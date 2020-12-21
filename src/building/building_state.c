@@ -123,7 +123,7 @@ static void write_type_data(buffer *buf, const building *b)
     }
 }
 
-void building_state_save_to_buffer(buffer* buf, const building* b)
+void building_state_save_to_buffer(buffer *buf, const building *b)
 {
     buffer_write_u8(buf, b->state);
     buffer_write_u8(buf, b->faction_id);
@@ -356,22 +356,6 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     b->storage_id = buffer_read_u8(buf);
     b->sentiment.house_happiness = buffer_read_i8(buf); // which union field we use does not matter
     b->show_on_problem_overlay = buffer_read_u8(buf);
-    if (file_io_load_expanded_building_data()) {
-        b->house_arena_gladiator = buffer_read_u8(buf);
-        b->house_arena_lion = buffer_read_u8(buf);
-        b->is_tourism_venue = buffer_read_u8(buf);
-        b->tourism_disabled = buffer_read_u8(buf);
-        b->tourism_income = buffer_read_u8(buf);
-        b->tourism_income_this_year = buffer_read_u8(buf);
-    }
-    else {
-        b->house_arena_gladiator = 0;
-        b->house_arena_lion = 0;
-        b->is_tourism_venue = 0;
-        b->tourism_disabled = 0;
-        b->tourism_income = 0;
-        b->tourism_income_this_year = 0;
-    }
 
     // backwards compatibility fixes for culture update
     if (building_monument_is_monument(b) && b->subtype.house_level && b->type != BUILDING_HIPPODROME) {
@@ -396,7 +380,14 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     // Building state variables are automatically set to 0, so if the savegame version doesn't include
     // that information, you can be assured that the game will read it as 0
     
-    // <Add new building state loading code here>
+    if (building_buf_size >= BUILDING_STATE_TOURISM_BUFFER_SIZE) {
+        b->house_arena_gladiator = buffer_read_u8(buf);
+        b->house_arena_lion = buffer_read_u8(buf);
+        b->is_tourism_venue = buffer_read_u8(buf);
+        b->tourism_disabled = buffer_read_u8(buf);
+        b->tourism_income = buffer_read_u8(buf);
+        b->tourism_income_this_year = buffer_read_u8(buf);
+    }
 
     // The following code should only be executed if the savegame includes building information that is not 
     // supported on this specific version of Augustus. The extra bytes in the buffer must be skipped in order

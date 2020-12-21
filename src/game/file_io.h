@@ -11,7 +11,4 @@ int game_file_io_write_saved_game(const char *filename);
 
 int game_file_io_delete_saved_game(const char *filename);
 
-int file_io_load_expanded_building_data(void);
-
-
 #endif // GAME_FILE_IO_H

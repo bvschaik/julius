@@ -86,7 +86,7 @@ static struct {
     int num_pieces;
     file_piece pieces[10];
     scenario_state state;
-} scenario_data = {0};
+} scenario_data;
 
 typedef struct {
     buffer *scenario_campaign_mission;
@@ -180,8 +180,6 @@ static struct {
     file_piece pieces[100];
     savegame_state state;
 } savegame_data = {0};
-
-static int active_save_version;
 
 static void init_file_piece(file_piece *piece, int size, int compressed)
 {
@@ -773,8 +771,4 @@ int game_file_io_delete_saved_game(const char *filename)
         log_error("Unable to delete game", 0, 0);
     }
     return result;
-}
-
-int file_io_load_expanded_building_data() {
-    return active_save_version > SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION;
 }

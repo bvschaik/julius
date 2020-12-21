@@ -57,7 +57,7 @@ static int expand_arrays(void)
     }
     data.figure_ids = new_ids;
 
-    uint8_t *new_paths = realloc(data.direction_paths, (data.array_size + ARRAY_SIZE_STEP) * sizeof(uint8_t) * MAX_PATH_LENGTH);
+    uint8_t (*new_paths)[MAX_PATH_LENGTH] = realloc(data.direction_paths, (data.array_size + ARRAY_SIZE_STEP) * sizeof(uint8_t) * MAX_PATH_LENGTH);
     if (!new_paths) {
         return 0;
     }
