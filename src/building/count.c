@@ -133,6 +133,7 @@ void building_count_update(void)
             case BUILDING_GRAND_TEMPLE_VENUS:
             case BUILDING_PANTHEON:
             case BUILDING_ORACLE:
+            case BUILDING_LARARIUM:
                 increase_count(type, b->num_workers > 0);
                 break;
 

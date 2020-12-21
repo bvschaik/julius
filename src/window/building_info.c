@@ -154,6 +154,7 @@ static int get_height_id(void)
             case BUILDING_TAVERN:
             case BUILDING_HEDGE_DARK:
             case BUILDING_HEDGE_LIGHT:
+            case BUILDING_LARARIUM:
             case BUILDING_COLONNADE:
                 return 1;
 
@@ -570,6 +571,8 @@ static void draw_background(void)
             }
         } else if (btype == BUILDING_ORACLE) {
             window_building_draw_oracle(&context);
+        } else if (btype == BUILDING_LARARIUM) {
+            window_building_draw_lararium(&context);
         } else if (btype == BUILDING_WORKCAMP) {
             window_building_draw_work_camp(&context);
         } else if (btype == BUILDING_ENGINEER_GUILD) {

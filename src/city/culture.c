@@ -132,7 +132,9 @@ void city_culture_update_coverage(void)
 
     // religion
     int oracles = building_count_total(BUILDING_ORACLE);
+    int shrines = building_count_total(BUILDING_LARARIUM);
     coverage.religion[GOD_CERES] = top(calc_percentage(
+            20 * shrines +
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_CERES) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_CERES) +
@@ -140,6 +142,7 @@ void city_culture_update_coverage(void)
             5000 * building_count_active(BUILDING_GRAND_TEMPLE_CERES),
         population));
     coverage.religion[GOD_NEPTUNE] = top(calc_percentage(
+            20 * shrines +
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_NEPTUNE) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_NEPTUNE) +
@@ -147,6 +150,7 @@ void city_culture_update_coverage(void)
             5000 * building_count_active(BUILDING_GRAND_TEMPLE_NEPTUNE),
         population));
     coverage.religion[GOD_MERCURY] = top(calc_percentage(
+            20 * shrines +
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_MERCURY) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_MERCURY) +
@@ -154,6 +158,7 @@ void city_culture_update_coverage(void)
             5000 * building_count_active(BUILDING_GRAND_TEMPLE_MERCURY),
         population));
     coverage.religion[GOD_MARS] = top(calc_percentage(
+            20 * shrines +
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_MARS) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_MARS) +
@@ -161,6 +166,7 @@ void city_culture_update_coverage(void)
             5000 * building_count_active(BUILDING_GRAND_TEMPLE_MARS),
         population));
     coverage.religion[GOD_VENUS] = top(calc_percentage(
+            20 * shrines +
             500 * oracles +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_VENUS) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_VENUS) +
