@@ -54,6 +54,7 @@ static struct building_image_context building_images_hedges[17] = {
 
 enum {
     CONTEXT_HEDGES,
+    CONTEXT_COLONNADE,
     CONTEXT_MAX_ITEMS
 };
 
@@ -61,6 +62,7 @@ static struct {
     struct building_image_context* context;
     int size;
 } context_pointers[] = {
+    {building_images_hedges, 17},
     {building_images_hedges, 17}
 };
 
@@ -105,7 +107,6 @@ static int context_matches_tiles(const struct building_image_context* context, c
 static const building_image* get_image(int group, int tiles[MAX_TILES], int rotation)
 {
     static building_image result;
-
     result.is_valid = 0;
     struct building_image_context* context = context_pointers[group].context;
     int size = context_pointers[group].size;
@@ -134,7 +135,7 @@ const building_image* building_image_context_get_hedges(int grid_offset, int inc
             continue;
         }
         building* b = building_get(map_building_at(offset));
-        if (b->type == BUILDING_HEDGE_DARK || b->type == BUILDING_HEDGE_LIGHT || connecting_grid[offset]) {
+        if (b->type == BUILDING_HEDGE_DARK || b->type == BUILDING_HEDGE_LIGHT || (connecting_grid[offset] && (connecting_grid_building == BUILDING_HEDGE_DARK || connecting_grid_building == BUILDING_HEDGE_LIGHT))) {
                 tiles[i] = 1;
         }
     }
@@ -148,6 +149,32 @@ const building_image* building_image_context_get_hedges(int grid_offset, int inc
     return get_image(CONTEXT_HEDGES, tiles, rotation);
 }
 
+const building_image* building_image_context_get_colonnade(int grid_offset, int include_construction)
+{
+
+    int tiles[MAX_TILES] = { 0,0,0,0,0,0,0,0 };
+    for (int i = 0; i < MAX_TILES; i += 2) {
+        int offset = grid_offset + map_grid_direction_delta(i);
+        if (!map_terrain_is(offset, TERRAIN_BUILDING) && !connecting_grid[offset]) {
+            continue;
+        }
+        building* b = building_get(map_building_at(offset));
+        if (b->type == BUILDING_COLONNADE || (connecting_grid[offset] && connecting_grid_building == BUILDING_COLONNADE)) {
+            tiles[i] = 1;
+        }
+    }
+    int building_id = map_building_at(grid_offset);
+    int rotation;
+    if (building_id) {
+        rotation = building_get(building_id)->subtype.orientation;
+    }
+    else {
+        rotation = building_rotation_get_rotation() % 2;
+    }
+    return get_image(CONTEXT_COLONNADE, tiles, rotation);
+}
+
+
 
 void building_image_context_init(void) 
 {
@@ -156,27 +183,30 @@ void building_image_context_init(void)
     }
 }
 
-
-
-
-
 void building_image_context_set_hedge_image(int grid_offset)
 {
     if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) && !connecting_grid[grid_offset]) {
         return;
     }
     building* b = building_get(map_building_at(grid_offset));
-    if (b->type != BUILDING_HEDGE_DARK && b->type != BUILDING_HEDGE_LIGHT && !connecting_grid[grid_offset]) {
+    if (b->type != BUILDING_HEDGE_DARK && b->type != BUILDING_HEDGE_LIGHT && b->type != BUILDING_COLONNADE && !connecting_grid[grid_offset]) {
         return;
     }
-    const building_image* img = building_image_context_get_hedges(grid_offset, 1);
-    int offset = img->group_offset;
-    int image_group;
+    const building_image* img;
+    int image_group = 0;
     if (b->type == BUILDING_HEDGE_DARK || (connecting_grid_building == BUILDING_HEDGE_DARK && connecting_grid[grid_offset])) {
+        img = building_image_context_get_hedges(grid_offset, 1);
         image_group = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "D Hedge 01");
-    } else {
+    } else if (b->type == BUILDING_HEDGE_LIGHT || (connecting_grid_building == BUILDING_HEDGE_LIGHT && connecting_grid[grid_offset])) {
+        img = building_image_context_get_hedges(grid_offset, 1);
         image_group = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "L Hedge 01");
+    } else if (b->type == BUILDING_COLONNADE || (connecting_grid_building == BUILDING_COLONNADE && connecting_grid[grid_offset])) {
+        img = building_image_context_get_colonnade(grid_offset, 1);
+        image_group = mods_get_image_id(mods_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
     }
+
+    int offset = img->group_offset;
+
     if (connecting_grid[grid_offset]) {
         map_image_set(grid_offset, image_group + offset);
         map_property_set_multi_tile_size(grid_offset, 1);

@@ -520,9 +520,11 @@ static translation_string all_strings[] = {
     { TR_WINDOW_ADVISOR_TOURISM, "Tourism"},
     { TR_WINDOW_FIGURE_TOURIST, "This traveller has spent: "},
     { TR_FIGURE_TYPE_TOURIST,  "Tourist"},
-    {TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
+    { TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
     { TR_SAVEGAME_LARGER_VERSION_TITLE, "Incompatible savegame version" },
     { TR_SAVEGAME_LARGER_VERSION_MESSAGE, "The savegame you're trying to load is for a more recent version of Augustus.\nPlease update Augustus to the most recent version." },
+    { TR_BUILDING_COLONNADE, "Colonnade" },
+
 
 };
 

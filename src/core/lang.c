@@ -418,6 +418,8 @@ const uint8_t *lang_get_string(int group, int index)
             return translation_for(TR_BUILDING_LEGION_STATUE);
         case BUILDING_DECORATIVE_COLUMN:
             return translation_for(TR_BUILDING_DECORATIVE_COLUMN);
+        case BUILDING_COLONNADE:
+            return translation_for(TR_BUILDING_COLONNADE);
         default:
             break;
         }

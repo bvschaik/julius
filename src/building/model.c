@@ -205,7 +205,7 @@ const model_building *model_get_building(building_type type)
             break;
     }
 
-    if ((type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT || type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_GARDEN_WALL) {
+    if ((type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT || type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_GARDEN_WALL || type == BUILDING_COLONNADE) {
         return &buildings[41];
     }
 
