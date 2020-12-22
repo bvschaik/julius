@@ -37,6 +37,9 @@ void formation_legion_delete_for_fort(building *fort)
             if (m->standard_figure_id) {
                 figure_delete(figure_get(m->standard_figure_id));
             }
+            for (int i = 0; i < m->num_figures; ++i) {
+                figure_get(m->figures[i])->action_state = FIGURE_ACTION_149_CORPSE;
+            }
             formation_clear(fort->formation_id);
             formation_calculate_legion_totals();
         }
