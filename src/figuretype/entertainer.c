@@ -63,6 +63,9 @@ static int determine_destination(int x, int y, building_type type1, building_typ
 static void update_shows(figure *f)
 {
     building *b = building_get(f->destination_building_id);
+    if (b->type < BUILDING_AMPHITHEATER || b->type > BUILDING_COLOSSEUM) {
+        return;
+    }
     switch (f->type) {
         case FIGURE_ACTOR:
             b->data.entertainment.play++;
