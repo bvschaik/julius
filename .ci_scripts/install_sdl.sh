@@ -36,7 +36,7 @@ function install_sdl_lib {
     tar -zxf "$FILENAME" -C deps/build
     cd $BUILDDIR
     SDL2_CONFIG="$ROOT/deps/SDL2-$SDL_VERSION/bin/sdl2-config" ./configure --prefix=$ROOT/$LIBDIR
-    make
+    make -j4
     make install
     cd $ROOT
     rm -rf deps/build

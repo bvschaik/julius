@@ -4,27 +4,27 @@ set -e
 
 case "$BUILD_TARGET" in
 "vita")
-	docker exec vitasdk /bin/bash -c "cd build && make"
+	docker exec vitasdk /bin/bash -c "cd build && make -j4"
 	;;
 "switch")
-	docker exec switchdev /bin/bash -c "cd build && make"
+	docker exec switchdev /bin/bash -c "cd build && make -j4"
 	mkdir -p release/julius
 	cp -f build/julius.nro release/julius/julius.nro
 	cd release && zip -r julius_switch.zip julius
 	;;
 "mac")
-	cd build && make && make test && make install
+	cd build && make -j4 && make test && make install
 	echo "Creating disk image"
 	hdiutil create -volname Julius -srcfolder julius.app -ov -format UDZO julius.dmg
 	;;
 "appimage")
-	cd build && make && make test
+	cd build && make -j4 && make test
 	make DESTDIR=AppDir install
 	cd ..
 	./.ci_scripts/package_appimage.sh
 	;;
 "linux")
-	cd build && make && make test
+	cd build && make -j4 && make test
 	zip julius.zip julius
 	;;
 "android")
@@ -49,6 +49,6 @@ case "$BUILD_TARGET" in
 	fi
 	;;
 *)
-	cd build && make && make test
+	cd build && make -j4 && make test
 	;;
 esac
