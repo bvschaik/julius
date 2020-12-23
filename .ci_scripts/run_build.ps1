@@ -10,7 +10,7 @@ if ("${env:COMPILER}" -eq "msvc") {
 } else {
     throw "Unknown compiler: ${env:COMPILER}"
 }
-cmake --build . --config Release
+cmake --build . -j 4 --config Release
 if (!$?) {
     throw "Build failed"
 }
