@@ -235,8 +235,14 @@ building *building_create(building_type type, int x, int y)
     b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
 
     // init expanded data
-    memset(&(b->house_arena_gladiator), 0, sizeof(building) - 128);
-
+    b->house_tavern_wine_access = 0;
+    b->house_tavern_meat_access = 0;
+    b->house_arena_gladiator = 0;
+    b->house_arena_lion = 0;
+    b->is_tourism_venue = 0;
+    b->tourism_disabled = 0;
+    b->tourism_income = 0;
+    b->tourism_income_this_year = 0;
     return b;
 }
 
