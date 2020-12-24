@@ -64,10 +64,6 @@ typedef struct {
     unsigned char house_figure_generation_delay;
     unsigned char house_tax_coverage;
     unsigned char house_pantheon_access;
-    unsigned char house_tavern_wine_access;
-    unsigned char house_tavern_meat_access;
-    unsigned char house_arena_gladiator;
-    unsigned char house_arena_lion;
     short formation_id;
     signed char monthly_levy;
     union {
@@ -154,6 +150,10 @@ typedef struct {
         signed char native_anger;
     } sentiment;
     unsigned char show_on_problem_overlay;
+    unsigned char house_tavern_wine_access;
+    unsigned char house_tavern_meat_access;
+    unsigned char house_arena_gladiator;
+    unsigned char house_arena_lion;
     unsigned char is_tourism_venue;
     unsigned char tourism_disabled;
     unsigned char tourism_income;
