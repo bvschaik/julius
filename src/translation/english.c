@@ -366,6 +366,14 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_OVERLAY_LEVY, " denarii paid monthly in levies." }, 
     {TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
     {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "This temple will collect food for your supply post, once it is constructed." },
+    { TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MAINTENANCE, "Toggle prefects and engineers access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_PRIEST, "Toggle priests access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MARKET, "Toggle market buyer access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_ENTERTAINER, "Toggle entertainer access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_EDUCATION, "Toggle education walker access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MEDICINE, "Toggle health walker access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, "Toggle tax collector access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_LABOR_SEEKER, "Toggle labor seekers access" },
 
 };
 

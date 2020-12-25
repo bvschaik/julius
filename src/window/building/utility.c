@@ -25,7 +25,8 @@ static struct {
     int orders_focus_button_id;
     int figure_focus_button_id;
     int building_id;
-} data = {0, 0, 0, 0};
+    int tooltip_id;
+} data = {0, 0, 0, 0, 0};
 
 static generic_button go_to_orders_button[] = {
     {0, 0, 304, 20, go_to_orders, button_none, 0, 0}
@@ -41,6 +42,8 @@ static generic_button orders_permission_buttons[] = {
     {0, 192, 210, 22, toggle_figure_state, button_none, PERMISSION_TAX_COLLECTOR, 0},
     {0, 224, 210, 22, toggle_figure_state, button_none, PERMISSION_LABOR_SEEKER, 0},
 };
+
+static int permission_tooltip_translations[] = {0,TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MAINTENANCE,TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_PRIEST,TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MARKET, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_ENTERTAINER, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_EDUCATION, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MEDICINE, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_LABOR_SEEKER};
 
 static int size_of_orders_permission_buttons = sizeof(orders_permission_buttons) / sizeof(*orders_permission_buttons);
 
@@ -173,6 +176,15 @@ void window_building_draw_roadblock_orders_foreground(building_info_context* c)
         else {
             lang_text_draw(99, 8, c->x_offset + 230, y_offset + 55 + 32 * i, FONT_NORMAL_RED);
         }
+    }
+}
+
+void window_building_roadblock_get_tooltip_walker_permissions(int* translation)
+{
+    if (data.figure_focus_button_id) {
+        *translation = permission_tooltip_translations[data.figure_focus_button_id];
+    } else {
+        *translation = 0;
     }
 }
 
