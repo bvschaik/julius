@@ -29,6 +29,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_TITLE, "Julius konfigurationer"},
     {TR_CONFIG_LANGUAGE_LABEL, "Språk:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(förval)"},
+    {TR_CONFIG_DISPLAY_SCALE, "Bildskärmsskala:"},
+    {TR_CONFIG_CURSOR_SCALE, "Markörskala:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "Användargränssnittsändringar"},
     {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Spelinställningar"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Visa introduktionsfilmer"},
