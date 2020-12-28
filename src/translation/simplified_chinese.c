@@ -22,6 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "指定路径未检测到有效语言包。"
         "请检视日志查看错误。"},
+    {TR_BUILD_ALL_TEMPLES, "全部"},
     {TR_BUTTON_OK, "确定"},
     {TR_BUTTON_CANCEL, "取消"},
     {TR_BUTTON_RESET_DEFAULTS, "重置默认"},

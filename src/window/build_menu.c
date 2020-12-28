@@ -12,6 +12,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/property.h"
+#include "translation/translation.h"
 #include "widget/city.h"
 #include "widget/sidebar/city.h"
 #include "window/city.h"
@@ -170,8 +171,9 @@ static void draw_menu_buttons(void)
             data.focus_button_id == i + 1 ? 1 : 2);
         int type = building_menu_type(data.selected_submenu, item_index);
         if (is_all_button(type)) {
-            lang_text_draw_centered(52, 19, item_x_align, data.y_offset + MENU_Y_OFFSET + 3 + MENU_ITEM_HEIGHT * i,
-                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
+            text_draw_centered(translation_for(TR_BUILD_ALL_TEMPLES),
+                item_x_align, data.y_offset + MENU_Y_OFFSET + 3 + MENU_ITEM_HEIGHT * i,
+                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
         } else {
             lang_text_draw_centered(28, type, item_x_align, data.y_offset + MENU_Y_OFFSET + 3 + MENU_ITEM_HEIGHT * i,
                 MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);

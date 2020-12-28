@@ -22,6 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "Den valda mappen inehåller inte ett giltigt språkpaket. "
         "Kolla loggen efter fel."},
+    {TR_BUILD_ALL_TEMPLES, "Alla"},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Avbryt"},
     {TR_BUTTON_RESET_DEFAULTS, "Återställ förval"},

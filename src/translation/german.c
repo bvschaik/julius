@@ -22,6 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "Das gewählte Verzeichnis enthält kein gültiges Sprachpaket. "
         "Bitte überprüfe das Protokoll auf Fehler."},
+    {TR_BUILD_ALL_TEMPLES, "Alle"},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Abbrechen"},
     {TR_BUTTON_RESET_DEFAULTS, "Zurücksetzen"},

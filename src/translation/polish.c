@@ -22,6 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "Wybrany folder nie zawiera poprawnego pakietu językowego"
         "Proszę sprawdzić błędy w pliku log"},
+    {TR_BUILD_ALL_TEMPLES, "Całość"},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Anuluj"},
     {TR_BUTTON_RESET_DEFAULTS, "Ustaw domyślne"},

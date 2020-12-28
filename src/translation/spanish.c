@@ -22,6 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "El directorio que has seleccionado no contiene un paquete de idioma válido. "
         "Por favor, comprueba el registro de errores."},
+    {TR_BUILD_ALL_TEMPLES, "Todo"},
     {TR_BUTTON_OK, "Aceptar"},
     {TR_BUTTON_CANCEL, "Cancelar"},
     {TR_BUTTON_RESET_DEFAULTS, "Por defecto"},

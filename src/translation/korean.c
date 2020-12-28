@@ -23,6 +23,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "현재 선택된 디렉터리는 사용 가능한 언어 팩을 포함하고 있지 않습니다. "
         "기록에서 오류를 확인해 주세요."},
+    {TR_BUILD_ALL_TEMPLES, "모두"},
     {TR_BUTTON_OK, "확인"},
     {TR_BUTTON_CANCEL, "취소"},
     {TR_BUTTON_RESET_DEFAULTS, "기본값으로 초기화"},
