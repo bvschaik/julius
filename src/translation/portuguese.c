@@ -30,6 +30,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_TITLE, "Opções de Configurações do Julius"},
     {TR_CONFIG_LANGUAGE_LABEL, "Idioma:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(padrão)"},
+    {TR_CONFIG_DISPLAY_SCALE, "Escala de exibição:"},
+    {TR_CONFIG_CURSOR_SCALE, "Escala do cursor:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "Mudanças de interface"},
     {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Mudanças de jogabilidade"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Tocar vídeos de abertura"},
