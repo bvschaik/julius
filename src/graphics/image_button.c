@@ -88,18 +88,18 @@ int image_buttons_handle_mouse(
             return 0;
         }
     } else if (hit_button->button_type == IB_BUILD || hit_button->button_type == IB_NORMAL) {
+        if (m->left.went_down || m->right.went_down) {
+            hit_button->pressed = 1;
+            hit_button->pressed_since = time_get_millis();
+        }
         if (!m->left.went_up && !m->right.went_up) {
             return 0;
         }
     }
     if (m->left.went_up) {
         sound_effect_play(SOUND_EFFECT_ICON);
-        hit_button->pressed = 1;
-        hit_button->pressed_since = time_get_millis();
         hit_button->left_click_handler(hit_button->parameter1, hit_button->parameter2);
     } else if (m->right.went_up) {
-        hit_button->pressed = 1;
-        hit_button->pressed_since = time_get_millis();
         hit_button->right_click_handler(hit_button->parameter1, hit_button->parameter2);
     } else if (hit_button->button_type == IB_SCROLL && m->left.is_down) {
         time_millis delay = hit_button->pressed == 2 ? PRESSED_REPEAT_MILLIS : PRESSED_REPEAT_INITIAL_MILLIS;
