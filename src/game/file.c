@@ -343,6 +343,7 @@ int game_file_load_scenario_data(const char *scenario_file)
 
     trade_prices_reset();
     load_empire_data(1, scenario_empire_id());
+    city_view_reset_orientation();
     return 1;
 }
 
