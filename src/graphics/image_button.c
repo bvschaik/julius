@@ -24,11 +24,11 @@ static void fade_pressed_effect(image_button *buttons, int num_buttons)
     }
 }
 
-static void remove_pressed_effect_build(image_button *buttons, int num_buttons)
+static void remove_pressed_effect_build(image_button *buttons, int num_buttons, image_button *except)
 {
     for (int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
-        if (btn->pressed && btn->button_type == IB_BUILD) {
+        if (btn->pressed && btn->button_type == IB_BUILD && btn != except) {
             btn->pressed = 0;
         }
     }
@@ -57,7 +57,6 @@ int image_buttons_handle_mouse(
     const mouse *m, int x, int y, image_button *buttons, int num_buttons, int *focus_button_id)
 {
     fade_pressed_effect(buttons, num_buttons);
-    remove_pressed_effect_build(buttons, num_buttons);
     image_button *hit_button = 0;
     if (focus_button_id) {
         *focus_button_id = 0;
@@ -80,6 +79,7 @@ int image_buttons_handle_mouse(
             }
         }
     }
+    remove_pressed_effect_build(buttons, num_buttons, hit_button);
     if (!hit_button) {
         return 0;
     }
