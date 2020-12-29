@@ -26,10 +26,11 @@ int generic_buttons_handle_mouse(
     generic_button *button = &buttons[button_id - 1];
     if (m->left.went_up) {
         button->left_click_handler(button->parameter1, button->parameter2);
+        return button->left_click_handler != button_none;
     } else if (m->right.went_up) {
         button->right_click_handler(button->parameter1, button->parameter2);
+        return button->right_click_handler != button_none;
     } else {
         return 0;
     }
-    return button_id;
 }
