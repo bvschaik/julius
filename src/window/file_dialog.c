@@ -56,8 +56,6 @@ static generic_button file_buttons[] = {
 
 static scrollbar_type scrollbar = { 464, 120, 206, on_scroll };
 
-static input_box file_name_input = { 144, 80, 20, 2, FONT_NORMAL_WHITE };
-
 typedef struct {
     char extension[4];
     char last_loaded_file[FILE_NAME_MAX];
@@ -74,6 +72,8 @@ static struct {
     uint8_t typed_name[FILE_NAME_MAX];
     char selected_file[FILE_NAME_MAX];
 } data;
+
+static input_box file_name_input = { 144, 80, 20, 2, FONT_NORMAL_WHITE, 0, data.typed_name, FILE_NAME_MAX };
 
 static file_type_data saved_game_data = {"sav"};
 static file_type_data scenario_data = {"map"};
@@ -99,7 +99,7 @@ static void init(file_type type, file_dialog_type dialog_type)
     scrollbar_init(&scrollbar, 0, data.file_list->num_files - NUM_FILES_IN_VIEW);
 
     strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
-    input_box_start(&file_name_input, data.typed_name, FILE_NAME_MAX, 0);
+    input_box_start(&file_name_input);
 }
 
 static void draw_foreground(void)

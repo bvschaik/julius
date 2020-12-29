@@ -17,6 +17,8 @@
 #include "widget/input_box.h"
 #include "window/mission_selection.h"
 
+#define PLAYER_NAME_LENGTH 32
+
 static void start_mission(int param1, int param2);
 static void button_back(int param1, int param2);
 
@@ -25,16 +27,16 @@ static image_button image_buttons[] = {
     {305, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, start_mission, button_none, 1, 0, 1}
 };
 
-static input_box player_name_input = { 160, 208, 20, 2, FONT_NORMAL_WHITE };
+static uint8_t player_name[PLAYER_NAME_LENGTH];
 
-static uint8_t player_name[32];
+static input_box player_name_input = {160, 208, 20, 2, FONT_NORMAL_WHITE, 1, player_name, PLAYER_NAME_LENGTH};
 
 static void init(void)
 {
     setting_clear_personal_savings();
     scenario_settings_init();
-    string_copy(lang_get_string(9, 5), player_name, 32);
-    input_box_start(&player_name_input, player_name, 32, 1);
+    string_copy(lang_get_string(9, 5), player_name, PLAYER_NAME_LENGTH);
+    input_box_start(&player_name_input);
 }
 
 static void draw_background(void)
