@@ -293,7 +293,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
         if (type == BUILDING_TOWER) {
             forbidden_terrain &= ~TERRAIN_WALL;
         }
-        if (forbidden_terrain || map_has_figure_at(tile_offset)) {
+        if (forbidden_terrain || (map_has_figure_at(tile_offset) && type != BUILDING_PLAZA)) {
             blocked_tiles[i] = blocked = 1;
         } else {
             blocked_tiles[i] = 0;
