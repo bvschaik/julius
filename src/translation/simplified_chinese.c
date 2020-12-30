@@ -30,6 +30,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_TITLE, "Julius 配置设定"},
     {TR_CONFIG_LANGUAGE_LABEL, "语言包:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "默认"},
+    {TR_CONFIG_DISPLAY_SCALE, "显示大小:"},
+    {TR_CONFIG_CURSOR_SCALE, "鼠标大小:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "用户界面更变"},
     {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "游戏内容更变"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "播放开场动画"},
