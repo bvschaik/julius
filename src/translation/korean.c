@@ -1,50 +1,8 @@
-
-Skip to content
-Pull requests
-Issues
-Marketplace
-Explore
-@sickchicken
-Learn Git and GitHub without any code!
-
-Using the Hello World guide, you’ll start a branch, write comments, and open a pull request.
-Keriew /
-augustus
-forked from bvschaik/julius
-
-19
-286
-
-    143
-
-Code
-Issues 41
-Pull requests 3
-Actions
-Projects
-Security
-
-    Insights
-
-augustus/src/translation/english.c
-@whgest
-whgest Mars module 1 can go off road to reach the supply post. Prevent modul…
-Latest commit e8ab2d0 on 21 Nov
-History
-8 contributors
-@Keriew
-@whgest
-@bvschaik
-@agruzdev
-@vittoriom94
-@crudelios
-@attrition
-@Antaryo
-376 lines (373 sloc) 28.5 KB
 #include "translation/common.h"
 #include "translation/translation.h"
 
 static translation_string all_strings[] = {
+
     {TR_NO_PATCH_TITLE, "1.0.1.0 패치가 설치되지 않음"},
     {TR_NO_PATCH_MESSAGE,
         "현재 설치된 시저 3는 1.0.1.0 패치를 포함하고 있지 않습니다. "
@@ -380,22 +338,8 @@ static translation_string all_strings[] = {
 
 };
 
-void translation_english(const translation_string **strings, int *num_strings)
+void translation_korean(const translation_string **strings, int *num_strings)
 {
     *strings = all_strings;
     *num_strings = sizeof(all_strings) / sizeof(translation_string);
 }
-
-    © 2020 GitHub, Inc.
-    Terms
-    Privacy
-    Security
-    Status
-    Help
-
-    Contact GitHub
-    Pricing
-    API
-    Training
-    Blog
-    About
