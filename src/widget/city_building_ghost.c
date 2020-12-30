@@ -485,15 +485,19 @@ static void draw_fountain(const map_tile *tile, int x, int y)
     if (city_finance_out_of_money()) {
         draw_flat_tile(x, y, COLOR_MASK_RED);
     } else {
+        int blocked_tiles = 0;
+        int blocked = is_blocked_for_building(tile->grid_offset, 1, &blocked_tiles);
+        int color_mask = blocked ? COLOR_MASK_RED : COLOR_MASK_GREEN;
         int image_id = image_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
             city_view_foreach_tile_in_range(tile->grid_offset, 1,
                 scenario_property_climate() == CLIMATE_DESERT ? 3 : 4, draw_fountain_range);
         }
-        draw_building(image_id, x, y);
+        image_draw_isometric_footprint(image_id, x, y, color_mask);
+        image_draw_isometric_top(image_id, x, y, color_mask);
         if (map_terrain_is(tile->grid_offset, TERRAIN_RESERVOIR_RANGE)) {
             const image *img = image_get(image_id);
-            image_draw_masked(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_GREEN);
+            image_draw_masked(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
         }
     }
 }
