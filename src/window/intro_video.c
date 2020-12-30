@@ -12,7 +12,7 @@ static int current_video;
 
 static int started;
 
-static const char *intro_videos[NUM_INTRO_VIDEOS] = { "smk/logo.smk", "smk/intro.smk", "smk/credits.smk" };
+static const char *intro_videos[NUM_INTRO_VIDEOS] = {"smk/logo.smk", "smk/intro.smk", "smk/credits.smk"};
 
 static int start_next_video(void)
 {

@@ -33,12 +33,12 @@ static struct {
     int x;
     int y;
     int centered;
-} window_pos = { 0, 0, 1 };
+} window_pos = {0, 0, 1};
 
 static struct {
     const int WIDTH;
     const int HEIGHT;
-} MINIMUM = { 640, 480 };
+} MINIMUM = {640, 480};
 
 static int scale_percentage = 100;
 static color_t *framebuffer;

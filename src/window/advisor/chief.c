@@ -136,7 +136,7 @@ static int draw_background(void)
         lang_text_draw(61, 78, X_OFFSET, 166, FONT_NORMAL_GREEN);
     } else if (city_military_months_until_distant_battle() > 0) {
         lang_text_draw(61, 77, X_OFFSET, 166, FONT_NORMAL_RED);
-    } else if (city_figures_soldiers() > 0) { // FIXED was ">=0" (always true)
+    } else if (city_figures_soldiers() > 0) {
         lang_text_draw(61, 73, X_OFFSET, 166, FONT_NORMAL_GREEN);
     } else {
         lang_text_draw(61, 72, X_OFFSET, 166, FONT_NORMAL_GREEN);

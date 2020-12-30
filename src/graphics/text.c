@@ -30,7 +30,7 @@ static struct {
 static struct {
     const uint8_t string[ELLIPSIS_LENGTH];
     int width[FONT_TYPES_MAX];
-} ellipsis = { {'.', '.', '.', 0} };
+} ellipsis = {{'.', '.', '.', 0}};
 
 static int get_ellipsis_width(font_t font)
 {

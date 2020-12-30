@@ -31,7 +31,7 @@ static struct {
     int build_in_progress;
     int start_elevation;
     map_tile start_tile;
-} data = { 0, TOOL_GRASS, 0, 3, 0 };
+} data = {0, TOOL_GRASS, 0, 3, 0};
 
 tool_type editor_tool_type(void)
 {

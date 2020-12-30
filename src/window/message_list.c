@@ -44,7 +44,7 @@ static generic_button generic_buttons_messages[] = {
     {0, 180, 412, 18, button_message, button_delete, 9, 0},
 };
 
-static scrollbar_type scrollbar = { 432, 112, 208, on_scroll };
+static scrollbar_type scrollbar = {432, 112, 208, on_scroll};
 
 static struct {
     int width_blocks;

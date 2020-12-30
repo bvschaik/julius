@@ -11,8 +11,8 @@
 
 #define MAX_TILES 4
 
-static const int X_VIEW_OFFSETS[MAX_TILES] = { 0, -30, 30, 0 };
-static const int Y_VIEW_OFFSETS[MAX_TILES] = { 0, 15, 15, 30 };
+static const int X_VIEW_OFFSETS[MAX_TILES] = {0, -30, 30, 0};
+static const int Y_VIEW_OFFSETS[MAX_TILES] = {0, 15, 15, 30};
 
 static void offset_to_view_offset(int dx, int dy, int *view_dx, int *view_dy)
 {

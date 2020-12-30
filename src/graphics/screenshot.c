@@ -236,7 +236,7 @@ static void create_full_city_screenshot(void)
     int base_width = (GRID_SIZE * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
     int max_height = (GRID_SIZE * TILE_Y_SIZE + city_height_pixels) / 2;
     int min_height = max_height - city_height_pixels - TILE_Y_SIZE;
-    map_tile dummy_tile = { 0, 0, 0 };
+    map_tile dummy_tile = {0, 0, 0};
     int error = 0;
     int current_height = image_set_loop_height_limits(min_height, max_height);
     int size;

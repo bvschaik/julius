@@ -54,7 +54,7 @@ static generic_button file_buttons[] = {
     {160, 304, 288, 16, button_select_file, button_none, 11, 0},
 };
 
-static scrollbar_type scrollbar = { 464, 120, 206, on_scroll };
+static scrollbar_type scrollbar = {464, 120, 206, on_scroll};
 
 typedef struct {
     char extension[4];
@@ -73,7 +73,7 @@ static struct {
     char selected_file[FILE_NAME_MAX];
 } data;
 
-static input_box file_name_input = { 144, 80, 20, 2, FONT_NORMAL_WHITE, 0, data.typed_name, FILE_NAME_MAX };
+static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE, 0, data.typed_name, FILE_NAME_MAX};
 
 static file_type_data saved_game_data = {"sav"};
 static file_type_data scenario_data = {"map"};

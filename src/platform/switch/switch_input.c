@@ -307,7 +307,7 @@ void switch_handle_analog_sticks(void)
     float right_joy_dead_zone_squared = 10240.0*10240.0;
     float slope = 0.414214f; // tangent of 22.5 degrees for size of angular zones
 
-    int direction_states[ANALOG_MAX] = { 0, 0, 0, 0 };
+    int direction_states[ANALOG_MAX] = {0, 0, 0, 0};
 
     if (right_x * right_x + right_y * right_y > right_joy_dead_zone_squared) {
         if (right_y > 0 && right_x > 0) {

@@ -24,11 +24,11 @@
 #define TILE_X_PIXELS 60
 #define TILE_Y_PIXELS 30
 
-static const int DIRECTION_X[] = {  0,  1,  1,  1,  0, -1, -1, -1,  0 };
-static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
+static const int DIRECTION_X[] = { 0,  1,  1,  1,  0, -1, -1, -1, 0};
+static const int DIRECTION_Y[] = {-1, -1,  0,  1,  1,  1,  0, -1, 0};
 static const int SCROLL_STEP[SCROLL_TYPE_MAX][11] = {
-    { 60, 44, 30, 20, 16, 12, 10, 8, 6, 4, 2 },
-    { 20, 15, 10,  7,  5,  4,  3, 3, 2, 2, 1 }
+    {60, 44, 30, 20, 16, 12, 10, 8, 6, 4, 2},
+    {20, 15, 10,  7,  5,  4,  3, 3, 2, 2, 1}
 };
 
 typedef enum {

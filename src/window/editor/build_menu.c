@@ -59,7 +59,7 @@ static struct {
     int y_offset;
 
     int focus_button_id;
-} data = { MENU_NONE };
+} data = {MENU_NONE};
 
 static int count_items(int submenu)
 {

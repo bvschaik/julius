@@ -16,8 +16,8 @@
 static void button_close(int save, int param2);
 
 static generic_button bottom_buttons[] = {
-    { 192, 228, 120, 24, button_close, button_none, 0 },
-    { 328, 228, 120, 24, button_close, button_none, 1 },
+    {192, 228, 120, 24, button_close, button_none, 0},
+    {328, 228, 120, 24, button_close, button_none, 1},
 };
 
 static translation_key bottom_button_texts[] = {

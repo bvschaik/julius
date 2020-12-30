@@ -39,11 +39,11 @@ typedef struct {
 } modifier_name;
 
 static const modifier_name modifier_names[] = {
-    { KEY_MOD_CTRL, "Ctrl" },
-    { KEY_MOD_ALT, "Alt" },
-    { KEY_MOD_GUI, "Gui" },
-    { KEY_MOD_SHIFT, "Shift" },
-    { KEY_MOD_NONE }
+    {KEY_MOD_CTRL, "Ctrl"},
+    {KEY_MOD_ALT, "Alt"},
+    {KEY_MOD_GUI, "Gui"},
+    {KEY_MOD_SHIFT, "Shift"},
+    {KEY_MOD_NONE}
 };
 
 const char *key_combination_name(key_type key, key_modifier_type modifiers)

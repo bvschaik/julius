@@ -8,7 +8,7 @@
 
 #define OFFSET(x,y) (x + GRID_SIZE * y)
 
-static const int TILE_GRID_OFFSETS[] = { 0, GRID_SIZE, 1, GRID_SIZE + 1 };
+static const int TILE_GRID_OFFSETS[] = {0, GRID_SIZE, 1, GRID_SIZE + 1};
 
 static const int ACCESS_RAMP_TILE_OFFSETS_BY_ORIENTATION[4][6] = {
     {OFFSET(0,1), OFFSET(1,1), OFFSET(0,2), OFFSET(1,2), OFFSET(0,0), OFFSET(1,0)},

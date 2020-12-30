@@ -74,7 +74,7 @@ static struct {
     int y_offset;
 
     int focus_button_id;
-} data = { SUBMENU_NONE };
+} data = {SUBMENU_NONE};
 
 static int init(build_menu_group submenu)
 {
