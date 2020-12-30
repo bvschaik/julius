@@ -287,8 +287,7 @@ void window_building_draw_granary_orders_foreground(building_info_context *c)
         } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
             lang_text_draw(99, 8, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_RED);
         } else if (state == BUILDING_STORAGE_STATE_GETTING) {
-            image_draw(image_group(GROUP_CONTEXT_ICONS) + 12,
-                c->x_offset + 186, y_offset + 49 + 22 * i);
+            image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
             lang_text_draw(99, 10, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
         }
     }

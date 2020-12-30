@@ -23,7 +23,7 @@ static void start_mission(int param1, int param2);
 static void button_back(int param1, int param2);
 
 static image_button image_buttons[] = {
-    {0,   2, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON,     8, button_back,   button_none, 0, 0, 1},
+    {0, 2, 31, 20, IB_NORMAL, GROUP_ARROW_MESSAGE_PROBLEMS, 8, button_back, button_none, 0, 0, 1},
     {305, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, start_mission, button_none, 1, 0, 1}
 };
 

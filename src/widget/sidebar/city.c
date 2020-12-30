@@ -84,8 +84,8 @@ static image_button buttons_build_expanded[] = {
     {63, 385, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 36, button_build, button_none, BUILD_MENU_SECURITY, 0, 1},
     {113, 385, 39, 26, IB_BUILD, GROUP_SIDEBAR_BUTTONS, 32, button_build, button_none, BUILD_MENU_INDUSTRY, 0, 1},
     {13, 421, 39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 48, button_undo, button_none, 0, 0, 1},
-    {63, 421, 39, 26, IB_NORMAL, GROUP_MESSAGE_ICON, 18, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
-    {113, 421, 39, 26, IB_BUILD, GROUP_MESSAGE_ICON, 22, button_go_to_problem, button_none, 0, 0, 1},
+    {63, 421, 39, 26, IB_NORMAL, GROUP_ARROW_MESSAGE_PROBLEMS, 18, button_messages, button_help, 0, MESSAGE_DIALOG_MESSAGES, 1},
+    {113, 421, 39, 26, IB_BUILD, GROUP_ARROW_MESSAGE_PROBLEMS, 22, button_go_to_problem, button_none, 0, 0, 1},
 };
 
 static image_button buttons_top_expanded[] = {

@@ -72,7 +72,7 @@ void map_water_supply_update_houses(void)
 
 static void set_all_aqueducts_to_no_water(void)
 {
-    int image_without_water = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
+    int image_without_water = image_group(GROUP_BUILDING_AQUEDUCT_NO_WATER);
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
@@ -95,7 +95,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
     memset(&queue, 0, sizeof(queue));
     int guard = 0;
     int next_offset;
-    int image_without_water = image_group(GROUP_BUILDING_AQUEDUCT) + 15;
+    int image_without_water = image_group(GROUP_BUILDING_AQUEDUCT_NO_WATER);
     do {
         if (++guard >= GRID_SIZE * GRID_SIZE) {
             break;

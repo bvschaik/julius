@@ -80,8 +80,7 @@ static int draw_employment_info(building_info_context *c, building *b, int y_off
 static void draw_employment_details(building_info_context *c, building *b, int y_offset, int text_id)
 {
     y_offset += c->y_offset;
-    image_draw(image_group(GROUP_CONTEXT_ICONS) + 14,
-        c->x_offset + 40, y_offset + 6);
+    image_draw(image_group(GROUP_CONTEXT_ICONS) + 14, c->x_offset + 40, y_offset + 6);
     if (text_id) {
         int width = lang_text_draw_amount(8, 12, b->num_workers,
             c->x_offset + 60, y_offset + 10, FONT_SMALL_BLACK);

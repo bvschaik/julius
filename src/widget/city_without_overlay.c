@@ -426,7 +426,7 @@ static void draw_animation(int x, int y, int grid_offset)
             (orientation == DIR_4_BOTTOM && xy == EDGE_X0Y0) ||
             (orientation == DIR_6_LEFT && xy == EDGE_X1Y0)) {
             building *gate = building_get(map_building_at(grid_offset));
-            int image_id = image_group(GROUP_BULIDING_GATEHOUSE);
+            int image_id = image_group(GROUP_BUILDING_GATEHOUSE);
             int color_mask = draw_building_as_deleted(gate) ? COLOR_MASK_RED : 0;
             if (gate->subtype.orientation == 1) {
                 if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {

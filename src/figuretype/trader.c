@@ -543,9 +543,8 @@ void figure_native_trader_action(figure *f)
         f->cart_image_id = 0;
     } else {
         f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * f->image_offset;
+        f->cart_image_id = image_group(GROUP_FIGURE_MIGRANT_CART) + 8 + 8 * f->resource_id;
     }
-    f->cart_image_id = image_group(GROUP_FIGURE_MIGRANT_CART) +
-        8 + 8 * f->resource_id; // BUGFIX should be within else statement?
     if (f->cart_image_id) {
         f->cart_image_id += dir;
         figure_image_set_cart_offset(f, dir);
