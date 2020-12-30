@@ -108,9 +108,6 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
             switch (map_property_multi_tile_size(grid_offset)) {
                 case 1: image_draw(image_id, x_view, y_view); break;
                 case 2: image_draw(image_id + 1, x_view, y_view - 1); break;
-                case 3: image_draw(image_id + 2, x_view, y_view - 2); break;
-                case 4: image_draw(image_id + 3, x_view, y_view - 3); break;
-                case 5: image_draw(image_id + 4, x_view, y_view - 4); break;
             }
         }
     } else {
