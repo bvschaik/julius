@@ -20,6 +20,7 @@
 #include "scenario/map.h"
 #include "scenario/property.h"
 #include "sound/music.h"
+#include "widget/scenario_minimap.h"
 #include "window/city.h"
 
 #include <string.h>
@@ -28,10 +29,14 @@
 
 static void button_select_item(int index, int param2);
 static void button_start_scenario(int param1, int param2);
+static void button_toggle_minimap(int param1, int param2);
 static void on_scroll(void);
 
 static image_button start_button =
     {600, 440, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start_scenario, button_none, 1, 0, 1};
+
+static generic_button toggle_minimap_button =
+    {570, 87, 39, 28, button_toggle_minimap, button_none, 0, 0};
 
 static generic_button file_buttons[] = {
     {18, 220, 252, 16, button_select_item, button_none, 0, 0},
@@ -55,7 +60,9 @@ static scrollbar_type scrollbar = {276, 210, 256, on_scroll, 8, 1};
 
 static struct {
     int focus_button_id;
+    int focus_toggle_button;
     int selected_item;
+    int show_minimap;
     char selected_scenario_filename[FILE_NAME_MAX];
     uint8_t selected_scenario_display[FILE_NAME_MAX];
 
@@ -67,6 +74,8 @@ static void init(void)
     scenario_set_custom(2);
     data.scenarios = dir_find_files_with_extension("map");
     data.focus_button_id = 0;
+    data.focus_toggle_button = 0;
+    data.show_minimap = 0;
     button_select_item(0, 0);
     scrollbar_init(&scrollbar, 0, data.scenarios->num_files - MAX_SCENARIOS);
 }
@@ -104,80 +113,94 @@ static void draw_scenario_info(void)
         scenario_info_x, 25, scenario_info_width + 10, FONT_LARGE_BLACK, 0);
     text_draw_centered(scenario_brief_description(), scenario_info_x, 60, scenario_info_width, FONT_NORMAL_WHITE, 0);
     lang_text_draw_year(scenario_property_start_year(), scenario_criteria_x, 90, FONT_LARGE_BLACK);
-    lang_text_draw_centered(44, 77 + scenario_property_climate(),
-        scenario_info_x, 150, scenario_info_width, FONT_NORMAL_BLACK);
 
-    // map size
-    int text_id;
-    switch (scenario_map_size()) {
-        case 40: text_id = 121; break;
-        case 60: text_id = 122; break;
-        case 80: text_id = 123; break;
-        case 100: text_id = 124; break;
-        case 120: text_id = 125; break;
-        default: text_id = 126; break;
-    }
-    lang_text_draw_centered(44, text_id, scenario_info_x, 170, scenario_info_width, FONT_NORMAL_BLACK);
-
-    // military
-    int num_invasions = scenario_invasion_count();
-    if (num_invasions <= 0) {
-        text_id = 112;
-    } else if (num_invasions <= 2) {
-        text_id = 113;
-    } else if (num_invasions <= 4) {
-        text_id = 114;
-    } else if (num_invasions <= 10) {
-        text_id = 115;
+    if (data.show_minimap) {
+        widget_scenario_minimap_draw(332, 119, 286, 300);
+        // minimap button: draw mission instructions image
+        image_draw(image_group(GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS),
+            toggle_minimap_button.x + 3, toggle_minimap_button.y + 3);
     } else {
-        text_id = 116;
-    }
-    lang_text_draw_centered(44, text_id, scenario_info_x, 190, scenario_info_width, FONT_NORMAL_BLACK);
+        // minimap button: draw minimap
+        widget_scenario_minimap_draw(
+            toggle_minimap_button.x + 3, toggle_minimap_button.y + 3,
+            toggle_minimap_button.width - 6, toggle_minimap_button.height - 6
+        );
 
-    lang_text_draw_centered(32, 11 + scenario_property_player_rank(),
-        scenario_info_x, 210, scenario_info_width, FONT_NORMAL_BLACK);
-    if (scenario_is_open_play()) {
-        if (scenario_open_play_id() < 12) {
-            lang_text_draw_multiline(145, scenario_open_play_id(),
-                scenario_info_x + 10, 270, scenario_info_width - 10, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(44, 77 + scenario_property_climate(),
+            scenario_info_x, 150, scenario_info_width, FONT_NORMAL_BLACK);
+
+        // map size
+        int text_id;
+        switch (scenario_map_size()) {
+            case 40: text_id = 121; break;
+            case 60: text_id = 122; break;
+            case 80: text_id = 123; break;
+            case 100: text_id = 124; break;
+            case 120: text_id = 125; break;
+            default: text_id = 126; break;
         }
-    } else {
-        lang_text_draw_centered(44, 127, scenario_info_x, 262, scenario_info_width, FONT_NORMAL_BLACK);
-        int width;
-        if (scenario_criteria_culture_enabled()) {
-            width = text_draw_number(scenario_criteria_culture(), '@', " ",
-                scenario_criteria_x, 290, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 129, scenario_criteria_x + width, 290, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(44, text_id, scenario_info_x, 170, scenario_info_width, FONT_NORMAL_BLACK);
+
+        // military
+        int num_invasions = scenario_invasion_count();
+        if (num_invasions <= 0) {
+            text_id = 112;
+        } else if (num_invasions <= 2) {
+            text_id = 113;
+        } else if (num_invasions <= 4) {
+            text_id = 114;
+        } else if (num_invasions <= 10) {
+            text_id = 115;
+        } else {
+            text_id = 116;
         }
-        if (scenario_criteria_prosperity_enabled()) {
-            width = text_draw_number(scenario_criteria_prosperity(), '@', " ",
-                scenario_criteria_x, 306, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 130, scenario_criteria_x + width, 306, FONT_NORMAL_BLACK);
-        }
-        if (scenario_criteria_peace_enabled()) {
-            width = text_draw_number(scenario_criteria_peace(), '@', " ",
-                scenario_criteria_x, 322, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 131, scenario_criteria_x + width, 322, FONT_NORMAL_BLACK);
-        }
-        if (scenario_criteria_favor_enabled()) {
-            width = text_draw_number(scenario_criteria_favor(), '@', " ",
-                scenario_criteria_x, 338, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 132, scenario_criteria_x + width, 338, FONT_NORMAL_BLACK);
-        }
-        if (scenario_criteria_population_enabled()) {
-            width = text_draw_number(scenario_criteria_population(), '@', " ",
-                scenario_criteria_x, 354, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 133, scenario_criteria_x + width, 354, FONT_NORMAL_BLACK);
-        }
-        if (scenario_criteria_time_limit_enabled()) {
-            width = text_draw_number(scenario_criteria_time_limit_years(), '@', " ",
-                scenario_criteria_x, 370, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 134, scenario_criteria_x + width, 370, FONT_NORMAL_BLACK);
-        }
-        if (scenario_criteria_survival_enabled()) {
-            width = text_draw_number(scenario_criteria_survival_years(), '@', " ",
-                scenario_criteria_x, 386, FONT_NORMAL_BLACK);
-            lang_text_draw(44, 135, scenario_criteria_x + width, 386, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(44, text_id, scenario_info_x, 190, scenario_info_width, FONT_NORMAL_BLACK);
+
+        lang_text_draw_centered(32, 11 + scenario_property_player_rank(),
+            scenario_info_x, 210, scenario_info_width, FONT_NORMAL_BLACK);
+        if (scenario_is_open_play()) {
+            if (scenario_open_play_id() < 12) {
+                lang_text_draw_multiline(145, scenario_open_play_id(),
+                    scenario_info_x + 10, 270, scenario_info_width - 10, FONT_NORMAL_BLACK);
+            }
+        } else {
+            lang_text_draw_centered(44, 127, scenario_info_x, 262, scenario_info_width, FONT_NORMAL_BLACK);
+            int width;
+            if (scenario_criteria_culture_enabled()) {
+                width = text_draw_number(scenario_criteria_culture(), '@', " ",
+                    scenario_criteria_x, 290, FONT_NORMAL_BLACK);
+                lang_text_draw(44, 129, scenario_criteria_x + width, 290, FONT_NORMAL_BLACK);
+            }
+            if (scenario_criteria_prosperity_enabled()) {
+                width = text_draw_number(scenario_criteria_prosperity(), '@', " ",
+                    scenario_criteria_x, 306, FONT_NORMAL_BLACK);
+                lang_text_draw(44, 130, scenario_criteria_x + width, 306, FONT_NORMAL_BLACK);
+            }
+            if (scenario_criteria_peace_enabled()) {
+                width = text_draw_number(scenario_criteria_peace(), '@', " ",
+                    scenario_criteria_x, 322, FONT_NORMAL_BLACK);
+                lang_text_draw(44, 131, scenario_criteria_x + width, 322, FONT_NORMAL_BLACK);
+            }
+            if (scenario_criteria_favor_enabled()) {
+                width = text_draw_number(scenario_criteria_favor(), '@', " ",
+                    scenario_criteria_x, 338, FONT_NORMAL_BLACK);
+                lang_text_draw(44, 132, scenario_criteria_x + width, 338, FONT_NORMAL_BLACK);
+            }
+            if (scenario_criteria_population_enabled()) {
+                width = text_draw_number(scenario_criteria_population(), '@', " ",
+                    scenario_criteria_x, 354, FONT_NORMAL_BLACK);
+                lang_text_draw(44, 133, scenario_criteria_x + width, 354, FONT_NORMAL_BLACK);
+            }
+            if (scenario_criteria_time_limit_enabled()) {
+                width = text_draw_number(scenario_criteria_time_limit_years(), '@', " ",
+                    scenario_criteria_x, 370, FONT_NORMAL_BLACK);
+                lang_text_draw(44, 134, scenario_criteria_x + width, 370, FONT_NORMAL_BLACK);
+            }
+            if (scenario_criteria_survival_enabled()) {
+                width = text_draw_number(scenario_criteria_survival_years(), '@', " ",
+                    scenario_criteria_x, 386, FONT_NORMAL_BLACK);
+                lang_text_draw(44, 135, scenario_criteria_x + width, 386, FONT_NORMAL_BLACK);
+            }
         }
     }
     lang_text_draw_centered(44, 136, scenario_info_x, 446, scenario_info_width, FONT_NORMAL_BLACK);
@@ -197,6 +220,10 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
     image_buttons_draw(0, 0, &start_button, 1);
+    button_border_draw(
+        toggle_minimap_button.x, toggle_minimap_button.y,
+        toggle_minimap_button.width, toggle_minimap_button.height,
+        data.focus_toggle_button);
     scrollbar_draw(&scrollbar);
     draw_scenario_list();
     graphics_reset_dialog();
@@ -209,6 +236,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0)) {
+        return;
+    }
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, &toggle_minimap_button, 1, &data.focus_toggle_button)) {
         return;
     }
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, MAX_SCENARIOS, &data.focus_button_id)) {
@@ -242,6 +272,12 @@ static void button_start_scenario(int param1, int param2)
         sound_music_update(1);
         window_city_show();
     }
+}
+
+static void button_toggle_minimap(int param1, int param2)
+{
+    data.show_minimap = !data.show_minimap;
+    window_invalidate();
 }
 
 static void on_scroll(void)
