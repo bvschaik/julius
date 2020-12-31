@@ -31,6 +31,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_TITLE, "Julius 설정 옵션"},
     {TR_CONFIG_LANGUAGE_LABEL, "언어:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(기본)"},
+    {TR_CONFIG_DISPLAY_SCALE, "화면 배율:"},
+    {TR_CONFIG_CURSOR_SCALE, "커서 배율:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "사용자 인터페이스 변경"},
     {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "게임플레이 변경"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "시작 영상 재생"},
