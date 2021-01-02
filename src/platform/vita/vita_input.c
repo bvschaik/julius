@@ -44,7 +44,9 @@ static struct {
     char utf8_text[MAX_VKBD_TEXT_SIZE];
     int requested;
     int max_length;
-} vkbd;
+} vkbd = {
+    max_length: MAX_VKBD_TEXT_SIZE
+};
 
 static int hires_dx = 0; // sub-pixel-precision counters to allow slow pointer motion of <1 pixel per frame
 static int hires_dy = 0;
