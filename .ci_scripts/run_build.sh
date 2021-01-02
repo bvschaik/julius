@@ -32,7 +32,7 @@ case "$BUILD_TARGET" in
 	if [ ! -f julius.keystore ]
 	then
 		COMMAND=assembleDebug
-	elif [ "$GITHUB_REF" == "refs/heads/master" ]
+	elif [ "$GITHUB_REF" == "refs/heads/master" ] || [[ "$GITHUB_REF" =~ ^refs/tags/v ]]
 	then
 		# Use last commit message for release notes
 		mkdir -p julius/src/main/play/release-notes/en-US
