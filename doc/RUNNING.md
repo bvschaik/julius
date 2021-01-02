@@ -200,7 +200,7 @@ A mouse compatibility list is available
 
 Like on other platforms, you must first make sure you obtain the original Caesar III files to your
 Android device. You may do so by installing Caesar III on your computer then copying the files to
-Android, or, if you have purchased Caesar III from GOG, you can use [Inno Setup Extractor](https://play.google.com/store/apps/details?id=uk.co.armedpineapple.innoextract&hl=pt_PT&gl=US).
+Android, or, if you have purchased Caesar III from GOG, you can use [Inno Setup Extractor](https://play.google.com/store/apps/details?id=uk.co.armedpineapple.innoextract).
 
 If you do use Inno Setup Extractor, the game files will be in the `app` folder inside your desired
 extraction folder. You can freely delete the `tmp` folder.
