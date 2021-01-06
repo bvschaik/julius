@@ -664,6 +664,7 @@ if(APPLE)
         MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist.in")
 
     set(DIRS "")
+    set(LIBS "")
 
     # if SDL2 library is a framework, we need to indicate to CMake
     # the path to its dependencies. SDL2_LIBRARY contains two parts.
@@ -678,13 +679,17 @@ if(APPLE)
     # the path to its dependencies (Ogg.framework etc):
     if(EXISTS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
         list(APPEND DIRS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
+        # Copy mpg123 framework manually because since MacOS 10.15, the
+        # dependency is seen as "weak" and not copied automatically
+        file(COPY "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks/mpg123.framework" DESTINATION "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks")
+        list(APPEND LIBS "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/mpg123.framework/mpg123")
     endif()
 
-    # when installing, "fixup" automatically copies librairies inside the
+    # when installing, "fixup" automatically copies libraries inside the
     # bundle and links the binary against them
     install(CODE "
         include(BundleUtilities)
-        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"\" \"${DIRS}\")
+        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
