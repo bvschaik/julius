@@ -1,16 +1,19 @@
 #include "switch_input.h"
 #include "switch.h"
-#include <math.h>
-#include <switch.h>
 
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/encoding.h"
+#include "core/string.h"
 #include "game/system.h"
 #include "graphics/screen.h"
+#include "input/keyboard.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 #include "platform/screen.h"
+
+#include <math.h>
+#include <switch.h>
 
 #define NO_MAPPING -1
 #define MAX_VKBD_TEXT_SIZE 600
@@ -55,12 +58,10 @@ static AppletOperationMode display_mode = -1;
 #define CURSOR_SCALE 200
 
 static struct {
+    uint8_t text[MAX_VKBD_TEXT_SIZE];
     char utf8_text[MAX_VKBD_TEXT_SIZE];
     int requested;
-    int max_length;
-} vkbd = {
-    .max_length = MAX_VKBD_TEXT_SIZE
-};
+} vkbd;
 
 static int hires_dx = 0; // sub-pixel-precision counters to allow slow pointer motion of <1 pixel per frame
 static int hires_dy = 0;
@@ -109,7 +110,6 @@ static uint8_t map_switch_button_to_sdlmousebutton[SWITCH_NUM_BUTTONS] =
     NO_MAPPING          // SWITCH_PAD_DOWN
 };
 
-static void switch_start_text_input(void);
 static void switch_rescale_analog(int *x, int *y, int dead);
 static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t event_type);
 static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32_t event_type);
@@ -140,6 +140,39 @@ static void change_display_size(void)
     }
 }
 
+static const uint8_t *switch_keyboard_get(const uint8_t *text, int max_length)
+{
+    max_length = calc_bound(max_length, 0, MAX_VKBD_TEXT_SIZE);
+    string_copy(text, vkbd.text, max_length);
+    encoding_to_utf8(text, vkbd.utf8_text, max_length, 0);
+    Result rc = 0;
+
+    SwkbdConfig kbd;
+
+    rc = swkbdCreate(&kbd, 0);
+
+    if (R_SUCCEEDED(rc)) {
+        swkbdConfigMakePresetDefault(&kbd);
+        swkbdConfigSetInitialText(&kbd, vkbd.utf8_text);
+        rc = swkbdShow(&kbd, vkbd.utf8_text, max_length);
+        swkbdClose(&kbd);
+        if (R_SUCCEEDED(rc)) {
+            encoding_from_utf8(vkbd.utf8_text, vkbd.text, max_length);
+        }
+    }
+
+    return vkbd.text;
+}
+
+static void switch_start_text_input(void)
+{
+    if (!keyboard_is_capturing()) {
+        return;
+    }
+    const uint8_t *text = switch_keyboard_get(keyboard_get_text(), keyboard_get_max_text_length());
+    keyboard_set_text(text);
+}
+
 void platform_init_callback(void)
 {
     config_set(CONFIG_SCREEN_CURSOR_SCALE, CURSOR_SCALE);
@@ -156,10 +189,8 @@ void platform_per_frame_callback(void)
     switch_handle_analog_sticks();
 }
 
-void platform_show_virtual_keyboard(const uint8_t *text, int max_length)
+void platform_show_virtual_keyboard(void)
 {
-    vkbd.max_length = calc_bound(max_length, 0, MAX_VKBD_TEXT_SIZE);
-    encoding_to_utf8(text, vkbd.utf8_text, MAX_VKBD_TEXT_SIZE, 0);
     vkbd.requested = 1;
 }
 
@@ -362,49 +393,6 @@ void switch_handle_analog_sticks(void)
             right_analog_state[direction] = direction_states[direction];
             switch_create_key_event_for_direction(direction, direction_states[direction]);
         }
-    }
-}
-
-static int switch_keyboard_get(char *title, char *buffer, int max_len)
-{
-    Result rc = 0;
-
-    SwkbdConfig kbd;
-
-    rc = swkbdCreate(&kbd, 0);
-
-    if (R_SUCCEEDED(rc)) {
-        swkbdConfigMakePresetDefault(&kbd);
-        swkbdConfigSetInitialText(&kbd, buffer);
-        rc = swkbdShow(&kbd, buffer, max_len);
-        swkbdClose(&kbd);
-    }
-    return R_SUCCEEDED(rc);
-}
-
-static void switch_start_text_input(void)
-{
-    if (!switch_keyboard_get("Enter New Text:", vkbd.utf8_text, vkbd.max_length)) {
-        return;
-    }
-    for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
-        switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
-    }
-    for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DELETE, SDLK_DELETE);
-        switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
-    }
-    for (int i = 0; i < MAX_VKBD_TEXT_SIZE - 1 && vkbd.utf8_text[i];) {
-        int bytes_in_char = encoding_get_utf8_character_bytes(vkbd.utf8_text[i]);
-        SDL_Event textinput_event;
-        textinput_event.type = SDL_TEXTINPUT;
-        for (int n = 0; n < bytes_in_char; n++) {
-            textinput_event.text.text[n] = vkbd.utf8_text[i + n];
-        }
-        textinput_event.text.text[bytes_in_char] = 0;
-        SDL_PushEvent(&textinput_event);
-        i += bytes_in_char;
     }
 }
 

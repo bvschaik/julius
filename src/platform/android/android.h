@@ -14,7 +14,7 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
 int android_remove_file(const char *filename);
 
 #define PLATFORM_USE_VIRTUAL_KEYBOARD
-void platform_show_virtual_keyboard(const uint8_t *text, int max_length);
+void platform_show_virtual_keyboard(void);
 void platform_hide_virtual_keyboard(void);
 
 #endif // __ANDROID__
