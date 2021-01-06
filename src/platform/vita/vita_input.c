@@ -3,14 +3,10 @@
 #include "vita.h"
 #include <math.h>
 
-#include "core/calc.h"
-#include "core/encoding.h"
-#include "core/string.h"
-#include "game/system.h"
+#include "input/keyboard.h"
 #include "input/mouse.h"
 
 #define NO_MAPPING -1
-#define MAX_VKBD_TEXT_SIZE 600
 
 enum {
     VITA_PAD_TRIANGLE   = 0,
@@ -40,13 +36,7 @@ static int can_change_touch_mode = 1;
 
 static SDL_Joystick *joy = NULL;
 
-static struct {
-    char utf8_text[MAX_VKBD_TEXT_SIZE];
-    int requested;
-    int max_length;
-} vkbd = {
-    .max_length = MAX_VKBD_TEXT_SIZE
-};
+static int vkbd_requested;
 
 static int hires_dx = 0; // sub-pixel-precision counters to allow slow pointer motion of <1 pixel per frame
 static int hires_dy = 0;
@@ -85,7 +75,6 @@ static uint8_t map_vita_button_to_sdlmousebutton[VITA_NUM_BUTTONS] =
     NO_MAPPING           // VITA_START
 };
 
-static void vita_start_text_input(void);
 static void vita_rescale_analog(int *x, int *y, int dead);
 static void vita_button_to_sdlkey_event(int vita_button, SDL_Event *event, uint32_t event_type);
 static void vita_button_to_sdlmouse_event(int vita_button, SDL_Event *event, uint32_t event_type);
@@ -93,20 +82,27 @@ static void vita_button_to_sdlmouse_event(int vita_button, SDL_Event *event, uin
 static void vita_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 static void vita_create_key_event_for_direction(int direction, int key_pressed);
 
+static void vita_start_text_input(void)
+{
+    if (!keyboard_is_capturing()) {
+        return;
+    }
+    const uint8_t *text = vita_keyboard_get(keyboard_get_text(), keyboard_get_max_text_length());
+    keyboard_set_text(text);
+}
+
 void platform_per_frame_callback(void)
 {
-    if (vkbd.requested) {
+    if (vkbd_requested) {
         vita_start_text_input();
-        vkbd.requested = 0;
+        vkbd_requested = 0;
     }
     vita_handle_analog_sticks();
 }
 
-void platform_show_virtual_keyboard(const uint8_t *text, int max_length)
+void platform_show_virtual_keyboard(void)
 {
-    vkbd.max_length = calc_bound(max_length, 0, MAX_VKBD_TEXT_SIZE);
-    encoding_to_utf8(text, vkbd.utf8_text, MAX_VKBD_TEXT_SIZE, 0);
-    vkbd.requested = 1;
+    vkbd_requested = 1;
 }
 
 void platform_hide_virtual_keyboard(void)
@@ -137,7 +133,7 @@ int vita_poll_event(SDL_Event *event)
                         vita_button_to_sdlmouse_event(event->jbutton.button, event, SDL_MOUSEBUTTONDOWN);
                         break;
                     case VITA_PAD_START:
-                        vkbd.requested = 1;
+                        vkbd_requested = 1;
                         break;
                     case VITA_PAD_SELECT:
                         if (can_change_touch_mode) {
@@ -280,33 +276,6 @@ void vita_handle_analog_sticks(void)
             right_analog_state[direction] = direction_states[direction];
             vita_create_key_event_for_direction(direction, direction_states[direction]);
         }
-    }
-}
-
-static void vita_start_text_input(void)
-{
-    char *text = vita_keyboard_get("Enter New Text:", vkbd.utf8_text, vkbd.max_length);
-    if (text == NULL)  {
-        return;
-    }
-    for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
-        vita_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
-    }
-    for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
-        vita_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DELETE, SDLK_DELETE);
-        vita_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
-    }
-    for (int i = 0; i < MAX_VKBD_TEXT_SIZE - 1 && text[i];) {
-        int bytes_in_char = encoding_get_utf8_character_bytes(text[i]);
-        SDL_Event textinput_event;
-        textinput_event.type = SDL_TEXTINPUT;
-        for (int n = 0; n < bytes_in_char; n++) {
-            textinput_event.text.text[n] = text[i + n];
-        }
-        textinput_event.text.text[bytes_in_char] = 0;
-        SDL_PushEvent(&textinput_event);
-        i += bytes_in_char;
     }
 }
 

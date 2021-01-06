@@ -234,7 +234,7 @@ JNIEXPORT void JNICALL Java_com_github_bvschaik_julius_JuliusMainActivity_gotDir
     has_directory = 1;
 }
 
-void platform_show_virtual_keyboard(const uint8_t *text, int max_length)
+void platform_show_virtual_keyboard(void)
 {
     if (!SDL_IsTextInputActive()) {
         SDL_StartTextInput();

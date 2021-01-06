@@ -95,10 +95,8 @@ void system_keyboard_set_input_rect(int x, int y, int width, int height);
 
 /**
  * Show the virtual keyboard
- * @param text The text to display on the virtual keyboard
- * @param max_length The maximum length of the text
  */
-void system_keyboard_show(const uint8_t *text, int max_length);
+void system_keyboard_show(void);
 
 /**
  * Hide the virtual keyboard

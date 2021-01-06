@@ -172,6 +172,11 @@ int keyboard_is_insert(void)
     return data.insert;
 }
 
+int keyboard_is_capturing(void)
+{
+    return data.capture;
+}
+
 int keyboard_cursor_position(void)
 {
     return data.cursor_position - data.viewport_start;
@@ -369,4 +374,23 @@ void keyboard_text(const char *text_utf8)
     while (internal_char[index]) {
         index += keyboard_character(&internal_char[index]);
     }
+}
+
+const uint8_t *keyboard_get_text(void)
+{
+    return data.text;
+}
+
+void keyboard_set_text(const uint8_t *text)
+{
+    if(!data.capture) {
+        return;
+    }
+    string_copy(text, data.text, data.max_length);
+    keyboard_refresh();
+}
+
+int keyboard_get_max_text_length(void)
+{
+    return data.max_length;
 }
