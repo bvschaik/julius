@@ -690,6 +690,11 @@ if(APPLE)
     install(CODE "
         include(BundleUtilities)
         fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
+        # Manually fix up link to mpg123 in SDL2_mixer
+        execute_process(COMMAND ${CMAKE_INSTALL_NAME_TOOL}
+            \"-change\" \"@rpath/mpg123.framework/Versions/A/mpg123\"
+            \"@executable_path/../Frameworks/mpg123.framework/mpg123\"
+            \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/SDL2_mixer.framework/Versions/A/SDL2_mixer\")
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
