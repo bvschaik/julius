@@ -19,7 +19,7 @@ static struct {
     SDL_Renderer *renderer;
 #ifdef __vita__
     // For Vita, we directly use a texture for two reasons:
-    // 1. Using an SDL texture is very slow because SDL_UpdateTexture uses a very expenssive memcpy() on Vita,
+    // 1. Using an SDL texture is very slow because SDL_UpdateTexture uses a very expensive memcpy() on Vita,
     //    making the game only run at about 10fps
     // 2. The default texture format created using SDL_CreateTexture on Vita is incompatible with color_t
     vita2d_texture *texture;

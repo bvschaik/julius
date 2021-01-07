@@ -7,6 +7,7 @@
 #include "core/config.h"
 #include "core/encoding.h"
 #include "game/system.h"
+#include "graphics/screen.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 #include "platform/screen.h"
@@ -116,6 +117,14 @@ static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event,
 static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 static void switch_create_key_event_for_direction(int direction, int key_pressed);
 
+static void center_mouse_cursor(void)
+{
+    int x = screen_width() / 2;
+    int y = screen_height() / 2;
+    system_set_mouse_position(&x, &y);
+    mouse_set_position(x, y);
+}
+
 static void change_display_size(void)
 {
     AppletOperationMode mode = appletGetOperationMode();
@@ -127,6 +136,7 @@ static void change_display_size(void)
         } else {
             system_scale_display(DOCKED_SCREEN_SCALE);
         }
+        center_mouse_cursor();
     }
 }
 
@@ -281,16 +291,16 @@ void switch_handle_analog_sticks(void)
                 x = 0;
                 xrel = 0 - last_mouse_x;
             }
-            if (x >= SWITCH_DISPLAY_WIDTH) {
-                x = SWITCH_DISPLAY_WIDTH - 1;
+            if (x >= screen_width()) {
+                x = screen_width() - 1;
                 xrel = x - last_mouse_x;
             }
             if (y < 0) {
                 y = 0;
                 yrel = 0 - last_mouse_y;
             }
-            if (y >= SWITCH_DISPLAY_HEIGHT) {
-                y = SWITCH_DISPLAY_HEIGHT - 1;
+            if (y >= screen_height()) {
+                y = screen_height() - 1;
                 yrel = y - last_mouse_y;
             }
             SDL_Event event;

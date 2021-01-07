@@ -497,10 +497,6 @@ static void setup(const julius_args *args)
         exit(1);
     }
 
-#ifdef PLATFORM_ENABLE_INIT_CALLBACK
-    platform_init_callback();
-#endif
-
     if (args->force_windowed && setting_fullscreen()) {
         int w, h;
         setting_window(&w, &h);
@@ -525,9 +521,9 @@ static void setup(const julius_args *args)
     // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
     system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
 
-    if (system_is_fullscreen_only()) {
-        system_move_mouse_cursor(screen_width() / 2, screen_height() / 2);
-    }
+#ifdef PLATFORM_ENABLE_INIT_CALLBACK
+    platform_init_callback();
+#endif
 
     time_set_millis(SDL_GetTicks());
 
