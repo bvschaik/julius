@@ -17,15 +17,7 @@
 static struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
-#ifdef __vita__
-    // For Vita, we directly use a texture for two reasons:
-    // 1. Using an SDL texture is very slow because SDL_UpdateTexture uses a very expensive memcpy() on Vita,
-    //    making the game only run at about 10fps
-    // 2. The default texture format created using SDL_CreateTexture on Vita is incompatible with color_t
-    vita2d_texture *texture;
-#else
     SDL_Texture *texture;
-#endif
     SDL_Texture *cursors[CURSOR_MAX];
 } SDL;
 
@@ -165,12 +157,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
 
 static void destroy_screen_texture(void)
 {
-#ifdef __vita__
-    vita2d_wait_rendering_done();
-    vita2d_free_texture(SDL.texture);
-#else
     SDL_DestroyTexture(SDL.texture);
-#endif
     SDL.texture = 0;
 }
 
@@ -208,14 +195,9 @@ int platform_screen_resize(int pixel_width, int pixel_height)
     SDL_RenderSetLogicalSize(SDL.renderer, logical_width, logical_height);
 
     setting_set_display(setting_fullscreen(), logical_width, logical_height);
-#ifdef __vita__
-    SDL.texture = vita2d_create_empty_texture_format(
-        logical_width, logical_height, SCE_GXM_TEXTURE_FORMAT_X8U8U8U8_1RGB);
-#else
     SDL.texture = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         logical_width, logical_height);
-#endif
 
     if (SDL.texture) {
         SDL_Log("Texture created: %d x %d", logical_width, logical_height);
@@ -371,12 +353,8 @@ void platform_screen_recreate_texture(void)
 void platform_screen_render(void)
 {
     SDL_RenderClear(SDL.renderer);
-#ifdef __vita__
-    vita2d_draw_texture(SDL.texture, 0, 0);
-#else
     SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
     SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
-#endif
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR
     draw_software_mouse_cursor();
 #endif
@@ -419,11 +397,7 @@ int system_is_fullscreen_only(void)
 
 color_t *system_create_framebuffer(int width, int height)
 {
-#ifdef __vita__
-    framebuffer = vita2d_texture_get_datap(SDL.texture);
-#else
     free(framebuffer);
     framebuffer = (color_t *)malloc((size_t)width * height * sizeof(color_t));
-#endif
     return framebuffer;
 }
