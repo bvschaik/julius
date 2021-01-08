@@ -196,7 +196,7 @@ int platform_screen_resize(int pixel_width, int pixel_height)
 
     setting_set_display(setting_fullscreen(), logical_width, logical_height);
     SDL.texture = SDL_CreateTexture(SDL.renderer,
-        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
+        SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING,
         logical_width, logical_height);
 
     if (SDL.texture) {
@@ -350,15 +350,22 @@ void platform_screen_recreate_texture(void)
 }
 #endif
 
-void platform_screen_render(void)
+void platform_screen_render(int update_screen)
+{
+    if (update_screen) {
+        SDL_RenderClear(SDL.renderer);
+        SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
+        SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
+#ifdef PLATFORM_USE_SOFTWARE_CURSOR
+        draw_software_mouse_cursor();
+#endif
+    }
+    SDL_RenderPresent(SDL.renderer);
+}
+
+void platform_screen_clear(void)
 {
     SDL_RenderClear(SDL.renderer);
-    SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
-    SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
-#ifdef PLATFORM_USE_SOFTWARE_CURSOR
-    draw_software_mouse_cursor();
-#endif
-    SDL_RenderPresent(SDL.renderer);
 }
 
 void platform_screen_generate_mouse_cursor_texture(int cursor_id, int scale, const color_t *cursor_colors)

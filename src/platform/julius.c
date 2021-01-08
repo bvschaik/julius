@@ -181,7 +181,7 @@ static void run_and_draw(void)
             'd', "", 70, y_offset_text, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
     }
 
-    platform_screen_render();
+    platform_screen_render(1);
 }
 #else
 static void run_and_draw(void)
@@ -191,7 +191,7 @@ static void run_and_draw(void)
     game_run();
     game_draw();
 
-    platform_screen_render();
+    platform_screen_render(1);
 }
 #endif
 

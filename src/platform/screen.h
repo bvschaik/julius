@@ -18,7 +18,8 @@ void platform_screen_center_window(void);
 void platform_screen_recreate_texture(void);
 #endif
 
-void platform_screen_render(void);
+void platform_screen_render(int update_screen);
+void platform_screen_clear(void);
 
 void platform_screen_generate_mouse_cursor_texture(int cursor_id, int scale, const color_t *cursor_colors);
 
