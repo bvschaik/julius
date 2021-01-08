@@ -1,3 +1,4 @@
+#include <widget/city_building_ghost.h>
 #include "city.h"
 
 #include "building/clone.h"
@@ -239,6 +240,9 @@ static void handle_hotkeys(const hotkeys *h)
     }
     if (h->clone_building) {
         building_clone_from_grid_offset(widget_city_current_grid_offset());
+    }
+    if(h->show_mergers) {
+        city_building_ghost_toggle_mergers_display();
     }
 }
 

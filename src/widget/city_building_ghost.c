@@ -1,3 +1,5 @@
+#include <graphics/graphics.h>
+#include <map/random.h>
 #include "city_building_ghost.h"
 
 #include "building/construction.h"
@@ -785,6 +787,38 @@ int city_building_ghost_mark_deleting(const map_tile *tile)
     }
     map_building_tiles_mark_deleting(tile->grid_offset);
     return 1;
+}
+
+static void draw_merge_locations(int x, int y, int grid_offset)
+{
+    int blocked_tiles = 0;
+    if(grid_offset <= 0
+        ||(map_random_get(grid_offset) & 7) >= 5
+        || is_blocked_for_building(grid_offset, 1, &blocked_tiles)){
+        return;
+    }
+
+    int centerX = x + 58 / 2;
+    int centerY = y + 30 / 2;
+
+    graphics_fill_rect(centerX - 2, centerY - 3, 4, 6, 0x901010);
+    graphics_fill_rect(centerX - 3, centerY - 2, 6, 4, 0x901010);
+    graphics_fill_rect(centerX - 1, centerY - 2, 2, 4, 0x10ff10);
+    graphics_fill_rect(centerX - 2, centerY - 1, 4, 2, 0x10ff10);
+}
+
+static int show_mergers = 0;
+
+void city_building_ghost_draw_house_merge_locations()
+{
+    if(show_mergers) {
+        city_view_foreach_map_tile(draw_merge_locations);
+    }
+}
+
+void city_building_ghost_toggle_mergers_display()
+{
+    show_mergers = !show_mergers;
 }
 
 void city_building_ghost_draw(const map_tile *tile)

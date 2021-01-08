@@ -104,7 +104,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Set bookmark 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Set bookmark 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Toggle battle info"},
-    {TR_HOTKEY_EDIT_TITLE, "Press new hotkey"}
+    {TR_HOTKEY_EDIT_TITLE, "Press new hotkey"},
+    {TR_HOTKEY_TOGGLE_SHOW_MERGERS, "Show house merge points"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

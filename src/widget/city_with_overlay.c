@@ -553,6 +553,7 @@ void city_with_overlay_draw(const map_tile *tile)
             draw_animation
         );
         city_building_ghost_draw(tile);
+        city_building_ghost_draw_house_merge_locations();
         city_view_foreach_map_tile(draw_elevated_figures);
     } else {
         city_view_foreach_map_tile(draw_figures);

@@ -277,6 +277,9 @@ static void add_definition(const hotkey_mapping *mapping)
         case HOTKEY_BUILD_CLONE:
             def->action = &data.hotkey_state.clone_building;
             break;
+        case HOTKEY_TOGGLE_SHOW_MERGERS:
+            def->action = &data.hotkey_state.show_mergers;
+            break;
         default:
             def->action = 0;
     }

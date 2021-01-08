@@ -529,6 +529,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         if (!selected_figure_id) {
             city_building_ghost_draw(tile);
         }
+        city_building_ghost_draw_house_merge_locations();
         city_view_foreach_valid_map_tile(
             draw_elevated_figures,
             draw_hippodrome_ornaments,
@@ -538,5 +539,6 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_map_tile(deletion_draw_terrain_top);
         city_view_foreach_map_tile(deletion_draw_figures_animations);
         city_view_foreach_map_tile(deletion_draw_remaining);
+        city_building_ghost_draw_house_merge_locations();
     }
 }
