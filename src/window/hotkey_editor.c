@@ -92,10 +92,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void button_close(int ok, int param2)
 {
+    // destroy window before callback call, because there may appear another popup window
+    // by design new popup window can't be showed over another popup window
+    window_go_back();
     if (ok) {
         data.callback(data.action, data.index, data.key, data.modifiers);
     }
-    window_go_back();
 }
 
 void window_hotkey_editor_key_pressed(key_type key, key_modifier_type modifiers)

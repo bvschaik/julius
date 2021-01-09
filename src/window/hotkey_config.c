@@ -3,6 +3,7 @@
 #include "building/type.h"
 #include "core/hotkey_config.h"
 #include "core/image_group.h"
+#include "core/lang.h"
 #include "core/string.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -15,6 +16,7 @@
 #include "translation/translation.h"
 #include "window/config.h"
 #include "window/hotkey_editor.h"
+#include "window/plain_message_dialog.h"
 
 #define HOTKEY_HEADER -1
 #define TR_NONE -1
@@ -283,10 +285,52 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
+static const uint8_t *hotkey_action_name_for(hotkey_action action)
+{
+    const uint8_t *name = 0;
+    for (int i = 0; i < NUM_VISIBLE_OPTIONS + scrollbar.max_scroll_position; i++) {
+        hotkey_widget *widget = &hotkey_widgets[i];
+        if (widget->action == action) {
+            if (widget->name_translation != TR_NONE) {
+                name = translation_for(widget->name_translation);
+            } else {
+                name = lang_get_string(widget->name_text_group, widget->name_text_id);
+            }
+            break;
+        }
+    }
+    return name;
+}
+
 static void set_hotkey(hotkey_action action, int index, key_type key, key_modifier_type modifiers)
 {
-    data.mappings[action][index].key = key;
-    data.mappings[action][index].modifiers = modifiers;
+    int is_duplicate_hotkey = 0;
+    // check if new key combination already assigned to another action
+    if (key != KEY_TYPE_NONE) {
+        for (int test_action = 0; test_action < HOTKEY_MAX_ITEMS; test_action++) {
+            for (int test_index = 0; test_index < 2; test_index++) {
+                if (data.mappings[test_action][test_index].key == key
+                    && data.mappings[test_action][test_index].modifiers == modifiers) {
+                    is_duplicate_hotkey = 1;
+                    // example explanation next "if" check:
+                    // "Fire overlay" already has hotkey "F" and user tries set same hotkey "F" again to "Fire overlay"
+                    // we must skip show warning window for better user experience
+                    if (!(test_action == action && test_index == index)) {
+                        window_plain_message_dialog_show_with_extra(TR_HOTKEY_DUPLICATE_TITLE, TR_HOTKEY_DUPLICATE_MESSAGE,
+                            hotkey_action_name_for(test_action));
+                    }
+                    break;
+                }
+            }
+            if (is_duplicate_hotkey) {
+                break;
+            }
+        }
+    }
+    if (!is_duplicate_hotkey) {
+        data.mappings[action][index].key = key;
+        data.mappings[action][index].modifiers = modifiers;
+    }
 }
 
 static void button_hotkey(int row, int is_alternative)
