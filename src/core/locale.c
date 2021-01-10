@@ -100,6 +100,13 @@ int locale_year_before_ad(void)
     return data.last_determined_language != LANGUAGE_ENGLISH;
 }
 
+int locale_translate_money_dn(void)
+{
+    // In Korean, 'Dn' translate to 'Funds', which makes no sense for
+    // constructions costs and other places where Dn is used for money.
+    return data.last_determined_language != LANGUAGE_KOREAN;
+}
+
 int locale_translate_rank_autosaves(void)
 {
     switch (data.last_determined_language) {
