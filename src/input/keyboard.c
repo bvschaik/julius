@@ -383,7 +383,7 @@ const uint8_t *keyboard_get_text(void)
 
 void keyboard_set_text(const uint8_t *text)
 {
-    if(!data.capture) {
+    if (!data.capture) {
         return;
     }
     string_copy(text, data.text, data.max_length);
