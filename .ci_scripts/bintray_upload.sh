@@ -60,5 +60,5 @@ then
   exit
 fi
 
-curl -u "$BINTRAY_USER_TOKEN" -T deploy/$DEPLOY_FILE https://api.bintray.com/content/bvschaik/$REPO/$PACKAGE/$VERSION/$DEPLOY_FILE?publish=1
+curl -u "$BINTRAY_USER_TOKEN" -T deploy/$DEPLOY_FILE https://api.bintray.com/content/keriew/$REPO/$PACKAGE/$VERSION/$DEPLOY_FILE?publish=1
 echo "\nUploaded to bintray. URL: https://bintray.com/keriew/$REPO/$PACKAGE/$VERSION#files" 
