@@ -1,0 +1,70 @@
+name: Build Augustus
+on: [push, pull_request]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Linux AppImage
+            os: ubuntu-16.04
+            BUILD_TARGET: appimage
+            DEPLOY: appimage
+          - name: Linux x64
+            os: ubuntu-18.04
+            cache-key: linux-x64
+            SDL_VERSION: 2.0.14
+            SDL_MIXER_VERSION: 2.0.4
+            BUILD_TARGET: linux
+            DEPLOY: linux
+          - name: Linux x64 (old SDL versions)
+            os: ubuntu-16.04
+            cache-key: linux-x64
+            SDL_VERSION: 2.0.0
+            SDL_MIXER_VERSION: 2.0.0
+            BUILD_TARGET: linux
+            DEPLOY: linux
+            SKIP_BINTRAY: true
+          - name: macOS
+            os: macos-latest
+            cache-key: macos
+            SDL_VERSION: 2.0.14
+            SDL_MIXER_VERSION: 2.0.4
+            BUILD_TARGET: mac
+            DEPLOY: mac
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    env:
+      SDL_VERSION: ${{ matrix.SDL_VERSION }}
+      SDL_MIXER_VERSION: ${{ matrix.SDL_MIXER_VERSION }}
+      BUILD_TARGET: ${{ matrix.BUILD_TARGET }}
+      DEPLOY: ${{ matrix.DEPLOY }}
+      SKIP_BINTRAY: ${{ matrix.SKIP_BINTRAY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        if: ${{ matrix.cache-key }}
+        with:
+          path: deps
+          key: ${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
+      - name: Set up environment
+        run: |
+          ./.ci_scripts/setup_environment.sh
+          ./.ci_scripts/install_sdl.sh
+      - name: Build and test
+        run: |
+          ./.ci_scripts/run_cmake.sh
+          ./.ci_scripts/run_build.sh
+      - name: Upload to Bintray
+        env:
+          BINTRAY_USER_TOKEN: ${{ secrets.BINTRAY_USER_TOKEN }}
+        run: |
+          ./.ci_scripts/bintray_upload.sh
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.name }}
+          path: deploy/
