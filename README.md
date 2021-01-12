@@ -1,6 +1,6 @@
 # Augustus ![](res/julius_48.png)
 
-[![Travis](https://travis-ci.com/Keriew/augustus.svg?branch=master)](https://travis-ci.com/Keriew/augustus)
+[![Github Actions](https://github.com/Keriew/augustus/workflows/Build%20Augustus/badge.svg)](https://github.com/Keriew/Augustus/actions)
 
 Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh)
 
