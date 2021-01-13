@@ -154,7 +154,8 @@ static key_state get_key_state_for_value(int value)
 static void set_arrow_key(key *arrow, int value)
 {
     key_state state = get_key_state_for_value(value);
-    if (state != KEY_STATE_AXIS && state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_UNPRESSED) {
+    if (state != KEY_STATE_AXIS && state != KEY_STATE_UNPRESSED &&
+        arrow->state != KEY_STATE_AXIS && arrow->state != KEY_STATE_UNPRESSED) {
         return;
     }
     // Key should retain axis state even if its value is zero
