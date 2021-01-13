@@ -8,8 +8,7 @@ case "$BUILD_TARGET" in
 	docker run -d --name vitasdk --workdir /build/git -v "${PWD}:/build/git" gnuton/vitasdk-docker:20190626 tail -f /dev/null
 	;;
 "switch")
-	docker run -d --name switchdev --workdir /build/git -v "${PWD}:/build/git" devkitpro/devkita64:20200528 tail -f /dev/null
-	docker exec switchdev /bin/bash -c "apt-get update && apt-get install -y --no-install-recommends cmake"
+	docker run -d --name switchdev --workdir /build/git -v "${PWD}:/build/git" devkitpro/devkita64:20200730 tail -f /dev/null
 	;;
 "android")
 	# Decrypt the key files

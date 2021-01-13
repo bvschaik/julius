@@ -797,26 +797,16 @@ elseif(SWITCH_BUILD)
     )
 
     set(FLAGS
-        -D__SWITCH__
-        -Wno-write-strings
-        -march=armv8-a
-        -mtune=cortex-a57
-        -mtp=soft
-        -O2
         -fPIE
-        -fno-asynchronous-unwind-tables
-        -funroll-loops
-        -fno-unwind-tables
-        -fno-optimize-sibling-calls
-        -mlittle-endian
-        -ffunction-sections
+        -L${DEVKITPRO}/portlibs/switch/lib
+        -L${DEVKITPRO}/libnx/lib
     )
 
     foreach(flag ${FLAGS})
         set(FLAGS_GENERAL "${FLAGS_GENERAL} ${flag}")
     endforeach(flag ${FLAGS})
 
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FLAGS_GENERAL} --verbose")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FLAGS_GENERAL}")
 
     target_compile_options(${SHORT_NAME} PRIVATE ${FLAGS})
     add_custom_command(TARGET ${SHORT_NAME}

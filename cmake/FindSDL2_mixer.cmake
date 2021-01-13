@@ -74,11 +74,8 @@ ELSE()
         /opt
         ${SDL_MIXER_EXT_DIR}
         ${SDL_MINGW_EXT_DIR}
+        ${CMAKE_FIND_ROOT_PATH}
     )
-
-    if (VITA)
-        SET(SDL2_SEARCH_PATHS $ENV{VITASDK}/arm-vita-eabi)
-    endif()
 
     if(NOT SDL2_MIXER_INCLUDE_DIR AND SDL2MIXER_INCLUDE_DIR)
       set(SDL2_MIXER_INCLUDE_DIR ${SDL2MIXER_INCLUDE_DIR} CACHE PATH "directory cache
