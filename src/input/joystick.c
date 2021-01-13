@@ -5,9 +5,9 @@
 #include "game/system.h"
 #include "graphics/window.h"
 #include "input/hotkey.h"
+#include "input/keyboard.h"
 #include "input/mouse.h"
 #include "input/scroll.h"
-#include "widget/input_box.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -674,9 +674,8 @@ int translate_system_functions(void)
 {
     if (get_joystick_input_for_action(MAPPING_ACTION_SHOW_VIRTUAL_KEYBOARD, &data.virtual_keyboard)) {
         if (data.virtual_keyboard.state == INPUT_STATE_WENT_DOWN) {
-            input_box *box = input_box_get_active();
-            if (box) {
-                system_keyboard_show(box->text, box->max_length);
+            if (keyboard_is_capturing()) {
+                system_keyboard_show();
             }
         }
         return 1;

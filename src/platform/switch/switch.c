@@ -3,10 +3,10 @@
 #include "core/encoding.h"
 #include "core/string.h"
 #include "game/system.h"
+#include "graphics/screen.h"
 #include "input/keyboard.h"
 #include "input/mouse.h"
 #include "input/touch.h"
-#include "platform/screen.h"
 #include "platform/switch/switch.h"
 
 #include <switch.h>

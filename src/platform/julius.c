@@ -27,15 +27,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __SWITCH__
-#include "platform/switch/switch.h"
-#endif
-
-#ifdef __vita__
-#include "platform/vita/vita.h"
-#endif
-
 #include "platform/android/android.h"
+#include "platform/switch/switch.h"
+#include "platform/vita/vita.h"
 
 #if defined(_WIN32)
 #include <string.h>
