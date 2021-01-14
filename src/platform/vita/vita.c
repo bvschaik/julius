@@ -28,11 +28,7 @@ static void center_mouse_cursor(void)
     mouse_set_position(x, y);
 }
 
-static struct {
-    uint8_t *text;
-    int requested;
-    int max_length;
-} vkbd;
+static int vkbd_requested;
 
 void platform_init_callback(void)
 {
@@ -65,15 +61,15 @@ static void vita_start_text_input(void)
 
 void platform_per_frame_callback(void)
 {
-    if (vkbd.requested) {
+    if (vkbd_requested{
         vita_start_text_input();
-        vkbd.requested = 0;
+        vkbd_requested = 0;
     }
 }
 
 void platform_show_virtual_keyboard(void)
 {
-    vkbd.requested = 1;
+    vkbd_requested = 1;
 }
 
 void platform_hide_virtual_keyboard(void)

@@ -33,6 +33,4 @@ int input_box_is_accepted(input_box *box);
 int input_box_handle_mouse(const mouse *m, const input_box *box);
 void input_box_draw(const input_box *box);
 
-input_box *input_box_get_active(void);
-
 #endif // WIDGET_INPUT_BOX_H
