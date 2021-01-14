@@ -286,6 +286,9 @@ int figure_rioter_collapse_building(figure *f)
             case BUILDING_FORT_GROUND:
             case BUILDING_FORT:
             case BUILDING_BURNING_RUIN:
+            case BUILDING_NATIVE_CROPS:
+            case BUILDING_NATIVE_HUT:
+            case BUILDING_NATIVE_MEETING:
                 continue;
         }
         if (b->house_size && b->subtype.house_level < HOUSE_SMALL_CASA) {
