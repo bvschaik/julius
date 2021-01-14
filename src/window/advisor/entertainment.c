@@ -168,8 +168,8 @@ static int draw_background(void)
         lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }
     else if (pct < 100) {
-        lang_text_draw_centered(57, 11 + pct_tavern / 10, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
-        lang_text_draw_centered(57, 17, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
+        lang_text_draw_centered(57, 11 + pct / 10, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
+        //lang_text_draw_centered(57, 17, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }
     else {
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
