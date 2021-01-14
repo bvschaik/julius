@@ -495,7 +495,6 @@ void draw_grand_temple_mars_military(building_info_context* c)
     lang_text_draw(91, 0, c->x_offset + 326, c->y_offset + y, FONT_NORMAL_BLACK); // "Tower"
     lang_text_draw(89, 0, c->x_offset + 326, c->y_offset + y + 20, FONT_NORMAL_BLACK); // "Fort"
 
-    window_building_draw_priority_buttons(c->x_offset + 285, c->y_offset + 55);
 }
 
 static void draw_grand_temple(building_info_context* c, const char* sound_file, int name, int bonus_desc,int banner_id, int quote, int temple_god_id, int extra_y)
@@ -541,11 +540,18 @@ static void draw_grand_temple(building_info_context* c, const char* sound_file, 
 void window_building_draw_grand_temple_foreground(building_info_context* c)
 {
     building* b = building_get(c->building_id);
-    if (b->subtype.monument_phase == MONUMENT_FINISHED && !b->data.monument.upgrades) {
+    if (b->subtype.monument_phase != MONUMENT_FINISHED) {
+        return;
+    }
+    if (!b->data.monument.upgrades) {
         button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 37,
             16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
         text_draw_centered(translation_for(TR_BUILDING_GRAND_TEMPLE_ADD_MODULE), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 33,
             16 * (c->width_blocks - 10), FONT_NORMAL_BLACK, 0);
+    }
+    if (b->type == BUILDING_GRAND_TEMPLE_MARS)
+    {
+        window_building_draw_priority_buttons(c->x_offset + 285, c->y_offset + 55);
     }
 }
 
