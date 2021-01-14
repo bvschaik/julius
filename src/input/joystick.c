@@ -1,6 +1,7 @@
 #include "joystick.h"
 
 #include "core/log.h"
+#include "core/speed.h"
 #include "core/time.h"
 #include "game/system.h"
 #include "graphics/window.h"
@@ -73,8 +74,8 @@ static struct {
     joystick_info joystick[JOYSTICK_MAX_CONTROLLERS];
     int connected_joysticks;
     struct {
-        int x_delta;
-        int y_delta;
+        speed_type x_speed;
+        speed_type y_speed;
         int left_button;
         int middle_button;
         int right_button;
@@ -486,6 +487,8 @@ static int translate_mouse_cursor_position(void)
     handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_DOWN, &cursor_input[DIRECTION_DOWN]);
     handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_RIGHT, &cursor_input[DIRECTION_RIGHT]);
     if (!handled) {
+        speed_clear(&data.mouse.x_speed);
+        speed_clear(&data.mouse.y_speed);
         return 0;
     }
 
@@ -496,30 +499,29 @@ static int translate_mouse_cursor_position(void)
     translate_input_for_element(&cursor_input[DIRECTION_RIGHT], JOYSTICK_ELEMENT_AXIS);
 
     if (!rescale_axis(cursor_input)) {
+        speed_clear(&data.mouse.x_speed);
+        speed_clear(&data.mouse.y_speed);
         return 0;
     }
     
-    int slowdown = CURSOR_SLOWDOWN_NORMAL;
+    double slowdown = CURSOR_SLOWDOWN_NORMAL;
     if (get_joystick_input_for_action(MAPPING_ACTION_FASTER_MOUSE_CURSOR_SPEED, 0)) {
         slowdown = CURSOR_SLOWDOWN_FASTER;
     } else if (get_joystick_input_for_action(MAPPING_ACTION_SLOWER_MOUSE_CURSOR_SPEED, 0)) {
         slowdown = CURSOR_SLOWDOWN_SLOWER;
     }
-    int delta_x = -cursor_input[DIRECTION_LEFT].value + cursor_input[DIRECTION_RIGHT].value;
-    int delta_y = -cursor_input[DIRECTION_LEFT].value + cursor_input[DIRECTION_RIGHT].value;
+    int delta_x = cursor_input[DIRECTION_RIGHT].value - cursor_input[DIRECTION_LEFT].value;
+    int delta_y = cursor_input[DIRECTION_DOWN].value - cursor_input[DIRECTION_UP].value;
 
-    // Sub-pixel precision to allow slow mouse motion at speeds < 1 pixel/frame
-    data.mouse.x_delta += cursor_input[DIRECTION_RIGHT].value - cursor_input[DIRECTION_LEFT].value;
-    data.mouse.y_delta += cursor_input[DIRECTION_DOWN].value - cursor_input[DIRECTION_UP].value;
+    speed_set_target(&data.mouse.x_speed, delta_x / slowdown, SPEED_CHANGE_IMMEDIATE, 1);
+    speed_set_target(&data.mouse.y_speed, delta_y / slowdown, SPEED_CHANGE_IMMEDIATE, 1);
 
-    if (data.mouse.x_delta == 0 && data.mouse.y_delta == 0) {
+    delta_x = speed_get_delta(&data.mouse.x_speed);
+    delta_y = speed_get_delta(&data.mouse.y_speed);
+
+    if (!delta_x && !delta_y) {
         return 1;
     }
-
-    delta_x = data.mouse.x_delta / slowdown;
-    delta_y = data.mouse.y_delta / slowdown;
-    data.mouse.x_delta %= slowdown;
-    data.mouse.y_delta %= slowdown;
 
     system_move_mouse_cursor(delta_x, delta_y);
     return 1;

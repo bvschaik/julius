@@ -61,7 +61,7 @@ static void vita_start_text_input(void)
 
 void platform_per_frame_callback(void)
 {
-    if (vkbd_requested{
+    if (vkbd_requested) {
         vita_start_text_input();
         vkbd_requested = 0;
     }
