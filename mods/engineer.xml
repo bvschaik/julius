@@ -22,7 +22,7 @@
 <!-- Note: Engineer's Guild ON Variant -->
     <image id="Eng Guild ON" >
 		<layer group="this" image="Eng Guild OFF" />
-        <animation speed="6" frames="8" reversible="false" />
+        <animation speed="6" frames="8" x="0" y="56" reversible="false" />
     </image>
     <image src="Engineers_Guild_On_01" />
     <image src="Engineers_Guild_On_02" />

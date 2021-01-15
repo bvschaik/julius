@@ -106,7 +106,7 @@
 
     <image id="s pond north on" >
 		<layer group="this" image="s pond north off" />
-        <animation speed="8" frames="8" x="0" y="0" reversible="false" />
+        <animation speed="8" frames="8" x="29" y="15" reversible="false" />
     </image>
     <image src="2x2_Pond_A_01" />
     <image src="2x2_Pond_A_02" />
@@ -125,7 +125,7 @@
 
     <image id="s pond south on" >
 		<layer group="this" image="s pond south off" />
-        <animation speed="8" frames="8" x="0" y="0" reversible="false" />
+        <animation speed="8" frames="8" x="29" y="24" reversible="false" />
     </image>
     <image src="2x2_Pond_B_01" />
     <image src="2x2_Pond_B_02" />
@@ -145,7 +145,7 @@
 
     <image id="l pond north on" >
 		<layer group="this" image="l pond north off" />
-        <animation speed="8" frames="8" x="0" y="0" reversible="false" />
+        <animation speed="8" frames="8" x="41" y="17" reversible="false" />
     </image>
     <image src="3x3_Pond_A_01" />
     <image src="3x3_Pond_A_02" />
@@ -165,7 +165,7 @@
 
     <image id="l pond south on" >
 		<layer group="this" image="l pond south off" />
-        <animation speed="8" frames="8" x="0" y="0" reversible="false" />
+        <animation speed="8" frames="8" x="41" y="27" reversible="false" />
     </image>
     <image src="3x3_Pond_B_01" />
     <image src="3x3_Pond_B_02" />
@@ -304,6 +304,20 @@
     <image id="Eque Statue" src="Equestrian_Statue" />
     <image id="Eque Statue R" src="Equestrian_Statue_R" />	
 	
+<!-- Note: Animation overlay for vanilla 'Large Statue' -->	
+    <image id="l statue anim" >
+		<layer group="61" image="2" />
+        <animation speed="7" frames="5" x="41" y="27" reversible="false" />
+    </image>
+    <image src="L_Statue_Animation_01" />
+    <image src="L_Statue_Animation_02" />
+    <image src="L_Statue_Animation_03" />
+    <image src="L_Statue_Animation_04" />
+    <image src="L_Statue_Animation_05" />
+
+
+
+
 
 	
 </mod>

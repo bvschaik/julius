@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!DOCTYPE mod>
+
+<mod author="Areldir" name="Watchtowers">
+<!-- Note: Watchtower Variants for Central, North and South Climates Respectively -->
+    <image id="Watchtower Central" src="Watchtower_Central" />
+    <image id="Watchtower North" src="Watchtower_North" />	
+    <image id="Watchtower South" src="Watchtower_South" />	
+
+</mod>		

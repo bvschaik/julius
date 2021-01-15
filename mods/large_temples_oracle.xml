@@ -10,9 +10,41 @@
     <image id="Venus LTemp Cons 0" src="Venus_L_Temple_Construction_0%" />	
     <image id="Oracle Cons" src="Oracle_Construction_0%" />	
 
-
 <!-- Note: Lararium asset -->
     <image id="Lararium 01" src="Lararium" />
 
+<!-- Note: Nymphaeum Construction 0% Phase -->
+    <image id="Nymphaeum Cons" src="Nymphaeum_Construction_0%" />
+
+<!-- Note: Nymphaeum OFF asset -->
+    <image id="Nymphaeum OFF" src="Nymphaeum_OFF" />
+
+<!-- Note: Nymphaeum ON Animation -->
+    <image id="Nymphaeum ON" width="178" height="158">
+		<layer group="this" image="Nymphaeum OFF" />
+        <animation speed="5" frames="6" x="0" y="0" reversible="false" />
+    </image>
+    <image src="Nymphaeum_ON_01"/>
+    <image src="Nymphaeum_ON_02"/>
+    <image src="Nymphaeum_ON_03"/>
+    <image src="Nymphaeum_ON_04"/>
+    <image src="Nymphaeum_ON_05"/>
+    <image src="Nymphaeum_ON_06"/>
+	
+<!-- Note: Large Mausoleum Construction 0% Phase -->
+    <image id="Mausoleum L Cons" src="Mausoleum_Large_Construction_0%" />
+
+<!-- Note: Large Mausoleum asset -->
+    <image id="Mausoleum L" src="Mausoleum_Large" />	
+
+<!-- Note: Small Mausoleum Construction 0% Phase -->
+    <image id="Mausoleum S Cons" src="Mausoleum_Small_Construction_0%%" />
+
+<!-- Note: Small Mausoleum asset -->
+    <image id="Mausoleum S" src="Mausoleum_Small" />		
+	
+<!-- Note: Small Mausoleum asset (Rotation Variant) -->
+    <image id="Mausoleum S R" src="Mausoleum_Small_R" />		
+	
 
 </mod>		

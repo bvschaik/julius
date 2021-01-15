@@ -62,7 +62,7 @@
 
 <!-- Note: Image next to 'Hold Games' button in Entertainment Advisor -->
     <image id="HoldGames Banner" width="126" height="88">
-		<layer group="159" image="48" x="-11" y="-9" />
+		<layer group="159" image="47" x="-11" y="-9" />
         <layer src="HoldGames_Banner_Border" x="0" y="0" />
     </image>
 
@@ -79,5 +79,13 @@
 		<layer group="this" image="T Pillar BG R" x="81" y="0" />
 		<layer group="this" image="T Pillar BG L" x="0" y="0" />
     </image>
+
+<!-- Note: UI Icons for Colosseum Games: "Imperial Games", "Naumachia" and "Executions" respectively, with selected and deselected variants -->
+    <image id="Naum Ico S" src="Naumachia_UI_Button_Selected" />
+    <image id="Naum Ico DS" src="Naumachia_UI_Button_Deselected" />
+    <image id="ImpG Ico S" src="Imperial_Games_UI_Button_Selected" />
+    <image id="ImpG Ico DS" src="Imperial_Games_UI_Button_Deselected" />
+    <image id="Exec Ico S" src="Executions_UI_Button_Selected" />
+    <image id="Exec Ico DS" src="Executions_UI_Button_Deselected" />
 
 </mod>

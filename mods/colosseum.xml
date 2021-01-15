@@ -4,16 +4,16 @@
 <mod author="Areldir" name="Colosseum">
 <!-- Note: Colosseum 0%, 25%, 50% and 75% construction phases respectively -->
     <image id="Coloseum Cons 01" src="Colosseum_0%_Construction_Phase" />	
-    <image id="Coloseum Cons 02" width="298" height="213">
-		<layer group="48" image="0" part="footprint" x="0" y="0" />
+    <image id="Coloseum Cons 02" width="298" height="154">
+		<layer group="48" image="0" part="footprint" x="0" y="-59" />
 	    <layer src="Colosseum_25%_Construction_Phase" />		
 	</image>
-    <image id="Coloseum Cons 03" width="298" height="213">
-		<layer group="48" image="0" part="footprint" x="0" y="0" />
+    <image id="Coloseum Cons 03" width="298" height="173">
+		<layer group="48" image="0" part="footprint" x="0" y="-40" />
 	    <layer src="Colosseum_50%_Construction_Phase" />		
 	</image>
-    <image id="Coloseum Cons 04" width="298" height="213">
-		<layer group="48" image="0" part="footprint" x="0" y="0" />
+    <image id="Coloseum Cons 04" width="298" height="186">
+		<layer group="48" image="0" part="footprint" x="0" y="-27" />
 	    <layer src="Colosseum_75%_Construction_Phase" />		
 	</image>	
 
@@ -31,7 +31,7 @@
 <!-- Note: Colosseum ON state -->	
     <image id="Coloseum ON" width="298" height="213">
 		<layer group="this" image="Coloseum OFF" x="0" y="0" />
-		<layer group="this" image="Col Crowd Fix" x="71" y="33" />	
+		<layer group="this" image="Col Crowd Fix" x="70" y="33" />	
 	</image>
 
 <!-- Note: Colosseum gladiator fighting animation fix (REFERENCE ASSETS: DO NOT USE) -->	
@@ -91,7 +91,7 @@
 <!-- Note: Colosseum Gladiator Fight animations (Fixed vanilla ON state) -->	
     <image id="Col Glad Fight" width="298" height="213">
 		<layer group="this" image="Coloseum ON" />
-        <animation speed="6" frames="13" x="123" y="57" reversible="false" />
+        <animation speed="5" frames="13" x="122" y="57" reversible="false" />
     </image>
     <image group="this" image="Col Glad fix 01" />
     <image group="this" image="Col Glad fix 02" />
@@ -110,7 +110,7 @@
 <!-- Note: Colosseum 'Naumachia' games animations -->	
     <image id="Col Naumachia" width="298" height="213">
 		<layer group="this" image="Coloseum ON" />
-        <animation speed="7" frames="12" x="71" y="33" reversible="false" />
+        <animation speed="9" frames="12" x="57" y="12" reversible="false" />
     </image>
     <image src="Naumachia_01" />
     <image src="Naumachia_02" />
@@ -125,6 +125,31 @@
     <image src="Naumachia_11" />
     <image src="Naumachia_12" />	
 
-
+<!-- Note: Colosseum 'Imperial Games' animations -->
+    <image id="Col Imp Games" width="298" height="213">
+		<layer group="this" image="Coloseum ON" />
+        <animation speed="9" frames="6" x="57" y="12" reversible="false" />
+    </image>
+    <image src="Imperial_Games_01" />
+    <image src="Imperial_Games_02" />
+    <image src="Imperial_Games_03" />
+    <image src="Imperial_Games_04" />
+    <image src="Imperial_Games_05" />
+    <image src="Imperial_Games_06" />
+	
+<!-- Note: Colosseum 'Imperial Games' animations -->
+    <image id="Col Exec" width="298" height="213">
+		<layer group="this" image="Coloseum ON" />
+        <animation speed="9" frames="6" x="57" y="12" reversible="false" />
+    </image>
+    <image src="Executions_01" />
+    <image src="Executions_02" />
+    <image src="Executions_03" />
+    <image src="Executions_04" />
+    <image src="Executions_05" />
+    <image src="Executions_06" />	
+	
+	
+	
 	
 </mod>		
