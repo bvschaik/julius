@@ -4,7 +4,7 @@
 #include "mods/mods.h"
 #include "type.h"
 
-#define MOD_BUILDINGS 49
+#define MOD_BUILDINGS 53
 
 mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_ROADBLOCK, { 1, 1, 0, 0, 0 },  "Areldir", "Roadblocks", 0},
@@ -55,7 +55,12 @@ mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_LEGION_STATUE, { 2, 1, 0, 0, 1 }, "Areldir", "Aesthetics", "legio statue"},
     {BUILDING_DECORATIVE_COLUMN, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "sml col B"},
     {BUILDING_COLONNADE, { 1, 1, 0, 0, 0 }, "Lizzaran", "Aesthetics_L", "G Colonnade 01"},
-    {BUILDING_LARARIUM, {1,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Lararium 01"}
+    {BUILDING_LARARIUM, {1,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Lararium 01"},
+    {BUILDING_NYMPHAEUM, {3,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Nymphaeum OFF"},
+    {BUILDING_SMALL_MAUSOLEUM, {2,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Mausoleum S"},
+    {BUILDING_LARGE_MAUSOLEUM, {3,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Mausoleum L"},
+    {BUILDING_WATCHTOWER, {2,0,0,0,0}, "Areldir", "Watchtowers", "Watchtower Central"},
+//    {BUILDING_PALLISADE, {1,0,0,0,0}, "Areldir", "Palisade", "Palisade"},
 };
 
 void init_mod_building_properties() {
@@ -228,6 +233,9 @@ static building_properties properties[170] = {
 
 const building_properties *building_properties_for_type(building_type type)
 {
+    if (type < 0 || type > BUILDING_TYPE_MAX) {
+        return &properties[0];
+    }
     if (type >= BUILDING_ROADBLOCK) {
         for (int i = 0; i < MOD_BUILDINGS; ++i) {
             if (mod_building_properties[i].type == type) {

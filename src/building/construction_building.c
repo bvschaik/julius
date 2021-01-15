@@ -686,6 +686,29 @@ static void add_to_map(int type, building *b, int size,
             b->subtype.orientation = orientation;
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "legio statue") + orientation % 2);
             break;
+        case BUILDING_WATCHTOWER:
+            switch (scenario_property_climate())
+            {
+            case CLIMATE_NORTHERN:
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower North"));
+                break;
+            case CLIMATE_DESERT:
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower South"));
+                break;
+            default:
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower Central"));
+                break;
+            }
+            break;
+        case BUILDING_SMALL_MAUSOLEUM:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum S"));
+            break;
+        case BUILDING_LARGE_MAUSOLEUM:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum L"));
+            break;
+        case BUILDING_NYMPHAEUM:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Nymphaeum OFF"));
+            break;
     }
     map_routing_update_land();
     map_routing_update_walls();

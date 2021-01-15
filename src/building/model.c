@@ -170,6 +170,10 @@ const model_building MODEL_GRAND_GARDEN = { 400,0,0,0,0,0 };
 const model_building MODEL_ARENA = { 500,-3,1,1,3,25 };
 const model_building MODEL_NULL = { 0,0,0,0,0 };
 const model_building MODEL_LARARIUM = { 150, 4, 1, 1, 3, 0 };
+const model_building MODEL_NYMPHAEUM = {500,12,2,-1,6,0};
+const model_building MODEL_SMALL_MAUSOLEUM = {500,-8,2,2,5,20};
+const model_building MODEL_LARGE_MAUSOLEUM = {1500,-10,2,2,6,30};
+const model_building MODEL_WATCHTOWER = {100,-6,1,2,3,5,};
 
 const model_building *model_get_building(building_type type)
 {
@@ -204,6 +208,14 @@ const model_building *model_get_building(building_type type)
             return &MODEL_ARENA;
         case BUILDING_LARARIUM:
             return &MODEL_LARARIUM;
+        case BUILDING_NYMPHAEUM:
+            return &MODEL_NYMPHAEUM;
+        case BUILDING_WATCHTOWER:
+            return &MODEL_WATCHTOWER;
+        case BUILDING_SMALL_MAUSOLEUM:
+            return &MODEL_SMALL_MAUSOLEUM;
+        case BUILDING_LARGE_MAUSOLEUM:
+            return &MODEL_LARGE_MAUSOLEUM;
         default:
             break;
     }
@@ -220,7 +232,7 @@ const model_building *model_get_building(building_type type)
         return &buildings[43];
     }
 
-    if (type > 129) {
+    if (type > 129 || type < 0) {
         return &MODEL_NULL;
     }
     else {
