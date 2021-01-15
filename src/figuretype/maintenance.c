@@ -397,6 +397,8 @@ void figure_prefect_action(figure *f)
     }
 }
 
+
+
 void figure_worker_action(figure *f)
 {
     f->terrain_usage = TERRAIN_USAGE_ROADS;

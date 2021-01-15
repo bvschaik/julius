@@ -109,7 +109,10 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_market_buyer_action,
     figure_tavern_action,
     figure_market_buyer_action, // 80
-    figure_tourist_action 
+    figure_tourist_action,
+    figure_watchman_action,
+    figure_watchtower_archer_action,
+    figure_arrow_action
 }; 
 
 void figure_action_handle(void)

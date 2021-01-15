@@ -1450,6 +1450,57 @@ static void spawn_figure_lighthouse(building* b) {
     }
 }
 
+static void spawn_figure_watchtower(building* b) {
+    check_labor_problem(b);
+    if (b->figure_id || b->figure_id2) {
+        return;
+    }
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 100);
+        int pct_workers = worker_percentage(b);
+        int spawn_delay;
+        if (pct_workers >= 100) {
+            spawn_delay = 0;
+        }
+        else if (pct_workers >= 75) {
+            spawn_delay = 1;
+        }
+        else if (pct_workers >= 50) {
+            spawn_delay = 3;
+        }
+        else if (pct_workers >= 25) {
+            spawn_delay = 7;
+        }
+        else if (pct_workers >= 1) {
+            spawn_delay = 15;
+        }
+        else {
+            return;
+        }
+        if (b->figure_id2) {
+            return;
+        }
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            figure* f = figure_create(FIGURE_WATCHMAN, road.x, road.y, DIR_0_TOP);
+            f->action_state = FIGURE_ACTION_220_WATCHMAN_PATROL_INITIATE;
+            f->building_id = b->id;
+            b->figure_id = f->id;
+            f = figure_create(FIGURE_WATCHMAN, road.x, road.y, DIR_0_TOP);
+            f->action_state = FIGURE_ACTION_220_WATCHMAN_PATROL_INITIATE;
+            f->building_id = b->id;
+            b->figure_id2 = f->id;
+            if (!b->figure_id4) {
+                figure* f = figure_create(FIGURE_WATCHTOWER_ARCHER, b->x, b->y, DIR_0_TOP);
+                f->building_id = b->id;
+                f->action_state = FIGURE_ACTION_223_ARCHER_GUARDING;
+            }
+        }
+    }
+}
+
 static void update_native_crop_progress(building *b)
 {
     b->data.industry.progress++;
@@ -1617,6 +1668,9 @@ void building_figure_generate(void)
                     break;
                 case BUILDING_TAVERN:
                     spawn_figure_tavern(b);
+                    break;
+                case BUILDING_WATCHTOWER:
+                    spawn_figure_watchtower(b);
                     break;
             }
         }

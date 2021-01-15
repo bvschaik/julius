@@ -14,6 +14,7 @@
 #include "figuretype/missile.h"
 #include "map/figure.h"
 #include "map/grid.h"
+#include "map/road_access.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 #include "sound/effect.h"
@@ -332,6 +333,66 @@ void figure_tower_sentry_reroute(void)
         }
     }
 }
+
+void figure_watchman_action(figure* f)
+{
+    building* b = building_get(f->building_id);
+
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 640;
+    if (b->state != BUILDING_STATE_IN_USE || (b->figure_id != f->id && b->figure_id2 != f->id)) {
+        f->state = FIGURE_STATE_DEAD;
+    }
+    figure_image_increase_offset(f, 12);
+
+    switch (f->action_state) {
+    case FIGURE_ACTION_150_ATTACK:
+        figure_combat_handle_attack(f);
+        break;
+    case FIGURE_ACTION_149_CORPSE:
+        figure_combat_handle_corpse(f);
+        break;
+    case FIGURE_ACTION_220_WATCHMAN_PATROL_INITIATE:
+        f->roam_length = 0;
+        figure_movement_init_roaming(f);
+        if (b->figure_id2 == f->id) { // Skip one roaming cycle for the second Watchman, so they go in the opposite directions
+            figure_movement_init_roaming(f);
+        }
+        f->action_state = FIGURE_ACTION_221_WATCHMAN_PATROLLING;
+        break;
+    case FIGURE_ACTION_221_WATCHMAN_PATROLLING:
+        f->is_ghost = 0;
+        f->roam_length++;
+        if (f->roam_length >= f->max_roam_length) {
+            int x_road, y_road;
+            if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                f->action_state = FIGURE_ACTION_222_WATCHMAN_RETURNING;
+                f->destination_x = x_road;
+                f->destination_y = y_road;
+                figure_route_remove(f);
+            }
+            else {
+                f->state = FIGURE_STATE_DEAD;
+            }
+        }
+        figure_movement_roam_ticks(f, 1);
+        break;
+    case FIGURE_ACTION_222_WATCHMAN_RETURNING:
+        figure_movement_move_ticks(f, 1);
+        if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST || f->direction == DIR_FIGURE_AT_DESTINATION) {
+            f->state = FIGURE_STATE_DEAD;
+        }
+        break;
+    }
+    figure_tower_sentry_set_image(f);
+}
+
+void figure_watchtower_archer_action(figure* f)
+{
+
+}
+
 
 void figure_kill_tower_sentries_at(int x, int y)
 {
