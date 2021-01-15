@@ -154,6 +154,7 @@ void figure_delete(figure *f)
         case FIGURE_FORT_STANDARD:
         case FIGURE_ARROW:
         case FIGURE_JAVELIN:
+        case FIGURE_FRIENDLY_ARROW:
         case FIGURE_BOLT:
         case FIGURE_SPEAR:
         case FIGURE_FISH_GULLS:

@@ -54,7 +54,11 @@ void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, 
 {
     figure *f = figure_create(type, x, y, DIR_0_TOP);
     if (f->id) {
-        f->missile_damage = type == FIGURE_BOLT ? 60 : 10;
+        if (type == FIGURE_BOLT || type == FIGURE_FRIENDLY_ARROW) {
+            f->missile_damage = 60;
+        } else {
+            f->missile_damage = 10;
+        }
         f->building_id = building_id;
         f->destination_x = x_dst;
         f->destination_y = y_dst;
@@ -186,6 +190,27 @@ void figure_spear_action(figure *f)
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
     f->image_id = image_group(GROUP_FIGURE_MISSILE) + dir;
 }
+
+void figure_friendly_arrow_action(figure* f)
+{
+	f->use_cross_country = 1;
+	f->progress_on_tile++;
+	if (f->progress_on_tile > 120) {
+		f->state = FIGURE_STATE_DEAD;
+	}
+	int should_die = figure_movement_move_ticks_cross_country(f, 4);
+	int target_id = get_non_citizen_on_tile(f->grid_offset);
+	if (target_id) {
+		missile_hit_target(f, target_id, FIGURE_ENEMY_CAESAR_LEGIONARY);
+		sound_effect_play(SOUND_EFFECT_ARROW_HIT);
+	}
+	else if (should_die) {
+		f->state = FIGURE_STATE_DEAD;
+	}
+	int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
+	f->image_id = image_group(GROUP_FIGURE_MISSILE) + 16 + dir;
+}
+
 
 void figure_javelin_action(figure *f)
 {

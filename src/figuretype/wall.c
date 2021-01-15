@@ -19,6 +19,9 @@
 #include "map/terrain.h"
 #include "sound/effect.h"
 
+#define BALLISTA_RANGE 15
+#define WATCHTOWER_RANGE 12
+
 static const int BALLISTA_FIRING_OFFSETS[] = {
     0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -75,7 +78,7 @@ void figure_ballista_action(figure *f)
             if (f->wait_ticks > 20) {
                 f->wait_ticks = 0;
                 map_point tile;
-                if (figure_combat_get_missile_target_for_soldier(f, 15, &tile)) {
+                if (figure_combat_get_missile_target_for_soldier(f, BALLISTA_RANGE, &tile)) {
                     f->action_state = FIGURE_ACTION_181_BALLISTA_FIRING;
                     f->wait_ticks_missile = figure_properties_for_type(f->type)->missile_delay;
                 }
@@ -85,7 +88,7 @@ void figure_ballista_action(figure *f)
             f->wait_ticks_missile++;
             if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
                 map_point tile;
-                if (figure_combat_get_missile_target_for_soldier(f, 15, &tile)) {
+                if (figure_combat_get_missile_target_for_soldier(f, BALLISTA_RANGE, &tile)) {
                     f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
                     f->wait_ticks_missile = 0;
                     figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_BOLT);
@@ -390,7 +393,37 @@ void figure_watchman_action(figure* f)
 
 void figure_watchtower_archer_action(figure* f)
 {
-
+    switch (f->action_state) {
+    case FIGURE_ACTION_149_CORPSE:
+        f->state = FIGURE_STATE_DEAD;
+        break;
+    case FIGURE_ACTION_223_ARCHER_GUARDING:
+        f->wait_ticks++;
+        if (f->wait_ticks > 20) {
+            f->wait_ticks = 0;
+            map_point tile;
+            if (figure_combat_get_missile_target_for_soldier(f, WATCHTOWER_RANGE, &tile)) {
+                f->action_state = FIGURE_ACTION_224_ARCHER_SHOOTING;
+                f->wait_ticks_missile = figure_properties_for_type(f->type)->missile_delay;
+            }
+        }
+        break;
+    case FIGURE_ACTION_224_ARCHER_SHOOTING:
+        f->wait_ticks_missile++;
+        if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
+            map_point tile;
+            if (figure_combat_get_missile_target_for_soldier(f, WATCHTOWER_RANGE, &tile)) {
+                f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
+                f->wait_ticks_missile = 0;
+                figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_FRIENDLY_ARROW);
+                sound_effect_play(SOUND_EFFECT_ARROW);
+            }
+            else {
+                f->action_state = FIGURE_ACTION_223_ARCHER_GUARDING;
+            }
+        }
+        break;
+    }
 }
 
 

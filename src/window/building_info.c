@@ -385,6 +385,8 @@ static void init(int grid_offset)
                     case FIGURE_FISH_GULLS:
                     case FIGURE_SPEAR:
                     case FIGURE_HIPPODROME_HORSES:
+                    case FIGURE_FRIENDLY_ARROW:
+                    case FIGURE_WATCHTOWER_ARCHER:
                         break;
                     default:
                         context.figure.figure_ids[context.figure.count++] = figure_id;
