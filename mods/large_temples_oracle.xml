@@ -38,7 +38,7 @@
     <image id="Mausoleum L" src="Mausoleum_Large" />	
 
 <!-- Note: Small Mausoleum Construction 0% Phase -->
-    <image id="Mausoleum S Cons" src="Mausoleum_Small_Construction_0%%" />
+    <image id="Mausoleum S Cons" src="Mausoleum_Small_Construction_0%" />
 
 <!-- Note: Small Mausoleum asset -->
     <image id="Mausoleum S" src="Mausoleum_Small" />		
