@@ -577,7 +577,7 @@ static void button_priority(int index, int param2)
 void window_building_draw_watchtower(building_info_context* c)
 {
     c->help_id = 85;
-    window_building_play_sound(c, "wavs/tower.wav");
+    window_building_play_sound(c, "wavs/tower2.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_WATCHTOWER), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
 
