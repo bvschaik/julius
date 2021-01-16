@@ -156,6 +156,7 @@ static int get_height_id(void)
             case BUILDING_HEDGE_LIGHT:
             case BUILDING_LARARIUM:
             case BUILDING_COLONNADE:
+            case BUILDING_WATCHTOWER:
                 return 1;
 
             case BUILDING_THEATER:
@@ -671,6 +672,8 @@ static void draw_background(void)
             window_building_draw_native_crops(&context);
         } else if (btype == BUILDING_MISSION_POST) {
             window_building_draw_mission_post(&context);
+        } else if (btype == BUILDING_WATCHTOWER) {
+            window_building_draw_watchtower(&context);
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info(&context);

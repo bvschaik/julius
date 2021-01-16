@@ -79,6 +79,7 @@ int figure_name_get(figure_type type, enemy_type enemy)
 
     case FIGURE_PREFECT:
     case FIGURE_TOWER_SENTRY:
+    case FIGURE_WATCHMAN:
         return get_next_name(&data.prefect, 198, 32);
 
     case FIGURE_ACTOR:

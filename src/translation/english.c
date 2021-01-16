@@ -527,9 +527,11 @@ static translation_string all_strings[] = {
     { TR_BUILDING_LARARIUM, "Lararium" },
     { TR_WINDOW_BUILDING_LARARIUM_DESC, "A small shrine to the gods and ancestors of the Roman people. Small sacrifices and prayers may be made here."},
     { TR_BUILDING_WATCHTOWER, "Watchtower"},
+    { TR_BUILDING_WATCHTOWER_DESC, "Archers on top of the tower keep an eye on external invasions, as watchmen patrol the streets." },
     { TR_BUILDING_NYMPHAEUM, "Nymphaeum"},
     { TR_BUILDING_SMALL_MAUSOLEUM, "Small Mausoleum"},
     { TR_BUILDING_LARGE_MAUSOLEUM, "Large Mausoleum"},
+    { TR_FIGURE_TYPE_WATCHMAN, "Watchman" },
 
 
 

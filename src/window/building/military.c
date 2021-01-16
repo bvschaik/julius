@@ -573,3 +573,20 @@ static void button_priority(int index, int param2)
         building_barracks_toggle_priority(barracks);
     }
 }
+
+void window_building_draw_watchtower(building_info_context* c)
+{
+    c->help_id = 85;
+    window_building_play_sound(c, "wavs/tower.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    text_draw_centered(translation_for(TR_BUILDING_WATCHTOWER), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+
+    building* b = building_get(c->building_id);
+    if (!c->has_road_access) {
+        window_building_draw_description(c, 69, 25);
+    } else {
+        text_draw_multiline(translation_for(TR_BUILDING_WATCHTOWER_DESC), c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+    }
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
+    window_building_draw_employment(c, 142);
+}

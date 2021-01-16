@@ -1496,6 +1496,7 @@ static void spawn_figure_watchtower(building* b) {
                 figure* f = figure_create(FIGURE_WATCHTOWER_ARCHER, b->x, b->y, DIR_0_TOP);
                 f->building_id = b->id;
                 f->action_state = FIGURE_ACTION_223_ARCHER_GUARDING;
+                b->figure_id4 = f->id;
             }
         }
     }
