@@ -176,11 +176,14 @@ void figure_tower_sentry_set_image(figure* f) {
         f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
             136 + figure_image_corpse_offset(f);
     }
-    else if (f->action_state == FIGURE_ACTION_172_TOWER_SENTRY_FIRING || f->action_state == FIGURE_ACTION_225_WATCHMAN_SHOOTING) {
+    else if (f->action_state == FIGURE_ACTION_172_TOWER_SENTRY_FIRING) {
         f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
             dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
-    }
-    else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+    } else if (f->action_state == FIGURE_ACTION_225_WATCHMAN_SHOOTING) {
+        dir = figure_image_normalize_direction(f->attack_direction);
+        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
+            dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
+    } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         int image_id = image_group(GROUP_FIGURE_TOWER_SENTRY);
         if (f->attack_image_offset < 16) {
             f->image_id = image_id + 96 + dir;
@@ -409,12 +412,11 @@ void figure_watchman_action(figure* f)
         if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
             map_point tile;
             if (figure_combat_get_missile_target_for_soldier(f, 10, &tile)) {
-                f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
+                f->attack_direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
                 f->wait_ticks_missile = 0;
                 figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_JAVELIN);
             }
             else {
-                f->direction = DIR_FIGURE_REROUTE;
                 f->action_state = FIGURE_ACTION_221_WATCHMAN_PATROLLING;
             }
         }
