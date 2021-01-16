@@ -12,6 +12,7 @@
 #include "map/grid.h"
 #include "map/soldier_strength.h"
 #include "map/terrain.h"
+#include "scenario/property.h"
 #include "sound/effect.h"
 
 static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_tile, int *y_tile)
@@ -233,12 +234,12 @@ static void update_herd_formation(formation *m)
 
 void formation_herd_update(void)
 {
-    if (city_figures_animals() <= 0) {
+    if (city_figures_animals() <= 0 && scenario_property_climate() != CLIMATE_NORTHERN) {
         return;
     }
     for (int i = 1; i < formation_count(); i++) {
         formation *m = formation_get(i);
-        if (m->in_use && m->is_herd && !m->is_legion && m->num_figures > 0) {
+        if (m->in_use && m->is_herd && !m->is_legion && (m->num_figures > 0 || m->figure_type == FIGURE_WOLF)) {
             update_herd_formation(m);
         }
     }
