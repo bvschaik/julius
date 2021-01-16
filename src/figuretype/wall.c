@@ -339,9 +339,6 @@ void figure_tower_sentry_reroute(void)
 
 static void watchman_pick_target(figure* f)
 {
-    if (enemy_army_total_enemy_formations() <= 0) {
-        return;
-    }
     if (f->action_state == FIGURE_ACTION_150_ATTACK ||
         f->action_state == FIGURE_ACTION_149_CORPSE) {
         return;
