@@ -59,7 +59,7 @@ mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_NYMPHAEUM, {3,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Nymphaeum OFF"},
     {BUILDING_SMALL_MAUSOLEUM, {2,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Mausoleum S"},
     {BUILDING_LARGE_MAUSOLEUM, {3,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Mausoleum L"},
-    {BUILDING_WATCHTOWER, {2,0,0,0,0}, "Areldir", "Watchtowers", "Watchtower Central"},
+    {BUILDING_WATCHTOWER, {2,0,0,0,0}, "Areldir", "Watchtowers", "Watchtower C OFF"},
 //    {BUILDING_PALLISADE, {1,0,0,0,0}, "Areldir", "Palisade", "Palisade"},
 };
 

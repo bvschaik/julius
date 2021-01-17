@@ -690,13 +690,13 @@ static void add_to_map(int type, building *b, int size,
             switch (scenario_property_climate())
             {
             case CLIMATE_NORTHERN:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower North"));
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower N ON"));
                 break;
             case CLIMATE_DESERT:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower South"));
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower S ON"));
                 break;
             default:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower Central"));
+                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower C ON"));
                 break;
             }
             break;
