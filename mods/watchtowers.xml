@@ -2,9 +2,43 @@
 <!DOCTYPE mod>
 
 <mod author="Areldir" name="Watchtowers">
-<!-- Note: Watchtower Variants for Central, North and South Climates Respectively -->
-    <image id="Watchtower Central" src="Watchtower_Central" />
-    <image id="Watchtower North" src="Watchtower_North" />	
-    <image id="Watchtower South" src="Watchtower_South" />	
+<!-- Note: Watchtower OFF and ON states for Central Climate Respectively -->
+    <image id="Watchtower C OFF" src="Watchtower_Central_OFF" />
+
+    <image id="Watchtower C ON" >
+		<layer group="this" image="Watchtower C OFF" />
+        <animation speed="8" frames="5" x="0" y="0" reversible="false" />
+    </image>
+    <image src="Watchtower_Central_ON_01" />
+    <image src="Watchtower_Central_ON_02" />
+    <image src="Watchtower_Central_ON_03" />
+    <image src="Watchtower_Central_ON_04" />
+    <image src="Watchtower_Central_ON_05" />
+
+<!-- Note: Watchtower OFF and ON states for North Climate Respectively -->
+    <image id="Watchtower N OFF" src="Watchtower_North_OFF" />	
+
+    <image id="Watchtower N ON" >	
+		<layer group="this" image="Watchtower N OFF" />
+        <animation speed="8" frames="5" x="0" y="0" reversible="false" />
+    </image>
+    <image src="Watchtower_North_ON_01" />
+    <image src="Watchtower_North_ON_02" />
+    <image src="Watchtower_North_ON_03" />
+    <image src="Watchtower_North_ON_04" />
+    <image src="Watchtower_North_ON_05" />
+
+<!-- Note: Watchtower OFF and ON states for South Climate Respectively -->
+    <image id="Watchtower S OFF" src="Watchtower_South_OFF" />	
+
+    <image id="Watchtower S ON" >	
+		<layer group="this" image="Watchtower S OFF" />
+        <animation speed="8" frames="5" x="0" y="0" reversible="false" />
+    </image>
+    <image src="Watchtower_South_ON_01" />
+    <image src="Watchtower_South_ON_02" />
+    <image src="Watchtower_South_ON_03" />
+    <image src="Watchtower_South_ON_04" />
+    <image src="Watchtower_South_ON_05" />
 
 </mod>		

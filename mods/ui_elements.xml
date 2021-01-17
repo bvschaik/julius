@@ -3,7 +3,6 @@
 
 <mod author="Areldir" name="UI_Elements">
 
-    <image id="Main Menu" src="Main_Menu_Alt" />
     <image id="7x7 Map Icon" src="7x7_Minimap_Icon" />
     <image id="Happy God Icon" src="Religion_God_Happy" />
 
