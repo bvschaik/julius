@@ -701,13 +701,22 @@ static void add_to_map(int type, building *b, int size,
             }
             break;
         case BUILDING_SMALL_MAUSOLEUM:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum S"));
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum S Cons"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 4);
+            building_monument_initialize(b);
             break;
         case BUILDING_LARGE_MAUSOLEUM:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum L"));
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum L Cons"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            building_monument_initialize(b);
             break;
         case BUILDING_NYMPHAEUM:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Nymphaeum OFF"));
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Nymphaeum Cons"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            building_monument_initialize(b);
             break;
     }
     map_routing_update_land();

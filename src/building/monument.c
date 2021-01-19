@@ -57,6 +57,18 @@ static int oracle_lt_resources[2][RESOURCE_MAX] = {
 	{1,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,},
 	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
 };
+static int nymphaeum_resources[2][RESOURCE_MAX] = {
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
+};
+static int small_mausoleum_resources[2][RESOURCE_MAX] = {
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
+};
+static int large_mausoleum_resources[2][RESOURCE_MAX] = {
+	{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,},
+	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}
+};
 
 
 static struct {
@@ -103,6 +115,8 @@ int building_monument_access_point(building* b, map_point* dst)
 	case BUILDING_LARGE_TEMPLE_MARS:
 	case BUILDING_LARGE_TEMPLE_VENUS:
 	case BUILDING_LIGHTHOUSE:
+	case BUILDING_NYMPHAEUM:
+	case BUILDING_LARGE_MAUSOLEUM:
 		if (dx == -1 && dy == -3) {
 			dst->x = b->x + 1;
 			dst->y = b->y + 2;
@@ -173,6 +187,7 @@ int building_monument_access_point(building* b, map_point* dst)
 		}
 		return 1;
 	case BUILDING_ORACLE:
+	case BUILDING_SMALL_MAUSOLEUM:
 		dst->x = b->x;
 		dst->y = b->y;	
 		return 1;
@@ -325,6 +340,12 @@ int building_monument_resources_needed_for_monument_type(int building_type, int 
 		return colosseum_resources[phase - 1][resource];
 	case BUILDING_HIPPODROME:
 		return hippodrome_resources[phase - 1][resource];
+	case BUILDING_NYMPHAEUM:
+		return nymphaeum_resources[phase - 1][resource];
+	case BUILDING_LARGE_MAUSOLEUM:
+		return large_mausoleum_resources[phase - 1][resource];
+	case BUILDING_SMALL_MAUSOLEUM:
+		return small_mausoleum_resources[phase - 1][resource];
 	default:
 		return 0;
 		break;
@@ -574,6 +595,51 @@ void building_monument_initialize(building* b)
 			break;
 		}
 		break;
+	case BUILDING_NYMPHAEUM:
+		switch (b->data.monument.monument_phase) 
+		{
+		case MONUMENT_FINISHED:
+			break;
+		case MONUMENT_START:
+			break;
+		case 2:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Nymphaeum ON"), TERRAIN_BUILDING);
+			b->data.monument.monument_phase = MONUMENT_FINISHED;
+			break;
+		default:
+			break;
+		}
+		break;
+	case BUILDING_SMALL_MAUSOLEUM:
+		switch (b->data.monument.monument_phase)
+		{
+		case MONUMENT_FINISHED:
+			break;
+		case MONUMENT_START:
+			break;
+		case 2:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum S"), TERRAIN_BUILDING);
+			b->data.monument.monument_phase = MONUMENT_FINISHED;
+			break;
+		default:
+			break;
+		}
+		break;
+	case BUILDING_LARGE_MAUSOLEUM:
+		switch (b->data.monument.monument_phase)
+		{
+		case MONUMENT_FINISHED:
+			break;
+		case MONUMENT_START:
+			break;
+		case 2:
+			map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum L"), TERRAIN_BUILDING);
+			b->data.monument.monument_phase = MONUMENT_FINISHED;
+			break;
+		default:
+			break;
+		}
+		break;
 	}
 
 	
@@ -586,27 +652,7 @@ void building_monument_initialize(building* b)
 
 int building_monument_is_monument(const building* b) 
 {
-	switch (b->type) {
-		case BUILDING_ORACLE:
-		case BUILDING_LARGE_TEMPLE_CERES:
-		case BUILDING_LARGE_TEMPLE_NEPTUNE:
-		case BUILDING_LARGE_TEMPLE_MERCURY:
-		case BUILDING_LARGE_TEMPLE_MARS:
-		case BUILDING_LARGE_TEMPLE_VENUS:
-		case BUILDING_GRAND_TEMPLE_CERES:
-		case BUILDING_GRAND_TEMPLE_NEPTUNE:
-		case BUILDING_GRAND_TEMPLE_MERCURY:
-		case BUILDING_GRAND_TEMPLE_MARS:
-		case BUILDING_GRAND_TEMPLE_VENUS:
-		case BUILDING_PANTHEON:
-		case BUILDING_MENU_GRAND_TEMPLES:
-		case BUILDING_LIGHTHOUSE:
-		case BUILDING_COLOSSEUM:
-		case BUILDING_HIPPODROME:
-			return 1;
-		break;
-	}
-	return 0;
+	return building_monument_type_is_monument(b->type);
 }
 
 int building_monument_type_is_monument(building_type type)
@@ -628,6 +674,9 @@ int building_monument_type_is_monument(building_type type)
 		case BUILDING_LIGHTHOUSE:
 		case BUILDING_COLOSSEUM:
 		case BUILDING_HIPPODROME:
+		case BUILDING_NYMPHAEUM:
+		case BUILDING_LARGE_MAUSOLEUM:
+		case BUILDING_SMALL_MAUSOLEUM:
 			return 1;
 		default:
 			return 0;
@@ -725,6 +774,9 @@ int building_monument_monument_phases(int building_type) {
 	case BUILDING_LARGE_TEMPLE_MERCURY:
 	case BUILDING_LARGE_TEMPLE_MARS:
 	case BUILDING_LARGE_TEMPLE_VENUS:
+	case BUILDING_LARGE_MAUSOLEUM:
+	case BUILDING_SMALL_MAUSOLEUM:
+	case BUILDING_NYMPHAEUM:
 		return 2;
 	default:
 		return 0;
