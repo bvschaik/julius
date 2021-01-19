@@ -37,6 +37,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Tocar vídeos de abertura"},
     {TR_CONFIG_SIDEBAR_INFO, "Informação extra no painel de controle"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Ativar rolagem suave"},
+    {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Desativar rolagem do mapa no limite da tela"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Desativar rolagem do mapa com botão direito do mouse"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Ativar indicador visual ao limpar o terreno"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permitir construir cada templo em sequência"},
