@@ -171,8 +171,8 @@ const model_building MODEL_ARENA = { 500,-3,1,1,3,25 };
 const model_building MODEL_NULL = { 0,0,0,0,0 };
 const model_building MODEL_LARARIUM = { 150, 4, 1, 1, 3, 0 };
 const model_building MODEL_NYMPHAEUM = {500,12,2,-1,6,0};
-const model_building MODEL_SMALL_MAUSOLEUM = {500,-8,2,2,5,20};
-const model_building MODEL_LARGE_MAUSOLEUM = {1500,-10,2,2,6,30};
+const model_building MODEL_SMALL_MAUSOLEUM = {500,-8,2,2,5,0};
+const model_building MODEL_LARGE_MAUSOLEUM = {1500,-10,2,2,6,0};
 const model_building MODEL_WATCHTOWER = {100,-6,1,2,3,5,};
 
 const model_building *model_get_building(building_type type)
