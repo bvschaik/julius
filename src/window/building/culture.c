@@ -842,6 +842,57 @@ void window_building_draw_grand_garden(building_info_context* c)
     text_draw_centered(translation_for(TR_BUILDING_GRAND_GARDEN), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
 }
 
+void window_building_draw_nymphaeum(building_info_context* c)
+{
+    c->help_id = 67;
+    building* b = building_get(c->building_id);
+    if (b->data.monument.monument_phase <= 0) {
+        window_building_play_sound(c, "wavs/oracle.wav");
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        text_draw_centered(translation_for(TR_BUILDING_NYMPHAEUM), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        text_draw_multiline(translation_for(TR_BUILDING_NYMPHAEUM_DESC), c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        window_building_draw_employment(c, 152);
+    } else {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        text_draw_centered(translation_for(TR_BUILDING_NYMPHAEUM), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        window_building_draw_monument_small_temple_construction_process(c);
+    }
+}
+
+void window_building_draw_small_mausoleum(building_info_context* c)
+{
+    c->help_id = 67;
+    building* b = building_get(c->building_id);
+    if (b->data.monument.monument_phase <= 0) {
+        window_building_play_sound(c, "wavs/oracle.wav");
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        text_draw_centered(translation_for(TR_BUILDING_SMALL_MAUSOLEUM), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        text_draw_multiline(translation_for(TR_BUILDING_SMALL_MAUSOLEUM_DESC), c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        window_building_draw_employment(c, 152);
+    } else {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        text_draw_centered(translation_for(TR_BUILDING_SMALL_MAUSOLEUM), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        window_building_draw_monument_small_temple_construction_process(c);
+    }
+}
+
+void window_building_draw_large_mausoleum(building_info_context* c)
+{
+    c->help_id = 67;
+    building* b = building_get(c->building_id);
+    if (b->data.monument.monument_phase <= 0) {
+        window_building_play_sound(c, "wavs/oracle.wav");
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        text_draw_centered(translation_for(TR_BUILDING_LARGE_MAUSOLEUM), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        text_draw_multiline(translation_for(TR_BUILDING_LARGE_MAUSOLEUM_DESC), c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        window_building_draw_employment(c, 152);
+    } else {
+        outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+        text_draw_centered(translation_for(TR_BUILDING_LARGE_MAUSOLEUM), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        window_building_draw_monument_small_temple_construction_process(c);
+    }
+}
+
 static void add_module(int selection)
 {
     if (!selection) {

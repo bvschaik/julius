@@ -75,6 +75,12 @@ void window_building_draw_grand_garden(building_info_context* c);
 
 void window_building_draw_lighthouse(building_info_context* c);
 
+void window_building_draw_small_mausoleum(building_info_context* c);
+
+void window_building_draw_large_mausoleum(building_info_context* c);
+
+void window_building_draw_nymphaeum(building_info_context* c);
+
 int window_building_handle_mouse_grand_temple(const mouse* m, building_info_context* c);
 
 

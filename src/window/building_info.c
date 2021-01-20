@@ -174,6 +174,9 @@ static int get_height_id(void)
             case BUILDING_LARGE_TEMPLE_MARS:
             case BUILDING_LARGE_TEMPLE_VENUS:
             case BUILDING_ORACLE:
+            case BUILDING_NYMPHAEUM:
+            case BUILDING_SMALL_MAUSOLEUM:
+            case BUILDING_LARGE_MAUSOLEUM:
                 return 3;
 
             case BUILDING_WELL:
@@ -576,6 +579,12 @@ static void draw_background(void)
             window_building_draw_oracle(&context);
         } else if (btype == BUILDING_LARARIUM) {
             window_building_draw_lararium(&context);
+        } else if (btype == BUILDING_NYMPHAEUM) {
+            window_building_draw_nymphaeum(&context);
+        } else if (btype == BUILDING_SMALL_MAUSOLEUM) {
+            window_building_draw_small_mausoleum(&context);
+        } else if (btype == BUILDING_LARGE_MAUSOLEUM) {
+            window_building_draw_large_mausoleum(&context);
         } else if (btype == BUILDING_WORKCAMP) {
             window_building_draw_work_camp(&context);
         } else if (btype == BUILDING_ENGINEER_GUILD) {

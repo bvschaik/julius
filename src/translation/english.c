@@ -529,8 +529,11 @@ static translation_string all_strings[] = {
     { TR_BUILDING_WATCHTOWER, "Watchtower"},
     { TR_BUILDING_WATCHTOWER_DESC, "Archers on top of the tower keep an eye on external invasions, as watchmen patrol the streets." },
     { TR_BUILDING_NYMPHAEUM, "Nymphaeum"},
+    { TR_BUILDING_NYMPHAEUM_DESC, "Nymphaeum DESCRIPTION PLACEHOLDER" },
     { TR_BUILDING_SMALL_MAUSOLEUM, "Small Mausoleum"},
+    { TR_BUILDING_SMALL_MAUSOLEUM_DESC, "Small Mausoleum DESCRIPTION PLACEHOLDER" },
     { TR_BUILDING_LARGE_MAUSOLEUM, "Large Mausoleum"},
+    { TR_BUILDING_LARGE_MAUSOLEUM_DESC, "Large Mausoleum DESCRIPTION PLACEHOLDER" },
     { TR_FIGURE_TYPE_WATCHMAN, "Watchman" },
 
 

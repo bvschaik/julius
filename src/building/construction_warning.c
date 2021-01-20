@@ -82,6 +82,8 @@ static void check_road_access(int type, int x, int y, int size)
         has_road = 1;
     } else if (type == BUILDING_ORACLE && map_closest_road_within_radius(x, y, size, 2, 0, 0)) {
         has_road = 1;
+    } else if (type == BUILDING_NYMPHAEUM && map_closest_road_within_radius(x, y, size, 2, 0, 0)) {
+        has_road = 1;
     }
     if (!has_road) {
         show(WARNING_ROAD_ACCESS_NEEDED);
