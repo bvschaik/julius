@@ -296,45 +296,47 @@ void map_orientation_update_buildings(void)
                 if (phase == -1) {
                     image1 = image_group(GROUP_BUILDING_HIPPODROME_1);
                     image2 = image_group(GROUP_BUILDING_HIPPODROME_2);
-                }
-                else {
+                } else {
                     image1 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NESW 01") + ((phase - 1) * phase_offset);
                     image2 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NWSE 01") + ((phase - 1) * phase_offset);
                 }
 
                 int building_part;
                 if(b->prev_part_building_id == 0){
-                    building_part = 0; // part 1, no previous building
-                } else if(b->next_part_building_id == 0){
-                    building_part = 2; // part 3, no next building
-                } else {
-                    building_part = 1; // part 2
-                }
-                map_orientation = building_rotation_get_building_orientation(b->subtype.orientation);
-                if (map_orientation == DIR_0_TOP) {
-                    image_id = image2;
-                    switch (building_part) {
-                        case 0: image_id += 0; break; // part 1
-                        case 1: image_id += 2; break; // part 2
-                        case 2: image_id += 4; break; // part 3, same for switch cases below
-                    }
-                } else if (map_orientation == DIR_4_BOTTOM) {
-                    image_id = image2;
-                    switch (building_part) {
-                        case 0: image_id += 4; break;
-                        case 1: image_id += 2; break;
-                        case 2: image_id += 0; break;
-                    }
-                } else if (map_orientation == DIR_6_LEFT) {
-                    image_id = image1;
-                    switch (building_part) {
-                        case 0: image_id += 0; break;
-                        case 1: image_id += 2; break;
-                        case 2: image_id += 4; break;
-                    }
-                } else { // DIR_2_RIGHT
-                    image_id = image1;
-                    switch (building_part) {
+					building_part = 0; // part 1, no previous building
+				} else if (b->next_part_building_id == 0) {
+					building_part = 2; // part 3, no next building
+				} else {
+					building_part = 1; // part 2
+				}
+
+				int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
+				if (orientation == DIR_0_TOP) {
+					image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
+					switch (building_part) {
+					case 0: image_id += 0; break; // part 1
+					case 1: image_id += 2; break; // part 2
+					case 2: image_id += 4; break; // part 3, same for switch cases below
+					}
+
+				} else if (orientation == DIR_4_BOTTOM) {
+					image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
+					switch (building_part) {
+					case 0: image_id += 4; break;
+					case 1: image_id += 2; break;
+					case 2: image_id += 0; break;
+					}
+
+				} else if (orientation == DIR_6_LEFT) {
+					image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
+					switch (building_part) {
+					case 0: image_id += 0; break;
+					case 1: image_id += 2; break;
+					case 2: image_id += 4; break;
+					}
+				} else { // DIR_2_RIGHT
+					image_id = image1;
+					switch (building_part) {
                         case 0: image_id += 4; break;
                         case 1: image_id += 2; break;
                         case 2: image_id += 0; break;

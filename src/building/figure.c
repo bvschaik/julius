@@ -976,6 +976,16 @@ static void spawn_figure_grand_temple_mars(building* b) {
             }
 
         }
+
+        // Pantheon Module 1 Bonus
+        if (!b->figure_id4 && building_monument_pantheon_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
+            figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
+            int pantheon_id = building_monument_working(BUILDING_PANTHEON);
+            b->figure_id4 = f->id;
+            f->destination_building_id = pantheon_id;
+            f->building_id = b->id;
+            f->action_state = FIGURE_ACTION_212_DESTINATION_PRIEST_CREATED;
+        }
     }
 }
 
@@ -1077,7 +1087,7 @@ static void spawn_figure_temple(building *b)
         }
 
         // Pantheon Module 1 Bonus
-        if (!b->figure_id4 && building_monument_pantheon_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
+        if (b->type != BUILDING_PANTHEON && !b->figure_id4 && building_monument_pantheon_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
             figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
             int pantheon_id = building_monument_working(BUILDING_PANTHEON);
             b->figure_id4 = f->id;
@@ -1426,7 +1436,7 @@ static void spawn_figure_mess_hall(building* b) {
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        spawn_labor_seeker(b, road.x, road.y, 10);
+        spawn_labor_seeker(b, road.x, road.y, 100);
         spawn_market_buyer(b, road, 1);
         if (b->figure_id) {
             b->figure_spawn_delay++;

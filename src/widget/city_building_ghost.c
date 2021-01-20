@@ -3,6 +3,7 @@
 #include "building/construction.h"
 #include "building/count.h"
 #include "building/industry.h"
+#include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/type.h"
@@ -290,10 +291,19 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
     if (type == BUILDING_BARRACKS && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
         return 1;
     }
+    if (type == BUILDING_MESS_HALL && city_buildings_has_mess_hall()) {
+        return 1;
+    }
     if (type == BUILDING_PLAZA && !map_terrain_is(grid_offset, TERRAIN_ROAD)) {
         return 1;
     }
     if (type == BUILDING_ROADBLOCK && !map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        return 1;
+    }
+    if (building_monument_has_monument(type)) {
+        return 1;
+    }
+    if (building_monument_is_grand_temple(type) && building_monument_count_grand_temples() >= 2) {
         return 1;
     }
     if (city_finance_out_of_money()) {

@@ -284,6 +284,10 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LEGION_FOOD_WARNING_1, "Recent food shortage decreased morale"},
     {TR_BUILDING_LEGION_FOOD_WARNING_2, "Recent food shortage greatly decreased morale"},
     {TR_BUILDING_LEGION_STARVING, "Food shortage" },
+    {TR_ADVISOR_TRADE_MAX, "Max"},
+    {TR_ADVISOR_TRADE_NO_LIMIT, "No limit"},
+    {TR_ADVISOR_TRADE_IMPORTABLE, "Importable"},
+    {TR_ADVISOR_TRADE_EXPORTABLE, "Exportable"},
     {TR_ADVISOR_LEGION_FOOD_SATISFIED, "Your soldiers have all the food they require."},
     {TR_ADVISOR_LEGION_FOOD_NEEDED, "Your soldiers need more food." },
     {TR_ADVISOR_LEGION_FOOD_CRITICAL, "Your soldiers are starving!"},
@@ -535,9 +539,15 @@ static translation_string all_strings[] = {
     { TR_BUILDING_LARGE_MAUSOLEUM, "Large Mausoleum"},
     { TR_BUILDING_LARGE_MAUSOLEUM_DESC, "Large Mausoleum DESCRIPTION PLACEHOLDER" },
     { TR_FIGURE_TYPE_WATCHMAN, "Watchman" },
-
-
-
+    {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "This temple will collect food for your supply post, once it is constructed." },
+    { TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MAINTENANCE, "Toggle prefects and engineers access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_PRIEST, "Toggle priests access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MARKET, "Toggle market buyer access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_ENTERTAINER, "Toggle entertainer access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_EDUCATION, "Toggle education walker access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MEDICINE, "Toggle health walker access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, "Toggle tax collector access" },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_LABOR_SEEKER, "Toggle labor seekers access" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

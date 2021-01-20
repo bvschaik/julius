@@ -54,6 +54,7 @@ static void draw_background(void)
 
 static void draw_background_military(void)
 {
+    clear_city_view(1);
     if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR)) {
         widget_sidebar_military_draw_background();
     } else {
@@ -136,6 +137,7 @@ static void draw_foreground(void)
 
 static void draw_foreground_military(void)
 {
+    clear_city_view(0);
     widget_top_menu_draw(0);
     window_city_draw();
     if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR)) {

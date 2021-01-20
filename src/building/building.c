@@ -281,6 +281,9 @@ void building_clear_related_data(building *b)
         city_buildings_remove_triumphal_arch();
         building_menu_update();
     }
+    if (b->type == BUILDING_MESS_HALL) {
+        city_buildings_remove_mess_hall();
+    }
 }
 
 void building_update_state(void)

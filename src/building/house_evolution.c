@@ -475,7 +475,7 @@ static int evolve_luxury_palace(building *house, house_demands *demands)
 {
     int bonus = (int)(building_monument_pantheon_module_is_active(PANTHEON_MODULE_2_HOUSING_EVOLUTION) && house->house_pantheon_access);
     int status = check_evolve_desirability(house, bonus);
-    if (!has_required_goods_and_services(house, 0, 0, demands)) {
+    if (!has_required_goods_and_services(house, 0, bonus, demands)) {
         status = DEVOLVE;
     }
     if (!has_devolve_delay(house, status) && status == DEVOLVE) {
