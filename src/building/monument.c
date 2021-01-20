@@ -692,6 +692,9 @@ int building_monument_type_is_mini_monument(building_type type)
 	case BUILDING_LARGE_TEMPLE_MERCURY:
 	case BUILDING_LARGE_TEMPLE_MARS:
 	case BUILDING_LARGE_TEMPLE_VENUS:
+	case BUILDING_SMALL_MAUSOLEUM:
+	case BUILDING_LARGE_MAUSOLEUM:
+	case BUILDING_NYMPHAEUM:
 		return 1;
 	default:
 		return 0;
