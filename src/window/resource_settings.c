@@ -16,6 +16,7 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/building.h"
+#include "translation/translation.h"
 #include "window/advisor/trade.h"
 #include "window/message_dialog.h"
 
@@ -142,7 +143,12 @@ static void draw_foreground(void)
     }
 
     if (trade_status == TRADE_STATUS_EXPORT || trade_status == TRADE_STATUS_IMPORT) {
-        lang_text_draw_amount(8, 10, city_resource_export_over(data.resource), 386, 221, FONT_NORMAL_BLACK);
+        int trade_quantity = city_resource_export_over(data.resource);
+        if (trade_status == TRADE_STATUS_IMPORT && trade_quantity == 0) {
+            text_draw(translation_for(TR_ADVISOR_TRADE_NO_LIMIT), 386, 221, FONT_NORMAL_BLACK, 0);
+        } else {
+            lang_text_draw_amount(8, 10, trade_quantity, 386, 221, FONT_NORMAL_BLACK);
+        }
     }
 
     if (building_count_industry_total(data.resource) > 0) {

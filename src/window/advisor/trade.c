@@ -8,6 +8,8 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "empire/city.h"
+#include "translation/translation.h"
 #include "window/empire.h"
 #include "window/resource_settings.h"
 #include "window/trade_prices.h"
@@ -80,12 +82,21 @@ static void draw_foreground(void)
             resource_trade_status trade_status = city_resource_trade_status(resource);
             if (trade_status == TRADE_STATUS_IMPORT) {
                 lang_text_draw(54, 5, 380, y_offset + 61, FONT_NORMAL_WHITE);
-                text_draw_number(city_resource_export_over(resource), '@', " ",
-                    500, y_offset + 61, FONT_NORMAL_WHITE);
+                int import_limit = city_resource_export_over(resource);
+                if (import_limit > 0) {
+                    text_draw_number(import_limit, '@', " ",
+                        500, y_offset + 61, FONT_NORMAL_WHITE);
+                } else {
+                    text_draw(translation_for(TR_ADVISOR_TRADE_MAX), 500, y_offset + 61, FONT_NORMAL_WHITE, 0);
+                }
             } else if (trade_status == TRADE_STATUS_EXPORT) {
                 int width = lang_text_draw(54, 6, 340, y_offset + 61, FONT_NORMAL_WHITE);
                 text_draw_number(city_resource_export_over(resource), '@', " ",
                     340 + width, y_offset + 61, FONT_NORMAL_WHITE);
+            } else if (empire_can_import_resource(resource)) {
+                text_draw(translation_for(TR_ADVISOR_TRADE_IMPORTABLE), 340, y_offset + 61, FONT_NORMAL_GREEN, 0);
+            } else if (empire_can_export_resource(resource)) {
+                text_draw(translation_for(TR_ADVISOR_TRADE_EXPORTABLE), 340, y_offset + 61, FONT_NORMAL_GREEN, 0);
             }
         }
     }
