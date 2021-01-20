@@ -22,7 +22,7 @@
 <!-- Note: Nymphaeum ON Animation -->
     <image id="Nymphaeum ON" width="178" height="158">
 		<layer group="this" image="Nymphaeum OFF" />
-        <animation speed="5" frames="6" x="0" y="0" reversible="false" />
+        <animation speed="5" frames="6" x="66" y="86" reversible="false" />
     </image>
     <image src="Nymphaeum_ON_01"/>
     <image src="Nymphaeum_ON_02"/>
