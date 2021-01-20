@@ -134,6 +134,9 @@ void building_count_update(void)
             case BUILDING_PANTHEON:
             case BUILDING_ORACLE:
             case BUILDING_LARARIUM:
+            case BUILDING_NYMPHAEUM:
+            case BUILDING_SMALL_MAUSOLEUM:
+            case BUILDING_LARGE_MAUSOLEUM:
                 increase_count(type, b->num_workers > 0);
                 break;
 

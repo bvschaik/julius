@@ -133,9 +133,15 @@ void city_culture_update_coverage(void)
     // religion
     int oracles = building_count_total(BUILDING_ORACLE);
     int shrines = building_count_total(BUILDING_LARARIUM);
+    int nymphaeums = building_count_total(BUILDING_NYMPHAEUM);
+    int small_mausoleums = building_count_total(BUILDING_SMALL_MAUSOLEUM);
+    int large_mausoleums = building_count_total(BUILDING_LARGE_MAUSOLEUM);
     coverage.religion[GOD_CERES] = top(calc_percentage(
             20 * shrines +
             500 * oracles +
+            500 * small_mausoleums +
+            750 * nymphaeums +
+            750 * large_mausoleums +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_CERES) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_CERES) +
             1500 * building_count_active(BUILDING_PANTHEON) +
@@ -144,6 +150,9 @@ void city_culture_update_coverage(void)
     coverage.religion[GOD_NEPTUNE] = top(calc_percentage(
             20 * shrines +
             500 * oracles +
+            500 * small_mausoleums +
+            750 * nymphaeums +
+            750 * large_mausoleums +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_NEPTUNE) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_NEPTUNE) +
             1500 * building_count_active(BUILDING_PANTHEON) +
@@ -152,6 +161,9 @@ void city_culture_update_coverage(void)
     coverage.religion[GOD_MERCURY] = top(calc_percentage(
             20 * shrines +
             500 * oracles +
+            500 * small_mausoleums +
+            750 * nymphaeums +
+            750 * large_mausoleums +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_MERCURY) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_MERCURY) +
             1500 * building_count_active(BUILDING_PANTHEON) +
@@ -160,6 +172,9 @@ void city_culture_update_coverage(void)
     coverage.religion[GOD_MARS] = top(calc_percentage(
             20 * shrines +
             500 * oracles +
+            500 * small_mausoleums +
+            750 * nymphaeums +
+            750 * large_mausoleums +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_MARS) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_MARS) +
             1500 * building_count_active(BUILDING_PANTHEON) +
@@ -168,6 +183,9 @@ void city_culture_update_coverage(void)
     coverage.religion[GOD_VENUS] = top(calc_percentage(
             20 * shrines +
             500 * oracles +
+            500 * small_mausoleums +
+            750 * nymphaeums +
+            750 * large_mausoleums +
             750 * building_count_active(BUILDING_SMALL_TEMPLE_VENUS) +
             1500 * building_count_active(BUILDING_LARGE_TEMPLE_VENUS) +
             1500 * building_count_active(BUILDING_PANTHEON) +
