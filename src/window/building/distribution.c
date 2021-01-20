@@ -550,7 +550,7 @@ void window_building_draw_granary_orders_foreground(building_info_context *c)
         } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER) {
             lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
 	    text_draw_centered(granary_quarter_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
-        } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
+        } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING || state == BUILDING_STORAGE_STATE_NOT_ACCEPTING_3QUARTERS || state == BUILDING_STORAGE_STATE_NOT_ACCEPTING_HALF || state == BUILDING_STORAGE_STATE_NOT_ACCEPTING_QUARTER) {
             lang_text_draw(99, 8, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_RED);
         } else if (state == BUILDING_STORAGE_STATE_GETTING) {
             image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
@@ -745,7 +745,7 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
         } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER) {
             lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
 	    text_draw_centered(warehouse_quarter_button_text,c->x_offset + 394, y_offset + 51 + 22 * i, 20, FONT_NORMAL_BLACK, 0);
-        } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
+        } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING || state == BUILDING_STORAGE_STATE_NOT_ACCEPTING_3QUARTERS || state == BUILDING_STORAGE_STATE_NOT_ACCEPTING_HALF || state == BUILDING_STORAGE_STATE_NOT_ACCEPTING_QUARTER) {
             lang_text_draw(99, 8, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_RED);
         } else if (state == BUILDING_STORAGE_STATE_GETTING) {
             image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, c->x_offset + 186, y_offset + 49 + 22 * i);
