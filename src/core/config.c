@@ -19,6 +19,7 @@ static const char *ini_keys[] = {
     "ui_sidebar_info",
     "ui_show_intro_video",
     "ui_smooth_scrolling",
+    "ui_disable_mouse_edge_scrolling",
     "ui_disable_map_drag",
     "ui_visual_feedback_on_delete",
     "ui_allow_cycling_temples",

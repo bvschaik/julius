@@ -365,7 +365,8 @@ static int get_direction(const mouse *m)
     // NOTE: using <= width/height (instead of <) to compensate for rounding
     // errors caused by scaling the display. SDL adds a 1px border to either
     // the right or the bottom when the aspect ratio does not match exactly.
-    if ((!m->is_touch || data.limits.active) && (x >= 0 && x <= width && y >= 0 && y <= height)) {
+    if (((!m->is_touch && !config_get(CONFIG_UI_DISABLE_MOUSE_EDGE_SCROLLING)) || data.limits.active) &&
+        (x >= 0 && x <= width && y >= 0 && y <= height)) {
         if (x < border) {
             left = 1;
             data.speed.modifier_x = 1 - x / (float) border;
