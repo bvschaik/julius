@@ -77,7 +77,7 @@ static void draw_foreground(void)
             lang_text_draw_centered(18, 5, 240, y_offset + 61, 100, FONT_NORMAL_WHITE);
         }
         if (city_resource_is_stockpiled(resource)) {
-            lang_text_draw(54, 3, 340, y_offset + 61, FONT_NORMAL_WHITE);
+            lang_text_draw(54, 3, 340, y_offset + 61, FONT_NORMAL_RED);
         } else {
             resource_trade_status trade_status = city_resource_trade_status(resource);
             if (trade_status == TRADE_STATUS_IMPORT) {
