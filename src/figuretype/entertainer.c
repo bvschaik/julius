@@ -62,7 +62,10 @@ static int determine_destination(int x, int y, building_type type1, building_typ
 
 static void update_shows(figure *f)
 {
-    building *b = building_get(f->destination_building_id);
+    building *b = building_main(building_get(f->destination_building_id));
+    if (b->type < BUILDING_AMPHITHEATER || b->type > BUILDING_COLOSSEUM) {
+        return;
+    }
     switch (f->type) {
         case FIGURE_ACTOR:
             b->data.entertainment.play++;
@@ -206,13 +209,20 @@ void figure_entertainer_action(figure *f)
                 if (dst_building_id) {
                     building *b_dst = building_get(dst_building_id);
                     int x_road, y_road;
-                    if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
-                        f->destination_building_id = dst_building_id;
-                        f->action_state = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
-                        f->destination_x = x_road;
-                        f->destination_y = y_road;
-                        f->roam_length = 0;
-                    } else {
+                    int found_road = 0;
+                    do {
+                        if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
+                            f->destination_building_id = dst_building_id;
+                            f->action_state = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
+                            f->destination_x = x_road;
+                            f->destination_y = y_road;
+                            f->roam_length = 0;
+                            found_road = 1;
+                            break;
+                        }
+                        b_dst = building_get(b_dst->next_part_building_id);
+                    } while (b_dst->id != 0);
+                    if (!found_road) {
                         f->state = FIGURE_STATE_DEAD;
                     }
                 } else {
