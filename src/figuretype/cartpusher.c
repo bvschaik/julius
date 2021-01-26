@@ -332,6 +332,7 @@ void figure_cartpusher_action(figure *f)
 
 static void determine_granaryman_destination(figure *f, int road_network_id)
 {
+    f->is_ghost = 0;
     map_point dst;
     int dst_building_id;
     building *granary = building_get(f->building_id);
@@ -344,9 +345,9 @@ static void determine_granaryman_destination(figure *f, int road_network_id)
             if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
                 f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
             }	    
-            f->is_ghost = 0;
         } else {
             f->state = FIGURE_STATE_DEAD;
+            f->is_ghost = 1;
         }
         return;
     }
@@ -380,6 +381,7 @@ static void determine_granaryman_destination(figure *f, int road_network_id)
     }
     // nowhere to go to: kill figure
     f->state = FIGURE_STATE_DEAD;
+    f->is_ghost = 1;
 }
 
 static void remove_resource_from_warehouse(figure *f)
@@ -394,6 +396,7 @@ static void remove_resource_from_warehouse(figure *f)
 
 static void determine_warehouseman_destination(figure *f, int road_network_id)
 {
+    f->is_ghost = 0;
     map_point dst;
     int dst_building_id;
     if (!f->resource_id) {
@@ -404,9 +407,9 @@ static void determine_warehouseman_destination(figure *f, int road_network_id)
             f->loads_sold_or_carrying = 0;
             set_destination(f, FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE, dst_building_id, dst.x, dst.y);
             f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-            f->is_ghost = 0;
         } else {
             f->state = FIGURE_STATE_DEAD;
+            f->is_ghost = 1;
         }
         return;
     }
@@ -467,6 +470,8 @@ static void determine_warehouseman_destination(figure *f, int road_network_id)
     }
     // no destination: kill figure
     f->state = FIGURE_STATE_DEAD;
+    f->is_ghost = 1;
+
 }
 
 void figure_warehouseman_action(figure *f)
