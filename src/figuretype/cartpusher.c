@@ -344,6 +344,7 @@ static void determine_granaryman_destination(figure *f, int road_network_id)
             if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
                 f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
             }	    
+            f->is_ghost = 0;
         } else {
             f->state = FIGURE_STATE_DEAD;
         }
@@ -403,6 +404,7 @@ static void determine_warehouseman_destination(figure *f, int road_network_id)
             f->loads_sold_or_carrying = 0;
             set_destination(f, FIGURE_ACTION_57_WAREHOUSEMAN_GETTING_RESOURCE, dst_building_id, dst.x, dst.y);
             f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+            f->is_ghost = 0;
         } else {
             f->state = FIGURE_STATE_DEAD;
         }
@@ -485,6 +487,7 @@ void figure_warehouseman_action(figure *f)
             break;
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
             building *b = building_get(f->building_id);
+            f->is_ghost = 1;
             if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
                 f->state = FIGURE_STATE_DEAD;
             }
