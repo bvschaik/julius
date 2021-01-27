@@ -1,6 +1,7 @@
 #include "SDL.h"
 
 #include "core/backtrace.h"
+#include "core/config.h"
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/lang.h"
@@ -8,10 +9,10 @@
 #include "game/game.h"
 #include "game/settings.h"
 #include "game/system.h"
+#include "graphics/screen.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 #include "platform/arguments.h"
-#include "platform/cursor.h"
 #include "platform/file_manager.h"
 #include "platform/keyboard_input.h"
 #include "platform/platform.h"
@@ -68,7 +69,7 @@ static void handler(int sig)
     exit(1);
 }
 
-#if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__)
+#if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__) || defined(__ANDROID__)
 /* Log to separate file on windows, since we don't have a console there */
 static FILE *log_file = 0;
 
@@ -88,7 +89,9 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
 
 static void setup_logging(void)
 {
-    log_file = file_open("augustus-log.txt", "wt");
+    // On some platforms (vita, android), not removing the file will not empty it when reopening for writing
+    file_remove("julius-log.txt");
+    log_file = file_open("julius-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
 
@@ -141,6 +144,14 @@ void system_set_fullscreen(int fullscreen)
 {
     post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
 }
+
+#ifdef _WIN32
+#define PLATFORM_ENABLE_PER_FRAME_CALLBACK
+static void platform_per_frame_callback(void)
+{
+    platform_screen_recreate_texture();
+}
+#endif
 
 #ifdef DRAW_FPS
 static struct {
@@ -205,7 +216,6 @@ static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
     }
 }
 
-#ifndef __SWITCH__
 static void handle_window_event(SDL_WindowEvent *event, int *window_active)
 {
     switch (event->event) {
@@ -237,16 +247,13 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
             break;
     }
 }
-#endif
 
 static void handle_event(SDL_Event *event, int *active, int *quit)
 {
     switch (event->type) {
-#ifndef __SWITCH__
         case SDL_WINDOWEVENT:
             handle_window_event(&event->window, active);
             break;
-#endif
         case SDL_KEYDOWN:
             platform_handle_key_down(&event->key);
             break;
@@ -377,8 +384,8 @@ static const char *ask_for_data_dir(int again)
 #ifdef __ANDROID__
     if (again) {
         const SDL_MessageBoxButtonData buttons[] = {
-           { SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK" },
-           { SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel" }
+           {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
+           {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}
         };
         const SDL_MessageBoxData messageboxdata = {
             SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
@@ -487,10 +494,6 @@ static void setup(const julius_args *args)
         exit(-1);
     }
 
-#ifdef PLATFORM_ENABLE_INIT_CALLBACK
-    platform_init_callback();
-#endif
-
     if (!pre_init(args->data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
         exit(1);
@@ -503,14 +506,26 @@ static void setup(const julius_args *args)
         SDL_Log("Forcing windowed mode with size %d x %d", w, h);
     }
 
+    // handle arguments
+    if (args->display_scale_percentage) {
+        config_set(CONFIG_SCREEN_DISPLAY_SCALE, args->display_scale_percentage);
+    }
+    if (args->cursor_scale_percentage) {
+        config_set(CONFIG_SCREEN_CURSOR_SCALE, args->cursor_scale_percentage);
+    }
+
     char title[100];
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
-    if (!platform_screen_create(title, args->display_scale_percentage)) {
+    if (!platform_screen_create(title, config_get(CONFIG_SCREEN_DISPLAY_SCALE))) {
         SDL_Log("Exiting: SDL create window failed");
         exit(-2);
     }
     // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
-    platform_init_cursors(args->cursor_scale_percentage);
+    system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
+
+#ifdef PLATFORM_ENABLE_INIT_CALLBACK
+    platform_init_callback();
+#endif
 
     time_set_millis(SDL_GetTicks());
 

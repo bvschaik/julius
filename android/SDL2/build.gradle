@@ -8,8 +8,6 @@ android {
     defaultConfig {
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 20012
-        versionName "2.0.12"
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
@@ -21,7 +19,8 @@ android {
             }
         }
         sourceSets {
-            main.java.srcDirs += '../../ext/SDL2/SDL2-2.0.12/android-project/app/src/main/java'
+            main.java.srcDirs += '../../ext/SDL2'
+            main.java.excludes += '**/android-project-ant/**'
         }
     }
     buildTypes {

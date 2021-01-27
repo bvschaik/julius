@@ -25,11 +25,11 @@
 #define TILE_X_PIXELS 60
 #define TILE_Y_PIXELS 30
 
-static const int DIRECTION_X[] = { 0,  1,  1,  1,  0, -1, -1, -1,  0 };
-static const int DIRECTION_Y[] = { -1, -1,  0,  1,  1,  1,  0, -1,  0 };
+static const int DIRECTION_X[] = { 0,  1,  1,  1,  0, -1, -1, -1, 0};
+static const int DIRECTION_Y[] = {-1, -1,  0,  1,  1,  1,  0, -1, 0};
 static const int SCROLL_STEP[SCROLL_TYPE_MAX][11] = {
-    { 60, 44, 30, 20, 16, 12, 10, 8, 6, 4, 2 },
-    { 20, 15, 10,  7,  5,  4,  3, 3, 2, 2, 1 }
+    {60, 44, 30, 20, 16, 12, 10, 8, 6, 4, 2},
+    {20, 15, 10,  7,  5,  4,  3, 3, 2, 2, 1}
 };
 
 typedef enum {
@@ -156,7 +156,8 @@ static key_state get_key_state_for_value(int value)
 static void set_arrow_key(key* arrow, int value)
 {
     key_state state = get_key_state_for_value(value);
-    if (state != KEY_STATE_AXIS && state != KEY_STATE_UNPRESSED && arrow->state != KEY_STATE_UNPRESSED) {
+    if (state != KEY_STATE_AXIS && state != KEY_STATE_UNPRESSED &&
+        arrow->state != KEY_STATE_AXIS && arrow->state != KEY_STATE_UNPRESSED) {
         return;
     }
     // Key should retain axis state even if its value is zero
@@ -371,7 +372,8 @@ static int get_direction(const mouse* m)
     // NOTE: using <= width/height (instead of <) to compensate for rounding
     // errors caused by scaling the display. SDL adds a 1px border to either
     // the right or the bottom when the aspect ratio does not match exactly.
-    if ((!m->is_touch || data.limits.active) && (x >= 0 && x <= width && y >= 0 && y <= height)) {
+    if (((!m->is_touch && !config_get(CONFIG_UI_DISABLE_MOUSE_EDGE_SCROLLING)) || data.limits.active) &&
+        (x >= 0 && x <= width && y >= 0 && y <= height)) {
         if (x < border) {
             left = 1;
             data.speed.modifier_x = 1 - x / (float)border;

@@ -111,6 +111,9 @@ static void draw_footprint(int x, int y, int grid_offset)
         color_t color_mask = 0;
         if (building_id) {
             building *b = building_get(building_id);
+            if (draw_building_as_deleted(b)) {
+                color_mask = COLOR_MASK_RED;
+            }
             int view_x, view_y, view_width, view_height;
             city_view_get_scaled_viewport(&view_x, &view_y, &view_width, &view_height);
             if (x < view_x + 100) {
@@ -300,13 +303,13 @@ static void draw_figures(int x, int y, int grid_offset)
     int figure_id = map_figure_at(grid_offset);
     while (figure_id) {
         figure *f = figure_get(figure_id);
-        if (!f->is_ghost) {
-            if (!draw_context.selected_figure_id) {
-                int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
-                city_draw_figure(f, x, y, highlight);
-            } else if (figure_id == draw_context.selected_figure_id) {
+        if (figure_id == draw_context.selected_figure_id) {
+            if (!f->is_ghost || f->height_adjusted_ticks) {
                 city_draw_selected_figure(f, x, y, draw_context.selected_figure_coord);
             }
+        } else if (!f->is_ghost) {
+            int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
+            city_draw_figure(f, x, y, highlight);
         }
         figure_id = f->next_figure_id_on_same_tile;
     }
@@ -426,7 +429,7 @@ static void draw_animation(int x, int y, int grid_offset)
             (orientation == DIR_4_BOTTOM && xy == EDGE_X0Y0) ||
             (orientation == DIR_6_LEFT && xy == EDGE_X1Y0)) {
             building *gate = building_get(map_building_at(grid_offset));
-            int image_id = image_group(GROUP_BULIDING_GATEHOUSE);
+            int image_id = image_group(GROUP_BUILDING_GATEHOUSE);
             int color_mask = draw_building_as_deleted(gate) ? COLOR_MASK_RED : 0;
             if (gate->subtype.orientation == 1) {
                 if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {

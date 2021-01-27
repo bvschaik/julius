@@ -319,10 +319,28 @@ static int unpack(const char *filename, unsigned char *buffer)
     return offset;
 }
 
+static int has_adjacent_terrain_type(int part_offset, int terrain_type)
+{
+    int grid_offset = part_offset / 2;
+    const int adjacent_tiles[] = {-162, 1, 162, -1};
+
+    for (int i = 0; i < 4; ++i) {
+        int adjacent_offset = grid_offset + adjacent_tiles[i];
+        if (adjacent_offset < 0 || adjacent_offset >= 162 * 162) {
+            continue;
+        }
+        int type = to_ushort(&file1_data[offset_of_part("terrain_grid") + adjacent_offset * 2]);
+        if (type & terrain_type) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 static int has_adjacent_building_type(int part_offset, int building_type)
 {
     int grid_offset = part_offset / 2;
-    const int adjacent_tiles[] = { -162, 1, 162, -1 };
+    const int adjacent_tiles[] = {-162, 1, 162, -1};
 
     for (int i = 0; i < 4; ++i) {
         int adjacent_offset = grid_offset + adjacent_tiles[i];
@@ -374,6 +392,12 @@ static int is_exception_image_grid(int global_offset, int part_offset)
     }
     // burning tent: fix in julius to use its own graphic
     if ((v1 == 734 && is_between(v2, 743, 770)) || (v2 == 734 && is_between(v1, 743, 770))) {
+        return 1;
+    }
+    // Exception for roads next to an access ramp: in julius the dirt roads and paved roads lead
+    // into the access ramp, while in Caesar 3 they do not. Therefore we do not check roads that
+    // are adjacent to an access ramp (terrain type 1024).
+    if (both_between(v1, v2, 591, 657) && has_adjacent_terrain_type(part_offset, 1024)) {
         return 1;
     }
     // Exception for roads next to a granary: in julius the dirt roads and paved roads lead

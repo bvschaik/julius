@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.1)
 include(CMakeDependentOption)
 
 if(VITA_BUILD AND SWITCH_BUILD)
@@ -185,13 +185,16 @@ set(PMURHASH_FILES
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/arguments.c
+    ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
+    ${PROJECT_SOURCE_DIR}/src/platform/file_manager_cache.c
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
     ${PROJECT_SOURCE_DIR}/src/platform/mouse.c
     ${PROJECT_SOURCE_DIR}/src/platform/platform.c
     ${PROJECT_SOURCE_DIR}/src/platform/prefs.c
+    ${PROJECT_SOURCE_DIR}/src/platform/screen.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
     ${PROJECT_SOURCE_DIR}/src/platform/touch.c
     ${PROJECT_SOURCE_DIR}/src/platform/version.c
@@ -201,8 +204,6 @@ set(PLATFORM_FILES
 if (VITA_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
@@ -210,19 +211,9 @@ if (VITA_BUILD)
 elseif (SWITCH_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/screen.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.c
     )
-else()
-    set(PLATFORM_FILES
-        ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
-        ${PROJECT_SOURCE_DIR}/src/platform/screen.c
-    )
-endif()
-
-if (ANDROID_BUILD)
+elseif (ANDROID_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/android/android.c
@@ -499,6 +490,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/map_editor_tool.c
     ${PROJECT_SOURCE_DIR}/src/widget/map_editor_pause_menu.c
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
+    ${PROJECT_SOURCE_DIR}/src/widget/scenario_minimap.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/city.c
@@ -705,11 +697,12 @@ if(APPLE)
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
     set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MACOSX_BUNDLE_BUNDLE_VERSION})
 
-    set_target_properties(augustus PROPERTIES
+    set_target_properties(${SHORT_NAME} PROPERTIES
         MACOSX_BUNDLE TRUE
         MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist.in")
 
     set(DIRS "")
+    set(LIBS "")
 
     # if SDL2 library is a framework, we need to indicate to CMake
     # the path to its dependencies. SDL2_LIBRARY contains two parts.
@@ -717,20 +710,29 @@ if(APPLE)
     # So strip out everything after the ';'
     string(REGEX REPLACE ";.*$" "" SDL2_LIB_DIR "${SDL2_LIBRARY}")
     if(EXISTS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
-        set(DIRS "${DIRS};${SDL2_LIB_DIR}/Versions/A/Frameworks")
+        list(APPEND DIRS "${SDL2_LIB_DIR}/Versions/A/Frameworks")
     endif()
 
     # if SDL2_mixer library is a framework, we need to indicate to CMake
     # the path to its dependencies (Ogg.framework etc):
     if(EXISTS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
-        set(DIRS "${DIRS};${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
+        list(APPEND DIRS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
+        # Copy mpg123 framework manually because since MacOS 10.15, the
+        # dependency is seen as "weak" and not copied automatically
+        file(COPY "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks/mpg123.framework" DESTINATION "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks")
+        list(APPEND LIBS "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/mpg123.framework/mpg123")
     endif()
 
-    # when installing, "fixup" automatically copies librairies inside the
+    # when installing, "fixup" automatically copies libraries inside the
     # bundle and links the binary against them
     install(CODE "
         include(BundleUtilities)
-        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"\" \"${DIRS}\")
+        fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
+        # Manually fix up link to mpg123 in SDL2_mixer
+        execute_process(COMMAND ${CMAKE_INSTALL_NAME_TOOL}
+            \"-change\" \"@rpath/mpg123.framework/Versions/A/mpg123\"
+            \"@executable_path/../Frameworks/mpg123.framework/mpg123\"
+            \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/SDL2_mixer.framework/Versions/A/SDL2_mixer\")
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
@@ -755,6 +757,9 @@ if(PNG_FOUND)
     include_directories(${PNG_INCLUDE_DIRS})
     target_link_libraries(${SHORT_NAME} ${PNG_LIBRARIES})
 else()
+    if(SYSTEM_LIBS)
+        message(STATUS "PNG was not found but that's ok: falling back to internal version")
+    endif()
     include_directories("ext/png")
     target_sources(${SHORT_NAME} PRIVATE "${PNG_FILES}")
 endif()
@@ -810,6 +815,7 @@ if (VITA_BUILD)
         SceGxm_stub
         SceHid_stub
         SceIofilemgr_stub
+        SceMotion_stub
         SceSysmodule_stub
         SceTouch_stub
         ScePower_stub
@@ -851,26 +857,16 @@ elseif(SWITCH_BUILD)
     )
 
     set(FLAGS
-        -D__SWITCH__
-        -Wno-write-strings
-        -march=armv8-a
-        -mtune=cortex-a57
-        -mtp=soft
-        -O2
         -fPIE
-        -fno-asynchronous-unwind-tables
-        -funroll-loops
-        -fno-unwind-tables
-        -fno-optimize-sibling-calls
-        -mlittle-endian
-        -ffunction-sections
+        -L${DEVKITPRO}/portlibs/switch/lib
+        -L${DEVKITPRO}/libnx/lib
     )
 
     foreach(flag ${FLAGS})
         set(FLAGS_GENERAL "${FLAGS_GENERAL} ${flag}")
     endforeach(flag ${FLAGS})
 
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FLAGS_GENERAL} --verbose")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FLAGS_GENERAL}")
 
     target_compile_options(${SHORT_NAME} PRIVATE ${FLAGS})
     add_custom_command(TARGET ${SHORT_NAME}

@@ -50,8 +50,8 @@ int platform_parse_arguments(int argc, char **argv, julius_args *output_args)
 
     // Set sensible defaults
     output_args->data_directory = 0;
-    output_args->display_scale_percentage = 100;
-    output_args->cursor_scale_percentage = 100;
+    output_args->display_scale_percentage = 0;
+    output_args->cursor_scale_percentage = 0;
     output_args->force_windowed = 0;
 
     for (int i = 1; i < argc; i++) {

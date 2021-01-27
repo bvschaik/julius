@@ -16,8 +16,8 @@
 static void button_close(int save, int param2);
 
 static generic_button bottom_buttons[] = {
-    { 192, 228, 120, 24, button_close, button_none, 0 },
-    { 328, 228, 120, 24, button_close, button_none, 1 },
+    {192, 228, 120, 24, button_close, button_none, 0},
+    {328, 228, 120, 24, button_close, button_none, 1},
 };
 
 static translation_key bottom_button_texts[] = {
@@ -40,7 +40,7 @@ static void init(hotkey_action action, int index,
     data.action = action;
     data.index = index;
     data.callback = callback;
-    data.key = KEY_NONE;
+    data.key = KEY_TYPE_NONE;
     data.modifiers = KEY_MOD_NONE;
     data.focus_button = 0;
 }
@@ -92,20 +92,22 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void button_close(int ok, int param2)
 {
+    // destroy window before callback call, because there may appear another popup window
+    // by design new popup window can't be showed over another popup window
+    window_go_back();
     if (ok) {
         data.callback(data.action, data.index, data.key, data.modifiers);
     }
-    window_go_back();
 }
 
 void window_hotkey_editor_key_pressed(key_type key, key_modifier_type modifiers)
 {
-    if (key == KEY_ENTER && modifiers == KEY_MOD_NONE) {
+    if (key == KEY_TYPE_ENTER && modifiers == KEY_MOD_NONE) {
         button_close(1, 0);
-    } else if (key == KEY_ESCAPE && modifiers == KEY_MOD_NONE) {
+    } else if (key == KEY_TYPE_ESCAPE && modifiers == KEY_MOD_NONE) {
         button_close(0, 0);
     } else {
-        if (key != KEY_NONE) {
+        if (key != KEY_TYPE_NONE) {
             data.key = key;
         }
         data.modifiers = modifiers;
@@ -115,7 +117,7 @@ void window_hotkey_editor_key_pressed(key_type key, key_modifier_type modifiers)
 void window_hotkey_editor_key_released(key_type key, key_modifier_type modifiers)
 {
     // update modifiers as long as we don't have a proper keypress
-    if (data.key == KEY_NONE && key == KEY_NONE) {
+    if (data.key == KEY_TYPE_NONE && key == KEY_TYPE_NONE) {
         data.modifiers = modifiers;
     }
 }

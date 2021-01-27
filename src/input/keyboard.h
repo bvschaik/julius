@@ -16,6 +16,7 @@ void keyboard_stop_capture_numeric(void);
 
 int keyboard_input_is_accepted(void);
 int keyboard_is_insert(void);
+int keyboard_is_capturing(void);
 int keyboard_cursor_position(void);
 int keyboard_offset_start(void);
 int keyboard_offset_end(void);
@@ -32,5 +33,10 @@ void keyboard_home(void);
 void keyboard_end(void);
 
 void keyboard_text(const char *text_utf8);
+
+const uint8_t *keyboard_get_text(void);
+void keyboard_set_text(const uint8_t *text);
+
+int keyboard_get_max_text_length(void);
 
 #endif // INPUT_KEYBOARD_H

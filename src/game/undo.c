@@ -200,6 +200,9 @@ static void add_building_to_terrain(building *b)
             image_group(GROUP_BUILDING_FARM_CROPS) + image_offset, 0);
     } else {
         int size = building_properties_for_type(b->type)->size;
+        if (building_is_house(b->type) && b->house_is_merged) {
+            size = 2;
+        }
         map_building_tiles_add(b->id, b->x, b->y, size, 0, 0);
         if (b->type == BUILDING_WHARF) {
             b->data.industry.fishing_boat_id = 0;

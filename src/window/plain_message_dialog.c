@@ -18,9 +18,10 @@ static image_button buttons[] = {
 static struct {
     const uint8_t *title;
     const uint8_t *message;
+    const uint8_t *extra;
 } data;
 
-static int init(translation_key title, translation_key message)
+static int init(translation_key title, translation_key message, const uint8_t *extra)
 {
     if (window_is(WINDOW_PLAIN_MESSAGE_DIALOG)) {
         // don't show popup over popup
@@ -28,6 +29,7 @@ static int init(translation_key title, translation_key message)
     }
     data.title = translation_for(title);
     data.message = translation_for(message);
+    data.extra = extra;
     return 1;
 }
 
@@ -37,6 +39,9 @@ static void draw_background(void)
     outer_panel_draw(80, 80, 30, 12);
     text_draw_centered(data.title, 80, 100, 480, FONT_LARGE_BLACK, 0);
     text_draw_multiline(data.message, 100, 140, 450, FONT_NORMAL_BLACK, 0);
+    if (data.extra) {
+        text_draw_centered(data.extra, 100, 180, 450, FONT_NORMAL_BLACK, 0);
+    }
     graphics_reset_dialog();
 }
 
@@ -69,7 +74,20 @@ static void button_ok(int param1, int param2)
 
 void window_plain_message_dialog_show(translation_key title, translation_key message)
 {
-    if (init(title, message)) {
+    if (init(title, message, 0)) {
+        window_type window = {
+            WINDOW_PLAIN_MESSAGE_DIALOG,
+            draw_background,
+            draw_foreground,
+            handle_input
+        };
+        window_show(&window);
+    }
+}
+
+void window_plain_message_dialog_show_with_extra(translation_key title, translation_key message, const uint8_t *extra)
+{
+    if (init(title, message, extra)) {
         window_type window = {
             WINDOW_PLAIN_MESSAGE_DIALOG,
             draw_background,

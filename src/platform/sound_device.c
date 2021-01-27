@@ -185,9 +185,7 @@ static void load_music_for_vita(const char *filename)
         vita_music_data.buffer = 0;
     }
     strncpy(vita_music_data.filename, filename, FILE_NAME_MAX - 1);
-    char *resolved_filename = vita_prepend_path(filename);
-    SceUID fd = sceIoOpen(resolved_filename, SCE_O_RDONLY, 0777);
-    free(resolved_filename);
+    SceUID fd = sceIoOpen(vita_prepend_path(filename), SCE_O_RDONLY, 0777);
     if (fd < 0) {
         return;
     }
@@ -203,6 +201,9 @@ int sound_device_play_music(const char *filename, int volume_pct)
 {
     if (data.initialized) {
         sound_device_stop_music();
+        if (!filename) {
+            return 0;
+        }
 #ifdef __vita__
         load_music_for_vita(filename);
         if (!vita_music_data.buffer) {

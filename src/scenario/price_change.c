@@ -39,4 +39,3 @@ void scenario_price_change_process(void)
         }
     }
 }
-

@@ -12,12 +12,17 @@ typedef struct {
     int width_blocks;
     int height_blocks;
     font_t font;
-    int max_length;
-    // private vars
+    int allow_punctuation;
     uint8_t *text;
+    int text_length;
 } input_box;
 
-void input_box_start(input_box *box, uint8_t *text, int length, int allow_punctuation);
+/**
+ * This will start text input. The `text` variable of the box will be used to capture
+ * input until @link input_box_stop @endlink is called
+ * @param box Input box
+ */
+void input_box_start(input_box *box);
 void input_box_pause(input_box *box);
 void input_box_resume(input_box *box);
 void input_box_stop(input_box *box);

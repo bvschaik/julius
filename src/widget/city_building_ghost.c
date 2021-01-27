@@ -4,6 +4,7 @@
 #include "building/count.h"
 #include "building/industry.h"
 #include "building/monument.h"
+#include "building/model.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/type.h"
@@ -336,7 +337,7 @@ static void draw_default(const map_tile* tile, int x_view, int y_view, building_
         if (type == BUILDING_TOWER) {
             forbidden_terrain &= ~TERRAIN_WALL;
         }
-        if (forbidden_terrain || map_has_figure_at(tile_offset)) {
+        if (forbidden_terrain || (map_has_figure_at(tile_offset) && type != BUILDING_PLAZA)) {
             blocked_tiles[i] = blocked = 1;
         } else {
             blocked_tiles[i] = 0;
@@ -542,14 +543,18 @@ static void draw_fountain(const map_tile *tile, int x, int y)
     if (city_finance_out_of_money()) {
         draw_flat_tile(x, y, COLOR_MASK_RED);
     } else {
+        int blocked_tiles = 0;
+        int blocked = is_blocked_for_building(tile->grid_offset, 1, &blocked_tiles);
+        int color_mask = blocked ? COLOR_MASK_BUILDING_GHOST_RED : COLOR_MASK_BUILDING_GHOST;
         int image_id = image_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
             city_view_foreach_tile_in_range(tile->grid_offset, 1, map_water_supply_fountain_radius(), draw_fountain_range);
         }
-        draw_building(image_id, x, y);
+        image_draw_isometric_footprint(image_id, x, y, color_mask);
+        image_draw_isometric_top(image_id, x, y, color_mask);
         if (map_terrain_is(tile->grid_offset, TERRAIN_RESERVOIR_RANGE)) {
             const image *img = image_get(image_id);
-            image_draw_masked(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, COLOR_MASK_BUILDING_GHOST);
+            image_draw_masked(image_id + 1, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
         }
     }
 }
@@ -674,6 +679,7 @@ static void draw_bridge(const map_tile *tile, int x, int y, building_type type)
         if (length > 1) {
             draw_flat_tile(x + x_delta * (length - 1), y + y_delta * (length - 1), COLOR_MASK_RED);
         }
+        building_construction_set_cost(0);
     } else {
         if (dir == DIR_0_TOP || dir == DIR_6_LEFT) {
             for (int i = length - 1; i >= 0; i--) {
@@ -686,6 +692,7 @@ static void draw_bridge(const map_tile *tile, int x, int y, building_type type)
                 city_draw_bridge_tile(x + x_delta * i, y + y_delta * i, sprite_id, COLOR_MASK_BUILDING_GHOST);
             }
         }
+        building_construction_set_cost(model_get_building(type)->cost * length);
     }
 }
 

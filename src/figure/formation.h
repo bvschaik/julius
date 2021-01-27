@@ -38,6 +38,7 @@ enum {
     FORMATION_ENEMY_DOUBLE_LINE = 10,
     FORMATION_ENEMY_WIDE_COLUMN = 11,
     FORMATION_ENEMY12 = 12,
+    FORMATION_MAX = 13
 };
 
 typedef struct {

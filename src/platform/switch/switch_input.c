@@ -1,12 +1,19 @@
 #include "switch_input.h"
 #include "switch.h"
-#include <math.h>
-#include <switch.h>
 
 #include "core/calc.h"
+#include "core/config.h"
 #include "core/encoding.h"
+#include "core/string.h"
+#include "game/system.h"
+#include "graphics/screen.h"
+#include "input/keyboard.h"
 #include "input/mouse.h"
 #include "input/touch.h"
+#include "platform/screen.h"
+
+#include <math.h>
+#include <switch.h>
 
 #define NO_MAPPING -1
 #define MAX_VKBD_TEXT_SIZE 600
@@ -44,10 +51,16 @@ static int can_change_touch_mode = 1;
 
 static SDL_Joystick *joy = NULL;
 
+static AppletOperationMode display_mode = -1;
+
+#define HANDHELD_SCREEN_SCALE 200
+#define DOCKED_SCREEN_SCALE 150
+#define CURSOR_SCALE 200
+
 static struct {
+    uint8_t text[MAX_VKBD_TEXT_SIZE];
     char utf8_text[MAX_VKBD_TEXT_SIZE];
     int requested;
-    int max_length;
 } vkbd;
 
 static int hires_dx = 0; // sub-pixel-precision counters to allow slow pointer motion of <1 pixel per frame
@@ -97,7 +110,6 @@ static uint8_t map_switch_button_to_sdlmousebutton[SWITCH_NUM_BUTTONS] =
     NO_MAPPING          // SWITCH_PAD_DOWN
 };
 
-static void switch_start_text_input(void);
 static void switch_rescale_analog(int *x, int *y, int dead);
 static void switch_button_to_sdlkey_event(int switch_button, SDL_Event *event, uint32_t event_type);
 static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event, uint32_t event_type);
@@ -105,13 +117,71 @@ static void switch_button_to_sdlmouse_event(int switch_button, SDL_Event *event,
 static void switch_create_and_push_sdlkey_event(uint32_t event_type, SDL_Scancode scan, SDL_Keycode key);
 static void switch_create_key_event_for_direction(int direction, int key_pressed);
 
+static void center_mouse_cursor(void)
+{
+    int x = screen_width() / 2;
+    int y = screen_height() / 2;
+    system_set_mouse_position(&x, &y);
+    mouse_set_position(x, y);
+}
+
+static void change_display_size(void)
+{
+    AppletOperationMode mode = appletGetOperationMode();
+    if (mode != display_mode) {
+        SDL_Log("Changing display mode to %s", mode == AppletOperationMode_Handheld ? "handheld" : "docked");
+        display_mode = mode;
+        if (display_mode == AppletOperationMode_Handheld) {
+            system_scale_display(HANDHELD_SCREEN_SCALE);
+        } else {
+            system_scale_display(DOCKED_SCREEN_SCALE);
+        }
+        center_mouse_cursor();
+    }
+}
+
+static const uint8_t *switch_keyboard_get(const uint8_t *text, int max_length)
+{
+    max_length = calc_bound(max_length, 0, MAX_VKBD_TEXT_SIZE);
+    string_copy(text, vkbd.text, max_length);
+    encoding_to_utf8(text, vkbd.utf8_text, max_length, 0);
+    Result rc = 0;
+
+    SwkbdConfig kbd;
+
+    rc = swkbdCreate(&kbd, 0);
+
+    if (R_SUCCEEDED(rc)) {
+        swkbdConfigMakePresetDefault(&kbd);
+        swkbdConfigSetInitialText(&kbd, vkbd.utf8_text);
+        rc = swkbdShow(&kbd, vkbd.utf8_text, max_length);
+        swkbdClose(&kbd);
+        if (R_SUCCEEDED(rc)) {
+            encoding_from_utf8(vkbd.utf8_text, vkbd.text, max_length);
+        }
+    }
+
+    return vkbd.text;
+}
+
+static void switch_start_text_input(void)
+{
+    if (!keyboard_is_capturing()) {
+        return;
+    }
+    const uint8_t *text = switch_keyboard_get(keyboard_get_text(), keyboard_get_max_text_length());
+    keyboard_set_text(text);
+}
+
 void platform_init_callback(void)
 {
+    config_set(CONFIG_SCREEN_CURSOR_SCALE, CURSOR_SCALE);
     touch_set_mode(TOUCH_MODE_TOUCHPAD);
 }
 
 void platform_per_frame_callback(void)
 {
+    change_display_size();
     if (vkbd.requested) {
         switch_start_text_input();
         vkbd.requested = 0;
@@ -119,10 +189,8 @@ void platform_per_frame_callback(void)
     switch_handle_analog_sticks();
 }
 
-void platform_show_virtual_keyboard(const uint8_t *text, int max_length)
+void platform_show_virtual_keyboard(void)
 {
-    vkbd.max_length = calc_bound(max_length, 0, MAX_VKBD_TEXT_SIZE);
-    encoding_to_utf8(text, vkbd.utf8_text, MAX_VKBD_TEXT_SIZE, 0);
     vkbd.requested = 1;
 }
 
@@ -254,16 +322,16 @@ void switch_handle_analog_sticks(void)
                 x = 0;
                 xrel = 0 - last_mouse_x;
             }
-            if (x >= SWITCH_DISPLAY_WIDTH) {
-                x = SWITCH_DISPLAY_WIDTH - 1;
+            if (x >= screen_width()) {
+                x = screen_width() - 1;
                 xrel = x - last_mouse_x;
             }
             if (y < 0) {
                 y = 0;
                 yrel = 0 - last_mouse_y;
             }
-            if (y >= SWITCH_DISPLAY_HEIGHT) {
-                y = SWITCH_DISPLAY_HEIGHT - 1;
+            if (y >= screen_height()) {
+                y = screen_height() - 1;
                 yrel = y - last_mouse_y;
             }
             SDL_Event event;
@@ -282,7 +350,7 @@ void switch_handle_analog_sticks(void)
     float right_joy_dead_zone_squared = 10240.0*10240.0;
     float slope = 0.414214f; // tangent of 22.5 degrees for size of angular zones
 
-    int direction_states[ANALOG_MAX] = { 0, 0, 0, 0 };
+    int direction_states[ANALOG_MAX] = {0, 0, 0, 0};
 
     if (right_x * right_x + right_y * right_y > right_joy_dead_zone_squared) {
         if (right_y > 0 && right_x > 0) {
@@ -325,49 +393,6 @@ void switch_handle_analog_sticks(void)
             right_analog_state[direction] = direction_states[direction];
             switch_create_key_event_for_direction(direction, direction_states[direction]);
         }
-    }
-}
-
-static int switch_keyboard_get(char *title, char *buffer, int max_len)
-{
-    Result rc = 0;
-
-    SwkbdConfig kbd;
-
-    rc = swkbdCreate(&kbd, 0);
-
-    if (R_SUCCEEDED(rc)) {
-        swkbdConfigMakePresetDefault(&kbd);
-        swkbdConfigSetInitialText(&kbd, buffer);
-        rc = swkbdShow(&kbd, buffer, max_len);
-        swkbdClose(&kbd);
-    }
-    return R_SUCCEEDED(rc);
-}
-
-static void switch_start_text_input(void)
-{
-    if (!switch_keyboard_get("Enter New Text:", vkbd.utf8_text, vkbd.max_length)) {
-        return;
-    }
-    for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
-        switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_BACKSPACE, SDLK_BACKSPACE);
-    }
-    for (int i = 0; i < MAX_VKBD_TEXT_SIZE; i++) {
-        switch_create_and_push_sdlkey_event(SDL_KEYDOWN, SDL_SCANCODE_DELETE, SDLK_DELETE);
-        switch_create_and_push_sdlkey_event(SDL_KEYUP, SDL_SCANCODE_DELETE, SDLK_DELETE);
-    }
-    for (int i = 0; i < MAX_VKBD_TEXT_SIZE - 1 && vkbd.utf8_text[i];) {
-        int bytes_in_char = encoding_get_utf8_character_bytes(vkbd.utf8_text[i]);
-        SDL_Event textinput_event;
-        textinput_event.type = SDL_TEXTINPUT;
-        for (int n = 0; n < bytes_in_char; n++) {
-            textinput_event.text.text[n] = vkbd.utf8_text[i + n];
-        }
-        textinput_event.text.text[bytes_in_char] = 0;
-        SDL_PushEvent(&textinput_event);
-        i += bytes_in_char;
     }
 }
 

@@ -174,10 +174,9 @@ static void draw_background(void)
 
 static void draw_foreground(void)
 {
-    if (!data.open_sub_menu) {
-        return;
+    if (data.open_sub_menu) {
+        menu_draw(&menu[data.open_sub_menu - 1], data.focus_sub_menu_id);
     }
-    menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -200,7 +199,7 @@ static void top_menu_window_show(void)
 static void refresh_background(void)
 {
     int block_width = 24;
-    int image_base = image_group(GROUP_TOP_MENU_SIDEBAR);
+    int image_base = image_group(GROUP_TOP_MENU);
     int s_width = screen_width();
     for (int i = 0; i * block_width < s_width; i++) {
         image_draw(image_base + i % 8, i * block_width, 0);
@@ -227,15 +226,16 @@ void widget_top_menu_draw(int force)
         return;
     }
 
+    int s_width = screen_width();
+
     refresh_background();
-    menu_bar_draw(menu, 4);
+    menu_bar_draw(menu, 4, s_width < 1024 ? 338 : 493);
 
     color_t treasure_color = COLOR_WHITE;
     int treasury = city_finance_treasury();
     if (treasury < 0) {
         treasure_color = COLOR_FONT_RED;
     }
-    int s_width = screen_width();
     if (s_width < 800) {
         data.offset_funds = 338;
         data.offset_population = 453;
@@ -289,7 +289,7 @@ static int handle_input_submenu(const mouse *m, const hotkeys *h)
     }
     int menu_id = menu_bar_handle_mouse(m, menu, 4, &data.focus_menu_id);
     if (menu_id && menu_id != data.open_sub_menu) {
-        window_invalidate();
+        window_request_refresh();
         data.open_sub_menu = menu_id;
     }
     if (!menu_handle_mouse(m, &menu[data.open_sub_menu - 1], &data.focus_sub_menu_id)) {

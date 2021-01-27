@@ -226,4 +226,3 @@ const building_properties *building_properties_for_type(building_type type)
 
     return &properties[type];
 }
-

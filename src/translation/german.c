@@ -22,6 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "Das gewählte Verzeichnis enthält kein gültiges Sprachpaket. "
         "Bitte überprüfe das Protokoll auf Fehler."},
+    {TR_BUILD_ALL_TEMPLES, "Alle"},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Abbrechen"},
     {TR_BUTTON_RESET_DEFAULTS, "Zurücksetzen"},
@@ -32,6 +33,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_LANGUAGE_LABEL, "Sprache:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(Standard)"},
     {TR_CONFIG_PAGE_LABEL, "Seite"},
+    {TR_CONFIG_DISPLAY_SCALE, "Skalierung der Anzeige:"},
+    {TR_CONFIG_CURSOR_SCALE, "Skalierung des Mauszeigers:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "Benutzeroberfläche"},
     {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Spielablauf"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Intro-Videos abspielen"},

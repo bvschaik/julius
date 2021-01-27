@@ -22,13 +22,12 @@ static image_button image_buttons[] = {
     {305, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, send_command, button_none, 1, 0, 1}
 };
 
-static input_box command_input = { 160, 208, 20, 2, FONT_NORMAL_WHITE };
-
 static char command[MAX_COMMAND_SIZE] = "";
+static input_box command_input = { 160, 208, 20, 2, FONT_NORMAL_WHITE, 1, (uint8_t *)command, MAX_COMMAND_SIZE };
 
 static void init(void)
 {
-    input_box_start(&command_input, (uint8_t *)command, MAX_COMMAND_SIZE, 1);
+    input_box_start(&command_input);
 }
 
 static void draw_foreground(void)
