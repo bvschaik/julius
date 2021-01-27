@@ -520,7 +520,7 @@ void building_construction_cancel(void)
         if (building_construction_is_updatable()) {
             game_undo_restore_map(1);
         }
-        if (building_construction_is_connecting) {
+        if (building_construction_is_connecting()) {
             building_image_context_clear_connection_grid();
             map_tiles_update_all_hedges();
         }
