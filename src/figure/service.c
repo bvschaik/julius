@@ -206,7 +206,7 @@ static void tourist_spend(building* b, figure *f)
 {
     int can_pay = 0;
     if (!b->is_tourism_venue || b->tourism_disabled) {
-        return 0;
+        return;
     }
 
     if (b->type == BUILDING_HIPPODROME) {
