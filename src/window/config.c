@@ -74,6 +74,10 @@ static const uint8_t *display_text_language(void);
 static const uint8_t *display_text_display_scale(void);
 static const uint8_t *display_text_cursor_scale(void);
 
+static const uint8_t *display_text_language(void);
+static const uint8_t *display_text_display_scale(void);
+static const uint8_t *display_text_cursor_scale(void);
+
 static scrollbar_type scrollbar = {580, ITEM_Y_OFFSET, ITEM_HEIGHT * NUM_VISIBLE_ITEMS, on_scroll, 4};
 
 enum {
@@ -94,6 +98,23 @@ enum {
     RANGE_DISPLAY_SCALE,
     RANGE_CURSOR_SCALE
 };
+
+enum {
+    SELECT_LANGUAGE
+};
+
+enum {
+    RANGE_DISPLAY_SCALE,
+    RANGE_CURSOR_SCALE
+};
+
+typedef struct {
+    int width_blocks;
+    int min;
+    int max;
+    int step;
+    int *value;
+} numerical_range_widget;
 
 typedef struct {
     int width_blocks;

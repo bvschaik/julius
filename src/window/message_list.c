@@ -120,10 +120,10 @@ static void draw_messages(int total_messages)
             image_offset = 2;
         }
         if (msg->is_read) {
-            image_draw(image_group(GROUP_MESSAGE_ICON) + 15 + image_offset,
+            image_draw(image_group(GROUP_ARROW_MESSAGE_PROBLEMS) + 15 + image_offset,
                 data.x_text + 12, data.y_text + 6 + 20 * i);
         } else {
-            image_draw(image_group(GROUP_MESSAGE_ICON) + 14 + image_offset,
+            image_draw(image_group(GROUP_ARROW_MESSAGE_PROBLEMS) + 14 + image_offset,
                 data.x_text + 12, data.y_text + 6 + 20 * i);
         }
         font_t font = FONT_NORMAL_WHITE;

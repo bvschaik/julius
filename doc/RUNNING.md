@@ -37,6 +37,17 @@ Augustus still works on Windows XP, but the most recent version of SDL does not.
 3. Extract `SDL2.dll` from that zip file to the same folder where you installed Augustus, overwriting the existing file
 4. Run Augustus
 
+Alternatively, you can check the `Disable right click to drag the map` option do disable right-click scrolling.
+
+### Windows XP
+
+Julius still works on Windows XP, but the most recent version of SDL does not. To get it to work:
+
+1. Follow the general instructions for Windows
+2. Download [SDL 2.0.9](http://libsdl.org/release/SDL2-2.0.9-win32-x86.zip)
+3. Extract `SDL2.dll` from that zip file to the same folder where you installed Julius, overwriting the existing file
+4. Run Julius
+
 ## Linux/BSD
 
 OpenBSD and FreeBSD provide Augustus as [package](http://ports.su/games/augustus-game).
