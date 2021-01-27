@@ -398,19 +398,22 @@ static void draw_background(void)
     text_draw_centered(translation_for(TR_CONFIG_TITLE), 16, 16, 608, FONT_LARGE_BLACK, 0);
 
     int page_x_offset = 30;
+    int open_tab_width = text_get_width(translation_for(page_names[data.page]), FONT_NORMAL_BLACK) + 6;
+    int max_closed_tab_width = (600 - page_x_offset * CONFIG_PAGES - open_tab_width) / (CONFIG_PAGES - 1);
     for(int i = 0; i < CONFIG_PAGES; ++i) {
         page_x_offset += 15;
         int width = 0;
         if (data.page == i) {
             width = text_draw(translation_for(page_names[i]), page_x_offset, 58, FONT_NORMAL_BLACK, 0);
         } else {
-            width = text_draw_ellipsized(translation_for(page_names[i]), page_x_offset, 58, 150, FONT_NORMAL_BLACK, 0);
+            width = text_draw_ellipsized(translation_for(page_names[i]),
+                                            page_x_offset, 58, max_closed_tab_width, FONT_NORMAL_BLACK, 0);
         }
         page_buttons[i].x = page_x_offset - 10;
         page_buttons[i].width = width + 15;
         free(data.graphics_behind_tab[i]);
-        data.graphics_behind_tab[i] = malloc((width + 15) * 3 * sizeof(color_t));
-        graphics_save_to_buffer(page_x_offset - 10, 75, width + 15, 3, data.graphics_behind_tab[i]);
+        data.graphics_behind_tab[i] = malloc(page_buttons[i].width * 3 * sizeof(color_t));
+        graphics_save_to_buffer(page_buttons[i].x, 75, page_buttons[i].width, 3, data.graphics_behind_tab[i]);
         page_x_offset += width;
     }
 
