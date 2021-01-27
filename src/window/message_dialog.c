@@ -34,7 +34,7 @@ static void button_advisor(int advisor, int param2);
 static void button_go_to_problem(int param1, int param2);
 
 static image_button image_button_back = {
-    0, 0, 31, 20, IB_NORMAL, GROUP_ARROW_MESSAGE_PROBLEMS, 8, button_back, button_none, 0, 0, 1
+    0, 0, 31, 20, IB_NORMAL, GROUP_MESSAGE_ICON, 8, button_back, button_none, 0, 0, 1
 };
 static image_button image_button_close = {
     0, 0, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1

@@ -570,7 +570,6 @@ void building_construction_update(int x, int y, int grid_offset)
                 map_building_tiles_are_clear(x + FORT_X_OFFSET[building_rotation_get_rotation()][city_view_orientation()/2], y + FORT_Y_OFFSET[building_rotation_get_rotation()][city_view_orientation()/2], 4, TERRAIN_ALL) &&
                 city_buildings_has_mess_hall()) {
                 mark_construction(x, y, 3, TERRAIN_ALL, 0);
-                mark_construction(x + x_offset, y + y_offset, 4, TERRAIN_ALL, 0);
             }
         }
     } else if (type == BUILDING_HIPPODROME) {

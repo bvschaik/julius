@@ -99,23 +99,6 @@ enum {
     RANGE_CURSOR_SCALE
 };
 
-enum {
-    SELECT_LANGUAGE
-};
-
-enum {
-    RANGE_DISPLAY_SCALE,
-    RANGE_CURSOR_SCALE
-};
-
-typedef struct {
-    int width_blocks;
-    int min;
-    int max;
-    int step;
-    int *value;
-} numerical_range_widget;
-
 typedef struct {
     int width_blocks;
     int min;
