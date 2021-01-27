@@ -16,6 +16,8 @@
 
 #include "SDL.h"
 
+#include <stdlib.h>
+
 static struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
