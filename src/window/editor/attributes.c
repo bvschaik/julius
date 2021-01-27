@@ -63,13 +63,16 @@ static arrow_button image_arrows[] = {
     {44, 424, 21, 24, change_image, 1, 0},
 };
 
-static input_box scenario_description_input = { 92, 40, 19, 2, FONT_NORMAL_WHITE };
-
 static struct {
     int is_paused;
     uint8_t brief_description[BRIEF_DESC_LENGTH];
     int focus_button_id;
 } data;
+
+static input_box scenario_description_input = {
+    92, 40, 19, 2, FONT_NORMAL_WHITE, 1,
+    data.brief_description, BRIEF_DESC_LENGTH
+};
 
 static void start(void)
 {
@@ -77,7 +80,7 @@ static void start(void)
         input_box_resume(&scenario_description_input);
     } else {
         string_copy(scenario_brief_description(), data.brief_description, BRIEF_DESC_LENGTH);
-        input_box_start(&scenario_description_input, data.brief_description, BRIEF_DESC_LENGTH, 1);
+        input_box_start(&scenario_description_input);
     }
 }
 
@@ -95,12 +98,20 @@ static void stop(int paused)
 static void draw_background(void)
 {
     window_editor_map_draw_all();
+
+    graphics_in_dialog();
+
+    outer_panel_draw(0, 28, 30, 28);
+
+    button_border_draw(18, 278, 184, 144, 0);
+    image_draw(image_group(GROUP_EDITOR_SCENARIO_IMAGE) + scenario_image_id(), 20, 280);
+
+    graphics_reset_dialog();
 }
 
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    outer_panel_draw(0, 28, 30, 28);
 
     input_box_draw(&scenario_description_input);
 
@@ -156,9 +167,6 @@ static void draw_foreground(void)
 
     button_border_draw(212, 436, 250, 30, data.focus_button_id == 10);
     lang_text_draw_centered(44, 94, 212, 445, 250, FONT_NORMAL_BLACK);
-
-    button_border_draw(18, 278, 184, 144, 0);
-    image_draw(image_group(GROUP_EDITOR_SCENARIO_IMAGE) + scenario_image_id(), 20, 280);
 
     arrow_buttons_draw(0, 0, image_arrows, 2);
 

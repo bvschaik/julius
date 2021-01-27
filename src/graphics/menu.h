@@ -23,7 +23,7 @@ typedef struct {
     int calculated_height_blocks;
 } menu_bar_item;
 
-void menu_bar_draw(menu_bar_item *items, int num_items);
+void menu_bar_draw(menu_bar_item *items, int num_items, int max_width);
 int menu_bar_handle_mouse(const mouse *m, menu_bar_item *items, int num_items, int *focus_menu_id);
 
 void menu_draw(menu_bar_item *menu, int focus_item_id);

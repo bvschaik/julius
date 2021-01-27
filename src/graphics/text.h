@@ -18,7 +18,7 @@ void text_ellipsize(uint8_t *str, font_t font, int requested_width);
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color);
 
 void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color);
-void text_draw_ellipsized(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color);
+int text_draw_ellipsized(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color);
 
 int text_draw_number(int value, char prefix, const char *postfix, int x_offset, int y_offset, font_t font);
 int text_draw_number_colored(

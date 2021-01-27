@@ -98,7 +98,6 @@ static void draw_foreground(void)
     if (!data.open_sub_menu) {
         return;
     }
-    window_editor_map_draw_all();
     menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
 }
 
@@ -111,7 +110,7 @@ static void top_menu_window_show(void)
 {
     window_type window = {
         WINDOW_EDITOR_TOP_MENU,
-        0,
+        window_editor_map_draw_all,
         draw_foreground,
         handle_input
     };
@@ -122,12 +121,12 @@ static void top_menu_window_show(void)
 void widget_top_menu_editor_draw(void)
 {
     int block_width = 24;
-    int image_base = image_group(GROUP_TOP_MENU_SIDEBAR);
+    int image_base = image_group(GROUP_TOP_MENU);
     int s_width = screen_width();
     for (int i = 0; i * block_width < s_width; i++) {
         image_draw(image_base + i % 8, i * block_width, 0);
     }
-    menu_bar_draw(menu, 5);
+    menu_bar_draw(menu, 5, s_width);
 }
 
 static int handle_input_submenu(const mouse *m, const hotkeys *h)
@@ -139,6 +138,7 @@ static int handle_input_submenu(const mouse *m, const hotkeys *h)
     }
     int menu_id = menu_bar_handle_mouse(m, menu, 5, &data.focus_menu_id);
     if (menu_id && menu_id != data.open_sub_menu) {
+        window_request_refresh();
         data.open_sub_menu = menu_id;
     }
     if (!menu_handle_mouse(m, &menu[data.open_sub_menu - 1], &data.focus_sub_menu_id)) {

@@ -5,12 +5,10 @@
 #include "graphics/text.h"
 #include "input/keyboard.h"
 
-void input_box_start(input_box *box, uint8_t *text, int length, int allow_punctuation)
+void input_box_start(input_box *box)
 {
-    box->text = text;
-    box->max_length = length;
     int text_width = (box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE;
-    keyboard_start_capture(text, length, allow_punctuation, text_width, box->font);
+    keyboard_start_capture(box->text, box->text_length, box->allow_punctuation, text_width, box->font);
     system_keyboard_set_input_rect(box->x, box->y,
             box->width_blocks * INPUT_BOX_BLOCK_SIZE,
             box->height_blocks * INPUT_BOX_BLOCK_SIZE);
@@ -28,7 +26,6 @@ void input_box_resume(input_box *box)
 
 void input_box_stop(input_box *box)
 {
-    box->text = 0;
     keyboard_stop_capture();
     system_keyboard_set_input_rect(0, 0, 0, 0);
 }
@@ -66,7 +63,7 @@ int input_box_handle_mouse(const mouse *m, const input_box *box)
     }
     int selected = is_mouse_inside_input(m, box);
     if (selected) {
-        system_keyboard_show(box->text, box->max_length);
+        system_keyboard_show();
     } else {
         system_keyboard_hide();
     }

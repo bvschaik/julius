@@ -181,4 +181,3 @@ void scenario_earthquake_load_state(buffer *buf)
         data.expand[i].y = buffer_read_i32(buf);
     }
 }
-

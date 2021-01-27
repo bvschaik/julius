@@ -287,4 +287,3 @@ void city_culture_load_state(buffer *buf)
     coverage.academy = buffer_read_i32(buf);
     coverage.hospital = buffer_read_i32(buf);
 }
-

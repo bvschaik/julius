@@ -1324,8 +1324,7 @@ static void spawn_figure_native_hut(building *b)
 
 static void spawn_figure_native_meeting(building *b)
 {
-    map_building_tiles_add(b->id, b->x, b->y, 2,
-        image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x, b->y, 2, image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
     if (city_buildings_is_mission_post_operational() && !has_figure_of_type(b, FIGURE_NATIVE_TRADER)) {
         int x_out, y_out;
         if (map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &x_out, &y_out)) {

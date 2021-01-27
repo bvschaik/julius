@@ -12,10 +12,18 @@ static const char *INI_FILENAME = "augustus.ini";
 
 // Keep this in the same order as the config_keys in config.h
 static const char *ini_keys[] = {
+    "ui_walker_waypoints",
+    "gameplay_fix_immigration",
+    "gameplay_fix_100y_ghosts",
+    "screen_display_scale",
+    "screen_cursor_scale",
     "ui_sidebar_info",
     "ui_show_intro_video",
     "ui_smooth_scrolling",
-    "ui_walker_waypoints",
+    "ui_disable_mouse_edge_scrolling",
+    "ui_disable_map_drag",
+    "ui_visual_feedback_on_delete",
+    "ui_allow_cycling_temples",
     "ui_show_water_structure_range",
     "ui_show_construction_size",
     "ui_zoom",
@@ -56,6 +64,8 @@ static int default_values[CONFIG_MAX_ENTRIES] = {
     [CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE] = 1,
     [CONFIG_UI_SHOW_CONSTRUCTION_SIZE] = 1,
     [CONFIG_UI_HIGHLIGHT_LEGIONS] = 1,
+    [CONFIG_SCREEN_DISPLAY_SCALE] = 100,
+    [CONFIG_SCREEN_CURSOR_SCALE] = 100
 };
 
 static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];

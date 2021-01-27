@@ -8,18 +8,14 @@ case "$BUILD_TARGET" in
 	docker run -d --name vitasdk --workdir /build/git -v "${PWD}:/build/git" gnuton/vitasdk-docker:20190626 tail -f /dev/null
 	;;
 "switch")
-	docker run -d --name switchdev --workdir /build/git -v "${PWD}:/build/git" devkitpro/devkita64:20200528 tail -f /dev/null
-	docker exec switchdev /bin/bash -c "apt-get update && apt-get install -y --no-install-recommends cmake"
+	docker run -d --name switchdev --workdir /build/git -v "${PWD}:/build/git" devkitpro/devkita64:20200730 tail -f /dev/null
 	;;
 "android")
-	# Install Android SDK packages
-	mkdir -p $HOME/.android
-	touch $HOME/.android/repositories.cfg
-
-	for PACKAGE in 'ndk-bundle' 'cmake;3.10.2.4988404'
-	do
-	  echo "Installing $PACKAGE..."
-	  yes | sdkmanager $PACKAGE > /dev/null
-	done
+	# Decrypt the key files
+	if [ "$FILE_ENCRYPTION_KEY" ]
+	then
+        openssl aes-256-cbc -K $FILE_ENCRYPTION_KEY -iv $FILE_ENCRYPTION_IV -in android/julius.keystore.enc -out android/julius.keystore -d;
+        openssl aes-256-cbc -K $FILE_ENCRYPTION_KEY -iv $FILE_ENCRYPTION_IV -in android/play-publisher.json.enc -out android/play-publisher.json -d;
+	fi
 	;;
 esac

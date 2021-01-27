@@ -1,6 +1,7 @@
 #include "text.h"
 
 #include "core/lang.h"
+#include "core/locale.h"
 #include "core/string.h"
 #include "core/time.h"
 #include "graphics/graphics.h"
@@ -30,7 +31,7 @@ static struct {
 static struct {
     const uint8_t string[ELLIPSIS_LENGTH];
     int width[FONT_TYPES_MAX];
-} ellipsis = { {'.', '.', '.', 0} };
+} ellipsis = {{'.', '.', '.', 0}};
 
 static int get_ellipsis_width(font_t font)
 {
@@ -257,12 +258,12 @@ void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t 
     text_draw(str, offset + x, y, font, color);
 }
 
-void text_draw_ellipsized(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color)
+int text_draw_ellipsized(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color)
 {
     static uint8_t buffer[1000];
     string_copy(str, buffer, 1000);
     text_ellipsize(buffer, font, box_width);
-    text_draw(buffer, x, y, font, color);
+    return text_draw(buffer, x, y, font, color);
 }
 
 int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
@@ -347,10 +348,13 @@ int text_draw_money(int value, int x_offset, int y_offset, font_t font)
 {
     uint8_t str[NUMBER_BUFFER_LENGTH];
     int money_len = number_to_string(str, value, '@', " ");
-    const uint8_t *postfix = lang_get_string(6, 0);
-    if (postfix) {
-        string_copy(postfix, str + money_len, NUMBER_BUFFER_LENGTH - money_len - 1);
+    const uint8_t *postfix;
+    if (locale_translate_money_dn()) {
+        postfix = lang_get_string(6, 0);
+    } else {
+        postfix = string_from_ascii("Dn");
     }
+    string_copy(postfix, str + money_len, NUMBER_BUFFER_LENGTH - money_len - 1);
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 

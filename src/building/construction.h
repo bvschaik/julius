@@ -3,6 +3,8 @@
 
 #include "building/type.h"
 
+void building_construction_set_cost(int cost);
+
 void building_construction_set_type(building_type type);
 
 void building_construction_clear_type(void);

@@ -36,6 +36,12 @@ language_type locale_determine_language(void);
 int locale_year_before_ad(void);
 
 /**
+ * Check whether to use the string 'Dn' from the 'funds' top menu when used for money amounts
+ * @return Boolean true for the translated version, false to use fixed string 'Dn'
+ */
+int locale_translate_money_dn(void);
+
+/**
  * Returns whether we should use localized filenames for the "Citizen.sav", etc autosaves
  * @return Boolean true if the filenames should be translated, false if we should use English
  */

@@ -83,4 +83,3 @@ void trade_routes_load_state(buffer *limit, buffer *traded)
         }
     }
 }
-

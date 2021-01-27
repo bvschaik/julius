@@ -22,6 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "El directorio que has seleccionado no contiene un paquete de idioma válido. "
         "Por favor, comprueba el registro de errores."},
+    {TR_BUILD_ALL_TEMPLES, "Todo"},
     {TR_BUTTON_OK, "Aceptar"},
     {TR_BUTTON_CANCEL, "Cancelar"},
     {TR_BUTTON_RESET_DEFAULTS, "Por defecto"},
@@ -32,6 +33,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_LANGUAGE_LABEL, "Idioma:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(por defecto)"},
     {TR_CONFIG_PAGE_LABEL, "Página"},
+    {TR_CONFIG_DISPLAY_SCALE, "Escala del monitor:"},
+    {TR_CONFIG_CURSOR_SCALE, "Escala del cursor:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "Cambios en la interfaz"},
     {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "Cambios en el juego"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Reproducir vídeos al inicio"},

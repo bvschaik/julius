@@ -47,7 +47,7 @@ static struct {
     editor_demand_change demand_change;
     int focus_button_id;
     int route_ids[MAX_ROUTES];
-    uint8_t *route_names[MAX_ROUTES];
+    const uint8_t *route_names[MAX_ROUTES];
     int num_routes;
 } data;
 

@@ -13,8 +13,8 @@
 #define HALF_TILE_WIDTH_PIXELS 30
 #define HALF_TILE_HEIGHT_PIXELS 15
 
-static const int X_DIRECTION_FOR_ORIENTATION[] = { 1,  1, -1, -1 };
-static const int Y_DIRECTION_FOR_ORIENTATION[] = { 1, -1, -1,  1 };
+static const int X_DIRECTION_FOR_ORIENTATION[] = {1,  1, -1, -1};
+static const int Y_DIRECTION_FOR_ORIENTATION[] = {1, -1, -1,  1};
 
 static struct {
     int screen_width;

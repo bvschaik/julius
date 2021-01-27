@@ -13,6 +13,14 @@
 #include "translation//translation.h"
 #include "window/city.h"
 
+#define MENU_X_OFFSET 170
+#define SUBMENU_X_OFFSET 348
+#define MENU_Y_OFFSET 72
+#define MENU_ITEM_HEIGHT 24
+#define MENU_CLICK_MARGIN 20
+
+#define MAX_BUTTONS 8
+
 static void button_menu_item(int index, int param2);
 static void button_submenu_item(int index, int param2);
 
@@ -158,18 +166,27 @@ static void handle_submenu_focus(void)
     }
 }
 
+static int click_outside_menu(const mouse *m, int x_offset)
+{
+    return m->left.went_up &&
+          (m->x < x_offset - MENU_CLICK_MARGIN - (data.selected_submenu ? SUBMENU_X_OFFSET : MENU_X_OFFSET) ||
+           m->x > x_offset + MENU_CLICK_MARGIN ||
+           m->y < MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
+           m->y > MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * MAX_BUTTONS);
+}
+
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     int x_offset = get_sidebar_x_offset();
     int handled = 0;
-    handled |= generic_buttons_handle_mouse(m, x_offset - 170, 72, menu_buttons, OVERLAY_BUTTONS, &data.menu_focus_button_id);
+    handled |= generic_buttons_handle_mouse(m, x_offset - MENU_X_OFFSET, MENU_Y_OFFSET, menu_buttons, OVERLAY_BUTTONS, &data.menu_focus_button_id);
 
     if (!data.keep_submenu_open) {
         handle_submenu_focus();
     }
     if (data.selected_submenu) {
         handled |= generic_buttons_handle_mouse(
-            m, x_offset - 348, 72 + 24 * data.selected_menu,
+            m, x_offset - SUBMENU_X_OFFSET, MENU_Y_OFFSET + MENU_ITEM_HEIGHT * data.selected_menu,
             submenu_buttons, data.num_submenu_items, &data.submenu_focus_button_id);
     }
     if (!handled && input_go_back_requested(m, h)) {
@@ -178,6 +195,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
         } else {
             window_city_show();
         }
+        return;
+    }
+    if (!handled && click_outside_menu(m, x_offset)) {
+        close_submenu();
+        window_city_show();
     }
 }
 

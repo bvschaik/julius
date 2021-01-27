@@ -57,7 +57,7 @@ static struct {
     int in_progress;
     map_tile start;
     map_tile end;
-    int cost;
+    int cost_preview;
     struct {
         int meadow;
         int rock;
@@ -337,6 +337,11 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
     return 1;
 }
 
+void building_construction_set_cost(int cost)
+{
+    data.cost_preview = cost;
+}
+
 void building_construction_set_type(building_type type)
 {
     data.type = type;
@@ -346,6 +351,7 @@ void building_construction_set_type(building_type type)
     data.start.y = 0;
     data.end.x = 0;
     data.end.y = 0;
+    data.cost_preview = 0;
 
     if (type != BUILDING_NONE) {
         data.required_terrain.wall = 0;
@@ -394,7 +400,7 @@ void building_construction_set_type(building_type type)
 
 void building_construction_clear_type(void)
 {
-    data.cost = 0;
+    data.cost_preview = 0;
     data.sub_type = BUILDING_NONE;
     data.type = BUILDING_NONE;
 }
@@ -406,14 +412,14 @@ building_type building_construction_type(void)
 
 int building_construction_cost(void)
 {
-    return data.cost;
+    return data.cost_preview;
 }
 
 int building_construction_size(int *x, int *y)
 {
     if (!config_get(CONFIG_UI_SHOW_CONSTRUCTION_SIZE) ||
-        !building_construction_is_updatable() ||
-        (data.type != BUILDING_CLEAR_LAND && !data.cost)) {
+        !building_construction_is_updatable() || !data.in_progress ||
+        (data.type != BUILDING_CLEAR_LAND && !data.cost_preview)) {
         return 0;
     }
     int size_x = data.end.x - data.start.x;
@@ -519,8 +525,9 @@ void building_construction_cancel(void)
             map_tiles_update_all_hedges();
         }
         data.in_progress = 0;
+        data.cost_preview = 0;
     } else {
-        building_construction_set_type(BUILDING_NONE);
+        building_construction_clear_type();
     }
     building_rotation_reset_rotation();
 }
@@ -538,7 +545,7 @@ void building_construction_update(int x, int y, int grid_offset)
         grid_offset = data.end.grid_offset;
     }
     if (!type || city_finance_out_of_money()) {
-        data.cost = 0;
+        data.cost_preview = 0;
         return;
     }
 
@@ -654,7 +661,7 @@ void building_construction_update(int x, int y, int grid_offset)
             mark_construction(x, y, size, TERRAIN_ALL, 0);
         }
     }
-    data.cost = current_cost;
+    data.cost_preview = current_cost;
 }
 
 static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
@@ -684,6 +691,7 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
 
 void building_construction_place(void)
 {
+    data.cost_preview = 0;
     data.in_progress = 0;
     int x_start = data.start.x;
     int y_start = data.start.y;

@@ -4,13 +4,11 @@
 #include "core/config.h"
 #include "graphics/color.h"
 #include "graphics/menu.h"
+#include "game/system.h"
 #include "graphics/screen.h"
 
 #include <stdlib.h>
 #include <string.h>
-#ifdef __vita__
-#include <vita2d.h>
-#endif
 
 static struct {
     color_t *pixels;
@@ -43,30 +41,15 @@ static struct {
 static clip_info clip;
 static canvas_type active_canvas;
 
-#ifdef __vita__
-extern vita2d_texture *tex_buffer_ui;
-extern vita2d_texture * tex_buffer_city;
-#endif
-
 void graphics_init_canvas(int width, int height)
 {
-#ifdef __vita__
-    canvas[CANVAS_UI].pixels = vita2d_texture_get_datap(tex_buffer_ui);
+    canvas[CANVAS_UI].pixels = system_create_ui_framebuffer(width, height);
     if (config_get(CONFIG_UI_ZOOM)) {
-        canvas[CANVAS_CITY].pixels = vita2d_texture_get_datap(tex_buffer_city);
+        canvas[CANVAS_CITY].pixels = system_create_city_framebuffer(width, height);
     } else {
+        system_release_city_framebuffer();
         canvas[CANVAS_CITY].pixels = 0;
     }
-#else
-    free(canvas[CANVAS_UI].pixels);
-    free(canvas[CANVAS_CITY].pixels);
-    canvas[CANVAS_UI].pixels = (color_t *) malloc((size_t) width * height * sizeof(color_t));
-    if (config_get(CONFIG_UI_ZOOM)) {
-        canvas[CANVAS_CITY].pixels = (color_t *) malloc((size_t) width * height * 4 * sizeof(color_t));
-    } else {
-        canvas[CANVAS_CITY].pixels = 0;
-    }
-#endif
     canvas[CANVAS_UI].width = width;
     canvas[CANVAS_UI].height = height;
     canvas[CANVAS_CITY].width = width * 2;
