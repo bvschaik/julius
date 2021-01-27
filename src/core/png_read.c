@@ -1,5 +1,7 @@
 #include "core/png_read.h"
 
+#include "core/dir.h"
+#include "core/file.h"
 #include "core/log.h"
 
 #include "png.h"
@@ -17,7 +19,7 @@ static void unload_png(void)
 {
     png_destroy_read_struct(&data.png_ptr, &data.info_ptr, 0);
     if (data.fp) {
-        fclose(data.fp);
+        file_close(data.fp);
         data.fp = 0;
     }
 }
@@ -26,7 +28,13 @@ static int load_png(const char *path)
 {
     unload_png();
     png_byte header[8];
-    data.fp = fopen(path, "rb");
+    const char *cased_path = dir_get_file(path, NOT_LOCALIZED);
+    log_info("opening png file", path, 0);
+    if (!cased_path) {
+        log_error("Unable to open png file", path, 0);
+        return 0;
+    }
+    data.fp = file_open(cased_path, "rb");
     if (!data.fp) {
         log_error("Unable to open png file", path, 0);
         return 0;
