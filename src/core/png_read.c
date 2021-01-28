@@ -29,7 +29,6 @@ static int load_png(const char *path)
     unload_png();
     png_byte header[8];
     const char *cased_path = dir_get_file(path, NOT_LOCALIZED);
-    log_info("opening png file", path, 0);
     if (!cased_path) {
         log_error("Unable to open png file", path, 0);
         return 0;
