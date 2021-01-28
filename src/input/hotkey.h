@@ -16,6 +16,7 @@ typedef struct {
     int rotate_map_right;
     int show_advisor;
     int show_overlay;
+    int show_overlay_relative;
     int toggle_overlay;
     int toggle_pause;
     int toggle_editor_battle_info;

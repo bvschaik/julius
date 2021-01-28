@@ -124,6 +124,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_ADVISOR_CHIEF, "Chief advisor"},
     {TR_HOTKEY_SHOW_ADVISOR_HOUSING, "Housing advisor"},
     {TR_HOTKEY_TOGGLE_OVERLAY, "Toggle current overlay"},
+    {TR_HOTKEY_SHOW_OVERLAY_RELATIVE, "Show relative overlay"},
     {TR_HOTKEY_SHOW_OVERLAY_WATER, "Show water overlay"},
     {TR_HOTKEY_SHOW_OVERLAY_FIRE, "Show fire overlay"},
     {TR_HOTKEY_SHOW_OVERLAY_DAMAGE, "Damage overlay"},
