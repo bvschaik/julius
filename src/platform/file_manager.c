@@ -190,8 +190,12 @@ int platform_file_manager_set_base_path(const char *path)
 #ifdef __vita__
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
-    if (strchr(mode, 'w') && !file_exists(filename, NOT_LOCALIZED)) {
-        platform_file_manager_cache_add_file_info(filename);
+    if (strchr(mode, 'w')) {
+        char temp_filename[FILE_NAME_MAX];
+        strncpy(temp_filename, filename, FILE_NAME_MAX - 1);
+        if (!file_exists(temp_filename, NOT_LOCALIZED)) {
+            platform_file_manager_cache_add_file_info(filename);
+        }
     }
     return fopen(vita_prepend_path(filename), mode);
 }
@@ -246,8 +250,12 @@ int platform_file_manager_remove_file(const char *filename)
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
 #ifdef USE_FILE_CACHE
-    if (strchr(mode, 'w') && !file_exists(filename, NOT_LOCALIZED)) {
-        platform_file_manager_cache_add_file_info(filename);
+    if (strchr(mode, 'w')) {
+        char temp_filename[FILE_NAME_MAX];
+        strncpy(temp_filename, filename, FILE_NAME_MAX - 1);
+        if (!file_exists(temp_filename, NOT_LOCALIZED)) {
+            platform_file_manager_cache_add_file_info(filename);
+        }
     }
 #endif
     return fopen(filename, mode);
