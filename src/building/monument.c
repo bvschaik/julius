@@ -275,7 +275,7 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
 		if (!building_monument_is_monument(b)) {
 			continue;
 		}
-		if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
+		if (b->data.monument.monument_phase == MONUMENT_FINISHED || b->data.monument.monument_phase < MONUMENT_START) {
 			continue;
 		}
 
