@@ -342,7 +342,7 @@ static void pay_monthly_building_levies(void) {
                 b->monthly_levy = building_levies[i].amount;
             }
         }
-        if (b->state == BUILDING_STATE_IN_USE && building_get_levy(b)) {
+        if (b->state == BUILDING_STATE_IN_USE && building_get_levy(b) && !b->prev_part_building_id) {
             levies += building_get_levy(b);
         }
     }
