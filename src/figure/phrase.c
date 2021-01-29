@@ -507,7 +507,11 @@ static int trade_ship_phrase(figure *f)
         } else if (state == TRADE_SHIP_SELLING) {
             return 7; // selling goods
         } else {
-            return 9; // no trade
+            if (!trader_has_traded(f->trader_id)) {
+                return 9; // no trade
+            } else {
+                return 11; // good trade
+            }
         }
     } else {
         return 10; // can't wait to trade
