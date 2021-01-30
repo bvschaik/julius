@@ -302,7 +302,7 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
     if (type == BUILDING_ROADBLOCK && !map_terrain_is(grid_offset, TERRAIN_ROAD)) {
         return 1;
     }
-    if (building_monument_has_monument(type)) {
+    if (!building_monument_type_is_mini_monument(type) && building_monument_has_monument(type)) {
         return 1;
     }
     if (building_monument_is_grand_temple(type) && building_monument_count_grand_temples() >= 2) {
