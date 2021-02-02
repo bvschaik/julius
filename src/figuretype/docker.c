@@ -1,6 +1,7 @@
 #include "docker.h"
 
 #include "building/building.h"
+#include "building/market.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
@@ -15,6 +16,7 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "figure/trader.h"
+#include "figuretype/trader.h"
 #include "map/road_access.h"
 
 static int try_import_resource(int building_id, int resource, int city_id)
@@ -85,13 +87,13 @@ static int try_export_resource(int building_id, int resource, int city_id)
     return 0;
 }
 
-static int get_closest_warehouse_for_import(int x, int y, int city_id, int distance_from_entry, int road_network_id,
+static int get_closest_warehouse_for_import(int x, int y, int city_id, building *dock,
                                             map_point *warehouse, int *import_resource)
 {
     int importable[16];
     importable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        importable[r] = empire_can_import_resource_from_city(city_id, r);
+        importable[r] = is_good_accepted(r - 1, dock) && empire_can_import_resource_from_city(city_id, r);
     }
     int resource = city_trade_next_docker_import_resource();
     for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !importable[resource]; i++) {
@@ -110,7 +112,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
         if (!b->has_road_access || b->distance_from_entry <= 0) {
             continue;
         }
-        if (b->road_network_id != road_network_id) {
+        if (b->road_network_id != dock->road_network_id) {
             continue;
         }
         if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, b)) {
@@ -131,7 +133,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
             }
             if (distance_penalty < 32) {
                 int distance = calc_distance_with_penalty(
-                    b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+                    b->x, b->y, x, y, dock->distance_from_entry, b->distance_from_entry);
                 // prefer emptier warehouse
                 distance += distance_penalty;
                 if (distance < min_distance) {
@@ -154,13 +156,13 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, int dista
     return min_building_id;
 }
 
-static int get_closest_warehouse_for_export(int x, int y, int city_id, int distance_from_entry, int road_network_id,
+static int get_closest_warehouse_for_export(int x, int y, int city_id, building *dock,
                                             map_point *warehouse, int *export_resource)
 {
     int exportable[16];
     exportable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        exportable[r] = empire_can_export_resource_to_city(city_id, r);
+        exportable[r] = is_good_accepted(r - 1, dock) && empire_can_export_resource_to_city(city_id, r);
     }
     int resource = city_trade_next_docker_export_resource();
     for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !exportable[resource]; i++) {
@@ -179,7 +181,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
         if (!b->has_road_access || b->distance_from_entry <= 0) {
             continue;
         }
-        if (b->road_network_id != road_network_id) {
+        if (b->road_network_id != dock->road_network_id) {
             continue;
         }
         if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_DOCK, b)) {
@@ -194,7 +196,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, int dista
             }
         }
         if (distance_penalty < 32) {
-            int distance = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+            int distance = calc_distance_with_penalty(b->x, b->y, x, y, dock->distance_from_entry, b->distance_from_entry);
             // prefer fuller warehouse
             distance += distance_penalty;
             if (distance < min_distance) {
@@ -244,7 +246,7 @@ static int deliver_import_resource(figure *f, building *dock)
     map_point tile;
     int resource;
     int warehouse_id = get_closest_warehouse_for_import(x, y, ship->empire_city_id,
-                      dock->distance_from_entry, dock->road_network_id, &tile, &resource);
+                      dock, &tile, &resource);
     if (!warehouse_id) {
         return 0;
     }
@@ -265,7 +267,7 @@ static int fetch_export_resource(figure *f, building *dock)
         return 0;
     }
     figure *ship = figure_get(ship_id);
-    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->trader_amount_bought >= 12) {
+    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->trader_amount_bought >= figure_trade_sea_trade_units()) {
         return 0;
     }
     int x, y;
@@ -273,7 +275,7 @@ static int fetch_export_resource(figure *f, building *dock)
     map_point tile;
     int resource;
     int warehouse_id = get_closest_warehouse_for_export(x, y, ship->empire_city_id,
-        dock->distance_from_entry, dock->road_network_id, &tile, &resource);
+        dock, &tile, &resource);
     if (!warehouse_id) {
         return 0;
     }
@@ -310,8 +312,6 @@ void figure_docker_action(figure *f)
     if (b->data.dock.trade_ship_id) {
         figure *ship = figure_get(b->data.dock.trade_ship_id);
         if (ship->state != FIGURE_STATE_ALIVE || ship->type != FIGURE_TRADE_SHIP) {
-            b->data.dock.trade_ship_id = 0;
-        } else if (trader_has_traded_max(ship->trader_id)) {
             b->data.dock.trade_ship_id = 0;
         } else if (ship->action_state == FIGURE_ACTION_115_TRADE_SHIP_LEAVING) {
             b->data.dock.trade_ship_id = 0;

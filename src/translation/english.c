@@ -320,6 +320,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SMALL_TEMPLE_MARS_NAME, "Temple of Mars"},
     {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Temple of Venus"},
     {TR_FIGURE_TYPE_PRIEST_BUYER, "Priest" },
+    {TR_BUILDING_DOCK_CITIES_CONFIG_DESC, "Cities with opened sea trade:" },
+    {TR_BUILDING_DOCK_CITIES_NO_ROUTES, "There are no open sea trade routes." },
     // Transcription of mission_exact4.wav
     {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"I'll do what I can to calm these barbarians down. I'm sure they'll stop attacking the city when I've had a word with them.\"" },
     {TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "An annual festival"},

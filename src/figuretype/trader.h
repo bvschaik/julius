@@ -31,6 +31,18 @@ int figure_trade_land_trade_units();
 
 int figure_trade_sea_trade_units();
 
+void figure_trader_ship_record_dock(figure *ship, int dock_id);
+
+int figure_trader_ship_docked_once_at_dock(figure *ship, int dock_id);
+
+int figure_trader_ship_can_queue_for_import(figure *ship);
+
+int figure_trader_ship_can_queue_for_export(figure *ship);
+
+int figure_trader_ship_get_distance_to_dock(const figure *ship, int dock_id);
+
+int figure_trader_ship_other_ship_closer_to_dock(int ship_id, int dock_id, int distance);
+
 #define IMAGE_CAMEL 4922
 
 #endif // FIGURETYPE_TRADER_H

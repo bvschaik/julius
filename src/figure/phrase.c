@@ -534,7 +534,11 @@ static int trade_ship_phrase(figure *f)
             }
         }
     } else {
-        return 10; // can't wait to trade
+        if (!trader_has_traded(f->trader_id)) {
+            return 10; // can't wait to trade
+        } else {
+            return 11; // good trade
+        }
     }
 }
 
