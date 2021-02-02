@@ -125,6 +125,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_ADVISOR_CHIEF, "Chief advisor"},
     {TR_HOTKEY_SHOW_ADVISOR_HOUSING, "Housing advisor"},
     {TR_HOTKEY_TOGGLE_OVERLAY, "Toggle current overlay"},
+    {TR_HOTKEY_SHOW_OVERLAY_RELATIVE, "Show relative overlay"},
     {TR_HOTKEY_SHOW_OVERLAY_WATER, "Show water overlay"},
     {TR_HOTKEY_SHOW_OVERLAY_FIRE, "Show fire overlay"},
     {TR_HOTKEY_SHOW_OVERLAY_DAMAGE, "Damage overlay"},
@@ -320,6 +321,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SMALL_TEMPLE_MARS_NAME, "Temple of Mars"},
     {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Temple of Venus"},
     {TR_FIGURE_TYPE_PRIEST_BUYER, "Priest" },
+    {TR_BUILDING_DOCK_CITIES_CONFIG_DESC, "Cities with opened sea trade:" },
+    {TR_BUILDING_DOCK_CITIES_NO_ROUTES, "There are no open sea trade routes." },
     // Transcription of mission_exact4.wav
     {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"I'll do what I can to calm these barbarians down. I'm sure they'll stop attacking the city when I've had a word with them.\"" },
     {TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "An annual festival"},

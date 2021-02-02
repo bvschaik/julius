@@ -23,7 +23,10 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "map/bookmark.h"
+#include "map/building.h"
 #include "map/grid.h"
+#include "map/property.h"
+#include "map/terrain.h"
 #include "scenario/building.h"
 #include "scenario/criteria.h"
 #include "widget/city.h"
@@ -167,6 +170,204 @@ static void show_overlay(int overlay)
     window_invalidate();
 }
 
+// this is mix of get_clone_type_from_grid_offset & get_clone_type_from_building functions with reduced code for overlay purpose
+static int get_building_type_from_grid_offset(int grid_offset)
+{
+    int terrain = map_terrain_get(grid_offset);
+
+    if (terrain & TERRAIN_BUILDING) {
+        int building_id = map_building_at(grid_offset);
+        if (building_id) {
+            building *building = building_main(building_get(building_id));
+            return building->type;
+        }
+    } else if (terrain & TERRAIN_AQUEDUCT) {
+        return BUILDING_AQUEDUCT;
+    } else if (terrain & TERRAIN_GARDEN) {
+        return BUILDING_GARDENS;
+    } else if (terrain & TERRAIN_ROAD) {
+        if (map_property_is_plaza_or_earthquake(grid_offset)) {
+            return BUILDING_PLAZA;
+        }
+        return BUILDING_ROAD;
+    }
+
+    return BUILDING_NONE;
+}
+
+static void show_overlay_from_grid_offset(int grid_offset)
+{
+    int overlay = OVERLAY_NONE;
+    int clone_type = get_building_type_from_grid_offset(grid_offset);
+    switch (clone_type) {
+        case BUILDING_PLAZA:
+        case BUILDING_ROAD:
+        case BUILDING_ROADBLOCK:
+            overlay = OVERLAY_ROADS;
+            break;
+        case BUILDING_AQUEDUCT:
+        case BUILDING_RESERVOIR:
+        case BUILDING_FOUNTAIN:
+        case BUILDING_WELL:
+            overlay = OVERLAY_WATER;
+            break;
+        case BUILDING_ORACLE:
+        case BUILDING_SMALL_TEMPLE_CERES:
+        case BUILDING_SMALL_TEMPLE_NEPTUNE:
+        case BUILDING_SMALL_TEMPLE_MERCURY:
+        case BUILDING_SMALL_TEMPLE_MARS:
+        case BUILDING_SMALL_TEMPLE_VENUS:
+        case BUILDING_LARGE_TEMPLE_CERES:
+        case BUILDING_LARGE_TEMPLE_NEPTUNE:
+        case BUILDING_LARGE_TEMPLE_MERCURY:
+        case BUILDING_LARGE_TEMPLE_MARS:
+        case BUILDING_LARGE_TEMPLE_VENUS:
+        case BUILDING_GRAND_TEMPLE_CERES:
+        case BUILDING_GRAND_TEMPLE_NEPTUNE:
+        case BUILDING_GRAND_TEMPLE_MERCURY:
+        case BUILDING_GRAND_TEMPLE_MARS:
+        case BUILDING_GRAND_TEMPLE_VENUS:
+        case BUILDING_PANTHEON:
+            overlay = OVERLAY_RELIGION;
+            break;
+        case BUILDING_PREFECTURE:
+        case BUILDING_BURNING_RUIN:
+            overlay = OVERLAY_FIRE;
+            break;
+        case BUILDING_ENGINEERS_POST:
+        case BUILDING_ENGINEER_GUILD:
+            overlay = OVERLAY_DAMAGE;
+            break;
+        case BUILDING_THEATER:
+        case BUILDING_ACTOR_COLONY:
+            overlay = OVERLAY_THEATER;
+            break;
+        case BUILDING_AMPHITHEATER:
+        case BUILDING_GLADIATOR_SCHOOL:
+            overlay = OVERLAY_AMPHITHEATER;
+            break;
+        case BUILDING_COLOSSEUM:
+        case BUILDING_LION_HOUSE:
+            overlay = OVERLAY_COLOSSEUM;
+            break;
+        case BUILDING_HIPPODROME:
+        case BUILDING_CHARIOT_MAKER:
+            overlay = OVERLAY_HIPPODROME;
+            break;
+        case BUILDING_SCHOOL:
+            overlay = OVERLAY_SCHOOL;
+            break;
+        case BUILDING_LIBRARY:
+            overlay = OVERLAY_LIBRARY;
+            break;
+        case BUILDING_ACADEMY:
+            overlay = OVERLAY_ACADEMY;
+            break;
+        case BUILDING_BARBER:
+            overlay = OVERLAY_BARBER;
+            break;
+        case BUILDING_BATHHOUSE:
+            overlay = OVERLAY_BATHHOUSE;
+            break;
+        case BUILDING_DOCTOR:
+            overlay = OVERLAY_CLINIC;
+            break;
+        case BUILDING_HOSPITAL:
+            overlay = OVERLAY_HOSPITAL;
+            break;
+        case BUILDING_FORUM:
+        case BUILDING_FORUM_UPGRADED:
+        case BUILDING_SENATE:
+        case BUILDING_SENATE_UPGRADED:
+            overlay = OVERLAY_TAX_INCOME;
+            break;
+        case BUILDING_MARKET:
+        case BUILDING_GRANARY:
+        case BUILDING_FRUIT_FARM:
+        case BUILDING_OLIVE_FARM:
+        case BUILDING_PIG_FARM:
+        case BUILDING_VEGETABLE_FARM:
+        case BUILDING_VINES_FARM:
+        case BUILDING_WHEAT_FARM:
+        case BUILDING_OIL_WORKSHOP:
+        case BUILDING_WINE_WORKSHOP:
+        case BUILDING_WHARF:
+            overlay = OVERLAY_FOOD_STOCKS;
+            break;
+        case BUILDING_GARDENS:
+        case BUILDING_GOVERNORS_HOUSE:
+        case BUILDING_GOVERNORS_VILLA:
+        case BUILDING_GOVERNORS_PALACE:
+        case BUILDING_HOUSE_SMALL_TENT:
+        case BUILDING_HOUSE_LARGE_TENT:
+        case BUILDING_HOUSE_SMALL_SHACK:
+        case BUILDING_HOUSE_LARGE_SHACK:
+        case BUILDING_HOUSE_SMALL_HOVEL:
+        case BUILDING_HOUSE_LARGE_HOVEL:
+        case BUILDING_HOUSE_SMALL_CASA:
+        case BUILDING_HOUSE_LARGE_CASA:
+        case BUILDING_HOUSE_SMALL_INSULA:
+        case BUILDING_HOUSE_MEDIUM_INSULA:
+        case BUILDING_HOUSE_LARGE_INSULA:
+        case BUILDING_HOUSE_GRAND_INSULA:
+        case BUILDING_HOUSE_SMALL_VILLA:
+        case BUILDING_HOUSE_MEDIUM_VILLA:
+        case BUILDING_HOUSE_LARGE_VILLA:
+        case BUILDING_HOUSE_GRAND_VILLA:
+        case BUILDING_HOUSE_SMALL_PALACE:
+        case BUILDING_HOUSE_MEDIUM_PALACE:
+        case BUILDING_HOUSE_LARGE_PALACE:
+        case BUILDING_HOUSE_LUXURY_PALACE:
+        case BUILDING_SMALL_STATUE:
+        case BUILDING_MEDIUM_STATUE:
+        case BUILDING_LARGE_STATUE:
+        case BUILDING_TRIUMPHAL_ARCH:
+        case BUILDING_SMALL_POND:
+        case BUILDING_LARGE_POND:
+        case BUILDING_PINE_TREE:
+        case BUILDING_FIR_TREE:
+        case BUILDING_OAK_TREE:
+        case BUILDING_ELM_TREE:
+        case BUILDING_FIG_TREE:
+        case BUILDING_PLUM_TREE:
+        case BUILDING_PALM_TREE:
+        case BUILDING_DATE_TREE:
+        case BUILDING_PINE_PATH:
+        case BUILDING_FIR_PATH:
+        case BUILDING_OAK_PATH:
+        case BUILDING_ELM_PATH:
+        case BUILDING_FIG_PATH:
+        case BUILDING_PLUM_PATH:
+        case BUILDING_PALM_PATH:
+        case BUILDING_DATE_PATH:
+        case BUILDING_PAVILION_BLUE:
+        case BUILDING_PAVILION_RED:
+        case BUILDING_PAVILION_ORANGE:
+        case BUILDING_PAVILION_YELLOW:
+        case BUILDING_PAVILION_GREEN:
+        case BUILDING_SMALL_STATUE_ALT:
+        case BUILDING_SMALL_STATUE_ALT_B:
+        case BUILDING_OBELISK:
+            overlay = OVERLAY_DESIRABILITY;
+            break;
+        case BUILDING_MISSION_POST:
+        case BUILDING_NATIVE_HUT:
+        case BUILDING_NATIVE_MEETING:
+            overlay = OVERLAY_NATIVE;
+            break;
+        case BUILDING_NONE:
+            if (map_terrain_get(grid_offset) & TERRAIN_RUBBLE) {
+                overlay = OVERLAY_DAMAGE;
+            }
+            break;
+        default:
+            break;
+    }
+    if (!(game_state_overlay() == OVERLAY_NONE && overlay == OVERLAY_NONE)) {
+        show_overlay(overlay);
+    }
+}
+
 static void cycle_legion(void)
 {
     static int current_legion_id = 1;
@@ -263,6 +464,9 @@ static void handle_hotkeys(const hotkeys *h)
     }
     if (h->clone_building) {
         building_clone_from_grid_offset(widget_city_current_grid_offset());
+    }
+    if (h->show_overlay_relative) {
+        show_overlay_from_grid_offset(widget_city_current_grid_offset());
     }
 }
 

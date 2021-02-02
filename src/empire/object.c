@@ -27,7 +27,6 @@ typedef struct {
 static full_empire_object objects[MAX_OBJECTS];
 
 static int get_trade_amount_code(int index, int resource);
-static int is_sea_trade_route(int route_id);
 
 static void fix_image_ids(void)
 {
@@ -321,7 +320,7 @@ static int get_trade_amount_code(int index, int resource)
     return 0;
 }
 
-static int is_sea_trade_route(int route_id)
+int is_sea_trade_route(int route_id)
 {
     for (int i = 0; i < MAX_OBJECTS; i++) {
         if (objects[i].in_use && objects[i].obj.trade_route_id == route_id) {

@@ -129,6 +129,9 @@ static void add_definition(const hotkey_mapping *mapping)
             def->action = &data.hotkey_state.show_advisor;
             def->value = ADVISOR_HOUSING;
             break;
+        case HOTKEY_SHOW_OVERLAY_RELATIVE:
+            def->action = &data.hotkey_state.show_overlay_relative;
+            break;
         case HOTKEY_SHOW_OVERLAY_WATER:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_WATER;

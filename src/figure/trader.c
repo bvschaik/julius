@@ -1,7 +1,8 @@
 #include "figure/trader.h"
 
 #include "empire/trade_prices.h"
-
+#include "figuretype/trader.h"
+#include "trader.h"
 #include <string.h>
 
 #define MAX_TRADERS 100
@@ -68,8 +69,20 @@ int trader_has_traded(int trader_id)
 
 int trader_has_traded_max(int trader_id)
 {
-    return data.traders[trader_id].bought_amount >= 12 || data.traders[trader_id].sold_amount >= 12;
+    return trader_has_bought_max(trader_id) || trader_has_sold_max(trader_id);
 }
+
+int trader_has_bought_max(int trader_id)
+{
+    return data.traders[trader_id].bought_amount >= figure_trade_sea_trade_units();
+}
+
+int trader_has_sold_max(int trader_id)
+{
+    return data.traders[trader_id].sold_amount >= figure_trade_sea_trade_units();
+}
+
+
 
 void traders_save_state(buffer *buf)
 {

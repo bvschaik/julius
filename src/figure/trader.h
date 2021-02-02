@@ -60,9 +60,24 @@ int trader_has_traded(int trader_id);
 /**
  * Check whether a trade ship has traded the maximum amount
  * @param trader_id Trader
- * @return True if the trader has either bought or sold the max amount (12)
+ * @return True if the trader has either bought or sold the max amount (12 or 16 with mercury monument)
  */
 int trader_has_traded_max(int trader_id);
+
+/**
+ * Check whether a trade ship has bought the maximum amount
+ * @param trader_id Trader
+ * @return True if the trader has bought the max amount (12 or 16 with mercury monument)
+ */
+int trader_has_bought_max(int trader_id);
+
+
+/**
+ * Check whether a trade ship has sold the maximum amount
+ * @param trader_id Trader
+ * @return True if the trader has sold the max amount (12 or 16 with mercury monument)
+ */
+int trader_has_sold_max(int trader_id);
 
 /**
  * Save state to buffer

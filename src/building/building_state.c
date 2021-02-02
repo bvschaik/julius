@@ -77,8 +77,10 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_i16(buf, 0);
     } else if (b->type == BUILDING_DOCK) {
         buffer_write_i16(buf, b->data.dock.queued_docker_id);
-        for (int i = 0; i < 25; i++) {
-            buffer_write_u8(buf, 0);
+        buffer_write_u8(buf, b->data.dock.has_accepted_route_ids);
+        buffer_write_i32(buf, b->data.dock.accepted_route_ids);
+        for (int i = 0; i < 20; i++) {
+          buffer_write_u8(buf, 0);
         }
         buffer_write_u8(buf, b->data.dock.num_ships);
         buffer_write_u8(buf, 0);
@@ -261,7 +263,9 @@ static void read_type_data(buffer *buf, building *b)
         buffer_skip(buf, 2);
     } else if (b->type == BUILDING_DOCK) {
         b->data.dock.queued_docker_id = buffer_read_i16(buf);
-        buffer_skip(buf, 25);
+        b->data.dock.has_accepted_route_ids = buffer_read_u8(buf);
+        b->data.dock.accepted_route_ids = buffer_read_i32(buf);
+        buffer_skip(buf, 20);
         b->data.dock.num_ships = buffer_read_u8(buf);
         buffer_skip(buf, 2);
         b->data.dock.orientation = buffer_read_i8(buf);

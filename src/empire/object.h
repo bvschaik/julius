@@ -50,4 +50,6 @@ void empire_object_city_force_sell_resource(int object_id, int resource);
 
 int empire_object_update_animation(const empire_object *obj, int image_id);
 
+int is_sea_trade_route(int route_id);
+
 #endif // EMPIRE_OBJECT_H
