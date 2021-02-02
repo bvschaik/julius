@@ -36,6 +36,12 @@ int building_rotation_get_rotation(void){
     return rotation;
 }
 
+int building_rotation_get_rotation_with_limit(int limit)
+{
+    rotation = rotation % limit;
+    return rotation;
+}
+
 void building_rotation_rotate_by_hotkey(void){
     rotate();
     road_orientation = road_orientation == 1 ? 2 : 1;    

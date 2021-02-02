@@ -32,24 +32,25 @@ static int connecting_grid_building = 0;
 // For rotation 
 // -1 any, otherwise shown value
 
-static struct building_image_context building_images_hedges[17] = {
-    {{1, 2, 1, 2, 0, 2, 0, 2}, {4, 5, 2, 3}, 1, -1},
-    {{0, 2, 1, 2, 1, 2, 0, 2}, {3, 4, 5, 2}, 1, -1},
-    {{0, 2, 0, 2, 1, 2, 1, 2}, {2, 3, 4, 5}, 1, -1},
-    {{1, 2, 0, 2, 0, 2, 1, 2}, {5, 2, 3, 4}, 1, -1},
-    {{1, 2, 0, 2, 1, 2, 0, 2}, {1, 0, 1, 0}, 1, -1},
-    {{0, 2, 1, 2, 0, 2, 1, 2}, {0, 1, 0, 1}, 1, -1},
-    {{1, 2, 0, 2, 0, 2, 0, 2}, {1, 0, 1, 0}, 1, -1},
-    {{0, 2, 1, 2, 0, 2, 0, 2}, {0, 1, 0, 1}, 1, -1},
-    {{0, 2, 0, 2, 1, 2, 0, 2}, {1, 0, 1, 0}, 1, -1},
-    {{0, 2, 0, 2, 0, 2, 1, 2}, {0, 1, 0, 1}, 1, -1},
-    {{1, 2, 1, 2, 1, 2, 0, 2}, {9, 7, 6, 8}, 1, -1},
-    {{0, 2, 1, 2, 1, 2, 1, 2}, {8, 9, 7, 6}, 1, -1},
-    {{1, 2, 0, 2, 1, 2, 1, 2}, {6, 8, 9, 7}, 1, -1},
-    {{1, 2, 1, 2, 0, 2, 1, 2}, {7, 6, 8, 9}, 1, -1},
-    {{1, 2, 1, 2, 1, 2, 1, 2}, {10, 10, 10, 10}, -1},
-    {{2, 2, 2, 2, 2, 2, 2, 2}, {1, 0, 1, 0}, 1, 0},
-    {{2, 2, 2, 2, 2, 2, 2, 2}, {0, 1, 0, 1}, 1, -1},
+static struct building_image_context building_images_hedges[18] = {
+    {{1, 2, 1, 2, 0, 2, 0, 2}, {4, 5, 2, 3}, 0, -1, 0},
+    {{0, 2, 1, 2, 1, 2, 0, 2}, {3, 4, 5, 2}, 0, -1, 0},
+    {{0, 2, 0, 2, 1, 2, 1, 2}, {2, 3, 4, 5}, 0, -1, 0},
+    {{1, 2, 0, 2, 0, 2, 1, 2}, {5, 2, 3, 4}, 0, -1, 0},
+    {{1, 2, 0, 2, 1, 2, 0, 2}, {1, 0, 1, 0}, 0, -1, 0}, 
+    {{0, 2, 1, 2, 0, 2, 1, 2}, {0, 1, 0, 1}, 0, -1, 0},
+    {{1, 2, 0, 2, 0, 2, 0, 2}, {1, 0, 1, 0}, 0, -1, 0},
+    {{0, 2, 1, 2, 0, 2, 0, 2}, {0, 1, 0, 1}, 0, -1, 0},
+    {{0, 2, 0, 2, 1, 2, 0, 2}, {1, 0, 1, 0}, 0, -1, 0},
+    {{0, 2, 0, 2, 0, 2, 1, 2}, {0, 1, 0, 1}, 0, -1, 0},
+    {{1, 2, 1, 2, 1, 2, 0, 2}, {9, 7, 6, 8}, 0, -1, 0},
+    {{0, 2, 1, 2, 1, 2, 1, 2}, {8, 9, 7, 6}, 0, -1, 0},
+    {{1, 2, 0, 2, 1, 2, 1, 2}, {6, 8, 9, 7}, 0, -1, 0},
+    {{1, 2, 1, 2, 0, 2, 1, 2}, {7, 6, 8, 9}, 0, -1, 0},
+    {{1, 2, 1, 2, 1, 2, 1, 2}, {10, 10, 10, 10}, 0, -1, 0},
+    {{2, 2, 2, 2, 2, 2, 2, 2}, {1, 0, 1, 0}, 0, 0, 0},
+    {{2, 2, 2, 2, 2, 2, 2, 2}, {0, 1, 0, 1}, 0, 1, 0},
+    {{2, 2, 2, 2, 2, 2, 2, 2}, {10, 10, 10, 10}, 0, -1, 0},
 };
 
 enum {
@@ -63,9 +64,9 @@ static struct {
     struct building_image_context* context;
     int size;
 } context_pointers[] = {
-    {building_images_hedges, 17},
-    {building_images_hedges, 17},
-    {building_images_hedges, 17},
+    {building_images_hedges, 18},
+    {building_images_hedges, 18},
+    {building_images_hedges, 18},
 };
 
 void building_image_context_clear_connection_grid() 
@@ -146,7 +147,7 @@ const building_image* building_image_context_get_hedges(int grid_offset)
     if (building_id) {
         rotation = building_get(building_id)->subtype.orientation;
     } else {
-        rotation = building_rotation_get_rotation() % 2;
+        rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
     }
     return get_image(CONTEXT_HEDGES, tiles, rotation);
 }
@@ -171,7 +172,7 @@ const building_image* building_image_context_get_colonnade(int grid_offset)
         rotation = building_get(building_id)->subtype.orientation;
     }
     else {
-        rotation = building_rotation_get_rotation() % 2;
+        rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
     }
     return get_image(CONTEXT_COLONNADE, tiles, rotation);
 }
@@ -195,8 +196,8 @@ const building_image* building_image_context_get_garden_path(int grid_offset)
 	if (building_id) {
 		rotation = building_get(building_id)->subtype.orientation;
 	} else {
-		rotation = building_rotation_get_rotation() % 2;
-	}
+        rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
+    }
 	return get_image(CONTEXT_GARDEN_PATH, tiles, rotation);
 }
 

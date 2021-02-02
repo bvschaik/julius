@@ -1,6 +1,8 @@
 #ifndef BUILDING_IMAGE_CONTEXT_H
 #define BUILDING_IMAGE_CONTEXT_H
 
+#define CONNECTING_BUILDINGS_ROTATION_LIMIT 3
+
 typedef struct {
     int is_valid;
     int group_offset;
