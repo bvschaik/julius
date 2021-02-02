@@ -420,6 +420,8 @@ const uint8_t *lang_get_string(int group, int index)
             return translation_for(TR_BUILDING_DECORATIVE_COLUMN);
         case BUILDING_COLONNADE:
             return translation_for(TR_BUILDING_COLONNADE);
+        case BUILDING_GARDEN_PATH:
+            return translation_for(TR_BUILDING_GARDEN_PATH);
         case BUILDING_LARARIUM:
             return translation_for(TR_BUILDING_LARARIUM);
         case BUILDING_NYMPHAEUM:

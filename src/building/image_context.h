@@ -17,6 +17,13 @@ void building_image_context_set_connecting_type(int building_type);
 
 void building_image_context_mark_connection_grid(int map_grid);
 
+const building_image* building_image_context_get_hedges(int grid_offset);
+
+const building_image* building_image_context_get_colonnade(int grid_offset);
+
+const building_image* building_image_context_get_garden_path(int grid_offset);
+
+int building_image_context_get_connecting_image_for_tile(int grid_offset, int building_type);
 
 #endif // BUILDING_IMAGE_CONTEXT_H
 

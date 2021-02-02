@@ -155,6 +155,7 @@ static int get_height_id(void)
             case BUILDING_HEDGE_LIGHT:
             case BUILDING_LARARIUM:
             case BUILDING_COLONNADE:
+            case BUILDING_GARDEN_PATH:
             case BUILDING_WATCHTOWER:
                 return 1;
 
@@ -646,7 +647,7 @@ static void draw_background(void)
             window_building_draw_statue(&context);
         } else if (btype == BUILDING_SMALL_POND || btype == BUILDING_LARGE_POND) {
             window_building_draw_pond(&context);
-        } else if ((btype >= BUILDING_PINE_TREE && btype <= BUILDING_PAVILION_GREEN) || (btype >= BUILDING_HEDGE_DARK && btype <= BUILDING_HEDGE_LIGHT) || btype == BUILDING_COLONNADE) {
+        } else if ((btype >= BUILDING_PINE_TREE && btype <= BUILDING_PAVILION_GREEN) || (btype >= BUILDING_HEDGE_DARK && btype <= BUILDING_HEDGE_LIGHT) || btype == BUILDING_COLONNADE || btype == BUILDING_GARDEN_PATH) {
             window_building_draw_garden(&context);
         } else if (btype == BUILDING_TRIUMPHAL_ARCH) {
             window_building_draw_triumphal_arch(&context);

@@ -76,12 +76,13 @@ static int last_items_cleared;
 static const int FORT_X_OFFSET[4][4] = {{3,4,4,3},{-1,0,0,-1},{-4,-3,-3,4},{0,1,1,0}};
 static const int FORT_Y_OFFSET[4][4] = {{-1,-1,0,0},{-4,-4,-3,-3},{0,0,1,1},{3,3,4,4}};
 
-static int building_construction_is_connecting(void)
+int building_construction_is_connecting(void)
 {
     switch (data.type) {
     case BUILDING_HEDGE_DARK:
     case BUILDING_HEDGE_LIGHT:
     case BUILDING_COLONNADE:
+    case BUILDING_GARDEN_PATH:
         return 1;
     default:
         return 0;
@@ -500,6 +501,7 @@ int building_construction_is_updatable(void)
         case BUILDING_HEDGE_DARK:
         case BUILDING_HEDGE_LIGHT:
         case BUILDING_COLONNADE:
+        case BUILDING_GARDEN_PATH:
         case BUILDING_GARDEN_WALL:
         case BUILDING_DECORATIVE_COLUMN:
         case BUILDING_WALL:
@@ -590,6 +592,10 @@ void building_construction_update(int x, int y, int grid_offset)
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_COLONNADE) {
         int image_id = mods_get_image_id(mods_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
+        if (items_placed >= 0) current_cost *= items_placed;
+    } else if (type == BUILDING_GARDEN_PATH) {
+        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) current_cost *= items_placed;
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
@@ -711,7 +717,7 @@ void building_construction_place(void)
     if (type != BUILDING_CLEAR_LAND && has_nearby_enemy(x_start, y_start, x_end, y_end)) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
             game_undo_restore_map(0);
-        } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT || type == BUILDING_COLONNADE) {
+        } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT || type == BUILDING_COLONNADE || type == BUILDING_GARDEN_PATH) {
             game_undo_restore_map(1);
         } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
             map_bridge_reset_building_length();
@@ -817,6 +823,11 @@ void building_construction_place(void)
     } else if (type == BUILDING_COLONNADE) {
         int rotation = building_rotation_get_rotation();
         int image_id = mods_get_image_id(mods_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
+        map_tiles_update_all_hedges();
+    } else if (type == BUILDING_GARDEN_PATH) {
+        int rotation = building_rotation_get_rotation();
+        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
         map_tiles_update_all_hedges();
     } else if (type == BUILDING_DECORATIVE_COLUMN) {

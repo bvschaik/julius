@@ -4,7 +4,7 @@
 #include "mods/mods.h"
 #include "type.h"
 
-#define MOD_BUILDINGS 53
+#define MOD_BUILDINGS 54
 
 mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_ROADBLOCK, { 1, 1, 0, 0, 0 },  "Areldir", "Roadblocks", 0},
@@ -49,12 +49,13 @@ mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_ARENA, { 3, 0, 0, 0, 0 }, "Areldir", "Arena", "Arena OFF" },
     {BUILDING_HORSE_STATUE, { 3, 1, 0, 0, 1 }, "Areldir", "Aesthetics", "Eque Statue"},
     {BUILDING_DOLPHIN_FOUNTAIN, { 2, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
-    {BUILDING_HEDGE_DARK, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
-    {BUILDING_HEDGE_LIGHT, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
+    {BUILDING_HEDGE_DARK, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "D Hedge 01"},
+    {BUILDING_HEDGE_LIGHT, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "L Hedge 01"},
     {BUILDING_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
     {BUILDING_LEGION_STATUE, { 2, 1, 0, 0, 1 }, "Areldir", "Aesthetics", "legio statue"},
     {BUILDING_DECORATIVE_COLUMN, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "sml col B"},
     {BUILDING_COLONNADE, { 1, 1, 0, 0, 0 }, "Lizzaran", "Aesthetics_L", "G Colonnade 01"},
+    {BUILDING_GARDEN_PATH, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Garden Path 01"},
     {BUILDING_LARARIUM, {1,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Lararium 01"},
     {BUILDING_NYMPHAEUM, {3,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Nymphaeum OFF"},
     {BUILDING_SMALL_MAUSOLEUM, {2,0,0,0,0}, "Areldir", "Large_Temples_Oracle", "Mausoleum S"},
