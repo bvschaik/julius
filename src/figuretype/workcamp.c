@@ -172,7 +172,6 @@ void figure_workcamp_slave_action(figure* f) {
 	f->terrain_usage = TERRAIN_USAGE_ROADS;
 	figure_image_increase_offset(f, 12);
 	f->cart_image_id = 0;
-	figure_image_increase_offset(f, 12);
 	figure* leader = figure_get(f->leading_figure_id);
 	map_point dst;
 	switch (f->action_state) {
