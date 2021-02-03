@@ -1,6 +1,7 @@
 #include "construction_building.h"
 
 #include "building/building.h"
+#include "building/building_variant.h"
 #include "building/construction.h"
 #include "building/construction_warning.h"
 #include "building/count.h"
@@ -294,7 +295,7 @@ static void add_to_map(int type, building *b, int size,
             }
             break;
         case BUILDING_PAVILION_BLUE:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion blue"));
+            add_building(b, building_variant_get_image_id(b->type));
             break;
         case BUILDING_PAVILION_RED:
             add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion red"));
@@ -721,6 +722,9 @@ static void add_to_map(int type, building *b, int size,
     map_routing_update_walls();
     if (building_monument_is_monument(b)) {
         building_monument_recalculate_monuments();
+    }
+    if (building_variant_has_variants(b->type)) {
+        b->subtype.orientation = building_rotation_get_rotation_with_limit(building_variant_get_number_of_variants(b->type));
     }
 }
 

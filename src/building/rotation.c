@@ -7,12 +7,17 @@
 #include "map/grid.h"
 
 static int rotation = 0;
+static int extra_rotation = 0;
 static int road_orientation = 1;
 
 static void rotate(void){
     rotation+=1;
+    extra_rotation += 1;
     if(rotation>3){
         rotation=0;
+    }
+    if (extra_rotation >= 100) {
+        extra_rotation = 0;
     }
 }
 
@@ -38,8 +43,8 @@ int building_rotation_get_rotation(void){
 
 int building_rotation_get_rotation_with_limit(int limit)
 {
-    rotation = rotation % limit;
-    return rotation;
+    extra_rotation = extra_rotation % limit;
+    return extra_rotation;
 }
 
 void building_rotation_rotate_by_hotkey(void){

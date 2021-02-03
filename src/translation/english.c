@@ -255,7 +255,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_PLUM_PATH, "Plum path" },
     {TR_BUILDING_PALM_PATH, "Palm path" },
     {TR_BUILDING_DATE_PATH, "Date path" },
-    {TR_BUILDING_BLUE_PAVILION, "Blue pavilion" },
+    {TR_BUILDING_BLUE_PAVILION, "Pavilion" },
     {TR_BUILDING_RED_PAVILION, "Red pavilion"},
     {TR_BUILDING_ORANGE_PAVILION, "Orange pavilion"},
     {TR_BUILDING_YELLOW_PAVILION, "Yellow pavilion"},

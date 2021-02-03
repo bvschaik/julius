@@ -1,5 +1,6 @@
 #include "city_building_ghost.h"
 
+#include "building/building_variant.h"
 #include "building/construction.h"
 #include "building/count.h"
 #include "building/image_context.h"
@@ -352,6 +353,8 @@ static void draw_default(const map_tile* tile, int x_view, int y_view, building_
         int x_offset = (building_size - 1) * MOD_IMAGE_Y_OFFSET;
 		if (building_construction_is_connecting()) {
             image_id = building_image_context_get_connecting_image_for_tile(grid_offset, type);
+        } else if (building_variant_has_variants(type)) {
+            image_id = building_variant_get_image_id(type);
         } else {
             int rotation_offset = building_rotation_get_rotation() % 2 * props->rotation_offset;
             image_id = props->image_group + rotation_offset;
