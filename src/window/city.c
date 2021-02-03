@@ -4,6 +4,7 @@
 #include "building/construction.h"
 #include "building/menu.h"
 #include "building/rotation.h"
+#include "building/type.h"
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"
@@ -235,7 +236,7 @@ static void show_overlay_from_grid_offset(int grid_offset)
             overlay = OVERLAY_FIRE;
             break;
         case BUILDING_ENGINEERS_POST:
-        case BUILDING_ENGINEER_GUILD:
+        case BUILDING_ARCHITECT_GUILD:
             overlay = OVERLAY_DAMAGE;
             break;
         case BUILDING_THEATER:

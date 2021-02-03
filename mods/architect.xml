@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE mod>
+
+<mod author="Areldir" name="Architect">
+<!-- Note: Architect animation frames 01-12 -->
+    <image id="Architect 01" src="architect_01" />
+    <image id="Architect 02" src="architect_02" />
+    <image id="Architect 03" src="architect_03" />
+    <image id="Architect 04" src="architect_04" />
+    <image id="Architect 05" src="architect_05" />
+    <image id="Architect 06" src="architect_06" />
+    <image id="Architect 07" src="architect_07" />
+    <image id="Architect 08" src="architect_08" />
+    <image id="Architect 09" src="architect_09" />
+    <image id="Architect 10" src="architect_10" />
+    <image id="Architect 11" src="architect_11" />
+    <image id="Architect 12" src="architect_12" />
+
+<!-- Note: Architect's Guild OFF Variant -->
+    <image id="Arch Guild OFF" src="Architects_Guild_OFF" />
+
+<!-- Note: Architect's Guild ON Variant -->
+    <image id="Arch Guild ON" >
+		<layer group="this" image="Arch Guild OFF" />
+e       <animation speed="6" frames="8" reversible="false" />
+    </image>
+    <image src="Architects_Guild_On_01" />
+    <image src="Architects_Guild_On_02" />
+    <image src="Architects_Guild_On_03" />
+    <image src="Architects_Guild_On_04" />
+    <image src="Architects_Guild_On_05" />
+    <image src="Architects_Guild_On_06" />
+    <image src="Architects_Guild_On_07" />
+    <image src="Architects_Guild_On_08" />
+    <image src="Architects_Guild_On_09" />
+    <image src="Architects_Guild_On_10" />
+    <image src="Architects_Guild_On_11" />
+    <image src="Architects_Guild_On_12" />
+
+	
+</mod>		

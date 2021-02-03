@@ -148,7 +148,7 @@ static int get_height_id(void)
             case BUILDING_FURNITURE_WORKSHOP:
             case BUILDING_POTTERY_WORKSHOP:
             case BUILDING_WORKCAMP:
-            case BUILDING_ENGINEER_GUILD:
+            case BUILDING_ARCHITECT_GUILD:
             case BUILDING_OBELISK:
             case BUILDING_TAVERN:
             case BUILDING_HEDGE_DARK:
@@ -588,8 +588,8 @@ static void draw_background(void)
             window_building_draw_large_mausoleum(&context);
         } else if (btype == BUILDING_WORKCAMP) {
             window_building_draw_work_camp(&context);
-        } else if (btype == BUILDING_ENGINEER_GUILD) {
-            window_building_draw_engineer_guild(&context);
+        } else if (btype == BUILDING_ARCHITECT_GUILD) {
+            window_building_draw_architect_guild(&context);
         } else if (btype == BUILDING_MESS_HALL) {
             window_building_draw_mess_hall(&context);
         } else if (btype == BUILDING_TAVERN) {

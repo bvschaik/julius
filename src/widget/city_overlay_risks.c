@@ -50,7 +50,7 @@ static int show_building_fire_crime(const building *b)
 
 static int show_building_damage(const building *b)
 {
-    return b->type == BUILDING_ENGINEERS_POST || b->type == BUILDING_ENGINEER_GUILD;
+    return b->type == BUILDING_ENGINEERS_POST || b->type == BUILDING_ARCHITECT_GUILD;
 }
 
 static int show_building_problems(const building *b)
@@ -70,7 +70,7 @@ static int show_figure_fire(const figure *f)
 
 static int show_figure_damage(const figure *f)
 {
-    return f->type == FIGURE_ENGINEER || f->type == FIGURE_WORK_CAMP_ENGINEER;
+    return f->type == FIGURE_ENGINEER || f->type == FIGURE_WORK_CAMP_ARCHITECT;
 }
 
 static int show_figure_crime(const figure *f)

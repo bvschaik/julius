@@ -1413,17 +1413,17 @@ static void spawn_figure_work_camp(building* b)
 	}
 }
 
-static void spawn_figure_engineer_guild(building* b) {
+static void spawn_figure_architect_guild(building* b) {
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
-        if (has_figure_of_type(b, FIGURE_WORK_CAMP_ENGINEER)) {
+        if (has_figure_of_type(b, FIGURE_WORK_CAMP_ARCHITECT)) {
             return;
         }
         if (building_monument_get_monument(road.x, road.y, RESOURCE_NONE, b->road_network_id, b->distance_from_entry, 0)) {
-            figure* f = figure_create(FIGURE_WORK_CAMP_ENGINEER, road.x, road.y, DIR_4_BOTTOM);
-            f->action_state = FIGURE_ACTION_206_WORK_CAMP_ENGINEER_CREATED;
+            figure* f = figure_create(FIGURE_WORK_CAMP_ARCHITECT, road.x, road.y, DIR_4_BOTTOM);
+            f->action_state = FIGURE_ACTION_206_WORK_CAMP_ARCHITECT_CREATED;
             b->figure_id = f->id;
             f->building_id = b->id;
         }
@@ -1651,8 +1651,8 @@ void building_figure_generate(void)
                 case BUILDING_WORKCAMP:
                     spawn_figure_work_camp(b);
                     break;
-                case BUILDING_ENGINEER_GUILD:
-                    spawn_figure_engineer_guild(b);
+                case BUILDING_ARCHITECT_GUILD:
+                    spawn_figure_architect_guild(b);
                     break;
                 case BUILDING_MESS_HALL:
                     spawn_figure_mess_hall(b);

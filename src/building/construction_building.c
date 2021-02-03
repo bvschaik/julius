@@ -634,8 +634,8 @@ static void add_to_map(int type, building *b, int size,
                 break;
             }
             break;
-        case BUILDING_ENGINEER_GUILD:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+        case BUILDING_ARCHITECT_GUILD:
+            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Architect"), "Arch Guild ON"));
             break;
         case BUILDING_MESS_HALL:
             b->data.market.is_mess_hall = 1;

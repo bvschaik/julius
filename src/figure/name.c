@@ -74,7 +74,7 @@ int figure_name_get(figure_type type, enemy_type enemy)
         return get_next_name(&data.tax_collector, 132, 32);
 
     case FIGURE_ENGINEER:
-    case FIGURE_WORK_CAMP_ENGINEER:
+    case FIGURE_WORK_CAMP_ARCHITECT:
         return get_next_name(&data.engineer, 165, 32);
 
     case FIGURE_PREFECT:

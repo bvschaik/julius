@@ -563,7 +563,7 @@ static int phrase_based_on_figure_state(figure *f)
         case FIGURE_PREFECT:
             return prefect_phrase(f);
         case FIGURE_ENGINEER:
-        case FIGURE_WORK_CAMP_ENGINEER:
+        case FIGURE_WORK_CAMP_ARCHITECT:
             return engineer_phrase(f);
         case FIGURE_PROTESTER:
         case FIGURE_CRIMINAL:

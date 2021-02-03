@@ -41,7 +41,7 @@ mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_SMALL_STATUE_ALT_B, { 1, 1, 0, 0, 14 },  "Areldir", "Aesthetics", "sml statue 3"},
     {BUILDING_OBELISK, { 2, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "obelisk"},
     {BUILDING_PANTHEON, { 7, 1, 0, 0, 0 }, "Areldir", "Pantheon", "Pantheon Const 01"},
-    {BUILDING_ENGINEER_GUILD, { 2, 1, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"},
+    {BUILDING_ARCHITECT_GUILD, { 2, 1, 0, 0, 0 }, "Areldir", "Architect", "Arch Guild OFF"},
     {BUILDING_MESS_HALL, { 3, 0, 0, 0, 0 }, "Areldir", "Mess_Hall", "Mess OFF Central"},
     {BUILDING_LIGHTHOUSE, { 3, 1, 0, 0, 0 }, "Areldir", "Lighthouses", "Lighthouse Const 01"},
     {BUILDING_TAVERN, { 2, 0, 0, 0, 0 }, "Areldir", "Tavern", "Tavern OFF"},

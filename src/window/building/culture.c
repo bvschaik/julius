@@ -611,7 +611,7 @@ void window_building_draw_work_camp(building_info_context* c)
     window_building_draw_employment(c, 138);
 }
 
-void window_building_draw_engineer_guild(building_info_context* c)
+void window_building_draw_architect_guild(building_info_context* c)
 {
     window_building_play_sound(c, "wavs/eng_post.wav");
     if (!c->has_road_access) {
@@ -619,8 +619,8 @@ void window_building_draw_engineer_guild(building_info_context* c)
     }
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
-    text_draw_centered(translation_for(TR_BUILDING_ENGINEER_GUILD), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    text_draw_multiline(translation_for(TR_BUILDING_ENGINEER_GUILD_DESC), c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+    text_draw_centered(translation_for(TR_BUILDING_ARCHITECT_GUILD), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    text_draw_multiline(translation_for(TR_BUILDING_ARCHITECT_GUILD_DESC), c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     window_building_draw_employment(c, 138);
 }
 

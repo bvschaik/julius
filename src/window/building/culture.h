@@ -67,7 +67,7 @@ void window_building_draw_pantheon(building_info_context* c);
 
 void window_building_draw_work_camp(building_info_context* c);
 
-void window_building_draw_engineer_guild(building_info_context* c);
+void window_building_draw_architect_guild(building_info_context* c);
 
 void window_building_draw_tavern(building_info_context* c);
 

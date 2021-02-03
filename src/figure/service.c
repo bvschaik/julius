@@ -612,7 +612,7 @@ int figure_service_provide_coverage(figure *f)
             houses_serviced = provide_entertainment(x, y, b->data.market.inventory[INVENTORY_WINE] ? b->data.market.inventory[INVENTORY_MEAT] ? 2 : 1 : 0, tavern_coverage);
             break;
         case FIGURE_ENGINEER: 
-        case FIGURE_WORK_CAMP_ENGINEER: {
+        case FIGURE_WORK_CAMP_ARCHITECT: {
             int max_damage = 0;
             houses_serviced = provide_service(x, y, &max_damage, engineer_coverage);
             if (max_damage > f->min_max_seen) {

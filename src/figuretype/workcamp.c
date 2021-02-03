@@ -9,6 +9,7 @@
 #include "core/calc.h"
 #include "core/image.h"
 #include "core/random.h"
+#include "figure/action.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
@@ -267,7 +268,7 @@ void figure_workcamp_engineer_action(figure* f) {
 	case FIGURE_ACTION_149_CORPSE:
 		figure_combat_handle_corpse(f);
 		break;
-	case FIGURE_ACTION_206_WORK_CAMP_ENGINEER_CREATED:
+	case FIGURE_ACTION_206_WORK_CAMP_ARCHITECT_CREATED:
 		if (!building_monument_has_unfinished_monuments()) {
 			f->state = FIGURE_STATE_DEAD;
 		}
@@ -279,7 +280,7 @@ void figure_workcamp_engineer_action(figure* f) {
 				f->destination_y = dst.y;
 				// Only send 1 engineer
 				building_monument_add_delivery(f->destination_building_id, f->id, RESOURCE_NONE, 10);
-				f->action_state = FIGURE_ACTION_207_WORK_CAMP_ENGINEER_GOING_TO_MONUMENT;
+				f->action_state = FIGURE_ACTION_207_WORK_CAMP_ARCHITECT_GOING_TO_MONUMENT;
 				break;
 			}
 			else {
@@ -288,10 +289,10 @@ void figure_workcamp_engineer_action(figure* f) {
 		}
 		figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
 		break;
-	case FIGURE_ACTION_207_WORK_CAMP_ENGINEER_GOING_TO_MONUMENT:
+	case FIGURE_ACTION_207_WORK_CAMP_ARCHITECT_GOING_TO_MONUMENT:
 		figure_movement_move_ticks(f, 1);
 		if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
-			f->action_state = FIGURE_ACTION_208_WORK_CAMP_ENGINEER_WORKING_ON_MONUMENT;
+			f->action_state = FIGURE_ACTION_208_WORK_CAMP_ARCHITECT_WORKING_ON_MONUMENT;
 			monument = building_get(f->destination_building_id);
             if (!building_monument_access_point(monument, &dst) || b->data.monument.monument_phase == MONUMENT_FINISHED) {
                 f->state = FIGURE_STATE_DEAD;
@@ -304,7 +305,7 @@ void figure_workcamp_engineer_action(figure* f) {
 		}
 		figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
 		break;
-	case FIGURE_ACTION_208_WORK_CAMP_ENGINEER_WORKING_ON_MONUMENT:
+	case FIGURE_ACTION_208_WORK_CAMP_ARCHITECT_WORKING_ON_MONUMENT:
 		figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
 		f->terrain_usage = TERRAIN_USAGE_ANY;
 		f->use_cross_country = 1;
@@ -320,7 +321,7 @@ void figure_workcamp_engineer_action(figure* f) {
 			}
 			else {
 				f->wait_ticks++;
-				f->image_id = mods_get_group_id("Areldir", "Engineer") + f->image_offset;
+				f->image_id = mods_get_group_id("Areldir", "Architect") + f->image_offset;
 
 			}
 
