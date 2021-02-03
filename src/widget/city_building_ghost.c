@@ -350,7 +350,7 @@ static void draw_default(const map_tile* tile, int x_view, int y_view, building_
         // hack for offsets, not perfect
         int y_offset = (building_size - 1) * MOD_IMAGE_X_OFFSET;
         int x_offset = (building_size - 1) * MOD_IMAGE_Y_OFFSET;
-		if (building_construction_is_connecting) {
+		if (building_construction_is_connecting()) {
             image_id = building_image_context_get_connecting_image_for_tile(grid_offset, type);
         } else {
             int rotation_offset = building_rotation_get_rotation() % 2 * props->rotation_offset;
