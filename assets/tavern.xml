@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE mod>
+<!DOCTYPE assetlist>
 
-<mod author="Areldir" name="Tavern">
+<assetlist author="Areldir" name="Tavern">
 <!-- Note: Tavern OFF Variant -->
     <image id="Tavern OFF" src="Tavern_OFF" />
 
@@ -458,4 +458,4 @@
 		
 		
 		
-</mod>		
+</assetlist>		

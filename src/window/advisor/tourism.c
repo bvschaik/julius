@@ -1,5 +1,6 @@
 #include "tourism.h"
 
+#include "assets/assets.h"
 #include "building/count.h"
 #include "city/finance.h"
 #include "city/population.h"
@@ -14,7 +15,6 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "mods/mods.h"
 #include "scenario/property.h"
 #include "translation/translation.h"
 #include "window/advisor/ratings.h"
@@ -44,7 +44,7 @@ static int draw_background(void)
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 8, 555, 320);
 
     
-    image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Tourism Pillar BG"), 535, 60);
+    image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Tourism Pillar BG"), 535, 60);
     draw_rating_column(555, 284, calc_bound(city_finance_tourism_rating(), 0, 100), city_finance_tourism_rating() >= 100);
 
     text_draw(translation_for(TR_ADVISOR_HEADER_TOURISM), 60, 12, FONT_LARGE_BLACK, 0);

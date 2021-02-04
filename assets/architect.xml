@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE mod>
+<!DOCTYPE assetlist>
 
-<mod author="Areldir" name="Architect">
+<assetlist author="Areldir" name="Engineer">
 <!-- Note: Architect animation frames 01-12 -->
     <image id="Architect 01" src="architect_01" />
     <image id="Architect 02" src="architect_02" />
@@ -38,4 +38,4 @@ e       <animation speed="6" frames="8" reversible="false" />
     <image src="Architects_Guild_On_12" />
 
 	
-</mod>		
+</assetlist>		

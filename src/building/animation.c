@@ -1,5 +1,6 @@
 #include "animation.h"
 
+#include "assets/assets.h"
 #include "building/industry.h"
 #include "building/model.h"
 #include "building/monument.h"
@@ -10,7 +11,6 @@
 #include "game/animation.h"
 #include "map/image.h"
 #include "map/sprite.h"
-#include "mods/mods.h"
 
 int building_animation_offset(building *b, int image_id, int grid_offset)
 {
@@ -72,18 +72,18 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_COLOSSEUM) {
         switch (city_festival_games_active()) {
         case 1:
-            map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
             break;
         case 2:
-            map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
             break;
         case 3:
-            map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
             break;
         default:
-            map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"));
+            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"));
             if (b->num_workers <= 0) {
-                map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"));
+                map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"));
             }
         }
     }   
@@ -91,13 +91,13 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     //if (b->type == BUILDING_HIPPODROME) {
     //    switch (city_festival_games_active()) {
     //    case 1:
-    //        map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+    //        map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
     //        break;
     //    case 2:
-    //        map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+    //        map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
     //        break;
     //    case 3:
-    //        map_image_set(grid_offset, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+    //        map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
     //        break;
     //    default:
     //        map_image_set(grid_offset, image_group(GROUP_BUILDING_HIPPODROME_1));

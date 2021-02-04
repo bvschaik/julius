@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE mod>
+<!DOCTYPE assetlist>
 
-<mod author="Areldir" name="Farmer">
+<assetlist author="Areldir" name="Farmer">
 <!-- Note: Farmer animation frames 01-11 -->
     <image id="Farmer 01" src="farmer_01" />
     <image id="Farmer 02" src="farmer_02" />
@@ -15,4 +15,4 @@
     <image id="Farmer 10" src="farmer_10" />
     <image id="Farmer 11" src="farmer_11" />
 	
-</mod>		
+</assetlist>		

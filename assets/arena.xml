@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE mod>
+<!DOCTYPE assetlist>
 
-<mod author="Areldir" name="Arena">
+<assetlist author="Areldir" name="Arena">
 <!-- Note: Arena Off Variant -->
     <image id="Arena OFF" src="Arena_Off" />
 
@@ -18,4 +18,4 @@
     <image src="Arena_On_06" />
 
 
-</mod>		
+</assetlist>		

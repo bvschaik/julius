@@ -1,5 +1,6 @@
 #include "city_without_overlay.h"
 
+#include "assets/assets.h"
 #include "building/animation.h"
 #include "building/construction.h"
 #include "building/dock.h"
@@ -25,7 +26,6 @@
 #include "map/property.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
-#include "mods/mods.h"
 #include "sound/city.h"
 #include "widget/city_bridge.h"
 #include "widget/city_building_ghost.h"
@@ -216,10 +216,10 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
         image_draw_masked(image_group(GROUP_BUILDING_THEATER_SHOW), x + 34, y - 22, color_mask);
     }
     if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0 && b->data.monument.monument_phase <= 0) {
-        image_draw_masked(mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum ON"), x, y - 123, color_mask);
+        image_draw_masked(assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum ON"), x, y - 123, color_mask);
     }
     if (b->type == BUILDING_COLOSSEUM && b->num_workers <= 0 && b->data.monument.monument_phase <= 0) {
-        image_draw_masked(mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"), x, y - 123, color_mask);
+        image_draw_masked(assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"), x, y - 123, color_mask);
     }
     if (b->type == BUILDING_HIPPODROME && building_main(b)->num_workers > 0
         && city_entertainment_hippodrome_has_race()) {

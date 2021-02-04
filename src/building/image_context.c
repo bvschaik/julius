@@ -1,9 +1,9 @@
 #include "image_context.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/rotation.h"
 #include "city/view.h"
-#include "mods/mods.h"
 #include "map/building.h"
 #include "map/building_tiles.h"
 #include "map/grid.h"
@@ -240,16 +240,16 @@ int building_image_context_get_connecting_image_for_tile(int grid_offset, int bu
 
     if (building_type == BUILDING_HEDGE_DARK || (connecting_grid_building == BUILDING_HEDGE_DARK && connecting_grid[grid_offset])) {
         img = building_image_context_get_hedges(grid_offset);
-        image_group = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "D Hedge 01");
+        image_group = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "D Hedge 01");
     } else if (building_type == BUILDING_HEDGE_LIGHT || (connecting_grid_building == BUILDING_HEDGE_LIGHT && connecting_grid[grid_offset])) {
         img = building_image_context_get_hedges(grid_offset);
-        image_group = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "L Hedge 01");
+        image_group = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "L Hedge 01");
     } else if (building_type == BUILDING_COLONNADE || (connecting_grid_building == BUILDING_COLONNADE && connecting_grid[grid_offset])) {
         img = building_image_context_get_colonnade(grid_offset);
-        image_group = mods_get_image_id(mods_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
+        image_group = assets_get_image_id(assets_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
     } else if (building_type == BUILDING_GARDEN_PATH || (connecting_grid_building == BUILDING_GARDEN_PATH && connecting_grid[grid_offset])) {
         img = building_image_context_get_garden_path(grid_offset);
-        image_group = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
+        image_group = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
     } else {
         return 0;
     }

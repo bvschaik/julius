@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE mod>
+<!DOCTYPE assetlist>
 
-<mod author="Areldir" name="Circus">
+<assetlist author="Areldir" name="Circus">
 <!-- Note: Circus 0% construction phase -->
     <image id="Circus NESW 01" src="Circus_NE-SW_0%_Construction_Back_Part" />	
     <image id="Circus NWSE 01" src="Circus_NW-SE_0%_Construction_Back_Part" />	
@@ -129,4 +129,4 @@
 		<layer group="214" image="4" x="0" y="0" />
 	</image>
 
-</mod>		
+</assetlist>		

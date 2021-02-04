@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE mod>
+<!DOCTYPE assetlist>
 
-<mod author="Areldir" name="Colosseum">
+<assetlist author="Areldir" name="Colosseum">
 <!-- Note: Colosseum 0%, 25%, 50% and 75% construction phases respectively -->
     <image id="Coloseum Cons 01" src="Colosseum_0%_Construction_Phase" />	
     <image id="Coloseum Cons 02" width="298" height="154">
@@ -152,4 +152,4 @@
 	
 	
 	
-</mod>		
+</assetlist>		

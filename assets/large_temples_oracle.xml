@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE mod>
+<!DOCTYPE assetlist>
 
-<mod author="Areldir" name="Large_Temples_Oracle">
+<assetlist author="Areldir" name="Large_Temples_Oracle">
 <!-- Note: Large Temple and Oracle Construction 0% Phases -->
     <image id="Ceres LTemp Cons 0" src="Ceres_L_Temple_Construction_0%" />
     <image id="Mars LTemp Cons 0" src="Mars_L_Temple_Construction_0%" />	
@@ -47,4 +47,4 @@
     <image id="Mausoleum S R" src="Mausoleum_Small_R" />		
 	
 
-</mod>		
+</assetlist>		

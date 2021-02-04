@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE mod>
+<!DOCTYPE assetlist>
 
-<mod author="Lizzaran" name="Aesthetics_L">
+<assetlist author="Lizzaran" name="Aesthetics_L">
 <!-- Note: Rotation variants for Vanilla Small Statue -->
 	<image id="Circus NWSE 31" width="58" height="53">
 		<layer group="61" image="0" part="footprint" x="0" y="-1" />
@@ -21,4 +21,4 @@
     <image id="G Colonnade 10" src="Colonnade_Intersection_04" />
     <image id="G Colonnade 11" src="Colonnade_Intersection_4w" />
 
-</mod>		
+</assetlist>		

@@ -1,5 +1,6 @@
 #include "entertainment.h"
 
+#include "assets/assets.h"
 #include "building/count.h"
 #include "city/culture.h"
 #include "city/entertainment.h"
@@ -14,7 +15,6 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "mods/mods.h"
 #include "translation/translation.h"
 #include "window/hold_games.h"
 
@@ -62,7 +62,7 @@ static void draw_games_info(void)
     inner_panel_draw(48, 312, 34, 6);
     text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_HEADER), 52, 284, FONT_LARGE_BLACK, 0);
 
-    image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "HoldGames Banner"), 460, 315);
+    image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "HoldGames Banner"), 460, 315);
 
     if (cooldown) {
         text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN_TEXT), 56, 340, 400, FONT_NORMAL_WHITE, 0);

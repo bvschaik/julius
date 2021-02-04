@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<!DOCTYPE mod>
+<!DOCTYPE assetlist>
 
-<mod author="Areldir" name="Watchtowers">
+<assetlist author="Areldir" name="Watchtowers">
 <!-- Note: Watchtower OFF and ON states for Central Climate Respectively -->
     <image id="Watchtower C OFF" src="Watchtower_Central_OFF" />
 
@@ -41,4 +41,4 @@
     <image src="Watchtower_South_ON_04" />
     <image src="Watchtower_South_ON_05" />
 
-</mod>		
+</assetlist>		
