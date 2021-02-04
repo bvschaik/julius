@@ -1,5 +1,6 @@
 #include "construction.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/construction_building.h"
 #include "building/construction_clear.h"
@@ -36,7 +37,6 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
-#include "mods/mods.h"
 
 struct reservoir_info {
     int cost;
@@ -581,7 +581,7 @@ void building_construction_update(int x, int y, int grid_offset)
         }
     }
     else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_TREE) {
-        int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
+        int image_id = assets_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
@@ -589,7 +589,7 @@ void building_construction_update(int x, int y, int grid_offset)
     }
     else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
         int rotation = building_rotation_get_rotation();
-        int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
+        int image_id = assets_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
@@ -597,32 +597,32 @@ void building_construction_update(int x, int y, int grid_offset)
     } else if (type >= BUILDING_SMALL_STATUE_ALT && type <= BUILDING_SMALL_STATUE_ALT_B) {
         int rotation = building_rotation_get_rotation();
         int rotation_offset = building_properties_for_type(type)->rotation_offset;
-        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"),"sml statue 2") + (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"),"sml statue 2") + (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
     } else if (type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT) {
-        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "L Hedge 01") + (BUILDING_HEDGE_LIGHT - type)*11;
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "L Hedge 01") + (BUILDING_HEDGE_LIGHT - type)*11;
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
     } else if (type == BUILDING_COLONNADE) {
-        int image_id = mods_get_image_id(mods_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
+        int image_id = assets_get_image_id(assets_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
     } else if (type == BUILDING_GARDEN_PATH) {
-        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
         int rotation = building_rotation_get_rotation();
-        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
@@ -830,37 +830,37 @@ void building_construction_place(void)
         map_routing_update_land();
     }
     else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_TREE) {
-        int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
+        int image_id = assets_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, 0);
     }
     else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
         int rotation = building_rotation_get_rotation();
-        int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
+        int image_id = assets_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
     }
     else if (type >= BUILDING_SMALL_STATUE_ALT && type <= BUILDING_SMALL_STATUE_ALT_B) {
         int rotation = building_rotation_get_rotation();
         int rotation_offset = building_properties_for_type(type)->rotation_offset;
-        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
     } else if (type >= BUILDING_HEDGE_DARK && type <= BUILDING_HEDGE_LIGHT) {
         int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
-        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "D Hedge 01") + (type - BUILDING_HEDGE_DARK) * 12;
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "D Hedge 01") + (type - BUILDING_HEDGE_DARK) * 12;
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();
     } else if (type == BUILDING_COLONNADE) {
         int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
-        int image_id = mods_get_image_id(mods_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
+        int image_id = assets_get_image_id(assets_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();
     } else if (type == BUILDING_GARDEN_PATH) {
         int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
-        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
         int rotation = building_rotation_get_rotation();
-        int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);

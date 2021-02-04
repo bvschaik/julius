@@ -1,5 +1,6 @@
 #include "water_supply.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/monument.h"
 #include "building/list.h"
@@ -13,7 +14,6 @@
 #include "map/image.h"
 #include "map/property.h"
 #include "map/terrain.h"
-#include "mods/mods.h"
 #include "scenario/property.h"
 
 #include <string.h>
@@ -253,7 +253,7 @@ void map_water_supply_update_reservoir_fountain(void)
             offset += POND_LARGE_IMAGE_OFFSET;
         }
 
-        map_building_tiles_add(b->id, b->x, b->y, b->size, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset, TERRAIN_BUILDING);
+        map_building_tiles_add(b->id, b->x, b->y, b->size, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset, TERRAIN_BUILDING);
 
     }
 }

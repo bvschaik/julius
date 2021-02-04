@@ -12,7 +12,7 @@
 	<frame id="frame2">
 		<liveitem>
 			<text valign="bottom" align="left" text-align="left" text-valign="bottom" line-space="3" ellipsis="on">
-				<str color="#ffffff" size="50" bold="on" shadow="on">Julius</str>
+				<str color="#ffffff" size="50" bold="on" shadow="on">Augustus</str>
 			</text>
 		</liveitem>
 	</frame>

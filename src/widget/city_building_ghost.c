@@ -1,5 +1,6 @@
 #include "city_building_ghost.h"
 
+#include "assets/assets.h"
 #include "building/building_variant.h"
 #include "building/construction.h"
 #include "building/count.h"
@@ -32,13 +33,12 @@
 #include "map/tiles.h"
 #include "map/water.h"
 #include "map/water_supply.h"
-#include "mods/mods.h"
 #include "scenario/property.h"
 #include "widget/city_bridge.h"
 
 #define MAX_TILES 49
-#define MOD_IMAGE_X_OFFSET 15
-#define MOD_IMAGE_Y_OFFSET 29
+#define EXTRA_ASSET_IMAGE_X_OFFSET 15
+#define EXTRA_ASSET_IMAGE_Y_OFFSET 29
 
 static const int X_VIEW_OFFSETS[MAX_TILES] = {
     0,
@@ -349,8 +349,8 @@ static void draw_default(const map_tile* tile, int x_view, int y_view, building_
         draw_partially_blocked(x_view, y_view, fully_blocked, num_tiles, blocked_tiles);
     } else if (type >= BUILDING_ROADBLOCK) {
         // hack for offsets, not perfect
-        int y_offset = (building_size - 1) * MOD_IMAGE_X_OFFSET;
-        int x_offset = (building_size - 1) * MOD_IMAGE_Y_OFFSET;
+        int y_offset = (building_size - 1) * EXTRA_ASSET_IMAGE_X_OFFSET;
+        int x_offset = (building_size - 1) * EXTRA_ASSET_IMAGE_Y_OFFSET;
 		if (building_construction_is_connecting()) {
             image_id = building_image_context_get_connecting_image_for_tile(grid_offset, type);
         } else if (building_variant_has_variants(type)) {
@@ -607,8 +607,8 @@ static void draw_pond(const map_tile* tile, int x, int y, int type)
     int blocked_tiles[9];
     int blocked = is_blocked_for_building(grid_offset, num_tiles, blocked_tiles);
     int fully_blocked = 0;
-    int y_offset = (size - 1) * MOD_IMAGE_X_OFFSET;
-    int x_offset = (size - 1) * MOD_IMAGE_Y_OFFSET;
+    int y_offset = (size - 1) * EXTRA_ASSET_IMAGE_X_OFFSET;
+    int x_offset = (size - 1) * EXTRA_ASSET_IMAGE_Y_OFFSET;
     if (city_finance_out_of_money()) {
         fully_blocked = 1;
         blocked = 1;
@@ -639,7 +639,7 @@ static void draw_pond(const map_tile* tile, int x, int y, int type)
             offset += POND_LARGE_IMAGE_OFFSET;
         }
 
-        draw_regular_building(type, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset, x - x_offset, y + y_offset, grid_offset);
+        draw_regular_building(type, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset, x - x_offset, y + y_offset, grid_offset);
     }
 }
 

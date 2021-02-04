@@ -1,8 +1,8 @@
 #include "religion.h"
 
+#include "assets/assets.h"
 #include "building/count.h"
 #include "city/festival.h"
-
 #include "city/gods.h"
 #include "city/houses.h"
 #include "game/settings.h"
@@ -11,9 +11,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
-#include "mods/mods.h"
 #include "window/hold_festival.h"
-
 
 static void button_hold_festival(int param1, int param2);
 
@@ -64,7 +62,7 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
     int happy_bolts = city_god_happy_bolts(god);
     for (int i = 0; i < happy_bolts; i++) {
         // Placeholder graphic
-        image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Happy God Icon"), 10 * i + width + 460, y_offset - 4);
+        image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Happy God Icon"), 10 * i + width + 460, y_offset - 4);
     }
 }
 

@@ -11,6 +11,7 @@
 #include "input/cursor.h"
 #include "platform/android/android.h"
 #include "platform/cursor.h"
+#include "platform/icon.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
 
@@ -92,7 +93,7 @@ static void set_scale_for_screen(int pixel_width, int pixel_height)
 {
     set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
     config_set(CONFIG_SCREEN_CURSOR_SCALE, scale_percentage);
-    if (SDL.texture) {
+    if (SDL.texture_ui) {
         system_init_cursors(scale_percentage);
     }
     SDL_Log("Auto-setting scale to %i", scale_percentage);
@@ -116,6 +117,17 @@ void platform_screen_get_scaled_params(int* width, int* height)
     else {
         setting_window(width, height);
     }
+}
+
+static void set_window_icon(void)
+{
+    SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(platform_icon_get_pixels(), 16, 16, 32, 16 * 4,
+                                                        0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+    if (!surface) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for icon. Reason: %s", SDL_GetError());
+    }
+    SDL_SetWindowIcon(SDL.window, surface);
+    SDL_FreeSurface(surface);
 }
 
 int platform_screen_create(const char *title, int display_scale_percentage)
@@ -160,6 +172,8 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         return 0;
     }
 
+    set_window_icon();
+
     if (system_is_fullscreen_only()) {
         SDL_GetWindowSize(SDL.window, &width, &height);
     }
@@ -187,13 +201,13 @@ int platform_screen_create(const char *title, int display_scale_percentage)
 
 static void destroy_screen_textures(void)
 {
-    if (SDL.texture_ui) {
-        SDL_DestroyTexture(SDL.texture_ui);
-        SDL.texture_ui = 0;
-    }
     if (SDL.texture_city) {
         SDL_DestroyTexture(SDL.texture_city);
         SDL.texture_city = 0;
+    }
+    if (SDL.texture_ui) {
+        SDL_DestroyTexture(SDL.texture_ui);
+        SDL.texture_ui = 0;
     }
 }
 
@@ -221,8 +235,14 @@ static int create_textures(int width, int height)
         SDL_SetTextureBlendMode(SDL.texture_ui, SDL_BLENDMODE_NONE);
     }
 
-    if (SDL.texture_ui && !city_texture_error) {
-        SDL_Log("Textures created (%d x %d)", width, height);
+    if (SDL.texture_ui) {
+        if(city_texture_error) {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create city texture, zoom will be disabled: %s", SDL_GetError());
+            SDL_SetTextureBlendMode(SDL.texture_ui, SDL_BLENDMODE_NONE);
+            config_set(CONFIG_UI_ZOOM, 0);
+        } else {
+            SDL_Log("Textures created (%d x %d)", width, height);
+        }
         return 1;
     } else {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create textures: %s", SDL_GetError());

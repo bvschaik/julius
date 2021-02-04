@@ -1,5 +1,6 @@
 #include "market.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/granary.h"
 #include "building/storage.h"
@@ -11,7 +12,6 @@
 #include "figure/route.h"
 #include "figuretype/wall.h"
 #include "game/resource.h"
-#include "mods/mods.h"
 
 static int create_delivery_boy(int leader_id, figure *f, int type)
 {
@@ -240,11 +240,11 @@ void figure_delivery_boy_action(figure *f)
 
     if (f->type == FIGURE_MESS_HALL_COLLECTOR) {
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-            f->image_id = mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall death 01") +
+            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall death 01") +
                 figure_image_corpse_offset(f);
         }
         else {
-            f->image_id = mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall NE 01") + dir * 12 +
+            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall NE 01") + dir * 12 +
                 f->image_offset;
         }
     } else {

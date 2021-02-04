@@ -14,13 +14,13 @@ typedef struct {
 typedef struct {
     int type;
     building_properties properties;
-    const char* mod_author;
-    const char* mod_name;
-    const char* mod_image_id;
-} mod_building_properties_mapping;
+    const char* asset_author;
+    const char* asset_name;
+    const char* asset_image_id;
+} augustus_building_properties_mapping;
 
 const building_properties *building_properties_for_type(building_type type);
 
-void init_mod_building_properties();
+void init_augustus_building_properties();
 
 #endif // BUILDING_PROPERTIES_H

@@ -1,5 +1,6 @@
 #include "construction_building.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/building_variant.h"
 #include "building/construction.h"
@@ -28,7 +29,6 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
-#include "mods/mods.h"
 #include "scenario/property.h"
 
 static void add_fort(int type, building *fort)
@@ -61,8 +61,8 @@ static void add_fort(int type, building *fort)
 
 static void add_hippodrome(building *b)
 {
-    int image1 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NESW 01");
-    int image2 = mods_get_image_id(mods_get_group_id("Areldir", "Circus"), "Circus NWSE 01");
+    int image1 = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NESW 01");
+    int image2 = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NWSE 01");
     
     city_buildings_add_hippodrome();
 
@@ -251,7 +251,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_THEATER));
             break;
         case BUILDING_COLOSSEUM:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 01"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 01"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
@@ -280,37 +280,37 @@ static void add_to_map(int type, building *b, int size,
             break;
         case BUILDING_SMALL_POND:
             if (scenario_property_climate() == CLIMATE_DESERT) {
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "s pond south off"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond south off"));
             }
             else {
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "s pond north off"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond north off"));
             }
             break;
         case BUILDING_LARGE_POND:
             if (scenario_property_climate() == CLIMATE_DESERT) {
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "l pond south off"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "l pond south off"));
             } 
             else {
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "l pond north off"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "l pond north off"));
             }
             break;
         case BUILDING_PAVILION_BLUE:
             add_building(b, building_variant_get_image_id(b->type));
             break;
         case BUILDING_PAVILION_RED:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion red"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "pavilion red"));
             break;
         case BUILDING_PAVILION_ORANGE:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion orange"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "pavilion orange"));
             break;
         case BUILDING_PAVILION_YELLOW:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion yellow"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "pavilion yellow"));
             break;
         case BUILDING_PAVILION_GREEN:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "pavilion green"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "pavilion green"));
             break;
         case BUILDING_OBELISK:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "obelisk"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "obelisk"));
             break;
         // health
         case BUILDING_DOCTOR:
@@ -443,46 +443,46 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_VENUS));
             break;
         case BUILDING_LARGE_TEMPLE_CERES:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Ceres LTemp Cons 0"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Ceres LTemp Cons 0"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Nept LTemp Cons 0"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Nept LTemp Cons 0"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_MERCURY:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Merc LTemp Cons 0"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Merc LTemp Cons 0"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_MARS:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mars LTemp Cons 0"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Mars LTemp Cons 0"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_VENUS:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Venus LTemp Cons 0"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Venus LTemp Cons 0"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_ORACLE:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Oracle Cons"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Oracle Cons"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 2);
             building_monument_initialize(b);            
             break;
         case BUILDING_LARARIUM:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Lararium 01"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Lararium 01"));
             break;
         case BUILDING_ROADBLOCK:
-            add_building(b, mods_get_group_id("Areldir", "Roadblocks"));
+            add_building(b, assets_get_group_id("Areldir", "Roadblocks"));
             map_terrain_add_roadblock_road(b->x, b->y, orientation);	    
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();
@@ -579,43 +579,43 @@ static void add_to_map(int type, building *b, int size,
             city_buildings_add_distribution_center(b);
             break;
         case BUILDING_GRAND_TEMPLE_CERES:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 01"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 01"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_GRAND_TEMPLE_NEPTUNE:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 01"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 01"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_GRAND_TEMPLE_MERCURY:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 01"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 01"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_GRAND_TEMPLE_MARS:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 01"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 01"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_GRAND_TEMPLE_VENUS:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 01"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 01"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_PANTHEON:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Pantheon"), "Pantheon Const 01"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 01"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_initialize(b);
             break;
         case BUILDING_LIGHTHOUSE:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 01"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 01"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
@@ -624,18 +624,18 @@ static void add_to_map(int type, building *b, int size,
             switch (scenario_property_climate())
             {
             case CLIMATE_NORTHERN:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Workcamps"), "Workcamp North"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp North"));
                 break;
             case CLIMATE_DESERT:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Workcamps"), "Workcamp South"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp South"));
                 break;
             default:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Workcamps"), "Workcamp Central"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp Central"));
                 break;
             }
             break;
         case BUILDING_ARCHITECT_GUILD:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Architect"), "Arch Guild ON"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Architect"), "Arch Guild ON"));
             break;
         case BUILDING_MESS_HALL:
             b->data.market.is_mess_hall = 1;
@@ -643,76 +643,76 @@ static void add_to_map(int type, building *b, int size,
             switch (scenario_property_climate())
             {
             case CLIMATE_NORTHERN:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall"), "Mess ON North"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "Mess ON North"));
                 break;
             case CLIMATE_DESERT:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall"), "Mess ON South"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "Mess ON South"));
                 break;
             default:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall"), "Mess ON Central"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "Mess ON Central"));
                 break;
             }
             break;
         case BUILDING_TAVERN:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Tavern"), "Tavern ON"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Tavern"), "Tavern ON"));
             break;
         case BUILDING_GRAND_GARDEN:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
             break;
         case BUILDING_ARENA:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Arena"), "Arena ON"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Arena"), "Arena ON"));
             break;
         case BUILDING_HORSE_STATUE:
             orientation = building_rotation_get_rotation();
             b->subtype.orientation = orientation;
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "Eque Statue") + orientation % 2);
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Eque Statue") + orientation % 2);
             break;
             break;
         case BUILDING_DOLPHIN_FOUNTAIN:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
             break;
         case BUILDING_HEDGE_DARK:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
             break;
         case BUILDING_HEDGE_LIGHT:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
             break;
         case BUILDING_GARDEN_WALL:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
             break;
         case BUILDING_LEGION_STATUE:
             orientation = building_rotation_get_rotation();
             b->subtype.orientation = orientation;
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "legio statue") + orientation % 2);
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "legio statue") + orientation % 2);
             break;
         case BUILDING_WATCHTOWER:
             switch (scenario_property_climate())
             {
             case CLIMATE_NORTHERN:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower N ON"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower N ON"));
                 break;
             case CLIMATE_DESERT:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower S ON"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower S ON"));
                 break;
             default:
-                add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Watchtowers"), "Watchtower C ON"));
+                add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower C ON"));
                 break;
             }
             break;
         case BUILDING_SMALL_MAUSOLEUM:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum S Cons"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum S Cons"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 4);
             building_monument_initialize(b);
             break;
         case BUILDING_LARGE_MAUSOLEUM:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum L Cons"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum L Cons"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_NYMPHAEUM:
-            add_building(b, mods_get_image_id(mods_get_group_id("Areldir", "Large_Temples_Oracle"), "Nymphaeum Cons"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Nymphaeum Cons"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);

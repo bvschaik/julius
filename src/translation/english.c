@@ -360,11 +360,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MENU_STATUES, "Statues" },
     {TR_BUILDING_MENU_GOV_RES, "Governor's mansions" },
     {TR_OVERLAY_ROADS, "Roads" },
-    {TR_NO_MODS_TITLE, "Mods folder can't be found" },
-    {TR_NO_MODS_MESSAGE,
-        "Your Caesar 3 installation does not have properly installed mods folder. "
+    {TR_NO_EXTRA_ASSETS_TITLE, "Assets folder can't be found" },
+    {TR_NO_EXTRA_ASSETS_MESSAGE,
+        "Your Caesar 3 installation does not have properly installed assets folder. "
         "New assets will not properly be displayed.\n"
-        "Please ensure a '/mods' directory exists in the top level of your Caesar 3 install directory. " },
+        "Please ensure a '/assets' directory exists in the top level of your Caesar 3 install directory. " },
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Lighthouse must be placed near water"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "This house has access to all five gods from the Pantheon"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Plentiful food is boosting morale" },

@@ -355,11 +355,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MENU_STATUES, "Statuen" },
     {TR_BUILDING_MENU_GOV_RES, "Gouverneursanwesen" },
     {TR_OVERLAY_ROADS, "Straßen" },
-    {TR_NO_MODS_TITLE, "Mods Ordner nicht gefunden." },
-    {TR_NO_MODS_MESSAGE,
-    "In Ihrer Caesar 3-Installation ist der Mods-Ordner nicht ordnungsgemäß installiert. "
+    {TR_NO_EXTRA_ASSETS_TITLE, "Assets Ordner nicht gefunden." },
+    {TR_NO_EXTRA_ASSETS_MESSAGE,
+    "In Ihrer Caesar 3-Installation ist der Assets-Ordner nicht ordnungsgemäß installiert. "
     "Neue Spielinhalte werden nicht richtig angezeigt. "
-    "Stellen Sie sicher, dass ein '/mods'-Verzeichnis in der obersten Ebene Ihres Caesar 3-Installationsverzeichnisses vorhanden ist."},
+    "Stellen Sie sicher, dass ein '/assets'-Verzeichnis in der obersten Ebene Ihres Caesar 3-Installationsverzeichnisses vorhanden ist."},
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Leuchtturm muss nah am Wasser platziert werden."},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Dieses Haus hat durch das Pantheon Zugang zu allen fünf Göttern."},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Reichhaltiges Nahrungsangebot steigert die Moral" },

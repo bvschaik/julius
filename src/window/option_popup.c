@@ -1,5 +1,6 @@
 #include "option_popup.h"
 
+#include "assets/assets.h"
 #include "core/image_group.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -9,7 +10,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "mods/mods.h"
 #include "translation/translation.h"
 
 static void button_select_option(int option, int param2);
@@ -48,16 +48,16 @@ static int init(int title, int prompt, option_menu_item option_1, option_menu_it
     data.show_cancel_button = show_cancel_button;
     data.width_blocks = 30;
     data.height_blocks = data.show_cancel_button ? 28 : 27;
-    if (!data.option_1.image_id && *data.option_1.mod_author) {
-        data.option_1.image_id = mods_get_image_id(mods_get_group_id((char *) data.option_1.mod_author, (char *) data.option_1.mod_name),
-            (char *) data.option_1.mod_image_id);
+    if (!data.option_1.image_id && *data.option_1.asset_author) {
+        data.option_1.image_id = assets_get_image_id(assets_get_group_id((char *) data.option_1.asset_author, (char *) data.option_1.asset_name),
+            (char *) data.option_1.asset_image_id);
     }
-    if (!data.option_2.image_id && *data.option_2.mod_author) {
-        data.option_2.image_id = mods_get_image_id(mods_get_group_id((char *) data.option_2.mod_author, (char *) data.option_2.mod_name),
-            (char *) data.option_2.mod_image_id);
+    if (!data.option_2.image_id && *data.option_2.asset_author) {
+        data.option_2.image_id = assets_get_image_id(assets_get_group_id((char *) data.option_2.asset_author, (char *) data.option_2.asset_name),
+            (char *) data.option_2.asset_image_id);
     }
     if (!data.base_border_image_id) {
-        data.base_border_image_id = mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), 
+        data.base_border_image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), 
             "Monument Mod Selection Borders");
     }
     return 1;

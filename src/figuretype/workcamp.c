@@ -1,5 +1,6 @@
 #include "workcamp.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/model.h"
 #include "building/monument.h"
@@ -16,7 +17,6 @@
 #include "figure/route.h"
 #include "map/figure.h"
 #include "map/grid.h"
-#include "mods/mods.h"
 
 static int create_slave_workers(int leader_id, figure* f)
 {
@@ -237,11 +237,11 @@ void figure_workcamp_slave_action(figure* f) {
 
 	int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
 	if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-		f->image_id = mods_get_image_id(mods_get_group_id("Areldir", "Slave_Walker"), "Slave death 01") +
+		f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"), "Slave death 01") +
 			figure_image_corpse_offset(f);
 	}
 	else {
-		f->image_id = mods_get_image_id(mods_get_group_id("Areldir", "Slave_Walker"), "Slave NE 01") + dir * 12 +
+		f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"), "Slave NE 01") + dir * 12 +
 			f->image_offset;
 
 
@@ -320,7 +320,7 @@ void figure_workcamp_engineer_action(figure* f) {
 			}
 			else {
 				f->wait_ticks++;
-				f->image_id = mods_get_group_id("Areldir", "Architect") + f->image_offset;
+				f->image_id = assets_get_group_id("Areldir", "Architect") + f->image_offset;
 
 			}
 

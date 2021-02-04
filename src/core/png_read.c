@@ -31,12 +31,7 @@ static int load_png(const char *path)
 {
     unload_png();
     png_byte header[8];
-    const char *cased_path = dir_get_file(path, NOT_LOCALIZED);
-    if (!cased_path) {
-        log_error("Unable to open png file", path, 0);
-        return 0;
-    }
-    data.fp = file_open(cased_path, "rb");
+    data.fp = file_open_asset(path, "rb");
     if (!data.fp) {
         log_error("Unable to open png file", path, 0);
         return 0;

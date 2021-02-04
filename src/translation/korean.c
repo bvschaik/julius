@@ -319,11 +319,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MENU_STATUES, "석상" },
     {TR_BUILDING_MENU_GOV_RES, "통치자의 주택" },
     {TR_OVERLAY_ROADS, "도로" },
-    {TR_NO_MODS_TITLE, "모드 폴더를 찾을 수 없습니다" },
-    {TR_NO_MODS_MESSAGE,
+    {TR_NO_EXTRA_ASSETS_TITLE, "모드 폴더를 찾을 수 없습니다" },
+    {TR_NO_EXTRA_ASSETS_MESSAGE,
         "당신의 시저 3이 설치된 위치에 모드 폴더가 올바르게 설치되지 않았습니다."
         "새 요소들이 정상적으로 표시되지 않을 것입니다.\n"
-        "'/mods' 폴더가 시저 3 폴더에 정확히 위치하도록 설치해 주십시오." },
+        "'/assets' 폴더가 시저 3 폴더에 정확히 위치하도록 설치해 주십시오." },
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "등대는 물 근처에 설치되어야 합니다"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "이 집은 판테온의 모든 5가지 신의 신앙을 접할 수 있습니다"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "풍부한 식량이 사기를 고양시키고 있습니다" },

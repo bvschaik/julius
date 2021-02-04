@@ -1,5 +1,6 @@
 #include "cck_selection.h"
 
+#include "assets/assets.h"
 #include "core/dir.h"
 #include "core/encoding.h"
 #include "core/file.h"
@@ -16,7 +17,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "mods/mods.h"
 #include "scenario/criteria.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"

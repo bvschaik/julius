@@ -351,11 +351,11 @@ static translation_string all_strings[] = {
     { TR_BUILDING_MENU_STATUES, "Posągi" },
     { TR_BUILDING_MENU_GOV_RES, "Domy guberantora" },
     { TR_OVERLAY_ROADS, "Drogi" },
-    { TR_NO_MODS_TITLE, "Nie można znaleźć folderu z modami" },
-    { TR_NO_MODS_MESSAGE,
+    { TR_NO_EXTRA_ASSETS_TITLE, "Nie można znaleźć folderu z modami" },
+    { TR_NO_EXTRA_ASSETS_MESSAGE,
         "Twoja instalacja Cezara 3 nie posiada odpowiednio zainstalowanego folderu z modami. "
         "Nowe obiekty mogą nie wyświetlać się prawidłowo.\n"
-        "Zapewnij aby folder '/mods' istniał w katalogu w którym jest zainstalowany Cezar 3. " },
+        "Zapewnij aby folder '/assets' istniał w katalogu w którym jest zainstalowany Cezar 3. " },
     { TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Latarnia musi być zbudowana blisko wody" },
     { TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Ten dom ma dostęp do wszystkich bogów z panteonu." },
     { TR_BUILDING_LEGION_FOOD_BONUS, "Liczne jedzenie wzmaga morale" },

@@ -1,5 +1,6 @@
 #include "main_menu.h"
 
+#include "assets/assets.h"
 #include "core/string.h"
 #include "editor/editor.h"
 #include "game/game.h"
@@ -13,7 +14,6 @@
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
-#include "mods/mods.h"
 #include "sound/music.h"
 #include "window/cck_selection.h"
 #include "window/config.h"
@@ -60,7 +60,7 @@ static void draw_background(void)
     image_draw_fullscreen_background(image_group(GROUP_MAIN_MENU_BACKGROUND));
     graphics_in_dialog();
     if (!data.logo_image_id) {
-        data.logo_image_id = mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "Main Menu Banner");
+        data.logo_image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Main Menu Banner");
     }
     image_draw(data.logo_image_id, 110, -50);
     graphics_reset_dialog();

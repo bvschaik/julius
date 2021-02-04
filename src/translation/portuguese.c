@@ -322,11 +322,11 @@ static translation_string all_strings[] = {
     { TR_BUILDING_MENU_STATUES, "Estátuas" },
     { TR_BUILDING_MENU_GOV_RES, "Mansões do Governador" },
     { TR_OVERLAY_ROADS, "Estradas" },
-    { TR_NO_MODS_TITLE, "A pasta de mods não pôde ser encontrada" },
-    { TR_NO_MODS_MESSAGE,
-    "Sua instalação do Caesar 3 não instalou adequadamente a pasta de mods. \
+    { TR_NO_EXTRA_ASSETS_TITLE, "A pasta de assets não pôde ser encontrada" },
+    { TR_NO_EXTRA_ASSETS_MESSAGE,
+    "Sua instalação do Caesar 3 não instalou adequadamente a pasta de assets. \
     Novos assets não serão carregados adequadamente.\n \
-    Por favor, garanta que um diretório '/mods' exista na última camada de seu diretório de instalação do Caesar 3." },
+    Por favor, garanta que um diretório '/assets' exista na última camada de seu diretório de instalação do Caesar 3." },
     { TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "O Farol deve ser posicionado perto da água" },
     { TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Esta moradia tem acesso a todos os cinco deuses do Panteão" },
     { TR_BUILDING_LEGION_FOOD_BONUS, "A abundância de comida está melhorando o moral" },

@@ -37,7 +37,7 @@ project(${SHORT_NAME} C)
 
 if (VITA_BUILD)
     include("${VITASDK}/share/vita.cmake" REQUIRED)
-    set(VITA_TITLEID  "AUGUSTUS001")
+    set(VITA_TITLEID  "AUGUSTUS1")
 endif()
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
@@ -185,10 +185,11 @@ set(PMURHASH_FILES
 
 set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/arguments.c
+    ${PROJECT_SOURCE_DIR}/src/platform/augustus.c
     ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager_cache.c
-    ${PROJECT_SOURCE_DIR}/src/platform/julius.c
+    ${PROJECT_SOURCE_DIR}/src/platform/icon.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
     ${PROJECT_SOURCE_DIR}/src/platform/mouse.c
@@ -217,6 +218,8 @@ elseif (ANDROID_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/android/android.c
+        ${PROJECT_SOURCE_DIR}/src/platform/android/asset_handler.c
+        ${PROJECT_SOURCE_DIR}/src/platform/android/jni.c
     )
 endif()
 
@@ -419,12 +422,12 @@ set(MAP_FILES
     ${PROJECT_SOURCE_DIR}/src/map/water.c
     ${PROJECT_SOURCE_DIR}/src/map/water_supply.c
 )
-set(MODS_FILES
-    ${PROJECT_SOURCE_DIR}/src/mods/group.c
-    ${PROJECT_SOURCE_DIR}/src/mods/image.c
-    ${PROJECT_SOURCE_DIR}/src/mods/layer.c
-    ${PROJECT_SOURCE_DIR}/src/mods/mods.c
-    ${PROJECT_SOURCE_DIR}/src/mods/xml.c
+set(ASSETS_FILES
+    ${PROJECT_SOURCE_DIR}/src/assets/group.c
+    ${PROJECT_SOURCE_DIR}/src/assets/image.c
+    ${PROJECT_SOURCE_DIR}/src/assets/layer.c
+    ${PROJECT_SOURCE_DIR}/src/assets/assets.c
+    ${PROJECT_SOURCE_DIR}/src/assets/xml.c
 )
 set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/building.c
@@ -611,7 +614,25 @@ set(TRANSLATION_FILES
 
 set(MACOSX_FILES "")
 if(APPLE)
-    set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/augustus.icns)
+    function(resource VAR SOURCE_PATH DESTINATION PATTERN)
+    file(GLOB_RECURSE _LIST CONFIGURE_DEPENDS ${SOURCE_PATH}/${PATTERN})
+    foreach (RESOURCE ${_LIST})
+        get_filename_component(_PARENT ${RESOURCE} DIRECTORY)
+        if (${_PARENT} STREQUAL ${SOURCE_PATH})
+            set(_DESTINATION ${DESTINATION})
+        else ()
+            file(RELATIVE_PATH _DESTINATION ${SOURCE_PATH} ${_PARENT})
+            set(_DESTINATION ${DESTINATION}/${_DESTINATION})
+        endif ()
+        set_property(SOURCE ${RESOURCE} PROPERTY MACOSX_PACKAGE_LOCATION ${_DESTINATION})
+    endforeach (RESOURCE)
+    set(${VAR} ${_LIST} PARENT_SCOPE)
+    endfunction()
+    resource(ASSET_SOURCES ${PROJECT_SOURCE_DIR}/assets Resources/assets *)
+    set(MACOSX_FILES
+        ${PROJECT_SOURCE_DIR}/res/augustus.icns
+        ${ASSET_SOURCES}
+    )
 endif()
 
 set(SOURCE_FILES
@@ -625,7 +646,7 @@ set(SOURCE_FILES
     ${GAME_FILES}
     ${INPUT_FILES}
     ${MAP_FILES}
-    ${MODS_FILES}
+    ${ASSETS_FILES}
     ${SCENARIO_FILES}
     ${GRAPHICS_FILES}
     ${SOUND_FILES}
@@ -673,6 +694,10 @@ if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 endif()
 
+if(CMAKE_INSTALL_DATADIR)
+    add_compile_definitions(CUSTOM_ASSETS_DIR="${CMAKE_INSTALL_DATADIR}")
+endif()
+
 if(APPLE)
     # generating a macOS icns file (see https://stackoverflow.com/a/20703594)
     add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/augustus.icns
@@ -692,7 +717,7 @@ if(APPLE)
         MACOSX_PACKAGE_LOCATION "Resources")
 
     # setting variables that will populate Info.plist
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER "nl.biancavanschaik.julius")
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER "pl.Keriew.augustus")
     set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OS X deployment version" FORCE)
     set(MACOSX_BUNDLE_ICON_FILE "augustus.icns")
@@ -775,7 +800,7 @@ else()
     include_directories("ext/expat")
     target_sources(${SHORT_NAME} PRIVATE "${EXPAT_FILES}")
     if(NOT WIN32)
-        add_compile_definitions(XML_DEV_URANDOM)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DXML_DEV_URANDOM")
     endif()
 endif()
 
@@ -826,7 +851,7 @@ if (VITA_BUILD)
         ScePgf_stub
         SceAppMgr_stub
     )
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__vita__")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__vita__ -DPNG_ARM_NEON_OPT=0")
     # this setting enables larger heap memory sizes on Vita, up to ~330 MB
     # useful for pre-loading videos into memory
     set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
@@ -838,6 +863,7 @@ if (VITA_BUILD)
         FILE res/vita/bg.png sce_sys/livearea/contents/bg.png
         FILE res/vita/startup.png sce_sys/livearea/contents/startup.png
         FILE res/vita/template.xml sce_sys/livearea/contents/template.xml
+        FILE assets assets
     )
 elseif(SWITCH_BUILD)
     target_link_libraries (${SHORT_NAME}
@@ -861,6 +887,7 @@ elseif(SWITCH_BUILD)
     )
 
     set(FLAGS
+         -DPNG_ARM_NEON_OPT=0
         -fPIE
         -L${DEVKITPRO}/portlibs/switch/lib
         -L${DEVKITPRO}/libnx/lib
@@ -876,15 +903,17 @@ elseif(SWITCH_BUILD)
     add_custom_command(TARGET ${SHORT_NAME}
         POST_BUILD
         COMMAND ${DEVKITPRO}/tools/bin/nacptool --create "${SHORT_NAME}" "rsn8887" ${SWITCH_VERSION} ${SHORT_NAME}.nacp
-        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switch/icon0.jpg --nacp=${SHORT_NAME}.nacp
+        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switch/icon0.jpg --nacp=${SHORT_NAME}.nacp --romfsdir="${CMAKE_SOURCE_DIR}/assets"
     )
 else()
     if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
         target_link_libraries(${SHORT_NAME} m)
     endif()
     if(ANDROID_BUILD)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPNG_ARM_NEON_OPT=0 -D_BSD_SOURCE")
         find_library(log-lib log)
-        target_link_libraries(${SHORT_NAME} ${log-lib})
+        find_library(android-lib android)
+        target_link_libraries(${SHORT_NAME} ${log-lib} ${android-lib})
     endif()
     target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
     if(NOT APPLE AND NOT ANDROID_BUILD)
@@ -894,9 +923,11 @@ else()
     if(UNIX AND NOT APPLE)
         install(FILES "res/augustus.desktop" DESTINATION "share/applications" RENAME "com.github.keriew.augustus.desktop")
         install(FILES "res/augustus.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.keriew.augustus.metainfo.xml")
+        install(FILES "res/augustus_32.png" DESTINATION "share/icons/hicolor/32x32/apps" RENAME "com.github.keriew.augustus.png")
         install(FILES "res/augustus_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.keriew.augustus.png")
         install(FILES "res/augustus_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.keriew.augustus.png")
         install(FILES "res/augustus_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.keriew.augustus.png")
+        install(DIRECTORY "assets" DESTINATION "share/augustus-game")
     endif()
 
 endif()

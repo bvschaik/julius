@@ -357,11 +357,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MENU_STATUES, "Statue" },
     {TR_BUILDING_MENU_GOV_RES, "Residenze del governatore" },
     {TR_OVERLAY_ROADS, "Strade" },
-    {TR_NO_MODS_TITLE, "La cartella mods non è stata trovata" },
-    {TR_NO_MODS_MESSAGE,
-        "La tua installazione di Caesar 3 non ha la cartella mods installata correttamente. "
+    {TR_NO_EXTRA_ASSETS_TITLE, "La cartella assets non è stata trovata" },
+    {TR_NO_EXTRA_ASSETS_MESSAGE,
+        "La tua installazione di Caesar 3 non ha la cartella assets installata correttamente. "
         "I nuovi assett non saranno mostrati correttamente.\n"
-        "Assicurati che la cartella '/mods' esiste nella cartella principale della tua installazione di Caesar 3. " },
+        "Assicurati che la cartella '/assets' esiste nella cartella principale della tua installazione di Caesar 3. " },
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Il faro deve essere posizionato vicino all'acqua"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Questa casa ha accesso a tutti i cinque dei del Pantheon"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "L'abbondanza di cibo aumenta il morale" },

@@ -1,10 +1,10 @@
 #include "image.h"
 
+#include "assets/assets.h"
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
 #include "core/log.h"
-#include "mods/mods.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -607,7 +607,7 @@ const image *image_get(int id)
     if (id >= 0 && id < MAIN_ENTRIES) {
         return &data.main[id];
     } else {
-        return mods_get_image(id);
+        return assets_get_image(id);
     }
 }
 
@@ -636,7 +636,7 @@ const image *image_get_enemy(int id)
 const color_t *image_data(int id)
 {
     if (id < 0 || id >= MAIN_ENTRIES) {
-        return mods_get_image_data(id);
+        return assets_get_image_data(id);
     }
     if (!data.main[id].draw.is_external) {
         return &data.main_data[data.main[id].draw.offset];
