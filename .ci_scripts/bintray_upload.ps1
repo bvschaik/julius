@@ -12,10 +12,6 @@ if ("$env:GITHUB_REF" -match "^refs/tags/v") {
     $repo = "julius"
 } elseif ("$env:GITHUB_REF" -eq "refs/heads/master") {
     $repo = "julius-dev"
-} elseif ("$env:GITHUB_REF" -match "^refs/heads/feature/(.*)") {
-    $repo = "julius-branches"
-    $branch = $matches[1]
-    $version = "$branch-$version"
 } elseif ("$env:GITHUB_REF" -match "^refs/pull/(.*)/merge") {
     $pr_id = $matches[1];
     $version = "pr-$pr_id-$version"

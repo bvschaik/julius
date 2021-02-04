@@ -12,10 +12,6 @@ then
 elif [[ "$GITHUB_REF" == "refs/heads/master" ]]
 then
   REPO=julius-dev
-elif [[ "$GITHUB_REF" =~ ^refs/heads/feature/ ]]
-then
-  REPO=julius-branches
-  VERSION=${GITHUB_REF##refs/heads/feature/}-$VERSION
 elif [[ "$GITHUB_REF" =~ ^refs/pull/ ]]
 then
   PR_ID=${GITHUB_REF##refs/pull/}
