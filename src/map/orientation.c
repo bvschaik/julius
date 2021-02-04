@@ -1,5 +1,6 @@
 #include "orientation.h"
 
+#include "assets/assets.h"
 #include "building/rotation.h"
 #include "city/view.h"
 #include "core/direction.h"
@@ -16,7 +17,6 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
-#include "mods/mods.h"
 
 #include <math.h>
 #include <stdlib.h>
@@ -350,7 +350,7 @@ void map_orientation_update_buildings(void)
                 break;
         }
         if (b->type >= BUILDING_PINE_PATH && b->type <= BUILDING_DATE_PATH) {
-            image_id = mods_get_group_id("Areldir", "Aesthetics") + (b->type - BUILDING_PINE_TREE) + (abs((b->subtype.orientation - (map_orientation / 2) % 2)) * PATH_ROTATE_OFFSET);
+            image_id = assets_get_group_id("Areldir", "Aesthetics") + (b->type - BUILDING_PINE_TREE) + (abs((b->subtype.orientation - (map_orientation / 2) % 2)) * PATH_ROTATE_OFFSET);
             map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         }
     }

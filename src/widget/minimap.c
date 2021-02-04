@@ -1,5 +1,6 @@
 #include "minimap.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/monument.h"
 #include "city/view.h"
@@ -13,7 +14,6 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
-#include "mods/mods.h"
 #include "scenario/property.h"
 
 #include <stdlib.h>
@@ -175,9 +175,9 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
             }
             if (building_monument_is_monument(b)) {
                 switch (map_property_multi_tile_size(grid_offset)) {
-                case 3: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "3 Mon MapIcon"), x_view, y_view - 2); break;
-                case 5: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "5 Mon MapIcon"), x_view, y_view - 4); break;
-                case 7: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "7 Mon MapIcon"), x_view, y_view - 6); break;
+                case 3: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "3 Mon MapIcon"), x_view, y_view - 2); break;
+                case 5: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "5 Mon MapIcon"), x_view, y_view - 4); break;
+                case 7: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "7 Mon MapIcon"), x_view, y_view - 6); break;
                 }
             } else {
                 switch (map_property_multi_tile_size(grid_offset)) {
@@ -186,7 +186,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
                 case 3: image_draw(image_id + 2, x_view, y_view - 2); break;
                 case 4: image_draw(image_id + 3, x_view, y_view - 3); break;
                 case 5: image_draw(image_id + 4, x_view, y_view - 4); break;
-                case 7: image_draw(mods_get_image_id(mods_get_group_id("Areldir", "UI_Elements"), "7x7 Map Icon"), x_view, y_view - 6);
+                case 7: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "7x7 Map Icon"), x_view, y_view - 6);
                 }
             }
         }

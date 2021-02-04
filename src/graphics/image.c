@@ -41,7 +41,7 @@ static int get_visible_footprint_pixels_per_row(int tiles, int width, int height
     }
 }
 
-static void draw_modded_footprint(int image_id, int x_offset, int y_offset, color_t color)
+static void draw_extra_asset_footprint(int image_id, int x_offset, int y_offset, color_t color)
 {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
@@ -105,7 +105,7 @@ static void draw_modded_footprint(int image_id, int x_offset, int y_offset, colo
     }
 }
 
-static void draw_modded_top(int image_id, int x_offset, int y_offset, color_t color)
+static void draw_extra_asset_top(int image_id, int x_offset, int y_offset, color_t color)
 {
     const image *img = image_get(image_id);
     const color_t *data = image_data(image_id);
@@ -239,7 +239,7 @@ static void draw_modded_top(int image_id, int x_offset, int y_offset, color_t co
     }
 }
 
-static void draw_modded_image(const image *img, const color_t *data, int x_offset, int y_offset, color_t color)
+static void draw_asset_image(const image *img, const color_t *data, int x_offset, int y_offset, color_t color)
 {
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, img->height);
     if (!clip->is_visible) {
@@ -277,8 +277,8 @@ static void draw_modded_image(const image *img, const color_t *data, int x_offse
 
 static void draw_uncompressed(const image *img, const color_t *data, int x_offset, int y_offset, color_t color, draw_type type)
 {
-    if (img->draw.type == IMAGE_TYPE_MOD) {
-        draw_modded_image(img, data, x_offset, y_offset, color);
+    if (img->draw.type == IMAGE_TYPE_EXTRA_ASSET) {
+        draw_asset_image(img, data, x_offset, y_offset, color);
         return;
     }
     const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, img->width, img->height);
@@ -1088,8 +1088,8 @@ void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_ma
 {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
-        if (img->draw.type == IMAGE_TYPE_MOD) {
-            draw_modded_footprint(image_id, x, y, color_mask);
+        if (img->draw.type == IMAGE_TYPE_EXTRA_ASSET) {
+            draw_extra_asset_footprint(image_id, x, y, color_mask);
         }
         return;
     }
@@ -1119,8 +1119,8 @@ void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, c
 {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
-        if (img->draw.type == IMAGE_TYPE_MOD) {
-            draw_modded_footprint(image_id, x, y, color_mask);
+        if (img->draw.type == IMAGE_TYPE_EXTRA_ASSET) {
+            draw_extra_asset_footprint(image_id, x, y, color_mask);
         }
         return;
     }
@@ -1151,8 +1151,8 @@ void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask)
 {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
-        if (img->draw.type == IMAGE_TYPE_MOD) {
-            draw_modded_top(image_id, x, y, color_mask);
+        if (img->draw.type == IMAGE_TYPE_EXTRA_ASSET) {
+            draw_extra_asset_top(image_id, x, y, color_mask);
         }
         return;
     }
@@ -1199,8 +1199,8 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
 {
     const image *img = image_get(image_id);
     if (img->draw.type != IMAGE_TYPE_ISOMETRIC) {
-        if (img->draw.type == IMAGE_TYPE_MOD) {
-            draw_modded_top(image_id, x, y, color_mask);
+        if (img->draw.type == IMAGE_TYPE_EXTRA_ASSET) {
+            draw_extra_asset_top(image_id, x, y, color_mask);
         }
         return;
     }
@@ -1259,7 +1259,7 @@ void image_draw_scaled(int image_id, int x_offset, int y_offset, double scale_fa
         color_t *dst = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
         int x_max = width - clip->clipped_pixels_right;
         int image_y_offset = (int) (y / scale_factor) * img->width;
-        if (img->draw.type == IMAGE_TYPE_MOD) {
+        if (img->draw.type == IMAGE_TYPE_EXTRA_ASSET) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
                 color_t pixel = data[(int) (image_y_offset + x / scale_factor)];
                 color_t alpha = pixel & COLOR_CHANNEL_ALPHA;

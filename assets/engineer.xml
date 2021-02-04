@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+
+<assetlist author="Areldir" name="Engineer">
+<!-- Note: Engineer animation frames 01-12 -->
+    <image id="Engineer 01" src="engineer_01" />
+    <image id="Engineer 02" src="engineer_02" />
+    <image id="Engineer 03" src="engineer_03" />
+    <image id="Engineer 04" src="engineer_04" />
+    <image id="Engineer 05" src="engineer_05" />
+    <image id="Engineer 06" src="engineer_06" />
+    <image id="Engineer 07" src="engineer_07" />
+    <image id="Engineer 08" src="engineer_08" />
+    <image id="Engineer 09" src="engineer_09" />
+    <image id="Engineer 10" src="engineer_10" />
+    <image id="Engineer 11" src="engineer_11" />
+    <image id="Engineer 12" src="engineer_12" />
+
+<!-- Note: Engineer's Guild OFF Variant -->
+    <image id="Eng Guild OFF" src="Engineers_Guild_OFF" />
+
+<!-- Note: Engineer's Guild ON Variant -->
+    <image id="Eng Guild ON" >
+		<layer group="this" image="Eng Guild OFF" />
+        <animation speed="6" frames="8" reversible="false" />
+    </image>
+    <image src="Engineers_Guild_On_01" />
+    <image src="Engineers_Guild_On_02" />
+    <image src="Engineers_Guild_On_03" />
+    <image src="Engineers_Guild_On_04" />
+    <image src="Engineers_Guild_On_05" />
+    <image src="Engineers_Guild_On_06" />
+    <image src="Engineers_Guild_On_07" />
+    <image src="Engineers_Guild_On_08" />
+    <image src="Engineers_Guild_On_09" />
+    <image src="Engineers_Guild_On_10" />
+    <image src="Engineers_Guild_On_11" />
+    <image src="Engineers_Guild_On_12" />
+
+	
+</assetlist>

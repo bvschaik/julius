@@ -11,6 +11,11 @@ FILE *file_open(const char *filename, const char *mode)
     return platform_file_manager_open_file(filename, mode);
 }
 
+FILE *file_open_asset(const char *asset, const char *mode)
+{
+    return platform_file_manager_open_asset(asset, mode);
+}
+
 int file_close(FILE *stream)
 {
     return fclose(stream);

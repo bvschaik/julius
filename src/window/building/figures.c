@@ -1,5 +1,6 @@
 #include "figures.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "city/view.h"
 #include "core/config.h"
@@ -16,7 +17,6 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "mods/mods.h"
 #include "scenario/property.h"
 #include "translation/translation.h"
 #include "widget/city.h"
@@ -63,10 +63,10 @@ static int big_people_image(figure_type type)
     switch (type)
     {
     case FIGURE_WORK_CAMP_SLAVE:
-        return mods_get_image_id(mods_get_group_id("Areldir", "Slave_Walker"), "Slave Portrait");
+        return assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"), "Slave Portrait");
         break;
     case FIGURE_MESS_HALL_COLLECTOR:
-        return mods_get_image_id(mods_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall Portrait");
+        return assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall Portrait");
         break;
     case FIGURE_TRADE_CARAVAN_DONKEY:
     case FIGURE_TRADE_CARAVAN:

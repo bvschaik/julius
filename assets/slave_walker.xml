@@ -1,0 +1,135 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+
+<assetlist author="Areldir" name="Slave_Walker">
+<!-- Note: Slave Portrait -->
+    <image id="Slave Portrait" >
+		<layer group="190" image="14" />
+		<layer src="slave_portrait_overlay" />
+    </image>
+
+<!-- Note: Slave Death animation frames 01-08 -->
+    <image id="Slave death 01" src="slave_death_01" />
+    <image id="Slave death 02" src="slave_death_02" />
+    <image id="Slave death 03" src="slave_death_03" />
+    <image id="Slave death 04" src="slave_death_04" />
+    <image id="Slave death 05" src="slave_death_05" />
+    <image id="Slave death 06" src="slave_death_06" />
+    <image id="Slave death 07" src="slave_death_07" />
+    <image id="Slave death 08" src="slave_death_08" />
+
+
+
+<!-- Note: Slave Walking animation frames NORTH-EAST DIRECTION 01-12 -->
+    <image id="Slave NE 01" src="slave_ne_01" />
+    <image id="Slave NE 02" src="slave_ne_02" />
+    <image id="Slave NE 03" src="slave_ne_03" />
+    <image id="Slave NE 04" src="slave_ne_04" />
+    <image id="Slave NE 05" src="slave_ne_05" />
+    <image id="Slave NE 06" src="slave_ne_06" />
+    <image id="Slave NE 07" src="slave_ne_07" />
+    <image id="Slave NE 08" src="slave_ne_08" />
+    <image id="Slave NE 09" src="slave_ne_09" />
+    <image id="Slave NE 10" src="slave_ne_10" />
+    <image id="Slave NE 11" src="slave_ne_11" />
+    <image id="Slave NE 12" src="slave_ne_12" />	
+
+<!-- Note: Slave Walking animation frames EAST DIRECTION 01-12 -->
+    <image id="Slave E 01" src="slave_e_01" />
+    <image id="Slave E 02" src="slave_e_02" />
+    <image id="Slave E 03" src="slave_e_03" />
+    <image id="Slave E 04" src="slave_e_04" />
+    <image id="Slave E 05" src="slave_e_05" />
+    <image id="Slave E 06" src="slave_e_06" />
+    <image id="Slave E 07" src="slave_e_07" />
+    <image id="Slave E 08" src="slave_e_08" />
+    <image id="Slave E 09" src="slave_e_09" />
+    <image id="Slave E 10" src="slave_e_10" />
+    <image id="Slave E 11" src="slave_e_11" />
+    <image id="Slave E 12" src="slave_e_12" />	
+
+<!-- Note: Slave Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
+    <image id="Slave SE 01" src="slave_se_01" />
+    <image id="Slave SE 02" src="slave_se_02" />
+    <image id="Slave SE 03" src="slave_se_03" />
+    <image id="Slave SE 04" src="slave_se_04" />
+    <image id="Slave SE 05" src="slave_se_05" />
+    <image id="Slave SE 06" src="slave_se_06" />
+    <image id="Slave SE 07" src="slave_se_07" />
+    <image id="Slave SE 08" src="slave_se_08" />
+    <image id="Slave SE 09" src="slave_se_09" />
+    <image id="Slave SE 10" src="slave_se_10" />
+    <image id="Slave SE 11" src="slave_se_11" />
+    <image id="Slave SE 12" src="slave_se_12" />	
+
+<!-- Note: Slave Walking animation frames SOUTH DIRECTION 01-12 -->
+    <image id="Slave S 01" src="slave_s_01" />
+    <image id="Slave S 02" src="slave_s_02" />
+    <image id="Slave S 03" src="slave_s_03" />
+    <image id="Slave S 04" src="slave_s_04" />
+    <image id="Slave S 05" src="slave_s_05" />
+    <image id="Slave S 06" src="slave_s_06" />
+    <image id="Slave S 07" src="slave_s_07" />
+    <image id="Slave S 08" src="slave_s_08" />
+    <image id="Slave S 09" src="slave_s_09" />
+    <image id="Slave S 10" src="slave_s_10" />
+    <image id="Slave S 11" src="slave_s_11" />
+    <image id="Slave S 12" src="slave_s_12" />	
+
+<!-- Note: Slave Walking animation frames SOUTH-WEST DIRECTION 01-12 -->
+    <image id="Slave SW 01" src="slave_sw_01" />
+    <image id="Slave SW 02" src="slave_sw_02" />
+    <image id="Slave SW 03" src="slave_sw_03" />
+    <image id="Slave SW 04" src="slave_sw_04" />
+    <image id="Slave SW 05" src="slave_sw_05" />
+    <image id="Slave SW 06" src="slave_sw_06" />
+    <image id="Slave SW 07" src="slave_sw_07" />
+    <image id="Slave SW 08" src="slave_sw_08" />
+    <image id="Slave SW 09" src="slave_sw_09" />
+    <image id="Slave SW 10" src="slave_sw_10" />
+    <image id="Slave SW 11" src="slave_sw_11" />
+    <image id="Slave SW 12" src="slave_sw_12" />	
+	
+<!-- Note: Slave Walking animation frames WEST DIRECTION 01-12 -->
+    <image id="Slave W 01" src="slave_w_01" />
+    <image id="Slave W 02" src="slave_w_02" />
+    <image id="Slave W 03" src="slave_w_03" />
+    <image id="Slave W 04" src="slave_w_04" />
+    <image id="Slave W 05" src="slave_w_05" />
+    <image id="Slave W 06" src="slave_w_06" />
+    <image id="Slave W 07" src="slave_w_07" />
+    <image id="Slave W 08" src="slave_w_08" />
+    <image id="Slave W 09" src="slave_w_09" />
+    <image id="Slave W 10" src="slave_w_10" />
+    <image id="Slave W 11" src="slave_w_11" />
+    <image id="Slave W 12" src="slave_w_12" />	
+
+<!-- Note: Slave Walking animation frames NORTH-WEST DIRECTION 01-12 -->
+    <image id="Slave NW 01" src="slave_nw_01" />
+    <image id="Slave NW 02" src="slave_nw_02" />
+    <image id="Slave NW 03" src="slave_nw_03" />
+    <image id="Slave NW 04" src="slave_nw_04" />
+    <image id="Slave NW 05" src="slave_nw_05" />
+    <image id="Slave NW 06" src="slave_nw_06" />
+    <image id="Slave NW 07" src="slave_nw_07" />
+    <image id="Slave NW 08" src="slave_nw_08" />
+    <image id="Slave NW 09" src="slave_nw_09" />
+    <image id="Slave NW 10" src="slave_nw_10" />
+    <image id="Slave NW 11" src="slave_nw_11" />
+    <image id="Slave NW 12" src="slave_nw_12" />	
+
+<!-- Note: Slave Walking animation frames NORTH DIRECTION 01-12 -->
+    <image id="Slave N 01" src="slave_n_01" />
+    <image id="Slave N 02" src="slave_n_02" />
+    <image id="Slave N 03" src="slave_n_03" />
+    <image id="Slave N 04" src="slave_n_04" />
+    <image id="Slave N 05" src="slave_n_05" />
+    <image id="Slave N 06" src="slave_n_06" />
+    <image id="Slave N 07" src="slave_n_07" />
+    <image id="Slave N 08" src="slave_n_08" />
+    <image id="Slave N 09" src="slave_n_09" />
+    <image id="Slave N 10" src="slave_n_10" />
+    <image id="Slave N 11" src="slave_n_11" />
+    <image id="Slave N 12" src="slave_n_12" />	
+	
+</assetlist>		

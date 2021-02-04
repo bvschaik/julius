@@ -350,11 +350,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MENU_STATUES, "Estatuas"},
     {TR_BUILDING_MENU_GOV_RES, "Mansión del gobernador"},
     {TR_OVERLAY_ROADS, "Caminos"},
-    {TR_NO_MODS_TITLE, "La carpeta de mods no está"},
-    {TR_NO_MODS_MESSAGE,
-        "Tu instalación de Caesar 3 no tiene bien instalada la carpeta de mods. "
+    {TR_NO_EXTRA_ASSETS_TITLE, "La carpeta de assets no está"},
+    {TR_NO_EXTRA_ASSETS_MESSAGE,
+        "Tu instalación de Caesar 3 no tiene bien instalada la carpeta de assets. "
         "Los nuevos elementos no se mostrarán correctamente.\n"
-        "Asegúrate de que la carpeta '/mods' existe en el directorio de instalación de Caesar 3. "},
+        "Asegúrate de que la carpeta '/assets' existe en el directorio de instalación de Caesar 3. "},
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "El faro debe ser construido cerca del agua."},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Esta casa tiene acceso a todos los dioses del Panteón"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "La abundante comida aumenta la moral"},

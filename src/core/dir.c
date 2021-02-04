@@ -110,8 +110,10 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
     corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
 
     size_t dir_len = 0;
+    size_t dir_skip = 0;
     if (!dir || !*dir) {
         dir = ".";
+        dir_skip = 2;
     }
     dir_len = strlen(dir);
     strncpy(corrected_filename, dir, 2 * FILE_NAME_MAX - 1);
@@ -127,7 +129,7 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
     FILE *fp = file_open(corrected_filename, "rb");
     if (fp) {
         file_close(fp);
-        return corrected_filename;
+        return corrected_filename + dir_skip;
     }
 
     if (!platform_file_manager_should_case_correct_file()) {
@@ -161,7 +163,7 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         return 0;
     }
     corrected_filename[path_offset - 1] = '/';
-    return corrected_filename;
+    return corrected_filename + dir_skip;
 }
 
 const dir_listing* dir_append_files_with_extension(const char* extension)
@@ -184,6 +186,11 @@ const char *dir_get_file(const char *filepath, int localizable)
             }
         }
     }
-
+    
     return get_case_corrected_file(0, filepath);
+}
+
+const char *dir_get_asset(const char *asset_path, const char *filepath)
+{
+    return get_case_corrected_file(asset_path, filepath);
 }

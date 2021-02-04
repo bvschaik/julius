@@ -33,6 +33,14 @@ jobs:
             SDL_MIXER_VERSION: 2.0.4
             BUILD_TARGET: mac
             DEPLOY: mac
+          - name: PS Vita
+            os: ubuntu-18.04
+            BUILD_TARGET: vita
+            DEPLOY: vita
+          - name: Nintendo Switch
+            os: ubuntu-18.04
+            BUILD_TARGET: switch
+            DEPLOY: switch
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     env:

@@ -1,5 +1,6 @@
 #include "game.h"
 
+#include "assets/assets.h"
 #include "building/model.h"
 #include "building/properties.h"
 #include "city/view.h"
@@ -22,7 +23,6 @@
 #include "graphics/font.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
-#include "mods/mods.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
@@ -105,13 +105,13 @@ int game_init(void)
         return 0;
     }
 
-    mods_init();
-    init_mod_building_properties();
+    assets_init();
+    init_augustus_building_properties();
     load_custom_messages();
     sound_system_init();
     game_state_init();
-    int missing_mods = !mods_get_image_id(mods_get_group_id("Areldir", "Roadblocks"),"roadblock"); // If can't find roadblocks mod, mods not installed properly
-    window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : (missing_mods ? MESSAGE_MISSING_MODS : MESSAGE_NONE)));
+    int missing_assets = !assets_get_image_id(assets_get_group_id("Areldir", "Roadblocks"),"roadblock"); // If can't find roadblocks asset, extra assets not installed properly
+    window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : (missing_assets ? MESSAGE_MISSING_EXTRA_ASSETS : MESSAGE_NONE)));
     return 1;
 }
 

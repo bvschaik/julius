@@ -349,11 +349,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MENU_STATUES, "Statyer" },
     {TR_BUILDING_MENU_GOV_RES, "Governor's mansions" },
     {TR_OVERLAY_ROADS, "Vägar" },
-    {TR_NO_MODS_TITLE, "'Mods'-mappen kan inte hittas." },
-    {TR_NO_MODS_MESSAGE,
-        "Din installation av Caesar 3 har ej en korrekt installerad 'mods'-mapp."
+    {TR_NO_EXTRA_ASSETS_TITLE, "'Assets'-mappen kan inte hittas." },
+    {TR_NO_EXTRA_ASSETS_MESSAGE,
+        "Din installation av Caesar 3 har ej en korrekt installerad 'assets'-mapp."
         "Nya tillgångar kommer ej visas korrekt.\n"
-        "Var god och säkertställ att '/mods'-mappen finns på översta nivån i din Caesar 3-installationsmapp." },
+        "Var god och säkertställ att '/assets'-mappen finns på översta nivån i din Caesar 3-installationsmapp." },
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Fyren måste placeras nära vatten"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Det här huset har tillgång till alla fem gudarna via Pantheon."},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Den rikliga maten ökar moralen" },

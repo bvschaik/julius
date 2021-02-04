@@ -1,12 +1,12 @@
 #include "properties.h"
 
+#include "assets/assets.h"
 #include "core/image_group.h" 
-#include "mods/mods.h"
 #include "type.h"
 
-#define MOD_BUILDINGS 37
+#define AUGUSTUS_BUILDINGS 37
 
-mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
+augustus_building_properties_mapping augustus_building_properties[AUGUSTUS_BUILDINGS] = {
     {BUILDING_ROADBLOCK, { 1, 1, 0, 0, 0 },  "Areldir", "Roadblocks", 0},
     {BUILDING_WORKCAMP, { 3, 0, 0, 0, 0 },  "Areldir", "Workcamps", "Workcamp Central"},
     {BUILDING_GRAND_TEMPLE_CERES, { 7, 1, 0, 0, 0 },  "Areldir", "Ceres_Temple", "Ceres Complex Const 01"},
@@ -46,14 +46,14 @@ mod_building_properties_mapping mod_building_properties[MOD_BUILDINGS] = {
     {BUILDING_LIGHTHOUSE, { 3, 1, 0, 0, 0 }, "Areldir", "Lighthouses", "Lighthouse Const 01"}
 };
 
-void init_mod_building_properties() {
-    for (int i = 0; i < MOD_BUILDINGS; ++i) {
-        int group = mods_get_group_id(mod_building_properties[i].mod_author, mod_building_properties[i].mod_name);
-        if (mod_building_properties[i].mod_image_id) {
-            mod_building_properties[i].properties.image_group = mods_get_image_id(group, mod_building_properties[i].mod_image_id);
+void init_augustus_building_properties() {
+    for (int i = 0; i < AUGUSTUS_BUILDINGS; ++i) {
+        int group = assets_get_group_id(augustus_building_properties[i].asset_author, augustus_building_properties[i].asset_name);
+        if (augustus_building_properties[i].asset_image_id) {
+            augustus_building_properties[i].properties.image_group = assets_get_image_id(group, augustus_building_properties[i].asset_image_id);
         }
         else {
-            mod_building_properties[i].properties.image_group = group;
+            augustus_building_properties[i].properties.image_group = group;
         }
     }
 }
@@ -217,9 +217,9 @@ static building_properties properties[170] = {
 const building_properties *building_properties_for_type(building_type type)
 {
     if (type >= BUILDING_ROADBLOCK) {
-        for (int i = 0; i < MOD_BUILDINGS; ++i) {
-            if (mod_building_properties[i].type == type) {
-                return &mod_building_properties[i].properties;
+        for (int i = 0; i < AUGUSTUS_BUILDINGS; ++i) {
+            if (augustus_building_properties[i].type == type) {
+                return &augustus_building_properties[i].properties;
             }
         }
     }

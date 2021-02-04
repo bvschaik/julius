@@ -50,6 +50,14 @@ int platform_file_manager_should_case_correct_file(void);
 FILE *platform_file_manager_open_file(const char *filename, const char *mode);
 
 /**
+ * Opens an asset file
+ * @param filename The asset file to open
+ * @param mode The mode to open the asset file - refer to fopen()
+ * @return A pointer to a FILE structure on success, NULL otherwise
+ */
+FILE *platform_file_manager_open_asset(const char *asset, const char *mode);
+
+/**
  * Removes a file
  * @param filename The file to remove
  * @return true if removal was successful, false otherwise

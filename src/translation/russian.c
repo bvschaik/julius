@@ -337,11 +337,11 @@ static translation_string all_strings[] = {
     { TR_BUILDING_MENU_STATUES, "Статуи" },
     { TR_BUILDING_MENU_GOV_RES, "Особняки правителя" },
     { TR_OVERLAY_ROADS, "Дороги" },
-    { TR_NO_MODS_TITLE, "Папка модов ('mods') не найдена" },
-    { TR_NO_MODS_MESSAGE,
+    { TR_NO_EXTRA_ASSETS_TITLE, "Папка модов ('assets') не найдена" },
+    { TR_NO_EXTRA_ASSETS_MESSAGE,
     "Ваша установка Цезарь 3 не имеет правильно установленную папку модов. \
     Новые спрайты не будут отображаться таким образом.\n \
-    Убедитесь, что папка '/mods' существует на верхнем уровне каталога установки Caesar 3." },
+    Убедитесь, что папка '/assets' существует на верхнем уровне каталога установки Caesar 3." },
     { TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Маяк нужно ставить возле воды" },
     { TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "В этом доме есть доступ ко всем пяти богам Пантеона." },
     { TR_BUILDING_LEGION_FOOD_BONUS, "Обильная еда поднимает боевой дух" },

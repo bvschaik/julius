@@ -88,7 +88,7 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
         }
         if (stat_status == STAT_WORKS) {
             stat(file_item->name, &file_info);
-            if (!S_ISREG(file_info.st_mode)) {
+            if (S_ISDIR(file_info.st_mode)) {
                 type = TYPE_DIR;
             }
         } else {
@@ -100,6 +100,9 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
                 if (!dir_name_offset) {
                     strncpy(full_name, info->name, FILE_NAME_MAX);
                     dir_name_offset = strlen(info->name);
+                    if(full_name[dir_name_offset - 1] != '/') {
+                        full_name[dir_name_offset++] = '/';
+                    }
                 }
                 strncpy(full_name + dir_name_offset, name, FILE_NAME_MAX - 1 - dir_name_offset);
                 DIR *file_d = opendir(full_name);
