@@ -318,9 +318,9 @@ int platform_file_manager_set_base_path(const char *path)
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
     if (strchr(mode, 'w')) {
-        char temp[FILE_NAME_MAX];
-        strncpy(temp, filename, FILE_NAME_MAX - 1);
-        if(!file_exists(temp, NOT_LOCALIZED)) {
+        char temp_filename[FILE_NAME_MAX];
+        strncpy(temp_filename, filename, FILE_NAME_MAX - 1);
+        if (!file_exists(temp_filename, NOT_LOCALIZED)) {
             platform_file_manager_cache_add_file_info(filename);
         }
     }
@@ -407,9 +407,9 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
 #ifdef USE_FILE_CACHE
     if (strchr(mode, 'w')) {
-        char temp[FILE_NAME_MAX];
-        strncpy(temp, filename, FILE_NAME_MAX - 1);
-        if(!file_exists(temp, NOT_LOCALIZED)) {
+        char temp_filename[FILE_NAME_MAX];
+        strncpy(temp_filename, filename, FILE_NAME_MAX - 1);
+        if (!file_exists(temp_filename, NOT_LOCALIZED)) {
             platform_file_manager_cache_add_file_info(filename);
         }
     }
