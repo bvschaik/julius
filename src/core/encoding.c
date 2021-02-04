@@ -531,28 +531,40 @@ static const letter_code *get_letter_code_for_utf8(const char *c, int *num_bytes
 {
     static letter_code single_char = {0, 1};
     from_utf8_lookup key = {0, NULL};
-    if (is_accent) *is_accent = 0;
+    if (is_accent) {
+        *is_accent = 0;
+    }
     const uint8_t *uc = (const uint8_t *) c;
 
     if (uc[0] < 0x80) {
-        if (num_bytes) *num_bytes = 1;
+        if (num_bytes) {
+            *num_bytes = 1;
+        }
         single_char.internal_value = uc[0];
         single_char.utf8_value[0] = uc[0];
         return &single_char;
     } else if ((uc[0] & 0xe0) == 0xc0 && (uc[1] & 0xc0) == 0x80) {
         // 2-byte character
-        if (num_bytes) *num_bytes = 2;
+        if (num_bytes) {
+            *num_bytes = 2;
+        }
         key.utf8 = uc[0] | uc[1] << 8;
         if (is_combining_char(uc[0], uc[1])) {
-            if (is_accent) *is_accent = 1;
+            if (is_accent) {
+                *is_accent = 1;
+            }
             return NULL;
         }
     } else if ((uc[0] & 0xf0) == 0xe0 && (uc[1] & 0xc0) == 0x80 && (uc[2] & 0xc0) == 0x80) {
         // 3-byte character
-        if (num_bytes) *num_bytes = 3;
+        if (num_bytes) {
+            *num_bytes = 3;
+        }
         key.utf8 = uc[0] | uc[1] << 8 | uc[2] << 16;
     } else {
-        if (num_bytes) *num_bytes = 1;
+        if (num_bytes) {
+            *num_bytes = 1;
+        }
     }
     if (key.utf8 == 0) {
         return NULL;

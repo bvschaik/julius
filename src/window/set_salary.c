@@ -40,7 +40,9 @@ static int focus_button_id;
 static int get_dialog_width(void)
 {
     int dialog_width = 16 + lang_text_get_width(52, 15, FONT_LARGE_BLACK);
-    if (dialog_width < MIN_DIALOG_WIDTH) dialog_width = MIN_DIALOG_WIDTH;
+    if (dialog_width < MIN_DIALOG_WIDTH) {
+        dialog_width = MIN_DIALOG_WIDTH;
+    }
     if (dialog_width % 16 != 0) {
         // make sure the width is a multiple of 16
         dialog_width += 16 - dialog_width % 16;

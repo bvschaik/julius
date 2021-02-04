@@ -102,8 +102,9 @@ static void route_queue_max(int source, int dest, int max_tiles, void (*callback
     int tiles = 0;
     while (queue.head != queue.tail) {
         int offset = queue.items[queue.head];
-        if (offset == dest) break;
-        if (++tiles > max_tiles) break;
+        if (offset == dest || ++tiles > max_tiles) {
+            break;
+        }
         int dist = 1 + routing_distance.items[offset];
         for (int i = 0; i < 4; i++) {
             if (valid_offset(offset + ROUTE_OFFSETS[i])) {

@@ -556,56 +556,82 @@ void building_construction_update(int x, int y, int grid_offset)
 
     if (type == BUILDING_CLEAR_LAND) {
         int items_placed = last_items_cleared = building_construction_clear_land(1, data.start.x, data.start.y, x, y);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_WALL) {
         int items_placed = building_construction_place_wall(1, data.start.x, data.start.y, x, y);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_ROAD) {
         int items_placed = building_construction_place_road(1, data.start.x, data.start.y, x, y);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_PLAZA) {
         int items_placed = place_plaza(data.start.x, data.start.y, x, y);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_GARDENS) {
         int items_placed = place_garden(data.start.x, data.start.y, x, y);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     }
     else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_TREE) {
         int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     }
     else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
         int rotation = building_rotation_get_rotation();
         int image_id = mods_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type >= BUILDING_SMALL_STATUE_ALT && type <= BUILDING_SMALL_STATUE_ALT_B) {
         int rotation = building_rotation_get_rotation();
         int rotation_offset = building_properties_for_type(type)->rotation_offset;
         int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"),"sml statue 2") + (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT) {
         int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "L Hedge 01") + (BUILDING_HEDGE_LIGHT - type)*11;
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_COLONNADE) {
         int image_id = mods_get_image_id(mods_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_GARDEN_PATH) {
         int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
         int rotation = building_rotation_get_rotation();
         int image_id = mods_get_image_id(mods_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
         int length = map_bridge_building_length();
-        if (length > 1) current_cost *= length;
+        if (length > 1) {
+            current_cost *= length;
+        }
     } else if (type == BUILDING_AQUEDUCT) {
         building_construction_place_aqueduct(data.start.x, data.start.y, x, y, &current_cost);
         map_tiles_update_all_aqueducts(0);
@@ -617,7 +643,9 @@ void building_construction_update(int x, int y, int grid_offset)
         data.draw_as_constructing = 0;
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         int items_placed = place_houses(1, data.start.x, data.start.y, x, y);
-        if (items_placed >= 0) current_cost *= items_placed;
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_GATEHOUSE) {
         mark_construction(x, y, 2, ~TERRAIN_ROAD, 0);
     } else if (type == BUILDING_ROADBLOCK) {

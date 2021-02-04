@@ -119,7 +119,9 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
 static void move_animals(const formation *m, int attacking_animals)
 {
     for (int i = 0; i < MAX_FORMATION_FIGURES; i++) {
-        if (m->figures[i] <= 0) continue;
+        if (m->figures[i] <= 0) {
+            continue;
+        }
         figure *f = figure_get(m->figures[i]);
         if (f->action_state == FIGURE_ACTION_149_CORPSE ||
             f->action_state == FIGURE_ACTION_150_ATTACK) {

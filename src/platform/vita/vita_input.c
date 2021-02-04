@@ -318,8 +318,12 @@ static void vita_rescale_analog(int *x, int *y, int dead)
             max_y = max_axis;
         }
         float maximum = sqrtf(max_x * max_x + max_y * max_y);
-        if (maximum > 1.25f * max_axis) maximum = 1.25f * max_axis;
-        if (maximum < magnitude) maximum = magnitude;
+        if (maximum > 1.25f * max_axis) {
+            maximum = 1.25f * max_axis;
+        }
+        if (maximum < magnitude) {
+            maximum = magnitude;
+        }
 
         // find scaled axis values with magnitudes between zero and maximum
         float scalingFactor = maximum / magnitude * (magnitude - dead_zone) / (maximum - dead_zone);

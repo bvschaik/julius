@@ -73,9 +73,13 @@ void building_maintenance_update_burning_ruins(void)
             continue;
         }
         int dir1 = fire_spread_direction - 1;
-        if (dir1 < 0) dir1 = 7;
+        if (dir1 < 0) {
+            dir1 = 7;
+        }
         int dir2 = fire_spread_direction + 1;
-        if (dir2 > 7) dir2 = 0;
+        if (dir2 > 7) {
+            dir2 = 0;
+        }
 
         int grid_offset = b->grid_offset;
         int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(fire_spread_direction));

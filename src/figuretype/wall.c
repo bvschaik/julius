@@ -147,13 +147,17 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
 
     if (map_routing_wall_tile_in_radius(x, y, 6, x_tile, y_tile)) {
         b->figure_roam_direction += 2;
-        if (b->figure_roam_direction > 6) b->figure_roam_direction = 0;
+        if (b->figure_roam_direction > 6) {
+            b->figure_roam_direction = 0;
+        }
         return 1;
     }
     for (int i = 0; i < 4; i++) {
         dir = b->figure_roam_direction;
         b->figure_roam_direction += 2;
-        if (b->figure_roam_direction > 6) b->figure_roam_direction = 0;
+        if (b->figure_roam_direction > 6) {
+            b->figure_roam_direction = 0;
+        }
         x = b->x;
         y = b->y;
         switch (dir) {
