@@ -63,7 +63,7 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
         building* dst_building = building_get(dst_building_id);
         int src_building_type = src_building->type;
         if ((src_building_type >= BUILDING_WHEAT_FARM && src_building_type <= BUILDING_PIG_FARM) || src_building_type == BUILDING_WHARF) {
-            dist = calc_distance_with_penalty(src_building->x, src_building->y, dst_building->x, dst_building->y, src_building->distance_from_entry, dst_building->distance_from_entry);
+            dist = calc_maximum_distance(src_building->x, src_building->y, dst_building->x, dst_building->y);
         }
         if (dist >= 64) {
             dst_building_id = 0;
@@ -99,7 +99,7 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
         building* dst_building = building_get(dst_building_id);
         int src_building_type = src_building->type;
         if ((src_building_type >= BUILDING_WHEAT_FARM && src_building_type <= BUILDING_PIG_FARM) || src_building_type == BUILDING_WHARF) {
-            dist = calc_distance_with_penalty(src_building->x, src_building->y, dst_building->x, dst_building->y, src_building->distance_from_entry, dst_building->distance_from_entry);
+            dist = calc_maximum_distance(src_building->x, src_building->y, dst_building->x, dst_building->y);
         }
         if (dist >= 64) {
             dst_building_id = 0;
@@ -127,7 +127,7 @@ static void determine_cartpusher_destination_food(figure *f, int road_network_id
         int dist = 0;
         building* dst_building = building_get(dst_building_id);
         if ((b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) || b->type == BUILDING_WHARF) {
-            dist = calc_distance_with_penalty(b->x, b->y, dst_building->x, dst_building->y, b->distance_from_entry, dst_building->distance_from_entry);
+            dist = calc_maximum_distance(b->x, b->y, dst_building->x, dst_building->y);
         }
         if (dist >= 64) {
             dst_building_id=0;

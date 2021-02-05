@@ -297,7 +297,7 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
 			continue;
 		}
 
-		int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+		int dist = calc_maximum_distance(b->x, b->y, x, y);
 		if (dist < min_dist) {
 			min_dist = dist;
 			min_building = b;

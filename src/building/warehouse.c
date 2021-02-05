@@ -360,9 +360,9 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
         }
         int dist;
         if (b->subtype.warehouse_resource_id == RESOURCE_NONE) { // empty warehouse space
-            dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+            dist = calc_maximum_distance(b->x, b->y, x, y);
         } else if (b->subtype.warehouse_resource_id == resource && b->loads_stored < 4) {
-            dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+            dist = calc_maximum_distance(b->x, b->y, x, y);
         } else {
             dist = 0;
         }
@@ -403,8 +403,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
             }
         }
         if (loads_stored > 0 && !building_warehouse_is_gettable(resource,b)) {
-            int dist = calc_distance_with_penalty(b->x, b->y, src->x, src->y,
-                                                  src->distance_from_entry, b->distance_from_entry);
+            int dist = calc_maximum_distance(b->x, b->y, src->x, src->y);
             dist -= 4 * loads_stored;
             if (dist < min_dist) {
                 min_dist = dist;
@@ -456,8 +455,7 @@ int building_warehouse_with_resource(int src_building_id, int x, int y, int reso
             }
         }
         if (loads_stored > 0) {
-            int dist = calc_distance_with_penalty(b->x, b->y, x, y,
-                distance_from_entry, b->distance_from_entry);
+            int dist = calc_maximum_distance(b->x, b->y, x, y);
             dist -= 4 * loads_stored;
             if (dist < min_dist) {
                 min_dist = dist;

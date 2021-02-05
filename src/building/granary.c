@@ -303,8 +303,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
 
         if (b->data.granary.resource_stored[RESOURCE_NONE] >= ONE_LOAD) {
             // there is room
-            int dist = calc_distance_with_penalty(
-                b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
+            int dist = calc_maximum_distance(b->x + 1, b->y + 1, x, y);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = i;
@@ -349,8 +348,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
         }
         if (b->data.granary.resource_stored[RESOURCE_NONE] > ONE_LOAD) {
             // there is room
-            int dist = calc_distance_with_penalty(
-                b->x + 1, b->y + 1, x, y, distance_from_entry, b->distance_from_entry);
+            int dist = calc_maximum_distance(b->x + 1, b->y + 1, x, y);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = i;
@@ -409,10 +407,7 @@ int building_granary_for_getting(building *src, map_point *dst)
             amount_gettable += b->data.granary.resource_stored[RESOURCE_MEAT];
         }
         if (amount_gettable > 0) {
-            int dist = calc_distance_with_penalty(
-                b->x + 1, b->y + 1,
-                src->x + 1, src->y + 1,
-                src->distance_from_entry, b->distance_from_entry);
+            int dist = calc_maximum_distance(b->x + 1, b->y + 1, src->x + 1, src->y + 1);
             if (amount_gettable <= 400) {
                 dist *= 2; // penalty for less food
             }

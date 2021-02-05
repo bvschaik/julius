@@ -1,5 +1,7 @@
 #include "core/calc.h"
 
+#define FAST_INT_HYPOTENUSE(long_edge, short_edge) 235 * ((long_edge) + ((short_edge) >> 1)) >> 8
+
 int calc_adjust_with_percentage(int value, int percentage)
 {
     return percentage * value / 100;
@@ -29,25 +31,10 @@ int calc_maximum_distance(int x1, int y1, int x2, int y2)
     int distance_x = get_delta(x1, x2);
     int distance_y = get_delta(y1, y2);
     if (distance_x >= distance_y) {
-        return distance_x;
+        return FAST_INT_HYPOTENUSE(distance_x, distance_y);
     } else {
-        return distance_y;
+        return FAST_INT_HYPOTENUSE(distance_y, distance_x);
     }
-}
-
-int calc_distance_with_penalty(int x1, int y1, int x2, int y2,
-                               int dist_to_entry1, int dist_to_entry2)
-{
-    int penalty;
-    if (dist_to_entry1 > dist_to_entry2) {
-        penalty = dist_to_entry1 - dist_to_entry2;
-    } else {
-        penalty = dist_to_entry2 - dist_to_entry1;
-    }
-    if (dist_to_entry1 == -1) {
-        penalty = 0;
-    }
-    return penalty + calc_maximum_distance(x1, y1, x2, y2);
 }
 
 direction_type calc_general_direction(int x_from, int y_from, int x_to, int y_to)

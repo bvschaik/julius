@@ -132,8 +132,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, building 
                 }
             }
             if (distance_penalty < 32) {
-                int distance = calc_distance_with_penalty(
-                    b->x, b->y, x, y, dock->distance_from_entry, b->distance_from_entry);
+                int distance = calc_maximum_distance(b->x, b->y, x, y);
                 // prefer emptier warehouse
                 distance += distance_penalty;
                 if (distance < min_distance) {
@@ -196,7 +195,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, building 
             }
         }
         if (distance_penalty < 32) {
-            int distance = calc_distance_with_penalty(b->x, b->y, x, y, dock->distance_from_entry, b->distance_from_entry);
+            int distance = calc_maximum_distance(b->x, b->y, x, y);
             // prefer fuller warehouse
             distance += distance_penalty;
             if (distance < min_distance) {

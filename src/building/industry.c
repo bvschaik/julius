@@ -220,7 +220,7 @@ int building_get_workshop_for_raw_material_with_room(
             continue;
         }
         if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id && b->loads_stored < 2) {
-            int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+            int dist = calc_maximum_distance(b->x, b->y, x, y);
             if (b->loads_stored > 0) {
                 dist += 20;
             }
@@ -259,7 +259,7 @@ int building_get_workshop_for_raw_material(
         }
         if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id) {
             int dist = 10 * b->loads_stored +
-                calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+                calc_maximum_distance(b->x, b->y, x, y);
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building = b;

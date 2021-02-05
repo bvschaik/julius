@@ -47,7 +47,7 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
 		if (b->loads_stored >= MAX_WEAPONS_BARRACKS) {
 			continue;
 		}
-		int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
+		int dist = calc_maximum_distance(b->x, b->y, x, y);
 		dist += 8 * b->loads_stored;
 		if (dist < min_dist) {
 			min_dist = dist;
