@@ -2,17 +2,13 @@
 
 [![Github Actions](https://github.com/bvschaik/julius/workflows/Build%20Julius/badge.svg)](https://github.com/bvschaik/julius/actions)
 
-Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh) or [Gitter](https://gitter.im/julius-game/community)
+Download:
+[![Download release version](https://julius.biancavanschaik.nl/badge/release.svg)](https://github.com/bvschaik/julius/releases/latest)
+[![Download development version](https://julius.biancavanschaik.nl/badge/development.svg)](https://julius.biancavanschaik.nl/)
 
-| Platform | Latest release | Latest build (may be unstable) |
-|----------|----------------|-----------------|
-| Windows  | [![Download](https://api.bintray.com/packages/bvschaik/julius/windows/images/download.svg)](https://bintray.com/bvschaik/julius/windows/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/windows/images/download.svg)](https://bintray.com/bvschaik/julius-dev/windows/_latestVersion#files) |
-| Linux AppImage | [![Download](https://api.bintray.com/packages/bvschaik/julius/linux/images/download.svg)](https://bintray.com/bvschaik/julius/linux/_latestVersion#files) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/linux/images/download.svg)](https://bintray.com/bvschaik/julius-dev/linux/_latestVersion#files) |
-| Mac | [![Download](https://api.bintray.com/packages/bvschaik/julius/mac/images/download.svg)](https://bintray.com/bvschaik/julius/mac/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/mac/images/download.svg)](https://bintray.com/bvschaik/julius-dev/mac/_latestVersion#files) |
-| PS Vita | [![Download](https://api.bintray.com/packages/bvschaik/julius/vita/images/download.svg)](https://bintray.com/bvschaik/julius/vita/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/vita/images/download.svg)](https://bintray.com/bvschaik/julius-dev/vita/_latestVersion#files) |
-| Nintendo Switch | [![Download](https://api.bintray.com/packages/bvschaik/julius/switch/images/download.svg)](https://bintray.com/bvschaik/julius/switch/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/switch/images/download.svg)](https://bintray.com/bvschaik/julius-dev/switch/_latestVersion#files) |
-| Android APK | [![Download](https://api.bintray.com/packages/bvschaik/julius/android/images/download.svg)](https://bintray.com/bvschaik/julius/android/_latestVersion) | [![Download](https://api.bintray.com/packages/bvschaik/julius-dev/android/images/download.svg)](https://bintray.com/bvschaik/julius-dev/android/_latestVersion#files) |
-| Android on Google Play | [Download](https://play.google.com/store/apps/details?id=com.github.bvschaik.julius) | [Sign up for testing](https://play.google.com/apps/testing/com.github.bvschaik.julius) |
+Android version on Google Play: [install release](https://play.google.com/store/apps/details?id=com.github.bvschaik.julius) or [sign up for test builds](https://play.google.com/apps/testing/com.github.bvschaik.julius)
+
+Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh) or [Gitter](https://gitter.im/julius-game/community)
 
 ## Julius: an open source re-implementation of Caesar III
 
@@ -31,6 +27,14 @@ Enhancements for Julius include:
 - Windowed mode support for 32-bit desktops
 - A lot of small in-game [quality of life improvements](https://github.com/bvschaik/julius/wiki/Improvements-from-Caesar-3)
 - Support for the [high-quality MP3 files](https://github.com/bvschaik/julius/wiki/MP3-Support) once provided on the Sierra website
+
+Supported platforms:
+- Windows
+- Linux AppImage
+- MacOS
+- PS Vita
+- Nintendo Switch
+- Android
 
 While Julius does not implement any gameplay changes, a fork of Julius named [Augustus](https://github.com/Keriew/augustus) is implementing many long-wanted gameplay changes, such as roadblocks.
 Beware: Augustus does not support the original Caesar 3 save files, while Julius does. So use Julius for a more vanilla experience with some visual improvements, or Augustus for a different gameplay experience.

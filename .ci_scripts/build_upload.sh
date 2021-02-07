@@ -65,7 +65,7 @@ case "$DEPLOY" in
   ;;
 esac
 
-if [ ! -z "$SKIP_BINTRAY" ]
+if [ ! -z "$SKIP_UPLOAD" ]
 then
   echo "Build is configured to skip deploy - skipping upload"
   exit
@@ -84,4 +84,4 @@ then
 fi
 
 curl -u "$UPLOAD_TOKEN" -T deploy/$DEPLOY_FILE https://julius.biancavanschaik.nl/upload/$REPO/$PACKAGE/$VERSION/$DEPLOY_FILE
-echo "\nUploaded. URL: https://julius.biancavanschaik.nl/"
+echo "Uploaded. URL: https://julius.biancavanschaik.nl/"

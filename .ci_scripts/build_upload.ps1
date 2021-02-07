@@ -67,7 +67,7 @@ if ($suffix -eq "windows") {
     if (!$?) {
         throw "Unable to upload"
     }
-    echo "\nUploaded. URL: https://julius.biancavanschaik.nl/"
+    echo "Uploaded. URL: https://julius.biancavanschaik.nl/"
 } else {
     echo "Not publishing build $suffix - skipping upload"
 }
