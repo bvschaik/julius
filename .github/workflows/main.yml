@@ -79,11 +79,16 @@ jobs:
         run: |
           ./.ci_scripts/run_cmake.sh
           ./.ci_scripts/run_build.sh
-      - name: Upload to Bintray
+      - name: Upload development artifacts
         env:
-          BINTRAY_USER_TOKEN: ${{ secrets.BINTRAY_USER_TOKEN }}
+          UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
         run: |
-          ./.ci_scripts/bintray_upload.sh
+          ./.ci_scripts/build_upload.sh
+      # - name: Upload to Bintray
+      #   env:
+      #     BINTRAY_USER_TOKEN: ${{ secrets.BINTRAY_USER_TOKEN }}
+      #   run: |
+      #     ./.ci_scripts/bintray_upload.sh
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -121,10 +126,14 @@ jobs:
         run: ./.ci_scripts/install_sdl.ps1
       - name: Build and test
         run: ./.ci_scripts/run_build.ps1
-      - name: Upload to Bintray
+      - name: Upload development artifacts
         env:
-          BINTRAY_USER_TOKEN: ${{ secrets.BINTRAY_USER_TOKEN }}
-        run: ./.ci_scripts/bintray_upload.ps1
+          UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
+        run: ./.ci_scripts/build_upload.ps1
+      # - name: Upload to Bintray
+      #   env:
+      #     BINTRAY_USER_TOKEN: ${{ secrets.BINTRAY_USER_TOKEN }}
+      #   run: ./.ci_scripts/bintray_upload.ps1
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
