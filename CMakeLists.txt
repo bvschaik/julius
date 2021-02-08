@@ -679,10 +679,6 @@ if(APPLE)
     # the path to its dependencies (Ogg.framework etc):
     if(EXISTS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
         list(APPEND DIRS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
-        # Copy mpg123 framework manually because since MacOS 10.15, the
-        # dependency is seen as "weak" and not copied automatically
-        file(COPY "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks/mpg123.framework" DESTINATION "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks")
-        list(APPEND LIBS "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/mpg123.framework/mpg123")
     endif()
 
     # when installing, "fixup" automatically copies libraries inside the
@@ -690,11 +686,6 @@ if(APPLE)
     install(CODE "
         include(BundleUtilities)
         fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
-        # Manually fix up link to mpg123 in SDL2_mixer
-        execute_process(COMMAND ${CMAKE_INSTALL_NAME_TOOL}
-            \"-change\" \"@rpath/mpg123.framework/Versions/A/mpg123\"
-            \"@executable_path/../Frameworks/mpg123.framework/mpg123\"
-            \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/SDL2_mixer.framework/Versions/A/SDL2_mixer\")
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
