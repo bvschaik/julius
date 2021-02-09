@@ -170,6 +170,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager_cache.c
+    ${PROJECT_SOURCE_DIR}/src/platform/icon.c
     ${PROJECT_SOURCE_DIR}/src/platform/julius.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
@@ -821,6 +822,7 @@ else()
     if(UNIX AND NOT APPLE)
         install(FILES "res/julius.desktop" DESTINATION "share/applications" RENAME "com.github.bvschaik.julius.desktop")
         install(FILES "res/julius.metainfo.xml" DESTINATION "share/metainfo" RENAME "com.github.bvschaik.julius.metainfo.xml")
+        install(FILES "res/julius_32.png" DESTINATION "share/icons/hicolor/32x32/apps" RENAME "com.github.bvschaik.julius.png")
         install(FILES "res/julius_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.bvschaik.julius.png")
         install(FILES "res/julius_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.bvschaik.julius.png")
         install(FILES "res/julius_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.bvschaik.julius.png")
