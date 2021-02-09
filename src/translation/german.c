@@ -40,6 +40,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Intro-Videos abspielen"},
     {TR_CONFIG_SIDEBAR_INFO, "Zusätzliche Informationen am rechten Bildschirmrand anzeigen"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Aktiviere sanftes Scrollen"},
+    {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Verschieben der Karte am Fensterrand deaktivieren"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Rechtsklick deaktivieren, um die Karte zu verschieben"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Das visuelle Feedback beim Planieren verbessern"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Erlaube alle Tempel nacheinander zu bauen"},
@@ -123,6 +124,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_ADVISOR_CHIEF, "Hauptberater"},
     {TR_HOTKEY_SHOW_ADVISOR_HOUSING, "Wohnraumberater"},
     {TR_HOTKEY_TOGGLE_OVERLAY, "Akt. Spezialkarte umschalten"},
+    {TR_HOTKEY_SHOW_OVERLAY_RELATIVE, "Zeige relative Einblendung"},
     {TR_HOTKEY_SHOW_OVERLAY_WATER, "Wasserkarte"},
     {TR_HOTKEY_SHOW_OVERLAY_FIRE, "Feuerkarte"},
     {TR_HOTKEY_SHOW_OVERLAY_DAMAGE, "Schadenskarte"},
@@ -318,6 +320,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SMALL_TEMPLE_MARS_NAME, "Tempel des Mars"},
     {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Tempel der Venus"},
     {TR_FIGURE_TYPE_PRIEST_BUYER, "Priester" },
+    {TR_BUILDING_DOCK_CITIES_CONFIG_DESC, "Städte mit eröffneter Seeroute:" },
+    {TR_BUILDING_DOCK_CITIES_NO_ROUTES, "Es wurden keine Seerouten eröffnet." },
     // Transkription von mission_exact4.wav
     {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"Ich werde tun, was ich kann, um diese Barbaren zu beruhigen. Ich bin sicher, dass sie ihre Angriffe auf die Stadt einstellen werden, wenn ich einfach nur mit ihnen spreche.\"" },
     {TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "Ein jährliches Fest"},
@@ -381,6 +385,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MEDICINE, "Durchlass für Gesundheitswesen umschalten" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, "Durchlass für Steuereintreiber umschalten" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_LABOR_SEEKER, "Durchlass für Arbeitslose umschalten" },
+    {TR_HOTKEY_DUPLICATE_TITLE, "Tastenkombination bereits in Verwendung"},
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "Diese Tastenkombination ist bereits folgender Aktion zugewiesen:"}
 
 };
 
