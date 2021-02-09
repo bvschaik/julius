@@ -4,7 +4,7 @@
 static translation_string all_strings[] = {
     {TR_NO_PATCH_TITLE, "Patch 1.0.1.0 ist nicht installiert"},
     {TR_NO_PATCH_MESSAGE,
-        "DDeine Caesar 3 Installation wurde noch nicht auf Version 1.0.1.0 aktualisiert. "
+        "Deine Caesar 3 Installation wurde noch nicht auf Version 1.0.1.0 aktualisiert. "
         "Der Patch kann hier heruntergeladen werden:\n"
         URL_PATCHES "\n"
         "Fortfahren auf eigene Gefahr."},
