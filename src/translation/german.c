@@ -105,7 +105,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Setze Lesezeichen 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Setze Lesezeichen 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Kampfinfos ein-/ausblenden"},
-    {TR_HOTKEY_EDIT_TITLE, "Neue Tastenkombination"}
+    {TR_HOTKEY_EDIT_TITLE, "Neue Tastenkombination"},
     {TR_HOTKEY_DUPLICATE_TITLE, "Tastenkombination bereits in Verwendung"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Diese Tastenkombination ist bereits folgender Aktion zugewiesen:"}
 };
