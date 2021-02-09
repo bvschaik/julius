@@ -3,7 +3,7 @@
 [![Github Actions](https://github.com/bvschaik/julius/workflows/Build%20Julius/badge.svg)](https://github.com/bvschaik/julius/actions)
 
 Download:
-[![Download release version](https://julius.biancavanschaik.nl/badge/release.svg)](https://github.com/bvschaik/julius/releases/latest)
+[![Download release version](https://julius.biancavanschaik.nl/badge/release.svg)](https://github.com/bvschaik/julius/wiki/Julius-release)
 [![Download development version](https://julius.biancavanschaik.nl/badge/development.svg)](https://julius.biancavanschaik.nl/)
 
 Android version on Google Play: [install release](https://play.google.com/store/apps/details?id=com.github.bvschaik.julius) or [sign up for test builds](https://play.google.com/apps/testing/com.github.bvschaik.julius)
