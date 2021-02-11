@@ -119,6 +119,7 @@ void platform_screen_get_scaled_params(int* width, int* height)
     }
 }
 
+#if !defined(_WIN32) && !defined(__APPLE__)
 static void set_window_icon(void)
 {
     SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(platform_icon_get_pixels(), 16, 16, 32, 16 * 4,
@@ -129,6 +130,7 @@ static void set_window_icon(void)
     SDL_SetWindowIcon(SDL.window, surface);
     SDL_FreeSurface(surface);
 }
+#endif
 
 int platform_screen_create(const char *title, int display_scale_percentage)
 {
@@ -172,7 +174,10 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         return 0;
     }
 
+#if !defined(_WIN32) && !defined (__APPLE__)
+    // Windows and mac don't need setting a window icon. In fact the icon gets blurry if we do
     set_window_icon();
+#endif
 
     if (system_is_fullscreen_only()) {
         SDL_GetWindowSize(SDL.window, &width, &height);
