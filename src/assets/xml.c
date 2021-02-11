@@ -52,6 +52,7 @@ static struct {
     int depth;
     int error;
     int finished;
+    image_groups *current_group;
     asset_image *current_image;
 } data;
 
@@ -80,28 +81,28 @@ static int count_xml_attributes(const char **attributes)
 
 static void xml_start_assetlist_element(const char **attributes)
 {
-    image_groups *group = group_get_new();
+    data.current_group = group_get_new();
     if (count_xml_attributes(attributes) != 4) {
         data.error = 1;
         return;
     }
-    group->first_image = 0;
+    data.current_group->first_image = 0;
     for (int i = 0; i < 4; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[0][0][0]) == 0) {
-            strncpy(group->author, attributes[i + 1], XML_STRING_MAX_LENGTH - 1);
+            strncpy(data.current_group->author, attributes[i + 1], XML_STRING_MAX_LENGTH - 1);
         }
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[0][0][1]) == 0) {
-            strncpy(group->name, attributes[i + 1], XML_STRING_MAX_LENGTH - 1);
+            strncpy(data.current_group->name, attributes[i + 1], XML_STRING_MAX_LENGTH - 1);
         }
     }
-    if (*group->author == '\0' || *group->name == '\0') {
+    if (*data.current_group->author == '\0' || *data.current_group->name == '\0') {
         data.error = 1;
         return;
     }
     data.image_index = 0;
     data.current_image = 0;
-    group->id = group_get_hash(group->author, group->name);
-    set_asset_image_base_path(group->author, group->name);
+    data.current_group->id = group_get_hash(data.current_group->author, data.current_group->name);
+    set_asset_image_base_path(data.current_group->author, data.current_group->name);
 }
 
 static void xml_start_image_element(const char **attributes)
@@ -122,7 +123,7 @@ static void xml_start_image_element(const char **attributes)
     }
     memset(img, 0, sizeof(asset_image));
     if (!data.current_image) {
-        group_get_current()->first_image = img;
+        data.current_group->first_image = img;
     } else {
         data.current_image->next = img;
     }
@@ -271,6 +272,7 @@ static void xml_start_animation_element(const char **attributes)
 static void xml_end_assetlist_element(void)
 {
     data.finished = 1;
+    data.current_group = 0;
 }
 
 static void xml_end_image_element(void)
@@ -278,13 +280,12 @@ static void xml_end_image_element(void)
     if (data.image_index >= XML_MAX_IMAGE_INDEXES) {
         return;
     }
-    image_groups *group = group_get_current();
     image *img = &data.current_image->img;
     img->draw.data_length = img->width * img->height * sizeof(color_t);
     img->draw.uncompressed_length = img->draw.data_length;
     if (!img->draw.data_length) {
         asset_image *prev = 0;
-        asset_image *latest_image = group->first_image;
+        asset_image *latest_image = data.current_group->first_image;
         while (latest_image) {
             if (latest_image == data.current_image) {
                 break;
@@ -295,7 +296,7 @@ static void xml_end_image_element(void)
         if (prev) {
             prev->next = 0;
         } else {
-            group->first_image = 0;
+            data.current_group->first_image = 0;
         }
         free(data.current_image);
 
@@ -399,7 +400,7 @@ void xml_process_assetlist_file(const char *xml_file_name)
         }
     } while (!done);
 
-    if (data.error || !data.finished) {
+    if (data.current_group && (data.error || !data.finished)) {
         group_unload_current();
     }
 
