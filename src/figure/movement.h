@@ -3,6 +3,8 @@
 
 #include "figure/figure.h"
 
+#define FIGURE_REROUTE_DESTINATION_TICKS 120
+
 void figure_movement_init_roaming(figure *f);
 
 void figure_movement_move_ticks(figure *f, int num_ticks);

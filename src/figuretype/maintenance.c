@@ -160,7 +160,7 @@ static int fight_enemy(figure *f)
     return 0;
 }
 
-static int fight_fire(figure *f)
+static int fight_fire(figure *f, int force)
 {
     if (building_list_burning_size() <= 0) {
         return 0;
@@ -170,14 +170,22 @@ static int fight_fire(figure *f)
         case FIGURE_ACTION_149_CORPSE:
         case FIGURE_ACTION_70_PREFECT_CREATED:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
-        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
-        case FIGURE_ACTION_75_PREFECT_AT_FIRE:
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
         case FIGURE_ACTION_77_PREFECT_AT_ENEMY:
             return 0;
+        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
+        case FIGURE_ACTION_75_PREFECT_AT_FIRE:
+            if (!force) {
+                return 0;
+            }
+            building *burn = building_get(f->destination_building_id);
+            if ((burn->state == BUILDING_STATE_IN_USE || burn->state == BUILDING_STATE_MOTHBALLED) &&
+                burn->type == BUILDING_BURNING_RUIN) {
+                return 1;
+            }
     }
     f->wait_ticks_missile++;
-    if (f->wait_ticks_missile < 20) {
+    if (f->wait_ticks_missile < 20 && !force) {
         return 0;
     }
     int distance;
@@ -186,6 +194,7 @@ static int fight_fire(figure *f)
         building *ruin = building_get(ruin_id);
         f->wait_ticks_missile = 0;
         f->action_state = FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE;
+        f->wait_ticks = 0;
         f->destination_x = ruin->road_access_x;
         f->destination_y = ruin->road_access_y;
         f->destination_building_id = ruin_id;
@@ -212,8 +221,7 @@ static void extinguish_fire(figure *f)
     }
     f->wait_ticks--;
     if (f->wait_ticks <= 0) {
-        f->wait_ticks_missile = 20;
-        if (!fight_fire(f)) {
+        if (!fight_fire(f, 1)) {
             building *b = building_get(f->building_id);
             int x_road, y_road;
             if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
@@ -254,7 +262,7 @@ void figure_prefect_action(figure *f)
 
     // special actions
     if (!fight_enemy(f)) {
-        fight_fire(f);
+        fight_fire(f, 0);
     }
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
@@ -328,6 +336,15 @@ void figure_prefect_action(figure *f)
                 f->wait_ticks = 50;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
+            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS && !fight_fire(f, 1)) {
+                int x_road, y_road;
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                    f->action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
+                    f->destination_x = x_road;
+                    f->destination_y = y_road;
+                    f->wait_ticks = 0;
+                    figure_route_remove(f);
+                }
             }
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:

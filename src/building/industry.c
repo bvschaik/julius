@@ -199,8 +199,7 @@ void building_workshop_add_raw_material(building *b)
     }
 }
 
-int building_get_workshop_for_raw_material_with_room(
-    int x, int y, int resource, int distance_from_entry, int road_network_id, map_point *dst)
+int building_get_workshop_for_raw_material_with_room(int x, int y, int resource, int road_network_id, map_point *dst)
 {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
@@ -237,8 +236,7 @@ int building_get_workshop_for_raw_material_with_room(
     return 0;
 }
 
-int building_get_workshop_for_raw_material(
-    int x, int y, int resource, int distance_from_entry, int road_network_id, map_point *dst)
+int building_get_workshop_for_raw_material(int x, int y, int resource, int road_network_id, map_point *dst)
 {
     if (city_resource_is_stockpiled(resource)) {
         return 0;

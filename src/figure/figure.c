@@ -92,6 +92,9 @@ figure *figure_create(figure_type type, int x, int y, direction_type dir)
     f->progress_to_next_tick = 0;
     f->dont_draw_elevated = 0;
     f->disallow_diagonal = 0;
+    f->resource_id = RESOURCE_NONE;
+    f->destination_building_id = 0;
+    f->wait_ticks = 0;
     random_generate_next();
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);

@@ -18,6 +18,8 @@
 #include "map/road_access.h"
 #include "scenario/property.h"
 
+#define INFINITE 10000
+
 int building_warehouse_get_space_info(building *warehouse)
 {
     int total_loads = 0;
@@ -329,49 +331,52 @@ int building_warehouses_remove_resource(int resource, int amount)
     return amount - amount_left;
 }
 
-int building_warehouse_for_storing(int src_building_id, int x, int y, int resource,
-                                   int distance_from_entry, int road_network_id, int *understaffed,
-                                   map_point *dst)
+int building_warehouse_accepts_storage(building *b, int resource, int *understaffed)
 {
-    int min_dist = 10000;
+    if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE ||
+        !b->has_road_access || b->distance_from_entry <= 0) {
+        return 0;
+    }
+    const building_storage *s = building_storage_get(b->storage_id);
+    if (building_warehouse_is_not_accepting(resource, b) || s->empty_all) {
+        return 0;
+    }
+    int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+    if (pct_workers < 100) {
+        if (understaffed) {
+            *understaffed += 1;
+        }
+        return 0;
+    }
+    building *space = b;
+    for (int t = 0; t < 8; t++) {
+        space = building_next(space);
+        if (space->subtype.warehouse_resource_id == RESOURCE_NONE || // empty warehouse space
+            (space->subtype.warehouse_resource_id == resource && space->loads_stored < 4)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int building_warehouse_for_storing(int src_building_id, int x, int y, int resource, int road_network_id,
+                                   int *understaffed, map_point *dst)
+{
+    int min_dist = INFINITE;
     int min_building_id = 0;
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_WAREHOUSE_SPACE) {
+        if (b->id == src_building_id || b->road_network_id != road_network_id ||
+            !building_warehouse_accepts_storage(b, resource, understaffed)) {
             continue;
         }
-        if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
-            continue;
-        }
-        building *building_dst = building_main(b);
-        if (src_building_id == building_dst->id) {
-            continue;
-        }
-        const building_storage *s = building_storage_get(building_dst->storage_id);
-        if (building_warehouse_is_not_accepting(resource,building_dst) || s->empty_all) {
-            continue;
-        }
-        int pct_workers = calc_percentage(building_dst->num_workers, model_get_building(building_dst->type)->laborers);
-        if (pct_workers < 100) {
-            if (understaffed) {
-                *understaffed += 1;
-            }
-            continue;
-        }
-        int dist;
-        if (b->subtype.warehouse_resource_id == RESOURCE_NONE) { // empty warehouse space
-            dist = calc_maximum_distance(b->x, b->y, x, y);
-        } else if (b->subtype.warehouse_resource_id == resource && b->loads_stored < 4) {
-            dist = calc_maximum_distance(b->x, b->y, x, y);
-        } else {
-            dist = 0;
-        }
-        if (dist > 0 && dist < min_dist) {
+        int dist = calc_maximum_distance(b->x, b->y, x, y);
+        if (dist < min_dist) {
             min_dist = dist;
             min_building_id = i;
         }
     }
-    building *b = building_main(building_get(min_building_id));
+    building *b = building_get(min_building_id);
     if (b->has_road_access == 1) {
         map_point_store_result(b->x, b->y, dst);
     } else if (!map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, dst)) {
@@ -380,9 +385,24 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
     return min_building_id;
 }
 
+int building_warehouse_amount_can_get_from(building *destination, int resource)
+{
+    int loads_stored = 0;
+    building *space = destination;
+    for (int t = 0; t < 8; t++) {
+        space = building_next(space);
+        if (space->id > 0 && space->loads_stored > 0) {
+            if (space->subtype.warehouse_resource_id == resource) {
+                loads_stored += space->loads_stored;
+            }
+        }
+    }
+    return loads_stored;
+}
+
 int building_warehouse_for_getting(building *src, int resource, map_point *dst)
 {
-    int min_dist = 10000;
+    int min_dist = INFINITE;
     building *min_building = 0;
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
@@ -392,17 +412,8 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
         if (i == src->id) {
             continue;
         }
-        int loads_stored = 0;
-        building *space = b;
-        for (int t = 0; t < 8; t++) {
-            space = building_next(space);
-            if (space->id > 0 && space->loads_stored > 0) {
-                if (space->subtype.warehouse_resource_id == resource) {
-                    loads_stored += space->loads_stored;
-                }
-            }
-        }
-        if (loads_stored > 0 && !building_warehouse_is_gettable(resource,b)) {
+        int loads_stored = building_warehouse_amount_can_get_from(b, resource);
+        if (loads_stored > 0 && !building_warehouse_is_gettable(resource, b)) {
             int dist = calc_maximum_distance(b->x, b->y, src->x, src->y);
             dist -= 4 * loads_stored;
             if (dist < min_dist) {

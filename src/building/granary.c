@@ -260,7 +260,33 @@ void building_granaries_calculate_stocks(void)
     }
 }
 
-int building_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id,
+int building_granary_accepts_storage(building *b, int resource, int *understaffed)
+{
+    if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY ||
+        !b->has_road_access || b->distance_from_entry <= 0) {
+        return 0;
+    }
+    int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+    if (pct_workers < 100) {
+        if (understaffed) {
+            *understaffed += 1;
+        }
+        return 0;
+    }
+    const building_storage *s = building_storage_get(b->storage_id);
+    if (building_granary_is_not_accepting(resource, b) || s->empty_all) {
+        return 0;
+    }
+
+    if (config_get(CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES)) {
+        if (building_granary_is_getting(resource, b)) {
+            return 0;
+        }
+    }
+    return b->data.granary.resource_stored[RESOURCE_NONE] >= ONE_LOAD;
+}
+
+int building_granary_for_storing(int x, int y, int resource, int road_network_id, 
                                  int force_on_stockpile, int *understaffed, map_point *dst)
 {
     if (scenario_property_rome_supplies_wheat()) {
@@ -276,38 +302,15 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
     int min_building_id = 0;
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_GRANARY) {
+        if (b->road_network_id != road_network_id ||
+            !building_granary_accepts_storage(b, resource, understaffed)) {
             continue;
         }
-
-        if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
-            continue;
-        }
-        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-        if (pct_workers < 100) {
-            if (understaffed) {
-                *understaffed += 1;
-            }
-            continue;
-        }
-        const building_storage *s = building_storage_get(b->storage_id);
-        if (building_granary_is_not_accepting(resource,b) || s->empty_all) {
-            continue;
-        }
-
-        if (config_get(CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES)) {
-                if (building_granary_is_getting(resource, b)) {
-                    continue;
-                }
-        }
-
-        if (b->data.granary.resource_stored[RESOURCE_NONE] >= ONE_LOAD) {
-            // there is room
-            int dist = calc_maximum_distance(b->x + 1, b->y + 1, x, y);
-            if (dist < min_dist) {
-                min_dist = dist;
-                min_building_id = i;
-            }
+        // there is room
+        int dist = calc_maximum_distance(b->x + 1, b->y + 1, x, y);
+        if (dist < min_dist) {
+            min_dist = dist;
+            min_building_id = i;
         }
     }
     // deliver to center of granary
@@ -316,8 +319,7 @@ int building_granary_for_storing(int x, int y, int resource, int distance_from_e
     return min_building_id;
 }
 
-int building_getting_granary_for_storing(int x, int y, int resource, int distance_from_entry, int road_network_id,
-                                         map_point *dst)
+int building_getting_granary_for_storing(int x, int y, int resource, int road_network_id, map_point *dst)
 {
     if (scenario_property_rome_supplies_wheat()) {
         return 0;
@@ -343,7 +345,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
             continue;
         }
         const building_storage *s = building_storage_get(b->storage_id);
-        if (!building_granary_is_getting(resource,b) || s->empty_all) {
+        if (!building_granary_is_getting(resource, b) || s->empty_all) {
             continue;
         }
         if (b->data.granary.resource_stored[RESOURCE_NONE] > ONE_LOAD) {
@@ -360,7 +362,29 @@ int building_getting_granary_for_storing(int x, int y, int resource, int distanc
     return min_building_id;
 }
 
-int building_granary_for_getting(building *src, map_point *dst)
+int building_granary_amount_can_get_from(building *destination, building *origin)
+{
+    int amount_gettable = 0;
+    if (building_granary_is_getting(RESOURCE_WHEAT, origin) &&
+        !building_granary_is_gettable(RESOURCE_WHEAT, destination)) {
+        amount_gettable += destination->data.granary.resource_stored[RESOURCE_WHEAT];
+    }
+    if (building_granary_is_getting(RESOURCE_VEGETABLES, origin) &&
+        !building_granary_is_gettable(RESOURCE_VEGETABLES, destination)) {
+        amount_gettable += destination->data.granary.resource_stored[RESOURCE_VEGETABLES];
+    }
+    if (building_granary_is_getting(RESOURCE_FRUIT, origin) &&
+        !building_granary_is_gettable(RESOURCE_FRUIT, destination)) {
+        amount_gettable += destination->data.granary.resource_stored[RESOURCE_FRUIT];
+    }
+    if (building_granary_is_getting(RESOURCE_MEAT, origin) &&
+        !building_granary_is_gettable(RESOURCE_MEAT, destination)) {
+        amount_gettable += destination->data.granary.resource_stored[RESOURCE_MEAT];
+    }
+    return amount_gettable;
+}
+
+int building_granary_for_getting(building *src, map_point *dst, int min_amount)
 {
     const building_storage *s_src = building_storage_get(src->storage_id);
     if (s_src->empty_all) {
@@ -369,17 +393,12 @@ int building_granary_for_getting(building *src, map_point *dst)
     if (scenario_property_rome_supplies_wheat()) {
         return 0;
     }
-    int is_getting = 0;
-    if (building_granary_is_getting(RESOURCE_WHEAT,src) ||
-            building_granary_is_getting(RESOURCE_VEGETABLES,src) ||
-            building_granary_is_getting(RESOURCE_FRUIT,src) ||
-            building_granary_is_getting(RESOURCE_MEAT,src)) {
-        is_getting = 1;
-    }
-    if (is_getting <= 0) {
+    if (!building_granary_is_getting(RESOURCE_WHEAT,src) &&
+        !building_granary_is_getting(RESOURCE_VEGETABLES,src) &&
+        !building_granary_is_getting(RESOURCE_FRUIT,src) &&
+        !building_granary_is_getting(RESOURCE_MEAT,src)) {
         return 0;
     }
-
     int min_dist = INFINITE;
     int min_building_id = 0;
     for (int i = 0; i < non_getting_granaries.num_items; i++) {
@@ -388,29 +407,9 @@ int building_granary_for_getting(building *src, map_point *dst)
             if (b->road_network_id != src->road_network_id) {
                 continue;
             }
-        }	    	
-        int amount_gettable = 0;
-        if ((building_granary_is_getting(RESOURCE_WHEAT,src)) &&
-            !building_granary_is_gettable(RESOURCE_WHEAT,b)) {
-            amount_gettable += b->data.granary.resource_stored[RESOURCE_WHEAT];
         }
-        if ((building_granary_is_getting(RESOURCE_VEGETABLES,src)) &&
-            !building_granary_is_gettable(RESOURCE_VEGETABLES,b)) {
-            amount_gettable += b->data.granary.resource_stored[RESOURCE_VEGETABLES];
-        }
-        if ((building_granary_is_getting(RESOURCE_FRUIT,src)) &&
-            !building_granary_is_gettable(RESOURCE_FRUIT,b)) {
-            amount_gettable += b->data.granary.resource_stored[RESOURCE_FRUIT];
-        }
-        if ((building_granary_is_getting(RESOURCE_MEAT,src)) &&
-            !building_granary_is_gettable(RESOURCE_MEAT,b)) {
-            amount_gettable += b->data.granary.resource_stored[RESOURCE_MEAT];
-        }
-        if (amount_gettable > 0) {
+        if (building_granary_amount_can_get_from(b, src) >= min_amount) {
             int dist = calc_maximum_distance(b->x + 1, b->y + 1, src->x + 1, src->y + 1);
-            if (amount_gettable <= 400) {
-                dist *= 2; // penalty for less food
-            }
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building_id = b->id;
