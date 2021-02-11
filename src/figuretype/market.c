@@ -13,21 +13,18 @@
 #include "figuretype/wall.h"
 #include "game/resource.h"
 
-static int create_delivery_boy(int leader_id, figure *f, int type)
+int figure_market_create_delivery_boy(int leader_id, figure* f, int type)
 {
     figure *boy = figure_create(type, f->x, f->y, 0);
     boy->leading_figure_id = leader_id;
     boy->collecting_item_id = f->collecting_item_id;
-    if (f->action_state == FIGURE_ACTION_214_DESTINATION_MARS_PRIEST_CREATED) { // deliver to destination instead of origin
+    // deliver to destination instead of origin
+    if (f->action_state == FIGURE_ACTION_214_DESTINATION_MARS_PRIEST_CREATED) {
         boy->building_id = f->destination_building_id;
     } else {
         boy->building_id = f->building_id;
     }
     return boy->id;
-}
-
-int figure_market_create_delivery_boy(int leader_id, figure* f, int type) {
-    return create_delivery_boy(leader_id, f, type);
 }
 
 static int take_food_from_granary(figure *f, int market_id, int granary_id)
@@ -84,7 +81,7 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     }
     int previous_boy = f->id;
     for (int i = 0; i < num_loads; i++) {
-        previous_boy = create_delivery_boy(previous_boy, f, type);
+        previous_boy = figure_market_create_delivery_boy(previous_boy, f, type);
     }
     return 1;
 }
@@ -107,9 +104,9 @@ static int take_resource_from_generic_building(figure* f, int building_id)
     b->loads_stored -= num_loads;
 
     // create delivery boys
-    int boy1 = create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
+    int boy1 = figure_market_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
     if (num_loads > 1) {
-        create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
+        figure_market_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
     }
     return 1;
 }
@@ -141,14 +138,12 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     building_warehouse_remove_resource(warehouse, resource, num_loads);
 
     // create delivery boys
-    int boy1 = create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
+    int boy1 = figure_market_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
     if (num_loads > 1) {
-        create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
+        figure_market_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
     }
     return 1;
 }
-
-
 
 void figure_market_buyer_action(figure *f)
 {
@@ -170,8 +165,7 @@ void figure_market_buyer_action(figure *f)
             break;
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {               
                 if (f->collecting_item_id > 3) {
                     if (!take_resource_from_warehouse(f, f->destination_building_id)) {
                         f->state = FIGURE_STATE_DEAD;

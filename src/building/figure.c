@@ -618,32 +618,29 @@ int figure_is_market_buyer(int type) {
     return type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER || type == FIGURE_PRIEST_BUYER || type == FIGURE_BARKEEP_BUYER;
 }
 
-static void spawn_market_buyer(building* b, map_point road, int figure_id_to_use) {
+static void spawn_market_buyer(building *b, map_point road, int figure_id_to_use)
+{
     // for markets and temples
     if (figure_id_to_use == 2 && b->figure_id2) {
-        figure* f = figure_get(b->figure_id2);
+        figure *f = figure_get(b->figure_id2);
         if (f->state != FIGURE_STATE_ALIVE || (!figure_is_market_buyer(f->type) && f->type != FIGURE_LABOR_SEEKER)) {
             b->figure_id2 = 0;
         }
-    } 
-    // for mess hall
-    else if (figure_id_to_use == 1 && b->figure_id) {
+    } else if (figure_id_to_use == 1 && b->figure_id) { // for mess hall
         if (b->figure_id) {
-            figure* f = figure_get(b->figure_id);
+            figure *f = figure_get(b->figure_id);
             if (f->state != FIGURE_STATE_ALIVE || !figure_is_market_buyer(f->type)) {
                 b->figure_id = 0;
             }
         }
-    }
-    // for mess hall 2nd QM
-    else if (figure_id_to_use == 4 && b->figure_id4) {
-        figure* f = figure_get(b->figure_id4);
+    } else if (figure_id_to_use == 4 && b->figure_id4) { // for mess hall 2nd QM
+        figure *f = figure_get(b->figure_id4);
         if (f->state != FIGURE_STATE_ALIVE || !figure_is_market_buyer(f->type)) {
             b->figure_id4 = 0;
         }
-    }
-    else {
+    } else {
         map_has_road_access(b->x, b->y, b->size, &road);
+        building_market_update_demands(b);
         int dst_building_id = building_market_get_storage_destination(b);
         if (dst_building_id > 0) {
             int type = FIGURE_MARKET_BUYER;
@@ -656,29 +653,26 @@ static void spawn_market_buyer(building* b, map_point road, int figure_id_to_use
             if (b->type == BUILDING_TAVERN) {
                 type = FIGURE_BARKEEP_BUYER;
             }
-            figure* f = figure_create(type, road.x, road.y, DIR_0_TOP);
+            figure *f = figure_create(type, road.x, road.y, DIR_0_TOP);
             f->action_state = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
             f->building_id = b->id;
 
             if (figure_id_to_use == 2) {
                 b->figure_id2 = f->id;
-            }
-            else if (figure_id_to_use == 1) {
+            } else if (figure_id_to_use == 1) {
                 b->figure_id = f->id;
-            }            
-            else if (figure_id_to_use == 4) {
+            } else if (figure_id_to_use == 4) {
                 b->figure_id4 = f->id;
             }
 
             f->destination_building_id = dst_building_id;
             f->collecting_item_id = b->data.market.fetch_inventory_id;
-            building* b_dst = building_get(dst_building_id);
+            building *b_dst = building_get(dst_building_id);
             if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) ||
                 map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
                 f->destination_x = road.x;
                 f->destination_y = road.y;
-            }
-            else {
+            } else {
                 f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
                 f->destination_x = f->x;
                 f->destination_y = f->y;
@@ -1373,17 +1367,16 @@ static void spawn_figure_barracks(building *b)
             map_has_road_access(b->x, b->y, b->size, &road);
             switch (b->subtype.barracks_priority)
             {
-            case PRIORITY_FORT:
-                if (!building_barracks_create_soldier(b, road.x, road.y)) {
-                    building_barracks_create_tower_sentry(b, road.x, road.y);
-                }
-                break;
-            default:
-                if (!building_barracks_create_tower_sentry(b, road.x, road.y)) {
-                    building_barracks_create_soldier(b, road.x, road.y);
-                }
+                case PRIORITY_FORT:
+                    if (!building_barracks_create_soldier(b, road.x, road.y)) {
+                        building_barracks_create_tower_sentry(b, road.x, road.y);
+                    }
+                    break;
+                default:
+                    if (!building_barracks_create_tower_sentry(b, road.x, road.y)) {
+                        building_barracks_create_soldier(b, road.x, road.y);
+                    }
             }
-
         }
     }
 }
@@ -1413,7 +1406,8 @@ static void spawn_figure_work_camp(building* b)
 	}
 }
 
-static void spawn_figure_architect_guild(building* b) {
+static void spawn_figure_architect_guild(building* b)
+{
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -1430,7 +1424,8 @@ static void spawn_figure_architect_guild(building* b) {
     }
 }
 
-static void spawn_figure_mess_hall(building* b) {
+static void spawn_figure_mess_hall(building* b)
+{
     int spawn_delay = 7;
     check_labor_problem(b);
     map_point road;
@@ -1439,11 +1434,9 @@ static void spawn_figure_mess_hall(building* b) {
         spawn_market_buyer(b, road, 1);
         if (b->figure_id) {
             b->figure_spawn_delay++;
-        }
-        else {
+        } else {
             b->figure_spawn_delay = 0;
         }
-
         if (building_monument_working(BUILDING_GRAND_TEMPLE_MARS) && b->figure_spawn_delay >= spawn_delay) {
             spawn_market_buyer(b, road, 4);
             b->figure_spawn_delay = 0;
@@ -1451,7 +1444,8 @@ static void spawn_figure_mess_hall(building* b) {
     }
 }
 
-static void spawn_figure_lighthouse(building* b) {
+static void spawn_figure_lighthouse(building* b)
+{
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -1471,20 +1465,15 @@ static void spawn_figure_watchtower(building* b) {
         int spawn_delay;
         if (pct_workers >= 100) {
             spawn_delay = 0;
-        }
-        else if (pct_workers >= 75) {
+        } else if (pct_workers >= 75) {
             spawn_delay = 1;
-        }
-        else if (pct_workers >= 50) {
+        } else if (pct_workers >= 50) {
             spawn_delay = 3;
-        }
-        else if (pct_workers >= 25) {
+        } else if (pct_workers >= 25) {
             spawn_delay = 7;
-        }
-        else if (pct_workers >= 1) {
+        } else if (pct_workers >= 1) {
             spawn_delay = 15;
-        }
-        else {
+        } else {
             return;
         }
         if (b->figure_id2) {

@@ -357,7 +357,7 @@ static void distribute_market_resources(building *b, building *market)
 
     int goods_no = 8;
 
-    //Venus base stockpile bonus
+    // Venus base stockpile bonus
     if (building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
         goods_no = 12;
     }
