@@ -40,6 +40,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Jouer la vidéo d'introduction"},
     {TR_CONFIG_SIDEBAR_INFO, "Informations supplémentaires dans le panneau latéral"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Activer le défilement doux"},
+	{TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Désactiver le défilement de la carte sur le bord de la fenêtre "},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Désactiver le clic droit pour déplacer la vue de la cité"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Améliore le retour visuel durant le dégagement du terrain"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permet de construire tous les temples successivement"},
@@ -122,7 +123,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_ADVISOR_FINANCIAL, "Finances"},
     {TR_HOTKEY_SHOW_ADVISOR_CHIEF, "Conseiller personnel"},
     {TR_HOTKEY_SHOW_ADVISOR_HOUSING, "Conseiller en logement"},
-    {TR_HOTKEY_TOGGLE_OVERLAY, "Basculer sur la carte précédente"},
+    {TR_HOTKEY_TOGGLE_OVERLAY, "Cartes de visualisation"},
+	{TR_HOTKEY_SHOW_OVERLAY_RELATIVE, "Cartes de visualisation relatif"},
     {TR_HOTKEY_SHOW_OVERLAY_WATER, "Eau"},
     {TR_HOTKEY_SHOW_OVERLAY_FIRE, "Incendies"},
     {TR_HOTKEY_SHOW_OVERLAY_DAMAGE, "Dégats"},
@@ -318,6 +320,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SMALL_TEMPLE_MARS_NAME, "Temple de Mars"},
     {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Temple de Venus"},
     {TR_FIGURE_TYPE_PRIEST_BUYER, "Prêtre"},
+	{TR_BUILDING_DOCK_CITIES_CONFIG_DESC, "Villes avec commerce maritime ouvert :" },
+    {TR_BUILDING_DOCK_CITIES_NO_ROUTES, "Il n'y a pas de routes commerciales maritimes." },
     // Transcription of mission_exact4.wav
     {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"Je ferai ce que je peux pour calmer ces barbares. Je suis sûr qu'ils arrêteront d'attaquer la ville quand j'aurai eu un mot avec eux.\""},
     {TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "An annual festival"},
@@ -366,7 +370,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LEGION_FOOD_STATUS, "Statut alimentaire"},
     {TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER, "Autoriser l'intendant à trouver de la nourriture ici"},
     {TR_WARNING_RESOURCES_NOT_AVAILABLE, "Vous ne pouvez pas obtenir le matériel nécessaire"},
-    {TR_CONFIG_GP_CH_MONUMENTS_BOOST_CULTURE_RATING, "Les temples monumentaux terminés confèrent un bonus de culture de +8"},
+    {TR_CONFIG_GP_CH_MONUMENTS_BOOST_CULTURE_RATING, "Les temples monumentaux donnent un bonus culture +8"},
     {TR_BUTTON_BACK_TO_MAIN_MENU, "Retour menu principal"},
     {TR_LABEL_PAUSE_MENU, "Pause"},
     {TR_OVERLAY_LEVY, "Taxes"},
@@ -381,7 +385,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MEDICINE, "Régler l'accès des travailleurs de santé" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, "Régler l'accès des collecteurs de taxes" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_LABOR_SEEKER, "Régler l'accès des demandeurs d'emploi" },
-	
+    {TR_HOTKEY_DUPLICATE_TITLE, "Raccourci déjà utilisé"},
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "Cette combinaison de touches est déjà affectée à l'action suivante :"}	
 };
 
 void translation_french(const translation_string** strings, int* num_strings)
