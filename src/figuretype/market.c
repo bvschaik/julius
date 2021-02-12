@@ -27,16 +27,27 @@ int figure_market_create_delivery_boy(int leader_id, figure* f, int type)
     return boy->id;
 }
 
+static int inventory_to_resource(int inventory_id)
+{
+    switch (inventory_id) {
+        case INVENTORY_WHEAT: return RESOURCE_WHEAT;
+        case INVENTORY_VEGETABLES: return RESOURCE_VEGETABLES;
+        case INVENTORY_FRUIT: return RESOURCE_FRUIT;
+        case INVENTORY_MEAT: return RESOURCE_MEAT;
+        case INVENTORY_POTTERY: return RESOURCE_POTTERY;
+        case INVENTORY_FURNITURE: return RESOURCE_FURNITURE;
+        case INVENTORY_OIL: return RESOURCE_OIL;
+        case INVENTORY_WINE: return RESOURCE_WINE;
+        default: return 0;
+    } 
+}
+
 static int take_food_from_granary(figure *f, int market_id, int granary_id)
 {
-    int resource;
-    switch (f->collecting_item_id) {
-        case INVENTORY_WHEAT: resource = RESOURCE_WHEAT; break;
-        case INVENTORY_VEGETABLES: resource = RESOURCE_VEGETABLES; break;
-        case INVENTORY_FRUIT: resource = RESOURCE_FRUIT; break;
-        case INVENTORY_MEAT: resource = RESOURCE_MEAT; break;
-        default: return 0;
+    if (f->collecting_item_id < INVENTORY_MIN_FOOD || f->collecting_item_id >= INVENTORY_MAX_FOOD) {
+        return 0;
     }
+    int resource = inventory_to_resource(f->collecting_item_id);
     building *granary = building_get(granary_id);
     int market_units = building_get(market_id)->data.market.inventory[f->collecting_item_id];
     int max_units = 0;
@@ -113,14 +124,10 @@ static int take_resource_from_generic_building(figure* f, int building_id)
 
 static int take_resource_from_warehouse(figure *f, int warehouse_id)
 {
-    int resource;
-    switch (f->collecting_item_id) {
-        case INVENTORY_POTTERY: resource = RESOURCE_POTTERY; break;
-        case INVENTORY_FURNITURE: resource = RESOURCE_FURNITURE; break;
-        case INVENTORY_OIL: resource = RESOURCE_OIL; break;
-        case INVENTORY_WINE: resource = RESOURCE_WINE; break;
-        default: return 0;
+    if (f->collecting_item_id < INVENTORY_MIN_GOOD || f->collecting_item_id >= INVENTORY_MAX_GOOD) {
+        return 0;
     }
+    int resource = inventory_to_resource(f->collecting_item_id);
     building *warehouse = building_get(warehouse_id);
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return take_resource_from_generic_building(f, warehouse_id);
@@ -145,6 +152,27 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     return 1;
 }
 
+static void recalculate_buyer_destination(figure *f)
+{
+    /***int resource = inventory_to_resource(f->collecting_item_id);
+    if (city_resource_is_stockpiled(resource)) {
+        f->state = FIGURE_STATE_DEAD;
+        return;
+    }
+    if (f->collecting_item_id >= INVENTORY_MAX_FOOD) { // warehouse
+        for(int i = 1; i < building_count(); ++ i)
+            if (building_warehouse_get_amount(b, resource) > 0) {
+        data->num_buildings++;
+        if (distance < data->distance) {
+            data->distance = distance;
+            data->building_id = b->id;
+        }
+    }
+    } else { // granary
+
+    }***/
+}
+
 void figure_market_buyer_action(figure *f)
 {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
@@ -165,7 +193,8 @@ void figure_market_buyer_action(figure *f)
             break;
         case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {               
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {          
+                f->wait_ticks = 0;     
                 if (f->collecting_item_id > 3) {
                     if (!take_resource_from_warehouse(f, f->destination_building_id)) {
                         f->state = FIGURE_STATE_DEAD;
@@ -183,6 +212,8 @@ void figure_market_buyer_action(figure *f)
                 f->destination_x = f->source_x;
                 f->destination_y = f->source_y;
                 figure_route_remove(f);
+            } else if (f->type == FIGURE_MARKET_BUYER && f->wait_ticks > FIGURE_REROUTE_DESTINATION_TICKS) {
+                recalculate_buyer_destination(f);
             }
             break;
         case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:

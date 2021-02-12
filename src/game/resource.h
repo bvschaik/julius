@@ -36,6 +36,7 @@ typedef enum {
 } resource_type;
 
 typedef enum {
+    INVENTORY_NONE = -1,
     INVENTORY_WHEAT = 0,
     INVENTORY_VEGETABLES = 1,
     INVENTORY_FRUIT = 2,

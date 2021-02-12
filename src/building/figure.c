@@ -641,7 +641,7 @@ static void spawn_market_buyer(building *b, map_point road, int figure_id_to_use
     } else {
         map_has_road_access(b->x, b->y, b->size, &road);
         building_market_update_demands(b);
-        int dst_building_id = building_market_get_storage_destination(b);
+        int dst_building_id = building_market_get_storage_destination(b, building_market_get_needed_inventory(b));
         if (dst_building_id > 0) {
             int type = FIGURE_MARKET_BUYER;
             if (b->type == BUILDING_MESS_HALL) {
