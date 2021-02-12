@@ -9,9 +9,9 @@ typedef struct {
     int min_distance;
 } inventory_data;
 
-int building_distribution_pick_inventory_to_fetch(
-    const building *b, inventory_data *data, int min_stock, int pick_first_found, int inventory_flags);
+#define BASELINE_STOCK 50
 
+int building_distribution_fetch(const building *b, inventory_data *data, int min_stock, int pick_first, int allowed);
 inventory_data *building_distribution_get_inventory_data(building *b, int needed_inventory, int max_distance);
 
 #endif // BUILDING_DISTRIBUTION_H

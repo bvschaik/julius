@@ -7,15 +7,14 @@
 
 #include <string.h>
 
+static inventory_data data[INVENTORY_MAX];
+
 static const int INVENTORY_SEARCH_ORDER[INVENTORY_MAX] = {
     INVENTORY_WHEAT, INVENTORY_VEGETABLES, INVENTORY_FRUIT, INVENTORY_MEAT,
     INVENTORY_POTTERY, INVENTORY_FURNITURE, INVENTORY_OIL, INVENTORY_WINE
 };
 
-static inventory_data data[INVENTORY_MAX];
-
-int building_distribution_pick_inventory_to_fetch(
-    const building *b, inventory_data *data, int min_stock, int pick_first_found, int inventory_flags)
+int building_distribution_fetch(const building *b, inventory_data *data, int min_stock, int pick_first, int allowed)
 {
     int inventory = INVENTORY_NONE;
     if (!min_stock) {
@@ -23,9 +22,9 @@ int building_distribution_pick_inventory_to_fetch(
     }
     for (int i = 0; i < INVENTORY_MAX; i++) {
         int current_inventory = INVENTORY_SEARCH_ORDER[i];
-        if (inventory_is_set(inventory_flags, current_inventory) &&
+        if (inventory_is_set(allowed, current_inventory) &&
             data[current_inventory].building_id && b->data.market.inventory[current_inventory] < min_stock) {
-            if (pick_first_found) {
+            if (pick_first) {
                 return current_inventory;
             }
             min_stock = b->data.market.inventory[current_inventory];

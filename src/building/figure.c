@@ -4,8 +4,11 @@
 #include "building/granary.h"
 #include "building/industry.h"
 #include "building/market.h"
+#include "building/mess_hall.h"
 #include "building/model.h"
 #include "building/monument.h"
+#include "building/tavern.h"
+#include "building/temple.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/data_private.h"
@@ -591,7 +594,8 @@ static void spawn_figure_colosseum(building *b)
             f->building_id = b->id;
             b->figure_id = f->id;
             figure_movement_init_roaming(f);
-            if (b->type == BUILDING_COLOSSEUM && b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
+            if (b->type == BUILDING_COLOSSEUM &&
+                (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0)) {
                 if (city_entertainment_show_message_colosseum()) {
                     city_message_post(1, MESSAGE_COLOSSEUM_WORKING_NEW, 0, 0);
                 }
@@ -614,71 +618,113 @@ static void set_market_graphic(building *b)
     }
 }
 
-int figure_is_market_buyer(int type) {
-    return type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER || type == FIGURE_PRIEST_BUYER || type == FIGURE_BARKEEP_BUYER;
+static void send_buyer_to_destination(figure *f, int dst_building_id)
+{
+    f->destination_building_id = dst_building_id;
+    building *b_dst = building_get(dst_building_id);
+    map_point road;
+    if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) ||
+        map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
+        f->action_state = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
+        f->destination_x = road.x;
+        f->destination_y = road.y;
+    } else {
+        f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
+        f->destination_x = f->x;
+        f->destination_y = f->y;
+    }
 }
 
-static void spawn_market_buyer(building *b, map_point road, int figure_id_to_use)
+static void spawn_temple_buyer(building *b, int x, int y)
 {
-    // for markets and temples
-    if (figure_id_to_use == 2 && b->figure_id2) {
+    if (b->figure_id2) {
         figure *f = figure_get(b->figure_id2);
-        if (f->state != FIGURE_STATE_ALIVE || (!figure_is_market_buyer(f->type) && f->type != FIGURE_LABOR_SEEKER)) {
+        if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_PRIEST_BUYER && f->type != FIGURE_LABOR_SEEKER)) {
             b->figure_id2 = 0;
         }
-    } else if (figure_id_to_use == 1 && b->figure_id) { // for mess hall
-        if (b->figure_id) {
-            figure *f = figure_get(b->figure_id);
-            if (f->state != FIGURE_STATE_ALIVE || !figure_is_market_buyer(f->type)) {
-                b->figure_id = 0;
-            }
-        }
-    } else if (figure_id_to_use == 4 && b->figure_id4) { // for mess hall 2nd QM
-        figure *f = figure_get(b->figure_id4);
-        if (f->state != FIGURE_STATE_ALIVE || !figure_is_market_buyer(f->type)) {
-            b->figure_id4 = 0;
-        }
-    } else {
-        map_has_road_access(b->x, b->y, b->size, &road);
-        building_market_update_demands(b);
-        int dst_building_id = building_market_get_storage_destination(b, building_market_get_needed_inventory(b));
-        if (dst_building_id > 0) {
-            int type = FIGURE_MARKET_BUYER;
-            if (b->type == BUILDING_MESS_HALL) {
-                type = FIGURE_MESS_HALL_BUYER;
-            }
-            if (b->type == BUILDING_SMALL_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_SMALL_TEMPLE_VENUS || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
-                type = FIGURE_PRIEST_BUYER;
-            }
-            if (b->type == BUILDING_TAVERN) {
-                type = FIGURE_BARKEEP_BUYER;
-            }
-            figure *f = figure_create(type, road.x, road.y, DIR_0_TOP);
-            f->action_state = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
-            f->building_id = b->id;
-
-            if (figure_id_to_use == 2) {
-                b->figure_id2 = f->id;
-            } else if (figure_id_to_use == 1) {
-                b->figure_id = f->id;
-            } else if (figure_id_to_use == 4) {
-                b->figure_id4 = f->id;
-            }
-
-            f->destination_building_id = dst_building_id;
-            f->collecting_item_id = b->data.market.fetch_inventory_id;
-            building *b_dst = building_get(dst_building_id);
-            if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) ||
-                map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
-                f->destination_x = road.x;
-                f->destination_y = road.y;
-            } else {
-                f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-                f->destination_x = f->x;
-                f->destination_y = f->y;
-            }
-        }
+        return;
     }
+    int dst_building_id = building_temple_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_PRIEST_BUYER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    b->figure_id2 = f->id;
+    f->collecting_item_id = b->data.market.fetch_inventory_id;
+    send_buyer_to_destination(f, dst_building_id);
+}
+
+static void spawn_tavern_buyer(building *b, int x, int y)
+{
+    if (b->figure_id2) {
+        figure *f = figure_get(b->figure_id2);
+        if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_BARKEEP_BUYER && f->type != FIGURE_LABOR_SEEKER)) {
+            b->figure_id2 = 0;
+        }
+        return;
+    }
+    int dst_building_id = building_tavern_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_BARKEEP_BUYER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    b->figure_id2 = f->id;
+    f->collecting_item_id = b->data.market.fetch_inventory_id;
+    send_buyer_to_destination(f, dst_building_id);
+}
+
+static void spawn_mess_hall_buyer(building *b, int x, int y, int figure_id_to_use)
+{
+    if (figure_id_to_use == 1 && b->figure_id) {
+        figure *f = figure_get(b->figure_id);
+        if (f->state != FIGURE_STATE_ALIVE || f->type != FIGURE_MESS_HALL_BUYER) {
+            b->figure_id = 0;
+        }
+        return;
+    }
+    if (figure_id_to_use == 4 && b->figure_id4) { // for mess hall 2nd QM
+        figure *f = figure_get(b->figure_id4);
+        if (f->state != FIGURE_STATE_ALIVE || f->type != FIGURE_MESS_HALL_BUYER) {
+            b->figure_id = 0;
+        }
+        return;
+    }
+    int dst_building_id = building_mess_hall_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_MESS_HALL_BUYER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    if (figure_id_to_use == 1) {
+        b->figure_id = f->id;
+    } else if (figure_id_to_use == 4) {
+        b->figure_id4 = f->id;
+    }
+    f->collecting_item_id = b->data.market.fetch_inventory_id;
+    send_buyer_to_destination(f, dst_building_id);
+}
+
+static void spawn_market_buyer(building *b, int x, int y)
+{
+    if (b->figure_id2) {
+        figure *f = figure_get(b->figure_id2);
+        if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_MARKET_BUYER && f->type != FIGURE_LABOR_SEEKER)) {
+            b->figure_id2 = 0;
+        }
+        return;
+    }
+    building_market_update_demands(b);
+    int dst_building_id = building_market_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_MARKET_BUYER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    b->figure_id2 = f->id;
+    f->collecting_item_id = b->data.market.fetch_inventory_id;
+    send_buyer_to_destination(f, dst_building_id);
 }
 
 static void spawn_figure_market(building *b)
@@ -713,7 +759,7 @@ static void spawn_figure_market(building *b)
             create_roaming_figure(b, road.x, road.y, FIGURE_MARKET_TRADER);
         }
         // market buyer or labor seeker
-        spawn_market_buyer(b, road, 2);
+        spawn_market_buyer(b, road.x, road.y);
     }
 }
 
@@ -1004,7 +1050,7 @@ static void spawn_figure_tavern(building* b)
                 create_roaming_figure(b, road.x, road.y, FIGURE_BARKEEP);
             }
         }        
-        spawn_market_buyer(b, road, 2);
+        spawn_tavern_buyer(b, road.x, road.y);
     }
 }
 
@@ -1048,7 +1094,6 @@ static void spawn_figure_temple(building *b)
         }
 
         // Mars Module 1 Bonus
-
         if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
             int mess_hall_id = city_buildings_get_mess_hall();
             building* mess_hall = building_get(mess_hall_id);
@@ -1057,7 +1102,7 @@ static void spawn_figure_temple(building *b)
                 if (f->state != FIGURE_STATE_ALIVE) {
                     b->figure_id2 = 0;
                 }
-                int food_to_deliver = building_mars_temple_food_to_deliver(b, mess_hall_id);
+                int food_to_deliver = building_temple_mars_food_to_deliver(b, mess_hall_id);
                 if (food_to_deliver >= 0) {
                     figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
 
@@ -1072,12 +1117,12 @@ static void spawn_figure_temple(building *b)
 
         // Ceres Module 2 Bonus
         if (building_is_ceres_temple(b->type) && building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD) && !b->figure_id2) {
-            spawn_market_buyer(b, road, 2);
+            spawn_temple_buyer(b, road.x, road.y);
         }
 
         // Venus Module 1 Bonus
         if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) && !b->figure_id2) {            
-            spawn_market_buyer(b, road, 2);
+            spawn_temple_buyer(b, road.x, road.y);
         }
 
         // Pantheon Module 1 Bonus
@@ -1431,14 +1476,14 @@ static void spawn_figure_mess_hall(building* b)
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
-        spawn_market_buyer(b, road, 1);
+        spawn_mess_hall_buyer(b, road.x, road.y, 1);
         if (b->figure_id) {
             b->figure_spawn_delay++;
         } else {
             b->figure_spawn_delay = 0;
         }
         if (building_monument_working(BUILDING_GRAND_TEMPLE_MARS) && b->figure_spawn_delay >= spawn_delay) {
-            spawn_market_buyer(b, road, 4);
+            spawn_mess_hall_buyer(b, road.x, road.y, 4);
             b->figure_spawn_delay = 0;
         }
     }
