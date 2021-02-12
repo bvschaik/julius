@@ -338,7 +338,8 @@ static translation_string all_strings[] = {
     { TR_LABEL_PAUSE_MENU, "Pausa" },
     { TR_OVERLAY_LEVY, "Custos de manutenção" },
     { TR_TOOLTIP_OVERLAY_LEVY, " denários pagos mensalmente em custos de manutenção" },
-    { TR_MAP_EDITOR_OPTIONS, "Configurações do cenário" }
+    { TR_MAP_EDITOR_OPTIONS, "Configurações do cenário" },
+    { TR_BUTTON_GO_TO_SITE, "Vá para o local" },
 };
 
 void translation_portuguese(const translation_string **strings, int *num_strings)

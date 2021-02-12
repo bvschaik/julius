@@ -368,7 +368,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_OVERLAY_LEVY, " denarii pagados mensualmente para dar mantenimiento."}, 
     {TR_MAP_EDITOR_OPTIONS, "Configuración de escenario"},
     {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "Este templo recolectará comida para tu puesto de suministro, una vez lo construyas."},
-
+    {TR_BUTTON_GO_TO_SITE, "Ir al sitio" },
 };
 
 void translation_spanish(const translation_string **strings, int *num_strings)

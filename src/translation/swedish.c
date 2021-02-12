@@ -366,6 +366,7 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_LEVY, "Avgifter" },
     {TR_TOOLTIP_OVERLAY_LEVY, " denarier betalade i avgifter månadsvis." }, 
     {TR_MAP_EDITOR_OPTIONS, "Scenarieinställningar" },										 
+    {TR_BUTTON_GO_TO_SITE, "Gå till platsen" },
 };
 
 void translation_swedish(const translation_string **strings, int *num_strings)

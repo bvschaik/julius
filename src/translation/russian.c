@@ -353,7 +353,8 @@ static translation_string all_strings[] = {
     { TR_LABEL_PAUSE_MENU, "Пауза" },
     { TR_OVERLAY_LEVY, "Сборы" },
     { TR_TOOLTIP_OVERLAY_LEVY, " оплаченные ден. в сборах." },
-    { TR_MAP_EDITOR_OPTIONS, "Настройки сценария" }
+    { TR_MAP_EDITOR_OPTIONS, "Настройки сценария" },
+    { TR_BUTTON_GO_TO_SITE, "Перейти к локации" },
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)

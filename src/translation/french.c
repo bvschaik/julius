@@ -386,7 +386,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, "Régler l'accès des collecteurs de taxes" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_LABOR_SEEKER, "Régler l'accès des demandeurs d'emploi" },
     {TR_HOTKEY_DUPLICATE_TITLE, "Raccourci déjà utilisé"},
-    {TR_HOTKEY_DUPLICATE_MESSAGE, "Cette combinaison de touches est déjà affectée à l'action suivante :"}	
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "Cette combinaison de touches est déjà affectée à l'action suivante :"},
+    {TR_BUTTON_GO_TO_SITE, "Aller sur le site" },
 };
 
 void translation_french(const translation_string** strings, int* num_strings)

@@ -558,6 +558,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "Hotkey already used"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "This key combination is already assigned to the following action:"},
     {TR_BUILDING_GARDEN_PATH, "Garden Path" },
+    {TR_BUTTON_GO_TO_SITE, "Go to the site" },
 
 };
 
