@@ -50,7 +50,12 @@ typedef enum {
     INVENTORY_MAX_FOOD = 4,
     INVENTORY_MIN_GOOD = 4,
     INVENTORY_MAX_GOOD = 8,
-    INVENTORY_MAX = 8
+    INVENTORY_MAX = 8,
+    // inventory flags
+    INVENTORY_FLAG_NONE = 0,
+    INVENTORY_FLAG_ALL_FOODS = 0x0f,
+    INVENTORY_FLAG_ALL_GOODS = 0xf0,
+    INVENTORY_FLAG_ALL = 0xff
 } inventory_type;
 
 typedef enum {
@@ -74,5 +79,11 @@ int resource_image_offset(resource_type resource, resource_image_type type);
 int resource_is_food(resource_type resource);
 
 workshop_type resource_to_workshop_type(resource_type resource);
+
+int inventory_is_set(int inventory, int flag);
+
+void inventory_set(int *inventory, int flag);
+
+int resource_from_inventory(int inventory_id);
 
 #endif // GAME_RESOURCE_H

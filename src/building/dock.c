@@ -67,7 +67,7 @@ int building_dock_accepts_ship(int ship_id, int dock_id)
     }
     for (int resource = RESOURCE_WHEAT; resource < RESOURCE_MAX; resource++) {
         if (city->sells_resource[resource] || city->buys_resource[resource]) {
-            if (is_good_accepted(resource - 1, dock)) {
+            if (building_market_is_good_accepted(resource - 1, dock)) {
                 return 1;
             }
         }
@@ -83,7 +83,7 @@ int building_dock_can_import_from_ship(building *dock, int ship_id)
     }
     
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (is_good_accepted(r - 1, dock) && empire_can_import_resource_from_city(ship->empire_city_id, r)) {
+        if (building_market_is_good_accepted(r - 1, dock) && empire_can_import_resource_from_city(ship->empire_city_id, r)) {
             return 1;
         }
     }
@@ -98,7 +98,7 @@ int building_dock_can_export_to_ship(building *dock, int ship_id)
     }
     
     for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (is_good_accepted(r - 1, dock) && empire_can_export_resource_to_city(ship->empire_city_id, r)) {
+        if (building_market_is_good_accepted(r - 1, dock) && empire_can_export_resource_to_city(ship->empire_city_id, r)) {
             return 1;
         }
     }

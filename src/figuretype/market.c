@@ -27,27 +27,12 @@ int figure_market_create_delivery_boy(int leader_id, figure* f, int type)
     return boy->id;
 }
 
-static int inventory_to_resource(int inventory_id)
-{
-    switch (inventory_id) {
-        case INVENTORY_WHEAT: return RESOURCE_WHEAT;
-        case INVENTORY_VEGETABLES: return RESOURCE_VEGETABLES;
-        case INVENTORY_FRUIT: return RESOURCE_FRUIT;
-        case INVENTORY_MEAT: return RESOURCE_MEAT;
-        case INVENTORY_POTTERY: return RESOURCE_POTTERY;
-        case INVENTORY_FURNITURE: return RESOURCE_FURNITURE;
-        case INVENTORY_OIL: return RESOURCE_OIL;
-        case INVENTORY_WINE: return RESOURCE_WINE;
-        default: return 0;
-    } 
-}
-
 static int take_food_from_granary(figure *f, int market_id, int granary_id)
 {
     if (f->collecting_item_id < INVENTORY_MIN_FOOD || f->collecting_item_id >= INVENTORY_MAX_FOOD) {
         return 0;
     }
-    int resource = inventory_to_resource(f->collecting_item_id);
+    int resource = resource_from_inventory(f->collecting_item_id);
     building *granary = building_get(granary_id);
     int market_units = building_get(market_id)->data.market.inventory[f->collecting_item_id];
     int max_units = 0;
@@ -127,7 +112,7 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     if (f->collecting_item_id < INVENTORY_MIN_GOOD || f->collecting_item_id >= INVENTORY_MAX_GOOD) {
         return 0;
     }
-    int resource = inventory_to_resource(f->collecting_item_id);
+    int resource = resource_from_inventory(f->collecting_item_id);
     building *warehouse = building_get(warehouse_id);
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return take_resource_from_generic_building(f, warehouse_id);
@@ -154,7 +139,7 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
 
 static void recalculate_buyer_destination(figure *f)
 {
-    /***int resource = inventory_to_resource(f->collecting_item_id);
+    /***int resource = resource_from_inventory(f->collecting_item_id);
     if (city_resource_is_stockpiled(resource)) {
         f->state = FIGURE_STATE_DEAD;
         return;

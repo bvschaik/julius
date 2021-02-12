@@ -41,3 +41,28 @@ workshop_type resource_to_workshop_type(resource_type resource)
             return WORKSHOP_NONE;
     }
 }
+
+int inventory_is_set(int inventory, int flag)
+{
+    return (inventory >> flag) & 1;
+}
+
+void inventory_set(int *inventory, int flag)
+{
+    *inventory |= 1 << flag; 
+}
+
+int resource_from_inventory(int inventory_id)
+{
+    switch (inventory_id) {
+        case INVENTORY_WHEAT: return RESOURCE_WHEAT;
+        case INVENTORY_VEGETABLES: return RESOURCE_VEGETABLES;
+        case INVENTORY_FRUIT: return RESOURCE_FRUIT;
+        case INVENTORY_MEAT: return RESOURCE_MEAT;
+        case INVENTORY_POTTERY: return RESOURCE_POTTERY;
+        case INVENTORY_FURNITURE: return RESOURCE_FURNITURE;
+        case INVENTORY_OIL: return RESOURCE_OIL;
+        case INVENTORY_WINE: return RESOURCE_WINE;
+        default: return 0;
+    } 
+}

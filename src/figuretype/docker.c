@@ -97,7 +97,7 @@ static int get_closest_warehouse_for_import(int x, int y, int city_id, building 
         int importable[16];
         importable[RESOURCE_NONE] = 0;
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-            importable[r] = is_good_accepted(r - 1, dock) && empire_can_import_resource_from_city(city_id, r);
+            importable[r] = building_market_is_good_accepted(r - 1, dock) && empire_can_import_resource_from_city(city_id, r);
         }
         resource = city_trade_next_docker_import_resource();
         for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !importable[resource]; i++) {
@@ -168,7 +168,7 @@ static int get_closest_warehouse_for_export(int x, int y, int city_id, building 
         int exportable[16];
         exportable[RESOURCE_NONE] = 0;
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-            exportable[r] = is_good_accepted(r - 1, dock) && empire_can_export_resource_to_city(city_id, r);
+            exportable[r] = building_market_is_good_accepted(r - 1, dock) && empire_can_export_resource_to_city(city_id, r);
         }
         resource = city_trade_next_docker_export_resource();
         for (int i = RESOURCE_MIN; i < RESOURCE_MAX && !exportable[resource]; i++) {
