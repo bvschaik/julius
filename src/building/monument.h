@@ -2,18 +2,18 @@
 #define BUILDING_MONUMENT_H
 
 #include "building/building.h"
-
 #include "map/grid.h"
 #include "map/road_access.h"
 #include "translation/translation.h"
 #include "window/option_popup.h"
 
-
-
 #define MAX_MONUMENTS 30
 #define MAX_MONUMENT_DELIVERIES 200
 #define MONUMENT_FINISHED -1
 #define MONUMENT_START 1
+#define MAX_GRAND_TEMPLES_PER_CITY 2
+#define MODULES_PER_TEMPLE 2
+#define MARS_OFFERING_FREQUENCY 16
 
 typedef struct {
 	int walker_id;
@@ -21,9 +21,6 @@ typedef struct {
 	int resource; 
 	int cartloads;
 } monument_delivery;
-
-#define MODULES_PER_TEMPLE 2
-#define MARS_OFFERING_FREQUENCY 16
 
 typedef enum {
 	CERES_MODULE_1_REDUCE_FOOD,
@@ -40,24 +37,24 @@ typedef enum {
 	PANTHEON_MODULE_2_HOUSING_EVOLUTION
 } module_type;
 
-int building_monument_access_point(building* b, map_point* dst);
-int building_monument_add_module(building* b, int module_type);
-int building_monument_deliver_resource(building* b, int resource);
-int building_monument_get_monument(int x, int y, int resource, int road_network_id, int distance_from_entry, map_point* dst);
+int building_monument_access_point(building *b, map_point *dst);
+int building_monument_add_module(building *b, int module_type);
+int building_monument_deliver_resource(building *b, int resource);
+int building_monument_get_monument(int x, int y, int resource, int road_network_id, int distance_from_entry, map_point *dst);
 int building_monument_has_unfinished_monuments(void);
-void building_monument_initialize(building* b);
+void building_monument_initialize(building *b);
 int building_monument_is_monument(const building *b);
 int building_monument_type_is_monument(building_type type);
 int building_monument_type_is_mini_monument(building_type type);
 int building_monument_is_grand_temple(building_type type);
-int building_monument_needs_resource(building* b, int resource);
-int building_monument_needs_resources(building* b);
-int building_monument_progress(building* b);
+int building_monument_needs_resource(building *b, int resource);
+int building_monument_needs_resources(building *b);
+int building_monument_progress(building *b);
 void building_monument_recalculate_monuments(void);
 int building_monument_working(int type);
 int building_monument_resources_needed_for_monument_type(int building_type, int resource, int phase);
 int building_monument_resource_in_delivery(int monument_id, int resource_id);
-int building_monument_resource_in_delivery_multipart(building* b, int resource_id);
+int building_monument_resource_in_delivery_multipart(building *b, int resource_id);
 int building_monument_remove_delivery(int figure_id);
 int building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no);
 int building_monument_has_monument(int type);
@@ -70,9 +67,9 @@ int building_monument_finish_monuments(void);
 int building_monument_phase(int phase);
 int building_monument_get_venus_gt(void);
 int building_monument_get_neptune_gt(void);
-void building_monument_initialize_deliveries();
-int building_monument_count_grand_temples();
-void building_monument_delivery_save_state(buffer* list);
-void building_monument_delivery_load_state(buffer* list);
+void building_monument_initialize_deliveries(void);
+int building_monument_count_grand_temples(void);
+void building_monument_delivery_save_state(buffer *list);
+void building_monument_delivery_load_state(buffer *list);
 
 #endif // BUILDING_MONUMENT_H 

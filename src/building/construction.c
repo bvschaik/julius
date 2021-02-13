@@ -690,7 +690,8 @@ void building_construction_update(int x, int y, int grid_offset)
             !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center()) &&
             !(type == BUILDING_MESS_HALL && city_buildings_has_mess_hall()) &&
             !building_monument_has_monument(type) &&
-            !(building_monument_is_grand_temple(type) && building_monument_count_grand_temples() >= 2)) {
+            !(building_monument_is_grand_temple(type) &&
+            building_monument_count_grand_temples() >= MAX_GRAND_TEMPLES_PER_CITY)) {
             int size = building_properties_for_type(type)->size;
             mark_construction(x, y, size, TERRAIN_ALL, 0);
         }
