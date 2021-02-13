@@ -78,7 +78,8 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
         SDL_Log("Maximum scale of %i applied", scale_percentage);
     }
 
-    SDL_SetWindowMinimumSize(SDL.window, scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
+    SDL_SetWindowMinimumSize(SDL.window,
+        scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
 
     // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
