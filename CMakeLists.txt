@@ -33,6 +33,7 @@ if(SWITCH_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 set(SHORT_NAME julius)
+set(USER_FRIENDLY_NAME Julius)
 project(${SHORT_NAME} C)
 
 if (VITA_BUILD)
@@ -651,7 +652,7 @@ if(APPLE)
 
     # setting variables that will populate Info.plist
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.bvschaik.julius")
-    set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
+    set(MACOSX_BUNDLE_BUNDLE_NAME ${USER_FRIENDLY_NAME})
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OS X deployment version" FORCE)
     set(MACOSX_BUNDLE_ICON_FILE "julius.icns")
     set(MACOSX_BUNDLE_BUNDLE_VERSION
