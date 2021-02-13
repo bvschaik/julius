@@ -307,7 +307,7 @@ static void draw_cartpusher(building_info_context *c, figure *f)
     }
 }
 
-static void draw_market_buyer(building_info_context *c, figure *f)
+static void draw_buyer(building_info_context *c, figure *f)
 {
     image_draw(big_people_image(f->type), c->x_offset + 28, c->y_offset + 112);
 
@@ -320,12 +320,12 @@ static void draw_market_buyer(building_info_context *c, figure *f)
         width = lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK);
     }
 
-    if (f->action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
+    if (f->action_state == FIGURE_ACTION_145_BUYER_GOING_TO_STORAGE) {
         width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
         int resource = inventory_to_resource_id(f->collecting_item_id);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 90 + width, c->y_offset + 135);
-    } else if (f->action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
+    } else if (f->action_state == FIGURE_ACTION_146_BUYER_RETURNING) {
         width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
         int resource = inventory_to_resource_id(f->collecting_item_id);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
@@ -383,8 +383,9 @@ static void draw_figure_info(building_info_context *c, int figure_id)
         draw_animal(c, f);
     } else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKER) {
         draw_cartpusher(c, f);
-    } else if (type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER || type == FIGURE_PRIEST_BUYER || type == FIGURE_BARKEEP_BUYER) {
-        draw_market_buyer(c, f);
+    } else if (type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER ||
+        type == FIGURE_PRIEST_BUYER || type == FIGURE_BARKEEP_BUYER) {
+        draw_buyer(c, f);
     } else {
         draw_normal_figure(c, f);
     }

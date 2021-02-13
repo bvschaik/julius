@@ -346,6 +346,7 @@ set(FIGURE_FILES
 )
 set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/animal.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/buyer.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/cartpusher.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/crime.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/docker.c
@@ -353,7 +354,6 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/enemy.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/entertainer.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/maintenance.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/market.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/migrant.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/missile.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/native.c

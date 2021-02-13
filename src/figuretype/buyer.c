@@ -1,4 +1,4 @@
-#include "market.h"
+#include "buyer.h"
 
 #include "assets/assets.h"
 #include "building/building.h"
@@ -13,7 +13,7 @@
 #include "figuretype/wall.h"
 #include "game/resource.h"
 
-int figure_market_create_delivery_boy(int leader_id, figure* f, int type)
+int figure_buyer_create_delivery_boy(int leader_id, figure *f, int type)
 {
     figure *boy = figure_create(type, f->x, f->y, 0);
     boy->leading_figure_id = leader_id;
@@ -77,21 +77,20 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     }
     int previous_boy = f->id;
     for (int i = 0; i < num_loads; i++) {
-        previous_boy = figure_market_create_delivery_boy(previous_boy, f, type);
+        previous_boy = figure_buyer_create_delivery_boy(previous_boy, f, type);
     }
     return 1;
 }
 
 // Venus Grand Temple wine
-static int take_resource_from_generic_building(figure* f, int building_id)
+static int take_resource_from_generic_building(figure *f, int building_id)
 {
-    building* b = building_get(building_id);
+    building *b = building_get(building_id);
     int num_loads;
     int stored = b->loads_stored;
     if (stored < 2) {
         num_loads = stored;
-    }
-    else {
+    } else {
         num_loads = 2;
     }
     if (num_loads <= 0) {
@@ -100,9 +99,9 @@ static int take_resource_from_generic_building(figure* f, int building_id)
     b->loads_stored -= num_loads;
 
     // create delivery boys
-    int boy1 = figure_market_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
+    int boy1 = figure_buyer_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
     if (num_loads > 1) {
-        figure_market_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
+        figure_buyer_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
     }
     return 1;
 }
@@ -130,42 +129,22 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     building_warehouse_remove_resource(warehouse, resource, num_loads);
 
     // create delivery boys
-    int boy1 = figure_market_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
+    int boy1 = figure_buyer_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
     if (num_loads > 1) {
-        figure_market_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
+        figure_buyer_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
     }
     return 1;
 }
 
-static void recalculate_buyer_destination(figure *f)
-{
-    /***int resource = resource_from_inventory(f->collecting_item_id);
-    if (city_resource_is_stockpiled(resource)) {
-        f->state = FIGURE_STATE_DEAD;
-        return;
-    }
-    if (f->collecting_item_id >= INVENTORY_MAX_FOOD) { // warehouse
-        for(int i = 1; i < building_count(); ++ i)
-            if (building_warehouse_get_amount(b, resource) > 0) {
-        data->num_buildings++;
-        if (distance < data->distance) {
-            data->distance = distance;
-            data->building_id = b->id;
-        }
-    }
-    } else { // granary
-
-    }***/
-}
-
-void figure_market_buyer_action(figure *f)
+void figure_buyer_action(figure *f)
 {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 800;
 
     building *b = building_get(f->building_id);
-    if (b->state != BUILDING_STATE_IN_USE || (b->figure_id2 != f->id && b->figure_id != f->id && b->figure_id4 != f->id)) {
+    if (b->state != BUILDING_STATE_IN_USE ||
+        (b->figure_id2 != f->id && b->figure_id != f->id && b->figure_id4 != f->id)) {
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
@@ -176,7 +155,7 @@ void figure_market_buyer_action(figure *f)
         case FIGURE_ACTION_149_CORPSE:
             figure_combat_handle_corpse(f);
             break;
-        case FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE:
+        case FIGURE_ACTION_145_BUYER_GOING_TO_STORAGE:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {          
                 f->wait_ticks = 0;     
@@ -189,19 +168,17 @@ void figure_market_buyer_action(figure *f)
                         f->state = FIGURE_STATE_DEAD;
                     }
                 }
-                f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
+                f->action_state = FIGURE_ACTION_146_BUYER_RETURNING;
                 f->destination_x = f->source_x;
                 f->destination_y = f->source_y;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
+                f->action_state = FIGURE_ACTION_146_BUYER_RETURNING;
                 f->destination_x = f->source_x;
                 f->destination_y = f->source_y;
                 figure_route_remove(f);
-            } else if (f->type == FIGURE_MARKET_BUYER && f->wait_ticks > FIGURE_REROUTE_DESTINATION_TICKS) {
-                recalculate_buyer_destination(f);
             }
             break;
-        case FIGURE_ACTION_146_MARKET_BUYER_RETURNING:
+        case FIGURE_ACTION_146_BUYER_RETURNING:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;

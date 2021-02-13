@@ -625,11 +625,11 @@ static void send_buyer_to_destination(figure *f, int dst_building_id)
     map_point road;
     if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) ||
         map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
-        f->action_state = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
+        f->action_state = FIGURE_ACTION_145_BUYER_GOING_TO_STORAGE;
         f->destination_x = road.x;
         f->destination_y = road.y;
     } else {
-        f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
+        f->action_state = FIGURE_ACTION_146_BUYER_RETURNING;
         f->destination_x = f->x;
         f->destination_y = f->y;
     }
