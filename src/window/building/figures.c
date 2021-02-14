@@ -40,8 +40,8 @@ static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
 };
 // Starting with FIGURE_WORK_CAMP_WORKER = 73,
 static const int NEW_FIGURE_TYPES[] = {
-    TR_FIGURE_TYPE_WORK_CAMP_WORKER,TR_FIGURE_TYPE_WORK_CAMP_SLAVE,TR_FIGURE_TYPE_WORK_CAMP_ARCHITECT,TR_FIGURE_TYPE_MESS_HALL_BUYER,TR_FIGURE_TYPE_MESS_HALL_COLLECTOR,
-    TR_FIGURE_TYPE_PRIEST_BUYER, TR_FIGURE_TYPE_BARKEEP, TR_FIGURE_TYPE_BARKEEP_BUYER, TR_FIGURE_TYPE_TOURIST, TR_FIGURE_TYPE_WATCHMAN, 0, 0 
+    TR_FIGURE_TYPE_WORK_CAMP_WORKER,TR_FIGURE_TYPE_WORK_CAMP_SLAVE,TR_FIGURE_TYPE_WORK_CAMP_ARCHITECT,TR_FIGURE_TYPE_MESS_HALL_SUPPLIER,TR_FIGURE_TYPE_MESS_HALL_COLLECTOR,
+    TR_FIGURE_TYPE_PRIEST_SUPPLIER, TR_FIGURE_TYPE_BARKEEP, TR_FIGURE_TYPE_BARKEEP_SUPPLIER, TR_FIGURE_TYPE_TOURIST, TR_FIGURE_TYPE_WATCHMAN, 0, 0 
 };
 
 static generic_button figure_buttons[] = {
@@ -307,25 +307,25 @@ static void draw_cartpusher(building_info_context *c, figure *f)
     }
 }
 
-static void draw_buyer(building_info_context *c, figure *f)
+static void draw_supplier(building_info_context *c, figure *f)
 {
     image_draw(big_people_image(f->type), c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     int width = 0;
-    if (f->type == FIGURE_MESS_HALL_BUYER || f->type == FIGURE_PRIEST_BUYER || f->type == FIGURE_BARKEEP_BUYER) {
+    if (f->type == FIGURE_MESS_HALL_SUPPLIER || f->type == FIGURE_PRIEST_SUPPLIER || f->type == FIGURE_BARKEEP_SUPPLIER) {
         int relative_id = f->type - NEW_FIGURES_ID;
         width = text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
     } else {
         width = lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK);
     }
 
-    if (f->action_state == FIGURE_ACTION_145_BUYER_GOING_TO_STORAGE) {
+    if (f->action_state == FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE) {
         width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
         int resource = inventory_to_resource_id(f->collecting_item_id);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 90 + width, c->y_offset + 135);
-    } else if (f->action_state == FIGURE_ACTION_146_BUYER_RETURNING) {
+    } else if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING) {
         width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
         int resource = inventory_to_resource_id(f->collecting_item_id);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
@@ -383,9 +383,9 @@ static void draw_figure_info(building_info_context *c, int figure_id)
         draw_animal(c, f);
     } else if (type == FIGURE_CART_PUSHER || type == FIGURE_WAREHOUSEMAN || type == FIGURE_DOCKER) {
         draw_cartpusher(c, f);
-    } else if (type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER ||
-        type == FIGURE_PRIEST_BUYER || type == FIGURE_BARKEEP_BUYER) {
-        draw_buyer(c, f);
+    } else if (type == FIGURE_MARKET_SUPPLIER || type == FIGURE_MESS_HALL_SUPPLIER ||
+        type == FIGURE_PRIEST_SUPPLIER || type == FIGURE_BARKEEP_SUPPLIER) {
+        draw_supplier(c, f);
     } else {
         draw_normal_figure(c, f);
     }

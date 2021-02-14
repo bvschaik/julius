@@ -110,10 +110,10 @@ void figure_delete(figure *f)
     building *b = building_get(f->building_id);
     switch (f->type) {
         case FIGURE_LABOR_SEEKER:
-        case FIGURE_MARKET_BUYER:
-        case FIGURE_PRIEST_BUYER:
-        case FIGURE_BARKEEP_BUYER:
-        case FIGURE_MESS_HALL_BUYER:
+        case FIGURE_MARKET_SUPPLIER:
+        case FIGURE_PRIEST_SUPPLIER:
+        case FIGURE_BARKEEP_SUPPLIER:
+        case FIGURE_MESS_HALL_SUPPLIER:
             if (f->building_id && f->id == b->figure_id2) {
                 b->figure_id2 = 0;
             }

@@ -4,7 +4,6 @@
 #include "city/figures.h"
 #include "figure/figure.h"
 #include "figuretype/animal.h"
-#include "figuretype/buyer.h"
 #include "figuretype/cartpusher.h"
 #include "figuretype/crime.h"
 #include "figuretype/docker.h"
@@ -17,6 +16,7 @@
 #include "figuretype/native.h"
 #include "figuretype/service.h"
 #include "figuretype/soldier.h"
+#include "figuretype/supplier.h"
 #include "figuretype/trader.h"
 #include "figuretype/wall.h"
 #include "figuretype/water.h"
@@ -67,7 +67,7 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_editor_flag_action,
     figure_flotsam_action,
     figure_docker_action,
-    figure_buyer_action,
+    figure_supplier_action,
     figure_patrician_action, //40
     figure_indigenous_native_action,
     figure_tower_sentry_action,
@@ -104,11 +104,11 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_workcamp_worker_action,
     figure_workcamp_slave_action,
     figure_workcamp_engineer_action,
-    figure_buyer_action,
+    figure_supplier_action,
     figure_delivery_boy_action,
-    figure_buyer_action,
+    figure_supplier_action,
     figure_tavern_action,
-    figure_buyer_action, // 80
+    figure_supplier_action, // 80
     figure_tourist_action,
     figure_watchman_action,
     figure_watchtower_archer_action,

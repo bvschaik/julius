@@ -8,7 +8,7 @@
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
-#include "figuretype/buyer.h"
+#include "figuretype/supplier.h"
 #include "map/building.h"
 #include "map/road_access.h"
 
@@ -131,7 +131,7 @@ void figure_destination_priest_action(figure* f)
         // create delivery boys
         int previous_boy = f->id;
         for (int i = 0; i < num_loads; i++) {
-            previous_boy = figure_buyer_create_delivery_boy(previous_boy, f, FIGURE_DELIVERY_BOY);
+            previous_boy = figure_supplier_create_delivery_boy(previous_boy, f, FIGURE_DELIVERY_BOY);
         }
 
         f->action_state = FIGURE_ACTION_215_PRIEST_GOING_TO_MESS_HALL;

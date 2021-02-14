@@ -323,11 +323,11 @@ static int market_trader_phrase(figure *f)
     return -1;
 }
 
-static int market_buyer_phrase(figure *f)
+static int market_supplier_phrase(figure *f)
 {
-    if (f->action_state == FIGURE_ACTION_145_BUYER_GOING_TO_STORAGE) {
+    if (f->action_state == FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE) {
         return 7;
-    } else if (f->action_state == FIGURE_ACTION_146_BUYER_RETURNING) {
+    } else if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING) {
         return 8;
     } else {
         return -1;
@@ -353,7 +353,7 @@ static int cart_pusher_phrase(figure *f)
     return -1;
 }
 
-static int mess_hall_buyer_phrase(figure* f) {
+static int mess_hall_supplier_phrase(figure* f) {
     return 0;
 }
 
@@ -554,8 +554,8 @@ static int phrase_based_on_figure_state(figure *f)
             return tax_collector_phrase(f);
         case FIGURE_MARKET_TRADER:
             return market_trader_phrase(f);
-        case FIGURE_MARKET_BUYER:
-            return market_buyer_phrase(f);
+        case FIGURE_MARKET_SUPPLIER:
+            return market_supplier_phrase(f);
         case FIGURE_CART_PUSHER:
             return cart_pusher_phrase(f);
         case FIGURE_WAREHOUSEMAN:
@@ -581,8 +581,8 @@ static int phrase_based_on_figure_state(figure *f)
         case FIGURE_TOWER_SENTRY:
         case FIGURE_WATCHMAN:
             return tower_sentry_phrase(f);
-        case FIGURE_MESS_HALL_BUYER:
-            return mess_hall_buyer_phrase(f);
+        case FIGURE_MESS_HALL_SUPPLIER:
+            return mess_hall_supplier_phrase(f);
         case FIGURE_FORT_JAVELIN:
         case FIGURE_FORT_MOUNTED:
         case FIGURE_FORT_LEGIONARY:

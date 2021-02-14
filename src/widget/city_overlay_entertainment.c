@@ -53,7 +53,7 @@ static building *get_entertainment_building(const figure *f)
 static int show_figure_entertainment(const figure *f)
 {
     return f->type == FIGURE_ACTOR || f->type == FIGURE_GLADIATOR ||
-        f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER || f->type == FIGURE_BARKEEP_BUYER || f->type == FIGURE_BARKEEP;
+        f->type == FIGURE_LION_TAMER || f->type == FIGURE_CHARIOTEER || f->type == FIGURE_BARKEEP_SUPPLIER || f->type == FIGURE_BARKEEP;
 }
 
 static int show_figure_theater(const figure *f)
@@ -89,7 +89,7 @@ static int show_figure_hippodrome(const figure *f)
 
 static int show_figure_tavern(const figure* f)
 {
-    return f->type == FIGURE_BARKEEP || f->type == FIGURE_BARKEEP_BUYER;
+    return f->type == FIGURE_BARKEEP || f->type == FIGURE_BARKEEP_SUPPLIER;
 }
 
 static int get_column_height_entertainment(const building *b)

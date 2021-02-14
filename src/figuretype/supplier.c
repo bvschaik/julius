@@ -1,4 +1,4 @@
-#include "buyer.h"
+#include "supplier.h"
 
 #include "assets/assets.h"
 #include "building/building.h"
@@ -13,7 +13,7 @@
 #include "figuretype/wall.h"
 #include "game/resource.h"
 
-int figure_buyer_create_delivery_boy(int leader_id, figure *f, int type)
+int figure_supplier_create_delivery_boy(int leader_id, figure *f, int type)
 {
     figure *boy = figure_create(type, f->x, f->y, 0);
     boy->leading_figure_id = leader_id;
@@ -72,12 +72,12 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     building_granary_remove_resource(granary, resource, 100 * num_loads);
     // create delivery boys
     int type = FIGURE_DELIVERY_BOY;
-    if (f->type == FIGURE_MESS_HALL_BUYER) {
+    if (f->type == FIGURE_MESS_HALL_SUPPLIER) {
         type = FIGURE_MESS_HALL_COLLECTOR;
     }
     int previous_boy = f->id;
     for (int i = 0; i < num_loads; i++) {
-        previous_boy = figure_buyer_create_delivery_boy(previous_boy, f, type);
+        previous_boy = figure_supplier_create_delivery_boy(previous_boy, f, type);
     }
     return 1;
 }
@@ -99,9 +99,9 @@ static int take_resource_from_generic_building(figure *f, int building_id)
     b->loads_stored -= num_loads;
 
     // create delivery boys
-    int boy1 = figure_buyer_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
+    int boy1 = figure_supplier_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
     if (num_loads > 1) {
-        figure_buyer_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
+        figure_supplier_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
     }
     return 1;
 }
@@ -129,14 +129,14 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     building_warehouse_remove_resource(warehouse, resource, num_loads);
 
     // create delivery boys
-    int boy1 = figure_buyer_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
+    int boy1 = figure_supplier_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
     if (num_loads > 1) {
-        figure_buyer_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
+        figure_supplier_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
     }
     return 1;
 }
 
-void figure_buyer_action(figure *f)
+void figure_supplier_action(figure *f)
 {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
@@ -155,7 +155,7 @@ void figure_buyer_action(figure *f)
         case FIGURE_ACTION_149_CORPSE:
             figure_combat_handle_corpse(f);
             break;
-        case FIGURE_ACTION_145_BUYER_GOING_TO_STORAGE:
+        case FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {          
                 f->wait_ticks = 0;     
@@ -168,17 +168,17 @@ void figure_buyer_action(figure *f)
                         f->state = FIGURE_STATE_DEAD;
                     }
                 }
-                f->action_state = FIGURE_ACTION_146_BUYER_RETURNING;
+                f->action_state = FIGURE_ACTION_146_SUPPLIER_RETURNING;
                 f->destination_x = f->source_x;
                 f->destination_y = f->source_y;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                f->action_state = FIGURE_ACTION_146_BUYER_RETURNING;
+                f->action_state = FIGURE_ACTION_146_SUPPLIER_RETURNING;
                 f->destination_x = f->source_x;
                 f->destination_y = f->source_y;
                 figure_route_remove(f);
             }
             break;
-        case FIGURE_ACTION_146_BUYER_RETURNING:
+        case FIGURE_ACTION_146_SUPPLIER_RETURNING:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
@@ -187,11 +187,11 @@ void figure_buyer_action(figure *f)
             }
             break;
     }
-    if (f->type == FIGURE_MESS_HALL_BUYER) {
+    if (f->type == FIGURE_MESS_HALL_SUPPLIER) {
         figure_tower_sentry_set_image(f);
-    } else if (f->type == FIGURE_PRIEST_BUYER) {
+    } else if (f->type == FIGURE_PRIEST_SUPPLIER) {
         figure_image_update(f, image_group(GROUP_FIGURE_PRIEST));    
-    } else if (f->type == FIGURE_BARKEEP_BUYER) {
+    } else if (f->type == FIGURE_BARKEEP_SUPPLIER) {
         figure_image_update(f, image_group(GROUP_FIGURE_BATHHOUSE_WORKER));
     } else {
         figure_image_update(f, image_group(GROUP_FIGURE_MARKET_LADY));
@@ -210,7 +210,7 @@ void figure_delivery_boy_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     } else {
         if (leader->state == FIGURE_STATE_ALIVE) {
-            if (leader->type == FIGURE_MARKET_BUYER || leader->type == FIGURE_DELIVERY_BOY || leader->type == FIGURE_MESS_HALL_BUYER || leader->type == FIGURE_MESS_HALL_COLLECTOR || leader->type == FIGURE_PRIEST_BUYER || leader->type == FIGURE_PRIEST || leader->type == FIGURE_BARKEEP_BUYER) {
+            if (leader->type == FIGURE_MARKET_SUPPLIER || leader->type == FIGURE_DELIVERY_BOY || leader->type == FIGURE_MESS_HALL_SUPPLIER || leader->type == FIGURE_MESS_HALL_COLLECTOR || leader->type == FIGURE_PRIEST_SUPPLIER || leader->type == FIGURE_PRIEST || leader->type == FIGURE_BARKEEP_SUPPLIER) {
                 figure_movement_follow_ticks(f, 1);
             } else {
                 f->state = FIGURE_STATE_DEAD;

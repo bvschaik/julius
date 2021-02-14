@@ -40,7 +40,7 @@ typedef struct {
     unsigned char road_access_x;
     unsigned char road_access_y;
     short figure_id;
-    short figure_id2; // labor seeker or market buyer
+    short figure_id2; // labor seeker or market supplier
     short immigrant_figure_id;
     short figure_id4; // tower ballista or burning ruin prefect
     unsigned char figure_spawn_delay;

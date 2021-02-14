@@ -65,12 +65,12 @@ static int show_building_none(const building* b)
 
 static int show_figure_religion(const figure *f)
 {
-    return f->type == FIGURE_PRIEST || f->type == FIGURE_PRIEST_BUYER;
+    return f->type == FIGURE_PRIEST || f->type == FIGURE_PRIEST_SUPPLIER;
 }
 
 static int show_figure_food_stocks(const figure *f)
 {
-    if (f->type == FIGURE_MARKET_BUYER || f->type == FIGURE_MARKET_TRADER ||
+    if (f->type == FIGURE_MARKET_SUPPLIER || f->type == FIGURE_MARKET_TRADER ||
         f->type == FIGURE_DELIVERY_BOY || f->type == FIGURE_FISHING_BOAT) {
         return 1;
     } else if (f->type == FIGURE_CART_PUSHER) {

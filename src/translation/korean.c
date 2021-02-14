@@ -271,7 +271,7 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_WORK_CAMP_WORKER, "십장"},
     {TR_FIGURE_TYPE_WORK_CAMP_SLAVE, "짐꾼"},
     {TR_FIGURE_TYPE_WORK_CAMP_ARCHITECT, "기술자"},
-    {TR_FIGURE_TYPE_MESS_HALL_BUYER, "병참장교"},
+    {TR_FIGURE_TYPE_MESS_HALL_SUPPLIER, "병참장교"},
     {TR_FIGURE_TYPE_MESS_HALL_COLLECTOR, "야영지 노예"},
     {TR_BUILDING_CERES_TEMPLE_MODULE_DESC, "대성전은 케레스의 성직자들을 조직해 식량과 기름을 배고픈 시민들에게 나눠주도록 합니다."},
     {TR_BUILDING_VENUS_TEMPLE_MODULE_DESC, "대성전은 비너스의 성직자들이 성스러운 포도주를 시민들에게 공급할 수 있게 합니다." },
@@ -281,7 +281,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SMALL_TEMPLE_MERCURY_NAME, "머큐리 신전"},
     {TR_BUILDING_SMALL_TEMPLE_MARS_NAME, "마르스 신전"},
     {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "비너스 신전"},
-    {TR_FIGURE_TYPE_PRIEST_BUYER, "성직자" },
+    {TR_FIGURE_TYPE_PRIEST_SUPPLIER, "성직자" },
     // Transcription of mission_exact4.wav
     {TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"이 야만인들을 진정시킬 수 있도록 최선을 다하겠습니다. 분명 대화를 나눠보면 이들도 도시를 공격하는 걸 멈출 겁니다.\"" },
     {TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "연례 축제"},

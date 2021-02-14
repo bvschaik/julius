@@ -489,8 +489,8 @@ int figure_service_provide_coverage(figure *f)
         case FIGURE_MARKET_TRADER:
             houses_serviced = provide_market_goods(f->building_id, x, y);
             break;
-        case FIGURE_MARKET_BUYER:
-            if (!config_get(CONFIG_GP_CH_NO_BUYER_DISTRIBUTION)) {
+        case FIGURE_MARKET_SUPPLIER:
+            if (!config_get(CONFIG_GP_CH_NO_SUPPLIER_DISTRIBUTION)) {
                 houses_serviced = provide_market_goods(f->building_id, x, y);
             }
             break;
