@@ -20,6 +20,7 @@
 #include "input/scroll.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
+#include "translation/translation.h"
 #include "window/advisors.h"
 #include "window/city.h"
 
@@ -173,7 +174,7 @@ static void draw_city_message_text(const lang_message *msg)
                 16 * data.text_width_blocks, data.text_height_blocks - 1, 0);
             break;
         case MESSAGE_TYPE_BUILDING_COMPLETION:
-            lang_text_draw(97, 0, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE);
+            text_draw(translation_for(TR_BUTTON_GO_TO_SITE), data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE, 0);
             rich_text_draw(msg->content.text, data.x_text + 8, data.y_text + 86,
                 16 * data.text_width_blocks, data.text_height_blocks - 1, 0);
             break;

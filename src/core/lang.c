@@ -297,9 +297,6 @@ const uint8_t *lang_get_string(int group, int index)
     if (group == 96 && !index) {
         return translation_for(TR_BUILDING_SMALL_TEMPLE_VENUS_NAME);
     }
-    if (group == 97 && !index) {
-        return translation_for(TR_BUTTON_GO_TO_SITE);
-    }
 
     if (group == 130) {
         switch (index) {
