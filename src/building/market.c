@@ -102,31 +102,30 @@ static int get_needed_inventory(building *market)
 int building_market_get_storage_destination(building *market)
 {
     int needed_inventory = get_needed_inventory(market);
-    inventory_data *data = building_distribution_get_inventory_data(market, needed_inventory, MAX_DISTANCE);
-    if (!data) {
+    if (needed_inventory == INVENTORY_FLAG_NONE) {
         return 0;
     }
-
+    inventory_data data[INVENTORY_MAX];
+    if (!building_distribution_get_inventory_data(data, market, MAX_DISTANCE)) {
+        return 0;
+    }
     // Prefer whichever good we don't have
-    int fetch_inventory = building_distribution_fetch(market, data, 0, 1, INVENTORY_FLAG_ALL);
+    int fetch_inventory = building_distribution_fetch(market, data, 0, 1, needed_inventory);
     if (fetch_inventory != INVENTORY_NONE) {
         market->data.market.fetch_inventory_id = fetch_inventory;
         return data[fetch_inventory].building_id;
     }
-
     // Then prefer smallest stock below baseline stock
-    fetch_inventory = building_distribution_fetch(market, data, BASELINE_STOCK, 0, INVENTORY_FLAG_ALL);
+    fetch_inventory = building_distribution_fetch(market, data, BASELINE_STOCK, 0, needed_inventory);
     if (fetch_inventory != INVENTORY_NONE) {
         market->data.market.fetch_inventory_id = fetch_inventory;
         return data[fetch_inventory].building_id;
     }    
-
     // All items well stocked: pick food below threshold
-    fetch_inventory = building_distribution_fetch(market, data, MAX_FOOD, 0, INVENTORY_FLAG_ALL_FOODS);
+    fetch_inventory = building_distribution_fetch(market, data, MAX_FOOD, 0, needed_inventory & INVENTORY_FLAG_ALL_FOODS);
     if (fetch_inventory != INVENTORY_NONE) {
         market->data.market.fetch_inventory_id = fetch_inventory;
         return data[fetch_inventory].building_id;
     }
-
     return 0;
 }

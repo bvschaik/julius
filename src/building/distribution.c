@@ -7,8 +7,6 @@
 
 #include <string.h>
 
-static inventory_data data[INVENTORY_MAX];
-
 static const int INVENTORY_SEARCH_ORDER[INVENTORY_MAX] = {
     INVENTORY_WHEAT, INVENTORY_VEGETABLES, INVENTORY_FRUIT, INVENTORY_MEAT,
     INVENTORY_POTTERY, INVENTORY_FURNITURE, INVENTORY_OIL, INVENTORY_WINE
@@ -51,19 +49,11 @@ static void update_good_resource(inventory_data *data, resource_type resource, b
     }
 }
 
-inventory_data *building_distribution_get_inventory_data(building *b, int needed_inventory, int max_distance)
+int building_distribution_get_inventory_data(inventory_data *data, building *b, int max_distance)
 {
-    memset(data, 0, sizeof(data));
-
-    int can_go;
     for (int i = 0; i < INVENTORY_MAX; i++) {
-        if (inventory_is_set(needed_inventory, i)) {
-            data[i].min_distance = max_distance;
-            can_go = 1;
-        }
-    }
-    if (!can_go) {
-        return 0;
+        data[i].min_distance = max_distance;
+        data[i].building_id = 0;
     }
 
     int permission; 
@@ -97,12 +87,10 @@ inventory_data *building_distribution_get_inventory_data(building *b, int needed
         }
     }
 
-    can_go = 0;
     for (int i = 0; i < INVENTORY_MAX; i++) {
         if (data[i].building_id) {
-            can_go = 1;
-            break;
+            return 1;
         }
     }
-    return can_go ? data : 0;
+    return 0;
 }

@@ -25,11 +25,8 @@ int building_temple_get_storage_destination(building *temple)
     if (!building_is_ceres_temple(temple->type)) { // Ceres module 2
         return 0;
     }
-    int allowed_inventory = INVENTORY_FLAG_ALL_FOODS;
-    inventory_set(&allowed_inventory, INVENTORY_WINE);
-    
-    inventory_data *data = building_distribution_get_inventory_data(temple, allowed_inventory, INFINITE);
-    if (!data) {
+    inventory_data data[INVENTORY_MAX];
+    if (!building_distribution_get_inventory_data(data, temple, INFINITE)) {
         return 0;
     }
     int inventory;
