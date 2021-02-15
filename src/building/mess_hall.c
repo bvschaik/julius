@@ -1,4 +1,4 @@
-#include "tavern.h"
+#include "mess_hall.h"
 
 #include "building/distribution.h"
 #include "game/resource.h"

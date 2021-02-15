@@ -1,4 +1,3 @@
-
 #include "temple.h"
 
 #include "building/distribution.h"
