@@ -84,15 +84,19 @@ static void init(file_type type, file_dialog_type dialog_type)
 {
     data.type = type;
     data.file_data = type == FILE_TYPE_SCENARIO ? &scenario_data : &saved_game_data;
-    if (strlen(data.file_data->last_loaded_file) == 0) {
-        string_copy(lang_get_string(9, type == FILE_TYPE_SCENARIO ? 7 : 6), data.typed_name, FILE_NAME_MAX);
-        encoding_to_utf8(data.typed_name, data.file_data->last_loaded_file, FILE_NAME_MAX, 0);
-        file_append_extension(data.file_data->last_loaded_file, data.file_data->extension);
-    } else {
+    data.dialog_type = dialog_type;
+
+    if (strlen(data.file_data->last_loaded_file) > 0) {
         encoding_from_utf8(data.file_data->last_loaded_file, data.typed_name, FILE_NAME_MAX);
         file_remove_extension(data.typed_name);
+    } else if (dialog_type == FILE_DIALOG_SAVE) {
+        // Suggest default filename
+        string_copy(lang_get_string(9, type == FILE_TYPE_SCENARIO ? 7 : 6), data.typed_name, FILE_NAME_MAX);
+    } else {
+        // Use empty string
+        data.typed_name[0] = 0;
     }
-    data.dialog_type = dialog_type;
+
     data.message_not_exist_start_time = 0;
 
     data.file_list = dir_find_files_with_extension(data.file_data->extension);
