@@ -71,6 +71,7 @@ static struct {
 
     file_type_data *file_data;
     uint8_t typed_name[FILE_NAME_MAX];
+    uint8_t previously_seen_typed_name[FILE_NAME_MAX];
     char selected_file[FILE_NAME_MAX];
 } data;
 
@@ -78,6 +79,25 @@ static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE, 0, data.t
 
 static file_type_data saved_game_data = {"sav"};
 static file_type_data scenario_data = {"map"};
+
+static void scroll_to_typed_text(void)
+{
+    char name_utf8[FILE_NAME_MAX];
+    encoding_to_utf8(data.typed_name, name_utf8, FILE_NAME_MAX, encoding_system_uses_decomposed());
+    size_t len = strlen(name_utf8);
+    if (len == 0) {
+        return;
+    }
+    for (int i = 0; i < data.file_list->num_files; i++) {
+        int cmp_result = strncasecmp(data.file_list->files[i], name_utf8, len);
+        if (cmp_result == 0) {
+            scrollbar_reset(&scrollbar, calc_bound(i, 0, data.file_list->num_files - NUM_FILES_IN_VIEW));
+        }
+        if (cmp_result >= 0) {
+            break;
+        }
+    }
+}
 
 static void init(file_type type, file_dialog_type dialog_type)
 {
@@ -99,9 +119,11 @@ static void init(file_type type, file_dialog_type dialog_type)
         // Use empty string
         data.typed_name[0] = 0;
     }
+    string_copy(data.typed_name, data.previously_seen_typed_name, FILE_NAME_MAX);
 
     data.file_list = dir_find_files_with_extension(data.file_data->extension);
     scrollbar_init(&scrollbar, 0, data.file_list->num_files - NUM_FILES_IN_VIEW);
+    scroll_to_typed_text();
 
     strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
     input_box_start(&file_name_input);
@@ -145,6 +167,15 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
+static int typed_text_has_changed()
+{
+    if (string_equals(data.previously_seen_typed_name, data.typed_name)) {
+        return 0;
+    }
+    string_copy(data.typed_name, data.previously_seen_typed_name, FILE_NAME_MAX);
+    return 1;
+}
+
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     data.double_click = m->left.double_click;
@@ -164,6 +195,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (input_go_back_requested(m, h)) {
         input_box_stop(&file_name_input);
         window_go_back();
+    }
+
+    if (typed_text_has_changed()) {
+        scroll_to_typed_text();
     }
 }
 
@@ -253,6 +288,7 @@ static void button_select_file(int index, int param2)
         strncpy(data.selected_file, data.file_list->files[scrollbar.scroll_position + index], FILE_NAME_MAX - 1);
         encoding_from_utf8(data.selected_file, data.typed_name, FILE_NAME_MAX);
         file_remove_extension(data.typed_name);
+        string_copy(data.typed_name, data.previously_seen_typed_name, FILE_NAME_MAX);
         input_box_refresh_text(&file_name_input);
         data.message_not_exist_start_time = 0;
     }
