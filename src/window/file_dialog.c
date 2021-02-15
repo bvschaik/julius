@@ -66,6 +66,7 @@ static struct {
     file_type type;
     file_dialog_type dialog_type;
     int focus_button_id;
+    int double_click;
     const dir_listing *file_list;
 
     file_type_data *file_data;
@@ -78,13 +79,15 @@ static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE, 0, data.t
 static file_type_data saved_game_data = {"sav"};
 static file_type_data scenario_data = {"map"};
 
-static int double_click = 0;
-
 static void init(file_type type, file_dialog_type dialog_type)
 {
     data.type = type;
     data.file_data = type == FILE_TYPE_SCENARIO ? &scenario_data : &saved_game_data;
     data.dialog_type = dialog_type;
+
+    data.message_not_exist_start_time = 0;
+    data.double_click = 0;
+    data.focus_button_id = 0;
 
     if (strlen(data.file_data->last_loaded_file) > 0) {
         encoding_from_utf8(data.file_data->last_loaded_file, data.typed_name, FILE_NAME_MAX);
@@ -96,8 +99,6 @@ static void init(file_type type, file_dialog_type dialog_type)
         // Use empty string
         data.typed_name[0] = 0;
     }
-
-    data.message_not_exist_start_time = 0;
 
     data.file_list = dir_find_files_with_extension(data.file_data->extension);
     scrollbar_init(&scrollbar, 0, data.file_list->num_files - NUM_FILES_IN_VIEW);
@@ -146,7 +147,7 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    double_click = m->left.double_click;
+    data.double_click = m->left.double_click;
 
     if (input_box_is_accepted(&file_name_input)) {
         button_ok_cancel(1, 0);
@@ -255,8 +256,8 @@ static void button_select_file(int index, int param2)
         input_box_refresh_text(&file_name_input);
         data.message_not_exist_start_time = 0;
     }
-    if (data.dialog_type != FILE_DIALOG_DELETE && double_click) {
-        double_click = 0;
+    if (data.dialog_type != FILE_DIALOG_DELETE && data.double_click) {
+        data.double_click = 0;
         button_ok_cancel(1, 0);
     }
 }
