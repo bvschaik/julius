@@ -80,22 +80,36 @@ static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE, 0, data.t
 static file_type_data saved_game_data = {"sav"};
 static file_type_data scenario_data = {"map"};
 
+static int find_first_file_with_prefix(const char *prefix)
+{
+    int len = strlen(prefix);
+    if (len == 0) {
+        return -1;
+    }
+    int left = 0;
+    int right = data.file_list->num_files;
+    while (left < right) {
+        int middle = (left + right) / 2;
+        if (string_compare_case_insensitive_prefix(data.file_list->files[middle], prefix, len) >= 0) {
+            right = middle;
+        } else {
+            left = middle + 1;
+        }
+    }
+    if (string_compare_case_insensitive_prefix(data.file_list->files[left], prefix, len) == 0) {
+        return left;
+    } else {
+        return -1;
+    }
+}
+
 static void scroll_to_typed_text(void)
 {
     char name_utf8[FILE_NAME_MAX];
     encoding_to_utf8(data.typed_name, name_utf8, FILE_NAME_MAX, encoding_system_uses_decomposed());
-    size_t len = strlen(name_utf8);
-    if (len == 0) {
-        return;
-    }
-    for (int i = 0; i < data.file_list->num_files; i++) {
-        int cmp_result = strncasecmp(data.file_list->files[i], name_utf8, len);
-        if (cmp_result == 0) {
-            scrollbar_reset(&scrollbar, calc_bound(i, 0, data.file_list->num_files - NUM_FILES_IN_VIEW));
-        }
-        if (cmp_result >= 0) {
-            break;
-        }
+    int index = find_first_file_with_prefix(name_utf8);
+    if (index >= 0) {
+        scrollbar_reset(&scrollbar, calc_bound(index, 0, data.file_list->num_files - NUM_FILES_IN_VIEW));
     }
 }
 
