@@ -2,6 +2,28 @@
 
 #include <ctype.h>
 
+#if _MSC_VER
+// Of course MSVC is the only compiler that doesn't have strcasecmp...
+#include <string.h>
+#define strcasecmp _stricmp
+#define strncasecmp _strnicmp
+#else
+#include <strings.h>
+#endif
+
+int string_equals(const uint8_t *a, const uint8_t *b)
+{
+    while (*a && *b && *a == *b) {
+        ++a;
+        ++b;
+    }
+    if (*a == 0 && *b == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 void string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
 {
     int length = 0;
@@ -124,33 +146,10 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign)
 
 int string_compare_case_insensitive(const char *a, const char *b)
 {
-    while (*a && *b) {
-        int aa = tolower(*a);
-        int bb = tolower(*b);
-        if (aa != bb) {
-            return aa - bb;
-        }
-        ++a;
-        ++b;
-    }
-    if (*a) {
-        return 1;
-    }
-    if (*b) {
-        return -1;
-    }
-    return 0;
+    return strcasecmp(a, b);
 }
 
-int string_equals(const uint8_t *a, const uint8_t *b)
+int string_compare_case_insensitive_prefix(const char *full_string, const char *prefix, int prefix_len)
 {
-    while (*a && *b && *a == *b) {
-        ++a;
-        ++b;
-    }
-    if (*a == 0 && *b == 0) {
-        return 1;
-    } else {
-        return 0;
-    }
+    return strncasecmp(full_string, prefix, prefix_len);
 }

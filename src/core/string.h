@@ -9,6 +9,14 @@
  */
 
 /**
+ * Checks if the two strings are equal
+ * @param a String A
+ * @param b String B
+ * @return Boolean true if the strings are equal, false if they differ
+ */
+int string_equals(const uint8_t *a, const uint8_t *b);
+
+/**
  * Copies a string
  * @param src Source string
  * @param dst Destination string
@@ -55,11 +63,12 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign);
 int string_compare_case_insensitive(const char *a, const char *b);
 
 /**
- * Checks if the two strings are equal
- * @param a String A
- * @param b String B
- * @return Boolean true if the strings are equal, false if they differ
+ * Checks if the full string starts with the given prefix in a case-insensitive way
+ * @param full_string String to check
+ * @param prefix Prefix to check for
+ * @param prefix_len Length of the prefix
+ * @return Negative if full_string < prefix, 0 if full_string starts with prefix, positive if full_string > prefix
  */
-int string_equals(const uint8_t *a, const uint8_t *b);
+int string_compare_case_insensitive_prefix(const char *full_string, const char *prefix, int prefix_len);
 
 #endif // CORE_STRING_H
