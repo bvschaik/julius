@@ -299,6 +299,7 @@ static int get_input_for_mapping(const joystick_info *joystick, const mapping_el
                     default:
                         current_value = 0;
                         log_info("Invalid hat value for hat", 0, element_id);
+                        break;
                 }
                 break;
             }
@@ -378,6 +379,7 @@ static void translate_input_for_element(mapped_input *input, joystick_element tr
                 break;
             default:
                 input->value *= 32767;
+                break;
         }
     } else if (translated_element == JOYSTICK_ELEMENT_TRACKBALL) {
         switch (input->element) {
@@ -386,6 +388,7 @@ static void translate_input_for_element(mapped_input *input, joystick_element tr
                 break;
             default:
                 input->value *= 5;
+                break;
         }
     } else if (translated_element == JOYSTICK_ELEMENT_BUTTON || translated_element == JOYSTICK_ELEMENT_HAT) {
         input->value = (input->value != 0) ? 1 : 0;
