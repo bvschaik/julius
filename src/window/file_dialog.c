@@ -20,6 +20,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "platform/file_manager.h"
 #include "widget/input_box.h"
 #include "window/city.h"
 #include "window/editor/map.h"
@@ -90,13 +91,13 @@ static int find_first_file_with_prefix(const char *prefix)
     int right = data.file_list->num_files;
     while (left < right) {
         int middle = (left + right) / 2;
-        if (string_compare_case_insensitive_prefix(data.file_list->files[middle], prefix, len) >= 0) {
+        if (platform_file_manager_compare_filename_prefix(data.file_list->files[middle], prefix, len) >= 0) {
             right = middle;
         } else {
             left = middle + 1;
         }
     }
-    if (string_compare_case_insensitive_prefix(data.file_list->files[left], prefix, len) == 0) {
+    if (platform_file_manager_compare_filename_prefix(data.file_list->files[left], prefix, len) == 0) {
         return left;
     } else {
         return -1;
@@ -181,7 +182,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static int typed_text_has_changed()
+static int typed_text_has_changed(void)
 {
     if (string_equals(data.previously_seen_typed_name, data.typed_name)) {
         return 0;

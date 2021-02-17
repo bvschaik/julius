@@ -1,16 +1,5 @@
 #include "core/string.h"
 
-#include <ctype.h>
-
-#if _MSC_VER
-// Of course MSVC is the only compiler that doesn't have strcasecmp...
-#include <string.h>
-#define strcasecmp _stricmp
-#define strncasecmp _strnicmp
-#else
-#include <strings.h>
-#endif
-
 int string_equals(const uint8_t *a, const uint8_t *b)
 {
     while (*a && *b && *a == *b) {
@@ -142,14 +131,4 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign)
     }
 
     return total_chars;
-}
-
-int string_compare_case_insensitive(const char *a, const char *b)
-{
-    return strcasecmp(a, b);
-}
-
-int string_compare_case_insensitive_prefix(const char *full_string, const char *prefix, int prefix_len)
-{
-    return strncasecmp(full_string, prefix, prefix_len);
 }
