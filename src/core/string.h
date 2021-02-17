@@ -54,21 +54,4 @@ int string_to_int(const uint8_t *str);
  */
 int string_from_int(uint8_t *dst, int value, int force_plus_sign);
 
-/**
- * Compares the two strings case insensitively, used exclusively for filenames
- * @param a String A
- * @param b String B
- * @return Negative if A < B, positive if A > B, zero if A == B
- */
-int string_compare_case_insensitive(const char *a, const char *b);
-
-/**
- * Checks if the full string starts with the given prefix in a case-insensitive way
- * @param full_string String to check
- * @param prefix Prefix to check for
- * @param prefix_len Length of the prefix
- * @return Negative if full_string < prefix, 0 if full_string starts with prefix, positive if full_string > prefix
- */
-int string_compare_case_insensitive_prefix(const char *full_string, const char *prefix, int prefix_len);
-
 #endif // CORE_STRING_H
