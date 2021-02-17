@@ -14,8 +14,25 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define HOTKEY_OFFSET MAPPING_ACTION_ROTATE_MAP_LEFT
+#define MAX_HOTKEYS 6
+#define MAX_AXIS 8
+#define MAX_BUTTONS 20
+#define MAX_TRACKBALLS 4
+#define MAX_HATS 4
+#define MAX_CONTROLLERS 6
+
+#define AXIS_MAX_THRESHOLD 1300
+
 typedef int joystick_axis;
 typedef int joystick_button;
+
+enum {
+    JOYSTICK_TRACKBALL_X_POSITIVE = 0,
+    JOYSTICK_TRACKBALL_X_NEGATIVE = 1,
+    JOYSTICK_TRACKBALL_Y_POSITIVE = 2,
+    JOYSTICK_TRACKBALL_Y_NEGATIVE = 3,
+};
 
 enum {
     DIRECTION_UP = 0,
@@ -48,10 +65,10 @@ typedef struct {
     int id;
     int connected;
     joystick_model *model;
-    joystick_axis axis[JOYSTICK_MAX_AXIS];
-    joystick_button button[JOYSTICK_MAX_BUTTONS];
-    joystick_trackball trackball[JOYSTICK_MAX_TRACKBALLS];
-    joystick_hat hat[JOYSTICK_MAX_HATS];
+    joystick_axis axis[MAX_AXIS];
+    joystick_button button[MAX_BUTTONS];
+    joystick_trackball trackball[MAX_TRACKBALLS];
+    joystick_hat hat[MAX_HATS];
 } joystick_info;
 
 typedef struct {
@@ -66,12 +83,9 @@ enum {
     CURSOR_SLOWDOWN_SLOWER = 8192
 };
 
-#define JOYSTICK_HOTKEY_OFFSET MAPPING_ACTION_ROTATE_MAP_LEFT
-#define JOYSTICK_MAX_HOTKEYS 6
-
 static struct {
-    joystick_model connected_models[JOYSTICK_MAX_CONTROLLERS];
-    joystick_info joystick[JOYSTICK_MAX_CONTROLLERS];
+    joystick_model connected_models[MAX_CONTROLLERS];
+    joystick_info joystick[MAX_CONTROLLERS];
     int connected_joysticks;
     struct {
         speed_type x_speed;
@@ -83,12 +97,12 @@ static struct {
         time_millis last_scroll_time;
     } mouse;
     mapped_input map_scroll[NUM_DIRECTIONS];
-    mapped_input joystick_hotkey[JOYSTICK_MAX_HOTKEYS];
+    mapped_input joystick_hotkey[MAX_HOTKEYS];
     mapped_input virtual_keyboard;
     mapped_input touch_mode;
 } data;
 
-static hotkey_action JOYSTICK_MAPPING_TO_HOTKEY_ACTION[JOYSTICK_MAX_HOTKEYS] = {
+static hotkey_action JOYSTICK_MAPPING_TO_HOTKEY_ACTION[MAX_HOTKEYS] = {
     HOTKEY_ROTATE_MAP_LEFT,
     HOTKEY_ROTATE_MAP_RIGHT,
     HOTKEY_INCREASE_GAME_SPEED,
@@ -96,28 +110,6 @@ static hotkey_action JOYSTICK_MAPPING_TO_HOTKEY_ACTION[JOYSTICK_MAX_HOTKEYS] = {
     HOTKEY_TOGGLE_PAUSE,
     HOTKEY_CYCLE_LEGION
 };
-
-joystick_model *joystick_get_model_by_guid(const char *guid)
-{
-    for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
-        joystick_model *model = &data.connected_models[i];
-        if (strcmp(guid, model->guid) == 0) {
-            return model;
-        }
-    }
-    return 0;
-}
-
-joystick_model *joystick_get_first_unused_model(void)
-{
-    for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
-        joystick_model *model = &data.connected_models[i];
-        if (!model->connected_joysticks) {
-            return model;
-        }
-    }
-    return 0;
-}
 
 static void update_hat(joystick_hat *hat, joystick_hat_position position)
 {
@@ -133,37 +125,17 @@ static void update_trackball(joystick_trackball *trackball, int delta_x, int del
     trackball->delta_y += delta_y;
 }
 
-static void joystick_reset_all_button_states(joystick_info *joystick)
+static void reset_joystick_state(joystick_info *joystick)
 {
-    memset(joystick->button, 0, sizeof(joystick_button) * JOYSTICK_MAX_BUTTONS);
-}
-
-static void joystick_reset_all_axis_states(joystick_info *joystick)
-{
-    memset(joystick->axis, 0, sizeof(int) * JOYSTICK_MAX_AXIS);
-}
-
-static void joystick_reset_all_hat_states(joystick_info *joystick)
-{
-    memset(joystick->hat, 0, sizeof(joystick_hat) * JOYSTICK_MAX_HATS);
-}
-
-static void joystick_reset_all_trackball_states(joystick_info *joystick)
-{
-    memset(joystick->trackball, 0, sizeof(joystick_trackball) * JOYSTICK_MAX_TRACKBALLS);
-}
-
-static void joystick_reset_state(joystick_info *joystick)
-{
-    joystick_reset_all_axis_states(joystick);
-    joystick_reset_all_button_states(joystick);
-    joystick_reset_all_trackball_states(joystick);
-    joystick_reset_all_hat_states(joystick);
+    memset(joystick->axis, 0, sizeof(int) * MAX_AXIS);
+    memset(joystick->button, 0, sizeof(joystick_button) * MAX_BUTTONS);
+    memset(joystick->trackball, 0, sizeof(joystick_trackball) * MAX_TRACKBALLS);
+    memset(joystick->hat, 0, sizeof(joystick_hat) * MAX_HATS);
 }
 
 static joystick_info *get_free_joystick(void)
 {
-    for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
+    for (int i = 0; i < MAX_CONTROLLERS; ++i) {
         if (!data.joystick[i].connected) {
             return &data.joystick[i];
         }
@@ -171,20 +143,37 @@ static joystick_info *get_free_joystick(void)
     return 0;
 }
 
-static joystick_info *get_joystick_from_id(int joystick_id)
+static joystick_model *get_model_by_guid(const char *guid)
 {
-    for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
-        if (data.joystick[i].id == joystick_id && data.joystick[i].connected) {
-            return &data.joystick[i];
+    for (int i = 0; i < MAX_CONTROLLERS; ++i) {
+        joystick_model *model = &data.connected_models[i];
+        if (strcmp(guid, model->guid) == 0) {
+            return model;
         }
     }
     return 0;
 }
 
-int joystick_add(int joystick_id, joystick_model *model)
+int joystick_has_model(const char *guid)
+{
+    return get_model_by_guid(guid) != 0;
+}
+
+void joystick_add_model(const joystick_model *model)
+{
+    for (int i = 0; i < MAX_CONTROLLERS; ++i) {
+        if (!data.connected_models[i].connected_joysticks) {
+            memcpy(&data.connected_models[i], model, sizeof(joystick_model));
+            return;
+        }
+    }
+}
+
+int joystick_add(int joystick_id, const char *guid)
 {
     joystick_info *joystick = get_free_joystick();
-    if (!joystick) {
+    joystick_model *model = get_model_by_guid(guid);
+    if (!joystick || !model) {
         return 0;
     }
     joystick->id = joystick_id;
@@ -195,28 +184,38 @@ int joystick_add(int joystick_id, joystick_model *model)
     return 1;
 }
 
-int joystick_is_listened(int joystick_id)
+static joystick_info *get_joystick_by_id(int joystick_id)
 {
-    return get_joystick_from_id(joystick_id) != 0;
+    for (int i = 0; i < MAX_CONTROLLERS; ++i) {
+        if (data.joystick[i].id == joystick_id && data.joystick[i].connected) {
+            return &data.joystick[i];
+        }
+    }
+    return 0;
+}
+
+int joystick_is_active(int joystick_id)
+{
+    return get_joystick_by_id(joystick_id) != 0;
 }
 
 int joystick_remove(int joystick_id)
 {
-    joystick_info *joystick = get_joystick_from_id(joystick_id);
+    joystick_info *joystick = get_joystick_by_id(joystick_id);
     if (!joystick) {
         return 0;
     }
     joystick->connected = 0;
     joystick->model->connected_joysticks--;
     joystick->model = 0;
-    joystick_reset_state(joystick);
+    reset_joystick_state(joystick);
     data.connected_joysticks--;
     return 1;
 }
 
 void joystick_update_element(int joystick_id, joystick_element element, int element_id, int value1, int value2)
 {
-    joystick_info *joystick = get_joystick_from_id(joystick_id);
+    joystick_info *joystick = get_joystick_by_id(joystick_id);
     if (!joystick) {
         return;
     }
@@ -228,13 +227,14 @@ void joystick_update_element(int joystick_id, joystick_element element, int elem
             update_hat(&joystick->hat[element_id], value1);
             break;
         case JOYSTICK_ELEMENT_AXIS:
-            joystick->axis[element_id] = (abs(value1) > 1300) ? value1 : 0;
+            joystick->axis[element_id] = (abs(value1) > AXIS_MAX_THRESHOLD) ? value1 : 0;
             break;
         case JOYSTICK_ELEMENT_TRACKBALL:
             update_trackball(&joystick->trackball[element_id], value1, value2);
             break;
         default:
             log_info("Trying to update wrong joystick element", 0, element);
+            break;
     }
 }
 
@@ -348,15 +348,17 @@ static int get_joystick_input_for_action(mapping_action action, mapped_input *in
     input->value = 0;
     input->element = JOYSTICK_ELEMENT_NONE;
 
-    for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
+    for (int i = 0; i < MAX_CONTROLLERS; ++i) {
         const joystick_info *joystick = &data.joystick[i];
         if (!joystick->connected) {
             continue;
         }
-        if(get_input_for_mapping(joystick, &joystick->model->first_mapping[action], input) ||
-           get_input_for_mapping(joystick, &joystick->model->second_mapping[action], input)) {
-            set_input_state(input);
-            return 1;
+        const joystick_model *model = joystick->model;
+        for (int j = 0; j < model->num_mappings; j++) {
+            if (model->mapping[j].action == action && get_input_for_mapping(joystick, &model->mapping[j], input)) {
+                set_input_state(input);
+                return 1;
+            }
         }
     }
     set_input_state(input);
@@ -393,13 +395,13 @@ static void translate_input_for_element(mapped_input *input, joystick_element tr
 
 static int rescale_axis(mapped_input *inputs)
 {
-    //radial and scaled dead_zone
-    //http://www.third-helix.com/2013/04/12/doing-thumbstick-dead-zones-right.html
-    //input and output values go from -32767...+32767;
+    // Radial and scaled dead_zone
+    // http://www.third-helix.com/2013/04/12/doing-thumbstick-dead-zones-right.html
+    // Input and output values go from -32767 to 32767
 
-    //the maximum is adjusted to account for SCE_CTRL_MODE_DIGITALANALOG_WIDE
-    //where a reported maximum axis value corresponds to 80% of the full range
-    //of motion of the analog stick
+    // The maximum is adjusted to account for SCE_CTRL_MODE_DIGITALANALOG_WIDE
+    // where a reported maximum axis value corresponds to 80% of the full range
+    // of motion of the analog stick
     const float max_axis = 32767.0f;
     float analog_x = (float) inputs[DIRECTION_RIGHT].value - inputs[DIRECTION_LEFT].value;
     float analog_y = (float) inputs[DIRECTION_DOWN].value - inputs[DIRECTION_UP].value;
@@ -414,7 +416,7 @@ static int rescale_axis(mapped_input *inputs)
     if (magnitude < dead_zone) {
         return 0;
     }
-    //adjust maximum magnitude
+    // Adjust maximum magnitude
     float abs_analog_x = fabsf(analog_x);
     float abs_analog_y = fabsf(analog_y);
     float max_x;
@@ -430,12 +432,12 @@ static int rescale_axis(mapped_input *inputs)
     if (maximum > 1.25f * max_axis) maximum = 1.25f * max_axis;
     if (maximum < magnitude) maximum = magnitude;
 
-    // find scaled axis values with magnitudes between zero and maximum
+    // Find scaled axis values with magnitudes between zero and maximum
     float scalingFactor = maximum / magnitude * (magnitude - dead_zone) / (maximum - dead_zone);
     analog_x = (analog_x * scalingFactor);
     analog_y = (analog_y * scalingFactor);
 
-    // clamp to ensure results will never exceed the max_axis value
+    // Clamp to ensure results will never exceed the max_axis value
     float clamping_factor = 1.0f;
     abs_analog_x = fabsf(analog_x);
     abs_analog_y = fabsf(analog_y);
@@ -472,10 +474,7 @@ static joystick_element get_highest_priority_element(mapped_input *inputs, int t
 
 static int translate_mapping_reset(void)
 {
-    if (!get_joystick_input_for_action(MAPPING_ACTION_RESET_MAPPING, 0)) {
-        return 0;
-    }
-    return 1;
+    return get_joystick_input_for_action(MAPPING_ACTION_RESET_MAPPING, 0);
 }
 
 static int translate_mouse_cursor_position(void)
@@ -658,8 +657,8 @@ static int translate_map_scrolling(void)
 static int translate_hotkeys(void)
 {
     int handled = 0;
-    for (int i = 0; i < JOYSTICK_MAX_HOTKEYS; ++i) {
-        int value = get_joystick_input_for_action(JOYSTICK_HOTKEY_OFFSET + i, &data.joystick_hotkey[i]);
+    for (int i = 0; i < MAX_HOTKEYS; ++i) {
+        int value = get_joystick_input_for_action(HOTKEY_OFFSET + i, &data.joystick_hotkey[i]);
         handled |= value;
         if (value) {
             if (data.joystick_hotkey[i].state == INPUT_STATE_WENT_DOWN) {
@@ -704,8 +703,8 @@ int joystick_to_mouse_and_keyboard(void)
         handled |= translate_hotkeys();
         handled |= translate_system_functions();
     }
-    for (int i = 0; i < JOYSTICK_MAX_CONTROLLERS; ++i) {
-        joystick_reset_all_trackball_states(&data.joystick[i]);
+    for (int i = 0; i < MAX_CONTROLLERS; ++i) {
+        memset(data.joystick[i].trackball, 0, sizeof(joystick_trackball) * MAX_TRACKBALLS);
     }
     if (handled) {
         mouse_remove_touch();
