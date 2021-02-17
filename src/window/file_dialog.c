@@ -83,7 +83,7 @@ static file_type_data scenario_data = {"map"};
 
 static int find_first_file_with_prefix(const char *prefix)
 {
-    int len = strlen(prefix);
+    int len = (int) strlen(prefix);
     if (len == 0) {
         return -1;
     }
@@ -182,13 +182,18 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static int typed_text_has_changed(void)
+static int should_scroll_to_typed_text(void)
 {
     if (string_equals(data.previously_seen_typed_name, data.typed_name)) {
         return 0;
     }
+    int scroll = 0;
+    // Only scroll when adding characters to the typed name
+    if (string_length(data.typed_name) > string_length(data.previously_seen_typed_name)) {
+        scroll = 1;
+    }
     string_copy(data.typed_name, data.previously_seen_typed_name, FILE_NAME_MAX);
-    return 1;
+    return scroll;
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -212,7 +217,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         window_go_back();
     }
 
-    if (typed_text_has_changed()) {
+    if (should_scroll_to_typed_text()) {
         scroll_to_typed_text();
     }
 }
@@ -225,7 +230,7 @@ static const char *get_chosen_filename(void)
     file_remove_extension(selected_name);
 
     if (string_equals(selected_name, data.typed_name)) {
-        // user has not modified the string after selecting it: use filename
+        // User has not modified the string after selecting it: use filename
         return data.selected_file;
     }
 
