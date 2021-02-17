@@ -432,13 +432,17 @@ static int rescale_axis(mapped_input *inputs)
         max_y = max_axis;
     }
     float maximum = sqrtf(max_x * max_x + max_y * max_y);
-    if (maximum > 1.25f * max_axis) maximum = 1.25f * max_axis;
-    if (maximum < magnitude) maximum = magnitude;
+    if (maximum > 1.25f * max_axis) {
+        maximum = 1.25f * max_axis;
+    }
+    if (maximum < magnitude) {
+        maximum = magnitude;
+    }
 
     // Find scaled axis values with magnitudes between zero and maximum
-    float scalingFactor = maximum / magnitude * (magnitude - dead_zone) / (maximum - dead_zone);
-    analog_x = (analog_x * scalingFactor);
-    analog_y = (analog_y * scalingFactor);
+    float scaling_factor = maximum / magnitude * (magnitude - dead_zone) / (maximum - dead_zone);
+    analog_x = (analog_x * scaling_factor);
+    analog_y = (analog_y * scaling_factor);
 
     // Clamp to ensure results will never exceed the max_axis value
     float clamping_factor = 1.0f;
