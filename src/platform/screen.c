@@ -196,7 +196,7 @@ int platform_screen_resize(int pixel_width, int pixel_height)
 
     setting_set_display(setting_fullscreen(), logical_width, logical_height);
     SDL.texture = SDL_CreateTexture(SDL.renderer,
-        SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING,
+        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
         logical_width, logical_height);
 
     if (SDL.texture) {
@@ -354,7 +354,9 @@ void platform_screen_render(int update_screen)
 {
     if (update_screen) {
         SDL_RenderClear(SDL.renderer);
+#ifndef __vita__
         SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
+#endif
         SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR
         draw_software_mouse_cursor();
@@ -404,7 +406,13 @@ int system_is_fullscreen_only(void)
 
 color_t *system_create_framebuffer(int width, int height)
 {
+#ifdef __vita__
+    int pitch;
+    SDL_LockTexture(SDL.texture, NULL, (void **)&framebuffer, &pitch);
+    SDL_UnlockTexture(SDL.texture);
+#else
     free(framebuffer);
     framebuffer = (color_t *)malloc((size_t)width * height * sizeof(color_t));
+#endif
     return framebuffer;
 }

@@ -16,10 +16,10 @@ cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game
 cmake_dependent_option(ANDROID_BUILD "Build for the Android environment." OFF "NOT MSVC; NOT VITA_BUILD; NOT SWITCH_BUILD" OFF)
 
 if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    if(DEFINED ENV{DOLCESDK})
-        set(CMAKE_TOOLCHAIN_FILE "$ENV{DOLCESDK}/share/dolce.toolchain.cmake" CACHE PATH "toolchain file")
+    if(DEFINED ENV{VITASDK})
+        set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
     else()
-        message(FATAL_ERROR "Please define DOLCESDK to point to your SDK path!")
+        message(FATAL_ERROR "Please define VITASDK to point to your SDK path!")
     endif()
 endif()
 
@@ -37,7 +37,7 @@ set(USER_FRIENDLY_NAME Julius)
 project(${SHORT_NAME} C)
 
 if (VITA_BUILD)
-    include("${DOLCESDK}/share/dolce.cmake" REQUIRED)
+    include("${VITASDK}/share/vita.cmake" REQUIRED)
     set(VITA_TITLEID  "JULIUS001")
 endif()
 
@@ -710,7 +710,7 @@ endif()
 
 if(VITA_BUILD)
     include_directories(
-        $ENV{DOLCESDK}/arm-dolce-eabi/include
+        $ENV{VITASDK}/arm-vita-eabi/include
         ${CMAKE_CURRENT_SOURCE_DIR}
     )
 elseif (SWITCH_BUILD)
@@ -738,14 +738,12 @@ if (VITA_BUILD)
         mpg123
         FLAC
         ogg
-        pib
         m
         SceAppUtil_stub
         SceAudio_stub
         SceCommonDialog_stub
         SceCtrl_stub
         SceDisplay_stub
-        SceDisplayUser_stub
         SceGxm_stub
         SceHid_stub
         SceMotion_stub
@@ -756,14 +754,13 @@ if (VITA_BUILD)
         ScePower_stub
         ScePgf_stub
         SceAppMgr_stub
-        SceAppMgrUser_stub
     )
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -D__vita__")
     # this setting enables larger heap memory sizes on Vita, up to ~330 MB
     # useful for pre-loading videos into memory
-    set(DOLCE_MKSFOEX_FLAGS "${DOLCE_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
-    dolce_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
-    dolce_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
+    set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d ATTRIBUTE2=12")
+    vita_create_self(${SHORT_NAME}.self ${SHORT_NAME} UNSAFE UNCOMPRESSED)
+    vita_create_vpk(${SHORT_NAME}.vpk ${VITA_TITLEID} ${SHORT_NAME}.self
         VERSION ${VITA_VERSION}
         NAME ${SHORT_NAME}
         FILE res/vita/icon0.png sce_sys/icon0.png

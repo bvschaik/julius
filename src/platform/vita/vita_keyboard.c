@@ -2,6 +2,7 @@
 
 #include "core/calc.h"
 #include "core/encoding.h"
+#include "core/string.h"
 #include "platform/screen.h"
 
 #include <string.h>
@@ -11,6 +12,7 @@
 #include <psp2/kernel/processmgr.h>
 #include <psp2/ime_dialog.h>
 #include <psp2/message_dialog.h>
+#include <string.h>
 
 enum {
     IME_DIALOG_RESULT_NONE = 0,

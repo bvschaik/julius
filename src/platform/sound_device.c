@@ -11,7 +11,7 @@
 #include <string.h>
 
 #ifdef __vita__
-#include <psp2/kernel/iofilemgr.h>
+#include <psp2/io/fcntl.h>
 #endif
 
 #define AUDIO_RATE 22050
