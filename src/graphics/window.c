@@ -3,6 +3,7 @@
 #include "graphics/warning.h"
 #include "input/cursor.h"
 #include "input/hotkey.h"
+#include "input/joystick.h"
 #include "input/scroll.h"
 #include "input/touch.h"
 #include "window/city.h"
@@ -102,8 +103,10 @@ void window_go_back(void)
 
 static void update_input_before(void)
 {
-    if (!touch_to_mouse()) {
-        mouse_determine_button_state();  // touch overrides mouse
+    int handled = touch_to_mouse();
+    handled |= joystick_to_mouse_and_keyboard();
+    if (!handled) {
+        mouse_determine_button_state();  // touch and joystick override mouse
     }
     hotkey_handle_global_keys();
 }

@@ -1,0 +1,30 @@
+#ifndef SWITCH_PAD_H
+#define SWITCH_PAD_H
+
+enum {
+    SWITCH_PAD_A = 0,
+    SWITCH_PAD_B = 1,
+    SWITCH_PAD_X = 2,
+    SWITCH_PAD_Y = 3,
+    SWITCH_LSTICK = 4,
+    SWITCH_RSTICK = 5,
+    SWITCH_PAD_L = 6,
+    SWITCH_PAD_R = 7,
+    SWITCH_PAD_ZL = 8,
+    SWITCH_PAD_ZR = 9,
+    SWITCH_PAD_PLUS = 10,
+    SWITCH_PAD_MINUS = 11,
+    SWITCH_PAD_LEFT = 12,
+    SWITCH_PAD_UP = 13,
+    SWITCH_PAD_RIGHT = 14,
+    SWITCH_PAD_DOWN = 15
+};
+
+enum {
+    SWITCH_LEFT_ANALOG_X = 0,
+    SWITCH_LEFT_ANALOG_Y = 1,
+    SWITCH_RIGHT_ANALOG_X = 2,
+    SWITCH_RIGHT_ANALOG_Y = 3
+};
+
+#endif // SWITCH_PAD_H

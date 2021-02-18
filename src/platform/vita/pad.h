@@ -1,0 +1,26 @@
+#ifndef VITA_PAD_H
+#define VITA_PAD_H
+
+enum {
+    VITA_PAD_TRIANGLE = 0,
+    VITA_PAD_CIRCLE = 1,
+    VITA_PAD_CROSS = 2,
+    VITA_PAD_SQUARE = 3,
+    VITA_PAD_L = 4,
+    VITA_PAD_R = 5,
+    VITA_PAD_DOWN = 6,
+    VITA_PAD_LEFT = 7,
+    VITA_PAD_UP = 8,
+    VITA_PAD_RIGHT = 9,
+    VITA_PAD_SELECT = 10,
+    VITA_PAD_START = 11
+};
+
+enum {
+    VITA_LEFT_ANALOG_X = 0,
+    VITA_LEFT_ANALOG_Y = 1,
+    VITA_RIGHT_ANALOG_X = 2,
+    VITA_RIGHT_ANALOG_Y = 3
+};
+
+#endif // VITA_PAD_H

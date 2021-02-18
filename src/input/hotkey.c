@@ -46,14 +46,11 @@ static struct {
     int num_arrows;
 } data;
 
-static void add_definition(const hotkey_mapping *mapping)
+static void set_definition_for_action(hotkey_action action, hotkey_definition *def)
 {
-    hotkey_definition *def = &data.definitions[data.num_definitions];
-    def->key = mapping->key;
-    def->modifiers = mapping->modifiers;
     def->value = 1;
     def->repeatable = 0;
-    switch (mapping->action) {
+    switch (action) {
         case HOTKEY_TOGGLE_PAUSE:
             def->action = &data.hotkey_state.toggle_pause;
             break;
@@ -280,6 +277,14 @@ static void add_definition(const hotkey_mapping *mapping)
         default:
             def->action = 0;
     }
+}
+
+static void add_definition(const hotkey_mapping *mapping)
+{
+    hotkey_definition *def = &data.definitions[data.num_definitions];
+    def->key = mapping->key;
+    def->modifiers = mapping->modifiers;
+    set_definition_for_action(mapping->action, def);
     if (def->action) {
         data.num_definitions++;
     }
@@ -455,4 +460,11 @@ void hotkey_handle_global_keys(void)
     if (data.global_hotkey_state.save_city_screenshot) {
         graphics_save_screenshot(1);
     }
+}
+
+void hotkey_set_value_for_action(hotkey_action action, int value)
+{
+    hotkey_definition def;
+    set_definition_for_action(action, &def);
+    *(def.action) = value ? def.value : 0;
 }
