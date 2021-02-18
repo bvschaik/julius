@@ -22,7 +22,12 @@
 #define MAX_HATS 4
 #define MAX_CONTROLLERS 6
 
+#define DEADZONE 2000.0f
 #define AXIS_MAX_THRESHOLD 1300
+#define AXIS_MAX_VALUE 32767
+
+// Note: this ratio is untested and may be under or oversensitive
+#define TRACKBALL_TO_AXIS_RATIO 5
 
 typedef int joystick_axis;
 typedef int joystick_button;
@@ -341,7 +346,7 @@ static void set_input_state(mapped_input *input)
 
 static int get_joystick_input_for_action(mapping_action action, mapped_input *input)
 {
-    static mapped_input dummy_input;
+    static mapped_input dummy_input = { 0 };
     if (!input) {
         input = &dummy_input;
     }
@@ -372,22 +377,22 @@ static void translate_input_for_element(mapped_input *input, joystick_element tr
         return;
     }
     if (translated_element == JOYSTICK_ELEMENT_AXIS) {
-        switch(input->element)
+        switch (input->element)
         {
             case JOYSTICK_ELEMENT_TRACKBALL:
-                input->value *= 5; // TODO is this a high enough value? I doubt it
+                input->value *= TRACKBALL_TO_AXIS_RATIO;
                 break;
             default:
-                input->value *= 32767;
+                input->value *= AXIS_MAX_VALUE;
                 break;
         }
     } else if (translated_element == JOYSTICK_ELEMENT_TRACKBALL) {
         switch (input->element) {
             case JOYSTICK_ELEMENT_AXIS:
-                input->value /= 5; // TODO is this a high enough value? I doubt it
+                input->value /= TRACKBALL_TO_AXIS_RATIO;
                 break;
             default:
-                input->value *= 5;
+                input->value *= TRACKBALL_TO_AXIS_RATIO;
                 break;
         }
     } else if (translated_element == JOYSTICK_ELEMENT_BUTTON || translated_element == JOYSTICK_ELEMENT_HAT) {
@@ -400,15 +405,13 @@ static int rescale_axis(mapped_input *inputs)
 {
     // Radial and scaled dead_zone
     // http://www.third-helix.com/2013/04/12/doing-thumbstick-dead-zones-right.html
-    // Input and output values go from -32767 to 32767
+    // Input and output values go from -AXIS_MAX_VALUE to AXIS_MAX_VALUE
 
     // The maximum is adjusted to account for SCE_CTRL_MODE_DIGITALANALOG_WIDE
     // where a reported maximum axis value corresponds to 80% of the full range
     // of motion of the analog stick
-    const float max_axis = 32767.0f;
     float analog_x = (float) inputs[DIRECTION_RIGHT].value - inputs[DIRECTION_LEFT].value;
     float analog_y = (float) inputs[DIRECTION_DOWN].value - inputs[DIRECTION_UP].value;
-    float dead_zone = 2000.0f;
 
     inputs[DIRECTION_UP].value = 0;
     inputs[DIRECTION_LEFT].value = 0;
@@ -416,7 +419,7 @@ static int rescale_axis(mapped_input *inputs)
     inputs[DIRECTION_RIGHT].value = 0;
 
     float magnitude = sqrtf(analog_x * analog_x + analog_y * analog_y);
-    if (magnitude < dead_zone) {
+    if (magnitude < DEADZONE) {
         return 0;
     }
     // Adjust maximum magnitude
@@ -425,22 +428,22 @@ static int rescale_axis(mapped_input *inputs)
     float max_x;
     float max_y;
     if (abs_analog_x > abs_analog_y) {
-        max_x = max_axis;
-        max_y = (max_axis * analog_y) / abs_analog_x;
+        max_x = AXIS_MAX_VALUE;
+        max_y = (AXIS_MAX_VALUE * analog_y) / abs_analog_x;
     } else {
-        max_x = (max_axis * analog_x) / abs_analog_y;
-        max_y = max_axis;
+        max_x = (AXIS_MAX_VALUE * analog_x) / abs_analog_y;
+        max_y = AXIS_MAX_VALUE;
     }
     float maximum = sqrtf(max_x * max_x + max_y * max_y);
-    if (maximum > 1.25f * max_axis) {
-        maximum = 1.25f * max_axis;
+    if (maximum > 1.25f * AXIS_MAX_VALUE) {
+        maximum = 1.25f * AXIS_MAX_VALUE;
     }
     if (maximum < magnitude) {
         maximum = magnitude;
     }
 
     // Find scaled axis values with magnitudes between zero and maximum
-    float scaling_factor = maximum / magnitude * (magnitude - dead_zone) / (maximum - dead_zone);
+    float scaling_factor = maximum / magnitude * (magnitude - DEADZONE) / (maximum - DEADZONE);
     analog_x = (analog_x * scaling_factor);
     analog_y = (analog_y * scaling_factor);
 
@@ -448,11 +451,11 @@ static int rescale_axis(mapped_input *inputs)
     float clamping_factor = 1.0f;
     abs_analog_x = fabsf(analog_x);
     abs_analog_y = fabsf(analog_y);
-    if (abs_analog_x > max_axis || abs_analog_y > max_axis) {
+    if (abs_analog_x > AXIS_MAX_VALUE || abs_analog_y > AXIS_MAX_VALUE) {
         if (abs_analog_x > abs_analog_y) {
-            clamping_factor = max_axis / abs_analog_x;
+            clamping_factor = AXIS_MAX_VALUE / abs_analog_x;
         } else {
-            clamping_factor = max_axis / abs_analog_y;
+            clamping_factor = AXIS_MAX_VALUE / abs_analog_y;
         }
     }
     if (analog_y > 0.0f) {
@@ -486,7 +489,7 @@ static int translate_mapping_reset(void)
 
 static int translate_mouse_cursor_position(void)
 {
-    mapped_input cursor_input[NUM_DIRECTIONS];
+    mapped_input cursor_input[NUM_DIRECTIONS] = { 0 };
 
     int handled = get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_UP, &cursor_input[DIRECTION_UP]);
     handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_LEFT, &cursor_input[DIRECTION_LEFT]);
@@ -592,10 +595,10 @@ static int translate_window_scrolling(void)
 
     if (scroll_up.value) {
         current_scroll = SCROLL_UP;
-        max_scroll_time = max_scroll_time * 32767 / scroll_up.value;
+        max_scroll_time = max_scroll_time * AXIS_MAX_VALUE / scroll_up.value;
     } else if (scroll_down.value) {
         current_scroll = SCROLL_DOWN;
-        max_scroll_time = max_scroll_time * 32767 / scroll_down.value;
+        max_scroll_time = max_scroll_time * AXIS_MAX_VALUE / scroll_down.value;
     }
 
     if (current_scroll != SCROLL_NONE) {
