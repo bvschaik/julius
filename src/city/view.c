@@ -345,9 +345,6 @@ void city_view_rotate_left(void)
 
 void city_view_rotate_right(void)
 {
-
-    log_info("rotated, orientation", 0, data.orientation);
-
     int center_grid_offset = get_center_grid_offset();
 
     data.orientation -= 2;
