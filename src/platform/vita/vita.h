@@ -3,7 +3,7 @@
 
 #ifdef __vita__
 
-#include <vita2d.h>
+#include <stdint.h>
 
 #define VITA_PATH_PREFIX "ux0:/data/julius/"
 #define VITA_DISPLAY_WIDTH 960

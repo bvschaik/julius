@@ -18,7 +18,7 @@
 static char prepended_path[2 * FILE_NAME_MAX * sizeof(char)];
 
 // max heap size is approx. 330 MB with -d ATTRIBUTE2=12, otherwise max is 192
-int _newlib_heap_size_user = 300 * 1024 * 1024;
+int _newlib_heap_size_user = 330 * 1024 * 1024;
 
 static void center_mouse_cursor(void)
 {

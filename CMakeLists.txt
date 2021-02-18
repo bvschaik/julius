@@ -738,7 +738,6 @@ if (VITA_BUILD)
         mpg123
         FLAC
         ogg
-        vita2d
         m
         SceAppUtil_stub
         SceAudio_stub
@@ -747,6 +746,7 @@ if (VITA_BUILD)
         SceDisplay_stub
         SceGxm_stub
         SceHid_stub
+        SceMotion_stub
         SceIofilemgr_stub
         SceMotion_stub
         SceSysmodule_stub

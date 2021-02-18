@@ -180,7 +180,7 @@ static void run_and_draw(void)
         text_draw_number_colored(time_after_draw - time_between_run_and_draw,
             'd', "", 70, y_offset_text, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
     }
-
+    platform_screen_update();
     platform_screen_render();
 }
 #else
@@ -191,6 +191,7 @@ static void run_and_draw(void)
     game_run();
     game_draw();
 
+    platform_screen_update();
     platform_screen_render();
 }
 #endif
