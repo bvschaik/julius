@@ -81,21 +81,6 @@ static int big_people_image(figure_type type)
     return image_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type] - 1;
 }
 
-static int inventory_to_resource_id(int value)
-{
-    switch (value) {
-        case INVENTORY_WHEAT: return RESOURCE_WHEAT;
-        case INVENTORY_VEGETABLES: return RESOURCE_VEGETABLES;
-        case INVENTORY_FRUIT: return RESOURCE_FRUIT;
-        case INVENTORY_MEAT: return RESOURCE_MEAT;
-        case INVENTORY_WINE: return RESOURCE_WINE;
-        case INVENTORY_OIL: return RESOURCE_OIL;
-        case INVENTORY_FURNITURE: return RESOURCE_FURNITURE;
-        case INVENTORY_POTTERY: return RESOURCE_POTTERY;
-        default: return RESOURCE_NONE;
-    }
-}
-
 static figure *get_head_of_caravan(figure *f)
 {
     while (f->type == FIGURE_TRADE_CARAVAN_DONKEY) {
@@ -322,14 +307,16 @@ static void draw_supplier(building_info_context *c, figure *f)
 
     if (f->action_state == FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE) {
         width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
-        int resource = inventory_to_resource_id(f->collecting_item_id);
+        int resource = resource_from_inventory(f->collecting_item_id);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 90 + width, c->y_offset + 135);
     } else if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING) {
-        width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
-        int resource = inventory_to_resource_id(f->collecting_item_id);
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
-            c->x_offset + 90 + width, c->y_offset + 135);
+        int resource = resource_from_inventory(f->collecting_item_id);
+        if (resource != RESOURCE_NONE) {
+            width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
+            image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+                c->x_offset + 90 + width, c->y_offset + 135);
+        }
     }
     if (c->figure.phrase_id >= 0) {
         lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,

@@ -327,7 +327,8 @@ static int market_supplier_phrase(figure *f)
 {
     if (f->action_state == FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE) {
         return 7;
-    } else if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING) {
+    } else if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING &&
+        resource_from_inventory(f->collecting_item_id) != RESOURCE_NONE) {
         return 8;
     } else {
         return -1;

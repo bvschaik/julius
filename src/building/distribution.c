@@ -12,7 +12,8 @@ static const int INVENTORY_SEARCH_ORDER[INVENTORY_MAX] = {
     INVENTORY_POTTERY, INVENTORY_FURNITURE, INVENTORY_OIL, INVENTORY_WINE
 };
 
-int building_distribution_fetch(const building *b, inventory_data *data, int min_stock, int pick_first, int allowed)
+int building_distribution_fetch(const building *b, inventory_storage_info *info,
+    int min_stock, int pick_first, int allowed)
 {
     int inventory = INVENTORY_NONE;
     if (!min_stock) {
@@ -21,7 +22,7 @@ int building_distribution_fetch(const building *b, inventory_data *data, int min
     for (int i = 0; i < INVENTORY_MAX; i++) {
         int current_inventory = INVENTORY_SEARCH_ORDER[i];
         if (inventory_is_set(allowed, current_inventory) &&
-            data[current_inventory].building_id && b->data.market.inventory[current_inventory] < min_stock) {
+            info[current_inventory].building_id && b->data.market.inventory[current_inventory] < min_stock) {
             if (pick_first) {
                 return current_inventory;
             }
@@ -32,32 +33,33 @@ int building_distribution_fetch(const building *b, inventory_data *data, int min
     return inventory;
 }
 
-static void update_food_resource(inventory_data *data, resource_type resource, const building *b, int distance)
+static void update_food_resource(inventory_storage_info *info, resource_type resource, const building *b, int distance)
 {
-    if (distance < data->min_distance && b->data.granary.resource_stored[resource]) {
-        data->min_distance = distance;
-        data->building_id = b->id;
+    if (distance < info->min_distance && b->data.granary.resource_stored[resource]) {
+        info->min_distance = distance;
+        info->building_id = b->id;
     }
 }
 
-static void update_good_resource(inventory_data *data, resource_type resource, building *b, int distance)
+static void update_good_resource(inventory_storage_info *info, resource_type resource, building *b, int distance)
 {
-    if (distance < data->min_distance &&
+    if (distance < info->min_distance &&
         !city_resource_is_stockpiled(resource) && building_warehouse_get_amount(b, resource) > 0) {
-        data->min_distance = distance;
-        data->building_id = b->id;
+        info->min_distance = distance;
+        info->building_id = b->id;
     }
 }
 
-int building_distribution_get_inventory_data(inventory_data *data, building *b, int max_distance)
+int building_distribution_get_inventory_storages(inventory_storage_info *info, building_type type,
+    int road_network, int x, int y, int max_distance)
 {
     for (int i = 0; i < INVENTORY_MAX; i++) {
-        data[i].min_distance = max_distance;
-        data[i].building_id = 0;
+        info[i].min_distance = max_distance;
+        info[i].building_id = 0;
     }
 
     int permission; 
-    if (b->type == BUILDING_MESS_HALL) {
+    if (type == BUILDING_MESS_HALL) {
         permission = BUILDING_STORAGE_PERMISSION_QUARTERMASTER;
     } else {
         permission = BUILDING_STORAGE_PERMISSION_MARKET;
@@ -69,26 +71,26 @@ int building_distribution_get_inventory_data(inventory_data *data, building *b, 
         if (b_dst->state != BUILDING_STATE_IN_USE ||
             (b_dst->type != BUILDING_GRANARY && b_dst->type != BUILDING_WAREHOUSE) ||
             !b_dst->has_road_access || b_dst->distance_from_entry <= 0 ||
-            b_dst->road_network_id != b->road_network_id ||
+            b_dst->road_network_id != road_network ||
             !building_storage_get_permission(permission, b_dst)) {
             continue;
         }
-        int distance = calc_maximum_distance(b->x, b->y, b_dst->x, b_dst->y);
+        int distance = calc_maximum_distance(x, y, b_dst->x, b_dst->y);
         if (b_dst->type == BUILDING_GRANARY) {
-            update_food_resource(&data[INVENTORY_WHEAT], RESOURCE_WHEAT, b_dst, distance);
-            update_food_resource(&data[INVENTORY_VEGETABLES], RESOURCE_VEGETABLES, b_dst, distance);
-            update_food_resource(&data[INVENTORY_FRUIT], RESOURCE_FRUIT, b_dst, distance);
-            update_food_resource(&data[INVENTORY_MEAT], RESOURCE_MEAT, b_dst, distance);
+            update_food_resource(&info[INVENTORY_WHEAT], RESOURCE_WHEAT, b_dst, distance);
+            update_food_resource(&info[INVENTORY_VEGETABLES], RESOURCE_VEGETABLES, b_dst, distance);
+            update_food_resource(&info[INVENTORY_FRUIT], RESOURCE_FRUIT, b_dst, distance);
+            update_food_resource(&info[INVENTORY_MEAT], RESOURCE_MEAT, b_dst, distance);
         } else {
-            update_good_resource(&data[INVENTORY_WINE], RESOURCE_WINE, b_dst, distance);
-            update_good_resource(&data[INVENTORY_OIL], RESOURCE_OIL, b_dst, distance);
-            update_good_resource(&data[INVENTORY_POTTERY], RESOURCE_POTTERY, b_dst, distance);
-            update_good_resource(&data[INVENTORY_FURNITURE], RESOURCE_FURNITURE, b_dst, distance);
+            update_good_resource(&info[INVENTORY_WINE], RESOURCE_WINE, b_dst, distance);
+            update_good_resource(&info[INVENTORY_OIL], RESOURCE_OIL, b_dst, distance);
+            update_good_resource(&info[INVENTORY_POTTERY], RESOURCE_POTTERY, b_dst, distance);
+            update_good_resource(&info[INVENTORY_FURNITURE], RESOURCE_FURNITURE, b_dst, distance);
         }
     }
 
     for (int i = 0; i < INVENTORY_MAX; i++) {
-        if (data[i].building_id) {
+        if (info[i].building_id) {
             return 1;
         }
     }

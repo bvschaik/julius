@@ -250,17 +250,14 @@ void building_maintenance_check_rome_access(void) {
 					}
 					b->state = BUILDING_STATE_UNDO;
 				}
-			}
-			else if (map_routing_distance(map_grid_offset(x_road, y_road))) {
+			} else if (map_routing_distance(map_grid_offset(x_road, y_road))) {
 				// reachable from rome
 				b->distance_from_entry = map_routing_distance(map_grid_offset(x_road, y_road));
 				b->house_unreachable_ticks = 0;
-			}
-			else if (map_closest_reachable_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+			} else if (map_closest_reachable_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
 				b->distance_from_entry = map_routing_distance(map_grid_offset(x_road, y_road));
 				b->house_unreachable_ticks = 0;
-			}
-			else {
+			} else {
 				// no reachable road in radius
 				if (!b->house_unreachable_ticks) {
 					problem_grid_offset = b->grid_offset;
@@ -272,8 +269,7 @@ void building_maintenance_check_rome_access(void) {
 					b->state = BUILDING_STATE_UNDO;
 				}
 			}
-		}
-		else if (b->type == BUILDING_WAREHOUSE) {
+		} else if (b->type == BUILDING_WAREHOUSE) {
 			if (!city_buildings_get_trade_center()) {
 				city_buildings_set_trade_center(i);
 			}
@@ -286,16 +282,14 @@ void building_maintenance_check_rome_access(void) {
 				b->road_access_x = x_road;
 				b->road_access_y = y_road;
 			}
-		}
-		else if (b->type == BUILDING_WAREHOUSE_SPACE) {
+		} else if (b->type == BUILDING_WAREHOUSE_SPACE) {
 			b->distance_from_entry = 0;
 			building* main_building = building_main(b);
 			b->road_network_id = main_building->road_network_id;
 			b->distance_from_entry = main_building->distance_from_entry;
 			b->road_access_x = main_building->road_access_x;
 			b->road_access_y = main_building->road_access_y;
-		}
-		else if (b->type == BUILDING_HIPPODROME) {
+		} else if (b->type == BUILDING_HIPPODROME) {
 			b->distance_from_entry = 0;
 			int x_road, y_road;
 			int road_grid_offset = map_road_to_largest_network_hippodrome(b->x, b->y, &x_road, &y_road);
@@ -305,8 +299,8 @@ void building_maintenance_check_rome_access(void) {
 				b->road_access_x = x_road;
 				b->road_access_y = y_road;
 			}
-		}
-		else if ((b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) || (b->type == BUILDING_PANTHEON)) {
+		} else if ((b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) ||
+            (b->type == BUILDING_PANTHEON)) {
 			b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network_grand_temple(b->x, b->y, &x_road, &y_road);
@@ -316,9 +310,7 @@ void building_maintenance_check_rome_access(void) {
 				b->road_access_x = x_road;
 				b->road_access_y = y_road;
 			}
-        }
-
-        else if (b->type == BUILDING_COLOSSEUM) {
+        } else if (b->type == BUILDING_COLOSSEUM) {
             b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network_colosseum(b->x, b->y, &x_road, &y_road);
@@ -328,9 +320,9 @@ void building_maintenance_check_rome_access(void) {
                 b->road_access_x = x_road;
                 b->road_access_y = y_road;
             }
-        }
-
-        else if (b->type == BUILDING_LIGHTHOUSE || b->type == BUILDING_LARGE_MAUSOLEUM || b->type == BUILDING_NYMPHAEUM || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
+        } else if (b->type == BUILDING_LIGHTHOUSE || b->type == BUILDING_LARGE_MAUSOLEUM ||
+            b->type == BUILDING_NYMPHAEUM ||
+            (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
             b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network_lighthouse(b->x, b->y, &x_road, &y_road);
@@ -340,8 +332,7 @@ void building_maintenance_check_rome_access(void) {
                 b->road_access_x = x_road;
                 b->road_access_y = y_road;
             }
-        }
-		else { // other building
+        } else { // other building
 			b->distance_from_entry = 0;
 			int x_road, y_road;
 			int road_grid_offset = map_road_to_largest_network(b->x, b->y, b->size, &x_road, &y_road);
@@ -379,8 +370,7 @@ void building_maintenance_check_rome_access(void) {
 			}
 		}
 		building_destroy_last_placed();
-	}
-	else if (problem_grid_offset) {
+	} else if (problem_grid_offset) {
 		// parts of city disconnected
 		city_warning_show(WARNING_CITY_BOXED_IN);
 		city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH);

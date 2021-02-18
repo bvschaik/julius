@@ -24,8 +24,9 @@ int building_temple_get_storage_destination(building *temple)
     if (!building_is_ceres_temple(temple->type)) { // Ceres module 2
         return 0;
     }
-    inventory_data data[INVENTORY_MAX];
-    if (!building_distribution_get_inventory_data(data, temple, INFINITE)) {
+    inventory_storage_info data[INVENTORY_MAX];
+    if (!building_distribution_get_inventory_storages(data, temple->type,
+            temple->road_network_id, temple->road_access_x, temple->road_access_y, INFINITE)) {
         return 0;
     }
     int inventory;

@@ -2,7 +2,9 @@
 
 #include "assets/assets.h"
 #include "building/building.h"
+#include "building/distribution.h"
 #include "building/granary.h"
+#include "building/market.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "core/image.h"
@@ -12,6 +14,10 @@
 #include "figure/route.h"
 #include "figuretype/wall.h"
 #include "game/resource.h"
+#include "map/road_access.h"
+#include "map/road_network.h"
+
+#define MAX_DISTANCE 40
 
 int figure_supplier_create_delivery_boy(int leader_id, figure *f, int type)
 {
@@ -136,6 +142,50 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     return 1;
 }
 
+static int change_market_supplier_destination(figure *f, int dst_building_id)
+{
+    figure_route_remove(f);
+    f->destination_building_id = dst_building_id;
+    building *b_dst = building_get(dst_building_id);
+    map_point road;
+    if (!map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) &&
+        !map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
+        return 0;
+    }
+    f->action_state = FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE;
+    f->destination_x = road.x;
+    f->destination_y = road.y;
+    return 1;
+}
+
+static int recalculate_market_supplier_destination(figure *f)
+{
+    int item = f->collecting_item_id;
+    building *market = building_get(f->building_id); 
+    inventory_storage_info info[INVENTORY_MAX];
+    if (!building_distribution_get_inventory_storages(info, BUILDING_MARKET,
+            map_road_network_get(f->grid_offset), f->x, f->y, MAX_DISTANCE)) {
+        return 0;
+    }
+    if (f->building_id == info[item].building_id) {
+        return 1;
+    }
+    if (info[item].building_id) {
+        return change_market_supplier_destination(f, info[item].building_id);
+    }
+    int needed_inventory = building_market_get_needed_inventory(market);
+    if (needed_inventory == INVENTORY_FLAG_NONE) {
+        return 0;
+    }
+    int fetch_inventory = building_market_fetch_inventory(market, info, needed_inventory);
+    if (fetch_inventory == INVENTORY_NONE) {
+        return 0;
+    }
+    market->data.market.fetch_inventory_id = fetch_inventory;
+    f->collecting_item_id = fetch_inventory;
+    return change_market_supplier_destination(f, info[item].building_id);
+}
+
 void figure_supplier_action(figure *f)
 {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
@@ -176,6 +226,15 @@ void figure_supplier_action(figure *f)
                 f->destination_x = f->source_x;
                 f->destination_y = f->source_y;
                 figure_route_remove(f);
+            } else if (f->type == FIGURE_MARKET_SUPPLIER && f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS) {
+                f->wait_ticks = 0;
+                if (!recalculate_market_supplier_destination(f)) {
+                    f->action_state = FIGURE_ACTION_146_SUPPLIER_RETURNING;
+                    f->collecting_item_id = INVENTORY_NONE;
+                    f->destination_x = f->source_x;
+                    f->destination_y = f->source_y;
+                    figure_route_remove(f);
+                }
             }
             break;
         case FIGURE_ACTION_146_SUPPLIER_RETURNING:

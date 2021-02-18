@@ -63,6 +63,6 @@ int resource_from_inventory(int inventory_id)
         case INVENTORY_FURNITURE: return RESOURCE_FURNITURE;
         case INVENTORY_OIL: return RESOURCE_OIL;
         case INVENTORY_WINE: return RESOURCE_WINE;
-        default: return 0;
+        default: return RESOURCE_NONE;
     } 
 }

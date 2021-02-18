@@ -8,8 +8,9 @@
 
 int building_tavern_get_storage_destination(building *tavern)
 {
-    inventory_data data[INVENTORY_MAX];
-    if (!building_distribution_get_inventory_data(data, tavern, INFINITE)) {
+    inventory_storage_info data[INVENTORY_MAX];
+    if (!building_distribution_get_inventory_storages(data, BUILDING_TAVERN, 
+            tavern->road_network_id, tavern->road_access_x, tavern->road_access_y, INFINITE)) {
         return 0;
     }
     if (data[INVENTORY_WINE].building_id && tavern->data.market.inventory[INVENTORY_WINE] < BASELINE_STOCK) {
