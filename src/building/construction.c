@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "building/building.h"
+#include "building/building_variant.h"
 #include "building/construction_building.h"
 #include "building/construction_clear.h"
 #include "building/construction_routed.h"
@@ -622,7 +623,7 @@ void building_construction_update(int x, int y, int grid_offset)
         }
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
         int rotation = building_rotation_get_rotation();
-        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
+        int image_id = building_variant_get_image_id(type);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
@@ -860,9 +861,10 @@ void building_construction_place(void)
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
-        int rotation = building_rotation_get_rotation();
-        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml col B") + rotation % 2;
-        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
+        int variant_numbers = building_variant_get_number_of_variants(type);
+        int rotation = building_rotation_get_rotation_with_limit(variant_numbers);
+        int image_id = building_variant_get_image_id(type);
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);
     } else if (!building_construction_place_building(type, x_end, y_end)) {

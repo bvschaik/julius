@@ -1,6 +1,7 @@
 #include "orientation.h"
 
 #include "assets/assets.h"
+#include "building/building_variant.h"
 #include "building/rotation.h"
 #include "building/properties.h"
 #include "city/view.h"
@@ -380,9 +381,9 @@ void map_orientation_update_buildings(void)
             image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "legio statue") + (abs((b->subtype.orientation - (map_orientation / 2) % 2)));
             map_building_tiles_add(i, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
         }
-        if (b->type == BUILDING_DECORATIVE_COLUMN) {
-            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml col B") + (abs((b->subtype.orientation - (map_orientation / 2) % 2)));
-            map_building_tiles_add(i, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
+        if (building_variant_has_variants(b->type)) {
+            image_id = building_variant_get_image_id_with_rotation(b->type, b->subtype.orientation);
+            map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
         }
     }
 }
