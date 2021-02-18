@@ -350,24 +350,26 @@ void platform_screen_recreate_texture(void)
 }
 #endif
 
-void platform_screen_render(int update_screen)
-{
-    if (update_screen) {
-        SDL_RenderClear(SDL.renderer);
-#ifndef __vita__
-        SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
-#endif
-        SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
-#ifdef PLATFORM_USE_SOFTWARE_CURSOR
-        draw_software_mouse_cursor();
-#endif
-    }
-    SDL_RenderPresent(SDL.renderer);
-}
-
 void platform_screen_clear(void)
 {
     SDL_RenderClear(SDL.renderer);
+}
+
+void platform_screen_update(void)
+{
+    SDL_RenderClear(SDL.renderer);
+#ifndef __vita__
+    SDL_UpdateTexture(SDL.texture, NULL, graphics_canvas(), screen_width() * 4);
+#endif
+    SDL_RenderCopy(SDL.renderer, SDL.texture, NULL, NULL);
+#ifdef PLATFORM_USE_SOFTWARE_CURSOR
+    draw_software_mouse_cursor();
+#endif
+}
+
+void platform_screen_render(void)
+{
+    SDL_RenderPresent(SDL.renderer);
 }
 
 void platform_screen_generate_mouse_cursor_texture(int cursor_id, int scale, const color_t *cursor_colors)

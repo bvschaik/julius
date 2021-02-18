@@ -125,7 +125,7 @@ const uint8_t *vita_keyboard_get(const uint8_t *initial_text, int max_length)
         } else if (ime_result != IME_DIALOG_RESULT_CANCELED) {
             done = 0;
         }
-        platform_screen_render(0);
+        platform_screen_render();
     }
     return final_text;
 }
