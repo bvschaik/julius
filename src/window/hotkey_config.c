@@ -320,7 +320,8 @@ static void set_hotkey(hotkey_action action, int index, key_type key, key_modifi
                     // "Fire overlay" already has hotkey "F" and user tries set same hotkey "F" again to "Fire overlay"
                     // we must skip show warning window for better user experience
                     if (!(test_action == action && test_index == index)) {
-                        window_plain_message_dialog_show_with_extra(TR_HOTKEY_DUPLICATE_TITLE, TR_HOTKEY_DUPLICATE_MESSAGE,
+                        window_plain_message_dialog_show_with_extra(
+                            TR_HOTKEY_DUPLICATE_TITLE, TR_HOTKEY_DUPLICATE_MESSAGE,
                             hotkey_action_name_for(test_action));
                     }
                     break;

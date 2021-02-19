@@ -33,6 +33,7 @@ if(SWITCH_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 set(SHORT_NAME augustus)
+set(USER_FRIENDLY_NAME Augustus)
 project(${SHORT_NAME} C)
 
 if (VITA_BUILD)
@@ -190,6 +191,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager_cache.c
     ${PROJECT_SOURCE_DIR}/src/platform/icon.c
+    ${PROJECT_SOURCE_DIR}/src/platform/joystick.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
     ${PROJECT_SOURCE_DIR}/src/platform/log.c
     ${PROJECT_SOURCE_DIR}/src/platform/mouse.c
@@ -206,13 +208,12 @@ if (VITA_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
-        ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_input.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
     )
 elseif (SWITCH_BUILD)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
-        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch_input.c
+        ${PROJECT_SOURCE_DIR}/src/platform/switch/switch.c
     )
 elseif (ANDROID_BUILD)
     set(PLATFORM_FILES
@@ -381,6 +382,7 @@ set(INPUT_FILES
     ${PROJECT_SOURCE_DIR}/src/input/cursor.c
     ${PROJECT_SOURCE_DIR}/src/input/hotkey.c
     ${PROJECT_SOURCE_DIR}/src/input/input.c
+    ${PROJECT_SOURCE_DIR}/src/input/joystick.c
     ${PROJECT_SOURCE_DIR}/src/input/keyboard.c
     ${PROJECT_SOURCE_DIR}/src/input/keys.c
     ${PROJECT_SOURCE_DIR}/src/input/mouse.c
@@ -714,7 +716,7 @@ if(APPLE)
 
     # setting variables that will populate Info.plist
     set(MACOSX_BUNDLE_GUI_IDENTIFIER "pl.Keriew.augustus")
-    set(MACOSX_BUNDLE_BUNDLE_NAME ${PROJECT_NAME})
+    set(MACOSX_BUNDLE_BUNDLE_NAME ${USER_FRIENDLY_NAME})
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10" CACHE STRING "Minimum OS X deployment version" FORCE)
     set(MACOSX_BUNDLE_ICON_FILE "augustus.icns")
     set(MACOSX_BUNDLE_BUNDLE_VERSION
@@ -724,7 +726,7 @@ if(APPLE)
 
     set_target_properties(${SHORT_NAME} PROPERTIES
         MACOSX_BUNDLE TRUE
-        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist.in")
+        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist")
 
     set(DIRS "")
     set(LIBS "")
@@ -742,10 +744,6 @@ if(APPLE)
     # the path to its dependencies (Ogg.framework etc):
     if(EXISTS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
         list(APPEND DIRS "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks")
-        # Copy mpg123 framework manually because since MacOS 10.15, the
-        # dependency is seen as "weak" and not copied automatically
-        file(COPY "${SDL2_MIXER_LIBRARY}/Versions/A/Frameworks/mpg123.framework" DESTINATION "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks")
-        list(APPEND LIBS "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/mpg123.framework/mpg123")
     endif()
 
     # when installing, "fixup" automatically copies libraries inside the
@@ -753,11 +751,6 @@ if(APPLE)
     install(CODE "
         include(BundleUtilities)
         fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
-        # Manually fix up link to mpg123 in SDL2_mixer
-        execute_process(COMMAND ${CMAKE_INSTALL_NAME_TOOL}
-            \"-change\" \"@rpath/mpg123.framework/Versions/A/mpg123\"
-            \"@executable_path/../Frameworks/mpg123.framework/mpg123\"
-            \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/SDL2_mixer.framework/Versions/A/SDL2_mixer\")
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
@@ -830,7 +823,6 @@ if (VITA_BUILD)
         mpg123
         FLAC
         ogg
-        vita2d
         m
         SceAppUtil_stub
         SceAudio_stub
@@ -839,6 +831,7 @@ if (VITA_BUILD)
         SceDisplay_stub
         SceGxm_stub
         SceHid_stub
+        SceMotion_stub
         SceIofilemgr_stub
         SceMotion_stub
         SceSysmodule_stub

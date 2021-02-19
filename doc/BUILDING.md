@@ -16,6 +16,6 @@ After downloading or cloning the sources, run the following commands:
 
 This results in a `julius` executable for your platform.
 
-See [Running Julius](RUNNING.md) for instructions on how to configure Julius.
+See [Running Julius (wiki)](https://github.com/bvschaik/julius/wiki/Running-Julius) for instructions on how to configure Julius.
 
 See [Building Julius (Wiki)](https://github.com/bvschaik/julius/wiki/Building-Julius) for detailed build instructions and additional CMake flags.

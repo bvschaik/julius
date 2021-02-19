@@ -91,7 +91,7 @@ static int draw_background(void)
     width = lang_text_draw(60, 14, 80, 287, FONT_NORMAL_BLACK);
     text_draw_percentage(10, 80 + width, 287, FONT_NORMAL_BLACK);
     text_draw_number(last_year->expenses.interest, '@', " ", 290, 287, FONT_NORMAL_BLACK);
-    text_draw_number(last_year->expenses.interest, '@', " ", 430, 287, FONT_NORMAL_BLACK);
+    text_draw_number(this_year->expenses.interest, '@', " ", 430, 287, FONT_NORMAL_BLACK);
 
     draw_row(60, 15, 302, last_year->expenses.salary, this_year->expenses.salary);
     draw_row(60, 16, 317, last_year->expenses.sundries, this_year->expenses.sundries);

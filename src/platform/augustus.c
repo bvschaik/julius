@@ -14,6 +14,7 @@
 #include "input/touch.h"
 #include "platform/arguments.h"
 #include "platform/file_manager.h"
+#include "platform/joystick.h"
 #include "platform/keyboard_input.h"
 #include "platform/platform.h"
 #include "platform/prefs.h"
@@ -26,17 +27,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __SWITCH__
-#include "platform/switch/switch.h"
-#include "platform/switch/switch_input.h"
-#endif
-
-#ifdef __vita__
-#include "platform/vita/vita.h"
-#include "platform/vita/vita_input.h"
-#endif
-
 #include "platform/android/android.h"
+#include "platform/switch/switch.h"
+#include "platform/vita/vita.h"
 
 #if defined(_WIN32)
 #include <string.h>
@@ -187,7 +180,7 @@ static void run_and_draw(void)
         text_draw_number_colored(time_after_draw - time_between_run_and_draw,
             'd', "", 70, y_offset_text, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
     }
-
+    platform_screen_update();
     platform_screen_render();
 }
 #else
@@ -198,6 +191,7 @@ static void run_and_draw(void)
     game_run();
     game_draw();
 
+    platform_screen_update();
     platform_screen_render();
 }
 #endif
@@ -294,6 +288,28 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             platform_touch_end(&event->tfinger);
             break;
 
+        case SDL_JOYAXISMOTION:
+            platform_joystick_handle_axis(&event->jaxis);
+            break;
+        case SDL_JOYBALLMOTION:
+            platform_joystick_handle_trackball(&event->jball);
+            break;
+        case SDL_JOYHATMOTION:
+            platform_joystick_handle_hat(&event->jhat);
+            break;
+        case SDL_JOYBUTTONDOWN:
+            platform_joystick_handle_button(&event->jbutton, 1);
+            break;
+        case SDL_JOYBUTTONUP:
+            platform_joystick_handle_button(&event->jbutton, 0);
+            break;
+        case SDL_JOYDEVICEADDED:
+            platform_joystick_device_changed(event->jdevice.which, 1);
+            break;
+        case SDL_JOYDEVICEREMOVED:
+            platform_joystick_device_changed(event->jdevice.which, 0);
+            break;
+
         case SDL_QUIT:
             *quit = 1;
             break;
@@ -330,13 +346,7 @@ static void main_loop(void)
         platform_per_frame_callback();
 #endif
         /* Process event queue */
-#ifdef __vita__
-        while (vita_poll_event(&event)) {
-#elif defined(__SWITCH__)
-        while (switch_poll_event(&event)) {
-#else
         while (SDL_PollEvent(&event)) {
-#endif
             handle_event(&event, &active, &quit);
         }
         if (!quit) {
@@ -352,19 +362,17 @@ static void main_loop(void)
 static int init_sdl(void)
 {
     SDL_Log("Initializing SDL");
-    Uint32 SDL_flags = SDL_INIT_AUDIO;
 
-    // on Vita, need video init only to enable physical kbd/mouse and touch events
-    SDL_flags |= SDL_INIT_VIDEO;
-
-#if defined(__vita__) || defined(__SWITCH__)
-    SDL_flags |= SDL_INIT_JOYSTICK;
+    // This hint must be set before initializing SDL, otherwise it won't work
+#if SDL_VERSION_ATLEAST(2, 0, 2)
+    SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
 #endif
 
-    if (SDL_Init(SDL_flags) != 0) {
+    if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }
+    platform_joystick_init();
 #if SDL_VERSION_ATLEAST(2, 0, 10)
     SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
     SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");

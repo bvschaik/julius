@@ -50,7 +50,7 @@ folder, in which case the game will ask you to point to the Caesar 3 folder.
 Note that you must have permission to write in the game data directory as the saves will be
 stored there.
 
-See [Running](doc/RUNNING.md) for further instructions and startup options.
+See [Running Julius](https://github.com/bvschaik/julius/wiki/Running-Julius) for further instructions and startup options.
 
 ## Bugs
 

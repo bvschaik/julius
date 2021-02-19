@@ -1,6 +1,17 @@
 #include "core/string.h"
 
-#include <ctype.h>
+int string_equals(const uint8_t *a, const uint8_t *b)
+{
+    while (*a && *b && *a == *b) {
+        ++a;
+        ++b;
+    }
+    if (*a == 0 && *b == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
 
 uint8_t* string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
 {
@@ -121,37 +132,4 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign)
     }
 
     return total_chars;
-}
-
-int string_compare_case_insensitive(const char *a, const char *b)
-{
-    while (*a && *b) {
-        int aa = tolower(*a);
-        int bb = tolower(*b);
-        if (aa != bb) {
-            return aa - bb;
-        }
-        ++a;
-        ++b;
-    }
-    if (*a) {
-        return 1;
-    }
-    if (*b) {
-        return -1;
-    }
-    return 0;
-}
-
-int string_equals(const uint8_t *a, const uint8_t *b)
-{
-    while (*a && *b && *a == *b) {
-        ++a;
-        ++b;
-    }
-    if (*a == 0 && *b == 0) {
-        return 1;
-    } else {
-        return 0;
-    }
 }
