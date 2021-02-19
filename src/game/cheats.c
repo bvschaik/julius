@@ -22,6 +22,8 @@
 #include "window/city.h"
 #include "window/console.h"
 
+#include <string.h>
+
 #define NUMBER_OF_COMMANDS 9
 
 static void game_cheat_add_money(uint8_t *);
@@ -205,7 +207,7 @@ void game_cheat_parse_command(uint8_t * command){
     uint8_t command_to_call[MAX_COMMAND_SIZE];
     int next_arg = parse_word(command,command_to_call);
     for (int i = 0; i < NUMBER_OF_COMMANDS; i++) {
-        if (string_compare_case_insensitive((char *)command_to_call, commands[i]) == 0) {
+        if (strcmp(command_to_call, commands[i]) == 0) {
             (*execute_command[i])(command+next_arg);
         }
     }

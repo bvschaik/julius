@@ -83,6 +83,7 @@ static void switch_start_text_input(void)
 
 void platform_init_callback(void)
 {
+    romfsInit();
     config_set(CONFIG_SCREEN_CURSOR_SCALE, CURSOR_SCALE);
     touch_set_mode(TOUCH_MODE_TOUCHPAD);
 }

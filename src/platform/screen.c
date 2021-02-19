@@ -430,6 +430,11 @@ void platform_screen_recreate_texture(void)
 void platform_screen_clear(void)
 {
     SDL_RenderClear(SDL.renderer);
+}
+
+void platform_screen_update(void)
+{
+    SDL_RenderClear(SDL.renderer);
     if (config_get(CONFIG_UI_ZOOM)) {
         city_view_get_unscaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
             &city_texture_position.renderer.w, &city_texture_position.offset.h);
