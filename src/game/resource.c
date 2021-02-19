@@ -66,3 +66,18 @@ int resource_from_inventory(int inventory_id)
         default: return RESOURCE_NONE;
     } 
 }
+
+int resource_to_inventory(resource_type resource)
+{
+    switch (resource) {
+        case RESOURCE_WHEAT: return INVENTORY_WHEAT;
+        case RESOURCE_VEGETABLES: return INVENTORY_VEGETABLES;
+        case RESOURCE_FRUIT: return INVENTORY_FRUIT;
+        case RESOURCE_MEAT: return INVENTORY_MEAT;
+        case RESOURCE_POTTERY: return INVENTORY_POTTERY;
+        case RESOURCE_FURNITURE: return INVENTORY_FURNITURE;
+        case RESOURCE_OIL: return INVENTORY_OIL;
+        case RESOURCE_WINE: return INVENTORY_WINE;
+        default: return INVENTORY_NONE;
+    } 
+}

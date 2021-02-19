@@ -187,7 +187,6 @@ static void init_dock_permission_buttons()
 
 static void draw_dock_permission_buttons(int x_offset, int y_offset, int dock_id)
 {
-    int button_order = 0;
     for (int i = 0; i < dock_distribution_permissions_buttons_count; i++) {
         if (i < dock_scrollbar.scroll_position || i - dock_scrollbar.scroll_position >= data.dock_max_cities_visible) {
             continue;
@@ -265,7 +264,7 @@ void window_building_draw_dock(building_info_context *c)
     }
 }
 
-void window_building_draw_dock_foreground(building_info_context* c)
+void window_building_draw_dock_foreground(building_info_context *c)
 {
     button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
         16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
@@ -275,39 +274,40 @@ void window_building_draw_dock_foreground(building_info_context* c)
     scrollbar_draw(&dock_scrollbar);
 }
 
-void window_building_draw_dock_orders(building_info_context* c)
+void window_building_draw_dock_orders(building_info_context *c)
 {
     c->help_id = 83;
     int y_offset = window_building_get_vertical_offset(c, 28);
     outer_panel_draw(c->x_offset, y_offset, 29, 28);
-    lang_text_draw_centered(101, 0, c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    text_draw_centered(translation_for(TR_DOCK_SPECIAL_ORDERS_HEADER),
+        c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 }
 
-void window_building_draw_dock_orders_foreground(building_info_context* c)
+void window_building_draw_dock_orders_foreground(building_info_context *c)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
-    for (int i = 0; i < 15; i++) {
-        resource_type resource = i + 1;
+    const resource_list *list = city_resource_get_potential();
+    for (int i = 0; i < list->size; i++) {
+        resource_type resource = list->items[i];
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
             resource_image_offset(resource, RESOURCE_IMAGE_ICON);
         image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
         image_draw(image_id, c->x_offset + 408, y_offset + 46 + 22 * i);
         lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
         button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
-        building* b = building_get(c->building_id);
-        int state = building_market_is_good_accepted(i, b);
+        building *b = building_get(c->building_id);
+        int state = building_market_is_good_accepted(list->items[i] - 1, b);
         if (state) {
             lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
-        }
-        else {
+        } else {
             lang_text_draw(99, 8, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_RED);
         }
     }
 }
 
-int window_building_handle_mouse_dock(const mouse* m, building_info_context* c)
+int window_building_handle_mouse_dock(const mouse *m, building_info_context *c)
 {
     int handled;
 
@@ -330,13 +330,13 @@ int window_building_handle_mouse_dock(const mouse* m, building_info_context* c)
     return handled;
 }
 
-int window_building_handle_mouse_dock_orders(const mouse* m, building_info_context* c)
+int window_building_handle_mouse_dock_orders(const mouse *m, building_info_context *c)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
 
     data.building_id = c->building_id;
     if (generic_buttons_handle_mouse(m, c->x_offset + 180, y_offset + 46,
-        orders_resource_buttons, 15,
+        orders_resource_buttons, city_resource_get_potential()->size,
         &data.resource_focus_button_id)) {
         return 1;
     }
@@ -359,7 +359,7 @@ void dock_cities_set_scroll_position(int scroll_position)
     data.dock_scrollbar_position = scroll_position;
 }
 
-void window_building_draw_stocks(building_info_context* c, building* b, int draw_goods, int always_show_food) 
+void window_building_draw_stocks(building_info_context *c, building *b, int draw_goods, int always_show_food) 
 {
     int image_id = image_group(GROUP_RESOURCE_ICONS);
     font_t font;
@@ -416,28 +416,26 @@ void window_building_draw_stocks(building_info_context* c, building* b, int draw
     }
 }
 
-void window_building_draw_market(building_info_context* c)
+void window_building_draw_market(building_info_context *c)
 {
     c->help_id = 2;
     window_building_play_sound(c, "wavs/market.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(97, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    building* b = building_get(c->building_id);
+    building *b = building_get(c->building_id);
 
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    }
-    else if (b->num_workers <= 0) {
+    } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 97, 2);
-    }
-    else {
+    } else {
         window_building_draw_stocks(c, b, 1, 0);
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 }
 
-void window_building_draw_market_foreground(building_info_context* c)
+void window_building_supplier_draw_foreground(building_info_context *c)
 {
     button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
         16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
@@ -445,72 +443,82 @@ void window_building_draw_market_foreground(building_info_context* c)
         16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 }
 
-void window_building_draw_market_orders(building_info_context* c)
+void window_building_draw_supplier_orders(building_info_context *c, const uint8_t *title)
 {
     c->help_id = 3;
     int y_offset = window_building_get_vertical_offset(c, 28);
     outer_panel_draw(c->x_offset, y_offset, 29, 28);
-    text_draw_centered(translation_for(TR_MARKET_SPECIAL_ORDERS_HEADER), c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    text_draw_centered(title, c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 }
 
-void window_building_draw_market_orders_foreground(building_info_context* c, int food_only, int limit_resource, int resource_id_1, int resource_id_2)
+static int get_allowed_inventory_for_supplier(building_type type)
+{
+    int allowed = INVENTORY_FLAG_NONE;
+    switch (type) {
+        case BUILDING_MARKET:
+            return INVENTORY_FLAG_ALL;
+        case BUILDING_MESS_HALL:
+            return INVENTORY_FLAG_ALL_FOODS;
+        case BUILDING_TAVERN:
+            inventory_set(&allowed, INVENTORY_WINE);
+            inventory_set(&allowed, INVENTORY_MEAT);
+            return allowed;
+        case BUILDING_SMALL_TEMPLE_VENUS:
+        case BUILDING_LARGE_TEMPLE_VENUS:
+            inventory_set(&allowed, INVENTORY_WINE);
+            inventory_set(&allowed, INVENTORY_MEAT);
+            return allowed;
+        case BUILDING_SMALL_TEMPLE_CERES:
+        case BUILDING_LARGE_TEMPLE_CERES:
+            inventory_set(&allowed, resource_to_inventory(city_resource_ceres_temple_food()));
+            inventory_set(&allowed, INVENTORY_OIL);
+            return allowed;
+        default:
+            return INVENTORY_FLAG_NONE;
+    }
+}
+
+void window_building_draw_supplier_orders_foreground(building_info_context *c)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
-    int resource_max = INVENTORY_MAX;
-    int resource_min = INVENTORY_WHEAT;
-    resource_type resources[8] = { RESOURCE_WHEAT,RESOURCE_VEGETABLES,RESOURCE_FRUIT,RESOURCE_MEAT,RESOURCE_WINE,RESOURCE_OIL,RESOURCE_FURNITURE,RESOURCE_POTTERY };
-
-    if (food_only) {
-        resource_max = 4;
-        for (int i = 4; i < 8; ++i) {
-            resources[i] = 0;
-        }        
-    } else if (limit_resource) {
-        int i = 1;
-        if (!resource_id_2) {
-            resources[0] = resource_id_1;
-        } else {
-            resources[0] = resource_id_1;
-            resources[1] = resource_id_2;
-            i++;
-        }
-        for (; i < 8; ++i) {
-            resources[i] = 0;
-        }
-    }
 
     draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
 
-    for (int i = resource_min; i < resource_max; i++) {
-        resource_type resource = resources[i];
-        if (!resource) {
+    const resource_list *list = city_resource_get_potential();
+    int allowed = get_allowed_inventory_for_supplier(building_get(c->building_id)->type);
+    int row = 0;
+    for (int i = 0; i < list->size; i++) {
+        resource_type resource = list->items[i];
+        int inventory = resource_to_inventory(resource);
+        if (inventory == INVENTORY_NONE || !inventory_is_set(allowed, inventory)) {
             continue;
         }
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
             resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
-        image_draw(image_id, c->x_offset + 408, y_offset + 46 + 22 * i);
-        lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
-        button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
+        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * row);
+        image_draw(image_id, c->x_offset + 408, y_offset + 46 + 22 * row);
+        lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * row, FONT_NORMAL_WHITE);
+        button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * row, 210, 22, data.resource_focus_button_id == row + 1);
         building *b = building_get(c->building_id);
-        int state = building_market_is_good_accepted(i,b);
+        int state = building_market_is_good_accepted(inventory, b);
         if (state) {
-            lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_WHITE);
+            lang_text_draw(99, 7, c->x_offset + 230, y_offset + 51 + 22 * row, FONT_NORMAL_WHITE);
         } else {
-            lang_text_draw(99, 8, c->x_offset + 230, y_offset + 51 + 22 * i, FONT_NORMAL_RED);
+            lang_text_draw(99, 8, c->x_offset + 230, y_offset + 51 + 22 * row, FONT_NORMAL_RED);
         }
+        row++;
     }
 }
 
-void window_building_handle_mouse_market(const mouse* m, building_info_context* c)
+void window_building_handle_mouse_supplier(const mouse *m, building_info_context *c)
 {
     generic_buttons_handle_mouse(
         m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
         go_to_orders_button, 1, &data.focus_button_id);
 }
 
-void window_building_handle_mouse_market_orders(const mouse* m, building_info_context* c)
+void window_building_handle_mouse_supplier_orders(const mouse *m, building_info_context *c)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
 
@@ -906,38 +914,36 @@ int window_building_handle_mouse_warehouse_orders(const mouse *m, building_info_
         warehouse_order_buttons, 3, &data.orders_focus_button_id);
 }
 
-void window_building_warehouse_get_tooltip_distribution_permissions(int* translation)
+void window_building_warehouse_get_tooltip_distribution_permissions(int *translation)
 {
     switch (data.permission_focus_button_id) {
-    case 1:
-        *translation = TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES;
-        break;
-    case 2:
-        *translation = TR_TOOLTIP_BUTTON_ACCEPT_TRADE_CARAVAN;
-        break;
-    case 3:
-        *translation = TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS;
-        break;
-    default:
-        break;
+        case 1:
+            *translation = TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES;
+            break;
+        case 2:
+            *translation = TR_TOOLTIP_BUTTON_ACCEPT_TRADE_CARAVAN;
+            break;
+        case 3:
+            *translation = TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS;
+            break;
+        default:
+            break;
     }
 
 }
 
-void window_building_granary_get_tooltip_distribution_permissions(int* translation)
+void window_building_granary_get_tooltip_distribution_permissions(int *translation)
 {
     switch (data.permission_focus_button_id) {
-    case 1:
-        *translation = TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES;
-        break;
-    case 2:
-        *translation = TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER;
-    default:
-        break;
+        case 1:
+            *translation = TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES;
+            break;
+        case 2:
+            *translation = TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER;
+        default:
+            break;
     }
-
 }
-
 
 void window_building_get_tooltip_warehouse_orders(int *group_id, int *text_id, int *translation)
 {
@@ -952,18 +958,46 @@ static void go_to_orders(int param1, int param2)
     window_building_info_show_storage_orders();
 }
 
+static int get_resource_index_for_supplier(building_type type, int index)
+{
+    const resource_list *list = city_resource_get_potential();
+    int allowed = get_allowed_inventory_for_supplier(type);
+    for (int i = 0; i < list->size; i++) {
+        int resource = list->items[i];
+        int inventory = resource_to_inventory(resource);
+        if (inventory == INVENTORY_NONE || !inventory_is_set(allowed, inventory)) {
+            continue;
+        }
+        if (!index--) {
+            return inventory;
+        }
+    }
+    return INVENTORY_NONE;
+}
+
 static void toggle_resource_state(int index, int param2)
 {
     building *b = building_get(data.building_id);
     int resource;
-    if (building_has_market_inventory(b->type)) {
-        building_market_toggle_good_accepted(index - 1, b);
-    }
-    else {
+    if (building_has_supplier_inventory(b->type) || b->type == BUILDING_DOCK) {
+        int resource;
+        if (b->type == BUILDING_DOCK) {
+            resource = city_resource_get_potential()->items[index - 1];
+            if (resource == RESOURCE_NONE) {
+                return;
+            }
+            resource -= 1;
+        } else {
+            resource = get_resource_index_for_supplier(b->type, index - 1);
+            if (resource == INVENTORY_NONE) {
+                return;
+            }
+        }
+        building_market_toggle_good_accepted(resource, b);
+    } else {
         if (b->type == BUILDING_WAREHOUSE) {
             resource = city_resource_get_available()->items[index - 1];
-        }
-        else {
+        } else {
             resource = city_resource_get_available_foods()->items[index - 1];
         }
         building_storage_cycle_resource_state(b->storage_id, resource);
@@ -982,7 +1016,7 @@ static void market_orders(int index, int param2)
 
 static void storage_toggle_permissions(int index, int param2)
 {
-    building* b = building_get(data.building_id);
+    building *b = building_get(data.building_id);
     building_storage_set_permission(index-1,b);
     window_invalidate();
 }
@@ -1032,9 +1066,9 @@ static void warehouse_orders(int index, int param2)
     window_invalidate();
 }
 
-void window_building_draw_mess_hall(building_info_context* c)
+void window_building_draw_mess_hall(building_info_context *c)
 {
-    building* b = building_get(c->building_id);
+    building *b = building_get(c->building_id);
     int mess_hall_fulfillment_display = 100 - city_mess_hall_food_missing_month();
     int food_stress = city_mess_hall_food_stress();
     int hunger_text;
@@ -1042,25 +1076,25 @@ void window_building_draw_mess_hall(building_info_context* c)
     window_building_play_sound(c, "wavs/warehouse2.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
    
-    text_draw_centered(translation_for(TR_BUILDING_MESS_HALL), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    text_draw_centered(translation_for(TR_BUILDING_MESS_HALL),
+        c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     window_building_draw_stocks(c, b, 0, 1);
     if (city_military_total_soldiers_in_city() > 0) {
-        int width = text_draw(translation_for(TR_BUILDING_MESS_HALL_FULFILLMENT), c->x_offset + 32, c->y_offset + 106, FONT_NORMAL_BLACK, 0);
-        text_draw_percentage(mess_hall_fulfillment_display, c->x_offset + 32 + width, c->y_offset + 106, FONT_NORMAL_BLACK);
-        width = text_draw(translation_for(TR_BUILDING_MESS_HALL_TROOP_HUNGER), c->x_offset + 32, c->y_offset + 126, FONT_NORMAL_BLACK, 0);
+        int width = text_draw(translation_for(TR_BUILDING_MESS_HALL_FULFILLMENT),
+            c->x_offset + 32, c->y_offset + 106, FONT_NORMAL_BLACK, 0);
+        text_draw_percentage(mess_hall_fulfillment_display,
+            c->x_offset + 32 + width, c->y_offset + 106, FONT_NORMAL_BLACK);
+        width = text_draw(translation_for(TR_BUILDING_MESS_HALL_TROOP_HUNGER),
+            c->x_offset + 32, c->y_offset + 126, FONT_NORMAL_BLACK, 0);
         if (food_stress < 3) {
             hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_1;
-        }
-        else if (food_stress > 80) {
+        } else if (food_stress > 80) {
             hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_5;
-        }
-        else if (food_stress > 60) {
+        } else if (food_stress > 60) {
             hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_4;
-        }
-        else if (food_stress > 40) {
+        } else if (food_stress > 40) {
             hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_3;
-        }
-        else {
+        } else {
             hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_2;
         }
 
@@ -1071,17 +1105,15 @@ void window_building_draw_mess_hall(building_info_context* c)
 
         if (city_mess_hall_food_types() == 2) {
             text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_1), c->x_offset + 32, c->y_offset + 175, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
-        }
-        else if (city_mess_hall_food_types() >= 3) {
+        } else if (city_mess_hall_food_types() >= 3) {
             text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_2), c->x_offset + 32, c->y_offset + 175, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
         }
-    }
-    else {
+    } else {
         text_draw_centered(translation_for(TR_BUILDING_MESS_HALL_NO_SOLDIERS), c->x_offset, c->y_offset + 150, 16 * (c->width_blocks), FONT_NORMAL_BLACK, 0);
     }
     text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_DESC), c->x_offset + 32, c->y_offset + 226, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
         
     inner_panel_draw(c->x_offset + 16, c->y_offset + 308, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 308);
-    window_building_draw_market_foreground(c);
+    window_building_supplier_draw_foreground(c);
 }

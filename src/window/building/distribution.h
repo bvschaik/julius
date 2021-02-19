@@ -4,6 +4,8 @@
 #include "common.h"
 #include "input/mouse.h"
 
+#include <stdint.h>
+
 void window_building_draw_dock(building_info_context *c);
 void window_building_draw_dock_orders_foreground(building_info_context* c);
 void window_building_draw_dock_orders(building_info_context* c);
@@ -13,12 +15,12 @@ int window_building_handle_mouse_dock(const mouse* m, building_info_context* c);
 int window_building_handle_mouse_dock_orders(const mouse* m, building_info_context* c);
 
 void window_building_draw_market(building_info_context *c);
-void window_building_draw_market_foreground(building_info_context *c);
-void window_building_draw_market_orders(building_info_context *c);
-void window_building_draw_market_orders_foreground(building_info_context *c, int food_only, int limit_resource, int resource_id_1, int resource_id_2);
+void window_building_supplier_draw_foreground(building_info_context *c);
+void window_building_draw_supplier_orders(building_info_context *c, const uint8_t *title);
+void window_building_draw_supplier_orders_foreground(building_info_context *c);
 
-void window_building_handle_mouse_market(const mouse* m, building_info_context* c);
-void window_building_handle_mouse_market_orders(const mouse* m, building_info_context* c);
+void window_building_handle_mouse_supplier(const mouse* m, building_info_context* c);
+void window_building_handle_mouse_supplier_orders(const mouse* m, building_info_context* c);
 
 void window_building_draw_mess_hall(building_info_context* c);
 

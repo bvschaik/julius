@@ -86,4 +86,6 @@ void inventory_set(int *inventory, int flag);
 
 int resource_from_inventory(int inventory_id);
 
+int resource_to_inventory(resource_type resource);
+
 #endif // GAME_RESOURCE_H

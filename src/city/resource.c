@@ -24,6 +24,11 @@ static struct {
     resource_list food_list;
 } available;
 
+static struct {
+    resource_list resource_list;
+    resource_list food_list;
+} potential;
+
 int city_resource_count(resource_type resource)
 {
     return city_data.resource.stored_in_warehouses[resource];
@@ -37,6 +42,16 @@ const resource_list *city_resource_get_available(void)
 const resource_list *city_resource_get_available_foods(void)
 {
     return &available.food_list;
+}
+
+const resource_list *city_resource_get_potential(void)
+{
+    return &potential.resource_list;
+}
+
+const resource_list *city_resource_get_potential_foods(void)
+{
+    return &potential.food_list;
 }
 
 int city_resource_multiple_wine_available(void)
@@ -224,14 +239,21 @@ void city_resource_determine_available(void)
     for (int i = 0; i < RESOURCE_MAX; i++) {
         available.resource_list.items[i] = 0;
         available.food_list.items[i] = 0;
+        potential.resource_list.items[i] = 0;
+        potential.food_list.items[i] = 0;
     }
     available.resource_list.size = 0;
     available.food_list.size = 0;
+    potential.resource_list.size = 0;
+    potential.food_list.size = 0;
 
     for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
         if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
             (i == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF))) {
             available.resource_list.items[available.resource_list.size++] = i;
+            potential.resource_list.items[potential.resource_list.size++] = i;
+        } else if (empire_can_produce_resource_potentially(i) || empire_can_import_resource_potentially(i)) {
+            potential.resource_list.items[potential.resource_list.size++] = i;
         }
     }
     for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
@@ -241,6 +263,9 @@ void city_resource_determine_available(void)
         if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
             (i == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF))) {
             available.food_list.items[available.food_list.size++] = i;
+            potential.food_list.items[potential.food_list.size++] = i;
+        } else if (empire_can_produce_resource_potentially(i) || empire_can_import_resource_potentially(i)) {
+            potential.food_list.items[potential.food_list.size++] = i;
         }
     }
 }

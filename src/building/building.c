@@ -405,7 +405,7 @@ int building_is_venus_temple(building_type type)
 }
 
 // all buildings capable of collecting and storing goods as a market
-int building_has_market_inventory(building_type type) {
+int building_has_supplier_inventory(building_type type) {
     return (type == BUILDING_MARKET ||
         type == BUILDING_MESS_HALL ||
         type == BUILDING_SMALL_TEMPLE_CERES ||
