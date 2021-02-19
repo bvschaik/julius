@@ -360,13 +360,13 @@ static void main_loop(void)
 static int init_sdl(void)
 {
     SDL_Log("Initializing SDL");
-    Uint32 SDL_flags = SDL_INIT_AUDIO;
 
-    // on Vita, need video init only to enable physical kbd/mouse and touch events
-    SDL_flags |= SDL_INIT_VIDEO;
-    SDL_flags |= SDL_INIT_JOYSTICK;
+    // This hint must be set before initializing SDL, otherwise it won't work
+#if SDL_VERSION_ATLEAST(2, 0, 2)
+    SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
+#endif
 
-    if (SDL_Init(SDL_flags) != 0) {
+    if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }

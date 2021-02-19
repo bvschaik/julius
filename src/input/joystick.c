@@ -186,6 +186,7 @@ int joystick_add(int joystick_id, const char *guid)
     joystick->connected = 1;
     model->connected_joysticks++;
     data.connected_joysticks++;
+    log_info("Joystick added with name", model->name, 0);
     return 1;
 }
 
@@ -212,9 +213,11 @@ int joystick_remove(int joystick_id)
     }
     joystick->connected = 0;
     joystick->model->connected_joysticks--;
+    const char *name = joystick->model->name;
     joystick->model = 0;
     reset_joystick_state(joystick);
     data.connected_joysticks--;
+    log_info("Joystick removed with name", name, 0);
     return 1;
 }
 
