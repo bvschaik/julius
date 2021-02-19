@@ -179,7 +179,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     int x_offset = get_sidebar_x_offset();
     int handled = 0;
-    handled |= generic_buttons_handle_mouse(m, x_offset - MENU_X_OFFSET, MENU_Y_OFFSET, menu_buttons, OVERLAY_BUTTONS, &data.menu_focus_button_id);
+    handled |= generic_buttons_handle_mouse(m, x_offset - MENU_X_OFFSET, MENU_Y_OFFSET,
+        menu_buttons, OVERLAY_BUTTONS, &data.menu_focus_button_id);
 
     if (!data.keep_submenu_open) {
         handle_submenu_focus();

@@ -34,7 +34,7 @@ int file_has_extension(const char *filename, const char *extension)
     if (!c) {
         filename--;
     }
-    return string_compare_case_insensitive(filename, extension) == 0;
+    return platform_file_manager_compare_filename(filename, extension) == 0;
 }
 
 void file_change_extension(char *filename, const char *new_extension)

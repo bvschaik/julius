@@ -50,7 +50,7 @@ static void expand_dir_listing(void)
 static int compare_lower(const void *va, const void *vb)
 {
     // arguments are pointers to char*
-    return string_compare_case_insensitive(*(const char**)va, *(const char**)vb);
+    return platform_file_manager_compare_filename(*(const char**)va, *(const char**)vb);
 }
 
 static int add_to_listing(const char *filename)
@@ -82,7 +82,7 @@ const dir_listing *dir_find_all_subdirectories(void)
 
 static int compare_case(const char *filename)
 {
-    if (string_compare_case_insensitive(filename, data.cased_filename) == 0) {
+    if (platform_file_manager_compare_filename(filename, data.cased_filename) == 0) {
         strcpy(data.cased_filename, filename);
         return LIST_MATCH;
     }

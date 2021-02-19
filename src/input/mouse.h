@@ -68,6 +68,11 @@ void mouse_set_inside_window(int inside);
  */
 void mouse_set_from_touch(const touch *first, const touch *last);
 
+/**
+ * Dissociates touch status from mouse
+ */
+void mouse_remove_touch(void);
+
 void mouse_reset_up_state(void);
 
 void mouse_reset_scroll(void);

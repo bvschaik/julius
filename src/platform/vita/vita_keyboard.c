@@ -3,14 +3,16 @@
 #include "core/calc.h"
 #include "core/encoding.h"
 #include "core/string.h"
+#include "platform/screen.h"
 
+#include <string.h>
 #include <psp2/apputil.h>
+#include <psp2/common_dialog.h>
 #include <psp2/display.h>
 #include <psp2/kernel/processmgr.h>
 #include <psp2/ime_dialog.h>
 #include <psp2/message_dialog.h>
 #include <string.h>
-#include <vita2d.h>
 
 enum {
     IME_DIALOG_RESULT_NONE = 0,
@@ -34,6 +36,7 @@ static int init_ime_dialog(const uint8_t *initial_text, int max_text_length, int
     if (ime_dialog_running) {
         return -1;
     }
+    max_text_length = calc_bound(max_text_length, 0, SCE_IME_DIALOG_MAX_TEXT_LENGTH);
     encoding_to_utf8(initial_text, ime_text_utf8, SCE_IME_DIALOG_MAX_TEXT_LENGTH, 0);
 
     // Set title (first time only)
@@ -109,27 +112,20 @@ const uint8_t *vita_keyboard_get(const uint8_t *initial_text, int max_length)
 
     if (ime_init_apputils == 0) {
         sceAppUtilInit(&(SceAppUtilInitParam){}, &(SceAppUtilBootParam){});
-        sceCommonDialogSetConfigParam(&(SceCommonDialogConfigParam){});
         ime_init_apputils = 1;
     }
     init_ime_dialog(initial_text, max_length, SCE_IME_TYPE_BASIC_LATIN, 0);
     int done = 0;
     while (!done) {
-        vita2d_start_drawing();
-        vita2d_clear_screen();
-
+        platform_screen_clear();
         done = 1;
-
         int ime_result = update_ime_dialog();
         if (ime_result == IME_DIALOG_RESULT_FINISHED) {
             encoding_from_utf8(ime_text_utf8, final_text, max_length);
         } else if (ime_result != IME_DIALOG_RESULT_CANCELED) {
             done = 0;
         }
-        vita2d_end_drawing();
-        vita2d_common_dialog_update();
-        vita2d_swap_buffers();
-        sceDisplayWaitVblankStart();
+        platform_screen_render();
     }
     return final_text;
 }

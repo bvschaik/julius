@@ -82,7 +82,8 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
         SDL_Log("Maximum scale of %i applied", scale_percentage);
     }
 
-    SDL_SetWindowMinimumSize(SDL.window, scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
+    SDL_SetWindowMinimumSize(SDL.window,
+        scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
 
     // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
@@ -431,7 +432,12 @@ void platform_screen_recreate_texture(void)
 }
 #endif
 
-void platform_screen_render(void)
+void platform_screen_clear(void)
+{
+    SDL_RenderClear(SDL.renderer);
+}
+
+void platform_screen_update(void)
 {
     SDL_RenderClear(SDL.renderer);
     if (config_get(CONFIG_UI_ZOOM)) {
@@ -439,14 +445,22 @@ void platform_screen_render(void)
             &city_texture_position.renderer.w, &city_texture_position.offset.h);
         city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
             &city_texture_position.offset.w, &city_texture_position.offset.h);
+#ifndef __vita__
         SDL_UpdateTexture(SDL.texture_city, &city_texture_position.offset, graphics_canvas(CANVAS_CITY), screen_width() * 4 * 2);
+#endif
         SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture_position.offset, &city_texture_position.renderer);
     }
+#ifndef __vita__
     SDL_UpdateTexture(SDL.texture_ui, NULL, graphics_canvas(CANVAS_UI), screen_width() * 4);
+#endif
     SDL_RenderCopy(SDL.renderer, SDL.texture_ui, NULL, NULL);
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR
     draw_software_mouse_cursor();
 #endif
+}
+
+void platform_screen_render(void)
+{
     SDL_RenderPresent(SDL.renderer);
 }
 
@@ -499,20 +513,37 @@ int system_save_screen_buffer(void *pixels)
 
 color_t *system_create_ui_framebuffer(int width, int height)
 {
+#ifdef __vita__
+    int pitch;
+    SDL_LockTexture(SDL.texture_ui, NULL, (void **)&framebuffer_ui, &pitch);
+    SDL_UnlockTexture(SDL.texture_ui);
+#else
     free(framebuffer_ui);
     framebuffer_ui = (color_t *)malloc((size_t)width * height * sizeof(color_t));
+#endif
     return framebuffer_ui;
 }
 
 color_t *system_create_city_framebuffer(int width, int height)
 {
+#ifdef __vita__
+    if (!SDL.texture_city) {
+        return 0;
+    }
+    int pitch;
+    SDL_LockTexture(SDL.texture_city, NULL, (void **)&framebuffer_city, &pitch);
+    SDL_UnlockTexture(SDL.texture_city);
+#else
     free(framebuffer_city);
     framebuffer_city = (color_t *)malloc((size_t)width * height * sizeof(color_t) * 4);
+#endif
     return framebuffer_city;
 }
 
 void system_release_city_framebuffer(void)
 {
+#ifndef __vita__
     free(framebuffer_city);
+#endif
     framebuffer_city = 0;
 }

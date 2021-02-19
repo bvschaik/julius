@@ -9,13 +9,9 @@ $version = Get-Content -TotalCount 1 res\version.txt
 
 $repo = ""
 if ("$env:GITHUB_REF" -match "^refs/tags/v") {
-    $repo = "julius"
+    $repo = "release"
 } elseif ("$env:GITHUB_REF" -eq "refs/heads/master") {
-    $repo = "julius-dev"
-} elseif ("$env:GITHUB_REF" -match "^refs/heads/feature/(.*)") {
-    $repo = "julius-branches"
-    $branch = $matches[1]
-    $version = "$branch-$version"
+    $repo = "development"
 } elseif ("$env:GITHUB_REF" -match "^refs/pull/(.*)/merge") {
     $pr_id = $matches[1];
     $version = "pr-$pr_id-$version"
@@ -55,23 +51,23 @@ if (!$?) {
 }
 
 if (!$repo) {
-    echo "No repo found - skipping deploy to Bintray"
+    echo "No repo found - skipping deploy"
     exit
 }
 
-if (!$env:BINTRAY_USER_TOKEN) {
-    echo "No user token found - skipping deploy to Bintray"
+if (!$env:UPLOAD_TOKEN) {
+    echo "No upload token found - skipping upload"
     exit
 }
 
-# Only upload 32-bit build to bintray
+# Only upload 32-bit build
 if ($suffix -eq "windows") {
     echo "Uploading $deploy_file to $repo/windows/$version"
-    curl -u "$env:BINTRAY_USER_TOKEN" -T "deploy/$deploy_file" "https://api.bintray.com/content/bvschaik/$repo/windows/$version/${deploy_file}?publish=1"
+    curl -u "$env:UPLOAD_TOKEN" -T "deploy/$deploy_file" "https://julius.biancavanschaik.nl/upload/$repo/windows/$version/${deploy_file}"
     if (!$?) {
-        throw "Unable to upload to Bintray"
+        throw "Unable to upload"
     }
-    echo "\nUploaded to bintray. URL: https://bintray.com/bvschaik/$repo/windows/$version#files"
+    echo "Uploaded. URL: https://julius.biancavanschaik.nl/"
 } else {
-    echo "Not publishing build $suffix - skipping deploy to Bintray"
+    echo "Not publishing build $suffix - skipping upload"
 }
