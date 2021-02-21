@@ -1,5 +1,6 @@
 #include "service.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/market.h"
 #include "core/config.h"
@@ -230,7 +231,23 @@ void figure_bathhouse_worker_action(figure *f)
 
 void figure_tavern_action(figure* f)
 {
-    culture_action(f, GROUP_FIGURE_BATHHOUSE_WORKER);
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 384;
+    building *b = building_get(f->building_id);
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
+        f->state = FIGURE_STATE_DEAD;
+    }
+    figure_image_increase_offset(f, 12);
+    roamer_action(f, 1);
+    int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
+    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Tavern"), "Barkeep Death 01") +
+            figure_image_corpse_offset(f);
+    } else {
+        f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Tavern"), "Barkeep NE 01") + dir * 12 +
+            f->image_offset;
+    }
 }
 
 void figure_doctor_action(figure *f)

@@ -75,6 +75,8 @@ static int big_people_image(figure_type type)
         if (scenario_property_climate() == CLIMATE_DESERT) {
             return image_group(GROUP_BIG_PEOPLE) + CAMEL_PORTRAIT - 1;
         }
+    case FIGURE_BARKEEP:
+        return assets_get_image_id(assets_get_group_id("Areldir", "Tavern"), "Barkeep Portrait");
     default:
         break;
     }
