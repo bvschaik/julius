@@ -27,12 +27,9 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CANCEL, "Abbrechen"},
     {TR_BUTTON_RESET_DEFAULTS, "Zurücksetzen"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Tastenkombinationen"},
-    {TR_BUTTON_NEXT, "+"},
-    {TR_BUTTON_PREV, "-"},
     {TR_CONFIG_TITLE, "Augustus Einstellungen"},
     {TR_CONFIG_LANGUAGE_LABEL, "Sprache:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(Standard)"},
-    {TR_CONFIG_PAGE_LABEL, "Seite"},
     {TR_CONFIG_DISPLAY_SCALE, "Skalierung der Anzeige:"},
     {TR_CONFIG_CURSOR_SCALE, "Skalierung des Mauszeigers:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "Benutzeroberfläche"},
@@ -359,11 +356,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MENU_STATUES, "Statuen" },
     {TR_BUILDING_MENU_GOV_RES, "Gouverneursanwesen" },
     {TR_OVERLAY_ROADS, "Straßen" },
-    {TR_NO_EXTRA_ASSETS_TITLE, "Assets Ordner nicht gefunden." },
+    {TR_NO_EXTRA_ASSETS_TITLE, " Extra Assets wurden nicht geladen" },
     {TR_NO_EXTRA_ASSETS_MESSAGE,
-    "In Ihrer Caesar 3-Installation ist der Assets-Ordner nicht ordnungsgemäß installiert. "
-    "Neue Spielinhalte werden nicht richtig angezeigt. "
-    "Stellen Sie sicher, dass ein '/assets'-Verzeichnis in der obersten Ebene Ihres Caesar 3-Installationsverzeichnisses vorhanden ist."},
+    "Extra Augustus Assets wurden nicht geladen.\n"
+    "Das kann durch ein fehlendes oder veraltetes Assetverzeichnis passieren.\n"
+    "Bitte stellen Sie sicher, dass die das aktuellste Assetverzeichnis haben, welches durch Github bereitgestellt wird."},
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Leuchtturm muss nah am Wasser platziert werden."},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Dieses Haus hat durch das Pantheon Zugang zu allen fünf Göttern."},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Reichhaltiges Nahrungsangebot steigert die Moral" },

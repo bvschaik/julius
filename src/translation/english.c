@@ -27,12 +27,9 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CANCEL, "Cancel"},
     {TR_BUTTON_RESET_DEFAULTS, "Reset defaults"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Configure hotkeys"},
-    {TR_BUTTON_NEXT, "+"},
-    {TR_BUTTON_PREV, "-"},
     {TR_CONFIG_TITLE, "Augustus configuration options"},
     {TR_CONFIG_LANGUAGE_LABEL, "Language:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(default)"},
-    {TR_CONFIG_PAGE_LABEL, "Page"},
     {TR_CONFIG_DISPLAY_SCALE, "Display scale:"},
     {TR_CONFIG_CURSOR_SCALE, "Cursor scale:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "User Interface"},
@@ -364,11 +361,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MENU_STATUES, "Statues" },
     {TR_BUILDING_MENU_GOV_RES, "Governor's mansions" },
     {TR_OVERLAY_ROADS, "Roads" },
-    {TR_NO_EXTRA_ASSETS_TITLE, "Assets folder can't be found" },
+    {TR_NO_EXTRA_ASSETS_TITLE, "Extra assets couldn't be loaded" },
     {TR_NO_EXTRA_ASSETS_MESSAGE,
-        "Your Caesar 3 installation does not have properly installed assets folder. "
-        "New assets will not properly be displayed.\n"
-        "Please ensure a '/assets' directory exists in the top level of your Caesar 3 install directory. " },
+        "The extra Augustus assets could not be loaded.\n"
+        "This can be due to a missing or old 'assets' directory.\n"
+        "Please ensure you have the most up-to-date 'assets' directory, which can obtained from GitHub." },
     {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Lighthouse must be placed near water"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "This house has access to all five gods from the Pantheon"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Plentiful food is boosting morale" },

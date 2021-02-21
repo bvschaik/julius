@@ -25,7 +25,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_TITLE, "Настройки Augustus"},
     {TR_CONFIG_LANGUAGE_LABEL, "Язык:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(по умолчанию)"},
-    {TR_CONFIG_PAGE_LABEL, "Страница"},
     {TR_CONFIG_DISPLAY_SCALE, "Размер экрана:"},
     {TR_CONFIG_CURSOR_SCALE, "Размер курсора:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "Изменения пользовательского интерфейса"},
