@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
 
-<assetlist author="Areldir" name="Engineer">
+<assetlist author="Areldir" name="Architect">
 <!-- Note: Architect animation frames 01-12 -->
     <image id="Architect 01" src="architect_01" />
     <image id="Architect 02" src="architect_02" />
@@ -22,7 +22,7 @@
 <!-- Note: Architect's Guild ON Variant -->
     <image id="Arch Guild ON" >
 		<layer group="this" image="Arch Guild OFF" />
-e       <animation speed="6" frames="8" reversible="false" />
+e       <animation speed="6" frames="8" y="56" reversible="false" />
     </image>
     <image src="Architects_Guild_On_01" />
     <image src="Architects_Guild_On_02" />

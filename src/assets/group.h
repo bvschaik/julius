@@ -13,6 +13,8 @@ typedef struct {
     asset_image *first_image;
 } image_groups;
 
+void group_setup_hash_replacements(void);
+
 int group_create_all(int total);
 
 image_groups *group_get_new(void);

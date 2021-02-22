@@ -30,6 +30,8 @@ void assets_init(void)
         xml_process_assetlist_file(xml_files->files[i]);
     }
 
+    group_setup_hash_replacements();
+
     // By default, if the requested image is not found, the roadblock image will be shown.
     // This ensures compatibility with previous release versions of Augustus, which only had roadblocks
     data.roadblock_image = asset_image_get_from_id(assets_get_group_id("Areldir", "Roadblocks"));
