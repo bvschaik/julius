@@ -76,6 +76,7 @@ static int big_people_image(figure_type type)
             return image_group(GROUP_BIG_PEOPLE) + CAMEL_PORTRAIT - 1;
         }
     case FIGURE_BARKEEP:
+    case FIGURE_BARKEEP_SUPPLIER:
         return assets_get_image_id(assets_get_group_id("Areldir", "Tavern"), "Barkeep Portrait");
     default:
         break;
