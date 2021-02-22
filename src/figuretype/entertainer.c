@@ -64,6 +64,20 @@ static int determine_tourist_destination(int x, int y)
     return b->id;
 }
 
+static int is_venue(building_type type)
+{
+    switch (type) {
+    case BUILDING_THEATER:
+    case BUILDING_AMPHITHEATER:
+    case BUILDING_ARENA:
+    case BUILDING_COLOSSEUM:
+    case BUILDING_HIPPODROME:
+        return 1;
+    default:
+        return 0;
+    }
+}
+
 static int determine_destination(int x, int y, building_type type1, building_type type2, building_type type3)
 {
     int road_network = map_road_network_get(map_grid_offset(x, y));
@@ -119,7 +133,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
 static void update_shows(figure *f)
 {
     building *b = building_main(building_get(f->destination_building_id));
-    if (b->type < BUILDING_AMPHITHEATER || b->type > BUILDING_COLOSSEUM) {
+    if (!is_venue(b->type)) {
         return;
     }
     switch (f->type) {
