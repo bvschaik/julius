@@ -36,7 +36,7 @@ void scrollbar_init(scrollbar_type *scrollbar, int scroll_position, int max_scro
 
 void scrollbar_reset(scrollbar_type *scrollbar, int scroll_position)
 {
-    scrollbar->scroll_position = calc_bound(scroll_position, 0, scrollbar->max_scroll_position);
+    scrollbar->scroll_position = scroll_position;
     scrollbar->is_dragging_scroll = 0;
 }
 
