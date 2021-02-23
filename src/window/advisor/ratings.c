@@ -172,7 +172,7 @@ static void button_rating(int rating, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text(void)
+static int get_tooltip_text(tooltip_context *c)
 {
     switch (focus_button_id) {
         case SELECTED_RATING_CULTURE: return 102;

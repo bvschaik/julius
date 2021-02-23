@@ -256,7 +256,7 @@ static void get_tooltip(tooltip_context *c)
     }
     int text_id = 0;
     if (current_advisor_window->get_tooltip_text) {
-        text_id = current_advisor_window->get_tooltip_text();
+        text_id = current_advisor_window->get_tooltip_text(c);
     }
     if (text_id) {
         c->text_id = text_id;

@@ -118,7 +118,7 @@ static void button_priority(int category, int param2)
     window_labor_priority_show(category);
 }
 
-static int get_tooltip_text(void)
+static int get_tooltip_text(tooltip_context *c)
 {
     if (focus_button_id) {
         return 90;

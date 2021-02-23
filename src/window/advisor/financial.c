@@ -122,7 +122,7 @@ static void button_change_taxes(int is_down, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text(void)
+static int get_tooltip_text(tooltip_context *c)
 {
     if (arrow_button_focus) {
         return 120;

@@ -2,6 +2,7 @@
 #define WINDOW_ADVISORS_H
 
 #include "city/constants.h"
+#include "graphics/tooltip.h"
 #include "input/mouse.h"
 
 typedef struct {
@@ -11,7 +12,7 @@ typedef struct {
     int (*draw_background)(void);
     void (*draw_foreground)(void);
     int (*handle_mouse)(const mouse *m);
-    int (*get_tooltip_text)(void);
+    int (*get_tooltip_text)(tooltip_context *c);
 } advisor_window_type;
 
 advisor_type window_advisors_get_advisor(void);

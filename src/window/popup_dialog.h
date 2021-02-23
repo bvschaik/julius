@@ -1,6 +1,8 @@
 #ifndef WINDOW_POPUP_DIALOG_H
 #define WINDOW_POPUP_DIALOG_H
 
+#include <stdint.h>
+
 typedef enum {
     POPUP_DIALOG_CUSTOM = -2,
     POPUP_DIALOG_NONE = -1,
@@ -23,6 +25,9 @@ void window_popup_dialog_show_confirmation(int text_group, int text_id,
         void (*close_func)(int accepted));
 
 void window_popup_dialog_show_confirmation_from_tr(int translation_key,
+    void (*close_func)(int accepted));
+
+void window_popup_dialog_show_custom_text(const uint8_t *custom_title, const uint8_t *custom_text,
     void (*close_func)(int accepted));
 
 #endif // WINDOW_POPUP_DIALOG_H

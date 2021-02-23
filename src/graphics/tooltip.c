@@ -101,10 +101,12 @@ static void save_window_under_tooltip_to_buffer(int x, int y, int width, int hei
 static const uint8_t *get_tooltip_text(const tooltip_context *c)
 {
     const uint8_t* text;
+    if (c->precomposed_text) {
+        return c->precomposed_text;
+    }
     if (c->translation_key) {
         text = translation_for(c->translation_key);
-    }
-    else {
+    } else {
         text = lang_get_string(c->text_group, c->text_id);
     }
     if (c->has_numeric_prefix) {

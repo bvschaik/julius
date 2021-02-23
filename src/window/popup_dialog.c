@@ -35,6 +35,8 @@ static struct {
     int has_buttons;
     int from_tr;
     int translation_key;
+    const uint8_t *custom_title;
+    const uint8_t *custom_text;
 } data;
 
 static int init(popup_dialog_type type, int custom_text_group, int custom_text_id,
@@ -51,6 +53,8 @@ static int init(popup_dialog_type type, int custom_text_group, int custom_text_i
     data.from_tr = 0;
     data.close_func = close_func;
     data.has_buttons = has_ok_cancel_buttons;
+    data.custom_title = 0;
+    data.custom_text = 0;
     return 1;
 }
 
@@ -67,14 +71,18 @@ static void draw_background(void)
             lang_text_draw_centered(GROUP, data.type + 1, 80, 140, 480, FONT_NORMAL_BLACK);
         }
     } else {
-        if (data.from_tr) {
+        if (data.custom_title) {
+            text_draw_centered(data.custom_title, 80, 100, 480, FONT_LARGE_BLACK, 0);
+        } else if (data.from_tr) {
             text_draw_centered(translation_for(data.translation_key), 80, 100, 480, FONT_LARGE_BLACK, 0);
-        }
-        else {
+        } else {
             lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK);            
         }
-
-        lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK);
+        if (data.custom_text) {
+            text_draw_centered(data.custom_text, 80, 140, 480, FONT_NORMAL_BLACK, 0);
+        } else {
+            lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK);
+        }
     }
     graphics_reset_dialog();
 }
@@ -166,4 +174,19 @@ void window_popup_dialog_show_confirmation_from_tr(int translation_key,
     }
 }
 
+void window_popup_dialog_show_custom_text(const uint8_t *custom_title, const uint8_t *custom_text,
+    void (*close_func)(int accepted))
+{
+    if (init(POPUP_DIALOG_NONE, 0, 0, close_func, 1)) {
+        window_type window = {
+            WINDOW_POPUP_DIALOG,
+            draw_background,
+            draw_foreground,
+            handle_input
+        };
+        data.custom_title = custom_title;
+        data.custom_text = custom_text;
+        window_show(&window);
+    }
 
+}

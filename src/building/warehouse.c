@@ -328,7 +328,7 @@ int building_warehouses_remove_resource(int resource, int amount)
             amount_left = building_warehouse_remove_resource(b, resource, amount_left);
         }
     }
-    return amount - amount_left;
+    return amount_left;
 }
 
 int building_warehouse_accepts_storage(building *b, int resource, int *understaffed)

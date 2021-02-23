@@ -5,6 +5,8 @@
 #include "city/military.h"
 #include "city/ratings.h"
 #include "city/resource.h"
+#include "core/lang.h"
+#include "core/string.h"
 #include "empire/city.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
@@ -15,6 +17,7 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
+#include "translation/translation.h"
 #include "window/donate_to_city.h"
 #include "window/empire.h"
 #include "window/gift_to_emperor.h"
@@ -22,12 +25,15 @@
 #include "window/set_salary.h"
 
 #define ADVISOR_HEIGHT 27
+#define RESOURCE_INFO_MAX_TEXT 200
 
 enum {
-    STATUS_NOT_ENOUGH_RESOURCES = -1,
-    STATUS_CONFIRM_SEND_LEGIONS = -2,
-    STATUS_NO_LEGIONS_SELECTED = -3,
-    STATUS_NO_LEGIONS_AVAILABLE = -4,
+    STATUS_RESOURCES_FROM_GRANARY = 0x100,
+    STATUS_NOT_ENOUGH_RESOURCES = 1,
+    STATUS_CONFIRM_SEND_LEGIONS = 2,
+    STATUS_NO_LEGIONS_SELECTED = 3,
+    STATUS_NO_LEGIONS_AVAILABLE = 4,
+    STATUS_MAX = 5
 };
 
 static void button_donate_to_city(int param1, int param2);
@@ -48,6 +54,18 @@ static generic_button imperial_buttons[] = {
 
 static int focus_button_id;
 static int selected_request_id;
+static uint8_t tooltip_resource_info[RESOURCE_INFO_MAX_TEXT];
+
+static int get_resource_amount_including_granaries(int resource, int amount, int *checked_granaries)
+{
+    *checked_granaries = 0;
+    int amount_stored = city_resource_count(resource);
+    if (amount_stored < amount && city_resource_is_food(resource)) {
+        amount_stored += city_resource_count_food_on_granaries(resource) / 100;
+        *checked_granaries = 1;
+    }
+    return amount_stored;
+}
 
 static void draw_request(int index, const scenario_request *request)
 {
@@ -76,13 +94,19 @@ static void draw_request(int index, const scenario_request *request)
         }
     } else {
         // normal goods request
-        int amount_stored = city_resource_count(request->resource);
-        width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
-        width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
-        if (amount_stored < request->amount) {
-            lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
+        int using_granaries;
+        int amount_stored = get_resource_amount_including_granaries(request->resource, request->amount, &using_granaries);
+        int y_offset = 120 + 42 * index;
+        width = text_draw_number(amount_stored, '@', " ", 40, y_offset, FONT_NORMAL_WHITE);
+        if (using_granaries) {
+            width += text_draw(translation_for(TR_ADVISOR_IN_STORAGE), 40 + width, y_offset, FONT_NORMAL_WHITE, 0);
         } else {
-            lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
+            width += lang_text_draw(52, 43, 40 + width, y_offset, FONT_NORMAL_WHITE);
+        }
+        if (amount_stored < request->amount) {
+            lang_text_draw(52, 48, 80 + width, y_offset, FONT_NORMAL_WHITE);
+        } else {
+            lang_text_draw(52, 47, 80 + width, y_offset, FONT_NORMAL_WHITE);
         }
     }
 }
@@ -156,11 +180,15 @@ static int get_request_status(int index)
                 return STATUS_NOT_ENOUGH_RESOURCES;
             }
         } else {
-            if (city_resource_count(request->resource) < request->amount) {
+            int using_granaries;
+            int amount = get_resource_amount_including_granaries(request->resource, request->amount, &using_granaries);
+            if (amount < request->amount) {
                 return STATUS_NOT_ENOUGH_RESOURCES;
+            } else if (using_granaries) {
+                return STATUS_RESOURCES_FROM_GRANARY | (request->id + STATUS_MAX);
             }
         }
-        return request->id + 1;
+        return request->id + STATUS_MAX;
     }
     return 0;
 }
@@ -261,27 +289,64 @@ static void button_request(int index, int param2)
                 window_popup_dialog_show(POPUP_DIALOG_NOT_ENOUGH_GOODS, confirm_nothing, 0);
                 break;
             default:
-                selected_request_id = status - 1;
-                window_popup_dialog_show(POPUP_DIALOG_SEND_GOODS, confirm_send_goods, 2);
+                selected_request_id = (status - STATUS_MAX) & ~STATUS_RESOURCES_FROM_GRANARY;
+                if (status & STATUS_RESOURCES_FROM_GRANARY) {
+                    window_popup_dialog_show_custom_text(
+                        translation_for(TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TITLE),
+                        translation_for(TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TEXT),
+                        confirm_send_goods);
+                } else {
+                    window_popup_dialog_show(POPUP_DIALOG_SEND_GOODS, confirm_send_goods, 2);
+                }
                 break;
         }
     }
 }
 
-static int get_tooltip_text(void)
+static void write_resource_storage_tooltip(tooltip_context *c, int resource)
+{
+    int amount_warehouse = city_resource_count(resource);
+    int amount_granary = city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
+    uint8_t *text = tooltip_resource_info;
+    text += string_from_int(text, amount_warehouse, 0);
+    *text = ' ';
+    text++;
+    text = string_copy(lang_get_string(52, 43), text, RESOURCE_INFO_MAX_TEXT - (int) (text - tooltip_resource_info));
+    *text = '\n';
+    text++;
+    text += string_from_int(text, amount_granary, 0);
+    *text = ' ';
+    text++;
+    text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, RESOURCE_INFO_MAX_TEXT - (int) (text - tooltip_resource_info));
+    c->precomposed_text = tooltip_resource_info;
+}
+
+static int get_tooltip_text(tooltip_context *c)
 {
     if (focus_button_id && focus_button_id <= 2) {
         return 93 + focus_button_id;
     } else if (focus_button_id == 3) {
         return 131;
-    } else {
-        return 0;
+    } else if (focus_button_id >= 4 && focus_button_id <= 8) {
+        int index = focus_button_id - 4;
+        int request_status = get_request_status(index);
+        if (request_status == STATUS_NOT_ENOUGH_RESOURCES || request_status >= STATUS_MAX) {
+            const scenario_request *request = scenario_request_get_visible(index);
+            int using_granaries;
+            get_resource_amount_including_granaries(request->resource, request->amount, &using_granaries);
+            if (using_granaries) {
+                write_resource_storage_tooltip(c, request->resource);
+                return 1;
+            }
+        }
     }
+    return 0;
 }
 
 const advisor_window_type *window_advisor_imperial(void)
 {
     city_resource_calculate_warehouse_stocks();
+    city_resource_calculate_food_stocks_and_supply_wheat();
     static const advisor_window_type window = {
         draw_background,
         draw_foreground,

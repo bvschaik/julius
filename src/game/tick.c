@@ -188,6 +188,7 @@ void game_tick_run(void)
     city_victory_check();
 }
 
-void game_tick_cheat_year(void){
+void game_tick_cheat_year(void)
+{
     advance_year();
 }

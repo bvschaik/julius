@@ -561,7 +561,7 @@ static void button_graph(int param1, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text(void)
+static int get_tooltip_text(tooltip_context *c)
 {
     if (focus_button_id && focus_button_id < 3) {
         return 111;

@@ -174,7 +174,7 @@ static void button_hold_festival(int param1, int param2)
     }
 }
 
-static int get_tooltip_text(void)
+static int get_tooltip_text(tooltip_context *c)
 {
     if (focus_button_id) {
         return 112;

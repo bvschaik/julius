@@ -129,7 +129,7 @@ static void button_resource(int resource_index, int param2)
     window_resource_settings_show(city_resource_get_available()->items[resource_index]);
 }
 
-static int get_tooltip_text(void)
+static int get_tooltip_text(tooltip_context *c)
 {
     if (focus_button_id == 1) {
         return 106;
