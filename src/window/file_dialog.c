@@ -108,6 +108,10 @@ static int find_first_file_with_prefix(const char *prefix)
 
 static void scroll_to_typed_text(void)
 {
+    if (data.file_list->num_files <= NUM_FILES_IN_VIEW) {
+        // No need to scroll
+        return;
+    }
     char name_utf8[FILE_NAME_MAX];
     encoding_to_utf8(data.typed_name, name_utf8, FILE_NAME_MAX, encoding_system_uses_decomposed());
     int index = find_first_file_with_prefix(name_utf8);
