@@ -140,7 +140,7 @@ static void draw_foreground(void)
             }
             arrow_buttons_draw(0, 0, import_amount_arrow_buttons, 2);   
         } else {
-            lang_text_draw_centered(54, 18, 32, 221, 282, FONT_NORMAL_BLACK);                
+            text_draw_centered(translation_for(TR_ADVISOR_TRADE_NOT_IMPORTING), 32, 221, 282, FONT_NORMAL_BLACK, 0);             
         }
     } else {
         if (!can_import_potentially) {
@@ -159,7 +159,7 @@ static void draw_foreground(void)
             text_draw_number(trade_quantity, 0, " ", x_offset + width, 221, FONT_NORMAL_BLACK);
             arrow_buttons_draw(0, 0, export_amount_arrow_buttons, 2);
         } else {
-            lang_text_draw_centered(54, 18, 324, 221, 282, FONT_NORMAL_BLACK);                
+            text_draw_centered(translation_for(TR_ADVISOR_TRADE_NOT_EXPORTING), 324, 221, 282, FONT_NORMAL_BLACK, 0);
         }
     } else {
         if (!can_export_potentially) {
