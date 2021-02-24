@@ -12,6 +12,9 @@
 int building_temple_get_storage_destination(building *temple)
 {
     if (building_is_venus_temple(temple->type)) {
+        if (!building_distribution_is_good_accepted(INVENTORY_WINE, temple) || !temple->data.market.wine_demand) {
+            return 0;
+        }
         building *grand_temple = building_get(building_monument_get_venus_gt());
         if (grand_temple->id != 0 && grand_temple->road_network_id == temple->road_network_id &&
             temple->data.market.inventory[INVENTORY_WINE] < BASELINE_STOCK && grand_temple->loads_stored > 0) {
@@ -24,26 +27,29 @@ int building_temple_get_storage_destination(building *temple)
     if (!building_is_ceres_temple(temple->type)) { // Ceres module 2
         return 0;
     }
+
+    int inventory = resource_to_inventory(city_resource_ceres_temple_food());
+    if (inventory == INVENTORY_NONE) {
+        return 0;
+    }
+    if (!building_distribution_is_good_accepted(inventory, temple) &&
+        (!building_distribution_is_good_accepted(INVENTORY_OIL, temple) || !temple->data.market.oil_demand)) {
+        return 0;
+    }
+
     inventory_storage_info data[INVENTORY_MAX];
     if (!building_distribution_get_inventory_storages(data, temple->type,
             temple->road_network_id, temple->road_access_x, temple->road_access_y, INFINITE)) {
         return 0;
     }
-    int inventory;
-    int ceres_food = city_resource_ceres_temple_food();
-    switch (ceres_food) {
-        case RESOURCE_WHEAT: inventory = INVENTORY_WHEAT; break;
-        case RESOURCE_VEGETABLES: inventory = INVENTORY_VEGETABLES; break;
-        case RESOURCE_FRUIT: inventory = INVENTORY_FRUIT; break;
-        case RESOURCE_MEAT: inventory = INVENTORY_MEAT; break;
-        case RESOURCE_WINE: inventory = INVENTORY_WINE; break;
-        default: return 0;
-    }
-    if (data[inventory].building_id && temple->data.market.inventory[inventory] < MAX_FOOD) {
+
+    if (building_distribution_is_good_accepted(inventory, temple) &&
+        data[inventory].building_id && temple->data.market.inventory[inventory] < MAX_FOOD) {
         temple->data.market.fetch_inventory_id = inventory;
         return data[inventory].building_id;
     }
-    if (data[INVENTORY_OIL].building_id && temple->data.market.inventory[INVENTORY_OIL] < BASELINE_STOCK) {
+    if (building_distribution_is_good_accepted(INVENTORY_OIL, temple) && temple->data.market.oil_demand &&
+        data[INVENTORY_OIL].building_id && temple->data.market.inventory[INVENTORY_OIL] < BASELINE_STOCK) {
         temple->data.market.fetch_inventory_id = INVENTORY_OIL;
         return data[INVENTORY_OIL].building_id;
     }

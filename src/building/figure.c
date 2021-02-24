@@ -644,6 +644,7 @@ static void spawn_temple_supplier(building *b, int x, int y)
         }
         return;
     }
+    building_distribution_update_demands(b);
     int dst_building_id = building_temple_get_storage_destination(b);
     if (dst_building_id == 0) {
         return;
@@ -715,7 +716,7 @@ static void spawn_market_supplier(building *b, int x, int y)
         }
         return;
     }
-    building_market_update_demands(b);
+    building_distribution_update_demands(b);
     int dst_building_id = building_market_get_storage_destination(b);
     if (dst_building_id == 0) {
         return;

@@ -283,7 +283,7 @@ void city_resource_determine_available(void)
 int city_resource_ceres_temple_food(void)
 {
     // locally produced
-    for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
+    for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
         if (i == RESOURCE_OLIVES || i == RESOURCE_VINES) {
             continue;
         }
@@ -293,7 +293,7 @@ int city_resource_ceres_temple_food(void)
     }
 
     // imported, if no food is locally produced
-    for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
+    for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
         if (i == RESOURCE_OLIVES || i == RESOURCE_VINES) {
             continue;
         }
@@ -302,7 +302,7 @@ int city_resource_ceres_temple_food(void)
         }
     }
 
-    return 0;
+    return RESOURCE_NONE;
 }
 
 static void calculate_available_food(void)

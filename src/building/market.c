@@ -34,66 +34,33 @@ int building_market_get_max_goods_stock(building *market)
     return max_stock;
 }
 
-int building_market_is_good_accepted(inventory_type resource, building *market)
-{
-    int goods_bit = 1 << resource;
-    return !(market->subtype.market_goods & goods_bit);
-}
-
-void building_market_toggle_good_accepted(inventory_type resource, building *market)
-{
-    int goods_bit = 1 << resource;
-    market->subtype.market_goods ^= goods_bit;
-}
-
-void building_market_unaccept_all_goods(building *market)
-{
-    market->subtype.market_goods = 0xffff;
-}
-
-void building_market_update_demands(building *market)
-{
-    if (market->data.market.pottery_demand) {
-        market->data.market.pottery_demand--;
-    }
-    if (market->data.market.furniture_demand) {
-        market->data.market.furniture_demand--;
-    }
-    if (market->data.market.oil_demand) {
-        market->data.market.oil_demand--;
-    }
-    if (market->data.market.wine_demand) {
-        market->data.market.wine_demand--;
-    }
-}
-
 int building_market_get_needed_inventory(building *market)
 {
     int needed = INVENTORY_FLAG_NONE;
     if (!scenario_property_rome_supplies_wheat()) {
-        if (building_market_is_good_accepted(INVENTORY_WHEAT, market)) {
+        if (building_distribution_is_good_accepted(INVENTORY_WHEAT, market)) {
             inventory_set(&needed, INVENTORY_WHEAT);
         }
-        if (building_market_is_good_accepted(INVENTORY_VEGETABLES, market)) {
+        if (building_distribution_is_good_accepted(INVENTORY_VEGETABLES, market)) {
             inventory_set(&needed, INVENTORY_VEGETABLES);
         }
-        if (building_market_is_good_accepted(INVENTORY_FRUIT, market)) {
+        if (building_distribution_is_good_accepted(INVENTORY_FRUIT, market)) {
             inventory_set(&needed, INVENTORY_FRUIT);
         }
-        if (building_market_is_good_accepted(INVENTORY_MEAT, market)) {
+        if (building_distribution_is_good_accepted(INVENTORY_MEAT, market)) {
             inventory_set(&needed, INVENTORY_MEAT);
         }
     }
-    if (market->data.market.pottery_demand && building_market_is_good_accepted(INVENTORY_POTTERY, market)) {
+    if (market->data.market.pottery_demand && building_distribution_is_good_accepted(INVENTORY_POTTERY, market)) {
         inventory_set(&needed, INVENTORY_POTTERY);
     }
-    if (market->data.market.furniture_demand && building_market_is_good_accepted(INVENTORY_FURNITURE, market)) {
+    if (market->data.market.furniture_demand && building_distribution_is_good_accepted(INVENTORY_FURNITURE, market)) {
         inventory_set(&needed, INVENTORY_FURNITURE);
     }
-    if (market->data.market.oil_demand && building_market_is_good_accepted(INVENTORY_OIL, market)) {
+    if (market->data.market.oil_demand && building_distribution_is_good_accepted(INVENTORY_OIL, market)) {
         inventory_set(&needed, INVENTORY_OIL);
     }
-    if (market->data.market.wine_demand && building_market_is_good_accepted(INVENTORY_WINE, market)) {
+    if (market->data.market.wine_demand && building_distribution_is_good_accepted(INVENTORY_WINE, market)) {
         inventory_set(&needed, INVENTORY_WINE);
     }
     return needed;

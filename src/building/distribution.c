@@ -12,6 +12,40 @@ static const int INVENTORY_SEARCH_ORDER[INVENTORY_MAX] = {
     INVENTORY_POTTERY, INVENTORY_FURNITURE, INVENTORY_OIL, INVENTORY_WINE
 };
 
+int building_distribution_is_good_accepted(inventory_type resource, building *b)
+{
+    int goods_bit = 1 << resource;
+    return !(b->subtype.market_goods & goods_bit);
+}
+
+void building_distribution_toggle_good_accepted(inventory_type resource, building *b)
+{
+    int goods_bit = 1 << resource;
+    b->subtype.market_goods ^= goods_bit;
+}
+
+void building_distribution_unaccept_all_goods(building *b)
+{
+    b->subtype.market_goods = 0xffff;
+}
+
+
+void building_distribution_update_demands(building *b)
+{
+    if (b->data.market.pottery_demand) {
+        b->data.market.pottery_demand--;
+    }
+    if (b->data.market.furniture_demand) {
+        b->data.market.furniture_demand--;
+    }
+    if (b->data.market.oil_demand) {
+        b->data.market.oil_demand--;
+    }
+    if (b->data.market.wine_demand) {
+        b->data.market.wine_demand--;
+    }
+}
+
 int building_distribution_fetch(const building *b, inventory_storage_info *info,
     int min_stock, int pick_first, int allowed)
 {
