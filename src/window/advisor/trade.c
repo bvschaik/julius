@@ -1,6 +1,7 @@
 #include "trade.h"
 
 #include "city/resource.h"
+#include "core/string.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -15,6 +16,7 @@
 #include "window/trade_prices.h"
 
 #define ADVISOR_HEIGHT 27
+#define NUMBER_WIDTH 20
 
 static void button_prices(int param1, int param2);
 static void button_empire(int param1, int param2);
@@ -42,6 +44,95 @@ static generic_button resource_buttons[] = {
 
 static int focus_button_id;
 
+static int get_status_text_starting_width(int box_width, int trade_flags_potential, int trade_flags, int trade_status)
+{
+    int width = 0;
+
+    if (trade_status & TRADE_STATUS_IMPORT) {
+        width += lang_text_get_width(54, 5, FONT_NORMAL_WHITE) + NUMBER_WIDTH;
+    } else if (trade_flags & TRADE_STATUS_IMPORT) {
+        width += text_get_width(translation_for(TR_ADVISOR_TRADE_IMPORTABLE), FONT_NORMAL_GREEN);
+    } else if (trade_flags_potential & TRADE_STATUS_IMPORT) {
+        width += text_get_width(translation_for(TR_ADVISOR_OPEN_TO_IMPORT), FONT_NORMAL_GREEN);
+    }
+
+    if (trade_flags_potential == TRADE_STATUS_IMPORT_EXPORT) {
+        width += text_get_width(string_from_ascii("/"), FONT_NORMAL_WHITE);
+    }
+
+    if (trade_status & TRADE_STATUS_EXPORT) {
+        width += lang_text_get_width(54, 6, FONT_NORMAL_WHITE) + NUMBER_WIDTH;
+    } else if (trade_flags & TRADE_STATUS_EXPORT) {
+        width += text_get_width(translation_for(TR_ADVISOR_TRADE_EXPORTABLE), FONT_NORMAL_GREEN);
+    } else if (trade_flags_potential & TRADE_STATUS_EXPORT) {
+        width += text_get_width(translation_for(TR_ADVISOR_OPEN_TO_EXPORT), FONT_NORMAL_GREEN);
+    }
+
+    return (box_width - width) / 2;
+}
+
+static void draw_trade_status_text(int resource, int x, int y, int box_width)
+{
+    int trade_flags_potential = TRADE_STATUS_NONE;
+    if (empire_can_import_resource_potentially(resource)) {
+        trade_flags_potential |= TRADE_STATUS_IMPORT;
+    }
+    if (empire_can_export_resource_potentially(resource)) {
+        trade_flags_potential |= TRADE_STATUS_EXPORT;
+    }
+    if (trade_flags_potential == TRADE_STATUS_NONE) {
+        return;
+    }
+
+    int trade_flags = TRADE_STATUS_NONE;
+    if (empire_can_import_resource(resource)) {
+        trade_flags |= TRADE_STATUS_IMPORT;
+    }
+    if (empire_can_export_resource(resource)) {
+        trade_flags |= TRADE_STATUS_EXPORT;
+    }
+    resource_trade_status trade_status = city_resource_trade_status(resource);
+
+    // Special case: needs to open trade routes to both import and export
+    if (trade_flags_potential == TRADE_STATUS_IMPORT_EXPORT && trade_flags == TRADE_STATUS_NONE) {
+        text_draw_centered(translation_for(TR_ADVISOR_OPEN_TO_IMPORT_EXPORT), x, y, box_width, FONT_NORMAL_GREEN, 0);
+        return;
+    }
+
+    int width = get_status_text_starting_width(box_width, trade_flags_potential, trade_flags, trade_status);
+    if (width < 0) {
+        width = 0;
+    }
+
+    if (trade_status & TRADE_STATUS_IMPORT) {
+        width += lang_text_draw(54, 5, x + width, y, FONT_NORMAL_WHITE);
+        int import_limit = city_resource_import_over(resource);
+        if (import_limit > 0) {
+            width += text_draw_number(import_limit, '@', " ", x + width, y, FONT_NORMAL_WHITE);
+        } else {
+            width += text_draw(translation_for(TR_ADVISOR_TRADE_MAX), x + width, y, FONT_NORMAL_WHITE, 0);
+        }
+    } else if (trade_flags & TRADE_STATUS_IMPORT) {
+        width += text_draw(translation_for(TR_ADVISOR_TRADE_IMPORTABLE), x + width, y, FONT_NORMAL_GREEN, 0);
+    } else if (trade_flags_potential & TRADE_STATUS_IMPORT) {
+        width += text_draw(translation_for(TR_ADVISOR_OPEN_TO_IMPORT), x + width, y, FONT_NORMAL_GREEN, 0);
+    }
+
+    if (trade_flags_potential == TRADE_STATUS_IMPORT_EXPORT) {
+        font_t font = trade_status != TRADE_STATUS_NONE ? FONT_NORMAL_WHITE : FONT_NORMAL_GREEN;
+        width += text_draw(string_from_ascii("/"), x + width, y, font, 0);
+    }
+
+    if (trade_status & TRADE_STATUS_EXPORT) {
+        width += lang_text_draw(54, 6, x + width, y, FONT_NORMAL_WHITE);
+        text_draw_number(city_resource_export_over(resource), '@', " ", x + width, y, FONT_NORMAL_WHITE);
+    } else if (trade_flags & TRADE_STATUS_EXPORT) {
+        text_draw(translation_for(TR_ADVISOR_TRADE_EXPORTABLE), x + width, y, FONT_NORMAL_GREEN, 0);
+    } else if (trade_flags_potential & TRADE_STATUS_EXPORT) {
+        text_draw(translation_for(TR_ADVISOR_OPEN_TO_EXPORT), x + width, y, FONT_NORMAL_GREEN, 0);
+    }
+}
+
 static int draw_background(void)
 {
     city_resource_determine_available();
@@ -56,10 +147,12 @@ static int draw_background(void)
     return ADVISOR_HEIGHT;
 }
 
+#include "graphics/graphics.h"
+
 static void draw_foreground(void)
 {
     inner_panel_draw(32, 52, 36, 21);
-    const resource_list *list = city_resource_get_available();
+    const resource_list *list = city_resource_get_potential();
     for (int i = 0; i < list->size; i++) {
         int y_offset = 22 * i;
         int resource = list->items[i];
@@ -74,30 +167,12 @@ static void draw_foreground(void)
         text_draw_number_centered(city_resource_count(resource),
             180, y_offset + 61, 60, FONT_NORMAL_WHITE);
         if (city_resource_is_mothballed(resource)) {
-            lang_text_draw_centered(18, 5, 240, y_offset + 61, 100, FONT_NORMAL_WHITE);
+            lang_text_draw_centered(18, 5, 220, y_offset + 61, 100, FONT_NORMAL_WHITE);
         }
         if (city_resource_is_stockpiled(resource)) {
-            lang_text_draw(54, 3, 340, y_offset + 61, FONT_NORMAL_RED);
+            lang_text_draw_centered(54, 3, 240, y_offset + 61, 320, FONT_NORMAL_RED);
         } else {
-            resource_trade_status trade_status = city_resource_trade_status(resource);
-            if (trade_status == TRADE_STATUS_IMPORT) {
-                lang_text_draw(54, 5, 340, y_offset + 61, FONT_NORMAL_WHITE);
-                int import_limit = city_resource_export_over(resource);
-                if (import_limit > 0) {
-                    text_draw_number(import_limit, '@', " ",
-                        500, y_offset + 61, FONT_NORMAL_WHITE);
-                } else {
-                    text_draw(translation_for(TR_ADVISOR_TRADE_MAX), 500, y_offset + 61, FONT_NORMAL_WHITE, 0);
-                }
-            } else if (trade_status == TRADE_STATUS_EXPORT) {
-                int width = lang_text_draw(54, 6, 340, y_offset + 61, FONT_NORMAL_WHITE);
-                text_draw_number(city_resource_export_over(resource), '@', " ",
-                    340 + width, y_offset + 61, FONT_NORMAL_WHITE);
-            } else if (empire_can_import_resource(resource)) {
-                text_draw(translation_for(TR_ADVISOR_TRADE_IMPORTABLE), 340, y_offset + 61, FONT_NORMAL_GREEN, 0);
-            } else if (empire_can_export_resource(resource)) {
-                text_draw(translation_for(TR_ADVISOR_TRADE_EXPORTABLE), 340, y_offset + 61, FONT_NORMAL_GREEN, 0);
-            }
+            draw_trade_status_text(resource, 240, y_offset + 61, 320);
         }
     }
 
@@ -110,7 +185,7 @@ static void draw_foreground(void)
 
 static int handle_mouse(const mouse *m)
 {
-    int num_resources = city_resource_get_available()->size;
+    int num_resources = city_resource_get_potential()->size;
     return generic_buttons_handle_mouse(m, 0, 0, resource_buttons, num_resources + 2, &focus_button_id);
 }
 
@@ -126,7 +201,7 @@ static void button_empire(int param1, int param2)
 
 static void button_resource(int resource_index, int param2)
 {
-    window_resource_settings_show(city_resource_get_available()->items[resource_index]);
+    window_resource_settings_show(city_resource_get_potential()->items[resource_index]);
 }
 
 static int get_tooltip_text(tooltip_context *c)

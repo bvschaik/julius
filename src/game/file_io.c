@@ -54,12 +54,13 @@
 
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x79;
+static const int SAVE_GAME_CURRENT_VERSION = 0x80;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
 static const int SAVE_GAME_WITHOUT_DELIVERIES_ADDED = 0x77;
 static const int SAVE_GAME_LAST_STATIC_VERSION = 0x78;
+static const int SAVE_GAME_LAST_JOINED_IMPORT_EXPORT_VERSION = 0x79;
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -179,7 +180,7 @@ static struct {
     int num_pieces;
     file_piece pieces[100];
     savegame_state state;
-} savegame_data = {0};
+} savegame_data;
 
 static void init_file_piece(file_piece *piece, int size, int compressed)
 {
@@ -415,7 +416,8 @@ static void savegame_load_from_state(savegame_state *state, int version)
                          state->city_faction_unknown,
                          state->city_graph_order,
                          state->city_entry_exit_xy,
-                         state->city_entry_exit_grid_offset);
+                         state->city_entry_exit_grid_offset,
+                         version > SAVE_GAME_LAST_JOINED_IMPORT_EXPORT_VERSION);
 
     building_load_state(state->buildings,
                         state->building_extra_highest_id,

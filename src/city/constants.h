@@ -57,7 +57,8 @@ typedef enum {
 typedef enum {
     TRADE_STATUS_NONE = 0,
     TRADE_STATUS_IMPORT = 1,
-    TRADE_STATUS_EXPORT = 2
+    TRADE_STATUS_EXPORT = 2,
+    TRADE_STATUS_IMPORT_EXPORT = 3
 } resource_trade_status;
 
 #endif // CITY_CONSTANTS_H

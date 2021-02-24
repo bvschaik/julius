@@ -114,24 +114,31 @@ resource_trade_status city_resource_trade_status(resource_type resource)
     return city_data.resource.trade_status[resource];
 }
 
-void city_resource_cycle_trade_status(resource_type resource)
+void city_resource_cycle_trade_status(resource_type resource, resource_trade_status status)
 {
-    ++city_data.resource.trade_status[resource];
-    if (city_data.resource.trade_status[resource] > TRADE_STATUS_EXPORT) {
-        city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
+    if (status == TRADE_STATUS_IMPORT && !empire_can_import_resource(resource)) {
+        city_data.resource.trade_status[resource] &= ~TRADE_STATUS_IMPORT;
+        return;
     }
+    if (status == TRADE_STATUS_EXPORT && !empire_can_export_resource(resource)) {
+        city_data.resource.trade_status[resource] &= ~TRADE_STATUS_EXPORT;
+        return;
+    }
+    city_data.resource.trade_status[resource] ^= status;
 
-    if (city_data.resource.trade_status[resource] == TRADE_STATUS_IMPORT &&
-        !empire_can_import_resource(resource)) {
-        city_data.resource.trade_status[resource] = TRADE_STATUS_EXPORT;
-    }
-    if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT &&
-        !empire_can_export_resource(resource)) {
-        city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
-    }
-    if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT) {
+    if (city_data.resource.trade_status[resource] & TRADE_STATUS_EXPORT) {
         city_data.resource.stockpiled[resource] = 0;
     }
+}
+
+int city_resource_import_over(resource_type resource)
+{
+    return city_data.resource.import_over[resource];
+}
+
+void city_resource_change_import_over(resource_type resource, int change)
+{
+    city_data.resource.import_over[resource] = calc_bound(city_data.resource.import_over[resource] + change, 0, 100);
 }
 
 int city_resource_export_over(resource_type resource)
@@ -155,9 +162,7 @@ void city_resource_toggle_stockpiled(resource_type resource)
         city_data.resource.stockpiled[resource] = 0;
     } else {
         city_data.resource.stockpiled[resource] = 1;
-        if (city_data.resource.trade_status[resource] == TRADE_STATUS_EXPORT) {
-            city_data.resource.trade_status[resource] = TRADE_STATUS_NONE;
-        }
+        city_data.resource.trade_status[resource] &= ~TRADE_STATUS_EXPORT;
     }
 }
 

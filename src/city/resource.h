@@ -39,7 +39,10 @@ int city_resource_last_used_warehouse(void);
 void city_resource_set_last_used_warehouse(int warehouse_id);
 
 resource_trade_status city_resource_trade_status(resource_type resource);
-void city_resource_cycle_trade_status(resource_type resource);
+void city_resource_cycle_trade_status(resource_type resource, resource_trade_status status);
+
+int city_resource_import_over(resource_type resource);
+void city_resource_change_import_over(resource_type resource, int change);
 
 int city_resource_export_over(resource_type resource);
 void city_resource_change_export_over(resource_type resource, int change);

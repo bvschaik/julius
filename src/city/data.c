@@ -115,8 +115,11 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.finance.tourism_last_year);
     buffer_write_i16(main, city_data.finance.tourism_this_year);
     buffer_write_i16(main, city_data.resource.last_used_warehouse);
-    for (int i = 0; i < 18; i++) {
+    for (int i = 0; i < 2; i++) {
         buffer_write_i16(main, city_data.unused.unknown_27f4[i]);
+    }
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        buffer_write_i16(main, city_data.resource.import_over[i]);
     }
     buffer_write_u8(main, city_data.map.entry_point.x);
     buffer_write_u8(main, city_data.map.entry_point.y);
@@ -536,7 +539,7 @@ static void save_main_data(buffer *main)
     }
 }
 
-static void load_main_data(buffer *main)
+static void load_main_data(buffer *main, int has_separate_import_limits)
 {
     buffer_read_raw(main, city_data.unused.other_player, 18068);
     city_data.unused.unknown_00a0 = buffer_read_i8(main);
@@ -602,8 +605,17 @@ static void load_main_data(buffer *main)
     city_data.finance.tourism_last_year = buffer_read_i32(main);
     city_data.finance.tourism_this_year = buffer_read_i16(main);
     city_data.resource.last_used_warehouse = buffer_read_i16(main);
-    for (int i = 0; i < 18; i++) {
-        city_data.unused.unknown_27f4[i] = buffer_read_i16(main);
+    if (has_separate_import_limits) {
+        for (int i = 0; i < 2; i++) {
+            city_data.unused.unknown_27f4[i] = buffer_read_i16(main);
+        }
+        for (int i = 0; i < RESOURCE_MAX; i++) {
+            city_data.resource.import_over[i] = buffer_read_i16(main);
+        }
+    } else {
+        for (int i = 0; i < 18; i++) {
+            city_data.unused.unknown_27f4[i] = buffer_read_i16(main);
+        }
     }
     city_data.map.entry_point.x = buffer_read_u8(main);
     city_data.map.entry_point.y = buffer_read_u8(main);
@@ -1021,6 +1033,16 @@ static void load_main_data(buffer *main)
     for (int i = 0; i < 232; i++) {
         city_data.unused.unknown_464c[i] = buffer_read_i8(main);
     }
+    if (!has_separate_import_limits) {
+        for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
+            if (city_data.resource.trade_status[i] == TRADE_STATUS_IMPORT) {
+                city_data.resource.import_over[i] = city_data.resource.export_over[i];
+                city_data.resource.export_over[i] = 0;
+            } else {
+                city_data.resource.import_over[i] = 0;
+            }
+        }
+    }
 }
 
 static void save_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
@@ -1060,9 +1082,9 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
 }
 
 void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
-                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
+                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset,  int has_separate_import_limits)
 {
-    load_main_data(main);
+    load_main_data(main, has_separate_import_limits);
 
     city_data.unused.faction_id = buffer_read_i32(faction);
     city_data.unused.faction_bytes[0] = buffer_read_i8(faction_unknown);

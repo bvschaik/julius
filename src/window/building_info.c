@@ -866,8 +866,7 @@ static void get_tooltip(tooltip_context *c)
     int btype = building_get(context.building_id)->type;
     if (focus_image_button_id) {
         text_id = focus_image_button_id;
-    }
-    else if (focus_generic_button_id) {
+    } else if (focus_generic_button_id) {
         if (building_get(context.building_id)->state == BUILDING_STATE_IN_USE) {
             translation = TR_TOOLTIP_BUTTON_MOTHBALL_ON;
         } else {
