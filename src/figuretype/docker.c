@@ -274,14 +274,15 @@ static int deliver_import_resource(figure *f, building *dock)
     return 1;
 }
 
-static int fetch_export_resource(figure *f, building *dock)
+static int fetch_export_resource(figure *f, building *dock, int add_to_bought)
 {
     int ship_id = dock->data.dock.trade_ship_id;
     if (!ship_id) {
         return 0;
     }
     figure *ship = figure_get(ship_id);
-    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->trader_amount_bought >= figure_trade_sea_trade_units()) {
+    if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED ||
+        (add_to_bought && ship->trader_amount_bought >= figure_trade_sea_trade_units())) {
         return 0;
     }
     int x, y;
@@ -293,7 +294,7 @@ static int fetch_export_resource(figure *f, building *dock)
     if (!warehouse_id) {
         return 0;
     }
-    if (!f->destination_building_id) {
+    if (add_to_bought) {
         ship->trader_amount_bought++;
     }
     if(f->destination_building_id != warehouse_id) {
@@ -355,7 +356,7 @@ void figure_docker_action(figure *f)
         case FIGURE_ACTION_132_DOCKER_IDLING:
             f->cart_image_id = 0;
             if (!deliver_import_resource(f, b)) {
-                fetch_export_resource(f, b);
+                fetch_export_resource(f, b, 1);
             }
             f->image_offset = 0;
             break;
@@ -445,12 +446,12 @@ void figure_docker_action(figure *f)
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS) {
-                if (!fetch_export_resource(f, b)) {
+                if (!fetch_export_resource(f, b, 0)) {
                     f->state = FIGURE_STATE_DEAD;
                 }
             }
             if (building_get(f->destination_building_id)->state != BUILDING_STATE_IN_USE &&
-                !fetch_export_resource(f, b)) {
+                !fetch_export_resource(f, b, 0)) {
                 f->state = FIGURE_STATE_DEAD;
             }
             break;
@@ -498,7 +499,7 @@ void figure_docker_action(figure *f)
                     f->destination_x = f->source_x;
                     f->destination_y = f->source_y;
                     f->resource_id = 0;
-                    fetch_export_resource(f, b);
+                    fetch_export_resource(f, b, 1);
                 } else {
                     f->action_state = FIGURE_ACTION_138_DOCKER_IMPORT_RETURNING;
                     f->destination_x = f->source_x;
@@ -527,7 +528,7 @@ void figure_docker_action(figure *f)
                     trader_record_bought_resource(trader_id, f->resource_id);
                     f->action_state = FIGURE_ACTION_137_DOCKER_EXPORT_RETURNING;
                 } else {
-                    fetch_export_resource(f, b);
+                    fetch_export_resource(f, b, 1);
                 }
             }
             f->image_offset = 0;
