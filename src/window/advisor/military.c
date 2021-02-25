@@ -216,7 +216,7 @@ static void button_go_to_legion(int legion_id, int param2)
 
 static void button_return_to_fort(int legion_id, int param2)
 {
-    formation *m = formation_get(formation_for_legion(legion_id+scrollbar.scroll_position));
+    formation *m = formation_get(formation_for_legion(legion_id + scrollbar.scroll_position));
     if (!m->in_distant_battle) {
         formation_legion_return_home(m);
         window_invalidate();
@@ -225,7 +225,7 @@ static void button_return_to_fort(int legion_id, int param2)
 
 static void button_empire_service(int legion_id, int param2)
 {
-    int formation_id = formation_for_legion(legion_id+scrollbar.scroll_position);
+    int formation_id = formation_for_legion(legion_id + scrollbar.scroll_position);
     formation_toggle_empire_service(formation_id);
     formation_calculate_figures();
     window_invalidate();

@@ -164,6 +164,7 @@ void formation_legion_return_home(formation *m)
         if (prepare_to_move(m)) {
             f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             figure_route_remove(f);
+            f->formation_at_rest = 1;
         }
     }
 }
