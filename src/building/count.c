@@ -192,6 +192,7 @@ void building_count_update(void)
                 if (b->num_workers > 0) {
                     city_buildings_add_working_wharf(!b->data.industry.fishing_boat_id);
                 }
+                increase_industry_count(RESOURCE_MEAT, b->num_workers > 0 && b->data.industry.fishing_boat_id);
                 break;
             case BUILDING_DOCK:
                 if (b->num_workers > 0 && b->has_water_access) {

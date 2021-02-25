@@ -298,7 +298,6 @@ static void read_type_data(buffer *buf, building *b)
 
 void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_size)
 {
-    int index = buf->index;
     b->state = buffer_read_u8(buf);
     b->faction_id = buffer_read_u8(buf);
     b->unknown_value = buffer_read_u8(buf);
@@ -368,6 +367,11 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
 
     if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && !b->data.monument.monument_phase) {
         b->data.monument.monument_phase = -1;
+    }
+
+    // Wharves produce meat
+    if (b->type == BUILDING_WHARF) {
+        b->output_resource_id = RESOURCE_MEAT;
     }
 
     // To keep backward savegame compatibility, only fill more recent building struct elements

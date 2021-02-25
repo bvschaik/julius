@@ -10,6 +10,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
+#include "translation/translation.h"
 
 static void draw_farm(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource)
 {
@@ -256,6 +257,8 @@ void window_building_draw_wharf(building_info_context *c)
 
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
+    } else if (city_resource_is_mothballed(RESOURCE_MEAT)) {
+        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_WHARF_MOTHBALLED);
     } else if (!b->data.industry.fishing_boat_id) {
         window_building_draw_description(c, 102, 2);
     } else {

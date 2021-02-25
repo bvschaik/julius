@@ -77,7 +77,8 @@ static void draw_foreground(void)
 
     lang_text_draw(23, data.resource, 60, 137, FONT_LARGE_BLACK);
 
-    if (empire_can_produce_resource(data.resource)) {
+    if (empire_can_produce_resource(data.resource) ||
+        (data.resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF))) {
         int total_buildings = building_count_industry_total(data.resource);
         int active_buildings = building_count_industry_active(data.resource);
         if (building_count_industry_total(data.resource) <= 0) {
@@ -109,7 +110,7 @@ static void draw_foreground(void)
                 lang_text_draw(54, 14, 66 + width, 172, FONT_NORMAL_BLACK);
             }
         }
-    } else if (data.resource != RESOURCE_MEAT || !scenario_building_allowed(BUILDING_WHARF)) {
+    } else {
         // we cannot produce this good
         lang_text_draw(54, 25, 66, 172, FONT_NORMAL_BLACK);
     }

@@ -6,6 +6,7 @@
 #include "core/io.h"
 #include "core/log.h"
 #include "core/string.h"
+#include "scenario/building.h"
 #include "translation/translation.h"
 
 #include <stdlib.h>
@@ -296,6 +297,9 @@ const uint8_t *lang_get_string(int group, int index)
     }
     if (group == 96 && !index) {
         return translation_for(TR_BUILDING_SMALL_TEMPLE_VENUS_NAME);
+    }
+    if (group == 23 && index == 6 && scenario_building_allowed(BUILDING_WHARF)) {
+        return translation_for(TR_RESOURCE_FISH);
     }
 
     if (group == 130) {

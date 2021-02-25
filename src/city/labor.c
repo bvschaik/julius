@@ -148,7 +148,8 @@ void city_labor_calculate_workers(int num_plebs, int num_patricians)
 }
 
 static int is_industry_disabled(building *b) {
-    if (b->type < BUILDING_WHEAT_FARM || b->type > BUILDING_POTTERY_WORKSHOP) {
+    if ((b->type < BUILDING_WHEAT_FARM || b->type > BUILDING_POTTERY_WORKSHOP) &&
+        b->type != BUILDING_WHARF) {
         return 0;
     }
     int resource = b->output_resource_id;

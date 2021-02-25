@@ -208,6 +208,9 @@ building *building_create(building_type type, int x, int y)
         case BUILDING_GRAND_TEMPLE_VENUS:
             b->output_resource_id = RESOURCE_WINE;
             break;
+        case BUILDING_WHARF:
+            b->output_resource_id = RESOURCE_MEAT;
+            break;
         default:
             b->output_resource_id = RESOURCE_NONE;
             break;

@@ -538,6 +538,7 @@ static translation_string all_strings[] = {
     { TR_TOOLTIP_OVERLAY_ARENA_COL_5, "This house has access to the Colosseum, with two shows." },
     { TR_WINDOW_BUILDING_TOURISM_DISABLED, "Too many buildings of this type-- travellers avoid this place." },
     { TR_WINDOW_BUILDING_TOURISM_ANNUAL, "Tourism income this year:" },
+    { TR_WINDOW_BUILDING_WHARF_MOTHBALLED, "Your Trade Advisor ordered a halt to fish production."},
     { TR_WINDOW_ADVISOR_FINANCE_INTEREST_TRIBUTE, "Tribute/interest"},
     { TR_WINDOW_ADVISOR_TOURISM, "Tourism"},
     { TR_WINDOW_FIGURE_TOURIST, "This traveller has spent: "},
@@ -570,6 +571,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_MESSAGE, "This key combination is already assigned to the following action:"},
     {TR_BUILDING_GARDEN_PATH, "Garden Path" },
     {TR_BUTTON_GO_TO_SITE, "Go to the site" },
+    {TR_RESOURCE_FISH, "Fish" },
 
 };
 
