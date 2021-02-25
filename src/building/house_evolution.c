@@ -564,7 +564,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         return;
     }
     // food types
-    int foodtypes_required = model->food;
+    int foodtypes_required = model->food_types;
     int foodtypes_available = 0;
     for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
         if (house->data.house.inventory[i]) {
