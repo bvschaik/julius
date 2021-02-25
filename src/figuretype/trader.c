@@ -674,12 +674,19 @@ void figure_trade_ship_action(figure *f)
             f->building_id = 0;
             if (f->wait_ticks > 20) {
                 f->wait_ticks = 0;
+                map_point queue_tile;
                 map_point tile;
-                int dock_id = building_dock_get_destination(f->id, 0, &tile);
+                int dock_id = building_dock_get_destination(f->id, 0, &queue_tile);
                 if (dock_id) {
-                    f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
-                    f->destination_x = tile.x;
-                    f->destination_y = tile.y;
+                    if (building_dock_request_docking(f->id, dock_id, &tile)) {
+                        f->action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
+                        f->destination_x = tile.x;
+                        f->destination_y = tile.y;
+                    } else {
+                        f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
+                        f->destination_x = queue_tile.x;
+                        f->destination_y = queue_tile.y;
+                    }
                     f->destination_building_id = dock_id;
                 } else {
                     f->state = FIGURE_STATE_DEAD;
