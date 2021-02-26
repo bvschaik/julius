@@ -10,7 +10,7 @@
 #include <string.h>
 
 #define ORIGINAL_BUFFER_SIZE_CULTURE1 132
-#define CURRENT_BUFFER_SIZE_CULTURE1 132
+#define CURRENT_BUFFER_SIZE_CULTURE1 160
 #define ORIGINAL_BUFFER_SIZE_CULTURE2 32
 #define CURRENT_BUFFER_SIZE_CULTURE2 32
 #define ORIGINAL_BUFFER_SIZE_CULTURE3 40
@@ -24,9 +24,21 @@
 
 
 
+
+typedef enum {
+	BUFFER_INDUSTRY,
+	BUFFER_CULTURE_1,
+	BUFFER_CULTURE_2,
+	BUFFER_CULTURE_3,
+	BUFFER_MILITARY,
+	BUFFER_SUPPORT,
+} count_buffers;
+
+
 struct record {
     int active;
     int total;
+    int upgraded;
 };
 
 static struct {
@@ -39,11 +51,14 @@ static void clear_counters(void)
     memset(&data, 0, sizeof(data));
 }
 
-static void increase_count(building_type type, int active)
+static void increase_count(building_type type, int active, int upgraded)
 {
     ++data.buildings[type].total;
     if (active) {
         ++data.buildings[type].active;
+        if (upgraded) {
+            ++data.buildings[type].upgraded;
+        }
     }
 }
 
@@ -87,23 +102,23 @@ void building_count_update(void)
             case BUILDING_HIPPODROME:
             case BUILDING_ARENA:
                 is_entertainment_venue = 1;
-                increase_count(type, b->num_workers > 0);
+                increase_count(type, b->num_workers > 0, b->upgrade_level);
                 break;
 
             case BUILDING_BARRACKS:
                 city_buildings_set_barracks(i);
-                increase_count(type, b->num_workers > 0);
+                increase_count(type, b->num_workers > 0, b->upgrade_level);
                 break;
 
             case BUILDING_HOSPITAL:
-                increase_count(type, b->num_workers > 0);
+                increase_count(type, b->num_workers > 0, b->upgrade_level);
                 city_health_add_hospital_workers(b->num_workers);
                 break;
 
             // water
             case BUILDING_RESERVOIR:
             case BUILDING_FOUNTAIN:
-                increase_count(type, b->has_water_access);
+                increase_count(type, b->has_water_access, b->upgrade_level);
                 break;
 
             // DEFAULT TREATMENT
@@ -153,7 +168,7 @@ void building_count_update(void)
             case BUILDING_NYMPHAEUM:
             case BUILDING_SMALL_MAUSOLEUM:
             case BUILDING_LARGE_MAUSOLEUM:
-                increase_count(type, b->num_workers > 0);
+                increase_count(type, b->num_workers > 0, b->upgrade_level);
                 break;
 
             // industry
@@ -340,6 +355,17 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
     buffer_write_i32(culture1, data.buildings[BUILDING_LARGE_TEMPLE_VENUS].total);
     buffer_write_i32(culture1, data.buildings[BUILDING_ORACLE].total);
 
+    // Save arena counts upgraded culture ratings buildings
+
+    buffer_write_i32(culture1, data.buildings[BUILDING_ARENA].total);
+    buffer_write_i32(culture1, data.buildings[BUILDING_ARENA].active);
+    buffer_write_i32(culture1, data.buildings[BUILDING_ARENA].upgraded);
+    buffer_write_i32(culture1, data.buildings[BUILDING_THEATER].upgraded);
+    buffer_write_i32(culture1, data.buildings[BUILDING_SCHOOL].upgraded);
+    buffer_write_i32(culture1, data.buildings[BUILDING_LIBRARY].upgraded);
+    buffer_write_i32(culture1, data.buildings[BUILDING_ACADEMY].upgraded);
+
+
     // culture 2
     buffer_write_i32(culture2, data.buildings[BUILDING_ACTOR_COLONY].total);
     buffer_write_i32(culture2, data.buildings[BUILDING_ACTOR_COLONY].active);
@@ -434,6 +460,19 @@ void building_count_load_state(buffer *industry, buffer *culture1, buffer *cultu
     data.buildings[BUILDING_LARGE_TEMPLE_MARS].total = buffer_read_i32(culture1);
     data.buildings[BUILDING_LARGE_TEMPLE_VENUS].total = buffer_read_i32(culture1);
     data.buildings[BUILDING_ORACLE].total = buffer_read_i32(culture1);
+
+    // Arena counts upgraded culture ratings buildings
+
+    if (buf_sizes[BUFFER_CULTURE_1] > ORIGINAL_BUFFER_SIZE_CULTURE1) {
+        data.buildings[BUILDING_ARENA].total = buffer_read_i32(culture1);
+        data.buildings[BUILDING_ARENA].active = buffer_read_i32(culture1);
+        data.buildings[BUILDING_ARENA].upgraded = buffer_read_i32(culture1);
+        data.buildings[BUILDING_THEATER].upgraded = buffer_read_i32(culture1);
+        data.buildings[BUILDING_SCHOOL].upgraded = buffer_read_i32(culture1);
+        data.buildings[BUILDING_LIBRARY].upgraded = buffer_read_i32(culture1);
+        data.buildings[BUILDING_ACADEMY].upgraded = buffer_read_i32(culture1);
+    }
+
 
     // culture 2
     data.buildings[BUILDING_ACTOR_COLONY].total = buffer_read_i32(culture2);
