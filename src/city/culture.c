@@ -205,11 +205,11 @@ void city_culture_update_coverage(void)
     city_population_calculate_educational_age();
 
     coverage.school = top(calc_percentage(
-        SCHOOL_COVERAGE * building_count_active(BUILDING_SCHOOL), city_population_school_age()));
+        city_culture_get_school_person_coverage(), city_population_school_age()));
     coverage.library = top(calc_percentage(
-        LIBRARY_COVERAGE * building_count_active(BUILDING_LIBRARY), population));
+        city_culture_get_library_person_coverage(), population));
     coverage.academy = top(calc_percentage(
-        ACADEMY_COVERAGE * building_count_active(BUILDING_ACADEMY), city_population_academy_age()));
+        city_culture_get_academy_person_coverage(), city_population_academy_age()));
 
     // health
     coverage.hospital = top(calc_percentage(
@@ -250,6 +250,21 @@ void city_culture_calculate(void)
 
     city_entertainment_calculate_shows();
     city_festival_calculate_costs();
+}
+
+int city_culture_get_school_person_coverage()
+{
+    return SCHOOL_COVERAGE * building_count_active(BUILDING_SCHOOL);
+}
+
+int city_culture_get_library_person_coverage()
+{
+    return LIBRARY_COVERAGE * building_count_active(BUILDING_LIBRARY);
+}
+
+int city_culture_get_academy_person_coverage()
+{
+    return ACADEMY_COVERAGE * building_count_active(BUILDING_ACADEMY);
 }
 
 void city_culture_save_state(buffer *buf)

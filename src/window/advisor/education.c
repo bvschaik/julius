@@ -77,7 +77,7 @@ static int draw_background(void)
     lang_text_draw_amount(8, 18, building_count_total(BUILDING_SCHOOL), 40, 105, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_SCHOOL), 150, 105, 100, FONT_NORMAL_WHITE);
 
-    width = text_draw_number(75 * building_count_active(BUILDING_SCHOOL), '@', " ", 280, 105, FONT_NORMAL_WHITE);
+    width = text_draw_number(city_culture_get_school_person_coverage, '@', " ", 280, 105, FONT_NORMAL_WHITE);
     lang_text_draw(57, 7, 280 + width, 105, FONT_NORMAL_WHITE);
 
     int pct_school = city_culture_coverage_school();
@@ -93,7 +93,7 @@ static int draw_background(void)
     lang_text_draw_amount(8, 20, building_count_total(BUILDING_ACADEMY), 40, 125, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_ACADEMY), 150, 125, 100, FONT_NORMAL_WHITE);
 
-    width = text_draw_number(100 * building_count_active(BUILDING_ACADEMY), '@', " ", 280, 125, FONT_NORMAL_WHITE);
+    width = text_draw_number(city_culture_get_academy_person_coverage(), '@', " ", 280, 125, FONT_NORMAL_WHITE);
     lang_text_draw(57, 8, 280 + width, 125, FONT_NORMAL_WHITE);
 
     int pct_academy = city_culture_coverage_academy();
@@ -109,7 +109,7 @@ static int draw_background(void)
     lang_text_draw_amount(8, 22, building_count_total(BUILDING_LIBRARY), 40, 145, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_LIBRARY), 150, 145, 100, FONT_NORMAL_WHITE);
 
-    width = text_draw_number(800 * building_count_active(BUILDING_LIBRARY), '@', " ", 280, 145, FONT_NORMAL_WHITE);
+    width = text_draw_number(city_culture_get_library_person_coverage(), '@', " ", 280, 145, FONT_NORMAL_WHITE);
     lang_text_draw(57, 9, 280 + width, 145, FONT_NORMAL_WHITE);
 
     int pct_library = city_culture_coverage_library();
