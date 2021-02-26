@@ -208,12 +208,16 @@ void map_water_supply_update_reservoir_fountain(void)
         int image_id;
         if (des > 60) {
             image_id = image_group(GROUP_BUILDING_FOUNTAIN_4);
+            b->upgrade_level = 3;
         } else if (des > 40) {
             image_id = image_group(GROUP_BUILDING_FOUNTAIN_3);
+            b->upgrade_level = 2;
         } else if (des > 20) {
             image_id = image_group(GROUP_BUILDING_FOUNTAIN_2);
+            b->upgrade_level = 1;
         } else {
             image_id = image_group(GROUP_BUILDING_FOUNTAIN_1);
+            b->upgrade_level = 0;
         }
         map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         if (map_terrain_is(b->grid_offset, TERRAIN_RESERVOIR_RANGE) && b->num_workers) {
