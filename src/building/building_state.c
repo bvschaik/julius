@@ -405,8 +405,8 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     }
 
     if (building_buf_size >= BUILDING_STATE_VARIANTS_AND_UPGRADES) {
-        b->variant = buffer_read_u8(buf, b->variant);
-        b->upgrade_level = buffer_read_u8(buf, b->upgrade_level);
+        b->variant = buffer_read_u8(buf);
+        b->upgrade_level = buffer_read_u8(buf);
     }
 
     // The following code should only be executed if the savegame includes building information that is not 
