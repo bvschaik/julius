@@ -30,6 +30,15 @@ int building_count_active(building_type type);
 int building_count_total(building_type type);
 
 /**
+ * Returns the upgraded building count for the type
+ * @param type Building type
+ * @return Number of upgraded buildings
+ */
+
+int building_count_upgraded(building_type type);
+
+
+/**
  * Returns the active building count for the resource type
  * @param resource Resource type
  * @return Number of active buildings

@@ -254,7 +254,7 @@ void city_culture_calculate(void)
 
 int city_culture_get_school_person_coverage()
 {
-    return SCHOOL_COVERAGE * building_count_active(BUILDING_SCHOOL);
+    return SCHOOL_COVERAGE * building_count_active(BUILDING_SCHOOL) + SCHOOL_UPGRADE_BONUS_COVERAGE * building_count_upgraded(BUILDING_SCHOOL);
 }
 
 int city_culture_get_library_person_coverage()

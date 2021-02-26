@@ -287,6 +287,11 @@ int building_count_total(building_type type)
     return data.buildings[type].total;
 }
 
+int building_count_upgraded(building_type type)
+{
+    return data.buildings[type].upgraded;
+}
+
 int building_count_industry_active(resource_type resource)
 {
     return data.industry[resource].active;

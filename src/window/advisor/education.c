@@ -77,7 +77,7 @@ static int draw_background(void)
     lang_text_draw_amount(8, 18, building_count_total(BUILDING_SCHOOL), 40, 105, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_SCHOOL), 150, 105, 100, FONT_NORMAL_WHITE);
 
-    width = text_draw_number(city_culture_get_school_person_coverage, '@', " ", 280, 105, FONT_NORMAL_WHITE);
+    width = text_draw_number(city_culture_get_school_person_coverage(), '@', " ", 280, 105, FONT_NORMAL_WHITE);
     lang_text_draw(57, 7, 280 + width, 105, FONT_NORMAL_WHITE);
 
     int pct_school = city_culture_coverage_school();
