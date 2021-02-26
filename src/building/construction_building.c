@@ -724,7 +724,7 @@ static void add_to_map(int type, building *b, int size,
         building_monument_recalculate_monuments();
     }
     if (building_variant_has_variants(b->type)) {
-        b->subtype.orientation = building_rotation_get_rotation_with_limit(building_variant_get_number_of_variants(b->type));
+        b->variant = building_rotation_get_rotation_with_limit(building_variant_get_number_of_variants(b->type));
     }
 }
 

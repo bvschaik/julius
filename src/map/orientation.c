@@ -382,7 +382,7 @@ void map_orientation_update_buildings(void)
             map_building_tiles_add(i, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
         }
         if (building_variant_has_variants(b->type)) {
-            image_id = building_variant_get_image_id_with_rotation(b->type, b->subtype.orientation);
+            image_id = building_variant_get_image_id_with_rotation(b->type, b->variant);
             map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
         }
     }

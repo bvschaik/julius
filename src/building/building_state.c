@@ -190,12 +190,19 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_u8(buf, b->show_on_problem_overlay);
 
     // expanded building data
+    // Tourism
     buffer_write_u8(buf, b->house_arena_gladiator);
     buffer_write_u8(buf, b->house_arena_lion);
     buffer_write_u8(buf, b->is_tourism_venue);
     buffer_write_u8(buf, b->tourism_disabled);
     buffer_write_u8(buf, b->tourism_income);
     buffer_write_u8(buf, b->tourism_income_this_year);
+
+    // Variants and upgrades
+    buffer_write_u8(buf, b->variant);
+    buffer_write_u8(buf, b->upgrade_level);
+
+
     // New building state code should always be added at the end to preserve savegame retrocompatibility
     // Also, don't forget to update BUILDING_STATE_CURRENT_BUFFER_SIZE and if possible, add a new macro like
     // BUILDING_STATE_NEW_FEATURE_BUFFER_SIZE with the full building state buffer size including all added features
@@ -395,6 +402,11 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         b->tourism_disabled = buffer_read_u8(buf);
         b->tourism_income = buffer_read_u8(buf);
         b->tourism_income_this_year = buffer_read_u8(buf);
+    }
+
+    if (building_buf_size >= BUILDING_STATE_VARIANTS_AND_UPGRADES) {
+        b->variant = buffer_read_u8(buf, b->variant);
+        b->upgrade_level = buffer_read_u8(buf, b->upgrade_level);
     }
 
     // The following code should only be executed if the savegame includes building information that is not 

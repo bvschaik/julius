@@ -246,6 +246,8 @@ building *building_create(building_type type, int x, int y)
     b->tourism_disabled = 0;
     b->tourism_income = 0;
     b->tourism_income_this_year = 0;
+    b->upgrade_level = 0;
+    b->variant = 0;
     return b;
 }
 
