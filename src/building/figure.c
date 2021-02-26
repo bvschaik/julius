@@ -1,5 +1,6 @@
 #include "building/figure.h"
 
+#include "assets/assets.h"
 #include "building/barracks.h"
 #include "building/granary.h"
 #include "building/industry.h"
@@ -825,6 +826,23 @@ static void spawn_figure_bathhouse(building *b)
     }
 }
 
+static void set_school_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    if (b->desirability <= 30) {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            image_group(GROUP_BUILDING_SCHOOL), TERRAIN_BUILDING);
+        b->upgrade_level = 0;
+    } else {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            assets_get_image_id(assets_get_group_id("Tomasz", "Upgrade_States"), "Upgraded_School"), TERRAIN_BUILDING);
+        b->upgrade_level = 1;
+    }
+}
+
+
 static void spawn_figure_school(building *b)
 {
     check_labor_problem(b);
@@ -841,6 +859,7 @@ static void spawn_figure_school(building *b)
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
+            set_school_graphic(b);
 
             figure *child1 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP);
             child1->action_state = FIGURE_ACTION_125_ROAMING;

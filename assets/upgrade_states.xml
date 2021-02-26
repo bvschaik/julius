@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+
+<assetlist author="Tomasz" name="Upgrade_States">
+    <image id="Upgraded_School">
+		<layer group="41"/>
+		<layer src="School_Upgrade_State" />
+    </image>
+</assetlist>		
