@@ -613,11 +613,11 @@ static void set_market_graphic(building *b)
     if (b->desirability <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
-        b->upgrade_level = 1;
+        b->upgrade_level = 0;
     } else {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
-        b->upgrade_level = 0;
+        b->upgrade_level = 1;
     }
 }
 
@@ -782,21 +782,21 @@ static void set_bathhouse_graphic(building *b)
         if (b->desirability <= 30) {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
-            b->upgrade_level = 1;
+            b->upgrade_level = 0;
         } else {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
-            b->upgrade_level = 0;
+            b->upgrade_level = 1;
         }
     } else {
         if (b->desirability <= 30) {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
-            b->upgrade_level = 1;
+            b->upgrade_level = 0;
         } else {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
-            b->upgrade_level = 0;
+            b->upgrade_level = 1;
         }
     }
 }
@@ -1171,11 +1171,11 @@ static void set_senate_graphic(building *b)
     if (b->desirability <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
-        b->upgrade_level = 1;
+        b->upgrade_level = 0;
     } else {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
-        b->upgrade_level = 0;
+        b->upgrade_level = 1;
     }
 }
 
