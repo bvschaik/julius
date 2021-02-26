@@ -831,7 +831,7 @@ static void set_school_graphic(building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return;
     }
-    if (b->desirability <= 30) {
+    if (b->desirability <= 40) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_SCHOOL), TERRAIN_BUILDING);
         b->upgrade_level = 0;
