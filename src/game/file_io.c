@@ -54,13 +54,14 @@
 
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x80;
+static const int SAVE_GAME_CURRENT_VERSION = 0x81;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
 static const int SAVE_GAME_WITHOUT_DELIVERIES_ADDED = 0x77;
 static const int SAVE_GAME_LAST_STATIC_VERSION = 0x78;
 static const int SAVE_GAME_LAST_JOINED_IMPORT_EXPORT_VERSION = 0x79;
+static const int SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION = 0x80;
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -244,6 +245,7 @@ static void init_savegame_data(int version)
     clear_savegame_pieces();
 
     int multiplier = 1;
+    int count_multiplier = 1;
     int burning_totals_size = 8;
     if (version > SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION) {
         multiplier = 5;
@@ -252,6 +254,11 @@ static void init_savegame_data(int version)
         multiplier = PIECE_SIZE_DYNAMIC;
         burning_totals_size = 4;
     } 
+
+    if (version > SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION) {
+        count_multiplier = PIECE_SIZE_DYNAMIC;
+    }
+
 
     int image_grid_size = 52488 * (version > SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION ? 2 : 1);
     int figures_size = 128000 * multiplier;
@@ -263,6 +270,13 @@ static void init_savegame_data(int version)
     int building_list_small_size = 1000 * multiplier;
     int building_list_large_size = 4000 * multiplier;
     int building_storages_size = 6400 * multiplier;
+
+    int building_count_culture1 = 132 * count_multiplier;
+    int building_count_culture2 = 32 * count_multiplier;
+    int building_count_culture3 = 40 * count_multiplier;
+    int building_count_military = 16 * count_multiplier;
+    int building_count_industry = 128 * count_multiplier;
+    int building_count_support = 24 * count_multiplier;
 
 
     savegame_state *state = &savegame_data.state;
@@ -297,12 +311,12 @@ static void init_savegame_data(int version)
     state->building_extra_highest_id_ever = create_savegame_piece(8, 0);
     state->random_iv = create_savegame_piece(8, 0);
     state->city_view_camera = create_savegame_piece(8, 0);
-    state->building_count_culture1 = create_savegame_piece(132, 0);
+    state->building_count_culture1 = create_savegame_piece(building_count_culture1, 0);
     state->city_graph_order = create_savegame_piece(8, 0);
     state->emperor_change_time = create_savegame_piece(8, 0);
     state->empire = create_savegame_piece(12, 0);
     state->empire_cities = create_savegame_piece(2706, 1);
-    state->building_count_industry = create_savegame_piece(128, 0);
+    state->building_count_industry = create_savegame_piece(building_count_industry, 0);
     state->trade_prices = create_savegame_piece(128, 0);
     state->figure_names = create_savegame_piece(84, 0);
     state->culture_coverage = create_savegame_piece(60, 0);
@@ -327,11 +341,11 @@ static void init_savegame_data(int version)
     state->building_list_small = create_savegame_piece(building_list_small_size, 1);
     state->building_list_large = create_savegame_piece(building_list_large_size, 1);
     state->tutorial_part1 = create_savegame_piece(32, 0);
-    state->building_count_military = create_savegame_piece(16, 0);
+    state->building_count_military = create_savegame_piece(building_count_military, 0);
     state->enemy_army_totals = create_savegame_piece(20, 0);
     state->building_storages = create_savegame_piece(building_storages_size, 0);
-    state->building_count_culture2 = create_savegame_piece(32, 0);
-    state->building_count_support = create_savegame_piece(24, 0);
+    state->building_count_culture2 = create_savegame_piece(building_count_culture2, 0);
+    state->building_count_support = create_savegame_piece(building_count_support, 0);
     state->tutorial_part2 = create_savegame_piece(4, 0);
     state->gladiator_revolt = create_savegame_piece(16, 0);
     state->trade_route_limit = create_savegame_piece(1280, 1);
@@ -339,7 +353,7 @@ static void init_savegame_data(int version)
     state->building_barracks_tower_sentry = create_savegame_piece(4, 0);
     state->building_extra_sequence = create_savegame_piece(4, 0);
     state->routing_counters = create_savegame_piece(16, 0);
-    state->building_count_culture3 = create_savegame_piece(40, 0);
+    state->building_count_culture3 = create_savegame_piece(building_count_culture3, 0);
     state->enemy_armies = create_savegame_piece(900, 0);
     state->city_entry_exit_xy = create_savegame_piece(16, 0);
     state->last_invasion_id = create_savegame_piece(2, 0);
@@ -434,7 +448,8 @@ static void savegame_load_from_state(savegame_state *state, int version)
                               state->building_count_culture2,
                               state->building_count_culture3,
                               state->building_count_military,
-                              state->building_count_support);
+                              state->building_count_support,
+                              version > SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION);
 
     scenario_emperor_change_load_state(state->emperor_change_time, state->emperor_change_state);
     empire_load_state(state->empire);

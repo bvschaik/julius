@@ -71,6 +71,6 @@ void building_count_save_state(
  * @param support Market and water
  */
 void building_count_load_state(
-    buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support);
+    buffer *industry, buffer *culture1, buffer *culture2, buffer *culture3, buffer *military, buffer *support, int includes_buffer_size);
 
 #endif // BUILDING_COUNT_H

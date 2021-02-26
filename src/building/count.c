@@ -6,7 +6,23 @@
 #include "city/health.h"
 #include "figure/figure.h"
 
+#include <stdlib.h>
 #include <string.h>
+
+#define ORIGINAL_BUFFER_SIZE_CULTURE1 132
+#define CURRENT_BUFFER_SIZE_CULTURE1 132
+#define ORIGINAL_BUFFER_SIZE_CULTURE2 32
+#define CURRENT_BUFFER_SIZE_CULTURE2 32
+#define ORIGINAL_BUFFER_SIZE_CULTURE3 40
+#define CURRENT_BUFFER_SIZE_CULTURE3 40
+#define ORIGINAL_BUFFER_SIZE_MILITARY 16
+#define CURRENT_BUFFER_SIZE_MILITARY 16
+#define ORIGINAL_BUFFER_SIZE_SUPPORT 24
+#define CURRENT_BUFFER_SIZE_SUPPORT 24
+#define ORIGINAL_BUFFER_SIZE_INDUSTRY 128
+#define CURRENT_BUFFER_SIZE_INDUSTRY 128
+
+
 
 struct record {
     int active;
@@ -269,6 +285,18 @@ int building_count_industry_total(resource_type resource)
 void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2,
                                 buffer *culture3, buffer *military, buffer *support)
 {
+    int buffer_sizes[] = { CURRENT_BUFFER_SIZE_INDUSTRY,CURRENT_BUFFER_SIZE_CULTURE1,CURRENT_BUFFER_SIZE_CULTURE2,CURRENT_BUFFER_SIZE_CULTURE3, CURRENT_BUFFER_SIZE_MILITARY, CURRENT_BUFFER_SIZE_SUPPORT };
+    buffer *buffer_pointers[] = {industry,culture1,culture2,culture3,military,support};
+    int buffer_count = 6;
+
+
+    for (int i = 0; i < buffer_count; i++) {
+        buffer *buf = buffer_pointers[i];
+        int buf_size = buffer_sizes[i]+4; // Extra 4 bytes to store buffer size
+        uint8_t *buf_data = malloc(buf_size);
+        buffer_init(buf, buf_data, buf_size);
+        buffer_write_i32(buf, buf_size);
+    }
     // industry
     for (int i = 0; i < RESOURCE_MAX; i++) {
         buffer_write_i32(industry, data.industry[i].total);
@@ -350,8 +378,20 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
 }
 
 void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2,
-                                buffer *culture3, buffer *military, buffer *support)
+                                buffer *culture3, buffer *military, buffer *support, int includes_buffer_size)
 {
+    int buf_sizes[] = {ORIGINAL_BUFFER_SIZE_INDUSTRY,ORIGINAL_BUFFER_SIZE_CULTURE1,ORIGINAL_BUFFER_SIZE_CULTURE2,ORIGINAL_BUFFER_SIZE_CULTURE3,ORIGINAL_BUFFER_SIZE_MILITARY,ORIGINAL_BUFFER_SIZE_SUPPORT};
+    int current_buf_sizes[] = { CURRENT_BUFFER_SIZE_INDUSTRY,CURRENT_BUFFER_SIZE_CULTURE1,CURRENT_BUFFER_SIZE_CULTURE2,CURRENT_BUFFER_SIZE_CULTURE3, CURRENT_BUFFER_SIZE_MILITARY, CURRENT_BUFFER_SIZE_SUPPORT };
+    buffer *buf_pointers[] = {industry,culture1,culture2,culture3,military,support};
+    int buffer_count = 6;
+
+    if (includes_buffer_size) {
+        for (int i = 0; i < buffer_count; i++) {
+            buf_sizes[i] = buffer_read_i32(buf_pointers[i]);
+            buf_sizes[i] -= 4;
+        }
+    }
+
     // industry
     for (int i = 0; i < RESOURCE_MAX; i++) {
         data.industry[i].total = buffer_read_i32(industry);
@@ -430,4 +470,12 @@ void building_count_load_state(buffer *industry, buffer *culture1, buffer *cultu
     data.buildings[BUILDING_RESERVOIR].active = buffer_read_i32(support);
     data.buildings[BUILDING_FOUNTAIN].total = buffer_read_i32(support);
     data.buildings[BUILDING_FOUNTAIN].active = buffer_read_i32(support);
+
+
+    for (int i = 0; i < buffer_count; i++) {
+        if (buf_sizes[i] > current_buf_sizes[i]) {
+            buffer_skip(buf_pointers[i], buf_sizes[i] - current_buf_sizes[i]);
+        }
+    }
+
 }
