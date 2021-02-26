@@ -482,7 +482,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Lararium 01"));
             break;
         case BUILDING_ROADBLOCK:
-            add_building(b, assets_get_group_id("Areldir", "Roadblocks"));
+            add_building(b, building_variant_get_image_id(type));
             map_terrain_add_roadblock_road(b->x, b->y, orientation);	    
             map_tiles_update_area_roads(b->x, b->y, 5);
             map_tiles_update_all_plazas();

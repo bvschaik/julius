@@ -5,7 +5,7 @@
 #include "city/view.h"
 #include "core/image.h"
 
-#define BUILDINGS_WITH_VARIANTS 5
+#define BUILDINGS_WITH_VARIANTS 6
 #define CITY_DIRECTION_ANY -1
 #define MAX_VARIANTS_PER_BUILDING 10
 
@@ -23,6 +23,7 @@ static struct building_variant variants[BUILDINGS_WITH_VARIANTS] = {
 	{5, BUILDING_DECORATIVE_COLUMN, {1,3,5,7,9}, 1},
 	{5, BUILDING_DECORATIVE_COLUMN, {0,2,4,6,8}, 2},
 	{5, BUILDING_DECORATIVE_COLUMN, {1,3,5,7,9}, 3},
+	{2, BUILDING_ROADBLOCK, {0,1}, CITY_DIRECTION_ANY},
 };
 
 int building_variant_has_variants(building_type type)
@@ -30,6 +31,7 @@ int building_variant_has_variants(building_type type)
 	switch (type) {
 	case BUILDING_PAVILION_BLUE:
 	case BUILDING_DECORATIVE_COLUMN:
+	case BUILDING_ROADBLOCK:
 		return 1;
 	default:
 		return 0;
