@@ -683,7 +683,7 @@ void building_monument_initialize(building *b)
 				break;
 			case 2:
 				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Nymphaeum ON"),
+					assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Nymphaeum ON"),
 					TERRAIN_BUILDING);
 				b->data.monument.monument_phase = MONUMENT_FINISHED;
 				break;
@@ -700,7 +700,7 @@ void building_monument_initialize(building *b)
 				break;
 			case 2:
 				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum S"),
+					assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum S"),
 					TERRAIN_BUILDING);
 				b->data.monument.monument_phase = MONUMENT_FINISHED;
 				break;
@@ -717,7 +717,7 @@ void building_monument_initialize(building *b)
 				break;
 			case 2:
 				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum L"),
+					assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum L"),
 					TERRAIN_BUILDING);
 				b->data.monument.monument_phase = MONUMENT_FINISHED;
 				break;

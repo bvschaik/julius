@@ -459,6 +459,22 @@ static void spawn_figure_amphitheater(building *b)
     }
 }
 
+static void set_theater_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    if (b->desirability <= 45) {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Theatre ON"), TERRAIN_BUILDING);
+        b->upgrade_level = 0;
+    } else {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Theatre Upgrade ON"), TERRAIN_BUILDING);
+        b->upgrade_level = 1;
+    }
+}
+
 static void spawn_figure_theater(building *b)
 {
     check_labor_problem(b);
@@ -476,6 +492,7 @@ static void spawn_figure_theater(building *b)
         }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
+            set_theater_graphic(b);
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_ACTOR, road.x, road.y, DIR_0_TOP);
             f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
@@ -837,7 +854,7 @@ static void set_school_graphic(building *b)
         b->upgrade_level = 0;
     } else {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
-            assets_get_image_id(assets_get_group_id("Tomasz", "Upgrade_States"), "Upgraded_School"), TERRAIN_BUILDING);
+            assets_get_image_id(assets_get_group_id("Tomasz", "Building_Upgrades"), "Upgraded_School"), TERRAIN_BUILDING);
         b->upgrade_level = 1;
     }
 }
@@ -885,6 +902,22 @@ static void spawn_figure_school(building *b)
     }
 }
 
+static void set_library_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    if (b->desirability <= 50) {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            assets_get_image_id(assets_get_group_id("Tomasz", "Building_Upgrades"), "Downgraded_Library"), TERRAIN_BUILDING);
+        b->upgrade_level = 0;
+    } else {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            image_group(GROUP_BUILDING_LIBRARY), TERRAIN_BUILDING);
+        b->upgrade_level = 1;
+    }
+}
+
 static void spawn_figure_library(building *b)
 {
     check_labor_problem(b);
@@ -893,6 +926,7 @@ static void spawn_figure_library(building *b)
     }
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        set_library_graphic(b);
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
         if (!spawn_delay) {

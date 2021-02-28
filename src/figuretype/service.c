@@ -242,10 +242,10 @@ void figure_tavern_action(figure* f)
     roamer_action(f, 1);
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Tavern"), "Barkeep Death 01") +
+        f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep Death 01") +
             figure_image_corpse_offset(f);
     } else {
-        f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Tavern"), "Barkeep NE 01") + dir * 12 +
+        f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep NE 01") + dir * 12 +
             f->image_offset;
     }
 }

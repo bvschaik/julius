@@ -248,7 +248,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_AMPHITHEATER));
             break;
         case BUILDING_THEATER:
-            add_building(b, image_group(GROUP_BUILDING_THEATER));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Theatre ON"));
             break;
         case BUILDING_COLOSSEUM:
             add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 01"));
@@ -333,7 +333,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_ACADEMY));
             break;
         case BUILDING_LIBRARY:
-            add_building(b, image_group(GROUP_BUILDING_LIBRARY));
+            add_building(b, assets_get_image_id(assets_get_group_id("Tomasz", "Building_Upgrades"), "Downgraded_Library"));
             break;
         // security
         case BUILDING_PREFECTURE:
@@ -443,43 +443,43 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_TEMPLE_VENUS));
             break;
         case BUILDING_LARGE_TEMPLE_CERES:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Ceres LTemp Cons 0"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Ceres LTemp Cons 0"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Nept LTemp Cons 0"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Nept LTemp Cons 0"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_MERCURY:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Merc LTemp Cons 0"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Merc LTemp Cons 0"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_MARS:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Mars LTemp Cons 0"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mars LTemp Cons 0"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_LARGE_TEMPLE_VENUS:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Venus LTemp Cons 0"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Venus LTemp Cons 0"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_ORACLE:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Oracle Cons"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Oracle Cons"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 2);
             building_monument_initialize(b);            
             break;
         case BUILDING_LARARIUM:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Lararium 01"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Lararium 01"));
             break;
         case BUILDING_ROADBLOCK:
             add_building(b, building_variant_get_image_id(type));
@@ -654,13 +654,13 @@ static void add_to_map(int type, building *b, int size,
             }
             break;
         case BUILDING_TAVERN:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Tavern"), "Tavern ON"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Tavern ON"));
             break;
         case BUILDING_GRAND_GARDEN:
             add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
             break;
         case BUILDING_ARENA:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Arena"), "Arena ON"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Arena ON"));
             break;
         case BUILDING_HORSE_STATUE:
             orientation = building_rotation_get_rotation();
@@ -700,19 +700,19 @@ static void add_to_map(int type, building *b, int size,
             }
             break;
         case BUILDING_SMALL_MAUSOLEUM:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum S Cons"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum S Cons"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 4);
             building_monument_initialize(b);
             break;
         case BUILDING_LARGE_MAUSOLEUM:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Mausoleum L Cons"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum L Cons"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
         case BUILDING_NYMPHAEUM:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Large_Temples_Oracle"), "Nymphaeum Cons"));
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Nymphaeum Cons"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);

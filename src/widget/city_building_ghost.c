@@ -347,7 +347,7 @@ static void draw_default(const map_tile* tile, int x_view, int y_view, building_
     }
     if (blocked) {
         draw_partially_blocked(x_view, y_view, fully_blocked, num_tiles, blocked_tiles);
-    } else if (type >= BUILDING_ROADBLOCK) {
+    } else if (type >= BUILDING_ROADBLOCK || type == BUILDING_LIBRARY) {
         // hack for offsets, not perfect
         int y_offset = (building_size - 1) * EXTRA_ASSET_IMAGE_X_OFFSET;
         int x_offset = (building_size - 1) * EXTRA_ASSET_IMAGE_Y_OFFSET;
