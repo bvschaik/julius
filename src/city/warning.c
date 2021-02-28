@@ -42,24 +42,21 @@ void city_warning_show(warning_type type)
     w->in_use = 1;
     w->time = time_get_millis();
     const uint8_t *text;
-    if (type == WARNING_ORIENTATION) {
-        text = lang_get_string(17, city_view_orientation());
-    }
-    else if (type == WARNING_NO_MESS_HALL) {
-        text = translation_for(TR_WARNING_NO_MESS_HALL);
-    }    
-    else if (type == WARNING_MAX_GRAND_TEMPLES) {
-        text = translation_for(TR_WARNING_MAX_GRAND_TEMPLES);
-    }
-    else if (type == WARNING_WATER_NEEDED_FOR_LIGHTHOUSE) {
-        text = translation_for(TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE);
-    }
-    else if (type == WARNING_RESOURCES_NOT_AVAILABLE) {
-        text = translation_for(TR_WARNING_RESOURCES_NOT_AVAILABLE);
-    }
-    else {
-        text = lang_get_string(19, type - 2);
-    }
+	if (type == WARNING_ORIENTATION) {
+		text = lang_get_string(17, city_view_orientation());
+	} else if (type == WARNING_NO_MESS_HALL) {
+		text = translation_for(TR_WARNING_NO_MESS_HALL);
+	} else if (type == WARNING_MAX_GRAND_TEMPLES) {
+		text = translation_for(TR_WARNING_MAX_GRAND_TEMPLES);
+	} else if (type == WARNING_WATER_NEEDED_FOR_LIGHTHOUSE) {
+		text = translation_for(TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE);
+	} else if (type == WARNING_RESOURCES_NOT_AVAILABLE) {
+		text = translation_for(TR_WARNING_RESOURCES_NOT_AVAILABLE);
+	} else if (type == WARNING_VARIANT_TOGGLE) {
+		text = translation_for(TR_WARNING_VARIANT_TOGGLE);
+	} else {
+		text = lang_get_string(19, type - 2);
+	}
     string_copy(text, w->text, MAX_TEXT);
 }
 

@@ -572,6 +572,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GARDEN_PATH, "Garden Path" },
     {TR_BUTTON_GO_TO_SITE, "Go to the site" },
     {TR_RESOURCE_FISH, "Fish" },
+    {TR_WARNING_VARIANT_TOGGLE, "Press rotation key to toggle variants of this building"},
 
 };
 

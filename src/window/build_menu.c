@@ -3,7 +3,9 @@
 #include "building/construction.h"
 #include "building/menu.h"
 #include "building/model.h"
+#include "building/building_variant.h"
 #include "city/view.h"
+#include "city/warning.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -311,6 +313,9 @@ static void button_menu_item(int item)
     } else {
         data.selected_submenu = SUBMENU_NONE;
         window_city_show();
+    }
+    if (building_variant_has_variants(type)) {
+        city_warning_show(WARNING_VARIANT_TOGGLE);
     }
 }
 

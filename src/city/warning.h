@@ -61,6 +61,7 @@ typedef enum {
     WARNING_MAX_GRAND_TEMPLES = 67,
     WARNING_WATER_NEEDED_FOR_LIGHTHOUSE = 68,
     WARNING_RESOURCES_NOT_AVAILABLE = 69,
+    WARNING_VARIANT_TOGGLE = 70,
 } warning_type;
 
 void city_warning_show(warning_type type);
