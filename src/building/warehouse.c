@@ -69,16 +69,24 @@ int building_warehouse_add_resource(building *b, int resource)
     if (building_warehouse_is_not_accepting(resource, building_main(b))) {
         return 0;
     }
-    // check building itself
-    int find_space = 0;
-    if (b->subtype.warehouse_resource_id && b->subtype.warehouse_resource_id != resource) {
-        find_space = 1;
-    } else if (b->loads_stored >= 4) {
-        find_space = 1;
-    } else if (b->type == BUILDING_WAREHOUSE) {
-        find_space = 1;
+    // Fill partially filled bays first
+    int space_found = 0;
+    building *space = building_main(b);
+    for (int i = 0; i < 8; i++) {
+        space = building_next(space);
+        if (!space->id) {
+            return 0;
+        }
+        if (space->subtype.warehouse_resource_id == resource) {
+            if (space->loads_stored < 4) {
+                space_found = 1;
+                b = space;
+                break;
+            }
+        }
     }
-    if (find_space) {
+    // Use a new bay if there aren't any partially filled
+    if (!space_found) {
         int space_found = 0;
         building *space = building_main(b);
         for (int i = 0; i < 8; i++) {
