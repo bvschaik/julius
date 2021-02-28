@@ -22,7 +22,7 @@
 <!-- Note: Architect's Guild ON Variant -->
     <image id="Arch Guild ON" >
 		<layer group="this" image="Arch Guild OFF" />
-e       <animation speed="6" frames="8" y="56" reversible="false" />
+        <animation speed="6" frames="8" x="0" y="56" reversible="false" />
     </image>
     <image src="Architects_Guild_On_01" />
     <image src="Architects_Guild_On_02" />
@@ -37,5 +37,4 @@ e       <animation speed="6" frames="8" y="56" reversible="false" />
     <image src="Architects_Guild_On_11" />
     <image src="Architects_Guild_On_12" />
 
-	
-</assetlist>		
+</assetlist>

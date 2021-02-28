@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
+
 <assetlist author="Areldir" name="Roadblocks">
     <image id="roadblock" src="Roadblock_New" />	
     <image id="roadblock_blue" src="Roadblock_blue" />	

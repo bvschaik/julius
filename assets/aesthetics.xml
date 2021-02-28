@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
+
 <assetlist author="Areldir" name="Aesthetics">
 
 
@@ -315,9 +316,4 @@
     <image src="L_Statue_Animation_04" />
     <image src="L_Statue_Animation_05" />
 
-
-
-
-
-	
 </assetlist>

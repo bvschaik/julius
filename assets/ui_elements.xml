@@ -87,4 +87,8 @@
     <image id="Exec Ico S" src="Executions_UI_Button_Selected" />
     <image id="Exec Ico DS" src="Executions_UI_Button_Deselected" />
 
+<!-- Note: Banner images for Hippodrome and Colosseum respectively -->
+    <image id="Circus Banner" src="Circus_Banner" />
+    <image id="Colosseum Banner" src="Colosseum_Banner" />
+
 </assetlist>

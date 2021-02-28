@@ -7,7 +7,7 @@
 
     <image id="Watchtower C ON" >
 		<layer group="this" image="Watchtower C OFF" />
-        <animation speed="8" frames="5" x="0" y="0" reversible="false" />
+        <animation speed="8" frames="5" x="54" y="49" reversible="false" />
     </image>
     <image src="Watchtower_Central_ON_01" />
     <image src="Watchtower_Central_ON_02" />
@@ -20,7 +20,7 @@
 
     <image id="Watchtower N ON" >	
 		<layer group="this" image="Watchtower N OFF" />
-        <animation speed="8" frames="5" x="0" y="0" reversible="false" />
+        <animation speed="8" frames="5" x="54" y="49" reversible="false" />
     </image>
     <image src="Watchtower_North_ON_01" />
     <image src="Watchtower_North_ON_02" />
@@ -33,7 +33,7 @@
 
     <image id="Watchtower S ON" >	
 		<layer group="this" image="Watchtower S OFF" />
-        <animation speed="8" frames="5" x="0" y="0" reversible="false" />
+        <animation speed="8" frames="5" x="54" y="49" reversible="false" />
     </image>
     <image src="Watchtower_South_ON_01" />
     <image src="Watchtower_South_ON_02" />
@@ -41,4 +41,4 @@
     <image src="Watchtower_South_ON_04" />
     <image src="Watchtower_South_ON_05" />
 
-</assetlist>		
+</assetlist>
