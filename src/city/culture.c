@@ -112,7 +112,7 @@ void city_culture_update_coverage(void)
     int population = city_data.population.population;
 
     // entertainment
-    coverage.tavern = top(calc_percentage(TAVERN_COVERAGE * building_count_active(BUILDING_TAVERN), population));
+    coverage.tavern = top(calc_percentage(city_culture_get_theatre_person_coverage(), population));
     coverage.theater = top(calc_percentage(THEATER_COVERAGE * building_count_active(BUILDING_THEATER), population));
     coverage.amphitheater = top(calc_percentage(AMPHITHEATER_COVERAGE * building_count_active(BUILDING_AMPHITHEATER), population));
     coverage.arena = top(calc_percentage(ARENA_COVERAGE * building_count_active(BUILDING_ARENA), population));
@@ -252,17 +252,22 @@ void city_culture_calculate(void)
     city_festival_calculate_costs();
 }
 
-int city_culture_get_school_person_coverage()
+int city_culture_get_theatre_person_coverage(void)
+{
+    return THEATER_COVERAGE * building_count_active(BUILDING_THEATER) + THEATER_UPGRADE_BONUS_COVERAGE * building_count_upgraded(BUILDING_THEATER);;
+}
+
+int city_culture_get_school_person_coverage(void)
 {
     return SCHOOL_COVERAGE * building_count_active(BUILDING_SCHOOL) + SCHOOL_UPGRADE_BONUS_COVERAGE * building_count_upgraded(BUILDING_SCHOOL);
 }
 
-int city_culture_get_library_person_coverage()
+int city_culture_get_library_person_coverage(void)
 {
-    return LIBRARY_COVERAGE * building_count_active(BUILDING_LIBRARY);
+    return LIBRARY_COVERAGE * building_count_active(BUILDING_LIBRARY) + LIBRARY_UPGRADE_BONUS_COVERAGE * building_count_upgraded(BUILDING_LIBRARY);;
 }
 
-int city_culture_get_academy_person_coverage()
+int city_culture_get_academy_person_coverage(void)
 {
     return ACADEMY_COVERAGE * building_count_active(BUILDING_ACADEMY);
 }

@@ -126,7 +126,7 @@ static int draw_background(void)
     lang_text_draw_amount(8, 34, building_count_total(BUILDING_THEATER), 40, 84, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_THEATER), 150, 84, 100, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_theater_shows(), 230, 84, 100, FONT_NORMAL_WHITE);
-    width = text_draw_number(THEATER_COVERAGE * building_count_active(BUILDING_THEATER), '_', " ",
+    width = text_draw_number(city_culture_get_theatre_person_coverage(), '_', " ",
         PEOPLE_OFFSET, 84, FONT_NORMAL_WHITE);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 84, FONT_NORMAL_WHITE);
     int pct_theater = city_culture_coverage_theater();
