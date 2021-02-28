@@ -478,7 +478,7 @@
     </image>
 
     <image id="Theatre ON" width="118" height="98">
-		<layer group="this" image="Theatre NO SHOW" x="0" y="0" />
+		<layer group="this" image="Theatre NOSHOW" x="0" y="0" />
         <animation speed="5" frames="21" x="60" y="32" reversible="false" />
     </image>
     <image group="46" image="1" />
