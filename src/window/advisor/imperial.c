@@ -60,7 +60,7 @@ static int get_resource_amount_including_granaries(int resource, int amount, int
 {
     *checked_granaries = 0;
     int amount_stored = city_resource_count(resource);
-    if (amount_stored < amount && city_resource_is_food(resource)) {
+    if (amount_stored < amount && resource_is_food(resource)) {
         amount_stored += city_resource_count_food_on_granaries(resource) / 100;
         *checked_granaries = 1;
     }

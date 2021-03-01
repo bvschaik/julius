@@ -69,7 +69,7 @@ void scenario_request_process(void)
                 if (!scenario.requests[i].can_comply_dialog_shown) {
                     resource_type resource = scenario.requests[i].resource;
                     int resource_amount = city_resource_count(resource);
-                    if (city_resource_is_food(resource)) {
+                    if (resource_is_food(resource)) {
                         resource_amount += city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
                     }
                     if (resource_amount >= scenario.requests[i].amount) {
@@ -119,7 +119,7 @@ void scenario_request_dispatch(int id)
         building_warehouses_remove_resource(RESOURCE_WEAPONS, amount);
     } else {
         int amount_left = building_warehouses_remove_resource(scenario.requests[id].resource, amount);
-        if (amount_left > 0 && city_resource_is_food(scenario.requests[id].resource)) {
+        if (amount_left > 0 && resource_is_food(scenario.requests[id].resource)) {
             building_granaries_remove_resource(scenario.requests[id].resource, amount_left * RESOURCE_GRANARY_ONE_LOAD);
         }
     }

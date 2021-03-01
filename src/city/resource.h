@@ -12,8 +12,6 @@ typedef struct {
     int items[RESOURCE_MAX];
 } resource_list;
 
-int city_resource_is_food(resource_type resource);
-
 int city_resource_count_food_on_granaries(resource_type food);
 int city_resource_count(resource_type resource);
 
