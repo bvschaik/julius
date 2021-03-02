@@ -256,6 +256,48 @@ static int get_building_image_id(int map_x, int map_y, building_type type, const
     return image_id;
 }
 
+static int get_new_building_image_id(int map_x, int map_y, int grid_offset, building_type type, const building_properties *props)
+{
+	int rotation_offset = building_rotation_get_rotation() % 2 * props->rotation_offset;
+	int image_id = props->image_group + rotation_offset;
+	if (building_construction_is_connecting()) {
+		image_id = building_image_context_get_connecting_image_for_tile(grid_offset, type);
+	} else if (building_variant_has_variants(type)) {
+		image_id = building_variant_get_image_id(type);
+	} else {
+		if (type == BUILDING_WATCHTOWER) {
+			switch (scenario_property_climate()) {
+			case CLIMATE_CENTRAL:
+				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower C ON");
+				break;
+			case CLIMATE_DESERT:
+				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower S ON");
+				break;
+			case CLIMATE_NORTHERN:
+				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower N ON");
+				break;
+			default:
+				break;
+			}
+		} else if (type == BUILDING_WORKCAMP) {
+			switch (scenario_property_climate()) {
+			case CLIMATE_CENTRAL:
+				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp Central");
+				break;
+			case CLIMATE_DESERT:
+				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp South");
+				break;
+			case CLIMATE_NORTHERN:
+				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp North");
+				break;
+			default:
+				break;
+			}
+		}
+	}
+	return image_id;
+}
+
 static void get_building_base_xy(int map_x, int map_y, int building_size, int *x, int *y)
 {
     switch (city_view_orientation()) {
@@ -351,14 +393,7 @@ static void draw_default(const map_tile* tile, int x_view, int y_view, building_
         // hack for offsets, not perfect
         int y_offset = (building_size - 1) * EXTRA_ASSET_IMAGE_X_OFFSET;
         int x_offset = (building_size - 1) * EXTRA_ASSET_IMAGE_Y_OFFSET;
-		if (building_construction_is_connecting()) {
-            image_id = building_image_context_get_connecting_image_for_tile(grid_offset, type);
-        } else if (building_variant_has_variants(type)) {
-            image_id = building_variant_get_image_id(type);
-        } else {
-            int rotation_offset = building_rotation_get_rotation() % 2 * props->rotation_offset;
-            image_id = props->image_group + rotation_offset;
-        }
+        image_id = get_new_building_image_id(tile->x, tile->y, grid_offset, type, props);
         draw_regular_building(type, image_id, x_view- x_offset, y_view+ y_offset, grid_offset);
     } else {
         image_id = get_building_image_id(tile->x, tile->y, type, props);
