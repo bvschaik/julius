@@ -477,13 +477,20 @@ static int pre_init(const char *custom_data_dir)
             }
             user_dir = ask_for_data_dir(1);
         }
-    #else
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-            "Julius requires the original files from Caesar 3 to run.",
-            "Move the Julius executable to the directory containing an existing "
-            "Caesar 3 installation, or run:\njulius path-to-c3-directory",
-            NULL);
-    #endif
+#elif defined(__vita__)
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+        "Error",
+        "Julius requires the original files from Caesar 3.\n\n"
+        "Please add the files to:\n\n"
+        VITA_PATH_PREFIX,
+        NULL);
+#else
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+        "Julius requires the original files from Caesar 3 to run.",
+        "Move the Julius executable to the directory containing an existing "
+        "Caesar 3 installation, or run:\njulius path-to-c3-directory",
+        NULL);
+#endif
 
     return 0;
 }
