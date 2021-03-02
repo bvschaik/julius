@@ -4,10 +4,12 @@
 #include "building/model.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
+#include "city/finance.h"
 #include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/config.h"
+#include "empire/trade_prices.h"
 #include "map/routing_terrain.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -83,9 +85,38 @@ int building_granary_is_gettable(int resource, building *b)
 }
 int building_granary_is_not_accepting(int resource, building *b)
 {
-    return !((building_granary_is_accepting(resource,b) || building_granary_is_getting(resource,b)));
+    return !((building_granary_is_accepting(resource, b) || building_granary_is_getting(resource, b)));
 }
 
+int building_granary_is_full(int resource, building *b)
+{
+    return b->data.granary.resource_stored[RESOURCE_NONE] <= 0;
+}
+
+int building_granary_resource_amount(int resource, building *b)
+{
+    return b->data.granary.resource_stored[resource];
+}
+
+int building_granary_add_import(building *granary, int resource)
+{
+    if (!building_granary_add_resource(granary, resource, 0)) {
+        return 0;
+    }
+    int price = trade_price_buy(resource);
+    city_finance_process_import(price);
+    return 1;
+}
+
+int building_granary_remove_export(building *granary, int resource)
+{
+    if (building_granary_remove_resource(granary, resource, RESOURCE_GRANARY_ONE_LOAD) == RESOURCE_GRANARY_ONE_LOAD) {
+        return 0;
+    }
+    int price = trade_price_sell(resource);
+    city_finance_process_export(price);
+    return 1;
+}
 
 int building_granary_add_resource(building *granary, int resource, int is_produced)
 {
@@ -101,12 +132,13 @@ int building_granary_add_resource(building *granary, int resource, int is_produc
     if (granary->data.granary.resource_stored[RESOURCE_NONE] <= 0) {
         return 0; // no space
     }
-    if (building_granary_is_not_accepting(resource,granary)) {
+    if (building_granary_is_not_accepting(resource, granary)) {
         return 0;
     }
     if (is_produced) {
         city_resource_add_produced_to_granary(RESOURCE_GRANARY_ONE_LOAD);
     }
+    city_resource_add_to_granary(resource, RESOURCE_GRANARY_ONE_LOAD);
     if (granary->data.granary.resource_stored[RESOURCE_NONE] <= RESOURCE_GRANARY_ONE_LOAD) {
         granary->data.granary.resource_stored[resource] += granary->data.granary.resource_stored[RESOURCE_NONE];
         granary->data.granary.resource_stored[RESOURCE_NONE] = 0;

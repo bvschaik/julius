@@ -83,12 +83,13 @@ static generic_button warehouse_distribution_permissions_buttons[] = {
      {0, 0, 20, 22, storage_toggle_permissions, button_none, 1, 0},
      {96, 0, 20, 22, storage_toggle_permissions, button_none, 2, 0},
      {228, 0, 20, 22, storage_toggle_permissions, button_none, 3, 0},
-
 };
 
 static generic_button granary_distribution_permissions_buttons[] = {
      {0, 0, 20, 22, storage_toggle_permissions, button_none, 1, 0},
      {96, 0, 20, 22, storage_toggle_permissions, button_none, 4, 0},
+     {192, 0, 20, 22, storage_toggle_permissions, button_none, 2, 0},
+     {324, 0, 20, 22, storage_toggle_permissions, button_none, 3, 0},
 };
 
 static generic_button dock_distribution_permissions_buttons[20];
@@ -157,9 +158,8 @@ static void draw_permissions_buttons(int x, int y, int buttons)
 static void draw_granary_permissions_buttons(int x, int y, int buttons)
 {
     uint8_t permission_button_text[] = { 'x', 0 };
-    int offsets[] = { 96, 132, 96 };
-    for (int i = 0; i < buttons; i++)
-    {
+    int offsets[] = { 96, 96, 132, 96 };
+    for (int i = 0; i < buttons; i++) {
         int permission = granary_distribution_permissions_buttons[i].parameter1 - 1;
         button_border_draw(x, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (building_storage_get_permission(permission, building_get(data.building_id))) {
@@ -246,7 +246,7 @@ void window_building_draw_dock(building_info_context *c)
     init_dock_permission_buttons();
     text_draw_centered(translation_for(TR_BUILDING_DOCK_CITIES_CONFIG_DESC), c->x_offset, c->y_offset + 240, 16 * c->width_blocks, FONT_NORMAL_BLACK, 0);
     int panel_height = c->height_blocks - 21;
-    data.dock_max_cities_visible = floor(panel_height * 16 / 22);
+    data.dock_max_cities_visible = panel_height * 16 / 22;
     int scrollbar_shown = dock_distribution_permissions_buttons_count > data.dock_max_cities_visible;
     int panel_width;
     if (scrollbar_shown) {
@@ -585,8 +585,6 @@ void window_building_draw_granary(building_info_context *c)
     int has_cart_orders = cartpusher && figure_get(cartpusher)->state == FIGURE_STATE_ALIVE;
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, has_cart_orders ? 5 : 4);
     window_building_draw_employment(c, 142);
-    image_draw(image_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 28, c->y_offset + 19 * c->height_blocks - 133);
-    image_draw(image_group(GROUP_FIGURE_TOWER_SENTRY) + 4, c->x_offset + 128, c->y_offset + 19 * c->height_blocks - 133);
     if (has_cart_orders) {
         int resource = figure_get(cartpusher)->resource_id;
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource +
@@ -595,6 +593,12 @@ void window_building_draw_granary(building_info_context *c)
         lang_text_draw_multiline(99, 17, c->x_offset + 64, c->y_offset + 193,
             16 * (c->width_blocks - 5), FONT_SMALL_BLACK);
     }
+
+    // Permissions image
+    image_draw(image_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 28, c->y_offset + 19 * c->height_blocks - 133);
+    image_draw(image_group(GROUP_FIGURE_TOWER_SENTRY) + 4, c->x_offset + 128, c->y_offset + 19 * c->height_blocks - 133);
+    image_draw(image_group(GROUP_FIGURE_TRADE_CARAVAN) + 4, c->x_offset + 218, c->y_offset + 19 * c->height_blocks - 133);
+    image_draw(image_group(GROUP_FIGURE_SHIP) + 4, c->x_offset + 308, c->y_offset + 19 * c->height_blocks - 150);
 }
 
 void window_building_draw_granary_foreground(building_info_context *c)
@@ -603,7 +607,7 @@ void window_building_draw_granary_foreground(building_info_context *c)
         16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
     lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
         16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-    draw_granary_permissions_buttons(c->x_offset + 58, c->y_offset + 19 * c->height_blocks - 122, 2);
+    draw_granary_permissions_buttons(c->x_offset + 58, c->y_offset + 19 * c->height_blocks - 122, 4);
 
 }
 
@@ -611,7 +615,7 @@ int window_building_handle_mouse_granary(const mouse *m, building_info_context *
 {
     data.building_id = c->building_id;
     if (generic_buttons_handle_mouse(m, c->x_offset + 58, c->y_offset + 19 * c->height_blocks - 122,
-        granary_distribution_permissions_buttons, 2, &data.permission_focus_button_id)) {
+        granary_distribution_permissions_buttons, 4, &data.permission_focus_button_id)) {
     }
     return generic_buttons_handle_mouse(
         m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
@@ -628,7 +632,6 @@ void window_building_draw_granary_orders(building_info_context *c)
     lang_text_draw_centered(98, 6, c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 }
-
 
 void window_building_draw_granary_orders_foreground(building_info_context *c)
 {
@@ -938,6 +941,12 @@ void window_building_granary_get_tooltip_distribution_permissions(int *translati
             break;
         case 2:
             *translation = TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER;
+        case 3:
+            *translation = TR_TOOLTIP_BUTTON_ACCEPT_TRADE_CARAVAN;
+            break;
+        case 4:
+            *translation = TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS;
+            break;
         default:
             break;
     }

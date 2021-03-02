@@ -37,6 +37,7 @@ static const char *ini_keys[] = {
     "gameplay_buyers_dont_distribute",
     "gameplay_change_getting_granaries_go_offroad",
     "gameplay_change_granaries_get_double",
+    "gameplay_change_allow_exporting_from_granaries",
     "gameplay_change_tower_sentries_go_offroad",
     "gameplay_change_farms_deliver_close",
     "gameplay_change_only_deliver_to_accepting_granaries",

@@ -181,6 +181,11 @@ void city_resource_add_produced_to_granary(int amount)
     city_data.resource.food_produced_this_month += amount;
 }
 
+void city_resource_add_to_granary(resource_type food, int amount)
+{
+    city_data.resource.granary_food_stored[food] += amount;
+}
+
 void city_resource_remove_from_granary(resource_type food, int amount)
 {
     city_data.resource.granary_food_stored[food] -= amount;

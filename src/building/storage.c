@@ -142,13 +142,13 @@ void building_storage_cycle_resource_state(int storage_id, resource_type resourc
     data.storages[storage_id].storage.resource_state[resource_id] = state;
 }
 
-void building_storage_set_permission(building_storage_permission_states p, building* b)
+void building_storage_set_permission(building_storage_permission_states p, building *b)
 {
     int permission_bit = 1 << p;
     data.storages[b->storage_id].storage.permissions ^= permission_bit;
 }
 
-int building_storage_get_permission(building_storage_permission_states p, building* b)
+int building_storage_get_permission(building_storage_permission_states p, building *b)
 {
     const building_storage* s = building_storage_get(b->storage_id);
     int permission_bit = 1 << p;

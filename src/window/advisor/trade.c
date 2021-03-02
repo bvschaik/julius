@@ -1,6 +1,7 @@
 #include "trade.h"
 
 #include "city/resource.h"
+#include "core/lang.h"
 #include "core/string.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
@@ -146,8 +147,11 @@ static int draw_background(void)
             button_border_draw(64, y_offset, 512 - data.margin_right, RESOURCE_ROW_HEIGHT, 1);
         }
         lang_text_draw(23, resource, 72, y_offset + 17, FONT_NORMAL_WHITE);
-        text_draw_number_centered(city_resource_count(resource),
-            164, y_offset + 17, 60, FONT_NORMAL_WHITE);
+        int amount = city_resource_count(resource);
+        if (resource_is_food(resource)) {
+            amount += city_resource_count_food_on_granaries(resource) / 100;
+        }
+        text_draw_number_centered(amount, 164, y_offset + 17, 60, FONT_NORMAL_WHITE);
         if (city_resource_is_mothballed(resource)) {
             lang_text_draw_centered(18, 5, 204, y_offset + 17, 100, FONT_NORMAL_WHITE);
         }
@@ -213,6 +217,25 @@ static void button_resource(int resource_index, int param2)
     window_resource_settings_show(city_resource_get_potential()->items[resource_index + scrollbar.scroll_position]);
 }
 
+static void write_resource_storage_tooltip(tooltip_context *c, int resource)
+{
+    static uint8_t tooltip_resource_info[200];
+    int amount_warehouse = city_resource_count(resource);
+    int amount_granary = city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
+    uint8_t *text = tooltip_resource_info;
+    text += string_from_int(text, amount_warehouse, 0);
+    *text = ' ';
+    text++;
+    text = string_copy(lang_get_string(52, 43), text, 200 - (int)(text - tooltip_resource_info));
+    *text = '\n';
+    text++;
+    text += string_from_int(text, amount_granary, 0);
+    *text = ' ';
+    text++;
+    text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, 200 - (int)(text - tooltip_resource_info));
+    c->precomposed_text = tooltip_resource_info;
+}
+
 static int get_tooltip_text(tooltip_context *c)
 {
     if (data.focus_button_id == 1) {
@@ -220,6 +243,12 @@ static int get_tooltip_text(tooltip_context *c)
     } else if (data.focus_button_id == 2) {
         return 41;
     } else if (data.focus_button_id) {
+        const mouse *m = mouse_in_dialog(mouse_get());
+        int resource = city_resource_get_potential()->items[data.focus_button_id - 3 + scrollbar.scroll_position];
+        if (resource_is_food(resource) && m->x > 180 && m->x < 220) {
+            write_resource_storage_tooltip(c, resource);
+            return 1;
+        }
         return 107;
     } else {
         return 0;
