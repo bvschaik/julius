@@ -1,5 +1,6 @@
 #include "city.h"
 
+#include "core/calc.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/map.h"
@@ -15,6 +16,7 @@
 #include <string.h>
 
 #define MAX_CITIES 41
+#define RESOURCES_TO_TRADER_RATIO 60
 
 static empire_city cities[MAX_CITIES];
 
@@ -247,29 +249,16 @@ void empire_city_force_sell(int route, int resource)
 
 static int generate_trader(int city_id, empire_city *city)
 {
-    int max_traders = 0;
-    int num_resources = 0;
+    int trade_potential = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         if (city->buys_resource[r] || city->sells_resource[r]) {
-            ++num_resources;
-            switch (trade_route_limit(city->route_id, r)) {
-                case 15: max_traders += 1; break;
-                case 25: max_traders += 2; break;
-                case 40: max_traders += 3; break;
-            }
+            trade_potential += trade_route_limit(city->route_id, r);
         }
     }
-    if (num_resources > 1) {
-        if (max_traders % num_resources) {
-            max_traders = max_traders / num_resources + 1;
-        } else {
-            max_traders = max_traders / num_resources;
-        }
-    }
-    if (max_traders <= 0) {
+    if (trade_potential <= 0) {
         return 0;
     }
-
+    int max_traders = calc_bound(trade_potential / RESOURCES_TO_TRADER_RATIO, 1, 3);
     int index;
     if (max_traders == 1) {
         if (!city->trader_figure_ids[0]) {
