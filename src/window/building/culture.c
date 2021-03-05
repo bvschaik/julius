@@ -144,7 +144,22 @@ void window_building_draw_barber(building_info_context *c)
 
 void window_building_draw_school(building_info_context *c)
 {
-    draw_culture_info(c, 68, "wavs/school.wav", 85);
+    c->help_id = 68;
+    window_building_play_sound(c, "wavs/school.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(85, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+
+    if (!c->has_road_access) {
+        window_building_draw_description(c, 69, 25);
+	} else if (building_get(c->building_id)->num_workers <= 0) {
+		window_building_draw_description(c, 85, 2);
+	} else if (building_get(c->building_id)->upgrade_level) {
+		window_building_draw_description_from_tr_string(c, TR_BUILDING_SCHOOL_UPGRADE_DESC);
+	} else {
+		window_building_draw_description(c, 85, 3);
+	}
+	inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
+	window_building_draw_employment(c, 142);
 }
 
 void window_building_draw_academy(building_info_context *c)
@@ -154,7 +169,22 @@ void window_building_draw_academy(building_info_context *c)
 
 void window_building_draw_library(building_info_context *c)
 {
-    draw_culture_info(c, 70, "wavs/library.wav", 87);
+    c->help_id = 70;
+    window_building_play_sound(c, "wavs/library.wav");
+	outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+	lang_text_draw_centered(87, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+
+	if (!c->has_road_access) {
+		window_building_draw_description(c, 69, 25);
+	} else if (building_get(c->building_id)->num_workers <= 0) {
+		window_building_draw_description(c, 87, 2);
+	} else if (building_get(c->building_id)->upgrade_level) {
+		window_building_draw_description_from_tr_string(c, TR_BUILDING_LIBRARY_UPGRADE_DESC);
+	} else {
+		window_building_draw_description(c, 87, 3);
+	}
+	inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
+    window_building_draw_employment(c, 142);
 }
 
 static void draw_temple_info(building_info_context *c, int image_offset)
@@ -292,11 +322,13 @@ void window_building_draw_theater(building_info_context *c)
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (b->num_workers <= 0) {
-        window_building_draw_description(c, 72, 4);
-    } else if (!b->data.entertainment.num_shows) {
-        window_building_draw_description(c, 72, 2);
-    } else if (b->data.entertainment.days1) {
+	} else if (b->num_workers <= 0) {
+		window_building_draw_description(c, 72, 4);
+	} else if (b->upgrade_level) {
+		window_building_draw_description_from_tr_string(c,TR_BUILDING_THEATRE_UPGRADE_DESC);
+	} else if (!b->data.entertainment.num_shows) {
+		window_building_draw_description(c, 72, 2);
+	} else if (b->data.entertainment.days1) {
         window_building_draw_description(c, 72, 3);
     }
 

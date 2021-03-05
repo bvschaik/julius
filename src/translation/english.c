@@ -574,7 +574,9 @@ static translation_string all_strings[] = {
     {TR_BUTTON_GO_TO_SITE, "Go to the site" },
     {TR_RESOURCE_FISH, "Fish" },
     {TR_WARNING_VARIANT_TOGGLE, "Press rotation key to toggle variants of this building"},
-
+    {TR_BUILDING_SCHOOL_UPGRADE_DESC, "The school is operational, and the local development allowed for its expansion. That allows more children to study at the same time."},
+    {TR_BUILDING_THEATRE_UPGRADE_DESC, "The development of the area allowed for expansion of the theater. The grander theater can satisfy entertainment needs of more citizens." },
+    {TR_BUILDING_LIBRARY_UPGRADE_DESC, "The local development allowed to greatly expand the library. The new scrolls can satisfy the education needs for a greater number of Romans." },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
