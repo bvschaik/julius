@@ -541,7 +541,9 @@ static void update_favor_rating(int is_yearly_update)
             }
         }
         // salary
-        int salary_delta = city_data.emperor.salary_rank - city_data.emperor.player_rank;
+        int rank_paid = city_emperor_rank_for_salary_paid(city_data.finance.last_year.expenses.salary);
+        int salary_delta = rank_paid - city_data.emperor.player_rank;
+
         if (city_data.emperor.player_rank != 0) {
             if (salary_delta > 0) {
                 // salary too high

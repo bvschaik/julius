@@ -11,6 +11,8 @@
 #include "scenario/property.h"
 #include "scenario/invasion.h"
 
+#define RANKS 11
+
 const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
 static int cheated_invasion = 0;
@@ -289,6 +291,17 @@ int city_emperor_salary_rank(void)
 int city_emperor_salary_amount(void)
 {
     return city_data.emperor.salary_amount;
+}
+
+int city_emperor_rank_for_salary_paid(int salary)
+{
+    for (int i = 0; i < RANKS; i++) {
+        if (salary <= SALARY_FOR_RANK[i]*12) {
+            return i;
+        }
+    }
+    // Return highest rank if others don't match, shouldn't happen
+    return 10;
 }
 
 int city_emperor_personal_savings(void)
