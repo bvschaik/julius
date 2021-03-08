@@ -453,9 +453,11 @@ static void window_building_draw_monument_construction_process(building_info_con
     int tr_phase_name, int tr_phase_name_text, int tr_construction_desc)
 {
     building *b = building_get(c->building_id);
+    map_point point;
     if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
-        if (!c->has_road_access) {
-            window_building_draw_description_at(c, 55, 69, 25);
+        if (!building_monument_access_point(b, &point)) 
+        {
+            window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_INFO_WARNING_NO_MONUMENT_ROAD_ACCESS);
             text_draw_multiline(translation_for(tr_construction_desc),
                 c->x_offset + 22, c->y_offset + 180, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
             return;
