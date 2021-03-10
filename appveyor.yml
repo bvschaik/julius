@@ -15,6 +15,9 @@ environment:
       PLATFORMTOOLSET: "v140"
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       COMPILER: msvc
+  UPLOAD_TOKEN:
+    secure: AfgHej91I7e2XMPia4NByC0fw4CK7rg5PovzHyFyS+rQ1DCM0jGF7KRj2oJUZCXITJwZeSK7YxodPsfcAbpqyA==
+      
 
 platform:
   - x86
