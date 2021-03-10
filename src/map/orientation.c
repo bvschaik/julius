@@ -367,10 +367,7 @@ void map_orientation_update_buildings(void)
                 map_water_add_building(i, b->x, b->y, 3, image_id);
                 break;
         }
-        if (b->type >= BUILDING_PINE_PATH && b->type <= BUILDING_DATE_PATH) {
-            image_id = assets_get_group_id("Areldir", "Aesthetics") + (b->type - BUILDING_PINE_TREE) + (abs((b->subtype.orientation - (map_orientation / 2) % 2)) * PATH_ROTATE_OFFSET);
-            map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
-        }
+
         if (b->type >= BUILDING_SMALL_STATUE_ALT && b->type <= BUILDING_SMALL_STATUE_ALT_B) {
             int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
             image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (b->type - BUILDING_SMALL_STATUE_ALT)

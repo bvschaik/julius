@@ -23,7 +23,7 @@ const building_image* building_image_context_get_hedges(int grid_offset);
 
 const building_image* building_image_context_get_colonnade(int grid_offset);
 
-const building_image* building_image_context_get_garden_path(int grid_offset);
+const building_image* building_image_context_get_garden_path(int grid_offset, int context);
 
 int building_image_context_get_connecting_image_for_tile(int grid_offset, int building_type);
 

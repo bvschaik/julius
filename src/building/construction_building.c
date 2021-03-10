@@ -671,12 +671,6 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_DOLPHIN_FOUNTAIN:
             add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
             break;
-        case BUILDING_HEDGE_DARK:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
-            break;
-        case BUILDING_HEDGE_LIGHT:
-            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
-            break;
         case BUILDING_GARDEN_WALL:
             add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
             break;

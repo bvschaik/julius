@@ -84,6 +84,14 @@ int building_construction_is_connecting(void)
     case BUILDING_HEDGE_LIGHT:
     case BUILDING_COLONNADE:
     case BUILDING_GARDEN_PATH:
+    case BUILDING_DATE_PATH:
+    case BUILDING_ELM_PATH:
+    case BUILDING_FIG_PATH:
+    case BUILDING_FIR_PATH:
+    case BUILDING_OAK_PATH:
+    case BUILDING_PALM_PATH:
+    case BUILDING_PINE_PATH:
+    case BUILDING_PLUM_PATH:
         return 1;
     default:
         return 0;
@@ -205,8 +213,9 @@ static int plot_draggable_building(int x_start, int y_start, int x_end, int y_en
                 items_placed++;
                 if (building_construction_is_connecting()) {
                     building_image_context_mark_connection_grid(grid_offset);
-                }
+                } else {
                 map_image_set(grid_offset, image_id);
+                }
             }
         }
     }
@@ -589,9 +598,7 @@ void building_construction_update(int x, int y, int grid_offset)
         }
     }
     else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
-        int rotation = building_rotation_get_rotation();
-        int image_id = assets_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
-        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, 0);
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
@@ -747,7 +754,7 @@ void building_construction_place(void)
     if (type != BUILDING_CLEAR_LAND && has_nearby_enemy(x_start, y_start, x_end, y_end)) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
             game_undo_restore_map(0);
-        } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT || type == BUILDING_COLONNADE || type == BUILDING_GARDEN_PATH) {
+        } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || building_construction_is_connecting()) {
             game_undo_restore_map(1);
         } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
             map_bridge_reset_building_length();
@@ -836,9 +843,10 @@ void building_construction_place(void)
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, 0);
     }
     else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
-        int rotation = building_rotation_get_rotation();
-        int image_id = assets_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE) + (rotation % 2 * PATH_ROTATE_OFFSET);
-        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
+        int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
+        map_tiles_update_all_hedges();
     }
     else if (type >= BUILDING_SMALL_STATUE_ALT && type <= BUILDING_SMALL_STATUE_ALT_B) {
         int rotation = building_rotation_get_rotation();

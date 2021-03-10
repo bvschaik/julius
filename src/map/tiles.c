@@ -1018,7 +1018,7 @@ void map_tiles_update_region_rubble(int x_min, int y_min, int x_max, int y_max)
 
 static void update_hedge_tile(int x, int y, int grid_offset)
 {
-        building_image_context_set_hedge_image(grid_offset);
+	building_image_context_set_hedge_image(grid_offset);
 }
 void map_tiles_update_all_hedges()
 {
