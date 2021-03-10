@@ -76,3 +76,45 @@ jobs:
         with:
           name: ${{ matrix.name }}
           path: deploy/
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows 32-bit
+            cache-key: mingw
+            COMPILER: mingw-32
+          - name: Windows 64-bit
+            cache-key: mingw
+            COMPILER: mingw-64
+          - name: Windows MSVC
+            cache-key: msvc
+            COMPILER: msvc
+    name: ${{ matrix.name }}
+    runs-on: windows-latest
+    env:
+      SDL_VERSION: 2.0.14
+      SDL_MIXER_VERSION: 2.0.4
+      COMPILER: ${{ matrix.COMPILER }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: deps
+          key: windows-${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
+      - name: Set up environment
+        run: ./.ci_scripts/install_sdl.ps1
+      - name: Build and test
+        run: ./.ci_scripts/run_build.ps1
+      - name: Upload development artifacts
+        env:
+          UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
+        run: ./.ci_scripts/build_upload.ps1
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.name }}
+          path: deploy\
+          

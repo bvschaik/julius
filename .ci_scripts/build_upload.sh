@@ -77,4 +77,4 @@ then
 fi
 
 curl -u "$UPLOAD_TOKEN" -T deploy/$DEPLOY_FILE https://augustus.josecadete.net/upload/$REPO/$PACKAGE/$VERSION/$DEPLOY_FILE
-echo "\nUploaded. URL: https://augustus.josecadete.net/" 
+echo "Uploaded. URL: https://augustus.josecadete.net/$REPO.html" 
