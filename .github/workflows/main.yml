@@ -103,7 +103,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: deps
-          key: windows-${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
+          key: windows-${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}-${{ hashFiles('**/assets_hash.txt') }}
       - name: Set up environment
         run: ./.ci_scripts/install_sdl.ps1
       - name: Build and test
