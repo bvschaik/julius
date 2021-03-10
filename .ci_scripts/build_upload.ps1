@@ -46,7 +46,6 @@ if ("${env:COMPILER}" -eq "msvc") {
     throw "Unknown compiler: ${env:COMPILER}"
 }
 
-CopyFile assets .
 CopyFile res\maps .
 CopyFile res\augustus_manual.pdf .
 
