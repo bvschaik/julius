@@ -308,7 +308,7 @@
 <!-- Note: Animation overlay for vanilla 'Large Statue' -->	
     <image id="l statue anim" >
 		<layer group="61" image="2" />
-        <animation speed="7" frames="5" x="41" y="27" reversible="false" />
+        <animation speed="7" frames="5" x="69" y="43" reversible="false" />
     </image>
     <image src="L_Statue_Animation_01" />
     <image src="L_Statue_Animation_02" />
