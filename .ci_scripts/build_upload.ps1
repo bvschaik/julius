@@ -51,8 +51,10 @@ $assets_file = "assets-$version-$repo.zip"
 
 $upload_assets = $false
 
-7z a "$assets_file" assets
-$current_assets_hash = (Get-FileHash "$assets_file").Hash
+if ($suffix -eq "windows") {
+    7z a "$assets_file" assets
+    $current_assets_hash = (Get-FileHash "$assets_file").Hash
+}
 
 if ($repo -eq "release") {
     CopyFile res\maps .
@@ -61,14 +63,15 @@ if ($repo -eq "release") {
 } else {
     7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
 
-    if (Test-Path deps\assets_hash.txt) {
-        $previous_assets_hash = Get-Content -TotalCount 1 deps\assets_hash.txt
-
-        if($current_assets_hash -ne $previous_assets_hash) {
+    if ($suffix -eq "windows") {
+        if (Test-Path deps\assets_hash.txt) {
+            $previous_assets_hash = Get-Content -TotalCount 1 deps\assets_hash.txt
+            if($current_assets_hash -ne $previous_assets_hash) {
+                $upload_assets = $true
+            }
+        } else {
             $upload_assets = $true
         }
-    } else {
-        $upload_assets = $true
     }
 }
 
@@ -94,17 +97,17 @@ if ($suffix -eq "windows") {
         throw "Unable to upload"
     }
     echo "Uploaded. URL: https://augustus.josecadete.net/$repo.html"
+
+    # Upload assets if they have changed
+    if ($upload_assets) {
+        echo "Assets have changed. Uploading $assets_file to $repo/windows/$version"
+        curl -u "$env:UPLOAD_TOKEN" -T "$assets_file" "https://augustus.josecadete.net/upload/$repo/assets/$version/${assets_file}"
+        if (!$?) {
+            throw "Unable to upload"
+        }
+        echo "Assets uploaded. URL: https://augustus.josecadete.net/$repo.html"
+        $current_assets_hash | Out-File deps\assets_hash.txt
+    }
 } else {
     echo "Not publishing build $suffix - skipping upload"
-}
-
-# Upload assets if they have changed
-if ($upload_assets) {
-    echo "Assets have changed. Uploading $assets_file to $repo/windows/$version"
-    curl -u "$env:UPLOAD_TOKEN" -T "deploy/$assets_file" "https://augustus.josecadete.net/upload/$repo/assets/$version/${assets_file}"
-    if (!$?) {
-        throw "Unable to upload"
-    }
-    echo "Assets uploaded. URL: https://augustus.josecadete.net/$repo.html"
-    $current_assets_hash | Out-File deps\assets_hash.txt
 }
