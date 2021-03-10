@@ -39,6 +39,10 @@
 #include "map/tiles.h"
 #include "map/water.h"
 
+#define BUILDING_CYCLES 4
+#define MAX_CYCLE_SIZE 10
+
+
 struct reservoir_info {
     int cost;
     int place_reservoir_at_start;
@@ -51,6 +55,8 @@ enum {
     PLACE_RESERVOIR_YES = 1,
     PLACE_RESERVOIR_EXISTS = 2
 };
+
+
 
 static struct {
     building_type type;
@@ -96,6 +102,36 @@ int building_construction_is_connecting(void)
     default:
         return 0;
     }
+}
+
+static int building_cycles [BUILDING_CYCLES][MAX_CYCLE_SIZE] = {
+    {BUILDING_NONE},
+    {BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY, BUILDING_SMALL_TEMPLE_MARS, BUILDING_SMALL_TEMPLE_VENUS,BUILDING_NONE},
+    {BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY, BUILDING_LARGE_TEMPLE_MARS, BUILDING_LARGE_TEMPLE_VENUS,BUILDING_NONE},
+    {BUILDING_DATE_PATH, BUILDING_ELM_PATH, BUILDING_FIG_PATH, BUILDING_FIR_PATH, BUILDING_OAK_PATH, BUILDING_PALM_PATH, BUILDING_PINE_PATH, BUILDING_PLUM_PATH, BUILDING_NONE},
+};
+
+int building_construction_cycle(void)
+{
+    if (data.type == BUILDING_NONE) {
+        return 0;
+    }
+
+    for (int i = 0; i < BUILDING_CYCLES; i++) {
+        for (int j = 0; j < MAX_CYCLE_SIZE; j++) {
+            if (building_cycles[i][j] == BUILDING_NONE) {
+                continue;
+            }
+            if (building_cycles[i][j] == data.type) {
+                data.type = building_cycles[i][j + 1];
+                if (data.type == BUILDING_NONE) {
+                    data.type = building_cycles[i][0];
+                }
+                return 1;
+            }
+        }
+    }
+    return 0;
 }
 
 static void mark_construction(int x, int y, int size, int terrain, int absolute_xy)

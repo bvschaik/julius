@@ -3,6 +3,8 @@
 
 #include "building/type.h"
 
+int building_construction_cycle(void);
+
 int building_construction_is_connecting(void);
 
 void building_construction_set_cost(int cost);

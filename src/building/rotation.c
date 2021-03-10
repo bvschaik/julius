@@ -1,5 +1,6 @@
 #include "rotation.h"
 
+#include "building/construction.h"
 #include "city/view.h"
 #include "core/config.h"
 #include "core/direction.h"
@@ -11,6 +12,7 @@ static int extra_rotation = 0;
 static int road_orientation = 1;
 
 static void rotate(void){
+    building_construction_cycle();
     rotation+=1;
     extra_rotation += 1;
     if(rotation>3){
