@@ -276,7 +276,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, image_group(GROUP_BUILDING_STATUE) + 1);
             break;
         case BUILDING_LARGE_STATUE:
-            add_building(b, image_group(GROUP_BUILDING_STATUE) + 2);
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "l statue anim"));
             break;
         case BUILDING_SMALL_POND:
             if (scenario_property_climate() == CLIMATE_DESERT) {
