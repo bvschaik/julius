@@ -49,7 +49,8 @@ Then you can either copy the game to the Caesar 3 folder, or run the game from a
 folder, in which case the game will ask you to point to the Caesar 3 folder.
 
 Note that you must have permission to write in the game data directory as the saves will be
-stored there.
+stored there. Also, your game must be patched to 1.0.1.0 to use Julius. If Julius tells you that
+you are missing it, you can [download the update here](https://github.com/bvschaik/julius/wiki/Patches).
 
 See [Running Julius](https://github.com/bvschaik/julius/wiki/Running-Julius) for further instructions and startup options.
 
