@@ -115,8 +115,8 @@ jobs:
         env:
           UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
         run: ./.ci_scripts/build_upload.ps1
-      - uses: actions/upload-artifact@v2
       - name: Upload artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.name }}
           path: deploy\
