@@ -120,8 +120,8 @@ jobs:
         with:
           name: ${{ matrix.name }}
           path: deploy\
+      - uses: actions/setup-ruby@v1
       - name: Send Webhook Notification
-        uses: actions/setup-ruby@v1
         if: always()
         env:
         JOB_STATUS: ${{ job.status }}
