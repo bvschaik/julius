@@ -12,7 +12,7 @@ then
 elif [[ "$GITHUB_REF" == "refs/heads/master" ]]
 then
   REPO=development
-elif [[ "$GITHUB_REF" == "refs/heads/release/" ]]
+elif [[ "$GITHUB_REF" == "refs/heads/release" ]]
 then
   REPO=experimental
 elif [[ "$GITHUB_REF" =~ ^refs/pull/ ]]
