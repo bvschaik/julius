@@ -50,6 +50,11 @@ if (!$?) {
     throw "Unable to create $deploy_file"
 }
 
+if ($env:SKIP_UPLOAD) {
+    echo "Build is configured to skip deploy - skipping upload"
+    exit
+}
+
 if (!$repo) {
     echo "No repo found - skipping deploy"
     exit
@@ -60,14 +65,9 @@ if (!$env:UPLOAD_TOKEN) {
     exit
 }
 
-# Only upload 32-bit build
-if ($suffix -eq "windows") {
-    echo "Uploading $deploy_file to $repo/windows/$version"
-    curl -u "$env:UPLOAD_TOKEN" -T "deploy/$deploy_file" "https://julius.biancavanschaik.nl/upload/$repo/windows/$version/${deploy_file}"
-    if (!$?) {
-        throw "Unable to upload"
-    }
-    echo "Uploaded. URL: https://julius.biancavanschaik.nl/"
-} else {
-    echo "Not publishing build $suffix - skipping upload"
+echo "Uploading $deploy_file to $repo/windows/$version"
+curl -u "$env:UPLOAD_TOKEN" -T "deploy/$deploy_file" "https://julius.biancavanschaik.nl/upload/$repo/windows/$version/${deploy_file}"
+if (!$?) {
+    throw "Unable to upload"
 }
+echo "Uploaded. URL: https://julius.biancavanschaik.nl/"
