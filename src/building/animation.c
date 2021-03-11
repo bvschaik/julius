@@ -69,6 +69,9 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_WATCHTOWER && b->num_workers <= 0) {
         return 0;
     }
+    if (b->type == BUILDING_LARGE_STATUE && !b->has_water_access) {
+        return 0;
+    }
     if (b->type == BUILDING_COLOSSEUM) {
         switch (city_festival_games_active()) {
         case 1:

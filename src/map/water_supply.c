@@ -260,6 +260,20 @@ void map_water_supply_update_reservoir_fountain(void)
         map_building_tiles_add(b->id, b->x, b->y, b->size, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset, TERRAIN_BUILDING);
 
     }
+
+    // Large statues, to check if they should play the animation
+    for (int i = 1; i < building_count(); i++) {
+        building *b = building_get(i);
+
+        if (b->type != BUILDING_LARGE_STATUE) {
+            continue;
+        }
+        if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
+            b->has_water_access = 1;
+        } else {
+            b->has_water_access = 0;
+        }
+    }
 }
 
 int map_water_supply_is_well_unnecessary(int well_id, int radius)
