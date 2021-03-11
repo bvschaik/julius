@@ -115,20 +115,20 @@ jobs:
         env:
           UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
         run: ./.ci_scripts/build_upload.ps1
-      - uses: actions/upload-artifact@v2
       - name: Upload artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.name }}
           path: deploy\
+      - uses: actions/setup-ruby@v1
       - name: Send Webhook Notification
-        uses: actions/setup-ruby@v1
         if: always()
         env:
-        JOB_STATUS: ${{ job.status }}
-        WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-        HOOK_OS_NAME: ${{ runner.os }}
-        WORKFLOW_NAME: ${{ github.workflow }}
+          JOB_STATUS: ${{ job.status }}
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          HOOK_OS_NAME: ${{ runner.os }}
+          WORKFLOW_NAME: ${{ github.workflow }}
         run: |
-                git clone https://github.com/DiscordHooks/github-actions-discord-webhook.git webhook
-                bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
+          git clone https://github.com/DiscordHooks/github-actions-discord-webhook.git webhook
+          bash webhook/send.sh $JOB_STATUS $WEBHOOK_URL
         shell: bash
