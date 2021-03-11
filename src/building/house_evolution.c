@@ -143,18 +143,16 @@ static int has_required_goods_and_services(building *house, int for_upgrade, int
         ++demands->requiring.clinic;
     }
     // food types
-    if (model->food) {
-        int foodtypes_required = model->food_types;
-        int foodtypes_available = 0;
-        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            if (house->data.house.inventory[i]) {
-                foodtypes_available++;
-            }
+    int foodtypes_required = model->food_types;
+    int foodtypes_available = 0;
+    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+        if (house->data.house.inventory[i]) {
+            foodtypes_available++;
         }
-        if (foodtypes_available < foodtypes_required) {
-            ++demands->missing.food;
-            return 0;
-        }
+    }
+    if (foodtypes_available < foodtypes_required) {
+        ++demands->missing.food;
+        return 0;
     }
     // goods
     if (house->data.house.inventory[INVENTORY_POTTERY] < model->pottery) {
@@ -607,26 +605,24 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         }
         return;
     }
-    int foodtypes_available = 0;
     // food types
-    if (model->food) {
-        int foodtypes_required = model->food_types;
-        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            if (house->data.house.inventory[i]) {
-                foodtypes_available++;
-            }
+    int foodtypes_required = model->food_types;
+    int foodtypes_available = 0;
+    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+        if (house->data.house.inventory[i]) {
+            foodtypes_available++;
         }
-        if (foodtypes_available < foodtypes_required) {
-            if (foodtypes_required == 1) {
-                house->data.house.evolve_text_id = 9;
-                return;
-            } else if (foodtypes_required == 2) {
-                house->data.house.evolve_text_id = 10;
-                return;
-            } else if (foodtypes_required == 3) {
-                house->data.house.evolve_text_id = 11;
-                return;
-            }
+    }
+    if (foodtypes_available < foodtypes_required) {
+        if (foodtypes_required == 1) {
+            house->data.house.evolve_text_id = 9;
+            return;
+        } else if (foodtypes_required == 2) {
+            house->data.house.evolve_text_id = 10;
+            return;
+        } else if (foodtypes_required == 3) {
+            house->data.house.evolve_text_id = 11;
+            return;
         }
     }
     // education
@@ -755,19 +751,17 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         return;
     }
     // food types
-    if (model->food) {
-        int foodtypes_required = model->food_types;
-        if (foodtypes_available < foodtypes_required) {
-            if (foodtypes_required == 1) {
-                house->data.house.evolve_text_id = 39;
-                return;
-            } else if (foodtypes_required == 2) {
-                house->data.house.evolve_text_id = 40;
-                return;
-            } else if (foodtypes_required == 3) {
-                house->data.house.evolve_text_id = 41;
-                return;
-            }
+    foodtypes_required = model->food_types;
+    if (foodtypes_available < foodtypes_required) {
+        if (foodtypes_required == 1) {
+            house->data.house.evolve_text_id = 39;
+            return;
+        } else if (foodtypes_required == 2) {
+            house->data.house.evolve_text_id = 40;
+            return;
+        } else if (foodtypes_required == 3) {
+            house->data.house.evolve_text_id = 41;
+            return;
         }
     }
     // education

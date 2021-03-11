@@ -8,20 +8,20 @@ build_dir="$(pwd)/build"
 VERSION=$(cat res/version.txt)
 if [[ "$GITHUB_REF" =~ ^refs/tags/v ]]
 then
-  REPO=Augustus
+  REPO=release
 elif [[ "$GITHUB_REF" == "refs/heads/master" ]]
 then
-  REPO=Augustus-unstable
+  REPO=development
 elif [[ "$GITHUB_REF" == "refs/heads/release/" ]]
 then
-  REPO=Augustus-rc
+  REPO=experimental
 elif [[ "$GITHUB_REF" =~ ^refs/pull/ ]]
 then
   PR_ID=${GITHUB_REF##refs/pull/}
   PR_ID=${PR_ID%%/merge}
   VERSION=pr-$PR_ID-$VERSION
 else
-  echo "Unknown branch type $GITHUB_REF - skipping deploy to Bintray"
+  echo "Unknown branch type $GITHUB_REF - skipping upload"
   exit
 fi
 
@@ -43,7 +43,7 @@ case "$DEPLOY" in
   cp "${build_dir}/augustus.nro" "deploy/$DEPLOY_FILE"
   ;;
 "appimage")
-  PACKAGE=linux
+  PACKAGE=linux-appimage
   DEPLOY_FILE=augustus-$VERSION-linux.AppImage
   cp "${build_dir}/augustus.AppImage" "deploy/$DEPLOY_FILE"
   ;;
@@ -53,28 +53,28 @@ case "$DEPLOY" in
   cp "${build_dir}/augustus.dmg" "deploy/$DEPLOY_FILE"
   ;;
 *)
-  echo "Unknown deploy type $DEPLOY - skipping deploy to Bintray"
+  echo "Unknown deploy type $DEPLOY - skipping upload"
   exit
   ;;
 esac
 
-if [ ! -z "$SKIP_BINTRAY" ]
+if [ ! -z "$SKIP_UPLOAD" ]
 then
-  echo "Build is configured to skip Bintray deploy - skipping deploy to Bintray"
+  echo "Build is configured to skip deploy - skipping upload"
   exit
 fi
 
 if [ -z "$REPO" ] || [ -z "$DEPLOY_FILE" ]
 then
-  echo "No repo or deploy file found - skipping deploy to Bintray"
+  echo "No repo or deploy file found - skipping upload"
   exit
 fi
 
-if [ -z "$BINTRAY_USER_TOKEN" ]
+if [ -z "$UPLOAD_TOKEN" ]
 then
-  echo "No user token found - skipping deploy to Bintray"
+  echo "No upload token found - skipping upload"
   exit
 fi
 
-curl -u "$BINTRAY_USER_TOKEN" -T deploy/$DEPLOY_FILE https://api.bintray.com/content/keriew/$REPO/$PACKAGE/$VERSION/$DEPLOY_FILE?publish=1
-echo "\nUploaded to bintray. URL: https://bintray.com/keriew/$REPO/$PACKAGE/$VERSION#files" 
+curl -u "$UPLOAD_TOKEN" -T deploy/$DEPLOY_FILE https://augustus.josecadete.net/upload/$REPO/$PACKAGE/$VERSION/$DEPLOY_FILE
+echo "Uploaded. URL: https://augustus.josecadete.net/$REPO.html" 

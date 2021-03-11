@@ -14,7 +14,3 @@ cmake --build . -j 4 --config Release
 if (!$?) {
     throw "Build failed"
 }
-ctest -C Release
-if (!$?) {
-    throw "Tests failed"
-}

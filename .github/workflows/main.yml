@@ -25,7 +25,7 @@ jobs:
             SDL_MIXER_VERSION: 2.0.0
             BUILD_TARGET: linux
             DEPLOY: linux
-            SKIP_BINTRAY: true
+            SKIP_UPLOAD: true
           - name: macOS
             os: macos-latest
             cache-key: macos
@@ -48,7 +48,7 @@ jobs:
       SDL_MIXER_VERSION: ${{ matrix.SDL_MIXER_VERSION }}
       BUILD_TARGET: ${{ matrix.BUILD_TARGET }}
       DEPLOY: ${{ matrix.DEPLOY }}
-      SKIP_BINTRAY: ${{ matrix.SKIP_BINTRAY }}
+      SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -66,9 +66,9 @@ jobs:
         run: |
           ./.ci_scripts/run_cmake.sh
           ./.ci_scripts/run_build.sh
-      - name: Upload to Bintray
+      - name: Upload development artifacts
         env:
-          BINTRAY_USER_TOKEN: ${{ secrets.BINTRAY_USER_TOKEN }}
+          UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
         run: |
           ./.ci_scripts/build_upload.sh
       - name: Upload artifacts
@@ -76,3 +76,45 @@ jobs:
         with:
           name: ${{ matrix.name }}
           path: deploy/
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows 32-bit
+            cache-key: mingw
+            COMPILER: mingw-32
+          - name: Windows 64-bit
+            cache-key: mingw
+            COMPILER: mingw-64
+          - name: Windows MSVC
+            cache-key: msvc
+            COMPILER: msvc
+    name: ${{ matrix.name }}
+    runs-on: windows-latest
+    env:
+      SDL_VERSION: 2.0.14
+      SDL_MIXER_VERSION: 2.0.4
+      COMPILER: ${{ matrix.COMPILER }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: deps
+          key: windows-${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}-${{ hashFiles('**/assets_hash.txt') }}
+      - name: Set up environment
+        run: ./.ci_scripts/install_sdl.ps1
+      - name: Build and test
+        run: ./.ci_scripts/run_build.ps1
+      - name: Upload development artifacts
+        env:
+          UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
+        run: ./.ci_scripts/build_upload.ps1
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.name }}
+          path: deploy\
+          
