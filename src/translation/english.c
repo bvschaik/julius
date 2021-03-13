@@ -541,9 +541,9 @@ static translation_string all_strings[] = {
     { TR_WINDOW_BUILDING_TOURISM_ANNUAL, "Tourism income this year:" },
     { TR_WINDOW_BUILDING_WHARF_MOTHBALLED, "Your Trade Advisor ordered a halt to fish production."},
     { TR_WINDOW_ADVISOR_FINANCE_INTEREST_TRIBUTE, "Tribute/interest"},
-    { TR_WINDOW_ADVISOR_TOURISM, "Tourism"},
+    { TR_WINDOW_ADVISOR_TOURISM, "Miscellaneous"},
     { TR_WINDOW_FIGURE_TOURIST, "This traveller has spent: "},
-    { TR_FIGURE_TYPE_TOURIST,  "Tourist"},
+    { TR_FIGURE_TYPE_TOURIST,  "Traveller"},
     { TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
     { TR_SAVEGAME_LARGER_VERSION_TITLE, "Incompatible savegame version" },
     { TR_SAVEGAME_LARGER_VERSION_MESSAGE, "The savegame you're trying to load is for a more recent version of Augustus.\nPlease update Augustus to the most recent version." },
@@ -578,6 +578,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_THEATRE_UPGRADE_DESC, "The development of the area allowed for expansion of the theater. The grander theater can satisfy entertainment needs of more citizens." },
     {TR_BUILDING_LIBRARY_UPGRADE_DESC, "The local development allowed to greatly expand the library. The new scrolls can satisfy the education needs for a greater number of Romans." },
     {TR_WINDOW_BUILDING_INFO_WARNING_NO_MONUMENT_ROAD_ACCESS, "The monument has no road access. To ensure that construction is possible, make sure that a road is connected to one of the middle tiles."}
+    { TR_WINDOW_BUILDING_WORKSHOP_STRIKING, "Due to low city sentiment, the plebians of this workshop have declared secession and refuse to work!" },
+    { TR_CITY_WARNING_SECESSION, "Plebians are refusing to work" },
+    { TR_CITY_WARNING_WAREHOUSE_BREAKIN, "Rioters have looted a warehouse" },
+    { TR_CITY_WARNING_GRANARY_BREAKIN, "Rioters have looted a granary" },
+    { TR_CITY_WARNING_MARKET_BREAKIN, "Rioters have looted a market" }
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

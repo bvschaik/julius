@@ -19,11 +19,11 @@ static void update_status(void)
     } else if (city_data.sentiment.value > 40) {
         city_data.migration.percentage = 0;
     } else if (city_data.sentiment.value > 30) {
-        city_data.migration.percentage = -10;
+        city_data.migration.percentage = -0;
     } else if (city_data.sentiment.value > 20) {
-        city_data.migration.percentage = -25;
+        city_data.migration.percentage = -10;
     } else {
-        city_data.migration.percentage = -50;
+        city_data.migration.percentage = -20;
     }
 
     city_data.migration.immigration_amount_per_batch = 0;

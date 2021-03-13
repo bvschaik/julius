@@ -162,6 +162,7 @@ typedef struct {
     unsigned char tourism_income_this_year;
     unsigned char variant;
     unsigned char upgrade_level;
+    unsigned char strike_duration_days;
 } building;
 
 building *building_get(int id);

@@ -83,7 +83,7 @@ static void advance_month(void)
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();
     decrement_blessing_festival_boost();
-    city_finance_calculate_tourism_rating();
+    building_industry_start_strikes();
 
     map_tiles_update_all_hedges();
     map_tiles_update_all_roads();

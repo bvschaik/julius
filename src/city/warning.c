@@ -35,7 +35,7 @@ void city_warning_show(warning_type type)
     if (!setting_warnings()) {
         return;
     }
-    struct warning *w = new_warning();
+    struct warning* w = new_warning();
     if (!w) {
         return;
     }
@@ -54,9 +54,16 @@ void city_warning_show(warning_type type)
 		text = translation_for(TR_WARNING_RESOURCES_NOT_AVAILABLE);
 	} else if (type == WARNING_VARIANT_TOGGLE) {
 		text = translation_for(TR_WARNING_VARIANT_TOGGLE);
-	} else {
+	} else if (type == WARNING_SECESSION) {
+        text = translation_for(TR_CITY_WARNING_SECESSION);
+    } else if (type == WARNING_WAREHOUSE_BREAKIN) {
+        text = translation_for(TR_CITY_WARNING_WAREHOUSE_BREAKIN);
+    } else if (type == WARNING_GRANARY_BREAKIN) {
+        text = translation_for(TR_CITY_WARNING_GRANARY_BREAKIN);
+    } else {
 		text = lang_get_string(19, type - 2);
 	}
+
     string_copy(text, w->text, MAX_TEXT);
 }
 

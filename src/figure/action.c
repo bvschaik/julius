@@ -51,7 +51,7 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_trade_ship_action, //20
     figure_trade_caravan_donkey_action,
     figure_protestor_action,
-    figure_criminal_action,
+    figure_rioter_action,
     figure_rioter_action,
     figure_fishing_boat_action,
     figure_market_trader_action,
