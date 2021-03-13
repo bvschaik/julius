@@ -35,11 +35,6 @@ static const int CRIMINAL_OFFSETS[] = {
 int figure_crime_loot_storage(figure* f, int resource, int building_id) {
     building* storage = building_get(building_id);
 
-    if (storage->type == BUILDING_MARKET) {
-        building_market_remove_resource(storage, resource, 35);
-        city_warning_show(WARNING_MARKET_BREAKIN);
-    }
-
     if (storage->type == BUILDING_GRANARY) {        
         building_granary_remove_resource(storage, resource, 100);
         city_warning_show(WARNING_GRANARY_BREAKIN);
@@ -88,8 +83,8 @@ static void generate_rioter(building *b, int amount)
         f->wait_ticks = 10 + 4 * i;
     }
     city_ratings_peace_record_rioter();
-    city_sentiment_change_happiness(10);
-    //set riot cooldown
+    city_sentiment_change_happiness(20);
+
     tutorial_on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(x_road, y_road));
@@ -106,7 +101,7 @@ static void generate_looter(building* b, int amount)
 
     for (int i = 0; i < amount; i++) {
         figure* f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
-        f->action_state = FIGURE_ACTION_220_CRIMINAL_LOOTER_CREATED;
+        f->action_state = FIGURE_ACTION_226_CRIMINAL_LOOTER_CREATED;
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
     }
@@ -123,7 +118,7 @@ static void generate_robber(building* b, int amount)
 
     for (int i = 0; i < amount; i++) {
         figure* f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
-        f->action_state = FIGURE_ACTION_221_CRIMINAL_ROBBER_CREATED;
+        f->action_state = FIGURE_ACTION_226_CRIMINAL_LOOTER_CREATED;
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
     }
@@ -255,7 +250,7 @@ void figure_rioter_action(figure *f)
                 }
             }
             break;
-        case FIGURE_ACTION_220_CRIMINAL_LOOTER_CREATED:
+        case FIGURE_ACTION_226_CRIMINAL_LOOTER_CREATED:
             figure_image_increase_offset(f, 32);
             f->wait_ticks++;
             if (f->wait_ticks >= 160) {
@@ -276,7 +271,7 @@ void figure_rioter_action(figure *f)
                 }
             }
             break;
-        case FIGURE_ACTION_221_CRIMINAL_ROBBER_CREATED:
+        case FIGURE_ACTION_227_CRIMINAL_ROBBER_CREATED:
             figure_image_increase_offset(f, 32);
             f->wait_ticks++;
             if (f->wait_ticks >= 160) {
@@ -292,7 +287,7 @@ void figure_rioter_action(figure *f)
                     figure_route_remove(f);
                 }
                 else {
-                    f->action_state = FIGURE_ACTION_220_CRIMINAL_LOOTER_CREATED;
+                    f->action_state = FIGURE_ACTION_226_CRIMINAL_LOOTER_CREATED;
                     figure_route_remove(f);
                 }
             }
@@ -324,7 +319,7 @@ void figure_rioter_action(figure *f)
                 }
             }
             break;
-        case FIGURE_ACTION_222_CRIMINAL_GOING_TO_LOOT:
+        case FIGURE_ACTION_228_CRIMINAL_GOING_TO_LOOT:
             figure_image_increase_offset(f, 12);
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
@@ -332,7 +327,7 @@ void figure_rioter_action(figure *f)
                 f->state = FIGURE_STATE_DEAD;
             }
             break;
-        case FIGURE_ACTION_223_CRIMINAL_GOING_TO_ROB:
+        case FIGURE_ACTION_229_CRIMINAL_GOING_TO_ROB:
             figure_image_increase_offset(f, 12);
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
@@ -356,7 +351,7 @@ void figure_rioter_action(figure *f)
         f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + 96 + figure_image_corpse_offset(f);
     } else if (f->direction == DIR_FIGURE_ATTACK) {
         f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->image_offset % 16];
-    } else if (f->action_state == FIGURE_ACTION_121_RIOTER_MOVING || f->action_state == FIGURE_ACTION_222_CRIMINAL_GOING_TO_LOOT || f->action_state == FIGURE_ACTION_223_CRIMINAL_GOING_TO_ROB) {
+    } else if (f->action_state == FIGURE_ACTION_121_RIOTER_MOVING || f->action_state == FIGURE_ACTION_228_CRIMINAL_GOING_TO_LOOT || f->action_state == FIGURE_ACTION_229_CRIMINAL_GOING_TO_ROB) {
         f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + dir + 8 * f->image_offset;
     } else {
         f->image_id = image_group(GROUP_FIGURE_CRIMINAL) + 104 + CRIMINAL_OFFSETS[f->image_offset / 2];

@@ -577,7 +577,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SCHOOL_UPGRADE_DESC, "The school is operational, and the local development allowed for its expansion. That allows more children to study at the same time."},
     {TR_BUILDING_THEATRE_UPGRADE_DESC, "The development of the area allowed for expansion of the theater. The grander theater can satisfy entertainment needs of more citizens." },
     {TR_BUILDING_LIBRARY_UPGRADE_DESC, "The local development allowed to greatly expand the library. The new scrolls can satisfy the education needs for a greater number of Romans." },
-    {TR_WINDOW_BUILDING_INFO_WARNING_NO_MONUMENT_ROAD_ACCESS, "The monument has no road access. To ensure that construction is possible, make sure that a road is connected to one of the middle tiles."}
+    {TR_WINDOW_BUILDING_INFO_WARNING_NO_MONUMENT_ROAD_ACCESS, "The monument has no road access. To ensure that construction is possible, make sure that a road is connected to one of the middle tiles."},
     { TR_WINDOW_BUILDING_WORKSHOP_STRIKING, "Due to low city sentiment, the plebians of this workshop have declared secession and refuse to work!" },
     { TR_CITY_WARNING_SECESSION, "Plebians are refusing to work" },
     { TR_CITY_WARNING_WAREHOUSE_BREAKIN, "Rioters have looted a warehouse" },
