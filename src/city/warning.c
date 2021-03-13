@@ -35,19 +35,19 @@ void city_warning_show(warning_type type)
     if (!setting_warnings()) {
         return;
     }
-    struct warning *w = new_warning();
+    struct warning* w = new_warning();
     if (!w) {
         return;
     }
     w->in_use = 1;
     w->time = time_get_millis();
-    const uint8_t *text;
+    const uint8_t* text;
     if (type == WARNING_ORIENTATION) {
         text = lang_get_string(17, city_view_orientation());
     }
     else if (type == WARNING_NO_MESS_HALL) {
         text = translation_for(TR_WARNING_NO_MESS_HALL);
-    }    
+    }
     else if (type == WARNING_MAX_GRAND_TEMPLES) {
         text = translation_for(TR_WARNING_MAX_GRAND_TEMPLES);
     }
@@ -56,6 +56,18 @@ void city_warning_show(warning_type type)
     }
     else if (type == WARNING_RESOURCES_NOT_AVAILABLE) {
         text = translation_for(TR_WARNING_RESOURCES_NOT_AVAILABLE);
+    }
+    else if (type == WARNING_SECESSION) {
+        text = translation_for(TR_CITY_WARNING_SECESSION);
+    }
+    else if (type == WARNING_WAREHOUSE_BREAKIN) {
+        text = translation_for(TR_CITY_WARNING_WAREHOUSE_BREAKIN);
+    }
+    else if (type == WARNING_GRANARY_BREAKIN) {
+        text = translation_for(TR_CITY_WARNING_GRANARY_BREAKIN);
+    }
+    else if (type == WARNING_MARKET_BREAKIN) {
+        text = translation_for(TR_CITY_WARNING_MARKET_BREAKIN);
     }
     else {
         text = lang_get_string(19, type - 2);

@@ -8,6 +8,7 @@
 #include "city/population.h"
 #include "core/calc.h"
 #include "core/config.h"
+#include "core/random.h"
 #include "game/difficulty.h"
 #include "game/tutorial.h"
 
@@ -419,4 +420,5 @@ void city_sentiment_update(void)
     }
     city_data.sentiment.previous_value = city_data.sentiment.value;
 }
+
 

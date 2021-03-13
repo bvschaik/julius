@@ -26,4 +26,6 @@ int building_get_workshop_for_raw_material(
 int building_get_workshop_for_raw_material_with_room(
     int x, int y, int resource, int distance_from_entry, int road_network_id, map_point *dst);
 
+void building_industry_start_strikes(void);
+
 #endif // BUILDING_INDUSTRY_H

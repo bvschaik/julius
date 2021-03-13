@@ -517,17 +517,20 @@ static translation_string all_strings[] = {
     { TR_WINDOW_BUILDING_TOURISM_DISABLED, "Too many buildings of this type-- travellers avoid this place." },
     { TR_WINDOW_BUILDING_TOURISM_ANNUAL, "Tourism income this year:" },
     { TR_WINDOW_ADVISOR_FINANCE_INTEREST_TRIBUTE, "Tribute/interest"},
-    { TR_WINDOW_ADVISOR_TOURISM, "Tourism"},
+    { TR_WINDOW_ADVISOR_TOURISM, "Miscellaneous"},
     { TR_WINDOW_FIGURE_TOURIST, "This traveller has spent: "},
-    { TR_FIGURE_TYPE_TOURIST,  "Tourist"},
+    { TR_FIGURE_TYPE_TOURIST,  "Traveller"},
     { TR_MAP_EDITOR_OPTIONS, "Scenario settings" },
     { TR_SAVEGAME_LARGER_VERSION_TITLE, "Incompatible savegame version" },
     { TR_SAVEGAME_LARGER_VERSION_MESSAGE, "The savegame you're trying to load is for a more recent version of Augustus.\nPlease update Augustus to the most recent version." },
     { TR_BUILDING_COLONNADE, "Colonnade" },
     { TR_BUILDING_LARARIUM, "Lararium" },
-    { TR_WINDOW_BUILDING_LARARIUM_DESC, "A small shrine to the gods and ancestors of the Roman people. Small sacrifices and prayers may be made here."}
-
-
+    { TR_WINDOW_BUILDING_LARARIUM_DESC, "A small shrine to the gods and ancestors of the Roman people. Small sacrifices and prayers may be made here."},
+    { TR_WINDOW_BUILDING_WORKSHOP_STRIKING, "Due to low city sentiment, the plebians of this workshop have declared secession and refuse to work!" },
+    { TR_CITY_WARNING_SECESSION, "Plebians are refusing to work" },
+    { TR_CITY_WARNING_WAREHOUSE_BREAKIN, "Rioters have looted a warehouse" },
+    { TR_CITY_WARNING_GRANARY_BREAKIN, "Rioters have looted a granary" },
+    { TR_CITY_WARNING_MARKET_BREAKIN, "Rioters have looted a market" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

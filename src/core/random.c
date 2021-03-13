@@ -1,6 +1,8 @@
 #include "core/random.h"
 
 #include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define MAX_RANDOM 100
 
@@ -90,4 +92,10 @@ void random_save_state(buffer *buf)
 {
     buffer_write_u32(buf, data.iv1);
     buffer_write_u32(buf, data.iv2);
+}
+
+int random_from_stdlib(void) {
+    time_t t;
+    srand((unsigned)time(&t));
+    return rand();
 }

@@ -5,6 +5,7 @@
 #include "building/warehouse.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "game/resource.h"
 #include "scenario/property.h"
 
@@ -12,6 +13,17 @@ struct resource_data {
     int building_id;
     int distance;
     int num_buildings;
+};
+
+static const int LOOT_PREFERENCE[] = {
+    RESOURCE_WINE,
+    RESOURCE_WHEAT,
+    RESOURCE_MEAT,
+    RESOURCE_OIL,
+    RESOURCE_FURNITURE,
+    RESOURCE_FRUIT,
+    RESOURCE_POTTERY,
+    RESOURCE_VEGETABLES
 };
 
 int building_market_get_max_food_stock(building *market)
@@ -100,6 +112,81 @@ int building_venus_temple_get_wine_destination(building* temple, building* grand
 
 static int food_threshhold(building *b) {
     return b->data.market.is_mess_hall ? 1200 : 600;
+}
+
+// Looters
+int building_market_remove_resource(int building_id, int resource, int amount)
+{
+    int inventory = 0;
+    switch (resource) {
+    case RESOURCE_WHEAT: inventory = INVENTORY_WHEAT; break;
+    case RESOURCE_VEGETABLES: inventory = INVENTORY_VEGETABLES; break;
+    case RESOURCE_FRUIT: inventory = INVENTORY_FRUIT; break;
+    case RESOURCE_MEAT: inventory = INVENTORY_MEAT; break;
+    case RESOURCE_POTTERY: inventory = INVENTORY_POTTERY; break;
+    case RESOURCE_FURNITURE: inventory = INVENTORY_FURNITURE; break;
+    case RESOURCE_OIL: inventory = INVENTORY_OIL; break;
+    case RESOURCE_WINE: inventory = INVENTORY_WINE; break;
+    }
+
+    building* b = building_get(building_id);
+    if (amount >= b->data.market.inventory[inventory]) {
+        b->data.market.inventory[inventory] = 0;
+    }
+    else {
+        b->data.market.inventory[inventory] -= amount;
+    }
+
+    return 1;
+}
+
+int building_market_get_destination_for_looting(int x, int y, int *x_tile, int *y_tile, int *resource) {
+    struct resource_data resources[RESOURCE_MAX];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        resources[i].building_id = 0;
+        resources[i].num_buildings = 0;
+        resources[i].distance = 40;
+    }
+
+    for (int i = 1; i < building_count(); i++) {
+        building* b = building_get(i);
+
+        if (b->type != BUILDING_GRANARY && b->type != BUILDING_WAREHOUSE && ! b->type != BUILDING_MARKET) {
+            continue;
+        }
+
+        int distance = calc_maximum_distance(x, y, b->x, b->y);
+        if (distance >= 120) {
+            continue;
+        }
+
+        if (b->type == BUILDING_GRANARY || b->type == BUILDING_MARKET) {
+            update_food_resource(&resources[RESOURCE_WHEAT], RESOURCE_WHEAT, b, distance);
+            update_food_resource(&resources[RESOURCE_VEGETABLES], RESOURCE_VEGETABLES, b, distance);
+            update_food_resource(&resources[RESOURCE_FRUIT], RESOURCE_FRUIT, b, distance);
+            update_food_resource(&resources[RESOURCE_MEAT], RESOURCE_MEAT, b, distance);
+        }
+        
+        if (b->type == BUILDING_WAREHOUSE || b->type == BUILDING_MARKET) {
+            update_good_resource(&resources[RESOURCE_WINE], RESOURCE_WINE, b, distance);
+            update_good_resource(&resources[RESOURCE_OIL], RESOURCE_OIL, b, distance);
+            update_good_resource(&resources[RESOURCE_POTTERY], RESOURCE_POTTERY, b, distance);
+            update_good_resource(&resources[RESOURCE_FURNITURE], RESOURCE_FURNITURE, b, distance);
+        }
+    }
+
+    // pick random from these targets instead of always following preference
+    for (int i = 0; i < 8; i++) {        
+        if (resources[LOOT_PREFERENCE[i]].building_id) {
+            building* b = building_get(resources[LOOT_PREFERENCE[i]].building_id);
+            *x_tile = b->x + 1;
+            *y_tile = b->y;
+            *resource = LOOT_PREFERENCE[i];
+            return resources[LOOT_PREFERENCE[i]].building_id;
+        }
+    }
+
+    return 0;
 }
 
 int building_market_get_storage_destination(building *market)

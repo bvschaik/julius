@@ -1,11 +1,17 @@
 #include "industry.h"
 
+#include "building/list.h"
 #include "building/monument.h"
 #include "city/data_private.h"
+#include "city/message.h"
 #include "city/resource.h"
+#include "city/view.h"
+#include "city/warning.h"
 #include "core/calc.h"
 #include "core/image.h"
+#include "core/random.h"
 #include "game/resource.h"
+#include "figure/figure.h"
 #include "map/building_tiles.h"
 #include "map/road_access.h"
 #include "scenario/property.h"
@@ -33,12 +39,12 @@ int building_is_workshop(building_type type)
     return type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP;
 }
 
-static int max_progress(const building *b)
+static int max_progress(const building* b)
 {
     return b->subtype.workshop_type ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
 }
 
-static void update_farm_image(const building *b)
+static void update_farm_image(const building* b)
 {
     map_building_tiles_add_farm(b->id, b->x, b->y,
         image_group(GROUP_BUILDING_FARM_CROPS) + 5 * (b->output_resource_id - 1),
@@ -58,16 +64,63 @@ static void building_other_update_production(building* b) {
     }
 }
 
+void building_industry_force_strike() {
+
+    building_list_small_clear();
+    for (int i = 1; i < building_count(); i++) {
+        building* b = building_get(i);
+
+        if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id || b->type == BUILDING_GRAND_TEMPLE_VENUS || building_is_farm(b->type) || b->strike_duration_days > 0) {
+            continue;
+        }
+        building_list_small_add(i);
+    }
+
+    int total_industries = building_list_small_size();
+    if (total_industries <= 0) {
+        return 0;
+    }
+
+    const int* industries = building_list_small_items();
+    int index;
+
+    index = random_from_stdlib() % total_industries;
+    building* b = building_get(industries[index]);
+    b->strike_duration_days = 48;
+    city_warning_show(WARNING_SECESSION);
+
+}
+
 void building_industry_update_production(void)
 {
+    int striking_buildings = 0;
+    
     for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-       
+        building* b = building_get(i);
+
         if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id) {
             continue;
         }
+
+        if (b->strike_duration_days > 0) {
+            striking_buildings += 1;
+            b->strike_duration_days--;
+            if (city_data.sentiment.value > 50) {
+                b->strike_duration_days -= 3;
+            }
+            if (city_data.sentiment.value > 65) {
+                b->strike_duration_days = 0;
+            }
+            if (b->strike_duration_days == 0) {
+                city_data.building.num_striking_industries -= 1;
+                striking_buildings -= 1;
+                // remove striker walker
+                figure_delete(figure_get(b->figure_id4));
+            }
+        }
+
         b->data.industry.has_raw_materials = 0;
-        if (b->houses_covered <= 0 || b->num_workers <= 0) {
+        if (b->houses_covered <= 0 || b->num_workers <= 0 || b->strike_duration_days > 0) {
             continue;
         }
 
@@ -79,6 +132,8 @@ void building_industry_update_production(void)
         if (b->subtype.workshop_type && !b->loads_stored) {
             continue;
         }
+
+
 
         if (b->data.industry.curse_days_left) {
             b->data.industry.curse_days_left--;
@@ -103,6 +158,11 @@ void building_industry_update_production(void)
                 update_farm_image(b);
             }
         }
+    }
+
+    int force_strikes = city_data.building.num_striking_industries - striking_buildings;
+    for (int i = 0; i < force_strikes; ++i) {
+        building_industry_force_strike();
     }
 }
 
@@ -272,3 +332,52 @@ int building_get_workshop_for_raw_material(
     }
     return 0;
 }
+
+void building_industry_start_strikes(void) {
+    double sentiment = city_data.sentiment.value;
+    int grid_offset = 0;
+    if (sentiment >= 50) {
+        return 0;
+    }
+
+    double strike_chance = ((55.0 - sentiment) * (55.0 - sentiment)) / 36.0;
+    int seed = (random_from_stdlib() % 100 <= strike_chance);
+    if (seed) {
+        // how many industries will strike
+        int to_strike = calc_bound(city_data.population.population / 2000, 1, 12);
+        
+        int grid_offset;
+        building_list_small_clear();
+
+        // select random industries to strike
+        for (int i = 1; i < building_count(); i++) {
+            building* b = building_get(i);
+
+            if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id || b->type == BUILDING_GRAND_TEMPLE_VENUS || building_is_farm(b->type) || b->strike_duration_days > 0) {
+                continue;
+            }
+            building_list_small_add(i);           
+
+        }
+
+        int total_industries = building_list_small_size();
+        if (total_industries <= 0) {
+            return 0;
+        }
+
+        const int* industries = building_list_small_items();
+        int index;
+
+        for (int i = 0; i < to_strike; i++) {
+            index = random_from_stdlib() % total_industries;
+            building* b = building_get(industries[index]);
+            b->strike_duration_days = 48;
+            city_data.building.num_striking_industries += 1;
+            grid_offset = b->grid_offset;
+        }
+
+        // Notify
+        city_warning_show(WARNING_SECESSION);
+    }
+}
+
