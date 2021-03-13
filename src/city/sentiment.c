@@ -8,6 +8,7 @@
 #include "city/population.h"
 #include "core/calc.h"
 #include "core/config.h"
+#include "core/random.h"
 #include "game/difficulty.h"
 #include "game/tutorial.h"
 
@@ -323,7 +324,7 @@ void city_sentiment_update(void)
 
         sentiment += blessing_festival_sentiment_boost;
         
-
+        sentiment = calc_bound(sentiment, 0, 100);
         b->sentiment.house_happiness = calc_bound((sentiment + b->sentiment.house_happiness) / 2, 0, 100); // sentiment changes to an average of current sentiment and new calculated value
         houses_calculated++;
 
@@ -419,4 +420,5 @@ void city_sentiment_update(void)
     }
     city_data.sentiment.previous_value = city_data.sentiment.value;
 }
+
 

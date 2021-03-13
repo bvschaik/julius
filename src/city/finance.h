@@ -15,10 +15,6 @@
 #define BUILDINGS_WITH_LEVIES 25
 #define BUILDINGS_WITH_TOURISM 12
 
-#define TOURISM_RATING_MODIFIER 0.05
-#define TOURISM_POP_MINIMUM 2000
-#define TOURISM_POP_PENALTY 5000
-
 typedef struct {
     int type;
     int amount;
@@ -101,13 +97,7 @@ typedef struct {
     int balance;
 } finance_overview;
 
-int city_finance_tourism_rating(void);
-
 int city_finance_tourism_income_last_month(void);
-
-int city_finance_tourism_lowest_factor(void);
-
-void city_finance_calculate_tourism_rating(void);
 
 const finance_overview *city_finance_overview_last_year(void);
 

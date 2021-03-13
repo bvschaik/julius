@@ -51,6 +51,7 @@ extern struct city_data_t {
         map_point main_native_meeting;
         int8_t unknown_value;
         int32_t mess_hall_building_id;
+        int32_t num_striking_industries;
     } building;
     struct {
         int16_t animals;
@@ -446,7 +447,6 @@ extern struct city_data_t {
         int32_t unused_4488;
         int32_t unused_native_force_attack;
         int32_t unused_44e0[2];
-        int32_t unused_44ec;
         int32_t unused_44f8;
         int32_t unused_4524[11];
         uint8_t unknown_458e;

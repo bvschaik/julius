@@ -47,12 +47,36 @@ static const int ENEMY_ATTACK_PRIORITY[4][100] = {
     }
 };
 
-static const int RIOTER_ATTACK_PRIORITY[100] = {
-    79, 78, 77, 29, 28, 27, 26, 25, 85, 84, 32, 33, 98, 65, 66, 67,
-    68, 69, 87, 86, 30, 31, 47, 52, 46, 48, 53, 51, 24, 23, 22, 21,
-    20, 46, 48, 114, 113, 112, 111, 110, 71, 72, 70, 74, 75, 76, 60, 61,
-    62, 63, 64, 34, 36, 37, 35, 94, 19, 18, 17, 16, 15, 49, 106, 107,
-    109, 108, 90, 100, 101, 102, 103, 104, 105, 55, 81, 91, 92, 14, 13, 12, 11, 10, 0
+static const int RIOTER_ATTACK_PRIORITY[29] = {
+    BUILDING_GOVERNORS_PALACE, 
+    BUILDING_GOVERNORS_VILLA, 
+    BUILDING_GOVERNORS_HOUSE, 
+    BUILDING_AMPHITHEATER, 
+    BUILDING_THEATER, 
+    BUILDING_HOSPITAL, 
+    BUILDING_ACADEMY, 
+    BUILDING_BATHHOUSE, 
+    BUILDING_LIBRARY, 
+    BUILDING_SCHOOL, 
+    BUILDING_DOCTOR, 
+    BUILDING_GLADIATOR_SCHOOL, 
+    BUILDING_ACTOR_COLONY, 
+    BUILDING_CHARIOT_MAKER, 
+    BUILDING_LION_HOUSE, 
+    BUILDING_BARBER,
+    BUILDING_TAVERN,
+    BUILDING_ARENA,
+    BUILDING_HORSE_STATUE,
+    BUILDING_LEGION_STATUE,
+    BUILDING_LARGE_STATUE,
+    BUILDING_MEDIUM_STATUE,
+    BUILDING_OBELISK,
+    BUILDING_HOUSE_LUXURY_PALACE,
+    BUILDING_HOUSE_LARGE_PALACE,
+    BUILDING_HOUSE_MEDIUM_PALACE,
+    BUILDING_HOUSE_SMALL_PALACE,
+    BUILDING_HOUSE_GRAND_VILLA,
+    BUILDING_HOUSE_LARGE_VILLA,
 };
 
 static const int LAYOUT_ORIENTATION_OFFSETS[13][4][40] = {
@@ -167,6 +191,40 @@ int formation_rioter_get_target_building(int *x_tile, int *y_tile)
         *y_tile = best_building->y;
         return best_building->id;
     }
+}
+
+int formation_rioter_get_target_building_for_robbery(int x, int y, int* x_tile, int* y_tile)
+{
+    int best_type_index = 100;
+    building* best_building = 0;
+    int closest = 10000;
+    for (int i = 1; i < building_count(); i++) {
+        building* b = building_get(i);
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+
+        if (b->type != BUILDING_FORUM && b->type != BUILDING_SENATE) {
+            continue;
+        }
+
+        int distance = calc_maximum_distance(x, y, b->x, b->y);
+
+        if (distance >= 150) {
+            continue;
+        }
+        if (distance < closest) {
+            best_building = b;
+        }
+    }
+    if (!best_building) {
+        return 0;
+    }
+
+    *x_tile = best_building->road_access_x;
+    *y_tile = best_building->road_access_y;
+    return best_building->id;
+    
 }
 
 static void set_enemy_target_building(formation *m)

@@ -58,7 +58,7 @@ static int determine_tourist_destination(int x, int y)
     const int *venues = building_list_small_items();
     int index;
 
-    index = random_byte() % total_venues;
+    index = random_from_stdlib() % total_venues;
     building *b = building_get(venues[index]);
     
     return b->id;

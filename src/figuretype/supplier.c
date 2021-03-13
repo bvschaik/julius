@@ -76,6 +76,7 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
         return 0;
     }
     building_granary_remove_resource(granary, resource, 100 * num_loads);
+    
     // create delivery boys
     int type = FIGURE_DELIVERY_BOY;
     if (f->type == FIGURE_MESS_HALL_SUPPLIER) {
@@ -111,6 +112,8 @@ static int take_resource_from_generic_building(figure *f, int building_id)
     }
     return 1;
 }
+
+
 
 static int take_resource_from_warehouse(figure *f, int warehouse_id)
 {

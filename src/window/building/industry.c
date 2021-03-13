@@ -100,6 +100,8 @@ static void draw_raw_material(
 
     if (!c->has_road_access) {
         window_building_draw_description_at(c, 70, 69, 25);
+    } else if (b->strike_duration_days > 0) {
+        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_WORKSHOP_STRIKING);
     } else if (city_resource_is_mothballed(resource)) {
         window_building_draw_description_at(c, 70, group_id, 4);
     } else if (b->num_workers <= 0) {
@@ -167,6 +169,9 @@ static void draw_workshop(
 
     if (!c->has_road_access) {
         window_building_draw_description_at(c, 86, 69, 25);
+    } 
+    else if (b->strike_duration_days > 0) {
+        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_WORKSHOP_STRIKING);
     } else if (city_resource_is_mothballed(resource)) {
         window_building_draw_description_at(c, 86, group_id, 4);
     } else if (b->num_workers <= 0) {

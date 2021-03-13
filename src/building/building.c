@@ -489,7 +489,7 @@ int building_get_levy(const building* b)
 
 int building_get_tourism(const building* b)
 {
-    return b->is_tourism_venue && city_finance_tourism_rating() > 0;
+    return b->is_tourism_venue;
 }
 
 

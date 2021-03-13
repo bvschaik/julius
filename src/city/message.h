@@ -13,6 +13,7 @@ typedef enum {
     MESSAGE_CAT_TUTORIAL3 = 9,
     MESSAGE_CAT_NO_WORKING_DOCK = 10,
     MESSAGE_CAT_FISHING_BLOCKED = 11,
+    MESSAGE_CAT_THEFT = 12,
 } message_category;
 
 typedef enum {
@@ -171,7 +172,8 @@ typedef enum {
     MESSAGE_KI_GAMES_END = 147,
     MESSAGE_OL_GAMES_PLANNED = 148,
     MESSAGE_OL_GAMES_START = 149,
-    MESSAGE_OL_GAMES_END = 150
+    MESSAGE_OL_GAMES_END = 150,
+    MESSAGE_LOOTING = 151
 
 } city_message_type;
 

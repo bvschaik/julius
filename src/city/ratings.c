@@ -104,6 +104,11 @@ void city_ratings_peace_record_rioter(void)
     city_data.ratings.peace_riot_cause = city_data.sentiment.low_mood_cause;
 }
 
+int city_ratings_peace_num_rioters(void)
+{
+    return city_data.ratings.peace_num_rioters;
+}
+
 void city_ratings_change_favor(int amount)
 {
     city_data.ratings.favor = calc_bound(city_data.ratings.favor + amount, 0, 100);

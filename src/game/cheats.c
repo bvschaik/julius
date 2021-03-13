@@ -6,11 +6,14 @@
 #include "building/type.h"
 #include "city/gods.h"
 #include "city/finance.h"
+#include "city/data_private.h"
+#include "city/sentiment.h"
 #include "city/victory.h"
 #include "city/warning.h"
 #include "core/string.h"
 #include "empire/city.h"
 #include "figure/figure.h"
+#include "figuretype/crime.h"
 #include "game/tick.h"
 #include "graphics/color.h"
 #include "graphics/font.h"
@@ -21,10 +24,9 @@
 #include "window/building_info.h"
 #include "window/city.h"
 #include "window/console.h"
-
 #include <string.h>
 
-#define NUMBER_OF_COMMANDS 9
+#define NUMBER_OF_COMMANDS 10
 
 static void game_cheat_add_money(uint8_t *);
 static void game_cheat_start_invasion(uint8_t *);
@@ -35,6 +37,7 @@ static void game_cheat_kill_all(uint8_t*);
 static void game_cheat_finish_monuments(uint8_t*);
 static void game_cheat_monument_phase(uint8_t*);
 static void game_cheat_unlock_all_buildings(uint8_t*);
+static void game_cheat_incite_riot(uint8_t*);
 
 static void (* const execute_command[])(uint8_t * args) = {
     game_cheat_add_money,
@@ -46,6 +49,7 @@ static void (* const execute_command[])(uint8_t * args) = {
     game_cheat_finish_monuments,
     game_cheat_monument_phase,
     game_cheat_unlock_all_buildings,
+    game_cheat_incite_riot
 };
 
 static const char *commands[] = {
@@ -58,6 +62,7 @@ static const char *commands[] = {
     "finishmonuments",
     "monumentphase",
     "whathaveromansdoneforus",
+    "nike"
 };
 
 static struct {
@@ -201,6 +206,14 @@ static void game_cheat_unlock_all_buildings(uint8_t* args) {
 }
 
 
+static void game_cheat_incite_riot(uint8_t* args) {
+    city_data.sentiment.value = 0;
+    city_sentiment_change_happiness(-100);
+    figure_generate_criminals();
+    city_warning_show_console((uint8_t*)"Incited a riot");
+    city_data.sentiment.value = 50;
+    city_sentiment_change_happiness(50);
+}
 
 
 void game_cheat_parse_command(uint8_t * command){

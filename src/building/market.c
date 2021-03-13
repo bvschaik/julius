@@ -6,7 +6,7 @@
 #define MAX_DISTANCE 40
 #define MAX_FOOD 600
 
-int building_market_get_max_food_stock(building *market)
+int building_market_get_max_food_stock(building* market)
 {
     int max_stock = 0;
     if (market->id > 0 && market->type == BUILDING_MARKET) {
@@ -20,7 +20,7 @@ int building_market_get_max_food_stock(building *market)
     return max_stock;
 }
 
-int building_market_get_max_goods_stock(building *market)
+int building_market_get_max_goods_stock(building* market)
 {
     int max_stock = 0;
     if (market->id > 0 && market->type == BUILDING_MARKET) {
@@ -34,7 +34,7 @@ int building_market_get_max_goods_stock(building *market)
     return max_stock;
 }
 
-int building_market_get_needed_inventory(building *market)
+int building_market_get_needed_inventory(building* market)
 {
     int needed = INVENTORY_FLAG_NONE;
     if (!scenario_property_rome_supplies_wheat()) {
@@ -66,7 +66,7 @@ int building_market_get_needed_inventory(building *market)
     return needed;
 }
 
-int building_market_fetch_inventory(building *market, inventory_storage_info *info, int needed_inventory)
+int building_market_fetch_inventory(building* market, inventory_storage_info* info, int needed_inventory)
 {
     // Prefer whichever good we don't have
     int fetch_inventory = building_distribution_fetch(market, info, 0, 1, needed_inventory);
@@ -77,7 +77,7 @@ int building_market_fetch_inventory(building *market, inventory_storage_info *in
     fetch_inventory = building_distribution_fetch(market, info, BASELINE_STOCK, 0, needed_inventory);
     if (fetch_inventory != INVENTORY_NONE) {
         return fetch_inventory;
-    }    
+    }
     // All items well stocked: pick food below threshold
     fetch_inventory = building_distribution_fetch(market, info, MAX_FOOD, 0,
         needed_inventory & INVENTORY_FLAG_ALL_FOODS);
@@ -87,7 +87,7 @@ int building_market_fetch_inventory(building *market, inventory_storage_info *in
     return INVENTORY_NONE;
 }
 
-int building_market_get_storage_destination(building *market)
+int building_market_get_storage_destination(building* market)
 {
     int needed_inventory = building_market_get_needed_inventory(market);
     if (needed_inventory == INVENTORY_FLAG_NONE) {
@@ -95,7 +95,7 @@ int building_market_get_storage_destination(building *market)
     }
     inventory_storage_info info[INVENTORY_MAX];
     if (!building_distribution_get_inventory_storages(info, BUILDING_MARKET,
-            market->road_network_id, market->road_access_x, market->road_access_y, MAX_DISTANCE)) {
+        market->road_network_id, market->road_access_x, market->road_access_y, MAX_DISTANCE)) {
         return 0;
     }
     int fetch_inventory = building_market_fetch_inventory(market, info, needed_inventory);
@@ -105,3 +105,5 @@ int building_market_get_storage_destination(building *market)
     market->data.market.fetch_inventory_id = fetch_inventory;
     return info[fetch_inventory].building_id;
 }
+
+

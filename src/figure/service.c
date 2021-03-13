@@ -631,8 +631,10 @@ int figure_service_provide_coverage(figure *f)
             break;
         }
         case FIGURE_RIOTER:
-            if (figure_rioter_collapse_building(f) == 1) {
-                return 1;
+            if (f->terrain_usage == TERRAIN_USAGE_ENEMY) {
+                if (figure_rioter_collapse_building(f) == 1) {
+                    return 1;
+                }
             }
             break;
         case FIGURE_TOURIST:

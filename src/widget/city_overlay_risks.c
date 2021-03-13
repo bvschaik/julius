@@ -24,6 +24,10 @@ void city_overlay_problems_prepare_building(building *b)
     if (b->house_size) {
         return;
     }
+    if (b->strike_duration_days > 0) {
+        b->show_on_problem_overlay = 1;
+        return;
+    }
     if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
         if (!b->has_water_access) {
             b->show_on_problem_overlay = 1;
@@ -75,7 +79,7 @@ static int show_figure_damage(const figure *f)
 
 static int show_figure_crime(const figure *f)
 {
-    return f->type == FIGURE_PREFECT || f->type == FIGURE_PROTESTER ||
+    return f->type == FIGURE_PREFECT || 
         f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER;
 }
 
@@ -85,6 +89,8 @@ static int show_figure_problems(const figure *f)
         return building_get(f->building_id)->show_on_problem_overlay;
     } else if (f->type == FIGURE_CART_PUSHER) {
         return f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->min_max_seen;
+    } else if (f->type == FIGURE_PROTESTER) {
+        return 1;
     } else {
         return 0;
     }
