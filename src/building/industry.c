@@ -335,7 +335,7 @@ void building_industry_start_strikes(void) {
     double sentiment = city_data.sentiment.value;
     int grid_offset = 0;
     if (sentiment >= 55) {
-        return 0;
+        return;
     }
 
     double strike_chance = ((60.0 - sentiment) * (60.0 - sentiment)) / 36.0;
@@ -360,7 +360,7 @@ void building_industry_start_strikes(void) {
 
         int total_industries = building_list_small_size();
         if (total_industries <= 0) {
-            return 0;
+            return;
         }
 
         const int* industries = building_list_small_items();
