@@ -78,7 +78,7 @@ void building_industry_force_strike() {
 
     int total_industries = building_list_small_size();
     if (total_industries <= 0) {
-        return 0;
+        return;
     }
 
     const int* industries = building_list_small_items();
