@@ -520,71 +520,6 @@ void city_finance_handle_year_change(void)
     pay_tribute();
 }
 
-void city_finance_calculate_tourism_rating(void)
-{
-    
-    if (city_data.population.population < TOURISM_POP_MINIMUM) {
-        city_data.finance.tourism_rating = 0;
-        return;
-    }
-
-    int rating = 0;
-    int lowest_factor = 0;
-    int tourism_suggestion = 0;
-    int coverage_rating = 0;
-    int sentiment_rating = 0;
-    int des_rating = 0;
-    int monument_rating = 0;
-    int games_rating = 0;
-
-    //10 points for each non monument ent coverage
-    coverage_rating += city_culture_coverage_tavern() / 10;
-    coverage_rating += city_culture_coverage_theater() / 10;
-    coverage_rating += city_culture_coverage_amphitheater() / 10;
-    coverage_rating += city_culture_coverage_colosseum() / 10;
-    coverage_rating += city_culture_coverage_hippodrome() / 10;
-
-    if (!building_monument_working(BUILDING_COLOSSEUM)) {
-        coverage_rating += city_culture_coverage_arena() / 10;
-    }    
-
-    lowest_factor = (coverage_rating / 2);
-    tourism_suggestion = 1;
-
-    //20 for sentiment
-    sentiment_rating += city_data.sentiment.value / 5;
-
-    if (sentiment_rating < lowest_factor) {
-        lowest_factor = sentiment_rating;
-        tourism_suggestion = 2;
-    }
-
-    //20 for average house des
-    des_rating += calc_bound(((city_data.culture.average_desirability + 20) / 5), 0, 20);
-
-    if (des_rating < lowest_factor) {
-        lowest_factor = des_rating;
-        tourism_suggestion = 3;
-    }
-
-    //15 for each GT
-    monument_rating += building_count_grand_temples_active() * 15;
-
-    rating = coverage_rating + sentiment_rating + des_rating + monument_rating + games_rating;
-
-    // small town penalty
-    if (city_data.population.population < TOURISM_POP_PENALTY) {
-        rating /= 2;
-    }
-
-    city_data.finance.tourism_rating = rating;
-    city_data.finance.tourism_lowest_factor = tourism_suggestion;
-}
-
-int city_finance_tourism_rating(void) {
-    return city_data.finance.tourism_rating;
-}
-
 int city_finance_tourism_income_last_month(void) {
     return city_data.finance.tourism_last_month;
 }
@@ -606,14 +541,10 @@ const finance_overview *city_finance_overview_this_year(void)
 
 int city_finance_spawn_tourist(void)
 {
-    
-    if (!city_finance_tourism_rating()) {
+    if (!city_festival_games_active()) {
         return 0;
     }
-    int tick_increase = random_byte() % city_finance_tourism_rating();
-    if (city_festival_games_active()) {
-        tick_increase *= 3;
-    }
+    int tick_increase = random_byte() % city_data.ratings.culture;
     city_data.finance.tourist_spawn_delay += tick_increase;
     if (city_data.finance.tourist_spawn_delay > 500) {
         figure_spawn_tourist();

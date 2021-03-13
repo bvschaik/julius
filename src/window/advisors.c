@@ -34,7 +34,6 @@
 #include "window/advisor/religion.h"
 #include "window/advisor/trade.h"
 #include "window/advisor/housing.h"
-#include "window/advisor/tourism.h"
 
 static void button_change_advisor(int advisor, int param2);
 static void button_help(int param1, int param2);
@@ -82,8 +81,7 @@ static const advisor_window_type *(*sub_advisors[])(void) = {
     0,
     window_advisor_housing, //population sub-advisor,
     0,
-    0,
-    window_advisor_tourism //entertainment sub-advisor
+    0
 };
 
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {

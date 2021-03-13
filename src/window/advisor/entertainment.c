@@ -19,7 +19,6 @@
 #include "window/hold_games.h"
 
 #define ADVISOR_HEIGHT 27
-#define TOURISM_ADVISOR_ID 22
 
 #define PEOPLE_OFFSET 330
 #define COVERAGE_OFFSET 470
@@ -27,18 +26,10 @@
 
 static int focus_button_id;
 static void button_hold_games(int param1, int param2);
-static void button_tourism(int param1, int param2);
 
 static generic_button hold_games_button[] = {
     {102, 380, 300, 20, button_hold_games, button_none, 0, 0},
-    {545, 240, 60, 51, button_tourism, button_none, 0, 0}
 };
-
-
-static void button_tourism(int param1, int param2)
-{
-    window_advisors_show_advisor(TOURISM_ADVISOR_ID);    
-}
 
 static int get_entertainment_advice(void)
 {
@@ -202,9 +193,6 @@ static int draw_background(void)
 
     draw_games_info();
     
-    text_draw_centered(translation_for(TR_ADVISOR_ENTERTAINMENT_BUTTON_TOURISM), 525, 295, 100, FONT_NORMAL_BLACK, 0);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 10, 555, 245);
-
     return ADVISOR_HEIGHT;
 }
 
@@ -213,7 +201,6 @@ static void draw_foreground(void)
     if (!city_festival_games_cooldown() && !city_festival_games_planning_time() && !city_festival_games_active()) {
         button_border_draw(102, 380, 300, 20, focus_button_id == 1);
     }
-    button_border_draw(545, 240, 60, 51, focus_button_id == 2);
 
 }
 

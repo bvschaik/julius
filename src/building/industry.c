@@ -334,11 +334,11 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int road_
 void building_industry_start_strikes(void) {
     double sentiment = city_data.sentiment.value;
     int grid_offset = 0;
-    if (sentiment >= 50) {
+    if (sentiment >= 55) {
         return 0;
     }
 
-    double strike_chance = ((55.0 - sentiment) * (55.0 - sentiment)) / 36.0;
+    double strike_chance = ((60.0 - sentiment) * (60.0 - sentiment)) / 36.0;
     int seed = (random_from_stdlib() % 100 <= strike_chance);
     if (seed) {
         // how many industries will strike

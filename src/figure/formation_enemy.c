@@ -221,8 +221,8 @@ int formation_rioter_get_target_building_for_robbery(int x, int y, int* x_tile, 
         return 0;
     }
 
-    *x_tile = best_building->x;
-    *y_tile = best_building->y;
+    *x_tile = best_building->road_access_x;
+    *y_tile = best_building->road_access_y;
     return best_building->id;
     
 }

@@ -60,6 +60,8 @@ void city_warning_show(warning_type type)
         text = translation_for(TR_CITY_WARNING_WAREHOUSE_BREAKIN);
     } else if (type == WARNING_GRANARY_BREAKIN) {
         text = translation_for(TR_CITY_WARNING_GRANARY_BREAKIN);
+    } else if (type == WARNING_THEFT) {
+        text = translation_for(TR_CITY_WARNING_THEFT);
     } else {
 		text = lang_get_string(19, type - 2);
 	}

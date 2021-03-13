@@ -28,6 +28,8 @@ void city_ratings_peace_record_criminal(void);
 
 void city_ratings_peace_record_rioter(void);
 
+int city_ratings_peace_num_rioters(void);
+
 void city_ratings_change_favor(int amount);
 
 void city_ratings_reset_favor_emperor_change(void);

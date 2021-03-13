@@ -93,6 +93,12 @@ int building_distribution_get_inventory_storages(inventory_storage_info *info, b
     }
 
     int permission; 
+
+    if (!type) {
+        // for looter walkers
+        permission = 1;
+    }
+
     if (type == BUILDING_MESS_HALL) {
         permission = BUILDING_STORAGE_PERMISSION_QUARTERMASTER;
     } else {
@@ -102,11 +108,11 @@ int building_distribution_get_inventory_storages(inventory_storage_info *info, b
     for (int i = 1; i < building_count(); i++) {
         building *b_dst = building_get(i);
 
-        if (b_dst->state != BUILDING_STATE_IN_USE ||
+        if (type && (b_dst->state != BUILDING_STATE_IN_USE ||
             (b_dst->type != BUILDING_GRANARY && b_dst->type != BUILDING_WAREHOUSE) ||
             !b_dst->has_road_access || b_dst->distance_from_entry <= 0 ||
             b_dst->road_network_id != road_network ||
-            !building_storage_get_permission(permission, b_dst)) {
+            !building_storage_get_permission(permission, b_dst))) {
             continue;
         }
         int distance = calc_maximum_distance(x, y, b_dst->x, b_dst->y);

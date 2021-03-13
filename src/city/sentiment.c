@@ -324,7 +324,7 @@ void city_sentiment_update(void)
 
         sentiment += blessing_festival_sentiment_boost;
         
-
+        sentiment = calc_bound(sentiment, 0, 100);
         b->sentiment.house_happiness = calc_bound((sentiment + b->sentiment.house_happiness) / 2, 0, 100); // sentiment changes to an average of current sentiment and new calculated value
         houses_calculated++;
 

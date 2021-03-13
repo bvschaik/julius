@@ -106,8 +106,4 @@ int building_market_get_storage_destination(building* market)
     return info[fetch_inventory].building_id;
 }
 
-int building_market_get_destination_for_looting(void)
-{
-    return 0;
-}
 

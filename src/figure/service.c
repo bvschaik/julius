@@ -630,11 +630,13 @@ int figure_service_provide_coverage(figure *f)
             f->min_max_seen = min_happiness;
             break;
         }
-        //case FIGURE_RIOTER:
-        //    if (figure_rioter_collapse_building(f) == 1) {
-        //        return 1;
-        //    }
-        //    break;
+        case FIGURE_RIOTER:
+            if (f->terrain_usage == TERRAIN_USAGE_ENEMY) {
+                if (figure_rioter_collapse_building(f) == 1) {
+                    return 1;
+                }
+            }
+            break;
         case FIGURE_TOURIST:
             tourist_visit(x, y, f, tourist_spend);
             break;
