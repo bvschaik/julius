@@ -64,12 +64,12 @@ int city_finance_treasury(void)
     return city_data.finance.treasury;
 }
 
-int city_finance_treasury_add(int amount)
+void city_finance_treasury_add(int amount)
 {
     city_data.finance.treasury += amount;
 }
 
-int city_finance_treasury_add_tourism(int amount)
+void city_finance_treasury_add_tourism(int amount)
 {
     city_finance_treasury_add(amount);
     city_data.finance.tourism_this_year += amount;
@@ -550,4 +550,6 @@ int city_finance_spawn_tourist(void)
         figure_spawn_tourist();
         city_data.finance.tourist_spawn_delay = 0;
     }
+
+    return 1;
 }

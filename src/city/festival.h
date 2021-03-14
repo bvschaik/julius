@@ -4,7 +4,7 @@
 #include "city/resource.h"
 #include "translation/translation.h"
 
-#define MAX_GAMES 4
+#define MAX_GAMES 3
 
 typedef struct {
 	int god_id;
