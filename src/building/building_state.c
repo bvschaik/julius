@@ -202,6 +202,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_u8(buf, b->variant);
     buffer_write_u8(buf, b->upgrade_level);
 
+    //strikes
     buffer_write_u8(buf, b->strike_duration_days);
 
     // New building state code should always be added at the end to preserve savegame retrocompatibility
@@ -403,12 +404,15 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         b->tourism_disabled = buffer_read_u8(buf);
         b->tourism_income = buffer_read_u8(buf);
         b->tourism_income_this_year = buffer_read_u8(buf);
-        b->strike_duration_days = buffer_read_u8(buf);
     }
 
     if (building_buf_size >= BUILDING_STATE_VARIANTS_AND_UPGRADES) {
         b->variant = buffer_read_u8(buf);
         b->upgrade_level = buffer_read_u8(buf);
+    }
+
+    if (building_buf_size >= BUILDING_STATE_STRIKES) {
+        b->strike_duration_days = buffer_read_u8(buf);
     }
 
     // The following code should only be executed if the savegame includes building information that is not 
