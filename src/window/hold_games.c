@@ -1,5 +1,6 @@
 #include "hold_games.h"
 
+#include "assets/assets.h"
 #include "building/count.h"
 #include "city/constants.h"
 #include "city/data_private.h"
@@ -36,10 +37,10 @@ static image_button action_button[] = {
 };
 
 static generic_button buttons_gods_size[] = {
-    {70, 96, 80, 90, button_game, button_none, 1, 0},
-    {170, 96, 80, 90, button_game, button_none, 2, 0},
-    {270, 96, 80, 90, button_game, button_none, 3, 0},
-    {370, 96, 80, 90, button_game, button_none, 4, 0},
+    {170, 96, 80, 90, button_game, button_none, 1, 0},
+    {270, 96, 80, 90, button_game, button_none, 2, 0},
+    {370, 96, 80, 90, button_game, button_none, 3, 0},
+    //{370, 96, 80, 90, button_game, button_none, 4, 0},
 };
 
 static int focus_button_id;
@@ -61,11 +62,13 @@ static void draw_background(void)
     text_draw_centered(translation_for(game->header_key), 48, 60, 544, FONT_LARGE_BLACK, 0);
     for (int i = 0; i < MAX_GAMES; i++) {
         if (i == game->id - 1) {
-            button_border_draw(100 * i + 66, 92, 90, 100, 1);
-            image_draw(image_group(GROUP_PANEL_WINDOWS) + i + 21, 100 * i + 70, 96);
+            button_border_draw(100 * i + 165, 92, 90, 100, 1);
+            image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
+                "Naum Ico S") + (2 * i), 100 * i + 170, 96);
         }
         else {
-            image_draw(image_group(GROUP_PANEL_WINDOWS) + i + 16, 100 * i + 70, 96);
+            image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
+                "Naum Ico DS") + (2 * i), 100 * i + 170, 96);
         }
     }
     text_draw_multiline(translation_for(game->description_key), 70, 222, 500, FONT_NORMAL_BLACK, 0);    

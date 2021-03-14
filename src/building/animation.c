@@ -78,10 +78,10 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
             map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
             break;
         case 2:
-            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Imp Games"));
             break;
         case 3:
-            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Exec"));
             break;
         default:
             map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"));

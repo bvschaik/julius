@@ -29,9 +29,9 @@ typedef struct {
 
 int city_finance_treasury(void);
 
-int city_finance_treasury_add(int amount);
+void city_finance_treasury_add(int amount);
 
-int city_finance_treasury_add_tourism(int amount);
+void city_finance_treasury_add_tourism(int amount);
 
 int city_finance_out_of_money(void);
 
