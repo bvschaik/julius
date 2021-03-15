@@ -914,9 +914,7 @@ void building_construction_place(void)
     } else if (!building_construction_place_building(type, x_end, y_end)) {
         return;
     }
-    if ((type >= BUILDING_LARGE_TEMPLE_CERES && type <= BUILDING_LARGE_TEMPLE_VENUS) || type == BUILDING_ORACLE) {
-        building_warehouses_remove_resource(RESOURCE_MARBLE, 2);
-    }
+
     if (data.type == BUILDING_MENU_SMALL_TEMPLES) {
         data.sub_type++;
         if (data.sub_type > BUILDING_SMALL_TEMPLE_VENUS) {
