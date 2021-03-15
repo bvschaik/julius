@@ -155,8 +155,8 @@ int model_load(void)
 }
 
 const model_building MODEL_ROADBLOCK = {40,0,0,0,0};
-const model_building MODEL_WORK_CAMP = { 150,-10,2,3,4,25 };
-const model_building MODEL_ARCHITECT_GUILD = { 150,-8,1,2,4,25 };
+const model_building MODEL_WORK_CAMP = { 150,-10,2,3,4,20 };
+const model_building MODEL_ARCHITECT_GUILD = { 150,-8,1,2,4,12 };
 const model_building MODEL_GRAND_TEMPLE_CERES = { 2500,20,2,-4,5,50 };
 const model_building MODEL_GRAND_TEMPLE_NEPTUNE = { 2500,20,2,-4,5,50 };
 const model_building MODEL_GRAND_TEMPLE_MERCURY = { 2500,20,2,-4,5,50 };
