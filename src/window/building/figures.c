@@ -327,6 +327,32 @@ static void draw_supplier(building_info_context *c, figure *f)
     }
 }
 
+static void draw_monument_worker(building_info_context *c, figure *f)
+{
+    image_draw(big_people_image(f->type), c->x_offset + 28, c->y_offset + 112);
+
+	lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
+	int relative_id = f->type - NEW_FIGURES_ID;
+	int width = text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
+    int resource = f->collecting_item_id;
+
+    if (f->action_state == FIGURE_ACTION_204_WORK_CAMP_WORKER_GETTING_RESOURCES ) {
+        width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+            c->x_offset + 90 + width, c->y_offset + 135);
+    } else if (f->action_state == FIGURE_ACTION_205_WORK_CAMP_WORKER_GOING_TO_MONUMENT || f->action_state == FIGURE_ACTION_209_WORK_CAMP_SLAVE_FOLLOWING ||
+        f->action_state == FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT || f->action_state == FIGURE_ACTION_211_WORK_CAMP_SLAVE_DELIVERING_RESOURCES) {
+            width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
+            image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+                c->x_offset + 90 + width, c->y_offset + 135);
+    }
+    if (c->figure.phrase_id >= 0) {
+        lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
+            c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_SMALL_BLACK);
+    }
+
+}
+
 static void draw_normal_figure(building_info_context *c, figure *f)
 {
     int image_id = big_people_image(f->type);
@@ -376,6 +402,8 @@ static void draw_figure_info(building_info_context *c, int figure_id)
     } else if (type == FIGURE_MARKET_SUPPLIER || type == FIGURE_MESS_HALL_SUPPLIER ||
         type == FIGURE_PRIEST_SUPPLIER || type == FIGURE_BARKEEP_SUPPLIER) {
         draw_supplier(c, f);
+    } else if (type == FIGURE_WORK_CAMP_WORKER || type == FIGURE_WORK_CAMP_SLAVE) {
+        draw_monument_worker(c, f);
     } else {
         draw_normal_figure(c, f);
     }
