@@ -288,17 +288,16 @@ void building_image_context_set_hedge_image(int grid_offset)
         return;
     }
 
-    int image_id = building_image_context_get_connecting_image_for_tile(grid_offset, b->type);
-
     if (connecting_grid[grid_offset]) {
+        int image_id = building_image_context_get_connecting_image_for_tile(grid_offset, connecting_grid_building);
         map_image_set(grid_offset, image_id);
-        map_property_set_multi_tile_size(grid_offset, 1);
-        map_property_mark_draw_tile(grid_offset);
     } else {
+        int image_id = building_image_context_get_connecting_image_for_tile(grid_offset, b->type);
         map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
-        map_property_set_multi_tile_size(grid_offset, 1);
-        map_property_mark_draw_tile(grid_offset);
     }
+    map_property_set_multi_tile_size(grid_offset, 1);
+    map_property_mark_draw_tile(grid_offset);
+
 
 }
 
