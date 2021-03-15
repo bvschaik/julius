@@ -163,11 +163,13 @@ const model_building MODEL_GRAND_TEMPLE_MERCURY = { 2500,20,2,-4,5,50 };
 const model_building MODEL_GRAND_TEMPLE_MARS = { 2500,20,2,-4,5,50 };
 const model_building MODEL_GRAND_TEMPLE_VENUS = { 2500,20,2,-4,5,50 };
 const model_building MODEL_PANTHEON = { 3500,20,2,-4,5,50 };
-const model_building MODEL_LIGHTHOUSE = { 2000,6,1,-1,4,30 };
+const model_building MODEL_LIGHTHOUSE = { 1250,6,1,-1,4,30 };
 const model_building MODEL_MESS_HALL = { 100,-8,1,2,4,10 };
 const model_building MODEL_TAVERN = { 25,-2,1,1,6,8 };
 const model_building MODEL_GRAND_GARDEN = { 400,0,0,0,0,0 };
 const model_building MODEL_ARENA = { 500,-3,1,1,3,25 };
+const model_building MODEL_COLOSSEUM = { 1500,-3,1,1,3,25 };
+const model_building MODEL_HIPPODROME = { 3500,-3,1,1,3,150 };
 const model_building MODEL_NULL = { 0,0,0,0,0 };
 const model_building MODEL_LARARIUM = { 150, 4, 1, 1, 3, 0 };
 const model_building MODEL_NYMPHAEUM = {500,12,2,-1,6,0};
@@ -206,6 +208,10 @@ const model_building *model_get_building(building_type type)
             return &MODEL_GRAND_GARDEN;
         case BUILDING_ARENA:
             return &MODEL_ARENA;
+        case BUILDING_COLOSSEUM:
+            return &MODEL_COLOSSEUM;
+        case BUILDING_HIPPODROME:
+            return &MODEL_HIPPODROME;
         case BUILDING_LARARIUM:
             return &MODEL_LARARIUM;
         case BUILDING_NYMPHAEUM:
