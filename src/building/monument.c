@@ -57,6 +57,10 @@ static int oracle_lt_resources[2][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
+static int large_temple_resources[2][RESOURCE_MAX] = {
+	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+};
 static int nymphaeum_resources[2][RESOURCE_MAX] = { 
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
@@ -331,6 +335,7 @@ int building_monument_resources_needed_for_monument_type(int building_type, int 
 		case BUILDING_LARGE_TEMPLE_NEPTUNE:
 		case BUILDING_LARGE_TEMPLE_MARS:
 		case BUILDING_LARGE_TEMPLE_VENUS:
+			return large_temple_resources[phase - 1][resource];
 		case BUILDING_ORACLE:
 			return oracle_lt_resources[phase - 1][resource];
 		case BUILDING_GRAND_TEMPLE_CERES:
