@@ -98,6 +98,15 @@ static mapping_element default_mapping[] = {
 };
 #endif
 
+static int use_joystick(void)
+{
+#if defined(__vita__) || defined(__SWITCH__)
+    return 1;
+#else
+    return 0;
+#endif
+}
+
 static void create_new_model(const char *guid, const char *name, int instance_id)
 {
     joystick_model model;
@@ -163,6 +172,9 @@ static void remove_joystick(int instance_id)
 
 void platform_joystick_init(void)
 {
+    if (!use_joystick()) {
+        return;
+    }
     if (SDL_JoystickEventState(SDL_ENABLE) != SDL_ENABLE) {
         SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION, "Joystick events could not be enabled: %s", SDL_GetError());
     }
@@ -173,6 +185,9 @@ void platform_joystick_init(void)
 
 void platform_joystick_device_changed(int id, int is_connected)
 {
+    if (!use_joystick()) {
+        return;
+    }
     if (is_connected) {
         add_joystick(id);
     } else {
@@ -182,16 +197,25 @@ void platform_joystick_device_changed(int id, int is_connected)
 
 void platform_joystick_handle_axis(SDL_JoyAxisEvent *event)
 {
+    if (!use_joystick()) {
+        return;
+    }
     joystick_update_element(event->which, JOYSTICK_ELEMENT_AXIS, event->axis, event->value, 0);
 }
 
 void platform_joystick_handle_trackball(SDL_JoyBallEvent *event)
 {
+    if (!use_joystick()) {
+        return;
+    }
     joystick_update_element(event->which, JOYSTICK_ELEMENT_TRACKBALL, event->ball, event->xrel, event->yrel);
 }
 
 void platform_joystick_handle_hat(SDL_JoyHatEvent *event)
 {
+    if (!use_joystick()) {
+        return;
+    }
     joystick_hat_position position = JOYSTICK_HAT_CENTERED;
     if (event->value & SDL_HAT_UP) {
         position |= JOYSTICK_HAT_UP;
@@ -210,5 +234,8 @@ void platform_joystick_handle_hat(SDL_JoyHatEvent *event)
 
 void platform_joystick_handle_button(SDL_JoyButtonEvent *event, int is_down)
 {
+    if (!use_joystick()) {
+        return;
+    }
     joystick_update_element(event->which, JOYSTICK_ELEMENT_BUTTON, event->button, is_down, 0);
 }
