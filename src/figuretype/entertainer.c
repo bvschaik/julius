@@ -121,7 +121,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
         else {
             days_left = 0;
         }
-        int dist = days_left + calc_maximum_distance(x, y, b->x, b->y);
+        int dist = 2*days_left + calc_maximum_distance(x, y, b->x, b->y);
         if (dist < min_distance) {
             min_distance = dist;
             min_building_id = venues[i];
