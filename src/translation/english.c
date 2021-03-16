@@ -175,12 +175,12 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC, "Priests provide entertainment and beautify houses themselves, increasing the attractiveness of the neighborhood without additional decoration." },
     {TR_BUILDING_PANTHEON_MODULE_1_DESC, "All the temples in the city send priests to Pantheon, spreading the faith and blessings of their gods." },
     {TR_BUILDING_PANTHEON_MODULE_2_DESC, "Houses with access to the Pantheon can evolve one additional step." },
-    {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, "Temple of Ceres Promitor" },
-    {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, "Temple of Ceres Reparator" },
+    {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, "Temple of Ceres Fecunda" }, // Note to translators: This one changed from the previous version, please update.
+    {TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, "Temple of Ceres Frugifera" }, // Note to translators: This one changed from the previous version, please update.
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, "Temple of Neptunus Equester" },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_2, "Temple of Neptunus Adiutor" },
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_1, "Temple of Mercurius Fortunus" },
-    {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_2, "Temple of Mercurius Abundantia" },
+    {TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_2, "Temple of Mercurius Mercator" }, // Note to translators: This one changed from the previous versions, please update.
     {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, "Temple of Mars Ultor" },
     {TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_2, "Temple of Mars Quirinus" },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, "Temple of Venus Verticordia" },
