@@ -90,7 +90,7 @@ android {
             main.assets.srcDirs += '../../assets'
         }
     }
-    /** signingConfigs {
+    signingConfigs {
         release {
             def isCI = System.getenv("CI") == "true"
             if (isCI) {
@@ -100,7 +100,7 @@ android {
                 keyPassword System.getenv("ANDROID_KEYSTORE_KEY_PASSWORD")
             }
         }
-    } **/
+    }
     buildTypes {
         debug {
             ext.alwaysUpdateBuildId = false
@@ -109,7 +109,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            // signingConfig signingConfigs.release
+            signingConfig signingConfigs.release
         }
     }
     externalNativeBuild {

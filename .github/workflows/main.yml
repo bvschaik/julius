@@ -47,6 +47,13 @@ jobs:
             os: ubuntu-20.04
             BUILD_TARGET: switch
             DEPLOY: switch
+          - name: Android
+            os: ubuntu-20.04
+            cache-key: android
+            SDL_VERSION: 2.0.14
+            SDL_MIXER_VERSION: 2.0.4
+            BUILD_TARGET: android
+            DEPLOY: android
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     env:
@@ -65,10 +72,16 @@ jobs:
           path: deps
           key: ${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
       - name: Set up environment
+        env:
+          FILE_ENCRYPTION_IV: ${{ secrets.FILE_ENCRYPTION_IV }}
+          FILE_ENCRYPTION_KEY: ${{ secrets.FILE_ENCRYPTION_KEY }}
         run: |
           ./.ci_scripts/setup_environment.sh
           ./.ci_scripts/install_sdl.sh
       - name: Build and test
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEYSTORE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
         run: |
           ./.ci_scripts/run_cmake.sh
           ./.ci_scripts/run_build.sh

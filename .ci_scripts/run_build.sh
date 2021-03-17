@@ -48,6 +48,21 @@ case "$BUILD_TARGET" in
 		zip -r augustus.zip augustus
 	fi
 	;;
+"android")
+	cd android
+	if [ ! -f augustus.keystore ]
+	then
+		COMMAND=assembleDebug
+	else
+		COMMAND=assembleRelease
+	fi
+	echo "Running ./gradlew $COMMAND"
+	TERM=dumb ./gradlew $COMMAND
+	if [ -f augustus/build/outputs/apk/release/augustus-release.apk ]
+	then
+		cp augustus/build/outputs/apk/release/augustus-release.apk ../build/augustus.apk
+	fi
+	;;
 *)
 	cd build && make -j4 && make
 	;;

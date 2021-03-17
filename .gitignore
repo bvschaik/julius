@@ -33,6 +33,9 @@ local.properties
 *.log
 /android/build/
 /android/*/build/
+/android/*/release/
+/android/augustus.keystore
 /android/julius.keystore
 /android/play-publisher.json
+/android/augustus/src/main/play
 /android/julius/src/main/play
