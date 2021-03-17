@@ -496,28 +496,28 @@
     <image id="Theatre F4" width="118" height="98">
 		<layer group="this" image="Theatre OFF" x="0" y="0" />
 		<layer group="191" x="34" y="31" />
-		<layer group="46" image="5" x="60" y="32" />
+		<layer group="46" image="4" x="60" y="32" />
 		<layer src="Theatre_Fix" x="0" y="0" />
     </image>
 
     <image id="Theatre F5" width="118" height="98">
 		<layer group="this" image="Theatre OFF" x="0" y="0" />
 		<layer group="191" x="34" y="31" />
-		<layer group="46" image="6" x="60" y="32" />
+		<layer group="46" image="5" x="60" y="32" />
 		<layer src="Theatre_Fix" x="0" y="0" />
     </image>
 
     <image id="Theatre F6" width="118" height="98">
 		<layer group="this" image="Theatre OFF" x="0" y="0" />
 		<layer group="191" x="34" y="31" />
-		<layer group="46" image="7" x="60" y="32" />
+		<layer group="46" image="6" x="60" y="32" />
 		<layer src="Theatre_Fix" x="0" y="0" />
     </image>
 
     <image id="Theatre F7" width="118" height="98">
 		<layer group="this" image="Theatre OFF" x="0" y="0" />
 		<layer group="191" x="34" y="31" />
-		<layer group="46" image="3" x="60" y="32" />
+		<layer group="46" image="7" x="60" y="32" />
 		<layer src="Theatre_Fix" x="0" y="0" />
     </image>
 
