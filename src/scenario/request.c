@@ -126,6 +126,17 @@ const scenario_request *scenario_request_get(int id)
     return &request;
 }
 
+int scenario_request_count_visible(void)
+{
+    int count = 0;
+    for (int i = 0; i < MAX_REQUESTS; i++) {
+        if (scenario.requests[i].resource && scenario.requests[i].visible) {
+            count++;
+        }
+    }
+    return count;
+}
+
 int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request))
 {
     int index = start_index;

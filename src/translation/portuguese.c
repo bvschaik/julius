@@ -105,7 +105,12 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Definir marcador 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Definir marcador 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Mostrar informações de batalha"},
-    {TR_HOTKEY_EDIT_TITLE, "Nova tecla de atalho"}
+    {TR_HOTKEY_EDIT_TITLE, "Nova tecla de atalho"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_VIEW_ALL, "Ver tudo"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_HAVE, "tem"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_SMALL_FORCE, "Pequena força"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_AVERAGE_FORCE, "Força mediana"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_LARGE_FORCE, "Grande força"}
 };
 
 void translation_portuguese(const translation_string **strings, int *num_strings)
