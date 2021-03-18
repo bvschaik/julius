@@ -47,6 +47,7 @@ static const char *ini_keys[] = {
     "gameplay_change_warehouses_dont_accept",
     "gameplay_change_houses_dont_expand_into_gardens",
     "gameplay_change_monuments_boost_culture_rating",
+    "gameplay_change_disable_infinite_wolves_spawning",
     "gameplay_change_romers_dont_skip_corners",
 };
 

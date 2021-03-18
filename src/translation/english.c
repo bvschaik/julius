@@ -384,6 +384,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER, "Allow quartermaster to get food here"},
     {TR_WARNING_RESOURCES_NOT_AVAILABLE, "You cannot obtain the needed materials"},
     {TR_CONFIG_GP_CH_MONUMENTS_BOOST_CULTURE_RATING, "Completed grand temples grant +8 culture rating"},
+    {TR_CONFIG_GP_CH_DISABLE_INFINITE_WOLVES_SPAWNING, "Disable infinite wolves spawning"},
     {TR_BUTTON_BACK_TO_MAIN_MENU, "Back to main menu" },
     {TR_LABEL_PAUSE_MENU, "Pause" },
     {TR_OVERLAY_LEVY, "Levies" },

@@ -2,6 +2,7 @@
 
 #include "city/figures.h"
 #include "city/sound.h"
+#include "core/config.h"
 #include "core/random.h"
 #include "figure/combat.h"
 #include "figure/figure.h"
@@ -241,7 +242,8 @@ void formation_herd_update(void)
     }
     for (int i = 1; i < formation_count(); i++) {
         formation *m = formation_get(i);
-        if (m->in_use && m->is_herd && !m->is_legion && (m->num_figures > 0 || m->figure_type == FIGURE_WOLF)) {
+        int infinite_wolves_spawning = m->figure_type == FIGURE_WOLF && !config_get(CONFIG_GP_CH_DISABLE_INFINITE_WOLVES_SPAWNING);
+        if (m->in_use && m->is_herd && !m->is_legion && (m->num_figures > 0 || infinite_wolves_spawning)) {
             update_herd_formation(m);
         }
     }
