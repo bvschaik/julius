@@ -386,6 +386,7 @@ void xml_process_assetlist_file(const char *xml_file_name)
     }
 
     XML_Parser parser = XML_ParserCreate(NULL);
+    XML_SetHashSalt(parser, HASH_SEED);
     XML_SetElementHandler(parser, xml_start_element, xml_end_element);
 
     char buffer[XML_BUFFER_SIZE];

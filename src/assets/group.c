@@ -5,8 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Do not change the seed. Doing so breaks savegame compatibility with extra asset images
-#define ASSET_HASH_SEED 0x12345678
 #define GROUP_HASH_MASK 0xffffff00
 #define GROUP_MIN_HASH 0x4000
 
@@ -49,7 +47,7 @@ image_groups *group_get_current(void)
 
 uint32_t group_get_hash(const char *author, const char *name)
 {
-    uint32_t hash = ASSET_HASH_SEED;
+    uint32_t hash = HASH_SEED;
     uint32_t carry = 0;
     uint32_t author_length = (uint32_t) strlen(author);
     uint32_t name_length = (uint32_t) strlen(name);
