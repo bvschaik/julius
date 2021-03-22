@@ -1,0 +1,24 @@
+workflow "PR Audit" {
+  on = "pull_request"
+  resolves = ["EC Audit PR"]
+}
+
+action "EC Audit PR" {
+  uses = "zbeekman/EditorConfig-Action@v1.1.0"
+  env = {
+    ALWAYS_LINT_ALL_FILES = "false"
+  }
+}
+
+workflow "Push Audit" {
+  on = "push"
+  resolves = ["EC Audit Push"]
+}
+
+action "EC Audit Push" {
+  uses = "zbeekman/EditorConfig-Action@v1.1.0"
+  env = {
+    EC_FIX_ERROR = "false" 
+    ALWAYS_LINT_ALL_FILES = "false"
+  }
+}
