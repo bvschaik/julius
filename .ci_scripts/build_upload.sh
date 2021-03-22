@@ -52,6 +52,14 @@ case "$DEPLOY" in
   DEPLOY_FILE=augustus-$VERSION-mac.dmg
   cp "${build_dir}/augustus.dmg" "deploy/$DEPLOY_FILE"
   ;;
+"android")
+  PACKAGE=android
+  if [ -f "${build_dir}/augustus.apk" ]
+  then
+    DEPLOY_FILE=augustus-$VERSION-android.apk
+    cp "${build_dir}/augustus.apk" "deploy/$DEPLOY_FILE"
+  fi
+  ;;
 *)
   echo "Unknown deploy type $DEPLOY - skipping upload"
   exit

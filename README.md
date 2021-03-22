@@ -7,12 +7,12 @@ Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh)
   
 | Platform | Latest release | Unstable build |
 |----------|----------------|----------------|
-| Windows  | [![Download](https://api.bintray.com/packages/keriew/Augustus/windows_release/images/download.svg)](https://bintray.com/keriew/Augustus/windows_release/_latestVersion#files) | [![Download](https://api.bintray.com/packages/keriew/Augustus-unstable/windows-unstable/images/download.svg)](https://bintray.com/keriew/Augustus-unstable/windows-unstable/_latestVersion#files)  (needs assets files from the release version) | 
-| Linux AppImage | [![Download](https://api.bintray.com/packages/keriew/Augustus/linux/images/download.svg)](https://bintray.com/keriew/Augustus/linux/_latestVersion#files) | [![Download](https://api.bintray.com/packages/keriew/Augustus-unstable/linux/images/download.svg)](https://bintray.com/keriew/Augustus-unstable/linux/_latestVersion#files)
-| Mac | [![Download](https://api.bintray.com/packages/keriew/Augustus/mac/images/download.svg)](https://bintray.com/keriew/Augustus/mac/_latestVersion#files) | [![Download](https://api.bintray.com/packages/keriew/Augustus-unstable/mac/images/download.svg)](https://bintray.com/keriew/Augustus-unstable/mac/_latestVersion#files) |
-| PS Vita | [![Download](https://api.bintray.com/packages/keriew/Augustus/vita-unstable/images/download.svg)](https://bintray.com/keriew/Augustus/vita-unstable/_latestVersion#files)| [![Download](https://api.bintray.com/packages/keriew/Augustus-unstable/vita/images/download.svg)](https://bintray.com/keriew/Augustus-unstable/vita/_latestVersion#files) |
-| Switch | Next Release! | [![Download](https://api.bintray.com/packages/keriew/Augustus-unstable/switch/images/download.svg)](https://bintray.com/keriew/Augustus-unstable/switch/_latestVersion#files) |
-| Android APK | Next Release! | Soon... |
+| Windows  | [![Download](https://augustus.josecadete.net/badge/release/windows.svg)](https://augustus.josecadete.net/download/latest/release/windows) | [![Download](https://augustus.josecadete.net/badge/development/windows.svg)](https://augustus.josecadete.net/download/latest/development/windows)  (needs assets files from the release version) | 
+| Linux AppImage | [![Download](https://augustus.josecadete.net/badge/release/linux-appimage.svg)](https://augustus.josecadete.net/download/latest/release/linux-appimage) | [![Download](https://augustus.josecadete.net/badge/development/linux-appimage.svg)](https://augustus.josecadete.net/download/latest/development/linux-appimage)
+| Mac | [![Download](https://augustus.josecadete.net/badge/release/mac.svg)](https://augustus.josecadete.net/download/latest/release/mac) | [![Download](https://augustus.josecadete.net/badge/development/mac.svg)](https://augustus.josecadete.net/download/latest/development/mac) |
+| PS Vita | [![Download](https://augustus.josecadete.net/badge/release/vita.svg)](https://augustus.josecadete.net/download/latest/release/vita)| [![Download](https://augustus.josecadete.net/badge/development/vita.svg)](https://augustus.josecadete.net/download/latest/development/vita) |
+| Switch | Next Release! | [![Download](https://augustus.josecadete.net/badge/development/switch.svg)](https://augustus.josecadete.net/download/latest/development/switch) |
+| Android APK | Next Release! | [![Download](https://augustus.josecadete.net/badge/development/android.svg)](https://augustus.josecadete.net/download/latest/development/android) |
 
 
 Augustus is a fork of the Julius project that intends to incorporate gameplay changes.
