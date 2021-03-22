@@ -71,5 +71,8 @@ void building_monument_initialize_deliveries(void);
 int building_monument_count_grand_temples(void);
 void building_monument_delivery_save_state(buffer *list);
 void building_monument_delivery_load_state(buffer *list);
+int building_monument_is_construction_halted(const building *b);
+int building_monument_toggle_construction_halted(building *b);
+int building_monument_is_unfinished_monument(const building *b);
 
 #endif // BUILDING_MONUMENT_H 

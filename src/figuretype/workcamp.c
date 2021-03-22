@@ -95,6 +95,10 @@ void figure_workcamp_worker_action(figure* f)
 			if (!monument_id) {
 				continue;
 			}
+			building *monument = building_get(monument_id);
+			if (building_monument_is_construction_halted(monument)) {
+				continue;
+			}
 			warehouse_id = building_warehouse_with_resource(f->building_id, f->x, f->y, resource, b->distance_from_entry, b->road_network_id, 0, &dst);
 			if (!warehouse_id) {
 				continue;
@@ -273,7 +277,7 @@ void figure_workcamp_engineer_action(figure* f) {
 		}
 		else {
 			int monument_id = building_monument_get_monument(b->x, b->y, RESOURCE_NONE, b->road_network_id, b->distance_from_entry, &dst);
-			if (monument_id) {
+			if (monument_id && !building_monument_is_construction_halted(building_get(monument_id))) {
 				f->destination_building_id = monument_id;
 				f->destination_x = dst.x;
 				f->destination_y = dst.y;

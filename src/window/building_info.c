@@ -18,6 +18,7 @@
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
+#include "graphics/lang_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -52,6 +53,7 @@ static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
 static void button_mothball(int mothball, int param2);
+static void button_monument_construction(int param1, int param2);
 
 static image_button image_buttons_help_close[] = {
     {14, 0, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
@@ -66,9 +68,14 @@ static generic_button generic_button_mothball[] = {
     {400, 3, 24, 24, button_mothball, button_none, 0, 0}
 };
 
+static generic_button generic_button_monument_construction[] = {
+    {80, 3, 304, 24, button_monument_construction, button_none, 0, 0}
+};
+
 static building_info_context context;
 static int focus_image_button_id;
 static int focus_generic_button_id;
+static int focus_monument_construction_button_id;
 
 static int get_height_id(void)
 {
@@ -214,6 +221,18 @@ static void draw_mothball_button(int x, int y, int focused)
         if (b->state == BUILDING_STATE_IN_USE) {
             text_draw_centered(working_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
         }
+}
+
+static void draw_halt_monument_construction_button(int x, int y, int focused, building *monument)
+{
+    int width = 16 * (context.width_blocks - 10);
+    button_border_draw(x, y, width, 20, focused ? 1 : 0);
+    if (monument->state != BUILDING_STATE_MOTHBALLED) {
+        text_draw_centered(translation_for(TR_BUTTON_HALT_MONUMENT_CONSTRUCTION), x, y + 4, width, FONT_NORMAL_BLACK, 0);
+    }
+    else {
+        text_draw_centered(translation_for(TR_BUTTON_RESUME_MONUMENT_CONSTRUCTION), x, y + 4, width, FONT_NORMAL_BLACK, 0);
+    }
 }
 
 static int center_in_city(int element_width_pixels)
@@ -689,6 +708,7 @@ static void draw_background(void)
 
 static void draw_foreground(void)
 {
+    building *b = building_get(context.building_id);
     // building-specific buttons
     if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.building_id)->type;
@@ -753,6 +773,12 @@ static void draw_foreground(void)
             btype == BUILDING_PANTHEON) {
             window_building_draw_grand_temple_foreground(&context);
         }
+        
+        if (building_monument_is_unfinished_monument(b)) {
+            draw_halt_monument_construction_button(context.x_offset + 80, 
+                context.y_offset + 3 + 16 * context.height_blocks - 40, 
+                focus_monument_construction_button_id, b);
+        }
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info_foreground(&context);
     }
@@ -768,7 +794,7 @@ static void draw_foreground(void)
         image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
             image_buttons_advisor, 1);
     }
-    if (!context.storage_show_special_orders) {
+    if (!context.storage_show_special_orders && !building_monument_is_unfinished_monument(b)) {
         int workers_needed = model_get_building(building_get(context.building_id)->type)->laborers;
         if (workers_needed) {
             draw_mothball_button(context.x_offset + 400, context.y_offset + 3 + 16 * context.height_blocks - 40,
@@ -843,8 +869,16 @@ static void handle_input(const mouse *m, const hotkeys *h)
         handled |= image_buttons_handle_mouse(
                       m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
                       image_buttons_help_close, 2, &focus_image_button_id);
-        handled = generic_buttons_handle_mouse(
-            m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_mothball, 1, &focus_generic_button_id);
+        building *b = building_get(context.building_id);
+        if (building_monument_is_unfinished_monument(b)) {
+            handled = generic_buttons_handle_mouse(
+                m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
+                generic_button_monument_construction, 1, &focus_monument_construction_button_id);
+        }
+        else {
+            handled = generic_buttons_handle_mouse(
+                m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40, generic_button_mothball, 1, &focus_generic_button_id);
+        }
     }
     if (context.can_go_to_advisor) {
         handled |= image_buttons_handle_mouse(
@@ -863,14 +897,18 @@ static void handle_input(const mouse *m, const hotkeys *h)
 static void get_tooltip(tooltip_context *c)
 {
     int text_id = 0, group_id = 0, translation = 0;
-    int btype = building_get(context.building_id)->type;
+    building *b = building_get(context.building_id);
+    int btype = b->type;
     if (focus_image_button_id) {
         text_id = focus_image_button_id;
     } else if (focus_generic_button_id) {
-        if (building_get(context.building_id)->state == BUILDING_STATE_IN_USE) {
-            translation = TR_TOOLTIP_BUTTON_MOTHBALL_ON;
-        } else {
-            translation = TR_TOOLTIP_BUTTON_MOTHBALL_OFF;
+        if (!building_monument_is_unfinished_monument(b)) {
+            if (building_get(context.building_id)->state == BUILDING_STATE_IN_USE) {
+                translation = TR_TOOLTIP_BUTTON_MOTHBALL_ON;
+            }
+            else {
+                translation = TR_TOOLTIP_BUTTON_MOTHBALL_OFF;
+            }
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         text_id = window_building_get_legion_info_tooltip_text(&context);
@@ -930,6 +968,12 @@ static void button_mothball(int mothball, int param2)
         building_mothball_toggle(b);
         window_invalidate();
     }
+}
+
+static void button_monument_construction(int param1, int param2) {
+    building *b = building_get(context.building_id);
+    building_monument_toggle_construction_halted(b);
+    window_invalidate();
 }
 
 void window_building_info_show(int grid_offset)
