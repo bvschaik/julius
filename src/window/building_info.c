@@ -373,6 +373,26 @@ static void init(int grid_offset)
                 }
                 context.warehouse_space_text = building_warehouse_get_space_info(b);
                 break;
+            case BUILDING_GRAND_TEMPLE_CERES:
+            case BUILDING_GRAND_TEMPLE_NEPTUNE:
+            case BUILDING_GRAND_TEMPLE_MERCURY:
+			case BUILDING_GRAND_TEMPLE_MARS:
+			case BUILDING_GRAND_TEMPLE_VENUS:
+            case BUILDING_PANTHEON:
+                if (map_has_road_access_monument_size7(b->x, b->y, 0)) {
+                    context.has_road_access = 1;
+                }
+                break;
+            case BUILDING_COLOSSEUM:
+                if (map_has_road_access_monument_size5(b->x,b->y, 0)) {
+                    context.has_road_access = 1;
+                }
+                break;
+            case BUILDING_LIGHTHOUSE:
+                if (map_has_road_access_monument_size3(b->x, b->y, 0)) {
+                    context.has_road_access = 1;
+                }
+                break;
             default:
                 if (map_has_road_access(b->x, b->y, b->size, 0)) {
                     context.has_road_access = 1;

@@ -85,6 +85,7 @@ int map_has_road_access_hippodrome_rotation(int x, int y, map_point *road, int r
     return 0;
 }
 
+
 int map_has_road_access_hippodrome(int x, int y, map_point *road)
 {
     return map_has_road_access_hippodrome_rotation( x, y, road, building_rotation_get_rotation());
@@ -117,6 +118,27 @@ int map_has_road_access_granary(int x, int y, map_point *road)
         return 1;
     }
     return 0;
+}
+
+int map_has_road_access_monument_size7(int x, int y, map_point *road)
+{
+    int x_road, y_road;
+    int road_grid_offset = map_road_to_largest_network_grand_temple(x, y, &x_road, &y_road);
+    return (road_grid_offset >= 0);
+}
+
+int map_has_road_access_monument_size5(int x, int y, map_point *road)
+{
+    int x_road, y_road;
+    int road_grid_offset = map_road_to_largest_network_colosseum(x, y, &x_road, &y_road);
+    return (road_grid_offset >= 0);
+}
+
+int map_has_road_access_monument_size3(int x, int y, map_point *road)
+{
+    int x_road, y_road;
+    int road_grid_offset = map_road_to_largest_network_lighthouse(x, y, &x_road, &y_road);
+    return (road_grid_offset >= 0);
 }
 
 
