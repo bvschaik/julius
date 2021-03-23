@@ -8,6 +8,7 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
+#include "translation/translation.h"
 
 static int is_problem_cartpusher(int figure_id)
 {
@@ -188,6 +189,34 @@ static int get_tooltip_crime(tooltip_context *c, const building *b)
     }
 }
 
+static int get_tooltip_problems(tooltip_context *c, const building *b)
+{
+    if (b->house_size) {
+        return 0;
+    }
+    if (b->strike_duration_days > 0) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_STRIKE;
+    } else if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_NO_WATER_ACCESS;
+    } else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_CLAY_PIT) {
+        if (is_problem_cartpusher(b->figure_id)) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_CARTPUSHER;
+        }
+    } else if (building_is_workshop(b->type)) {
+        if (is_problem_cartpusher(b->figure_id)) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_CARTPUSHER;
+        } else if (b->loads_stored <= 0) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_NO_RESOURCES;
+        }
+    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_MOTHBALLED;
+    }
+    if (c->translation_key) {
+        return 1;
+    }
+    return 0;
+}
+
 const city_overlay *city_overlay_for_fire(void)
 {
     static city_overlay overlay = {
@@ -245,7 +274,7 @@ const city_overlay *city_overlay_for_problems(void)
         show_figure_problems,
         get_column_height_none,
         0,
-        0,
+        get_tooltip_problems,
         0,
         0
     };

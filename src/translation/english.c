@@ -517,6 +517,11 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_OVERLAY_ARENA_COL_3, "This house has access to an arena with two shows." },
     {TR_TOOLTIP_OVERLAY_ARENA_COL_4, "This house has access to the Colosseum, with one show." },
     {TR_TOOLTIP_OVERLAY_ARENA_COL_5, "This house has access to the Colosseum, with two shows." },
+    {TR_TOOLTIP_OVERLAY_PROBLEMS_STRIKE, "Workers on strike" },
+    {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_WATER_ACCESS, "No water access" },
+    {TR_TOOLTIP_OVERLAY_PROBLEMS_CARTPUSHER, "Waiting for the cartpusher" },
+    {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_RESOURCES, "No resources available" },
+    {TR_TOOLTIP_OVERLAY_PROBLEMS_MOTHBALLED, "Building mothballed" },
     {TR_WINDOW_BUILDING_TOURISM_DISABLED, "Too many buildings of this type-- travellers avoid this place." },
     {TR_WINDOW_BUILDING_TOURISM_ANNUAL, "Income from travellers this year:" },
     {TR_WINDOW_BUILDING_WHARF_MOTHBALLED, "Your Trade Advisor ordered a halt to fish production."},
@@ -568,7 +573,7 @@ static translation_string all_strings[] = {
     {TR_CITY_WARNING_GRANARY_BREAKIN, "A granary was looted" },
     {TR_CITY_WARNING_THEFT, "Funds were stolen from a forum or senate" },
     {TR_CITY_MESSAGE_TITLE_LOOTING, "Looting in the city"},
-    {TR_CITY_MESSAGE_TEXT_LOOTING, "A warehouse or granary was looted by angry citizens and goods were stolen. Low sentiment makes these incidents more likely."}
+    {TR_CITY_MESSAGE_TEXT_LOOTING, "A warehouse or granary was looted by angry citizens and goods were stolen. Low sentiment makes these incidents more likely."},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
