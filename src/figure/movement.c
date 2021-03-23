@@ -112,6 +112,10 @@ static roadblock_permission get_permission_for_figure_type(figure* f)
         return PERMISSION_TAX_COLLECTOR;
     case FIGURE_LABOR_SEEKER:
         return PERMISSION_LABOR_SEEKER;
+    case FIGURE_MISSIONARY:
+        return PERMISSION_MISSIONARY;
+    case FIGURE_WATCHMAN:
+        return PERMISSION_WATCHMAN;
     default:
         return PERMISSION_NONE;
         break;

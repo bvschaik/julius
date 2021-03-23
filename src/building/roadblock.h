@@ -12,7 +12,9 @@ typedef enum {
 	PERMISSION_EDUCATION = 5,
 	PERMISSION_MEDICINE = 6,
 	PERMISSION_TAX_COLLECTOR = 7,
-	PERMISSION_LABOR_SEEKER = 8
+	PERMISSION_LABOR_SEEKER = 8,
+	PERMISSION_MISSIONARY = 9,
+	PERMISSION_WATCHMAN = 10,
 } roadblock_permission;
 
 void building_roadblock_set_permission(roadblock_permission p, building* b);
