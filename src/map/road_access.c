@@ -122,23 +122,54 @@ int map_has_road_access_granary(int x, int y, map_point *road)
 
 int map_has_road_access_monument_size7(int x, int y, map_point *road)
 {
-    int x_road, y_road;
-    int road_grid_offset = map_road_to_largest_network_grand_temple(x, y, &x_road, &y_road);
-    return (road_grid_offset >= 0);
+    int min_value = 12;
+    int min_grid_offset = map_grid_offset(x, y);
+    find_minimum_road_tile(x, y+3, 1, &min_value, &min_grid_offset);
+    find_minimum_road_tile(x+3, y, 1, &min_value, &min_grid_offset);
+    find_minimum_road_tile(x+3, y+6, 1, &min_value, &min_grid_offset);
+    find_minimum_road_tile(x+6, y+3, 1, &min_value, &min_grid_offset);
+
+    if (min_value < 12) {
+        if (road) {
+            map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
+        }
+        return 1;
+    }
+    return 0;
 }
 
 int map_has_road_access_monument_size5(int x, int y, map_point *road)
 {
-    int x_road, y_road;
-    int road_grid_offset = map_road_to_largest_network_colosseum(x, y, &x_road, &y_road);
-    return (road_grid_offset >= 0);
+    int min_value = 12;
+    int min_grid_offset = map_grid_offset(x, y);
+    find_minimum_road_tile(x, y + 2, 1, &min_value, &min_grid_offset);
+    find_minimum_road_tile(x + 2, y, 1, &min_value, &min_grid_offset);
+    find_minimum_road_tile(x + 2, y + 4, 1, &min_value, &min_grid_offset);
+    find_minimum_road_tile(x + 4, y + 2, 1, &min_value, &min_grid_offset);
+    if (min_value < 12) {
+        if (road) {
+            map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
+        }
+        return 1;
+    }
+    return 0;
 }
 
 int map_has_road_access_monument_size3(int x, int y, map_point *road)
 {
-    int x_road, y_road;
-    int road_grid_offset = map_road_to_largest_network_lighthouse(x, y, &x_road, &y_road);
-    return (road_grid_offset >= 0);
+    int min_value = 12;
+    int min_grid_offset = map_grid_offset(x, y);
+    find_minimum_road_tile(x, y + 1, 1, &min_value, &min_grid_offset);
+    find_minimum_road_tile(x + 1, y, 1, &min_value, &min_grid_offset);
+    find_minimum_road_tile(x + 1, y + 2, 1, &min_value, &min_grid_offset);
+    find_minimum_road_tile(x + 2, y + 1, 1, &min_value, &min_grid_offset);
+    if (min_value < 12) {
+        if (road) {
+            map_point_store_result(map_grid_offset_to_x(min_grid_offset), map_grid_offset_to_y(min_grid_offset), road);
+        }
+        return 1;
+    }
+    return 0;
 }
 
 
