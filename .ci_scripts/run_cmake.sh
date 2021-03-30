@@ -20,6 +20,7 @@ case "$BUILD_TARGET" in
 	mkdir build
 	;;
 "emscripten")
+	export EMSDK=${PWD}/emsdk
 	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -DEMSCRIPTEN_BUILD=ON ..
 	;;
 *)
