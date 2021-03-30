@@ -82,12 +82,6 @@ jobs:
         run: |
           ./.ci_scripts/setup_environment.sh
           ./.ci_scripts/install_sdl.sh
-      - name: Setup Emscripten
-        if: ${{ matrix.name == 'Emscripten' }}
-        uses: mymindstorm/setup-emsdk@v7
-        with:
-          version: 2.0.16
-          actions-cache-folder: 'deps/emsdk-cache'
       - name: Build and test
         env:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
