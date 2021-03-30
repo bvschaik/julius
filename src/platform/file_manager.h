@@ -67,6 +67,14 @@ int platform_file_manager_compare_filename_prefix(const char *filename, const ch
 FILE *platform_file_manager_open_file(const char *filename, const char *mode);
 
 /**
+ * Closes a file stream
+ * @param stream The stream to close
+ * @return See fclose (If the stream is successfully closed, a zero value is returned.
+ *         On failure, EOF is returned.)
+ */
+int platform_file_manager_close_file(FILE *stream);
+
+/**
  * Removes a file
  * @param filename The file to remove
  * @return true if removal was successful, false otherwise

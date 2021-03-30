@@ -87,7 +87,8 @@ then
   then
     install_sdl_android "SDL2" $SDL_VERSION
     install_sdl_android "SDL2_mixer" $SDL_MIXER_VERSION
-  else
+  elif [ "$BUILD_TARGET" != "emscripten" ]
+  then
     install_sdl_lib "SDL2" $SDL_VERSION
     install_sdl_lib "SDL2_mixer" $SDL_MIXER_VERSION
   fi

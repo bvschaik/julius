@@ -13,7 +13,7 @@ FILE *file_open(const char *filename, const char *mode)
 
 int file_close(FILE *stream)
 {
-    return fclose(stream);
+    return platform_file_manager_close_file(stream);
 }
 
 int file_has_extension(const char *filename, const char *extension)

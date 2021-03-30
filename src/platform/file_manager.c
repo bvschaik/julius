@@ -4,6 +4,7 @@
 #include "core/log.h"
 #include "core/string.h"
 #include "platform/android/android.h"
+#include "platform/emscripten/emscripten.h"
 #include "platform/file_manager_cache.h"
 #include "platform/vita/vita.h"
 
@@ -28,7 +29,7 @@
 #define fs_dir_close _wclosedir
 #define fs_dir_read _wreaddir
 #define dir_entry_name(d) wchar_to_utf8(d->d_name)
-typedef const wchar_t * dir_name;
+typedef const wchar_t *dir_name;
 
 static const char *wchar_to_utf8(const wchar_t *str)
 {
@@ -37,7 +38,7 @@ static const char *wchar_to_utf8(const wchar_t *str)
     int size_needed = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
     if (size_needed > filename_buffer_size) {
         free(filename_buffer);
-        filename_buffer = (char*) malloc(sizeof(char) * size_needed);
+        filename_buffer = (char *) malloc(sizeof(char) * size_needed);
         filename_buffer_size = size_needed;
     }
     WideCharToMultiByte(CP_UTF8, 0, str, -1, filename_buffer, size_needed, NULL, NULL);
@@ -59,7 +60,7 @@ static wchar_t *utf8_to_wchar(const char *str)
 #define fs_dir_close closedir
 #define fs_dir_read readdir
 #define dir_entry_name(d) ((d)->d_name)
-typedef const char * dir_name;
+typedef const char *dir_name;
 #endif
 
 #ifndef S_ISLNK
@@ -89,6 +90,10 @@ typedef const char * dir_name;
 #define chdir _chdir
 #elif !defined(__vita__)
 #include <unistd.h>
+#endif
+
+#ifdef __EMSCRIPTEN__
+static int writing_to_file;
 #endif
 
 #ifndef USE_FILE_CACHE
@@ -184,7 +189,7 @@ int platform_file_manager_should_case_correct_file(void)
 int platform_file_manager_compare_filename(const char *a, const char *b)
 {
 #if _MSC_VER
-    return _mbsicmp((const unsigned char *)a, (const unsigned char *)b);
+    return _mbsicmp((const unsigned char *) a, (const unsigned char *) b);
 #else
     return strcasecmp(a, b);
 #endif
@@ -193,7 +198,7 @@ int platform_file_manager_compare_filename(const char *a, const char *b)
 int platform_file_manager_compare_filename_prefix(const char *filename, const char *prefix, int prefix_len)
 {
 #if _MSC_VER
-    return _mbsnicmp((const unsigned char *)filename, (const unsigned char *)prefix, prefix_len);
+    return _mbsnicmp((const unsigned char *) filename, (const unsigned char *) prefix, prefix_len);
 #else
     return strncasecmp(filename, prefix, prefix_len);
 #endif
@@ -270,6 +275,25 @@ int platform_file_manager_remove_file(const char *filename)
     return android_remove_file(filename);
 }
 
+#elif defined(__EMSCRIPTEN__)
+
+FILE *platform_file_manager_open_file(const char *filename, const char *mode)
+{
+    writing_to_file = strchr(mode, 'w') != 0;
+    return fopen(filename, mode);
+}
+
+int platform_file_manager_remove_file(const char *filename)
+{
+    if (remove(filename) == 0) {
+        EM_ASM(
+            Module.syncFS();
+        );
+        return 1;
+    }
+    return 0;
+}
+
 #else
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
@@ -295,3 +319,17 @@ int platform_file_manager_remove_file(const char *filename)
 }
 
 #endif
+
+int platform_file_manager_close_file(FILE *stream)
+{
+    int result = fclose(stream);
+#ifdef __EMSCRIPTEN__
+    if (writing_to_file) {
+        writing_to_file = 0;
+        EM_ASM(
+            Module.syncFS();
+        );
+    }
+#endif
+    return result;
+}

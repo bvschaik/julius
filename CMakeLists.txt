@@ -14,6 +14,7 @@ option(SYSTEM_LIBS "Use system libraries when available." ON)
 cmake_dependent_option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF "NOT MSVC" OFF)
 cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT MSVC; NOT VITA_BUILD" OFF)
 cmake_dependent_option(ANDROID_BUILD "Build for the Android environment." OFF "NOT MSVC; NOT VITA_BUILD; NOT SWITCH_BUILD" OFF)
+cmake_dependent_option(EMESCRIPTEN_BUILD "Build for the Emscripten environment." OFF "NOT VITA_BUILD; NOT SWITCH_BUILD; NOT ANDROID_BUILD" OFF)
 
 if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
@@ -29,6 +30,15 @@ if(SWITCH_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
         set(CMAKE_TOOLCHAIN_FILE "./cmake/switch.cmake" CACHE PATH "toolchain file")
     else()
         message(FATAL_ERROR "Please define DEVKITPRO to point to your SDK path!")
+    endif()
+endif()
+
+if(EMSCRIPTEN_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+    if(DEFINED ENV{EMSDK})
+        set(EMSDK $ENV{EMSDK})
+        set(CMAKE_TOOLCHAIN_FILE "$ENV{EMSDK}/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake" CACHE PATH "toolchain file")
+    else()
+        message(FATAL_ERROR "Please define EMSDK to point to your Emscripten SDK path!")
     endif()
 endif()
 
@@ -139,6 +149,10 @@ endif()
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.c.in ${PROJECT_SOURCE_DIR}/src/platform/version.c)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.rc.in ${PROJECT_SOURCE_DIR}/res/version.rc)
 configure_file(${PROJECT_SOURCE_DIR}/gen/version.txt.in ${PROJECT_SOURCE_DIR}/res/version.txt)
+
+if(EMSCRIPTEN_BUILD)
+    configure_file(${PROJECT_SOURCE_DIR}/gen/shell.html.in ${PROJECT_SOURCE_DIR}/res/shell.html)
+endif()
 
 if(DRAW_FPS)
   add_definitions(-DDRAW_FPS)
@@ -576,6 +590,11 @@ if(APPLE)
     set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/julius.icns)
 endif()
 
+set(EMSCRIPTEN_FILES "")
+if(EMSCRIPTEN_BUILD)
+    set(EMSCRIPTEN_FILES ${PROJECT_SOURCE_DIR}/res/shell.html)
+endif()
+
 set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${CORE_FILES}
@@ -597,6 +616,7 @@ set(SOURCE_FILES
     ${TINYFD_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc
     ${MACOSX_FILES}
+    ${EMSCRIPTEN_FILES}
 )
 
 function(GET_SDL_EXT_DIR result module)
@@ -620,13 +640,24 @@ function(GET_SDL_EXT_DIR result module)
     endforeach()
 endfunction()
 
-find_package(SDL2 REQUIRED)
-find_package(SDL2_mixer REQUIRED)
+if(EMSCRIPTEN_BUILD)
+    set(USE_FLAGS "-s USE_SDL=2 -s USE_SDL_MIXER=2")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
+    set(CMAKE_EXECUTABLE_SUFFIX .html)
+else()
+    find_package(SDL2 REQUIRED)
+    find_package(SDL2_mixer REQUIRED)
+endif()
 
 if(ANDROID_BUILD)
     add_library(${SHORT_NAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
 else()
     add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
+endif()
+
+if (EMSCRIPTEN_BUILD)
+    set_target_properties(${SHORT_NAME} PROPERTIES LINK_FLAGS "-lidbfs.js -s SINGLE_FILE=1 -s DEMANGLE_SUPPORT=1 --shell-file ${PROJECT_SOURCE_DIR}/res/shell.html -s INITIAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=0 -s SAFE_HEAP=1 -s INVOKE_RUN=0 -s 'EXPORTED_FUNCTIONS=[\"_main\"]' -s 'EXPORTED_RUNTIME_METHODS=[\"callMain\",\"FS\"]'  --bind")
 endif()
 
 if(MSVC)
@@ -691,8 +722,12 @@ if(APPLE)
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
 endif()
 
-include_directories(${SDL2_INCLUDE_DIR})
-include_directories(${SDL2_MIXER_INCLUDE_DIR})
+if(SDL2_INCLUDE_DIR)
+    include_directories(${SDL2_INCLUDE_DIR})
+endif()
+if(SDL2_MIXER_INCLUDE_DIR)
+    include_directories(${SDL2_MIXER_INCLUDE_DIR})
+endif()
 
 if(SYSTEM_LIBS)
     find_package(PNG)
@@ -830,7 +865,7 @@ else()
     endif()
 
     # Unit tests
-    if(NOT VITA_BUILD AND NOT SWITCH_BUILD AND NOT ANDROID_BUILD)
+    if(NOT VITA_BUILD AND NOT SWITCH_BUILD AND NOT ANDROID_BUILD AND NOT EMSCRIPTEN_BUILD)
         enable_testing()
         add_subdirectory(test)
     endif()
