@@ -48,6 +48,9 @@ case "$BUILD_TARGET" in
 		cp julius/build/outputs/apk/release/julius-release.apk ../build/julius.apk
 	fi
 	;;
+"emscripten")
+cd build && make -j4
+	;;
 *)
 	cd build && make -j4 && make test
 	;;

@@ -28,6 +28,7 @@
 #include <stdlib.h>
 
 #include "platform/android/android.h"
+#include "platform/emscripten/emscripten.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
 
@@ -55,11 +56,24 @@ enum {
     USER_EVENT_CENTER_WINDOW,
 };
 
+static struct {
+    int active;
+    int quit;
+} data = { 1, 0 };
+
+static void exit_with_status(int status)
+{
+#ifdef __EMSCRIPTEN__
+    EM_ASM(Module.quitGame($0), status);
+#endif
+    exit(status);
+}
+
 static void handler(int sig)
 {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Oops, crashed with signal %d :(", sig);
     backtrace_print();
-    exit(1);
+    exit_with_status(1);
 }
 
 #if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__) || defined(__ANDROID__)
@@ -151,7 +165,7 @@ static struct {
     int frame_count;
     int last_fps;
     Uint32 last_update_time;
-} fps = {0, 0, 0};
+} fps;
 
 static void run_and_draw(void)
 {
@@ -240,11 +254,11 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
     }
 }
 
-static void handle_event(SDL_Event *event, int *active, int *quit)
+static void handle_event(SDL_Event *event)
 {
     switch (event->type) {
         case SDL_WINDOWEVENT:
-            handle_window_event(&event->window, active);
+            handle_window_event(&event->window, &data.active);
             break;
         case SDL_KEYDOWN:
             platform_handle_key_down(&event->key);
@@ -309,12 +323,12 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
             break;
 
         case SDL_QUIT:
-            *quit = 1;
+            data.quit = 1;
             break;
 
         case SDL_USEREVENT:
             if (event->user.code == USER_EVENT_QUIT) {
-                *quit = 1;
+                data.quit = 1;
             } else if (event->user.code == USER_EVENT_RESIZE) {
                 platform_screen_set_window_size(INTPTR(event->user.data1), INTPTR(event->user.data2));
             } else if (event->user.code == USER_EVENT_FULLSCREEN) {
@@ -331,29 +345,41 @@ static void handle_event(SDL_Event *event, int *active, int *quit)
     }
 }
 
+static void teardown(void)
+{
+    SDL_Log("Exiting game");
+    game_exit();
+    platform_screen_destroy();
+    SDL_Quit();
+    teardown_logging();
+}
+
 static void main_loop(void)
 {
-    mouse_set_inside_window(1);
-
-    run_and_draw();
-    int active = 1;
-    int quit = 0;
-    while (!quit) {
-        SDL_Event event;
+    SDL_Event event;
 #ifdef PLATFORM_ENABLE_PER_FRAME_CALLBACK
-        platform_per_frame_callback();
+    platform_per_frame_callback();
 #endif
-        /* Process event queue */
-        while (SDL_PollEvent(&event)) {
-            handle_event(&event, &active, &quit);
-        }
-        if (!quit) {
-            if (active) {
-                run_and_draw();
-            } else {
-                SDL_WaitEvent(NULL);
-            }
-        }
+    /* Process event queue */
+    while (SDL_PollEvent(&event)) {
+        handle_event(&event);
+    }
+    if (data.quit) {
+#ifdef __EMSCRIPTEN__
+        emscripten_cancel_main_loop();
+#endif
+        teardown();
+#ifdef __EMSCRIPTEN__
+        EM_ASM(
+            Module.quitGame();
+        );
+#endif
+        return;
+    }
+    if (data.active) {
+        run_and_draw();
+    } else {
+        SDL_WaitEvent(NULL);
     }
 }
 
@@ -440,7 +466,7 @@ static int pre_init(const char *custom_data_dir)
         return 1;
     }
 
-    #if SDL_VERSION_ATLEAST(2, 0, 1)
+#if SDL_VERSION_ATLEAST(2, 0, 1)
     if (platform_sdl_version_at_least(2, 0, 1)) {
         char *base_path = SDL_GetBasePath();
         if (base_path) {
@@ -454,29 +480,29 @@ static int pre_init(const char *custom_data_dir)
             SDL_free(base_path);
         }
     }
-    #endif
-
-    #ifdef SHOW_FOLDER_SELECT_DIALOG
-        const char *user_dir = pref_data_dir();
-        if (user_dir) {
-            SDL_Log("Loading game from user pref %s", user_dir);
-            if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
-                return 1;
-            }
-        }
-
-        user_dir = ask_for_data_dir(0);
-        while (user_dir) {
-            SDL_Log("Loading game from user-selected dir %s", user_dir);
-            if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
-                pref_save_data_dir(user_dir);
-#ifdef __ANDROID__
-                android_toast_message("C3 files found. Path saved.");
 #endif
-                return 1;
-            }
-            user_dir = ask_for_data_dir(1);
+
+#ifdef SHOW_FOLDER_SELECT_DIALOG
+    const char *user_dir = pref_data_dir();
+    if (user_dir) {
+        SDL_Log("Loading game from user pref %s", user_dir);
+        if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
+            return 1;
         }
+    }
+
+    user_dir = ask_for_data_dir(0);
+    while (user_dir) {
+        SDL_Log("Loading game from user-selected dir %s", user_dir);
+        if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
+            pref_save_data_dir(user_dir);
+#ifdef __ANDROID__
+            android_toast_message("C3 files found. Path saved.");
+#endif
+            return 1;
+        }
+        user_dir = ask_for_data_dir(1);
+    }
 #elif defined(__vita__)
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
         "Error",
@@ -504,12 +530,12 @@ static void setup(const julius_args *args)
 
     if (!init_sdl()) {
         SDL_Log("Exiting: SDL init failed");
-        exit(-1);
+        exit_with_status(-1);
     }
 
     if (!pre_init(args->data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
-        exit(1);
+        exit_with_status(1);
     }
 
     if (args->force_windowed && setting_fullscreen()) {
@@ -531,7 +557,7 @@ static void setup(const julius_args *args)
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
     if (!platform_screen_create(title, config_get(CONFIG_SCREEN_DISPLAY_SCALE))) {
         SDL_Log("Exiting: SDL create window failed");
-        exit(-2);
+        exit_with_status(-2);
     }
     // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
     system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
@@ -544,17 +570,11 @@ static void setup(const julius_args *args)
 
     if (!game_init()) {
         SDL_Log("Exiting: game init failed");
-        exit(2);
+        exit_with_status(2);
     }
-}
 
-static void teardown(void)
-{
-    SDL_Log("Exiting game");
-    game_exit();
-    platform_screen_destroy();
-    SDL_Quit();
-    teardown_logging();
+    data.quit = 0;
+    data.active = 1;
 }
 
 int main(int argc, char **argv)
@@ -564,8 +584,16 @@ int main(int argc, char **argv)
 
     setup(&args);
 
-    main_loop();
+    mouse_set_inside_window(1);
+    run_and_draw();
 
-    teardown();
+#ifdef __EMSCRIPTEN__
+    emscripten_set_main_loop(main_loop, 0, 1);
+#else
+    while (!data.quit) {
+        main_loop();
+    }
+#endif
+
     return 0;
 }

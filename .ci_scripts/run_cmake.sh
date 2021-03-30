@@ -19,6 +19,9 @@ case "$BUILD_TARGET" in
 "android")
 	mkdir build
 	;;
+"emscripten")
+	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -DEMSCRIPTEN_BUILD=ON ..
+	;;
 *)
 	mkdir build && cd build && cmake ..
 	;;
