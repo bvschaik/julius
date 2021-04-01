@@ -17,7 +17,7 @@
 
 #define MAX_SENTIMENT_FROM_EXTRA_ENTERTAINMENT 24
 #define MAX_SENTIMENT_FROM_EXTRA_FOOD 24
-#define DECENT_HOUSING_LEVEL HOUSE_LARGE_CASA
+#define DECENT_HOUSING_LEVEL HOUSE_SMALL_INSULA
 #define UNEMPLOYMENT_THRESHHOLD 5
 #define UNEMPLOYMENT_MODIFIER 3
 #define TAX_MODIFIER_POSITIVE_CURVE 0.6
@@ -25,10 +25,10 @@
 #define WAGE_NEGATIVE_MODIFIER 3
 #define WAGE_POSITIVE_MODIFIER 2
 #define BASE_TAX_RATE 6
-#define SQUALOR_MULTIPLIER 2
+#define SQUALOR_MULTIPLIER 3
 #define SENTIMENT_PER_ENTERTAINMENT 1
 #define SENTIMENT_PER_EXTRA_FOOD 12
-
+#define BONUS_SENTIMENT_POORER_PEOPLE 20
 
 int city_sentiment(void)
 {
@@ -94,9 +94,10 @@ int city_sentiment_blessing_festival_sentiment_boost(void)
     return city_data.sentiment.blessing_festival_sentiment_boost;
 }
 
-void decrement_blessing_festival_boost(void) {
+void decrement_blessing_festival_boost(void)
+{
     double boost = city_data.sentiment.blessing_festival_sentiment_boost;
-    city_data.sentiment.blessing_festival_sentiment_boost = (int)floor(boost * 0.84);
+    city_data.sentiment.blessing_festival_sentiment_boost = (int) floor(boost * 0.84);
 }
 
 static int get_sentiment_penalty_for_tent_dwellers(void)
@@ -186,12 +187,14 @@ static int get_sentiment_contribution_employment(void)
     }
 }
 
-static int calc_economy_modifier_wage(void) {
+static int calc_economy_modifier_wage(void)
+{
     int wage_differential = (city_data.labor.wages - city_data.labor.wages_rome);
     return (wage_differential > 0 ? wage_differential * WAGE_POSITIVE_MODIFIER : wage_differential * WAGE_NEGATIVE_MODIFIER);
 }
 
-static int calc_economy_modifier_unemployment(void) {
+static int calc_economy_modifier_unemployment(void)
+{
     int unemployment_penalty = 0;
     if (city_data.labor.unemployment_percentage > UNEMPLOYMENT_THRESHHOLD) {
         unemployment_penalty = ((city_data.labor.unemployment_percentage - UNEMPLOYMENT_THRESHHOLD) / UNEMPLOYMENT_MODIFIER) * -1;
@@ -199,26 +202,27 @@ static int calc_economy_modifier_unemployment(void) {
     return unemployment_penalty;
 }
 
-static int calc_economy_modifier_tax(void) {
-    double tax_differential = (double)city_data.finance.tax_percentage - BASE_TAX_RATE;
+static int calc_economy_modifier_tax(void)
+{
+    double tax_differential = (double) city_data.finance.tax_percentage - BASE_TAX_RATE;
     double result = 0.0;
     if (tax_differential > 0.0) {
         result = (pow(tax_differential, 2.0) * (TAX_MODIFIER_NEGATIVE_CURVE)) * -1;
-        return (int)floor(result);
-    }
-    else if (tax_differential < 0.0) {
+        return (int) floor(result);
+    } else if (tax_differential < 0.0) {
         result = (pow(tax_differential, 2.0) * (TAX_MODIFIER_POSITIVE_CURVE));
-        return (int)floor(result);
+        return (int) floor(result);
     }
     return 0;
 }
 
-static int calc_average_housing_level(void) {
+static int calc_average_housing_level(void)
+{
     int avg = 0;
     int num_houses = 0;
 
     for (int i = 1; i < building_count(); i++) {
-        building* b = building_get(i);
+        building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
             avg += b->subtype.house_level;
             if (b->subtype.house_level >= HOUSE_SMALL_VILLA) {
@@ -231,26 +235,29 @@ static int calc_average_housing_level(void) {
             }
             num_houses++;
         }
-    }        
+    }
 
     if (num_houses) {
         avg = avg / num_houses;
     }
 
-    return avg * SQUALOR_MULTIPLIER;
+    return avg;
 }
 
-static int calc_scaling_housing_penalty(int house_level, int average) {
-    int penalty = (average - (house_level * 2)) * 2;
-    return (penalty > 0) ? penalty * -1 : 0;
+static int calc_scaling_housing_penalty(int house_level, int average)
+{
+    int penalty = (average - house_level) * 2 * SQUALOR_MULTIPLIER;
+    return (penalty > 0) ? penalty : 0;
 }
 
-static int calc_scaling_housing_bonus(int house_level, int average) {
+static int calc_scaling_housing_bonus(int house_level, int average)
+{
     int bonus = (house_level - average) * 2;
     return (bonus > 0) ? bonus : 0;
 }
 
-static int calculate_extra_ent_bonus(int entertainment, int required) {
+static int calculate_extra_ent_bonus(int entertainment, int required)
+{
     int extra = (entertainment - required) * SENTIMENT_PER_ENTERTAINMENT;
     if (extra > 0) {
         return calc_bound(extra, 0, MAX_SENTIMENT_FROM_EXTRA_ENTERTAINMENT);
@@ -258,7 +265,8 @@ static int calculate_extra_ent_bonus(int entertainment, int required) {
     return 0;
 }
 
-static int calculate_extra_food_bonus(int types, int required) {
+static int calculate_extra_food_bonus(int types, int required)
+{
     int extra = (types - required * SENTIMENT_PER_EXTRA_FOOD);
     if (extra > 0) {
         return calc_bound(extra, 0, MAX_SENTIMENT_FROM_EXTRA_FOOD);
@@ -271,6 +279,7 @@ void city_sentiment_update(void)
     city_population_check_consistency();
 
     int default_sentiment = difficulty_sentiment();
+    int small_city_sentiment = calc_bound(default_sentiment, 60, default_sentiment);
     int houses_calculated = 0;
     int sentiment_contribution_taxes = calc_economy_modifier_tax();
     int sentiment_contribution_wages = calc_economy_modifier_wage();
@@ -280,7 +289,7 @@ void city_sentiment_update(void)
     int average_squalor_penalty = 0;
 
     for (int i = 1; i < building_count(); i++) {
-        building* b = building_get(i);
+        building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
             continue;
         }
@@ -290,42 +299,39 @@ void city_sentiment_update(void)
         }
         if (city_data.population.population < 300) {
             // small town has no complaints
-            b->sentiment.house_happiness = default_sentiment;
-            if (default_sentiment < 50) {
-                // Fix very hard immigration bug: give a boost for Very Hard difficulty so that
-                // immigration is not halted simply because you are between pop 200 and 300
-                b->sentiment.house_happiness += 50 - default_sentiment;
-            }
+            b->sentiment.house_happiness = small_city_sentiment;
             continue;
         }
 
         int sentiment = default_sentiment;
         int squalor_penalty = 0;
-        int ent_bonus = 0;
-        int food_bonus = 0;
-        
+
         sentiment += sentiment_contribution_taxes;
-        
+
         if (b->subtype.house_level <= HOUSE_GRAND_INSULA) {
             sentiment += sentiment_contribution_wages;
         }
         if (b->subtype.house_level < DECENT_HOUSING_LEVEL) {
             squalor_penalty = calc_scaling_housing_penalty(b->subtype.house_level, average_housing_level);
-            sentiment += squalor_penalty;
-            average_squalor_penalty += squalor_penalty * -1;
-
+            sentiment -= squalor_penalty;
+            sentiment += BONUS_SENTIMENT_POORER_PEOPLE;
+            average_squalor_penalty += squalor_penalty;
+        } else {
+            sentiment += calc_scaling_housing_bonus(b->subtype.house_level, average_housing_level);
         }
-        sentiment += calc_scaling_housing_bonus(b->subtype.house_level, average_housing_level);
-        ent_bonus += calculate_extra_ent_bonus(b->data.house.entertainment, model_get_house(b->subtype.house_level)->entertainment);
-        food_bonus += calculate_extra_food_bonus(b->data.house.num_foods, model_get_house(b->subtype.house_level)->food_types);
+        int ent_bonus = calculate_extra_ent_bonus(b->data.house.entertainment,
+            model_get_house(b->subtype.house_level)->entertainment);
+        int food_bonus = calculate_extra_food_bonus(b->data.house.num_foods,
+            model_get_house(b->subtype.house_level)->food_types);
 
         sentiment += ent_bonus;
         sentiment += food_bonus;
 
         sentiment += blessing_festival_sentiment_boost;
-        
+
         sentiment = calc_bound(sentiment, 0, 100);
-        b->sentiment.house_happiness = calc_bound((sentiment + b->sentiment.house_happiness) / 2, 0, 100); // sentiment changes to an average of current sentiment and new calculated value
+        // sentiment changes to an average of current sentiment and new calculated value
+        b->sentiment.house_happiness = calc_bound((sentiment + b->sentiment.house_happiness) / 2, 0, 100);
         houses_calculated++;
 
         int worst_sentiment = 0;
@@ -365,7 +371,7 @@ void city_sentiment_update(void)
     int total_pop = 0;
     int total_houses = 0;
     for (int i = 1; i < building_count(); i++) {
-        building* b = building_get(i);
+        building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
             total_pop += b->house_population;
             total_houses++;
