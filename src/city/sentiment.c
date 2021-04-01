@@ -352,11 +352,9 @@ void city_sentiment_update(void)
             if (sentiment < 80) {
                 if (ent_bonus < SENTIMENT_PER_EXTRA_FOOD || ent_bonus < food_bonus) {
                     b->house_sentiment_message = SUGGEST_MORE_ENT;
-                }
-                else if (food_bonus < MAX_SENTIMENT_FROM_EXTRA_FOOD && b->data.house.num_foods < 3) {
+                } else if (food_bonus < MAX_SENTIMENT_FROM_EXTRA_FOOD && b->data.house.num_foods < 3) {
                     b->house_sentiment_message = SUGGEST_MORE_FOOD;
-                }
-                else {
+                } else {
                     b->house_sentiment_message = LOW_MOOD_CAUSE_NONE;
                 }
             }
@@ -390,11 +388,9 @@ void city_sentiment_update(void)
             city_data.sentiment.message_delay = 3;
             if (city_data.sentiment.value < 35) {
                 city_message_post(0, MESSAGE_PEOPLE_ANGRY, 0, 0);
-            }
-            else if (city_data.sentiment.value < 40) {
+            } else if (city_data.sentiment.value < 40) {
                 city_message_post(0, MESSAGE_PEOPLE_UNHAPPY, 0, 0);
-            }
-            else {
+            } else {
                 city_message_post(0, MESSAGE_PEOPLE_DISGRUNTLED, 0, 0);
             }
         }
@@ -420,5 +416,3 @@ void city_sentiment_update(void)
     }
     city_data.sentiment.previous_value = city_data.sentiment.value;
 }
-
-
