@@ -61,8 +61,18 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
     }
     int happy_bolts = city_god_happy_bolts(god);
     for (int i = 0; i < happy_bolts; i++) {
-        // Placeholder graphic
         image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Happy God Icon"), 10 * i + width + 460, y_offset - 4);
+    }
+}
+
+static void draw_oracle_row(void)
+{
+    lang_text_draw(59, 8, 40, 166, FONT_NORMAL_WHITE);
+    text_draw_number_centered(building_count_total(BUILDING_ORACLE), 230, 166, 50, FONT_NORMAL_WHITE);
+    if (building_count_active(BUILDING_PANTHEON)) {
+        text_draw_number_centered(building_count_total(BUILDING_NYMPHAEUM) + building_count_active(BUILDING_PANTHEON), 290, 166, 50, FONT_NORMAL_GREEN);
+    } else {
+        text_draw_number_centered(building_count_total(BUILDING_NYMPHAEUM), 290, 166, 50, FONT_NORMAL_WHITE);
     }
 }
 
@@ -139,11 +149,7 @@ static int draw_background(void)
     draw_god_row(GOD_VENUS, 146, BUILDING_SMALL_TEMPLE_VENUS, BUILDING_LARGE_TEMPLE_VENUS, BUILDING_GRAND_TEMPLE_VENUS);
 
     // oracles
-    lang_text_draw(59, 8, 40, 166, FONT_NORMAL_WHITE);
-    if (building_count_active(BUILDING_PANTHEON)) {
-        text_draw_number_centered(building_count_active(BUILDING_PANTHEON), 290, 166, 50, FONT_NORMAL_GREEN);
-    }
-    text_draw_number_centered(building_count_total(BUILDING_ORACLE), 230, 166, 50, FONT_NORMAL_WHITE);
+    draw_oracle_row();
     
     city_gods_calculate_least_happy();
 
