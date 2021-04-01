@@ -45,6 +45,10 @@ int city_culture_get_theatre_person_coverage(void);
 int city_culture_get_school_person_coverage(void);
 int city_culture_get_library_person_coverage(void);
 int city_culture_get_academy_person_coverage(void);
+int city_culture_get_tavern_person_coverage(void);
+int city_culture_get_ampitheatre_person_coverage(void);
+int city_culture_get_arena_person_coverage(void);
+
 
 
 void city_culture_save_state(buffer *buf);
