@@ -66,6 +66,8 @@ static const city_overlay *get_city_overlay(void)
             return city_overlay_for_theater();
         case OVERLAY_AMPHITHEATER:
             return city_overlay_for_amphitheater();
+        case OVERLAY_ARENA:
+            return city_overlay_for_arena();
         case OVERLAY_COLOSSEUM:
             return city_overlay_for_colosseum();
         case OVERLAY_HIPPODROME:

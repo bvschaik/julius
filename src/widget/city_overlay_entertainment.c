@@ -25,9 +25,14 @@ static int show_building_amphitheater(const building *b)
         || b->type == BUILDING_AMPHITHEATER;
 }
 
+static int show_building_arena(const building *b)
+{
+    return b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_LION_HOUSE || b->type == BUILDING_ARENA;
+}
+
 static int show_building_colosseum(const building *b)
 {
-    return b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_LION_HOUSE || b->type == BUILDING_COLOSSEUM || b->type == BUILDING_ARENA;
+    return b->type == BUILDING_GLADIATOR_SCHOOL || b->type == BUILDING_LION_HOUSE || b->type == BUILDING_COLOSSEUM;
 }
 
 static int show_building_hippodrome(const building *b)
@@ -72,10 +77,20 @@ static int show_figure_amphitheater(const figure *f)
     return 0;
 }
 
+static int show_figure_arena(const figure *f)
+{
+    if (f->type == FIGURE_GLADIATOR) {
+        return get_entertainment_building(f)->type == BUILDING_ARENA;
+    } else if (f->type == FIGURE_LION_TAMER) {
+        return 1;
+    }
+    return 0;
+}
+
 static int show_figure_colosseum(const figure *f)
 {
     if (f->type == FIGURE_GLADIATOR) {
-        return get_entertainment_building(f)->type == BUILDING_COLOSSEUM || get_entertainment_building(f)->type == BUILDING_ARENA;
+        return get_entertainment_building(f)->type == BUILDING_COLOSSEUM;
     } else if (f->type == FIGURE_LION_TAMER) {
         return 1;
     }
@@ -107,10 +122,14 @@ static int get_column_height_amphitheater(const building *b)
     return b->house_size && b->data.house.amphitheater_actor ? b->data.house.amphitheater_actor / 10 : NO_COLUMN;
 }
 
+static int get_column_height_arena(const building *b)
+{
+    return b->house_size && b->house_arena_gladiator ? b->house_arena_gladiator / 10 : NO_COLUMN;
+}
+
 static int get_column_height_colosseum(const building *b)
 {
-    int coverage = (b->data.house.colosseum_gladiator > b->house_arena_gladiator) ? b->data.house.colosseum_gladiator : b->house_arena_gladiator;
-    return b->house_size && coverage ? coverage / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.colosseum_gladiator ? b->data.house.colosseum_gladiator / 10 : NO_COLUMN;
 }
 
 static int get_column_height_hippodrome(const building *b)
@@ -282,6 +301,22 @@ const city_overlay *city_overlay_for_amphitheater(void)
         get_column_height_amphitheater,
         0,
         get_tooltip_amphitheater,
+        0,
+        0
+    };
+    return &overlay;
+}
+
+const city_overlay *city_overlay_for_arena(void)
+{
+    static city_overlay overlay = {
+        OVERLAY_ARENA,
+        COLUMN_TYPE_ACCESS,
+        show_building_arena,
+        show_figure_arena,
+        get_column_height_arena,
+        0,
+        get_tooltip_colosseum,
         0,
         0
     };

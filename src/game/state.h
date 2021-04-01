@@ -30,6 +30,7 @@ enum {
     OVERLAY_ROADS = 30,
     OVERLAY_LEVY = 31,
     OVERLAY_TAVERN = 32,
+    OVERLAY_ARENA = 33,
 };
 
 void game_state_init(void);
