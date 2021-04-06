@@ -49,7 +49,7 @@ case "$BUILD_TARGET" in
 	fi
 	;;
 "emscripten")
-cd build && make -j4
+	cd build && make -j4
 	;;
 *)
 	cd build && make -j4 && make test

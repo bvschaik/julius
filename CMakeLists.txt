@@ -11,6 +11,9 @@ endif()
 
 option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
 option(SYSTEM_LIBS "Use system libraries when available." ON)
+option(EMSCRIPTEN_LOAD_SDL_PORTS "Load SDL and SDL_mixer emscripten ports instead of compiling them" OFF)
+option(LINK_MPG123 "Link mpg123 statically to Julius instead of relying on a library." OFF)
+
 cmake_dependent_option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF "NOT MSVC" OFF)
 cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT MSVC; NOT VITA_BUILD" OFF)
 cmake_dependent_option(ANDROID_BUILD "Build for the Android environment." OFF "NOT MSVC; NOT VITA_BUILD; NOT SWITCH_BUILD" OFF)
@@ -619,35 +622,41 @@ set(SOURCE_FILES
     ${EMSCRIPTEN_FILES}
 )
 
-function(GET_SDL_EXT_DIR result module)
-    if(NOT module STREQUAL "")
-        set(module "_${module}")
-    endif()
-    set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
-    file(GLOB children
-        RELATIVE ${SDL_LOCATION}
-        CONFIGURE_DEPENDS
-        ${SDL_LOCATION}/SDL${module}
-        ${SDL_LOCATION}/SDL2${module}
-        ${SDL_LOCATION}/SDL${module}-*
-        ${SDL_LOCATION}/SDL2${module}-*
-    )
-    foreach(child ${children})
-        if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
-            set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
-            break()
-        endif()
-    endforeach()
-endfunction()
-
-if(EMSCRIPTEN_BUILD)
+if(EMSCRIPTEN_BUILD AND EMSCRIPTEN_LOAD_SDL_PORTS)
     set(USE_FLAGS "-s USE_SDL=2 -s USE_SDL_MIXER=2")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
-    set(CMAKE_EXECUTABLE_SUFFIX .html)
 else()
+    function(GET_SDL_EXT_DIR result module)
+        if(NOT module STREQUAL "")
+            set(module "_${module}")
+        endif()
+        set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
+        file(GLOB children
+            RELATIVE ${SDL_LOCATION}
+            CONFIGURE_DEPENDS
+            ${SDL_LOCATION}/SDL${module}
+            ${SDL_LOCATION}/SDL2${module}
+            ${SDL_LOCATION}/SDL${module}-*
+            ${SDL_LOCATION}/SDL2${module}-*
+        )
+        foreach(child ${children})
+            if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
+                set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
+                break()
+            endif()
+        endforeach()
+    endfunction()
+
     find_package(SDL2 REQUIRED)
     find_package(SDL2_mixer REQUIRED)
+    if(EMSCRIPTEN_BUILD)
+        set(LINK_MPG123 true)
+    endif()
+endif()
+
+if(LINK_MPG123)
+    find_package(MPG123 REQUIRED)
 endif()
 
 if(ANDROID_BUILD)
@@ -656,8 +665,9 @@ else()
     add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
 endif()
 
-if (EMSCRIPTEN_BUILD)
-    set_target_properties(${SHORT_NAME} PROPERTIES LINK_FLAGS "-lidbfs.js -s SINGLE_FILE=1 -s DEMANGLE_SUPPORT=1 --shell-file ${PROJECT_SOURCE_DIR}/res/shell.html -s INITIAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=0 -s SAFE_HEAP=1 -s INVOKE_RUN=0 -s 'EXPORTED_FUNCTIONS=[\"_main\"]' -s 'EXPORTED_RUNTIME_METHODS=[\"callMain\",\"FS\"]'  --bind")
+if(EMSCRIPTEN_BUILD)
+    set(CMAKE_EXECUTABLE_SUFFIX .html)
+    set_target_properties(${SHORT_NAME} PROPERTIES LINK_FLAGS "-lidbfs.js -s SINGLE_FILE=1 -s DEMANGLE_SUPPORT=1 -s DYNCALLS=1 --shell-file ${PROJECT_SOURCE_DIR}/res/shell.html -s INITIAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=0 -s SAFE_HEAP=1 -s INVOKE_RUN=0 -s 'EXPORTED_FUNCTIONS=[\"_main\"]' -s 'EXPORTED_RUNTIME_METHODS=[\"callMain\",\"FS\"]'  --bind")
 endif()
 
 if(MSVC)
@@ -847,10 +857,13 @@ else()
         target_link_libraries(${SHORT_NAME} m)
     endif()
     if(ANDROID_BUILD)
-        find_library(log-lib log)
-        target_link_libraries(${SHORT_NAME} ${log-lib})
+        find_library(LOG_LIB log)
+        target_link_libraries(${SHORT_NAME} ${LOG_LIB})
     endif()
-    target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
+    if(LINK_MPG123)
+        target_link_libraries(${SHORT_NAME} ${MPG123_LIBRARY})
+    endif()
+    target_link_libraries(${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
     if(NOT APPLE AND NOT ANDROID_BUILD)
         install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
     endif()

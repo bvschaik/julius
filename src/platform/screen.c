@@ -15,6 +15,8 @@
 
 #include "SDL.h"
 
+#include <stdlib.h>
+
 static struct {
     SDL_Window *window;
     SDL_Renderer *renderer;
@@ -26,12 +28,12 @@ static struct {
     int x;
     int y;
     int centered;
-} window_pos = {0, 0, 1};
+} window_pos = { 0, 0, 1 };
 
 static struct {
     const int WIDTH;
     const int HEIGHT;
-} MINIMUM = {640, 480};
+} MINIMUM = { 640, 480 };
 
 static int scale_percentage = 100;
 static color_t *framebuffer;
@@ -411,11 +413,11 @@ color_t *system_create_framebuffer(int width, int height)
 {
 #ifdef __vita__
     int pitch;
-    SDL_LockTexture(SDL.texture, NULL, (void **)&framebuffer, &pitch);
+    SDL_LockTexture(SDL.texture, NULL, (void **) &framebuffer, &pitch);
     SDL_UnlockTexture(SDL.texture);
 #else
     free(framebuffer);
-    framebuffer = (color_t *)malloc((size_t)width * height * sizeof(color_t));
+    framebuffer = (color_t *) malloc((size_t) width * height * sizeof(color_t));
 #endif
     return framebuffer;
 }

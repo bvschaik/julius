@@ -436,7 +436,13 @@
           // As a default initial behavior, pop up an alert when webgl context is lost. To make your
           // application robust, you may want to override this behavior before shipping!
           // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
-          canvas.addEventListener("webglcontextlost", function(e) { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
+          canvas.addEventListener("webglcontextlost", function(e) {
+            Module.setStatus('WebGL context lost. Please click to reload the page.');
+            e.preventDefault();
+            addInfoElementClickEvent(function() {
+              window.location = window.location;
+            });
+          }, false);
 
           return canvas;
         })(),
@@ -668,7 +674,7 @@
             Module.setStatus("Error creating filesystem:<br><br>" + err +
               "<br><br>Please click to refresh your browser and select your C3 folder again");
             addInfoElementClickEvent(function() {
-              location.reload();
+              window.location = window.location;
             });
           };
           DBDeleteRequest.onerror = function(error) {
@@ -734,7 +740,7 @@
             Module.setStatus("Error loading files:<br><br>" + reader.error +
               "<br><br>Please click to refresh your browser and select your C3 folder again");
             addInfoElementClickEvent(function() {
-              location.reload();
+              window.location = window.location;
             });
           }
           reader.readAsArrayBuffer(file);
@@ -793,7 +799,7 @@
                   Module.setStatus("Error loading files:<br><br>" + e +
                     "<br><br>Please click to refresh your browser and select your C3 folder again");
                   addInfoElementClickEvent(function() {
-                    location.reload();
+                    window.location = window.location;
                   });
                 });
               } 
@@ -803,7 +809,7 @@
             Module.setStatus("Error opening zip file:<br><br>" + e +
               "<br><br>Please click to refresh your browser and select your C3 folder again");
             addInfoElementClickEvent(function() {
-              location.reload();
+              window.location = window.location;
             });
           });
         },
@@ -848,7 +854,7 @@
                     Module.setStatus("Error loading files:<br><br>" + e +
                       "<br><br>Please click to refresh your browser and select your C3 folder again");
                     addInfoElementClickEvent(function() {
-                      location.reload();
+                      window.location = window.location;
                     });
                     return;
                   }
@@ -916,7 +922,7 @@
       window.onerror = function(error) {
         Module.setStatus("Unhandled error:<br><br>" + error + "<br><br>Please click to refresh your browser");
         addInfoElementClickEvent(function() {
-          location.reload();
+          window.location = window.location;
         });
         Module.setStatus = function() {};
       }
