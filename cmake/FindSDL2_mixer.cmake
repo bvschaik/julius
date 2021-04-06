@@ -64,6 +64,8 @@ ELSE()
     endif()
 
     SET(SDL2_SEARCH_PATHS
+        ${SDL_MIXER_EXT_DIR}
+        ${SDL_MINGW_EXT_DIR}
         ~/Library/Frameworks
         /Library/Frameworks
         /usr/local
@@ -73,8 +75,6 @@ ELSE()
         /opt/csw # Blastwave
         /opt
         /boot/system/develop/headers/SDL2 # Haiku
-        ${SDL_MIXER_EXT_DIR}
-        ${SDL_MINGW_EXT_DIR}
         ${CMAKE_FIND_ROOT_PATH}
     )
 
@@ -103,6 +103,7 @@ ELSE()
           ENV SDL2DIR
         PATH_SUFFIXES include include/SDL2
         PATHS ${SDL2_SEARCH_PATHS}
+        NO_CMAKE_FIND_ROOT_PATH
       )
     endif()
 
@@ -117,6 +118,7 @@ ELSE()
         ENV SDL2DIR
       PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
       PATHS ${SDL2_SEARCH_PATHS}
+      NO_CMAKE_FIND_ROOT_PATH
     )
 ENDIF()
 
