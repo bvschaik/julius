@@ -5,18 +5,22 @@
 #include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/log.h"
 #include "map/building_tiles.h"
 #include "map/grid.h"
 #include "map/orientation.h"
 #include "map/road_access.h"
 #include "map/terrain.h"
 
+#include <stdlib.h>
+#include <string.h>
+
+#define MONUMENTS_SIZE_STEP 100
+#define MAX_MONUMENT_DELIVERIES 1000
+#define MODULES_PER_TEMPLE 2
 #define INFINITE 10000
 
-static int monuments[MAX_MONUMENTS];
-static monument_delivery monument_deliveries[MAX_MONUMENT_DELIVERIES];
-
-static int grand_temple_resources[6][RESOURCE_MAX] = { 
+static int grand_temple_resources[6][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 20, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 16, 0, 0, 0 },
@@ -24,7 +28,7 @@ static int grand_temple_resources[6][RESOURCE_MAX] = {
 	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
-static int pantheon_resources[6][RESOURCE_MAX] = { 
+static int pantheon_resources[6][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 16, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 32, 0, 0, 0 },
@@ -32,28 +36,28 @@ static int pantheon_resources[6][RESOURCE_MAX] = {
 	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
-static int lighthouse_resources[5][RESOURCE_MAX] = { 
+static int lighthouse_resources[5][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 12, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 8, 0, 0, 0 },
 	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 20, 8, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
-static int colosseum_resources[5][RESOURCE_MAX] = { 
+static int colosseum_resources[5][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 16, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 16, 0, 0, 0 },
 	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 16, 12, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
-static int hippodrome_resources[5][RESOURCE_MAX] = { 
+static int hippodrome_resources[5][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 32, 0, 0, 0 },
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 32, 0, 0, 0 },
 	{ 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 46, 32, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
-static int oracle_lt_resources[2][RESOURCE_MAX] = { 
+static int oracle_lt_resources[2][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
@@ -61,33 +65,38 @@ static int large_temple_resources[2][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
-static int nymphaeum_resources[2][RESOURCE_MAX] = { 
+static int nymphaeum_resources[2][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
-static int small_mausoleum_resources[2][RESOURCE_MAX] = { 
+static int small_mausoleum_resources[2][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
-static int large_mausoleum_resources[2][RESOURCE_MAX] = { 
+static int large_mausoleum_resources[2][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
+typedef struct {
+	int walker_id;
+	int destination_id;
+	int resource;
+	int cartloads;
+} monument_delivery;
+
 static struct {
+	int *monuments;
+	int monuments_array_size;
 	int monuments_number;
 	int unfinished_monuments;
+	monument_delivery monument_deliveries[MAX_MONUMENT_DELIVERIES];
 } data;
 
 int building_monument_deliver_resource(building *b, int resource)
 {
-	if (b->id <= 0) {
-		return 0;
-	}
-	if (!building_monument_is_monument(b)) {
-		return 0;
-	}
-	if (b->data.monument.resources_needed[resource] <= 0) {
+	if (b->id <= 0 || building_monument_is_monument(b) ||
+		b->data.monument.resources_needed[resource] <= 0) {
 		return 0;
 	}
 
@@ -100,7 +109,6 @@ int building_monument_deliver_resource(building *b, int resource)
 	while (b->next_part_building_id) {
 		b = building_get(b->next_part_building_id);
 		b->data.monument.resources_needed[resource]--;
-
 	}
 	return 1;
 }
@@ -176,11 +184,11 @@ int building_monument_access_point(building *b, map_point *dst)
 		case BUILDING_ORACLE:
 		case BUILDING_SMALL_MAUSOLEUM:
 			dst->x = b->x;
-			dst->y = b->y;	
+			dst->y = b->y;
 			return 1;
 		case BUILDING_HIPPODROME:
 			dst->x = b->x;
-			dst->y = b->y;		
+			dst->y = b->y;
 			return 1;
 	}
 	return 0;
@@ -188,13 +196,9 @@ int building_monument_access_point(building *b, map_point *dst)
 
 int building_monument_add_module(building *b, int module_type)
 {
-	if (!building_monument_is_monument(b)) {
-		return 0;
-	}
-	if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
-		return 0;
-	}
-	if (b->data.monument.upgrades) {
+	if (!building_monument_is_monument(b) ||
+		b->data.monument.monument_phase != MONUMENT_FINISHED ||
+		b->data.monument.upgrades) {
 		return 0;
 	}
 
@@ -279,32 +283,26 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
 	int min_dist = INFINITE;
 	building *min_building = 0;
 	for (int i = 0; i < data.monuments_number; i++) {
-		if (!monuments[i]) {
+		if (!data.monuments[i]) {
 			continue;
 		}
-		building *b = building_get(monuments[i]);
-		if (!building_monument_is_monument(b)) {
+		building *b = building_get(data.monuments[i]);
+		if (!building_monument_is_monument(b) ||
+			b->data.monument.monument_phase == MONUMENT_FINISHED ||
+			b->data.monument.monument_phase < MONUMENT_START ||
+			(!resource && building_monument_needs_resources(b))) {
 			continue;
 		}
-		if (b->data.monument.monument_phase == MONUMENT_FINISHED || b->data.monument.monument_phase < MONUMENT_START) {
-			continue;
-		}
-		if (!resource) {
-			if (building_monument_needs_resources(b)) {
-				continue;
-			}
-		} 
+		short needed = b->data.monument.resources_needed[resource];
 		if ((b->next_part_building_id || b->prev_part_building_id) &&
-			(b->data.monument.resources_needed[resource] - building_monument_resource_in_delivery_multipart(b, resource)) <= 0) {
+			(needed - building_monument_resource_in_delivery_multipart(b, resource)) <= 0) {
 			continue;
 		}
-		if ((b->data.monument.resources_needed[resource] - building_monument_resource_in_delivery(b->id,resource)) <= 0) {
+		if ((needed - building_monument_resource_in_delivery(b->id, resource)) <= 0) {
 			continue;
 		}
-		if (!map_has_road_access(b->x, b->y, b->size, 0)) {
-			continue;
-		}
-		if (b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
+		if (!map_has_road_access(b->x, b->y, b->size, 0) ||
+			b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
 			continue;
 		}
 		int dist = calc_maximum_distance(b->x, b->y, x, y);
@@ -367,380 +365,389 @@ int building_monument_resources_needed_for_monument_type(int building_type, int 
 void building_monument_initialize(building *b)
 {
 	switch (b->type) {
-	case BUILDING_ORACLE:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					image_group(GROUP_BUILDING_ORACLE), TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-		}
-		break;
-	case BUILDING_LARGE_TEMPLE_CERES:
-	case BUILDING_LARGE_TEMPLE_NEPTUNE:
-	case BUILDING_LARGE_TEMPLE_MERCURY:
-	case BUILDING_LARGE_TEMPLE_MARS:
-	case BUILDING_LARGE_TEMPLE_VENUS:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size, image_group(b->type + 6) + 1, TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-		}
-		break;
-	case BUILDING_GRAND_TEMPLE_CERES:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 02"),
-					TERRAIN_BUILDING);
-				break;
-			case 3:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 03"),
-					TERRAIN_BUILDING);
-				break;
-			case 4:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 04"),
-					TERRAIN_BUILDING);
-				break;
-			case 5:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 05"),
-					TERRAIN_BUILDING);
-				break;
-			case 6:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex On"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-		}
-		break;
-	case BUILDING_GRAND_TEMPLE_NEPTUNE:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 02"),
-					TERRAIN_BUILDING);
-				break;
-			case 3:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 03"),
-					TERRAIN_BUILDING);
-				break;
-			case 4:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 04"),
-					TERRAIN_BUILDING);
-				break;
-			case 5:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Const 05"),
-					TERRAIN_BUILDING);
-				break;
-			case 6:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex On"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-		}
-		break;
-	case BUILDING_GRAND_TEMPLE_MERCURY:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 02"),
-					TERRAIN_BUILDING);
-				break;
-			case 3:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 03"),
-					TERRAIN_BUILDING);
-				break;
-			case 4:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 04"),
-					TERRAIN_BUILDING);
-				break;
-			case 5:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Const 05"),
-					TERRAIN_BUILDING);
-				break;
-			case 6:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex On"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-		}
-		break;
-	case BUILDING_GRAND_TEMPLE_MARS:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 02"),
-					TERRAIN_BUILDING);
-				break;
-			case 3:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 03"), 
-					TERRAIN_BUILDING);
-				break;
-			case 4:
-				map_building_tiles_add(b->id, b->x, b->y, b->size, 
-					assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 04"),
-					TERRAIN_BUILDING);
-				break;
-			case 5:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 05"),
-					TERRAIN_BUILDING);
-				break;
-			case 6:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex On"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-		}
-		break;
-	case BUILDING_GRAND_TEMPLE_VENUS:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 02"),
-					TERRAIN_BUILDING);
-				break;
-			case 3:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 03"),
-					TERRAIN_BUILDING);
-				break;
-			case 4:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 04"),
-					TERRAIN_BUILDING);
-				break;
-			case 5:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 05"),
-					TERRAIN_BUILDING);
-				break;
-			case 6:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex On"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-		}
-		break;
-	case BUILDING_PANTHEON:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 02"),
-					TERRAIN_BUILDING);
-				break;
-			case 3:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 03"),
-					TERRAIN_BUILDING);			
-				break;
-			case 4:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 04"),
-					TERRAIN_BUILDING);			
-				break;
-			case 5:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 05"),
-					TERRAIN_BUILDING);			
-				break;
-			case 6:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon On"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-		}
-		break;
-	case BUILDING_LIGHTHOUSE:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 02"),
-					TERRAIN_BUILDING);
-				break;
-			case 3:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 03"),
-					TERRAIN_BUILDING);
-				break;
-			case 4:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 04"),
-					TERRAIN_BUILDING);
-				break;
-			case 5:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse ON"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-		}
-		break;
-	case BUILDING_COLOSSEUM:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 02"),
-					TERRAIN_BUILDING);
-				break;
-			case 3:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 03"),
-					TERRAIN_BUILDING);
-				break;
-			case 4:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 04"),
-					TERRAIN_BUILDING);
-				break;
-			case 5:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-		}
-		break;
-	case BUILDING_HIPPODROME:
-		switch (b->data.monument.monument_phase) {
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_orientation_update_buildings();
-				break;
-			case 3:
-				map_orientation_update_buildings();
-				break;
-			case 4:
-				map_orientation_update_buildings();
-				break;
-			case 5:
-				map_orientation_update_buildings();
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
+		case BUILDING_ORACLE:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						image_group(GROUP_BUILDING_ORACLE), TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
 			}
-		break;
-	case BUILDING_NYMPHAEUM:
-		switch (b->data.monument.monument_phase) 
-		{
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Nymphaeum ON"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-			default:
-				break;
+			break;
+		case BUILDING_LARGE_TEMPLE_CERES:
+		case BUILDING_LARGE_TEMPLE_NEPTUNE:
+		case BUILDING_LARGE_TEMPLE_MERCURY:
+		case BUILDING_LARGE_TEMPLE_MARS:
+		case BUILDING_LARGE_TEMPLE_VENUS:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						image_group(b->type + 6) + 1, TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
 			}
-		break;
-	case BUILDING_SMALL_MAUSOLEUM:
-		switch (b->data.monument.monument_phase)
-		{
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum S"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-			default:
-				break;
-		}
-		break;
-	case BUILDING_LARGE_MAUSOLEUM:
-		switch (b->data.monument.monument_phase)
-		{
-			case MONUMENT_FINISHED:
-				break;
-			case MONUMENT_START:
-				break;
-			case 2:
-				map_building_tiles_add(b->id, b->x, b->y, b->size,
-					assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum L"),
-					TERRAIN_BUILDING);
-				b->data.monument.monument_phase = MONUMENT_FINISHED;
-				break;
-			default:
-				break;
-		}
-		break;
+			break;
+		case BUILDING_GRAND_TEMPLE_CERES:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 02"),
+						TERRAIN_BUILDING);
+					break;
+				case 3:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 03"),
+						TERRAIN_BUILDING);
+					break;
+				case 4:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 04"),
+						TERRAIN_BUILDING);
+					break;
+				case 5:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 05"),
+						TERRAIN_BUILDING);
+					break;
+				case 6:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex On"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+			}
+			break;
+		case BUILDING_GRAND_TEMPLE_NEPTUNE:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
+						"Neptune Complex Const 02"),
+						TERRAIN_BUILDING);
+					break;
+				case 3:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
+						"Neptune Complex Const 03"),
+						TERRAIN_BUILDING);
+					break;
+				case 4:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
+						"Neptune Complex Const 04"),
+						TERRAIN_BUILDING);
+					break;
+				case 5:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
+						"Neptune Complex Const 05"),
+						TERRAIN_BUILDING);
+					break;
+				case 6:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
+						"Neptune Complex On"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+			}
+			break;
+		case BUILDING_GRAND_TEMPLE_MERCURY:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
+						"Mercury Complex Const 02"),
+						TERRAIN_BUILDING);
+					break;
+				case 3:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
+						"Mercury Complex Const 03"),
+						TERRAIN_BUILDING);
+					break;
+				case 4:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
+						"Mercury Complex Const 04"),
+						TERRAIN_BUILDING);
+					break;
+				case 5:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
+						"Mercury Complex Const 05"),
+						TERRAIN_BUILDING);
+					break;
+				case 6:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
+						"Mercury Complex On"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+			}
+			break;
+		case BUILDING_GRAND_TEMPLE_MARS:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 02"),
+						TERRAIN_BUILDING);
+					break;
+				case 3:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 03"),
+						TERRAIN_BUILDING);
+					break;
+				case 4:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 04"),
+						TERRAIN_BUILDING);
+					break;
+				case 5:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 05"),
+						TERRAIN_BUILDING);
+					break;
+				case 6:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex On"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+			}
+			break;
+		case BUILDING_GRAND_TEMPLE_VENUS:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 02"),
+						TERRAIN_BUILDING);
+					break;
+				case 3:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 03"),
+						TERRAIN_BUILDING);
+					break;
+				case 4:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 04"),
+						TERRAIN_BUILDING);
+					break;
+				case 5:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 05"),
+						TERRAIN_BUILDING);
+					break;
+				case 6:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex On"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+			}
+			break;
+		case BUILDING_PANTHEON:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 02"),
+						TERRAIN_BUILDING);
+					break;
+				case 3:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 03"),
+						TERRAIN_BUILDING);
+					break;
+				case 4:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 04"),
+						TERRAIN_BUILDING);
+					break;
+				case 5:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 05"),
+						TERRAIN_BUILDING);
+					break;
+				case 6:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon On"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+			}
+			break;
+		case BUILDING_LIGHTHOUSE:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 02"),
+						TERRAIN_BUILDING);
+					break;
+				case 3:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 03"),
+						TERRAIN_BUILDING);
+					break;
+				case 4:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 04"),
+						TERRAIN_BUILDING);
+					break;
+				case 5:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse ON"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+			}
+			break;
+		case BUILDING_COLOSSEUM:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 02"),
+						TERRAIN_BUILDING);
+					break;
+				case 3:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 03"),
+						TERRAIN_BUILDING);
+					break;
+				case 4:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 04"),
+						TERRAIN_BUILDING);
+					break;
+				case 5:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+			}
+			break;
+		case BUILDING_HIPPODROME:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_orientation_update_buildings();
+					break;
+				case 3:
+					map_orientation_update_buildings();
+					break;
+				case 4:
+					map_orientation_update_buildings();
+					break;
+				case 5:
+					map_orientation_update_buildings();
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+			}
+			break;
+		case BUILDING_NYMPHAEUM:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Nymphaeum ON"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+				default:
+					break;
+			}
+			break;
+		case BUILDING_SMALL_MAUSOLEUM:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum S"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+				default:
+					break;
+			}
+			break;
+		case BUILDING_LARGE_MAUSOLEUM:
+			switch (b->data.monument.monument_phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					map_building_tiles_add(b->id, b->x, b->y, b->size,
+						assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum L"),
+						TERRAIN_BUILDING);
+					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					break;
+				default:
+					break;
+			}
+			break;
 	}
 
 	if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
 		for (int resource = 0; resource < RESOURCE_MAX; resource++) {
 			b->data.monument.resources_needed[resource] =
-				building_monument_resources_needed_for_monument_type(b->type,resource,b->data.monument.monument_phase);
+				building_monument_resources_needed_for_monument_type(b->type, resource,
+				b->data.monument.monument_phase);
 		}
 	}
 }
 
-int building_monument_is_monument(const building *b) 
+int building_monument_is_monument(const building *b)
 {
 	return building_monument_type_is_monument(b->type);
 }
@@ -776,18 +783,18 @@ int building_monument_type_is_monument(building_type type)
 int building_monument_type_is_mini_monument(building_type type)
 {
 	switch (type) {
-	case BUILDING_ORACLE:
-	case BUILDING_LARGE_TEMPLE_CERES:
-	case BUILDING_LARGE_TEMPLE_NEPTUNE:
-	case BUILDING_LARGE_TEMPLE_MERCURY:
-	case BUILDING_LARGE_TEMPLE_MARS:
-	case BUILDING_LARGE_TEMPLE_VENUS:
-	case BUILDING_SMALL_MAUSOLEUM:
-	case BUILDING_LARGE_MAUSOLEUM:
-	case BUILDING_NYMPHAEUM:
-		return 1;
-	default:
-		return 0;
+		case BUILDING_ORACLE:
+		case BUILDING_LARGE_TEMPLE_CERES:
+		case BUILDING_LARGE_TEMPLE_NEPTUNE:
+		case BUILDING_LARGE_TEMPLE_MERCURY:
+		case BUILDING_LARGE_TEMPLE_MARS:
+		case BUILDING_LARGE_TEMPLE_VENUS:
+		case BUILDING_SMALL_MAUSOLEUM:
+		case BUILDING_LARGE_MAUSOLEUM:
+		case BUILDING_NYMPHAEUM:
+			return 1;
+		default:
+			return 0;
 	}
 }
 
@@ -816,7 +823,7 @@ int building_monument_needs_resource(building *b, int resource)
 int building_monument_phase(int phase)
 {
 	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = monuments[i];
+		int monument_id = data.monuments[i];
 		building *b = building_get(monument_id);
 		if (!building_monument_is_monument(b)) {
 			continue;
@@ -830,7 +837,7 @@ int building_monument_phase(int phase)
 int building_monument_get_venus_gt(void)
 {
 	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = monuments[i];
+		int monument_id = data.monuments[i];
 		building *b = building_get(monument_id);
 		if (b->type == BUILDING_GRAND_TEMPLE_VENUS) {
 			return monument_id;
@@ -842,7 +849,7 @@ int building_monument_get_venus_gt(void)
 int building_monument_get_neptune_gt(void)
 {
 	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = monuments[i];
+		int monument_id = data.monuments[i];
 		building *b = building_get(monument_id);
 		if (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE) {
 			return monument_id;
@@ -854,37 +861,36 @@ int building_monument_get_neptune_gt(void)
 int building_monument_monument_phases(int building_type)
 {
 	switch (building_type) {
-	case BUILDING_PANTHEON:
-	case BUILDING_GRAND_TEMPLE_CERES:
-	case BUILDING_GRAND_TEMPLE_MERCURY:
-	case BUILDING_GRAND_TEMPLE_NEPTUNE:
-	case BUILDING_GRAND_TEMPLE_MARS:
-	case BUILDING_GRAND_TEMPLE_VENUS:
-		return 6;
-	case BUILDING_LIGHTHOUSE:
-	case BUILDING_COLOSSEUM:
-	case BUILDING_HIPPODROME:
-		return 5;
-	case BUILDING_ORACLE:
-	case BUILDING_LARGE_TEMPLE_CERES:
-	case BUILDING_LARGE_TEMPLE_NEPTUNE:
-	case BUILDING_LARGE_TEMPLE_MERCURY:
-	case BUILDING_LARGE_TEMPLE_MARS:
-	case BUILDING_LARGE_TEMPLE_VENUS:
-	case BUILDING_LARGE_MAUSOLEUM:
-	case BUILDING_SMALL_MAUSOLEUM:
-	case BUILDING_NYMPHAEUM:
-		return 2;
-	default:
-		return 0;
-		break;
+		case BUILDING_PANTHEON:
+		case BUILDING_GRAND_TEMPLE_CERES:
+		case BUILDING_GRAND_TEMPLE_MERCURY:
+		case BUILDING_GRAND_TEMPLE_NEPTUNE:
+		case BUILDING_GRAND_TEMPLE_MARS:
+		case BUILDING_GRAND_TEMPLE_VENUS:
+			return 6;
+		case BUILDING_LIGHTHOUSE:
+		case BUILDING_COLOSSEUM:
+		case BUILDING_HIPPODROME:
+			return 5;
+		case BUILDING_ORACLE:
+		case BUILDING_LARGE_TEMPLE_CERES:
+		case BUILDING_LARGE_TEMPLE_NEPTUNE:
+		case BUILDING_LARGE_TEMPLE_MERCURY:
+		case BUILDING_LARGE_TEMPLE_MARS:
+		case BUILDING_LARGE_TEMPLE_VENUS:
+		case BUILDING_LARGE_MAUSOLEUM:
+		case BUILDING_SMALL_MAUSOLEUM:
+		case BUILDING_NYMPHAEUM:
+			return 2;
+		default:
+			return 0;
 	}
 }
 
 int building_monument_finish_monuments(void)
 {
 	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = monuments[i];
+		int monument_id = data.monuments[i];
 		building *b = building_get(monument_id);
 		if (!building_monument_is_monument(b)) {
 			continue;
@@ -946,26 +952,35 @@ int building_monument_progress(building *b)
 
 void building_monument_recalculate_monuments(void)
 {
-	for (int i = 0; i < MAX_MONUMENTS; i++) {
-		monuments[i] = 0;
+	if (!data.monuments) {
+		data.monuments = malloc(sizeof(int) * MONUMENTS_SIZE_STEP);
+		if (!data.monuments) {
+			log_error("Unable to allocate enough memory for monuments. The game will now crash.", 0, 0);
+		}
+		data.monuments_array_size = MONUMENTS_SIZE_STEP;
 	}
+	memset(data.monuments, 0, sizeof(int) * data.monuments_array_size);
+
 	data.monuments_number = 0;
 	data.unfinished_monuments = 0;
 
 	for (int i = 0; i < building_count(); i++) {
-		building* b = building_get(i);
+		building *b = building_get(i);
 		if (building_monument_is_monument(b)) {
-			data.monuments_number++;
+			if (data.monuments_number == data.monuments_array_size) {
+				data.monuments_array_size += MONUMENTS_SIZE_STEP;
+				int *new_monuments_array = realloc(data.monuments, data.monuments_array_size);
+				if (!new_monuments_array) {
+					log_error("Unable to allocate enough memory for monuments. The game will likely crash.", 0, 0);
+					return;
+				}
+				data.monuments = new_monuments_array;
+			}
 			if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
 				data.unfinished_monuments++;
 			}
-			for (int j = 0; j < MAX_MONUMENTS; j++) {
-				if (monuments[j]) {
-					continue;
-				}
-				monuments[j] = i;
-				break;
-			}
+			data.monuments[data.monuments_number] = i;
+			data.monuments_number++;
 		}
 	}
 }
@@ -973,22 +988,21 @@ void building_monument_recalculate_monuments(void)
 void building_monument_initialize_deliveries(void)
 {
 	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
-		monument_deliveries[i].destination_id = 0;
-		monument_deliveries[i].walker_id = 0;
-		monument_deliveries[i].resource = 0;
-		monument_deliveries[i].cartloads = 0;
+		data.monument_deliveries[i].destination_id = 0;
+		data.monument_deliveries[i].walker_id = 0;
+		data.monument_deliveries[i].resource = 0;
+		data.monument_deliveries[i].cartloads = 0;
 	}
 }
 
 int building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no)
 {
 	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
-		if (monument_deliveries[i].destination_id == 0)
-		{
-			monument_deliveries[i].destination_id = monument_id;
-			monument_deliveries[i].walker_id = figure_id;
-			monument_deliveries[i].resource = resource_id;
-			monument_deliveries[i].cartloads = loads_no;
+		if (data.monument_deliveries[i].destination_id == 0) {
+			data.monument_deliveries[i].destination_id = monument_id;
+			data.monument_deliveries[i].walker_id = figure_id;
+			data.monument_deliveries[i].resource = resource_id;
+			data.monument_deliveries[i].cartloads = loads_no;
 			return 1;
 		}
 	}
@@ -998,12 +1012,11 @@ int building_monument_add_delivery(int monument_id, int figure_id, int resource_
 int building_monument_remove_delivery(int figure_id)
 {
 	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
-		if (monument_deliveries[i].walker_id == figure_id)
-		{
-			monument_deliveries[i].destination_id = 0;
-			monument_deliveries[i].walker_id = 0;
-			monument_deliveries[i].resource = 0;
-			monument_deliveries[i].cartloads = 0;
+		if (data.monument_deliveries[i].walker_id == figure_id) {
+			data.monument_deliveries[i].destination_id = 0;
+			data.monument_deliveries[i].walker_id = 0;
+			data.monument_deliveries[i].resource = 0;
+			data.monument_deliveries[i].cartloads = 0;
 		}
 	}
 	return 0;
@@ -1013,27 +1026,27 @@ int building_monument_resource_in_delivery(int monument_id, int resource_id)
 {
 	int resources = 0;
 	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
-		if (monument_deliveries[i].destination_id == monument_id && monument_deliveries[i].resource == resource_id)
-		{
-			resources += monument_deliveries[i].cartloads;
+		if (data.monument_deliveries[i].destination_id == monument_id &&
+			data.monument_deliveries[i].resource == resource_id) {
+			resources += data.monument_deliveries[i].cartloads;
 		}
 	}
 	return resources;
 }
 
-int building_monument_resource_in_delivery_multipart(building* b, int resource_id)
+int building_monument_resource_in_delivery_multipart(building *b, int resource_id)
 {
 	int resources = 0;
-	
+
 	while (b->prev_part_building_id) {
 		b = building_get(b->prev_part_building_id);
 	}
 
 	while (b->id) {
 		for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
-			if (monument_deliveries[i].destination_id == b->id && monument_deliveries[i].resource == resource_id)
-			{
-				resources += monument_deliveries[i].cartloads;
+			if (data.monument_deliveries[i].destination_id == b->id &&
+				data.monument_deliveries[i].resource == resource_id) {
+				resources += data.monument_deliveries[i].cartloads;
 			}
 		}
 		b = building_get(b->next_part_building_id);
@@ -1046,8 +1059,8 @@ int building_monument_resource_in_delivery_multipart(building* b, int resource_i
 int building_monument_has_monument(int type)
 {
 	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = monuments[i];
-		building* b = building_get(monument_id);
+		int monument_id = data.monuments[i];
+		building *b = building_get(monument_id);
 		if (b->type != type) {
 			continue;
 		}
@@ -1059,12 +1072,12 @@ int building_monument_has_monument(int type)
 	return 0;
 }
 
-int building_monument_count_grand_temples(void) 
+int building_monument_count_grand_temples(void)
 {
 	int count = 0;
 	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = monuments[i];
-		building* b = building_get(monument_id);
+		int monument_id = data.monuments[i];
+		building *b = building_get(monument_id);
 		if (building_monument_is_grand_temple(b->type)) {
 			count++;
 		}
@@ -1075,7 +1088,7 @@ int building_monument_count_grand_temples(void)
 int building_monument_working(int type)
 {
 	int monument_id = building_monument_has_monument(type);
-	building* b = building_get(monument_id);
+	building *b = building_get(monument_id);
 	if (!monument_id) {
 		return 0;
 	}
@@ -1088,7 +1101,7 @@ int building_monument_working(int type)
 int building_monument_upgraded(int type)
 {
 	int monument_id = building_monument_working(type);
-	building* b = building_get(monument_id);
+	building *b = building_get(monument_id);
 	if (!monument_id) {
 		return 0;
 	}
@@ -1101,7 +1114,7 @@ int building_monument_upgraded(int type)
 int building_monument_module_type(int type)
 {
 	int monument_id = building_monument_working(type);
-	building* b = building_get(monument_id);
+	building *b = building_get(monument_id);
 	if (!monument_id) {
 		return 0;
 	}
@@ -1112,7 +1125,7 @@ int building_monument_gt_module_is_active(int module)
 {
 	int module_num = module % MODULES_PER_TEMPLE + 1;
 	int temple_type = module / MODULES_PER_TEMPLE + BUILDING_GRAND_TEMPLE_CERES;
-	
+
 	return building_monument_module_type(temple_type) == module_num;
 }
 
@@ -1121,41 +1134,43 @@ int building_monument_pantheon_module_is_active(int module)
 	return building_monument_module_type(BUILDING_PANTHEON) == (module - (PANTHEON_MODULE_1_DESTINATION_PRIESTS - 1));
 }
 
-static void delivery_save(buffer* buf, int i)
+static void delivery_save(buffer *buf, int i)
 {
-	buffer_write_i32(buf, monument_deliveries[i].walker_id);
-	buffer_write_i32(buf, monument_deliveries[i].destination_id);
-	buffer_write_i32(buf, monument_deliveries[i].resource);
-	buffer_write_i32(buf, monument_deliveries[i].cartloads);
+	buffer_write_i32(buf, data.monument_deliveries[i].walker_id);
+	buffer_write_i32(buf, data.monument_deliveries[i].destination_id);
+	buffer_write_i32(buf, data.monument_deliveries[i].resource);
+	buffer_write_i32(buf, data.monument_deliveries[i].cartloads);
 }
 
-static void delivery_load(buffer* buf, int i)
+static void delivery_load(buffer *buf, int i)
 {
-	monument_deliveries[i].walker_id = buffer_read_i32(buf);
-	monument_deliveries[i].destination_id = buffer_read_i32(buf);
-	monument_deliveries[i].resource = buffer_read_i32(buf);
-	monument_deliveries[i].cartloads = buffer_read_i32(buf);
+	data.monument_deliveries[i].walker_id = buffer_read_i32(buf);
+	data.monument_deliveries[i].destination_id = buffer_read_i32(buf);
+	data.monument_deliveries[i].resource = buffer_read_i32(buf);
+	data.monument_deliveries[i].cartloads = buffer_read_i32(buf);
 }
 
-void building_monument_delivery_save_state(buffer* list)
+void building_monument_delivery_save_state(buffer *list)
 {
 	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
-		delivery_save(list,i);
+		delivery_save(list, i);
 	}
 }
 
-void building_monument_delivery_load_state(buffer* list)
+void building_monument_delivery_load_state(buffer *list)
 {
 	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
 		delivery_load(list, i);
 	}
 }
 
-int building_monument_is_construction_halted(const building *b) {
+int building_monument_is_construction_halted(const building *b)
+{
 	return b->state == BUILDING_STATE_MOTHBALLED;
 }
 
-int building_monument_toggle_construction_halted(building *b) {
+int building_monument_toggle_construction_halted(building *b)
+{
 	if (b->state == BUILDING_STATE_MOTHBALLED) {
 		b->state = BUILDING_STATE_IN_USE;
 		return 0;
@@ -1165,6 +1180,7 @@ int building_monument_toggle_construction_halted(building *b) {
 	}
 }
 
-int building_monument_is_unfinished_monument(const building *b) {
+int building_monument_is_unfinished_monument(const building *b)
+{
 	return building_monument_is_monument(b) && b->data.monument.monument_phase != MONUMENT_FINISHED;
 }

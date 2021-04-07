@@ -2,25 +2,12 @@
 #define BUILDING_MONUMENT_H
 
 #include "building/building.h"
-#include "map/grid.h"
 #include "map/road_access.h"
-#include "translation/translation.h"
-#include "window/option_popup.h"
 
-#define MAX_MONUMENTS 30
-#define MAX_MONUMENT_DELIVERIES 200
 #define MONUMENT_FINISHED -1
 #define MONUMENT_START 1
 #define MAX_GRAND_TEMPLES_PER_CITY 2
-#define MODULES_PER_TEMPLE 2
 #define MARS_OFFERING_FREQUENCY 16
-
-typedef struct {
-	int walker_id;
-	int destination_id;
-	int resource; 
-	int cartloads;
-} monument_delivery;
 
 typedef enum {
 	CERES_MODULE_1_REDUCE_FOOD,
