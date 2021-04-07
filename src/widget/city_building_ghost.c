@@ -64,34 +64,42 @@ static const int Y_VIEW_OFFSETS[MAX_TILES] = {
 #define OFFSET(x,y) (x + GRID_SIZE * y)
 
 static const int TILE_GRID_OFFSETS[4][MAX_TILES] = {
-    {OFFSET(0,0),
-    OFFSET(0,1), OFFSET(1,0), OFFSET(1,1),
-    OFFSET(0,2), OFFSET(2,0), OFFSET(1,2), OFFSET(2,1), OFFSET(2,2),
-    OFFSET(0,3), OFFSET(3,0), OFFSET(1,3), OFFSET(3,1), OFFSET(2,3), OFFSET(3,2), OFFSET(3,3),
-    OFFSET(0,4), OFFSET(4,0), OFFSET(1,4), OFFSET(4,1), OFFSET(2,4), OFFSET(4,2), OFFSET(3,4), OFFSET(4,3), OFFSET(4,4),
-    OFFSET(0,5), OFFSET(5,0), OFFSET(1,5), OFFSET(5,1), OFFSET(2,5), OFFSET(5,2), OFFSET(3,5), OFFSET(5,3), OFFSET(4,5), OFFSET(5,4),OFFSET(5,5),
-    OFFSET(0,6), OFFSET(6,0), OFFSET(1,6), OFFSET(6,1), OFFSET(2,6), OFFSET(6,2), OFFSET(3,6), OFFSET(6,3), OFFSET(4,6), OFFSET(6,4),OFFSET(5,6),OFFSET(6,5),OFFSET(6,6)},
-    {OFFSET(0,0),
-    OFFSET(-1,0), OFFSET(0,1), OFFSET(-1,1),
-    OFFSET(-2,0), OFFSET(0,2), OFFSET(-2,1), OFFSET(-1,2), OFFSET(-2,2),
-    OFFSET(-3,0), OFFSET(0,3), OFFSET(-3,1), OFFSET(-1,3), OFFSET(-3,2), OFFSET(-2,3), OFFSET(-3,3),
-    OFFSET(-4,0), OFFSET(0,4), OFFSET(-4,1), OFFSET(-1,4), OFFSET(-4,2), OFFSET(-2,4), OFFSET(-4,3), OFFSET(-3,4), OFFSET(-4,4),
-    OFFSET(-5,0), OFFSET(0,5), OFFSET(-5,1), OFFSET(-1,5), OFFSET(-5,2), OFFSET(-2,5), OFFSET(-5,3), OFFSET(-3,5), OFFSET(-5,4), OFFSET(-4,5), OFFSET(-5,5),
-    OFFSET(-6,0), OFFSET(0,6), OFFSET(-6,1), OFFSET(-1,6), OFFSET(-6,2), OFFSET(-2,6), OFFSET(-6,3), OFFSET(-3,6), OFFSET(-6,4), OFFSET(-4,6), OFFSET(-6,5), OFFSET(-5,6), OFFSET(-6,6) },
-    {OFFSET(0,0),
-    OFFSET(0,-1), OFFSET(-1,0), OFFSET(-1,-1),
-    OFFSET(0,-2), OFFSET(-2,0), OFFSET(-1,-2), OFFSET(-2,-1), OFFSET(-2,-2),
-    OFFSET(0,-3), OFFSET(-3,0), OFFSET(-1,-3), OFFSET(-3,-1), OFFSET(-2,-3), OFFSET(-3,-2), OFFSET(-3,-3),
-    OFFSET(0,-4), OFFSET(-4,0), OFFSET(-1,-4), OFFSET(-4,-1), OFFSET(-2,-4), OFFSET(-4,-2), OFFSET(-3,-4), OFFSET(-4,-3), OFFSET(-4,-4),
-    OFFSET(0,-5), OFFSET(-5,0), OFFSET(-1,-5), OFFSET(-5,-1), OFFSET(-2,-5), OFFSET(-5,-2), OFFSET(-3,-5), OFFSET(-5,-3), OFFSET(-4,-5), OFFSET(-5,-4), OFFSET(-5,-5),
-    OFFSET(0,-6), OFFSET(-6,0), OFFSET(-1,-6), OFFSET(-6,-1), OFFSET(-2,-6), OFFSET(-6,-2), OFFSET(-3,-6), OFFSET(-6,-3), OFFSET(-4,-6), OFFSET(-6,-4), OFFSET(-5,-6), OFFSET(-6,-5), OFFSET(-6,-6)},
-    {OFFSET(0,0),
-    OFFSET(1,0), OFFSET(0,-1), OFFSET(1,-1),
-    OFFSET(2,0), OFFSET(0,-2), OFFSET(2,-1), OFFSET(1,-2), OFFSET(2,-2),
-    OFFSET(3,0), OFFSET(0,-3), OFFSET(3,-1), OFFSET(1,-3), OFFSET(3,-2), OFFSET(2,-3), OFFSET(3,-3),
-    OFFSET(4,0), OFFSET(0,-4), OFFSET(4,-1), OFFSET(1,-4), OFFSET(4,-2), OFFSET(2,-4), OFFSET(4,-3), OFFSET(3,-4), OFFSET(4,-4),
-    OFFSET(5,0), OFFSET(0,-5), OFFSET(5,-1), OFFSET(1,-5), OFFSET(5,-2), OFFSET(2,-5), OFFSET(5,-3), OFFSET(3,-5), OFFSET(5,-4), OFFSET(4,-5), OFFSET(5,-5),
-    OFFSET(6,0), OFFSET(0,-6), OFFSET(6,-1), OFFSET(1,-6), OFFSET(6,-2), OFFSET(2,-6), OFFSET(6,-3), OFFSET(3,-6), OFFSET(6,-4), OFFSET(4,-6), OFFSET(6,-5), OFFSET(5,-6), OFFSET(6,-6)},
+    {
+        OFFSET(0,0),
+        OFFSET(0,1), OFFSET(1,0), OFFSET(1,1),
+        OFFSET(0,2), OFFSET(2,0), OFFSET(1,2), OFFSET(2,1), OFFSET(2,2),
+        OFFSET(0,3), OFFSET(3,0), OFFSET(1,3), OFFSET(3,1), OFFSET(2,3), OFFSET(3,2), OFFSET(3,3),
+        OFFSET(0,4), OFFSET(4,0), OFFSET(1,4), OFFSET(4,1), OFFSET(2,4), OFFSET(4,2), OFFSET(3,4), OFFSET(4,3), OFFSET(4,4),
+        OFFSET(0,5), OFFSET(5,0), OFFSET(1,5), OFFSET(5,1), OFFSET(2,5), OFFSET(5,2), OFFSET(3,5), OFFSET(5,3), OFFSET(4,5), OFFSET(5,4),OFFSET(5,5),
+        OFFSET(0,6), OFFSET(6,0), OFFSET(1,6), OFFSET(6,1), OFFSET(2,6), OFFSET(6,2), OFFSET(3,6), OFFSET(6,3), OFFSET(4,6), OFFSET(6,4),OFFSET(5,6),OFFSET(6,5),OFFSET(6,6)
+    },
+    {
+        OFFSET(0,0),
+        OFFSET(-1,0), OFFSET(0,1), OFFSET(-1,1),
+        OFFSET(-2,0), OFFSET(0,2), OFFSET(-2,1), OFFSET(-1,2), OFFSET(-2,2),
+        OFFSET(-3,0), OFFSET(0,3), OFFSET(-3,1), OFFSET(-1,3), OFFSET(-3,2), OFFSET(-2,3), OFFSET(-3,3),
+        OFFSET(-4,0), OFFSET(0,4), OFFSET(-4,1), OFFSET(-1,4), OFFSET(-4,2), OFFSET(-2,4), OFFSET(-4,3), OFFSET(-3,4), OFFSET(-4,4),
+        OFFSET(-5,0), OFFSET(0,5), OFFSET(-5,1), OFFSET(-1,5), OFFSET(-5,2), OFFSET(-2,5), OFFSET(-5,3), OFFSET(-3,5), OFFSET(-5,4), OFFSET(-4,5), OFFSET(-5,5),
+        OFFSET(-6,0), OFFSET(0,6), OFFSET(-6,1), OFFSET(-1,6), OFFSET(-6,2), OFFSET(-2,6), OFFSET(-6,3), OFFSET(-3,6), OFFSET(-6,4), OFFSET(-4,6), OFFSET(-6,5), OFFSET(-5,6), OFFSET(-6,6)
+    },
+    {
+        OFFSET(0,0),
+        OFFSET(0,-1), OFFSET(-1,0), OFFSET(-1,-1),
+        OFFSET(0,-2), OFFSET(-2,0), OFFSET(-1,-2), OFFSET(-2,-1), OFFSET(-2,-2),
+        OFFSET(0,-3), OFFSET(-3,0), OFFSET(-1,-3), OFFSET(-3,-1), OFFSET(-2,-3), OFFSET(-3,-2), OFFSET(-3,-3),
+        OFFSET(0,-4), OFFSET(-4,0), OFFSET(-1,-4), OFFSET(-4,-1), OFFSET(-2,-4), OFFSET(-4,-2), OFFSET(-3,-4), OFFSET(-4,-3), OFFSET(-4,-4),
+        OFFSET(0,-5), OFFSET(-5,0), OFFSET(-1,-5), OFFSET(-5,-1), OFFSET(-2,-5), OFFSET(-5,-2), OFFSET(-3,-5), OFFSET(-5,-3), OFFSET(-4,-5), OFFSET(-5,-4), OFFSET(-5,-5),
+        OFFSET(0,-6), OFFSET(-6,0), OFFSET(-1,-6), OFFSET(-6,-1), OFFSET(-2,-6), OFFSET(-6,-2), OFFSET(-3,-6), OFFSET(-6,-3), OFFSET(-4,-6), OFFSET(-6,-4), OFFSET(-5,-6), OFFSET(-6,-5), OFFSET(-6,-6)
+    },
+    {
+        OFFSET(0,0),
+        OFFSET(1,0), OFFSET(0,-1), OFFSET(1,-1),
+        OFFSET(2,0), OFFSET(0,-2), OFFSET(2,-1), OFFSET(1,-2), OFFSET(2,-2),
+        OFFSET(3,0), OFFSET(0,-3), OFFSET(3,-1), OFFSET(1,-3), OFFSET(3,-2), OFFSET(2,-3), OFFSET(3,-3),
+        OFFSET(4,0), OFFSET(0,-4), OFFSET(4,-1), OFFSET(1,-4), OFFSET(4,-2), OFFSET(2,-4), OFFSET(4,-3), OFFSET(3,-4), OFFSET(4,-4),
+        OFFSET(5,0), OFFSET(0,-5), OFFSET(5,-1), OFFSET(1,-5), OFFSET(5,-2), OFFSET(2,-5), OFFSET(5,-3), OFFSET(3,-5), OFFSET(5,-4), OFFSET(4,-5), OFFSET(5,-5),
+        OFFSET(6,0), OFFSET(0,-6), OFFSET(6,-1), OFFSET(1,-6), OFFSET(6,-2), OFFSET(2,-6), OFFSET(6,-3), OFFSET(3,-6), OFFSET(6,-4), OFFSET(4,-6), OFFSET(6,-5), OFFSET(5,-6), OFFSET(6,-6)
+    },
 };
 
 static const int FORT_GROUND_GRID_OFFSETS[4][4] = {
@@ -100,13 +108,13 @@ static const int FORT_GROUND_GRID_OFFSETS[4][4] = {
     { OFFSET(-4,0),  OFFSET(-3,0), OFFSET(-3,1), OFFSET(-4,1)},
     { OFFSET(0,3),   OFFSET(1,3), OFFSET(1,4),  OFFSET(0,4)}
 };
-static const int FORT_GROUND_X_VIEW_OFFSETS[4] = {120, 90, -120, -90};
-static const int FORT_GROUND_Y_VIEW_OFFSETS[4] = {30, -75, -60, 45};
+static const int FORT_GROUND_X_VIEW_OFFSETS[4] = { 120, 90, -120, -90 };
+static const int FORT_GROUND_Y_VIEW_OFFSETS[4] = { 30, -75, -60, 45 };
 
-static const int RESERVOIR_GRID_OFFSETS[4] = {OFFSET(-1,-1), OFFSET(1,-1), OFFSET(1,1), OFFSET(-1,1)};
+static const int RESERVOIR_GRID_OFFSETS[4] = { OFFSET(-1,-1), OFFSET(1,-1), OFFSET(1,1), OFFSET(-1,1) };
 
-static const int HIPPODROME_X_VIEW_OFFSETS[4] = {150, 150, -150, -150};
-static const int HIPPODROME_Y_VIEW_OFFSETS[4] = {75, -75, -75, 75};
+static const int HIPPODROME_X_VIEW_OFFSETS[4] = { 150, 150, -150, -150 };
+static const int HIPPODROME_Y_VIEW_OFFSETS[4] = { 75, -75, -75, 75 };
 
 #define RESERVOIR_RANGE_MAX_TILES 900
 
@@ -166,14 +174,16 @@ static void draw_fountain_range(int x, int y, int grid_offset)
     image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE);
 }
 
-static void image_draw_warehouse(int image_id, int x, int y){
-    
+static void image_draw_warehouse(int image_id, int x, int y)
+{
     int image_id_space = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
-    int corner = building_rotation_get_corner(building_rotation_get_building_orientation(building_rotation_get_rotation()));
+    int building_orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
+    int corner = building_rotation_get_corner(building_orientation);
     for (int i = 0; i < 9; i++) {
-        if(i == corner){
+        if (i == corner) {
             draw_building(image_id, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
-            image_draw_masked(image_group(GROUP_BUILDING_WAREHOUSE) + 17, x + X_VIEW_OFFSETS[i] - 4, y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_BUILDING_GHOST);
+            image_draw_masked(image_group(GROUP_BUILDING_WAREHOUSE) + 17,
+                x + X_VIEW_OFFSETS[i] - 4, y + Y_VIEW_OFFSETS[i] - 42, COLOR_MASK_BUILDING_GHOST);
         } else {
             draw_building(image_id_space, x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i]);
         }
@@ -219,8 +229,9 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
 }
 
 static int get_building_image_id(int map_x, int map_y, building_type type, const building_properties *props)
-{   int image_id;
-    image_id = image_group(props->image_group) + props->image_offset; 
+{
+    int image_id;
+    image_id = image_group(props->image_group) + props->image_offset;
 
     if (type == BUILDING_GATEHOUSE) {
         int orientation = map_orientation_for_gatehouse(map_x, map_y);
@@ -256,46 +267,47 @@ static int get_building_image_id(int map_x, int map_y, building_type type, const
     return image_id;
 }
 
-static int get_new_building_image_id(int map_x, int map_y, int grid_offset, building_type type, const building_properties *props)
+static int get_new_building_image_id(int map_x, int map_y, int grid_offset,
+    building_type type, const building_properties *props)
 {
-	int rotation_offset = building_rotation_get_rotation() % 2 * props->rotation_offset;
-	int image_id = props->image_group + rotation_offset;
-	if (building_construction_is_connecting()) {
-		image_id = building_image_context_get_connecting_image_for_tile(grid_offset, type);
-	} else if (building_variant_has_variants(type)) {
-		image_id = building_variant_get_image_id(type);
-	} else {
-		if (type == BUILDING_WATCHTOWER) {
-			switch (scenario_property_climate()) {
-			case CLIMATE_CENTRAL:
-				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower C ON");
-				break;
-			case CLIMATE_DESERT:
-				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower S ON");
-				break;
-			case CLIMATE_NORTHERN:
-				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower N ON");
-				break;
-			default:
-				break;
-			}
-		} else if (type == BUILDING_WORKCAMP) {
-			switch (scenario_property_climate()) {
-			case CLIMATE_CENTRAL:
-				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp Central");
-				break;
-			case CLIMATE_DESERT:
-				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp South");
-				break;
-			case CLIMATE_NORTHERN:
-				image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp North");
-				break;
-			default:
-				break;
-			}
-		}
-	}
-	return image_id;
+    int rotation_offset = building_rotation_get_rotation() % 2 * props->rotation_offset;
+    int image_id = props->image_group + rotation_offset;
+    if (building_construction_is_connecting()) {
+        image_id = building_image_context_get_connecting_image_for_tile(grid_offset, type);
+    } else if (building_variant_has_variants(type)) {
+        image_id = building_variant_get_image_id(type);
+    } else {
+        if (type == BUILDING_WATCHTOWER) {
+            switch (scenario_property_climate()) {
+                case CLIMATE_CENTRAL:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower C ON");
+                    break;
+                case CLIMATE_DESERT:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower S ON");
+                    break;
+                case CLIMATE_NORTHERN:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower N ON");
+                    break;
+                default:
+                    break;
+            }
+        } else if (type == BUILDING_WORKCAMP) {
+            switch (scenario_property_climate()) {
+                case CLIMATE_CENTRAL:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp Central");
+                    break;
+                case CLIMATE_DESERT:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp South");
+                    break;
+                case CLIMATE_NORTHERN:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp North");
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    return image_id;
 }
 
 static void get_building_base_xy(int map_x, int map_y, int building_size, int *x, int *y)
@@ -358,9 +370,9 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
     return 0;
 }
 
-static void draw_default(const map_tile* tile, int x_view, int y_view, building_type type)
+static void draw_default(const map_tile *tile, int x_view, int y_view, building_type type)
 {
-    const building_properties* props = building_properties_for_type(type);
+    const building_properties *props = building_properties_for_type(type);
     int building_size = type == BUILDING_WAREHOUSE ? 3 : props->size;
     int image_id = 0;
 
@@ -375,7 +387,8 @@ static void draw_default(const map_tile* tile, int x_view, int y_view, building_
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset + TILE_GRID_OFFSETS[orientation_index][i];
         int forbidden_terrain = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
-        if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH || type == BUILDING_PLAZA || type == BUILDING_ROADBLOCK) {
+        if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH ||
+            type == BUILDING_PLAZA || type == BUILDING_ROADBLOCK) {
             forbidden_terrain &= ~TERRAIN_ROAD;
         }
         if (type == BUILDING_TOWER) {
@@ -394,10 +407,10 @@ static void draw_default(const map_tile* tile, int x_view, int y_view, building_
         int y_offset = (building_size - 1) * EXTRA_ASSET_IMAGE_X_OFFSET;
         int x_offset = (building_size - 1) * EXTRA_ASSET_IMAGE_Y_OFFSET;
         image_id = get_new_building_image_id(tile->x, tile->y, grid_offset, type, props);
-        draw_regular_building(type, image_id, x_view- x_offset, y_view+ y_offset, grid_offset);
+        draw_regular_building(type, image_id, x_view - x_offset, y_view + y_offset, grid_offset);
     } else {
         image_id = get_building_image_id(tile->x, tile->y, type, props);
-        draw_regular_building(type, image_id, x_view, y_view, grid_offset);        
+        draw_regular_building(type, image_id, x_view, y_view, grid_offset);
     }
 }
 
@@ -436,7 +449,7 @@ static void draw_second_reservoir_range(int x, int y, int grid_offset)
 
 static void draw_blocked_footprint(int x, int y, int size)
 {
-    size *=size;
+    size *= size;
     for (int i = 0; i < 9; i++) {
         draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
     }
@@ -499,10 +512,12 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
         }
         if (!draw_later) {
             if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-                city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, map_water_supply_reservoir_radius(), draw_first_reservoir_range);
-                city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, map_water_supply_reservoir_radius(), draw_second_reservoir_range);
+                city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3,
+                    map_water_supply_reservoir_radius(), draw_first_reservoir_range);
+                city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3,
+                    map_water_supply_reservoir_radius(), draw_second_reservoir_range);
             }
-            if(blocked) {
+            if (blocked) {
                 draw_blocked_footprint(x_start, y_start, 3);
             } else {
                 draw_single_reservoir(x_start, y_start, has_water);
@@ -516,17 +531,19 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     y -= 30;
     if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!building_construction_in_progress() || draw_later)) {
         if (draw_later) {
-            city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, map_water_supply_reservoir_radius(), draw_first_reservoir_range);
+            city_view_foreach_tile_in_range(offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3,
+                map_water_supply_reservoir_radius(), draw_first_reservoir_range);
         }
-        city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, map_water_supply_reservoir_radius(), draw_second_reservoir_range);
+        city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3,
+            map_water_supply_reservoir_radius(), draw_second_reservoir_range);
     }
-    if(blocked) {
+    if (blocked) {
         draw_blocked_footprint(x, y, 3);
     } else {
         draw_single_reservoir(x, y, has_water);
     }
     if (draw_later) {
-        if(blocked) {
+        if (blocked) {
             draw_blocked_footprint(x_start, y_start, 3);
         } else {
             draw_single_reservoir(x_start, y_start, has_water);
@@ -563,7 +580,7 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
             int group_offset = img->group_offset;
             if (!img->aqueduct_offset) {
-                if (map_terrain_is(grid_offset + map_grid_delta(0,-1), TERRAIN_ROAD)) {
+                if (map_terrain_is(grid_offset + map_grid_delta(0, -1), TERRAIN_ROAD)) {
                     group_offset = 3;
                 } else {
                     group_offset = 2;
@@ -591,7 +608,8 @@ static void draw_fountain(const map_tile *tile, int x, int y)
         int color_mask = blocked ? COLOR_MASK_BUILDING_GHOST_RED : COLOR_MASK_BUILDING_GHOST;
         int image_id = image_group(building_properties_for_type(BUILDING_FOUNTAIN)->image_group);
         if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-            city_view_foreach_tile_in_range(tile->grid_offset, 1, map_water_supply_fountain_radius(), draw_fountain_range);
+            city_view_foreach_tile_in_range(tile->grid_offset, 1,
+                map_water_supply_fountain_radius(), draw_fountain_range);
         }
         image_draw_isometric_footprint(image_id, x, y, color_mask);
         image_draw_isometric_top(image_id, x, y, color_mask);
@@ -629,12 +647,13 @@ static void draw_bathhouse(const map_tile *tile, int x, int y)
         draw_building(image_id, x, y);
         if (has_water) {
             const image *img = image_get(image_id);
-            image_draw_masked(image_id - 1, x + img->sprite_offset_x - 7, y + img->sprite_offset_y + 6, COLOR_MASK_BUILDING_GHOST);
+            image_draw_masked(image_id - 1, x + img->sprite_offset_x - 7, y + img->sprite_offset_y + 6,
+                COLOR_MASK_BUILDING_GHOST);
         }
     }
 }
 
-static void draw_pond(const map_tile* tile, int x, int y, int type)
+static void draw_pond(const map_tile *tile, int x, int y, int type)
 {
     int grid_offset = tile->grid_offset;
     int num_tiles = (type == BUILDING_LARGE_POND) ? 9 : 4;
@@ -651,8 +670,7 @@ static void draw_pond(const map_tile* tile, int x, int y, int type)
 
     if (blocked) {
         draw_partially_blocked(x, y, fully_blocked, num_tiles, blocked_tiles);
-    }
-    else {
+    } else {
         int has_water = 0;
         int orientation_index = city_view_orientation() / 2;
         int offset = 0;
@@ -663,7 +681,7 @@ static void draw_pond(const map_tile* tile, int x, int y, int type)
                 has_water = 1;
             }
         }
-        
+
         if (scenario_property_climate() == CLIMATE_DESERT) {
             offset += POND_CLIMATE_IMAGE_OFFSET;
         }
@@ -673,8 +691,8 @@ static void draw_pond(const map_tile* tile, int x, int y, int type)
         if (type == BUILDING_LARGE_POND) {
             offset += POND_LARGE_IMAGE_OFFSET;
         }
-
-        draw_regular_building(type, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset, x - x_offset, y + y_offset, grid_offset);
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset;
+        draw_regular_building(type, image_id, x - x_offset, y + y_offset, grid_offset);
     }
 }
 
@@ -754,14 +772,15 @@ static void draw_fort(const map_tile *tile, int x, int y)
     num_tiles_ground *= num_tiles_ground;
 
     int grid_offset_fort = tile->grid_offset;
-    int grid_offset_ground = grid_offset_fort + FORT_GROUND_GRID_OFFSETS[building_rotation_get_rotation()][city_view_orientation()/2];
+    int grid_offset_ground = grid_offset_fort +
+        FORT_GROUND_GRID_OFFSETS[building_rotation_get_rotation()][city_view_orientation() / 2];
     int blocked_tiles_fort[MAX_TILES];
     int blocked_tiles_ground[MAX_TILES];
 
     blocked += is_blocked_for_building(grid_offset_fort, num_tiles_fort, blocked_tiles_fort);
     blocked += is_blocked_for_building(grid_offset_ground, num_tiles_ground, blocked_tiles_ground);
 
-    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation())/2;
+    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
     int x_ground = x + FORT_GROUND_X_VIEW_OFFSETS[orientation_index];
     int y_ground = y + FORT_GROUND_Y_VIEW_OFFSETS[orientation_index];
 
@@ -791,13 +810,13 @@ static void draw_hippodrome(const map_tile *tile, int x, int y)
         blocked = 1;
     }
     int num_tiles = 25;
-    
+
     building_rotation_force_two_orientations();
-    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation())/2;
+    int orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
     int grid_offset1 = tile->grid_offset;
     int grid_offset2 = grid_offset1 + building_rotation_get_delta_with_rotation(5);
     int grid_offset3 = grid_offset1 + building_rotation_get_delta_with_rotation(10);
-    
+
     int blocked_tiles1[25];
     int blocked_tiles2[25];
     int blocked_tiles3[25];
@@ -942,8 +961,6 @@ void city_building_ghost_draw(const map_tile *tile)
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
 
-    // update road required based on timer
-    building_rotation_update_road_orientation();
     switch (type) {
         case BUILDING_DRAGGABLE_RESERVOIR:
             draw_draggable_reservoir(tile, x, y);

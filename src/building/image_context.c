@@ -125,7 +125,7 @@ static int context_matches_tiles(const struct building_image_context *context,
             return 0;
         }
     }
-    if ((context->rotation != rotation) && (context->rotation != -1)) {
+    if (context->rotation != rotation) {
         return 0;
     }
     return 1;
@@ -247,7 +247,7 @@ static int path_image_for_type(int type)
 
 const building_image *building_image_context_get_garden_path(int grid_offset, int context)
 {
-    int tiles[MAX_TILES] = { 0,0,0,0,0,0,0,0 };
+    int tiles[MAX_TILES] = { 0 };
     for (int i = 0; i < MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
         if (!map_terrain_is(offset, TERRAIN_BUILDING) && !connecting_grid[offset]) {
