@@ -978,10 +978,10 @@ void building_monument_recalculate_monuments(void)
 				data.monuments = new_monuments_array;
 				memset(data.monuments + data.monuments_array_size, 0, sizeof(int) * MONUMENTS_SIZE_STEP);
 				data.monuments_array_size += MONUMENTS_SIZE_STEP;
-			}i
-				if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
-					data.unfinished_monuments++;
-				}
+			}
+			if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
+				data.unfinished_monuments++;
+			}
 			data.monuments[data.monuments_number] = i;
 			data.monuments_number++;
 		}
