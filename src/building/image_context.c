@@ -17,7 +17,7 @@ struct building_image_context {
     const unsigned char tiles[MAX_TILES];
     const unsigned char offset_for_orientation[4];
     const unsigned char max_item_offset;
-    char rotation;
+    const char rotation;
     unsigned char current_item_offset;
 };
 

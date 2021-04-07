@@ -36,7 +36,7 @@ static int load_png(const char *path)
         log_error("Unable to open png file", path, 0);
         return 0;
     }
-    int bytes_read = fread(header, 1, 8, data.fp);
+    size_t bytes_read = fread(header, 1, 8, data.fp);
     if (bytes_read != 8 || png_sig_cmp(header, 0, 8)) {
         log_error("Invalid png file", path, 0);
         unload_png();
@@ -115,10 +115,10 @@ int png_read(const char *path, color_t *pixels)
         png_read_row(data.png_ptr, row, 0);
         png_bytep src = row;
         for (int x = 0; x < width; ++x) {
-            *dst  = ((color_t) *(src + 0)) << COLOR_BITSHIFT_RED;
-            *dst |= ((color_t) *(src + 1)) << COLOR_BITSHIFT_GREEN;
-            *dst |= ((color_t) *(src + 2)) << COLOR_BITSHIFT_BLUE;
-            *dst |= ((color_t) *(src + 3)) << COLOR_BITSHIFT_ALPHA;
+            *dst = ((color_t) * (src + 0)) << COLOR_BITSHIFT_RED;
+            *dst |= ((color_t) * (src + 1)) << COLOR_BITSHIFT_GREEN;
+            *dst |= ((color_t) * (src + 2)) << COLOR_BITSHIFT_BLUE;
+            *dst |= ((color_t) * (src + 3)) << COLOR_BITSHIFT_ALPHA;
             dst++;
             src += BYTES_PER_PIXEL;
         }
