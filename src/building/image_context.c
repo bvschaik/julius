@@ -125,10 +125,7 @@ static int context_matches_tiles(const struct building_image_context *context,
             return 0;
         }
     }
-    if (context->rotation != rotation) {
-        return 0;
-    }
-    return 1;
+    return context->rotation == -1 || context->rotation == rotation;
 }
 
 static const building_image *get_image(int group, int tiles[MAX_TILES], int rotation)
