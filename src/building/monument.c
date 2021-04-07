@@ -16,7 +16,8 @@
 #include <string.h>
 
 #define MONUMENTS_SIZE_STEP 100
-#define MAX_MONUMENT_DELIVERIES 1000
+#define DELIVERY_ARRAY_SIZE_STEP 200
+#define ORIGINAL_DELIVERY_BUFFER_SIZE 16
 #define MODULES_PER_TEMPLE 2
 #define INFINITE 10000
 
@@ -90,7 +91,8 @@ static struct {
 	int monuments_array_size;
 	int monuments_number;
 	int unfinished_monuments;
-	monument_delivery monument_deliveries[MAX_MONUMENT_DELIVERIES];
+	monument_delivery *monument_deliveries;
+	int monument_deliveries_array_size;
 } data;
 
 int building_monument_deliver_resource(building *b, int resource)
@@ -968,50 +970,79 @@ void building_monument_recalculate_monuments(void)
 		building *b = building_get(i);
 		if (building_monument_is_monument(b)) {
 			if (data.monuments_number == data.monuments_array_size) {
-				data.monuments_array_size += MONUMENTS_SIZE_STEP;
-				int *new_monuments_array = realloc(data.monuments, data.monuments_array_size);
+				int *new_monuments_array = realloc(data.monuments, data.monuments_array_size + MONUMENTS_SIZE_STEP);
 				if (!new_monuments_array) {
 					log_error("Unable to allocate enough memory for monuments. The game will likely crash.", 0, 0);
 					return;
 				}
 				data.monuments = new_monuments_array;
-			}
-			if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
-				data.unfinished_monuments++;
-			}
+				memset(data.monuments + data.monuments_array_size, 0, sizeof(int) * MONUMENTS_SIZE_STEP);
+				data.monuments_array_size += MONUMENTS_SIZE_STEP;
+			}i
+				if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
+					data.unfinished_monuments++;
+				}
 			data.monuments[data.monuments_number] = i;
 			data.monuments_number++;
 		}
 	}
 }
 
+static void create_delivery_array(int size)
+{
+	free(data.monument_deliveries);
+	data.monument_deliveries_array_size = size;
+	data.monument_deliveries = malloc(size * sizeof(monument_delivery));
+	memset(data.monument_deliveries, 0, sizeof(monument_delivery) * data.monument_deliveries_array_size);
+}
+
+static int expand_delivery_array(void)
+{
+	monument_delivery *delivery_array = realloc(data.monument_deliveries,
+		(data.monument_deliveries_array_size + DELIVERY_ARRAY_SIZE_STEP) * sizeof(monument_delivery));
+	if (!delivery_array) {
+		return 0;
+	}
+	data.monument_deliveries = delivery_array;
+	memset(data.monument_deliveries + data.monument_deliveries_array_size, 0,
+		sizeof(monument_delivery) * DELIVERY_ARRAY_SIZE_STEP);
+	data.monument_deliveries_array_size += DELIVERY_ARRAY_SIZE_STEP;
+
+	return 1;
+}
+
 void building_monument_initialize_deliveries(void)
 {
-	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
-		data.monument_deliveries[i].destination_id = 0;
-		data.monument_deliveries[i].walker_id = 0;
-		data.monument_deliveries[i].resource = 0;
-		data.monument_deliveries[i].cartloads = 0;
-	}
+	create_delivery_array(DELIVERY_ARRAY_SIZE_STEP);
 }
 
 int building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no)
 {
-	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
-		if (data.monument_deliveries[i].destination_id == 0) {
-			data.monument_deliveries[i].destination_id = monument_id;
-			data.monument_deliveries[i].walker_id = figure_id;
-			data.monument_deliveries[i].resource = resource_id;
-			data.monument_deliveries[i].cartloads = loads_no;
-			return 1;
+	for (int i = 0; i < data.monument_deliveries_array_size; i++) {
+		if (data.monument_deliveries[i].destination_id != 0) {
+			continue;
 		}
+		data.monument_deliveries[i].destination_id = monument_id;
+		data.monument_deliveries[i].walker_id = figure_id;
+		data.monument_deliveries[i].resource = resource_id;
+		data.monument_deliveries[i].cartloads = loads_no;
+		return 1;
 	}
-	return 0;
+	if (!expand_delivery_array()) {
+		return 0;
+	}
+	int index = data.monument_deliveries_array_size - DELIVERY_ARRAY_SIZE_STEP;
+	monument_delivery *delivery = &data.monument_deliveries[index];
+	delivery->destination_id = monument_id;
+	delivery->walker_id = figure_id;
+	delivery->resource = resource_id;
+	delivery->cartloads = loads_no;
+	return 1;
 }
 
 int building_monument_remove_delivery(int figure_id)
 {
-	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
+	for (int i = 0; i < data.monument_deliveries_array_size; i++) {
 		if (data.monument_deliveries[i].walker_id == figure_id) {
 			data.monument_deliveries[i].destination_id = 0;
 			data.monument_deliveries[i].walker_id = 0;
@@ -1025,7 +1056,7 @@ int building_monument_remove_delivery(int figure_id)
 int building_monument_resource_in_delivery(int monument_id, int resource_id)
 {
 	int resources = 0;
-	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
+	for (int i = 0; i < data.monument_deliveries_array_size; i++) {
 		if (data.monument_deliveries[i].destination_id == monument_id &&
 			data.monument_deliveries[i].resource == resource_id) {
 			resources += data.monument_deliveries[i].cartloads;
@@ -1043,14 +1074,13 @@ int building_monument_resource_in_delivery_multipart(building *b, int resource_i
 	}
 
 	while (b->id) {
-		for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
+		for (int i = 0; i < data.monument_deliveries_array_size; i++) {
 			if (data.monument_deliveries[i].destination_id == b->id &&
 				data.monument_deliveries[i].resource == resource_id) {
 				resources += data.monument_deliveries[i].cartloads;
 			}
 		}
 		b = building_get(b->next_part_building_id);
-
 	}
 
 	return resources;
@@ -1134,33 +1164,54 @@ int building_monument_pantheon_module_is_active(int module)
 	return building_monument_module_type(BUILDING_PANTHEON) == (module - (PANTHEON_MODULE_1_DESTINATION_PRIESTS - 1));
 }
 
-static void delivery_save(buffer *buf, int i)
+static void delivery_save(buffer *buf, monument_delivery *delivery)
 {
-	buffer_write_i32(buf, data.monument_deliveries[i].walker_id);
-	buffer_write_i32(buf, data.monument_deliveries[i].destination_id);
-	buffer_write_i32(buf, data.monument_deliveries[i].resource);
-	buffer_write_i32(buf, data.monument_deliveries[i].cartloads);
+	buffer_write_i32(buf, delivery->walker_id);
+	buffer_write_i32(buf, delivery->destination_id);
+	buffer_write_i32(buf, delivery->resource);
+	buffer_write_i32(buf, delivery->cartloads);
 }
 
-static void delivery_load(buffer *buf, int i)
+static void delivery_load(buffer *buf, monument_delivery *delivery, int size)
 {
-	data.monument_deliveries[i].walker_id = buffer_read_i32(buf);
-	data.monument_deliveries[i].destination_id = buffer_read_i32(buf);
-	data.monument_deliveries[i].resource = buffer_read_i32(buf);
-	data.monument_deliveries[i].cartloads = buffer_read_i32(buf);
-}
+	delivery->walker_id = buffer_read_i32(buf);
+	delivery->destination_id = buffer_read_i32(buf);
+	delivery->resource = buffer_read_i32(buf);
+	delivery->cartloads = buffer_read_i32(buf);
 
-void building_monument_delivery_save_state(buffer *list)
-{
-	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
-		delivery_save(list, i);
+	if (size > ORIGINAL_DELIVERY_BUFFER_SIZE) {
+		buffer_skip(buf, size - ORIGINAL_DELIVERY_BUFFER_SIZE);
 	}
 }
 
-void building_monument_delivery_load_state(buffer *list)
+void building_monument_delivery_save_state(buffer *buf)
 {
-	for (int i = 0; i < MAX_MONUMENT_DELIVERIES; i++) {
-		delivery_load(list, i);
+	int buf_size = 4 + data.monument_deliveries_array_size * ORIGINAL_DELIVERY_BUFFER_SIZE;
+	uint8_t *buf_data = malloc(buf_size);
+	buffer_init(buf, buf_data, buf_size);
+	buffer_write_i32(buf, ORIGINAL_DELIVERY_BUFFER_SIZE);
+
+	for (int i = 0; i < data.monument_deliveries_array_size; i++) {
+		delivery_save(buf, &data.monument_deliveries[i]);
+	}
+}
+
+void building_monument_delivery_load_state(buffer *buf, int includes_delivery_buffer_size)
+{
+	int delivery_buf_size = ORIGINAL_DELIVERY_BUFFER_SIZE;
+	int buf_size = buf->size;
+
+	if (includes_delivery_buffer_size) {
+		delivery_buf_size = buffer_read_i32(buf);
+		buf_size -= 4;
+	}
+
+	int deliveries_to_load = buf_size / delivery_buf_size;
+
+	create_delivery_array(deliveries_to_load);
+
+	for (int i = 0; i < deliveries_to_load; i++) {
+		delivery_load(buf, &data.monument_deliveries[i], delivery_buf_size);
 	}
 }
 

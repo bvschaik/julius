@@ -54,14 +54,15 @@
 
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x81;
+static const int SAVE_GAME_CURRENT_VERSION = 0x82;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
-static const int SAVE_GAME_WITHOUT_DELIVERIES_ADDED = 0x77;
+static const int SAVE_GAME_LAST_NO_DELIVERIES_VERSION = 0x77;
 static const int SAVE_GAME_LAST_STATIC_VERSION = 0x78;
 static const int SAVE_GAME_LAST_JOINED_IMPORT_EXPORT_VERSION = 0x79;
 static const int SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION = 0x80;
+static const int SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION = 0x81;
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -253,7 +254,7 @@ static void init_savegame_data(int version)
     if (version > SAVE_GAME_LAST_STATIC_VERSION) {
         multiplier = PIECE_SIZE_DYNAMIC;
         burning_totals_size = 4;
-    } 
+    }
 
     if (version > SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION) {
         count_multiplier = PIECE_SIZE_DYNAMIC;
@@ -363,7 +364,9 @@ static void init_savegame_data(int version)
     state->tutorial_part3 = create_savegame_piece(4, 0);
     state->city_entry_exit_grid_offset = create_savegame_piece(8, 0);
     state->end_marker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness
-    if (version > SAVE_GAME_WITHOUT_DELIVERIES_ADDED) {
+    if (version > SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION) {
+        state->deliveries = create_savegame_piece(PIECE_SIZE_DYNAMIC, 0);
+    } else if (version > SAVE_GAME_LAST_NO_DELIVERIES_VERSION) {
         state->deliveries = create_savegame_piece(3200, 0);
     }
 }
@@ -403,10 +406,10 @@ static void scenario_save_to_state(scenario_state *file)
 static void savegame_load_from_state(savegame_state *state, int version)
 {
     scenario_settings_load_state(state->scenario_campaign_mission,
-                                 state->scenario_settings,
-                                 state->scenario_is_custom,
-                                 state->player_name,
-                                 state->scenario_name);
+        state->scenario_settings,
+        state->scenario_is_custom,
+        state->player_name,
+        state->scenario_name);
     if (version <= SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION) {
         map_image_load_state_legacy(state->image_grid);
     } else {
@@ -426,30 +429,30 @@ static void savegame_load_from_state(savegame_state *state, int version)
     formations_load_state(state->formations, state->formation_totals, version > SAVE_GAME_LAST_STATIC_VERSION);
 
     city_data_load_state(state->city_data,
-                         state->city_faction,
-                         state->city_faction_unknown,
-                         state->city_graph_order,
-                         state->city_entry_exit_xy,
-                         state->city_entry_exit_grid_offset,
-                         version > SAVE_GAME_LAST_JOINED_IMPORT_EXPORT_VERSION);
+        state->city_faction,
+        state->city_faction_unknown,
+        state->city_graph_order,
+        state->city_entry_exit_xy,
+        state->city_entry_exit_grid_offset,
+        version > SAVE_GAME_LAST_JOINED_IMPORT_EXPORT_VERSION);
 
     building_load_state(state->buildings,
-                        state->building_extra_highest_id,
-                        state->building_extra_highest_id_ever,
-                        state->building_extra_sequence,
-                        state->building_extra_corrupt_houses,
-                        version > SAVE_GAME_LAST_STATIC_VERSION);
+        state->building_extra_highest_id,
+        state->building_extra_highest_id_ever,
+        state->building_extra_sequence,
+        state->building_extra_corrupt_houses,
+        version > SAVE_GAME_LAST_STATIC_VERSION);
     building_barracks_load_state(state->building_barracks_tower_sentry);
     city_view_load_state(state->city_view_orientation, state->city_view_camera);
     game_time_load_state(state->game_time);
     random_load_state(state->random_iv);
     building_count_load_state(state->building_count_industry,
-                              state->building_count_culture1,
-                              state->building_count_culture2,
-                              state->building_count_culture3,
-                              state->building_count_military,
-                              state->building_count_support,
-                              version > SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION);
+        state->building_count_culture1,
+        state->building_count_culture2,
+        state->building_count_culture3,
+        state->building_count_military,
+        state->building_count_support,
+        version > SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION);
 
     scenario_emperor_change_load_state(state->emperor_change_time, state->emperor_change_state);
     empire_load_state(state->empire);
@@ -462,14 +465,14 @@ static void savegame_load_from_state(savegame_state *state, int version)
     scenario_criteria_load_state(state->max_game_year);
     scenario_earthquake_load_state(state->earthquake);
     city_message_load_state(state->messages, state->message_extra,
-                            state->message_counts, state->message_delays,
-                            state->population_messages);
+        state->message_counts, state->message_delays,
+        state->population_messages);
     sound_city_load_state(state->city_sounds);
     traders_load_state(state->figure_traders);
 
     building_list_load_state(state->building_list_small, state->building_list_large,
-                             state->building_list_burning, state->building_list_burning_totals,
-                             version > SAVE_GAME_LAST_STATIC_VERSION);
+        state->building_list_burning, state->building_list_burning_totals,
+        version > SAVE_GAME_LAST_STATIC_VERSION);
 
     tutorial_load_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
@@ -485,10 +488,11 @@ static void savegame_load_from_state(savegame_state *state, int version)
     if (state) {
         buffer_skip(state->end_marker, 8);
     }
-    if (version <= SAVE_GAME_WITHOUT_DELIVERIES_ADDED) {
+    if (version <= SAVE_GAME_LAST_NO_DELIVERIES_VERSION) {
         building_monument_initialize_deliveries();
     } else {
-        building_monument_delivery_load_state(state->deliveries);
+        building_monument_delivery_load_state(state->deliveries,
+            version > SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION);
     }
 }
 
@@ -497,10 +501,10 @@ static void savegame_save_to_state(savegame_state *state)
     buffer_write_i32(state->file_version, SAVE_GAME_CURRENT_VERSION);
 
     scenario_settings_save_state(state->scenario_campaign_mission,
-                                 state->scenario_settings,
-                                 state->scenario_is_custom,
-                                 state->player_name,
-                                 state->scenario_name);
+        state->scenario_settings,
+        state->scenario_is_custom,
+        state->player_name,
+        state->scenario_name);
 
     map_image_save_state(state->image_grid);
     map_building_save_state(state->building_grid, state->building_damage_grid);
@@ -518,27 +522,27 @@ static void savegame_save_to_state(savegame_state *state)
     formations_save_state(state->formations, state->formation_totals);
 
     city_data_save_state(state->city_data,
-                         state->city_faction,
-                         state->city_faction_unknown,
-                         state->city_graph_order,
-                         state->city_entry_exit_xy,
-                         state->city_entry_exit_grid_offset);
+        state->city_faction,
+        state->city_faction_unknown,
+        state->city_graph_order,
+        state->city_entry_exit_xy,
+        state->city_entry_exit_grid_offset);
 
     building_save_state(state->buildings,
-                        state->building_extra_highest_id,
-                        state->building_extra_highest_id_ever,
-                        state->building_extra_sequence,
-                        state->building_extra_corrupt_houses);
+        state->building_extra_highest_id,
+        state->building_extra_highest_id_ever,
+        state->building_extra_sequence,
+        state->building_extra_corrupt_houses);
     building_barracks_save_state(state->building_barracks_tower_sentry);
     city_view_save_state(state->city_view_orientation, state->city_view_camera);
     game_time_save_state(state->game_time);
     random_save_state(state->random_iv);
     building_count_save_state(state->building_count_industry,
-                              state->building_count_culture1,
-                              state->building_count_culture2,
-                              state->building_count_culture3,
-                              state->building_count_military,
-                              state->building_count_support);
+        state->building_count_culture1,
+        state->building_count_culture2,
+        state->building_count_culture3,
+        state->building_count_military,
+        state->building_count_support);
 
     scenario_emperor_change_save_state(state->emperor_change_time, state->emperor_change_state);
     empire_save_state(state->empire);
@@ -552,13 +556,13 @@ static void savegame_save_to_state(savegame_state *state)
     scenario_criteria_save_state(state->max_game_year);
     scenario_earthquake_save_state(state->earthquake);
     city_message_save_state(state->messages, state->message_extra,
-                            state->message_counts, state->message_delays,
-                            state->population_messages);
+        state->message_counts, state->message_delays,
+        state->population_messages);
     sound_city_save_state(state->city_sounds);
     traders_save_state(state->figure_traders);
 
     building_list_save_state(state->building_list_small, state->building_list_large,
-                             state->building_list_burning, state->building_list_burning_totals);
+        state->building_list_burning, state->building_list_burning_totals);
 
     tutorial_save_state(state->tutorial_part1, state->tutorial_part2, state->tutorial_part3);
 
@@ -573,7 +577,6 @@ static void savegame_save_to_state(savegame_state *state)
     buffer_skip(state->end_marker, 284);
 
     building_monument_delivery_save_state(state->deliveries);
-
 }
 
 int game_file_io_read_scenario(const char *filename)
@@ -693,8 +696,8 @@ static int savegame_read_from_file(FILE *fp)
         }
         // The last piece may be smaller than buf.size
         if (!result && i != (savegame_data.num_pieces - 1)) {
-            log_info("Incorrect buffer size, got.", 0, result);
-            log_info("Incorrect buffer size, expected." , 0, piece->buf.size);
+            log_info("Incorrect buffer size, got", 0, result);
+            log_info("Incorrect buffer size, expected", 0, piece->buf.size);
             return 0;
         }
     }
