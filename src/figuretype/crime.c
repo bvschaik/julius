@@ -220,7 +220,7 @@ void figure_generate_criminals(void)
         }
     }
     if (min_building) {
-        min_building->sentiment.house_happiness += 5;
+        min_building->sentiment.house_happiness += 2;
         if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
             return;
         }

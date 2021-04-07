@@ -74,10 +74,8 @@ static void draw_happiness_info(building_info_context *c, int y_offset)
         sentiment_text_id = happiness / 10 + TR_BUILDING_WINDOW_HOUSE_SENTIMENT_2;
     }
     int width = text_draw(translation_for(sentiment_text_id), c->x_offset + 36, y_offset, FONT_SMALL_BLACK, 0);
-    // todo: for testing purposes. remove later
-    text_draw_number(happiness, '(', ")", c->x_offset + 36 + width, y_offset, FONT_SMALL_BLACK);
-    int message = building_get(c->building_id)->house_sentiment_message;
 
+    int message = building_get(c->building_id)->house_sentiment_message;
     switch (message) {
         case LOW_MOOD_CAUSE_NO_JOBS:
             text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_UNEMPLOYMENT),
