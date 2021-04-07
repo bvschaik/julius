@@ -17,12 +17,11 @@ struct building_image_context {
     const unsigned char tiles[MAX_TILES];
     const unsigned char offset_for_orientation[4];
     const unsigned char max_item_offset;
-    const char rotation;
+    char rotation;
     unsigned char current_item_offset;
 };
 
-
-static char connecting_grid[GRID_SIZE * GRID_SIZE] = {0};
+static char connecting_grid[GRID_SIZE * GRID_SIZE] = { 0 };
 static int connecting_grid_building = 0;
 
 // 0 = no match
@@ -33,50 +32,48 @@ static int connecting_grid_building = 0;
 // -1 any, otherwise shown value
 
 static struct building_image_context building_images_hedges[18] = {
-    {{1, 2, 1, 2, 0, 2, 0, 2}, {4, 5, 2, 3}, 0, -1, 0},
-    {{0, 2, 1, 2, 1, 2, 0, 2}, {3, 4, 5, 2}, 0, -1, 0},
-    {{0, 2, 0, 2, 1, 2, 1, 2}, {2, 3, 4, 5}, 0, -1, 0},
-    {{1, 2, 0, 2, 0, 2, 1, 2}, {5, 2, 3, 4}, 0, -1, 0},
-    {{1, 2, 0, 2, 1, 2, 0, 2}, {1, 0, 1, 0}, 0, -1, 0}, 
-    {{0, 2, 1, 2, 0, 2, 1, 2}, {0, 1, 0, 1}, 0, -1, 0},
-    {{1, 2, 0, 2, 0, 2, 0, 2}, {1, 0, 1, 0}, 0, -1, 0},
-    {{0, 2, 1, 2, 0, 2, 0, 2}, {0, 1, 0, 1}, 0, -1, 0},
-    {{0, 2, 0, 2, 1, 2, 0, 2}, {1, 0, 1, 0}, 0, -1, 0},
-    {{0, 2, 0, 2, 0, 2, 1, 2}, {0, 1, 0, 1}, 0, -1, 0},
-    {{1, 2, 1, 2, 1, 2, 0, 2}, {9, 7, 6, 8}, 0, -1, 0},
-    {{0, 2, 1, 2, 1, 2, 1, 2}, {8, 9, 7, 6}, 0, -1, 0},
-    {{1, 2, 0, 2, 1, 2, 1, 2}, {6, 8, 9, 7}, 0, -1, 0},
-    {{1, 2, 1, 2, 0, 2, 1, 2}, {7, 6, 8, 9}, 0, -1, 0},
-    {{1, 2, 1, 2, 1, 2, 1, 2}, {10, 10, 10, 10}, 0, -1, 0},
-    {{2, 2, 2, 2, 2, 2, 2, 2}, {1, 0, 1, 0}, 0, 0, 0},
-    {{2, 2, 2, 2, 2, 2, 2, 2}, {0, 1, 0, 1}, 0, 1, 0},
-    {{2, 2, 2, 2, 2, 2, 2, 2}, {10, 10, 10, 10}, 0, -1, 0},
+    { { 1, 2, 1, 2, 0, 2, 0, 2 }, {  4,  5,  2,  3 }, 0, -1, 0 },
+    { { 0, 2, 1, 2, 1, 2, 0, 2 }, {  3,  4,  5,  2 }, 0, -1, 0 },
+    { { 0, 2, 0, 2, 1, 2, 1, 2 }, {  2,  3,  4,  5 }, 0, -1, 0 },
+    { { 1, 2, 0, 2, 0, 2, 1, 2 }, {  5,  2,  3,  4 }, 0, -1, 0 },
+    { { 1, 2, 0, 2, 1, 2, 0, 2 }, {  1,  0,  1,  0 }, 0, -1, 0 },
+    { { 0, 2, 1, 2, 0, 2, 1, 2 }, {  0,  1,  0,  1 }, 0, -1, 0 },
+    { { 1, 2, 0, 2, 0, 2, 0, 2 }, {  1,  0,  1,  0 }, 0, -1, 0 },
+    { { 0, 2, 1, 2, 0, 2, 0, 2 }, {  0,  1,  0,  1 }, 0, -1, 0 },
+    { { 0, 2, 0, 2, 1, 2, 0, 2 }, {  1,  0,  1,  0 }, 0, -1, 0 },
+    { { 0, 2, 0, 2, 0, 2, 1, 2 }, {  0,  1,  0,  1 }, 0, -1, 0 },
+    { { 1, 2, 1, 2, 1, 2, 0, 2 }, {  9,  7,  6,  8 }, 0, -1, 0 },
+    { { 0, 2, 1, 2, 1, 2, 1, 2 }, {  8,  9,  7,  6 }, 0, -1, 0 },
+    { { 1, 2, 0, 2, 1, 2, 1, 2 }, {  6,  8,  9,  7 }, 0, -1, 0 },
+    { { 1, 2, 1, 2, 0, 2, 1, 2 }, {  7,  6,  8,  9 }, 0, -1, 0 },
+    { { 1, 2, 1, 2, 1, 2, 1, 2 }, { 10, 10, 10, 10 }, 0, -1, 0 },
+    { { 2, 2, 2, 2, 2, 2, 2, 2 }, {  1,  0,  1,  0 }, 0,  0, 0 },
+    { { 2, 2, 2, 2, 2, 2, 2, 2 }, {  0,  1,  0,  1 }, 0,  1, 0 },
+    { { 2, 2, 2, 2, 2, 2, 2, 2 }, { 10, 10, 10, 10 }, 0, -1, 0 },
 };
 
 static struct building_image_context building_images_path_intersection[9] = {
-    {{1, 2, 1, 2, 0, 2, 0, 2}, {2, 3, 0, 1}, 0, -1, 0},
-    {{0, 2, 1, 2, 1, 2, 0, 2}, {1, 2, 3, 0}, 0, -1, 0},
-    {{0, 2, 0, 2, 1, 2, 1, 2}, {0, 1, 2, 3}, 0, -1, 0},
-    {{1, 2, 0, 2, 0, 2, 1, 2}, {3, 0, 1, 2}, 0, -1, 0},
-    {{1, 2, 1, 2, 1, 2, 0, 2}, {5, 6, 7, 4}, 0, -1, 0},
-    {{0, 2, 1, 2, 1, 2, 1, 2}, {4, 5, 6, 7}, 0, -1, 0},
-    {{1, 2, 0, 2, 1, 2, 1, 2}, {7, 4, 5, 6}, 0, -1, 0},
-    {{1, 2, 1, 2, 0, 2, 1, 2}, {6, 7, 4, 5}, 0, -1, 0},
-    {{1, 2, 1, 2, 1, 2, 1, 2}, {8, 8, 8, 8}, 0, -1, 0},
+    { { 1, 2, 1, 2, 0, 2, 0, 2 }, { 2, 3, 0, 1 }, 0, -1, 0 },
+    { { 0, 2, 1, 2, 1, 2, 0, 2 }, { 1, 2, 3, 0 }, 0, -1, 0 },
+    { { 0, 2, 0, 2, 1, 2, 1, 2 }, { 0, 1, 2, 3 }, 0, -1, 0 },
+    { { 1, 2, 0, 2, 0, 2, 1, 2 }, { 3, 0, 1, 2 }, 0, -1, 0 },
+    { { 1, 2, 1, 2, 1, 2, 0, 2 }, { 5, 6, 7, 4 }, 0, -1, 0 },
+    { { 0, 2, 1, 2, 1, 2, 1, 2 }, { 4, 5, 6, 7 }, 0, -1, 0 },
+    { { 1, 2, 0, 2, 1, 2, 1, 2 }, { 7, 4, 5, 6 }, 0, -1, 0 },
+    { { 1, 2, 1, 2, 0, 2, 1, 2 }, { 6, 7, 4, 5 }, 0, -1, 0 },
+    { { 1, 2, 1, 2, 1, 2, 1, 2 }, { 8, 8, 8, 8 }, 0, -1, 0 },
 };
 
 static struct building_image_context building_images_path[8] = {
-    {{1, 2, 0, 2, 1, 2, 0, 2}, {0, 56, 0, 56}, 0, -1, 0},
-    {{0, 2, 1, 2, 0, 2, 1, 2}, {56, 0, 56, 0}, 0, -1, 0},
-    {{1, 2, 0, 2, 0, 2, 0, 2}, {0, 56, 0, 56}, 0, -1, 0},
-    {{0, 2, 1, 2, 0, 2, 0, 2}, {56, 0, 56, 0}, 0, -1, 0},
-    {{0, 2, 0, 2, 1, 2, 0, 2}, {0, 56, 0, 56}, 0, -1, 0},
-    {{0, 2, 0, 2, 0, 2, 1, 2}, {56, 0, 56, 0}, 0, -1, 0},
-    {{2, 2, 2, 2, 2, 2, 2, 2}, {0, 56, 0, 56}, 0, 0, 0},
-    {{2, 2, 2, 2, 2, 2, 2, 2}, {56, 0, 56, 0}, 0, -1, 0},
+    { { 1, 2, 0, 2, 1, 2, 0, 2 }, {  0, 56,  0, 56 }, 0, -1, 0 },
+    { { 0, 2, 1, 2, 0, 2, 1, 2 }, { 56,  0, 56,  0 }, 0, -1, 0 },
+    { { 1, 2, 0, 2, 0, 2, 0, 2 }, {  0, 56,  0, 56 }, 0, -1, 0 },
+    { { 0, 2, 1, 2, 0, 2, 0, 2 }, { 56,  0, 56,  0 }, 0, -1, 0 },
+    { { 0, 2, 0, 2, 1, 2, 0, 2 }, {  0, 56,  0, 56 }, 0, -1, 0 },
+    { { 0, 2, 0, 2, 0, 2, 1, 2 }, { 56,  0, 56,  0 }, 0, -1, 0 },
+    { { 2, 2, 2, 2, 2, 2, 2, 2 }, {  0, 56,  0, 56 }, 0,  0, 0 },
+    { { 2, 2, 2, 2, 2, 2, 2, 2 }, { 56,  0, 56,  0 }, 0, -1, 0 },
 };
-
-
 
 enum {
     CONTEXT_HEDGES,
@@ -87,19 +84,18 @@ enum {
 };
 
 static struct {
-    struct building_image_context* context;
+    struct building_image_context *context;
     int size;
 } context_pointers[] = {
-    {building_images_hedges, 18},
-    {building_images_hedges, 18},
-    {building_images_path, 8},
-    {building_images_path_intersection, 9},
+    { building_images_hedges, 18 },
+    { building_images_hedges, 18 },
+    { building_images_path, 8 },
+    { building_images_path_intersection, 9 },
 };
 
-void building_image_context_clear_connection_grid() 
+void building_image_context_clear_connection_grid()
 {
-    for (int i = 0; i < GRID_SIZE*GRID_SIZE; i++)
-    {
+    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
         connecting_grid[i] = 0;
     }
 }
@@ -114,14 +110,15 @@ void building_image_context_mark_connection_grid(int map_grid)
     connecting_grid[map_grid] = 1;
 }
 
-static void clear_current_offset(struct building_image_context* items, int num_items)
+static void clear_current_offset(struct building_image_context *items, int num_items)
 {
     for (int i = 0; i < num_items; i++) {
         items[i].current_item_offset = 0;
     }
 }
 
-static int context_matches_tiles(const struct building_image_context* context, const int tiles[MAX_TILES], int rotation)
+static int context_matches_tiles(const struct building_image_context *context,
+    const int tiles[MAX_TILES], int rotation)
 {
     for (int i = 0; i < MAX_TILES; i++) {
         if (context->tiles[i] != 2 && tiles[i] != context->tiles[i]) {
@@ -134,11 +131,11 @@ static int context_matches_tiles(const struct building_image_context* context, c
     return 1;
 }
 
-static const building_image* get_image(int group, int tiles[MAX_TILES], int rotation)
+static const building_image *get_image(int group, int tiles[MAX_TILES], int rotation)
 {
     static building_image result;
     result.is_valid = 0;
-    struct building_image_context* context = context_pointers[group].context;
+    struct building_image_context *context = context_pointers[group].context;
     int size = context_pointers[group].size;
     for (int i = 0; i < size; i++) {
         if (context_matches_tiles(&context[i], tiles, rotation)) {
@@ -155,18 +152,20 @@ static const building_image* get_image(int group, int tiles[MAX_TILES], int rota
     return &result;
 }
 
-const building_image* building_image_context_get_hedges(int grid_offset)
+const building_image *building_image_context_get_hedges(int grid_offset)
 {
 
-    int tiles[MAX_TILES] = { 0,0,0,0,0,0,0,0 };
+    int tiles[MAX_TILES] = { 0 };
     for (int i = 0; i < MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
         if (!map_terrain_is(offset, TERRAIN_BUILDING) && !connecting_grid[offset]) {
             continue;
         }
-        building* b = building_get(map_building_at(offset));
-        if (b->type == BUILDING_HEDGE_DARK || b->type == BUILDING_HEDGE_LIGHT || (connecting_grid[offset] && (connecting_grid_building == BUILDING_HEDGE_DARK || connecting_grid_building == BUILDING_HEDGE_LIGHT))) {
-                tiles[i] = 1;
+        building *b = building_get(map_building_at(offset));
+        if (b->type == BUILDING_HEDGE_DARK || b->type == BUILDING_HEDGE_LIGHT ||
+            (connecting_grid[offset] &&
+            (connecting_grid_building == BUILDING_HEDGE_DARK || connecting_grid_building == BUILDING_HEDGE_LIGHT))) {
+            tiles[i] = 1;
         }
     }
     int building_id = map_building_at(grid_offset);
@@ -179,17 +178,18 @@ const building_image* building_image_context_get_hedges(int grid_offset)
     return get_image(CONTEXT_HEDGES, tiles, rotation);
 }
 
-const building_image* building_image_context_get_colonnade(int grid_offset)
+const building_image *building_image_context_get_colonnade(int grid_offset)
 {
 
-    int tiles[MAX_TILES] = { 0,0,0,0,0,0,0,0 };
+    int tiles[MAX_TILES] = { 0 };
     for (int i = 0; i < MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
         if (!map_terrain_is(offset, TERRAIN_BUILDING) && !connecting_grid[offset]) {
             continue;
         }
-        building* b = building_get(map_building_at(offset));
-        if (b->type == BUILDING_COLONNADE || (connecting_grid[offset] && connecting_grid_building == BUILDING_COLONNADE)) {
+        building *b = building_get(map_building_at(offset));
+        if (b->type == BUILDING_COLONNADE ||
+            (connecting_grid[offset] && connecting_grid_building == BUILDING_COLONNADE)) {
             tiles[i] = 1;
         }
     }
@@ -197,8 +197,7 @@ const building_image* building_image_context_get_colonnade(int grid_offset)
     int rotation;
     if (building_id) {
         rotation = building_get(building_id)->subtype.orientation;
-    }
-    else {
+    } else {
         rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
     }
     return get_image(CONTEXT_COLONNADE, tiles, rotation);
@@ -207,71 +206,69 @@ const building_image* building_image_context_get_colonnade(int grid_offset)
 static int is_garden_path(int type)
 {
     switch (type) {
-    case BUILDING_DATE_PATH:
-    case BUILDING_ELM_PATH:
-    case BUILDING_FIG_PATH:
-    case BUILDING_FIR_PATH:
-    case BUILDING_OAK_PATH:
-    case BUILDING_PALM_PATH:
-    case BUILDING_PINE_PATH:
-    case BUILDING_PLUM_PATH:
-    case BUILDING_GARDEN_PATH:
-        return 1;
-    default:
-        return 0;
+        case BUILDING_DATE_PATH:
+        case BUILDING_ELM_PATH:
+        case BUILDING_FIG_PATH:
+        case BUILDING_FIR_PATH:
+        case BUILDING_OAK_PATH:
+        case BUILDING_PALM_PATH:
+        case BUILDING_PINE_PATH:
+        case BUILDING_PLUM_PATH:
+        case BUILDING_GARDEN_PATH:
+            return 1;
+        default:
+            return 0;
     }
 }
 
 static int path_image_for_type(int type)
 {
-	switch (type) {
-	case BUILDING_DATE_PATH:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn date");
-	case BUILDING_ELM_PATH:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn elm");
-    case BUILDING_FIG_PATH:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn fig");
-    case BUILDING_FIR_PATH:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn fir");
-    case BUILDING_OAK_PATH:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn oak");
-    case BUILDING_PALM_PATH:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn palm");
-    case BUILDING_PINE_PATH:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn pine");
-    case BUILDING_PLUM_PATH:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn plum");
-    default:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
+    switch (type) {
+        case BUILDING_DATE_PATH:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn date");
+        case BUILDING_ELM_PATH:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn elm");
+        case BUILDING_FIG_PATH:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn fig");
+        case BUILDING_FIR_PATH:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn fir");
+        case BUILDING_OAK_PATH:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn oak");
+        case BUILDING_PALM_PATH:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn palm");
+        case BUILDING_PINE_PATH:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn pine");
+        case BUILDING_PLUM_PATH:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn plum");
+        default:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
     }
 }
 
-const building_image* building_image_context_get_garden_path(int grid_offset, int context)
+const building_image *building_image_context_get_garden_path(int grid_offset, int context)
 {
-	int tiles[MAX_TILES] = { 0,0,0,0,0,0,0,0 };
-	for (int i = 0; i < MAX_TILES; i += 2) {
-		int offset = grid_offset + map_grid_direction_delta(i);
-		if (!map_terrain_is(offset, TERRAIN_BUILDING) && !connecting_grid[offset]) {
-			continue;
-		}
-		building* b = building_get(map_building_at(offset));
-		if (is_garden_path(b->type) || (connecting_grid[offset] && is_garden_path(connecting_grid_building))) {
-			tiles[i] = 1;
-		}
-	}
-	int building_id = map_building_at(grid_offset);
-	int rotation;
-	if (building_id) {
-		rotation = building_get(building_id)->subtype.orientation;
-	} else {
+    int tiles[MAX_TILES] = { 0,0,0,0,0,0,0,0 };
+    for (int i = 0; i < MAX_TILES; i += 2) {
+        int offset = grid_offset + map_grid_direction_delta(i);
+        if (!map_terrain_is(offset, TERRAIN_BUILDING) && !connecting_grid[offset]) {
+            continue;
+        }
+        building *b = building_get(map_building_at(offset));
+        if (is_garden_path(b->type) || (connecting_grid[offset] && is_garden_path(connecting_grid_building))) {
+            tiles[i] = 1;
+        }
+    }
+    int building_id = map_building_at(grid_offset);
+    int rotation;
+    if (building_id) {
+        rotation = building_get(building_id)->subtype.orientation;
+    } else {
         rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
     }
-	return get_image(context, tiles, rotation);
+    return get_image(context, tiles, rotation);
 }
 
-
-
-void building_image_context_init(void) 
+void building_image_context_init(void)
 {
     for (int i = 0; i < CONTEXT_MAX_ITEMS; i++) {
         clear_current_offset(context_pointers[i].context, context_pointers[i].size);
@@ -283,8 +280,9 @@ void building_image_context_set_hedge_image(int grid_offset)
     if (!map_terrain_is(grid_offset, TERRAIN_BUILDING) && !connecting_grid[grid_offset]) {
         return;
     }
-    building* b = building_get(map_building_at(grid_offset));
-    if (b->type != BUILDING_HEDGE_DARK && b->type != BUILDING_HEDGE_LIGHT && b->type != BUILDING_COLONNADE && !is_garden_path(b->type) && !connecting_grid[grid_offset]) {
+    building *b = building_get(map_building_at(grid_offset));
+    if (b->type != BUILDING_HEDGE_DARK && b->type != BUILDING_HEDGE_LIGHT && b->type != BUILDING_COLONNADE &&
+        !is_garden_path(b->type) && !connecting_grid[grid_offset]) {
         return;
     }
 
@@ -297,12 +295,11 @@ void building_image_context_set_hedge_image(int grid_offset)
     }
     map_property_set_multi_tile_size(grid_offset, 1);
     map_property_mark_draw_tile(grid_offset);
-
-
 }
 
-int building_image_context_get_connecting_image_for_tile(int grid_offset, int building_type) {
-    const building_image* img;
+int building_image_context_get_connecting_image_for_tile(int grid_offset, int building_type)
+{
+    const building_image *img;
     int image_group = 0;
 
     if (!building_type && connecting_grid[grid_offset]) {
@@ -322,10 +319,10 @@ int building_image_context_get_connecting_image_for_tile(int grid_offset, int bu
         img = building_image_context_get_garden_path(grid_offset, CONTEXT_GARDEN_PATH_INTERSECTION);
         image_group = path_image_for_type(BUILDING_GARDEN_PATH);
         // If path isn't an intersection, it's a straight path instead
-		if (!img->is_valid) { 
-			img = building_image_context_get_garden_path(grid_offset, CONTEXT_GARDEN_PATH);
-			image_group = path_image_for_type(building_type);
-		}
+        if (!img->is_valid) {
+            img = building_image_context_get_garden_path(grid_offset, CONTEXT_GARDEN_PATH);
+            image_group = path_image_for_type(building_type);
+        }
     } else {
         return 0;
     }

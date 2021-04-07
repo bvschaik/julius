@@ -50,7 +50,7 @@ static void expand_dir_listing(void)
 static int compare_lower(const void *va, const void *vb)
 {
     // arguments are pointers to char*
-    return platform_file_manager_compare_filename(*(const char**)va, *(const char**)vb);
+    return platform_file_manager_compare_filename(*(const char **) va, *(const char **) vb);
 }
 
 static int add_to_listing(const char *filename)
@@ -68,7 +68,7 @@ const dir_listing *dir_find_files_with_extension(const char *dir, const char *ex
 {
     clear_dir_listing();
     platform_file_manager_list_directory_contents(dir, TYPE_FILE, extension, add_to_listing);
-    qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
+    qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
     return &data.listing;
 }
 
@@ -76,7 +76,7 @@ const dir_listing *dir_find_all_subdirectories(void)
 {
     clear_dir_listing();
     platform_file_manager_list_directory_contents(0, TYPE_DIR, 0, add_to_listing);
-    qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
+    qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
     return &data.listing;
 }
 
@@ -136,10 +136,10 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         return 0;
     }
 
-    int path_offset = dir_len;
+    size_t path_offset = dir_len;
     corrected_filename[path_offset - 1] = 0;
 
-    while(1) {
+    while (1) {
         char *slash = strchr(&corrected_filename[path_offset], '/');
         if (!slash) {
             slash = strchr(&corrected_filename[path_offset], '\\');
@@ -166,10 +166,10 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
     return corrected_filename + dir_skip;
 }
 
-const dir_listing* dir_append_files_with_extension(const char* extension)
+const dir_listing *dir_append_files_with_extension(const char *extension)
 {
     platform_file_manager_list_directory_contents(0, TYPE_FILE, extension, add_to_listing);
-    qsort(data.listing.files, data.listing.num_files, sizeof(char*), compare_lower);
+    qsort(data.listing.files, data.listing.num_files, sizeof(char *), compare_lower);
     return &data.listing;
 }
 
@@ -186,7 +186,7 @@ const char *dir_get_file(const char *filepath, int localizable)
             }
         }
     }
-    
+
     return get_case_corrected_file(0, filepath);
 }
 

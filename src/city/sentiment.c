@@ -95,7 +95,8 @@ int city_sentiment_get_blessing_festival_boost(void)
 
 void city_sentiment_decrement_blessing_boost(void)
 {
-    city_data.sentiment.blessing_festival_boost *= FESTIVAL_BOOST_DECREMENT_RATE;
+    short new_sentiment = (short) (city_data.sentiment.blessing_festival_boost * FESTIVAL_BOOST_DECREMENT_RATE);
+    city_data.sentiment.blessing_festival_boost = new_sentiment;
 }
 
 static int get_wage_sentiment_modifier(void)

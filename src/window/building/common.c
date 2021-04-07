@@ -81,23 +81,27 @@ static int draw_employment_info(building_info_context *c, building *b, int y_off
     return text_id;
 }
 
-void window_building_draw_levy(int amount, int x_offset, int y_offset) {
+void window_building_draw_levy(int amount, int x_offset, int y_offset)
+{
     image_draw(image_group(GROUP_RESOURCE_ICONS) + 16, x_offset + 300, y_offset + 5);
     int width = text_draw_money(abs(amount), x_offset + 320, y_offset + 10, FONT_SMALL_BLACK);
     if (amount > 0) {
-        text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY), x_offset + 320 + width, y_offset + 10, FONT_SMALL_BLACK, 0);
+        text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY),
+            x_offset + 320 + width, y_offset + 10, FONT_SMALL_BLACK, 0);
     }
 }
 
-void window_building_draw_tourism(building_info_context* c, int x_offset, int y_offset) {
-    building* b = building_get(c->building_id);
+void window_building_draw_tourism(building_info_context *c, int x_offset, int y_offset)
+{
+    building *b = building_get(c->building_id);
     if (b->tourism_income_this_year > 0) {
         //image_draw(image_group(GROUP_RESOURCE_ICONS) + 16, x_offset + 0, y_offset + 5);
-        int width = text_draw_money(abs(b->tourism_income_this_year), x_offset + 0, y_offset + 10, FONT_SMALL_BLACK);
-        text_draw(translation_for(TR_WINDOW_BUILDING_TOURISM_ANNUAL), x_offset + 0 + width, y_offset + 10, FONT_SMALL_BLACK, 0);
-    }
-    else if (b->tourism_disabled) {
-        text_draw(translation_for(TR_WINDOW_BUILDING_TOURISM_DISABLED), x_offset + 0, y_offset + 10, FONT_SMALL_BLACK, 0);
+        int width = text_draw_money(b->tourism_income_this_year, x_offset + 0, y_offset + 10, FONT_SMALL_BLACK);
+        text_draw(translation_for(TR_WINDOW_BUILDING_TOURISM_ANNUAL),
+            x_offset + 0 + width, y_offset + 10, FONT_SMALL_BLACK, 0);
+    } else if (b->tourism_disabled) {
+        text_draw(translation_for(TR_WINDOW_BUILDING_TOURISM_DISABLED),
+            x_offset + 0, y_offset + 10, FONT_SMALL_BLACK, 0);
     }
 }
 
@@ -115,23 +119,23 @@ static void draw_employment_details(building_info_context *c, building *b, int y
         window_building_draw_tourism(c, c->x_offset, y_offset + 100);
     }
 
-	int laborers_needed = model_get_building(b->type)->laborers;
-	if (laborers_needed) {
-		if (text_id) {
-			int width = lang_text_draw_amount(8, 12, b->num_workers,
-				c->x_offset + 60, y_offset + 10, FONT_SMALL_BLACK);
-			width += text_draw_number(laborers_needed, '(', "",
-				c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
-			lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
-			lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_SMALL_BLACK);
-		} else {
-			int width = lang_text_draw_amount(8, 12, b->num_workers,
-				c->x_offset + 60, y_offset + 16, FONT_SMALL_BLACK);
-			width += text_draw_number(laborers_needed, '(', "",
-				c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
-			lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
-		}
-	}
+    int laborers_needed = model_get_building(b->type)->laborers;
+    if (laborers_needed) {
+        if (text_id) {
+            int width = lang_text_draw_amount(8, 12, b->num_workers,
+                c->x_offset + 60, y_offset + 10, FONT_SMALL_BLACK);
+            width += text_draw_number(laborers_needed, '(', "",
+                c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
+            lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_SMALL_BLACK);
+            lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_SMALL_BLACK);
+        } else {
+            int width = lang_text_draw_amount(8, 12, b->num_workers,
+                c->x_offset + 60, y_offset + 16, FONT_SMALL_BLACK);
+            width += text_draw_number(laborers_needed, '(', "",
+                c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
+            lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_SMALL_BLACK);
+        }
+    }
 }
 
 void window_building_draw_employment(building_info_context *c, int y_offset)
@@ -154,7 +158,7 @@ void window_building_draw_description(building_info_context *c, int text_group, 
         16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
 
-void window_building_draw_description_from_tr_string(building_info_context* c, int translation_key)
+void window_building_draw_description_from_tr_string(building_info_context *c, int translation_key)
 {
     text_draw_multiline(translation_for(translation_key), c->x_offset + 32, c->y_offset + 76,
         16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);

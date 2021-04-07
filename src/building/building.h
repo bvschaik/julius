@@ -50,7 +50,7 @@ typedef struct {
     short prev_part_building_id;
     short next_part_building_id;
     short loads_stored;
-    short house_sentiment_message;
+    unsigned char house_sentiment_message;
     unsigned char has_well_access;
     short num_workers;
     unsigned char labor_category;
@@ -205,13 +205,13 @@ int building_get_highest_id(void);
 
 void building_update_highest_id(void);
 
-int building_mothball_toggle(building* b);
+int building_mothball_toggle(building *b);
 
-int building_mothball_set(building* b, int value);
+int building_mothball_set(building *b, int value);
 
-int building_get_tourism(const building* b);
+int building_get_tourism(const building *b);
 
-int building_get_levy(const building* b);
+int building_get_levy(const building *b);
 
 void building_totals_add_corrupted_house(int unfixable);
 

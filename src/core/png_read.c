@@ -36,8 +36,8 @@ static int load_png(const char *path)
         log_error("Unable to open png file", path, 0);
         return 0;
     }
-    fread(header, 1, 8, data.fp);
-    if (png_sig_cmp(header, 0, 8)) {
+    int bytes_read = fread(header, 1, 8, data.fp);
+    if (bytes_read != 8 || png_sig_cmp(header, 0, 8)) {
         log_error("Invalid png file", path, 0);
         unload_png();
         return 0;
