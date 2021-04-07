@@ -39,7 +39,7 @@ typedef struct {
     int resource;
 } looter_destination;
 
-int get_looter_destination(figure* f)
+int get_looter_destination(figure *f)
 {
     inventory_storage_info info[INVENTORY_MAX];
     looter_destination possible_destinations[INVENTORY_MAX];
@@ -53,7 +53,7 @@ int get_looter_destination(figure* f)
     int options = 0;
 
     for (int i = 0; i < INVENTORY_MAX; ++i) {
-        if (info[i].building_id > 0) {            
+        if (info[i].building_id > 0) {
             possible_destinations[options].building_id = info[i].building_id;
             possible_destinations[options].resource = i;
             options += 1;
@@ -64,7 +64,7 @@ int get_looter_destination(figure* f)
         int random_index = random_from_stdlib() % options;
         building_id = possible_destinations[random_index].building_id;
 
-        building* storage = building_get(building_id);
+        building *storage = building_get(building_id);
         resource = resource_from_inventory(possible_destinations[random_index].resource);
 
         f->destination_x = storage->road_access_x;
@@ -73,20 +73,19 @@ int get_looter_destination(figure* f)
         f->collecting_item_id = resource;
 
         return storage->id;
-    }
-    else {
+    } else {
         return 0;
     }
 }
 
-void figure_crime_loot_storage(figure* f, int resource, int building_id) {
-    building* storage = building_get(building_id);
+void figure_crime_loot_storage(figure *f, int resource, int building_id)
+{
+    building *storage = building_get(building_id);
 
-    if (storage->type == BUILDING_GRANARY) {        
+    if (storage->type == BUILDING_GRANARY) {
         building_granary_remove_resource(storage, resource, 100);
         city_warning_show(WARNING_GRANARY_BREAKIN);
-    }
-    else {
+    } else {
         building_warehouse_remove_resource(storage, resource, 1);
         city_warning_show(WARNING_WAREHOUSE_BREAKIN);
     }
@@ -95,7 +94,8 @@ void figure_crime_loot_storage(figure* f, int resource, int building_id) {
     city_message_post_with_popup_delay(MESSAGE_CAT_THEFT, MESSAGE_LOOTING, storage->type, f->grid_offset);
 }
 
-static void figure_crime_steal_money(figure *f) {
+static void figure_crime_steal_money(figure *f)
+{
     int treasury = city_finance_treasury();
     int money_stolen = treasury / 40;
     if (money_stolen > 400) {
@@ -108,14 +108,14 @@ static void figure_crime_steal_money(figure *f) {
     city_message_apply_sound_interval(MESSAGE_CAT_THEFT);
     city_message_post_with_popup_delay(MESSAGE_CAT_THEFT, MESSAGE_THEFT, money_stolen, f->grid_offset);
     city_warning_show(WARNING_THEFT);
-    city_finance_process_stolen(money_stolen);    
+    city_finance_process_stolen(money_stolen);
 }
 
-static void generate_striker(building* b)
+static void generate_striker(building *b)
 {
     int x_road, y_road;
     if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road) && b->figure_id4 == 0) {
-        figure* f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM);
+        figure *f = figure_create(FIGURE_PROTESTER, x_road, y_road, DIR_4_BOTTOM);
         f->building_id = b->id;
         b->figure_id4 = f->id;
     }
@@ -133,7 +133,7 @@ static void generate_rioter(building *b, int amount)
     }
 
     city_sentiment_add_criminal();
-        
+
     for (int i = 0; i < amount; i++) {
         figure *f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
         f->action_state = FIGURE_ACTION_120_RIOTER_CREATED;
@@ -148,7 +148,7 @@ static void generate_rioter(building *b, int amount)
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(x_road, y_road));
 }
 
-static void generate_looter(building* b, int amount)
+static void generate_looter(building *b, int amount)
 {
     int x_road, y_road;
     if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road)) {
@@ -157,7 +157,7 @@ static void generate_looter(building* b, int amount)
     city_sentiment_add_criminal();
 
     for (int i = 0; i < amount; i++) {
-        figure* f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
+        figure *f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
         f->terrain_usage = TERRAIN_USAGE_ANY;
         f->action_state = FIGURE_ACTION_226_CRIMINAL_LOOTER_CREATED;
         f->roam_length = 0;
@@ -165,12 +165,12 @@ static void generate_looter(building* b, int amount)
     }
 }
 
-static void generate_robber(building* b, int amount)
+static void generate_robber(building *b, int amount)
 {
     if (city_finance_treasury() < 400) {
         return;
     }
-    
+
     int x_road, y_road;
     if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road)) {
         return;
@@ -178,7 +178,7 @@ static void generate_robber(building* b, int amount)
     city_sentiment_add_criminal();
 
     for (int i = 0; i < amount; i++) {
-        figure* f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
+        figure *f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
         f->action_state = FIGURE_ACTION_227_CRIMINAL_ROBBER_CREATED;
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
@@ -220,7 +220,7 @@ void figure_generate_criminals(void)
         }
     }
     if (min_building) {
-        min_building->sentiment.house_happiness += 50;
+        min_building->sentiment.house_happiness += 5;
         if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
             return;
         }
@@ -233,7 +233,6 @@ void figure_generate_criminals(void)
                     generate_rioter(min_building, amount);
                     generate_looter(min_building, amount);
                     generate_robber(min_building, amount);
-                                      
                 } else if (min_happiness < 30) {
                     generate_looter(min_building, 2);
                 } else if (min_happiness < 50) {
@@ -298,7 +297,7 @@ void figure_rioter_action(figure *f)
                 f->action_state = FIGURE_ACTION_121_RIOTER_MOVING;
                 int x_tile, y_tile, resource = 0, target_building_id;
                 target_building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
-                
+
                 if (target_building_id) {
                     f->destination_x = x_tile;
                     f->destination_y = y_tile;
@@ -320,8 +319,7 @@ void figure_rioter_action(figure *f)
                 if (target_building_id) {
                     f->action_state = FIGURE_ACTION_228_CRIMINAL_GOING_TO_LOOT;
                     figure_route_remove(f);
-                }
-                else {
+                } else {
                     f->state = FIGURE_STATE_DEAD;
                     figure_route_remove(f);
                 }
@@ -341,8 +339,7 @@ void figure_rioter_action(figure *f)
                     f->collecting_item_id = resource;
                     f->action_state = FIGURE_ACTION_229_CRIMINAL_GOING_TO_ROB;
                     figure_route_remove(f);
-                }
-                else {
+                } else {
                     f->action_state = FIGURE_ACTION_226_CRIMINAL_LOOTER_CREATED;
                     figure_route_remove(f);
                 }
@@ -353,8 +350,8 @@ void figure_rioter_action(figure *f)
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 figure_rioter_collapse_building(f);
-                
-                int x_tile, y_tile;                
+
+                int x_tile, y_tile;
                 int building_id = formation_rioter_get_target_building(&x_tile, &y_tile);
                 if (building_id) {
                     f->destination_x = x_tile;
@@ -392,7 +389,7 @@ void figure_rioter_action(figure *f)
             }
             break;
     }
-    
+
     int dir;
     if (f->direction == DIR_FIGURE_ATTACK) {
         dir = f->attack_direction;
@@ -438,7 +435,7 @@ int figure_rioter_collapse_building(figure *f)
             case BUILDING_GRANARY:
             case BUILDING_FORUM:
             case BUILDING_SENATE:
-            continue;
+                continue;
         }
         if (b->house_size && b->subtype.house_level < HOUSE_SMALL_CASA) {
             continue;

@@ -82,7 +82,7 @@ static void advance_month(void)
     city_victory_update_months_to_govern();
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();
-    decrement_blessing_festival_boost();
+    city_sentiment_decrement_blessing_boost();
     building_industry_start_strikes();
 
     map_tiles_update_all_hedges();

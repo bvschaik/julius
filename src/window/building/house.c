@@ -69,39 +69,54 @@ static void draw_tax_info(building_info_context *c, int y_offset)
 static void draw_happiness_info(building_info_context *c, int y_offset)
 {
     int happiness = building_get(c->building_id)->sentiment.house_happiness;
-    int width = text_draw(translation_for(calc_bound(happiness / 10, 0, 9) + TR_BUILDING_WINDOW_HOUSE_SENTIMENT_1), c->x_offset + 36, y_offset, FONT_SMALL_BLACK, 0);
+    int sentiment_text_id = TR_BUILDING_WINDOW_HOUSE_SENTIMENT_1;
+    if (happiness > 0) {
+        sentiment_text_id = happiness / 10 + TR_BUILDING_WINDOW_HOUSE_SENTIMENT_2;
+    }
+    int width = text_draw(translation_for(sentiment_text_id), c->x_offset + 36, y_offset, FONT_SMALL_BLACK, 0);
     // todo: for testing purposes. remove later
     text_draw_number(happiness, '(', ")", c->x_offset + 36 + width, y_offset, FONT_SMALL_BLACK);
     int message = building_get(c->building_id)->house_sentiment_message;
-       
+
     switch (message) {
-        case (LOW_MOOD_CAUSE_NO_JOBS):
-            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_UNEMPLOYMENT), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+        case LOW_MOOD_CAUSE_NO_JOBS:
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_UNEMPLOYMENT),
+                c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
             break;
-        case (LOW_MOOD_CAUSE_HIGH_TAXES):
-            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_HIGH_TAXES), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+        case LOW_MOOD_CAUSE_HIGH_TAXES:
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_HIGH_TAXES),
+                c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
             break;
-        case (LOW_MOOD_CAUSE_LOW_WAGES):
-            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_LOW_WAGES), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+        case LOW_MOOD_CAUSE_LOW_WAGES:
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_LOW_WAGES),
+                c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
             break;
-        case (LOW_MOOD_CAUSE_SQUALOR):
-            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_SQUALOR), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+        case LOW_MOOD_CAUSE_SQUALOR:
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_UPSET_SQUALOR),
+                c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
             break;
-        case (SUGGEST_MORE_ENT):
-            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_SUGGEST_ENTERTAINMENT), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+        case SUGGEST_MORE_ENT:
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_SUGGEST_ENTERTAINMENT),
+                c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
             break;
-        case (SUGGEST_MORE_FOOD):
-            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_SUGGEST_FOOD), c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+        case SUGGEST_MORE_FOOD:
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_SUGGEST_FOOD),
+                c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
+            break;
+        case SUGGEST_MORE_DESIRABILITY:
+            text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_SUGGEST_DESIRABILITY),
+                c->x_offset + 36, y_offset + 20, FONT_SMALL_BLACK, 0);
             break;
         default:
             break;
     }
 
-    if (city_sentiment_blessing_festival_sentiment_boost() > 3) {
-        text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_RECENT_EVENT_POSITIVE), c->x_offset + 36, y_offset + 40, FONT_SMALL_BLACK, 0);
-    }
-    else if (city_sentiment_blessing_festival_sentiment_boost() < -3) {
-        text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_RECENT_EVENT_NEGATIVE), c->x_offset + 36, y_offset + 40, FONT_SMALL_BLACK, 0);
+    if (city_sentiment_get_blessing_festival_boost() > 3) {
+        text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_RECENT_EVENT_POSITIVE),
+            c->x_offset + 36, y_offset + 40, FONT_SMALL_BLACK, 0);
+    } else if (city_sentiment_get_blessing_festival_boost() < -3) {
+        text_draw(translation_for(TR_BUILDING_WINDOW_HOUSE_RECENT_EVENT_NEGATIVE),
+            c->x_offset + 36, y_offset + 40, FONT_SMALL_BLACK, 0);
     }
 }
 
@@ -171,10 +186,11 @@ void window_building_draw_house(building_info_context *c)
         c->x_offset + 394, c->y_offset + y_amount, FONT_SMALL_BLACK);
 
     if (b->data.house.evolve_text_id == 62) {
-        int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id, c->x_offset + 32, c->y_offset + 60, FONT_NORMAL_BLACK);
+        int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id,
+            c->x_offset + 32, c->y_offset + 60, FONT_NORMAL_BLACK);
         width += lang_text_draw_colored(41, building_get(c->worst_desirability_building_id)->type,
             c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
-        text_draw((uint8_t*)")", c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_BLACK, 0);
+        text_draw((uint8_t *) ")", c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_BLACK, 0);
         lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id,
             c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
     } else {

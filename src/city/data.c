@@ -245,7 +245,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.finance.levies_so_far);
     buffer_write_i32(main, city_data.finance.this_year.expenses.levies);
     buffer_write_i32(main, city_data.finance.last_year.expenses.levies);
-    buffer_write_i32(main, city_data.unused.unknown_4238[0]);    
+    buffer_write_i32(main, city_data.unused.unknown_4238[0]);
     buffer_write_i32(main, city_data.ratings.prosperity_treasury_last_year);
     buffer_write_i32(main, city_data.ratings.culture_points.theater);
     buffer_write_i32(main, city_data.ratings.culture_points.religion);
@@ -346,7 +346,7 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 2; i++) {
         buffer_write_i16(main, city_data.unused.unknown_439c[i]);
     }
-    buffer_write_i16(main, city_data.sentiment.blessing_festival_sentiment_boost);
+    buffer_write_i16(main, city_data.sentiment.blessing_festival_boost);
     buffer_write_i16(main, city_data.figure.animals);
     buffer_write_i16(main, city_data.trade.num_sea_routes);
     buffer_write_i16(main, city_data.trade.num_land_routes);
@@ -741,7 +741,7 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     city_data.finance.levies_so_far = buffer_read_i32(main);
     city_data.finance.this_year.expenses.levies = buffer_read_i32(main);
     city_data.finance.last_year.expenses.levies = buffer_read_i32(main);
-    city_data.unused.unknown_4238[0] = buffer_read_i32(main);    
+    city_data.unused.unknown_4238[0] = buffer_read_i32(main);
     city_data.ratings.prosperity_treasury_last_year = buffer_read_i32(main);
     city_data.ratings.culture_points.theater = buffer_read_i32(main);
     city_data.ratings.culture_points.religion = buffer_read_i32(main);
@@ -842,7 +842,7 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     for (int i = 0; i < 2; i++) {
         city_data.unused.unknown_439c[i] = buffer_read_i16(main);
     }
-    city_data.sentiment.blessing_festival_sentiment_boost = buffer_read_i16(main);
+    city_data.sentiment.blessing_festival_boost = buffer_read_i16(main);
     city_data.figure.animals = buffer_read_i16(main);
     city_data.trade.num_sea_routes = buffer_read_i16(main);
     city_data.trade.num_land_routes = buffer_read_i16(main);
@@ -1068,7 +1068,7 @@ static void load_entry_exit(buffer *entry_exit_xy, buffer *entry_exit_grid_offse
 }
 
 void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
-                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
+    buffer *entry_exit_xy, buffer *entry_exit_grid_offset)
 {
     save_main_data(main);
 
@@ -1082,7 +1082,7 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
 }
 
 void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
-                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset,  int has_separate_import_limits)
+    buffer *entry_exit_xy, buffer *entry_exit_grid_offset, int has_separate_import_limits)
 {
     load_main_data(main, has_separate_import_limits);
 

@@ -39,7 +39,7 @@ static struct {
     int created_sequence;
     int incorrect_houses;
     int unfixable_houses;
-} extra = {0, 0, 0, 0};
+} extra = { 0, 0, 0, 0 };
 
 building *building_get(int id)
 {
@@ -131,7 +131,7 @@ building *building_create(building_type type, int x, int y)
     b->type = type;
     b->size = props->size;
     b->created_sequence = extra.created_sequence++;
-    b->sentiment.house_happiness = 50;
+    b->sentiment.house_happiness = 100;
     b->distance_from_entry = 0;
 
     // house size
@@ -219,16 +219,16 @@ building *building_create(building_type type, int x, int y)
     if (type == BUILDING_GRANARY) {
         b->data.granary.resource_stored[RESOURCE_NONE] = 2400;
     }
-    
+
     if (type == BUILDING_MARKET) {
-	// Set it as accepting all goods
+        // Set it as accepting all goods
         b->subtype.market_goods = 0x0000;
     }
 
-    if(type == BUILDING_WAREHOUSE || type == BUILDING_HIPPODROME) {
+    if (type == BUILDING_WAREHOUSE || type == BUILDING_HIPPODROME) {
         b->subtype.orientation = building_rotation_get_rotation();
     }
-    
+
     b->x = x;
     b->y = y;
     b->grid_offset = map_grid_offset(x, y);
@@ -315,11 +315,11 @@ void building_update_state(void)
                     road_recalc = 1;
                 }
                 map_building_tiles_remove(i, b->x, b->y);
-		if (b->type == BUILDING_ROADBLOCK) {
-		    // Leave the road behind the deleted roadblock
-		    map_terrain_add_roadblock_road(b->x,b->y,0);
+                if (b->type == BUILDING_ROADBLOCK) {
+                    // Leave the road behind the deleted roadblock
+                    map_terrain_add_roadblock_road(b->x, b->y, 0);
                     road_recalc = 1;
-		}
+                }
                 land_recalc = 1;
                 building_delete(b);
             } else if (b->state == BUILDING_STATE_RUBBLE) {
@@ -381,7 +381,7 @@ int building_is_statue_garden_temple(building_type type)
         (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE) ||
         (type >= BUILDING_SMALL_POND && type <= BUILDING_PANTHEON) ||
         (type == BUILDING_GARDENS)
-     );
+        );
 }
 
 int building_is_ceres_temple(building_type type)
@@ -410,7 +410,8 @@ int building_is_venus_temple(building_type type)
 }
 
 // all buildings capable of collecting and storing goods as a market
-int building_has_supplier_inventory(building_type type) {
+int building_has_supplier_inventory(building_type type)
+{
     return (type == BUILDING_MARKET ||
         type == BUILDING_MESS_HALL ||
         type == BUILDING_SMALL_TEMPLE_CERES ||
@@ -470,24 +471,24 @@ int building_mothball_set(building *b, int mothball)
 
 }
 
-int building_get_levy(const building* b)
+int building_get_levy(const building *b)
 {
     int levy = b->monthly_levy;
     if (levy <= 0) {
         return 0;
     }
     //Pantheon base bonus
-    if (building_monument_working(BUILDING_PANTHEON) && 
+    if (building_monument_working(BUILDING_PANTHEON) &&
         ((b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) ||
         (b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) || b->type == BUILDING_ORACLE)) {
         levy = (levy / 4) * 3;
     }
-        
+
     return difficulty_adjust_levies(levy);
-    
+
 }
 
-int building_get_tourism(const building* b)
+int building_get_tourism(const building *b)
 {
     return b->is_tourism_venue;
 }
@@ -513,7 +514,7 @@ void building_clear_all(void)
 }
 
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *sequence, buffer *corrupt_houses)
+    buffer *sequence, buffer *corrupt_houses)
 {
     int buf_size = 4 + data.building_array_size * BUILDING_STATE_CURRENT_BUFFER_SIZE;
     uint8_t *buf_data = malloc(buf_size);
@@ -532,7 +533,7 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
 }
 
 void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *sequence, buffer *corrupt_houses, int includes_building_size)
+    buffer *sequence, buffer *corrupt_houses, int includes_building_size)
 {
     int building_buf_size = BUILDING_STATE_ORIGINAL_BUFFER_SIZE;
     int buf_size = buf->size;
@@ -540,8 +541,8 @@ void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     if (includes_building_size) {
         building_buf_size = buffer_read_i32(buf);
         buf_size -= 4;
-    }      
-    
+    }
+
     int buildings_to_load = buf_size / building_buf_size;
 
     create_building_array(buildings_to_load);

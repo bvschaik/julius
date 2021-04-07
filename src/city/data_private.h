@@ -227,7 +227,7 @@ extern struct city_data_t {
         int32_t unemployment;
         int32_t wages;
         int32_t low_mood_cause;
-        int16_t blessing_festival_sentiment_boost;
+        int16_t blessing_festival_boost;
 
         int32_t protesters;
         int32_t criminals; // muggers+rioters

@@ -28,6 +28,7 @@ typedef enum {
     LOW_MOOD_CAUSE_SQUALOR = 6,
     SUGGEST_MORE_ENT = 7,
     SUGGEST_MORE_FOOD = 8,
+    SUGGEST_MORE_DESIRABILITY = 9
 } low_mood_cause;
 
 typedef enum {

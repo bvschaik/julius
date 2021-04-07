@@ -88,15 +88,14 @@ static void update_buildings(void)
             step_size = model->desirability_step_size;
             range = model->desirability_range;
 
-            //Venus Module 2 House Desirability Bonus
+            // Venus Module 2 House Desirability Bonus
             if (building_is_house(b->type) && b->data.house.temple_venus && venus_module2) {
                 if (b->subtype.house_level >= HOUSE_SMALL_VILLA) {
                     value += 4;
                     range += 1;
-                }
-                else {
+                } else {
                     value += 2;
-                }                              
+                }
             }
 
             if (building_monument_is_monument(b) && b->data.monument.monument_phase != MONUMENT_FINISHED) {
@@ -106,7 +105,7 @@ static void update_buildings(void)
                 range = 0;
             }
 
-            //Venus GT Base Bonus
+            // Venus GT Base Bonus
             if (building_is_statue_garden_temple(b->type) && venus_gt) {
                 value_bonus = ((value / 4) > 1) ? (value / 4) : 1;
                 value += value_bonus;

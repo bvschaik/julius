@@ -51,7 +51,7 @@ void city_gods_reset_neptune_blessing(void)
 }
 
 void city_gods_update_blessings(void)
-{   
+{
     if (city_data.religion.neptune_double_trade_active > 0) {
         city_data.religion.neptune_double_trade_active--;
     }
@@ -82,7 +82,7 @@ static void perform_blessing(god_type god)
             break;
         case GOD_VENUS:
             city_message_post(1, MESSAGE_BLESSING_FROM_VENUS_ALTERNATE, 0, 0);
-            city_data.sentiment.blessing_festival_sentiment_boost += 18;
+            city_data.sentiment.blessing_festival_boost += 18;
             city_population_venus_blessing();
             city_data.religion.venus_blessing_months_left = VENUS_BLESSING_MONTHS;
             break;
@@ -114,7 +114,7 @@ static void perform_small_curse(god_type god)
             break;
         case GOD_VENUS:
             city_message_post(1, MESSAGE_VENUS_IS_UPSET, 0, 0);
-            city_data.sentiment.blessing_festival_sentiment_boost -= 15;
+            city_data.sentiment.blessing_festival_boost -= 15;
             city_health_change(-10);
             city_sentiment_update();
             break;
@@ -442,6 +442,7 @@ int city_god_neptune_create_shipwreck_flotsam(void)
     }
 }
 
-void city_god_blessing_cheat(int god_id){
+void city_god_blessing_cheat(int god_id)
+{
     perform_blessing(god_id);
 }
