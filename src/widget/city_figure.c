@@ -58,6 +58,7 @@ static void draw_hippodrome_horse(const figure *f, int x, int y)
             } else {
                 y -= 12;
             }
+            // fall through
         case DIR_4_BOTTOM:
             x += 20;
             if (val <= 9) {
@@ -136,7 +137,7 @@ static void draw_map_flag(const figure *f, int x, int y)
 }
 
 static void tile_cross_country_offset_to_pixel_offset(int cross_country_x, int cross_country_y,
-                                                      int *pixel_x, int *pixel_y)
+    int *pixel_x, int *pixel_y)
 {
     int dir = city_view_orientation();
     if (dir == DIR_0_TOP || dir == DIR_4_BOTTOM) {

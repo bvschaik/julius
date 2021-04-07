@@ -362,7 +362,7 @@ void figure_tourist_action(figure *f)
             f->is_ghost = 1;
             f->image_offset = 0;
             f->action_state = FIGURE_ACTION_218_TOURIST_CHOOSING_DESTINATION;
-
+            break;
         case FIGURE_ACTION_218_TOURIST_CHOOSING_DESTINATION:
             f->use_cross_country = 1;
             f->is_ghost = 1;
