@@ -80,7 +80,7 @@ void city_message_init_scenario(void)
     data.population_shown.pop20000 = 0;
     data.population_shown.pop25000 = 0;
 
-    for (int i = 0; i <= MESSAGE_CAT_MAX; i++) {
+    for (int i = 0; i < MESSAGE_CAT_MAX; i++) {
         data.last_sound_time[i] = 0;
     }
 
