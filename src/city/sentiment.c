@@ -17,7 +17,6 @@
 
 #define MAX_SENTIMENT_FROM_EXTRA_ENTERTAINMENT 24
 #define MAX_SENTIMENT_FROM_EXTRA_FOOD 24
-#define GOOD_HOUSING_LEVEL HOUSE_LARGE_INSULA
 #define FESTIVAL_BOOST_DECREMENT_RATE 0.84
 #define UNEMPLOYMENT_THRESHHOLD 5
 #define MAX_TAX_MULTIPLIER 12
@@ -140,8 +139,17 @@ static int get_average_housing_level(void)
         if (b->state != BUILDING_STATE_IN_USE || !b->house_size || !b->house_population) {
             continue;
         }
-        avg += b->subtype.house_level * b->house_population;
-        population += b->house_population;
+        int house_level = b->subtype.house_level;
+        int multiplier = 1;
+        if (house_level >= HOUSE_SMALL_VILLA) {
+            multiplier++; // Villas count twice
+            if (house_level >= HOUSE_SMALL_PALACE) {
+                multiplier++; // Palaces count thrice
+            }
+        }        
+        int house_population =  b->house_population * multiplier;
+        avg += house_level * house_population;
+        population += house_population;
     }
     if (population) {
         avg = avg / population;
@@ -215,6 +223,11 @@ void city_sentiment_update(void)
 
         int house_level_sentiment = house_level_sentiment_modifier(b->subtype.house_level, average_housing_level);
         if (house_level_sentiment < 0) {
+            if (b->subtype.house_level <= HOUSE_SMALL_CASA) {
+                house_level_sentiment *= 2;
+            } else if (b->subtype.house_level >= HOUSE_GRAND_INSULA) {
+                house_level_sentiment = 0;
+            }
             average_squalor_penalty += house_level_sentiment;
         }
         sentiment += house_level_sentiment;
