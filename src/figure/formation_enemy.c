@@ -48,21 +48,21 @@ static const int ENEMY_ATTACK_PRIORITY[4][100] = {
 };
 
 static const int RIOTER_ATTACK_PRIORITY[29] = {
-    BUILDING_GOVERNORS_PALACE, 
-    BUILDING_GOVERNORS_VILLA, 
-    BUILDING_GOVERNORS_HOUSE, 
-    BUILDING_AMPHITHEATER, 
-    BUILDING_THEATER, 
-    BUILDING_HOSPITAL, 
-    BUILDING_ACADEMY, 
-    BUILDING_BATHHOUSE, 
-    BUILDING_LIBRARY, 
-    BUILDING_SCHOOL, 
-    BUILDING_DOCTOR, 
-    BUILDING_GLADIATOR_SCHOOL, 
-    BUILDING_ACTOR_COLONY, 
-    BUILDING_CHARIOT_MAKER, 
-    BUILDING_LION_HOUSE, 
+    BUILDING_GOVERNORS_PALACE,
+    BUILDING_GOVERNORS_VILLA,
+    BUILDING_GOVERNORS_HOUSE,
+    BUILDING_AMPHITHEATER,
+    BUILDING_THEATER,
+    BUILDING_HOSPITAL,
+    BUILDING_ACADEMY,
+    BUILDING_BATHHOUSE,
+    BUILDING_LIBRARY,
+    BUILDING_SCHOOL,
+    BUILDING_DOCTOR,
+    BUILDING_GLADIATOR_SCHOOL,
+    BUILDING_ACTOR_COLONY,
+    BUILDING_CHARIOT_MAKER,
+    BUILDING_LION_HOUSE,
     BUILDING_BARBER,
     BUILDING_TAVERN,
     BUILDING_ARENA,
@@ -193,18 +193,14 @@ int formation_rioter_get_target_building(int *x_tile, int *y_tile)
     }
 }
 
-int formation_rioter_get_target_building_for_robbery(int x, int y, int* x_tile, int* y_tile)
+int formation_rioter_get_target_building_for_robbery(int x, int y, int *x_tile, int *y_tile)
 {
-    int best_type_index = 100;
-    building* best_building = 0;
+    building *best_building = 0;
     int closest = 10000;
     for (int i = 1; i < building_count(); i++) {
-        building* b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
-            continue;
-        }
-
-        if (b->type != BUILDING_FORUM && b->type != BUILDING_SENATE) {
+        building *b = building_get(i);
+        if (b->state != BUILDING_STATE_IN_USE ||
+            (b->type != BUILDING_FORUM && b->type != BUILDING_SENATE)) {
             continue;
         }
 
@@ -223,8 +219,8 @@ int formation_rioter_get_target_building_for_robbery(int x, int y, int* x_tile, 
 
     *x_tile = best_building->road_access_x;
     *y_tile = best_building->road_access_y;
+
     return best_building->id;
-    
 }
 
 static void set_enemy_target_building(formation *m)
@@ -308,13 +304,15 @@ static void set_native_target_building(formation *m)
             case BUILDING_FORT:
             case BUILDING_ROADBLOCK:
                 break;
-            default: {
-                int distance = calc_maximum_distance(meeting_x, meeting_y, b->x, b->y);
-                if (distance < min_distance) {
-                    min_building = b;
-                    min_distance = distance;
+            default:
+                {
+                    int distance = calc_maximum_distance(meeting_x, meeting_y, b->x, b->y);
+                    if (distance < min_distance) {
+                        min_building = b;
+                        min_distance = distance;
+                    }
                 }
-            }
+                break;
         }
     }
     if (min_building) {
@@ -325,12 +323,12 @@ static void set_native_target_building(formation *m)
 static void approach_target(formation *m)
 {
     if (map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home,
-            m->destination_x, m->destination_y, m->destination_building_id, 400) ||
+        m->destination_x, m->destination_y, m->destination_building_id, 400) ||
         map_routing_noncitizen_can_travel_through_everything(m->x_home, m->y_home,
-            m->destination_x, m->destination_y)) {
+        m->destination_x, m->destination_y)) {
         int x_tile, y_tile;
         if (map_routing_get_closest_tile_within_range(m->x_home, m->y_home,
-                m->destination_x, m->destination_y, 8, 20, &x_tile, &y_tile)) {
+            m->destination_x, m->destination_y, 8, 20, &x_tile, &y_tile)) {
             formation_set_destination(m, x_tile, y_tile);
         }
     }

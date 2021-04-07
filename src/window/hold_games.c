@@ -23,8 +23,6 @@
 #include "window/message_dialog.h"
 
 static void button_game(int god, int param2);
-static void button_size(int size, int param2);
-static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_hold_games(int param1, int param2);
 
@@ -53,7 +51,7 @@ static void draw_background(void)
         city_data.games.selected_games_id = 1;
         selected_game_id = 1;
     }
-    games_type* game = get_game_from_id(selected_game_id);
+    games_type *game = get_game_from_id(selected_game_id);
 
     window_advisors_draw_dialog_background();
     graphics_in_dialog();
@@ -65,13 +63,12 @@ static void draw_background(void)
             button_border_draw(100 * i + 165, 92, 90, 100, 1);
             image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
                 "Naum Ico S") + (2 * i), 100 * i + 170, 96);
-        }
-        else {
+        } else {
             image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
                 "Naum Ico DS") + (2 * i), 100 * i + 170, 96);
         }
     }
-    text_draw_multiline(translation_for(game->description_key), 70, 222, 500, FONT_NORMAL_BLACK, 0);    
+    text_draw_multiline(translation_for(game->description_key), 70, 222, 500, FONT_NORMAL_BLACK, 0);
 
     int width = text_draw(translation_for(TR_WINDOW_GAMES_COST), 120, 300, FONT_NORMAL_BLACK, 0);
     width += text_draw_money(game->cost, 120 + width, 300, FONT_NORMAL_BLACK);
@@ -79,13 +76,13 @@ static void draw_background(void)
 
     width = 0;
     int has_resources = 1;
-    for (int i = 0; i < RESOURCE_MAX; ++i) {        
+    for (int i = 0; i < RESOURCE_MAX; ++i) {
         if (game->resource_cost[i]) {
             width += text_draw_number(game->resource_cost[i], '@', "", 120 + width, 320, FONT_NORMAL_BLACK);
             if (city_resource_get_stored(i) < game->resource_cost[i]) {
                 has_resources = 0;
             }
-            image_draw(image_group(GROUP_RESOURCE_ICONS) + i, 120 + width, 316);    
+            image_draw(image_group(GROUP_RESOURCE_ICONS) + i, 120 + width, 316);
             width += 32;
         }
     }
@@ -94,14 +91,12 @@ static void draw_background(void)
         text_draw(translation_for(TR_WINDOW_GAMES_NO_VENUE), 130, 352, FONT_NORMAL_BLACK, 0);
     } else if (city_emperor_personal_savings() < game->cost) {
         text_draw(translation_for(TR_WINDOW_GAMES_NOT_ENOUGH_FUNDS), 130, 352, FONT_NORMAL_BLACK, 0);
-    }
-    else if (!has_resources){
+    } else if (!has_resources) {
         text_draw(translation_for(TR_WINDOW_GAMES_NOT_ENOUGH_RESOURCES), 130, 352, FONT_NORMAL_BLACK, 0);
-    }
-    else {
+    } else {
         image_buttons_draw(0, 0, action_button, 1);
     }
-         
+
     graphics_reset_dialog();
 }
 
@@ -112,9 +107,9 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse* m, const hotkeys* h)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
-    const mouse* m_dialog = mouse_in_dialog(m);
+    const mouse *m_dialog = mouse_in_dialog(m);
     int handled = 0;
     handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 1, &focus_image_button_id);
     handled |= image_buttons_handle_mouse(m_dialog, 0, 0, action_button, 1, &focus_image_button_id);
@@ -133,20 +128,6 @@ static void button_game(int game, int param2)
     window_invalidate();
 }
 
-static void button_size(int size, int param2)
-{
-    if (!city_finance_out_of_money()) {
-        if (city_festival_select_size(size)) {
-            window_invalidate();
-        }
-    }
-}
-
-static void button_help(int param1, int param2)
-{
-    window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, 0);
-}
-
 static void button_close(int param1, int param2)
 {
     window_advisors_show();
@@ -158,7 +139,7 @@ static void button_hold_games(int param1, int param2)
     window_advisors_show();
 }
 
-static void get_tooltip(tooltip_context* c)
+static void get_tooltip(tooltip_context *c)
 {
     if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5)) {
         return;
@@ -166,8 +147,8 @@ static void get_tooltip(tooltip_context* c)
     c->type = TOOLTIP_BUTTON;
     // image buttons
     switch (focus_image_button_id) {
-    case 1: c->text_id = 1; break;
-    case 2: c->text_id = 2; break;
+        case 1: c->text_id = 1; break;
+        case 2: c->text_id = 2; break;
     }
 
 }

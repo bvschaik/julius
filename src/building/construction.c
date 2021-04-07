@@ -80,35 +80,38 @@ static struct {
 
 static int last_items_cleared;
 
-static const int FORT_X_OFFSET[4][4] = {{3,4,4,3},{-1,0,0,-1},{-4,-3,-3,4},{0,1,1,0}};
-static const int FORT_Y_OFFSET[4][4] = {{-1,-1,0,0},{-4,-4,-3,-3},{0,0,1,1},{3,3,4,4}};
+static const int FORT_X_OFFSET[4][4] = { {3,4,4,3},{-1,0,0,-1},{-4,-3,-3,4},{0,1,1,0} };
+static const int FORT_Y_OFFSET[4][4] = { {-1,-1,0,0},{-4,-4,-3,-3},{0,0,1,1},{3,3,4,4} };
 
 int building_construction_is_connecting(void)
 {
     switch (data.type) {
-    case BUILDING_HEDGE_DARK:
-    case BUILDING_HEDGE_LIGHT:
-    case BUILDING_COLONNADE:
-    case BUILDING_GARDEN_PATH:
-    case BUILDING_DATE_PATH:
-    case BUILDING_ELM_PATH:
-    case BUILDING_FIG_PATH:
-    case BUILDING_FIR_PATH:
-    case BUILDING_OAK_PATH:
-    case BUILDING_PALM_PATH:
-    case BUILDING_PINE_PATH:
-    case BUILDING_PLUM_PATH:
-        return 1;
-    default:
-        return 0;
+        case BUILDING_HEDGE_DARK:
+        case BUILDING_HEDGE_LIGHT:
+        case BUILDING_COLONNADE:
+        case BUILDING_GARDEN_PATH:
+        case BUILDING_DATE_PATH:
+        case BUILDING_ELM_PATH:
+        case BUILDING_FIG_PATH:
+        case BUILDING_FIR_PATH:
+        case BUILDING_OAK_PATH:
+        case BUILDING_PALM_PATH:
+        case BUILDING_PINE_PATH:
+        case BUILDING_PLUM_PATH:
+            return 1;
+        default:
+            return 0;
     }
 }
 
-static int building_cycles [BUILDING_CYCLES][MAX_CYCLE_SIZE] = {
-    {BUILDING_NONE},
-    {BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY, BUILDING_SMALL_TEMPLE_MARS, BUILDING_SMALL_TEMPLE_VENUS,BUILDING_NONE},
-    {BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY, BUILDING_LARGE_TEMPLE_MARS, BUILDING_LARGE_TEMPLE_VENUS,BUILDING_NONE},
-    {BUILDING_DATE_PATH, BUILDING_ELM_PATH, BUILDING_FIG_PATH, BUILDING_FIR_PATH, BUILDING_OAK_PATH, BUILDING_PALM_PATH, BUILDING_PINE_PATH, BUILDING_PLUM_PATH, BUILDING_NONE},
+static int building_cycles[BUILDING_CYCLES][MAX_CYCLE_SIZE] = {
+    { BUILDING_NONE },
+    { BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY,
+      BUILDING_SMALL_TEMPLE_MARS,  BUILDING_SMALL_TEMPLE_VENUS,   BUILDING_NONE },
+    { BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY,
+      BUILDING_LARGE_TEMPLE_MARS,  BUILDING_LARGE_TEMPLE_VENUS,   BUILDING_NONE },
+    { BUILDING_DATE_PATH, BUILDING_ELM_PATH,  BUILDING_FIG_PATH,  BUILDING_FIR_PATH,
+      BUILDING_OAK_PATH,  BUILDING_PALM_PATH, BUILDING_PINE_PATH, BUILDING_PLUM_PATH, BUILDING_NONE },
 };
 
 int building_construction_cycle(void)
@@ -151,7 +154,7 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
     game_undo_restore_building_state();
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x,y);
+            int grid_offset = map_grid_offset(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                 continue;
             }
@@ -219,7 +222,7 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end)
     int items_placed = 0;
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int grid_offset = map_grid_offset(x,y);
+            int grid_offset = map_grid_offset(x, y);
             if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                 items_placed++;
                 map_terrain_add(grid_offset, TERRAIN_GARDEN);
@@ -250,7 +253,7 @@ static int plot_draggable_building(int x_start, int y_start, int x_end, int y_en
                 if (building_construction_is_connecting()) {
                     building_image_context_mark_connection_grid(grid_offset);
                 } else {
-                map_image_set(grid_offset, image_id);
+                    map_image_set(grid_offset, image_id);
                 }
             }
         }
@@ -262,7 +265,8 @@ static int plot_draggable_building(int x_start, int y_start, int x_end, int y_en
     return items_placed;
 }
 
-static int place_draggable_building(int x_start, int y_start, int x_end, int y_end, int building_type, int image_id, int rotation)
+static int place_draggable_building(int x_start, int y_start, int x_end, int y_end,
+    int building_type, int image_id, int rotation)
 {
     int x_min, y_min, x_max, y_max;
     map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
@@ -274,7 +278,7 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
             int grid_offset = map_grid_offset(x, y);
             if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                 items_placed++;
-                building* b = building_create(building_type, x, y);
+                building *b = building_create(building_type, x, y);
                 b->subtype.orientation = rotation;
                 game_undo_add_building(b);
                 map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
@@ -288,7 +292,8 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
 }
 
 
-static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_start, int x_end, int y_end, struct reservoir_info *info)
+static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_start,
+    int x_end, int y_end, struct reservoir_info *info)
 {
     info->cost = 0;
     info->place_reservoir_at_start = PLACE_RESERVOIR_NO;
@@ -341,8 +346,8 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
         map_routing_block(x_end - 1, y_end - 1, 3);
         mark_construction(x_end - 1, y_end - 1, 3, TERRAIN_ALL, 1);
     }
-    const int aqueduct_offsets_x[] = {0, 2, 0, -2};
-    const int aqueduct_offsets_y[] = {-2, 0, 2, 0};
+    const int aqueduct_offsets_x[] = { 0, 2, 0, -2 };
+    const int aqueduct_offsets_y[] = { -2, 0, 2, 0 };
     int min_dist = 10000;
     int min_dir_start = 0, min_dir_end = 0;
     for (int dir_start = 0; dir_start < 4; dir_start++) {
@@ -353,7 +358,7 @@ static int place_reservoir_and_aqueducts(int measure_only, int x_start, int y_st
             int dy_end = aqueduct_offsets_y[dir_end];
             int dist;
             if (building_construction_place_aqueduct_for_reservoir(1,
-                    x_start + dx_start, y_start + dy_start, x_end + dx_end, y_end + dy_end, &dist)) {
+                x_start + dx_start, y_start + dy_start, x_end + dx_end, y_end + dy_end, &dist)) {
                 if (dist && dist < min_dist) {
                     min_dist = dist;
                     min_dir_start = dir_start;
@@ -625,15 +630,13 @@ void building_construction_update(int x, int y, int grid_offset)
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
-    }
-    else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_TREE) {
+    } else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_TREE) {
         int image_id = assets_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
-    }
-    else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
+    } else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, 0);
         if (items_placed >= 0) {
             current_cost *= items_placed;
@@ -641,13 +644,15 @@ void building_construction_update(int x, int y, int grid_offset)
     } else if (type >= BUILDING_SMALL_STATUE_ALT && type <= BUILDING_SMALL_STATUE_ALT_B) {
         int rotation = building_rotation_get_rotation();
         int rotation_offset = building_properties_for_type(type)->rotation_offset;
-        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"),"sml statue 2") + (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml statue 2") +
+            (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
     } else if (type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT) {
-        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "L Hedge 01") + (BUILDING_HEDGE_LIGHT - type)*11;
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "L Hedge 01") +
+            (BUILDING_HEDGE_LIGHT - type) * 11;
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
             current_cost *= items_placed;
@@ -665,7 +670,6 @@ void building_construction_update(int x, int y, int grid_offset)
             current_cost *= items_placed;
         }
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
-        int rotation = building_rotation_get_rotation();
         int image_id = building_variant_get_image_id(type);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
         if (items_placed >= 0) {
@@ -700,8 +704,12 @@ void building_construction_update(int x, int y, int grid_offset)
         mark_construction(x, y, 3, TERRAIN_ALL, 0);
     } else if (building_is_fort(type)) {
         if (formation_get_num_legions_cached() < formation_get_max_legions()) {
+            int rotation = building_rotation_get_rotation();
+            int orientation = city_view_orientation() / 2;
+            int x_offset = FORT_X_OFFSET[rotation][orientation];
+            int y_offset = FORT_Y_OFFSET[rotation][orientation];
             if (map_building_tiles_are_clear(x, y, 3, TERRAIN_ALL) &&
-                map_building_tiles_are_clear(x + FORT_X_OFFSET[building_rotation_get_rotation()][city_view_orientation()/2], y + FORT_Y_OFFSET[building_rotation_get_rotation()][city_view_orientation()/2], 4, TERRAIN_ALL) &&
+                map_building_tiles_are_clear(x + x_offset, y + y_offset, 4, TERRAIN_ALL) &&
                 city_buildings_has_mess_hall()) {
                 mark_construction(x, y, 3, TERRAIN_ALL, 0);
             }
@@ -715,7 +723,7 @@ void building_construction_update(int x, int y, int grid_offset)
             map_building_tiles_are_clear(x + x_offset_1, y + y_offset_1, 5, TERRAIN_ALL) &&
             map_building_tiles_are_clear(x + x_offset_2, y + y_offset_2, 5, TERRAIN_ALL) &&
             !city_buildings_has_hippodrome()) {
-                mark_construction(x, y, 5, TERRAIN_ALL, 0);
+            mark_construction(x, y, 5, TERRAIN_ALL, 0);
         }
     } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
         if (!map_water_determine_orientation_size2(x, y, 1, 0, 0)) {
@@ -726,11 +734,12 @@ void building_construction_update(int x, int y, int grid_offset)
             data.draw_as_constructing = 1;
         }
     } else if (data.required_terrain.meadow || data.required_terrain.rock || data.required_terrain.tree ||
-            data.required_terrain.water || data.required_terrain.wall || data.required_terrain.distant_water) {
+        data.required_terrain.water || data.required_terrain.wall || data.required_terrain.distant_water) {
         // never mark as constructing
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
-            !(type == BUILDING_BARRACKS && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) &&
+            !(type == BUILDING_BARRACKS && city_buildings_has_barracks() &&
+            !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) &&
             !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center()) &&
             !(type == BUILDING_MESS_HALL && city_buildings_has_mess_hall()) &&
             !building_monument_has_monument(type) &&
@@ -747,11 +756,11 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
 {
     for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
-        if(config_get(CONFIG_GP_CH_WOLVES_BLOCK)) {
-	    if (f->state != FIGURE_STATE_ALIVE || (!figure_is_enemy(f) && f->type != FIGURE_WOLF)) {
-            continue;
-	    }
-	} else if (f->state != FIGURE_STATE_ALIVE || !figure_is_enemy(f)) {
+        if (config_get(CONFIG_GP_CH_WOLVES_BLOCK)) {
+            if (f->state != FIGURE_STATE_ALIVE || (!figure_is_enemy(f) && f->type != FIGURE_WOLF)) {
+                continue;
+            }
+        } else if (f->state != FIGURE_STATE_ALIVE || !figure_is_enemy(f)) {
             continue;
         }
         int dx = (f->x > x_start) ? (f->x - x_start) : (x_start - f->x);
@@ -855,16 +864,16 @@ void building_construction_place(void)
         if (info.place_reservoir_at_start == PLACE_RESERVOIR_YES) {
             building *reservoir = building_create(BUILDING_RESERVOIR, x_start - 1, y_start - 1);
             game_undo_add_building(reservoir);
-            map_building_tiles_add(reservoir->id, x_start-1, y_start-1, 3,
+            map_building_tiles_add(reservoir->id, x_start - 1, y_start - 1, 3,
                 image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
-            map_aqueduct_set(map_grid_offset(x_start-1, y_start-1), 0);
+            map_aqueduct_set(map_grid_offset(x_start - 1, y_start - 1), 0);
         }
         if (info.place_reservoir_at_end == PLACE_RESERVOIR_YES) {
             building *reservoir = building_create(BUILDING_RESERVOIR, x_end - 1, y_end - 1);
             game_undo_add_building(reservoir);
-            map_building_tiles_add(reservoir->id, x_end-1, y_end-1, 3,
+            map_building_tiles_add(reservoir->id, x_end - 1, y_end - 1, 3,
                 image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
-            map_aqueduct_set(map_grid_offset(x_end-1, y_end-1), 0);
+            map_aqueduct_set(map_grid_offset(x_end - 1, y_end - 1), 0);
             if (!map_terrain_exists_tile_in_area_with_type(x_start - 2, y_start - 2, 5, TERRAIN_WATER)
                 && info.place_reservoir_at_start == PLACE_RESERVOIR_NO) {
                 building_construction_warning_check_reservoir(BUILDING_RESERVOIR);
@@ -873,25 +882,24 @@ void building_construction_place(void)
         placement_cost = info.cost;
         map_tiles_update_all_aqueducts(0);
         map_routing_update_land();
-    }
-    else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_TREE) {
+    } else if (type >= BUILDING_PINE_TREE && type <= BUILDING_DATE_TREE) {
         int image_id = assets_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, 0);
-    }
-    else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
+    } else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
         int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
         int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();
-    }
-    else if (type >= BUILDING_SMALL_STATUE_ALT && type <= BUILDING_SMALL_STATUE_ALT_B) {
+    } else if (type >= BUILDING_SMALL_STATUE_ALT && type <= BUILDING_SMALL_STATUE_ALT_B) {
         int rotation = building_rotation_get_rotation();
         int rotation_offset = building_properties_for_type(type)->rotation_offset;
-        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml statue 2") +
+            (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
     } else if (type >= BUILDING_HEDGE_DARK && type <= BUILDING_HEDGE_LIGHT) {
         int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
-        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "D Hedge 01") + (type - BUILDING_HEDGE_DARK) * 12;
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "D Hedge 01") +
+            (type - BUILDING_HEDGE_DARK) * 12;
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();
     } else if (type == BUILDING_COLONNADE) {

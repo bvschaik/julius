@@ -288,64 +288,61 @@ void map_orientation_update_buildings(void)
                 map_terrain_add_triumphal_arch_roads(b->x, b->y, b->subtype.orientation);
                 break;
             case BUILDING_HIPPODROME:
-            {
-                int phase = b->data.monument.monument_phase;
-                int phase_offset = 6;
-                int image1 = 0;
-                int image2 = 0;
+                {
+                    int phase = b->data.monument.monument_phase;
+                    int phase_offset = 6;
+                    int image = 0;
 
-                if (phase == -1) {
-                    image1 = image_group(GROUP_BUILDING_HIPPODROME_1);
-                    image2 = image_group(GROUP_BUILDING_HIPPODROME_2);
-                } else {
-                    image1 = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NESW 01") + ((phase - 1) * phase_offset);
-                    image2 = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NWSE 01") + ((phase - 1) * phase_offset);
-                }
-
-                int building_part;
-                if(b->prev_part_building_id == 0){
-					building_part = 0; // part 1, no previous building
-				} else if (b->next_part_building_id == 0) {
-					building_part = 2; // part 3, no next building
-				} else {
-					building_part = 1; // part 2
-				}
-
-				int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
-				if (orientation == DIR_0_TOP) {
-					image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
-					switch (building_part) {
-					case 0: image_id += 0; break; // part 1
-					case 1: image_id += 2; break; // part 2
-					case 2: image_id += 4; break; // part 3, same for switch cases below
-					}
-
-				} else if (orientation == DIR_4_BOTTOM) {
-					image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
-					switch (building_part) {
-					case 0: image_id += 4; break;
-					case 1: image_id += 2; break;
-					case 2: image_id += 0; break;
-					}
-
-				} else if (orientation == DIR_6_LEFT) {
-					image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
-					switch (building_part) {
-					case 0: image_id += 0; break;
-					case 1: image_id += 2; break;
-					case 2: image_id += 4; break;
-					}
-				} else { // DIR_2_RIGHT
-					image_id = image1;
-					switch (building_part) {
-                        case 0: image_id += 4; break;
-                        case 1: image_id += 2; break;
-                        case 2: image_id += 0; break;
+                    if (phase == -1) {
+                        image = image_group(GROUP_BUILDING_HIPPODROME_1);
+                    } else {
+                        image = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NESW 01") + ((phase - 1) * phase_offset);
                     }
+
+                    int building_part;
+                    if (b->prev_part_building_id == 0) {
+                        building_part = 0; // part 1, no previous building
+                    } else if (b->next_part_building_id == 0) {
+                        building_part = 2; // part 3, no next building
+                    } else {
+                        building_part = 1; // part 2
+                    }
+
+                    int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
+                    if (orientation == DIR_0_TOP) {
+                        image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
+                        switch (building_part) {
+                            case 0: image_id += 0; break; // part 1
+                            case 1: image_id += 2; break; // part 2
+                            case 2: image_id += 4; break; // part 3, same for switch cases below
+                        }
+
+                    } else if (orientation == DIR_4_BOTTOM) {
+                        image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
+                        switch (building_part) {
+                            case 0: image_id += 4; break;
+                            case 1: image_id += 2; break;
+                            case 2: image_id += 0; break;
+                        }
+
+                    } else if (orientation == DIR_6_LEFT) {
+                        image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
+                        switch (building_part) {
+                            case 0: image_id += 0; break;
+                            case 1: image_id += 2; break;
+                            case 2: image_id += 4; break;
+                        }
+                    } else { // DIR_2_RIGHT
+                        image_id = image;
+                        switch (building_part) {
+                            case 0: image_id += 4; break;
+                            case 1: image_id += 2; break;
+                            case 2: image_id += 0; break;
+                        }
+                    }
+                    map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
                 }
-                map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
                 break;
-            }
             case BUILDING_SHIPYARD:
                 image_offset = (4 + b->data.industry.orientation - map_orientation / 2) % 4;
                 image_id = image_group(GROUP_BUILDING_SHIPYARD) + image_offset;
@@ -382,7 +379,7 @@ void map_orientation_update_buildings(void)
             image_id = building_variant_get_image_id_with_rotation(b->type, b->variant);
             map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
             if (b->type == BUILDING_ROADBLOCK) {
-                map_terrain_add_roadblock_road(b->x,b->y,0);
+                map_terrain_add_roadblock_road(b->x, b->y, 0);
             }
         }
     }

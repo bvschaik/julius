@@ -270,6 +270,7 @@ games_type *get_game_from_id(int id)
             return &ALL_GAMES[i];
         }
     }
+    return 0;
 }
 
 static void post_games_message(int type)
@@ -282,6 +283,7 @@ static void post_games_message(int type)
 static void begin_games(void)
 {
     games_type *game = get_game_from_id(city_data.games.selected_games_id);
+
     city_data.games.months_to_go = 0;
     city_data.games.games_is_active = 1;
     city_data.games.remaining_duration = game->duration_days;
@@ -291,7 +293,6 @@ static void begin_games(void)
 
 static void end_games(void)
 {
-    games_type *game = get_game_from_id(city_data.games.selected_games_id);
     city_data.games.games_is_active = 0;
     city_data.games.remaining_duration = 0;
 

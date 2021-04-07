@@ -56,7 +56,7 @@ static generic_button file_buttons[] = {
     {160, 304, 288, 16, button_select_file, button_none, 11, 0},
 };
 
-static scrollbar_type scrollbar = {464, 120, 206, on_scroll};
+static scrollbar_type scrollbar = { 464, 120, 206, on_scroll };
 
 typedef struct {
     char extension[4];
@@ -77,11 +77,11 @@ static struct {
     char selected_file[FILE_NAME_MAX];
 } data;
 
-static input_box file_name_input = {144, 80, 20, 2, FONT_NORMAL_WHITE, 0, data.typed_name, FILE_NAME_MAX};
+static input_box file_name_input = { 144, 80, 20, 2, FONT_NORMAL_WHITE, 0, data.typed_name, FILE_NAME_MAX };
 
-static file_type_data saved_game_data = {"sav"};
-static file_type_data saved_game_data_expanded = {"svx"};
-static file_type_data scenario_data = {"map"};
+static file_type_data saved_game_data = { "sav" };
+static file_type_data saved_game_data_expanded = { "svx" };
+static file_type_data scenario_data = { "map" };
 
 static int find_first_file_with_prefix(const char *prefix)
 {
@@ -132,12 +132,12 @@ static void init(file_type type, file_dialog_type dialog_type)
 
     if (strlen(data.file_data->last_loaded_file) > 0) {
         encoding_from_utf8(data.file_data->last_loaded_file, data.typed_name, FILE_NAME_MAX);
-        file_remove_extension(data.typed_name);
+        file_remove_extension((char *) data.typed_name);
     } else if (dialog_type == FILE_DIALOG_SAVE) {
         // Suggest default filename
         string_copy(lang_get_string(9, type == FILE_TYPE_SCENARIO ? 7 : 6), data.typed_name, FILE_NAME_MAX);
         if (type == FILE_TYPE_SAVED_GAME) {
-            file_append_extension((char *)data.typed_name, saved_game_data_expanded.extension);
+            file_append_extension((char *) data.typed_name, saved_game_data_expanded.extension);
         }
         encoding_to_utf8(data.typed_name, data.file_data->last_loaded_file, FILE_NAME_MAX, 0);
     } else {

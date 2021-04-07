@@ -38,7 +38,6 @@
 #include "window/advisors.h"
 #include "window/file_dialog.h"
 
-static int selected_legion_formation_id;
 static int city_view_dirty;
 
 static void clear_city_view(int force)

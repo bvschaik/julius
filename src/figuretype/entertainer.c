@@ -15,21 +15,22 @@
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
 
-void figure_spawn_tourist(void) {
-    const map_tile* entry = city_map_entry_point();
-    const map_tile* exit = city_map_exit_point();
+void figure_spawn_tourist(void)
+{
+    const map_tile *entry = city_map_entry_point();
+    const map_tile *exit = city_map_exit_point();
     if (random_byte() % 2) {
-        figure* tourist = figure_create(FIGURE_TOURIST, entry->x, entry->y, DIR_0_TOP);
+        figure *tourist = figure_create(FIGURE_TOURIST, entry->x, entry->y, DIR_0_TOP);
         tourist->action_state = FIGURE_ACTION_217_TOURIST_CREATED;
     } else {
-        figure* tourist = figure_create(FIGURE_TOURIST, exit->x, exit->y, DIR_0_TOP);
+        figure *tourist = figure_create(FIGURE_TOURIST, exit->x, exit->y, DIR_0_TOP);
         tourist->action_state = FIGURE_ACTION_217_TOURIST_CREATED;
-    }    
+    }
 }
 
 static int determine_tourist_destination(int x, int y)
 {
-    int road_network = map_road_network_get(map_grid_offset(x,y));
+    int road_network = map_road_network_get(map_grid_offset(x, y));
 
     building_list_small_clear();
 
@@ -37,7 +38,7 @@ static int determine_tourist_destination(int x, int y)
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
-        }        
+        }
         if (city_festival_games_active()) {
             if (b->type != city_festival_games_active_venue_type()) {
                 continue;
@@ -60,21 +61,21 @@ static int determine_tourist_destination(int x, int y)
 
     index = random_from_stdlib() % total_venues;
     building *b = building_get(venues[index]);
-    
+
     return b->id;
 }
 
 static int is_venue(building_type type)
 {
     switch (type) {
-    case BUILDING_THEATER:
-    case BUILDING_AMPHITHEATER:
-    case BUILDING_ARENA:
-    case BUILDING_COLOSSEUM:
-    case BUILDING_HIPPODROME:
-        return 1;
-    default:
-        return 0;
+        case BUILDING_THEATER:
+        case BUILDING_AMPHITHEATER:
+        case BUILDING_ARENA:
+        case BUILDING_COLOSSEUM:
+        case BUILDING_HIPPODROME:
+            return 1;
+        default:
+            return 0;
     }
 }
 
@@ -85,7 +86,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
     building_list_small_clear();
 
     for (int i = 1; i < building_count(); i++) {
-        building* b = building_get(i);
+        building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
@@ -106,22 +107,20 @@ static int determine_destination(int x, int y, building_type type1, building_typ
     if (total_venues <= 0) {
         return 0;
     }
-    const int* venues = building_list_small_items();
+    const int *venues = building_list_small_items();
     int min_building_id = 0;
     int min_distance = 10000;
     for (int i = 0; i < total_venues; i++) {
-        building* b = building_get(venues[i]);
+        building *b = building_get(venues[i]);
         int days_left;
         if (b->type == type1) {
             days_left = b->data.entertainment.days1;
-        }
-        else if (b->type == type2) {
+        } else if (b->type == type2) {
             days_left = b->data.entertainment.days2;
-        }
-        else {
+        } else {
             days_left = 0;
         }
-        int dist = 2*days_left + calc_maximum_distance(x, y, b->x, b->y);
+        int dist = 2 * days_left + calc_maximum_distance(x, y, b->x, b->y);
         if (dist < min_distance) {
             min_distance = dist;
             min_building_id = venues[i];
@@ -345,72 +344,66 @@ void figure_entertainer_action(figure *f)
     update_image(f);
 }
 
-void figure_tourist_action(figure* f)
+void figure_tourist_action(figure *f)
 {
-    building* b = building_get(f->building_id);
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     figure_image_increase_offset(f, 12);
 
     switch (f->action_state) {
-    case FIGURE_ACTION_150_ATTACK:
-        figure_combat_handle_attack(f);
-        figure_image_increase_offset(f, 32);
-        break;
-    case FIGURE_ACTION_149_CORPSE:
-        figure_combat_handle_corpse(f);
-        break;
-    case FIGURE_ACTION_217_TOURIST_CREATED:
-        f->is_ghost = 1;
-        f->image_offset = 0;
-        f->action_state = FIGURE_ACTION_218_TOURIST_CHOOSING_DESTINATION;
+        case FIGURE_ACTION_150_ATTACK:
+            figure_combat_handle_attack(f);
+            figure_image_increase_offset(f, 32);
+            break;
+        case FIGURE_ACTION_149_CORPSE:
+            figure_combat_handle_corpse(f);
+            break;
+        case FIGURE_ACTION_217_TOURIST_CREATED:
+            f->is_ghost = 1;
+            f->image_offset = 0;
+            f->action_state = FIGURE_ACTION_218_TOURIST_CHOOSING_DESTINATION;
 
-    case FIGURE_ACTION_218_TOURIST_CHOOSING_DESTINATION:
-        f->use_cross_country = 1;
-        f->is_ghost = 1;
-        int dst_building_id = 0;
-        if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
-            dst_building_id = determine_tourist_destination(f->x, f->y);
-            if (dst_building_id) {
-                building* b_dst = building_get(dst_building_id);
-                int x_road, y_road;
-                if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
-                    f->destination_building_id = dst_building_id;
-                    f->action_state = FIGURE_ACTION_219_TOURIST_GOING_TO_VENUE;
-                    f->destination_x = x_road;
-                    f->destination_y = y_road;
-                    f->roam_length = 0;
-                }
-                else {
+        case FIGURE_ACTION_218_TOURIST_CHOOSING_DESTINATION:
+            f->use_cross_country = 1;
+            f->is_ghost = 1;
+            int dst_building_id = 0;
+            if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
+                dst_building_id = determine_tourist_destination(f->x, f->y);
+                if (dst_building_id) {
+                    building *b_dst = building_get(dst_building_id);
+                    int x_road, y_road;
+                    if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
+                        f->destination_building_id = dst_building_id;
+                        f->action_state = FIGURE_ACTION_219_TOURIST_GOING_TO_VENUE;
+                        f->destination_x = x_road;
+                        f->destination_y = y_road;
+                        f->roam_length = 0;
+                    } else {
+                        f->state = FIGURE_STATE_DEAD;
+                    }
+                } else {
                     f->state = FIGURE_STATE_DEAD;
                 }
             }
-            else {
+            f->is_ghost = 1;
+            break;
+
+        case FIGURE_ACTION_219_TOURIST_GOING_TO_VENUE:
+            f->is_ghost = 0;
+            figure_movement_move_ticks(f, 1);
+            for (int i = 0; i < 12; ++i) {
+                if (f->tourist.visited_building_type_ids[i]) {
+                    f->tourist.ticks_since_last_visited_id[i]++;
+                }
+            }
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                f->state = FIGURE_STATE_DEAD;
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
+                figure_route_remove(f);
+            } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
-        }
-        f->is_ghost = 1;
-        break;
-
-    case FIGURE_ACTION_219_TOURIST_GOING_TO_VENUE:
-        f->is_ghost = 0;
-        figure_movement_move_ticks(f, 1);
-        for (int i=0; i < 12; ++i) {
-            if (f->tourist.visited_building_type_ids[i]) {
-                f->tourist.ticks_since_last_visited_id[i]++;
-            }
-        }
-        if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-            f->state = FIGURE_STATE_DEAD;
-        }
-        else if (f->direction == DIR_FIGURE_REROUTE) {
-            figure_route_remove(f);
-        }
-        else if (f->direction == DIR_FIGURE_LOST) {
-            f->state = FIGURE_STATE_DEAD;
-        }
-        break;
+            break;
     }
     update_image(f);
 }
-

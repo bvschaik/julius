@@ -151,8 +151,16 @@ static int get_average_housing_level(void)
 static int house_level_sentiment_modifier(int house_level, int average)
 {
     int diff_from_average = house_level - average;
-    int multiplier = diff_from_average < 0 ? SQUALOR_MULTIPLIER : 1;
-    return diff_from_average * multiplier;
+    if (diff_from_average < 0) {
+        diff_from_average *= SQUALOR_MULTIPLIER;
+    }
+    return diff_from_average;
+}
+
+static int extra_desirability_bonus(int desirability, int max)
+{
+    int extra = (desirability - 50) / DESIRABILITY_TO_SENTIMENT_RATIO;
+    return calc_bound(extra, 0, max);
 }
 
 static int extra_entertainment_bonus(int entertainment, int required)
@@ -210,17 +218,15 @@ void city_sentiment_update(void)
         }
         sentiment += house_level_sentiment;
 
-        int desirability_bonus = (b->desirability - 50) / DESIRABILITY_TO_SENTIMENT_RATIO;
         int max_desirability = b->subtype.house_level + 1;
-
-        sentiment += calc_bound(desirability_bonus, 0, max_desirability);
-
-        int ent_bonus = extra_entertainment_bonus(b->data.house.entertainment,
+        int desirability_bonus = extra_desirability_bonus(b->desirability, max_desirability);
+        int entertainment_bonus = extra_entertainment_bonus(b->data.house.entertainment,
             model_get_house(b->subtype.house_level)->entertainment);
         int food_bonus = extra_food_bonus(b->data.house.num_foods,
             model_get_house(b->subtype.house_level)->food_types);
 
-        sentiment += ent_bonus;
+        sentiment += desirability_bonus;
+        sentiment += entertainment_bonus;
         sentiment += food_bonus;
 
         sentiment += blessing_festival_boost;
@@ -253,8 +259,8 @@ void city_sentiment_update(void)
             }
 
             if (worst_sentiment > -15) {
-                if (ent_bonus < SENTIMENT_PER_EXTRA_FOOD ||
-                    (ent_bonus < food_bonus && ent_bonus < desirability_bonus)) {
+                if (entertainment_bonus < SENTIMENT_PER_EXTRA_FOOD ||
+                    (entertainment_bonus < food_bonus && entertainment_bonus < desirability_bonus)) {
                     b->house_sentiment_message = SUGGEST_MORE_ENT;
                 } else if (desirability_bonus < max_desirability && desirability_bonus < food_bonus) {
                     b->house_sentiment_message = SUGGEST_MORE_DESIRABILITY;

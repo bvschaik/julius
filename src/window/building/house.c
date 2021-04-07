@@ -73,7 +73,7 @@ static void draw_happiness_info(building_info_context *c, int y_offset)
     if (happiness > 0) {
         sentiment_text_id = happiness / 10 + TR_BUILDING_WINDOW_HOUSE_SENTIMENT_2;
     }
-    int width = text_draw(translation_for(sentiment_text_id), c->x_offset + 36, y_offset, FONT_SMALL_BLACK, 0);
+    text_draw(translation_for(sentiment_text_id), c->x_offset + 36, y_offset, FONT_SMALL_BLACK, 0);
 
     int message = building_get(c->building_id)->house_sentiment_message;
     switch (message) {
