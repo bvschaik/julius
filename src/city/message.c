@@ -40,7 +40,7 @@ static struct {
     int message_count[MAX_MESSAGE_CATEGORIES];
     int message_delay[MAX_MESSAGE_CATEGORIES];
 
-    time_millis last_sound_time[MESSAGE_CAT_RIOT_COLLAPSE+1];
+    time_millis last_sound_time[MESSAGE_CAT_MAX];
 
     int problem_count;
     int problem_index;
@@ -80,7 +80,7 @@ void city_message_init_scenario(void)
     data.population_shown.pop20000 = 0;
     data.population_shown.pop25000 = 0;
 
-    for (int i = 0; i <= MESSAGE_CAT_RIOT_COLLAPSE; i++) {
+    for (int i = 0; i <= MESSAGE_CAT_MAX; i++) {
         data.last_sound_time[i] = 0;
     }
 

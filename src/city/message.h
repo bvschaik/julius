@@ -14,6 +14,7 @@ typedef enum {
     MESSAGE_CAT_NO_WORKING_DOCK = 10,
     MESSAGE_CAT_FISHING_BLOCKED = 11,
     MESSAGE_CAT_THEFT = 12,
+    MESSAGE_CAT_MAX = 13,
 } message_category;
 
 typedef enum {
