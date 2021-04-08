@@ -1,8 +1,9 @@
 #include "extra.h"
 
 #include "assets/assets.h"
-#include "city/gods.h"
+#include "city/figures.h"
 #include "city/finance.h"
+#include "city/gods.h"
 #include "city/labor.h"
 #include "city/military.h"
 #include "city/population.h"
@@ -26,6 +27,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "scenario/criteria.h"
+#include "scenario/invasion.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 #include "translation/translation.h"
@@ -39,8 +41,9 @@
 #define EXTRA_INFO_VERTICAL_PADDING 8
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64
 #define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 48
-#define EXTRA_INFO_HEIGHT_RATINGS 176
+#define EXTRA_INFO_HEIGHT_INVASIONS 48
 #define EXTRA_INFO_HEIGHT_GODS 64
+#define EXTRA_INFO_HEIGHT_RATINGS 176
 #define EXTRA_INFO_HEIGHT_REQUESTS_PANEL 48
 #define EXTRA_INFO_HEIGHT_REQUESTS_MIN EXTRA_INFO_LINE_SPACE + EXTRA_INFO_HEIGHT_REQUESTS_PANEL
 
@@ -99,6 +102,7 @@ static struct {
         int happy;
         int angry;
     } gods;
+    int next_invasion;
     int visible_requests;
     int active_requests;
     int request_buttons_y_offset;
@@ -140,10 +144,10 @@ static sidebar_extra_display calculate_displayable_info(sidebar_extra_display in
     } else {
         return result;
     }
-    if (available_height >= EXTRA_INFO_HEIGHT_RATINGS) {
-        if (info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
-            available_height -= EXTRA_INFO_HEIGHT_RATINGS;
-            result |= SIDEBAR_EXTRA_DISPLAY_RATINGS;
+    if (available_height >= EXTRA_INFO_HEIGHT_INVASIONS) {
+        if (info_to_display & SIDEBAR_EXTRA_DISPLAY_INVASIONS) {
+            available_height -= EXTRA_INFO_HEIGHT_INVASIONS;
+            result |= SIDEBAR_EXTRA_DISPLAY_INVASIONS;
         }
     } else {
         return result;
@@ -152,6 +156,14 @@ static sidebar_extra_display calculate_displayable_info(sidebar_extra_display in
         if (info_to_display & SIDEBAR_EXTRA_DISPLAY_GODS) {
             available_height -= EXTRA_INFO_HEIGHT_GODS;
             result |= SIDEBAR_EXTRA_DISPLAY_GODS;
+        }
+    } else {
+        return result;
+    }
+    if (available_height >= EXTRA_INFO_HEIGHT_RATINGS) {
+        if (info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
+            available_height -= EXTRA_INFO_HEIGHT_RATINGS;
+            result |= SIDEBAR_EXTRA_DISPLAY_RATINGS;
         }
     } else {
         return result;
@@ -177,11 +189,14 @@ static int calculate_extra_info_height(int available_height)
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
         height += EXTRA_INFO_HEIGHT_UNEMPLOYMENT;
     }
-    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
-        height += EXTRA_INFO_HEIGHT_RATINGS;
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_INVASIONS) {
+        height += EXTRA_INFO_HEIGHT_INVASIONS;
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GODS) {
         height += EXTRA_INFO_HEIGHT_GODS;
+    }
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
+        height += EXTRA_INFO_HEIGHT_RATINGS;
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) {
         height += EXTRA_INFO_HEIGHT_REQUESTS_MIN;
@@ -271,6 +286,17 @@ static int update_extra_info(int is_background)
             &data.unemployment.amount
         );
     }
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_INVASIONS) {
+        int next_invasion = 0;
+        if (!city_figures_total_invading_enemies()) {
+            next_invasion = scenario_invasion_get_years_remaining() + 1;
+        }
+        changed |= update_extra_info_value(next_invasion, &data.next_invasion);
+    }
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GODS) {
+        changed |= update_extra_info_value(count_happy_gods(), &data.gods.happy);
+        changed |= update_extra_info_value(count_angry_gods(), &data.gods.angry);
+    }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
         if (is_background) {
             set_extra_info_objectives();
@@ -280,10 +306,6 @@ static int update_extra_info(int is_background)
         changed |= update_extra_info_value(city_rating_peace(), &data.objectives.peace.value);
         changed |= update_extra_info_value(city_rating_favor(), &data.objectives.favor.value);
         changed |= update_extra_info_value(city_population(), &data.objectives.population.value);
-    }
-    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GODS) {
-        changed |= update_extra_info_value(count_happy_gods(), &data.gods.happy);
-        changed |= update_extra_info_value(count_angry_gods(), &data.gods.angry);
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) {
         int new_requests = update_extra_info_value(count_active_requests(), &data.active_requests);
@@ -440,16 +462,19 @@ static void draw_extra_info_panel(void)
         y_offset += EXTRA_INFO_VERTICAL_PADDING * 3;
     }
 
-    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_INVASIONS) {
         y_offset += EXTRA_INFO_VERTICAL_PADDING;
 
-        y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 1, &data.objectives.culture, 0);
-        y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 2, &data.objectives.prosperity, 0);
-        y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 3, &data.objectives.peace, 0);
-        y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 4, &data.objectives.favor, 0);
-        y_offset += draw_extra_info_objective(data.x_offset, y_offset, 4, 6, &data.objectives.population, 1);
+        text_draw(translation_for(TR_SIDEBAR_EXTRA_INVASIONS), data.x_offset + 10, y_offset, FONT_NORMAL_WHITE, 0);
 
-        y_offset += EXTRA_INFO_VERTICAL_PADDING;
+        y_offset += EXTRA_INFO_VERTICAL_PADDING * 2 + 4;
+
+        font_t font_type = data.next_invasion == 0 || data.next_invasion == 2 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
+
+        text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_INVASION_UNDERWAY + data.next_invasion),
+            data.x_offset + 2, y_offset, data.width - 4, font_type, 0);
+
+        y_offset += EXTRA_INFO_LINE_SPACE + 4;
     }
 
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GODS) {
@@ -458,8 +483,8 @@ static void draw_extra_info_panel(void)
         text_draw(translation_for(TR_SIDEBAR_EXTRA_GODS), data.x_offset + 10, y_offset, FONT_NORMAL_WHITE, 0);
         y_offset += EXTRA_INFO_LINE_SPACE + EXTRA_INFO_VERTICAL_PADDING;
 
-        int font_color = data.gods.angry > 0 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
-        int width = text_draw_number(data.gods.angry, 0, "", data.x_offset + 42, y_offset + 2, font_color);
+        font_t font_type = data.gods.angry > 0 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
+        int width = text_draw_number(data.gods.angry, 0, "", data.x_offset + 42, y_offset + 2, font_type);
         image_draw(image_group(GROUP_GOD_BOLT), data.x_offset + 42 + width, y_offset - 2);
 
         static int happy_image_id;
@@ -470,6 +495,16 @@ static void draw_extra_info_panel(void)
         image_draw(happy_image_id, data.x_offset + 82 + width, y_offset - 2);
 
         y_offset += EXTRA_INFO_VERTICAL_PADDING * 2;
+    }
+
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
+        y_offset += EXTRA_INFO_LINE_SPACE;
+
+        y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 1, &data.objectives.culture, 0);
+        y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 2, &data.objectives.prosperity, 0);
+        y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 3, &data.objectives.peace, 0);
+        y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 4, &data.objectives.favor, 0);
+        y_offset += draw_extra_info_objective(data.x_offset, y_offset, 4, 6, &data.objectives.population, 1);
     }
 
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) {
