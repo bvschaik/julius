@@ -577,6 +577,11 @@ static translation_string all_strings[] = {
     {TR_CITY_WARNING_THEFT, "Funds were stolen from a forum or senate" },
     {TR_CITY_MESSAGE_TITLE_LOOTING, "Looting in the city"},
     {TR_CITY_MESSAGE_TEXT_LOOTING, "A warehouse or granary was looted by angry citizens and goods were stolen. Low sentiment makes these incidents more likely."},
+    {TR_SIDEBAR_EXTRA_REQUESTS_VIEW_ALL, "View all" },
+    {TR_SIDEBAR_EXTRA_REQUESTS_HAVE, "have" },
+    {TR_SIDEBAR_EXTRA_REQUESTS_SMALL_FORCE, "Small force"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_AVERAGE_FORCE, "Average force"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_LARGE_FORCE, "Large force"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

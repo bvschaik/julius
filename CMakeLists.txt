@@ -310,6 +310,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/mission.c
     ${PROJECT_SOURCE_DIR}/src/city/population.c
     ${PROJECT_SOURCE_DIR}/src/city/ratings.c
+    ${PROJECT_SOURCE_DIR}/src/city/request.c
     ${PROJECT_SOURCE_DIR}/src/city/resource.c
     ${PROJECT_SOURCE_DIR}/src/city/sentiment.c
     ${PROJECT_SOURCE_DIR}/src/city/sound.c

@@ -340,6 +340,11 @@ static translation_string all_strings[] = {
     { TR_TOOLTIP_OVERLAY_LEVY, " denários pagos mensalmente em custos de manutenção" },
     { TR_MAP_EDITOR_OPTIONS, "Configurações do cenário" },
     { TR_BUTTON_GO_TO_SITE, "Vá para o local" },
+    {TR_SIDEBAR_EXTRA_REQUESTS_VIEW_ALL, "Ver tudo"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_HAVE, "tem"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_SMALL_FORCE, "Pequena força"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_AVERAGE_FORCE, "Força mediana"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_LARGE_FORCE, "Grande força"}
 };
 
 void translation_portuguese(const translation_string **strings, int *num_strings)
