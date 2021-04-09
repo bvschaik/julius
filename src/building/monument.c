@@ -97,7 +97,7 @@ static struct {
 
 int building_monument_deliver_resource(building *b, int resource)
 {
-	if (b->id <= 0 || building_monument_is_monument(b) ||
+	if (b->id <= 0 || !building_monument_is_monument(b) ||
 		b->data.monument.resources_needed[resource] <= 0) {
 		return 0;
 	}
