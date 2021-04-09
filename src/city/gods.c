@@ -197,8 +197,9 @@ static void update_god_moods(void)
         if (god->happiness >= 50) {
             god->wrath_bolts = 0;
         } else if (god->happiness < 40) {
-            god->happy_bolts = 0;
-            if (god->happiness >= 20) {
+            if (god->happy_bolts > 0) {
+                god->happy_bolts -= 1;
+            } else if (god->happiness >= 20) {
                 god->wrath_bolts += 1;
             } else if (god->happiness >= 10) {
                 god->wrath_bolts += 2;
