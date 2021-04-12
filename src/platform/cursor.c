@@ -4,9 +4,9 @@
 #include "graphics/color.h"
 #include "input/cursor.h"
 #include "platform/screen.h"
+#include "platform/haiku/haiku.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
-#include "platform/haiku/haiku.h"
 
 #include "SDL.h"
 
