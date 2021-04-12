@@ -50,6 +50,7 @@ case "$BUILD_TARGET" in
 	;;
 "emscripten")
 	cd build && make -j4
+	zip julius.zip julius.html
 	;;
 *)
 	cd build && make -j4 && make test
