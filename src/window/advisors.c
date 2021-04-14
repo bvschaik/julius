@@ -252,7 +252,11 @@ static void get_tooltip(tooltip_context *c)
         }
         return;
     }
-    advisor_tooltip_result result = { .text_id = 0, .translation_key = 0 };
+    advisor_tooltip_result result = {
+        .text_id = 0,
+        .translation_key = 0,
+        .precomposed_text = 0
+    };
     if (current_advisor_window->get_tooltip_text != 0) {
         current_advisor_window->get_tooltip_text(&result);
     }
@@ -261,6 +265,9 @@ static void get_tooltip(tooltip_context *c)
         c->type = TOOLTIP_BUTTON;
     } else if (result.translation_key) {
         c->translation_key = result.translation_key;
+        c->type = TOOLTIP_BUTTON;
+    } else if (result.precomposed_text) {
+        c->precomposed_text = result.precomposed_text;
         c->type = TOOLTIP_BUTTON;
     }
 }

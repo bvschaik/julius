@@ -237,7 +237,7 @@ void button_request(int index, int param2)
     }
 }
 
-static void write_resource_storage_tooltip(tooltip_context *c, int resource)
+static void write_resource_storage_tooltip(advisor_tooltip_result *r, int resource)
 {
     int amount_warehouse = city_resource_count(resource);
     int amount_granary = city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
@@ -252,7 +252,7 @@ static void write_resource_storage_tooltip(tooltip_context *c, int resource)
     *text = ' ';
     text++;
     text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, RESOURCE_INFO_MAX_TEXT - (int) (text - tooltip_resource_info));
-    c->precomposed_text = tooltip_resource_info;
+    r->precomposed_text = tooltip_resource_info;
 }
 
 static void get_tooltip_text(advisor_tooltip_result *r)
@@ -269,12 +269,10 @@ static void get_tooltip_text(advisor_tooltip_result *r)
             int using_granaries;
             city_resource_get_amount_including_granaries(request->resource, request->amount, &using_granaries);
             if (using_granaries) {
-                write_resource_storage_tooltip(c, request->resource);
-                return 1;
+                write_resource_storage_tooltip(r, request->resource);
             }
         }
     }
-    return 0;
 }
 
 const advisor_window_type *window_advisor_imperial(void)

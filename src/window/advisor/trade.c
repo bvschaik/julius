@@ -217,7 +217,7 @@ static void button_resource(int resource_index, int param2)
     window_resource_settings_show(city_resource_get_potential()->items[resource_index + scrollbar.scroll_position]);
 }
 
-static void write_resource_storage_tooltip(tooltip_context *c, int resource)
+static void write_resource_storage_tooltip(advisor_tooltip_result *r, int resource)
 {
     static uint8_t tooltip_resource_info[200];
     int amount_warehouse = city_resource_count(resource);
@@ -233,7 +233,7 @@ static void write_resource_storage_tooltip(tooltip_context *c, int resource)
     *text = ' ';
     text++;
     text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, 200 - (int) (text - tooltip_resource_info));
-    c->precomposed_text = tooltip_resource_info;
+    r->precomposed_text = tooltip_resource_info;
 }
 
 static void get_tooltip_text(advisor_tooltip_result *r)
@@ -246,7 +246,7 @@ static void get_tooltip_text(advisor_tooltip_result *r)
         const mouse *m = mouse_in_dialog(mouse_get());
         int resource = city_resource_get_potential()->items[data.focus_button_id - 3 + scrollbar.scroll_position];
         if (resource_is_food(resource) && m->x > 180 && m->x < 220) {
-            write_resource_storage_tooltip(c, resource);
+            write_resource_storage_tooltip(r, resource);
             return;
         }
         r->text_id = 107;
