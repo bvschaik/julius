@@ -268,14 +268,12 @@ static void button_request(int index, int param2)
     }
 }
 
-static int get_tooltip_text(void)
+static void get_tooltip_text(advisor_tooltip_result *r)
 {
     if (focus_button_id && focus_button_id <= 2) {
-        return 93 + focus_button_id;
+        r->text_id = 93 + focus_button_id;
     } else if (focus_button_id == 3) {
-        return 131;
-    } else {
-        return 0;
+        r->text_id = 131;
     }
 }
 

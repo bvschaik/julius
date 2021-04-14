@@ -381,6 +381,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MEDICINE, "Régler l'accès des travailleurs de santé" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, "Régler l'accès des collecteurs de taxes" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_LABOR_SEEKER, "Régler l'accès des demandeurs d'emploi" },
+    {TR_RETURN_ALL_TO_FORT, "Tout"},
 	
 };
 

@@ -172,14 +172,21 @@ static void button_rating(int rating, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text(void)
+static void get_tooltip_text(advisor_tooltip_result *r)
 {
     switch (focus_button_id) {
-        case SELECTED_RATING_CULTURE: return 102;
-        case SELECTED_RATING_PROSPERITY: return 103;
-        case SELECTED_RATING_PEACE: return 104;
-        case SELECTED_RATING_FAVOR: return 105;
-        default: return 0;
+        case SELECTED_RATING_CULTURE: 
+            r->text_id = 102;
+            break;
+        case SELECTED_RATING_PROSPERITY: 
+            r->text_id = 103;
+            break;
+        case SELECTED_RATING_PEACE: 
+            r->text_id = 104;
+            break;
+        case SELECTED_RATING_FAVOR: 
+            r->text_id = 105;
+            break;
     }
 }
 

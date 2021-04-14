@@ -104,7 +104,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "设定视角标签 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "设定视角标签 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "战斗信息切换"},
-    {TR_HOTKEY_EDIT_TITLE, "按下新热键"}
+    {TR_HOTKEY_EDIT_TITLE, "按下新热键"},
+    {TR_RETURN_ALL_TO_FORT, "全部"},
 };
 
 void translation_simplified_chinese(const translation_string **strings, int *num_strings)

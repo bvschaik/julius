@@ -247,12 +247,15 @@ static void get_tooltip(tooltip_context *c)
         }
         return;
     }
-    int text_id = 0;
-    if (current_advisor_window->get_tooltip_text) {
-        text_id = current_advisor_window->get_tooltip_text();
+    advisor_tooltip_result result = { .text_id = 0, .translation_key = 0 };
+    if (current_advisor_window->get_tooltip_text != 0) {
+        current_advisor_window->get_tooltip_text(&result);
     }
-    if (text_id) {
-        c->text_id = text_id;
+    if (result.text_id) {
+        c->text_id = result.text_id;
+        c->type = TOOLTIP_BUTTON;
+    } else if (result.translation_key) {
+        c->translation_key = result.translation_key;
         c->type = TOOLTIP_BUTTON;
     }
 }

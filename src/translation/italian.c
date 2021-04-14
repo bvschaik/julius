@@ -373,7 +373,8 @@ static translation_string all_strings[] = {
     {TR_LABEL_PAUSE_MENU, "Pausa" },
     {TR_OVERLAY_LEVY, "Arruolamenti" },
     {TR_TOOLTIP_OVERLAY_LEVY, " denari pagati mensilmente in arruolamenti." }, 
-    {TR_MAP_EDITOR_OPTIONS, "Impostazioni scenario" }
+    {TR_MAP_EDITOR_OPTIONS, "Impostazioni scenario" },
+    {TR_RETURN_ALL_TO_FORT, "Tutti"},
 };
 
 void translation_italian(const translation_string **strings, int *num_strings)

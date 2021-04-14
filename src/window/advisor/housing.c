@@ -118,17 +118,13 @@ static void go_back(int param1, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text(void) {
-    return 0;
-}
-
 const advisor_window_type *window_advisor_housing(void)
 {
     static const advisor_window_type window = {
         draw_background,
         draw_foreground,
         handle_mouse,
-        get_tooltip_text
+        0
     };
     return &window;
 }

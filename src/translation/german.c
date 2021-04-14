@@ -386,8 +386,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, "Durchlass für Steuereintreiber umschalten" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_LABOR_SEEKER, "Durchlass für Arbeitslose umschalten" },
     {TR_HOTKEY_DUPLICATE_TITLE, "Tastenkombination bereits in Verwendung"},
-    {TR_HOTKEY_DUPLICATE_MESSAGE, "Diese Tastenkombination ist bereits folgender Aktion zugewiesen:"}
-
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "Diese Tastenkombination ist bereits folgender Aktion zugewiesen:"},
+    {TR_RETURN_ALL_TO_FORT, "Alle"},
 };
 
 void translation_german(const translation_string **strings, int *num_strings)
