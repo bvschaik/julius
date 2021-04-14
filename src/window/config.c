@@ -78,7 +78,7 @@ static const uint8_t *display_text_language(void);
 static const uint8_t *display_text_display_scale(void);
 static const uint8_t *display_text_cursor_scale(void);
 
-static scrollbar_type scrollbar = {580, ITEM_Y_OFFSET, ITEM_HEIGHT * NUM_VISIBLE_ITEMS, on_scroll, 4};
+static scrollbar_type scrollbar = { 580, ITEM_Y_OFFSET, ITEM_HEIGHT * NUM_VISIBLE_ITEMS, on_scroll, 4 };
 
 enum {
     TYPE_NONE,
@@ -111,7 +111,7 @@ typedef struct {
     int type;
     int subtype;
     translation_key description;
-    const uint8_t* (*get_display_text)(void);
+    const uint8_t *(*get_display_text)(void);
     int enabled;
 } config_widget;
 
@@ -154,7 +154,7 @@ static config_widget all_widgets[CONFIG_PAGES][MAX_WIDGETS] = {
         {TYPE_CHECKBOX, CONFIG_GP_CH_FARMS_DELIVER_CLOSE, TR_CONFIG_FARMS_DELIVER_CLOSE },
         {TYPE_CHECKBOX, CONFIG_GP_CH_DELIVER_ONLY_TO_ACCEPTING_GRANARIES, TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES },
         {TYPE_CHECKBOX, CONFIG_GP_CH_ALL_HOUSES_MERGE, TR_CONFIG_ALL_HOUSES_MERGE },
-        {TYPE_CHECKBOX, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY, TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY },    
+        {TYPE_CHECKBOX, CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY, TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY },
         {TYPE_CHECKBOX, CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT, TR_CONFIG_NOT_ACCEPTING_WAREHOUSES },
         {TYPE_CHECKBOX, CONFIG_GP_CH_HOUSES_DONT_EXPAND_INTO_GARDENS, TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS }
     }
@@ -242,7 +242,7 @@ static void init_config_values(void)
 
 static void enable_all_widgets(void)
 {
-    for(int p = 0; p < CONFIG_PAGES; p++) {
+    for (int p = 0; p < CONFIG_PAGES; p++) {
         for (int i = 0; i < MAX_WIDGETS; i++) {
             if (all_widgets[p][i].type) {
                 all_widgets[p][i].enabled = 1;
@@ -253,7 +253,7 @@ static void enable_all_widgets(void)
 
 static void disable_widget(int type, int subtype)
 {
-    for(int p = 0; p < CONFIG_PAGES; p++) {
+    for (int p = 0; p < CONFIG_PAGES; p++) {
         for (int i = 0; i < MAX_WIDGETS; i++) {
             if (all_widgets[p][i].type == type && all_widgets[p][i].subtype == subtype) {
                 all_widgets[p][i].enabled = 0;
@@ -265,7 +265,7 @@ static void disable_widget(int type, int subtype)
 static void install_widgets(void)
 {
     data.num_widgets = 0;
-    for(int p = 0; p < CONFIG_PAGES; p++) {
+    for (int p = 0; p < CONFIG_PAGES; p++) {
         data.widgets_per_page[p] = 0;
         for (int i = 0; i < MAX_WIDGETS; i++) {
             if (all_widgets[p][i].enabled) {
@@ -298,7 +298,7 @@ static void init(void)
     string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
     data.language_options[0] = data.language_options_data[0];
     data.num_language_options = 1;
-    const dir_listing* subdirs = dir_find_all_subdirectories();
+    const dir_listing *subdirs = dir_find_all_subdirectories();
     const char *original_value = data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value;
     for (int i = 0; i < subdirs->num_files; i++) {
         if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i])) {
@@ -387,11 +387,38 @@ static void update_scale(void)
     }
 }
 
+static void draw_borders(void)
+{
+    int width = screen_width();
+    int height = screen_height();
+    int image_base = image_group(GROUP_EMPIRE_PANELS);
+
+    // horizontal bar borders
+    for (int x = 0; x < width; x += 86) {
+        image_draw(image_base + 1, x, 0);
+        image_draw(image_base + 1, x, height - 16);
+    }
+
+    // vertical bar borders
+    for (int y = 16; y < height; y += 86) {
+        image_draw(image_base, 0, y);
+        image_draw(image_base, width - 16, y);
+    }
+
+    // crossbars
+    image_draw(image_base + 2, 0, 0);
+    image_draw(image_base + 2, 0, height - 16);
+    image_draw(image_base + 2, width - 16, 0);
+    image_draw(image_base + 2, width - 16, height - 16);
+}
+
 static void draw_background(void)
 {
     update_scale();
 
     image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 5);
+
+    draw_borders();
 
     graphics_in_dialog();
 
@@ -402,14 +429,14 @@ static void draw_background(void)
     int page_x_offset = 30;
     int open_tab_width = text_get_width(translation_for(page_names[data.page]), FONT_NORMAL_BLACK) + 6;
     int max_closed_tab_width = (600 - page_x_offset * CONFIG_PAGES - open_tab_width) / (CONFIG_PAGES - 1);
-    for(int i = 0; i < CONFIG_PAGES; ++i) {
+    for (int i = 0; i < CONFIG_PAGES; ++i) {
         page_x_offset += 15;
         int width = 0;
         if (data.page == i) {
             width = text_draw(translation_for(page_names[i]), page_x_offset, 58, FONT_NORMAL_BLACK, 0);
         } else {
             width = text_draw_ellipsized(translation_for(page_names[i]),
-                                            page_x_offset, 58, max_closed_tab_width, FONT_NORMAL_BLACK, 0);
+                page_x_offset, 58, max_closed_tab_width, FONT_NORMAL_BLACK, 0);
         }
         page_buttons[i].x = page_x_offset - 10;
         page_buttons[i].width = width + 15;
@@ -451,10 +478,10 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    for(int i = 0; i < CONFIG_PAGES; ++i) {
+    for (int i = 0; i < CONFIG_PAGES; ++i) {
         button_border_draw(page_buttons[i].x, page_buttons[i].y,
-                            page_buttons[i].width, page_buttons[i].height,
-                            data.page_focus_button == i + 1);
+            page_buttons[i].width, page_buttons[i].height,
+            data.page_focus_button == i + 1);
         if (data.page == i) {
             graphics_draw_from_buffer(page_buttons[i].x, 75, page_buttons[i].width, 3, data.graphics_behind_tab[i]);
         } else {
@@ -561,7 +588,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
     int handled = 0;
     data.focus_button = 0;
-    
+
     for (int i = 0; i < NUM_VISIBLE_ITEMS && i < data.widgets_per_page[data.page]; i++) {
         config_widget *w = data.widgets[i + data.starting_option + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
@@ -606,7 +633,7 @@ static void toggle_switch(int key)
 
 static void set_language(int index)
 {
-    const char* dir = index == 0 ? "" : data.language_options_utf8[index];
+    const char *dir = index == 0 ? "" : data.language_options_utf8[index];
     strncpy(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].new_value, dir, CONFIG_STRING_VALUE_MAX - 1);
 
     data.selected_language_option = index;
@@ -758,11 +785,11 @@ static void button_page(int page, int param2)
 
 static void get_tooltip(tooltip_context *c)
 {
-    if(data.page_focus_button) {
+    if (data.page_focus_button) {
         int page = data.page_focus_button - 1;
         if (page == data.page) {
             return;
-        }   
+        }
         int text_width = text_get_width(translation_for(page_names[page]), FONT_NORMAL_BLACK);
         if (page_buttons[page].width - 15 < text_width) {
             c->translation_key = page_names[page];

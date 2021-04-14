@@ -41,12 +41,12 @@ static void button_toggle_minimap(int param1, int param2);
 static void on_scroll(void);
 
 static image_button start_button =
-    {600, 440, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start_scenario, button_none, 1, 0, 1};
+{ 600, 440, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start_scenario, button_none, 1, 0, 1 };
 
 static image_button back_button =
-    {330, 440, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_back, button_none, 1, 0, 1 };
+{ 330, 440, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_back, button_none, 1, 0, 1 };
 static generic_button toggle_minimap_button =
-    {570, 87, 39, 28, button_toggle_minimap, button_none, 0, 0};
+{ 570, 87, 39, 28, button_toggle_minimap, button_none, 0, 0 };
 
 static generic_button file_buttons[] = {
     {18, 220, 252, 16, button_select_item, button_none, 0, 0},
@@ -66,7 +66,7 @@ static generic_button file_buttons[] = {
     {18, 444, 252, 16, button_select_item, button_none, 14, 0},
 };
 
-static scrollbar_type scrollbar = {276, 210, 256, on_scroll, 8, 1};
+static scrollbar_type scrollbar = { 276, 210, 256, on_scroll, 8, 1 };
 
 static struct {
     int focus_button_id;
@@ -104,7 +104,7 @@ static void draw_scenario_list(void)
         }
         strcpy(file, data.scenarios->files[i + scrollbar.scroll_position]);
         encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
-        file_remove_extension((char *)displayable_file);
+        file_remove_extension((char *) displayable_file);
         text_ellipsize(displayable_file, font, 240);
         text_draw(displayable_file, 24, 220 + 16 * i, font, 0);
     }
@@ -216,9 +216,35 @@ static void draw_scenario_info(void)
     lang_text_draw_centered(44, 136, scenario_info_x, 446, scenario_info_width, FONT_NORMAL_BLACK);
 }
 
+static void draw_borders(void)
+{
+    int width = screen_width();
+    int height = screen_height();
+    int image_base = image_group(GROUP_EMPIRE_PANELS);
+
+    // horizontal bar borders
+    for (int x = 0; x < width; x += 86) {
+        image_draw(image_base + 1, x, 0);
+        image_draw(image_base + 1, x, height - 16);
+    }
+
+    // vertical bar borders
+    for (int y = 16; y < height; y += 86) {
+        image_draw(image_base, 0, y);
+        image_draw(image_base, width - 16, y);
+    }
+
+    // crossbars
+    image_draw(image_base + 2, 0, 0);
+    image_draw(image_base + 2, 0, height - 16);
+    image_draw(image_base + 2, width - 16, 0);
+    image_draw(image_base + 2, width - 16, height - 16);
+}
+
 static void draw_background(void)
 {
     image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 25);
+    draw_borders();
     graphics_set_clip_rectangle((screen_width() - WINDOW_WIDTH) / 2, (screen_height() - WINDOW_HEIGHT) / 2,
         WINDOW_WIDTH, WINDOW_HEIGHT);
     graphics_in_dialog();
@@ -270,7 +296,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_back(int param1, int param2) {
+static void button_back(int param1, int param2)
+{
     window_go_back();
 }
 
@@ -283,7 +310,7 @@ static void button_select_item(int index, int param2)
     strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item]);
     game_file_load_scenario_data(data.selected_scenario_filename);
     encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
-    file_remove_extension((char *)data.selected_scenario_display);
+    file_remove_extension((char *) data.selected_scenario_display);
     window_invalidate();
 }
 
