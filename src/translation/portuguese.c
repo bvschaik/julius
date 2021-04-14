@@ -341,10 +341,12 @@ static translation_string all_strings[] = {
     { TR_MAP_EDITOR_OPTIONS, "Configurações do cenário" },
     { TR_BUTTON_GO_TO_SITE, "Vá para o local" },
     {TR_SIDEBAR_EXTRA_REQUESTS_VIEW_ALL, "Ver tudo"},
-    {TR_SIDEBAR_EXTRA_REQUESTS_HAVE, "tem"},
     {TR_SIDEBAR_EXTRA_REQUESTS_SMALL_FORCE, "Pequena força"},
     {TR_SIDEBAR_EXTRA_REQUESTS_AVERAGE_FORCE, "Força mediana"},
     {TR_SIDEBAR_EXTRA_REQUESTS_LARGE_FORCE, "Grande força"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_SEND, "Enviar pedido"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_STOCK, "Loja"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_UNSTOCK, "Pare de armazenar"},
     { TR_RETURN_ALL_TO_FORT, "Voltar tudo" },
 };
 

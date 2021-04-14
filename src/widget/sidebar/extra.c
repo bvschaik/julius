@@ -59,11 +59,11 @@ static arrow_button arrow_buttons_speed[] = {
 };
 
 static generic_button buttons_emperor_requests[] = {
-    {2, 0, 158, 48, button_handle_request, button_none, 0, 0},
-    {2, 48, 158, 48, button_handle_request, button_none, 1, 0},
-    {2, 96, 158, 48, button_handle_request, button_none, 2, 0},
-    {2, 144, 158, 48, button_handle_request, button_none, 3, 0},
-    {2, 192, 158, 48, button_handle_request, button_none, 4, 0}
+    {2, 28, 158, 20, button_handle_request, button_none, 0, 0},
+    {2, 76, 158, 20, button_handle_request, button_none, 1, 0},
+    {2, 124, 158, 20, button_handle_request, button_none, 2, 0},
+    {2, 172, 158, 20, button_handle_request, button_none, 3, 0},
+    {2, 220, 158, 20, button_handle_request, button_none, 4, 0}
 };
 
 typedef struct {
@@ -77,6 +77,7 @@ typedef struct {
     int amount;
     int available;
     int time;
+    int stockpiled;
 } request;
 
 static struct {
@@ -263,6 +264,11 @@ static int count_angry_gods(void)
     return angry_gods;
 }
 
+static int is_stockpiled_changed(resource_type resource)
+{
+    return city_resource_is_stockpiled(resource);
+}
+
 static int update_extra_info_value(int value, int *field)
 {
     if (value == *field) {
@@ -309,6 +315,7 @@ static int update_extra_info(int is_background)
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) {
         int new_requests = update_extra_info_value(count_active_requests(), &data.active_requests);
+
         int troop_requests = city_request_has_troop_request();
         if (troop_requests) {
             changed |= update_extra_info_value(RESOURCE_TROOPS, &data.requests[0].resource);
@@ -337,6 +344,8 @@ static int update_extra_info(int is_background)
                 changed |= update_extra_info_value(city_resource_get_amount_including_granaries(r->resource,
                     r->amount, 0), &slot->available);
             }
+
+            changed |= update_extra_info_value(is_stockpiled_changed(r->resource), &slot->stockpiled);
         }
         if (new_requests || must_resort) {
             qsort(data.requests + troop_requests, other_requests, sizeof(request), sort_requests);
@@ -385,44 +394,98 @@ static int draw_request_buttons(int y_offset)
 {
     int original_offset = y_offset;
 
+    y_offset += EXTRA_INFO_VERTICAL_PADDING;
+
     for (int i = 0; i < data.visible_requests; i++) {
         const request *r = &data.requests[i];
-        y_offset += EXTRA_INFO_VERTICAL_PADDING;
+
         if (data.visible_requests < data.active_requests && i == data.visible_requests - 1) {
             text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_VIEW_ALL),
-                data.x_offset, y_offset + EXTRA_INFO_VERTICAL_PADDING + 4, data.width, FONT_NORMAL_GREEN, 0);
+                data.x_offset, y_offset + 25, data.width, FONT_NORMAL_GREEN, 0);
             break;
         }
+
         if (r->resource == RESOURCE_TROOPS) {
-            image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS,
-                data.x_offset + 10, y_offset + 5);
+            int width = data.x_offset + 10;
+
+            int image_id = image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS;
+            const image *img = image_get(image_id);
+            int image_y_offset = (EXTRA_INFO_LINE_SPACE - img->height) / 2;
+
+            image_draw(image_id, width, y_offset + image_y_offset - 2);
+
             int force_text_offset = get_text_offset_for_force_size(r->amount);
+
             text_draw_ellipsized(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_SMALL_FORCE + force_text_offset),
-                data.x_offset + 32, y_offset, data.width - 34, FONT_NORMAL_WHITE, 0);
-            y_offset += EXTRA_INFO_LINE_SPACE;
-            lang_text_draw_amount(8, 4, r->time, data.x_offset + 26, y_offset + 4,
-                r->time <= 3 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE);
+                data.x_offset + 32, y_offset - 7, data.width - 34, FONT_NORMAL_GREEN, 0);
+
+            lang_text_draw_amount(8, 4, r->time, data.x_offset + 26, y_offset + 6,
+                r->time <= REQUEST_MONTHS_LEFT_FOR_RED_WARNING ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
+
+            text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_SEND),
+                               data.x_offset + 2 , y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
+
         } else {
             int width = data.x_offset + 10;
-            width += text_draw_number(r->amount, 0, "",
-                width, y_offset, FONT_NORMAL_WHITE);
+
             int resource_offset = r->resource + resource_image_offset(r->resource, RESOURCE_IMAGE_ICON);
+
             int image_id = image_group(GROUP_RESOURCE_ICONS) + resource_offset;
             const image *img = image_get(image_id);
             int image_y_offset = (EXTRA_INFO_LINE_SPACE - img->height) / 2;
+
             image_draw(image_id, width, y_offset + image_y_offset);
+
+            width += img->width + 6;
+
             if (r->resource != RESOURCE_DENARII) {
-                width += img->width + 6;
-                width += text_draw(string_from_ascii("("), width, y_offset, FONT_NORMAL_WHITE, 0) - 6;
-                width += text_draw(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_HAVE),
-                    width, y_offset, FONT_NORMAL_WHITE, 0);
-                text_draw_number(r->available, 0, ")", width, y_offset, FONT_NORMAL_WHITE);
+                int is_stockpiled = city_resource_is_stockpiled(r->resource);
+                int enough_resource = 0;
+
+                int request_index = data.requests[i].index;
+                if (city_request_has_troop_request() && i != 0) {
+                    request_index++;
+                }
+
+                int status = city_request_get_status(request_index);
+
+                // button text
+                if (status) {
+                    if (status == CITY_REQUEST_STATUS_NOT_ENOUGH_RESOURCES) {
+                        if (is_stockpiled) {
+                            image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
+                                                           "Store Icon"), data.x_offset + 5, y_offset + 10);
+                            text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_UNSTOCK),
+                                               data.x_offset + 2 , y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
+                        } else {
+                            text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_STOCK),
+                                               data.x_offset + 2 , y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
+                        }
+                    } else {
+                        enough_resource = 1;
+                        text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_SEND),
+                                           data.x_offset + 2 , y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
+                    }
+                }
+
+                // request current / total
+                width += text_draw_number(r->available, 0, "/", width, y_offset+2, enough_resource ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+                width += text_draw_number(r->amount, 0, "",
+                                          width-5, y_offset+2, enough_resource ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+
+            } else {
+                width += text_draw_number(r->amount, 0, "",
+                                          width, y_offset+2, FONT_NORMAL_GREEN);
+
+                text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_SEND),
+                                   data.x_offset + 2 , y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
             }
-            y_offset += EXTRA_INFO_LINE_SPACE;
-            lang_text_draw_amount(8, 4, r->time, data.x_offset + 4, y_offset + 4,
-                r->time <= REQUEST_MONTHS_LEFT_FOR_RED_WARNING ? FONT_NORMAL_RED : FONT_NORMAL_WHITE);
+
+            // request time left
+            lang_text_draw_amount(8, 4, r->time, width, y_offset + 2,
+                                  r->time <= REQUEST_MONTHS_LEFT_FOR_RED_WARNING ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
         }
-        y_offset += EXTRA_INFO_VERTICAL_PADDING * 3;
+        y_offset += EXTRA_INFO_HEIGHT_REQUESTS_PANEL;
     }
     return y_offset - original_offset;
 }
@@ -469,7 +532,7 @@ static void draw_extra_info_panel(void)
 
         y_offset += EXTRA_INFO_VERTICAL_PADDING * 2 + 4;
 
-        font_t font_type = data.next_invasion == 0 || data.next_invasion == 2 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
+        font_t font_type = data.next_invasion == 0 || data.next_invasion == 2 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN;
 
         text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_INVASION_UNDERWAY + data.next_invasion),
             data.x_offset + 2, y_offset, data.width - 4, font_type, 0);
@@ -483,7 +546,7 @@ static void draw_extra_info_panel(void)
         text_draw(translation_for(TR_SIDEBAR_EXTRA_GODS), data.x_offset + 10, y_offset, FONT_NORMAL_WHITE, 0);
         y_offset += EXTRA_INFO_LINE_SPACE + EXTRA_INFO_VERTICAL_PADDING;
 
-        font_t font_type = data.gods.angry > 0 ? FONT_NORMAL_RED : FONT_NORMAL_WHITE;
+        font_t font_type = data.gods.angry > 0 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN;
         int width = text_draw_number(data.gods.angry, 0, "", data.x_offset + 42, y_offset + 2, font_type);
         image_draw(image_group(GROUP_GOD_BOLT), data.x_offset + 42 + width, y_offset - 2);
 
@@ -491,7 +554,7 @@ static void draw_extra_info_panel(void)
         if (!happy_image_id) {
             happy_image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Happy God Icon");
         }
-        width = text_draw_number(data.gods.happy, 0, "", data.x_offset + 82, y_offset + 2, FONT_NORMAL_WHITE);
+        width = text_draw_number(data.gods.happy, 0, "", data.x_offset + 82, y_offset + 2, FONT_NORMAL_GREEN);
         image_draw(happy_image_id, data.x_offset + 82 + width, y_offset - 2);
 
         y_offset += EXTRA_INFO_VERTICAL_PADDING * 2;
@@ -551,8 +614,11 @@ static void draw_extra_info_buttons(void)
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS && data.active_requests) {
         for (int i = 0; i < data.visible_requests; i++) {
-            button_border_draw(data.x_offset + 2, data.request_buttons_y_offset + i * EXTRA_INFO_HEIGHT_REQUESTS_PANEL,
-                data.width - 4, EXTRA_INFO_HEIGHT_REQUESTS_PANEL, i == data.focused_request_button_id - 1);
+
+            int y_offset = data.request_buttons_y_offset + i * EXTRA_INFO_HEIGHT_REQUESTS_PANEL + 28;
+
+            button_border_draw(data.x_offset + 2, y_offset,
+            data.width - 4, EXTRA_INFO_HEIGHT_REQUESTS_PANEL - 28, i == data.focused_request_button_id - 1);
         }
     }
 }
@@ -569,8 +635,8 @@ int sidebar_extra_handle_mouse(const mouse *m)
         return 1;
     }
     if ((data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) &&
-        generic_buttons_handle_mouse(m, data.x_offset, data.request_buttons_y_offset,
-        buttons_emperor_requests, data.visible_requests, &data.focused_request_button_id)) {
+            generic_buttons_handle_mouse(m, data.x_offset, data.request_buttons_y_offset,
+            buttons_emperor_requests, data.visible_requests, &data.focused_request_button_id)) {
         return 1;
     }
     return 0;
@@ -614,6 +680,8 @@ static void button_handle_request(int index, int param2)
         request_index++;
     }
     int status = city_request_get_status(request_index);
+    const request *r = &data.requests[index];
+
     if (status) {
         city_military_clear_empire_service_legions();
         switch (status) {
@@ -627,9 +695,12 @@ static void button_handle_request(int index, int param2)
                 window_popup_dialog_show(POPUP_DIALOG_SEND_TROOPS, confirm_send_troops, 2);
                 break;
             case CITY_REQUEST_STATUS_NOT_ENOUGH_RESOURCES:
-                window_popup_dialog_show(POPUP_DIALOG_NOT_ENOUGH_GOODS, confirm_nothing, 0);
+                city_resource_toggle_stockpiled(r->resource);
                 break;
             default:
+                if (city_resource_is_stockpiled(r->resource)) {
+                    city_resource_toggle_stockpiled(r->resource);
+                }
                 data.selected_request_id = (status - CITY_REQUEST_STATUS_MAX) &
                     ~CITY_REQUEST_STATUS_RESOURCES_FROM_GRANARY;
                 if (status & CITY_REQUEST_STATUS_RESOURCES_FROM_GRANARY) {

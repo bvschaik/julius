@@ -385,7 +385,16 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "Raccourci déjà utilisé"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Cette combinaison de touches est déjà affectée à l'action suivante :"},
     {TR_BUTTON_GO_TO_SITE, "Aller sur le site" },
-    {TR_RETURN_ALL_TO_FORT, "Retour tout"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_VIEW_ALL, "Tout voir" },
+    {TR_SIDEBAR_EXTRA_REQUESTS_SMALL_FORCE, "Troupe modeste"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_AVERAGE_FORCE, "Troupe moyenne"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_LARGE_FORCE, "Troupe importante"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_SEND, "Envoyer la requête"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_STOCK, "Stocker"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_UNSTOCK, "Arrêter de stocker"},
+    {TR_TOOLTIP_ADVISOR_HOUSING_GRAPH_BUTTON, "Afficher les informations de population" },
+    {TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON, "Afficher les informations de logement" },
+    {TR_RETURN_ALL_TO_FORT, "Tout retourner"},
 };
 
 void translation_french(const translation_string** strings, int* num_strings)

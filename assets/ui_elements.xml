@@ -91,4 +91,6 @@
     <image id="Circus Banner" src="Circus_Banner" />
     <image id="Colosseum Banner" src="Colosseum_Banner" />
 
+    <image id="Store Icon" src="Store_Icon" />
+
 </assetlist>
