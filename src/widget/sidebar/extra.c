@@ -398,16 +398,20 @@ static int draw_request_buttons(int y_offset)
 
     for (int i = 0; i < data.visible_requests; i++) {
         const request *r = &data.requests[i];
+        int base_button_y_offset = i * EXTRA_INFO_HEIGHT_REQUESTS_PANEL;
 
         if (data.visible_requests < data.active_requests && i == data.visible_requests - 1) {
+            buttons_emperor_requests[i].y = base_button_y_offset + 9;
+            buttons_emperor_requests[i].height = 30;
+
             text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_VIEW_ALL),
-                data.x_offset, y_offset + 25, data.width, FONT_NORMAL_GREEN, 0);
+                data.x_offset, y_offset + 11, data.width, FONT_NORMAL_GREEN, 0);
             break;
         }
-
+        buttons_emperor_requests[i].y = base_button_y_offset + 28;
+        buttons_emperor_requests[i].height = 20;
+        int width = data.x_offset + 10;
         if (r->resource == RESOURCE_TROOPS) {
-            int width = data.x_offset + 10;
-
             int image_id = image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS;
             const image *img = image_get(image_id);
             int image_y_offset = (EXTRA_INFO_LINE_SPACE - img->height) / 2;
@@ -423,11 +427,8 @@ static int draw_request_buttons(int y_offset)
                 r->time <= REQUEST_MONTHS_LEFT_FOR_RED_WARNING ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
 
             text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_SEND),
-                               data.x_offset + 2 , y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
-
+                data.x_offset + 2, y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
         } else {
-            int width = data.x_offset + 10;
-
             int resource_offset = r->resource + resource_image_offset(r->resource, RESOURCE_IMAGE_ICON);
 
             int image_id = image_group(GROUP_RESOURCE_ICONS) + resource_offset;
@@ -454,36 +455,41 @@ static int draw_request_buttons(int y_offset)
                     if (status == CITY_REQUEST_STATUS_NOT_ENOUGH_RESOURCES) {
                         if (is_stockpiled) {
                             image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
-                                                           "Store Icon"), data.x_offset + 5, y_offset + 10);
+                                "Store Icon"), data.x_offset + 5, y_offset + 10);
                             text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_UNSTOCK),
-                                               data.x_offset + 2 , y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
+                                data.x_offset + 2, y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
                         } else {
                             text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_STOCK),
-                                               data.x_offset + 2 , y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
+                                data.x_offset + 2, y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
                         }
                     } else {
                         enough_resource = 1;
                         text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_SEND),
-                                           data.x_offset + 2 , y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
+                            data.x_offset + 2, y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
                     }
                 }
 
                 // request current / total
-                width += text_draw_number(r->available, 0, "/", width, y_offset+2, enough_resource ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+                width += text_draw_number(r->available, 0, "/", width, y_offset + 2,
+                    enough_resource ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
                 width += text_draw_number(r->amount, 0, "",
-                                          width-5, y_offset+2, enough_resource ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+                    width - 5, y_offset + 2, enough_resource ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
 
             } else {
                 width += text_draw_number(r->amount, 0, "",
-                                          width, y_offset+2, FONT_NORMAL_GREEN);
+                    width, y_offset + 2, FONT_NORMAL_GREEN);
 
                 text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_SEND),
-                                   data.x_offset + 2 , y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
+                    data.x_offset + 2, y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
             }
 
+            font_t font_color = r->time <= REQUEST_MONTHS_LEFT_FOR_RED_WARNING ? FONT_NORMAL_RED : FONT_NORMAL_GREEN;
+
             // request time left
-            lang_text_draw_amount(8, 4, r->time, width, y_offset + 2,
-                                  r->time <= REQUEST_MONTHS_LEFT_FOR_RED_WARNING ? FONT_NORMAL_RED : FONT_NORMAL_GREEN);
+            text_draw(string_from_ascii(","), width - 12, y_offset + 2, FONT_NORMAL_GREEN, 0);
+            width += text_draw_number(r->time, 0, "", width, y_offset + 2, font_color);
+            lang_text_draw_ellipsized(8, 4 + (r->time != 1), width, y_offset + 2,
+                data.width - (width - data.x_offset) - 4, font_color);
         }
         y_offset += EXTRA_INFO_HEIGHT_REQUESTS_PANEL;
     }
@@ -615,10 +621,8 @@ static void draw_extra_info_buttons(void)
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS && data.active_requests) {
         for (int i = 0; i < data.visible_requests; i++) {
 
-            int y_offset = data.request_buttons_y_offset + i * EXTRA_INFO_HEIGHT_REQUESTS_PANEL + 28;
-
-            button_border_draw(data.x_offset + 2, y_offset,
-            data.width - 4, EXTRA_INFO_HEIGHT_REQUESTS_PANEL - 28, i == data.focused_request_button_id - 1);
+            button_border_draw(data.x_offset + 2, data.request_buttons_y_offset + buttons_emperor_requests[i].y,
+                data.width - 4, buttons_emperor_requests[i].height, i == data.focused_request_button_id - 1);
         }
     }
 }
@@ -635,8 +639,8 @@ int sidebar_extra_handle_mouse(const mouse *m)
         return 1;
     }
     if ((data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) &&
-            generic_buttons_handle_mouse(m, data.x_offset, data.request_buttons_y_offset,
-            buttons_emperor_requests, data.visible_requests, &data.focused_request_button_id)) {
+        generic_buttons_handle_mouse(m, data.x_offset, data.request_buttons_y_offset,
+        buttons_emperor_requests, data.visible_requests, &data.focused_request_button_id)) {
         return 1;
     }
     return 0;

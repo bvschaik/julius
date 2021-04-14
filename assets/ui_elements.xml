@@ -91,6 +91,7 @@
     <image id="Circus Banner" src="Circus_Banner" />
     <image id="Colosseum Banner" src="Colosseum_Banner" />
 
+<!-- Note: UI icon to show when item is being stockpiled -->
     <image id="Store Icon" src="Store_Icon" />
 
 </assetlist>
