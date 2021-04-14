@@ -366,6 +366,7 @@ static translation_string all_strings[] = {
     { TR_TOOLTIP_OVERLAY_LEVY, " denarów płaconych miesięcznie jako żołd." },
     { TR_MAP_EDITOR_OPTIONS, "Ustawienia scenariusza" },
     { TR_BUTTON_GO_TO_SITE, "Idź do lokacji" },
+    { TR_RETURN_ALL_TO_FORT, "Całość" },
 };
 
 void translation_polish(const translation_string **strings, int *num_strings)

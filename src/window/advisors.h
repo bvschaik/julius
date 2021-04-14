@@ -6,13 +6,18 @@
 #include "input/mouse.h"
 
 typedef struct {
+    int text_id;
+    int translation_key;
+} advisor_tooltip_result;
+
+typedef struct {
     /**
      * @return height of the advisor in blocks of 16px
      */
     int (*draw_background)(void);
     void (*draw_foreground)(void);
     int (*handle_mouse)(const mouse *m);
-    int (*get_tooltip_text)(tooltip_context *c);
+    void (*get_tooltip_text)(advisor_tooltip_result *r);
 } advisor_window_type;
 
 advisor_type window_advisors_get_advisor(void);

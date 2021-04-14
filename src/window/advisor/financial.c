@@ -84,7 +84,7 @@ static int draw_background(void)
     draw_row(60, 10, 218, last_year->income.total, this_year->income.total);
 
     // expenses
-    
+
     draw_row(60, 11, 242, last_year->expenses.imports, this_year->expenses.imports);
     draw_row(60, 12, 257, last_year->expenses.wages, this_year->expenses.wages);
     draw_row(60, 13, 272, last_year->expenses.construction, this_year->expenses.construction);
@@ -122,12 +122,10 @@ static void button_change_taxes(int is_down, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text(tooltip_context *c)
+static void get_tooltip_text(advisor_tooltip_result *r)
 {
     if (arrow_button_focus) {
-        return 120;
-    } else {
-        return 0;
+        r->text_id = 120;
     }
 }
 

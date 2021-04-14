@@ -354,6 +354,7 @@ static translation_string all_strings[] = {
     { TR_TOOLTIP_OVERLAY_LEVY, " оплаченные ден. в сборах." },
     { TR_MAP_EDITOR_OPTIONS, "Настройки сценария" },
     { TR_BUTTON_GO_TO_SITE, "Перейти к локации" },
+    { TR_RETURN_ALL_TO_FORT, "Все" },
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)

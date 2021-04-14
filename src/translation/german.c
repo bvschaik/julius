@@ -75,7 +75,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Zufällig einstürzende Lehmgruben und Eisenminen nehmen hingegen Geld"},
     {TR_CONFIG_MULTIPLE_BARRACKS, "Erlaube das Errichten mehrerer Kasernen." },
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warenhäuser nehmen nach dem Bau nichts an"},
-    {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Häuser erweitern sich nicht in Gärten"},    
+    {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Häuser erweitern sich nicht in Gärten"},
     {TR_HOTKEY_TITLE, "Augustus Tastenkombinationen"},
     {TR_HOTKEY_LABEL, "Tastenkombination"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternativ"},
@@ -188,7 +188,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_MENU, "Prachttempel" },
     {TR_BUILDING_WORK_CAMP, "Arbeiterlager" },
     {TR_BUILDING_WORK_CAMP_DESC, "Arbeiter versammeln sich hier, um Materialien an Baustellen zu liefern." },
-    {TR_HEADER_HOUSING, "Wohnraum"},								
+    {TR_HEADER_HOUSING, "Wohnraum"},
     {TR_ADVISOR_HOUSING_ROOM, "In der Stadt gibt es noch Platz für"},
     {TR_ADVISOR_HOUSING_NO_ROOM, "In der Stadt gibt es keinen Wohnraum mehr."},
     {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, "Bevölkerungsnachfrage an Einheiten Geschirr"},
@@ -385,6 +385,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "Tastenkombination bereits in Verwendung"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Diese Tastenkombination ist bereits folgender Aktion zugewiesen:"},
     {TR_BUTTON_GO_TO_SITE, "Gehen Sie zur Standort" },
+    {TR_RETURN_ALL_TO_FORT, "Alle"},
 };
 
 void translation_german(const translation_string **strings, int *num_strings)

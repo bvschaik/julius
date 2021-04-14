@@ -368,7 +368,7 @@ static translation_string all_strings[] = {
     {TR_MAP_EDITOR_OPTIONS, "시나리오 설정" },
     {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "이 신전은 건설된 후 보급창에 공급할 식량을 수집할 것입니다." },
     {TR_BUTTON_GO_TO_SITE, "위치로 이동" },
-
+    {TR_RETURN_ALL_TO_FORT, "모두"},
 };
 
 void translation_korean(const translation_string **strings, int *num_strings)

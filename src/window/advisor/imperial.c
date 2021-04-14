@@ -255,12 +255,12 @@ static void write_resource_storage_tooltip(tooltip_context *c, int resource)
     c->precomposed_text = tooltip_resource_info;
 }
 
-static int get_tooltip_text(tooltip_context *c)
+static void get_tooltip_text(advisor_tooltip_result *r)
 {
     if (focus_button_id && focus_button_id <= 2) {
-        return 93 + focus_button_id;
+        r->text_id = 93 + focus_button_id;
     } else if (focus_button_id == 3) {
-        return 131;
+        r->text_id = 131;
     } else if (focus_button_id >= 4 && focus_button_id <= 8) {
         int index = focus_button_id - 4;
         int request_status = city_request_get_status(index);

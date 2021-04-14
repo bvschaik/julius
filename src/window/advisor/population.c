@@ -273,7 +273,8 @@ static void draw_society_graph(int full_size, int x, int y)
     }
 }
 
-static void print_society_info(void) {
+static void print_society_info(void)
+{
     int width;
     int avg_tax_per_house = 0;
     if (calculate_total_housing_buildings() > 0) {
@@ -297,7 +298,8 @@ static void print_society_info(void) {
     text_draw_money(avg_tax_per_house, 75 + width, 396, FONT_NORMAL_WHITE);
 }
 
-static void print_census_info(void) {
+static void print_census_info(void)
+{
 
     int width;
 
@@ -318,7 +320,8 @@ static void print_census_info(void) {
     text_draw_number(city_population_yearly_deaths(), '@', "", 75 + width, 396, FONT_NORMAL_WHITE);
 }
 
-static void print_history_info(void) {
+static void print_history_info(void)
+{
     int width;
 
     // food stores
@@ -374,7 +377,8 @@ static void print_history_info(void) {
         } else {
             lang_text_draw(55, 17, 70 + width, 396, FONT_NORMAL_WHITE);
         }
-    }}
+    }
+}
 
 static void draw_housing_button(int full_size, int x, int y)
 {
@@ -402,7 +406,7 @@ static int draw_background(void)
     image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
 
     width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
-    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450+width, 25, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK, 0);
 
     int big_text, top_text, bot_text;
     void (*big_graph)(int, int, int);
@@ -561,14 +565,12 @@ static void button_graph(int param1, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text(tooltip_context *c)
+static void get_tooltip_text(advisor_tooltip_result *r)
 {
     if (focus_button_id && focus_button_id < 3) {
-        return 111;
+        r->text_id = 111;
     } else if (focus_button_id && focus_button_id == 3) {
-        c->translation_key = TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON;
-    } else {
-        return 0;
+        r->translation_key = TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON;
     }
 }
 

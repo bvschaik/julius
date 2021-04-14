@@ -344,7 +344,8 @@ static translation_string all_strings[] = {
     {TR_SIDEBAR_EXTRA_REQUESTS_HAVE, "tem"},
     {TR_SIDEBAR_EXTRA_REQUESTS_SMALL_FORCE, "Pequena força"},
     {TR_SIDEBAR_EXTRA_REQUESTS_AVERAGE_FORCE, "Força mediana"},
-    {TR_SIDEBAR_EXTRA_REQUESTS_LARGE_FORCE, "Grande força"}
+    {TR_SIDEBAR_EXTRA_REQUESTS_LARGE_FORCE, "Grande força"},
+    { TR_RETURN_ALL_TO_FORT, "Voltar tudo" },
 };
 
 void translation_portuguese(const translation_string **strings, int *num_strings)

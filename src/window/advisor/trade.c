@@ -84,7 +84,7 @@ static void draw_resource_status_text(int resource, int x, int y, int box_width)
     resource_trade_status trade_status = city_resource_trade_status(resource);
 
     int two_lines = trade_flags_potential == TRADE_STATUS_IMPORT_EXPORT ||
-        (trade_flags_potential & TRADE_STATUS_IMPORT && city_resource_is_stockpiled(resource)); 
+        (trade_flags_potential & TRADE_STATUS_IMPORT && city_resource_is_stockpiled(resource));
 
     if (!two_lines) {
         y += 10;
@@ -100,7 +100,7 @@ static void draw_resource_status_text(int resource, int x, int y, int box_width)
             text_draw(translation_for(TR_ADVISOR_TRADE_MAX), x + width, y, FONT_NORMAL_WHITE, 0);
         }
     } else if (trade_flags & TRADE_STATUS_IMPORT) {
-        text_draw_centered(translation_for(TR_ADVISOR_TRADE_IMPORTABLE), x , y, box_width, FONT_NORMAL_GREEN, 0);
+        text_draw_centered(translation_for(TR_ADVISOR_TRADE_IMPORTABLE), x, y, box_width, FONT_NORMAL_GREEN, 0);
     } else if (trade_flags_potential & TRADE_STATUS_IMPORT) {
         text_draw_centered(translation_for(TR_ADVISOR_OPEN_TO_IMPORT), x, y, box_width, FONT_NORMAL_GREEN, 0);
     }
@@ -226,32 +226,30 @@ static void write_resource_storage_tooltip(tooltip_context *c, int resource)
     text += string_from_int(text, amount_warehouse, 0);
     *text = ' ';
     text++;
-    text = string_copy(lang_get_string(52, 43), text, 200 - (int)(text - tooltip_resource_info));
+    text = string_copy(lang_get_string(52, 43), text, 200 - (int) (text - tooltip_resource_info));
     *text = '\n';
     text++;
     text += string_from_int(text, amount_granary, 0);
     *text = ' ';
     text++;
-    text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, 200 - (int)(text - tooltip_resource_info));
+    text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, 200 - (int) (text - tooltip_resource_info));
     c->precomposed_text = tooltip_resource_info;
 }
 
-static int get_tooltip_text(tooltip_context *c)
+static void get_tooltip_text(advisor_tooltip_result *r)
 {
     if (data.focus_button_id == 1) {
-        return 106;
+        r->text_id = 106;
     } else if (data.focus_button_id == 2) {
-        return 41;
+        r->text_id = 41;
     } else if (data.focus_button_id) {
         const mouse *m = mouse_in_dialog(mouse_get());
         int resource = city_resource_get_potential()->items[data.focus_button_id - 3 + scrollbar.scroll_position];
         if (resource_is_food(resource) && m->x > 180 && m->x < 220) {
             write_resource_storage_tooltip(c, resource);
-            return 1;
+            return;
         }
-        return 107;
-    } else {
-        return 0;
+        r->text_id = 107;
     }
 }
 

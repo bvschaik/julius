@@ -362,10 +362,11 @@ static translation_string all_strings[] = {
     {TR_BUTTON_BACK_TO_MAIN_MENU, "Volver al menú principal"},
     {TR_LABEL_PAUSE_MENU, "Pausa"},
     {TR_OVERLAY_LEVY, "Mantenimiento"},
-    {TR_TOOLTIP_OVERLAY_LEVY, " denarii pagados mensualmente para dar mantenimiento."}, 
+    {TR_TOOLTIP_OVERLAY_LEVY, " denarii pagados mensualmente para dar mantenimiento."},
     {TR_MAP_EDITOR_OPTIONS, "Configuración de escenario"},
     {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "Este templo recolectará comida para tu puesto de suministro, una vez lo construyas."},
     {TR_BUTTON_GO_TO_SITE, "Ir al sitio" },
+    {TR_RETURN_ALL_TO_FORT, "Regresar todo"},
 };
 
 void translation_spanish(const translation_string **strings, int *num_strings)
