@@ -588,7 +588,10 @@ static translation_string all_strings[] = {
     {TR_SIDEBAR_EXTRA_REQUESTS_HAVE, "have" },
     {TR_SIDEBAR_EXTRA_REQUESTS_SMALL_FORCE, "Small force"},
     {TR_SIDEBAR_EXTRA_REQUESTS_AVERAGE_FORCE, "Average force"},
-    {TR_SIDEBAR_EXTRA_REQUESTS_LARGE_FORCE, "Large force"}
+    {TR_SIDEBAR_EXTRA_REQUESTS_LARGE_FORCE, "Large force"},
+    {TR_TOOLTIP_ADVISOR_HOUSING_GRAPH_BUTTON, "Go to population graphs" },
+    {TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON, "Go to housing advisor" },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

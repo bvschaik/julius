@@ -119,6 +119,10 @@ static void go_back(int param1, int param2)
 }
 
 static int get_tooltip_text(tooltip_context *c) {
+    if (focus_button_id == 1) {
+        c->translation_key = TR_TOOLTIP_ADVISOR_HOUSING_GRAPH_BUTTON;
+        return 1;
+    }
     return 0;
 }
 

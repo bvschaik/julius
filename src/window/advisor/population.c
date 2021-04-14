@@ -565,6 +565,8 @@ static int get_tooltip_text(tooltip_context *c)
 {
     if (focus_button_id && focus_button_id < 3) {
         return 111;
+    } else if (focus_button_id && focus_button_id == 3) {
+        c->translation_key = TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON;
     } else {
         return 0;
     }
