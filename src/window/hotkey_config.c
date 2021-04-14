@@ -10,6 +10,7 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -31,7 +32,7 @@ static void button_hotkey(int row, int is_alternative);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
 
-static scrollbar_type scrollbar = {580, 72, 352, on_scroll};
+static scrollbar_type scrollbar = { 580, 72, 352, on_scroll };
 
 typedef struct {
     int action;
@@ -177,7 +178,7 @@ static void init(void)
     scrollbar_init(&scrollbar, 0, sizeof(hotkey_widgets) / sizeof(hotkey_widget) - NUM_VISIBLE_OPTIONS);
 
     for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
-        hotkey_mapping empty = {KEY_TYPE_NONE, KEY_MOD_NONE, i};
+        hotkey_mapping empty = { KEY_TYPE_NONE, KEY_MOD_NONE, i };
 
         const hotkey_mapping *mapping = hotkey_for_action(i, 0);
         data.mappings[i][0] = mapping ? *mapping : empty;
@@ -187,11 +188,37 @@ static void init(void)
     }
 }
 
+static void draw_borders(void)
+{
+    int width = screen_width();
+    int height = screen_height();
+    int image_base = image_group(GROUP_EMPIRE_PANELS);
+
+    // horizontal bar borders
+    for (int x = 0; x < width; x += 86) {
+        image_draw(image_base + 1, x, 0);
+        image_draw(image_base + 1, x, height - 16);
+    }
+
+    // vertical bar borders
+    for (int y = 16; y < height; y += 86) {
+        image_draw(image_base, 0, y);
+        image_draw(image_base, width - 16, y);
+    }
+
+    // crossbars
+    image_draw(image_base + 2, 0, 0);
+    image_draw(image_base + 2, 0, height - 16);
+    image_draw(image_base + 2, width - 16, 0);
+    image_draw(image_base + 2, width - 16, height - 16);
+}
+
 static void draw_background(void)
 {
     graphics_clear_screen(CANVAS_UI);
 
     image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 5);
+    draw_borders();
 
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
