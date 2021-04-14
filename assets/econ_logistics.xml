@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+
+<assetlist author="Areldir" name="Econ_Logistics">
+<!-- Note: Caravanserai OFF Variant for Northern/Central and Southern Climates Respectively -->
+    <image id="Caravanserai N OFF" src="Caravanserai_n_OFF" />
+    <image id="Caravanserai S OFF" src="Caravanserai_s_OFF" />
+
+<!-- Note: Caravanserai ON Variant for Northern/Central Climate -->
+    <image id="Caravanserai N ON" width="238" height="155">
+		<layer group="this" image="Caravanserai N OFF" />
+        <animation speed="8" frames="3" x="44" y="38" reversible="true" />
+    </image>
+    <image src="Caravanserai_n_ON_01" />
+    <image src="Caravanserai_n_ON_02" />
+    <image src="Caravanserai_n_ON_03" />
+
+<!-- Note: Caravanserai ON Variant for Southern Climate -->
+    <image id="Caravanserai S ON" width="238" height="148">
+		<layer group="this" image="Caravanserai S OFF" />
+        <animation speed="8" frames="3" x="44" y="30" reversible="true" />
+    </image>
+    <image src="Caravanserai_s_ON_01" />
+    <image src="Caravanserai_s_ON_02" />
+    <image src="Caravanserai_s_ON_03" />
+
+<!-- Note: Caravanserai Construction 0% Phase -->
+    <image id="Caravanserai Cons" src="Caravanserai_Construction_0%" />
+
+</assetlist>

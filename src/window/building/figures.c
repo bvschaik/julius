@@ -41,7 +41,7 @@ static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
 // Starting with FIGURE_WORK_CAMP_WORKER = 73,
 static const int NEW_FIGURE_TYPES[] = {
     TR_FIGURE_TYPE_WORK_CAMP_WORKER,TR_FIGURE_TYPE_WORK_CAMP_SLAVE,TR_FIGURE_TYPE_WORK_CAMP_ARCHITECT,TR_FIGURE_TYPE_MESS_HALL_SUPPLIER,TR_FIGURE_TYPE_MESS_HALL_COLLECTOR,
-    TR_FIGURE_TYPE_PRIEST_SUPPLIER, TR_FIGURE_TYPE_BARKEEP, TR_FIGURE_TYPE_BARKEEP_SUPPLIER, TR_FIGURE_TYPE_TOURIST, TR_FIGURE_TYPE_WATCHMAN, 0, 0 
+    TR_FIGURE_TYPE_PRIEST_SUPPLIER, TR_FIGURE_TYPE_BARKEEP, TR_FIGURE_TYPE_BARKEEP_SUPPLIER, TR_FIGURE_TYPE_TOURIST, TR_FIGURE_TYPE_WATCHMAN, 0, 0
 };
 
 static generic_button figure_buttons[] = {
@@ -55,31 +55,30 @@ static generic_button figure_buttons[] = {
 };
 
 static struct {
-    color_t figure_images[7][48*48];
+    color_t figure_images[7][48 * 48];
     int focus_button_id;
     building_info_context *context_for_callback;
 } data;
 
 static int big_people_image(figure_type type)
 {
-    switch (type)
-    {
-    case FIGURE_WORK_CAMP_SLAVE:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"), "Slave Portrait");
-        break;
-    case FIGURE_MESS_HALL_COLLECTOR:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall Portrait");
-        break;
-    case FIGURE_TRADE_CARAVAN_DONKEY:
-    case FIGURE_TRADE_CARAVAN:
-        if (scenario_property_climate() == CLIMATE_DESERT) {
-            return image_group(GROUP_BIG_PEOPLE) + CAMEL_PORTRAIT - 1;
-        }
-    case FIGURE_BARKEEP:
-    case FIGURE_BARKEEP_SUPPLIER:
-        return assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep Portrait");
-    default:
-        break;
+    switch (type) {
+        case FIGURE_WORK_CAMP_SLAVE:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"), "Slave Portrait");
+            break;
+        case FIGURE_MESS_HALL_COLLECTOR:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "M Hall Portrait");
+            break;
+        case FIGURE_TRADE_CARAVAN_DONKEY:
+        case FIGURE_TRADE_CARAVAN:
+            if (scenario_property_climate() == CLIMATE_DESERT) {
+                return image_group(GROUP_BIG_PEOPLE) + CAMEL_PORTRAIT - 1;
+            }
+        case FIGURE_BARKEEP:
+        case FIGURE_BARKEEP_SUPPLIER:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep Portrait");
+        default:
+            break;
     }
     return image_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[type] - 1;
 }
@@ -331,20 +330,20 @@ static void draw_monument_worker(building_info_context *c, figure *f)
 {
     image_draw(big_people_image(f->type), c->x_offset + 28, c->y_offset + 112);
 
-	lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
-	int relative_id = f->type - NEW_FIGURES_ID;
-	int width = text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
+    lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
+    int relative_id = f->type - NEW_FIGURES_ID;
+    int width = text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
     int resource = f->collecting_item_id;
 
-    if (f->action_state == FIGURE_ACTION_204_WORK_CAMP_WORKER_GETTING_RESOURCES ) {
+    if (f->action_state == FIGURE_ACTION_204_WORK_CAMP_WORKER_GETTING_RESOURCES) {
         width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 90 + width, c->y_offset + 135);
     } else if (f->action_state == FIGURE_ACTION_205_WORK_CAMP_WORKER_GOING_TO_MONUMENT || f->action_state == FIGURE_ACTION_209_WORK_CAMP_SLAVE_FOLLOWING ||
         f->action_state == FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT || f->action_state == FIGURE_ACTION_211_WORK_CAMP_SLAVE_DELIVERING_RESOURCES) {
-            width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
-            image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
-                c->x_offset + 90 + width, c->y_offset + 135);
+        width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_SMALL_BLACK);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+            c->x_offset + 90 + width, c->y_offset + 135);
     }
     if (c->figure.phrase_id >= 0) {
         lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
@@ -365,7 +364,7 @@ static void draw_normal_figure(building_info_context *c, figure *f)
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     if (f->type >= NEW_FIGURES_ID) {
         int relative_id = f->type - NEW_FIGURES_ID;
-        text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK,0);
+        text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
     } else {
         lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK);
     }
@@ -443,7 +442,7 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate *coord)
 void window_building_prepare_figure_list(building_info_context *c)
 {
     if (c->figure.count > 0) {
-        pixel_coordinate coord = {0, 0};
+        pixel_coordinate coord = { 0, 0 };
         if (config_get(CONFIG_UI_ZOOM)) {
             graphics_set_active_canvas(CANVAS_CITY);
         }

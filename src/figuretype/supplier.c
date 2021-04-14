@@ -46,8 +46,7 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     int num_loads;
     if (building_get(market_id)->data.market.is_mess_hall) {
         max_units = MAX_FOOD_STOCKED_MESS_HALL - market_units;
-    }
-    else {
+    } else {
         max_units = MAX_FOOD_STOCKED_MARKET - market_units;
     }
     if (granary_units >= 800) {
@@ -76,7 +75,7 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
         return 0;
     }
     building_granary_remove_resource(granary, resource, 100 * num_loads);
-    
+
     // create delivery boys
     int type = FIGURE_DELIVERY_BOY;
     if (f->type == FIGURE_MESS_HALL_SUPPLIER) {
@@ -164,10 +163,10 @@ static int change_market_supplier_destination(figure *f, int dst_building_id)
 static int recalculate_market_supplier_destination(figure *f)
 {
     int item = f->collecting_item_id;
-    building *market = building_get(f->building_id); 
+    building *market = building_get(f->building_id);
     inventory_storage_info info[INVENTORY_MAX];
     if (!building_distribution_get_inventory_storages(info, BUILDING_MARKET,
-            map_road_network_get(f->grid_offset), f->x, f->y, MAX_DISTANCE)) {
+        map_road_network_get(f->grid_offset), f->x, f->y, MAX_DISTANCE)) {
         return 0;
     }
     if (f->building_id == info[item].building_id) {
@@ -210,8 +209,8 @@ void figure_supplier_action(figure *f)
             break;
         case FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE:
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {          
-                f->wait_ticks = 0;     
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                f->wait_ticks = 0;
                 if (f->collecting_item_id > 3) {
                     if (!take_resource_from_warehouse(f, f->destination_building_id)) {
                         f->state = FIGURE_STATE_DEAD;
@@ -252,7 +251,7 @@ void figure_supplier_action(figure *f)
     if (f->type == FIGURE_MESS_HALL_SUPPLIER) {
         figure_tower_sentry_set_image(f);
     } else if (f->type == FIGURE_PRIEST_SUPPLIER) {
-        figure_image_update(f, image_group(GROUP_FIGURE_PRIEST));    
+        figure_image_update(f, image_group(GROUP_FIGURE_PRIEST));
     } else if (f->type == FIGURE_BARKEEP_SUPPLIER) {
         int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
@@ -296,19 +295,17 @@ void figure_delivery_boy_action(figure *f)
 
     if (f->type == FIGURE_MESS_HALL_COLLECTOR) {
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall death 01") +
+            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "M Hall death 01") +
                 figure_image_corpse_offset(f);
-        }
-        else {
-            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall_Walker"), "M Hall NE 01") + dir * 12 +
-                f->image_offset;
+        } else {
+            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "M Hall NE 01") +
+                dir * 12 + f->image_offset;
         }
     } else {
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
             f->image_id = image_group(GROUP_FIGURE_DELIVERY_BOY) + 96 +
                 figure_image_corpse_offset(f);
-        }
-        else {
+        } else {
             f->image_id = image_group(GROUP_FIGURE_DELIVERY_BOY) +
                 dir + 8 * f->image_offset;
         }
