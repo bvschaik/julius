@@ -45,8 +45,10 @@
     <image id="Const. Banner 01" src="Construction_Banner_01" />
     <image id="Const. Banner 02" src="Construction_Banner_02" />
 
-<!-- Note: Minimap icons for Monuments 3x3, 5x5 and 7x7 respectively  -->
+<!-- Note: Minimap icons for Monuments 2x2, 3x3, 4x4, 5x5 and 7x7 respectively  -->
+    <image id="2 Mon MapIcon" src="2x2_Monument_Icon" />
     <image id="3 Mon MapIcon" src="3x3_Monument_Icon" />
+    <image id="4 Mon MapIcon" src="4x4_Monument_Icon" />
     <image id="5 Mon MapIcon" src="5x5_Monument_Icon" />
     <image id="7 Mon MapIcon" src="7x7_Monument_Icon" />
 
