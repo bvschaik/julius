@@ -12,6 +12,7 @@
 #include "map/orientation.h"
 #include "map/road_access.h"
 #include "map/terrain.h"
+#include "scenario/property.h"
 
 #define MONUMENTS_SIZE_STEP 100
 #define DELIVERY_ARRAY_SIZE_STEP 200
@@ -75,6 +76,10 @@ static int small_mausoleum_resources[2][RESOURCE_MAX] = {
 static int large_mausoleum_resources[2][RESOURCE_MAX] = {
 	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+};
+static int caravanserai_resources[2][RESOURCE_MAX] = {
+    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 6, 0, 0, 0 },
+    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 
 typedef struct {
@@ -180,6 +185,7 @@ int building_monument_access_point(building *b, map_point *dst)
 			return 1;
 		case BUILDING_ORACLE:
 		case BUILDING_SMALL_MAUSOLEUM:
+        case BUILDING_CARAVANSERAI:
 			dst->x = b->x;
 			dst->y = b->y;
 			return 1;
@@ -195,7 +201,7 @@ int building_monument_add_module(building *b, int module_type)
 {
 	if (!building_monument_is_monument(b) ||
 		b->data.monument.monument_phase != MONUMENT_FINISHED ||
-		b->data.monument.upgrades) {
+        (b->data.monument.upgrades && b->type != BUILDING_CARAVANSERAI)) {
 		return 0;
 	}
 
@@ -355,6 +361,8 @@ int building_monument_resources_needed_for_monument_type(int building_type, int 
 			return large_mausoleum_resources[phase - 1][resource];
 		case BUILDING_SMALL_MAUSOLEUM:
 			return small_mausoleum_resources[phase - 1][resource];
+        case BUILDING_CARAVANSERAI:
+            return caravanserai_resources[phase - 1][resource];
 		default:
 			return 0;
 			break;
@@ -735,6 +743,33 @@ void building_monument_initialize(building *b)
 					break;
 			}
 			break;
+		case BUILDING_CARAVANSERAI:
+            switch (b->data.monument.monument_phase)
+            {
+                case MONUMENT_FINISHED:
+                    break;
+                case MONUMENT_START:
+                    break;
+                case 2:
+                    switch (scenario_property_climate())
+                    {
+                        case CLIMATE_DESERT:
+                            map_building_tiles_add(b->id, b->x, b->y, b->size,
+                                                   assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S ON"),
+                                                   TERRAIN_BUILDING);
+                            break;
+                        default:
+                            map_building_tiles_add(b->id, b->x, b->y, b->size,
+                                                   assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N ON"),
+                                                   TERRAIN_BUILDING);
+                            break;
+                    }
+                    b->data.monument.monument_phase = MONUMENT_FINISHED;
+                    break;
+                default:
+                    break;
+            }
+            break;
 	}
 
 	if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
@@ -773,6 +808,7 @@ int building_monument_type_is_monument(building_type type)
 		case BUILDING_NYMPHAEUM:
 		case BUILDING_LARGE_MAUSOLEUM:
 		case BUILDING_SMALL_MAUSOLEUM:
+        case BUILDING_CARAVANSERAI:
 			return 1;
 		default:
 			return 0;
@@ -791,6 +827,7 @@ int building_monument_type_is_mini_monument(building_type type)
 		case BUILDING_SMALL_MAUSOLEUM:
 		case BUILDING_LARGE_MAUSOLEUM:
 		case BUILDING_NYMPHAEUM:
+        case BUILDING_CARAVANSERAI:
 			return 1;
 		default:
 			return 0;
@@ -883,6 +920,7 @@ int building_monument_monument_phases(int building_type)
 		case BUILDING_LARGE_MAUSOLEUM:
 		case BUILDING_SMALL_MAUSOLEUM:
 		case BUILDING_NYMPHAEUM:
+        case BUILDING_CARAVANSERAI:
 			return 2;
 		default:
 			return 0;

@@ -556,6 +556,7 @@ static int phrase_based_on_figure_state(figure *f)
         case FIGURE_MARKET_TRADER:
             return market_trader_phrase(f);
         case FIGURE_MARKET_SUPPLIER:
+        case FIGURE_CARAVANSERAI_SUPPLIER:
             return market_supplier_phrase(f);
         case FIGURE_CART_PUSHER:
             return cart_pusher_phrase(f);

@@ -284,7 +284,7 @@ void figure_cartpusher_action(figure *f)
             break;
         case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
             set_cart_graphic(f);
-            figure_movement_move_ticks_with_percentage(f, speed_factor,percentage_speed);
+            figure_movement_move_ticks_with_percentage(f, speed_factor, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE;
                 f->wait_ticks = 0;

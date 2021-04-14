@@ -34,9 +34,9 @@ void building_warehouse_remove_resource_curse(building *warehouse, int amount);
 
 void building_warehouse_space_set_image(building *space, int resource);
 
-void building_warehouse_space_add_import(building *space, int resource);
+void building_warehouse_space_add_import(building *space, int resource, int land_trader);
 
-void building_warehouse_space_remove_export(building *space, int resource);
+void building_warehouse_space_remove_export(building *space, int resource, int land_trader);
 
 void building_warehouses_add_resource(int resource, int amount);
 

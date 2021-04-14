@@ -80,4 +80,6 @@ void window_building_draw_description_at(building_info_context *c, int y_offset,
 
 void window_building_play_sound(building_info_context *c, const char *sound_file);
 
+void window_building_draw_monument_construction_process(building_info_context *c,
+                                                        int tr_phase_name, int tr_phase_name_text, int tr_construction_desc);
 #endif // WINDOW_BUILDING_COMMON_H

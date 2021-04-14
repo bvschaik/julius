@@ -6,6 +6,7 @@
 #include "core/config.h"
 #include "city/data_private.h"
 #include "empire/city.h"
+#include "figure/figure.h"
 
 void city_trade_update(void)
 {
@@ -117,4 +118,16 @@ int city_trade_next_docker_export_resource(void)
         city_data.trade.docker_export_resource = RESOURCE_MIN;
     }
     return city_data.trade.docker_export_resource;
+}
+
+int trade_caravan_count(void)
+{
+    int count = 0;
+    for (int i = 1; i < figure_count(); i++) {
+        figure *f = figure_get(i);
+        if (f->type == FIGURE_TRADE_CARAVAN || f->type == FIGURE_TRADE_CARAVAN_DONKEY || f->type == FIGURE_NATIVE_TRADER) {
+            count++;
+        }
+    }
+    return count;
 }

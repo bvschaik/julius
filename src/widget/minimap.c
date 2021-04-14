@@ -173,7 +173,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
             } else {
                 image_id = image_group(GROUP_MINIMAP_BUILDING);
             }
-            if (building_monument_is_monument(b)) {
+            if (building_monument_is_monument(b) && b->type != BUILDING_CARAVANSERAI) {
                 switch (map_property_multi_tile_size(grid_offset)) {
                 case 3: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "3 Mon MapIcon"), x_view, y_view - 2); break;
                 case 5: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "5 Mon MapIcon"), x_view, y_view - 4); break;

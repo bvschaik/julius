@@ -25,8 +25,8 @@ static void draw_background(void)
     for (int i = 1; i < 16; i++) {
         int image_offset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 126 + 30 * i, 194);
-        text_draw_number_centered(trade_price_buy(i), 120 + 30 * i, 229, 30, FONT_SMALL_PLAIN);
-        text_draw_number_centered(trade_price_sell(i), 120 + 30 * i, 254, 30, FONT_SMALL_PLAIN);
+        text_draw_number_centered(trade_price_buy(i, 0), 120 + 30 * i, 229, 30, FONT_SMALL_PLAIN);
+        text_draw_number_centered(trade_price_sell(i, 0), 120 + 30 * i, 254, 30, FONT_SMALL_PLAIN);
     }
     lang_text_draw_centered(13, 1, 16, 296, 608, FONT_NORMAL_BLACK);
 

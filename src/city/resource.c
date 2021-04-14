@@ -8,8 +8,10 @@
 #include "city/data_private.h"
 #include "city/message.h"
 #include "city/military.h"
+#include "city/trade.h"
 #include "core/calc.h"
 #include "empire/city.h"
+#include "figure/figure.h"
 #include "figure/formation.h"
 #include "game/difficulty.h"
 #include "game/tutorial.h"
@@ -510,7 +512,36 @@ void city_resource_consume_food(void)
                 city_data.mess_hall.food_types = num_foods;
             }
         }
+        if (b->type == BUILDING_CARAVANSERAI && building_monument_working(BUILDING_CARAVANSERAI)) {
+            int food_required = trade_caravan_count() * FOOD_PER_TRADER_MONTHLY;
+            int total_food_in_caravanserai = 0;
+            double proportionate_amount = 0;
+            int amount_for_type = 0;
 
+            for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
+                total_food_in_caravanserai += b->data.market.inventory[i];
+            }
+
+            city_data.caravanserai.total_food = total_food_in_caravanserai;
+
+            if (food_required) {
+                for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
+                    proportionate_amount = ((double)food_required * (double)b->data.market.inventory[i]) / (double)total_food_in_caravanserai;
+                    if (proportionate_amount > 0) {
+                        amount_for_type = calc_bound((int) ceil(proportionate_amount), 0, b->data.market.inventory[i]);
+                        b->data.market.inventory[i] -= amount_for_type;
+                    }
+                }
+
+                if (food_required > total_food_in_caravanserai) {
+                    total_consumed += total_food_in_caravanserai;
+                    city_data.caravanserai.total_food = 0;
+                } else {
+                    total_consumed += food_required;
+                    city_data.caravanserai.total_food -= food_required;
+                }
+            }
+        }
     }
 
     if (city_military_total_soldiers_in_city() > 0 && !city_data.building.mess_hall_building_id && !city_data.mess_hall.missing_mess_hall_warning_shown) {

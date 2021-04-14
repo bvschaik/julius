@@ -29,6 +29,11 @@ int city_buildings_has_hippodrome(void);
 void city_buildings_add_hippodrome(void);
 void city_buildings_remove_hippodrome(void);
 
+int city_buildings_has_caravanserai(void);
+void city_buildings_add_caravanserai(building *caravanserai);
+void city_buildings_remove_caravanserai(void);
+int city_buildings_get_caravanserai(void);
+
 int city_buildings_triumphal_arch_available(void);
 void city_buildings_earn_triumphal_arch(void);
 void city_buildings_build_triumphal_arch(void);

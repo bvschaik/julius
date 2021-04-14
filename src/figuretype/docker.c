@@ -43,7 +43,7 @@ static int try_import_resource(int building_id, int resource, int city_id)
     int route_id = empire_city_get_route_id(city_id);
 
     if (b->type == BUILDING_GRANARY) {
-        int result = building_granary_add_import(b, resource);
+        int result = building_granary_add_import(b, resource, 0);
         if (result) {
             trade_route_increase_traded(route_id, resource);
         }
@@ -57,7 +57,7 @@ static int try_import_resource(int building_id, int resource, int city_id)
         if (space->id > 0) {
             if (space->loads_stored && space->loads_stored < 4 && space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(route_id, resource);
-                building_warehouse_space_add_import(space, resource);
+                building_warehouse_space_add_import(space, resource, 0);
                 return 1;
             }
         }
@@ -69,7 +69,7 @@ static int try_import_resource(int building_id, int resource, int city_id)
         if (space->id > 0) {
             if (space->subtype.warehouse_resource_id == RESOURCE_NONE) {
                 trade_route_increase_traded(route_id, resource);
-                building_warehouse_space_add_import(space, resource);
+                building_warehouse_space_add_import(space, resource, 0);
                 return 1;
             }
         }
@@ -89,7 +89,7 @@ static int try_export_resource(int building_id, int resource, int city_id)
     }
 
     if (b->type == BUILDING_GRANARY) {
-        int result = building_granary_remove_export(b, resource);
+        int result = building_granary_remove_export(b, resource, 0);
         if (result) {
             trade_route_increase_traded(empire_city_get_route_id(city_id), resource);
         }
@@ -102,7 +102,7 @@ static int try_export_resource(int building_id, int resource, int city_id)
         if (space->id > 0) {
             if (space->loads_stored && space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(empire_city_get_route_id(city_id), resource);
-                building_warehouse_space_remove_export(space, resource);
+                building_warehouse_space_remove_export(space, resource, 0);
                 return 1;
             }
         }

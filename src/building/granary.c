@@ -98,22 +98,22 @@ int building_granary_resource_amount(int resource, building *b)
     return b->data.granary.resource_stored[resource];
 }
 
-int building_granary_add_import(building *granary, int resource)
+int building_granary_add_import(building *granary, int resource, int land_trader)
 {
     if (!building_granary_add_resource(granary, resource, 0)) {
         return 0;
     }
-    int price = trade_price_buy(resource);
+    int price = trade_price_buy(resource, land_trader);
     city_finance_process_import(price);
     return 1;
 }
 
-int building_granary_remove_export(building *granary, int resource)
+int building_granary_remove_export(building *granary, int resource, int land_trader)
 {
     if (building_granary_remove_resource(granary, resource, RESOURCE_GRANARY_ONE_LOAD) == RESOURCE_GRANARY_ONE_LOAD) {
         return 0;
     }
-    int price = trade_price_sell(resource);
+    int price = trade_price_sell(resource, land_trader);
     city_finance_process_export(price);
     return 1;
 }

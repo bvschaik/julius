@@ -43,6 +43,16 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_u8(buf, b->data.house.num_gods);
         buffer_write_u8(buf, b->data.house.devolve_delay);
         buffer_write_u8(buf, b->data.house.evolve_text_id);
+    // Do not place this after if (building_has_supplier_inventory(b->type) or after if (building_monument_is_monument(b))
+    // Because Caravanserai is monument AND supplier building and resources_needed / inventory is same memory spot
+    } else if(b->type == BUILDING_CARAVANSERAI) {
+        for (int i = 0; i < RESOURCE_MAX; i++) {
+            buffer_write_i16(buf, b->data.monument.resources_needed[i]);
+        }
+        buffer_write_i32(buf, b->data.monument.upgrades);
+        buffer_write_i16(buf, b->data.monument.progress);
+        buffer_write_i16(buf, b->data.monument.monument_phase);
+        buffer_write_u8(buf, b->data.market.fetch_inventory_id);
     } else if (building_has_supplier_inventory(b->type)) {
         buffer_write_i16(buf, 0);
         for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -243,6 +253,16 @@ static void read_type_data(buffer *buf, building *b)
         b->data.house.num_gods = buffer_read_u8(buf);
         b->data.house.devolve_delay = buffer_read_u8(buf);
         b->data.house.evolve_text_id = buffer_read_u8(buf);
+    // Do not place this after if (building_has_supplier_inventory(b->type) or after if (building_monument_is_monument(b))
+    // Because Caravanserai is monument AND supplier building and resources_needed / inventory is same memory spot
+    } else if (b->type == BUILDING_CARAVANSERAI) {
+        for (int i = 0; i < RESOURCE_MAX; i++) {
+            b->data.monument.resources_needed[i] = buffer_read_i16(buf);
+        }
+        b->data.monument.upgrades = buffer_read_i32(buf);
+        b->data.monument.progress = buffer_read_i16(buf);
+        b->data.monument.monument_phase = buffer_read_i16(buf);
+        b->data.market.fetch_inventory_id = buffer_read_u8(buf);
     } else if (building_has_supplier_inventory(b->type)) {
         buffer_skip(buf, 2);
         for (int i = 0; i < INVENTORY_MAX; i++) {

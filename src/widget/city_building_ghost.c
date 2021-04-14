@@ -305,6 +305,15 @@ static int get_new_building_image_id(int map_x, int map_y, int grid_offset,
                 default:
                     break;
             }
+        } else if (type == BUILDING_CARAVANSERAI) {
+            switch (scenario_property_climate()) {
+                case CLIMATE_DESERT:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S ON");
+                    break;
+                default:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N ON");
+                    break;
+            }
         }
     }
     return image_id;
@@ -344,6 +353,9 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
         return 1;
     }
     if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
+        return 1;
+    }
+    if (type == BUILDING_CARAVANSERAI && city_buildings_has_caravanserai()) {
         return 1;
     }
     if (type == BUILDING_BARRACKS && city_buildings_has_barracks() && !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {

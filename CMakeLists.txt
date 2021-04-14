@@ -256,6 +256,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/building.c
     ${PROJECT_SOURCE_DIR}/src/building/building_state.c
     ${PROJECT_SOURCE_DIR}/src/building/building_variant.c
+    ${PROJECT_SOURCE_DIR}/src/building/caravanserai.c
     ${PROJECT_SOURCE_DIR}/src/building/clone.c
     ${PROJECT_SOURCE_DIR}/src/building/construction.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_building.c
@@ -514,6 +515,7 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/slide.c
 )
 set(WINDOW_FILES
+    ${PROJECT_SOURCE_DIR}/src/window/action_popup.c
     ${PROJECT_SOURCE_DIR}/src/window/advisors.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/chief.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/education.c

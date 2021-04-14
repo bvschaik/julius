@@ -252,7 +252,7 @@ void figure_supplier_action(figure *f)
         figure_tower_sentry_set_image(f);
     } else if (f->type == FIGURE_PRIEST_SUPPLIER) {
         figure_image_update(f, image_group(GROUP_FIGURE_PRIEST));
-    } else if (f->type == FIGURE_BARKEEP_SUPPLIER) {
+    } else if (f->type == FIGURE_BARKEEP_SUPPLIER || f->type == FIGURE_CARAVANSERAI_SUPPLIER) {
         int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
             f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep Death 01") +
@@ -278,7 +278,7 @@ void figure_delivery_boy_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     } else {
         if (leader->state == FIGURE_STATE_ALIVE) {
-            if (leader->type == FIGURE_MARKET_SUPPLIER || leader->type == FIGURE_DELIVERY_BOY || leader->type == FIGURE_MESS_HALL_SUPPLIER || leader->type == FIGURE_MESS_HALL_COLLECTOR || leader->type == FIGURE_PRIEST_SUPPLIER || leader->type == FIGURE_PRIEST || leader->type == FIGURE_BARKEEP_SUPPLIER) {
+            if (leader->type == FIGURE_MARKET_SUPPLIER || leader->type == FIGURE_DELIVERY_BOY || leader->type == FIGURE_MESS_HALL_SUPPLIER || leader->type == FIGURE_MESS_HALL_COLLECTOR || leader->type == FIGURE_PRIEST_SUPPLIER || leader->type == FIGURE_PRIEST || leader->type == FIGURE_BARKEEP_SUPPLIER || leader->type == FIGURE_CARAVANSERAI_SUPPLIER) {
                 figure_movement_follow_ticks(f, 1);
             } else {
                 f->state = FIGURE_STATE_DEAD;

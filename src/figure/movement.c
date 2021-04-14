@@ -375,11 +375,17 @@ void figure_movement_move_ticks(figure *f, int num_ticks)
 
 void figure_movement_move_ticks_with_percentage(figure* f, int num_ticks, int tick_percentage)
 {
-    f->progress_to_next_tick += tick_percentage;
-    if (f->progress_to_next_tick >= 100) {
-        f->progress_to_next_tick -= 100;
+    int progress = f->progress_to_next_tick + tick_percentage;
+
+    if (progress >= 100) {
+        progress -= 100;
         num_ticks++;
+    } else if (progress <= -100) {
+        progress += 100;
+        num_ticks--;
     }
+    f->progress_to_next_tick = (char) progress;
+
     walk_ticks(f, num_ticks, 0);
 }
 
@@ -424,12 +430,16 @@ void figure_movement_follow_ticks(figure *f, int num_ticks)
 
 void figure_movement_follow_ticks_with_percentage(figure* f, int num_ticks, int tick_percentage)
 {
-   
-    f->progress_to_next_tick += tick_percentage;
-    if (f->progress_to_next_tick >= 100) {
-        f->progress_to_next_tick -= 100;
+    int progress = f->progress_to_next_tick + tick_percentage;
+
+    if (progress >= 100) {
+        progress -= 100;
         num_ticks++;
+    } else if (progress <= -100) {
+        progress += 100;
+        num_ticks--;
     }
+    f->progress_to_next_tick = (char) progress;
 
     const figure* leader = figure_get(f->leading_figure_id);
     if (f->x == f->source_x && f->y == f->source_y) {

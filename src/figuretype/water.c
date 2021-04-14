@@ -221,7 +221,7 @@ void figure_fishing_boat_action(figure *f)
             }
             break;
         case FIGURE_ACTION_191_FISHING_BOAT_GOING_TO_FISH:
-            figure_movement_move_ticks_with_percentage(f, speed,percentage_speed);
+            figure_movement_move_ticks_with_percentage(f, speed, percentage_speed);
             f->height_adjusted_ticks = 0;
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 map_point tile;

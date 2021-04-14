@@ -1,3 +1,9 @@
+#include "building/caravanserai.h"
+#include "building/model.h"
+#include "building/monument.h"
+#include "city/buildings.h"
+#include "city/resource.h"
+#include "core/calc.h"
 #include "trade_prices.h"
 
 struct trade_price {
@@ -14,6 +20,57 @@ static const struct trade_price DEFAULT_PRICES[RESOURCE_MAX] = {
 
 static struct trade_price prices[RESOURCE_MAX];
 
+static int trade_get_caravanserai_factor(int percent) {
+    int caravanserai_percent = 0;
+
+    if (building_monument_working(BUILDING_CARAVANSERAI)) {
+        building *b = building_get(city_buildings_get_caravanserai());
+
+        // caravanserai has enough food for the month
+        if (building_caravanserai_enough_foods(b)) {
+            // get workers percentage
+            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+            if (pct_workers >= 100) { // full laborers
+                caravanserai_percent = percent;
+            } else if (pct_workers > 0) {
+                caravanserai_percent = caravanserai_percent / 2;
+            }
+        }
+    }
+
+    return caravanserai_percent;
+}
+
+static int trade_factor_sell(int land_trader)
+{
+    int percent = 0;
+    if (land_trader && city_buildings_has_caravanserai()) {
+        int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
+
+        if (policy == TRADE_POLICY_1) {
+            percent = trade_get_caravanserai_factor(POLICY_1_BONUS_PERCENT); // trader buy 20% more
+        } else if (policy == TRADE_POLICY_2) {
+            percent = - trade_get_caravanserai_factor(POLICY_2_MALUS_PERCENT); // trader buy 10% less
+        }
+    }
+    return percent;
+}
+
+static int trade_factor_buy(int land_trader)
+{
+    int percent = 0;
+    if (land_trader && city_buildings_has_caravanserai()) {
+        int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
+
+        if (policy == TRADE_POLICY_1) {
+            percent = - trade_get_caravanserai_factor(POLICY_1_MALUS_PERCENT); // player buy 10% more
+        } else if (policy == TRADE_POLICY_2) {
+            percent = trade_get_caravanserai_factor(POLICY_2_BONUS_PERCENT); // player buy 20% less
+        }
+    }
+    return percent;
+}
+
 void trade_prices_reset(void)
 {
     for (int i = 0; i < RESOURCE_MAX; i++) {
@@ -21,14 +78,14 @@ void trade_prices_reset(void)
     }
 }
 
-int trade_price_buy(resource_type resource)
+int trade_price_buy(resource_type resource, int land_trader)
 {
-    return prices[resource].buy;
+    return calc_adjust_with_percentage(prices[resource].buy, 100 + trade_factor_buy(land_trader));
 }
 
-int trade_price_sell(resource_type resource)
+int trade_price_sell(resource_type resource, int land_trader)
 {
-    return prices[resource].sell;
+    return calc_adjust_with_percentage(prices[resource].sell, 100 + trade_factor_sell(land_trader));
 }
 
 int trade_price_change(resource_type resource, int amount)

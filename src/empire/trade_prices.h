@@ -17,14 +17,16 @@ void trade_prices_reset(void);
 /**
  * Get the buy price for the resource
  * @param resource Resource
+ * @param int land_trader 1 if land_trader 0 else sea_trader
  */
-int trade_price_buy(resource_type resource);
+int trade_price_buy(resource_type resource, int land_trader);
 
 /**
  * Get the sell price for the resource
  * @param resource Resource
+ * @param int land_trader 1 if land_trader 0 else sea_trader
  */
-int trade_price_sell(resource_type resource);
+int trade_price_sell(resource_type resource, int land_trader);
 
 /**
  * Change the trade price for resource by amount

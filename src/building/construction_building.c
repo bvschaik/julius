@@ -63,7 +63,7 @@ static void add_hippodrome(building *b)
 {
     int image1 = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NESW 01");
     int image2 = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NWSE 01");
-    
+
     city_buildings_add_hippodrome();
 
     building_rotation_force_two_orientations();
@@ -476,7 +476,7 @@ static void add_to_map(int type, building *b, int size,
             add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Oracle Cons"));
             b->data.monument.monument_phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 2);
-            building_monument_initialize(b);            
+            building_monument_initialize(b);
             break;
         case BUILDING_LARARIUM:
             add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Lararium 01"));
@@ -551,7 +551,7 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_WAREHOUSE:
             add_warehouse(b);
             break;
-        case BUILDING_HIPPODROME:            
+        case BUILDING_HIPPODROME:
             add_hippodrome(b);
             building_monument_initialize(b);
             building* b2 = building_get(b->next_part_building_id);
@@ -711,6 +711,13 @@ static void add_to_map(int type, building *b, int size,
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_initialize(b);
             break;
+        case BUILDING_CARAVANSERAI:
+            city_buildings_add_caravanserai(b);
+            add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai Cons"));
+            b->data.monument.monument_phase = MONUMENT_START;
+            map_tiles_update_area_roads(b->x, b->y, 4);
+            building_monument_initialize(b);
+            break;
     }
     map_routing_update_land();
     map_routing_update_walls();
@@ -866,6 +873,10 @@ int building_construction_place_building(building_type type, int x, int y)
         }
     }
     if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
+        city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
+        return 0;
+    }
+    if (type == BUILDING_CARAVANSERAI && city_buildings_has_caravanserai()) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }

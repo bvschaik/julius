@@ -113,6 +113,7 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_watchman_action,
     figure_watchtower_archer_action,
     figure_friendly_arrow_action,
+    figure_supplier_action
 }; 
 
 void figure_action_handle(void)

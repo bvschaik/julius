@@ -143,6 +143,7 @@ void building_count_update(void)
             // distribution
             case BUILDING_MARKET:
             case BUILDING_TAVERN:
+            case BUILDING_CARAVANSERAI:
             // military
             case BUILDING_MILITARY_ACADEMY:
             case BUILDING_MESS_HALL:

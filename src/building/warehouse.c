@@ -186,19 +186,19 @@ void building_warehouse_space_set_image(building *space, int resource)
     map_image_set(space->grid_offset, image_id);
 }
 
-void building_warehouse_space_add_import(building *space, int resource)
+void building_warehouse_space_add_import(building *space, int resource, int land_trader)
 {
     city_resource_add_to_warehouse(resource, 1);
     space->loads_stored++;
     space->subtype.warehouse_resource_id = resource;
 
-    int price = trade_price_buy(resource);
+    int price = trade_price_buy(resource, land_trader);
     city_finance_process_import(price);
 
     building_warehouse_space_set_image(space, resource);
 }
 
-void building_warehouse_space_remove_export(building *space, int resource)
+void building_warehouse_space_remove_export(building *space, int resource, int land_trader)
 {
     city_resource_remove_from_warehouse(resource, 1);
     space->loads_stored--;
@@ -206,7 +206,7 @@ void building_warehouse_space_remove_export(building *space, int resource)
         space->subtype.warehouse_resource_id = RESOURCE_NONE;
     }
 
-    int price = trade_price_sell(resource);
+    int price = trade_price_sell(resource, land_trader);
     city_finance_process_export(price);
 
     building_warehouse_space_set_image(space, resource);

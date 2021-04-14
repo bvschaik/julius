@@ -79,6 +79,7 @@ void figure_delete(figure *f)
         case FIGURE_PRIEST_SUPPLIER:
         case FIGURE_BARKEEP_SUPPLIER:
         case FIGURE_MESS_HALL_SUPPLIER:
+        case FIGURE_CARAVANSERAI_SUPPLIER:
             if (f->building_id && f->id == b->figure_id2) {
                 b->figure_id2 = 0;
             } else if (f->building_id && f->id == b->figure_id) {
@@ -275,7 +276,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_u8(buf, f->migrant_num_people);
     buffer_write_u8(buf, f->is_ghost);
     buffer_write_u8(buf, f->min_max_seen);
-    buffer_write_u8(buf, f->progress_to_next_tick);
+    buffer_write_i8(buf, f->progress_to_next_tick);
     buffer_write_i16(buf, f->leading_figure_id);
     buffer_write_u8(buf, f->attack_image_offset);
     buffer_write_u8(buf, f->wait_ticks_missile);
@@ -375,7 +376,7 @@ static void figure_load(buffer *buf, figure *f, int figure_buf_size)
     f->migrant_num_people = buffer_read_u8(buf);
     f->is_ghost = buffer_read_u8(buf);
     f->min_max_seen = buffer_read_u8(buf);
-    f->progress_to_next_tick = buffer_read_u8(buf);
+    f->progress_to_next_tick = buffer_read_i8(buf);
     f->leading_figure_id = buffer_read_i16(buf);
     f->attack_image_offset = buffer_read_u8(buf);
     f->wait_ticks_missile = buffer_read_u8(buf);
