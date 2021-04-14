@@ -9,6 +9,9 @@
 #include "city/finance.h"
 #include "city/population.h"
 #include "city/warning.h"
+#include "core/array.h"
+#include "core/calc.h"
+#include "core/log.h"
 #include "figure/formation_legion.h"
 #include "game/difficulty.h"
 #include "game/resource.h"
@@ -23,40 +26,33 @@
 #include "map/tiles.h"
 #include "menu.h"
 
-#include <string.h>
-#include <stdlib.h>
-
 #define BUILDING_ARRAY_SIZE_STEP 2000
 
-static struct {
-    building *all_buildings;
-    int building_array_size;
-} data;
+static array(building) buildings;
 
 static struct {
-    int highest_id_in_use;
-    int highest_id_ever;
     int created_sequence;
     int incorrect_houses;
     int unfixable_houses;
-} extra = { 0, 0, 0, 0 };
+} extra;
 
 building *building_get(int id)
 {
-    return &data.all_buildings[id];
+    return &buildings.items[id];
 }
 
 int building_count(void)
 {
-    return data.building_array_size;
+    return buildings.size;
 }
 
 int building_find(building_type type)
 {
-    for (int i = 1; i < data.building_array_size; ++i) {
-        building *b = &data.all_buildings[i];
+    building *b;
+    array_foreach(buildings, b)
+    {
         if (b->state == BUILDING_STATE_IN_USE && b->type == type) {
-            return i;
+            return b->id;
         }
     }
     return 0;
@@ -68,57 +64,23 @@ building *building_main(building *b)
         if (b->prev_part_building_id <= 0) {
             return b;
         }
-        b = &data.all_buildings[b->prev_part_building_id];
+        b = &buildings.items[b->prev_part_building_id];
     }
-    return &data.all_buildings[0];
+    return array_first(buildings);
 }
 
 building *building_next(building *b)
 {
-    return &data.all_buildings[b->next_part_building_id];
-}
-
-static void create_building_array(int size)
-{
-    free(data.all_buildings);
-    data.building_array_size = size;
-    data.all_buildings = malloc(size * sizeof(building));
-    for (int i = 0; i < size; i++) {
-        memset(&data.all_buildings[i], 0, sizeof(building));
-        data.all_buildings[i].id = i;
-    }
-}
-
-static int expand_building_array(void)
-{
-    building *b = realloc(data.all_buildings, (data.building_array_size + BUILDING_ARRAY_SIZE_STEP) * sizeof(building));
-    if (!b) {
-        return 0;
-    }
-    data.all_buildings = b;
-    data.building_array_size += BUILDING_ARRAY_SIZE_STEP;
-    for (int i = data.building_array_size - BUILDING_ARRAY_SIZE_STEP; i < data.building_array_size; i++) {
-        memset(&data.all_buildings[i], 0, sizeof(building));
-        data.all_buildings[i].id = i;
-    }
-    return 1;
+    return &buildings.items[b->next_part_building_id];
 }
 
 building *building_create(building_type type, int x, int y)
 {
-    building *b = 0;
-    for (int i = 1; i < data.building_array_size; i++) {
-        if (data.all_buildings[i].state == BUILDING_STATE_UNUSED && !game_undo_contains_building(i)) {
-            b = &data.all_buildings[i];
-            break;
-        }
-    }
+    building *b;
+    array_new_item(buildings, 1, b);
     if (!b) {
-        if (!expand_building_array()) {
-            city_warning_show(WARNING_DATA_LIMIT_REACHED);
-            return &data.all_buildings[0];
-        }
-        b = &data.all_buildings[data.building_array_size - BUILDING_ARRAY_SIZE_STEP];
+        city_warning_show(WARNING_DATA_LIMIT_REACHED);
+        return array_first(buildings);
     }
 
     const building_properties *props = building_properties_for_type(type);
@@ -257,6 +219,8 @@ static void building_delete(building *b)
     int id = b->id;
     memset(b, 0, sizeof(building));
     b->id = id;
+
+    array_trim(buildings);
 }
 
 void building_clear_related_data(building *b)
@@ -291,45 +255,52 @@ void building_clear_related_data(building *b)
     }
 }
 
+void building_trim(void)
+{
+    array_trim(buildings);
+}
+
 void building_update_state(void)
 {
     int land_recalc = 0;
     int wall_recalc = 0;
     int road_recalc = 0;
     int aqueduct_recalc = 0;
-    for (int i = 1; i < data.building_array_size; i++) {
-        building *b = &data.all_buildings[i];
+    building *b;
+    array_foreach(buildings, b)
+    {
         if (b->state == BUILDING_STATE_CREATED) {
             b->state = BUILDING_STATE_IN_USE;
         }
-        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
-            if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
-                if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
-                    wall_recalc = 1;
-                    road_recalc = 1;
-                } else if (b->type == BUILDING_RESERVOIR) {
-                    aqueduct_recalc = 1;
-                } else if (b->type == BUILDING_GRANARY) {
-                    road_recalc = 1;
-                } else if ((b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) || b->type == BUILDING_PANTHEON || b->type == BUILDING_LIGHTHOUSE) {
-                    road_recalc = 1;
-                }
-                map_building_tiles_remove(i, b->x, b->y);
-                if (b->type == BUILDING_ROADBLOCK) {
-                    // Leave the road behind the deleted roadblock
-                    map_terrain_add_roadblock_road(b->x, b->y, 0);
-                    road_recalc = 1;
-                }
-                land_recalc = 1;
-                building_delete(b);
-            } else if (b->state == BUILDING_STATE_RUBBLE) {
-                if (b->house_size) {
-                    city_population_remove_home_removed(b->house_population);
-                }
-                building_delete(b);
-            } else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
-                building_delete(b);
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+            continue;
+        }
+        if (b->state == BUILDING_STATE_UNDO || b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
+            if (b->type == BUILDING_TOWER || b->type == BUILDING_GATEHOUSE) {
+                wall_recalc = 1;
+                road_recalc = 1;
+            } else if (b->type == BUILDING_RESERVOIR) {
+                aqueduct_recalc = 1;
+            } else if (b->type == BUILDING_GRANARY) {
+                road_recalc = 1;
+            } else if ((b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) || b->type == BUILDING_PANTHEON || b->type == BUILDING_LIGHTHOUSE) {
+                road_recalc = 1;
             }
+            map_building_tiles_remove(i, b->x, b->y);
+            if (b->type == BUILDING_ROADBLOCK) {
+                // Leave the road behind the deleted roadblock
+                map_terrain_add_roadblock_road(b->x, b->y, 0);
+                road_recalc = 1;
+            }
+            land_recalc = 1;
+            building_delete(b);
+        } else if (b->state == BUILDING_STATE_RUBBLE) {
+            if (b->house_size) {
+                city_population_remove_home_removed(b->house_population);
+            }
+            building_delete(b);
+        } else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
+            building_delete(b);
         }
     }
     if (wall_recalc) {
@@ -348,8 +319,9 @@ void building_update_state(void)
 
 void building_update_desirability(void)
 {
-    for (int i = 1; i < data.building_array_size; i++) {
-        building *b = &data.all_buildings[i];
+    building *b;
+    array_foreach(buildings, b)
+    {
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
@@ -428,24 +400,6 @@ int building_is_fort(building_type type)
         type == BUILDING_FORT_MOUNTED;
 }
 
-int building_get_highest_id(void)
-{
-    return extra.highest_id_in_use;
-}
-
-void building_update_highest_id(void)
-{
-    extra.highest_id_in_use = 0;
-    for (int i = 1; i < data.building_array_size; i++) {
-        if (data.all_buildings[i].state != BUILDING_STATE_UNUSED) {
-            extra.highest_id_in_use = i;
-        }
-    }
-    if (extra.highest_id_in_use > extra.highest_id_ever) {
-        extra.highest_id_ever = extra.highest_id_in_use;
-    }
-}
-
 int building_mothball_toggle(building *b)
 {
     if (b->state == BUILDING_STATE_IN_USE) {
@@ -502,12 +456,23 @@ void building_totals_add_corrupted_house(int unfixable)
     }
 }
 
+static void initialize_new_building(building *b, int position)
+{
+    b->id = position;
+}
+
+static int building_in_use(const building *b)
+{
+    return b->state != BUILDING_STATE_UNUSED || game_undo_contains_building(b->id);
+}
+
 void building_clear_all(void)
 {
-    create_building_array(BUILDING_ARRAY_SIZE_STEP);
+    if (!array_init(buildings, BUILDING_ARRAY_SIZE_STEP, initialize_new_building, building_in_use)) {
+        log_error("Unable to allocate enought memory for the building array. The game will now crash.", 0, 0);
+    }
+    array_next(buildings); // Ignore first building
 
-    extra.highest_id_in_use = 0;
-    extra.highest_id_ever = 0;
     extra.created_sequence = 0;
     extra.incorrect_houses = 0;
     extra.unfixable_houses = 0;
@@ -516,15 +481,17 @@ void building_clear_all(void)
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
     buffer *sequence, buffer *corrupt_houses)
 {
-    int buf_size = 4 + data.building_array_size * BUILDING_STATE_CURRENT_BUFFER_SIZE;
+    int buf_size = 4 + buildings.size * BUILDING_STATE_CURRENT_BUFFER_SIZE;
     uint8_t *buf_data = malloc(buf_size);
     buffer_init(buf, buf_data, buf_size);
     buffer_write_i32(buf, BUILDING_STATE_CURRENT_BUFFER_SIZE);
-    for (int i = 0; i < data.building_array_size; i++) {
-        building_state_save_to_buffer(buf, &data.all_buildings[i]);
+    building *b;
+    array_foreach(buildings, b)
+    {
+        building_state_save_to_buffer(buf, b);
     }
-    buffer_write_i32(highest_id, extra.highest_id_in_use);
-    buffer_write_i32(highest_id_ever, extra.highest_id_ever);
+    buffer_write_i32(highest_id, buildings.size);
+    buffer_write_i32(highest_id_ever, buildings.size);
     buffer_skip(highest_id_ever, 4);
     buffer_write_i32(sequence, extra.created_sequence);
 
@@ -532,8 +499,7 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     buffer_write_i32(corrupt_houses, extra.unfixable_houses);
 }
 
-void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-    buffer *sequence, buffer *corrupt_houses, int includes_building_size)
+void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, int includes_building_size)
 {
     int building_buf_size = BUILDING_STATE_ORIGINAL_BUFFER_SIZE;
     int buf_size = buf->size;
@@ -544,30 +510,23 @@ void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     }
 
     int buildings_to_load = buf_size / building_buf_size;
+    int array_size = calc_value_in_step(buildings_to_load, BUILDING_ARRAY_SIZE_STEP);
 
-    create_building_array(buildings_to_load);
+    if (!array_init(buildings, array_size, initialize_new_building, building_in_use)) {
+        log_error("Unable to allocate enought memory for the building array. The game will now crash.", 0, 0);
+    }
 
-    // Reduce number of used buildings on old Augustus savefiles that were hardcoded to load 10000. Improves performance
     int highest_id_in_use = 0;
-    int reduce_building_array_size = !includes_building_size && buildings_to_load == 10000;
 
-    for (int i = 0; i < data.building_array_size; i++) {
-        building_state_load_from_buffer(buf, &data.all_buildings[i], building_buf_size);
-        data.all_buildings[i].id = i;
-        if (reduce_building_array_size && data.all_buildings[i].state != BUILDING_STATE_UNUSED) {
+    for (int i = 0; i < buildings_to_load; i++) {
+        building *b = array_next(buildings);
+        building_state_load_from_buffer(buf, b, building_buf_size);
+        if (b->state != BUILDING_STATE_UNUSED) {
             highest_id_in_use = i;
         }
     }
-    if (reduce_building_array_size) {
-        data.building_array_size = BUILDING_ARRAY_SIZE_STEP;
-        while (highest_id_in_use > data.building_array_size) {
-            data.building_array_size += BUILDING_ARRAY_SIZE_STEP;
-        }
-    }
+    buildings.size = highest_id_in_use + 1;
 
-    extra.highest_id_in_use = buffer_read_i32(highest_id);
-    extra.highest_id_ever = buffer_read_i32(highest_id_ever);
-    buffer_skip(highest_id_ever, 4);
     extra.created_sequence = buffer_read_i32(sequence);
 
     extra.incorrect_houses = buffer_read_i32(corrupt_houses);

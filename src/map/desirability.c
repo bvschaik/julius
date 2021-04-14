@@ -70,7 +70,6 @@ static void add_to_terrain(int x, int y, int size, int desirability, int step, i
 
 static void update_buildings(void)
 {
-    int max_id = building_get_highest_id();
     int value;
     int value_bonus;
     int step;
@@ -78,7 +77,7 @@ static void update_buildings(void)
     int range;
     int venus_module2 = building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT);
     int venus_gt = building_monument_working(BUILDING_GRAND_TEMPLE_VENUS);
-    for (int i = 1; i <= max_id; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE) {
 

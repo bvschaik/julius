@@ -1,6 +1,9 @@
 #include "figure/figure.h"
 
 #include "building/building.h"
+#include "core/array.h"
+#include "core/calc.h"
+#include "core/log.h"
 #include "city/emperor.h"
 #include "core/random.h"
 #include "empire/city.h"
@@ -10,9 +13,6 @@
 #include "map/figure.h"
 #include "map/grid.h"
 
-#include <stdlib.h>
-#include <string.h>
-
 #define FIGURE_ARRAY_SIZE_STEP 1000
 
 #define FIGURE_ORIGINAL_BUFFER_SIZE 128
@@ -20,62 +20,27 @@
 
 static struct {
     int created_sequence;
-    figure *figures;
-    int figure_array_size;
+    array(figure) figures;
 } data;
 
 figure *figure_get(int id)
 {
-    return &data.figures[id];
+    return &data.figures.items[id];
 }
 
 int figure_count(void)
 {
-    return data.figure_array_size;
-}
-
-static void create_figure_array(int size)
-{
-    free(data.figures);
-    data.figure_array_size = size;
-    data.figures = malloc(size * sizeof(figure));
-    for (int i = 0; i < size; i++) {
-        memset(&data.figures[i], 0, sizeof(figure));
-        data.figures[i].id = i;
-    }
-}
-
-static int expand_figure_array(void)
-{
-    figure *f = realloc(data.figures, (data.figure_array_size + FIGURE_ARRAY_SIZE_STEP) * sizeof(figure));
-    if (!f) {
-        return 0;
-    }
-    data.figures = f;
-    data.figure_array_size += FIGURE_ARRAY_SIZE_STEP;
-    for (int i = data.figure_array_size - FIGURE_ARRAY_SIZE_STEP; i < data.figure_array_size; i++) {
-        memset(&data.figures[i], 0, sizeof(figure));
-        data.figures[i].id = i;
-    }
-    return 1;
+    return data.figures.size;
 }
 
 figure *figure_create(figure_type type, int x, int y, direction_type dir)
 {
-    int id = 0;
-    for (int i = 1; i < data.figure_array_size; i++) {
-        if (!data.figures[i].state) {
-            id = i;
-            break;
-        }
+    figure *f = 0;
+    array_new_item(data.figures, 1, f);
+    if (!f) {
+        return array_first(data.figures);
     }
-    if (!id && expand_figure_array()) {
-        id = data.figure_array_size - FIGURE_ARRAY_SIZE_STEP;
-    }
-    if (!id) {
-        return &data.figures[0];
-    }
-    figure *f = &data.figures[id];
+
     f->state = FIGURE_STATE_ALIVE;
     f->faction_id = 1;
     f->type = type;
@@ -116,11 +81,9 @@ void figure_delete(figure *f)
         case FIGURE_MESS_HALL_SUPPLIER:
             if (f->building_id && f->id == b->figure_id2) {
                 b->figure_id2 = 0;
-            }
-            else if (f->building_id && f->id == b->figure_id) {
+            } else if (f->building_id && f->id == b->figure_id) {
                 b->figure_id = 0;
-            }
-            else if (f->building_id && f->id == b->figure_id4) {
+            } else if (f->building_id && f->id == b->figure_id4) {
                 b->figure_id4 = 0;
             }
             break;
@@ -194,6 +157,8 @@ void figure_delete(figure *f)
     int figure_id = f->id;
     memset(f, 0, sizeof(figure));
     f->id = figure_id;
+
+    array_trim(data.figures);
 }
 
 int figure_is_dead(const figure *f)
@@ -216,16 +181,31 @@ int figure_is_herd(const figure *f)
     return f->type >= FIGURE_SHEEP && f->type <= FIGURE_ZEBRA;
 }
 
+static void initialize_new_figure(figure *f, int position)
+{
+    f->id = position;
+}
+
+static int figure_is_active(const figure *f)
+{
+    return f->state != 0;
+}
+
 void figure_init_scenario(void)
 {
-    create_figure_array(FIGURE_ARRAY_SIZE_STEP);
+    if (!array_init(data.figures, FIGURE_ARRAY_SIZE_STEP, initialize_new_figure, figure_is_active)) {
+        log_error("Unable to create figures array. The game will now crash.", 0, 0);
+    }
+    array_next(data.figures); // Ignore first figure
     data.created_sequence = 0;
 }
 
 void figure_kill_all(void)
 {
-    for (int i = 1; i < data.figure_array_size; i++) {
-        data.figures[i].state = FIGURE_STATE_DEAD;
+    figure *f;
+    array_foreach(data.figures, f)
+    {
+        f->state = FIGURE_STATE_DEAD;
     }
 }
 
@@ -440,13 +420,15 @@ void figure_save_state(buffer *list, buffer *seq)
 {
     buffer_write_i32(seq, data.created_sequence);
 
-    int buf_size = 4 + data.figure_array_size * FIGURE_CURRENT_BUFFER_SIZE;
+    int buf_size = 4 + data.figures.size * FIGURE_CURRENT_BUFFER_SIZE;
     uint8_t *buf_data = malloc(buf_size);
     buffer_init(list, buf_data, buf_size);
     buffer_write_i32(list, FIGURE_CURRENT_BUFFER_SIZE);
 
-    for (int i = 0; i < data.figure_array_size; i++) {
-        figure_save(list, &data.figures[i]);
+    figure *f;
+    array_foreach(data.figures, f)
+    {
+        figure_save(list, f);
     }
 }
 
@@ -463,24 +445,20 @@ void figure_load_state(buffer *list, buffer *seq, int includes_figure_size)
     }
 
     int figures_to_load = buf_size / figure_buf_size;
+    int array_size = calc_value_in_step(figures_to_load, FIGURE_ARRAY_SIZE_STEP);
 
-    create_figure_array(figures_to_load);
+    if (!array_init(data.figures, array_size, initialize_new_figure, figure_is_active)) {
+        log_error("Unable to create figures array. The game will now crash.", 0, 0);
+    }
 
-    // Reduce number of used figures on old Augustus savefiles that were hardcoded to load 5000. Improves performance
     int highest_id_in_use = 0;
-    int reduce_figure_array_size = !includes_figure_size && figures_to_load == 5000;
 
-    for (int i = 0; i < data.figure_array_size; i++) {
-        figure_load(list, &data.figures[i], figure_buf_size);
-        data.figures[i].id = i;
-        if (reduce_figure_array_size && data.figures[i].state) {
+    for (int i = 0; i < figures_to_load; i++) {
+        figure *f = array_next(data.figures);
+        figure_load(list, f, figure_buf_size);
+        if (f->state) {
             highest_id_in_use = i;
         }
     }
-    if (reduce_figure_array_size) {
-        data.figure_array_size = FIGURE_ARRAY_SIZE_STEP;
-        while (highest_id_in_use > data.figure_array_size) {
-            data.figure_array_size += FIGURE_ARRAY_SIZE_STEP;
-        }
-    }
+    data.figures.size = highest_id_in_use + 1;
 }

@@ -203,8 +203,7 @@ void figure_generate_criminals(void)
 {
     building *min_building = 0;
     int min_happiness = 50;
-    int max_id = building_get_highest_id();
-    for (int i = 1; i <= max_id; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
             if (b->sentiment.house_happiness >= 50) {

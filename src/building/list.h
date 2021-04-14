@@ -33,9 +33,8 @@ const int *building_list_small_items(void);
 
 /**
  * Clears the large building list
- * @param clear_entries Whether to clear the item values as well
  */
-void building_list_large_clear(int clear_entries);
+void building_list_large_clear(void);
 
 /**
  * Adds a building to the large list

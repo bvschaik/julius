@@ -84,6 +84,7 @@ static void advance_month(void)
     city_message_decrease_delays();
     city_sentiment_decrement_blessing_boost();
     building_industry_start_strikes();
+    building_trim();
 
     map_tiles_update_all_hedges();
     map_tiles_update_all_roads();
@@ -121,7 +122,7 @@ static void advance_day(void)
 static void advance_tick(void)
 {
     // NB: these ticks are noop:
-    // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
+    // 0, 9, 10, 11, 13, 14, 15, 26, 41, 42, 47
     switch (game_time_tick()) {
         case 1: city_gods_calculate_moods(1); break;
         case 2: sound_music_update(0); break;
@@ -131,7 +132,6 @@ static void advance_tick(void)
         case 6: map_natives_check_land(); break;
         case 7: map_road_network_update(); break;
         case 8: building_granaries_calculate_stocks(); break;
-        case 10: building_update_highest_id(); break;
         case 12: house_service_decay_houses_covered(); break;
         case 16: city_resource_calculate_warehouse_stocks(); break;
         case 17: city_resource_calculate_food_stocks_and_supply_wheat(); break;

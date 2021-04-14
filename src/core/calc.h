@@ -27,6 +27,14 @@ int calc_adjust_with_percentage(int value, int percentage);
 int calc_percentage(int value, int total);
 
 /**
+ * Calculates the next multiple of step in which value will fit
+ * @param value The value to fit in the multiple of step
+ * @param step The step to use as a multiple
+ * @return The multiple of step into which value fits
+ */
+int calc_value_in_step(int value, int step);
+
+/**
  * Gets maximum distance
  * @return max(dx, dy)
  */

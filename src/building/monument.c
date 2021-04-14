@@ -4,6 +4,7 @@
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/resource.h"
+#include "core/array.h"
 #include "core/calc.h"
 #include "core/log.h"
 #include "map/building_tiles.h"
@@ -11,9 +12,6 @@
 #include "map/orientation.h"
 #include "map/road_access.h"
 #include "map/terrain.h"
-
-#include <stdlib.h>
-#include <string.h>
 
 #define MONUMENTS_SIZE_STEP 100
 #define DELIVERY_ARRAY_SIZE_STEP 200
@@ -87,12 +85,9 @@ typedef struct {
 } monument_delivery;
 
 static struct {
-	int *monuments;
-	int monuments_array_size;
-	int monuments_number;
+	array(int) monuments;
+	array(monument_delivery) monument_deliveries;
 	int unfinished_monuments;
-	monument_delivery *monument_deliveries;
-	int monument_deliveries_array_size;
 } data;
 
 int building_monument_deliver_resource(building *b, int resource)
@@ -284,11 +279,13 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
 	}
 	int min_dist = INFINITE;
 	building *min_building = 0;
-	for (int i = 0; i < data.monuments_number; i++) {
-		if (!data.monuments[i]) {
+	int *monument_id;
+	array_foreach(data.monuments, monument_id)
+	{
+		if (!*monument_id) {
 			continue;
 		}
-		building *b = building_get(data.monuments[i]);
+		building *b = building_get(*monument_id);
 		if (!building_monument_is_monument(b) ||
 			b->data.monument.monument_phase == MONUMENT_FINISHED ||
 			b->data.monument.monument_phase < MONUMENT_START ||
@@ -824,9 +821,10 @@ int building_monument_needs_resource(building *b, int resource)
 
 int building_monument_phase(int phase)
 {
-	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = data.monuments[i];
-		building *b = building_get(monument_id);
+	int *monument_id;
+	array_foreach(data.monuments, monument_id)
+	{
+		building *b = building_get(*monument_id);
 		if (!building_monument_is_monument(b)) {
 			continue;
 		}
@@ -838,11 +836,12 @@ int building_monument_phase(int phase)
 
 int building_monument_get_venus_gt(void)
 {
-	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = data.monuments[i];
-		building *b = building_get(monument_id);
+	int *monument_id;
+	array_foreach(data.monuments, monument_id)
+	{
+		building *b = building_get(*monument_id);
 		if (b->type == BUILDING_GRAND_TEMPLE_VENUS) {
-			return monument_id;
+			return *monument_id;
 		}
 	}
 	return 0;
@@ -850,11 +849,12 @@ int building_monument_get_venus_gt(void)
 
 int building_monument_get_neptune_gt(void)
 {
-	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = data.monuments[i];
-		building *b = building_get(monument_id);
+	int *monument_id;
+	array_foreach(data.monuments, monument_id)
+	{
+		building *b = building_get(*monument_id);
 		if (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE) {
-			return monument_id;
+			return *monument_id;
 		}
 	}
 	return 0;
@@ -891,9 +891,10 @@ int building_monument_monument_phases(int building_type)
 
 int building_monument_finish_monuments(void)
 {
-	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = data.monuments[i];
-		building *b = building_get(monument_id);
+	int *monument_id;
+	array_foreach(data.monuments, monument_id)
+	{
+		building *b = building_get(*monument_id);
 		if (!building_monument_is_monument(b)) {
 			continue;
 		}
@@ -954,85 +955,50 @@ int building_monument_progress(building *b)
 
 void building_monument_recalculate_monuments(void)
 {
-	if (!data.monuments) {
-		data.monuments = malloc(sizeof(int) * MONUMENTS_SIZE_STEP);
-		if (!data.monuments) {
-			log_error("Unable to allocate enough memory for monuments. The game will now crash.", 0, 0);
-		}
-		data.monuments_array_size = MONUMENTS_SIZE_STEP;
+	if (!data.monuments.capacity && !array_init(data.monuments, MONUMENTS_SIZE_STEP, 0, 0)) {
+		log_error("Unable to allocate enough memory for monuments. The game will now crash.", 0, 0);
 	}
-	memset(data.monuments, 0, sizeof(int) * data.monuments_array_size);
 
-	data.monuments_number = 0;
+	data.monuments.size = 0;
 	data.unfinished_monuments = 0;
 
 	for (int i = 0; i < building_count(); i++) {
 		building *b = building_get(i);
 		if (building_monument_is_monument(b)) {
-			if (data.monuments_number == data.monuments_array_size) {
-				int *new_monuments_array = realloc(data.monuments, data.monuments_array_size + MONUMENTS_SIZE_STEP);
-				if (!new_monuments_array) {
-					log_error("Unable to allocate enough memory for monuments. The game will likely crash.", 0, 0);
-					return;
-				}
-				data.monuments = new_monuments_array;
-				memset(data.monuments + data.monuments_array_size, 0, sizeof(int) * MONUMENTS_SIZE_STEP);
-				data.monuments_array_size += MONUMENTS_SIZE_STEP;
+			int *monument = array_advance(data.monuments);
+			if (!monument) {
+				log_error("Unable to allocate enough memory for monuments. The game will likely crash.", 0, 0);
+				return;
 			}
+
 			if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
 				data.unfinished_monuments++;
 			}
-			data.monuments[data.monuments_number] = i;
-			data.monuments_number++;
+			*monument = i;
 		}
 	}
 }
 
-static void create_delivery_array(int size)
+static int delivery_in_use(const monument_delivery *delivery)
 {
-	free(data.monument_deliveries);
-	data.monument_deliveries_array_size = size;
-	data.monument_deliveries = malloc(size * sizeof(monument_delivery));
-	memset(data.monument_deliveries, 0, sizeof(monument_delivery) * data.monument_deliveries_array_size);
-}
-
-static int expand_delivery_array(void)
-{
-	monument_delivery *delivery_array = realloc(data.monument_deliveries,
-		(data.monument_deliveries_array_size + DELIVERY_ARRAY_SIZE_STEP) * sizeof(monument_delivery));
-	if (!delivery_array) {
-		return 0;
-	}
-	data.monument_deliveries = delivery_array;
-	memset(data.monument_deliveries + data.monument_deliveries_array_size, 0,
-		sizeof(monument_delivery) * DELIVERY_ARRAY_SIZE_STEP);
-	data.monument_deliveries_array_size += DELIVERY_ARRAY_SIZE_STEP;
-
-	return 1;
+	return delivery->destination_id != 0;
 }
 
 void building_monument_initialize_deliveries(void)
 {
-	create_delivery_array(DELIVERY_ARRAY_SIZE_STEP);
+	if (!array_init(data.monument_deliveries, DELIVERY_ARRAY_SIZE_STEP, 0, delivery_in_use)) {
+		log_error("Failed to create monument array. The game will likely crash.", 0, 0);
+	}
 }
 
 int building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no)
 {
-	for (int i = 0; i < data.monument_deliveries_array_size; i++) {
-		if (data.monument_deliveries[i].destination_id != 0) {
-			continue;
-		}
-		data.monument_deliveries[i].destination_id = monument_id;
-		data.monument_deliveries[i].walker_id = figure_id;
-		data.monument_deliveries[i].resource = resource_id;
-		data.monument_deliveries[i].cartloads = loads_no;
-		return 1;
-	}
-	if (!expand_delivery_array()) {
+	monument_delivery *delivery;
+	array_new_item(data.monument_deliveries, 0, delivery);
+	if (!delivery) {
+		log_error("Failed to create a new monument delivery. The game maybe running out of memory", 0, 0);
 		return 0;
 	}
-	int index = data.monument_deliveries_array_size - DELIVERY_ARRAY_SIZE_STEP;
-	monument_delivery *delivery = &data.monument_deliveries[index];
 	delivery->destination_id = monument_id;
 	delivery->walker_id = figure_id;
 	delivery->resource = resource_id;
@@ -1040,26 +1006,27 @@ int building_monument_add_delivery(int monument_id, int figure_id, int resource_
 	return 1;
 }
 
-int building_monument_remove_delivery(int figure_id)
+void building_monument_remove_delivery(int figure_id)
 {
-	for (int i = 0; i < data.monument_deliveries_array_size; i++) {
-		if (data.monument_deliveries[i].walker_id == figure_id) {
-			data.monument_deliveries[i].destination_id = 0;
-			data.monument_deliveries[i].walker_id = 0;
-			data.monument_deliveries[i].resource = 0;
-			data.monument_deliveries[i].cartloads = 0;
+	monument_delivery *delivery;
+	array_foreach(data.monument_deliveries, delivery)
+	{
+		if (delivery->walker_id == figure_id) {
+			delivery->destination_id = 0;
 		}
 	}
-	return 0;
+	array_trim(data.monument_deliveries);
 }
 
 int building_monument_resource_in_delivery(int monument_id, int resource_id)
 {
 	int resources = 0;
-	for (int i = 0; i < data.monument_deliveries_array_size; i++) {
-		if (data.monument_deliveries[i].destination_id == monument_id &&
-			data.monument_deliveries[i].resource == resource_id) {
-			resources += data.monument_deliveries[i].cartloads;
+	monument_delivery *delivery;
+	array_foreach(data.monument_deliveries, delivery)
+	{
+		if (delivery->destination_id == monument_id &&
+			delivery->resource == resource_id) {
+			resources += delivery->cartloads;
 		}
 	}
 	return resources;
@@ -1074,10 +1041,12 @@ int building_monument_resource_in_delivery_multipart(building *b, int resource_i
 	}
 
 	while (b->id) {
-		for (int i = 0; i < data.monument_deliveries_array_size; i++) {
-			if (data.monument_deliveries[i].destination_id == b->id &&
-				data.monument_deliveries[i].resource == resource_id) {
-				resources += data.monument_deliveries[i].cartloads;
+		monument_delivery *delivery;
+		array_foreach(data.monument_deliveries, delivery)
+		{
+			if (delivery->destination_id == b->id &&
+				delivery->resource == resource_id) {
+				resources += delivery->cartloads;
 			}
 		}
 		b = building_get(b->next_part_building_id);
@@ -1088,16 +1057,17 @@ int building_monument_resource_in_delivery_multipart(building *b, int resource_i
 
 int building_monument_has_monument(int type)
 {
-	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = data.monuments[i];
-		building *b = building_get(monument_id);
+	int *monument_id;
+	array_foreach(data.monuments, monument_id)
+	{
+		building *b = building_get(*monument_id);
 		if (b->type != type) {
 			continue;
 		}
 		if (!building_monument_is_monument(b)) {
 			return 0;
 		}
-		return monument_id;
+		return *monument_id;
 	}
 	return 0;
 }
@@ -1105,9 +1075,10 @@ int building_monument_has_monument(int type)
 int building_monument_count_grand_temples(void)
 {
 	int count = 0;
-	for (int i = 0; i < data.monuments_number; i++) {
-		int monument_id = data.monuments[i];
-		building *b = building_get(monument_id);
+	int *monument_id;
+	array_foreach(data.monuments, monument_id)
+	{
+		building *b = building_get(*monument_id);
 		if (building_monument_is_grand_temple(b->type)) {
 			count++;
 		}
@@ -1186,13 +1157,15 @@ static void delivery_load(buffer *buf, monument_delivery *delivery, int size)
 
 void building_monument_delivery_save_state(buffer *buf)
 {
-	int buf_size = 4 + data.monument_deliveries_array_size * ORIGINAL_DELIVERY_BUFFER_SIZE;
+	int buf_size = 4 + data.monument_deliveries.size * ORIGINAL_DELIVERY_BUFFER_SIZE;
 	uint8_t *buf_data = malloc(buf_size);
 	buffer_init(buf, buf_data, buf_size);
 	buffer_write_i32(buf, ORIGINAL_DELIVERY_BUFFER_SIZE);
 
-	for (int i = 0; i < data.monument_deliveries_array_size; i++) {
-		delivery_save(buf, &data.monument_deliveries[i]);
+	monument_delivery *delivery;
+	array_foreach(data.monument_deliveries, delivery)
+	{
+		delivery_save(buf, delivery);
 	}
 }
 
@@ -1208,10 +1181,14 @@ void building_monument_delivery_load_state(buffer *buf, int includes_delivery_bu
 
 	int deliveries_to_load = buf_size / delivery_buf_size;
 
-	create_delivery_array(deliveries_to_load);
+	int array_size = calc_value_in_step(deliveries_to_load, DELIVERY_ARRAY_SIZE_STEP);
+
+	if (!array_init(data.monument_deliveries, array_size, 0, delivery_in_use)) {
+		log_error("Failed to create the monument deliveries array. The game may crash.", 0, 0);
+	}
 
 	for (int i = 0; i < deliveries_to_load; i++) {
-		delivery_load(buf, &data.monument_deliveries[i], delivery_buf_size);
+		delivery_load(buf, array_next(data.monument_deliveries), delivery_buf_size);
 	}
 }
 

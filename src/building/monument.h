@@ -42,7 +42,7 @@ int building_monument_working(int type);
 int building_monument_resources_needed_for_monument_type(int building_type, int resource, int phase);
 int building_monument_resource_in_delivery(int monument_id, int resource_id);
 int building_monument_resource_in_delivery_multipart(building *b, int resource_id);
-int building_monument_remove_delivery(int figure_id);
+void building_monument_remove_delivery(int figure_id);
 int building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no);
 int building_monument_has_monument(int type);
 int building_monument_upgraded(int type);

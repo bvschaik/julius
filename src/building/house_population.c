@@ -56,7 +56,7 @@ int house_population_remove_from_city(int num_people)
 
 static void fill_building_list_with_houses(void)
 {
-    building_list_large_clear(0);
+    building_list_large_clear();
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
@@ -65,7 +65,8 @@ static void fill_building_list_with_houses(void)
     }
 }
 
-int house_population_get_capacity(building *house) {
+int house_population_get_capacity(building *house)
+{
     int max_pop = model_get_house(house->subtype.house_level)->max_people;
 
     // Neptune module 2 bonus

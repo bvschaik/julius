@@ -17,6 +17,11 @@ int calc_percentage(int value, int total)
     }
 }
 
+int calc_value_in_step(int value, int step)
+{
+    return value + step - (value % step);
+}
+
 static int get_delta(int value1, int value2)
 {
     if (value1 <= value2) {
