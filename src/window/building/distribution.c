@@ -1224,7 +1224,9 @@ static void caravanserai_policy(int selection)
 
 static void caravanserai_action(int param1, int param2)
 {
-    window_action_popup_show(TR_BUILDING_CARAVANSERAI_POLICY_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_TEXT, caravanserai_policy_options, caravanserai_policy, 1);
+    building *b = building_get(city_buildings_get_caravanserai());
+    int current_policy = b->data.monument.upgrades;
+    window_action_popup_show(TR_BUILDING_CARAVANSERAI_POLICY_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_TEXT, caravanserai_policy_options, caravanserai_policy, current_policy);
 }
 
 void window_building_draw_caravanserai(building_info_context* c)

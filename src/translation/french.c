@@ -350,6 +350,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_CARAVANSERAI_POLICY_2, "Les caravanes vendent leurs biens 20% moins cher mais achètent pour 10% moins cher." },
     {TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, "Consilium Quantitas" },
     {TR_BUILDING_CARAVANSERAI_POLICY_3, "Les caravanes peuvent porter 50% plus mais leur vitesse est réduite de 15%." },
+    {TR_CONFIRM_SELECT_POLICY, "Appliquer (500 dn)"},
     {TR_BUILDING_LIGHTHOUSE_PHASE_1, "(Fondation)"},
     {TR_BUILDING_LIGHTHOUSE_PHASE_2, "(Piédestal)"},
     {TR_BUILDING_LIGHTHOUSE_PHASE_3, "(Tour)"},
