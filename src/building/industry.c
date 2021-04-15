@@ -368,16 +368,24 @@ void building_industry_start_strikes(void)
         int index;
 
         for (int i = 0; i < to_strike; i++) {
-
-            // Prevent the same building from being selected twice
-        find_suitable_building:
             index = random_from_stdlib() % total_industries;
+            // Prevent the same building from being selected twice
+            int current = index + 1;
             building *b = building_get(industries[index]);
-            if (b->strike_duration_days > 0) {
-                goto find_suitable_building;
+            while (b->strike_duration_days > 0) {
+                if (current == total_industries) {
+                    current = 0;
+                }
+                b = building_get(industries[current]);
+                current++;
+                if (current == index) {
+                    break;
+                }
+            }
+            if (current == index) {
+                break;
             }
             b->strike_duration_days = 48;
-
             city_data.building.num_striking_industries += 1;
         }
 
