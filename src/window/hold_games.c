@@ -148,9 +148,7 @@ static void get_tooltip(tooltip_context *c)
     games_type *game = get_game_from_id(focus_button_id);
     if (game) {
         c->translation_key = game->header_key;
-        return 1;
     }
-
 }
 
 void window_hold_games_show(void)

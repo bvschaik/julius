@@ -529,6 +529,13 @@ void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, 
             highest_id_in_use = i;
         }
     }
+
+    // Fix messy old hack that assigned type BUILDING_GARDENS to building 0
+    building *b = array_first(buildings);
+    if (b->state == BUILDING_STATE_UNUSED && b->type == BUILDING_GARDENS) {
+        b->type = BUILDING_NONE;
+    }
+
     buildings.size = highest_id_in_use + 1;
 
     extra.created_sequence = buffer_read_i32(sequence);

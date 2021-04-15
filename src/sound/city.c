@@ -205,12 +205,8 @@ void sound_city_set_volume(int percentage)
     }
 }
 
-void sound_city_mark_building_view(building *b, int direction)
+void sound_city_mark_building_view(building_type type, int num_workers, int direction)
 {
-    if (b->state == BUILDING_STATE_UNUSED) {
-        return;
-    }
-    int type = b->type;
     int channel = BUILDING_TYPE_TO_CHANNEL_ID[type];
     if (!channel) {
         return;
@@ -218,7 +214,7 @@ void sound_city_mark_building_view(building *b, int direction)
     if (type == BUILDING_THEATER || type == BUILDING_AMPHITHEATER ||
         type == BUILDING_GLADIATOR_SCHOOL || type == BUILDING_HIPPODROME) {
         // entertainment is shut off when caesar invades
-        if (b->num_workers <= 0 || city_figures_imperial_soldiers() > 0) {
+        if (num_workers <= 0 || city_figures_imperial_soldiers() > 0) {
             return;
         }
     }
