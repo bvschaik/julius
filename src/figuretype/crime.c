@@ -262,7 +262,7 @@ void figure_protestor_action(figure *f)
     figure_image_increase_offset(f, 64);
     f->cart_image_id = 0;
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->state = FIGURE_STATE_DEAD;
+        figure_combat_handle_corpse(f);
     }
     f->wait_ticks++;
     if (f->wait_ticks > 200 && f->building_id == 0) {
