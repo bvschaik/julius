@@ -76,6 +76,8 @@ void window_building_draw_description(building_info_context *c, int text_group, 
 
 void window_building_draw_description_from_tr_string(building_info_context* c, int translation_key);
 
+void window_building_draw_description_from_tr_string_at(building_info_context *c, int translation_key, int y_offset);
+
 void window_building_draw_description_at(building_info_context *c, int y_offset, int text_group, int text_id);
 
 void window_building_play_sound(building_info_context *c, const char *sound_file);

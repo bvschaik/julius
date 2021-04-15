@@ -609,8 +609,9 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_ADVISOR_HOUSING_GRAPH_BUTTON, "Go to population graphs" },
     {TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON, "Visit your Housing Advisor" },
     {TR_BUILDING_MONUMENT_CONSTRUCTION_ARCHITECT_NEEDED, "This monument has all the materials needed for this phase and awaits a skilled architect from the architects' guild to oversee its construction." },
-    {TR_RETURN_ALL_TO_FORT, "Return all"},
+    {TR_RETURN_ALL_TO_FORT, "Return all" },
     {TR_TOOLTIP_ADVISOR_ENTERTAINMENT_GAMES_BUTTON, "Games information" },
+    {TR_WINDOW_BUILDING_GOVERNMENT_LARGE_STATUE_WATER_WARNING, "The statue looks fabulous, but it would look even grander with its fountain active, if we provided it with water access." },
 
 };
 

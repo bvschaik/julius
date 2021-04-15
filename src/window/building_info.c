@@ -677,13 +677,14 @@ static void draw_background(void)
             window_building_draw_well(&context);
         } else if (btype == BUILDING_SMALL_STATUE ||
             btype == BUILDING_MEDIUM_STATUE ||
-            btype == BUILDING_LARGE_STATUE ||
             btype == BUILDING_SMALL_STATUE_ALT ||
             btype == BUILDING_SMALL_STATUE_ALT_B ||
             btype == BUILDING_LEGION_STATUE ||
             btype == BUILDING_DECORATIVE_COLUMN ||
             btype == BUILDING_HORSE_STATUE) {
             window_building_draw_statue(&context);
+        } else if (btype == BUILDING_LARGE_STATUE) {
+            window_building_draw_large_statue(&context);
         } else if (btype == BUILDING_SMALL_POND || btype == BUILDING_LARGE_POND) {
             window_building_draw_pond(&context);
         } else if ((btype >= BUILDING_PINE_TREE && btype <= BUILDING_PAVILION_GREEN) ||

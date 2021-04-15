@@ -116,6 +116,16 @@ void window_building_draw_statue(building_info_context *c)
     window_building_draw_description_at(c, 16 * c->height_blocks - 158, 80, 1);
 }
 
+void window_building_draw_large_statue(building_info_context *c)
+{
+    building *b = building_get(c->building_id);
+    window_building_draw_statue(c);
+    if (!b->has_water_access) {
+        window_building_draw_description_from_tr_string_at(c, TR_WINDOW_BUILDING_GOVERNMENT_LARGE_STATUE_WATER_WARNING, 48);
+    }
+}
+
+
 void window_building_draw_triumphal_arch(building_info_context* c)
 {
     c->help_id = 79;

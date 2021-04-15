@@ -15,6 +15,8 @@ void window_building_draw_plaza(building_info_context *c);
 
 void window_building_draw_statue(building_info_context *c);
 
+void window_building_draw_large_statue(building_info_context *c);
+
 void window_building_draw_triumphal_arch(building_info_context *c);
 
 void window_building_draw_pond(building_info_context* c);
