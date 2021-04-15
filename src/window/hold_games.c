@@ -145,10 +145,10 @@ static void get_tooltip(tooltip_context *c)
         return;
     }
     c->type = TOOLTIP_BUTTON;
-    // image buttons
-    switch (focus_image_button_id) {
-        case 1: c->text_id = 1; break;
-        case 2: c->text_id = 2; break;
+    games_type *game = get_game_from_id(focus_button_id);
+    if (game) {
+        c->translation_key = game->header_key;
+        return 1;
     }
 
 }

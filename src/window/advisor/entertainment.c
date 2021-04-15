@@ -209,7 +209,7 @@ static void button_hold_games(int param1, int param2)
 static void get_tooltip_text(advisor_tooltip_result *r)
 {
     if (focus_button_id) {
-        r->text_id = 112;
+        r->translation_key = TR_TOOLTIP_ADVISOR_ENTERTAINMENT_GAMES_BUTTON;
     }
 }
 
