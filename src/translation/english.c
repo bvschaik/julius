@@ -607,7 +607,7 @@ static translation_string all_strings[] = {
     {TR_SIDEBAR_EXTRA_REQUESTS_STOCK, "Store"},
     {TR_SIDEBAR_EXTRA_REQUESTS_UNSTOCK, "Stop storing"},
     {TR_TOOLTIP_ADVISOR_HOUSING_GRAPH_BUTTON, "Go to population graphs" },
-    {TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON, "Go to housing advisor" },
+    {TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON, "Visit your Housing Advisor" },
     {TR_BUILDING_MONUMENT_CONSTRUCTION_ARCHITECT_NEEDED, "This monument has all the materials needed for this phase and awaits a skilled architect from the architects' guild to oversee its construction." },
     {TR_RETURN_ALL_TO_FORT, "Return all"},
 };
