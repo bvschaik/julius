@@ -53,6 +53,10 @@ struct { \
         for (int i = index; i < (a).size; i++) { \
             if (!(a).in_use(&(a).items[i])) { \
                 ptr = &(a).items[i]; \
+                memset(ptr, 0, sizeof(*(a).items)); \
+                if ((a).constructor) { \
+                    (a).constructor(ptr, i); \
+                } \
                 break; \
             } \
         } \
