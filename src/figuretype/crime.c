@@ -6,6 +6,7 @@
 #include "building/distribution.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
+#include "city/data_private.h"
 #include "city/figures.h"
 #include "city/finance.h"
 #include "city/message.h"
@@ -29,6 +30,7 @@
 #include "scenario/property.h"
 
 #define MAX_LOOTING_DISTANCE 120
+#define COOLDOWN_AFTER_CRIME_DAYS 32
 
 static const int CRIMINAL_OFFSETS[] = {
     0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
@@ -121,6 +123,11 @@ static void generate_striker(building *b)
     }
 }
 
+static void set_crime_cooldown(void)
+{
+    city_data.sentiment.crime_cooldown = COOLDOWN_AFTER_CRIME_DAYS;
+}
+
 static void generate_rioter(building *b, int amount)
 {
     int x_road, y_road;
@@ -146,6 +153,8 @@ static void generate_rioter(building *b, int amount)
     tutorial_on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(x_road, y_road));
+    set_crime_cooldown();
+
 }
 
 static void generate_looter(building *b, int amount)
@@ -163,6 +172,7 @@ static void generate_looter(building *b, int amount)
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
     }
+    set_crime_cooldown();
 }
 
 static void generate_robber(building *b, int amount)
@@ -183,6 +193,7 @@ static void generate_robber(building *b, int amount)
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
     }
+    set_crime_cooldown();
 }
 
 static void generate_protestor(building *b)
@@ -201,6 +212,10 @@ static void generate_protestor(building *b)
 
 void figure_generate_criminals(void)
 {
+    if (city_data.sentiment.crime_cooldown > 0) {
+        city_data.sentiment.crime_cooldown -= 1;
+        return;
+    }
     building *min_building = 0;
     int min_happiness = 50;
     for (int i = 1; i < building_count(); i++) {

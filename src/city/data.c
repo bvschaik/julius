@@ -160,9 +160,10 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.resource.granary_total_stored);
     buffer_write_i32(main, city_data.resource.food_types_available);
     buffer_write_i32(main, city_data.resource.food_types_eaten);
-    for (int i = 0; i < 264; i++) {
+    for (int i = 0; i < 263; i++) {
         buffer_write_i8(main, city_data.unused.unknown_2924[i]);
     }
+    buffer_write_i8(main,city_data.sentiment.crime_cooldown);
     buffer_write_i32(main, city_data.building.caravanserai_building_id);
     buffer_write_i32(main, city_data.caravanserai.total_food);
     for (int i = 0; i < RESOURCE_MAX; i++) {
@@ -658,9 +659,10 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     city_data.resource.granary_total_stored = buffer_read_i32(main);
     city_data.resource.food_types_available = buffer_read_i32(main);
     city_data.resource.food_types_eaten = buffer_read_i32(main);
-    for (int i = 0; i < 264; i++) {
+    for (int i = 0; i < 263; i++) {
         city_data.unused.unknown_2924[i] = buffer_read_i8(main);
     }
+    city_data.sentiment.crime_cooldown = buffer_read_i8(main);
     city_data.building.caravanserai_building_id = buffer_read_i32(main);
     city_data.caravanserai.total_food = buffer_read_i32(main);
     for (int i = 0; i < RESOURCE_MAX; i++) {

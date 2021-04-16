@@ -232,6 +232,7 @@ extern struct city_data_t {
 
         int32_t protesters;
         int32_t criminals; // muggers+rioters
+        int8_t crime_cooldown;
     } sentiment;
     struct {
         int32_t num_hospital_workers;
