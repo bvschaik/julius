@@ -361,6 +361,7 @@ void figure_rioter_action(figure *f)
             }
             break;
         case FIGURE_ACTION_121_RIOTER_MOVING:
+            f->terrain_usage = TERRAIN_USAGE_ENEMY;
             figure_image_increase_offset(f, 12);
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
