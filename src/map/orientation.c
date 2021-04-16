@@ -291,12 +291,20 @@ void map_orientation_update_buildings(void)
                 {
                     int phase = b->data.monument.monument_phase;
                     int phase_offset = 6;
-                    int image = 0;
+                    int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
 
                     if (phase == -1) {
-                        image = image_group(GROUP_BUILDING_HIPPODROME_1);
+                        if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
+                            image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
+                        } else {
+                            image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
+                        }
                     } else {
-                        image = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NESW 01") + ((phase - 1) * phase_offset);
+                        if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
+                            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NWSE 01") + ((phase - 1) * phase_offset);
+                        } else {
+                            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NESW 01") + ((phase - 1) * phase_offset);
+                        }
                     }
 
                     int building_part;
@@ -308,9 +316,7 @@ void map_orientation_update_buildings(void)
                         building_part = 1; // part 2
                     }
 
-                    int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
                     if (orientation == DIR_0_TOP) {
-                        image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
                         switch (building_part) {
                             case 0: image_id += 0; break; // part 1
                             case 1: image_id += 2; break; // part 2
@@ -318,7 +324,6 @@ void map_orientation_update_buildings(void)
                         }
 
                     } else if (orientation == DIR_4_BOTTOM) {
-                        image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
                         switch (building_part) {
                             case 0: image_id += 4; break;
                             case 1: image_id += 2; break;
@@ -326,14 +331,12 @@ void map_orientation_update_buildings(void)
                         }
 
                     } else if (orientation == DIR_6_LEFT) {
-                        image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
                         switch (building_part) {
                             case 0: image_id += 0; break;
                             case 1: image_id += 2; break;
                             case 2: image_id += 4; break;
                         }
                     } else { // DIR_2_RIGHT
-                        image_id = image;
                         switch (building_part) {
                             case 0: image_id += 4; break;
                             case 1: image_id += 2; break;
