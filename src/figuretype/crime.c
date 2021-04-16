@@ -212,10 +212,6 @@ static void generate_protestor(building *b)
 
 void figure_generate_criminals(void)
 {
-    if (city_data.sentiment.crime_cooldown > 0) {
-        city_data.sentiment.crime_cooldown -= 1;
-        return;
-    }
     building *min_building = 0;
     int min_happiness = 50;
     for (int i = 1; i < building_count(); i++) {
@@ -232,6 +228,10 @@ void figure_generate_criminals(void)
         if (b->strike_duration_days > 0) {
             generate_striker(b);
         }
+    }
+    if (city_data.sentiment.crime_cooldown > 0) {
+        city_data.sentiment.crime_cooldown -= 1;
+        return;
     }
     if (min_building) {
         min_building->sentiment.house_happiness += 2;
