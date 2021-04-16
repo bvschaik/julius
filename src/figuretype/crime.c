@@ -279,6 +279,7 @@ void figure_protestor_action(figure *f)
 void figure_rioter_action(figure *f)
 {
     city_figures_add_rioter(!f->targeted_by_figure_id);
+    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
     f->max_roam_length = 480;
     f->cart_image_id = 0;
     f->is_ghost = 0;
@@ -377,6 +378,10 @@ void figure_rioter_action(figure *f)
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 figure_crime_loot_storage(f, f->collecting_item_id, f->destination_building_id);
                 f->state = FIGURE_STATE_DEAD;
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
+                figure_route_remove(f);
+            } else if (f->direction == DIR_FIGURE_LOST) {
+                f->state = FIGURE_STATE_DEAD;
             }
             break;
         case FIGURE_ACTION_229_CRIMINAL_GOING_TO_ROB:
@@ -384,6 +389,10 @@ void figure_rioter_action(figure *f)
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 figure_crime_steal_money(f);
+                f->state = FIGURE_STATE_DEAD;
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
+                figure_route_remove(f);
+            } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
             break;
