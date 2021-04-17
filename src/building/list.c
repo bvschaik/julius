@@ -73,12 +73,12 @@ void building_list_burning_clear(void)
 
 void building_list_burning_add(int building_id)
 {
-    if (!data.large.capacity && !array_init(data.large, BURNING_SIZE_STEP, 0, 0)) {
+    if (!data.burning.capacity && !array_init(data.burning, BURNING_SIZE_STEP, 0, 0)) {
         return;
     }
-    int *element = array_advance(data.large);
+    int *element = array_advance(data.burning);
     if (!element) {
-        element = array_last(data.large);
+        element = array_last(data.burning);
     }
     *element = building_id;
 }
