@@ -119,10 +119,6 @@ static void draw_employment_details(building_info_context *c, building *b, int y
         window_building_draw_levy(levy, c->x_offset, y_offset);
     }
 
-    if (building_get_tourism(b)) {
-        window_building_draw_tourism(c, c->x_offset, y_offset + 100);
-    }
-
     int laborers_needed = model_get_building(b->type)->laborers;
     if (laborers_needed) {
         if (text_id) {
