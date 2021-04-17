@@ -64,7 +64,7 @@ static struct building_image_context building_images_path_intersection[9] = {
     { { 1, 2, 1, 2, 1, 2, 1, 2 }, { 8, 8, 8, 8 }, 0, -1, 0 },
 };
 
-static struct building_image_context building_images_path[8] = {
+static struct building_image_context building_images_tree_path[8] = {
     { { 1, 2, 0, 2, 1, 2, 0, 2 }, {  0, 56,  0, 56 }, 0, -1, 0 },
     { { 0, 2, 1, 2, 0, 2, 1, 2 }, { 56,  0, 56,  0 }, 0, -1, 0 },
     { { 1, 2, 0, 2, 0, 2, 0, 2 }, {  0, 56,  0, 56 }, 0, -1, 0 },
@@ -75,11 +75,23 @@ static struct building_image_context building_images_path[8] = {
     { { 2, 2, 2, 2, 2, 2, 2, 2 }, { 56,  0, 56,  0 }, 0, -1, 0 },
 };
 
+static struct building_image_context building_images_treeless_path[8] = {
+    { { 1, 2, 0, 2, 1, 2, 0, 2 }, { 54, 0,  54,  0 }, 0, -1, 0 },
+    { { 0, 2, 1, 2, 0, 2, 1, 2 }, {  0, 54,  0, 54 }, 0, -1, 0 },
+    { { 1, 2, 0, 2, 0, 2, 0, 2 }, { 54, 0,  54,  0 }, 0, -1, 0 },
+    { { 0, 2, 1, 2, 0, 2, 0, 2 }, {  0, 54,  0, 54 }, 0, -1, 0 },
+    { { 0, 2, 0, 2, 1, 2, 0, 2 }, { 54, 0,  54,  0 }, 0, -1, 0 },
+    { { 0, 2, 0, 2, 0, 2, 1, 2 }, {  0, 54,  0, 54 }, 0, -1, 0 },
+    { { 2, 2, 2, 2, 2, 2, 2, 2 }, { 54, 0,  54,  0 }, 0,  0, 0 },
+    { { 2, 2, 2, 2, 2, 2, 2, 2 }, {  0, 54,  0, 54 }, 0, -1, 0 },
+};
+
 enum {
     CONTEXT_HEDGES,
     CONTEXT_COLONNADE,
-    CONTEXT_GARDEN_PATH,
+    CONTEXT_GARDEN_TREE_PATH,
     CONTEXT_GARDEN_PATH_INTERSECTION,
+    CONTEXT_GARDEN_TREELESS_PATH,
     CONTEXT_MAX_ITEMS
 };
 
@@ -89,8 +101,9 @@ static struct {
 } context_pointers[] = {
     { building_images_hedges, 18 },
     { building_images_hedges, 18 },
-    { building_images_path, 8 },
+    { building_images_tree_path, 8 },
     { building_images_path_intersection, 9 },
+    { building_images_treeless_path, 8 },
 };
 
 void building_image_context_clear_connection_grid()
@@ -218,6 +231,11 @@ static int is_garden_path(int type)
     }
 }
 
+static int path_image_for_garden_connections()
+{
+    return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
+}
+
 static int path_image_for_type(int type)
 {
     switch (type) {
@@ -237,8 +255,10 @@ static int path_image_for_type(int type)
             return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn pine");
         case BUILDING_PLUM_PATH:
             return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "path orn plum");
+        case BUILDING_GARDEN_PATH:
+            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "garden path r");
         default:
-            return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
+            return 0;
     }
 }
 
@@ -314,10 +334,14 @@ int building_image_context_get_connecting_image_for_tile(int grid_offset, int bu
         image_group = assets_get_image_id(assets_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
     } else if (is_garden_path(building_type)) {
         img = building_image_context_get_garden_path(grid_offset, CONTEXT_GARDEN_PATH_INTERSECTION);
-        image_group = path_image_for_type(BUILDING_GARDEN_PATH);
+        image_group = path_image_for_garden_connections();
         // If path isn't an intersection, it's a straight path instead
         if (!img->is_valid) {
-            img = building_image_context_get_garden_path(grid_offset, CONTEXT_GARDEN_PATH);
+            if (building_type == BUILDING_GARDEN_PATH) {
+                img = building_image_context_get_garden_path(grid_offset, CONTEXT_GARDEN_TREELESS_PATH);
+            } else {
+                img = building_image_context_get_garden_path(grid_offset, CONTEXT_GARDEN_TREE_PATH);
+            }
             image_group = path_image_for_type(building_type);
         }
     } else {
