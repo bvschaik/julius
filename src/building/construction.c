@@ -49,6 +49,11 @@ struct reservoir_info {
     int place_reservoir_at_end;
 };
 
+struct cycle {
+    int rotations_to_next; 
+    int array[MAX_CYCLE_SIZE];
+};
+
 enum {
     PLACE_RESERVOIR_BLOCKED = -1,
     PLACE_RESERVOIR_NO = 0,
@@ -76,7 +81,10 @@ static struct {
     int draw_as_constructing;
     int start_offset_x_view;
     int start_offset_y_view;
+    int cycle_step;
 } data;
+
+
 
 static int last_items_cleared;
 
@@ -104,16 +112,16 @@ int building_construction_is_connecting(void)
     }
 }
 
-const static int building_cycles[BUILDING_CYCLES][MAX_CYCLE_SIZE] = {
-    { BUILDING_NONE },
-    { BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY,
-      BUILDING_SMALL_TEMPLE_MARS,  BUILDING_SMALL_TEMPLE_VENUS,   BUILDING_NONE },
-    { BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY,
-      BUILDING_LARGE_TEMPLE_MARS,  BUILDING_LARGE_TEMPLE_VENUS,   BUILDING_NONE },
-    { BUILDING_DATE_PATH, BUILDING_ELM_PATH,  BUILDING_FIG_PATH,  BUILDING_FIR_PATH,
-      BUILDING_OAK_PATH,  BUILDING_PALM_PATH, BUILDING_PINE_PATH, BUILDING_PLUM_PATH, BUILDING_NONE },
-    { BUILDING_DATE_TREE, BUILDING_ELM_TREE,  BUILDING_FIG_TREE,  BUILDING_FIR_TREE,
-      BUILDING_OAK_TREE,  BUILDING_PALM_TREE, BUILDING_PINE_TREE, BUILDING_PLUM_TREE, BUILDING_NONE },
+const static struct cycle building_cycles[BUILDING_CYCLES] = {
+    { 1, { BUILDING_NONE }},
+    { 1, { BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY,
+      BUILDING_SMALL_TEMPLE_MARS,  BUILDING_SMALL_TEMPLE_VENUS,   BUILDING_NONE }},
+    { 1, {BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY,
+      BUILDING_LARGE_TEMPLE_MARS,  BUILDING_LARGE_TEMPLE_VENUS,   BUILDING_NONE }},
+    { 2, {BUILDING_DATE_PATH, BUILDING_ELM_PATH,  BUILDING_FIG_PATH,  BUILDING_FIR_PATH,
+      BUILDING_OAK_PATH,  BUILDING_PALM_PATH, BUILDING_PINE_PATH, BUILDING_PLUM_PATH, BUILDING_NONE }},
+    { 1, {BUILDING_DATE_TREE, BUILDING_ELM_TREE,  BUILDING_FIG_TREE,  BUILDING_FIR_TREE,
+      BUILDING_OAK_TREE,  BUILDING_PALM_TREE, BUILDING_PINE_TREE, BUILDING_PLUM_TREE, BUILDING_NONE }},
 
 };
 
@@ -125,13 +133,18 @@ int building_construction_cycle(void)
 
     for (int i = 0; i < BUILDING_CYCLES; i++) {
         for (int j = 0; j < MAX_CYCLE_SIZE; j++) {
-            if (building_cycles[i][j] == BUILDING_NONE) {
+            if (building_cycles[i].array[j] == BUILDING_NONE) {
                 continue;
             }
-            if (building_cycles[i][j] == data.type) {
-                data.type = building_cycles[i][j + 1];
+            if (building_cycles[i].array[j] == data.type) {
+                data.cycle_step += 1;
+                if (data.cycle_step < building_cycles[i].rotations_to_next) {
+                    return 0;
+                }
+                data.cycle_step = 0;
+                data.type = building_cycles[i].array[j + 1];
                 if (data.type == BUILDING_NONE) {
-                    data.type = building_cycles[i][0];
+                    data.type = building_cycles[i].array[0];
                 }
                 return 1;
             }
@@ -889,7 +902,7 @@ void building_construction_place(void)
         int image_id = assets_get_group_id("Areldir", "Aesthetics") + (type - BUILDING_PINE_TREE);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, 0);
     } else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
-        int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
+        int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT_PATHS);
         int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();
@@ -900,18 +913,18 @@ void building_construction_place(void)
             (type - BUILDING_SMALL_STATUE_ALT) + (rotation % 2 * rotation_offset);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation % 2);
     } else if (type >= BUILDING_HEDGE_DARK && type <= BUILDING_HEDGE_LIGHT) {
-        int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
+        int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT_HEDGES);
         int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "D Hedge 01") +
             (type - BUILDING_HEDGE_DARK) * 12;
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();
     } else if (type == BUILDING_COLONNADE) {
-        int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
+        int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT_HEDGES);
         int image_id = assets_get_image_id(assets_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();
     } else if (type == BUILDING_GARDEN_PATH) {
-        int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
+        int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT_PATHS);
         int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();

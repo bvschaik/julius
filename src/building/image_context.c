@@ -170,7 +170,7 @@ const building_image *building_image_context_get_hedges(int grid_offset)
     if (building_id) {
         rotation = building_get(building_id)->subtype.orientation;
     } else {
-        rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
+        rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT_HEDGES);
     }
     return get_image(CONTEXT_HEDGES, tiles, rotation);
 }
@@ -195,7 +195,7 @@ const building_image *building_image_context_get_colonnade(int grid_offset)
     if (building_id) {
         rotation = building_get(building_id)->subtype.orientation;
     } else {
-        rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
+        rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT_HEDGES);
     }
     return get_image(CONTEXT_COLONNADE, tiles, rotation);
 }
@@ -260,7 +260,7 @@ const building_image *building_image_context_get_garden_path(int grid_offset, in
     if (building_id) {
         rotation = building_get(building_id)->subtype.orientation;
     } else {
-        rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT);
+        rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT_PATHS);
     }
     return get_image(context, tiles, rotation);
 }
