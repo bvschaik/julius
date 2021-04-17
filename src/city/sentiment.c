@@ -204,7 +204,7 @@ void city_sentiment_update(void)
             continue;
         }
         if (!b->house_population) {
-            b->sentiment.house_happiness = default_sentiment;
+            b->sentiment.house_happiness = calc_bound(city_data.sentiment.value + 10, 0, 100);
             continue;
         }
 
@@ -302,7 +302,7 @@ void city_sentiment_update(void)
         city_data.sentiment.value = calc_bound(total_sentiment / total_pop, 0, 100);
         average_squalor_penalty = average_squalor_penalty / total_houses;
     } else {
-        city_data.sentiment.value = 60;
+        city_data.sentiment.value = default_sentiment;
     }
 
     if (city_data.sentiment.message_delay) {
