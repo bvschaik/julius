@@ -4,7 +4,7 @@
 #include "core/image_group.h" 
 #include "type.h"
 
-#define AUGUSTUS_BUILDINGS 56
+#define AUGUSTUS_BUILDINGS 57
 
 augustus_building_properties_mapping augustus_building_properties[AUGUSTUS_BUILDINGS] = {
     {BUILDING_ROADBLOCK, { 1, 1, 0, 0, 0 },  "Areldir", "Roadblocks", 0},
@@ -63,6 +63,7 @@ augustus_building_properties_mapping augustus_building_properties[AUGUSTUS_BUILD
     {BUILDING_WATCHTOWER, {2,0,0,0,0}, "Areldir", "Watchtowers", "Watchtower C OFF"},
     {BUILDING_LIBRARY, {2,0,0,0,0}, "Tomasz", "Building_Upgrades", "Downgraded_Library"},
     {BUILDING_CARAVANSERAI, { 4, 0, 0, 0, 0 },  "Areldir", "Econ_Logistics", "Caravanserai N OFF"},
+    {BUILDING_SMALL_STATUE, {1,1,0,0,-12}, "Lizzaran", "Aesthetics_L", "V Small Statue" }
     //    {BUILDING_PALLISADE, {1,0,0,0,0}, "Areldir", "Palisade", "Palisade"},
 };
 
@@ -234,12 +235,25 @@ static building_properties properties[170] = {
         {0, 0,   0, 0, 0 },
 };
 
+static int is_vanilla_building_with_changed_properties(building_type type)
+{
+    switch (type) {
+    case BUILDING_LIBRARY:
+    case BUILDING_SMALL_STATUE:
+        return 1;
+        break;
+    default:
+        return 0;
+        break;
+    }
+}
+
 const building_properties *building_properties_for_type(building_type type)
 {
     if (type < 0 || type > BUILDING_TYPE_MAX) {
         return &properties[0];
     }
-    if (type >= BUILDING_ROADBLOCK || type == BUILDING_LIBRARY) {
+    if (type >= BUILDING_ROADBLOCK || is_vanilla_building_with_changed_properties(type)) {
         for (int i = 0; i < AUGUSTUS_BUILDINGS; ++i) {
             if (augustus_building_properties[i].type == type) {
                 return &augustus_building_properties[i].properties;

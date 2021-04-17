@@ -316,4 +316,9 @@
     <image src="L_Statue_Animation_04" />
     <image src="L_Statue_Animation_05" />
 
+<!-- Note: Assets for 'garden path' rotation and corner variants are above -->
+    <image id="garden path" >
+		<layer group="59" image="3" x="0" y="0" />
+    </image>
+
 </assetlist>

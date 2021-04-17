@@ -378,6 +378,11 @@ void map_orientation_update_buildings(void)
             image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "legio statue") + (abs((b->subtype.orientation - (map_orientation / 2) % 2)));
             map_building_tiles_add(i, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
         }
+        if (b->type == BUILDING_SMALL_STATUE) {
+            int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
+            int image_id = assets_get_image_id(assets_get_group_id("Lizzaran", "Aesthetics_L"), "V Small Statue") + (b->subtype.orientation % 2) * rotation_offset;
+            map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+        }
         if (building_variant_has_variants(b->type)) {
             image_id = building_variant_get_image_id_with_rotation(b->type, b->variant);
             map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);

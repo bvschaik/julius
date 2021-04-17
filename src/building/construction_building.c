@@ -270,7 +270,11 @@ static void add_to_map(int type, building *b, int size,
             break;
         // statues
         case BUILDING_SMALL_STATUE:
-            add_building(b, image_group(GROUP_BUILDING_STATUE));
+            orientation = building_rotation_get_rotation();
+            b->subtype.orientation = orientation;
+            int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
+            int image_id = assets_get_image_id(assets_get_group_id("Lizzaran", "Aesthetics_L"), "V Small Statue") + (orientation % 2) * rotation_offset;
+            add_building(b, image_id);
             break;
         case BUILDING_MEDIUM_STATUE:
             add_building(b, image_group(GROUP_BUILDING_STATUE) + 1);
@@ -666,7 +670,6 @@ static void add_to_map(int type, building *b, int size,
             orientation = building_rotation_get_rotation();
             b->subtype.orientation = orientation;
             add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Eque Statue") + orientation % 2);
-            break;
             break;
         case BUILDING_DOLPHIN_FOUNTAIN:
             add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Engineer"), "Eng Guild ON"));
