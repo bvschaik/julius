@@ -175,7 +175,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, int
     return 1;
 }
 
-static int check_requirements(building* house, house_demands* demands)
+static int check_requirements(building *house, house_demands *demands)
 {
     int bonus = 0;
     if (building_monument_pantheon_module_is_active(PANTHEON_MODULE_2_HOUSING_EVOLUTION) && house->house_pantheon_access) {
@@ -184,8 +184,7 @@ static int check_requirements(building* house, house_demands* demands)
     int status = check_evolve_desirability(house, bonus);
     if (!has_required_goods_and_services(house, 0, bonus, demands)) {
         status = DEVOLVE;
-    }
-    else if (status == EVOLVE) {
+    } else if (status == EVOLVE) {
         status = has_required_goods_and_services(house, 1, bonus, demands);
     }
     return status;

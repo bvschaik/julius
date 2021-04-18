@@ -40,7 +40,7 @@ static int show_building_hippodrome(const building *b)
     return b->type == BUILDING_CHARIOT_MAKER || b->type == BUILDING_HIPPODROME;
 }
 
-static int show_building_tavern(const building* b)
+static int show_building_tavern(const building *b)
 {
     return b->type == BUILDING_TAVERN;
 }
@@ -102,7 +102,7 @@ static int show_figure_hippodrome(const figure *f)
     return f->type == FIGURE_CHARIOTEER;
 }
 
-static int show_figure_tavern(const figure* f)
+static int show_figure_tavern(const figure *f)
 {
     return f->type == FIGURE_BARKEEP || f->type == FIGURE_BARKEEP_SUPPLIER;
 }
@@ -137,7 +137,7 @@ static int get_column_height_hippodrome(const building *b)
     return b->house_size && b->data.house.hippodrome ? b->data.house.hippodrome / 10 : NO_COLUMN;
 }
 
-static int get_column_height_tavern(const building* b)
+static int get_column_height_tavern(const building *b)
 {
     if (!b->house_size || !b->house_tavern_wine_access) {
         return NO_COLUMN;
@@ -202,17 +202,13 @@ static int get_tooltip_colosseum(tooltip_context *c, const building *b)
 {
     if (b->data.house.colosseum_gladiator && b->data.house.colosseum_lion) {
         c->translation_key = TR_TOOLTIP_OVERLAY_ARENA_COL_5;
-    }
-    else if (b->data.house.colosseum_gladiator) {
+    } else if (b->data.house.colosseum_gladiator) {
         c->translation_key = TR_TOOLTIP_OVERLAY_ARENA_COL_4;
-    }
-    else if (b->house_arena_gladiator && b->house_arena_lion) {
+    } else if (b->house_arena_gladiator && b->house_arena_lion) {
         c->translation_key = TR_TOOLTIP_OVERLAY_ARENA_COL_3;
-    }
-    else if (b->house_arena_gladiator) {
+    } else if (b->house_arena_gladiator) {
         c->translation_key = TR_TOOLTIP_OVERLAY_ARENA_COL_2;
-    }
-    else {
+    } else {
         c->translation_key = TR_TOOLTIP_OVERLAY_ARENA_COL_1;
     }
     return 0;
@@ -231,27 +227,22 @@ static int get_tooltip_hippodrome(tooltip_context *c, const building *b)
     }
 }
 
-static int get_tooltip_tavern(tooltip_context* c, const building* b)
+static int get_tooltip_tavern(tooltip_context *c, const building *b)
 {
     if (b->house_tavern_wine_access <= 0) {
         c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_1;
-    }
-    else if (b->house_tavern_wine_access <= 20) {
+    } else if (b->house_tavern_wine_access <= 20) {
         c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_2;
-    }
-    else if (b->data.house.hippodrome <= 80) {
+    } else if (b->data.house.hippodrome <= 80) {
         if (!b->house_tavern_meat_access) {
             c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_3;
-        }
-        else {
+        } else {
             c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_4;
         }
-    }
-    else {
+    } else {
         if (!b->house_tavern_meat_access) {
             c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_5;
-        }
-        else {
+        } else {
             c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_6;
         }
     }
@@ -355,7 +346,7 @@ const city_overlay *city_overlay_for_hippodrome(void)
     return &overlay;
 }
 
-const city_overlay* city_overlay_for_tavern(void)
+const city_overlay *city_overlay_for_tavern(void)
 {
     static city_overlay overlay = {
         OVERLAY_TAVERN,
