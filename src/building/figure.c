@@ -421,8 +421,7 @@ static void spawn_figure_amphitheater(building *b)
     }
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        if (b->houses_covered <= 50 ||
-            (b->data.entertainment.days1 <= 0 && b->data.entertainment.days2 <= 0)) {
+        if (b->houses_covered <= 50) {
             generate_labor_seeker(b, road.x, road.y);
         }
         int pct_workers = worker_percentage(b);
@@ -481,7 +480,7 @@ static void spawn_figure_theater(building *b)
     }
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        if (b->houses_covered <= 50 || b->data.entertainment.days1 <= 0) {
+        if (b->houses_covered <= 50) {
             generate_labor_seeker(b, road.x, road.y);
         }
         int spawn_delay = default_spawn_delay(b);
@@ -519,7 +518,7 @@ static void spawn_figure_hippodrome(building *b)
     }
     map_point road;
     if (map_has_road_access_hippodrome_rotation(b->x, b->y, &road, b->subtype.orientation)) {
-        if (b->houses_covered <= 50 || b->data.entertainment.days1 <= 0) {
+        if (b->houses_covered <= 50) {
             generate_labor_seeker(b, road.x, road.y);
         }
         int pct_workers = worker_percentage(b);
@@ -578,8 +577,7 @@ static void spawn_figure_colosseum(building *b)
     }
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        if (b->houses_covered <= 50 ||
-            (b->data.entertainment.days1 <= 0 && b->data.entertainment.days2 <= 0)) {
+        if (b->houses_covered <= 50) {
             generate_labor_seeker(b, road.x, road.y);
         }
         int pct_workers = worker_percentage(b);
