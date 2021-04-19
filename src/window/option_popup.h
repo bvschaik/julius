@@ -15,7 +15,7 @@ typedef struct {
 } option_menu_item;
 
 void window_option_popup_show(int title, int subtitle, option_menu_item *options,
-    void (*close_func)(int selection), int show_cancel_button);
+    void (*close_func)(int selection), int show_cancel_button, int show_confirm_button);
 
 
 

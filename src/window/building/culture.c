@@ -986,5 +986,5 @@ static void add_module_prompt(int param1, int param2)
         options[1].show = 1;
     }
 
-    window_option_popup_show(TR_SELECT_EPITHET_PROMPT_HEADER, TR_SELECT_EPITHET_PROMPT_TEXT, options, add_module, 1);
+    window_option_popup_show(TR_SELECT_EPITHET_PROMPT_HEADER, TR_SELECT_EPITHET_PROMPT_TEXT, options, add_module, 1, 1);
 }

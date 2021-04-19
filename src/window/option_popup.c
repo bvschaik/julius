@@ -12,12 +12,15 @@
 #include "input/input.h"
 #include "translation/translation.h"
 
+#define CONFIRM_BUTTON 3
+
 static void button_select_option(int option, int param2);
 
 static generic_button buttons[] = {
-    {20, 120, 430, 130, button_select_option, button_none, 1, 0},
-    {20, 260, 430, 130, button_select_option, button_none, 2, 0},
-    {120, 397, 240, 20, button_select_option, button_none, 0, 0}
+    {20, 120, 150, 130, button_select_option, button_none, 1, 0},
+    {20, 260, 150, 130, button_select_option, button_none, 2, 0},
+    {40, 407, 180, 20, button_select_option, button_none, 0, 0},
+    {260, 407, 180, 20, button_select_option, button_none, CONFIRM_BUTTON, 0}
 };
 
 static struct {
@@ -28,24 +31,28 @@ static struct {
     int width_blocks;
     int height_blocks;
     int show_cancel_button;
+    int show_confirm_button;
     void (*close_func)(int selection);
     int focus_button_id;
     int base_border_image_id;
+    int selected_option;
 } data;
 
 static int init(int title, int prompt, option_menu_item option_1, option_menu_item option_2,
-        void (*close_func)(int selection), int show_cancel_button)
+        void (*close_func)(int selection), int show_cancel_button, int show_confirm_button)
 {
     if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
         return 0;
     }
     data.close_func = close_func;
+    data.selected_option = 0;
     data.title = title;
     data.prompt = prompt;
     data.option_1 = option_1;
     data.option_2 = option_2;
     data.show_cancel_button = show_cancel_button;
+    data.show_confirm_button = show_confirm_button;
     data.width_blocks = 30;
     data.height_blocks = data.show_cancel_button ? 28 : 27;
     if (!data.option_1.image_id && *data.option_1.asset_author) {
@@ -78,12 +85,16 @@ static void draw_background(void)
     if (data.option_1.show) {
         if (data.option_1.image_id) {
             image_draw(data.option_1.image_id, text_x, 170);
-            text_x += 160;
+            text_x += 162;
             text_width = 270;
         }
 
-        text_draw_multiline(translation_for(data.option_1.header), text_x, 175, text_width, FONT_NORMAL_BLACK, 0);
-        text_draw_multiline(translation_for(data.option_1.desc), text_x, 195, text_width, FONT_NORMAL_BLACK, 0);
+        if (data.selected_option == 1) {
+            inner_panel_draw(text_x - 6, 172, 18, 8);
+        }
+
+        text_draw_multiline(translation_for(data.option_1.header), text_x, 177, text_width, data.selected_option == 1 ? FONT_NORMAL_WHITE : FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(translation_for(data.option_1.desc), text_x, 197, text_width, data.selected_option == 1 ? FONT_NORMAL_WHITE : FONT_NORMAL_BLACK, 0);
 
         text_width = 420;
         text_x = 100;
@@ -92,16 +103,26 @@ static void draw_background(void)
     if (data.option_2.show) {
         if (data.option_2.image_id) {
             image_draw(data.option_2.image_id, text_x, 310);
-            text_x += 160;
+            text_x += 162;
             text_width = 270;
         }
 
-        text_draw_multiline(translation_for(data.option_2.header), text_x, 315, text_width, FONT_NORMAL_BLACK, 0);
-        text_draw_multiline(translation_for(data.option_2.desc), text_x, 335, text_width, FONT_NORMAL_BLACK, 0);
+        if (data.selected_option == 2) {
+            inner_panel_draw(text_x - 6, 312, 18, 8);
+        }
+
+        text_draw_multiline(translation_for(data.option_2.header), text_x, 317, text_width, data.selected_option == 2 ? FONT_NORMAL_WHITE : FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(translation_for(data.option_2.desc), text_x, 337, text_width, data.selected_option == 2 ? FONT_NORMAL_WHITE : FONT_NORMAL_BLACK, 0);
     }
 
     if (data.show_cancel_button) {
-        lang_text_draw_centered(13, 4, 200, 452, 240, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(13, 4, 120, 452, 180, FONT_NORMAL_BLACK);
+    }
+
+    if (data.show_confirm_button) {
+        text_draw_centered(translation_for(TR_CONFIRM_SELECT_EPITHET), 340, 452, 180,
+                           data.selected_option ? FONT_NORMAL_BLACK : FONT_NORMAL_PLAIN, data.selected_option ? 0 : COLOR_FONT_LIGHT_GRAY);
+
     }
 
     graphics_reset_dialog();
@@ -125,7 +146,10 @@ static void draw_foreground(void)
         draw_option_image_border(100, 310, data.focus_button_id == 2);
     }
     if (data.show_cancel_button) {
-        button_border_draw(200, 447, 240, 20, data.focus_button_id == 3);
+        button_border_draw(120, 447, 180, 20, data.focus_button_id == 3);
+    }
+    if (data.show_confirm_button) {
+        button_border_draw(340, 447, 180, 20, data.focus_button_id == 4 && data.selected_option);
     }
     graphics_reset_dialog();
 }
@@ -137,7 +161,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
         window_go_back();
     }
 
-    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 80, 40, buttons, data.show_cancel_button ? 3 : 2, &data.focus_button_id)) {
+    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 80, 40, buttons,
+                                     2 + data.show_cancel_button + data.show_confirm_button, &data.focus_button_id)) {
         return;
     }
 
@@ -145,21 +170,26 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void button_select_option(int option, int param2)
 {
-    if ((data.option_1.show && option == 1) || (data.option_2.show && option == 2)) {
-        data.close_func(option);
-        window_go_back();
+    if (option && option != CONFIRM_BUTTON) {
+        data.selected_option = option;
+        window_request_refresh();
+    } else {
+        if (option == CONFIRM_BUTTON) {
+            if (data.selected_option) {
+                data.close_func(data.selected_option);
+                window_go_back();
+            }
+        } else {
+            data.close_func(0);
+            window_go_back();
+        }
     }
-    else if (!option) {
-        data.close_func(option);
-        window_go_back();
-    }
-    
 }
 
 void window_option_popup_show(int title, int prompt, option_menu_item *options,
-    void (*close_func)(int selection), int show_cancel_button)
+    void (*close_func)(int selection), int show_cancel_button, int show_confirm_button)
 {
-    if (init(title, prompt, options[0], options[1], close_func, show_cancel_button)) {
+    if (init(title, prompt, options[0], options[1], close_func, show_cancel_button, show_confirm_button)) {
         window_type window = {
             WINDOW_POPUP_DIALOG,
             draw_background,

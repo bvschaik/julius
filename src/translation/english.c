@@ -359,14 +359,14 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_CARAVANSERAI_SUPPLIER, "Caravanserai supplier" },
     {TR_BUILDING_CARAVANSERAI_POLICY_TITLE, "Trade policy" },
     {TR_BUILDING_CARAVANSERAI_NO_POLICY, "No trade policy" },
-    {TR_BUILDING_CARAVANSERAI_POLICY_TEXT, "Select your trade policy in your city. It will cost 500 denarii." },
+    {TR_BUILDING_CARAVANSERAI_POLICY_TEXT, "Select your trade policy in your city. This will cost 500 Dn." },
     {TR_BUILDING_CARAVANSERAI_POLICY_1_TITLE, "Consilium Venditor" },
     {TR_BUILDING_CARAVANSERAI_POLICY_1, "Caravans buy their goods up to 20% more but sell 10% more." },
     {TR_BUILDING_CARAVANSERAI_POLICY_2_TITLE, "Consilium Acquisitionem" },
     {TR_BUILDING_CARAVANSERAI_POLICY_2, "Caravans sell their goods up to 20% cheaper but buy 10% less." },
     {TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, "Consilium Quantitas" },
     {TR_BUILDING_CARAVANSERAI_POLICY_3, "Caravans carry 50% more but their speed is reduced by 15%." },
-    {TR_CONFIRM_SELECT_POLICY, "Apply (500dn)"},
+    {TR_CONFIRM_SELECT_POLICY, "Apply (500 Dn)"},
     {TR_BUILDING_LIGHTHOUSE_PHASE_1, "(Foundation)" },
     {TR_BUILDING_LIGHTHOUSE_PHASE_2, "(Pedestal)" },
     {TR_BUILDING_LIGHTHOUSE_PHASE_3, "(Tower)" },
@@ -613,7 +613,7 @@ static translation_string all_strings[] = {
     {TR_RETURN_ALL_TO_FORT, "Return all" },
     {TR_TOOLTIP_ADVISOR_ENTERTAINMENT_GAMES_BUTTON, "Games information" },
     {TR_WINDOW_BUILDING_GOVERNMENT_LARGE_STATUE_WATER_WARNING, "The statue looks fabulous, but it would look even grander with its fountain active, if we provided it with water access." },
-
+    {TR_CONFIRM_SELECT_EPITHET, "Apply (1000 Dn)"},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
