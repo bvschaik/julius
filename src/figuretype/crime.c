@@ -30,7 +30,6 @@
 #include "scenario/property.h"
 
 #define MAX_LOOTING_DISTANCE 120
-#define COOLDOWN_AFTER_CRIME_DAYS 32
 
 static const int CRIMINAL_OFFSETS[] = {
     0, 0, 1, 2, 3, 4, 5, 6, 7, 7, 6, 5, 4, 3, 2, 1
@@ -123,11 +122,6 @@ static void generate_striker(building *b)
     }
 }
 
-static void set_crime_cooldown(void)
-{
-    city_data.sentiment.crime_cooldown = COOLDOWN_AFTER_CRIME_DAYS;
-}
-
 static void generate_rioter(building *b, int amount)
 {
     int x_road, y_road;
@@ -138,6 +132,8 @@ static void generate_rioter(building *b, int amount)
     if (!map_closest_road_within_radius(b->x, b->y, b->size, 4, &x_road, &y_road)) {
         return;
     }
+
+    b->house_criminal_active = 1;
 
     city_sentiment_add_criminal();
 
@@ -153,7 +149,7 @@ static void generate_rioter(building *b, int amount)
     tutorial_on_crime();
     city_message_apply_sound_interval(MESSAGE_CAT_RIOT);
     city_message_post_with_popup_delay(MESSAGE_CAT_RIOT, MESSAGE_RIOT, b->type, map_grid_offset(x_road, y_road));
-    set_crime_cooldown();
+    city_sentiment_set_crime_cooldown();
 
 }
 
@@ -172,7 +168,8 @@ static void generate_looter(building *b, int amount)
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
     }
-    set_crime_cooldown();
+    b->house_criminal_active = 1;
+    city_sentiment_set_crime_cooldown();
 }
 
 static void generate_robber(building *b, int amount)
@@ -186,6 +183,7 @@ static void generate_robber(building *b, int amount)
         return;
     }
     city_sentiment_add_criminal();
+    b->house_criminal_active = 1;
 
     for (int i = 0; i < amount; i++) {
         figure *f = figure_create(FIGURE_RIOTER, x_road, y_road, DIR_4_BOTTOM);
@@ -193,7 +191,7 @@ static void generate_robber(building *b, int amount)
         f->roam_length = 0;
         f->wait_ticks = 10 + 4 * i;
     }
-    set_crime_cooldown();
+    city_sentiment_set_crime_cooldown();
 }
 
 static void generate_protestor(building *b)
@@ -229,8 +227,8 @@ void figure_generate_criminals(void)
             generate_striker(b);
         }
     }
-    if (city_data.sentiment.crime_cooldown > 0) {
-        city_data.sentiment.crime_cooldown -= 1;
+    if (city_sentiment_crime_cooldown() > 0) {
+        city_sentiment_reduce_crime_cooldown();
         return;
     }
     if (min_building) {

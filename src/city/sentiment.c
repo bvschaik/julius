@@ -27,6 +27,7 @@
 #define SENTIMENT_PER_EXTRA_FOOD 12
 #define MAX_SENTIMENT_CHANGE 2
 #define DESIRABILITY_TO_SENTIMENT_RATIO 2
+#define COOLDOWN_AFTER_CRIME_DAYS 32
 
 int city_sentiment(void)
 {
@@ -86,6 +87,24 @@ int city_sentiment_criminals(void)
 {
     return city_data.sentiment.criminals;
 }
+
+int city_sentiment_crime_cooldown(void)
+{
+    return city_data.sentiment.crime_cooldown;
+}
+
+void city_sentiment_set_crime_cooldown(void)
+{
+    city_data.sentiment.crime_cooldown = COOLDOWN_AFTER_CRIME_DAYS;
+}
+
+void city_sentiment_reduce_crime_cooldown(void)
+{
+    if (city_sentiment_crime_cooldown() > 0) {
+        city_data.sentiment.crime_cooldown -= 1;
+    }
+}
+
 
 int city_sentiment_get_blessing_festival_boost(void)
 {

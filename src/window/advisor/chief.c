@@ -176,7 +176,7 @@ static int draw_background(void)
         lang_text_draw(61, 33, X_OFFSET, 206, FONT_NORMAL_RED);
     } else if (city_sentiment_criminals() > 10) {
         lang_text_draw(61, 32, X_OFFSET, 206, FONT_NORMAL_RED);
-    } else if (city_sentiment_criminals()) {
+    } else if (city_sentiment_criminals() || city_sentiment_crime_cooldown()) {
         lang_text_draw(61, 31, X_OFFSET, 206, FONT_NORMAL_RED);
     } else if (city_sentiment_protesters()) {
         lang_text_draw(61, 30, X_OFFSET, 206, FONT_NORMAL_RED);

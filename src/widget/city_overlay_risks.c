@@ -10,6 +10,17 @@
 #include "map/terrain.h"
 #include "translation/translation.h"
 
+enum crime_level
+{
+    NO_CRIME = 0,
+    MINOR_CRIME = 1,
+    LOW_CRIME = 2,
+    SOME_CRIME = 3,
+    MEDIUM_CRIME = 4,
+    LARGE_CRIME = 5,
+    RAMPANT_CRIME = 6,
+};
+
 static int is_problem_cartpusher(int figure_id)
 {
     if (figure_id) {
@@ -81,7 +92,7 @@ static int show_figure_damage(const figure *f)
 static int show_figure_crime(const figure *f)
 {
     return f->type == FIGURE_PREFECT || 
-        f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER;
+        f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER || f->type == FIGURE_PROTESTER;
 }
 
 static int show_figure_problems(const figure *f)
@@ -112,21 +123,44 @@ static int get_column_height_damage(const building *b)
     return b->damage_risk > 0 ? b->damage_risk / 20 : NO_COLUMN;
 }
 
-static int get_column_height_crime(const building *b)
+static int get_crime_level(const building *b)
 {
     if (b->house_size) {
         int happiness = b->sentiment.house_happiness;
         if (happiness <= 0) {
-            return 10;
-        } else if (happiness <= 10) {
-            return 8;
+            return RAMPANT_CRIME;
+        } else if (happiness <= 10 || b->house_criminal_active) {
+            return LARGE_CRIME;
         } else if (happiness <= 20) {
-            return 6;
+            return MEDIUM_CRIME;
         } else if (happiness <= 30) {
-            return 4;
+            return SOME_CRIME;
         } else if (happiness <= 40) {
-            return 2;
+            return LOW_CRIME;
         } else if (happiness < 50) {
+            return MINOR_CRIME;
+        }
+    }
+    return 0;
+
+}
+
+static int get_column_height_crime(const building *b)
+{
+    if (b->house_size) {
+        int happiness = b->sentiment.house_happiness;
+        int crime = get_crime_level(b);
+        if (crime == RAMPANT_CRIME) {
+            return 10;
+        } else if (crime == LARGE_CRIME) {
+            return 8;
+        } else if (crime == MEDIUM_CRIME) {
+            return 6;
+        } else if (crime == SOME_CRIME) {
+            return 4;
+        } else if (crime == LOW_CRIME) {
+            return 2;
+        } else if (crime == MINOR_CRIME) {
             return 1;
         }
     }
@@ -174,19 +208,21 @@ static int get_tooltip_damage(tooltip_context *c, const building *b)
 
 static int get_tooltip_crime(tooltip_context *c, const building *b)
 {
-    if (b->sentiment.house_happiness <= 0) {
-        return 63;
-    } else if (b->sentiment.house_happiness <= 10) {
-        return 62;
-    } else if (b->sentiment.house_happiness <= 20) {
-        return 61;
-    } else if (b->sentiment.house_happiness <= 30) {
-        return 60;
-    } else if (b->sentiment.house_happiness < 50) {
-        return 59;
-    } else {
-        return 58;
-    }
+        int happiness = b->sentiment.house_happiness;
+        int crime = get_crime_level(b);
+        if (crime == RAMPANT_CRIME) {
+            return 63;
+        } else if (crime == LARGE_CRIME) {
+            return 62;
+        } else if (crime == MEDIUM_CRIME) {
+            return 61;
+        } else if (crime == SOME_CRIME) {
+            return 60;
+        } else if (crime == LOW_CRIME) {
+            return 59;
+        } else {
+            return 58;
+        }
 }
 
 static int get_tooltip_problems(tooltip_context *c, const building *b)

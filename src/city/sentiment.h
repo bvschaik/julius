@@ -16,6 +16,9 @@ void city_sentiment_add_criminal(void);
 
 int city_sentiment_protesters(void);
 int city_sentiment_criminals(void);
+int city_sentiment_crime_cooldown(void);
+void city_sentiment_set_crime_cooldown(void);
+void city_sentiment_reduce_crime_cooldown(void);
 int city_sentiment_get_blessing_festival_boost(void);
 void city_sentiment_decrement_blessing_boost(void);
 
