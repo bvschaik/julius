@@ -222,8 +222,7 @@ void game_undo_perform(void)
     if (data.type == BUILDING_CLEAR_LAND) {
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
-                building *b = building_get(data.buildings[i].id);
-                memcpy(b, &data.buildings[i], sizeof(building));
+                building *b = building_restore(&data.buildings[i]);
                 switch (b->type) {
                     case BUILDING_WAREHOUSE:
                     case BUILDING_GRANARY:

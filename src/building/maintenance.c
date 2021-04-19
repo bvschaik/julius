@@ -114,10 +114,9 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
     int min_occupied_building_id = 0;
     int min_occupied_dist = *distance = 10000;
 
-    const int *burning = building_list_burning_items();
     int burning_size = building_list_burning_size();
     for (int i = 0; i < burning_size; i++) {
-        int building_id = burning[i];
+        int building_id = building_list_burning_item(i);
         building *b = building_get(building_id);
         if ((b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_MOTHBALLED) && b->type == BUILDING_BURNING_RUIN && !b->ruin_has_plague && b->distance_from_entry) {
             int dist = calc_maximum_distance(x, y, b->x, b->y);

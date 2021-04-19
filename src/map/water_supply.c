@@ -69,9 +69,8 @@ void map_water_supply_update_houses(void)
         }
     }
     int total_wells = building_list_small_size();
-    const int *wells = building_list_small_items();
     for (int i = 0; i < total_wells; i++) {
-        mark_well_access(wells[i], map_water_supply_well_radius());
+        mark_well_access(building_list_small_item(i), map_water_supply_well_radius());
     }
 }
 
@@ -167,14 +166,13 @@ void map_water_supply_update_reservoir_fountain(void)
         }
     }
     int total_reservoirs = building_list_large_size();
-    const int *reservoirs = building_list_large_items();
     // fill reservoirs from full ones
     int changed = 1;
     static const int CONNECTOR_OFFSETS[] = { OFFSET(1,-1), OFFSET(3,1), OFFSET(1,3), OFFSET(-1,1) };
     while (changed == 1) {
         changed = 0;
         for (int i = 0; i < total_reservoirs; i++) {
-            building *b = building_get(reservoirs[i]);
+            building *b = building_get(building_list_large_item(i));
             if (b->has_water_access == 2) {
                 b->has_water_access = 1;
                 changed = 1;
@@ -186,7 +184,7 @@ void map_water_supply_update_reservoir_fountain(void)
     }
     // mark reservoir ranges
     for (int i = 0; i < total_reservoirs; i++) {
-        building *b = building_get(reservoirs[i]);
+        building *b = building_get(building_list_large_item(i));
         if (b->has_water_access) {
             map_terrain_add_with_radius(b->x, b->y, 3, map_water_supply_reservoir_radius(), TERRAIN_RESERVOIR_RANGE);
         }

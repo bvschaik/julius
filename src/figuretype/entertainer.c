@@ -56,11 +56,10 @@ static int determine_tourist_destination(int x, int y)
         return 0;
     }
 
-    const int *venues = building_list_small_items();
     int index;
 
     index = random_from_stdlib() % total_venues;
-    building *b = building_get(venues[index]);
+    building *b = building_get(building_list_small_item(index));
 
     return b->id;
 }
@@ -107,11 +106,10 @@ static int determine_destination(int x, int y, building_type type1, building_typ
     if (total_venues <= 0) {
         return 0;
     }
-    const int *venues = building_list_small_items();
     int min_building_id = 0;
     int min_distance = 10000;
     for (int i = 0; i < total_venues; i++) {
-        building *b = building_get(venues[i]);
+        building *b = building_get(building_list_small_item(i));
         int days_left;
         if (b->type == type1) {
             days_left = b->data.entertainment.days1;
@@ -123,7 +121,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
         int dist = 2 * days_left + calc_maximum_distance(x, y, b->x, b->y);
         if (dist < min_distance) {
             min_distance = dist;
-            min_building_id = venues[i];
+            min_building_id = building_list_small_item(i);
         }
     }
     return min_building_id;

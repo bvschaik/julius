@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "core/array.h"
-#include "core/calc.h"
 #include "core/log.h"
 #include "city/emperor.h"
 #include "core/random.h"
@@ -25,7 +24,7 @@ static struct {
 
 figure *figure_get(int id)
 {
-    return &data.figures.items[id];
+    return array_item(data.figures, id);
 }
 
 int figure_count(void)
@@ -194,10 +193,10 @@ static int figure_is_active(const figure *f)
 
 void figure_init_scenario(void)
 {
-    if (!array_init(data.figures, FIGURE_ARRAY_SIZE_STEP, initialize_new_figure, figure_is_active)) {
+    if (!array_init(data.figures, FIGURE_ARRAY_SIZE_STEP, initialize_new_figure, figure_is_active) ||
+        !array_next(data.figures)) { // Ignore first figure
         log_error("Unable to create figures array. The game will now crash.", 0, 0);
     }
-    array_next(data.figures); // Ignore first figure
     data.created_sequence = 0;
 }
 
@@ -446,9 +445,9 @@ void figure_load_state(buffer *list, buffer *seq, int includes_figure_size)
     }
 
     int figures_to_load = buf_size / figure_buf_size;
-    int array_size = calc_value_in_step(figures_to_load, FIGURE_ARRAY_SIZE_STEP);
 
-    if (!array_init(data.figures, array_size, initialize_new_figure, figure_is_active)) {
+    if (!array_init(data.figures, FIGURE_ARRAY_SIZE_STEP, initialize_new_figure, figure_is_active) ||
+        !array_expand(data.figures, figures_to_load)) {
         log_error("Unable to create figures array. The game will now crash.", 0, 0);
     }
 

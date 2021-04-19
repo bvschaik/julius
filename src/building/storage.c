@@ -32,10 +32,10 @@ static int storage_in_use(const data_storage *storage)
 
 void building_storage_clear_all(void)
 {
-    if (!array_init(storages, STORAGE_ARRAY_SIZE_STEP, storage_create, storage_in_use)) {
+    if (!array_init(storages, STORAGE_ARRAY_SIZE_STEP, storage_create, storage_in_use) ||
+        !array_next(storages)) { // Ignore first storage
         log_error("Unable to create storages. The game will likely crash.", 0, 0);
     }
-    array_next(storages); // Ignore first storage
 }
 
 void building_storage_reset_building_ids(void)
@@ -53,11 +53,11 @@ void building_storage_reset_building_ids(void)
         }
         if (b->type == BUILDING_GRANARY || b->type == BUILDING_WAREHOUSE) {
             if (b->storage_id) {
-                if (storages.items[b->storage_id].building_id) {
+                if (array_item(storages, b->storage_id)->building_id) {
                     // storage is already connected to a building: corrupt, create new
                     b->storage_id = building_storage_create();
                 } else {
-                    storages.items[b->storage_id].building_id = i;
+                    array_item(storages, b->storage_id)->building_id = i;
                 }
             }
         }
@@ -77,10 +77,10 @@ int building_storage_create(void)
 
 int building_storage_restore(int storage_id)
 {
-    if (storages.items[storage_id].in_use) {
+    if (array_item(storages, storage_id)->in_use) {
         return 0;
     }
-    storages.items[storage_id].in_use = 1;
+    array_item(storages, storage_id)->in_use = 1;
     if (storage_id >= storages.size) {
         storages.size = storage_id + 1;
     }
@@ -89,23 +89,23 @@ int building_storage_restore(int storage_id)
 
 void building_storage_delete(int storage_id)
 {
-    storages.items[storage_id].in_use = 0;
+    array_item(storages, storage_id)->in_use = 0;
     array_trim(storages);
 }
 
 const building_storage *building_storage_get(int storage_id)
 {
-    return &storages.items[storage_id].storage;
+    return &array_item(storages, storage_id)->storage;
 }
 
 void building_storage_toggle_empty_all(int storage_id)
 {
-    storages.items[storage_id].storage.empty_all ^= 1;
+    array_item(storages, storage_id)->storage.empty_all ^= 1;
 }
 
 void building_storage_cycle_resource_state(int storage_id, resource_type resource_id)
 {
-    int state = storages.items[storage_id].storage.resource_state[resource_id];
+    int state = array_item(storages, storage_id)->storage.resource_state[resource_id];
     if (state == BUILDING_STORAGE_STATE_ACCEPTING) {
         state = BUILDING_STORAGE_STATE_NOT_ACCEPTING;
     } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING) {
@@ -131,13 +131,13 @@ void building_storage_cycle_resource_state(int storage_id, resource_type resourc
     } else if (state == BUILDING_STORAGE_STATE_NOT_ACCEPTING_3QUARTERS) {
         state = BUILDING_STORAGE_STATE_GETTING_3QUARTERS;
     }
-    storages.items[storage_id].storage.resource_state[resource_id] = state;
+    array_item(storages, storage_id)->storage.resource_state[resource_id] = state;
 }
 
 void building_storage_set_permission(building_storage_permission_states p, building *b)
 {
     int permission_bit = 1 << p;
-    storages.items[b->storage_id].storage.permissions ^= permission_bit;
+    array_item(storages, b->storage_id)->storage.permissions ^= permission_bit;
 }
 
 int building_storage_get_permission(building_storage_permission_states p, building *b)
@@ -149,7 +149,7 @@ int building_storage_get_permission(building_storage_permission_states p, buildi
 
 void building_storage_cycle_partial_resource_state(int storage_id, resource_type resource_id)
 {
-    int state = storages.items[storage_id].storage.resource_state[resource_id];
+    int state = array_item(storages, storage_id)->storage.resource_state[resource_id];
     if (state == BUILDING_STORAGE_STATE_ACCEPTING) {
         state = BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS;
     } else if (state == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS) {
@@ -168,12 +168,13 @@ void building_storage_cycle_partial_resource_state(int storage_id, resource_type
     } else if (state == BUILDING_STORAGE_STATE_GETTING_QUARTER) {
         state = BUILDING_STORAGE_STATE_GETTING;
     }
-    storages.items[storage_id].storage.resource_state[resource_id] = state;
+    array_item(storages, storage_id)->storage.resource_state[resource_id] = state;
 }
 void building_storage_accept_none(int storage_id)
 {
+    data_storage *s = array_item(storages, storage_id);
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        storages.items[storage_id].storage.resource_state[r] = BUILDING_STORAGE_STATE_NOT_ACCEPTING;
+        s->storage.resource_state[r] = BUILDING_STORAGE_STATE_NOT_ACCEPTING;
     }
 }
 
@@ -208,9 +209,9 @@ void building_storage_load_state(buffer *buf, int includes_storage_size)
     }
 
     int storages_to_load = buf_size / storage_buf_size;
-    int array_size = calc_value_in_step(storages_to_load, STORAGE_ARRAY_SIZE_STEP);
 
-    if (!array_init(storages, array_size, storage_create, storage_in_use)) {
+    if (!array_init(storages, STORAGE_ARRAY_SIZE_STEP, storage_create, storage_in_use) ||
+        !array_expand(storages, storages_to_load)) {
         log_error("Unable to create storages. The game will likely crash.", 0, 0);
     }
 

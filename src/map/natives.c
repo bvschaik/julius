@@ -65,7 +65,6 @@ static void determine_meeting_center(void)
     if (total_meetings <= 0) {
         return;
     }
-    const int *meetings = building_list_small_items();
     // determine closest meeting center for hut
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
@@ -73,11 +72,11 @@ static void determine_meeting_center(void)
             int min_dist = 1000;
             int min_meeting_id = 0;
             for (int n = 0; n < total_meetings; n++) {
-                building *meeting = building_get(meetings[n]);
+                building *meeting = building_get(building_list_small_item(n));
                 int dist = calc_maximum_distance(b->x, b->y, meeting->x, meeting->y);
                 if (dist < min_dist) {
                     min_dist = dist;
-                    min_meeting_id = meetings[n];
+                    min_meeting_id = building_list_small_item(n);
                 }
             }
             b->subtype.native_meeting_center_id = min_meeting_id;

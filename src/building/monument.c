@@ -993,7 +993,7 @@ int building_monument_progress(building *b)
 
 void building_monument_recalculate_monuments(void)
 {
-	if (!data.monuments.capacity && !array_init(data.monuments, MONUMENTS_SIZE_STEP, 0, 0)) {
+	if (!data.monuments.blocks && !array_init(data.monuments, MONUMENTS_SIZE_STEP, 0, 0)) {
 		log_error("Unable to allocate enough memory for monuments. The game will now crash.", 0, 0);
 	}
 
@@ -1219,9 +1219,8 @@ void building_monument_delivery_load_state(buffer *buf, int includes_delivery_bu
 
 	int deliveries_to_load = buf_size / delivery_buf_size;
 
-	int array_size = calc_value_in_step(deliveries_to_load, DELIVERY_ARRAY_SIZE_STEP);
-
-	if (!array_init(data.monument_deliveries, array_size, 0, delivery_in_use)) {
+	if (!array_init(data.monument_deliveries, DELIVERY_ARRAY_SIZE_STEP, 0, delivery_in_use) ||
+		!array_expand(data.monument_deliveries, deliveries_to_load)) {
 		log_error("Failed to create the monument deliveries array. The game may crash.", 0, 0);
 	}
 

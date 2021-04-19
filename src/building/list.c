@@ -19,7 +19,7 @@ void building_list_small_clear(void)
 
 void building_list_small_add(int building_id)
 {
-    if (!data.small.capacity && !array_init(data.small, SMALL_SIZE_STEP, 0, 0)) {
+    if (!data.small.blocks && !array_init(data.small, SMALL_SIZE_STEP, 0, 0)) {
         return;
     }
     int *element = array_advance(data.small);
@@ -34,9 +34,9 @@ int building_list_small_size(void)
     return data.small.size;
 }
 
-const int *building_list_small_items(void)
+int building_list_small_item(int index)
 {
-    return data.small.items;
+    return *array_item(data.small, index);
 }
 
 void building_list_large_clear(void)
@@ -46,7 +46,7 @@ void building_list_large_clear(void)
 
 void building_list_large_add(int building_id)
 {
-    if (!data.large.capacity && !array_init(data.large, LARGE_SIZE_STEP, 0, 0)) {
+    if (!data.large.blocks && !array_init(data.large, LARGE_SIZE_STEP, 0, 0)) {
         return;
     }
     int *element = array_advance(data.large);
@@ -61,9 +61,9 @@ int building_list_large_size(void)
     return data.large.size;
 }
 
-const int *building_list_large_items(void)
+int building_list_large_item(int index)
 {
-    return data.large.items;
+    return *array_item(data.large, index);
 }
 
 void building_list_burning_clear(void)
@@ -73,7 +73,7 @@ void building_list_burning_clear(void)
 
 void building_list_burning_add(int building_id)
 {
-    if (!data.burning.capacity && !array_init(data.burning, BURNING_SIZE_STEP, 0, 0)) {
+    if (!data.burning.blocks && !array_init(data.burning, BURNING_SIZE_STEP, 0, 0)) {
         return;
     }
     int *element = array_advance(data.burning);
@@ -88,9 +88,9 @@ int building_list_burning_size(void)
     return data.burning.size;
 }
 
-const int *building_list_burning_items(void)
+int building_list_burning_item(int index)
 {
-    return data.burning.items;
+    return *array_item(data.burning, index);
 }
 
 void building_list_save_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals)

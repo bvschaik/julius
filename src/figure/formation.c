@@ -42,10 +42,10 @@ static int formation_in_use(const formation *m)
 
 void formations_clear(void)
 {
-    if (!array_init(formations, FORMATION_ARRAY_SIZE_STEP, initialize_new_formation, formation_in_use)) {
+    if (!array_init(formations, FORMATION_ARRAY_SIZE_STEP, initialize_new_formation, formation_in_use) ||
+        !array_next(formations)) { // Ignore first formation
         log_error("Unable to create the formations array. The game will likely crash.", 0, 0);
     }
-    array_next(formations); // Ignore first formation
     data.id_last_in_use = 0;
     data.id_last_legion = 0;
     data.num_legions = 0;
@@ -54,7 +54,7 @@ void formations_clear(void)
 
 void formation_clear(int formation_id)
 {
-    formations.items[formation_id].in_use = 0;
+    array_item(formations, formation_id)->in_use = 0;
     array_trim(formations);
 }
 
@@ -144,7 +144,7 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
 
 formation *formation_get(int formation_id)
 {
-    return &formations.items[formation_id];
+    return array_item(formations, formation_id);
 }
 
 int formation_count(void)
@@ -164,7 +164,7 @@ void formation_set_selected(int formation_id)
 
 void formation_toggle_empire_service(int formation_id)
 {
-    formations.items[formation_id].empire_service ^= 1;
+    array_item(formations, formation_id)->empire_service ^= 1;
 }
 
 void formation_record_missile_fired(formation *m)
@@ -778,10 +778,9 @@ void formations_load_state(buffer *buf, buffer *totals, int includes_buffer_size
     }
 
     int formations_to_load = buf_size / formation_buf_size;
-    int array_size = includes_buffer_size ?
-        calc_value_in_step(includes_buffer_size, FORMATION_ARRAY_SIZE_STEP) : formations_to_load;
 
-    if (!array_init(formations, array_size, initialize_new_formation, formation_in_use)) {
+    if (!array_init(formations, FORMATION_ARRAY_SIZE_STEP, initialize_new_formation, formation_in_use) ||
+        !array_expand(formations, formations_to_load)) {
         log_error("Unable to create the formations array. The game will likely crash.", 0, 0);
     }
 

@@ -10,7 +10,6 @@
 #include "city/population.h"
 #include "city/warning.h"
 #include "core/array.h"
-#include "core/calc.h"
 #include "core/log.h"
 #include "figure/formation_legion.h"
 #include "game/difficulty.h"
@@ -38,7 +37,7 @@ static struct {
 
 building *building_get(int id)
 {
-    return &buildings.items[id];
+    return array_item(buildings, id);
 }
 
 int building_count(void)
@@ -64,14 +63,14 @@ building *building_main(building *b)
         if (b->prev_part_building_id <= 0) {
             return b;
         }
-        b = &buildings.items[b->prev_part_building_id];
+        b = array_item(buildings, b->prev_part_building_id);
     }
     return array_first(buildings);
 }
 
 building *building_next(building *b)
 {
-    return &buildings.items[b->next_part_building_id];
+    return array_item(buildings, b->next_part_building_id);
 }
 
 building *building_create(building_type type, int x, int y)
@@ -256,6 +255,16 @@ void building_clear_related_data(building *b)
     if (b->type == BUILDING_MESS_HALL) {
         city_buildings_remove_mess_hall();
     }
+}
+
+building *building_restore(building *b)
+{
+    building *restored = array_item(buildings, b->id);
+    memcpy(restored, b, sizeof(building));
+    if (b->id >= buildings.size) {
+        buildings.size = b->id + 1;
+    }
+    return restored;
 }
 
 void building_trim(void)
@@ -472,10 +481,10 @@ static int building_in_use(const building *b)
 
 void building_clear_all(void)
 {
-    if (!array_init(buildings, BUILDING_ARRAY_SIZE_STEP, initialize_new_building, building_in_use)) {
+    if (!array_init(buildings, BUILDING_ARRAY_SIZE_STEP, initialize_new_building, building_in_use) ||
+        !array_next(buildings)) { // Ignore first building
         log_error("Unable to allocate enought memory for the building array. The game will now crash.", 0, 0);
     }
-    array_next(buildings); // Ignore first building
 
     extra.created_sequence = 0;
     extra.incorrect_houses = 0;
@@ -514,9 +523,9 @@ void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, 
     }
 
     int buildings_to_load = buf_size / building_buf_size;
-    int array_size = calc_value_in_step(buildings_to_load, BUILDING_ARRAY_SIZE_STEP);
 
-    if (!array_init(buildings, array_size, initialize_new_building, building_in_use)) {
+    if (!array_init(buildings, BUILDING_ARRAY_SIZE_STEP, initialize_new_building, building_in_use) ||
+        !array_expand(buildings, buildings_to_load)) {
         log_error("Unable to allocate enought memory for the building array. The game will now crash.", 0, 0);
     }
 

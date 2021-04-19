@@ -179,6 +179,8 @@ building *building_create(building_type type, int x, int y);
 
 void building_clear_related_data(building *b);
 
+building *building_restore(building *b);
+
 void building_trim(void);
 
 void building_update_state(void);

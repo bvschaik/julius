@@ -83,11 +83,10 @@ void building_industry_force_strike()
         return;
     }
 
-    const int *industries = building_list_small_items();
     int index;
 
     index = random_from_stdlib() % total_industries;
-    building *b = building_get(industries[index]);
+    building *b = building_get(building_list_small_item(index));
     b->strike_duration_days = 48;
     city_warning_show(WARNING_SECESSION);
 
@@ -364,19 +363,18 @@ void building_industry_start_strikes(void)
             return;
         }
 
-        const int *industries = building_list_small_items();
         int index;
 
         for (int i = 0; i < to_strike; i++) {
             index = random_from_stdlib() % total_industries;
             // Prevent the same building from being selected twice
             int current = index + 1;
-            building *b = building_get(industries[index]);
+            building *b = building_get(building_list_small_item(index));
             while (b->strike_duration_days > 0) {
                 if (current == total_industries) {
                     current = 0;
                 }
-                b = building_get(industries[current]);
+                b = building_get(building_list_small_item(current));
                 current++;
                 if (current == index) {
                     break;
