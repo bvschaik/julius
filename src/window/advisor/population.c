@@ -33,37 +33,17 @@ static int focus_button_id;
 
 static void get_y_axis(int max_value, int *y_max, int *y_shift)
 {
-    if (max_value <= 100) {
-        *y_max = 100;
-        *y_shift = -1;
-    } else if (max_value <= 200) {
-        *y_max = 200;
-        *y_shift = 0;
-    } else if (max_value <= 400) {
-        *y_max = 400;
-        *y_shift = 1;
-    } else if (max_value <= 800) {
-        *y_max = 800;
-        *y_shift = 2;
-    } else if (max_value <= 1600) {
-        *y_max = 1600;
-        *y_shift = 3;
-    } else if (max_value <= 3200) {
-        *y_max = 3200;
-        *y_shift = 4;
-    } else if (max_value <= 6400) {
-        *y_max = 6400;
-        *y_shift = 5;
-    } else if (max_value <= 12800) {
-        *y_max = 12800;
-        *y_shift = 6;
-    } else if (max_value <= 25600) {
-        *y_max = 25600;
-        *y_shift = 7;
-    } else {
-        *y_max = 51200;
-        *y_shift = 8;
+    int max = 1;
+    int shift = -1;
+    max_value /= 100;
+
+    while (max_value) {
+        max <<= 1;
+        shift++;
+        max_value >>= 1;
     }
+    *y_max = max * 100;
+    *y_shift = shift;
 }
 
 static void get_min_max_month_year(int max_months, int *start_month, int *start_year, int *end_month, int *end_year)
