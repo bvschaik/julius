@@ -10,8 +10,7 @@
 #include "map/terrain.h"
 #include "translation/translation.h"
 
-enum crime_level
-{
+enum crime_level {
     NO_CRIME = 0,
     MINOR_CRIME = 1,
     LOW_CRIME = 2,
@@ -91,8 +90,8 @@ static int show_figure_damage(const figure *f)
 
 static int show_figure_crime(const figure *f)
 {
-    return f->type == FIGURE_PREFECT || 
-        f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER || f->type == FIGURE_PROTESTER 
+    return f->type == FIGURE_PREFECT ||
+        f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER || f->type == FIGURE_PROTESTER
         || f->type == FIGURE_CRIMINAL_LOOTER || f->type == FIGURE_CRIMINAL_ROBBER;
 }
 
@@ -208,21 +207,20 @@ static int get_tooltip_damage(tooltip_context *c, const building *b)
 
 static int get_tooltip_crime(tooltip_context *c, const building *b)
 {
-        int happiness = b->sentiment.house_happiness;
-        int crime = get_crime_level(b);
-        if (crime == RAMPANT_CRIME) {
-            return 63;
-        } else if (crime == LARGE_CRIME) {
-            return 62;
-        } else if (crime == MEDIUM_CRIME) {
-            return 61;
-        } else if (crime == SOME_CRIME) {
-            return 60;
-        } else if (crime == LOW_CRIME) {
-            return 59;
-        } else {
-            return 58;
-        }
+    int crime = get_crime_level(b);
+    if (crime == RAMPANT_CRIME) {
+        return 63;
+    } else if (crime == LARGE_CRIME) {
+        return 62;
+    } else if (crime == MEDIUM_CRIME) {
+        return 61;
+    } else if (crime == SOME_CRIME) {
+        return 60;
+    } else if (crime == LOW_CRIME) {
+        return 59;
+    } else {
+        return 58;
+    }
 }
 
 static int get_tooltip_problems(tooltip_context *c, const building *b)

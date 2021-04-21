@@ -157,7 +157,7 @@ static void init(void)
 
 void window_advisors_draw_dialog_background(void)
 {
-    image_draw_fullscreen_background(image_group(GROUP_ADVISOR_BACKGROUND));
+    image_draw_fullscreen_background_with_borders(image_group(GROUP_ADVISOR_BACKGROUND));
     graphics_in_dialog();
     image_draw(image_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
 

@@ -15,6 +15,8 @@ void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color);
 
 void image_draw_fullscreen_background(int image_id);
 
+void image_draw_fullscreen_background_with_borders(int image_id);
+
 void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask);
 void image_draw_isometric_footprint_from_draw_tile(int image_id, int x, int y, color_t color_mask);
 

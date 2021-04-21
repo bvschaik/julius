@@ -216,35 +216,10 @@ static void draw_scenario_info(void)
     lang_text_draw_centered(44, 136, scenario_info_x, 446, scenario_info_width, FONT_NORMAL_BLACK);
 }
 
-static void draw_borders(void)
-{
-    int width = screen_width();
-    int height = screen_height();
-    int image_base = image_group(GROUP_EMPIRE_PANELS);
-
-    // horizontal bar borders
-    for (int x = 0; x < width; x += 86) {
-        image_draw(image_base + 1, x, 0);
-        image_draw(image_base + 1, x, height - 16);
-    }
-
-    // vertical bar borders
-    for (int y = 16; y < height; y += 86) {
-        image_draw(image_base, 0, y);
-        image_draw(image_base, width - 16, y);
-    }
-
-    // crossbars
-    image_draw(image_base + 2, 0, 0);
-    image_draw(image_base + 2, 0, height - 16);
-    image_draw(image_base + 2, width - 16, 0);
-    image_draw(image_base + 2, width - 16, height - 16);
-}
-
 static void draw_background(void)
 {
-    image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 25);
-    draw_borders();
+    image_draw_fullscreen_background_with_borders(image_group(GROUP_INTERMEZZO_BACKGROUND) + 25);
+
     graphics_set_clip_rectangle((screen_width() - WINDOW_WIDTH) / 2, (screen_height() - WINDOW_HEIGHT) / 2,
         WINDOW_WIDTH, WINDOW_HEIGHT);
     graphics_in_dialog();

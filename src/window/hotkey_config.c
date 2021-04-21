@@ -188,37 +188,11 @@ static void init(void)
     }
 }
 
-static void draw_borders(void)
-{
-    int width = screen_width();
-    int height = screen_height();
-    int image_base = image_group(GROUP_EMPIRE_PANELS);
-
-    // horizontal bar borders
-    for (int x = 0; x < width; x += 86) {
-        image_draw(image_base + 1, x, 0);
-        image_draw(image_base + 1, x, height - 16);
-    }
-
-    // vertical bar borders
-    for (int y = 16; y < height; y += 86) {
-        image_draw(image_base, 0, y);
-        image_draw(image_base, width - 16, y);
-    }
-
-    // crossbars
-    image_draw(image_base + 2, 0, 0);
-    image_draw(image_base + 2, 0, height - 16);
-    image_draw(image_base + 2, width - 16, 0);
-    image_draw(image_base + 2, width - 16, height - 16);
-}
-
 static void draw_background(void)
 {
     graphics_clear_screen(CANVAS_UI);
 
-    image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 5);
-    draw_borders();
+    image_draw_fullscreen_background_with_borders(image_group(GROUP_INTERMEZZO_BACKGROUND) + 5);
 
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
