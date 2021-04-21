@@ -92,7 +92,8 @@ static int show_figure_damage(const figure *f)
 static int show_figure_crime(const figure *f)
 {
     return f->type == FIGURE_PREFECT || 
-        f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER || f->type == FIGURE_PROTESTER;
+        f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER || f->type == FIGURE_PROTESTER 
+        || f->type == FIGURE_CRIMINAL_LOOTER || f->type == FIGURE_CRIMINAL_ROBBER;
 }
 
 static int show_figure_problems(const figure *f)
