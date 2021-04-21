@@ -4,6 +4,7 @@
 #include "building/list.h"
 #include "building/maintenance.h"
 #include "city/figures.h"
+#include "city/sentiment.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "figure/combat.h"
@@ -105,7 +106,7 @@ static int get_nearest_enemy(int x, int y, int *distance)
         if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR) {
             dist = calc_maximum_distance(x, y, f->x, f->y);
         } else if (f->type == FIGURE_CRIMINAL_LOOTER || f->type == FIGURE_CRIMINAL_ROBBER) {
-            dist = 3*calc_maximum_distance(x, y, f->x, f->y);
+            dist = 3 * calc_maximum_distance(x, y, f->x, f->y);
         } else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
             dist = calc_maximum_distance(x, y, f->x, f->y);
         } else if (figure_is_enemy(f)) {

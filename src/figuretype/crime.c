@@ -266,7 +266,9 @@ void figure_protestor_action(figure *f)
 {
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     figure_image_increase_offset(f, 64);
+    city_figures_add_protester();
     f->cart_image_id = 0;
+
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
         figure_combat_handle_corpse(f);
     }
@@ -373,6 +375,7 @@ void figure_rioter_action(figure *f)
 
 void figure_robber_action(figure *f)
 {
+    city_figures_add_robber(!f->targeted_by_figure_id);
     f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
     f->max_roam_length = 480;
     f->cart_image_id = 0;
@@ -423,6 +426,7 @@ void figure_robber_action(figure *f)
 
 void figure_looter_action(figure *f)
 {
+    city_figures_add_looter(!f->targeted_by_figure_id);
     f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
     f->max_roam_length = 480;
     f->cart_image_id = 0;

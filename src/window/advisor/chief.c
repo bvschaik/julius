@@ -174,11 +174,11 @@ static int draw_background(void)
     draw_title(206, 6);
     if (city_figures_rioters()) {
         lang_text_draw(61, 33, X_OFFSET, 206, FONT_NORMAL_RED);
-    } else if (city_sentiment_criminals() > 10) {
+    } else if (city_figures_criminals() > 10) {
         lang_text_draw(61, 32, X_OFFSET, 206, FONT_NORMAL_RED);
-    } else if (city_sentiment_criminals() || city_sentiment_crime_cooldown()) {
+    } else if (city_figures_criminals()) {
         lang_text_draw(61, 31, X_OFFSET, 206, FONT_NORMAL_RED);
-    } else if (city_sentiment_protesters()) {
+    } else if (city_figures_protesters() || city_sentiment_crime_cooldown()) {
         lang_text_draw(61, 30, X_OFFSET, 206, FONT_NORMAL_RED);
     } else {
         lang_text_draw(61, 29, X_OFFSET, 206, FONT_NORMAL_GREEN);

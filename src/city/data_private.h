@@ -60,6 +60,9 @@ extern struct city_data_t {
         int32_t enemies;
         int32_t imperial_soldiers;
         int32_t rioters;
+        int32_t robbers;
+        int32_t looters;
+        int32_t protesters;
         int32_t soldiers;
         int32_t security_breach_duration;
     } figure;
