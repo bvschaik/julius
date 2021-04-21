@@ -614,6 +614,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_ADVISOR_ENTERTAINMENT_GAMES_BUTTON, "Games information" },
     {TR_WINDOW_BUILDING_GOVERNMENT_LARGE_STATUE_WATER_WARNING, "The statue looks fabulous, but it would look even grander with its fountain active, if we provided it with water access." },
     {TR_CONFIRM_SELECT_EPITHET, "Apply (1000 Dn)"},
+    {TR_FIGURE_TYPE_LOOTER, "Looter" },
+    {TR_FIGURE_TYPE_ROBBER, "Robber" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

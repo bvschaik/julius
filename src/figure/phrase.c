@@ -255,7 +255,7 @@ static const int FIGURE_TYPE_TO_SOUND_TYPE[] = {
     25, 25, 25, 25, 25, 25, 25, 25, -1, -1, // 50-59
     -1, -1, -1, -1, 30, -1, 31, -1, -1, -1, // 60-69
     -1, -1, -1, 18, 19, 2, 1, 19, 8, 11,  // 70-79
-    11, -1, 1, -1, -1, -1, -1, -1, -1, -1,  // 80-89
+    11, -1, 1, -1, -1, -1, 20, 20, -1, -1,  // 80-89
 };
 
 enum {
@@ -570,6 +570,8 @@ static int phrase_based_on_figure_state(figure *f)
         case FIGURE_PROTESTER:
         case FIGURE_CRIMINAL:
         case FIGURE_RIOTER:
+        case FIGURE_CRIMINAL_ROBBER:
+        case FIGURE_CRIMINAL_LOOTER:
         case FIGURE_DELIVERY_BOY:
             return citizen_phrase(f);
         case FIGURE_MISSIONARY:
