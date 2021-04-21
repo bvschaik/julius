@@ -27,6 +27,8 @@ typedef uint32_t color_t;
 #define COLOR_MASK_NONE 0xffffffff
 #define COLOR_MASK_RED 0xffff0818
 #define COLOR_MASK_GREEN 0xff18ff18
+#define COLOR_MASK_PURPLE 0xff7f0000
+#define COLOR_MASK_DARK_GREEN 0xff005100
 #define COLOR_MASK_BLUE 0x663377ff
 #define COLOR_MASK_GREY 0x66aaaaaa
 #define COLOR_MASK_LEGION_HIGHLIGHT 0x66ff3300

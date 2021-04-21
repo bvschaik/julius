@@ -50,7 +50,7 @@ static int trade_factor_sell(int land_trader)
         if (policy == TRADE_POLICY_1) {
             percent = trade_get_caravanserai_factor(POLICY_1_BONUS_PERCENT); // trader buy 20% more
         } else if (policy == TRADE_POLICY_2) {
-            percent = - trade_get_caravanserai_factor(POLICY_2_MALUS_PERCENT); // trader buy 10% less
+            percent -= trade_get_caravanserai_factor(POLICY_2_MALUS_PERCENT); // trader buy 10% less
         }
     }
     return percent;
@@ -63,9 +63,9 @@ static int trade_factor_buy(int land_trader)
         int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
 
         if (policy == TRADE_POLICY_1) {
-            percent = - trade_get_caravanserai_factor(POLICY_1_MALUS_PERCENT); // player buy 10% more
+            percent = trade_get_caravanserai_factor(POLICY_1_MALUS_PERCENT); // player buy 10% more
         } else if (policy == TRADE_POLICY_2) {
-            percent = trade_get_caravanserai_factor(POLICY_2_BONUS_PERCENT); // player buy 20% less
+            percent -= trade_get_caravanserai_factor(POLICY_2_BONUS_PERCENT); // player buy 20% less
         }
     }
     return percent;

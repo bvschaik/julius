@@ -1,5 +1,8 @@
 #include "trade_prices.h"
 
+#include "building/caravanserai.h"
+#include "building/monument.h"
+#include "city/buildings.h"
 #include "empire/trade_prices.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -20,13 +23,27 @@ static void draw_background(void)
     graphics_shade_rect(17, 53, 622, 334, 0);
     outer_panel_draw(16, 144, 38, 11);
     lang_text_draw(54, 21, 26, 153, FONT_LARGE_BLACK);
-    lang_text_draw(54, 22, 26, 228, FONT_NORMAL_BLACK);
-    lang_text_draw(54, 23, 26, 253, FONT_NORMAL_BLACK);
+    lang_text_draw(54, 22, 26, 226, FONT_NORMAL_BLACK);
+    lang_text_draw(54, 23, 26, 262, FONT_NORMAL_BLACK);
+
     for (int i = 1; i < 16; i++) {
         int image_offset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 126 + 30 * i, 194);
-        text_draw_number_centered(trade_price_buy(i, 0), 120 + 30 * i, 229, 30, FONT_SMALL_PLAIN);
-        text_draw_number_centered(trade_price_sell(i, 0), 120 + 30 * i, 254, 30, FONT_SMALL_PLAIN);
+        text_draw_number_centered(trade_price_buy(i, 0), 120 + 30 * i, 226, 30, FONT_SMALL_PLAIN);
+        text_draw_number_centered(trade_price_sell(i, 0), 120 + 30 * i, 262, 30, FONT_SMALL_PLAIN);
+
+        if (city_buildings_has_caravanserai()) {
+            int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
+            if (policy && policy != TRADE_POLICY_3) {
+                text_draw_number_centered_colored(trade_price_buy(i, 1), 120 + 30 * i, 240, 30, FONT_SMALL_PLAIN, policy == TRADE_POLICY_1 ? COLOR_MASK_PURPLE : COLOR_MASK_DARK_GREEN);
+                text_draw_number_centered_colored(trade_price_sell(i, 1), 120 + 30 * i, 276, 30, FONT_SMALL_PLAIN, policy == TRADE_POLICY_1 ? COLOR_MASK_DARK_GREEN : COLOR_MASK_PURPLE);
+
+                int image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1;
+                image_draw(image_id, 125, 236);
+
+                image_draw(image_id, 125, 272);
+            }
+        }
     }
     lang_text_draw_centered(13, 1, 16, 296, 608, FONT_NORMAL_BLACK);
 
