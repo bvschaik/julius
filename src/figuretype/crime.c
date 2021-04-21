@@ -206,6 +206,7 @@ static void generate_protestor(building *b)
             city_ratings_peace_record_criminal();
         }
     }
+    city_sentiment_set_crime_cooldown();
 }
 
 void figure_generate_criminals(void)
@@ -232,38 +233,30 @@ void figure_generate_criminals(void)
         return;
     }
     if (min_building) {
-        min_building->sentiment.house_happiness += 2;
         if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
             return;
         }
         int sentiment = city_sentiment();
-        if (sentiment < 30) {
-            if (random_byte() >= sentiment + 50) {
-                if (min_happiness <= 10) {
-                    city_sentiment_change_happiness(30);
-                    int amount = calc_bound(city_population() / 1000, 1, 10);
+        if (random_byte() >= sentiment + 20) {
+            min_building->sentiment.house_happiness += 5;
+            if (min_happiness <= 15) {
+                int population = city_sentiment_get_population_below_happiness(25);
+                if (population > 0 && city_population() / population < 20) { // 5% population for rioting
+                    int amount = calc_bound(city_population() / 1000, 1, 20);
                     generate_rioter(min_building, amount);
                     generate_looter(min_building, amount);
                     generate_robber(min_building, amount);
-                } else if (min_happiness < 30) {
-                    generate_looter(min_building, 2);
-                } else if (min_happiness < 50) {
-                    generate_robber(min_building, 2);
+                    city_sentiment_set_min_happiness(30);
+                } else {
+                    generate_looter(min_building, 3);
+                    generate_robber(min_building, 3);
                 }
-            }
-        } else if (sentiment < 60) {
-            if (random_byte() >= sentiment + 40) {
-                if (min_happiness < 30) {
-                    generate_looter(min_building, 1);
-                } else if (min_happiness < 50) {
-                    generate_robber(min_building, 1);
-                }
-            }
-        } else {
-            if (random_byte() >= sentiment + 20) {
-                if (min_happiness < 50) {
-                    generate_protestor(min_building);
-                }
+            } else if (min_happiness < 30) {
+                generate_looter(min_building, min_happiness < 20 ? 2 : 1);
+            } else if (min_happiness < 45) {
+                generate_robber(min_building, min_happiness < 30 ? 2 : 1);
+            } else if (min_happiness < 50) {
+                generate_protestor(min_building);
             }
         }
     }

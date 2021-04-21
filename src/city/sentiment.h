@@ -8,6 +8,9 @@ int city_sentiment_low_mood_cause(void);
 void city_sentiment_change_happiness(int amount);
 
 void city_sentiment_set_max_happiness(int max);
+void city_sentiment_set_min_happiness(int min);
+
+int city_sentiment_get_population_below_happiness(int happiness);
 
 void city_sentiment_reset_protesters_criminals(void);
 

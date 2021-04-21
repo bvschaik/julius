@@ -364,7 +364,7 @@ void figure_prefect_action(figure *f)
                     f->state = FIGURE_STATE_DEAD;
                 }
             }
-            figure_movement_move_ticks(f, 1);
+            figure_movement_move_ticks_with_percentage(f, 1, 20);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 figure *target = figure_get(f->target_figure_id);
                 f->destination_x = target->x;

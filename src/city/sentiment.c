@@ -27,7 +27,7 @@
 #define SENTIMENT_PER_EXTRA_FOOD 12
 #define MAX_SENTIMENT_CHANGE 2
 #define DESIRABILITY_TO_SENTIMENT_RATIO 2
-#define COOLDOWN_AFTER_CRIME_DAYS 32
+#define COOLDOWN_AFTER_CRIME_DAYS 10
 
 int city_sentiment(void)
 {
@@ -51,15 +51,43 @@ void city_sentiment_change_happiness(int amount)
 
 void city_sentiment_set_max_happiness(int max)
 {
+    max = calc_bound(max, 0, 100);
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
             if (b->sentiment.house_happiness > max) {
                 b->sentiment.house_happiness = max;
             }
-            b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness, 0, 100);
         }
     }
+}
+
+void city_sentiment_set_min_happiness(int min)
+{
+
+    min = calc_bound(min, 0, 100);
+    for (int i = 1; i < building_count(); i++) {
+        building *b = building_get(i);
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+            if (b->sentiment.house_happiness < min) {
+                b->sentiment.house_happiness = min;
+            }
+        }
+    }
+}
+
+int city_sentiment_get_population_below_happiness(int happiness)
+{
+    int population_affected = 0;
+    for (int i = 1; i < building_count(); i++) {
+        building *b = building_get(i);
+        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+            if (b->sentiment.house_happiness < happiness) {
+                population_affected += b->house_population;
+            }
+        }
+    }
+    return population_affected;
 }
 
 void city_sentiment_reset_protesters_criminals(void)
@@ -165,8 +193,8 @@ static int get_average_housing_level(void)
             if (house_level >= HOUSE_SMALL_PALACE) {
                 multiplier++; // Palaces count thrice
             }
-        }        
-        int house_population =  b->house_population * multiplier;
+        }
+        int house_population = b->house_population * multiplier;
         avg += house_level * house_population;
         population += house_population;
     }
@@ -199,6 +227,10 @@ static int extra_entertainment_bonus(int entertainment, int required)
 
 static int extra_food_bonus(int types, int required)
 {
+    // Tents have no food bonus because they always scavenge for food
+    if (required == 0) {
+        return 0;
+    }
     int extra = (types - required * SENTIMENT_PER_EXTRA_FOOD);
     return calc_bound(extra, 0, MAX_SENTIMENT_FROM_EXTRA_FOOD);
 }
