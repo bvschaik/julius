@@ -107,42 +107,29 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_i
                 dx == x_leftmost && dy == y_leftmost);
         }
     }
-    // crop tile 1
     int growth = progress / 10;
-    set_crop_tile(building_id, x, y, 0, 2, crop_image_id, growth);
+    int growth_per_tile = growth / 5;
+    int growth_remaining = growth % 5;
+
+    // crop tile 1
+    set_crop_tile(building_id, x, y, 0, 2, crop_image_id, growth_per_tile + (growth_remaining-- > 0 ? 1 : 0));
 
     // crop tile 2
-    growth -= 4;
-    if (growth < 0) {
-        growth = 0;
-    }
-    set_crop_tile(building_id, x, y, 1, 2, crop_image_id, growth);
+    set_crop_tile(building_id, x, y, 1, 2, crop_image_id, growth_per_tile + (growth_remaining-- > 0 ? 1 : 0));
 
     // crop tile 3
-    growth -= 4;
-    if (growth < 0) {
-        growth = 0;
-    }
-    set_crop_tile(building_id, x, y, 2, 2, crop_image_id, growth);
+    set_crop_tile(building_id, x, y, 2, 2, crop_image_id, growth_per_tile + (growth_remaining-- > 0 ? 1 : 0));
 
     // crop tile 4
-    growth -= 4;
-    if (growth < 0) {
-        growth = 0;
-    }
-    set_crop_tile(building_id, x, y, 2, 1, crop_image_id, growth);
+    set_crop_tile(building_id, x, y, 2, 1, crop_image_id, growth_per_tile + (growth_remaining > 0 ? 1 : 0));
 
     // crop tile 5
-    growth -= 4;
-    if (growth < 0) {
-        growth = 0;
-    }
-    set_crop_tile(building_id, x, y, 2, 0, crop_image_id, growth);
+    set_crop_tile(building_id, x, y, 2, 0, crop_image_id, growth_per_tile);
 }
 
 int map_building_tiles_add_aqueduct(int x, int y)
 {
-    int grid_offset = map_grid_offset(x,y);
+    int grid_offset = map_grid_offset(x, y);
     map_terrain_add(grid_offset, TERRAIN_AQUEDUCT);
     map_property_clear_constructing(grid_offset);
     return 1;
