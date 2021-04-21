@@ -238,10 +238,6 @@ void figure_generate_criminals(void)
         city_sentiment_reduce_crime_cooldown();
         return;
     }
-    if (city_sentiment_crime_cooldown() > 0) {
-        city_sentiment_reduce_crime_cooldown();
-        return;
-    }
     if (min_building) {
         if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
             return;
@@ -392,43 +388,43 @@ void figure_robber_action(figure *f)
     f->is_ghost = 0;
 
     switch (f->action_state) {
-    case FIGURE_ACTION_150_ATTACK:
-        figure_combat_handle_attack(f);
-        break;
-    case FIGURE_ACTION_149_CORPSE:
-        figure_combat_handle_corpse(f);
-        break;
-    case FIGURE_ACTION_227_CRIMINAL_ROBBER_CREATED:
-        figure_image_increase_offset(f, 32);
-        f->wait_ticks++;
-        if (f->wait_ticks >= 160) {
-            int x_tile, y_tile, resource = 0, target_building_id;
-            target_building_id = formation_rioter_get_target_building_for_robbery(f->x, f->y, &x_tile, &y_tile);
+        case FIGURE_ACTION_150_ATTACK:
+            figure_combat_handle_attack(f);
+            break;
+        case FIGURE_ACTION_149_CORPSE:
+            figure_combat_handle_corpse(f);
+            break;
+        case FIGURE_ACTION_227_CRIMINAL_ROBBER_CREATED:
+            figure_image_increase_offset(f, 32);
+            f->wait_ticks++;
+            if (f->wait_ticks >= 160) {
+                int x_tile, y_tile, resource = 0, target_building_id;
+                target_building_id = formation_rioter_get_target_building_for_robbery(f->x, f->y, &x_tile, &y_tile);
 
-            if (target_building_id) {
-                f->destination_x = x_tile;
-                f->destination_y = y_tile;
-                f->destination_building_id = target_building_id;
-                f->collecting_item_id = resource;
-                f->action_state = FIGURE_ACTION_229_CRIMINAL_GOING_TO_ROB;
+                if (target_building_id) {
+                    f->destination_x = x_tile;
+                    f->destination_y = y_tile;
+                    f->destination_building_id = target_building_id;
+                    f->collecting_item_id = resource;
+                    f->action_state = FIGURE_ACTION_229_CRIMINAL_GOING_TO_ROB;
+                    figure_route_remove(f);
+                } else {
+                    f->state = FIGURE_STATE_DEAD;
+                }
+            }
+            break;
+        case FIGURE_ACTION_229_CRIMINAL_GOING_TO_ROB:
+            figure_image_increase_offset(f, 12);
+            figure_movement_move_ticks(f, 1);
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                figure_crime_steal_money(f);
+                f->state = FIGURE_STATE_DEAD;
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
-            } else {
+            } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
-        }
-        break;
-    case FIGURE_ACTION_229_CRIMINAL_GOING_TO_ROB:
-        figure_image_increase_offset(f, 12);
-        figure_movement_move_ticks(f, 1);
-        if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-            figure_crime_steal_money(f);
-            f->state = FIGURE_STATE_DEAD;
-        } else if (f->direction == DIR_FIGURE_REROUTE) {
-            figure_route_remove(f);
-        } else if (f->direction == DIR_FIGURE_LOST) {
-            f->state = FIGURE_STATE_DEAD;
-        }
-        break;
+            break;
     }
 
     set_criminal_image(f);
@@ -443,39 +439,39 @@ void figure_looter_action(figure *f)
     f->is_ghost = 0;
 
     switch (f->action_state) {
-    case FIGURE_ACTION_150_ATTACK:
-        figure_combat_handle_attack(f);
-        break;
-    case FIGURE_ACTION_149_CORPSE:
-        figure_combat_handle_corpse(f);
-        break;
-    case FIGURE_ACTION_226_CRIMINAL_LOOTER_CREATED:
-        figure_image_increase_offset(f, 32);
-        f->wait_ticks++;
-        if (f->wait_ticks >= 160) {
-            int target_building_id = get_looter_destination(f);
+        case FIGURE_ACTION_150_ATTACK:
+            figure_combat_handle_attack(f);
+            break;
+        case FIGURE_ACTION_149_CORPSE:
+            figure_combat_handle_corpse(f);
+            break;
+        case FIGURE_ACTION_226_CRIMINAL_LOOTER_CREATED:
+            figure_image_increase_offset(f, 32);
+            f->wait_ticks++;
+            if (f->wait_ticks >= 160) {
+                int target_building_id = get_looter_destination(f);
 
-            if (target_building_id) {
-                f->action_state = FIGURE_ACTION_228_CRIMINAL_GOING_TO_LOOT;
-                figure_route_remove(f);
-            } else {
-                f->state = FIGURE_STATE_DEAD;
-                figure_route_remove(f);
+                if (target_building_id) {
+                    f->action_state = FIGURE_ACTION_228_CRIMINAL_GOING_TO_LOOT;
+                    figure_route_remove(f);
+                } else {
+                    f->state = FIGURE_STATE_DEAD;
+                    figure_route_remove(f);
+                }
             }
-        }
-        break;
-    case FIGURE_ACTION_228_CRIMINAL_GOING_TO_LOOT:
-        figure_image_increase_offset(f, 12);
-        figure_movement_move_ticks(f, 1);
-        if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-            figure_crime_loot_storage(f, f->collecting_item_id, f->destination_building_id);
-            f->state = FIGURE_STATE_DEAD;
-        } else if (f->direction == DIR_FIGURE_REROUTE) {
-            figure_route_remove(f);
-        } else if (f->direction == DIR_FIGURE_LOST) {
-            f->state = FIGURE_STATE_DEAD;
-        }
-        break;
+            break;
+        case FIGURE_ACTION_228_CRIMINAL_GOING_TO_LOOT:
+            figure_image_increase_offset(f, 12);
+            figure_movement_move_ticks(f, 1);
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                figure_crime_loot_storage(f, f->collecting_item_id, f->destination_building_id);
+                f->state = FIGURE_STATE_DEAD;
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
+                figure_route_remove(f);
+            } else if (f->direction == DIR_FIGURE_LOST) {
+                f->state = FIGURE_STATE_DEAD;
+            }
+            break;
     }
 
     set_criminal_image(f);
