@@ -47,7 +47,7 @@ static void destroy_on_fire(building *b, int plagued)
     if (map_terrain_is(b->grid_offset, TERRAIN_WATER)) {
         b->state = BUILDING_STATE_DELETED_BY_GAME;
     } else {
-        b->type = BUILDING_BURNING_RUIN;
+        building_change_type(b, BUILDING_BURNING_RUIN);
         b->figure_id4 = 0;
         b->tax_income_or_storage = 0;
         b->fire_duration = (b->house_figure_generation_delay & 7) + 1;
@@ -115,7 +115,8 @@ static void destroy_linked_parts(building *b, int on_fire)
     part = b;
     for (int i = 0; i < 9; i++) {
         part = building_next(part);
-        if (part->id <= 0) {
+        int part_id = part->id;
+        if (part_id <= 0) {
             break;
         }
         if (on_fire) {
@@ -153,18 +154,17 @@ void building_destroy_by_rioter(building *b)
 
 int building_destroy_first_of_type(building_type type)
 {
-    int i = building_find(type);
-    if (i) {
-        building* b = building_get(i);
-        int grid_offset = b->grid_offset;
-        game_undo_disable();
-        b->state = BUILDING_STATE_RUBBLE;
-        map_building_tiles_set_rubble(i, b->x, b->y, b->size);
-        sound_effect_play(SOUND_EFFECT_EXPLOSION);
-        map_routing_update_land();
-        return grid_offset;
+    building *b = building_first_of_type(type);
+    if (!b) {
+        return 0;
     }
-    return 0;
+    int grid_offset = b->grid_offset;
+    game_undo_disable();
+    b->state = BUILDING_STATE_RUBBLE;
+    map_building_tiles_set_rubble(b->id, b->x, b->y, b->size);
+    sound_effect_play(SOUND_EFFECT_EXPLOSION);
+    map_routing_update_land();
+    return grid_offset;
 }
 
 void building_destroy_last_placed(void)

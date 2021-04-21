@@ -118,8 +118,8 @@ void city_finance_process_export(int price)
     city_data.finance.treasury += price;
     city_data.finance.this_year.income.exports += price;
     if (city_data.religion.neptune_double_trade_active) {
-        city_data.finance.treasury += price/2;
-        city_data.finance.this_year.income.exports += price/2;
+        city_data.finance.treasury += price / 2;
+        city_data.finance.this_year.income.exports += price / 2;
     }
 }
 
@@ -207,16 +207,16 @@ void city_finance_estimate_taxes(void)
 {
     city_data.taxes.monthly.collected_plebs = 0;
     city_data.taxes.monthly.collected_patricians = 0;
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_tax_coverage) {
-            int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
-            int trm = difficulty_adjust_money(
-                model_get_house(b->subtype.house_level)->tax_multiplier);
-            if (is_patrician) {
-                city_data.taxes.monthly.collected_patricians += b->house_population * trm;
-            } else {
-                city_data.taxes.monthly.collected_plebs += b->house_population * trm;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_tax_coverage) {
+                int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
+                int trm = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
+                if (is_patrician) {
+                    city_data.taxes.monthly.collected_patricians += b->house_population * trm;
+                } else {
+                    city_data.taxes.monthly.collected_plebs += b->house_population * trm;
+                }
             }
         }
     }
@@ -247,35 +247,35 @@ static void collect_monthly_taxes(void)
     for (int i = 0; i < MAX_HOUSE_LEVELS; i++) {
         city_data.population.at_level[i] = 0;
     }
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
-            continue;
-        }
-
-        int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
-        int population = b->house_population;
-        int trm = difficulty_adjust_money(
-            model_get_house(b->subtype.house_level)->tax_multiplier);
-        city_data.population.at_level[b->subtype.house_level] += population;
-
-        int tax = population * trm;
-        if (b->house_tax_coverage) {
-            if (is_patrician) {
-                city_data.taxes.taxed_patricians += population;
-                city_data.taxes.monthly.collected_patricians += tax;
-            } else {
-                city_data.taxes.taxed_plebs += population;
-                city_data.taxes.monthly.collected_plebs += tax;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
+                continue;
             }
-            b->tax_income_or_storage += tax;
-        } else {
-            if (is_patrician) {
-                city_data.taxes.untaxed_patricians += population;
-                city_data.taxes.monthly.uncollected_patricians += tax;
+
+            int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
+            int population = b->house_population;
+            int trm = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
+            city_data.population.at_level[b->subtype.house_level] += population;
+
+            int tax = population * trm;
+            if (b->house_tax_coverage) {
+                if (is_patrician) {
+                    city_data.taxes.taxed_patricians += population;
+                    city_data.taxes.monthly.collected_patricians += tax;
+                } else {
+                    city_data.taxes.taxed_plebs += population;
+                    city_data.taxes.monthly.collected_plebs += tax;
+                }
+                b->tax_income_or_storage += tax;
             } else {
-                city_data.taxes.untaxed_plebs += population;
-                city_data.taxes.monthly.uncollected_plebs += tax;
+                if (is_patrician) {
+                    city_data.taxes.untaxed_patricians += population;
+                    city_data.taxes.monthly.uncollected_patricians += tax;
+                } else {
+                    city_data.taxes.untaxed_plebs += population;
+                    city_data.taxes.monthly.uncollected_plebs += tax;
+                }
             }
         }
     }
@@ -334,43 +334,44 @@ static void pay_monthly_salary(void)
     }
 }
 
-static void pay_monthly_building_levies(void) {
+static void pay_monthly_building_levies(void)
+{
     int levies = 0;
-    for (int i = 1; i < building_count(); i++) {
-        building* b = building_get(i);
-        for (int i = 0; i < BUILDINGS_WITH_LEVIES; ++i) {
-            if (b->type == building_levies[i].type) {
-                b->monthly_levy = building_levies[i].amount;
+    for (int i = 0; i < BUILDINGS_WITH_LEVIES; i++) {
+        building_type type = building_levies[i].type;
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            b->monthly_levy = building_levies[i].amount;
+            int levy = building_get_levy(b);
+            if (b->state == BUILDING_STATE_IN_USE && levy && !b->prev_part_building_id) {
+                levies += levy;
             }
         }
-        if (b->state == BUILDING_STATE_IN_USE && building_get_levy(b) && !b->prev_part_building_id) {
-            levies += building_get_levy(b);
-        }
     }
-    
-    city_data.finance.treasury -= levies;   
+
+    city_data.finance.treasury -= levies;
     city_data.finance.this_year.expenses.levies += levies;
 }
 
-static void activate_monthly_tourism(void) {
-    for (int i = 1; i < building_count(); i++) {
-        building* b = building_get(i);
-        for (int i = 0; i < BUILDINGS_WITH_TOURISM; ++i) {
-            if (b->type == tourism_modifiers[i].type && b->state == BUILDING_STATE_IN_USE && b->num_workers) {
-                b->is_tourism_venue = 1;
-                if (game_time_month() == 0) {
-                    b->tourism_income_this_year = 0;
-                }
-                tourism_modifiers[i].count++;
-                // disable redundant venues for tourism
-                if ((tourism_modifiers[i].count * tourism_modifiers[i].coverage) > city_data.population.population) {
-                    b->tourism_disabled = 1;
-                    b->tourism_income = 0;
-                }
-                else {
-                    b->tourism_disabled = 0;
-                    b->tourism_income = tourism_modifiers[i].income_modifier;
-                }
+static void activate_monthly_tourism(void)
+{
+    for (int i = 0; i < BUILDINGS_WITH_TOURISM; i++) {
+        building_type type = tourism_modifiers[i].type;
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE || !b->num_workers) {
+                continue;
+            }
+            b->is_tourism_venue = 1;
+            if (game_time_month() == 0) {
+                b->tourism_income_this_year = 0;
+            }
+            tourism_modifiers[i].count++;
+            // disable redundant venues for tourism
+            if ((tourism_modifiers[i].count * tourism_modifiers[i].coverage) > city_data.population.population) {
+                b->tourism_disabled = 1;
+                b->tourism_income = 0;
+            } else {
+                b->tourism_disabled = 0;
+                b->tourism_income = tourism_modifiers[i].income_modifier;
             }
         }
     }
@@ -396,10 +397,11 @@ static void reset_taxes(void)
     city_data.taxes.yearly.uncollected_patricians = 0;
 
     // reset tax income in building list
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
-            b->tax_income_or_storage = 0;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+                b->tax_income_or_storage = 0;
+            }
         }
     }
 }
@@ -521,11 +523,13 @@ void city_finance_handle_year_change(void)
     pay_tribute();
 }
 
-int city_finance_tourism_income_last_month(void) {
+int city_finance_tourism_income_last_month(void)
+{
     return city_data.finance.tourism_last_month;
 }
 
-int city_finance_tourism_lowest_factor(void) {
+int city_finance_tourism_lowest_factor(void)
+{
     return city_data.finance.tourism_lowest_factor;
 }
 

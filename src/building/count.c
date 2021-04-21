@@ -26,12 +26,12 @@
 
 
 typedef enum {
-	BUFFER_INDUSTRY,
-	BUFFER_CULTURE_1,
-	BUFFER_CULTURE_2,
-	BUFFER_CULTURE_3,
-	BUFFER_MILITARY,
-	BUFFER_SUPPORT,
+    BUFFER_INDUSTRY,
+    BUFFER_CULTURE_1,
+    BUFFER_CULTURE_2,
+    BUFFER_CULTURE_3,
+    BUFFER_MILITARY,
+    BUFFER_SUPPORT,
 } count_buffers;
 
 
@@ -240,7 +240,7 @@ void building_count_update(void)
                 b->immigrant_figure_id = 0;
             }
         }
-        if (is_entertainment_venue && (!building_monument_is_monument(b) || b->data.monument.monument_phase == MONUMENT_FINISHED)) {
+        if (is_entertainment_venue && (!building_monument_is_monument(b) || b->data.monument.phase == MONUMENT_FINISHED)) {
             // update number of shows
             int shows = 0;
             if (b->data.entertainment.days1 > 0) {
@@ -257,15 +257,17 @@ void building_count_update(void)
     limit_hippodrome();
 }
 
-int building_count_grand_temples(void) {
+int building_count_grand_temples(void)
+{
     return (data.buildings[BUILDING_GRAND_TEMPLE_CERES].total +
-            data.buildings[BUILDING_GRAND_TEMPLE_NEPTUNE].total + 
-            data.buildings[BUILDING_GRAND_TEMPLE_MERCURY].total + 
-            data.buildings[BUILDING_GRAND_TEMPLE_MARS].total + 
-            data.buildings[BUILDING_GRAND_TEMPLE_VENUS].total);
+        data.buildings[BUILDING_GRAND_TEMPLE_NEPTUNE].total +
+        data.buildings[BUILDING_GRAND_TEMPLE_MERCURY].total +
+        data.buildings[BUILDING_GRAND_TEMPLE_MARS].total +
+        data.buildings[BUILDING_GRAND_TEMPLE_VENUS].total);
 }
 
-int building_count_grand_temples_active(void) {
+int building_count_grand_temples_active(void)
+{
     return (data.buildings[BUILDING_GRAND_TEMPLE_CERES].active +
         data.buildings[BUILDING_GRAND_TEMPLE_NEPTUNE].active +
         data.buildings[BUILDING_GRAND_TEMPLE_MERCURY].active +
@@ -274,7 +276,8 @@ int building_count_grand_temples_active(void) {
         data.buildings[BUILDING_PANTHEON].active);
 }
 
-int building_count_colosseum(void) {
+int building_count_colosseum(void)
+{
     return data.buildings[BUILDING_COLOSSEUM].total;
 }
 
@@ -304,16 +307,16 @@ int building_count_industry_total(resource_type resource)
 }
 
 void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2,
-                                buffer *culture3, buffer *military, buffer *support)
+    buffer *culture3, buffer *military, buffer *support)
 {
     int buffer_sizes[] = { CURRENT_BUFFER_SIZE_INDUSTRY,CURRENT_BUFFER_SIZE_CULTURE1,CURRENT_BUFFER_SIZE_CULTURE2,CURRENT_BUFFER_SIZE_CULTURE3, CURRENT_BUFFER_SIZE_MILITARY, CURRENT_BUFFER_SIZE_SUPPORT };
-    buffer *buffer_pointers[] = {industry,culture1,culture2,culture3,military,support};
+    buffer *buffer_pointers[] = { industry,culture1,culture2,culture3,military,support };
     int buffer_count = 6;
 
 
     for (int i = 0; i < buffer_count; i++) {
         buffer *buf = buffer_pointers[i];
-        int buf_size = buffer_sizes[i]+4; // Extra 4 bytes to store buffer size
+        int buf_size = buffer_sizes[i] + 4; // Extra 4 bytes to store buffer size
         uint8_t *buf_data = malloc(buf_size);
         buffer_init(buf, buf_data, buf_size);
         buffer_write_i32(buf, buf_size);
@@ -410,11 +413,11 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
 }
 
 void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2,
-                                buffer *culture3, buffer *military, buffer *support, int includes_buffer_size)
+    buffer *culture3, buffer *military, buffer *support, int includes_buffer_size)
 {
-    int buf_sizes[] = {ORIGINAL_BUFFER_SIZE_INDUSTRY,ORIGINAL_BUFFER_SIZE_CULTURE1,ORIGINAL_BUFFER_SIZE_CULTURE2,ORIGINAL_BUFFER_SIZE_CULTURE3,ORIGINAL_BUFFER_SIZE_MILITARY,ORIGINAL_BUFFER_SIZE_SUPPORT};
+    int buf_sizes[] = { ORIGINAL_BUFFER_SIZE_INDUSTRY,ORIGINAL_BUFFER_SIZE_CULTURE1,ORIGINAL_BUFFER_SIZE_CULTURE2,ORIGINAL_BUFFER_SIZE_CULTURE3,ORIGINAL_BUFFER_SIZE_MILITARY,ORIGINAL_BUFFER_SIZE_SUPPORT };
     int current_buf_sizes[] = { CURRENT_BUFFER_SIZE_INDUSTRY,CURRENT_BUFFER_SIZE_CULTURE1,CURRENT_BUFFER_SIZE_CULTURE2,CURRENT_BUFFER_SIZE_CULTURE3, CURRENT_BUFFER_SIZE_MILITARY, CURRENT_BUFFER_SIZE_SUPPORT };
-    buffer *buf_pointers[] = {industry,culture1,culture2,culture3,military,support};
+    buffer *buf_pointers[] = { industry,culture1,culture2,culture3,military,support };
     int buffer_count = 6;
 
     if (includes_buffer_size) {

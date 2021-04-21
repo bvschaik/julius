@@ -253,6 +253,8 @@ void map_orientation_update_buildings(void)
         int image_id;
         int image_offset;
         switch (b->type) {
+            default:
+                break;
             case BUILDING_GATEHOUSE:
                 if (b->subtype.orientation == 1) {
                     if (orientation_is_top_bottom) {
@@ -289,7 +291,7 @@ void map_orientation_update_buildings(void)
                 break;
             case BUILDING_HIPPODROME:
                 {
-                    int phase = b->data.monument.monument_phase;
+                    int phase = b->data.monument.phase;
                     int phase_offset = 6;
                     int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
 

@@ -57,10 +57,10 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_GRANARY && b->num_workers < model_get_building(b->type)->laborers) {
         return 0;
     }
-    if (building_monument_is_monument(b) && (b->type != BUILDING_ORACLE && b->type != BUILDING_NYMPHAEUM && (b->num_workers <= 0 || b->data.monument.monument_phase != MONUMENT_FINISHED))) {
+    if (building_monument_is_monument(b) && (b->type != BUILDING_ORACLE && b->type != BUILDING_NYMPHAEUM && (b->num_workers <= 0 || b->data.monument.phase != MONUMENT_FINISHED))) {
         return 0;
     }
-    if ((b->type == BUILDING_ARCHITECT_GUILD || b->type == BUILDING_MESS_HALL || b->type == BUILDING_ARENA)  && b->num_workers <= 0) {
+    if ((b->type == BUILDING_ARCHITECT_GUILD || b->type == BUILDING_MESS_HALL || b->type == BUILDING_ARENA) && b->num_workers <= 0) {
         return 0;
     }
     if (b->type == BUILDING_TAVERN && (b->num_workers <= 0 || !b->data.market.inventory[4])) { //wine
@@ -74,22 +74,22 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     }
     if (b->type == BUILDING_COLOSSEUM) {
         switch (city_festival_games_active()) {
-        case 1:
-            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
-            break;
-        case 2:
-            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Imp Games"));
-            break;
-        case 3:
-            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Exec"));
-            break;
-        default:
-            map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"));
-            if (b->num_workers <= 0) {
-                map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"));
-            }
+            case 1:
+                map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Naumachia"));
+                break;
+            case 2:
+                map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Imp Games"));
+                break;
+            case 3:
+                map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Exec"));
+                break;
+            default:
+                map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"));
+                if (b->num_workers <= 0) {
+                    map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"));
+                }
         }
-    }   
+    }
 
     //if (b->type == BUILDING_HIPPODROME) {
     //    switch (city_festival_games_active()) {

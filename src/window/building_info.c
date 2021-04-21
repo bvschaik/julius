@@ -804,7 +804,7 @@ static void draw_foreground(void)
             btype == BUILDING_PANTHEON) {
             window_building_draw_grand_temple_foreground(&context);
         } else if (btype == BUILDING_CARAVANSERAI &&
-            !building_monument_is_unfinished_monument(b)) {
+            b->data.monument.phase == MONUMENT_FINISHED) {
             if (context.storage_show_special_orders) {
                 window_building_draw_supplier_orders_foreground(&context);
             } else {

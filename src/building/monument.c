@@ -78,9 +78,34 @@ static int large_mausoleum_resources[2][RESOURCE_MAX] = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
 static int caravanserai_resources[2][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 6, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+	{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 6, 0, 0, 0 },
+	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
 };
+
+static const building_type MONUMENT_BUILDING_TYPES[] = {
+	BUILDING_ORACLE,
+	BUILDING_LARGE_TEMPLE_CERES,
+	BUILDING_LARGE_TEMPLE_NEPTUNE,
+	BUILDING_LARGE_TEMPLE_MERCURY,
+	BUILDING_LARGE_TEMPLE_MARS,
+	BUILDING_LARGE_TEMPLE_VENUS,
+	BUILDING_GRAND_TEMPLE_CERES,
+	BUILDING_GRAND_TEMPLE_NEPTUNE,
+	BUILDING_GRAND_TEMPLE_MERCURY,
+	BUILDING_GRAND_TEMPLE_MARS,
+	BUILDING_GRAND_TEMPLE_VENUS,
+	BUILDING_PANTHEON,
+	BUILDING_MENU_GRAND_TEMPLES,
+	BUILDING_LIGHTHOUSE,
+	BUILDING_COLOSSEUM,
+	BUILDING_HIPPODROME,
+	BUILDING_NYMPHAEUM,
+	BUILDING_LARGE_MAUSOLEUM,
+	BUILDING_SMALL_MAUSOLEUM,
+	BUILDING_CARAVANSERAI
+};
+
+#define MAX_MONUMENT_TYPES (sizeof(MONUMENT_BUILDING_TYPES) / sizeof(building_type))
 
 typedef struct {
 	int walker_id;
@@ -89,11 +114,7 @@ typedef struct {
 	int cartloads;
 } monument_delivery;
 
-static struct {
-	array(int) monuments;
-	array(monument_delivery) monument_deliveries;
-	int unfinished_monuments;
-} data;
+array(monument_delivery) monument_deliveries;
 
 int building_monument_deliver_resource(building *b, int resource)
 {
@@ -120,6 +141,8 @@ int building_monument_access_point(building *b, map_point *dst)
 	int dx = b->x - b->road_access_x;
 	int dy = b->y - b->road_access_y;
 	switch (b->type) {
+		default:
+			return 0;
 		case BUILDING_LARGE_TEMPLE_CERES:
 		case BUILDING_LARGE_TEMPLE_NEPTUNE:
 		case BUILDING_LARGE_TEMPLE_MERCURY:
@@ -185,7 +208,7 @@ int building_monument_access_point(building *b, map_point *dst)
 			return 1;
 		case BUILDING_ORACLE:
 		case BUILDING_SMALL_MAUSOLEUM:
-        case BUILDING_CARAVANSERAI:
+		case BUILDING_CARAVANSERAI:
 			dst->x = b->x;
 			dst->y = b->y;
 			return 1;
@@ -200,8 +223,8 @@ int building_monument_access_point(building *b, map_point *dst)
 int building_monument_add_module(building *b, int module_type)
 {
 	if (!building_monument_is_monument(b) ||
-		b->data.monument.monument_phase != MONUMENT_FINISHED ||
-        (b->data.monument.upgrades && b->type != BUILDING_CARAVANSERAI)) {
+		b->data.monument.phase != MONUMENT_FINISHED ||
+		(b->data.monument.upgrades && b->type != BUILDING_CARAVANSERAI)) {
 		return 0;
 	}
 
@@ -209,6 +232,8 @@ int building_monument_add_module(building *b, int module_type)
 
 	if (b->data.monument.upgrades == 1) {
 		switch (b->type) {
+			default:
+				break;
 			case BUILDING_GRAND_TEMPLE_CERES:
 				map_building_tiles_add(b->id, b->x, b->y, b->size,
 					assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Module"),
@@ -242,6 +267,8 @@ int building_monument_add_module(building *b, int module_type)
 		}
 	} else if (b->data.monument.upgrades == 2) {
 		switch (b->type) {
+			default:
+				break;
 			case BUILDING_GRAND_TEMPLE_CERES:
 				map_building_tiles_add(b->id, b->x, b->y, b->size,
 					assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Module2"),
@@ -285,35 +312,31 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
 	}
 	int min_dist = INFINITE;
 	building *min_building = 0;
-	int *monument_id;
-	array_foreach(data.monuments, monument_id)
-	{
-		if (!*monument_id) {
-			continue;
-		}
-		building *b = building_get(*monument_id);
-		if (!building_monument_is_monument(b) ||
-			b->data.monument.monument_phase == MONUMENT_FINISHED ||
-			b->data.monument.monument_phase < MONUMENT_START ||
-			(!resource && building_monument_needs_resources(b))) {
-			continue;
-		}
-		short needed = b->data.monument.resources_needed[resource];
-		if ((b->next_part_building_id || b->prev_part_building_id) &&
-			(needed - building_monument_resource_in_delivery_multipart(b, resource)) <= 0) {
-			continue;
-		}
-		if ((needed - building_monument_resource_in_delivery(b->id, resource)) <= 0) {
-			continue;
-		}
-		if (!map_has_road_access(b->x, b->y, b->size, 0) ||
-			b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
-			continue;
-		}
-		int dist = calc_maximum_distance(b->x, b->y, x, y);
-		if (dist < min_dist) {
-			min_dist = dist;
-			min_building = b;
+	for (int i = 0; i < MAX_MONUMENT_TYPES; i++) {
+		building_type type = MONUMENT_BUILDING_TYPES[i];
+		for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+			if (b->data.monument.phase == MONUMENT_FINISHED ||
+				b->data.monument.phase < MONUMENT_START ||
+				(!resource && building_monument_needs_resources(b))) {
+				continue;
+			}
+			short needed = b->data.monument.resources_needed[resource];
+			if ((b->next_part_building_id || b->prev_part_building_id) &&
+				(needed - building_monument_resource_in_delivery_multipart(b, resource)) <= 0) {
+				continue;
+			}
+			if ((needed - building_monument_resource_in_delivery(b->id, resource)) <= 0) {
+				continue;
+			}
+			if (!map_has_road_access(b->x, b->y, b->size, 0) ||
+				b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
+				continue;
+			}
+			int dist = calc_maximum_distance(b->x, b->y, x, y);
+			if (dist < min_dist) {
+				min_dist = dist;
+				min_building = b;
+			}
 		}
 	}
 	if (min_building && min_dist < INFINITE) {
@@ -327,12 +350,20 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
 
 int building_monument_has_unfinished_monuments(void)
 {
-	return data.unfinished_monuments;
+	for (int i = 0; i < MAX_MONUMENT_TYPES; i++) {
+		building_type type = MONUMENT_BUILDING_TYPES[i];
+		for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+			if (b->data.monument.phase != MONUMENT_FINISHED) {
+				return 1;
+			}
+		}
+	}
+	return 0;
 }
 
-int building_monument_resources_needed_for_monument_type(int building_type, int resource, int phase)
+int building_monument_resources_needed_for_monument_type(building_type type, int resource, int phase)
 {
-	switch (building_type) {
+	switch (type) {
 		case BUILDING_LARGE_TEMPLE_CERES:
 		case BUILDING_LARGE_TEMPLE_MERCURY:
 		case BUILDING_LARGE_TEMPLE_NEPTUNE:
@@ -361,19 +392,20 @@ int building_monument_resources_needed_for_monument_type(int building_type, int 
 			return large_mausoleum_resources[phase - 1][resource];
 		case BUILDING_SMALL_MAUSOLEUM:
 			return small_mausoleum_resources[phase - 1][resource];
-        case BUILDING_CARAVANSERAI:
-            return caravanserai_resources[phase - 1][resource];
+		case BUILDING_CARAVANSERAI:
+			return caravanserai_resources[phase - 1][resource];
 		default:
 			return 0;
-			break;
 	}
 }
 
 void building_monument_initialize(building *b)
 {
 	switch (b->type) {
+		default:
+			return;
 		case BUILDING_ORACLE:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -381,7 +413,7 @@ void building_monument_initialize(building *b)
 				case 2:
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						image_group(GROUP_BUILDING_ORACLE), TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
@@ -390,7 +422,7 @@ void building_monument_initialize(building *b)
 		case BUILDING_LARGE_TEMPLE_MERCURY:
 		case BUILDING_LARGE_TEMPLE_MARS:
 		case BUILDING_LARGE_TEMPLE_VENUS:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -398,12 +430,12 @@ void building_monument_initialize(building *b)
 				case 2:
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						image_group(b->type + 6) + 1, TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
 		case BUILDING_GRAND_TEMPLE_CERES:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -432,12 +464,12 @@ void building_monument_initialize(building *b)
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex On"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
 		case BUILDING_GRAND_TEMPLE_NEPTUNE:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -471,12 +503,12 @@ void building_monument_initialize(building *b)
 						assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
 						"Neptune Complex On"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
 		case BUILDING_GRAND_TEMPLE_MERCURY:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -510,12 +542,12 @@ void building_monument_initialize(building *b)
 						assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
 						"Mercury Complex On"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
 		case BUILDING_GRAND_TEMPLE_MARS:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -544,12 +576,12 @@ void building_monument_initialize(building *b)
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex On"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
 		case BUILDING_GRAND_TEMPLE_VENUS:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -578,12 +610,12 @@ void building_monument_initialize(building *b)
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex On"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
 		case BUILDING_PANTHEON:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -612,12 +644,12 @@ void building_monument_initialize(building *b)
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon On"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
 		case BUILDING_LIGHTHOUSE:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -641,12 +673,12 @@ void building_monument_initialize(building *b)
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse ON"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
 		case BUILDING_COLOSSEUM:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -670,12 +702,12 @@ void building_monument_initialize(building *b)
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
 		case BUILDING_HIPPODROME:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -691,12 +723,12 @@ void building_monument_initialize(building *b)
 					break;
 				case 5:
 					map_orientation_update_buildings();
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 			}
 			break;
 		case BUILDING_NYMPHAEUM:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -705,14 +737,14 @@ void building_monument_initialize(building *b)
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Nymphaeum ON"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 				default:
 					break;
 			}
 			break;
 		case BUILDING_SMALL_MAUSOLEUM:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -721,14 +753,14 @@ void building_monument_initialize(building *b)
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum S"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 				default:
 					break;
 			}
 			break;
 		case BUILDING_LARGE_MAUSOLEUM:
-			switch (b->data.monument.monument_phase) {
+			switch (b->data.monument.phase) {
 				case MONUMENT_FINISHED:
 					break;
 				case MONUMENT_START:
@@ -737,46 +769,44 @@ void building_monument_initialize(building *b)
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
 						assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum L"),
 						TERRAIN_BUILDING);
-					b->data.monument.monument_phase = MONUMENT_FINISHED;
+					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 				default:
 					break;
 			}
 			break;
 		case BUILDING_CARAVANSERAI:
-            switch (b->data.monument.monument_phase)
-            {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    switch (scenario_property_climate())
-                    {
-                        case CLIMATE_DESERT:
-                            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                                                   assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S ON"),
-                                                   TERRAIN_BUILDING);
-                            break;
-                        default:
-                            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                                                   assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N ON"),
-                                                   TERRAIN_BUILDING);
-                            break;
-                    }
-                    b->data.monument.monument_phase = MONUMENT_FINISHED;
-                    break;
-                default:
-                    break;
-            }
-            break;
+			switch (b->data.monument.phase) {
+				case MONUMENT_FINISHED:
+					break;
+				case MONUMENT_START:
+					break;
+				case 2:
+					switch (scenario_property_climate()) {
+						case CLIMATE_DESERT:
+							map_building_tiles_add(b->id, b->x, b->y, b->size,
+								assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S ON"),
+								TERRAIN_BUILDING);
+							break;
+						default:
+							map_building_tiles_add(b->id, b->x, b->y, b->size,
+								assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N ON"),
+								TERRAIN_BUILDING);
+							break;
+					}
+					b->data.monument.phase = MONUMENT_FINISHED;
+					break;
+				default:
+					break;
+			}
+			break;
 	}
 
-	if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
+	if (b->data.monument.phase != MONUMENT_FINISHED) {
 		for (int resource = 0; resource < RESOURCE_MAX; resource++) {
 			b->data.monument.resources_needed[resource] =
 				building_monument_resources_needed_for_monument_type(b->type, resource,
-				b->data.monument.monument_phase);
+				b->data.monument.phase);
 		}
 	}
 }
@@ -788,31 +818,12 @@ int building_monument_is_monument(const building *b)
 
 int building_monument_type_is_monument(building_type type)
 {
-	switch (type) {
-		case BUILDING_ORACLE:
-		case BUILDING_LARGE_TEMPLE_CERES:
-		case BUILDING_LARGE_TEMPLE_NEPTUNE:
-		case BUILDING_LARGE_TEMPLE_MERCURY:
-		case BUILDING_LARGE_TEMPLE_MARS:
-		case BUILDING_LARGE_TEMPLE_VENUS:
-		case BUILDING_GRAND_TEMPLE_CERES:
-		case BUILDING_GRAND_TEMPLE_NEPTUNE:
-		case BUILDING_GRAND_TEMPLE_MERCURY:
-		case BUILDING_GRAND_TEMPLE_MARS:
-		case BUILDING_GRAND_TEMPLE_VENUS:
-		case BUILDING_PANTHEON:
-		case BUILDING_MENU_GRAND_TEMPLES:
-		case BUILDING_LIGHTHOUSE:
-		case BUILDING_COLOSSEUM:
-		case BUILDING_HIPPODROME:
-		case BUILDING_NYMPHAEUM:
-		case BUILDING_LARGE_MAUSOLEUM:
-		case BUILDING_SMALL_MAUSOLEUM:
-        case BUILDING_CARAVANSERAI:
+	for (int i = 0; i < MAX_MONUMENT_TYPES; i++) {
+		if (type == MONUMENT_BUILDING_TYPES[i]) {
 			return 1;
-		default:
-			return 0;
+		}
 	}
+	return 0;
 }
 
 int building_monument_type_is_mini_monument(building_type type)
@@ -827,7 +838,7 @@ int building_monument_type_is_mini_monument(building_type type)
 		case BUILDING_SMALL_MAUSOLEUM:
 		case BUILDING_LARGE_MAUSOLEUM:
 		case BUILDING_NYMPHAEUM:
-        case BUILDING_CARAVANSERAI:
+		case BUILDING_CARAVANSERAI:
 			return 1;
 		default:
 			return 0;
@@ -850,56 +861,38 @@ int building_monument_is_grand_temple(building_type type)
 
 int building_monument_needs_resource(building *b, int resource)
 {
-	if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
+	if (b->data.monument.phase == MONUMENT_FINISHED) {
 		return 0;
 	}
 	return (b->data.monument.resources_needed[resource]);
 }
 
-int building_monument_phase(int phase)
+void building_monument_set_construction_phase(int phase)
 {
-	int *monument_id;
-	array_foreach(data.monuments, monument_id)
-	{
-		building *b = building_get(*monument_id);
-		if (!building_monument_is_monument(b)) {
-			continue;
+	for (int i = 0; i < MAX_MONUMENT_TYPES; i++) {
+		building_type type = MONUMENT_BUILDING_TYPES[i];
+		for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+			b->data.monument.phase = phase;
+			building_monument_initialize(b);
 		}
-		b->data.monument.monument_phase = phase;
-		building_monument_initialize(b);
 	}
-	return 1;
 }
 
 int building_monument_get_venus_gt(void)
 {
-	int *monument_id;
-	array_foreach(data.monuments, monument_id)
-	{
-		building *b = building_get(*monument_id);
-		if (b->type == BUILDING_GRAND_TEMPLE_VENUS) {
-			return *monument_id;
-		}
-	}
-	return 0;
+	building *monument = building_first_of_type(BUILDING_GRAND_TEMPLE_VENUS);
+	return monument ? monument->id : 0;
 }
 
 int building_monument_get_neptune_gt(void)
 {
-	int *monument_id;
-	array_foreach(data.monuments, monument_id)
-	{
-		building *b = building_get(*monument_id);
-		if (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE) {
-			return *monument_id;
-		}
-	}
-	return 0;
+	building *monument = building_first_of_type(BUILDING_GRAND_TEMPLE_NEPTUNE);
+	return monument ? monument->id : 0;
 }
 
-int building_monument_monument_phases(int building_type)
+int building_monument_phases(building_type type)
 {
-	switch (building_type) {
+	switch (type) {
 		case BUILDING_PANTHEON:
 		case BUILDING_GRAND_TEMPLE_CERES:
 		case BUILDING_GRAND_TEMPLE_MERCURY:
@@ -920,32 +913,27 @@ int building_monument_monument_phases(int building_type)
 		case BUILDING_LARGE_MAUSOLEUM:
 		case BUILDING_SMALL_MAUSOLEUM:
 		case BUILDING_NYMPHAEUM:
-        case BUILDING_CARAVANSERAI:
+		case BUILDING_CARAVANSERAI:
 			return 2;
 		default:
 			return 0;
 	}
 }
 
-int building_monument_finish_monuments(void)
+void building_monument_finish_monuments(void)
 {
-	int *monument_id;
-	array_foreach(data.monuments, monument_id)
-	{
-		building *b = building_get(*monument_id);
-		if (!building_monument_is_monument(b)) {
-			continue;
+	for (int i = 0; i < MAX_MONUMENT_TYPES; i++) {
+		building_type type = MONUMENT_BUILDING_TYPES[i];
+		for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+			b->data.monument.phase = building_monument_phases(b->type);
+			building_monument_initialize(b);
 		}
-		b->data.monument.monument_phase = building_monument_monument_phases(b->type);
-		building_monument_initialize(b);
 	}
-	return 1;
-
 }
 
 int building_monument_needs_resources(building *b)
 {
-	if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
+	if (b->data.monument.phase == MONUMENT_FINISHED) {
 		return 0;
 	}
 	for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
@@ -961,21 +949,21 @@ int building_monument_progress(building *b)
 	if (building_monument_needs_resources(b)) {
 		return 0;
 	}
-	if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
+	if (b->data.monument.phase == MONUMENT_FINISHED) {
 		return 0;
 	}
 	while (b->prev_part_building_id) {
 		b = building_get(b->prev_part_building_id);
 	}
-	b->data.monument.monument_phase++;
+	b->data.monument.phase++;
 	building_monument_initialize(b);
 
 	while (b->next_part_building_id) {
 		b = building_get(b->next_part_building_id);
-		b->data.monument.monument_phase++;
+		b->data.monument.phase++;
 		building_monument_initialize(b);
 	}
-	if (b->data.monument.monument_phase == MONUMENT_FINISHED) {
+	if (b->data.monument.phase == MONUMENT_FINISHED) {
 		if (building_monument_is_grand_temple(b->type)) {
 			city_message_post(1, MESSAGE_GRAND_TEMPLE_COMPLETE, 0, b->grid_offset);
 		} else if (b->type == BUILDING_PANTHEON) {
@@ -991,32 +979,6 @@ int building_monument_progress(building *b)
 	return 1;
 }
 
-void building_monument_recalculate_monuments(void)
-{
-	if (!data.monuments.blocks && !array_init(data.monuments, MONUMENTS_SIZE_STEP, 0, 0)) {
-		log_error("Unable to allocate enough memory for monuments. The game will now crash.", 0, 0);
-	}
-
-	data.monuments.size = 0;
-	data.unfinished_monuments = 0;
-
-	for (int i = 0; i < building_count(); i++) {
-		building *b = building_get(i);
-		if (building_monument_is_monument(b)) {
-			int *monument = array_advance(data.monuments);
-			if (!monument) {
-				log_error("Unable to allocate enough memory for monuments. The game will likely crash.", 0, 0);
-				return;
-			}
-
-			if (b->data.monument.monument_phase != MONUMENT_FINISHED) {
-				data.unfinished_monuments++;
-			}
-			*monument = i;
-		}
-	}
-}
-
 static int delivery_in_use(const monument_delivery *delivery)
 {
 	return delivery->destination_id != 0;
@@ -1024,43 +986,42 @@ static int delivery_in_use(const monument_delivery *delivery)
 
 void building_monument_initialize_deliveries(void)
 {
-	if (!array_init(data.monument_deliveries, DELIVERY_ARRAY_SIZE_STEP, 0, delivery_in_use)) {
+	if (!array_init(monument_deliveries, DELIVERY_ARRAY_SIZE_STEP, 0, delivery_in_use)) {
 		log_error("Failed to create monument array. The game will likely crash.", 0, 0);
 	}
 }
 
-int building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no)
+void building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no)
 {
 	monument_delivery *delivery;
-	array_new_item(data.monument_deliveries, 0, delivery);
+	array_new_item(monument_deliveries, 0, delivery);
 	if (!delivery) {
 		log_error("Failed to create a new monument delivery. The game maybe running out of memory", 0, 0);
-		return 0;
+		return;
 	}
 	delivery->destination_id = monument_id;
 	delivery->walker_id = figure_id;
 	delivery->resource = resource_id;
 	delivery->cartloads = loads_no;
-	return 1;
 }
 
 void building_monument_remove_delivery(int figure_id)
 {
 	monument_delivery *delivery;
-	array_foreach(data.monument_deliveries, delivery)
+	array_foreach(monument_deliveries, delivery)
 	{
 		if (delivery->walker_id == figure_id) {
 			delivery->destination_id = 0;
 		}
 	}
-	array_trim(data.monument_deliveries);
+	array_trim(monument_deliveries);
 }
 
 int building_monument_resource_in_delivery(int monument_id, int resource_id)
 {
 	int resources = 0;
 	monument_delivery *delivery;
-	array_foreach(data.monument_deliveries, delivery)
+	array_foreach(monument_deliveries, delivery)
 	{
 		if (delivery->destination_id == monument_id &&
 			delivery->resource == resource_id) {
@@ -1080,7 +1041,7 @@ int building_monument_resource_in_delivery_multipart(building *b, int resource_i
 
 	while (b->id) {
 		monument_delivery *delivery;
-		array_foreach(data.monument_deliveries, delivery)
+		array_foreach(monument_deliveries, delivery)
 		{
 			if (delivery->destination_id == b->id &&
 				delivery->resource == resource_id) {
@@ -1093,51 +1054,48 @@ int building_monument_resource_in_delivery_multipart(building *b, int resource_i
 	return resources;
 }
 
-int building_monument_has_monument(int type)
+int building_monument_has_monument(building_type type)
 {
-	int *monument_id;
-	array_foreach(data.monuments, monument_id)
-	{
-		building *b = building_get(*monument_id);
-		if (b->type != type) {
-			continue;
-		}
-		if (!building_monument_is_monument(b)) {
-			return 0;
-		}
-		return *monument_id;
+	building *b = building_first_of_type(type);
+	if (!building_monument_type_is_monument(type) || !b) {
+		return 0;
 	}
-	return 0;
+	return b->id;
 }
 
 int building_monument_count_grand_temples(void)
 {
 	int count = 0;
-	int *monument_id;
-	array_foreach(data.monuments, monument_id)
-	{
-		building *b = building_get(*monument_id);
-		if (building_monument_is_grand_temple(b->type)) {
+	static const building_type grand_temples[] = {
+		BUILDING_GRAND_TEMPLE_CERES,
+		BUILDING_GRAND_TEMPLE_NEPTUNE,
+		BUILDING_GRAND_TEMPLE_MERCURY,
+		BUILDING_GRAND_TEMPLE_MARS,
+		BUILDING_GRAND_TEMPLE_VENUS
+	};
+	for (int i = 0; i < 5; i++) {
+		building_type type = grand_temples[i];
+		for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
 			count++;
 		}
 	}
 	return count;
 }
 
-int building_monument_working(int type)
+int building_monument_working(building_type type)
 {
 	int monument_id = building_monument_has_monument(type);
 	building *b = building_get(monument_id);
 	if (!monument_id) {
 		return 0;
 	}
-	if (b->data.monument.monument_phase != MONUMENT_FINISHED || b->state != BUILDING_STATE_IN_USE) {
+	if (b->data.monument.phase != MONUMENT_FINISHED || b->state != BUILDING_STATE_IN_USE) {
 		return 0;
 	}
 	return monument_id;
 }
 
-int building_monument_upgraded(int type)
+int building_monument_upgraded(building_type type)
 {
 	int monument_id = building_monument_working(type);
 	building *b = building_get(monument_id);
@@ -1150,7 +1108,7 @@ int building_monument_upgraded(int type)
 	return monument_id;
 }
 
-int building_monument_module_type(int type)
+int building_monument_module_type(building_type type)
 {
 	int monument_id = building_monument_working(type);
 	building *b = building_get(monument_id);
@@ -1195,13 +1153,13 @@ static void delivery_load(buffer *buf, monument_delivery *delivery, int size)
 
 void building_monument_delivery_save_state(buffer *buf)
 {
-	int buf_size = 4 + data.monument_deliveries.size * ORIGINAL_DELIVERY_BUFFER_SIZE;
+	int buf_size = 4 + monument_deliveries.size * ORIGINAL_DELIVERY_BUFFER_SIZE;
 	uint8_t *buf_data = malloc(buf_size);
 	buffer_init(buf, buf_data, buf_size);
 	buffer_write_i32(buf, ORIGINAL_DELIVERY_BUFFER_SIZE);
 
 	monument_delivery *delivery;
-	array_foreach(data.monument_deliveries, delivery)
+	array_foreach(monument_deliveries, delivery)
 	{
 		delivery_save(buf, delivery);
 	}
@@ -1219,13 +1177,13 @@ void building_monument_delivery_load_state(buffer *buf, int includes_delivery_bu
 
 	int deliveries_to_load = buf_size / delivery_buf_size;
 
-	if (!array_init(data.monument_deliveries, DELIVERY_ARRAY_SIZE_STEP, 0, delivery_in_use) ||
-		!array_expand(data.monument_deliveries, deliveries_to_load)) {
+	if (!array_init(monument_deliveries, DELIVERY_ARRAY_SIZE_STEP, 0, delivery_in_use) ||
+		!array_expand(monument_deliveries, deliveries_to_load)) {
 		log_error("Failed to create the monument deliveries array. The game may crash.", 0, 0);
 	}
 
 	for (int i = 0; i < deliveries_to_load; i++) {
-		delivery_load(buf, array_next(data.monument_deliveries), delivery_buf_size);
+		delivery_load(buf, array_next(monument_deliveries), delivery_buf_size);
 	}
 }
 
@@ -1247,5 +1205,5 @@ int building_monument_toggle_construction_halted(building *b)
 
 int building_monument_is_unfinished_monument(const building *b)
 {
-	return building_monument_is_monument(b) && b->data.monument.monument_phase != MONUMENT_FINISHED;
+	return building_monument_is_monument(b) && b->data.monument.phase != MONUMENT_FINISHED;
 }

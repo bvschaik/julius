@@ -76,9 +76,10 @@ void game_undo_add_building(building *b)
     }
 }
 
-void game_undo_adjust_building(building * b){
+void game_undo_adjust_building(building *b)
+{
     for (int i = 0; i < MAX_UNDO_BUILDINGS; i++) {
-        if(data.buildings[i].id == b->id){
+        if (data.buildings[i].id == b->id) {
             // found! update the building now
             memcpy(&data.buildings[i], b, sizeof(building));
         }
@@ -222,8 +223,10 @@ void game_undo_perform(void)
     if (data.type == BUILDING_CLEAR_LAND) {
         for (int i = 0; i < data.num_buildings; i++) {
             if (data.buildings[i].id) {
-                building *b = building_restore(&data.buildings[i]);
+                building *b = building_restore_from_undo(&data.buildings[i]);
                 switch (b->type) {
+                    default:
+                        break;
                     case BUILDING_WAREHOUSE:
                     case BUILDING_GRANARY:
                         if (!building_storage_restore(b->storage_id)) {
@@ -269,7 +272,7 @@ void game_undo_perform(void)
         map_property_restore();
         map_property_clear_constructing_and_deleted();
     } else if (data.type == BUILDING_AQUEDUCT || data.type == BUILDING_ROAD ||
-            data.type == BUILDING_WALL) {
+        data.type == BUILDING_WALL) {
         map_terrain_restore();
         map_aqueduct_restore();
         restore_map_images();
@@ -301,7 +304,6 @@ void game_undo_perform(void)
     }
     map_routing_update_land();
     map_routing_update_walls();
-    building_monument_recalculate_monuments();
     data.num_buildings = 0;
 }
 

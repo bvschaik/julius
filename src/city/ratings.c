@@ -474,11 +474,12 @@ static void calculate_max_prosperity(void)
 {
     int points = 0;
     int houses = 0;
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state && b->house_size) {
-            points += model_get_house(b->subtype.house_level)->prosperity;
-            houses++;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state && b->house_size) {
+                points += model_get_house(b->subtype.house_level)->prosperity;
+                houses++;
+            }
         }
     }
     if (houses > 0) {
@@ -577,27 +578,27 @@ static void update_favor_rating(int is_yearly_update)
             int bonus = 1;
             if (scenario_criteria_culture_enabled() &&
                 city_data.ratings.culture < calc_adjust_with_percentage(
-                    scenario_criteria_culture(), milestone_pct)) {
+                scenario_criteria_culture(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_prosperity_enabled() &&
                 city_data.ratings.prosperity < calc_adjust_with_percentage(
-                    scenario_criteria_prosperity(), milestone_pct)) {
+                scenario_criteria_prosperity(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_peace_enabled() &&
                 city_data.ratings.peace < calc_adjust_with_percentage(
-                    scenario_criteria_peace(), milestone_pct)) {
+                scenario_criteria_peace(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_favor_enabled() &&
                 city_data.ratings.favor < calc_adjust_with_percentage(
-                    scenario_criteria_favor(), milestone_pct)) {
+                scenario_criteria_favor(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_population_enabled() &&
                 city_data.population.population < calc_adjust_with_percentage(
-                    scenario_criteria_population(), milestone_pct)) {
+                scenario_criteria_population(), milestone_pct)) {
                 bonus = 0;
             }
             if (bonus) {
@@ -632,6 +633,7 @@ void city_ratings_update(int is_yearly_update)
     }
 }
 
-int city_ratings_prosperity_max(void) {
+int city_ratings_prosperity_max(void)
+{
     return city_data.ratings.prosperity_max;
 }

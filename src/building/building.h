@@ -3,9 +3,15 @@
 
 #include "building/type.h"
 #include "core/buffer.h"
+#include "core/time.h"
 
-typedef struct {
+typedef struct building {
     int id;
+
+    struct building *prev_of_type;
+    struct building *next_of_type;
+
+    time_millis last_update;
 
     unsigned char state;
     unsigned char faction_id;
@@ -16,7 +22,7 @@ typedef struct {
     unsigned char x;
     unsigned char y;
     short grid_offset;
-    short type;
+    building_type type;
     union {
         short house_level;
         short warehouse_resource_id;
@@ -136,9 +142,8 @@ typedef struct {
             short resources_needed[16];
             int upgrades;
             int progress;
-            short monument_phase;
+            short phase;
         } monument;
-
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;
@@ -171,6 +176,10 @@ int building_count(void);
 
 int building_find(building_type type);
 
+building *building_first_of_type(building_type type);
+
+void building_change_type(building *b, building_type type);
+
 building *building_main(building *b);
 
 building *building_next(building *b);
@@ -179,7 +188,7 @@ building *building_create(building_type type, int x, int y);
 
 void building_clear_related_data(building *b);
 
-building *building_restore(building *b);
+building *building_restore_from_undo(building *to_restore);
 
 void building_trim(void);
 

@@ -44,7 +44,7 @@ static const struct {
     int x;
     int y;
     int offset;
-} EXPAND_DIRECTION_DELTA[MAX_DIR] = {{0, 0, 0}, {-1, -1, -GRID_SIZE - 1}, {-1, 0, -1}, {0, -1, -GRID_SIZE}};
+} EXPAND_DIRECTION_DELTA[MAX_DIR] = { {0, 0, 0}, {-1, -1, -GRID_SIZE - 1}, {-1, 0, -1}, {0, -1, -GRID_SIZE} };
 
 static struct {
     int x;
@@ -55,7 +55,7 @@ static struct {
 
 void building_house_change_to(building *house, building_type type)
 {
-    house->type = type;
+    building_change_type(house, type);
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
     int image_id = image_group(HOUSE_IMAGE[house->subtype.house_level].group);
     if (house->house_is_merged) {
@@ -80,7 +80,7 @@ static void create_vacant_lot(int x, int y, int image_id)
 
 void building_house_change_to_vacant_lot(building *house)
 {
-    house->type = BUILDING_HOUSE_VACANT_LOT;
+    building_change_type(house, BUILDING_HOUSE_VACANT_LOT);
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
     int image_id = image_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
     if (house->house_is_merged) {
@@ -89,7 +89,6 @@ void building_house_change_to_vacant_lot(building *house)
         house->size = house->house_size = 1;
         house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
         map_building_tiles_add(house->id, house->x, house->y, 1, image_id, TERRAIN_BUILDING);
-
         create_vacant_lot(house->x + 1, house->y, image_id);
         create_vacant_lot(house->x, house->y + 1, image_id);
         create_vacant_lot(house->x + 1, house->y + 1, image_id);
@@ -149,7 +148,7 @@ void building_house_merge(building *house)
     if (house->house_is_merged) {
         return;
     }
-    if (!config_get(CONFIG_GP_CH_ALL_HOUSES_MERGE)) {    
+    if (!config_get(CONFIG_GP_CH_ALL_HOUSES_MERGE)) {
         if ((map_random_get(house->grid_offset) & 7) >= 5) {
             return;
         }
@@ -162,8 +161,8 @@ void building_house_merge(building *house)
             if (other_house->id == house->id) {
                 num_house_tiles++;
             } else if (other_house->state == BUILDING_STATE_IN_USE && other_house->house_size &&
-                    other_house->subtype.house_level == house->subtype.house_level &&
-                    !other_house->house_is_merged) {
+                other_house->subtype.house_level == house->subtype.house_level &&
+                !other_house->house_is_merged) {
                 num_house_tiles++;
             }
         }
@@ -289,7 +288,8 @@ static void copy_house_data(building *house, const building *main_house)
     house->data.house.theater = main_house->data.house.theater;
 }
 
-static void create_splitted_house_tile(const building *main_house, building_type type, int x, int y, int image_id, int population, const int *inventory)
+static void create_splitted_house_tile(building *main_house, building_type type,
+    int x, int y, int image_id, int population, const int *inventory)
 {
     building *house = building_create(type, x, y);
     house->house_population = population;
@@ -299,7 +299,7 @@ static void create_splitted_house_tile(const building *main_house, building_type
     copy_house_data(house, main_house);
     house->distance_from_entry = 0;
     map_building_tiles_add(house->id, house->x, house->y, 1,
-                           image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
+        image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
 }
 
 static void split_size2(building *house, building_type new_type)
@@ -316,7 +316,7 @@ static void split_size2(building *house, building_type new_type)
     map_building_tiles_remove(house->id, house->x, house->y);
 
     // main tile
-    house->type = new_type;
+    building_change_type(house, new_type);
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
     house->size = house->house_size = 1;
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
@@ -329,7 +329,7 @@ static void split_size2(building *house, building_type new_type)
 
     int image_id = house_image_group(house->subtype.house_level);
     map_building_tiles_add(house->id, house->x, house->y, house->size,
-                           image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
+        image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
     create_splitted_house_tile(house, house->type, house->x + 1, house->y, image_id, population_per_tile, inventory_per_tile);
@@ -351,7 +351,7 @@ static void split_size3(building *house)
     map_building_tiles_remove(house->id, house->x, house->y);
 
     // main tile
-    house->type = BUILDING_HOUSE_MEDIUM_INSULA;
+    building_change_type(house, BUILDING_HOUSE_MEDIUM_INSULA);
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
     house->size = house->house_size = 1;
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
@@ -364,7 +364,7 @@ static void split_size3(building *house)
 
     int image_id = house_image_group(house->subtype.house_level);
     map_building_tiles_add(house->id, house->x, house->y, house->size,
-                           image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
+        image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
     create_splitted_house_tile(house, house->type, house->x, house->y + 1, image_id, population_per_tile, inventory_per_tile);
@@ -402,7 +402,7 @@ void building_house_expand_to_large_insula(building *house)
     split(house, 4);
     prepare_for_merge(house->id, 4);
 
-    house->type = BUILDING_HOUSE_LARGE_INSULA;
+    building_change_type(house, BUILDING_HOUSE_LARGE_INSULA);
     house->subtype.house_level = HOUSE_LARGE_INSULA;
     house->size = house->house_size = 2;
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
@@ -423,7 +423,7 @@ void building_house_expand_to_large_villa(building *house)
     split(house, 9);
     prepare_for_merge(house->id, 9);
 
-    house->type = BUILDING_HOUSE_LARGE_VILLA;
+    building_change_type(house, BUILDING_HOUSE_LARGE_VILLA);
     house->subtype.house_level = HOUSE_LARGE_VILLA;
     house->size = house->house_size = 3;
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
@@ -444,7 +444,7 @@ void building_house_expand_to_large_palace(building *house)
     split(house, 16);
     prepare_for_merge(house->id, 16);
 
-    house->type = BUILDING_HOUSE_LARGE_PALACE;
+    building_change_type(house, BUILDING_HOUSE_LARGE_PALACE);
     house->subtype.house_level = HOUSE_LARGE_PALACE;
     house->size = house->house_size = 4;
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
@@ -479,7 +479,7 @@ void building_house_devolve_from_large_villa(building *house)
     map_building_tiles_remove(house->id, house->x, house->y);
 
     // main tile
-    house->type = BUILDING_HOUSE_MEDIUM_VILLA;
+    building_change_type(house, BUILDING_HOUSE_MEDIUM_VILLA);
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
     house->size = house->house_size = 2;
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
@@ -492,9 +492,9 @@ void building_house_devolve_from_large_villa(building *house)
 
     int image_id = house_image_group(house->subtype.house_level);
     map_building_tiles_add(house->id, house->x, house->y, house->size,
-                           image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
+        image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
 
-    // the other tiles (new buildings)
+// the other tiles (new buildings)
     image_id = house_image_group(HOUSE_MEDIUM_INSULA);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 2, house->y, image_id, population_per_tile, inventory_per_tile);
@@ -522,7 +522,7 @@ void building_house_devolve_from_large_palace(building *house)
     map_building_tiles_remove(house->id, house->x, house->y);
 
     // main tile
-    house->type = BUILDING_HOUSE_MEDIUM_PALACE;
+    building_change_type(house, BUILDING_HOUSE_MEDIUM_PALACE);
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
     house->size = house->house_size = 3;
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);

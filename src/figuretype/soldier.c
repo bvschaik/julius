@@ -16,7 +16,7 @@
 #include "map/grid.h"
 #include "map/point.h"
 
-static const map_point ALTERNATIVE_POINTS[] = {{-1, -6},
+static const map_point ALTERNATIVE_POINTS[] = { {-1, -6},
     {0, -1}, {1, -1}, {1, 0}, {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1},
     {0, -2}, {1, -2}, {2, -2}, {2, -1}, {2, 0}, {2, 1}, {2, 2}, {1, 2},
     {0, 2}, {-1, 2}, {-2, 2}, {-2, 1}, {-2, 0}, {-2, -1}, {-2, -2}, {-1, -2},
@@ -86,9 +86,9 @@ void figure_military_standard_action(figure *f)
     }
 }
 
-static void javelin_launch_missile(figure *f)
+static figure *javelin_launch_missile(figure *f)
 {
-    map_point tile = {-1, -1};
+    map_point tile = { -1, -1 };
     f->wait_ticks_missile++;
     if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
         f->wait_ticks_missile = 0;
@@ -104,7 +104,9 @@ static void javelin_launch_missile(figure *f)
             if (tile.x == -1 || tile.y == -1) {
                 map_point_get_last_result(&tile);
             }
-            figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_JAVELIN);
+            int soldier_id = f->id;
+            figure_create_missile(soldier_id, f->x, f->y, tile.x, tile.y, FIGURE_JAVELIN);
+            f = figure_get(f->id);
             formation_record_missile_fired(formation_get(f->formation_id));
         }
         f->attack_image_offset++;
@@ -112,6 +114,7 @@ static void javelin_launch_missile(figure *f)
             f->attack_image_offset = 0;
         }
     }
+    return f;
 }
 
 static void legionary_attack_adjacent_enemy(figure *f)
@@ -336,7 +339,7 @@ void figure_soldier_action(figure *f)
             }
             if (f->action_state != FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD) {
                 if (f->type == FIGURE_FORT_JAVELIN) {
-                    javelin_launch_missile(f);
+                    f = javelin_launch_missile(f);
                 } else if (f->type == FIGURE_FORT_LEGIONARY) {
                     legionary_attack_adjacent_enemy(f);
                 }
@@ -370,22 +373,23 @@ void figure_soldier_action(figure *f)
                 }
             }
             break;
-        case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE: {
-            const map_tile *exit = city_map_exit_point();
-            f->formation_at_rest = 0;
-            f->destination_x = exit->x;
-            f->destination_y = exit->y;
-            figure_movement_move_ticks(f, speed_factor);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->action_state = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
-                figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_REROUTE) {
-                figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_LOST) {
-                f->state = FIGURE_STATE_DEAD;
+        case FIGURE_ACTION_87_SOLDIER_GOING_TO_DISTANT_BATTLE:
+            {
+                const map_tile *exit = city_map_exit_point();
+                f->formation_at_rest = 0;
+                f->destination_x = exit->x;
+                f->destination_y = exit->y;
+                figure_movement_move_ticks(f, speed_factor);
+                if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                    f->action_state = FIGURE_ACTION_89_SOLDIER_AT_DISTANT_BATTLE;
+                    figure_route_remove(f);
+                } else if (f->direction == DIR_FIGURE_REROUTE) {
+                    figure_route_remove(f);
+                } else if (f->direction == DIR_FIGURE_LOST) {
+                    f->state = FIGURE_STATE_DEAD;
+                }
+                break;
             }
-            break;
-        }
         case FIGURE_ACTION_88_SOLDIER_RETURNING_FROM_DISTANT_BATTLE:
             f->is_ghost = 0;
             f->wait_ticks = 0;

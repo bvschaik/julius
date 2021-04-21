@@ -27,7 +27,11 @@
 
 #define BUILDING_ARRAY_SIZE_STEP 2000
 
-static array(building) buildings;
+static struct {
+    array(building) buildings;
+    building *first_of_type[BUILDING_TYPE_MAX];
+    building *last_of_type[BUILDING_TYPE_MAX];
+} data;
 
 static struct {
     int created_sequence;
@@ -37,24 +41,27 @@ static struct {
 
 building *building_get(int id)
 {
-    return array_item(buildings, id);
+    return array_item(data.buildings, id);
 }
 
 int building_count(void)
 {
-    return buildings.size;
+    return data.buildings.size;
 }
 
 int building_find(building_type type)
 {
-    building *b;
-    array_foreach(buildings, b)
-    {
-        if (b->state == BUILDING_STATE_IN_USE && b->type == type) {
+    for (building *b = data.first_of_type[type]; b; b = b->next_of_type) {
+        if (b->state == BUILDING_STATE_IN_USE) {
             return b->id;
         }
     }
     return 0;
+}
+
+building *building_first_of_type(building_type type)
+{
+    return data.first_of_type[type];
 }
 
 building *building_main(building *b)
@@ -63,23 +70,84 @@ building *building_main(building *b)
         if (b->prev_part_building_id <= 0) {
             return b;
         }
-        b = array_item(buildings, b->prev_part_building_id);
+        b = array_item(data.buildings, b->prev_part_building_id);
     }
-    return array_first(buildings);
+    return array_first(data.buildings);
 }
 
 building *building_next(building *b)
 {
-    return array_item(buildings, b->next_part_building_id);
+    return array_item(data.buildings, b->next_part_building_id);
+}
+
+static void fill_adjacent_types(building *b)
+{
+    building *first = data.first_of_type[b->type];
+    building *last = data.last_of_type[b->type];
+    if (!first || !last) {
+        b->prev_of_type = 0;
+        b->next_of_type = 0;
+        data.first_of_type[b->type] = b;
+        data.last_of_type[b->type] = b;
+    } else if (b->id < first->id) {
+        first->prev_of_type = b;
+        b->next_of_type = first;
+        b->prev_of_type = 0;
+        data.first_of_type[b->type] = b;
+    } else if (b->id > last->id) {
+        last->next_of_type = b;
+        b->prev_of_type = last;
+        b->next_of_type = 0;
+        data.last_of_type[b->type] = b;
+    } else if (b != first && b != last) {
+        int id = b->id - 1;
+        while (id) {
+            building *prev = building_get(id);
+            if (prev->state != BUILDING_STATE_UNUSED &&
+                prev->type == b->type) {
+                b->prev_of_type = prev;
+                b->next_of_type = prev->next_of_type;
+                b->next_of_type->prev_of_type = b;
+                prev->next_of_type = b;
+                break;
+            }
+            id--;
+        }
+    }
+}
+
+static void remove_adjacent_types(building *b)
+{
+    building *first = data.first_of_type[b->type];
+    building *last = data.last_of_type[b->type];
+    if (b == first && b == last) {
+        data.first_of_type[b->type] = 0;
+        data.last_of_type[b->type] = 0;
+    } else if (b == first) {
+        data.first_of_type[b->type] = b->next_of_type;
+        if (b->next_of_type) {
+            b->next_of_type->prev_of_type = 0;
+        }
+    } else if (b == last) {
+        data.last_of_type[b->type] = b->prev_of_type;
+        if (b->prev_of_type) {
+            b->prev_of_type->next_of_type = 0;
+        }
+    } else {
+        b->prev_of_type->next_of_type = b->next_of_type;
+        b->next_of_type->prev_of_type = b->prev_of_type;
+    }
+    b->prev_of_type = 0;
+    b->next_of_type = 0;
 }
 
 building *building_create(building_type type, int x, int y)
 {
     building *b;
-    array_new_item(buildings, 1, b);
+    array_new_item(data.buildings, 1, b);
     if (!b) {
         city_warning_show(WARNING_DATA_LIMIT_REACHED);
-        return array_first(buildings);
+        return array_first(data.buildings);
     }
 
     const building_properties *props = building_properties_for_type(type);
@@ -94,6 +162,8 @@ building *building_create(building_type type, int x, int y)
     b->created_sequence = extra.created_sequence++;
     b->sentiment.house_happiness = 100;
     b->distance_from_entry = 0;
+
+    fill_adjacent_types(b);
 
     // house size
     b->house_size = 0;
@@ -212,14 +282,25 @@ building *building_create(building_type type, int x, int y)
     return b;
 }
 
+void building_change_type(building *b, building_type type)
+{
+    if (b->type == type) {
+        return;
+    }
+    remove_adjacent_types(b);
+    b->type = type;
+    fill_adjacent_types(b);
+}
+
 static void building_delete(building *b)
 {
     building_clear_related_data(b);
+    remove_adjacent_types(b);
     int id = b->id;
     memset(b, 0, sizeof(building));
     b->id = id;
 
-    array_trim(buildings);
+    array_trim(data.buildings);
 }
 
 void building_clear_related_data(building *b)
@@ -257,19 +338,20 @@ void building_clear_related_data(building *b)
     }
 }
 
-building *building_restore(building *b)
+building *building_restore_from_undo(building *to_restore)
 {
-    building *restored = array_item(buildings, b->id);
-    memcpy(restored, b, sizeof(building));
-    if (b->id >= buildings.size) {
-        buildings.size = b->id + 1;
+    building *b = array_item(data.buildings, to_restore->id);
+    memcpy(b, to_restore, sizeof(building));
+    if (b->id >= data.buildings.size) {
+        data.buildings.size = b->id + 1;
     }
-    return restored;
+    fill_adjacent_types(b);
+    return b;
 }
 
 void building_trim(void)
 {
-    array_trim(buildings);
+    array_trim(data.buildings);
 }
 
 void building_update_state(void)
@@ -279,7 +361,7 @@ void building_update_state(void)
     int road_recalc = 0;
     int aqueduct_recalc = 0;
     building *b;
-    array_foreach(buildings, b)
+    array_foreach(data.buildings, b)
     {
         if (b->state == BUILDING_STATE_CREATED) {
             b->state = BUILDING_STATE_IN_USE;
@@ -332,7 +414,7 @@ void building_update_state(void)
 void building_update_desirability(void)
 {
     building *b;
-    array_foreach(buildings, b)
+    array_foreach(data.buildings, b)
     {
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
@@ -393,7 +475,7 @@ int building_is_venus_temple(building_type type)
     return (type == BUILDING_SMALL_TEMPLE_VENUS || type == BUILDING_LARGE_TEMPLE_VENUS);
 }
 
-// all buildings capable of collecting and storing goods as a market
+// All buildings capable of collecting and storing goods as a market
 int building_has_supplier_inventory(building_type type)
 {
     return (type == BUILDING_MARKET ||
@@ -444,10 +526,11 @@ int building_get_levy(const building *b)
     if (levy <= 0) {
         return 0;
     }
-    //Pantheon base bonus
+    // Pantheon base bonus
     if (building_monument_working(BUILDING_PANTHEON) &&
         ((b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) ||
-        (b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) || b->type == BUILDING_ORACLE)) {
+        (b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) ||
+        b->type == BUILDING_ORACLE)) {
         levy = (levy / 4) * 3;
     }
 
@@ -459,7 +542,6 @@ int building_get_tourism(const building *b)
 {
     return b->is_tourism_venue;
 }
-
 
 void building_totals_add_corrupted_house(int unfixable)
 {
@@ -481,9 +563,9 @@ static int building_in_use(const building *b)
 
 void building_clear_all(void)
 {
-    if (!array_init(buildings, BUILDING_ARRAY_SIZE_STEP, initialize_new_building, building_in_use) ||
-        !array_next(buildings)) { // Ignore first building
-        log_error("Unable to allocate enought memory for the building array. The game will now crash.", 0, 0);
+    if (!array_init(data.buildings, BUILDING_ARRAY_SIZE_STEP, initialize_new_building, building_in_use) ||
+        !array_next(data.buildings)) { // Ignore first building
+        log_error("Unable to allocate enough memory for the building array. The game will now crash.", 0, 0);
     }
 
     extra.created_sequence = 0;
@@ -494,17 +576,17 @@ void building_clear_all(void)
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
     buffer *sequence, buffer *corrupt_houses)
 {
-    int buf_size = 4 + buildings.size * BUILDING_STATE_CURRENT_BUFFER_SIZE;
+    int buf_size = 4 + data.buildings.size * BUILDING_STATE_CURRENT_BUFFER_SIZE;
     uint8_t *buf_data = malloc(buf_size);
     buffer_init(buf, buf_data, buf_size);
     buffer_write_i32(buf, BUILDING_STATE_CURRENT_BUFFER_SIZE);
     building *b;
-    array_foreach(buildings, b)
+    array_foreach(data.buildings, b)
     {
         building_state_save_to_buffer(buf, b);
     }
-    buffer_write_i32(highest_id, buildings.size);
-    buffer_write_i32(highest_id_ever, buildings.size);
+    buffer_write_i32(highest_id, data.buildings.size);
+    buffer_write_i32(highest_id_ever, data.buildings.size);
     buffer_skip(highest_id_ever, 4);
     buffer_write_i32(sequence, extra.created_sequence);
 
@@ -524,28 +606,32 @@ void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, 
 
     int buildings_to_load = buf_size / building_buf_size;
 
-    if (!array_init(buildings, BUILDING_ARRAY_SIZE_STEP, initialize_new_building, building_in_use) ||
-        !array_expand(buildings, buildings_to_load)) {
+    if (!array_init(data.buildings, BUILDING_ARRAY_SIZE_STEP, initialize_new_building, building_in_use) ||
+        !array_expand(data.buildings, buildings_to_load)) {
         log_error("Unable to allocate enought memory for the building array. The game will now crash.", 0, 0);
     }
+
+    memset(data.first_of_type, 0, sizeof(data.first_of_type));
+    memset(data.last_of_type, 0, sizeof(data.last_of_type));
 
     int highest_id_in_use = 0;
 
     for (int i = 0; i < buildings_to_load; i++) {
-        building *b = array_next(buildings);
+        building *b = array_next(data.buildings);
         building_state_load_from_buffer(buf, b, building_buf_size);
         if (b->state != BUILDING_STATE_UNUSED) {
             highest_id_in_use = i;
+            fill_adjacent_types(b);
         }
     }
 
     // Fix messy old hack that assigned type BUILDING_GARDENS to building 0
-    building *b = array_first(buildings);
+    building *b = array_first(data.buildings);
     if (b->state == BUILDING_STATE_UNUSED && b->type == BUILDING_GARDENS) {
         b->type = BUILDING_NONE;
     }
 
-    buildings.size = highest_id_in_use + 1;
+    data.buildings.size = highest_id_in_use + 1;
 
     extra.created_sequence = buffer_read_i32(sequence);
 

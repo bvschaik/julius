@@ -46,12 +46,14 @@ void building_storage_reset_building_ids(void)
         storage->building_id = 0;
     }
 
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED) {
-            continue;
-        }
-        if (b->type == BUILDING_GRANARY || b->type == BUILDING_WAREHOUSE) {
+    static const building_type types[] = { BUILDING_GRANARY, BUILDING_WAREHOUSE };
+
+    for (int i = 0; i < 2; i++) {
+        building_type type = types[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_UNUSED) {
+                continue;
+            }
             if (b->storage_id) {
                 if (array_item(storages, b->storage_id)->building_id) {
                     // storage is already connected to a building: corrupt, create new

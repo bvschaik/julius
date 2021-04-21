@@ -32,7 +32,7 @@ static int determine_tourist_destination(int x, int y)
 {
     int road_network = map_road_network_get(map_grid_offset(x, y));
 
-    building_list_small_clear();
+    building_list_large_clear();
 
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
@@ -44,14 +44,15 @@ static int determine_tourist_destination(int x, int y)
                 continue;
             }
         }
-        if (b->is_tourism_venue && !b->tourism_disabled && b->distance_from_entry && b->road_network_id == road_network) {
+        if (b->is_tourism_venue && !b->tourism_disabled && b->distance_from_entry
+            && b->road_network_id == road_network) {
             if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) {
                 continue;
             }
-            building_list_small_add(i);
+            building_list_large_add(i);
         }
     }
-    int total_venues = building_list_small_size();
+    int total_venues = building_list_large_size();
     if (total_venues <= 0) {
         return 0;
     }
@@ -59,7 +60,7 @@ static int determine_tourist_destination(int x, int y)
     int index;
 
     index = random_from_stdlib() % total_venues;
-    building *b = building_get(building_list_small_item(index));
+    building *b = building_get(building_list_large_item(index));
 
     return b->id;
 }
@@ -82,34 +83,34 @@ static int determine_destination(int x, int y, building_type type1, building_typ
 {
     int road_network = map_road_network_get(map_grid_offset(x, y));
 
-    building_list_small_clear();
+    building_list_large_clear();
 
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
-            continue;
-        }
-        if (b->type != type1 && b->type != type2 && b->type != type3) {
-            continue;
-        }
-        if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && b->data.monument.monument_phase != -1) {
-            continue;
-        }
-        if (b->distance_from_entry && b->road_network_id == road_network) {
-            if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) {
+    building_type types[3] = { type1, type2, type3 };
+
+    for (int i = 0; i < 3; i++) {
+        for (building *b = building_first_of_type(types[i]); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
                 continue;
             }
-            building_list_small_add(i);
+            if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && b->data.monument.phase != -1) {
+                continue;
+            }
+            if (b->distance_from_entry && b->road_network_id == road_network) {
+                if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) {
+                    continue;
+                }
+                building_list_large_add(b->id);
+            }
         }
     }
-    int total_venues = building_list_small_size();
+    int total_venues = building_list_large_size();
     if (total_venues <= 0) {
         return 0;
     }
     int min_building_id = 0;
     int min_distance = 10000;
     for (int i = 0; i < total_venues; i++) {
-        building *b = building_get(building_list_small_item(i));
+        building *b = building_get(building_list_large_item(i));
         int days_left;
         if (b->type == type1) {
             days_left = b->data.entertainment.days1;
@@ -121,7 +122,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
         int dist = 2 * days_left + calc_maximum_distance(x, y, b->x, b->y);
         if (dist < min_distance) {
             min_distance = dist;
-            min_building_id = building_list_small_item(i);
+            min_building_id = building_list_large_item(i);
         }
     }
     return min_building_id;

@@ -51,15 +51,11 @@ static void mark_well_access(int well_id, int radius)
 
 void map_water_supply_update_houses(void)
 {
-    building_list_small_clear();
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
-            continue;
-        }
-        if (b->type == BUILDING_WELL) {
-            building_list_small_add(i);
-        } else if (b->house_size) {
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
+                continue;
+            }
             b->has_water_access = 0;
             b->has_well_access = 0;
             if (map_terrain_exists_tile_in_area_with_type(
@@ -68,9 +64,10 @@ void map_water_supply_update_houses(void)
             }
         }
     }
-    int total_wells = building_list_small_size();
-    for (int i = 0; i < total_wells; i++) {
-        mark_well_access(building_list_small_item(i), map_water_supply_well_radius());
+    for (building *b = building_first_of_type(BUILDING_WELL); b; b = b->next_of_type) {
+        if (b->state == BUILDING_STATE_IN_USE) {
+            mark_well_access(b->id, map_water_supply_well_radius());
+        }
     }
 }
 
@@ -152,27 +149,25 @@ void map_water_supply_update_reservoir_fountain(void)
     map_terrain_remove_all(TERRAIN_FOUNTAIN_RANGE | TERRAIN_RESERVOIR_RANGE);
     // reservoirs
     set_all_aqueducts_to_no_water();
-    building_list_large_clear();
-    // mark reservoirs next to water
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_RESERVOIR) {
-            building_list_large_add(i);
-            if (map_terrain_exists_tile_in_area_with_type(b->x - 1, b->y - 1, 5, TERRAIN_WATER)) {
-                b->has_water_access = 2;
-            } else {
-                b->has_water_access = 0;
-            }
+    for (building *b = building_first_of_type(BUILDING_RESERVOIR); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+        if (map_terrain_exists_tile_in_area_with_type(b->x - 1, b->y - 1, 5, TERRAIN_WATER)) {
+            b->has_water_access = 2;
+        } else {
+            b->has_water_access = 0;
         }
     }
-    int total_reservoirs = building_list_large_size();
     // fill reservoirs from full ones
     int changed = 1;
     static const int CONNECTOR_OFFSETS[] = { OFFSET(1,-1), OFFSET(3,1), OFFSET(1,3), OFFSET(-1,1) };
     while (changed == 1) {
         changed = 0;
-        for (int i = 0; i < total_reservoirs; i++) {
-            building *b = building_get(building_list_large_item(i));
+        for (building *b = building_first_of_type(BUILDING_RESERVOIR); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
+                continue;
+            }
             if (b->has_water_access == 2) {
                 b->has_water_access = 1;
                 changed = 1;
@@ -183,9 +178,8 @@ void map_water_supply_update_reservoir_fountain(void)
         }
     }
     // mark reservoir ranges
-    for (int i = 0; i < total_reservoirs; i++) {
-        building *b = building_get(building_list_large_item(i));
-        if (b->has_water_access) {
+    for (building *b = building_first_of_type(BUILDING_RESERVOIR); b; b = b->next_of_type) {
+        if (b->state == BUILDING_STATE_IN_USE && b->has_water_access) {
             map_terrain_add_with_radius(b->x, b->y, 3, map_water_supply_reservoir_radius(), TERRAIN_RESERVOIR_RANGE);
         }
     }
@@ -197,9 +191,8 @@ void map_water_supply_update_reservoir_fountain(void)
     }
 
     // fountains
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_FOUNTAIN) {
+    for (building *b = building_first_of_type(BUILDING_FOUNTAIN); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
         int des = b->desirability;
@@ -217,7 +210,7 @@ void map_water_supply_update_reservoir_fountain(void)
             image_id = image_group(GROUP_BUILDING_FOUNTAIN_1);
             b->upgrade_level = 0;
         }
-        map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+        map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         if (map_terrain_is(b->grid_offset, TERRAIN_RESERVOIR_RANGE) && b->num_workers) {
             b->has_water_access = 1;
             map_terrain_add_with_radius(b->x, b->y, 1,
@@ -227,42 +220,37 @@ void map_water_supply_update_reservoir_fountain(void)
         }
     }
     //ponds
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
+    static const building_type ponds[] = { BUILDING_SMALL_POND, BUILDING_LARGE_POND };
+    for (int i = 0; i < 2; i++) {
+        for (building *b = building_first_of_type(ponds[i]); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
+                continue;
+            }
+            if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
+                b->has_water_access = 1;
+            } else {
+                b->has_water_access = 0;
+            }
 
-        if (b->type != BUILDING_SMALL_POND && b->type != BUILDING_LARGE_POND) {
-            continue;
+            int offset = 0;
+            if (scenario_property_climate() == CLIMATE_DESERT) {
+                offset += POND_CLIMATE_IMAGE_OFFSET;
+            }
+            if (b->has_water_access) {
+                offset += POND_WATERED_IMAGE_OFFSET;
+            }
+            if (b->type == BUILDING_LARGE_POND) {
+                offset += POND_LARGE_IMAGE_OFFSET;
+            }
+            map_building_tiles_add(b->id, b->x, b->y, b->size,
+                assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset,
+                TERRAIN_BUILDING);
         }
-        if (b->state != BUILDING_STATE_IN_USE) {
-            continue;
-        }
-
-        if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
-            b->has_water_access = 1;
-        } else {
-            b->has_water_access = 0;
-        }
-
-        int offset = 0;
-        if (scenario_property_climate() == CLIMATE_DESERT) {
-            offset += POND_CLIMATE_IMAGE_OFFSET;
-        }
-        if (b->has_water_access) {
-            offset += POND_WATERED_IMAGE_OFFSET;
-        }
-        if (b->type == BUILDING_LARGE_POND) {
-            offset += POND_LARGE_IMAGE_OFFSET;
-        }
-
-        map_building_tiles_add(b->id, b->x, b->y, b->size, assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset, TERRAIN_BUILDING);
-
     }
 
     // Large statues, to check if they should play the animation
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-
-        if (b->type != BUILDING_LARGE_STATUE) {
+    for (building *b = building_first_of_type(BUILDING_LARGE_STATUE); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
         if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {

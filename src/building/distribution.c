@@ -84,6 +84,14 @@ static void update_good_resource(inventory_storage_info *info, resource_type res
     }
 }
 
+static int is_invalid_destination(building *b, int permission, int road_network)
+{
+    return (b->state != BUILDING_STATE_IN_USE ||
+        !b->has_road_access || b->distance_from_entry <= 0 ||
+        b->road_network_id != road_network ||
+        !building_storage_get_permission(permission, b));
+}
+
 int building_distribution_get_inventory_storages(inventory_storage_info *info, building_type type,
     int road_network, int x, int y, int max_distance)
 {
@@ -92,12 +100,7 @@ int building_distribution_get_inventory_storages(inventory_storage_info *info, b
         info[i].building_id = 0;
     }
 
-    int permission; 
-
-    if (!type) {
-        // for looter walkers
-        permission = 1;
-    }
+    int permission;
 
     if (type == BUILDING_MESS_HALL) {
         permission = BUILDING_STORAGE_PERMISSION_QUARTERMASTER;
@@ -105,28 +108,28 @@ int building_distribution_get_inventory_storages(inventory_storage_info *info, b
         permission = BUILDING_STORAGE_PERMISSION_MARKET;
     }
 
-    for (int i = 1; i < building_count(); i++) {
-        building *b_dst = building_get(i);
-
-        if (type && (b_dst->state != BUILDING_STATE_IN_USE ||
-            (b_dst->type != BUILDING_GRANARY && b_dst->type != BUILDING_WAREHOUSE) ||
-            !b_dst->has_road_access || b_dst->distance_from_entry <= 0 ||
-            b_dst->road_network_id != road_network ||
-            !building_storage_get_permission(permission, b_dst))) {
+    for (building *b = building_first_of_type(BUILDING_GRANARY); b; b = b->next_of_type) {
+        // Looter walkers have no type
+        if (type && is_invalid_destination(b, permission, road_network)) {
             continue;
         }
-        int distance = calc_maximum_distance(x, y, b_dst->x, b_dst->y);
-        if (b_dst->type == BUILDING_GRANARY) {
-            update_food_resource(&info[INVENTORY_WHEAT], RESOURCE_WHEAT, b_dst, distance);
-            update_food_resource(&info[INVENTORY_VEGETABLES], RESOURCE_VEGETABLES, b_dst, distance);
-            update_food_resource(&info[INVENTORY_FRUIT], RESOURCE_FRUIT, b_dst, distance);
-            update_food_resource(&info[INVENTORY_MEAT], RESOURCE_MEAT, b_dst, distance);
-        } else {
-            update_good_resource(&info[INVENTORY_WINE], RESOURCE_WINE, b_dst, distance);
-            update_good_resource(&info[INVENTORY_OIL], RESOURCE_OIL, b_dst, distance);
-            update_good_resource(&info[INVENTORY_POTTERY], RESOURCE_POTTERY, b_dst, distance);
-            update_good_resource(&info[INVENTORY_FURNITURE], RESOURCE_FURNITURE, b_dst, distance);
+        int distance = calc_maximum_distance(x, y, b->x, b->y);
+
+        update_food_resource(&info[INVENTORY_WHEAT], RESOURCE_WHEAT, b, distance);
+        update_food_resource(&info[INVENTORY_VEGETABLES], RESOURCE_VEGETABLES, b, distance);
+        update_food_resource(&info[INVENTORY_FRUIT], RESOURCE_FRUIT, b, distance);
+        update_food_resource(&info[INVENTORY_MEAT], RESOURCE_MEAT, b, distance);
+    }
+    for (building *b = building_first_of_type(BUILDING_WAREHOUSE); b; b = b->next_of_type) {
+        if (type && is_invalid_destination(b, permission, road_network)) {
+            continue;
         }
+        int distance = calc_maximum_distance(x, y, b->x, b->y);
+
+        update_good_resource(&info[INVENTORY_WINE], RESOURCE_WINE, b, distance);
+        update_good_resource(&info[INVENTORY_OIL], RESOURCE_OIL, b, distance);
+        update_good_resource(&info[INVENTORY_POTTERY], RESOURCE_POTTERY, b, distance);
+        update_good_resource(&info[INVENTORY_FURNITURE], RESOURCE_FURNITURE, b, distance);
     }
 
     for (int i = 0; i < INVENTORY_MAX; i++) {

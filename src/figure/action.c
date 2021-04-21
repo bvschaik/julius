@@ -24,8 +24,7 @@
 
 
 static void figure_nobody_action(figure *f)
-{
-}
+{}
 
 static void (*figure_action_callbacks[])(figure *f) = {
     figure_nobody_action, //0
@@ -116,7 +115,7 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_supplier_action,
     figure_robber_action,
     figure_looter_action,
-}; 
+};
 
 void figure_action_handle(void)
 {

@@ -66,15 +66,16 @@ static int closest_house_with_room(int x, int y)
 {
     int min_dist = 1000;
     int min_building_id = 0;
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size
-            && b->distance_from_entry > 0 && b->house_population_room > 0) {
-            if (!b->immigrant_figure_id) {
-                int dist = calc_maximum_distance(x, y, b->x, b->y);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    min_building_id = i;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->house_size &&
+                b->distance_from_entry > 0 && b->house_population_room > 0) {
+                if (!b->immigrant_figure_id) {
+                    int dist = calc_maximum_distance(x, y, b->x, b->y);
+                    if (dist < min_dist) {
+                        min_dist = dist;
+                        min_building_id = b->id;
+                    }
                 }
             }
         }

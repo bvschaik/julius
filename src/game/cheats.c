@@ -35,7 +35,7 @@ static void game_cheat_cast_blessing(uint8_t *);
 static void game_cheat_show_tooltip(uint8_t *);
 static void game_cheat_kill_all(uint8_t *);
 static void game_cheat_finish_monuments(uint8_t *);
-static void game_cheat_monument_phase(uint8_t *);
+static void game_cheat_set_monument_phase(uint8_t *);
 static void game_cheat_unlock_all_buildings(uint8_t *);
 static void game_cheat_incite_riot(uint8_t *);
 
@@ -47,7 +47,7 @@ static void (*const execute_command[])(uint8_t *args) = {
     game_cheat_show_tooltip,
     game_cheat_kill_all,
     game_cheat_finish_monuments,
-    game_cheat_monument_phase,
+    game_cheat_set_monument_phase,
     game_cheat_unlock_all_buildings,
     game_cheat_incite_riot
 };
@@ -203,11 +203,11 @@ static void game_cheat_finish_monuments(uint8_t *args)
     city_warning_show_console((uint8_t *) "Monuments finished");
 }
 
-static void game_cheat_monument_phase(uint8_t *args)
+static void game_cheat_set_monument_phase(uint8_t *args)
 {
     int phase = 0;
     parse_integer(args, &phase);
-    building_monument_phase(phase);
+    building_monument_set_construction_phase(phase);
     city_warning_show_console((uint8_t *) "Monuments updated");
 }
 

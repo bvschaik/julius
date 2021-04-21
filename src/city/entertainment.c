@@ -50,50 +50,58 @@ void city_entertainment_calculate_shows(void)
     city_data.entertainment.hippodrome_no_shows_weighted = 0;
     city_data.entertainment.venue_needing_shows = 0;
 
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
+    for (building *b = building_first_of_type(BUILDING_THEATER); b; b = b->next_of_type) {
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
-        switch (b->type) {
-            case BUILDING_THEATER:
-                if (b->data.entertainment.days1) {
-                    city_data.entertainment.theater_shows++;
-                } else {
-                    city_data.entertainment.theater_no_shows_weighted++;
-                }
-                break;
-            case BUILDING_AMPHITHEATER:
-                if (b->data.entertainment.days1) {
-                    city_data.entertainment.amphitheater_shows++;
-                } else {
-                    city_data.entertainment.amphitheater_no_shows_weighted += 2;
-                }
-                if (b->data.entertainment.days2) {
-                    city_data.entertainment.amphitheater_shows++;
-                } else {
-                    city_data.entertainment.amphitheater_no_shows_weighted += 2;
-                }
-                break;
-            case BUILDING_COLOSSEUM || BUILDING_ARENA:
-                if (b->data.entertainment.days1) {
-                    city_data.entertainment.colosseum_shows++;
-                } else {
-                    city_data.entertainment.colosseum_no_shows_weighted += 3;
-                }
-                if (b->data.entertainment.days2) {
-                    city_data.entertainment.colosseum_shows++;
-                } else {
-                    city_data.entertainment.colosseum_no_shows_weighted += 3;
-                }
-                break;
-            case BUILDING_HIPPODROME:
-                if (b->data.entertainment.days1) {
-                    city_data.entertainment.hippodrome_shows++;
-                } else {
-                    city_data.entertainment.hippodrome_no_shows_weighted += 100;
-                }
-                break;
+        if (b->data.entertainment.days1) {
+            city_data.entertainment.theater_shows++;
+        } else {
+            city_data.entertainment.theater_no_shows_weighted++;
+        }
+    }
+    for (building *b = building_first_of_type(BUILDING_AMPHITHEATER); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+        if (b->data.entertainment.days1) {
+            city_data.entertainment.amphitheater_shows++;
+        } else {
+            city_data.entertainment.amphitheater_no_shows_weighted += 2;
+        }
+        if (b->data.entertainment.days2) {
+            city_data.entertainment.amphitheater_shows++;
+        } else {
+            city_data.entertainment.amphitheater_no_shows_weighted += 2;
+        }
+    }
+    static const building_type colosseum_and_arena[] = { BUILDING_COLOSSEUM, BUILDING_ARENA };
+    for (int i = 0; i < 2; i++) {
+        building_type type = colosseum_and_arena[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
+                continue;
+            }
+            if (b->data.entertainment.days1) {
+                city_data.entertainment.colosseum_shows++;
+            } else {
+                city_data.entertainment.colosseum_no_shows_weighted += 3;
+            }
+            if (b->data.entertainment.days2) {
+                city_data.entertainment.colosseum_shows++;
+            } else {
+                city_data.entertainment.colosseum_no_shows_weighted += 3;
+            }
+        }
+    }
+    for (building *b = building_first_of_type(BUILDING_HIPPODROME); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+        if (b->data.entertainment.days1) {
+            city_data.entertainment.hippodrome_shows++;
+        } else {
+            city_data.entertainment.hippodrome_no_shows_weighted += 100;
         }
     }
     int worst_shows = 0;

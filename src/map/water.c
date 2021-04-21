@@ -63,7 +63,7 @@ static int blocked_land_terrain(void)
 }
 
 int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
-                                          int *orientation_absolute, int *orientation_relative)
+    int *orientation_absolute, int *orientation_relative)
 {
     if (adjust_xy == 1) {
         switch (city_view_orientation()) {
@@ -78,8 +78,8 @@ int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
     }
 
     int base_offset = map_grid_offset(x, y);
-    int tile_offsets[] = {OFFSET(0,0), OFFSET(1,0), OFFSET(0,1), OFFSET(1,1)};
-    const int should_be_water[4][4] = {{1, 1, 0, 0}, {0, 1, 0, 1}, {0, 0, 1, 1}, {1, 0, 1, 0}};
+    int tile_offsets[] = { OFFSET(0,0), OFFSET(1,0), OFFSET(0,1), OFFSET(1,1) };
+    const int should_be_water[4][4] = { {1, 1, 0, 0}, {0, 1, 0, 1}, {0, 0, 1, 1}, {1, 0, 1, 0} };
     for (int dir = 0; dir < 4; dir++) {
         int ok_tiles = 0;
         int blocked_tiles = 0;
@@ -131,7 +131,7 @@ int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
 }
 
 int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
-                                          int *orientation_absolute, int *orientation_relative)
+    int *orientation_absolute, int *orientation_relative)
 {
     if (adjust_xy == 1) {
         switch (city_view_orientation()) {
@@ -208,9 +208,8 @@ int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
 int map_water_get_wharf_for_new_fishing_boat(figure *boat, map_point *tile)
 {
     building *wharf = 0;
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_WHARF) {
+    for (building *b = building_first_of_type(BUILDING_WHARF); b; b = b->next_of_type) {
+        if (b->state == BUILDING_STATE_IN_USE) {
             int wharf_boat_id = b->data.industry.fishing_boat_id;
             if (!wharf_boat_id || wharf_boat_id == boat->id) {
                 wharf = b;

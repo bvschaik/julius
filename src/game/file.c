@@ -210,15 +210,16 @@ static void load_empire_data(int is_custom_scenario, int empire_id)
 }
 
 /**
- * search for hippodrome buildings, all three pieces should have the same subtype.orientation 
+ * search for hippodrome buildings, all three pieces should have the same subtype.orientation
  */
-static void check_hippodrome_compatibility(building *b){
-    // if we got the middle part of the hippodrome
-    if(b->next_part_building_id && b->prev_part_building_id){
-        building * next = building_get(b->next_part_building_id);
-        building * prev = building_get(b->prev_part_building_id);
+static void check_hippodrome_compatibility(building *b)
+{
+// if we got the middle part of the hippodrome
+    if (b->next_part_building_id && b->prev_part_building_id) {
+        building *next = building_get(b->next_part_building_id);
+        building *prev = building_get(b->prev_part_building_id);
         // if orientation is different, it means that rotation was not available yet in augustus, so it should be set to 0
-        if(b->subtype.orientation != next->subtype.orientation || b->subtype.orientation != prev->subtype.orientation){
+        if (b->subtype.orientation != next->subtype.orientation || b->subtype.orientation != prev->subtype.orientation) {
             prev->subtype.orientation = 0;
             b->subtype.orientation = 0;
             next->subtype.orientation = 0;
@@ -226,12 +227,10 @@ static void check_hippodrome_compatibility(building *b){
     }
 }
 
-static void check_backward_compatibility(void){
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if(b->type == BUILDING_HIPPODROME){
-            check_hippodrome_compatibility(b);
-        }
+static void check_backward_compatibility(void)
+{
+    for (building *b = building_first_of_type(BUILDING_HIPPODROME); b; b = b->next_of_type) {
+        check_hippodrome_compatibility(b);
     }
 }
 
@@ -268,8 +267,6 @@ static void initialize_saved_game(void)
     map_tiles_determine_gardens();
 
     city_message_clear_scroll();
-
-    building_monument_recalculate_monuments();
 
     game_state_unpause();
 }
@@ -363,7 +360,7 @@ int game_file_start_scenario(const char *scenario_file)
 {
     uint8_t scenario_name[FILE_NAME_MAX];
     encoding_from_utf8(scenario_file, scenario_name, FILE_NAME_MAX);
-    file_remove_extension((char *)scenario_name);
+    file_remove_extension((char *) scenario_name);
     return start_scenario(scenario_name, scenario_file);
 }
 

@@ -34,9 +34,8 @@ void building_dock_update_open_water_access(void)
 {
     map_point river_entry = scenario_map_river_entry();
     map_routing_calculate_distances_water_boat(river_entry.x, river_entry.y);
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && !b->house_size && b->type == BUILDING_DOCK) {
+    for (building *b = building_first_of_type(BUILDING_DOCK); b; b = b->next_of_type) {
+        if (b->state == BUILDING_STATE_IN_USE && !b->house_size) {
             if (map_terrain_is_adjacent_to_open_water(b->x, b->y, 3)) {
                 b->has_water_access = 1;
             } else {
@@ -59,9 +58,9 @@ int building_dock_is_connected_to_open_water(int x, int y)
 
 int building_dock_accepts_ship(int ship_id, int dock_id)
 {
-    building* dock = building_get(dock_id);
-    figure* f = figure_get(ship_id);
-    empire_city* city = empire_city_get(f->empire_city_id);
+    building *dock = building_get(dock_id);
+    figure *f = figure_get(ship_id);
+    empire_city *city = empire_city_get(f->empire_city_id);
     if (!building_dock_can_trade_with_route(city->route_id, dock_id)) {
         return 0;
     }
@@ -81,7 +80,7 @@ int building_dock_can_import_from_ship(building *dock, int ship_id)
     if (trader_has_sold_max(ship->trader_id)) {
         return 0;
     }
-    
+
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         if (building_distribution_is_good_accepted(r - 1, dock)) {
             return 1;
@@ -96,7 +95,7 @@ int building_dock_can_export_to_ship(building *dock, int ship_id)
     if (trader_has_bought_max(ship->trader_id)) {
         return 0;
     }
-    
+
     for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         if (building_distribution_is_good_accepted(r - 1, dock)) {
             return 1;
@@ -121,7 +120,7 @@ static int get_free_destination(int ship_id, int exclude_dock_id, map_point *til
             continue;
         }
 
-        building* dock = building_get(dock_id);
+        building *dock = building_get(dock_id);
         if (dock->data.dock.trade_ship_id) {
             continue;
         }
@@ -243,7 +242,7 @@ int building_dock_get_closer_free_destination(int ship_id, ship_dock_request_typ
 
         if (ship->action_state == FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE &&
             destination_dock_ready_for_ship(ship) &&
-            distance_to_destination < distance_to_dock ) {
+            distance_to_destination < distance_to_dock) {
             continue;
         }
 
@@ -264,7 +263,7 @@ int building_dock_get_closer_free_destination(int ship_id, ship_dock_request_typ
 
     int dock_id = 0;
     if (nearest_import_dock_id) {
-        if (nearest_export_dock_id && min_distance_export < min_distance_import + MAX_DISTANCE_FOR_REROUTING ) {
+        if (nearest_export_dock_id && min_distance_export < min_distance_import + MAX_DISTANCE_FOR_REROUTING) {
             dock_id = nearest_export_dock_id;
         } else {
             dock_id = nearest_import_dock_id;
@@ -294,7 +293,7 @@ void building_dock_set_can_trade_with_route(int route_id, int dock_id, int can_t
     building *dock = building_get(dock_id);
     if (!dock->data.dock.has_accepted_route_ids) {
         dock->data.dock.has_accepted_route_ids = 1;
-        dock->data.dock.accepted_route_ids  = 0xffffffff;
+        dock->data.dock.accepted_route_ids = 0xffffffff;
     }
     int mask = 1 << route_id;
     if (can_trade) {

@@ -19,9 +19,11 @@
 
 #define MAX_DISTANCE 40
 
-int figure_supplier_create_delivery_boy(int leader_id, figure *f, int type)
+int figure_supplier_create_delivery_boy(int leader_id, int first_figure_id, int type)
 {
+    figure *f = figure_get(first_figure_id);
     figure *boy = figure_create(type, f->x, f->y, 0);
+    f = figure_get(first_figure_id);
     boy->leading_figure_id = leader_id;
     boy->collecting_item_id = f->collecting_item_id;
     // deliver to destination instead of origin
@@ -81,9 +83,10 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     if (f->type == FIGURE_MESS_HALL_SUPPLIER) {
         type = FIGURE_MESS_HALL_COLLECTOR;
     }
+    int leader_id = f->id;
     int previous_boy = f->id;
     for (int i = 0; i < num_loads; i++) {
-        previous_boy = figure_supplier_create_delivery_boy(previous_boy, f, type);
+        previous_boy = figure_supplier_create_delivery_boy(previous_boy, leader_id, type);
     }
     return 1;
 }
@@ -105,14 +108,13 @@ static int take_resource_from_generic_building(figure *f, int building_id)
     b->loads_stored -= num_loads;
 
     // create delivery boys
-    int boy1 = figure_supplier_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
+    int priest_id = f->id;
+    int boy1 = figure_supplier_create_delivery_boy(priest_id, priest_id, FIGURE_DELIVERY_BOY);
     if (num_loads > 1) {
-        figure_supplier_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
+        figure_supplier_create_delivery_boy(boy1, priest_id, FIGURE_DELIVERY_BOY);
     }
     return 1;
 }
-
-
 
 static int take_resource_from_warehouse(figure *f, int warehouse_id)
 {
@@ -137,9 +139,10 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     building_warehouse_remove_resource(warehouse, resource, num_loads);
 
     // create delivery boys
-    int boy1 = figure_supplier_create_delivery_boy(f->id, f, FIGURE_DELIVERY_BOY);
+    int supplier_id = f->id;
+    int boy1 = figure_supplier_create_delivery_boy(supplier_id, supplier_id, FIGURE_DELIVERY_BOY);
     if (num_loads > 1) {
-        figure_supplier_create_delivery_boy(boy1, f, FIGURE_DELIVERY_BOY);
+        figure_supplier_create_delivery_boy(boy1, supplier_id, FIGURE_DELIVERY_BOY);
     }
     return 1;
 }
@@ -211,6 +214,7 @@ void figure_supplier_action(figure *f)
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->wait_ticks = 0;
+                int id = f->id;
                 if (f->collecting_item_id > 3) {
                     if (!take_resource_from_warehouse(f, f->destination_building_id)) {
                         f->state = FIGURE_STATE_DEAD;
@@ -220,6 +224,7 @@ void figure_supplier_action(figure *f)
                         f->state = FIGURE_STATE_DEAD;
                     }
                 }
+                f = figure_get(id);
                 f->action_state = FIGURE_ACTION_146_SUPPLIER_RETURNING;
                 f->destination_x = f->source_x;
                 f->destination_y = f->source_y;

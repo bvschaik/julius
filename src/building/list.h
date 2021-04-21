@@ -8,9 +8,9 @@
  * Temporary building lists for tick processing
  */
 
-/**
- * Clears the small building list
- */
+ /**
+  * Clears the small building list
+  */
 void building_list_small_clear(void);
 
 /**

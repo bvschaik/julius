@@ -45,13 +45,13 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_u8(buf, b->data.house.evolve_text_id);
     // Do not place this after if (building_has_supplier_inventory(b->type) or after if (building_monument_is_monument(b))
     // Because Caravanserai is monument AND supplier building and resources_needed / inventory is same memory spot
-    } else if(b->type == BUILDING_CARAVANSERAI) {
+    } else if (b->type == BUILDING_CARAVANSERAI) {
         for (int i = 0; i < RESOURCE_MAX; i++) {
             buffer_write_i16(buf, b->data.monument.resources_needed[i]);
         }
         buffer_write_i32(buf, b->data.monument.upgrades);
         buffer_write_i16(buf, b->data.monument.progress);
-        buffer_write_i16(buf, b->data.monument.monument_phase);
+        buffer_write_i16(buf, b->data.monument.phase);
         buffer_write_u8(buf, b->data.market.fetch_inventory_id);
     } else if (building_has_supplier_inventory(b->type)) {
         buffer_write_i16(buf, 0);
@@ -83,14 +83,14 @@ static void write_type_data(buffer *buf, const building *b)
         }
         buffer_write_i32(buf, b->data.monument.upgrades);
         buffer_write_i16(buf, b->data.monument.progress);
-        buffer_write_i16(buf, b->data.monument.monument_phase);
+        buffer_write_i16(buf, b->data.monument.phase);
         buffer_write_i16(buf, 0);
     } else if (b->type == BUILDING_DOCK) {
         buffer_write_i16(buf, b->data.dock.queued_docker_id);
         buffer_write_u8(buf, b->data.dock.has_accepted_route_ids);
         buffer_write_i32(buf, b->data.dock.accepted_route_ids);
         for (int i = 0; i < 20; i++) {
-          buffer_write_u8(buf, 0);
+            buffer_write_u8(buf, 0);
         }
         buffer_write_u8(buf, b->data.dock.num_ships);
         buffer_write_u8(buf, 0);
@@ -261,7 +261,7 @@ static void read_type_data(buffer *buf, building *b)
         }
         b->data.monument.upgrades = buffer_read_i32(buf);
         b->data.monument.progress = buffer_read_i16(buf);
-        b->data.monument.monument_phase = buffer_read_i16(buf);
+        b->data.monument.phase = buffer_read_i16(buf);
         b->data.market.fetch_inventory_id = buffer_read_u8(buf);
     } else if (building_has_supplier_inventory(b->type)) {
         buffer_skip(buf, 2);
@@ -288,7 +288,7 @@ static void read_type_data(buffer *buf, building *b)
         }
         b->data.monument.upgrades = buffer_read_i32(buf);
         b->data.monument.progress = buffer_read_i16(buf);
-        b->data.monument.monument_phase = buffer_read_i16(buf);
+        b->data.monument.phase = buffer_read_i16(buf);
         buffer_skip(buf, 2);
     } else if (b->type == BUILDING_DOCK) {
         b->data.dock.queued_docker_id = buffer_read_i16(buf);
@@ -391,11 +391,11 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
 
     // backwards compatibility fixes for culture update
     if (building_monument_is_monument(b) && b->subtype.house_level && b->type != BUILDING_HIPPODROME) {
-        b->data.monument.monument_phase = b->subtype.house_level;
+        b->data.monument.phase = b->subtype.house_level;
     }
 
-    if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && !b->data.monument.monument_phase) {
-        b->data.monument.monument_phase = -1;
+    if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && !b->data.monument.phase) {
+        b->data.monument.phase = -1;
     }
 
     // Wharves produce meat
@@ -416,7 +416,7 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     // }
     // Building state variables are automatically set to 0, so if the savegame version doesn't include
     // that information, you can be assured that the game will read it as 0
-    
+
     if (building_buf_size >= BUILDING_STATE_TOURISM_BUFFER_SIZE) {
         b->house_arena_gladiator = buffer_read_u8(buf);
         b->house_arena_lion = buffer_read_u8(buf);

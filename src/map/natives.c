@@ -41,8 +41,8 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
                     type != BUILDING_NATIVE_HUT &&
                     type != BUILDING_NATIVE_MEETING &&
                     type != BUILDING_NATIVE_CROPS &&
-		    type != BUILDING_ROADBLOCK
-		    ) {
+                    type != BUILDING_ROADBLOCK
+                    ) {
                     return 1;
                 }
             }
@@ -53,34 +53,23 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
 
 static void determine_meeting_center(void)
 {
-    // gather list of meeting centers
-    building_list_small_clear();
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_NATIVE_MEETING) {
-            building_list_small_add(i);
+
+    // Determine closest meeting center for hut
+
+    for (building *b = building_first_of_type(BUILDING_NATIVE_HUT); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
         }
-    }
-    int total_meetings = building_list_small_size();
-    if (total_meetings <= 0) {
-        return;
-    }
-    // determine closest meeting center for hut
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_NATIVE_HUT) {
-            int min_dist = 1000;
-            int min_meeting_id = 0;
-            for (int n = 0; n < total_meetings; n++) {
-                building *meeting = building_get(building_list_small_item(n));
-                int dist = calc_maximum_distance(b->x, b->y, meeting->x, meeting->y);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    min_meeting_id = building_list_small_item(n);
-                }
+        int min_dist = 1000;
+        int min_meeting_id = 0;
+        for (building *m = building_first_of_type(BUILDING_NATIVE_MEETING); m; m = m->next_of_type) {
+            int dist = calc_maximum_distance(b->x, b->y, m->x, m->y);
+            if (dist < min_dist) {
+                min_dist = dist;
+                min_meeting_id = m->id;
             }
-            b->subtype.native_meeting_center_id = min_meeting_id;
         }
+        b->subtype.native_meeting_center_id = min_meeting_id;
     }
 }
 
@@ -200,28 +189,24 @@ void map_natives_check_land(void)
     map_property_clear_all_native_land();
     city_military_decrease_native_attack_duration();
 
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
-            continue;
-        }
-        int size, radius;
-        if (b->type == BUILDING_NATIVE_HUT) {
-            size = 1;
-            radius = 3;
-        } else if (b->type == BUILDING_NATIVE_MEETING) {
-            size = 2;
-            radius = 6;
-        } else {
-            continue;
-        }
-        if (b->sentiment.native_anger >= 100) {
-            mark_native_land(b->x, b->y, size, radius);
-            if (has_building_on_native_land(b->x, b->y, size, radius)) {
-                city_military_start_native_attack();
+    building_type native_buildings[] = { BUILDING_NATIVE_HUT, BUILDING_NATIVE_MEETING };
+    int native_size[] = { 1, 2 };
+    int native_radius[] = { 3, 6 };
+
+    for (int i = 0; i < 2; i++) {
+        building_type type = native_buildings[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
+                continue;
             }
-        } else {
-            b->sentiment.native_anger++;
+            if (b->sentiment.native_anger >= 100) {
+                mark_native_land(b->x, b->y, native_size[i], native_radius[i]);
+                if (has_building_on_native_land(b->x, b->y, native_size[i], native_radius[i])) {
+                    city_military_start_native_attack();
+                }
+            } else {
+                b->sentiment.native_anger++;
+            }
         }
     }
 }

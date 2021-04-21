@@ -6,9 +6,9 @@
  * Type definitions for buildings
  */
 
-/**
- * Building types
- */
+ /**
+  * Building types
+  */
 typedef enum {
     BUILDING_NONE = 0,
     BUILDING_MENU_FARMS = 2,
@@ -136,7 +136,7 @@ typedef enum {
     BUILDING_MENU_TREES = 123,
     BUILDING_MENU_PATHS = 124,
     BUILDING_MENU_PARKS = 125,
-    BUILDING_SMALL_POND = 126,        
+    BUILDING_SMALL_POND = 126,
     BUILDING_LARGE_POND = 127,
     BUILDING_PINE_TREE = 128,
     BUILDING_FIR_TREE = 129,
@@ -176,7 +176,7 @@ typedef enum {
     BUILDING_HEDGE_DARK = 163,
     BUILDING_HEDGE_LIGHT = 164,
     BUILDING_GARDEN_WALL = 165,
-    BUILDING_LEGION_STATUE= 166,
+    BUILDING_LEGION_STATUE = 166,
     BUILDING_DECORATIVE_COLUMN = 167,
     BUILDING_COLONNADE = 168,
     BUILDING_LARARIUM = 169,

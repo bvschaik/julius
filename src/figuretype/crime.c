@@ -211,11 +211,21 @@ static void generate_protestor(building *b)
 
 void figure_generate_criminals(void)
 {
+    for (building_type type = BUILDING_MARBLE_QUARRY; type <= BUILDING_POTTERY_WORKSHOP; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->strike_duration_days > 0) {
+                generate_striker(b);
+            }
+        }
+    }
+
     building *min_building = 0;
     int min_happiness = 50;
-    for (int i = 1; i < building_count(); i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
+                continue;
+            }
             if (b->sentiment.house_happiness >= 50) {
                 b->house_criminal_active = 0;
             } else if (b->sentiment.house_happiness < min_happiness) {
@@ -223,10 +233,10 @@ void figure_generate_criminals(void)
                 min_building = b;
             }
         }
-
-        if (b->strike_duration_days > 0) {
-            generate_striker(b);
-        }
+    }
+    if (city_sentiment_crime_cooldown() > 0) {
+        city_sentiment_reduce_crime_cooldown();
+        return;
     }
     if (city_sentiment_crime_cooldown() > 0) {
         city_sentiment_reduce_crime_cooldown();
@@ -497,6 +507,8 @@ int figure_rioter_collapse_building(figure *f)
             case BUILDING_FORUM:
             case BUILDING_SENATE:
                 continue;
+            default:
+                break;
         }
         if (b->house_size && b->subtype.house_level < HOUSE_SMALL_CASA) {
             continue;

@@ -155,16 +155,16 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
 {
     // get which part of the hippodrome is getting checked
     int building_part;
-    if(b->prev_part_building_id == 0){
+    if (b->prev_part_building_id == 0) {
         building_part = 0; // part 1, no previous building
-    } else if(b->next_part_building_id == 0){
+    } else if (b->next_part_building_id == 0) {
         building_part = 2; // part 3, no next building
     } else {
         building_part = 1; // part 2
     }
-    int orientation =  building_rotation_get_building_orientation(b->subtype.orientation);
+    int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
     int population = city_population();
-    if ((building_part == 0 ) && population > 2000) {
+    if ((building_part == 0) && population > 2000) {
         // first building part
         switch (orientation) {
             case DIR_0_TOP:
@@ -190,7 +190,7 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
             case DIR_6_LEFT:
                 image_draw_masked(image_group(GROUP_BUILDING_HIPPODROME_1) + 7, x, y - 80, color_mask);
         }
-    } else if ((building_part == 2 ) && population > 1000) {
+    } else if ((building_part == 2) && population > 1000) {
         // last building part
         switch (orientation) {
             case DIR_0_TOP:
@@ -214,10 +214,10 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
     if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0) {
         image_draw_masked(image_group(GROUP_BUILDING_AMPHITHEATER_SHOW), x + 36, y - 47, color_mask);
     }
-    if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0 && b->data.monument.monument_phase <= 0) {
+    if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0 && b->data.monument.phase <= 0) {
         image_draw_masked(assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum ON"), x, y - 123, color_mask);
     }
-    if (b->type == BUILDING_COLOSSEUM && b->num_workers <= 0 && b->data.monument.monument_phase <= 0) {
+    if (b->type == BUILDING_COLOSSEUM && b->num_workers <= 0 && b->data.monument.phase <= 0) {
         image_draw_masked(assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"), x, y - 123, color_mask);
     }
     if (b->type == BUILDING_HIPPODROME && building_main(b)->num_workers > 0
@@ -356,9 +356,9 @@ static void draw_warehouse_ornaments(const building *b, int x, int y, color_t co
 static void draw_granary_stores(const image *img, const building *b, int x, int y, color_t color_mask)
 {
     image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 1,
-                      x + img->sprite_offset_x,
-                      y + 60 + img->sprite_offset_y - img->height,
-                      color_mask);
+        x + img->sprite_offset_x,
+        y + 60 + img->sprite_offset_y - img->height,
+        color_mask);
     if (b->data.granary.resource_stored[RESOURCE_NONE] < 2400) {
         image_draw_masked(image_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask);
     }
@@ -404,9 +404,9 @@ static void draw_animation(int x, int y, int grid_offset)
                 } else {
                     int ydiff = 15 * map_property_multi_tile_size(grid_offset) + 15;
                     image_draw_masked(image_id + animation_offset,
-                                      x + img->sprite_offset_x,
-                                      y + ydiff + img->sprite_offset_y - img->height,
-                                      color_mask);
+                        x + img->sprite_offset_x,
+                        y + ydiff + img->sprite_offset_y - img->height,
+                        color_mask);
                 }
             }
         }
