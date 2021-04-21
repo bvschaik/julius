@@ -149,7 +149,6 @@ static int get_crime_level(const building *b)
 static int get_column_height_crime(const building *b)
 {
     if (b->house_size) {
-        int happiness = b->sentiment.house_happiness;
         int crime = get_crime_level(b);
         if (crime == RAMPANT_CRIME) {
             return 10;

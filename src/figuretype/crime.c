@@ -240,9 +240,9 @@ void figure_generate_criminals(void)
         if (random_byte() >= sentiment + 20) {
             min_building->sentiment.house_happiness += 5;
             if (min_happiness <= 15) {
-                int population = city_sentiment_get_population_below_happiness(25);
-                if (population > 0 && city_population() / population < 20) { // 5% population for rioting
-                    int amount = calc_bound(city_population() / 1000, 1, 20);
+                int unhappy_population = city_sentiment_get_population_below_happiness(25);
+                if (calc_percentage(unhappy_population, city_population()) >= 5) {
+                    int amount = calc_bound(unhappy_population / 100, 1, 20);
                     generate_rioter(min_building, amount);
                     generate_looter(min_building, amount);
                     generate_robber(min_building, amount);

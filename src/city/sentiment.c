@@ -150,12 +150,11 @@ static int get_wage_sentiment_modifier(void)
 {
     int wage_differential = city_data.labor.wages - city_data.labor.wages_rome;
     if (city_finance_treasury() <= 0) {
-        if (difficulty_sentiment() > 70) {
-            if (wage_differential > 0) {
-                wage_differential = 0;
-            }
-        } else {
-            wage_differential = -city_data.labor.wages_rome;
+        if (wage_differential > 0) {
+            wage_differential = 0;
+        }
+        if (difficulty_sentiment() <= 70 && wage_differential > -5) {
+            wage_differential = -5;
         }
     }
     return wage_differential * (wage_differential > 0 ? WAGE_POSITIVE_MODIFIER : WAGE_NEGATIVE_MODIFIER);
