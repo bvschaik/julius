@@ -288,6 +288,9 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
         case HOTKEY_BUILD_CLONE:
             def->action = &data.hotkey_state.clone_building;
             break;
+        case HOTKEY_UNDO:
+            def->action = &data.hotkey_state.undo;
+            break;
         default:
             def->action = 0;
     }

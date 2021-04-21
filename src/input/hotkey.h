@@ -27,6 +27,7 @@ typedef struct {
     int rotate_building;
     int building;
     int clone_building;
+    int undo;
 } hotkeys;
 
 void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings);

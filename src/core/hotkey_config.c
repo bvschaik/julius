@@ -81,7 +81,8 @@ static const char *ini_keys[] = {
     "resize_to_1024",
     "save_screenshot",
     "save_city_screenshot",
-    "clone_building"
+    "clone_building",
+    "undo"
 };
 
 static struct {
@@ -243,7 +244,7 @@ static void load_file(void)
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
         size_t size = strlen(line);
-        while (size > 0 && (line[size-1] == '\n' || line[size-1] == '\r')) {
+        while (size > 0 && (line[size - 1] == '\n' || line[size - 1] == '\r')) {
             line[--size] = 0;
         }
         char *equals = strchr(line, '=');

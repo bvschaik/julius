@@ -16,6 +16,7 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/time.h"
+#include "game/undo.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -461,6 +462,10 @@ static void handle_hotkeys(const hotkeys *h)
             building_construction_cancel();
             building_construction_set_type(h->building);
         }
+    }
+    if (h->undo) {
+        game_undo_perform();
+        window_invalidate();
     }
     if (h->clone_building) {
         building_clone_from_grid_offset(widget_city_current_grid_offset());

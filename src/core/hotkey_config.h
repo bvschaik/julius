@@ -71,6 +71,7 @@ typedef enum {
     HOTKEY_SAVE_SCREENSHOT,
     HOTKEY_SAVE_CITY_SCREENSHOT,
     HOTKEY_BUILD_CLONE,
+    HOTKEY_UNDO,
     HOTKEY_MAX_ITEMS
 } hotkey_action;
 
