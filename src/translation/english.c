@@ -616,6 +616,7 @@ static translation_string all_strings[] = {
     {TR_CONFIRM_SELECT_EPITHET, "Apply (1000 Dn)"},
     {TR_FIGURE_TYPE_LOOTER, "Looter" },
     {TR_FIGURE_TYPE_ROBBER, "Robber" },
+    {TR_OVERLAY_SENTIMENT, "Sentiment" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

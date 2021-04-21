@@ -52,9 +52,9 @@ static generic_button submenu_buttons[] = {
     {0, 216, 160, 24, button_submenu_item, button_none, 9, 0},
 };
 
-static const int MENU_ID_TO_OVERLAY[OVERLAY_BUTTONS] = {OVERLAY_NONE, OVERLAY_WATER, 1, 3, 5, 6, 7, OVERLAY_RELIGION, OVERLAY_ROADS, OVERLAY_LEVY};
-static const int MENU_ID_TO_SUBMENU_ID[OVERLAY_BUTTONS] = {0, 0, 1, 2, 3, 4, 5, 0, 0};
-static const int ADDITIONAL_OVERLAY_TR[] = { TR_OVERLAY_ROADS, TR_OVERLAY_LEVY, TR_OVERLAY_TAVERN, TR_OVERLAY_ARENA_COL };
+static const int MENU_ID_TO_OVERLAY[OVERLAY_BUTTONS] = { OVERLAY_NONE, OVERLAY_WATER, 1, 3, 5, 6, 7, OVERLAY_RELIGION, OVERLAY_ROADS, OVERLAY_LEVY };
+static const int MENU_ID_TO_SUBMENU_ID[OVERLAY_BUTTONS] = { 0, 0, 1, 2, 3, 4, 5, 0, 0 };
+static const int ADDITIONAL_OVERLAY_TR[] = { TR_OVERLAY_ROADS, TR_OVERLAY_LEVY, TR_OVERLAY_TAVERN, TR_OVERLAY_ARENA_COL, TR_OVERLAY_SENTIMENT };
 
 static const int SUBMENU_ID_TO_OVERLAY[6][OVERLAY_BUTTONS] = {
     {0},
@@ -62,7 +62,7 @@ static const int SUBMENU_ID_TO_OVERLAY[6][OVERLAY_BUTTONS] = {
     {OVERLAY_ENTERTAINMENT, OVERLAY_TAVERN, OVERLAY_THEATER, OVERLAY_AMPHITHEATER, OVERLAY_ARENA, OVERLAY_COLOSSEUM, OVERLAY_HIPPODROME, 0},
     {OVERLAY_EDUCATION, OVERLAY_SCHOOL, OVERLAY_LIBRARY, OVERLAY_ACADEMY, 0},
     {OVERLAY_BARBER, OVERLAY_BATHHOUSE, OVERLAY_CLINIC, OVERLAY_HOSPITAL, 0},
-    {OVERLAY_TAX_INCOME, OVERLAY_FOOD_STOCKS, OVERLAY_DESIRABILITY, 0},
+    {OVERLAY_TAX_INCOME, OVERLAY_FOOD_STOCKS, OVERLAY_DESIRABILITY, OVERLAY_SENTIMENT, 0},
 };
 
 static struct {
@@ -104,7 +104,7 @@ static void draw_foreground(void)
         int overlay = MENU_ID_TO_OVERLAY[i];
         int translation = get_overlay_translation(overlay);
         if (translation) {
-            text_draw_centered(translation_for(translation), x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN,0);
+            text_draw_centered(translation_for(translation), x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN, 0);
         } else {
             lang_text_draw_centered(14, MENU_ID_TO_OVERLAY[i], x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
         }
@@ -169,10 +169,10 @@ static void handle_submenu_focus(void)
 static int click_outside_menu(const mouse *m, int x_offset)
 {
     return m->left.went_up &&
-          (m->x < x_offset - MENU_CLICK_MARGIN - (data.selected_submenu ? SUBMENU_X_OFFSET : MENU_X_OFFSET) ||
-           m->x > x_offset + MENU_CLICK_MARGIN ||
-           m->y < MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
-           m->y > MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * MAX_BUTTONS);
+        (m->x < x_offset - MENU_CLICK_MARGIN - (data.selected_submenu ? SUBMENU_X_OFFSET : MENU_X_OFFSET) ||
+        m->x > x_offset + MENU_CLICK_MARGIN ||
+        m->y < MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
+        m->y > MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * MAX_BUTTONS);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -241,7 +241,8 @@ void window_overlay_menu_show(void)
     window_show(&window);
 }
 
-int get_overlay_translation(int overlay) {
+int get_overlay_translation(int overlay)
+{
     if (overlay >= OVERLAY_ROADS) {
         return ADDITIONAL_OVERLAY_TR[overlay - OVERLAY_ROADS];
     } else {

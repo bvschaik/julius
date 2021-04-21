@@ -314,7 +314,8 @@ void city_sentiment_update(void)
                 worst_sentiment = sentiment_contribution_taxes;
                 b->house_sentiment_message = LOW_MOOD_CAUSE_HIGH_TAXES;
             }
-            if (sentiment_contribution_wages < worst_sentiment) {
+            if (b->subtype.house_level <= HOUSE_GRAND_INSULA &&
+                sentiment_contribution_wages < worst_sentiment) {
                 worst_sentiment = sentiment_contribution_wages;
                 b->house_sentiment_message = LOW_MOOD_CAUSE_LOW_WAGES;
             }
