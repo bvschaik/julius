@@ -255,7 +255,7 @@ const city_overlay *city_overlay_for_fire(void)
 {
     static city_overlay overlay = {
         OVERLAY_FIRE,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED_TO_GREEN,
         show_building_fire_crime,
         show_figure_fire,
         get_column_height_fire,
@@ -271,7 +271,7 @@ const city_overlay *city_overlay_for_damage(void)
 {
     static city_overlay overlay = {
         OVERLAY_DAMAGE,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED_TO_GREEN,
         show_building_damage,
         show_figure_damage,
         get_column_height_damage,
@@ -287,7 +287,7 @@ const city_overlay *city_overlay_for_crime(void)
 {
     static city_overlay overlay = {
         OVERLAY_CRIME,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED_TO_GREEN,
         show_building_fire_crime,
         show_figure_crime,
         get_column_height_crime,
@@ -303,7 +303,7 @@ const city_overlay *city_overlay_for_problems(void)
 {
     static city_overlay overlay = {
         OVERLAY_PROBLEMS,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED,
         show_building_problems,
         show_figure_problems,
         get_column_height_none,
@@ -370,7 +370,7 @@ const city_overlay *city_overlay_for_native(void)
 {
     static city_overlay overlay = {
         OVERLAY_NATIVE,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED,
         show_building_native,
         show_figure_native,
         get_column_height_none,

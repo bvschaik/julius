@@ -356,15 +356,26 @@ static void draw_footprint(int x, int y, int grid_offset)
     }
 }
 
-static void draw_overlay_column(int x, int y, int height, int is_red)
+static void draw_overlay_column(int x, int y, int height, column_color_type color_type)
 {
     int image_id = image_group(GROUP_OVERLAY_COLUMN);
-    if (is_red) {
-        image_id += 9;
-    }
     if (height > 10) {
         height = 10;
     }
+    switch (color_type) {
+        case COLUMN_COLOR_RED:
+            image_id += 9;
+            break;
+        case COLUMN_COLOR_RED_TO_GREEN:
+            image_id += height - (height % 3);
+            break;
+        case COLUMN_COLOR_GREEN_TO_RED:
+            image_id += 9 - height + (height % 3);
+            break;
+        default:
+            break;
+    }
+
     int capital_height = image_get(image_id)->height;
     // base
     image_draw(image_id + 2, x + 9, y - 8);
@@ -429,7 +440,7 @@ void city_with_overlay_draw_building_top(int x, int y, int grid_offset)
                 draw = is_drawable_farm_corner(grid_offset);
             }
             if (draw) {
-                draw_overlay_column(x, y, column_height, overlay->column_type == COLUMN_TYPE_RISK);
+                draw_overlay_column(x, y, column_height, overlay->column_type);
             }
         }
     }

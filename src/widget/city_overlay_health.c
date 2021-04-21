@@ -118,7 +118,7 @@ const city_overlay *city_overlay_for_barber(void)
 {
     static city_overlay overlay = {
         OVERLAY_BARBER,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN_TO_RED,
         show_building_barber,
         show_figure_barber,
         get_column_height_barber,
@@ -134,7 +134,7 @@ const city_overlay *city_overlay_for_bathhouse(void)
 {
     static city_overlay overlay = {
         OVERLAY_BATHHOUSE,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN_TO_RED,
         show_building_bathhouse,
         show_figure_bathhouse,
         get_column_height_bathhouse,
@@ -150,7 +150,7 @@ const city_overlay *city_overlay_for_clinic(void)
 {
     static city_overlay overlay = {
         OVERLAY_CLINIC,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN_TO_RED,
         show_building_clinic,
         show_figure_clinic,
         get_column_height_clinic,
@@ -166,7 +166,7 @@ const city_overlay *city_overlay_for_hospital(void)
 {
     static city_overlay overlay = {
         OVERLAY_HOSPITAL,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN_TO_RED,
         show_building_hospital,
         show_figure_hospital,
         get_column_height_hospital,

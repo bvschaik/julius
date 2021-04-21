@@ -303,7 +303,7 @@ const city_overlay *city_overlay_for_religion(void)
 {
     static city_overlay overlay = {
         OVERLAY_RELIGION,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN_TO_RED,
         show_building_religion,
         show_figure_religion,
         get_column_height_religion,
@@ -319,7 +319,7 @@ const city_overlay *city_overlay_for_food_stocks(void)
 {
     static city_overlay overlay = {
         OVERLAY_FOOD_STOCKS,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED,
         show_building_food_stocks,
         show_figure_food_stocks,
         get_column_height_food_stocks,
@@ -335,7 +335,7 @@ const city_overlay *city_overlay_for_tax_income(void)
 {
     static city_overlay overlay = {
         OVERLAY_TAX_INCOME,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN_TO_RED,
         show_building_tax_income,
         show_figure_tax_income,
         get_column_height_tax_income,
@@ -441,7 +441,7 @@ const city_overlay *city_overlay_for_water(void)
 {
     static city_overlay overlay = {
         OVERLAY_WATER,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN,
         show_building_water,
         show_figure_none,
         get_column_height_none,
@@ -482,7 +482,7 @@ const city_overlay *city_overlay_for_sentiment(void)
 {
     static city_overlay overlay = {
         OVERLAY_DESIRABILITY,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN,
         show_building_sentiment,
         show_figure_none,
         get_column_height_none,
@@ -589,7 +589,7 @@ const city_overlay *city_overlay_for_desirability(void)
 {
     static city_overlay overlay = {
         OVERLAY_DESIRABILITY,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN,
         show_building_desirability,
         show_figure_none,
         get_column_height_none,
@@ -605,7 +605,7 @@ const city_overlay *city_overlay_for_roads(void)
 {
     static city_overlay overlay = {
         OVERLAY_ROADS,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN,
         show_building_roads,
         show_figure_none,
         get_column_height_none,
@@ -621,7 +621,7 @@ const city_overlay *city_overlay_for_levy(void)
 {
     static city_overlay overlay = {
         OVERLAY_LEVY,
-        COLUMN_TYPE_ACCESS,
+        COLUMN_COLOR_GREEN,
         show_building_none,
         show_figure_none,
         get_column_height_levy,
@@ -632,4 +632,3 @@ const city_overlay *city_overlay_for_levy(void)
     };
     return &overlay;
 }
-
