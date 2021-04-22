@@ -389,7 +389,7 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     b->sentiment.house_happiness = buffer_read_i8(buf); // which union field we use does not matter
     b->show_on_problem_overlay = buffer_read_u8(buf);
 
-    // backwards compatibility fixes for culture update
+    // Backwards compatibility fixes for culture update
     if (building_monument_is_monument(b) && b->subtype.house_level && b->type != BUILDING_HIPPODROME) {
         b->data.monument.phase = b->subtype.house_level;
     }
@@ -401,6 +401,12 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     // Wharves produce meat
     if (b->type == BUILDING_WHARF) {
         b->output_resource_id = RESOURCE_MEAT;
+    }
+
+    // Backwards compatibility fixes for sentiment update
+    if (building_buf_size < BUILDING_STATE_STRIKES &&
+        b->house_population && b->sentiment.house_happiness < 20) {
+        b->sentiment.house_happiness = 30;
     }
 
     // To keep backward savegame compatibility, only fill more recent building struct elements

@@ -307,7 +307,7 @@ void city_sentiment_update(void)
 
             sentiment += blessing_festival_boost;
 
-            // change sentiment gradually to the new value
+            // Change sentiment gradually to the new value
             int sentiment_delta = sentiment - b->sentiment.house_happiness;
             sentiment_delta = calc_bound(sentiment_delta, -MAX_SENTIMENT_CHANGE, MAX_SENTIMENT_CHANGE);
             b->sentiment.house_happiness = calc_bound(b->sentiment.house_happiness + sentiment_delta, 0, 100);
