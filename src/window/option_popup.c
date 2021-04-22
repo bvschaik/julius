@@ -17,8 +17,8 @@
 static void button_select_option(int option, int param2);
 
 static generic_button buttons[] = {
-    {20, 120, 150, 130, button_select_option, button_none, 1, 0},
-    {20, 260, 150, 130, button_select_option, button_none, 2, 0},
+    {20, 120, 430, 130, button_select_option, button_none, 1, 0},
+    {20, 260, 430, 130, button_select_option, button_none, 2, 0},
     {40, 407, 180, 20, button_select_option, button_none, 0, 0},
     {260, 407, 180, 20, button_select_option, button_none, CONFIRM_BUTTON, 0}
 };

@@ -121,7 +121,7 @@ static generic_button warehouse_order_buttons[] = {
 };
 
 static generic_button go_to_caravanserai_action_button[] = {
-        {0, 0, 115, 100, caravanserai_action, button_none, 0, 0}
+        {0, 0, 400, 100, caravanserai_action, button_none, 0, 0}
 };
 
 static struct {
