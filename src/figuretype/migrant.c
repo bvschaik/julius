@@ -7,12 +7,18 @@
 #include "city/population.h"
 #include "core/calc.h"
 #include "core/image.h"
+#include "core/time.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "game/undo.h"
 #include "map/road_access.h"
+
+static struct {
+    int available;
+    time_millis last_check;
+} houses_with_room;
 
 void figure_create_immigrant(building *house, int num_people)
 {
@@ -64,6 +70,10 @@ static void update_direction_and_image(figure *f)
 
 static int closest_house_with_room(int x, int y)
 {
+    if (houses_with_room.last_check == time_get_millis() && !houses_with_room.available) {
+        return 0;
+    }
+    int available_houses = 0;
     int min_dist = 1000;
     int min_building_id = 0;
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
@@ -72,6 +82,7 @@ static int closest_house_with_room(int x, int y)
                 b->distance_from_entry > 0 && b->house_population_room > 0) {
                 if (!b->immigrant_figure_id) {
                     int dist = calc_maximum_distance(x, y, b->x, b->y);
+                    available_houses++;
                     if (dist < min_dist) {
                         min_dist = dist;
                         min_building_id = b->id;
@@ -80,8 +91,10 @@ static int closest_house_with_room(int x, int y)
             }
         }
     }
+    available_houses--;
+    houses_with_room.last_check = time_get_millis();
+    houses_with_room.available = available_houses;
     return min_building_id;
-
 }
 
 void figure_immigrant_action(figure *f)
@@ -313,7 +326,7 @@ void figure_homeless_action(figure *f)
                 figure_route_remove(f);
             }
             f->wait_ticks++;
-            if (f->wait_ticks > 30) {
+            if (f->wait_ticks > FIGURE_REROUTE_DESTINATION_TICKS) {
                 f->wait_ticks = 0;
                 int building_id = closest_house_with_room(f->x, f->y);
                 if (building_id > 0) {

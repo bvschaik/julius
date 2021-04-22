@@ -151,7 +151,7 @@ static struct {
     int frame_count;
     int last_fps;
     Uint32 last_update_time;
-} fps = {0, 0, 0};
+} fps = { 0, 0, 0 };
 
 static void run_and_draw(void)
 {
@@ -420,10 +420,10 @@ static const char *ask_for_data_dir(int again)
         if (!result) {
             return NULL;
         }
-    }
+        }
     return tinyfd_selectFolderDialog("Please select your Caesar 3 folder", NULL);
 #endif
-}
+    }
 #endif
 
 static int pre_init(const char *custom_data_dir)
@@ -442,7 +442,7 @@ static int pre_init(const char *custom_data_dir)
         return 1;
     }
 
-    #if SDL_VERSION_ATLEAST(2, 0, 1)
+#if SDL_VERSION_ATLEAST(2, 0, 1)
     if (platform_sdl_version_at_least(2, 0, 1)) {
         char *base_path = SDL_GetBasePath();
         if (base_path) {
@@ -456,29 +456,29 @@ static int pre_init(const char *custom_data_dir)
             SDL_free(base_path);
         }
     }
-    #endif
-
-    #ifdef SHOW_FOLDER_SELECT_DIALOG
-        const char *user_dir = pref_data_dir();
-        if (user_dir) {
-            SDL_Log("Loading game from user pref %s", user_dir);
-            if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
-                return 1;
-            }
-        }
-
-        user_dir = ask_for_data_dir(0);
-        while (user_dir) {
-            SDL_Log("Loading game from user-selected dir %s", user_dir);
-            if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
-                pref_save_data_dir(user_dir);
-#ifdef __ANDROID__
-                android_toast_message("C3 files found. Path saved.");
 #endif
-                return 1;
-            }
-            user_dir = ask_for_data_dir(1);
+
+#ifdef SHOW_FOLDER_SELECT_DIALOG
+    const char *user_dir = pref_data_dir();
+    if (user_dir) {
+        SDL_Log("Loading game from user pref %s", user_dir);
+        if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
+            return 1;
         }
+    }
+
+    user_dir = ask_for_data_dir(0);
+    while (user_dir) {
+        SDL_Log("Loading game from user-selected dir %s", user_dir);
+        if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
+            pref_save_data_dir(user_dir);
+#ifdef __ANDROID__
+            android_toast_message("C3 files found. Path saved.");
+#endif
+            return 1;
+        }
+        user_dir = ask_for_data_dir(1);
+    }
 #elif defined(__vita__)
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
         "Error",
