@@ -482,45 +482,48 @@ static int house_consume_food(void)
 static int mess_hall_consume_food(void)
 {
     int total_consumed = 0;
-    for (building *b = building_first_of_type(BUILDING_MESS_HALL); b; b = b->next_of_type) {
-        if (b->state == BUILDING_STATE_IN_USE) {
-            int food_required = city_military_total_soldiers_in_city() *
-                difficulty_adjust_soldier_food_consumption(FOOD_PER_SOLDIER_MONTHLY);
-            int num_foods = 0;
-            int total_food_in_mess_hall = 0;
-            double proportionate_amount = 0;
-            int amount_for_type = 0;
+    building *b = building_first_of_type(BUILDING_MESS_HALL);
+    if (!b || b->state != BUILDING_STATE_IN_USE) {
+        return 0;
+    };
+    int food_required = city_military_total_soldiers_in_city() *
+        difficulty_adjust_soldier_food_consumption(FOOD_PER_SOLDIER_MONTHLY);
+    int num_foods = 0;
+    int total_food_in_mess_hall = 0;
+    int proportionate_amount = 0;
+    int amount_for_type = 0;
 
-            for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
-                total_food_in_mess_hall += b->data.market.inventory[i];
-            }
+    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
+        total_food_in_mess_hall += b->data.market.inventory[i];
+    }
 
-            city_data.mess_hall.total_food = total_food_in_mess_hall;
+    city_data.mess_hall.total_food = total_food_in_mess_hall;
+    if (!food_required || !total_food_in_mess_hall) {
+        return 0;
+    }
 
-            if (food_required) {
-                for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
-                    proportionate_amount = ((double) food_required * (double) b->data.market.inventory[i]) / (double) total_food_in_mess_hall;
-                    if (proportionate_amount > 0) {
-                        amount_for_type = calc_bound((int) ceil(proportionate_amount), 0, b->data.market.inventory[i]);
-                        b->data.market.inventory[i] -= amount_for_type;
-                        ++num_foods;
-                    }
-                }
-
-                if (food_required > total_food_in_mess_hall) {
-                    city_data.mess_hall.food_percentage_missing_this_month = 100 - calc_percentage(total_food_in_mess_hall, food_required);
-                    total_consumed += total_food_in_mess_hall;
-                    city_data.mess_hall.total_food = 0;
-                } else {
-                    city_data.mess_hall.food_percentage_missing_this_month = 0;
-                    total_consumed += food_required;
-                    city_data.mess_hall.total_food -= food_required;
-                }
-
-                city_data.mess_hall.food_types = num_foods;
-            }
+    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
+        proportionate_amount = food_required * b->data.market.inventory[i] / total_food_in_mess_hall;
+        if (proportionate_amount > 0) {
+            amount_for_type = calc_bound((int) ceil(proportionate_amount), 0, b->data.market.inventory[i]);
+            b->data.market.inventory[i] -= amount_for_type;
+            ++num_foods;
         }
     }
+
+    if (food_required > total_food_in_mess_hall) {
+        city_data.mess_hall.food_percentage_missing_this_month = 100 -
+            calc_percentage(total_food_in_mess_hall, food_required);
+        total_consumed += total_food_in_mess_hall;
+        city_data.mess_hall.total_food = 0;
+    } else {
+        city_data.mess_hall.food_percentage_missing_this_month = 0;
+        total_consumed += food_required;
+        city_data.mess_hall.total_food -= food_required;
+    }
+
+    city_data.mess_hall.food_types = num_foods;
+
     return total_consumed;
 }
 
@@ -529,38 +532,44 @@ static int canvaserai_consume_food(void)
     if (!building_monument_working(BUILDING_CARAVANSERAI)) {
         return 0;
     }
+    int food_required = trade_caravan_count() * FOOD_PER_TRADER_MONTHLY;
 
     int total_consumed = 0;
-    for (building *b = building_first_of_type(BUILDING_CARAVANSERAI); b; b = b->next_of_type) {
-        int food_required = trade_caravan_count() * FOOD_PER_TRADER_MONTHLY;
-        int total_food_in_caravanserai = 0;
-        int proportionate_amount = 0;
-        int amount_for_type = 0;
+    building *b = building_first_of_type(BUILDING_CARAVANSERAI);
+    if (!b) {
+        return 0;
+    }
 
-        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
-            total_food_in_caravanserai += b->data.market.inventory[i];
-        }
+    int total_food_in_caravanserai = 0;
+    int proportionate_amount = 0;
+    int amount_for_type = 0;
 
-        city_data.caravanserai.total_food = total_food_in_caravanserai;
+    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
+        total_food_in_caravanserai += b->data.market.inventory[i];
+    }
 
-        if (!food_required) {
-            continue;
-        }
-        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
-            proportionate_amount = food_required * b->data.market.inventory[i] / total_food_in_caravanserai;
-            if (proportionate_amount > 0) {
-                amount_for_type = calc_bound(proportionate_amount, 0, b->data.market.inventory[i]);
-                b->data.market.inventory[i] -= amount_for_type;
-            }
-        }
-        if (food_required > total_food_in_caravanserai) {
-            total_consumed += total_food_in_caravanserai;
-            city_data.caravanserai.total_food = 0;
-        } else {
-            total_consumed += food_required;
-            city_data.caravanserai.total_food -= food_required;
+    city_data.caravanserai.total_food = total_food_in_caravanserai;
+
+
+    if (!food_required || !total_food_in_caravanserai) {
+        return 0;
+    }
+
+    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
+        proportionate_amount = food_required * b->data.market.inventory[i] / total_food_in_caravanserai;
+        if (proportionate_amount > 0) {
+            amount_for_type = calc_bound(proportionate_amount, 0, b->data.market.inventory[i]);
+            b->data.market.inventory[i] -= amount_for_type;
         }
     }
+    if (food_required > total_food_in_caravanserai) {
+        total_consumed += total_food_in_caravanserai;
+        city_data.caravanserai.total_food = 0;
+    } else {
+        total_consumed += food_required;
+        city_data.caravanserai.total_food -= food_required;
+    }
+
     return total_consumed;
 }
 
