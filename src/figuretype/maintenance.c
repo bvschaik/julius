@@ -16,6 +16,8 @@
 #include "map/road_access.h"
 #include "sound/effect.h"
 
+#define INFINITE 10000
+
 void figure_engineer_action(figure *f)
 {
     building *b = building_get(f->building_id);
@@ -93,28 +95,37 @@ void figure_engineer_action(figure *f)
     figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
 }
 
+static int get_enemy_distance(figure *f, int x, int y)
+{
+    if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR) {
+        return calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_CRIMINAL_LOOTER || f->type == FIGURE_CRIMINAL_ROBBER) {
+        return 3 * calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+        return calc_maximum_distance(x, y, f->x, f->y);
+    } else if (figure_is_enemy(f)) {
+        return 3 * calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_WOLF) {
+        return 4 * calc_maximum_distance(x, y, f->x, f->y);
+    }
+    return INFINITE;
+}
+
 static int get_nearest_enemy(int x, int y, int *distance)
 {
     int min_enemy_id = 0;
-    int min_dist = 10000;
+    int min_dist = INFINITE;
     for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
-        if (f->state != FIGURE_STATE_ALIVE || f->targeted_by_figure_id) {
+        if (f->state != FIGURE_STATE_ALIVE) {
             continue;
         }
-        int dist;
-        if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR) {
-            dist = calc_maximum_distance(x, y, f->x, f->y);
-        } else if (f->type == FIGURE_CRIMINAL_LOOTER || f->type == FIGURE_CRIMINAL_ROBBER) {
-            dist = 3 * calc_maximum_distance(x, y, f->x, f->y);
-        } else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
-            dist = calc_maximum_distance(x, y, f->x, f->y);
-        } else if (figure_is_enemy(f)) {
-            dist = 3 * calc_maximum_distance(x, y, f->x, f->y);
-        } else if (f->type == FIGURE_WOLF) {
-            dist = 4 * calc_maximum_distance(x, y, f->x, f->y);
-        } else {
-            continue;
+        int dist = get_enemy_distance(f, x, y);
+        if (dist != INFINITE && f->targeted_by_figure_id) {
+            figure *pursuiter = figure_get(f->targeted_by_figure_id);
+            if (get_enemy_distance(f, pursuiter->x, pursuiter->y) < dist) {
+                continue;
+            }
         }
         if (dist < min_dist) {
             min_dist = dist;
@@ -145,12 +156,13 @@ static int fight_enemy(figure *f)
     if (f->wait_ticks_next_target < 10) {
         return 0;
     }
-    f->wait_ticks_next_target = 0;
     int distance;
     int enemy_id = get_nearest_enemy(f->x, f->y, &distance);
     if (enemy_id > 0 && distance <= 30) {
         figure *enemy = figure_get(enemy_id);
-        f->wait_ticks_next_target = 0;
+        if (enemy->targeted_by_figure_id) {
+            figure_get(enemy->targeted_by_figure_id)->target_figure_id = 0;
+        }
         f->action_state = FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY;
         f->destination_x = enemy->x;
         f->destination_y = enemy->y;
@@ -160,6 +172,7 @@ static int fight_enemy(figure *f)
         figure_route_remove(f);
         return 1;
     }
+    f->wait_ticks_next_target = 0;
     return 0;
 }
 
@@ -355,7 +368,8 @@ void figure_prefect_action(figure *f)
             break;
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
             f->terrain_usage = TERRAIN_USAGE_ANY;
-            if (!target_is_alive(f)) {
+            if (!target_is_alive(f) &&
+                !fight_enemy(f)) {
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
