@@ -60,7 +60,6 @@ void city_sentiment_set_max_happiness(int max)
                 if (b->sentiment.house_happiness > max) {
                     b->sentiment.house_happiness = max;
                 }
-                b->sentiment.house_happiness = max;
             }
         }
     }
@@ -75,7 +74,6 @@ void city_sentiment_set_min_happiness(int min)
                 if (b->sentiment.house_happiness < min) {
                     b->sentiment.house_happiness = min;
                 }
-                b->sentiment.house_happiness = min;
             }
         }
     }
@@ -188,11 +186,12 @@ static int get_average_housing_level(void)
 
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
         int multiplier = 1;
-        if (type == BUILDING_HOUSE_SMALL_VILLA) {
-            multiplier++; // Villas count twice
-        }
-        if (type == BUILDING_HOUSE_SMALL_PALACE) {
-            multiplier++; // Palaces count thrice
+        if (type == BUILDING_HOUSE_LARGE_CASA) {
+            multiplier = 10;
+        } else if (type == BUILDING_HOUSE_SMALL_VILLA) {
+            multiplier = 20;
+        } else if (type == BUILDING_HOUSE_SMALL_PALACE) {
+            multiplier = 30;
         }
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
@@ -256,8 +255,16 @@ void city_sentiment_update(void)
     int total_sentiment = 0;
     int total_pop = 0;
     int total_houses = 0;
+    int house_level_sentiment_multiplier = 3;
 
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        if (type == BUILDING_HOUSE_SMALL_SHACK) {
+            house_level_sentiment_multiplier = 2;
+        } else if (type == BUILDING_HOUSE_LARGE_CASA) {
+            house_level_sentiment_multiplier = 1;
+        } else if (type == BUILDING_HOUSE_SMALL_VILLA) {
+            house_level_sentiment_multiplier = 0;
+        }
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
                 continue;
@@ -282,11 +289,7 @@ void city_sentiment_update(void)
 
             int house_level_sentiment = house_level_sentiment_modifier(b->subtype.house_level, average_housing_level);
             if (house_level_sentiment < 0) {
-                if (b->subtype.house_level <= HOUSE_SMALL_CASA) {
-                    house_level_sentiment *= 2;
-                } else if (b->subtype.house_level >= HOUSE_GRAND_INSULA) {
-                    house_level_sentiment = 0;
-                }
+                house_level_sentiment *= house_level_sentiment_multiplier;
                 average_squalor_penalty += house_level_sentiment;
             }
             sentiment += house_level_sentiment;
