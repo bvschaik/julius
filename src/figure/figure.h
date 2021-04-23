@@ -148,7 +148,7 @@ void figure_init_scenario(void);
 
 void figure_kill_all(void);
 
-int target_is_alive(const figure *f);
+int figure_target_is_alive(const figure *f);
 
 void figure_save_state(buffer *list, buffer *seq);
 

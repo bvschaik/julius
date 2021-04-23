@@ -219,7 +219,7 @@ void figure_kill_all(void)
     }
 }
 
-int target_is_alive(figure *f)
+int figure_target_is_alive(const figure *f)
 {
     if (f->target_figure_id <= 0) {
         return 0;

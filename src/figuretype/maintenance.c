@@ -356,7 +356,7 @@ void figure_prefect_action(figure *f)
             break;
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
             f->terrain_usage = TERRAIN_USAGE_ANY;
-            if (!target_is_alive(f) &&
+            if (!figure_target_is_alive(f) &&
                 !fight_enemy(f)) {
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
