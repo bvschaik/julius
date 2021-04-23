@@ -13,6 +13,7 @@
 #include "game/time.h"
 
 #define POPULATION_SCALING_FACTOR 1000
+#define BASE_RESOURCE_REQUIREMENT 3
 
 typedef enum {
     G_PLANNING,
@@ -21,9 +22,9 @@ typedef enum {
 } games_messages;
 
 games_type ALL_GAMES[MAX_GAMES] = {
-    {1, TR_WINDOW_GAMES_OPTION_1, TR_WINDOW_GAMES_OPTION_1_DESC, 500, 100, 1, 32, 64, 33, {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,}},
-    {2, TR_WINDOW_GAMES_OPTION_2, TR_WINDOW_GAMES_OPTION_2_DESC, 500, 100, 1, 32, 64, 33, {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
-    {3, TR_WINDOW_GAMES_OPTION_3, TR_WINDOW_GAMES_OPTION_3_DESC, 500, 100, 1, 32, 64, 33, {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
+    {1, TR_WINDOW_GAMES_OPTION_1, TR_WINDOW_GAMES_OPTION_1_DESC, 1800, 100, 1, 32, 64, 33, {0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,}},
+    {2, TR_WINDOW_GAMES_OPTION_2, TR_WINDOW_GAMES_OPTION_2_DESC, 1000, 200, 1, 32, 64, 33, {0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,}},
+    {3, TR_WINDOW_GAMES_OPTION_3, TR_WINDOW_GAMES_OPTION_3_DESC, 800, 200, 1, 32, 64, 33, {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,}},
     //{4, TR_WINDOW_GAMES_OPTION_4, TR_WINDOW_GAMES_OPTION_4_DESC, 100, 1, 32, 120, 32, {0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,}}
 };
 
@@ -47,6 +48,17 @@ int city_games_money_cost(int game_type_id)
     int cost = game->cost_base + game->cost_scaling * (city_data.population.population / POPULATION_SCALING_FACTOR);
     return cost;
 }
+
+int city_games_resource_cost(int game_type_id, resource_type resource)
+{
+    games_type *game = city_games_get_game_type(game_type_id);
+    if (!game) {
+        return 0;
+    }
+    int cost = game->resource_cost[resource] * (BASE_RESOURCE_REQUIREMENT + city_data.population.population / POPULATION_SCALING_FACTOR);
+    return cost;
+}
+
 
 static void post_games_message(int type)
 {
@@ -82,8 +94,9 @@ void city_games_schedule(int game_id)
     city_emperor_decrement_personal_savings(city_games_money_cost(game_id));
 
     for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-        if (game->resource_cost[resource]) {
-            building_warehouses_remove_resource(resource, game->resource_cost[resource]);
+        int resource_cost = city_games_resource_cost(game_id, resource);
+        if (resource_cost) {
+            building_warehouses_remove_resource(resource, resource_cost);
         }
     }
 
@@ -123,4 +136,19 @@ void city_games_decrement_duration(void)
             end_games();
         }
     }
+}
+
+int city_games_naval_battle_active(void)
+{
+    return city_data.games.games_1_bonus_months;
+}
+
+int city_games_executions_active(void)
+{
+    return city_data.games.games_2_bonus_months;
+}
+
+int city_games_trade_festival_active(void)
+{
+    return city_data.games.games_3_bonus_months;
 }

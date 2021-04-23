@@ -77,10 +77,12 @@ static void draw_background(void)
 
     width = 0;
     int has_resources = 1;
+    int resource_cost = 0;
     for (int i = 0; i < RESOURCE_MAX; ++i) {
-        if (game->resource_cost[i]) {
-            width += text_draw_number(game->resource_cost[i], '@', "", 120 + width, 320, FONT_NORMAL_BLACK);
-            if (city_resource_get_stored(i) < game->resource_cost[i]) {
+        resource_cost = city_games_resource_cost(selected_game_id,i);
+        if (resource_cost) {
+            width += text_draw_number(resource_cost, '@', "", 120 + width, 320, FONT_NORMAL_BLACK);
+            if (city_resource_get_stored(i) < resource_cost) {
                 has_resources = 0;
             }
             image_draw(image_group(GROUP_RESOURCE_ICONS) + i, 120 + width, 316);

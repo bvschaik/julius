@@ -20,10 +20,15 @@ typedef struct {
 } games_type;
 
 int city_games_money_cost(int game_type_id);
+int city_games_resource_cost(int game_type_id, resource_type resource);
 
 void city_games_schedule(int game_id);
 void city_games_decrement_month_counts(void);
 void city_games_decrement_duration(void);
+
+int city_games_naval_battle_active(void);
+int city_games_executions_active(void);
+int city_games_trade_festival_active(void);
 
 games_type *city_games_get_game_type(int id);
 
