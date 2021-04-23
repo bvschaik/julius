@@ -563,6 +563,9 @@ static int building_in_use(const building *b)
 
 void building_clear_all(void)
 {
+    memset(data.first_of_type, 0, sizeof(data.first_of_type));
+    memset(data.last_of_type, 0, sizeof(data.last_of_type));
+
     if (!array_init(data.buildings, BUILDING_ARRAY_SIZE_STEP, initialize_new_building, building_in_use) ||
         !array_next(data.buildings)) { // Ignore first building
         log_error("Unable to allocate enough memory for the building array. The game will now crash.", 0, 0);
