@@ -27,8 +27,6 @@
 #include "widget/city.h"
 
 #define CAMEL_PORTRAIT 59
-#define NEW_FIGURES_ID 73
-
 
 static void select_figure(int index, int param2);
 
@@ -336,7 +334,7 @@ static void draw_supplier(building_info_context *c, figure *f)
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     int width = 0;
     if (f->type == FIGURE_MESS_HALL_SUPPLIER || f->type == FIGURE_PRIEST_SUPPLIER || f->type == FIGURE_BARKEEP_SUPPLIER || f->type == FIGURE_CARAVANSERAI_SUPPLIER) {
-        int relative_id = f->type - NEW_FIGURES_ID;
+        int relative_id = f->type - FIGURE_NEW_TYPES;
         width = text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
     } else {
         width = lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK);
@@ -366,7 +364,7 @@ static void draw_monument_worker(building_info_context *c, figure *f)
     image_draw(big_people_image(f->type), c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
-    int relative_id = f->type - NEW_FIGURES_ID;
+    int relative_id = f->type - FIGURE_NEW_TYPES;
     int width = text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
     int resource = f->collecting_item_id;
 
@@ -397,8 +395,8 @@ static void draw_normal_figure(building_info_context *c, figure *f)
     image_draw(image_id, c->x_offset + 28, c->y_offset + 112);
 
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
-    if (f->type >= NEW_FIGURES_ID) {
-        int relative_id = f->type - NEW_FIGURES_ID;
+    if (f->type >= FIGURE_NEW_TYPES && f->type < FIGURE_TYPE_MAX) {
+        int relative_id = f->type - FIGURE_NEW_TYPES;
         text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
     } else {
         lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK);
