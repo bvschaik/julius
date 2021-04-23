@@ -19,6 +19,8 @@ typedef struct {
     int resource_cost[RESOURCE_MAX];
 } games_type;
 
+int city_games_money_cost(int game_type_id);
+
 void city_games_schedule(int game_id);
 void city_games_decrement_month_counts(void);
 void city_games_decrement_duration(void);
