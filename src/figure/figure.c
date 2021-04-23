@@ -219,6 +219,18 @@ void figure_kill_all(void)
     }
 }
 
+int target_is_alive(figure *f)
+{
+    if (f->target_figure_id <= 0) {
+        return 0;
+    }
+    figure *target = figure_get(f->target_figure_id);
+    if (!figure_is_dead(target) && target->created_sequence == f->target_figure_created_sequence) {
+        return 1;
+    }
+    return 0;
+}
+
 static void figure_save(buffer *buf, const figure *f)
 {
     buffer_write_u8(buf, f->alternative_location_index);

@@ -15,6 +15,7 @@
 #include "city/buildings.h"
 #include "city/data_private.h"
 #include "city/entertainment.h"
+#include "city/games.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
@@ -608,6 +609,12 @@ static void spawn_figure_colosseum(building *b)
             f->building_id = b->id;
             b->figure_id = f->id;
             figure_movement_init_roaming(f);
+            if (b->type == BUILDING_COLOSSEUM && city_games_executions_active()) {
+                f = figure_create(FIGURE_LION_TAMER, road.x, road.y, DIR_0_TOP);
+                f->action_state = FIGURE_ACTION_230_LION_TAMERS_HUNTING_ENEMIES;
+                f = figure_create(FIGURE_LION_TAMER, road.x, road.y, DIR_0_TOP);
+                f->action_state = FIGURE_ACTION_230_LION_TAMERS_HUNTING_ENEMIES;
+            }
             if (b->type == BUILDING_COLOSSEUM &&
                 (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0)) {
                 if (city_entertainment_show_message_colosseum()) {

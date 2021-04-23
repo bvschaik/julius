@@ -2,11 +2,13 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "city/festival.h"
+#include "city/figures.h"
 #include "city/map.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "core/random.h"
 #include "figure/combat.h"
+#include "figure/enemy_army.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
@@ -14,6 +16,8 @@
 #include "map/road_access.h"
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
+
+#define INFINITE 10000
 
 void figure_spawn_tourist(void)
 {
@@ -184,7 +188,7 @@ static void update_image(figure *f)
         image_id = image_group(GROUP_FIGURE_PATRICIAN);
     } else if (f->type == FIGURE_LION_TAMER) {
         image_id = image_group(GROUP_FIGURE_LION_TAMER);
-        if (f->wait_ticks_missile >= 96) {
+        if (f->wait_ticks_missile >= 96 && f->action_state != FIGURE_ACTION_149_CORPSE) {
             image_id = image_group(GROUP_FIGURE_LION_TAMER_WHIP);
         }
         f->cart_image_id = image_group(GROUP_FIGURE_LION);
@@ -207,6 +211,77 @@ static void update_image(figure *f)
         f->cart_image_id += dir + 8 * f->image_offset;
         figure_image_set_cart_offset(f, dir);
     }
+}
+
+static int get_enemy_distance(figure *f, int x, int y)
+{
+    if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR) {
+        return calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_CRIMINAL_LOOTER || f->type == FIGURE_CRIMINAL_ROBBER) {
+        return 3 * calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+        return calc_maximum_distance(x, y, f->x, f->y);
+    } else if (figure_is_enemy(f)) {
+        return calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_WOLF) {
+        return 2 * calc_maximum_distance(x, y, f->x, f->y);
+    }
+    return INFINITE;
+}
+
+static int get_nearest_enemy(int x, int y, int *distance)
+{
+    int min_enemy_id = 0;
+    int min_dist = INFINITE;
+    for (int i = 1; i < figure_count(); i++) {
+        figure *f = figure_get(i);
+        if (f->state != FIGURE_STATE_ALIVE) {
+            continue;
+        }
+        int dist = get_enemy_distance(f, x, y);
+        if (dist != INFINITE && f->targeted_by_figure_id) {
+            figure *pursuiter = figure_get(f->targeted_by_figure_id);
+            if (get_enemy_distance(f, pursuiter->x, pursuiter->y) < dist) {
+                continue;
+            }
+        }
+        if (dist < min_dist) {
+            min_dist = dist;
+            min_enemy_id = i;
+        }
+    }
+    *distance = min_dist;
+    return min_enemy_id;
+}
+
+static int fight_enemy(figure *f)
+{
+    if (!city_figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0) {
+        return 0;
+    }
+    switch (f->action_state) {
+    case FIGURE_ACTION_150_ATTACK:
+    case FIGURE_ACTION_149_CORPSE:
+        return 0;
+    }
+
+    int distance;
+    int enemy_id = get_nearest_enemy(f->x, f->y, &distance);
+    if (enemy_id > 0 && distance <= 50) {
+        figure *enemy = figure_get(enemy_id);
+        if (enemy->targeted_by_figure_id) {
+            figure_get(enemy->targeted_by_figure_id)->target_figure_id = 0;
+        }
+        f->destination_x = enemy->x;
+        f->destination_y = enemy->y;
+        f->target_figure_id = enemy_id;
+        enemy->targeted_by_figure_id = f->id;
+        f->target_figure_created_sequence = enemy->created_sequence;
+        figure_route_remove(f);
+        return 1;
+    }
+    f->wait_ticks_next_target = 0;
+    return 0;
 }
 
 void figure_entertainer_action(figure *f)
@@ -336,6 +411,22 @@ void figure_entertainer_action(figure *f)
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+                f->state = FIGURE_STATE_DEAD;
+            }
+            break;
+        case FIGURE_ACTION_230_LION_TAMERS_HUNTING_ENEMIES:
+            f->terrain_usage = TERRAIN_USAGE_ANY;
+            if (!target_is_alive(f) &&
+                !fight_enemy(f)) {
+                f->state = FIGURE_STATE_DEAD;
+            }
+            figure_movement_move_ticks_with_percentage(f, 1, 50);
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                figure *target = figure_get(f->target_figure_id);
+                f->destination_x = target->x;
+                f->destination_y = target->y;
+                figure_route_remove(f);
+            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
             break;

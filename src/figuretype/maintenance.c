@@ -252,18 +252,6 @@ static void extinguish_fire(figure *f)
     }
 }
 
-static int target_is_alive(figure *f)
-{
-    if (f->target_figure_id <= 0) {
-        return 0;
-    }
-    figure *target = figure_get(f->target_figure_id);
-    if (!figure_is_dead(target) && target->created_sequence == f->target_figure_created_sequence) {
-        return 1;
-    }
-    return 0;
-}
-
 void figure_prefect_action(figure *f)
 {
     building *b = building_get(f->building_id);
