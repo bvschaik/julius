@@ -11,18 +11,6 @@ typedef struct {
 	int month;
 } auto_festival;
 
-typedef struct {
-    int id;
-    int header_key;
-    int description_key;
-    int cost;
-    int delay_months;
-    int duration_days;
-    int bonus_duration;
-    int building_id_required;
-    int resource_cost[RESOURCE_MAX];
-} games_type;
-
 int city_festival_is_planned(void);
 int city_festival_months_since_last(void);
 
@@ -51,11 +39,5 @@ void city_festival_schedule(void);
 
 void city_festival_update(void);
 void city_festival_calculate_costs(void);
-
-void city_festival_games_schedule(int game_id);
-void city_festival_games_decrement_month_counts(void);
-void city_festival_games_decrement_duration(void);
-
-games_type* get_game_from_id(int id);
 
 #endif // CITY_FESTIVAL_H

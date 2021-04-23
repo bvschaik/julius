@@ -301,6 +301,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/festival.c
     ${PROJECT_SOURCE_DIR}/src/city/figures.c
     ${PROJECT_SOURCE_DIR}/src/city/finance.c
+    ${PROJECT_SOURCE_DIR}/src/city/games.c
     ${PROJECT_SOURCE_DIR}/src/city/gods.c
     ${PROJECT_SOURCE_DIR}/src/city/health.c
     ${PROJECT_SOURCE_DIR}/src/city/houses.c

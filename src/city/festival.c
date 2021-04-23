@@ -20,19 +20,6 @@ auto_festival autofestivals[5] = {
     {4, 3}, // venus, april
 };
 
-typedef enum {
-    G_PLANNING,
-    G_STARTING,
-    G_ENDING
-} games_messages;
-
-games_type ALL_GAMES[MAX_GAMES] = {
-    {1, TR_WINDOW_GAMES_OPTION_1, TR_WINDOW_GAMES_OPTION_1_DESC, 100, 1, 32, 64, 33, {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,}},
-    {2, TR_WINDOW_GAMES_OPTION_2, TR_WINDOW_GAMES_OPTION_2_DESC, 0, 1, 32, 64, 33, {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
-    {3, TR_WINDOW_GAMES_OPTION_3, TR_WINDOW_GAMES_OPTION_3_DESC, 0, 1, 32, 64, 33, {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,}},
-    //{4, TR_WINDOW_GAMES_OPTION_4, TR_WINDOW_GAMES_OPTION_4_DESC, 100, 1, 32, 120, 32, {0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,}}
-};
-
 int city_festival_is_planned(void)
 {
     return city_data.festival.planned.size != FESTIVAL_NONE;
@@ -259,93 +246,6 @@ void city_festival_calculate_costs(void)
         city_data.festival.not_enough_wine = 1;
         if (city_data.festival.selected.size == FESTIVAL_GRAND) {
             city_data.festival.selected.size = FESTIVAL_LARGE;
-        }
-    }
-}
-
-games_type *get_game_from_id(int id)
-{
-    for (int i = 0; i <= MAX_GAMES; ++i) {
-        if (ALL_GAMES[i].id == id) {
-            return &ALL_GAMES[i];
-        }
-    }
-    return 0;
-}
-
-static void post_games_message(int type)
-{
-    int game_id = city_data.games.selected_games_id;
-    int message_offset = (game_id - 1) * 3 + type;
-    city_message_post(1, message_offset + MESSAGE_NG_GAMES_PLANNED, 0, 0);
-}
-
-static void begin_games(void)
-{
-    games_type *game = get_game_from_id(city_data.games.selected_games_id);
-
-    city_data.games.months_to_go = 0;
-    city_data.games.games_is_active = 1;
-    city_data.games.remaining_duration = game->duration_days;
-
-    post_games_message(G_STARTING);
-}
-
-static void end_games(void)
-{
-    city_data.games.games_is_active = 0;
-    city_data.games.remaining_duration = 0;
-
-    city_data.games.months_since_last = 0;
-
-    post_games_message(G_ENDING);
-}
-
-void city_festival_games_schedule(int game_id)
-{
-    games_type *game = get_game_from_id(game_id);
-    city_emperor_decrement_personal_savings(game->cost);
-
-    for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-        if (game->resource_cost[resource]) {
-            building_warehouses_remove_resource(resource, game->resource_cost[resource]);
-        }
-    }
-
-    city_data.games.months_to_go = game->delay_months;
-    post_games_message(G_PLANNING);
-}
-
-void city_festival_games_decrement_month_counts(void)
-{
-    city_data.games.months_since_last++;
-
-    if (city_data.games.months_to_go) {
-        city_data.games.months_to_go--;
-        if (city_data.games.months_to_go == 0) {
-            begin_games();
-        }
-    }
-    if (city_data.games.games_1_bonus_months) {
-        city_data.games.games_1_bonus_months--;
-    }
-    if (city_data.games.games_2_bonus_months) {
-        city_data.games.games_2_bonus_months--;
-    }
-    if (city_data.games.games_3_bonus_months) {
-        city_data.games.games_3_bonus_months--;
-    }
-    if (city_data.games.games_4_bonus_months) {
-        city_data.games.games_4_bonus_months--;
-    }
-}
-
-void city_festival_games_decrement_duration(void)
-{
-    if (city_data.games.remaining_duration && city_data.games.games_is_active) {
-        city_data.games.remaining_duration--;
-        if (city_data.games.remaining_duration == 0) {
-            end_games();
         }
     }
 }

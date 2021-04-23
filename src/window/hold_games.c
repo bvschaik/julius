@@ -6,6 +6,7 @@
 #include "city/data_private.h"
 #include "city/festival.h"
 #include "city/finance.h"
+#include "city/games.h"
 #include "city/gods.h"
 #include "core/image_group.h"
 #include "game/resource.h"
@@ -51,7 +52,7 @@ static void draw_background(void)
         city_data.games.selected_games_id = 1;
         selected_game_id = 1;
     }
-    games_type *game = get_game_from_id(selected_game_id);
+    games_type *game = city_games_get_game_type(selected_game_id);
 
     window_advisors_draw_dialog_background();
     graphics_in_dialog();
@@ -71,7 +72,7 @@ static void draw_background(void)
     text_draw_multiline(translation_for(game->description_key), 70, 222, 500, FONT_NORMAL_BLACK, 0);
 
     int width = text_draw(translation_for(TR_WINDOW_GAMES_COST), 120, 300, FONT_NORMAL_BLACK, 0);
-    width += text_draw_money(game->cost, 120 + width, 300, FONT_NORMAL_BLACK);
+    width += text_draw_money(city_games_money_cost(selected_game_id), 120 + width, 300, FONT_NORMAL_BLACK);
     text_draw(translation_for(TR_WINDOW_GAMES_PERSONAL_FUNDS), 120 + width, 300, FONT_NORMAL_BLACK, 0);
 
     width = 0;
@@ -89,7 +90,7 @@ static void draw_background(void)
 
     if (!building_count_active(game->building_id_required)) {
         text_draw(translation_for(TR_WINDOW_GAMES_NO_VENUE), 130, 352, FONT_NORMAL_BLACK, 0);
-    } else if (city_emperor_personal_savings() < game->cost) {
+    } else if (city_emperor_personal_savings() < city_games_money_cost(selected_game_id)) {
         text_draw(translation_for(TR_WINDOW_GAMES_NOT_ENOUGH_FUNDS), 130, 352, FONT_NORMAL_BLACK, 0);
     } else if (!has_resources) {
         text_draw(translation_for(TR_WINDOW_GAMES_NOT_ENOUGH_RESOURCES), 130, 352, FONT_NORMAL_BLACK, 0);
@@ -135,7 +136,7 @@ static void button_close(int param1, int param2)
 
 static void button_hold_games(int param1, int param2)
 {
-    city_festival_games_schedule(city_data.games.selected_games_id);
+    city_games_schedule(city_data.games.selected_games_id);
     window_advisors_show();
 }
 
@@ -145,7 +146,7 @@ static void get_tooltip(tooltip_context *c)
         return;
     }
     c->type = TOOLTIP_BUTTON;
-    games_type *game = get_game_from_id(focus_button_id);
+    games_type *game = city_games_get_game_type(focus_button_id);
     if (game) {
         c->translation_key = game->header_key;
     }

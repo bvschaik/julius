@@ -15,6 +15,7 @@
 #include "city/emperor.h"
 #include "city/festival.h"
 #include "city/finance.h"
+#include "city/games.h"
 #include "city/gods.h"
 #include "city/health.h"
 #include "city/labor.h"
@@ -100,7 +101,7 @@ static void advance_month(void)
 
     city_population_record_monthly();
     city_festival_update();
-    city_festival_games_decrement_month_counts();
+    city_games_decrement_month_counts();
     city_gods_update_blessings();
     tutorial_on_month_tick();
     if (setting_monthly_autosave()) {
@@ -162,7 +163,7 @@ static void advance_tick(void)
         case 44: building_maintenance_check_fire_collapse(); break;
         case 45: figure_generate_criminals(); break;
         case 46: building_industry_update_wheat_production(); break;
-        case 47: city_festival_games_decrement_duration(); break;
+        case 47: city_games_decrement_duration(); break;
         case 48: house_service_decay_tax_collector(); break;
         case 49: city_culture_calculate(); break;
     }

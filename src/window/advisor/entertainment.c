@@ -6,6 +6,7 @@
 #include "city/entertainment.h"
 #include "city/festival.h"
 #include "city/finance.h"
+#include "city/games.h"
 #include "city/gods.h"
 #include "city/houses.h"
 #include "core/calc.h"
@@ -47,7 +48,7 @@ static int get_entertainment_advice(void)
 
 static void draw_games_info(void)
 {
-    games_type *game = get_game_from_id(city_festival_selected_game_id());
+    games_type *game = city_games_get_game_type(city_festival_selected_game_id());
     int cooldown = city_festival_games_cooldown();
 
     inner_panel_draw(48, 312, 34, 6);
