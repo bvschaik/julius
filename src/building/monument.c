@@ -317,6 +317,7 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
 		for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
 			if (b->data.monument.phase == MONUMENT_FINISHED ||
 				b->data.monument.phase < MONUMENT_START ||
+				building_monument_is_construction_halted(b) ||
 				(!resource && building_monument_needs_resources(b))) {
 				continue;
 			}
