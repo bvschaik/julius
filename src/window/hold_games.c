@@ -82,7 +82,7 @@ static void draw_background(void)
         resource_cost = city_games_resource_cost(selected_game_id,i);
         if (resource_cost) {
             width += text_draw_number(resource_cost, '@', "", 120 + width, 320, FONT_NORMAL_BLACK);
-            if (city_resource_get_stored(i) < resource_cost) {
+            if (city_resource_count(i) < resource_cost) {
                 has_resources = 0;
             }
             image_draw(image_group(GROUP_RESOURCE_ICONS) + i, 120 + width, 316);

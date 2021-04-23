@@ -6,6 +6,7 @@
 #include "building/count.h"
 #include "city/culture.h"
 #include "city/data_private.h"
+#include "city/games.h"
 #include "city/victory.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -14,6 +15,7 @@
 #include "scenario/property.h"
 
 #define GT_CULTURE_BONUS 8
+#define GAMES_MONTHLY_FAVOUR_BONUS 2
 
 int city_rating_culture(void)
 {
@@ -519,7 +521,7 @@ static void update_peace_rating(void)
     update_peace_explanation();
 }
 
-static void update_favor_rating(int is_yearly_update)
+static void update_favor_rating(int is_yearly_update, int is_monthly_update)
 {
     if (scenario_is_open_play()) {
         city_data.ratings.favor = 50;
@@ -528,6 +530,11 @@ static void update_favor_rating(int is_yearly_update)
     city_data.emperor.months_since_gift++;
     if (city_data.emperor.months_since_gift >= 12) {
         city_data.emperor.gift_overdose_penalty = 0;
+    }
+    if (is_monthly_update) {
+        if (city_games_imperial_festival_active()) {
+            city_data.ratings.favor += GAMES_MONTHLY_FAVOUR_BONUS;
+        }
     }
     if (is_yearly_update) {
         city_data.ratings.favor_salary_penalty = 0;
@@ -622,10 +629,10 @@ static void update_favor_rating(int is_yearly_update)
     city_ratings_update_favor_explanation();
 }
 
-void city_ratings_update(int is_yearly_update)
+void city_ratings_update(int is_yearly_update, int is_monthly_update)
 {
     update_culture_rating();
-    update_favor_rating(is_yearly_update);
+    update_favor_rating(is_yearly_update, is_monthly_update);
     calculate_max_prosperity();
     if (is_yearly_update) {
         update_prosperity_rating();

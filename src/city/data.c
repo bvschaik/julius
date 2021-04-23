@@ -463,9 +463,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.mess_hall.total_food);
     buffer_write_i32(main, city_data.mess_hall.missing_mess_hall_warning_shown);
     buffer_write_i32(main, city_data.military.soldiers_in_city);
-    for (int i = 0; i < 1; i++) {
-        buffer_write_i32(main, city_data.unused.unused_4524[i]);
-    }
+    buffer_write_i32(main, city_data.games.naval_battle_distant_battle_bonus);
     buffer_write_i32(main, city_data.figure.looters);
     buffer_write_i32(main, city_data.figure.robbers);
     buffer_write_i32(main, city_data.figure.protesters);
@@ -966,9 +964,7 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     city_data.mess_hall.total_food = buffer_read_i32(main);
     city_data.mess_hall.missing_mess_hall_warning_shown = buffer_read_i32(main);
     city_data.military.soldiers_in_city = buffer_read_i32(main);
-    for (int i = 0; i < 1; i++) {
-        city_data.unused.unused_4524[i] = buffer_read_i32(main);
-    }
+    city_data.games.naval_battle_distant_battle_bonus = buffer_read_i32(main);
     city_data.figure.looters = buffer_read_i32(main);
     city_data.figure.robbers = buffer_read_i32(main);
     city_data.figure.protesters = buffer_read_i32(main);

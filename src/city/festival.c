@@ -95,11 +95,11 @@ int city_festival_games_bonus_active(int game_id)
 {
     switch (game_id) {
         case 1:
-            return city_data.games.games_1_bonus_months;
+            return city_data.games.naval_battle_bonus_months;
         case 2:
-            return city_data.games.games_2_bonus_months;
+            return city_data.games.executions_bonus_months;
         case 3:
-            return city_data.games.games_3_bonus_months;
+            return city_data.games.imperial_games_bonus_months;
         case 4:
             return city_data.games.games_4_bonus_months;
         default:

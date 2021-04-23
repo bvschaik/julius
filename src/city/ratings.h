@@ -42,7 +42,7 @@ void city_ratings_update_favor_explanation(void);
 
 void city_ratings_update_explanations(void);
 
-void city_ratings_update(int is_yearly_update);
+void city_ratings_update(int is_yearly_update, int is_monthly_update);
 
 int city_ratings_prosperity_max(void);
 

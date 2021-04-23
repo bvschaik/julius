@@ -332,9 +332,10 @@ extern struct city_data_t {
         int32_t remaining_duration;
         int32_t months_since_last;
         int32_t games_is_active;
-        int32_t games_1_bonus_months;
-        int32_t games_2_bonus_months;
-        int32_t games_3_bonus_months;
+        int32_t naval_battle_bonus_months;
+        int32_t naval_battle_distant_battle_bonus;
+        int32_t executions_bonus_months;
+        int32_t imperial_games_bonus_months;
         int32_t games_4_bonus_months;
     } games;
     struct {

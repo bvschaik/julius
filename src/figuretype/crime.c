@@ -9,6 +9,7 @@
 #include "city/data_private.h"
 #include "city/figures.h"
 #include "city/finance.h"
+#include "city/games.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "city/ratings.h"
@@ -211,6 +212,10 @@ static void generate_protestor(building *b)
 
 void figure_generate_criminals(void)
 {
+    if (city_games_executions_active()) {
+        return;
+    }
+
     for (building_type type = BUILDING_MARBLE_QUARRY; type <= BUILDING_POTTERY_WORKSHOP; type++) {
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state == BUILDING_STATE_IN_USE && b->strike_duration_days > 0) {

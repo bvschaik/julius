@@ -5,6 +5,7 @@
 #include "city/constants.h"
 #include "city/data_private.h"
 #include "city/figures.h"
+#include "city/games.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
@@ -29,6 +30,7 @@
 #define MAX_SENTIMENT_CHANGE 2
 #define DESIRABILITY_TO_SENTIMENT_RATIO 2
 #define COOLDOWN_AFTER_CRIME_DAYS 10
+#define EXECUTIONS_GAMES_SENTIMENT_BONUS 20
 
 int city_sentiment(void)
 {
@@ -149,6 +151,14 @@ void city_sentiment_decrement_blessing_boost(void)
     city_data.sentiment.blessing_festival_boost = new_sentiment;
 }
 
+static int get_games_bonus(void)
+{
+    if (city_games_executions_active()) {
+        return EXECUTIONS_GAMES_SENTIMENT_BONUS;
+    }
+    return 0;
+}
+
 static int get_wage_sentiment_modifier(void)
 {
     int wage_differential = city_data.labor.wages - city_data.labor.wages_rome;
@@ -251,6 +261,7 @@ void city_sentiment_update(void)
     int average_housing_level = get_average_housing_level();
     int blessing_festival_boost = city_data.sentiment.blessing_festival_boost;
     int average_squalor_penalty = 0;
+    int games_bonus = get_games_bonus();
 
     int total_sentiment = 0;
     int total_pop = 0;
@@ -304,6 +315,7 @@ void city_sentiment_update(void)
             sentiment += desirability_bonus;
             sentiment += entertainment_bonus;
             sentiment += food_bonus;
+            sentiment += games_bonus;
 
             sentiment += blessing_festival_boost;
 

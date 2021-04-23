@@ -1,6 +1,7 @@
 #include "formation_legion.h"
 
 #include "city/figures.h"
+#include "city/games.h"
 #include "city/military.h"
 #include "city/warning.h"
 #include "core/calc.h"
@@ -187,6 +188,9 @@ static int dispatch_soldiers(formation *m)
     } else {
         strength_factor = m->figure_type == FIGURE_FORT_LEGIONARY ? 2 : 1;
     }
+    if (city_games_naval_battle_distant_battle_bonus_active()) {
+        strength_factor += 1;
+    }
     return strength_factor * m->num_figures;
 }
 
@@ -206,6 +210,7 @@ void formation_legions_dispatch_to_distant_battle(void)
         roman_strength = 255;
     }
     if (num_legions > 0) {
+        city_games_remove_naval_battle_distant_battle_bonus();
         city_military_dispatch_to_distant_battle(roman_strength);
     }
 }

@@ -214,12 +214,6 @@ void city_resource_add_to_warehouse(resource_type resource, int amount)
     city_data.resource.stored_in_warehouses[resource] += amount;
 }
 
-int city_resource_get_stored(resource_type resource)
-{
-    int stored = city_data.resource.space_in_warehouses[resource];
-    return stored;
-}
-
 void city_resource_remove_from_warehouse(resource_type resource, int amount)
 {
     city_data.resource.space_in_warehouses[resource] += amount;

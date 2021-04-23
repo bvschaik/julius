@@ -21,10 +21,14 @@ typedef enum {
     G_ENDING
 } games_messages;
 
+static void naval_battle_start(int id);
+static void executions_start(int id);
+static void imperial_games_start(int id);
+
 games_type ALL_GAMES[MAX_GAMES] = {
-    {1, TR_WINDOW_GAMES_OPTION_1, TR_WINDOW_GAMES_OPTION_1_DESC, 1800, 100, 1, 32, 64, 33, {0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,}},
-    {2, TR_WINDOW_GAMES_OPTION_2, TR_WINDOW_GAMES_OPTION_2_DESC, 1000, 200, 1, 32, 64, 33, {0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,}},
-    {3, TR_WINDOW_GAMES_OPTION_3, TR_WINDOW_GAMES_OPTION_3_DESC, 800, 200, 1, 32, 64, 33, {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,}},
+    {1, TR_WINDOW_GAMES_OPTION_1, TR_WINDOW_GAMES_OPTION_1_DESC, 2000, 100, 1, 32, 12, 33, {0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,}, naval_battle_start},
+    {2, TR_WINDOW_GAMES_OPTION_2, TR_WINDOW_GAMES_OPTION_2_DESC, 1000, 200, 1, 32, 12, 33, {0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,}, executions_start},
+    {3, TR_WINDOW_GAMES_OPTION_3, TR_WINDOW_GAMES_OPTION_3_DESC, 1000, 200, 1, 32, 12, 33, {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,}, imperial_games_start},
     //{4, TR_WINDOW_GAMES_OPTION_4, TR_WINDOW_GAMES_OPTION_4_DESC, 100, 1, 32, 120, 32, {0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,}}
 };
 
@@ -74,6 +78,7 @@ static void begin_games(void)
     city_data.games.months_to_go = 0;
     city_data.games.games_is_active = 1;
     city_data.games.remaining_duration = game->duration_days;
+    game->games_start_function(city_data.games.selected_games_id);
 
     post_games_message(G_STARTING);
 }
@@ -114,14 +119,14 @@ void city_games_decrement_month_counts(void)
             begin_games();
         }
     }
-    if (city_data.games.games_1_bonus_months) {
-        city_data.games.games_1_bonus_months--;
+    if (city_data.games.naval_battle_bonus_months) {
+        city_data.games.naval_battle_bonus_months--;
     }
-    if (city_data.games.games_2_bonus_months) {
-        city_data.games.games_2_bonus_months--;
+    if (city_data.games.executions_bonus_months) {
+        city_data.games.executions_bonus_months--;
     }
-    if (city_data.games.games_3_bonus_months) {
-        city_data.games.games_3_bonus_months--;
+    if (city_data.games.imperial_games_bonus_months) {
+        city_data.games.imperial_games_bonus_months--;
     }
     if (city_data.games.games_4_bonus_months) {
         city_data.games.games_4_bonus_months--;
@@ -140,15 +145,44 @@ void city_games_decrement_duration(void)
 
 int city_games_naval_battle_active(void)
 {
-    return city_data.games.games_1_bonus_months;
+    return city_data.games.naval_battle_bonus_months;
 }
 
 int city_games_executions_active(void)
 {
-    return city_data.games.games_2_bonus_months;
+    return city_data.games.executions_bonus_months;
 }
 
-int city_games_trade_festival_active(void)
+int city_games_imperial_festival_active(void)
 {
-    return city_data.games.games_3_bonus_months;
+    return city_data.games.imperial_games_bonus_months;
+}
+
+int city_games_naval_battle_distant_battle_bonus_active(void)
+{
+    return city_data.games.naval_battle_distant_battle_bonus;
+}
+
+void city_games_remove_naval_battle_distant_battle_bonus(void)
+{
+    city_data.games.naval_battle_distant_battle_bonus = 0;
+}
+
+static void naval_battle_start(int id)
+{
+    games_type *game = city_games_get_game_type(city_data.games.selected_games_id);
+    city_data.games.naval_battle_bonus_months = game->bonus_duration;
+    city_data.games.naval_battle_distant_battle_bonus = 1;
+}
+
+static void executions_start(int id)
+{
+    games_type *game = city_games_get_game_type(city_data.games.selected_games_id);
+    city_data.games.executions_bonus_months = game->bonus_duration;
+}
+
+static void imperial_games_start(int id)
+{
+    games_type *game = city_games_get_game_type(city_data.games.selected_games_id);
+    city_data.games.imperial_games_bonus_months = game->bonus_duration;
 }
