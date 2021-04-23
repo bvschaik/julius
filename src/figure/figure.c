@@ -213,6 +213,7 @@ void figure_kill_all(void)
             case FIGURE_MAP_FLAG:
             case FIGURE_FISH_GULLS:
             case FIGURE_SHIPWRECK:
+            case FIGURE_FORT_STANDARD:
                 continue;
         }  
     }
