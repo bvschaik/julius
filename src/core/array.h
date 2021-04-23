@@ -47,13 +47,21 @@ struct { \
 /**
  * Creates a new item for the array, either by finding an available empty item or by expanding the array.
  * @param a The array structure
- * @param index The index upon which to start searching for a free slot.
+ * @param index The index upon which to start searching for a free slot. If index is greater than the arrray size,
+ *        the array will be expanded.
  * @param ptr A pointer that will get the new item. Will be null if there was a memory allocation error.
  */
 #define array_new_item(a, index, ptr) \
 { \
     ptr = 0; \
-    if ((a).in_use) { \
+    int error = 0; \
+    while ((a).size < index) { \
+        if (!array_advance(a)) { \
+            error = 1; \
+            break; \
+        } \
+    } \
+    if (!error && (a).in_use) { \
         for (int i = index; i < (a).size; i++) { \
             if (!(a).in_use(array_item(a, i))) { \
                 ptr = array_item(a, i); \
@@ -65,7 +73,7 @@ struct { \
             } \
         } \
     } \
-    if (!ptr) { \
+    if (!error && !ptr) { \
         ptr = array_advance(a); \
     } \
 }
