@@ -18,45 +18,24 @@
 static void button_graph(int param1, int param2);
 
 static generic_button graph_buttons[] = {
-    {503,  61, 104, 55, button_graph, button_none, 0, 0},
-    {503, 161, 104, 55, button_graph, button_none, 1, 0},
+    {509,  61, 104, 55, button_graph, button_none, 0, 0},
+    {509, 161, 104, 55, button_graph, button_none, 1, 0},
 };
 
 static int focus_button_id;
 
 static void get_y_axis(int max_value, int *y_max, int *y_shift)
 {
-    if (max_value <= 100) {
-        *y_max = 100;
-        *y_shift = -1;
-    } else if (max_value <= 200) {
-        *y_max = 200;
-        *y_shift = 0;
-    } else if (max_value <= 400) {
-        *y_max = 400;
-        *y_shift = 1;
-    } else if (max_value <= 800) {
-        *y_max = 800;
-        *y_shift = 2;
-    } else if (max_value <= 1600) {
-        *y_max = 1600;
-        *y_shift = 3;
-    } else if (max_value <= 3200) {
-        *y_max = 3200;
-        *y_shift = 4;
-    } else if (max_value <= 6400) {
-        *y_max = 6400;
-        *y_shift = 5;
-    } else if (max_value <= 12800) {
-        *y_max = 12800;
-        *y_shift = 6;
-    } else if (max_value <= 25600) {
-        *y_max = 25600;
-        *y_shift = 7;
-    } else {
-        *y_max = 51200;
-        *y_shift = 8;
+    int max = 1;
+    int shift = -1;
+    int value = max_value > 0 ? (max_value - 1) / 100 : 0;
+    while (value) {
+        max <<= 1;
+        shift++;
+        value >>= 1;
     }
+    *y_max = max * 100;
+    *y_shift = shift;
 }
 
 static void get_min_max_month_year(int max_months, int *start_month, int *start_year, int *end_month, int *end_year)
@@ -281,7 +260,7 @@ static int draw_background(void)
         lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK);
     }
 
-    image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
+    image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 62, 60);
 
     int big_text, top_text, bot_text;
     void (*big_graph)(int, int, int);
@@ -341,9 +320,9 @@ static int draw_background(void)
     lang_text_draw_centered(55, big_text, 60, 295, 400, FONT_NORMAL_BLACK);
     lang_text_draw_centered(55, top_text, 504, 120, 100, FONT_NORMAL_BLACK);
     lang_text_draw_centered(55, bot_text, 504, 220, 100, FONT_NORMAL_BLACK);
-    big_graph(1, 64, 64);
-    top_graph(0, 505, 63);
-    bot_graph(0, 505, 163);
+    big_graph(1, 70, 64);
+    top_graph(0, 511, 63);
+    bot_graph(0, 511, 163);
 
     // food/migration info panel
     inner_panel_draw(48, 336, 34, 5);
@@ -415,14 +394,14 @@ static int draw_background(void)
 static void draw_foreground(void)
 {
     if (focus_button_id == 0) {
-        button_border_draw(501, 60, 106, 57, 0);
-        button_border_draw(501, 160, 106, 57, 0);
+        button_border_draw(507, 60, 106, 57, 0);
+        button_border_draw(507, 160, 106, 57, 0);
     } else if (focus_button_id == 1) {
-        button_border_draw(501, 60, 106, 57, 1);
-        button_border_draw(501, 160, 106, 57, 0);
+        button_border_draw(507, 60, 106, 57, 1);
+        button_border_draw(507, 160, 106, 57, 0);
     } else if (focus_button_id == 2) {
-        button_border_draw(501, 60, 106, 57, 0);
-        button_border_draw(501, 160, 106, 57, 1);
+        button_border_draw(507, 60, 106, 57, 0);
+        button_border_draw(507, 160, 106, 57, 1);
     }
 }
 
