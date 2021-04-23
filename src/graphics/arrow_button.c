@@ -1,6 +1,5 @@
 #include "arrow_button.h"
 
-#include "core/time.h"
 #include "graphics/image.h"
 
 static const int REPEATS[] = {
@@ -43,9 +42,9 @@ int arrow_buttons_handle_mouse(
 
     time_millis curr_time = time_get_millis();
     int should_repeat = 0;
-    if (curr_time - last_time >= REPEAT_MILLIS) {
+    if (curr_time - buttons->last_time >= REPEAT_MILLIS) {
         should_repeat = 1;
-        last_time = curr_time;
+        buttons->last_time = curr_time;
     }
     for (int i = 0; i < num_buttons; i++) {
         arrow_button *btn = &buttons[i];
