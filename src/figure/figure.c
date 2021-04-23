@@ -205,7 +205,16 @@ void figure_kill_all(void)
     figure *f;
     array_foreach(data.figures, f)
     {
-        f->state = FIGURE_STATE_DEAD;
+        switch (f->type) {
+            default:
+                f->state = FIGURE_STATE_DEAD;
+                break;
+            case FIGURE_EXPLOSION:
+            case FIGURE_MAP_FLAG:
+            case FIGURE_FISH_GULLS:
+            case FIGURE_SHIPWRECK:
+                continue;
+        }  
     }
 }
 
