@@ -31,6 +31,7 @@
 #define DESIRABILITY_TO_SENTIMENT_RATIO 2
 #define COOLDOWN_AFTER_CRIME_DAYS 10
 #define EXECUTIONS_GAMES_SENTIMENT_BONUS 20
+#define IMPERIAL_GAMES_SENTIMENT_BONUS 15
 
 int city_sentiment(void)
 {
@@ -153,10 +154,14 @@ void city_sentiment_decrement_blessing_boost(void)
 
 static int get_games_bonus(void)
 {
+    int bonus = 0;
     if (city_games_executions_active()) {
-        return EXECUTIONS_GAMES_SENTIMENT_BONUS;
+        bonus += EXECUTIONS_GAMES_SENTIMENT_BONUS;
     }
-    return 0;
+    if (city_games_imperial_festival_active()) {
+        bonus += IMPERIAL_GAMES_SENTIMENT_BONUS;
+    }
+    return bonus;
 }
 
 static int get_wage_sentiment_modifier(void)

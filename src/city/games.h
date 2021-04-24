@@ -10,6 +10,7 @@ typedef struct {
     int id;
     int header_key;
     int description_key;
+    int message_planning;
     int cost_base;
     int cost_scaling;
     int delay_months;

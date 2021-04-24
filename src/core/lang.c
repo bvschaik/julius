@@ -240,12 +240,17 @@ void load_custom_messages(void)
         m = &data.message_entries[i];
         set_message_parameters(m, TR_CITY_MESSAGE_TITLE_GREAT_GAMES, TR_CITY_MESSAGE_TEXT_NAVAL_GAMES_PLANNING + j, 1, MESSAGE_TYPE_GENERAL);
         i += 1;
-
     }
 
     m = &data.message_entries[i];
     set_message_parameters(m, TR_CITY_MESSAGE_TITLE_LOOTING, TR_CITY_MESSAGE_TEXT_LOOTING, 1, MESSAGE_TYPE_DISASTER);
     i += 1;
+
+    for (int j = 0; j < 3; ++j) {
+        m = &data.message_entries[i];
+        set_message_parameters(m, TR_CITY_MESSAGE_TITLE_GREAT_GAMES, TR_CITY_MESSAGE_TEXT_IMPERIAL_GAMES_PLANNING + j, 1, MESSAGE_TYPE_GENERAL);
+        i += 1;
+    }
 }
 
 

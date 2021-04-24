@@ -26,9 +26,9 @@ static void executions_start(int id);
 static void imperial_games_start(int id);
 
 games_type ALL_GAMES[MAX_GAMES] = {
-    {1, TR_WINDOW_GAMES_OPTION_1, TR_WINDOW_GAMES_OPTION_1_DESC, 2000, 100, 1, 32, 12, 33, {0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,}, naval_battle_start},
-    {2, TR_WINDOW_GAMES_OPTION_2, TR_WINDOW_GAMES_OPTION_2_DESC, 1000, 200, 1, 32, 12, 33, {0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,}, executions_start},
-    {3, TR_WINDOW_GAMES_OPTION_3, TR_WINDOW_GAMES_OPTION_3_DESC, 1000, 200, 1, 32, 12, 33, {0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,}, imperial_games_start},
+    {1, TR_WINDOW_GAMES_OPTION_1, TR_WINDOW_GAMES_OPTION_1_DESC, MESSAGE_NG_GAMES_PLANNED, 2000, 100, 1, 32, 12, 33, {0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,}, naval_battle_start},
+    {2, TR_WINDOW_GAMES_OPTION_2, TR_WINDOW_GAMES_OPTION_2_DESC, MESSAGE_AN_GAMES_PLANNED, 1000, 200, 1, 32, 12, 33, {0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,}, executions_start},
+    {3, TR_WINDOW_GAMES_OPTION_5, TR_WINDOW_GAMES_OPTION_5_DESC, MESSAGE_IG_GAMES_PLANNED, 1000, 200, 1, 32, 12, 33, {0,3,0,0,0,0,0,0,1,0,0,0,0,0,0,0,}, imperial_games_start},
     //{4, TR_WINDOW_GAMES_OPTION_4, TR_WINDOW_GAMES_OPTION_4_DESC, 100, 1, 32, 120, 32, {0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,}}
 };
 
@@ -67,8 +67,8 @@ int city_games_resource_cost(int game_type_id, resource_type resource)
 static void post_games_message(int type)
 {
     int game_id = city_data.games.selected_games_id;
-    int message_offset = (game_id - 1) * 3 + type;
-    city_message_post(1, message_offset + MESSAGE_NG_GAMES_PLANNED, 0, 0);
+    games_type *game = city_games_get_game_type(city_data.games.selected_games_id);
+    city_message_post(1, game->message_planning + type, 0, 0);
 }
 
 static void begin_games(void)

@@ -32,6 +32,18 @@ static generic_button hold_games_button[] = {
     {102, 380, 300, 20, button_hold_games, button_none, 0, 0},
 };
 
+
+struct games_text {
+    translation_key preparation_text;
+    translation_key ongoing_text;
+} text_data[] = { 
+    {0,0}, // 0 element unused
+    {TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_NG, TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG},
+    {TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_AG, TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_AG},
+    {TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_IG, TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_IG},
+};
+
+
 static int get_entertainment_advice(void)
 {
     const house_demands *demands = city_houses_demands();
@@ -63,10 +75,10 @@ static void draw_games_info(void)
 
     }     else if (city_festival_games_planning_time()) {
         text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_PREPARING), 56, 340, 400, FONT_NORMAL_WHITE, 0);
-        int width = text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_PREPARING_NG + ((game->id - 1) * 2)), 102, 375, FONT_NORMAL_WHITE, 0);
+        int width = text_draw(translation_for(text_data[game->id].preparation_text), 102, 375, FONT_NORMAL_WHITE, 0);
         text_draw_number(city_festival_games_planning_time(), '@', "", 102 + width, 375, FONT_NORMAL_WHITE);
     }     else if (city_festival_games_active()) {
-        text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG + ((game->id - 1) * 2)), 60, 325, 400, FONT_NORMAL_WHITE, 0);
+        text_draw_multiline(translation_for(text_data[game->id].ongoing_text), 60, 325, 400, FONT_NORMAL_WHITE, 0);
     }     else {
         text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC), 60, 325, 400, FONT_NORMAL_WHITE, 0);
         text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_BUTTON), 102, 385, 300, FONT_NORMAL_WHITE, 0);
