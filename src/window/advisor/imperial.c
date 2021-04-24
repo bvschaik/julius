@@ -265,7 +265,7 @@ static void get_tooltip_text(advisor_tooltip_result *r)
         int index = focus_button_id - 4;
         int request_status = city_request_get_status(index);
         if (request_status == CITY_REQUEST_STATUS_NOT_ENOUGH_RESOURCES || request_status >= CITY_REQUEST_STATUS_MAX) {
-            const scenario_request *request = scenario_request_get_visible(index - city_military_has_distant_battle());
+            const scenario_request *request = scenario_request_get_visible(index - city_request_has_troop_request());
             int using_granaries;
             city_resource_get_amount_including_granaries(request->resource, request->amount, &using_granaries);
             if (using_granaries) {
