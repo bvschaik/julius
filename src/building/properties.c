@@ -60,7 +60,7 @@ augustus_building_properties_mapping augustus_building_properties[AUGUSTUS_BUILD
     {BUILDING_NYMPHAEUM, {3,0,0,0,0}, "Areldir", "Minor_Monuments", "Nymphaeum OFF"},
     {BUILDING_SMALL_MAUSOLEUM, {2,0,0,0,0}, "Areldir", "Minor_Monuments", "Mausoleum S"},
     {BUILDING_LARGE_MAUSOLEUM, {3,0,0,0,0}, "Areldir", "Minor_Monuments", "Mausoleum L"},
-    {BUILDING_WATCHTOWER, {2,0,0,0,0}, "Areldir", "Watchtowers", "Watchtower C OFF"},
+    {BUILDING_WATCHTOWER, {2,1,0,0,0}, "Areldir", "Watchtowers", "Watchtower C OFF"},
     {BUILDING_LIBRARY, {2,0,0,0,0}, "Tomasz", "Building_Upgrades", "Downgraded_Library"},
     {BUILDING_CARAVANSERAI, { 4, 0, 0, 0, 0 },  "Areldir", "Econ_Logistics", "Caravanserai N OFF"},
     {BUILDING_SMALL_STATUE, {1,1,0,0,-12}, "Lizzaran", "Aesthetics_L", "V Small Statue" }
