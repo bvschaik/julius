@@ -216,7 +216,7 @@ static int get_tooltip_crime(tooltip_context *c, const building *b)
         return 61;
     } else if (crime == SOME_CRIME) {
         return 60;
-    } else if (crime == LOW_CRIME) {
+    } else if (crime == LOW_CRIME || crime == MINOR_CRIME) {
         return 59;
     } else {
         return 58;
