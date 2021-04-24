@@ -136,16 +136,22 @@ int building_construction_cycle(void)
             if (building_cycles[i].array[j] == BUILDING_NONE) {
                 continue;
             }
-            if (building_cycles[i].array[j] == data.type) {
+            if (building_cycles[i].array[j] == building_construction_type()) {
                 data.cycle_step += 1;
                 if (data.cycle_step < building_cycles[i].rotations_to_next) {
                     return 0;
                 }
                 data.cycle_step = 0;
-                data.type = building_cycles[i].array[j + 1];
-                if (data.type == BUILDING_NONE) {
-                    data.type = building_cycles[i].array[0];
+                int new_type = building_cycles[i].array[j + 1];
+                if (new_type == BUILDING_NONE) {
+                    new_type = building_cycles[i].array[0];
                 }
+                if (building_cycles[i].array[j] == data.type) {
+                    data.type = new_type;
+                } else {
+                    data.sub_type = new_type;
+                }
+
                 return 1;
             }
         }
@@ -603,7 +609,7 @@ void building_construction_cancel(void)
 
 void building_construction_update(int x, int y, int grid_offset)
 {
-    building_type type = data.sub_type ? data.sub_type : data.type;
+    building_type type = building_construction_type();
     if (grid_offset) {
         data.end.x = x;
         data.end.y = y;
@@ -801,7 +807,7 @@ void building_construction_place(void)
     int y_start = data.start.y;
     int x_end = data.end.x;
     int y_end = data.end.y;
-    building_type type = data.sub_type ? data.sub_type : data.type;
+    building_type type = building_construction_type();
     building_construction_warning_reset();
     if (!type) {
         return;
