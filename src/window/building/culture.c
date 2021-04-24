@@ -792,6 +792,10 @@ void window_building_draw_colosseum(building_info_context *c)
                 window_building_draw_description(c, 74, 4);
             }
         }
+        if (b->type == BUILDING_COLOSSEUM && c->height_blocks > 27) {
+            int banner_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Colosseum Banner");
+            image_draw(banner_id, c->x_offset + 32, c->y_offset + 256);
+        }
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
@@ -886,6 +890,10 @@ void window_building_draw_hippodrome(building_info_context *c)
                 c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
         } else {
             lang_text_draw(73, 5, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        }
+        if (c->height_blocks > 27) {
+            int banner_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Circus Banner");
+            image_draw(banner_id, c->x_offset + 32, c->y_offset + 256);
         }
     } else {
         window_building_draw_monument_hippodrome_construction_process(c);
