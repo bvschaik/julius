@@ -59,6 +59,7 @@ void building_rotation_rotate_by_hotkey(void)
 void building_rotation_reset_rotation(void)
 {
     data.rotation = 0;
+    data.extra_rotation = 0;
 }
 
 int building_rotation_get_building_orientation(int building_rotation)
