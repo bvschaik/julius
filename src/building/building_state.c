@@ -390,7 +390,7 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     b->show_on_problem_overlay = buffer_read_u8(buf);
 
     // Backwards compatibility fixes for culture update
-    if (building_monument_is_monument(b) && b->subtype.house_level && b->type != BUILDING_HIPPODROME) {
+    if (building_monument_is_monument(b) && b->subtype.house_level && b->type != BUILDING_HIPPODROME && b->type != BUILDING_CARAVANSERAI) {
         b->data.monument.phase = b->subtype.house_level;
     }
 
