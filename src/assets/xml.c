@@ -25,7 +25,7 @@ static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH]
     { { "author", "name" } }, // assetlist
     { { "id", "src", "width", "height", "group", "image", "index" } }, // image
     { { "src", "group", "image", "x", "y", "invert", "rotate", "part" }, // layer
-    { "frames", "speed", "reversible", "x", "y" } } // animation
+    { "frames", "speed", "reversible", "x", "y", "index" } } // animation
 };
 
 static void xml_start_assetlist_element(const char **attributes);
@@ -154,6 +154,8 @@ static void xml_start_image_element(const char **attributes)
             int index = string_to_int(string_from_ascii(attributes[i + 1]));
             if (data.image_index < index) {
                 data.image_index = index;
+            } else if (data.image_index > index) {
+                log_error("The manually set index is higher than the current index. The manual index will be ignored. The current index is ", 0, data.image_index);
             }
         }
     }
@@ -265,6 +267,9 @@ static void xml_start_animation_element(const char **attributes)
         }
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][4]) == 0) {
             img->img.sprite_offset_y = string_to_int(string_from_ascii(attributes[i + 1]));
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][5]) == 0) {
+            img->img.animation_start_offset = string_to_int(string_from_ascii(attributes[i + 1])) - data.image_index;
         }
     }
 }

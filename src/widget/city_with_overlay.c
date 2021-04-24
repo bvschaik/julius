@@ -533,7 +533,7 @@ static void draw_animation(int x, int y, int grid_offset)
                         case 4: ydiff = 75; break;
                         case 5: ydiff = 90; break;
                     }
-                    image_draw_masked(image_id + animation_offset,
+                    image_draw_masked(image_id + img->animation_start_offset + animation_offset,
                         x + img->sprite_offset_x,
                         y + ydiff + img->sprite_offset_y - img->height,
                         color_mask);
