@@ -30,7 +30,6 @@ int scenario_building_allowed(int building_type)
         case BUILDING_MENU_GRAND_TEMPLES:
             return scenario.allowed_buildings[ALLOWED_BUILDING_LARGE_TEMPLES] && scenario.allowed_buildings[ALLOWED_BUILDING_MONUMENTS];
         case BUILDING_ORACLE:
-        case BUILDING_LARARIUM:
         case BUILDING_SMALL_MAUSOLEUM:
         case BUILDING_LARGE_MAUSOLEUM:
         case BUILDING_NYMPHAEUM:
