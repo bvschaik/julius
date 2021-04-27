@@ -716,6 +716,8 @@ static void add_to_map(int type, building *b, int size,
             }
             break;
         case BUILDING_SMALL_MAUSOLEUM:
+            orientation = building_rotation_get_rotation();
+            b->subtype.orientation = orientation;
             add_building(b, assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum S Cons"));
             b->data.monument.phase = MONUMENT_START;
             map_tiles_update_area_roads(b->x, b->y, 4);

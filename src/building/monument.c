@@ -752,7 +752,7 @@ void building_monument_initialize(building *b)
 					break;
 				case 2:
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
-						assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum S"),
+						assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum S") + b->subtype.orientation % 2,
 						TERRAIN_BUILDING);
 					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
