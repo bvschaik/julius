@@ -6,6 +6,7 @@
 #include "city/data_private.h"
 #include "city/figures.h"
 #include "city/games.h"
+#include "city/gods.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
@@ -180,8 +181,9 @@ static int get_wage_sentiment_modifier(void)
 
 static int get_unemployment_sentiment_modifier(void)
 {
-    if (city_data.labor.unemployment_percentage > UNEMPLOYMENT_THRESHHOLD) {
-        return city_data.labor.unemployment_percentage - UNEMPLOYMENT_THRESHHOLD;
+    int unhappiness_treshhold = UNEMPLOYMENT_THRESHHOLD + city_god_venus_bonus_employment();
+    if (city_data.labor.unemployment_percentage > unhappiness_treshhold) {
+        return (city_data.labor.unemployment_percentage - unhappiness_treshhold);
     }
     return 0;
 }

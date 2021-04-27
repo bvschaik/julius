@@ -5,6 +5,7 @@
 #include "building/monument.h"
 #include "core/config.h"
 #include "city/data_private.h"
+#include "city/gods.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
@@ -135,9 +136,7 @@ void city_labor_calculate_workers(int num_plebs, int num_patricians)
     city_data.population.percentage_plebs = calc_percentage(num_plebs, num_plebs + num_patricians);
 
     if (config_get(CONFIG_GP_CH_FIXED_WORKERS)) {
-        if (city_data.religion.venus_blessing_months_left > 0) {
-            venus_blessing_modifier = ((city_data.religion.venus_blessing_months_left / 12) + 1);
-        }
+        venus_blessing_modifier = city_god_venus_bonus_employment();
         city_data.population.working_age = calc_adjust_with_percentage(num_plebs, 38 + venus_blessing_modifier);
         city_data.labor.workers_available = city_data.population.working_age;
     } else {
