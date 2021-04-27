@@ -14,5 +14,6 @@ enum {
 
 int city_request_has_troop_request(void);
 int city_request_get_status(int index);
+int city_get_request_resource(int index);
 
 #endif // CITY_REQUEST_H

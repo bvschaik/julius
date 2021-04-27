@@ -207,6 +207,8 @@ static void confirm_send_goods(int accepted)
 void button_request(int index, int param2)
 {
     int status = city_request_get_status(index);
+    int resource_type = city_get_request_resource(index);
+
     if (status) {
         city_military_clear_empire_service_legions();
         switch (status) {
@@ -223,6 +225,11 @@ void button_request(int index, int param2)
                 window_popup_dialog_show(POPUP_DIALOG_NOT_ENOUGH_GOODS, confirm_nothing, 0);
                 break;
             default:
+                if (resource_type != RESOURCE_DENARII) {
+                    if (city_resource_is_stockpiled(resource_type)) {
+                        city_resource_toggle_stockpiled(resource_type);
+                    }
+                }
                 selected_request_id = (status - CITY_REQUEST_STATUS_MAX) & ~CITY_REQUEST_STATUS_RESOURCES_FROM_GRANARY;
                 if (status & CITY_REQUEST_STATUS_RESOURCES_FROM_GRANARY) {
                     window_popup_dialog_show_custom_text(

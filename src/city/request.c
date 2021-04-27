@@ -46,3 +46,13 @@ int city_request_get_status(int index)
     }
     return 0;
 }
+
+int city_get_request_resource(int index) {
+    int num_requests = 0;
+    if (city_request_has_troop_request()) {
+        num_requests = 1;
+    }
+    const scenario_request *request = scenario_request_get_visible(index - num_requests);
+
+    return request->resource;
+}

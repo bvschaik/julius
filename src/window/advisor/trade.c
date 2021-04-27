@@ -70,7 +70,11 @@ static void draw_resource_status_text(int resource, int x, int y, int box_width)
     if (empire_can_export_resource_potentially(resource)) {
         trade_flags_potential |= TRADE_STATUS_EXPORT;
     }
+
     if (trade_flags_potential == TRADE_STATUS_NONE) {
+        if (city_resource_is_stockpiled(resource)) {
+            lang_text_draw_centered(54, 3, x, y + 10, box_width, FONT_NORMAL_RED);
+        }
         return;
     }
 
@@ -84,7 +88,7 @@ static void draw_resource_status_text(int resource, int x, int y, int box_width)
     resource_trade_status trade_status = city_resource_trade_status(resource);
 
     int two_lines = trade_flags_potential == TRADE_STATUS_IMPORT_EXPORT ||
-        (trade_flags_potential & TRADE_STATUS_IMPORT && city_resource_is_stockpiled(resource));
+                    (trade_flags_potential & TRADE_STATUS_IMPORT && city_resource_is_stockpiled(resource));
 
     if (!two_lines) {
         y += 10;
