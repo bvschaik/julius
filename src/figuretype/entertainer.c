@@ -1,6 +1,7 @@
 #include "entertainer.h"
 #include "building/building.h"
 #include "building/list.h"
+#include "building/monument.h"
 #include "city/festival.h"
 #include "city/figures.h"
 #include "city/map.h"
@@ -69,15 +70,16 @@ static int determine_tourist_destination(int x, int y)
     return b->id;
 }
 
-static int is_venue(building_type type)
+static int is_venue(building *b)
 {
-    switch (type) {
+    switch (b->type) {
         case BUILDING_THEATER:
         case BUILDING_AMPHITHEATER:
         case BUILDING_ARENA:
+            return 1;
         case BUILDING_COLOSSEUM:
         case BUILDING_HIPPODROME:
-            return 1;
+            return b->data.monument.phase == MONUMENT_FINISHED;
         default:
             return 0;
     }
@@ -135,7 +137,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
 static void update_shows(figure *f)
 {
     building *b = building_main(building_get(f->destination_building_id));
-    if (!is_venue(b->type)) {
+    if (!is_venue(b)) {
         return;
     }
     switch (f->type) {
@@ -260,9 +262,9 @@ static int fight_enemy(figure *f)
         return 0;
     }
     switch (f->action_state) {
-    case FIGURE_ACTION_150_ATTACK:
-    case FIGURE_ACTION_149_CORPSE:
-        return 0;
+        case FIGURE_ACTION_150_ATTACK:
+        case FIGURE_ACTION_149_CORPSE:
+            return 0;
     }
 
     int distance;
