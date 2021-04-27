@@ -193,18 +193,14 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
     } else {
         int rand = map_random_get(grid_offset);
         int image_id;
-        if (terrain & TERRAIN_WATER) {
-            image_id = image_group(GROUP_MINIMAP_WATER) + (rand & 3);
-        } else if (terrain & TERRAIN_SHRUB) {
-            image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
-        } else if (terrain & TERRAIN_TREE) {
-            image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
-        } else if (terrain & TERRAIN_ROCK) {
-            image_id = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
-        } else if (terrain & TERRAIN_ELEVATION) {
-            image_id = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
-        } else if (terrain & TERRAIN_ROAD) {
+        if (terrain & TERRAIN_ROAD) {
             image_id = image_group(GROUP_MINIMAP_ROAD);
+        } else if (terrain & TERRAIN_WATER) {
+            image_id = image_group(GROUP_MINIMAP_WATER) + (rand & 3);
+        } else if (terrain & (TERRAIN_SHRUB | TERRAIN_TREE)) {
+            image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
+        } else if (terrain & (TERRAIN_ROCK | TERRAIN_ELEVATION)) {
+            image_id = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
         } else if (terrain & TERRAIN_AQUEDUCT) {
             image_id = image_group(GROUP_MINIMAP_AQUEDUCT);
         } else if (terrain & TERRAIN_WALL) {
