@@ -624,6 +624,8 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_LOOTER, "Looter" },
     {TR_FIGURE_TYPE_ROBBER, "Robber" },
     {TR_OVERLAY_SENTIMENT, "Sentiment" },
+    {TR_WINDOW_ADVISOR_ENTERTAINMENT_NO_COVERAGE, "Nobody" },
+    {TR_WINDOW_ADVISOR_ENTERTAINMENT_FULL_COVERAGE, "Everyone" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

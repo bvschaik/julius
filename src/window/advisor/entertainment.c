@@ -172,25 +172,29 @@ static int draw_background(void)
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }
 
-    // colosseums
+    // colosseumszzzz
     lang_text_draw_amount(8, 38, building_count_total(BUILDING_COLOSSEUM), 40, 143, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_COLOSSEUM), 150, 143, 100, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_colosseum_shows(), 230, 143, 100, FONT_NORMAL_WHITE);
-    lang_text_draw_centered(58, 6, PEOPLE_OFFSET + 10, 143, 100, FONT_NORMAL_WHITE);
+    
     if (city_culture_coverage_colosseum() == 0) {
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_NO_COVERAGE), PEOPLE_OFFSET + 10, 143, 100, FONT_NORMAL_WHITE, 0);
         lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 143, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }     else {
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_FULL_COVERAGE), PEOPLE_OFFSET + 10, 143, 100, FONT_NORMAL_WHITE, 0);
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 143, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
+
     }
 
     // hippodromes
     lang_text_draw_amount(8, 40, building_count_total(BUILDING_HIPPODROME), 40, 163, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_HIPPODROME), 150, 163, 100, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_hippodrome_shows(), 230, 163, 100, FONT_NORMAL_WHITE);
-    lang_text_draw_centered(58, 6, PEOPLE_OFFSET + 10, 163, 100, FONT_NORMAL_WHITE);
     if (city_culture_coverage_hippodrome() == 0) {
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_NO_COVERAGE), PEOPLE_OFFSET + 10, 163, 100, FONT_NORMAL_WHITE, 0);
         lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 163, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     } else {
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_FULL_COVERAGE), PEOPLE_OFFSET + 10, 163, 100, FONT_NORMAL_WHITE, 0);
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 163, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }
 
