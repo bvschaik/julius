@@ -261,7 +261,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_FINANCE_LEVIES, "Byggnadsavgifter"},
     {TR_CONFIRM_DELETE_MONUMENT, "Rasera det här monumentet"},
     {TR_SELECT_EPITHET_PROMPT_HEADER, "Välj epitet att tilldela."},
-    {TR_SELECT_EPITHET_PROMPT_TEXT, "Genom att tilldela en epitet tillägnar du ditt tempel en permanent aspekt av dess gud, vilket ger präster gudomliga krafter. Detta kommer kosta 1000 Dn." },
+    {TR_SELECT_EPITHET_PROMPT_TEXT, "Genom att tilldela en epitet tillägnar du ditt tempel en permanent aspekt av dess gud, vilket ger präster gudomliga krafter." },
     {TR_BUILDING_INFO_MONTHLY_LEVY, "/månad"},
     {TR_BUILDING_MESS_HALL, "Förnödenhetsstation"},
     {TR_BUILDING_MESS_HALL_DESC, "Förnödenhetsstationen samlar in mat från stadens sädesmagasin för att utfodra soldater stationerade i stadens fort. En förnödenhetsstation med dålig tillgång till mat kommer leda till att rekryteringen saktar ned samt att truppernas moral tar skada."},
@@ -365,6 +365,7 @@ static translation_string all_strings[] = {
     {TR_MAP_EDITOR_OPTIONS, "Scenarieinställningar" },										 
     {TR_BUTTON_GO_TO_SITE, "Gå till platsen" },
     {TR_RETURN_ALL_TO_FORT, "Allt"},
+    {TR_OPTION_MENU_COST, "Detta kommer kosta"}
 };
 
 void translation_swedish(const translation_string **strings, int *num_strings)

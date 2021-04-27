@@ -1,22 +1,18 @@
 #ifndef WINDOW_OPTION_DIALOG_H
 #define WINDOW_OPTION_DIALOG_H
 
-#include <stdint.h>
+typedef enum {
+    OPTION_MENU_SMALL_ROW = 0,
+    OPTION_MENU_LARGE_ROW = 1
+} option_menu_row_size;
 
 typedef struct {
-    int show;
     int header;
     int desc;
     int image_id;
-    uint8_t asset_author[24];
-    uint8_t asset_name[24];
-    uint8_t asset_image_id[24];
-    int required_allowed_building_id;
 } option_menu_item;
 
-void window_option_popup_show(int title, int subtitle, option_menu_item *options,
-    void (*close_func)(int selection), int show_cancel_button, int show_confirm_button);
-
-
+void window_option_popup_show(int title, int subtitle, option_menu_item *options, int num_options,
+    void (*close_func)(int selection), int current_option, int price, option_menu_row_size row_size);
 
 #endif // WINDOW_OPTION_DIALOG_H

@@ -40,6 +40,7 @@ void graphics_restore_original_canvas(void);
 canvas_type graphics_get_canvas_type(void);
 
 void graphics_in_dialog(void);
+void graphics_in_dialog_with_size(int width, int height);
 void graphics_reset_dialog(void);
 
 void graphics_set_clip_rectangle(int x, int y, int width, int height);

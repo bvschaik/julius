@@ -263,7 +263,7 @@ static translation_string all_strings[] = {
     { TR_ADVISOR_FINANCE_LEVIES, "Żołd budynków" },
     { TR_CONFIRM_DELETE_MONUMENT, "Zniszczyć ten monument" },
     { TR_SELECT_EPITHET_PROMPT_HEADER, "Wybierz epitet do nadania" },
-    { TR_SELECT_EPITHET_PROMPT_TEXT, "Nadanie epitetu trwale poświęci tę światynię temu aspektowi boga, nadając kapłanom boską moc. Będzie kosztować 1000 Dn." },
+    { TR_SELECT_EPITHET_PROMPT_TEXT, "Nadanie epitetu trwale poświęci tę światynię temu aspektowi boga, nadając kapłanom boską moc." },
     { TR_BUILDING_INFO_MONTHLY_LEVY, "/miesiąc" },
     { TR_BUILDING_MESS_HALL, "Punkt zaopatrzenia" },
     { TR_BUILDING_MESS_HALL_DESC, "Punkt zaopatrzeniowy zabiera jedzenie ze spichlerzy by zapewniż pożywienie żołnierzom w miejskich fortach. Brak żywności spowolni rekrutację i osłabi morale." },
@@ -367,6 +367,7 @@ static translation_string all_strings[] = {
     { TR_MAP_EDITOR_OPTIONS, "Ustawienia scenariusza" },
     { TR_BUTTON_GO_TO_SITE, "Idź do lokacji" },
     { TR_RETURN_ALL_TO_FORT, "Całość" },
+    {TR_OPTION_MENU_COST, "Będzie kosztować" }
 };
 
 void translation_polish(const translation_string **strings, int *num_strings)

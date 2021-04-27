@@ -37,54 +37,70 @@ static struct {
     int building_id;
 } data;
 
-static const option_menu_item temple_module_options[12] = {
+static struct {
+    option_menu_item option;
+    const building_type required_building;
+    const char image_id[32];
+} temple_module_options[12] = {
     {
-        0, TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC,
-        0, "Areldir", "UI_Elements", "Ceres M Icon", 0
+        { TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC },
+        BUILDING_NONE,
+        "Ceres M Icon"
     },
     {
-        0, TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC,
-        0, "Areldir", "UI_Elements", "Ceres M2 Icon", 0
+        { TR_BUILDING_GRAND_TEMPLE_CERES_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC },
+        BUILDING_NONE,
+        "Ceres M2 Icon"
     },
     {
-        0, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC,
-        0, "Areldir", "UI_Elements", "Nept M2 Icon", BUILDING_HIPPODROME
+        { TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC },
+        BUILDING_HIPPODROME,
+        "Nept M2 Icon"
     },
     {
-        0, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC,
-        0, "Areldir", "UI_Elements", "Nept M Icon", 0
+        { TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC },
+        BUILDING_NONE,
+        "Nept M Icon"
     },
     {
-        0, TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC,
-        0, "Areldir", "UI_Elements", "Merc M Icon", 0
+        { TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC },
+        BUILDING_NONE,
+        "Merc M Icon"
     },
     {
-        0, TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC,
-        0, "Areldir", "UI_Elements", "Merc M2 Icon", 0
+        { TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_2_DESC },
+        BUILDING_NONE,
+        "Merc M2 Icon"
     },
     {
-        0, TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC,
-        0, "Areldir", "UI_Elements", "Mars M2 Icon", BUILDING_FORT
+        { TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC },
+        BUILDING_FORT,
+        "Mars M2 Icon"
     },
     {
-        0, TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC,
-        0, "Areldir", "UI_Elements", "Mars M Icon", 0
+        { TR_BUILDING_GRAND_TEMPLE_MARS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_2_DESC },
+        BUILDING_NONE,
+        "Mars M Icon"
     },
     {
-        0, TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC,
-        0, "Areldir", "UI_Elements", "Venus M Icon", 0
+        { TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_1, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC },
+        BUILDING_NONE,
+        "Venus M Icon"
     },
     {
-        0, TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC,
-        0, "Areldir", "UI_Elements", "Venus M2 Icon", 0
+        { TR_BUILDING_GRAND_TEMPLE_VENUS_DESC_MODULE_2, TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_2_DESC },
+        BUILDING_NONE,
+        "Venus M2 Icon"
     },
     {
-        0, TR_BUILDING_PANTHEON_DESC_MODULE_1, TR_BUILDING_PANTHEON_MODULE_1_DESC,
-        0, "Areldir", "UI_Elements", "Panth M Icon", 0
+        { TR_BUILDING_PANTHEON_DESC_MODULE_1, TR_BUILDING_PANTHEON_MODULE_1_DESC },
+        BUILDING_NONE,
+        "Panth M Icon"
     },
     {
-        0, TR_BUILDING_PANTHEON_DESC_MODULE_2, TR_BUILDING_PANTHEON_MODULE_2_DESC,
-        0, "Areldir", "UI_Elements", "Panth M2 Icon", 0
+        { TR_BUILDING_PANTHEON_DESC_MODULE_2, TR_BUILDING_PANTHEON_MODULE_2_DESC },
+        BUILDING_NONE,
+        "Panth M2 Icon"
     }
 };
 
@@ -552,7 +568,7 @@ static void draw_grand_temple(building_info_context *c, const char *sound_file,
         window_building_draw_monument_temple_construction_process(c);
     }
     if (b->data.monument.upgrades) {
-        int module_name = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].header;
+        int module_name = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].option.header;
         text_draw_centered(translation_for(module_name),
             c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     } else {
@@ -564,7 +580,7 @@ static void draw_grand_temple(building_info_context *c, const char *sound_file,
         int height = text_draw_multiline(translation_for(bonus_desc),
             c->x_offset + 22, c->y_offset + 56 + extra_y, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         if (b->data.monument.upgrades) {
-            int module_desc = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].desc;
+            int module_desc = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].option.desc;
             height += text_draw_multiline(translation_for(module_desc),
                 c->x_offset + 22, c->y_offset + 66 + height + extra_y, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         }
@@ -983,16 +999,34 @@ static void add_module(int selection)
     building_monument_add_module(b, selection);
 }
 
+static void generate_module_image_id(int index)
+{
+    option_menu_item *option = &temple_module_options[index].option;
+    if (option->image_id) {
+        return;
+    }
+    option->image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
+        temple_module_options[index].image_id);
+}
+
 static void add_module_prompt(int param1, int param2)
 {
-    option_menu_item options[2] = { temple_module_options[god_id * 2], temple_module_options[god_id * 2 + 1] };
-    if (scenario_building_allowed(temple_module_options[god_id * 2].required_allowed_building_id)) {
-        options[0].show = 1;
+    int num_options = 0;
+    int option_id = god_id * 2;
+
+    static option_menu_item options[2];
+
+    if (scenario_building_allowed(temple_module_options[option_id].required_building)) {
+        generate_module_image_id(option_id);
+        options[num_options++] = temple_module_options[option_id].option;
+    }
+    if (scenario_building_allowed(temple_module_options[option_id + 1].required_building)) {
+        generate_module_image_id(option_id + 1);
+        options[num_options++] = temple_module_options[option_id + 1].option;
     }
 
-    if (scenario_building_allowed(temple_module_options[god_id * 2 + 1].required_allowed_building_id)) {
-        options[1].show = 1;
+    if (num_options) {
+        window_option_popup_show(TR_SELECT_EPITHET_PROMPT_HEADER, TR_SELECT_EPITHET_PROMPT_TEXT,
+            options, num_options, add_module, 0, 1000, OPTION_MENU_LARGE_ROW);
     }
-
-    window_option_popup_show(TR_SELECT_EPITHET_PROMPT_HEADER, TR_SELECT_EPITHET_PROMPT_TEXT, options, add_module, 1, 1);
 }

@@ -262,7 +262,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_FINANCE_LEVIES, "Mantenimiento de edificios"},
     {TR_CONFIRM_DELETE_MONUMENT, "Demoliendo este monumento"},
     {TR_SELECT_EPITHET_PROMPT_HEADER, "Selecciona el epíteto a conferir"},
-    {TR_SELECT_EPITHET_PROMPT_TEXT, "Conferir un epíteto dedicará permanentemente tu templo a un aspecto de su deidad, inbuyendo a los sacerdotes de poder divino. Esto costará 1000 Dn."},
+    {TR_SELECT_EPITHET_PROMPT_TEXT, "Conferir un epíteto dedicará permanentemente tu templo a un aspecto de su deidad, inbuyendo a los sacerdotes de poder divino."},
     {TR_BUILDING_INFO_MONTHLY_LEVY, "/mes"},
     {TR_BUILDING_MESS_HALL, "Puesto de suministro"},
     {TR_BUILDING_MESS_HALL_DESC, "El puesto de suministro recolecta alimentos de los graneros de la ciudad para alimentar a los soldados de los fuertes. Un mal abastecimiento ralentizará el reclutamiento y dañará la moral."},
@@ -366,7 +366,8 @@ static translation_string all_strings[] = {
     {TR_MAP_EDITOR_OPTIONS, "Configuración de escenario"},
     {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "Este templo recolectará comida para tu puesto de suministro, una vez lo construyas."},
     {TR_BUTTON_GO_TO_SITE, "Ir al sitio" },
-    {TR_RETURN_ALL_TO_FORT, "Regresar todo"},
+    {TR_RETURN_ALL_TO_FORT, "Regresar todo" },
+    {TR_OPTION_MENU_COST, "Esto costará" }
 };
 
 void translation_spanish(const translation_string **strings, int *num_strings)

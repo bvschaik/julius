@@ -26,8 +26,8 @@
 #include "scenario/property.h"
 #include "sound/speech.h"
 #include "translation/translation.h"
-#include "window/action_popup.h"
 #include "window/building_info.h"
+#include "window/option_popup.h"
 
 #include <math.h>
 
@@ -137,19 +137,10 @@ static struct {
     int caravanserai_focus_button_id;
 } data;
 
-static const option_menu_item caravanserai_policy_options[3] = {
-        {
-                0, TR_BUILDING_CARAVANSERAI_POLICY_1_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_1,
-                0, "Areldir", "Econ_Logistics", "Trade Policy 1", 0
-        },
-        {
-                0, TR_BUILDING_CARAVANSERAI_POLICY_2_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_2,
-                0, "Areldir", "Econ_Logistics", "Trade Policy 2", 0
-        },
-        {
-                0, TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_3,
-                0, "Areldir", "Econ_Logistics", "Trade Policy 3", 0
-        }
+static option_menu_item caravanserai_policy_options[3] = {
+    { TR_BUILDING_CARAVANSERAI_POLICY_1_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_1 },
+    { TR_BUILDING_CARAVANSERAI_POLICY_2_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_2 },
+    { TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_3 }
 };
 
 uint8_t warehouse_full_button_text[] = "32";
@@ -172,7 +163,7 @@ static void draw_permissions_buttons(int x, int y, int buttons)
 {
     uint8_t permission_button_text[] = { 'x', 0 };
     int offsets[] = { 96, 132, 96 };
-    for (int i = 0; i < buttons; i++)     {
+    for (int i = 0; i < buttons; i++) {
         button_border_draw(x, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (building_storage_get_permission(i, building_get(data.building_id))) {
             text_draw_centered(permission_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
@@ -1177,30 +1168,26 @@ static void draw_policy_image_border(int x, int y, int focused)
 
 void window_building_draw_caravanserai_action(building_info_context *c)
 {
+    static int no_policy_image;
+    if (!no_policy_image) {
+        no_policy_image = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Trade Policy");
+        caravanserai_policy_options[0].image_id = no_policy_image + 1;
+        caravanserai_policy_options[1].image_id = no_policy_image + 2;
+        caravanserai_policy_options[2].image_id = no_policy_image + 3;
 
+    }
     int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
-    int policy_title = TR_BUILDING_CARAVANSERAI_NO_POLICY;
-
-    if (policy) {
-        policy_title = caravanserai_policy_options[policy - 1].header;
-    }
-
-    text_draw_multiline(translation_for(policy_title), c->x_offset + 160, c->y_offset + 160,
-        260, FONT_NORMAL_BLACK, 0);
-
-    if (policy) {
-        text_draw_multiline(translation_for(policy_title + 1), c->x_offset + 160, c->y_offset + 185,
-            260, FONT_NORMAL_BLACK, 0);
-
-        int policy_image = assets_get_image_id(assets_get_group_id((char *) caravanserai_policy_options[policy - 1].asset_author, (char *) caravanserai_policy_options[policy - 1].asset_name),
-            (char *) caravanserai_policy_options[policy - 1].asset_image_id);
-
-        image_draw(policy_image, c->x_offset + 32, c->y_offset + 150);
+    if (!policy) {
+        text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_NO_POLICY),
+            c->x_offset + 160, c->y_offset + 160, 260, FONT_NORMAL_BLACK, 0);
+        image_draw(no_policy_image, c->x_offset + 32, c->y_offset + 150);
     } else {
-        int policy_image = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Trade Policy");
-        image_draw(policy_image, c->x_offset + 32, c->y_offset + 150);
+        text_draw_multiline(translation_for(caravanserai_policy_options[policy - 1].header),
+            c->x_offset + 160, c->y_offset + 160, 260, FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(translation_for(caravanserai_policy_options[policy - 1].header + 1),
+            c->x_offset + 160, c->y_offset + 185, 260, FONT_NORMAL_BLACK, 0);
+        image_draw(caravanserai_policy_options[policy - 1].image_id, c->x_offset + 32, c->y_offset + 150);
     }
-
 }
 
 void window_building_draw_caravanserai_foreground(building_info_context *c)
@@ -1225,7 +1212,8 @@ static void caravanserai_action(int param1, int param2)
 {
     building *b = building_get(city_buildings_get_caravanserai());
     int current_policy = b->data.monument.upgrades;
-    window_action_popup_show(TR_BUILDING_CARAVANSERAI_POLICY_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_TEXT, caravanserai_policy_options, caravanserai_policy, current_policy);
+    window_option_popup_show(TR_BUILDING_CARAVANSERAI_POLICY_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_TEXT,
+        caravanserai_policy_options, 3, caravanserai_policy, current_policy, 500, OPTION_MENU_SMALL_ROW);
 }
 
 void window_building_draw_caravanserai(building_info_context *c)
@@ -1251,4 +1239,3 @@ void window_building_draw_caravanserai(building_info_context *c)
 
     text_draw_centered(translation_for(TR_BUILDING_CARAVANSERAI), c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
 }
-

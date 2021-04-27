@@ -234,7 +234,7 @@ static translation_string all_strings[] = {
     { TR_ADVISOR_FINANCE_LEVIES, "Custos de manutenção" },
     { TR_CONFIRM_DELETE_MONUMENT, "Demolindo este monumento" },
     { TR_SELECT_EPITHET_PROMPT_HEADER, "Selecione um epíteto" },
-    { TR_SELECT_EPITHET_PROMPT_TEXT, "Outorgar um epíteto dedica permanentemente o Santuário a um aspecto da divindade, dando poderes divinos aos seus sacerdotes. Esta ação tem um custo de 1000 Dn." },
+    { TR_SELECT_EPITHET_PROMPT_TEXT, "Outorgar um epíteto dedica permanentemente o Santuário a um aspecto da divindade, dando poderes divinos aos seus sacerdotes." },
     { TR_BUILDING_INFO_MONTHLY_LEVY, "/mês" },
     { TR_BUILDING_MESS_HALL, "Posto de suprimentos" },
     { TR_BUILDING_MESS_HALL_DESC, "O posto de suprimentos recolhe comida dos celeiros da cidade para abastecer os soldados nos fortes. Um posto mal abastecido atrasa o recrutamento e prejudica o moral das tropas." },
@@ -348,6 +348,7 @@ static translation_string all_strings[] = {
     {TR_SIDEBAR_EXTRA_REQUESTS_STOCK, "Loja"},
     {TR_SIDEBAR_EXTRA_REQUESTS_UNSTOCK, "Pare de armazenar"},
     { TR_RETURN_ALL_TO_FORT, "Voltar tudo" },
+    {TR_OPTION_MENU_COST, "Esta ação tem um custo de"}
 };
 
 void translation_portuguese(const translation_string **strings, int *num_strings)

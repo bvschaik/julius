@@ -516,7 +516,6 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/slide.c
 )
 set(WINDOW_FILES
-    ${PROJECT_SOURCE_DIR}/src/window/action_popup.c
     ${PROJECT_SOURCE_DIR}/src/window/advisors.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/chief.c
     ${PROJECT_SOURCE_DIR}/src/window/advisor/education.c

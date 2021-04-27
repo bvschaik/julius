@@ -269,7 +269,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_FINANCE_LEVIES, "Tasse edilizie"},
     {TR_CONFIRM_DELETE_MONUMENT, "Demolire questo monumento"},
     {TR_SELECT_EPITHET_PROMPT_HEADER, "Seleziona l'epiteto da conferire"},
-    {TR_SELECT_EPITHET_PROMPT_TEXT, "Il conferimento di un epiteto consacrerà permanentemente il tuo tempio a un aspetto della sua divinità, donando ai sacerdoti il potere divino. Questo costerà 1000 dn." },
+    {TR_SELECT_EPITHET_PROMPT_TEXT, "Il conferimento di un epiteto consacrerà permanentemente il tuo tempio a un aspetto della sua divinità, donando ai sacerdoti il potere divino." },
     {TR_BUILDING_INFO_MONTHLY_LEVY, "/mese"},
     {TR_BUILDING_MESS_HALL, "Stazione di rifornimento"},
     {TR_BUILDING_MESS_HALL_DESC, "La stazione di rifornimento raccoglie cibo dai granai della città per sfamare i soldati di stanza nei forti della città. Un posto di rifornimento mal rifornito rallenta il reclutamento e danneggia il morale."},
@@ -373,6 +373,7 @@ static translation_string all_strings[] = {
     {TR_MAP_EDITOR_OPTIONS, "Impostazioni scenario" },
     {TR_BUTTON_GO_TO_SITE, "Vai alla posizione" },
     {TR_RETURN_ALL_TO_FORT, "Ritorna tutti" },
+    {TR_OPTION_MENU_COST, "Questo costerà"}
 };
 
 void translation_italian(const translation_string **strings, int *num_strings)

@@ -271,7 +271,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_FINANCE_LEVIES, "Taxes de construction"},
     {TR_CONFIRM_DELETE_MONUMENT, "Démolir ce monument"},
     {TR_SELECT_EPITHET_PROMPT_HEADER, "Sélectionnez l'épithète à accorder"},
-    {TR_SELECT_EPITHET_PROMPT_TEXT, "Accorder une épithète consacrera en permanence votre temple à un aspect de sa divinité, conférant aux prêtres un pouvoir divin. Cela coûtera 1000 Dn."},
+    {TR_SELECT_EPITHET_PROMPT_TEXT, "Accorder une épithète consacrera en permanence votre temple à un aspect de sa divinité, conférant aux prêtres un pouvoir divin."},
     {TR_BUILDING_INFO_MONTHLY_LEVY, "/Mois"},
     {TR_BUILDING_MESS_HALL, "Poste de ravitaillement"},
     {TR_BUILDING_MESS_HALL_DESC, "Le poste de ravitaillement recueille de la nourriture des greniers de la cité pour nourrir les soldats stationnés dans les forts. Un mauvais approvisionnement ralentira le recrutement et nuira au moral."},
@@ -359,14 +359,13 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_CARAVANSERAI_SUPPLIER, "Fournisseur du caravansérail" },
     {TR_BUILDING_CARAVANSERAI_POLICY_TITLE, "Politique commerciale" },
     {TR_BUILDING_CARAVANSERAI_NO_POLICY, "Aucune politique commerciale actuellement" },
-    {TR_BUILDING_CARAVANSERAI_POLICY_TEXT, "Séléctionner une politique commerciale dans votre cité. Cela vous coûtera 500  Dn." },
+    {TR_BUILDING_CARAVANSERAI_POLICY_TEXT, "Séléctionner une politique commerciale dans votre cité." },
     {TR_BUILDING_CARAVANSERAI_POLICY_1_TITLE, "Consilium Venditor" },
     {TR_BUILDING_CARAVANSERAI_POLICY_1, "Les caravanes achètent leurs biens 20% plus cher mais vendent pour 10% plus cher." },
     {TR_BUILDING_CARAVANSERAI_POLICY_2_TITLE, "Consilium Acquisitionem" },
     {TR_BUILDING_CARAVANSERAI_POLICY_2, "Les caravanes vendent leurs biens 20% moins cher mais achètent pour 10% moins cher." },
     {TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, "Consilium Quantitas" },
     {TR_BUILDING_CARAVANSERAI_POLICY_3, "Les caravanes peuvent porter 50% plus mais leur vitesse est réduite de 15%." },
-    {TR_CONFIRM_SELECT_POLICY, "Appliquer (500 Dn)"},
     {TR_BUILDING_LIGHTHOUSE_PHASE_1, "(Fondations)"},
     {TR_BUILDING_LIGHTHOUSE_PHASE_2, "(Piédestal)"},
     {TR_BUILDING_LIGHTHOUSE_PHASE_3, "(Tour)"},
@@ -613,7 +612,8 @@ static translation_string all_strings[] = {
     {TR_RETURN_ALL_TO_FORT, "Tout retourner" },
     {TR_TOOLTIP_ADVISOR_ENTERTAINMENT_GAMES_BUTTON, "Informations sur les jeux" },
     {TR_WINDOW_BUILDING_GOVERNMENT_LARGE_STATUE_WATER_WARNING, "La statue a l'air fabuleuse, mais elle aurait l'air encore plus incroyable avec un accès à l'eau." },
-    {TR_CONFIRM_SELECT_EPITHET, "Appliquer (1000 Dn)"},
+    {TR_OPTION_MENU_APPLY, "Appliquer"},
+    {TR_OPTION_MENU_COST, "Cela vous coûtera"}
 };
 
 void translation_french(const translation_string** strings, int* num_strings)
