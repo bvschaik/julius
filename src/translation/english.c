@@ -492,7 +492,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_GAMES_OPTION_2_DESC, "The Colosseum will host gruesome animal hunts and executions by wild beasts, delighting the plebian classes. Criminals, riots, and revolts will be suppressed for 12 months. Gladiators will help defend the city from the next invasion." },
     {TR_WINDOW_GAMES_OPTION_3_DESC, "The Colosseum will host games in honor of the gods on the first day of next year, beseeching fortune and prosperity. Trade quotas will be doubled next year." },
     {TR_WINDOW_GAMES_OPTION_4_DESC, "The Hippodrome will host the Olympic Games. Your city will host throngs of visitors, and if your athletes honor your city well you will gain a permanent increase in tourism and favor." },
-    {TR_WINDOW_GAMES_OPTION_5_DESC, "The Colosseum will host the Roman Games. Your city will host many visitors from far away, eagir to show their strengths in a variety of competitions. Celebrating will earn you the favour of both the Emperor and the common people in the next year." },
+    {TR_WINDOW_GAMES_OPTION_5_DESC, "The Colosseum will host the Roman Games. Your city will host many visitors from far away, eager to show their strengths in a variety of competitions. Celebrating will earn you the favour of both the Emperor and the common people in the next year." },
     {TR_WINDOW_GAMES_COST, "Cost:" },
     {TR_WINDOW_GAMES_PERSONAL_FUNDS, "(personal funds)" },
     {TR_WINDOW_GAMES_NOT_ENOUGH_FUNDS, "Not enough personal funds." },

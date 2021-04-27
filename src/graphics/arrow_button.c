@@ -38,8 +38,6 @@ static int get_button(const mouse *m, int x, int y, arrow_button *buttons, int n
 int arrow_buttons_handle_mouse(
     const mouse *m, int x, int y, arrow_button *buttons, int num_buttons, int *focus_button_id)
 {
-    static time_millis last_time = 0;
-
     time_millis curr_time = time_get_millis();
     int should_repeat = 0;
     if (curr_time - buttons->last_time >= REPEAT_MILLIS) {

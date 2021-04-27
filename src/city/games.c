@@ -66,7 +66,6 @@ int city_games_resource_cost(int game_type_id, resource_type resource)
 
 static void post_games_message(int type)
 {
-    int game_id = city_data.games.selected_games_id;
     games_type *game = city_games_get_game_type(city_data.games.selected_games_id);
     city_message_post(1, game->message_planning + type, 0, 0);
 }
