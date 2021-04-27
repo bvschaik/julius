@@ -11,6 +11,7 @@
 #include "input/cursor.h"
 #include "platform/android/android.h"
 #include "platform/cursor.h"
+#include "platform/haiku/haiku.h"
 #include "platform/icon.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"

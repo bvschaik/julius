@@ -60,9 +60,6 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = map_grid_offset(x, y);
-            if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION)) {
-                continue;
-            }
             if (measure_only && visual_feedback_on_delete) {
                 building *b = get_deletable_building(grid_offset);
                 if (map_property_is_deleted(grid_offset) || (b && map_property_is_deleted(b->grid_offset))) {
@@ -73,12 +70,17 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                     if (b) {
                         items_placed++;
                     }
+                } else if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION)) {
+                    continue;
                 } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) { // keep the "bridge is free" bug from C3
                     continue;
                 } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)
                     || map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                     items_placed++;
                 }
+                continue;
+            }
+            if (map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ELEVATION)) {
                 continue;
             }
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
@@ -201,7 +203,7 @@ static void confirm_delete_monument(int accepted)
 {
     if (accepted == 1) {
         confirm.monument_confirmed = 1;
-    }     else {
+    } else {
         confirm.monument_confirmed = -1;
     }
     clear_land_confirmed(0, confirm.x_start, confirm.y_start, confirm.x_end, confirm.y_end);

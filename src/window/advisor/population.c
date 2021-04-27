@@ -24,9 +24,9 @@
 static void button_graph(int param1, int param2);
 
 static generic_button graph_buttons[] = {
-    {503,  61, 104, 55, button_graph, button_none, 0, 0},
-    {503, 161, 104, 55, button_graph, button_none, 1, 0},
-    {545, 260, 60, 51, button_graph, button_none, 0, 1}
+    { 509,  61, 104, 55, button_graph, button_none, 0, 0 },
+    { 509, 161, 104, 55, button_graph, button_none, 1, 0 },
+    { 545, 260,  60, 51, button_graph, button_none, 0, 1 }
 };
 
 static int focus_button_id;
@@ -35,12 +35,11 @@ static void get_y_axis(int max_value, int *y_max, int *y_shift)
 {
     int max = 1;
     int shift = -1;
-    max_value /= 100;
-
-    while (max_value) {
+    int value = max_value > 0 ? (max_value - 1) / 100 : 0;
+    while (value) {
         max <<= 1;
         shift++;
-        max_value >>= 1;
+        value >>= 1;
     }
     *y_max = max * 100;
     *y_shift = shift;
@@ -383,7 +382,7 @@ static int draw_background(void)
         lang_text_draw(55, 2, 60, 12, FONT_LARGE_BLACK);
     }
 
-    image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 56, 60);
+    image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 62, 60);
 
     width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
     text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK, 0);
@@ -464,9 +463,9 @@ static int draw_background(void)
     lang_text_draw_centered(55, top_text, 504, 130, 100, FONT_NORMAL_BLACK);
     lang_text_draw_centered(55, bot_text, 504, 230, 100, FONT_NORMAL_BLACK);
 
-    big_graph(1, 64, 64);
-    top_graph(0, 505, 63);
-    bot_graph(0, 505, 163);
+    big_graph(1, 70, 64);
+    top_graph(0, 511, 63);
+    bot_graph(0, 511, 163);
     housing_button(0, 545, 275);
 
     // info panel
@@ -487,20 +486,20 @@ static int draw_background(void)
 static void draw_foreground(void)
 {
     if (focus_button_id == 0) {
-        button_border_draw(501, 60, 106, 57, 0);
-        button_border_draw(501, 160, 106, 57, 0);
+        button_border_draw(507, 60, 106, 57, 0);
+        button_border_draw(507, 160, 106, 57, 0);
         button_border_draw(545, 260, 60, 51, 0);
     } else if (focus_button_id == 1) {
-        button_border_draw(501, 60, 106, 57, 1);
-        button_border_draw(501, 160, 106, 57, 0);
+        button_border_draw(507, 60, 106, 57, 1);
+        button_border_draw(507, 160, 106, 57, 0);
         button_border_draw(545, 260, 60, 51, 0);
     } else if (focus_button_id == 2) {
-        button_border_draw(501, 60, 106, 57, 0);
-        button_border_draw(501, 160, 106, 57, 1);
+        button_border_draw(507, 60, 106, 57, 0);
+        button_border_draw(507, 160, 106, 57, 1);
         button_border_draw(545, 260, 60, 51, 0);
     } else if (focus_button_id == 3) {
-        button_border_draw(501, 60, 106, 57, 0);
-        button_border_draw(501, 160, 106, 57, 0);
+        button_border_draw(507, 60, 106, 57, 0);
+        button_border_draw(507, 160, 106, 57, 0);
         button_border_draw(545, 260, 60, 51, 1);
     }
 }
