@@ -6,6 +6,9 @@
     <image id="7x7 Map Icon" src="7x7_Minimap_Icon" />
     <image id="Happy God Icon" src="Religion_God_Happy" />
 
+<!-- Note: Banner image for Caravanserai -->
+    <image id="Caravanserai Banner" src="Caravanserai_Banner" />
+
 <!-- Note: Banner image for Lighthouse -->
     <image id="Lighthouse Banner" src="Lighthouse_Banner" />
 

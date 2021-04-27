@@ -192,10 +192,8 @@ static int get_height_id(void)
 
             case BUILDING_DOCK:
             case BUILDING_LIGHTHOUSE:
-                return 6;
-
             case BUILDING_CARAVANSERAI:
-                return 5;
+                return 6;
 
             case BUILDING_MESS_HALL:
                 return 7;

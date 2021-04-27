@@ -1231,7 +1231,10 @@ void window_building_draw_caravanserai(building_info_context *c)
         window_building_draw_caravanserai_action(c);
 
         inner_panel_draw(c->x_offset + 16, c->y_offset + 270, c->width_blocks - 2, 4);
-        window_building_draw_employment(c, 270);
+        window_building_draw_employment(c, 278);
+
+        image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Caravanserai Banner"),
+                   c->x_offset + 32, c->y_offset + 350);
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         window_building_draw_monument_caravanserai_construction_process(c);
