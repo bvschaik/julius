@@ -117,13 +117,13 @@ static int get_nearest_enemy(int x, int y, int *distance)
     int min_dist = INFINITE;
     for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
-        if (f->state != FIGURE_STATE_ALIVE) {
+        if (figure_is_dead(f)) {
             continue;
         }
         int dist = get_enemy_distance(f, x, y);
         if (dist != INFINITE && f->targeted_by_figure_id) {
             figure *pursuiter = figure_get(f->targeted_by_figure_id);
-            if (get_enemy_distance(f, pursuiter->x, pursuiter->y) < dist) {
+            if (get_enemy_distance(f, pursuiter->x, pursuiter->y) < dist * 2) {
                 continue;
             }
         }

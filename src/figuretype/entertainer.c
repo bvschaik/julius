@@ -237,7 +237,7 @@ static int get_nearest_enemy(int x, int y, int *distance)
     int min_dist = INFINITE;
     for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
-        if (f->state != FIGURE_STATE_ALIVE) {
+        if (figure_is_dead(f)) {
             continue;
         }
         int dist = get_enemy_distance(f, x, y);
