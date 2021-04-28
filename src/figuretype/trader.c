@@ -80,16 +80,15 @@ int figure_create_trade_caravan(int x, int y, int city_id)
     caravan->empire_city_id = city_id;
     caravan->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
     caravan->wait_ticks = 10;
-    int caravan_id = caravan->id;
     // donkey 1
     figure *donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, x, y, DIR_0_TOP);
     donkey1->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
-    donkey1->leading_figure_id = caravan_id;
+    donkey1->leading_figure_id = caravan->id;
     // donkey 2
     figure *donkey2 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, x, y, DIR_0_TOP);
     donkey2->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
-    donkey2->leading_figure_id = caravan_id;
-    return caravan_id;
+    donkey2->leading_figure_id = donkey1->id;
+    return caravan->id;
 }
 
 int figure_create_trade_ship(int x, int y, int city_id)
