@@ -14,35 +14,44 @@
 #include <string.h>
 
 #define XML_BUFFER_SIZE 1024
-#define XML_MAX_DEPTH 3
+#define XML_MAX_DEPTH 4
 #define XML_MAX_ELEMENTS_PER_DEPTH 2
 #define XML_MAX_ATTRIBUTES 8
 #define XML_TAG_MAX_LENGTH 12
 #define XML_MAX_IMAGE_INDEXES 256
 
-static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_TAG_MAX_LENGTH] = { { "assetlist" }, { "image" }, { "layer", "animation" } };
+static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_TAG_MAX_LENGTH] = { { "assetlist" }, { "image" }, { "layer", "animation" }, { "frame" } };
 static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG_MAX_LENGTH] = {
     { { "author", "name" } }, // assetlist
     { { "id", "src", "width", "height", "group", "image", "index" } }, // image
     { { "src", "group", "image", "x", "y", "invert", "rotate", "part" }, // layer
-    { "frames", "speed", "reversible", "x", "y", "index" } } // animation
+    { "frames", "speed", "reversible", "x", "y" } }, // animation
+    { { "src", "width", "height", "group", "image" } } // frame
 };
 
 static void xml_start_assetlist_element(const char **attributes);
 static void xml_start_image_element(const char **attributes);
 static void xml_start_layer_element(const char **attributes);
 static void xml_start_animation_element(const char **attributes);
+static void xml_start_frame_element(const char **attributes);
 static void xml_end_assetlist_element(void);
 static void xml_end_image_element(void);
 static void xml_end_layer_element(void);
 static void xml_end_animation_element(void);
+static void xml_end_frame_element(void);
 
 static void (*xml_start_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH])(const char **attributes) = {
-    { xml_start_assetlist_element }, { xml_start_image_element }, { xml_start_layer_element, xml_start_animation_element }
+    { xml_start_assetlist_element },
+    { xml_start_image_element },
+    { xml_start_layer_element, xml_start_animation_element },
+    { xml_start_frame_element }
 };
 
 static void (*xml_end_element_callback[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH])(void) = {
-    { xml_end_assetlist_element }, { xml_end_image_element }, { xml_end_layer_element, xml_end_animation_element }
+    { xml_end_assetlist_element },
+    { xml_end_image_element },
+    { xml_end_layer_element, xml_end_animation_element },
+    { xml_end_frame_element }
 };
 
 static struct {
@@ -52,8 +61,11 @@ static struct {
     int depth;
     int error;
     int finished;
+    int frame_image_index;
+    int in_animation;
     image_groups *current_group;
     asset_image *current_image;
+    asset_image *current_animation;
 } data;
 
 static void set_asset_image_base_path(const char *author, const char *name)
@@ -268,10 +280,75 @@ static void xml_start_animation_element(const char **attributes)
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][4]) == 0) {
             img->img.sprite_offset_y = string_to_int(string_from_ascii(attributes[i + 1]));
         }
-        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][5]) == 0) {
-            img->img.animation_start_offset = string_to_int(string_from_ascii(attributes[i + 1])) - data.image_index;
+    }
+    if (!img->img.num_animation_sprites) {
+        data.in_animation = 1;
+    }
+}
+
+static void xml_start_frame_element(const char **attributes)
+{
+    int total_attributes = count_xml_attributes(attributes);
+    if (!data.in_animation || total_attributes < 2 || total_attributes % 2) {
+        return;
+    }
+    asset_image *img = malloc(sizeof(asset_image));
+    if (!img) {
+        data.error = 1;
+        return;
+    }
+    memset(img, 0, sizeof(asset_image));
+
+    const char *path = 0;
+    const char *group = 0;
+    const char *id = 0;
+    for (int i = 0; i < total_attributes; i += 2) {
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][0]) == 0) {
+            path = attributes[i + 1];
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][1]) == 0) {
+            img->img.width = string_to_int(string_from_ascii(attributes[i + 1]));
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][2]) == 0) {
+            img->img.height = string_to_int(string_from_ascii(attributes[i + 1]));
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][3]) == 0) {
+            group = attributes[i + 1];
+        }
+        if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][4]) == 0) {
+            id = attributes[i + 1];
         }
     }
+    img->last_layer = &img->first_layer;
+    img->index = data.frame_image_index;
+    if (!path && !(group && id)) {
+        free(img);
+        return;
+    }
+    asset_image_add_layer(img, path, group, id, 0, 0, INVERT_NONE, ROTATE_NONE, PART_BOTH);
+    img->img.draw.data_length = img->img.width * img->img.height * sizeof(color_t);
+    img->img.draw.uncompressed_length = img->img.draw.data_length;
+    if (!img->img.draw.data_length) {
+        free(img);
+        return;
+    }
+    img->img.draw.type = IMAGE_TYPE_EXTRA_ASSET;
+    img->active = 1;
+    asset_image_load(img);
+
+    data.frame_image_index++;
+    if (!data.current_image->img.animation_start_offset) {
+        data.current_image->img.animation_start_offset = (ANIMATION_FRAMES_GROUP + img->index) -
+            (data.current_group->id + data.current_image->index) - 1;
+    }
+    image_groups *animations = group_get_from_hash(ANIMATION_FRAMES_GROUP);
+    if (!animations->first_image) {
+        animations->first_image = img;
+    } else {
+        data.current_animation->next = img;
+    }
+    data.current_animation = img;
+    data.current_image->img.num_animation_sprites++;
 }
 
 static void xml_end_assetlist_element(void)
@@ -316,12 +393,15 @@ static void xml_end_image_element(void)
 }
 
 static void xml_end_layer_element(void)
-{
-}
+{}
 
 static void xml_end_animation_element(void)
 {
+    data.in_animation = 0;
 }
+
+static void xml_end_frame_element(void)
+{}
 
 static int get_element_index(const char *name)
 {

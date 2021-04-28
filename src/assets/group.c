@@ -6,7 +6,7 @@
 #include <string.h>
 
 #define GROUP_HASH_MASK 0xffffff00
-#define GROUP_MIN_HASH 0x4000
+#define GROUP_MIN_HASH 0x8000
 
 typedef struct {
     uint32_t original;
@@ -27,11 +27,13 @@ void group_setup_hash_replacements(void)
 
 int group_create_all(int total)
 {
-    data.groups = malloc(sizeof(image_groups) * total);
+    data.groups = malloc(sizeof(image_groups) * (total + 1));
     if (!data.groups) {
         return 0;
     }
-    memset(data.groups, 0, sizeof(image_groups) * total);
+    memset(data.groups, 0, sizeof(image_groups) * (total + 1));
+    data.groups[0].id = ANIMATION_FRAMES_GROUP;
+    data.total_groups = 1; // Group 0: image animations group
     return 1;
 }
 
@@ -56,7 +58,7 @@ uint32_t group_get_hash(const char *author, const char *name)
     PMurHash32_Process(&hash, &carry, name, name_length);
 
     hash = PMurHash32_Result(hash, carry, author_length + name_length);
-    
+
     // The following code increases the risk of hash collision but allows better image indexing
     if (hash < GROUP_MIN_HASH) {
         hash |= GROUP_MIN_HASH;

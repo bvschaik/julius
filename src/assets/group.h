@@ -6,6 +6,8 @@
 
 #include <stdint.h>
 
+#define ANIMATION_FRAMES_GROUP 10240
+
 typedef struct {
     char author[XML_STRING_MAX_LENGTH];
     char name[XML_STRING_MAX_LENGTH];
