@@ -29,7 +29,6 @@ static int show_building_religion(const building *b)
         b->type == BUILDING_GRAND_TEMPLE_NEPTUNE || b->type == BUILDING_GRAND_TEMPLE_MERCURY ||
         b->type == BUILDING_GRAND_TEMPLE_MARS || b->type == BUILDING_GRAND_TEMPLE_VENUS ||
         b->type == BUILDING_PANTHEON || b->type == BUILDING_NYMPHAEUM;
-    ;
 }
 
 static int show_building_food_stocks(const building *b)

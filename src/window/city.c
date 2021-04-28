@@ -229,6 +229,10 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_GRAND_TEMPLE_MARS:
         case BUILDING_GRAND_TEMPLE_VENUS:
         case BUILDING_PANTHEON:
+        case BUILDING_LARARIUM:
+        case BUILDING_NYMPHAEUM:
+        case BUILDING_SMALL_MAUSOLEUM:
+        case BUILDING_LARGE_MAUSOLEUM:
             overlay = OVERLAY_RELIGION;
             break;
         case BUILDING_PREFECTURE:
