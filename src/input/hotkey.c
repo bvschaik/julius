@@ -443,7 +443,7 @@ void hotkey_key_released(key_type key, key_modifier_type modifiers)
     }
 }
 
-static void confirm_exit(int accepted)
+static void confirm_exit(int accepted, int checked)
 {
     if (accepted) {
         system_exit();

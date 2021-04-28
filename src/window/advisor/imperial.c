@@ -46,6 +46,7 @@ static generic_button imperial_buttons[] = {
 
 static int focus_button_id;
 static int selected_request_id;
+static int selected_resource;
 static uint8_t tooltip_resource_info[RESOURCE_INFO_MAX_TEXT];
 
 static void draw_request(int index, const scenario_request *request)
@@ -186,10 +187,10 @@ static void button_gift_to_emperor(int param1, int param2)
     window_gift_to_emperor_show();
 }
 
-static void confirm_nothing(int accepted)
+static void confirm_nothing(int accepted, int checked)
 {}
 
-static void confirm_send_troops(int accepted)
+static void confirm_send_troops(int accepted, int checked)
 {
     if (accepted) {
         formation_legions_dispatch_to_distant_battle();
@@ -197,10 +198,13 @@ static void confirm_send_troops(int accepted)
     }
 }
 
-static void confirm_send_goods(int accepted)
+static void confirm_send_goods(int accepted, int checked)
 {
     if (accepted) {
         scenario_request_dispatch(selected_request_id);
+        if (!checked && city_resource_is_stockpiled(selected_resource)) {
+            city_resource_toggle_stockpiled(selected_resource);
+        }
     }
 }
 
@@ -225,19 +229,20 @@ void button_request(int index, int param2)
                 window_popup_dialog_show(POPUP_DIALOG_NOT_ENOUGH_GOODS, confirm_nothing, 0);
                 break;
             default:
-                if (resource_type != RESOURCE_DENARII) {
-                    if (city_resource_is_stockpiled(resource_type)) {
-                        city_resource_toggle_stockpiled(resource_type);
-                    }
-                }
+                selected_resource = resource_type;
                 selected_request_id = (status - CITY_REQUEST_STATUS_MAX) & ~CITY_REQUEST_STATUS_RESOURCES_FROM_GRANARY;
                 if (status & CITY_REQUEST_STATUS_RESOURCES_FROM_GRANARY) {
-                    window_popup_dialog_show_custom_text(
+                    window_popup_dialog_show_confirmation(
                         translation_for(TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TITLE),
                         translation_for(TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TEXT),
+                        city_resource_is_stockpiled(resource_type) ? translation_for(TR_ADVISOR_KEEP_STOCKPILING) : 0,
                         confirm_send_goods);
                 } else {
-                    window_popup_dialog_show(POPUP_DIALOG_SEND_GOODS, confirm_send_goods, 2);
+                    window_popup_dialog_show_confirmation(
+                        lang_get_string(5, POPUP_DIALOG_SEND_GOODS),
+                        lang_get_string(5, POPUP_DIALOG_SEND_GOODS + 1),
+                        city_resource_is_stockpiled(resource_type) ? translation_for(TR_ADVISOR_KEEP_STOCKPILING) : 0,
+                        confirm_send_goods);
                 }
                 break;
         }

@@ -3,6 +3,7 @@
 #include "building/construction.h"
 #include "city/finance.h"
 #include "city/population.h"
+#include "core/lang.h"
 #include "game/file.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -381,7 +382,7 @@ static void menu_file_new_game(int param)
     window_main_menu_show(1);
 }
 
-static void replay_map_confirmed(int confirmed)
+static void replay_map_confirmed(int confirmed, int checked)
 {
     if (!confirmed) {
         window_city_show();
@@ -400,7 +401,7 @@ static void menu_file_replay_map(int param)
 {
     clear_state();
     building_construction_clear_type();
-    window_popup_dialog_show_confirmation(1, 2, replay_map_confirmed);
+    window_popup_dialog_show_confirmation(lang_get_string(1, 2), 0, 0, replay_map_confirmed);
 }
 
 static void menu_file_load_game(int param)
@@ -425,7 +426,7 @@ static void menu_file_delete_game(int param)
     window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_DELETE);
 }
 
-static void menu_file_confirm_exit(int accepted)
+static void menu_file_confirm_exit(int accepted, int checked)
 {
     if (accepted) {
         system_exit();

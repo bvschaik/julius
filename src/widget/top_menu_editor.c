@@ -98,7 +98,7 @@ static void draw_foreground(void)
     if (!data.open_sub_menu) {
         return;
     }
-    menu_draw(&menu[data.open_sub_menu -1], data.focus_sub_menu_id);
+    menu_draw(&menu[data.open_sub_menu - 1], data.focus_sub_menu_id);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -207,7 +207,7 @@ static void menu_file_save_map(int param)
     window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
 }
 
-static void menu_file_confirm_exit(int accepted)
+static void menu_file_confirm_exit(int accepted, int checked)
 {
     if (accepted) {
         game_exit_editor();

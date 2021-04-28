@@ -47,7 +47,8 @@ int city_request_get_status(int index)
     return 0;
 }
 
-int city_get_request_resource(int index) {
+int city_get_request_resource(int index)
+{
     int num_requests = 0;
     if (city_request_has_troop_request()) {
         num_requests = 1;

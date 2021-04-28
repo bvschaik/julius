@@ -179,7 +179,7 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
     return items_placed;
 }
 
-static void confirm_delete_fort(int accepted)
+static void confirm_delete_fort(int accepted, int checked)
 {
     if (accepted == 1) {
         confirm.fort_confirmed = 1;
@@ -189,7 +189,7 @@ static void confirm_delete_fort(int accepted)
     clear_land_confirmed(0, confirm.x_start, confirm.y_start, confirm.x_end, confirm.y_end);
 }
 
-static void confirm_delete_bridge(int accepted)
+static void confirm_delete_bridge(int accepted, int checked)
 {
     if (accepted == 1) {
         confirm.bridge_confirmed = 1;
@@ -199,7 +199,7 @@ static void confirm_delete_bridge(int accepted)
     clear_land_confirmed(0, confirm.x_start, confirm.y_start, confirm.x_end, confirm.y_end);
 }
 
-static void confirm_delete_monument(int accepted)
+static void confirm_delete_monument(int accepted, int checked)
 {
     if (accepted == 1) {
         confirm.monument_confirmed = 1;
@@ -254,7 +254,7 @@ int building_construction_clear_land(int measure_only, int x_start, int y_start,
         window_popup_dialog_show(POPUP_DIALOG_DELETE_FORT, confirm_delete_fort, 2);
         return -1;
     } else if (ask_confirm_monument) {
-        window_popup_dialog_show_confirmation_from_tr(TR_CONFIRM_DELETE_MONUMENT, confirm_delete_monument);
+        window_popup_dialog_show_confirmation(translation_for(TR_CONFIRM_DELETE_MONUMENT), 0, 0, confirm_delete_monument);
         return -1;
     } else if (ask_confirm_bridge) {
         window_popup_dialog_show(POPUP_DIALOG_DELETE_BRIDGE, confirm_delete_bridge, 2);

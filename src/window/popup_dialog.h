@@ -19,15 +19,9 @@ typedef enum {
 } popup_dialog_type;
 
 void window_popup_dialog_show(popup_dialog_type type,
-        void (*close_func)(int accepted), int has_ok_cancel_buttons);
+        void (*close_func)(int accepted, int checked), int has_ok_cancel_buttons);
 
-void window_popup_dialog_show_confirmation(int text_group, int text_id,
-        void (*close_func)(int accepted));
-
-void window_popup_dialog_show_confirmation_from_tr(int translation_key,
-    void (*close_func)(int accepted));
-
-void window_popup_dialog_show_custom_text(const uint8_t *custom_title, const uint8_t *custom_text,
-    void (*close_func)(int accepted));
+void window_popup_dialog_show_confirmation(const uint8_t *custom_title, const uint8_t *custom_text,
+    const uint8_t *checkbox_text, void (*close_func)(int accepted, int checked));
 
 #endif // WINDOW_POPUP_DIALOG_H
