@@ -122,7 +122,7 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
 {
     int formation_id = get_closest_legion_needing_soldiers(barracks);
     if (formation_id > 0) {
-        const formation *m = formation_get(formation_id);
+        formation *m = formation_get(formation_id);
         figure *f = figure_create(m->figure_type, x, y, DIR_0_TOP);
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
@@ -145,6 +145,9 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
             }
         } else {
             f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
+        }
+        if (m->num_figures == MAX_FORMATION_FIGURES - 1) {
+            m->legion_recruit_type = LEGION_RECRUIT_NONE;
         }
     }
     formation_calculate_figures();
