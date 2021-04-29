@@ -12,6 +12,8 @@ static const char *INI_FILENAME = "augustus.ini";
 
 // Keep this in the same order as the config_keys in config.h
 static const char *ini_keys[] = {
+    "enable_audio",
+    "master_volume",
     "ui_walker_waypoints",
     "gameplay_fix_immigration",
     "gameplay_fix_100y_ghosts",
@@ -59,6 +61,8 @@ static int values[CONFIG_MAX_ENTRIES];
 static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
 static int default_values[CONFIG_MAX_ENTRIES] = {
+    [CONFIG_GENERAL_ENABLE_AUDIO] = 1,
+    [CONFIG_GENERAL_MASTER_VOLUME] = 100,
     [CONFIG_UI_SIDEBAR_INFO] = 1,
     [CONFIG_UI_SMOOTH_SCROLLING] = 1,
     [CONFIG_UI_ZOOM] = 1,
@@ -126,7 +130,7 @@ void config_load(void)
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
         size_t size = strlen(line);
-        while (size > 0 && (line[size-1] == '\n' || line[size-1] == '\r')) {
+        while (size > 0 && (line[size - 1] == '\n' || line[size - 1] == '\r')) {
             line[--size] = 0;
         }
         char *equals = strchr(line, '=');

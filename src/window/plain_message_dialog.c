@@ -93,7 +93,7 @@ void window_plain_message_dialog_show(translation_key title, translation_key mes
 
 void window_plain_message_dialog_show_with_extra(translation_key title, translation_key message, const uint8_t *extra)
 {
-    if (init(title, message, 0, extra)) {
+    if (init(title, message, 1, extra)) {
         window_type window = {
             WINDOW_PLAIN_MESSAGE_DIALOG,
             draw_background,

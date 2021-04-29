@@ -21,15 +21,13 @@
 #include "widget/city.h"
 #include "window/advisors.h"
 #include "window/city.h"
-#include "window/difficulty_options.h"
-#include "window/display_options.h"
+#include "window/config.h"
 #include "window/file_dialog.h"
+#include "window/hotkey_config.h"
 #include "window/main_menu.h"
 #include "window/message_dialog.h"
 #include "window/mission_briefing.h"
 #include "window/popup_dialog.h"
-#include "window/sound_options.h"
-#include "window/speed_options.h"
 
 enum {
     INFO_NONE = 0,
@@ -45,10 +43,11 @@ static void menu_file_save_game(int param);
 static void menu_file_delete_game(int param);
 static void menu_file_exit_game(int param);
 
-static void menu_options_display(int param);
-static void menu_options_sound(int param);
-static void menu_options_speed(int param);
-static void menu_options_difficulty(int param);
+static void menu_options_general(int param);
+static void menu_options_user_interface(int param);
+static void menu_options_gameplay(int param);
+static void menu_options_city_management(int param);
+static void menu_options_hotkeys(int param);
 static void menu_options_autosave(int param);
 
 static void menu_help_help(int param);
@@ -59,20 +58,21 @@ static void menu_help_about(int param);
 static void menu_advisors_go_to(int advisor);
 
 static menu_item menu_file[] = {
-    {1, 1, menu_file_new_game, 0},
     {1, 2, menu_file_replay_map, 0},
     {1, 3, menu_file_load_game, 0},
     {1, 4, menu_file_save_game, 0},
     {1, 6, menu_file_delete_game, 0},
+    {CUSTOM_TRANSLATION, TR_BUTTON_BACK_TO_MAIN_MENU, menu_file_new_game, 0},
     {1, 5, menu_file_exit_game, 0},
 };
 
 static menu_item menu_options[] = {
-    {2, 1, menu_options_display, 0},
-    {2, 2, menu_options_sound, 0},
-    {2, 3, menu_options_speed, 0},
-    {2, 6, menu_options_difficulty, 0},
-    {19, 51, menu_options_autosave, 0},
+    {CUSTOM_TRANSLATION, TR_CONFIG_HEADER_GENERAL, menu_options_general, 0},
+    {CUSTOM_TRANSLATION, TR_CONFIG_HEADER_UI_CHANGES, menu_options_user_interface, 0},
+    {CUSTOM_TRANSLATION, TR_CONFIG_HEADER_GAMEPLAY_CHANGES, menu_options_gameplay, 0},
+    {CUSTOM_TRANSLATION, TR_CONFIG_HEADER_CITY_MANAGEMENT_CHANGES, menu_options_city_management, 0},
+    {CUSTOM_TRANSLATION, TR_BUTTON_CONFIGURE_HOTKEYS, menu_options_hotkeys, 0},
+    {19, 51, menu_options_autosave, 0}
 };
 
 static menu_item menu_help[] = {
@@ -99,7 +99,7 @@ static menu_item menu_advisors[] = {
 
 static menu_bar_item menu[] = {
     {1, menu_file, 6},
-    {2, menu_options, 5},
+    {2, menu_options, 6},
     {3, menu_help, 4},
     {4, menu_advisors, 12},
 };
@@ -132,7 +132,7 @@ static void clear_state(void)
 
 static void set_text_for_autosave(void)
 {
-    menu_update_text(&menu[INDEX_OPTIONS], 4, setting_monthly_autosave() ? 51 : 52);
+    menu_update_text(&menu[INDEX_OPTIONS], 5, setting_monthly_autosave() ? 51 : 52);
 }
 
 static void set_text_for_tooltips(void)
@@ -441,28 +441,39 @@ static void menu_file_exit_game(int param)
     window_popup_dialog_show(POPUP_DIALOG_QUIT, menu_file_confirm_exit, 1);
 }
 
-static void menu_options_display(int param)
+static void menu_options_general(int param)
 {
     clear_state();
-    window_display_options_show(window_city_return);
+    window_go_back();
+    window_config_show(CONFIG_PAGE_GENERAL, 0);
 }
 
-static void menu_options_sound(int param)
+static void menu_options_user_interface(int param)
 {
     clear_state();
-    window_sound_options_show(window_city_return);
+    window_go_back();
+    window_config_show(CONFIG_PAGE_UI_CHANGES, 0);
 }
 
-static void menu_options_speed(int param)
+static void menu_options_gameplay(int param)
 {
     clear_state();
-    window_speed_options_show(window_city_return);
+    window_go_back();
+    window_config_show(CONFIG_PAGE_GAMEPLAY_CHANGES, 0);
 }
 
-static void menu_options_difficulty(int param)
+static void menu_options_city_management(int param)
 {
     clear_state();
-    window_difficulty_options_show(window_city_return);
+    window_go_back();
+    window_config_show(CONFIG_PAGE_CITY_MANAGEMENT_CHANGES, 0);
+}
+
+static void menu_options_hotkeys(int param)
+{
+    clear_state();
+    window_go_back();
+    window_hotkey_config_show();
 }
 
 static void menu_options_autosave(int param)

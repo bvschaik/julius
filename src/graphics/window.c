@@ -9,7 +9,7 @@
 #include "input/touch.h"
 #include "window/city.h"
 
-#define MAX_QUEUE 3
+#define MAX_QUEUE 5
 
 static struct {
     window_type window_queue[MAX_QUEUE];
@@ -21,11 +21,10 @@ static struct {
 } data;
 
 static void noop(void)
-{
-}
+{}
+
 static void noop_input(const mouse *m, const hotkeys *h)
-{
-}
+{}
 
 static void increase_queue_index(void)
 {

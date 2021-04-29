@@ -9,13 +9,12 @@
 #include "graphics/window.h"
 #include "scenario/editor_map.h"
 #include "scenario/scenario.h"
-#include "window/display_options.h"
+#include "translation/translation.h"
+#include "window/config.h"
 #include "window/file_dialog.h"
 #include "window/message_dialog.h"
 #include "window/popup_dialog.h"
 #include "window/select_list.h"
-#include "window/sound_options.h"
-#include "window/speed_options.h"
 #include "window/editor/empire.h"
 #include "window/editor/map.h"
 
@@ -24,9 +23,7 @@ static void menu_file_load_map(int param);
 static void menu_file_save_map(int param);
 static void menu_file_exit_editor(int param);
 
-static void menu_options_display(int param);
-static void menu_options_sound(int param);
-static void menu_options_speed(int param);
+static void menu_options_general(int param);
 
 static void menu_help_help(int param);
 static void menu_help_about(int param);
@@ -45,9 +42,7 @@ static menu_item menu_file[] = {
 };
 
 static menu_item menu_options[] = {
-    {2, 1, menu_options_display, 0},
-    {2, 2, menu_options_sound, 0},
-    {2, 3, menu_options_speed, 0},
+    {CUSTOM_TRANSLATION, TR_CONFIG_HEADER_GENERAL, menu_options_general, 0},
 };
 
 static menu_item menu_help[] = {
@@ -67,7 +62,7 @@ static menu_item menu_empire[] = {
 
 static menu_bar_item menu[] = {
     {7, menu_file, 4},
-    {2, menu_options, 3},
+    {2, menu_options, 1},
     {3, menu_help, 2},
     {10, menu_resets, 3},
     {149, menu_empire, 1},
@@ -227,25 +222,11 @@ static void menu_file_exit_editor(int param)
     }
 }
 
-static void menu_options_display(int param)
+static void menu_options_general(int param)
 {
     clear_state();
     window_editor_map_show();
-    window_display_options_show(window_editor_map_show);
-}
-
-static void menu_options_sound(int param)
-{
-    clear_state();
-    window_editor_map_show();
-    window_sound_options_show(window_editor_map_show);
-}
-
-static void menu_options_speed(int param)
-{
-    clear_state();
-    window_editor_map_show();
-    window_speed_options_show(window_editor_map_show);
+    window_config_show(CONFIG_PAGE_GENERAL, 0);
 }
 
 static void menu_help_help(int param)

@@ -126,7 +126,7 @@ static void button_click(int type, int param2)
             sound_music_play_editor();
         }
     } else if (type == 5) {
-        window_config_show();
+        window_config_show(CONFIG_FIRST_PAGE, 1);
     } else if (type == 6) {
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
     }

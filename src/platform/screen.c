@@ -246,6 +246,7 @@ static int create_textures(int width, int height)
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create city texture, zoom will be disabled: %s", SDL_GetError());
             SDL_SetTextureBlendMode(SDL.texture_ui, SDL_BLENDMODE_NONE);
             config_set(CONFIG_UI_ZOOM, 0);
+            return -1;
         } else {
             SDL_Log("Textures created (%d x %d)", width, height);
         }
@@ -497,12 +498,22 @@ int system_is_fullscreen_only(void)
 #endif
 }
 
-void system_reload_textures(void)
+void system_get_max_resolution(int *width, int *height)
+{
+    SDL_DisplayMode mode;
+    int index = SDL_GetWindowDisplayIndex(SDL.window);
+    SDL_GetCurrentDisplayMode(index, &mode);
+    *width = scale_pixels_to_logical(mode.w);
+    *height = scale_pixels_to_logical(mode.h);
+}
+
+int system_reload_textures(void)
 {
     int width = screen_width();
     int height = screen_height();
-    create_textures(width, height);
+    int result = create_textures(width, height);
     screen_set_resolution(width, height);
+    return result != -1;
 }
 
 int system_save_screen_buffer(void *pixels)

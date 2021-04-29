@@ -193,7 +193,7 @@ static void draw_background(void)
 {
     graphics_clear_screen(CANVAS_UI);
 
-    image_draw_fullscreen_background_with_borders(image_group(GROUP_INTERMEZZO_BACKGROUND) + 5);
+    window_draw_underlying_window();
 
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
@@ -287,7 +287,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0,
         bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
     if (!handled && (m->right.went_up || h->escape_pressed)) {
-        window_config_show();
+        window_go_back();
     }
 }
 

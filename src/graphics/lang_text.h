@@ -3,6 +3,7 @@
 
 #include "graphics/font.h"
 #include "graphics/color.h"
+#include "translation/translation.h"
 
 int lang_text_get_width(int group, int number, font_t font);
 

@@ -10,7 +10,7 @@
  */
 
 /**
- * Gets the version of Julius
+ * Gets the version of Augustus
  * @return Version number
  */
 const char *system_version(void);
@@ -23,9 +23,17 @@ const char *system_version(void);
 void system_resize(int width, int height);
 
 /**
- * Reload game textures
+ * Get maximum available resolution
+ * @param width Pointer to variable to store the max width
+ * @param height Pointer to variable to store the max height
  */
-void system_reload_textures(void);
+void system_get_max_resolution(int *width, int *height);
+
+/**
+ * Reload game textures
+ * @return 0 if there was a problem reloading the textures, 1 otherwise
+ */
+int system_reload_textures(void);
 
 /**
  * Saves the screen buffer to memory
