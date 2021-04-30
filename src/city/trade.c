@@ -1,5 +1,6 @@
 #include "trade.h"
 
+#include "building/caravanserai.h"
 #include "building/count.h"
 #include "building/monument.h"
 #include "city/constants.h"
@@ -23,6 +24,9 @@ void city_trade_update(void)
     // Update trade problems
     if (city_data.trade.land_trade_problem_duration > 0) {
         city_data.trade.land_trade_problem_duration--;
+        if (building_caravanserai_is_fully_functional()) {
+            city_data.trade.land_trade_problem_duration--;
+        }
     } else {
         city_data.trade.land_trade_problem_duration = 0;
     }
@@ -35,6 +39,10 @@ void city_trade_update(void)
     if (city_data.trade.sea_trade_problem_duration <= 0) {
         city_data.trade.sea_trade_problem_duration = 0;
     }
+    if (city_data.trade.land_trade_problem_duration <= 0) {
+        city_data.trade.land_trade_problem_duration = 0;
+    }
+
 
     empire_city_generate_trader();
 }

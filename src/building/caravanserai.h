@@ -7,5 +7,6 @@
 
 int building_caravanserai_enough_foods(building *caravanserai);
 int building_caravanserai_get_storage_destination(building *caravanserai);
+int building_caravanserai_is_fully_functional(void);
 
 #endif // BUILDING_CARANVASERAI_H

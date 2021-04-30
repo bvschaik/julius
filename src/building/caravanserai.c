@@ -1,6 +1,8 @@
 #include "caravanserai.h"
 
 #include "building/distribution.h"
+#include "building/monument.h"
+#include "city/buildings.h"
 #include "city/trade.h"
 #include "city/resource.h"
 
@@ -26,8 +28,8 @@ static int get_needed_food(building *caravanserai)
     return food_needed;
 }
 
-int building_caravanserai_enough_foods(building *caravanserai) {
-
+int building_caravanserai_enough_foods(building *caravanserai)
+{
     int food_required_monthly = trade_caravan_count() * FOOD_PER_TRADER_MONTHLY;
     int total_food_in_caravanserai = 0;
 
@@ -69,4 +71,20 @@ int building_caravanserai_get_storage_destination(building *caravanserai)
         return data[fetch_inventory].building_id;
     }
     return 0;
+}
+
+int building_caravanserai_is_fully_functional(void)
+{
+    if (!building_monument_working(BUILDING_CARAVANSERAI)) {
+        return 0;
+    }
+
+    building *b = building_get(city_buildings_get_caravanserai());
+
+
+    if (building_caravanserai_enough_foods(b)) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
