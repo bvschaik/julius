@@ -3,6 +3,7 @@
 #include "building/caravanserai.h"
 #include "building/monument.h"
 #include "city/buildings.h"
+#include "city/trade_policy.h"
 #include "empire/trade_prices.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -14,38 +15,106 @@
 #include "input/input.h"
 #include "window/advisors.h"
 
+
 static void draw_background(void)
 {
     window_draw_underlying_window();
 
     graphics_in_dialog();
 
+    int has_caravanserai = building_monument_working(BUILDING_CARAVANSERAI);
+    int has_lighthouse = building_monument_working(BUILDING_LIGHTHOUSE);
+    int land_policy = building_monument_module_type(BUILDING_CARAVANSERAI);
+    int sea_policy = building_monument_module_type(BUILDING_LIGHTHOUSE);
+
+    int has_land_trade_policy = has_caravanserai && land_policy && land_policy != TRADE_POLICY_3;
+    int has_sea_trade_policy = has_lighthouse && sea_policy && sea_policy != TRADE_POLICY_3;
+    int same_policy = land_policy == sea_policy;
+
+    int window_height = 11;
+    int line_buy_position = 230;
+    int line_sell_position = 270;
+    int number_margin = 25;
+    int button_position = 295;
+    int icon_shift = 126;
+    int price_shift = 120;
+    int four_line = 0;
+    int no_policy = !has_land_trade_policy && !has_sea_trade_policy;
+
+    if (((has_sea_trade_policy && !has_land_trade_policy) ||
+       (!has_sea_trade_policy && has_land_trade_policy) ||
+       (has_sea_trade_policy && has_land_trade_policy && !same_policy))) {
+        window_height = 17;
+        line_sell_position = 305;
+        button_position = 390;
+        four_line = 1;
+        icon_shift = 66;
+        price_shift = 60;
+    }
+
     graphics_shade_rect(17, 53, 622, 334, 0);
-    outer_panel_draw(16, 144, 38, 11);
+    outer_panel_draw(16, 144, 38, window_height);
+
     lang_text_draw(54, 21, 26, 153, FONT_LARGE_BLACK);
-    lang_text_draw(54, 22, 26, 226, FONT_NORMAL_BLACK);
-    lang_text_draw(54, 23, 26, 262, FONT_NORMAL_BLACK);
+
+    if (four_line) {
+        lang_text_draw_centered(54, 22, 26, line_buy_position, 608, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(54, 23, 26, line_sell_position, 608, FONT_NORMAL_BLACK);
+    } else {
+        lang_text_draw(54, 22, 26, line_buy_position, FONT_NORMAL_BLACK);
+        lang_text_draw(54, 23, 26, line_sell_position, FONT_NORMAL_BLACK);
+    }
+
 
     for (int i = 1; i < 16; i++) {
         int image_offset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 126 + 30 * i, 194);
-        text_draw_number_centered(trade_price_buy(i, 0), 120 + 30 * i, 226, 30, FONT_SMALL_PLAIN);
-        text_draw_number_centered(trade_price_sell(i, 0), 120 + 30 * i, 262, 30, FONT_SMALL_PLAIN);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, icon_shift + 30 * i, 194);
 
-        if (city_buildings_has_caravanserai()) {
-            int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
-            if (policy && policy != TRADE_POLICY_3) {
-                text_draw_number_centered_colored(trade_price_buy(i, 1), 120 + 30 * i, 240, 30, FONT_SMALL_PLAIN, policy == TRADE_POLICY_1 ? COLOR_MASK_PURPLE : COLOR_MASK_DARK_GREEN);
-                text_draw_number_centered_colored(trade_price_sell(i, 1), 120 + 30 * i, 276, 30, FONT_SMALL_PLAIN, policy == TRADE_POLICY_1 ? COLOR_MASK_DARK_GREEN : COLOR_MASK_PURPLE);
-
-                int image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1;
-                image_draw(image_id, 125, 236);
-
-                image_draw(image_id, 125, 272);
+        if (!four_line || no_policy) {
+            if (no_policy) {
+                text_draw_number_centered(trade_price_buy(i,0), price_shift + 30 * i, line_buy_position, 30, FONT_SMALL_PLAIN);
+                text_draw_number_centered(trade_price_sell(i,0), price_shift + 30 * i, line_sell_position, 30, FONT_SMALL_PLAIN);
+            } else {
+                text_draw_number_centered_colored(trade_price_buy(i, 1), price_shift + 30 * i, line_buy_position, 30, FONT_SMALL_PLAIN, land_policy == TRADE_POLICY_1 ? COLOR_MASK_PURPLE : COLOR_MASK_DARK_GREEN);
+                text_draw_number_centered_colored(trade_price_sell(i, 1), price_shift + 30 * i, line_sell_position, 30, FONT_SMALL_PLAIN, land_policy == TRADE_POLICY_1 ? COLOR_MASK_DARK_GREEN : COLOR_MASK_PURPLE);
+            }
+        } else {
+            if (has_land_trade_policy) {
+                text_draw_number_centered_colored(trade_price_buy(i, 1), price_shift + 30 * i, line_buy_position + number_margin, 30, FONT_SMALL_PLAIN, land_policy == TRADE_POLICY_1 ? COLOR_MASK_PURPLE : COLOR_MASK_DARK_GREEN);
+                text_draw_number_centered_colored(trade_price_sell(i, 1), price_shift + 30 * i, line_sell_position + number_margin, 30, FONT_SMALL_PLAIN, land_policy == TRADE_POLICY_1 ? COLOR_MASK_DARK_GREEN : COLOR_MASK_PURPLE);
+            } else {
+                text_draw_number_centered(trade_price_buy(i,1), price_shift + 30 * i, line_buy_position + number_margin, 30, FONT_SMALL_PLAIN);
+                text_draw_number_centered(trade_price_sell(i,1), price_shift + 30 * i, line_sell_position + number_margin, 30, FONT_SMALL_PLAIN);
+            }
+            if (has_sea_trade_policy) {
+                text_draw_number_centered_colored(trade_price_buy(i, 0), price_shift + 30 * i, line_buy_position + 2 * number_margin, 30, FONT_SMALL_PLAIN, sea_policy == TRADE_POLICY_1 ? COLOR_MASK_PURPLE : COLOR_MASK_DARK_GREEN);
+                text_draw_number_centered_colored(trade_price_sell(i, 0), price_shift + 30 * i, line_sell_position + 2 * number_margin, 30, FONT_SMALL_PLAIN, sea_policy == TRADE_POLICY_1 ? COLOR_MASK_DARK_GREEN : COLOR_MASK_PURPLE);
+            } else {
+                text_draw_number_centered(trade_price_buy(i,0), price_shift + 30 * i, line_buy_position + 2 * number_margin, 30, FONT_SMALL_PLAIN);
+                text_draw_number_centered(trade_price_sell(i,0), price_shift + 30 * i, line_sell_position + 2 * number_margin, 30, FONT_SMALL_PLAIN);
             }
         }
     }
-    lang_text_draw_centered(13, 1, 16, 296, 608, FONT_NORMAL_BLACK);
+
+    if (four_line) {
+        int y_pos_buy = line_buy_position + number_margin - 5;
+        int y_pos_sell = line_sell_position + number_margin - 5;
+
+        int image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1;
+
+        image_draw(image_id, 60, y_pos_buy);
+        image_draw(image_id, 60, y_pos_sell);
+
+        image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE);
+        if (!same_policy) {
+            y_pos_buy += number_margin;
+            y_pos_sell += number_margin;
+        }
+        image_draw(image_id, 60, y_pos_buy);
+        image_draw(image_id, 60, y_pos_sell);
+    }
+
+    lang_text_draw_centered(13, 1, 16, button_position, 608, FONT_NORMAL_BLACK);
 
     graphics_reset_dialog();
 }

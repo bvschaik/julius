@@ -34,6 +34,12 @@
     <image id="Trade Policy 2" src="Trade_Policy_2" />
     <image id="Trade Policy 3" src="Trade_Policy_3" />
 
+    <!-- Note: Lighthouse Trade Policy -->
+    <image id="Sea Trade Policy" src="Sea_Trade_Policy_Icon" />
+    <image id="Sea Trade Policy 1" src="Sea_Trade_Policy_1" />
+    <image id="Sea Trade Policy 2" src="Sea_Trade_Policy_2" />
+    <image id="Sea Trade Policy 3" src="Sea_Trade_Policy_3" />
+
     <image src="Policy_Selection_Border_Top_UnHover" id="Policy Selection Borders" />
     <image src="Policy_Selection_Border_Top_Hover" />
     <image src="Policy_Selection_Border_Right_UnHover" />

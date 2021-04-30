@@ -1,14 +1,14 @@
 #include "culture.h"
 
 #include "assets/assets.h"
-#include "building/building.h"
+#include "building/caravanserai.h"
 #include "building/market.h"
 #include "building/monument.h"
 #include "city/buildings.h"
 #include "city/constants.h"
 #include "city/festival.h"
 #include "city/finance.h"
-#include "city/resource.h"
+#include "city/trade_policy.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -16,7 +16,6 @@
 #include "graphics/text.h"
 #include "scenario/building.h"
 #include "sound/speech.h"
-#include "translation/translation.h"
 #include "window/option_popup.h"
 #include "window/building/military.h"
 
@@ -25,6 +24,7 @@
 
 static void add_module_prompt(int param1, int param2);
 static void draw_temple(building_info_context *c, const char *sound_file, int group_id);
+static void lighthouse_action(int param1, int param2);
 
 static int god_id;
 
@@ -32,9 +32,14 @@ static generic_button add_module_button[] = {
     { 0, 0, 304, 20, add_module_prompt, button_none, 0, 0 }
 };
 
+static generic_button go_to_lighthouse_action_button[] = {
+        {0, 0, 400, 100, lighthouse_action, button_none, 0, 0}
+};
+
 static struct {
     int focus_button_id;
     int building_id;
+    int lighthouse_focus_button_id;
 } data;
 
 static struct {
@@ -861,17 +866,50 @@ void window_building_draw_arena(building_info_context *c)
     }
 }
 
+static void draw_policy_image_border(int x, int y, int focused)
+{
+    int id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
+                                 "Policy Selection Borders");
+
+    image_draw(id + focused, x, y);
+    image_draw(id + 2 + focused, x + 105, y + 5);
+    image_draw(id + 4 + focused, x, y + 90);
+    image_draw(id + 6 + focused, x, y + 5);
+}
+
+void window_building_handle_mouse_lighthouse(const mouse *m, building_info_context *c)
+{
+    generic_buttons_handle_mouse(
+            m, c->x_offset + 32, c->y_offset + 150,
+            go_to_lighthouse_action_button, 1, &data.lighthouse_focus_button_id);
+}
+
+void window_building_draw_lighthouse_foreground(building_info_context *c)
+{
+    draw_policy_image_border(c->x_offset + 32, c->y_offset + 150, data.lighthouse_focus_button_id == 1);
+}
+
+void lighthouse_action(int param1, int param2)
+{
+    window_policy_show(0);
+}
+
 void window_building_draw_lighthouse(building_info_context *c)
 {
     building *b = building_get(c->building_id);
     if (b->data.monument.phase == MONUMENT_FINISHED) {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-        int height = text_draw_multiline(translation_for(TR_BUILDING_LIGHTHOUSE_BONUS_DESC),
+        text_draw_multiline(translation_for(TR_BUILDING_LIGHTHOUSE_BONUS_DESC),
             c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+
+        window_building_draw_policy_action(c, 0);
+
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 270, c->width_blocks - 2, 4);
+        window_building_draw_employment(c, 278);
+
         image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Lighthouse Banner"),
-            c->x_offset + 32, c->y_offset + 166 + height);
-        inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height, c->width_blocks - 2, 4);
-        window_building_draw_employment(c, 96 + height);
+                   c->x_offset + 32, c->y_offset + 350);
+
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         window_building_draw_monument_lighthouse_construction_process(c);

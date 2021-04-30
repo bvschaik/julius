@@ -73,6 +73,10 @@ void window_building_draw_tavern(building_info_context* c);
 
 void window_building_draw_grand_garden(building_info_context* c);
 
+void window_building_handle_mouse_lighthouse(const mouse *m, building_info_context *c);
+
+void window_building_draw_lighthouse_foreground(building_info_context *c);
+
 void window_building_draw_lighthouse(building_info_context* c);
 
 void window_building_draw_small_mausoleum(building_info_context* c);

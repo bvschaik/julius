@@ -6,6 +6,7 @@
 #include "building/model.h"
 #include "building/monument.h"
 #include "city/buildings.h"
+#include "city/trade_policy.h"
 #include "city/view.h"
 #include "core/config.h"
 #include "empire/city.h"
@@ -103,8 +104,8 @@ static void draw_trader(building_info_context *c, figure *f)
     int width = lang_text_draw(64, f->type, c->x_offset + 40, c->y_offset + 110, FONT_SMALL_BLACK);
     lang_text_draw(21, city->name_id, c->x_offset + 40 + width, c->y_offset + 110, FONT_SMALL_BLACK);
 
-    width = lang_text_draw(129, 1, c->x_offset + 40, c->y_offset + (f->type == FIGURE_TRADE_SHIP ? 132 : 130), FONT_SMALL_BLACK);
-    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? figure_trade_sea_trade_units() : figure_trade_land_trade_units(), c->x_offset + 40 + width, c->y_offset + (f->type == FIGURE_TRADE_SHIP ? 132 : 130), FONT_SMALL_BLACK);
+    width = lang_text_draw(129, 1, c->x_offset + 40, c->y_offset + 130, FONT_SMALL_BLACK);
+    lang_text_draw_amount(8, 10, f->type == FIGURE_TRADE_SHIP ? figure_trade_sea_trade_units() : figure_trade_land_trade_units(), c->x_offset + 40 + width, c->y_offset + 130, FONT_SMALL_BLACK);
 
     int trader_id = f->trader_id;
     if (f->type == FIGURE_TRADE_SHIP) {
@@ -115,7 +116,7 @@ static void draw_trader(building_info_context *c, figure *f)
             case FIGURE_ACTION_115_TRADE_SHIP_LEAVING: text_id = 8; break;
             default: text_id = 9; break;
         }
-        lang_text_draw(129, text_id, c->x_offset + 40, c->y_offset + 154, FONT_SMALL_BLACK);
+        lang_text_draw(129, text_id, c->x_offset + 40, c->y_offset + 150, FONT_SMALL_BLACK);
     } else {
         int text_id;
         switch (f->action_state) {
@@ -140,7 +141,7 @@ static void draw_trader(building_info_context *c, figure *f)
     }
     if (trader_has_traded(trader_id)) {
         // bought
-        int y_base = c->y_offset + (f->type == FIGURE_TRADE_SHIP ? 180 : 174) ;
+        int y_base = c->y_offset + 174;
         width = lang_text_draw(129, 4, c->x_offset + 40, y_base, FONT_SMALL_BLACK);
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
             if (trader_bought_resources(trader_id, r)) {
@@ -152,7 +153,7 @@ static void draw_trader(building_info_context *c, figure *f)
             }
         }
         // sold
-        y_base = c->y_offset + (f->type == FIGURE_TRADE_SHIP ? 210 : 202);
+        y_base = c->y_offset + 202;
         width = lang_text_draw(129, 5, c->x_offset + 40, y_base, FONT_SMALL_BLACK);
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
             if (trader_sold_resources(trader_id, r)) {
@@ -165,7 +166,7 @@ static void draw_trader(building_info_context *c, figure *f)
         }
     } else { // nothing sold/bought (yet)
         // buying
-        int y_base = c->y_offset + (f->type == FIGURE_TRADE_SHIP ? 180 : 174) ;
+        int y_base = c->y_offset + 174;
         width = lang_text_draw(129, 2, c->x_offset + 40, y_base, FONT_SMALL_BLACK);
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
             if (city->buys_resource[r]) {
@@ -175,7 +176,7 @@ static void draw_trader(building_info_context *c, figure *f)
             }
         }
         // selling
-        y_base = c->y_offset + (f->type == FIGURE_TRADE_SHIP ? 210 : 202);
+        y_base = c->y_offset + 202;
         width = lang_text_draw(129, 3, c->x_offset + 40, y_base, FONT_SMALL_BLACK);
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
             if (city->sells_resource[r]) {
@@ -211,6 +212,27 @@ static void draw_trader(building_info_context *c, figure *f)
             }
         } else {
             text_draw(translation_for(TR_BUILDING_CARAVANSERAI_NO_POLICY), c->x_offset + 40, c->y_offset + 222, FONT_SMALL_BLACK, 0);
+        }
+    }
+
+    if (building_monument_working(BUILDING_LIGHTHOUSE) && f->type == FIGURE_TRADE_SHIP) {
+
+        int policy = building_monument_module_type(BUILDING_LIGHTHOUSE);
+        if(policy) {
+            int text_width = text_draw(translation_for(TR_BUILDING_LIGHTHOUSE_POLICY_TITLE), c->x_offset + 40, c->y_offset + 222, FONT_SMALL_BLACK, 0);
+            switch(policy) {
+                case TRADE_POLICY_1 :
+                    text_draw(translation_for(TR_BUILDING_LIGHTHOUSE_POLICY_1_TITLE), c->x_offset + 40 + text_width + 10, c->y_offset + 222, FONT_SMALL_BLACK, 0);
+                    break;
+                case TRADE_POLICY_2 :
+                    text_draw(translation_for(TR_BUILDING_LIGHTHOUSE_POLICY_2_TITLE), c->x_offset + 40 + text_width + 10, c->y_offset + 222, FONT_SMALL_BLACK, 0);
+                    break;
+                case TRADE_POLICY_3 :
+                    text_draw(translation_for(TR_BUILDING_LIGHTHOUSE_POLICY_3_TITLE), c->x_offset + 40 + text_width + 10, c->y_offset + 222, FONT_SMALL_BLACK, 0);
+                    break;
+            }
+        } else {
+            text_draw(translation_for(TR_BUILDING_LIGHTHOUSE_NO_POLICY), c->x_offset + 40, c->y_offset + 222, FONT_SMALL_BLACK, 0);
         }
     }
 }

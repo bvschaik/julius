@@ -3,6 +3,7 @@
 #include "building/monument.h"
 #include "city/buildings.h"
 #include "city/resource.h"
+#include "city/trade_policy.h"
 #include "core/calc.h"
 #include "trade_prices.h"
 
@@ -20,25 +21,41 @@ static const struct trade_price DEFAULT_PRICES[RESOURCE_MAX] = {
 
 static struct trade_price prices[RESOURCE_MAX];
 
-static int trade_get_caravanserai_factor(int percent) {
-    int caravanserai_percent = 0;
+static int trade_percentage_from_laborers(int percent, building *b)
+{
+    int percent_laborers = 0;
+    // get workers percentage
+    int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+    if (pct_workers >= 100) { // full laborers
+        percent_laborers = percent;
+    } else if (pct_workers > 0) {
+        percent_laborers = percent / 2;
+    }
+    return percent_laborers;
+}
 
+static int trade_get_caravanserai_factor(int percent)
+{
+    int caravanserai_percent = 0;
     if (building_monument_working(BUILDING_CARAVANSERAI)) {
         building *b = building_get(city_buildings_get_caravanserai());
 
         // caravanserai has enough food for the month
         if (building_caravanserai_enough_foods(b)) {
-            // get workers percentage
-            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-            if (pct_workers >= 100) { // full laborers
-                caravanserai_percent = percent;
-            } else if (pct_workers > 0) {
-                caravanserai_percent = caravanserai_percent / 2;
-            }
+            caravanserai_percent = trade_percentage_from_laborers(percent, b);
         }
     }
-
     return caravanserai_percent;
+}
+
+static int trade_get_lighthouse_factor(int percent) {
+    int lighthouse_percent = 0;
+
+    if (building_monument_working(BUILDING_LIGHTHOUSE)) {
+        building *b = building_get(building_find(BUILDING_LIGHTHOUSE));
+        lighthouse_percent = trade_percentage_from_laborers(percent, b);
+    }
+    return lighthouse_percent;
 }
 
 static int trade_factor_sell(int land_trader)
@@ -51,6 +68,14 @@ static int trade_factor_sell(int land_trader)
             percent = trade_get_caravanserai_factor(POLICY_1_BONUS_PERCENT); // trader buy 20% more
         } else if (policy == TRADE_POLICY_2) {
             percent -= trade_get_caravanserai_factor(POLICY_2_MALUS_PERCENT); // trader buy 10% less
+        }
+    } else if(!land_trader && building_find(BUILDING_LIGHTHOUSE)) {
+        int policy = building_monument_module_type(BUILDING_LIGHTHOUSE);
+
+        if (policy == TRADE_POLICY_1) {
+            percent = trade_get_lighthouse_factor(POLICY_1_BONUS_PERCENT); // trader buy 20% more
+        } else if (policy == TRADE_POLICY_2) {
+            percent -= trade_get_lighthouse_factor(POLICY_2_MALUS_PERCENT); // trader buy 10% less
         }
     }
     return percent;
@@ -66,6 +91,14 @@ static int trade_factor_buy(int land_trader)
             percent = trade_get_caravanserai_factor(POLICY_1_MALUS_PERCENT); // player buy 10% more
         } else if (policy == TRADE_POLICY_2) {
             percent -= trade_get_caravanserai_factor(POLICY_2_BONUS_PERCENT); // player buy 20% less
+        }
+    } else if (!land_trader && building_find(BUILDING_LIGHTHOUSE)) {
+        int policy = building_monument_module_type(BUILDING_LIGHTHOUSE);
+
+        if (policy == TRADE_POLICY_1) {
+            percent = trade_get_lighthouse_factor(POLICY_1_MALUS_PERCENT); // player buy 10% more
+        } else if (policy == TRADE_POLICY_2) {
+            percent -= trade_get_lighthouse_factor(POLICY_2_BONUS_PERCENT); // player buy 20% less
         }
     }
     return percent;

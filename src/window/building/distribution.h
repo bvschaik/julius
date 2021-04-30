@@ -22,8 +22,6 @@ void window_building_draw_supplier_orders_foreground(building_info_context *c);
 void window_building_handle_mouse_supplier(const mouse* m, building_info_context* c);
 void window_building_handle_mouse_supplier_orders(const mouse* m, building_info_context* c);
 
-void window_building_handle_mouse_caravanserai(const mouse* m, building_info_context* c);
-
 void window_building_draw_mess_hall(building_info_context* c);
 
 void window_building_draw_granary(building_info_context *c);
@@ -48,7 +46,7 @@ void window_building_granary_get_tooltip_distribution_permissions(int* translati
 void window_building_warehouse_get_tooltip_distribution_permissions(int* translation);
 void window_building_get_tooltip_warehouse_orders(int *group_id, int *text_id, int *translation);
 
-void window_building_draw_caravanserai_action(building_info_context *c);
+void window_building_handle_mouse_caravanserai(const mouse* m, building_info_context* c);
 void window_building_draw_caravanserai_foreground(building_info_context *c);
 void window_building_draw_caravanserai(building_info_context* c);
 #endif // WINDOW_BUILDING_DISTRIBUTION_H

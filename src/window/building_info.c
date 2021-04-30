@@ -2,6 +2,7 @@
 
 #include "building/barracks.h"
 #include "building/building.h"
+#include "building/culture.h"
 #include "building/house_evolution.h"
 #include "building/model.h"
 #include "building/monument.h"
@@ -741,7 +742,9 @@ static void draw_foreground(void)
     // building-specific buttons
     if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.building_id)->type;
-        if (btype == BUILDING_GRANARY) {
+        if (btype == BUILDING_LIGHTHOUSE) {
+            window_building_draw_lighthouse_foreground(&context);
+        } else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
                 window_building_draw_granary_orders_foreground(&context);
             } else {
@@ -893,6 +896,8 @@ static int handle_specific_building_info_mouse(const mouse *m)
             }
         } else if ((btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) || btype == BUILDING_PANTHEON) {
             window_building_handle_mouse_grand_temple(m, &context);
+        } else if (btype == BUILDING_LIGHTHOUSE) {
+            window_building_handle_mouse_lighthouse(m, &context);
         }
     }
     return 0;
