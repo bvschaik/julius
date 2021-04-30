@@ -21,6 +21,7 @@
 #include "input/input.h"
 #include "translation/translation.h"
 #include "window/advisors.h"
+#include "window/city.h"
 #include "window/message_dialog.h"
 
 static void button_game(int god, int param2);
@@ -42,8 +43,11 @@ static generic_button buttons_gods_size[] = {
     //{370, 96, 80, 90, button_game, button_none, 4, 0},
 };
 
-static int focus_button_id;
-static int focus_image_button_id;
+static struct {
+    int focus_button_id;
+    int focus_image_button_id;
+    int return_to_city;
+} data;
 
 static void draw_background(void)
 {
@@ -110,18 +114,27 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
+static void close_window()
+{
+    if (data.return_to_city) {
+        window_city_show();
+    } else {
+        window_advisors_show();
+    }
+}
+
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     int handled = 0;
-    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 1, &focus_image_button_id);
-    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, action_button, 1, &focus_image_button_id);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_gods_size, 4, &focus_button_id);
-    if (focus_image_button_id) {
-        focus_button_id = 0;
+    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 1, &data.focus_image_button_id);
+    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, action_button, 1, &data.focus_image_button_id);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_gods_size, 3, &data.focus_button_id);
+    if (data.focus_image_button_id) {
+        data.focus_button_id = 0;
     }
     if (!handled && input_go_back_requested(m, h)) {
-        window_advisors_show();
+        close_window();
     }
 }
 
@@ -133,28 +146,28 @@ static void button_game(int game, int param2)
 
 static void button_close(int param1, int param2)
 {
-    window_advisors_show();
+    close_window();
 }
 
 static void button_hold_games(int param1, int param2)
 {
     city_games_schedule(city_data.games.selected_games_id);
-    window_advisors_show();
+    close_window();
 }
 
 static void get_tooltip(tooltip_context *c)
 {
-    if (!focus_image_button_id && (!focus_button_id || focus_button_id > 5)) {
+    if (!data.focus_image_button_id && (!data.focus_button_id || data.focus_button_id > 4)) {
         return;
     }
     c->type = TOOLTIP_BUTTON;
-    games_type *game = city_games_get_game_type(focus_button_id);
+    games_type *game = city_games_get_game_type(data.focus_button_id);
     if (game) {
         c->translation_key = game->header_key;
     }
 }
 
-void window_hold_games_show(void)
+void window_hold_games_show(int return_to_city)
 {
     window_type window = {
         WINDOW_HOLD_GAMES,
@@ -163,5 +176,6 @@ void window_hold_games_show(void)
         handle_input,
         get_tooltip
     };
+    data.return_to_city = return_to_city;
     window_show(&window);
 }

@@ -58,31 +58,37 @@ static int get_entertainment_advice(void)
     }
 }
 
-static void draw_games_info(void)
+void window_entertainment_draw_games_text(int x, int y)
 {
     games_type *game = city_games_get_game_type(city_festival_selected_game_id());
     int cooldown = city_festival_games_cooldown();
+
+    if (cooldown) {
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN_TEXT), x, y + 15, 400, FONT_NORMAL_WHITE, 0);
+        int width = text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN), x + 46, y + 50, FONT_NORMAL_WHITE, 0);
+        text_draw_number(cooldown, '@', "", x + 46 + width, y + 50, FONT_NORMAL_WHITE);
+    } else if (city_festival_games_planning_time()) {
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_PREPARING), x, y + 15, 400, FONT_NORMAL_WHITE, 0);
+        int width = text_draw(translation_for(text_data[game->id].preparation_text), x + 56, y + 50, FONT_NORMAL_WHITE, 0);
+        text_draw_number(city_festival_games_planning_time(), '@', "", x + 56 + width, y + 50, FONT_NORMAL_WHITE);
+    } else if (city_festival_games_active()) {
+        text_draw_multiline(translation_for(text_data[game->id].ongoing_text), x + 4, y, 400, FONT_NORMAL_WHITE, 0);
+    } else {
+        text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC), x + 4, y, 400, FONT_NORMAL_WHITE, 0);
+        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_BUTTON), x + 56, y + 60, 300, FONT_NORMAL_WHITE, 0);
+    }
+
+}
+
+static void draw_games_info(void)
+{
 
     inner_panel_draw(48, 312, 34, 6);
     text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_HEADER), 52, 284, FONT_LARGE_BLACK, 0);
 
     image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "HoldGames Banner"), 460, 315);
+    window_entertainment_draw_games_text(56, 325);
 
-    if (cooldown) {
-        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN_TEXT), 56, 340, 400, FONT_NORMAL_WHITE, 0);
-        int width = text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN), 102, 375, FONT_NORMAL_WHITE, 0);
-        text_draw_number(cooldown, '@', "", 102 + width, 375, FONT_NORMAL_WHITE);
-
-    }     else if (city_festival_games_planning_time()) {
-        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_PREPARING), 56, 340, 400, FONT_NORMAL_WHITE, 0);
-        int width = text_draw(translation_for(text_data[game->id].preparation_text), 102, 375, FONT_NORMAL_WHITE, 0);
-        text_draw_number(city_festival_games_planning_time(), '@', "", 102 + width, 375, FONT_NORMAL_WHITE);
-    }     else if (city_festival_games_active()) {
-        text_draw_multiline(translation_for(text_data[game->id].ongoing_text), 60, 325, 400, FONT_NORMAL_WHITE, 0);
-    }     else {
-        text_draw_multiline(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC), 60, 325, 400, FONT_NORMAL_WHITE, 0);
-        text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_BUTTON), 102, 385, 300, FONT_NORMAL_WHITE, 0);
-    }
 }
 
 
@@ -220,7 +226,7 @@ static int handle_mouse(const mouse *m)
 
 static void button_hold_games(int param1, int param2)
 {
-    window_hold_games_show();
+    window_hold_games_show(0);
 }
 
 static void get_tooltip_text(advisor_tooltip_result *r)

@@ -16,13 +16,18 @@
 #include "graphics/text.h"
 #include "scenario/building.h"
 #include "sound/speech.h"
-#include "window/option_popup.h"
+#include "translation/translation.h"
+#include "window/advisor/entertainment.h"
 #include "window/building/military.h"
+#include "window/hold_games.h"
+#include "window/option_popup.h"
 
 #define GOD_PANTHEON 5
 #define MODULE_COST 1000
 
 static void add_module_prompt(int param1, int param2);
+static void hold_games(int param1, int param2);
+
 static void draw_temple(building_info_context *c, const char *sound_file, int group_id);
 static void lighthouse_action(int param1, int param2);
 
@@ -34,6 +39,10 @@ static generic_button add_module_button[] = {
 
 static generic_button go_to_lighthouse_action_button[] = {
         {0, 0, 400, 100, lighthouse_action, button_none, 0, 0}
+};
+
+static generic_button hold_games_button[] = {
+{ 0, 0, 300, 20, hold_games, button_none, 0, 0 }
 };
 
 static struct {
@@ -637,6 +646,21 @@ int window_building_handle_mouse_grand_temple(const mouse *m, building_info_cont
     return 0;
 }
 
+int window_building_handle_mouse_colosseum(const mouse *m, building_info_context *c)
+{
+    building *b = building_get(c->building_id);
+    data.building_id = c->building_id;
+    if (b->data.monument.phase != MONUMENT_FINISHED) {
+        return 0;
+    }
+    if (generic_buttons_handle_mouse(m, c->x_offset + 88, c->y_offset + 535, 
+        hold_games_button, 1, &data.focus_button_id)) {
+        return 1;
+    }
+    return 0;
+}
+
+
 void window_building_draw_grand_temple_ceres(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES_DESC,
@@ -755,8 +779,13 @@ void window_building_draw_tavern(building_info_context *c)
     return;
 }
 
+static void draw_games_info(building_info_context *c)
+{
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 470, c->width_blocks - 2, 6);
+    window_entertainment_draw_games_text(c->x_offset + 32, c->y_offset + 480);
+}
 
-void window_building_draw_colosseum(building_info_context *c)
+void window_building_draw_colosseum_background(building_info_context *c)
 {
     c->help_id = 73;
     building *b = building_get(c->building_id);
@@ -816,12 +845,24 @@ void window_building_draw_colosseum(building_info_context *c)
         if (b->type == BUILDING_COLOSSEUM && c->height_blocks > 27) {
             int banner_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Colosseum Banner");
             image_draw(banner_id, c->x_offset + 32, c->y_offset + 256);
+            draw_games_info(c);
         }
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
         window_building_draw_monument_colosseum_construction_process(c);
     }
+}
+
+void window_buildiing_draw_colosseum_foreground(building_info_context *c)
+{
+    building *b = building_get(c->building_id);
+    data.building_id = c->building_id;
+    if (b->data.monument.phase != MONUMENT_FINISHED) {
+        return;
+    }
+    button_border_draw(c->x_offset + 88, c->y_offset + 535,
+        300, 20, data.focus_button_id == 1);
 }
 
 void window_building_draw_arena(building_info_context *c)
@@ -1067,4 +1108,9 @@ static void add_module_prompt(int param1, int param2)
         window_option_popup_show(TR_SELECT_EPITHET_PROMPT_HEADER, TR_SELECT_EPITHET_PROMPT_TEXT,
             options, num_options, add_module, 0, 1000, OPTION_MENU_LARGE_ROW);
     }
+}
+
+static void hold_games(int param1, int param2)
+{
+    window_hold_games_show(1);
 }
