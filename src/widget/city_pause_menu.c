@@ -1,5 +1,6 @@
 #include "city_pause_menu.h"
 
+#include "building/construction.h"
 #include "core/lang.h"
 #include "game/file.h"
 #include "game/undo.h"
@@ -88,6 +89,7 @@ static void replay_map_confirmed(int confirmed, int checked)
 static void main_menu_confirmed(int confirmed, int checked)
 {
     if (confirmed) {
+        building_construction_clear_type();
         game_undo_disable();
         game_state_reset_overlay();
         window_main_menu_show(1);

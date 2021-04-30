@@ -36,11 +36,11 @@ enum {
     INFO_DATE = 3
 };
 
-static void menu_file_new_game(int param);
 static void menu_file_replay_map(int param);
 static void menu_file_load_game(int param);
 static void menu_file_save_game(int param);
 static void menu_file_delete_game(int param);
+static void menu_file_exit_to_main_menu(int param);
 static void menu_file_exit_game(int param);
 
 static void menu_options_general(int param);
@@ -62,7 +62,7 @@ static menu_item menu_file[] = {
     {1, 3, menu_file_load_game, 0},
     {1, 4, menu_file_save_game, 0},
     {1, 6, menu_file_delete_game, 0},
-    {CUSTOM_TRANSLATION, TR_BUTTON_BACK_TO_MAIN_MENU, menu_file_new_game, 0},
+    {CUSTOM_TRANSLATION, TR_BUTTON_BACK_TO_MAIN_MENU, menu_file_exit_to_main_menu, 0},
     {1, 5, menu_file_exit_game, 0},
 };
 
@@ -373,15 +373,6 @@ int widget_top_menu_get_tooltip_text(tooltip_context *c)
     return 0;
 }
 
-static void menu_file_new_game(int param)
-{
-    clear_state();
-    building_construction_clear_type();
-    game_undo_disable();
-    game_state_reset_overlay();
-    window_main_menu_show(1);
-}
-
 static void replay_map_confirmed(int confirmed, int checked)
 {
     if (!confirmed) {
@@ -433,6 +424,25 @@ static void menu_file_confirm_exit(int accepted, int checked)
     } else {
         window_city_return();
     }
+}
+
+static void main_menu_confirmed(int confirmed, int checked)
+{
+    if (!confirmed) {
+        window_city_show();
+        return;
+    }
+    building_construction_clear_type();
+    game_undo_disable();
+    game_state_reset_overlay();
+    window_main_menu_show(1);
+}
+
+static void menu_file_exit_to_main_menu(int param)
+{
+    clear_state();
+    window_popup_dialog_show_confirmation(translation_for(TR_BUTTON_BACK_TO_MAIN_MENU), 0, 0,
+        main_menu_confirmed);
 }
 
 static void menu_file_exit_game(int param)
