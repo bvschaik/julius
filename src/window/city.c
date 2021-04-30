@@ -255,7 +255,7 @@ static void show_overlay_from_grid_offset(int grid_offset)
             overlay = OVERLAY_TAVERN;
             break;
         case BUILDING_ARENA:
-            overlay = BUILDING_ARENA;
+            overlay = OVERLAY_ARENA;
             break;
         case BUILDING_COLOSSEUM:
         case BUILDING_LION_HOUSE:
