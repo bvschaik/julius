@@ -366,59 +366,62 @@ void dock_cities_set_scroll_position(int scroll_position)
     data.dock_scrollbar_position = scroll_position;
 }
 
-void window_building_draw_stocks(building_info_context *c, building *b, int draw_goods, int always_show_food)
+static void window_building_draw_stocks(building_info_context *c, building *b, int draw_goods, int always_show_food, int draw_higher)
 {
     int image_id = image_group(GROUP_RESOURCE_ICONS);
     font_t font;
+
+    int position = draw_higher ? 44 : 64;
+    int good_position = draw_higher ? 84 : 104;
 
     if (always_show_food || b->data.market.inventory[INVENTORY_WHEAT] || b->data.market.inventory[INVENTORY_VEGETABLES] ||
         b->data.market.inventory[INVENTORY_FRUIT] || b->data.market.inventory[INVENTORY_MEAT]) {
         // food stocks
         font = building_distribution_is_good_accepted(INVENTORY_WHEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + 64);
+        image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + position);
         text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
-            c->x_offset + 64, c->y_offset + 70, font);
+            c->x_offset + 64, c->y_offset + position + 6, font);
 
         font = building_distribution_is_good_accepted(INVENTORY_VEGETABLES, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + 64);
+        image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + position);
         text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
-            c->x_offset + 174, c->y_offset + 70, font);
+            c->x_offset + 174, c->y_offset + position + 6, font);
 
         font = building_distribution_is_good_accepted(INVENTORY_FRUIT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + 64);
+        image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + position);
         text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
-            c->x_offset + 284, c->y_offset + 70, font);
+            c->x_offset + 284, c->y_offset + position + 6, font);
 
         font = building_distribution_is_good_accepted(INVENTORY_MEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_MEAT +
             resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
-            c->x_offset + 362, c->y_offset + 64);
+            c->x_offset + 362, c->y_offset + position);
         text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
-            c->x_offset + 394, c->y_offset + 70, font);
+            c->x_offset + 394, c->y_offset + position + 6, font);
     } else {
         window_building_draw_description_at(c, 48, 97, 4);
     }
     // good stocks
     if (draw_goods) {
         font = building_distribution_is_good_accepted(INVENTORY_POTTERY, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + 104);
+        image_draw(image_id + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + good_position);
         text_draw_number(b->data.market.inventory[INVENTORY_POTTERY], '@', " ",
-            c->x_offset + 64, c->y_offset + 110, font);
+            c->x_offset + 64, c->y_offset + good_position + 6, font);
 
         font = building_distribution_is_good_accepted(INVENTORY_FURNITURE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + 104);
+        image_draw(image_id + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + good_position);
         text_draw_number(b->data.market.inventory[INVENTORY_FURNITURE], '@', " ",
-            c->x_offset + 174, c->y_offset + 110, font);
+            c->x_offset + 174, c->y_offset + good_position + 6, font);
 
         font = building_distribution_is_good_accepted(INVENTORY_OIL, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_OIL, c->x_offset + 252, c->y_offset + 104);
+        image_draw(image_id + RESOURCE_OIL, c->x_offset + 252, c->y_offset + good_position);
         text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
-            c->x_offset + 284, c->y_offset + 110, font);
+            c->x_offset + 284, c->y_offset + good_position + 6, font);
 
         font = building_distribution_is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_WINE, c->x_offset + 362, c->y_offset + 104);
+        image_draw(image_id + RESOURCE_WINE, c->x_offset + 362, c->y_offset + good_position);
         text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
-            c->x_offset + 394, c->y_offset + 110, font);
+            c->x_offset + 394, c->y_offset + good_position + 6, font);
     }
 }
 
@@ -435,7 +438,7 @@ void window_building_draw_market(building_info_context *c)
     } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 97, 2);
     } else {
-        window_building_draw_stocks(c, b, 1, 0);
+        window_building_draw_stocks(c, b, 1, 0, 0);
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
@@ -1092,7 +1095,7 @@ void window_building_draw_mess_hall(building_info_context *c)
 
     text_draw_centered(translation_for(TR_BUILDING_MESS_HALL),
         c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_stocks(c, b, 0, 1);
+    window_building_draw_stocks(c, b, 0, 1, 0);
     if (city_military_total_soldiers_in_city() > 0) {
         int width = text_draw(translation_for(TR_BUILDING_MESS_HALL_FULFILLMENT),
             c->x_offset + 32, c->y_offset + 106, FONT_NORMAL_BLACK, 0);
@@ -1174,9 +1177,9 @@ void window_building_draw_caravanserai(building_info_context *c)
         window_building_play_sound(c, "wavs/market2.wav");
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
-        window_building_draw_stocks(c, b, 0, 1);
+        window_building_draw_stocks(c, b, 0, 1, 1);
 
-        text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_DESC), c->x_offset + 32, c->y_offset + 106, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_DESC), c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
 
         window_building_draw_policy_action(c, 1);
 
