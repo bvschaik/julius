@@ -418,7 +418,6 @@ static translation_string all_strings[] = {
     { TR_BUILDING_LIGHTHOUSE_PHASE_4_TEXT, "Инженеры ремонтируют маяк. Скоро он будет светить на многие мили, направляя корабли домой." },
     { TR_BUILDING_LIGHTHOUSE_CONSTRUCTION_DESC, "Для строительства маяка требуются материалы, хранящиеся на складе, рабочие из рабочего лагеря и инженеры из гильдии инженеров." },
     { TR_BUILDING_LIGHTHOUSE_BONUS_DESC, "Свет маяка ведет моряков империи в ваш город. Рыбацкие лодки движутся на 10% быстрее. Морские штормы длятся вдвое раз меньше." },
-    { TR_BUILDING_LIGHTHOUSE_BONUS_DESC, "Its light guides the sailors of the empire to your city. Fishing ships move 10% faster. Sea storms last half as long." },
     { TR_BUILDING_LIGHTHOUSE_POLICY_TITLE, "Морская торговая политика" },
     { TR_BUILDING_LIGHTHOUSE_NO_POLICY, "Не выбрана" },
     { TR_BUILDING_LIGHTHOUSE_POLICY_TEXT, "Выберите морскую торговую политику в вашем городе." },
