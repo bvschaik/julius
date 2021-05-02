@@ -865,12 +865,12 @@ static int handle_specific_building_info_mouse(const mouse *m)
         int btype = building_get(context.building_id)->type;
 
         if (building_has_supplier_inventory(btype)) {
-            if (btype == BUILDING_CARAVANSERAI) {
-                window_building_handle_mouse_caravanserai(m, &context);
-            }
             if (context.storage_show_special_orders) {
                 window_building_handle_mouse_supplier_orders(m, &context);
             } else {
+                if (btype == BUILDING_CARAVANSERAI) {
+                    window_building_handle_mouse_caravanserai(m, &context);
+                }
                 window_building_handle_mouse_supplier(m, &context);
             }
         } else if (btype == BUILDING_ROADBLOCK) {
