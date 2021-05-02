@@ -50,6 +50,7 @@ static struct {
     int x;
     int y;
     int inventory[INVENTORY_MAX];
+    int sentiment;
     int population;
 } merge_data;
 
@@ -110,6 +111,7 @@ static void prepare_for_merge(int building_id, int num_tiles)
             building *house = building_get(map_building_at(house_offset));
             if (house->id != building_id && house->house_size) {
                 merge_data.population += house->house_population;
+                merge_data.sentiment += house->house_population * house->sentiment.house_happiness;
                 for (int inv = 0; inv < INVENTORY_MAX; inv++) {
                     merge_data.inventory[inv] += house->data.house.inventory[inv];
                     house->house_population = 0;
@@ -126,7 +128,11 @@ static void merge(building *b)
 
     b->size = b->house_size = 2;
     b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(b->x, b->y, b->size);
+    merge_data.sentiment += b->house_population * b->sentiment.house_happiness;
     b->house_population += merge_data.population;
+    if (b->house_population) {
+        b->sentiment.house_happiness = merge_data.sentiment / b->house_population;
+    }
     for (int i = 0; i < INVENTORY_MAX; i++) {
         b->data.house.inventory[i] += merge_data.inventory[i];
     }
@@ -286,6 +292,7 @@ static void copy_house_data(building *house, const building *main_house)
     house->data.house.temple_neptune = main_house->data.house.temple_neptune;
     house->data.house.temple_venus = main_house->data.house.temple_venus;
     house->data.house.theater = main_house->data.house.theater;
+    house->sentiment.house_happiness = main_house->sentiment.house_happiness;
 }
 
 static void create_splitted_house_tile(building *main_house, building_type type,
