@@ -659,7 +659,9 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_NO_COVERAGE, "Nobody" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_FULL_COVERAGE, "Everyone" },
     {TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY, "Select a land trade policy"},
-    {TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY, "Select a sea trade policy"}
+    {TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY_REQUIRED, "A Caravanserai is mandatory in your city to choose a land trade policy"},
+    {TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY, "Select a sea trade policy"},
+    {TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY, "A Lighthouse is mandatory in your city to choose a sea trade policy"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

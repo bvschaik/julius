@@ -185,17 +185,25 @@ static int draw_background(void)
         inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / 16 - 3);
     }
 
-    if (building_monument_working(BUILDING_CARAVANSERAI)) {
-        button_border_draw(45, 390, 40, 30, data.focus_button_id == 3);
-        int image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1;
-        image_draw(image_id, 51, 394);
+    int land_policy_available = building_monument_working(BUILDING_CARAVANSERAI);
+    int sea_policy_available = building_monument_working(BUILDING_LIGHTHOUSE);
+
+    button_border_draw(45, 390, 40, 30, land_policy_available && data.focus_button_id == 3);
+    int image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1;
+    image_draw(image_id, 51, 394);
+
+    if (!land_policy_available) {
+        graphics_shade_rect(45, 390, 40, 30, 0);
     }
 
-    if (building_monument_working(BUILDING_LIGHTHOUSE)) {
-        button_border_draw(95, 390, 40, 30, data.focus_button_id == 4);
-        int image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE);
-        image_draw(image_id, 99, 394);
+    button_border_draw(95, 390, 40, 30, sea_policy_available && data.focus_button_id == 4);
+    image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE);
+    image_draw(image_id, 99, 394);
+
+    if (!sea_policy_available) {
+        graphics_shade_rect(95, 390, 40, 30, 0);
     }
+
 
     return ADVISOR_HEIGHT;
 }
@@ -273,10 +281,18 @@ static void get_tooltip_text(advisor_tooltip_result *r)
         r->text_id = 106;
     } else if (data.focus_button_id == 2) {
         r->text_id = 41;
-    } else if (data.focus_button_id == 3 && building_monument_working(BUILDING_CARAVANSERAI)) {
-        r->translation_key = TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY;
-    } else if (data.focus_button_id == 4 && building_monument_working(BUILDING_LIGHTHOUSE)) {
-        r->translation_key = TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY;
+    } else if (data.focus_button_id == 3) {
+        if (building_monument_working(BUILDING_CARAVANSERAI)) {
+            r->translation_key = TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY;
+        } else {
+            r->translation_key = TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY_REQUIRED;
+        }
+    } else if (data.focus_button_id == 4) {
+        if (building_monument_working(BUILDING_LIGHTHOUSE)) {
+            r->translation_key = TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY;
+        } else {
+            r->translation_key = TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY_REQUIRED;
+        }
     } else if (data.focus_button_id > 4) {
         const mouse *m = mouse_in_dialog(mouse_get());
         int resource = city_resource_get_potential()->items[data.focus_button_id - 5 + scrollbar.scroll_position];
