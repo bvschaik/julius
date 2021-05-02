@@ -20,6 +20,8 @@ int map_has_road_access_monument_size5(int x, int y, map_point *road);
 
 int map_has_road_access_monument_size3(int x, int y, map_point *road);
 
+int map_has_road_access_monument_size4(int x, int y, map_point *road);
+
 int map_closest_road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road);
 
 int map_closest_reachable_road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road);
@@ -35,6 +37,8 @@ int map_road_to_largest_network_grand_temple(int x, int y, int* x_road, int* y_r
 int map_road_to_largest_network_colosseum(int x, int y, int* x_road, int* y_road);
 
 int map_road_to_largest_network_lighthouse(int x, int y, int* x_road, int* y_road);
+
+int map_road_to_largest_network_caravanserai(int x, int y, int *x_road, int *y_road);
 
 int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles, int p);
 

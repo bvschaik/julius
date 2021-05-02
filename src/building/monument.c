@@ -208,14 +208,39 @@ int building_monument_access_point(building *b, map_point *dst)
 			return 1;
 		case BUILDING_ORACLE:
 		case BUILDING_SMALL_MAUSOLEUM:
-		case BUILDING_CARAVANSERAI:
-			dst->x = b->x;
-			dst->y = b->y;
-			return 1;
 		case BUILDING_HIPPODROME:
-			dst->x = b->x;
-			dst->y = b->y;
-			return 1;
+            dst->x = b->x;
+            dst->y = b->y;
+            return 1;
+        case BUILDING_CARAVANSERAI:
+            if (dx == -2 && dy == -4) {
+                dst->x = b->x + 2;
+                dst->y = b->y + 3;
+            } else if (dx == -1 && dy == -4) {
+                dst->x = b->x + 1;
+                dst->y = b->y + 3;
+            } else if (dx == 1 && dy == -1) {
+                dst->x = b->x;
+                dst->y = b->y + 1;
+            } else if (dx == 1 && dy == -2) {
+                dst->x = b->x;
+                dst->y = b->y + 2;
+            } else if (dx == -2 && dy == 1) {
+                dst->x = b->x + 2;
+                dst->y = b->y;
+            } else if (dx == -1 && dy == 1) {
+                dst->x = b->x + 1;
+                dst->y = b->y;
+            } else if (dx == -4 && dy == -1) {
+                dst->x = b->x + 3;
+                dst->y = b->y + 1;
+            } else if (dx == -4 && dy == -2) {
+                dst->x = b->x + 3;
+                dst->y = b->y + 2;
+            } else {
+                return 0;
+            }
+            return 1;
 	}
 	return 0;
 }

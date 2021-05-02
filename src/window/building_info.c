@@ -395,6 +395,11 @@ static void init(int grid_offset)
                     context.has_road_access = 1;
                 }
                 break;
+            case BUILDING_CARAVANSERAI:
+                if (map_has_road_access_monument_size4(b->x, b->y, 0)) {
+                    context.has_road_access = 1;
+                }
+                break;
             default:
                 if (map_has_road_access(b->x, b->y, b->size, 0)) {
                     context.has_road_access = 1;
