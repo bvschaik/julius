@@ -334,4 +334,17 @@
 		<layer group="59" image="3" x="0" y="0" />
     </image>
 
+<!-- Note: Assets for 'Crenellated garden wall' all directions and intersection variants -->
+    <image index="127" id="C Garden Wall 01" src="Garden_Wall_A" />
+    <image index="128" id="C Garden Wall 02" src="Garden_Wall_A_R" />
+    <image index="129" id="C Garden Wall 03" src="Garden_Wall_A_Corner_01" />
+    <image index="130" id="C Garden Wall 04" src="Garden_Wall_A_Corner_02" />
+    <image index="131" id="C Garden Wall 05" src="Garden_Wall_A_Corner_03" />
+    <image index="132" id="C Garden Wall 06" src="Garden_Wall_A_Corner_04" />
+    <image index="133" id="C Garden Wall 07" src="Garden_Wall_A_Intersection_01" />
+    <image index="134" id="C Garden Wall 08" src="Garden_Wall_A_Intersection_02" />
+    <image index="135" id="C Garden Wall 09" src="Garden_Wall_A_Intersection_03" />
+    <image index="136" id="C Garden Wall 10" src="Garden_Wall_A_Intersection_04" />
+    <image index="137" id="C Garden Wall 11" src="Garden_Wall_A_Intersection_4w" />
+
 </assetlist>
