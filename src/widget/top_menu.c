@@ -89,6 +89,7 @@ static menu_item menu_advisors[] = {
     {4, 4, menu_advisors_go_to, 4},
     {4, 5, menu_advisors_go_to, 5},
     {4, 6, menu_advisors_go_to, 6},
+    {CUSTOM_TRANSLATION, TR_HEADER_HOUSING, menu_advisors_go_to, 19},
     {4, 7, menu_advisors_go_to, 7},
     {4, 8, menu_advisors_go_to, 8},
     {4, 9, menu_advisors_go_to, 9},
@@ -101,7 +102,7 @@ static menu_bar_item menu[] = {
     {1, menu_file, 6},
     {2, menu_options, 6},
     {3, menu_help, 4},
-    {4, menu_advisors, 12},
+    {4, menu_advisors, 13},
 };
 
 static const int INDEX_OPTIONS = 1;
