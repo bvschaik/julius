@@ -92,6 +92,7 @@ enum {
     CONTEXT_GARDEN_TREE_PATH,
     CONTEXT_GARDEN_PATH_INTERSECTION,
     CONTEXT_GARDEN_TREELESS_PATH,
+    CONTEXT_GARDEN_WALLS,
     CONTEXT_MAX_ITEMS
 };
 
@@ -104,6 +105,7 @@ static struct {
     { building_images_tree_path, 8 },
     { building_images_path_intersection, 9 },
     { building_images_treeless_path, 8 },
+    { building_images_hedges, 18 },
 };
 
 void building_image_context_clear_connection_grid()
@@ -164,7 +166,6 @@ static const building_image *get_image(int group, int tiles[MAX_TILES], int rota
 
 const building_image *building_image_context_get_hedges(int grid_offset)
 {
-
     int tiles[MAX_TILES] = { 0 };
     for (int i = 0; i < MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
@@ -190,7 +191,6 @@ const building_image *building_image_context_get_hedges(int grid_offset)
 
 const building_image *building_image_context_get_colonnade(int grid_offset)
 {
-
     int tiles[MAX_TILES] = { 0 };
     for (int i = 0; i < MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
@@ -213,6 +213,30 @@ const building_image *building_image_context_get_colonnade(int grid_offset)
     return get_image(CONTEXT_COLONNADE, tiles, rotation);
 }
 
+const building_image *building_image_context_get_garden_wall(int grid_offset)
+{
+    int tiles[MAX_TILES] = { 0 };
+    for (int i = 0; i < MAX_TILES; i += 2) {
+        int offset = grid_offset + map_grid_direction_delta(i);
+        if (!map_terrain_is(offset, TERRAIN_BUILDING) && !connecting_grid[offset]) {
+            continue;
+        }
+        building *b = building_get(map_building_at(offset));
+        if (b->type == BUILDING_GARDEN_WALL ||
+            (connecting_grid[offset] && connecting_grid_building == BUILDING_GARDEN_WALL)) {
+            tiles[i] = 1;
+        }
+    }
+    int building_id = map_building_at(grid_offset);
+    int rotation;
+    if (building_id) {
+        rotation = building_get(building_id)->subtype.orientation;
+    } else {
+        rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT_HEDGES);
+    }
+    return get_image(CONTEXT_GARDEN_WALLS, tiles, rotation);
+}
+
 static int is_garden_path(int type)
 {
     switch (type) {
@@ -231,7 +255,7 @@ static int is_garden_path(int type)
     }
 }
 
-static int path_image_for_garden_connections()
+static int path_image_for_garden_connections(void)
 {
     return assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
 }
@@ -299,7 +323,7 @@ void building_image_context_set_hedge_image(int grid_offset)
     }
     building *b = building_get(map_building_at(grid_offset));
     if (b->type != BUILDING_HEDGE_DARK && b->type != BUILDING_HEDGE_LIGHT && b->type != BUILDING_COLONNADE &&
-        !is_garden_path(b->type) && !connecting_grid[grid_offset]) {
+        !is_garden_path(b->type) && b->type != BUILDING_GARDEN_WALL && !connecting_grid[grid_offset]) {
         return;
     }
 
@@ -332,6 +356,9 @@ int building_image_context_get_connecting_image_for_tile(int grid_offset, int bu
     } else if (building_type == BUILDING_COLONNADE) {
         img = building_image_context_get_colonnade(grid_offset);
         image_group = assets_get_image_id(assets_get_group_id("Lizzaran", "Aesthetics_L"), "G Colonnade 01");
+    } else if (building_type == BUILDING_GARDEN_WALL) {
+        img = building_image_context_get_garden_wall(grid_offset);
+        image_group = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "C Garden Wall 01");
     } else if (is_garden_path(building_type)) {
         img = building_image_context_get_garden_path(grid_offset, CONTEXT_GARDEN_PATH_INTERSECTION);
         image_group = path_image_for_garden_connections();

@@ -106,6 +106,7 @@ int building_construction_is_connecting(void)
         case BUILDING_PALM_PATH:
         case BUILDING_PINE_PATH:
         case BUILDING_PLUM_PATH:
+        case BUILDING_GARDEN_WALL:
             return 1;
         default:
             return 0;
@@ -691,6 +692,12 @@ void building_construction_update(int x, int y, int grid_offset)
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
+    } else if (type == BUILDING_GARDEN_WALL) {
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "C Garden Wall 01");
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
         int image_id = building_variant_get_image_id(type);
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, type, image_id);
@@ -932,6 +939,11 @@ void building_construction_place(void)
     } else if (type == BUILDING_GARDEN_PATH) {
         int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT_PATHS);
         int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "Garden Path 01");
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
+        map_tiles_update_all_hedges();
+    } else if (type == BUILDING_GARDEN_WALL) {
+        int rotation = building_rotation_get_rotation_with_limit(CONNECTING_BUILDINGS_ROTATION_LIMIT_PATHS);
+        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "C Garden Wall 01");
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, image_id, rotation);
         map_tiles_update_all_hedges();
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
