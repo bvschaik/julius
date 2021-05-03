@@ -363,7 +363,7 @@ void text_draw_with_money(const uint8_t *text, int value, const char *prefix, co
     uint8_t str[NUMBER_BUFFER_LENGTH];
     uint8_t *offset = string_copy(text, str, NUMBER_BUFFER_LENGTH);
     if (prefix && *prefix) {
-        offset = string_copy(string_from_ascii(prefix), offset, NUMBER_BUFFER_LENGTH - (offset - str) - 1);
+        offset = string_copy(string_from_ascii(prefix), offset, NUMBER_BUFFER_LENGTH - (int) (offset - str) - 1);
     }
     offset += number_to_string(offset, value, 0, " ");
     const uint8_t *money_postfix;
@@ -372,9 +372,9 @@ void text_draw_with_money(const uint8_t *text, int value, const char *prefix, co
     } else {
         money_postfix = string_from_ascii("Dn");
     }
-    offset = string_copy(money_postfix, offset, NUMBER_BUFFER_LENGTH - (offset - str) - 1);
+    offset = string_copy(money_postfix, offset, NUMBER_BUFFER_LENGTH - (int) (offset - str) - 1);
     if (postfix && *postfix) {
-        string_copy(string_from_ascii(postfix), offset, NUMBER_BUFFER_LENGTH - (offset - str) - 1);
+        string_copy(string_from_ascii(postfix), offset, NUMBER_BUFFER_LENGTH - (int) (offset - str) - 1);
     }
     if (box_width > 0) {
         text_draw_centered(str, x_offset, y_offset, box_width, font, color);

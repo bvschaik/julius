@@ -490,7 +490,7 @@ static void init(int page, int show_background_image)
     }
     if (!volume_text[0]) {
         volume_offset = string_copy(translation_for(TR_CONFIG_VOLUME), volume_text, 63);
-        volume_offset = string_copy(string_from_ascii(" "), volume_offset, volume_offset - volume_text - 1);
+        volume_offset = string_copy(string_from_ascii(" "), volume_offset, (int) (volume_offset - volume_text - 1));
     }
 
     for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
@@ -1133,7 +1133,8 @@ static int config_enable_music(config_key key)
 static int config_set_music_volume(config_key key)
 {
     config_change_basic(key);
-    sound_music_set_volume(data.config_values[key].new_value);
+    setting_set_sound_volume(SOUND_MUSIC, data.config_values[key].new_value);
+    sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
     return 1;
 }
 
@@ -1153,7 +1154,8 @@ static int config_enable_speech(config_key key)
 static int config_set_speech_volume(config_key key)
 {
     config_change_basic(key);
-    sound_speech_set_volume(data.config_values[key].new_value);
+    setting_set_sound_volume(SOUND_SPEECH, data.config_values[key].new_value);
+    sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
     return 1;
 }
 
@@ -1170,7 +1172,8 @@ static int config_enable_effects(config_key key)
 static int config_set_effects_volume(config_key key)
 {
     config_change_basic(key);
-    sound_effect_set_volume(data.config_values[key].new_value);
+    setting_set_sound_volume(SOUND_EFFECTS, data.config_values[key].new_value);
+    sound_effect_set_volume(setting_sound(SOUND_EFFECTS)->volume);
     return 1;
 }
 
@@ -1187,7 +1190,8 @@ static int config_enable_city_sounds(config_key key)
 static int config_set_city_sounds_volume(config_key key)
 {
     config_change_basic(key);
-    sound_city_set_volume(data.config_values[key].new_value);
+    setting_set_sound_volume(SOUND_CITY, data.config_values[key].new_value);
+    sound_city_set_volume(setting_sound(SOUND_CITY)->volume);
     return 1;
 }
 

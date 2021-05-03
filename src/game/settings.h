@@ -41,8 +41,7 @@ const set_sound *setting_sound(set_sound_type type);
 
 int setting_sound_is_enabled(set_sound_type type);
 void setting_toggle_sound_enabled(set_sound_type type);
-void setting_increase_sound_volume(set_sound_type type);
-void setting_decrease_sound_volume(set_sound_type type);
+void setting_set_sound_volume(set_sound_type type, int volume);
 void setting_reset_sound(set_sound_type type, int enabled, int volume);
 
 int setting_game_speed(void);
