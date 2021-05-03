@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+
+<assetlist author="MSTVD" name="UI_Elements_MSTVD">
+
+<!-- Note: Button for Housing Advisor -->
+    <image id="Housing Adv UH" src="Housing_Advisor_Button_UnHover" />
+    <image id="Housing Adv H" src="Housing_Advisor_Button_Hover" />
+
+
+
+
+
+</assetlist>
