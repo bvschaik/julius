@@ -98,12 +98,15 @@ void building_house_change_to_vacant_lot(building *house)
     }
 }
 
+#include "core/log.h"
+
 static void prepare_for_merge(int building_id, int num_tiles)
 {
     for (int i = 0; i < INVENTORY_MAX; i++) {
         merge_data.inventory[i] = 0;
     }
     merge_data.population = 0;
+    merge_data.sentiment = 0;
     int grid_offset = map_grid_offset(merge_data.x, merge_data.y);
     for (int i = 0; i < num_tiles; i++) {
         int house_offset = grid_offset + HOUSE_TILE_OFFSETS[i];
