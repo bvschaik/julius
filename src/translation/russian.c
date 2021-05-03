@@ -664,7 +664,9 @@ static translation_string all_strings[] = {
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_NO_COVERAGE, "Никого" },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_FULL_COVERAGE, "Всех" },
     { TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY, "Выберите политику наземной торговли"},
-    { TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY, "Выберите политику морской торговли"}
+    { TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY_REQUIRED, "Сначала постройте караван-сарай чтобы выбрать политику наземной торговли"},
+    { TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY, "Выберите политику морской торговли"},
+    { TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY, "Сначала постройте маяк чтобы выбрать политику морской торговли"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
