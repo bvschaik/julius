@@ -661,7 +661,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY, "Sélectionner une politique commerciale terrestre"},
     {TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY_REQUIRED, "Un Caravansérail est nécessaire dans votre cité pour choisir une politique commerciale terrestre"},
     {TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY, "Sélectionner une politique commerciale maritime"},
-    {TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY, "Un Phare est nécessaire dans votre cité pour choisir une politique commerciale maritime"}
+    {TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY_REQUIRED, "Un Phare est nécessaire dans votre cité pour choisir une politique commerciale maritime"}
 };
 
 void translation_french(const translation_string** strings, int* num_strings)
