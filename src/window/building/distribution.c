@@ -1166,7 +1166,9 @@ void window_building_draw_caravanserai_foreground(building_info_context *c)
 
 void caravanserai_action(int param1, int param2)
 {
-    window_policy_show(1);
+    if (building_monument_working(BUILDING_CARAVANSERAI)) {
+        window_policy_show(1);
+    }
 }
 
 void window_building_draw_caravanserai(building_info_context *c)

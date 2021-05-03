@@ -747,7 +747,7 @@ static void draw_foreground(void)
     // building-specific buttons
     if (context.type == BUILDING_INFO_BUILDING) {
         int btype = building_get(context.building_id)->type;
-        if (btype == BUILDING_LIGHTHOUSE) {
+        if (btype == BUILDING_LIGHTHOUSE && b->data.monument.phase == MONUMENT_FINISHED) {
             window_building_draw_lighthouse_foreground(&context);
         } else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {

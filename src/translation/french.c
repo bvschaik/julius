@@ -236,7 +236,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_TOTAL_POPULATION, "Résidents"},
     {TR_ADVISOR_IN_STORAGE, "en stock"},
     {TR_ADVISOR_FROM_GRANARIES, "depuis les greniers"},
-    {TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TITLE, "Expedier la nourriture depuis les greniers" },
+    {TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TITLE, "Expedier depuis les greniers" },
     {TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TEXT,"Êtes-vous sûre?"},
     {TR_ADVISOR_KEEP_STOCKPILING, "Continuer à stocker la ressource"},
     {TR_REQUIRED_RESOURCES, "Ressources livrées pour la phase actuelle :"},

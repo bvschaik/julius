@@ -932,7 +932,9 @@ void window_building_draw_lighthouse_foreground(building_info_context *c)
 
 void lighthouse_action(int param1, int param2)
 {
-    window_policy_show(0);
+    if (building_monument_working(BUILDING_LIGHTHOUSE)) {
+        window_policy_show(0);
+    }
 }
 
 void window_building_draw_lighthouse(building_info_context *c)
