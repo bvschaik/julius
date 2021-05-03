@@ -101,6 +101,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
         "Your system does not have enough graphics memory to enable city zoom.\n"
         "City zoom has not been enabled."},
+    {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "Display max attainable prosperity rating with current housing"},
     {TR_HOTKEY_TITLE, "Augustus hotkey configuration"},
     {TR_HOTKEY_LABEL, "Hotkey"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},
@@ -239,6 +240,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TITLE, "Dispatching food from granaries"},
     {TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TEXT, "Are you sure?"},
     {TR_ADVISOR_KEEP_STOCKPILING, "Keep stockpiling resource"},
+    {TR_ADVISOR_MAX_ATTAINABLE_PROSPERITY_IS, "Max Prosperity for the current housing level is"},
     {TR_REQUIRED_RESOURCES, "Resources delivered for current phase:"},
     {TR_BUILDING_GRAND_TEMPLE_CONSTRUCTION_DESC, "Constructing grand temples requires material stored in a warehouse, laborers from a work camp, and architects from an architects' guild."},
     {TR_CONSTRUCTION_PHASE, "Construction phase:"},

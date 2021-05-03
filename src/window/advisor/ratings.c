@@ -1,6 +1,7 @@
 #include "ratings.h"
 
 #include "city/ratings.h"
+#include "core/calc.h"
 #include "core/config.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -119,14 +120,24 @@ static int draw_background(void)
             }
             break;
         case SELECTED_RATING_PROSPERITY:
+        {
+            int line_width;
             lang_text_draw(53, 2, 72, 359, FONT_NORMAL_WHITE);
             if (prosperity <= 90) {
-                lang_text_draw_multiline(53, 16 + city_rating_selected_explanation(),
+                line_width = lang_text_draw_multiline(53, 16 + city_rating_selected_explanation(),
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
-                lang_text_draw_multiline(53, 51, 72, 374, 496, FONT_NORMAL_WHITE);
+                line_width = lang_text_draw_multiline(53, 51, 72, 374, 496, FONT_NORMAL_WHITE);
+            }
+            if (config_get(CONFIG_UI_SHOW_MAX_PROSPERITY)) {
+                int max = calc_bound(city_ratings_prosperity_max(), 0, 100);
+                if (prosperity < max) {
+                    int width = lang_text_draw(CUSTOM_TRANSLATION, TR_ADVISOR_MAX_ATTAINABLE_PROSPERITY_IS, 72, 374 + line_width, FONT_NORMAL_WHITE);
+                    text_draw_number(max, 0, ".", 72 + width, 374 + line_width, FONT_NORMAL_WHITE);
+                }
             }
             break;
+        }
         case SELECTED_RATING_PEACE:
             lang_text_draw(53, 3, 72, 359, FONT_NORMAL_WHITE);
             if (peace <= 90) {
