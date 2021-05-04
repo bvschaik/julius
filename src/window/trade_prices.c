@@ -24,8 +24,8 @@ static void draw_background(void)
 
     int has_caravanserai = building_monument_working(BUILDING_CARAVANSERAI);
     int has_lighthouse = building_monument_working(BUILDING_LIGHTHOUSE);
-    int land_policy = building_monument_module_type(BUILDING_CARAVANSERAI);
-    int sea_policy = building_monument_module_type(BUILDING_LIGHTHOUSE);
+    trade_policy land_policy = city_trade_policy_get(LAND_TRADE_POLICY);
+    trade_policy sea_policy = city_trade_policy_get(SEA_TRADE_POLICY);
 
     int has_land_trade_policy = has_caravanserai && land_policy && land_policy != TRADE_POLICY_3;
     int has_sea_trade_policy = has_lighthouse && sea_policy && sea_policy != TRADE_POLICY_3;
@@ -42,8 +42,8 @@ static void draw_background(void)
     int no_policy = !has_land_trade_policy && !has_sea_trade_policy;
 
     if (((has_sea_trade_policy && !has_land_trade_policy) ||
-       (!has_sea_trade_policy && has_land_trade_policy) ||
-       (has_sea_trade_policy && has_land_trade_policy && !same_policy))) {
+        (!has_sea_trade_policy && has_land_trade_policy) ||
+        (has_sea_trade_policy && has_land_trade_policy && !same_policy))) {
         window_height = 17;
         line_sell_position = 305;
         button_position = 390;
@@ -72,8 +72,8 @@ static void draw_background(void)
 
         if (!four_line || no_policy) {
             if (no_policy) {
-                text_draw_number_centered(trade_price_buy(i,0), price_shift + 30 * i, line_buy_position, 30, FONT_SMALL_PLAIN);
-                text_draw_number_centered(trade_price_sell(i,0), price_shift + 30 * i, line_sell_position, 30, FONT_SMALL_PLAIN);
+                text_draw_number_centered(trade_price_buy(i, 0), price_shift + 30 * i, line_buy_position, 30, FONT_SMALL_PLAIN);
+                text_draw_number_centered(trade_price_sell(i, 0), price_shift + 30 * i, line_sell_position, 30, FONT_SMALL_PLAIN);
             } else {
                 text_draw_number_centered_colored(trade_price_buy(i, 1), price_shift + 30 * i, line_buy_position, 30, FONT_SMALL_PLAIN, land_policy == TRADE_POLICY_1 ? COLOR_MASK_PURPLE : COLOR_MASK_DARK_GREEN);
                 text_draw_number_centered_colored(trade_price_sell(i, 1), price_shift + 30 * i, line_sell_position, 30, FONT_SMALL_PLAIN, land_policy == TRADE_POLICY_1 ? COLOR_MASK_DARK_GREEN : COLOR_MASK_PURPLE);
@@ -83,15 +83,15 @@ static void draw_background(void)
                 text_draw_number_centered_colored(trade_price_buy(i, 1), price_shift + 30 * i, line_buy_position + number_margin, 30, FONT_SMALL_PLAIN, land_policy == TRADE_POLICY_1 ? COLOR_MASK_PURPLE : COLOR_MASK_DARK_GREEN);
                 text_draw_number_centered_colored(trade_price_sell(i, 1), price_shift + 30 * i, line_sell_position + number_margin, 30, FONT_SMALL_PLAIN, land_policy == TRADE_POLICY_1 ? COLOR_MASK_DARK_GREEN : COLOR_MASK_PURPLE);
             } else {
-                text_draw_number_centered(trade_price_buy(i,1), price_shift + 30 * i, line_buy_position + number_margin, 30, FONT_SMALL_PLAIN);
-                text_draw_number_centered(trade_price_sell(i,1), price_shift + 30 * i, line_sell_position + number_margin, 30, FONT_SMALL_PLAIN);
+                text_draw_number_centered(trade_price_buy(i, 1), price_shift + 30 * i, line_buy_position + number_margin, 30, FONT_SMALL_PLAIN);
+                text_draw_number_centered(trade_price_sell(i, 1), price_shift + 30 * i, line_sell_position + number_margin, 30, FONT_SMALL_PLAIN);
             }
             if (has_sea_trade_policy) {
                 text_draw_number_centered_colored(trade_price_buy(i, 0), price_shift + 30 * i, line_buy_position + 2 * number_margin, 30, FONT_SMALL_PLAIN, sea_policy == TRADE_POLICY_1 ? COLOR_MASK_PURPLE : COLOR_MASK_DARK_GREEN);
                 text_draw_number_centered_colored(trade_price_sell(i, 0), price_shift + 30 * i, line_sell_position + 2 * number_margin, 30, FONT_SMALL_PLAIN, sea_policy == TRADE_POLICY_1 ? COLOR_MASK_DARK_GREEN : COLOR_MASK_PURPLE);
             } else {
-                text_draw_number_centered(trade_price_buy(i,0), price_shift + 30 * i, line_buy_position + 2 * number_margin, 30, FONT_SMALL_PLAIN);
-                text_draw_number_centered(trade_price_sell(i,0), price_shift + 30 * i, line_sell_position + 2 * number_margin, 30, FONT_SMALL_PLAIN);
+                text_draw_number_centered(trade_price_buy(i, 0), price_shift + 30 * i, line_buy_position + 2 * number_margin, 30, FONT_SMALL_PLAIN);
+                text_draw_number_centered(trade_price_sell(i, 0), price_shift + 30 * i, line_sell_position + 2 * number_margin, 30, FONT_SMALL_PLAIN);
             }
         }
     }

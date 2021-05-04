@@ -8,6 +8,7 @@
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
+#include "city/finance.h"
 #include "city/military.h"
 #include "city/resource.h"
 #include "city/trade_policy.h"
@@ -22,8 +23,10 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
+#include "sound/speech.h"
 #include "translation/translation.h"
 #include "window/building_info.h"
+#include "window/option_popup.h"
 
 #include <math.h>
 
@@ -40,7 +43,8 @@ static void draw_dock_permission_buttons(int x_offset, int y_offset, int dock_id
 static void on_dock_cities_scroll(void);
 static int dock_cities_scroll_position(void);
 static void dock_cities_set_scroll_position(int);
-static void caravanserai_action(int param1, int param2);
+
+static void button_caravanserai_policy(int selected_policy, int param2);
 
 static generic_button go_to_orders_button[] = {
     {0, 0, 304, 20, go_to_orders, button_none, 0, 0}
@@ -117,7 +121,26 @@ static generic_button warehouse_order_buttons[] = {
 };
 
 static generic_button go_to_caravanserai_action_button[] = {
-        {0, 0, 400, 100, caravanserai_action, button_none, 0, 0}
+        {0, 0, 400, 100, button_caravanserai_policy, button_none, 0, 0}
+};
+
+static struct {
+    int title;
+    int subtitle;
+    const char *base_image_name;
+    option_menu_item items[4];
+    const char *wav_file;
+} land_trade_policy = {
+    TR_BUILDING_CARAVANSERAI_POLICY_TITLE,
+    TR_BUILDING_CARAVANSERAI_POLICY_TEXT,
+    "Trade Policy",
+    {
+        { TR_BUILDING_CARAVANSERAI_NO_POLICY },
+        { TR_BUILDING_CARAVANSERAI_POLICY_1_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_1 },
+        { TR_BUILDING_CARAVANSERAI_POLICY_2_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_2 },
+        { TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_3 }
+    },
+    "wavs/market4.wav"
 };
 
 static struct {
@@ -1155,8 +1178,8 @@ static void draw_policy_image_border(int x, int y, int focused)
 void window_building_handle_mouse_caravanserai(const mouse *m, building_info_context *c)
 {
     generic_buttons_handle_mouse(
-            m, c->x_offset + 32, c->y_offset + 150,
-            go_to_caravanserai_action_button, 1, &data.caravanserai_focus_button_id);
+        m, c->x_offset + 32, c->y_offset + 150,
+        go_to_caravanserai_action_button, 1, &data.caravanserai_focus_button_id);
 }
 
 void window_building_draw_caravanserai_foreground(building_info_context *c)
@@ -1164,10 +1187,22 @@ void window_building_draw_caravanserai_foreground(building_info_context *c)
     draw_policy_image_border(c->x_offset + 32, c->y_offset + 150, data.caravanserai_focus_button_id == 1);
 }
 
-void caravanserai_action(int param1, int param2)
+static void apply_policy(int selected_policy)
+{
+    if (selected_policy == NO_POLICY) {
+        return;
+    }
+    city_trade_policy_set(LAND_TRADE_POLICY, selected_policy);
+    sound_speech_play_file(land_trade_policy.wav_file);
+    city_finance_process_sundry(TRADE_POLICY_COST);
+}
+
+static void button_caravanserai_policy(int selected_policy, int param2)
 {
     if (building_monument_working(BUILDING_CARAVANSERAI)) {
-        window_policy_show(1);
+        window_option_popup_show(land_trade_policy.title, land_trade_policy.subtitle,
+            &land_trade_policy.items[1], 3, apply_policy, city_trade_policy_get(LAND_TRADE_POLICY),
+            TRADE_POLICY_COST, OPTION_MENU_SMALL_ROW);
     }
 }
 
@@ -1183,13 +1218,30 @@ void window_building_draw_caravanserai(building_info_context *c)
 
         text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_DESC), c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
 
-        window_building_draw_policy_action(c, 1);
+        if (!land_trade_policy.items[0].image_id) {
+            int base_policy_image = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
+                land_trade_policy.base_image_name);
+            land_trade_policy.items[0].image_id = base_policy_image;
+            land_trade_policy.items[1].image_id = base_policy_image + 1;
+            land_trade_policy.items[2].image_id = base_policy_image + 2;
+            land_trade_policy.items[3].image_id = base_policy_image + 3;
+        }
+
+        trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
+
+        text_draw_multiline(translation_for(land_trade_policy.items[policy].header),
+            c->x_offset + 160, c->y_offset + 160, 260, FONT_NORMAL_BLACK, 0);
+        if (policy != NO_POLICY) {
+            text_draw_multiline(translation_for(land_trade_policy.items[policy].desc),
+                c->x_offset + 160, c->y_offset + 185, 260, FONT_NORMAL_BLACK, 0);
+        }
+        image_draw(land_trade_policy.items[policy].image_id, c->x_offset + 32, c->y_offset + 150);
 
         inner_panel_draw(c->x_offset + 16, c->y_offset + 270, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 278);
 
         image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Caravanserai Banner"),
-                   c->x_offset + 32, c->y_offset + 350);
+            c->x_offset + 32, c->y_offset + 350);
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         window_building_draw_monument_caravanserai_construction_process(c);

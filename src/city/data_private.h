@@ -389,6 +389,8 @@ extern struct city_data_t {
         int32_t caravan_backup_import_resource;
         int32_t docker_import_resource;
         int32_t docker_export_resource;
+        uint8_t land_policy;
+        uint8_t sea_policy;
     } trade;
     struct {
         map_tile entry_point;

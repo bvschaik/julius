@@ -131,7 +131,8 @@ static void save_main_data(buffer *main)
     buffer_write_u8(main, city_data.building.senate_y);
     buffer_write_i16(main, city_data.building.senate_grid_offset);
     buffer_write_i32(main, city_data.building.senate_building_id);
-    buffer_write_i16(main, city_data.unused.unknown_2828);
+    buffer_write_u8(main, city_data.trade.land_policy);
+    buffer_write_u8(main, city_data.trade.sea_policy);
     for (int i = 0; i < RESOURCE_MAX; i++) {
         buffer_write_i16(main, city_data.resource.space_in_warehouses[i]);
     }
@@ -163,7 +164,7 @@ static void save_main_data(buffer *main)
     for (int i = 0; i < 263; i++) {
         buffer_write_i8(main, city_data.unused.unknown_2924[i]);
     }
-    buffer_write_i8(main,city_data.sentiment.crime_cooldown);
+    buffer_write_i8(main, city_data.sentiment.crime_cooldown);
     buffer_write_i32(main, city_data.building.caravanserai_building_id);
     buffer_write_i32(main, city_data.caravanserai.total_food);
     for (int i = 0; i < RESOURCE_MAX; i++) {
@@ -631,7 +632,8 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     city_data.building.senate_y = buffer_read_u8(main);
     city_data.building.senate_grid_offset = buffer_read_i16(main);
     city_data.building.senate_building_id = buffer_read_i32(main);
-    city_data.unused.unknown_2828 = buffer_read_i16(main);
+    city_data.trade.land_policy = buffer_read_u8(main);
+    city_data.trade.sea_policy = buffer_read_u8(main);
     for (int i = 0; i < RESOURCE_MAX; i++) {
         city_data.resource.space_in_warehouses[i] = buffer_read_i16(main);
     }

@@ -29,7 +29,27 @@ static void add_module_prompt(int param1, int param2);
 static void hold_games(int param1, int param2);
 
 static void draw_temple(building_info_context *c, const char *sound_file, int group_id);
-static void lighthouse_action(int param1, int param2);
+
+static void button_lighthouse_policy(int selected_policy, int param2);
+
+static struct {
+    int title;
+    int subtitle;
+    const char *base_image_name;
+    option_menu_item items[4];
+    const char *wav_file;
+} sea_trade_policy = {
+    TR_BUILDING_LIGHTHOUSE_POLICY_TITLE,
+    TR_BUILDING_LIGHTHOUSE_POLICY_TEXT,
+    "Sea Trade Policy",
+    {
+        { TR_BUILDING_LIGHTHOUSE_NO_POLICY },
+        { TR_BUILDING_LIGHTHOUSE_POLICY_1_TITLE, TR_BUILDING_LIGHTHOUSE_POLICY_1 },
+        { TR_BUILDING_LIGHTHOUSE_POLICY_2_TITLE, TR_BUILDING_LIGHTHOUSE_POLICY_2 },
+        { TR_BUILDING_LIGHTHOUSE_POLICY_3_TITLE, TR_BUILDING_LIGHTHOUSE_POLICY_3 }
+    },
+    "wavs/dock1.wav"
+};
 
 static int god_id;
 
@@ -38,7 +58,7 @@ static generic_button add_module_button[] = {
 };
 
 static generic_button go_to_lighthouse_action_button[] = {
-        {0, 0, 400, 100, lighthouse_action, button_none, 0, 0}
+        {0, 0, 400, 100, button_lighthouse_policy, button_none, 0, 0}
 };
 
 static generic_button hold_games_button[] = {
@@ -653,7 +673,7 @@ int window_building_handle_mouse_colosseum(const mouse *m, building_info_context
     if (b->data.monument.phase != MONUMENT_FINISHED) {
         return 0;
     }
-    if (generic_buttons_handle_mouse(m, c->x_offset + 88, c->y_offset + 535, 
+    if (generic_buttons_handle_mouse(m, c->x_offset + 88, c->y_offset + 535,
         hold_games_button, 1, &data.focus_button_id)) {
         return 1;
     }
@@ -913,7 +933,7 @@ void window_building_draw_arena(building_info_context *c)
 static void draw_policy_image_border(int x, int y, int focused)
 {
     int id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
-                                 "Policy Selection Borders");
+        "Policy Selection Borders");
 
     image_draw(id + focused, x, y);
     image_draw(id + 2 + focused, x + 105, y + 5);
@@ -924,8 +944,8 @@ static void draw_policy_image_border(int x, int y, int focused)
 void window_building_handle_mouse_lighthouse(const mouse *m, building_info_context *c)
 {
     generic_buttons_handle_mouse(
-            m, c->x_offset + 32, c->y_offset + 150,
-            go_to_lighthouse_action_button, 1, &data.lighthouse_focus_button_id);
+        m, c->x_offset + 32, c->y_offset + 150,
+        go_to_lighthouse_action_button, 1, &data.lighthouse_focus_button_id);
 }
 
 void window_building_draw_lighthouse_foreground(building_info_context *c)
@@ -933,10 +953,22 @@ void window_building_draw_lighthouse_foreground(building_info_context *c)
     draw_policy_image_border(c->x_offset + 32, c->y_offset + 150, data.lighthouse_focus_button_id == 1);
 }
 
-void lighthouse_action(int param1, int param2)
+static void apply_policy(int selected_policy)
+{
+    if (selected_policy == NO_POLICY) {
+        return;
+    }
+    city_trade_policy_set(SEA_TRADE_POLICY, selected_policy);
+    sound_speech_play_file(sea_trade_policy.wav_file);
+    city_finance_process_sundry(TRADE_POLICY_COST);
+}
+
+static void button_lighthouse_policy(int selected_policy, int param2)
 {
     if (building_monument_working(BUILDING_LIGHTHOUSE)) {
-        window_policy_show(0);
+        window_option_popup_show(sea_trade_policy.title, sea_trade_policy.subtitle,
+            &sea_trade_policy.items[1], 3, apply_policy, city_trade_policy_get(SEA_TRADE_POLICY),
+            TRADE_POLICY_COST, OPTION_MENU_SMALL_ROW);
     }
 }
 
@@ -948,13 +980,30 @@ void window_building_draw_lighthouse(building_info_context *c)
         text_draw_multiline(translation_for(TR_BUILDING_LIGHTHOUSE_BONUS_DESC),
             c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
 
-        window_building_draw_policy_action(c, 0);
+        if (!sea_trade_policy.items[0].image_id) {
+            int base_policy_image = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
+                sea_trade_policy.base_image_name);
+            sea_trade_policy.items[0].image_id = base_policy_image;
+            sea_trade_policy.items[1].image_id = base_policy_image + 1;
+            sea_trade_policy.items[2].image_id = base_policy_image + 2;
+            sea_trade_policy.items[3].image_id = base_policy_image + 3;
+        }
+
+        trade_policy policy = city_trade_policy_get(SEA_TRADE_POLICY);
+
+        text_draw_multiline(translation_for(sea_trade_policy.items[policy].header),
+            c->x_offset + 160, c->y_offset + 160, 260, FONT_NORMAL_BLACK, 0);
+        if (policy != NO_POLICY) {
+            text_draw_multiline(translation_for(sea_trade_policy.items[policy].desc),
+                c->x_offset + 160, c->y_offset + 185, 260, FONT_NORMAL_BLACK, 0);
+        }
+        image_draw(sea_trade_policy.items[policy].image_id, c->x_offset + 32, c->y_offset + 150);
 
         inner_panel_draw(c->x_offset + 16, c->y_offset + 270, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 278);
 
         image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Lighthouse Banner"),
-                   c->x_offset + 32, c->y_offset + 350);
+            c->x_offset + 32, c->y_offset + 350);
 
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);

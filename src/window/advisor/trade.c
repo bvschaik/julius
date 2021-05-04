@@ -1,12 +1,15 @@
 #include "trade.h"
 
+#include "assets/assets.h"
 #include "building/caravanserai.h"
 #include "building/monument.h"
 #include "city/buildings.h"
+#include "city/finance.h"
 #include "city/resource.h"
 #include "city/trade_policy.h"
 #include "core/lang.h"
 #include "core/string.h"
+#include "empire/city.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h" 
@@ -16,9 +19,10 @@
 #include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
-#include "empire/city.h"
+#include "sound/speech.h"
 #include "translation/translation.h"
 #include "window/empire.h"
+#include "window/option_popup.h"
 #include "window/resource_settings.h"
 #include "window/trade_prices.h"
 
@@ -40,8 +44,8 @@ static scrollbar_type scrollbar = { 580, RESOURCE_Y_OFFSET, RESOURCE_ROW_HEIGHT 
 static generic_button resource_buttons[] = {
     {375, 392, 200, 24, button_prices, button_none, 1, 0},
     {160, 392, 200, 24, button_empire, button_none, 1, 0},
-    {45, 390, 40, 30, button_policy, button_none, 1, 0},
-    {95, 390, 40, 30, button_policy, button_none, 0, 0},
+    {45, 390, 40, 30, button_policy, button_none, LAND_TRADE_POLICY, 0},
+    {95, 390, 40, 30, button_policy, button_none, SEA_TRADE_POLICY, 0},
     {64, 56, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 0, 0},
     {64, 97, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 1, 0},
     {64, 138, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 2, 0},
@@ -53,9 +57,41 @@ static generic_button resource_buttons[] = {
 };
 
 static struct {
+    int title;
+    int subtitle;
+    const char *base_image_name;
+    option_menu_item items[3];
+    const char *wav_file;
+} policy_options[] = {
+    {
+        TR_BUILDING_CARAVANSERAI_POLICY_TITLE,
+        TR_BUILDING_CARAVANSERAI_POLICY_TEXT,
+        "Trade Policy",
+        {
+            { TR_BUILDING_CARAVANSERAI_POLICY_1_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_1 },
+            { TR_BUILDING_CARAVANSERAI_POLICY_2_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_2 },
+            { TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, TR_BUILDING_CARAVANSERAI_POLICY_3 }
+        },
+        "wavs/market4.wav"
+    },
+    {
+        TR_BUILDING_LIGHTHOUSE_POLICY_TITLE,
+        TR_BUILDING_LIGHTHOUSE_POLICY_TEXT,
+        "Sea Trade Policy",
+        {
+            { TR_BUILDING_LIGHTHOUSE_POLICY_1_TITLE, TR_BUILDING_LIGHTHOUSE_POLICY_1 },
+            { TR_BUILDING_LIGHTHOUSE_POLICY_2_TITLE, TR_BUILDING_LIGHTHOUSE_POLICY_2 },
+            { TR_BUILDING_LIGHTHOUSE_POLICY_3_TITLE, TR_BUILDING_LIGHTHOUSE_POLICY_3 }
+        },
+        "wavs/dock1.wav"
+    }
+};
+
+static struct {
     int focus_button_id;
     const resource_list *list;
     int margin_right;
+    trade_policy_type policy_type;
 } data;
 
 static void init(void)
@@ -204,7 +240,6 @@ static int draw_background(void)
         graphics_shade_rect(95, 390, 40, 30, 0);
     }
 
-
     return ADVISOR_HEIGHT;
 }
 
@@ -233,6 +268,31 @@ static int handle_mouse(const mouse *m)
     return result;
 }
 
+static void apply_policy(int selected_policy)
+{
+    if (selected_policy == NO_POLICY) {
+        return;
+    }
+    city_trade_policy_set(data.policy_type, selected_policy);
+    sound_speech_play_file(policy_options[data.policy_type].wav_file);
+    city_finance_process_sundry(TRADE_POLICY_COST);
+}
+
+static void show_policy(trade_policy_type policy_type)
+{
+    data.policy_type = policy_type;
+    if (!policy_options[policy_type].items[0].image_id) {
+        int base_policy_image = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
+            policy_options[policy_type].base_image_name);
+        policy_options[policy_type].items[0].image_id = base_policy_image + 1;
+        policy_options[policy_type].items[1].image_id = base_policy_image + 2;
+        policy_options[policy_type].items[2].image_id = base_policy_image + 3;
+    }
+    window_option_popup_show(policy_options[policy_type].title, policy_options[policy_type].subtitle,
+        policy_options[policy_type].items, 3, apply_policy, city_trade_policy_get(policy_type),
+        TRADE_POLICY_COST, OPTION_MENU_SMALL_ROW);
+}
+
 static void button_prices(int param1, int param2)
 {
     window_trade_prices_show();
@@ -243,12 +303,13 @@ static void button_empire(int param1, int param2)
     window_empire_show();
 }
 
-static void button_policy(int param1, int param2)
+static void button_policy(int policy_type, int param2)
 {
-    if ((param1 && building_monument_working(BUILDING_CARAVANSERAI)) ||
-        (!param1 && building_monument_working(BUILDING_LIGHTHOUSE))) {
-        window_policy_show(param1);
+    if ((policy_type == LAND_TRADE_POLICY && !building_monument_working(BUILDING_CARAVANSERAI)) ||
+        (policy_type == SEA_TRADE_POLICY && !building_monument_working(BUILDING_LIGHTHOUSE))) {
+        return;
     }
+    show_policy(policy_type);
 }
 
 static void button_resource(int resource_index, int param2)

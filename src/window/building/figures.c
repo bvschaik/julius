@@ -193,18 +193,20 @@ static void draw_trader(building_info_context *c, figure *f)
         int active = building_caravanserai_enough_foods(b);
 
         if (active) {
-            int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
-            if(policy) {
+            trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
+            if (policy) {
                 int text_width = text_draw(translation_for(TR_BUILDING_CARAVANSERAI_POLICY_TITLE), c->x_offset + 40, c->y_offset + 222, FONT_SMALL_BLACK, 0);
-                switch(policy) {
-                    case TRADE_POLICY_1 :
+                switch (policy) {
+                    case TRADE_POLICY_1:
                         text_draw(translation_for(TR_BUILDING_CARAVANSERAI_POLICY_1_TITLE), c->x_offset + 40 + text_width + 10, c->y_offset + 222, FONT_SMALL_BLACK, 0);
                         break;
-                    case TRADE_POLICY_2 :
+                    case TRADE_POLICY_2:
                         text_draw(translation_for(TR_BUILDING_CARAVANSERAI_POLICY_2_TITLE), c->x_offset + 40 + text_width + 10, c->y_offset + 222, FONT_SMALL_BLACK, 0);
                         break;
-                    case TRADE_POLICY_3 :
+                    case TRADE_POLICY_3:
                         text_draw(translation_for(TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE), c->x_offset + 40 + text_width + 10, c->y_offset + 222, FONT_SMALL_BLACK, 0);
+                        break;
+                    default:
                         break;
                 }
             } else {
@@ -217,18 +219,20 @@ static void draw_trader(building_info_context *c, figure *f)
 
     if (building_monument_working(BUILDING_LIGHTHOUSE) && f->type == FIGURE_TRADE_SHIP) {
 
-        int policy = building_monument_module_type(BUILDING_LIGHTHOUSE);
-        if(policy) {
+        trade_policy policy = city_trade_policy_get(SEA_TRADE_POLICY);
+        if (policy) {
             int text_width = text_draw(translation_for(TR_BUILDING_LIGHTHOUSE_POLICY_TITLE), c->x_offset + 40, c->y_offset + 222, FONT_SMALL_BLACK, 0);
-            switch(policy) {
-                case TRADE_POLICY_1 :
+            switch (policy) {
+                case TRADE_POLICY_1:
                     text_draw(translation_for(TR_BUILDING_LIGHTHOUSE_POLICY_1_TITLE), c->x_offset + 40 + text_width + 10, c->y_offset + 222, FONT_SMALL_BLACK, 0);
                     break;
-                case TRADE_POLICY_2 :
+                case TRADE_POLICY_2:
                     text_draw(translation_for(TR_BUILDING_LIGHTHOUSE_POLICY_2_TITLE), c->x_offset + 40 + text_width + 10, c->y_offset + 222, FONT_SMALL_BLACK, 0);
                     break;
-                case TRADE_POLICY_3 :
+                case TRADE_POLICY_3:
                     text_draw(translation_for(TR_BUILDING_LIGHTHOUSE_POLICY_3_TITLE), c->x_offset + 40 + text_width + 10, c->y_offset + 222, FONT_SMALL_BLACK, 0);
+                    break;
+                default:
                     break;
             }
         } else {

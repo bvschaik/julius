@@ -52,7 +52,7 @@ static int trader_malus_speed(void)
 
     if (building_monument_working(BUILDING_CARAVANSERAI)) {
         building *b = building_get(city_buildings_get_caravanserai());
-        int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
+        trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
 
         if (building_caravanserai_enough_foods(b) && policy == TRADE_POLICY_3) {
             int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
@@ -1031,7 +1031,7 @@ static int trade_policy_factor(int land_trader)
     if (land_trader && building_monument_working(BUILDING_CARAVANSERAI)) {
         building *b = building_get(city_buildings_get_caravanserai());
 
-        int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
+        trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
 
         if (building_caravanserai_enough_foods(b) && policy == TRADE_POLICY_3) {
             int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
@@ -1041,8 +1041,8 @@ static int trade_policy_factor(int land_trader)
                 trade_percent = POLICY_3_BONUS_PERCENT / 2; // caravan capacity increase by 25%
             }
         }
-    } else if(!land_trader && building_monument_working(BUILDING_LIGHTHOUSE)) {
-        int policy = building_monument_module_type(BUILDING_LIGHTHOUSE);
+    } else if (!land_trader && building_monument_working(BUILDING_LIGHTHOUSE)) {
+        trade_policy policy = city_trade_policy_get(SEA_TRADE_POLICY);
         if (policy == TRADE_POLICY_3) {
             building *b = building_get(building_find(BUILDING_LIGHTHOUSE));
 

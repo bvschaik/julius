@@ -48,7 +48,8 @@ static int trade_get_caravanserai_factor(int percent)
     return caravanserai_percent;
 }
 
-static int trade_get_lighthouse_factor(int percent) {
+static int trade_get_lighthouse_factor(int percent)
+{
     int lighthouse_percent = 0;
 
     if (building_monument_working(BUILDING_LIGHTHOUSE)) {
@@ -62,15 +63,15 @@ static int trade_factor_sell(int land_trader)
 {
     int percent = 0;
     if (land_trader && city_buildings_has_caravanserai()) {
-        int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
+        trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
 
         if (policy == TRADE_POLICY_1) {
             percent = trade_get_caravanserai_factor(POLICY_1_BONUS_PERCENT); // trader buy 20% more
         } else if (policy == TRADE_POLICY_2) {
             percent -= trade_get_caravanserai_factor(POLICY_2_MALUS_PERCENT); // trader buy 10% less
         }
-    } else if(!land_trader && building_find(BUILDING_LIGHTHOUSE)) {
-        int policy = building_monument_module_type(BUILDING_LIGHTHOUSE);
+    } else if (!land_trader && building_find(BUILDING_LIGHTHOUSE)) {
+        trade_policy policy = city_trade_policy_get(SEA_TRADE_POLICY);
 
         if (policy == TRADE_POLICY_1) {
             percent = trade_get_lighthouse_factor(POLICY_1_BONUS_PERCENT); // trader buy 20% more
@@ -85,7 +86,7 @@ static int trade_factor_buy(int land_trader)
 {
     int percent = 0;
     if (land_trader && city_buildings_has_caravanserai()) {
-        int policy = building_monument_module_type(BUILDING_CARAVANSERAI);
+        trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
 
         if (policy == TRADE_POLICY_1) {
             percent = trade_get_caravanserai_factor(POLICY_1_MALUS_PERCENT); // player buy 10% more
@@ -93,7 +94,7 @@ static int trade_factor_buy(int land_trader)
             percent -= trade_get_caravanserai_factor(POLICY_2_BONUS_PERCENT); // player buy 20% less
         }
     } else if (!land_trader && building_find(BUILDING_LIGHTHOUSE)) {
-        int policy = building_monument_module_type(BUILDING_LIGHTHOUSE);
+        trade_policy policy = city_trade_policy_get(SEA_TRADE_POLICY);
 
         if (policy == TRADE_POLICY_1) {
             percent = trade_get_lighthouse_factor(POLICY_1_MALUS_PERCENT); // player buy 10% more
