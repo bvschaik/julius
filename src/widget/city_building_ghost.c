@@ -218,11 +218,6 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
             image_draw_masked(image_id + 1,
                 x + img->sprite_offset_x - 33, y + img->sprite_offset_y - 56, COLOR_MASK_BUILDING_GHOST);
         }
-    } else if (type == BUILDING_WELL) {
-        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
-            city_view_foreach_tile_in_range(grid_offset, 1, map_water_supply_well_radius(), draw_fountain_range);
-        }
-        draw_building(image_id, x, y);
     } else if (type != BUILDING_CLEAR_LAND) {
         draw_building(image_id, x, y);
     }
@@ -632,6 +627,24 @@ static void draw_fountain(const map_tile *tile, int x, int y)
     }
 }
 
+static void draw_well(const map_tile *tile, int x, int y)
+{
+    if (city_finance_out_of_money()) {
+        draw_flat_tile(x, y, COLOR_MASK_RED);
+    } else {
+        int blocked_tiles = 0;
+        int blocked = is_blocked_for_building(tile->grid_offset, 1, &blocked_tiles);
+        int color_mask = blocked ? COLOR_MASK_BUILDING_GHOST_RED : COLOR_MASK_BUILDING_GHOST;
+        int image_id = image_group(building_properties_for_type(BUILDING_WELL)->image_group);
+        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE)) {
+            city_view_foreach_tile_in_range(tile->grid_offset, 1,
+                map_water_supply_well_radius(), draw_fountain_range);
+        }
+        image_draw_isometric_footprint(image_id, x, y, color_mask);
+        image_draw_isometric_top(image_id, x, y, color_mask);
+    }
+}
+
 static void draw_bathhouse(const map_tile *tile, int x, int y)
 {
     int grid_offset = tile->grid_offset;
@@ -982,6 +995,9 @@ void city_building_ghost_draw(const map_tile *tile)
             break;
         case BUILDING_FOUNTAIN:
             draw_fountain(tile, x, y);
+            break;
+        case BUILDING_WELL:
+            draw_well(tile, x, y);
             break;
         case BUILDING_BATHHOUSE:
             draw_bathhouse(tile, x, y);
