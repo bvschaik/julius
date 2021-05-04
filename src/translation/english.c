@@ -94,7 +94,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, "Open trade route count as providing different wine type"},
     {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Randomly collapsing clay pits and iron mines take some money instead"},
     {TR_CONFIG_MULTIPLE_BARRACKS, "Allow building multiple barracks" },
-    {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warehouses don't accept anything when built"},
+    {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warehouses and granaries don't accept anything when built"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Houses don't expand into gardens"},
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Roaming walkers don't skip corners"},
     {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "City zoom could not be enabled"},
