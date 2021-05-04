@@ -241,8 +241,6 @@ void figure_workcamp_slave_action(figure *f)
 	} else {
 		f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"), "Slave NE 01") + dir * 12 +
 			f->image_offset;
-
-
 	}
 	if (f->state == FIGURE_STATE_DEAD) {
 		building_monument_remove_delivery(f->id);

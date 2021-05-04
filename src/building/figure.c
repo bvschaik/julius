@@ -791,7 +791,8 @@ static void spawn_caravanserai_supplier(building *b, int x, int y)
 {
     if (b->figure_id2) {
         figure *f = figure_get(b->figure_id2);
-        if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_CARAVANSERAI_SUPPLIER && f->type != FIGURE_LABOR_SEEKER)) {
+        if (f->state != FIGURE_STATE_ALIVE ||
+            (f->type != FIGURE_CARAVANSERAI_SUPPLIER && f->type != FIGURE_LABOR_SEEKER)) {
             b->figure_id2 = 0;
         }
         return;

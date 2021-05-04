@@ -382,6 +382,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_CARAVANSERAI_PHASE_1, "(Foundation)"},
     {TR_BUILDING_CARAVANSERAI_PHASE_1_TEXT, "Engineers dig the foundations of this future resting place."},
     {TR_FIGURE_TYPE_CARAVANSERAI_SUPPLIER, "Caravanserai supplier" },
+    {TR_FIGURE_TYPE_CARAVANSERAI_COLLECTOR, "Caravanserai collector" },
     {TR_BUILDING_CARAVANSERAI_POLICY_TITLE, "Land trade policy" },
     {TR_BUILDING_CARAVANSERAI_NO_POLICY, "No land trade policy" },
     {TR_BUILDING_CARAVANSERAI_POLICY_TEXT, "Select your land trade policy in your city." },
