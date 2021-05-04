@@ -16,7 +16,7 @@
 static void button_hold_festival(int param1, int param2);
 
 static generic_button hold_festival_button[] = {
-    {102, 330, 300, 20, button_hold_festival, button_none, 0, 0},
+    {102, 340, 300, 20, button_hold_festival, button_none, 0, 0},
 };
 
 static int focus_button_id;
@@ -99,21 +99,20 @@ static int get_festival_advice(void)
     }
 }
 
-
 static void draw_festival_info(void)
 {
-    inner_panel_draw(48, 292, 34, 6);
-    image_draw(image_group(GROUP_PANEL_WINDOWS) + 15, 460, 295);
-    lang_text_draw(58, 17, 52, 264, FONT_LARGE_BLACK);
+    inner_panel_draw(48, 302, 34, 6);
+    image_draw(image_group(GROUP_PANEL_WINDOWS) + 15, 460, 305);
+    lang_text_draw(58, 17, 52, 274, FONT_LARGE_BLACK);
 
-    int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 305, FONT_NORMAL_WHITE);
-    lang_text_draw(58, 15, 112 + width, 305, FONT_NORMAL_WHITE);
+    int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 315, FONT_NORMAL_WHITE);
+    lang_text_draw(58, 15, 112 + width, 315, FONT_NORMAL_WHITE);
     if (city_festival_is_planned()) {
-        lang_text_draw_centered(58, 34, 102, 329, 300, FONT_NORMAL_WHITE);
+        lang_text_draw_centered(58, 34, 102, 339, 300, FONT_NORMAL_WHITE);
     } else {
-        lang_text_draw_centered(58, 16, 102, 329, 300, FONT_NORMAL_WHITE);
+        lang_text_draw_centered(58, 16, 102, 339, 300, FONT_NORMAL_WHITE);
     }
-    lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 350, 400, FONT_NORMAL_WHITE);
+    lang_text_draw_multiline(58, 18 + get_festival_advice(), 56, 360, 400, FONT_NORMAL_WHITE);
 }
 
 static int draw_background(void)
@@ -161,11 +160,10 @@ static int draw_background(void)
     return height_blocks;
 }
 
-
 static void draw_foreground(void)
 {
     if (!city_festival_is_planned()) {
-        button_border_draw(102, 325, 300, 20, focus_button_id == 1);
+        button_border_draw(102, 335, 300, 20, focus_button_id == 1);
     }
 }
 
