@@ -26,8 +26,8 @@ static void button_hold_festival(int param1, int param2);
 static image_button image_buttons_bottom[] = {
     {58, 316, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
     {558, 319, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1},
-    {358, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_hold_festival, button_none, 1, 0, 1},
-    {400, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close, button_none, 0, 0, 1},
+    {452, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_hold_festival, button_none, 1, 0, 1},
+    {494, 317, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close, button_none, 0, 0, 1},
 };
 
 static generic_button buttons_gods_size[] = {
@@ -90,7 +90,7 @@ static void draw_background(void)
         }
     }
     draw_buttons();
-    lang_text_draw(58, 30 + city_festival_selected_size(), 180, 322, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(58, 30 + city_festival_selected_size(), 28, 322, 544, FONT_NORMAL_BLACK);
 
     graphics_reset_dialog();
 }
@@ -134,7 +134,7 @@ static void button_size(int size, int param2)
 
 static void button_help(int param1, int param2)
 {
-    window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, 0);
+    window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_RELIGION, 0);
 }
 
 static void button_close(int param1, int param2)

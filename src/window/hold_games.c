@@ -25,18 +25,21 @@
 #include "window/message_dialog.h"
 
 static void button_game(int god, int param2);
+static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_hold_games(int param1, int param2);
 
 static image_button image_buttons_bottom[] = {
-    {500, 350, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close, button_none, 0, 0, 1}
+    {59, 353, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+    {558, 352, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1},
+    {494, 350, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_close, button_none, 0, 0, 1}
 };
 
 static image_button action_button[] = {
-    {458, 350, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_hold_games, button_none, 1, 0, 1}
+    {452, 350, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, button_hold_games, button_none, 1, 0, 1}
 };
 
-static generic_button buttons_gods_size[] = {
+static generic_button buttons_games_size[] = {
     {170, 96, 80, 90, button_game, button_none, 1, 0},
     {270, 96, 80, 90, button_game, button_none, 2, 0},
     {370, 96, 80, 90, button_game, button_none, 3, 0},
@@ -46,7 +49,9 @@ static generic_button buttons_gods_size[] = {
 static struct {
     int focus_button_id;
     int focus_image_button_id;
+    int focus_game_button_id;
     int return_to_city;
+    int game_possible;
 } data;
 
 static void draw_background(void)
@@ -93,6 +98,7 @@ static void draw_background(void)
             width += 32;
         }
     }
+    data.game_possible = 0;
 
     if (!building_count_active(game->building_id_required)) {
         text_draw(translation_for(TR_WINDOW_GAMES_NO_VENUE), 130, 352, FONT_NORMAL_BLACK, 0);
@@ -101,6 +107,7 @@ static void draw_background(void)
     } else if (!has_resources) {
         text_draw(translation_for(TR_WINDOW_GAMES_NOT_ENOUGH_RESOURCES), 130, 352, FONT_NORMAL_BLACK, 0);
     } else {
+        data.game_possible = 1;
         image_buttons_draw(0, 0, action_button, 1);
     }
 
@@ -110,7 +117,10 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    image_buttons_draw(0, 0, image_buttons_bottom, 1);
+    image_buttons_draw(0, 0, image_buttons_bottom, 3);
+    if (data.game_possible) {
+        image_buttons_draw(0, 0, action_button, 1);
+    }
     graphics_reset_dialog();
 }
 
@@ -127,10 +137,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     int handled = 0;
-    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 1, &data.focus_image_button_id);
-    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, action_button, 1, &data.focus_image_button_id);
-    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_gods_size, 3, &data.focus_button_id);
-    if (data.focus_image_button_id) {
+    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons_bottom, 3, &data.focus_image_button_id);
+    handled |= image_buttons_handle_mouse(m_dialog, 0, 0, action_button, 1, &data.focus_game_button_id);
+    handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, buttons_games_size, 3, &data.focus_button_id);
+    if (data.focus_image_button_id || data.focus_game_button_id) {
         data.focus_button_id = 0;
     }
     if (!handled && input_go_back_requested(m, h)) {
@@ -144,6 +154,11 @@ static void button_game(int game, int param2)
     window_invalidate();
 }
 
+static void button_help(int param1, int param2)
+{
+    window_message_dialog_show(MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT, 0);
+}
+
 static void button_close(int param1, int param2)
 {
     close_window();
@@ -151,19 +166,35 @@ static void button_close(int param1, int param2)
 
 static void button_hold_games(int param1, int param2)
 {
-    city_games_schedule(city_data.games.selected_games_id);
-    close_window();
+    if (data.game_possible) {
+        city_games_schedule(city_data.games.selected_games_id);
+        close_window();
+    }
 }
 
 static void get_tooltip(tooltip_context *c)
 {
-    if (!data.focus_image_button_id && (!data.focus_button_id || data.focus_button_id > 4)) {
+    if (!data.focus_image_button_id && !data.focus_game_button_id && (!data.focus_button_id || data.focus_button_id > 4)) {
         return;
     }
+
     c->type = TOOLTIP_BUTTON;
-    games_type *game = city_games_get_game_type(data.focus_button_id);
-    if (game) {
-        c->translation_key = game->header_key;
+
+    if (data.focus_image_button_id) {
+        switch (data.focus_image_button_id) {
+            case 1: c->text_id = 1; break;
+            case 2: c->text_id = 2; break;
+            case 3: c->translation_key = TR_TOOLTIP_NO_GAME; break;
+        }
+    } else if (data.focus_game_button_id && data.game_possible) {
+        c->translation_key = TR_TOOLTIP_HOLD_GAME;
+    } else if (data.focus_button_id) {
+        games_type *game = city_games_get_game_type(data.focus_button_id);
+        if (game) {
+            c->translation_key = game->header_key;
+        }
+    } else {
+        c->type = TOOLTIP_NONE;
     }
 }
 

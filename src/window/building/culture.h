@@ -41,7 +41,7 @@ void window_building_draw_arena(building_info_context* c);
 
 void window_building_draw_colosseum_background(building_info_context *c);
 
-void window_buildiing_draw_colosseum_foreground(building_info_context *c);
+void window_building_draw_colosseum_foreground(building_info_context *c);
 
 void window_building_draw_hippodrome(building_info_context *c);
 

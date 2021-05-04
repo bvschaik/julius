@@ -854,15 +854,18 @@ void window_building_draw_colosseum_background(building_info_context *c)
     }
 }
 
-void window_buildiing_draw_colosseum_foreground(building_info_context *c)
+void window_building_draw_colosseum_foreground(building_info_context *c)
 {
     building *b = building_get(c->building_id);
     data.building_id = c->building_id;
     if (b->data.monument.phase != MONUMENT_FINISHED) {
         return;
     }
-    button_border_draw(c->x_offset + 88, c->y_offset + 535,
-        300, 20, data.focus_button_id == 1);
+
+    if (!city_festival_games_active() && !city_festival_games_planning_time() && !city_festival_games_cooldown()) {
+        button_border_draw(c->x_offset + 88, c->y_offset + 535,
+            300, 20, data.focus_button_id == 1);
+    }
 }
 
 void window_building_draw_arena(building_info_context *c)
@@ -1114,5 +1117,7 @@ static void add_module_prompt(int param1, int param2)
 
 static void hold_games(int param1, int param2)
 {
-    window_hold_games_show(1);
+    if (!city_festival_games_active() && !city_festival_games_planning_time() && !city_festival_games_cooldown()) {
+        window_hold_games_show(1);
+    }
 }

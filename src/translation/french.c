@@ -519,11 +519,11 @@ static translation_string all_strings[] = {
     {TR_WINDOW_GAMES_OPTION_3, "Jeux des Calendes" },
     {TR_WINDOW_GAMES_OPTION_4, "Jeux Olympiques" },
     {TR_WINDOW_GAMES_OPTION_5, "Jeux Romains" },
-    {TR_WINDOW_GAMES_OPTION_1_DESC, "Le Colisée sera inondé pour reconstituer une grande bataille navale. Augmente la vitesse de déplacement des soldats, ainsi que la force des soldats dans les batailles lointaines, pendant 60 mois." },
-    {TR_WINDOW_GAMES_OPTION_2_DESC, "Le Colisée accueillera des chasses d'animaux horribles et des exécutions par des bêtes sauvages, ravissant les classes plébéiennes. Les criminels, les émeutes et les révoltes seront réprimés pendant 60 mois. Les gladiateurs aideront à défendre la cité de la prochaine invasion." },
+    {TR_WINDOW_GAMES_OPTION_1_DESC, "Le Colisée sera inondé pour reconstituer une grande bataille navale. Augmente la vitesse de déplacement des soldats, ainsi que la force des soldats dans les batailles lointaines, pendant 12 mois." },
+    {TR_WINDOW_GAMES_OPTION_2_DESC, "Le Colisée accueillera des chasses d'animaux sauvages, ravissant les plébéiens. Les criminels, les émeutes et les révoltes seront réprimés pendant 12 mois. Les gladiateurs défendront la cité lors des prochaines invasions." },
     {TR_WINDOW_GAMES_OPTION_3_DESC, "Le Colisée accueillera des jeux en l'honneur des dieux le premier jour de l'année prochaine, implorant fortune et prospérité. Les quotas commerciaux seront doublés l'année prochaine." },
     {TR_WINDOW_GAMES_OPTION_4_DESC, "L'Hippodrome accueillera les Jeux Olympiques. Votre cité accueillera des foules de visiteurs, et si vos athlètes honorent bien votre cité, vous obtiendrez une augmentation permanente du tourisme et de la faveur." },
-    {TR_WINDOW_GAMES_OPTION_5_DESC, "Le Colisée accueillera les Jeux Romains. Votre ville accueillera de nombreux voyageurs, désireux de prouver leurs forces dans une variété de défis. Ces célébrations vous apportera les faveurs de l'empereur et de votre peuple jusqu'à l'an prochain." },
+    {TR_WINDOW_GAMES_OPTION_5_DESC, "Le Colisée accueillera les Jeux Romains. Votre ville accueillera de nombreux voyageurs, désireux de prouver leurs forces. Ces célébrations vous apportera les faveurs de l'empereur et de votre peuple pendant 12 mois." },
     {TR_WINDOW_GAMES_COST, "Coût:" },
     {TR_WINDOW_GAMES_PERSONAL_FUNDS, "(fonds personnels)" },
     {TR_WINDOW_GAMES_NOT_ENOUGH_FUNDS, "Fonds personnels insuffisants." },
@@ -661,7 +661,9 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY, "Sélectionner une politique commerciale terrestre"},
     {TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY_REQUIRED, "Un Caravansérail est nécessaire dans votre cité pour choisir une politique commerciale terrestre"},
     {TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY, "Sélectionner une politique commerciale maritime"},
-    {TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY_REQUIRED, "Un Phare est nécessaire dans votre cité pour choisir une politique commerciale maritime"}
+    {TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY_REQUIRED, "Un Phare est nécessaire dans votre cité pour choisir une politique commerciale maritime"},
+    {TR_TOOLTIP_HOLD_GAME, "Organiser les jeux"},
+    {TR_TOOLTIP_NO_GAME, "Ne pas organiser les jeux"},
 };
 
 void translation_french(const translation_string** strings, int* num_strings)

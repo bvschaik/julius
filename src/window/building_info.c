@@ -818,7 +818,7 @@ static void draw_foreground(void)
                 window_building_draw_caravanserai_foreground(&context);
             }
         } else if (btype == BUILDING_COLOSSEUM) {
-            window_buildiing_draw_colosseum_foreground(&context);
+            window_building_draw_colosseum_foreground(&context);
         }
 
         if (building_monument_is_unfinished_monument(b)) {
