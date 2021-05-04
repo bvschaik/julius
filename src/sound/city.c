@@ -12,7 +12,7 @@
 #define MAX_CHANNELS 70
 
 // for compatibility with the original game:
-#define CITY_CHANNEL_OFFSET 15
+#define CITY_CHANNEL_OFFSET 18
 
 enum {
     SOUND_CHANNEL_CITY_HOUSE_SLUM = 30,
@@ -234,10 +234,9 @@ void sound_city_decay_views(void)
     }
 }
 
-void sound_city_progress_ambient(void) 
+void sound_city_progress_ambient(void)
 {
-    for (int i = 0; i < ambient_channels_number; i++)
-    {
+    for (int i = 0; i < ambient_channels_number; i++) {
         channels[ambient_channels[i]].available = 1;
         ++channels[ambient_channels[i]].total_views;
         ++channels[ambient_channels[i]].direction_views[SOUND_DIRECTION_CENTER];

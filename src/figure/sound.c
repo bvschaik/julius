@@ -9,6 +9,7 @@ void figure_play_die_sound(const figure *f)
 {
     int is_soldier = 0;
     int is_citizen = 0;
+    int is_female_citizen = 0;
     switch (f->type) {
         case FIGURE_WOLF:
             sound_effect_play(SOUND_EFFECT_WOLF_DIE);
@@ -58,12 +59,20 @@ void figure_play_die_sound(const figure *f)
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
             is_soldier = 1;
             break;
+        case FIGURE_MARKET_TRADER:
+        case FIGURE_MARKET_SUPPLIER:
+        case FIGURE_BATHHOUSE_WORKER:
+        case FIGURE_BARKEEP:
+            is_female_citizen = 1;
+            break;
         default:
             is_citizen = 1;
             break;
     }
     if (is_soldier) {
         sound_effect_play(SOUND_EFFECT_SOLDIER_DIE + city_sound_update_die_soldier());
+    } else if (is_female_citizen) {
+        sound_effect_play(SOUND_EFFECT_FEMALE_CITIZEN_DIE);
     } else if (is_citizen) {
         sound_effect_play(SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen());
     }
