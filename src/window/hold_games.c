@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "building/count.h"
+#include "building/granary.h"
 #include "city/constants.h"
 #include "city/data_private.h"
 #include "city/festival.h"
@@ -87,14 +88,14 @@ static void draw_background(void)
     width = 0;
     int has_resources = 1;
     int resource_cost = 0;
-    for (int i = 0; i < RESOURCE_MAX; ++i) {
-        resource_cost = city_games_resource_cost(selected_game_id,i);
+    for (int resource = 0; resource < RESOURCE_MAX; ++resource) {
+        resource_cost = city_games_resource_cost(selected_game_id,resource);
         if (resource_cost) {
             width += text_draw_number(resource_cost, '@', "", 120 + width, 320, FONT_NORMAL_BLACK);
-            if (city_resource_count(i) < resource_cost) {
+            if (city_resource_get_amount_including_granaries(resource, resource_cost, 0) < resource_cost) {
                 has_resources = 0;
             }
-            image_draw(image_group(GROUP_RESOURCE_ICONS) + i, 120 + width, 316);
+            image_draw(image_group(GROUP_RESOURCE_ICONS) + resource, 120 + width, 316);
             width += 32;
         }
     }

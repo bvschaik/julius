@@ -1,5 +1,6 @@
 #include "games.h"
 
+#include "building/granary.h"
 #include "building/warehouse.h"
 #include "building/monument.h"
 #include "core/calc.h"
@@ -100,7 +101,11 @@ void city_games_schedule(int game_id)
     for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
         int resource_cost = city_games_resource_cost(game_id, resource);
         if (resource_cost) {
-            building_warehouses_remove_resource(resource, resource_cost);
+            resource_cost = building_warehouses_remove_resource(resource, resource_cost);
+            if (resource_cost > 0 && resource_is_food(resource)) {
+                building_granaries_remove_resource(resource, resource_cost * RESOURCE_GRANARY_ONE_LOAD);
+            }
+
         }
     }
 
