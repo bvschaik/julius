@@ -8,7 +8,9 @@
     <image id="Housing Adv H" src="Housing_Advisor_Button_Hover" />
 
 
-
-
+<!-- Note: Alternate Buttons for Housing Advisor -->
+    <image id="Housing Adv Alt 01" src="Housing_Advisor_Alt_01" />
+    <image id="Housing Adv Alt 02" src="Housing_Advisor_Alt_02" />
+    <image id="Housing Adv Alt 03" src="Housing_Advisor_Alt_03" />
 
 </assetlist>
