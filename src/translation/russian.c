@@ -96,7 +96,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, "Торговые пути увеличивают разнообразие вина"},
     {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Вместо разрушения, разрушающаяся шахта заберет часть денег"},
     {TR_CONFIG_MULTIPLE_BARRACKS, "Разрешить постройку нескольких казарм" },
-    {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Склады ничего не принимают при постройке"},
+    {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Склады и амбары ничего не принимают при постройке"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Дома не расширяются в сады"},
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Бродячие граждане не пропускают углы"},
     {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "Увеличение камеры не может быть вкл."},
@@ -400,6 +400,7 @@ static translation_string all_strings[] = {
     { TR_BUILDING_CARAVANSERAI_PHASE_1, "(Фундамент)"},
     { TR_BUILDING_CARAVANSERAI_PHASE_1_TEXT, "Инженеры заливают фундамент для будущего места отдыха."},
     { TR_FIGURE_TYPE_CARAVANSERAI_SUPPLIER, "Поставщик" },
+    { TR_FIGURE_TYPE_CARAVANSERAI_COLLECTOR, "Сборщик" },
     { TR_BUILDING_CARAVANSERAI_POLICY_TITLE, "Торговая политика" },
     { TR_BUILDING_CARAVANSERAI_NO_POLICY, "Не выбрана" },
     { TR_BUILDING_CARAVANSERAI_POLICY_TEXT, "Выберите торговую политику в вашем городе."},
@@ -507,7 +508,7 @@ static translation_string all_strings[] = {
     { TR_BUILDING_DOLPHIN_FOUNTAIN, "Фонтан с дельфинами" },
     { TR_BUILDING_HEDGE_DARK, "Темная изгородь" },
     { TR_BUILDING_HEDGE_LIGHT, "Светлая изгородь" },
-    { TR_BUILDING_GARDEN_WALL, "Садовая стена" },
+    { TR_BUILDING_GARDEN_WALL, "Петельная садовая стена" },
     { TR_BUILDING_LEGION_STATUE, "Статуя легионера" },
     { TR_BUILDING_DECORATIVE_COLUMN, "Мраморная колонка" },
     { TR_BUILDING_COLOSSEUM_PHASE_1, "(Гипогей)" },
@@ -668,6 +669,9 @@ static translation_string all_strings[] = {
     { TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY_REQUIRED, "Сначала постройте караван-сарай чтобы выбрать политику наземной торговли"},
     { TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY, "Выберите политику морской торговли"},
     { TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY_REQUIRED, "Сначала постройте маяк чтобы выбрать политику морской торговли"},
+    { TR_TOOLTIP_HOLD_GAME, "Провести эти игры"},
+    { TR_TOOLTIP_NO_GAME, "Не проводить эти игры"},
+    { TR_WARNING_NEARBY_WOLF, "Слишком близко к волкам!"}
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
