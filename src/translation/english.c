@@ -410,7 +410,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LIGHTHOUSE_POLICY_2_TITLE, "Consilium emptor maritimae" },
     {TR_BUILDING_LIGHTHOUSE_POLICY_2, "Maritime buyer's policy: Trade ship imports are 20% cheaper, but sea-based exports earn 10% less." },
     {TR_BUILDING_LIGHTHOUSE_POLICY_3_TITLE, "Consilium quantitas maritimae" },
-    {TR_BUILDING_LIGHTHOUSE_POLICY_3, "Maritime quantity policy: Trade ships carry 50% more goods, but their speed is reduced by 15%." },
+    {TR_BUILDING_LIGHTHOUSE_POLICY_3, "Maritime quantity policy: Trade ships carry 50% more goods, but move 15% slower." },
     {TR_EDITOR_ALLOWED_BUILDINGS_MONUMENTS, "Monuments"},
     {TR_CITY_MESSAGE_TEXT_LIGHTHOUSE_COMPLETE, "The completed lighthouse, a mighty tower of stone, looms over the horizon. May its beacon guide ships home until the end of time." },
     {TR_CITY_MESSAGE_TEXT_PANTHEON_COMPLETE, "The Pantheon is completed. It stands unrivaled as a monument to the awesome power of the gods and people of Rome." },
