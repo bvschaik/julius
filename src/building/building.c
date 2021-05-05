@@ -447,7 +447,8 @@ int building_is_statue_garden_temple(building_type type)
         (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE) ||
         (type >= BUILDING_SMALL_POND && type <= BUILDING_PANTHEON) ||
         (type == BUILDING_GARDENS) || (type == BUILDING_GARDEN_PATH) ||
-        (type >= BUILDING_HORSE_STATUE && type <= BUILDING_LARGE_MAUSOLEUM)
+        (type >= BUILDING_HORSE_STATUE && type <= BUILDING_LARGE_MAUSOLEUM) ||
+        type == BUILDING_GARDEN_WALL
         );
 }
 
