@@ -398,6 +398,10 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         b->data.monument.phase = -1;
     }
 
+    if (((b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) || b->type == BUILDING_ORACLE) && !b->data.monument.phase) {
+        b->data.monument.phase = -1;
+    }
+
     // Wharves produce meat
     if (b->type == BUILDING_WHARF) {
         b->output_resource_id = RESOURCE_MEAT;
