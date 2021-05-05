@@ -488,7 +488,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_DOLPHIN_FOUNTAIN, "Dolphin fountain" },
     {TR_BUILDING_HEDGE_DARK, "Verdant hedge" },
     {TR_BUILDING_HEDGE_LIGHT, "Sunlit hedge" },
-    {TR_BUILDING_GARDEN_WALL, "Crenellated garden wall" },
+    {TR_BUILDING_GARDEN_WALL, "Looped garden wall" },
     {TR_BUILDING_LEGION_STATUE, "Legionary statue" },
     {TR_BUILDING_DECORATIVE_COLUMN, "Marble column" },
     {TR_BUILDING_COLOSSEUM_PHASE_1, "(Hypogeum)" },
