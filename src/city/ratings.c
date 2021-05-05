@@ -14,7 +14,7 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
-#define GT_CULTURE_BONUS 8
+#define MONUMENT_CULTURE_BONUS 6
 #define GAMES_MONTHLY_FAVOUR_BONUS 2
 
 int city_rating_culture(void)
@@ -408,14 +408,14 @@ static void update_culture_rating(void)
     }
     city_data.ratings.culture += city_data.ratings.culture_points.library;
 
-    if (config_get(CONFIG_GP_CH_MONUMENTS_BOOST_CULTURE_RATING)) {
-        city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_CERES) * GT_CULTURE_BONUS;
-        city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_NEPTUNE) * GT_CULTURE_BONUS;
-        city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_MERCURY) * GT_CULTURE_BONUS;
-        city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_MARS) * GT_CULTURE_BONUS;
-        city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_VENUS) * GT_CULTURE_BONUS;
-        city_data.ratings.culture += building_count_active(BUILDING_PANTHEON) * GT_CULTURE_BONUS;
-    }
+    city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_CERES) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_NEPTUNE) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_MERCURY) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_MARS) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_VENUS) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_PANTHEON) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_COLOSSEUM) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_HIPPODROME) * MONUMENT_CULTURE_BONUS;
 
     city_data.ratings.culture = calc_bound(city_data.ratings.culture, 0, 100);
     update_culture_explanation();
