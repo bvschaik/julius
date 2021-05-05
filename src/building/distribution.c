@@ -29,7 +29,6 @@ void building_distribution_unaccept_all_goods(building *b)
     b->subtype.market_goods = 0xffff;
 }
 
-
 void building_distribution_update_demands(building *b)
 {
     if (b->data.market.pottery_demand) {
