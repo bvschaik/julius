@@ -58,7 +58,7 @@ int game_pre_init(void)
     if (!lang_load(0)) {
         errlog("'c3.eng' or 'c3_mm.eng' files not found or too large.");
         return 0;
-    }    
+    }
     update_encoding();
     random_init();
     return 1;
@@ -110,7 +110,7 @@ int game_init(void)
     load_custom_messages();
     sound_system_init();
     game_state_init();
-    int missing_assets = !assets_get_image_id(assets_get_group_id("Areldir", "Roadblocks"),"roadblock"); // If can't find roadblocks asset, extra assets not installed properly
+    int missing_assets = !assets_get_image_id(assets_get_group_id("Areldir", "Roadblocks"), "roadblock"); // If can't find roadblocks asset, extra assets not installed properly
     window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : (missing_assets ? MESSAGE_MISSING_EXTRA_ASSETS : MESSAGE_NONE)));
     return 1;
 }
@@ -132,7 +132,7 @@ static int reload_language(int is_editor, int reload_images)
         errlog("unable to load font graphics");
         return 0;
     }
-    if (!image_load_climate(CLIMATE_CENTRAL, is_editor, reload_images)) {
+    if (!image_load_climate(scenario_property_climate(), is_editor, reload_images)) {
         errlog("unable to load main graphics");
         return 0;
     }
