@@ -667,6 +667,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY_REQUIRED, "A Lighthouse is mandatory in your city to choose a sea trade policy"},
     {TR_TOOLTIP_HOLD_GAME, "Hold the game"},
     {TR_TOOLTIP_NO_GAME, "Do not hold the games"},
+    {TR_WARNING_NEARBY_WOLF, "Cannot build when wolves are nearby"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -50,7 +50,7 @@ struct reservoir_info {
 };
 
 struct cycle {
-    int rotations_to_next; 
+    int rotations_to_next;
     int array[MAX_CYCLE_SIZE];
 };
 
@@ -781,7 +781,7 @@ void building_construction_update(int x, int y, int grid_offset)
     data.cost_preview = current_cost;
 }
 
-static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
+static figure_type nearby_enemy_type(int x_start, int y_start, int x_end, int y_end)
 {
     for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
@@ -792,18 +792,19 @@ static int has_nearby_enemy(int x_start, int y_start, int x_end, int y_end)
         } else if (f->state != FIGURE_STATE_ALIVE || !figure_is_enemy(f)) {
             continue;
         }
+        int distance = f->type == FIGURE_WOLF ? 6 : 12;
         int dx = (f->x > x_start) ? (f->x - x_start) : (x_start - f->x);
         int dy = (f->y > y_start) ? (f->y - y_start) : (y_start - f->y);
-        if (dx <= 12 && dy <= 12) {
-            return 1;
+        if (dx <= distance && dy <= distance) {
+            return f->type;
         }
         dx = (f->x > x_end) ? (f->x - x_end) : (x_end - f->x);
         dy = (f->y > y_end) ? (f->y - y_end) : (y_end - f->y);
-        if (dx <= 12 && dy <= 12) {
-            return 1;
+        if (dx <= distance && dy <= distance) {
+            return f->type;
         }
     }
-    return 0;
+    return FIGURE_NONE;
 }
 
 void building_construction_place(void)
@@ -825,7 +826,9 @@ void building_construction_place(void)
         return;
     }
 
-    if (type != BUILDING_CLEAR_LAND && has_nearby_enemy(x_start, y_start, x_end, y_end)) {
+    figure_type enemy_type = nearby_enemy_type(x_start, y_start, x_end, y_end);
+
+    if (type != BUILDING_CLEAR_LAND && enemy_type != FIGURE_NONE) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
             game_undo_restore_map(0);
         } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || building_construction_is_connecting()) {
@@ -835,7 +838,7 @@ void building_construction_place(void)
         } else {
             map_property_clear_constructing_and_deleted();
         }
-        city_warning_show(WARNING_ENEMY_NEARBY);
+        city_warning_show(enemy_type == FIGURE_WOLF ? WARNING_WOLF_NEARBY : WARNING_ENEMY_NEARBY);
         return;
     }
 

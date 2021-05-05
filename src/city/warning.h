@@ -66,6 +66,7 @@ typedef enum {
     WARNING_WAREHOUSE_BREAKIN = 72,
     WARNING_GRANARY_BREAKIN = 73,
     WARNING_THEFT = 74,
+    WARNING_WOLF_NEARBY = 75
 } warning_type;
 
 void city_warning_show(warning_type type);
@@ -77,6 +78,6 @@ const uint8_t *city_warning_get(int id);
 void city_warning_clear_all(void);
 void city_warning_clear_outdated(void);
 
-void city_warning_show_console(uint8_t * warning_text);
+void city_warning_show_console(uint8_t *warning_text);
 
 #endif // CITY_WARNING_H
