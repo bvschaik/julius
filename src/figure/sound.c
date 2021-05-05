@@ -25,6 +25,8 @@ void figure_play_die_sound(const figure *f)
             break;
         case FIGURE_ENEMY48_CHARIOT:
         case FIGURE_ENEMY52_MOUNTED_ARCHER:
+        case FIGURE_FORT_MOUNTED:
+        case FIGURE_ENEMY_CAESAR_MOUNTED:
             sound_effect_play(SOUND_EFFECT_HORSE2);
             break;
         case FIGURE_ENEMY46_CAMEL:
@@ -39,7 +41,6 @@ void figure_play_die_sound(const figure *f)
             break;
         case FIGURE_PREFECT:
         case FIGURE_FORT_JAVELIN:
-        case FIGURE_FORT_MOUNTED:
         case FIGURE_FORT_LEGIONARY:
         case FIGURE_GLADIATOR:
         case FIGURE_INDIGENOUS_NATIVE:
@@ -55,7 +56,6 @@ void figure_play_die_sound(const figure *f)
         case FIGURE_ENEMY53_AXE:
         case FIGURE_ENEMY54_GLADIATOR:
         case FIGURE_ENEMY_CAESAR_JAVELIN:
-        case FIGURE_ENEMY_CAESAR_MOUNTED:
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
             is_soldier = 1;
             break;
