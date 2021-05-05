@@ -377,7 +377,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ACCEPT_TRADE_SHIPS, "Allow trade ships to trade here"},
     {TR_BUILDING_LIGHTHOUSE, "Lighthouse"},
     {TR_BUILDING_CARAVANSERAI, "Caravanserai"},
-    {TR_BUILDING_CARAVANSERAI_DESC, "Merchant caravans take advantage of this sheltered place to rest, water and feed their animals . Land trade disruptions last half as long."},
+    {TR_BUILDING_CARAVANSERAI_DESC, "Merchant caravans take advantage of this sheltered place to rest, water and feed their animals. Land trade disruptions last half as long."},
     {TR_CARAVANSERAI_SPECIAL_ORDERS_HEADER, "Caravanserai instructions"},
     {TR_BUILDING_CARAVANSERAI_PHASE_1, "(Foundation)"},
     {TR_BUILDING_CARAVANSERAI_PHASE_1_TEXT, "Engineers dig the foundations of this future resting place."},
