@@ -33,6 +33,7 @@
 #define COOLDOWN_AFTER_CRIME_DAYS 10
 #define EXECUTIONS_GAMES_SENTIMENT_BONUS 20
 #define IMPERIAL_GAMES_SENTIMENT_BONUS 15
+#define POP_STEP_FOR_BASE_AVERAGE_HOUSE_LEVEL 625
 
 int city_sentiment(void)
 {
@@ -168,14 +169,6 @@ static int get_games_bonus(void)
 static int get_wage_sentiment_modifier(void)
 {
     int wage_differential = city_data.labor.wages - city_data.labor.wages_rome;
-    if (city_finance_treasury() <= 0) {
-        if (wage_differential > 0) {
-            wage_differential = 0;
-        }
-        if (difficulty_sentiment() <= 70 && wage_differential > -5) {
-            wage_differential = -5;
-        }
-    }
     return wage_differential * (wage_differential > 0 ? WAGE_POSITIVE_MODIFIER : WAGE_NEGATIVE_MODIFIER);
 }
 
@@ -221,7 +214,9 @@ static int get_average_housing_level(void)
     if (population) {
         avg = avg / population;
     }
-    return avg;
+    int base_average_level = population / POP_STEP_FOR_BASE_AVERAGE_HOUSE_LEVEL;
+    base_average_level = calc_bound(base_average_level, HOUSE_SMALL_TENT, HOUSE_SMALL_INSULA);
+    return avg < base_average_level ? base_average_level : avg;
 }
 
 static int house_level_sentiment_modifier(int house_level, int average)
@@ -402,8 +397,8 @@ void city_sentiment_update(void)
     int worst_sentiment = 0;
     city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NONE;
 
-    if (sentiment_contribution_unemployment < worst_sentiment) {
-        worst_sentiment = sentiment_contribution_unemployment;
+    if (-sentiment_contribution_unemployment < worst_sentiment) {
+        worst_sentiment = -sentiment_contribution_unemployment;
         city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NO_JOBS;
     }
     if (sentiment_contribution_taxes < worst_sentiment) {

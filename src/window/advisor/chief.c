@@ -91,7 +91,7 @@ static int draw_background(void)
             default: text_id = 0; break;
         }
         if (text_id) {
-            lang_text_draw(61, text_id, X_OFFSET, 106, FONT_NORMAL_GREEN);
+            lang_text_draw(61, text_id, X_OFFSET, 106, FONT_NORMAL_RED);
         }
     }
 
@@ -142,14 +142,13 @@ static int draw_background(void)
 
     // military
     draw_title(186, 5);
-    
+
     int food_text = 0;
     int food_stress = city_data.mess_hall.food_stress_cumulative;
 
     if (food_stress > 60) {
         food_text = TR_ADVISOR_LEGION_FOOD_CRITICAL;
-    }
-    else if (food_stress > 40) {
+    } else if (food_stress > 40) {
         food_text = TR_ADVISOR_LEGION_FOOD_NEEDED;
     }
     if (food_text && city_figures_soldiers() > 0) {
