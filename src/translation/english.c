@@ -671,7 +671,8 @@ static translation_string all_strings[] = {
     {TR_MARKET_TRADING, "Trading"},
     {TR_MARKET_NOT_TRADING, "Not trading"},
     {TR_TEMPLE_DISTRIBUTING, "Distributing"},
-    {TR_TEMPLE_NOT_DISTRIBUTING, "Not distributing"}
+    {TR_TEMPLE_NOT_DISTRIBUTING, "Not distributing"},
+    {TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR, "Poor overall housing prevents immigration"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

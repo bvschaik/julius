@@ -80,6 +80,7 @@ static int draw_background(void)
     } else if (city_migration_percentage() >= 80) {
         lang_text_draw(61, 25, X_OFFSET, 106, FONT_NORMAL_GREEN);
     } else {
+        int text_group = 61;
         int text_id;
         switch (city_migration_no_immigration_cause()) {
             case NO_IMMIGRATION_LOW_WAGES: text_id = 19; break;
@@ -88,10 +89,14 @@ static int draw_background(void)
             case NO_IMMIGRATION_HIGH_TAXES: text_id = 22; break;
             case NO_IMMIGRATION_MANY_TENTS: text_id = 70; break;
             case NO_IMMIGRATION_LOW_MOOD: text_id = 71; break;
+            case NO_IMMIGRATION_SQUALOR:
+                text_group = CUSTOM_TRANSLATION;
+                text_id = TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR;
+                break;
             default: text_id = 0; break;
         }
         if (text_id) {
-            lang_text_draw(61, text_id, X_OFFSET, 106, FONT_NORMAL_RED);
+            lang_text_draw(text_group, text_id, X_OFFSET, 106, FONT_NORMAL_RED);
         }
     }
 
