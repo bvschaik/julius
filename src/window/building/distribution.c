@@ -1233,10 +1233,10 @@ void window_building_draw_caravanserai(building_info_context *c)
         trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
 
         text_draw_multiline(translation_for(land_trade_policy.items[policy].header),
-            c->x_offset + 160, c->y_offset + 160, 260, FONT_NORMAL_BLACK, 0);
+            c->x_offset + 160, c->y_offset + 156, 260, FONT_NORMAL_BLACK, 0);
         if (policy != NO_POLICY) {
             text_draw_multiline(translation_for(land_trade_policy.items[policy].desc),
-                c->x_offset + 160, c->y_offset + 185, 260, FONT_NORMAL_BLACK, 0);
+                c->x_offset + 160, c->y_offset + 181, 260, FONT_NORMAL_BLACK, 0);
         }
         image_draw(land_trade_policy.items[policy].image_id, c->x_offset + 32, c->y_offset + 150);
 
