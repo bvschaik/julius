@@ -257,26 +257,21 @@ static void print_society_info(void)
         avg_tax_per_house = city_finance_estimated_tax_income() / calculate_total_housing_buildings();
     }
 
-    // Housing prosperity cap
-    width = text_draw(translation_for(TR_ADVISOR_HOUSING_PROSPERITY_RATING), 75, 342, FONT_NORMAL_WHITE, 0);
-    text_draw_number(city_ratings_prosperity_max(), '@', " ", 75 + width, 342, FONT_NORMAL_WHITE);
-
     // Percent patricians
-    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES), 75, 360, FONT_NORMAL_WHITE, 0);
-    text_draw_percentage(percentage_city_population_in_villas_palaces(), 75 + width, 360, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES), 75, 342, FONT_NORMAL_WHITE, 0);
+    text_draw_percentage(percentage_city_population_in_villas_palaces(), 75 + width, 342, FONT_NORMAL_WHITE);
 
     // Percent impoverished
-    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS), 75, 378, FONT_NORMAL_WHITE, 0);
-    text_draw_percentage(percentage_city_population_in_tents_shacks(), 75 + width, 378, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS), 75, 360, FONT_NORMAL_WHITE, 0);
+    text_draw_percentage(percentage_city_population_in_tents_shacks(), 75 + width, 360, FONT_NORMAL_WHITE);
 
     // Average tax
-    width = text_draw(translation_for(TR_ADVISOR_AVERAGE_TAX), 75, 396, FONT_NORMAL_WHITE, 0);
-    text_draw_money(avg_tax_per_house, 75 + width, 396, FONT_NORMAL_WHITE);
+    width = text_draw(translation_for(TR_ADVISOR_AVERAGE_TAX), 75, 378, FONT_NORMAL_WHITE, 0);
+    text_draw_money(avg_tax_per_house, 75 + width, 378, FONT_NORMAL_WHITE);
 }
 
 static void print_census_info(void)
 {
-
     int width;
 
     // Average age
@@ -456,7 +451,9 @@ static int draw_background(void)
     image_draw(image_id, 56, 344);
     image_draw(image_id, 56, 362);
     image_draw(image_id, 56, 380);
-    image_draw(image_id, 56, 398);
+    if (graph_order < 4) {
+        image_draw(image_id, 56, 398);
+    }
 
     info_panel();
 
