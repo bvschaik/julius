@@ -98,8 +98,6 @@ void building_house_change_to_vacant_lot(building *house)
     }
 }
 
-#include "core/log.h"
-
 static void prepare_for_merge(int building_id, int num_tiles)
 {
     for (int i = 0; i < INVENTORY_MAX; i++) {
