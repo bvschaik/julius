@@ -743,7 +743,7 @@ static void draw_background(void)
     update_widgets();
 
     if (data.show_background_image) {
-        image_draw_fullscreen_background_with_borders(image_group(GROUP_INTERMEZZO_BACKGROUND) + 5);
+        image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 5);
     } else {
         window_draw_underlying_window();
     }

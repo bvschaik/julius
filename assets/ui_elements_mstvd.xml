@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
 
-<assetlist author="MSTVD" name="UI_Elements_MSTVD">
+<assetlist author="MSTVD" name="UI_Elements">
 
 <!-- Note: Button for Housing Advisor -->
-    <image id="Housing Adv UH" src="Housing_Advisor_Button_UnHover" />
-    <image id="Housing Adv H" src="Housing_Advisor_Button_Hover" />
+    <image id="Housing Advisor Button" src="Housing_Advisor_Button" />
+    <image id="Housing Advisor Button Selected" src="Housing_Advisor_Button_Selected" />
 
 
 <!-- Note: Alternate Buttons for Housing Advisor -->

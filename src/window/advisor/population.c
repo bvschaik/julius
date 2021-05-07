@@ -15,18 +15,15 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
-#include "translation/translation.h"
 #include "window/advisors.h"
 
 #define ADVISOR_HEIGHT 27
-#define HOUSING_ADVISOR_ID 19
 
 static void button_graph(int param1, int param2);
 
 static generic_button graph_buttons[] = {
     { 509,  61, 104, 55, button_graph, button_none, 0, 0 },
-    { 509, 161, 104, 55, button_graph, button_none, 1, 0 },
-    { 545, 260,  60, 51, button_graph, button_none, 0, 1 }
+    { 509, 161, 104, 55, button_graph, button_none, 1, 0 }
 };
 
 static int focus_button_id;
@@ -359,12 +356,6 @@ static void print_history_info(void)
     }
 }
 
-static void draw_housing_button(int full_size, int x, int y)
-{
-    image_draw_isometric_footprint(image_group(29) + 2, x, y, COLOR_MASK_NONE);
-    image_draw_isometric_top(image_group(29) + 2, x, y, COLOR_MASK_NONE);
-}
-
 static int draw_background(void)
 {
     int width;
@@ -391,7 +382,6 @@ static int draw_background(void)
     void (*big_graph)(int, int, int);
     void (*top_graph)(int, int, int);
     void (*bot_graph)(int, int, int);
-    void (*housing_button)(int, int, int);
     void (*info_panel)();
 
     switch (graph_order) {
@@ -403,7 +393,6 @@ static int draw_background(void)
             big_graph = draw_history_graph;
             top_graph = draw_census_graph;
             bot_graph = draw_society_graph;
-            housing_button = draw_housing_button;
             info_panel = print_history_info;
             break;
         case 1:
@@ -413,7 +402,6 @@ static int draw_background(void)
             big_graph = draw_history_graph;
             top_graph = draw_society_graph;
             bot_graph = draw_census_graph;
-            housing_button = draw_housing_button;
             info_panel = print_history_info;
             break;
         case 2:
@@ -423,7 +411,6 @@ static int draw_background(void)
             big_graph = draw_census_graph;
             top_graph = draw_history_graph;
             bot_graph = draw_society_graph;
-            housing_button = draw_housing_button;
             info_panel = print_census_info;
             break;
         case 3:
@@ -433,7 +420,6 @@ static int draw_background(void)
             big_graph = draw_census_graph;
             top_graph = draw_society_graph;
             bot_graph = draw_history_graph;
-            housing_button = draw_housing_button;
             info_panel = print_census_info;
             break;
         case 4:
@@ -443,7 +429,6 @@ static int draw_background(void)
             big_graph = draw_society_graph;
             top_graph = draw_history_graph;
             bot_graph = draw_census_graph;
-            housing_button = draw_housing_button;
             info_panel = print_society_info;
             break;
         case 5:
@@ -453,12 +438,10 @@ static int draw_background(void)
             big_graph = draw_society_graph;
             top_graph = draw_census_graph;
             bot_graph = draw_history_graph;
-            housing_button = draw_housing_button;
             info_panel = print_society_info;
             break;
     }
 
-    text_draw_centered(translation_for(TR_HEADER_HOUSING), 545, 315, 61, FONT_NORMAL_BLACK, 0);
     lang_text_draw_centered(55, big_text, 60, 295, 400, FONT_NORMAL_BLACK);
     lang_text_draw_centered(55, top_text, 504, 130, 100, FONT_NORMAL_BLACK);
     lang_text_draw_centered(55, bot_text, 504, 230, 100, FONT_NORMAL_BLACK);
@@ -466,7 +449,6 @@ static int draw_background(void)
     big_graph(1, 70, 64);
     top_graph(0, 511, 63);
     bot_graph(0, 511, 163);
-    housing_button(0, 545, 275);
 
     // info panel
     inner_panel_draw(48, 336, 34, 5);
@@ -488,19 +470,12 @@ static void draw_foreground(void)
     if (focus_button_id == 0) {
         button_border_draw(507, 60, 106, 57, 0);
         button_border_draw(507, 160, 106, 57, 0);
-        button_border_draw(545, 260, 60, 51, 0);
     } else if (focus_button_id == 1) {
         button_border_draw(507, 60, 106, 57, 1);
         button_border_draw(507, 160, 106, 57, 0);
-        button_border_draw(545, 260, 60, 51, 0);
     } else if (focus_button_id == 2) {
         button_border_draw(507, 60, 106, 57, 0);
         button_border_draw(507, 160, 106, 57, 1);
-        button_border_draw(545, 260, 60, 51, 0);
-    } else if (focus_button_id == 3) {
-        button_border_draw(507, 60, 106, 57, 0);
-        button_border_draw(507, 160, 106, 57, 0);
-        button_border_draw(545, 260, 60, 51, 1);
     }
 }
 
@@ -513,33 +488,28 @@ static void button_graph(int param1, int param2)
 {
     int new_order;
 
-    if (param2) {
-        // go to housing advisor
-        window_advisors_show_advisor(HOUSING_ADVISOR_ID);
-    } else {
-        switch (city_population_graph_order()) {
-            default:
-            case 0:
-                new_order = param1 ? 5 : 2;
-                break;
-            case 1:
-                new_order = param1 ? 3 : 4;
-                break;
-            case 2:
-                new_order = param1 ? 4 : 0;
-                break;
-            case 3:
-                new_order = param1 ? 1 : 5;
-                break;
-            case 4:
-                new_order = param1 ? 2 : 1;
-                break;
-            case 5:
-                new_order = param1 ? 0 : 3;
-                break;
-        }
-        city_population_set_graph_order(new_order);
+    switch (city_population_graph_order()) {
+        default:
+        case 0:
+            new_order = param1 ? 5 : 2;
+            break;
+        case 1:
+            new_order = param1 ? 3 : 4;
+            break;
+        case 2:
+            new_order = param1 ? 4 : 0;
+            break;
+        case 3:
+            new_order = param1 ? 1 : 5;
+            break;
+        case 4:
+            new_order = param1 ? 2 : 1;
+            break;
+        case 5:
+            new_order = param1 ? 0 : 3;
+            break;
     }
+    city_population_set_graph_order(new_order);
 
     window_invalidate();
 }
@@ -548,8 +518,6 @@ static void get_tooltip_text(advisor_tooltip_result *r)
 {
     if (focus_button_id && focus_button_id < 3) {
         r->text_id = 111;
-    } else if (focus_button_id && focus_button_id == 3) {
-        r->translation_key = TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON;
     }
 }
 

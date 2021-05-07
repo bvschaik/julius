@@ -1067,9 +1067,8 @@ void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color)
     }
 }
 
-void image_draw_fullscreen_background(int image_id)
+static inline void draw_fullscreen_background(int image_id)
 {
-    graphics_clear_screens();
     int s_width = screen_width();
     int s_height = screen_height();
     const image *img = image_get(image_id);
@@ -1084,10 +1083,8 @@ void image_draw_fullscreen_background(int image_id)
     }
 }
 
-void image_draw_fullscreen_background_with_borders(int image_id)
+static inline void draw_fullscreen_borders(void)
 {
-    image_draw_fullscreen_background(image_id);
-
     int width = screen_width();
     int height = screen_height();
     int image_base = image_group(GROUP_EMPIRE_PANELS);
@@ -1109,6 +1106,13 @@ void image_draw_fullscreen_background_with_borders(int image_id)
     image_draw(image_base + 2, 0, height - 16);
     image_draw(image_base + 2, width - 16, 0);
     image_draw(image_base + 2, width - 16, height - 16);
+}
+
+void image_draw_fullscreen_background(int image_id)
+{
+    graphics_clear_screens();
+    draw_fullscreen_background(image_id);
+    draw_fullscreen_borders();
 }
 
 void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask)

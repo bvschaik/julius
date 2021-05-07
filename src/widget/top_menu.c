@@ -1,6 +1,7 @@
 #include "top_menu.h"
 
 #include "building/construction.h"
+#include "city/constants.h"
 #include "city/finance.h"
 #include "city/population.h"
 #include "core/lang.h"
@@ -83,19 +84,19 @@ static menu_item menu_help[] = {
 };
 
 static menu_item menu_advisors[] = {
-    {4, 1, menu_advisors_go_to, 1},
-    {4, 2, menu_advisors_go_to, 2},
-    {4, 3, menu_advisors_go_to, 3},
-    {4, 4, menu_advisors_go_to, 4},
-    {4, 5, menu_advisors_go_to, 5},
-    {4, 6, menu_advisors_go_to, 6},
-    {CUSTOM_TRANSLATION, TR_HEADER_HOUSING, menu_advisors_go_to, 19},
-    {4, 7, menu_advisors_go_to, 7},
-    {4, 8, menu_advisors_go_to, 8},
-    {4, 9, menu_advisors_go_to, 9},
-    {4, 10, menu_advisors_go_to, 10},
-    {4, 11, menu_advisors_go_to, 11},
-    {4, 12, menu_advisors_go_to, 12},
+    {4, 1, menu_advisors_go_to, ADVISOR_LABOR},
+    {4, 2, menu_advisors_go_to, ADVISOR_MILITARY},
+    {4, 3, menu_advisors_go_to, ADVISOR_IMPERIAL},
+    {4, 4, menu_advisors_go_to, ADVISOR_RATINGS},
+    {4, 5, menu_advisors_go_to, ADVISOR_TRADE},
+    {4, 6, menu_advisors_go_to, ADVISOR_POPULATION},
+    {CUSTOM_TRANSLATION, TR_HEADER_HOUSING, menu_advisors_go_to, ADVISOR_HOUSING},
+    {4, 7, menu_advisors_go_to, ADVISOR_HEALTH},
+    {4, 8, menu_advisors_go_to, ADVISOR_EDUCATION},
+    {4, 9, menu_advisors_go_to, ADVISOR_ENTERTAINMENT},
+    {4, 10, menu_advisors_go_to, ADVISOR_RELIGION},
+    {4, 11, menu_advisors_go_to, ADVISOR_FINANCIAL},
+    {4, 12, menu_advisors_go_to, ADVISOR_CHIEF},
 };
 
 static menu_bar_item menu[] = {

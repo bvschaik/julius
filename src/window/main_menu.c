@@ -58,7 +58,7 @@ static void draw_version_string(void)
 
 static void draw_background(void)
 {
-    image_draw_fullscreen_background_with_borders(image_group(GROUP_INTERMEZZO_BACKGROUND));
+    image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND));
 
     graphics_in_dialog();
     if (!data.logo_image_id) {

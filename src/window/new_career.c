@@ -42,7 +42,7 @@ static void init(void)
 
 static void draw_background(void)
 {
-    image_draw_fullscreen_background_with_borders(image_group(GROUP_MAIN_MENU_BACKGROUND));
+    image_draw_fullscreen_background(image_group(GROUP_MAIN_MENU_BACKGROUND));
 }
 
 static void draw_foreground(void)
