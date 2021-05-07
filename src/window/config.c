@@ -1,5 +1,6 @@
 #include "config.h"
 
+#include "city/view.h"
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/dir.h"
@@ -1199,6 +1200,7 @@ static int config_set_city_sounds_volume(config_key key)
 static int config_change_zoom(config_key key)
 {
     config_change_basic(key);
+    city_view_set_scale(100);
     if (!system_reload_textures()) {
         window_plain_message_dialog_show(TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE,
             TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE, 1);
