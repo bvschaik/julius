@@ -21,7 +21,8 @@
 void menu_file_new_map(int param);
 static void menu_file_load_map(int param);
 static void menu_file_save_map(int param);
-static void menu_file_exit_editor(int param);
+static void menu_file_exit_to_menu(int param);
+static void menu_file_exit_game(int param);
 
 static void menu_options_general(int param);
 
@@ -38,7 +39,8 @@ static menu_item menu_file[] = {
     {7, 1, menu_file_new_map, 0},
     {7, 2, menu_file_load_map, 0},
     {7, 3, menu_file_save_map, 0},
-    {7, 4, menu_file_exit_editor, 0},
+    {CUSTOM_TRANSLATION, TR_BUTTON_BACK_TO_MAIN_MENU, menu_file_exit_to_menu, 0},
+    {1, 5, menu_file_exit_game, 0}
 };
 
 static menu_item menu_options[] = {
@@ -61,7 +63,7 @@ static menu_item menu_empire[] = {
 };
 
 static menu_bar_item menu[] = {
-    {7, menu_file, 4},
+    {7, menu_file, 5},
     {2, menu_options, 1},
     {3, menu_help, 2},
     {10, menu_resets, 3},
@@ -202,7 +204,7 @@ static void menu_file_save_map(int param)
     window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
 }
 
-static void menu_file_confirm_exit(int accepted, int checked)
+static void menu_file_confirm_exit_to_menu(int accepted, int checked)
 {
     if (accepted) {
         game_exit_editor();
@@ -211,15 +213,30 @@ static void menu_file_confirm_exit(int accepted, int checked)
     }
 }
 
-static void menu_file_exit_editor(int param)
+static void menu_file_exit_to_menu(int param)
 {
     clear_state();
     window_editor_map_show();
     if (scenario_is_saved()) {
         game_exit_editor();
     } else {
-        window_popup_dialog_show(POPUP_DIALOG_EDITOR_QUIT_WITHOUT_SAVING, menu_file_confirm_exit, 1);
+        window_popup_dialog_show(POPUP_DIALOG_EDITOR_QUIT_WITHOUT_SAVING, menu_file_confirm_exit_to_menu, 1);
     }
+}
+
+static void menu_file_confirm_exit_game(int accepted, int checked)
+{
+    if (accepted) {
+        system_exit();
+    } else {
+        window_editor_map_show();
+    }
+}
+
+static void menu_file_exit_game(int param)
+{
+    clear_state();
+    window_popup_dialog_show(POPUP_DIALOG_QUIT, menu_file_confirm_exit_game, 1);
 }
 
 static void menu_options_general(int param)
