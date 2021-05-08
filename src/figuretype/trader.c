@@ -1024,55 +1024,77 @@ void figure_trade_ship_action(figure *f)
     f->image_id = image_group(GROUP_FIGURE_SHIP) + dir;
 }
 
-static int trade_policy_factor(int land_trader)
+int figure_trade_land_trade_units()
 {
-    int trade_percent = 0;
+    int unit = 8;
 
-    if (land_trader && building_monument_working(BUILDING_CARAVANSERAI)) {
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_MERCURY)) {
+        int add_unit = 0;
+        int monument_id = building_monument_has_monument(BUILDING_GRAND_TEMPLE_MERCURY);
+        building *b = building_get(monument_id);
+
+        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+        if (pct_workers >= 100) { // full laborers
+            add_unit = 4;
+        } else if (pct_workers > 0) {
+            add_unit = 2;
+        }
+        unit += add_unit;
+    }
+
+    if (building_monument_working(BUILDING_CARAVANSERAI)) {
         building *b = building_get(city_buildings_get_caravanserai());
 
         trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
 
+        int add_unit = 0;
         if (building_caravanserai_enough_foods(b) && policy == TRADE_POLICY_3) {
             int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
             if (pct_workers >= 100) { // full laborers
-                trade_percent = POLICY_3_BONUS_PERCENT; // caravan capacity increase by 50%
+                add_unit = POLICY_3_BONUS; // caravan capacity increase by +2
             } else if (pct_workers > 0) {
-                trade_percent = POLICY_3_BONUS_PERCENT / 2; // caravan capacity increase by 25%
+                add_unit = POLICY_3_BONUS / 2; // caravan capacity increase by +1
             }
         }
-    } else if (!land_trader && building_monument_working(BUILDING_LIGHTHOUSE)) {
-        trade_policy policy = city_trade_policy_get(SEA_TRADE_POLICY);
-        if (policy == TRADE_POLICY_3) {
-            building *b = building_get(building_find(BUILDING_LIGHTHOUSE));
-
-            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-            if (pct_workers >= 100) { // full laborers
-                trade_percent = POLICY_3_BONUS_PERCENT; // ships capacity increase by 50%
-            } else if (pct_workers > 0) {
-                trade_percent = POLICY_3_BONUS_PERCENT / 2; // ships capacity increase by 25%
-            }
-        }
+        unit += add_unit;
     }
-    return trade_percent;
-}
-
-int figure_trade_land_trade_units()
-{
-    int unit = 8;
-    if (building_monument_working(BUILDING_GRAND_TEMPLE_MERCURY)) {
-        unit = 12;
-    }
-    return unit + calc_adjust_with_percentage(8, trade_policy_factor(1));
+    return unit;
 }
 
 int figure_trade_sea_trade_units()
 {
     int unit = 12;
     if (building_monument_working(BUILDING_GRAND_TEMPLE_MERCURY)) {
-        unit = 16;
+        int add_unit = 0;
+        building *b = building_get(building_find(BUILDING_GRAND_TEMPLE_MERCURY));
+
+        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+        if (pct_workers >= 100) { // full laborers
+            add_unit = 6;
+        } else if (pct_workers > 0) {
+            add_unit = 3;
+        }
+        unit += add_unit;
     }
-    return unit + calc_adjust_with_percentage(12, trade_policy_factor(0));
+
+    if (building_monument_working(BUILDING_LIGHTHOUSE)) {
+        trade_policy policy = city_trade_policy_get(SEA_TRADE_POLICY);
+
+        int add_unit = 0;
+        if (policy == TRADE_POLICY_3) {
+            building *b = building_get(building_find(BUILDING_LIGHTHOUSE));
+
+            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+            if (pct_workers >= 100) { // full laborers
+                add_unit = POLICY_3_BONUS;
+            } else if (pct_workers > 0) {
+                add_unit = POLICY_3_BONUS / 2;
+            }
+        }
+        unit += add_unit;
+    }
+
+    return unit;
 }
 
 int figure_trader_ship_docked_once_at_dock(figure *ship, int dock_id)
