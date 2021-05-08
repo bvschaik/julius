@@ -99,4 +99,15 @@
 <!-- Note: UI icon to show when item is being stockpiled -->
     <image id="Store Icon" src="Store_Icon" />
 
+<!-- Note: Blank advisor buttons for use as templates -->
+    <image id="Adv_B_Blank_UH" width="40" height="40">
+		<layer group="128" image="9" x="0" y="0" />
+        <layer src="Advisor_Button_UH" x="0" y="0" />
+    </image>	
+    <image id="Adv_B_Blank_H" width="40" height="40">
+		<layer group="128" image="22" x="0" y="0" />
+        <layer src="Advisor_Button_H" x="0" y="0" />
+    </image>	
+
+
 </assetlist>
