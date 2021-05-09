@@ -319,6 +319,23 @@ static void draw_military_panel_background(int x_offset)
     draw_military_info_buttons(x_offset, Y_OFFSET_PANEL_START);
 }
 
+static void draw_legion_buttons(int x_offset, int y_offset)
+{
+    int num_legions = formation_get_num_legions();
+    if (num_legions > 1) {
+        arrow_buttons_draw(x_offset, y_offset, buttons_cycle_legion, 2);
+    }
+    const formation *m = formation_get(data.active_legion.formation_id);
+    if (m->num_figures) {
+        draw_layout_buttons(x_offset, y_offset + Y_OFFSET_LAYOUT_BUTTONS, 0, m);
+        for (int i = 0; i < 3; i++) {
+            button_border_draw(x_offset + buttons_bottom[i].x, y_offset + Y_OFFSET_BOTTOM_BUTTONS,
+                30, 30, data.bottom_buttons_focus_id == i + 1);
+        }
+    }
+
+}
+
 static void draw_background(int x_offset)
 {
     image_draw(image_group(GROUP_SIDE_PANEL) + 1, x_offset, 24);
@@ -326,9 +343,11 @@ static void draw_background(int x_offset)
     lang_text_draw_centered(61, 5, x_offset, 32, 117, FONT_NORMAL_GREEN);
     widget_minimap_draw(x_offset + 8, 59, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
     draw_military_panel_background(x_offset);
+    draw_legion_buttons(x_offset, Y_OFFSET_PANEL_START);
     int extra_height = sidebar_extra_draw_background(x_offset, MILITARY_PANEL_HEIGHT,
         SIDEBAR_EXPANDED_WIDTH, sidebar_common_get_height() - MILITARY_PANEL_HEIGHT + TOP_MENU_HEIGHT,
         0, SIDEBAR_EXTRA_DISPLAY_ALL);
+    sidebar_extra_draw_foreground();
 
     sidebar_common_draw_relief(x_offset, MILITARY_PANEL_HEIGHT + extra_height, GROUP_SIDE_PANEL, 0);
 }
@@ -354,18 +373,7 @@ static void draw_military_panel_foreground(int x_offset)
     if (has_legion_changed(&data.active_legion, m)) {
         draw_military_panel_background(x_offset);
     }
-    int y_offset = Y_OFFSET_PANEL_START;
-    int num_legions = formation_get_num_legions();
-    if (num_legions > 1) {
-        arrow_buttons_draw(x_offset, y_offset, buttons_cycle_legion, 2);
-    }
-    if (m->num_figures) {
-        draw_layout_buttons(x_offset, y_offset + Y_OFFSET_LAYOUT_BUTTONS, 0, m);
-        for (int i = 0; i < 3; i++) {
-            button_border_draw(x_offset + buttons_bottom[i].x, y_offset + Y_OFFSET_BOTTOM_BUTTONS,
-                30, 30, data.bottom_buttons_focus_id == i + 1);
-        }
-    }
+    draw_legion_buttons(x_offset, Y_OFFSET_PANEL_START);
 }
 
 static void draw_foreground(int x_offset)

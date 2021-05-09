@@ -437,7 +437,7 @@ static void handle_mouse(const mouse *m)
 {
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
-    zoom_map(m);    
+    zoom_map(m);
     building_construction_reset_draw_as_constructing();
     if (m->left.went_down) {
         if (handle_legion_click(tile)) {
@@ -522,6 +522,10 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
         if (t->has_started) {
             data.capture_input = 1;
         }
+        const touch *last = touch_get_latest();
+        if (last->in_use) {
+            handle_touch_zoom(t, last);
+        }
         handle_touch_scroll(t);
         if (t->has_ended) {
             data.capture_input = 0;
@@ -534,6 +538,7 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
         window_city_show();
     } else {
         update_city_view_coords(m->x, m->y, tile);
+        zoom_map(m);
         if ((!m->is_touch && m->left.went_down)
             || (m->is_touch && m->left.went_up && touch_was_click(touch_get_earliest()))) {
             military_map_click(legion_formation_id, tile);

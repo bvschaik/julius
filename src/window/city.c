@@ -536,7 +536,7 @@ int window_city_military_is_cursor_in_menu(void)
     }
     const mouse *m = mouse_get();
     int x, y, width, height;
-    city_view_get_scaled_viewport(&x, &y, &width, &height);
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
     return m->x < x || m->x >= width || m->y < y || m->y >= height;
 }
 
