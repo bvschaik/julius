@@ -622,7 +622,7 @@ static translation_string all_strings[] = {
     {TR_BUTTON_HALT_MONUMENT_CONSTRUCTION, "Halt construction" },
     {TR_BUTTON_RESUME_MONUMENT_CONSTRUCTION, "Resume construction" },
     {TR_RESOURCE_FISH, "Fish" },
-    {TR_WARNING_VARIANT_TOGGLE, "Press the rotation key to cycle through variants of this building"},
+    {TR_WARNING_VARIANT_TOGGLE, "Press the rotation key to cycle variants of this building"},
     {TR_BUILDING_SCHOOL_UPGRADE_DESC, "This school is operational. Local development allowed your citizens to expand the building, providing space for more children."},
     {TR_BUILDING_THEATRE_UPGRADE_DESC, "This theater is operational. Local development allowed your citizens to expand the building, providing more seating." },
     {TR_BUILDING_LIBRARY_UPGRADE_DESC, "This library is operational. Local development allowed your citizens to expand the building, providing additional scrolls and reading nooks." },
