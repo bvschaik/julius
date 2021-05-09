@@ -1550,11 +1550,25 @@ static void spawn_figure_architect_guild(building *b)
 
 static void spawn_figure_mess_hall(building *b)
 {
-    int spawn_delay = 7;
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
+        int spawn_delay;
+        int pct_workers = worker_percentage(b);
+        if (pct_workers >= 100) {
+            spawn_delay = 7;
+        } else if (pct_workers >= 75) {
+            spawn_delay = 15;
+        } else if (pct_workers >= 50) {
+            spawn_delay = 29;
+        } else if (pct_workers >= 25) {
+            spawn_delay = 44;
+        } else if (pct_workers >= 1) {
+            spawn_delay = 59;
+        } else {
+            return;
+        }
         spawn_mess_hall_supplier(b, road.x, road.y, 1);
         if (b->figure_id) {
             b->figure_spawn_delay++;
