@@ -156,16 +156,16 @@ int model_load(void)
 
 const model_building MODEL_ROADBLOCK = {40,0,0,0,0};
 const model_building MODEL_WORK_CAMP = { 150,-10,2,3,4,20 };
-const model_building MODEL_ARCHITECT_GUILD = { 150,-8,1,2,4,12 };
+const model_building MODEL_ARCHITECT_GUILD = { 200,-8,1,2,4,12 };
 const model_building MODEL_GRAND_TEMPLE_CERES = { 2500,20,2,-4,5,50 };
 const model_building MODEL_GRAND_TEMPLE_NEPTUNE = { 2500,20,2,-4,5,50 };
 const model_building MODEL_GRAND_TEMPLE_MERCURY = { 2500,20,2,-4,5,50 };
 const model_building MODEL_GRAND_TEMPLE_MARS = { 2500,20,2,-4,5,50 };
 const model_building MODEL_GRAND_TEMPLE_VENUS = { 2500,20,2,-4,5,50 };
 const model_building MODEL_PANTHEON = { 3500,20,2,-4,5,50 };
-const model_building MODEL_LIGHTHOUSE = { 1250,6,1,-1,4,30 };
+const model_building MODEL_LIGHTHOUSE = { 1250,6,1,-1,4,20 };
 const model_building MODEL_MESS_HALL = { 100,-8,1,2,4,10 };
-const model_building MODEL_TAVERN = { 25,-2,1,1,6,8 };
+const model_building MODEL_TAVERN = { 40,-2,1,1,6,8 };
 const model_building MODEL_GRAND_GARDEN = { 400,0,0,0,0,0 };
 const model_building MODEL_ARENA = { 500,-3,1,1,3,25 };
 const model_building MODEL_COLOSSEUM = { 1500,-3,1,1,3,100 };
@@ -175,8 +175,8 @@ const model_building MODEL_LARARIUM = { 150, 4, 1, 1, 3, 0 };
 const model_building MODEL_NYMPHAEUM = {500,12,2,-1,6,0};
 const model_building MODEL_SMALL_MAUSOLEUM = {500,-8,2,2,5,0};
 const model_building MODEL_LARGE_MAUSOLEUM = {1500,-10,2,2,6,0};
-const model_building MODEL_WATCHTOWER = {100,-6,1,2,3,5,};
-const model_building MODEL_CARAVANSERAI = { 500,-10,2,3,4,10 };
+const model_building MODEL_WATCHTOWER = {100,-6,1,2,3,8,};
+const model_building MODEL_CARAVANSERAI = { 500,-10,2,3,4,20 };
 
 const model_building *model_get_building(building_type type)
 {
