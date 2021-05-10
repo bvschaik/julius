@@ -347,4 +347,20 @@
     <image index="136" id="C Garden Wall 10" src="Garden_Wall_A_Intersection_04" />
     <image index="137" id="C Garden Wall 11" src="Garden_Wall_A_Intersection_4w" />
 
+<!-- Note: Assets for 'Garden wall gate' with rotation variant -->
+    <image index="138" id="Garden Gate" >
+        <layer src="Garden_Gate" />
+        <animation speed="1" x="0" y="0" reversible="false">
+            <frame src="Garden_Gate_Top" />
+        </animation>
+    </image>
+
+    <image index="139" id="Garden Gate R" >
+        <layer src="Garden_Gate_R" />
+        <animation speed="1" x="0" y="0" reversible="false">
+            <frame src="Garden_Gate_R_Top" />
+        </animation>
+    </image>
+
+
 </assetlist>
