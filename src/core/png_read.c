@@ -81,7 +81,7 @@ int png_get_image_size(const char *path, int *width, int *height)
     return 1;
 }
 
-int png_read(const char *path, color_t *pixels)
+int png_read(const char *path, color_t *pixels, int width, int height)
 {
     if (!load_png(path)) {
         return 0;
@@ -102,9 +102,19 @@ int png_read(const char *path, color_t *pixels)
     }
     png_read_update_info(data.png_ptr, data.info_ptr);
 
-    int width = png_get_image_width(data.png_ptr, data.info_ptr);
-    int height = png_get_image_height(data.png_ptr, data.info_ptr);
-    row = malloc(sizeof(png_byte) * width * BYTES_PER_PIXEL);
+    int image_width = png_get_image_width(data.png_ptr, data.info_ptr);
+    int image_height = png_get_image_height(data.png_ptr, data.info_ptr);
+    int width_padding = 0;
+
+    if (width > image_width) {
+        width_padding = width - image_width;
+        width = image_width;
+    }
+    if (height > image_height) {
+        height = image_height;
+    }
+
+    row = malloc(sizeof(png_byte) * image_width * BYTES_PER_PIXEL);
     if (!row) {
         log_error("Unable to load png file. Out of memory", 0, 0);
         unload_png();
@@ -122,6 +132,7 @@ int png_read(const char *path, color_t *pixels)
             dst++;
             src += BYTES_PER_PIXEL;
         }
+        dst += width_padding;
     }
     free(row);
     unload_png();

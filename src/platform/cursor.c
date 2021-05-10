@@ -1,5 +1,7 @@
 #include "cursor.h"
 
+#include "core/config.h"
+#include "core/png_read.h"
 #include "game/system.h"
 #include "graphics/color.h"
 #include "input/cursor.h"
@@ -9,6 +11,9 @@
 #include "platform/vita/vita.h"
 
 #include "SDL.h"
+
+static char cursor_path[64] = "Areldir/Color_Cursors/";
+static int cursor_path_offset;
 
 static struct {
     SDL_Cursor *cursors[CURSOR_MAX];
@@ -28,17 +33,53 @@ static const color_t mouse_colors[] = {
     ALPHA_OPAQUE | COLOR_WHITE
 };
 
-static SDL_Surface *generate_cursor_surface(const cursor *c)
+static SDL_Surface *get_surface_from_png(const cursor *c)
+{
+    if (!config_get(CONFIG_SCREEN_COLOR_CURSORS)) {
+        return 0;
+    }
+    if (!cursor_path_offset) {
+        cursor_path_offset = strlen(cursor_path);
+    }
+    strncpy(cursor_path + cursor_path_offset, c->png_path, 64 - cursor_path_offset);
+    int width, height;
+    if (!png_get_image_size(cursor_path, &width, &height)) {
+        return 0;
+    }
+    int size = platform_cursor_get_texture_size(width, height);
+    SDL_Surface *cursor_surface =
+        SDL_CreateRGBSurface(0, size, size, 32,
+        COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
+    color_t *pixels = cursor_surface->pixels;
+    SDL_memset(pixels, 0, sizeof(color_t) * size * size);
+    if (!png_read(cursor_path, pixels, size, size)) {
+        SDL_FreeSurface(cursor_surface);
+        return 0;
+    }
+    return cursor_surface;
+}
+
+static SDL_Surface *get_surface_from_memory(const cursor *c)
 {
     int size = platform_cursor_get_texture_size(c->width, c->height);
     SDL_Surface *cursor_surface =
-        SDL_CreateRGBSurface(0, size, size, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+        SDL_CreateRGBSurface(0, size, size, 32,
+        COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
     color_t *pixels = cursor_surface->pixels;
     SDL_memset(pixels, 0, sizeof(color_t) * size * size);
     for (int y = 0; y < c->height; y++) {
         for (int x = 0; x < c->width; x++) {
             pixels[y * size + x] = mouse_colors[c->data[y * c->width + x] - 32];
         }
+    }
+    return cursor_surface;
+}
+
+static SDL_Surface *generate_cursor_surface(const cursor *c)
+{
+    SDL_Surface *cursor_surface = get_surface_from_png(c);
+    if (!cursor_surface) {
+        cursor_surface = get_surface_from_memory(c);
     }
     return cursor_surface;
 }
@@ -97,7 +138,7 @@ cursor_scale platform_cursor_get_current_scale(void)
 int platform_cursor_get_texture_size(int width, int height)
 {
     int size = 32;
-    while (size <= width || size <= height) {
+    while (size < width || size < height) {
         size *= 2;
     }
     return size;

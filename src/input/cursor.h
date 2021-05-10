@@ -13,7 +13,7 @@ typedef enum {
 typedef enum {
     CURSOR_SCALE_1 = 0,
     CURSOR_SCALE_1_5 = 1,
-    CURSOR_SCALE_2 = 2,
+    CURSOR_SCALE_2 = 2
 } cursor_scale;
 
 typedef struct {
@@ -21,6 +21,7 @@ typedef struct {
     int hotspot_y;
     int width;
     int height;
+    const char *png_path;
     const char *data;
 } cursor;
 

@@ -171,6 +171,7 @@ static config_widget all_widgets[CONFIG_PAGES][MAX_WIDGETS] = {
         {TYPE_NUMERICAL_RANGE, RANGE_DISPLAY_SCALE, 0, display_text_display_scale},
         {TYPE_NUMERICAL_DESC, RANGE_CURSOR_SCALE, TR_CONFIG_CURSOR_SCALE},
         {TYPE_NUMERICAL_RANGE, RANGE_CURSOR_SCALE, 0, display_text_cursor_scale},
+        {TYPE_CHECKBOX, CONFIG_SCREEN_COLOR_CURSORS, TR_CONFIG_USE_COLOR_CURSORS, 0, 5},
         {TYPE_SPACE, TR_CONFIG_AUDIO},
         {TYPE_HEADER, TR_CONFIG_AUDIO, 0, 0, 5},
         {TYPE_CHECKBOX, CONFIG_GENERAL_ENABLE_AUDIO, TR_CONFIG_ENABLE_AUDIO, 0, 5},
@@ -309,6 +310,7 @@ static struct {
     int active_numerical_range;
     int show_background_image;
     int has_changes;
+    int reload_cursors;
     color_t *graphics_behind_tab[CONFIG_PAGES];
 } data;
 
@@ -321,7 +323,7 @@ static int config_change_game_speed(config_key key);
 static int config_change_fullscreen(config_key key);
 static int config_change_display_resolution(config_key key);
 static int config_change_display_scale(config_key key);
-static int config_change_cursor_scale(config_key key);
+static int config_change_cursors(config_key key);
 
 static int config_enable_audio(config_key key);
 static int config_set_master_volume(config_key key);
@@ -347,7 +349,8 @@ static inline void set_custom_config_changes(void)
     data.config_values[CONFIG_ORIGINAL_FULLSCREEN].change_action = config_change_fullscreen;
     data.config_values[CONFIG_ORIGINAL_WINDOWED_RESOLUTION].change_action = config_change_display_resolution;
     data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].change_action = config_change_display_scale;
-    data.config_values[CONFIG_SCREEN_CURSOR_SCALE].change_action = config_change_cursor_scale;
+    data.config_values[CONFIG_SCREEN_CURSOR_SCALE].change_action = config_change_cursors;
+    data.config_values[CONFIG_SCREEN_COLOR_CURSORS].change_action = config_change_cursors;
 
     data.config_values[CONFIG_ORIGINAL_GAME_SPEED].change_action = config_change_game_speed;
     data.config_values[CONFIG_GENERAL_ENABLE_AUDIO].change_action = config_enable_audio;
@@ -1078,10 +1081,18 @@ static int config_change_display_scale(config_key key)
     return 1;
 }
 
-static int config_change_cursor_scale(config_key key)
+static void restart_cursors(void)
+{
+    if (data.reload_cursors) {
+        system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
+        data.reload_cursors = 0;
+    }
+}
+
+static int config_change_cursors(config_key key)
 {
     config_change_basic(key);
-    system_init_cursors(data.config_values[key].new_value);
+    data.reload_cursors = 1;
     return 1;
 }
 
@@ -1287,6 +1298,7 @@ static int apply_changed_configs(void)
             }
         }
     }
+    restart_cursors();
     return 1;
 }
 

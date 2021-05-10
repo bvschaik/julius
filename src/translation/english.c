@@ -43,6 +43,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_WINDOWED_RESOLUTION, "Windowed resolution:"},
     {TR_CONFIG_DISPLAY_SCALE, "Display scale:"},
     {TR_CONFIG_CURSOR_SCALE, "Cursor scale:"},
+    {TR_CONFIG_USE_COLOR_CURSORS, "Use colored cursors"},
     {TR_CONFIG_AUDIO, "Audio Options"},
     {TR_CONFIG_VOLUME, "Volume"},
     {TR_CONFIG_ENABLE_AUDIO, "Enable audio"},

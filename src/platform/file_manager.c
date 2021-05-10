@@ -236,7 +236,7 @@ int platform_file_manager_list_directory_contents(
 #else
         current_dir = set_dir_name(dir);
 #endif
-        }
+    }
 #ifdef __ANDROID__
     int match = android_get_directory_contents(current_dir, type, extension, callback);
 #elif defined(USE_FILE_CACHE)
@@ -295,7 +295,7 @@ int platform_file_manager_list_directory_contents(
         free_dir_name(current_dir);
     }
     return match;
-    }
+}
 
 int platform_file_manager_should_case_correct_file(void)
 {
@@ -355,7 +355,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 
 FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
 {
-    const char *cased_asset_path = dir_get_asset(assets_directory, asset);
+    const char *cased_asset_path = dir_get_asset(get_assets_directory(), asset);
     return fopen(cased_asset_path, mode);
 }
 
@@ -382,7 +382,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 
 FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
 {
-    const char *cased_asset_path = dir_get_asset(assets_directory, asset);
+    const char *cased_asset_path = dir_get_asset(get_assets_directory(), asset);
 
     wchar_t *wfile = utf8_to_wchar(cased_asset_path);
     wchar_t *wmode = utf8_to_wchar(mode);
@@ -438,7 +438,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
     }
 #endif
     return fopen(filename, mode);
-    }
+}
 
 int platform_file_manager_remove_file(const char *filename)
 {
@@ -450,7 +450,7 @@ int platform_file_manager_remove_file(const char *filename)
 
 FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
 {
-    const char *cased_asset_path = dir_get_asset(assets_directory, asset);
+    const char *cased_asset_path = dir_get_asset(get_assets_directory(), asset);
     return fopen(cased_asset_path, mode);
 }
 #endif
