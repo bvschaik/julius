@@ -12,6 +12,8 @@
 
 #include "SDL.h"
 
+#include <string.h>
+
 static char cursor_path[64] = "Areldir/Color_Cursors/";
 static int cursor_path_offset;
 
