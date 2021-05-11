@@ -9,6 +9,7 @@
 #include "city/message.h"
 #include "city/military.h"
 #include "city/trade.h"
+#include "city/trade_policy.h"
 #include "core/calc.h"
 #include "empire/city.h"
 #include "figure/figure.h"
@@ -523,12 +524,18 @@ static int mess_hall_consume_food(void)
     return total_consumed;
 }
 
-static int canvaserai_consume_food(void)
+static int caravanserai_consume_food(void)
 {
     if (!building_monument_working(BUILDING_CARAVANSERAI)) {
         return 0;
     }
     int food_required = trade_caravan_count() * FOOD_PER_TRADER_MONTHLY;
+
+    trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
+
+    if (policy == TRADE_POLICY_3) { // consume 20% more
+        food_required = calc_adjust_with_percentage(food_required, 100 + POLICY_3_MALUS_PERCENT);
+    }
 
     int total_consumed = 0;
     building *b = building_first_of_type(BUILDING_CARAVANSERAI);
@@ -558,6 +565,7 @@ static int canvaserai_consume_food(void)
             b->data.market.inventory[i] -= amount_for_type;
         }
     }
+
     if (food_required > total_food_in_caravanserai) {
         total_consumed += total_food_in_caravanserai;
         city_data.caravanserai.total_food = 0;
@@ -574,7 +582,7 @@ void city_resource_consume_food(void)
     calculate_available_food();
     city_data.resource.food_types_eaten = 0;
 
-    int total_consumed = house_consume_food() + mess_hall_consume_food() + canvaserai_consume_food();
+    int total_consumed = house_consume_food() + mess_hall_consume_food() + caravanserai_consume_food();
 
     if (city_military_total_soldiers_in_city() > 0 && !city_data.building.mess_hall_building_id &&
         !city_data.mess_hall.missing_mess_hall_warning_shown) {

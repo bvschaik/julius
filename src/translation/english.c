@@ -392,7 +392,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_CARAVANSERAI_POLICY_2_TITLE, "Consilium emptor terrae" },
     {TR_BUILDING_CARAVANSERAI_POLICY_2, "Landed buyer's policy: Land imports are 20% cheaper, but land exports earn 10% less." },
     {TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, "Consilium quantitas terrae" },
-    {TR_BUILDING_CARAVANSERAI_POLICY_3, "Landed quantity policy: Trade caravans carry 4 goods more, but move 10% slower." },
+    {TR_BUILDING_CARAVANSERAI_POLICY_3, "Landed quantity policy: Trade caravans carry 4 goods more, but consume 20% more food in the Caravanserai." },
     {TR_BUILDING_LIGHTHOUSE_PHASE_1, "(Foundation)" },
     {TR_BUILDING_LIGHTHOUSE_PHASE_2, "(Pedestal)" },
     {TR_BUILDING_LIGHTHOUSE_PHASE_3, "(Tower)" },
@@ -411,7 +411,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LIGHTHOUSE_POLICY_2_TITLE, "Consilium emptor maritimae" },
     {TR_BUILDING_LIGHTHOUSE_POLICY_2, "Maritime buyer's policy: Sea imports are 20% cheaper, but sea exports earn 10% less." },
     {TR_BUILDING_LIGHTHOUSE_POLICY_3_TITLE, "Consilium quantitas maritimae" },
-    {TR_BUILDING_LIGHTHOUSE_POLICY_3, "Maritime quantity policy: Ships carry 4 goods more, but move 10% slower." },
+    {TR_BUILDING_LIGHTHOUSE_POLICY_3, "Maritime quantity policy: Ships carry 4 goods more, but the Lighthouse consumes 20% more timber." },
     {TR_EDITOR_ALLOWED_BUILDINGS_MONUMENTS, "Monuments"},
     {TR_CITY_MESSAGE_TEXT_LIGHTHOUSE_COMPLETE, "The completed lighthouse; a mighty tower of stone, looms over the horizon. May its firey beacon guide ships safely home until the end of time." },
     {TR_CITY_MESSAGE_TEXT_PANTHEON_COMPLETE, "The Pantheon is completed. It stands unrivaled as a monument to the awesome power of the gods and people of Rome." },
@@ -673,7 +673,8 @@ static translation_string all_strings[] = {
     {TR_MARKET_NOT_TRADING, "Not trading"},
     {TR_TEMPLE_DISTRIBUTING, "Distributing"},
     {TR_TEMPLE_NOT_DISTRIBUTING, "Not distributing"},
-    {TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR, "Squalid housing and slums prevent immigration"}
+    {TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR, "Squalid housing and slums prevent immigration"},
+    {TR_FIGURE_TYPE_LIGHTHOUSE_SUPPLIER, "Lighthouse keeper"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

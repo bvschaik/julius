@@ -2,6 +2,7 @@
 
 #include "building/caravanserai.h"
 #include "building/count.h"
+#include "building/lighthouse.h"
 #include "building/monument.h"
 #include "city/constants.h"
 #include "core/config.h"
@@ -32,7 +33,7 @@ void city_trade_update(void)
     }
     if (city_data.trade.sea_trade_problem_duration > 0) {
         city_data.trade.sea_trade_problem_duration--;
-        if (building_monument_working(BUILDING_LIGHTHOUSE)) {
+        if (building_lighthouse_is_fully_functional()) {
             city_data.trade.sea_trade_problem_duration--;
         }
     } 

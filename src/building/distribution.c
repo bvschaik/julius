@@ -138,3 +138,34 @@ int building_distribution_get_inventory_storages(inventory_storage_info *info, b
     }
     return 0;
 }
+
+int building_distribution_get_raw_material_storages(inventory_storage_info *info, building_type type,
+                                                 int road_network, int x, int y, int max_distance)
+{
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        info[i].min_distance = max_distance;
+        info[i].building_id = 0;
+    }
+
+    int permission = BUILDING_STORAGE_PERMISSION_MARKET;
+
+    for (building *b = building_first_of_type(BUILDING_WAREHOUSE); b; b = b->next_of_type) {
+        if (type && is_invalid_destination(b, permission, road_network)) {
+            continue;
+        }
+        int distance = calc_maximum_distance(x, y, b->x, b->y);
+
+        update_good_resource(&info[RESOURCE_IRON], RESOURCE_IRON, b, distance);
+        update_good_resource(&info[RESOURCE_TIMBER], RESOURCE_TIMBER, b, distance);
+        update_good_resource(&info[RESOURCE_CLAY], RESOURCE_CLAY, b, distance);
+        update_good_resource(&info[RESOURCE_MARBLE], RESOURCE_MARBLE, b, distance);
+    }
+
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        if (info[i].building_id) {
+            return 1;
+        }
+    }
+    return 0;
+}
+

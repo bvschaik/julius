@@ -95,7 +95,7 @@ typedef struct {
     unsigned char height_adjusted_ticks;
     unsigned char current_height;
     unsigned char target_height;
-    unsigned char collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
+    unsigned char collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen or lighthouse supplier
     unsigned char trade_ship_failed_dock_attempts;
     unsigned char phrase_sequence_exact;
     signed char phrase_id;

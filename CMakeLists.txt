@@ -276,6 +276,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/house_service.c
     ${PROJECT_SOURCE_DIR}/src/building/image_context.c
     ${PROJECT_SOURCE_DIR}/src/building/industry.c
+    ${PROJECT_SOURCE_DIR}/src/building/lighthouse.c
     ${PROJECT_SOURCE_DIR}/src/building/list.c
     ${PROJECT_SOURCE_DIR}/src/building/maintenance.c
     ${PROJECT_SOURCE_DIR}/src/building/market.c

@@ -118,22 +118,32 @@ static int take_resource_from_generic_building(figure *f, int building_id)
     return 1;
 }
 
-static int take_resource_from_warehouse(figure *f, int warehouse_id)
+static int take_resource_from_warehouse(figure *f, int warehouse_id, int max_amount)
 {
-    if (f->collecting_item_id < INVENTORY_MIN_GOOD || f->collecting_item_id >= INVENTORY_MAX_GOOD) {
-        return 0;
+    int lighthouse_supplier = f->type == FIGURE_LIGHTHOUSE_SUPPLIER;
+    int resource;
+    if (lighthouse_supplier) {
+        resource = f->collecting_item_id;
+        if (f->collecting_item_id < RESOURCE_MIN_RAW || f->collecting_item_id >= RESOURCE_MAX_RAW) {
+            return 0;
+        }
+    } else {
+        resource = resource_from_inventory(f->collecting_item_id);
+        if (f->collecting_item_id < INVENTORY_MIN_GOOD || f->collecting_item_id >= INVENTORY_MAX_GOOD) {
+            return 0;
+        }
     }
-    int resource = resource_from_inventory(f->collecting_item_id);
+
     building *warehouse = building_get(warehouse_id);
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return take_resource_from_generic_building(f, warehouse_id);
     }
     int num_loads;
     int stored = building_warehouse_get_amount(warehouse, resource);
-    if (stored < 2) {
+    if (stored < max_amount) {
         num_loads = stored;
     } else {
-        num_loads = 2;
+        num_loads = max_amount;
     }
     if (num_loads <= 0) {
         return 0;
@@ -141,10 +151,12 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     building_warehouse_remove_resource(warehouse, resource, num_loads);
 
     // create delivery boys
-    int supplier_id = f->id;
-    int boy1 = figure_supplier_create_delivery_boy(supplier_id, supplier_id, FIGURE_DELIVERY_BOY);
-    if (num_loads > 1) {
-        figure_supplier_create_delivery_boy(boy1, supplier_id, FIGURE_DELIVERY_BOY);
+    if (!lighthouse_supplier) {
+        int supplier_id = f->id;
+        int boy1 = figure_supplier_create_delivery_boy(supplier_id, supplier_id, FIGURE_DELIVERY_BOY);
+        if (num_loads > 1) {
+            figure_supplier_create_delivery_boy(boy1, supplier_id, FIGURE_DELIVERY_BOY);
+        }
     }
     return 1;
 }
@@ -218,7 +230,8 @@ void figure_supplier_action(figure *f)
                 f->wait_ticks = 0;
                 int id = f->id;
                 if (f->collecting_item_id > 3) {
-                    if (!take_resource_from_warehouse(f, f->destination_building_id)) {
+                    int max_amount = f->type == FIGURE_LIGHTHOUSE_SUPPLIER ? 1 : 2;
+                    if (!take_resource_from_warehouse(f, f->destination_building_id, max_amount)) {
                         f->state = FIGURE_STATE_DEAD;
                     }
                 } else {
@@ -249,6 +262,9 @@ void figure_supplier_action(figure *f)
         case FIGURE_ACTION_146_SUPPLIER_RETURNING:
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
+                if (f->direction == DIR_FIGURE_AT_DESTINATION && f->type == FIGURE_LIGHTHOUSE_SUPPLIER) {
+                    building_get(f->building_id)->loads_stored += 100;
+                }
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
@@ -267,6 +283,15 @@ void figure_supplier_action(figure *f)
         } else {
             f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep NE 01") + dir * 12 +
                 f->image_offset;
+        }
+    } else if (f->type == FIGURE_LIGHTHOUSE_SUPPLIER) {
+        int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
+        if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"),
+                                              "Slave death 01") + figure_image_corpse_offset(f);
+        } else {
+            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"),
+                                              "Slave NE 01") + dir * 12 + f->image_offset;
         }
     } else {
         figure_image_update(f, image_group(GROUP_FIGURE_MARKET_LADY));

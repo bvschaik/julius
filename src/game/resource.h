@@ -32,7 +32,9 @@ typedef enum {
     RESOURCE_MIN = 1,
     RESOURCE_MAX = 16,
     RESOURCE_MIN_FOOD = 1,
-    RESOURCE_MAX_FOOD = 7
+    RESOURCE_MAX_FOOD = 7,
+    RESOURCE_MIN_RAW = 9,
+    RESOURCE_MAX_RAW = 13
 } resource_type;
 
 typedef enum {

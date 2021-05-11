@@ -4,6 +4,7 @@
 #include "building/caravanserai.h"
 #include "building/dock.h"
 #include "building/granary.h"
+#include "building/lighthouse.h"
 #include "building/model.h"
 #include "building/monument.h"
 #include "building/warehouse.h"
@@ -45,28 +46,6 @@ static int trader_bonus_speed(void)
     }
 }
 
-// Caravanserai Trade Policy base malus to trader speed
-static int trader_malus_speed(void)
-{
-    int malus = 0;
-
-    if (building_monument_working(BUILDING_CARAVANSERAI)) {
-        building *b = building_get(city_buildings_get_caravanserai());
-        trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
-
-        if (building_caravanserai_enough_foods(b) && policy == TRADE_POLICY_3) {
-            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-            if (pct_workers >= 100) { // full laborers
-                malus = POLICY_3_MALUS_PERCENT; // caravan speed decrease by 15%
-            } else if (pct_workers > 0) {
-                malus = POLICY_3_MALUS_PERCENT / 2; // caravan speed decrease by 7.5%
-            }
-        }
-    }
-
-    return malus;
-}
-
 // Neptune Grand Temple base bonus to trader speed
 static int sea_trader_bonus_speed(void)
 {
@@ -75,28 +54,6 @@ static int sea_trader_bonus_speed(void)
     } else {
         return 0;
     }
-}
-
-// Lighthouse Trade Policy base malus to trader speed
-static int sea_trader_malus_speed(void)
-{
-    int malus = 0;
-
-    if (building_monument_working(BUILDING_LIGHTHOUSE)) {
-        building *b = building_get(building_find(BUILDING_LIGHTHOUSE));
-        int policy = building_monument_module_type(BUILDING_LIGHTHOUSE);
-
-        if (policy == TRADE_POLICY_3) {
-            int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-            if (pct_workers >= 100) { // full laborers
-                malus = POLICY_3_MALUS_PERCENT; // ships speed decrease by 15%
-            } else if (pct_workers > 0) {
-                malus = POLICY_3_MALUS_PERCENT / 2; // ships speed decrease by 7.5%
-            }
-        }
-    }
-
-    return malus;
 }
 
 int figure_create_trade_caravan(int x, int y, int city_id)
@@ -495,7 +452,7 @@ static int trader_image_id()
 
 void figure_trade_caravan_action(figure *f)
 {
-    int move_speed = trader_bonus_speed() - trader_malus_speed();
+    int move_speed = trader_bonus_speed();
 
     f->is_ghost = 0;
     f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
@@ -604,7 +561,7 @@ void figure_trade_caravan_action(figure *f)
 
 void figure_trade_caravan_donkey_action(figure *f)
 {
-    int move_speed = trader_bonus_speed() - trader_malus_speed();
+    int move_speed = trader_bonus_speed();
 
     f->is_ghost = 0;
     f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
@@ -636,7 +593,7 @@ void figure_trade_caravan_donkey_action(figure *f)
 
 void figure_native_trader_action(figure *f)
 {
-    int move_speed = trader_bonus_speed() - trader_malus_speed();
+    int move_speed = trader_bonus_speed();
 
     f->is_ghost = 0;
     f->terrain_usage = TERRAIN_USAGE_ANY;
@@ -824,7 +781,7 @@ static int get_best_dock_destination(figure *f)
 
 void figure_trade_ship_action(figure *f)
 {
-    int move_speed = sea_trader_bonus_speed() - sea_trader_malus_speed();
+    int move_speed = sea_trader_bonus_speed();
     f->is_ghost = 0;
     f->is_boat = 1;
     figure_image_increase_offset(f, 12);
@@ -1042,18 +999,18 @@ int figure_trade_land_trade_units()
         unit += add_unit;
     }
 
-    if (building_monument_working(BUILDING_CARAVANSERAI)) {
+    if (building_caravanserai_is_fully_functional()) {
         building *b = building_get(city_buildings_get_caravanserai());
 
         trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
 
         int add_unit = 0;
-        if (building_caravanserai_enough_foods(b) && policy == TRADE_POLICY_3) {
+        if (policy == TRADE_POLICY_3) {
             int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
             if (pct_workers >= 100) { // full laborers
-                add_unit = POLICY_3_BONUS; // caravan capacity increase by +2
+                add_unit = POLICY_3_BONUS;
             } else if (pct_workers > 0) {
-                add_unit = POLICY_3_BONUS / 2; // caravan capacity increase by +1
+                add_unit = POLICY_3_BONUS / 2;
             }
         }
         unit += add_unit;
@@ -1077,7 +1034,7 @@ int figure_trade_sea_trade_units()
         unit += add_unit;
     }
 
-    if (building_monument_working(BUILDING_LIGHTHOUSE)) {
+    if (building_lighthouse_is_fully_functional()) {
         trade_policy policy = city_trade_policy_get(SEA_TRADE_POLICY);
 
         int add_unit = 0;

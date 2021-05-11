@@ -91,6 +91,7 @@ static const figure_properties properties[] = {
     {4,  12,   0,   0,   0,   0,   0},
     {4,  12,   0,   0,   0,   0,   0},
     {1,  20,   0,   0,   0,   0,   0},
+    {1,  20,   0,   0,   0,   0,   0}
 };
 
 const figure_properties *figure_properties_for_type(figure_type type)

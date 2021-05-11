@@ -1,4 +1,5 @@
 #include "building/caravanserai.h"
+#include "building/lighthouse.h"
 #include "building/model.h"
 #include "building/monument.h"
 #include "city/buildings.h"
@@ -37,13 +38,9 @@ static int trade_percentage_from_laborers(int percent, building *b)
 static int trade_get_caravanserai_factor(int percent)
 {
     int caravanserai_percent = 0;
-    if (building_monument_working(BUILDING_CARAVANSERAI)) {
+    if (building_caravanserai_is_fully_functional()) {
         building *b = building_get(city_buildings_get_caravanserai());
-
-        // caravanserai has enough food for the month
-        if (building_caravanserai_enough_foods(b)) {
-            caravanserai_percent = trade_percentage_from_laborers(percent, b);
-        }
+        caravanserai_percent = trade_percentage_from_laborers(percent, b);
     }
     return caravanserai_percent;
 }
@@ -52,7 +49,7 @@ static int trade_get_lighthouse_factor(int percent)
 {
     int lighthouse_percent = 0;
 
-    if (building_monument_working(BUILDING_LIGHTHOUSE)) {
+    if (building_lighthouse_is_fully_functional()) {
         building *b = building_get(building_find(BUILDING_LIGHTHOUSE));
         lighthouse_percent = trade_percentage_from_laborers(percent, b);
     }

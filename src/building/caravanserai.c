@@ -81,7 +81,6 @@ int building_caravanserai_is_fully_functional(void)
 
     building *b = building_get(city_buildings_get_caravanserai());
 
-
     if (building_caravanserai_enough_foods(b)) {
         return 1;
     } else {

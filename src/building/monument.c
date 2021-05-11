@@ -697,7 +697,7 @@ void building_monument_initialize(building *b)
 					break;
 				case 5:
 					map_building_tiles_add(b->id, b->x, b->y, b->size,
-						assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse ON"),
+						assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse OFF"),
 						TERRAIN_BUILDING);
 					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
@@ -808,18 +808,18 @@ void building_monument_initialize(building *b)
 				case MONUMENT_START:
 					break;
 				case 2:
-					switch (scenario_property_climate()) {
-						case CLIMATE_DESERT:
-							map_building_tiles_add(b->id, b->x, b->y, b->size,
-								assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S ON"),
-								TERRAIN_BUILDING);
-							break;
-						default:
-							map_building_tiles_add(b->id, b->x, b->y, b->size,
-								assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N ON"),
-								TERRAIN_BUILDING);
-							break;
-					}
+                    switch (scenario_property_climate()) {
+                        case CLIMATE_DESERT:
+                            map_building_tiles_add(b->id, b->x, b->y, b->size,
+                                                   assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S ON"),
+                                                   TERRAIN_BUILDING);
+                            break;
+                        default:
+                            map_building_tiles_add(b->id, b->x, b->y, b->size,
+                                                   assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N ON"),
+                                                   TERRAIN_BUILDING);
+                            break;
+                    }
 					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 				default:

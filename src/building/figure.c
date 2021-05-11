@@ -5,6 +5,7 @@
 #include "building/caravanserai.h"
 #include "building/granary.h"
 #include "building/industry.h"
+#include "building/lighthouse.h"
 #include "building/market.h"
 #include "building/mess_hall.h"
 #include "building/model.h"
@@ -808,6 +809,27 @@ static void spawn_caravanserai_supplier(building *b, int x, int y)
     send_supplier_to_destination(f, dst_building_id);
 }
 
+static void spawn_lighthouse_supplier(building *b, int x, int y)
+{
+    if (b->figure_id2) {
+        figure *f = figure_get(b->figure_id2);
+        if (f->state != FIGURE_STATE_ALIVE ||
+            (f->type != FIGURE_LIGHTHOUSE_SUPPLIER && f->type != FIGURE_LABOR_SEEKER)) {
+            b->figure_id2 = 0;
+        }
+        return;
+    }
+    int dst_building_id = building_lighthouse_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_LIGHTHOUSE_SUPPLIER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    b->figure_id2 = f->id;
+    f->collecting_item_id = RESOURCE_TIMBER; // Raw Resource
+    send_supplier_to_destination(f, dst_building_id);
+}
+
 static void set_bathhouse_graphic(building *b)
 {
     if (b->state != BUILDING_STATE_IN_USE) {
@@ -1092,7 +1114,6 @@ static void spawn_figure_grand_temple_mars(building *b)
             if (!has_figure_of_type(b, FIGURE_PRIEST)) {
                 create_roaming_figure(b, road.x, road.y, FIGURE_PRIEST);
             }
-
         }
 
         // Pantheon Module 1 Bonus
@@ -1606,6 +1627,15 @@ static void spawn_figure_lighthouse(building *b)
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
+        int spawn_delay = default_spawn_delay(b);
+        if (!spawn_delay) {
+            return;
+        }
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            spawn_lighthouse_supplier(b, road.x, road.y);
+        }
     }
 }
 

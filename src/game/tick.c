@@ -9,6 +9,7 @@
 #include "building/house_population.h"
 #include "building/house_service.h"
 #include "building/industry.h"
+#include "building/lighthouse.h"
 #include "building/maintenance.h"
 #include "building/warehouse.h"
 #include "city/culture.h"
@@ -116,6 +117,9 @@ static void advance_day(void)
     }
     if (game_time_day() == 0 || game_time_day() == 8) {
         city_sentiment_update();
+    }
+    if (game_time_day() == 0 || game_time_day() == 7) {
+        building_lighthouse_consume_timber();
     }
     tutorial_on_day_tick();
 }

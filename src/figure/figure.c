@@ -79,6 +79,7 @@ void figure_delete(figure *f)
         case FIGURE_BARKEEP_SUPPLIER:
         case FIGURE_MESS_HALL_SUPPLIER:
         case FIGURE_CARAVANSERAI_SUPPLIER:
+        case FIGURE_LIGHTHOUSE_SUPPLIER:
             if (f->building_id && f->id == b->figure_id2) {
                 b->figure_id2 = 0;
             } else if (f->building_id && f->id == b->figure_id) {

@@ -327,9 +327,18 @@ static int market_supplier_phrase(figure *f)
 {
     if (f->action_state == FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE) {
         return 7;
-    } else if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING &&
-        resource_from_inventory(f->collecting_item_id) != RESOURCE_NONE) {
-        return 8;
+    } else if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING) {
+        int resource;
+        if (f->type == FIGURE_LIGHTHOUSE_SUPPLIER) {
+            resource = f->collecting_item_id;
+        } else {
+            resource = resource_from_inventory(f->collecting_item_id);
+        }
+        if (resource != RESOURCE_NONE) {
+            return 8;
+        } else {
+            return -1;
+        }
     } else {
         return -1;
     }
@@ -557,6 +566,7 @@ static int phrase_based_on_figure_state(figure *f)
             return market_trader_phrase(f);
         case FIGURE_MARKET_SUPPLIER:
         case FIGURE_CARAVANSERAI_SUPPLIER:
+        case FIGURE_LIGHTHOUSE_SUPPLIER:
             return market_supplier_phrase(f);
         case FIGURE_CART_PUSHER:
             return cart_pusher_phrase(f);

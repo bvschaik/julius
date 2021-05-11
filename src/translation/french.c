@@ -43,6 +43,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_WINDOWED_RESOLUTION, "Résolution:"},
     {TR_CONFIG_DISPLAY_SCALE, "Mise à l'échelle de l'affichage :"},
     {TR_CONFIG_CURSOR_SCALE, "Taille du curseur de souris :"},
+    {TR_CONFIG_USE_COLOR_CURSORS, "Utiliser un cursor coloré"},
     {TR_CONFIG_AUDIO, "Options audio"},
     {TR_CONFIG_VOLUME, "Volume"},
     {TR_CONFIG_ENABLE_AUDIO, "Activer l'audio"},
@@ -322,7 +323,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_TRADE_NO_LIMIT, "Sans limite"},
     {TR_ADVISOR_TRADE_IMPORTABLE, "Importable"},
     {TR_ADVISOR_TRADE_EXPORTABLE, "Exportable"},
-    {TR_ADVISOR_TRADE_NO_BUYERS, "Aucun acheteur pour cette resource"},
+    {TR_ADVISOR_TRADE_NO_BUYERS, "Aucun acheteur pour cette ressource"},
     {TR_ADVISOR_TRADE_NO_SELLERS, "Aucun vendeur pour cette ressource"},
     {TR_ADVISOR_TRADE_NOT_IMPORTING, "Ne pas importer"},
     {TR_ADVISOR_TRADE_NOT_EXPORTING, "Ne pas exporter"},
@@ -391,7 +392,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_CARAVANSERAI_POLICY_2_TITLE, "Consilium acquisitionem terrae" },
     {TR_BUILDING_CARAVANSERAI_POLICY_2, "Les caravanes vendent leurs biens 20% moins cher, mais vos exportations terrestres vous rapportent 10% de moins." },
     {TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, "Consilium quantitas terrae" },
-    {TR_BUILDING_CARAVANSERAI_POLICY_3, "Les caravanes peuvent porter 4 biens de plus, mais se déplacent 10% mois vite." },
+    {TR_BUILDING_CARAVANSERAI_POLICY_3, "Les caravanes peuvent porter 4 biens de plus, mais consomment 20% plus de nourriture dans le Caravansérail." },
     {TR_BUILDING_LIGHTHOUSE_PHASE_1, "(Fondations)"},
     {TR_BUILDING_LIGHTHOUSE_PHASE_2, "(Piédestal)"},
     {TR_BUILDING_LIGHTHOUSE_PHASE_3, "(Tour)"},
@@ -410,7 +411,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LIGHTHOUSE_POLICY_2_TITLE, "Consilium emptor maritimae" },
     {TR_BUILDING_LIGHTHOUSE_POLICY_2, "Les navires marchants vendent leurs biens 20% moins cher, mais vos exportations maritimes vous rapportent 10% de moins." },
     {TR_BUILDING_LIGHTHOUSE_POLICY_3_TITLE, "Consilium quantitas maritimae" },
-    {TR_BUILDING_LIGHTHOUSE_POLICY_3, "Les navires marchants peuvent emporter 4 biens de plus, mais se déplacent 10% mois vite." },
+    {TR_BUILDING_LIGHTHOUSE_POLICY_3, "Les navires marchants peuvent emporter 4 biens de plus, mais le phare consomme 20% plus de bois." },
     {TR_EDITOR_ALLOWED_BUILDINGS_MONUMENTS, "Monuments"},
     {TR_CITY_MESSAGE_TEXT_LIGHTHOUSE_COMPLETE, "Le phare achevé, une puissante tour de pierre, se profile à l'horizon. Que sa lumière guide les navires jusqu'à la fin des temps."},
     {TR_CITY_MESSAGE_TEXT_PANTHEON_COMPLETE, "Le Panthéon est achevé. Il trône inégalé en tant que monument dédié à la puissance impressionnante des dieux et du peuple de Rome."},
@@ -671,7 +672,9 @@ static translation_string all_strings[] = {
     {TR_MARKET_TRADING, "Commercer"},
     {TR_MARKET_NOT_TRADING, "Ne pas commercer"},
     {TR_TEMPLE_DISTRIBUTING, "Distribuer"},
-    {TR_TEMPLE_NOT_DISTRIBUTING, "Ne pas distribuer"}
+    {TR_TEMPLE_NOT_DISTRIBUTING, "Ne pas distribuer"},
+    {TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR, "Des logements sordides et des bidonvilles empêchent l'immigration"},
+    {TR_FIGURE_TYPE_LIGHTHOUSE_SUPPLIER, "Gardien du phare"}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)

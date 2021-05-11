@@ -977,8 +977,17 @@ void window_building_draw_lighthouse(building_info_context *c)
     building *b = building_get(c->building_id);
     if (b->data.monument.phase == MONUMENT_FINISHED) {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_TIMBER, c->x_offset + 22, c->y_offset + 46);
+        int width = lang_text_draw(125, 12, c->x_offset + 50, c->y_offset + 50, FONT_NORMAL_BLACK);
+        if (b->loads_stored < 1) {
+            lang_text_draw_amount(8, 10, 0, c->x_offset + 50 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
+        } else {
+            lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 50 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
+        }
+
         text_draw_multiline(translation_for(TR_BUILDING_LIGHTHOUSE_BONUS_DESC),
-            c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+            c->x_offset + 22, c->y_offset + 70, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
 
         if (!sea_trade_policy.items[0].image_id) {
             int base_policy_image = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
