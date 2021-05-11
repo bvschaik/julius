@@ -17,8 +17,9 @@ cursor_scale platform_cursor_get_current_scale(void);
 
 /**
  * Gets the current cursor texture size as a power of two
+ * @param c The cursor info struct
  * @return The cursor size as a power of two
  */
-int platform_cursor_get_texture_size(int width, int height);
+int platform_cursor_get_texture_size(const cursor *c);
 
 #endif // PLATFORM_CURSOR_H

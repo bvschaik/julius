@@ -404,7 +404,7 @@ static void draw_software_mouse_cursor(void)
         cursor_shape current_cursor_shape = platform_cursor_get_current_shape();
         const cursor *c = input_cursor_data(current_cursor_shape, platform_cursor_get_current_scale());
         if (c) {
-            int size = platform_cursor_get_texture_size(c->width, c->height);
+            int size = platform_cursor_get_texture_size(c);
             size = calc_adjust_with_percentage(size, calc_percentage(100, scale_percentage));
             SDL_Rect dst;
             dst.x = mouse->x - c->hotspot_x;
@@ -471,7 +471,7 @@ void platform_screen_generate_mouse_cursor_texture(int cursor_id, int scale, con
         SDL.cursors[cursor_id] = 0;
     }
     const cursor *c = input_cursor_data(cursor_id, scale);
-    int size = platform_cursor_get_texture_size(c->width, c->height);
+    int size = platform_cursor_get_texture_size(c);
     SDL.cursors[cursor_id] = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC,
         size, size);
