@@ -187,11 +187,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, "Land and sea traders have an additional 50% capacity. Land traders move 25% faster." },
     {TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Trains soldiers like a barracks. Four extra forts may be built." },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "City gardens, statues, and temples glow with increased beauty, increasing their desirability. Houses stock more goods and devolve more slowly." },
-    {TR_BUILDING_PANTHEON_BONUS_DESC, "Provides access to all gods. Holds annual festivals and reduces temple levies by 25%." },
+    {TR_BUILDING_PANTHEON_BONUS_DESC, "Provides access to all gods. Holds annual festivals and reduces religious and cultural building levies by 25%." }, // Note to translators: This one changed from the previous version, please update.
     {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, "Priests reduce food consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, "Temples produce charioteers for the hippodrome." },
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, "Priests reduce pottery and furniture consumption by 20%." },
-    {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, "Temples generate food, in an amount based on the number of houses they cover, and deliver it to the supply post." },
+    {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, "Temples generate food, in an amount based on the number of houses they cover, and deliver it to the supply post. Fort levies reduced by 25%." }, // Note to translators: This one changed from the previous version, please update.
     {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, "The Grand temple produces wine in a quantity scaled to city population with Venus temple access. Temples collect and distribute it to houses and taverns." },
     {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_2_DESC, "Priests collect and distribute both oil and one food type from city storage." },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_2_DESC, "Priests expand housing capacity by 5%. Grand temple provides water like a filled reservoir." },
