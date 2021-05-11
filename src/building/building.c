@@ -532,25 +532,25 @@ int building_get_levy(const building *b)
     if (building_monument_working(BUILDING_PANTHEON) &&
         ((b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) ||
         (b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) ||
-        b->type == BUILDING_ORACLE || b->type == BUILDING_NYMPHAEUM || b->type == BUILDING_COLOSSEUM || b->type == BUILDING_HIPPODROME)) {
+        b->type == BUILDING_ORACLE || b->type == BUILDING_NYMPHAEUM || b->type == BUILDING_SMALL_MAUSOLEUM ||
+        b->type == BUILDING_LARGE_MAUSOLEUM)) {
         levy = (levy / 4) * 3;
     }
 
     // Mars module 1 bonus
     if (building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
         switch (b->type) {
-        case BUILDING_FORT_JAVELIN:
-        case BUILDING_FORT_MOUNTED:
-        case BUILDING_FORT_LEGIONARIES:
-            levy = (levy / 4) * 3;
-            break;
-        default:
-            break;
+            case BUILDING_FORT_JAVELIN:
+            case BUILDING_FORT_MOUNTED:
+            case BUILDING_FORT_LEGIONARIES:
+                levy = (levy / 4) * 3;
+                break;
+            default:
+                break;
         }
     }
 
     return difficulty_adjust_levies(levy);
-
 }
 
 int building_get_tourism(const building *b)
