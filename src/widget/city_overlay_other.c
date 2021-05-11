@@ -480,7 +480,7 @@ static void draw_sentiment_values(int x, int y, int grid_offset)
 const city_overlay *city_overlay_for_sentiment(void)
 {
     static city_overlay overlay = {
-        OVERLAY_DESIRABILITY,
+        OVERLAY_SENTIMENT,
         COLUMN_COLOR_GREEN,
         show_building_sentiment,
         show_figure_none,

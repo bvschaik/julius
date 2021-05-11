@@ -10,7 +10,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "translation//translation.h"
+#include "translation/translation.h"
 #include "window/city.h"
 
 #define MENU_X_OFFSET 170
