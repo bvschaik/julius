@@ -492,16 +492,18 @@ static int mess_hall_consume_food(void)
     }
 
     city_data.mess_hall.total_food = total_food_in_mess_hall;
-    if (!food_required || !total_food_in_mess_hall) {
+    if (!food_required) {
         return 0;
     }
 
-    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
-        proportionate_amount = food_required * b->data.market.inventory[i] / total_food_in_mess_hall;
-        if (proportionate_amount > 0) {
-            amount_for_type = calc_bound((int) ceil(proportionate_amount), 0, b->data.market.inventory[i]);
-            b->data.market.inventory[i] -= amount_for_type;
-            ++num_foods;
+    if (total_food_in_mess_hall > 0) {
+        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
+            proportionate_amount = food_required * b->data.market.inventory[i] / total_food_in_mess_hall;
+            if (proportionate_amount > 0) {
+                amount_for_type = calc_bound((int) ceil(proportionate_amount), 0, b->data.market.inventory[i]);
+                b->data.market.inventory[i] -= amount_for_type;
+                ++num_foods;
+            }
         }
     }
 
