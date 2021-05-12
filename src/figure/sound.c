@@ -107,6 +107,8 @@ void figure_play_hit_sound(figure_type type)
             }
             break;
         case FIGURE_FORT_JAVELIN:
+        case FIGURE_TOWER_SENTRY:
+        case FIGURE_WATCHMAN:
             if (city_sound_update_hit_soldier()) {
                 sound_effect_play(SOUND_EFFECT_LIGHT_SWORD);
             }
