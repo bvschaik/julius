@@ -209,38 +209,38 @@ int building_monument_access_point(building *b, map_point *dst)
 		case BUILDING_ORACLE:
 		case BUILDING_SMALL_MAUSOLEUM:
 		case BUILDING_HIPPODROME:
-            dst->x = b->x;
-            dst->y = b->y;
-            return 1;
-        case BUILDING_CARAVANSERAI:
-            if (dx == -2 && dy == -4) {
-                dst->x = b->x + 2;
-                dst->y = b->y + 3;
-            } else if (dx == -1 && dy == -4) {
-                dst->x = b->x + 1;
-                dst->y = b->y + 3;
-            } else if (dx == 1 && dy == -1) {
-                dst->x = b->x;
-                dst->y = b->y + 1;
-            } else if (dx == 1 && dy == -2) {
-                dst->x = b->x;
-                dst->y = b->y + 2;
-            } else if (dx == -2 && dy == 1) {
-                dst->x = b->x + 2;
-                dst->y = b->y;
-            } else if (dx == -1 && dy == 1) {
-                dst->x = b->x + 1;
-                dst->y = b->y;
-            } else if (dx == -4 && dy == -1) {
-                dst->x = b->x + 3;
-                dst->y = b->y + 1;
-            } else if (dx == -4 && dy == -2) {
-                dst->x = b->x + 3;
-                dst->y = b->y + 2;
-            } else {
-                return 0;
-            }
-            return 1;
+			dst->x = b->x;
+			dst->y = b->y;
+			return 1;
+		case BUILDING_CARAVANSERAI:
+			if (dx == -2 && dy == -4) {
+				dst->x = b->x + 2;
+				dst->y = b->y + 3;
+			} else if (dx == -1 && dy == -4) {
+				dst->x = b->x + 1;
+				dst->y = b->y + 3;
+			} else if (dx == 1 && dy == -1) {
+				dst->x = b->x;
+				dst->y = b->y + 1;
+			} else if (dx == 1 && dy == -2) {
+				dst->x = b->x;
+				dst->y = b->y + 2;
+			} else if (dx == -2 && dy == 1) {
+				dst->x = b->x + 2;
+				dst->y = b->y;
+			} else if (dx == -1 && dy == 1) {
+				dst->x = b->x + 1;
+				dst->y = b->y;
+			} else if (dx == -4 && dy == -1) {
+				dst->x = b->x + 3;
+				dst->y = b->y + 1;
+			} else if (dx == -4 && dy == -2) {
+				dst->x = b->x + 3;
+				dst->y = b->y + 2;
+			} else {
+				return 0;
+			}
+			return 1;
 	}
 	return 0;
 }
@@ -808,18 +808,18 @@ void building_monument_initialize(building *b)
 				case MONUMENT_START:
 					break;
 				case 2:
-                    switch (scenario_property_climate()) {
-                        case CLIMATE_DESERT:
-                            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                                                   assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S ON"),
-                                                   TERRAIN_BUILDING);
-                            break;
-                        default:
-                            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                                                   assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N ON"),
-                                                   TERRAIN_BUILDING);
-                            break;
-                    }
+					switch (scenario_property_climate()) {
+						case CLIMATE_DESERT:
+							map_building_tiles_add(b->id, b->x, b->y, b->size,
+								assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S ON"),
+								TERRAIN_BUILDING);
+							break;
+						default:
+							map_building_tiles_add(b->id, b->x, b->y, b->size,
+								assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N ON"),
+								TERRAIN_BUILDING);
+							break;
+					}
 					b->data.monument.phase = MONUMENT_FINISHED;
 					break;
 				default:
@@ -1215,7 +1215,7 @@ void building_monument_delivery_load_state(buffer *buf, int includes_delivery_bu
 
 int building_monument_is_construction_halted(const building *b)
 {
-	return b->state == BUILDING_STATE_MOTHBALLED;
+	return building_main(b)->state == BUILDING_STATE_MOTHBALLED;
 }
 
 int building_monument_toggle_construction_halted(building *b)
