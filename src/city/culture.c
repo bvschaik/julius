@@ -10,6 +10,13 @@
 #include "city/population.h"
 #include "core/calc.h"
 
+#define SHRINE_COVERAGE 20
+#define SMALL_TEMPLE_COVERAGE 750
+#define LARGE_TEMPLE_COVERAGE 3000
+#define ORACLE_COVERAGE 500
+#define LARGE_ORACLE_COVERAGE 750
+#define PANTHEON_COVERAGE 1500
+#define GRAND_TEMPLE_COVERAGE 5000
 
 
 static struct {
@@ -136,61 +143,61 @@ void city_culture_update_coverage(void)
     int small_mausoleums = building_count_total(BUILDING_SMALL_MAUSOLEUM);
     int large_mausoleums = building_count_total(BUILDING_LARGE_MAUSOLEUM);
     coverage.religion[GOD_CERES] = top(calc_percentage(
-        20 * shrines +
-        500 * oracles +
-        500 * small_mausoleums +
-        750 * nymphaeums +
-        750 * large_mausoleums +
-        750 * building_count_active(BUILDING_SMALL_TEMPLE_CERES) +
-        1500 * building_count_active(BUILDING_LARGE_TEMPLE_CERES) +
-        1500 * building_count_active(BUILDING_PANTHEON) +
-        5000 * building_count_active(BUILDING_GRAND_TEMPLE_CERES),
+        SHRINE_COVERAGE * shrines +
+        ORACLE_COVERAGE * oracles +
+        ORACLE_COVERAGE * small_mausoleums +
+        LARGE_ORACLE_COVERAGE * nymphaeums +
+        LARGE_ORACLE_COVERAGE * large_mausoleums +
+        SMALL_TEMPLE_COVERAGE * building_count_active(BUILDING_SMALL_TEMPLE_CERES) +
+        LARGE_TEMPLE_COVERAGE * building_count_active(BUILDING_LARGE_TEMPLE_CERES) +
+        PANTHEON_COVERAGE * building_count_active(BUILDING_PANTHEON) +
+        GRAND_TEMPLE_COVERAGE * building_count_active(BUILDING_GRAND_TEMPLE_CERES),
         population));
     coverage.religion[GOD_NEPTUNE] = top(calc_percentage(
-        20 * shrines +
-        500 * oracles +
-        500 * small_mausoleums +
-        750 * nymphaeums +
-        750 * large_mausoleums +
-        750 * building_count_active(BUILDING_SMALL_TEMPLE_NEPTUNE) +
-        1500 * building_count_active(BUILDING_LARGE_TEMPLE_NEPTUNE) +
-        1500 * building_count_active(BUILDING_PANTHEON) +
-        5000 * building_count_active(BUILDING_GRAND_TEMPLE_NEPTUNE),
+        SHRINE_COVERAGE * shrines +
+        ORACLE_COVERAGE * oracles +
+        ORACLE_COVERAGE * small_mausoleums +
+        LARGE_ORACLE_COVERAGE * nymphaeums +
+        LARGE_ORACLE_COVERAGE * large_mausoleums +
+        SMALL_TEMPLE_COVERAGE * building_count_active(BUILDING_SMALL_TEMPLE_NEPTUNE) +
+        LARGE_TEMPLE_COVERAGE * building_count_active(BUILDING_LARGE_TEMPLE_NEPTUNE) +
+        PANTHEON_COVERAGE * building_count_active(BUILDING_PANTHEON) +
+        GRAND_TEMPLE_COVERAGE * building_count_active(BUILDING_GRAND_TEMPLE_NEPTUNE),
         population));
     coverage.religion[GOD_MERCURY] = top(calc_percentage(
-        20 * shrines +
-        500 * oracles +
-        500 * small_mausoleums +
-        750 * nymphaeums +
-        750 * large_mausoleums +
-        750 * building_count_active(BUILDING_SMALL_TEMPLE_MERCURY) +
-        1500 * building_count_active(BUILDING_LARGE_TEMPLE_MERCURY) +
-        1500 * building_count_active(BUILDING_PANTHEON) +
-        5000 * building_count_active(BUILDING_GRAND_TEMPLE_MERCURY),
+        SHRINE_COVERAGE * shrines +
+        ORACLE_COVERAGE * oracles +
+        ORACLE_COVERAGE * small_mausoleums +
+        LARGE_ORACLE_COVERAGE * nymphaeums +
+        LARGE_ORACLE_COVERAGE * large_mausoleums +
+        SMALL_TEMPLE_COVERAGE * building_count_active(BUILDING_SMALL_TEMPLE_MERCURY) +
+        LARGE_TEMPLE_COVERAGE * building_count_active(BUILDING_LARGE_TEMPLE_MERCURY) +
+        PANTHEON_COVERAGE * building_count_active(BUILDING_PANTHEON) +
+        GRAND_TEMPLE_COVERAGE * building_count_active(BUILDING_GRAND_TEMPLE_MERCURY),
         population));
     coverage.religion[GOD_MARS] = top(calc_percentage(
-        20 * shrines +
-        500 * oracles +
-        500 * small_mausoleums +
-        750 * nymphaeums +
-        750 * large_mausoleums +
-        750 * building_count_active(BUILDING_SMALL_TEMPLE_MARS) +
-        1500 * building_count_active(BUILDING_LARGE_TEMPLE_MARS) +
-        1500 * building_count_active(BUILDING_PANTHEON) +
-        5000 * building_count_active(BUILDING_GRAND_TEMPLE_MARS),
+        SHRINE_COVERAGE * shrines +
+        ORACLE_COVERAGE * oracles +
+        ORACLE_COVERAGE * small_mausoleums +
+        LARGE_ORACLE_COVERAGE * nymphaeums +
+        LARGE_ORACLE_COVERAGE * large_mausoleums +
+        SMALL_TEMPLE_COVERAGE * building_count_active(BUILDING_SMALL_TEMPLE_MARS) +
+        LARGE_TEMPLE_COVERAGE * building_count_active(BUILDING_LARGE_TEMPLE_MARS) +
+        PANTHEON_COVERAGE * building_count_active(BUILDING_PANTHEON) +
+        GRAND_TEMPLE_COVERAGE * building_count_active(BUILDING_GRAND_TEMPLE_MARS),
         population));
     coverage.religion[GOD_VENUS] = top(calc_percentage(
-        20 * shrines +
-        500 * oracles +
-        500 * small_mausoleums +
-        750 * nymphaeums +
-        750 * large_mausoleums +
-        750 * building_count_active(BUILDING_SMALL_TEMPLE_VENUS) +
-        1500 * building_count_active(BUILDING_LARGE_TEMPLE_VENUS) +
-        1500 * building_count_active(BUILDING_PANTHEON) +
-        5000 * building_count_active(BUILDING_GRAND_TEMPLE_VENUS),
+        SHRINE_COVERAGE * shrines +
+        ORACLE_COVERAGE * oracles +
+        ORACLE_COVERAGE * small_mausoleums +
+        LARGE_ORACLE_COVERAGE * nymphaeums +
+        LARGE_ORACLE_COVERAGE * large_mausoleums +
+        SMALL_TEMPLE_COVERAGE * building_count_active(BUILDING_SMALL_TEMPLE_VENUS) +
+        LARGE_TEMPLE_COVERAGE * building_count_active(BUILDING_LARGE_TEMPLE_VENUS) +
+        PANTHEON_COVERAGE * building_count_active(BUILDING_PANTHEON) +
+        GRAND_TEMPLE_COVERAGE * building_count_active(BUILDING_GRAND_TEMPLE_VENUS),
         population));
-    coverage.oracle = top(calc_percentage(500 * oracles, population));
+    coverage.oracle = top(calc_percentage(ORACLE_COVERAGE * oracles, population));
 
     city_data.culture.religion_coverage =
         coverage.religion[GOD_CERES] +
