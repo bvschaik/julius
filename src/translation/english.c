@@ -599,6 +599,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_BUILDING_LARARIUM_DESC, "This small shrine is dedicated to the ancestral spirits of the Roman people. Small sacrifices and prayers may be made here."},
     {TR_BUILDING_WATCHTOWER, "Watchtower"},
     {TR_BUILDING_WATCHTOWER_DESC, "Archers on the battlements of this tower keep a vigilant watch for invaders, while watchmen patrol the streets below." },
+    {TR_BUILDING_WATCHTOWER_DESC_NO_SOLDIERS, "This tower needs a sentry from the barracks before it can protect our city."},
     {TR_BUILDING_NYMPHAEUM, "Nymphaeum"},
     {TR_BUILDING_NYMPHAEUM_DESC, "This great temple is dedicated to the water nymphs - minor deities of spring, river and sea. It promises beauty and plenty to the surrounding land and divine favor to the city." },
     {TR_BUILDING_SMALL_MAUSOLEUM, "Small Mausoleum"},

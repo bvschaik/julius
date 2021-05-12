@@ -154,6 +154,19 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
     return formation_id ? 1 : 0;
 }
 
+static building *get_unmanned_tower(building_type type, building *barracks, map_point *road)
+{
+    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+        if (b->state == BUILDING_STATE_IN_USE && b->num_workers > 0 &&
+            !b->figure_id && !b->figure_id4 && (b->road_network_id == barracks->road_network_id || config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))) {
+            if (map_has_road_access(b->x, b->y, b->size, road)) {
+                return b;
+            }
+        }
+    }
+    return 0;
+}
+
 int building_barracks_create_tower_sentry(building *barracks, int x, int y)
 {
     map_point road;
@@ -161,18 +174,16 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
         return 0;
     }
     building *tower = 0;
-    for (building *b = building_first_of_type(BUILDING_TOWER); b; b = b->next_of_type) {
-        if (b->state == BUILDING_STATE_IN_USE && b->num_workers > 0 &&
-            !b->figure_id && (b->road_network_id == barracks->road_network_id || config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD))) {
-            if (map_has_road_access(b->x, b->y, b->size, &road)) {
-                tower = b;
-                break;
-            }
+
+    tower = get_unmanned_tower(BUILDING_TOWER, barracks, &road);
+    if (!tower) { // If no unmanned towers, check watchtowers
+        tower = get_unmanned_tower(BUILDING_WATCHTOWER, barracks, &road);
+        if (!tower) {
+            return 0;
         }
     }
-    if (!tower) {
-        return 0;
-    }
+
+
     figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     if (map_has_road_access(tower->x, tower->y, tower->size, &road)) {

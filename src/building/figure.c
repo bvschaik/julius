@@ -1650,22 +1650,30 @@ static void spawn_figure_watchtower(building *b)
         spawn_labor_seeker(b, road.x, road.y, 100);
         int pct_workers = worker_percentage(b);
         int spawn_delay;
+
+        if (!b->figure_id4) { // Don't spawn watchmen until they get sentry from the barracks
+            building_barracks_request_tower_sentry();
+            return;
+        }
+
         if (pct_workers >= 100) {
-            spawn_delay = 0;
+            spawn_delay = 10;
         } else if (pct_workers >= 75) {
-            spawn_delay = 1;
+            spawn_delay = 20;
         } else if (pct_workers >= 50) {
-            spawn_delay = 3;
+            spawn_delay = 30;
         } else if (pct_workers >= 25) {
-            spawn_delay = 7;
+            spawn_delay = 40;
         } else if (pct_workers >= 1) {
-            spawn_delay = 15;
+            spawn_delay = 60;
         } else {
             return;
         }
+
         if (b->figure_id2) {
             return;
         }
+
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
@@ -1677,12 +1685,6 @@ static void spawn_figure_watchtower(building *b)
             f->action_state = FIGURE_ACTION_220_WATCHMAN_PATROL_INITIATE;
             f->building_id = b->id;
             b->figure_id2 = f->id;
-            if (!b->figure_id4) {
-                figure *f = figure_create(FIGURE_WATCHTOWER_ARCHER, b->x, b->y, DIR_0_TOP);
-                f->building_id = b->id;
-                f->action_state = FIGURE_ACTION_223_ARCHER_GUARDING;
-                b->figure_id4 = f->id;
-            }
         }
     }
 }

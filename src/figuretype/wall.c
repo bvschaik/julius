@@ -176,6 +176,17 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
     return 0;
 }
 
+static void figure_watchtower_archer_spawn(building *b)
+{
+    if (b->figure_id4 || b->type != BUILDING_WATCHTOWER) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_WATCHTOWER_ARCHER, b->x, b->y, DIR_0_TOP);
+    f->building_id = b->id;
+    f->action_state = FIGURE_ACTION_223_ARCHER_GUARDING;
+    b->figure_id4 = f->id;
+}
+
 void figure_tower_sentry_set_image(figure *f)
 {
     int dir = figure_image_direction(f);
@@ -286,13 +297,19 @@ void figure_tower_sentry_action(figure *f)
             f->is_ghost = 0;
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                map_figure_delete(f);
-                f->source_x = f->x = b->x;
-                f->source_y = f->y = b->y;
-                f->grid_offset = map_grid_offset(f->x, f->y);
-                map_figure_add(f);
-                f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
-                figure_route_remove(f);
+                if (b->type == BUILDING_WATCHTOWER) {
+                    figure_watchtower_archer_spawn(b);
+                    figure_route_remove(f);
+                    f->state = FIGURE_STATE_DEAD;
+                } else { // if Tower
+                    map_figure_delete(f);
+                    f->source_x = f->x = b->x;
+                    f->source_y = f->y = b->y;
+                    f->grid_offset = map_grid_offset(f->x, f->y);
+                    map_figure_add(f);
+                    f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
+                    figure_route_remove(f);
+                }
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
