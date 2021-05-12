@@ -66,7 +66,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_TAVERN && (b->num_workers <= 0 || !b->data.market.inventory[4])) { //wine
         return 0;
     }
-    if ((b->type == BUILDING_WATCHTOWER && b->num_workers <= 0) || !b->figure_id4) {
+    if (b->type == BUILDING_WATCHTOWER && (b->num_workers <= 0 || !b->figure_id4)) {
         return 0;
     }
     if (b->type == BUILDING_LARGE_STATUE && !b->has_water_access) {
