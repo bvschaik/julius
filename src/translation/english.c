@@ -596,7 +596,7 @@ static translation_string all_strings[] = {
     {TR_SAVEGAME_LARGER_VERSION_MESSAGE, "The savegame you're trying to load is for a more recent version of Augustus.\nPlease update Augustus to the most recent version." },
     {TR_BUILDING_COLONNADE, "Colonnade" },
     {TR_BUILDING_LARARIUM, "Lararium" },
-    {TR_WINDOW_BUILDING_LARARIUM_DESC, "This small shrine is dedicated to the ancestral spirits of the Roman people. Small sacrifices and prayers may be made here."},
+    {TR_WINDOW_BUILDING_LARARIUM_DESC, "This small shrine is dedicated to Lares, the ancestral spirits of the Roman people. Small sacrifices and prayers may be made here."},
     {TR_BUILDING_WATCHTOWER, "Watchtower"},
     {TR_BUILDING_WATCHTOWER_DESC, "Archers on the battlements of this tower keep a vigilant watch for invaders, while watchmen patrol the streets below." },
     {TR_BUILDING_WATCHTOWER_DESC_NO_SOLDIERS, "This tower needs a sentry from the barracks before it can protect our city."},
