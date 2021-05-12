@@ -12,8 +12,8 @@
 #define NUM_BUILDINGS 130
 #define NUM_HOUSES 20
 
-static const uint8_t ALL_BUILDINGS[] = {'A', 'L', 'L', ' ', 'B', 'U', 'I', 'L', 'D', 'I', 'N', 'G', 'S', 0};
-static const uint8_t ALL_HOUSES[] = {'A', 'L', 'L', ' ', 'H', 'O', 'U', 'S', 'E', 'S', 0};
+static const uint8_t ALL_BUILDINGS[] = { 'A', 'L', 'L', ' ', 'B', 'U', 'I', 'L', 'D', 'I', 'N', 'G', 'S', 0 };
+static const uint8_t ALL_HOUSES[] = { 'A', 'L', 'L', ' ', 'H', 'O', 'U', 'S', 'E', 'S', 0 };
 
 static model_building buildings[NUM_BUILDINGS];
 static model_house houses[NUM_HOUSES];
@@ -70,6 +70,34 @@ static const uint8_t *get_value(const uint8_t *ptr, const uint8_t *end_ptr, int 
     *value = string_to_int(ptr);
     ptr += index_of(ptr, ',', (int) (end_ptr - ptr));
     return ptr;
+}
+
+static void override_model_data(void)
+{
+    buildings[BUILDING_LARGE_TEMPLE_CERES].desirability_value = 14;
+    buildings[BUILDING_LARGE_TEMPLE_CERES].desirability_step = 2;
+    buildings[BUILDING_LARGE_TEMPLE_CERES].desirability_step_size = -2;
+    buildings[BUILDING_LARGE_TEMPLE_CERES].desirability_range = 5;
+
+    buildings[BUILDING_LARGE_TEMPLE_NEPTUNE].desirability_value = 14;
+    buildings[BUILDING_LARGE_TEMPLE_NEPTUNE].desirability_step = 2;
+    buildings[BUILDING_LARGE_TEMPLE_NEPTUNE].desirability_step_size = -2;
+    buildings[BUILDING_LARGE_TEMPLE_NEPTUNE].desirability_range = 5;
+
+    buildings[BUILDING_LARGE_TEMPLE_MERCURY].desirability_value = 14;
+    buildings[BUILDING_LARGE_TEMPLE_MERCURY].desirability_step = 2;
+    buildings[BUILDING_LARGE_TEMPLE_MERCURY].desirability_step_size = -2;
+    buildings[BUILDING_LARGE_TEMPLE_MERCURY].desirability_range = 5;
+
+    buildings[BUILDING_LARGE_TEMPLE_MARS].desirability_value = 14;
+    buildings[BUILDING_LARGE_TEMPLE_MARS].desirability_step = 2;
+    buildings[BUILDING_LARGE_TEMPLE_MARS].desirability_step_size = -2;
+    buildings[BUILDING_LARGE_TEMPLE_MARS].desirability_range = 5;
+
+    buildings[BUILDING_LARGE_TEMPLE_VENUS].desirability_value = 14;
+    buildings[BUILDING_LARGE_TEMPLE_VENUS].desirability_step = 2;
+    buildings[BUILDING_LARGE_TEMPLE_VENUS].desirability_step_size = -2;
+    buildings[BUILDING_LARGE_TEMPLE_VENUS].desirability_range = 5;
 }
 
 int model_load(void)
@@ -149,12 +177,14 @@ int model_load(void)
         ptr = get_value(ptr, end_ptr, &houses[i].tax_multiplier);
     }
 
+    override_model_data();
+
     log_info("Model loaded", 0, 0);
     free(buffer);
     return 1;
 }
 
-const model_building MODEL_ROADBLOCK = {40,0,0,0,0};
+const model_building MODEL_ROADBLOCK = { 40,0,0,0,0 };
 const model_building MODEL_WORK_CAMP = { 150,-10,2,3,4,20 };
 const model_building MODEL_ARCHITECT_GUILD = { 200,-8,1,2,4,12 };
 const model_building MODEL_GRAND_TEMPLE_CERES = { 2500,20,2,-4,5,50 };
@@ -172,10 +202,10 @@ const model_building MODEL_COLOSSEUM = { 1500,-3,1,1,3,100 };
 const model_building MODEL_HIPPODROME = { 3500,-3,1,1,3,150 };
 const model_building MODEL_NULL = { 0,0,0,0,0 };
 const model_building MODEL_LARARIUM = { 100, 4, 1, 1, 3, 0 };
-const model_building MODEL_NYMPHAEUM = {500,12,2,-1,6,0};
-const model_building MODEL_SMALL_MAUSOLEUM = {500,-8,1,3,5,0};
-const model_building MODEL_LARGE_MAUSOLEUM = {1500,-10,1,3,6,0};
-const model_building MODEL_WATCHTOWER = {100,-6,1,2,3,8,};
+const model_building MODEL_NYMPHAEUM = { 500,12,2,-1,6,0 };
+const model_building MODEL_SMALL_MAUSOLEUM = { 500,-8,1,3,5,0 };
+const model_building MODEL_LARGE_MAUSOLEUM = { 1500,-10,1,3,6,0 };
+const model_building MODEL_WATCHTOWER = { 100,-6,1,2,3,8, };
 const model_building MODEL_CARAVANSERAI = { 500,-10,2,3,4,20 };
 
 const model_building *model_get_building(building_type type)
@@ -229,24 +259,26 @@ const model_building *model_get_building(building_type type)
             break;
     }
 
-    if ((type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) || type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT 
-        || type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_GARDEN_WALL || type == BUILDING_COLONNADE || type == BUILDING_GARDEN_WALL
-        || type == BUILDING_GARDEN_PATH) {
+    if ((type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) ||
+        type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT ||
+        type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_GARDEN_WALL ||
+        type == BUILDING_COLONNADE || type == BUILDING_GARDEN_WALL ||
+        type == BUILDING_GARDEN_PATH) {
         return &buildings[41];
     }
 
-    if(type == BUILDING_SMALL_POND || type==BUILDING_OBELISK || type == BUILDING_LEGION_STATUE || type == BUILDING_DOLPHIN_FOUNTAIN) {
+    if (type == BUILDING_SMALL_POND || type == BUILDING_OBELISK ||
+        type == BUILDING_LEGION_STATUE || type == BUILDING_DOLPHIN_FOUNTAIN) {
         return &buildings[42];
     }
 
-    if(type == BUILDING_LARGE_POND || type== BUILDING_HORSE_STATUE) {
+    if (type == BUILDING_LARGE_POND || type == BUILDING_HORSE_STATUE) {
         return &buildings[43];
     }
 
     if (type > 129 || type < 0) {
         return &MODEL_NULL;
-    }
-    else {
+    } else {
         return &buildings[type];
     }
 }
