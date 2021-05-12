@@ -1213,7 +1213,7 @@ void building_monument_delivery_load_state(buffer *buf, int includes_delivery_bu
     }
 }
 
-int building_monument_is_construction_halted(const building *b)
+int building_monument_is_construction_halted(building *b)
 {
     return building_main(b)->state == BUILDING_STATE_MOTHBALLED;
 }
