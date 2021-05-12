@@ -410,7 +410,7 @@ static translation_string all_strings[] = {
     { TR_BUILDING_CARAVANSERAI_POLICY_2_TITLE, "Соглашение по покупке" },
     { TR_BUILDING_CARAVANSERAI_POLICY_2, "Вы покупаете товар на 20% дешевле, но и продаете на 10% дешевле." },
     { TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, "Соглашение по объему" },
-    { TR_BUILDING_CARAVANSERAI_POLICY_3, "Вместимость караванов увеличивается на 4 единицы, но их скорость уменьшается на 10%." },
+    { TR_BUILDING_CARAVANSERAI_POLICY_3, "Вместимость караванов увеличивается на 4 единицы, но караван-сарайю нужно 20% больше еды." },
     { TR_BUILDING_LIGHTHOUSE, "Маяк" },
     { TR_BUILDING_LIGHTHOUSE_PHASE_1, "(Фундамент)" },
     { TR_BUILDING_LIGHTHOUSE_PHASE_2, "(Постамент)" },
@@ -430,7 +430,7 @@ static translation_string all_strings[] = {
     { TR_BUILDING_LIGHTHOUSE_POLICY_2_TITLE, "Соглашение по покупке" },
     { TR_BUILDING_LIGHTHOUSE_POLICY_2, "Вы покупаете товар кораблей на 20% дешевле, но и продаете им на 10% дешевле." },
     { TR_BUILDING_LIGHTHOUSE_POLICY_3_TITLE, "Соглашение по объему" },
-    { TR_BUILDING_LIGHTHOUSE_POLICY_3, "Вместимость кораблей увеличивается на 4 единицы, но их скорость уменьшается на 10%." },
+    { TR_BUILDING_LIGHTHOUSE_POLICY_3, "Вместимость кораблей увеличивается на 4 единицы, но маяку нужно 20% больше древесины." },
     { TR_EDITOR_ALLOWED_BUILDINGS_MONUMENTS, "Памятники" },
     { TR_CITY_MESSAGE_TEXT_LIGHTHOUSE_COMPLETE, "Завершeнный маяк, могучая каменная башня, вырисовывается над горизонтом. Пусть его свет ведeт кораблей домой до окончания веков." },
     { TR_CITY_MESSAGE_TEXT_PANTHEON_COMPLETE, "Пантеон завершeн. Он является непревзойденным памятником огромной силы богов и людей Рима." },
@@ -678,6 +678,7 @@ static translation_string all_strings[] = {
     { TR_TEMPLE_DISTRIBUTING, "Распределяет"},
     { TR_TEMPLE_NOT_DISTRIBUTING, "Не распределяет"},
     { TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR, "Плохой средний уровень жилья сдерживает иммиграцию"},
+    { TR_FIGURE_TYPE_LIGHTHOUSE_SUPPLIER, "Смотритель маяка"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
