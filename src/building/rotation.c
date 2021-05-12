@@ -7,23 +7,39 @@
 #include "core/time.h"
 #include "map/grid.h"
 
+#define MAX_ROTATION 3
+#define MAX_BIG_ROTATION 100
+
 static struct {
     int rotation;
     int extra_rotation;
     int road_orientation;
 } data = { 0, 0, 1 };
 
-static void rotate(void)
+static void rotate_forward(void)
 {
-    building_construction_cycle();
+    building_construction_cycle_forward();
     data.rotation += 1;
     data.extra_rotation += 1;
-    if (data.rotation > 3) {
+    if (data.rotation > MAX_ROTATION) {
         data.rotation = 0;
     }
-    if (data.extra_rotation >= 100) {
+    if (data.extra_rotation >= MAX_BIG_ROTATION) {
         data.extra_rotation = 0;
     }
+}
+
+static void rotate_backward()
+{
+        building_construction_cycle_back();
+        data.rotation -= 1;
+        data.extra_rotation -= 1;
+        if (data.rotation < 0) {
+            data.rotation = MAX_ROTATION;
+        }
+        if (data.extra_rotation < 0) {
+            data.extra_rotation = MAX_BIG_ROTATION;
+        }
 }
 
 int building_rotation_get_road_orientation(void)
@@ -46,13 +62,18 @@ int building_rotation_get_rotation(void)
 
 int building_rotation_get_rotation_with_limit(int limit)
 {
-    data.extra_rotation = data.extra_rotation % limit;
-    return data.extra_rotation;
+    return data.extra_rotation % limit;
 }
 
-void building_rotation_rotate_by_hotkey(void)
+void building_rotation_rotate_forward_by_hotkey(void)
 {
-    rotate();
+    rotate_forward();
+    data.road_orientation = data.road_orientation == 1 ? 2 : 1;
+}
+
+void building_rotation_rotate_backward_by_hotkey(void)
+{
+    rotate_backward();
     data.road_orientation = data.road_orientation == 1 ? 2 : 1;
 }
 

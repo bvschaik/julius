@@ -3,7 +3,9 @@
 
 #include "building/type.h"
 
-int building_construction_cycle(void);
+int building_construction_cycle_forward(void);
+
+int building_construction_cycle_back(void);
 
 int building_construction_is_connecting(void);
 

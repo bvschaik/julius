@@ -161,6 +161,9 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
         case HOTKEY_ROTATE_BUILDING:
             def->action = &data.hotkey_state.rotate_building;
             break;
+        case HOTKEY_ROTATE_BUILDING_BACK:
+            def->action = &data.hotkey_state.rotate_building_back;
+            break;
         case HOTKEY_GO_TO_BOOKMARK_1:
             def->action = &data.hotkey_state.go_to_bookmark;
             def->value = 1;

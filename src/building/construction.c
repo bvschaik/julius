@@ -42,7 +42,6 @@
 #define BUILDING_CYCLES 5
 #define MAX_CYCLE_SIZE 10
 
-
 struct reservoir_info {
     int cost;
     int place_reservoir_at_start;
@@ -50,6 +49,7 @@ struct reservoir_info {
 };
 
 struct cycle {
+    int size;
     int rotations_to_next;
     int array[MAX_CYCLE_SIZE];
 };
@@ -114,38 +114,70 @@ int building_construction_is_connecting(void)
 }
 
 const static struct cycle building_cycles[BUILDING_CYCLES] = {
-    { 1, { BUILDING_NONE }},
-    { 1, { BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY,
-      BUILDING_SMALL_TEMPLE_MARS,  BUILDING_SMALL_TEMPLE_VENUS,   BUILDING_NONE }},
-    { 1, {BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY,
-      BUILDING_LARGE_TEMPLE_MARS,  BUILDING_LARGE_TEMPLE_VENUS,   BUILDING_NONE }},
-    { 2, {BUILDING_GARDEN_PATH, BUILDING_DATE_PATH, BUILDING_ELM_PATH,  BUILDING_FIG_PATH,  BUILDING_FIR_PATH,
-      BUILDING_OAK_PATH,  BUILDING_PALM_PATH, BUILDING_PINE_PATH, BUILDING_PLUM_PATH, BUILDING_NONE }},
-    { 1, {BUILDING_DATE_TREE, BUILDING_ELM_TREE,  BUILDING_FIG_TREE,  BUILDING_FIR_TREE,
-      BUILDING_OAK_TREE,  BUILDING_PALM_TREE, BUILDING_PINE_TREE, BUILDING_PLUM_TREE, BUILDING_NONE }},
-
+    { 5, 1, { BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY,
+      BUILDING_SMALL_TEMPLE_MARS,  BUILDING_SMALL_TEMPLE_VENUS }},
+    { 5, 1, {BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY,
+      BUILDING_LARGE_TEMPLE_MARS,  BUILDING_LARGE_TEMPLE_VENUS}},
+    { 9, 2, {BUILDING_GARDEN_PATH, BUILDING_DATE_PATH, BUILDING_ELM_PATH,  BUILDING_FIG_PATH,  BUILDING_FIR_PATH,
+      BUILDING_OAK_PATH,  BUILDING_PALM_PATH, BUILDING_PINE_PATH, BUILDING_PLUM_PATH}},
+    { 8, 1, {BUILDING_DATE_TREE, BUILDING_ELM_TREE,  BUILDING_FIG_TREE,  BUILDING_FIR_TREE,
+      BUILDING_OAK_TREE,  BUILDING_PALM_TREE, BUILDING_PINE_TREE, BUILDING_PLUM_TREE }},
 };
 
-int building_construction_cycle(void)
+int building_construction_cycle_forward(void)
 {
     if (data.type == BUILDING_NONE) {
         return 0;
     }
 
     for (int i = 0; i < BUILDING_CYCLES; i++) {
-        for (int j = 0; j < MAX_CYCLE_SIZE; j++) {
-            if (building_cycles[i].array[j] == BUILDING_NONE) {
-                continue;
-            }
+        int size = building_cycles[i].size;
+        for (int j = 0; j < size; j++) {
             if (building_cycles[i].array[j] == building_construction_type()) {
                 data.cycle_step += 1;
                 if (data.cycle_step < building_cycles[i].rotations_to_next) {
                     return 0;
                 }
                 data.cycle_step = 0;
-                int new_type = building_cycles[i].array[j + 1];
-                if (new_type == BUILDING_NONE) {
+                int new_type;
+                if (j + 1 >= size) { // If last element of the list, the next one is the first one
                     new_type = building_cycles[i].array[0];
+                } else { // Otherwise pick the first one
+                    new_type = building_cycles[i].array[j + 1];
+                }
+                if (building_cycles[i].array[j] == data.type) {
+                    data.type = new_type;
+                } else {
+                    data.sub_type = new_type;
+                }
+
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int building_construction_cycle_back(void)
+{
+    if (data.type == BUILDING_NONE) {
+        return 0;
+    }
+
+    for (int i = 0; i < BUILDING_CYCLES; i++) {
+        int size = building_cycles[i].size;
+        for (int j = 0; j < size; j++) {
+            if (building_cycles[i].array[j] == building_construction_type()) {
+                data.cycle_step -= 1;
+                if (data.cycle_step >= 0) {
+                    return 0;
+                }
+                data.cycle_step = building_cycles[i].rotations_to_next - 1;
+                int new_type;
+                if (j - 1 < 0) { // If first element of the list, pick the last element
+                    new_type = building_cycles[i].array[size - 1];
+                } else { // Otherwise pick the previous element
+                    new_type = building_cycles[i].array[j - 1];
                 }
                 if (building_cycles[i].array[j] == data.type) {
                     data.type = new_type;

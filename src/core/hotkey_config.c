@@ -66,6 +66,7 @@ static const char *ini_keys[] = {
     "load_file",
     "save_file",
     "rotate_building",
+    "rotate_building_back",
     "go_to_bookmark_1",
     "go_to_bookmark_2",
     "go_to_bookmark_3",

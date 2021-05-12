@@ -465,7 +465,10 @@ static void handle_hotkeys(const hotkeys *h)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
     }
     if (h->rotate_building) {
-        building_rotation_rotate_by_hotkey();
+        building_rotation_rotate_forward_by_hotkey();
+    }
+    if (h->rotate_building_back) {
+        building_rotation_rotate_backward_by_hotkey();
     }
     if (h->building) {
         if (scenario_building_allowed(h->building) && building_menu_is_enabled(h->building)) {
