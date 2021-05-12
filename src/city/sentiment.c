@@ -360,7 +360,8 @@ void city_sentiment_update(void)
                         b->house_sentiment_message = SUGGEST_MORE_ENT;
                     } else if (desirability_bonus < max_desirability && desirability_bonus < food_bonus) {
                         b->house_sentiment_message = SUGGEST_MORE_DESIRABILITY;
-                    } else if (food_bonus < MAX_SENTIMENT_FROM_EXTRA_FOOD && b->data.house.num_foods < 3) {
+                    } else if (model_get_house(b->subtype.house_level)->food_types > 0 &&
+                        food_bonus < MAX_SENTIMENT_FROM_EXTRA_FOOD && b->data.house.num_foods < 3) {
                         b->house_sentiment_message = SUGGEST_MORE_FOOD;
                     } else {
                         b->house_sentiment_message = LOW_MOOD_CAUSE_NONE;
