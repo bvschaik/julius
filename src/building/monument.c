@@ -951,8 +951,14 @@ void building_monument_finish_monuments(void)
     for (int i = 0; i < MAX_MONUMENT_TYPES; i++) {
         building_type type = MONUMENT_BUILDING_TYPES[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->data.monument.phase == MONUMENT_FINISHED) {
+                continue;
+            }
             b->data.monument.phase = building_monument_phases(b->type);
             building_monument_initialize(b);
+            for (int resource = 0; resource < RESOURCE_MAX; resource++) {
+                b->data.monument.resources_needed[resource] = 0;
+            }
         }
     }
 }
