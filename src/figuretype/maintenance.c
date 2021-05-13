@@ -17,6 +17,7 @@
 #include "sound/effect.h"
 
 #define INFINITE 10000
+#define RECALCULATE_ENEMY_LOCATION_TICKS 30
 
 void figure_engineer_action(figure *f)
 {
@@ -163,6 +164,7 @@ static int fight_enemy(figure *f)
         if (enemy->targeted_by_figure_id) {
             figure_get(enemy->targeted_by_figure_id)->target_figure_id = 0;
         }
+        f->wait_ticks = 0;
         f->action_state = FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY;
         f->destination_x = enemy->x;
         f->destination_y = enemy->y;
@@ -370,10 +372,11 @@ void figure_prefect_action(figure *f)
                 }
             }
             figure_movement_move_ticks_with_percentage(f, 1, 20);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+            if (f->direction == DIR_FIGURE_AT_DESTINATION || f->wait_ticks++ > RECALCULATE_ENEMY_LOCATION_TICKS) {
                 figure *target = figure_get(f->target_figure_id);
                 f->destination_x = target->x;
                 f->destination_y = target->y;
+                f->wait_ticks = 0;
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
