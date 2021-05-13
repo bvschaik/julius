@@ -1,9 +1,10 @@
 #include "build_menu.h"
 
+#include "building/building_variant.h"
 #include "building/construction.h"
 #include "building/menu.h"
 #include "building/model.h"
-#include "building/building_variant.h"
+#include "building/properties.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "graphics/generic_button.h"
@@ -273,9 +274,9 @@ static int set_submenu_for_type(building_type type)
             break;
         case BUILDING_FORT:
             data.selected_submenu = BUILD_MENU_FORTS;
-			break;
-		case BUILDING_MENU_GRAND_TEMPLES:
-			data.selected_submenu = BUILD_MENU_GRAND_TEMPLES;
+            break;
+        case BUILDING_MENU_GRAND_TEMPLES:
+            data.selected_submenu = BUILD_MENU_GRAND_TEMPLES;
             break;
         case BUILDING_MENU_PARKS:
             data.selected_submenu = BUILD_MENU_PARKS;
@@ -314,7 +315,7 @@ static void button_menu_item(int item)
         data.selected_submenu = SUBMENU_NONE;
         window_city_show();
     }
-    if (building_variant_has_variants(type)) {
+    if (building_variant_has_variants(type) || building_properties_for_type(type)->rotation_offset) {
         city_warning_show(WARNING_VARIANT_TOGGLE);
     }
 }
