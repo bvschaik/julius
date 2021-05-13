@@ -37,6 +37,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Воспроизводить вступительные видео"},
     {TR_CONFIG_SIDEBAR_INFO, "Дополнительная информация на контрольной панели"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Включить плавный скроллинг"},
+    {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Откл. перемещение по карте при движении за край дисплея"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Откл. перемещение по карте по клику правой кнопкой"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Улучшить граф. эффект при очистке территории"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Постройка храмов в циклической последовательности"},
