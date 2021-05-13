@@ -977,6 +977,7 @@ void window_building_granary_get_tooltip_distribution_permissions(int *translati
             break;
         case 2:
             *translation = TR_TOOLTIP_BUTTON_ACCEPT_QUARTERMASTER;
+            break;
         case 3:
             *translation = TR_TOOLTIP_BUTTON_ACCEPT_TRADE_CARAVAN;
             break;
