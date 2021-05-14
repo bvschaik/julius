@@ -315,9 +315,6 @@ static void button_menu_item(int item)
         data.selected_submenu = SUBMENU_NONE;
         window_city_show();
     }
-    if (building_variant_has_variants(type) || building_properties_for_type(type)->rotation_offset) {
-        city_warning_show(WARNING_VARIANT_TOGGLE);
-    }
 }
 
 void window_build_menu_show(int submenu)

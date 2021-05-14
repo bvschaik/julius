@@ -449,6 +449,24 @@ void building_construction_set_cost(int cost)
     data.cost_preview = cost;
 }
 
+static int type_has_rotations(building_type type)
+{
+    if (building_variant_has_variants(type) || building_properties_for_type(type)->rotation_offset) {
+        return 1;
+    }
+    switch (type) {
+        case BUILDING_FORT_JAVELIN:
+        case BUILDING_FORT_LEGIONARIES:
+        case BUILDING_FORT_MOUNTED:
+        case BUILDING_WAREHOUSE:
+        case BUILDING_HIPPODROME:
+            return 1;
+        default:
+            return 0;
+            break;
+    }
+}
+
 void building_construction_set_type(building_type type)
 {
     data.type = type;
@@ -501,6 +519,10 @@ void building_construction_set_type(building_type type)
                 data.required_terrain.distant_water = 1;
             default:
                 break;
+        }
+
+        if (type_has_rotations(type)) {
+            city_warning_show(WARNING_VARIANT_TOGGLE);
         }
     }
 }
