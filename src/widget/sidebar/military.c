@@ -96,7 +96,8 @@ static void button_return_to_fort(int param1, int param2);
 static void button_empire_service(int param1, int param2);
 
 static image_button buttons_title_close[] = {
-    {127, 5, 31, 20, IB_NORMAL, 90, 0, button_close_military_sidebar, button_none, 0, 0, 1},
+    {123, 4, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4,
+        button_close_military_sidebar, button_none, 0, 0, 1},
     {4, 3, 117, 31, IB_NORMAL, 93, 0, button_military_menu, button_none, 0, 0, 1}
 };
 
