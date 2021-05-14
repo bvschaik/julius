@@ -2,6 +2,7 @@
 
 #include "building/construction.h"
 #include "building/properties.h"
+#include "building/rotation.h"
 #include "city/finance.h"
 #include "city/view.h"
 #include "city/warning.h"
@@ -251,7 +252,7 @@ static int input_coords_in_city(int x, int y)
     x -= x_offset;
     y -= y_offset;
 
-    return (x >= 0 && x < width && y >= 0 && y < height);
+    return (x >= 0 && x < width &&y >= 0 && y < height);
 }
 
 static void handle_touch_scroll(const touch *t)
@@ -308,7 +309,7 @@ static void handle_last_touch(void)
     }
 }
 
-static int handle_cancel_construction_button(const touch *t)
+static int handle_construction_buttons(const touch *t)
 {
     if (!building_construction_type()) {
         return 0;
@@ -318,12 +319,29 @@ static int handle_cancel_construction_button(const touch *t)
     int box_size = 5 * 16;
     width -= box_size;
 
-    if (t->current_point.x < width || t->current_point.x >= width + box_size ||
-        t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
-        return 0;
+    if (t->current_point.x >= width && t->current_point.x < width + box_size &&
+        t->current_point.y >= 24 && t->current_point.y < 40 + box_size) {
+        building_construction_cancel();
+        return 1;
     }
-    building_construction_cancel();
-    return 1;
+
+    if (building_construction_type_has_rotations()) {
+        width = 8;
+        box_size = 4 * 16;
+        if (t->current_point.x >= width && t->current_point.x < width + box_size &&
+            t->current_point.y >= 24 && t->current_point.y < 56 + box_size) {
+            building_rotation_rotate_backward();
+            return 1;
+        }
+        width = 3 * 16 + 8;
+        box_size = 4 * 16;
+        if (t->current_point.x >= width && t->current_point.x < width + box_size &&
+            t->current_point.y >= 24 && t->current_point.y < 56 + box_size) {
+            building_rotation_rotate_forward();
+            return 1;
+        }
+    }
+    return 0;
 }
 
 static void handle_first_touch(map_tile *tile)
@@ -332,7 +350,7 @@ static void handle_first_touch(map_tile *tile)
     building_type type = building_construction_type();
 
     if (touch_was_click(first)) {
-        if (handle_cancel_construction_button(first) || handle_legion_click(tile)) {
+        if (handle_construction_buttons(first) || handle_legion_click(tile)) {
             return;
         }
         if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
@@ -566,7 +584,7 @@ void widget_city_get_tooltip(tooltip_context *c)
     int building_id = map_building_at(grid_offset);
     int overlay = game_state_overlay();
     // cheat tooltips
-    if(overlay == OVERLAY_NONE && game_cheat_tooltip_enabled()){
+    if (overlay == OVERLAY_NONE && game_cheat_tooltip_enabled()) {
         c->type = TOOLTIP_TILES;
         c->high_priority = 1;
         return;

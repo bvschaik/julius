@@ -61,8 +61,6 @@ enum {
     PLACE_RESERVOIR_EXISTS = 2
 };
 
-
-
 static struct {
     building_type type;
     building_type sub_type;
@@ -83,8 +81,6 @@ static struct {
     int start_offset_y_view;
     int cycle_step;
 } data;
-
-
 
 static int last_items_cleared;
 
@@ -449,12 +445,13 @@ void building_construction_set_cost(int cost)
     data.cost_preview = cost;
 }
 
-static int type_has_rotations(building_type type)
+int building_construction_type_has_rotations(void)
 {
-    if (building_variant_has_variants(type) || building_properties_for_type(type)->rotation_offset) {
+    if (building_variant_has_variants(data.type) || building_properties_for_type(data.type)->rotation_offset ||
+        building_construction_is_connecting()) {
         return 1;
     }
-    switch (type) {
+    switch (data.type) {
         case BUILDING_FORT_JAVELIN:
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_MOUNTED:
@@ -463,7 +460,6 @@ static int type_has_rotations(building_type type)
             return 1;
         default:
             return 0;
-            break;
     }
 }
 
@@ -519,10 +515,6 @@ void building_construction_set_type(building_type type)
                 data.required_terrain.distant_water = 1;
             default:
                 break;
-        }
-
-        if (type_has_rotations(type)) {
-            city_warning_show(WARNING_VARIANT_TOGGLE);
         }
     }
 }

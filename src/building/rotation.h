@@ -13,8 +13,8 @@ int building_rotation_get_rotation_with_limit(int limit);
 
 int building_rotation_get_corner(int rot);
 
-void building_rotation_rotate_forward_by_hotkey(void);
-void building_rotation_rotate_backward_by_hotkey(void);
+void building_rotation_rotate_forward(void);
+void building_rotation_rotate_backward(void);
 void building_rotation_reset_rotation(void);
 
 #endif // BUILDING_ROTATION_H

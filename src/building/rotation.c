@@ -31,15 +31,15 @@ static void rotate_forward(void)
 
 static void rotate_backward()
 {
-        building_construction_cycle_back();
-        data.rotation -= 1;
-        data.extra_rotation -= 1;
-        if (data.rotation < 0) {
-            data.rotation = MAX_ROTATION;
-        }
-        if (data.extra_rotation < 0) {
-            data.extra_rotation = MAX_BIG_ROTATION;
-        }
+    building_construction_cycle_back();
+    data.rotation -= 1;
+    data.extra_rotation -= 1;
+    if (data.rotation < 0) {
+        data.rotation = MAX_ROTATION;
+    }
+    if (data.extra_rotation < 0) {
+        data.extra_rotation = MAX_BIG_ROTATION;
+    }
 }
 
 int building_rotation_get_road_orientation(void)
@@ -65,13 +65,13 @@ int building_rotation_get_rotation_with_limit(int limit)
     return data.extra_rotation % limit;
 }
 
-void building_rotation_rotate_forward_by_hotkey(void)
+void building_rotation_rotate_forward(void)
 {
     rotate_forward();
     data.road_orientation = data.road_orientation == 1 ? 2 : 1;
 }
 
-void building_rotation_rotate_backward_by_hotkey(void)
+void building_rotation_rotate_backward(void)
 {
     rotate_backward();
     data.road_orientation = data.road_orientation == 1 ? 2 : 1;

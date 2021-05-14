@@ -15,6 +15,8 @@ void building_construction_set_type(building_type type);
 
 void building_construction_clear_type(void);
 
+int building_construction_type_has_rotations(void);
+
 building_type building_construction_type(void);
 
 int building_construction_cost(void);

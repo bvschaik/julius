@@ -1,8 +1,10 @@
 #include "city.h"
 
+#include "building/building_variant.h"
 #include "building/clone.h"
 #include "building/construction.h"
 #include "building/menu.h"
+#include "building/properties.h"
 #include "building/rotation.h"
 #include "building/type.h"
 #include "city/message.h"
@@ -110,7 +112,7 @@ static void draw_paused_and_time_left(void)
     }
 }
 
-static void draw_cancel_construction(void)
+static void draw_construction_buttons(void)
 {
     if (!mouse_get()->is_touch || !building_construction_type()) {
         return;
@@ -120,6 +122,18 @@ static void draw_cancel_construction(void)
     width -= 4 * 16;
     inner_panel_draw(width - 4, 40, 3, 2);
     image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+
+    if (building_construction_type_has_rotations()) {
+        width = 16;
+        inner_panel_draw(width - 4, 40, 3, 2);
+        image_draw(image_group(GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS) + 6, width + 3, 46);
+        graphics_draw_inset_rect(width + 2, 45, 36, 24);
+        width += 3 * 16 + 8;
+        inner_panel_draw(width - 4, 40, 3, 2);
+        image_draw(image_group(GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS) + 9, width + 3, 46);
+        graphics_draw_inset_rect(width + 2, 45, 36, 24);
+    }
+
     city_view_dirty = 1;
 }
 
@@ -131,7 +145,7 @@ static void draw_foreground(void)
     widget_sidebar_city_draw_foreground();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         draw_paused_and_time_left();
-        draw_cancel_construction();
+        draw_construction_buttons();
     }
     city_view_dirty |= widget_city_draw_construction_cost_and_size();
     if (window_is(WINDOW_CITY)) {
@@ -465,10 +479,10 @@ static void handle_hotkeys(const hotkeys *h)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
     }
     if (h->rotate_building) {
-        building_rotation_rotate_forward_by_hotkey();
+        building_rotation_rotate_forward();
     }
     if (h->rotate_building_back) {
-        building_rotation_rotate_backward_by_hotkey();
+        building_rotation_rotate_backward();
     }
     if (h->building) {
         if (scenario_building_allowed(h->building) && building_menu_is_enabled(h->building)) {

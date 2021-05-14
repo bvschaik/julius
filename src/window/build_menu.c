@@ -1,10 +1,8 @@
 #include "build_menu.h"
 
-#include "building/building_variant.h"
 #include "building/construction.h"
 #include "building/menu.h"
 #include "building/model.h"
-#include "building/properties.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "graphics/generic_button.h"
@@ -77,7 +75,7 @@ static struct {
     int y_offset;
 
     int focus_button_id;
-} data = {SUBMENU_NONE};
+} data = { SUBMENU_NONE };
 
 static int init(build_menu_group submenu)
 {
@@ -160,7 +158,7 @@ static int get_sidebar_x_offset(void)
 static int is_all_button(building_type type)
 {
     return (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) ||
-           (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
+        (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
 }
 
 static void draw_menu_buttons(void)
@@ -213,17 +211,17 @@ static void draw_foreground(void)
 static int click_outside_menu(const mouse *m, int x_offset)
 {
     return m->left.went_up &&
-          (m->x < x_offset - MENU_X_OFFSET - MENU_CLICK_MARGIN ||
-           m->x > x_offset + MENU_CLICK_MARGIN ||
-           m->y < data.y_offset + MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
-           m->y > data.y_offset + MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * data.num_items);
+        (m->x < x_offset - MENU_X_OFFSET - MENU_CLICK_MARGIN ||
+        m->x > x_offset + MENU_CLICK_MARGIN ||
+        m->y < data.y_offset + MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
+        m->y > data.y_offset + MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * data.num_items);
 }
 
 static int handle_build_submenu(const mouse *m)
 {
     return generic_buttons_handle_mouse(
         m, get_sidebar_x_offset() - MENU_X_OFFSET, data.y_offset + MENU_Y_OFFSET,
-               build_menu_buttons, data.num_items, &data.focus_button_id);
+        build_menu_buttons, data.num_items, &data.focus_button_id);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -314,6 +312,10 @@ static void button_menu_item(int item)
     } else {
         data.selected_submenu = SUBMENU_NONE;
         window_city_show();
+    }
+
+    if (building_construction_type_has_rotations() && !mouse_get()->is_touch) {
+        city_warning_show(WARNING_VARIANT_TOGGLE);
     }
 }
 
