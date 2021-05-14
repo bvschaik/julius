@@ -259,6 +259,18 @@ void map_water_supply_update_reservoir_fountain(void)
             b->has_water_access = 0;
         }
     }
+
+    for (building *b = building_first_of_type(BUILDING_COLOSSEUM); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+        if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
+            b->has_water_access = 1;
+        } else {
+            b->has_water_access = 0;
+        }
+    }
+
 }
 
 int map_water_supply_is_well_unnecessary(int well_id, int radius)

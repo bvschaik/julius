@@ -100,6 +100,7 @@ static void draw_background(void)
         }
     }
     data.game_possible = 0;
+    building *game_building = building_first_of_type(game->building_id_required);
 
     if (!building_count_active(game->building_id_required)) {
         text_draw(translation_for(TR_WINDOW_GAMES_NO_VENUE), 130, 352, FONT_NORMAL_BLACK, 0);
@@ -107,6 +108,8 @@ static void draw_background(void)
         text_draw(translation_for(TR_WINDOW_GAMES_NOT_ENOUGH_FUNDS), 130, 352, FONT_NORMAL_BLACK, 0);
     } else if (!has_resources) {
         text_draw(translation_for(TR_WINDOW_GAMES_NOT_ENOUGH_RESOURCES), 130, 352, FONT_NORMAL_BLACK, 0);
+    } else if (game->water_access_required && game_building && !game_building->has_water_access) {
+        text_draw(translation_for(TR_WINDOW_GAMES_NO_WATER_ACCESS), 130, 352, FONT_NORMAL_BLACK, 0);
     } else {
         data.game_possible = 1;
         image_buttons_draw(0, 0, action_button, 1);

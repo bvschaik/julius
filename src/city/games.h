@@ -17,6 +17,7 @@ typedef struct {
     int duration_days;
     int bonus_duration;
     int building_id_required;
+    int water_access_required;
     int resource_cost[RESOURCE_MAX];
     void (*games_start_function)(int id);
 } games_type;
