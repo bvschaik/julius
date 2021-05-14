@@ -350,7 +350,7 @@ static void handle_first_touch(map_tile *tile)
     building_type type = building_construction_type();
 
     if (touch_was_click(first)) {
-        if (handle_construction_buttons(first) || handle_legion_click(tile)) {
+        if (handle_legion_click(tile)) {
             return;
         }
         if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
@@ -423,6 +423,10 @@ static void handle_touch(void)
     const touch *first = touch_get_earliest();
     if (!first->in_use) {
         scroll_restore_margins();
+        return;
+    }
+
+    if (touch_was_click(first) && handle_construction_buttons(first)) {
         return;
     }
 
