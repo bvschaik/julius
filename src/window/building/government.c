@@ -142,7 +142,7 @@ void window_building_draw_pond(building_info_context * c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     
     text_draw_centered(translation_for(TR_BUILDING_WINDOW_POND), c->x_offset, c->y_offset + 25, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_description_from_tr_string(c, TR_BUILDING_POND_DESC);
+    window_building_draw_description_from_tr_string_at(c, TR_BUILDING_POND_DESC, 96);
 }
 
 void window_building_draw_obelisk(building_info_context* c)
@@ -152,5 +152,5 @@ void window_building_draw_obelisk(building_info_context* c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
     text_draw_centered(translation_for(TR_BUILDING_OBELISK), c->x_offset, c->y_offset + 25, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_description_from_tr_string(c, TR_BUILDING_OBELISK_DESC);
+    window_building_draw_description_from_tr_string_at(c, TR_BUILDING_OBELISK_DESC, 96);
 }

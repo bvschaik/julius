@@ -139,7 +139,7 @@ void window_building_draw_roadblock(building_info_context *c)
     window_building_play_sound(c, "wavs/prefecture.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(28, 115, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_from_tr_string(c, TR_BUILDING_ROADBLOCK_DESC);
+    window_building_draw_description_from_tr_string_at(c, TR_BUILDING_ROADBLOCK_DESC, 96);
 }
 
 void window_building_draw_roadblock_foreground(building_info_context *c)

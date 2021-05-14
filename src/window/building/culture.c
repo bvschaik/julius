@@ -586,7 +586,7 @@ void window_building_draw_lararium(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_LARARIUM),
         c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_LARARIUM_DESC);
+    window_building_draw_description_from_tr_string_at(c, TR_WINDOW_BUILDING_LARARIUM_DESC, 96);
 }
 
 static void draw_grand_temple(building_info_context *c, const char *sound_file,
