@@ -330,14 +330,14 @@ static int handle_construction_buttons(const touch *t)
         box_size = 4 * 16;
         if (t->current_point.x >= width && t->current_point.x < width + box_size &&
             t->current_point.y >= 24 && t->current_point.y < 56 + box_size) {
-            building_rotation_rotate_backward();
+            building_rotation_rotate_forward();
             return 1;
         }
         width = 3 * 16 + 8;
         box_size = 4 * 16;
         if (t->current_point.x >= width && t->current_point.x < width + box_size &&
             t->current_point.y >= 24 && t->current_point.y < 56 + box_size) {
-            building_rotation_rotate_forward();
+            building_rotation_rotate_backward();
             return 1;
         }
     }
