@@ -7,6 +7,8 @@ int building_construction_cycle_forward(void);
 
 int building_construction_cycle_back(void);
 
+int building_construction_type_can_cycle(building_type type);
+
 int building_construction_is_connecting(void);
 
 void building_construction_set_cost(int cost);

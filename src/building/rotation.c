@@ -144,7 +144,7 @@ int building_rotation_get_corner(int rotation)
 int building_rotation_type_has_rotations(building_type type)
 {
     if (building_variant_has_variants(type) || building_properties_for_type(type)->rotation_offset ||
-        building_image_context_type_is_connecting(type)) {
+        building_image_context_type_is_connecting(type) || building_construction_type_can_cycle(type)) {
         return 1;
     }
     switch (type) {
@@ -153,6 +153,10 @@ int building_rotation_type_has_rotations(building_type type)
         case BUILDING_FORT_MOUNTED:
         case BUILDING_WAREHOUSE:
         case BUILDING_HIPPODROME:
+        case BUILDING_GATEHOUSE:
+        case BUILDING_TRIUMPHAL_ARCH:
+        case BUILDING_MENU_LARGE_TEMPLES:
+        case BUILDING_MENU_SMALL_TEMPLES:
             return 1;
         default:
             return 0;

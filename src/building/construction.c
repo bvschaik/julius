@@ -39,7 +39,7 @@
 #include "map/tiles.h"
 #include "map/water.h"
 
-#define BUILDING_CYCLES 5
+#define BUILDING_CYCLES 4
 #define MAX_CYCLE_SIZE 10
 
 struct reservoir_info {
@@ -102,6 +102,19 @@ const static struct cycle building_cycles[BUILDING_CYCLES] = {
     { 8, 1, {BUILDING_DATE_TREE, BUILDING_ELM_TREE,  BUILDING_FIG_TREE,  BUILDING_FIR_TREE,
       BUILDING_OAK_TREE,  BUILDING_PALM_TREE, BUILDING_PINE_TREE, BUILDING_PLUM_TREE }},
 };
+
+int building_construction_type_can_cycle(building_type type)
+{
+    for (int i = 0; i < BUILDING_CYCLES; i++) {
+        int size = building_cycles[i].size;
+        for (int j = 0; j < size; j++) {
+            if (building_cycles[i].array[j] == type) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
 
 int building_construction_cycle_forward(void)
 {
