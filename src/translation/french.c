@@ -676,7 +676,8 @@ static translation_string all_strings[] = {
     {TR_TEMPLE_DISTRIBUTING, "Distribuer"},
     {TR_TEMPLE_NOT_DISTRIBUTING, "Ne pas distribuer"},
     {TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR, "Des logements sordides et des bidonvilles empêchent l'immigration"},
-    {TR_FIGURE_TYPE_LIGHTHOUSE_SUPPLIER, "Gardien du phare"}
+    {TR_FIGURE_TYPE_LIGHTHOUSE_SUPPLIER, "Gardien du phare"},
+    {TR_WINDOW_GAMES_NO_WATER_ACCESS, "Le lieu n'a pas accès à un réservoir."}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
