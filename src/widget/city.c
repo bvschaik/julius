@@ -325,7 +325,7 @@ static int handle_construction_buttons(const touch *t)
         return 1;
     }
 
-    if (building_construction_type_has_rotations()) {
+    if (building_construction_can_rotate()) {
         width = 8;
         box_size = 4 * 16;
         if (t->current_point.x >= width && t->current_point.x < width + box_size &&

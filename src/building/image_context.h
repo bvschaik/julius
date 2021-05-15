@@ -1,6 +1,8 @@
 #ifndef BUILDING_IMAGE_CONTEXT_H
 #define BUILDING_IMAGE_CONTEXT_H
 
+#include "building/type.h"
+
 #define CONNECTING_BUILDINGS_ROTATION_LIMIT_HEDGES 3
 #define CONNECTING_BUILDINGS_ROTATION_LIMIT_PATHS 2
 
@@ -27,6 +29,8 @@ const building_image* building_image_context_get_colonnade(int grid_offset);
 const building_image* building_image_context_get_garden_path(int grid_offset, int context);
 
 int building_image_context_get_connecting_image_for_tile(int grid_offset, int building_type);
+
+int building_image_context_type_is_connecting(building_type type);
 
 #endif // BUILDING_IMAGE_CONTEXT_H
 

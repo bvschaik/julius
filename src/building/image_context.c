@@ -377,3 +377,25 @@ int building_image_context_get_connecting_image_for_tile(int grid_offset, int bu
     int image_id = image_group + img->group_offset;
     return image_id;
 }
+
+int building_image_context_type_is_connecting(building_type type)
+{
+    switch (type) {
+        case BUILDING_HEDGE_DARK:
+        case BUILDING_HEDGE_LIGHT:
+        case BUILDING_COLONNADE:
+        case BUILDING_GARDEN_PATH:
+        case BUILDING_DATE_PATH:
+        case BUILDING_ELM_PATH:
+        case BUILDING_FIG_PATH:
+        case BUILDING_FIR_PATH:
+        case BUILDING_OAK_PATH:
+        case BUILDING_PALM_PATH:
+        case BUILDING_PINE_PATH:
+        case BUILDING_PLUM_PATH:
+        case BUILDING_GARDEN_WALL:
+            return 1;
+        default:
+            return 0;
+    }
+}

@@ -1,8 +1,11 @@
 #include "build_menu.h"
 
+#include "assets/assets.h"
 #include "building/construction.h"
 #include "building/menu.h"
+#include "building/monument.h"
 #include "building/model.h"
+#include "building/rotation.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "graphics/generic_button.h"
@@ -18,11 +21,17 @@
 #include "widget/sidebar/city.h"
 #include "window/city.h"
 
-#define MENU_X_OFFSET 258
+#define MENU_X_OFFSET 290
 #define MENU_Y_OFFSET 110
 #define MENU_ITEM_HEIGHT 24
-#define MENU_ITEM_WIDTH 176
+#define MENU_ITEM_WIDTH 208
 #define MENU_CLICK_MARGIN 20
+#define MENU_TEXT_X_OFFSET 8
+
+
+#define MENU_ICON_WIDTH 14
+#define MENU_ICON_X_OFFSET 3
+#define MENU_ICON_Y_OFFSET 3
 
 #define SUBMENU_NONE -1
 
@@ -30,36 +39,36 @@ static void button_menu_index(int param1, int param2);
 static void button_menu_item(int item);
 
 static generic_button build_menu_buttons[] = {
-    {0, 0, 256, 20, button_menu_index, button_none, 1, 0},
-    {0, 24, 256, 20, button_menu_index, button_none, 2, 0},
-    {0, 48, 256, 20, button_menu_index, button_none, 3, 0},
-    {0, 72, 256, 20, button_menu_index, button_none, 4, 0},
-    {0, 96, 256, 20, button_menu_index, button_none, 5, 0},
-    {0, 120, 256, 20, button_menu_index, button_none, 6, 0},
-    {0, 144, 256, 20, button_menu_index, button_none, 7, 0},
-    {0, 168, 256, 20, button_menu_index, button_none, 8, 0},
-    {0, 192, 256, 20, button_menu_index, button_none, 9, 0},
-    {0, 216, 256, 20, button_menu_index, button_none, 10, 0},
-    {0, 240, 256, 20, button_menu_index, button_none, 11, 0},
-    {0, 264, 256, 20, button_menu_index, button_none, 12, 0},
-    {0, 288, 256, 20, button_menu_index, button_none, 13, 0},
-    {0, 312, 256, 20, button_menu_index, button_none, 14, 0},
-    {0, 336, 256, 20, button_menu_index, button_none, 15, 0},
-    {0, 360, 256, 20, button_menu_index, button_none, 16, 0},
-    {0, 384, 256, 20, button_menu_index, button_none, 17, 0},
-    {0, 408, 256, 20, button_menu_index, button_none, 18, 0},
-    {0, 432, 256, 20, button_menu_index, button_none, 19, 0},
-    {0, 456, 256, 20, button_menu_index, button_none, 20, 0},
-    {0, 480, 256, 20, button_menu_index, button_none, 21, 0},
-    {0, 504, 256, 20, button_menu_index, button_none, 22, 0},
-    {0, 528, 256, 20, button_menu_index, button_none, 23, 0},
-    {0, 552, 256, 20, button_menu_index, button_none, 24, 0},
-    {0, 576, 256, 20, button_menu_index, button_none, 25, 0},
-    {0, 600, 256, 20, button_menu_index, button_none, 26, 0},
-    {0, 624, 256, 20, button_menu_index, button_none, 27, 0},
-    {0, 648, 256, 20, button_menu_index, button_none, 28, 0},
-    {0, 672, 256, 20, button_menu_index, button_none, 29, 0},
-    {0, 696, 256, 20, button_menu_index, button_none, 30, 0},
+    {0, 0, 290, 20, button_menu_index, button_none, 1, 0},
+    {0, 24, 290, 20, button_menu_index, button_none, 2, 0},
+    {0, 48, 290, 20, button_menu_index, button_none, 3, 0},
+    {0, 72, 290, 20, button_menu_index, button_none, 4, 0},
+    {0, 96, 290, 20, button_menu_index, button_none, 5, 0},
+    {0, 120, 290, 20, button_menu_index, button_none, 6, 0},
+    {0, 144, 290, 20, button_menu_index, button_none, 7, 0},
+    {0, 168, 290, 20, button_menu_index, button_none, 8, 0},
+    {0, 192, 290, 20, button_menu_index, button_none, 9, 0},
+    {0, 216, 290, 20, button_menu_index, button_none, 10, 0},
+    {0, 240, 290, 20, button_menu_index, button_none, 11, 0},
+    {0, 264, 290, 20, button_menu_index, button_none, 12, 0},
+    {0, 288, 290, 20, button_menu_index, button_none, 13, 0},
+    {0, 312, 290, 20, button_menu_index, button_none, 14, 0},
+    {0, 336, 290, 20, button_menu_index, button_none, 15, 0},
+    {0, 360, 290, 20, button_menu_index, button_none, 16, 0},
+    {0, 384, 290, 20, button_menu_index, button_none, 17, 0},
+    {0, 408, 290, 20, button_menu_index, button_none, 18, 0},
+    {0, 432, 290, 20, button_menu_index, button_none, 19, 0},
+    {0, 456, 290, 20, button_menu_index, button_none, 20, 0},
+    {0, 480, 290, 20, button_menu_index, button_none, 21, 0},
+    {0, 504, 290, 20, button_menu_index, button_none, 22, 0},
+    {0, 528, 290, 20, button_menu_index, button_none, 23, 0},
+    {0, 552, 290, 20, button_menu_index, button_none, 24, 0},
+    {0, 576, 290, 20, button_menu_index, button_none, 25, 0},
+    {0, 600, 290, 20, button_menu_index, button_none, 26, 0},
+    {0, 624, 290, 20, button_menu_index, button_none, 27, 0},
+    {0, 648, 290, 20, button_menu_index, button_none, 28, 0},
+    {0, 672, 290, 20, button_menu_index, button_none, 29, 0},
+    {0, 696, 290, 20, button_menu_index, button_none, 30, 0},
 };
 
 static const int Y_MENU_OFFSETS[] = {
@@ -73,7 +82,6 @@ static struct {
     build_menu_group selected_submenu;
     int num_items;
     int y_offset;
-
     int focus_button_id;
 } data = { SUBMENU_NONE };
 
@@ -168,15 +176,15 @@ static void draw_menu_buttons(void)
     int item_x_align = x_offset - MENU_X_OFFSET - 8;
     for (int i = 0; i < data.num_items; i++) {
         item_index = building_menu_next_index(data.selected_submenu, item_index);
-        label_draw(item_x_align, data.y_offset + MENU_Y_OFFSET + MENU_ITEM_HEIGHT * i, 16,
+        label_draw(item_x_align, data.y_offset + MENU_Y_OFFSET + MENU_ITEM_HEIGHT * i, 18,
             data.focus_button_id == i + 1 ? 1 : 2);
         int type = building_menu_type(data.selected_submenu, item_index);
         if (is_all_button(type)) {
             text_draw_centered(translation_for(TR_BUILD_ALL_TEMPLES),
-                item_x_align, data.y_offset + MENU_Y_OFFSET + 3 + MENU_ITEM_HEIGHT * i,
+                item_x_align + MENU_TEXT_X_OFFSET, data.y_offset + MENU_Y_OFFSET + 3 + MENU_ITEM_HEIGHT * i,
                 MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
         } else {
-            lang_text_draw_centered(28, type, item_x_align, data.y_offset + MENU_Y_OFFSET + 3 + MENU_ITEM_HEIGHT * i,
+            lang_text_draw_centered(28, type, item_x_align + MENU_TEXT_X_OFFSET, data.y_offset + MENU_Y_OFFSET + 3 + MENU_ITEM_HEIGHT * i,
                 MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
         }
         if (type == BUILDING_DRAGGABLE_RESERVOIR) {
@@ -199,6 +207,22 @@ static void draw_menu_buttons(void)
             text_draw_money(cost, x_offset - 82, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
                 FONT_NORMAL_GREEN);
         }
+
+        int icons_drawn = 0;
+        if (building_rotation_type_has_rotations(type)) {
+            int image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Rotate Build Icon");
+            image_draw(image_id, item_x_align + icons_drawn * MENU_ICON_WIDTH + MENU_ICON_X_OFFSET,
+                data.y_offset + MENU_Y_OFFSET + MENU_ICON_Y_OFFSET + MENU_ITEM_HEIGHT * i);
+            icons_drawn++;
+        }
+
+        if (building_monument_type_is_monument(type)) {
+            int image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Monument Build Icon");
+            image_draw(image_id, item_x_align + icons_drawn * MENU_ICON_WIDTH + MENU_ICON_X_OFFSET,
+                data.y_offset + MENU_Y_OFFSET + MENU_ICON_Y_OFFSET + MENU_ITEM_HEIGHT * i);
+            icons_drawn++;
+        }
+
     }
 }
 
@@ -314,7 +338,7 @@ static void button_menu_item(int item)
         window_city_show();
     }
 
-    if (building_construction_type_has_rotations() && !mouse_get()->is_touch) {
+    if (building_construction_can_rotate() && !mouse_get()->is_touch) {
         city_warning_show(WARNING_VARIANT_TOGGLE);
     }
 }

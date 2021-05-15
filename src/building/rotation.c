@@ -1,6 +1,9 @@
 #include "rotation.h"
 
+#include "building/building_variant.h"
 #include "building/construction.h"
+#include "building/image_context.h"
+#include "building/properties.h"
 #include "city/view.h"
 #include "core/config.h"
 #include "core/direction.h"
@@ -135,5 +138,23 @@ int building_rotation_get_corner(int rotation)
             return 5; // right corner
         default:
             return 0; // top corner
+    }
+}
+
+int building_rotation_type_has_rotations(building_type type)
+{
+    if (building_variant_has_variants(type) || building_properties_for_type(type)->rotation_offset ||
+        building_image_context_type_is_connecting(type)) {
+        return 1;
+    }
+    switch (type) {
+        case BUILDING_FORT_JAVELIN:
+        case BUILDING_FORT_LEGIONARIES:
+        case BUILDING_FORT_MOUNTED:
+        case BUILDING_WAREHOUSE:
+        case BUILDING_HIPPODROME:
+            return 1;
+        default:
+            return 0;
     }
 }

@@ -123,7 +123,7 @@ static void draw_construction_buttons(void)
     inner_panel_draw(width - 4, 40, 3, 2);
     image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
 
-    if (building_construction_type_has_rotations()) {
+    if (building_construction_can_rotate()) {
         width = 16;
         inner_panel_draw(width - 4, 40, 3, 2);
         image_draw(image_group(GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS) + 6, width + 3, 46);

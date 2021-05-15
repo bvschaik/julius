@@ -1,6 +1,8 @@
 #ifndef BUILDING_ROTATION_H
 #define BUILDING_ROTATION_H
 
+#include "building/type.h"
+
 int building_rotation_get_road_orientation(void);
 
 void building_rotation_force_two_orientations(void);
@@ -16,5 +18,7 @@ int building_rotation_get_corner(int rot);
 void building_rotation_rotate_forward(void);
 void building_rotation_rotate_backward(void);
 void building_rotation_reset_rotation(void);
+
+int building_rotation_type_has_rotations(building_type type);
 
 #endif // BUILDING_ROTATION_H

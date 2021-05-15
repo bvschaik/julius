@@ -89,24 +89,7 @@ static const int FORT_Y_OFFSET[4][4] = { {-1,-1,0,0},{-4,-4,-3,-3},{0,0,1,1},{3,
 
 int building_construction_is_connecting(void)
 {
-    switch (data.type) {
-        case BUILDING_HEDGE_DARK:
-        case BUILDING_HEDGE_LIGHT:
-        case BUILDING_COLONNADE:
-        case BUILDING_GARDEN_PATH:
-        case BUILDING_DATE_PATH:
-        case BUILDING_ELM_PATH:
-        case BUILDING_FIG_PATH:
-        case BUILDING_FIR_PATH:
-        case BUILDING_OAK_PATH:
-        case BUILDING_PALM_PATH:
-        case BUILDING_PINE_PATH:
-        case BUILDING_PLUM_PATH:
-        case BUILDING_GARDEN_WALL:
-            return 1;
-        default:
-            return 0;
-    }
+    return building_image_context_type_is_connecting(data.type);
 }
 
 const static struct cycle building_cycles[BUILDING_CYCLES] = {
@@ -445,22 +428,9 @@ void building_construction_set_cost(int cost)
     data.cost_preview = cost;
 }
 
-int building_construction_type_has_rotations(void)
+int building_construction_can_rotate(void)
 {
-    if (building_variant_has_variants(data.type) || building_properties_for_type(data.type)->rotation_offset ||
-        building_construction_is_connecting()) {
-        return 1;
-    }
-    switch (data.type) {
-        case BUILDING_FORT_JAVELIN:
-        case BUILDING_FORT_LEGIONARIES:
-        case BUILDING_FORT_MOUNTED:
-        case BUILDING_WAREHOUSE:
-        case BUILDING_HIPPODROME:
-            return 1;
-        default:
-            return 0;
-    }
+    return building_rotation_type_has_rotations(data.type);
 }
 
 void building_construction_set_type(building_type type)
