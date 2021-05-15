@@ -234,24 +234,6 @@ static building *get_next_warehouse(void)
     return 0;
 }
 
-void building_warehouses_add_resource(int resource, int amount)
-{
-    building *b = get_next_warehouse();
-    if (!b) {
-        return;
-    }
-    building *initial_warehouse = b;
-    do {
-        if (b->state == BUILDING_STATE_IN_USE) {
-            city_resource_set_last_used_warehouse(b->id);
-            while (amount && building_warehouse_add_resource(b, resource)) {
-                amount--;
-            }
-        }
-        b = b->next_of_type ? b->next_of_type : building_first_of_type(BUILDING_WAREHOUSE);
-    } while (b != initial_warehouse && amount);
-}
-
 int THREEQ_WAREHOUSE = 24;
 int HALF_WAREHOUSE = 16;
 int QUARTER_WAREHOUSE = 8;

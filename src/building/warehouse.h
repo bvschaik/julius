@@ -38,8 +38,6 @@ void building_warehouse_space_add_import(building *space, int resource, int land
 
 void building_warehouse_space_remove_export(building *space, int resource, int land_trader);
 
-void building_warehouses_add_resource(int resource, int amount);
-
 int building_warehouses_remove_resource(int resource, int amount);
 
 int building_warehouse_accepts_storage(building *b, int resource, int *understaffed);
