@@ -151,6 +151,7 @@ int building_rotation_type_has_rotations(building_type type)
         case BUILDING_FORT_JAVELIN:
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_MOUNTED:
+        case BUILDING_FORT:
         case BUILDING_WAREHOUSE:
         case BUILDING_HIPPODROME:
         case BUILDING_GATEHOUSE:
