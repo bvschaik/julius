@@ -553,6 +553,60 @@ static int trade_ship_phrase(figure *f)
     }
 }
 
+static int city_god_state(void)
+{
+    int least_god_happiness = 100;
+    for (int i = 0; i < MAX_GODS; i++) {
+        int happiness = city_god_happiness(i);
+        if (happiness < least_god_happiness) {
+            least_god_happiness = happiness;
+        }
+    }
+    if (least_god_happiness < 20) {
+        return GOD_STATE_VERY_ANGRY;
+    } else if (least_god_happiness < 40) {
+        return GOD_STATE_ANGRY;
+    } else {
+        return GOD_STATE_NONE;
+    }
+}
+
+static int barkeep_phrase(figure *f)
+{
+    f->phrase_sequence_city = 0;
+    int god_state = city_god_state();
+    int unemployment_pct = city_labor_unemployment_percentage();
+
+    if (unemployment_pct >= 17) {
+        return 1;
+    } else if (city_labor_workers_needed() >= 10) {
+        return 2;
+    } else if (city_culture_average_entertainment() == 0) {
+        return 3;
+    } else if (god_state == GOD_STATE_VERY_ANGRY) {
+        return 4;
+    } else if (city_culture_average_entertainment() <= 10) {
+        return 3;
+    } else if (god_state == GOD_STATE_ANGRY) {
+        return 4;
+    } else if (city_culture_average_entertainment() <= 20) {
+        return 3;
+    } else if (city_resource_food_supply_months() >= 4 &&
+        unemployment_pct <= 5 &&
+        city_culture_average_health() > 0 &&
+        city_culture_average_education() > 0) {
+        if (city_population() < 500) {
+            return 5;
+        } else {
+            return 6;
+        }
+    } else if (unemployment_pct >= 10) {
+        return 1;
+    } else {
+        return 5;
+    }
+}
+
 static int phrase_based_on_figure_state(figure *f)
 {
     switch (f->type) {
@@ -605,6 +659,9 @@ static int phrase_based_on_figure_state(figure *f)
             return docker_phrase(f);
         case FIGURE_TRADE_CARAVAN:
             return trade_caravan_phrase(f);
+        case FIGURE_BARKEEP:
+        case FIGURE_BARKEEP_SUPPLIER:
+            return barkeep_phrase(f);
         case FIGURE_TRADE_CARAVAN_DONKEY:
             while (f->type == FIGURE_TRADE_CARAVAN_DONKEY && f->leading_figure_id) {
                 f = figure_get(f->leading_figure_id);
@@ -614,24 +671,6 @@ static int phrase_based_on_figure_state(figure *f)
             return trade_ship_phrase(f);
     }
     return -1;
-}
-
-static int city_god_state(void)
-{
-    int least_god_happiness = 100;
-    for (int i = 0; i < MAX_GODS; i++) {
-        int happiness = city_god_happiness(i);
-        if (happiness < least_god_happiness) {
-            least_god_happiness = happiness;
-        }
-    }
-    if (least_god_happiness < 20) {
-        return GOD_STATE_VERY_ANGRY;
-    } else if (least_god_happiness < 40) {
-        return GOD_STATE_ANGRY;
-    } else {
-        return GOD_STATE_NONE;
-    }
 }
 
 static int phrase_based_on_city_state(figure *f)
