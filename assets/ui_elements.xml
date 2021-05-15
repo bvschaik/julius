@@ -109,5 +109,8 @@
         <layer src="Advisor_Button_H" x="0" y="0" />
     </image>	
 
+<!-- Note: Rotation and Monument icons for building buttons respectively -->
+    <image id="Monument Build Icon" src="Monument_Panel" />
+    <image id="Rotate Build Icon" src="Rotation_Panel" />
 
 </assetlist>
