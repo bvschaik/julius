@@ -105,7 +105,9 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Установить точку 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Установить точку 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Вкл./выкл. инфо о битвах"},
-    {TR_HOTKEY_EDIT_TITLE, "Новая клавиша"}
+    {TR_HOTKEY_EDIT_TITLE, "Новая клавиша"},
+    {TR_HOTKEY_DUPLICATE_TITLE, "Горячая клавиша уже назначена"},
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "Эта комбинация клавиш уже назначена на следующее действие:"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
