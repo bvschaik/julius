@@ -681,6 +681,7 @@ static translation_string all_strings[] = {
     { TR_TEMPLE_NOT_DISTRIBUTING, "Не распределяет"},
     { TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR, "Низкий средний уровень жилья сдерживает иммиграцию"},
     { TR_FIGURE_TYPE_LIGHTHOUSE_SUPPLIER, "Смотритель маяка"},
+    { TR_WINDOW_GAMES_NO_WATER_ACCESS, "Место не имеет доступ к резервуару."},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
