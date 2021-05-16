@@ -11,27 +11,27 @@ case "$BUILD_TARGET" in
 	;;
 "mac")
 	cp -r res/maps ./build	
-	cp -r res/augustus_manual.pdf ./build	
+	cp -r res/manual ./build	
 	cd build && make -j4 && make install && \
 	echo "Creating disk image" && \
 	hdiutil create -volname Augustus -srcfolder augustus.app -ov -format UDZO augustus.dmg
 	if [[ "$GITHUB_REF" =~ ^refs/tags/v ]]
 	then
-		zip -r augustus.zip augustus.dmg maps augustus_manual.pdf
+		zip -r augustus.zip augustus.dmg maps manual
 	else
 		zip -r augustus.zip augustus.dmg 	
 	fi
 	;;
 "appimage")	
 	cp -r res/maps ./build	
-	cp -r res/augustus_manual.pdf ./build	
+	cp -r res/manual ./build	
 	cd build && make -j4 && \
 	make DESTDIR=AppDir install && \
 	cd .. && \
 	./.ci_scripts/package_appimage.sh
 	if [[ "$GITHUB_REF" =~ ^refs/tags/v ]]	
 	then
-		zip -r augustus.zip augustus.AppImage maps augustus_manual.pdf
+		zip -r augustus.zip augustus.AppImage maps manual
 	else
 		zip -r augustus.zip . -i augustus.AppImage	
 	fi
@@ -39,11 +39,11 @@ case "$BUILD_TARGET" in
 "linux")
 	cp -r assets ./build
 	cp -r res/maps ./build	
-	cp -r res/augustus_manual.pdf ./build	
+	cp -r res/manual ./build	
 	cd build && make -j4
 	if [[ "$GITHUB_REF" =~ ^refs/tags/v ]]
 	then
-		zip -r augustus.zip augustus assets maps augustus_manual.pdf
+		zip -r augustus.zip augustus assets maps manual
 	else
 		zip -r augustus.zip augustus
 	fi
