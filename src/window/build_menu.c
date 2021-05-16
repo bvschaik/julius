@@ -208,6 +208,12 @@ static void draw_menu_buttons(void)
                 FONT_NORMAL_GREEN);
         }
 
+        // Don't draw icons for temple submenus
+        if ((type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES) &&
+            data.selected_submenu == BUILD_MENU_TEMPLES) {
+            continue;
+        }
+
         int icons_drawn = 0;
         if (building_rotation_type_has_rotations(type)) {
             int image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Rotate Build Icon");
