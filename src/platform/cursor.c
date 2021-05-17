@@ -15,7 +15,7 @@
 #include <string.h>
 
 static char cursor_path[64] = "Areldir/Color_Cursors/";
-static int cursor_path_offset;
+static size_t cursor_path_offset;
 
 static struct {
     SDL_Cursor *cursors[CURSOR_MAX];
