@@ -31,7 +31,7 @@ case "$BUILD_TARGET" in
 	./.ci_scripts/package_appimage.sh
 	if [[ "$GITHUB_REF" =~ ^refs/tags/v ]]	
 	then
-		zip -r augustus.zip augustus.AppImage maps manual
+		zip -r augustus.zip . -i augustus.AppImage maps manual
 	else
 		zip -r augustus.zip . -i augustus.AppImage	
 	fi

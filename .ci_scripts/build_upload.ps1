@@ -49,8 +49,8 @@ if ("${env:COMPILER}" -eq "msvc") {
 $deploy_file = "augustus-$version-$suffix.zip"
 
 if ($repo -eq "release") {
-    CopyFile res\maps .
-    CopyFile res\manual .
+    xcopy /ei res\maps .\maps
+    xcopy /ei res\manual .\manual
     7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll assets maps manual
 } else {
     7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
