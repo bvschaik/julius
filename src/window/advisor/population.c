@@ -460,16 +460,16 @@ static int draw_background(void)
     return ADVISOR_HEIGHT;
 }
 
-
-
 static void draw_foreground(void)
 {
     if (focus_button_id == 0) {
         button_border_draw(507, 60, 106, 57, 0);
         button_border_draw(507, 160, 106, 57, 0);
+        button_border_draw(545, 260, 60, 51, 0);
     } else if (focus_button_id == 1) {
         button_border_draw(507, 60, 106, 57, 1);
         button_border_draw(507, 160, 106, 57, 0);
+        button_border_draw(545, 260, 60, 51, 0);
     } else if (focus_button_id == 2) {
         button_border_draw(507, 60, 106, 57, 0);
         button_border_draw(507, 160, 106, 57, 1);

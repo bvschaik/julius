@@ -54,4 +54,4 @@ See [Running Julius](https://github.com/bvschaik/julius/wiki/Running-Julius) for
 
 ## Bugs
 
-See the list of [Bugs & idiosyncrasies](doc/bugs.md) to find out more about some known bugs.
+See the list of [Bugs & idiosyncrasies](https://github.com/bvschaik/julius/wiki/Caesar-3-bugs) to find out more about some known bugs.
