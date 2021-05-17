@@ -25,7 +25,7 @@
 
 #define MAX_BUTTONS 6
 
-static void menu_file_confirm_exit(int accepted)
+static void menu_file_confirm_exit(int accepted, int checked)
 {
     if (accepted) {
         game_exit_editor();
@@ -68,9 +68,9 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void handle_input(const mouse* m, const hotkeys* h)
+static void handle_input(const mouse *m, const hotkeys *h)
 {
-    const mouse* m_dialog = mouse_in_dialog(m);
+    const mouse *m_dialog = mouse_in_dialog(m);
     if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, MAX_BUTTONS, &focus_button_id)) {
         return;
     }
@@ -85,21 +85,7 @@ static void handle_input(const mouse* m, const hotkeys* h)
     }
 }
 
-static void replay_map_confirmed(int confirmed)
-{
-    if (confirmed) {
-        if (scenario_is_custom()) {
-            game_file_start_scenario_by_name(scenario_name());
-            window_city_show();
-        }
-        else {
-            scenario_save_campaign_player_name();
-            window_mission_briefing_show();
-        }
-    }
-}
-
-static void main_menu_confirmed(int confirmed)
+static void main_menu_confirmed(int confirmed, int checked)
 {
     if (confirmed) {
         if (scenario_is_saved()) {
@@ -114,21 +100,16 @@ static void button_click(int type, int param2)
 {
     if (type == 1) {
         window_go_back();
-    }
-    else if (type == 2) {
+    } else if (type == 2) {
         menu_file_new_map(1);
-    }
-    else if (type == 3) {
+    } else if (type == 3) {
         window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_LOAD);
-    }
-    else if (type == 4) {
+    } else if (type == 4) {
         window_file_dialog_show(FILE_TYPE_SCENARIO, FILE_DIALOG_SAVE);
-    }
-    else if (type == 5) {
+    } else if (type == 5) {
         window_editor_attributes_show();
-    }
-    else if (type == 6) {
-        window_popup_dialog_show_confirmation_from_tr(TR_BUTTON_BACK_TO_MAIN_MENU, main_menu_confirmed);
+    } else if (type == 6) {
+        window_popup_dialog_show_confirmation(translation_for(TR_BUTTON_BACK_TO_MAIN_MENU), 0, 0, main_menu_confirmed);
     }
 }
 

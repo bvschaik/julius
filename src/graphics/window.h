@@ -75,6 +75,7 @@ typedef enum {
     WINDOW_EDITOR_DEMAND_CHANGES,
     WINDOW_EDITOR_EDIT_DEMAND_CHANGE,
     WINDOW_EDITOR_WIN_CRITERIA,
+    WINDOW_HOLD_GAMES,
 } window_id;
 
 typedef struct {

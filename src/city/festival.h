@@ -1,6 +1,11 @@
 #ifndef CITY_FESTIVAL_H
 #define CITY_FESTIVAL_H
 
+#include "city/resource.h"
+#include "translation/translation.h"
+
+#define MAX_GAMES 3
+
 typedef struct {
 	int god_id;
 	int month;
@@ -21,6 +26,14 @@ void city_festival_select_god(int god_id);
 
 int city_festival_selected_size(void);
 int city_festival_select_size(int size);
+
+int city_festival_selected_game_id(void);
+int city_festival_games_active(void);
+int city_festival_games_active_venue_type(void);
+int city_festival_games_bonus_active(int game_id);
+int city_festival_games_remaining_duration(void);
+int city_festival_games_planning_time(void);
+int city_festival_games_cooldown(void);
 
 void city_festival_schedule(void);
 

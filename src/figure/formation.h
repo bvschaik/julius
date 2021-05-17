@@ -4,8 +4,6 @@
 #include "core/buffer.h"
 #include "figure/type.h"
 
-#define MAX_FORMATIONS 250
-
 #define MAX_LEGIONS 6
 #define MAX_FORMATION_FIGURES 16
 
@@ -136,6 +134,7 @@ int formation_create_enemy(int figure_type, int x, int y, int layout, int orient
                            int enemy_type, int attack_type, int invasion_id, int invasion_sequence);
 
 formation *formation_get(int formation_id);
+int formation_count(void);
 
 int formation_get_selected(void);
 void formation_set_selected(int formation_id);
@@ -182,6 +181,6 @@ void formation_calculate_figures(void);
 void formation_update_all(int second_time);
 
 void formations_save_state(buffer *buf, buffer *totals);
-void formations_load_state(buffer *buf, buffer *totals);
+void formations_load_state(buffer *buf, buffer *totals, int includes_buffer_size);
 
 #endif // FIGURE_FORMATION_H

@@ -8,9 +8,9 @@
  * Temporary building lists for tick processing
  */
 
-/**
- * Clears the small building list
- */
+ /**
+  * Clears the small building list
+  */
 void building_list_small_clear(void);
 
 /**
@@ -26,16 +26,16 @@ void building_list_small_add(int building_id);
 int building_list_small_size(void);
 
 /**
- * Returns the items on the small list
- * @return List of building IDs
+ * Returns the item on the small list at the corresponding position
+ * @param index The index to retrieve the building ID
+ * @return The building ID at the corresponding index
  */
-const int *building_list_small_items(void);
+int building_list_small_item(int index);
 
 /**
  * Clears the large building list
- * @param clear_entries Whether to clear the item values as well
  */
-void building_list_large_clear(int clear_entries);
+void building_list_large_clear(void);
 
 /**
  * Adds a building to the large list
@@ -50,10 +50,11 @@ void building_list_large_add(int building_id);
 int building_list_large_size(void);
 
 /**
- * Returns the items on the large list
- * @return List of building IDs
+ * Returns the item on the large list at the corresponding position
+ * @param index The index to retrieve the building ID
+ * @return The building ID at the corresponding index
  */
-const int *building_list_large_items(void);
+int building_list_large_item(int index);
 
 void building_list_burning_clear(void);
 
@@ -61,10 +62,10 @@ void building_list_burning_add(int building_id);
 
 int building_list_burning_size(void);
 
-const int *building_list_burning_items(void);
+int building_list_burning_item(int index);
 
 void building_list_save_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals);
 
-void building_list_load_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals);
+void building_list_load_state(buffer *small, buffer *large, buffer *burning, buffer *burning_totals, int is_new_version);
 
 #endif // BUILDING_LIST_H

@@ -28,6 +28,7 @@ static void draw_title(int y, int text_id)
 {
     image_draw(image_group(GROUP_BULLET), 32, y + 1);
     lang_text_draw(61, text_id, 52, y, FONT_NORMAL_WHITE);
+
 }
 
 static int draw_background(void)
@@ -79,6 +80,7 @@ static int draw_background(void)
     } else if (city_migration_percentage() >= 80) {
         lang_text_draw(61, 25, X_OFFSET, 106, FONT_NORMAL_GREEN);
     } else {
+        int text_group = 61;
         int text_id;
         switch (city_migration_no_immigration_cause()) {
             case NO_IMMIGRATION_LOW_WAGES: text_id = 19; break;
@@ -87,10 +89,14 @@ static int draw_background(void)
             case NO_IMMIGRATION_HIGH_TAXES: text_id = 22; break;
             case NO_IMMIGRATION_MANY_TENTS: text_id = 70; break;
             case NO_IMMIGRATION_LOW_MOOD: text_id = 71; break;
+            case NO_IMMIGRATION_SQUALOR:
+                text_group = CUSTOM_TRANSLATION;
+                text_id = TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR;
+                break;
             default: text_id = 0; break;
         }
         if (text_id) {
-            lang_text_draw(61, text_id, X_OFFSET, 106, FONT_NORMAL_GREEN);
+            lang_text_draw(text_group, text_id, X_OFFSET, 106, FONT_NORMAL_RED);
         }
     }
 
@@ -141,14 +147,13 @@ static int draw_background(void)
 
     // military
     draw_title(186, 5);
-    
+
     int food_text = 0;
     int food_stress = city_data.mess_hall.food_stress_cumulative;
 
     if (food_stress > 60) {
         food_text = TR_ADVISOR_LEGION_FOOD_CRITICAL;
-    }
-    else if (food_stress > 40) {
+    } else if (food_stress > 40) {
         food_text = TR_ADVISOR_LEGION_FOOD_NEEDED;
     }
     if (food_text && city_figures_soldiers() > 0) {
@@ -173,11 +178,11 @@ static int draw_background(void)
     draw_title(206, 6);
     if (city_figures_rioters()) {
         lang_text_draw(61, 33, X_OFFSET, 206, FONT_NORMAL_RED);
-    } else if (city_sentiment_criminals() > 10) {
+    } else if (city_figures_criminals() > 10) {
         lang_text_draw(61, 32, X_OFFSET, 206, FONT_NORMAL_RED);
-    } else if (city_sentiment_criminals()) {
+    } else if (city_figures_criminals()) {
         lang_text_draw(61, 31, X_OFFSET, 206, FONT_NORMAL_RED);
-    } else if (city_sentiment_protesters()) {
+    } else if (city_figures_protesters() || city_sentiment_crime_cooldown()) {
         lang_text_draw(61, 30, X_OFFSET, 206, FONT_NORMAL_RED);
     } else {
         lang_text_draw(61, 29, X_OFFSET, 206, FONT_NORMAL_GREEN);

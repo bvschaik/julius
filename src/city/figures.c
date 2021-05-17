@@ -6,6 +6,9 @@ void city_figures_reset(void)
 {
     city_data.figure.enemies = 0;
     city_data.figure.rioters = 0;
+    city_data.figure.looters = 0;
+    city_data.figure.robbers = 0;
+    city_data.figure.protesters = 0;
     city_data.figure.attacking_natives = 0;
     city_data.figure.animals = 0;
     city_data.figure.imperial_soldiers = 0;
@@ -44,6 +47,27 @@ void city_figures_add_rioter(int is_attacking)
     }
 }
 
+void city_figures_add_looter(int is_attacking)
+{
+    city_data.figure.looters++;
+    if (is_attacking) {
+        city_data.figure.security_breach_duration = 10;
+    }
+}
+
+void city_figures_add_robber(int is_attacking)
+{
+    city_data.figure.robbers++;
+    if (is_attacking) {
+        city_data.figure.security_breach_duration = 10;
+    }
+}
+
+void city_figures_add_protester(void)
+{
+    city_data.figure.protesters++;
+}
+
 void city_figures_add_soldier(void)
 {
     city_data.figure.soldiers++;
@@ -77,6 +101,26 @@ int city_figures_enemies(void)
 int city_figures_rioters(void)
 {
     return city_data.figure.rioters;
+}
+
+int city_figures_looters(void)
+{
+    return city_data.figure.looters;
+}
+
+int city_figures_robbers(void)
+{
+    return city_data.figure.robbers;
+}
+
+int city_figures_protesters(void)
+{
+    return city_data.figure.protesters;
+}
+
+int city_figures_criminals(void)
+{
+    return city_figures_rioters() + city_figures_looters() + city_figures_robbers();
 }
 
 int city_figures_soldiers(void)

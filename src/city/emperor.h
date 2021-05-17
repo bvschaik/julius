@@ -36,6 +36,8 @@ int city_emperor_salary_for_rank(int rank);
 
 void city_emperor_set_salary_rank(int rank);
 
+int city_emperor_rank_for_salary_paid(int salary);
+
 int city_emperor_salary_rank(void);
 int city_emperor_salary_amount(void);
 
@@ -52,5 +54,7 @@ int city_emperor_rank(void);
 void city_emperor_mark_soldier_killed(void);
 
 void city_emperor_force_attack(int size);
+
+void city_emperor_decrement_personal_savings(int amount);
 
 #endif // CITY_EMPEROR_H

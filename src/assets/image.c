@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define ANIMATION_MAX_IMAGE_ID 32768
+
 static void load_image_layers(asset_image *img)
 {
     for (layer *l = img->last_layer; l; l = l->prev) {
@@ -138,8 +140,23 @@ int asset_image_add_layer(asset_image *img,
     return 1;
 }
 
+asset_image *get_animation_image(int image_id)
+{
+    image_groups *group = group_get_from_hash(ANIMATION_FRAMES_GROUP);
+    int image_index = image_id - ANIMATION_FRAMES_GROUP;
+    for (asset_image *img = group->first_image; img; img = img->next) {
+        if (img->index == image_index) {
+            return img;
+        }
+    }
+    return 0;
+}
+
 asset_image *asset_image_get_from_id(int image_id)
 {
+    if (image_id >= ANIMATION_FRAMES_GROUP && image_id < ANIMATION_MAX_IMAGE_ID) {
+        return get_animation_image(image_id);
+    }
     image_groups *group = group_get_from_hash(image_id);
     if (!group) {
         return 0;

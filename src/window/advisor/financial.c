@@ -1,5 +1,6 @@
 #include "financial.h"
 
+#include "city/data_private.h"
 #include "city/finance.h"
 #include "core/calc.h"
 #include "graphics/arrow_button.h"
@@ -74,28 +75,24 @@ static int draw_background(void)
     // income
     draw_row(60, 8, 155, last_year->income.taxes, this_year->income.taxes);
     draw_row(60, 9, 170, last_year->income.exports, this_year->income.exports);
-    draw_row(60, 20, 185, last_year->income.donated, this_year->income.donated);
+    draw_tr_row(TR_WINDOW_ADVISOR_TOURISM, 185, city_data.finance.tourism_last_year, city_data.finance.tourism_this_year);
+    draw_row(60, 20, 200, last_year->income.donated, this_year->income.donated);
 
-    graphics_draw_horizontal_line(280, 350, 198, COLOR_BLACK);
-    graphics_draw_horizontal_line(420, 490, 198, COLOR_BLACK);
+    graphics_draw_horizontal_line(280, 350, 213, COLOR_BLACK);
+    graphics_draw_horizontal_line(420, 490, 213, COLOR_BLACK);
 
-    draw_row(60, 10, 203, last_year->income.total, this_year->income.total);
+    draw_row(60, 10, 218, last_year->income.total, this_year->income.total);
 
     // expenses
-    draw_row(60, 11, 227, last_year->expenses.imports, this_year->expenses.imports);
-    draw_row(60, 12, 242, last_year->expenses.wages, this_year->expenses.wages);
-    draw_row(60, 13, 257, last_year->expenses.construction, this_year->expenses.construction);
-    draw_tr_row(TR_ADVISOR_FINANCE_LEVIES, 272, last_year->expenses.levies, this_year->expenses.levies);
 
-    // interest (with percentage)
-    width = lang_text_draw(60, 14, 80, 287, FONT_NORMAL_BLACK);
-    text_draw_percentage(10, 80 + width, 287, FONT_NORMAL_BLACK);
-    text_draw_number(last_year->expenses.interest, '@', " ", 290, 287, FONT_NORMAL_BLACK);
-    text_draw_number(this_year->expenses.interest, '@', " ", 430, 287, FONT_NORMAL_BLACK);
+    draw_row(60, 11, 242, last_year->expenses.imports, this_year->expenses.imports);
+    draw_row(60, 12, 257, last_year->expenses.wages, this_year->expenses.wages);
+    draw_row(60, 13, 272, last_year->expenses.construction, this_year->expenses.construction);
+    draw_tr_row(TR_ADVISOR_FINANCE_LEVIES, 287, last_year->expenses.levies, this_year->expenses.levies);
 
     draw_row(60, 15, 302, last_year->expenses.salary, this_year->expenses.salary);
     draw_row(60, 16, 317, last_year->expenses.sundries, this_year->expenses.sundries);
-    draw_row(60, 21, 332, last_year->expenses.tribute, this_year->expenses.tribute);
+    draw_tr_row(TR_WINDOW_ADVISOR_FINANCE_INTEREST_TRIBUTE, 332, last_year->expenses.tribute + last_year->expenses.interest, this_year->expenses.tribute + this_year->expenses.interest);
 
     graphics_draw_horizontal_line(280, 350, 345, COLOR_BLACK);
     graphics_draw_horizontal_line(420, 490, 345, COLOR_BLACK);
@@ -125,12 +122,10 @@ static void button_change_taxes(int is_down, int param2)
     window_invalidate();
 }
 
-static int get_tooltip_text(void)
+static void get_tooltip_text(advisor_tooltip_result *r)
 {
     if (arrow_button_focus) {
-        return 120;
-    } else {
-        return 0;
+        r->text_id = 120;
     }
 }
 

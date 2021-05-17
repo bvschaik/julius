@@ -12,11 +12,14 @@ static const char *INI_FILENAME = "augustus.ini";
 
 // Keep this in the same order as the config_keys in config.h
 static const char *ini_keys[] = {
+    "enable_audio",
+    "master_volume",
     "ui_walker_waypoints",
     "gameplay_fix_immigration",
     "gameplay_fix_100y_ghosts",
     "screen_display_scale",
     "screen_cursor_scale",
+    "screen_color_cursors",
     "ui_sidebar_info",
     "ui_show_intro_video",
     "ui_smooth_scrolling",
@@ -29,6 +32,7 @@ static const char *ini_keys[] = {
     "ui_highlight_legions",
     "ui_show_military_sidebar",
     "ui_disable_map_drag",
+    "ui_show_max_prosperity",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",
     "gameplay_change_retire_at_60",
@@ -37,6 +41,7 @@ static const char *ini_keys[] = {
     "gameplay_buyers_dont_distribute",
     "gameplay_change_getting_granaries_go_offroad",
     "gameplay_change_granaries_get_double",
+    "gameplay_change_allow_exporting_from_granaries",
     "gameplay_change_tower_sentries_go_offroad",
     "gameplay_change_farms_deliver_close",
     "gameplay_change_only_deliver_to_accepting_granaries",
@@ -46,6 +51,8 @@ static const char *ini_keys[] = {
     "gameplay_change_warehouses_dont_accept",
     "gameplay_change_houses_dont_expand_into_gardens",
     "gameplay_change_monuments_boost_culture_rating",
+    "gameplay_change_disable_infinite_wolves_spawning",
+    "gameplay_change_romers_dont_skip_corners",
 };
 
 static const char *ini_string_keys[] = {
@@ -56,6 +63,8 @@ static int values[CONFIG_MAX_ENTRIES];
 static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 
 static int default_values[CONFIG_MAX_ENTRIES] = {
+    [CONFIG_GENERAL_ENABLE_AUDIO] = 1,
+    [CONFIG_GENERAL_MASTER_VOLUME] = 100,
     [CONFIG_UI_SIDEBAR_INFO] = 1,
     [CONFIG_UI_SMOOTH_SCROLLING] = 1,
     [CONFIG_UI_ZOOM] = 1,
@@ -123,7 +132,7 @@ void config_load(void)
     while ((line = fgets(line_buffer, MAX_LINE, fp))) {
         // Remove newline from string
         size_t size = strlen(line);
-        while (size > 0 && (line[size-1] == '\n' || line[size-1] == '\r')) {
+        while (size > 0 && (line[size - 1] == '\n' || line[size - 1] == '\r')) {
             line[--size] = 0;
         }
         char *equals = strchr(line, '=');

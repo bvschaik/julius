@@ -13,6 +13,6 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
                           buffer *entry_exit_xy, buffer *entry_exit_grid_offset);
 
 void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
-                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset);
+                          buffer *entry_exit_xy, buffer *entry_exit_grid_offset, int has_separate_import_limits);
 
 #endif // CITY_DATA_H

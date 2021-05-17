@@ -33,6 +33,8 @@ static int get_land_type_citizen_building(int grid_offset)
     building *b = building_get(map_building_at(grid_offset));
     int type = CITIZEN_N1_BLOCKED;
     switch (b->type) {
+        default:
+            return CITIZEN_N1_BLOCKED;
         case BUILDING_WAREHOUSE:
         case BUILDING_GATEHOUSE:
             type = CITIZEN_0_ROAD;
@@ -146,6 +148,8 @@ static int get_land_type_noncitizen(int grid_offset)
 {
     int type = NONCITIZEN_1_BUILDING;
     switch (building_get(map_building_at(grid_offset))->type) {
+        default:
+            return NONCITIZEN_1_BUILDING;
         case BUILDING_WAREHOUSE:
         case BUILDING_FORT_GROUND:
             type = NONCITIZEN_0_PASSABLE;

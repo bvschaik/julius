@@ -6,6 +6,7 @@
 #include "building/count.h"
 #include "city/culture.h"
 #include "city/data_private.h"
+#include "city/games.h"
 #include "city/victory.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -13,7 +14,8 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 
-#define GT_CULTURE_BONUS 8
+#define MONUMENT_CULTURE_BONUS 6
+#define GAMES_MONTHLY_FAVOUR_BONUS 2
 
 int city_rating_culture(void)
 {
@@ -82,6 +84,7 @@ void city_ratings_peace_building_destroyed(building_type type)
         case BUILDING_FORT_GROUND:
         case BUILDING_GATEHOUSE:
         case BUILDING_TOWER:
+        case BUILDING_WATCHTOWER:
             break;
         default:
             city_data.ratings.peace_destroyed_buildings++;
@@ -101,6 +104,11 @@ void city_ratings_peace_record_rioter(void)
 {
     city_data.ratings.peace_num_rioters++;
     city_data.ratings.peace_riot_cause = city_data.sentiment.low_mood_cause;
+}
+
+int city_ratings_peace_num_rioters(void)
+{
+    return city_data.ratings.peace_num_rioters;
 }
 
 void city_ratings_change_favor(int amount)
@@ -400,14 +408,14 @@ static void update_culture_rating(void)
     }
     city_data.ratings.culture += city_data.ratings.culture_points.library;
 
-    if (config_get(CONFIG_GP_CH_MONUMENTS_BOOST_CULTURE_RATING)) {
-        city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_CERES) * GT_CULTURE_BONUS;
-        city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_NEPTUNE) * GT_CULTURE_BONUS;
-        city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_MERCURY) * GT_CULTURE_BONUS;
-        city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_MARS) * GT_CULTURE_BONUS;
-        city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_VENUS) * GT_CULTURE_BONUS;
-        city_data.ratings.culture += building_count_active(BUILDING_PANTHEON) * GT_CULTURE_BONUS;
-    }
+    city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_CERES) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_NEPTUNE) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_MERCURY) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_MARS) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_GRAND_TEMPLE_VENUS) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_PANTHEON) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_COLOSSEUM) * MONUMENT_CULTURE_BONUS;
+    city_data.ratings.culture += building_count_active(BUILDING_HIPPODROME) * MONUMENT_CULTURE_BONUS;
 
     city_data.ratings.culture = calc_bound(city_data.ratings.culture, 0, 100);
     update_culture_explanation();
@@ -468,11 +476,12 @@ static void calculate_max_prosperity(void)
 {
     int points = 0;
     int houses = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state && b->house_size) {
-            points += model_get_house(b->subtype.house_level)->prosperity;
-            houses++;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state && b->house_size) {
+                points += model_get_house(b->subtype.house_level)->prosperity;
+                houses++;
+            }
         }
     }
     if (houses > 0) {
@@ -512,7 +521,7 @@ static void update_peace_rating(void)
     update_peace_explanation();
 }
 
-static void update_favor_rating(int is_yearly_update)
+static void update_favor_rating(int is_yearly_update, int is_monthly_update)
 {
     if (scenario_is_open_play()) {
         city_data.ratings.favor = 50;
@@ -521,6 +530,11 @@ static void update_favor_rating(int is_yearly_update)
     city_data.emperor.months_since_gift++;
     if (city_data.emperor.months_since_gift >= 12) {
         city_data.emperor.gift_overdose_penalty = 0;
+    }
+    if (is_monthly_update) {
+        if (city_games_imperial_festival_active()) {
+            city_data.ratings.favor += GAMES_MONTHLY_FAVOUR_BONUS;
+        }
     }
     if (is_yearly_update) {
         city_data.ratings.favor_salary_penalty = 0;
@@ -540,7 +554,9 @@ static void update_favor_rating(int is_yearly_update)
             }
         }
         // salary
-        int salary_delta = city_data.emperor.salary_rank - city_data.emperor.player_rank;
+        int rank_paid = city_emperor_rank_for_salary_paid(city_data.finance.last_year.expenses.salary);
+        int salary_delta = rank_paid - city_data.emperor.player_rank;
+
         if (city_data.emperor.player_rank != 0) {
             if (salary_delta > 0) {
                 // salary too high
@@ -569,27 +585,27 @@ static void update_favor_rating(int is_yearly_update)
             int bonus = 1;
             if (scenario_criteria_culture_enabled() &&
                 city_data.ratings.culture < calc_adjust_with_percentage(
-                    scenario_criteria_culture(), milestone_pct)) {
+                scenario_criteria_culture(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_prosperity_enabled() &&
                 city_data.ratings.prosperity < calc_adjust_with_percentage(
-                    scenario_criteria_prosperity(), milestone_pct)) {
+                scenario_criteria_prosperity(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_peace_enabled() &&
                 city_data.ratings.peace < calc_adjust_with_percentage(
-                    scenario_criteria_peace(), milestone_pct)) {
+                scenario_criteria_peace(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_favor_enabled() &&
                 city_data.ratings.favor < calc_adjust_with_percentage(
-                    scenario_criteria_favor(), milestone_pct)) {
+                scenario_criteria_favor(), milestone_pct)) {
                 bonus = 0;
             }
             if (scenario_criteria_population_enabled() &&
                 city_data.population.population < calc_adjust_with_percentage(
-                    scenario_criteria_population(), milestone_pct)) {
+                scenario_criteria_population(), milestone_pct)) {
                 bonus = 0;
             }
             if (bonus) {
@@ -613,10 +629,10 @@ static void update_favor_rating(int is_yearly_update)
     city_ratings_update_favor_explanation();
 }
 
-void city_ratings_update(int is_yearly_update)
+void city_ratings_update(int is_yearly_update, int is_monthly_update)
 {
     update_culture_rating();
-    update_favor_rating(is_yearly_update);
+    update_favor_rating(is_yearly_update, is_monthly_update);
     calculate_max_prosperity();
     if (is_yearly_update) {
         update_prosperity_rating();
@@ -624,6 +640,7 @@ void city_ratings_update(int is_yearly_update)
     }
 }
 
-int city_ratings_prosperity_max(void) {
+int city_ratings_prosperity_max(void)
+{
     return city_data.ratings.prosperity_max;
 }

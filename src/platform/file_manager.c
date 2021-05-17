@@ -32,7 +32,7 @@
 #define fs_dir_close _wclosedir
 #define fs_dir_read _wreaddir
 #define dir_entry_name(d) wchar_to_utf8(d->d_name)
-typedef const wchar_t * dir_name;
+typedef const wchar_t *dir_name;
 
 static const char *wchar_to_utf8(const wchar_t *str)
 {
@@ -41,7 +41,7 @@ static const char *wchar_to_utf8(const wchar_t *str)
     int size_needed = WideCharToMultiByte(CP_UTF8, 0, str, -1, NULL, 0, NULL, NULL);
     if (size_needed > filename_buffer_size) {
         free(filename_buffer);
-        filename_buffer = (char*) malloc(sizeof(char) * size_needed);
+        filename_buffer = (char *) malloc(sizeof(char) * size_needed);
         filename_buffer_size = size_needed;
     }
     WideCharToMultiByte(CP_UTF8, 0, str, -1, filename_buffer, size_needed, NULL, NULL);
@@ -63,7 +63,7 @@ static wchar_t *utf8_to_wchar(const char *str)
 #define fs_dir_close closedir
 #define fs_dir_read readdir
 #define dir_entry_name(d) ((d)->d_name)
-typedef const char * dir_name;
+typedef const char *dir_name;
 #endif
 
 #ifndef S_ISLNK
@@ -129,7 +129,6 @@ static const char *ASSET_DIRS[MAX_ASSET_DIRS] = {
 };
 
 static char assets_directory[FILE_NAME_MAX];
-static char assets_directory_length;
 
 static int write_base_path_to(char *dest)
 {
@@ -169,12 +168,12 @@ static const dir_name get_assets_directory(void)
             size_t home_dir_length = strlen(home_dir);
             strncpy(assets_directory, home_dir, FILE_NAME_MAX);
             strncpy(assets_directory + home_dir_length, &ASSET_DIRS[i][1], FILE_NAME_MAX - home_dir_length);
-        // Special case - SDL base path
+            // Special case - SDL base path
         } else if (strcmp(ASSET_DIRS[i], "***SDL_BASE_PATH***") == 0) {
             if (!write_base_path_to(assets_directory)) {
                 continue;
             }
-        // Special case - Path relative to executable location (AppImage)
+            // Special case - Path relative to executable location (AppImage)
         } else if (strcmp(ASSET_DIRS[i], "***RELATIVE_PATH***") == 0) {
             if (!write_base_path_to(assets_directory)) {
                 continue;
@@ -187,17 +186,16 @@ static const dir_name get_assets_directory(void)
         } else {
             strncpy(assets_directory, ASSET_DIRS[i], FILE_NAME_MAX - 1);
         }
-        int offset = strlen(assets_directory);
+        size_t offset = strlen(assets_directory);
         assets_directory[offset++] = '/';
         // Special case for romfs on switch
 #ifdef __SWITCH__
-        if(strcmp(assets_directory, "romfs:/") != 0) {
+        if (strcmp(assets_directory, "romfs:/") != 0) {
 #endif
             strncpy(&assets_directory[offset], ASSETS_DIR_NAME, FILE_NAME_MAX - offset);
 #ifdef __SWITCH__
         }
 #endif
-        assets_directory_length = strlen(assets_directory);
 #ifndef __vita__
         dir_name result = set_dir_name(assets_directory);
 #else
@@ -311,7 +309,7 @@ int platform_file_manager_should_case_correct_file(void)
 int platform_file_manager_compare_filename(const char *a, const char *b)
 {
 #if _MSC_VER
-    return _mbsicmp((const unsigned char *)a, (const unsigned char *)b);
+    return _mbsicmp((const unsigned char *) a, (const unsigned char *) b);
 #else
     return strcasecmp(a, b);
 #endif
@@ -320,7 +318,7 @@ int platform_file_manager_compare_filename(const char *a, const char *b)
 int platform_file_manager_compare_filename_prefix(const char *filename, const char *prefix, int prefix_len)
 {
 #if _MSC_VER
-    return _mbsnicmp((const unsigned char *)filename, (const unsigned char *)prefix, prefix_len);
+    return _mbsnicmp((const unsigned char *) filename, (const unsigned char *) prefix, prefix_len);
 #else
     return strncasecmp(filename, prefix, prefix_len);
 #endif
@@ -357,6 +355,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 
 FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
 {
+    get_assets_directory();
     const char *cased_asset_path = dir_get_asset(assets_directory, asset);
     return fopen(cased_asset_path, mode);
 }
@@ -384,8 +383,9 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 
 FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
 {
+    get_assets_directory();
     const char *cased_asset_path = dir_get_asset(assets_directory, asset);
-    
+
     wchar_t *wfile = utf8_to_wchar(cased_asset_path);
     wchar_t *wmode = utf8_to_wchar(mode);
 
@@ -418,7 +418,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 
 FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
 {
-    return (FILE *)android_open_asset(asset, mode);
+    return (FILE *) android_open_asset(asset, mode);
 }
 
 int platform_file_manager_remove_file(const char *filename)
@@ -452,6 +452,7 @@ int platform_file_manager_remove_file(const char *filename)
 
 FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
 {
+    get_assets_directory();
     const char *cased_asset_path = dir_get_asset(assets_directory, asset);
     return fopen(cased_asset_path, mode);
 }

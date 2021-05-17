@@ -4,6 +4,7 @@
 #include "building/list.h"
 #include "building/maintenance.h"
 #include "city/figures.h"
+#include "city/sentiment.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "figure/combat.h"
@@ -14,6 +15,9 @@
 #include "map/building.h"
 #include "map/road_access.h"
 #include "sound/effect.h"
+
+#define INFINITE 10000
+#define RECALCULATE_ENEMY_LOCATION_TICKS 30
 
 void figure_engineer_action(figure *f)
 {
@@ -92,26 +96,37 @@ void figure_engineer_action(figure *f)
     figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
 }
 
+static int get_enemy_distance(figure *f, int x, int y)
+{
+    if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR) {
+        return calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_CRIMINAL_LOOTER || f->type == FIGURE_CRIMINAL_ROBBER) {
+        return 3 * calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+        return calc_maximum_distance(x, y, f->x, f->y);
+    } else if (figure_is_enemy(f)) {
+        return 3 * calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_WOLF) {
+        return 4 * calc_maximum_distance(x, y, f->x, f->y);
+    }
+    return INFINITE;
+}
+
 static int get_nearest_enemy(int x, int y, int *distance)
 {
     int min_enemy_id = 0;
-    int min_dist = 10000;
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    int min_dist = INFINITE;
+    for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
-        if (f->state != FIGURE_STATE_ALIVE || f->targeted_by_figure_id) {
+        if (figure_is_dead(f)) {
             continue;
         }
-        int dist;
-        if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR) {
-            dist = calc_maximum_distance(x, y, f->x, f->y);
-        } else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
-            dist = calc_maximum_distance(x, y, f->x, f->y);
-        } else if (figure_is_enemy(f)) {
-            dist = 3 * calc_maximum_distance(x, y, f->x, f->y);
-        } else if (f->type == FIGURE_WOLF) {
-            dist = 4 * calc_maximum_distance(x, y, f->x, f->y);
-        } else {
-            continue;
+        int dist = get_enemy_distance(f, x, y);
+        if (dist != INFINITE && f->targeted_by_figure_id) {
+            figure *pursuiter = figure_get(f->targeted_by_figure_id);
+            if (get_enemy_distance(f, pursuiter->x, pursuiter->y) < dist * 2) {
+                continue;
+            }
         }
         if (dist < min_dist) {
             min_dist = dist;
@@ -142,12 +157,14 @@ static int fight_enemy(figure *f)
     if (f->wait_ticks_next_target < 10) {
         return 0;
     }
-    f->wait_ticks_next_target = 0;
     int distance;
     int enemy_id = get_nearest_enemy(f->x, f->y, &distance);
     if (enemy_id > 0 && distance <= 30) {
         figure *enemy = figure_get(enemy_id);
-        f->wait_ticks_next_target = 0;
+        if (enemy->targeted_by_figure_id) {
+            figure_get(enemy->targeted_by_figure_id)->target_figure_id = 0;
+        }
+        f->wait_ticks = 0;
         f->action_state = FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY;
         f->destination_x = enemy->x;
         f->destination_y = enemy->y;
@@ -157,10 +174,11 @@ static int fight_enemy(figure *f)
         figure_route_remove(f);
         return 1;
     }
+    f->wait_ticks_next_target = 0;
     return 0;
 }
 
-static int fight_fire(figure *f)
+static int fight_fire(figure *f, int force)
 {
     if (building_list_burning_size() <= 0) {
         return 0;
@@ -170,14 +188,22 @@ static int fight_fire(figure *f)
         case FIGURE_ACTION_149_CORPSE:
         case FIGURE_ACTION_70_PREFECT_CREATED:
         case FIGURE_ACTION_71_PREFECT_ENTERING_EXITING:
-        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
-        case FIGURE_ACTION_75_PREFECT_AT_FIRE:
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
         case FIGURE_ACTION_77_PREFECT_AT_ENEMY:
             return 0;
+        case FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE:
+        case FIGURE_ACTION_75_PREFECT_AT_FIRE:
+            if (!force) {
+                return 0;
+            }
+            building *burn = building_get(f->destination_building_id);
+            if ((burn->state == BUILDING_STATE_IN_USE || burn->state == BUILDING_STATE_MOTHBALLED) &&
+                burn->type == BUILDING_BURNING_RUIN) {
+                return 1;
+            }
     }
     f->wait_ticks_missile++;
-    if (f->wait_ticks_missile < 20) {
+    if (f->wait_ticks_missile < 20 && !force) {
         return 0;
     }
     int distance;
@@ -186,6 +212,7 @@ static int fight_fire(figure *f)
         building *ruin = building_get(ruin_id);
         f->wait_ticks_missile = 0;
         f->action_state = FIGURE_ACTION_74_PREFECT_GOING_TO_FIRE;
+        f->wait_ticks = 0;
         f->destination_x = ruin->road_access_x;
         f->destination_y = ruin->road_access_y;
         f->destination_building_id = ruin_id;
@@ -212,8 +239,7 @@ static void extinguish_fire(figure *f)
     }
     f->wait_ticks--;
     if (f->wait_ticks <= 0) {
-        f->wait_ticks_missile = 20;
-        if (!fight_fire(f)) {
+        if (!fight_fire(f, 1)) {
             building *b = building_get(f->building_id);
             int x_road, y_road;
             if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
@@ -226,18 +252,6 @@ static void extinguish_fire(figure *f)
             }
         }
     }
-}
-
-static int target_is_alive(figure *f)
-{
-    if (f->target_figure_id <= 0) {
-        return 0;
-    }
-    figure *target = figure_get(f->target_figure_id);
-    if (!figure_is_dead(target) && target->created_sequence == f->target_figure_created_sequence) {
-        return 1;
-    }
-    return 0;
 }
 
 void figure_prefect_action(figure *f)
@@ -254,7 +268,7 @@ void figure_prefect_action(figure *f)
 
     // special actions
     if (!fight_enemy(f)) {
-        fight_fire(f);
+        fight_fire(f, 0);
     }
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
@@ -328,6 +342,15 @@ void figure_prefect_action(figure *f)
                 f->wait_ticks = 50;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
+            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS && !fight_fire(f, 1)) {
+                int x_road, y_road;
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                    f->action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
+                    f->destination_x = x_road;
+                    f->destination_y = y_road;
+                    f->wait_ticks = 0;
+                    figure_route_remove(f);
+                }
             }
             break;
         case FIGURE_ACTION_75_PREFECT_AT_FIRE:
@@ -335,7 +358,8 @@ void figure_prefect_action(figure *f)
             break;
         case FIGURE_ACTION_76_PREFECT_GOING_TO_ENEMY:
             f->terrain_usage = TERRAIN_USAGE_ANY;
-            if (!target_is_alive(f)) {
+            if (!figure_target_is_alive(f) &&
+                !fight_enemy(f)) {
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
@@ -347,11 +371,12 @@ void figure_prefect_action(figure *f)
                     f->state = FIGURE_STATE_DEAD;
                 }
             }
-            figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+            figure_movement_move_ticks_with_percentage(f, 1, 20);
+            if (f->direction == DIR_FIGURE_AT_DESTINATION || f->wait_ticks++ > RECALCULATE_ENEMY_LOCATION_TICKS) {
                 figure *target = figure_get(f->target_figure_id);
                 f->destination_x = target->x;
                 f->destination_y = target->y;
+                f->wait_ticks = 0;
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;

@@ -4,6 +4,7 @@
 #include "building/destruction.h"
 #include "building/roadblock.h"
 #include "core/calc.h"
+#include "core/config.h"
 #include "figure/combat.h"
 #include "figure/route.h"
 #include "figure/service.h"
@@ -95,6 +96,7 @@ static roadblock_permission get_permission_for_figure_type(figure* f)
     case FIGURE_CHARIOTEER:
     case FIGURE_ACTOR:
     case FIGURE_LION_TAMER:
+    case FIGURE_BARKEEP:
         return PERMISSION_ENTERTAINER;
         break;
     case FIGURE_SURGEON:
@@ -110,6 +112,10 @@ static roadblock_permission get_permission_for_figure_type(figure* f)
         return PERMISSION_TAX_COLLECTOR;
     case FIGURE_LABOR_SEEKER:
         return PERMISSION_LABOR_SEEKER;
+    case FIGURE_MISSIONARY:
+        return PERMISSION_MISSIONARY;
+    case FIGURE_WATCHMAN:
+        return PERMISSION_WATCHMAN;
     default:
         return PERMISSION_NONE;
         break;
@@ -293,6 +299,9 @@ void figure_movement_init_roaming(figure *f)
     f->roam_choose_destination = 0;
     f->roam_ticks_until_next_turn = -1;
     f->roam_turn_direction = 2;
+    if (config_get(CONFIG_GP_CH_ROAMERS_DONT_SKIP_CORNERS)) {
+        f->disallow_diagonal = 1;
+    }
     int roam_dir = b->figure_roam_direction;
     b->figure_roam_direction += 2;
     if (b->figure_roam_direction > 6) {
@@ -331,7 +340,9 @@ static void roam_set_direction(figure *f)
             break;
         }
         dir++;
-        if (dir > 7) dir = 0;
+        if (dir > 7) {
+            dir = 0;
+        }
         road_offset_dir1++;
     }
     int road_offset_dir2 = 0;
@@ -342,7 +353,9 @@ static void roam_set_direction(figure *f)
             break;
         }
         dir--;
-        if (dir < 0) dir = 7;
+        if (dir < 0) {
+            dir = 7;
+        }
         road_offset_dir2++;
     }
     if (road_offset_dir1 <= road_offset_dir2) {
@@ -362,11 +375,17 @@ void figure_movement_move_ticks(figure *f, int num_ticks)
 
 void figure_movement_move_ticks_with_percentage(figure* f, int num_ticks, int tick_percentage)
 {
-    f->progress_to_next_tick += tick_percentage;
-    if (f->progress_to_next_tick >= 100) {
-        f->progress_to_next_tick -= 100;
+    int progress = f->progress_to_next_tick + tick_percentage;
+
+    if (progress >= 100) {
+        progress -= 100;
         num_ticks++;
+    } else if (progress <= -100) {
+        progress += 100;
+        num_ticks--;
     }
+    f->progress_to_next_tick = (char) progress;
+
     walk_ticks(f, num_ticks, 0);
 }
 
@@ -411,12 +430,16 @@ void figure_movement_follow_ticks(figure *f, int num_ticks)
 
 void figure_movement_follow_ticks_with_percentage(figure* f, int num_ticks, int tick_percentage)
 {
-   
-    f->progress_to_next_tick += tick_percentage;
-    if (f->progress_to_next_tick >= 100) {
-        f->progress_to_next_tick -= 100;
+    int progress = f->progress_to_next_tick + tick_percentage;
+
+    if (progress >= 100) {
+        progress -= 100;
         num_ticks++;
+    } else if (progress <= -100) {
+        progress += 100;
+        num_ticks--;
     }
+    f->progress_to_next_tick = (char) progress;
 
     const figure* leader = figure_get(f->leading_figure_id);
     if (f->x == f->source_x && f->y == f->source_y) {
@@ -524,8 +547,11 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                         break;
                     }
                     f->direction += f->roam_turn_direction;
-                    if (f->direction > 6) f->direction = 0;
-                    if (f->direction < 0) f->direction = 6;
+                    if (f->direction > 6) {
+                        f->direction = 0;
+                    } else if (f->direction < 0) {
+                        f->direction = 6;
+                    }
                 } while (dir++ < 4);
             } else { // > 2 road tiles
                 f->direction = (f->roam_random_counter + map_random_get(f->grid_offset)) & 6;
@@ -541,8 +567,11 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                             break;
                         }
                         f->direction += f->roam_turn_direction;
-                        if (f->direction > 6) f->direction = 0;
-                        if (f->direction < 0) f->direction = 6;
+                        if (f->direction > 6) {
+                            f->direction = 0;
+                        } else if (f->direction < 0) {
+                            f->direction = 6;
+                        }
                     } while (dir++ < 4);
                 }
             }
@@ -700,7 +729,7 @@ int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x
     figure *f = figure_get(0); // abuse unused figure 0 as scratch
     f->cross_country_x = 15 * x_src;
     f->cross_country_y = 15 * y_src;
-    if (map_terrain_is(map_grid_offset(x_src, y_src), TERRAIN_WALL_OR_GATEHOUSE)) {
+    if (map_terrain_is(map_grid_offset(x_src, y_src), TERRAIN_WALL_OR_GATEHOUSE) || building_get(map_building_at(map_grid_offset(x_src, y_src)))->type == BUILDING_WATCHTOWER) {
         height = 6;
     }
     figure_movement_set_cross_country_direction(f, 15 * x_src, 15 * y_src, 15 * x_dst, 15 * y_dst, 0);
@@ -721,7 +750,7 @@ int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x
             if (map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_GATEHOUSE | TERRAIN_TREE)) {
                 break;
             }
-            if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_property_multi_tile_size(grid_offset) > 1) {
+            if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_property_multi_tile_size(grid_offset) > 1)  {
                 break;
             }
         }

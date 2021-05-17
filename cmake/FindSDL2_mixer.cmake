@@ -72,6 +72,7 @@ ELSE()
         /opt/local # DarwinPorts
         /opt/csw # Blastwave
         /opt
+        /boot/system/develop/headers/SDL2 # Haiku
         ${SDL_MIXER_EXT_DIR}
         ${SDL_MINGW_EXT_DIR}
         ${CMAKE_FIND_ROOT_PATH}

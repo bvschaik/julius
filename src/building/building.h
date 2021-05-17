@@ -3,11 +3,15 @@
 
 #include "building/type.h"
 #include "core/buffer.h"
+#include "core/time.h"
 
-#define MAX_BUILDINGS 10000
-
-typedef struct {
+typedef struct building {
     int id;
+
+    struct building *prev_of_type;
+    struct building *next_of_type;
+
+    time_millis last_update;
 
     unsigned char state;
     unsigned char faction_id;
@@ -18,7 +22,7 @@ typedef struct {
     unsigned char x;
     unsigned char y;
     short grid_offset;
-    short type;
+    building_type type;
     union {
         short house_level;
         short warehouse_resource_id;
@@ -29,7 +33,6 @@ typedef struct {
         short market_goods;
         short roadblock_exceptions;
         short barracks_priority;
-        short monument_phase;
     } subtype;
     unsigned char road_network_id;
     unsigned short created_sequence;
@@ -43,7 +46,7 @@ typedef struct {
     unsigned char road_access_x;
     unsigned char road_access_y;
     short figure_id;
-    short figure_id2; // labor seeker or market buyer
+    short figure_id2; // labor seeker or market supplier
     short immigrant_figure_id;
     short figure_id4; // tower ballista or burning ruin prefect
     unsigned char figure_spawn_delay;
@@ -53,6 +56,7 @@ typedef struct {
     short prev_part_building_id;
     short next_part_building_id;
     short loads_stored;
+    unsigned char house_sentiment_message;
     unsigned char has_well_access;
     short num_workers;
     unsigned char labor_category;
@@ -67,7 +71,7 @@ typedef struct {
     unsigned char house_tax_coverage;
     unsigned char house_pantheon_access;
     short formation_id;
-    unsigned char monthly_levy;
+    signed char monthly_levy;
     union {
         struct {
             short queued_docker_id;
@@ -138,8 +142,8 @@ typedef struct {
             short resources_needed[16];
             int upgrades;
             int progress;
+            short phase;
         } monument;
-
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;
@@ -153,11 +157,28 @@ typedef struct {
         signed char native_anger;
     } sentiment;
     unsigned char show_on_problem_overlay;
+    unsigned char house_tavern_wine_access;
+    unsigned char house_tavern_meat_access;
+    unsigned char house_arena_gladiator;
+    unsigned char house_arena_lion;
+    unsigned char is_tourism_venue;
+    unsigned char tourism_disabled;
+    unsigned char tourism_income;
+    unsigned char tourism_income_this_year;
+    unsigned char variant;
+    unsigned char upgrade_level;
+    unsigned char strike_duration_days;
 } building;
 
 building *building_get(int id);
 
+int building_count(void);
+
 int building_find(building_type type);
+
+building *building_first_of_type(building_type type);
+
+void building_change_type(building *b, building_type type);
 
 building *building_main(building *b);
 
@@ -166,6 +187,10 @@ building *building_next(building *b);
 building *building_create(building_type type, int x, int y);
 
 void building_clear_related_data(building *b);
+
+building *building_restore_from_undo(building *to_restore);
+
+void building_trim(void);
 
 void building_update_state(void);
 
@@ -183,19 +208,19 @@ int building_is_mars_temple(building_type type);
 
 int building_is_venus_temple(building_type type);
 
+int building_has_supplier_inventory(building_type type);
+
 int building_is_statue_garden_temple(building_type type);
 
 int building_is_fort(building_type type);
 
-int building_get_highest_id(void);
+int building_mothball_toggle(building *b);
 
-void building_update_highest_id(void);
+int building_mothball_set(building *b, int value);
 
-int building_mothball_toggle(building* b);
+int building_get_tourism(const building *b);
 
-int building_mothball_set(building* b, int value);
-
-int building_get_levy(const building* b);
+int building_get_levy(const building *b);
 
 void building_totals_add_corrupted_house(int unfixable);
 
@@ -204,7 +229,6 @@ void building_clear_all(void);
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
                          buffer *sequence, buffer *corrupt_houses);
 
-void building_load_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
-                         buffer *sequence, buffer *corrupt_houses);
+void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, int includes_building_size);
 
 #endif // BUILDING_BUILDING_H

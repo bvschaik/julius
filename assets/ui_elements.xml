@@ -3,9 +3,11 @@
 
 <assetlist author="Areldir" name="UI_Elements">
 
-    <image id="Main Menu" src="Main_Menu_Alt" />
     <image id="7x7 Map Icon" src="7x7_Minimap_Icon" />
     <image id="Happy God Icon" src="Religion_God_Happy" />
+
+<!-- Note: Banner image for Caravanserai -->
+    <image id="Caravanserai Banner" src="Caravanserai_Banner" />
 
 <!-- Note: Banner image for Lighthouse -->
     <image id="Lighthouse Banner" src="Lighthouse_Banner" />
@@ -46,8 +48,10 @@
     <image id="Const. Banner 01" src="Construction_Banner_01" />
     <image id="Const. Banner 02" src="Construction_Banner_02" />
 
-<!-- Note: Minimap icons for Monuments 3x3, 5x5 and 7x7 respectively  -->
+<!-- Note: Minimap icons for Monuments 2x2, 3x3, 4x4, 5x5 and 7x7 respectively  -->
+    <image id="2 Mon MapIcon" src="2x2_Monument_Icon" />
     <image id="3 Mon MapIcon" src="3x3_Monument_Icon" />
+    <image id="4 Mon MapIcon" src="4x4_Monument_Icon" />
     <image id="5 Mon MapIcon" src="5x5_Monument_Icon" />
     <image id="7 Mon MapIcon" src="7x7_Monument_Icon" />
 
@@ -59,5 +63,54 @@
     <image src="Map_Selection_Overlay_Border_Top" />
     <image src="Map_Selection_Overlay_Border_Right" />
     <image src="Map_Selection_Overlay_Border_Bottom" />
+
+<!-- Note: Image next to 'Hold Games' button in Entertainment Advisor -->
+    <image id="HoldGames Banner" width="126" height="88">
+		<layer group="159" image="47" x="-11" y="-9" />
+        <layer src="HoldGames_Banner_Border" x="0" y="0" />
+    </image>
+
+<!-- Note: Tourism Pillar Banner Parts (REFERENCE ASSETS: DO NOT USE) -->
+    <image id="T Pillar BG R" width="10" height="235">
+		<layer group="195" image="0" x="510" y="0" />
+    </image>		
+    <image id="T Pillar BG L" width="9" height="235">
+		<layer group="195" image="0" x="0" y="0" />
+    </image>		
+<!-- Note: Banner to go behind Tourism Pillar in Entertainment Advisor (USE THIS ONE) -->
+    <image id="Tourism Pillar BG" width="91" height="235">
+		<layer group="195" image="0" x="-64" y="0" />
+		<layer group="this" image="T Pillar BG R" x="81" y="0" />
+		<layer group="this" image="T Pillar BG L" x="0" y="0" />
+    </image>
+
+<!-- Note: UI Icons for Colosseum Games: "Imperial Games", "Naumachia" and "Executions" respectively, with selected and deselected variants -->
+    <image id="Naum Ico S" src="Naumachia_UI_Button_Selected" />
+    <image id="Naum Ico DS" src="Naumachia_UI_Button_Deselected" />
+    <image id="ImpG Ico S" src="Imperial_Games_UI_Button_Selected" />
+    <image id="ImpG Ico DS" src="Imperial_Games_UI_Button_Deselected" />
+    <image id="Exec Ico S" src="Executions_UI_Button_Selected" />
+    <image id="Exec Ico DS" src="Executions_UI_Button_Deselected" />
+
+<!-- Note: Banner images for Hippodrome and Colosseum respectively -->
+    <image id="Circus Banner" src="Circus_Banner" />
+    <image id="Colosseum Banner" src="Colosseum_Banner" />
+
+<!-- Note: UI icon to show when item is being stockpiled -->
+    <image id="Store Icon" src="Store_Icon" />
+
+<!-- Note: Blank advisor buttons for use as templates -->
+    <image id="Adv_B_Blank_UH" width="40" height="40">
+		<layer group="128" image="9" x="0" y="0" />
+        <layer src="Advisor_Button_UH" x="0" y="0" />
+    </image>	
+    <image id="Adv_B_Blank_H" width="40" height="40">
+		<layer group="128" image="22" x="0" y="0" />
+        <layer src="Advisor_Button_H" x="0" y="0" />
+    </image>	
+
+<!-- Note: Rotation and Monument icons for building buttons respectively -->
+    <image id="Monument Build Icon" src="Monument_Panel" />
+    <image id="Rotate Build Icon" src="Rotation_Panel" />
 
 </assetlist>

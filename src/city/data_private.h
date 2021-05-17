@@ -44,6 +44,7 @@ extern struct city_data_t {
         int8_t triumphal_arches_available;
         int8_t triumphal_arches_placed;
         int16_t working_wharfs;
+        int32_t caravanserai_building_id;
         int32_t shipyard_boats_requested;
         int16_t working_docks;
         int16_t working_dock_ids[10];
@@ -51,6 +52,7 @@ extern struct city_data_t {
         map_point main_native_meeting;
         int8_t unknown_value;
         int32_t mess_hall_building_id;
+        int32_t num_striking_industries;
     } building;
     struct {
         int16_t animals;
@@ -58,6 +60,9 @@ extern struct city_data_t {
         int32_t enemies;
         int32_t imperial_soldiers;
         int32_t rioters;
+        int32_t robbers;
+        int32_t looters;
+        int32_t protesters;
         int32_t soldiers;
         int32_t security_breach_duration;
     } figure;
@@ -125,6 +130,12 @@ extern struct city_data_t {
         int32_t tribute_not_paid_total_years;
         int32_t wage_rate_paid_this_year;
         int32_t wage_rate_paid_last_year;
+        int32_t tourism_rating;
+        int32_t tourism_last_month;
+        int32_t tourism_lowest_factor;
+        int32_t tourism_last_year;
+        int16_t tourism_this_year;
+        int16_t tourist_spawn_delay;
     } finance;
     struct {
         int32_t taxed_plebs;
@@ -220,9 +231,11 @@ extern struct city_data_t {
         int32_t unemployment;
         int32_t wages;
         int32_t low_mood_cause;
+        int16_t blessing_festival_boost;
 
         int32_t protesters;
         int32_t criminals; // muggers+rioters
+        int8_t crime_cooldown;
     } sentiment;
     struct {
         int32_t num_hospital_workers;
@@ -267,6 +280,7 @@ extern struct city_data_t {
         int32_t average_health;
         int32_t religion_coverage;
         int32_t population_with_venus_access;
+        int32_t average_desirability;
     } culture;
     struct {
         god_status gods[5];
@@ -313,11 +327,24 @@ extern struct city_data_t {
         int32_t second_festival_effect_months;
     } festival;
     struct {
+        int32_t selected_games_id;
+        int32_t months_to_go;
+        int32_t remaining_duration;
+        int32_t months_since_last;
+        int32_t games_is_active;
+        int32_t naval_battle_bonus_months;
+        int32_t naval_battle_distant_battle_bonus;
+        int32_t executions_bonus_months;
+        int32_t imperial_games_bonus_months;
+        int32_t games_4_bonus_months;
+    } games;
+    struct {
         int16_t space_in_warehouses[RESOURCE_MAX];
         int16_t stored_in_warehouses[RESOURCE_MAX];
         int32_t space_in_workshops[6];
         int32_t stored_in_workshops[6];
         int16_t trade_status[RESOURCE_MAX];
+        int16_t import_over[RESOURCE_MAX];
         int16_t export_over[RESOURCE_MAX];
         int32_t stockpiled[RESOURCE_MAX];
         int16_t mothballed[RESOURCE_MAX];
@@ -362,6 +389,8 @@ extern struct city_data_t {
         int32_t caravan_backup_import_resource;
         int32_t docker_import_resource;
         int32_t docker_export_resource;
+        uint8_t land_policy;
+        uint8_t sea_policy;
     } trade;
     struct {
         map_tile entry_point;
@@ -392,6 +421,9 @@ extern struct city_data_t {
         int32_t food_percentage_missing_this_month;
         int32_t total_food;
     } mess_hall;
+    struct {
+        int32_t total_food;
+    } caravanserai;
     struct {
         int8_t other_player[18068];
         int8_t unknown_00a0;
@@ -426,7 +458,6 @@ extern struct city_data_t {
         int32_t unused_4488;
         int32_t unused_native_force_attack;
         int32_t unused_44e0[2];
-        int32_t unused_44ec;
         int32_t unused_44f8;
         int32_t unused_4524[11];
         uint8_t unknown_458e;

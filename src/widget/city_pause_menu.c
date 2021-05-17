@@ -1,5 +1,7 @@
 #include "city_pause_menu.h"
 
+#include "building/construction.h"
+#include "core/lang.h"
 #include "game/file.h"
 #include "game/undo.h"
 #include "game/state.h"
@@ -71,7 +73,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void replay_map_confirmed(int confirmed)
+static void replay_map_confirmed(int confirmed, int checked)
 {
     if (confirmed) {
         if (scenario_is_custom()) {
@@ -84,9 +86,10 @@ static void replay_map_confirmed(int confirmed)
     }
 }
 
-static void main_menu_confirmed(int confirmed)
+static void main_menu_confirmed(int confirmed, int checked)
 {
     if (confirmed) {
+        building_construction_clear_type();
         game_undo_disable();
         game_state_reset_overlay();
         window_main_menu_show(1);
@@ -98,7 +101,7 @@ static void button_click(int type, int param2)
     if (type == 1) {
         window_go_back();
     } else if (type == 2) {
-        window_popup_dialog_show_confirmation(1, 2, replay_map_confirmed);
+        window_popup_dialog_show_confirmation(lang_get_string(1, 2), 0, 0, replay_map_confirmed);
     } else if (type == 3) {
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
     } else if (type == 4) {
@@ -106,7 +109,7 @@ static void button_click(int type, int param2)
     } else if (type == 5) {
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_DELETE);
     } else if (type == 6) {
-        window_popup_dialog_show_confirmation_from_tr(TR_BUTTON_BACK_TO_MAIN_MENU, main_menu_confirmed);
+        window_popup_dialog_show_confirmation(translation_for(TR_BUTTON_BACK_TO_MAIN_MENU), 0, 0, main_menu_confirmed);
     }
 }
 

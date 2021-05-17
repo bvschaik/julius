@@ -492,7 +492,7 @@ void figure_hippodrome_horse_reroute(void)
     if (!city_entertainment_hippodrome_has_race()) {
         return;
     }
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
         if (f->state == FIGURE_STATE_ALIVE && f->type == FIGURE_HIPPODROME_HORSES) {
             f->wait_ticks_missile = 0;

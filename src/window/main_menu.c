@@ -1,6 +1,7 @@
 #include "main_menu.h"
 
 #include "assets/assets.h"
+#include "core/calc.h"
 #include "core/string.h"
 #include "editor/editor.h"
 #include "game/game.h"
@@ -44,20 +45,21 @@ static void draw_version_string(void)
 {
     uint8_t version_string[100] = "Augustus v";
     int version_prefix_length = string_length(version_string);
-    int text_y = screen_height() - 30;
+    int text_y = screen_height() - 54;
 
     string_copy(string_from_ascii(system_version()), version_string + version_prefix_length, 99);
 
-    int text_width = text_get_width(version_string, FONT_SMALL_PLAIN);
+    int text_width = text_get_width(version_string, FONT_NORMAL_GREEN);
+    int width = calc_value_in_step(text_width + 20, 16);
 
-    graphics_draw_rect(10, text_y, text_width + 14, 20, COLOR_BLACK);
-    graphics_fill_rect(11, text_y + 1, text_width + 12, 18, COLOR_WHITE);
-    text_draw(version_string, 18, text_y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
+    inner_panel_draw(20, text_y, width / 16, 2);
+    text_draw_centered(version_string, 20, text_y + 11, width, FONT_NORMAL_GREEN, 0);
 }
 
 static void draw_background(void)
 {
-    image_draw_fullscreen_background(image_group(GROUP_MAIN_MENU_BACKGROUND));
+    image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND));
+
     graphics_in_dialog();
     if (!data.logo_image_id) {
         data.logo_image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Main Menu Banner");
@@ -101,7 +103,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void confirm_exit(int accepted)
+static void confirm_exit(int accepted, int checked)
 {
     if (accepted) {
         system_exit();
@@ -119,12 +121,12 @@ static void button_click(int type, int param2)
     } else if (type == 4) {
         if (!editor_is_present() || !game_init_editor()) {
             window_plain_message_dialog_show(
-                TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE);
+                TR_NO_EDITOR_TITLE, TR_NO_EDITOR_MESSAGE, 1);
         } else {
             sound_music_play_editor();
         }
     } else if (type == 5) {
-        window_config_show();
+        window_config_show(CONFIG_FIRST_PAGE, 1);
     } else if (type == 6) {
         window_popup_dialog_show(POPUP_DIALOG_QUIT, confirm_exit, 1);
     }

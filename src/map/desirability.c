@@ -50,7 +50,9 @@ static void add_desirability_at_distance(int x, int y, int size, int distance, i
 static void add_to_terrain(int x, int y, int size, int desirability, int step, int step_size, int range)
 {
     if (size > 0) {
-        if (range > 6) range = 6;
+        if (range > 6) {
+            range = 6;
+        }
         int tiles_within_step = 0;
         int distance = 1;
         while (range > 0) {
@@ -68,7 +70,6 @@ static void add_to_terrain(int x, int y, int size, int desirability, int step, i
 
 static void update_buildings(void)
 {
-    int max_id = building_get_highest_id();
     int value;
     int value_bonus;
     int step;
@@ -76,7 +77,7 @@ static void update_buildings(void)
     int range;
     int venus_module2 = building_monument_gt_module_is_active(VENUS_MODULE_2_DESIRABILITY_ENTERTAINMENT);
     int venus_gt = building_monument_working(BUILDING_GRAND_TEMPLE_VENUS);
-    for (int i = 1; i <= max_id; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_IN_USE) {
 
@@ -86,25 +87,24 @@ static void update_buildings(void)
             step_size = model->desirability_step_size;
             range = model->desirability_range;
 
-            //Venus Module 2 House Desirability Bonus
+            // Venus Module 2 House Desirability Bonus
             if (building_is_house(b->type) && b->data.house.temple_venus && venus_module2) {
                 if (b->subtype.house_level >= HOUSE_SMALL_VILLA) {
                     value += 4;
                     range += 1;
-                }
-                else {
+                } else {
                     value += 2;
-                }                              
+                }
             }
 
-            if (building_monument_is_monument(b) && b->subtype.monument_phase != MONUMENT_FINISHED) {
+            if (building_monument_is_monument(b) && b->data.monument.phase != MONUMENT_FINISHED) {
                 value = 0;
                 step = 0;
                 step_size = 0;
                 range = 0;
             }
 
-            //Venus GT Base Bonus
+            // Venus GT Base Bonus
             if (building_is_statue_garden_temple(b->type) && venus_gt) {
                 value_bonus = ((value / 4) > 1) ? (value / 4) : 1;
                 value += value_bonus;

@@ -21,7 +21,7 @@ static struct {
     int x_end;
     int y_start;
     int y_end;
-} clip_rectangle = {0, 800, 0, 600};
+} clip_rectangle = { 0, 800, 0, 600 };
 
 static struct {
     int x;
@@ -128,6 +128,11 @@ static void set_translation(int x, int y)
 void graphics_in_dialog(void)
 {
     set_translation(screen_dialog_offset_x(), screen_dialog_offset_y());
+}
+
+void graphics_in_dialog_with_size(int width, int height)
+{
+    set_translation((screen_width() - width) / 2, (screen_height() - height) / 2);
 }
 
 void graphics_reset_dialog(void)

@@ -254,7 +254,8 @@ static const int FIGURE_TYPE_TO_SOUND_TYPE[] = {
     18, -1, 1, 25, 25, 25, 25, 25, 25, 25, // 40-49
     25, 25, 25, 25, 25, 25, 25, 25, -1, -1, // 50-59
     -1, -1, -1, -1, 30, -1, 31, -1, -1, -1, // 60-69
-    -1, -1, -1, 18, 19, 2, 1, 19, 8, -1,  // 70-79
+    -1, -1, -1, 18, 19, 2, 1, 19, 8, 11,  // 70-79
+    11, -1, 1, -1, -1, -1, 20, 20, 4, -1,  // 80-89
 };
 
 enum {
@@ -322,12 +323,22 @@ static int market_trader_phrase(figure *f)
     return -1;
 }
 
-static int market_buyer_phrase(figure *f)
+static int market_supplier_phrase(figure *f)
 {
-    if (f->action_state == FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE) {
+    if (f->action_state == FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE) {
         return 7;
-    } else if (f->action_state == FIGURE_ACTION_146_MARKET_BUYER_RETURNING) {
-        return 8;
+    } else if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING) {
+        int resource;
+        if (f->type == FIGURE_LIGHTHOUSE_SUPPLIER) {
+            resource = f->collecting_item_id;
+        } else {
+            resource = resource_from_inventory(f->collecting_item_id);
+        }
+        if (resource != RESOURCE_NONE) {
+            return 8;
+        } else {
+            return -1;
+        }
     } else {
         return -1;
     }
@@ -352,7 +363,7 @@ static int cart_pusher_phrase(figure *f)
     return -1;
 }
 
-static int mess_hall_buyer_phrase(figure* f) {
+static int mess_hall_supplier_phrase(figure* f) {
     return 0;
 }
 
@@ -483,8 +494,8 @@ static int soldier_phrase(void)
 
 static int docker_phrase(figure *f)
 {
-    if (f->action_state == FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_WAREHOUSE ||
-        f->action_state == FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_WAREHOUSE) {
+    if (f->action_state == FIGURE_ACTION_135_DOCKER_IMPORT_GOING_TO_STORAGE ||
+        f->action_state == FIGURE_ACTION_136_DOCKER_EXPORT_GOING_TO_STORAGE) {
         if (calc_maximum_distance(
             f->destination_x, f->destination_y, f->source_x, f->source_y) >= 25) {
             return 9; // too far
@@ -542,64 +553,6 @@ static int trade_ship_phrase(figure *f)
     }
 }
 
-static int phrase_based_on_figure_state(figure *f)
-{
-    switch (f->type) {
-        case FIGURE_LION_TAMER:
-            return lion_tamer_phrase(f);
-        case FIGURE_GLADIATOR:
-            return gladiator_phrase(f);
-        case FIGURE_TAX_COLLECTOR:
-            return tax_collector_phrase(f);
-        case FIGURE_MARKET_TRADER:
-            return market_trader_phrase(f);
-        case FIGURE_MARKET_BUYER:
-            return market_buyer_phrase(f);
-        case FIGURE_CART_PUSHER:
-            return cart_pusher_phrase(f);
-        case FIGURE_WAREHOUSEMAN:
-            return warehouseman_phrase(f);
-        case FIGURE_PREFECT:
-            return prefect_phrase(f);
-        case FIGURE_ENGINEER:
-        case FIGURE_WORK_CAMP_ENGINEER:
-            return engineer_phrase(f);
-        case FIGURE_PROTESTER:
-        case FIGURE_CRIMINAL:
-        case FIGURE_RIOTER:
-        case FIGURE_DELIVERY_BOY:
-            return citizen_phrase(f);
-        case FIGURE_MISSIONARY:
-            return missionary_phrase(f);
-        case FIGURE_HOMELESS:
-            return homeless_phrase(f);
-        case FIGURE_IMMIGRANT:
-            return house_seeker_phrase(f);
-        case FIGURE_EMIGRANT:
-            return emigrant_phrase();
-        case FIGURE_TOWER_SENTRY:
-            return tower_sentry_phrase(f);
-        case FIGURE_MESS_HALL_BUYER:
-            return mess_hall_buyer_phrase(f);
-        case FIGURE_FORT_JAVELIN:
-        case FIGURE_FORT_MOUNTED:
-        case FIGURE_FORT_LEGIONARY:
-            return soldier_phrase();
-        case FIGURE_DOCKER:
-            return docker_phrase(f);
-        case FIGURE_TRADE_CARAVAN:
-            return trade_caravan_phrase(f);
-        case FIGURE_TRADE_CARAVAN_DONKEY:
-            while (f->type == FIGURE_TRADE_CARAVAN_DONKEY && f->leading_figure_id) {
-                f = figure_get(f->leading_figure_id);
-            }
-            return f->type == FIGURE_TRADE_CARAVAN ? trade_caravan_phrase(f) : -1;
-        case FIGURE_TRADE_SHIP:
-            return trade_ship_phrase(f);
-    }
-    return -1;
-}
-
 static int city_god_state(void)
 {
     int least_god_happiness = 100;
@@ -616,6 +569,108 @@ static int city_god_state(void)
     } else {
         return GOD_STATE_NONE;
     }
+}
+
+static int barkeep_phrase(figure *f)
+{
+    f->phrase_sequence_city = 0;
+    int god_state = city_god_state();
+    int unemployment_pct = city_labor_unemployment_percentage();
+
+    if (unemployment_pct >= 17) {
+        return 1;
+    } else if (city_labor_workers_needed() >= 10) {
+        return 2;
+    } else if (city_culture_average_entertainment() == 0) {
+        return 3;
+    } else if (god_state == GOD_STATE_VERY_ANGRY) {
+        return 4;
+    } else if (city_culture_average_entertainment() <= 10) {
+        return 3;
+    } else if (god_state == GOD_STATE_ANGRY) {
+        return 4;
+    } else if (city_culture_average_entertainment() <= 20) {
+        return 3;
+    } else if (city_resource_food_supply_months() >= 4 &&
+        unemployment_pct <= 5 &&
+        city_culture_average_health() > 0 &&
+        city_culture_average_education() > 0) {
+        if (city_population() < 500) {
+            return 5;
+        } else {
+            return 6;
+        }
+    } else if (unemployment_pct >= 10) {
+        return 1;
+    } else {
+        return 5;
+    }
+}
+
+static int phrase_based_on_figure_state(figure *f)
+{
+    switch (f->type) {
+        case FIGURE_LION_TAMER:
+            return lion_tamer_phrase(f);
+        case FIGURE_GLADIATOR:
+            return gladiator_phrase(f);
+        case FIGURE_TAX_COLLECTOR:
+            return tax_collector_phrase(f);
+        case FIGURE_MARKET_TRADER:
+            return market_trader_phrase(f);
+        case FIGURE_MARKET_SUPPLIER:
+        case FIGURE_CARAVANSERAI_SUPPLIER:
+        case FIGURE_LIGHTHOUSE_SUPPLIER:
+            return market_supplier_phrase(f);
+        case FIGURE_CART_PUSHER:
+            return cart_pusher_phrase(f);
+        case FIGURE_WAREHOUSEMAN:
+            return warehouseman_phrase(f);
+        case FIGURE_PREFECT:
+            return prefect_phrase(f);
+        case FIGURE_ENGINEER:
+        case FIGURE_WORK_CAMP_ARCHITECT:
+            return engineer_phrase(f);
+        case FIGURE_PROTESTER:
+        case FIGURE_CRIMINAL:
+        case FIGURE_RIOTER:
+        case FIGURE_CRIMINAL_ROBBER:
+        case FIGURE_CRIMINAL_LOOTER:
+        case FIGURE_DELIVERY_BOY:
+            return citizen_phrase(f);
+        case FIGURE_MISSIONARY:
+            return missionary_phrase(f);
+        case FIGURE_HOMELESS:
+            return homeless_phrase(f);
+        case FIGURE_IMMIGRANT:
+            return house_seeker_phrase(f);
+        case FIGURE_EMIGRANT:
+            return emigrant_phrase();
+        case FIGURE_TOWER_SENTRY:
+        case FIGURE_WATCHMAN:
+            return tower_sentry_phrase(f);
+        case FIGURE_MESS_HALL_SUPPLIER:
+            return mess_hall_supplier_phrase(f);
+        case FIGURE_FORT_JAVELIN:
+        case FIGURE_FORT_MOUNTED:
+        case FIGURE_FORT_LEGIONARY:
+            return soldier_phrase();
+        case FIGURE_DOCKER:
+            return docker_phrase(f);
+        case FIGURE_TRADE_CARAVAN:
+            return trade_caravan_phrase(f);
+        case FIGURE_BARKEEP:
+        case FIGURE_BARKEEP_SUPPLIER:
+            return barkeep_phrase(f);
+        case FIGURE_TRADE_CARAVAN_DONKEY:
+            while (f->type == FIGURE_TRADE_CARAVAN_DONKEY && f->leading_figure_id) {
+                f = figure_get(f->leading_figure_id);
+            }
+            return f->type == FIGURE_TRADE_CARAVAN ? trade_caravan_phrase(f) : -1;
+        case FIGURE_TRADE_SHIP:
+            return trade_ship_phrase(f);
+    }
+    return -1;
 }
 
 static int phrase_based_on_city_state(figure *f)

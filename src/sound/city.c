@@ -1,6 +1,7 @@
 #include "city.h"
 
 #include "city/figures.h"
+#include "core/random.h"
 #include "core/time.h"
 #include "game/settings.h"
 #include "sound/channel.h"
@@ -11,7 +12,7 @@
 #define MAX_CHANNELS 70
 
 // for compatibility with the original game:
-#define CITY_CHANNEL_OFFSET 15
+#define CITY_CHANNEL_OFFSET 18
 
 enum {
     SOUND_CHANNEL_CITY_HOUSE_SLUM = 30,
@@ -93,6 +94,8 @@ typedef struct {
 } city_channel;
 
 static city_channel channels[MAX_CHANNELS];
+static int ambient_channels[] = { 61 };
+static int ambient_channels_number = 1;
 
 static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //0-9
@@ -110,8 +113,9 @@ static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
     28, 29, 0, 0, 0, 0, 0, 0, 0, 0, //120-129
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130-139
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //140-149
-    0, 0, 44, 37, 0, 0, 0, 0, 0, 0, //150-159
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //160-169
+    0, 0, 44, 37, 0, 0, 0, 0, 56, 0, //150-159
+    9, 0, 0, 0, 0, 0, 0, 0, 0, 0, //160-169
+    44, 44, 44, 24, 0, 0, 0, 0, 0, 0, //170-179
 
 };
 
@@ -201,12 +205,8 @@ void sound_city_set_volume(int percentage)
     }
 }
 
-void sound_city_mark_building_view(building *b, int direction)
+void sound_city_mark_building_view(building_type type, int num_workers, int direction)
 {
-    if (b->state == BUILDING_STATE_UNUSED) {
-        return;
-    }
-    int type = b->type;
     int channel = BUILDING_TYPE_TO_CHANNEL_ID[type];
     if (!channel) {
         return;
@@ -214,7 +214,7 @@ void sound_city_mark_building_view(building *b, int direction)
     if (type == BUILDING_THEATER || type == BUILDING_AMPHITHEATER ||
         type == BUILDING_GLADIATOR_SCHOOL || type == BUILDING_HIPPODROME) {
         // entertainment is shut off when caesar invades
-        if (b->num_workers <= 0 || city_figures_imperial_soldiers() > 0) {
+        if (num_workers <= 0 || city_figures_imperial_soldiers() > 0) {
             return;
         }
     }
@@ -231,6 +231,15 @@ void sound_city_decay_views(void)
             channels[i].direction_views[d] = 0;
         }
         channels[i].total_views /= 2;
+    }
+}
+
+void sound_city_progress_ambient(void)
+{
+    for (int i = 0; i < ambient_channels_number; i++) {
+        channels[ambient_channels[i]].available = 1;
+        ++channels[ambient_channels[i]].total_views;
+        ++channels[ambient_channels[i]].direction_views[SOUND_DIRECTION_CENTER];
     }
 }
 
@@ -299,6 +308,7 @@ void sound_city_play(void)
         }
     }
     if (!max_sound_id) {
+       // progress_ambient();
         return;
     }
 

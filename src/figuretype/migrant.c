@@ -7,11 +7,18 @@
 #include "city/population.h"
 #include "core/calc.h"
 #include "core/image.h"
+#include "core/time.h"
 #include "figure/combat.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
+#include "game/undo.h"
 #include "map/road_access.h"
+
+static struct {
+    int available;
+    time_millis last_check;
+} houses_with_room;
 
 void figure_create_immigrant(building *house, int num_people)
 {
@@ -39,13 +46,15 @@ void figure_create_emigrant(building *house, int num_people)
     f->migrant_num_people = num_people;
 }
 
-void figure_create_homeless(int x, int y, int num_people)
+figure *figure_create_homeless(building *house, int num_people)
 {
-    figure *f = figure_create(FIGURE_HOMELESS, x, y, DIR_0_TOP);
+    figure *f = figure_create(FIGURE_HOMELESS, house->x, house->y, DIR_0_TOP);
+    f->building_id = house->id;
     f->action_state = FIGURE_ACTION_7_HOMELESS_CREATED;
     f->wait_ticks = 0;
     f->migrant_num_people = num_people;
     city_population_remove_homeless(num_people);
+    return f;
 }
 
 static void update_direction_and_image(figure *f)
@@ -61,24 +70,31 @@ static void update_direction_and_image(figure *f)
 
 static int closest_house_with_room(int x, int y)
 {
+    if (houses_with_room.last_check == time_get_millis() && !houses_with_room.available) {
+        return 0;
+    }
+    int available_houses = 0;
     int min_dist = 1000;
     int min_building_id = 0;
-    int max_id = building_get_highest_id();
-    for (int i = 1; i <= max_id; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size
-            && b->distance_from_entry > 0 && b->house_population_room > 0) {
-            if (!b->immigrant_figure_id) {
-                int dist = calc_maximum_distance(x, y, b->x, b->y);
-                if (dist < min_dist) {
-                    min_dist = dist;
-                    min_building_id = i;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->house_size &&
+                b->distance_from_entry > 0 && b->house_population_room > 0) {
+                if (!b->immigrant_figure_id) {
+                    int dist = calc_maximum_distance(x, y, b->x, b->y);
+                    available_houses++;
+                    if (dist < min_dist) {
+                        min_dist = dist;
+                        min_building_id = b->id;
+                    }
                 }
             }
         }
     }
+    available_houses--;
+    houses_with_room.last_check = time_get_millis();
+    houses_with_room.available = available_houses;
     return min_building_id;
-
 }
 
 void figure_immigrant_action(figure *f)
@@ -298,6 +314,7 @@ void figure_homeless_action(figure *f)
                     b->house_population_room = max_people - b->house_population;
                     city_population_add_homeless(f->migrant_num_people);
                     b->immigrant_figure_id = 0;
+                    game_undo_disable();
                 }
             }
             break;
@@ -309,7 +326,7 @@ void figure_homeless_action(figure *f)
                 figure_route_remove(f);
             }
             f->wait_ticks++;
-            if (f->wait_ticks > 30) {
+            if (f->wait_ticks > FIGURE_REROUTE_DESTINATION_TICKS) {
                 f->wait_ticks = 0;
                 int building_id = closest_house_with_room(f->x, f->y);
                 if (building_id > 0) {

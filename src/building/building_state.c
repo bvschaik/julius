@@ -1,6 +1,8 @@
 #include "building_state.h"
 
+#include "building/building.h"
 #include "building/monument.h"
+#include "game/file_io.h"
 #include "game/resource.h"
 
 static int is_industry_type(const building *b)
@@ -41,7 +43,17 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_u8(buf, b->data.house.num_gods);
         buffer_write_u8(buf, b->data.house.devolve_delay);
         buffer_write_u8(buf, b->data.house.evolve_text_id);
-    } else if (b->type == BUILDING_MARKET || b->type == BUILDING_MESS_HALL || b->type == BUILDING_SMALL_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_SMALL_TEMPLE_VENUS || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
+    // Do not place this after if (building_has_supplier_inventory(b->type) or after if (building_monument_is_monument(b))
+    // Because Caravanserai is monument AND supplier building and resources_needed / inventory is same memory spot
+    } else if (b->type == BUILDING_CARAVANSERAI) {
+        for (int i = 0; i < RESOURCE_MAX; i++) {
+            buffer_write_i16(buf, b->data.monument.resources_needed[i]);
+        }
+        buffer_write_i32(buf, b->data.monument.upgrades);
+        buffer_write_i16(buf, b->data.monument.progress);
+        buffer_write_i16(buf, b->data.monument.phase);
+        buffer_write_u8(buf, b->data.market.fetch_inventory_id);
+    } else if (building_has_supplier_inventory(b->type)) {
         buffer_write_i16(buf, 0);
         for (int i = 0; i < INVENTORY_MAX; i++) {
             buffer_write_i16(buf, b->data.market.inventory[i]);
@@ -71,13 +83,14 @@ static void write_type_data(buffer *buf, const building *b)
         }
         buffer_write_i32(buf, b->data.monument.upgrades);
         buffer_write_i16(buf, b->data.monument.progress);
-        buffer_write_i32(buf, 0);
+        buffer_write_i16(buf, b->data.monument.phase);
+        buffer_write_i16(buf, 0);
     } else if (b->type == BUILDING_DOCK) {
         buffer_write_i16(buf, b->data.dock.queued_docker_id);
         buffer_write_u8(buf, b->data.dock.has_accepted_route_ids);
         buffer_write_i32(buf, b->data.dock.accepted_route_ids);
         for (int i = 0; i < 20; i++) {
-          buffer_write_u8(buf, 0);
+            buffer_write_u8(buf, 0);
         }
         buffer_write_u8(buf, b->data.dock.num_ships);
         buffer_write_u8(buf, 0);
@@ -155,12 +168,12 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_u8(buf, b->days_since_offering);
     buffer_write_u8(buf, b->figure_roam_direction);
     buffer_write_u8(buf, b->has_water_access);
-    buffer_write_u8(buf, 0);
-    buffer_write_u8(buf, 0);
+    buffer_write_u8(buf, b->house_tavern_wine_access);
+    buffer_write_u8(buf, b->house_tavern_meat_access);
     buffer_write_i16(buf, b->prev_part_building_id);
     buffer_write_i16(buf, b->next_part_building_id);
     buffer_write_i16(buf, b->loads_stored);
-    buffer_write_u8(buf, 0);
+    buffer_write_u8(buf, b->house_sentiment_message);
     buffer_write_u8(buf, b->has_well_access);
     buffer_write_i16(buf, b->num_workers);
     buffer_write_u8(buf, b->labor_category);
@@ -185,6 +198,27 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_u8(buf, b->storage_id);
     buffer_write_i8(buf, b->sentiment.house_happiness); // which union field we use does not matter
     buffer_write_u8(buf, b->show_on_problem_overlay);
+
+    // expanded building data
+    // Tourism
+    buffer_write_u8(buf, b->house_arena_gladiator);
+    buffer_write_u8(buf, b->house_arena_lion);
+    buffer_write_u8(buf, b->is_tourism_venue);
+    buffer_write_u8(buf, b->tourism_disabled);
+    buffer_write_u8(buf, b->tourism_income);
+    buffer_write_u8(buf, b->tourism_income_this_year);
+
+    // Variants and upgrades
+    buffer_write_u8(buf, b->variant);
+    buffer_write_u8(buf, b->upgrade_level);
+
+    //strikes
+    buffer_write_u8(buf, b->strike_duration_days);
+
+    // New building state code should always be added at the end to preserve savegame retrocompatibility
+    // Also, don't forget to update BUILDING_STATE_CURRENT_BUFFER_SIZE and if possible, add a new macro like
+    // BUILDING_STATE_NEW_FEATURE_BUFFER_SIZE with the full building state buffer size including all added features
+    // up until that point in Augustus' development
 }
 
 static void read_type_data(buffer *buf, building *b)
@@ -219,7 +253,17 @@ static void read_type_data(buffer *buf, building *b)
         b->data.house.num_gods = buffer_read_u8(buf);
         b->data.house.devolve_delay = buffer_read_u8(buf);
         b->data.house.evolve_text_id = buffer_read_u8(buf);
-    } else if (b->type == BUILDING_MARKET || b->type == BUILDING_MESS_HALL || b->type == BUILDING_SMALL_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_SMALL_TEMPLE_VENUS || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
+    // Do not place this after if (building_has_supplier_inventory(b->type) or after if (building_monument_is_monument(b))
+    // Because Caravanserai is monument AND supplier building and resources_needed / inventory is same memory spot
+    } else if (b->type == BUILDING_CARAVANSERAI) {
+        for (int i = 0; i < RESOURCE_MAX; i++) {
+            b->data.monument.resources_needed[i] = buffer_read_i16(buf);
+        }
+        b->data.monument.upgrades = buffer_read_i32(buf);
+        b->data.monument.progress = buffer_read_i16(buf);
+        b->data.monument.phase = buffer_read_i16(buf);
+        b->data.market.fetch_inventory_id = buffer_read_u8(buf);
+    } else if (building_has_supplier_inventory(b->type)) {
         buffer_skip(buf, 2);
         for (int i = 0; i < INVENTORY_MAX; i++) {
             b->data.market.inventory[i] = buffer_read_i16(buf);
@@ -244,7 +288,8 @@ static void read_type_data(buffer *buf, building *b)
         }
         b->data.monument.upgrades = buffer_read_i32(buf);
         b->data.monument.progress = buffer_read_i16(buf);
-        buffer_skip(buf, 4);
+        b->data.monument.phase = buffer_read_i16(buf);
+        buffer_skip(buf, 2);
     } else if (b->type == BUILDING_DOCK) {
         b->data.dock.queued_docker_id = buffer_read_i16(buf);
         b->data.dock.has_accepted_route_ids = buffer_read_u8(buf);
@@ -280,7 +325,7 @@ static void read_type_data(buffer *buf, building *b)
     }
 }
 
-void building_state_load_from_buffer(buffer *buf, building *b)
+void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_size)
 {
     b->state = buffer_read_u8(buf);
     b->faction_id = buffer_read_u8(buf);
@@ -313,12 +358,12 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->days_since_offering = buffer_read_u8(buf);
     b->figure_roam_direction = buffer_read_u8(buf);
     b->has_water_access = buffer_read_u8(buf);
-    buffer_skip(buf, 1);
-    buffer_skip(buf, 1);
+    b->house_tavern_wine_access = buffer_read_u8(buf);
+    b->house_tavern_meat_access = buffer_read_u8(buf);
     b->prev_part_building_id = buffer_read_i16(buf);
     b->next_part_building_id = buffer_read_i16(buf);
     b->loads_stored = buffer_read_i16(buf);
-    buffer_skip(buf, 1);
+    b->house_sentiment_message = buffer_read_u8(buf);
     b->has_well_access = buffer_read_u8(buf);
     b->num_workers = buffer_read_i16(buf);
     b->labor_category = buffer_read_u8(buf);
@@ -343,4 +388,67 @@ void building_state_load_from_buffer(buffer *buf, building *b)
     b->storage_id = buffer_read_u8(buf);
     b->sentiment.house_happiness = buffer_read_i8(buf); // which union field we use does not matter
     b->show_on_problem_overlay = buffer_read_u8(buf);
+
+    // Backwards compatibility fixes for culture update
+    if (building_monument_is_monument(b) && b->subtype.house_level && b->type != BUILDING_HIPPODROME && b->type != BUILDING_CARAVANSERAI) {
+        b->data.monument.phase = b->subtype.house_level;
+    }
+
+    if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && !b->data.monument.phase) {
+        b->data.monument.phase = -1;
+    }
+
+    if (((b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) || b->type == BUILDING_ORACLE) && !b->data.monument.phase) {
+        b->data.monument.phase = -1;
+    }
+
+    // Wharves produce meat
+    if (b->type == BUILDING_WHARF) {
+        b->output_resource_id = RESOURCE_MEAT;
+    }
+
+    // Backwards compatibility fixes for sentiment update
+    if (building_buf_size < BUILDING_STATE_STRIKES &&
+        b->house_population && b->sentiment.house_happiness < 20) {
+        b->sentiment.house_happiness = 30;
+    }
+
+    // To keep backward savegame compatibility, only fill more recent building struct elements
+    // if building_buf_size is the correct size when those elements are included
+    // For example, if you add an int (4 bytes) to the building state struct, in order to check
+    // if the samegame version has that new int, you should add the folloging code:
+    // if (building_buf_size >= BULDING_STATE_ORIGINAL_BUFFER_SIZE + 4) {
+    //    b->new_var = buffer_read_i32(buf);
+    // }
+    // Or even better:
+    // if (building_buf_size >= BULDING_STATE_NEW_FEATURE_BUFFER_SIZE) {
+    //    b->new_var = buffer_read_i32(buf);
+    // }
+    // Building state variables are automatically set to 0, so if the savegame version doesn't include
+    // that information, you can be assured that the game will read it as 0
+
+    if (building_buf_size >= BUILDING_STATE_TOURISM_BUFFER_SIZE) {
+        b->house_arena_gladiator = buffer_read_u8(buf);
+        b->house_arena_lion = buffer_read_u8(buf);
+        b->is_tourism_venue = buffer_read_u8(buf);
+        b->tourism_disabled = buffer_read_u8(buf);
+        b->tourism_income = buffer_read_u8(buf);
+        b->tourism_income_this_year = buffer_read_u8(buf);
+    }
+
+    if (building_buf_size >= BUILDING_STATE_VARIANTS_AND_UPGRADES) {
+        b->variant = buffer_read_u8(buf);
+        b->upgrade_level = buffer_read_u8(buf);
+    }
+
+    if (building_buf_size >= BUILDING_STATE_STRIKES) {
+        b->strike_duration_days = buffer_read_u8(buf);
+    }
+
+    // The following code should only be executed if the savegame includes building information that is not 
+    // supported on this specific version of Augustus. The extra bytes in the buffer must be skipped in order
+    // to prevent reading bogus data for the next building
+    if (building_buf_size > BUILDING_STATE_CURRENT_BUFFER_SIZE) {
+        buffer_skip(buf, building_buf_size - BUILDING_STATE_CURRENT_BUFFER_SIZE);
+    }
 }

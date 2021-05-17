@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+
+<assetlist author="Areldir" name="Econ_Logistics">
+    <!-- Note: Caravanserai OFF Variant for Northern/Central and Southern Climates Respectively -->
+    <image id="Caravanserai N OFF" src="Caravanserai_n_OFF" />
+    <image id="Caravanserai S OFF" src="Caravanserai_s_OFF" />
+
+    <!-- Note: Caravanserai ON Variant for Northern/Central Climate -->
+    <image id="Caravanserai N ON" width="238" height="155">
+        <layer group="this" image="Caravanserai N OFF" />
+        <animation speed="8" frames="3" x="44" y="38" reversible="true" />
+    </image>
+    <image src="Caravanserai_n_ON_01" />
+    <image src="Caravanserai_n_ON_02" />
+    <image src="Caravanserai_n_ON_03" />
+
+    <!-- Note: Caravanserai ON Variant for Southern Climate -->
+    <image id="Caravanserai S ON" width="238" height="148">
+        <layer group="this" image="Caravanserai S OFF" />
+        <animation speed="8" frames="3" x="44" y="30" reversible="true" />
+    </image>
+    <image src="Caravanserai_s_ON_01" />
+    <image src="Caravanserai_s_ON_02" />
+    <image src="Caravanserai_s_ON_03" />
+
+    <!-- Note: Caravanserai Construction 0% Phase -->
+    <image id="Caravanserai Cons" src="Caravanserai_Construction_0%" />
+
+
+    <!-- Note: Caravanserai Trade Policy -->
+    <image id="Trade Policy" src="Trade_Policy_Icon" />
+    <image id="Trade Policy 1" src="Trade_Policy_1" />
+    <image id="Trade Policy 2" src="Trade_Policy_2" />
+    <image id="Trade Policy 3" src="Trade_Policy_3" />
+
+    <!-- Note: Lighthouse Trade Policy -->
+    <image id="Sea Trade Policy" src="Sea_Trade_Policy_Icon" />
+    <image id="Sea Trade Policy 1" src="Sea_Trade_Policy_1" />
+    <image id="Sea Trade Policy 2" src="Sea_Trade_Policy_2" />
+    <image id="Sea Trade Policy 3" src="Sea_Trade_Policy_3" />
+
+    <image src="Policy_Selection_Border_Top_UnHover" id="Policy Selection Borders" />
+    <image src="Policy_Selection_Border_Top_Hover" />
+    <image src="Policy_Selection_Border_Right_UnHover" />
+    <image src="Policy_Selection_Border_Right_Hover" />
+    <image src="Policy_Selection_Border_Bottom_UnHover" />
+    <image src="Policy_Selection_Border_Bottom_Hover" />
+    <image src="Policy_Selection_Border_Left_UnHover" />
+    <image src="Policy_Selection_Border_Left_Hover" />
+
+</assetlist>

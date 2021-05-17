@@ -74,11 +74,12 @@ int figure_name_get(figure_type type, enemy_type enemy)
         return get_next_name(&data.tax_collector, 132, 32);
 
     case FIGURE_ENGINEER:
-    case FIGURE_WORK_CAMP_ENGINEER:
+    case FIGURE_WORK_CAMP_ARCHITECT:
         return get_next_name(&data.engineer, 165, 32);
 
     case FIGURE_PREFECT:
     case FIGURE_TOWER_SENTRY:
+    case FIGURE_WATCHMAN:
         return get_next_name(&data.prefect, 198, 32);
 
     case FIGURE_ACTOR:
@@ -102,8 +103,11 @@ int figure_name_get(figure_type type, enemy_type enemy)
         return get_next_name(&data.ship, 579, 16);
 
     case FIGURE_MARKET_TRADER:
-    case FIGURE_MARKET_BUYER:
+    case FIGURE_MARKET_SUPPLIER:
     case FIGURE_BATHHOUSE_WORKER:
+    case FIGURE_BARKEEP_SUPPLIER:
+    case FIGURE_BARKEEP:
+    case FIGURE_CARAVANSERAI_SUPPLIER:
         return get_next_name(&data.citizen_female, 99, 32);
 
     case FIGURE_SCHOOL_CHILD:
@@ -111,11 +115,12 @@ int figure_name_get(figure_type type, enemy_type enemy)
     case FIGURE_BARBER:
     case FIGURE_WORKER:
     case FIGURE_MESS_HALL_COLLECTOR:
+    case FIGURE_LIGHTHOUSE_SUPPLIER:
     default:
         return get_next_name(&data.citizen_male, 1, 64);
 
     case FIGURE_PRIEST:
-    case FIGURE_PRIEST_BUYER:
+    case FIGURE_PRIEST_SUPPLIER:
     case FIGURE_TEACHER:
     case FIGURE_MISSIONARY:
     case FIGURE_LIBRARIAN:
@@ -135,7 +140,7 @@ int figure_name_get(figure_type type, enemy_type enemy)
 
     case FIGURE_FORT_LEGIONARY:
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
-    case FIGURE_MESS_HALL_BUYER:
+    case FIGURE_MESS_HALL_SUPPLIER:
         return get_next_name(&data.legionary, 297, 32);
 
     case FIGURE_INDIGENOUS_NATIVE:

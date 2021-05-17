@@ -77,7 +77,7 @@ static struct {
     int is_scrolling;
     int finished_scroll;
     int focus_resource;
-} data = {0, 1};
+} data = { 0, 1 };
 
 static void init(void)
 {
@@ -191,11 +191,11 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 trade_max = trade_now;
             }
             int text_width = text_draw_number(trade_now, '@', "",
-                                             x_offset + 104 * index + 150, y_offset + 71, FONT_NORMAL_GREEN);
+                x_offset + 104 * index + 150, y_offset + 71, FONT_NORMAL_GREEN);
             text_width += lang_text_draw(47, 11,
-                                        x_offset + 104 * index + 148 + text_width, y_offset + 71, FONT_NORMAL_GREEN);
+                x_offset + 104 * index + 148 + text_width, y_offset + 71, FONT_NORMAL_GREEN);
             text_draw_number(trade_max, '@', "",
-                             x_offset + 104 * index + 138 + text_width, y_offset + 71, FONT_NORMAL_GREEN);
+                x_offset + 104 * index + 138 + text_width, y_offset + 71, FONT_NORMAL_GREEN);
             index++;
         }
     } else { // trade is closed
@@ -450,7 +450,7 @@ static void draw_foreground(void)
 static int is_outside_map(int x, int y)
 {
     return (x < data.x_min + 16 || x >= data.x_max - 16 ||
-            y < data.y_min + 16 || y >= data.y_max - 120);
+        y < data.y_min + 16 || y >= data.y_max - 120);
 }
 
 static void determine_selected_object(const mouse *m)
@@ -566,7 +566,7 @@ static int get_tooltip_resource(tooltip_context *c)
     int object_id = empire_selected_object() - 1;
     int x_offset = (data.x_min + data.x_max - 500) / 2;
     int y_offset = data.y_max - 113;
-    
+
     int item_offset = lang_text_get_width(47, 5, FONT_NORMAL_GREEN);
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         if (empire_object_city_sells_resource(object_id, r)) {
@@ -651,7 +651,7 @@ static void button_show_resource_window(int resource, int param2)
     window_resource_settings_show(resource);
 }
 
-static void confirmed_open_trade(int accepted)
+static void confirmed_open_trade(int accepted, int checked)
 {
     if (accepted) {
         empire_city_open_trade(data.selected_city);

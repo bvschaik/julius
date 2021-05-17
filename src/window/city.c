@@ -1,9 +1,12 @@
 #include "city.h"
 
+#include "building/building_variant.h"
 #include "building/clone.h"
 #include "building/construction.h"
 #include "building/menu.h"
+#include "building/properties.h"
 #include "building/rotation.h"
+#include "building/type.h"
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"
@@ -15,6 +18,7 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/time.h"
+#include "game/undo.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -37,7 +41,6 @@
 #include "window/advisors.h"
 #include "window/file_dialog.h"
 
-static int selected_legion_formation_id;
 static int city_view_dirty;
 
 static void clear_city_view(int force)
@@ -109,7 +112,7 @@ static void draw_paused_and_time_left(void)
     }
 }
 
-static void draw_cancel_construction(void)
+static void draw_construction_buttons(void)
 {
     if (!mouse_get()->is_touch || !building_construction_type()) {
         return;
@@ -119,6 +122,18 @@ static void draw_cancel_construction(void)
     width -= 4 * 16;
     inner_panel_draw(width - 4, 40, 3, 2);
     image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+
+    if (building_construction_can_rotate()) {
+        width = 16;
+        inner_panel_draw(width - 4, 40, 3, 2);
+        image_draw(image_group(GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS) + 6, width + 3, 46);
+        graphics_draw_inset_rect(width + 2, 45, 36, 24);
+        width += 3 * 16 + 8;
+        inner_panel_draw(width - 4, 40, 3, 2);
+        image_draw(image_group(GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS) + 9, width + 3, 46);
+        graphics_draw_inset_rect(width + 2, 45, 36, 24);
+    }
+
     city_view_dirty = 1;
 }
 
@@ -130,7 +145,7 @@ static void draw_foreground(void)
     widget_sidebar_city_draw_foreground();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         draw_paused_and_time_left();
-        draw_cancel_construction();
+        draw_construction_buttons();
     }
     city_view_dirty |= widget_city_draw_construction_cost_and_size();
     if (window_is(WINDOW_CITY)) {
@@ -228,6 +243,10 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_GRAND_TEMPLE_MARS:
         case BUILDING_GRAND_TEMPLE_VENUS:
         case BUILDING_PANTHEON:
+        case BUILDING_LARARIUM:
+        case BUILDING_NYMPHAEUM:
+        case BUILDING_SMALL_MAUSOLEUM:
+        case BUILDING_LARGE_MAUSOLEUM:
             overlay = OVERLAY_RELIGION;
             break;
         case BUILDING_PREFECTURE:
@@ -235,7 +254,7 @@ static void show_overlay_from_grid_offset(int grid_offset)
             overlay = OVERLAY_FIRE;
             break;
         case BUILDING_ENGINEERS_POST:
-        case BUILDING_ENGINEER_GUILD:
+        case BUILDING_ARCHITECT_GUILD:
             overlay = OVERLAY_DAMAGE;
             break;
         case BUILDING_THEATER:
@@ -245,6 +264,12 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_AMPHITHEATER:
         case BUILDING_GLADIATOR_SCHOOL:
             overlay = OVERLAY_AMPHITHEATER;
+            break;
+        case BUILDING_TAVERN:
+            overlay = OVERLAY_TAVERN;
+            break;
+        case BUILDING_ARENA:
+            overlay = OVERLAY_ARENA;
             break;
         case BUILDING_COLOSSEUM:
         case BUILDING_LION_HOUSE:
@@ -374,7 +399,7 @@ static void cycle_legion(void)
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         int legion_id = current_legion_id;
         current_legion_id = 0;
-        for (int i = 1; i < MAX_FORMATIONS; i++) {
+        for (int i = 1; i < formation_count(); i++) {
             legion_id++;
             if (legion_id > MAX_LEGIONS) {
                 legion_id = 1;
@@ -454,13 +479,20 @@ static void handle_hotkeys(const hotkeys *h)
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_SAVE);
     }
     if (h->rotate_building) {
-        building_rotation_rotate_by_hotkey();
+        building_rotation_rotate_forward();
+    }
+    if (h->rotate_building_back) {
+        building_rotation_rotate_backward();
     }
     if (h->building) {
         if (scenario_building_allowed(h->building) && building_menu_is_enabled(h->building)) {
             building_construction_cancel();
             building_construction_set_type(h->building);
         }
+    }
+    if (h->undo) {
+        game_undo_perform();
+        window_invalidate();
     }
     if (h->clone_building) {
         building_clone_from_grid_offset(widget_city_current_grid_offset());
@@ -521,7 +553,11 @@ int window_city_military_is_cursor_in_menu(void)
     }
     const mouse *m = mouse_get();
     int x, y, width, height;
-    city_view_get_scaled_viewport(&x, &y, &width, &height);
+    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    if (config_get(CONFIG_UI_ZOOM)) {
+        y += 24;
+        height += 24;
+    }
     return m->x < x || m->x >= width || m->y < y || m->y >= height;
 }
 

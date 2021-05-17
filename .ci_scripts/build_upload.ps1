@@ -50,8 +50,8 @@ $deploy_file = "augustus-$version-$suffix.zip"
 
 if ($repo -eq "release") {
     CopyFile res\maps .
-    CopyFile res\augustus_manual.pdf .
-    7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll assets maps augustus_manual.pdf
+    CopyFile res\manual .
+    7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll assets maps manual
 } else {
     7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
 }

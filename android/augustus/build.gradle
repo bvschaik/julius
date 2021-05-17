@@ -67,7 +67,7 @@ task getVersion {
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
-    ndkVersion "22.0.7026061"
+    ndkVersion "22.1.7171670"
 
     defaultConfig {
         applicationId "com.github.Keriew.augustus"
@@ -125,7 +125,7 @@ android {
 
 repositories {
     google()
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {

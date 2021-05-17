@@ -225,6 +225,7 @@ elseif (ANDROID_BUILD)
 endif()
 
 set(CORE_FILES
+    ${PROJECT_SOURCE_DIR}/src/core/array.c
     ${PROJECT_SOURCE_DIR}/src/core/backtrace.c
     ${PROJECT_SOURCE_DIR}/src/core/buffer.c
     ${PROJECT_SOURCE_DIR}/src/core/calc.c
@@ -254,6 +255,8 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/barracks.c
     ${PROJECT_SOURCE_DIR}/src/building/building.c
     ${PROJECT_SOURCE_DIR}/src/building/building_state.c
+    ${PROJECT_SOURCE_DIR}/src/building/building_variant.c
+    ${PROJECT_SOURCE_DIR}/src/building/caravanserai.c
     ${PROJECT_SOURCE_DIR}/src/building/clone.c
     ${PROJECT_SOURCE_DIR}/src/building/construction.c
     ${PROJECT_SOURCE_DIR}/src/building/construction_building.c
@@ -262,6 +265,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/construction_warning.c
     ${PROJECT_SOURCE_DIR}/src/building/count.c
     ${PROJECT_SOURCE_DIR}/src/building/destruction.c
+    ${PROJECT_SOURCE_DIR}/src/building/distribution.c
     ${PROJECT_SOURCE_DIR}/src/building/dock.c
     ${PROJECT_SOURCE_DIR}/src/building/figure.c
     ${PROJECT_SOURCE_DIR}/src/building/government.c
@@ -270,17 +274,22 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/house_evolution.c
     ${PROJECT_SOURCE_DIR}/src/building/house_population.c
     ${PROJECT_SOURCE_DIR}/src/building/house_service.c
+    ${PROJECT_SOURCE_DIR}/src/building/image_context.c
     ${PROJECT_SOURCE_DIR}/src/building/industry.c
+    ${PROJECT_SOURCE_DIR}/src/building/lighthouse.c
     ${PROJECT_SOURCE_DIR}/src/building/list.c
     ${PROJECT_SOURCE_DIR}/src/building/maintenance.c
     ${PROJECT_SOURCE_DIR}/src/building/market.c
     ${PROJECT_SOURCE_DIR}/src/building/menu.c
+    ${PROJECT_SOURCE_DIR}/src/building/mess_hall.c
     ${PROJECT_SOURCE_DIR}/src/building/model.c
     ${PROJECT_SOURCE_DIR}/src/building/monument.c
     ${PROJECT_SOURCE_DIR}/src/building/properties.c
     ${PROJECT_SOURCE_DIR}/src/building/roadblock.c
     ${PROJECT_SOURCE_DIR}/src/building/rotation.c
     ${PROJECT_SOURCE_DIR}/src/building/storage.c
+    ${PROJECT_SOURCE_DIR}/src/building/tavern.c
+    ${PROJECT_SOURCE_DIR}/src/building/temple.c
     ${PROJECT_SOURCE_DIR}/src/building/warehouse.c
 )
 set(CITY_FILES
@@ -293,6 +302,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/festival.c
     ${PROJECT_SOURCE_DIR}/src/city/figures.c
     ${PROJECT_SOURCE_DIR}/src/city/finance.c
+    ${PROJECT_SOURCE_DIR}/src/city/games.c
     ${PROJECT_SOURCE_DIR}/src/city/gods.c
     ${PROJECT_SOURCE_DIR}/src/city/health.c
     ${PROJECT_SOURCE_DIR}/src/city/houses.c
@@ -304,10 +314,12 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/mission.c
     ${PROJECT_SOURCE_DIR}/src/city/population.c
     ${PROJECT_SOURCE_DIR}/src/city/ratings.c
+    ${PROJECT_SOURCE_DIR}/src/city/request.c
     ${PROJECT_SOURCE_DIR}/src/city/resource.c
     ${PROJECT_SOURCE_DIR}/src/city/sentiment.c
     ${PROJECT_SOURCE_DIR}/src/city/sound.c
     ${PROJECT_SOURCE_DIR}/src/city/trade.c
+    ${PROJECT_SOURCE_DIR}/src/city/trade_policy.c
     ${PROJECT_SOURCE_DIR}/src/city/victory.c
     ${PROJECT_SOURCE_DIR}/src/city/view.c
     ${PROJECT_SOURCE_DIR}/src/city/warning.c
@@ -348,12 +360,12 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/enemy.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/entertainer.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/maintenance.c
-    ${PROJECT_SOURCE_DIR}/src/figuretype/market.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/migrant.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/missile.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/native.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/service.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/soldier.c
+    ${PROJECT_SOURCE_DIR}/src/figuretype/supplier.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/trader.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/wall.c
     ${PROJECT_SOURCE_DIR}/src/figuretype/water.c
@@ -553,12 +565,11 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/city.c
     ${PROJECT_SOURCE_DIR}/src/window/config.c
     ${PROJECT_SOURCE_DIR}/src/window/console.c
-    ${PROJECT_SOURCE_DIR}/src/window/difficulty_options.c
-    ${PROJECT_SOURCE_DIR}/src/window/display_options.c
     ${PROJECT_SOURCE_DIR}/src/window/donate_to_city.c
     ${PROJECT_SOURCE_DIR}/src/window/empire.c
     ${PROJECT_SOURCE_DIR}/src/window/file_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/gift_to_emperor.c
+    ${PROJECT_SOURCE_DIR}/src/window/hold_games.c
     ${PROJECT_SOURCE_DIR}/src/window/hold_festival.c
     ${PROJECT_SOURCE_DIR}/src/window/hotkey_config.c
     ${PROJECT_SOURCE_DIR}/src/window/hotkey_editor.c
@@ -582,8 +593,6 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/resource_settings.c
     ${PROJECT_SOURCE_DIR}/src/window/select_list.c
     ${PROJECT_SOURCE_DIR}/src/window/set_salary.c
-    ${PROJECT_SOURCE_DIR}/src/window/sound_options.c
-    ${PROJECT_SOURCE_DIR}/src/window/speed_options.c
     ${PROJECT_SOURCE_DIR}/src/window/trade_opened.c
     ${PROJECT_SOURCE_DIR}/src/window/trade_prices.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c

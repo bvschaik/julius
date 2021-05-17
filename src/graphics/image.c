@@ -84,7 +84,7 @@ static void draw_extra_asset_footprint(int image_id, int x_offset, int y_offset,
             for (int x = x_start; x < x_max; x++, dst++) {
                 color_t alpha = *data & COLOR_CHANNEL_ALPHA;
                 if (alpha == ALPHA_OPAQUE) {
-                    if(alpha_mask == ALPHA_OPAQUE) {
+                    if (alpha_mask == ALPHA_OPAQUE) {
                         *dst = *data & color;
                     } else {
                         *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data & color, *dst, alpha_mask >> COLOR_BITSHIFT_ALPHA);
@@ -165,11 +165,11 @@ static void draw_extra_asset_top(int image_id, int x_offset, int y_offset, color
                             *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data & color, *dst, alpha_mask >> COLOR_BITSHIFT_ALPHA);
                         } else if (alpha != ALPHA_TRANSPARENT) {
                             color_t final_alpha = COLOR_MIX_ALPHA(alpha >> COLOR_BITSHIFT_ALPHA,
-                                                                    alpha_mask >> COLOR_BITSHIFT_ALPHA);
+                                alpha_mask >> COLOR_BITSHIFT_ALPHA);
                             *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data & color, *dst, final_alpha);
                         }
                         data++;
-                    }                    
+                    }
                 }
             } else {
                 for (int x = x_start; x < x_max; x++, dst++) {
@@ -215,11 +215,11 @@ static void draw_extra_asset_top(int image_id, int x_offset, int y_offset, color
                         *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data & color, *dst, alpha_mask >> COLOR_BITSHIFT_ALPHA);
                     } else if (alpha != ALPHA_TRANSPARENT) {
                         color_t final_alpha = COLOR_MIX_ALPHA(alpha >> COLOR_BITSHIFT_ALPHA,
-                                                                alpha_mask >> COLOR_BITSHIFT_ALPHA);
+                            alpha_mask >> COLOR_BITSHIFT_ALPHA);
                         *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data & color, *dst, final_alpha);
                     }
                     data++;
-                }                    
+                }
             }
         } else {
             for (int x = x_start; x < x_max; x++, dst++) {
@@ -286,7 +286,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
         return;
     }
     int alpha_mask = color & COLOR_CHANNEL_ALPHA;
-    if(type == DRAW_TYPE_AND) {
+    if (type == DRAW_TYPE_AND) {
         if (alpha_mask == ALPHA_TRANSPARENT) {
             return;
         }
@@ -331,7 +331,7 @@ static void draw_uncompressed(const image *img, const color_t *data, int x_offse
                         *dst = COLOR_BLEND_ALPHA_TO_OPAQUE(*data & color, *dst, alpha_mask >> COLOR_BITSHIFT_ALPHA);
                     }
                     data++;
-                }                
+                }
             }
         } else if (type == DRAW_TYPE_BLEND) {
             for (int x = clip->clipped_pixels_left; x < x_max; x++, dst++) {
@@ -450,7 +450,7 @@ static void draw_compressed_set(
 static void draw_compressed_masked(
     const image *img, const color_t *data, int x_offset, int y_offset, int height, color_t color)
 {
-    if(color == COLOR_MASK_NONE) {
+    if (color == COLOR_MASK_NONE) {
         draw_compressed(img, data, x_offset, y_offset, height);
         return;
     }
@@ -459,7 +459,7 @@ static void draw_compressed_masked(
         return;
     }
     color_t alpha_mask = color & COLOR_CHANNEL_ALPHA;
-    if(alpha_mask == ALPHA_TRANSPARENT) {
+    if (alpha_mask == ALPHA_TRANSPARENT) {
         return;
     }
     color |= ALPHA_OPAQUE;
@@ -617,7 +617,7 @@ static void draw_compressed_blend_alpha(
                     while (b) {
                         color_t d = *dst;
                         *dst = (((src_rb + (d & COLOR_CHANNEL_RB) * alpha_dst) & (COLOR_CHANNEL_RB << 8)) |
-                                ((src_g  + (d & COLOR_CHANNEL_GREEN) * alpha_dst) & (COLOR_CHANNEL_GREEN << 8))) >> 8;
+                            ((src_g + (d & COLOR_CHANNEL_GREEN) * alpha_dst) & (COLOR_CHANNEL_GREEN << 8))) >> 8;
                         b--;
                         dst++;
                     }
@@ -626,7 +626,7 @@ static void draw_compressed_blend_alpha(
                         if (x >= clip->clipped_pixels_left && x < img->width - clip->clipped_pixels_right) {
                             color_t d = *dst;
                             *dst = (((src_rb + (d & COLOR_CHANNEL_RB) * alpha_dst) & (COLOR_CHANNEL_RB << 8)) |
-                                   ((src_g  + (d & COLOR_CHANNEL_GREEN) * alpha_dst) & (COLOR_CHANNEL_GREEN << 8))) >> 8;
+                                ((src_g + (d & COLOR_CHANNEL_GREEN) * alpha_dst) & (COLOR_CHANNEL_GREEN << 8))) >> 8;
                         }
                         dst++;
                         x++;
@@ -731,14 +731,14 @@ static void draw_footprint_tile(const color_t *data, int x_offset, int y_offset,
             memcpy(buffer, src, x_max * sizeof(color_t));
             src += x_max + x_pixel_advance;
         } else {
-            if(alpha_mask == ALPHA_OPAQUE) {
+            if (alpha_mask == ALPHA_OPAQUE) {
                 for (int x = 0; x < x_max; x++, buffer++, src++) {
                     *buffer = *src & color_mask;
                 }
             } else {
                 for (int x = 0; x < x_max; x++, buffer++, src++) {
                     *buffer = COLOR_BLEND_ALPHA_TO_OPAQUE(*src & color_mask, *buffer, alpha_mask >> COLOR_BITSHIFT_ALPHA);
-                }                
+                }
             }
             src += x_pixel_advance;
         }
@@ -861,7 +861,7 @@ static void draw_footprint_size5(int image_id, int x, int y, color_t color_mask)
 
 static void draw_footprint_size7(int image_id, int x, int y, color_t color_mask)
 {
-    const color_t* data = image_data(image_id);
+    const color_t *data = image_data(image_id);
 
     int index = 0;
     draw_footprint_tile(tile_data(data, index++), x, y, color_mask);
@@ -898,18 +898,18 @@ static void draw_footprint_size7(int image_id, int x, int y, color_t color_mask)
 
     draw_footprint_tile(tile_data(data, index++), x, y + 120, color_mask);
 
-    draw_footprint_tile(tile_data(data, index++), x-150, y + 75, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x+150, y + 75, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x-120, y + 90, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x+120, y + 90, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x-90, y + 105, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x+90, y + 105, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x-60, y + 120, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x+60, y + 120, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x-30, y + 135, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x+30, y + 135, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x-180, y + 150, color_mask);
-    draw_footprint_tile(tile_data(data, index++), x+180, y + 90, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 150, y + 75, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 150, y + 75, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 120, y + 90, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 120, y + 90, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 90, y + 105, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 90, y + 105, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 60, y + 120, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 60, y + 120, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 30, y + 135, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 30, y + 135, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x - 180, y + 150, color_mask);
+    draw_footprint_tile(tile_data(data, index++), x + 180, y + 90, color_mask);
     draw_footprint_tile(tile_data(data, index++), x - 150, y + 90, color_mask);
     draw_footprint_tile(tile_data(data, index++), x + 150, y + 105, color_mask);
     draw_footprint_tile(tile_data(data, index++), x - 120, y + 105, color_mask);
@@ -972,7 +972,7 @@ void image_draw_masked(int image_id, int x, int y, color_t color_mask)
         }
     } else {
         draw_uncompressed(img, data, x, y, color_mask,
-                            (color_mask && color_mask != COLOR_MASK_NONE) ? DRAW_TYPE_AND : DRAW_TYPE_NONE);
+            (color_mask && color_mask != COLOR_MASK_NONE) ? DRAW_TYPE_AND : DRAW_TYPE_NONE);
     }
 }
 
@@ -1067,9 +1067,8 @@ void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color)
     }
 }
 
-void image_draw_fullscreen_background(int image_id)
+static inline void draw_fullscreen_background(int image_id)
 {
-    graphics_clear_screens();
     int s_width = screen_width();
     int s_height = screen_height();
     const image *img = image_get(image_id);
@@ -1082,6 +1081,38 @@ void image_draw_fullscreen_background(int image_id)
     } else {
         image_draw_scaled(image_id, (int) ((s_width - img->width * scale) / 2), (int) ((s_height - img->height * scale) / 2), scale);
     }
+}
+
+static inline void draw_fullscreen_borders(void)
+{
+    int width = screen_width();
+    int height = screen_height();
+    int image_base = image_group(GROUP_EMPIRE_PANELS);
+
+    // horizontal bar borders
+    for (int x = 0; x < width; x += 86) {
+        image_draw(image_base + 1, x, 0);
+        image_draw(image_base + 1, x, height - 16);
+    }
+
+    // vertical bar borders
+    for (int y = 16; y < height; y += 86) {
+        image_draw(image_base, 0, y);
+        image_draw(image_base, width - 16, y);
+    }
+
+    // crossbars
+    image_draw(image_base + 2, 0, 0);
+    image_draw(image_base + 2, 0, height - 16);
+    image_draw(image_base + 2, width - 16, 0);
+    image_draw(image_base + 2, width - 16, height - 16);
+}
+
+void image_draw_fullscreen_background(int image_id)
+{
+    graphics_clear_screens();
+    draw_fullscreen_background(image_id);
+    draw_fullscreen_borders();
 }
 
 void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask)

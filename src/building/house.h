@@ -20,4 +20,6 @@ void building_house_devolve_from_large_palace(building *house);
 
 void building_house_check_for_corruption(building *house);
 
+void building_house_restore_population_after_undo(building *house);
+
 #endif // BUILDING_HOUSE_H

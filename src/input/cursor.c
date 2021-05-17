@@ -6,7 +6,7 @@
 
 static const cursor ARROW[] = {
     {
-        0, 0, 13, 21,
+        0, 0, 13, 21, "Arrow.png",
         "#            "
         "##           "
         "#'#          "
@@ -30,7 +30,7 @@ static const cursor ARROW[] = {
         "        ##   "
     },
     {
-        0, 0, 18, 30,
+        0, 0, 18, 30, "Arrow_150.png",
         "#                 "
         "##                "
         "#&#               "
@@ -63,7 +63,7 @@ static const cursor ARROW[] = {
         "           ###    "
     },
     {
-        0, 0, 24, 40,
+        0, 0, 24, 40, "Arrow_200.png",
         "#                       "
         "##                      "
         "#&#                     "
@@ -109,7 +109,7 @@ static const cursor ARROW[] = {
 
 static const cursor SWORD[] = {
     {
-        0, 0, 22, 22,
+        0, 0, 22, 22, "Sword.png",
         "#####                 "
         "#'''##                "
         "#''''##               "
@@ -134,7 +134,7 @@ static const cursor SWORD[] = {
         "                 #### "
     },
     {
-        0, 0, 34, 34,
+        0, 0, 34, 34, "Sword_150.png",
         "######                            "
         "#%&&&##                           "
         "#&'''&##                          "
@@ -171,7 +171,7 @@ static const cursor SWORD[] = {
         "                           ####   "
     },
     {
-        0, 0, 46, 44,
+        0, 0, 46, 44, "Sword_200.png",
         "########                                      "
         "#%%%%%%##                                     "
         "#%'''''&##                                    "
@@ -221,7 +221,7 @@ static const cursor SWORD[] = {
 
 static const cursor SHOVEL[] = {
     {
-        1, 26, 28, 28,
+        1, 26, 28, 28, "Shovel.png",
         "                       ##   "
         "                      ####  "
         "                     ##'### "
@@ -252,7 +252,7 @@ static const cursor SHOVEL[] = {
         "  #####                     "
     },
     {
-        2, 39, 44, 41,
+        2, 39, 44, 41, "Shovel_150.png",
         "                                   ####     "
         "                                 #######    "
         "                                ##%&#####   "
@@ -296,7 +296,7 @@ static const cursor SHOVEL[] = {
         "  #########                                 "
     },
     {
-        3, 52, 58, 55,
+        3, 52, 58, 55, "Shovel_200.png",
         "                                               ##         "
         "                                             ######       "
         "                                            ###&#####     "

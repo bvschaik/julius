@@ -1,6 +1,9 @@
 #include "popup_dialog.h"
-#include "core/image_group.h"
 
+#include "core/image_group.h"
+#include "core/lang.h"
+#include "core/string.h"
+#include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
@@ -11,12 +14,13 @@
 #include "input/input.h"
 #include "translation/translation.h"
 
-
 #define GROUP 5
 
 #define PROCEED_GROUP 43
 #define PROCEED_TEXT 5
+#define CHECKBOX_CHECK_SIZE 20
 
+static void button_checkbox(int param1, int param2);
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);
 static void confirm(void);
@@ -26,31 +30,41 @@ static image_button buttons[] = {
     {256, 100, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_cancel, button_none, 0, 0, 1},
 };
 
+static generic_button checkbox = { 160, 180, 360, 20, button_checkbox, button_none };
+
 static struct {
-    popup_dialog_type type;
-    int custom_text_group;
-    int custom_text_id;
     int ok_clicked;
-    void (*close_func)(int accepted);
+    void (*close_func)(int accepted, int checked);
     int has_buttons;
-    int from_tr;
     int translation_key;
+    int checked;
+    int has_focus;
+    int checkbox_start_width;
+    const uint8_t *custom_title;
+    const uint8_t *custom_text;
+    const uint8_t *checkbox_text;
 } data;
 
-static int init(popup_dialog_type type, int custom_text_group, int custom_text_id,
-        void (*close_func)(int accepted), int has_ok_cancel_buttons)
+static int init(const uint8_t *custom_title, const uint8_t *custom_text,
+    const uint8_t *checkbox_text, void (*close_func)(int accepted, int checked), int has_ok_cancel_buttons)
 {
     if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
         return 0;
     }
-    data.type = type;
-    data.custom_text_group = custom_text_group;
-    data.custom_text_id = custom_text_id;
     data.ok_clicked = 0;
-    data.from_tr = 0;
     data.close_func = close_func;
     data.has_buttons = has_ok_cancel_buttons;
+    data.custom_title = custom_title;
+    data.custom_text = custom_text;
+    data.checkbox_text = checkbox_text;
+    data.checked = 0;
+    if (!data.custom_text) {
+        data.custom_text = lang_get_string(PROCEED_GROUP, PROCEED_TEXT);
+    }
+    if (data.checkbox_text) {
+        data.checkbox_start_width = 80 + (480 - text_get_width(data.checkbox_text, FONT_NORMAL_BLACK) - 30) / 2;
+    }
     return 1;
 }
 
@@ -58,23 +72,20 @@ static void draw_background(void)
 {
     window_draw_underlying_window();
     graphics_in_dialog();
-    outer_panel_draw(80, 80, 30, 10);
-    if (data.type >= 0) {
-        lang_text_draw_centered(GROUP, data.type, 80, 100, 480, FONT_LARGE_BLACK);
-        if (lang_text_get_width(GROUP, data.type + 1, FONT_NORMAL_BLACK) >= 420) {
-            lang_text_draw_multiline(GROUP, data.type + 1, 110, 140, 420, FONT_NORMAL_BLACK);
-        } else {
-            lang_text_draw_centered(GROUP, data.type + 1, 80, 140, 480, FONT_NORMAL_BLACK);
-        }
+    outer_panel_draw(80, 80, 30, data.checkbox_text ? 11 : 10);
+    if (data.custom_title) {
+        text_draw_centered(data.custom_title, 80, 100, 480, FONT_LARGE_BLACK, 0);
+    }
+    if (text_get_width(data.custom_text, FONT_NORMAL_BLACK) >= 420) {
+        text_draw_multiline(data.custom_text, 110, 140, 420, FONT_NORMAL_BLACK, 0);
     } else {
-        if (data.from_tr) {
-            text_draw_centered(translation_for(data.translation_key), 80, 100, 480, FONT_LARGE_BLACK, 0);
+        text_draw_centered(data.custom_text, 80, 140, 480, FONT_NORMAL_BLACK, 0);
+    }
+    if (data.checkbox_text) {
+        if (data.checked) {
+            text_draw(string_from_ascii("x"), data.checkbox_start_width + 6, 183, FONT_NORMAL_BLACK, 0);
         }
-        else {
-            lang_text_draw_centered(data.custom_text_group, data.custom_text_id, 80, 100, 480, FONT_LARGE_BLACK);            
-        }
-
-        lang_text_draw_centered(PROCEED_GROUP, PROCEED_TEXT, 80, 140, 480, FONT_NORMAL_BLACK);
+        text_draw(data.checkbox_text, data.checkbox_start_width + 30, 184, FONT_NORMAL_BLACK, 0);
     }
     graphics_reset_dialog();
 }
@@ -82,8 +93,11 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
+    if (data.checkbox_text) {
+        button_border_draw(data.checkbox_start_width, 180, CHECKBOX_CHECK_SIZE, CHECKBOX_CHECK_SIZE, data.has_focus);
+    }
     if (data.has_buttons) {
-        image_buttons_draw(80, 80, buttons, 2);
+        image_buttons_draw(80, data.checkbox_text ? 110 : 80, buttons, 2);
     } else {
         lang_text_draw_centered(13, 1, 80, 208, 480, FONT_NORMAL_BLACK);
     }
@@ -92,11 +106,15 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (data.has_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), 80, 80, buttons, 2, 0)) {
+    if (data.checkbox_text && generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, &checkbox, 1, &data.has_focus)) {
+        return;
+    }
+    if (data.has_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), 80,
+        data.checkbox_text ? 110 : 80, buttons, 2, 0)) {
         return;
     }
     if (input_go_back_requested(m, h)) {
-        data.close_func(0);
+        data.close_func(0, 0);
         window_go_back();
     }
     if (h->enter_pressed) {
@@ -112,19 +130,25 @@ static void button_ok(int param1, int param2)
 static void button_cancel(int param1, int param2)
 {
     window_go_back();
-    data.close_func(0);
+    data.close_func(0, 0);
+}
+
+static void button_checkbox(int param1, int param2)
+{
+    data.checked ^= 1;
+    window_request_refresh();
 }
 
 static void confirm(void)
 {
     window_go_back();
-    data.close_func(1);
+    data.close_func(1, data.checked);
 }
 
 void window_popup_dialog_show(popup_dialog_type type,
-    void (*close_func)(int accepted), int has_ok_cancel_buttons)
+    void (*close_func)(int accepted, int checked), int has_ok_cancel_buttons)
 {
-    if (init(type, 0, 0, close_func, has_ok_cancel_buttons)) {
+    if (init(lang_get_string(GROUP, type), lang_get_string(GROUP, type + 1), 0, close_func, has_ok_cancel_buttons)) {
         window_type window = {
             WINDOW_POPUP_DIALOG,
             draw_background,
@@ -135,10 +159,10 @@ void window_popup_dialog_show(popup_dialog_type type,
     }
 }
 
-void window_popup_dialog_show_confirmation(int text_group, int text_id,
-    void (*close_func)(int accepted))
+void window_popup_dialog_show_confirmation(const uint8_t *custom_title, const uint8_t *custom_text,
+    const uint8_t *checkbox_text, void (*close_func)(int accepted, int checked))
 {
-    if (init(POPUP_DIALOG_NONE, text_group, text_id, close_func, 1)) {
+    if (init(custom_title, custom_text, checkbox_text, close_func, 1)) {
         window_type window = {
             WINDOW_POPUP_DIALOG,
             draw_background,
@@ -148,22 +172,3 @@ void window_popup_dialog_show_confirmation(int text_group, int text_id,
         window_show(&window);
     }
 }
-
-
-void window_popup_dialog_show_confirmation_from_tr(int translation_key,
-    void (*close_func)(int accepted))
-{
-    if (init(POPUP_DIALOG_NONE, 0, 0, close_func, 1)) {
-        window_type window = {
-            WINDOW_POPUP_DIALOG,
-            draw_background,
-            draw_foreground,
-            handle_input
-        };
-        data.from_tr = 1;
-        data.translation_key = translation_key;
-        window_show(&window);
-    }
-}
-
-

@@ -5,23 +5,35 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Do not change the seed. Doing so breaks savegame compatibility with extra asset images
-#define ASSET_HASH_SEED 0x12345678
 #define GROUP_HASH_MASK 0xffffff00
-#define GROUP_MIN_HASH 0x4000
+#define GROUP_MIN_HASH 0x8000
+
+typedef struct {
+    uint32_t original;
+    uint32_t replacement;
+} hash_replacement;
 
 static struct {
     int total_groups;
     image_groups *groups;
+    hash_replacement engineer_to_architect;
 } data;
+
+void group_setup_hash_replacements(void)
+{
+    data.engineer_to_architect.original = group_get_hash("Areldir", "Engineer");
+    data.engineer_to_architect.replacement = group_get_hash("Areldir", "Architect");
+}
 
 int group_create_all(int total)
 {
-    data.groups = malloc(sizeof(image_groups) * total);
+    data.groups = malloc(sizeof(image_groups) * (total + 1));
     if (!data.groups) {
         return 0;
     }
-    memset(data.groups, 0, sizeof(image_groups) * total);
+    memset(data.groups, 0, sizeof(image_groups) * (total + 1));
+    data.groups[0].id = ANIMATION_FRAMES_GROUP;
+    data.total_groups = 1; // Group 0: image animations group
     return 1;
 }
 
@@ -37,7 +49,7 @@ image_groups *group_get_current(void)
 
 uint32_t group_get_hash(const char *author, const char *name)
 {
-    uint32_t hash = ASSET_HASH_SEED;
+    uint32_t hash = HASH_SEED;
     uint32_t carry = 0;
     uint32_t author_length = (uint32_t) strlen(author);
     uint32_t name_length = (uint32_t) strlen(name);
@@ -46,7 +58,7 @@ uint32_t group_get_hash(const char *author, const char *name)
     PMurHash32_Process(&hash, &carry, name, name_length);
 
     hash = PMurHash32_Result(hash, carry, author_length + name_length);
-    
+
     // The following code increases the risk of hash collision but allows better image indexing
     if (hash < GROUP_MIN_HASH) {
         hash |= GROUP_MIN_HASH;
@@ -57,6 +69,9 @@ uint32_t group_get_hash(const char *author, const char *name)
 image_groups *group_get_from_hash(uint32_t hash)
 {
     hash &= GROUP_HASH_MASK;
+    if (hash == data.engineer_to_architect.original) {
+        hash = data.engineer_to_architect.replacement;
+    }
     for (int i = 0; i < data.total_groups; ++i) {
         image_groups *group = &data.groups[i];
         if (hash == group->id) {

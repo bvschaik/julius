@@ -14,9 +14,11 @@ void sound_city_init(void);
 
 void sound_city_set_volume(int percentage);
 
-void sound_city_mark_building_view(building *b, int direction);
+void sound_city_mark_building_view(building_type type, int num_workers, int direction);
 
 void sound_city_decay_views(void);
+
+void sound_city_progress_ambient(void);
 
 void sound_city_play(void);
 

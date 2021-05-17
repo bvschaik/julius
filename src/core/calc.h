@@ -27,17 +27,18 @@ int calc_adjust_with_percentage(int value, int percentage);
 int calc_percentage(int value, int total);
 
 /**
+ * Calculates the next multiple of step in which value will fit
+ * @param value The value to fit in the multiple of step
+ * @param step The step to use as a multiple
+ * @return The multiple of step into which value fits
+ */
+int calc_value_in_step(int value, int step);
+
+/**
  * Gets maximum distance
  * @return max(dx, dy)
  */
 int calc_maximum_distance(int x1, int y1, int x2, int y2);
-
-/**
- * Gets maximum distance with penalty applied
- * @return max(dx, dy) + difference between dist_to_entry
- */
-int calc_distance_with_penalty(int x1, int y1, int x2, int y2,
-                               int dist_to_entry1, int dist_to_entry2);
 
 /**
  * Gets the general direction from 'from' to 'to'
@@ -77,6 +78,7 @@ int calc_missile_direction(int x_from, int y_from, int x_to, int y_to);
  * @return Value bounded to be between min and max
  */
 int32_t calc_bound(int32_t value, int32_t min, int32_t max);
+double calc_bound_double(double value, double min, double max);
 
 int calc_absolute_decrement(int value, int step);
 

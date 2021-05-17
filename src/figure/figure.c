@@ -1,6 +1,8 @@
 #include "figure/figure.h"
 
 #include "building/building.h"
+#include "core/array.h"
+#include "core/log.h"
 #include "city/emperor.h"
 #include "core/random.h"
 #include "empire/city.h"
@@ -10,31 +12,34 @@
 #include "map/figure.h"
 #include "map/grid.h"
 
-#include <string.h>
+#define FIGURE_ARRAY_SIZE_STEP 1000
+
+#define FIGURE_ORIGINAL_BUFFER_SIZE 128
+#define FIGURE_CURRENT_BUFFER_SIZE 128
 
 static struct {
     int created_sequence;
-    figure figures[MAX_FIGURES];
-} data = {0};
+    array(figure) figures;
+} data;
 
 figure *figure_get(int id)
 {
-    return &data.figures[id];
+    return array_item(data.figures, id);
+}
+
+int figure_count(void)
+{
+    return data.figures.size;
 }
 
 figure *figure_create(figure_type type, int x, int y, direction_type dir)
 {
-    int id = 0;
-    for (int i = 1; i < MAX_FIGURES; i++) {
-        if (!data.figures[i].state) {
-            id = i;
-            break;
-        }
+    figure *f = 0;
+    array_new_item(data.figures, 1, f);
+    if (!f) {
+        return array_first(data.figures);
     }
-    if (!id) {
-        return &data.figures[0];
-    }
-    figure *f = &data.figures[id];
+
     f->state = FIGURE_STATE_ALIVE;
     f->faction_id = 1;
     f->type = type;
@@ -50,6 +55,10 @@ figure *figure_create(figure_type type, int x, int y, direction_type dir)
     f->progress_on_tile = 15;
     f->progress_to_next_tick = 0;
     f->dont_draw_elevated = 0;
+    f->disallow_diagonal = 0;
+    f->resource_id = RESOURCE_NONE;
+    f->destination_building_id = 0;
+    f->wait_ticks = 0;
     random_generate_next();
     f->phrase_sequence_city = f->phrase_sequence_exact = random_byte() & 3;
     f->name = figure_name_get(type, 0);
@@ -65,20 +74,22 @@ void figure_delete(figure *f)
     building *b = building_get(f->building_id);
     switch (f->type) {
         case FIGURE_LABOR_SEEKER:
-        case FIGURE_MARKET_BUYER:
-        case FIGURE_PRIEST_BUYER:
-        case FIGURE_MESS_HALL_BUYER:
+        case FIGURE_MARKET_SUPPLIER:
+        case FIGURE_PRIEST_SUPPLIER:
+        case FIGURE_BARKEEP_SUPPLIER:
+        case FIGURE_MESS_HALL_SUPPLIER:
+        case FIGURE_CARAVANSERAI_SUPPLIER:
+        case FIGURE_LIGHTHOUSE_SUPPLIER:
             if (f->building_id && f->id == b->figure_id2) {
                 b->figure_id2 = 0;
-            }
-            else if (f->building_id && f->id == b->figure_id) {
+            } else if (f->building_id && f->id == b->figure_id) {
                 b->figure_id = 0;
-            }
-            else if (f->building_id && f->id == b->figure_id4) {
+            } else if (f->building_id && f->id == b->figure_id4) {
                 b->figure_id4 = 0;
             }
             break;
         case FIGURE_BALLISTA:
+        case FIGURE_WATCHTOWER_ARCHER:
             b->figure_id4 = 0;
             break;
         case FIGURE_DOCKER:
@@ -110,6 +121,7 @@ void figure_delete(figure *f)
         case FIGURE_FORT_STANDARD:
         case FIGURE_ARROW:
         case FIGURE_JAVELIN:
+        case FIGURE_FRIENDLY_ARROW:
         case FIGURE_BOLT:
         case FIGURE_SPEAR:
         case FIGURE_FISH_GULLS:
@@ -121,6 +133,13 @@ void figure_delete(figure *f)
         case FIGURE_MESS_HALL_COLLECTOR:
             // nothing to do here
             break;
+        case FIGURE_WATCHMAN:
+            if (f->id == b->figure_id2) {
+                b->figure_id2 = 0;
+            } else if (f->id == b->figure_id) {
+                b->figure_id = 0;
+            }
+            break;
         default:
             if (f->building_id) {
                 b->figure_id = 0;
@@ -131,7 +150,7 @@ void figure_delete(figure *f)
         empire_city_remove_trader(f->empire_city_id, f->id);
     }
     if (f->immigrant_building_id) {
-        b->immigrant_figure_id = 0;
+        building_get(f->immigrant_building_id)->immigrant_figure_id = 0;
     }
     figure_route_remove(f);
     map_figure_delete(f);
@@ -139,6 +158,8 @@ void figure_delete(figure *f)
     int figure_id = f->id;
     memset(f, 0, sizeof(figure));
     f->id = figure_id;
+
+    array_trim(data.figures);
 }
 
 int figure_is_dead(const figure *f)
@@ -161,20 +182,54 @@ int figure_is_herd(const figure *f)
     return f->type >= FIGURE_SHEEP && f->type <= FIGURE_ZEBRA;
 }
 
+static void initialize_new_figure(figure *f, int position)
+{
+    f->id = position;
+}
+
+static int figure_is_active(const figure *f)
+{
+    return f->state != 0;
+}
+
 void figure_init_scenario(void)
 {
-    for (int i = 0; i < MAX_FIGURES; i++) {
-        memset(&data.figures[i], 0, sizeof(figure));
-        data.figures[i].id = i;
+    if (!array_init(data.figures, FIGURE_ARRAY_SIZE_STEP, initialize_new_figure, figure_is_active) ||
+        !array_next(data.figures)) { // Ignore first figure
+        log_error("Unable to create figures array. The game will now crash.", 0, 0);
     }
     data.created_sequence = 0;
 }
 
 void figure_kill_all(void)
 {
-    for (int i = 1; i < MAX_FIGURES; i++) {
-        data.figures[i].state = FIGURE_STATE_DEAD;
+    figure *f;
+    array_foreach(data.figures, f)
+    {
+        switch (f->type) {
+            default:
+                f->state = FIGURE_STATE_DEAD;
+                break;
+            case FIGURE_EXPLOSION:
+            case FIGURE_MAP_FLAG:
+            case FIGURE_FISH_GULLS:
+            case FIGURE_SHIPWRECK:
+            case FIGURE_FORT_STANDARD:
+                continue;
+        }  
     }
+}
+
+int figure_target_is_alive(const figure *f)
+{
+    if (f->target_figure_id <= 0) {
+        return 0;
+    }
+    figure *target = figure_get(f->target_figure_id);
+    if (!figure_is_dead(target) && target->created_sequence == f->target_figure_created_sequence) {
+        return 1;
+    }
+    return 0;
 }
 
 static void figure_save(buffer *buf, const figure *f)
@@ -210,7 +265,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_u8(buf, f->source_y);
     buffer_write_u8(buf, f->formation_position_x.soldier);
     buffer_write_u8(buf, f->formation_position_y.soldier);
-    buffer_write_i16(buf, f->__unused_24);
+    buffer_write_i16(buf, f->disallow_diagonal);
     buffer_write_i16(buf, f->wait_ticks);
     buffer_write_u8(buf, f->action_state);
     buffer_write_u8(buf, f->progress_on_tile);
@@ -243,7 +298,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_u8(buf, f->migrant_num_people);
     buffer_write_u8(buf, f->is_ghost);
     buffer_write_u8(buf, f->min_max_seen);
-    buffer_write_u8(buf, f->progress_to_next_tick);
+    buffer_write_i8(buf, f->progress_to_next_tick);
     buffer_write_i16(buf, f->leading_figure_id);
     buffer_write_u8(buf, f->attack_image_offset);
     buffer_write_u8(buf, f->wait_ticks_missile);
@@ -277,7 +332,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_i16(buf, f->opponent_id);
 }
 
-static void figure_load(buffer *buf, figure *f)
+static void figure_load(buffer *buf, figure *f, int figure_buf_size)
 {
     f->alternative_location_index = buffer_read_u8(buf);
     f->image_offset = buffer_read_u8(buf);
@@ -310,7 +365,7 @@ static void figure_load(buffer *buf, figure *f)
     f->source_y = buffer_read_u8(buf);
     f->formation_position_x.soldier = buffer_read_u8(buf);
     f->formation_position_y.soldier = buffer_read_u8(buf);
-    f->__unused_24 = buffer_read_i16(buf);
+    f->disallow_diagonal = buffer_read_i16(buf);
     f->wait_ticks = buffer_read_i16(buf);
     f->action_state = buffer_read_u8(buf);
     f->progress_on_tile = buffer_read_u8(buf);
@@ -343,7 +398,7 @@ static void figure_load(buffer *buf, figure *f)
     f->migrant_num_people = buffer_read_u8(buf);
     f->is_ghost = buffer_read_u8(buf);
     f->min_max_seen = buffer_read_u8(buf);
-    f->progress_to_next_tick = buffer_read_u8(buf);
+    f->progress_to_next_tick = buffer_read_i8(buf);
     f->leading_figure_id = buffer_read_i16(buf);
     f->attack_image_offset = buffer_read_u8(buf);
     f->wait_ticks_missile = buffer_read_u8(buf);
@@ -375,23 +430,58 @@ static void figure_load(buffer *buf, figure *f)
     f->attacker_id1 = buffer_read_i16(buf);
     f->attacker_id2 = buffer_read_i16(buf);
     f->opponent_id = buffer_read_i16(buf);
+
+    // The following code should only be executed if the savegame includes figure information that is not 
+    // supported on this specific version of Augustus. The extra bytes in the buffer must be skipped in order
+    // to prevent reading bogus data for the next figure
+    if (figure_buf_size > FIGURE_CURRENT_BUFFER_SIZE) {
+        buffer_skip(buf, figure_buf_size - FIGURE_CURRENT_BUFFER_SIZE);
+    }
 }
 
 void figure_save_state(buffer *list, buffer *seq)
 {
     buffer_write_i32(seq, data.created_sequence);
 
-    for (int i = 0; i < MAX_FIGURES; i++) {
-        figure_save(list, &data.figures[i]);
+    int buf_size = 4 + data.figures.size * FIGURE_CURRENT_BUFFER_SIZE;
+    uint8_t *buf_data = malloc(buf_size);
+    buffer_init(list, buf_data, buf_size);
+    buffer_write_i32(list, FIGURE_CURRENT_BUFFER_SIZE);
+
+    figure *f;
+    array_foreach(data.figures, f)
+    {
+        figure_save(list, f);
     }
 }
 
-void figure_load_state(buffer *list, buffer *seq)
+void figure_load_state(buffer *list, buffer *seq, int includes_figure_size)
 {
     data.created_sequence = buffer_read_i32(seq);
 
-    for (int i = 0; i < MAX_FIGURES; i++) {
-        figure_load(list, &data.figures[i]);
-        data.figures[i].id = i;
+    int figure_buf_size = FIGURE_ORIGINAL_BUFFER_SIZE;
+    int buf_size = list->size;
+
+    if (includes_figure_size) {
+        figure_buf_size = buffer_read_i32(list);
+        buf_size -= 4;
     }
+
+    int figures_to_load = buf_size / figure_buf_size;
+
+    if (!array_init(data.figures, FIGURE_ARRAY_SIZE_STEP, initialize_new_figure, figure_is_active) ||
+        !array_expand(data.figures, figures_to_load)) {
+        log_error("Unable to create figures array. The game will now crash.", 0, 0);
+    }
+
+    int highest_id_in_use = 0;
+
+    for (int i = 0; i < figures_to_load; i++) {
+        figure *f = array_next(data.figures);
+        figure_load(list, f, figure_buf_size);
+        if (f->state) {
+            highest_id_in_use = i;
+        }
+    }
+    data.figures.size = highest_id_in_use + 1;
 }

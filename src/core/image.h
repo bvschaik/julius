@@ -34,6 +34,7 @@ typedef struct {
     int sprite_offset_y;
     int animation_can_reverse;
     int animation_speed_id;
+    int animation_start_offset;
     struct {
         int type;
         int is_fully_compressed;

@@ -51,7 +51,7 @@ void city_gods_reset_neptune_blessing(void)
 }
 
 void city_gods_update_blessings(void)
-{   
+{
     if (city_data.religion.neptune_double_trade_active > 0) {
         city_data.religion.neptune_double_trade_active--;
     }
@@ -82,7 +82,7 @@ static void perform_blessing(god_type god)
             break;
         case GOD_VENUS:
             city_message_post(1, MESSAGE_BLESSING_FROM_VENUS_ALTERNATE, 0, 0);
-            city_sentiment_change_happiness(25);
+            city_data.sentiment.blessing_festival_boost += 18;
             city_population_venus_blessing();
             city_data.religion.venus_blessing_months_left = VENUS_BLESSING_MONTHS;
             break;
@@ -114,8 +114,7 @@ static void perform_small_curse(god_type god)
             break;
         case GOD_VENUS:
             city_message_post(1, MESSAGE_VENUS_IS_UPSET, 0, 0);
-            city_sentiment_set_max_happiness(50);
-            city_sentiment_change_happiness(-5);
+            city_data.sentiment.blessing_festival_boost -= 15;
             city_health_change(-10);
             city_sentiment_update();
             break;
@@ -198,8 +197,9 @@ static void update_god_moods(void)
         if (god->happiness >= 50) {
             god->wrath_bolts = 0;
         } else if (god->happiness < 40) {
-            god->happy_bolts = 0;
-            if (god->happiness >= 20) {
+            if (god->happy_bolts > 0) {
+                god->happy_bolts -= 1;
+            } else if (god->happiness >= 20) {
                 god->wrath_bolts += 1;
             } else if (god->happiness >= 10) {
                 god->wrath_bolts += 2;
@@ -443,6 +443,16 @@ int city_god_neptune_create_shipwreck_flotsam(void)
     }
 }
 
-void city_god_blessing_cheat(int god_id){
+int city_god_venus_bonus_employment(void)
+{
+    if (city_data.religion.venus_blessing_months_left > 0) {
+        return ((city_data.religion.venus_blessing_months_left / 12) + 1);
+    } else {
+        return 0;
+    }
+}
+
+void city_god_blessing_cheat(int god_id)
+{
     perform_blessing(god_id);
 }

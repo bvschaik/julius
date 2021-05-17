@@ -14,9 +14,13 @@
 #include "figuretype/missile.h"
 #include "map/figure.h"
 #include "map/grid.h"
+#include "map/road_access.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 #include "sound/effect.h"
+
+#define BALLISTA_RANGE 15
+#define WATCHTOWER_RANGE 12
 
 static const int BALLISTA_FIRING_OFFSETS[] = {
     0, 1, 2, 3, 4, 5, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -74,7 +78,7 @@ void figure_ballista_action(figure *f)
             if (f->wait_ticks > 20) {
                 f->wait_ticks = 0;
                 map_point tile;
-                if (figure_combat_get_missile_target_for_soldier(f, 15, &tile)) {
+                if (figure_combat_get_missile_target_for_soldier(f, BALLISTA_RANGE, &tile)) {
                     f->action_state = FIGURE_ACTION_181_BALLISTA_FIRING;
                     f->wait_ticks_missile = figure_properties_for_type(f->type)->missile_delay;
                 }
@@ -84,10 +88,12 @@ void figure_ballista_action(figure *f)
             f->wait_ticks_missile++;
             if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
                 map_point tile;
-                if (figure_combat_get_missile_target_for_soldier(f, 15, &tile)) {
+                if (figure_combat_get_missile_target_for_soldier(f, BALLISTA_RANGE, &tile)) {
                     f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
                     f->wait_ticks_missile = 0;
-                    figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_BOLT);
+                    int figure_id = f->id;
+                    figure_create_missile(figure_id, f->x, f->y, tile.x, tile.y, FIGURE_BOLT);
+                    figure_get(figure_id);
                     sound_effect_play(SOUND_EFFECT_BALLISTA_SHOOT);
                 } else {
                     f->action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
@@ -143,13 +149,17 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
 
     if (map_routing_wall_tile_in_radius(x, y, 6, x_tile, y_tile)) {
         b->figure_roam_direction += 2;
-        if (b->figure_roam_direction > 6) b->figure_roam_direction = 0;
+        if (b->figure_roam_direction > 6) {
+            b->figure_roam_direction = 0;
+        }
         return 1;
     }
     for (int i = 0; i < 4; i++) {
         dir = b->figure_roam_direction;
         b->figure_roam_direction += 2;
-        if (b->figure_roam_direction > 6) b->figure_roam_direction = 0;
+        if (b->figure_roam_direction > 6) {
+            b->figure_roam_direction = 0;
+        }
         x = b->x;
         y = b->y;
         switch (dir) {
@@ -166,26 +176,38 @@ static int tower_sentry_init_patrol(building *b, int *x_tile, int *y_tile)
     return 0;
 }
 
-void figure_tower_sentry_set_image(figure* f) {
+static void figure_watchtower_archer_spawn(building *b)
+{
+    if (b->figure_id4 || b->type != BUILDING_WATCHTOWER) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_WATCHTOWER_ARCHER, b->x, b->y, DIR_0_TOP);
+    f->building_id = b->id;
+    f->action_state = FIGURE_ACTION_223_ARCHER_GUARDING;
+    b->figure_id4 = f->id;
+}
+
+void figure_tower_sentry_set_image(figure *f)
+{
     int dir = figure_image_direction(f);
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
         f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
             136 + figure_image_corpse_offset(f);
-    }
-    else if (f->action_state == FIGURE_ACTION_172_TOWER_SENTRY_FIRING) {
+    } else if (f->action_state == FIGURE_ACTION_172_TOWER_SENTRY_FIRING) {
         f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
             dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
-    }
-    else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+    } else if (f->action_state == FIGURE_ACTION_225_WATCHMAN_SHOOTING) {
+        dir = figure_image_normalize_direction(f->attack_direction);
+        f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
+            dir + 96 + 8 * TOWER_SENTRY_FIRING_OFFSETS[f->wait_ticks_missile / 2];
+    } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         int image_id = image_group(GROUP_FIGURE_TOWER_SENTRY);
         if (f->attack_image_offset < 16) {
             f->image_id = image_id + 96 + dir;
-        }
-        else {
+        } else {
             f->image_id = image_id + 96 + dir + 8 * ((f->attack_image_offset - 16) / 2);
         }
-    }
-    else {
+    } else {
         f->image_id = image_group(GROUP_FIGURE_TOWER_SENTRY) +
             dir + 8 * f->image_offset;
     }
@@ -247,7 +269,9 @@ void figure_tower_sentry_action(figure *f)
                 if (figure_combat_get_missile_target_for_soldier(f, 10, &tile)) {
                     f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
                     f->wait_ticks_missile = 0;
+                    int figure_id = f->id;
                     figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_JAVELIN);
+                    f = figure_get(figure_id);
                 } else {
                     f->action_state = FIGURE_ACTION_173_TOWER_SENTRY_RETURNING;
                     f->destination_x = f->source_x;
@@ -268,18 +292,24 @@ void figure_tower_sentry_action(figure *f)
             f->terrain_usage = TERRAIN_USAGE_ROADS;
             if (config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD)) {
                 f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
-            }	    
-	    
+            }
+
             f->is_ghost = 0;
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                map_figure_delete(f);
-                f->source_x = f->x = b->x;
-                f->source_y = f->y = b->y;
-                f->grid_offset = map_grid_offset(f->x, f->y);
-                map_figure_add(f);
-                f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
-                figure_route_remove(f);
+                if (b->type == BUILDING_WATCHTOWER) {
+                    figure_watchtower_archer_spawn(b);
+                    figure_route_remove(f);
+                    f->state = FIGURE_STATE_DEAD;
+                } else { // if Tower
+                    map_figure_delete(f);
+                    f->source_x = f->x = b->x;
+                    f->source_y = f->y = b->y;
+                    f->grid_offset = map_grid_offset(f->x, f->y);
+                    map_figure_add(f);
+                    f->action_state = FIGURE_ACTION_170_TOWER_SENTRY_AT_REST;
+                    figure_route_remove(f);
+                }
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
@@ -289,7 +319,7 @@ void figure_tower_sentry_action(figure *f)
         f->current_height = 18;
     } else if (map_terrain_is(f->grid_offset, TERRAIN_GATEHOUSE)) {
         f->in_building_wait_ticks = 24;
-    } 
+    }
     if (f->in_building_wait_ticks) {
         f->in_building_wait_ticks--;
         f->height_adjusted_ticks = 0;
@@ -299,7 +329,7 @@ void figure_tower_sentry_action(figure *f)
 
 void figure_tower_sentry_reroute(void)
 {
-    for (int i = 1; i < MAX_FIGURES; i++) {
+    for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
         if (f->type != FIGURE_TOWER_SENTRY || map_routing_is_wall_passable(f->grid_offset)) {
             continue;
@@ -333,9 +363,133 @@ void figure_tower_sentry_reroute(void)
     }
 }
 
+static void watchman_pick_target(figure *f)
+{
+    if (f->action_state == FIGURE_ACTION_150_ATTACK ||
+        f->action_state == FIGURE_ACTION_149_CORPSE) {
+        return;
+    }
+    f->wait_ticks_next_target++;
+    if (f->wait_ticks_next_target >= 40) {
+        f->wait_ticks_next_target = 0;
+        map_point tile;
+        if (figure_combat_get_missile_target_for_soldier(f, 10, &tile)) {
+            f->action_state = FIGURE_ACTION_225_WATCHMAN_SHOOTING;
+        }
+    }
+}
+
+
+void figure_watchman_action(figure *f)
+{
+    building *b = building_get(f->building_id);
+
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    f->max_roam_length = 640;
+    if (b->state != BUILDING_STATE_IN_USE || (b->figure_id != f->id && b->figure_id2 != f->id)) {
+        f->state = FIGURE_STATE_DEAD;
+    }
+    figure_image_increase_offset(f, 12);
+    watchman_pick_target(f);
+    switch (f->action_state) {
+        case FIGURE_ACTION_150_ATTACK:
+            figure_combat_handle_attack(f);
+            break;
+        case FIGURE_ACTION_149_CORPSE:
+            figure_combat_handle_corpse(f);
+            break;
+        case FIGURE_ACTION_220_WATCHMAN_PATROL_INITIATE:
+            f->roam_length = 0;
+            figure_movement_init_roaming(f);
+            if (b->figure_id2 == f->id) { // Skip one roaming cycle for the second Watchman, so they go in the opposite directions
+                figure_movement_init_roaming(f);
+            }
+            f->action_state = FIGURE_ACTION_221_WATCHMAN_PATROLLING;
+            break;
+        case FIGURE_ACTION_221_WATCHMAN_PATROLLING:
+            f->is_ghost = 0;
+            f->roam_length++;
+            if (f->roam_length >= f->max_roam_length) {
+                int x_road, y_road;
+                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                    f->action_state = FIGURE_ACTION_222_WATCHMAN_RETURNING;
+                    f->destination_x = x_road;
+                    f->destination_y = y_road;
+                    figure_route_remove(f);
+                } else {
+                    f->state = FIGURE_STATE_DEAD;
+                }
+            }
+            figure_movement_roam_ticks(f, 1);
+            break;
+        case FIGURE_ACTION_222_WATCHMAN_RETURNING:
+            figure_movement_move_ticks(f, 1);
+            if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST || f->direction == DIR_FIGURE_AT_DESTINATION) {
+                f->state = FIGURE_STATE_DEAD;
+            }
+            break;
+        case FIGURE_ACTION_225_WATCHMAN_SHOOTING:
+            f->wait_ticks_missile++;
+            if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
+                map_point tile;
+                if (figure_combat_get_missile_target_for_soldier(f, 10, &tile)) {
+                    f->attack_direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
+                    f->wait_ticks_missile = 0;
+                    int figure_id = f->id;
+                    figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_JAVELIN);
+                    f = figure_get(figure_id);
+                } else {
+                    f->action_state = FIGURE_ACTION_221_WATCHMAN_PATROLLING;
+                }
+            }
+            break;
+    }
+    figure_tower_sentry_set_image(f);
+}
+
+void figure_watchtower_archer_action(figure *f)
+{
+    building *b = building_get(f->building_id);
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id4 != f->id) {
+        f->state = FIGURE_STATE_DEAD;
+    }
+    switch (f->action_state) {
+        case FIGURE_ACTION_149_CORPSE:
+            f->state = FIGURE_STATE_DEAD;
+            break;
+        case FIGURE_ACTION_223_ARCHER_GUARDING:
+            f->wait_ticks++;
+            if (f->wait_ticks > 20) {
+                f->wait_ticks = 0;
+                map_point tile;
+                if (figure_combat_get_missile_target_for_soldier(f, WATCHTOWER_RANGE, &tile)) {
+                    f->action_state = FIGURE_ACTION_224_ARCHER_SHOOTING;
+                    f->wait_ticks_missile = figure_properties_for_type(f->type)->missile_delay;
+                }
+            }
+            break;
+        case FIGURE_ACTION_224_ARCHER_SHOOTING:
+            f->wait_ticks_missile++;
+            if (f->wait_ticks_missile > figure_properties_for_type(f->type)->missile_delay) {
+                map_point tile;
+                if (figure_combat_get_missile_target_for_soldier(f, WATCHTOWER_RANGE, &tile)) {
+                    f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
+                    f->wait_ticks_missile = 0;
+                    figure_create_missile(f->id, f->x, f->y, tile.x, tile.y, FIGURE_FRIENDLY_ARROW);
+                    sound_effect_play(SOUND_EFFECT_ARROW);
+                } else {
+                    f->action_state = FIGURE_ACTION_223_ARCHER_GUARDING;
+                }
+            }
+            break;
+    }
+}
+
+
 void figure_kill_tower_sentries_at(int x, int y)
 {
-    for (int i = 0; i < MAX_FIGURES; i++) {
+    for (int i = 0; i < figure_count(); i++) {
         figure *f = figure_get(i);
         if (!figure_is_dead(f) && f->type == FIGURE_TOWER_SENTRY) {
             if (calc_maximum_distance(f->x, f->y, x, y) <= 1) {

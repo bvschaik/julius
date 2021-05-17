@@ -2,6 +2,7 @@
 
 #include "building/construction.h"
 #include "building/properties.h"
+#include "building/rotation.h"
 #include "city/finance.h"
 #include "city/view.h"
 #include "city/warning.h"
@@ -251,7 +252,7 @@ static int input_coords_in_city(int x, int y)
     x -= x_offset;
     y -= y_offset;
 
-    return (x >= 0 && x < width && y >= 0 && y < height);
+    return (x >= 0 && x < width &&y >= 0 && y < height);
 }
 
 static void handle_touch_scroll(const touch *t)
@@ -308,7 +309,7 @@ static void handle_last_touch(void)
     }
 }
 
-static int handle_cancel_construction_button(const touch *t)
+static int handle_construction_buttons(const touch *t)
 {
     if (!building_construction_type()) {
         return 0;
@@ -318,12 +319,29 @@ static int handle_cancel_construction_button(const touch *t)
     int box_size = 5 * 16;
     width -= box_size;
 
-    if (t->current_point.x < width || t->current_point.x >= width + box_size ||
-        t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
-        return 0;
+    if (t->current_point.x >= width && t->current_point.x < width + box_size &&
+        t->current_point.y >= 24 && t->current_point.y < 40 + box_size) {
+        building_construction_cancel();
+        return 1;
     }
-    building_construction_cancel();
-    return 1;
+
+    if (building_construction_can_rotate()) {
+        width = 8;
+        box_size = 4 * 16;
+        if (t->current_point.x >= width && t->current_point.x < width + box_size &&
+            t->current_point.y >= 24 && t->current_point.y < 56 + box_size) {
+            building_rotation_rotate_forward();
+            return 1;
+        }
+        width = 3 * 16 + 8;
+        box_size = 4 * 16;
+        if (t->current_point.x >= width && t->current_point.x < width + box_size &&
+            t->current_point.y >= 24 && t->current_point.y < 56 + box_size) {
+            building_rotation_rotate_backward();
+            return 1;
+        }
+    }
+    return 0;
 }
 
 static void handle_first_touch(map_tile *tile)
@@ -332,7 +350,7 @@ static void handle_first_touch(map_tile *tile)
     building_type type = building_construction_type();
 
     if (touch_was_click(first)) {
-        if (handle_cancel_construction_button(first) || handle_legion_click(tile)) {
+        if (handle_legion_click(tile)) {
             return;
         }
         if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
@@ -408,6 +426,10 @@ static void handle_touch(void)
         return;
     }
 
+    if (touch_was_click(first) && handle_construction_buttons(first)) {
+        return;
+    }
+
     map_tile *tile = &data.current_tile;
     if (!building_construction_in_progress() || input_coords_in_city(first->current_point.x, first->current_point.y)) {
         update_city_view_coords(first->current_point.x, first->current_point.y, tile);
@@ -437,7 +459,7 @@ static void handle_mouse(const mouse *m)
 {
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
-    zoom_map(m);    
+    zoom_map(m);
     building_construction_reset_draw_as_constructing();
     if (m->left.went_down) {
         if (handle_legion_click(tile)) {
@@ -522,6 +544,10 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
         if (t->has_started) {
             data.capture_input = 1;
         }
+        const touch *last = touch_get_latest();
+        if (last->in_use) {
+            handle_touch_zoom(t, last);
+        }
         handle_touch_scroll(t);
         if (t->has_ended) {
             data.capture_input = 0;
@@ -534,6 +560,7 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
         window_city_show();
     } else {
         update_city_view_coords(m->x, m->y, tile);
+        zoom_map(m);
         if ((!m->is_touch && m->left.went_down)
             || (m->is_touch && m->left.went_up && touch_was_click(touch_get_earliest()))) {
             military_map_click(legion_formation_id, tile);
@@ -561,7 +588,7 @@ void widget_city_get_tooltip(tooltip_context *c)
     int building_id = map_building_at(grid_offset);
     int overlay = game_state_overlay();
     // cheat tooltips
-    if(overlay == OVERLAY_NONE && game_cheat_tooltip_enabled()){
+    if (overlay == OVERLAY_NONE && game_cheat_tooltip_enabled()) {
         c->type = TOOLTIP_TILES;
         c->high_priority = 1;
         return;

@@ -5,6 +5,7 @@
 #include "building/monument.h"
 #include "core/config.h"
 #include "city/data_private.h"
+#include "city/gods.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
@@ -42,7 +43,9 @@ static int CATEGORY_FOR_BUILDING_TYPE[] = {
     8, 8, -1, -1, -1, -1, -1, -1, -1, -1, //120
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 130
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 140
-    0, 0, 8, 2, 5, 0, 0, 0, 0, 0, // 150
+    0, 0, 8, 2, 5, 0, 0, 0, 6, 0, // 150
+    6, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 160
+    -1, -1, -1, 5, -1, -1, 0, -1, -1, -1, // 170
 };
 
 static struct {
@@ -132,10 +135,8 @@ void city_labor_calculate_workers(int num_plebs, int num_patricians)
     int venus_blessing_modifier = 0;
     city_data.population.percentage_plebs = calc_percentage(num_plebs, num_plebs + num_patricians);
 
-    if (config_get(CONFIG_GP_CH_FIXED_WORKERS)) {    
-        if (city_data.religion.venus_blessing_months_left > 0) {
-            venus_blessing_modifier = ((city_data.religion.venus_blessing_months_left / 12) + 1);
-        }
+    if (config_get(CONFIG_GP_CH_FIXED_WORKERS)) {
+        venus_blessing_modifier = city_god_venus_bonus_employment();
         city_data.population.working_age = calc_adjust_with_percentage(num_plebs, 38 + venus_blessing_modifier);
         city_data.labor.workers_available = city_data.population.working_age;
     } else {
@@ -145,8 +146,10 @@ void city_labor_calculate_workers(int num_plebs, int num_patricians)
     }
 }
 
-static int is_industry_disabled(building *b) {
-    if (b->type < BUILDING_WHEAT_FARM || b->type > BUILDING_POTTERY_WORKSHOP) {
+static int is_industry_disabled(building *b)
+{
+    if ((b->type < BUILDING_WHEAT_FARM || b->type > BUILDING_POTTERY_WORKSHOP) &&
+        b->type != BUILDING_WHARF) {
         return 0;
     }
     int resource = b->output_resource_id;
@@ -189,7 +192,7 @@ static void calculate_workers_needed_per_category(void)
         city_data.labor.categories[cat].workers_allocated = 0;
         city_data.labor.categories[cat].workers_needed = 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
@@ -203,11 +206,10 @@ static void calculate_workers_needed_per_category(void)
         if (category == LABOR_CATEGORY_WATER && building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
             //Neptune Gt base bonus
             city_data.labor.categories[category].workers_needed += (model_get_building(b->type)->laborers) / 2;
-        }
-        else {
+        } else {
             city_data.labor.categories[category].workers_needed += model_get_building(b->type)->laborers;
         }
-        
+
         city_data.labor.categories[category].total_houses_covered += b->houses_covered;
         city_data.labor.categories[category].buildings++;
     }
@@ -311,20 +313,24 @@ static void check_employment(void)
 static void set_building_worker_weight(void)
 {
     int water_per_10k_per_building = calc_percentage(100, city_data.labor.categories[LABOR_CATEGORY_WATER].buildings);
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
+    for (building_type type = 0; type < BUILDING_TYPE_MAX; type++) {
+        int cat = CATEGORY_FOR_BUILDING_TYPE[type];
+        if (cat < 0) {
             continue;
         }
-        int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
-        if (cat == LABOR_CATEGORY_WATER) {
-            b->percentage_houses_covered = water_per_10k_per_building;
-        } else if (cat >= 0) {
-            b->percentage_houses_covered = 0;
-            if (b->houses_covered) {
-                b->percentage_houses_covered =
-                    calc_percentage(100 * b->houses_covered,
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
+                continue;
+            }
+            if (cat == LABOR_CATEGORY_WATER) {
+                b->percentage_houses_covered = water_per_10k_per_building;
+            } else {
+                b->percentage_houses_covered = 0;
+                if (b->houses_covered) {
+                    b->percentage_houses_covered =
+                        calc_percentage(100 * b->houses_covered,
                         city_data.labor.categories[cat].total_houses_covered);
+                }
             }
         }
     }
@@ -347,8 +353,8 @@ static void allocate_workers_to_water(void)
     }
     int building_id = start_building_id;
     start_building_id = 0;
-    for (int guard = 1; guard < MAX_BUILDINGS; guard++, building_id++) {
-        if (building_id >= MAX_BUILDINGS) {
+    for (int guard = 1; guard < building_count(); guard++, building_id++) {
+        if (building_id >= building_count()) {
             building_id = 1;
         }
         building *b = building_get(building_id);
@@ -387,21 +393,20 @@ static void allocate_workers_to_non_water_buildings(void)
             city_data.labor.categories[i].workers_allocated < city_data.labor.categories[i].workers_needed
             ? 1 : 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
-            continue;
-        }
-        int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
+    for (building_type type = 0; type < BUILDING_TYPE_MAX; type++) {
+        int cat = CATEGORY_FOR_BUILDING_TYPE[type];
         if (cat == LABOR_CATEGORY_WATER || cat < 0) {
             // water is handled by allocate_workers_to_water(void)
             continue;
         }
-        b->num_workers = 0;
-        if (!should_have_workers(b, cat, 0)) {
-            continue;
-        }
-        if (b->percentage_houses_covered > 0) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
+                continue;
+            }
+            b->num_workers = 0;
+            if (!should_have_workers(b, cat, 0) || b->percentage_houses_covered <= 0) {
+                continue;
+            }
             int required_workers = model_get_building(b->type)->laborers;
             if (category_workers_needed[cat]) {
                 int num_workers = calc_adjust_with_percentage(
@@ -429,28 +434,29 @@ static void allocate_workers_to_non_water_buildings(void)
             }
         }
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE) {
-            continue;
-        }
-        int cat = CATEGORY_FOR_BUILDING_TYPE[b->type];
+    for (building_type type = 0; type < BUILDING_TYPE_MAX; type++) {
+        int cat = CATEGORY_FOR_BUILDING_TYPE[type];
         if (cat < 0 || cat == LABOR_CATEGORY_WATER || cat == LABOR_CATEGORY_MILITARY) {
             continue;
         }
-        if (!should_have_workers(b, cat, 0)) {
-            continue;
-        }
-        if (b->percentage_houses_covered > 0 && category_workers_needed[cat]) {
-            int required_workers = model_get_building(b->type)->laborers;
-            if (b->num_workers < required_workers) {
-                int needed = required_workers - b->num_workers;
-                if (needed > category_workers_needed[cat]) {
-                    b->num_workers += category_workers_needed[cat];
-                    category_workers_needed[cat] = 0;
-                } else {
-                    b->num_workers += needed;
-                    category_workers_needed[cat] -= needed;
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
+                continue;
+            }
+            if (!should_have_workers(b, cat, 0)) {
+                continue;
+            }
+            if (b->percentage_houses_covered > 0 && category_workers_needed[cat]) {
+                int required_workers = model_get_building(b->type)->laborers;
+                if (b->num_workers < required_workers) {
+                    int needed = required_workers - b->num_workers;
+                    if (needed > category_workers_needed[cat]) {
+                        b->num_workers += category_workers_needed[cat];
+                        category_workers_needed[cat] = 0;
+                    } else {
+                        b->num_workers += needed;
+                        category_workers_needed[cat] -= needed;
+                    }
                 }
             }
         }

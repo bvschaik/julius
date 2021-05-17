@@ -5,6 +5,8 @@ int difficulty_starting_favor(void);
 
 int difficulty_sentiment(void);
 
+int difficulty_base_tax_rate(void);
+
 int difficulty_adjust_money(int money);
 
 int difficulty_adjust_enemies(int enemies);

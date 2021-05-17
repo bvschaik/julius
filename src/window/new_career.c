@@ -9,6 +9,7 @@
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -29,7 +30,7 @@ static image_button image_buttons[] = {
 
 static uint8_t player_name[PLAYER_NAME_LENGTH];
 
-static input_box player_name_input = {160, 208, 20, 2, FONT_NORMAL_WHITE, 1, player_name, PLAYER_NAME_LENGTH};
+static input_box player_name_input = { 160, 208, 20, 2, FONT_NORMAL_WHITE, 1, player_name, PLAYER_NAME_LENGTH };
 
 static void init(void)
 {

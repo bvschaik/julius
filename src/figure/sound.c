@@ -9,6 +9,7 @@ void figure_play_die_sound(const figure *f)
 {
     int is_soldier = 0;
     int is_citizen = 0;
+    int is_female_citizen = 0;
     switch (f->type) {
         case FIGURE_WOLF:
             sound_effect_play(SOUND_EFFECT_WOLF_DIE);
@@ -24,6 +25,8 @@ void figure_play_die_sound(const figure *f)
             break;
         case FIGURE_ENEMY48_CHARIOT:
         case FIGURE_ENEMY52_MOUNTED_ARCHER:
+        case FIGURE_FORT_MOUNTED:
+        case FIGURE_ENEMY_CAESAR_MOUNTED:
             sound_effect_play(SOUND_EFFECT_HORSE2);
             break;
         case FIGURE_ENEMY46_CAMEL:
@@ -38,12 +41,12 @@ void figure_play_die_sound(const figure *f)
             break;
         case FIGURE_PREFECT:
         case FIGURE_FORT_JAVELIN:
-        case FIGURE_FORT_MOUNTED:
         case FIGURE_FORT_LEGIONARY:
         case FIGURE_GLADIATOR:
         case FIGURE_INDIGENOUS_NATIVE:
         case FIGURE_TOWER_SENTRY:
-        case FIGURE_MESS_HALL_BUYER:
+        case FIGURE_MESS_HALL_SUPPLIER:
+        case FIGURE_WATCHMAN:
         case FIGURE_ENEMY43_SPEAR:
         case FIGURE_ENEMY44_SWORD:
         case FIGURE_ENEMY45_SWORD:
@@ -53,9 +56,14 @@ void figure_play_die_sound(const figure *f)
         case FIGURE_ENEMY53_AXE:
         case FIGURE_ENEMY54_GLADIATOR:
         case FIGURE_ENEMY_CAESAR_JAVELIN:
-        case FIGURE_ENEMY_CAESAR_MOUNTED:
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
             is_soldier = 1;
+            break;
+        case FIGURE_MARKET_TRADER:
+        case FIGURE_MARKET_SUPPLIER:
+        case FIGURE_BATHHOUSE_WORKER:
+        case FIGURE_BARKEEP:
+            is_female_citizen = 1;
             break;
         default:
             is_citizen = 1;
@@ -63,6 +71,8 @@ void figure_play_die_sound(const figure *f)
     }
     if (is_soldier) {
         sound_effect_play(SOUND_EFFECT_SOLDIER_DIE + city_sound_update_die_soldier());
+    } else if (is_female_citizen) {
+        sound_effect_play(SOUND_EFFECT_FEMALE_CITIZEN_DIE);
     } else if (is_citizen) {
         sound_effect_play(SOUND_EFFECT_CITIZEN_DIE + city_sound_update_die_citizen());
     }
@@ -97,6 +107,8 @@ void figure_play_hit_sound(figure_type type)
             }
             break;
         case FIGURE_FORT_JAVELIN:
+        case FIGURE_TOWER_SENTRY:
+        case FIGURE_WATCHMAN:
             if (city_sound_update_hit_soldier()) {
                 sound_effect_play(SOUND_EFFECT_LIGHT_SWORD);
             }

@@ -51,23 +51,27 @@ static void cause_disease(int total_people)
     }
     tutorial_on_disease();
     // kill people who don't have access to a doctor
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
-            if (!b->data.house.clinic) {
-                people_to_kill -= b->house_population;
-                building_destroy_by_plague(b);
-                if (people_to_kill <= 0) {
-                    return;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        building *next_of_type = 0; // building_destroy_by_plague changes the building type
+        for (building *b = building_first_of_type(type); b; b = next_of_type) {
+            next_of_type = b->next_of_type;
+            if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
+                if (!b->data.house.clinic) {
+                    people_to_kill -= b->house_population;
+                    building_destroy_by_plague(b);
+                    if (people_to_kill <= 0) {
+                        return;
+                    }
                 }
             }
         }
     }
     // kill people in tents
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
-            if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        building *next_of_type = 0; // building_destroy_by_plague changes the building type
+        for (building *b = building_first_of_type(type); b; b = next_of_type) {
+            next_of_type = b->next_of_type;
+            if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
                 people_to_kill -= b->house_population;
                 building_destroy_by_plague(b);
                 if (people_to_kill <= 0) {
@@ -77,13 +81,16 @@ static void cause_disease(int total_people)
         }
     }
     // kill anyone
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
-            people_to_kill -= b->house_population;
-            building_destroy_by_plague(b);
-            if (people_to_kill <= 0) {
-                return;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        building *next_of_type = 0; // building_destroy_by_plague changes the building type
+        for (building *b = building_first_of_type(type); b; b = next_of_type) {
+            next_of_type = b->next_of_type;
+            if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
+                people_to_kill -= b->house_population;
+                building_destroy_by_plague(b);
+                if (people_to_kill <= 0) {
+                    return;
+                }
             }
         }
     }
@@ -98,26 +105,27 @@ void city_health_update(void)
     }
     int total_population = 0;
     int healthy_population = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->house_size || !b->house_population) {
-            continue;
-        }
-        total_population += b->house_population;
-        if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
-            if (b->data.house.clinic) {
-                healthy_population += b->house_population;
-            } else {
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE || !b->house_size || !b->house_population) {
+                continue;
+            }
+            total_population += b->house_population;
+            if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
+                if (b->data.house.clinic) {
+                    healthy_population += b->house_population;
+                } else {
+                    healthy_population += b->house_population / 4;
+                }
+            } else if (b->data.house.clinic) {
+                if (b->house_days_without_food == 0) {
+                    healthy_population += b->house_population;
+                } else {
+                    healthy_population += b->house_population / 4;
+                }
+            } else if (b->house_days_without_food == 0) {
                 healthy_population += b->house_population / 4;
             }
-        } else if (b->data.house.clinic) {
-            if (b->house_days_without_food == 0) {
-                healthy_population += b->house_population;
-            } else {
-                healthy_population += b->house_population / 4;
-            }
-        } else if (b->house_days_without_food == 0) {
-            healthy_population += b->house_population / 4;
         }
     }
     city_data.health.target_value = calc_percentage(healthy_population, total_population);

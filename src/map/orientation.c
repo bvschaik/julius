@@ -1,7 +1,9 @@
 #include "orientation.h"
 
 #include "assets/assets.h"
+#include "building/building_variant.h"
 #include "building/rotation.h"
+#include "building/properties.h"
 #include "city/view.h"
 #include "core/direction.h"
 #include "core/image.h"
@@ -64,6 +66,8 @@ void map_orientation_change(int counter_clockwise)
     map_tiles_update_all_plazas();
     map_tiles_update_all_walls();
     map_tiles_update_all_aqueducts(0);
+    map_tiles_update_all_hedges();
+
 
     map_orientation_update_buildings();
     map_bridge_update_after_rotate(counter_clockwise);
@@ -241,7 +245,7 @@ void map_orientation_update_buildings(void)
 {
     int map_orientation = city_view_orientation();
     int orientation_is_top_bottom = map_orientation == DIR_0_TOP || map_orientation == DIR_4_BOTTOM;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNUSED) {
             continue;
@@ -249,6 +253,8 @@ void map_orientation_update_buildings(void)
         int image_id;
         int image_offset;
         switch (b->type) {
+            default:
+                break;
             case BUILDING_GATEHOUSE:
                 if (b->subtype.orientation == 1) {
                     if (orientation_is_top_bottom) {
@@ -284,50 +290,64 @@ void map_orientation_update_buildings(void)
                 map_terrain_add_triumphal_arch_roads(b->x, b->y, b->subtype.orientation);
                 break;
             case BUILDING_HIPPODROME:
-            {
-                // get which part of the hippodrome is getting checked
+                {
+                    int phase = b->data.monument.phase;
+                    int phase_offset = 6;
+                    int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
 
-                int building_part;
-                if(b->prev_part_building_id == 0){
-                    building_part = 0; // part 1, no previous building
-                } else if(b->next_part_building_id == 0){
-                    building_part = 2; // part 3, no next building
-                } else {
-                    building_part = 1; // part 2
+                    if (phase == -1) {
+                        if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
+                            image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
+                        } else {
+                            image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
+                        }
+                    } else {
+                        if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
+                            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NWSE 01") + ((phase - 1) * phase_offset);
+                        } else {
+                            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NESW 01") + ((phase - 1) * phase_offset);
+                        }
+                    }
+
+                    int building_part;
+                    if (b->prev_part_building_id == 0) {
+                        building_part = 0; // part 1, no previous building
+                    } else if (b->next_part_building_id == 0) {
+                        building_part = 2; // part 3, no next building
+                    } else {
+                        building_part = 1; // part 2
+                    }
+
+                    if (orientation == DIR_0_TOP) {
+                        switch (building_part) {
+                            case 0: image_id += 0; break; // part 1
+                            case 1: image_id += 2; break; // part 2
+                            case 2: image_id += 4; break; // part 3, same for switch cases below
+                        }
+
+                    } else if (orientation == DIR_4_BOTTOM) {
+                        switch (building_part) {
+                            case 0: image_id += 4; break;
+                            case 1: image_id += 2; break;
+                            case 2: image_id += 0; break;
+                        }
+
+                    } else if (orientation == DIR_6_LEFT) {
+                        switch (building_part) {
+                            case 0: image_id += 0; break;
+                            case 1: image_id += 2; break;
+                            case 2: image_id += 4; break;
+                        }
+                    } else { // DIR_2_RIGHT
+                        switch (building_part) {
+                            case 0: image_id += 4; break;
+                            case 1: image_id += 2; break;
+                            case 2: image_id += 0; break;
+                        }
+                    }
+                    map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
                 }
-                int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
-                if (orientation == DIR_0_TOP) {
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
-                    switch (building_part) {
-                        case 0: image_id += 0; break; // part 1
-                        case 1: image_id += 2; break; // part 2
-                        case 2: image_id += 4; break; // part 3, same for switch cases below
-                    }
-                } else if (orientation == DIR_4_BOTTOM) {
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
-                    switch (building_part) {
-                        case 0: image_id += 4; break;
-                        case 1: image_id += 2; break;
-                        case 2: image_id += 0; break;
-                    }
-                } else if (orientation == DIR_6_LEFT) {
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
-                    switch (building_part) {
-                        case 0: image_id += 0; break;
-                        case 1: image_id += 2; break;
-                        case 2: image_id += 4; break;
-                    }
-                } else { // DIR_2_RIGHT
-                    image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
-                    switch (building_part) {
-                        case 0: image_id += 4; break;
-                        case 1: image_id += 2; break;
-                        case 2: image_id += 0; break;
-                    }
-                }
-                map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
                 break;
-            }
             case BUILDING_SHIPYARD:
                 image_offset = (4 + b->data.industry.orientation - map_orientation / 2) % 4;
                 image_id = image_group(GROUP_BUILDING_SHIPYARD) + image_offset;
@@ -349,9 +369,28 @@ void map_orientation_update_buildings(void)
                 map_water_add_building(i, b->x, b->y, 3, image_id);
                 break;
         }
-        if (b->type >= BUILDING_PINE_PATH && b->type <= BUILDING_DATE_PATH) {
-            image_id = assets_get_group_id("Areldir", "Aesthetics") + (b->type - BUILDING_PINE_TREE) + (abs((b->subtype.orientation - (map_orientation / 2) % 2)) * PATH_ROTATE_OFFSET);
+
+        if (b->type >= BUILDING_SMALL_STATUE_ALT && b->type <= BUILDING_SMALL_STATUE_ALT_B) {
+            int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
+            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (b->type - BUILDING_SMALL_STATUE_ALT)
+                + (abs((b->subtype.orientation - (map_orientation / 2) % 2)) * rotation_offset);
             map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+        }
+        if (b->type == BUILDING_LEGION_STATUE) {
+            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "legio statue") + (abs((b->subtype.orientation - (map_orientation / 2) % 2)));
+            map_building_tiles_add(i, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
+        }
+        if (b->type == BUILDING_SMALL_STATUE) {
+            int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
+            int image_id = assets_get_image_id(assets_get_group_id("Lizzaran", "Aesthetics_L"), "V Small Statue") + (b->subtype.orientation % 2) * rotation_offset;
+            map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+        }
+        if (building_variant_has_variants(b->type)) {
+            image_id = building_variant_get_image_id_with_rotation(b->type, b->variant);
+            map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
+            if (b->type == BUILDING_ROADBLOCK) {
+                map_terrain_add_roadblock_road(b->x, b->y, 0);
+            }
         }
     }
 }

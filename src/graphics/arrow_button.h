@@ -1,6 +1,7 @@
 #ifndef GRAPHICS_ARROW_BUTTON_H
 #define GRAPHICS_ARROW_BUTTON_H
 
+#include "core/time.h"
 #include "input/mouse.h"
 
 typedef struct {
@@ -14,6 +15,7 @@ typedef struct {
     // state
     int pressed;
     int repeats;
+    time_millis last_time;
 } arrow_button;
 
 void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons);

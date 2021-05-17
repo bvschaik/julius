@@ -137,9 +137,13 @@ int editor_tool_can_place_building(const map_tile *tile, int num_tiles, int *blo
         int forbidden_terrain = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
         if (forbidden_terrain || map_has_figure_at(tile_offset)) {
             blocked = 1;
-            if (blocked_tiles) blocked_tiles[i] = 1;
+            if (blocked_tiles) {
+                blocked_tiles[i] = 1;
+            }
         } else {
-            if (blocked_tiles) blocked_tiles[i] = 0;
+            if (blocked_tiles) {
+                blocked_tiles[i] = 0;
+            }
         }
     }
     return !blocked;

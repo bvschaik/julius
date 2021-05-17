@@ -10,6 +10,7 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -31,7 +32,7 @@ static void button_hotkey(int row, int is_alternative);
 static void button_reset_defaults(int param1, int param2);
 static void button_close(int save, int param2);
 
-static scrollbar_type scrollbar = {580, 72, 352, on_scroll};
+static scrollbar_type scrollbar = { 580, 72, 352, on_scroll };
 
 typedef struct {
     int action;
@@ -64,6 +65,7 @@ static hotkey_widget hotkey_widgets[] = {
     {HOTKEY_ROTATE_MAP_LEFT, TR_HOTKEY_ROTATE_MAP_LEFT},
     {HOTKEY_ROTATE_MAP_RIGHT, TR_HOTKEY_ROTATE_MAP_RIGHT},
     {HOTKEY_ROTATE_BUILDING, TR_HOTKEY_ROTATE_BUILDING},
+    {HOTKEY_ROTATE_BUILDING_BACK, TR_HOTKEY_ROTATE_BUILDING_BACK},
     {HOTKEY_HEADER, TR_HOTKEY_HEADER_BUILD},
     {HOTKEY_BUILD_CLONE, TR_HOTKEY_BUILD_CLONE},
     {HOTKEY_BUILD_CLEAR_LAND, TR_NONE, 68, 21},
@@ -83,6 +85,7 @@ static hotkey_widget hotkey_widgets[] = {
     {HOTKEY_BUILD_AQUEDUCT, TR_NONE, GROUP_BUILDINGS, BUILDING_AQUEDUCT},
     {HOTKEY_BUILD_FOUNTAIN, TR_NONE, GROUP_BUILDINGS, BUILDING_FOUNTAIN},
     {HOTKEY_BUILD_ROADBLOCK, TR_NONE, GROUP_BUILDINGS, BUILDING_ROADBLOCK},
+    {HOTKEY_UNDO, TR_NONE, GROUP_BUILDINGS, 1},
     {HOTKEY_HEADER, TR_HOTKEY_HEADER_ADVISORS},
     {HOTKEY_SHOW_ADVISOR_LABOR, TR_HOTKEY_SHOW_ADVISOR_LABOR},
     {HOTKEY_SHOW_ADVISOR_MILITARY, TR_HOTKEY_SHOW_ADVISOR_MILITARY},
@@ -90,13 +93,13 @@ static hotkey_widget hotkey_widgets[] = {
     {HOTKEY_SHOW_ADVISOR_RATINGS, TR_HOTKEY_SHOW_ADVISOR_RATINGS},
     {HOTKEY_SHOW_ADVISOR_TRADE, TR_HOTKEY_SHOW_ADVISOR_TRADE},
     {HOTKEY_SHOW_ADVISOR_POPULATION, TR_HOTKEY_SHOW_ADVISOR_POPULATION},
+    {HOTKEY_SHOW_ADVISOR_HOUSING, TR_HOTKEY_SHOW_ADVISOR_HOUSING},
     {HOTKEY_SHOW_ADVISOR_HEALTH, TR_HOTKEY_SHOW_ADVISOR_HEALTH},
     {HOTKEY_SHOW_ADVISOR_EDUCATION, TR_HOTKEY_SHOW_ADVISOR_EDUCATION},
     {HOTKEY_SHOW_ADVISOR_ENTERTAINMENT, TR_HOTKEY_SHOW_ADVISOR_ENTERTAINMENT},
     {HOTKEY_SHOW_ADVISOR_RELIGION, TR_HOTKEY_SHOW_ADVISOR_RELIGION},
     {HOTKEY_SHOW_ADVISOR_FINANCIAL, TR_HOTKEY_SHOW_ADVISOR_FINANCIAL},
     {HOTKEY_SHOW_ADVISOR_CHIEF, TR_HOTKEY_SHOW_ADVISOR_CHIEF},
-    {HOTKEY_SHOW_ADVISOR_HOUSING, TR_HOTKEY_SHOW_ADVISOR_HOUSING},
     {HOTKEY_HEADER, TR_HOTKEY_HEADER_OVERLAYS},
     {HOTKEY_TOGGLE_OVERLAY, TR_HOTKEY_TOGGLE_OVERLAY},
     {HOTKEY_SHOW_OVERLAY_RELATIVE, TR_HOTKEY_SHOW_OVERLAY_RELATIVE},
@@ -177,7 +180,7 @@ static void init(void)
     scrollbar_init(&scrollbar, 0, sizeof(hotkey_widgets) / sizeof(hotkey_widget) - NUM_VISIBLE_OPTIONS);
 
     for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
-        hotkey_mapping empty = {KEY_TYPE_NONE, KEY_MOD_NONE, i};
+        hotkey_mapping empty = { KEY_TYPE_NONE, KEY_MOD_NONE, i };
 
         const hotkey_mapping *mapping = hotkey_for_action(i, 0);
         data.mappings[i][0] = mapping ? *mapping : empty;
@@ -191,7 +194,7 @@ static void draw_background(void)
 {
     graphics_clear_screen(CANVAS_UI);
 
-    image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 5);
+    window_draw_underlying_window();
 
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
@@ -285,7 +288,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0,
         bottom_buttons, NUM_BOTTOM_BUTTONS, &data.bottom_focus_button);
     if (!handled && (m->right.went_up || h->escape_pressed)) {
-        window_config_show();
+        window_go_back();
     }
 }
 

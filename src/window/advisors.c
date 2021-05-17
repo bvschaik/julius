@@ -1,5 +1,6 @@
 #include "advisors.h"
 
+#include "assets/assets.h"
 #include "city/constants.h"
 #include "city/culture.h"
 #include "city/finance.h"
@@ -19,6 +20,7 @@
 #include "graphics/image_button.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "translation/translation.h"
 #include "window/city.h"
 #include "window/message_dialog.h"
 #include "window/advisor/chief.h"
@@ -42,20 +44,21 @@ static image_button help_button = {
     11, -7, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1
 };
 
-static generic_button advisor_buttons[] = {
-    {12, 1, 40, 40, button_change_advisor, button_none, ADVISOR_LABOR, 0},
-    {60, 1, 40, 40, button_change_advisor, button_none, ADVISOR_MILITARY, 0},
-    {108, 1, 40, 40, button_change_advisor, button_none, ADVISOR_IMPERIAL, 0},
-    {156, 1, 40, 40, button_change_advisor, button_none, ADVISOR_RATINGS, 0},
-    {204, 1, 40, 40, button_change_advisor, button_none, ADVISOR_TRADE, 0},
-    {252, 1, 40, 40, button_change_advisor, button_none, ADVISOR_POPULATION, 0},
-    {300, 1, 40, 40, button_change_advisor, button_none, ADVISOR_HEALTH, 0},
-    {348, 1, 40, 40, button_change_advisor, button_none, ADVISOR_EDUCATION, 0},
-    {396, 1, 40, 40, button_change_advisor, button_none, ADVISOR_ENTERTAINMENT, 0},
-    {444, 1, 40, 40, button_change_advisor, button_none, ADVISOR_RELIGION, 0},
-    {492, 1, 40, 40, button_change_advisor, button_none, ADVISOR_FINANCIAL, 0},
-    {540, 1, 40, 40, button_change_advisor, button_none, ADVISOR_CHIEF, 0},
-    {588, 1, 40, 40, button_change_advisor, button_none, 0, 0},
+static generic_button advisor_buttons[ADVISOR_MAX] = {
+    {9, 1, 40, 40, button_change_advisor, button_none, ADVISOR_LABOR, 0},
+    {54, 1, 40, 40, button_change_advisor, button_none, ADVISOR_MILITARY, 0},
+    {99, 1, 40, 40, button_change_advisor, button_none, ADVISOR_IMPERIAL, 0},
+    {144, 1, 40, 40, button_change_advisor, button_none, ADVISOR_RATINGS, 0},
+    {189, 1, 40, 40, button_change_advisor, button_none, ADVISOR_TRADE, 0},
+    {234, 1, 40, 40, button_change_advisor, button_none, ADVISOR_POPULATION, 0},
+    {279, 1, 40, 40, button_change_advisor, button_none, ADVISOR_HOUSING, 0},
+    {324, 1, 40, 40, button_change_advisor, button_none, ADVISOR_HEALTH, 0},
+    {369, 1, 40, 40, button_change_advisor, button_none, ADVISOR_EDUCATION, 0},
+    {414, 1, 40, 40, button_change_advisor, button_none, ADVISOR_ENTERTAINMENT, 0},
+    {459, 1, 40, 40, button_change_advisor, button_none, ADVISOR_RELIGION, 0},
+    {504, 1, 40, 40, button_change_advisor, button_none, ADVISOR_FINANCIAL, 0},
+    {549, 1, 40, 40, button_change_advisor, button_none, ADVISOR_CHIEF, 0},
+    {594, 1, 40, 40, button_change_advisor, button_none, 0, 0},
 };
 
 static const advisor_window_type *(*sub_advisors[])(void) = {
@@ -66,6 +69,7 @@ static const advisor_window_type *(*sub_advisors[])(void) = {
     window_advisor_ratings,
     window_advisor_trade,
     window_advisor_population,
+    window_advisor_housing,
     window_advisor_health,
     window_advisor_education,
     window_advisor_entertainment,
@@ -78,8 +82,9 @@ static const advisor_window_type *(*sub_advisors[])(void) = {
     0,
     0,
     0,
+    window_advisor_housing, // housing sub-advisor,
     0,
-    window_advisor_housing //population sub-advisor
+    0
 };
 
 static const int ADVISOR_TO_MESSAGE_TEXT[] = {
@@ -89,6 +94,7 @@ static const int ADVISOR_TO_MESSAGE_TEXT[] = {
     MESSAGE_DIALOG_ADVISOR_IMPERIAL,
     MESSAGE_DIALOG_ADVISOR_RATINGS,
     MESSAGE_DIALOG_ADVISOR_TRADE,
+    MESSAGE_DIALOG_ADVISOR_POPULATION,
     MESSAGE_DIALOG_ADVISOR_POPULATION,
     MESSAGE_DIALOG_ADVISOR_HEALTH,
     MESSAGE_DIALOG_ADVISOR_EDUCATION,
@@ -101,9 +107,13 @@ static const int ADVISOR_TO_MESSAGE_TEXT[] = {
     MESSAGE_DIALOG_ABOUT,
     MESSAGE_DIALOG_ABOUT,
     MESSAGE_DIALOG_ABOUT,
-    MESSAGE_DIALOG_ABOUT,
     MESSAGE_DIALOG_ADVISOR_POPULATION,
+    MESSAGE_DIALOG_ABOUT,
+    MESSAGE_DIALOG_ABOUT,
+    MESSAGE_DIALOG_ADVISOR_ENTERTAINMENT
 };
+
+static int advisor_image_ids[2][ADVISOR_MAX];
 
 static const advisor_window_type *current_advisor_window = 0;
 static advisor_type current_advisor = ADVISOR_NONE;
@@ -150,18 +160,36 @@ static void init(void)
     set_advisor_window();
 }
 
+static void prepare_advisor_image_ids(void)
+{
+    if (advisor_image_ids[0][0]) {
+        return;
+    }
+    int reduce = 0;
+    for (int i = 0; i < ADVISOR_MAX; i++) {
+        if (i == (ADVISOR_HOUSING - 1)) {
+            reduce = 1;
+            int group = assets_get_group_id("MSTVD", "UI_Elements");
+            advisor_image_ids[0][ADVISOR_HOUSING - 1] = assets_get_image_id(group, "Housing Advisor Button");
+            advisor_image_ids[1][ADVISOR_HOUSING - 1] = assets_get_image_id(group, "Housing Advisor Button Selected");
+        } else {
+            advisor_image_ids[0][i] = image_group(GROUP_ADVISOR_ICONS) + i - reduce;
+            advisor_image_ids[1][i] = image_group(GROUP_ADVISOR_ICONS) + i - reduce + 13;
+        }
+    }
+}
+
 void window_advisors_draw_dialog_background(void)
 {
     image_draw_fullscreen_background(image_group(GROUP_ADVISOR_BACKGROUND));
     graphics_in_dialog();
     image_draw(image_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
 
-    for (int i = 0; i < 13; i++) {
-        int selected_offset = 0;
-        if (current_advisor && i == (current_advisor % 13) - 1) {
-            selected_offset = 13;
-        }
-        image_draw(image_group(GROUP_ADVISOR_ICONS) + i + selected_offset, 48 * i + 12, 441);
+    prepare_advisor_image_ids();
+
+    for (int i = 0; i < ADVISOR_MAX; i++) {
+        int selected = current_advisor && i == (current_advisor % ADVISOR_MAX) - 1;
+        image_draw(advisor_image_ids[selected][i], 45 * i + 8, 441);
     }
     graphics_reset_dialog();
 }
@@ -202,7 +230,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     handle_hotkeys(h);
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, 13, &focus_button_id)) {
+    if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, ADVISOR_MAX, &focus_button_id)) {
         return;
     }
     int button_id;
@@ -242,17 +270,29 @@ static void get_tooltip(tooltip_context *c)
         c->type = TOOLTIP_BUTTON;
         if (focus_button_id == -1) {
             c->text_id = 1; // help button
+        } else if (focus_button_id == ADVISOR_HOUSING) {
+            c->translation_key = TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON;
         } else {
-            c->text_id = 69 + focus_button_id;
+            c->text_id = 69 + focus_button_id - (focus_button_id >= ADVISOR_HOUSING ? 1 : 0);
         }
         return;
     }
-    int text_id = 0;
-    if (current_advisor_window->get_tooltip_text) {
-        text_id = current_advisor_window->get_tooltip_text();
+    advisor_tooltip_result result = {
+        .text_id = 0,
+        .translation_key = 0,
+        .precomposed_text = 0
+    };
+    if (current_advisor_window->get_tooltip_text != 0) {
+        current_advisor_window->get_tooltip_text(&result);
     }
-    if (text_id) {
-        c->text_id = text_id;
+    if (result.text_id) {
+        c->text_id = result.text_id;
+        c->type = TOOLTIP_BUTTON;
+    } else if (result.translation_key) {
+        c->translation_key = result.translation_key;
+        c->type = TOOLTIP_BUTTON;
+    } else if (result.precomposed_text) {
+        c->precomposed_text = result.precomposed_text;
         c->type = TOOLTIP_BUTTON;
     }
 }

@@ -109,8 +109,8 @@ static translation_string all_strings[] = {
     { TR_HOTKEY_EDIT_TITLE, "Pressiona nova tecla de atalho" },
     { TR_BUILDING_ROADBLOCK, "Bloqueio de Estrada" },
     { TR_BUILDING_ROADBLOCK_DESC, "Bloqueio de estrada - impede cidadãos ociosos." },
-    { TR_BUILDING_ENGINEER_GUILD, "Guilda de Engenharia" },
-    { TR_BUILDING_ENGINEER_GUILD_DESC, "Os engenheiros trabalham incansavelmente, construindo monumentos pela glória de Roma." },
+    { TR_BUILDING_ARCHITECT_GUILD, "Guilda de Arquitetos" },
+    { TR_BUILDING_ARCHITECT_GUILD_DESC, "Os arquitetos trabalham incansavelmente, construindo monumentos pela glória de Roma." },
     { TR_BUILDING_GRAND_TEMPLE_ADD_MODULE, "Designa um epíteto no templo" },
     { TR_BUILDING_GRAND_TEMPLE_CERES, "Santuário de Ceres" },
     { TR_BUILDING_GRAND_TEMPLE_NEPTUNE, "Santuário de Netuno" },
@@ -234,7 +234,7 @@ static translation_string all_strings[] = {
     { TR_ADVISOR_FINANCE_LEVIES, "Custos de manutenção" },
     { TR_CONFIRM_DELETE_MONUMENT, "Demolindo este monumento" },
     { TR_SELECT_EPITHET_PROMPT_HEADER, "Selecione um epíteto" },
-    { TR_SELECT_EPITHET_PROMPT_TEXT, "Outorgar um epíteto dedica permanentemente o Santuário a um aspecto da divindade, dando poderes divinos aos seus sacerdotes. Esta ação tem um custo de 1000 Dn." },
+    { TR_SELECT_EPITHET_PROMPT_TEXT, "Outorgar um epíteto dedica permanentemente o Santuário a um aspecto da divindade, dando poderes divinos aos seus sacerdotes." },
     { TR_BUILDING_INFO_MONTHLY_LEVY, "/mês" },
     { TR_BUILDING_MESS_HALL, "Posto de suprimentos" },
     { TR_BUILDING_MESS_HALL_DESC, "O posto de suprimentos recolhe comida dos celeiros da cidade para abastecer os soldados nos fortes. Um posto mal abastecido atrasa o recrutamento e prejudica o moral das tropas." },
@@ -274,8 +274,8 @@ static translation_string all_strings[] = {
     { TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING, "Encantado com a tua devoção, Mercúrio abençoa a tua indústria, revelando matérias-primas aos artesãos." },
     { TR_FIGURE_TYPE_WORK_CAMP_WORKER, "Capataz" },
     { TR_FIGURE_TYPE_WORK_CAMP_SLAVE, "Carregador" },
-    { TR_FIGURE_TYPE_WORK_CAMP_ENGINEER, "Engenheiro" },
-    { TR_FIGURE_TYPE_MESS_HALL_BUYER, "Contramestre" },
+    { TR_FIGURE_TYPE_WORK_CAMP_ARCHITECT, "Arquiteto" },
+    { TR_FIGURE_TYPE_MESS_HALL_SUPPLIER, "Contramestre" },
     { TR_FIGURE_TYPE_MESS_HALL_COLLECTOR, "Servente" },
     { TR_BUILDING_CERES_TEMPLE_MODULE_DESC, "O Santuário de Ceres mobiliza seus sacerdotes para a distribuição de comida e azeite aos cidadãos famintos." },
     { TR_BUILDING_VENUS_TEMPLE_MODULE_DESC, "O Santuário de Vênus permite que seus sacerdotes distribuam do vinho sagrado aos cidadãos." },
@@ -285,7 +285,7 @@ static translation_string all_strings[] = {
     { TR_BUILDING_SMALL_TEMPLE_MERCURY_NAME, "Templo de Mercúrio" },
     { TR_BUILDING_SMALL_TEMPLE_MARS_NAME, "Templo de Marte" },
     { TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Templo de Vênus" },
-    { TR_FIGURE_TYPE_PRIEST_BUYER, "Sacerdote" },
+    { TR_FIGURE_TYPE_PRIEST_SUPPLIER, "Sacerdote" },
     { TR_PHRASE_FIGURE_MISSIONARY_EXACT_4, "\"Vou fazer o que puder para acalmar esses bárbaros. Estou certo de que eles irão parar de atacar quando eu conseguir conversar com eles.\"" },
     { TR_CITY_MESSAGE_TITLE_PANTHEON_FESTIVAL, "Um festival anual" },
     { TR_CITY_MESSAGE_TEXT_PANTHEON_FESTIVAL_CERES, "Os fiéis lotam os templos para a celebração da Cerealia, em honra a Ceres. Os fazendeiros oferecem sacrifícios pedindo colheitas abundantes nos próximos anos." },
@@ -322,11 +322,11 @@ static translation_string all_strings[] = {
     { TR_BUILDING_MENU_STATUES, "Estátuas" },
     { TR_BUILDING_MENU_GOV_RES, "Mansões do Governador" },
     { TR_OVERLAY_ROADS, "Estradas" },
-    { TR_NO_EXTRA_ASSETS_TITLE, "A pasta de assets não pôde ser encontrada" },
+    { TR_NO_EXTRA_ASSETS_TITLE, "Assets extra não foram carregados" },
     { TR_NO_EXTRA_ASSETS_MESSAGE,
-    "Sua instalação do Caesar 3 não instalou adequadamente a pasta de assets. \
-    Novos assets não serão carregados adequadamente.\n \
-    Por favor, garanta que um diretório '/assets' exista na última camada de seu diretório de instalação do Caesar 3." },
+        "Os assets extra do Augustus não foram carregados.\n"
+        "Isto pode ser devido a uma pasta 'assets' antiga ou faltando.\n"
+        "Certifique que tem a pasta 'assets' mais atual, que pode ser descarregada do GitHub." },
     { TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "O Farol deve ser posicionado perto da água" },
     { TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Esta moradia tem acesso a todos os cinco deuses do Panteão" },
     { TR_BUILDING_LEGION_FOOD_BONUS, "A abundância de comida está melhorando o moral" },
@@ -338,7 +338,17 @@ static translation_string all_strings[] = {
     { TR_LABEL_PAUSE_MENU, "Pausa" },
     { TR_OVERLAY_LEVY, "Custos de manutenção" },
     { TR_TOOLTIP_OVERLAY_LEVY, " denários pagos mensalmente em custos de manutenção" },
-    { TR_MAP_EDITOR_OPTIONS, "Configurações do cenário" }
+    { TR_MAP_EDITOR_OPTIONS, "Configurações do cenário" },
+    { TR_BUTTON_GO_TO_SITE, "Vá para o local" },
+    {TR_SIDEBAR_EXTRA_REQUESTS_VIEW_ALL, "Ver tudo"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_SMALL_FORCE, "Pequena força"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_AVERAGE_FORCE, "Força mediana"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_LARGE_FORCE, "Grande força"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_SEND, "Enviar pedido"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_STOCK, "Loja"},
+    {TR_SIDEBAR_EXTRA_REQUESTS_UNSTOCK, "Pare de armazenar"},
+    { TR_RETURN_ALL_TO_FORT, "Voltar tudo" },
+    {TR_OPTION_MENU_COST, "Esta ação tem um custo de"}
 };
 
 void translation_portuguese(const translation_string **strings, int *num_strings)

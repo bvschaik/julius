@@ -8,6 +8,17 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
+#include "translation/translation.h"
+
+enum crime_level {
+    NO_CRIME = 0,
+    MINOR_CRIME = 1,
+    LOW_CRIME = 2,
+    SOME_CRIME = 3,
+    MEDIUM_CRIME = 4,
+    LARGE_CRIME = 5,
+    RAMPANT_CRIME = 6,
+};
 
 static int is_problem_cartpusher(int figure_id)
 {
@@ -22,6 +33,10 @@ static int is_problem_cartpusher(int figure_id)
 void city_overlay_problems_prepare_building(building *b)
 {
     if (b->house_size) {
+        return;
+    }
+    if (b->strike_duration_days > 0) {
+        b->show_on_problem_overlay = 1;
         return;
     }
     if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
@@ -50,7 +65,7 @@ static int show_building_fire_crime(const building *b)
 
 static int show_building_damage(const building *b)
 {
-    return b->type == BUILDING_ENGINEERS_POST || b->type == BUILDING_ENGINEER_GUILD;
+    return b->type == BUILDING_ENGINEERS_POST || b->type == BUILDING_ARCHITECT_GUILD;
 }
 
 static int show_building_problems(const building *b)
@@ -70,13 +85,14 @@ static int show_figure_fire(const figure *f)
 
 static int show_figure_damage(const figure *f)
 {
-    return f->type == FIGURE_ENGINEER || f->type == FIGURE_WORK_CAMP_ENGINEER;
+    return f->type == FIGURE_ENGINEER || f->type == FIGURE_WORK_CAMP_ARCHITECT;
 }
 
 static int show_figure_crime(const figure *f)
 {
-    return f->type == FIGURE_PREFECT || f->type == FIGURE_PROTESTER ||
-        f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER;
+    return f->type == FIGURE_PREFECT ||
+        f->type == FIGURE_CRIMINAL || f->type == FIGURE_RIOTER || f->type == FIGURE_PROTESTER
+        || f->type == FIGURE_CRIMINAL_LOOTER || f->type == FIGURE_CRIMINAL_ROBBER;
 }
 
 static int show_figure_problems(const figure *f)
@@ -85,6 +101,8 @@ static int show_figure_problems(const figure *f)
         return building_get(f->building_id)->show_on_problem_overlay;
     } else if (f->type == FIGURE_CART_PUSHER) {
         return f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->min_max_seen;
+    } else if (f->type == FIGURE_PROTESTER) {
+        return 1;
     } else {
         return 0;
     }
@@ -105,21 +123,43 @@ static int get_column_height_damage(const building *b)
     return b->damage_risk > 0 ? b->damage_risk / 20 : NO_COLUMN;
 }
 
-static int get_column_height_crime(const building *b)
+static int get_crime_level(const building *b)
 {
     if (b->house_size) {
         int happiness = b->sentiment.house_happiness;
         if (happiness <= 0) {
-            return 10;
-        } else if (happiness <= 10) {
-            return 8;
+            return RAMPANT_CRIME;
+        } else if (happiness <= 10 || b->house_criminal_active) {
+            return LARGE_CRIME;
         } else if (happiness <= 20) {
-            return 6;
+            return MEDIUM_CRIME;
         } else if (happiness <= 30) {
-            return 4;
+            return SOME_CRIME;
         } else if (happiness <= 40) {
-            return 2;
+            return LOW_CRIME;
         } else if (happiness < 50) {
+            return MINOR_CRIME;
+        }
+    }
+    return 0;
+
+}
+
+static int get_column_height_crime(const building *b)
+{
+    if (b->house_size) {
+        int crime = get_crime_level(b);
+        if (crime == RAMPANT_CRIME) {
+            return 10;
+        } else if (crime == LARGE_CRIME) {
+            return 8;
+        } else if (crime == MEDIUM_CRIME) {
+            return 6;
+        } else if (crime == SOME_CRIME) {
+            return 4;
+        } else if (crime == LOW_CRIME) {
+            return 2;
+        } else if (crime == MINOR_CRIME) {
             return 1;
         }
     }
@@ -167,26 +207,55 @@ static int get_tooltip_damage(tooltip_context *c, const building *b)
 
 static int get_tooltip_crime(tooltip_context *c, const building *b)
 {
-    if (b->sentiment.house_happiness <= 0) {
+    int crime = get_crime_level(b);
+    if (crime == RAMPANT_CRIME) {
         return 63;
-    } else if (b->sentiment.house_happiness <= 10) {
+    } else if (crime == LARGE_CRIME) {
         return 62;
-    } else if (b->sentiment.house_happiness <= 20) {
+    } else if (crime == MEDIUM_CRIME) {
         return 61;
-    } else if (b->sentiment.house_happiness <= 30) {
+    } else if (crime == SOME_CRIME) {
         return 60;
-    } else if (b->sentiment.house_happiness < 50) {
+    } else if (crime == LOW_CRIME || crime == MINOR_CRIME) {
         return 59;
     } else {
         return 58;
     }
 }
 
+static int get_tooltip_problems(tooltip_context *c, const building *b)
+{
+    if (b->house_size) {
+        return 0;
+    }
+    if (b->strike_duration_days > 0) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_STRIKE;
+    } else if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_NO_WATER_ACCESS;
+    } else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_CLAY_PIT) {
+        if (is_problem_cartpusher(b->figure_id)) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_CARTPUSHER;
+        }
+    } else if (building_is_workshop(b->type)) {
+        if (is_problem_cartpusher(b->figure_id)) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_CARTPUSHER;
+        } else if (b->loads_stored <= 0) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_NO_RESOURCES;
+        }
+    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_MOTHBALLED;
+    }
+    if (c->translation_key) {
+        return 1;
+    }
+    return 0;
+}
+
 const city_overlay *city_overlay_for_fire(void)
 {
     static city_overlay overlay = {
         OVERLAY_FIRE,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED_TO_GREEN,
         show_building_fire_crime,
         show_figure_fire,
         get_column_height_fire,
@@ -202,7 +271,7 @@ const city_overlay *city_overlay_for_damage(void)
 {
     static city_overlay overlay = {
         OVERLAY_DAMAGE,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED_TO_GREEN,
         show_building_damage,
         show_figure_damage,
         get_column_height_damage,
@@ -218,7 +287,7 @@ const city_overlay *city_overlay_for_crime(void)
 {
     static city_overlay overlay = {
         OVERLAY_CRIME,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED_TO_GREEN,
         show_building_fire_crime,
         show_figure_crime,
         get_column_height_crime,
@@ -234,12 +303,12 @@ const city_overlay *city_overlay_for_problems(void)
 {
     static city_overlay overlay = {
         OVERLAY_PROBLEMS,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED,
         show_building_problems,
         show_figure_problems,
         get_column_height_none,
         0,
-        0,
+        get_tooltip_problems,
         0,
         0
     };
@@ -301,7 +370,7 @@ const city_overlay *city_overlay_for_native(void)
 {
     static city_overlay overlay = {
         OVERLAY_NATIVE,
-        COLUMN_TYPE_RISK,
+        COLUMN_COLOR_RED,
         show_building_native,
         show_figure_native,
         get_column_height_none,

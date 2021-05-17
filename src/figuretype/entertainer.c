@@ -1,10 +1,15 @@
 #include "entertainer.h"
-
 #include "building/building.h"
 #include "building/list.h"
+#include "building/monument.h"
+#include "city/festival.h"
+#include "city/figures.h"
+#include "city/map.h"
 #include "core/calc.h"
 #include "core/image.h"
+#include "core/random.h"
 #include "figure/combat.h"
+#include "figure/enemy_army.h"
 #include "figure/image.h"
 #include "figure/movement.h"
 #include "figure/route.h"
@@ -13,36 +18,105 @@
 #include "map/road_network.h"
 #include "scenario/gladiator_revolt.h"
 
-static int determine_destination(int x, int y, building_type type1, building_type type2)
+#define INFINITE 10000
+
+void figure_spawn_tourist(void)
 {
-    int road_network = map_road_network_get(map_grid_offset(x,y));
+    const map_tile *entry = city_map_entry_point();
+    const map_tile *exit = city_map_exit_point();
+    if (random_byte() % 2) {
+        figure *tourist = figure_create(FIGURE_TOURIST, entry->x, entry->y, DIR_0_TOP);
+        tourist->action_state = FIGURE_ACTION_217_TOURIST_CREATED;
+    } else {
+        figure *tourist = figure_create(FIGURE_TOURIST, exit->x, exit->y, DIR_0_TOP);
+        tourist->action_state = FIGURE_ACTION_217_TOURIST_CREATED;
+    }
+}
 
-    building_list_small_clear();
+static int determine_tourist_destination(int x, int y)
+{
+    int road_network = map_road_network_get(map_grid_offset(x, y));
 
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
+    building_list_large_clear();
+
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
-        if (b->type != type1 && b->type != type2) {
-            continue;
+        if (city_festival_games_active()) {
+            if (b->type != city_festival_games_active_venue_type()) {
+                continue;
+            }
         }
-        if (b->distance_from_entry && b->road_network_id == road_network) {
+        if (b->is_tourism_venue && !b->tourism_disabled && b->distance_from_entry
+            && b->road_network_id == road_network) {
             if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) {
                 continue;
             }
-            building_list_small_add(i);
+            building_list_large_add(i);
         }
     }
-    int total_venues = building_list_small_size();
+    int total_venues = building_list_large_size();
     if (total_venues <= 0) {
         return 0;
     }
-    const int *venues = building_list_small_items();
+
+    int index;
+
+    index = random_from_stdlib() % total_venues;
+    building *b = building_get(building_list_large_item(index));
+
+    return b->id;
+}
+
+static int is_venue(building *b)
+{
+    switch (b->type) {
+        case BUILDING_THEATER:
+        case BUILDING_AMPHITHEATER:
+        case BUILDING_ARENA:
+            return 1;
+        case BUILDING_COLOSSEUM:
+        case BUILDING_HIPPODROME:
+            return b->data.monument.phase == MONUMENT_FINISHED;
+        default:
+            return 0;
+    }
+}
+
+static int determine_destination(int x, int y, building_type type1, building_type type2, building_type type3)
+{
+    int road_network = map_road_network_get(map_grid_offset(x, y));
+
+    building_list_large_clear();
+
+    building_type types[3] = { type1, type2, type3 };
+
+    for (int i = 0; i < 3; i++) {
+        for (building *b = building_first_of_type(types[i]); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
+                continue;
+            }
+            if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && b->data.monument.phase != -1) {
+                continue;
+            }
+            if (b->distance_from_entry && b->road_network_id == road_network) {
+                if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) {
+                    continue;
+                }
+                building_list_large_add(b->id);
+            }
+        }
+    }
+    int total_venues = building_list_large_size();
+    if (total_venues <= 0) {
+        return 0;
+    }
     int min_building_id = 0;
     int min_distance = 10000;
     for (int i = 0; i < total_venues; i++) {
-        building *b = building_get(venues[i]);
+        building *b = building_get(building_list_large_item(i));
         int days_left;
         if (b->type == type1) {
             days_left = b->data.entertainment.days1;
@@ -51,10 +125,10 @@ static int determine_destination(int x, int y, building_type type1, building_typ
         } else {
             days_left = 0;
         }
-        int dist = days_left + calc_maximum_distance(x, y, b->x, b->y);
+        int dist = 2 * days_left + calc_maximum_distance(x, y, b->x, b->y);
         if (dist < min_distance) {
             min_distance = dist;
-            min_building_id = venues[i];
+            min_building_id = building_list_large_item(i);
         }
     }
     return min_building_id;
@@ -63,7 +137,7 @@ static int determine_destination(int x, int y, building_type type1, building_typ
 static void update_shows(figure *f)
 {
     building *b = building_main(building_get(f->destination_building_id));
-    if (b->type < BUILDING_AMPHITHEATER || b->type > BUILDING_COLOSSEUM) {
+    if (!is_venue(b)) {
         return;
     }
     switch (f->type) {
@@ -112,9 +186,11 @@ static void update_image(figure *f)
         image_id = image_group(GROUP_FIGURE_ACTOR);
     } else if (f->type == FIGURE_GLADIATOR) {
         image_id = image_group(GROUP_FIGURE_GLADIATOR);
+    } else if (f->type == FIGURE_TOURIST) {
+        image_id = image_group(GROUP_FIGURE_PATRICIAN);
     } else if (f->type == FIGURE_LION_TAMER) {
         image_id = image_group(GROUP_FIGURE_LION_TAMER);
-        if (f->wait_ticks_missile >= 96) {
+        if (f->wait_ticks_missile >= 96 && f->action_state != FIGURE_ACTION_149_CORPSE) {
             image_id = image_group(GROUP_FIGURE_LION_TAMER_WHIP);
         }
         f->cart_image_id = image_group(GROUP_FIGURE_LION);
@@ -137,6 +213,77 @@ static void update_image(figure *f)
         f->cart_image_id += dir + 8 * f->image_offset;
         figure_image_set_cart_offset(f, dir);
     }
+}
+
+static int get_enemy_distance(figure *f, int x, int y)
+{
+    if (f->type == FIGURE_RIOTER || f->type == FIGURE_ENEMY54_GLADIATOR) {
+        return calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_CRIMINAL_LOOTER || f->type == FIGURE_CRIMINAL_ROBBER) {
+        return 3 * calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_INDIGENOUS_NATIVE && f->action_state == FIGURE_ACTION_159_NATIVE_ATTACKING) {
+        return calc_maximum_distance(x, y, f->x, f->y);
+    } else if (figure_is_enemy(f)) {
+        return calc_maximum_distance(x, y, f->x, f->y);
+    } else if (f->type == FIGURE_WOLF) {
+        return 2 * calc_maximum_distance(x, y, f->x, f->y);
+    }
+    return INFINITE;
+}
+
+static int get_nearest_enemy(int x, int y, int *distance)
+{
+    int min_enemy_id = 0;
+    int min_dist = INFINITE;
+    for (int i = 1; i < figure_count(); i++) {
+        figure *f = figure_get(i);
+        if (figure_is_dead(f)) {
+            continue;
+        }
+        int dist = get_enemy_distance(f, x, y);
+        if (dist != INFINITE && f->targeted_by_figure_id) {
+            figure *pursuiter = figure_get(f->targeted_by_figure_id);
+            if (get_enemy_distance(f, pursuiter->x, pursuiter->y) < dist) {
+                continue;
+            }
+        }
+        if (dist < min_dist) {
+            min_dist = dist;
+            min_enemy_id = i;
+        }
+    }
+    *distance = min_dist;
+    return min_enemy_id;
+}
+
+static int fight_enemy(figure *f)
+{
+    if (!city_figures_has_security_breach() && enemy_army_total_enemy_formations() <= 0) {
+        return 0;
+    }
+    switch (f->action_state) {
+        case FIGURE_ACTION_150_ATTACK:
+        case FIGURE_ACTION_149_CORPSE:
+            return 0;
+    }
+
+    int distance;
+    int enemy_id = get_nearest_enemy(f->x, f->y, &distance);
+    if (enemy_id > 0 && distance <= 50) {
+        figure *enemy = figure_get(enemy_id);
+        if (enemy->targeted_by_figure_id) {
+            figure_get(enemy->targeted_by_figure_id)->target_figure_id = 0;
+        }
+        f->destination_x = enemy->x;
+        f->destination_y = enemy->y;
+        f->target_figure_id = enemy_id;
+        enemy->targeted_by_figure_id = f->id;
+        f->target_figure_created_sequence = enemy->created_sequence;
+        figure_route_remove(f);
+        return 1;
+    }
+    f->wait_ticks_next_target = 0;
+    return 0;
 }
 
 void figure_entertainer_action(figure *f)
@@ -194,16 +341,16 @@ void figure_entertainer_action(figure *f)
                 int dst_building_id = 0;
                 switch (f->type) {
                     case FIGURE_ACTOR:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_THEATER, BUILDING_AMPHITHEATER);
+                        dst_building_id = determine_destination(f->x, f->y, BUILDING_THEATER, BUILDING_AMPHITHEATER, 0);
                         break;
                     case FIGURE_GLADIATOR:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM);
+                        dst_building_id = determine_destination(f->x, f->y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM, BUILDING_ARENA);
                         break;
                     case FIGURE_LION_TAMER:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_COLOSSEUM, 0);
+                        dst_building_id = determine_destination(f->x, f->y, BUILDING_COLOSSEUM, BUILDING_ARENA, 0);
                         break;
                     case FIGURE_CHARIOTEER:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_HIPPODROME, 0);
+                        dst_building_id = determine_destination(f->x, f->y, BUILDING_HIPPODROME, 0, 0);
                         break;
                 }
                 if (dst_building_id) {
@@ -266,6 +413,86 @@ void figure_entertainer_action(figure *f)
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+                f->state = FIGURE_STATE_DEAD;
+            }
+            break;
+        case FIGURE_ACTION_230_LION_TAMERS_HUNTING_ENEMIES:
+            f->terrain_usage = TERRAIN_USAGE_ANY;
+            if (!figure_target_is_alive(f) &&
+                !fight_enemy(f)) {
+                f->state = FIGURE_STATE_DEAD;
+            }
+            figure_movement_move_ticks_with_percentage(f, 1, 50);
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                figure *target = figure_get(f->target_figure_id);
+                f->destination_x = target->x;
+                f->destination_y = target->y;
+                figure_route_remove(f);
+            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
+                f->state = FIGURE_STATE_DEAD;
+            }
+            break;
+    }
+    update_image(f);
+}
+
+void figure_tourist_action(figure *f)
+{
+    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->use_cross_country = 0;
+    figure_image_increase_offset(f, 12);
+
+    switch (f->action_state) {
+        case FIGURE_ACTION_150_ATTACK:
+            figure_combat_handle_attack(f);
+            figure_image_increase_offset(f, 32);
+            break;
+        case FIGURE_ACTION_149_CORPSE:
+            figure_combat_handle_corpse(f);
+            break;
+        case FIGURE_ACTION_217_TOURIST_CREATED:
+            f->is_ghost = 1;
+            f->image_offset = 0;
+            f->action_state = FIGURE_ACTION_218_TOURIST_CHOOSING_DESTINATION;
+            break;
+        case FIGURE_ACTION_218_TOURIST_CHOOSING_DESTINATION:
+            f->use_cross_country = 1;
+            f->is_ghost = 1;
+            int dst_building_id = 0;
+            if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
+                dst_building_id = determine_tourist_destination(f->x, f->y);
+                if (dst_building_id) {
+                    building *b_dst = building_get(dst_building_id);
+                    int x_road, y_road;
+                    if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
+                        f->destination_building_id = dst_building_id;
+                        f->action_state = FIGURE_ACTION_219_TOURIST_GOING_TO_VENUE;
+                        f->destination_x = x_road;
+                        f->destination_y = y_road;
+                        f->roam_length = 0;
+                    } else {
+                        f->state = FIGURE_STATE_DEAD;
+                    }
+                } else {
+                    f->state = FIGURE_STATE_DEAD;
+                }
+            }
+            f->is_ghost = 1;
+            break;
+
+        case FIGURE_ACTION_219_TOURIST_GOING_TO_VENUE:
+            f->is_ghost = 0;
+            figure_movement_move_ticks(f, 1);
+            for (int i = 0; i < 12; ++i) {
+                if (f->tourist.visited_building_type_ids[i]) {
+                    f->tourist.ticks_since_last_visited_id[i]++;
+                }
+            }
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                f->state = FIGURE_STATE_DEAD;
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
+                figure_route_remove(f);
+            } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
             break;

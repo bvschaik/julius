@@ -26,7 +26,7 @@ static struct {
     int figure_focus_button_id;
     int building_id;
     int tooltip_id;
-} data = {0, 0, 0, 0, 0};
+} data = { 0, 0, 0, 0, 0 };
 
 static generic_button go_to_orders_button[] = {
     {0, 0, 304, 20, go_to_orders, button_none, 0, 0}
@@ -41,9 +41,17 @@ static generic_button orders_permission_buttons[] = {
     {0, 164, 210, 22, toggle_figure_state, button_none, PERMISSION_MEDICINE, 0},
     {0, 192, 210, 22, toggle_figure_state, button_none, PERMISSION_TAX_COLLECTOR, 0},
     {0, 224, 210, 22, toggle_figure_state, button_none, PERMISSION_LABOR_SEEKER, 0},
+    {0, 256, 210, 22, toggle_figure_state, button_none, PERMISSION_MISSIONARY, 0},
+    {0, 288, 210, 22, toggle_figure_state, button_none, PERMISSION_WATCHMAN, 0},
 };
 
-static int permission_tooltip_translations[] = {0,TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MAINTENANCE,TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_PRIEST,TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MARKET, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_ENTERTAINER, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_EDUCATION, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MEDICINE, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_LABOR_SEEKER};
+static int permission_tooltip_translations[] = { 0,
+TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MAINTENANCE,TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_PRIEST,
+TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MARKET, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_ENTERTAINER,
+TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_EDUCATION, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MEDICINE,
+TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_LABOR_SEEKER,
+TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MISSIONARY, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_WATCHMAN,
+};
 
 static int size_of_orders_permission_buttons = sizeof(orders_permission_buttons) / sizeof(*orders_permission_buttons);
 
@@ -131,55 +139,55 @@ void window_building_draw_roadblock(building_info_context *c)
     window_building_play_sound(c, "wavs/prefecture.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(28, 115, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_from_tr_string(c, TR_BUILDING_ROADBLOCK_DESC);
+    window_building_draw_description_from_tr_string_at(c, TR_BUILDING_ROADBLOCK_DESC, 96);
 }
 
-void window_building_draw_roadblock_foreground(building_info_context* c)
+void window_building_draw_roadblock_foreground(building_info_context *c)
 {
     button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
         16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
     text_draw_centered(translation_for(TR_BUILDING_ROADBLOCK), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
-        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK,0);
+        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK, 0);
 
 }
 
-void window_building_draw_roadblock_orders(building_info_context* c)
+void window_building_draw_roadblock_orders(building_info_context *c)
 {
     c->help_id = 3;
     int y_offset = window_building_get_vertical_offset(c, 28);
     outer_panel_draw(c->x_offset, y_offset, 29, 28);
-    text_draw_centered(translation_for(TR_BUILDING_ROADBLOCK), c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK,0);
+    text_draw_centered(translation_for(TR_BUILDING_ROADBLOCK), c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 
 }
 
-void window_building_draw_roadblock_orders_foreground(building_info_context* c)
+void window_building_draw_roadblock_orders_foreground(building_info_context *c)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
     int ids[] = { GROUP_FIGURE_ENGINEER,GROUP_FIGURE_PREFECT,GROUP_FIGURE_PRIEST,GROUP_FIGURE_PRIEST,
         GROUP_FIGURE_MARKET_LADY,GROUP_FIGURE_MARKET_LADY,GROUP_FIGURE_ACTOR,GROUP_FIGURE_LION_TAMER,
         GROUP_FIGURE_TEACHER_LIBRARIAN, GROUP_FIGURE_SCHOOL_CHILD, GROUP_FIGURE_DOCTOR_SURGEON, GROUP_FIGURE_BATHHOUSE_WORKER,
-        GROUP_FIGURE_TAX_COLLECTOR, GROUP_FIGURE_TAX_COLLECTOR, GROUP_FIGURE_LABOR_SEEKER, GROUP_FIGURE_LABOR_SEEKER
+        GROUP_FIGURE_TAX_COLLECTOR, GROUP_FIGURE_TAX_COLLECTOR, GROUP_FIGURE_LABOR_SEEKER, GROUP_FIGURE_LABOR_SEEKER,
+        GROUP_FIGURE_MISSIONARY, GROUP_FIGURE_MISSIONARY, GROUP_FIGURE_TOWER_SENTRY, GROUP_FIGURE_TOWER_SENTRY,
     };
-    building* b = building_get(c->building_id);
+    building *b = building_get(c->building_id);
     data.building_id = b->id;
 
     for (int i = 0; i < size_of_orders_permission_buttons; i++) {
-        image_draw(image_group(ids[i*2]) + 4, c->x_offset + 32, y_offset + 46 + 32 * i);
-        image_draw(image_group(ids[i*2+1]) + 4, c->x_offset + 64, y_offset + 46 + 32 * i);
+        image_draw(image_group(ids[i * 2]) + 4, c->x_offset + 32, y_offset + 46 + 32 * i);
+        image_draw(image_group(ids[i * 2 + 1]) + 4, c->x_offset + 64, y_offset + 46 + 32 * i);
        // lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
         button_border_draw(c->x_offset + 180, y_offset + 50 + 32 * i, 210, 22, data.figure_focus_button_id == i + 1);
-        int state = building_roadblock_get_permission(i+1, b);
+        int state = building_roadblock_get_permission(i + 1, b);
         if (state) {
-            lang_text_draw(99, 7, c->x_offset + 230, y_offset + 55 + 32 * i, FONT_NORMAL_WHITE);
-        }
-        else {
-            lang_text_draw(99, 8, c->x_offset + 230, y_offset + 55 + 32 * i, FONT_NORMAL_RED);
+            lang_text_draw_centered(99, 7, c->x_offset + 180, y_offset + 55 + 32 * i, 210, FONT_NORMAL_WHITE);
+        } else {
+            lang_text_draw_centered(99, 8, c->x_offset + 180, y_offset + 55 + 32 * i, 210, FONT_NORMAL_RED);
         }
     }
 }
 
-void window_building_roadblock_get_tooltip_walker_permissions(int* translation)
+void window_building_roadblock_get_tooltip_walker_permissions(int *translation)
 {
     if (data.figure_focus_button_id) {
         *translation = permission_tooltip_translations[data.figure_focus_button_id];
@@ -313,8 +321,9 @@ void window_building_draw_native_crops(building_info_context *c)
     draw_native(c, 133);
 }
 
-void toggle_figure_state(int index, int param2) {
-    building* b = building_get(data.building_id);
+void toggle_figure_state(int index, int param2)
+{
+    building *b = building_get(data.building_id);
     if (b->type == BUILDING_ROADBLOCK) {
         building_roadblock_set_permission(index, b);
     }
@@ -322,9 +331,8 @@ void toggle_figure_state(int index, int param2) {
 
 }
 
-static void roadblock_orders(int param1, int param2) {
-
-}
+static void roadblock_orders(int param1, int param2)
+{}
 
 static void go_to_orders(int param1, int param2)
 {
@@ -332,14 +340,14 @@ static void go_to_orders(int param1, int param2)
 }
 
 
-int window_building_handle_mouse_roadblock(const mouse* m, building_info_context* c)
+int window_building_handle_mouse_roadblock(const mouse *m, building_info_context *c)
 {
-   return generic_buttons_handle_mouse(
+    return generic_buttons_handle_mouse(
         m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
         go_to_orders_button, 1, &data.focus_button_id);
 }
 
-int window_building_handle_mouse_roadblock_orders(const mouse* m, building_info_context* c)
+int window_building_handle_mouse_roadblock_orders(const mouse *m, building_info_context *c)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
 

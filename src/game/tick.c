@@ -9,12 +9,14 @@
 #include "building/house_population.h"
 #include "building/house_service.h"
 #include "building/industry.h"
+#include "building/lighthouse.h"
 #include "building/maintenance.h"
 #include "building/warehouse.h"
 #include "city/culture.h"
 #include "city/emperor.h"
 #include "city/festival.h"
 #include "city/finance.h"
+#include "city/games.h"
 #include "city/gods.h"
 #include "city/health.h"
 #include "city/labor.h"
@@ -64,7 +66,7 @@ static void advance_year(void)
     city_finance_handle_year_change();
     empire_city_reset_yearly_trade_amounts();
     building_maintenance_update_fire_direction();
-    city_ratings_update(1);
+    city_ratings_update(1,0);
 }
 
 static void advance_month(void)
@@ -82,7 +84,11 @@ static void advance_month(void)
     city_victory_update_months_to_govern();
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();
+    city_sentiment_decrement_blessing_boost();
+    building_industry_start_strikes();
+    building_trim();
 
+    map_tiles_update_all_hedges();
     map_tiles_update_all_roads();
     map_tiles_update_all_water();
     map_routing_update_land_citizen();
@@ -91,11 +97,12 @@ static void advance_month(void)
     if (game_time_advance_month()) {
         advance_year();
     } else {
-        city_ratings_update(0);
+        city_ratings_update(0,1);
     }
 
     city_population_record_monthly();
     city_festival_update();
+    city_games_decrement_month_counts();
     city_gods_update_blessings();
     tutorial_on_month_tick();
     if (setting_monthly_autosave()) {
@@ -111,13 +118,16 @@ static void advance_day(void)
     if (game_time_day() == 0 || game_time_day() == 8) {
         city_sentiment_update();
     }
+    if (game_time_day() == 0 || game_time_day() == 7) {
+        building_lighthouse_consume_timber();
+    }
     tutorial_on_day_tick();
 }
 
 static void advance_tick(void)
 {
     // NB: these ticks are noop:
-    // 0, 9, 11, 13, 14, 15, 26, 41, 42, 47
+    // 0, 9, 10, 11, 13, 14, 15, 26, 41, 42, 47
     switch (game_time_tick()) {
         case 1: city_gods_calculate_moods(1); break;
         case 2: sound_music_update(0); break;
@@ -127,7 +137,6 @@ static void advance_tick(void)
         case 6: map_natives_check_land(); break;
         case 7: map_road_network_update(); break;
         case 8: building_granaries_calculate_stocks(); break;
-        case 10: building_update_highest_id(); break;
         case 12: house_service_decay_houses_covered(); break;
         case 16: city_resource_calculate_warehouse_stocks(); break;
         case 17: city_resource_calculate_food_stocks_and_supply_wheat(); break;
@@ -153,10 +162,12 @@ static void advance_tick(void)
         case 38: building_update_desirability(); break;
         case 39: building_house_process_evolve_and_consume_goods(); break;
         case 40: building_update_state(); break;
+        case 42: city_finance_spawn_tourist(); break;
         case 43: building_maintenance_update_burning_ruins(); break;
         case 44: building_maintenance_check_fire_collapse(); break;
         case 45: figure_generate_criminals(); break;
         case 46: building_industry_update_wheat_production(); break;
+        case 47: city_games_decrement_duration(); break;
         case 48: house_service_decay_tax_collector(); break;
         case 49: city_culture_calculate(); break;
     }
@@ -182,6 +193,7 @@ void game_tick_run(void)
     city_victory_check();
 }
 
-void game_tick_cheat_year(void){
+void game_tick_cheat_year(void)
+{
     advance_year();
 }

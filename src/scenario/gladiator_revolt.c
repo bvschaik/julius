@@ -1,6 +1,7 @@
 #include "gladiator_revolt.h"
 
 #include "building/count.h"
+#include "city/games.h"
 #include "city/message.h"
 #include "core/random.h"
 #include "game/time.h"
@@ -26,9 +27,10 @@ void scenario_gladiator_revolt_process(void)
     if (!scenario.gladiator_revolt.enabled) {
         return;
     }
+
     if (data.state == EVENT_NOT_STARTED) {
         if (game_time_year() == data.game_year && game_time_month() == data.month) {
-            if (building_count_active(BUILDING_GLADIATOR_SCHOOL) > 0) {
+            if (building_count_active(BUILDING_GLADIATOR_SCHOOL) > 0 && !city_games_executions_active()) {
                 data.state = EVENT_IN_PROGRESS;
                 city_message_post(1, MESSAGE_GLADIATOR_REVOLT, 0, 0);
             } else {

@@ -161,6 +161,9 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
         case HOTKEY_ROTATE_BUILDING:
             def->action = &data.hotkey_state.rotate_building;
             break;
+        case HOTKEY_ROTATE_BUILDING_BACK:
+            def->action = &data.hotkey_state.rotate_building_back;
+            break;
         case HOTKEY_GO_TO_BOOKMARK_1:
             def->action = &data.hotkey_state.go_to_bookmark;
             def->value = 1;
@@ -287,6 +290,9 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             break;
         case HOTKEY_BUILD_CLONE:
             def->action = &data.hotkey_state.clone_building;
+            break;
+        case HOTKEY_UNDO:
+            def->action = &data.hotkey_state.undo;
             break;
         default:
             def->action = 0;
@@ -440,7 +446,7 @@ void hotkey_key_released(key_type key, key_modifier_type modifiers)
     }
 }
 
-static void confirm_exit(int accepted)
+static void confirm_exit(int accepted, int checked)
 {
     if (accepted) {
         system_exit();

@@ -151,7 +151,7 @@ int map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int grid_offset = map_grid_offset(xx, yy);
-            if (grid_offset != except_grid_offset && !terrain_grid.items[grid_offset]) {
+            if (grid_offset != except_grid_offset && !(terrain_grid.items[grid_offset] & TERRAIN_NOT_CLEAR)) {
                 *x_tile = xx;
                 *y_tile = yy;
                 return 1;

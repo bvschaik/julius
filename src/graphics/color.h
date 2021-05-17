@@ -27,6 +27,8 @@ typedef uint32_t color_t;
 #define COLOR_MASK_NONE 0xffffffff
 #define COLOR_MASK_RED 0xffff0818
 #define COLOR_MASK_GREEN 0xff18ff18
+#define COLOR_MASK_PURPLE 0xff7f0000
+#define COLOR_MASK_DARK_GREEN 0xff005100
 #define COLOR_MASK_BLUE 0x663377ff
 #define COLOR_MASK_GREY 0x66aaaaaa
 #define COLOR_MASK_LEGION_HIGHLIGHT 0x66ff3300
@@ -43,6 +45,10 @@ typedef uint32_t color_t;
 #define COLOR_MINIMAP_ENEMY_DESERT 0xff08007b
 #define COLOR_MINIMAP_WOLF COLOR_BLACK
 
+#define COLOR_OVERLAY_NEUTRAL 0xccffffff
+#define COLOR_OVERLAY_NEGATIVE_STEP 0x00040505
+#define COLOR_OVERLAY_POSITIVE_STEP 0x00050504
+
 #define COLOR_MOUSE_DARK_GRAY 0xff3f3f3f
 #define COLOR_MOUSE_MEDIUM_GRAY 0xff737373
 #define COLOR_MOUSE_LIGHT_GRAY 0xffb3b3b3
@@ -53,6 +59,9 @@ typedef uint32_t color_t;
 #define ALPHA_TRANSPARENT 0x00000000
 
 #define COLOR_BITSHIFT_ALPHA 24
+#define COLOR_BITSHIFT_RED 16
+#define COLOR_BITSHIFT_GREEN 8
+#define COLOR_BITSHIFT_BLUE 0
 
 #define COLOR_CHANNEL_ALPHA 0xff000000
 #define COLOR_CHANNEL_RED 0x00ff0000
@@ -60,7 +69,7 @@ typedef uint32_t color_t;
 #define COLOR_CHANNEL_BLUE 0x000000ff
 #define COLOR_CHANNEL_RB (COLOR_CHANNEL_RED | COLOR_CHANNEL_BLUE)
 
-#define COLOR_COMPONENT(c, shift) ((c >> shift) & 0xff)
+#define COLOR_COMPONENT(c, shift) (((c) >> (shift)) & 0xff)
 
 // Note: for the blending functions to work properly, variables must be of type color_t
 

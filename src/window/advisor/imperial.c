@@ -4,7 +4,10 @@
 #include "city/finance.h"
 #include "city/military.h"
 #include "city/ratings.h"
+#include "city/request.h"
 #include "city/resource.h"
+#include "core/lang.h"
+#include "core/string.h"
 #include "empire/city.h"
 #include "figure/formation_legion.h"
 #include "graphics/generic_button.h"
@@ -15,6 +18,7 @@
 #include "graphics/window.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
+#include "translation/translation.h"
 #include "window/donate_to_city.h"
 #include "window/empire.h"
 #include "window/gift_to_emperor.h"
@@ -22,13 +26,7 @@
 #include "window/set_salary.h"
 
 #define ADVISOR_HEIGHT 27
-
-enum {
-    STATUS_NOT_ENOUGH_RESOURCES = -1,
-    STATUS_CONFIRM_SEND_LEGIONS = -2,
-    STATUS_NO_LEGIONS_SELECTED = -3,
-    STATUS_NO_LEGIONS_AVAILABLE = -4,
-};
+#define RESOURCE_INFO_MAX_TEXT 200
 
 static void button_donate_to_city(int param1, int param2);
 static void button_set_salary(int param1, int param2);
@@ -48,6 +46,8 @@ static generic_button imperial_buttons[] = {
 
 static int focus_button_id;
 static int selected_request_id;
+static int selected_resource;
+static uint8_t tooltip_resource_info[RESOURCE_INFO_MAX_TEXT];
 
 static void draw_request(int index, const scenario_request *request)
 {
@@ -76,13 +76,20 @@ static void draw_request(int index, const scenario_request *request)
         }
     } else {
         // normal goods request
-        int amount_stored = city_resource_count(request->resource);
-        width = text_draw_number(amount_stored, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
-        width += lang_text_draw(52, 43, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
-        if (amount_stored < request->amount) {
-            lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
+        int using_granaries;
+        int amount_stored = city_resource_get_amount_including_granaries(request->resource,
+            request->amount, &using_granaries);
+        int y_offset = 120 + 42 * index;
+        width = text_draw_number(amount_stored, '@', " ", 40, y_offset, FONT_NORMAL_WHITE);
+        if (using_granaries) {
+            width += text_draw(translation_for(TR_ADVISOR_IN_STORAGE), 40 + width, y_offset, FONT_NORMAL_WHITE, 0);
         } else {
-            lang_text_draw(52, 47, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
+            width += lang_text_draw(52, 43, 40 + width, y_offset, FONT_NORMAL_WHITE);
+        }
+        if (amount_stored < request->amount) {
+            lang_text_draw(52, 48, 80 + width, y_offset, FONT_NORMAL_WHITE);
+        } else {
+            lang_text_draw(52, 47, 80 + width, y_offset, FONT_NORMAL_WHITE);
         }
     }
 }
@@ -104,8 +111,7 @@ static int draw_background(void)
     inner_panel_draw(32, 90, 36, 14);
 
     int num_requests = 0;
-    if (city_military_months_until_distant_battle() > 0
-        && !city_military_distant_battle_roman_army_is_traveling_forth()) {
+    if (city_request_has_troop_request()) {
         // can send to distant battle
         button_border_draw(38, 96, 560, 40, 0);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, 50, 106);
@@ -133,38 +139,6 @@ static int draw_background(void)
     return ADVISOR_HEIGHT;
 }
 
-static int get_request_status(int index)
-{
-    int num_requests = 0;
-    if (city_military_months_until_distant_battle() > 0
-        && !city_military_distant_battle_roman_army_is_traveling_forth()) {
-        num_requests = 1;
-        if (index == 0) {
-            if (city_military_total_legions() <= 0) {
-                return STATUS_NO_LEGIONS_AVAILABLE;
-            } else if (city_military_empire_service_legions() <= 0) {
-                return STATUS_NO_LEGIONS_SELECTED;
-            } else {
-                return STATUS_CONFIRM_SEND_LEGIONS;
-            }
-        }
-    }
-    const scenario_request *request = scenario_request_get_visible(index - num_requests);
-    if (request) {
-        if (request->resource == RESOURCE_DENARII) {
-            if (city_finance_treasury() <= request->amount) {
-                return STATUS_NOT_ENOUGH_RESOURCES;
-            }
-        } else {
-            if (city_resource_count(request->resource) < request->amount) {
-                return STATUS_NOT_ENOUGH_RESOURCES;
-            }
-        }
-        return request->id + 1;
-    }
-    return 0;
-}
-
 static void draw_foreground(void)
 {
     inner_panel_draw(64, 324, 32, 6);
@@ -186,20 +160,10 @@ static void draw_foreground(void)
     lang_text_draw_centered(52, 49, 320, 346, 250, FONT_NORMAL_WHITE);
 
     // Request buttons
-    if (get_request_status(0)) {
-        button_border_draw(38, 96, 560, 40, focus_button_id == 4);
-    }
-    if (get_request_status(1)) {
-        button_border_draw(38, 138, 560, 40, focus_button_id == 5);
-    }
-    if (get_request_status(2)) {
-        button_border_draw(38, 180, 560, 40, focus_button_id == 6);
-    }
-    if (get_request_status(3)) {
-        button_border_draw(38, 222, 560, 40, focus_button_id == 7);
-    }
-    if (get_request_status(4)) {
-        button_border_draw(38, 264, 560, 40, focus_button_id == 8);
+    for (int i = 0; i < CITY_REQUEST_MAX_ACTIVE; i++) {
+        if (city_request_get_status(i)) {
+            button_border_draw(38, 96 + i * 42, 560, 40, focus_button_id == i + 4);
+        }
     }
 }
 
@@ -223,11 +187,10 @@ static void button_gift_to_emperor(int param1, int param2)
     window_gift_to_emperor_show();
 }
 
-static void confirm_nothing(int accepted)
-{
-}
+static void confirm_nothing(int accepted, int checked)
+{}
 
-static void confirm_send_troops(int accepted)
+static void confirm_send_troops(int accepted, int checked)
 {
     if (accepted) {
         formation_legions_dispatch_to_distant_battle();
@@ -235,53 +198,98 @@ static void confirm_send_troops(int accepted)
     }
 }
 
-static void confirm_send_goods(int accepted)
+static void confirm_send_goods(int accepted, int checked)
 {
     if (accepted) {
         scenario_request_dispatch(selected_request_id);
-    }
-}
-
-static void button_request(int index, int param2)
-{
-    int status = get_request_status(index);
-    if (status) {
-        city_military_clear_empire_service_legions();
-        switch (status) {
-            case STATUS_NO_LEGIONS_AVAILABLE:
-                window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_AVAILABLE, confirm_nothing, 0);
-                break;
-            case STATUS_NO_LEGIONS_SELECTED:
-                window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_SELECTED, confirm_nothing, 0);
-                break;
-            case STATUS_CONFIRM_SEND_LEGIONS:
-                window_popup_dialog_show(POPUP_DIALOG_SEND_TROOPS, confirm_send_troops, 2);
-                break;
-            case STATUS_NOT_ENOUGH_RESOURCES:
-                window_popup_dialog_show(POPUP_DIALOG_NOT_ENOUGH_GOODS, confirm_nothing, 0);
-                break;
-            default:
-                selected_request_id = status - 1;
-                window_popup_dialog_show(POPUP_DIALOG_SEND_GOODS, confirm_send_goods, 2);
-                break;
+        if (!checked && city_resource_is_stockpiled(selected_resource)) {
+            city_resource_toggle_stockpiled(selected_resource);
         }
     }
 }
 
-static int get_tooltip_text(void)
+void button_request(int index, int param2)
+{
+    int status = city_request_get_status(index);
+    if (!status) {
+        return;
+    }
+    city_military_clear_empire_service_legions();
+    switch (status) {
+        case CITY_REQUEST_STATUS_NO_LEGIONS_AVAILABLE:
+            window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_AVAILABLE, confirm_nothing, 0);
+            break;
+        case CITY_REQUEST_STATUS_NO_LEGIONS_SELECTED:
+            window_popup_dialog_show(POPUP_DIALOG_NO_LEGIONS_SELECTED, confirm_nothing, 0);
+            break;
+        case CITY_REQUEST_STATUS_CONFIRM_SEND_LEGIONS:
+            window_popup_dialog_show(POPUP_DIALOG_SEND_TROOPS, confirm_send_troops, 2);
+            break;
+        case CITY_REQUEST_STATUS_NOT_ENOUGH_RESOURCES:
+            window_popup_dialog_show(POPUP_DIALOG_NOT_ENOUGH_GOODS, confirm_nothing, 0);
+            break;
+        default:
+            selected_resource = city_get_request_resource(index);
+            selected_request_id = (status - CITY_REQUEST_STATUS_MAX) & ~CITY_REQUEST_STATUS_RESOURCES_FROM_GRANARY;
+            if (status & CITY_REQUEST_STATUS_RESOURCES_FROM_GRANARY) {
+                window_popup_dialog_show_confirmation(
+                    translation_for(TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TITLE),
+                    translation_for(TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TEXT),
+                    city_resource_is_stockpiled(selected_resource) ? translation_for(TR_ADVISOR_KEEP_STOCKPILING) : 0,
+                    confirm_send_goods);
+            } else {
+                window_popup_dialog_show_confirmation(
+                    lang_get_string(5, POPUP_DIALOG_SEND_GOODS),
+                    lang_get_string(5, POPUP_DIALOG_SEND_GOODS + 1),
+                    city_resource_is_stockpiled(selected_resource) ? translation_for(TR_ADVISOR_KEEP_STOCKPILING) : 0,
+                    confirm_send_goods);
+            }
+            break;
+    }
+}
+
+static void write_resource_storage_tooltip(advisor_tooltip_result *r, int resource)
+{
+    int amount_warehouse = city_resource_count(resource);
+    int amount_granary = city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
+    uint8_t *text = tooltip_resource_info;
+    text += string_from_int(text, amount_warehouse, 0);
+    *text = ' ';
+    text++;
+    text = string_copy(lang_get_string(52, 43), text, RESOURCE_INFO_MAX_TEXT - (int) (text - tooltip_resource_info));
+    *text = '\n';
+    text++;
+    text += string_from_int(text, amount_granary, 0);
+    *text = ' ';
+    text++;
+    text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, RESOURCE_INFO_MAX_TEXT - (int) (text - tooltip_resource_info));
+    r->precomposed_text = tooltip_resource_info;
+}
+
+static void get_tooltip_text(advisor_tooltip_result *r)
 {
     if (focus_button_id && focus_button_id <= 2) {
-        return 93 + focus_button_id;
+        r->text_id = 93 + focus_button_id;
     } else if (focus_button_id == 3) {
-        return 131;
-    } else {
-        return 0;
+        r->text_id = 131;
+    } else if (focus_button_id >= 4 && focus_button_id <= 8) {
+        int index = focus_button_id - 4;
+        int request_status = city_request_get_status(index);
+        if (request_status == CITY_REQUEST_STATUS_NOT_ENOUGH_RESOURCES || request_status >= CITY_REQUEST_STATUS_MAX) {
+            const scenario_request *request = scenario_request_get_visible(index - city_request_has_troop_request());
+            int using_granaries;
+            city_resource_get_amount_including_granaries(request->resource, request->amount, &using_granaries);
+            if (using_granaries) {
+                write_resource_storage_tooltip(r, request->resource);
+            }
+        }
     }
 }
 
 const advisor_window_type *window_advisor_imperial(void)
 {
     city_resource_calculate_warehouse_stocks();
+    city_resource_calculate_food_stocks_and_supply_wheat();
     static const advisor_window_type window = {
         draw_background,
         draw_foreground,

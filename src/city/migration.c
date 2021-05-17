@@ -126,22 +126,25 @@ void city_migration_determine_no_immigration_cause(void)
 {
     switch (city_data.sentiment.low_mood_cause) {
         case LOW_MOOD_CAUSE_NO_FOOD:
-            city_data.migration.no_immigration_cause = 2;
+            city_data.migration.no_immigration_cause = NO_IMMIGRATION_NO_FOOD;
             break;
         case LOW_MOOD_CAUSE_NO_JOBS:
-            city_data.migration.no_immigration_cause = 1;
+            city_data.migration.no_immigration_cause = NO_IMMIGRATION_NO_JOBS;
             break;
         case LOW_MOOD_CAUSE_HIGH_TAXES:
-            city_data.migration.no_immigration_cause = 3;
+            city_data.migration.no_immigration_cause = NO_IMMIGRATION_HIGH_TAXES;
             break;
         case LOW_MOOD_CAUSE_LOW_WAGES:
-            city_data.migration.no_immigration_cause = 0;
+            city_data.migration.no_immigration_cause = NO_IMMIGRATION_LOW_WAGES;
             break;
         case LOW_MOOD_CAUSE_MANY_TENTS:
-            city_data.migration.no_immigration_cause = 4;
+            city_data.migration.no_immigration_cause = NO_IMMIGRATION_MANY_TENTS;
+            break;
+        case LOW_MOOD_CAUSE_SQUALOR:
+            city_data.migration.no_immigration_cause = NO_IMMIGRATION_SQUALOR;
             break;
         default:
-            city_data.migration.no_immigration_cause = 5;
+            city_data.migration.no_immigration_cause = NO_IMMIGRATION_LOW_MOOD;
             break;
     }
 }

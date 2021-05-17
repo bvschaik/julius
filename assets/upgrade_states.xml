@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+
+<assetlist author="Tomasz" name="Building_Upgrades">
+    <image id="Upgraded_School" width="118" height="110">
+		<layer group="41" x="0" y="18" />
+		<layer src="School_Upgrade_State" x="0" y="0" />
+    </image>
+
+<!-- Note: Library Cropped Reference Asset: DO NOT USE! -->
+    <image id="Library Ref 01" width="118" height="72">
+		<layer group="42" x="0" y="-47" />
+    </image>
+
+<!-- Note: Library Downgrade Asset: USE THIS ONE! -->
+    <image id="Downgraded_Library" width="118" height="101">
+		<layer group="this" image="Library Ref 01" x="0" y="29" />
+		<layer src="Library_Downgrade_State" x="0" y="0" />
+    </image>
+
+</assetlist>

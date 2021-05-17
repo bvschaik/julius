@@ -57,7 +57,7 @@ static void load_default_settings(void)
     data.game_speed = 90;
     data.scroll_speed = 70;
 
-    data.difficulty = DIFFICULTY_HARD;
+    data.difficulty = DIFFICULTY_NORMAL;
     data.tooltips = TOOLTIPS_FULL;
     data.warnings = 1;
     data.gods_enabled = 1;
@@ -227,16 +227,10 @@ void setting_toggle_sound_enabled(set_sound_type type)
     sound->enabled = sound->enabled ? 0 : 1;
 }
 
-void setting_increase_sound_volume(set_sound_type type)
+void setting_set_sound_volume(set_sound_type type, int volume)
 {
     set_sound *sound = get_sound(type);
-    sound->volume = calc_bound(sound->volume + 1, 0, 100);
-}
-
-void setting_decrease_sound_volume(set_sound_type type)
-{
-    set_sound *sound = get_sound(type);
-    sound->volume = calc_bound(sound->volume - 1, 0, 100);
+    sound->volume = calc_bound(volume, 0, 100);
 }
 
 void setting_reset_sound(set_sound_type type, int enabled, int volume)

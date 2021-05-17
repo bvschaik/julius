@@ -11,6 +11,7 @@
 #include "input/cursor.h"
 #include "platform/android/android.h"
 #include "platform/cursor.h"
+#include "platform/haiku/haiku.h"
 #include "platform/icon.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
@@ -36,12 +37,12 @@ static struct {
     int x;
     int y;
     int centered;
-} window_pos = {0, 0, 1};
+} window_pos = { 0, 0, 1 };
 
 static struct {
     const int WIDTH;
     const int HEIGHT;
-} MINIMUM = {640, 480};
+} MINIMUM = { 640, 480 };
 
 static int scale_percentage = 100;
 static color_t *framebuffer_ui;
@@ -106,7 +107,7 @@ int platform_screen_get_scale(void)
     return scale_percentage;
 }
 
-void platform_screen_get_scaled_params(int* width, int* height)
+void platform_screen_get_scaled_params(int *width, int *height)
 {
     int fullscreen = setting_fullscreen();
     if (fullscreen == 1) {
@@ -114,22 +115,23 @@ void platform_screen_get_scaled_params(int* width, int* height)
         SDL_GetDesktopDisplayMode(SDL_GetWindowDisplayIndex(SDL.window), &mode);
         *width = mode.w;
         *height = mode.h;
-    }
-    else {
+    } else {
         setting_window(width, height);
     }
 }
 
+#if !defined(_WIN32) && !defined(__APPLE__)
 static void set_window_icon(void)
 {
     SDL_Surface *surface = SDL_CreateRGBSurfaceFrom(platform_icon_get_pixels(), 16, 16, 32, 16 * 4,
-                                                        0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+        0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
     if (!surface) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for icon. Reason: %s", SDL_GetError());
     }
     SDL_SetWindowIcon(SDL.window, surface);
     SDL_FreeSurface(surface);
 }
+#endif
 
 int platform_screen_create(const char *title, int display_scale_percentage)
 {
@@ -163,7 +165,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     if (fullscreen) {
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
-    
+
     SDL.window = SDL_CreateWindow(title,
         SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         width, height, flags);
@@ -173,7 +175,10 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         return 0;
     }
 
+#if !defined(_WIN32) && !defined (__APPLE__)
+    // Windows and mac don't need setting a window icon. In fact the icon gets blurry if we do
     set_window_icon();
+#endif
 
     if (system_is_fullscreen_only()) {
         SDL_GetWindowSize(SDL.window, &width, &height);
@@ -237,10 +242,11 @@ static int create_textures(int width, int height)
     }
 
     if (SDL.texture_ui) {
-        if(city_texture_error) {
+        if (city_texture_error) {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create city texture, zoom will be disabled: %s", SDL_GetError());
             SDL_SetTextureBlendMode(SDL.texture_ui, SDL_BLENDMODE_NONE);
             config_set(CONFIG_UI_ZOOM, 0);
+            return -1;
         } else {
             SDL_Log("Textures created (%d x %d)", width, height);
         }
@@ -282,8 +288,7 @@ int platform_screen_resize(int pixel_width, int pixel_height, int save)
     if (create_textures(logical_width, logical_height)) {
         screen_set_resolution(logical_width, logical_height);
         return 1;
-    }
-    else {
+    } else {
         return 0;
     }
 }
@@ -399,7 +404,7 @@ static void draw_software_mouse_cursor(void)
         cursor_shape current_cursor_shape = platform_cursor_get_current_shape();
         const cursor *c = input_cursor_data(current_cursor_shape, platform_cursor_get_current_scale());
         if (c) {
-            int size = platform_cursor_get_texture_size(c->width, c->height);
+            int size = platform_cursor_get_texture_size(c);
             size = calc_adjust_with_percentage(size, calc_percentage(100, scale_percentage));
             SDL_Rect dst;
             dst.x = mouse->x - c->hotspot_x;
@@ -466,7 +471,7 @@ void platform_screen_generate_mouse_cursor_texture(int cursor_id, int scale, con
         SDL.cursors[cursor_id] = 0;
     }
     const cursor *c = input_cursor_data(cursor_id, scale);
-    int size = platform_cursor_get_texture_size(c->width, c->height);
+    int size = platform_cursor_get_texture_size(c);
     SDL.cursors[cursor_id] = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC,
         size, size);
@@ -493,28 +498,58 @@ int system_is_fullscreen_only(void)
 #endif
 }
 
-void system_reload_textures(void)
+void system_get_max_resolution(int *width, int *height)
+{
+    SDL_DisplayMode mode;
+    int index = SDL_GetWindowDisplayIndex(SDL.window);
+    SDL_GetCurrentDisplayMode(index, &mode);
+    *width = scale_pixels_to_logical(mode.w);
+    *height = scale_pixels_to_logical(mode.h);
+}
+
+int system_reload_textures(void)
 {
     int width = screen_width();
     int height = screen_height();
-    create_textures(width, height);
+    int result = create_textures(width, height);
     screen_set_resolution(width, height);
+    return result != -1;
 }
 
 int system_save_screen_buffer(void *pixels)
 {
-    return SDL_RenderReadPixels(SDL.renderer, NULL, SDL_PIXELFORMAT_ARGB8888, pixels, screen_width() * sizeof(color_t)) == 0;
+    if (scale_percentage == 100) {
+        return SDL_RenderReadPixels(SDL.renderer, NULL,
+            SDL_PIXELFORMAT_ARGB8888, pixels, screen_width() * sizeof(color_t)) == 0;
+    }
+    int width = screen_width();
+    int height = screen_height();
+    SDL_Texture *target = SDL_CreateTexture(SDL.renderer,
+        SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_TARGET,
+        width, height);
+    if (!target) {
+        return 0;
+    }
+    SDL_SetRenderTarget(SDL.renderer, target);
+    SDL_RenderClear(SDL.renderer);
+    SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture_position.offset, &city_texture_position.renderer);
+    SDL_RenderCopy(SDL.renderer, SDL.texture_ui, NULL, NULL);
+    int result = SDL_RenderReadPixels(SDL.renderer, NULL,
+        SDL_PIXELFORMAT_ARGB8888, pixels, width * sizeof(color_t)) == 0;
+    SDL_SetRenderTarget(SDL.renderer, NULL);
+    SDL_DestroyTexture(target);
+    return result;
 }
 
 color_t *system_create_ui_framebuffer(int width, int height)
 {
 #ifdef __vita__
     int pitch;
-    SDL_LockTexture(SDL.texture_ui, NULL, (void **)&framebuffer_ui, &pitch);
+    SDL_LockTexture(SDL.texture_ui, NULL, (void **) &framebuffer_ui, &pitch);
     SDL_UnlockTexture(SDL.texture_ui);
 #else
     free(framebuffer_ui);
-    framebuffer_ui = (color_t *)malloc((size_t)width * height * sizeof(color_t));
+    framebuffer_ui = (color_t *) malloc((size_t) width * height * sizeof(color_t));
 #endif
     return framebuffer_ui;
 }
@@ -526,11 +561,11 @@ color_t *system_create_city_framebuffer(int width, int height)
         return 0;
     }
     int pitch;
-    SDL_LockTexture(SDL.texture_city, NULL, (void **)&framebuffer_city, &pitch);
+    SDL_LockTexture(SDL.texture_city, NULL, (void **) &framebuffer_city, &pitch);
     SDL_UnlockTexture(SDL.texture_city);
 #else
     free(framebuffer_city);
-    framebuffer_city = (color_t *)malloc((size_t)width * height * sizeof(color_t) * 4);
+    framebuffer_city = (color_t *) malloc((size_t) width * height * sizeof(color_t) * 4);
 #endif
     return framebuffer_city;
 }

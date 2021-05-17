@@ -3,11 +3,21 @@
 
 #include "building/type.h"
 
+int building_construction_cycle_forward(void);
+
+int building_construction_cycle_back(void);
+
+int building_construction_type_can_cycle(building_type type);
+
+int building_construction_is_connecting(void);
+
 void building_construction_set_cost(int cost);
 
 void building_construction_set_type(building_type type);
 
 void building_construction_clear_type(void);
+
+int building_construction_can_rotate(void);
 
 building_type building_construction_type(void);
 

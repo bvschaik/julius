@@ -1,21 +1,29 @@
 #ifndef CITY_RESOURCE_H
 #define CITY_RESOURCE_H
 
-#define FOOD_PER_SOLDIER_MONTHLY 4
-
 #include "city/constants.h"
 #include "game/resource.h"
+
+#define FOOD_PER_SOLDIER_MONTHLY 4
+#define FOOD_PER_TRADER_MONTHLY 10
+#define RESOURCE_GRANARY_ONE_LOAD 100
 
 typedef struct {
     int size;
     int items[RESOURCE_MAX];
 } resource_list;
 
+int city_resource_count_food_on_granaries(resource_type food);
 int city_resource_count(resource_type resource);
+int city_resource_get_amount_including_granaries(int resource, int amount, int *checked_granaries);
 
 const resource_list *city_resource_get_available(void);
 
 const resource_list *city_resource_get_available_foods(void);
+
+const resource_list *city_resource_get_potential(void);
+
+const resource_list *city_resource_get_potential_foods(void);
 
 int city_resource_multiple_wine_available(void);
 
@@ -31,7 +39,10 @@ int city_resource_last_used_warehouse(void);
 void city_resource_set_last_used_warehouse(int warehouse_id);
 
 resource_trade_status city_resource_trade_status(resource_type resource);
-void city_resource_cycle_trade_status(resource_type resource);
+void city_resource_cycle_trade_status(resource_type resource, resource_trade_status status);
+
+int city_resource_import_over(resource_type resource);
+void city_resource_change_import_over(resource_type resource, int change);
 
 int city_resource_export_over(resource_type resource);
 void city_resource_change_export_over(resource_type resource, int change);
@@ -45,6 +56,7 @@ void city_resource_toggle_mothballed(resource_type resource);
 int city_resource_has_workshop_with_room(int workshop_type);
 
 void city_resource_add_produced_to_granary(int amount);
+void city_resource_add_to_granary(resource_type food, int amount);
 void city_resource_remove_from_granary(resource_type food, int amount);
 
 void city_resource_add_to_warehouse(resource_type resource, int amount);

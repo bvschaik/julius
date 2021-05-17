@@ -5,6 +5,7 @@
 #include "city/population.h"
 #include "city/resource.h"
 #include "core/calc.h"
+#include "core/config.h"
 #include "core/log.h"
 #include "core/io.h"
 #include "empire/city.h"
@@ -139,12 +140,17 @@ int empire_can_export_resource_to_city(int city_id, int resource)
         // quota reached
         return 0;
     }
-    if (city_resource_count(resource) <= city_resource_export_over(resource)) {
+    int in_stock = city_resource_count(resource);
+    if (resource_is_food(resource) && config_get(CONFIG_GP_CH_ALLOW_EXPORTING_FROM_GRANARIES)) {
+        in_stock += city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
+    }
+
+    if (in_stock <= city_resource_export_over(resource)) {
         // stocks too low
         return 0;
     }
     if (city_id == 0 || city->buys_resource[resource]) {
-        return city_resource_trade_status(resource) == TRADE_STATUS_EXPORT;
+        return (city_resource_trade_status(resource) & TRADE_STATUS_EXPORT) == TRADE_STATUS_EXPORT;
     } else {
         return 0;
     }
@@ -170,7 +176,7 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     if (!city->sells_resource[resource]) {
         return 0;
     }
-    if (city_resource_trade_status(resource) != TRADE_STATUS_IMPORT) {
+    if (!(city_resource_trade_status(resource) & TRADE_STATUS_IMPORT)) {
         return 0;
     }
     if (trade_route_limit_reached(city->route_id, resource)) {
@@ -178,6 +184,9 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     }
 
     int in_stock = city_resource_count(resource);
+    if (resource_is_food(resource)) {
+        in_stock += city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
+    }
     int max_in_stock = 0;
     /* NOTE: don't forget to uncomment function get_max_stock_for_population
     
@@ -219,7 +228,7 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     if (finished_good) {
         max_in_stock = 2 + 2 * building_count_industry_active(finished_good);
     }*/
-    max_in_stock = city_resource_export_over(resource);
+    max_in_stock = city_resource_import_over(resource);
     return (max_in_stock == 0 || in_stock < max_in_stock) ? 1 : 0;
 }
 

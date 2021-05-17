@@ -7,126 +7,204 @@
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
+#include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "translation/translation.h"
 
+#define CANCEL_BUTTON 0
+#define CONFIRM_BUTTON 1
+#define MAX_OPTIONS 3
+#define START_Y_OFFSET 88
+
+static const int Y_OFFSET_PER_OPTION[2] = { 112, 144 };
+static int border_image_ids[2];
+
+static void on_scroll(void);
+
 static void button_select_option(int option, int param2);
 
 static generic_button buttons[] = {
-    {20, 120, 430, 130, button_select_option, button_none, 1, 0},
-    {20, 260, 430, 130, button_select_option, button_none, 2, 0},
-    {120, 397, 240, 20, button_select_option, button_none, 0, 0}
+    {40, 0, 180, 20, button_select_option, button_none, CANCEL_BUTTON, 0},
+    {260, 0, 180, 20, button_select_option, button_none, CONFIRM_BUTTON, 0},
+    {20, 0, 0, 0, button_select_option, button_none, 2, 0},
+    {20, 0, 0, 0, button_select_option, button_none, 3, 0},
+    {20, 0, 0, 0, button_select_option, button_none, 4, 0}
 };
+
+static scrollbar_type scrollbar = { 420, START_Y_OFFSET + 40, 0, on_scroll, 4 };
 
 static struct {
     int title;
-    int prompt;
-    option_menu_item option_1;
-    option_menu_item option_2;
+    int subtitle;
+    option_menu_item *options;
+    int num_options;
     int width_blocks;
     int height_blocks;
-    int show_cancel_button;
     void (*close_func)(int selection);
     int focus_button_id;
-    int base_border_image_id;
+    int original_option;
+    int selected_option;
+    int price;
+    int visible_options;
+    int scroll_position;
+    int height;
+    option_menu_row_size row_size;
 } data;
 
-static int init(int title, int prompt, option_menu_item option_1, option_menu_item option_2,
-        void (*close_func)(int selection), int show_cancel_button)
+static int init(int title, int subtitle, option_menu_item *options, int num_options,
+    void (*close_func)(int selection), int original_option, int price, option_menu_row_size row_size)
 {
     if (window_is(WINDOW_POPUP_DIALOG)) {
         // don't show popup over popup
         return 0;
     }
+    data.num_options = num_options <= MAX_OPTIONS ? num_options : MAX_OPTIONS;
     data.close_func = close_func;
     data.title = title;
-    data.prompt = prompt;
-    data.option_1 = option_1;
-    data.option_2 = option_2;
-    data.show_cancel_button = show_cancel_button;
+    data.subtitle = subtitle;
     data.width_blocks = 30;
-    data.height_blocks = data.show_cancel_button ? 28 : 27;
-    if (!data.option_1.image_id && *data.option_1.asset_author) {
-        data.option_1.image_id = assets_get_image_id(assets_get_group_id((char *) data.option_1.asset_author, (char *) data.option_1.asset_name),
-            (char *) data.option_1.asset_image_id);
+    data.original_option = original_option;
+    data.selected_option = data.original_option;
+    data.price = price;
+    data.options = options;
+    data.height = 0;
+    data.row_size = row_size;
+
+    for (int i = 0; i < MAX_OPTIONS; i++) {
+        buttons[i + 2].y = 40 + START_Y_OFFSET + i * Y_OFFSET_PER_OPTION[data.row_size];
+        buttons[i + 2].height = Y_OFFSET_PER_OPTION[data.row_size] - 16;
     }
-    if (!data.option_2.image_id && *data.option_2.asset_author) {
-        data.option_2.image_id = assets_get_image_id(assets_get_group_id((char *) data.option_2.asset_author, (char *) data.option_2.asset_name),
-            (char *) data.option_2.asset_image_id);
-    }
-    if (!data.base_border_image_id) {
-        data.base_border_image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), 
+
+    if (!border_image_ids[0]) {
+        border_image_ids[0] = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
+            "Policy Selection Borders");
+        border_image_ids[1] = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
             "Monument Mod Selection Borders");
     }
     return 1;
 }
 
+static void calculate_visible_options(void)
+{
+    if (data.height == screen_height()) {
+        return;
+    }
+    data.height = screen_height();
+    data.visible_options = (data.height - 160) / Y_OFFSET_PER_OPTION[data.row_size];
+    if (data.visible_options > data.num_options) {
+        data.visible_options = data.num_options;
+    }
+    data.height_blocks = 10 + data.visible_options * (data.row_size == OPTION_MENU_SMALL_ROW ? 7 : 9);
+    buttons[0].y = buttons[1].y = START_Y_OFFSET + 42 + Y_OFFSET_PER_OPTION[data.row_size] * data.visible_options;
+
+    buttons[2].width = buttons[3].width = buttons[4].width = data.num_options == data.visible_options ? 430 : 400;
+
+    scrollbar.height = Y_OFFSET_PER_OPTION[data.row_size] * data.visible_options;
+    scrollbar_init(&scrollbar, 0, data.num_options - data.visible_options);
+    if (data.selected_option > data.visible_options) {
+        scrollbar.scroll_position = data.selected_option - data.visible_options;
+    }
+}
+
+static void draw_apply_button(int x, int y, int box_width)
+{
+    font_t font = data.selected_option != data.original_option ? FONT_NORMAL_BLACK : FONT_NORMAL_PLAIN;
+    color_t color = data.selected_option != data.original_option ? 0 : COLOR_FONT_LIGHT_GRAY;
+    if (!data.price) {
+        text_draw_centered(translation_for(TR_OPTION_MENU_APPLY), x, y, box_width, font, color);
+    } else {
+        text_draw_with_money(translation_for(TR_OPTION_MENU_APPLY), data.price, " (", ")",
+            x, y, box_width, font, color);
+    }
+}
+
 static void draw_background(void)
 {
-    int text_width = 440;
-    int text_x = 100;
-    
     window_draw_underlying_window();
-    graphics_in_dialog();
-    outer_panel_draw(80, 40, data.width_blocks, data.height_blocks);
 
-    text_draw_centered(translation_for(data.title), 80, 60, 480, FONT_LARGE_BLACK, 0);
-    text_draw_multiline(translation_for(data.prompt), text_x, 100, text_width, FONT_NORMAL_BLACK, 0);
+    calculate_visible_options();
+    graphics_in_dialog_with_size(16 * data.width_blocks, 16 * data.height_blocks);
+    outer_panel_draw(0, 0, data.width_blocks, data.height_blocks);
 
-    if (data.option_1.show) {
-        if (data.option_1.image_id) {
-            image_draw(data.option_1.image_id, text_x, 170);
-            text_x += 160;
-            text_width = 270;
+    text_draw_centered(translation_for(data.title), 0, 20, 480, FONT_LARGE_BLACK, 0);
+    text_draw_multiline(translation_for(data.subtitle), 20, 60, 440, FONT_NORMAL_BLACK, 0);
+    if (data.price) {
+        text_draw_with_money(translation_for(TR_OPTION_MENU_COST), data.price, " ", ".",
+            20, 110, 0, FONT_NORMAL_BLACK, 0);
+    }
+
+    int y_offset = START_Y_OFFSET;
+
+    for (int i = 0; i < data.visible_options; i++) {
+        int text_width = data.num_options == data.visible_options ? 448 : 400;
+        int text_x = 20;
+
+        if (data.options[i + scrollbar.scroll_position].image_id) {
+            image_draw(data.options[i + scrollbar.scroll_position].image_id, text_x, y_offset + 42);
+            int offset = data.row_size == OPTION_MENU_SMALL_ROW ? 128 : 160;
+            text_x += offset;
+            text_width -= offset;
         }
-
-        text_draw_multiline(translation_for(data.option_1.header), text_x, 175, text_width, FONT_NORMAL_BLACK, 0);
-        text_draw_multiline(translation_for(data.option_1.desc), text_x, 195, text_width, FONT_NORMAL_BLACK, 0);
-
-        text_width = 420;
-        text_x = 100;
-    }
-
-    if (data.option_2.show) {
-        if (data.option_2.image_id) {
-            image_draw(data.option_2.image_id, text_x, 310);
-            text_x += 160;
-            text_width = 270;
+        if (data.selected_option == i + scrollbar.scroll_position + 1) {
+            inner_panel_draw(text_x - 6, y_offset + 44,
+                text_width / 16,
+                Y_OFFSET_PER_OPTION[data.row_size] / 16 - 1);
         }
+        text_draw_multiline(translation_for(data.options[i + scrollbar.scroll_position].header),
+            text_x, y_offset + 49, text_width - 4,
+            data.selected_option == i + scrollbar.scroll_position + 1 ? FONT_NORMAL_WHITE : FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(translation_for(data.options[i + scrollbar.scroll_position].desc),
+            text_x, y_offset + 69, text_width - 4,
+            data.selected_option == i + scrollbar.scroll_position + 1 ? FONT_NORMAL_WHITE : FONT_NORMAL_BLACK, 0);
 
-        text_draw_multiline(translation_for(data.option_2.header), text_x, 315, text_width, FONT_NORMAL_BLACK, 0);
-        text_draw_multiline(translation_for(data.option_2.desc), text_x, 335, text_width, FONT_NORMAL_BLACK, 0);
+
+        y_offset += Y_OFFSET_PER_OPTION[data.row_size];
     }
 
-    if (data.show_cancel_button) {
-        lang_text_draw_centered(13, 4, 200, 452, 240, FONT_NORMAL_BLACK);
-    }
+    lang_text_draw_centered(13, 4, 40, buttons[0].y + 4,
+        180, FONT_NORMAL_BLACK);
+    draw_apply_button(260, buttons[1].y + 4, 180);
 
     graphics_reset_dialog();
 }
 
 static void draw_option_image_border(int x, int y, int focused)
 {
-    image_draw(data.base_border_image_id + focused, x, y);
-    image_draw(data.base_border_image_id + 2 + focused, x + 146, y + 5);
-    image_draw(data.base_border_image_id + 4 + focused, x, y + 126);
-    image_draw(data.base_border_image_id + 6 + focused, x, y + 5);
+    if (data.row_size == OPTION_MENU_SMALL_ROW) {
+        image_draw(border_image_ids[0] + focused, x, y);
+        image_draw(border_image_ids[0] + 2 + focused, x + 105, y + 5);
+        image_draw(border_image_ids[0] + 4 + focused, x, y + 90);
+        image_draw(border_image_ids[0] + 6 + focused, x, y + 5);
+    } else {
+        image_draw(border_image_ids[1] + focused, x, y);
+        image_draw(border_image_ids[1] + 2 + focused, x + 146, y + 5);
+        image_draw(border_image_ids[1] + 4 + focused, x, y + 126);
+        image_draw(border_image_ids[1] + 6 + focused, x, y + 5);
+    }
 }
 
 static void draw_foreground(void)
 {
-    graphics_in_dialog();
-    if (data.option_1.image_id && data.option_1.show) {
-        draw_option_image_border(100, 170, data.focus_button_id == 1);
+    graphics_in_dialog_with_size(16 * data.width_blocks, 16 * data.height_blocks);
+    for (int i = 0; i < data.visible_options; i++) {
+        if (data.options[i + scrollbar.scroll_position].image_id) {
+            draw_option_image_border(20, buttons[i + 2].y + 2, data.focus_button_id == i + 3);
+        }
     }
-    if (data.option_2.image_id && data.option_2.show) {
-        draw_option_image_border(100, 310, data.focus_button_id == 2);
+
+    button_border_draw(40, buttons[0].y, 180, 20, data.focus_button_id == 1);
+
+    button_border_draw(260, buttons[1].y, 180, 20,
+        data.focus_button_id == 2 && data.selected_option != data.original_option);
+
+    if (data.num_options > data.visible_options) {
+        inner_panel_draw(scrollbar.x + 4, scrollbar.y + 32, 2, scrollbar.height / 16 - 4);
+        scrollbar_draw(&scrollbar);
     }
-    if (data.show_cancel_button) {
-        button_border_draw(200, 447, 240, 20, data.focus_button_id == 3);
-    }
+
     graphics_reset_dialog();
 }
 
@@ -136,30 +214,44 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.close_func(0);
         window_go_back();
     }
-
-    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 80, 40, buttons, data.show_cancel_button ? 3 : 2, &data.focus_button_id)) {
+    const mouse *m_dialog = mouse_in_dialog_with_size(m, data.width_blocks * 16, data.height_blocks * 16);
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
         return;
     }
+    if (generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, data.visible_options + 2, &data.focus_button_id)) {
+        return;
+    }
+}
 
+static void on_scroll(void)
+{
+    window_invalidate();
 }
 
 static void button_select_option(int option, int param2)
 {
-    if ((data.option_1.show && option == 1) || (data.option_2.show && option == 2)) {
-        data.close_func(option);
-        window_go_back();
+    switch (option) {
+        case CANCEL_BUTTON:
+            data.close_func(0);
+            window_go_back();
+            break;
+        case CONFIRM_BUTTON:
+            if (data.selected_option != data.original_option) {
+                data.close_func(data.selected_option);
+                window_go_back();
+            }
+            break;
+        default:
+            data.selected_option = option + scrollbar.scroll_position - CONFIRM_BUTTON;
+            window_request_refresh();
+            break;
     }
-    else if (!option) {
-        data.close_func(option);
-        window_go_back();
-    }
-    
 }
 
-void window_option_popup_show(int title, int prompt, option_menu_item *options,
-    void (*close_func)(int selection), int show_cancel_button)
+void window_option_popup_show(int title, int subtitle, option_menu_item *options, int num_options,
+    void (*close_func)(int selection), int current_option, int price, option_menu_row_size row_size)
 {
-    if (init(title, prompt, options[0], options[1], close_func, show_cancel_button)) {
+    if (init(title, subtitle, options, num_options, close_func, current_option, price, row_size)) {
         window_type window = {
             WINDOW_POPUP_DIALOG,
             draw_background,
@@ -169,4 +261,3 @@ void window_option_popup_show(int title, int prompt, option_menu_item *options,
         window_show(&window);
     }
 }
-

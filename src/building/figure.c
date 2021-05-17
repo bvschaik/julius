@@ -1,15 +1,22 @@
 #include "building/figure.h"
 
+#include "assets/assets.h"
 #include "building/barracks.h"
+#include "building/caravanserai.h"
 #include "building/granary.h"
 #include "building/industry.h"
+#include "building/lighthouse.h"
 #include "building/market.h"
+#include "building/mess_hall.h"
 #include "building/model.h"
 #include "building/monument.h"
+#include "building/tavern.h"
+#include "building/temple.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/data_private.h"
 #include "city/entertainment.h"
+#include "city/games.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "core/calc.h"
@@ -45,13 +52,13 @@ static void generate_labor_seeker(building *b, int x, int y)
         return;
     }
     if (config_get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
-	// If it can access Rome
+        // If it can access Rome
         if (b->distance_from_entry) {
             b->houses_covered = 100;
-	} else {
+        } else {
             b->houses_covered = 0;
-	}
-	return;
+        }
+        return;
     }
     if (b->figure_id2) {
         figure *f = figure_get(b->figure_id2);
@@ -70,13 +77,12 @@ static void generate_labor_seeker(building *b, int x, int y)
 static void spawn_labor_seeker(building *b, int x, int y, int min_houses)
 {
     if (config_get(CONFIG_GP_CH_GLOBAL_LABOUR)) {
-	// If it can access Rome
+        // If it can access Rome
         if (b->distance_from_entry) {
             b->houses_covered = 2 * min_houses;
-	    }
-	    else {
-                b->houses_covered = 0;
-	    }
+        } else {
+            b->houses_covered = 0;
+        }
     } else if (b->houses_covered <= min_houses) {
         generate_labor_seeker(b, x, y);
     }
@@ -336,6 +342,7 @@ static void spawn_figure_gladiator_school(building *b)
 static void spawn_figure_lion_house(building *b)
 {
     check_labor_problem(b);
+    check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 50);
@@ -365,18 +372,16 @@ static void spawn_figure_lion_house(building *b)
     }
 }
 
-static void spawn_figure_chariot(building* b, map_point road, int use_figure_2)
+static void spawn_figure_chariot(building *b, map_point road, int use_figure_2)
 {
-    figure* f = figure_create(FIGURE_CHARIOTEER, road.x, road.y, DIR_0_TOP);
+    figure *f = figure_create(FIGURE_CHARIOTEER, road.x, road.y, DIR_0_TOP);
     f->action_state = FIGURE_ACTION_90_ENTERTAINER_AT_SCHOOL_CREATED;
     f->building_id = b->id;
     if (!use_figure_2) {
         b->figure_id = f->id;
-    }
-    else {
+    } else {
         b->figure_id2 = f->id;
     }
-    
 }
 
 static void spawn_figure_chariot_maker(building *b)
@@ -418,8 +423,7 @@ static void spawn_figure_amphitheater(building *b)
     }
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        if (b->houses_covered <= 50 ||
-            (b->data.entertainment.days1 <= 0 && b->data.entertainment.days2 <= 0)) {
+        if (b->houses_covered <= 50) {
             generate_labor_seeker(b, road.x, road.y);
         }
         int pct_workers = worker_percentage(b);
@@ -454,6 +458,22 @@ static void spawn_figure_amphitheater(building *b)
     }
 }
 
+static void set_theater_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    if (b->desirability <= 45) {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Theatre ON"), TERRAIN_BUILDING);
+        b->upgrade_level = 0;
+    } else {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Theatre Upgrade ON"), TERRAIN_BUILDING);
+        b->upgrade_level = 1;
+    }
+}
+
 static void spawn_figure_theater(building *b)
 {
     check_labor_problem(b);
@@ -462,7 +482,7 @@ static void spawn_figure_theater(building *b)
     }
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        if (b->houses_covered <= 50 || b->data.entertainment.days1 <= 0) {
+        if (b->houses_covered <= 50) {
             generate_labor_seeker(b, road.x, road.y);
         }
         int spawn_delay = default_spawn_delay(b);
@@ -471,6 +491,7 @@ static void spawn_figure_theater(building *b)
         }
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
+            set_theater_graphic(b);
             b->figure_spawn_delay = 0;
             figure *f = figure_create(FIGURE_ACTOR, road.x, road.y, DIR_0_TOP);
             f->action_state = FIGURE_ACTION_94_ENTERTAINER_ROAMING;
@@ -499,7 +520,7 @@ static void spawn_figure_hippodrome(building *b)
     }
     map_point road;
     if (map_has_road_access_hippodrome_rotation(b->x, b->y, &road, b->subtype.orientation)) {
-        if (b->houses_covered <= 50 || b->data.entertainment.days1 <= 0) {
+        if (b->houses_covered <= 50) {
             generate_labor_seeker(b, road.x, road.y);
         }
         int pct_workers = worker_percentage(b);
@@ -542,7 +563,7 @@ static void spawn_figure_hippodrome(building *b)
 
                 if (b->data.entertainment.days1 > 0) {
                     if (city_entertainment_show_message_hippodrome()) {
-                        city_message_post(1, MESSAGE_WORKING_HIPPODROME, 0, 0);
+                        city_message_post(1, MESSAGE_HIPPODROME_WORKING_NEW, 0, 0);
                     }
                 }
             }
@@ -558,8 +579,7 @@ static void spawn_figure_colosseum(building *b)
     }
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
-        if (b->houses_covered <= 50 ||
-            (b->data.entertainment.days1 <= 0 && b->data.entertainment.days2 <= 0)) {
+        if (b->houses_covered <= 50) {
             generate_labor_seeker(b, road.x, road.y);
         }
         int pct_workers = worker_percentage(b);
@@ -590,9 +610,16 @@ static void spawn_figure_colosseum(building *b)
             f->building_id = b->id;
             b->figure_id = f->id;
             figure_movement_init_roaming(f);
-            if (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0) {
+            if (b->type == BUILDING_COLOSSEUM && city_games_executions_active()) {
+                f = figure_create(FIGURE_LION_TAMER, road.x, road.y, DIR_0_TOP);
+                f->action_state = FIGURE_ACTION_230_LION_TAMERS_HUNTING_ENEMIES;
+                f = figure_create(FIGURE_LION_TAMER, road.x, road.y, DIR_0_TOP);
+                f->action_state = FIGURE_ACTION_230_LION_TAMERS_HUNTING_ENEMIES;
+            }
+            if (b->type == BUILDING_COLOSSEUM &&
+                (b->data.entertainment.days1 > 0 || b->data.entertainment.days2 > 0)) {
                 if (city_entertainment_show_message_colosseum()) {
-                    city_message_post(1, MESSAGE_WORKING_COLOSSEUM, 0, 0);
+                    city_message_post(1, MESSAGE_COLOSSEUM_WORKING_NEW, 0, 0);
                 }
             }
         }
@@ -607,80 +634,122 @@ static void set_market_graphic(building *b)
     if (b->desirability <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
+        b->upgrade_level = 0;
     } else {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
+        b->upgrade_level = 1;
     }
 }
 
-int figure_is_market_buyer(int type) {
-    return type == FIGURE_MARKET_BUYER || type == FIGURE_MESS_HALL_BUYER || type == FIGURE_PRIEST_BUYER;
+static void send_supplier_to_destination(figure *f, int dst_building_id)
+{
+    f->destination_building_id = dst_building_id;
+    building *b_dst = building_get(dst_building_id);
+    map_point road;
+    if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) ||
+        map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
+        f->action_state = FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE;
+        f->destination_x = road.x;
+        f->destination_y = road.y;
+    } else {
+        f->action_state = FIGURE_ACTION_146_SUPPLIER_RETURNING;
+        f->destination_x = f->x;
+        f->destination_y = f->y;
+    }
 }
 
-static void spawn_market_buyer(building* b, map_point road, int figure_id_to_use) {
-    // for markets and temples
-    if (figure_id_to_use == 2 && b->figure_id2) {
-        figure* f = figure_get(b->figure_id2);
-        if (f->state != FIGURE_STATE_ALIVE || (!figure_is_market_buyer(f->type) && f->type != FIGURE_LABOR_SEEKER)) {
+static void spawn_temple_supplier(building *b, int x, int y)
+{
+    if (b->figure_id2) {
+        figure *f = figure_get(b->figure_id2);
+        if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_PRIEST_SUPPLIER && f->type != FIGURE_LABOR_SEEKER)) {
             b->figure_id2 = 0;
         }
-    } 
-    // for mess hall
-    else if (figure_id_to_use == 1 && b->figure_id) {
-        if (b->figure_id) {
-            figure* f = figure_get(b->figure_id);
-            if (f->state != FIGURE_STATE_ALIVE || !figure_is_market_buyer(f->type)) {
-                b->figure_id = 0;
-            }
-        }
+        return;
     }
-    // for mess hall 2nd QM
-    else if (figure_id_to_use == 4 && b->figure_id4) {
-        figure* f = figure_get(b->figure_id4);
-        if (f->state != FIGURE_STATE_ALIVE || !figure_is_market_buyer(f->type)) {
-            b->figure_id4 = 0;
-        }
+    building_distribution_update_demands(b);
+    int dst_building_id = building_temple_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
     }
-    else {
-        map_has_road_access(b->x, b->y, b->size, &road);
-        int dst_building_id = building_market_get_storage_destination(b);
-        if (dst_building_id > 0) {
-            int type = FIGURE_MARKET_BUYER;
-            if (b->type == BUILDING_MESS_HALL) {
-                type = FIGURE_MESS_HALL_BUYER;
-            }
-            if (b->type == BUILDING_SMALL_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_SMALL_TEMPLE_VENUS || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
-                type = FIGURE_PRIEST_BUYER;
-            }
-            figure* f = figure_create(type, road.x, road.y, DIR_0_TOP);
-            f->action_state = FIGURE_ACTION_145_MARKET_BUYER_GOING_TO_STORAGE;
-            f->building_id = b->id;
+    figure *f = figure_create(FIGURE_PRIEST_SUPPLIER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    b->figure_id2 = f->id;
+    f->collecting_item_id = b->data.market.fetch_inventory_id;
+    send_supplier_to_destination(f, dst_building_id);
+}
 
-            if (figure_id_to_use == 2) {
-                b->figure_id2 = f->id;
-            }
-            else if (figure_id_to_use == 1) {
-                b->figure_id = f->id;
-            }            
-            else if (figure_id_to_use == 4) {
-                b->figure_id4 = f->id;
-            }
-
-            f->destination_building_id = dst_building_id;
-            f->collecting_item_id = b->data.market.fetch_inventory_id;
-            building* b_dst = building_get(dst_building_id);
-            if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) ||
-                map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
-                f->destination_x = road.x;
-                f->destination_y = road.y;
-            }
-            else {
-                f->action_state = FIGURE_ACTION_146_MARKET_BUYER_RETURNING;
-                f->destination_x = f->x;
-                f->destination_y = f->y;
-            }
+static void spawn_tavern_supplier(building *b, int x, int y)
+{
+    if (b->figure_id2) {
+        figure *f = figure_get(b->figure_id2);
+        if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_BARKEEP_SUPPLIER && f->type != FIGURE_LABOR_SEEKER)) {
+            b->figure_id2 = 0;
         }
+        return;
     }
+    int dst_building_id = building_tavern_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_BARKEEP_SUPPLIER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    b->figure_id2 = f->id;
+    f->collecting_item_id = b->data.market.fetch_inventory_id;
+    send_supplier_to_destination(f, dst_building_id);
+}
+
+static void spawn_mess_hall_supplier(building *b, int x, int y, int figure_id_to_use)
+{
+    if (figure_id_to_use == 1 && b->figure_id) {
+        figure *f = figure_get(b->figure_id);
+        if (f->state != FIGURE_STATE_ALIVE || f->type != FIGURE_MESS_HALL_SUPPLIER) {
+            b->figure_id = 0;
+        }
+        return;
+    }
+    if (figure_id_to_use == 4 && b->figure_id4) { // for mess hall 2nd QM
+        figure *f = figure_get(b->figure_id4);
+        if (f->state != FIGURE_STATE_ALIVE || f->type != FIGURE_MESS_HALL_SUPPLIER) {
+            b->figure_id = 0;
+        }
+        return;
+    }
+    int dst_building_id = building_mess_hall_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_MESS_HALL_SUPPLIER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    if (figure_id_to_use == 1) {
+        b->figure_id = f->id;
+    } else if (figure_id_to_use == 4) {
+        b->figure_id4 = f->id;
+    }
+    f->collecting_item_id = b->data.market.fetch_inventory_id;
+    send_supplier_to_destination(f, dst_building_id);
+}
+
+static void spawn_market_supplier(building *b, int x, int y)
+{
+    if (b->figure_id2) {
+        figure *f = figure_get(b->figure_id2);
+        if (f->state != FIGURE_STATE_ALIVE || (f->type != FIGURE_MARKET_SUPPLIER && f->type != FIGURE_LABOR_SEEKER)) {
+            b->figure_id2 = 0;
+        }
+        return;
+    }
+    building_distribution_update_demands(b);
+    int dst_building_id = building_market_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_MARKET_SUPPLIER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    b->figure_id2 = f->id;
+    f->collecting_item_id = b->data.market.fetch_inventory_id;
+    send_supplier_to_destination(f, dst_building_id);
 }
 
 static void spawn_figure_market(building *b)
@@ -714,11 +783,52 @@ static void spawn_figure_market(building *b)
             b->figure_spawn_delay = 0;
             create_roaming_figure(b, road.x, road.y, FIGURE_MARKET_TRADER);
         }
-        // market buyer or labor seeker
-        spawn_market_buyer(b, road, 2);
+        // market supplier or labor seeker
+        spawn_market_supplier(b, road.x, road.y);
     }
 }
 
+static void spawn_caravanserai_supplier(building *b, int x, int y)
+{
+    if (b->figure_id2) {
+        figure *f = figure_get(b->figure_id2);
+        if (f->state != FIGURE_STATE_ALIVE ||
+            (f->type != FIGURE_CARAVANSERAI_SUPPLIER && f->type != FIGURE_LABOR_SEEKER)) {
+            b->figure_id2 = 0;
+        }
+        return;
+    }
+    int dst_building_id = building_caravanserai_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_CARAVANSERAI_SUPPLIER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    b->figure_id2 = f->id;
+    f->collecting_item_id = b->data.market.fetch_inventory_id;
+    send_supplier_to_destination(f, dst_building_id);
+}
+
+static void spawn_lighthouse_supplier(building *b, int x, int y)
+{
+    if (b->figure_id2) {
+        figure *f = figure_get(b->figure_id2);
+        if (f->state != FIGURE_STATE_ALIVE ||
+            (f->type != FIGURE_LIGHTHOUSE_SUPPLIER && f->type != FIGURE_LABOR_SEEKER)) {
+            b->figure_id2 = 0;
+        }
+        return;
+    }
+    int dst_building_id = building_lighthouse_get_storage_destination(b);
+    if (dst_building_id == 0) {
+        return;
+    }
+    figure *f = figure_create(FIGURE_LIGHTHOUSE_SUPPLIER, x, y, DIR_0_TOP);
+    f->building_id = b->id;
+    b->figure_id2 = f->id;
+    f->collecting_item_id = RESOURCE_TIMBER; // Raw Resource
+    send_supplier_to_destination(f, dst_building_id);
+}
 
 static void set_bathhouse_graphic(building *b)
 {
@@ -734,17 +844,21 @@ static void set_bathhouse_graphic(building *b)
         if (b->desirability <= 30) {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
+            b->upgrade_level = 0;
         } else {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
+            b->upgrade_level = 1;
         }
     } else {
         if (b->desirability <= 30) {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
+            b->upgrade_level = 0;
         } else {
             map_building_tiles_add(b->id, b->x, b->y, b->size,
                 image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
+            b->upgrade_level = 1;
         }
     }
 }
@@ -774,6 +888,23 @@ static void spawn_figure_bathhouse(building *b)
     }
 }
 
+static void set_school_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    if (b->desirability <= 40) {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            image_group(GROUP_BUILDING_SCHOOL), TERRAIN_BUILDING);
+        b->upgrade_level = 0;
+    } else {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            assets_get_image_id(assets_get_group_id("Tomasz", "Building_Upgrades"), "Upgraded_School"), TERRAIN_BUILDING);
+        b->upgrade_level = 1;
+    }
+}
+
+
 static void spawn_figure_school(building *b)
 {
     check_labor_problem(b);
@@ -790,6 +921,7 @@ static void spawn_figure_school(building *b)
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
+            set_school_graphic(b);
 
             figure *child1 = figure_create(FIGURE_SCHOOL_CHILD, road.x, road.y, DIR_0_TOP);
             child1->action_state = FIGURE_ACTION_125_ROAMING;
@@ -815,6 +947,22 @@ static void spawn_figure_school(building *b)
     }
 }
 
+static void set_library_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    if (b->desirability <= 50) {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            assets_get_image_id(assets_get_group_id("Tomasz", "Building_Upgrades"), "Downgraded_Library"), TERRAIN_BUILDING);
+        b->upgrade_level = 0;
+    } else {
+        map_building_tiles_add(b->id, b->x, b->y, b->size,
+            image_group(GROUP_BUILDING_LIBRARY), TERRAIN_BUILDING);
+        b->upgrade_level = 1;
+    }
+}
+
 static void spawn_figure_library(building *b)
 {
     check_labor_problem(b);
@@ -823,6 +971,7 @@ static void spawn_figure_library(building *b)
     }
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        set_library_graphic(b);
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
         if (!spawn_delay) {
@@ -920,7 +1069,8 @@ static void spawn_figure_hospital(building *b)
     }
 }
 
-static void spawn_figure_grand_temple_mars(building* b) {
+static void spawn_figure_grand_temple_mars(building *b)
+{
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -929,20 +1079,15 @@ static void spawn_figure_grand_temple_mars(building* b) {
         int spawn_delay;
         if (pct_workers >= 100) {
             spawn_delay = 8;
-        }
-        else if (pct_workers >= 75) {
+        } else if (pct_workers >= 75) {
             spawn_delay = 12;
-        }
-        else if (pct_workers >= 50) {
+        } else if (pct_workers >= 50) {
             spawn_delay = 16;
-        }
-        else if (pct_workers >= 25) {
+        } else if (pct_workers >= 25) {
             spawn_delay = 32;
-        }
-        else if (pct_workers >= 1) {
+        } else if (pct_workers >= 1) {
             spawn_delay = 48;
-        }
-        else {
+        } else {
             return;
         }
 
@@ -955,33 +1100,56 @@ static void spawn_figure_grand_temple_mars(building* b) {
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             map_has_road_access(b->x, b->y, b->size, &road);
-            switch (b->subtype.barracks_priority)
-            {
-            case PRIORITY_FORT:
-                if (!building_barracks_create_soldier(b, road.x, road.y)) {
-                    building_barracks_create_tower_sentry(b, road.x, road.y);
-                }
-                break;
-            default:
-                if (!building_barracks_create_tower_sentry(b, road.x, road.y)) {
-                    building_barracks_create_soldier(b, road.x, road.y);
-                }
+            switch (b->subtype.barracks_priority) {
+                case PRIORITY_FORT:
+                    if (!building_barracks_create_soldier(b, road.x, road.y)) {
+                        building_barracks_create_tower_sentry(b, road.x, road.y);
+                    }
+                    break;
+                default:
+                    if (!building_barracks_create_tower_sentry(b, road.x, road.y)) {
+                        building_barracks_create_soldier(b, road.x, road.y);
+                    }
             }
             if (!has_figure_of_type(b, FIGURE_PRIEST)) {
                 create_roaming_figure(b, road.x, road.y, FIGURE_PRIEST);
             }
-
         }
 
         // Pantheon Module 1 Bonus
         if (!b->figure_id4 && building_monument_pantheon_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
-            figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
+            figure *f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
             int pantheon_id = building_monument_working(BUILDING_PANTHEON);
             b->figure_id4 = f->id;
             f->destination_building_id = pantheon_id;
             f->building_id = b->id;
             f->action_state = FIGURE_ACTION_212_DESTINATION_PRIEST_CREATED;
         }
+    }
+}
+
+static void spawn_figure_tavern(building *b)
+{
+    check_labor_problem(b);
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        if (b->houses_covered <= 50) {
+            generate_labor_seeker(b, road.x, road.y);
+        }
+        int spawn_delay = default_spawn_delay(b) * 2;
+        if (!spawn_delay) {
+            return;
+        }
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            if (!has_figure_of_type(b, FIGURE_BARKEEP) && b->data.market.inventory[INVENTORY_WINE] > 21) {
+                b->data.market.inventory[INVENTORY_WINE] -= 20;
+                b->data.market.inventory[INVENTORY_MEAT] -= calc_bound(40, 40, b->data.market.inventory[INVENTORY_MEAT]);
+                create_roaming_figure(b, road.x, road.y, FIGURE_BARKEEP);
+            }
+        }
+        spawn_tavern_supplier(b, road.x, road.y);
     }
 }
 
@@ -1009,7 +1177,7 @@ static void spawn_figure_temple(building *b)
             return;
         }
         b->figure_spawn_delay++;
-        if (b->figure_spawn_delay > spawn_delay) {            
+        if (b->figure_spawn_delay > spawn_delay) {
             if (!has_figure_of_type(b, FIGURE_PRIEST)) {
                 create_roaming_figure(b, road.x, road.y, FIGURE_PRIEST);
             }
@@ -1019,24 +1187,23 @@ static void spawn_figure_temple(building *b)
                 if (b->loads_stored > 1) {
                     spawn_figure_chariot(b, road, 1);
                     b->loads_stored = 0;
-                }                
+                }
             }
             b->figure_spawn_delay = 0;
         }
 
         // Mars Module 1 Bonus
-
         if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
             int mess_hall_id = city_buildings_get_mess_hall();
-            building* mess_hall = building_get(mess_hall_id);
+            building *mess_hall = building_get(mess_hall_id);
             if (mess_hall_id && mess_hall->type == BUILDING_MESS_HALL) {
-                figure* f = figure_get(b->figure_id2);
+                figure *f = figure_get(b->figure_id2);
                 if (f->state != FIGURE_STATE_ALIVE) {
                     b->figure_id2 = 0;
                 }
-                int food_to_deliver = building_mars_temple_food_to_deliver(b, mess_hall_id);
+                int food_to_deliver = building_temple_mars_food_to_deliver(b, mess_hall_id);
                 if (food_to_deliver >= 0) {
-                    figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
+                    figure *f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
 
                     f->collecting_item_id = food_to_deliver;
                     b->figure_id2 = f->id;
@@ -1049,17 +1216,17 @@ static void spawn_figure_temple(building *b)
 
         // Ceres Module 2 Bonus
         if (building_is_ceres_temple(b->type) && building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD) && !b->figure_id2) {
-            spawn_market_buyer(b, road, 2);
+            spawn_temple_supplier(b, road.x, road.y);
         }
 
         // Venus Module 1 Bonus
-        if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) && !b->figure_id2) {            
-            spawn_market_buyer(b, road, 2);
+        if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) && !b->figure_id2) {
+            spawn_temple_supplier(b, road.x, road.y);
         }
 
         // Pantheon Module 1 Bonus
         if (b->type != BUILDING_PANTHEON && !b->figure_id4 && building_monument_pantheon_module_is_active(PANTHEON_MODULE_1_DESTINATION_PRIESTS)) {
-            figure* f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
+            figure *f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
             int pantheon_id = building_monument_working(BUILDING_PANTHEON);
             b->figure_id4 = f->id;
             f->destination_building_id = pantheon_id;
@@ -1077,9 +1244,11 @@ static void set_senate_graphic(building *b)
     if (b->desirability <= 30) {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
+        b->upgrade_level = 0;
     } else {
         map_building_tiles_add(b->id, b->x, b->y, b->size,
             image_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
+        b->upgrade_level = 1;
     }
 }
 
@@ -1342,19 +1511,17 @@ static void spawn_figure_barracks(building *b)
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
             map_has_road_access(b->x, b->y, b->size, &road);
-            switch (b->subtype.barracks_priority)
-            {
-            case PRIORITY_FORT:
-                if (!building_barracks_create_soldier(b, road.x, road.y)) {
-                    building_barracks_create_tower_sentry(b, road.x, road.y);
-                }
-                break;
-            default:
-                if (!building_barracks_create_tower_sentry(b, road.x, road.y)) {
-                    building_barracks_create_soldier(b, road.x, road.y);
-                }
+            switch (b->subtype.barracks_priority) {
+                case PRIORITY_FORT:
+                    if (!building_barracks_create_soldier(b, road.x, road.y)) {
+                        building_barracks_create_tower_sentry(b, road.x, road.y);
+                    }
+                    break;
+                default:
+                    if (!building_barracks_create_tower_sentry(b, road.x, road.y)) {
+                        building_barracks_create_soldier(b, road.x, road.y);
+                    }
             }
-
         }
     }
 }
@@ -1368,65 +1535,157 @@ static void spawn_figure_military_academy(building *b)
     }
 }
 
-static void spawn_figure_work_camp(building* b)
+static void spawn_figure_work_camp(building *b)
 {
-	check_labor_problem(b);
-	map_point road;
-	if (map_has_road_access(b->x, b->y, b->size, &road)) {
-		spawn_labor_seeker(b, road.x, road.y, 100);
-		if (has_figure_of_type(b, FIGURE_WORK_CAMP_WORKER)) {
-			return;
-		}
-		figure* f = figure_create(FIGURE_WORK_CAMP_WORKER, road.x, road.y, DIR_4_BOTTOM);
-		f->action_state = FIGURE_ACTION_203_WORK_CAMP_WORKER_CREATED;
-		b->figure_id = f->id;
-		f->building_id = b->id;
-	}
-}
-
-static void spawn_figure_engineer_guild(building* b) {
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
-        if (has_figure_of_type(b, FIGURE_WORK_CAMP_ENGINEER)) {
+        if (has_figure_of_type(b, FIGURE_WORK_CAMP_WORKER)) {
+            return;
+        }
+        figure *f = figure_create(FIGURE_WORK_CAMP_WORKER, road.x, road.y, DIR_4_BOTTOM);
+        f->action_state = FIGURE_ACTION_203_WORK_CAMP_WORKER_CREATED;
+        b->figure_id = f->id;
+        f->building_id = b->id;
+    }
+}
+
+static void spawn_figure_architect_guild(building *b)
+{
+    check_labor_problem(b);
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 100);
+        if (has_figure_of_type(b, FIGURE_WORK_CAMP_ARCHITECT)) {
             return;
         }
         if (building_monument_get_monument(road.x, road.y, RESOURCE_NONE, b->road_network_id, b->distance_from_entry, 0)) {
-            figure* f = figure_create(FIGURE_WORK_CAMP_ENGINEER, road.x, road.y, DIR_4_BOTTOM);
-            f->action_state = FIGURE_ACTION_206_WORK_CAMP_ENGINEER_CREATED;
+            figure *f = figure_create(FIGURE_WORK_CAMP_ARCHITECT, road.x, road.y, DIR_4_BOTTOM);
+            f->action_state = FIGURE_ACTION_206_WORK_CAMP_ARCHITECT_CREATED;
             b->figure_id = f->id;
             f->building_id = b->id;
         }
     }
 }
 
-static void spawn_figure_mess_hall(building* b) {
-    int spawn_delay = 7;
+static void spawn_figure_mess_hall(building *b)
+{
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
-        spawn_market_buyer(b, road, 1);
+        int spawn_delay;
+        int pct_workers = worker_percentage(b);
+        if (pct_workers >= 100) {
+            spawn_delay = 7;
+        } else if (pct_workers >= 75) {
+            spawn_delay = 15;
+        } else if (pct_workers >= 50) {
+            spawn_delay = 29;
+        } else if (pct_workers >= 25) {
+            spawn_delay = 44;
+        } else if (pct_workers >= 1) {
+            spawn_delay = 59;
+        } else {
+            return;
+        }
+        spawn_mess_hall_supplier(b, road.x, road.y, 1);
         if (b->figure_id) {
             b->figure_spawn_delay++;
-        }
-        else {
+        } else {
             b->figure_spawn_delay = 0;
         }
-
         if (building_monument_working(BUILDING_GRAND_TEMPLE_MARS) && b->figure_spawn_delay >= spawn_delay) {
-            spawn_market_buyer(b, road, 4);
+            spawn_mess_hall_supplier(b, road.x, road.y, 4);
             b->figure_spawn_delay = 0;
         }
     }
 }
 
-static void spawn_figure_lighthouse(building* b) {
+static void spawn_figure_caravanserai(building *b)
+{
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         spawn_labor_seeker(b, road.x, road.y, 100);
+        int spawn_delay = default_spawn_delay(b);
+        if (!spawn_delay) {
+            return;
+        }
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            spawn_caravanserai_supplier(b, road.x, road.y);
+        }
+    }
+}
+
+static void spawn_figure_lighthouse(building *b)
+{
+    check_labor_problem(b);
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 100);
+        int spawn_delay = default_spawn_delay(b);
+        if (!spawn_delay) {
+            return;
+        }
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            spawn_lighthouse_supplier(b, road.x, road.y);
+        }
+    }
+}
+
+static void spawn_figure_watchtower(building *b)
+{
+    check_labor_problem(b);
+    if (b->figure_id || b->figure_id2) {
+        return;
+    }
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 100);
+        int pct_workers = worker_percentage(b);
+        int spawn_delay;
+
+        if (!b->figure_id4) { // Don't spawn watchmen until they get sentry from the barracks
+            building_barracks_request_tower_sentry();
+            return;
+        }
+
+        if (pct_workers >= 100) {
+            spawn_delay = 10;
+        } else if (pct_workers >= 75) {
+            spawn_delay = 20;
+        } else if (pct_workers >= 50) {
+            spawn_delay = 30;
+        } else if (pct_workers >= 25) {
+            spawn_delay = 40;
+        } else if (pct_workers >= 1) {
+            spawn_delay = 60;
+        } else {
+            return;
+        }
+
+        if (b->figure_id2) {
+            return;
+        }
+
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            figure *f = figure_create(FIGURE_WATCHMAN, road.x, road.y, DIR_0_TOP);
+            f->action_state = FIGURE_ACTION_220_WATCHMAN_PATROL_INITIATE;
+            f->building_id = b->id;
+            b->figure_id = f->id;
+            f = figure_create(FIGURE_WATCHMAN, road.x, road.y, DIR_0_TOP);
+            f->action_state = FIGURE_ACTION_220_WATCHMAN_PATROL_INITIATE;
+            f->building_id = b->id;
+            b->figure_id2 = f->id;
+        }
     }
 }
 
@@ -1443,15 +1702,16 @@ void building_figure_generate(void)
 {
     int patrician_generated = 0;
     building_barracks_decay_tower_sentry_request();
-    int max_id = building_get_highest_id();
-    for (int i = 1; i <= max_id; i++) {
+    for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
+            b->show_on_problem_overlay = 1;
             continue;
         }
         if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)) {
             continue;
         }
+
         b->show_on_problem_overlay = 0;
         // range of building types
         if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE) {
@@ -1460,11 +1720,13 @@ void building_figure_generate(void)
             spawn_figure_industry(b);
         } else if (b->type >= BUILDING_SENATE && b->type <= BUILDING_FORUM_UPGRADED) {
             spawn_figure_senate_forum(b);
-        } else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) {
+        } else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS && b->data.monument.phase <= 0) {
             spawn_figure_temple(b);
         } else {
             // single building type
             switch (b->type) {
+                default:
+                    break;
                 case BUILDING_WAREHOUSE:
                     spawn_figure_warehouse(b);
                     break;
@@ -1499,9 +1761,16 @@ void building_figure_generate(void)
                     spawn_figure_theater(b);
                     break;
                 case BUILDING_HIPPODROME:
-                    spawn_figure_hippodrome(b);
+                    if (b->data.monument.phase == MONUMENT_FINISHED) {
+                        spawn_figure_hippodrome(b);
+                    }
                     break;
                 case BUILDING_COLOSSEUM:
+                    if (b->data.monument.phase == MONUMENT_FINISHED) {
+                        spawn_figure_colosseum(b);
+                    }
+                    break;
+                case BUILDING_ARENA:
                     spawn_figure_colosseum(b);
                     break;
                 case BUILDING_MARKET:
@@ -1561,14 +1830,14 @@ void building_figure_generate(void)
                 case BUILDING_WORKCAMP:
                     spawn_figure_work_camp(b);
                     break;
-                case BUILDING_ENGINEER_GUILD:
-                    spawn_figure_engineer_guild(b);
+                case BUILDING_ARCHITECT_GUILD:
+                    spawn_figure_architect_guild(b);
                     break;
                 case BUILDING_MESS_HALL:
                     spawn_figure_mess_hall(b);
                     break;
                 case BUILDING_GRAND_TEMPLE_MARS:
-                    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+                    if (b->data.monument.phase == MONUMENT_FINISHED) {
                         spawn_figure_grand_temple_mars(b);
                     }
                     break;
@@ -1577,13 +1846,24 @@ void building_figure_generate(void)
                 case BUILDING_GRAND_TEMPLE_MERCURY:
                 case BUILDING_GRAND_TEMPLE_VENUS:
                 case BUILDING_PANTHEON:
-                    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+                    if (b->data.monument.phase == MONUMENT_FINISHED) {
                         spawn_figure_temple(b);
                     }
                     break;
                 case BUILDING_LIGHTHOUSE:
-                    if (b->subtype.monument_phase == MONUMENT_FINISHED) {
+                    if (b->data.monument.phase == MONUMENT_FINISHED) {
                         spawn_figure_lighthouse(b);
+                    }
+                    break;
+                case BUILDING_TAVERN:
+                    spawn_figure_tavern(b);
+                    break;
+                case BUILDING_WATCHTOWER:
+                    spawn_figure_watchtower(b);
+                    break;
+                case BUILDING_CARAVANSERAI:
+                    if (b->data.monument.phase == MONUMENT_FINISHED) {
+                        spawn_figure_caravanserai(b);
                     }
                     break;
             }

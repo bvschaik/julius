@@ -3,26 +3,32 @@
 #include "building/building.h"
 #include "building/count.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "city/data_private.h"
+#include "city/culture.h"
+#include "city/festival.h"
 #include "core/calc.h"
+#include "core/random.h"
 #include "game/difficulty.h"
 #include "game/time.h"
+#include "figuretype/entertainer.h"
 
 #define MAX_HOUSE_LEVELS 20
 
+
 static building_levy_for_type building_levies[] = {
     {BUILDING_FORT, FORT_LEVY_MONTHLY},
-    {BUILDING_SMALL_TEMPLE_CERES, TEMPLE_LEVY_MONTHLY },
-    {BUILDING_SMALL_TEMPLE_NEPTUNE, TEMPLE_LEVY_MONTHLY },
-    {BUILDING_SMALL_TEMPLE_MERCURY, TEMPLE_LEVY_MONTHLY },
-    {BUILDING_SMALL_TEMPLE_MARS, TEMPLE_LEVY_MONTHLY },
-    {BUILDING_SMALL_TEMPLE_VENUS, TEMPLE_LEVY_MONTHLY },
-    {BUILDING_LARGE_TEMPLE_CERES, TEMPLE_LEVY_MONTHLY },
-    {BUILDING_LARGE_TEMPLE_NEPTUNE, TEMPLE_LEVY_MONTHLY },
-    {BUILDING_LARGE_TEMPLE_MERCURY, TEMPLE_LEVY_MONTHLY },
-    {BUILDING_LARGE_TEMPLE_MARS, TEMPLE_LEVY_MONTHLY },
-    {BUILDING_LARGE_TEMPLE_VENUS, TEMPLE_LEVY_MONTHLY },
-    {BUILDING_ORACLE, TEMPLE_LEVY_MONTHLY },
+    {BUILDING_SMALL_TEMPLE_CERES, SMALL_TEMPLE_LEVY_MONTHLY },
+    {BUILDING_SMALL_TEMPLE_NEPTUNE, SMALL_TEMPLE_LEVY_MONTHLY },
+    {BUILDING_SMALL_TEMPLE_MERCURY, SMALL_TEMPLE_LEVY_MONTHLY },
+    {BUILDING_SMALL_TEMPLE_MARS, SMALL_TEMPLE_LEVY_MONTHLY },
+    {BUILDING_SMALL_TEMPLE_VENUS, SMALL_TEMPLE_LEVY_MONTHLY },
+    {BUILDING_LARGE_TEMPLE_CERES, LARGE_TEMPLE_LEVY_MONTHLY },
+    {BUILDING_LARGE_TEMPLE_NEPTUNE, LARGE_TEMPLE_LEVY_MONTHLY },
+    {BUILDING_LARGE_TEMPLE_MERCURY, LARGE_TEMPLE_LEVY_MONTHLY },
+    {BUILDING_LARGE_TEMPLE_MARS, LARGE_TEMPLE_LEVY_MONTHLY }, // 10
+    {BUILDING_LARGE_TEMPLE_VENUS, LARGE_TEMPLE_LEVY_MONTHLY },
+    {BUILDING_ORACLE, SMALL_TEMPLE_LEVY_MONTHLY },
     {BUILDING_TOWER, TOWER_LEVY_MONTHLY },
     {BUILDING_LIGHTHOUSE, LIGHTHOUSE_LEVY_MONTHLY },
     {BUILDING_GRAND_TEMPLE_CERES, GRAND_TEMPLE_LEVY_MONTHLY},
@@ -30,13 +36,46 @@ static building_levy_for_type building_levies[] = {
     {BUILDING_GRAND_TEMPLE_MERCURY, GRAND_TEMPLE_LEVY_MONTHLY},
     {BUILDING_GRAND_TEMPLE_MARS, GRAND_TEMPLE_LEVY_MONTHLY},
     {BUILDING_GRAND_TEMPLE_VENUS, GRAND_TEMPLE_LEVY_MONTHLY},
-    {BUILDING_PANTHEON, PANTHEON_LEVY_MONTHLY}
+    {BUILDING_PANTHEON, PANTHEON_LEVY_MONTHLY}, // 20
+    {BUILDING_COLOSSEUM, COLOSSEUM_LEVY_MONTHLY},
+    {BUILDING_HIPPODROME, HIPPODROME_LEVY_MONTHLY},
+    {BUILDING_SMALL_MAUSOLEUM, SMALL_MAUSOLEUM_LEVY_MONTHLY},
+    {BUILDING_LARGE_MAUSOLEUM, SMALL_TEMPLE_LEVY_MONTHLY},
+    {BUILDING_NYMPHAEUM, LARGE_TEMPLE_LEVY_MONTHLY},
+    {BUILDING_CARAVANSERAI, CARAVANSERAI_LEVY_MONTHLY }
+};
+
+static tourism_for_type tourism_modifiers[] = {
+    {BUILDING_TAVERN, 2, TAVERN_COVERAGE, 0},
+    {BUILDING_THEATER, 1, THEATER_COVERAGE, 0},
+    {BUILDING_AMPHITHEATER, 1, AMPHITHEATER_COVERAGE, 0},
+    {BUILDING_ARENA, 2, ARENA_COVERAGE, 0},
+    {BUILDING_COLOSSEUM, 4, 0, 0},
+    {BUILDING_HIPPODROME, 5, 0, 0},
+    {BUILDING_GRAND_TEMPLE_CERES, 3, 0, 0},
+    {BUILDING_GRAND_TEMPLE_NEPTUNE, 3, 0, 0},
+    {BUILDING_GRAND_TEMPLE_MERCURY, 3, 0, 0},
+    {BUILDING_GRAND_TEMPLE_MARS, 3, 0, 0},
+    {BUILDING_GRAND_TEMPLE_VENUS, 3, 0, 0},
+    {BUILDING_PANTHEON, 3, 0, 0}
 };
 
 int city_finance_treasury(void)
 {
     return city_data.finance.treasury;
 }
+
+void city_finance_treasury_add(int amount)
+{
+    city_data.finance.treasury += amount;
+}
+
+void city_finance_treasury_add_tourism(int amount)
+{
+    city_finance_treasury_add(amount);
+    city_data.finance.tourism_this_year += amount;
+}
+
 
 int city_finance_out_of_money(void)
 {
@@ -79,8 +118,8 @@ void city_finance_process_export(int price)
     city_data.finance.treasury += price;
     city_data.finance.this_year.income.exports += price;
     if (city_data.religion.neptune_double_trade_active) {
-        city_data.finance.treasury += price/2;
-        city_data.finance.this_year.income.exports += price/2;
+        city_data.finance.treasury += price / 2;
+        city_data.finance.this_year.income.exports += price / 2;
     }
 }
 
@@ -168,16 +207,16 @@ void city_finance_estimate_taxes(void)
 {
     city_data.taxes.monthly.collected_plebs = 0;
     city_data.taxes.monthly.collected_patricians = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_tax_coverage) {
-            int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
-            int trm = difficulty_adjust_money(
-                model_get_house(b->subtype.house_level)->tax_multiplier);
-            if (is_patrician) {
-                city_data.taxes.monthly.collected_patricians += b->house_population * trm;
-            } else {
-                city_data.taxes.monthly.collected_plebs += b->house_population * trm;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_tax_coverage) {
+                int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
+                int trm = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
+                if (is_patrician) {
+                    city_data.taxes.monthly.collected_patricians += b->house_population * trm;
+                } else {
+                    city_data.taxes.monthly.collected_plebs += b->house_population * trm;
+                }
             }
         }
     }
@@ -208,35 +247,35 @@ static void collect_monthly_taxes(void)
     for (int i = 0; i < MAX_HOUSE_LEVELS; i++) {
         city_data.population.at_level[i] = 0;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
-            continue;
-        }
-
-        int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
-        int population = b->house_population;
-        int trm = difficulty_adjust_money(
-            model_get_house(b->subtype.house_level)->tax_multiplier);
-        city_data.population.at_level[b->subtype.house_level] += population;
-
-        int tax = population * trm;
-        if (b->house_tax_coverage) {
-            if (is_patrician) {
-                city_data.taxes.taxed_patricians += population;
-                city_data.taxes.monthly.collected_patricians += tax;
-            } else {
-                city_data.taxes.taxed_plebs += population;
-                city_data.taxes.monthly.collected_plebs += tax;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
+                continue;
             }
-            b->tax_income_or_storage += tax;
-        } else {
-            if (is_patrician) {
-                city_data.taxes.untaxed_patricians += population;
-                city_data.taxes.monthly.uncollected_patricians += tax;
+
+            int is_patrician = b->subtype.house_level >= HOUSE_SMALL_VILLA;
+            int population = b->house_population;
+            int trm = difficulty_adjust_money(model_get_house(b->subtype.house_level)->tax_multiplier);
+            city_data.population.at_level[b->subtype.house_level] += population;
+
+            int tax = population * trm;
+            if (b->house_tax_coverage) {
+                if (is_patrician) {
+                    city_data.taxes.taxed_patricians += population;
+                    city_data.taxes.monthly.collected_patricians += tax;
+                } else {
+                    city_data.taxes.taxed_plebs += population;
+                    city_data.taxes.monthly.collected_plebs += tax;
+                }
+                b->tax_income_or_storage += tax;
             } else {
-                city_data.taxes.untaxed_plebs += population;
-                city_data.taxes.monthly.uncollected_plebs += tax;
+                if (is_patrician) {
+                    city_data.taxes.untaxed_patricians += population;
+                    city_data.taxes.monthly.uncollected_patricians += tax;
+                } else {
+                    city_data.taxes.untaxed_plebs += population;
+                    city_data.taxes.monthly.uncollected_plebs += tax;
+                }
             }
         }
     }
@@ -295,27 +334,53 @@ static void pay_monthly_salary(void)
     }
 }
 
-static void pay_monthly_building_levies(void) {
+static void pay_monthly_building_levies(void)
+{
     int levies = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        for (int i = 0; i < BUILDINGS_WITH_LEVIES; ++i) {
-            if (b->type == building_levies[i].type) {
-                b->monthly_levy = building_levies[i].amount;
+    for (int i = 0; i < BUILDINGS_WITH_LEVIES; i++) {
+        building_type type = building_levies[i].type;
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            b->monthly_levy = building_levies[i].amount;
+            int levy = building_get_levy(b);
+            if (b->state == BUILDING_STATE_IN_USE && levy && !b->prev_part_building_id) {
+                levies += levy;
             }
         }
-        if (b->state == BUILDING_STATE_IN_USE && building_get_levy(b)) {
-            levies += building_get_levy(b);
+    }
+
+    city_data.finance.treasury -= levies;
+    city_data.finance.this_year.expenses.levies += levies;
+}
+
+static void activate_monthly_tourism(void)
+{
+    for (int i = 0; i < BUILDINGS_WITH_TOURISM; i++) {
+        building_type type = tourism_modifiers[i].type;
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE || !b->num_workers) {
+                continue;
+            }
+            b->is_tourism_venue = 1;
+            if (game_time_month() == 0) {
+                b->tourism_income_this_year = 0;
+            }
+            tourism_modifiers[i].count++;
+            // disable redundant venues for tourism
+            if ((tourism_modifiers[i].count * tourism_modifiers[i].coverage) > city_data.population.population) {
+                b->tourism_disabled = 1;
+                b->tourism_income = 0;
+            } else {
+                b->tourism_disabled = 0;
+                b->tourism_income = tourism_modifiers[i].income_modifier;
+            }
         }
     }
-    
-    city_data.finance.treasury -= levies;   
-    city_data.finance.this_year.expenses.levies += levies;
 }
 
 void city_finance_handle_month_change(void)
 {
     collect_monthly_taxes();
+    activate_monthly_tourism();
     pay_monthly_wages();
     pay_monthly_interest();
     pay_monthly_salary();
@@ -332,10 +397,11 @@ static void reset_taxes(void)
     city_data.taxes.yearly.uncollected_patricians = 0;
 
     // reset tax income in building list
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
-            b->tax_income_or_storage = 0;
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->house_size) {
+                b->tax_income_or_storage = 0;
+            }
         }
     }
 }
@@ -382,6 +448,10 @@ static void copy_amounts_to_last_year(void)
     // donations
     last_year->income.donated = this_year->income.donated;
     this_year->income.donated = 0;
+
+    //tourism 
+    city_data.finance.tourism_last_year = city_data.finance.tourism_this_year;
+    city_data.finance.tourism_this_year = 0;
 }
 
 static void pay_tribute(void)
@@ -453,6 +523,17 @@ void city_finance_handle_year_change(void)
     pay_tribute();
 }
 
+int city_finance_tourism_income_last_month(void)
+{
+    return city_data.finance.tourism_last_month;
+}
+
+int city_finance_tourism_lowest_factor(void)
+{
+    return city_data.finance.tourism_lowest_factor;
+}
+
+
 const finance_overview *city_finance_overview_last_year(void)
 {
     return &city_data.finance.last_year;
@@ -461,4 +542,19 @@ const finance_overview *city_finance_overview_last_year(void)
 const finance_overview *city_finance_overview_this_year(void)
 {
     return &city_data.finance.this_year;
+}
+
+int city_finance_spawn_tourist(void)
+{
+    if (!city_festival_games_active()) {
+        return 0;
+    }
+    int tick_increase = random_byte() % city_data.ratings.culture;
+    city_data.finance.tourist_spawn_delay += tick_increase;
+    if (city_data.finance.tourist_spawn_delay > 500) {
+        figure_spawn_tourist();
+        city_data.finance.tourist_spawn_delay = 0;
+    }
+
+    return 1;
 }

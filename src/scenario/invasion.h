@@ -12,6 +12,8 @@ void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_
 
 int scenario_invasion_count(void);
 
+int scenario_invasion_get_years_remaining(void);
+
 int scenario_invasion_start_from_mars(void);
 
 int scenario_invasion_start_from_caesar(int size);

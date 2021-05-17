@@ -1,11 +1,17 @@
 #include "industry.h"
 
+#include "building/list.h"
 #include "building/monument.h"
 #include "city/data_private.h"
+#include "city/message.h"
 #include "city/resource.h"
+#include "city/view.h"
+#include "city/warning.h"
 #include "core/calc.h"
 #include "core/image.h"
+#include "core/random.h"
 #include "game/resource.h"
+#include "figure/figure.h"
 #include "map/building_tiles.h"
 #include "map/road_access.h"
 #include "scenario/property.h"
@@ -17,6 +23,47 @@
 
 #define MERCURY_BLESSING_LOADS 3
 
+enum {
+    MIN_FARM = 0,
+    MIN_FOOD_PRODUCER = 0,
+    MAX_FARM = 5,
+    MAX_FOOD_PRODUCER = 6,
+    MIN_RAW_MATERIALS = 7,
+    MAX_RAW_MATERIALS = 10,
+    MIN_WORKSHOP = 11,
+    MAX_WORKSHOP = 15,
+    VENUS_TEMPLE = 16,
+    MAX_INDUSTRY_TYPES = 17
+};
+
+static const building_type INDUSTRY_TYPES[] = {
+    BUILDING_WHEAT_FARM,
+    BUILDING_VEGETABLE_FARM,
+    BUILDING_FRUIT_FARM,
+    BUILDING_OLIVE_FARM,
+    BUILDING_VINES_FARM,
+    BUILDING_PIG_FARM,
+    BUILDING_WHARF,
+    BUILDING_MARBLE_QUARRY,
+    BUILDING_IRON_MINE,
+    BUILDING_TIMBER_YARD,
+    BUILDING_CLAY_PIT,
+    BUILDING_WINE_WORKSHOP,
+    BUILDING_OIL_WORKSHOP,
+    BUILDING_WEAPONS_WORKSHOP,
+    BUILDING_FURNITURE_WORKSHOP,
+    BUILDING_POTTERY_WORKSHOP,
+    BUILDING_GRAND_TEMPLE_VENUS,
+};
+
+static const building_type OUTPUT_TYPE_TO_INDUSTRY[] = {
+    BUILDING_NONE,
+    BUILDING_OIL_WORKSHOP,
+    BUILDING_WINE_WORKSHOP,
+    BUILDING_WEAPONS_WORKSHOP,
+    BUILDING_FURNITURE_WORKSHOP,
+    BUILDING_POTTERY_WORKSHOP
+};
 
 int building_is_farm(building_type type)
 {
@@ -45,7 +92,8 @@ static void update_farm_image(const building *b)
         b->data.industry.progress);
 }
 
-static void building_other_update_production(building* b) {
+static void building_other_update_production(building *b)
+{
     // For monuments or other non-industry subtypes that generate goods
     if (building_monument_is_monument(b)) {
         b->data.monument.progress += (10 + (city_data.culture.population_with_venus_access / 200));
@@ -58,31 +106,106 @@ static void building_other_update_production(building* b) {
     }
 }
 
+static int random_industry_strikes(int num_strikes)
+{
+    int strikes = 0;
+    int total_industries = building_list_large_size();
+    if (num_strikes >= total_industries) {
+        for (int i = 0; i < total_industries; i++) {
+            building *b = building_get(building_list_large_item(i));
+            if (b->strike_duration_days == 0) {
+                b->strike_duration_days = 48;
+                strikes++;
+            }
+        }
+        return strikes;
+    }
+
+    for (int i = 0; i < num_strikes; i++) {
+        int index = random_from_stdlib() % total_industries;
+
+        // Prevent the same building from being selected twice
+        int current = index + 1;
+        building *b = building_get(building_list_large_item(index));
+        while (b->strike_duration_days > 0) {
+            if (current == total_industries) {
+                current = 0;
+            }
+            b = building_get(building_list_large_item(current));
+            current++;
+            if (current == index) {
+                return strikes;
+            }
+        }
+        b->strike_duration_days = 48;
+        strikes++;
+    }
+    return strikes;
+}
+
+static void force_strike(int num_strikes)
+{
+    building_list_large_clear();
+    for (int i = MIN_RAW_MATERIALS; i <= MAX_WORKSHOP; i++) {
+        building_type type = INDUSTRY_TYPES[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->strike_duration_days == 0) {
+                building_list_large_add(b->id);
+            }
+        }
+    }
+    if (random_industry_strikes(num_strikes)) {
+        city_warning_show(WARNING_SECESSION);
+    }
+}
+
 void building_industry_update_production(void)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-       
-        if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id) {
-            continue;
-        }
-        b->data.industry.has_raw_materials = 0;
-        if (b->houses_covered <= 0 || b->num_workers <= 0) {
-            continue;
-        }
+    int striking_buildings = 0;
 
-        if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) && b->type == BUILDING_GRAND_TEMPLE_VENUS) {
-            building_other_update_production(b);
-            continue;
-        }
+    for (int i = 0; i < MAX_INDUSTRY_TYPES; i++) {
+        building_type type = INDUSTRY_TYPES[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
+                continue;
+            }
 
-        if (b->subtype.workshop_type && !b->loads_stored) {
-            continue;
-        }
+            if (b->strike_duration_days > 0) {
+                striking_buildings++;
+                b->strike_duration_days--;
+                if (city_data.sentiment.value > 50) {
+                    b->strike_duration_days -= 3;
+                }
+                if (city_data.sentiment.value > 65) {
+                    b->strike_duration_days = 0;
+                }
+                if (b->strike_duration_days == 0) {
+                    city_data.building.num_striking_industries--;
+                    striking_buildings--;
+                    // remove striker walker
+                    figure_delete(figure_get(b->figure_id4));
+                }
+            }
 
-        if (b->data.industry.curse_days_left) {
-            b->data.industry.curse_days_left--;
-        } else {
+            b->data.industry.has_raw_materials = 0;
+            if (b->houses_covered <= 0 || b->num_workers <= 0 || b->strike_duration_days > 0) {
+                continue;
+            }
+
+            if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE) &&
+                b->type == BUILDING_GRAND_TEMPLE_VENUS) {
+                building_other_update_production(b);
+                continue;
+            }
+
+            if (b->subtype.workshop_type && !b->loads_stored) {
+                continue;
+            }
+
+            if (b->data.industry.curse_days_left) {
+                b->data.industry.curse_days_left--;
+                continue;
+            }
             if (b->data.industry.blessing_days_left) {
                 b->data.industry.blessing_days_left--;
             }
@@ -104,6 +227,9 @@ void building_industry_update_production(void)
             }
         }
     }
+
+    int num_strikes = city_data.building.num_striking_industries - striking_buildings;
+    force_strike(num_strikes);
 }
 
 void building_industry_update_wheat_production(void)
@@ -111,24 +237,19 @@ void building_industry_update_wheat_production(void)
     if (scenario_property_climate() == CLIMATE_NORTHERN) {
         return;
     }
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !b->output_resource_id) {
+    for (building *b = building_first_of_type(BUILDING_WHEAT_FARM); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE || b->houses_covered <= 0 ||
+            b->num_workers <= 0 || b->data.industry.curse_days_left) {
             continue;
         }
-        if (b->houses_covered <= 0 || b->num_workers <= 0) {
-            continue;
-        }
-        if (b->type == BUILDING_WHEAT_FARM && !b->data.industry.curse_days_left) {
+        b->data.industry.progress += b->num_workers;
+        if (b->data.industry.blessing_days_left) {
             b->data.industry.progress += b->num_workers;
-            if (b->data.industry.blessing_days_left) {
-                b->data.industry.progress += b->num_workers;
-            }
-            if (b->data.industry.progress > MAX_PROGRESS_RAW) {
-                b->data.industry.progress = MAX_PROGRESS_RAW;
-            }
-            update_farm_image(b);
         }
+        if (b->data.industry.progress > MAX_PROGRESS_RAW) {
+            b->data.industry.progress = MAX_PROGRESS_RAW;
+        }
+        update_farm_image(b);
     }
 }
 
@@ -155,39 +276,45 @@ void building_industry_start_new_production(building *b)
 
 void building_bless_farms(void)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->output_resource_id && building_is_farm(b->type)) {
-            b->data.industry.progress = MAX_PROGRESS_RAW;
-            b->data.industry.curse_days_left = 0;
-            b->data.industry.blessing_days_left = 16;
-            update_farm_image(b);
+    for (int i = MIN_FARM; i <= MAX_FARM; i++) {
+        building_type type = INDUSTRY_TYPES[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE) {
+                b->data.industry.progress = MAX_PROGRESS_RAW;
+                b->data.industry.curse_days_left = 0;
+                b->data.industry.blessing_days_left = 16;
+                update_farm_image(b);
+            }
         }
     }
 }
 
 void building_bless_industry(void)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building* b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && building_is_workshop(b->type) && b->loads_stored) {
-            if (b->loads_stored < MERCURY_BLESSING_LOADS) {
-                b->loads_stored = MERCURY_BLESSING_LOADS;
+    for (int i = MIN_WORKSHOP; i <= MAX_WORKSHOP; i++) {
+        building_type type = INDUSTRY_TYPES[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->loads_stored) {
+                if (b->loads_stored < MERCURY_BLESSING_LOADS) {
+                    b->loads_stored = MERCURY_BLESSING_LOADS;
+                }
+                b->data.industry.progress = MAX_PROGRESS_WORKSHOP;
             }
-            b->data.industry.progress = MAX_PROGRESS_WORKSHOP;
         }
     }
 }
 
 void building_curse_farms(int big_curse)
 {
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state == BUILDING_STATE_IN_USE && b->output_resource_id && building_is_farm(b->type)) {
-            b->data.industry.progress = 0;
-            b->data.industry.blessing_days_left = 0;
-            b->data.industry.curse_days_left = big_curse ? 48 : 4;
-            update_farm_image(b);
+    for (int i = MIN_FARM; i <= MAX_FARM; i++) {
+        building_type type = INDUSTRY_TYPES[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE) {
+                b->data.industry.progress = 0;
+                b->data.industry.blessing_days_left = 0;
+                b->data.industry.curse_days_left = big_curse ? 48 : 4;
+                update_farm_image(b);
+            }
         }
     }
 }
@@ -199,8 +326,8 @@ void building_workshop_add_raw_material(building *b)
     }
 }
 
-int building_get_workshop_for_raw_material_with_room(
-    int x, int y, int resource, int distance_from_entry, int road_network_id, map_point *dst)
+int building_get_workshop_for_raw_material_with_room(int x, int y,
+    int resource, int road_network_id, map_point *dst)
 {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
@@ -211,23 +338,19 @@ int building_get_workshop_for_raw_material_with_room(
     }
     int min_dist = INFINITE;
     building *min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
+    building_type type = OUTPUT_TYPE_TO_INDUSTRY[output_type];
+    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE || !b->has_road_access || b->distance_from_entry <= 0 ||
+            b->road_network_id != road_network_id || b->loads_stored >= 2) {
             continue;
         }
-        if (!b->has_road_access || b->distance_from_entry <= 0) {
-            continue;
+        int dist = calc_maximum_distance(b->x, b->y, x, y);
+        if (b->loads_stored > 0) {
+            dist += 20;
         }
-        if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id && b->loads_stored < 2) {
-            int dist = calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
-            if (b->loads_stored > 0) {
-                dist += 20;
-            }
-            if (dist < min_dist) {
-                min_dist = dist;
-                min_building = b;
-            }
+        if (dist < min_dist) {
+            min_dist = dist;
+            min_building = b;
         }
     }
     if (min_building) {
@@ -237,8 +360,7 @@ int building_get_workshop_for_raw_material_with_room(
     return 0;
 }
 
-int building_get_workshop_for_raw_material(
-    int x, int y, int resource, int distance_from_entry, int road_network_id, map_point *dst)
+int building_get_workshop_for_raw_material(int x, int y, int resource, int road_network_id, map_point *dst)
 {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
@@ -249,21 +371,17 @@ int building_get_workshop_for_raw_material(
     }
     int min_dist = INFINITE;
     building *min_building = 0;
-    for (int i = 1; i < MAX_BUILDINGS; i++) {
-        building *b = building_get(i);
-        if (b->state != BUILDING_STATE_IN_USE || !building_is_workshop(b->type)) {
+    building_type type = OUTPUT_TYPE_TO_INDUSTRY[output_type];
+    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE ||
+            !b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
             continue;
         }
-        if (!b->has_road_access || b->distance_from_entry <= 0) {
-            continue;
-        }
-        if (b->subtype.workshop_type == output_type && b->road_network_id == road_network_id) {
-            int dist = 10 * b->loads_stored +
-                calc_distance_with_penalty(b->x, b->y, x, y, distance_from_entry, b->distance_from_entry);
-            if (dist < min_dist) {
-                min_dist = dist;
-                min_building = b;
-            }
+        int dist = 10 * b->loads_stored +
+            calc_maximum_distance(b->x, b->y, x, y);
+        if (dist < min_dist) {
+            min_dist = dist;
+            min_building = b;
         }
     }
     if (min_building) {
@@ -271,4 +389,36 @@ int building_get_workshop_for_raw_material(
         return min_building->id;
     }
     return 0;
+}
+
+void building_industry_start_strikes(void)
+{
+    if (city_data.sentiment.value >= 55) {
+        return;
+    }
+    int base_chance = 60 - city_data.sentiment.value;
+    int strike_chance = base_chance * base_chance / 36;
+    if (random_from_stdlib() % 100 > strike_chance) {
+        return;
+    }
+    int to_strike = calc_bound(city_data.population.population / 2000, 1, 12);
+
+    building_list_large_clear();
+
+    for (int i = MIN_RAW_MATERIALS; i <= MAX_WORKSHOP; i++) {
+        building_type type = INDUSTRY_TYPES[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->strike_duration_days == 0) {
+                building_list_large_add(b->id);
+            }
+        }
+    }
+
+    int strikes = random_industry_strikes(to_strike);
+
+    city_data.building.num_striking_industries += strikes;
+
+    if (strikes) {
+        city_warning_show(WARNING_SECESSION);
+    }
 }

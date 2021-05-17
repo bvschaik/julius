@@ -6,8 +6,6 @@
 #include "figure/action.h"
 #include "figure/type.h"
 
-#define MAX_FIGURES 5000
-
 typedef struct {
     int id;
 
@@ -49,7 +47,7 @@ typedef struct {
         unsigned char soldier;
         signed char enemy;
     } formation_position_y;
-    short __unused_24;
+    short disallow_diagonal;
     short wait_ticks;
     unsigned char action_state;
     unsigned char progress_on_tile;
@@ -82,7 +80,7 @@ typedef struct {
     unsigned char migrant_num_people;
     unsigned char is_ghost;
     unsigned char min_max_seen;
-    unsigned char progress_to_next_tick;
+    char progress_to_next_tick;
     short leading_figure_id;
     unsigned char attack_image_offset;
     unsigned char wait_ticks_missile;
@@ -97,7 +95,7 @@ typedef struct {
     unsigned char height_adjusted_ticks;
     unsigned char current_height;
     unsigned char target_height;
-    unsigned char collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen
+    unsigned char collecting_item_id; // NOT a resource ID for cartpushers! IS a resource ID for warehousemen or lighthouse supplier
     unsigned char trade_ship_failed_dock_attempts;
     unsigned char phrase_sequence_exact;
     signed char phrase_id;
@@ -114,9 +112,17 @@ typedef struct {
     short attacker_id1;
     short attacker_id2;
     short opponent_id;
+    struct {
+        unsigned short tourist_money_spent;
+        unsigned short ticks_since_last_visited_id[12];
+        unsigned short visited_building_type_ids[12];
+        unsigned char tourist_rank;
+    } tourist;
 } figure;
 
 figure *figure_get(int id);
+
+int figure_count(void);
 
 /**
  * Creates a figure
@@ -142,8 +148,10 @@ void figure_init_scenario(void);
 
 void figure_kill_all(void);
 
+int figure_target_is_alive(const figure *f);
+
 void figure_save_state(buffer *list, buffer *seq);
 
-void figure_load_state(buffer *list, buffer *seq);
+void figure_load_state(buffer *list, buffer *seq, int includes_figure_size);
 
 #endif // FIGURE_FIGURE_H

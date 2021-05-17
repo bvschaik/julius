@@ -1,11 +1,14 @@
+#include "core/calc.h"
+#include "core/config.h"
 #include "core/file.h"
 #include "core/log.h"
 #include "sound/device.h"
 #include "game/settings.h"
-#include "SDL.h"
-#include "SDL_mixer.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
+
+#include "SDL.h"
+#include "SDL_mixer.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -19,7 +22,7 @@
 #define AUDIO_CHANNELS 2
 #define AUDIO_BUFFERS 1024
 
-#define MAX_CHANNELS 150
+#define MAX_CHANNELS 160
 
 #if SDL_VERSION_ATLEAST(2, 0, 7)
 #define USE_SDL_AUDIOSTREAM
@@ -60,7 +63,8 @@ static struct {
 
 static int percentage_to_volume(int percentage)
 {
-    return percentage * SDL_MIX_MAXVOLUME / 100;
+    int master_percentage = config_get(CONFIG_GENERAL_MASTER_VOLUME);
+    return calc_adjust_with_percentage(percentage, master_percentage) * SDL_MIX_MAXVOLUME / 100;
 }
 
 static void init_channels(void)
@@ -199,7 +203,7 @@ static void load_music_for_vita(const char *filename)
 
 int sound_device_play_music(const char *filename, int volume_pct)
 {
-    if (data.initialized) {
+    if (data.initialized && config_get(CONFIG_GENERAL_ENABLE_AUDIO)) {
         sound_device_stop_music();
         if (!filename) {
             return 0;
@@ -240,7 +244,7 @@ int sound_device_play_music(const char *filename, int volume_pct)
 
 void sound_device_play_file_on_channel(const char *filename, int channel, int volume_pct)
 {
-    if (data.initialized) {
+    if (data.initialized && config_get(CONFIG_GENERAL_ENABLE_AUDIO)) {
         sound_device_stop_channel(channel);
         data.channels[channel].chunk = load_chunk(filename);
         if (data.channels[channel].chunk) {
@@ -252,7 +256,7 @@ void sound_device_play_file_on_channel(const char *filename, int channel, int vo
 
 void sound_device_play_channel(int channel, int volume_pct)
 {
-    if (data.initialized) {
+    if (data.initialized && config_get(CONFIG_GENERAL_ENABLE_AUDIO)) {
         sound_channel *ch = &data.channels[channel];
         if (load_channel(ch)) {
             sound_device_set_channel_volume(channel, volume_pct);
@@ -263,7 +267,7 @@ void sound_device_play_channel(int channel, int volume_pct)
 
 void sound_device_play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct)
 {
-    if (data.initialized) {
+    if (data.initialized && config_get(CONFIG_GENERAL_ENABLE_AUDIO)) {
         sound_channel *ch = &data.channels[channel];
         if (load_channel(ch)) {
             Mix_SetPanning(channel, left_pct * 255 / 100, right_pct * 255 / 100);
@@ -315,7 +319,7 @@ static void free_custom_audio_stream(void)
 }
 
 static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_channels, int src_rate,
-                                      SDL_AudioFormat dst_format, Uint8 dst_channels, int dst_rate)
+    SDL_AudioFormat dst_format, Uint8 dst_channels, int dst_rate)
 {
     free_custom_audio_stream();
 
@@ -371,7 +375,7 @@ static int put_custom_audio_stream(Uint8 *audio_data, int len)
 #endif
 
     // Convert audio to SDL format
-    custom_music.cvt.buf = (Uint8*)malloc((size_t)(len * custom_music.cvt.len_mult));
+    custom_music.cvt.buf = (Uint8 *) malloc((size_t) (len * custom_music.cvt.len_mult));
     if (!custom_music.cvt.buf) {
         return 0;
     }
@@ -445,7 +449,7 @@ static void custom_music_callback(void *dummy, Uint8 *stream, int len)
 }
 
 void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate,
-                                          const unsigned char *audio_data, int len)
+    const unsigned char *audio_data, int len)
 {
     SDL_AudioFormat format;
     if (bitdepth == 8) {
@@ -481,14 +485,14 @@ void sound_device_write_custom_music_data(const unsigned char *audio_data, int l
         return;
     }
     // Mix audio to sound effect volume
-    Uint8 *mix_buffer = (Uint8*)malloc(len);
+    Uint8 *mix_buffer = (Uint8 *) malloc(len);
     if (!mix_buffer) {
         return;
     }
     memset(mix_buffer, (custom_music.format == AUDIO_U8) ? 128 : 0, len);
     SDL_MixAudioFormat(mix_buffer, audio_data,
         custom_music.format, len,
-        percentage_to_volume(setting_sound(SOUND_EFFECTS)->volume));
+        config_get(CONFIG_GENERAL_ENABLE_AUDIO) ? percentage_to_volume(setting_sound(SOUND_EFFECTS)->volume) : 0);
 
     put_custom_audio_stream(mix_buffer, len);
     free(mix_buffer);

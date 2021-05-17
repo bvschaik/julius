@@ -68,4 +68,5 @@ void random_save_state(buffer *buf);
  */
 void random_load_state(buffer *buf);
 
+int random_from_stdlib(void);
 #endif // CORE_RANDOM_H

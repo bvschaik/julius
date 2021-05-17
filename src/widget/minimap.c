@@ -67,9 +67,9 @@ void widget_minimap_invalidate(void)
 static void foreach_map_tile(map_callback *callback)
 {
     city_view_foreach_minimap_tile(data.x_offset, data.y_offset,
-                                   data.absolute_x, data.absolute_y,
-                                   data.width_tiles, data.height_tiles,
-                                   callback);
+        data.absolute_x, data.absolute_y,
+        data.width_tiles, data.height_tiles,
+        callback);
 }
 
 static void set_bounds(int x_offset, int y_offset, int width, int height)
@@ -175,36 +175,34 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
             }
             if (building_monument_is_monument(b)) {
                 switch (map_property_multi_tile_size(grid_offset)) {
-                case 3: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "3 Mon MapIcon"), x_view, y_view - 2); break;
-                case 5: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "5 Mon MapIcon"), x_view, y_view - 4); break;
-                case 7: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "7 Mon MapIcon"), x_view, y_view - 6); break;
+                    case 2: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "2 Mon MapIcon"), x_view, y_view - 1); break;
+                    case 3: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "3 Mon MapIcon"), x_view, y_view - 2); break;
+                    case 4: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "4 Mon MapIcon"), x_view, y_view - 3); break;
+                    case 5: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "5 Mon MapIcon"), x_view, y_view - 4); break;
+                    case 7: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "7 Mon MapIcon"), x_view, y_view - 6); break;
                 }
             } else {
                 switch (map_property_multi_tile_size(grid_offset)) {
-                case 1: image_draw(image_id, x_view, y_view); break;
-                case 2: image_draw(image_id + 1, x_view, y_view - 1); break;
-                case 3: image_draw(image_id + 2, x_view, y_view - 2); break;
-                case 4: image_draw(image_id + 3, x_view, y_view - 3); break;
-                case 5: image_draw(image_id + 4, x_view, y_view - 4); break;
-                case 7: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "7x7 Map Icon"), x_view, y_view - 6);
+                    case 1: image_draw(image_id, x_view, y_view); break;
+                    case 2: image_draw(image_id + 1, x_view, y_view - 1); break;
+                    case 3: image_draw(image_id + 2, x_view, y_view - 2); break;
+                    case 4: image_draw(image_id + 3, x_view, y_view - 3); break;
+                    case 5: image_draw(image_id + 4, x_view, y_view - 4); break;
+                    case 7: image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "7x7 Map Icon"), x_view, y_view - 6);
                 }
             }
         }
     } else {
         int rand = map_random_get(grid_offset);
         int image_id;
-        if (terrain & TERRAIN_WATER) {
-            image_id = image_group(GROUP_MINIMAP_WATER) + (rand & 3);
-        } else if (terrain & TERRAIN_SHRUB) {
-            image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
-        } else if (terrain & TERRAIN_TREE) {
-            image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
-        } else if (terrain & TERRAIN_ROCK) {
-            image_id = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
-        } else if (terrain & TERRAIN_ELEVATION) {
-            image_id = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
-        } else if (terrain & TERRAIN_ROAD) {
+        if (terrain & TERRAIN_ROAD) {
             image_id = image_group(GROUP_MINIMAP_ROAD);
+        } else if (terrain & TERRAIN_WATER) {
+            image_id = image_group(GROUP_MINIMAP_WATER) + (rand & 3);
+        } else if (terrain & (TERRAIN_SHRUB | TERRAIN_TREE)) {
+            image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
+        } else if (terrain & (TERRAIN_ROCK | TERRAIN_ELEVATION)) {
+            image_id = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
         } else if (terrain & TERRAIN_AQUEDUCT) {
             image_id = image_group(GROUP_MINIMAP_AQUEDUCT);
         } else if (terrain & TERRAIN_WALL) {
@@ -245,7 +243,7 @@ static void prepare_minimap_cache(int width, int height)
 {
     if (width != data.width || height != data.height) {
         free(data.cache);
-        data.cache = (color_t *)malloc(sizeof(color_t) * width * height);
+        data.cache = (color_t *) malloc(sizeof(color_t) * width * height);
     }
 }
 

@@ -1,11 +1,14 @@
 #include "trade.h"
 
+#include "building/caravanserai.h"
 #include "building/count.h"
+#include "building/lighthouse.h"
 #include "building/monument.h"
 #include "city/constants.h"
 #include "core/config.h"
 #include "city/data_private.h"
 #include "empire/city.h"
+#include "figure/figure.h"
 
 void city_trade_update(void)
 {
@@ -22,18 +25,25 @@ void city_trade_update(void)
     // Update trade problems
     if (city_data.trade.land_trade_problem_duration > 0) {
         city_data.trade.land_trade_problem_duration--;
+        if (building_caravanserai_is_fully_functional()) {
+            city_data.trade.land_trade_problem_duration--;
+        }
     } else {
         city_data.trade.land_trade_problem_duration = 0;
     }
     if (city_data.trade.sea_trade_problem_duration > 0) {
         city_data.trade.sea_trade_problem_duration--;
-        if (building_monument_working(BUILDING_LIGHTHOUSE)) {
+        if (building_lighthouse_is_fully_functional()) {
             city_data.trade.sea_trade_problem_duration--;
         }
     } 
     if (city_data.trade.sea_trade_problem_duration <= 0) {
         city_data.trade.sea_trade_problem_duration = 0;
     }
+    if (city_data.trade.land_trade_problem_duration <= 0) {
+        city_data.trade.land_trade_problem_duration = 0;
+    }
+
 
     empire_city_generate_trader();
 }
@@ -117,4 +127,16 @@ int city_trade_next_docker_export_resource(void)
         city_data.trade.docker_export_resource = RESOURCE_MIN;
     }
     return city_data.trade.docker_export_resource;
+}
+
+int trade_caravan_count(void)
+{
+    int count = 0;
+    for (int i = 1; i < figure_count(); i++) {
+        figure *f = figure_get(i);
+        if (f->type == FIGURE_TRADE_CARAVAN || f->type == FIGURE_TRADE_CARAVAN_DONKEY || f->type == FIGURE_NATIVE_TRADER) {
+            count++;
+        }
+    }
+    return count;
 }

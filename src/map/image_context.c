@@ -18,6 +18,7 @@ struct terrain_image_context {
     unsigned char current_item_offset;
 };
 
+
 // 0 = no match
 // 1 = match
 // 2 = don't care
@@ -418,17 +419,23 @@ static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(2, 1)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(1, 2)) ? 1 : 0;
             }
-            if (b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) {
+            if ((b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) || (b->type == BUILDING_PANTHEON)) {
                 tiles[i]  = (offset == b->grid_offset + map_grid_delta(3, 0)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(0, 3)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(6, 3)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(3, 6)) ? 1 : 0;
             }
-            if (b->type == BUILDING_LIGHTHOUSE) {
+            if (b->type == BUILDING_LIGHTHOUSE || b->type == BUILDING_LARGE_MAUSOLEUM || (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
                 tiles[i] = (offset == b->grid_offset + map_grid_delta(0, 1)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(1, 0)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(1, 2)) ? 1 : 0;
                 tiles[i] |= (offset == b->grid_offset + map_grid_delta(2, 1)) ? 1 : 0;
+            }
+            if (b->type == BUILDING_COLOSSEUM) {
+                tiles[i] = (offset == b->grid_offset + map_grid_delta(0, 2)) ? 1 : 0;
+                tiles[i] |= (offset == b->grid_offset + map_grid_delta(2, 0)) ? 1 : 0;
+                tiles[i] |= (offset == b->grid_offset + map_grid_delta(2, 4)) ? 1 : 0;
+                tiles[i] |= (offset == b->grid_offset + map_grid_delta(4, 2)) ? 1 : 0;
             }
         }
     }

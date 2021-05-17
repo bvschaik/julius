@@ -42,7 +42,9 @@ static int get_dialog_width(void)
     int title_width = lang_text_get_width(50, 25, FONT_LARGE_BLACK);
     int rclick_width = lang_text_get_width(13, 3, FONT_NORMAL_BLACK);
     int dialog_width = 16 + (title_width > rclick_width ? title_width : rclick_width);
-    if (dialog_width < MIN_DIALOG_WIDTH) dialog_width = MIN_DIALOG_WIDTH;
+    if (dialog_width < MIN_DIALOG_WIDTH) {
+        dialog_width = MIN_DIALOG_WIDTH;
+    }
     if (dialog_width % 16 != 0) {
         // make sure the width is a multiple of 16
         dialog_width += 16 - dialog_width % 16;

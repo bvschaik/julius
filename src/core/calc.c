@@ -15,6 +15,11 @@ int calc_percentage(int value, int total)
     }
 }
 
+int calc_value_in_step(int value, int step)
+{
+    return value + step - (value % step);
+}
+
 static int get_delta(int value1, int value2)
 {
     if (value1 <= value2) {
@@ -28,26 +33,7 @@ int calc_maximum_distance(int x1, int y1, int x2, int y2)
 {
     int distance_x = get_delta(x1, x2);
     int distance_y = get_delta(y1, y2);
-    if (distance_x >= distance_y) {
-        return distance_x;
-    } else {
-        return distance_y;
-    }
-}
-
-int calc_distance_with_penalty(int x1, int y1, int x2, int y2,
-                               int dist_to_entry1, int dist_to_entry2)
-{
-    int penalty;
-    if (dist_to_entry1 > dist_to_entry2) {
-        penalty = dist_to_entry1 - dist_to_entry2;
-    } else {
-        penalty = dist_to_entry2 - dist_to_entry1;
-    }
-    if (dist_to_entry1 == -1) {
-        penalty = 0;
-    }
-    return penalty + calc_maximum_distance(x1, y1, x2, y2);
+    return distance_x > distance_y ? distance_x : distance_y;
 }
 
 direction_type calc_general_direction(int x_from, int y_from, int x_to, int y_to)
@@ -223,6 +209,19 @@ int32_t calc_bound(int32_t value, int32_t min, int32_t max)
     } else if (value > max) {
         return max;
     } else {
+        return value;
+    }
+}
+
+double calc_bound_double(double value, double min, double max)
+{
+    if (value < min) {
+        return min;
+    }
+    else if (value > max) {
+        return max;
+    }
+    else {
         return value;
     }
 }

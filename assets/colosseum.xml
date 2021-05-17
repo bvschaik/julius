@@ -1,0 +1,152 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+
+<assetlist author="Areldir" name="Colosseum">
+<!-- Note: Colosseum 0%, 25%, 50% and 75% construction phases respectively -->
+    <image id="Coloseum Cons 01" src="Colosseum_0%_Construction_Phase" />	
+    <image id="Coloseum Cons 02" width="298" height="154">
+		<layer group="48" image="0" part="footprint" x="0" y="-59" />
+	    <layer src="Colosseum_25%_Construction_Phase" />		
+	</image>
+    <image id="Coloseum Cons 03" width="298" height="173">
+		<layer group="48" image="0" part="footprint" x="0" y="-40" />
+	    <layer src="Colosseum_50%_Construction_Phase" />		
+	</image>
+    <image id="Coloseum Cons 04" width="298" height="186">
+		<layer group="48" image="0" part="footprint" x="0" y="-27" />
+	    <layer src="Colosseum_75%_Construction_Phase" />		
+	</image>	
+
+<!-- Note: Colosseum OFF state -->		
+    <image id="Coloseum OFF" width="298" height="213">
+		<layer group="48" image="0" x="0" y="0" />		
+	</image>
+
+<!-- Note: Colosseum crowd animation fix (REFERENCE ASSET: DO NOT USE) -->	
+    <image id="Col Crowd Fix" width="157" height="61">
+		<layer group="48" image="14" x="0" y="0" />
+	    <layer src="Colosseum_ON_Overlay" />		
+	</image>
+
+<!-- Note: Colosseum ON state -->	
+    <image id="Coloseum ON" width="298" height="213">
+		<layer group="this" image="Coloseum OFF" x="0" y="0" />
+		<layer group="this" image="Col Crowd Fix" x="70" y="33" />	
+	</image>
+
+<!-- Note: Colosseum gladiator fighting animation fix (REFERENCE ASSETS: DO NOT USE) -->	
+    <image id="Col Glad fix 01" width="53" height="41">
+		<layer group="48" image="1" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>
+    <image id="Col Glad fix 02" width="53" height="41">
+		<layer group="48" image="2" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>
+    <image id="Col Glad fix 03" width="53" height="41">
+		<layer group="48" image="3" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>
+    <image id="Col Glad fix 04" width="53" height="41">
+		<layer group="48" image="4" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>	
+    <image id="Col Glad fix 05" width="53" height="41">
+		<layer group="48" image="5" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>
+    <image id="Col Glad fix 06" width="53" height="41">
+		<layer group="48" image="6" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>		
+    <image id="Col Glad fix 07" width="53" height="41">
+		<layer group="48" image="7" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>
+    <image id="Col Glad fix 08" width="53" height="41">
+		<layer group="48" image="8" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>
+    <image id="Col Glad fix 09" width="53" height="41">
+		<layer group="48" image="9" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>
+    <image id="Col Glad fix 10" width="53" height="41">
+		<layer group="48" image="10" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>	
+    <image id="Col Glad fix 11" width="53" height="41">
+		<layer group="48" image="11" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>
+    <image id="Col Glad fix 12" width="53" height="41">
+		<layer group="48" image="12" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>	
+   <image id="Col Glad fix 13" width="53" height="41">
+		<layer group="48" image="13" x="0" y="0" />
+	    <layer src="Colosseum_Fight_Overlay" />		
+	</image>	
+	
+<!-- Note: Colosseum Gladiator Fight animations (Fixed vanilla ON state) -->	
+    <image id="Col Glad Fight" width="298" height="213">
+		<layer group="this" image="Coloseum ON" />
+        <animation speed="5" frames="13" x="122" y="57" reversible="false" />
+    </image>
+    <image group="this" image="Col Glad fix 01" />
+    <image group="this" image="Col Glad fix 02" />
+    <image group="this" image="Col Glad fix 03" />
+    <image group="this" image="Col Glad fix 04" />
+    <image group="this" image="Col Glad fix 05" />
+    <image group="this" image="Col Glad fix 06" />
+    <image group="this" image="Col Glad fix 07" />
+    <image group="this" image="Col Glad fix 08" />
+    <image group="this" image="Col Glad fix 09" />
+    <image group="this" image="Col Glad fix 10" />
+    <image group="this" image="Col Glad fix 11" />
+    <image group="this" image="Col Glad fix 12" />
+    <image group="this" image="Col Glad fix 13" />
+
+<!-- Note: Colosseum 'Naumachia' games animations -->	
+    <image id="Col Naumachia" width="298" height="213">
+		<layer group="this" image="Coloseum ON" />
+        <animation speed="9" frames="12" x="57" y="12" reversible="false" />
+    </image>
+    <image src="Naumachia_01" />
+    <image src="Naumachia_02" />
+    <image src="Naumachia_03" />		
+    <image src="Naumachia_04" />
+    <image src="Naumachia_05" />
+    <image src="Naumachia_06" />		
+    <image src="Naumachia_07" />
+    <image src="Naumachia_08" />
+    <image src="Naumachia_09" />		
+    <image src="Naumachia_10" />
+    <image src="Naumachia_11" />
+    <image src="Naumachia_12" />	
+
+<!-- Note: Colosseum 'Imperial Games' animations -->
+    <image id="Col Imp Games" width="298" height="213">
+		<layer group="this" image="Coloseum ON" />
+        <animation speed="9" frames="6" x="57" y="12" reversible="false" />
+    </image>
+    <image src="Imperial_Games_01" />
+    <image src="Imperial_Games_02" />
+    <image src="Imperial_Games_03" />
+    <image src="Imperial_Games_04" />
+    <image src="Imperial_Games_05" />
+    <image src="Imperial_Games_06" />
+	
+<!-- Note: Colosseum 'Imperial Games' animations -->
+    <image id="Col Exec" width="298" height="213">
+		<layer group="this" image="Coloseum ON" />
+        <animation speed="9" frames="6" x="57" y="12" reversible="false" />
+    </image>
+    <image src="Executions_01" />
+    <image src="Executions_02" />
+    <image src="Executions_03" />
+    <image src="Executions_04" />
+    <image src="Executions_05" />
+    <image src="Executions_06" />	
+	
+</assetlist>

@@ -3,11 +3,14 @@
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/log.h"
+#include "graphics/color.h"
 
 #include "png.h"
 
 #include <stdio.h>
 #include <stdlib.h>
+
+#define BYTES_PER_PIXEL 4
 
 static struct {
     png_structp png_ptr;
@@ -33,8 +36,8 @@ static int load_png(const char *path)
         log_error("Unable to open png file", path, 0);
         return 0;
     }
-    fread(header, 1, 8, data.fp);
-    if (png_sig_cmp(header, 0, 8)) {
+    size_t bytes_read = fread(header, 1, 8, data.fp);
+    if (bytes_read != 8 || png_sig_cmp(header, 0, 8)) {
         log_error("Invalid png file", path, 0);
         unload_png();
         return 0;
@@ -78,13 +81,15 @@ int png_get_image_size(const char *path, int *width, int *height)
     return 1;
 }
 
-int png_read(const char *path, uint8_t *pixels)
+int png_read(const char *path, color_t *pixels, int width, int height)
 {
     if (!load_png(path)) {
         return 0;
     }
+    png_bytep row = 0;
     if (setjmp(png_jmpbuf(data.png_ptr))) {
         log_error("Unable to read png file", 0, 0);
+        free(row);
         unload_png();
         return 0;
     }
@@ -92,21 +97,44 @@ int png_read(const char *path, uint8_t *pixels)
     png_set_filler(data.png_ptr, 0xFF, PNG_FILLER_AFTER);
     png_set_expand(data.png_ptr);
     png_set_strip_16(data.png_ptr);
-    png_set_bgr(data.png_ptr);
-
-    png_set_interlace_handling(data.png_ptr);
+    if (png_set_interlace_handling(data.png_ptr) != 1) {
+        log_info("The image has interlacing and therefore will not open correctly", 0, 0);
+    }
     png_read_update_info(data.png_ptr, data.info_ptr);
 
-    int width = png_get_image_width(data.png_ptr, data.info_ptr);
-    int height = png_get_image_height(data.png_ptr, data.info_ptr);
-    png_bytep *row_pointers = malloc(sizeof(png_bytep) * height);
-    for (int y = 0; y < height; ++y) {
-        row_pointers[y] = pixels + y * width * sizeof(color_t);
+    int image_width = png_get_image_width(data.png_ptr, data.info_ptr);
+    int image_height = png_get_image_height(data.png_ptr, data.info_ptr);
+    int width_padding = 0;
+
+    if (width > image_width) {
+        width_padding = width - image_width;
+        width = image_width;
+    }
+    if (height > image_height) {
+        height = image_height;
     }
 
-    png_read_image(data.png_ptr, row_pointers);
-    free(row_pointers);
-
+    row = malloc(sizeof(png_byte) * image_width * BYTES_PER_PIXEL);
+    if (!row) {
+        log_error("Unable to load png file. Out of memory", 0, 0);
+        unload_png();
+        return 0;
+    }
+    color_t *dst = pixels;
+    for (int y = 0; y < height; ++y) {
+        png_read_row(data.png_ptr, row, 0);
+        png_bytep src = row;
+        for (int x = 0; x < width; ++x) {
+            *dst = ((color_t) * (src + 0)) << COLOR_BITSHIFT_RED;
+            *dst |= ((color_t) * (src + 1)) << COLOR_BITSHIFT_GREEN;
+            *dst |= ((color_t) * (src + 2)) << COLOR_BITSHIFT_BLUE;
+            *dst |= ((color_t) * (src + 3)) << COLOR_BITSHIFT_ALPHA;
+            dst++;
+            src += BYTES_PER_PIXEL;
+        }
+        dst += width_padding;
+    }
+    free(row);
     unload_png();
     return 1;
 }

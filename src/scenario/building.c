@@ -30,6 +30,9 @@ int scenario_building_allowed(int building_type)
         case BUILDING_MENU_GRAND_TEMPLES:
             return scenario.allowed_buildings[ALLOWED_BUILDING_LARGE_TEMPLES] && scenario.allowed_buildings[ALLOWED_BUILDING_MONUMENTS];
         case BUILDING_ORACLE:
+        case BUILDING_SMALL_MAUSOLEUM:
+        case BUILDING_LARGE_MAUSOLEUM:
+        case BUILDING_NYMPHAEUM:
             return scenario.allowed_buildings[ALLOWED_BUILDING_ORACLE];
         case BUILDING_SCHOOL:
             return scenario.allowed_buildings[ALLOWED_BUILDING_SCHOOL];
@@ -41,6 +44,7 @@ int scenario_building_allowed(int building_type)
             return scenario.allowed_buildings[ALLOWED_BUILDING_THEATER];
         case BUILDING_AMPHITHEATER:
             return scenario.allowed_buildings[ALLOWED_BUILDING_AMPHITHEATER];
+        case BUILDING_ARENA:
         case BUILDING_COLOSSEUM:
             return scenario.allowed_buildings[ALLOWED_BUILDING_COLOSSEUM];
         case BUILDING_HIPPODROME:
@@ -85,6 +89,7 @@ int scenario_building_allowed(int building_type)
         case BUILDING_WALL:
             return scenario.allowed_buildings[ALLOWED_BUILDING_WALL];
         case BUILDING_TOWER:
+        case BUILDING_WATCHTOWER:
             return scenario.allowed_buildings[ALLOWED_BUILDING_TOWER];
         case BUILDING_GATEHOUSE:
             return scenario.allowed_buildings[ALLOWED_BUILDING_GATEHOUSE];

@@ -47,11 +47,11 @@ void window_logo_show(int show_patch_message)
     init();
     window_show(&window);
     if (show_patch_message == MESSAGE_MISSING_PATCH) {
-        window_plain_message_dialog_show(TR_NO_PATCH_TITLE, TR_NO_PATCH_MESSAGE);
+        window_plain_message_dialog_show(TR_NO_PATCH_TITLE, TR_NO_PATCH_MESSAGE, 0);
     } else if (show_patch_message == MESSAGE_MISSING_FONTS) {
-        window_plain_message_dialog_show(TR_MISSING_FONTS_TITLE, TR_MISSING_FONTS_MESSAGE);
+        window_plain_message_dialog_show(TR_MISSING_FONTS_TITLE, TR_MISSING_FONTS_MESSAGE, 0);
     } else if (show_patch_message == MESSAGE_MISSING_EXTRA_ASSETS) {
-        window_plain_message_dialog_show(TR_NO_EXTRA_ASSETS_TITLE, TR_NO_EXTRA_ASSETS_MESSAGE);
+        window_plain_message_dialog_show(TR_NO_EXTRA_ASSETS_TITLE, TR_NO_EXTRA_ASSETS_MESSAGE, 0);
     }
     if (config_get(CONFIG_UI_SHOW_INTRO_VIDEO)) {
         window_intro_video_show();

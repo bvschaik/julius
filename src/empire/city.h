@@ -21,7 +21,7 @@ typedef struct {
 
 void empire_city_clear_all(void);
 
-empire_city * empire_city_get(int city_id);
+empire_city *empire_city_get(int city_id);
 
 int empire_city_get_route_id(int city_id);
 
@@ -30,6 +30,8 @@ int empire_can_import_resource(int resource);
 int empire_can_import_resource_potentially(int resource);
 
 int empire_has_access_to_resource(int resource);
+
+int empire_can_export_resource_potentially(int resource);
 
 int empire_can_export_resource(int resource);
 

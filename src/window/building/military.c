@@ -55,14 +55,13 @@ static struct {
 static void draw_priority_buttons(int x, int y, int buttons)
 {
     uint8_t permission_selection_text[] = { 'x', 0 };
-    for (int i = 0; i < buttons; i++)
-    {
+    for (int i = 0; i < buttons; i++) {
         int x_adj = x + priority_buttons[i].x;
         int y_adj = y + priority_buttons[i].y;
-        building* barracks = building_get(data.building_id);
+        building *barracks = building_get(data.building_id);
         int priority = building_barracks_get_priority(barracks);
-        button_border_draw(x_adj , y_adj, 20, 20, data.focus_priority_button_id == i + 1 ? 1 : 0);
-        if (priority == i ) {
+        button_border_draw(x_adj, y_adj, 20, 20, data.focus_priority_button_id == i + 1 ? 1 : 0);
+        if (priority == i) {
             text_draw_centered(permission_selection_text, x_adj + 1, y_adj + 4, 20, FONT_NORMAL_BLACK, 0);
         }
     }
@@ -135,9 +134,11 @@ void window_building_draw_barracks(building_info_context *c)
             offset = 4;
         }
         if (city_data.mess_hall.food_stress_cumulative > 50) {
-            text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING_2), c->x_offset + 26, c->y_offset + 86, 16 * c->width_blocks - 30, FONT_NORMAL_BLACK, 0);
+            text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING_2),
+                c->x_offset + 26, c->y_offset + 86, 16 * c->width_blocks - 30, FONT_NORMAL_BLACK, 0);
         } else if (city_data.mess_hall.food_stress_cumulative > 20) {
-            text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING), c->x_offset + 26, c->y_offset + 86, 16 * c->width_blocks - 30, FONT_NORMAL_BLACK, 0);
+            text_draw_multiline(translation_for(TR_BUILDING_BARRACKS_FOOD_WARNING),
+                c->x_offset + 26, c->y_offset + 86, 16 * c->width_blocks - 30, FONT_NORMAL_BLACK, 0);
         } else if (c->worker_percentage >= 100) {
             window_building_draw_description_at(c, 70, 136, 5 + offset);
         } else if (c->worker_percentage >= 66) {
@@ -153,12 +154,11 @@ void window_building_draw_barracks(building_info_context *c)
     lang_text_draw(50, 21, c->x_offset + 46, c->y_offset + 204, FONT_NORMAL_BLACK); // "Priority"
     lang_text_draw(91, 0, c->x_offset + 46, c->y_offset + 224, FONT_NORMAL_BLACK); // "Tower"
     lang_text_draw(89, 0, c->x_offset + 46, c->y_offset + 244, FONT_NORMAL_BLACK); // "Fort"
-    
 }
 
-void window_building_draw_barracks_foreground(building_info_context* c)
+void window_building_draw_barracks_foreground(building_info_context *c)
 {
-    draw_priority_buttons(c->x_offset + 46, c->y_offset + 224,2);
+    draw_priority_buttons(c->x_offset + 46, c->y_offset + 224, 2);
 
 }
 
@@ -167,22 +167,22 @@ void window_building_draw_priority_buttons(int x, int y)
     draw_priority_buttons(x, y, 2);
 }
 
-int window_building_handle_mouse_barracks(const mouse* m, building_info_context* c)
+int window_building_handle_mouse_barracks(const mouse *m, building_info_context *c)
 {
-    if (generic_buttons_handle_mouse(m, c->x_offset + 46, c->y_offset + 224, priority_buttons, 2, &data.focus_priority_button_id))
-    {
+    if (generic_buttons_handle_mouse(m, c->x_offset + 46, c->y_offset + 224,
+        priority_buttons, 2, &data.focus_priority_button_id)) {
         window_invalidate();
         return 1;
-    } 
+    }
 
     return 0;
 }
 
 
-int window_building_handle_mouse_grand_temple_mars(const mouse* m, building_info_context* c)
+int window_building_handle_mouse_grand_temple_mars(const mouse *m, building_info_context *c)
 {
-    if (generic_buttons_handle_mouse(m, c->x_offset + 285, c->y_offset + 55, priority_buttons, 2, &data.focus_priority_button_id))
-    {
+    if (generic_buttons_handle_mouse(m, c->x_offset + 285, c->y_offset + 55,
+        priority_buttons, 2, &data.focus_priority_button_id)) {
         window_invalidate();
         return 1;
     }
@@ -220,8 +220,8 @@ void window_building_draw_fort(building_info_context *c)
     lang_text_draw_centered(89, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
     int text_id = formation_get(c->formation_id)->cursed_by_mars ? 1 : 2;
     window_building_draw_description_at(c, 16 * c->height_blocks - 208, 89, text_id);
-    
-    building* b = building_get(c->building_id);
+
+    building *b = building_get(c->building_id);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     if (building_get_levy(b)) {
         window_building_draw_levy(building_get_levy(b), c->x_offset, c->y_offset + 150);
@@ -262,7 +262,8 @@ void window_building_draw_legion_info(building_info_context *c)
         morale_offset = 20;
     }
     int image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - morale_offset;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2, c->y_offset + 16 + icon_height + flag_height);
+    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
+        c->y_offset + 16 + icon_height + flag_height);
 
     // number of soldiers
     lang_text_draw(138, 23, c->x_offset + 100, c->y_offset + 60, FONT_NORMAL_BLACK);
@@ -270,29 +271,23 @@ void window_building_draw_legion_info(building_info_context *c)
     // health
     lang_text_draw(138, 24, c->x_offset + 100, c->y_offset + 80, FONT_NORMAL_BLACK);
     if (m->mess_hall_max_morale_modifier < -20) {
-        text_draw(translation_for(TR_BUILDING_LEGION_STARVING), c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
-    }
-    else {
+        text_draw(translation_for(TR_BUILDING_LEGION_STARVING),
+            c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
+    } else {
         int health = calc_percentage(m->total_damage, m->max_total_damage);
         if (health <= 0) {
             text_id = 26;
-        }
-        else if (health <= 20) {
+        } else if (health <= 20) {
             text_id = 27;
-        }
-        else if (health <= 40) {
+        } else if (health <= 40) {
             text_id = 28;
-        }
-        else if (health <= 55) {
+        } else if (health <= 55) {
             text_id = 29;
-        }
-        else if (health <= 70) {
+        } else if (health <= 70) {
             text_id = 30;
-        }
-        else if (health <= 90) {
+        } else if (health <= 90) {
             text_id = 31;
-        }
-        else {
+        } else {
             text_id = 32;
         }
         lang_text_draw(138, text_id, c->x_offset + 300, c->y_offset + 80, FONT_NORMAL_BLACK);
@@ -308,35 +303,33 @@ void window_building_draw_legion_info(building_info_context *c)
         lang_text_draw(138, 37 + morale_offset, c->x_offset + 300, c->y_offset + 120, FONT_NORMAL_BLACK);
     }
     // food
-    text_draw(translation_for(TR_BUILDING_LEGION_FOOD_STATUS), c->x_offset + 100, c->y_offset + 140, FONT_NORMAL_BLACK, 0);
+    text_draw(translation_for(TR_BUILDING_LEGION_FOOD_STATUS),
+        c->x_offset + 100, c->y_offset + 140, FONT_NORMAL_BLACK, 0);
     if (food_stress < 3) {
         hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_1;
-    }
-    else if (food_stress > 80) {
+    } else if (food_stress > 80) {
         hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_5;
-    }
-    else if (food_stress > 60) {
+    } else if (food_stress > 60) {
         hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_4;
-    }
-    else if (food_stress > 40) {
+    } else if (food_stress > 40) {
         hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_3;
-    }
-    else {
+    } else {
         hunger_text = TR_BUILDING_MESS_HALL_TROOP_HUNGER_2;
     }
 
     text_draw(translation_for(hunger_text), c->x_offset + 300, c->y_offset + 140, FONT_NORMAL_BLACK, 0);
     // food warnings
     if (m->mess_hall_max_morale_modifier < -20) {
-        text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_2), c->x_offset + 20, c->y_offset + 340, c->width_blocks * 16 - 40, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
+        text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_2),
+            c->x_offset + 20, c->y_offset + 340, c->width_blocks * 16 - 40, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
+    } else if (m->mess_hall_max_morale_modifier < -5) {
+        text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_1),
+            c->x_offset + 20, c->y_offset + 340, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
+    } else if (m->mess_hall_max_morale_modifier > 0) {
+        text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_BONUS),
+            c->x_offset + 20, c->y_offset + 340, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
     }
-    else if (m->mess_hall_max_morale_modifier < -5) {
-        text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_WARNING_1), c->x_offset + 20, c->y_offset + 340, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
-    }
-    else if (m->mess_hall_max_morale_modifier > 0) {
-        text_draw_centered(translation_for(TR_BUILDING_LEGION_FOOD_BONUS), c->x_offset + 20, c->y_offset + 340, c->width_blocks * 16 - 40, FONT_NORMAL_BLACK, 0);
-    }
-    
+
     if (m->num_figures) {
         // layout
         static const int OFFSETS_LEGIONARY[2][5] = {
@@ -439,8 +432,7 @@ void window_building_draw_legion_info_foreground(building_info_context *c)
                 text_id = 22;
             }
             break;
-        // double line
-        case 3:
+        case 3: // double line
         case 4:
             title_id = 14;
             text_id = 20;
@@ -483,7 +475,8 @@ void window_building_draw_legion_info_foreground(building_info_context *c)
             break;
     }
     lang_text_draw(138, title_id, c->x_offset + 24, c->y_offset + 276, FONT_NORMAL_WHITE);
-    lang_text_draw_multiline(138, text_id, c->x_offset + 24, c->y_offset + 292, 16 * (c->width_blocks - 4), FONT_NORMAL_GREEN);
+    lang_text_draw_multiline(138, text_id, c->x_offset + 24, c->y_offset + 292,
+        16 * (c->width_blocks - 4), FONT_NORMAL_GREEN);
 
     if (!m->is_at_fort) {
         button_border_draw(c->x_offset + 16 * (c->width_blocks - 18) / 2,
@@ -568,8 +561,31 @@ static void button_layout(int index, int param2)
 
 static void button_priority(int index, int param2)
 {
-    building* barracks = building_get(data.building_id);
+    building *barracks = building_get(data.building_id);
     if (index != barracks->subtype.barracks_priority) {
         building_barracks_toggle_priority(barracks);
     }
+}
+
+void window_building_draw_watchtower(building_info_context *c)
+{
+    c->help_id = 85;
+    window_building_play_sound(c, "wavs/tower2.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    text_draw_centered(translation_for(TR_BUILDING_WATCHTOWER),
+        c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    if (!c->has_road_access) {
+        window_building_draw_description(c, 69, 25);
+    } else {
+        building *b = building_get(c->building_id);
+        if (!b->figure_id4) {
+            text_draw_multiline(translation_for(TR_BUILDING_WATCHTOWER_DESC_NO_SOLDIERS),
+                c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        } else {
+            text_draw_multiline(translation_for(TR_BUILDING_WATCHTOWER_DESC),
+                c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        }
+    }
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
+    window_building_draw_employment(c, 142);
 }

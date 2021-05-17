@@ -1,5 +1,6 @@
 #include "request.h"
 
+#include "building/granary.h"
 #include "building/warehouse.h"
 #include "city/finance.h"
 #include "city/message.h"
@@ -65,10 +66,16 @@ void scenario_request_process(void)
                         city_ratings_reduce_favor_missed_request(5);
                     }
                 }
-                if (!scenario.requests[i].can_comply_dialog_shown &&
-                    city_resource_count(scenario.requests[i].resource) >= scenario.requests[i].amount) {
-                    scenario.requests[i].can_comply_dialog_shown = 1;
-                    city_message_post(1, MESSAGE_REQUEST_CAN_COMPLY, i, 0);
+                if (!scenario.requests[i].can_comply_dialog_shown) {
+                    resource_type resource = scenario.requests[i].resource;
+                    int resource_amount = city_resource_count(resource);
+                    if (resource_is_food(resource)) {
+                        resource_amount += city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
+                    }
+                    if (resource_amount >= scenario.requests[i].amount) {
+                        scenario.requests[i].can_comply_dialog_shown = 1;
+                        city_message_post(1, MESSAGE_REQUEST_CAN_COMPLY, i, 0);
+                    }
                 }
             } else {
                 // request is not visible
@@ -111,7 +118,10 @@ void scenario_request_dispatch(int id)
         city_population_remove_for_troop_request(amount);
         building_warehouses_remove_resource(RESOURCE_WEAPONS, amount);
     } else {
-        building_warehouses_remove_resource(scenario.requests[id].resource, amount);
+        int amount_left = building_warehouses_remove_resource(scenario.requests[id].resource, amount);
+        if (amount_left > 0 && resource_is_food(scenario.requests[id].resource)) {
+            building_granaries_remove_resource(scenario.requests[id].resource, amount_left * RESOURCE_GRANARY_ONE_LOAD);
+        }
     }
 }
 
@@ -124,6 +134,17 @@ const scenario_request *scenario_request_get(int id)
     request.state = scenario.requests[id].state;
     request.months_to_comply = scenario.requests[id].months_to_comply;
     return &request;
+}
+
+int scenario_request_count_visible(void)
+{
+    int count = 0;
+    for (int i = 0; i < MAX_REQUESTS; i++) {
+        if (scenario.requests[i].resource && scenario.requests[i].visible) {
+            count++;
+        }
+    }
+    return count;
 }
 
 int scenario_request_foreach_visible(int start_index, void (*callback)(int index, const scenario_request *request))
