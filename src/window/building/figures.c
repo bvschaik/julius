@@ -358,7 +358,9 @@ static void draw_supplier(building_info_context *c, figure *f)
 
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     int width = 0;
-    if (f->type == FIGURE_MESS_HALL_SUPPLIER || f->type == FIGURE_PRIEST_SUPPLIER || f->type == FIGURE_BARKEEP_SUPPLIER || f->type == FIGURE_CARAVANSERAI_SUPPLIER) {
+    if (f->type == FIGURE_MESS_HALL_SUPPLIER || f->type == FIGURE_PRIEST_SUPPLIER ||
+        f->type == FIGURE_BARKEEP_SUPPLIER || f->type == FIGURE_CARAVANSERAI_SUPPLIER ||
+        f->type == FIGURE_LIGHTHOUSE_SUPPLIER) {
         int relative_id = f->type - FIGURE_NEW_TYPES;
         width = text_draw(translation_for(NEW_FIGURE_TYPES[relative_id]), c->x_offset + 92, c->y_offset + 139, FONT_SMALL_BLACK, 0);
     } else {
