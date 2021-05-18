@@ -331,10 +331,10 @@ void city_sentiment_update(void)
             total_houses++;
             total_sentiment += b->sentiment.house_happiness * b->house_population;
 
-            if (b->sentiment.house_happiness < 80) {
-                int worst_sentiment = 0;
-                b->house_sentiment_message = LOW_MOOD_CAUSE_NONE;
+            int worst_sentiment = 0;
+            b->house_sentiment_message = LOW_MOOD_CAUSE_NONE;
 
+            if (b->sentiment.house_happiness < 80) {
                 if (b->house_tax_coverage) {
                     worst_sentiment = sentiment_contribution_taxes;
                     b->house_sentiment_message = LOW_MOOD_CAUSE_HIGH_TAXES;
