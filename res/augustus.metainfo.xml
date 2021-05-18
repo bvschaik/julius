@@ -20,15 +20,17 @@
 			<li>Market special orders</li>
 			<li>Partial warehouse storage</li>
 			<li>Increased game limits</li>
+	        </ul>
 		<p>Augustus requires the original assets (graphics, sounds, etc) from Caesar 3 to run. It optionally supports the high-quality MP3 files once provided on the Sierra website.</p>
 	</description>
 	<launchable type="desktop-id">com.github.keriew.augustus.desktop</launchable>
 	<screenshots>
 		<screenshot type="default">
-			<image type="source">https://raw.githubusercontent.com/keriew/augustus/master/res/sce_sys/livearea/contents/bg.png</image>
+			<image type="source">https://raw.githubusercontent.com/keriew/augustus/master/doc/main-image.png</image>
 		</screenshot>
 	</screenshots>
 	<releases>
+		<release version="3.0.1" date="2021-05-17"/>
 		<release version="2.0.1" date="2020-11-16"/>
 		<release version="2.0.0" date="2020-11-12"/>
 		<release version="1.4.1a" date="2020-06-09"/>
