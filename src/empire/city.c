@@ -258,7 +258,7 @@ static int generate_trader(int city_id, empire_city *city)
     if (trade_potential <= 0) {
         return 0;
     }
-    int max_traders = calc_bound(trade_potential / RESOURCES_TO_TRADER_RATIO, 1, 3);
+    int max_traders = calc_bound(trade_potential / RESOURCES_TO_TRADER_RATIO + 1, 1, 3);
     int index;
     if (max_traders == 1) {
         if (!city->trader_figure_ids[0]) {
