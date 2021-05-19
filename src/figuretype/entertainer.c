@@ -85,53 +85,64 @@ static int is_venue(building *b)
     }
 }
 
-static int determine_destination(int x, int y, building_type type1, building_type type2, building_type type3)
+static building *determine_destination(figure *f)
 {
-    int road_network = map_road_network_get(map_grid_offset(x, y));
+    int road_network = map_road_network_get(map_grid_offset(f->x, f->y));
 
-    building_list_large_clear();
+    static const building_type destinations_per_entertainer_type[4][3] =
+    {
+        { BUILDING_THEATER, BUILDING_AMPHITHEATER },
+        { BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM, BUILDING_ARENA },
+        { BUILDING_COLOSSEUM, BUILDING_ARENA },
+        { BUILDING_HIPPODROME }
+    };
 
-    building_type types[3] = { type1, type2, type3 };
+    const building_type *destinations;
+    switch (f->type) {
+        case FIGURE_ACTOR:
+            destinations = destinations_per_entertainer_type[0];
+            break;
+        case FIGURE_GLADIATOR:
+            destinations = destinations_per_entertainer_type[1];
+            break;
+        case FIGURE_LION_TAMER:
+            destinations = destinations_per_entertainer_type[2];
+            break;
+        case FIGURE_CHARIOTEER:
+            destinations = destinations_per_entertainer_type[3];
+            break;
+        default:
+            return 0;
+    }
+
+    building *closest = 0;
+    int min_distance = 10000;
 
     for (int i = 0; i < 3; i++) {
-        for (building *b = building_first_of_type(types[i]); b; b = b->next_of_type) {
+        building_type type = destinations[i];
+        int use_secondary_entertainment = (f->type == FIGURE_ACTOR && type == BUILDING_AMPHITHEATER) ||
+            (f->type == FIGURE_GLADIATOR && (type == BUILDING_ARENA || type == BUILDING_COLOSSEUM));
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state != BUILDING_STATE_IN_USE) {
                 continue;
             }
-            if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && b->data.monument.phase != -1) {
+            if ((type == BUILDING_HIPPODROME || type == BUILDING_COLOSSEUM) && b->data.monument.phase != -1) {
                 continue;
             }
             if (b->distance_from_entry && b->road_network_id == road_network) {
-                if (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) {
+                if (type == BUILDING_HIPPODROME && b->prev_part_building_id) {
                     continue;
                 }
-                building_list_large_add(b->id);
+            }
+            int days_left = use_secondary_entertainment ? b->data.entertainment.days2 : b->data.entertainment.days1;
+            int dist = 2 * days_left + calc_maximum_distance(f->x, f->y, b->x, b->y);
+            if (dist < min_distance) {
+                min_distance = dist;
+                closest = b;
             }
         }
     }
-    int total_venues = building_list_large_size();
-    if (total_venues <= 0) {
-        return 0;
-    }
-    int min_building_id = 0;
-    int min_distance = 10000;
-    for (int i = 0; i < total_venues; i++) {
-        building *b = building_get(building_list_large_item(i));
-        int days_left;
-        if (b->type == type1) {
-            days_left = b->data.entertainment.days1;
-        } else if (b->type == type2) {
-            days_left = b->data.entertainment.days2;
-        } else {
-            days_left = 0;
-        }
-        int dist = 2 * days_left + calc_maximum_distance(x, y, b->x, b->y);
-        if (dist < min_distance) {
-            min_distance = dist;
-            min_building_id = building_list_large_item(i);
-        }
-    }
-    return min_building_id;
+    return closest;
 }
 
 static void update_shows(figure *f)
@@ -338,28 +349,13 @@ void figure_entertainer_action(figure *f)
             f->use_cross_country = 1;
             f->is_ghost = 1;
             if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
-                int dst_building_id = 0;
-                switch (f->type) {
-                    case FIGURE_ACTOR:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_THEATER, BUILDING_AMPHITHEATER, 0);
-                        break;
-                    case FIGURE_GLADIATOR:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM, BUILDING_ARENA);
-                        break;
-                    case FIGURE_LION_TAMER:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_COLOSSEUM, BUILDING_ARENA, 0);
-                        break;
-                    case FIGURE_CHARIOTEER:
-                        dst_building_id = determine_destination(f->x, f->y, BUILDING_HIPPODROME, 0, 0);
-                        break;
-                }
-                if (dst_building_id) {
-                    building *b_dst = building_get(dst_building_id);
+                building *b_dst = determine_destination(f);
+                if (b_dst) {
                     int x_road, y_road;
                     int found_road = 0;
                     do {
                         if (map_closest_road_within_radius(b_dst->x, b_dst->y, b_dst->size, 2, &x_road, &y_road)) {
-                            f->destination_building_id = dst_building_id;
+                            f->destination_building_id = b_dst->id;
                             f->action_state = FIGURE_ACTION_92_ENTERTAINER_GOING_TO_VENUE;
                             f->destination_x = x_road;
                             f->destination_y = y_road;
