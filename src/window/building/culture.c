@@ -925,9 +925,9 @@ void window_building_draw_arena(building_info_context *c)
     } else if (b->data.entertainment.num_shows == 2) {
         window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_BOTH_SHOWS);
     } else if (b->data.entertainment.days1) {
-        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NEEDS_LIONS);
-    } else if (b->data.entertainment.days2) {
         window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS);
+    } else if (b->data.entertainment.days2) {
+        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NEEDS_LIONS);
     }
 }
 
