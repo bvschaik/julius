@@ -69,6 +69,7 @@ static struct {
     int focus_button_id;
     int building_id;
     int lighthouse_focus_button_id;
+    int module_choices[2];
 } data;
 
 static struct {
@@ -1138,7 +1139,7 @@ static void add_module(int selection)
     sound_speech_play_file("wavs/oracle.wav");
     building *b = building_get(data.building_id);
     city_finance_process_construction(MODULE_COST);
-    building_monument_add_module(b, selection);
+    building_monument_add_module(b, data.module_choices[selection-1]);
 }
 
 static void generate_module_image_id(int index)
@@ -1160,10 +1161,12 @@ static void add_module_prompt(int param1, int param2)
 
     if (scenario_building_allowed(temple_module_options[option_id].required_building)) {
         generate_module_image_id(option_id);
+        data.module_choices[num_options] = 1;
         options[num_options++] = temple_module_options[option_id].option;
     }
     if (scenario_building_allowed(temple_module_options[option_id + 1].required_building)) {
         generate_module_image_id(option_id + 1);
+        data.module_choices[num_options] = 2;
         options[num_options++] = temple_module_options[option_id + 1].option;
     }
 
