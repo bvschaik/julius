@@ -326,7 +326,11 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
             if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                 items_placed++;
                 building *b = building_create(building_type, x, y);
-                b->subtype.orientation = rotation;
+                if (building_variant_has_variants(building_type)) {
+                    b->variant = building_rotation_get_rotation_with_limit(building_variant_get_number_of_variants(b->type));
+                } else {
+                    b->subtype.orientation = rotation;
+                }
                 game_undo_add_building(b);
                 map_building_tiles_add(b->id, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
             }
