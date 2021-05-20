@@ -275,13 +275,13 @@ static int get_new_building_image_id(int map_x, int map_y, int grid_offset,
         if (type == BUILDING_WATCHTOWER) {
             switch (scenario_property_climate()) {
                 case CLIMATE_CENTRAL:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower C ON");
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower C OFF");
                     break;
                 case CLIMATE_DESERT:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower S ON");
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower S OFF");
                     break;
                 case CLIMATE_NORTHERN:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower N ON");
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower N OFF");
                     break;
                 default:
                     break;
@@ -303,10 +303,22 @@ static int get_new_building_image_id(int map_x, int map_y, int grid_offset,
         } else if (type == BUILDING_CARAVANSERAI) {
             switch (scenario_property_climate()) {
                 case CLIMATE_DESERT:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S ON");
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S OFF");
                     break;
                 default:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N ON");
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N OFF");
+                    break;
+            }
+        } else if (type == BUILDING_MESS_HALL) {
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "Mess OFF North");
+                    break;
+                case CLIMATE_DESERT:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "Mess OFF South");
+                    break;
+                default:
+                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "Mess OFF Central");
                     break;
             }
         }
