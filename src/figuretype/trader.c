@@ -424,10 +424,10 @@ static int get_closest_storage(const figure *f, int x, int y, int city_id, map_p
     return min_building->id;
 }
 
-static void go_to_next_storage(figure *f, int x_src, int y_src)
+static void go_to_next_storage(figure *f)
 {
     map_point dst;
-    int destination_id = get_closest_storage(f, x_src, y_src, f->empire_city_id, &dst);
+    int destination_id = get_closest_storage(f, f->x, f->y, f->empire_city_id, &dst);
     if (destination_id) {
         f->destination_building_id = destination_id;
         f->action_state = FIGURE_ACTION_101_TRADE_CARAVAN_ARRIVING;
@@ -470,17 +470,7 @@ void figure_trade_caravan_action(figure *f)
             f->wait_ticks++;
             if (f->wait_ticks > 20) {
                 f->wait_ticks = 0;
-                int x_base, y_base;
-                int trade_center_id = city_buildings_get_trade_center();
-                if (trade_center_id) {
-                    building *trade_center = building_get(trade_center_id);
-                    x_base = trade_center->x;
-                    y_base = trade_center->y;
-                } else {
-                    x_base = f->x;
-                    y_base = f->y;
-                }
-                go_to_next_storage(f, x_base, y_base);
+                go_to_next_storage(f);
             }
             f->image_offset = 0;
             break;
@@ -532,7 +522,7 @@ void figure_trade_caravan_action(figure *f)
                     move_on++;
                 }
                 if (move_on == 2) {
-                    go_to_next_storage(f, f->x, f->y);
+                    go_to_next_storage(f);
                 }
             }
             f->image_offset = 0;

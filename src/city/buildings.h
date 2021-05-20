@@ -22,9 +22,6 @@ int city_buildings_has_distribution_center(void);
 void city_buildings_add_distribution_center(building *center);
 void city_buildings_remove_distribution_center(building *center);
 
-int city_buildings_get_trade_center(void);
-void city_buildings_set_trade_center(int building_id);
-
 int city_buildings_has_hippodrome(void);
 void city_buildings_add_hippodrome(void);
 void city_buildings_remove_hippodrome(void);

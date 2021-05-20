@@ -273,19 +273,6 @@ static int get_closest_building_for_export(int x, int y, int city_id, building *
     return min_building_id;
 }
 
-static void get_trade_center_location(const figure *f, int *x, int *y)
-{
-    int trade_center_id = city_buildings_get_trade_center();
-    if (trade_center_id) {
-        building *trade_center = building_get(trade_center_id);
-        *x = trade_center->x;
-        *y = trade_center->y;
-    } else {
-        *x = f->x;
-        *y = f->y;
-    }
-}
-
 static int deliver_import_resource(figure *f, building *dock)
 {
     int ship_id = dock->data.dock.trade_ship_id;
@@ -296,11 +283,9 @@ static int deliver_import_resource(figure *f, building *dock)
     if (ship->action_state != FIGURE_ACTION_112_TRADE_SHIP_MOORED || ship->loads_sold_or_carrying <= 0) {
         return 0;
     }
-    int x, y;
-    get_trade_center_location(f, &x, &y);
     map_point tile;
     int resource = f->resource_id;
-    int destination_id = get_closest_building_for_import(x, y, ship->empire_city_id,
+    int destination_id = get_closest_building_for_import(f->x, f->y, ship->empire_city_id,
         dock, &tile, &resource);
     if (!destination_id) {
         return 0;
@@ -333,11 +318,9 @@ static int fetch_export_resource(figure *f, building *dock, int add_to_bought)
         (add_to_bought && ship->trader_amount_bought >= figure_trade_sea_trade_units())) {
         return 0;
     }
-    int x, y;
-    get_trade_center_location(f, &x, &y);
     map_point tile;
     int resource = f->resource_id;
-    int destination_id = get_closest_building_for_export(x, y, ship->empire_city_id,
+    int destination_id = get_closest_building_for_export(f->x, f->y, ship->empire_city_id,
         dock, &tile, &resource);
     if (!destination_id) {
         return 0;

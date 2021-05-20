@@ -116,8 +116,7 @@ static generic_button market_order_buttons[] = {
 
 static generic_button warehouse_order_buttons[] = {
     {0, 0, 304, 20, warehouse_orders, button_none, 0, 0},
-    {0, -22, 304, 20, warehouse_orders, button_none, 1, 0},
-    {314, 0, 20, 20, warehouse_orders, button_none, 2, 0},
+    {314, 0, 20, 20, warehouse_orders, button_none, 1, 0},
 };
 
 static generic_button go_to_caravanserai_action_button[] = {
@@ -797,7 +796,6 @@ void window_building_get_tooltip_granary_orders(int *group_id, int *text_id, int
         *group_id = 143;
         *text_id = 1;
     }
-
 }
 
 void window_building_draw_warehouse(building_info_context *c)
@@ -907,15 +905,8 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
             16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
     }
 
-    // trade center
-    button_border_draw(c->x_offset + 80, y_offset + 382, 16 * (c->width_blocks - 10),
-        20, data.orders_focus_button_id == 2 ? 1 : 0);
-    int is_trade_center = c->building_id == city_buildings_get_trade_center();
-    lang_text_draw_centered(99, is_trade_center ? 11 : 12, c->x_offset + 80, y_offset + 386,
-        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-
     // accept none button
-    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 3);
+    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 2);
 
     const resource_list *list = city_resource_get_available();
     for (int i = 0; i < list->size; i++) {
@@ -948,7 +939,7 @@ int window_building_handle_mouse_warehouse_orders(const mouse *m, building_info_
         return 1;
     }
     return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404,
-        warehouse_order_buttons, 3, &data.orders_focus_button_id);
+        warehouse_order_buttons, 2, &data.orders_focus_button_id);
 }
 
 void window_building_warehouse_get_tooltip_distribution_permissions(int *translation)
@@ -991,7 +982,7 @@ void window_building_granary_get_tooltip_distribution_permissions(int *translati
 
 void window_building_get_tooltip_warehouse_orders(int *group_id, int *text_id, int *translation)
 {
-    if (data.orders_focus_button_id == 3) {
+    if (data.orders_focus_button_id == 2) {
         *group_id = 15;
         *text_id = 1;
     }
@@ -1102,8 +1093,6 @@ static void warehouse_orders(int index, int param2)
         int storage_id = building_get(data.building_id)->storage_id;
         building_storage_toggle_empty_all(storage_id);
     } else if (index == 1) {
-        city_buildings_set_trade_center(data.building_id);
-    } else if (index == 2) {
         int storage_id = building_get(data.building_id)->storage_id;
         building_storage_accept_none(storage_id);
     }

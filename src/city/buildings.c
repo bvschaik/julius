@@ -30,7 +30,7 @@ void city_buildings_remove_senate(building *senate)
 
 int city_buildings_has_barracks(void)
 {
-	return city_data.building.barracks_placed;
+    return city_data.building.barracks_placed;
 }
 
 void city_buildings_add_barracks(building *barracks)
@@ -66,7 +66,7 @@ void city_buildings_set_barracks(int building_id)
 
 int city_buildings_has_mess_hall(void)
 {
-	return city_data.building.mess_hall_building_id > 0;
+    return city_data.building.mess_hall_building_id > 0;
 }
 
 void city_buildings_add_mess_hall(building *mess_hall)
@@ -80,7 +80,7 @@ void city_buildings_remove_mess_hall(void)
     city_data.building.mess_hall_building_id = 0;
 }
 
-int city_buildings_get_mess_hall(void) 
+int city_buildings_get_mess_hall(void)
 {
     return city_data.building.mess_hall_building_id;
 }
@@ -109,16 +109,6 @@ void city_buildings_remove_distribution_center(building *center)
         city_data.building.distribution_center_y = 0;
         city_data.building.distribution_center_placed = 0;
     }
-}
-
-int city_buildings_get_trade_center(void)
-{
-    return city_data.building.trade_center_building_id;
-}
-
-void city_buildings_set_trade_center(int building_id)
-{
-    city_data.building.trade_center_building_id = building_id;
 }
 
 int city_buildings_has_hippodrome(void)

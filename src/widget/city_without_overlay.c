@@ -348,9 +348,6 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
 static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask)
 {
     image_draw_masked(image_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask);
-    if (b->id == city_buildings_get_trade_center()) {
-        image_draw_masked(image_group(GROUP_BUILDING_TRADE_CENTER_FLAG), x + 19, y - 56, color_mask);
-    }
 }
 
 static void draw_granary_stores(const image *img, const building *b, int x, int y, color_t color_mask)

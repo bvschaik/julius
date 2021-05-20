@@ -270,9 +270,6 @@ void building_maintenance_check_rome_access(void)
                 }
             }
         } else if (b->type == BUILDING_WAREHOUSE) {
-            if (!city_buildings_get_trade_center()) {
-                city_buildings_set_trade_center(i);
-            }
             b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 3, &x_road, &y_road);
