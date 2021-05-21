@@ -13,7 +13,7 @@
 
 #define MAIN_ENTRIES 10000
 #define ENEMY_ENTRIES 801
-#define CYRILLIC_FONT_ENTRIES 2000
+#define EXTERNAL_FONT_ENTRIES 2000
 #define TRAD_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS)
 #define SIMP_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS)
 #define KOREAN_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS)
@@ -22,19 +22,20 @@
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET HEADER_SIZE
 #define ENEMY_INDEX_SIZE ENTRY_SIZE * ENEMY_ENTRIES
-#define CYRILLIC_FONT_INDEX_OFFSET HEADER_SIZE
-#define CYRILLIC_FONT_INDEX_SIZE ENTRY_SIZE * CYRILLIC_FONT_ENTRIES
+#define EXTERNAL_FONT_INDEX_OFFSET HEADER_SIZE
+#define EXTERNAL_FONT_INDEX_SIZE ENTRY_SIZE * EXTERNAL_FONT_ENTRIES
 
 #define MAIN_DATA_SIZE 30000000
 #define EMPIRE_DATA_SIZE (2000*1000*4)
 #define ENEMY_DATA_SIZE 2400000
-#define CYRILLIC_FONT_DATA_SIZE 1500000
+#define EXTERNAL_FONT_DATA_SIZE 1500000
 #define CHINESE_FONT_DATA_SIZE 7200000
 #define KOREAN_FONT_DATA_SIZE 7500000
 #define JAPANESE_FONT_DATA_SIZE 11000000
 #define SCRATCH_DATA_SIZE 12100000
 
 #define CYRILLIC_FONT_BASE_OFFSET 201
+#define GREEK_FONT_BASE_OFFSET 1
 
 #define NAME_SIZE 32
 
@@ -66,8 +67,8 @@ static const char EDITOR_GRAPHICS_555[][NAME_SIZE] = {
 };
 static const char EMPIRE_555[NAME_SIZE] = "The_empire.555";
 
-static const char CYRILLIC_FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
-static const char CYRILLIC_FONTS_555[NAME_SIZE] = "C3_fonts.555";
+static const char EXTERNAL_FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
+static const char EXTERNAL_FONTS_555[NAME_SIZE] = "C3_fonts.555";
 static const char CHINESE_FONTS_555[NAME_SIZE] = "rome.555";
 static const char CHINESE_FONTS_555_V2[NAME_SIZE] = "rome-v2.555";
 static const char KOREAN_FONTS_555[NAME_SIZE] = "korean.555";
@@ -346,28 +347,28 @@ static int alloc_font_memory(int font_entries, int font_data_size)
     return 1;
 }
 
-static int load_cyrillic_fonts(void)
+static int load_external_fonts(int base_offset)
 {
-    if (!alloc_font_memory(CYRILLIC_FONT_ENTRIES, CYRILLIC_FONT_DATA_SIZE)) {
+    if (!alloc_font_memory(EXTERNAL_FONT_ENTRIES, EXTERNAL_FONT_DATA_SIZE)) {
         return 0;
     }
-    if (CYRILLIC_FONT_INDEX_SIZE != io_read_file_part_into_buffer(CYRILLIC_FONTS_SG2, MAY_BE_LOCALIZED,
-        data.tmp_data, CYRILLIC_FONT_INDEX_SIZE, CYRILLIC_FONT_INDEX_OFFSET)) {
+    if (EXTERNAL_FONT_INDEX_SIZE != io_read_file_part_into_buffer(EXTERNAL_FONTS_SG2, MAY_BE_LOCALIZED,
+        data.tmp_data, EXTERNAL_FONT_INDEX_SIZE, EXTERNAL_FONT_INDEX_OFFSET)) {
         return 0;
     }
     buffer buf;
-    buffer_init(&buf, data.tmp_data, CYRILLIC_FONT_INDEX_SIZE);
-    read_index(&buf, data.font, CYRILLIC_FONT_ENTRIES);
+    buffer_init(&buf, data.tmp_data, EXTERNAL_FONT_INDEX_SIZE);
+    read_index(&buf, data.font, EXTERNAL_FONT_ENTRIES);
 
-    int data_size = io_read_file_into_buffer(CYRILLIC_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    int data_size = io_read_file_into_buffer(EXTERNAL_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
         return 0;
     }
     buffer_init(&buf, data.tmp_data, data_size);
-    convert_images(data.font, CYRILLIC_FONT_ENTRIES, &buf, data.font_data);
+    convert_images(data.font, EXTERNAL_FONT_ENTRIES, &buf, data.font_data);
 
     data.fonts_enabled = FULL_CHARSET_IN_FONT;
-    data.font_base_offset = CYRILLIC_FONT_BASE_OFFSET;
+    data.font_base_offset = base_offset;
     return 1;
 }
 
@@ -646,7 +647,9 @@ static int load_japanese_fonts(void)
 int image_load_fonts(encoding_type encoding)
 {
     if (encoding == ENCODING_CYRILLIC) {
-        return load_cyrillic_fonts();
+        return load_external_fonts(CYRILLIC_FONT_BASE_OFFSET);
+    } else if (encoding == ENCODING_GREEK) {
+        return load_external_fonts(GREEK_FONT_BASE_OFFSET);
     } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
         return load_traditional_chinese_fonts();
     } else if (encoding == ENCODING_SIMPLIFIED_CHINESE) {
