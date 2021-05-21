@@ -27,18 +27,19 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CANCEL, "取消"},
     {TR_BUTTON_RESET_DEFAULTS, "重置默认"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "热键绑定"},
-    {TR_CONFIG_TITLE, "Julius 配置设定"},
+    {TR_CONFIG_TITLE, "Julius 游戏配置"},
     {TR_CONFIG_LANGUAGE_LABEL, "语言包:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "默认"},
-    {TR_CONFIG_DISPLAY_SCALE, "显示大小:"},
-    {TR_CONFIG_CURSOR_SCALE, "鼠标大小:"},
+    {TR_CONFIG_DISPLAY_SCALE, "显示比例:"},
+    {TR_CONFIG_CURSOR_SCALE, "鼠标比例:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "用户界面更变"},
     {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "游戏内容更变"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "播放开场动画"},
     {TR_CONFIG_SIDEBAR_INFO, "控制面板更多信息"},
     {TR_CONFIG_SMOOTH_SCROLLING, "平滑视角滚动"},
-    {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "禁用右键拖动地图"},
-    {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "优化清理土地视觉反馈"},
+    {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "禁用屏幕边缘滚动地图"},
+    {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "禁用鼠标右键拖动地图"},
+    {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "优化清理土地视觉效果"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "允许连续建造每种神庙"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "建造时显示贮水池水泉及水井覆盖范围"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "显示拖动建设大小"},
@@ -104,7 +105,9 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "设定视角标签 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "设定视角标签 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "战斗信息切换"},
-    {TR_HOTKEY_EDIT_TITLE, "按下新热键"}
+    {TR_HOTKEY_EDIT_TITLE, "按下新热键"},
+    {TR_HOTKEY_DUPLICATE_TITLE, "热键已占用"},
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "该键位已设定为以下功能:"}
 };
 
 void translation_simplified_chinese(const translation_string **strings, int *num_strings)
