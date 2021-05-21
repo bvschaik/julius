@@ -215,7 +215,7 @@ void window_building_draw_granary(building_info_context *c)
             resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 32, c->y_offset + 190);
         lang_text_draw_multiline(99, 17, c->x_offset + 64, c->y_offset + 193,
-            16 * (c->width_blocks - 5), FONT_SMALL_BLACK);
+            16 * (c->width_blocks - 5), FONT_NORMAL_BROWN);
     }
 }
 
@@ -354,11 +354,11 @@ void window_building_draw_warehouse(building_info_context *c)
             resource_image_offset(resource, RESOURCE_IMAGE_ICON),
             c->x_offset + 32, c->y_offset + 220);
         lang_text_draw_multiline(99, 17, c->x_offset + 64, c->y_offset + 223,
-            16 * (c->width_blocks - 5), FONT_SMALL_BLACK);
+            16 * (c->width_blocks - 5), FONT_NORMAL_BROWN);
     } else if (b->num_workers) {
         // cartpusher is waiting for orders
         lang_text_draw_multiline(99, 15, c->x_offset + 32, c->y_offset + 223,
-            16 * (c->width_blocks - 3), FONT_SMALL_BLACK);
+            16 * (c->width_blocks - 3), FONT_NORMAL_BROWN);
     }
 
     if (c->warehouse_space_text == 1) { // full

@@ -144,13 +144,13 @@ void window_building_draw_theater(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
     window_building_draw_employment(c, 138);
     if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(72, 6, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        int width = lang_text_draw(72, 6, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-            c->x_offset + width + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
         lang_text_draw(72, 7 + b->data.entertainment.play,
-            c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(72, 5, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        lang_text_draw(72, 5, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     }
 }
 
@@ -178,20 +178,20 @@ void window_building_draw_amphitheater(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 7);
     window_building_draw_employment(c, 138);
     if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(71, 8, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        int width = lang_text_draw(71, 8, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-            c->x_offset + width + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(71, 7, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        lang_text_draw(71, 7, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     }
     if (b->data.entertainment.days2 > 0) {
-        int width = lang_text_draw(71, 10, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        int width = lang_text_draw(71, 10, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2,
-            c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         lang_text_draw(72, 7 + b->data.entertainment.play,
-            c->x_offset + 32, c->y_offset + 222, FONT_SMALL_BLACK);
+            c->x_offset + 32, c->y_offset + 222, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(71, 9, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        lang_text_draw(71, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     }
 }
 
@@ -219,18 +219,18 @@ void window_building_draw_colosseum(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
     window_building_draw_employment(c, 138);
     if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(74, 8, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        int width = lang_text_draw(74, 8, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-            c->x_offset + width + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(74, 7, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        lang_text_draw(74, 7, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     }
     if (b->data.entertainment.days2 > 0) {
-        int width = lang_text_draw(74, 10, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        int width = lang_text_draw(74, 10, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2,
-            c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     }
 }
 
@@ -254,11 +254,11 @@ void window_building_draw_hippodrome(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
     window_building_draw_employment(c, 138);
     if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(73, 6, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        int width = lang_text_draw(73, 6, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-            c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(73, 5, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        lang_text_draw(73, 5, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     }
 }
 
