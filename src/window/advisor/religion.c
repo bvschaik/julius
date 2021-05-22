@@ -70,12 +70,12 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
 static void draw_oracle_row(void)
 {
     lang_text_draw(59, 8, 40, 166, FONT_NORMAL_WHITE);
-    text_draw_number_centered(building_count_total(BUILDING_ORACLE), 230, 166, 50, FONT_NORMAL_WHITE);
+    text_draw_number_centered(building_count_active(BUILDING_ORACLE), 230, 166, 50, FONT_NORMAL_WHITE);
     if (building_count_active(BUILDING_PANTHEON)) {
-        text_draw_number_centered(building_count_total(BUILDING_NYMPHAEUM) +
+        text_draw_number_centered(building_count_active(BUILDING_NYMPHAEUM) +
             building_count_active(BUILDING_PANTHEON), 290, 166, 50, FONT_NORMAL_GREEN);
     } else {
-        text_draw_number_centered(building_count_total(BUILDING_NYMPHAEUM), 290, 166, 50, FONT_NORMAL_WHITE);
+        text_draw_number_centered(building_count_active(BUILDING_NYMPHAEUM), 290, 166, 50, FONT_NORMAL_WHITE);
     }
 }
 

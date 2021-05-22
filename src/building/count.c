@@ -164,14 +164,14 @@ void building_count_update(void)
             case BUILDING_GRAND_TEMPLE_MARS:
             case BUILDING_GRAND_TEMPLE_VENUS:
             case BUILDING_PANTHEON:
-            case BUILDING_ORACLE:
             case BUILDING_LARARIUM:
-            case BUILDING_NYMPHAEUM:
             case BUILDING_SMALL_MAUSOLEUM:
             case BUILDING_LARGE_MAUSOLEUM:
                 increase_count(type, b->num_workers > 0, b->upgrade_level);
                 break;
-
+            case BUILDING_ORACLE:
+            case BUILDING_NYMPHAEUM:
+                increase_count(type, b->data.monument.phase == MONUMENT_FINISHED, b->upgrade_level);
             // industry
             case BUILDING_WHEAT_FARM:
                 increase_industry_count(RESOURCE_WHEAT, b->num_workers > 0);
