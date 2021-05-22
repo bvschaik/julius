@@ -14,8 +14,10 @@
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/image.h"
+#include "map/image_context.h"
 #include "map/property.h"
 #include "map/random.h"
+#include "map/tiles.h"
 #include "map/terrain.h"
 #include "widget/city_bridge.h"
 #include "widget/city_building_ghost.h"
@@ -342,9 +344,22 @@ static void draw_footprint(int x, int y, int grid_offset)
     } else if (map_property_is_draw_tile(grid_offset)) {
         int terrain = map_terrain_get(grid_offset);
         if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
-            // display grass
-            int image_id = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
-            image_draw_isometric_footprint_from_draw_tile(image_id, x, y, map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
+            if (terrain & TERRAIN_ROAD) {
+                // Draw the equivalent road tile.
+                int image_id = image_group(GROUP_TERRAIN_ROAD);
+                if (map_tiles_is_paved_road(grid_offset)) {
+                    const terrain_image *img = map_image_context_get_paved_road(grid_offset);
+                    image_id += img->group_offset + img->item_offset;
+                } else {
+                    const terrain_image *img = map_image_context_get_dirt_road(grid_offset);
+                    image_id += img->group_offset + img->item_offset + 49;
+                }
+                image_draw_isometric_footprint_from_draw_tile(image_id, x, y, map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
+            } else {    
+                // display grass
+                int image_id = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
+                image_draw_isometric_footprint_from_draw_tile(image_id, x, y, map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
+            }
         } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
             image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y,
                 map_is_highlighted(grid_offset) ? COLOR_BLUE : 0);
