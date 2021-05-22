@@ -30,7 +30,7 @@ int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, i
 
 int map_road_to_largest_network(int x, int y, int size, int *x_road, int *y_road);
 
-int map_road_to_largest_network_hippodrome(int x, int y, int *x_road, int *y_road);
+int map_road_to_largest_network_hippodrome(int x, int y, int *x_road, int *y_road, int rotated);
 
 int map_road_to_largest_network_grand_temple(int x, int y, int* x_road, int* y_road);
 

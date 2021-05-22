@@ -347,13 +347,19 @@ static void check_min_dist_hippodrome(int base_offset, int x_offset,
     }
 }
 
-int map_road_to_largest_network_hippodrome(int x, int y, int *x_road, int *y_road)
+int map_road_to_largest_network_hippodrome(int x, int y, int *x_road, int *y_road, int rotated)
 {
     int min_index = 12;
     int min_grid_offset = -1;
-    check_road_to_largest_network_hippodrome(x, y, &min_index, &min_grid_offset);
-    check_road_to_largest_network_hippodrome(x + 5, y, &min_index, &min_grid_offset);
-    check_road_to_largest_network_hippodrome(x + 10, y, &min_index, &min_grid_offset);
+    if (rotated) {
+        check_road_to_largest_network_hippodrome(x, y, &min_index, &min_grid_offset);
+        check_road_to_largest_network_hippodrome(x, y + 5, &min_index, &min_grid_offset);
+        check_road_to_largest_network_hippodrome(x, y + 10, &min_index, &min_grid_offset);
+    } else {
+        check_road_to_largest_network_hippodrome(x, y, &min_index, &min_grid_offset);
+        check_road_to_largest_network_hippodrome(x + 5, y, &min_index, &min_grid_offset);
+        check_road_to_largest_network_hippodrome(x + 10, y, &min_index, &min_grid_offset);
+    }
 
     if (min_index < 12) {
         *x_road = map_grid_offset_to_x(min_grid_offset);
@@ -364,10 +370,15 @@ int map_road_to_largest_network_hippodrome(int x, int y, int *x_road, int *y_roa
     int min_dist = 100000;
     min_grid_offset = -1;
     int min_x_offset = -1;
-    check_min_dist_hippodrome(map_grid_offset(x, y), 0, &min_dist, &min_grid_offset, &min_x_offset);
-    check_min_dist_hippodrome(map_grid_offset(x + 5, y), 5, &min_dist, &min_grid_offset, &min_x_offset);
-    check_min_dist_hippodrome(map_grid_offset(x + 10, y), 10, &min_dist, &min_grid_offset, &min_x_offset);
-
+    if (rotated) {
+        check_min_dist_hippodrome(map_grid_offset(x, y), 0, &min_dist, &min_grid_offset, &min_x_offset);
+        check_min_dist_hippodrome(map_grid_offset(x, y + 5), 5, &min_dist, &min_grid_offset, &min_x_offset);
+        check_min_dist_hippodrome(map_grid_offset(x, y + 10), 10, &min_dist, &min_grid_offset, &min_x_offset);
+    } else {
+        check_min_dist_hippodrome(map_grid_offset(x, y), 0, &min_dist, &min_grid_offset, &min_x_offset);
+        check_min_dist_hippodrome(map_grid_offset(x + 5, y), 5, &min_dist, &min_grid_offset, &min_x_offset);
+        check_min_dist_hippodrome(map_grid_offset(x + 10, y), 10, &min_dist, &min_grid_offset, &min_x_offset);
+    }
     if (min_grid_offset >= 0) {
         *x_road = map_grid_offset_to_x(min_grid_offset) + min_x_offset;
         *y_road = map_grid_offset_to_y(min_grid_offset);
