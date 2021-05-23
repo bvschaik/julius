@@ -658,17 +658,14 @@ static void draw_multibyte_letter(font_t font, const image *img, const color_t *
             break;
         case FONT_NORMAL_GREEN:
             draw_uncompressed(img, data, x + 1, y + 1, 0xe7cfad, DRAW_TYPE_BLEND_ALPHA);
-            draw_uncompressed(img, data, x, y, 0x311c10, DRAW_TYPE_BLEND_ALPHA);
-            break;
-        case FONT_NORMAL_PLAIN:
-            draw_uncompressed(img, data, x, y + 2, color, DRAW_TYPE_BLEND_ALPHA);
+            draw_uncompressed(img, data, x, y, COLOR_BLACK, DRAW_TYPE_BLEND_ALPHA);
             break;
         case FONT_NORMAL_BLACK:
         case FONT_LARGE_BLACK:
             draw_uncompressed(img, data, x + 1, y + 1, 0xcead9c, DRAW_TYPE_BLEND_ALPHA);
-            draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
+            draw_uncompressed(img, data, x, y, COLOR_BLACK, DRAW_TYPE_BLEND_ALPHA);
             break;
-        default:
+        default: // Plain + brown
             draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
             break;
     }
