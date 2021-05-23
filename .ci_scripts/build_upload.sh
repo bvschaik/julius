@@ -12,6 +12,10 @@ then
 elif [[ "$GITHUB_REF" == "refs/heads/master" ]]
 then
   REPO=development
+elif [[ "$GITHUB_REF" =~ ^refs/heads/feature/ ]]
+then
+  FEATURE=${GITHUB_REF##refs/heads/feature/}
+  VERSION=$VERSION-$FEATURE
 elif [[ "$GITHUB_REF" =~ ^refs/pull/ ]]
 then
   PR_ID=${GITHUB_REF##refs/pull/}

@@ -12,6 +12,9 @@ if ("$env:GITHUB_REF" -match "^refs/tags/v") {
     $repo = "release"
 } elseif ("$env:GITHUB_REF" -eq "refs/heads/master") {
     $repo = "development"
+} elseif ("$env:GITHUB_REF" -match "^refs/heads/feature/(.*)") {
+    $feature = $matches[1];
+    $version = "$version-$feature"
 } elseif ("$env:GITHUB_REF" -match "^refs/pull/(.*)/merge") {
     $pr_id = $matches[1];
     $version = "pr-$pr_id-$version"
