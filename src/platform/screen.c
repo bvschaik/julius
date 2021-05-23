@@ -121,6 +121,11 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     SDL_Log("Creating screen %d x %d, %s, driver: %s", width, height,
         fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
+
+#if SDL_VERSION_ATLEAST(2, 0, 1)
+    flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+#endif
+
     if (fullscreen) {
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }
