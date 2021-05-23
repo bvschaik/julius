@@ -312,7 +312,7 @@ static void draw_content(const lang_message *msg)
 
 static void draw_background_normal(void)
 {
-    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
+    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED, 5);
     const lang_message *msg = lang_get_message(data.text_id);
     data.x = msg->x;
     data.y = msg->y;
@@ -341,12 +341,12 @@ static void draw_background_video(void)
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
         lines_available = 3;
     }
-    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
+    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED, 5);
     rich_text_clear_links();
     int lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
     if (lines_required > lines_available) {
         small_font = 1;
-        rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN);
+        rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN, 7);
         lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
     }
 
