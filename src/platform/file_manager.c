@@ -110,6 +110,9 @@ static int is_file(int mode)
 #endif
 
 static const char *ASSET_DIRS[MAX_ASSET_DIRS] = {
+#ifdef _WIN32
+    "***SDL_BASE_PATH***",
+#endif
     ".",
 #ifdef __vita__
     VITA_PATH_PREFIX,
