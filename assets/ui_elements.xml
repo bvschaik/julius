@@ -113,4 +113,17 @@
     <image id="Monument Build Icon" src="Monument_Panel" />
     <image id="Rotate Build Icon" src="Rotation_Panel" />
 
+<!-- Note: Hippodrome racing UI button -->
+    <image id="Hipp_Racing_Button" src="Hippodrome_Betting_Select_Button" />
+
+<!-- Note: Hippodrome team selection buttons -->
+    <image id="Hipp_Blues_UH" src="Hippodrome_Team_Select_Blues_UH" />
+    <image id="Hipp_Blues_H" src="Hippodrome_Team_Select_Blues_H" />
+    <image id="Hipp_Reds_UH" src="Hippodrome_Team_Select_Reds_UH" />
+    <image id="Hipp_Reds_H" src="Hippodrome_Team_Select_Reds_H" />
+    <image id="Hipp_Whites_UH" src="Hippodrome_Team_Select_Whites_UH" />
+    <image id="Hipp_Whites_H" src="Hippodrome_Team_Select_Whites_H" />
+    <image id="Hipp_Greens_UH" src="Hippodrome_Team_Select_Greens_UH" />
+    <image id="Hipp_Greens_H" src="Hippodrome_Team_Select_Greens_H" />
+
 </assetlist>
