@@ -107,7 +107,6 @@ int figure_name_get(figure_type type, enemy_type enemy)
     case FIGURE_BATHHOUSE_WORKER:
     case FIGURE_BARKEEP_SUPPLIER:
     case FIGURE_BARKEEP:
-    case FIGURE_CARAVANSERAI_SUPPLIER:
         return get_next_name(&data.citizen_female, 99, 32);
 
     case FIGURE_SCHOOL_CHILD:
@@ -115,6 +114,7 @@ int figure_name_get(figure_type type, enemy_type enemy)
     case FIGURE_BARBER:
     case FIGURE_WORKER:
     case FIGURE_MESS_HALL_COLLECTOR:
+    case FIGURE_CARAVANSERAI_SUPPLIER:
     case FIGURE_LIGHTHOUSE_SUPPLIER:
     default:
         return get_next_name(&data.citizen_male, 1, 64);

@@ -70,6 +70,7 @@ static int big_people_image(figure_type type)
 {
     switch (type) {
         case FIGURE_WORK_CAMP_SLAVE:
+        case FIGURE_CARAVANSERAI_SUPPLIER:
         case FIGURE_CARAVANSERAI_COLLECTOR:
         case FIGURE_LIGHTHOUSE_SUPPLIER:
             return assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"), "Slave Portrait");
@@ -84,7 +85,6 @@ static int big_people_image(figure_type type)
             }
         case FIGURE_BARKEEP:
         case FIGURE_BARKEEP_SUPPLIER:
-        case FIGURE_CARAVANSERAI_SUPPLIER:
             return assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep Portrait");
         default:
             break;
