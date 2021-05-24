@@ -25,6 +25,10 @@ void house_service_decay_culture(void)
             decay(&b->data.house.amphitheater_gladiator);
             decay(&b->data.house.colosseum_gladiator);
             decay(&b->data.house.colosseum_lion);
+            decay(&b->house_arena_gladiator);
+            decay(&b->house_arena_lion);
+            decay(&b->house_tavern_meat_access);
+            decay(&b->house_tavern_wine_access);
             decay(&b->data.house.hippodrome);
             decay(&b->data.house.school);
             decay(&b->data.house.library);
