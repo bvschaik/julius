@@ -28,7 +28,7 @@
 #define EMPIRE_DATA_SIZE (2000*1000*4)
 #define ENEMY_DATA_SIZE 2400000
 #define CYRILLIC_FONT_DATA_SIZE 1500000
-#define TRAD_CHINESE_FONT_DATA_SIZE 7000000
+#define TRAD_CHINESE_FONT_DATA_SIZE 7200000
 #define KOREAN_FONT_DATA_SIZE 7500000
 #define SCRATCH_DATA_SIZE 12100000
 
@@ -66,7 +66,8 @@ static const char EMPIRE_555[NAME_SIZE] = "The_empire.555";
 
 static const char CYRILLIC_FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
 static const char CYRILLIC_FONTS_555[NAME_SIZE] = "C3_fonts.555";
-static const char TRAD_CHINESE_FONTS_555[NAME_SIZE] = "rome.555";
+static const char CHINESE_FONTS_555[NAME_SIZE] = "rome.555";
+static const char CHINESE_FONTS_555_V2[NAME_SIZE] = "rome-v2.555";
 static const char KOREAN_FONTS_555[NAME_SIZE] = "korean.555";
 static const char KOREAN_FONTS_555_V2[NAME_SIZE] = "korean-v2.555";
 
@@ -367,11 +368,13 @@ static int load_cyrillic_fonts(void)
     return 1;
 }
 
-static int parse_multibyte_font(int num_chars, buffer *input, color_t *pixels, int pixel_offset, int char_size, int index_offset)
+static int parse_multibyte_font(
+    int num_chars, buffer *input, color_t *pixels, int pixel_offset,
+    int char_size, int letter_spacing, int index_offset)
 {
     for (int i = 0; i < num_chars; i++) {
         image *img = &data.font[index_offset + i];
-        img->width = char_size;
+        img->width = char_size + letter_spacing;
         img->height = char_size;
         img->draw.bitmap_id = 0;
         img->draw.offset = pixel_offset;
@@ -392,6 +395,11 @@ static int parse_multibyte_font(int num_chars, buffer *input, color_t *pixels, i
                 pixels++;
                 pixel_offset++;
                 bits >>= 4;
+            }
+            for (int s = 0; s < letter_spacing; s++) {
+                *pixels = COLOR_SG2_TRANSPARENT;
+                pixels++;
+                pixel_offset++;
             }
         }
     }
@@ -440,22 +448,36 @@ static int load_traditional_chinese_fonts(void)
         return 0;
     }
 
-    int data_size = io_read_file_into_buffer(
-        TRAD_CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    int file_version = 2;
+    int data_size = io_read_file_into_buffer(CHINESE_FONTS_555_V2, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
-        return 0;
+        file_version = 1;
+        data_size = io_read_file_into_buffer(CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+        if (!data_size) {
+            log_error("Julius requires extra files for Chinese characters:", CHINESE_FONTS_555_V2, 0);
+            return 0;
+        }
     }
+
     buffer input;
     buffer_init(&input, data.tmp_data, data_size);
     color_t *pixels = data.font_data;
-    int pixel_offset = 0;
-
-    log_info("Parsing Chinese font", 0, 0);
+    int offset = 0;
     int num_chars = IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS;
-    pixel_offset = parse_chinese_font(num_chars, &input, &pixels[pixel_offset], pixel_offset, 12, 0);
-    pixel_offset = parse_chinese_font(num_chars, &input, &pixels[pixel_offset], pixel_offset, 16, num_chars);
-    pixel_offset = parse_chinese_font(num_chars, &input, &pixels[pixel_offset], pixel_offset, 20, num_chars * 2);
-    log_info("Done parsing Chinese font", 0, 0);
+
+    log_info("Parsing Traditional Chinese font", 0, 0);
+    if (file_version == 2) {
+        // 4-bit font file
+        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 12, 1, 0);
+        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 15, 1, num_chars);
+        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 20, 1, num_chars*2);
+    } else if (file_version == 1) {
+        // Old 1-bit font file
+        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 12, 0);
+        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 16, num_chars);
+        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 20, num_chars * 2);
+    }
+    log_info("Done parsing Traditional Chinese font", 0, 0);
 
     data.fonts_enabled = MULTIBYTE_IN_FONT;
     data.font_base_offset = 0;
@@ -468,21 +490,35 @@ static int load_simplified_chinese_fonts(void)
         return 0;
     }
 
-    int data_size = io_read_file_into_buffer(
-        TRAD_CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    int file_version = 2;
+    int data_size = io_read_file_into_buffer(CHINESE_FONTS_555_V2, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
     if (!data_size) {
-        return 0;
+        file_version = 1;
+        data_size = io_read_file_into_buffer(CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+        if (!data_size) {
+            log_error("Julius requires extra files for Chinese characters:", CHINESE_FONTS_555_V2, 0);
+            return 0;
+        }
     }
+
     buffer input;
     buffer_init(&input, data.tmp_data, data_size);
     color_t *pixels = data.font_data;
-    int pixel_offset = 0;
+    int offset = 0;
+    int num_chars = IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS;
 
     log_info("Parsing Simplified Chinese font", 0, 0);
-    int num_chars = IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS;
-    pixel_offset = parse_chinese_font(num_chars, &input, &pixels[pixel_offset], pixel_offset, 12, 0);
-    pixel_offset = parse_chinese_font(num_chars, &input, &pixels[pixel_offset], pixel_offset, 16, num_chars);
-    pixel_offset = parse_chinese_font(num_chars, &input, &pixels[pixel_offset], pixel_offset, 19, num_chars * 2);
+    if (file_version == 2) {
+        // 4-bit font file
+        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 12, 1, 0);
+        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 15, 1, num_chars);
+        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 20, 1, num_chars*2);
+    } else if (file_version == 1) {
+        // Old 1-bit font file
+        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 12, 0);
+        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 16, num_chars);
+        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 19, num_chars * 2);
+    }
     log_info("Done parsing Simplified Chinese font", 0, 0);
 
     data.fonts_enabled = MULTIBYTE_IN_FONT;
@@ -545,25 +581,22 @@ static int load_korean_fonts(void)
     buffer input;
     buffer_init(&input, data.tmp_data, data_size);
     color_t *pixels = data.font_data;
-    int pixel_offset = 0;
+    int offset = 0;
+    int num_chars = IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS;
 
     log_info("Parsing Korean font", 0, 0);
     if (file_version == 2) {
         // 4-bit font file
-        int num_chars = IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS;
-        pixel_offset = parse_multibyte_font(num_chars, &input, &pixels[pixel_offset], pixel_offset, 12, 0);
-        pixel_offset = parse_multibyte_font(num_chars, &input, &pixels[pixel_offset], pixel_offset, 15, num_chars);
-        pixel_offset = parse_multibyte_font(num_chars, &input, &pixels[pixel_offset], pixel_offset, 20, num_chars*2);
+        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 12, 0, 0);
+        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 15, 0, num_chars);
+        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 20, 0, num_chars*2);
     } else if (file_version == 1) {
         // Old 1-bit font file
-        pixel_offset = parse_korean_font(
-            &input, &pixels[pixel_offset], pixel_offset, 12, 0);
-        pixel_offset = parse_korean_font(
-            &input, &pixels[pixel_offset], pixel_offset, 15, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS);
-        pixel_offset = parse_korean_font(
-            &input, &pixels[pixel_offset], pixel_offset, 20, IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS * 2);
+        offset = parse_korean_font(&input, &pixels[offset], offset, 12, 0);
+        offset = parse_korean_font(&input, &pixels[offset], offset, 15, num_chars);
+        offset = parse_korean_font(&input, &pixels[offset], offset, 20, num_chars * 2);
     }
-    log_info("Done parsing Korean font", 0, pixel_offset);
+    log_info("Done parsing Korean font", 0, 0);
 
     data.fonts_enabled = MULTIBYTE_IN_FONT;
     data.font_base_offset = 0;
