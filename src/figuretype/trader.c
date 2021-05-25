@@ -809,7 +809,7 @@ void figure_trade_ship_action(figure *f)
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->wait_ticks = 0;
                 f->state = FIGURE_STATE_DEAD;
-            } else if (f->wait_ticks >= FIGURE_REROUTE_DESTINATION_TICKS) {
+            } else if (f->wait_ticks++ >= FIGURE_REROUTE_DESTINATION_TICKS) {
                 f->wait_ticks = 0;
                 map_point tile;
                 int dock_id;

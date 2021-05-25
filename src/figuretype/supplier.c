@@ -182,8 +182,12 @@ static int recalculate_market_supplier_destination(figure *f)
     int item = f->collecting_item_id;
     building *market = building_get(f->building_id);
     inventory_storage_info info[INVENTORY_MAX];
+    int road_network = map_road_network_get(f->grid_offset);
+    if (!road_network) {
+        return 1;
+    }
     if (!building_distribution_get_inventory_storages(info, BUILDING_MARKET,
-        map_road_network_get(f->grid_offset), f->x, f->y, MAX_DISTANCE)) {
+        road_network, f->x, f->y, MAX_DISTANCE)) {
         return 0;
     }
     if (f->building_id == info[item].building_id) {
