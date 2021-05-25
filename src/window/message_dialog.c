@@ -322,6 +322,12 @@ static void draw_background_normal(void)
     draw_title(msg);
     draw_subtitle(msg);
     draw_content(msg);
+
+    if (msg->type == TYPE_MANUAL && data.num_history > 0) {
+        // Back button text
+        lang_text_draw(12, 0,
+            data.x + 52, data.y + 16 * msg->height_blocks - 31, FONT_NORMAL_BLACK);
+    }
 }
 
 static void draw_background_video(void)
@@ -448,8 +454,6 @@ static void draw_foreground_normal(void)
         image_buttons_draw(
             data.x + 16, data.y + 16 * msg->height_blocks - 36,
             &image_button_back, 1);
-        lang_text_draw(12, 0,
-            data.x + 52, data.y + 16 * msg->height_blocks - 31, FONT_NORMAL_BLACK);
     }
 
     if (msg->type == TYPE_MESSAGE) {
