@@ -395,16 +395,21 @@ void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
     if (key == KEY_TYPE_NONE) {
         return;
     }
-    for (int i = 0; i < data.num_arrows; i++) {
-        arrow_definition *arrow = &data.arrows[i];
-        if (arrow->key == key) {
-            arrow->action(1);
-        }
-    }
+    int found_action = 0;
     for (int i = 0; i < data.num_definitions; i++) {
         hotkey_definition *def = &data.definitions[i];
         if (def->key == key && def->modifiers == modifiers && (!repeat || def->repeatable)) {
             *(def->action) = def->value;
+            found_action = 1;
+        }
+    }
+    if (found_action) {
+        return;
+    }
+    for (int i = 0; i < data.num_arrows; i++) {
+        arrow_definition *arrow = &data.arrows[i];
+        if (arrow->key == key) {
+            arrow->action(1);
         }
     }
 }
