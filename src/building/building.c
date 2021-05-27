@@ -540,9 +540,7 @@ int building_get_levy(const building *b)
     // Mars module 1 bonus
     if (building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
         switch (b->type) {
-            case BUILDING_FORT_JAVELIN:
-            case BUILDING_FORT_MOUNTED:
-            case BUILDING_FORT_LEGIONARIES:
+            case BUILDING_FORT:
                 levy = (levy / 4) * 3;
                 break;
             default:
