@@ -362,7 +362,7 @@ void figure_docker_action(figure *f)
     if (b->state != BUILDING_STATE_IN_USE) {
         f->state = FIGURE_STATE_DEAD;
     }
-    if (b->type != BUILDING_DOCK && b->type != BUILDING_WHARF) {
+    if (b->type != BUILDING_DOCK) {
         f->state = FIGURE_STATE_DEAD;
     }
     if (b->data.dock.num_ships) {
