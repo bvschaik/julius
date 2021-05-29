@@ -33,6 +33,8 @@ enum {
 
 int map_terrain_is(int grid_offset, int terrain);
 
+int map_terrain_is_superset(int grid_offset, int terrain_sum);
+
 int map_terrain_get(int grid_offset);
 
 void map_terrain_set(int grid_offset, int terrain);
@@ -47,7 +49,21 @@ void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terr
 
 void map_terrain_remove_all(int terrain);
 
+/**
+ * Check orthogonal neighbours of a tile if they contain a terrain.
+ * @param grid_offset Tile which neighbours will be checked.
+ * @param terrain Terrain bitmask to be checked for.
+ * @return 1 if any orthogonal tiles matches at least one terrain from the bitmask, 0 otherwise.
+ */
 int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain);
+
+/**
+ * Check orthogonal neighbours of a tile if they contain a terrain.
+ * @param grid_offset Tile which neighbours will be checked.
+ * @param terrain Terrain bitmask to be checked for.
+ * @return 1 if any orthogonal tiles matches all terrains from the bitmask, 0 otherwise.
+ */
+int map_terrain_count_directly_adjacent_with_types(int grid_offset, int terrain_sum);
 
 int map_terrain_count_diagonally_adjacent_with_type(int grid_offset, int terrain);
 

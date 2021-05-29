@@ -12,6 +12,11 @@ int map_terrain_is(int grid_offset, int terrain)
     return map_grid_is_valid_offset(grid_offset) && terrain_grid.items[grid_offset] & terrain;
 }
 
+int map_terrain_is_superset(int grid_offset, int terrain_sum)
+{
+    return map_grid_is_valid_offset(grid_offset) && ((terrain_grid.items[grid_offset] & terrain_sum) == terrain_sum);
+}
+
 int map_terrain_get(int grid_offset)
 {
     return terrain_grid.items[grid_offset];
@@ -78,6 +83,25 @@ int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain)
     }
     return count;
 }
+
+int map_terrain_count_directly_adjacent_with_types(int grid_offset, int terrain_sum)
+{
+    int count = 0;
+    if (map_terrain_is_superset(grid_offset + map_grid_delta(0, -1), terrain_sum)) {
+        count++;
+    }
+    if (map_terrain_is_superset(grid_offset + map_grid_delta(1, 0), terrain_sum)) {
+        count++;
+    }
+    if (map_terrain_is_superset(grid_offset + map_grid_delta(0, 1), terrain_sum)) {
+        count++;
+    }
+    if (map_terrain_is_superset(grid_offset + map_grid_delta(-1, 0), terrain_sum)) {
+        count++;
+    }
+    return count;
+}
+
 
 int map_terrain_count_diagonally_adjacent_with_type(int grid_offset, int terrain)
 {

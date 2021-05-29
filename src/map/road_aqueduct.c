@@ -70,6 +70,10 @@ int map_can_place_aqueduct_on_road(int grid_offset)
     if (image_id != 0 && image_id != 1 && image_id != 49 && image_id != 50) {
         return 0;
     }
+    if (map_terrain_count_directly_adjacent_with_types(grid_offset, TERRAIN_ROAD | TERRAIN_AQUEDUCT)) {
+        return 0;
+    }
+
     int check_y = image_id == 0 || image_id == 49;
     if (city_view_orientation() == DIR_6_LEFT || city_view_orientation() == DIR_2_RIGHT) {
         check_y = !check_y;

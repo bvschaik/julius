@@ -584,6 +584,9 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
             if (map_property_is_plaza_or_earthquake(grid_offset)) {
                 blocked = 1;
             }
+            if (map_terrain_count_directly_adjacent_with_types(grid_offset, TERRAIN_ROAD | TERRAIN_AQUEDUCT)) {
+                blocked = 1;
+            }
         } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
             blocked = 1;
         }
