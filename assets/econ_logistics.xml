@@ -49,4 +49,37 @@
     <image src="Policy_Selection_Border_Left_UnHover" />
     <image src="Policy_Selection_Border_Left_Hover" />
 
+    <!-- Note: Cart Depot OFF Variants for Northern, Central and Southern Climates Respectively -->
+    <image id="Cart Depot N OFF" src="Cart_Depot_OFF_N" />
+    <image id="Cart Depot C OFF" src="Cart_Depot_OFF_C" />
+    <image id="Cart Depot S OFF" src="Cart_Depot_OFF_S" />
+
+    <!-- Note: Cart Depot ON Variants for Northern, Central and Southern Climates Respectively -->
+    <image id="Cart Depot N ON" >
+        <layer group="this" image="Cart Depot N OFF" />
+        <animation speed="3" x="47" y="31" reversible="true">
+            <frame src="Cart_Depot_ON_01" />
+            <frame src="Cart_Depot_ON_02" />
+            <frame src="Cart_Depot_ON_03" />
+        </animation>
+    </image>
+
+    <image id="Cart Depot C ON" >
+        <layer group="this" image="Cart Depot C OFF" />
+        <animation speed="3" x="47" y="31" reversible="true">
+            <frame src="Cart_Depot_ON_01" />
+            <frame src="Cart_Depot_ON_02" />
+            <frame src="Cart_Depot_ON_03" />
+        </animation>
+    </image>
+
+    <image id="Cart Depot S ON" >
+        <layer group="this" image="Cart Depot S OFF" />
+        <animation speed="3" x="47" y="31" reversible="true">
+            <frame src="Cart_Depot_ON_01" />
+            <frame src="Cart_Depot_ON_02" />
+            <frame src="Cart_Depot_ON_03" />
+        </animation>
+    </image>
+
 </assetlist>
