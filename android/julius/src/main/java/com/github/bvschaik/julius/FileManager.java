@@ -36,7 +36,8 @@ public class FileManager {
     static int setBaseUri(Uri newUri) {
         try {
             baseUri = newUri;
-            FileInfo.base = new FileInfo(DocumentsContract.getTreeDocumentId(newUri), null, DocumentsContract.Document.MIME_TYPE_DIR, Uri.EMPTY);
+            FileInfo.base = new FileInfo(DocumentsContract.getTreeDocumentId(newUri), null,
+                DocumentsContract.Document.MIME_TYPE_DIR, Uri.EMPTY);
             return 1;
         } catch (Exception e) {
             Log.e("julius", "Error in setBaseUri: " + e);
@@ -66,7 +67,8 @@ public class FileManager {
         Cursor cursor = activity.getContentResolver().query(children, columns, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                result.put(cursor.getString(1).toLowerCase(), new FileInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2), dir));
+                FileInfo fileInfo = new FileInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2), dir);
+                result.put(cursor.getString(1).toLowerCase(), fileInfo);
             }
             cursor.close();
         }
@@ -185,13 +187,15 @@ public class FileManager {
                 if (!isWrite) {
                     return 0;
                 } else {
-                    fileUri = DocumentsContract.createDocument(activity.getContentResolver(), folderInfo.getUri(), "application/octet-stream", fileName);
+                    fileUri = DocumentsContract.createDocument(activity.getContentResolver(),
+                        folderInfo.getUri(), "application/octet-stream", fileName);
                     if (fileUri == null) {
                         return 0;
                     }
                     HashMap<String, FileInfo> dirCache = directoryStructureCache.get(folderInfo.getUri());
                     if (dirCache != null) {
-                        fileInfo = new FileInfo(DocumentsContract.getDocumentId(fileUri), fileName, "application/octet-stream", folderInfo.getUri());
+                        fileInfo = new FileInfo(DocumentsContract.getDocumentId(fileUri),
+                            fileName, "application/octet-stream", folderInfo.getUri());
                         dirCache.put(fileName.toLowerCase(), fileInfo);
                     }
                 }
