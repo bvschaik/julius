@@ -42,7 +42,7 @@ void warning_draw(void)
             top_offset += 70;
         }
         int box_width = determine_width(text);
-        label_draw(center - box_width / 2 + 1, top_offset, box_width / 16 + 1, 1);
+        label_draw(center - box_width / 2 + 1, top_offset, box_width / BLOCK_SIZE + 1, 1);
         if (box_width < 460) {
             // ornaments at the side
             image_draw(image_group(GROUP_CONTEXT_ICONS) + 15, center - box_width / 2 + 2, top_offset + 2);

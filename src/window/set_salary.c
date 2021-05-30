@@ -41,9 +41,9 @@ static int get_dialog_width(void)
 {
     int dialog_width = 16 + lang_text_get_width(52, 15, FONT_LARGE_BLACK);
     if (dialog_width < MIN_DIALOG_WIDTH) dialog_width = MIN_DIALOG_WIDTH;
-    if (dialog_width % 16 != 0) {
-        // make sure the width is a multiple of 16
-        dialog_width += 16 - dialog_width % 16;
+    if (dialog_width % BLOCK_SIZE != 0) {
+        // make sure the width is a multiple of BLOCK_SIZE
+        dialog_width += BLOCK_SIZE - dialog_width % BLOCK_SIZE;
     }
     return dialog_width;
 }
@@ -54,7 +54,7 @@ static void draw_foreground(void)
 
     int dialog_width = get_dialog_width();
     int dialog_x = 128 - (dialog_width - MIN_DIALOG_WIDTH) / 2;
-    outer_panel_draw(dialog_x, 32, dialog_width / 16, 25);
+    outer_panel_draw(dialog_x, 32, dialog_width / BLOCK_SIZE, 25);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, dialog_x + 16, 48);
     lang_text_draw_centered(52, 15, dialog_x + 48, 48, dialog_width - 64, FONT_LARGE_BLACK);
 

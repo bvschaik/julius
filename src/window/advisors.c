@@ -17,6 +17,7 @@
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
+#include "graphics/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
 #include "window/city.h"
@@ -161,7 +162,7 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog();
-    image_buttons_draw(0, 16 * (advisor_height - 2), &help_button, 1);
+    image_buttons_draw(0, BLOCK_SIZE * (advisor_height - 2), &help_button, 1);
     graphics_reset_dialog();
 
     if (current_advisor_window->draw_foreground) {
@@ -190,7 +191,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     int button_id;
-    image_buttons_handle_mouse(m_dialog, 0, 16 * (advisor_height - 2), &help_button, 1, &button_id);
+    image_buttons_handle_mouse(m_dialog, 0, BLOCK_SIZE * (advisor_height - 2), &help_button, 1, &button_id);
     if (button_id) {
         focus_button_id = -1;
     }

@@ -14,6 +14,7 @@
 #include "figure/phrase.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
+#include "graphics/panel.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -339,14 +340,14 @@ static void init(int grid_offset)
     // dialog placement
     int s_width = screen_width();
     int s_height = screen_height();
-    context.x_offset = center_in_city(16 * context.width_blocks);
+    context.x_offset = center_in_city(BLOCK_SIZE * context.width_blocks);
     if (s_width >= 1024 && s_height >= 768) {
         context.x_offset = mouse_get()->x;
         context.y_offset = mouse_get()->y;
         window_building_set_possible_position(&context.x_offset, &context.y_offset,
             context.width_blocks, context.height_blocks);
     } else if (s_height >= 600 && mouse_get()->y <= (s_height - 24) / 2 + 24) {
-        context.y_offset = s_height - 16 * context.height_blocks - MARGIN_POSITION;
+        context.y_offset = s_height - BLOCK_SIZE * context.height_blocks - MARGIN_POSITION;
     } else {
         context.y_offset = MIN_Y_POSITION;
     }
@@ -532,11 +533,11 @@ static void draw_foreground(void)
         int y_offset = window_building_get_vertical_offset(&context, 28);
         image_buttons_draw(context.x_offset, y_offset + 400, image_buttons_help_close, 2);
     } else {
-        image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
+        image_buttons_draw(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
             image_buttons_help_close, 2);
     }
     if (context.can_go_to_advisor) {
-        image_buttons_draw(context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
+        image_buttons_draw(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
             image_buttons_advisor, 1);
     }
 }
@@ -580,12 +581,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
             image_buttons_help_close, 2, &focus_image_button_id);
     } else {
         handled |= image_buttons_handle_mouse(
-                      m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
+                      m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
                       image_buttons_help_close, 2, &focus_image_button_id);
     }
     if (context.can_go_to_advisor) {
         handled |= image_buttons_handle_mouse(
-                      m, context.x_offset, context.y_offset + 16 * context.height_blocks - 40,
+                      m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
                       image_buttons_advisor, 1, 0);
     }
     if (!handled) {

@@ -239,7 +239,7 @@ static void draw_cartpusher(building_info_context *c, figure *f)
     }
 
     int phrase_height = lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
-        c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_NORMAL_BROWN);
+        c->x_offset + 90, c->y_offset + 160, BLOCK_SIZE * (c->width_blocks - 8), FONT_NORMAL_BROWN);
 
     if (!f->building_id) {
         return;
@@ -298,7 +298,7 @@ static void draw_market_buyer(building_info_context *c, figure *f)
     }
     if (c->figure.phrase_id >= 0) {
         lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
-            c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_NORMAL_BROWN);
+            c->x_offset + 90, c->y_offset + 160, BLOCK_SIZE * (c->width_blocks - 8), FONT_NORMAL_BROWN);
     }
 }
 
@@ -316,13 +316,13 @@ static void draw_normal_figure(building_info_context *c, figure *f)
 
     if (c->figure.phrase_id >= 0) {
         lang_text_draw_multiline(130, 21 * c->figure.sound_id + c->figure.phrase_id + 1,
-            c->x_offset + 90, c->y_offset + 160, 16 * (c->width_blocks - 8), FONT_NORMAL_BROWN);
+            c->x_offset + 90, c->y_offset + 160, BLOCK_SIZE * (c->width_blocks - 8), FONT_NORMAL_BROWN);
     }
 }
 
 static void draw_figure_info(building_info_context *c, int figure_id)
 {
-    button_border_draw(c->x_offset + 24, c->y_offset + 102, 16 * (c->width_blocks - 3), 138, 0);
+    button_border_draw(c->x_offset + 24, c->y_offset + 102, BLOCK_SIZE * (c->width_blocks - 3), 138, 0);
 
     figure *f = figure_get(figure_id);
     int type = f->type;
@@ -345,7 +345,8 @@ void window_building_draw_figure_list(building_info_context *c)
 {
     inner_panel_draw(c->x_offset + 16, c->y_offset + 40, c->width_blocks - 2, 13);
     if (c->figure.count <= 0) {
-        lang_text_draw_centered(70, 0, c->x_offset, c->y_offset + 120, 16 * c->width_blocks, FONT_NORMAL_BROWN);
+        lang_text_draw_centered(70, 0, c->x_offset, c->y_offset + 120,
+            BLOCK_SIZE * c->width_blocks, FONT_NORMAL_BROWN);
     } else {
         for (int i = 0; i < c->figure.count; i++) {
             button_border_draw(c->x_offset + 60 * i + 25, c->y_offset + 45, 52, 52, i == c->figure.selected_index);

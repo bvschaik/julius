@@ -11,6 +11,7 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "graphics/graphics.h"
+#include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/scroll.h"
@@ -267,7 +268,7 @@ static int handle_cancel_construction_button(const touch *t)
     }
     int x, y, width, height;
     city_view_get_viewport(&x, &y, &width, &height);
-    int box_size = 5 * 16;
+    int box_size = 5 * BLOCK_SIZE;
     width -= box_size;
 
     if (t->current_point.x < width || t->current_point.x >= width + box_size ||

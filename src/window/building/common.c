@@ -7,14 +7,15 @@
 #include "city/view.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
+#include "graphics/panel.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "sound/speech.h"
 
 void window_building_set_possible_position(int *x_offset, int *y_offset, int width_blocks, int height_blocks)
 {
-    int dialog_width = 16 * width_blocks;
-    int dialog_height = 16 * height_blocks;
+    int dialog_width = BLOCK_SIZE * width_blocks;
+    int dialog_height = BLOCK_SIZE * height_blocks;
     int stub;
     int width;
     city_view_get_viewport(&stub, &stub, &width, &stub);
@@ -33,8 +34,8 @@ void window_building_set_possible_position(int *x_offset, int *y_offset, int wid
 
 int window_building_get_vertical_offset(building_info_context *c, int new_window_height)
 {
-    new_window_height = new_window_height * 16;
-    int old_window_height = c->height_blocks * 16;
+    new_window_height = new_window_height * BLOCK_SIZE;
+    int old_window_height = c->height_blocks * BLOCK_SIZE;
     int y_offset = c->y_offset;
 
     int center = (old_window_height / 2) + y_offset;
@@ -114,13 +115,13 @@ void window_building_draw_employment_without_house_cover(building_info_context *
 void window_building_draw_description(building_info_context *c, int text_group, int text_id)
 {
     lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + 56,
-        16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+        BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
 
 void window_building_draw_description_at(building_info_context *c, int y_offset, int text_group, int text_id)
 {
     lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + y_offset,
-        16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+        BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
 
 void window_building_play_sound(building_info_context *c, const char *sound_file)

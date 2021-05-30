@@ -16,7 +16,7 @@ static void draw_vacant_lot(building_info_context *c)
 {
     window_building_prepare_figure_list(c);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(128, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(128, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_figure_list(c);
 
     int text_id = 2;
@@ -24,7 +24,7 @@ static void draw_vacant_lot(building_info_context *c)
     if (map_closest_road_within_radius(b->x, b->y, 1, 2, 0, 0)) {
         text_id = 1;
     }
-    window_building_draw_description_at(c, 16 * c->height_blocks - 113, 128, text_id);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 113, 128, text_id);
 }
 
 static void draw_population_info(building_info_context *c, int y_offset)
@@ -91,7 +91,7 @@ void window_building_draw_house(building_info_context *c)
     }
     int level = b->type - 10;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(29, level, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(29, level, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 148, c->width_blocks - 2, 10);
 
     draw_population_info(c, c->y_offset + 154);
@@ -121,7 +121,7 @@ void window_building_draw_house(building_info_context *c)
     } else {
         // no food necessary
         lang_text_draw_multiline(127, 33, c->x_offset + 36, c->y_offset + 234,
-            16 * (c->width_blocks - 6), FONT_NORMAL_BROWN);
+            BLOCK_SIZE * (c->width_blocks - 6), FONT_NORMAL_BROWN);
     }
     // goods inventory
     // pottery
@@ -148,9 +148,9 @@ void window_building_draw_house(building_info_context *c)
             c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
         text_draw((uint8_t*)")", c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_BLACK, 0);
         lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id,
-            c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+            c->x_offset + 32, c->y_offset + 76, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK);
     } else {
         lang_text_draw_multiline(127, 40 + b->data.house.evolve_text_id,
-            c->x_offset + 32, c->y_offset + 70, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+            c->x_offset + 32, c->y_offset + 70, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK);
     }
 }

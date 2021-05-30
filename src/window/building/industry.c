@@ -18,7 +18,8 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
-    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10,
+        BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
     int pct_grown = calc_percentage(b->data.industry.progress, 200);
@@ -48,7 +49,7 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 136, group_id, 1);
 }
 
 void window_building_draw_wheat_farm(building_info_context *c)
@@ -89,7 +90,8 @@ static void draw_raw_material(
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
-    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10,
+        BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
     int pct_done = calc_percentage(b->data.industry.progress, 200);
@@ -117,7 +119,7 @@ static void draw_raw_material(
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 136, group_id, 1);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 136, group_id, 1);
 }
 
 void window_building_draw_marble_quarry(building_info_context *c)
@@ -148,7 +150,8 @@ static void draw_workshop(
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10);
-    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10,
+        BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
     int pct_done = calc_percentage(b->data.industry.progress, 400);
@@ -218,7 +221,7 @@ void window_building_draw_shipyard(building_info_context *c)
     c->help_id = 82;
     window_building_play_sound(c, "wavs/shipyard.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(100, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(100, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
 
@@ -231,10 +234,10 @@ void window_building_draw_shipyard(building_info_context *c)
         lang_text_draw(100, 3, c->x_offset + 32 + width, c->y_offset + 56, FONT_NORMAL_BLACK);
         if (city_buildings_shipyard_boats_requested()) {
             lang_text_draw_multiline(100, 5, c->x_offset + 32, c->y_offset + 80,
-                16 * (c->width_blocks - 6), FONT_NORMAL_BLACK);
+                BLOCK_SIZE * (c->width_blocks - 6), FONT_NORMAL_BLACK);
         } else {
             lang_text_draw_multiline(100, 4, c->x_offset + 32, c->y_offset + 80,
-                16 * (c->width_blocks - 6), FONT_NORMAL_BLACK);
+                BLOCK_SIZE * (c->width_blocks - 6), FONT_NORMAL_BLACK);
         }
     }
 
@@ -247,7 +250,7 @@ void window_building_draw_wharf(building_info_context *c)
     c->help_id = 84;
     window_building_play_sound(c, "wavs/wharf.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(102, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(102, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
         resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
         c->x_offset + 10, c->y_offset + 10);

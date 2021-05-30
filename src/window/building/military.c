@@ -39,8 +39,8 @@ void window_building_draw_wall(building_info_context *c)
     c->help_id = 85;
     window_building_play_sound(c, "wavs/wall.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(139, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 139, 1);
+    lang_text_draw_centered(139, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 158, 139, 1);
 }
 
 void window_building_draw_gatehouse(building_info_context *c)
@@ -48,8 +48,8 @@ void window_building_draw_gatehouse(building_info_context *c)
     c->help_id = 85;
     window_building_play_sound(c, "wavs/gatehouse.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(90, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 90, 1);
+    lang_text_draw_centered(90, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 158, 90, 1);
 }
 
 void window_building_draw_tower(building_info_context *c)
@@ -57,7 +57,7 @@ void window_building_draw_tower(building_info_context *c)
     c->help_id = 85;
     window_building_play_sound(c, "wavs/tower.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(91, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(91, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
@@ -78,7 +78,7 @@ void window_building_draw_barracks(building_info_context *c)
     c->help_id = 37;
     window_building_play_sound(c, "wavs/barracks.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(136, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, c->x_offset + 64, c->y_offset + 38);
 
     building *b = building_get(c->building_id);
@@ -118,7 +118,7 @@ void window_building_draw_military_academy(building_info_context *c)
     c->help_id = 88;
     window_building_play_sound(c, "wavs/mil_acad.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(135, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(135, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
@@ -139,9 +139,9 @@ void window_building_draw_fort(building_info_context *c)
     c->help_id = 87;
     window_building_play_sound(c, "wavs/fort.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(89, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(89, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     int text_id = formation_get(c->formation_id)->cursed_by_mars ? 1 : 2;
-    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 89, text_id);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 158, 89, text_id);
 }
 
 void window_building_draw_legion_info(building_info_context *c)
@@ -150,7 +150,8 @@ void window_building_draw_legion_info(building_info_context *c)
     const formation *m = formation_get(c->formation_id);
     c->help_id = 87;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(138, m->legion_id, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(138, m->legion_id, c->x_offset, c->y_offset + 10,
+        BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     // standard icon at the top
     int icon_image_id = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
@@ -354,13 +355,13 @@ void window_building_draw_legion_info_foreground(building_info_context *c)
     }
     lang_text_draw(138, title_id, c->x_offset + 24, c->y_offset + 236, FONT_NORMAL_WHITE);
     lang_text_draw_multiline(138, text_id, c->x_offset + 24, c->y_offset + 252,
-        16 * (c->width_blocks - 4), FONT_NORMAL_GREEN);
+        BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_GREEN);
 
     if (!m->is_at_fort) {
-        button_border_draw(c->x_offset + 16 * (c->width_blocks - 18) / 2,
-            c->y_offset + 16 * c->height_blocks - 48, 288, 32, data.return_button_id == 1);
-        lang_text_draw_centered(138, 58, c->x_offset + 16 * (c->width_blocks - 18) / 2,
-            c->y_offset + 16 * c->height_blocks - 39, 288, FONT_NORMAL_BLACK);
+        button_border_draw(c->x_offset + BLOCK_SIZE * (c->width_blocks - 18) / 2,
+            c->y_offset + BLOCK_SIZE * c->height_blocks - 48, 288, 32, data.return_button_id == 1);
+        lang_text_draw_centered(138, 58, c->x_offset + BLOCK_SIZE * (c->width_blocks - 18) / 2,
+            c->y_offset + BLOCK_SIZE * c->height_blocks - 39, 288, FONT_NORMAL_BLACK);
     }
 }
 
@@ -374,8 +375,8 @@ int window_building_handle_mouse_legion_info(const mouse *m, building_info_conte
         }
     }
     if (!handled) {
-        handled = generic_buttons_handle_mouse(m, c->x_offset + 16 * (c->width_blocks - 18) / 2,
-            c->y_offset + 16 * c->height_blocks - 48, return_button, 1, &data.return_button_id);
+        handled = generic_buttons_handle_mouse(m, c->x_offset + BLOCK_SIZE * (c->width_blocks - 18) / 2,
+            c->y_offset + BLOCK_SIZE * c->height_blocks - 48, return_button, 1, &data.return_button_id);
     }
     data.context_for_callback = 0;
     return handled;

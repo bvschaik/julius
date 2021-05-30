@@ -6,6 +6,7 @@
 #include "core/string.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
+#include "graphics/panel.h"
 #include "graphics/scrollbar.h"
 #include "graphics/window.h"
 
@@ -47,15 +48,15 @@ int rich_text_init(
     data.y_text = y_text;
     if (!data.num_lines) {
         data.text_height_blocks = height_blocks;
-        data.text_height_lines = (height_blocks - 1) * 16 / data.line_height;
+        data.text_height_lines = (height_blocks - 1) * BLOCK_SIZE / data.line_height;
         data.text_width_blocks = width_blocks;
 
         data.num_lines = rich_text_draw(text,
             data.x_text + 8, data.y_text + 6,
-            16 * data.text_width_blocks - 16, data.text_height_lines, 1);
-        scrollbar.x = data.x_text + 16 * data.text_width_blocks - 1;
+            BLOCK_SIZE * data.text_width_blocks - BLOCK_SIZE, data.text_height_lines, 1);
+        scrollbar.x = data.x_text + BLOCK_SIZE * data.text_width_blocks - 1;
         scrollbar.y = data.y_text;
-        scrollbar.height = 16 * data.text_height_blocks;
+        scrollbar.height = BLOCK_SIZE * data.text_height_blocks;
         scrollbar_init(&scrollbar, scrollbar.scroll_position, data.num_lines - data.text_height_lines);
         if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll) {
             data.text_width_blocks += 2;

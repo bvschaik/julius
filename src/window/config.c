@@ -278,7 +278,7 @@ static void numerical_range_draw(const numerical_range_widget *w, int x, int y, 
     text_draw(value_text, x, y + 6, FONT_NORMAL_BLACK, 0);
     inner_panel_draw(x + NUMERICAL_SLIDER_X, y + 4, w->width_blocks, 1);
 
-    int width = w->width_blocks * 16 - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
+    int width = w->width_blocks * BLOCK_SIZE - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
     int scroll_position = (*w->value - w->min) * width / (w->max - w->min);
     image_draw(image_group(GROUP_PANEL_BUTTON) + 37,
         x + NUMERICAL_SLIDER_X + NUMERICAL_SLIDER_PADDING + scroll_position, y + 2);
@@ -379,7 +379,7 @@ static void draw_foreground(void)
     }
 
     if (data.num_widgets > NUM_VISIBLE_ITEMS) {
-        inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / 16 - 3);
+        inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / BLOCK_SIZE - 3);
         scrollbar_draw(&scrollbar);
     }
 
@@ -430,10 +430,10 @@ static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numeri
             data.active_numerical_range = 0;
             return 0;
         }
-    } else if (!m->left.is_down || !is_numerical_range(m, x, y, w->width_blocks * 16)) {
+    } else if (!m->left.is_down || !is_numerical_range(m, x, y, w->width_blocks * BLOCK_SIZE)) {
         return 0;
     }
-    int slider_width = w->width_blocks * 16 - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
+    int slider_width = w->width_blocks * BLOCK_SIZE - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
     int pixels_per_pct = slider_width / (w->max - w->min);
     int dot_position = m->x - x - NUMERICAL_SLIDER_X - NUMERICAL_DOT_SIZE / 2 + pixels_per_pct / 2;
 

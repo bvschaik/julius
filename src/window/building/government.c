@@ -12,7 +12,7 @@ void window_building_draw_forum(building_info_context *c)
     c->help_id = 76;
     window_building_play_sound(c, "wavs/forum.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(106, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(106, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, c->x_offset + 16, c->y_offset + 36);
 
     building *b = building_get(c->building_id);
@@ -46,7 +46,7 @@ void window_building_draw_senate(building_info_context *c)
     c->help_id = 77;
     window_building_play_sound(c, "wavs/senate.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(105, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(105, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, c->x_offset + 16, c->y_offset + 36);
 
     building *b = building_get(c->building_id);
@@ -81,8 +81,8 @@ void window_building_draw_governor_home(building_info_context *c)
     c->help_id = 78;
     window_building_play_sound(c, "wavs/gov_palace.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(103, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 143, 103, 1);
+    lang_text_draw_centered(103, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 143, 103, 1);
 }
 
 void window_building_draw_garden(building_info_context *c)
@@ -90,8 +90,8 @@ void window_building_draw_garden(building_info_context *c)
     c->help_id = 80;
     window_building_play_sound(c, "wavs/park.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(79, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 79, 1);
+    lang_text_draw_centered(79, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 158, 79, 1);
 }
 
 void window_building_draw_plaza(building_info_context *c)
@@ -100,9 +100,9 @@ void window_building_draw_plaza(building_info_context *c)
     window_building_play_sound(c, "wavs/plaza.wav");
     window_building_prepare_figure_list(c);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(137, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(137, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_figure_list(c);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 113, 137, 1);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 113, 137, 1);
 }
 
 void window_building_draw_statue(building_info_context *c)
@@ -110,8 +110,8 @@ void window_building_draw_statue(building_info_context *c)
     c->help_id = 79;
     window_building_play_sound(c, "wavs/statue.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(80, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 80, 1);
+    lang_text_draw_centered(80, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 158, 80, 1);
 }
 
 void window_building_draw_triumphal_arch(building_info_context *c)
@@ -119,6 +119,6 @@ void window_building_draw_triumphal_arch(building_info_context *c)
     c->help_id = 79;
     window_building_play_sound(c, "wavs/statue.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(80, 2, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, 16 * c->height_blocks - 158, 80, 3);
+    lang_text_draw_centered(80, 2, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 158, 80, 3);
 }

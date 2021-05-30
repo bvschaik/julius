@@ -190,11 +190,11 @@ static int draw_extra_info_objective(
 
 static void draw_extra_info_panel(void)
 {
-    int panel_blocks = data.height / 16;
+    int panel_blocks = data.height / BLOCK_SIZE;
     graphics_draw_vertical_line(data.x_offset, data.y_offset, data.y_offset + data.height, COLOR_WHITE);
     graphics_draw_vertical_line(data.x_offset + data.width - 1, data.y_offset,
         data.y_offset + data.height, COLOR_SIDEBAR);
-    inner_panel_draw(data.x_offset + 1, data.y_offset, data.width / 16, panel_blocks);
+    inner_panel_draw(data.x_offset + 1, data.y_offset, data.width / BLOCK_SIZE, panel_blocks);
 
     int y_current_line = data.y_offset + EXTRA_INFO_VERTICAL_PADDING;
 

@@ -24,7 +24,7 @@ typedef enum {
     LABOR_CATEGORY_GOVERNANCE_RELIGION = 8
 } labor_category;
 
-static int CATEGORY_FOR_BUILDING_TYPE[] = {
+static const int CATEGORY_FOR_BUILDING_TYPE[] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 0
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 10
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 20
