@@ -51,6 +51,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SPEECH, "Enable speech"},
     {TR_CONFIG_EFFECTS, "Enable sound effects"},
     {TR_CONFIG_CITY_SOUNDS, "Enable city sounds"},
+    {TR_CONFIG_VIDEO_SOUND, "Enable video sound"},
     {TR_CONFIG_SCROLL_SPEED, "Scroll speed:"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Play intro videos"},
     {TR_CONFIG_SIDEBAR_INFO, "Extra information in the control panel"},

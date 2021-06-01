@@ -14,6 +14,8 @@ static const char *INI_FILENAME = "augustus.ini";
 static const char *ini_keys[] = {
     "enable_audio",
     "master_volume",
+    "enable_audio_in_videos",
+    "video_volume",
     "ui_walker_waypoints",
     "gameplay_fix_immigration",
     "gameplay_fix_100y_ghosts",
@@ -65,6 +67,8 @@ static char string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
 static int default_values[CONFIG_MAX_ENTRIES] = {
     [CONFIG_GENERAL_ENABLE_AUDIO] = 1,
     [CONFIG_GENERAL_MASTER_VOLUME] = 100,
+    [CONFIG_GENERAL_ENABLE_VIDEO_SOUND] = 1,
+    [CONFIG_GENERAL_VIDEO_VOLUME] = 100,
     [CONFIG_UI_SIDEBAR_INFO] = 1,
     [CONFIG_UI_SMOOTH_SCROLLING] = 1,
     [CONFIG_UI_ZOOM] = 1,

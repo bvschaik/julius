@@ -41,7 +41,7 @@
 #define BUTTON_SPACING 24
 #define TEXT_Y_OFFSET 4
 
-#define MAX_WIDGETS 26
+#define MAX_WIDGETS 30
 
 #define NUM_VISIBLE_ITEMS 13
 
@@ -78,6 +78,7 @@ static const uint8_t *display_text_music_volume(void);
 static const uint8_t *display_text_speech_volume(void);
 static const uint8_t *display_text_sound_effects_volume(void);
 static const uint8_t *display_text_city_sounds_volume(void);
+static const uint8_t *display_text_video_volume(void);
 static const uint8_t *display_text_scroll_speed(void);
 static const uint8_t *display_text_difficulty(void);
 
@@ -107,6 +108,7 @@ enum {
     RANGE_SPEECH_VOLUME,
     RANGE_SOUND_EFFECTS_VOLUME,
     RANGE_CITY_SOUNDS_VOLUME,
+    RANGE_VIDEO_VOLUME,
     RANGE_SCROLL_SPEED,
     RANGE_DIFFICULTY
 };
@@ -184,6 +186,8 @@ static config_widget all_widgets[CONFIG_PAGES][MAX_WIDGETS] = {
         {TYPE_NUMERICAL_RANGE, RANGE_SOUND_EFFECTS_VOLUME, 0, display_text_sound_effects_volume, 1},
         {TYPE_CHECKBOX, CONFIG_ORIGINAL_ENABLE_CITY_SOUNDS, TR_CONFIG_CITY_SOUNDS, 0, 5},
         {TYPE_NUMERICAL_RANGE, RANGE_CITY_SOUNDS_VOLUME, 0, display_text_city_sounds_volume, 1},
+        {TYPE_CHECKBOX, CONFIG_GENERAL_ENABLE_VIDEO_SOUND, TR_CONFIG_VIDEO_SOUND, 0, 5},
+        {TYPE_NUMERICAL_RANGE, RANGE_VIDEO_VOLUME, 0, display_text_video_volume, 1}
     },
     { // UI
         {TYPE_NUMERICAL_DESC, RANGE_SCROLL_SPEED, TR_CONFIG_SCROLL_SPEED},
@@ -252,6 +256,7 @@ static numerical_range_widget ranges[] = {
     { 98, 27,   0,   0,  1, 0},
     { 50, 30,  50, 500,  5, 0},
     { 50, 30, 100, 200, 50, 0},
+    {130, 25,   0, 100,  1, 0},
     {130, 25,   0, 100,  1, 0},
     {130, 25,   0, 100,  1, 0},
     {130, 25,   0, 100,  1, 0},
@@ -383,6 +388,7 @@ static inline void set_range_values(void)
     ranges[RANGE_SPEECH_VOLUME].value = &data.config_values[CONFIG_ORIGINAL_SPEECH_VOLUME].new_value;
     ranges[RANGE_SOUND_EFFECTS_VOLUME].value = &data.config_values[CONFIG_ORIGINAL_SOUND_EFFECTS_VOLUME].new_value;
     ranges[RANGE_CITY_SOUNDS_VOLUME].value = &data.config_values[CONFIG_ORIGINAL_CITY_SOUNDS_VOLUME].new_value;
+    ranges[RANGE_VIDEO_VOLUME].value = &data.config_values[CONFIG_GENERAL_VIDEO_VOLUME].new_value;
 
     ranges[RANGE_SCROLL_SPEED].value = &data.config_values[CONFIG_ORIGINAL_SCROLL_SPEED].new_value;
     ranges[RANGE_DIFFICULTY].value = &data.config_values[CONFIG_ORIGINAL_DIFFICULTY].new_value;
@@ -632,6 +638,12 @@ static const uint8_t *display_text_speech_volume(void)
 static const uint8_t *display_text_sound_effects_volume(void)
 {
     percentage_string(volume_offset, data.config_values[CONFIG_ORIGINAL_SOUND_EFFECTS_VOLUME].new_value);
+    return volume_text;
+}
+
+static const uint8_t *display_text_video_volume(void)
+{
+    percentage_string(volume_offset, data.config_values[CONFIG_GENERAL_VIDEO_VOLUME].new_value);
     return volume_text;
 }
 
