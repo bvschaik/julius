@@ -50,6 +50,7 @@ static struct {
 
 static struct {
     SDL_AudioFormat format;
+    SDL_AudioFormat dst_format;
 #ifdef USE_SDL_AUDIOSTREAM
     SDL_AudioStream *stream;
     int use_audiostream;
@@ -323,6 +324,8 @@ static int create_custom_audio_stream(SDL_AudioFormat src_format, Uint8 src_chan
 {
     free_custom_audio_stream();
 
+    custom_music.dst_format = dst_format;
+
 #ifdef USE_SDL_AUDIOSTREAM
     if (custom_music.use_audiostream) {
         custom_music.stream = SDL_NewAudioStream(
@@ -362,7 +365,7 @@ static int custom_audio_stream_active(void)
     return custom_music.buffer != 0;
 }
 
-static int put_custom_audio_stream(Uint8 *audio_data, int len)
+static int put_custom_audio_stream(const Uint8 *audio_data, int len)
 {
     if (!audio_data || len <= 0 || !custom_audio_stream_active()) {
         return 0;
@@ -404,36 +407,55 @@ static int put_custom_audio_stream(Uint8 *audio_data, int len)
 
 static int get_custom_audio_stream(Uint8 *dst, int len)
 {
+    // Write silence
+    memset(dst, 0, len);
+
     if (!dst || len <= 0 || !custom_audio_stream_active()) {
         return 0;
     }
+    int bytes_copied = 0;
+
+    // Mix audio to sound effect volume
+    Uint8 *mix_buffer = (Uint8 *) malloc(len);
+    if (!mix_buffer) {
+        return 0;
+    }
+    memset(mix_buffer, 0, len);
 
 #ifdef USE_SDL_AUDIOSTREAM
     if (custom_music.use_audiostream) {
-        return SDL_AudioStreamGet(custom_music.stream, dst, len);
+        bytes_copied = SDL_AudioStreamGet(custom_music.stream, mix_buffer, len);
+        if (bytes_copied <= 0) {
+            return 0;
+        }
+    } else {
+#endif
+        if (custom_music.cur_read < custom_music.cur_write) {
+            int bytes_available = custom_music.cur_write - custom_music.cur_read;
+            int bytes_to_copy = bytes_available < len ? bytes_available : len;
+            memcpy(mix_buffer, &custom_music.buffer[custom_music.cur_read], bytes_to_copy);
+            bytes_copied = bytes_to_copy;
+        } else {
+            int bytes_available = custom_music.buffer_size - custom_music.cur_read;
+            int bytes_to_copy = bytes_available < len ? bytes_available : len;
+            memcpy(mix_buffer, &custom_music.buffer[custom_music.cur_read], bytes_to_copy);
+            bytes_copied = bytes_to_copy;
+            if (bytes_copied < len) {
+                int second_part_len = len - bytes_copied;
+                bytes_available = custom_music.cur_write;
+                bytes_to_copy = bytes_available < second_part_len ? bytes_available : second_part_len;
+                memcpy(&mix_buffer[bytes_copied], custom_music.buffer, bytes_to_copy);
+                bytes_copied += bytes_to_copy;
+            }
+        }
+        custom_music.cur_read = (custom_music.cur_read + bytes_copied) % custom_music.buffer_size;
+#ifdef USE_SDL_AUDIOSTREAM
     }
 #endif
 
-    int bytes_copied = 0;
-    if (custom_music.cur_read < custom_music.cur_write) {
-        int bytes_available = custom_music.cur_write - custom_music.cur_read;
-        int bytes_to_copy = bytes_available < len ? bytes_available : len;
-        memcpy(dst, &custom_music.buffer[custom_music.cur_read], bytes_to_copy);
-        bytes_copied = bytes_to_copy;
-    } else {
-        int bytes_available = custom_music.buffer_size - custom_music.cur_read;
-        int bytes_to_copy = bytes_available < len ? bytes_available : len;
-        memcpy(dst, &custom_music.buffer[custom_music.cur_read], bytes_to_copy);
-        bytes_copied = bytes_to_copy;
-        if (bytes_copied < len) {
-            int second_part_len = len - bytes_copied;
-            bytes_available = custom_music.cur_write;
-            bytes_to_copy = bytes_available < second_part_len ? bytes_available : second_part_len;
-            memcpy(&dst[bytes_copied], custom_music.buffer, bytes_to_copy);
-            bytes_copied += bytes_to_copy;
-        }
-    }
-    custom_music.cur_read = (custom_music.cur_read + bytes_copied) % custom_music.buffer_size;
+    SDL_MixAudioFormat(dst, mix_buffer, custom_music.dst_format, bytes_copied,
+        config_get(CONFIG_GENERAL_ENABLE_AUDIO) ? percentage_to_volume(setting_sound(SOUND_EFFECTS)->volume) : 0);
+    free(mix_buffer);
 
     return bytes_copied;
 }
@@ -441,11 +463,6 @@ static int get_custom_audio_stream(Uint8 *dst, int len)
 static void custom_music_callback(void *dummy, Uint8 *stream, int len)
 {
     int bytes_copied = get_custom_audio_stream(stream, len);
-
-    if (bytes_copied < len) {
-        // end of stream, write silence
-        memset(&stream[bytes_copied], 0, len - bytes_copied);
-    }
 }
 
 void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate,
@@ -484,18 +501,7 @@ void sound_device_write_custom_music_data(const unsigned char *audio_data, int l
     if (!audio_data || len <= 0 || !custom_audio_stream_active()) {
         return;
     }
-    // Mix audio to sound effect volume
-    Uint8 *mix_buffer = (Uint8 *) malloc(len);
-    if (!mix_buffer) {
-        return;
-    }
-    memset(mix_buffer, (custom_music.format == AUDIO_U8) ? 128 : 0, len);
-    SDL_MixAudioFormat(mix_buffer, audio_data,
-        custom_music.format, len,
-        config_get(CONFIG_GENERAL_ENABLE_AUDIO) ? percentage_to_volume(setting_sound(SOUND_EFFECTS)->volume) : 0);
-
-    put_custom_audio_stream(mix_buffer, len);
-    free(mix_buffer);
+    put_custom_audio_stream(audio_data, len);
 }
 
 void sound_device_use_default_music_player(void)
