@@ -372,12 +372,12 @@ void map_orientation_update_buildings(void)
 
         if (b->type >= BUILDING_SMALL_STATUE_ALT && b->type <= BUILDING_SMALL_STATUE_ALT_B) {
             int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
-            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (b->type - BUILDING_SMALL_STATUE_ALT)
-                + (abs((b->subtype.orientation - (map_orientation / 2) % 2)) * rotation_offset);
+            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (b->subtype.orientation % 2) * rotation_offset;
             map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
         }
         if (b->type == BUILDING_LEGION_STATUE) {
-            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "legio statue") + (abs((b->subtype.orientation - (map_orientation / 2) % 2)));
+            int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
+            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "legio statue") + (b->subtype.orientation % 2) * rotation_offset;
             map_building_tiles_add(i, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
         }
         if (b->type == BUILDING_SMALL_STATUE) {
