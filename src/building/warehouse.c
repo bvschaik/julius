@@ -456,9 +456,9 @@ int building_warehouse_with_resource(int src_building_id, int x, int y, int reso
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
             continue;
         }
-        b = building_main(b);
+        building *main = building_main(b);
 
-        int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
+        int pct_workers = calc_percentage(main->num_workers, model_get_building(main->type)->laborers);
         if (pct_workers < 100) {
             if (understaffed) {
                 *understaffed += 1;
@@ -466,7 +466,7 @@ int building_warehouse_with_resource(int src_building_id, int x, int y, int reso
             continue;
         }
         int loads_stored = 0;
-        building *space = b;
+        building *space = main;
         for (int t = 0; t < 8; t++) {
             space = building_next(space);
             if (space->id > 0 && space->loads_stored > 0) {
@@ -476,11 +476,11 @@ int building_warehouse_with_resource(int src_building_id, int x, int y, int reso
             }
         }
         if (loads_stored > 0) {
-            int dist = calc_maximum_distance(b->x, b->y, x, y);
+            int dist = calc_maximum_distance(main->x, main->y, x, y);
             dist -= 4 * loads_stored;
             if (dist < min_dist) {
                 min_dist = dist;
-                min_building = b;
+                min_building = main;
             }
         }
     }
