@@ -460,7 +460,7 @@ static int get_custom_audio_stream(Uint8 *dst, int len)
 
 static void custom_music_callback(void *dummy, Uint8 *stream, int len)
 {
-    int bytes_copied = get_custom_audio_stream(stream, len);
+    get_custom_audio_stream(stream, len);
 }
 
 void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate,
