@@ -53,6 +53,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SPEECH, "Вкл. речь"},
     {TR_CONFIG_EFFECTS, "Вкл. звуковые эффекты"},
     {TR_CONFIG_CITY_SOUNDS, "Вкл. городской шум"},
+    {TR_CONFIG_VIDEO_SOUND, "Вкл. звук видео"},
     {TR_CONFIG_SCROLL_SPEED, "Скорость прокрутки:"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Проигрывать вступительные видеоролики"},
     {TR_CONFIG_SIDEBAR_INFO, "Дополнительная информация на панели управления"},
