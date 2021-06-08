@@ -76,7 +76,7 @@ static void draw_foreground(void)
     graphics_in_dialog();
 
     for (int i = 0; i < MAX_BUTTONS; i++) {
-        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
+        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / BLOCK_SIZE, data.focus_button_id == i + 1 ? 1 : 0);
     }
 
     lang_text_draw_centered(30, 1, 192, 136, 256, FONT_NORMAL_GREEN);

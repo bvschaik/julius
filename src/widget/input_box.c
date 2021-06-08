@@ -16,13 +16,13 @@ static image_button clear_text_button =
 
 void input_box_start(input_box *box)
 {
-    int text_width = (box->width_blocks - 2) * INPUT_BOX_BLOCK_SIZE - 35;
+    int text_width = (box->width_blocks - 2) * BLOCK_SIZE - 35;
     keyboard_start_capture(box->text, box->text_length, box->allow_punctuation, text_width, box->font);
     clear_text_button.x_offset = box->x + box->width_blocks * 16 - 43;
     clear_text_button.y_offset = box->y + 3;
     system_keyboard_set_input_rect(box->x, box->y,
-            box->width_blocks * INPUT_BOX_BLOCK_SIZE - 35,
-            box->height_blocks * INPUT_BOX_BLOCK_SIZE);
+            box->width_blocks * BLOCK_SIZE - 35,
+            box->height_blocks * BLOCK_SIZE);
 }
 
 void input_box_pause(input_box *box)
@@ -53,8 +53,8 @@ int input_box_is_accepted(input_box *box)
 
 static int is_mouse_inside_input(const mouse *m, const input_box *box)
 {
-    return m->x >= box->x && m->x < box->x + box->width_blocks  * INPUT_BOX_BLOCK_SIZE &&
-           m->y >= box->y && m->y < box->y + box->height_blocks * INPUT_BOX_BLOCK_SIZE;
+    return m->x >= box->x && m->x < box->x + box->width_blocks  * BLOCK_SIZE &&
+           m->y >= box->y && m->y < box->y + box->height_blocks * BLOCK_SIZE;
 }
 
 void input_box_draw(const input_box *box)

@@ -74,11 +74,16 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode);
  */
 FILE *platform_file_manager_open_asset(const char *asset, const char *mode);
 
+
 /**
  * Removes a file
  * @param filename The file to remove
  * @return true if removal was successful, false otherwise
  */
 int platform_file_manager_remove_file(const char *filename);
+
+
+int platform_file_manager_close_file(FILE *stream);
+
 
 #endif // PLATFORM_FILE_MANAGER_H

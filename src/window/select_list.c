@@ -114,7 +114,7 @@ static void draw_foreground(void)
 {
     if (data.num_items > MAX_ITEMS_PER_LIST) {
         int max_first = items_in_first_list();
-        outer_panel_draw(data.x, data.y, 26, (20 * max_first + 24) / 16);
+        outer_panel_draw(data.x, data.y, 26, (20 * max_first + 24) / BLOCK_SIZE);
         for (int i = 0; i < max_first; i++) {
             draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
         }
@@ -122,7 +122,7 @@ static void draw_foreground(void)
             draw_item(i + max_first, 205, 11 + 20 * i, MAX_ITEMS_PER_LIST + i + 1 == data.focus_button_id);
         }
     } else {
-        outer_panel_draw(data.x, data.y, 13, (20 * data.num_items + 24) / 16);
+        outer_panel_draw(data.x, data.y, 13, (20 * data.num_items + 24) / BLOCK_SIZE);
         for (int i = 0; i < data.num_items; i++) {
             draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
         }

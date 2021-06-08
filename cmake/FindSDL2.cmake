@@ -67,7 +67,7 @@
 
 GET_SDL_EXT_DIR(SDL_EXT_DIR "")
 
-IF(ANDROID_BUILD)
+IF(${TARGET_PLATFORM} STREQUAL "android")
     STRING(TOLOWER ${CMAKE_BUILD_TYPE} ANDROID_BUILD_DIR)
     SET(SDL2_LIBRARY SDL2)
     SET(SDL2_ANDROID_HOOK ${SDL_EXT_DIR}/src/main/android/SDL_android_main.c)
@@ -98,6 +98,8 @@ ELSE()
     endif()
 
     SET(SDL2_SEARCH_PATHS
+        ${SDL_EXT_DIR}
+        ${SDL_MINGW_EXT_DIR}
         ~/Library/Frameworks
         /Library/Frameworks
         /usr/local
@@ -107,8 +109,6 @@ ELSE()
         /opt/csw # Blastwave
         /opt
         /boot/system/develop/headers/SDL2 # Haiku
-        ${SDL_EXT_DIR}
-        ${SDL_MINGW_EXT_DIR}
         ${CMAKE_FIND_ROOT_PATH}
     )
 
@@ -117,6 +117,7 @@ ELSE()
         $ENV{SDL2DIR}
         PATH_SUFFIXES include/SDL2 include
         PATHS ${SDL2_SEARCH_PATHS}
+        NO_CMAKE_FIND_ROOT_PATH
     )
 
     FIND_LIBRARY(SDL2_LIBRARY_TEMP
@@ -125,6 +126,7 @@ ELSE()
         $ENV{SDL2DIR}
         PATH_SUFFIXES lib64 lib lib/${SDL2_PROCESSOR_ARCH}
         PATHS ${SDL2_SEARCH_PATHS}
+        NO_CMAKE_FIND_ROOT_PATH
     )
 
     IF(NOT SDL2_BUILDING_LIBRARY)
@@ -148,9 +150,9 @@ ENDIF()
 # The Apple build may not need an explicit flag because one of the
 # frameworks may already provide it.
 # But for non-OSX systems, I will use the CMake Threads package.
-IF(NOT APPLE)
+IF(NOT APPLE AND NOT EMSCRIPTEN)
     FIND_PACKAGE(Threads)
-ENDIF(NOT APPLE)
+ENDIF()
 
 # MinGW needs an additional library, mwindows
 # It's total link flags should look like -lmingw32 -lSDL2main -lSDL2 -lmwindows

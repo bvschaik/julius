@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Julius</title>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.4/FileSaver.min.js"></script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
+    <style>
+      body {
+        background: black;
+        margin: auto;
+      }
+
+      /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+      canvas {
+        border: 0px none;
+        background-color: black;
+      }
+
+      canvas {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        border: 0;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+      }
+
+      input#loaddir {
+        display: none;
+      }
+
+      .spinner {
+        display: block;
+        overflow: visible;
+        height: 50px;
+        width: 50px;
+        margin: 0px auto;
+        -webkit-animation: rotation .8s linear infinite;
+        -moz-animation: rotation .8s linear infinite;
+        -o-animation: rotation .8s linear infinite;
+        animation: rotation 0.8s linear infinite;
+        border-left: 10px solid rgb(140, 140, 140);
+        border-right: 10px solid rgb(200, 200, 200);
+        border-bottom: 10px solid rgb(200, 200, 200);
+        border-top: 10px solid rgb(200, 200, 200);
+        border-radius: 100%;
+        background-color: transparent;
+      }
+
+      .spinner.small {
+        height: 10px;
+        width: 10px;
+        border-width: 2px;
+        margin-right: 4px;
+        position: relative;
+        top: 2px;
+      }
+
+      @-webkit-keyframes rotation {
+        from {-webkit-transform: rotate(0deg);}
+        to {-webkit-transform: rotate(360deg);}
+      }
+
+      @-moz-keyframes rotation {
+        from {-moz-transform: rotate(0deg);}
+        to {-moz-transform: rotate(360deg);}
+      }
+
+      @-o-keyframes rotation {
+        from {-o-transform: rotate(0deg);}
+        to {-o-transform: rotate(360deg);}
+      }
+
+      @keyframes rotation {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(360deg);}
+      }
+
+      div#infoLocation {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: 30px;
+        border: 10px solid rgb(200, 200, 200);
+        border-radius: 30px;
+        background-color: white;
+        color: rgb(100, 100, 100);
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        align-items: center; 
+        font: bold 15pt Tahoma, Verdana, sans-serif;
+        z-index: 2;
+      }
+
+      div#infoLocation::after {
+        content: "";
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-image: url(https://raw.githubusercontent.com/bvschaik/julius/master/res/julius_512.png);
+        opacity: 0.25;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;   
+      }
+
+      div#infoLocation div {
+        text-align: center;
+      }
+
+      div#infoLocation div#middleElement {
+        position: relative;
+        top: -25px;
+      }
+
+      div#infoLocation div#startOptions,
+      div#infoLocation div#confirm {
+        display: none;
+      }
+
+      div#infoLocation div.version {
+        font-size: 10pt;
+      }
+
+      div#infoLocation h1 {
+        text-align: center;
+      }
+
+      div#infoLocation h1 small {
+        font-style: italic;
+        font-weight: 100;
+      }
+
+      progress {
+        -webkit-appearance: none;
+        appearance: none;
+        border: 1px solid rgb(120, 120, 120);
+        border-radius: 5px;
+        margin: auto;
+        width: 100%;
+        max-width: 300px;
+        width: 75vw;
+        height: 20px;
+        display: none;
+      }
+
+      progress::-webkit-progress-bar {
+        background-color: rgba(180, 180, 180, 0.5);
+      }
+
+      progress::-webkit-progress-value {
+        background: rgb(140, 140, 140);
+        border-radius: 2px; 
+        background-size: 35px 20px, 100% 100%, 100% 100%;
+      }
+
+      progress::-moz-progress-bar {
+        background: rgb(140, 140, 140);
+        border-radius: 2px; 
+        background-size: 35px 20px, 100% 100%, 100% 100%;
+      }
+
+      #infoLocation input[type='button'] {
+        cursor: pointer;
+        border: 1px solid black;
+        border-radius: 2px;
+        background-color: rgba(180, 180, 180, 0.5);
+        padding: 8pt;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        min-width: 100pt;
+        margin: 8pt;
+      }
+
+      #infoLocation input[type='button']:hover {
+        background-color: rgba(200, 200, 200, 0.5);
+      }
+
+      #infoLocation input[type='button'].red {
+        border: 1px solid red;
+        color: red;
+      }
+
+      #infoLocation input[type='button'].red:hover {
+        background-color: red;
+        color: rgb(200, 200, 200);
+      }
+
+      #play {
+        border: 1px solid black;
+        border-radius: 5px;
+        background-color: rgba(180, 180, 180, 0.5);
+        padding: 25pt;
+        cursor: pointer;
+        width: 120pt;
+        margin: auto;
+      }
+
+      #play:hover {
+        background-color: rgba(200, 200, 200, 0.5);
+      }
+
+      #play::before {
+        content: "";
+        width: 0;
+        height: 0;
+        margin: 0 auto 15pt auto;
+        display: block;
+        border-style: solid;
+        border-color: transparent transparent transparent rgb(140, 140, 140);
+        border-width: 37px 0px 37px 74px;
+      }
+
+      #OSD {
+        display: none;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        border: 1px solid rgb(120, 120, 120);
+        border-radius:2px;
+        background-color: rgba(255, 255, 255, 0.25);
+        color: rgb(200, 200, 200);
+        font-weight: normal;
+        padding: 4pt;
+        font-size: 10pt;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="infoLocation">
+      <h1>Julius <small>online</small></h1>
+      <div id="middleElement">
+        <div id="loadStatus">
+          <div id="spinner" class="spinner"></div>
+          <div id="status"><noscript>Please enable JavaScript to play Julius</noscript>Waiting for JavaScript to load...</div>
+          <progress id="progress"></progress>
+        </div>
+        <div id="startOptions">
+          <div id="play" onclick="Module.startGame()">Play Julius</div>
+          <input type="button" id="downloadSaves" onclick="Module.downloadSaves()" value="Download Saves">
+          <input type="button" class="red" onclick="Module.showSubWindow(confirmElement)" value="Delete all files">
+        </div>
+        <div id="confirm">
+          <div>Are you sure you want to delete all files?<br><br>You will lose all your savegames</div>
+          <input type="button" class="red" onclick="Module.clearFS()" value="YES">
+          <input type="button" onclick="Module.showSubWindow(startOptionsElement)" value="No">          
+        </div>
+      </div>
+      <div class="version">v@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@@VERSION_REVISION@</div>
+    </div>
+    <div id="OSD">
+      <span id="OSDSpinner" class="spinner small"></span>
+      <span id="OSDStatus"></span>
+    </div>
+    <input type="file" id="loaddir" name="fileList" webkitdirectory multiple>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()" tabindex="-1"></canvas>
+    <script type='text/javascript'>
+      var C3Dir = '/C3';
+
+      var infoElement = document.getElementById('infoLocation');
+      var statusElement = document.getElementById('status');
+      var progressElement = document.getElementById('progress');
+      var spinnerElement = document.getElementById('spinner');
+      var dirElement = document.getElementById('loaddir');
+
+      var loadStatusElement = document.getElementById('loadStatus');
+      var startOptionsElement = document.getElementById('startOptions');
+      var confirmElement = document.getElementById('confirm');
+
+      var OSDElement = document.getElementById('OSD');
+      var OSDSpinnerElement = document.getElementById('OSDSpinner');
+      var OSDStatusElement = document.getElementById('OSDStatus');
+
+      var filesRead;
+      var totalFiles;
+
+      dirElement.addEventListener('change', function(event) {
+        removeEventListeners();
+        Module.loadDirFromInput(event.target.files);
+      }, false);
+
+      function clickSelectFile() {
+        dirElement.click();
+      }
+
+      function clickShowMainWindow() {
+        Module.showFirstScreen();
+      }
+
+      function dragOverEvent(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy';
+      }
+
+      function dragEnterEvent() {
+        infoElement.style.borderStyle = 'dashed';
+      };
+          
+      function dragLeaveEvent() {
+        infoElement.style.borderStyle = 'solid';
+      };
+
+      function dropEvent(event) {
+        event.stopPropagation();
+        event.preventDefault();
+        removeEventListeners();
+        infoElement.style.borderStyle = 'solid';
+        Module.loadDirFromDropTarget(event.dataTransfer);
+      }
+
+      function addFileUploadEventListeners() {
+        if (dirElement.webkitdirectory && !BrowserSupport.canLoadFolder) {
+          dirElement.webkitdirectory = false;
+        }
+
+        if (BrowserSupport.canUseInput()) {
+          infoElement.style.cursor = 'pointer';
+          infoElement.addEventListener('click', clickSelectFile, false);
+        }
+        if (BrowserSupport.canUseDragDrop()) {
+          infoElement.addEventListener('dragover', dragOverEvent, false);
+          infoElement.addEventListener('dragenter', dragEnterEvent, false);
+          infoElement.addEventListener('dragleave', dragLeaveEvent, false);
+          infoElement.addEventListener('drop', dropEvent, false);
+        }
+      }
+
+      function removeEventListeners() {
+        infoElement.style.cursor = 'auto';
+        infoElement.removeEventListener('click', clickSelectFile, false);
+        infoElement.removeEventListener('click', clickShowMainWindow, false);
+        infoElement.removeEventListener('dragover', dragOverEvent, false);
+        infoElement.removeEventListener('dragenter', dragEnterEvent, false);
+        infoElement.removeEventListener('dragleave', dragLeaveEvent, false);
+        infoElement.removeEventListener('drop', dropEvent, false);
+      }
+
+      function removeUploadedFiles() {
+        dirElement.value = null;
+      }
+
+      function processFileEntry(entry, path) {
+        path = path || '';
+        if (entry.isFile) {
+          entry.file(function(file) {
+            Module.loadFile(file, path + file.name);
+          }, function(error) {
+            Module.FSError = true;
+            console.error(error);
+          });
+        } else if (entry.isDirectory) {
+          FS.mkdir(C3Dir + '/' + (path + entry.name), 0777);
+          filesRead++;
+
+          // Get folder contents
+          var dirReader = entry.createReader();
+          dirReader.readEntries(function processEntries(entries) {
+            totalFiles += entries.length;
+            for (var i = 0; i < entries.length; i++) {
+              processFileEntry(entries[i], path + entry.name + '/');
+            }
+            if (entries.length > 0) {
+              dirReader.readEntries(processEntries);
+            }
+          });
+        }
+      }
+
+      function addInfoElementClickEvent(callback) {
+        infoElement.style.cursor = 'pointer';
+        setTimeout(function () {
+          infoElement.addEventListener('click', callback);
+        }, 50);        
+      }
+
+
+      var BrowserSupport = {
+        hasZip: false,
+        canDownloadSaves: false,
+        canLoadZip: false,
+        canReadFile: false,
+        canLoadFolder: false,
+        canDragDrop: false,
+        canDragDropFolder: false,
+        canDragDropZip: false,
+        isAndroid: navigator.userAgent.toLowerCase().indexOf("android") > -1,
+        check: function () {
+          BrowserSupport.hasZip = typeof JSZip !== 'undefined';
+          BrowserSupport.canDownloadSaves = typeof saveAs !== 'undefined' &&
+            BrowserSupport.hasZip && JSZip.support['blob'];
+          BrowserSupport.canLoadZip = BrowserSupport.hasZip && JSZip.support['uint8array'];
+          BrowserSupport.canReadFile = typeof FileReader !== 'undefined' && typeof ArrayBuffer !== 'undefined';
+
+          BrowserSupport.canLoadFolder = BrowserSupport.canReadFile &&
+            'webkitdirectory' in dirElement && !BrowserSupport.isAndroid;
+
+          BrowserSupport.canDragDrop = !BrowserSupport.isAndroid && ('draggable' in infoElement ||
+            ('ondragstart' in infoElement && 'ondrop' in infoElement));
+          BrowserSupport.canDragDropFolder = BrowserSupport.canDragDrop &&
+            typeof DataTransferItem !== 'undefined' &&
+            DataTransferItem.prototype.webkitGetAsEntry && BrowserSupport.canReadFile;
+          BrowserSupport.canDragDropZip = BrowserSupport.canDragDrop && BrowserSupport.canLoadZip;
+        },
+        canUseInput: function() {
+          return BrowserSupport.canLoadFolder || BrowserSupport.canLoadZip;
+        },
+        canUseDragDrop: function() {
+          return BrowserSupport.canDragDropFolder || BrowserSupport.canDragDropZip;
+        }
+      }
+
+
+      var Module = {
+        preRun: [],
+        postRun: [],
+        addFilesMessage: '',
+        running: false,
+        syncingFS: false,
+        FSError: false,
+        totalDependencies: 0,
+        canvas: (function() {
+          var canvas = document.getElementById('canvas');
+
+          // As a default initial behavior, pop up an alert when webgl context is lost. To make your
+          // application robust, you may want to override this behavior before shipping!
+          // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
+          canvas.addEventListener("webglcontextlost", function(e) {
+            Module.setStatus('WebGL context lost. Please click to reload the page.');
+            e.preventDefault();
+            addInfoElementClickEvent(function() {
+              window.location = window.location;
+            });
+          }, false);
+
+          return canvas;
+        })(),
+        print: (function() {
+          return function(text) {
+            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            console.log(text);
+          };
+        })(),
+        printErr: function(text) {
+          if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+          console.error(text);
+        },
+        setStatus: function(text) {
+          if (!Module.setStatus.last) {
+            Module.setStatus.last = { time: Date.now(), text: '' };
+          }
+          if (!text || text === Module.setStatus.last.text) {
+            return;
+          }
+          Module.showSubWindow(loadStatusElement);
+          var m = text.match(/([^(]+)?\((\d+(\.\d+)?)\/(\d+)\)/);
+          var now = Date.now();
+          if (m && now - Module.setStatus.last.time < 16) {
+            return; // if this is a progress update, skip it if too soon
+          }
+          Module.setStatus.last.time = now;
+          Module.setStatus.last.text = text;
+          if (m) {
+            text = m[1].trim();
+            progressElement.value = parseInt(m[2]) * 100;
+            progressElement.max = parseInt(m[4]) * 100;
+            progressElement.style.display = 'block';
+          } else {
+            progressElement.value = null;
+            progressElement.max = null;
+            progressElement.style.display = 'none';
+          }
+          spinnerElement.style.display = text.endsWith('...') ? 'block ' : 'none';
+          statusElement.innerHTML = text;
+        },
+        createUploadMessage: function() {
+          if (Module.addFilesMessage !== '') {
+            return;
+          }
+          var text = '';
+          var inputAllowed = 0;
+          var dragDropAllowed = 0;
+          if (BrowserSupport.canUseInput()) {
+            text += 'Click to select your C3 ';
+            if (BrowserSupport.canLoadFolder) {
+              text += 'folder';
+              inputAllowed |= 1;
+              if (BrowserSupport.canLoadZip) {
+                text += '/zip file';
+                inputAllowed |= 2;
+              }
+            } else {
+              text += 'zip file';
+            }
+          }
+          if (BrowserSupport.canUseDragDrop()) {
+            if (BrowserSupport.canUseInput()) {
+              text += ' or drag ';
+            } else {
+              text += 'Drag ';
+            }
+            if (BrowserSupport.canDragDropFolder) {
+              dragDropAllowed |= 1;
+            }
+            if (BrowserSupport.canDragDropZip) {
+              dragDropAllowed |= 2;
+            }
+            if (dragDropAllowed == inputAllowed) {
+              text += 'it';
+            } else {
+              text += 'your ';
+              if (dragDropAllowed & 1) {
+                text += 'C3 folder';
+              }
+              if (dragDropAllowed == 3) {
+                text += '/';
+              }
+              if (dragDropAllowed & 2) {
+                text += 'zip file';
+              }
+            }
+            text += ' here';
+          }
+          Module.addFilesMessage = text;
+        },
+        showOSD: function(text) {
+          OSDElement.style.display = 'block';
+          OSDSpinnerElement.style.display = text.endsWith('...') ? 'inline-block ' : 'none';
+          OSDStatusElement.innerHTML = text;
+        },
+        clearOSD: function() {
+          OSDElement.style.display = 'none';
+        },
+        showSubWindow: function(subWindow) {
+          if (Module.running) {
+            return;
+          }
+          Module.clearOSD();
+          infoElement.style.display = 'flex';
+          loadStatusElement.style.display = subWindow === loadStatusElement ? 'block' : 'none';
+          startOptionsElement.style.display = subWindow === startOptionsElement ? 'block' : 'none';
+          confirmElement.style.display = subWindow === confirmElement ? 'block' : 'none';
+        },
+        showFirstScreen: function() {
+          removeEventListeners();
+          Module.showSubWindow(startOptionsElement);
+        },
+        monitorRunDependencies: function(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          if (left) {
+            Module.setStatus('Preparing... (' + (this.totalDependencies - left) + '/' + this.totalDependencies + ')');
+          } else {
+            Module.setStatus('All downloads complete');
+          }
+        },
+        onRuntimeInitialized: function() {
+          BrowserSupport.check();
+          Module.createUploadMessage();
+
+          if (!BrowserSupport.canDownloadSaves) {
+            document.getElementById('downloadSaves').style.display = 'none';
+          }
+          Module.startFS();
+        },
+        startGame: function() {
+          if (Module.running) {
+            return;
+          }
+          Module.running = true;
+          Module.setStatus("Starting...");
+          Module.callMain([C3Dir]);
+          setTimeout(function() {
+            if (Module.running) {
+              infoElement.style.display = 'none';
+            }
+          }, 1000);
+        },
+        quitGame: function(status) {
+          Module.running = false;
+          infoElement.style.display = 'flex';
+          if (status) {
+            Module.setStatus('The selected files are not a valid C3 installation<br><br>Deleting files...');
+            Module.clearPath(C3Dir);
+            FS.syncfs(false, function() {
+              Module.setStatus('The selected files are not a valid C3 installation<br><br>' +
+                Module.addFilesMessage);
+              addFileUploadEventListeners();
+            })
+          } else {
+            Module.syncFS();
+          }
+        },
+        startFS: function() {
+          Module.setStatus("Waiting for filesystem to load...");
+          try {
+            FS.mkdir(C3Dir);
+            FS.mount(IDBFS, {}, C3Dir);
+            FS.syncfs(true, function(err) {
+              if (err) {
+                Module.handleFSError(err);
+                return;
+              }
+              if (Object.keys(FS.lookupPath(C3Dir).node.contents).length === 0) {
+                if (!BrowserSupport.canUseDragDrop() && !BrowserSupport.canUseInput()) {
+                  Module.setStatus("Your browser does not support any way to load the C3 files" +
+                    "<br><br>Please use a more modern browser");
+                  return;
+                }
+                Module.setStatus(Module.addFilesMessage);
+                addFileUploadEventListeners();
+                return;
+              }
+              Module.showFirstScreen();
+            });
+          } catch (e) {
+            Module.handleFSError(e);
+            return;
+          }
+        },
+        syncFS: function() {
+          if (Module.syncingFS) {
+            return;
+          }
+          Module.syncingFS = true;
+          var message = 'Syncing filesystem, please wait...';
+          if (!Module.running) {
+            Module.setStatus(message);
+          } else {
+            Module.showOSD(message);
+          }
+          FS.syncfs(false, function(err) {
+            Module.syncingFS = false;
+            if (!Module.running) {
+              Module.showFirstScreen();
+            }
+            Module.clearOSD();
+          });                
+        },
+        clearPath: function(path) {
+          Object.keys(FS.lookupPath(path).node.contents).forEach(element => {
+            var stat = FS.stat(path + '/' + element);
+            if (stat.mode & 0040000) {
+              Module.clearPath(path + '/' + element);
+              FS.rmdir(path + '/' + element);
+            } else {
+              FS.unlink(path + '/' + element);
+            }
+          });
+        },
+        clearFS: function() {
+          Module.setStatus("Deleting filesystem contents...");
+          Module.clearPath(C3Dir);
+          FS.syncfs(false, function(err) {
+            Module.setStatus("Filesystem deleted<br><br>" + Module.addFilesMessage);
+            addFileUploadEventListeners();
+          });
+        },
+        handleFSError: function(err) {
+          Module.FSError = true;
+          console.error(err);
+          var DBDeleteRequest = indexedDB.deleteDatabase(C3Dir);
+          var DBDeleteAction = function() {
+            Module.setStatus("Error creating filesystem:<br><br>" + err +
+              "<br><br>Please click to refresh your browser and select your C3 folder again");
+            addInfoElementClickEvent(function() {
+              window.location = window.location;
+            });
+          };
+          DBDeleteRequest.onerror = function(error) {
+            console.error("Error deleting database:" + error);
+            DBDeleteAction();
+          };
+          DBDeleteRequest.onsuccess = DBDeleteAction;
+          DBDeleteRequest.onblocked = DBDeleteAction;
+        },
+        downloadSaves: function() {
+          if (Module.running || !BrowserSupport.canDownloadSaves) {
+            return;
+          }
+          var zip = new JSZip();
+          var hasData = false;
+          Module.setStatus('Checking for downloadable saves...');
+          Object.keys(FS.lookupPath(C3Dir).node.contents).forEach(element => {
+            if (element.endsWith('.sav') || element.endsWith('.map')) {
+              var array = FS.readFile(C3Dir + '/' + element);
+              zip.file(element, array);
+              hasData = true;
+            }
+          });
+          if (!hasData) {
+            Module.setStatus('There are no saves available for download<br><br><small>(Click to exit this prompt)</small>');
+            addInfoElementClickEvent(clickShowMainWindow);
+            return;
+          }
+          Module.setStatus('Creating zip file...');
+          zip.generateAsync({type:"blob"}).then(function(blob) {
+            Module.showFirstScreen();
+            saveAs(blob, 'julius savefiles.zip');
+          }, function (err) {
+            Module.setStatus('There was an error creating the zip file:<br><br>' + err +
+              '<br><br><small>(Click to exit this prompt)</small>');
+            addInfoElementClickEvent(clickShowMainWindow);
+          });
+        },
+        loadFile: function(file, fileName) {
+          if (Module.FSError) {
+            return;
+          }
+          var reader = new FileReader();
+          reader.onloadend = (function(file) {
+            return function(e) {
+              if (Module.FSError) {
+                return;
+              }
+              Module.setStatus("Loading files... (" + (filesRead + 1) + "/" + totalFiles + ")");
+              FS.writeFile(C3Dir + '/' + file, new Uint8Array(e.target.result), {encoding: 'binary'});
+              filesRead++;
+              if (filesRead == totalFiles) {
+                Module.setStatus("Syncing filesystem, please wait...");
+                FS.syncfs(false, function(err) {
+                  removeUploadedFiles();
+                  Module.startGame();
+                });
+              }
+            };
+          })(fileName);
+          reader.onerror = function() {
+            Module.FSError = true;
+            Module.setStatus("Error loading files:<br><br>" + reader.error +
+              "<br><br>Please click to refresh your browser and select your C3 folder again");
+            addInfoElementClickEvent(function() {
+              window.location = window.location;
+            });
+          }
+          reader.readAsArrayBuffer(file);
+        },
+        loadDirFromZipFile: function(zipFile) {
+          Module.setStatus("Opening zip file...");
+          JSZip.loadAsync(zipFile, {createFolders: true}).then(function(zip) {
+            var rootDirs = new Set();
+            var rootDirIndex = 0;
+
+            totalFiles = 0;
+            filesRead = 0;
+            Module.FSError = false;
+            
+            zip.forEach(function(path, file) {
+              rootDirs.add(path.substring(0, path.indexOf('/')));
+              totalFiles++;
+            });
+            if(rootDirs.size === 1) {
+              var rootDir = rootDirs.values().next().value;
+              if (rootDir !== '') {
+                rootDirIndex = rootDir.length + 1;
+              }
+            }
+            if (rootDirIndex > 0) {
+              totalFiles--;
+            }
+            zip.forEach(function(path, file) {
+              if (Module.FSError) {
+                return;
+              }
+              path = path.substring(rootDirIndex);
+              if (path === '') {
+                return;
+              }
+              if (file.dir) {
+                FS.mkdir(C3Dir + '/' + path, 0777);
+                filesRead++;
+              } else {
+                file.async('uint8array').then(function(fileData) {
+                  if (Module.FSError) {
+                    return;
+                  }
+                  Module.setStatus("Loading files... (" + (filesRead + 1) + "/" + totalFiles + ")");
+                  FS.writeFile(C3Dir + '/' + path, fileData, {encoding: 'binary'});
+                  filesRead++;
+                  if (filesRead === totalFiles) {
+                    Module.setStatus("Syncing filesystem, please wait...");
+                    FS.syncfs(false, function(err) {
+                      removeUploadedFiles();
+                      Module.startGame();
+                    });
+                  }
+                }, function(e) {
+                  Module.FSError = true;
+                  Module.setStatus("Error loading files:<br><br>" + e +
+                    "<br><br>Please click to refresh your browser and select your C3 folder again");
+                  addInfoElementClickEvent(function() {
+                    window.location = window.location;
+                  });
+                });
+              } 
+            });
+          }, function(e) {
+            Module.FSError = true;
+            Module.setStatus("Error opening zip file:<br><br>" + e +
+              "<br><br>Please click to refresh your browser and select your C3 folder again");
+            addInfoElementClickEvent(function() {
+              window.location = window.location;
+            });
+          });
+        },
+        loadDirFromInput: function(files) {
+          Module.setStatus("Clearing old contents...");
+          Module.clearPath(C3Dir);
+          filesRead = 0;
+          totalFiles = files.length;
+          Module.setStatus("Preparing file load...");
+          Module.FSError = false;
+          if (totalFiles == 1) {
+            if (BrowserSupport.canLoadZip && files[0].name.endsWith(".zip")) {
+              Module.loadDirFromZipFile(files[0]);
+            } else {
+              Module.setStatus("Wrong file selected<br><br>" + Module.addFilesMessage);
+              addFileUploadEventListeners();
+            }
+            return;
+          }
+          if (!BrowserSupport.canLoadFolder) {
+            Module.setStatus("Wrong file selected<br><br>" + Module.addFilesMessage);
+            addFileUploadEventListeners();
+            return;           
+          }
+          var dirSet = new Set();
+          for (let i = 0; i < totalFiles; i++) {
+            let file = files[i].webkitRelativePath;
+            file = file.substring(file.indexOf("/") + 1);
+            if (file.lastIndexOf("/") != -1) { 
+              let folder = file.substring(0, file.lastIndexOf("/"));
+              var pathArr = folder.split('/');
+              var currPath = '';
+              for (var j = 0; j < pathArr.length; j++) {
+                currPath += '/';
+                currPath += pathArr[j];
+                if (!dirSet.has(currPath)) {
+                  dirSet.add(currPath);
+                  try { 
+                    FS.mkdir(C3Dir + currPath, 0777);
+                  } catch (e) {
+                    Module.FSError = true;
+                    Module.setStatus("Error loading files:<br><br>" + e +
+                      "<br><br>Please click to refresh your browser and select your C3 folder again");
+                    addInfoElementClickEvent(function() {
+                      window.location = window.location;
+                    });
+                    return;
+                  }
+                }
+              }
+            }
+            Module.loadFile(files[i], file);
+          }
+        },
+        loadDirFromDropTarget: function(dataTransfer) {
+          Module.setStatus("Clearing old contents...");
+          Module.clearPath(C3Dir);
+
+          filesRead = 0;
+          totalFiles = 0;
+          Module.FSError = false;
+          Module.setStatus("Preparing file load...");
+
+          if (BrowserSupport.canDragDropFolder) {
+            const fileList = dataTransfer.items;
+
+            if (fileList[0] && fileList[0].webkitGetAsEntry && (firstEntry = fileList[0].webkitGetAsEntry())) {
+              if (fileList.length == 1) {
+                if (!firstEntry.isDirectory) {
+                  if (BrowserSupport.canDragDropZip && firstEntry.name.endsWith('.zip')) {
+                    Module.loadDirFromZipFile(fileList[0].getAsFile());
+                  } else {
+                    Module.setStatus("Invalid file dropped<br><br>" + Module.addFilesMessage);
+                    addFileUploadEventListeners();
+                  }
+                } else {
+                  // Get folder contents  
+                  var dirReader = firstEntry.createReader();
+                  dirReader.readEntries(function processEntries(entries) {
+                    totalFiles += entries.length;
+                    for (var i = 0; i < entries.length; i++) {
+                      processFileEntry(entries[i]);
+                    }
+                    if (entries.length > 0) {
+                      dirReader.readEntries(processEntries);
+                    }
+                  });
+                }
+                return;
+              }
+              totalFiles = fileList.length;
+              for (var i = 0; i < fileList.length; i++) {
+                var entry = fileList[i].webkitGetAsEntry();
+                processFileEntry(entry);
+              }
+              return;
+            }
+            return;
+          }
+          // Old way, supports only zip file
+          const files = dataTransfer.files;
+
+          if (BrowserSupport.canDragDropZip || files.length != 1 || !files[0].name.endsWith('.zip')) {
+            Module.setStatus("Your browser only supports dropping a zip file");
+            return;
+          }
+          Module.loadDirFromZipFile(files[0]);
+        }
+      };
+      window.onerror = function(error) {
+        Module.setStatus("Unhandled error:<br><br>" + error + "<br><br>Please click to refresh your browser");
+        addInfoElementClickEvent(function() {
+          window.location = window.location;
+        });
+        Module.setStatus = function() {};
+      }
+    </script>
+    {{{ SCRIPT }}}
+  </body>
+</html>

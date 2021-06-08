@@ -29,7 +29,7 @@
 #include <string.h>
 
 #define NUM_FILES_IN_VIEW 12
-#define MAX_FILE_WINDOW_TEXT_WIDTH (18 * INPUT_BOX_BLOCK_SIZE)
+#define MAX_FILE_WINDOW_TEXT_WIDTH (18 * BLOCK_SIZE)
 
 static const time_millis NOT_EXIST_MESSAGE_TIMEOUT = 500;
 

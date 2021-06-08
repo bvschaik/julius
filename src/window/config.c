@@ -573,7 +573,7 @@ static void numerical_range_draw(const numerical_range_widget *w, int x, int y, 
     text_draw(value_text, x, y + 6, FONT_NORMAL_BLACK, 0);
     inner_panel_draw(x + w->x, y + 4, w->width_blocks + extra_width / 16, 1);
 
-    int width = w->width_blocks * 16 + extra_width - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
+    int width = w->width_blocks * BLOCK_SIZE + extra_width - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
     int scroll_position = (*w->value - w->min) * width / (w->max - w->min);
     image_draw(image_group(GROUP_PANEL_BUTTON) + 37,
         x + w->x + NUMERICAL_SLIDER_PADDING + scroll_position, y + 2);
@@ -856,7 +856,7 @@ static void draw_foreground(void)
     }
 
     if (data.widgets_per_page[data.page] > NUM_VISIBLE_ITEMS) {
-        inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / 16 - 3);
+        inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / BLOCK_SIZE - 3);
         scrollbar_draw(&scrollbar);
     }
 
@@ -912,7 +912,7 @@ static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numeri
         return 0;
     }
     int extra_width = data.widgets_per_page[data.page] > NUM_VISIBLE_ITEMS ? 0 : 64;
-    int slider_width = w->width_blocks * 16 - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE + extra_width;
+    int slider_width = w->width_blocks * BLOCK_SIZE - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE + extra_width;
     int pixels_per_pct = slider_width / (w->max - w->min);
     int dot_position = m->x - x - w->x - NUMERICAL_DOT_SIZE / 2 + pixels_per_pct / 2;
 
@@ -1280,10 +1280,9 @@ static int config_change_string_language(config_string_key key)
 {
     config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].new_value);
     if (!game_reload_language()) {
-        // Notify user that language dir is invalid and revert to previously selected
-        window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE, 1);
         config_set_string(CONFIG_STRING_UI_LANGUAGE_DIR, data.config_string_values[key].original_value);
         game_reload_language();
+        window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE, 1);
         return 0;
     }
     strncpy(data.config_string_values[key].original_value,

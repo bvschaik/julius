@@ -5,6 +5,7 @@
 #include "core/log.h"
 #include "core/string.h"
 #include "platform/android/android.h"
+#include "platform/emscripten/emscripten.h"
 #include "platform/file_manager_cache.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
@@ -93,6 +94,10 @@ typedef const char *dir_name;
 #define chdir _chdir
 #elif !defined(__vita__)
 #include <unistd.h>
+#endif
+
+#ifdef __EMSCRIPTEN__
+static int writing_to_file;
 #endif
 
 #ifndef USE_FILE_CACHE
@@ -429,6 +434,25 @@ int platform_file_manager_remove_file(const char *filename)
     return android_remove_file(filename);
 }
 
+#elif defined(__EMSCRIPTEN__)
+
+FILE *platform_file_manager_open_file(const char *filename, const char *mode)
+{
+    writing_to_file = strchr(mode, 'w') != 0;
+    return fopen(filename, mode);
+}
+
+int platform_file_manager_remove_file(const char *filename)
+{
+    if (remove(filename) == 0) {
+        EM_ASM(
+            Module.syncFS();
+        );
+        return 1;
+    }
+    return 0;
+}
+
 #else
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
@@ -460,3 +484,17 @@ FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
     return fopen(cased_asset_path, mode);
 }
 #endif
+
+int platform_file_manager_close_file(FILE *stream)
+{
+    int result = fclose(stream);
+#ifdef __EMSCRIPTEN__
+    if (writing_to_file) {
+        writing_to_file = 0;
+        EM_ASM(
+            Module.syncFS();
+        );
+    }
+#endif
+    return result;
+}

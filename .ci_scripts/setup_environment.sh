@@ -18,4 +18,11 @@ case "$BUILD_TARGET" in
         # openssl aes-256-cbc -K $FILE_ENCRYPTION_KEY -iv $FILE_ENCRYPTION_IV -in android/play-publisher.json.enc -out android/play-publisher.json -d;
 	fi
 	;;
+"emscripten")
+	# Get EMSDK
+	git clone https://github.com/emscripten-core/emsdk.git
+	cd emsdk
+	./emsdk install latest
+	./emsdk activate latest
+	;;
 esac

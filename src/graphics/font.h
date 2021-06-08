@@ -15,7 +15,7 @@ typedef enum {
     FONT_LARGE_BROWN,
     FONT_SMALL_PLAIN,
     FONT_NORMAL_GREEN,
-    FONT_SMALL_BLACK,
+    FONT_NORMAL_BROWN,
     FONT_TYPES_MAX
 } font_t;
 

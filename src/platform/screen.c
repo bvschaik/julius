@@ -86,8 +86,15 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
     SDL_SetWindowMinimumSize(SDL.window,
         scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
 
-    // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, (scale_percentage % 100 == 0) ? "nearest" : "linear");
+    const char *scale_quality = "linear";
+#ifndef __APPLE__
+    // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper.
+    // But not on MacOS: users are used to the linear interpolation since that's what Apple also does.
+    if (scale_percentage % 100 == 0) {
+        scale_quality = "nearest";
+    }
+#endif
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scale_quality);
 }
 
 #ifdef __ANDROID__
@@ -162,6 +169,11 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     SDL_Log("Creating screen %d x %d, %s, driver: %s", width, height,
         fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
+
+#if SDL_VERSION_ATLEAST(2, 0, 1)
+    flags |= SDL_WINDOW_ALLOW_HIGHDPI;
+#endif
+
     if (fullscreen) {
         flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
     }

@@ -118,8 +118,9 @@ static void draw_construction_buttons(void)
         return;
     }
     int x, y, width, height;
+
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
-    width -= 4 * 16;
+    width -= 4 * BLOCK_SIZE;
     inner_panel_draw(width - 4, 40, 3, 2);
     image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
 

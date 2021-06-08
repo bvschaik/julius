@@ -27,16 +27,17 @@ static translation_string all_strings[] = {
     {TR_BUTTON_CANCEL, "取消"},
     {TR_BUTTON_RESET_DEFAULTS, "重置默認"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "熱鍵綁定"},
-    {TR_CONFIG_TITLE, "Julius 配置設定"},
+    {TR_CONFIG_TITLE, "Julius 遊戲配置"},
     {TR_CONFIG_LANGUAGE_LABEL, "語言包:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "默認"},
-    {TR_CONFIG_DISPLAY_SCALE, "顯示大小:"},
-    {TR_CONFIG_CURSOR_SCALE, "滑鼠大小:"},
+    {TR_CONFIG_DISPLAY_SCALE, "顯示比例:"},
+    {TR_CONFIG_CURSOR_SCALE, "滑鼠比例:"},
     {TR_CONFIG_HEADER_UI_CHANGES, "使用者介面更變"},
     {TR_CONFIG_HEADER_GAMEPLAY_CHANGES, "遊戲內容更變"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "播放啓動動畫"},
     {TR_CONFIG_SIDEBAR_INFO, "控制台更多資訊"},
     {TR_CONFIG_SMOOTH_SCROLLING, "平滑視角滾動"},
+    {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "禁用螢幕邊緣滾動地圖"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "禁用右鍵拖動地圖"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "優化清理土地視覺回饋"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "允許連續建造每種神廟"},
@@ -106,6 +107,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "戰鬥資訊切換"},
     {TR_HOTKEY_EDIT_TITLE, "按下新熱鍵"},
     {TR_RETURN_ALL_TO_FORT, "全部"},
+    {TR_HOTKEY_DUPLICATE_TITLE, "熱鍵已佔用"},
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "該鍵位已設定為以下功能:"}
 };
 
 void translation_traditional_chinese(const translation_string **strings, int *num_strings)

@@ -124,7 +124,7 @@ static void draw_background(void)
 
     inner_panel_draw(32, 184, 33, 15);
 
-    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED);
+    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED, 5);
     rich_text_init(msg->content.text, 64, 184, 31, 15, 0);
 
     graphics_set_clip_rectangle(35, 187, 522, 234);

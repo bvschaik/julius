@@ -4,8 +4,6 @@
 #include "graphics/font.h"
 #include "input/mouse.h"
 
-#define INPUT_BOX_BLOCK_SIZE 16
-
 typedef struct {
     int x;
     int y;

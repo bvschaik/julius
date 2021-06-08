@@ -6,6 +6,7 @@
 #include "core/string.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
+#include "graphics/panel.h"
 #include "graphics/scrollbar.h"
 #include "graphics/window.h"
 
@@ -23,13 +24,13 @@ static struct {
     int y_max;
 } links[MAX_LINKS];
 
-static int num_links;
-static const font_definition *normal_font_def;
-static const font_definition *link_font_def;
-
 static uint8_t tmp_line[200];
 
 static struct {
+    const font_definition *normal_font;
+    const font_definition *link_font;
+    int line_height;
+
     int x_text;
     int y_text;
     int text_width_blocks;
@@ -37,6 +38,7 @@ static struct {
     int text_height_lines;
     int num_lines;
     int max_scroll_position;
+    int num_links;
 } data;
 
 int rich_text_init(
@@ -46,15 +48,15 @@ int rich_text_init(
     data.y_text = y_text;
     if (!data.num_lines) {
         data.text_height_blocks = height_blocks;
-        data.text_height_lines = height_blocks - 1;
+        data.text_height_lines = (height_blocks - 1) * BLOCK_SIZE / data.line_height;
         data.text_width_blocks = width_blocks;
 
         data.num_lines = rich_text_draw(text,
             data.x_text + 8, data.y_text + 6,
-            16 * data.text_width_blocks - 16, data.text_height_lines, 1);
-        scrollbar.x = data.x_text + 16 * data.text_width_blocks - 1;
+            BLOCK_SIZE * data.text_width_blocks - BLOCK_SIZE, data.text_height_lines, 1);
+        scrollbar.x = data.x_text + BLOCK_SIZE * data.text_width_blocks - 1;
         scrollbar.y = data.y_text;
-        scrollbar.height = 16 * data.text_height_blocks;
+        scrollbar.height = BLOCK_SIZE * data.text_height_blocks;
         scrollbar_init(&scrollbar, scrollbar.scroll_position, data.num_lines - data.text_height_lines);
         if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll) {
             data.text_width_blocks += 2;
@@ -64,10 +66,11 @@ int rich_text_init(
     return data.text_width_blocks;
 }
 
-void rich_text_set_fonts(font_t normal_font, font_t link_font)
+void rich_text_set_fonts(font_t normal_font, font_t link_font, int line_spacing)
 {
-    normal_font_def = font_definition_for(normal_font);
-    link_font_def = font_definition_for(link_font);
+    data.normal_font = font_definition_for(normal_font);
+    data.link_font = font_definition_for(link_font);
+    data.line_height = data.normal_font->line_height + line_spacing;
 }
 
 void rich_text_reset(int scroll_position)
@@ -86,13 +89,13 @@ void rich_text_clear_links(void)
         links[i].y_min = 0;
         links[i].y_max = 0;
     }
-    num_links = 0;
+    data.num_links = 0;
 }
 
 int rich_text_get_clicked_link(const mouse *m)
 {
     if (m->left.went_up) {
-        for (int i = 0; i < num_links; i++) {
+        for (int i = 0; i < data.num_links; i++) {
             if (m->x >= links[i].x_min && m->x <= links[i].x_max &&
                 m->y >= links[i].y_min && m->y <= links[i].y_max) {
                 return links[i].message_id;
@@ -104,13 +107,13 @@ int rich_text_get_clicked_link(const mouse *m)
 
 static void add_link(int message_id, int x_start, int x_end, int y)
 {
-    if (num_links < MAX_LINKS) {
-        links[num_links].message_id = message_id;
-        links[num_links].x_min = x_start - 2;
-        links[num_links].x_max = x_end + 2;
-        links[num_links].y_min = y - 1;
-        links[num_links].y_max = y + 13;
-        num_links++;
+    if (data.num_links < MAX_LINKS) {
+        links[data.num_links].message_id = message_id;
+        links[data.num_links].x_min = x_start - 2;
+        links[data.num_links].x_max = x_end + 2;
+        links[data.num_links].y_min = y - 1;
+        links[data.num_links].y_max = y + 13;
+        data.num_links++;
     }
 }
 
@@ -157,7 +160,7 @@ static int get_word_width(const uint8_t *str, int in_link, int *num_chars)
             width += 4;
         } else if (*str > ' ') {
             // normal char
-            int letter_id = font_letter_id(normal_font_def, str, &num_bytes);
+            int letter_id = font_letter_id(data.normal_font, str, &num_bytes);
             if (letter_id >= 0) {
                 width += 1 + image_letter(letter_id)->width;
             }
@@ -195,9 +198,9 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
             start_link = 1;
         }
         if (*str >= ' ') {
-            const font_definition *def = normal_font_def;
+            const font_definition *def = data.normal_font;
             if (num_link_chars > 0) {
-                def = link_font_def;
+                def = data.link_font;
             }
 
             int num_bytes = 1;
@@ -287,7 +290,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                                 c = *text++;
                             }
                             image_id += image_group(GROUP_MESSAGE_IMAGES) - 1;
-                            image_height_lines = image_get(image_id)->height / 16 + 2;
+                            image_height_lines = image_get(image_id)->height / data.line_height + 2;
                             if (line > 0) {
                                 lines_before_image = 1;
                             }
@@ -319,13 +322,14 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                     lines_before_image--;
                 } else {
                     const image *img = image_get(image_id);
-                    image_height_lines = img->height / 16 + 2;
+                    image_height_lines = img->height / data.line_height + 2;
                     int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
                     if (line < height_lines + scrollbar.scroll_position) {
                         if (line >= scrollbar.scroll_position) {
                             image_draw(image_id, image_offset_x, y + 8);
                         } else {
-                            image_draw(image_id, image_offset_x, y + 8 - 16 * (scrollbar.scroll_position - line));
+                            image_draw(image_id, image_offset_x,
+                                y + 8 - data.line_height * (scrollbar.scroll_position - line));
                         }
                     }
                     image_id = 0;
@@ -335,7 +339,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
         line++;
         num_lines++;
         if (!outside_viewport) {
-            y += 16;
+            y += data.line_height;
         }
     }
     return num_lines;

@@ -144,7 +144,8 @@ static void draw_culture_info(building_info_context *c, int help_id, const char 
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10,
+        BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
@@ -172,7 +173,7 @@ void window_building_draw_bathhouse(building_info_context *c)
     c->help_id = 64;
     window_building_play_sound(c, "wavs/baths.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(83, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(83, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
     if (!b->has_water_access) {
@@ -258,7 +259,7 @@ static void draw_temple_info(building_info_context *c, int image_offset)
         text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
             c->x_offset + 222, c->y_offset + 60, font);
         text_draw_multiline(translation_for(TR_BUILDING_CERES_TEMPLE_MODULE_DESC),
-            c->x_offset + 112, c->y_offset + 90, 16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
+            c->x_offset + 112, c->y_offset + 90, BLOCK_SIZE * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
             c->x_offset + 16, c->y_offset + 45);
         return;
@@ -270,9 +271,9 @@ static void draw_temple_info(building_info_context *c, int image_offset)
         text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
             c->x_offset + 132, c->y_offset + 60, font);
         text_draw_multiline(translation_for(TR_BUILDING_VENUS_TEMPLE_MODULE_DESC),
-            c->x_offset + 112, c->y_offset + 90, 16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
+            c->x_offset + 112, c->y_offset + 90, BLOCK_SIZE * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
-            c->x_offset + 16, c->y_offset + 45);
+            c->x_offset + BLOCK_SIZE, c->y_offset + 45);
 
         return;
     }
@@ -298,11 +299,11 @@ static void draw_temple_info(building_info_context *c, int image_offset)
         if (city_buildings_get_mess_hall()) {
             text_draw_multiline(translation_for(TR_BUILDING_MARS_TEMPLE_MODULE_DESC),
                 c->x_offset + 112, c->y_offset + 90,
-                16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
+                BLOCK_SIZE * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         } else {
             text_draw_multiline(translation_for(TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS),
                 c->x_offset + 112, c->y_offset + 90,
-                16 * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
+                BLOCK_SIZE * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         }
 
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS), c->x_offset + 16, c->y_offset + 45);
@@ -369,7 +370,7 @@ void window_building_draw_theater(building_info_context *c)
     c->help_id = 71;
     window_building_play_sound(c, "wavs/theatre.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(72, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(72, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
@@ -386,13 +387,13 @@ void window_building_draw_theater(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
     window_building_draw_employment(c, 138);
     if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(72, 6, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        int width = lang_text_draw(72, 6, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-            c->x_offset + width + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
         lang_text_draw(72, 7 + b->data.entertainment.play,
-            c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(72, 5, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        lang_text_draw(72, 5, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     }
 }
 
@@ -402,7 +403,7 @@ void window_building_draw_amphitheater(building_info_context *c)
     // The file name has a typo
     window_building_play_sound(c, "wavs/ampitheatre.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(71, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(71, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     building *b = building_get(c->building_id);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
@@ -421,20 +422,20 @@ void window_building_draw_amphitheater(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 7);
     window_building_draw_employment(c, 138);
     if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(71, 8, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        int width = lang_text_draw(71, 8, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-            c->x_offset + width + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(71, 7, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        lang_text_draw(71, 7, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     }
     if (b->data.entertainment.days2 > 0) {
-        int width = lang_text_draw(71, 10, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        int width = lang_text_draw(71, 10, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2,
-            c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         lang_text_draw(72, 7 + b->data.entertainment.play,
-            c->x_offset + 32, c->y_offset + 222, FONT_SMALL_BLACK);
+            c->x_offset + 32, c->y_offset + 222, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(71, 9, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        lang_text_draw(71, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     }
 }
 
@@ -444,7 +445,7 @@ static void draw_entertainment_school(building_info_context *c, const char *soun
     window_building_play_sound(c, sound_file);
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (building_get(c->building_id)->num_workers <= 0) {
@@ -552,12 +553,12 @@ static void draw_temple(building_info_context *c, const char *sound_file, int gr
     if (b->data.monument.phase <= 0) {
         window_building_play_sound(c, sound_file);
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-        lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
+        lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
         inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 152);
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-        lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
+        lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
         window_building_draw_monument_small_temple_construction_process(c);
     }
 }
@@ -570,7 +571,7 @@ void window_building_draw_oracle(building_info_context *c)
         window_building_play_sound(c, "wavs/oracle.wav");
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         lang_text_draw_centered(110, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
-        window_building_draw_description_at(c, 16 * c->height_blocks - 248, 110, 1);
+        window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 248, 110, 1);
         inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 152);
     } else {
@@ -586,7 +587,7 @@ void window_building_draw_lararium(building_info_context *c)
     window_building_play_sound(c, "wavs/oracle.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_LARARIUM),
-        c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
     window_building_draw_description_from_tr_string_at(c, TR_WINDOW_BUILDING_LARARIUM_DESC, 96);
 }
 
@@ -605,10 +606,10 @@ static void draw_grand_temple(building_info_context *c, const char *sound_file,
     if (b->data.monument.upgrades) {
         int module_name = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].option.header;
         text_draw_centered(translation_for(module_name),
-            c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+            c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
     } else {
         text_draw_centered(translation_for(name),
-            c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+            c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
     }
 
     if (b->data.monument.phase == MONUMENT_FINISHED) {
@@ -630,7 +631,7 @@ static void draw_grand_temple(building_info_context *c, const char *sound_file,
         if (c->height_blocks > 26) {
             image_draw(banner_id, c->x_offset + 32, c->y_offset + 166 + height + extra_y);
             text_draw_centered_with_linebreaks(translation_for(quote),
-                c->x_offset, c->y_offset + 386 + height + extra_y, 16 * c->width_blocks - 16, FONT_NORMAL_BLACK, 0);
+                c->x_offset, c->y_offset + 386 + height + extra_y, BLOCK_SIZE * c->width_blocks - 16, FONT_NORMAL_BLACK, 0);
         }
     }
 }
@@ -645,7 +646,7 @@ void window_building_draw_grand_temple_foreground(building_info_context *c)
         button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 37,
             16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
         text_draw_centered(translation_for(TR_BUILDING_GRAND_TEMPLE_ADD_MODULE),
-            c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 33,
+            c->x_offset + 80, c->y_offset + BLOCK_SIZE * c->height_blocks - 33,
             16 * (c->width_blocks - 10), FONT_NORMAL_BLACK, 0);
     }
     if (b->type == BUILDING_GRAND_TEMPLE_MARS) {
@@ -660,7 +661,7 @@ int window_building_handle_mouse_grand_temple(const mouse *m, building_info_cont
     if (b->data.monument.phase != MONUMENT_FINISHED || b->data.monument.upgrades) {
         return 0;
     }
-    if (generic_buttons_handle_mouse(m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+    if (generic_buttons_handle_mouse(m, c->x_offset + 80, c->y_offset + BLOCK_SIZE * c->height_blocks - 34,
         add_module_button, 1, &data.focus_button_id)) {
         return 1;
     }
@@ -738,9 +739,9 @@ void window_building_draw_work_camp(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     text_draw_centered(translation_for(TR_BUILDING_WORK_CAMP),
-        c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
     text_draw_multiline(translation_for(TR_BUILDING_WORK_CAMP_DESC),
-        c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        c->x_offset + 32, c->y_offset + 76, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     window_building_draw_employment(c, 138);
 }
 
@@ -753,9 +754,9 @@ void window_building_draw_architect_guild(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     text_draw_centered(translation_for(TR_BUILDING_ARCHITECT_GUILD),
-        c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
     text_draw_multiline(translation_for(TR_BUILDING_ARCHITECT_GUILD_DESC),
-        c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        c->x_offset + 32, c->y_offset + 76, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     window_building_draw_employment(c, 138);
 }
 
@@ -767,7 +768,7 @@ void window_building_draw_tavern(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
     text_draw_centered(translation_for(TR_BUILDING_TAVERN), c->x_offset, c->y_offset + 12,
-        16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
 
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, c->x_offset + 32, c->y_offset + 60);
     font_t font = building_distribution_is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
@@ -783,16 +784,16 @@ void window_building_draw_tavern(building_info_context *c)
         window_building_draw_description_at(c, 69, 25, 96);
     } else if (b->num_workers <= 0) {
         text_draw_multiline(translation_for(TR_BUILDING_TAVERN_DESC_1),
-            c->x_offset + 32, c->y_offset + 96, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+            c->x_offset + 32, c->y_offset + 96, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     } else if (!b->data.market.inventory[INVENTORY_WINE]) {
         text_draw_multiline(translation_for(TR_BUILDING_TAVERN_DESC_2),
-            c->x_offset + 32, c->y_offset + 96, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+            c->x_offset + 32, c->y_offset + 96, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     } else if (!b->data.market.inventory[INVENTORY_MEAT]) {
         text_draw_multiline(translation_for(TR_BUILDING_TAVERN_DESC_3),
-            c->x_offset + 32, c->y_offset + 96, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+            c->x_offset + 32, c->y_offset + 96, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     } else {
         text_draw_multiline(translation_for(TR_BUILDING_TAVERN_DESC_4),
-            c->x_offset + 32, c->y_offset + 96, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+            c->x_offset + 32, c->y_offset + 96, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     }
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 156, c->width_blocks - 2, 4);
@@ -818,25 +819,25 @@ void window_building_draw_colosseum_background(building_info_context *c)
         inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 7);
         window_building_draw_employment(c, 138);
         if (b->data.entertainment.days1 > 0) {
-            int width = lang_text_draw(74, 8, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+            int width = lang_text_draw(74, 8, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
             lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-                c->x_offset + width + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+                c->x_offset + width + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
         } else {
-            lang_text_draw(74, 7, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+            lang_text_draw(74, 7, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
         }
         if (b->data.entertainment.days2 > 0) {
-            int width = lang_text_draw(74, 10, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            int width = lang_text_draw(74, 10, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
             lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2,
-                c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+                c->x_offset + width + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         } else {
-            lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         }
 
         if (b->type == BUILDING_ARENA) {
             text_draw_centered(translation_for(TR_BUILDING_ARENA),
-                c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+                c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
         } else {
-            lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+            lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
         }
 
         // todo: better link of venue to game
@@ -844,9 +845,9 @@ void window_building_draw_colosseum_background(building_info_context *c)
             window_building_draw_description_from_tr_string(c, TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG +
                 ((active_games - 1) * 2));
             int width = text_draw(translation_for(TR_WINDOW_BUILDING_GAMES_REMAINING_DURATION),
-                c->x_offset + 32, c->y_offset + 222, FONT_SMALL_BLACK, 0);
+                c->x_offset + 32, c->y_offset + 222, FONT_NORMAL_BROWN, 0);
             lang_text_draw_amount(8, 44, 2 * city_festival_games_remaining_duration(),
-                c->x_offset + width + 32, c->y_offset + 222, FONT_SMALL_BLACK);
+                c->x_offset + width + 32, c->y_offset + 222, FONT_NORMAL_BROWN);
 
         } else {
             if (!c->has_road_access) {
@@ -870,7 +871,7 @@ void window_building_draw_colosseum_background(building_info_context *c)
         }
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-        lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+        lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
         window_building_draw_monument_colosseum_construction_process(c);
     }
 }
@@ -899,21 +900,21 @@ void window_building_draw_arena(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 7);
     window_building_draw_employment(c, 138);
     text_draw_centered(translation_for(TR_BUILDING_ARENA),
-        c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
     if (b->data.entertainment.days1 > 0) {
-        int width = lang_text_draw(74, 8, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        int width = lang_text_draw(74, 8, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-            c->x_offset + width + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(74, 7, c->x_offset + 32, c->y_offset + 182, FONT_SMALL_BLACK);
+        lang_text_draw(74, 7, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     }
 
     if (b->data.entertainment.days2 > 0) {
-        int width = lang_text_draw(74, 10, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        int width = lang_text_draw(74, 10, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days2,
-            c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            c->x_offset + width + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     } else {
-        lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+        lang_text_draw(74, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     }
 
     if (!c->has_road_access) {
@@ -1020,14 +1021,14 @@ void window_building_draw_lighthouse(building_info_context *c)
         window_building_draw_monument_lighthouse_construction_process(c);
     }
     text_draw_centered(translation_for(TR_BUILDING_LIGHTHOUSE),
-        c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
 }
 
 void window_building_draw_hippodrome(building_info_context *c)
 {
     c->help_id = 74;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(73, 0, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
+    lang_text_draw_centered(73, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     building *b = building_get(c->building_id);
     if (b->data.monument.phase == MONUMENT_FINISHED) {
         window_building_play_sound(c, "wavs/hippodrome.wav");
@@ -1044,11 +1045,11 @@ void window_building_draw_hippodrome(building_info_context *c)
         inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 6);
         window_building_draw_employment(c, 138);
         if (b->data.entertainment.days1 > 0) {
-            int width = lang_text_draw(73, 6, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            int width = lang_text_draw(73, 6, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
             lang_text_draw_amount(8, 44, 2 * b->data.entertainment.days1,
-                c->x_offset + width + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+                c->x_offset + width + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         } else {
-            lang_text_draw(73, 5, c->x_offset + 32, c->y_offset + 202, FONT_SMALL_BLACK);
+            lang_text_draw(73, 5, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         }
         if (c->height_blocks > 27) {
             int banner_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Circus Banner");
@@ -1065,7 +1066,7 @@ void window_building_draw_grand_garden(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     text_draw_centered(translation_for(TR_BUILDING_GRAND_GARDEN),
-        c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+        c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
 }
 
 void window_building_draw_nymphaeum(building_info_context *c)
@@ -1076,7 +1077,7 @@ void window_building_draw_nymphaeum(building_info_context *c)
         window_building_play_sound(c, "wavs/oracle.wav");
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         text_draw_centered(translation_for(TR_BUILDING_NYMPHAEUM),
-            c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+            c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
         text_draw_multiline(translation_for(TR_BUILDING_NYMPHAEUM_DESC),
             c->x_offset + 22, c->y_offset + 56, 14 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
@@ -1084,7 +1085,7 @@ void window_building_draw_nymphaeum(building_info_context *c)
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         text_draw_centered(translation_for(TR_BUILDING_NYMPHAEUM),
-            c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+            c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
         window_building_draw_monument_small_temple_construction_process(c);
     }
 }
@@ -1097,7 +1098,7 @@ void window_building_draw_small_mausoleum(building_info_context *c)
         window_building_play_sound(c, "wavs/oracle.wav");
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         text_draw_centered(translation_for(TR_BUILDING_SMALL_MAUSOLEUM),
-            c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+            c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
         text_draw_multiline(translation_for(TR_BUILDING_SMALL_MAUSOLEUM_DESC),
             c->x_offset + 22, c->y_offset + 56, 14 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
@@ -1105,7 +1106,7 @@ void window_building_draw_small_mausoleum(building_info_context *c)
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         text_draw_centered(translation_for(TR_BUILDING_SMALL_MAUSOLEUM),
-            c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+            c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
         window_building_draw_monument_small_temple_construction_process(c);
     }
 }
@@ -1118,7 +1119,7 @@ void window_building_draw_large_mausoleum(building_info_context *c)
         window_building_play_sound(c, "wavs/oracle.wav");
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         text_draw_centered(translation_for(TR_BUILDING_LARGE_MAUSOLEUM),
-            c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+            c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
         text_draw_multiline(translation_for(TR_BUILDING_LARGE_MAUSOLEUM_DESC),
             c->x_offset + 22, c->y_offset + 56, 14 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
@@ -1126,7 +1127,7 @@ void window_building_draw_large_mausoleum(building_info_context *c)
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         text_draw_centered(translation_for(TR_BUILDING_LARGE_MAUSOLEUM),
-            c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+            c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
         window_building_draw_monument_small_temple_construction_process(c);
     }
 }

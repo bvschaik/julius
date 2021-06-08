@@ -60,6 +60,14 @@ case "$DEPLOY" in
     cp "${build_dir}/augustus.apk" "deploy/$DEPLOY_FILE"
   fi
   ;;
+"emscripten")
+  PACKAGE=emscripten
+  if [ -f "${build_dir}/julius.zip" ]
+  then
+    DEPLOY_FILE=julius-$VERSION-emscripten.zip
+    cp "${build_dir}/julius.zip" "deploy/$DEPLOY_FILE"
+  fi
+  ;;
 *)
   echo "Unknown deploy type $DEPLOY - skipping upload"
   exit

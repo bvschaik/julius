@@ -16,6 +16,7 @@
 #include "game/state.h"
 #include "graphics/graphics.h"
 #include "graphics/menu.h"
+#include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
@@ -316,7 +317,7 @@ static int handle_construction_buttons(const touch *t)
     }
     int x, y, width, height;
     city_view_get_unscaled_viewport(&x, &y, &width, &height);
-    int box_size = 5 * 16;
+    int box_size = 5 * BLOCK_SIZE;
     width -= box_size;
 
     if (t->current_point.x >= width && t->current_point.x < width + box_size &&

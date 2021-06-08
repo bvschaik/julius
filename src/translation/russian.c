@@ -682,6 +682,8 @@ static translation_string all_strings[] = {
     { TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR, "Низкий средний уровень жилья сдерживает иммиграцию"},
     { TR_FIGURE_TYPE_LIGHTHOUSE_SUPPLIER, "Смотритель маяка"},
     { TR_WINDOW_GAMES_NO_WATER_ACCESS, "Место не имеет доступ к резервуару."},
+    { TR_HOTKEY_DUPLICATE_TITLE, "Горячая клавиша уже назначена"},
+    { TR_HOTKEY_DUPLICATE_MESSAGE, "Эта комбинация клавиш уже назначена на следующее действие:"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)

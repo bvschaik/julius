@@ -65,9 +65,9 @@ static void calculate_menu_dimensions(menu_bar_item *menu)
         }
         height_pixels += MENU_ITEM_HEIGHT;
     }
-    int blocks = (max_width + 8) / 16 + 1; // 1 block padding
+    int blocks = (max_width + 8) / BLOCK_SIZE + 1; // 1 block padding
     menu->calculated_width_blocks = blocks < 10 ? 10 : blocks;
-    menu->calculated_height_blocks = height_pixels / 16;
+    menu->calculated_height_blocks = height_pixels / BLOCK_SIZE;
 }
 
 void menu_draw(menu_bar_item *menu, int focus_item_id)
@@ -85,7 +85,7 @@ void menu_draw(menu_bar_item *menu, int focus_item_id)
         }
         if (i == focus_item_id - 1) {
             graphics_fill_rect(menu->x_start, y_offset - 4,
-                16 * menu->calculated_width_blocks, 20, COLOR_BLACK);
+                BLOCK_SIZE * menu->calculated_width_blocks, 20, COLOR_BLACK);
             lang_text_draw_colored(sub->text_group, sub->text_number,
                 menu->x_start + 8, y_offset, FONT_NORMAL_PLAIN, COLOR_FONT_ORANGE);
         } else {
@@ -104,7 +104,7 @@ static int get_menu_item(const mouse *m, menu_bar_item *menu)
             continue;
         }
         if (menu->x_start <= m->x &&
-            menu->x_start + 16 * menu->calculated_width_blocks > m->x &&
+            menu->x_start + BLOCK_SIZE * menu->calculated_width_blocks > m->x &&
             y_offset - 2 <= m->y &&
             y_offset + 19 > m->y) {
             return i + 1;
@@ -136,7 +136,7 @@ void menu_update_text(menu_bar_item *menu, int index, int text_number)
     if (menu->calculated_width_blocks > 0) {
         int item_width = lang_text_get_width(
             menu->items[index].text_group, text_number, FONT_NORMAL_BLACK);
-        int blocks = (item_width + 8) / 16 + 1;
+        int blocks = (item_width + 8) / BLOCK_SIZE + 1;
         if (blocks > menu->calculated_width_blocks) {
             menu->calculated_width_blocks = blocks;
         }
