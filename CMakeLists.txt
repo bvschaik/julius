@@ -1,21 +1,15 @@
 cmake_minimum_required(VERSION 3.1)
 include(CMakeDependentOption)
 
-if(VITA_BUILD AND SWITCH_BUILD)
-    message(FATAL_ERROR "Cannot build with -DVITA_BUILD=ON and -DSWITCH_BUILD=ON at the same time")
-endif()
+set(TARGET_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: vita switch android emscripten. Leave blank for no cross compilation")
+set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS default vita switch android emscripten)
 
-if((VITA_BUILD OR SWITCH_BUILD) AND ANDROID_BUILD)
-    message(FATAL_ERROR "Cannot build with -DVITA_BUILD=ON or -DSWITCH_BUILD=ON and -DANDROID_BUILD=ON at the same time")
-endif()
+string(TOLOWER ${TARGET_PLATFORM} TARGET_PLATFORM)
 
 option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
 option(SYSTEM_LIBS "Use system libraries when available." ON)
-cmake_dependent_option(VITA_BUILD "Build for the PlayStation Vita handheld game console." OFF "NOT MSVC" OFF)
-cmake_dependent_option(SWITCH_BUILD "Build for the Nintendo Switch handheld game console." OFF "NOT MSVC; NOT VITA_BUILD" OFF)
-cmake_dependent_option(ANDROID_BUILD "Build for the Android environment." OFF "NOT MSVC; NOT VITA_BUILD; NOT SWITCH_BUILD" OFF)
 
-if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+if(${TARGET_PLATFORM} STREQUAL "vita" AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
         set(CMAKE_TOOLCHAIN_FILE "$ENV{VITASDK}/share/vita.toolchain.cmake" CACHE PATH "toolchain file")
     else()
@@ -23,7 +17,7 @@ if(VITA_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     endif()
 endif()
 
-if(SWITCH_BUILD AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+if(${TARGET_PLATFORM} STREQUAL "switch" AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{DEVKITPRO})
         set(DEVKITPRO $ENV{DEVKITPRO})
         set(CMAKE_TOOLCHAIN_FILE "./cmake/switch.cmake" CACHE PATH "toolchain file")
@@ -36,7 +30,7 @@ set(SHORT_NAME augustus)
 set(USER_FRIENDLY_NAME Augustus)
 project(${SHORT_NAME} C)
 
-if (VITA_BUILD)
+if (${TARGET_PLATFORM} STREQUAL "vita")
     include("${VITASDK}/share/vita.cmake" REQUIRED)
     set(VITA_TITLEID  "AUGUSTUS1")
 endif()
@@ -107,7 +101,7 @@ else()
     set(VERSION_REVISION " unknown development version")
 endif()
 
-if(VITA_BUILD)
+if(${TARGET_PLATFORM} STREQUAL "vita")
     string(LENGTH "${PROJECT_VERSION_MAJOR}" NUM_DIGITS)
     if(NUM_DIGITS EQUAL 1)
         set(VITA_VERSION_MAJOR "0${PROJECT_VERSION_MAJOR}")
@@ -129,7 +123,7 @@ if(VITA_BUILD)
     set(VITA_VERSION "${VITA_VERSION_MAJOR}.${VITA_VERSION_MINOR}")
 endif()
 
-if (SWITCH_BUILD)
+if (${TARGET_PLATFORM} STREQUAL "switch")
     string(SUBSTRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}" 0 15 SWITCH_VERSION)
 endif()
 
@@ -204,18 +198,18 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.c
 )
 
-if (VITA_BUILD)
+if (${TARGET_PLATFORM} STREQUAL "vita")
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
     )
-elseif (SWITCH_BUILD)
+elseif (${TARGET_PLATFORM} STREQUAL "switch")
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch.c
     )
-elseif (ANDROID_BUILD)
+elseif (${TARGET_PLATFORM} STREQUAL "android")
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/android/android.c
@@ -802,12 +796,12 @@ else()
     endif()
 endif()
 
-if(VITA_BUILD)
+if(${TARGET_PLATFORM} STREQUAL "vita")
     include_directories(
         $ENV{VITASDK}/arm-vita-eabi/include
         ${CMAKE_CURRENT_SOURCE_DIR}
     )
-elseif (SWITCH_BUILD)
+elseif (${TARGET_PLATFORM} STREQUAL "switch")
     include_directories(
         ${DEVKITPRO}/portlibs/switch/include/SDL2
         ${DEVKITPRO}/libnx/include
@@ -822,7 +816,7 @@ if(MSVC)
     include_directories(ext/dirent)
 endif()
 
-if (VITA_BUILD)
+if(${TARGET_PLATFORM} STREQUAL "vita")
     target_link_libraries (${SHORT_NAME}
         ${SDL2_MIXER_LIBRARY}
         ${SDL2_LIBRARY}
@@ -863,7 +857,7 @@ if (VITA_BUILD)
         FILE res/vita/template.xml sce_sys/livearea/contents/template.xml
         FILE assets assets
     )
-elseif(SWITCH_BUILD)
+elseif (${TARGET_PLATFORM} STREQUAL "switch")
     target_link_libraries (${SHORT_NAME}
         SDL2_mixer
         SDL2
@@ -907,14 +901,14 @@ else()
     if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
         target_link_libraries(${SHORT_NAME} m)
     endif()
-    if(ANDROID_BUILD)
+    if(${TARGET_PLATFORM} STREQUAL "android")
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DPNG_ARM_NEON_OPT=0 -D_BSD_SOURCE")
         find_library(log-lib log)
         find_library(android-lib android)
         target_link_libraries(${SHORT_NAME} ${log-lib} ${android-lib})
     endif()
     target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
-    if(NOT APPLE AND NOT ANDROID_BUILD)
+    if(NOT APPLE AND NOT ${TARGET_PLATFORM} STREQUAL "android")
         install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
     endif()
 
