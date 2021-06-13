@@ -59,7 +59,7 @@ enum {
 static struct {
     int active;
     int quit;
-} data = { 1, 0 };
+} data = {1, 0};
 
 static void exit_with_status(int status)
 {
