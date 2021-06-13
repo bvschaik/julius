@@ -663,7 +663,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         house->data.house.evolve_text_id = 65;
         return;
     }
-    if (level >= 19) { // max level!
+    if (level >= HOUSE_LUXURY_PALACE) { // max level!
         house->data.house.evolve_text_id = 60;
         return;
     }

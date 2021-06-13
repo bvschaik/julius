@@ -215,8 +215,8 @@ static int trader_get_sell_resource(int warehouse_id, int city_id)
     return 0;
 }
 
-static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int distance_from_entry,
-                                 map_point *warehouse)
+static int get_closest_warehouse(
+    const figure *f, int x, int y, int city_id, int distance_from_entry, map_point *warehouse)
 {
     int exportable[RESOURCE_MAX];
     int importable[RESOURCE_MAX];
@@ -229,7 +229,7 @@ static int get_closest_warehouse(const figure *f, int x, int y, int city_id, int
         }
         if (city_id) {
             importable[r] = empire_can_import_resource_from_city(city_id, r);
-        } else { // exclude own city (id=0), shouldn't happen, but still..
+        } else { // Don't import goods from native traders
             importable[r] = 0;
         }
         if (f->loads_sold_or_carrying >= 8) {
