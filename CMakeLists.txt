@@ -685,7 +685,7 @@ endfunction()
 find_package(SDL2 REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 
-if(ANDROID_BUILD)
+if(${TARGET_PLATFORM} STREQUAL "android")
     add_library(${SHORT_NAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
 else()
     add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
