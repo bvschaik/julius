@@ -30,7 +30,7 @@ int building_monument_deliver_resource(building *b, int resource);
 int building_monument_get_monument(int x, int y, int resource,
     int road_network_id, int distance_from_entry, map_point *dst);
 int building_monument_has_unfinished_monuments(void);
-void building_monument_initialize(building *b);
+void building_monument_set_phase(building *b, int phase);
 int building_monument_is_monument(const building *b);
 int building_monument_type_is_monument(building_type type);
 int building_monument_type_is_mini_monument(building_type type);
@@ -52,7 +52,7 @@ int building_monument_phases(building_type building_type);
 int building_monument_gt_module_is_active(int module);
 int building_monument_pantheon_module_is_active(int module);
 void building_monument_finish_monuments(void);
-void building_monument_set_construction_phase(int phase);
+void building_monuments_set_construction_phase(int phase);
 int building_monument_get_venus_gt(void);
 int building_monument_get_neptune_gt(void);
 void building_monument_initialize_deliveries(void);

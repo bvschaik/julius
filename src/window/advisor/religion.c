@@ -62,7 +62,7 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
     }
     int happy_bolts = city_god_happy_bolts(god);
     for (int i = 0; i < happy_bolts; i++) {
-        image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Happy God Icon"),
+        image_draw(assets_get_image_id("UI_Elements", "Happy God Icon"),
             10 * i + width + 460, y_offset - 4);
     }
 }

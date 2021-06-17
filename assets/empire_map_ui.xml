@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<!DOCTYPE assetlist>
-
-<assetlist author="Areldir" name="Empire_Map_UI">
-
-<!-- Note: Fix for Hagia Sophia Sprite (removes Islamic minarets built in 1500s) -->
-    <image id="H Sophia Fix" src="Hagia_Sophia_Fix" />
-
-</assetlist>

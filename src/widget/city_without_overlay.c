@@ -2,8 +2,11 @@
 
 #include "assets/assets.h"
 #include "building/animation.h"
+#include "building/connectable.h"
 #include "building/construction.h"
 #include "building/dock.h"
+#include "building/image.h"
+#include "building/properties.h"
 #include "building/rotation.h"
 #include "building/type.h"
 #include "city/buildings.h"
@@ -135,7 +138,8 @@ static void draw_footprint(int x, int y, int grid_offset)
             sound_city_mark_building_view(BUILDING_GARDENS, 0, SOUND_DIRECTION_CENTER);
         }
         int image_id = map_image_at(grid_offset);
-        if (map_property_is_constructing(grid_offset)) {
+        if (map_property_is_constructing(grid_offset)) { //&&
+          //  !building_is_connectable(building_construction_type())) {
             image_id = image_group(GROUP_TERRAIN_OVERLAY);
         }
         if (draw_context.advance_water_animation &&
@@ -214,11 +218,12 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
     if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0) {
         image_draw_masked(image_group(GROUP_BUILDING_AMPHITHEATER_SHOW), x + 36, y - 47, color_mask);
     }
-    if (b->type == BUILDING_COLOSSEUM && b->num_workers > 0 && b->data.monument.phase <= 0) {
-        image_draw_masked(assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum ON"), x, y - 123, color_mask);
-    }
-    if (b->type == BUILDING_COLOSSEUM && b->num_workers <= 0 && b->data.monument.phase <= 0) {
-        image_draw_masked(assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum OFF"), x, y - 123, color_mask);
+    if (b->type == BUILDING_COLOSSEUM && b->data.monument.phase <= 0) {
+        if (b->num_workers > 0) {
+            image_draw_masked(assets_get_image_id("Colosseum", "Coloseum ON"), x, y - 123, color_mask);
+        } else {
+            image_draw_masked(assets_get_image_id("Colosseum", "Coloseum OFF"), x, y - 123, color_mask);
+        }
     }
     if (b->type == BUILDING_HIPPODROME && building_main(b)->num_workers > 0
         && city_entertainment_hippodrome_has_race()) {
@@ -507,6 +512,22 @@ static void deletion_draw_remaining(int x, int y, int grid_offset)
     draw_hippodrome_ornaments(x, y, grid_offset);
 }
 
+static void draw_connectable_construction_ghost(int x, int y, int grid_offset)
+{
+    if (!map_property_is_constructing(grid_offset)) {
+        return;
+    }
+    static building b;
+    b.type = building_construction_type();
+    b.grid_offset = grid_offset;
+    if (building_properties_for_type(b.type)->rotation_offset) {
+        b.subtype.orientation = building_rotation_get_rotation();
+    }
+    int image_id = building_image_get(&b);
+    image_draw_isometric_footprint_from_draw_tile(image_id, x, y, COLOR_MASK_BUILDING_GHOST);
+    image_draw_isometric_top_from_draw_tile(image_id, x, y, COLOR_MASK_BUILDING_GHOST);
+}
+
 void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile)
 {
     int highlighted_formation = 0;
@@ -532,6 +553,9 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
             draw_animation
         );
         if (!selected_figure_id) {
+            if (building_is_connectable(building_construction_type())) {
+                city_view_foreach_map_tile(draw_connectable_construction_ghost);
+            }
             city_building_ghost_draw(tile);
         }
         city_view_foreach_valid_map_tile(

@@ -2,9 +2,10 @@
 
 #include "assets/assets.h"
 #include "building/building_variant.h"
+#include "building/connectable.h"
 #include "building/construction.h"
 #include "building/count.h"
-#include "building/image_context.h"
+#include "building/image.h"
 #include "building/industry.h"
 #include "building/monument.h"
 #include "building/model.h"
@@ -125,6 +126,8 @@ static struct {
     int last_grid_offset;
     int blocked;
 } reservoir_range_data;
+
+static building ghost_building;
 
 static void draw_flat_tile(int x, int y, color_t color_mask)
 {
@@ -265,65 +268,20 @@ static int get_building_image_id(int map_x, int map_y, building_type type, const
 static int get_new_building_image_id(int map_x, int map_y, int grid_offset,
     building_type type, const building_properties *props)
 {
-    int rotation_offset = building_rotation_get_rotation() % 2 * props->rotation_offset;
-    int image_id = props->image_group + rotation_offset;
-    if (building_construction_is_connecting()) {
-        image_id = building_image_context_get_connecting_image_for_tile(grid_offset, type);
-    } else if (building_variant_has_variants(type)) {
-        image_id = building_variant_get_image_id(type);
+    ghost_building.type = type;
+    ghost_building.grid_offset = grid_offset;
+    if (building_variant_has_variants(type)) {
+        ghost_building.variant = building_rotation_get_rotation_with_limit(
+            building_variant_get_number_of_variants(type));
     } else {
-        if (type == BUILDING_WATCHTOWER) {
-            switch (scenario_property_climate()) {
-                case CLIMATE_CENTRAL:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower C OFF");
-                    break;
-                case CLIMATE_DESERT:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower S OFF");
-                    break;
-                case CLIMATE_NORTHERN:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Watchtowers"), "Watchtower N OFF");
-                    break;
-                default:
-                    break;
-            }
-        } else if (type == BUILDING_WORKCAMP) {
-            switch (scenario_property_climate()) {
-                case CLIMATE_CENTRAL:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp Central");
-                    break;
-                case CLIMATE_DESERT:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp South");
-                    break;
-                case CLIMATE_NORTHERN:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Workcamps"), "Workcamp North");
-                    break;
-                default:
-                    break;
-            }
-        } else if (type == BUILDING_CARAVANSERAI) {
-            switch (scenario_property_climate()) {
-                case CLIMATE_DESERT:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S OFF");
-                    break;
-                default:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N OFF");
-                    break;
-            }
-        } else if (type == BUILDING_MESS_HALL) {
-            switch (scenario_property_climate()) {
-                case CLIMATE_NORTHERN:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "Mess OFF North");
-                    break;
-                case CLIMATE_DESERT:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "Mess OFF South");
-                    break;
-                default:
-                    image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"), "Mess OFF Central");
-                    break;
-            }
-        }
+        ghost_building.variant = 0;
     }
-    return image_id;
+    if (building_properties_for_type(type)->rotation_offset) {
+        ghost_building.subtype.orientation = building_rotation_get_rotation();
+    } else {
+        ghost_building.subtype.orientation = 0;
+    }
+    return building_image_get(&ghost_building);
 }
 
 static void get_building_base_xy(int map_x, int map_y, int building_size, int *x, int *y)
@@ -713,7 +671,6 @@ static void draw_pond(const map_tile *tile, int x, int y, int type)
     } else {
         int has_water = 0;
         int orientation_index = city_view_orientation() / 2;
-        int offset = 0;
 
         for (int i = 0; i < num_tiles; i++) {
             int tile_offset = grid_offset + TILE_GRID_OFFSETS[orientation_index][i];
@@ -721,18 +678,11 @@ static void draw_pond(const map_tile *tile, int x, int y, int type)
                 has_water = 1;
             }
         }
+        ghost_building.type = type;
+        ghost_building.has_water_access = has_water;
+        ghost_building.grid_offset = grid_offset;
 
-        if (scenario_property_climate() == CLIMATE_DESERT) {
-            offset += POND_CLIMATE_IMAGE_OFFSET;
-        }
-        if (has_water) {
-            offset += POND_WATERED_IMAGE_OFFSET;
-        }
-        if (type == BUILDING_LARGE_POND) {
-            offset += POND_LARGE_IMAGE_OFFSET;
-        }
-        int image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset;
-        draw_regular_building(type, image_id, x - x_offset, y + y_offset, grid_offset);
+        draw_regular_building(type, building_image_get(&ghost_building), x - x_offset, y + y_offset, grid_offset);
     }
 }
 

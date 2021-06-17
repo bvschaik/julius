@@ -79,10 +79,8 @@ static int init(int title, int subtitle, option_menu_item *options, int num_opti
     }
 
     if (!border_image_ids[0]) {
-        border_image_ids[0] = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
-            "Policy Selection Borders");
-        border_image_ids[1] = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
-            "Monument Mod Selection Borders");
+        border_image_ids[0] = assets_get_image_id("UI_Elements", "Policy Selection Borders");
+        border_image_ids[1] = assets_get_image_id("UI_Elements", "Monument Mod Selection Borders");
     }
     return 1;
 }

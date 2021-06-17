@@ -1,8 +1,8 @@
 #include "rotation.h"
 
 #include "building/building_variant.h"
+#include "building/connectable.h"
 #include "building/construction.h"
-#include "building/image_context.h"
 #include "building/properties.h"
 #include "city/view.h"
 #include "core/config.h"
@@ -144,7 +144,7 @@ int building_rotation_get_corner(int rotation)
 int building_rotation_type_has_rotations(building_type type)
 {
     if (building_variant_has_variants(type) || building_properties_for_type(type)->rotation_offset ||
-        building_image_context_type_is_connecting(type) || building_construction_type_can_cycle(type)) {
+        building_is_connectable(type) || building_construction_type_can_cycle(type)) {
         return 1;
     }
     switch (type) {

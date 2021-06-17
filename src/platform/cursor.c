@@ -14,7 +14,7 @@
 
 #include <string.h>
 
-static char cursor_path[64] = "Areldir/Color_Cursors/";
+static char cursor_path[64] = "Color_Cursors/";
 static size_t cursor_path_offset;
 
 static struct {

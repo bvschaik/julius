@@ -687,7 +687,7 @@ void window_building_draw_grand_temple_ceres(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES_DESC,
         TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC,
-        assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Ceres L Banner"),
+        assets_get_image_id("UI_Elements", "Ceres L Banner"),
         TR_BUILDING_CERES_TEMPLE_QUOTE, GOD_CERES, 0);
 }
 
@@ -695,7 +695,7 @@ void window_building_draw_grand_temple_neptune(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC,
         TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC,
-        assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Nept L Banner"),
+        assets_get_image_id("UI_Elements", "Nept L Banner"),
         TR_BUILDING_NEPTUNE_TEMPLE_QUOTE, GOD_NEPTUNE, 0);
 }
 
@@ -703,7 +703,7 @@ void window_building_draw_grand_temple_mercury(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC,
         TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC,
-        assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Merc L Banner"),
+        assets_get_image_id("UI_Elements", "Merc L Banner"),
         TR_BUILDING_MERCURY_TEMPLE_QUOTE, GOD_MERCURY, 0);
 }
 
@@ -711,7 +711,7 @@ void window_building_draw_grand_temple_mars(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS_DESC,
         TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC,
-        assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Mars L Banner"),
+        assets_get_image_id("UI_Elements", "Mars L Banner"),
         TR_BUILDING_MARS_TEMPLE_QUOTE, GOD_MARS, 50);
 }
 
@@ -719,14 +719,14 @@ void window_building_draw_grand_temple_venus(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS_DESC,
         TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC,
-        assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Venus L Banner"),
+        assets_get_image_id("UI_Elements", "Venus L Banner"),
         TR_BUILDING_VENUS_TEMPLE_QUOTE, GOD_VENUS, 20);
 }
 
 void window_building_draw_pantheon(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/oracle.wav", TR_BUILDING_PANTHEON_DESC, TR_BUILDING_PANTHEON_BONUS_DESC,
-        assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Panth L Banner"),
+        assets_get_image_id("UI_Elements", "Panth L Banner"),
         TR_BUILDING_PANTHEON_QUOTE, GOD_PANTHEON, 0);
 }
 
@@ -865,7 +865,7 @@ void window_building_draw_colosseum_background(building_info_context *c)
             }
         }
         if (b->type == BUILDING_COLOSSEUM && c->height_blocks > 27) {
-            int banner_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Colosseum Banner");
+            int banner_id = assets_get_image_id("UI_Elements", "Colosseum Banner");
             image_draw(banner_id, c->x_offset + 32, c->y_offset + 256);
             draw_games_info(c);
         }
@@ -934,8 +934,7 @@ void window_building_draw_arena(building_info_context *c)
 
 static void draw_policy_image_border(int x, int y, int focused)
 {
-    int id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
-        "Policy Selection Borders");
+    int id = assets_get_image_id("UI_Elements", "Policy Selection Borders");
 
     image_draw(id + focused, x, y);
     image_draw(id + 2 + focused, x + 105, y + 5);
@@ -992,7 +991,7 @@ void window_building_draw_lighthouse(building_info_context *c)
             c->x_offset + 22, c->y_offset + 70, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
 
         if (!sea_trade_policy.items[0].image_id) {
-            int base_policy_image = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
+            int base_policy_image = assets_get_image_id("UI_Elements",
                 sea_trade_policy.base_image_name);
             sea_trade_policy.items[0].image_id = base_policy_image;
             sea_trade_policy.items[1].image_id = base_policy_image + 1;
@@ -1013,7 +1012,7 @@ void window_building_draw_lighthouse(building_info_context *c)
         inner_panel_draw(c->x_offset + 16, c->y_offset + 270, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 278);
 
-        image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Lighthouse Banner"),
+        image_draw(assets_get_image_id("UI_Elements", "Lighthouse Banner"),
             c->x_offset + 32, c->y_offset + 350);
 
     } else {
@@ -1052,7 +1051,7 @@ void window_building_draw_hippodrome(building_info_context *c)
             lang_text_draw(73, 5, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         }
         if (c->height_blocks > 27) {
-            int banner_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Circus Banner");
+            int banner_id = assets_get_image_id("UI_Elements", "Circus Banner");
             image_draw(banner_id, c->x_offset + 32, c->y_offset + 256);
         }
     } else {
@@ -1140,7 +1139,7 @@ static void add_module(int selection)
     sound_speech_play_file("wavs/oracle.wav");
     building *b = building_get(data.building_id);
     city_finance_process_construction(MODULE_COST);
-    building_monument_add_module(b, data.module_choices[selection-1]);
+    building_monument_add_module(b, data.module_choices[selection - 1]);
 }
 
 static void generate_module_image_id(int index)
@@ -1149,7 +1148,7 @@ static void generate_module_image_id(int index)
     if (option->image_id) {
         return;
     }
-    option->image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
+    option->image_id = assets_get_image_id("UI_Elements",
         temple_module_options[index].image_id);
 }
 

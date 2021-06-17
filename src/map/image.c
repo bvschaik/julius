@@ -1,6 +1,13 @@
 #include "image.h"
 
+#include "building/image.h"
+#include "building/industry.h"
+#include "core/image.h"
+#include "core/image_group.h"
+#include "map/building_tiles.h"
 #include "map/grid.h"
+#include "map/orientation.h"
+#include "map/tiles.h"
 
 static grid_u32 images;
 static grid_u32 images_backup;
@@ -48,6 +55,30 @@ void map_image_init_edges(void)
     images.items[map_grid_offset(0, height)] = 3;
     images.items[map_grid_offset(width, 0)] = 4;
     images.items[map_grid_offset(width, height)] = 5;
+}
+
+void map_image_update_all(void)
+{
+    map_tiles_update_all();
+    for (int i = 1; i < building_count(); i++) {
+        building *b = building_get(i);
+        if (b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED && b->state != BUILDING_STATE_CREATED) {
+            continue;
+        }
+        if (building_is_farm(b->type)) {
+            map_building_tiles_add_farm(b->id, b->x, b->y,
+                image_group(GROUP_BUILDING_FARM_CROPS) + 5 * (b->output_resource_id - 1),
+                b->data.industry.progress);
+            continue;
+        }
+        int image_id = building_image_get(b);
+
+        for (int dy = 0; dy < b->size; dy++) {
+            for (int dx = 0; dx < b->size; dx++) {
+                map_image_set(map_grid_offset(b->x + dx, b->y + dy), image_id);
+            }
+        }
+    }
 }
 
 void map_image_save_state_legacy(buffer *buf)

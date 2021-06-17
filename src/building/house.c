@@ -1,5 +1,6 @@
 #include "house.h"
 
+#include "building/image.h"
 #include "city/population.h"
 #include "core/config.h"
 #include "core/image.h"
@@ -24,23 +25,6 @@ static const int HOUSE_TILE_OFFSETS[] = {
 };
 
 static const struct {
-    int group;
-    int offset;
-    int num_types;
-} HOUSE_IMAGE[20] = {
-    {GROUP_BUILDING_HOUSE_TENT, 0, 2}, {GROUP_BUILDING_HOUSE_TENT, 2, 2},
-    {GROUP_BUILDING_HOUSE_SHACK, 0, 2}, {GROUP_BUILDING_HOUSE_SHACK, 2, 2},
-    {GROUP_BUILDING_HOUSE_HOVEL, 0, 2}, {GROUP_BUILDING_HOUSE_HOVEL, 2, 2},
-    {GROUP_BUILDING_HOUSE_CASA, 0, 2}, {GROUP_BUILDING_HOUSE_CASA, 2, 2},
-    {GROUP_BUILDING_HOUSE_INSULA_1, 0, 2}, {GROUP_BUILDING_HOUSE_INSULA_1, 2, 2},
-    {GROUP_BUILDING_HOUSE_INSULA_2, 0, 2}, {GROUP_BUILDING_HOUSE_INSULA_2, 2, 2},
-    {GROUP_BUILDING_HOUSE_VILLA_1, 0, 2}, {GROUP_BUILDING_HOUSE_VILLA_1, 2, 2},
-    {GROUP_BUILDING_HOUSE_VILLA_2, 0, 1}, {GROUP_BUILDING_HOUSE_VILLA_2, 1, 1},
-    {GROUP_BUILDING_HOUSE_PALACE_1, 0, 1}, {GROUP_BUILDING_HOUSE_PALACE_1, 1, 1},
-    {GROUP_BUILDING_HOUSE_PALACE_2, 0, 1}, {GROUP_BUILDING_HOUSE_PALACE_2, 1, 1},
-};
-
-static const struct {
     int x;
     int y;
     int offset;
@@ -58,43 +42,33 @@ void building_house_change_to(building *house, building_type type)
 {
     building_change_type(house, type);
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
-    int image_id = image_group(HOUSE_IMAGE[house->subtype.house_level].group);
-    if (house->house_is_merged) {
-        image_id += 4;
-        if (HOUSE_IMAGE[house->subtype.house_level].offset) {
-            image_id += 1;
-        }
-    } else {
-        image_id += HOUSE_IMAGE[house->subtype.house_level].offset;
-        image_id += map_random_get(house->grid_offset) & (HOUSE_IMAGE[house->subtype.house_level].num_types - 1);
-    }
-    map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size, building_image_get(house), TERRAIN_BUILDING);
 }
 
-static void create_vacant_lot(int x, int y, int image_id)
+static void create_vacant_lot(int x, int y)
 {
     building *b = building_create(BUILDING_HOUSE_VACANT_LOT, x, y);
     b->house_population = 0;
     b->distance_from_entry = 0;
-    map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x, b->y, 1, building_image_get(b), TERRAIN_BUILDING);
 }
 
 void building_house_change_to_vacant_lot(building *house)
 {
+    house->house_population = 0;
     building_change_type(house, BUILDING_HOUSE_VACANT_LOT);
     house->subtype.house_level = house->type - BUILDING_HOUSE_VACANT_LOT;
-    int image_id = image_group(GROUP_BUILDING_HOUSE_VACANT_LOT);
     if (house->house_is_merged) {
         map_building_tiles_remove(house->id, house->x, house->y);
         house->house_is_merged = 0;
         house->size = house->house_size = 1;
         house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
-        map_building_tiles_add(house->id, house->x, house->y, 1, image_id, TERRAIN_BUILDING);
-        create_vacant_lot(house->x + 1, house->y, image_id);
-        create_vacant_lot(house->x, house->y + 1, image_id);
-        create_vacant_lot(house->x + 1, house->y + 1, image_id);
+        map_building_tiles_add(house->id, house->x, house->y, 1, building_image_get(house), TERRAIN_BUILDING);
+        create_vacant_lot(house->x + 1, house->y);
+        create_vacant_lot(house->x, house->y + 1);
+        create_vacant_lot(house->x + 1, house->y + 1);
     } else {
-        map_image_set(house->grid_offset, image_id);
+        map_image_set(house->grid_offset, building_image_get(house));
     }
 }
 
@@ -137,17 +111,12 @@ static void merge(building *b)
     for (int i = 0; i < INVENTORY_MAX; i++) {
         b->data.house.inventory[i] += merge_data.inventory[i];
     }
-    int image_id = image_group(HOUSE_IMAGE[b->subtype.house_level].group) + 4;
-    if (HOUSE_IMAGE[b->subtype.house_level].offset) {
-        image_id += 1;
-    }
-
     map_building_tiles_remove(b->id, b->x, b->y);
     b->x = merge_data.x;
     b->y = merge_data.y;
     b->grid_offset = map_grid_offset(b->x, b->y);
     b->house_is_merged = 1;
-    map_building_tiles_add(b->id, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x, b->y, 2, building_image_get(b), TERRAIN_BUILDING);
 }
 
 void building_house_merge(building *house)
@@ -263,11 +232,6 @@ int building_house_can_expand(building *house, int num_tiles)
     return 0;
 }
 
-static int house_image_group(int level)
-{
-    return image_group(HOUSE_IMAGE[level].group) + HOUSE_IMAGE[level].offset;
-}
-
 static void copy_house_data(building *house, const building *main_house)
 {
     house->data.house.academy = main_house->data.house.academy;
@@ -297,7 +261,7 @@ static void copy_house_data(building *house, const building *main_house)
 }
 
 static void create_splitted_house_tile(building *main_house, building_type type,
-    int x, int y, int image_id, int population, const int *inventory)
+    int x, int y, int population, const int *inventory)
 {
     building *house = building_create(type, x, y);
     house->house_population = population;
@@ -307,7 +271,7 @@ static void create_splitted_house_tile(building *main_house, building_type type,
     copy_house_data(house, main_house);
     house->distance_from_entry = 0;
     map_building_tiles_add(house->id, house->x, house->y, 1,
-        image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
+        building_image_get(house), TERRAIN_BUILDING);
 }
 
 static void split_size2(building *house, building_type new_type)
@@ -335,14 +299,13 @@ static void split_size2(building *house, building_type new_type)
     }
     house->distance_from_entry = 0;
 
-    int image_id = house_image_group(house->subtype.house_level);
     map_building_tiles_add(house->id, house->x, house->y, house->size,
-        image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
+        building_image_get(house), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
-    create_splitted_house_tile(house, house->type, house->x + 1, house->y, image_id, population_per_tile, inventory_per_tile);
-    create_splitted_house_tile(house, house->type, house->x, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_splitted_house_tile(house, house->type, house->x + 1, house->y + 1, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 1, house->y, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x, house->y + 1, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 1, house->y + 1, population_per_tile, inventory_per_tile);
 }
 
 static void split_size3(building *house)
@@ -370,17 +333,16 @@ static void split_size3(building *house)
     }
     house->distance_from_entry = 0;
 
-    int image_id = house_image_group(house->subtype.house_level);
     map_building_tiles_add(house->id, house->x, house->y, house->size,
-        image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
+        building_image_get(house), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
-    create_splitted_house_tile(house, house->type, house->x, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_splitted_house_tile(house, house->type, house->x + 1, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_splitted_house_tile(house, house->type, house->x + 2, house->y + 1, image_id, population_per_tile, inventory_per_tile);
-    create_splitted_house_tile(house, house->type, house->x, house->y + 2, image_id, population_per_tile, inventory_per_tile);
-    create_splitted_house_tile(house, house->type, house->x + 1, house->y + 2, image_id, population_per_tile, inventory_per_tile);
-    create_splitted_house_tile(house, house->type, house->x + 2, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x, house->y + 1, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 1, house->y + 1, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 2, house->y + 1, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x, house->y + 2, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 1, house->y + 2, population_per_tile, inventory_per_tile);
+    create_splitted_house_tile(house, house->type, house->x + 2, house->y + 2, population_per_tile, inventory_per_tile);
 }
 
 static void split(building *house, int num_tiles)
@@ -418,12 +380,11 @@ void building_house_expand_to_large_insula(building *house)
     for (int i = 0; i < INVENTORY_MAX; i++) {
         house->data.house.inventory[i] += merge_data.inventory[i];
     }
-    int image_id = house_image_group(house->subtype.house_level) + (map_random_get(house->grid_offset) & 1);
     map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
     house->y = merge_data.y;
     house->grid_offset = map_grid_offset(house->x, house->y);
-    map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size, building_image_get(house), TERRAIN_BUILDING);
 }
 
 void building_house_expand_to_large_villa(building *house)
@@ -439,12 +400,11 @@ void building_house_expand_to_large_villa(building *house)
     for (int i = 0; i < INVENTORY_MAX; i++) {
         house->data.house.inventory[i] += merge_data.inventory[i];
     }
-    int image_id = house_image_group(house->subtype.house_level);
     map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
     house->y = merge_data.y;
     house->grid_offset = map_grid_offset(house->x, house->y);
-    map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size, building_image_get(house), TERRAIN_BUILDING);
 }
 
 void building_house_expand_to_large_palace(building *house)
@@ -460,12 +420,11 @@ void building_house_expand_to_large_palace(building *house)
     for (int i = 0; i < INVENTORY_MAX; i++) {
         house->data.house.inventory[i] += merge_data.inventory[i];
     }
-    int image_id = house_image_group(house->subtype.house_level);
     map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
     house->y = merge_data.y;
     house->grid_offset = map_grid_offset(house->x, house->y);
-    map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size, building_image_get(house), TERRAIN_BUILDING);
 }
 
 void building_house_devolve_from_large_insula(building *house)
@@ -498,22 +457,20 @@ void building_house_devolve_from_large_villa(building *house)
     }
     house->distance_from_entry = 0;
 
-    int image_id = house_image_group(house->subtype.house_level);
     map_building_tiles_add(house->id, house->x, house->y, house->size,
-        image_id + (map_random_get(house->grid_offset) & 1), TERRAIN_BUILDING);
+        building_image_get(house), TERRAIN_BUILDING);
 
 // the other tiles (new buildings)
-    image_id = house_image_group(HOUSE_MEDIUM_INSULA);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x + 2, house->y, image_id, population_per_tile, inventory_per_tile);
+        house->x + 2, house->y, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x + 2, house->y + 1, image_id, population_per_tile, inventory_per_tile);
+        house->x + 2, house->y + 1, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+        house->x, house->y + 2, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x + 1, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+        house->x + 1, house->y + 2, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x + 2, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+        house->x + 2, house->y + 2, population_per_tile, inventory_per_tile);
 }
 
 void building_house_devolve_from_large_palace(building *house)
@@ -541,25 +498,23 @@ void building_house_devolve_from_large_palace(building *house)
     }
     house->distance_from_entry = 0;
 
-    int image_id = house_image_group(house->subtype.house_level);
-    map_building_tiles_add(house->id, house->x, house->y, house->size, image_id, TERRAIN_BUILDING);
+    map_building_tiles_add(house->id, house->x, house->y, house->size, building_image_get(house), TERRAIN_BUILDING);
 
     // the other tiles (new buildings)
-    image_id = house_image_group(HOUSE_MEDIUM_INSULA);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x + 3, house->y, image_id, population_per_tile, inventory_per_tile);
+        house->x + 3, house->y, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x + 3, house->y + 1, image_id, population_per_tile, inventory_per_tile);
+        house->x + 3, house->y + 1, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x + 3, house->y + 2, image_id, population_per_tile, inventory_per_tile);
+        house->x + 3, house->y + 2, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x, house->y + 3, image_id, population_per_tile, inventory_per_tile);
+        house->x, house->y + 3, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x + 1, house->y + 3, image_id, population_per_tile, inventory_per_tile);
+        house->x + 1, house->y + 3, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x + 2, house->y + 3, image_id, population_per_tile, inventory_per_tile);
+        house->x + 2, house->y + 3, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
-        house->x + 3, house->y + 3, image_id, population_per_tile, inventory_per_tile);
+        house->x + 3, house->y + 3, population_per_tile, inventory_per_tile);
 }
 
 void building_house_check_for_corruption(building *house)

@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "building/distribution.h"
+#include "building/image.h"
 #include "building/monument.h"
 #include "city/trade_policy.h"
 #include "core/calc.h"
@@ -46,17 +47,8 @@ static void set_lighthouse_graphic(building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return;
     }
-    if (b->loads_stored > 0) {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-                               assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse ON"),
-                               TERRAIN_BUILDING);
-    } else {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-                               assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse OFF"),
-                               TERRAIN_BUILDING);
-    }
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
 }
-
 
 void building_lighthouse_consume_timber(void)
 {

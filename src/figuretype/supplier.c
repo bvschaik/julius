@@ -282,20 +282,20 @@ void figure_supplier_action(figure *f)
     } else if (f->type == FIGURE_BARKEEP_SUPPLIER) {
         int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep Death 01") +
+            f->image_id = assets_get_image_id("Entertainment", "Barkeep Death 01") +
                 figure_image_corpse_offset(f);
         } else {
-            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep NE 01") + dir * 12 +
-                f->image_offset;
+            f->image_id = assets_get_image_id("Entertainment", "Barkeep NE 01") +
+                dir * 12 + f->image_offset;
         }
     } else if (f->type == FIGURE_LIGHTHOUSE_SUPPLIER || f->type == FIGURE_CARAVANSERAI_SUPPLIER) {
         int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"),
-                                              "Slave death 01") + figure_image_corpse_offset(f);
+            f->image_id = assets_get_image_id("Construction_Guilds", "Slave death 01") +
+                figure_image_corpse_offset(f);
         } else {
-            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"),
-                                              "Slave NE 01") + dir * 12 + f->image_offset;
+            f->image_id = assets_get_image_id("Construction_Guilds", "Slave NE 01") +
+                dir * 12 + f->image_offset;
         }
     } else {
         figure_image_update(f, image_group(GROUP_FIGURE_MARKET_LADY));
@@ -335,21 +335,18 @@ void figure_delivery_boy_action(figure *f)
 
     if (f->type == FIGURE_MESS_HALL_COLLECTOR) {
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"),
-                "M Hall death 01") +
+            f->image_id = assets_get_image_id("Military_Buildings", "M Hall death 01") +
                 figure_image_corpse_offset(f);
         } else {
-            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Mess_Hall"),
-                "M Hall NE 01") +
+            f->image_id = assets_get_image_id("Military_Buildings", "M Hall NE 01") +
                 dir * 12 + f->image_offset;
         }
     } else if (f->type == FIGURE_CARAVANSERAI_COLLECTOR) {
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"),
-                "Slave death 01") + figure_image_corpse_offset(f);
+            f->image_id = assets_get_image_id("Construction_Guilds", "Slave death 01") + figure_image_corpse_offset(f);
         } else {
-            f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Slave_Walker"),
-                "Slave NE 01") + dir * 12 + f->image_offset;
+            f->image_id = assets_get_image_id("Construction_Guilds", "Slave NE 01")
+                + dir * 12 + f->image_offset;
         }
     } else {
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {

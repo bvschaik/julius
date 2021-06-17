@@ -1,6 +1,7 @@
 #include "image.h"
 
 #include "assets/group.h"
+#include "core/array.h"
 #include "core/image.h"
 #include "core/log.h"
 #include "graphics/color.h"
@@ -10,7 +11,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ANIMATION_MAX_IMAGE_ID 32768
+#define ASSET_ARRAY_SIZE 2000
+
+array(asset_image) asset_images;
 
 static void load_image_layers(asset_image *img)
 {
@@ -33,8 +36,9 @@ void asset_image_unload_layers(asset_image *img)
 int asset_image_load(asset_image *img)
 {
     if (img->loaded) {
-        return 1;
+        return img->data != 0;
     }
+    img->loaded = 1;
 
     load_image_layers(img);
 
@@ -48,7 +52,6 @@ int asset_image_load(asset_image *img)
             img->is_clone = l->is_asset_image_reference;
             l->is_asset_image_reference = 1;
             layer_unload(l);
-            img->loaded = 1;
             return 1;
         }
     }
@@ -57,7 +60,6 @@ int asset_image_load(asset_image *img)
     if (!img->data) {
         log_error("Not enough memory to load image", img->id, 0);
         asset_image_unload_layers(img);
-        img->active = 0;
         return 0;
     }
     memset(img->data, 0, img->img.draw.data_length);
@@ -90,7 +92,6 @@ int asset_image_load(asset_image *img)
         }
     }
     asset_image_unload_layers(img);
-    img->loaded = 1;
     return 1;
 }
 
@@ -140,34 +141,13 @@ int asset_image_add_layer(asset_image *img,
     return 1;
 }
 
-asset_image *get_animation_image(int image_id)
-{
-    image_groups *group = group_get_from_hash(ANIMATION_FRAMES_GROUP);
-    int image_index = image_id - ANIMATION_FRAMES_GROUP;
-    for (asset_image *img = group->first_image; img; img = img->next) {
-        if (img->index == image_index) {
-            return img;
-        }
-    }
-    return 0;
-}
-
 asset_image *asset_image_get_from_id(int image_id)
 {
-    if (image_id >= ANIMATION_FRAMES_GROUP && image_id < ANIMATION_MAX_IMAGE_ID) {
-        return get_animation_image(image_id);
-    }
-    image_groups *group = group_get_from_hash(image_id);
-    if (!group) {
+    asset_image *last = array_last(asset_images);
+    if (image_id < 0 || !last || image_id > last->index) {
         return 0;
     }
-    int image_index = image_id & 0xff;
-    for (asset_image *img = group->first_image; img; img = img->next) {
-        if (img->index == image_index) {
-            return img;
-        }
-    }
-    return 0;
+    return array_item(asset_images, image_id);
 }
 
 void asset_image_unload(asset_image *img)
@@ -178,4 +158,28 @@ void asset_image_unload(asset_image *img)
     if (!img->is_clone) {
         free(img->data);
     }
+    img->active = 0;
+}
+
+static void new_image(asset_image *img, int index)
+{
+    img->index = index;
+    img->active = 1;
+}
+
+static int is_image_active(const asset_image *img)
+{
+    return img->active;
+}
+
+int asset_image_init_array(void)
+{
+    return array_init(asset_images, ASSET_ARRAY_SIZE, new_image, is_image_active);
+}
+
+asset_image *asset_image_create(void)
+{
+    asset_image *result;
+    array_new_item(asset_images, 0, result);
+    return result;
 }

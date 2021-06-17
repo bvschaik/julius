@@ -1,0 +1,735 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="Grand_Temples">
+	<!-- Note: Ceres Complex Reference Assets DO NOT USE -->
+	<image id="Ceres_LT_25" width="178" height="159">
+		<layer group="71" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Ceres_Temple_Construction_25%" x="0" y="59"/>
+	</image>
+	<image id="Ceres_LT_50" width="178" height="159">
+		<layer group="71" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Ceres_Temple_Construction_50%" x="0" y="26"/>
+	</image>
+	<image id="Ceres_LT_75" width="178" height="159">
+		<layer group="71" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Ceres_Temple_Construction_75%" x="0" y="8"/>
+	</image>
+	<!-- Note: Ceres Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
+	<image id="Ceres Complex Const 01" width="418" height="234">
+		<layer src="Ceres_Temple_Complex_Construction_Base_01"/>
+		<layer src="Ceres_Temple_Construction_0%" x="90" y="60"/>
+	</image>
+	<image id="Ceres Complex Const 02" width="418" height="234">
+		<layer src="Ceres_Temple_Complex_Construction_Base_02"/>
+		<layer group="this" image="Ceres_LT_25" x="90" y="0"/>
+	</image>
+	<image id="Ceres Complex Const 03" width="418" height="234">
+		<layer src="Ceres_Temple_Complex_Construction_Base_02"/>
+		<layer group="this" image="Ceres_LT_50" x="90" y="0"/>
+	</image>
+	<image id="Ceres Complex Const 04" width="418" height="234">
+		<layer src="Ceres_Temple_Complex_Construction_Base_03"/>
+		<layer group="this" image="Ceres_LT_50" x="90" y="0"/>
+	</image>
+	<image id="Ceres Complex Const 05" width="418" height="234">
+		<layer src="Ceres_Temple_Complex_Construction_Base_03"/>
+		<layer group="71" image="1" x="90" y="0"/>
+	</image>
+	<!-- Note: Ceres Complex ON/OFF States -->
+	<image id="Ceres Complex Off" width="418" height="234">
+		<layer src="Ceres_Temple_Complex_Base_Layer"/>
+		<layer group="71" image="1" x="90" y="0"/>
+		<layer src="Ceres_Temple_Complex_Top_Layer" x="59" y="87"/>
+	</image>
+	<image id="Ceres Complex On" width="418" height="234">
+		<layer src="Ceres_Temple_Complex_Base_Layer"/>
+		<layer group="71" image="1" x="90" y="0"/>
+		<layer src="Ceres_Temple_Complex_On_Layer" x="199" y="125"/>
+		<layer src="Ceres_Temple_Complex_Top_Layer" x="59" y="87"/>
+	</image>
+	<!-- Note: Ceres Complex Module Animation References (REFERENCE IMAGES - DO NOT USE!!) -->
+	<image id="Ceres Module F1">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_01" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F2">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_02" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F3">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_03" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F4">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_04" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F5">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_05" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F6">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_06" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F7">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_07" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F8">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_08" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F9">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_09" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F10">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_10" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F11">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Farmer_11" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F12">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_01" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F13">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_02" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F14">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_03" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F15">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_04" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F16">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_05" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F17">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_06" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F18">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_07" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F19">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_08" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F20">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_09" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F21">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_10" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F22">
+		<layer src="Ceres_Temple_Complex_Module_02"/>
+		<layer src="Ceres_Farmer_11" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F23">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_01" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F24">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_02" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F25">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_03" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F26">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_04" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F27">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_05" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F28">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_06" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F29">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_07" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F30">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_08" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F31">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_09" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F32">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_10" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F33">
+		<layer src="Ceres_Temple_Complex_Module_03"/>
+		<layer src="Ceres_Farmer_11" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F34">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_01" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F35">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_02" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F36">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_03" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F37">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_04" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F38">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_05" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F39">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_06" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F40">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_07" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F41">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_08" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F42">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_09" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F43">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_10" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F44">
+		<layer src="Ceres_Temple_Complex_Module_04"/>
+		<layer src="Ceres_Farmer_11" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F45">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_01" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F46">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_02" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F47">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_03" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F48">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_04" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F49">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_05" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F50">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_06" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F51">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_07" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F52">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_08" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F53">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_09" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F54">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_10" x="40" y="15"/>
+	</image>
+	<image id="Ceres Module F55">
+		<layer src="Ceres_Temple_Complex_Module_05"/>
+		<layer src="Ceres_Farmer_11" x="40" y="15"/>
+	</image>
+	<!-- Note: Ceres Complex Module Animation (Priests collect/dristribute food)(USE THIS ONE!!) -->
+	<image id="Ceres Complex Module" width="418" height="234">
+		<layer group="this" image="Ceres Complex Off"/>
+		<animation speed="6" x="190" y="95" reversible="false">
+			<frame group="this" image="Ceres Module F1"/>
+			<frame group="this" image="Ceres Module F2"/>
+			<frame group="this" image="Ceres Module F3"/>
+			<frame group="this" image="Ceres Module F4"/>
+			<frame group="this" image="Ceres Module F5"/>
+			<frame group="this" image="Ceres Module F6"/>
+			<frame group="this" image="Ceres Module F7"/>
+			<frame group="this" image="Ceres Module F8"/>
+			<frame group="this" image="Ceres Module F9"/>
+			<frame group="this" image="Ceres Module F10"/>
+			<frame group="this" image="Ceres Module F11"/>
+			<frame group="this" image="Ceres Module F12"/>
+			<frame group="this" image="Ceres Module F13"/>
+			<frame group="this" image="Ceres Module F14"/>
+			<frame group="this" image="Ceres Module F15"/>
+			<frame group="this" image="Ceres Module F16"/>
+			<frame group="this" image="Ceres Module F17"/>
+			<frame group="this" image="Ceres Module F18"/>
+			<frame group="this" image="Ceres Module F19"/>
+			<frame group="this" image="Ceres Module F20"/>
+			<frame group="this" image="Ceres Module F21"/>
+			<frame group="this" image="Ceres Module F22"/>
+			<frame group="this" image="Ceres Module F23"/>
+			<frame group="this" image="Ceres Module F24"/>
+			<frame group="this" image="Ceres Module F25"/>
+			<frame group="this" image="Ceres Module F26"/>
+			<frame group="this" image="Ceres Module F27"/>
+			<frame group="this" image="Ceres Module F28"/>
+			<frame group="this" image="Ceres Module F29"/>
+			<frame group="this" image="Ceres Module F30"/>
+			<frame group="this" image="Ceres Module F31"/>
+			<frame group="this" image="Ceres Module F32"/>
+			<frame group="this" image="Ceres Module F33"/>
+			<frame group="this" image="Ceres Module F34"/>
+			<frame group="this" image="Ceres Module F35"/>
+			<frame group="this" image="Ceres Module F36"/>
+			<frame group="this" image="Ceres Module F37"/>
+			<frame group="this" image="Ceres Module F38"/>
+			<frame group="this" image="Ceres Module F39"/>
+			<frame group="this" image="Ceres Module F40"/>
+			<frame group="this" image="Ceres Module F41"/>
+			<frame group="this" image="Ceres Module F42"/>
+			<frame group="this" image="Ceres Module F43"/>
+			<frame group="this" image="Ceres Module F44"/>
+			<frame group="this" image="Ceres Module F45"/>
+			<frame group="this" image="Ceres Module F46"/>
+			<frame group="this" image="Ceres Module F47"/>
+			<frame group="this" image="Ceres Module F48"/>
+			<frame group="this" image="Ceres Module F49"/>
+			<frame group="this" image="Ceres Module F50"/>
+			<frame group="this" image="Ceres Module F51"/>
+			<frame group="this" image="Ceres Module F52"/>
+			<frame group="this" image="Ceres Module F53"/>
+			<frame group="this" image="Ceres Module F54"/>
+			<frame group="this" image="Ceres Module F55"/>
+		</animation>
+	</image>
+	<!-- Note: Ceres Complex Module2 Animation (Priests reduce food consumption) -->
+	<image id="Ceres Complex Module2" width="418" height="234">
+		<layer group="this" image="Ceres Complex Off"/>
+		<animation speed="6" x="190" y="95" reversible="true">
+			<frame src="Ceres_Temple_Complex_Module2_01"/>
+			<frame src="Ceres_Temple_Complex_Module2_02"/>
+			<frame src="Ceres_Temple_Complex_Module2_03"/>
+		</animation>
+	</image>
+	<!-- Note: Mars Complex Reference Assets DO NOT USE -->
+	<image id="Mars_LT_25" width="178" height="148">
+		<layer group="74" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Mars_Temple_Construction_25%" x="0" y="44"/>
+	</image>
+	<image id="Mars_LT_50" width="178" height="148">
+		<layer group="74" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Mars_Temple_Construction_50%" x="0" y="27"/>
+	</image>
+	<image id="Mars_LT_75" width="178" height="148">
+		<layer group="74" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Mars_Temple_Construction_75%" x="0" y="7"/>
+	</image>
+	<!-- Note: Mars Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
+	<image id="Mars Complex Const 01" width="418" height="223">
+		<layer src="Ceres_Temple_Complex_Construction_Base_01" x="0" y="-11"/>
+		<layer src="Mars_Temple_Construction_0%" x="90" y="49"/>
+	</image>
+	<image id="Mars Complex Const 02" width="418" height="223">
+		<layer src="Mars_Temple_Complex_Construction_Base_01" x="0" y="0"/>
+		<layer group="this" image="Mars_LT_25" x="90" y="0"/>
+	</image>
+	<image id="Mars Complex Const 03" width="418" height="223">
+		<layer src="Mars_Temple_Complex_Construction_Base_02" x="0" y="0"/>
+		<layer group="this" image="Mars_LT_50" x="90" y="0"/>
+	</image>
+	<image id="Mars Complex Const 04" width="418" height="223">
+		<layer src="Mars_Temple_Complex_Construction_Base_02" x="0" y="0"/>
+		<layer group="this" image="Mars_LT_75" x="90" y="0"/>
+	</image>
+	<image id="Mars Complex Const 05" width="418" height="223">
+		<layer src="Mars_Temple_Complex_Construction_Base_03"/>
+		<layer group="74" image="1" x="90" y="0"/>
+	</image>
+	<!-- Note: Mars Complex ON/OFF States -->
+	<image id="Mars Complex Off" width="418" height="231">
+		<layer src="Mars_Temple_Complex_Base_Layer"/>
+		<layer group="74" image="1" x="90" y="8"/>
+		<layer src="Mars_Temple_Complex_Top_Layer" x="59" y="83"/>
+	</image>
+	<image id="Mars Complex On" width="418" height="231">
+		<layer group="this" image="Mars Complex Off"/>
+		<layer src="Mars_Temple_Complex_On_Layer" x="199" y="121"/>
+	</image>
+	<!-- Note: Mars Complex Module Animation (Priests buff Mess Hall) -->
+	<image id="Mars Complex Module" width="418" height="231">
+		<layer group="this" image="Mars Complex Off"/>
+		<animation speed="6" x="191" y="97" reversible="true">
+			<frame src="Mars_Temple_Complex_Module2_01"/>
+			<frame src="Mars_Temple_Complex_Module2_02"/>
+			<frame src="Mars_Temple_Complex_Module2_03"/>
+		</animation>
+	</image>
+	<!-- Note: Mars Complex Module2 Animation (Priests reduce goods consumption) -->
+	<image id="Mars Complex Module2" width="418" height="231">
+		<layer group="this" image="Mars Complex Off"/>
+		<animation speed="6" x="211" y="105" reversible="false">
+			<frame src="Mars_Temple_Complex_Module_01"/>
+			<frame src="Mars_Temple_Complex_Module_02"/>
+			<frame src="Mars_Temple_Complex_Module_03"/>
+			<frame src="Mars_Temple_Complex_Module_04"/>
+			<frame src="Mars_Temple_Complex_Module_05"/>
+		</animation>
+	</image>
+	<!-- Note: Mercury Complex Reference Assets DO NOT USE -->
+	<image id="Mercury_LT_25" width="178" height="148">
+		<layer group="73" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Mercury_Temple_Construction_25%" x="0" y="41"/>
+	</image>
+	<image id="Mercury_LT_50" width="178" height="148">
+		<layer group="73" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Mercury_Temple_Construction_50%" x="0" y="16"/>
+	</image>
+	<image id="Mercury_LT_75" width="178" height="148">
+		<layer group="73" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Mercury_Temple_Construction_75%" x="0" y="8"/>
+	</image>
+	<!-- Note: Mercury Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
+	<image id="Mercury Complex Const 01" width="418" height="223">
+		<layer src="Mercury_Temple_Complex_Construction_Base_01"/>
+		<layer src="Mercury_Temple_Construction_0%" x="150" y="49"/>
+	</image>
+	<image id="Mercury Complex Const 02" width="418" height="223">
+		<layer src="Mercury_Temple_Complex_Construction_Base_02"/>
+		<layer group="this" image="Mercury_LT_25" x="150" y="0"/>
+	</image>
+	<image id="Mercury Complex Const 03" width="418" height="223">
+		<layer src="Mercury_Temple_Complex_Construction_Base_03"/>
+		<layer group="this" image="Mercury_LT_50" x="150" y="0"/>
+	</image>
+	<image id="Mercury Complex Const 04" width="418" height="223">
+		<layer src="Mercury_Temple_Complex_Construction_Base_03"/>
+		<layer group="this" image="Mercury_LT_75" x="150" y="0"/>
+	</image>
+	<image id="Mercury Complex Const 05" width="418" height="223">
+		<layer src="Mercury_Temple_Complex_Construction_Base_03"/>
+		<layer group="73" image="1" x="150" y="0"/>
+	</image>
+	<!-- Note: Mercury Complex ON/OFF States -->
+	<image id="Mercury Complex Off" width="418" height="231">
+		<layer src="Mercury_Temple_Complex_Base_Layer"/>
+		<layer group="73" image="1" x="150" y="8"/>
+		<layer src="Mercury_Temple_Complex_Top_Layer" x="199" y="79"/>
+	</image>
+	<image id="Mercury Complex On" width="418" height="231">
+		<layer group="this" image="Mercury Complex Off"/>
+		<layer src="Mercury_Temple_Complex_On_Layer" x="135" y="117"/>
+	</image>
+	<!-- Note: Mercury Complex Module Animation (Priests reduce Oil/Wine consumption) -->
+	<image id="Mercury Complex Module" width="418" height="231">
+		<layer group="this" image="Mercury Complex Off"/>
+		<animation speed="5" x="115" y="105" reversible="true">
+			<frame src="Mercury_Temple_Complex_Module_01"/>
+			<frame src="Mercury_Temple_Complex_Module_02"/>
+			<frame src="Mercury_Temple_Complex_Module_03"/>
+		</animation>
+	</image>
+	<!-- Note: Mercury Complex Module2 Animation (Priests reduce Pottery/Furniture consumption) -->
+	<image id="Mercury Complex Module2" width="418" height="231">
+		<layer group="this" image="Mercury Complex Off"/>
+		<animation speed="5" x="94" y="103" reversible="true">
+			<frame src="Mercury_Temple_Complex_Module2_01"/>
+			<frame src="Mercury_Temple_Complex_Module2_02"/>
+			<frame src="Mercury_Temple_Complex_Module2_03"/>
+		</animation>
+	</image>
+	<!-- Note: Neptune Complex Reference Assets DO NOT USE -->
+	<image id="Neptune_LT_25" width="178" height="154">
+		<layer group="72" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Neptune_Temple_Construction_25%" x="0" y="50"/>
+	</image>
+	<image id="Neptune_LT_50" width="178" height="154">
+		<layer group="72" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Neptune_Temple_Construction_50%" x="0" y="29"/>
+	</image>
+	<image id="Neptune_LT_75" width="178" height="154">
+		<layer group="72" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Neptune_Temple_Construction_75%" x="0" y="8"/>
+	</image>
+	<!-- Note: Neptune Large Temple Off state for NO Reservoir Access -->
+	<image id="Neptune LTemple Off" width="178" height="154">
+		<layer group="72" image="1"/>
+		<layer src="Neptune_Temple_Ponds_Off" x="21" y="55"/>
+	</image>
+	<!-- Note: Neptune Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
+	<image id="Neptune Complex Const 01" width="418" height="229">
+		<layer src="Mercury_Temple_Complex_Construction_Base_01" x="0" y="6"/>
+		<layer src="Neptune_Temple_Construction_0%" x="150" y="55"/>
+	</image>
+	<image id="Neptune Complex Const 02" width="418" height="229">
+		<layer src="Neptune_Temple_Complex_Construction_Base_01"/>
+		<layer group="this" image="Neptune_LT_25" x="150" y="0"/>
+	</image>
+	<image id="Neptune Complex Const 03" width="418" height="229">
+		<layer src="Neptune_Temple_Complex_Construction_Base_02"/>
+		<layer group="this" image="Neptune_LT_50" x="150" y="0"/>
+	</image>
+	<image id="Neptune Complex Const 04" width="418" height="229">
+		<layer src="Neptune_Temple_Complex_Construction_Base_02"/>
+		<layer group="this" image="Neptune_LT_75" x="150" y="0"/>
+	</image>
+	<image id="Neptune Complex Const 05" width="418" height="229">
+		<layer src="Neptune_Temple_Complex_Construction_Base_02"/>
+		<layer group="this" image="Neptune LTemple Off" x="150" y="0"/>
+	</image>
+	<!-- Note: Neptune Complex ON/OFF States -->
+	<image id="Neptune Complex Off" width="418" height="231">
+		<layer src="Neptune_Temple_Complex_Base_Layer"/>
+		<layer group="this" image="Neptune LTemple Off" x="150" y="2"/>
+		<layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84"/>
+	</image>
+	<image id="Neptune Complex On" width="418" height="231">
+		<layer src="Neptune_Temple_Complex_Base_Layer"/>
+		<layer group="72" image="1" x="150" y="2"/>
+		<layer src="Neptune_Temple_Complex_On_Layer" x="135" y="117"/>
+		<layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84"/>
+	</image>
+	<!-- Note: Neptune Complex Module Animation References (REFERENCE IMAGES - DO NOT USE!!) -->
+	<image id="Neptune Module F1">
+		<layer src="Neptune_Temple_Complex_Module_01"/>
+		<layer group="206" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F2">
+		<layer src="Neptune_Temple_Complex_Module_02"/>
+		<layer group="206" image="1" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F3">
+		<layer src="Neptune_Temple_Complex_Module_03"/>
+		<layer group="206" image="2" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F4">
+		<layer src="Neptune_Temple_Complex_Module_04"/>
+		<layer group="206" image="3" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F5">
+		<layer src="Neptune_Temple_Complex_Module_05"/>
+		<layer group="206" image="4" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F6">
+		<layer src="Neptune_Temple_Complex_Module_01"/>
+		<layer group="206" image="5" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F7">
+		<layer src="Neptune_Temple_Complex_Module_02"/>
+		<layer group="206" image="6" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F8">
+		<layer src="Neptune_Temple_Complex_Module_03"/>
+		<layer group="206" image="7" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F9">
+		<layer src="Neptune_Temple_Complex_Module_04"/>
+		<layer group="206" image="8" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F10">
+		<layer src="Neptune_Temple_Complex_Module_05"/>
+		<layer group="206" image="9" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F11">
+		<layer src="Neptune_Temple_Complex_Module_01"/>
+		<layer group="206" image="10" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F12">
+		<layer src="Neptune_Temple_Complex_Module_02"/>
+		<layer group="206" image="11" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F13">
+		<layer src="Neptune_Temple_Complex_Module_03"/>
+		<layer group="206" image="12" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F14">
+		<layer src="Neptune_Temple_Complex_Module_04"/>
+		<layer group="206" image="13" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F15">
+		<layer src="Neptune_Temple_Complex_Module_05"/>
+		<layer group="206" image="14" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F16">
+		<layer src="Neptune_Temple_Complex_Module_01"/>
+		<layer group="206" image="15" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F17">
+		<layer src="Neptune_Temple_Complex_Module_02"/>
+		<layer group="206" image="16" x="45" y="30"/>
+	</image>
+	<image id="Neptune Module F18">
+		<layer src="Neptune_Temple_Complex_Module_03"/>
+		<layer group="206" image="17" x="45" y="30"/>
+	</image>
+	<!-- Note: Neptune Complex Module Animation (Chariot Walkers) -->
+	<image id="Neptune Complex Module" width="418" height="231">
+		<layer group="this" image="Neptune Complex On"/>
+		<animation speed="6" x="98" y="27" reversible="true">
+			<frame src="Neptune_Temple_Complex_Module2_01"/>
+			<frame src="Neptune_Temple_Complex_Module2_02"/>
+			<frame src="Neptune_Temple_Complex_Module2_03"/>
+		</animation>
+	</image>
+	<!-- Note: Neptune Complex Module2 Animation ON (Fountain ON)(USE THIS ONE!!) -->
+	<image id="Neptune Complex Module2" width="418" height="231">
+		<layer group="this" image="Neptune Complex On"/>
+		<animation speed="5" x="98" y="27" reversible="false">
+			<frame group="this" image="Neptune Module F1"/>
+			<frame group="this" image="Neptune Module F2"/>
+			<frame group="this" image="Neptune Module F3"/>
+			<frame group="this" image="Neptune Module F4"/>
+			<frame group="this" image="Neptune Module F5"/>
+			<frame group="this" image="Neptune Module F6"/>
+			<frame group="this" image="Neptune Module F7"/>
+			<frame group="this" image="Neptune Module F8"/>
+			<frame group="this" image="Neptune Module F9"/>
+			<frame group="this" image="Neptune Module F10"/>
+			<frame group="this" image="Neptune Module F11"/>
+			<frame group="this" image="Neptune Module F12"/>
+			<frame group="this" image="Neptune Module F13"/>
+			<frame group="this" image="Neptune Module F14"/>
+			<frame group="this" image="Neptune Module F15"/>
+			<frame group="this" image="Neptune Module F16"/>
+			<frame group="this" image="Neptune Module F17"/>
+			<frame group="this" image="Neptune Module F18"/>
+		</animation>
+	</image>
+	<!-- Note: Neptune Complex Module2 Animation OFF (Fountain OFF) -->
+	<image id="Neptune Complex Off" width="418" height="231">
+		<layer src="Neptune_Temple_Complex_Base_Layer"/>
+		<layer group="this" image="Neptune LTemple Off" x="150" y="2"/>
+		<layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84"/>
+		<layer src="Neptune_Temple_Complex_Module_OFF" x="98" y="27"/>
+	</image>
+	<!-- Note: Pantheon Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
+	<image id="Pantheon Const 01" src="Pantheon_Complex_Construction_01"/>
+	<image id="Pantheon Const 02" src="Pantheon_Complex_Construction_02"/>
+	<image id="Pantheon Const 03" src="Pantheon_Complex_Construction_03"/>
+	<image id="Pantheon Const 04" src="Pantheon_Complex_Construction_04"/>
+	<image id="Pantheon Const 05" src="Pantheon_Complex_Construction_05"/>
+	<!-- Note: Pantheon Complex ON/OFF States -->
+	<image id="Pantheon On" src="Pantheon_Temple_Complex_On"/>
+	<image id="Pantheon Off" src="Pantheon_Temple_Complex_Off"/>
+	<!-- Note: Pantheon Complex Module Animation (Bonus destination walkers) -->
+	<image id="Pantheon Module" width="418" height="231">
+		<layer group="this" image="Pantheon Off"/>
+		<animation speed="5" x="86" y="49" reversible="true">
+			<frame src="Pantheon_Temple_Complex_Module_01"/>
+			<frame src="Pantheon_Temple_Complex_Module_02"/>
+			<frame src="Pantheon_Temple_Complex_Module_03"/>
+		</animation>
+	</image>
+	<!-- Note: Pantheon Complex Module2 Animation (Oracles spawn walkers) -->
+	<image id="Pantheon Module2" width="418" height="231">
+		<layer group="this" image="Pantheon Off"/>
+		<animation speed="5" x="86" y="49" reversible="true">
+			<frame src="Pantheon_Temple_Complex_Module2_01"/>
+			<frame src="Pantheon_Temple_Complex_Module2_02"/>
+			<frame src="Pantheon_Temple_Complex_Module2_03"/>
+		</animation>
+	</image>
+	<!-- Note: Venus Complex Reference Assets DO NOT USE -->
+	<image id="Venus_LT_25" width="178" height="142">
+		<layer group="75" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Venus_Temple_Construction_25%" x="0" y="34"/>
+	</image>
+	<image id="Venus_LT_50" width="178" height="142">
+		<layer group="75" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Venus_Temple_Construction_50%" x="0" y="20"/>
+	</image>
+	<image id="Venus_LT_75" width="178" height="142">
+		<layer group="75" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Venus_Temple_Construction_75%" x="0" y="0"/>
+	</image>
+	<!-- Note: Venus Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
+	<image id="Venus Complex Const 01" width="418" height="219">
+		<layer src="Ceres_Temple_Complex_Construction_Base_01" x="0" y="-15"/>
+		<layer src="Venus_Temple_Construction_0%" x="90" y="45"/>
+	</image>
+	<image id="Venus Complex Const 02" width="418" height="219">
+		<layer src="Venus_Temple_Complex_Construction_Base_01" x="0" y="0"/>
+		<layer group="this" image="Venus_LT_25" x="90" y="2"/>
+	</image>
+	<image id="Venus Complex Const 03" width="418" height="219">
+		<layer src="Venus_Temple_Complex_Construction_Base_01" x="0" y="0"/>
+		<layer group="this" image="Venus_LT_50" x="90" y="2"/>
+	</image>
+	<image id="Venus Complex Const 04" width="418" height="219">
+		<layer src="Venus_Temple_Complex_Construction_Base_02" x="0" y="0"/>
+		<layer group="this" image="Venus_LT_75" x="90" y="2"/>
+	</image>
+	<image id="Venus Complex Const 05" width="418" height="219">
+		<layer src="Venus_Temple_Complex_Construction_Base_02" x="0" y="0"/>
+		<layer group="75" image="1" x="90" y="2"/>
+	</image>
+	<!-- Note: Venus Complex ON/OFF States -->
+	<image id="Venus Complex Off" width="418" height="231">
+		<layer src="Venus_Temple_Complex_Base_Layer"/>
+		<layer group="75" image="1" x="90" y="14"/>
+		<layer src="Venus_Temple_Complex_Top_Layer" x="71" y="79"/>
+	</image>
+	<image id="Venus Complex On" width="418" height="231">
+		<layer group="this" image="Venus Complex Off"/>
+		<layer src="Venus_Temple_Complex_On_Layer" x="198" y="121"/>
+	</image>
+	<!-- Note: Venus Complex Module Animation (Priests bless schools, baths & hospitals) -->
+	<image id="Venus Complex Module" width="418" height="231">
+		<layer group="this" image="Venus Complex Off"/>
+		<layer src="Venus_Temple_Complex_Module_Layer" x="185" y="92"/>
+		<animation speed="8" x="225" y="114" reversible="false">
+			<frame group="105"/>
+			<frame group="105" image="1"/>
+			<frame group="105" image="10"/>
+			<frame group="105" image="11"/>
+			<frame group="105" image="19"/>
+			<frame group="105" image="20"/>
+			<frame group="105" image="28"/>
+			<frame group="105" image="29"/>
+			<frame group="105" image="37"/>
+			<frame group="105" image="38"/>
+			<frame group="105" image="46"/>
+			<frame group="105" image="47"/>
+			<frame group="105" image="55"/>
+			<frame group="105" image="64"/>
+			<frame group="105" image="65"/>
+		</animation>
+	</image>
+	<!-- Note: Venus Complex Module2 Animation (Priests buff desirability & entertainment) -->
+	<image id="Venus Complex Module2" width="418" height="231">
+		<layer group="this" image="Venus Complex Off"/>
+		<animation speed="6" x="184" y="92" reversible="true">
+			<frame src="Venus_Temple_Complex_Module2_01"/>
+			<frame src="Venus_Temple_Complex_Module2_02"/>
+			<frame src="Venus_Temple_Complex_Module2_03"/>
+		</animation>
+	</image>
+</assetlist>

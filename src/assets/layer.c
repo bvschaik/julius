@@ -127,7 +127,8 @@ layer *layer_add_from_image_path(layer *l, const char *path, int offset_x, int o
     return l;
 }
 
-layer *layer_add_from_image_id(layer *l, const char *group_id, const char *image_id, int offset_x, int offset_y)
+layer *layer_add_from_image_id(layer *l, const char *group_id, const char *image_id,
+    int offset_x, int offset_y)
 {
     if (!l) {
         return 0;
@@ -137,12 +138,14 @@ layer *layer_add_from_image_id(layer *l, const char *group_id, const char *image
     const image *original_image = 0;
     if (strcmp(group_id, "this") == 0) {
         const image_groups *group = group_get_current();
-        for (const asset_image *image = group->first_image; image; image = image->next) {
+        const asset_image *image = asset_image_get_from_id(group->first_image_index);
+        while (image && image->index <= group->last_image_index) {
             if (strcmp(image->id, image_id) == 0) {
-                l->original_image_id = group->id + image->index;
+                l->original_image_id = image->index + MAIN_ENTRIES;
                 original_image = &image->img;
                 break;
             }
+            image = asset_image_get_from_id(image->index + 1);
         }
         if (!l->original_image_id) {
             log_error("Unable to find image on current group with id", image_id, 0);

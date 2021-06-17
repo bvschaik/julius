@@ -1,366 +1,341 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
 
-<assetlist author="Areldir" name="Aesthetics">
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="Aesthetics">
+	<!-- Note: Assets for 'Ornamental Pine Tree', 'Ornamental Fir Tree', 'Ornamental Oak Tree', 'Ornamental Elm Tree', 'Ornamental Fig Tree', 'Ornamental Plum Tree', 'Ornamental Palm Tree' and 'Ornamental Date Tree' respectively -->
+	<image id="ornamental pine">
+		<layer group="59" image="0"/>
+		<layer src="Ornamental_Tree_01_Top_Layer"/>
+	</image>
+	<image id="ornamental fir" width="58" height="62">
+		<layer group="59" image="2" x="0" y="30"/>
+		<layer src="Ornamental_Tree_06_Top_Layer" x="0" y="0"/>
+	</image>
+	<image id="ornamental oak" width="58" height="55">
+		<layer group="59" image="2" x="0" y="23"/>
+		<layer src="Ornamental_Tree_02_Top_Layer" x="0" y="0"/>
+	</image>
+	<image id="ornamental elm" width="58" height="55">
+		<layer group="59" image="2" x="0" y="23"/>
+		<layer src="Ornamental_Tree_07_Top_Layer" x="0" y="0"/>
+	</image>
+	<image id="ornamental fig" width="58" height="55">
+		<layer group="59" image="2" x="0" y="23"/>
+		<layer src="Ornamental_Tree_03_Top_Layer" x="0" y="0"/>
+	</image>
+	<image id="ornamental plum" width="58" height="55">
+		<layer group="59" image="2" x="0" y="23"/>
+		<layer src="Ornamental_Tree_08_Top_Layer" x="0" y="0"/>
+	</image>
+	<image id="ornamental palm" width="58" height="54">
+		<layer group="59" image="2" x="0" y="22"/>
+		<layer src="Ornamental_Tree_04_Top_Layer" x="0" y="0"/>
+	</image>
+	<image id="ornamental date" width="58" height="54">
+		<layer group="59" image="2" x="0" y="22"/>
+		<layer src="Ornamental_Tree_05_Top_Layer" x="0" y="0"/>
+	</image>
+	<!-- Note: Assets for 'Ornamental Pine Tree Path', 'Ornamental Fir Tree Path', 'Ornamental Oak Tree Path', 'Ornamental Elm Tree Path',  -->
+	<!--  'Ornamental Fig Tree Path', 'Ornamental Plum Tree Path', 'Ornamental Palm Tree Path' and 'Ornamental Date Tree Path' respectively -->
+	<image id="path orn pine" width="58" height="71">
+		<layer group="59" image="3" x="0" y="39"/>
+		<layer src="Pine_Tree_Path"/>
+	</image>
+	<image id="path orn fir" width="58" height="72">
+		<layer group="59" image="3" x="0" y="40"/>
+		<layer src="Fir_Tree_Path"/>
+	</image>
+	<image id="path orn oak" width="58" height="60">
+		<layer group="59" image="3" x="0" y="28"/>
+		<layer src="Oak_Tree_Path"/>
+	</image>
+	<image id="path orn elm" width="58" height="60">
+		<layer group="59" image="3" x="0" y="28"/>
+		<layer src="Elm_Tree_Path"/>
+	</image>
+	<image id="path orn fig" width="58" height="53">
+		<layer group="59" image="3" x="0" y="21"/>
+		<layer src="Fig_Tree_Path"/>
+	</image>
+	<image id="path orn plum" width="58" height="53">
+		<layer group="59" image="3" x="0" y="21"/>
+		<layer src="Plum_Tree_Path"/>
+	</image>
+	<image id="path orn palm" width="58" height="65">
+		<layer group="59" image="3" x="0" y="33"/>
+		<layer src="Palm_Tree_Path"/>
+	</image>
+	<image id="path orn date" width="58" height="60">
+		<layer group="59" image="3" x="0" y="28"/>
+		<layer src="Date_Tree_Path"/>
+	</image>
+	<!-- Note: Assets for 'Ornamental Blue Pavilion', 'Ornamental Red Pavilion', 'Ornamental Orange Pavilion', 'Ornamental Yellow Pavilion' and 'Ornamental Green Pavilion' respectively -->
+	<image id="pavilion blue" src="Pavilion_Blue"/>
+	<image id="pavilion red" src="Pavilion_Red"/>
+	<image id="pavilion orange" src="Pavilion_Orange"/>
+	<image id="pavilion yellow" src="Pavilion_Yellow"/>
+	<image id="pavilion green" src="Pavilion_Green"/>
+	<!-- Note: Small pond OFF and ON variants respectively FOR NORTHERN AND CENTRAL CLIMATES -->
+	<image id="s pond north off">
+		<layer src="2x2_Pond_A_OFF"/>
+	</image>
+	<image index="22" id="s pond north on">
+		<layer group="this" image="s pond north off"/>
+		<layer src="2x2_Pond_A_01" x="27" y="16"/>
+		<animation speed="8" x="27" y="16" reversible="false">
+			<frame src="2x2_Pond_A_01"/>
+			<frame src="2x2_Pond_A_02"/>
+			<frame src="2x2_Pond_A_03"/>
+			<frame src="2x2_Pond_A_04"/>
+			<frame src="2x2_Pond_A_05"/>
+			<frame src="2x2_Pond_A_06"/>
+			<frame src="2x2_Pond_A_07"/>
+			<frame src="2x2_Pond_A_08"/>
+		</animation>
+	</image>
+	<!-- Note: Small pond OFF and ON variants respectively FOR SOUTHERN CLIMATES -->
+	<image id="s pond south off">
+		<layer src="2x2_Pond_B_OFF"/>
+	</image>
+	<image id="s pond south on">
+		<layer group="this" image="s pond south off"/>
+		<layer src="2x2_Pond_B_01" x="31" y="25"/>
+		<animation speed="12" x="31" y="25" reversible="false">
+			<frame src="2x2_Pond_B_01"/>
+			<frame src="2x2_Pond_B_02"/>
+			<frame src="2x2_Pond_B_03"/>
+			<frame src="2x2_Pond_B_04"/>
+			<frame src="2x2_Pond_B_05"/>
+			<frame src="2x2_Pond_B_06"/>
+			<frame src="2x2_Pond_B_07"/>
+			<frame src="2x2_Pond_B_08"/>
+		</animation>
+	</image>
+	<!-- Note: Large pond OFF and ON variants respectively FOR NORTHERN AND CENTRAL CLIMATES -->
+	<image id="l pond north off">
+		<layer src="3x3_Pond_A_Off"/>
+	</image>
+	<image id="l pond north on">
+		<layer group="this" image="l pond north off"/>
+		<layer src="3x3_Pond_A_01" x="42"/>
+		<animation speed="10" x="42" y="0" reversible="false">
+			<frame index="43" src="3x3_Pond_A_01"/>
+			<frame index="44" src="3x3_Pond_A_02"/>
+			<frame index="45" src="3x3_Pond_A_03"/>
+			<frame index="46" src="3x3_Pond_A_04"/>
+			<frame index="47" src="3x3_Pond_A_05"/>
+			<frame index="48" src="3x3_Pond_A_06"/>
+			<frame index="49" src="3x3_Pond_A_07"/>
+			<frame index="50" src="3x3_Pond_A_08"/>
+		</animation>
+	</image>
+	<!-- Note: Large pond OFF and ON variants respectively FOR SOUTHERN CLIMATES -->
+	<image id="l pond south off">
+		<layer src="3x3_Pond_B_Off"/>
+	</image>
+	<image id="l pond south on">
+		<layer group="this" image="l pond south off"/>
+		<layer src="3x3_Pond_B_01" x="33" y="29"/>
+		<animation speed="10" x="33" y="29" reversible="false">
+			<frame src="3x3_Pond_B_01"/>
+			<frame src="3x3_Pond_B_02"/>
+			<frame src="3x3_Pond_B_03"/>
+			<frame src="3x3_Pond_B_04"/>
+			<frame src="3x3_Pond_B_05"/>
+			<frame src="3x3_Pond_B_06"/>
+			<frame src="3x3_Pond_B_07"/>
+			<frame src="3x3_Pond_B_08"/>
+			<frame src="3x3_Pond_B_09"/>
+			<frame src="3x3_Pond_B_10"/>
+			<frame src="3x3_Pond_B_11"/>
+			<frame src="3x3_Pond_B_12"/>
+			<frame src="3x3_Pond_B_13"/>
+			<frame src="3x3_Pond_B_14"/>
+			<frame src="3x3_Pond_B_15"/>
+			<frame src="3x3_Pond_B_16"/>
+			<frame src="3x3_Pond_B_17"/>
+			<frame src="3x3_Pond_B_18"/>
+			<frame src="3x3_Pond_B_19"/>
+		</animation>
+	</image>
+	<!-- Note: Assets for 'Small Statue 2' and 'Small Statue 3' respectively -->
+	<image id="sml statue 2" src="Small_Statue_01"/>
+	<image id="sml statue 3" src="Small_Statue_02"/>
+	<!-- Note: Assets for 'Small Statue 2' and 'Small Statue 3' respectively -->
+	<image id="obelisk">
+		<layer src="Obelisk_Footprint"/>
+		<layer group="213" image="3" x="52" y="0"/>
+		<layer src="Obelisk_Top" x="57" y="63"/>
+	</image>
+	<!-- Note: Rotated assets for the garden paths, including vanilla (if needed) -->
+	<image id="path pine r" width="58" height="71">
+		<layer group="59" image="3" x="0" y="39" invert="horizontal"/>
+		<layer src="Pine_Tree_Path_Rotated"/>
+	</image>
+	<image id="path fir r" width="58" height="72">
+		<layer group="59" image="3" x="0" y="40" invert="horizontal"/>
+		<layer src="Fir_Tree_Path_Rotated"/>
+	</image>
+	<image id="path oak r" width="58" height="60">
+		<layer group="59" image="3" x="0" y="28" invert="horizontal"/>
+		<layer src="Oak_Tree_Path_Rotated"/>
+	</image>
+	<image id="path elm r" width="58" height="60">
+		<layer group="59" image="3" x="0" y="28" invert="horizontal"/>
+		<layer src="Elm_Tree_Path_Rotated"/>
+	</image>
+	<image id="path fig r" width="58" height="53">
+		<layer group="59" image="3" x="0" y="21" invert="horizontal"/>
+		<layer src="Fig_Tree_Path_Rotated"/>
+	</image>
+	<image id="path plum r" width="58" height="53">
+		<layer group="59" image="3" x="0" y="21" invert="horizontal"/>
+		<layer src="Plum_Tree_Path_Rotated"/>
+	</image>
+	<image id="path palm r" width="58" height="65">
+		<layer group="59" image="3" x="0" y="33" invert="horizontal"/>
+		<layer src="Palm_Tree_Path_Rotated"/>
+	</image>
+	<image id="path date r" width="58" height="60">
+		<layer group="59" image="3" x="0" y="28" invert="horizontal"/>
+		<layer src="Date_Tree_Path_Rotated"/>
+	</image>
+	<image id="garden path r" width="58" height="32">
+		<layer group="59" image="3" x="0" y="0" invert="horizontal"/>
+		<layer src="Garden_Path_Rotated"/>
+	</image>
+	<!-- Note: Assets for 'Legionary Statue' with rotation variant -->
+	<image id="legio statue" src="Legionary_Statue"/>
+	<image id="legio statue R" src="Legionary_Statue_Rotated"/>
+	<!-- Note: Assets for 'Small Statue 2' and 'Small Statue 3' rotation variants respectively -->
+	<image id="sml statue 2 R" src="Small_Statue_01_Rotated"/>
+	<image id="sml statue 3 R" src="Small_Statue_02_Rotated"/>
+	<!-- Note: Assets for 'Small Blue Column', 'Small Green Column', 'Small Orange Column', 'Small Red Column' and 'Small Yellow Column' respectively, with rotation variants -->
+	<image id="sml col B" src="Small_Column_Blue"/>
+	<image id="sml col B R" src="Small_Column_Blue_Rotated"/>
+	<image id="sml col G" src="Small_Column_Green"/>
+	<image id="sml col G R" src="Small_Column_Green_Rotated"/>
+	<image id="sml col O" src="Small_Column_Orange"/>
+	<image id="sml col O R" src="Small_Column_Orange_Rotated"/>
+	<image id="sml col R" src="Small_Column_Red"/>
+	<image id="sml col R R" src="Small_Column_Red_Rotated"/>
+	<image id="sml col Y" src="Small_Column_Yellow"/>
+	<image id="sml col Y R" src="Small_Column_Yellow_Rotated"/>
+	<!-- Note: Assets for 'Sunlit Hedge' including all directions and intersection variants -->
+	<image id="L Hedge 01" src="Light_Green_Hedge"/>
+	<image id="L Hedge 02" src="Light_Green_Hedge_R"/>
+	<image id="L Hedge 03" src="Light_Green_Hedge_Corner_01"/>
+	<image id="L Hedge 04" src="Light_Green_Hedge_Corner_02"/>
+	<image id="L Hedge 05" src="Light_Green_Hedge_Corner_03"/>
+	<image id="L Hedge 06" src="Light_Green_Hedge_Corner_04"/>
+	<image id="L Hedge 07" src="Light_Green_Hedge_Intersection_01"/>
+	<image id="L Hedge 08" src="Light_Green_Hedge_Intersection_02"/>
+	<image id="L Hedge 09" src="Light_Green_Hedge_Intersection_03"/>
+	<image id="L Hedge 10" src="Light_Green_Hedge_Intersection_04"/>
+	<image id="L Hedge 11" src="Light_Green_Hedge_Intersections_4w"/>
+	<!-- Note: Assets for 'Verdant Hedge' including all directions and intersection variants -->
+	<image id="D Hedge 01" src="Dark_Green_Hedge"/>
+	<image id="D Hedge 02" src="Dark_Green_Hedge_R"/>
+	<image id="D Hedge 03" src="Dark_Green_Hedge_Corner_01"/>
+	<image id="D Hedge 04" src="Dark_Green_Hedge_Corner_02"/>
+	<image id="D Hedge 05" src="Dark_Green_Hedge_Corner_03"/>
+	<image id="D Hedge 06" src="Dark_Green_Hedge_Corner_04"/>
+	<image id="D Hedge 07" src="Dark_Green_Hedge_Intersection_01"/>
+	<image id="D Hedge 08" src="Dark_Green_Hedge_Intersection_02"/>
+	<image id="D Hedge 09" src="Dark_Green_Hedge_Intersection_03"/>
+	<image id="D Hedge 10" src="Dark_Green_Hedge_Intersection_04"/>
+	<image id="D Hedge 11" src="Dark_Green_Hedge_Intersections_4w"/>
+	<!-- Note: Assets for 'Garden path' all directions and intersection variants -->
+	<image id="Garden Path 01" src="Path_Corner_01"/>
+	<image id="Garden Path 02" src="Path_Corner_02"/>
+	<image id="Garden Path 03" src="Path_Corner_03"/>
+	<image id="Garden Path 04" src="Path_Corner_04"/>
+	<image id="Garden Path 05" src="Path_Intersection_01"/>
+	<image id="Garden Path 06" src="Path_Intersection_02"/>
+	<image id="Garden Path 07" src="Path_Intersection_03"/>
+	<image id="Garden Path 08" src="Path_Intersection_04"/>
+	<image id="Garden Path 09" src="Path_Intersection_4w"/>
+	<!-- Note: Assets for 'Equestrian Statue' with rotation variant -->
+	<image id="Eque Statue" src="Equestrian_Statue"/>
+	<image id="Eque Statue R" src="Equestrian_Statue_R"/>
+	<!-- Note: Animation overlay for vanilla 'Large Statue' -->
+	<image id="l statue anim">
+		<layer group="61" image="2"/>
+		<animation speed="7" x="69" y="43" reversible="false">
+			<frame src="L_Statue_Animation_01"/>
+			<frame src="L_Statue_Animation_02"/>
+			<frame src="L_Statue_Animation_03"/>
+			<frame src="L_Statue_Animation_04"/>
+			<frame src="L_Statue_Animation_05"/>
+		</animation>
+	</image>
+	<!-- Note: Assets for 'garden path' rotation and corner variants are above -->
+	<image id="garden path">
+		<layer group="59" image="3" x="0" y="0"/>
+	</image>
+	<!-- Note: Assets for 'Looped garden wall' all directions and intersection variants -->
+	<image id="C Garden Wall 01" src="Garden_Wall_A"/>
+	<image id="C Garden Wall 02" src="Garden_Wall_A_R"/>
+	<image id="C Garden Wall 03" src="Garden_Wall_A_Corner_01"/>
+	<image id="C Garden Wall 04" src="Garden_Wall_A_Corner_02"/>
+	<image id="C Garden Wall 05" src="Garden_Wall_A_Corner_03"/>
+	<image id="C Garden Wall 06" src="Garden_Wall_A_Corner_04"/>
+	<image id="C Garden Wall 07" src="Garden_Wall_A_Intersection_01"/>
+	<image id="C Garden Wall 08" src="Garden_Wall_A_Intersection_02"/>
+	<image id="C Garden Wall 09" src="Garden_Wall_A_Intersection_03"/>
+	<image id="C Garden Wall 10" src="Garden_Wall_A_Intersection_04"/>
+	<image id="C Garden Wall 11" src="Garden_Wall_A_Intersection_4w"/>
+	<!-- Note: Assets for 'Garden wall gate' with rotation variant -->
+	<image id="Garden Gate">
+		<layer src="Garden_Gate"/>
+		<animation speed="1" x="0" y="0" reversible="false">
+			<frame src="Garden_Gate_Top"/>
+		</animation>
+	</image>
+	<image id="Garden Gate R">
+		<layer src="Garden_Gate_R"/>
+		<animation speed="1" x="0" y="0" reversible="false">
+			<frame src="Garden_Gate_R_Top"/>
+		</animation>
+	</image>
+	<!-- Note: Assets for 'Roofed garden wall' all directions and intersection variants -->
+	<image id="R Garden Wall 01" src="Garden_Wall_B"/>
+	<image id="R Garden Wall 02" src="Garden_Wall_B_R"/>
+	<image id="R Garden Wall 03" src="Garden_Wall_B_Corner_01"/>
+	<image id="R Garden Wall 04" src="Garden_Wall_B_Corner_02"/>
+	<image id="R Garden Wall 05" src="Garden_Wall_B_Corner_03"/>
+	<image id="R Garden Wall 06" src="Garden_Wall_B_Corner_04"/>
+	<image id="R Garden Wall 07" src="Garden_Wall_B_Intersection_01"/>
+	<image id="R Garden Wall 08" src="Garden_Wall_B_Intersection_02"/>
+	<image id="R Garden Wall 09" src="Garden_Wall_B_Intersection_03"/>
+	<image id="R Garden Wall 10" src="Garden_Wall_B_Intersection_04"/>
+	<image id="R Garden Wall 11" src="Garden_Wall_B_Intersection_4w"/>
 
-
-<!-- Note: Assets for 'Ornamental Pine Tree', 'Ornamental Fir Tree', 'Ornamental Oak Tree', 'Ornamental Elm Tree', 'Ornamental Fig Tree', 'Ornamental Plum Tree', 'Ornamental Palm Tree' and 'Ornamental Date Tree' respectively -->
-    <image index="0" id="ornamental pine" >
-		<layer group="59" image="0" />
-		<layer src="Ornamental_Tree_01_Top_Layer" />
+    <!-- Note: Rotation variants for Vanilla Small Statue -->
+    <!-- Assets created by Lizzaran -->
+    <image id="V Small Statue R" width="58" height="53">
+        <layer group="61" image="0" part="footprint" x="0" y="0" />
+        <layer src="Small_Statue_Rotated" />
     </image>
 
-    <image index="1" id="ornamental fir" width="58" height="62">
-		<layer group="59" image="2" x="0" y="30" />
-		<layer src="Ornamental_Tree_06_Top_Layer" x="0" y="0" />
+    <!-- Note: Assets for 'Garden colonnade' all directions and intersection variants -->
+    <!-- Assets created by Lizzaran -->
+    <image id="G Colonnade 01" src="Colonnade" />
+    <image id="G Colonnade 02" src="Colonnade_R" />
+    <image id="G Colonnade 03" src="Colonnade_Corner_01" />
+    <image id="G Colonnade 04" src="Colonnade_Corner_02" />
+    <image id="G Colonnade 05" src="Colonnade_Corner_03" />
+    <image id="G Colonnade 06" src="Colonnade_Corner_04" />
+    <image id="G Colonnade 07" src="Colonnade_Intersection_01" />
+    <image id="G Colonnade 08" src="Colonnade_Intersection_02" />
+    <image id="G Colonnade 09" src="Colonnade_Intersection_03" />
+    <image id="G Colonnade 10" src="Colonnade_Intersection_04" />
+    <image id="G Colonnade 11" src="Colonnade_Intersection_4w" />
+
+    <!-- Note: Vanilla Small Statue -->
+    <!-- Assets created by Lizzaran -->
+    <image id="V Small Statue" >
+        <layer group="61" image="0" x="0" y="0" />
     </image>
-
-    <image index="2" id="ornamental oak" width="58" height="55">
-		<layer group="59" image="2" x="0" y="23" />
-		<layer src="Ornamental_Tree_02_Top_Layer" x="0" y="0" />
-    </image>
-
-    <image index="3" id="ornamental elm" width="58" height="55">
-		<layer group="59" image="2" x="0" y="23" />
-		<layer src="Ornamental_Tree_07_Top_Layer" x="0" y="0" />
-    </image>
-
-    <image index="4" id="ornamental fig" width="58" height="55">
-		<layer group="59" image="2" x="0" y="23" />
-		<layer src="Ornamental_Tree_03_Top_Layer" x="0" y="0" />
-    </image>
-
-    <image index="5" id="ornamental plum" width="58" height="55">
-		<layer group="59" image="2" x="0" y="23" />
-		<layer src="Ornamental_Tree_08_Top_Layer" x="0" y="0" />
-    </image>
-
-    <image index="6" id="ornamental palm" width="58" height="54">
-		<layer group="59" image="2" x="0" y="22" />
-		<layer src="Ornamental_Tree_04_Top_Layer" x="0" y="0" />
-    </image>
-
-    <image index="7" id="ornamental date" width="58" height="54">
-		<layer group="59" image="2" x="0" y="22" />
-		<layer src="Ornamental_Tree_05_Top_Layer" x="0" y="0" />
-    </image>
-
-
-<!-- Note: Assets for 'Ornamental Pine Tree Path', 'Ornamental Fir Tree Path', 'Ornamental Oak Tree Path', 'Ornamental Elm Tree Path',  --> 
-<!--  'Ornamental Fig Tree Path', 'Ornamental Plum Tree Path', 'Ornamental Palm Tree Path' and 'Ornamental Date Tree Path' respectively -->
-    <image index="8" id="path orn pine" width="58" height="71">
-		<layer group="59" image="3" x="0" y="39" />
-		<layer src="Pine_Tree_Path" />
-    </image>
-
-    <image index="9" id="path orn fir" width="58" height="72">
-		<layer group="59" image="3" x="0" y="40" />
-		<layer src="Fir_Tree_Path" />
-    </image>
-	
-    <image index="10" id="path orn oak" width="58" height="60">
-		<layer group="59" image="3" x="0" y="28" />
-		<layer src="Oak_Tree_Path" />
-    </image>
-
-    <image index="11" id="path orn elm" width="58" height="60">
-		<layer group="59" image="3" x="0" y="28" />
-		<layer src="Elm_Tree_Path" />
-    </image>
-
-    <image index="12" id="path orn fig" width="58" height="53">
-		<layer group="59" image="3" x="0" y="21" />
-		<layer src="Fig_Tree_Path" />
-    </image>
-
-    <image index="13" id="path orn plum" width="58" height="53">
-		<layer group="59" image="3" x="0" y="21" />
-		<layer src="Plum_Tree_Path" />
-    </image>
-
-    <image index="14" id="path orn palm" width="58" height="65">
-		<layer group="59" image="3" x="0" y="33" />
-		<layer src="Palm_Tree_Path" />
-    </image>
-
-    <image index="15" id="path orn date" width="58" height="60">
-		<layer group="59" image="3" x="0" y="28" />
-		<layer src="Date_Tree_Path" />
-    </image>
-
-
-<!-- Note: Assets for 'Ornamental Blue Pavilion', 'Ornamental Red Pavilion', 'Ornamental Orange Pavilion', 'Ornamental Yellow Pavilion' and 'Ornamental Green Pavilion' respectively -->
-    <image index="16" id="pavilion blue" src="Pavilion_Blue" />
-
-    <image index="17" id="pavilion red" src="Pavilion_Red" />
-
-    <image index="18" id="pavilion orange" src="Pavilion_Orange" />
-
-    <image index="19" id="pavilion yellow" src="Pavilion_Yellow" />
-
-    <image index="20" id="pavilion green" src="Pavilion_Green" />
-
-<!-- Note: Small pond OFF and ON variants respectively FOR NORTHERN AND CENTRAL CLIMATES -->
-    <image index="21" id="s pond north off" >
-		<layer src="2x2_Pond_A_OFF" />
-    </image>
-
-    <image index="22" id="s pond north on" >
-		<layer group="this" image="s pond north off" />
-        <animation speed="8" frames="8" x="27" y="16" reversible="false" />
-    </image>
-    <image index="23" src="2x2_Pond_A_01" />
-    <image index="24" src="2x2_Pond_A_02" />
-    <image index="25" src="2x2_Pond_A_03" />
-    <image index="26" src="2x2_Pond_A_04" />
-    <image index="27" src="2x2_Pond_A_05" />
-    <image index="28" src="2x2_Pond_A_06" />
-    <image index="29" src="2x2_Pond_A_07" />
-    <image index="30" src="2x2_Pond_A_08" />
-
-
-<!-- Note: Small pond OFF and ON variants respectively FOR SOUTHERN CLIMATES -->
-    <image index="31" id="s pond south off" >
-		<layer src="2x2_Pond_B_OFF" />
-    </image>
-
-    <image index="32" id="s pond south on" >
-		<layer group="this" image="s pond south off" />
-        <animation speed="12" frames="8" x="31" y="25" reversible="false" />
-    </image>
-    <image index="33" src="2x2_Pond_B_01" />
-    <image index="34" src="2x2_Pond_B_02" />
-    <image index="35" src="2x2_Pond_B_03" />
-    <image index="36" src="2x2_Pond_B_04" />
-    <image index="37" src="2x2_Pond_B_05" />
-    <image index="38" src="2x2_Pond_B_06" />
-    <image index="39" src="2x2_Pond_B_07" />
-    <image index="40" src="2x2_Pond_B_08" />
-
-
-<!-- Note: Large pond OFF and ON variants respectively FOR NORTHERN AND CENTRAL CLIMATES -->
-    <image index="41" id="l pond north off" >
-		<layer src="3x3_Pond_A_Off" />
-    </image>
-
-
-    <image index="42" id="l pond north on" >
-		<layer group="this" image="l pond north off" />
-        <animation speed="10" frames="8" x="42" y="0" reversible="false" />
-    </image>
-    <image index="43" src="3x3_Pond_A_01" />
-    <image index="44" src="3x3_Pond_A_02" />
-    <image index="45" src="3x3_Pond_A_03" />
-    <image index="46" src="3x3_Pond_A_04" />
-    <image index="47" src="3x3_Pond_A_05" />
-    <image index="48" src="3x3_Pond_A_06" />
-    <image index="49" src="3x3_Pond_A_07" />
-    <image index="50" src="3x3_Pond_A_08" />
-
-
-<!-- Note: Large pond OFF and ON variants respectively FOR SOUTHERN CLIMATES -->
-    <image index="51" id="l pond south off" >
-		<layer src="3x3_Pond_B_Off" />
-    </image>
-
-
-    <image index="52" id="l pond south on" >
-        <layer group="this" image="l pond south off" />
-        <animation speed="10" x="33" y="29" reversible="false">
-            <frame src="3x3_Pond_B_01" />
-            <frame src="3x3_Pond_B_02" />
-            <frame src="3x3_Pond_B_03" />
-            <frame src="3x3_Pond_B_04" />
-            <frame src="3x3_Pond_B_05" />
-            <frame src="3x3_Pond_B_06" />
-            <frame src="3x3_Pond_B_07" />
-            <frame src="3x3_Pond_B_08" />
-            <frame src="3x3_Pond_B_09" />
-            <frame src="3x3_Pond_B_10" />
-            <frame src="3x3_Pond_B_11" />
-            <frame src="3x3_Pond_B_12" />
-            <frame src="3x3_Pond_B_13" />
-            <frame src="3x3_Pond_B_14" />
-            <frame src="3x3_Pond_B_15" />
-            <frame src="3x3_Pond_B_16" />
-            <frame src="3x3_Pond_B_17" />
-            <frame src="3x3_Pond_B_18" />
-            <frame src="3x3_Pond_B_19" />
-        </animation>
-    </image>
-
-
-
-<!-- Note: Assets for 'Small Statue 2' and 'Small Statue 3' respectively -->
-    <image index="61" id="sml statue 2" src="Small_Statue_01" />
-
-    <image index="62" id="sml statue 3" src="Small_Statue_02" />	
-
-
-<!-- Note: Assets for 'Small Statue 2' and 'Small Statue 3' respectively -->
-    <image index="63" id="obelisk" >	
-		<layer src="Obelisk_Footprint" />
-		<layer group="213" image="3" x="52" y="0" />
-		<layer src="Obelisk_Top" x="57" y="63" />
-    </image>	
-	
-<!-- Note: Rotated assets for the garden paths, including vanilla (if needed) -->
-    <image index="64" id="path pine r" width="58" height="71">
-		<layer group="59" image="3" x="0" y="39" invert="horizontal" />
-		<layer src="Pine_Tree_Path_Rotated" />
-    </image>
-
-    <image index="65" id="path fir r" width="58" height="72">
-		<layer group="59" image="3" x="0" y="40" invert="horizontal" />
-		<layer src="Fir_Tree_Path_Rotated" />
-    </image>
-	
-    <image index="66" id="path oak r" width="58" height="60">
-		<layer group="59" image="3" x="0" y="28" invert="horizontal" />
-		<layer src="Oak_Tree_Path_Rotated" />
-    </image>	
-	
-    <image index="67" id="path elm r" width="58" height="60">
-		<layer group="59" image="3" x="0" y="28" invert="horizontal" />
-		<layer src="Elm_Tree_Path_Rotated" />
-    </image>
-
-    <image index="68" id="path fig r" width="58" height="53">
-		<layer group="59" image="3" x="0" y="21" invert="horizontal" />
-		<layer src="Fig_Tree_Path_Rotated" />
-    </image>
-
-    <image index="69" id="path plum r" width="58" height="53">
-		<layer group="59" image="3" x="0" y="21" invert="horizontal" />
-		<layer src="Plum_Tree_Path_Rotated" />
-    </image>
-
-    <image index="70" id="path palm r" width="58" height="65">
-		<layer group="59" image="3" x="0" y="33" invert="horizontal" />
-		<layer src="Palm_Tree_Path_Rotated" />
-    </image>
-
-    <image index="71" id="path date r" width="58" height="60">
-		<layer group="59" image="3" x="0" y="28" invert="horizontal" />
-		<layer src="Date_Tree_Path_Rotated" />
-    </image>
-
-    <image index="72" id="garden path r" width="58" height="32">
-		<layer group="59" image="3" x="0" y="0" invert="horizontal" />
-		<layer src="Garden_Path_Rotated" />
-    </image>
-
-<!-- Note: Assets for 'Legionary Statue' with rotation variant -->
-    <image index="73" id="legio statue" src="Legionary_Statue" />
-
-    <image index="74" id="legio statue R" src="Legionary_Statue_Rotated" />	
-	
-<!-- Note: Assets for 'Small Statue 2' and 'Small Statue 3' rotation variants respectively -->
-    <image index="75" id="sml statue 2 R" src="Small_Statue_01_Rotated" />
-
-    <image index="76" id="sml statue 3 R" src="Small_Statue_02_Rotated" />		
-	
-<!-- Note: Assets for 'Small Blue Column', 'Small Green Column', 'Small Orange Column', 'Small Red Column' and 'Small Yellow Column' respectively, with rotation variants -->
-    <image index="77" id="sml col B" src="Small_Column_Blue" />
-    <image index="78" id="sml col B R" src="Small_Column_Blue_Rotated" />	
-
-    <image index="79" id="sml col G" src="Small_Column_Green" />
-    <image index="80" id="sml col G R" src="Small_Column_Green_Rotated" />	
-
-    <image index="81" id="sml col O" src="Small_Column_Orange" />
-    <image index="82" id="sml col O R" src="Small_Column_Orange_Rotated" />	
-
-    <image index="83" id="sml col R" src="Small_Column_Red" />
-    <image index="84" id="sml col R R" src="Small_Column_Red_Rotated" />	
-
-    <image index="85" id="sml col Y" src="Small_Column_Yellow" />
-    <image index="86" id="sml col Y R" src="Small_Column_Yellow_Rotated" />	
-
-	
-<!-- Note: Assets for 'Sunlit Hedge' including all directions and intersection variants -->
-    <image index="87" id="L Hedge 01" src="Light_Green_Hedge" />
-    <image index="88" id="L Hedge 02" src="Light_Green_Hedge_R" />
-    <image index="89" id="L Hedge 03" src="Light_Green_Hedge_Corner_01" />
-    <image index="90" id="L Hedge 04" src="Light_Green_Hedge_Corner_02" />
-    <image index="91" id="L Hedge 05" src="Light_Green_Hedge_Corner_03" />
-    <image index="92" id="L Hedge 06" src="Light_Green_Hedge_Corner_04" />
-    <image index="93" id="L Hedge 07" src="Light_Green_Hedge_Intersection_01" />
-    <image index="94" id="L Hedge 08" src="Light_Green_Hedge_Intersection_02" />
-    <image index="95" id="L Hedge 09" src="Light_Green_Hedge_Intersection_03" />
-    <image index="96" id="L Hedge 10" src="Light_Green_Hedge_Intersection_04" />
-    <image index="97" id="L Hedge 11" src="Light_Green_Hedge_Intersections_4w" />
-	
-<!-- Note: Assets for 'Verdant Hedge' including all directions and intersection variants -->
-    <image index="98" id="D Hedge 01" src="Dark_Green_Hedge" />
-    <image index="99" id="D Hedge 02" src="Dark_Green_Hedge_R" />
-    <image index="100" id="D Hedge 03" src="Dark_Green_Hedge_Corner_01" />
-    <image index="101" id="D Hedge 04" src="Dark_Green_Hedge_Corner_02" />
-    <image index="102" id="D Hedge 05" src="Dark_Green_Hedge_Corner_03" />
-    <image index="103" id="D Hedge 06" src="Dark_Green_Hedge_Corner_04" />
-    <image index="104" id="D Hedge 07" src="Dark_Green_Hedge_Intersection_01" />
-    <image index="105" id="D Hedge 08" src="Dark_Green_Hedge_Intersection_02" />
-    <image index="106" id="D Hedge 09" src="Dark_Green_Hedge_Intersection_03" />
-    <image index="107" id="D Hedge 10" src="Dark_Green_Hedge_Intersection_04" />
-    <image index="108" id="D Hedge 11" src="Dark_Green_Hedge_Intersections_4w" />
-		
-<!-- Note: Assets for 'Garden path' all directions and intersection variants -->
-    <image index="109" id="Garden Path 01" src="Path_Corner_01" />
-    <image index="110" id="Garden Path 02" src="Path_Corner_02" />
-    <image index="111" id="Garden Path 03" src="Path_Corner_03" />
-    <image index="112" id="Garden Path 04" src="Path_Corner_04" />
-    <image index="113" id="Garden Path 05" src="Path_Intersection_01" />
-    <image index="114" id="Garden Path 06" src="Path_Intersection_02" />
-    <image index="115" id="Garden Path 07" src="Path_Intersection_03" />
-    <image index="116" id="Garden Path 08" src="Path_Intersection_04" />
-    <image index="117" id="Garden Path 09" src="Path_Intersection_4w" />
-			
-<!-- Note: Assets for 'Equestrian Statue' with rotation variant -->	
-    <image index="118" id="Eque Statue" src="Equestrian_Statue" />
-    <image index="119" id="Eque Statue R" src="Equestrian_Statue_R" />	
-	
-<!-- Note: Animation overlay for vanilla 'Large Statue' -->	
-    <image index="120" id="l statue anim" >
-		<layer group="61" image="2" />
-        <animation speed="7" frames="5" x="69" y="43" reversible="false" />
-    </image>
-    <image index="121" src="L_Statue_Animation_01" />
-    <image index="122" src="L_Statue_Animation_02" />
-    <image index="123" src="L_Statue_Animation_03" />
-    <image index="124" src="L_Statue_Animation_04" />
-    <image index="125" src="L_Statue_Animation_05" />
-
-<!-- Note: Assets for 'garden path' rotation and corner variants are above -->
-    <image index="126" id="garden path" >
-		<layer group="59" image="3" x="0" y="0" />
-    </image>
-
-<!-- Note: Assets for 'Crenellated garden wall' all directions and intersection variants -->
-    <image index="127" id="C Garden Wall 01" src="Garden_Wall_A" />
-    <image index="128" id="C Garden Wall 02" src="Garden_Wall_A_R" />
-    <image index="129" id="C Garden Wall 03" src="Garden_Wall_A_Corner_01" />
-    <image index="130" id="C Garden Wall 04" src="Garden_Wall_A_Corner_02" />
-    <image index="131" id="C Garden Wall 05" src="Garden_Wall_A_Corner_03" />
-    <image index="132" id="C Garden Wall 06" src="Garden_Wall_A_Corner_04" />
-    <image index="133" id="C Garden Wall 07" src="Garden_Wall_A_Intersection_01" />
-    <image index="134" id="C Garden Wall 08" src="Garden_Wall_A_Intersection_02" />
-    <image index="135" id="C Garden Wall 09" src="Garden_Wall_A_Intersection_03" />
-    <image index="136" id="C Garden Wall 10" src="Garden_Wall_A_Intersection_04" />
-    <image index="137" id="C Garden Wall 11" src="Garden_Wall_A_Intersection_4w" />
-
-<!-- Note: Assets for 'Garden wall gate' with rotation variant -->
-    <image index="138" id="Garden Gate" >
-        <layer src="Garden_Gate" />
-        <animation speed="1" x="0" y="0" reversible="false">
-            <frame src="Garden_Gate_Top" />
-        </animation>
-    </image>
-
-    <image index="139" id="Garden Gate R" >
-        <layer src="Garden_Gate_R" />
-        <animation speed="1" x="0" y="0" reversible="false">
-            <frame src="Garden_Gate_R_Top" />
-        </animation>
-    </image>
-
-
 </assetlist>

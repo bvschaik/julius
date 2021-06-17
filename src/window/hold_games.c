@@ -72,11 +72,11 @@ static void draw_background(void)
     for (int i = 0; i < MAX_GAMES; i++) {
         if (i == game->id - 1) {
             button_border_draw(100 * i + 165, 92, 90, 100, 1);
-            image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
-                "Naum Ico S") + (2 * i), 100 * i + 170, 96);
+            image_draw(assets_get_image_id("UI_Elements", "Naum Ico S") +
+                (2 * i), 100 * i + 170, 96);
         } else {
-            image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
-                "Naum Ico DS") + (2 * i), 100 * i + 170, 96);
+            image_draw(assets_get_image_id("UI_Elements", "Naum Ico DS") +
+                (2 * i), 100 * i + 170, 96);
         }
     }
     text_draw_multiline(translation_for(game->description_key), 70, 222, 500, FONT_NORMAL_BLACK, 0);
@@ -89,7 +89,7 @@ static void draw_background(void)
     int has_resources = 1;
     int resource_cost = 0;
     for (int resource = 0; resource < RESOURCE_MAX; ++resource) {
-        resource_cost = city_games_resource_cost(selected_game_id,resource);
+        resource_cost = city_games_resource_cost(selected_game_id, resource);
         if (resource_cost) {
             width += text_draw_number(resource_cost, '@', "", 120 + width, 320, FONT_NORMAL_BLACK);
             if (city_resource_get_amount_including_granaries(resource, resource_cost, 0) < resource_cost) {

@@ -1,5 +1,6 @@
 #include "destruction.h"
 
+#include "building/image.h"
 #include "city/message.h"
 #include "city/population.h"
 #include "city/ratings.h"
@@ -55,14 +56,8 @@ static void destroy_on_fire(building *b, int plagued)
         b->size = 1;
         b->ruin_has_plague = plagued;
         memset(&b->data, 0, 42);
-        int image_id;
-        if (was_tent) {
-            image_id = image_group(GROUP_TERRAIN_RUBBLE_TENT);
-        } else {
-            int random = map_random_get(b->grid_offset) & 3;
-            image_id = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
-        }
-        map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+        b->data.rubble.was_tent = was_tent;
+        map_building_tiles_add(b->id, b->x, b->y, 1, building_image_get(b), TERRAIN_BUILDING);
     }
     static const int x_tiles[] = {
         0, 1, 1, 0, 2, 2, 2, 1, 0, 3, 3, 3, 3, 2, 1, 0, 4, 4, 4, 4, 4, 3, 2, 1, 0, 5, 5, 5, 5, 5, 5, 4, 3, 2, 1, 0
@@ -77,14 +72,8 @@ static void destroy_on_fire(building *b, int plagued)
             continue;
         }
         building *ruin = building_create(BUILDING_BURNING_RUIN, x, y);
-        int image_id;
-        if (was_tent) {
-            image_id = image_group(GROUP_TERRAIN_RUBBLE_TENT);
-        } else {
-            int random = map_random_get(ruin->grid_offset) & 3;
-            image_id = image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * random;
-        }
-        map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, image_id, TERRAIN_BUILDING);
+        ruin->data.rubble.was_tent = was_tent;
+        map_building_tiles_add(ruin->id, ruin->x, ruin->y, 1, building_image_get(ruin), TERRAIN_BUILDING);
         ruin->fire_duration = (ruin->house_figure_generation_delay & 7) + 1;
         ruin->figure_id4 = 0;
         ruin->fire_proof = 1;

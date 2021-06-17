@@ -1,11 +1,6 @@
 #ifndef MAP_WATER_SUPPLY_H
 #define MAP_WATER_SUPPLY_H
 
-#define POND_CLIMATE_IMAGE_OFFSET 10 
-#define POND_WATERED_IMAGE_OFFSET 1
-#define POND_LARGE_IMAGE_OFFSET 20
-
-
 void map_water_supply_update_houses(void);
 void map_water_supply_update_reservoir_fountain(void);
 

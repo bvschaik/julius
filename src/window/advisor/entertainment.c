@@ -83,8 +83,7 @@ static void draw_games_info(void)
 {
     inner_panel_draw(48, 302, 34, 6);
     text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_HEADER), 52, 274, FONT_LARGE_BLACK, 0);
-    image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
-        "HoldGames Banner"), 460, 305);
+    image_draw(assets_get_image_id("UI_Elements", "HoldGames Banner"), 460, 305);
     window_entertainment_draw_games_text(56, 315);
 }
 

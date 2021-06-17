@@ -3,7 +3,6 @@
 
 #include "building/building.h"
 
-
 int building_variant_has_variants(building_type type);
 
 int building_variant_get_image_id(building_type type);

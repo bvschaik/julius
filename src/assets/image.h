@@ -6,7 +6,8 @@
 
 #define IMAGE_PRELOAD_MAX_SIZE 65535
 
-typedef struct asset_image {
+typedef struct {
+    int index;
     int active;
     int loaded;
     char id[XML_STRING_MAX_LENGTH];
@@ -15,8 +16,6 @@ typedef struct asset_image {
     image img;
     color_t *data;
     int is_clone;
-    int index;
-    struct asset_image *next;
 } asset_image;
 
 int asset_image_load(asset_image *img);
@@ -28,5 +27,8 @@ void asset_image_unload_layers(asset_image *img);
 void asset_image_unload(asset_image *img);
 
 asset_image *asset_image_get_from_id(int image_id);
+
+int asset_image_init_array(void);
+asset_image *asset_image_create(void);
 
 #endif // ASSETS_IMAGE_H

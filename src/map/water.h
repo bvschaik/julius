@@ -4,13 +4,13 @@
 #include "figure/figure.h"
 #include "map/point.h"
 
-void map_water_add_building(int building_id, int x, int y, int size, int image_id);
+void map_water_add_building(int building_id, int x, int y, int size);
 
 int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
-                                          int *orientation_absolute, int *orientation_relative);
+    int *orientation_absolute, int *orientation_relative);
 
 int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
-                                          int *orientation_absolute, int *orientation_relative);
+    int *orientation_absolute, int *orientation_relative);
 
 int map_water_get_wharf_for_new_fishing_boat(figure *boat, map_point *tile);
 

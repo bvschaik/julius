@@ -2,7 +2,8 @@
 
 #include "assets/assets.h"
 #include "building/building_variant.h"
-#include "building/rotation.h"
+#include "building/connectable.h"
+#include "building/image.h"
 #include "building/properties.h"
 #include "city/view.h"
 #include "core/direction.h"
@@ -66,7 +67,7 @@ void map_orientation_change(int counter_clockwise)
     map_tiles_update_all_plazas();
     map_tiles_update_all_walls();
     map_tiles_update_all_aqueducts(0);
-    map_tiles_update_all_hedges();
+    building_connectable_update_connections();
 
 
     map_orientation_update_buildings();
@@ -243,154 +244,43 @@ int map_orientation_for_triumphal_arch(int x, int y)
 
 void map_orientation_update_buildings(void)
 {
-    int map_orientation = city_view_orientation();
-    int orientation_is_top_bottom = map_orientation == DIR_0_TOP || map_orientation == DIR_4_BOTTOM;
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state == BUILDING_STATE_UNUSED) {
             continue;
         }
-        int image_id;
-        int image_offset;
         switch (b->type) {
             default:
                 break;
             case BUILDING_GATEHOUSE:
-                if (b->subtype.orientation == 1) {
-                    if (orientation_is_top_bottom) {
-                        image_id = image_group(GROUP_BUILDING_TOWER) + 1;
-                    } else {
-                        image_id = image_group(GROUP_BUILDING_TOWER) + 2;
-                    }
-                } else {
-                    if (orientation_is_top_bottom) {
-                        image_id = image_group(GROUP_BUILDING_TOWER) + 2;
-                    } else {
-                        image_id = image_group(GROUP_BUILDING_TOWER) + 1;
-                    }
-                }
-                map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
+                map_building_tiles_add(i, b->x, b->y, b->size, building_image_get(b),
+                    TERRAIN_GATEHOUSE | TERRAIN_BUILDING);
                 map_terrain_add_gatehouse_roads(b->x, b->y, 0);
                 break;
             case BUILDING_TRIUMPHAL_ARCH:
-                if (b->subtype.orientation == 1) {
-                    if (orientation_is_top_bottom) {
-                        image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
-                    } else {
-                        image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
-                    }
-                } else {
-                    if (orientation_is_top_bottom) {
-                        image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) + 2;
-                    } else {
-                        image_id = image_group(GROUP_BUILDING_TRIUMPHAL_ARCH);
-                    }
-                }
-                map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
+                map_building_tiles_add(i, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
                 map_terrain_add_triumphal_arch_roads(b->x, b->y, b->subtype.orientation);
                 break;
             case BUILDING_HIPPODROME:
-                {
-                    int phase = b->data.monument.phase;
-                    int phase_offset = 6;
-                    int orientation = building_rotation_get_building_orientation(b->subtype.orientation);
-
-                    if (phase == -1) {
-                        if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
-                            image_id = image_group(GROUP_BUILDING_HIPPODROME_2);
-                        } else {
-                            image_id = image_group(GROUP_BUILDING_HIPPODROME_1);
-                        }
-                    } else {
-                        if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
-                            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NWSE 01") + ((phase - 1) * phase_offset);
-                        } else {
-                            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Circus"), "Circus NESW 01") + ((phase - 1) * phase_offset);
-                        }
-                    }
-
-                    int building_part;
-                    if (b->prev_part_building_id == 0) {
-                        building_part = 0; // part 1, no previous building
-                    } else if (b->next_part_building_id == 0) {
-                        building_part = 2; // part 3, no next building
-                    } else {
-                        building_part = 1; // part 2
-                    }
-
-                    if (orientation == DIR_0_TOP) {
-                        switch (building_part) {
-                            case 0: image_id += 0; break; // part 1
-                            case 1: image_id += 2; break; // part 2
-                            case 2: image_id += 4; break; // part 3, same for switch cases below
-                        }
-
-                    } else if (orientation == DIR_4_BOTTOM) {
-                        switch (building_part) {
-                            case 0: image_id += 4; break;
-                            case 1: image_id += 2; break;
-                            case 2: image_id += 0; break;
-                        }
-
-                    } else if (orientation == DIR_6_LEFT) {
-                        switch (building_part) {
-                            case 0: image_id += 0; break;
-                            case 1: image_id += 2; break;
-                            case 2: image_id += 4; break;
-                        }
-                    } else { // DIR_2_RIGHT
-                        switch (building_part) {
-                            case 0: image_id += 4; break;
-                            case 1: image_id += 2; break;
-                            case 2: image_id += 0; break;
-                        }
-                    }
-                    map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
-                }
+                map_building_tiles_add(i, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
                 break;
             case BUILDING_SHIPYARD:
-                image_offset = (4 + b->data.industry.orientation - map_orientation / 2) % 4;
-                image_id = image_group(GROUP_BUILDING_SHIPYARD) + image_offset;
-                map_water_add_building(i, b->x, b->y, 2, image_id);
-                break;
             case BUILDING_WHARF:
-                image_offset = (4 + b->data.industry.orientation - map_orientation / 2) % 4;
-                image_id = image_group(GROUP_BUILDING_WHARF) + image_offset;
-                map_water_add_building(i, b->x, b->y, 2, image_id);
-                break;
             case BUILDING_DOCK:
-                image_offset = (4 + b->data.dock.orientation - map_orientation / 2) % 4;
-                switch (image_offset) {
-                    case 0: image_id = image_group(GROUP_BUILDING_DOCK_1); break;
-                    case 1: image_id = image_group(GROUP_BUILDING_DOCK_2); break;
-                    case 2: image_id = image_group(GROUP_BUILDING_DOCK_3); break;
-                    default:image_id = image_group(GROUP_BUILDING_DOCK_4); break;
-                }
-                map_water_add_building(i, b->x, b->y, 3, image_id);
+                map_water_add_building(i, b->x, b->y, b->size);
                 break;
-        }
-
-        if (b->type >= BUILDING_SMALL_STATUE_ALT && b->type <= BUILDING_SMALL_STATUE_ALT_B) {
-            int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
-            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "sml statue 2") + (b->subtype.orientation % 2) * rotation_offset;
-            map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
-        }
-        if (b->type == BUILDING_LEGION_STATUE) {
-            int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
-            image_id = assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "legio statue") + (b->subtype.orientation % 2) * rotation_offset;
-            map_building_tiles_add(i, b->x, b->y, 2, image_id, TERRAIN_BUILDING);
-        }
-        if (b->type == BUILDING_SMALL_STATUE) {
-            int rotation_offset = building_properties_for_type(b->type)->rotation_offset;
-            int image_id = assets_get_image_id(assets_get_group_id("Lizzaran", "Aesthetics_L"), "V Small Statue") + (b->subtype.orientation % 2) * rotation_offset;
-            map_building_tiles_add(i, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
-        }
-        if (building_variant_has_variants(b->type)) {
-            image_id = building_variant_get_image_id_with_rotation(b->type, b->variant);
-            map_building_tiles_add(i, b->x, b->y, b->size, image_id, TERRAIN_BUILDING);
-            if (b->type == BUILDING_ROADBLOCK) {
-                map_terrain_add_roadblock_road(b->x, b->y, 0);
-            }
+            case BUILDING_SMALL_STATUE:
+            case BUILDING_SMALL_STATUE_ALT:
+            case BUILDING_SMALL_STATUE_ALT_B:
+            case BUILDING_LEGION_STATUE:
+            case BUILDING_PAVILION_BLUE:
+            case BUILDING_DECORATIVE_COLUMN:
+                map_building_tiles_add(i, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
+                break;
+            case BUILDING_ROADBLOCK:
+                map_building_tiles_add(i, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
+                map_terrain_add_roadblock_road(b->x, b->y);
+                break;
         }
     }
 }

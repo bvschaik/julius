@@ -455,8 +455,8 @@ static int draw_request_buttons(int y_offset)
                 if (status) {
                     if (status == CITY_REQUEST_STATUS_NOT_ENOUGH_RESOURCES) {
                         if (is_stockpiled) {
-                            image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"),
-                                "Store Icon"), data.x_offset + 5, y_offset + 10);
+                            image_draw(assets_get_image_id("UI_Elements", "Store Icon"),
+                                data.x_offset + 5, y_offset + 10);
                             text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_UNSTOCK),
                                 data.x_offset + 2, y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
                         } else {
@@ -559,7 +559,7 @@ static void draw_extra_info_panel(void)
 
         static int happy_image_id;
         if (!happy_image_id) {
-            happy_image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Happy God Icon");
+            happy_image_id = assets_get_image_id("UI_Elements", "Happy God Icon");
         }
         width = text_draw_number(data.gods.happy, 0, "", data.x_offset + 82, y_offset + 2, FONT_NORMAL_GREEN);
         image_draw(happy_image_id, data.x_offset + 82 + width, y_offset - 2);

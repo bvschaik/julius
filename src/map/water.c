@@ -1,6 +1,7 @@
 #include "water.h"
 
 #include "building/building.h"
+#include "building/image.h"
 #include "city/view.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -12,7 +13,7 @@
 
 #define OFFSET(x,y) (x + GRID_SIZE * y)
 
-void map_water_add_building(int building_id, int x, int y, int size, int image_id)
+void map_water_add_building(int building_id, int x, int y, int size)
 {
     if (!map_grid_is_inside(x, y, size)) {
         return;
@@ -47,7 +48,7 @@ void map_water_add_building(int building_id, int x, int y, int size, int image_i
             map_building_set(grid_offset, building_id);
             map_property_clear_constructing(grid_offset);
             map_property_set_multi_tile_size(grid_offset, size);
-            map_image_set(grid_offset, image_id);
+            map_image_set(grid_offset, building_image_get(building_get(building_id)));
             map_property_set_multi_tile_xy(grid_offset, dx, dy,
                 dx == leftmost.x && dy == leftmost.y);
         }

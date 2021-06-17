@@ -1,85 +1,77 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
 
-<assetlist author="Areldir" name="Econ_Logistics">
-    <!-- Note: Caravanserai OFF Variant for Northern/Central and Southern Climates Respectively -->
-    <image id="Caravanserai N OFF" src="Caravanserai_n_OFF" />
-    <image id="Caravanserai S OFF" src="Caravanserai_s_OFF" />
-
-    <!-- Note: Caravanserai ON Variant for Northern/Central Climate -->
-    <image id="Caravanserai N ON" width="238" height="155">
-        <layer group="this" image="Caravanserai N OFF" />
-        <animation speed="8" frames="3" x="44" y="38" reversible="true" />
-    </image>
-    <image src="Caravanserai_n_ON_01" />
-    <image src="Caravanserai_n_ON_02" />
-    <image src="Caravanserai_n_ON_03" />
-
-    <!-- Note: Caravanserai ON Variant for Southern Climate -->
-    <image id="Caravanserai S ON" width="238" height="148">
-        <layer group="this" image="Caravanserai S OFF" />
-        <animation speed="8" frames="3" x="44" y="30" reversible="true" />
-    </image>
-    <image src="Caravanserai_s_ON_01" />
-    <image src="Caravanserai_s_ON_02" />
-    <image src="Caravanserai_s_ON_03" />
-
-    <!-- Note: Caravanserai Construction 0% Phase -->
-    <image id="Caravanserai Cons" src="Caravanserai_Construction_0%" />
-
-
-    <!-- Note: Caravanserai Trade Policy -->
-    <image id="Trade Policy" src="Trade_Policy_Icon" />
-    <image id="Trade Policy 1" src="Trade_Policy_1" />
-    <image id="Trade Policy 2" src="Trade_Policy_2" />
-    <image id="Trade Policy 3" src="Trade_Policy_3" />
-
-    <!-- Note: Lighthouse Trade Policy -->
-    <image id="Sea Trade Policy" src="Sea_Trade_Policy_Icon" />
-    <image id="Sea Trade Policy 1" src="Sea_Trade_Policy_1" />
-    <image id="Sea Trade Policy 2" src="Sea_Trade_Policy_2" />
-    <image id="Sea Trade Policy 3" src="Sea_Trade_Policy_3" />
-
-    <image src="Policy_Selection_Border_Top_UnHover" id="Policy Selection Borders" />
-    <image src="Policy_Selection_Border_Top_Hover" />
-    <image src="Policy_Selection_Border_Right_UnHover" />
-    <image src="Policy_Selection_Border_Right_Hover" />
-    <image src="Policy_Selection_Border_Bottom_UnHover" />
-    <image src="Policy_Selection_Border_Bottom_Hover" />
-    <image src="Policy_Selection_Border_Left_UnHover" />
-    <image src="Policy_Selection_Border_Left_Hover" />
-
-    <!-- Note: Cart Depot OFF Variants for Northern, Central and Southern Climates Respectively -->
-    <image id="Cart Depot N OFF" src="Cart_Depot_OFF_N" />
-    <image id="Cart Depot C OFF" src="Cart_Depot_OFF_C" />
-    <image id="Cart Depot S OFF" src="Cart_Depot_OFF_S" />
-
-    <!-- Note: Cart Depot ON Variants for Northern, Central and Southern Climates Respectively -->
-    <image id="Cart Depot N ON" >
-        <layer group="this" image="Cart Depot N OFF" />
-        <animation speed="3" x="47" y="31" reversible="true">
-            <frame src="Cart_Depot_ON_01" />
-            <frame src="Cart_Depot_ON_02" />
-            <frame src="Cart_Depot_ON_03" />
-        </animation>
-    </image>
-
-    <image id="Cart Depot C ON" >
-        <layer group="this" image="Cart Depot C OFF" />
-        <animation speed="3" x="47" y="31" reversible="true">
-            <frame src="Cart_Depot_ON_01" />
-            <frame src="Cart_Depot_ON_02" />
-            <frame src="Cart_Depot_ON_03" />
-        </animation>
-    </image>
-
-    <image id="Cart Depot S ON" >
-        <layer group="this" image="Cart Depot S OFF" />
-        <animation speed="3" x="47" y="31" reversible="true">
-            <frame src="Cart_Depot_ON_01" />
-            <frame src="Cart_Depot_ON_02" />
-            <frame src="Cart_Depot_ON_03" />
-        </animation>
-    </image>
-
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="Econ_Logistics">
+	<!-- Note: Caravanserai OFF Variant for Northern/Central and Southern Climates Respectively -->
+	<image id="Caravanserai N OFF" src="Caravanserai_n_OFF"/>
+	<image id="Caravanserai S OFF" src="Caravanserai_s_OFF"/>
+	<!-- Note: Caravanserai ON Variant for Northern/Central Climate -->
+	<image id="Caravanserai N ON" width="238" height="155">
+		<layer group="this" image="Caravanserai N OFF"/>
+		<animation speed="8" x="44" y="38" reversible="true">
+			<frame src="Caravanserai_n_ON_01"/>
+			<frame src="Caravanserai_n_ON_02"/>
+			<frame src="Caravanserai_n_ON_03"/>
+		</animation>
+	</image>
+	<!-- Note: Caravanserai ON Variant for Southern Climate -->
+	<image id="Caravanserai S ON" width="238" height="148">
+		<layer group="this" image="Caravanserai S OFF"/>
+		<animation speed="8" x="44" y="30" reversible="true">
+			<frame src="Caravanserai_s_ON_01"/>
+			<frame src="Caravanserai_s_ON_02"/>
+			<frame src="Caravanserai_s_ON_03"/>
+		</animation>
+	</image>
+	<!-- Note: Caravanserai Construction 0% Phase -->
+	<image id="Caravanserai Cons" src="Caravanserai_Construction_0%"/>
+	<!-- Note: Cart Depot OFF Variants for Northern, Central and Southern Climates Respectively -->
+	<image id="Cart Depot N OFF" src="Cart_Depot_OFF_N"/>
+	<image id="Cart Depot C OFF" src="Cart_Depot_OFF_C"/>
+	<image id="Cart Depot S OFF" src="Cart_Depot_OFF_S"/>
+	<!-- Note: Cart Depot ON Variants for Northern, Central and Southern Climates Respectively -->
+	<image id="Cart Depot N ON">
+		<layer group="this" image="Cart Depot N OFF"/>
+		<animation speed="7" x="47" y="31" reversible="true">
+			<frame src="Cart_Depot_ON_01"/>
+			<frame src="Cart_Depot_ON_02"/>
+			<frame src="Cart_Depot_ON_03"/>
+		</animation>
+	</image>
+	<image id="Cart Depot C ON">
+		<layer group="this" image="Cart Depot C OFF"/>
+		<animation speed="7" x="47" y="31" reversible="true">
+			<frame src="Cart_Depot_ON_01"/>
+			<frame src="Cart_Depot_ON_02"/>
+			<frame src="Cart_Depot_ON_03"/>
+		</animation>
+	</image>
+	<image id="Cart Depot S ON">
+		<layer group="this" image="Cart Depot S OFF"/>
+		<animation speed="7" x="47" y="31" reversible="true">
+			<frame src="Cart_Depot_ON_01"/>
+			<frame src="Cart_Depot_ON_02"/>
+			<frame src="Cart_Depot_ON_03"/>
+		</animation>
+	</image>
+	<!-- Note: Lighthouse Construction 01-04 are the 0%, 25%, 50%, and 75% construction phases respectively -->
+	<image id="Lighthouse Const 01" src="Lighthouse_Construction_01"/>
+	<image id="Lighthouse Const 02" src="Lighthouse_Construction_02"/>
+	<image id="Lighthouse Const 03" src="Lighthouse_Construction_03"/>
+	<image id="Lighthouse Const 04" src="Lighthouse_Construction_04"/>
+	<!-- Note: Lighthouse OFF Variant -->
+	<image id="Lighthouse OFF" src="Lighthouse_OFF"/>
+	<!-- Note: Lighthouse ON Variant -->
+	<image id="Lighthouse ON">
+		<layer group="this" image="Lighthouse OFF"/>
+		<animation speed="5" x="74" y="1" reversible="false">
+			<frame src="Lighthouse_ON_01"/>
+			<frame src="Lighthouse_ON_02"/>
+			<frame src="Lighthouse_ON_03"/>
+			<frame src="Lighthouse_ON_04"/>
+			<frame src="Lighthouse_ON_05"/>
+		</animation>
+	</image>
 </assetlist>
+	

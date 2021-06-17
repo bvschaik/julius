@@ -4,6 +4,7 @@
 #include "building/barracks.h"
 #include "building/caravanserai.h"
 #include "building/granary.h"
+#include "building/image.h"
 #include "building/industry.h"
 #include "building/lighthouse.h"
 #include "building/market.h"
@@ -463,15 +464,8 @@ static void set_theater_graphic(building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return;
     }
-    if (b->desirability <= 45) {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-            assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Theatre ON"), TERRAIN_BUILDING);
-        b->upgrade_level = 0;
-    } else {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-            assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Theatre Upgrade ON"), TERRAIN_BUILDING);
-        b->upgrade_level = 1;
-    }
+    b->upgrade_level = b->desirability > 45;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
 }
 
 static void spawn_figure_theater(building *b)
@@ -631,15 +625,8 @@ static void set_market_graphic(building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return;
     }
-    if (b->desirability <= 30) {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-            image_group(GROUP_BUILDING_MARKET), TERRAIN_BUILDING);
-        b->upgrade_level = 0;
-    } else {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-            image_group(GROUP_BUILDING_MARKET_FANCY), TERRAIN_BUILDING);
-        b->upgrade_level = 1;
-    }
+    b->upgrade_level = b->desirability > 30;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
 }
 
 static void send_supplier_to_destination(figure *f, int dst_building_id)
@@ -835,32 +822,9 @@ static void set_bathhouse_graphic(building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return;
     }
-    if (map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE)) {
-        b->has_water_access = 1;
-    } else {
-        b->has_water_access = 0;
-    }
-    if (b->has_water_access && b->num_workers) {
-        if (b->desirability <= 30) {
-            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                image_group(GROUP_BUILDING_BATHHOUSE_WATER), TERRAIN_BUILDING);
-            b->upgrade_level = 0;
-        } else {
-            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                image_group(GROUP_BUILDING_BATHHOUSE_FANCY_WATER), TERRAIN_BUILDING);
-            b->upgrade_level = 1;
-        }
-    } else {
-        if (b->desirability <= 30) {
-            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                image_group(GROUP_BUILDING_BATHHOUSE_NO_WATER), TERRAIN_BUILDING);
-            b->upgrade_level = 0;
-        } else {
-            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                image_group(GROUP_BUILDING_BATHHOUSE_FANCY_NO_WATER), TERRAIN_BUILDING);
-            b->upgrade_level = 1;
-        }
-    }
+    b->has_water_access = map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE);
+    b->upgrade_level = b->desirability > 30;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
 }
 
 static void spawn_figure_bathhouse(building *b)
@@ -893,15 +857,8 @@ static void set_school_graphic(building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return;
     }
-    if (b->desirability <= 40) {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-            image_group(GROUP_BUILDING_SCHOOL), TERRAIN_BUILDING);
-        b->upgrade_level = 0;
-    } else {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-            assets_get_image_id(assets_get_group_id("Tomasz", "Building_Upgrades"), "Upgraded_School"), TERRAIN_BUILDING);
-        b->upgrade_level = 1;
-    }
+    b->upgrade_level = b->desirability > 40;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
 }
 
 
@@ -952,15 +909,8 @@ static void set_library_graphic(building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return;
     }
-    if (b->desirability <= 50) {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-            assets_get_image_id(assets_get_group_id("Tomasz", "Building_Upgrades"), "Downgraded_Library"), TERRAIN_BUILDING);
-        b->upgrade_level = 0;
-    } else {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-            image_group(GROUP_BUILDING_LIBRARY), TERRAIN_BUILDING);
-        b->upgrade_level = 1;
-    }
+    b->upgrade_level = b->desirability > 50;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
 }
 
 static void spawn_figure_library(building *b)
@@ -1241,15 +1191,8 @@ static void set_senate_graphic(building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return;
     }
-    if (b->desirability <= 30) {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-            image_group(GROUP_BUILDING_SENATE), TERRAIN_BUILDING);
-        b->upgrade_level = 0;
-    } else {
-        map_building_tiles_add(b->id, b->x, b->y, b->size,
-            image_group(GROUP_BUILDING_SENATE_FANCY), TERRAIN_BUILDING);
-        b->upgrade_level = 1;
-    }
+    b->upgrade_level = b->desirability > 30;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
 }
 
 static void spawn_figure_senate_forum(building *b)
@@ -1464,7 +1407,7 @@ static void spawn_figure_native_hut(building *b)
 
 static void spawn_figure_native_meeting(building *b)
 {
-    map_building_tiles_add(b->id, b->x, b->y, 2, image_group(GROUP_BUILDING_NATIVE) + 2, TERRAIN_BUILDING);
+    map_building_tiles_add(b->id, b->x, b->y, 2, building_image_get(b), TERRAIN_BUILDING);
     if (city_buildings_is_mission_post_operational() && !has_figure_of_type(b, FIGURE_NATIVE_TRADER)) {
         int x_out, y_out;
         if (map_terrain_get_adjacent_road_or_clear_land(b->x, b->y, b->size, &x_out, &y_out)) {

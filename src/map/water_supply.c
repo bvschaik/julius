@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "building/building.h"
+#include "building/image.h"
 #include "building/monument.h"
 #include "building/list.h"
 #include "core/image.h"
@@ -219,7 +220,7 @@ void map_water_supply_update_reservoir_fountain(void)
             b->has_water_access = 0;
         }
     }
-    //ponds
+    // Ponds
     static const building_type ponds[] = { BUILDING_SMALL_POND, BUILDING_LARGE_POND };
     for (int i = 0; i < 2; i++) {
         for (building *b = building_first_of_type(ponds[i]); b; b = b->next_of_type) {
@@ -231,20 +232,7 @@ void map_water_supply_update_reservoir_fountain(void)
             } else {
                 b->has_water_access = 0;
             }
-
-            int offset = 0;
-            if (scenario_property_climate() == CLIMATE_DESERT) {
-                offset += POND_CLIMATE_IMAGE_OFFSET;
-            }
-            if (b->has_water_access) {
-                offset += POND_WATERED_IMAGE_OFFSET;
-            }
-            if (b->type == BUILDING_LARGE_POND) {
-                offset += POND_LARGE_IMAGE_OFFSET;
-            }
-            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                assets_get_image_id(assets_get_group_id("Areldir", "Aesthetics"), "s pond north off") + offset,
-                TERRAIN_BUILDING);
+            map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
         }
     }
 

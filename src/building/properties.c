@@ -7,74 +7,76 @@
 #define AUGUSTUS_BUILDINGS 57
 
 augustus_building_properties_mapping augustus_building_properties[AUGUSTUS_BUILDINGS] = {
-    {BUILDING_ROADBLOCK, { 1, 1, 0, 0, 0 },  "Areldir", "Roadblocks", 0},
-    {BUILDING_WORKCAMP, { 3, 0, 0, 0, 0 },  "Areldir", "Workcamps", "Workcamp Central"},
-    {BUILDING_GRAND_TEMPLE_CERES, { 7, 1, 0, 0, 0 },  "Areldir", "Ceres_Temple", "Ceres Complex Off"},
-    {BUILDING_GRAND_TEMPLE_NEPTUNE, { 7, 1, 0, 0, 0 },  "Areldir", "Neptune_Temple", "Neptune Complex Off"},
-    {BUILDING_GRAND_TEMPLE_MERCURY, { 7, 1, 0, 0, 0 },  "Areldir", "Mercury_Temple", "Mercury Complex Off"},
-    {BUILDING_GRAND_TEMPLE_MARS, { 7, 1, 0, 0, 0 },  "Areldir", "Mars_Temple", "Mars Complex Off"},
-    {BUILDING_GRAND_TEMPLE_VENUS, { 7, 1, 0, 0, 0 },  "Areldir", "Venus_Temple", "Venus Complex Off"},
-    {BUILDING_SMALL_POND, { 2, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "s pond south off"},
-    {BUILDING_LARGE_POND, { 3, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "l pond south off"},
-    {BUILDING_PINE_TREE, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "ornamental pine"},
-    {BUILDING_FIR_TREE, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "ornamental fir"},
-    {BUILDING_OAK_TREE, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "ornamental oak"},
-    {BUILDING_ELM_TREE, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "ornamental elm"},
-    {BUILDING_FIG_TREE, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "ornamental fig"},
-    {BUILDING_PLUM_TREE, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "ornamental plum"},
-    {BUILDING_PALM_TREE, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "ornamental palm"},
-    {BUILDING_DATE_TREE, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "ornamental date"},
-    {BUILDING_PINE_PATH,{ 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "path orn pine",},
-    {BUILDING_FIR_PATH, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "path orn fir",},
-    {BUILDING_OAK_PATH, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "path orn oak",},
-    {BUILDING_ELM_PATH, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "path orn elm"},
-    {BUILDING_FIG_PATH, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "path orn fig"},
-    {BUILDING_PLUM_PATH, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "path orn plum"},
-    {BUILDING_PALM_PATH, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "path orn palm"},
-    {BUILDING_DATE_PATH, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "path orn date"},
-    {BUILDING_PAVILION_BLUE, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "pavilion blue"},
-    {BUILDING_PAVILION_RED, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "pavilion red"},
-    {BUILDING_PAVILION_ORANGE, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "pavilion orange"},
-    {BUILDING_PAVILION_YELLOW, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "pavilion yellow"},
-    {BUILDING_PAVILION_GREEN, { 1, 1, 0, 0, 0 },  "Areldir", "Aesthetics", "pavilion green"},
-    {BUILDING_SMALL_STATUE_ALT, { 1, 1, 0, 0, 14 },  "Areldir", "Aesthetics", "sml statue 2"},
-    {BUILDING_SMALL_STATUE_ALT_B, { 1, 1, 0, 0, 14 },  "Areldir", "Aesthetics", "sml statue 3"},
-    {BUILDING_OBELISK, { 2, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "obelisk"},
-    {BUILDING_PANTHEON, { 7, 1, 0, 0, 0 }, "Areldir", "Pantheon", "Pantheon Off"},
-    {BUILDING_ARCHITECT_GUILD, { 2, 1, 0, 0, 0 }, "Areldir", "Architect", "Arch Guild OFF"},
-    {BUILDING_MESS_HALL, { 3, 0, 0, 0, 0 }, "Areldir", "Mess_Hall", "Mess OFF Central"},
-    {BUILDING_LIGHTHOUSE, { 3, 1, 0, 0, 0 }, "Areldir", "Lighthouses", "Lighthouse OFF"},
-    {BUILDING_TAVERN, { 2, 0, 0, 0, 0 }, "Areldir", "Entertainment", "Tavern OFF"},
-    {BUILDING_GRAND_GARDEN, { 2, 1, 0, 0, 0 }, "Areldir", "Engineer", "Eng Guild OFF"},
-    {BUILDING_ARENA, { 3, 0, 0, 0, 0 }, "Areldir", "Entertainment", "Arena OFF" },
-    {BUILDING_HORSE_STATUE, { 3, 1, 0, 0, 1 }, "Areldir", "Aesthetics", "Eque Statue"},
-    {BUILDING_DOLPHIN_FOUNTAIN, { 2, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
-    {BUILDING_HEDGE_DARK, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "D Hedge 01"},
-    {BUILDING_HEDGE_LIGHT, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "L Hedge 01"},
-    {BUILDING_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Eng Guild OFF"},
-    {BUILDING_LEGION_STATUE, { 2, 1, 0, 0, 1 }, "Areldir", "Aesthetics", "legio statue"},
-    {BUILDING_DECORATIVE_COLUMN, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "sml col B"},
-    {BUILDING_COLONNADE, { 1, 1, 0, 0, 0 }, "Lizzaran", "Aesthetics_L", "G Colonnade 01"},
-    {BUILDING_GARDEN_PATH, { 1, 1, 0, 0, 0 }, "Areldir", "Aesthetics", "Garden Path 01"},
-    {BUILDING_LARARIUM, {1,0,0,0,0}, "Areldir", "Minor_Monuments", "Lararium 01"},
-    {BUILDING_NYMPHAEUM, {3,0,0,0,0}, "Areldir", "Minor_Monuments", "Nymphaeum OFF"},
-    {BUILDING_SMALL_MAUSOLEUM, {2,1,0,0,1}, "Areldir", "Minor_Monuments", "Mausoleum S"},
-    {BUILDING_LARGE_MAUSOLEUM, {3,1,0,0,0}, "Areldir", "Minor_Monuments", "Mausoleum L"},
-    {BUILDING_WATCHTOWER, {2,1,0,0,0}, "Areldir", "Watchtowers", "Watchtower C OFF"},
-    {BUILDING_LIBRARY, {2,0,0,0,0}, "Tomasz", "Building_Upgrades", "Downgraded_Library"},
-    {BUILDING_CARAVANSERAI, { 4, 1, 0, 0, 0 },  "Areldir", "Econ_Logistics", "Caravanserai N OFF"},
-    {BUILDING_SMALL_STATUE, {1,1,0,0,-12}, "Lizzaran", "Aesthetics_L", "V Small Statue" }
-    //    {BUILDING_PALLISADE, {1,0,0,0,0}, "Areldir", "Palisade", "Palisade"},
+    {BUILDING_ROADBLOCK, { 1, 1, 0, 0, 0 }, "Roadblocks", 0},
+    {BUILDING_WORKCAMP, { 3, 0, 0, 0, 0 }, "Construction_Guilds", "Workcamp Central"},
+    {BUILDING_GRAND_TEMPLE_CERES, { 7, 1, 0, 0, 0 }, "Grand_Temples", "Ceres Complex Off"},
+    {BUILDING_GRAND_TEMPLE_NEPTUNE, { 7, 1, 0, 0, 0 }, "Grand_Temples", "Neptune Complex Off"},
+    {BUILDING_GRAND_TEMPLE_MERCURY, { 7, 1, 0, 0, 0 }, "Grand_Temples", "Mercury Complex Off"},
+    {BUILDING_GRAND_TEMPLE_MARS, { 7, 1, 0, 0, 0 }, "Grand_Temples", "Mars Complex Off"},
+    {BUILDING_GRAND_TEMPLE_VENUS, { 7, 1, 0, 0, 0 }, "Grand_Temples", "Venus Complex Off"},
+    {BUILDING_SMALL_POND, { 2, 1, 0, 0, 0 }, "Aesthetics", "s pond south off"},
+    {BUILDING_LARGE_POND, { 3, 1, 0, 0, 0 }, "Aesthetics", "l pond south off"},
+    {BUILDING_PINE_TREE, { 1, 1, 0, 0, 0 }, "Aesthetics", "ornamental pine"},
+    {BUILDING_FIR_TREE, { 1, 1, 0, 0, 0 }, "Aesthetics", "ornamental fir"},
+    {BUILDING_OAK_TREE, { 1, 1, 0, 0, 0 }, "Aesthetics", "ornamental oak"},
+    {BUILDING_ELM_TREE, { 1, 1, 0, 0, 0 }, "Aesthetics", "ornamental elm"},
+    {BUILDING_FIG_TREE, { 1, 1, 0, 0, 0 }, "Aesthetics", "ornamental fig"},
+    {BUILDING_PLUM_TREE, { 1, 1, 0, 0, 0 }, "Aesthetics", "ornamental plum"},
+    {BUILDING_PALM_TREE, { 1, 1, 0, 0, 0 }, "Aesthetics", "ornamental palm"},
+    {BUILDING_DATE_TREE, { 1, 1, 0, 0, 0 }, "Aesthetics", "ornamental date"},
+    {BUILDING_PINE_PATH,{ 1, 1, 0, 0, 0 }, "Aesthetics", "path orn pine",},
+    {BUILDING_FIR_PATH, { 1, 1, 0, 0, 0 }, "Aesthetics", "path orn fir",},
+    {BUILDING_OAK_PATH, { 1, 1, 0, 0, 0 }, "Aesthetics", "path orn oak",},
+    {BUILDING_ELM_PATH, { 1, 1, 0, 0, 0 }, "Aesthetics", "path orn elm"},
+    {BUILDING_FIG_PATH, { 1, 1, 0, 0, 0 }, "Aesthetics", "path orn fig"},
+    {BUILDING_PLUM_PATH, { 1, 1, 0, 0, 0 }, "Aesthetics", "path orn plum"},
+    {BUILDING_PALM_PATH, { 1, 1, 0, 0, 0 }, "Aesthetics", "path orn palm"},
+    {BUILDING_DATE_PATH, { 1, 1, 0, 0, 0 }, "Aesthetics", "path orn date"},
+    {BUILDING_PAVILION_BLUE, { 1, 1, 0, 0, 0 }, "Aesthetics", "pavilion blue"},
+    {BUILDING_PAVILION_RED, { 1, 1, 0, 0, 0 }, "Aesthetics", "pavilion red"},
+    {BUILDING_PAVILION_ORANGE, { 1, 1, 0, 0, 0 }, "Aesthetics", "pavilion orange"},
+    {BUILDING_PAVILION_YELLOW, { 1, 1, 0, 0, 0 }, "Aesthetics", "pavilion yellow"},
+    {BUILDING_PAVILION_GREEN, { 1, 1, 0, 0, 0 }, "Aesthetics", "pavilion green"},
+    {BUILDING_SMALL_STATUE_ALT, { 1, 1, 0, 0, 14 }, "Aesthetics", "sml statue 2"},
+    {BUILDING_SMALL_STATUE_ALT_B, { 1, 1, 0, 0, 14 }, "Aesthetics", "sml statue 3"},
+    {BUILDING_OBELISK, { 2, 1, 0, 0, 0 }, "Aesthetics", "obelisk"},
+    {BUILDING_PANTHEON, { 7, 1, 0, 0, 0 }, "Grand_Temples", "Pantheon Off"},
+    {BUILDING_ARCHITECT_GUILD, { 2, 1, 0, 0, 0 }, "Construction_Guilds", "Arch Guild OFF"},
+    {BUILDING_MESS_HALL, { 3, 0, 0, 0, 0 }, "Military_Buildings", "Mess OFF Central"},
+    {BUILDING_LIGHTHOUSE, { 3, 1, 0, 0, 0 }, "Econ_Logistics", "Lighthouse OFF"},
+    {BUILDING_TAVERN, { 2, 0, 0, 0, 0 }, "Entertainment", "Tavern OFF"},
+    {BUILDING_GRAND_GARDEN, { 2, 1, 0, 0, 0 }, "Engineer", "Eng Guild OFF"},
+    {BUILDING_ARENA, { 3, 0, 0, 0, 0 }, "Entertainment", "Arena OFF" },
+    {BUILDING_HORSE_STATUE, { 3, 1, 0, 0, 1 }, "Aesthetics", "Eque Statue"},
+    {BUILDING_DOLPHIN_FOUNTAIN, { 2, 1, 0, 0, 0 }, "Aesthetics", "Eng Guild OFF"},
+    {BUILDING_HEDGE_DARK, { 1, 1, 0, 0, 0 }, "Aesthetics", "D Hedge 01"},
+    {BUILDING_HEDGE_LIGHT, { 1, 1, 0, 0, 0 }, "Aesthetics", "L Hedge 01"},
+    {BUILDING_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Aesthetics", "Eng Guild OFF"},
+    {BUILDING_LEGION_STATUE, { 2, 1, 0, 0, 1 }, "Aesthetics", "legio statue"},
+    {BUILDING_DECORATIVE_COLUMN, { 1, 1, 0, 0, 0 }, "Aesthetics", "sml col B"},
+    {BUILDING_COLONNADE, { 1, 1, 0, 0, 0 }, "Aesthetics", "G Colonnade 01"},
+    {BUILDING_GARDEN_PATH, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden Path 01"},
+    {BUILDING_LARARIUM, {1,0,0,0,0}, "Minor_Monuments", "Lararium 01"},
+    {BUILDING_NYMPHAEUM, {3,0,0,0,0}, "Minor_Monuments", "Nymphaeum OFF"},
+    {BUILDING_SMALL_MAUSOLEUM, {2,1,0,0,1}, "Minor_Monuments", "Mausoleum S"},
+    {BUILDING_LARGE_MAUSOLEUM, {3,1,0,0,0}, "Minor_Monuments", "Mausoleum L"},
+    {BUILDING_WATCHTOWER, {2,1,0,0,0}, "Military_Buildings", "Watchtower C OFF"},
+    {BUILDING_LIBRARY, {2,0,0,0,0}, "Building_Upgrades", "Downgraded_Library"},
+    {BUILDING_CARAVANSERAI, { 4, 1, 0, 0, 0 }, "Econ_Logistics", "Caravanserai N OFF"},
+    {BUILDING_SMALL_STATUE, {1,1,0,0,-12}, "Aesthetics", "V Small Statue" }
+    //    {BUILDING_PALLISADE, {1,0,0,0,0}, "Military_Buildings", "Palisade"},
 };
 
 void init_augustus_building_properties()
 {
     for (int i = 0; i < AUGUSTUS_BUILDINGS; ++i) {
-        int group = assets_get_group_id(augustus_building_properties[i].asset_author, augustus_building_properties[i].asset_name);
         if (augustus_building_properties[i].asset_image_id) {
-            augustus_building_properties[i].properties.image_group = assets_get_image_id(group, augustus_building_properties[i].asset_image_id);
+            augustus_building_properties[i].properties.image_group =
+                assets_get_image_id(augustus_building_properties[i].asset_name,
+                    augustus_building_properties[i].asset_image_id);
         } else {
-            augustus_building_properties[i].properties.image_group = group;
+            augustus_building_properties[i].properties.image_group =
+                assets_get_group_id(augustus_building_properties[i].asset_name);
         }
     }
 }
@@ -238,13 +240,11 @@ static building_properties properties[170] = {
 static int is_vanilla_building_with_changed_properties(building_type type)
 {
     switch (type) {
-    case BUILDING_LIBRARY:
-    case BUILDING_SMALL_STATUE:
-        return 1;
-        break;
-    default:
-        return 0;
-        break;
+        case BUILDING_LIBRARY:
+        case BUILDING_SMALL_STATUE:
+            return 1;
+        default:
+            return 0;
     }
 }
 

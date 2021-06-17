@@ -16,7 +16,6 @@ struct building_variant {
     int orientation;
 };
 
-
 static struct building_variant variants[BUILDINGS_WITH_VARIANTS] = {
     {5, BUILDING_PAVILION_BLUE, {0,1,2,3,4}, CITY_DIRECTION_ANY},
     {10, BUILDING_DECORATIVE_COLUMN, {0,1,2,3,4,5,6,7,8,9}, 0},

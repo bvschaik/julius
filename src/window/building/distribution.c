@@ -1151,8 +1151,7 @@ static void window_building_draw_monument_caravanserai_construction_process(buil
 
 static void draw_policy_image_border(int x, int y, int focused)
 {
-    int id = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
-        "Policy Selection Borders");
+    int id = assets_get_image_id("UI_Elements", "Policy Selection Borders");
 
     image_draw(id + focused, x, y);
     image_draw(id + 2 + focused, x + 105, y + 5);
@@ -1204,7 +1203,7 @@ void window_building_draw_caravanserai(building_info_context *c)
         text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_DESC), c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
 
         if (!land_trade_policy.items[0].image_id) {
-            int base_policy_image = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
+            int base_policy_image = assets_get_image_id("UI_Elements",
                 land_trade_policy.base_image_name);
             land_trade_policy.items[0].image_id = base_policy_image;
             land_trade_policy.items[1].image_id = base_policy_image + 1;
@@ -1225,7 +1224,7 @@ void window_building_draw_caravanserai(building_info_context *c)
         inner_panel_draw(c->x_offset + 16, c->y_offset + 270, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 278);
 
-        image_draw(assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Caravanserai Banner"),
+        image_draw(assets_get_image_id("UI_Elements", "Caravanserai Banner"),
             c->x_offset + 32, c->y_offset + 350);
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);

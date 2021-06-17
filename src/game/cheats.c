@@ -207,7 +207,7 @@ static void game_cheat_set_monument_phase(uint8_t *args)
 {
     int phase = 0;
     parse_integer(args, &phase);
-    building_monument_set_construction_phase(phase);
+    building_monuments_set_construction_phase(phase);
     city_warning_show_console((uint8_t *) "Monuments updated");
 }
 

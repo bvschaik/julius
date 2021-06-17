@@ -1,6 +1,8 @@
 #include "building.h"
 
 #include "building/building_state.h"
+#include "building/building_variant.h"
+#include "building/menu.h"
 #include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
@@ -23,7 +25,6 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
-#include "menu.h"
 
 #define BUILDING_ARRAY_SIZE_STEP 2000
 
@@ -383,7 +384,7 @@ void building_update_state(void)
             map_building_tiles_remove(i, b->x, b->y);
             if (b->type == BUILDING_ROADBLOCK) {
                 // Leave the road behind the deleted roadblock
-                map_terrain_add_roadblock_road(b->x, b->y, 0);
+                map_terrain_add(b->grid_offset, TERRAIN_ROAD);
                 road_recalc = 1;
             }
             land_recalc = 1;

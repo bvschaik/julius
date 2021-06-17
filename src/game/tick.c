@@ -1,5 +1,6 @@
 #include "tick.h"
 
+#include "building/connectable.h"
 #include "building/count.h"
 #include "building/dock.h"
 #include "building/figure.h"
@@ -88,7 +89,7 @@ static void advance_month(void)
     building_industry_start_strikes();
     building_trim();
 
-    map_tiles_update_all_hedges();
+    building_connectable_update_connections();
     map_tiles_update_all_roads();
     map_tiles_update_all_water();
     map_routing_update_land_citizen();

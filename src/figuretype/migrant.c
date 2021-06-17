@@ -37,7 +37,6 @@ void figure_create_emigrant(building *house, int num_people)
     if (num_people < house->house_population) {
         house->house_population -= num_people;
     } else {
-        house->house_population = 0;
         building_house_change_to_vacant_lot(house);
     }
     figure *f = figure_create(FIGURE_EMIGRANT, house->x, house->y, DIR_0_TOP);
@@ -166,12 +165,13 @@ void figure_immigrant_action(figure *f)
                 if (room < f->migrant_num_people) {
                     f->migrant_num_people = room;
                 }
-                if (!b->house_population) {
-                    building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
-                }
+                int is_empty = b->house_population == 0;
                 b->house_population += f->migrant_num_people;
                 b->house_population_room = max_people - b->house_population;
                 city_population_add(f->migrant_num_people);
+                if (is_empty) {
+                    building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
+                }
                 b->immigrant_figure_id = 0;
             }
             f->is_ghost = f->in_building_wait_ticks ? 1 : 0;
@@ -307,12 +307,13 @@ void figure_homeless_action(figure *f)
                     if (room < f->migrant_num_people) {
                         f->migrant_num_people = room;
                     }
-                    if (!b->house_population) {
-                        building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
-                    }
+                    int is_empty = b->house_population == 0;
                     b->house_population += f->migrant_num_people;
                     b->house_population_room = max_people - b->house_population;
                     city_population_add_homeless(f->migrant_num_people);
+                    if (is_empty) {
+                        building_house_change_to(b, BUILDING_HOUSE_SMALL_TENT);
+                    }
                     b->immigrant_figure_id = 0;
                     game_undo_disable();
                 }

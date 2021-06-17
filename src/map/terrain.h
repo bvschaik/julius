@@ -76,7 +76,7 @@ int map_terrain_exists_tile_in_area_with_type(int x, int y, int size, int terrai
 int map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radius, int terrain);
 
 int map_terrain_exists_clear_tile_in_radius(int x, int y, int size, int radius, int except_grid_offset,
-                                            int *x_tile, int *y_tile);
+    int *x_tile, int *y_tile);
 
 int map_terrain_all_tiles_in_radius_are(int x, int y, int size, int radius, int terrain);
 
@@ -92,7 +92,7 @@ int map_terrain_is_adjacent_to_open_water(int x, int y, int size);
 
 int map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int *x_tile, int *y_tile);
 
-void map_terrain_add_roadblock_road(int x, int y, int orientation);
+void map_terrain_add_roadblock_road(int x, int y);
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation);
 void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation);
 

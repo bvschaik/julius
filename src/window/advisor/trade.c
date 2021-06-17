@@ -282,7 +282,7 @@ static void show_policy(trade_policy_type policy_type)
 {
     data.policy_type = policy_type;
     if (!policy_options[policy_type].items[0].image_id) {
-        int base_policy_image = assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"),
+        int base_policy_image = assets_get_image_id("UI_Elements",
             policy_options[policy_type].base_image_name);
         policy_options[policy_type].items[0].image_id = base_policy_image + 1;
         policy_options[policy_type].items[1].image_id = base_policy_image + 2;

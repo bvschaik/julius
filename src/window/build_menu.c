@@ -216,14 +216,14 @@ static void draw_menu_buttons(void)
 
         int icons_drawn = 0;
         if (building_rotation_type_has_rotations(type)) {
-            int image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Rotate Build Icon");
+            int image_id = assets_get_image_id("UI_Elements", "Rotate Build Icon");
             image_draw(image_id, item_x_align + icons_drawn * MENU_ICON_WIDTH + MENU_ICON_X_OFFSET,
                 data.y_offset + MENU_Y_OFFSET + MENU_ICON_Y_OFFSET + MENU_ITEM_HEIGHT * i);
             icons_drawn++;
         }
 
         if (building_monument_type_is_monument(type)) {
-            int image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Monument Build Icon");
+            int image_id = assets_get_image_id("UI_Elements", "Monument Build Icon");
             image_draw(image_id, item_x_align + icons_drawn * MENU_ICON_WIDTH + MENU_ICON_X_OFFSET,
                 data.y_offset + MENU_Y_OFFSET + MENU_ICON_Y_OFFSET + MENU_ITEM_HEIGHT * i);
             icons_drawn++;

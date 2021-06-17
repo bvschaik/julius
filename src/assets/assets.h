@@ -10,9 +10,9 @@
 
 void assets_init(void);
 
-int assets_get_group_id(const char *assetlist_author, const char *asset_name);
+int assets_get_group_id(const char *assetlist_name);
 
-int assets_get_image_id(int asset_group_id, const char *image_name);
+int assets_get_image_id(const char *assetlist_name, const char *image_name);
 
 const image *assets_get_image(int image_id);
 

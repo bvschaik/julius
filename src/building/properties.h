@@ -14,7 +14,6 @@ typedef struct {
 typedef struct {
     int type;
     building_properties properties;
-    const char* asset_author;
     const char* asset_name;
     const char* asset_image_id;
 } augustus_building_properties_mapping;

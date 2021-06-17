@@ -62,7 +62,7 @@ static void draw_background(void)
 
     graphics_in_dialog();
     if (!data.logo_image_id) {
-        data.logo_image_id = assets_get_image_id(assets_get_group_id("Areldir", "UI_Elements"), "Main Menu Banner");
+        data.logo_image_id = assets_get_image_id("UI_Elements", "Main Menu Banner");
     }
     image_draw(data.logo_image_id, 110, -50);
     graphics_reset_dialog();

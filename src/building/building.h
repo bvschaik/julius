@@ -144,6 +144,9 @@ typedef struct building {
             int progress;
             short phase;
         } monument;
+        struct {
+            unsigned char was_tent;
+        } rubble;
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;

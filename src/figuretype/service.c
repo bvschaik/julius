@@ -95,21 +95,21 @@ void figure_destination_priest_action(figure *f)
 
             if (market_units >= 800) {
                 num_loads = 8;
-            }         else if (market_units >= 700) {
+            } else if (market_units >= 700) {
                 num_loads = 7;
-            }         else if (market_units >= 600) {
+            } else if (market_units >= 600) {
                 num_loads = 6;
-            }         else if (market_units >= 500) {
+            } else if (market_units >= 500) {
                 num_loads = 5;
-            }         else if (market_units >= 400) {
+            } else if (market_units >= 400) {
                 num_loads = 4;
-            }         else if (market_units >= 300) {
+            } else if (market_units >= 300) {
                 num_loads = 3;
-            }         else if (market_units >= 200) {
+            } else if (market_units >= 200) {
                 num_loads = 2;
-            }         else if (market_units >= 100) {
+            } else if (market_units >= 100) {
                 num_loads = 1;
-            }         else {
+            } else {
                 num_loads = 0;
             }
             if (num_loads > max_units / 100) {
@@ -136,9 +136,9 @@ void figure_destination_priest_action(figure *f)
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->state = FIGURE_STATE_DEAD;
-            }         else if (f->direction == DIR_FIGURE_REROUTE) {
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
-            }         else if (f->direction == DIR_FIGURE_LOST) {
+            } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
             break;
@@ -147,9 +147,9 @@ void figure_destination_priest_action(figure *f)
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->state = FIGURE_STATE_DEAD;
-            }         else if (f->direction == DIR_FIGURE_REROUTE) {
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
-            }         else if (f->direction == DIR_FIGURE_LOST) {
+            } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
             break;
@@ -232,10 +232,10 @@ void figure_tavern_action(figure *f)
     roamer_action(f, 1);
     int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep Death 01") +
+        f->image_id = assets_get_image_id("Entertainment", "Barkeep Death 01") +
             figure_image_corpse_offset(f);
     } else {
-        f->image_id = assets_get_image_id(assets_get_group_id("Areldir", "Entertainment"), "Barkeep NE 01") + dir * 12 +
+        f->image_id = assets_get_image_id("Entertainment", "Barkeep NE 01") + dir * 12 +
             f->image_offset;
     }
 }

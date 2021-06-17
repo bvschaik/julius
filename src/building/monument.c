@@ -1,6 +1,7 @@
 #include "monument.h"
 
 #include "assets/assets.h"
+#include "building/image.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/resource.h"
@@ -251,80 +252,8 @@ int building_monument_add_module(building *b, int module_type)
         (b->data.monument.upgrades && b->type != BUILDING_CARAVANSERAI && b->type != BUILDING_LIGHTHOUSE)) {
         return 0;
     }
-
     b->data.monument.upgrades = module_type;
-
-    if (b->data.monument.upgrades == 1) {
-        switch (b->type) {
-            default:
-                break;
-            case BUILDING_GRAND_TEMPLE_CERES:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Module"),
-                    TERRAIN_BUILDING);
-                break;
-            case BUILDING_GRAND_TEMPLE_NEPTUNE:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Module"),
-                    TERRAIN_BUILDING);
-                break;
-            case BUILDING_GRAND_TEMPLE_MERCURY:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Module"),
-                    TERRAIN_BUILDING);
-                break;
-            case BUILDING_GRAND_TEMPLE_MARS:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Module"),
-                    TERRAIN_BUILDING);
-                break;
-            case BUILDING_GRAND_TEMPLE_VENUS:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Module"),
-                    TERRAIN_BUILDING);
-                break;
-            case BUILDING_PANTHEON:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Module"),
-                    TERRAIN_BUILDING);
-                break;
-        }
-    } else if (b->data.monument.upgrades == 2) {
-        switch (b->type) {
-            default:
-                break;
-            case BUILDING_GRAND_TEMPLE_CERES:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Module2"),
-                    TERRAIN_BUILDING);
-                break;
-            case BUILDING_GRAND_TEMPLE_NEPTUNE:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"), "Neptune Complex Module2"),
-                    TERRAIN_BUILDING);
-                break;
-            case BUILDING_GRAND_TEMPLE_MERCURY:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"), "Mercury Complex Module2"),
-                    TERRAIN_BUILDING);
-                break;
-            case BUILDING_GRAND_TEMPLE_MARS:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Module2"),
-                    TERRAIN_BUILDING);
-                break;
-            case BUILDING_GRAND_TEMPLE_VENUS:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Module2"),
-                    TERRAIN_BUILDING);
-                break;
-            case BUILDING_PANTHEON:
-                map_building_tiles_add(b->id, b->x, b->y, b->size,
-                    assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Module2"),
-                    TERRAIN_BUILDING);
-                break;
-        }
-    }
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
     return 1;
 }
 
@@ -424,409 +353,16 @@ int building_monument_resources_needed_for_monument_type(building_type type, int
     }
 }
 
-void building_monument_initialize(building *b)
+void building_monument_set_phase(building *b, int phase)
 {
-    switch (b->type) {
-        default:
-            return;
-        case BUILDING_ORACLE:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        image_group(GROUP_BUILDING_ORACLE), TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_LARGE_TEMPLE_CERES:
-        case BUILDING_LARGE_TEMPLE_NEPTUNE:
-        case BUILDING_LARGE_TEMPLE_MERCURY:
-        case BUILDING_LARGE_TEMPLE_MARS:
-        case BUILDING_LARGE_TEMPLE_VENUS:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        image_group(b->type + 6) + 1, TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_GRAND_TEMPLE_CERES:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 02"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 3:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 03"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 4:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 04"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 5:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex Const 05"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 6:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Ceres_Temple"), "Ceres Complex On"),
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_GRAND_TEMPLE_NEPTUNE:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
-                        "Neptune Complex Const 02"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 3:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
-                        "Neptune Complex Const 03"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 4:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
-                        "Neptune Complex Const 04"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 5:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
-                        "Neptune Complex Const 05"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 6:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Neptune_Temple"),
-                        "Neptune Complex On"),
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_GRAND_TEMPLE_MERCURY:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
-                        "Mercury Complex Const 02"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 3:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
-                        "Mercury Complex Const 03"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 4:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
-                        "Mercury Complex Const 04"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 5:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
-                        "Mercury Complex Const 05"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 6:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Mercury_Temple"),
-                        "Mercury Complex On"),
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_GRAND_TEMPLE_MARS:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 02"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 3:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 03"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 4:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 04"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 5:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex Const 05"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 6:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Mars_Temple"), "Mars Complex On"),
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_GRAND_TEMPLE_VENUS:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 02"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 3:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 03"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 4:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 04"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 5:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex Const 05"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 6:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Venus_Temple"), "Venus Complex On"),
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_PANTHEON:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 02"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 3:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 03"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 4:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 04"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 5:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon Const 05"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 6:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Pantheon"), "Pantheon On"),
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_LIGHTHOUSE:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 02"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 3:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 03"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 4:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse Const 04"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 5:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Lighthouses"), "Lighthouse OFF"),
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_COLOSSEUM:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 02"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 3:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 03"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 4:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Coloseum Cons 04"),
-                        TERRAIN_BUILDING);
-                    break;
-                case 5:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Colosseum"), "Col Glad Fight"),
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_HIPPODROME:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_orientation_update_buildings();
-                    break;
-                case 3:
-                    map_orientation_update_buildings();
-                    break;
-                case 4:
-                    map_orientation_update_buildings();
-                    break;
-                case 5:
-                    map_orientation_update_buildings();
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-            }
-            break;
-        case BUILDING_NYMPHAEUM:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Nymphaeum ON"),
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case BUILDING_SMALL_MAUSOLEUM:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum S") + b->subtype.orientation % 2,
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case BUILDING_LARGE_MAUSOLEUM:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    map_building_tiles_add(b->id, b->x, b->y, b->size,
-                        assets_get_image_id(assets_get_group_id("Areldir", "Minor_Monuments"), "Mausoleum L"),
-                        TERRAIN_BUILDING);
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-                default:
-                    break;
-            }
-            break;
-        case BUILDING_CARAVANSERAI:
-            switch (b->data.monument.phase) {
-                case MONUMENT_FINISHED:
-                    break;
-                case MONUMENT_START:
-                    break;
-                case 2:
-                    switch (scenario_property_climate()) {
-                        case CLIMATE_DESERT:
-                            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                                assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai S ON"),
-                                TERRAIN_BUILDING);
-                            break;
-                        default:
-                            map_building_tiles_add(b->id, b->x, b->y, b->size,
-                                assets_get_image_id(assets_get_group_id("Areldir", "Econ_Logistics"), "Caravanserai N ON"),
-                                TERRAIN_BUILDING);
-                            break;
-                    }
-                    b->data.monument.phase = MONUMENT_FINISHED;
-                    break;
-                default:
-                    break;
-            }
-            break;
+    if (phase == building_monument_phases(b->type)) {
+        phase = MONUMENT_FINISHED;
     }
-
+    if (phase == b->data.monument.phase) {
+        return;
+    }
+    b->data.monument.phase = phase;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
     if (b->data.monument.phase != MONUMENT_FINISHED) {
         for (int resource = 0; resource < RESOURCE_MAX; resource++) {
             b->data.monument.resources_needed[resource] =
@@ -892,13 +428,12 @@ int building_monument_needs_resource(building *b, int resource)
     return (b->data.monument.resources_needed[resource]);
 }
 
-void building_monument_set_construction_phase(int phase)
+void building_monuments_set_construction_phase(int phase)
 {
     for (int i = 0; i < MAX_MONUMENT_TYPES; i++) {
         building_type type = MONUMENT_BUILDING_TYPES[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            b->data.monument.phase = phase;
-            building_monument_initialize(b);
+            building_monument_set_phase(b, phase);
         }
     }
 }
@@ -953,8 +488,7 @@ void building_monument_finish_monuments(void)
             if (b->data.monument.phase == MONUMENT_FINISHED) {
                 continue;
             }
-            b->data.monument.phase = building_monument_phases(b->type);
-            building_monument_initialize(b);
+            building_monument_set_phase(b, MONUMENT_FINISHED);
             for (int resource = 0; resource < RESOURCE_MAX; resource++) {
                 b->data.monument.resources_needed[resource] = 0;
             }
@@ -986,13 +520,11 @@ int building_monument_progress(building *b)
     while (b->prev_part_building_id) {
         b = building_get(b->prev_part_building_id);
     }
-    b->data.monument.phase++;
-    building_monument_initialize(b);
+    building_monument_set_phase(b, b->data.monument.phase + 1);
 
     while (b->next_part_building_id) {
         b = building_get(b->next_part_building_id);
-        b->data.monument.phase++;
-        building_monument_initialize(b);
+        building_monument_set_phase(b, b->data.monument.phase + 1);
     }
     if (b->data.monument.phase == MONUMENT_FINISHED) {
         if (building_monument_is_grand_temple(b->type)) {

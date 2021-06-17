@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
 
-<assetlist author="Areldir" name="Roadblocks">
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="Roadblocks">
     <image id="roadblock" src="Roadblock_New_Red" />	
     <image id="roadblock_blue" src="Roadblock_New_Blue" />	
     <image id="roadblock_purple" src="Roadblock_New_Purple" />	
