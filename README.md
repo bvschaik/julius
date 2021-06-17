@@ -52,6 +52,17 @@ you are missing it, you can [download the update here](https://github.com/bvscha
 
 See [Running Julius](https://github.com/bvschaik/julius/wiki/Running-Julius) for further instructions and startup options.
 
+## Manual
+
+Augustus changes are explained in detail in the comprehensive manual. Below you can find the links to the manual in a few language versions.
+
+| Language | Manual |
+|----------|--------|
+|English   |[Download](https://github.com/Keriew/augustus/raw/master/res/manual/augustus_manual_3_0.pdf)|
+|Chinese   |[Download](https://github.com/Keriew/augustus/raw/master/res/translated_manuals/augustus_manual_chinese_3.0.pdf)|
+|Polish   |[Download](https://github.com/Keriew/augustus/raw/master/res/manual/augustus_manual_polish_3.0.pdf)|
+|Russian   |[Download](https://github.com/Keriew/augustus/raw/master/res/manual/augustus_manual_russian_3.0.pdf)|
+
 ## Bugs
 
 See the list of [Bugs & idiosyncrasies](https://github.com/bvschaik/julius/wiki/Caesar-3-bugs) to find out more about some known bugs.
