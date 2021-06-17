@@ -55,6 +55,14 @@ jobs:
             SDL_MIXER_VERSION: 2.0.4
             BUILD_TARGET: android
             DEPLOY: android
+          - name: Emscripten
+            os: ubuntu-20.04
+            cache-key: emscripten
+            SDL_VERSION: 2.0.14
+            SDL_MIXER_VERSION: 2.0.4
+            MPG123_VERSION: 1.26.5
+            BUILD_TARGET: emscripten
+            DEPLOY: emscripten
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     env:

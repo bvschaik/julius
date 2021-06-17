@@ -118,6 +118,9 @@ static const char *ASSET_DIRS[MAX_ASSET_DIRS] = {
 #ifdef _WIN32
     "***SDL_BASE_PATH***",
 #endif
+#ifdef __EMSCRIPTEN__
+    "",
+#endif
     ".",
 #ifdef __vita__
     VITA_PATH_PREFIX,
@@ -451,6 +454,13 @@ int platform_file_manager_remove_file(const char *filename)
         return 1;
     }
     return 0;
+}
+
+FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
+{
+    get_assets_directory();
+    const char *cased_asset_path = dir_get_asset(assets_directory, asset);
+    return fopen(cased_asset_path, mode);
 }
 
 #else

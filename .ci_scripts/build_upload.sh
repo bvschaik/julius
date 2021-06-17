@@ -62,10 +62,10 @@ case "$DEPLOY" in
   ;;
 "emscripten")
   PACKAGE=emscripten
-  if [ -f "${build_dir}/julius.zip" ]
+  if [ -f "${build_dir}/augustus.zip" ]
   then
-    DEPLOY_FILE=julius-$VERSION-emscripten.zip
-    cp "${build_dir}/julius.zip" "deploy/$DEPLOY_FILE"
+    DEPLOY_FILE=augustus-$VERSION-emscripten.zip
+    cp "${build_dir}/augustus.zip" "deploy/$DEPLOY_FILE"
   fi
   ;;
 *)

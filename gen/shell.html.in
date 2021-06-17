@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Julius</title>
+    <title>Augustus</title>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.4/FileSaver.min.js"></script>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.5.0/jszip.min.js"></script>
     <style>
@@ -105,7 +105,7 @@
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
-        background-image: url(https://raw.githubusercontent.com/bvschaik/julius/master/res/julius_512.png);
+        background-image: url(https://raw.githubusercontent.com/Keriew/augustus/master/res/augustus_512.png);
         opacity: 0.25;
         top: 0;
         left: 0;
@@ -239,15 +239,15 @@
   </head>
   <body>
     <div id="infoLocation">
-      <h1>Julius <small>online</small></h1>
+      <h1>Augustus <small>online</small></h1>
       <div id="middleElement">
         <div id="loadStatus">
           <div id="spinner" class="spinner"></div>
-          <div id="status"><noscript>Please enable JavaScript to play Julius</noscript>Waiting for JavaScript to load...</div>
+          <div id="status"><noscript>Please enable JavaScript to play Augustus</noscript>Waiting for JavaScript to load...</div>
           <progress id="progress"></progress>
         </div>
         <div id="startOptions">
-          <div id="play" onclick="Module.startGame()">Play Julius</div>
+          <div id="play" onclick="Module.startGame()">Play Augustus</div>
           <input type="button" id="downloadSaves" onclick="Module.downloadSaves()" value="Download Saves">
           <input type="button" class="red" onclick="Module.showSubWindow(confirmElement)" value="Delete all files">
         </div>
@@ -692,7 +692,7 @@
           var hasData = false;
           Module.setStatus('Checking for downloadable saves...');
           Object.keys(FS.lookupPath(C3Dir).node.contents).forEach(element => {
-            if (element.endsWith('.sav') || element.endsWith('.map')) {
+            if (element.endsWith('.sav') || element.endsWith('.svx') || element.endsWith('.map')) {
               var array = FS.readFile(C3Dir + '/' + element);
               zip.file(element, array);
               hasData = true;
@@ -706,7 +706,7 @@
           Module.setStatus('Creating zip file...');
           zip.generateAsync({type:"blob"}).then(function(blob) {
             Module.showFirstScreen();
-            saveAs(blob, 'julius savefiles.zip');
+            saveAs(blob, 'augustus savefiles.zip');
           }, function (err) {
             Module.setStatus('There was an error creating the zip file:<br><br>' + err +
               '<br><br><small>(Click to exit this prompt)</small>');
