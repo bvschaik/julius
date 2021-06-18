@@ -23,6 +23,7 @@
 #include "window/empire.h"
 #include "window/gift_to_emperor.h"
 #include "window/popup_dialog.h"
+#include "window/resource_settings.h"
 #include "window/set_salary.h"
 
 #define ADVISOR_HEIGHT 27
@@ -32,16 +33,17 @@ static void button_donate_to_city(int param1, int param2);
 static void button_set_salary(int param1, int param2);
 static void button_gift_to_emperor(int param1, int param2);
 static void button_request(int index, int param2);
+static void button_request_resource(int index, int param2);
 
 static generic_button imperial_buttons[] = {
     {320, 367, 250, 20, button_donate_to_city, button_none, 0, 0},
     {70, 393, 500, 20, button_set_salary, button_none, 0, 0},
     {320, 341, 250, 20, button_gift_to_emperor, button_none, 0, 0},
-    {38, 96, 560, 40, button_request, button_none, 0, 0},
-    {38, 138, 560, 40, button_request, button_none, 1, 0},
-    {38, 180, 560, 40, button_request, button_none, 2, 0},
-    {38, 222, 560, 40, button_request, button_none, 3, 0},
-    {38, 264, 560, 40, button_request, button_none, 4, 0},
+    {38, 96, 560, 40, button_request, button_request_resource, 0, 0},
+    {38, 138, 560, 40, button_request, button_request_resource, 1, 0},
+    {38, 180, 560, 40, button_request, button_request_resource, 2, 0},
+    {38, 222, 560, 40, button_request, button_request_resource, 3, 0},
+    {38, 264, 560, 40, button_request, button_request_resource, 4, 0},
 };
 
 static int focus_button_id;
@@ -246,6 +248,28 @@ void button_request(int index, int param2)
             }
             break;
     }
+}
+
+// Used for showing the resource settings window on right click
+void button_request_resource(int index, int param2)
+{
+    // Make sure there's a request pending at this index
+    if (!city_request_get_status(index)) {
+        return;
+    }
+
+    // index 0 is used for a troop request if it exists
+    if (!index && city_request_has_troop_request()) {
+        return;
+    }
+    selected_resource = city_get_request_resource(index);
+    
+    // we can't manage money with the resource settings window
+    if (selected_resource == RESOURCE_DENARII) {
+        return;
+    }
+
+    window_resource_settings_show(selected_resource);
 }
 
 static void write_resource_storage_tooltip(advisor_tooltip_result *r, int resource)
