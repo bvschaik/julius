@@ -51,7 +51,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SPEECH, "Ativar falas"},
     {TR_CONFIG_EFFECTS, "Ativar efeitos sonoros"},
     {TR_CONFIG_CITY_SOUNDS, "Ativar sons da cidade"},
-    {TR_CONFIG_SCROLL_SPEED, "Velocidade de rolagem:"},   
+    {TR_CONFIG_SCROLL_SPEED, "Velocidade de rolagem:"},
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Tocar vídeos de abertura"},
     {TR_CONFIG_SIDEBAR_INFO, "Informação extra no painel de controle"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Ativar rolagem suave"},
@@ -684,4 +684,3 @@ void translation_portuguese(const translation_string **strings, int *num_strings
     *strings = all_strings;
     *num_strings = sizeof(all_strings) / sizeof(translation_string);
 }
-
