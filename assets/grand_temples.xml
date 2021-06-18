@@ -31,7 +31,7 @@
 	</image>
 	<image id="Ceres Complex Const 04" width="418" height="234">
 		<layer src="Ceres_Temple_Complex_Construction_Base_03"/>
-		<layer group="this" image="Ceres_LT_50" x="90" y="0"/>
+		<layer group="this" image="Ceres_LT_75" x="90" y="0"/>
 	</image>
 	<image id="Ceres Complex Const 05" width="418" height="234">
 		<layer src="Ceres_Temple_Complex_Construction_Base_03"/>
