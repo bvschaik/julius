@@ -15,6 +15,9 @@ Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh)
 | Android APK |  [![Download](https://augustus.josecadete.net/badge/release/android.svg)](https://augustus.josecadete.net/download/latest/release/android) | [![Download](https://augustus.josecadete.net/badge/development/android.svg)](https://augustus.josecadete.net/download/latest/development/android) |
 
 
+Alternatively, you can [**try Augustus in your browser**](https://augustus.josecadete.net/play/). Note that you'll still need to provide a valid Caesar 3 installation folder.
+
+
 Augustus is a fork of the Julius project that intends to incorporate gameplay changes.
 =======
 The aim of this project is to provide enhanced, customizable gameplay to Caesar 3 using project Julius UI enhancements.
