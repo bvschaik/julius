@@ -246,35 +246,35 @@ int building_image_get(building *b)
         case BUILDING_LARGE_TEMPLE_CERES:
             switch (b->data.monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Minor_Monuments", "Ceres LTemp Cons 0");
+                    return assets_get_image_id("Grand_Temples", "Ceres_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_CERES) + 1;
             }
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
             switch (b->data.monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Minor_Monuments", "Nept LTemp Cons 0");
+                    return assets_get_image_id("Grand_Temples", "Neptune_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1;
             }
         case BUILDING_LARGE_TEMPLE_MERCURY:
             switch (b->data.monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Minor_Monuments", "Merc LTemp Cons 0");
+                    return assets_get_image_id("Grand_Temples", "Mercury_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1;
             }
         case BUILDING_LARGE_TEMPLE_MARS:
             switch (b->data.monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Minor_Monuments", "Mars LTemp Cons 0");
+                    return assets_get_image_id("Grand_Temples", "Mars_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_MARS) + 1;
             }
         case BUILDING_LARGE_TEMPLE_VENUS:
             switch (b->data.monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Minor_Monuments", "Venus LTemp Cons 0");
+                    return assets_get_image_id("Grand_Temples", "Venus_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_VENUS) + 1;
             }
