@@ -644,7 +644,7 @@ int building_image_get(building *b)
         case BUILDING_NYMPHAEUM:
             switch (b->data.monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Minor_Monuments", "Nymphaeum Cons");
+                    return assets_get_image_id("Grand_Temples", "Pantheon_Const_00");
                 default:
                     return assets_get_image_id("Minor_Monuments", "Nymphaeum ON");
             }
