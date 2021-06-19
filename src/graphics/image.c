@@ -1035,7 +1035,7 @@ static void draw_multibyte_letter(font_t font, const image *img, const color_t *
             draw_uncompressed(img, data, x, y, COLOR_BLACK, DRAW_TYPE_BLEND_ALPHA);
             break;
         default: // Plain + brown
-            draw_uncompressed(img, data, x, y, color, DRAW_TYPE_BLEND_ALPHA);
+            draw_uncompressed(img, data, x, y, ALPHA_OPAQUE | color, DRAW_TYPE_BLEND_ALPHA);
             break;
     }
 }
