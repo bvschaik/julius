@@ -602,7 +602,7 @@ static void get_tooltip_trade_route_type(tooltip_context *c)
         return;
     }
 
-    int x_offset = (data.x_min + data.x_max + 300) / 2;
+    int x_offset = (data.x_min + data.x_max + 355) / 2;
     int y_offset = data.y_max - 41;
     int y_offset_max = y_offset + 22 - 2 * city->is_sea_trade;
     if (c->mouse_x >= x_offset && c->mouse_x < x_offset + 32 &&
