@@ -180,6 +180,6 @@ int asset_image_init_array(void)
 asset_image *asset_image_create(void)
 {
     asset_image *result;
-    array_new_item(asset_images, 0, result);
+    array_new_item(asset_images, 1, result);
     return result;
 }
