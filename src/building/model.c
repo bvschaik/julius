@@ -1,5 +1,6 @@
 #include "building/model.h"
 
+#include "city/resource.h"
 #include "core/io.h"
 #include "core/log.h"
 #include "core/string.h"
@@ -286,4 +287,21 @@ const model_building *model_get_building(building_type type)
 const model_house *model_get_house(house_level level)
 {
     return &houses[level];
+}
+
+int model_house_uses_inventory(house_level level, inventory_type inventory)
+{
+    const model_house *house = model_get_house(level);
+    switch (inventory) {
+        case INVENTORY_WINE:
+            return house->wine;
+        case INVENTORY_OIL:
+            return house->oil;
+        case INVENTORY_FURNITURE:
+            return house->furniture;
+        case INVENTORY_POTTERY:
+            return house->pottery;
+        default:
+            return 0;
+    }
 }

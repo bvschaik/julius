@@ -504,25 +504,33 @@ static void consume_resource(building *b, int inventory, int amount)
 
 static void consume_resources(building *b)
 {
+
+    int consumption_reduction[INVENTORY_MAX] = {0};
+
     const model_house *model = model_get_house(b->subtype.house_level);
     // mercury module 1 - pottery and furniture reduced by 20%
-    if (!(game_time_month() % 6) && b->data.house.temple_mercury && building_monument_gt_module_is_active(MERCURY_MODULE_1_POTTERY_FURN)) {
-        consume_resource(b, INVENTORY_OIL, model->oil);
-        consume_resource(b, INVENTORY_WINE, model->wine);
+    if (building_monument_gt_module_is_active(MERCURY_MODULE_1_POTTERY_FURN)) {
+        consumption_reduction[INVENTORY_POTTERY] += 20;
+        consumption_reduction[INVENTORY_FURNITURE] += 20;
     }
     // mercury module 2 - oil and wine reduced by 20%
-    else if (!(game_time_month() % 6) && b->data.house.temple_mercury && building_monument_gt_module_is_active(MERCURY_MODULE_2_OIL_WINE)) {
-        consume_resource(b, INVENTORY_POTTERY, model->pottery);
-        consume_resource(b, INVENTORY_FURNITURE, model->furniture);
+    if (b->data.house.temple_mercury && building_monument_gt_module_is_active(MERCURY_MODULE_2_OIL_WINE)) {
+        consumption_reduction[INVENTORY_WINE] += 20;
+        consumption_reduction[INVENTORY_OIL] += 20;
     }
-    // mars module 2 - all goods reduced by 10%
-    else if (!(game_time_total_months() % 10) && b->data.house.temple_mars && building_monument_gt_module_is_active(MARS_MODULE_2_ALL_GOODS)) {
+    // mars module 2 - all goods reduced by 10% 
+    if (b->data.house.temple_mars && building_monument_gt_module_is_active(MARS_MODULE_2_ALL_GOODS)) {
+        consumption_reduction[INVENTORY_WINE] += 10;
+        consumption_reduction[INVENTORY_OIL] += 10;
+        consumption_reduction[INVENTORY_POTTERY] += 10;
+        consumption_reduction[INVENTORY_FURNITURE] += 10;
+    }
 
-    } else {
-        consume_resource(b, INVENTORY_POTTERY, model->pottery);
-        consume_resource(b, INVENTORY_FURNITURE, model->furniture);
-        consume_resource(b, INVENTORY_OIL, model->oil);
-        consume_resource(b, INVENTORY_WINE, model->wine);
+    for (inventory_type inventory = INVENTORY_MIN_GOOD; inventory < INVENTORY_MAX_GOOD; inventory++) {
+        if (!consumption_reduction[inventory] ||
+            (game_time_total_months() % (100 / consumption_reduction[inventory]))) {
+            consume_resource(b, inventory, model_house_uses_inventory(b->subtype.house_level,inventory));
+        }
     }
 }
 
