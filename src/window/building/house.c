@@ -131,8 +131,6 @@ void window_building_draw_house(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(29, level, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 148, c->width_blocks - 2, 13);
-    lang_text_draw_centered(29, level, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 148, c->width_blocks - 2, 10);
 
     draw_population_info(c, c->y_offset + 154);
     draw_tax_info(c, c->y_offset + 194);

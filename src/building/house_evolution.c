@@ -504,10 +504,8 @@ static void consume_resource(building *b, int inventory, int amount)
 
 static void consume_resources(building *b)
 {
+    int consumption_reduction[INVENTORY_MAX] = { 0 };
 
-    int consumption_reduction[INVENTORY_MAX] = {0};
-
-    const model_house *model = model_get_house(b->subtype.house_level);
     // mercury module 1 - pottery and furniture reduced by 20%
     if (building_monument_gt_module_is_active(MERCURY_MODULE_1_POTTERY_FURN)) {
         consumption_reduction[INVENTORY_POTTERY] += 20;
@@ -529,7 +527,7 @@ static void consume_resources(building *b)
     for (inventory_type inventory = INVENTORY_MIN_GOOD; inventory < INVENTORY_MAX_GOOD; inventory++) {
         if (!consumption_reduction[inventory] ||
             (game_time_total_months() % (100 / consumption_reduction[inventory]))) {
-            consume_resource(b, inventory, model_house_uses_inventory(b->subtype.house_level,inventory));
+            consume_resource(b, inventory, model_house_uses_inventory(b->subtype.house_level, inventory));
         }
     }
 }
