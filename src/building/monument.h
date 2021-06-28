@@ -6,7 +6,6 @@
 
 #define MONUMENT_FINISHED -1
 #define MONUMENT_START 1
-#define MAX_GRAND_TEMPLES_PER_CITY 2
 #define MARS_OFFERING_FREQUENCY 16
 
 typedef enum {

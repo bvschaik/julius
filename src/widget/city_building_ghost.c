@@ -338,7 +338,8 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
     if (!building_monument_type_is_mini_monument(type) && building_monument_has_monument(type)) {
         return 1;
     }
-    if (building_monument_is_grand_temple(type) && building_monument_count_grand_temples() >= 2) {
+    if (building_monument_is_grand_temple(type) &&
+        building_monument_count_grand_temples() >= config_get(CONFIG_GP_CH_MAX_GRAND_TEMPLES)) {
         return 1;
     }
     if (city_finance_out_of_money()) {

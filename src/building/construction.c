@@ -778,7 +778,7 @@ void building_construction_update(int x, int y, int grid_offset)
             !(type == BUILDING_MESS_HALL && city_buildings_has_mess_hall()) &&
             !building_monument_has_monument(type) &&
             !(building_monument_is_grand_temple(type) &&
-            building_monument_count_grand_temples() >= MAX_GRAND_TEMPLES_PER_CITY)) {
+            building_monument_count_grand_temples() >= config_get(CONFIG_GP_CH_MAX_GRAND_TEMPLES))) {
             int size = building_properties_for_type(type)->size;
             mark_construction(x, y, size, TERRAIN_ALL, 0);
         }
