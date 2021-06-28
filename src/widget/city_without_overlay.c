@@ -6,6 +6,7 @@
 #include "building/construction.h"
 #include "building/dock.h"
 #include "building/image.h"
+#include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/type.h"
@@ -122,7 +123,8 @@ static void draw_footprint(int x, int y, int grid_offset)
             }
             int view_x, view_y, view_width, view_height;
             city_view_get_scaled_viewport(&view_x, &view_y, &view_width, &view_height);
-            if (b->state == BUILDING_STATE_IN_USE) {
+            if (b->state == BUILDING_STATE_IN_USE &&
+                (!building_monument_is_monument(b) || b->data.monument.phase <= 0)) {
                 int direction;
                 if (x < view_x + 100) {
                     direction = SOUND_DIRECTION_LEFT;
