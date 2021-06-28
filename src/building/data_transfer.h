@@ -2,8 +2,6 @@
 #define BUILDING_DATA_TRANSFER_H
 
 #include "building/building.h"
-#include "building/storage.h"
-
 
 typedef enum {
     DATA_TYPE_NOT_SUPPORTED,
@@ -13,14 +11,6 @@ typedef enum {
     DATA_TYPE_MARKET,
     DATA_TYPE_ROADBLOCK,
 } building_data_type;
-
-typedef struct {
-    building_data_type data_type;
-    int subtype;
-    building_storage storage;
-    int extended_data[16];
-} building_data;
-
 
 int building_data_transfer_copy(building *b);
 
