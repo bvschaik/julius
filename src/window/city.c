@@ -3,6 +3,7 @@
 #include "building/building_variant.h"
 #include "building/clone.h"
 #include "building/construction.h"
+#include "building/data_transfer.h"
 #include "building/menu.h"
 #include "building/properties.h"
 #include "building/rotation.h"
@@ -498,6 +499,21 @@ static void handle_hotkeys(const hotkeys *h)
     if (h->clone_building) {
         building_clone_from_grid_offset(widget_city_current_grid_offset());
     }
+    if (h->copy_building_settings) {
+        int building_id = map_building_at(widget_city_current_grid_offset());
+        if (building_id) {
+            building *b = building_main(building_get(building_id));
+            building_data_transfer_copy(b);
+        }
+    }
+    if (h->paste_building_settings) {
+        int building_id = map_building_at(widget_city_current_grid_offset());
+        if (building_id) {
+            building *b = building_main(building_get(building_id));
+            building_data_transfer_paste(b);
+        }
+    }
+
     if (h->show_overlay_relative) {
         show_overlay_from_grid_offset(widget_city_current_grid_offset());
     }

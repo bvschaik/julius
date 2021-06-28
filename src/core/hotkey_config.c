@@ -83,6 +83,8 @@ static const char *ini_keys[] = {
     "save_screenshot",
     "save_city_screenshot",
     "clone_building",
+    "copy_building_settings",
+    "paste_building_settings",
     "undo"
 };
 

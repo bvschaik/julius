@@ -81,6 +81,14 @@ void building_storage_delete(int storage_id);
 const building_storage *building_storage_get(int storage_id);
 
 /**
+ * Sets values of a building storage to that of another building storage
+ * @param storage_id Storage id to be changed
+ * @param new_data New values of storage data
+ */
+void building_storage_set_data(int storage_id, building_storage new_data);
+
+
+/**
  * Cycles the resource state for the storage
  * @param storage_id Storage id
  * @param resource_id Resource id

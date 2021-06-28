@@ -39,7 +39,6 @@ typedef struct {
 static struct {
     global_hotkeys global_hotkey_state;
     hotkeys hotkey_state;
-
     hotkey_definition *definitions;
     int num_definitions;
     arrow_definition *arrows;
@@ -293,6 +292,12 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             break;
         case HOTKEY_UNDO:
             def->action = &data.hotkey_state.undo;
+            break;
+        case HOTKEY_COPY_BUILDING_SETTINGS:
+            def->action = &data.hotkey_state.copy_building_settings;
+            break;
+        case HOTKEY_PASTE_BUILDING_SETTINGS:
+            def->action = &data.hotkey_state.paste_building_settings;
             break;
         default:
             def->action = 0;

@@ -675,7 +675,10 @@ static translation_string all_strings[] = {
     {TR_TEMPLE_NOT_DISTRIBUTING, "Not distributing"},
     {TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR, "Squalid housing and slums prevent immigration"},
     {TR_FIGURE_TYPE_LIGHTHOUSE_SUPPLIER, "Lighthouse keeper"},
-    {TR_WINDOW_GAMES_NO_WATER_ACCESS, "Venue doesn't have access to a reservoir."},
+    {TR_WINDOW_GAMES_NO_WATER_ACCESS, "Venue doesn't have access to a reservoir." },
+    {TR_HOTKEY_COPY_SETTINGS, "Copy building settings" },
+    {TR_HOTKEY_PASTE_SETTINGS, "Paste buildling settings" },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

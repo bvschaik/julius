@@ -100,6 +100,12 @@ const building_storage *building_storage_get(int storage_id)
     return &array_item(storages, storage_id)->storage;
 }
 
+void building_storage_set_data(int storage_id, building_storage new_data)
+{
+    array_item(storages, storage_id)->storage = new_data;
+}
+
+
 void building_storage_toggle_empty_all(int storage_id)
 {
     array_item(storages, storage_id)->storage.empty_all ^= 1;
