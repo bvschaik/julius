@@ -126,7 +126,9 @@ static int reload_language(int is_editor, int reload_images)
         return 0;
     }
     encoding_type encoding = update_encoding();
-    load_custom_messages();
+    if (!is_editor) {
+        load_custom_messages();
+    }
 
     if (!image_load_fonts(encoding)) {
         errlog("unable to load font graphics");
