@@ -313,8 +313,7 @@ void figure_workcamp_engineer_action(figure *f)
                     }
                 } else {
                     f->wait_ticks++;
-                    f->image_id = assets_get_group_id("Architect") + f->image_offset;
-
+                    f->image_id = assets_get_group_id("Construction_Guilds") + f->image_offset;
                 }
 
             } else {
