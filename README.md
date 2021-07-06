@@ -35,6 +35,7 @@ Supported platforms:
 - PS Vita
 - Nintendo Switch
 - Android
+- Any compatible browser (Emscripten)
 
 While Julius does not implement any gameplay changes, a fork of Julius named [Augustus](https://github.com/Keriew/augustus) is implementing many long-wanted gameplay changes, such as roadblocks.
 Beware: Augustus does not support the original Caesar 3 save files, while Julius does. So use Julius for a more vanilla experience with some visual improvements, or Augustus for a different gameplay experience.
