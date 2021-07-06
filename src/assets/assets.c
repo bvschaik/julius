@@ -46,6 +46,7 @@ int assets_get_group_id(const char *assetlist_name)
     if (group) {
         return group->first_image_index + MAIN_ENTRIES;
     }
+    log_info("Asset group not found: ", assetlist_name, 0);
     return data.roadblock_image_id;
 }
 
@@ -56,6 +57,7 @@ int assets_get_image_id(const char *assetlist_name, const char *image_name)
     }
     image_groups *group = group_get_from_name(assetlist_name);
     if (!group) {
+        log_info("Asset group not found: ", assetlist_name, 0);
         return data.roadblock_image_id;
     }
     const asset_image *image = asset_image_get_from_id(group->first_image_index);
@@ -65,6 +67,8 @@ int assets_get_image_id(const char *assetlist_name, const char *image_name)
         }
         image = asset_image_get_from_id(image->index + 1);
     }
+    log_info("Asset image not found: ", image_name, 0);
+    log_info("Asset group is: ", assetlist_name, 0);
     return data.roadblock_image_id;
 }
 
