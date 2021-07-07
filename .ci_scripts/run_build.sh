@@ -65,7 +65,6 @@ case "$BUILD_TARGET" in
 	;;
 "emscripten")
 	cd build && make -j4
-	zip augustus.zip augustus.html augustus.data
 	;;
 *)
 	cd build && make -j4 && make
