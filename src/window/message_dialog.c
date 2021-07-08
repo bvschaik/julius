@@ -98,8 +98,8 @@ static struct {
 } player_message;
 
 static void set_city_message(int year, int month,
-                             int param1, int param2,
-                             int message_advisor, int use_popup)
+    int param1, int param2,
+    int message_advisor, int use_popup)
 {
     player_message.year = year;
     player_message.month = month;
@@ -123,7 +123,7 @@ static void init(int text_id, void (*background_callback)(void))
     const lang_message *msg = lang_get_message(text_id);
     if (player_message.use_popup != 1) {
         data.show_video = 0;
-    } else if (msg->video.text && video_start((char*)msg->video.text)) {
+    } else if (msg->video.text && video_start((char *) msg->video.text)) {
         data.show_video = 1;
     } else {
         data.show_video = 0;
@@ -140,11 +140,12 @@ static int resource_image(int resource)
     return image_id;
 }
 
-static int is_event_message(const lang_message *msg) {
-  return msg->type == TYPE_MESSAGE &&
-         (msg->message_type == MESSAGE_TYPE_DISASTER ||
-          msg->message_type == MESSAGE_TYPE_INVASION ||
-          msg->message_type == MESSAGE_TYPE_BUILDING_COMPLETION);
+static int is_event_message(const lang_message *msg)
+{
+    return msg->type == TYPE_MESSAGE &&
+        (msg->message_type == MESSAGE_TYPE_DISASTER ||
+        msg->message_type == MESSAGE_TYPE_INVASION ||
+        msg->message_type == MESSAGE_TYPE_BUILDING_COMPLETION);
 }
 
 static void draw_city_message_text(const lang_message *msg)
@@ -179,18 +180,26 @@ static void draw_city_message_text(const lang_message *msg)
                 16 * data.text_width_blocks, data.text_height_blocks - 1, 0);
             break;
 
-        case MESSAGE_TYPE_EMIGRATION: {
-            int low_mood_cause = city_sentiment_low_mood_cause();
-            if (low_mood_cause >= 1 && low_mood_cause <= 5) {
-                int max_width = BLOCK_SIZE * (data.text_width_blocks - 1) - 64;
-                lang_text_draw_multiline(12, low_mood_cause + 2,
-                    data.x + 64, data.y_text + 44, max_width, FONT_NORMAL_WHITE);
+        case MESSAGE_TYPE_EMIGRATION:
+            {
+                int low_mood_cause = player_message.param1;
+                if (!low_mood_cause) {
+                    low_mood_cause = city_sentiment_low_mood_cause();
+                }
+                if (low_mood_cause >= 1 && low_mood_cause <= 5) {
+                    int max_width = BLOCK_SIZE * (data.text_width_blocks - 1) - 64;
+                    lang_text_draw_multiline(12, low_mood_cause + 2,
+                        data.x + 64, data.y_text + 44, max_width, FONT_NORMAL_WHITE);
+                } else if (low_mood_cause == LOW_MOOD_CAUSE_SQUALOR) {
+                    int max_width = BLOCK_SIZE * (data.text_width_blocks - 1) - 64;
+                    lang_text_draw_multiline(CUSTOM_TRANSLATION, TR_CITY_MESSAGE_SQUALOR,
+                        data.x + 64, data.y_text + 44, max_width, FONT_NORMAL_WHITE);
+                }
+                rich_text_draw(msg->content.text,
+                    data.x_text + 8, data.y_text + 86, BLOCK_SIZE * (data.text_width_blocks - 1),
+                    data.text_height_blocks - 1, 0);
+                break;
             }
-            rich_text_draw(msg->content.text,
-                data.x_text + 8, data.y_text + 86, BLOCK_SIZE * (data.text_width_blocks - 1),
-                data.text_height_blocks - 1, 0);
-            break;
-        }
         case MESSAGE_TYPE_TUTORIAL:
             rich_text_draw(msg->content.text,
                 data.x_text + 8, data.y_text + 6, BLOCK_SIZE * (data.text_width_blocks - 1),
@@ -214,25 +223,26 @@ static void draw_city_message_text(const lang_message *msg)
                 data.text_height_blocks - 1, 0);
             break;
 
-        default: {
-            int lines = rich_text_draw(msg->content.text,
-                data.x_text + 8, data.y_text + 56, BLOCK_SIZE * (data.text_width_blocks - 1),
-                data.text_height_blocks - 1, 0);
-            if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
-                const scenario_request *request = scenario_request_get(player_message.param1);
-                int y_offset = data.y_text + 86 + lines * 16;
-                text_draw_number(request->amount, '@', " ", data.x_text + 8, y_offset, FONT_NORMAL_WHITE);
-                image_draw(resource_image(request->resource), data.x_text + 70, y_offset - 5);
-                lang_text_draw(23, request->resource,
-                    data.x_text + 100, y_offset, FONT_NORMAL_WHITE);
-                if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
-                    int width = lang_text_draw_amount(8, 4, request->months_to_comply,
-                        data.x_text + 200, y_offset, FONT_NORMAL_WHITE);
-                    lang_text_draw(12, 2, data.x_text + 200 + width, y_offset, FONT_NORMAL_WHITE);
+        default:
+            {
+                int lines = rich_text_draw(msg->content.text,
+                    data.x_text + 8, data.y_text + 56, BLOCK_SIZE * (data.text_width_blocks - 1),
+                    data.text_height_blocks - 1, 0);
+                if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
+                    const scenario_request *request = scenario_request_get(player_message.param1);
+                    int y_offset = data.y_text + 86 + lines * 16;
+                    text_draw_number(request->amount, '@', " ", data.x_text + 8, y_offset, FONT_NORMAL_WHITE);
+                    image_draw(resource_image(request->resource), data.x_text + 70, y_offset - 5);
+                    lang_text_draw(23, request->resource,
+                        data.x_text + 100, y_offset, FONT_NORMAL_WHITE);
+                    if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
+                        int width = lang_text_draw_amount(8, 4, request->months_to_comply,
+                            data.x_text + 200, y_offset, FONT_NORMAL_WHITE);
+                        lang_text_draw(12, 2, data.x_text + 200 + width, y_offset, FONT_NORMAL_WHITE);
+                    }
                 }
+                break;
             }
-            break;
-        }
     }
 }
 
@@ -466,7 +476,7 @@ static void draw_foreground_normal(void)
     if (msg->type == TYPE_MESSAGE) {
         image_buttons_draw(data.x + 16, data.y + BLOCK_SIZE * msg->height_blocks - 40, get_advisor_button(), 1);
         if (is_event_message(msg)) {
-          image_buttons_draw(data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1);
+            image_buttons_draw(data.x + 64, data.y_text + 36, &image_button_go_to_problem, 1);
         }
     }
     image_buttons_draw(data.x + BLOCK_SIZE * msg->width_blocks - 38, data.y + BLOCK_SIZE * msg->height_blocks - 36,
@@ -481,7 +491,7 @@ static void draw_foreground_video(void)
     image_buttons_draw(data.x + 372, data.y + 410, &image_button_close, 1);
     const lang_message *msg = lang_get_message(data.text_id);
     if (is_event_message(msg)) {
-      image_buttons_draw(data.x + 48, data.y + 407, &image_button_go_to_problem, 1);
+        image_buttons_draw(data.x + 48, data.y + 407, &image_button_go_to_problem, 1);
     }
 }
 
@@ -505,11 +515,11 @@ static int handle_input_video(const mouse *m_dialog, const lang_message *msg)
         return 1;
     }
     if (is_event_message(msg)) {
-      if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407,
-                                     &image_button_go_to_problem, 1,
-                                     &data.focus_button_id)) {
-        return 1;
-      }
+        if (image_buttons_handle_mouse(m_dialog, data.x + 48, data.y + 407,
+            &image_button_go_to_problem, 1,
+            &data.focus_button_id)) {
+            return 1;
+        }
     }
     return 0;
 }
@@ -517,7 +527,7 @@ static int handle_input_video(const mouse *m_dialog, const lang_message *msg)
 static int handle_input_normal(const mouse *m_dialog, const lang_message *msg)
 {
     if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(
-                m_dialog, data.x + 16, data.y + BLOCK_SIZE * msg->height_blocks - 36, &image_button_back, 1, 0)) {
+        m_dialog, data.x + 16, data.y + BLOCK_SIZE * msg->height_blocks - 36, &image_button_back, 1, 0)) {
         return 1;
     }
     if (msg->type == TYPE_MESSAGE) {
@@ -653,7 +663,7 @@ void window_message_dialog_show(int text_id, void (*background_callback)(void))
 }
 
 void window_message_dialog_show_city_message(int text_id, int year, int month,
-                                             int param1, int param2, int message_advisor, int use_popup)
+    int param1, int param2, int message_advisor, int use_popup)
 {
     set_city_message(year, month, param1, param2, message_advisor, use_popup);
     window_message_dialog_show(text_id, window_city_draw_all);

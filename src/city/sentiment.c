@@ -378,23 +378,6 @@ void city_sentiment_update(void)
         city_data.sentiment.value = default_sentiment;
     }
 
-    if (city_data.sentiment.message_delay) {
-        city_data.sentiment.message_delay--;
-    }
-
-    if (city_data.sentiment.value < 48 && city_data.sentiment.value < city_data.sentiment.previous_value) {
-        if (city_data.sentiment.message_delay <= 0) {
-            city_data.sentiment.message_delay = 3;
-            if (city_data.sentiment.value < 35) {
-                city_message_post(0, MESSAGE_PEOPLE_ANGRY, 0, 0);
-            } else if (city_data.sentiment.value < 40) {
-                city_message_post(0, MESSAGE_PEOPLE_UNHAPPY, 0, 0);
-            } else {
-                city_message_post(0, MESSAGE_PEOPLE_DISGRUNTLED, 0, 0);
-            }
-        }
-    }
-
     int worst_sentiment = 0;
     city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_NONE;
 
@@ -413,5 +396,27 @@ void city_sentiment_update(void)
     if (average_squalor_penalty < worst_sentiment) {
         city_data.sentiment.low_mood_cause = LOW_MOOD_CAUSE_SQUALOR;
     }
+
+    if (city_data.sentiment.message_delay) {
+        city_data.sentiment.message_delay--;
+    }
+
+    if (city_data.sentiment.value < 48 && city_data.sentiment.value < city_data.sentiment.previous_value) {
+        if (city_data.sentiment.message_delay <= 0) {
+            city_data.sentiment.message_delay = 3;
+            int cause = city_data.sentiment.low_mood_cause;
+            if (!cause) {
+                cause = -1;
+            }
+            if (city_data.sentiment.value < 35) {
+                city_message_post(0, MESSAGE_PEOPLE_ANGRY, cause, 0);
+            } else if (city_data.sentiment.value < 40) {
+                city_message_post(0, MESSAGE_PEOPLE_UNHAPPY, cause, 0);
+            } else {
+                city_message_post(0, MESSAGE_PEOPLE_DISGRUNTLED, cause, 0);
+            }
+        }
+    }
+
     city_data.sentiment.previous_value = city_data.sentiment.value;
 }
