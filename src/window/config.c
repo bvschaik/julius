@@ -632,6 +632,7 @@ static void button_close(int save, int param2)
         return;
     }
     if (apply_changed_configs()) {
+        config_save();
         window_main_menu_show(0);
     }
 }
