@@ -37,7 +37,7 @@ case "$BUILD_TARGET" in
 		# Use last commit message for release notes
 		mkdir -p julius/src/main/play/release-notes/en-US
 		git log -1 --pretty=%B | head -n1 > julius/src/main/play/release-notes/en-US/internal.txt
-		COMMAND=publishRelease
+		COMMAND=publishReleaseApps
 	else
 		COMMAND=assembleRelease
 	fi
