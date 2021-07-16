@@ -681,7 +681,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_GAMES_NO_WATER_ACCESS, "Venue doesn't have access to a reservoir." },
     {TR_HOTKEY_COPY_SETTINGS, "Copy building settings" },
     {TR_HOTKEY_PASTE_SETTINGS, "Paste buildling settings" },
-
+    {TR_WINDOW_ADVISOR_RELIGION_LARARIUMS, "Larariums" }
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -79,6 +79,12 @@ static void draw_oracle_row(void)
     }
 }
 
+static void draw_lararium_row(void)
+{
+    text_draw(translation_for(TR_WINDOW_ADVISOR_RELIGION_LARARIUMS), 40, 186, FONT_NORMAL_WHITE, 0);
+    text_draw_number_centered(building_count_total(BUILDING_LARARIUM), 230, 186, 50, FONT_NORMAL_WHITE);
+}
+
 static int get_festival_advice(void)
 {
     int months_since_festival = city_festival_months_since_last();
@@ -134,7 +140,7 @@ static int draw_background(void)
     lang_text_draw(59, 9, 370, 32, FONT_SMALL_PLAIN);
     lang_text_draw(59, 7, 370, 46, FONT_SMALL_PLAIN);
 
-    inner_panel_draw(32, 60, 36, 8);
+    inner_panel_draw(32, 60, 36, 9);
 
     // god rows
     draw_god_row(GOD_CERES, 66, BUILDING_SMALL_TEMPLE_CERES,
@@ -151,9 +157,12 @@ static int draw_background(void)
     // oracles
     draw_oracle_row();
 
+    // larariums
+    draw_lararium_row();
+
     city_gods_calculate_least_happy();
 
-    lang_text_draw_multiline(59, 21 + get_religion_advice(), 60, 196, 512, FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(59, 21 + get_religion_advice(), 60, 216, 512, FONT_NORMAL_BLACK);
 
     draw_festival_info();
 
