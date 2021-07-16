@@ -120,9 +120,10 @@ static int get_column_height_food_stocks(const building *b)
 
 static int get_column_height_levy(const building *b)
 {
-    int height = calc_percentage(building_get_levy(b), PANTHEON_LEVY_MONTHLY) / 10;
+    int levy = building_get_levy(b);
+    int height = calc_percentage(levy, PANTHEON_LEVY_MONTHLY) / 10;
     height = calc_bound(height, 1, 10);
-    return b->monthly_levy ? height : NO_COLUMN;
+    return levy ? height : NO_COLUMN;
 }
 
 static int get_column_height_tax_income(const building *b)
@@ -269,9 +270,10 @@ static int get_tooltip_roads(tooltip_context *c, int grid_offset)
 
 static int get_tooltip_levy(tooltip_context *c, const building *b)
 {
-    if (b->monthly_levy > 0) {
+    int levy = building_get_levy(b);
+    if (levy > 0) {
         c->has_numeric_prefix = 1;
-        c->numeric_prefix = building_get_levy(b);
+        c->numeric_prefix = levy;
         c->translation_key = TR_TOOLTIP_OVERLAY_LEVY;
         return 1;
     }

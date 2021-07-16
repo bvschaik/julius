@@ -529,6 +529,17 @@ int building_get_levy(const building *b)
     if (levy <= 0) {
         return 0;
     }
+    if (building_monument_type_is_monument(b->type) && b->data.monument.phase != MONUMENT_FINISHED) {
+        return 0;
+    }
+    if (b->state != BUILDING_STATE_IN_USE && levy && !b->prev_part_building_id) {
+        return 0;
+    }
+    if (b->prev_part_building_id) {
+        return 0;
+    }
+
+
     // Pantheon base bonus
     if (building_monument_working(BUILDING_PANTHEON) &&
         ((b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) ||
