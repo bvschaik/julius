@@ -536,6 +536,11 @@ void figure_warehouseman_action(figure *f)
     int road_network_id = map_road_network_get(f->grid_offset);
     int speed_factor = cartpusher_speed();
     int percentage_speed = cartpusher_percentage_speed(f);
+    building *b = building_get(f->building_id);
+
+    if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
+        f->state = FIGURE_STATE_DEAD;
+    }
 
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
@@ -545,11 +550,7 @@ void figure_warehouseman_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
-            building *b = building_get(f->building_id);
             f->is_ghost = 1;
-            if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
-                f->state = FIGURE_STATE_DEAD;
-            }
             f->wait_ticks++;
             if (f->wait_ticks > 2) {
                 if (b->type == BUILDING_GRANARY) {
@@ -581,7 +582,7 @@ void figure_warehouseman_action(figure *f)
         case FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING:
             f->wait_ticks++;
             if (f->wait_ticks > 4) {
-                building *b = building_get(f->destination_building_id);
+                b = building_get(f->destination_building_id);
                 switch (b->type) {
                     case BUILDING_GRANARY:
                         building_granary_add_resource(b, f->resource_id, 0);
