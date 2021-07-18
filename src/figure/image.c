@@ -77,3 +77,12 @@ int figure_image_normalize_direction(int direction)
     }
     return normalized_direction;
 }
+
+int figure_image_offset_direction(int direction, int offset)
+{
+    direction += offset;
+    if (direction < 0) {
+        direction += 8;
+    }
+    return direction;
+}

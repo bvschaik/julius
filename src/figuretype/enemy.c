@@ -472,7 +472,7 @@ void figure_enemy50_sword_action(figure *f)
         if (m->enemy_type == ENEMY_3_CELT) {
             // Celt swordsmen walking sprites don't match
             // direction convention - adjust for that
-            dir = figure_image_normalize_direction(dir - 1);
+            dir = figure_image_offset_direction(dir, -1);
         }
         f->image_id = 449 + dir + 8 * f->image_offset;
     }
