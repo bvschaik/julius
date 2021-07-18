@@ -140,8 +140,8 @@ void city_culture_update_coverage(void)
     int oracles = building_count_active(BUILDING_ORACLE);
     int shrines = building_count_total(BUILDING_LARARIUM);
     int nymphaeums = building_count_active(BUILDING_NYMPHAEUM);
-    int small_mausoleums = building_count_total(BUILDING_SMALL_MAUSOLEUM);
-    int large_mausoleums = building_count_total(BUILDING_LARGE_MAUSOLEUM);
+    int small_mausoleums = building_count_active(BUILDING_SMALL_MAUSOLEUM);
+    int large_mausoleums = building_count_active(BUILDING_LARGE_MAUSOLEUM);
     coverage.religion[GOD_CERES] = top(calc_percentage(
         SHRINE_COVERAGE * shrines +
         ORACLE_COVERAGE * oracles +
