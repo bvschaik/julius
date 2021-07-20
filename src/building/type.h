@@ -196,6 +196,7 @@ typedef enum {
  * House levels
  */
 typedef enum {
+    HOUSE_MIN = 0,
     HOUSE_SMALL_TENT = 0,
     HOUSE_LARGE_TENT = 1,
     HOUSE_SMALL_SHACK = 2,
@@ -216,6 +217,7 @@ typedef enum {
     HOUSE_MEDIUM_PALACE = 17,
     HOUSE_LARGE_PALACE = 18,
     HOUSE_LUXURY_PALACE = 19,
+    HOUSE_MAX = 19,
 } house_level;
 
 enum {

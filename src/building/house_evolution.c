@@ -30,6 +30,7 @@ static int check_evolve_desirability(building *house, int bonus)
 {
     int level = house->subtype.house_level;
     level -= bonus;
+    level = calc_bound(level, HOUSE_MIN, HOUSE_MAX);
     const model_house *model = model_get_house(level);
     int evolve_des = model->evolve_desirability;
     if (level >= HOUSE_LUXURY_PALACE) {
@@ -57,6 +58,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, int
     if (with_bonus) {
         --level;
     }
+    level = calc_bound(level, HOUSE_MIN, HOUSE_MAX);
     const model_house *model = model_get_house(level);
     // water
     int water = model->water;
@@ -580,6 +582,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     if (building_monument_pantheon_module_is_active(PANTHEON_MODULE_2_HOUSING_EVOLUTION) && house->house_pantheon_access) {
         level--;
     }
+    level = calc_bound(level, HOUSE_MIN, HOUSE_MAX);
 
     // this house will devolve soon because...
 
