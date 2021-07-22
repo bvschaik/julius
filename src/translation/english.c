@@ -681,14 +681,14 @@ static translation_string all_strings[] = {
     {TR_WINDOW_GAMES_NO_WATER_ACCESS, "Venue doesn't have access to a reservoir." },
     {TR_HOTKEY_COPY_SETTINGS, "Copy building settings" },
     {TR_HOTKEY_PASTE_SETTINGS, "Paste building settings" },
-    {TR_WINDOW_ADVISOR_RELIGION_LARARIUMS, "Larariums" },
-    {TR_WINDOW_RACE_BET_BUTTON, "Bet on the race"},
-    {TR_WINDOW_IN_PROGRESS_BET_BUTTON, "Bet in progress"},
-    {TR_WINDOW_RACE_BET_TITLE, "Betting on a horse"},
+    {TR_WINDOW_ADVISOR_RELIGION_LARARIUMS, "Lararia" },
+    {TR_WINDOW_RACE_BET_BUTTON, "Bet on a horse"},
+    {TR_WINDOW_IN_PROGRESS_BET_BUTTON, "Race in progress"},
+    {TR_WINDOW_RACE_BET_TITLE, "Place a bet on a horse"},
     {TR_WINDOW_RACE_BET_AMOUNT, "Amount"},
-    {TR_WINDOW_RACE_BET_DESCRIPTION, "Bet an amount on the horse of your choice and double your stake if your foal wins. Your earnings will even be quadrupled during the games!"},
-    {TR_WARNING_BET_VICTORY, "Victory of your horse"},
-    {TR_WARNING_BET_DEFEAT, "Defeat of your horse"},
+    {TR_WINDOW_RACE_BET_DESCRIPTION, "Bet an amount of your personal funds on the chariot team of your choice, and double your stake if your horse wins. Your earnings will even be quadrupled during the Colosseum Games!"},
+    {TR_WARNING_BET_VICTORY, "Your horse won the race at your city's Hippodrome"},
+    {TR_WARNING_BET_DEFEAT, "Your horse lost the race at your city's Hippodrome"},
     {TR_PERSONAL_SAVINGS, "Savings :"}
 };
 
