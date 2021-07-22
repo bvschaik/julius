@@ -64,6 +64,10 @@ void city_warning_show(warning_type type)
         text = translation_for(TR_CITY_WARNING_THEFT);
     } else if (type == WARNING_WOLF_NEARBY) {
         text = translation_for(TR_WARNING_NEARBY_WOLF);
+    } else if (type == WARNING_BET_VICTORY) {
+        text = translation_for(TR_WARNING_BET_VICTORY);
+    } else if (type == WARNING_BET_DEFEAT) {
+        text = translation_for(TR_WARNING_BET_DEFEAT);
     } else {
         text = lang_get_string(19, type - 2);
     }

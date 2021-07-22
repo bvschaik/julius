@@ -265,7 +265,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.houses.missing.education);
     buffer_write_i32(main, city_data.houses.requiring.school);
     buffer_write_i32(main, city_data.houses.requiring.library);
-    buffer_write_i32(main, city_data.unused.unknown_4284);
+    buffer_write_i32(main, city_data.games.bet_amount);
     buffer_write_i32(main, city_data.houses.missing.barber);
     buffer_write_i32(main, city_data.houses.missing.bathhouse);
     buffer_write_i32(main, city_data.houses.missing.food);
@@ -494,7 +494,7 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, city_data.distant_battle.roman_months_traveled);
     buffer_write_u8(main, city_data.military.total_legions);
     buffer_write_u8(main, city_data.military.empire_service_legions);
-    buffer_write_u8(main, city_data.unused.unknown_458e);
+    buffer_write_u8(main, city_data.games.bet_value);
     buffer_write_u8(main, city_data.military.total_soldiers);
     buffer_write_i8(main, city_data.building.triumphal_arches_placed);
     buffer_write_i8(main, city_data.sound.die_citizen);
@@ -766,7 +766,7 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     city_data.houses.missing.education = buffer_read_i32(main);
     city_data.houses.requiring.school = buffer_read_i32(main);
     city_data.houses.requiring.library = buffer_read_i32(main);
-    city_data.unused.unknown_4284 = buffer_read_i32(main);
+    city_data.games.bet_amount = buffer_read_i32(main);
     city_data.houses.missing.barber = buffer_read_i32(main);
     city_data.houses.missing.bathhouse = buffer_read_i32(main);
     city_data.houses.missing.food = buffer_read_i32(main);
@@ -996,7 +996,7 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     city_data.distant_battle.roman_months_traveled = buffer_read_i8(main);
     city_data.military.total_legions = buffer_read_u8(main);
     city_data.military.empire_service_legions = buffer_read_u8(main);
-    city_data.unused.unknown_458e = buffer_read_u8(main);
+    city_data.games.bet_value = buffer_read_u8(main);
     city_data.military.total_soldiers = buffer_read_u8(main);
     city_data.building.triumphal_arches_placed = buffer_read_i8(main);
     city_data.sound.die_citizen = buffer_read_i8(main);

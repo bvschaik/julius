@@ -337,6 +337,8 @@ extern struct city_data_t {
         int32_t executions_bonus_months;
         int32_t imperial_games_bonus_months;
         int32_t games_4_bonus_months;
+        uint8_t bet_value;
+        int32_t bet_amount;
     } games;
     struct {
         int16_t space_in_warehouses[RESOURCE_MAX];

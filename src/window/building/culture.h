@@ -43,7 +43,9 @@ void window_building_draw_colosseum_background(building_info_context *c);
 
 void window_building_draw_colosseum_foreground(building_info_context *c);
 
-void window_building_draw_hippodrome(building_info_context *c);
+void window_building_draw_hippodrome_background(building_info_context *c);
+
+void window_building_draw_hippodrome_foreground(building_info_context *c);
 
 void window_building_draw_actor_colony(building_info_context *c);
 
@@ -90,6 +92,8 @@ void window_building_draw_nymphaeum(building_info_context* c);
 int window_building_handle_mouse_grand_temple(const mouse* m, building_info_context* c);
 
 int window_building_handle_mouse_colosseum(const mouse *m, building_info_context *c);
+
+int window_building_handle_mouse_hippodrome(const mouse *m, building_info_context *c);
 
 
 

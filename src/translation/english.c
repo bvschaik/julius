@@ -680,8 +680,16 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_LIGHTHOUSE_SUPPLIER, "Lighthouse keeper" },
     {TR_WINDOW_GAMES_NO_WATER_ACCESS, "Venue doesn't have access to a reservoir." },
     {TR_HOTKEY_COPY_SETTINGS, "Copy building settings" },
-    {TR_HOTKEY_PASTE_SETTINGS, "Paste buildling settings" },
-    {TR_WINDOW_ADVISOR_RELIGION_LARARIUMS, "Larariums" }
+    {TR_HOTKEY_PASTE_SETTINGS, "Paste building settings" },
+    {TR_WINDOW_ADVISOR_RELIGION_LARARIUMS, "Larariums" },
+    {TR_WINDOW_RACE_BET_BUTTON, "Bet on the race"},
+    {TR_WINDOW_IN_PROGRESS_BET_BUTTON, "Bet in progress"},
+    {TR_WINDOW_RACE_BET_TITLE, "Betting on a horse"},
+    {TR_WINDOW_RACE_BET_AMOUNT, "Amount"},
+    {TR_WINDOW_RACE_BET_DESCRIPTION, "Bet an amount on the horse of your choice and double your stake if your foal wins. Your earnings will even be quadrupled during the games!"},
+    {TR_WARNING_BET_VICTORY, "Victory of your horse"},
+    {TR_WARNING_BET_DEFEAT, "Defeat of your horse"},
+    {TR_PERSONAL_SAVINGS, "Savings :"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -4,6 +4,7 @@
 #include "city/entertainment.h"
 #include "city/figures.h"
 #include "city/view.h"
+#include "city/race_bet.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "core/random.h"
@@ -455,6 +456,7 @@ void figure_hippodrome_horse_action(figure *f)
         case FIGURE_ACTION_202_HIPPODROME_HORSE_DONE:
             if (!f->wait_ticks) {
                 set_horse_destination(f, HORSE_FINISHED);
+                race_result_process();
                 f->direction = calc_general_direction(f->x, f->y, f->destination_x, f->destination_y);
                 figure_movement_set_cross_country_direction(f,
                     f->cross_country_x, f->cross_country_y, 15 * f->destination_x, 15 * f->destination_y, 0);

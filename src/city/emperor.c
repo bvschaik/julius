@@ -196,7 +196,7 @@ const emperor_gift *city_emperor_get_gift(int size)
 
 int city_emperor_can_send_gift(int size)
 {
-    return city_data.emperor.gifts[size].cost <= city_data.emperor.personal_savings;
+    return city_data.emperor.gifts[size].cost <= city_data.emperor.personal_savings - city_data.games.bet_amount;
 }
 
 void city_emperor_calculate_gift_costs(void)
@@ -316,14 +316,14 @@ int city_emperor_rank(void)
 
 void city_emperor_init_donation_amount(void)
 {
-    if (city_data.emperor.donate_amount > city_data.emperor.personal_savings) {
-        city_data.emperor.donate_amount = city_data.emperor.personal_savings;
+    if (city_data.emperor.donate_amount > city_data.emperor.personal_savings - city_data.games.bet_amount) {
+        city_data.emperor.donate_amount = city_data.emperor.personal_savings - city_data.games.bet_amount;
     }
 }
 
 void city_emperor_set_donation_amount(int amount)
 {
-    city_data.emperor.donate_amount = calc_bound(amount, 0, city_data.emperor.personal_savings);
+    city_data.emperor.donate_amount = calc_bound(amount, 0, city_data.emperor.personal_savings - city_data.games.bet_amount);
 }
 
 void city_emperor_change_donation_amount(int change)
@@ -362,5 +362,5 @@ void city_emperor_force_attack(int size){
 
 void city_emperor_decrement_personal_savings(int amount)
 {
-    city_data.emperor.personal_savings -= calc_bound(amount, 0, city_data.emperor.personal_savings);
+    city_data.emperor.personal_savings -= calc_bound(amount, 0, city_data.emperor.personal_savings - city_data.games.bet_amount);
 }

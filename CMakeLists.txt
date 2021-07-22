@@ -320,6 +320,7 @@ set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/military.c
     ${PROJECT_SOURCE_DIR}/src/city/mission.c
     ${PROJECT_SOURCE_DIR}/src/city/population.c
+    ${PROJECT_SOURCE_DIR}/src/city/race_bet.c
     ${PROJECT_SOURCE_DIR}/src/city/ratings.c
     ${PROJECT_SOURCE_DIR}/src/city/request.c
     ${PROJECT_SOURCE_DIR}/src/city/resource.c
@@ -597,6 +598,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/overlay_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/plain_message_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.c
+    ${PROJECT_SOURCE_DIR}/src/window/race_bet.c
     ${PROJECT_SOURCE_DIR}/src/window/resource_settings.c
     ${PROJECT_SOURCE_DIR}/src/window/select_list.c
     ${PROJECT_SOURCE_DIR}/src/window/set_salary.c

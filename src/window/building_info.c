@@ -574,7 +574,7 @@ static void draw_background(void)
         } else if (btype == BUILDING_THEATER) {
             window_building_draw_theater(&context);
         } else if (btype == BUILDING_HIPPODROME) {
-            window_building_draw_hippodrome(&context);
+            window_building_draw_hippodrome_background(&context);
         } else if (btype == BUILDING_COLOSSEUM) {
             window_building_draw_colosseum_background(&context);
         } else if (btype == BUILDING_ARENA) {
@@ -820,6 +820,8 @@ static void draw_foreground(void)
             }
         } else if (btype == BUILDING_COLOSSEUM) {
             window_building_draw_colosseum_foreground(&context);
+        } else if (btype == BUILDING_HIPPODROME) {
+            window_building_draw_hippodrome_foreground(&context);
         }
 
         if (building_monument_is_unfinished_monument(b)) {
@@ -908,6 +910,8 @@ static int handle_specific_building_info_mouse(const mouse *m)
             window_building_handle_mouse_lighthouse(m, &context);
         } else if (btype == BUILDING_COLOSSEUM) {
             window_building_handle_mouse_colosseum(m, &context);
+        } else if (btype == BUILDING_HIPPODROME) {
+            window_building_handle_mouse_hippodrome(m, &context);
         }
     }
     return 0;
