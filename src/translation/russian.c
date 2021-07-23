@@ -681,10 +681,23 @@ static translation_string all_strings[] = {
     { TR_TEMPLE_DISTRIBUTING, "Распределяет"},
     { TR_TEMPLE_NOT_DISTRIBUTING, "Не распределяет"},
     { TR_ADVISOR_CHIEF_NO_IMMIGRATION_SQUALOR, "Низкий средний уровень жилья сдерживает иммиграцию"},
+    { TR_CITY_MESSAGE_SQUALOR, "Плохое жилье и трущобы - проблема"},
     { TR_FIGURE_TYPE_LIGHTHOUSE_SUPPLIER, "Смотритель маяка"},
     { TR_WINDOW_GAMES_NO_WATER_ACCESS, "Место не имеет доступ к резервуару."},
     { TR_HOTKEY_DUPLICATE_TITLE, "Горячая клавиша уже назначена"},
     { TR_HOTKEY_DUPLICATE_MESSAGE, "Эта комбинация клавиш уже назначена на следующее действие:"},
+    { TR_HOTKEY_COPY_SETTINGS, "Копировать настройки здания"},
+    { TR_HOTKEY_PASTE_SETTINGS, "Вставить настройки здания"},
+    { TR_WINDOW_ADVISOR_RELIGION_LARARIUMS, "Ларарии в городе"},
+    { TR_WINDOW_RACE_BET_BUTTON, "Ставка на скачку"},
+    { TR_WINDOW_IN_PROGRESS_BET_BUTTON, "Ставка в процессе"},
+    { TR_WINDOW_RACE_BET_TITLE, "Ставка на лошадь"},
+    { TR_WINDOW_RACE_BET_AMOUNT, "Количество"},
+    { TR_WINDOW_RACE_BET_DESCRIPTION, "Сделайте ставку на лошадь по вашему выбору и удвойте ставку, если ваш конь выиграет. Во время игр ваш заработок даже увеличится в четыре раза!"},
+    { TR_WARNING_BET_VICTORY, "Ваш конь победил"},
+    { TR_WARNING_BET_DEFEAT, "Ваш конь проиграл"},
+    { TR_PERSONAL_SAVINGS, "сбережения:"}
+    
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
