@@ -689,7 +689,11 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_BET_DESCRIPTION, "Bet an amount of your personal funds on the chariot team of your choice, and double your stake if your horse wins. Your earnings will even be quadrupled during the Colosseum Games!"},
     {TR_WARNING_BET_VICTORY, "Your horse won the race at your city's Hippodrome"},
     {TR_WARNING_BET_DEFEAT, "Your horse lost the race at your city's Hippodrome"},
-    {TR_PERSONAL_SAVINGS, "Savings :"}
+    {TR_PERSONAL_SAVINGS, "Savings :"},
+    {TR_WINDOW_RACE_BET_BLUE_HORSE, "Bet on the blue horse"},
+    {TR_WINDOW_RACE_BET_RED_HORSE, "Bet on the red horse"},
+    {TR_WINDOW_RACE_BET_WHITE_HORSE, "Bet on the white horse"},
+    {TR_WINDOW_RACE_BET_GREEN_HORSE, "Bet on the green horse"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

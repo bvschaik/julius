@@ -14,6 +14,7 @@
 #include "race_bet.h"
 #include "translation/translation.h"
 
+static translation_key button_tooltips[] = {TR_WINDOW_RACE_BET_BLUE_HORSE, TR_WINDOW_RACE_BET_RED_HORSE, TR_WINDOW_RACE_BET_WHITE_HORSE, TR_WINDOW_RACE_BET_GREEN_HORSE};
 
 static void arrow_button_bet(int is_down, int param2);
 static void button_horse_selection(int option, int param2);
@@ -149,6 +150,14 @@ static void button_confirm(int option, int param2)
     }
 }
 
+static void handle_tooltip(tooltip_context *c)
+{
+    if (data.focus_button_id) {
+        c->type = TOOLTIP_BUTTON;
+        c->translation_key = button_tooltips[data.focus_button_id - 1];
+    }
+}
+
 void window_race_bet_show()
 {
     if (init()) {
@@ -156,7 +165,8 @@ void window_race_bet_show()
                 WINDOW_RACE_BET,
                 draw_background,
                 draw_foreground,
-                handle_input
+                handle_input,
+                handle_tooltip
         };
         window_show(&window);
     }
