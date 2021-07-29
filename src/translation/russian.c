@@ -696,7 +696,7 @@ static translation_string all_strings[] = {
     { TR_WINDOW_RACE_BET_DESCRIPTION, "Сделайте ставку на лошадь по вашему выбору и удвойте ставку, если ваш конь выиграет. Во время игр ваш заработок даже увеличится в четыре раза!"},
     { TR_WARNING_BET_VICTORY, "Ваш конь победил"},
     { TR_WARNING_BET_DEFEAT, "Ваш конь проиграл"},
-    { TR_PERSONAL_SAVINGS, "сбережения:"}
+    { TR_PERSONAL_SAVINGS, "сбережения:"},
     { TR_WINDOW_RACE_BET_BLUE_HORSE, "Ставка на синих"},
     { TR_WINDOW_RACE_BET_RED_HORSE, "Ставка на красных"},
     { TR_WINDOW_RACE_BET_WHITE_HORSE, "Ставка на белых"},
