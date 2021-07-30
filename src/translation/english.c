@@ -693,7 +693,12 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_BET_BLUE_HORSE, "Bet on the blue horse"},
     {TR_WINDOW_RACE_BET_RED_HORSE, "Bet on the red horse"},
     {TR_WINDOW_RACE_BET_WHITE_HORSE, "Bet on the white horse"},
-    {TR_WINDOW_RACE_BET_GREEN_HORSE, "Bet on the green horse"}
+    {TR_WINDOW_RACE_BET_GREEN_HORSE, "Bet on the green horse"},
+    {TR_BUILDING_GRAND_TEMPLE_NEEDS_WORKERS, "Without a full staff of priests and attendants, the temple can't perform all the rites and celebrations. Until that changes, we can't expect divine favour. "},
+    {TR_BUILDING_COLOSSEUM_NEEDS_WORKERS, "Colosseum needs more workers to ensure all of our citizens get the entertainment worthy of the place."},
+    {TR_BUILDING_HIPPODROME_NEEDS_WORKERS, "The Hippodrome needs more workers to provide spectacular entertainment for all of our citizens."},
+    {TR_BUILDING_LIGHTHOUSE_NEEDS_WORKERS, "The Lighthouse doesn't have all the workers it needs to keep the fire going. Ships can't rely on its light to find the way to our docks."},
+    {TR_BUILDING_CARAVANSERAI_NEEDS_WORKERS, "Without all the needed labourers, Caravanserai can't service all the incoming caravans."},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

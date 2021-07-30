@@ -1200,8 +1200,13 @@ void window_building_draw_caravanserai(building_info_context *c)
 
         window_building_draw_stocks(c, b, 0, 1, 1);
 
-        text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_DESC), c->x_offset + 32, c->y_offset + 76, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
-
+        if (building_monument_has_labour_problems(b)) {
+            text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_NEEDS_WORKERS),
+                c->x_offset + 22, c->y_offset + 76, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        } else {
+            text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_DESC), c->x_offset + 32, c->y_offset + 76, 
+                16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        }
         if (!land_trade_policy.items[0].image_id) {
             int base_policy_image = assets_get_image_id("UI_Elements",
                 land_trade_policy.base_image_name);

@@ -618,14 +618,19 @@ static void draw_grand_temple(building_info_context *c, const char *sound_file,
         text_draw_centered(translation_for(name),
             c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
     }
-
+    int height = 0;
     if (b->data.monument.phase == MONUMENT_FINISHED) {
-        int height = text_draw_multiline(translation_for(bonus_desc),
-            c->x_offset + 22, c->y_offset + 56 + extra_y, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
-        if (b->data.monument.upgrades) {
-            int module_desc = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].option.desc;
-            height += text_draw_multiline(translation_for(module_desc),
-                c->x_offset + 22, c->y_offset + 66 + height + extra_y, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        if (building_monument_has_labour_problems(b)) {
+            height = text_draw_multiline(translation_for(TR_BUILDING_GRAND_TEMPLE_NEEDS_WORKERS),
+                c->x_offset + 22, c->y_offset + 56 + extra_y, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        } else {
+            height = text_draw_multiline(translation_for(bonus_desc),
+                c->x_offset + 22, c->y_offset + 56 + extra_y, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+            if (b->data.monument.upgrades) {
+                int module_desc = temple_module_options[god_id * 2 + (b->data.monument.upgrades - 1)].option.desc;
+                height += text_draw_multiline(translation_for(module_desc),
+                    c->x_offset + 22, c->y_offset + 66 + height + extra_y, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+            }
         }
         if (b->type == BUILDING_GRAND_TEMPLE_MARS) {
             draw_grand_temple_mars_military(c);
@@ -847,27 +852,32 @@ void window_building_draw_colosseum_background(building_info_context *c)
         }
 
         // todo: better link of venue to game
-        if (active_games && active_games <= 3 && b->type == BUILDING_COLOSSEUM) {
-            window_building_draw_description_from_tr_string(c, TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG +
-                ((active_games - 1) * 2));
-            int width = text_draw(translation_for(TR_WINDOW_BUILDING_GAMES_REMAINING_DURATION),
-                c->x_offset + 32, c->y_offset + 222, FONT_NORMAL_BROWN, 0);
-            lang_text_draw_amount(8, 44, 2 * city_festival_games_remaining_duration(),
-                c->x_offset + width + 32, c->y_offset + 222, FONT_NORMAL_BROWN);
-
+        if (b->type == BUILDING_COLOSSEUM && building_monument_has_labour_problems(b)) {
+            text_draw_multiline(translation_for(TR_BUILDING_COLOSSEUM_NEEDS_WORKERS),
+                c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         } else {
-            if (!c->has_road_access) {
-                window_building_draw_description(c, 69, 25);
-            } else if (b->num_workers <= 0) {
-                window_building_draw_description(c, 74, 6);
-            } else if (!b->data.entertainment.num_shows) {
-                window_building_draw_description(c, 74, 2);
-            } else if (b->data.entertainment.num_shows == 2) {
-                window_building_draw_description(c, 74, 3);
-            } else if (b->data.entertainment.days1) {
-                window_building_draw_description(c, 74, 5);
-            } else if (b->data.entertainment.days2) {
-                window_building_draw_description(c, 74, 4);
+            if (active_games && active_games <= 3 && b->type == BUILDING_COLOSSEUM) {
+                window_building_draw_description_from_tr_string(c, TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG +
+                    ((active_games - 1) * 2));
+                int width = text_draw(translation_for(TR_WINDOW_BUILDING_GAMES_REMAINING_DURATION),
+                    c->x_offset + 32, c->y_offset + 222, FONT_NORMAL_BROWN, 0);
+                lang_text_draw_amount(8, 44, 2 * city_festival_games_remaining_duration(),
+                    c->x_offset + width + 32, c->y_offset + 222, FONT_NORMAL_BROWN);
+
+            } else {
+                if (!c->has_road_access) {
+                    window_building_draw_description(c, 69, 25);
+                } else if (b->num_workers <= 0) {
+                    window_building_draw_description(c, 74, 6);
+                } else if (!b->data.entertainment.num_shows) {
+                    window_building_draw_description(c, 74, 2);
+                } else if (b->data.entertainment.num_shows == 2) {
+                    window_building_draw_description(c, 74, 3);
+                } else if (b->data.entertainment.days1) {
+                    window_building_draw_description(c, 74, 5);
+                } else if (b->data.entertainment.days2) {
+                    window_building_draw_description(c, 74, 4);
+                }
             }
         }
         if (b->type == BUILDING_COLOSSEUM && c->height_blocks > 27) {
@@ -993,8 +1003,13 @@ void window_building_draw_lighthouse(building_info_context *c)
             lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 50 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
         }
 
-        text_draw_multiline(translation_for(TR_BUILDING_LIGHTHOUSE_BONUS_DESC),
-            c->x_offset + 22, c->y_offset + 70, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        if (building_monument_has_labour_problems(b)) {
+            text_draw_multiline(translation_for(TR_BUILDING_LIGHTHOUSE_NEEDS_WORKERS),
+                c->x_offset + 22, c->y_offset + 70, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        } else {
+            text_draw_multiline(translation_for(TR_BUILDING_LIGHTHOUSE_BONUS_DESC),
+                c->x_offset + 22, c->y_offset + 70, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+        }
 
         if (!sea_trade_policy.items[0].image_id) {
             int base_policy_image = assets_get_image_id("UI_Elements",
@@ -1065,8 +1080,9 @@ void window_building_draw_hippodrome_background(building_info_context *c)
         window_building_play_sound(c, "wavs/hippodrome.wav");
         if (!c->has_road_access) {
             window_building_draw_description(c, 69, 25);
-        } else if (b->num_workers <= 0) {
-            window_building_draw_description(c, 73, 4);
+        } else if (building_monument_has_labour_problems(b)) {
+            text_draw_multiline(translation_for(TR_BUILDING_HIPPODROME_NEEDS_WORKERS),
+                c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         } else if (!b->data.entertainment.num_shows) {
             window_building_draw_description(c, 73, 2);
         } else if (b->data.entertainment.days1) {

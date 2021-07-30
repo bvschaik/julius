@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "building/image.h"
+#include "building/model.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/resource.h"
@@ -645,6 +646,17 @@ int building_monument_count_grand_temples(void)
     return count;
 }
 
+int building_monument_has_labour_problems(building *b)
+{
+    model_building *model = model_get_building(b->type);
+
+    if (b->num_workers < model->laborers) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 int building_monument_working(building_type type)
 {
     int monument_id = building_monument_has_monument(type);
@@ -655,6 +667,11 @@ int building_monument_working(building_type type)
     if (b->data.monument.phase != MONUMENT_FINISHED || b->state != BUILDING_STATE_IN_USE) {
         return 0;
     }
+
+    if (building_monument_has_labour_problems(b)) {
+        return 0;
+    }
+
     return monument_id;
 }
 
@@ -674,10 +691,12 @@ int building_monument_upgraded(building_type type)
 int building_monument_module_type(building_type type)
 {
     int monument_id = building_monument_working(type);
-    building *b = building_get(monument_id);
+
     if (!monument_id) {
         return 0;
     }
+
+    building *b = building_get(monument_id);
     return b->data.monument.upgrades;
 }
 
