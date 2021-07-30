@@ -597,6 +597,7 @@ int building_construction_is_updatable(void)
         case BUILDING_COLONNADE:
         case BUILDING_GARDEN_PATH:
         case BUILDING_GARDEN_WALL:
+        case BUILDING_ROOFED_GARDEN_WALL:
         case BUILDING_DECORATIVE_COLUMN:
         case BUILDING_WALL:
         case BUILDING_PLAZA:
@@ -704,11 +705,16 @@ void building_construction_update(int x, int y, int grid_offset)
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
-    } else if (type == BUILDING_DECORATIVE_COLUMN) {
+    } else if (type == BUILDING_ROOFED_GARDEN_WALL) {
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y);
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
+    } else if (type == BUILDING_DECORATIVE_COLUMN) {
+            int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y);
+            if (items_placed >= 0) {
+                current_cost *= items_placed;
+            }
     } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
         int length = map_bridge_building_length();
         if (length > 1) {
@@ -937,6 +943,9 @@ void building_construction_place(void)
         int rotation = building_rotation_get_rotation_with_limit(BUILDING_CONNECTABLE_ROTATION_LIMIT_PATHS);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation);
     } else if (type == BUILDING_GARDEN_WALL) {
+        int rotation = building_rotation_get_rotation_with_limit(BUILDING_CONNECTABLE_ROTATION_LIMIT_PATHS);
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation);
+    } else if (type == BUILDING_ROOFED_GARDEN_WALL) {
         int rotation = building_rotation_get_rotation_with_limit(BUILDING_CONNECTABLE_ROTATION_LIMIT_PATHS);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation);
     } else if (type == BUILDING_DECORATIVE_COLUMN) {

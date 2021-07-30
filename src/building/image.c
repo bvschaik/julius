@@ -686,6 +686,9 @@ int building_image_get(building *b)
         case BUILDING_GARDEN_WALL:
             return assets_get_image_id("Aesthetics", "C Garden Wall 01") +
                 building_connectable_get_garden_wall_offset(b->grid_offset);
+        case BUILDING_ROOFED_GARDEN_WALL:
+            return assets_get_image_id("Aesthetics", "R Garden Wall 01") +
+                building_connectable_get_garden_wall_offset(b->grid_offset);
         case BUILDING_DATE_PATH:
         case BUILDING_ELM_PATH:
         case BUILDING_FIG_PATH:

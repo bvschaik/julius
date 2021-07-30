@@ -33,7 +33,8 @@ static const building_type connectable_buildings[] = {
     BUILDING_PALM_PATH,
     BUILDING_PINE_PATH,
     BUILDING_PLUM_PATH,
-    BUILDING_GARDEN_WALL
+    BUILDING_GARDEN_WALL,
+    BUILDING_ROOFED_GARDEN_WALL,
 };
 
 static const int MAX_CONNECTABLE_BUILDINGS = sizeof(connectable_buildings) / sizeof(building_type);
@@ -194,8 +195,9 @@ int building_connectable_get_garden_wall_offset(int grid_offset)
             continue;
         }
         building *b = building_get(map_building_at(offset));
-        if (b->type == BUILDING_GARDEN_WALL ||
-            (map_property_is_constructing(offset) && building_construction_type() == BUILDING_GARDEN_WALL)) {
+        if (b->type == BUILDING_GARDEN_WALL || b->type == BUILDING_ROOFED_GARDEN_WALL ||
+            (map_property_is_constructing(offset) && (building_construction_type() == BUILDING_GARDEN_WALL 
+                || building_construction_type() == BUILDING_ROOFED_GARDEN_WALL))) {
             tiles[i] = 1;
         }
     }
