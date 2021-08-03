@@ -1,142 +1,152 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
-	<!-- Unless specifically mentioned, all assets created by Areldir -->
-	<assetlist name="UI_Elements">
-		<image id="7x7 Map Icon" src="7x7_Minimap_Icon"/>
-		<image id="Happy God Icon" src="Religion_God_Happy"/>
-		<!-- Note: Banner image for Caravanserai -->
-		<image id="Caravanserai Banner" src="Caravanserai_Banner"/>
-		<!-- Note: Banner image for Lighthouse -->
-		<image id="Lighthouse Banner" src="Lighthouse_Banner"/>
-		<!-- Note: Banner images for Grand Temples -->
-		<image id="Ceres L Banner" src="Ceres_Banner"/>
-		<image id="Mars L Banner" src="Mars_Banner"/>
-		<image id="Merc L Banner" src="Mercury_Banner"/>
-		<image id="Venus L Banner" src="Venus_Banner"/>
-		<image id="Nept L Banner" src="Neptune_Banner"/>
-		<image id="Panth L Banner" src="Pantheon_Banner"/>
-		<!-- Note: Banner images for Module Selection UI -->
-		<image id="Ceres M Icon" src="Ceres_Temple_Complex_Module_Banner"/>
-		<image id="Ceres M2 Icon" src="Ceres_Temple_Complex_Module2_Banner"/>
-		<image id="Mars M Icon" src="Mars_Temple_Complex_Module_Banner"/>
-		<image id="Mars M2 Icon" src="Mars_Temple_Complex_Module2_Banner"/>
-		<image id="Merc M Icon" src="Mercury_Temple_Complex_Module_Banner"/>
-		<image id="Merc M2 Icon" src="Mercury_Temple_Complex_Module2_Banner"/>
-		<image id="Nept M Icon" src="Neptune_Temple_Complex_Module_Banner"/>
-		<image id="Nept M2 Icon" src="Neptune_Temple_Complex_Module2_Banner"/>
-		<image id="Panth M Icon" src="Pantheon_Temple_Complex_Module_Banner"/>
-		<image id="Panth M2 Icon" src="Pantheon_Temple_Complex_Module2_Banner"/>
-		<image id="Venus M Icon" src="Venus_Temple_Complex_Module_Banner"/>
-		<image id="Venus M2 Icon" src="Venus_Temple_Complex_Module2_Banner"/>
-		<!-- Note: Banner Border images for Module Selection UI Hover and UnHover variants -->
-		<image src="Module_Selection_Border_Top_UnHover" id="Monument Mod Selection Borders"/>
-		<image src="Module_Selection_Border_Top_Hover"/>
-		<image src="Module_Selection_Border_Right_UnHover"/>
-		<image src="Module_Selection_Border_Right_Hover"/>
-		<image src="Module_Selection_Border_Bottom_UnHover"/>
-		<image src="Module_Selection_Border_Bottom_Hover"/>
-		<image src="Module_Selection_Border_Left_UnHover"/>
-		<image src="Module_Selection_Border_Left_Hover"/>
-		<!-- Note: Banner images for Construction Sites -->
-		<image id="Const. Banner 01" src="Construction_Banner_01"/>
-		<image id="Const. Banner 02" src="Construction_Banner_02"/>
-		<!-- Note: Minimap icons for Monuments 2x2, 3x3, 4x4, 5x5 and 7x7 respectively  -->
-		<image id="2 Mon MapIcon" src="2x2_Monument_Icon"/>
-		<image id="3 Mon MapIcon" src="3x3_Monument_Icon"/>
-		<image id="4 Mon MapIcon" src="4x4_Monument_Icon"/>
-		<image id="5 Mon MapIcon" src="5x5_Monument_Icon"/>
-		<image id="7 Mon MapIcon" src="7x7_Monument_Icon"/>
-		<!-- Note: Banner with Augustus Logo for Main Menu  -->
-		<image id="Main Menu Banner" src="Augustus_Main_Menu_Banner_Sml"/>
-		<!-- Note: Border for Campaign Map Selection Screen  -->
-		<image id="Mission Selection Border" src="Map_Selection_Overlay_Border_Left"/>
-		<image src="Map_Selection_Overlay_Border_Top"/>
-		<image src="Map_Selection_Overlay_Border_Right"/>
-		<image src="Map_Selection_Overlay_Border_Bottom"/>
-		<!-- Note: Image next to 'Hold Games' button in Entertainment Advisor -->
-		<image id="HoldGames Banner" width="126" height="88">
-			<layer group="159" image="47" x="-11" y="-9"/>
-			<layer src="HoldGames_Banner_Border" x="0" y="0"/>
-		</image>
-		<!-- Note: Tourism Pillar Banner Parts (REFERENCE ASSETS: DO NOT USE) -->
-		<image id="T Pillar BG R" width="10" height="235">
-			<layer group="195" image="0" x="510" y="0"/>
-		</image>
-		<image id="T Pillar BG L" width="9" height="235">
-			<layer group="195" image="0" x="0" y="0"/>
-		</image>
-		<!-- Note: Banner to go behind Tourism Pillar in Entertainment Advisor (USE THIS ONE) -->
-		<image id="Tourism Pillar BG" width="91" height="235">
-			<layer group="195" image="0" x="-64" y="0"/>
-			<layer group="this" image="T Pillar BG R" x="81" y="0"/>
-			<layer group="this" image="T Pillar BG L" x="0" y="0"/>
-		</image>
-		<!-- Note: UI Icons for Colosseum Games: "Imperial Games", "Naumachia" and "Executions" respectively, with selected and deselected variants -->
-		<image id="Naum Ico S" src="Naumachia_UI_Button_Selected"/>
-		<image id="Naum Ico DS" src="Naumachia_UI_Button_Deselected"/>
-		<image id="ImpG Ico S" src="Imperial_Games_UI_Button_Selected"/>
-		<image id="ImpG Ico DS" src="Imperial_Games_UI_Button_Deselected"/>
-		<image id="Exec Ico S" src="Executions_UI_Button_Selected"/>
-		<image id="Exec Ico DS" src="Executions_UI_Button_Deselected"/>
-		<!-- Note: Banner images for Hippodrome and Colosseum respectively -->
-		<image id="Circus Banner" src="Circus_Banner"/>
-		<image id="Colosseum Banner" src="Colosseum_Banner"/>
-		<!-- Note: UI icon to show when item is being stockpiled -->
-		<image id="Store Icon" src="Store_Icon"/>
-		<!-- Note: Blank advisor buttons for use as templates -->
-		<image id="Adv_B_Blank_UH" width="40" height="40">
-			<layer group="128" image="9" x="0" y="0"/>
-			<layer src="Advisor_Button_UH" x="0" y="0"/>
-		</image>
-		<image id="Adv_B_Blank_H" width="40" height="40">
-			<layer group="128" image="22" x="0" y="0"/>
-			<layer src="Advisor_Button_H" x="0" y="0"/>
-		</image>
-		<!-- Note: Rotation and Monument icons for building buttons respectively -->
-		<image id="Monument Build Icon" src="Monument_Panel"/>
-		<image id="Rotate Build Icon" src="Rotation_Panel"/>
-		<!-- Note: Hippodrome racing UI button -->
-		<image id="Hipp_Racing_Button" src="Hippodrome_Betting_Select_Button"/>
-		<!-- Note: Hippodrome team selection buttons -->
-		<image id="Hipp_Blues_UH" src="Hippodrome_Team_Select_Blues_UH"/>
-		<image id="Hipp_Blues_H" src="Hippodrome_Team_Select_Blues_H"/>
-		<image id="Hipp_Reds_UH" src="Hippodrome_Team_Select_Reds_UH"/>
-		<image id="Hipp_Reds_H" src="Hippodrome_Team_Select_Reds_H"/>
-		<image id="Hipp_Whites_UH" src="Hippodrome_Team_Select_Whites_UH"/>
-		<image id="Hipp_Whites_H" src="Hippodrome_Team_Select_Whites_H"/>
-		<image id="Hipp_Greens_UH" src="Hippodrome_Team_Select_Greens_UH"/>
-		<image id="Hipp_Greens_H" src="Hippodrome_Team_Select_Greens_H"/>
-		<!-- Note: Caravanserai Trade Policy -->
-		<image id="Trade Policy" src="Trade_Policy_Icon"/>
-		<image id="Trade Policy 1" src="Trade_Policy_1"/>
-		<image id="Trade Policy 2" src="Trade_Policy_2"/>
-		<image id="Trade Policy 3" src="Trade_Policy_3"/>
-		<!-- Note: Lighthouse Trade Policy -->
-		<image id="Sea Trade Policy" src="Sea_Trade_Policy_Icon"/>
-		<image id="Sea Trade Policy 1" src="Sea_Trade_Policy_1"/>
-		<image id="Sea Trade Policy 2" src="Sea_Trade_Policy_2"/>
-		<image id="Sea Trade Policy 3" src="Sea_Trade_Policy_3"/>
-		<image src="Policy_Selection_Border_Top_UnHover" id="Policy Selection Borders"/>
-		<image src="Policy_Selection_Border_Top_Hover"/>
-		<image src="Policy_Selection_Border_Right_UnHover"/>
-		<image src="Policy_Selection_Border_Right_Hover"/>
-		<image src="Policy_Selection_Border_Bottom_UnHover"/>
-		<image src="Policy_Selection_Border_Bottom_Hover"/>
-		<image src="Policy_Selection_Border_Left_UnHover"/>
-		<image src="Policy_Selection_Border_Left_Hover"/>
-		<!-- Note: Fix for Hagia Sophia sprite (removes historically inaccurate Islamic minarets, which were added to the building in the 1500s) -->
-		<image id="H Sophia Fix" src="Hagia_Sophia_Fix"/>
-		<!-- Note: Button for Housing Advisor -->
-		<!-- Button assets created by MSTVD and Areldir -->
-		<image id="Housing Advisor Button" width="40" height="40">
-			<layer group="128" image="9" x="0" y="0"/>
-			<layer src="Advisor_Button_UH" x="0" y="0"/>
-			<layer src="Housing_Advisor_UH" x="0" y="0"/>
-		</image>
-		<image id="Housing Advisor Button Selected" width="40" height="40">
-			<layer group="128" image="22" x="0" y="0"/>
-			<layer src="Advisor_Button_H" x="0" y="0"/>
-			<layer src="Housing_Advisor_H" x="0" y="0"/>
-		</image>
-	</assetlist>
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="UI_Elements">
+	<image id="7x7 Map Icon" src="7x7_Minimap_Icon"/>
+	<image id="Happy God Icon" src="Religion_God_Happy"/>
+	<!-- Note: Banner image for Caravanserai -->
+	<image id="Caravanserai Banner" src="Caravanserai_Banner"/>
+	<!-- Note: Banner image for Lighthouse -->
+	<image id="Lighthouse Banner" src="Lighthouse_Banner"/>
+	<!-- Note: Banner images for Grand Temples -->
+	<image id="Ceres L Banner" src="Ceres_Banner"/>
+	<image id="Mars L Banner" src="Mars_Banner"/>
+	<image id="Merc L Banner" src="Mercury_Banner"/>
+	<image id="Venus L Banner" src="Venus_Banner"/>
+	<image id="Nept L Banner" src="Neptune_Banner"/>
+	<image id="Panth L Banner" src="Pantheon_Banner"/>
+	<!-- Note: Banner images for Module Selection UI -->
+	<image id="Ceres M Icon" src="Ceres_Temple_Complex_Module_Banner"/>
+	<image id="Ceres M2 Icon" src="Ceres_Temple_Complex_Module2_Banner"/>
+	<image id="Mars M Icon" src="Mars_Temple_Complex_Module_Banner"/>
+	<image id="Mars M2 Icon" src="Mars_Temple_Complex_Module2_Banner"/>
+	<image id="Merc M Icon" src="Mercury_Temple_Complex_Module_Banner"/>
+	<image id="Merc M2 Icon" src="Mercury_Temple_Complex_Module2_Banner"/>
+	<image id="Nept M Icon" src="Neptune_Temple_Complex_Module_Banner"/>
+	<image id="Nept M2 Icon" src="Neptune_Temple_Complex_Module2_Banner"/>
+	<image id="Panth M Icon" src="Pantheon_Temple_Complex_Module_Banner"/>
+	<image id="Panth M2 Icon" src="Pantheon_Temple_Complex_Module2_Banner"/>
+	<image id="Venus M Icon" src="Venus_Temple_Complex_Module_Banner"/>
+	<image id="Venus M2 Icon" src="Venus_Temple_Complex_Module2_Banner"/>
+	<!-- Note: Banner Border images for Module Selection UI Hover and UnHover variants -->
+	<image src="Module_Selection_Border_Top_UnHover" id="Monument Mod Selection Borders"/>
+	<image src="Module_Selection_Border_Top_Hover"/>
+	<image src="Module_Selection_Border_Right_UnHover"/>
+	<image src="Module_Selection_Border_Right_Hover"/>
+	<image src="Module_Selection_Border_Bottom_UnHover"/>
+	<image src="Module_Selection_Border_Bottom_Hover"/>
+	<image src="Module_Selection_Border_Left_UnHover"/>
+	<image src="Module_Selection_Border_Left_Hover"/>
+	<!-- Note: Banner images for Construction Sites -->
+	<image id="Const. Banner 01" src="Construction_Banner_01"/>
+	<image id="Const. Banner 02" src="Construction_Banner_02"/>
+	<!-- Note: Minimap icons for Monuments 2x2, 3x3, 4x4, 5x5 and 7x7 respectively  -->
+	<image id="2 Mon MapIcon" src="2x2_Monument_Icon"/>
+	<image id="3 Mon MapIcon" src="3x3_Monument_Icon"/>
+	<image id="4 Mon MapIcon" src="4x4_Monument_Icon"/>
+	<image id="5 Mon MapIcon" src="5x5_Monument_Icon"/>
+	<image id="7 Mon MapIcon" src="7x7_Monument_Icon"/>
+	<!-- Note: Banner with Augustus Logo for Main Menu  -->
+	<image id="Main Menu Banner" src="Augustus_Main_Menu_Banner_Sml"/>
+	<!-- Note: Border for Campaign Map Selection Screen  -->
+	<image id="Mission Selection Border" src="Map_Selection_Overlay_Border_Left"/>
+	<image src="Map_Selection_Overlay_Border_Top"/>
+	<image src="Map_Selection_Overlay_Border_Right"/>
+	<image src="Map_Selection_Overlay_Border_Bottom"/>
+	<!-- Note: Image next to 'Hold Games' button in Entertainment Advisor -->
+	<image id="HoldGames Banner" width="126" height="88">
+		<layer group="159" image="47" x="-11" y="-9"/>
+		<layer src="HoldGames_Banner_Border" x="0" y="0"/>
+	</image>
+	<!-- Note: Tourism Pillar Banner Parts (REFERENCE ASSETS: DO NOT USE) -->
+	<image id="T Pillar BG R" width="10" height="235">
+		<layer group="195" image="0" x="510" y="0"/>
+	</image>
+	<image id="T Pillar BG L" width="9" height="235">
+		<layer group="195" image="0" x="0" y="0"/>
+	</image>
+	<!-- Note: Banner to go behind Tourism Pillar in Entertainment Advisor (USE THIS ONE) -->
+	<image id="Tourism Pillar BG" width="91" height="235">
+		<layer group="195" image="0" x="-64" y="0"/>
+		<layer group="this" image="T Pillar BG R" x="81" y="0"/>
+		<layer group="this" image="T Pillar BG L" x="0" y="0"/>
+	</image>
+	<!-- Note: UI Icons for Colosseum Games: "Imperial Games", "Naumachia" and "Executions" respectively, with selected and deselected variants -->
+	<image id="Naum Ico S" src="Naumachia_UI_Button_Selected"/>
+	<image id="Naum Ico DS" src="Naumachia_UI_Button_Deselected"/>
+	<image id="ImpG Ico S" src="Imperial_Games_UI_Button_Selected"/>
+	<image id="ImpG Ico DS" src="Imperial_Games_UI_Button_Deselected"/>
+	<image id="Exec Ico S" src="Executions_UI_Button_Selected"/>
+	<image id="Exec Ico DS" src="Executions_UI_Button_Deselected"/>
+	<!-- Note: Banner images for Hippodrome and Colosseum respectively -->
+	<image id="Circus Banner" src="Circus_Banner"/>
+	<image id="Colosseum Banner" src="Colosseum_Banner"/>
+	<!-- Note: UI icon to show when item is being stockpiled -->
+	<image id="Store Icon" src="Store_Icon"/>
+	<!-- Note: Blank advisor buttons for use as templates -->
+	<image id="Adv_B_Blank_UH" width="40" height="40">
+		<layer group="128" image="9" x="0" y="0"/>
+		<layer src="Advisor_Button_UH" x="0" y="0"/>
+	</image>
+	<image id="Adv_B_Blank_H" width="40" height="40">
+		<layer group="128" image="22" x="0" y="0"/>
+		<layer src="Advisor_Button_H" x="0" y="0"/>
+	</image>
+	<!-- Note: Rotation and Monument icons for building buttons respectively -->
+	<image id="Monument Build Icon" src="Monument_Panel"/>
+	<image id="Rotate Build Icon" src="Rotation_Panel"/>
+	<!-- Note: Hippodrome racing UI button -->
+	<image id="Hipp_Racing_Button" src="Hippodrome_Betting_Select_Button"/>
+	<!-- Note: Hippodrome team selection buttons -->
+	<image id="Hipp_Blues_UH" src="Hippodrome_Team_Select_Blues_UH"/>
+	<image id="Hipp_Blues_H" src="Hippodrome_Team_Select_Blues_H"/>
+	<image id="Hipp_Reds_UH" src="Hippodrome_Team_Select_Reds_UH"/>
+	<image id="Hipp_Reds_H" src="Hippodrome_Team_Select_Reds_H"/>
+	<image id="Hipp_Whites_UH" src="Hippodrome_Team_Select_Whites_UH"/>
+	<image id="Hipp_Whites_H" src="Hippodrome_Team_Select_Whites_H"/>
+	<image id="Hipp_Greens_UH" src="Hippodrome_Team_Select_Greens_UH"/>
+	<image id="Hipp_Greens_H" src="Hippodrome_Team_Select_Greens_H"/>
+	<!-- Note: Caravanserai Trade Policy -->
+	<image id="Trade Policy" src="Trade_Policy_Icon"/>
+	<image id="Trade Policy 1" src="Trade_Policy_1"/>
+	<image id="Trade Policy 2" src="Trade_Policy_2"/>
+	<image id="Trade Policy 3" src="Trade_Policy_3"/>
+	<!-- Note: Lighthouse Trade Policy -->
+	<image id="Sea Trade Policy" src="Sea_Trade_Policy_Icon"/>
+	<image id="Sea Trade Policy 1" src="Sea_Trade_Policy_1"/>
+	<image id="Sea Trade Policy 2" src="Sea_Trade_Policy_2"/>
+	<image id="Sea Trade Policy 3" src="Sea_Trade_Policy_3"/>
+	<image src="Policy_Selection_Border_Top_UnHover" id="Policy Selection Borders"/>
+	<image src="Policy_Selection_Border_Top_Hover"/>
+	<image src="Policy_Selection_Border_Right_UnHover"/>
+	<image src="Policy_Selection_Border_Right_Hover"/>
+	<image src="Policy_Selection_Border_Bottom_UnHover"/>
+	<image src="Policy_Selection_Border_Bottom_Hover"/>
+	<image src="Policy_Selection_Border_Left_UnHover"/>
+	<image src="Policy_Selection_Border_Left_Hover"/>
+	<!-- Note: Fix for Hagia Sophia sprite (removes historically inaccurate Islamic minarets, which were added to the building in the 1500s) -->
+	<image id="H Sophia Fix" src="Hagia_Sophia_Fix"/>
+	<!-- Note: Button for Housing Advisor -->
+	<!-- Button assets created by MSTVD and Areldir -->
+	<image id="Housing Advisor Button" width="40" height="40">
+		<layer group="128" image="9" x="0" y="0"/>
+		<layer src="Advisor_Button_UH" x="0" y="0"/>
+		<layer src="Housing_Advisor_UH" x="0" y="0"/>
+	</image>
+	<image id="Housing Advisor Button Selected" width="40" height="40">
+		<layer group="128" image="22" x="0" y="0"/>
+		<layer src="Advisor_Button_H" x="0" y="0"/>
+		<layer src="Housing_Advisor_H" x="0" y="0"/>
+	</image>
+	<!-- Note: Button for Building Mothball -->
+	<!-- Button assets created by MSTVD -->
+	<image id="Mothball_1" src="Mothball_1"/>
+	<image id="Mothball_2" src="Mothball_2"/>
+	<image id="Mothball_3" src="Mothball_3"/>
+	<image id="Mothball_4" src="Mothball_4"/>
+	<image id="Unmothball_1" src="Unmothball_1"/>
+	<image id="Unmothball_2" src="Unmothball_2"/>
+	<image id="Unmothball_3" src="Unmothball_3"/>
+	<image id="Unmothball_4" src="Unmothball_4"/>
+</assetlist>
 	
