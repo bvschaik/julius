@@ -55,7 +55,7 @@ static void destroy_on_fire(building *b, int plagued)
         b->fire_proof = 1;
         b->size = 1;
         b->ruin_has_plague = plagued;
-        memset(&b->data, 0, 42);
+        memset(&b->data, 0, sizeof(b->data));
         b->data.rubble.was_tent = was_tent;
         map_building_tiles_add(b->id, b->x, b->y, 1, building_image_get(b), TERRAIN_BUILDING);
     }
