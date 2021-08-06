@@ -44,7 +44,7 @@ static void destroy_on_fire(building *b, int plagued)
         num_tiles = 0;
     }
     map_building_tiles_remove(b->id, b->x, b->y);
-    if (map_terrain_is(b->grid_offset, TERRAIN_WATER)) {
+    if (map_terrain_is(b->grid_offset, TERRAIN_WATER | TERRAIN_ROCK)) {
         b->state = BUILDING_STATE_DELETED_BY_GAME;
     } else {
         b->type = BUILDING_BURNING_RUIN;
@@ -73,7 +73,7 @@ static void destroy_on_fire(building *b, int plagued)
     for (int tile = 1; tile < num_tiles; tile++) {
         int x = x_tiles[tile] + b->x;
         int y = y_tiles[tile] + b->y;
-        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_WATER)) {
+        if (map_terrain_is(map_grid_offset(x, y), TERRAIN_WATER | TERRAIN_ROCK)) {
             continue;
         }
         building *ruin = building_create(BUILDING_BURNING_RUIN, x, y);
