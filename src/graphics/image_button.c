@@ -1,5 +1,6 @@
 #include "image_button.h"
 
+#include "assets/assets.h"
 #include "graphics/image.h"
 #include "sound/effect.h"
 
@@ -45,18 +46,28 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons)
             if (btn->enabled) {
                 if (btn->pressed) {
                     image_id += 2;
-                }
-                else if (btn->focused) {
+                } else if (btn->focused) {
                     image_id += 1;
                 }
+            } else {
+                image_id += 3;
             }
-            else {
+        } else if (btn->assetlist_name) {
+            image_id = assets_get_image_id(btn->assetlist_name, btn->image_name);
+            if (btn->enabled) {
+                if (btn->pressed) {
+                    image_id += 2;
+                } else if (btn->focused) {
+                    image_id += 1;
+                }
+            } else {
                 image_id += 3;
             }
         }
         image_draw(image_id, x + btn->x_offset, y + btn->y_offset);
     }
 }
+
 
 static int should_be_pressed(const image_button *btn, const mouse *m)
 {

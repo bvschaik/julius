@@ -25,6 +25,9 @@ typedef struct {
     int parameter1;
     int parameter2;
     char enabled;
+    // optional, used for buttons made with Augustus assets
+    const char *assetlist_name;
+    const char *image_name;
     // state
     char pressed;
     char focused;
