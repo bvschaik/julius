@@ -96,19 +96,19 @@ int map_has_road_access_granary(int x, int y, map_point *road)
 {
     int rx = -1, ry = -1;
     if (map_terrain_is(map_grid_offset(x + 1, y - 1), TERRAIN_ROAD) &&
-        (building_type_is_roadblock(building_get(map_building_at(map_grid_offset(x + 1, y - 1)))->type))) {
+        (!building_type_is_roadblock(building_get(map_building_at(map_grid_offset(x + 1, y - 1)))->type))) {
         rx = x + 1;
         ry = y - 1;
     } else if (map_terrain_is(map_grid_offset(x + 3, y + 1), TERRAIN_ROAD) &&
-        (building_type_is_roadblock(building_get(map_building_at(map_grid_offset(x + 3, y + 1)))->type ))) {
+        (!building_type_is_roadblock(building_get(map_building_at(map_grid_offset(x + 3, y + 1)))->type ))) {
         rx = x + 3;
         ry = y + 1;
     } else if (map_terrain_is(map_grid_offset(x + 1, y + 3), TERRAIN_ROAD) &&
-        (building_type_is_roadblock(building_get(map_building_at(map_grid_offset(x + 1, y + 3)))->type))) {
+        (!building_type_is_roadblock(building_get(map_building_at(map_grid_offset(x + 1, y + 3)))->type))) {
         rx = x + 1;
         ry = y + 3;
     } else if (map_terrain_is(map_grid_offset(x - 1, y + 1), TERRAIN_ROAD) &&
-        (building_type_is_roadblock(building_get(map_building_at(map_grid_offset(x - 1, y + 1)))->type))) {
+        (!building_type_is_roadblock(building_get(map_building_at(map_grid_offset(x - 1, y + 1)))->type))) {
         rx = x - 1;
         ry = y + 1;
     }
@@ -554,7 +554,7 @@ int map_has_adjacent_road_tiles(int grid_offset)
     int adjacent_roads = 0;
     for (int i = 0; i < 4; i++) {
         building *b = building_get(map_building_at(tiles[i]));
-        if (building_type_is_roadblock(b->type)) {
+        if (!building_type_is_roadblock(b->type)) {
             adjacent_roads += terrain_is_road_like(tiles[i]);
         }
     }
