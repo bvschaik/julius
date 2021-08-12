@@ -847,6 +847,9 @@ void window_building_draw_warehouse(building_info_context *c)
                     BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN);
             }
         } else {
+            image_draw(image_group(GROUP_RESOURCE_ICONS) + f->collecting_item_id +
+                resource_image_offset(f->collecting_item_id, RESOURCE_IMAGE_ICON),
+                c->x_offset + 32, c->y_offset + 220);
             text_draw_multiline(translation_for(TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING), c->x_offset + 64, c->y_offset + 223,
                 BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN, 0);
         }
