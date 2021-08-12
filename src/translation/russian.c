@@ -512,6 +512,9 @@ static translation_string all_strings[] = {
     { TR_BUILDING_HEDGE_DARK, "Темная изгородь" },
     { TR_BUILDING_HEDGE_LIGHT, "Светлая изгородь" },
     { TR_BUILDING_GARDEN_WALL, "Петельная садовая стена" },
+    { TR_BUILDING_ROOFED_GARDEN_WALL, "Крытая садовая стена"},
+    { TR_BUILDING_GARDEN_WALL_GATE, "Садовые ворота"},
+    { TR_BUILDING_GARDEN_WALL_GATE_DESC, "Ворота удерживают незваных гостей от нарушения покоя садов."}
     { TR_BUILDING_LEGION_STATUE, "Статуя легионера" },
     { TR_BUILDING_DECORATIVE_COLUMN, "Мраморная колонка" },
     { TR_BUILDING_COLOSSEUM_PHASE_1, "(Гипогей)" },
@@ -700,7 +703,8 @@ static translation_string all_strings[] = {
     { TR_WINDOW_RACE_BET_BLUE_HORSE, "Ставка на синих"},
     { TR_WINDOW_RACE_BET_RED_HORSE, "Ставка на красных"},
     { TR_WINDOW_RACE_BET_WHITE_HORSE, "Ставка на белых"},
-    { TR_WINDOW_RACE_BET_GREEN_HORSE, "Ставка на зеленых"}
+    { TR_WINDOW_RACE_BET_GREEN_HORSE, "Ставка на зеленых"},
+    { TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Наша тележка забирает товар из другого склада."},
     
 };
 
