@@ -220,6 +220,7 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_PLAZA:
         case BUILDING_ROAD:
         case BUILDING_ROADBLOCK:
+        case BUILDING_GARDEN_WALL_GATE:
             overlay = OVERLAY_ROADS;
             break;
         case BUILDING_AQUEDUCT:

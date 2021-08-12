@@ -362,11 +362,16 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
     int num_tiles = building_size * building_size;
     int blocked_tiles[MAX_TILES];
     int orientation_index = city_view_orientation() / 2;
+
+    if (building_connectable_gate_type(type) && map_terrain_get(grid_offset) == TERRAIN_ROAD) {
+        type = building_connectable_gate_type(type);
+    }
+
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset + TILE_GRID_OFFSETS[orientation_index][i];
         int forbidden_terrain = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
         if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH ||
-            type == BUILDING_PLAZA || type == BUILDING_ROADBLOCK) {
+            type == BUILDING_PLAZA || type == BUILDING_ROADBLOCK || type == BUILDING_GARDEN_WALL_GATE) {
             forbidden_terrain &= ~TERRAIN_ROAD;
         }
         if (type == BUILDING_TOWER) {

@@ -383,7 +383,7 @@ void building_update_state(void)
                 road_recalc = 1;
             }
             map_building_tiles_remove(i, b->x, b->y);
-            if (b->type == BUILDING_ROADBLOCK) {
+            if (building_type_is_roadblock(b->type)) {
                 // Leave the road behind the deleted roadblock
                 map_terrain_add(b->grid_offset, TERRAIN_ROAD);
                 road_recalc = 1;

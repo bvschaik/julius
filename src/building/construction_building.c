@@ -299,7 +299,7 @@ static void add_to_map(int type, building *b, int size,
 int building_construction_place_building(building_type type, int x, int y)
 {
     int terrain_mask = TERRAIN_ALL;
-    if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH || type == BUILDING_ROADBLOCK) {
+    if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH || building_type_is_roadblock(type)) {
         terrain_mask = ~TERRAIN_ROAD;
     } else if (type == BUILDING_TOWER) {
         terrain_mask = ~TERRAIN_WALL;

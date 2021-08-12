@@ -281,6 +281,7 @@ static void set_native_target_building(formation *m)
             case BUILDING_WAREHOUSE:
             case BUILDING_FORT:
             case BUILDING_ROADBLOCK:
+            case BUILDING_GARDEN_WALL_GATE:
                 break;
             default:
                 {

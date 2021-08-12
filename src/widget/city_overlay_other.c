@@ -1,6 +1,7 @@
 #include "city_overlay_other.h"
 
 #include "building/model.h"
+#include "building/roadblock.h"
 #include "city/constants.h"
 #include "city/finance.h"
 #include "core/calc.h"
@@ -58,7 +59,7 @@ static int show_building_desirability(const building *b)
 
 static int show_building_roads(const building *b)
 {
-    return b->type == BUILDING_ROADBLOCK;
+    return building_type_is_roadblock(b->type);
 }
 
 static int show_building_none(const building *b)

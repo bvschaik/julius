@@ -264,7 +264,8 @@ const model_building *model_get_building(building_type type)
         type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT ||
         type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_GARDEN_WALL ||
         type == BUILDING_COLONNADE || type == BUILDING_GARDEN_WALL || 
-        type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_GARDEN_PATH) {
+        type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_GARDEN_PATH ||
+        type == BUILDING_GARDEN_WALL_GATE) {
         return &buildings[41];
     }
 

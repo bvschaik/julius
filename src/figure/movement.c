@@ -240,7 +240,7 @@ static void advance_route_tile(figure *f, int roaming_enabled)
                 // do not allow roaming through gatehouse
                 f->direction = DIR_FIGURE_REROUTE;
             }
-            if (b->type == BUILDING_ROADBLOCK) {
+            if (building_type_is_roadblock(b->type)) {
                 // do not allow roaming through roadblock
                 int permission = get_permission_for_figure_type(f);
                 if (!building_roadblock_get_permission(permission, b)) {

@@ -92,6 +92,7 @@ building_data_type building_data_transfer_data_type_from_building_type(building_
 {
     switch (type) {
         case BUILDING_ROADBLOCK:
+        case BUILDING_GARDEN_WALL_GATE:
             return DATA_TYPE_ROADBLOCK;
         case BUILDING_DOCK:
             return DATA_TYPE_DOCK;

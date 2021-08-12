@@ -521,6 +521,9 @@ static void draw_connectable_construction_ghost(int x, int y, int grid_offset)
     }
     static building b;
     b.type = building_construction_type();
+    if (building_connectable_gate_type(b.type) && map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        b.type = building_connectable_gate_type(b.type);
+    }
     b.grid_offset = grid_offset;
     if (building_properties_for_type(b.type)->rotation_offset) {
         b.subtype.orientation = building_rotation_get_rotation();

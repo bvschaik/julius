@@ -13,13 +13,17 @@ enum {
     CONTEXT_GARDEN_PATH_INTERSECTION,
     CONTEXT_GARDEN_TREELESS_PATH,
     CONTEXT_GARDEN_WALLS,
+    CONTEXT_GARDEN_GATE,
     CONTEXT_MAX_ITEMS
 };
+
+int building_connectable_gate_type(building_type type);
 
 int building_connectable_get_hedge_offset(int grid_offset);
 int building_connectable_get_colonnade_offset(int grid_offset);
 int building_connectable_get_garden_wall_offset(int grid_offset);
 int building_connectable_get_garden_path_offset(int grid_offset, int context);
+int building_connectable_get_garden_gate_offset(int grid_offset);
 
 int building_is_connectable(building_type type);
 
