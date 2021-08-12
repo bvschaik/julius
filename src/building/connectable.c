@@ -233,7 +233,7 @@ static int is_garden_path(building_type type)
 
 static int is_garden_wall(building_type type)
 {
-    return type == BUILDING_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL || BUILDING_GARDEN_WALL_GATE;
+    return type == BUILDING_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_GARDEN_WALL_GATE;
 }
 
 int building_connectable_get_garden_wall_offset(int grid_offset)
@@ -245,8 +245,7 @@ int building_connectable_get_garden_wall_offset(int grid_offset)
             continue;
         }
         building *b = building_get(map_building_at(offset));
-        if (is_garden_wall(b->type) ||
-            (map_property_is_constructing(offset) && (is_garden_wall(building_construction_type())))) {
+        if (is_garden_wall(b->type) || (map_property_is_constructing(offset) && is_garden_wall(building_construction_type()))) {
             tiles[i] = 1;
         }
     }
