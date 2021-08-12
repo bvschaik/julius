@@ -514,7 +514,7 @@ static translation_string all_strings[] = {
     { TR_BUILDING_GARDEN_WALL, "Петельная садовая стена" },
     { TR_BUILDING_ROOFED_GARDEN_WALL, "Крытая садовая стена"},
     { TR_BUILDING_GARDEN_WALL_GATE, "Садовые ворота"},
-    { TR_BUILDING_GARDEN_WALL_GATE_DESC, "Ворота удерживают незваных гостей от нарушения покоя садов."}
+    { TR_BUILDING_GARDEN_WALL_GATE_DESC, "Ворота удерживают незваных гостей от нарушения покоя садов."},
     { TR_BUILDING_LEGION_STATUE, "Статуя легионера" },
     { TR_BUILDING_DECORATIVE_COLUMN, "Мраморная колонка" },
     { TR_BUILDING_COLOSSEUM_PHASE_1, "(Гипогей)" },
