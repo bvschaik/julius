@@ -701,7 +701,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_CARAVANSERAI_NEEDS_WORKERS, "Without all the needed labourers, Caravanserai can't service all the incoming caravans."},
     {TR_BUILDING_ROOFED_GARDEN_WALL, "Roofed garden wall"},
     {TR_BUILDING_GARDEN_WALL_GATE, "Garden gate"},
-    {TR_BUILDING_GARDEN_WALL_GATE_DESC, "Gate keeps uninvited guests from disrupting the peace of the gardens."}
+    {TR_BUILDING_GARDEN_WALL_GATE_DESC, "Gate keeps uninvited guests from disrupting the peace of the gardens."},
+    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "The cart pusher is on his way to get the goods from another warehouse."}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
