@@ -746,7 +746,6 @@ int building_image_get(building *b)
                 return image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * (map_random_get(b->grid_offset) & 3);
             }
         case BUILDING_GARDEN_WALL_GATE:
-            log_info("Offset", 0, building_connectable_get_garden_gate_offset(b->grid_offset));
             return assets_get_image_id("Aesthetics", "Garden Gate") + building_connectable_get_garden_gate_offset(b->grid_offset);
         default:
             return 0;
