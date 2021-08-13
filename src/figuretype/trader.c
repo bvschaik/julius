@@ -312,9 +312,7 @@ static int get_closest_storage(const figure *f, int x, int y, int city_id, map_p
     exportable[RESOURCE_NONE] = 0;
     importable[RESOURCE_NONE] = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (r == RESOURCE_TIMBER && city_id) {
-            int can_do = 0;
-        }
+
         exportable[r] = empire_can_export_resource_to_city(city_id, r);
         if (f->trader_amount_bought >= figure_trade_land_trade_units()) {
             exportable[r] = 0;
@@ -382,9 +380,7 @@ static int get_closest_storage(const figure *f, int x, int y, int city_id, map_p
             !building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, b)) {
             continue;
         }
-        if (!map_has_road_access(b->x, b->y, 3, dst)) {
-            continue;
-        }
+
         const building_storage *s = building_storage_get(b->storage_id);
         int distance_penalty = 32;
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
