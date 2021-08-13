@@ -146,8 +146,9 @@ void window_building_draw_roadblock_foreground(building_info_context *c)
 {
     button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
         16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    text_draw_centered(translation_for(TR_BUILDING_ROADBLOCK), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
-        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK, 0);
+    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + BLOCK_SIZE * c->height_blocks - 30,
+        BLOCK_SIZE * (c->width_blocks - 10), FONT_NORMAL_BLACK);
+
 
 }
 
@@ -209,8 +210,8 @@ void window_building_draw_garden_gate_foreground(building_info_context *c)
 {
     button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
         16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    text_draw_centered(translation_for(TR_BUILDING_GARDEN_WALL_GATE), c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 30,
-        16 * (c->width_blocks - 10), FONT_NORMAL_BLACK, 0);
+    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + BLOCK_SIZE * c->height_blocks - 30,
+        BLOCK_SIZE * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 
 }
 
