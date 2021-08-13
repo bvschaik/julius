@@ -66,7 +66,7 @@ augustus_building_properties_mapping augustus_building_properties[AUGUSTUS_BUILD
     {BUILDING_SMALL_STATUE, {1,1,0,0,-12}, "Aesthetics", "V Small Statue" },
     {BUILDING_ROOFED_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Aesthetics", "Eng Guild OFF"},
     {BUILDING_GARDEN_WALL_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Eng Guild OFF"},
-    {BUILDING_PALISADE, {1,0,0,0,0}, "Military_Buildings", "Palisade"},
+    {BUILDING_PALISADE, {1,1,0,0,0}, "Military_Buildings", "Palisade"},
 };
 
 void init_augustus_building_properties()
