@@ -628,6 +628,7 @@ int building_construction_is_updatable(void)
         case BUILDING_PLAZA:
         case BUILDING_GARDENS:
         case BUILDING_HOUSE_VACANT_LOT:
+        case BUILDING_PALISADE:
             return 1;
         default:
             return 0;
@@ -740,6 +741,11 @@ void building_construction_update(int x, int y, int grid_offset)
             if (items_placed >= 0) {
                 current_cost *= items_placed;
             }
+    } else if (type == BUILDING_PALISADE) {
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, 0);
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
         int length = map_bridge_building_length();
         if (length > 1) {
@@ -976,6 +982,9 @@ void building_construction_place(void)
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
         int variant_numbers = building_variant_get_number_of_variants(type);
         int rotation = building_rotation_get_rotation_with_limit(variant_numbers);
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation);
+    } else if (type == BUILDING_PALISADE) {
+        int rotation = building_rotation_get_rotation_with_limit(BUILDING_CONNECTABLE_ROTATION_LIMIT_HEDGES);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation);
     } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         placement_cost *= place_houses(0, x_start, y_start, x_end, y_end);

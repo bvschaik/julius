@@ -747,6 +747,15 @@ int building_image_get(building *b)
             }
         case BUILDING_GARDEN_WALL_GATE:
             return assets_get_image_id("Aesthetics", "Garden Gate") + building_connectable_get_garden_gate_offset(b->grid_offset);
+        case BUILDING_PALISADE:
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    return assets_get_image_id("Military_Buildings", "Pal Wall N 01") + building_connectable_get_palisade_offset(b->grid_offset);
+                case CLIMATE_DESERT:
+                    return assets_get_image_id("Military_Buildings", "Pal Wall S 01") + building_connectable_get_palisade_offset(b->grid_offset);
+                default:
+                    return assets_get_image_id("Military_Buildings", "Pal Wall C 01") + building_connectable_get_palisade_offset(b->grid_offset);
+            }
         default:
             return 0;
     }

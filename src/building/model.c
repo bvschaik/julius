@@ -208,6 +208,7 @@ const model_building MODEL_SMALL_MAUSOLEUM = { 500,-8,1,3,5,0 };
 const model_building MODEL_LARGE_MAUSOLEUM = { 1500,-10,1,3,6,0 };
 const model_building MODEL_WATCHTOWER = { 100,-6,1,2,3,8, };
 const model_building MODEL_CARAVANSERAI = { 500,-10,2,3,4,20 };
+const model_building MODEL_PALISADE = { 6,0,0,0,0,0 };
 
 const model_building *model_get_building(building_type type)
 {
@@ -256,6 +257,8 @@ const model_building *model_get_building(building_type type)
             return &MODEL_LARGE_MAUSOLEUM;
         case BUILDING_CARAVANSERAI:
             return &MODEL_CARAVANSERAI;
+        case BUILDING_PALISADE:
+            return &MODEL_PALISADE;
         default:
             break;
     }

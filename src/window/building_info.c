@@ -170,6 +170,7 @@ static int get_height_id(void)
             case BUILDING_GARDEN_WALL:
             case BUILDING_ROOFED_GARDEN_WALL:
             case BUILDING_GARDEN_WALL_GATE:
+            case BUILDING_PALISADE:
                 return 1;
 
             case BUILDING_THEATER:
@@ -746,6 +747,8 @@ static void draw_background(void)
             } else {
                 window_building_draw_garden_gate(&context);
             }
+        } else if (btype == BUILDING_PALISADE) {
+            window_building_draw_palisade(&context);
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info(&context);

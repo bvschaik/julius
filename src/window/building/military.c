@@ -1,4 +1,5 @@
 #include "military.h"
+
 #include "building/barracks.h"
 #include "building/building.h"
 #include "building/count.h"
@@ -590,3 +591,13 @@ void window_building_draw_watchtower(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 }
+
+void window_building_draw_palisade(building_info_context *c)
+{
+    c->help_id = 85;
+    window_building_play_sound(c, "wavs/wall.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    text_draw_centered(translation_for(TR_BUILDING_PALISADE), c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
+    window_building_draw_description_from_tr_string_at(c, TR_BUILDING_PALISADE_DESC, BLOCK_SIZE * c->height_blocks - 158);
+}
+

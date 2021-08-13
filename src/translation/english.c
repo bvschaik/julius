@@ -702,7 +702,10 @@ static translation_string all_strings[] = {
     {TR_BUILDING_ROOFED_GARDEN_WALL, "Roofed garden wall"},
     {TR_BUILDING_GARDEN_WALL_GATE, "Garden gate"},
     {TR_BUILDING_GARDEN_WALL_GATE_DESC, "Gate keeps uninvited guests from disrupting the peace of the gardens."},
-    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "The cart pusher is on his way to get the goods from another warehouse."}
+    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "The cart pusher is on his way to get the goods from another warehouse."},
+    {TR_BUILDING_PALISADE, "Palisade" },
+    {TR_BUILDING_PALISADE_DESC, "This solid wooden wall will keep us safe from invaders and hostile animals."},
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -22,7 +22,7 @@ enum {
     DESTROYABLE_AQUEDUCT_GARDEN,
     DESTROYABLE_WALL,
     DESTROYABLE_GATEHOUSE,
-    DESTROYABLE_NONE
+    DESTROYABLE_NONE,
 };
 int map_routing_get_destroyable(int grid_offset);
 

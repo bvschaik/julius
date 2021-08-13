@@ -87,6 +87,7 @@ int scenario_building_allowed(int building_type)
         case BUILDING_DOCK:
             return scenario.allowed_buildings[ALLOWED_BUILDING_DOCK];
         case BUILDING_WALL:
+        case BUILDING_PALISADE:
             return scenario.allowed_buildings[ALLOWED_BUILDING_WALL];
         case BUILDING_TOWER:
         case BUILDING_WATCHTOWER:

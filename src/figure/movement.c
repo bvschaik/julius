@@ -19,6 +19,11 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 
+#define PALISADE_HP   60
+#define BUILDING_HP   10
+#define WALL_HP      200
+#define GATEHOUSE_HP 150
+
 static void advance_tick(figure *f)
 {
     switch (f->direction) {
@@ -205,20 +210,29 @@ static void advance_route_tile(figure *f, int roaming_enabled)
             int max_damage = 0;
             switch (map_routing_get_destroyable(target_grid_offset)) {
                 case DESTROYABLE_BUILDING:
-                    max_damage = 10;
+                {
+                    building *b = building_get(map_building_at(target_grid_offset));
+                    switch (b->type) {
+                        case BUILDING_PALISADE:
+                            max_damage = PALISADE_HP;
+                        default:
+                            max_damage = BUILDING_HP;
+                            break;
+                    }
                     break;
+                }
                 case DESTROYABLE_AQUEDUCT_GARDEN:
                     if (map_terrain_is(target_grid_offset, TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE)) {
                         cause_damage = 0;
                     } else {
-                        max_damage = 10;
+                        max_damage = BUILDING_HP;
                     }
                     break;
                 case DESTROYABLE_WALL:
-                    max_damage = 200;
+                    max_damage = WALL_HP;
                     break;
                 case DESTROYABLE_GATEHOUSE:
-                    max_damage = 150;
+                    max_damage = GATEHOUSE_HP;
                     break;
             }
             if (cause_damage) {
