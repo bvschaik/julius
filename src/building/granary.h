@@ -4,6 +4,12 @@
 #include "building/building.h"
 #include "map/point.h"
 
+// make sure to update src/window/building/distribution.c so the number renders correctly
+#define FULL_GRANARY 3200
+#define THREEQUARTERS_GRANARY 2400
+#define HALF_GRANARY 1600
+#define QUARTER_GRANARY 800
+
 enum {
     GRANARY_TASK_NONE = -1,
     GRANARY_TASK_GETTING = 0
@@ -47,5 +53,7 @@ void building_granary_bless(void);
 void building_granary_warehouse_curse(int big);
 
 int building_granary_is_getting(int resource, building* b);
+
+void building_granary_update_built_granaries_capacity();
 
 #endif // BUILDING_GRANARY_H

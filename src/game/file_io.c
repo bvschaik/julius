@@ -2,6 +2,7 @@
 
 #include "building/barracks.h"
 #include "building/count.h"
+#include "building/granary.h"
 #include "building/list.h"
 #include "building/monument.h"
 #include "building/storage.h"
@@ -56,7 +57,7 @@
 
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x84;
+static const int SAVE_GAME_CURRENT_VERSION = 0x85;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
@@ -66,6 +67,8 @@ static const int SAVE_GAME_LAST_JOINED_IMPORT_EXPORT_VERSION = 0x79;
 static const int SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION = 0x80;
 static const int SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION = 0x81;
 static const int SAVE_GAME_LAST_STORED_IMAGE_IDS = 0x83;
+// SAVE_GAME_INCREASE_GRANARY_CAPACITY shall be updated if we decide to change granary capacity again.
+static const int SAVE_GAME_INCREASE_GRANARY_CAPACITY = 0x85;
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -451,6 +454,9 @@ static void savegame_load_from_state(savegame_state *state, int version)
         state->building_count_military,
         state->building_count_support,
         version > SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION);
+    if (version < SAVE_GAME_INCREASE_GRANARY_CAPACITY) {
+        building_granary_update_built_granaries_capacity();
+    }
 
     scenario_emperor_change_load_state(state->emperor_change_time, state->emperor_change_state);
     empire_load_state(state->empire);

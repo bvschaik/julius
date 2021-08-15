@@ -39,10 +39,6 @@ static int get_amount(building *granary, int resource)
     return granary->data.granary.resource_stored[resource];
 }
 
-int THREEQUARTERS_GRANARY = 1800;
-int HALF_GRANARY = 1200;
-int QUARTER_GRANARY = 600;
-
 int building_granary_is_accepting(int resource, building *b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
@@ -551,5 +547,21 @@ void building_granary_warehouse_curse(int big)
             amount = building_granary_remove_resource(max_building, RESOURCE_FRUIT, amount);
             building_granary_remove_resource(max_building, RESOURCE_MEAT, amount);
         }
+    }
+}
+
+void building_granary_update_built_granaries_capacity()
+{
+    for (building *b = building_first_of_type(BUILDING_GRANARY); b; b = b->next_of_type) {
+        int total_units = 0;
+        for (int resource = RESOURCE_MIN_FOOD; resource < RESOURCE_MAX_FOOD; resource++) {
+            total_units += b->data.granary.resource_stored[resource];
+        }
+        total_units += b->data.granary.resource_stored[RESOURCE_NONE];
+
+        if (total_units < 3200) {
+            b->data.granary.resource_stored[RESOURCE_NONE] += 3200 - total_units;
+        }
+        // for now, we don't handle the case where we decrease granary capacity
     }
 }

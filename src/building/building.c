@@ -2,6 +2,7 @@
 
 #include "building/building_state.h"
 #include "building/building_variant.h"
+#include "building/granary.h"
 #include "building/menu.h"
 #include "building/monument.h"
 #include "building/properties.h"
@@ -249,7 +250,7 @@ building *building_create(building_type type, int x, int y)
     }
 
     if (type == BUILDING_GRANARY) {
-        b->data.granary.resource_stored[RESOURCE_NONE] = 2400;
+        b->data.granary.resource_stored[RESOURCE_NONE] = FULL_GRANARY;
     }
 
     if (type == BUILDING_MARKET) {

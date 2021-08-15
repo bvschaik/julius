@@ -3,6 +3,7 @@
 #include "assets/assets.h"
 #include "building/building.h"
 #include "building/dock.h"
+#include "building/granary.h"
 #include "building/market.h"
 #include "building/monument.h"
 #include "building/storage.h"
@@ -159,10 +160,10 @@ uint8_t warehouse_full_button_text[] = "32";
 uint8_t warehouse_3quarters_button_text[] = "24";
 uint8_t warehouse_half_button_text[] = "16";
 uint8_t warehouse_quarter_button_text[] = "8";
-uint8_t granary_full_button_text[] = "24";
-uint8_t granary_3quarters_button_text[] = "18";
-uint8_t granary_half_button_text[] = "12";
-uint8_t granary_quarter_button_text[] = "6";
+uint8_t granary_full_button_text[] = "32";
+uint8_t granary_3quarters_button_text[] = "24";
+uint8_t granary_half_button_text[] = "16";
+uint8_t granary_quarter_button_text[] = "8";
 
 static void draw_accept_none_button(int x, int y, int focused)
 {
@@ -686,7 +687,7 @@ void window_building_draw_granary_orders(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
 }
 
-static void draw_button_from_state(int state, int x, int y)
+static void draw_button_from_state(int state, int x, int y, building_type type)
 {
     switch (state) {
         case BUILDING_STORAGE_STATE_GETTING:
@@ -711,26 +712,28 @@ static void draw_button_from_state(int state, int x, int y)
             lang_text_draw_centered(99, 7, x, y, 210, FONT_NORMAL_WHITE);
             break;
     }
+    uint8_t *button_text = warehouse_full_button_text;
     switch (state) {
         case BUILDING_STORAGE_STATE_ACCEPTING:
         case BUILDING_STORAGE_STATE_GETTING:
-            text_draw_centered(warehouse_full_button_text, x + 214, y, 20, FONT_NORMAL_BLACK, 0);
+            button_text = type == BUILDING_GRANARY ? granary_full_button_text : warehouse_full_button_text;
             break;
         case BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS:
         case BUILDING_STORAGE_STATE_GETTING_3QUARTERS:
-            text_draw_centered(warehouse_3quarters_button_text, x + 214, y, 20, FONT_NORMAL_BLACK, 0);
+            button_text = type == BUILDING_GRANARY ? granary_3quarters_button_text : warehouse_3quarters_button_text;
             break;
         case BUILDING_STORAGE_STATE_ACCEPTING_HALF:
         case BUILDING_STORAGE_STATE_GETTING_HALF:
-            text_draw_centered(warehouse_half_button_text, x + 214, y, 20, FONT_NORMAL_BLACK, 0);
+            button_text = type == BUILDING_GRANARY ? granary_half_button_text : warehouse_half_button_text;
             break;
         case BUILDING_STORAGE_STATE_ACCEPTING_QUARTER:
         case BUILDING_STORAGE_STATE_GETTING_QUARTER:
-            text_draw_centered(warehouse_quarter_button_text, x + 214, y, 20, FONT_NORMAL_BLACK, 0);
+            button_text = type == BUILDING_GRANARY ? granary_quarter_button_text : warehouse_quarter_button_text;
             break;
         default:
             break;
     }
+    text_draw_centered(button_text, x + 214, y, 20, FONT_NORMAL_BLACK, 0);
 }
 
 void window_building_draw_granary_orders_foreground(building_info_context *c)
@@ -765,7 +768,7 @@ void window_building_draw_granary_orders_foreground(building_info_context *c)
         button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
         button_border_draw(c->x_offset + 390, y_offset + 46 + 22 * i, 28, 22, data.partial_resource_focus_button_id == i + 1);
 
-        draw_button_from_state(storage->resource_state[resource], c->x_offset + 180, y_offset + 51 + 22 * i);
+        draw_button_from_state(storage->resource_state[resource], c->x_offset + 180, y_offset + 51 + 22 * i, BUILDING_GRANARY);
     }
 }
 
@@ -926,7 +929,7 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
         button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
         button_border_draw(c->x_offset + 390, y_offset + 46 + 22 * i, 28, 22, data.partial_resource_focus_button_id == i + 1);
 
-        draw_button_from_state(storage->resource_state[resource], c->x_offset + 180, y_offset + 51 + 22 * i);
+        draw_button_from_state(storage->resource_state[resource], c->x_offset + 180, y_offset + 51 + 22 * i, BUILDING_WAREHOUSE);
     }
 }
 
