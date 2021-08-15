@@ -705,6 +705,8 @@ static translation_string all_strings[] = {
     { TR_WINDOW_RACE_BET_WHITE_HORSE, "Ставка на белых"},
     { TR_WINDOW_RACE_BET_GREEN_HORSE, "Ставка на зеленых"},
     { TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Наша тележка забирает товар из другого склада."},
+    {TR_BUILDING_PALISADE, "Частокол" },
+    {TR_BUILDING_PALISADE_DESC, "Эта прочная деревянная стена защитит нас от захватчиков и диких животных."},
     
 };
 
