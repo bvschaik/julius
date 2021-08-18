@@ -14,6 +14,9 @@
 #define MAX_QUEUE GRID_SIZE * GRID_SIZE
 #define GUARD 50000
 
+#define UNTIL_STOP 0
+#define UNTIL_CONTINUE 1
+
 typedef enum {
     DIRECTIONS_NO_DIAGONALS = 4,
     DIRECTIONS_DIAGONALS = 8
@@ -223,7 +226,7 @@ static void route_queue_all_from(int source, max_directions directions, int (*ca
             int dist = 1 + distance.determined.items[offset];
             for (int i = 0; i < directions; i++) {
                 if (valid_offset(offset + ROUTE_OFFSETS[i])) {
-                    if (!callback(offset + ROUTE_OFFSETS[i], dist)) {
+                    if (callback(offset + ROUTE_OFFSETS[i], dist) == UNTIL_STOP) {
                         break;
                     }
                 }
@@ -410,12 +413,12 @@ static int callback_delete_wall_aqueduct(int next_offset, int dist)
     if (terrain_land_citizen.items[next_offset] < CITIZEN_0_ROAD) {
         if (map_terrain_is(next_offset, TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
             map_terrain_remove(next_offset, TERRAIN_CLEARABLE);
-            return 1;
+            return UNTIL_STOP;
         }
     } else {
         enqueue(next_offset, dist);
     }
-    return 0;
+    return UNTIL_CONTINUE;
 }
 
 void map_routing_delete_first_wall_or_aqueduct(int x, int y)
