@@ -11,13 +11,13 @@ int building_is_workshop(building_type type);
 void building_industry_update_production(void);
 void building_industry_update_wheat_production(void);
 
+int building_stockpiling_enabled(building *b);
 int building_industry_has_produced_resource(building *b);
 void building_industry_start_new_production(building *b);
 
 void building_bless_farms(void);
 void building_curse_farms(int big_curse);
 void building_bless_industry(void);
-
 
 void building_workshop_add_raw_material(building *b);
 

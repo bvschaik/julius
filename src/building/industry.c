@@ -3,17 +3,12 @@
 #include "building/list.h"
 #include "building/monument.h"
 #include "city/data_private.h"
-#include "city/message.h"
-#include "city/resource.h"
-#include "city/view.h"
 #include "city/warning.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "core/random.h"
-#include "game/resource.h"
 #include "figure/figure.h"
 #include "map/building_tiles.h"
-#include "map/road_access.h"
 #include "scenario/property.h"
 
 #define MAX_PROGRESS_RAW 200
@@ -251,6 +246,11 @@ void building_industry_update_wheat_production(void)
         }
         update_farm_image(b);
     }
+}
+
+int building_stockpiling_enabled(building *b)
+{
+    return b->data.industry.is_stockpiling;
 }
 
 int building_industry_has_produced_resource(building *b)

@@ -101,7 +101,7 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
 
     int dst_building_id = 0;
     // priority 1: warehouse if resource is on stockpile
-    if (city_resource_is_stockpiled(b->output_resource_id)) {
+    if (city_resource_is_stockpiled(b->output_resource_id) || building_stockpiling_enabled(b)) {
         dst_building_id = building_warehouse_for_storing(0, f->x, f->y,
                             b->output_resource_id, road_network_id, &understaffed_storages, &dst);
     }

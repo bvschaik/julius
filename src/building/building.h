@@ -100,6 +100,7 @@ typedef struct building {
             unsigned char curse_days_left;
             unsigned char has_raw_materials;
             unsigned char has_fish;
+            unsigned char is_stockpiling;
             unsigned char orientation;
             short fishing_boat_id;
         } industry;
@@ -217,11 +218,17 @@ int building_is_statue_garden_temple(building_type type);
 
 int building_is_fort(building_type type);
 
+int building_is_primary_product_producer(building_type type);
+
 int building_mothball_toggle(building *b);
 
 int building_mothball_set(building *b, int value);
 
 int building_get_tourism(const building *b);
+
+unsigned char building_stockpiling_toggle(building *b);
+
+int building_get_tourism(const building* b);
 
 int building_get_levy(const building *b);
 

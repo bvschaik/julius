@@ -2,6 +2,7 @@
 
 #include "building/building_state.h"
 #include "building/building_variant.h"
+#include "building/industry.h"
 #include "building/granary.h"
 #include "building/menu.h"
 #include "building/monument.h"
@@ -437,6 +438,11 @@ void building_update_desirability(void)
     }
 }
 
+int building_is_primary_product_producer(building_type type)
+{
+    return building_is_raw_resource_producer(type) || building_is_farm(type) || type == BUILDING_WHARF;
+}
+
 int building_is_house(building_type type)
 {
     return type >= BUILDING_HOUSE_VACANT_LOT && type <= BUILDING_HOUSE_LUXURY_PALACE;
@@ -523,6 +529,12 @@ int building_mothball_set(building *b, int mothball)
     }
     return b->state;
 
+}
+
+unsigned char building_stockpiling_toggle(building *b)
+{
+    b->data.industry.is_stockpiling = !b->data.industry.is_stockpiling;
+    return b->data.industry.is_stockpiling;
 }
 
 int building_get_levy(const building *b)

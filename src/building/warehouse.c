@@ -6,16 +6,13 @@
 #include "building/monument.h"
 #include "building/model.h"
 #include "building/storage.h"
-#include "city/buildings.h"
 #include "city/finance.h"
-#include "city/military.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/image.h"
 #include "empire/trade_prices.h"
 #include "game/tutorial.h"
 #include "map/image.h"
-#include "map/road_access.h"
 #include "scenario/property.h"
 
 #define INFINITE 10000
@@ -574,6 +571,9 @@ static int contains_non_stockpiled_food(building *space, const int *resources)
 
 int building_warehouse_determine_worker_task(building *warehouse, int *resource)
 {
+    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_WORKER, warehouse)) {
+        return WAREHOUSE_TASK_NONE; // Disabled by player
+    }
     int pct_workers = calc_percentage(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
     if (pct_workers < 50) {
         return WAREHOUSE_TASK_NONE;
