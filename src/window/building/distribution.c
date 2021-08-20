@@ -4,10 +4,10 @@
 #include "building/building.h"
 #include "building/dock.h"
 #include "building/granary.h"
+#include "building/industry.h"
 #include "building/market.h"
 #include "building/monument.h"
 #include "building/storage.h"
-#include "building/industry.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/finance.h"
@@ -189,7 +189,7 @@ static void draw_permissions_buttons(int x, int y, int buttons)
         BUILDING_STORAGE_PERMISSION_DOCK,
         BUILDING_STORAGE_PERMISSION_WORKER
     };
-    int offsets[] = { 96, 132, 96 };
+    int offsets[] = { 96, 132, 96, 96 };
     for (int i = 0; i < buttons; i++)
     {
         int rule_id = rules[i];
@@ -897,7 +897,7 @@ void window_building_draw_warehouse(building_info_context *c)
     image_draw(image_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 32, c->y_offset + BLOCK_SIZE * c->height_blocks - 83);
     image_draw(image_group(GROUP_FIGURE_TRADE_CARAVAN) + 4, c->x_offset + 128, c->y_offset + BLOCK_SIZE * c->height_blocks - 83);
     image_draw(image_group(GROUP_FIGURE_SHIP) + 4, c->x_offset + 216, c->y_offset + BLOCK_SIZE * c->height_blocks - 100);
-    image_draw(image_group(GROUP_FIGURE_CARTPUSHER), c->x_offset + 356, c->y_offset + 16 * c->height_blocks - 93);
+    image_draw(image_group(GROUP_FIGURE_CARTPUSHER), c->x_offset + 356, c->y_offset + BLOCK_SIZE * c->height_blocks - 93);
 }
 
 void window_building_draw_warehouse_foreground(building_info_context *c)
