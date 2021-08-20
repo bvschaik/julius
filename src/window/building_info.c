@@ -170,7 +170,6 @@ static int get_height_id(void)
             case BUILDING_SENATE:
             case BUILDING_SENATE_UPGRADED:
             case BUILDING_FOUNTAIN:
-            case BUILDING_GRANARY:
                 return 2;
 
             case BUILDING_BARRACKS:
@@ -206,6 +205,9 @@ static int get_height_id(void)
             case BUILDING_HIPPODROME:
             case BUILDING_COLOSSEUM:
                 return 8;
+
+            case BUILDING_GRANARY:
+                return 9;
 
             default:
                 return 0;
@@ -479,6 +481,7 @@ static void init(int grid_offset)
         case 6: context.height_blocks = 38; break;
         case 7: context.height_blocks = 26; break;
         case 8: context.height_blocks = 40; context.width_blocks = 30; break;
+        case 9: context.height_blocks = 20; break;
         default: context.height_blocks = 22; break;
     }
     if (screen_height() <= 600) {
