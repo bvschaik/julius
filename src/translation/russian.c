@@ -710,9 +710,6 @@ static translation_string all_strings[] = {
     { TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Наша тележка забирает товар из другого склада."},
     {TR_BUILDING_PALISADE, "Частокол" },
     {TR_BUILDING_PALISADE_DESC, "Эта прочная деревянная стена защитит нас от захватчиков и диких животных."},
-    {TR_TOOLTIP_BUTTON_ACCEPT_WORKERS, "Не носить ресурсы в мастерские или в амбары"},
-    {TR_TOOLTIP_BUTTON_STOCKPILING_ON, "Вкл. складирование на склад"},
-    {TR_TOOLTIP_BUTTON_STOCKPILING_OFF, "Выкл. складирование на склад"},
     
 };
 
