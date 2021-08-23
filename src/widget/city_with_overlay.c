@@ -467,10 +467,10 @@ static void draw_top(int x, int y, int grid_offset)
     if (overlay->draw_custom_top) {
         overlay->draw_custom_top(x, y, grid_offset);
     } else if (map_property_is_draw_tile(grid_offset)) {
-        if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
-            if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset)) {
-                city_with_overlay_draw_building_top(x, y, grid_offset);
-            } else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset)) {
+            city_with_overlay_draw_building_top(x, y, grid_offset);
+        } else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+            if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
                 color_t color_mask = 0;
                 if (map_property_is_deleted(grid_offset) && !is_multi_tile_terrain(grid_offset)) {
                     color_mask = COLOR_MASK_RED;
@@ -479,8 +479,10 @@ static void draw_top(int x, int y, int grid_offset)
                 image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask);
             }
         }
+
     }
 }
+
 
 static void draw_animation(int x, int y, int grid_offset)
 {

@@ -59,7 +59,7 @@ static int show_building_desirability(const building *b)
 
 static int show_building_roads(const building *b)
 {
-    return building_type_is_roadblock(b->type);
+    return building_type_is_roadblock(b->type) || b->type == BUILDING_GATEHOUSE;
 }
 
 static int show_building_none(const building *b)
