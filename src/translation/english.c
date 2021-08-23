@@ -709,6 +709,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_PALISADE, "Palisade" },
     {TR_BUILDING_PALISADE_DESC, "This earthen bank, topped by a high wall of sharpened wooden stakes will keep your city safe from invaders and hostile animals."},
     {TR_OVERLAY_MOTHBALL, "Mothballed"},
+    {TR_OVERLAY_ENEMY, "Enemies"},
 
 };
 

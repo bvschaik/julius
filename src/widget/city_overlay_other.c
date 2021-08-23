@@ -648,8 +648,8 @@ const city_overlay *city_overlay_for_mothball(void)
         show_building_mothball,
         show_figure_none,
         get_column_height_none,
-        0,
         get_tooltip_none,
+        0,
         0,
         0
     };

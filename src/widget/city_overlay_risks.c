@@ -1,6 +1,7 @@
 #include "city_overlay_risks.h"
 
 #include "building/industry.h"
+#include "figure/properties.h"
 #include "game/state.h"
 #include "graphics/image.h"
 #include "map/building.h"
@@ -78,6 +79,11 @@ static int show_building_native(const building *b)
     return b->type == BUILDING_NATIVE_HUT || b->type == BUILDING_NATIVE_MEETING || b->type == BUILDING_MISSION_POST;
 }
 
+static int show_building_none(const building *b)
+{
+    return 0;
+}
+
 static int show_figure_fire(const figure *f)
 {
     return f->type == FIGURE_PREFECT;
@@ -111,6 +117,12 @@ static int show_figure_problems(const figure *f)
 static int show_figure_native(const figure *f)
 {
     return f->type == FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_MISSIONARY;
+}
+
+static int show_figure_enemy(const figure *f)
+{
+    figure_properties *props = figure_properties_for_type(f->type);
+    return props->category == FIGURE_CATEGORY_HOSTILE || props->category == FIGURE_CATEGORY_NATIVE;
 }
 
 static int get_column_height_fire(const building *b)
@@ -378,6 +390,23 @@ const city_overlay *city_overlay_for_native(void)
         0,
         draw_footprint_native,
         draw_top_native
+    };
+    return &overlay;
+}
+
+
+const city_overlay *city_overlay_for_enemy(void)
+{
+    static city_overlay overlay = {
+        OVERLAY_ENEMY,
+        COLUMN_COLOR_RED,
+        show_building_none,
+        show_figure_enemy,
+        get_column_height_none,
+        0,
+        0,
+        0,
+        0
     };
     return &overlay;
 }

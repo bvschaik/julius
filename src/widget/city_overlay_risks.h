@@ -15,4 +15,6 @@ const city_overlay *city_overlay_for_problems(void);
 
 const city_overlay *city_overlay_for_native(void);
 
+const city_overlay *city_overlay_for_enemy(void);
+
 #endif // WIGET_CITY_OVERLAY_RISKS_H
