@@ -708,6 +708,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "The cart pusher is on his way to get the goods from another warehouse."},
     {TR_BUILDING_PALISADE, "Palisade" },
     {TR_BUILDING_PALISADE_DESC, "This earthen bank, topped by a high wall of sharpened wooden stakes will keep your city safe from invaders and hostile animals."},
+    {TR_OVERLAY_MOTHBALL, "Mothballed"},
 
 };
 

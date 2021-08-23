@@ -109,6 +109,8 @@ static const city_overlay *get_city_overlay(void)
             return city_overlay_for_roads();
         case OVERLAY_LEVY:
             return city_overlay_for_levy();
+        case OVERLAY_MOTHBALL:
+            return city_overlay_for_mothball();
         default:
             return 0;
     }
@@ -647,7 +649,7 @@ int city_with_overlay_get_tooltip_text(tooltip_context *c, int grid_offset)
     int overlay_requires_house =
         overlay_type != OVERLAY_WATER && overlay_type != OVERLAY_FIRE && overlay_type != OVERLAY_LEVY &&
         overlay_type != OVERLAY_DAMAGE && overlay_type != OVERLAY_NATIVE && overlay_type != OVERLAY_DESIRABILITY &&
-        overlay_type != OVERLAY_PROBLEMS
+        overlay_type != OVERLAY_PROBLEMS && overlay_type != OVERLAY_MOTHBALL
         ;
     building *b = building_get(building_id);
     if (overlay_requires_house && !b->house_size) {

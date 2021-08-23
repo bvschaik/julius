@@ -62,6 +62,11 @@ static int show_building_roads(const building *b)
     return building_type_is_roadblock(b->type) || b->type == BUILDING_GATEHOUSE;
 }
 
+static int show_building_mothball(const building *b)
+{
+    return b->state == BUILDING_STATE_MOTHBALLED;
+}
+
 static int show_building_none(const building *b)
 {
     return 0;
@@ -264,7 +269,7 @@ static int get_tooltip_desirability(tooltip_context *c, int grid_offset)
     }
 }
 
-static int get_tooltip_roads(tooltip_context *c, int grid_offset)
+static int get_tooltip_none(tooltip_context *c, int grid_offset)
 {
     return 0;
 }
@@ -611,7 +616,7 @@ const city_overlay *city_overlay_for_roads(void)
         show_building_roads,
         show_figure_none,
         get_column_height_none,
-        get_tooltip_roads,
+        get_tooltip_none,
         0,
         0,
         0
@@ -634,3 +639,20 @@ const city_overlay *city_overlay_for_levy(void)
     };
     return &overlay;
 }
+
+const city_overlay *city_overlay_for_mothball(void)
+{
+    static city_overlay overlay = {
+        OVERLAY_MOTHBALL,
+        COLUMN_COLOR_GREEN,
+        show_building_mothball,
+        show_figure_none,
+        get_column_height_none,
+        0,
+        get_tooltip_none,
+        0,
+        0
+    };
+    return &overlay;
+}
+
