@@ -31,7 +31,6 @@ typedef struct building {
         short fort_figure_type;
         short native_meeting_center_id;
         short market_goods;
-        short roadblock_exceptions;
         short barracks_priority;
     } subtype;
     unsigned char road_network_id;
@@ -148,6 +147,9 @@ typedef struct building {
         struct {
             unsigned char was_tent;
         } rubble;
+        struct {
+            short exceptions;
+        } roadblock;
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;
@@ -239,6 +241,6 @@ void building_clear_all(void);
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
                          buffer *sequence, buffer *corrupt_houses);
 
-void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, int includes_building_size);
+void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, int includes_building_size, int save_version);
 
 #endif // BUILDING_BUILDING_H

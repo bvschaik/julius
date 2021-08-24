@@ -10,7 +10,7 @@
 void building_roadblock_set_permission(roadblock_permission p, building* b) {
     if (building_type_is_roadblock(b->type)) {
         int permission_bit = 1 << p;
-        b->subtype.roadblock_exceptions ^= permission_bit;
+        b->data.roadblock.exceptions ^= permission_bit;
     }
 }
 
@@ -19,7 +19,7 @@ int building_roadblock_get_permission(roadblock_permission p, building* b) {
         return 0;
     }
     int permission_bit = 1 << p;
-    return (b->subtype.roadblock_exceptions & permission_bit);
+    return (b->data.roadblock.exceptions & permission_bit);
 }
 
 int building_type_is_roadblock(building_type type)

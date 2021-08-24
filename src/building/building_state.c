@@ -1,6 +1,9 @@
 #include "building_state.h"
 #include "building/monument.h"
+#include "building/roadblock.h"
 #include "game/resource.h"
+
+#define SAVE_GAME_ROADBLOCK_DATA_MOVED_FROM_SUBTYPE 0x86
 
 static int is_industry_type(const building *b)
 {
@@ -100,6 +103,11 @@ static void write_type_data(buffer *buf, const building *b)
             buffer_write_i16(buf, b->data.dock.docker_ids[i]);
         }
         buffer_write_i16(buf, b->data.dock.trade_ship_id);
+    } else if (building_type_is_roadblock(b->type)) {
+        buffer_write_u16(buf, b->data.roadblock.exceptions);
+        for (int i = 0; i < 40; i++) {
+            buffer_write_u8(buf, 0);
+        }
     } else if (is_industry_type(b)) {
         buffer_write_i16(buf, b->data.industry.progress);
         for (int i = 0; i < 11; i++) {
@@ -301,6 +309,9 @@ static void read_type_data(buffer *buf, building *b, int building_buf_size)
             b->data.dock.docker_ids[i] = buffer_read_i16(buf);
         }
         b->data.dock.trade_ship_id = buffer_read_i16(buf);
+    } else if (building_type_is_roadblock(b->type)) {
+        b->data.roadblock.exceptions = buffer_read_i16(buf);
+        buffer_skip(buf, 40);
     } else if (is_industry_type(b)) {
         b->data.industry.progress = buffer_read_i16(buf);
         buffer_skip(buf, 11);
@@ -324,7 +335,7 @@ static void read_type_data(buffer *buf, building *b, int building_buf_size)
     }
 }
 
-void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_size)
+void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_size, int save_version)
 {
     b->state = buffer_read_u8(buf);
     b->faction_id = buffer_read_u8(buf);
@@ -413,6 +424,13 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
             b->data.monument.phase = -1;
         }
 
+    }
+
+    if (save_version < SAVE_GAME_ROADBLOCK_DATA_MOVED_FROM_SUBTYPE) {
+        // Backwards compatibility - roadblock data used to be stored in b->subtype 
+        if (building_type_is_roadblock(b->type)) {
+            b->data.roadblock.exceptions = b->subtype.orientation;
+        }
     }
 
     // To keep backward savegame compatibility, only fill more recent building struct elements

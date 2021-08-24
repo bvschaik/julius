@@ -57,7 +57,7 @@
 
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x85;
+static const int SAVE_GAME_CURRENT_VERSION = 0x86;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
@@ -69,6 +69,8 @@ static const int SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION = 0x81;
 static const int SAVE_GAME_LAST_STORED_IMAGE_IDS = 0x83;
 // SAVE_GAME_INCREASE_GRANARY_CAPACITY shall be updated if we decide to change granary capacity again.
 static const int SAVE_GAME_INCREASE_GRANARY_CAPACITY = 0x85;
+static const int SAVE_GAME_ROADBLOCK_DATA_MOVED_FROM_SUBTYPE = 0x86;
+
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -442,7 +444,8 @@ static void savegame_load_from_state(savegame_state *state, int version)
     building_load_state(state->buildings,
         state->building_extra_sequence,
         state->building_extra_corrupt_houses,
-        version > SAVE_GAME_LAST_STATIC_VERSION);
+        version > SAVE_GAME_LAST_STATIC_VERSION,
+        version);
     building_barracks_load_state(state->building_barracks_tower_sentry);
     city_view_load_state(state->city_view_orientation, state->city_view_camera);
     game_time_load_state(state->game_time);

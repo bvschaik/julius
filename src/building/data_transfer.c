@@ -36,7 +36,7 @@ int building_data_transfer_copy(building *b)
 
     switch (data_type) {
         case DATA_TYPE_ROADBLOCK:
-            data.subtype = b->subtype.roadblock_exceptions;
+            data.subtype = b->data.roadblock.exceptions;
             return 1;
         case DATA_TYPE_MARKET:
             data.subtype = b->subtype.market_goods;
@@ -69,7 +69,7 @@ int building_data_transfer_paste(building *b)
 
     switch (data_type) {
         case DATA_TYPE_ROADBLOCK:
-            b->subtype.roadblock_exceptions = data.subtype;
+            b->data.roadblock.exceptions = data.subtype;
             return 1;
         case DATA_TYPE_MARKET:
             b->subtype.market_goods = data.subtype;

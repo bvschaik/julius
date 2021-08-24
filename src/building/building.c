@@ -636,7 +636,7 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
     buffer_write_i32(corrupt_houses, extra.unfixable_houses);
 }
 
-void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, int includes_building_size)
+void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, int includes_building_size, int save_version)
 {
     int building_buf_size = BUILDING_STATE_ORIGINAL_BUFFER_SIZE;
     int buf_size = buf->size;
@@ -660,7 +660,7 @@ void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, 
 
     for (int i = 0; i < buildings_to_load; i++) {
         building *b = array_next(data.buildings);
-        building_state_load_from_buffer(buf, b, building_buf_size);
+        building_state_load_from_buffer(buf, b, building_buf_size, save_version);
         if (b->state != BUILDING_STATE_UNUSED) {
             highest_id_in_use = i;
             fill_adjacent_types(b);
