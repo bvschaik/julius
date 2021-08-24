@@ -121,7 +121,7 @@ static int show_figure_native(const figure *f)
 
 static int show_figure_enemy(const figure *f)
 {
-    figure_properties *props = figure_properties_for_type(f->type);
+    const figure_properties *props = figure_properties_for_type(f->type);
     return props->category == FIGURE_CATEGORY_HOSTILE || props->category == FIGURE_CATEGORY_NATIVE;
 }
 

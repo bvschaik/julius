@@ -648,7 +648,7 @@ int building_monument_count_grand_temples(void)
 
 int building_monument_has_labour_problems(building *b)
 {
-    model_building *model = model_get_building(b->type);
+    const model_building *model = model_get_building(b->type);
 
     if (b->num_workers < model->laborers) {
         return 1;
