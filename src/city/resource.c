@@ -173,8 +173,10 @@ void city_resource_toggle_stockpiled(resource_type resource)
 {
     if (city_data.resource.stockpiled[resource]) {
         city_data.resource.stockpiled[resource] = 0;
+        city_data.resource.trade_status[resource] |= city_data.resource.export_status_before_stockpiling[resource];
     } else {
         city_data.resource.stockpiled[resource] = 1;
+        city_data.resource.export_status_before_stockpiling[resource] = city_data.resource.trade_status[resource] & TRADE_STATUS_EXPORT;
         city_data.resource.trade_status[resource] &= ~TRADE_STATUS_EXPORT;
     }
 }
