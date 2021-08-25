@@ -710,6 +710,8 @@ static translation_string all_strings[] = {
     { TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Наша тележка забирает товар из другого склада."},
     {TR_BUILDING_PALISADE, "Частокол" },
     {TR_BUILDING_PALISADE_DESC, "Эта прочная деревянная стена защитит нас от захватчиков и диких животных."},
+    {TR_OVERLAY_MOTHBALL, "Выкл. строения"},
+    {TR_OVERLAY_ENEMY, "Враги"},
     
 };
 
