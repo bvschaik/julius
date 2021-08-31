@@ -163,11 +163,13 @@ static void draw_culture_info(building_info_context *c, int help_id, const char 
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 136, group_id, 1);
 }
 
 void window_building_draw_clinic(building_info_context *c)
 {
     draw_culture_info(c, 65, "wavs/clinic.wav", 81);
+
 }
 
 void window_building_draw_hospital(building_info_context *c)
@@ -194,6 +196,7 @@ void window_building_draw_bathhouse(building_info_context *c)
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 136, 83, 1);
 }
 
 void window_building_draw_barber(building_info_context *c)
@@ -219,6 +222,7 @@ void window_building_draw_school(building_info_context *c)
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 136, 85, 1);
 }
 
 void window_building_draw_academy(building_info_context *c)
@@ -244,6 +248,7 @@ void window_building_draw_library(building_info_context *c)
     }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 136, 87, 1);
 }
 
 static void draw_temple_info(building_info_context *c, int image_offset)

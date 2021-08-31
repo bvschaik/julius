@@ -117,10 +117,6 @@ static int get_height_id(void)
             case BUILDING_LION_HOUSE:
             case BUILDING_ACTOR_COLONY:
             case BUILDING_CHARIOT_MAKER:
-            case BUILDING_DOCTOR:
-            case BUILDING_HOSPITAL:
-            case BUILDING_BATHHOUSE:
-            case BUILDING_BARBER:
             case BUILDING_BURNING_RUIN:
             case BUILDING_RESERVOIR:
             case BUILDING_NATIVE_HUT:
@@ -129,9 +125,6 @@ static int get_height_id(void)
             case BUILDING_MISSION_POST:
             case BUILDING_PREFECTURE:
             case BUILDING_ENGINEERS_POST:
-            case BUILDING_SCHOOL:
-            case BUILDING_ACADEMY:
-            case BUILDING_LIBRARY:
             case BUILDING_GATEHOUSE:
             case BUILDING_TOWER:
             case BUILDING_FORT:
