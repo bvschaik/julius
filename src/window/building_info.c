@@ -145,11 +145,6 @@ static int get_height_id(void)
             case BUILDING_FORUM:
             case BUILDING_ROADBLOCK:
             case BUILDING_FORUM_UPGRADED:
-            case BUILDING_WINE_WORKSHOP:
-            case BUILDING_OIL_WORKSHOP:
-            case BUILDING_WEAPONS_WORKSHOP:
-            case BUILDING_FURNITURE_WORKSHOP:
-            case BUILDING_POTTERY_WORKSHOP:
             case BUILDING_WORKCAMP:
             case BUILDING_ARCHITECT_GUILD:
             case BUILDING_OBELISK:
