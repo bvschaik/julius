@@ -703,6 +703,7 @@ typedef enum {
     TR_OVERLAY_MOTHBALL,
     TR_OVERLAY_ENEMY,
     TR_BUILDING_TAVERN_DESC_5,
+    TR_OVERLAY_WAREHOUSES,
     TRANSLATION_MAX_KEY,
 } translation_key;
 

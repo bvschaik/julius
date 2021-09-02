@@ -711,6 +711,7 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_MOTHBALL, "Mothballed"},
     {TR_OVERLAY_ENEMY, "Enemies"},
     {TR_BUILDING_TAVERN_DESC_5, "Citizens in their free time love visiting this establishment to socialize and have some lunch with wine." },
+    {TR_OVERLAY_WAREHOUSES, "Warehouses" },
 
 };
 

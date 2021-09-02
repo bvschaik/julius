@@ -34,6 +34,7 @@ enum {
     OVERLAY_SENTIMENT = 34,
     OVERLAY_MOTHBALL = 35,
     OVERLAY_ENEMY = 36,
+    OVERLAY_WAREHOUSE = 37,
 };
 
 void game_state_init(void);
