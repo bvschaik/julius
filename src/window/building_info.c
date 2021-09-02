@@ -141,7 +141,6 @@ static int get_height_id(void)
             case BUILDING_WORKCAMP:
             case BUILDING_ARCHITECT_GUILD:
             case BUILDING_OBELISK:
-            case BUILDING_TAVERN:
             case BUILDING_HEDGE_DARK:
             case BUILDING_HEDGE_LIGHT:
             case BUILDING_LARARIUM:
@@ -154,14 +153,12 @@ static int get_height_id(void)
             case BUILDING_PALISADE:
                 return 1;
 
-            case BUILDING_THEATER:
             case BUILDING_SENATE:
             case BUILDING_SENATE_UPGRADED:
             case BUILDING_FOUNTAIN:
                 return 2;
 
             case BUILDING_BARRACKS:
-            case BUILDING_AMPHITHEATER:
             case BUILDING_LARGE_TEMPLE_CERES:
             case BUILDING_LARGE_TEMPLE_NEPTUNE:
             case BUILDING_LARGE_TEMPLE_MERCURY:

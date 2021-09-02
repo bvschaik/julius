@@ -407,6 +407,7 @@ void window_building_draw_theater(building_info_context *c)
     } else {
         lang_text_draw(72, 5, c->x_offset + 32, c->y_offset + 182, FONT_NORMAL_BROWN);
     }
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 100, 72, 1);
 }
 
 void window_building_draw_amphitheater(building_info_context *c)
@@ -449,6 +450,7 @@ void window_building_draw_amphitheater(building_info_context *c)
     } else {
         lang_text_draw(71, 9, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
     }
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 100, 71, 1);
 }
 
 static void draw_entertainment_school(building_info_context *c, const char *sound_file, int group_id)
@@ -800,6 +802,7 @@ void window_building_draw_tavern(building_info_context *c)
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 156, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 158);
+    window_building_draw_description_from_tr_string_at(c, TR_BUILDING_TAVERN_DESC_5 ,BLOCK_SIZE * c->height_blocks - 110);
     return;
 }
 
@@ -895,6 +898,7 @@ void window_building_draw_colosseum_background(building_info_context *c)
         lang_text_draw_centered(74, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
         window_building_draw_monument_colosseum_construction_process(c);
     }
+
 }
 
 void window_building_draw_colosseum_foreground(building_info_context *c)
@@ -950,7 +954,11 @@ void window_building_draw_arena(building_info_context *c)
         window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS);
     } else if (b->data.entertainment.days2) {
         window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NEEDS_LIONS);
+    }   
+    if (b->type == BUILDING_ARENA) {
+        window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 90, 74, 1);
     }
+
 }
 
 static void draw_policy_image_border(int x, int y, int focused)
