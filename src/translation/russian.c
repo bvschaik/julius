@@ -713,6 +713,7 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_MOTHBALL, "Выкл. строения"},
     {TR_OVERLAY_ENEMY, "Враги"},
     {TR_BUILDING_TAVERN_DESC_5, "Граждане в свободное время любят посещать это заведение, чтобы пообщаться, пообедать и глотнуть вина." },
+    {TR_OVERLAY_WAREHOUSES, "Склады" },
     
 };
 
