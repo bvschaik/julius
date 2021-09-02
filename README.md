@@ -8,7 +8,7 @@ Download:
 
 Android version on Google Play: [install release](https://play.google.com/store/apps/details?id=com.github.bvschaik.julius) or [sign up for test builds](https://play.google.com/apps/testing/com.github.bvschaik.julius)
 
-Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh) or [Gitter](https://gitter.im/julius-game/community)
+Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh)
 
 ## Julius: an open source re-implementation of Caesar III
 
