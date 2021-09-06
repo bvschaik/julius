@@ -35,6 +35,8 @@ int building_menu_next_index(int submenu, int current_index);
 
 building_type building_menu_type(int submenu, int item);
 
+build_menu_group building_menu_for_type(building_type type);
+
 int building_menu_is_enabled(building_type type);
 
 /**
