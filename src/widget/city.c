@@ -258,6 +258,7 @@ static void handle_last_touch(void)
     const touch *last = touch_get_latest();
     if (last->in_use && touch_was_click(last)) {
         building_construction_cancel();
+        window_request_refresh();
     }
 }
 
@@ -276,6 +277,7 @@ static int handle_cancel_construction_button(const touch *t)
         return 0;
     }
     building_construction_cancel();
+    window_request_refresh();
     return 1;
 }
 
@@ -416,6 +418,7 @@ static void handle_mouse(const mouse *m)
             }
         } else {
             building_construction_cancel();
+            window_request_refresh();
         }
     }
 }
@@ -433,6 +436,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
     if (h->escape_pressed) {
         if (building_construction_type()) {
             building_construction_cancel();
+            window_request_refresh();
         } else {
             hotkey_handle_escape();
         }

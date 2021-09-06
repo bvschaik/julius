@@ -188,6 +188,7 @@ static void set_construction_building_type(building_type type)
     if (scenario_building_allowed(type) && building_menu_is_enabled(type)) {
         building_construction_cancel();
         building_construction_set_type(type);
+        window_request_refresh();
     }
 }
 
