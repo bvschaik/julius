@@ -125,6 +125,15 @@ static void destroy_linked_parts(building *b, int on_fire)
             part->state = BUILDING_STATE_RUBBLE;
         }
     }
+
+    // Unlink the buildings to prevent corrupting the building table
+    part = building_main(b);
+    for (int i = 0; i < 9 && part->id > 0; i++) {
+        building *next_part = building_next(part);
+        part->next_part_building_id = 0;
+        part->prev_part_building_id = 0;
+        part = next_part;
+    }
 }
 
 void building_destroy_by_collapse(building *b)
