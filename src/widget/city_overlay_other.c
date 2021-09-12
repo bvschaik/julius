@@ -116,7 +116,7 @@ static int show_figure_none(const figure *f)
 
 static int get_column_height_religion(const building *b)
 {
-    return b->house_size && b->data.house.num_gods ? b->data.house.num_gods * 17 / 10 : NO_COLUMN;
+    return b->house_size && b->data.house.num_gods ? b->data.house.num_gods * 18 / 10 : NO_COLUMN;
 }
 
 static int get_column_height_food_stocks(const building *b)
