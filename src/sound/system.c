@@ -165,6 +165,7 @@ static char channel_filenames[SOUND_CHANNEL_MAX][CHANNEL_FILENAME_MAX] = {
     "",
     "wavs/river.wav",
     "wavs/mission.wav",
+    "wavs/tower4.wav"
 };
 
 static void correct_channel_filenames(void)

@@ -16,6 +16,8 @@ void sound_city_set_volume(int percentage);
 
 void sound_city_mark_building_view(building_type type, int num_workers, int direction);
 
+void sound_city_mark_construction_site_view(int direction);
+
 void sound_city_decay_views(void);
 
 void sound_city_progress_ambient(void);

@@ -124,8 +124,8 @@ static void draw_footprint(int x, int y, int grid_offset)
             }
             int view_x, view_y, view_width, view_height;
             city_view_get_scaled_viewport(&view_x, &view_y, &view_width, &view_height);
-            if (b->state == BUILDING_STATE_IN_USE &&
-                (!building_monument_is_monument(b) || b->data.monument.phase <= 0)) {
+            
+            if (b->state == BUILDING_STATE_IN_USE) {
                 int direction;
                 if (x < view_x + 100) {
                     direction = SOUND_DIRECTION_LEFT;
@@ -134,7 +134,11 @@ static void draw_footprint(int x, int y, int grid_offset)
                 } else {
                     direction = SOUND_DIRECTION_CENTER;
                 }
-                sound_city_mark_building_view(b->type, b->num_workers, direction);
+                if (building_monument_is_unfinished_monument(b)) {
+                    sound_city_mark_construction_site_view(direction);
+                } else {
+                    sound_city_mark_building_view(b->type, b->num_workers, direction);
+                }
             }
         }
         if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
