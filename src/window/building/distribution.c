@@ -182,7 +182,6 @@ static void draw_accept_none_button(int x, int y, int focused)
 
 static void draw_permissions_buttons(int x, int y, int buttons)
 {
-    uint8_t permission_button_text[] = { 'x', 0 };
     building_storage_permission_states rules[] = {
         BUILDING_STORAGE_PERMISSION_MARKET,
         BUILDING_STORAGE_PERMISSION_TRADERS,
@@ -195,7 +194,7 @@ static void draw_permissions_buttons(int x, int y, int buttons)
         int rule_id = rules[i];
         button_border_draw(x, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (building_storage_get_permission(rule_id, building_get(data.building_id))) {
-            text_draw_centered(permission_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+            image_draw(assets_get_image_id("UI_Elements", "Allowed_Walker_Check"), x + 4, y + 4);
         }
         x += offsets[i];
     }
@@ -203,13 +202,12 @@ static void draw_permissions_buttons(int x, int y, int buttons)
 
 static void draw_granary_permissions_buttons(int x, int y, int buttons)
 {
-    uint8_t permission_button_text[] = { 'x', 0 };
     int offsets[] = { 96, 96, 132, 96 };
     for (int i = 0; i < buttons; i++) {
         int permission = granary_distribution_permissions_buttons[i].parameter1 - 1;
         button_border_draw(x, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (building_storage_get_permission(permission, building_get(data.building_id))) {
-            text_draw_centered(permission_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+            image_draw(assets_get_image_id("UI_Elements", "Allowed_Walker_Check"), x + 4, y + 4);
         }
         x += offsets[i];
     }
