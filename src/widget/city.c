@@ -305,6 +305,7 @@ static void handle_last_touch(void)
     }
     if (touch_was_click(last)) {
         building_construction_cancel();
+        window_request_refresh();
     } else if (touch_not_click(last)) {
         handle_touch_zoom(touch_get_earliest(), last);
     }
@@ -323,6 +324,7 @@ static int handle_construction_buttons(const touch *t)
     if (t->current_point.x >= width && t->current_point.x < width + box_size &&
         t->current_point.y >= 24 && t->current_point.y < 40 + box_size) {
         building_construction_cancel();
+        window_request_refresh();
         return 1;
     }
 
@@ -487,6 +489,7 @@ static void handle_mouse(const mouse *m)
             }
         } else {
             building_construction_cancel();
+            window_request_refresh();
         }
     }
 }
@@ -504,6 +507,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
     if (h->escape_pressed) {
         if (building_construction_type()) {
             building_construction_cancel();
+            window_request_refresh();
         } else {
             video_stop();
             window_city_pause_menu_show();

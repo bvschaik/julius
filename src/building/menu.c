@@ -359,10 +359,22 @@ building_type building_menu_type(int submenu, int item)
     return MENU_BUILDING_TYPE[submenu][item];
 }
 
+build_menu_group building_menu_for_type(building_type type)
+{
+    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
+        for (int item = 0; item < BUILD_MENU_ITEM_MAX && MENU_BUILDING_TYPE[sub][item]; item++) {
+            if (MENU_BUILDING_TYPE[sub][item] == type) {
+                return sub;
+            }
+        }
+    }
+    return -1;
+}
+
 int building_menu_is_enabled(building_type type)
 {
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
-        for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
+        for (int item = 0; item < BUILD_MENU_ITEM_MAX && MENU_BUILDING_TYPE[sub][item]; item++) {
             if (MENU_BUILDING_TYPE[sub][item] == type) {
                 return menu_enabled[sub][item];
             }

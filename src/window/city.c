@@ -437,6 +437,15 @@ static void toggle_pause(void)
     city_warning_clear_all();
 }
 
+static void set_construction_building_type(building_type type)
+{
+    if (scenario_building_allowed(type) && building_menu_is_enabled(type)) {
+        building_construction_cancel();
+        building_construction_set_type(type);
+        window_request_refresh();
+    }
+}
+
 static void handle_hotkeys(const hotkeys *h)
 {
     if (h->toggle_pause) {
@@ -492,17 +501,17 @@ static void handle_hotkeys(const hotkeys *h)
         building_rotation_rotate_backward();
     }
     if (h->building) {
-        if (scenario_building_allowed(h->building) && building_menu_is_enabled(h->building)) {
-            building_construction_cancel();
-            building_construction_set_type(h->building);
-        }
+        set_construction_building_type(h->building);
     }
     if (h->undo) {
         game_undo_perform();
         window_invalidate();
     }
     if (h->clone_building) {
-        building_clone_from_grid_offset(widget_city_current_grid_offset());
+        building_type type = building_clone_type_from_grid_offset(widget_city_current_grid_offset());
+        if (type) {
+            set_construction_building_type(type);
+        }
     }
     if (h->copy_building_settings) {
         int building_id = map_building_at(widget_city_current_grid_offset());

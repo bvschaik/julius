@@ -319,7 +319,7 @@ static int get_closest_storage(const figure *f, int x, int y, int city_id, map_p
         }
         if (city_id) {
             importable[r] = empire_can_import_resource_from_city(city_id, r);
-        } else { // exclude own city (id=0), shouldn't happen, but still..
+        } else { // Don't import goods from native traders
             importable[r] = 0;
         }
         if (f->loads_sold_or_carrying >= figure_trade_land_trade_units()) {

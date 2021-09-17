@@ -79,6 +79,7 @@ android {
 
         externalNativeBuild {
             cmake {
+                version "3.18.1"
                 arguments "-DTARGET_PLATFORM=android", "-DSYSTEM_LIBS=OFF"
             }
         }
@@ -114,6 +115,7 @@ android {
     }
     externalNativeBuild {
         cmake {
+            version "3.18.1"
             path "../../CMakeLists.txt"
         }
     }
@@ -130,5 +132,5 @@ repositories {
 
 dependencies {
     implementation project(':SDL2')
-    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.3.0'
 }

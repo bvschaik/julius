@@ -349,7 +349,7 @@ static void set_input_state(mapped_input *input)
 
 static int get_joystick_input_for_action(mapping_action action, mapped_input *input)
 {
-    static mapped_input dummy_input = { 0 };
+    static mapped_input dummy_input = {0};
     if (!input) {
         input = &dummy_input;
     }
@@ -492,7 +492,7 @@ static int translate_mapping_reset(void)
 
 static int translate_mouse_cursor_position(void)
 {
-    mapped_input cursor_input[NUM_DIRECTIONS] = { 0 };
+    mapped_input cursor_input[NUM_DIRECTIONS] = {0};
 
     int handled = get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_UP, &cursor_input[DIRECTION_UP]);
     handled |= get_joystick_input_for_action(MAPPING_ACTION_MOUSE_CURSOR_LEFT, &cursor_input[DIRECTION_LEFT]);
