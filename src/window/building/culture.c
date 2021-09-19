@@ -1116,7 +1116,7 @@ void window_building_draw_hippodrome_background(building_info_context *c)
             image_draw(banner_id, c->x_offset + 32, c->y_offset + 256);
         }
 
-        text_draw_centered(translation_for(city_data.games.bet_value ? TR_WINDOW_IN_PROGRESS_BET_BUTTON : TR_WINDOW_RACE_BET_TITLE), c->x_offset + 88, c->y_offset + 607, 300, FONT_NORMAL_BLACK, 0);
+        text_draw_centered(translation_for(city_data.games.chosen_horse ? TR_WINDOW_IN_PROGRESS_BET_BUTTON : TR_WINDOW_RACE_BET_TITLE), c->x_offset + 88, c->y_offset + 607, 300, FONT_NORMAL_BLACK, 0);
     } else {
         window_building_draw_monument_hippodrome_construction_process(c);
     }

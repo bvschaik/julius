@@ -497,7 +497,7 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, city_data.distant_battle.roman_months_traveled);
     buffer_write_u8(main, city_data.military.total_legions);
     buffer_write_u8(main, city_data.military.empire_service_legions);
-    buffer_write_u8(main, city_data.games.bet_value);
+    buffer_write_u8(main, city_data.games.chosen_horse);
     buffer_write_u8(main, city_data.military.total_soldiers);
     buffer_write_i8(main, city_data.building.triumphal_arches_placed);
     buffer_write_i8(main, city_data.sound.die_citizen);
@@ -1002,7 +1002,7 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     city_data.distant_battle.roman_months_traveled = buffer_read_i8(main);
     city_data.military.total_legions = buffer_read_u8(main);
     city_data.military.empire_service_legions = buffer_read_u8(main);
-    city_data.games.bet_value = buffer_read_u8(main);
+    city_data.games.chosen_horse = buffer_read_u8(main);
     city_data.military.total_soldiers = buffer_read_u8(main);
     city_data.building.triumphal_arches_placed = buffer_read_i8(main);
     city_data.sound.die_citizen = buffer_read_i8(main);

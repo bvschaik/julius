@@ -11,14 +11,14 @@ static int get_random_race_result(void)
 
 int has_bet_in_progress(void)
 {
-    return city_data.games.bet_value != NO_BET && city_data.games.bet_amount;
+    return city_data.games.chosen_horse != NO_BET && city_data.games.bet_amount;
 }
 
 void race_result_process(void)
 {
-    if (city_data.games.bet_value != NO_BET) {
+    if (city_data.games.chosen_horse != NO_BET) {
         // bet success
-        if (get_random_race_result() == city_data.games.bet_value) {
+        if (get_random_race_result() == city_data.games.chosen_horse) {
             city_data.emperor.personal_savings += city_data.games.bet_amount * (city_festival_games_active() ? 4 : 2);
             city_warning_show(WARNING_BET_VICTORY);
         } else {
@@ -31,7 +31,7 @@ void race_result_process(void)
         }
 
         // reset previous bet
-        city_data.games.bet_value = NO_BET;
+        city_data.games.chosen_horse = NO_BET;
         city_data.games.bet_amount = 0;
     }
 }
