@@ -80,7 +80,13 @@ int calc_missile_direction(int x_from, int y_from, int x_to, int y_to);
 int32_t calc_bound(int32_t value, int32_t min, int32_t max);
 double calc_bound_double(double value, double min, double max);
 
-int calc_absolute_decrement(int value, int step);
+/**
+ * Moves a value toward 0 by step
+ * @param value Value to move toward zero
+ * @param step Pointer to the value to set as a step. step is changed if it is smaller than value
+ * @return Value decremented by step or 0 if the absolute value is smaller than the absolute step
+ */
+int calc_absolute_decrement(int value, int *step);
 
 
 #endif // CORE_CALC_H

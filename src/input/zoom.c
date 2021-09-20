@@ -2,16 +2,19 @@
 
 #include "core/calc.h"
 #include "core/config.h"
+#include "core/speed.h"
 #include "graphics/menu.h"
 
 #include <math.h>
 
 #define ZOOM_STEP 2
+#define ZOOM_DELTA 20
 
 static struct {
     int delta;
     int restore;
     pixel_offset input_offset;
+    speed_type step;
     struct {
         int active;
         int start_zoom;
@@ -74,12 +77,17 @@ void zoom_map(const mouse *m)
     }
     if (m->middle.went_up) {
         data.restore = 1;
+        speed_clear(&data.step);
         data.input_offset.x = m->x;
         data.input_offset.y = m->y - TOP_MENU_HEIGHT;
     }
     if (m->scrolled != SCROLL_NONE) {
         data.restore = 0;
-        data.delta = (m->scrolled == SCROLL_DOWN) ? 20 : -20;
+        data.delta = (m->scrolled == SCROLL_DOWN) ? ZOOM_DELTA : -ZOOM_DELTA;
+        if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
+            speed_clear(&data.step);
+            speed_set_target(&data.step, ZOOM_STEP, SPEED_CHANGE_IMMEDIATE, 1);
+        }
         data.input_offset.x = m->x;
         data.input_offset.y = m->y - TOP_MENU_HEIGHT;
     }
@@ -91,27 +99,40 @@ int zoom_update_value(int *zoom, pixel_offset *camera_position)
     if (!data.touch.active) {
         if (data.restore) {
             data.delta = 100 - *zoom;
+            if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
+                speed_set_target(&data.step, ZOOM_STEP, SPEED_CHANGE_IMMEDIATE, 1);
+            }
             data.restore = 0;
         }
         if (data.delta == 0) {
             return 0;
         }
         if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
-            step = (data.delta > 0) ? ZOOM_STEP : -ZOOM_STEP;
+            step = speed_get_delta(&data.step);
             if (*zoom > 100) {
                 step *= 2;
+            }
+            if (!step) {
+                return 1;
             }
         } else {
             step = data.delta;
         }
-        data.delta = calc_absolute_decrement(data.delta, step);
+
+        data.delta = calc_absolute_decrement(data.delta, &step);
+
+        if (data.delta == 0) {
+            speed_clear(&data.step);
+        }
     } else {
+        speed_clear(&data.step);
         data.restore = 0;
         step = data.touch.current_zoom - *zoom;
     }
 
     int result = calc_bound(*zoom + step, 50, 200);
     if (*zoom == result) {
+        speed_clear(&data.step);
         data.delta = 0;
         return 0;
     }
