@@ -14,7 +14,7 @@ jobs:
       matrix:
         include:
           - name: Linux AppImage
-            os: ubuntu-16.04
+            os: ubuntu-18.04
             BUILD_TARGET: appimage
             DEPLOY: appimage
           - name: Linux x64
@@ -26,7 +26,7 @@ jobs:
             BUILD_TARGET: linux
             DEPLOY: linux
           - name: Linux x64 (old SDL versions)
-            os: ubuntu-16.04
+            os: ubuntu-18.04
             cache-key: linux-x64
             SDL_VERSION: 2.0.0
             SDL_MIXER_VERSION: 2.0.0
