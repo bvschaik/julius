@@ -613,7 +613,7 @@ void window_building_draw_primary_product_stockpiling(building_info_context *c)
     int y = c->y_offset + primary_product_producer_button_stockpiling->y + 16 * c->height_blocks - 40;
     button_border_draw(x, y, 20, 20, data.primary_product_stockpiling_id);
     if (building_stockpiling_enabled(building_get(c->building_id))) {
-        text_draw_centered(working_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+        image_draw(assets_get_image_id("UI_Elements", "Warehousing"), x + 4, y + 4);
     }
 }
 

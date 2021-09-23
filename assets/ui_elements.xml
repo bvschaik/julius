@@ -151,5 +151,6 @@
     <!-- Note: Checkmark toggle for allowed walkers -->
     <!-- Image created by Ouaz and released by him under the CC-BY-SA 3.0 license -->
     <image id="Allowed_Walker_Check" src="Allowed_Walker_Checkmark"/>
+    <image id="Warehousing" src="Warehousing"/>
 </assetlist>
 	
