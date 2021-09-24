@@ -21,6 +21,8 @@ typedef struct {
     void (*get_tooltip_text)(advisor_tooltip_result *r);
 } advisor_window_type;
 
+void window_advisors_set_advisor(advisor_type advisor);
+
 advisor_type window_advisors_get_advisor(void);
 
 void window_advisors_draw_dialog_background(void);

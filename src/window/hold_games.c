@@ -212,5 +212,7 @@ void window_hold_games_show(int return_to_city)
         get_tooltip
     };
     data.return_to_city = return_to_city;
+    // Make sure entertainment advisor is selected in case it was opened from outside the advisors window
+    window_advisors_set_advisor(ADVISOR_ENTERTAINMENT); 
     window_show(&window);
 }

@@ -131,7 +131,7 @@ static void set_advisor_window(void)
     }
 }
 
-static void set_advisor(int advisor)
+void window_advisors_set_advisor(advisor_type advisor)
 {
     current_advisor = advisor;
     setting_set_last_advisor(advisor);
@@ -252,7 +252,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 static void button_change_advisor(int advisor, int param2)
 {
     if (advisor) {
-        set_advisor(advisor);
+        window_advisors_set_advisor(advisor);
         window_invalidate();
     } else {
         window_city_show();
@@ -321,7 +321,7 @@ void window_advisors_show_checked(void)
 {
     tutorial_availability avail = tutorial_advisor_empire_availability();
     if (avail == AVAILABLE) {
-        set_advisor(setting_last_advisor());
+        window_advisors_set_advisor(setting_last_advisor());
         window_advisors_show();
     } else {
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
@@ -335,7 +335,7 @@ int window_advisors_show_advisor(advisor_type advisor)
         city_warning_show(avail == NOT_AVAILABLE ? WARNING_NOT_AVAILABLE : WARNING_NOT_AVAILABLE_YET);
         return 0;
     }
-    set_advisor(advisor);
+    window_advisors_set_advisor(advisor);
     window_advisors_show();
     return 1;
 }
