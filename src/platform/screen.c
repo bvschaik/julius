@@ -29,9 +29,15 @@ static struct {
 } SDL;
 
 static struct {
-    SDL_Rect offset;
-    SDL_Rect renderer;
-} city_texture_position;
+    struct {
+        SDL_Rect offset;
+        SDL_Rect renderer;
+    } position;
+    struct {
+        int width;
+        int height;
+    } max_size;
+} city_texture;
 
 static struct {
     int x;
@@ -207,6 +213,11 @@ int platform_screen_create(const char *title, int display_scale_percentage)
         }
     }
 
+    SDL_RendererInfo info;
+    SDL_GetRendererInfo(SDL.renderer, &info);
+    city_texture.max_size.width = info.max_texture_width;
+    city_texture.max_size.height = info.max_texture_height;
+
 #if !defined(__APPLE__)
     if (fullscreen && SDL_GetNumVideoDisplays() > 1) {
         SDL_SetWindowGrab(SDL.window, SDL_TRUE);
@@ -240,12 +251,13 @@ static int create_textures(int width, int height)
     int city_texture_error;
 
     if (config_get(CONFIG_UI_ZOOM)) {
+        int max_zoom = system_get_max_zoom(width, height);
         SDL.texture_city = SDL_CreateTexture(SDL.renderer,
             SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING,
-            width * 2, height * 2);
-        city_texture_position.renderer.x = 0;
-        city_texture_position.renderer.y = TOP_MENU_HEIGHT;
-        city_texture_position.renderer.h = height - TOP_MENU_HEIGHT;
+            calc_adjust_with_percentage(width, max_zoom), calc_adjust_with_percentage(height, max_zoom));
+        city_texture.position.renderer.x = 0;
+        city_texture.position.renderer.y = TOP_MENU_HEIGHT;
+        city_texture.position.renderer.h = height - TOP_MENU_HEIGHT;
         SDL_SetTextureBlendMode(SDL.texture_ui, SDL_BLENDMODE_BLEND);
         city_texture_error = SDL.texture_city == 0;
     } else {
@@ -453,14 +465,14 @@ void platform_screen_update(void)
 {
     SDL_RenderClear(SDL.renderer);
     if (config_get(CONFIG_UI_ZOOM)) {
-        city_view_get_unscaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
-            &city_texture_position.renderer.w, &city_texture_position.offset.h);
-        city_view_get_scaled_viewport(&city_texture_position.offset.x, &city_texture_position.offset.y,
-            &city_texture_position.offset.w, &city_texture_position.offset.h);
+        city_view_get_unscaled_viewport(&city_texture.position.offset.x, &city_texture.position.offset.y,
+            &city_texture.position.renderer.w, &city_texture.position.offset.h);
+        city_view_get_scaled_viewport(&city_texture.position.offset.x, &city_texture.position.offset.y,
+            &city_texture.position.offset.w, &city_texture.position.offset.h);
 #ifndef __vita__
-        SDL_UpdateTexture(SDL.texture_city, &city_texture_position.offset, graphics_canvas(CANVAS_CITY), screen_width() * 4 * 2);
+        SDL_UpdateTexture(SDL.texture_city, &city_texture.position.offset, graphics_canvas(CANVAS_CITY), screen_width() * 4 * 2);
 #endif
-        SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture_position.offset, &city_texture_position.renderer);
+        SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture.position.offset, &city_texture.position.renderer);
     }
 #ifndef __vita__
     SDL_UpdateTexture(SDL.texture_ui, NULL, graphics_canvas(CANVAS_UI), screen_width() * 4);
@@ -528,6 +540,15 @@ int system_reload_textures(void)
     return result != -1;
 }
 
+int system_get_max_zoom(int width, int height)
+{
+    int width_scale_pct = city_texture.max_size.width * 100 / width;
+    int height_scale_pct = city_texture.max_size.height * 100 / height;
+    int max_zoom = SDL_min(width_scale_pct, height_scale_pct);
+
+    return calc_bound(max_zoom, 100, 200);
+}
+
 int system_save_screen_buffer(void *pixels)
 {
     if (scale_percentage == 100) {
@@ -544,7 +565,7 @@ int system_save_screen_buffer(void *pixels)
     }
     SDL_SetRenderTarget(SDL.renderer, target);
     SDL_RenderClear(SDL.renderer);
-    SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture_position.offset, &city_texture_position.renderer);
+    SDL_RenderCopy(SDL.renderer, SDL.texture_city, &city_texture.position.offset, &city_texture.position.renderer);
     SDL_RenderCopy(SDL.renderer, SDL.texture_ui, NULL, NULL);
     int result = SDL_RenderReadPixels(SDL.renderer, NULL,
         SDL_PIXELFORMAT_ARGB8888, pixels, width * sizeof(color_t)) == 0;

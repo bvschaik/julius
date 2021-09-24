@@ -62,7 +62,7 @@ static void update_zoom_level(void)
     int zoom = city_view_get_scale();
     pixel_offset offset;
     city_view_get_camera_in_pixels(&offset.x, &offset.y);
-    if (zoom_update_value(&zoom, &offset)) {
+    if (zoom_update_value(&zoom, city_view_get_max_scale(), &offset)) {
         city_view_set_scale(zoom);
         city_view_set_camera_from_pixel_position(offset.x, offset.y);
         sound_city_decay_views();

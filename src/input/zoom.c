@@ -93,7 +93,7 @@ void zoom_map(const mouse *m)
     }
 }
 
-int zoom_update_value(int *zoom, pixel_offset *camera_position)
+int zoom_update_value(int *zoom, int max, pixel_offset *camera_position)
 {
     int step;
     if (!data.touch.active) {
@@ -127,10 +127,14 @@ int zoom_update_value(int *zoom, pixel_offset *camera_position)
     } else {
         speed_clear(&data.step);
         data.restore = 0;
-        step = data.touch.current_zoom - *zoom;
+        int current_zoom = data.touch.current_zoom;
+        if (current_zoom > 90 || current_zoom < 110) {
+            current_zoom = 100;
+        }
+        step = current_zoom - *zoom;
     }
 
-    int result = calc_bound(*zoom + step, 50, 200);
+    int result = calc_bound(*zoom + step, 50, max);
     if (*zoom == result) {
         speed_clear(&data.step);
         data.delta = 0;

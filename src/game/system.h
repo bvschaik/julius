@@ -36,6 +36,14 @@ void system_get_max_resolution(int *width, int *height);
 int system_reload_textures(void);
 
 /**
+ * Get the maximum allowed zoom
+ * @param width The width to check the zoom
+ * @param height The height to check the zoom
+ * @return The maximum allowed zoom, truncated between 100 and 200
+ */
+int system_get_max_zoom(int width, int height);
+
+/**
  * Saves the screen buffer to memory
  * Even though it is set to "void", uses "color_t" format
  * @return true if saving was successful, false otherwise

@@ -23,6 +23,9 @@ void city_view_reset_orientation(void);
 int city_view_get_scale(void);
 void city_view_set_scale(int scale);
 
+int city_view_get_max_scale(void);
+void city_view_set_max_scale(int scale);
+
 void city_view_get_camera(int *x, int *y);
 void city_view_get_pixel_offset(int *x, int *y);
 void city_view_get_camera_in_pixels(int *x, int *y);

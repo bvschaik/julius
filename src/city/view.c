@@ -22,6 +22,7 @@ static struct {
     int sidebar_collapsed;
     int orientation;
     int scale;
+    int max_scale;
     struct {
         view_tile tile;
         pixel_offset pixel;
@@ -178,6 +179,11 @@ void city_view_reset_orientation(void)
 int city_view_get_scale(void)
 {
     return data.scale;
+}
+
+int city_view_get_max_scale(void)
+{
+    return data.max_scale;
 }
 
 void city_view_get_camera(int *x, int *y)
@@ -386,7 +392,7 @@ static void set_viewport_without_sidebar(void)
 void city_view_set_scale(int scale)
 {
     if (config_get(CONFIG_UI_ZOOM)) {
-        scale = calc_bound(scale, 50, 200);
+        scale = calc_bound(scale, 50, data.max_scale);
     } else {
         scale = 100;
     }
@@ -397,6 +403,14 @@ void city_view_set_scale(int scale)
         set_viewport_with_sidebar();
     }
     check_camera_boundaries();
+}
+
+void city_view_set_max_scale(int scale)
+{
+    data.max_scale = scale;
+    if (data.scale > scale) {
+        city_view_set_scale(scale);
+    }
 }
 
 void city_view_set_viewport(int screen_width, int screen_height)

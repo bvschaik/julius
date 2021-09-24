@@ -46,6 +46,7 @@ void graphics_init_canvas(int width, int height)
     canvas[CANVAS_UI].pixels = system_create_ui_framebuffer(width, height);
     if (config_get(CONFIG_UI_ZOOM)) {
         canvas[CANVAS_CITY].pixels = system_create_city_framebuffer(width, height);
+        city_view_set_max_scale(system_get_max_zoom(width, height));
     } else {
         system_release_city_framebuffer();
         canvas[CANVAS_CITY].pixels = 0;
