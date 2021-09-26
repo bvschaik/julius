@@ -151,6 +151,15 @@
     <!-- Note: Checkmark toggle for allowed walkers -->
     <!-- Image created by Ouaz and released by him under the CC-BY-SA 3.0 license -->
     <image id="Allowed_Walker_Check" src="Allowed_Walker_Checkmark"/>
+    <!-- Warehousing icon by Ouaz -->
     <image id="Warehousing" src="Warehousing"/>
+    <image id="Maintain_1" src="Maintain_1"/> <!-- Normal -->
+    <image id="Maintain_2" src="Maintain_2"/> <!-- On hover -->
+    <image id="Maintain_3" src="Maintain_3"/> <!-- On click -->
+    <image id="Maintain_4" src="Maintain_4"/> <!-- Button Disabled -->
+    <image id="Stop_Maintain_1" src="Stop_Maintain_1"/> <!-- Normal -->
+    <image id="Stop_Maintain_2" src="Stop_Maintain_2"/> <!-- On hover -->
+    <image id="Stop_Maintain_3" src="Stop_Maintain_3"/> <!-- On click -->
+    <image id="Stop_Maintain_4" src="Stop_Maintain_4"/> <!-- Button Disabled -->
 </assetlist>
 	
