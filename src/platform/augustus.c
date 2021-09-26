@@ -1,6 +1,6 @@
 #include "SDL.h"
 
-#include "core/backtrace.h"
+#include "platform/backtrace.h"
 #include "core/config.h"
 #include "core/encoding.h"
 #include "core/file.h"
@@ -60,21 +60,6 @@ static struct {
     int active;
     int quit;
 } data = {1, 0};
-
-static void exit_with_status(int status)
-{
-#ifdef __EMSCRIPTEN__
-    EM_ASM(Module.quitGame($0), status);
-#endif
-    exit(status);
-}
-
-static void handler(int sig)
-{
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Oops, crashed with signal %d :(", sig);
-    backtrace_print();
-    exit_with_status(1);
-}
 
 #if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__) || defined(__ANDROID__)
 /* Log to separate file on windows, since we don't have a console there */
@@ -525,7 +510,7 @@ static int pre_init(const char *custom_data_dir)
 
 static void setup(const julius_args *args)
 {
-    signal(SIGSEGV, handler);
+    install_game_crashhandler();
     setup_logging();
 
     SDL_Log("Augustus version %s", system_version());

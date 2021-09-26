@@ -229,9 +229,20 @@ elseif (${TARGET_PLATFORM} STREQUAL "android")
     )
 endif()
 
+if (WIN32)
+    set(PLATFORM_FILES
+        ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/windows/backtrace.c
+    )
+else()
+    set(PLATFORM_FILES
+        ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/posix/backtrace.c
+    )
+endif()
+
 set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/array.c
-    ${PROJECT_SOURCE_DIR}/src/core/backtrace.c
     ${PROJECT_SOURCE_DIR}/src/core/buffer.c
     ${PROJECT_SOURCE_DIR}/src/core/calc.c
     ${PROJECT_SOURCE_DIR}/src/core/config.c
@@ -954,6 +965,10 @@ else()
     target_link_libraries (${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
     if(NOT APPLE AND NOT ${TARGET_PLATFORM} STREQUAL "android")
         install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
+    endif()
+
+    if(WIN32)
+       target_link_libraries(${SHORT_NAME} dbghelp shlwapi)
     endif()
 
     if(UNIX AND NOT APPLE)
