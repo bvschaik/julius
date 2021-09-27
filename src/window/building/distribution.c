@@ -621,7 +621,6 @@ void window_building_handle_mouse_primary_product_producer(const mouse *m, build
 
 void window_building_draw_primary_product_stockpiling(building_info_context *c)
 {
-    uint8_t working_text[] = { 'x', 0 };
     int x = c->x_offset + primary_product_producer_button_stockpiling->x;
     int y = c->y_offset + primary_product_producer_button_stockpiling->y + 16 * c->height_blocks - 40;
     button_border_draw(x, y, 20, 20, data.primary_product_stockpiling_id);

@@ -1,6 +1,5 @@
 #include "SDL.h"
 
-#include "platform/backtrace.h"
 #include "core/config.h"
 #include "core/encoding.h"
 #include "core/file.h"
@@ -510,7 +509,7 @@ static int pre_init(const char *custom_data_dir)
 
 static void setup(const julius_args *args)
 {
-    install_game_crashhandler();
+    system_setup_crash_handler();
     setup_logging();
 
     SDL_Log("Augustus version %s", system_version());

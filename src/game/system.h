@@ -180,6 +180,11 @@ color_t *system_create_city_framebuffer(int width, int height);
 void system_release_city_framebuffer(void);
 
 /**
+ * Sets up the crash handler
+ */
+void system_setup_crash_handler(void);
+
+/**
  * Exit the game
  */
 void system_exit(void);

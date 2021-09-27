@@ -69,7 +69,7 @@ static const int SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION = 0x81;
 static const int SAVE_GAME_LAST_STORED_IMAGE_IDS = 0x83;
 // SAVE_GAME_INCREASE_GRANARY_CAPACITY shall be updated if we decide to change granary capacity again.
 static const int SAVE_GAME_INCREASE_GRANARY_CAPACITY = 0x85;
-static const int SAVE_GAME_ROADBLOCK_DATA_MOVED_FROM_SUBTYPE = 0x86;
+// static const int SAVE_GAME_ROADBLOCK_DATA_MOVED_FROM_SUBTYPE = 0x86; This define is unneeded for now
 
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
