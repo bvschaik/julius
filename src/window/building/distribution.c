@@ -1035,7 +1035,12 @@ void window_building_warehouse_get_tooltip_distribution_permissions(int *transla
             break;
     }
     if (data.image_button_focus_id) {
-        *translation = TR_TOOLTIP_BUTTON_ACCEPT_WORKERS;
+        building *b = building_get(data.building_id);
+        if (building_storage_get_permission(BUILDING_STORAGE_PERMISSION_WORKER, b)) {
+            *translation = TR_TOOLTIP_BUTTON_ACCEPT_WORKERS; 
+        } else {
+            *translation = TR_TOOLTIP_BUTTON_REJECT_WORKERS;
+        }
     }
 }
 

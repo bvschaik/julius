@@ -716,6 +716,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "Red team, famously known for the most successful charioteer in the history of Rome, a former oarsman, who saved the Roman consul." },
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "White team, founded by former gladiators. They have combat in their blood, and even as free men they live for the challenge." },
     {TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION, "Green team, claiming its roots to the Celeres, horsemen from the time of the Kingdom of Rome. Still claiming to be the best of the best." },
+    {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Resume resource delivery"},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
