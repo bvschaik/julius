@@ -14,6 +14,7 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/time.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -56,7 +57,39 @@ static int center_in_city(int element_width_pixels)
     return x + margin;
 }
 
-static void draw_paused_and_time_left(void)
+static void draw_pause_icon(int x_offset, int y_offset)
+{
+    graphics_draw_horizontal_line(x_offset + 3, x_offset + 11, y_offset + 3, COLOR_BLACK);
+    graphics_draw_vertical_line(x_offset + 3, y_offset + 4, y_offset + 16, COLOR_BLACK);
+    graphics_fill_rect(x_offset + 4, y_offset + 4, 8, 13, COLOR_WHITE);
+
+    x_offset += 13;
+
+    graphics_draw_horizontal_line(x_offset + 3, x_offset + 11, y_offset + 3, COLOR_BLACK);
+    graphics_draw_vertical_line(x_offset + 3, y_offset + 4, y_offset + 16, COLOR_BLACK);
+    graphics_fill_rect(x_offset + 4, y_offset + 4, 8, 13, COLOR_WHITE);
+}
+
+static void draw_play_paused_buttons_and_info(void)
+{
+    int paused = game_state_is_paused();
+    if (paused) {
+        int x_offset = center_in_city(448);
+        outer_panel_draw(x_offset, 40, 28, 3);
+        lang_text_draw_centered(13, 2, x_offset, 58, 448, FONT_NORMAL_BLACK);
+    }
+    if (!mouse_get()->is_touch) {
+        return;
+    }
+    inner_panel_draw(10, 40, 3, 2);
+    if (paused) {
+        image_draw(image_group(GROUP_ARROW_MESSAGE_PROBLEMS), 20, 46);
+    } else {
+        draw_pause_icon(20, 46);
+    }
+}
+
+static void draw_time_left(void)
 {
     if (scenario_criteria_time_limit_enabled() && !city_victory_has_won()) {
         int years;
@@ -81,11 +114,6 @@ static void draw_paused_and_time_left(void)
         int width = lang_text_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
         text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
     }
-    if (game_state_is_paused()) {
-        int x_offset = center_in_city(448);
-        outer_panel_draw(x_offset, 40, 28, 3);
-        lang_text_draw_centered(13, 2, x_offset, 58, 448, FONT_NORMAL_BLACK);
-    }
 }
 
 static void draw_cancel_construction(void)
@@ -106,7 +134,8 @@ static void draw_foreground(void)
     window_city_draw();
     widget_sidebar_city_draw_foreground();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
-        draw_paused_and_time_left();
+        draw_time_left();
+        draw_play_paused_buttons_and_info();
         draw_cancel_construction();
     }
     widget_city_draw_construction_cost_and_size();
@@ -124,7 +153,8 @@ static void draw_foreground_military(void)
     } else {
         widget_sidebar_city_draw_foreground();
     }
-    draw_paused_and_time_left();
+    draw_time_left();
+    draw_play_paused_buttons_and_info();
 }
 
 static void exit_military_command(void)

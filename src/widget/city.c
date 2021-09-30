@@ -262,6 +262,18 @@ static void handle_last_touch(void)
     }
 }
 
+static int handle_play_pause_button(const touch *t)
+{
+    int box_size = 5 * BLOCK_SIZE;
+
+    if (t->current_point.x >= box_size ||
+        t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
+        return 0;
+    }
+    game_state_toggle_paused();
+    return 1;
+}
+
 static int handle_cancel_construction_button(const touch *t)
 {
     if (!building_construction_type()) {
@@ -287,7 +299,7 @@ static void handle_first_touch(map_tile *tile)
     building_type type = building_construction_type();
 
     if (touch_was_click(first)) {
-        if (handle_cancel_construction_button(first) || handle_legion_click(tile)) {
+        if (handle_play_pause_button(first) || handle_cancel_construction_button(first) || handle_legion_click(tile)) {
             return;
         }
         if (type == BUILDING_NONE && handle_right_click_allow_building_info(tile)) {
