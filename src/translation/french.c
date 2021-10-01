@@ -22,7 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "Le répertoire que vous avez sélectionné ne contient pas de pack de langue valide. "
         "Veuillez consulter les erreurs dans le fichier de log."},
-    {TR_BUILD_ALL_TEMPLES, "Tout"},
+    {TR_BUILD_ALL_TEMPLES, "Tous"},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Annuler"},
     {TR_BUTTON_RESET_DEFAULTS, "Réglages par défaut"},
@@ -69,7 +69,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Redimensionner en 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Capturer l'écran de jeu"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Capturer la cité entière"},
-    {TR_HOTKEY_BUILD_CLONE, "Cloner le bâtiment sous le curseur"},
+    {TR_HOTKEY_BUILD_CLONE, "Cloner l'objet sous le curseur"},
     {TR_HOTKEY_LOAD_FILE, "Charger une partie"},
     {TR_HOTKEY_SAVE_FILE, "Sauvegarder une partie"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Augmenter la vitesse du jeu"},
