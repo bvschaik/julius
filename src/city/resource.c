@@ -445,9 +445,16 @@ static int house_consume_food(void)
             } else {
                 amount_per_type = calc_adjust_with_percentage(b->house_population, 50);
             }
-            if (num_types > 1) {
-                amount_per_type /= num_types;
+            int foodtypes_available = 0;
+            for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
+                if (b->data.house.inventory[i]) {
+                    foodtypes_available++;
+                }
             }
+            if (foodtypes_available) {
+                amount_per_type /= foodtypes_available;
+            }
+
             b->data.house.num_foods = 0;
             if (scenario_property_rome_supplies_wheat()) {
                 city_data.resource.food_types_eaten = 1;
@@ -455,7 +462,7 @@ static int house_consume_food(void)
                 b->data.house.inventory[INVENTORY_WHEAT] = amount_per_type;
                 b->data.house.num_foods = 1;
             } else if (num_types > 0) {
-                for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD && b->data.house.num_foods < num_types; t++) {
+                for (int t = INVENTORY_MIN_FOOD; t < INVENTORY_MAX_FOOD; t++) {
                     if (b->data.house.inventory[t] >= amount_per_type) {
                         b->data.house.inventory[t] -= amount_per_type;
                         b->data.house.num_foods++;
