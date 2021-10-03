@@ -10,7 +10,9 @@
 #include "figure/formation_legion.h"
 #include "game/settings.h"
 #include "game/state.h"
+#include "graphics/button.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -97,6 +99,55 @@ void widget_city_draw_construction_cost_and_size(void)
         text_draw_number_colored(size_y, '@', " ", x - 15 + width, y + 25, FONT_SMALL_PLAIN, COLOR_FONT_YELLOW);
     }
     graphics_reset_clip_rectangle();
+}
+
+static void draw_pause_icon(int x_offset, int y_offset)
+{
+    graphics_draw_horizontal_line(x_offset + 3, x_offset + 11, y_offset + 3, COLOR_BLACK);
+    graphics_draw_vertical_line(x_offset + 3, y_offset + 4, y_offset + 16, COLOR_BLACK);
+    graphics_fill_rect(x_offset + 4, y_offset + 4, 8, 13, COLOR_WHITE);
+
+    x_offset += 13;
+
+    graphics_draw_horizontal_line(x_offset + 3, x_offset + 11, y_offset + 3, COLOR_BLACK);
+    graphics_draw_vertical_line(x_offset + 3, y_offset + 4, y_offset + 16, COLOR_BLACK);
+    graphics_fill_rect(x_offset + 4, y_offset + 4, 8, 13, COLOR_WHITE);
+}
+
+static void draw_pause_button(void)
+{
+    inner_panel_draw(10, 40, 3, 2);
+    button_border_draw(10, 40, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
+    if (game_state_is_paused()) {
+        image_draw(image_group(GROUP_ARROW_MESSAGE_PROBLEMS), 20, 46);
+    } else {
+        draw_pause_icon(20, 46);
+    }
+}
+
+static void draw_cancel_construction_button(void)
+{
+    if (!building_construction_type()) {
+        return;
+    }
+    int x, y, width, height;
+    city_view_get_viewport(&x, &y, &width, &height);
+    width -= 4 * BLOCK_SIZE;
+    inner_panel_draw(width - 4, 40, 3, 2);
+    button_border_draw(width - 4, 40, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
+    // Use clip rectangle to remove the border of the "X" image
+    graphics_set_clip_rectangle(width + 1, 44 + 1, 37, 24);
+    image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+    graphics_reset_clip_rectangle();
+}
+
+void widget_city_draw_touch_buttons(void)
+{
+    if (!mouse_get()->is_touch) {
+        return;
+    }
+    draw_pause_button();
+    draw_cancel_construction_button();
 }
 
 // INPUT HANDLING
