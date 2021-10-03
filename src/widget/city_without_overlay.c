@@ -10,6 +10,7 @@
 #include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
+#include "building/storage.h"
 #include "building/type.h"
 #include "city/buildings.h"
 #include "city/entertainment.h"
@@ -37,6 +38,8 @@
 #include "widget/city_figure.h"
 
 #define OFFSET(x,y) (x + GRID_SIZE * y)
+
+#define WAREHOUSE_FLAG_FRAMES 8
 
 static const int ADJACENT_OFFSETS[2][4][7] = {
     {
@@ -357,6 +360,19 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
     }
 }
 
+static void draw_warehouse_flag(const building *b, int x, int y, color_t color_mask, int frame)
+{
+    const building_storage *storage = building_storage_get(b->storage_id);
+    int permission_mask = 0x7;
+    int permissions = (~storage->permissions) & permission_mask;
+    if (!permissions) {
+        return;
+    }
+    frame = frame % WAREHOUSE_FLAG_FRAMES;
+    int image_offset = frame + (permissions - 1) * WAREHOUSE_FLAG_FRAMES;
+    image_draw_masked(assets_get_image_id("Warehouse_Flags", "Warehouse_Flag_Market_1") + image_offset, x + 19, y - 56, color_mask);
+}
+
 static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask)
 {
     image_draw_masked(image_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask);
@@ -416,7 +432,11 @@ static void draw_animation(int x, int y, int grid_offset)
                         x + img->sprite_offset_x,
                         y + ydiff + img->sprite_offset_y - img->height,
                         color_mask);
+                    if (b->type == BUILDING_WAREHOUSE) {
+                        draw_warehouse_flag(b, x, y, color_mask, animation_offset);
+                    }
                 }
+
             }
         }
     } else if (map_sprite_bridge_at(grid_offset)) {
