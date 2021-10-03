@@ -14,6 +14,7 @@
 #include "game/settings.h"
 #include "game/state.h"
 #include "game/time.h"
+#include "graphics/button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -82,6 +83,7 @@ static void draw_play_paused_buttons_and_info(void)
         return;
     }
     inner_panel_draw(10, 40, 3, 2);
+    button_border_draw(10, 40, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
     if (paused) {
         image_draw(image_group(GROUP_ARROW_MESSAGE_PROBLEMS), 20, 46);
     } else {
@@ -125,7 +127,11 @@ static void draw_cancel_construction(void)
     city_view_get_viewport(&x, &y, &width, &height);
     width -= 4 * BLOCK_SIZE;
     inner_panel_draw(width - 4, 40, 3, 2);
+    button_border_draw(width - 4, 40, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
+    // Use clip rectangle to remove the border in the "X" image
+    graphics_set_clip_rectangle(width + 1, 44 + 1, 37, 24);
     image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+    graphics_reset_clip_rectangle();
 }
 
 static void draw_foreground(void)
