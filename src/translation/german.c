@@ -43,14 +43,14 @@ static translation_string all_strings[] = {
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Erlaube alle Tempel nacheinander zu bauen"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Zeige Reichweite beim Bauen von Reservoirs und Brunnen"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Zeige Konstruktionsgröße beim Bauen"},
-    {TR_CONFIG_HIGHLIGHT_LEGIONS, "Hebe Legion beim Berühren mit der Maus hervor"},
+    {TR_CONFIG_HIGHLIGHT_LEGIONS, "Hebe Soldaten bei Berührung mit der Maus hervor"},
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Zeige Legionen am rechten Bildschirmrand"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Behebe Immigrationsfehler auf 'Sehr schwierig'"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Behebe '100 Jahre alte Geister'"},
     {TR_HOTKEY_TITLE, "Julius Tastenkombinationen einstellen"},
     {TR_HOTKEY_LABEL, "Tastenkombination"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternativ"},
-    {TR_HOTKEY_HEADER_ARROWS, "Pfeiltasten"},
+    {TR_HOTKEY_HEADER_ARROWS, "Richtungstasten"},
     {TR_HOTKEY_HEADER_GLOBAL, "Globale Tastenkombinationen"},
     {TR_HOTKEY_HEADER_CITY, "Stadt"},
     {TR_HOTKEY_HEADER_ADVISORS, "Berater"},
@@ -75,7 +75,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Spielgeschwindigkeit erhöhen"},
     {TR_HOTKEY_DECREASE_GAME_SPEED, "Spielgeschwindigkeit reduzieren"},
     {TR_HOTKEY_TOGGLE_PAUSE, "Spiel pausieren"},
-    {TR_HOTKEY_CYCLE_LEGION, "Durch Legionen wechseln"},
+    {TR_HOTKEY_CYCLE_LEGION, "Durch Legionen schalten"},
     {TR_HOTKEY_ROTATE_MAP_LEFT, "Karte nach links drehen"},
     {TR_HOTKEY_ROTATE_MAP_RIGHT, "Karte nach rechts drehen"},
     {TR_HOTKEY_SHOW_ADVISOR_LABOR, "Arbeitsberater"},
@@ -107,7 +107,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Kampfinfos ein-/ausblenden"},
     {TR_HOTKEY_EDIT_TITLE, "Neue Tastenkombination"},
     {TR_HOTKEY_DUPLICATE_TITLE, "Tastenkombination bereits in Verwendung"},
-    {TR_HOTKEY_DUPLICATE_MESSAGE, "Diese Tastenkombination ist bereits folgender Aktion zugewiesen:"}
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "Diese Tastenkombination ist bereits folgender Aktion zugewiesen:"},
 };
 
 void translation_german(const translation_string **strings, int *num_strings)

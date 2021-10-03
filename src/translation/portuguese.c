@@ -105,7 +105,9 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "Definir marcador 3"},
     {TR_HOTKEY_SET_BOOKMARK_4, "Definir marcador 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Mostrar informações de batalha"},
-    {TR_HOTKEY_EDIT_TITLE, "Nova tecla de atalho"}
+    {TR_HOTKEY_EDIT_TITLE, "Nova tecla de atalho"},
+    {TR_HOTKEY_DUPLICATE_TITLE, "Atalho já utilizado"},
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "Esta combinação de teclas já está designada para a seguinte ação:"},
 };
 
 void translation_portuguese(const translation_string **strings, int *num_strings)

@@ -7,7 +7,7 @@ static translation_string all_strings[] = {
         "Votre installation de Caesar 3 ne contient pas le patch 1.0.1.0. "
         "Vous pouvez le télécharger depuis : \n"
         URL_PATCHES "\n"
-        "Procédez à vos propres risques."},
+        "Procédez à vos risques et périls."},
     {TR_MISSING_FONTS_TITLE, "Polices manquantes"},
     {TR_MISSING_FONTS_MESSAGE,
         "Votre installation de Caesar 3 requiert des polices d'écriture supplémentaires. "
@@ -15,7 +15,7 @@ static translation_string all_strings[] = {
         URL_PATCHES},
     {TR_NO_EDITOR_TITLE, "Éditeur manquant"},
     {TR_NO_EDITOR_MESSAGE,
-        "Votre installation de Cesar 3 ne contient pas le fichier éditeur. "
+        "Votre installation de Caesar 3 ne contient pas le fichier éditeur. "
         "Vous pouvez le télécharger depuis : \n"
         URL_EDITOR},
     {TR_INVALID_LANGUAGE_TITLE, "Répertoire de langue invalide"},
@@ -25,7 +25,7 @@ static translation_string all_strings[] = {
     {TR_BUILD_ALL_TEMPLES, "Tous"},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Annuler"},
-    {TR_BUTTON_RESET_DEFAULTS, "Réglages par défaut"},
+    {TR_BUTTON_RESET_DEFAULTS, "Réinitialiser"},
     {TR_BUTTON_CONFIGURE_HOTKEYS, "Contrôles du clavier"},
     {TR_CONFIG_TITLE, "Options de configuration de Julius"},
     {TR_CONFIG_LANGUAGE_LABEL, "Langue :"},
@@ -44,10 +44,10 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Voir la zone d'effet en plaçant les bâtiments de distribution d'eau"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Voir la taille des constructions durant le glissement de la souris"},
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "Mettre en surbrillance les légions au survol du curseur"},
-    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Activer la gestion militaire dans le panneau latéral"},
+    {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Activer la barre latérale militaire"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corrige le bug d'immigration en mode très difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corrige le bug des fantômes de 100 ans"},
-    {TR_HOTKEY_TITLE, "Configuration du clavier"},
+    {TR_HOTKEY_TITLE, "Configuration raccourcis clavier"},
     {TR_HOTKEY_LABEL, "Touche"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},
     {TR_HOTKEY_HEADER_ARROWS, "Flèches directionnelles"},
@@ -74,7 +74,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SAVE_FILE, "Sauvegarder une partie"},
     {TR_HOTKEY_INCREASE_GAME_SPEED, "Augmenter la vitesse du jeu"},
     {TR_HOTKEY_DECREASE_GAME_SPEED, "Diminuer la vitesse du jeu"},
-    {TR_HOTKEY_TOGGLE_PAUSE, "Activer la pause"},
+    {TR_HOTKEY_TOGGLE_PAUSE, "Mettre en pause"},
     {TR_HOTKEY_CYCLE_LEGION, "Parcourir les légions en boucle"},
     {TR_HOTKEY_ROTATE_MAP_LEFT, "Tourner la carte vers la gauche"},
     {TR_HOTKEY_ROTATE_MAP_RIGHT, "Tourner la carte vers la droite"},
@@ -89,7 +89,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_ADVISOR_ENTERTAINMENT, "Loisirs"},
     {TR_HOTKEY_SHOW_ADVISOR_RELIGION, "Religion"},
     {TR_HOTKEY_SHOW_ADVISOR_FINANCIAL, "Finances"},
-    {TR_HOTKEY_SHOW_ADVISOR_CHIEF, "Conseiller personnel"},
+    {TR_HOTKEY_SHOW_ADVISOR_CHIEF, "Conseiller"},
     {TR_HOTKEY_TOGGLE_OVERLAY, "Basculer sur la carte précédente"},
     {TR_HOTKEY_SHOW_OVERLAY_WATER, "Eau"},
     {TR_HOTKEY_SHOW_OVERLAY_FIRE, "Incendies"},
@@ -106,8 +106,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_4, "Définir comme point d'intérêt 4"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Afficher les infos de bataille"},
     {TR_HOTKEY_EDIT_TITLE, "Appuyez sur une touche"},
-    {TR_HOTKEY_DUPLICATE_TITLE, "Touche de raccourci déjà utilisée"},
-    {TR_HOTKEY_DUPLICATE_MESSAGE, "Cette combinaison de touches est déjà assignée à l'action suivante :"}
+    {TR_HOTKEY_DUPLICATE_TITLE, "Raccourci déjà utilisé"},
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "Cette combinaison de touches est déjà affectée à l'action suivante :"},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
