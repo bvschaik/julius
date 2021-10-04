@@ -143,9 +143,6 @@ static void draw_cancel_construction_button(void)
 
 void widget_city_draw_touch_buttons(void)
 {
-    if (!mouse_get()->is_touch) {
-        return;
-    }
     draw_pause_button();
     draw_cancel_construction_button();
 }
@@ -264,6 +261,9 @@ static int has_confirmed_construction(int ghost_offset, int tile_offset, int ran
 
 static int input_coords_in_city(int x, int y)
 {
+    if (x < 5 * BLOCK_SIZE && y < 40 + 5 * BLOCK_SIZE) {
+        return 0;
+    }
     int x_offset, y_offset, width, height;
     city_view_get_viewport(&x_offset, &y_offset, &width, &height);
 
@@ -414,7 +414,9 @@ static void handle_first_touch(map_tile *tile)
         build_end();
         widget_city_clear_current_tile();
     } else if (first->has_ended) {
-        data.selected_tile = *tile;
+        if (first->current_point.x >= 5 * BLOCK_SIZE || first->current_point.y >= 40 + 5 * BLOCK_SIZE) {
+            data.selected_tile = *tile;
+        }
     }
 }
 
@@ -427,7 +429,11 @@ static void handle_touch(void)
     }
 
     map_tile *tile = &data.current_tile;
-    if (!building_construction_in_progress() || input_coords_in_city(first->current_point.x, first->current_point.y)) {
+    if (!building_construction_in_progress()) {
+        if (first->current_point.x >= 5 * BLOCK_SIZE || first->current_point.y >= 40 + 5 * BLOCK_SIZE) {
+            update_city_view_coords(first->current_point.x, first->current_point.y, tile);
+        }
+    } else if (input_coords_in_city(first->current_point.x, first->current_point.y)) {
         update_city_view_coords(first->current_point.x, first->current_point.y, tile);
     }
 
@@ -535,6 +541,9 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
     if (m->is_touch) {
         const touch *t = touch_get_earliest();
         if (!t->in_use) {
+            return;
+        }
+        if (touch_was_click(t) && handle_play_pause_button(t)) {
             return;
         }
         if (t->has_started) {

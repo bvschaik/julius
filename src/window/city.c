@@ -99,8 +99,11 @@ static void draw_foreground(void)
     widget_sidebar_city_draw_foreground();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         draw_time_left();
-        draw_paused_banner();
-        widget_city_draw_touch_buttons();
+        if (mouse_get()->is_touch) {
+            widget_city_draw_touch_buttons();
+        } else {
+            draw_paused_banner();
+        }
     }
     widget_city_draw_construction_cost_and_size();
     if (window_is(WINDOW_CITY)) {
@@ -118,8 +121,11 @@ static void draw_foreground_military(void)
         widget_sidebar_city_draw_foreground();
     }
     draw_time_left();
-    draw_paused_banner();
-    widget_city_draw_touch_buttons();
+    if (mouse_get()->is_touch) {
+        widget_city_draw_touch_buttons();
+    } else {
+        draw_paused_banner();
+    }
 }
 
 static void exit_military_command(void)
