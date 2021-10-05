@@ -39,7 +39,7 @@
 
 #define OFFSET(x,y) (x + GRID_SIZE * y)
 
-#define WAREHOUSE_FLAG_FRAMES 8
+#define WAREHOUSE_FLAG_FRAMES 9
 
 static const int ADJACENT_OFFSETS[2][4][7] = {
     {
@@ -360,17 +360,27 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
     }
 }
 
-static void draw_warehouse_flag(const building *b, int x, int y, color_t color_mask, int frame)
+static int get_warehouse_flag_image_id(const building *b)
 {
     const building_storage *storage = building_storage_get(b->storage_id);
     int permission_mask = 0x7;
     int permissions = (~storage->permissions) & permission_mask;
     if (!permissions) {
+        return 0;
+    }
+    int image_offset = (permissions - 1) * WAREHOUSE_FLAG_FRAMES;
+    int image_id = assets_get_image_id("Warehouse_Flags", "Warehouse_Flag_Market") + image_offset;
+    return image_id;
+}
+
+static void draw_warehouse_flag(const building *b, int x, int y, color_t color_mask)
+{
+    int image_id = get_warehouse_flag_image_id(b);
+    if (!image_id) {
         return;
     }
-    frame = frame % WAREHOUSE_FLAG_FRAMES;
-    int image_offset = frame + (permissions - 1) * WAREHOUSE_FLAG_FRAMES;
-    image_draw_masked(assets_get_image_id("Warehouse_Flags", "Warehouse_Flag_Market_1") + image_offset, x + 19, y - 56, color_mask);
+    image_id += b->data.warehouse.flag_frame;
+    image_draw_masked(image_id, x + 19, y - 56, color_mask);
 }
 
 static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask)
@@ -414,6 +424,8 @@ static void draw_animation(int x, int y, int grid_offset)
                 draw_dock_workers(b, x, y, color_mask);
             } else if (b->type == BUILDING_WAREHOUSE) {
                 draw_warehouse_ornaments(b, x, y, color_mask);
+                draw_warehouse_flag(b, x, y, color_mask);
+                building_animation_advance_warehouse_flag(b, get_warehouse_flag_image_id(b));
             } else if (b->type == BUILDING_GRANARY) {
                 draw_granary_stores(img, b, x, y, color_mask);
             } else if (b->type == BUILDING_BURNING_RUIN && b->ruin_has_plague) {
@@ -432,11 +444,7 @@ static void draw_animation(int x, int y, int grid_offset)
                         x + img->sprite_offset_x,
                         y + ydiff + img->sprite_offset_y - img->height,
                         color_mask);
-                    if (b->type == BUILDING_WAREHOUSE) {
-                        draw_warehouse_flag(b, x, y, color_mask, animation_offset);
-                    }
                 }
-
             }
         }
     } else if (map_sprite_bridge_at(grid_offset)) {

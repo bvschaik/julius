@@ -150,6 +150,9 @@ typedef struct building {
         struct {
             short exceptions;
         } roadblock;
+        struct {
+            short flag_frame;
+        } warehouse;
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;

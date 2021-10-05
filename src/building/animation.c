@@ -162,3 +162,19 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     map_sprite_animation_set(grid_offset, is_reverse ? new_sprite | 0x80 : new_sprite);
     return new_sprite;
 }
+
+int building_animation_advance_warehouse_flag(building *b, int image_id)
+{
+    const image *img = assets_get_image(image_id);
+    if (!img->animation_speed_id) {
+        return 0;
+    }
+    if (game_animation_should_advance(img->animation_speed_id)) {
+        b->data.warehouse.flag_frame++;
+    }
+
+    if (b->data.warehouse.flag_frame > img->num_animation_sprites) {
+        b->data.warehouse.flag_frame = 0;
+    }
+    return b->data.warehouse.flag_frame;
+}
