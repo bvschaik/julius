@@ -38,6 +38,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "시작 영상 재생"},
     {TR_CONFIG_SIDEBAR_INFO, "게임 제어판에 추가 정보 표시"},
     {TR_CONFIG_SMOOTH_SCROLLING, "부드러운 화면이동 가능"},
+    {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "창 가장자리 스크롤 끄기"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "오른 클릭 드래그 화면이동 끄기"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "지형 평탄화 시 시각적 표현 향상"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "각각의 신전을 연속으로 설치 가능"},
@@ -105,7 +106,9 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SET_BOOKMARK_3, "3지점 설정"},
     {TR_HOTKEY_SET_BOOKMARK_4, "4지점 설정"},
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "전투 정보 전환"},
-    {TR_HOTKEY_EDIT_TITLE, "새 단축키 입력"}
+    {TR_HOTKEY_EDIT_TITLE, "새 단축키 입력"},
+    {TR_HOTKEY_DUPLICATE_TITLE, "단축키가 이미 사용 중"},
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "해당 키 조합은 이미 다음의 행동에 할당되어 있습니다:"},
 };
 
 void translation_korean(const translation_string **strings, int *num_strings)
