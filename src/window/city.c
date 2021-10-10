@@ -352,6 +352,10 @@ void window_city_show(void)
 
 void window_city_military_show(int legion_formation_id)
 {
+    if (building_construction_type()) {
+        building_construction_cancel();
+        building_construction_clear_type();
+    }
     formation_set_selected(legion_formation_id);
     if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && widget_sidebar_military_enter(legion_formation_id)) {
         return;
