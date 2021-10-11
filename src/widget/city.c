@@ -116,12 +116,12 @@ static void draw_pause_icon(int x_offset, int y_offset)
 
 static void draw_pause_button(void)
 {
-    inner_panel_draw(10, 40, 3, 2);
-    button_border_draw(10, 40, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
+    inner_panel_draw(16, 40, 3, 2);
+    button_border_draw(16, 40, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
     if (game_state_is_paused()) {
-        image_draw(image_group(GROUP_ARROW_MESSAGE_PROBLEMS), 20, 46);
+        image_draw(image_group(GROUP_ARROW_MESSAGE_PROBLEMS), 26, 46);
     } else {
-        draw_pause_icon(20, 46);
+        draw_pause_icon(26, 46);
     }
 }
 
@@ -130,14 +130,15 @@ static void draw_cancel_construction_button(void)
     if (!building_construction_type()) {
         return;
     }
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
-    width -= 4 * BLOCK_SIZE;
-    inner_panel_draw(width - 4, 40, 3, 2);
-    button_border_draw(width - 4, 40, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
+    int city_x, city_y, width, height;
+    city_view_get_viewport(&city_x, &city_y, &width, &height);
+    int x_offset = width - 4 * BLOCK_SIZE;
+    int y_offset = 40;
+    inner_panel_draw(x_offset, y_offset, 3, 2);
+    button_border_draw(x_offset, y_offset, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
     // Use clip rectangle to remove the border of the "X" image
-    graphics_set_clip_rectangle(width + 1, 44 + 1, 37, 24);
-    image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, width, 44);
+    graphics_set_clip_rectangle(x_offset + 5, y_offset + 5, 37, 24);
+    image_draw(image_group(GROUP_OK_CANCEL_SCROLL_BUTTONS) + 4, x_offset + 4, y_offset + 4);
     graphics_reset_clip_rectangle();
 }
 
@@ -145,6 +146,26 @@ void widget_city_draw_touch_buttons(void)
 {
     draw_pause_button();
     draw_cancel_construction_button();
+}
+
+static int is_pause_button(int x, int y)
+{
+    return x < 5 * BLOCK_SIZE && y >= 24 && y < 24 + 4 * BLOCK_SIZE;
+}
+
+static int is_cancel_construction_button(int x, int y)
+{
+    if (!building_construction_type()) {
+        return 0;
+    }
+    int city_x, city_y, width, height;
+    city_view_get_viewport(&city_x, &city_y, &width, &height);
+
+    int touch_width = 5 * BLOCK_SIZE;
+    int touch_height = 4 * BLOCK_SIZE;
+    int x_offset = width - touch_width;
+    int y_offset = 24;
+    return x >= x_offset && x < x_offset + touch_width && y >= y_offset && y < y_offset + touch_height;
 }
 
 // INPUT HANDLING
@@ -261,7 +282,7 @@ static int has_confirmed_construction(int ghost_offset, int tile_offset, int ran
 
 static int input_coords_in_city(int x, int y)
 {
-    if (x < 5 * BLOCK_SIZE && y < 40 + 5 * BLOCK_SIZE) {
+    if (is_pause_button(x, y) || is_cancel_construction_button(x, y)) {
         return 0;
     }
     int x_offset, y_offset, width, height;
@@ -315,33 +336,21 @@ static void handle_last_touch(void)
 
 static int handle_play_pause_button(const touch *t)
 {
-    int box_size = 5 * BLOCK_SIZE;
-
-    if (t->current_point.x >= box_size ||
-        t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
-        return 0;
+    if (is_pause_button(t->current_point.x, t->current_point.y)) {
+        game_state_toggle_paused();
+        return 1;
     }
-    game_state_toggle_paused();
-    return 1;
+    return 0;
 }
 
 static int handle_cancel_construction_button(const touch *t)
 {
-    if (!building_construction_type()) {
-        return 0;
+    if (is_cancel_construction_button(t->current_point.x, t->current_point.y)) {
+        building_construction_cancel();
+        window_request_refresh();
+        return 1;
     }
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
-    int box_size = 5 * BLOCK_SIZE;
-    width -= box_size;
-
-    if (t->current_point.x < width || t->current_point.x >= width + box_size ||
-        t->current_point.y < 24 || t->current_point.y >= 40 + box_size) {
-        return 0;
-    }
-    building_construction_cancel();
-    window_request_refresh();
-    return 1;
+    return 0;
 }
 
 static void handle_first_touch(map_tile *tile)
@@ -414,9 +423,7 @@ static void handle_first_touch(map_tile *tile)
         build_end();
         widget_city_clear_current_tile();
     } else if (first->has_ended) {
-        if (first->current_point.x >= 5 * BLOCK_SIZE || first->current_point.y >= 40 + 5 * BLOCK_SIZE) {
-            data.selected_tile = *tile;
-        }
+        data.selected_tile = *tile;
     }
 }
 
@@ -429,11 +436,7 @@ static void handle_touch(void)
     }
 
     map_tile *tile = &data.current_tile;
-    if (!building_construction_in_progress()) {
-        if (first->current_point.x >= 5 * BLOCK_SIZE || first->current_point.y >= 40 + 5 * BLOCK_SIZE) {
-            update_city_view_coords(first->current_point.x, first->current_point.y, tile);
-        }
-    } else if (input_coords_in_city(first->current_point.x, first->current_point.y)) {
+    if (!building_construction_in_progress() || input_coords_in_city(first->current_point.x, first->current_point.y)) {
         update_city_view_coords(first->current_point.x, first->current_point.y, tile);
     }
 
