@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "city/view.h"
+#include "core/buffer.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "graphics/graphics.h"

@@ -11,6 +11,8 @@
  */
 int map_building_at(int grid_offset);
 
+int map_building_from_buffer(buffer *buildings, int grid_offset);
+
 void map_building_set(int grid_offset, int building_id);
 
 /**
