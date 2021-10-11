@@ -17,6 +17,12 @@ int map_terrain_get(int grid_offset)
     return terrain_grid.items[grid_offset];
 }
 
+int map_terrain_get_from_buffer(buffer *buf, int grid_offset)
+{
+    buffer_set(buf, grid_offset * sizeof(uint16_t));
+    return buffer_read_u16(buf);
+}
+
 void map_terrain_set(int grid_offset, int terrain)
 {
     terrain_grid.items[grid_offset] = terrain;

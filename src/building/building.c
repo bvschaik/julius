@@ -35,6 +35,12 @@ building *building_get(int id)
     return &all_buildings[id];
 }
 
+void building_get_from_buffer(buffer *buf, int id, building *b)
+{
+    buffer_set(buf, 128 * id);
+    building_state_load_from_buffer(buf, b);
+}
+
 building *building_main(building *b)
 {
     for (int guard = 0; guard < 9; guard++) {

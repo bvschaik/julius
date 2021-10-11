@@ -13,6 +13,10 @@ void scenario_save_state(buffer *buf);
 
 void scenario_load_state(buffer *buf);
 
+int scenario_climate_from_buffer(buffer *buf);
+
+void scenario_map_data_from_buffer(buffer *buf, int *width, int *height, int *grid_start, int *grid_border_size);
+
 void scenario_settings_save_state(
     buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name);
 

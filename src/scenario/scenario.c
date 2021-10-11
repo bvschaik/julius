@@ -437,6 +437,21 @@ void scenario_load_state(buffer *buf)
     scenario.is_saved = 1;
 }
 
+int scenario_climate_from_buffer(buffer *buf)
+{
+    buffer_set(buf, 1704);
+    return buffer_read_u8(buf);
+}
+
+void scenario_map_data_from_buffer(buffer *buf, int *width, int *height, int *grid_start, int *grid_border_size)
+{
+    buffer_set(buf, 388);
+    *width = buffer_read_i32(buf);
+    *height = buffer_read_i32(buf);
+    *grid_start = buffer_read_i32(buf);
+    *grid_border_size = buffer_read_i32(buf);
+}
+
 void scenario_settings_init(void)
 {
     scenario.settings.campaign_mission = 0;

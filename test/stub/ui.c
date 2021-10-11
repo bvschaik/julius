@@ -63,6 +63,11 @@ void window_popup_dialog_show(popup_dialog_type type, void (*okFunc)(int), int h
 void widget_minimap_invalidate(void)
 {}
 
+const void *widget_scenario_minimap_draw_from_save(const void *buffers, int *width, int *height)
+{
+    return 0;
+}
+
 int window_building_info_get_building_type(void)
 {
     return 0;

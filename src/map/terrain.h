@@ -34,6 +34,8 @@ int map_terrain_is(int grid_offset, int terrain);
 
 int map_terrain_get(int grid_offset);
 
+int map_terrain_get_from_buffer(buffer *buf, int grid_offset);
+
 void map_terrain_set(int grid_offset, int terrain);
 
 void map_terrain_add(int grid_offset, int terrain);

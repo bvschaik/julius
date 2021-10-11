@@ -1,12 +1,19 @@
 #include "scenario_minimap.h"
 
+#include "building/building.h"
 #include "city/view.h"
+#include "figure/figure.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "map/building.h"
+#include "map/figure.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
 #include "scenario/property.h"
+
+#define MINIMAP_SAVE_WIDTH 266
+#define MINIMAP_SAVE_HEIGHT 272
 
 typedef struct {
     color_t left;
@@ -21,6 +28,8 @@ typedef struct {
     tile_color grass[8];
     tile_color road;
 } tile_color_set;
+
+static const minimap_save_buffers *minimap_buffers;
 
 // Since the minimap tiles are only 25 color sets per climate, we just hardcode them.
 // This "hack" is necessary to avoid reloading the climate graphics when selecting
@@ -138,4 +147,93 @@ void widget_scenario_minimap_draw(int x_offset, int y_offset, int width, int hei
     graphics_set_clip_rectangle(x_offset, y_offset, width, height);
     foreach_map_tile(draw_minimap_tile);
     graphics_reset_clip_rectangle();
+}
+
+static void draw_minimap_tile_from_save(int x_view, int y_view, int grid_offset)
+{
+    if (grid_offset < 0) {
+        return;
+    }
+
+    int terrain = map_terrain_get_from_buffer(minimap_buffers->map_terrain, grid_offset);
+    building b;
+    // exception for fort ground: display as empty land
+    if (terrain & TERRAIN_BUILDING) {
+        building_get_from_buffer(minimap_buffers->buildings,
+            map_building_from_buffer(minimap_buffers->map_building, grid_offset), &b);
+        if (b.type == BUILDING_FORT_GROUND) {
+            terrain = 0;
+        }
+    }
+
+    if (terrain & TERRAIN_BUILDING) {
+        if (map_property_is_draw_tile_from_buffer(minimap_buffers->map_edge, grid_offset)) {
+            int image_id;
+            if (b.house_size) {
+                image_id = image_group(GROUP_MINIMAP_HOUSE);
+            } else if (b.type == BUILDING_RESERVOIR) {
+                image_id = image_group(GROUP_MINIMAP_AQUEDUCT) - 1;
+            } else {
+                image_id = image_group(GROUP_MINIMAP_BUILDING);
+            }
+            switch (map_property_multi_tile_size_from_buffer(minimap_buffers->map_bitfields, grid_offset)) {
+                case 1: image_draw(image_id, x_view, y_view); break;
+                case 2: image_draw(image_id + 1, x_view, y_view - 1); break;
+                case 3: image_draw(image_id + 2, x_view, y_view - 2); break;
+                case 4: image_draw(image_id + 3, x_view, y_view - 3); break;
+                case 5: image_draw(image_id + 4, x_view, y_view - 4); break;
+            }
+        }
+    } else if (terrain & TERRAIN_AQUEDUCT) {
+        image_draw(image_group(GROUP_MINIMAP_AQUEDUCT), x_view, y_view);
+    } else if (terrain & TERRAIN_WALL) {
+        image_draw(image_group(GROUP_MINIMAP_WALL), x_view, y_view);
+    } else {
+        int rand = map_random_get_from_buffer(minimap_buffers->map_random, grid_offset);
+        const tile_color *color;
+        const tile_color_set *set = &MINIMAP_COLOR_SETS[minimap_buffers->climate];
+        if (terrain & TERRAIN_WATER) {
+            color = &set->water[rand & 3];
+        } else if (terrain & (TERRAIN_SHRUB | TERRAIN_TREE)) {
+            color = &set->tree[rand & 3];
+        } else if (terrain & (TERRAIN_ROCK | TERRAIN_ELEVATION)) {
+            color = &set->rock[rand & 3];
+        } else if (terrain & TERRAIN_ROAD) {
+            color = &set->road;
+        } else if (terrain & TERRAIN_MEADOW) {
+            color = &set->meadow[rand & 3];
+        } else {
+            color = &set->grass[rand & 7];
+        }
+        graphics_draw_vertical_line(x_view, y_view, y_view, color->left);
+        graphics_draw_vertical_line(x_view + 1, y_view, y_view, color->right);
+    }
+}
+
+const color_t *widget_scenario_minimap_draw_from_save(const minimap_save_buffers *buffers, int *width, int *height)
+{
+    *width = 0;
+    *height = 0;
+
+    minimap_buffers = buffers;
+
+    static color_t screen[MINIMAP_SAVE_WIDTH * MINIMAP_SAVE_HEIGHT];
+    static color_t dst[MINIMAP_SAVE_WIDTH * MINIMAP_SAVE_HEIGHT];
+
+    graphics_save_to_buffer(0, 0, MINIMAP_SAVE_WIDTH, MINIMAP_SAVE_HEIGHT, screen);
+    graphics_fill_rect(0, 0, MINIMAP_SAVE_WIDTH, MINIMAP_SAVE_HEIGHT, 0);
+    graphics_set_clip_rectangle(0, 0, MINIMAP_SAVE_WIDTH, MINIMAP_SAVE_HEIGHT);
+    set_bounds(0, 0, MINIMAP_SAVE_WIDTH, MINIMAP_SAVE_HEIGHT);
+    city_view_set_custom_lookup(buffers->grid_start, buffers->grid_width,
+        buffers->grid_height, buffers->grid_border_size);
+    foreach_map_tile(draw_minimap_tile_from_save);
+    city_view_restore_lookup();
+    graphics_reset_clip_rectangle();
+    graphics_save_to_buffer(0, 0, MINIMAP_SAVE_WIDTH, MINIMAP_SAVE_HEIGHT, dst);
+    graphics_draw_from_buffer(0, 0, MINIMAP_SAVE_WIDTH, MINIMAP_SAVE_HEIGHT, screen);
+
+    *width = MINIMAP_SAVE_WIDTH;
+    *height = MINIMAP_SAVE_HEIGHT;
+
+    return dst;
 }
