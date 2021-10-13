@@ -706,7 +706,22 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GARDEN_WALL_GATE_DESC, "Grinden hindrar oinbjudna gäster från att störa i de fridfulla trädgårdarna."},
     {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Vagndragaren hämtar varor från ett annat varuhus."},
     {TR_BUILDING_PALISADE, "Palissad" },
-    {TR_BUILDING_PALISADE_DESC, "Detta gedigna pålverk av trä kommer skydda oss från angripare och fientliga djur."},		
+    {TR_BUILDING_PALISADE_DESC, "Detta gedigna pålverk av trä kommer skydda oss från angripare och fientliga djur."},	
+    {TR_CONFIG_MAX_GRAND_TEMPLES, "Maximalt antal storslagna tempel per stad:" },
+    {TR_CONFIG_USE_COLOR_CURSORS, "Använd färgade muspekare" },
+    {TR_HOTKEY_COPY_SETTINGS, "Kopiera byggnadsinställningar" },
+    {TR_OVERLAY_MOTHBALL, "Ur bruk" },
+    {TR_OVERLAY_ENEMY, "Fiender" },
+    {TR_BUILDING_TAVERN_DESC_5, "Medborgare älskar att besöka den här anläggningen på deras fritid för att umgås över god mat och fint vin." },
+    {TR_OVERLAY_WAREHOUSES, "Handelsmagasin" },
+    {TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION, "Det blåa laget - Neptunus favoriter. De här är de mest lovande av Roms unga kuskar som önskar visa vad de går för." },
+    {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "Det röda laget - känt som laget som leds av den mest framgångsrika kusken i Roms historia - en föredetta roddare som räddade livet på en romesrk konsul." },
+    {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "Det vita laget - grundat av föredetta gladiatorer. De har stridandet i blodet, och trots att de är fria män lever de för den här utmaningen." },
+    {TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION, "Det gröna laget - arvingar till Celeresryttarna från tiden då rom ännu var ett kungarike. De påstår sig fortfarande vara de bästa av de bästa." },
+    {TR_TOOLTIP_BUTTON_ACCEPT_WORKERS, "Stoppa leveranser av resurser till handelsmagasin och sädesmagasin." },
+    {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Återuppta resursleveranser" },
+    {TR_TOOLTIP_BUTTON_STOCKPILING_ON, "Hamstra varor direkt handelsmagasin." },
+    {TR_TOOLTIP_BUTTON_STOCKPILING_OFF, "Sluta hamstra varor direkt i handelsmagasin." },
 };
 
 void translation_swedish(const translation_string **strings, int *num_strings)
