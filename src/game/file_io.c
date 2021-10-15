@@ -80,6 +80,7 @@ static struct {
     int num_pieces;
     file_piece pieces[10];
     scenario_state state;
+    char last_loaded_scenario[FILE_NAME_MAX];
 } scenario_data = {0};
 
 typedef struct {
@@ -196,12 +197,20 @@ static buffer *create_savegame_piece(int size, int compressed)
     return &piece->buf;
 }
 
+static int reset_scenario_pieces(void)
+{
+    if (scenario_data.num_pieces == 0) {
+        return 0;
+    }
+    for (int i = 0; i < scenario_data.num_pieces; i++) {
+        buffer_reset(&scenario_data.pieces[i].buf);
+    }
+    return 1;
+}
+
 static void init_scenario_data(void)
 {
-    if (scenario_data.num_pieces > 0) {
-        for (int i = 0; i < scenario_data.num_pieces; i++) {
-            buffer_reset(&scenario_data.pieces[i].buf);
-        }
+    if (reset_scenario_pieces()) {
         return;
     }
     scenario_state *state = &scenario_data.state;
@@ -506,9 +515,8 @@ static void savegame_save_to_state(savegame_state *state)
     buffer_skip(state->end_marker, 284);
 }
 
-int game_file_io_read_scenario(const char *filename)
+static int load_scenario_to_buffers(const char *filename)
 {
-    log_info("Loading scenario", filename, 0);
     init_scenario_data();
     FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
     if (!fp) {
@@ -523,27 +531,31 @@ int game_file_io_read_scenario(const char *filename)
         }
     }
     file_close(fp);
+    return 1;
+}
 
+int game_file_io_read_scenario(const char *filename)
+{
+    log_info("Loading scenario", filename, 0);
+    if (strcmp(scenario_data.last_loaded_scenario, filename) != 0) {
+        if (!load_scenario_to_buffers(filename)) {
+            return 0;
+        }
+    }
     scenario_load_from_state(&scenario_data.state);
+    scenario_data.last_loaded_scenario[0] = 0;
     return 1;
 }
 
 int game_file_io_read_scenario_info(const char *filename, scenario_info *info)
 {
-    init_scenario_data();
-    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
-    if (!fp) {
-        return 0;
-    }
-    for (int i = 0; i < scenario_data.num_pieces; i++) {
-        size_t read_size = fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
-        if (read_size != scenario_data.pieces[i].buf.size) {
-            log_error("Unable to load scenario", filename, 0);
-            file_close(fp);
+    if (strcmp(scenario_data.last_loaded_scenario, filename) != 0) {
+        if (!load_scenario_to_buffers(filename)) {
             return 0;
         }
     }
-    file_close(fp);
+
+    strncpy(scenario_data.last_loaded_scenario, filename, FILE_NAME_MAX - 1);
 
     const scenario_state *state = &scenario_data.state;
 
@@ -573,6 +585,8 @@ int game_file_io_read_scenario_info(const char *filename, scenario_info *info)
 
     info->minimap_image = game_file_minimap_create(&minimap_buffers);
     info->map_size = minimap_buffers.grid_width;
+
+    reset_scenario_pieces();
 
     return 1;
 }
