@@ -20,6 +20,8 @@ except_file(TEST_CORE_FILES "core/image.c" ${CORE_FILES})
 except_file(TEST_CORE_FILES "core/lang.c" ${TEST_CORE_FILES})
 except_file(TEST_CORE_FILES "core/speed.c" ${TEST_CORE_FILES})
 except_file(TEST_BUILDING_FILES "building/model.c" ${BUILDING_FILES})
+except_file(TEST_GAME_FILES "game/file_minimap.c" ${GAME_FILES})
+
 
 add_executable(translationcheck
     translation/check.c
@@ -54,11 +56,11 @@ add_executable(autopilot
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
     ${TEST_CORE_FILES}
     ${TEST_BUILDING_FILES}
+    ${TEST_GAME_FILES}
     ${CITY_FILES}
     ${EMPIRE_FILES}
     ${FIGURE_FILES}
     ${FIGURETYPE_FILES}
-    ${GAME_FILES}
     ${MAP_FILES}
     ${SCENARIO_FILES}
     ${SOUND_FILES}

@@ -22,6 +22,7 @@
 #include "figure/name.h"
 #include "figure/route.h"
 #include "figure/trader.h"
+#include "game/file_minimap.h"
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "map/aqueduct.h"
@@ -43,7 +44,6 @@
 #include "scenario/invasion.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
-#include "widget/scenario_minimap.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -528,6 +528,55 @@ int game_file_io_read_scenario(const char *filename)
     return 1;
 }
 
+int game_file_io_read_scenario_info(const char *filename, scenario_info *info)
+{
+    init_scenario_data();
+    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+    if (!fp) {
+        return 0;
+    }
+    for (int i = 0; i < scenario_data.num_pieces; i++) {
+        size_t read_size = fread(scenario_data.pieces[i].buf.data, 1, scenario_data.pieces[i].buf.size, fp);
+        if (read_size != scenario_data.pieces[i].buf.size) {
+            log_error("Unable to load scenario", filename, 0);
+            file_close(fp);
+            return 0;
+        }
+    }
+    file_close(fp);
+
+    const scenario_state *state = &scenario_data.state;
+
+    scenario_description_from_buffer(state->scenario, info->description);
+    info->image_id = scenario_image_id_from_buffer(state->scenario);
+    info->climate = scenario_climate_from_buffer(state->scenario);
+    info->total_invasions = scenario_invasions_from_buffer(state->scenario);
+    info->player_rank = scenario_rank_from_buffer(state->scenario);
+    info->start_year = scenario_start_year_from_buffer(state->scenario);
+    scenario_open_play_info_from_buffer(state->scenario, &info->is_open_play, &info->open_play_id);
+    
+    if (!info->is_open_play) {
+        scenario_objectives_from_buffer(state->scenario, &info->win_criteria);
+    }
+
+    file_buffers minimap_buffers;
+    minimap_buffers.buildings = 0;
+    minimap_buffers.map_building = 0;
+    minimap_buffers.map_bitfields = state->bitfields;
+    minimap_buffers.map_terrain = state->terrain;
+    minimap_buffers.map_edge = state->edge;
+    minimap_buffers.map_random = state->random;
+    minimap_buffers.climate = info->climate;
+    
+    scenario_map_data_from_buffer(state->scenario, &minimap_buffers.grid_width, &minimap_buffers.grid_height,
+        &minimap_buffers.grid_start, &minimap_buffers.grid_border_size);
+
+    info->minimap_image = game_file_minimap_create(&minimap_buffers);
+    info->map_size = minimap_buffers.grid_width;
+
+    return 1;
+}
+
 int game_file_io_write_scenario(const char *filename)
 {
     log_info("Saving scenario", filename, 0);
@@ -688,7 +737,7 @@ static int savegame_read_file_info(FILE *fp, saved_game_info *info)
     init_file_piece(&building_grid, 52488, 0);
     init_file_piece(&buildings, 256000, 0);
 
-    minimap_save_buffers minimap_buffers;
+    file_buffers minimap_buffers;
     minimap_buffers.map_terrain = &terrain_grid.buf;
     minimap_buffers.map_random = &random_grid.buf;
     minimap_buffers.map_edge = &edge_grid.buf;
@@ -793,8 +842,7 @@ static int savegame_read_file_info(FILE *fp, saved_game_info *info)
     scenario_map_data_from_buffer(&scenario.buf, &minimap_buffers.grid_width, &minimap_buffers.grid_height,
         &minimap_buffers.grid_start, &minimap_buffers.grid_border_size);
 
-    info->minimap_image = widget_scenario_minimap_draw_from_save(&minimap_buffers,
-        &info->minimap_image_width, &info->minimap_image_height);
+    info->minimap_image = game_file_minimap_create(&minimap_buffers);
 
     free_file_piece(&city_data);
     free_file_piece(&game_time);

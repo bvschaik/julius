@@ -5,6 +5,7 @@
 #include "core/buffer.h"
 #include "figure/figure.h"
 #include "figure/formation.h"
+#include "game/file_minimap.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "map/building.h"
@@ -305,6 +306,19 @@ void widget_minimap_draw(int x_offset, int y_offset, int width, int height, int 
         graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height, COLOR_MINIMAP_DARK);
         graphics_draw_vertical_line(x_offset - 1 + width, y_offset,
             y_offset + height, COLOR_MINIMAP_LIGHT);
+    }
+}
+
+void widget_minimap_draw_from_buffer(int x, int y, int width, int height, const color_t *buffer)
+{
+    int x_offset = (FILE_MINIMAP_IMAGE_WIDTH - width) / 2;
+    int y_offset = (FILE_MINIMAP_IMAGE_HEIGHT - height) / 2;
+
+    const color_t *dst = buffer + y_offset * FILE_MINIMAP_IMAGE_WIDTH + x_offset;
+
+    for (int i = 0; i < height; i++) {
+        graphics_blend_from_buffer(x, y + i, width, 1, dst);
+        dst += FILE_MINIMAP_IMAGE_WIDTH;
     }
 }
 

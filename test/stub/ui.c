@@ -63,7 +63,7 @@ void window_popup_dialog_show(popup_dialog_type type, void (*okFunc)(int), int h
 void widget_minimap_invalidate(void)
 {}
 
-const void *widget_scenario_minimap_draw_from_save(const void *buffers, int *width, int *height)
+const void *game_file_minimap_create(const void *buffers)
 {
     return 0;
 }

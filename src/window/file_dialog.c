@@ -24,6 +24,7 @@
 #include "platform/file_manager.h"
 #include "translation/translation.h"
 #include "widget/input_box.h"
+#include "widget/minimap.h"
 #include "window/city.h"
 #include "window/editor/map.h"
 
@@ -246,8 +247,7 @@ static void draw_foreground(void)
                     500, 396, 108, FONT_NORMAL_BLACK, 0);
                 text_draw(translation_for(TR_SAVE_DIALOG_POPULATION), 362, 416, FONT_NORMAL_BLACK, 0);
                 text_draw_number(data.info.population, '\0', "", 500, 416, FONT_NORMAL_BLACK);
-                graphics_blend_from_buffer(352, 80,
-                    data.info.minimap_image_width, data.info.minimap_image_height, data.info.minimap_image);
+                widget_minimap_draw_from_buffer(352, 80, 266, 272, data.info.minimap_image);
             } else {
                 text_draw_centered(translation_for(TR_SAVE_DIALOG_INVALID_FILE), 362, 241, 246, FONT_LARGE_BLACK, 0);
             }
