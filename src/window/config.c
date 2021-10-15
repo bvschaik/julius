@@ -430,7 +430,7 @@ static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numeri
             data.active_numerical_range = 0;
             return 0;
         }
-    } else if (!m->left.is_down || !is_numerical_range(m, x, y, w->width_blocks * BLOCK_SIZE)) {
+    } else if (!m->left.went_down || !is_numerical_range(m, x, y, w->width_blocks * BLOCK_SIZE)) {
         return 0;
     }
     int slider_width = w->width_blocks * BLOCK_SIZE - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
