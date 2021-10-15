@@ -19,8 +19,6 @@ SET(MPG123_SEARCH_PATHS
     ${MPG123_EXT_DIR}
     ~/Library/Frameworks
     /Library/Frameworks
-    /usr/local
-    /usr
     /sw # Fink
     /opt/local # DarwinPorts
     /opt/csw # Blastwave
