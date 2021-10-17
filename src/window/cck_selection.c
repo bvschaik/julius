@@ -56,7 +56,7 @@ static generic_button file_buttons[] = {
     {18, 444, 252, 16, button_select_item, button_none, 14, 0},
 };
 
-static scrollbar_type scrollbar = {276, 210, 256, on_scroll, 8, 1};
+static scrollbar_type scrollbar = {276, 210, 256, 260, MAX_SCENARIOS, on_scroll, 1, 8, 1};
 
 static struct {
     int focus_button_id;
@@ -77,7 +77,7 @@ static void init(void)
     data.focus_toggle_button = 0;
     data.show_minimap = 0;
     button_select_item(0, 0);
-    scrollbar_init(&scrollbar, 0, data.scenarios->num_files - MAX_SCENARIOS);
+    scrollbar_init(&scrollbar, 0, data.scenarios->num_files);
 }
 
 static void draw_scenario_list(void)

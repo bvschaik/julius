@@ -44,7 +44,7 @@ static generic_button generic_buttons_messages[] = {
     {0, 180, 412, 18, button_message, button_delete, 9, 0},
 };
 
-static scrollbar_type scrollbar = {432, 112, 208, on_scroll};
+static scrollbar_type scrollbar = {432, 112, 208, 416, MAX_MESSAGES, on_scroll, 1};
 
 static struct {
     int width_blocks;
@@ -60,7 +60,7 @@ static struct {
 static void init(void)
 {
     city_message_sort_and_compact();
-    scrollbar_init(&scrollbar, city_message_scroll_position(), city_message_count() - MAX_MESSAGES);
+    scrollbar_init(&scrollbar, city_message_scroll_position(), city_message_count());
 }
 
 static void draw_background(void)
@@ -146,6 +146,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
     int old_button_id = data.focus_button_id;
     data.focus_button_id = 0;
 
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
+        data.focus_button_id = 13;
+        return;
+    }
+
     int button_id;
     int handled = image_buttons_handle_mouse(m_dialog, 16, 32 + BLOCK_SIZE * data.height_blocks - 42,
         &image_button_help, 1, &button_id);
@@ -156,9 +161,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
         32 + BLOCK_SIZE * data.height_blocks - 36, &image_button_close, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 12;
-    }
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
-        data.focus_button_id = 13;
     }
     handled |= generic_buttons_handle_mouse(m_dialog, data.x_text, data.y_text + 4,
         generic_buttons_messages, MAX_MESSAGES, &button_id);
@@ -208,7 +210,7 @@ static void button_delete(int id_to_delete, int param2)
     int id = city_message_set_current(scrollbar.scroll_position + id_to_delete);
     if (id < city_message_count()) {
         city_message_delete(id);
-        scrollbar_update_max(&scrollbar, city_message_count() - MAX_MESSAGES);
+        scrollbar_update_total_elements(&scrollbar, city_message_count());
         window_invalidate();
     }
 }
