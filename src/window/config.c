@@ -57,7 +57,9 @@ static const uint8_t *display_text_language(void);
 static const uint8_t *display_text_display_scale(void);
 static const uint8_t *display_text_cursor_scale(void);
 
-static scrollbar_type scrollbar = {580, ITEM_Y_OFFSET, ITEM_HEIGHT * NUM_VISIBLE_ITEMS, on_scroll, 4};
+static scrollbar_type scrollbar = {
+    580, ITEM_Y_OFFSET, ITEM_HEIGHT * NUM_VISIBLE_ITEMS, CHECKBOX_WIDTH, NUM_VISIBLE_ITEMS, on_scroll, 0, 4
+};
 
 enum {
     TYPE_NONE,
@@ -257,7 +259,7 @@ static void init(void)
     }
     install_widgets();
 
-    scrollbar_init(&scrollbar, 0, data.num_widgets - NUM_VISIBLE_ITEMS);
+    scrollbar_init(&scrollbar, 0, data.num_widgets);
 }
 
 static void checkbox_draw_text(int x, int y, int value_key, translation_key description)

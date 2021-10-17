@@ -14,7 +14,10 @@
 
 static void on_scroll(void);
 
-static scrollbar_type scrollbar = {0, 0, 0, on_scroll};
+static scrollbar_type scrollbar = {
+    .has_y_margin = 1,
+    .on_scroll_callback = on_scroll
+};
 
 static struct {
     int message_id;
@@ -57,10 +60,12 @@ int rich_text_init(
         scrollbar.x = data.x_text + BLOCK_SIZE * data.text_width_blocks - 1;
         scrollbar.y = data.y_text;
         scrollbar.height = BLOCK_SIZE * data.text_height_blocks;
-        scrollbar_init(&scrollbar, scrollbar.scroll_position, data.num_lines - data.text_height_lines);
+        scrollbar.elements_in_view = data.text_height_lines;
+        scrollbar_init(&scrollbar, scrollbar.scroll_position, data.num_lines);
         if (data.num_lines <= data.text_height_lines && adjust_width_on_no_scroll) {
             data.text_width_blocks += 2;
         }
+        scrollbar.scrollable_width = BLOCK_SIZE * data.text_width_blocks;
         window_invalidate();
     }
     return data.text_width_blocks;
