@@ -17,7 +17,8 @@ typedef enum {
     TUT2_BUILD_START,
     TUT2_BUILD_UP_TO_250,
     TUT2_BUILD_UP_TO_450,
-    TUT2_BUILD_AFTER_450
+    TUT2_BUILD_AFTER_450,
+    TUT1_BUILD_AFTER_SENATE
 } tutorial_build_buttons;
 
 void tutorial_init(void);

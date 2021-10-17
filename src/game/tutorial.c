@@ -77,6 +77,8 @@ tutorial_build_buttons tutorial_get_build_buttons(void)
             return TUT1_BUILD_AFTER_FIRE;
         } else if (!data.tutorial1.senate_built) {
             return TUT1_BUILD_AFTER_COLLAPSE;
+        } else {
+            return TUT1_BUILD_AFTER_SENATE;
         }
     } else if (scenario_is_tutorial_2()) {
         if (!data.tutorial2.granary_built) {
