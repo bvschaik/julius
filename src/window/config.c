@@ -921,7 +921,7 @@ static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numeri
             data.active_numerical_range = 0;
             return 0;
         }
-    } else if (!m->left.is_down || !is_numerical_range(w, m, x, y)) {
+    } else if (!m->left.went_down || !is_numerical_range(w, m, x, y)) {
         return 0;
     }
     int extra_width = data.widgets_per_page[data.page] > NUM_VISIBLE_ITEMS ? 0 : 64;

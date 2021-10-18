@@ -26,3 +26,17 @@ void system_keyboard_hide(void)
     platform_hide_virtual_keyboard();
 #endif
 }
+
+void system_start_text_input(void)
+{
+#ifndef PLATFORM_USE_VIRTUAL_KEYBOARD
+    SDL_StartTextInput();
+#endif
+}
+
+void system_stop_text_input(void)
+{
+#ifndef PLATFORM_USE_VIRTUAL_KEYBOARD
+    SDL_StopTextInput();
+#endif
+}

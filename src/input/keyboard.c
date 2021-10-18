@@ -114,6 +114,7 @@ void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation
     data.box_width = box_width;
     data.font = font;
     update_viewport(1);
+    system_start_text_input();
 }
 
 void keyboard_refresh(void)
@@ -126,12 +127,14 @@ void keyboard_refresh(void)
 void keyboard_resume_capture(void)
 {
     data.capture = 1;
+    system_start_text_input();
 }
 
 void keyboard_pause_capture(void)
 {
     data.capture = 0;
     system_keyboard_hide();
+    system_stop_text_input();
 }
 
 void keyboard_stop_capture(void)
@@ -143,18 +146,21 @@ void keyboard_stop_capture(void)
     data.max_length = 0;
     data.accepted = 0;
     system_keyboard_hide();
+    system_stop_text_input();
 }
 
 void keyboard_start_capture_numeric(void (*callback)(int))
 {
     data.capture_numeric = 1;
     data.capture_numeric_callback = callback;
+    system_start_text_input();
 }
 
 void keyboard_stop_capture_numeric(void)
 {
     data.capture_numeric = 0;
     data.capture_numeric_callback = 0;
+    system_stop_text_input();
 }
 
 int keyboard_input_is_accepted(void)

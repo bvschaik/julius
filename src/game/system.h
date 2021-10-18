@@ -132,6 +132,16 @@ void system_keyboard_show(void);
 void system_keyboard_hide(void);
 
 /**
+ * Enable text input events
+ */
+void system_start_text_input(void);
+
+/**
+ * Disable text input events
+ */
+void system_stop_text_input(void);
+
+/**
  * Sets mouse to relative mode, where moving the mouse
  * does not move the cursor on the screen
  * @param enabled Boolean: 1 for enable, 0 for disable

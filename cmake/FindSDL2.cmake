@@ -102,8 +102,6 @@ ELSE()
         ${SDL_MINGW_EXT_DIR}
         ~/Library/Frameworks
         /Library/Frameworks
-        /usr/local
-        /usr
         /sw # Fink
         /opt/local # DarwinPorts
         /opt/csw # Blastwave

@@ -38,6 +38,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "시작 영상 재생"},
     {TR_CONFIG_SIDEBAR_INFO, "게임 제어판에 추가 정보 표시"},
     {TR_CONFIG_SMOOTH_SCROLLING, "부드러운 화면이동 가능"},
+    {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "창 가장자리 화면이동 끄기"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "오른 클릭 드래그 화면이동 끄기"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "지형 평탄화 시 시각적 표현 향상"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "각각의 신전을 연속으로 설치 가능"},
@@ -369,6 +370,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "이 신전은 건설된 후 보급창에 공급할 식량을 수집할 것입니다." },
     {TR_BUTTON_GO_TO_SITE, "위치로 이동" },
     {TR_RETURN_ALL_TO_FORT, "모두"},
+    {TR_HOTKEY_DUPLICATE_TITLE, "단축키가 이미 사용 중"},
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "해당 키 조합은 이미 다음의 행동에 할당되어 있습니다:"},
 };
 
 void translation_korean(const translation_string **strings, int *num_strings)
