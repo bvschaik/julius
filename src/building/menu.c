@@ -223,7 +223,7 @@ static void enable_tutorial1_after_collapse(int *enabled, building_type type)
 static void enable_tutorial1_after_senate(int *enabled, building_type type)
 {
     enable_tutorial1_after_collapse(enabled, type);
-    enable_if_allowed(enabled, type, BUILD_MENU_SMALL_TEMPLES);
+    enable_if_allowed(enabled, type, BUILDING_MENU_SMALL_TEMPLES);
 }
 
 static void enable_tutorial2_start(int *enabled, building_type type)
