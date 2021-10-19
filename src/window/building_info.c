@@ -376,6 +376,11 @@ static void init(int grid_offset)
                 }
                 break;
             case BUILDING_LIGHTHOUSE:
+            case BUILDING_LARGE_TEMPLE_CERES:
+            case BUILDING_LARGE_TEMPLE_MARS:
+            case BUILDING_LARGE_TEMPLE_MERCURY:
+            case BUILDING_LARGE_TEMPLE_NEPTUNE:
+            case BUILDING_LARGE_TEMPLE_VENUS:
                 if (map_has_road_access_monument_size3(b->x, b->y, 0)) {
                     context.has_road_access = 1;
                 }
