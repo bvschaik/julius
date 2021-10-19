@@ -53,6 +53,16 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_i16(buf, b->data.monument.progress);
         buffer_write_i16(buf, b->data.monument.phase);
         buffer_write_u8(buf, b->data.market.fetch_inventory_id);
+    // As above, Ceres and Venus temples are both monuments and suppliers 
+    } else if (b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
+        for (int i = 0; i < RESOURCE_MAX; i++) {
+            buffer_write_i16(buf, b->data.monument.resources_needed[i]);
+        }
+        buffer_write_i32(buf, b->data.monument.upgrades);
+        buffer_write_i16(buf, b->data.monument.progress);
+        buffer_write_i16(buf, b->data.monument.phase);
+        buffer_write_u8(buf, b->data.market.fetch_inventory_id);
+        buffer_write_u8(buf, 0);
     } else if (building_has_supplier_inventory(b->type)) {
         buffer_write_i16(buf, 0);
         for (int i = 0; i < INVENTORY_MAX; i++) {
@@ -269,6 +279,19 @@ static void read_type_data(buffer *buf, building *b, int building_buf_size)
         b->data.monument.progress = buffer_read_i16(buf);
         b->data.monument.phase = buffer_read_i16(buf);
         b->data.market.fetch_inventory_id = buffer_read_u8(buf);
+    // As above, Ceres and Venus temples are both monuments and suppliers 
+    } else if (b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
+        for (int i = 0; i < RESOURCE_MAX; i++) {
+            b->data.monument.resources_needed[i] = buffer_read_i16(buf);
+        }
+        b->data.monument.upgrades = buffer_read_i32(buf);
+        b->data.monument.progress = buffer_read_i16(buf);
+        b->data.monument.phase = buffer_read_i16(buf);
+        if (!b->data.monument.phase) { // Compatibility fix
+            b->data.monument.phase == MONUMENT_FINISHED;
+        }
+        b->data.market.fetch_inventory_id = buffer_read_u8(buf);
+        buffer_skip(buf, 1);
     } else if (building_has_supplier_inventory(b->type)) {
         buffer_skip(buf, 2);
         for (int i = 0; i < INVENTORY_MAX; i++) {
