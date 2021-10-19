@@ -784,13 +784,14 @@ static void draw_foreground(void)
             } else {
                 window_building_supplier_draw_foreground(&context);
             }
-        } else if (building_is_venus_temple(btype) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
+        } else if (building_is_venus_temple(btype) && b->data.monument.phase <= 0 &&
+            building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
             if (context.storage_show_special_orders) {
                 window_building_draw_supplier_orders_foreground(&context);
             } else {
                 window_building_supplier_draw_foreground(&context);
             }
-        } else if (building_is_ceres_temple(btype) &&
+        } else if (building_is_ceres_temple(btype) && b->data.monument.phase <= 0 &&
             building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD)) {
             if (context.storage_show_special_orders) {
                 window_building_draw_supplier_orders_foreground(&context);
