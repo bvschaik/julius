@@ -6,6 +6,7 @@
 #include "building/construction.h"
 #include "building/construction_warning.h"
 #include "building/count.h"
+#include "building/distribution.h"
 #include "building/dock.h"
 #include "building/image.h"
 #include "building/menu.h"
@@ -169,11 +170,20 @@ static void add_to_map(int type, building *b, int size,
             add_building(b);
             map_tiles_update_area_roads(b->x, b->y, 5);
             break;
+        // Don't autodistribute wine for new Venus temples
+        case BUILDING_SMALL_TEMPLE_VENUS:
+            add_building(b);
+            building_distribution_unaccept_all_goods(b);
+            break;
+        case BUILDING_LARGE_TEMPLE_VENUS:
+            map_tiles_update_area_roads(b->x, b->y, 5);
+            building_monument_set_phase(b, MONUMENT_START);
+            building_distribution_unaccept_all_goods(b);
+            break;
         case BUILDING_LARGE_TEMPLE_CERES:
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
         case BUILDING_LARGE_TEMPLE_MERCURY:
         case BUILDING_LARGE_TEMPLE_MARS:
-        case BUILDING_LARGE_TEMPLE_VENUS:
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_set_phase(b, MONUMENT_START);
             break;
