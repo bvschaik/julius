@@ -288,7 +288,7 @@ static void read_type_data(buffer *buf, building *b, int building_buf_size)
         b->data.monument.progress = buffer_read_i16(buf);
         b->data.monument.phase = buffer_read_i16(buf);
         if (!b->data.monument.phase) { // Compatibility fix
-            b->data.monument.phase == MONUMENT_FINISHED;
+            b->data.monument.phase = MONUMENT_FINISHED;
         }
         b->data.market.fetch_inventory_id = buffer_read_u8(buf);
         buffer_skip(buf, 1);

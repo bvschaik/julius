@@ -3,6 +3,7 @@
 #include "building/barracks.h"
 #include "building/count.h"
 #include "building/granary.h"
+#include "building/industry.h"
 #include "building/monument.h"
 #include "building/model.h"
 #include "building/storage.h"
@@ -641,7 +642,8 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
         if (space->id > 0 && space->loads_stored > 0) {
             if (!city_resource_is_stockpiled(space->subtype.warehouse_resource_id)) {
                 int workshop_type = resource_to_workshop_type(space->subtype.warehouse_resource_id);
-                if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type)) {
+                if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type) &&
+                    building_has_workshop_for_raw_material_with_room(workshop_type, warehouse->road_network_id)) {
                     *resource = space->subtype.warehouse_resource_id;
                     return WAREHOUSE_TASK_DELIVERING;
                 }
