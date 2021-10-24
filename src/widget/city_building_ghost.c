@@ -117,6 +117,35 @@ static const int RESERVOIR_GRID_OFFSETS[4] = { OFFSET(-1,-1), OFFSET(1,-1), OFFS
 static const int HIPPODROME_X_VIEW_OFFSETS[4] = { 150, 150, -150, -150 };
 static const int HIPPODROME_Y_VIEW_OFFSETS[4] = { 75, -75, -75, 75 };
 
+enum farm_ghost_object {
+    FARM_GHOST_NO_DRAW,
+    FARM_GHOST_FARMHOUSE,
+    FARM_GHOST_CROP
+};
+
+static const int FARM_TILES[4][9] = {
+    {
+        FARM_GHOST_FARMHOUSE, FARM_GHOST_NO_DRAW, FARM_GHOST_NO_DRAW,
+        FARM_GHOST_NO_DRAW, FARM_GHOST_CROP, FARM_GHOST_CROP,
+        FARM_GHOST_CROP, FARM_GHOST_CROP, FARM_GHOST_CROP
+    },
+    {
+        FARM_GHOST_CROP, FARM_GHOST_FARMHOUSE, FARM_GHOST_CROP,
+        FARM_GHOST_NO_DRAW, FARM_GHOST_NO_DRAW, FARM_GHOST_CROP,
+        FARM_GHOST_NO_DRAW, FARM_GHOST_CROP, FARM_GHOST_CROP
+    },
+    {
+        FARM_GHOST_CROP, FARM_GHOST_CROP, FARM_GHOST_CROP,
+        FARM_GHOST_FARMHOUSE, FARM_GHOST_CROP, FARM_GHOST_CROP,
+        FARM_GHOST_NO_DRAW, FARM_GHOST_NO_DRAW, FARM_GHOST_NO_DRAW
+    },
+    {
+        FARM_GHOST_CROP, FARM_GHOST_CROP, FARM_GHOST_FARMHOUSE,
+        FARM_GHOST_NO_DRAW, FARM_GHOST_CROP, FARM_GHOST_NO_DRAW,
+        FARM_GHOST_CROP, FARM_GHOST_NO_DRAW, FARM_GHOST_CROP
+    },
+};
+
 #define RESERVOIR_RANGE_MAX_TILES 900
 
 static struct {
@@ -193,15 +222,53 @@ static void image_draw_warehouse(int image_id, int x, int y)
     }
 }
 
+int get_crop_image_id(building_type type)
+{
+    switch (type) {
+        case BUILDING_WHEAT_FARM:
+            return image_group(GROUP_BUILDING_FARM_CROPS);
+        case BUILDING_VEGETABLE_FARM:
+            return image_group(GROUP_BUILDING_FARM_CROPS) + 5;
+        case BUILDING_FRUIT_FARM:
+            return image_group(GROUP_BUILDING_FARM_CROPS) + 10;
+        case BUILDING_OLIVE_FARM:
+            return image_group(GROUP_BUILDING_FARM_CROPS) + 15;
+        case BUILDING_VINES_FARM:
+            return image_group(GROUP_BUILDING_FARM_CROPS) + 20;
+        case BUILDING_PIG_FARM:
+            return image_group(GROUP_BUILDING_FARM_CROPS) + 25;
+        default:
+            return image_group(GROUP_BUILDING_FARM_CROPS);
+            break;
+    }
+}
+
+static void image_draw_farm(building_type type, int image_id, int x, int y)
+{
+    // Custom draw order to properly draw isometric tops
+    const int draw_order[9] = { 0, 2, 5, 1, 3, 7, 4, 6, 8 };
+    int orientation_index = city_view_orientation() / 2;
+    int crop_image = get_crop_image_id(type);
+    for (int i = 0; i < 9; i++) {
+        int j = draw_order[i];
+        switch (FARM_TILES[orientation_index][j]) {
+            case FARM_GHOST_CROP:
+                draw_building(crop_image, x + X_VIEW_OFFSETS[j], y + Y_VIEW_OFFSETS[j]);
+                break;
+            case FARM_GHOST_FARMHOUSE:
+                draw_building(image_id, x + X_VIEW_OFFSETS[j], y + Y_VIEW_OFFSETS[j]);
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+
 static void draw_regular_building(building_type type, int image_id, int x, int y, int grid_offset)
 {
     if (building_is_farm(type)) {
-        draw_building(image_id, x, y);
-        // fields
-        for (int i = 4; i < 9; i++) {
-            image_draw_isometric_footprint(image_id + 1,
-                x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_BUILDING_GHOST);
-        }
+        image_draw_farm(type, image_id, x, y);
     } else if (type == BUILDING_WAREHOUSE) {
         image_draw_warehouse(image_id, x, y);
     } else if (type == BUILDING_GRANARY) {
