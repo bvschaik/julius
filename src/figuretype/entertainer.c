@@ -211,6 +211,12 @@ static void update_image(figure *f)
     if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         if (f->type == FIGURE_GLADIATOR) {
             f->image_id = image_id + 104 + dir + 8 * (f->image_offset / 2);
+            // Correct for two missing frames, animation is glitchy otherwise
+            if (f->image_id >= 5705 && f->image_id <= 5706) {
+                f->image_id -= 8;
+            } else if (f->image_id > 5705) {
+                f->image_id -= 2;
+            }
         } else {
             f->image_id = image_id + dir;
         }
