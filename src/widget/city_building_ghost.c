@@ -222,7 +222,7 @@ static void image_draw_warehouse(int image_id, int x, int y)
     }
 }
 
-int get_crop_image_id(building_type type)
+static int get_crop_image_id(building_type type)
 {
     switch (type) {
         case BUILDING_WHEAT_FARM:
