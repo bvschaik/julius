@@ -26,15 +26,15 @@ static int arrow_button_focus;
 static void draw_row(int group, int number, int y, int value_last_year, int value_this_year)
 {
     lang_text_draw(group, number, 80, y, FONT_NORMAL_BLACK);
-    text_draw_number(value_last_year, '@', " ", 290, y, FONT_NORMAL_BLACK);
-    text_draw_number(value_this_year, '@', " ", 430, y, FONT_NORMAL_BLACK);
+    text_draw_number_with_separator(value_last_year, '@', " ", 290, y, FONT_NORMAL_BLACK);
+    text_draw_number_with_separator(value_this_year, '@', " ", 430, y, FONT_NORMAL_BLACK);
 }
 
 static void draw_tr_row(int tr_string, int y, int value_last_year, int value_this_year)
 {
     text_draw(translation_for(tr_string), 80, y, FONT_NORMAL_BLACK, 0);
-    text_draw_number(value_last_year, '@', " ", 290, y, FONT_NORMAL_BLACK);
-    text_draw_number(value_this_year, '@', " ", 430, y, FONT_NORMAL_BLACK);
+    text_draw_number_with_separator(value_last_year, '@', " ", 290, y, FONT_NORMAL_BLACK);
+    text_draw_number_with_separator(value_this_year, '@', " ", 430, y, FONT_NORMAL_BLACK);
 }
 
 static int draw_background(void)

@@ -69,7 +69,7 @@ static void draw_request(int index, const scenario_request *request)
     if (request->resource == RESOURCE_DENARII) {
         // request for money
         int treasury = city_finance_treasury();
-        width = text_draw_number(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
+        width = text_draw_number_with_separator(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
         width += lang_text_draw(52, 44, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         if (treasury < request->amount) {
             lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
@@ -277,13 +277,13 @@ static void write_resource_storage_tooltip(advisor_tooltip_result *r, int resour
     int amount_warehouse = city_resource_count(resource);
     int amount_granary = city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
     uint8_t *text = tooltip_resource_info;
-    text += string_from_int(text, amount_warehouse, 0);
+    text += string_from_int(text, amount_warehouse, 0, 0);
     *text = ' ';
     text++;
     text = string_copy(lang_get_string(52, 43), text, RESOURCE_INFO_MAX_TEXT - (int) (text - tooltip_resource_info));
     *text = '\n';
     text++;
-    text += string_from_int(text, amount_granary, 0);
+    text += string_from_int(text, amount_granary, 0, locale_number_thousands_separator());
     *text = ' ';
     text++;
     text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, RESOURCE_INFO_MAX_TEXT - (int) (text - tooltip_resource_info));

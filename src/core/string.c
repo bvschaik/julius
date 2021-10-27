@@ -85,7 +85,7 @@ int string_to_int(const uint8_t *str)
     return result;
 }
 
-int string_from_int(uint8_t *dst, int value, int force_plus_sign)
+int string_from_int(uint8_t *dst, int value, int force_plus_sign, uint8_t thousands_separator)
 {
     int total_chars = 0;
     if (value >= 0) {
@@ -108,17 +108,17 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign)
     } else if (value < 1000) {
         num_digits = 3;
     } else if (value < 10000) {
-        num_digits = 4;
+        num_digits = thousands_separator ? 5 : 4;
     } else if (value < 100000) {
-        num_digits = 5;
+        num_digits = thousands_separator ? 6 : 5;
     } else if (value < 1000000) {
-        num_digits = 6;
+        num_digits = thousands_separator ? 7 : 6;
     } else if (value < 10000000) {
-        num_digits = 7;
+        num_digits = thousands_separator ? 9 : 7;
     } else if (value < 100000000) {
-        num_digits = 8;
+        num_digits = thousands_separator ? 10 : 8;
     } else if (value < 1000000000) {
-        num_digits = 9;
+        num_digits = thousands_separator ? 11 : 9;
     } else {
         num_digits = 0;
     }
@@ -126,9 +126,15 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign)
     total_chars += num_digits;
 
     dst[num_digits] = 0;
+    int digits_written = 0;
     while (--num_digits >= 0) {
+        if (thousands_separator && (digits_written == 3 || digits_written == 6)) {
+            dst[num_digits] = thousands_separator;
+            --num_digits;
+        }
         dst[num_digits] = (uint8_t) (value % 10 + '0');
         value /= 10;
+        ++digits_written;
     }
 
     return total_chars;

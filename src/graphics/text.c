@@ -313,13 +313,13 @@ int text_draw(const uint8_t *str, int x, int y, font_t font, color_t color)
     return current_x - x;
 }
 
-static int number_to_string(uint8_t *str, int value, char prefix, const char *postfix)
+static int number_to_string(uint8_t *str, int value, char prefix, const char *postfix, uint8_t thousands_separator)
 {
     int offset = 0;
     if (prefix) {
         str[offset++] = prefix;
     }
-    offset += string_from_int(&str[offset], value, 0);
+    offset += string_from_int(&str[offset], value, 0, thousands_separator);
     while (*postfix) {
         str[offset++] = *postfix;
         postfix++;
@@ -331,7 +331,14 @@ static int number_to_string(uint8_t *str, int value, char prefix, const char *po
 int text_draw_number(int value, char prefix, const char *postfix, int x_offset, int y_offset, font_t font)
 {
     uint8_t str[NUMBER_BUFFER_LENGTH];
-    number_to_string(str, value, prefix, postfix);
+    number_to_string(str, value, prefix, postfix, 0);
+    return text_draw(str, x_offset, y_offset, font, 0);
+}
+
+int text_draw_number_with_separator(int value, char prefix, const char* postfix, int x_offset, int y_offset, font_t font)
+{
+    uint8_t str[NUMBER_BUFFER_LENGTH];
+    number_to_string(str, value, prefix, postfix, locale_number_thousands_separator());
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 
@@ -339,14 +346,22 @@ int text_draw_number_colored(
     int value, char prefix, const char *postfix, int x_offset, int y_offset, font_t font, color_t color)
 {
     uint8_t str[NUMBER_BUFFER_LENGTH];
-    number_to_string(str, value, prefix, postfix);
+    number_to_string(str, value, prefix, postfix, 0);
+    return text_draw(str, x_offset, y_offset, font, color);
+}
+
+int text_draw_number_colored_with_separator(
+    int value, char prefix, const char* postfix, int x_offset, int y_offset, font_t font, color_t color)
+{
+    uint8_t str[NUMBER_BUFFER_LENGTH];
+    number_to_string(str, value, prefix, postfix, locale_number_thousands_separator());
     return text_draw(str, x_offset, y_offset, font, color);
 }
 
 int text_draw_money(int value, int x_offset, int y_offset, font_t font)
 {
     uint8_t str[NUMBER_BUFFER_LENGTH];
-    int money_len = number_to_string(str, value, '@', " ");
+    int money_len = number_to_string(str, value, '@', " ", locale_number_thousands_separator());
     const uint8_t *postfix;
     if (locale_translate_money_dn()) {
         postfix = lang_get_string(6, 0);
@@ -365,7 +380,7 @@ void text_draw_with_money(const uint8_t *text, int value, const char *prefix, co
     if (prefix && *prefix) {
         offset = string_copy(string_from_ascii(prefix), offset, NUMBER_BUFFER_LENGTH - (int) (offset - str) - 1);
     }
-    offset += number_to_string(offset, value, 0, " ");
+    offset += number_to_string(offset, value, 0, " ", locale_number_thousands_separator());
     const uint8_t *money_postfix;
     if (locale_translate_money_dn()) {
         money_postfix = lang_get_string(6, 0);
@@ -386,7 +401,7 @@ void text_draw_with_money(const uint8_t *text, int value, const char *prefix, co
 int text_draw_percentage(int value, int x_offset, int y_offset, font_t font)
 {
     uint8_t str[NUMBER_BUFFER_LENGTH];
-    number_to_string(str, value, '@', "%");
+    number_to_string(str, value, '@', "%", 0);
     return text_draw(str, x_offset, y_offset, font, 0);
 }
 
@@ -394,7 +409,7 @@ int text_draw_label_and_number(const uint8_t *label, int value, const char *post
 {
     uint8_t str[2 * NUMBER_BUFFER_LENGTH];
     uint8_t *pos = label ? string_copy(label, str, NUMBER_BUFFER_LENGTH) : str;
-    number_to_string(pos, value, '@', postfix);
+    number_to_string(pos, value, '@', postfix, 0);
     return text_draw(str, x_offset, y_offset, font, color);
 }
 
@@ -402,21 +417,28 @@ void text_draw_label_and_number_centered(const uint8_t *label, int value, const 
 {
     uint8_t str[2 * NUMBER_BUFFER_LENGTH];
     uint8_t *pos = label ? string_copy(label, str, NUMBER_BUFFER_LENGTH) : str;
-    number_to_string(pos, value, '@', postfix);
+    number_to_string(pos, value, '@', postfix, 0);
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
 void text_draw_number_centered(int value, int x_offset, int y_offset, int box_width, font_t font)
 {
     uint8_t str[NUMBER_BUFFER_LENGTH];
-    number_to_string(str, value, '@', " ");
+    number_to_string(str, value, '@', " ", 0);
+    text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
+}
+
+void text_draw_number_centered_with_separator(int value, int x_offset, int y_offset, int box_width, font_t font)
+{
+    uint8_t str[NUMBER_BUFFER_LENGTH];
+    number_to_string(str, value, '@', " ", locale_number_thousands_separator());
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
 void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int y_offset, int box_width, font_t font)
 {
     uint8_t str[NUMBER_BUFFER_LENGTH];
-    number_to_string(str, value, prefix, " ");
+    number_to_string(str, value, prefix, " ", 0);
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
@@ -424,7 +446,7 @@ void text_draw_number_centered_colored(
     int value, int x_offset, int y_offset, int box_width, font_t font, color_t color)
 {
     uint8_t str[NUMBER_BUFFER_LENGTH];
-    number_to_string(str, value, '@', " ");
+    number_to_string(str, value, '@', " ", 0);
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 

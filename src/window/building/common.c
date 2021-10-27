@@ -125,14 +125,14 @@ static void draw_employment_details(building_info_context *c, building *b, int y
         if (text_id) {
             int width = lang_text_draw_amount(8, 12, b->num_workers,
                 c->x_offset + 60, y_offset + 10, FONT_NORMAL_BROWN);
-            width += text_draw_number(laborers_needed, '(', "",
+            width += text_draw_number_with_separator(laborers_needed, '(', "",
                 c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BROWN);
             lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BROWN);
             lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_NORMAL_BROWN);
         } else {
             int width = lang_text_draw_amount(8, 12, b->num_workers,
                 c->x_offset + 60, y_offset + 16, FONT_NORMAL_BROWN);
-            width += text_draw_number(laborers_needed, '(', "",
+            width += text_draw_number_with_separator(laborers_needed, '(', "",
                 c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BROWN);
             lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BROWN);
         }

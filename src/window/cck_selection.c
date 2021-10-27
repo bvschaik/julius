@@ -197,7 +197,7 @@ static void draw_scenario_info(void)
                 lang_text_draw(44, 132, scenario_criteria_x + width, 338, FONT_NORMAL_BLACK);
             }
             if (scenario_criteria_population_enabled()) {
-                width = text_draw_number(scenario_criteria_population(), '@', " ",
+                width = text_draw_number_with_separator(scenario_criteria_population(), '@', " ",
                     scenario_criteria_x, 354, FONT_NORMAL_BLACK);
                 lang_text_draw(44, 133, scenario_criteria_x + width, 354, FONT_NORMAL_BLACK);
             }

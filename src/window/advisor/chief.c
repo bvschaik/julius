@@ -46,7 +46,7 @@ static int draw_background(void)
     if (city_labor_unemployment_percentage() > 0) {
         width = lang_text_draw(61, 12, X_OFFSET, 66, FONT_NORMAL_RED);
         width += text_draw_percentage(city_labor_unemployment_percentage(), X_OFFSET + width, 66, FONT_NORMAL_RED);
-        text_draw_number(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")",
+        text_draw_number_with_separator(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")",
             X_OFFSET + width, 66, FONT_NORMAL_RED);
     } else if (city_labor_workers_needed() > 0) {
         width = lang_text_draw(61, 13, X_OFFSET, 66, FONT_NORMAL_RED);
@@ -108,7 +108,7 @@ static int draw_background(void)
         width = text_draw(translation_for(TR_ADVISOR_HOUSING_NO_ROOM), X_OFFSET, 126, FONT_NORMAL_GREEN, 0);
     } else {
         width = text_draw(translation_for(TR_ADVISOR_HOUSING_ROOM), X_OFFSET, 126, FONT_NORMAL_GREEN, 0);
-        text_draw_number(city_population_open_housing_capacity(), '@', " ", X_OFFSET + width, 126, FONT_NORMAL_GREEN);
+        text_draw_number_with_separator(city_population_open_housing_capacity(), '@', " ", X_OFFSET + width, 126, FONT_NORMAL_GREEN);
     }
 
     // food stocks

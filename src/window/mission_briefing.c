@@ -80,7 +80,7 @@ static void draw_background(void)
         goal_index++;
         label_draw(16 + x, 32 + y, 15, 1);
         int width = lang_text_draw(62, 11, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
-        text_draw_number(scenario_criteria_population(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
+        text_draw_number_with_separator(scenario_criteria_population(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
     }
     if (scenario_criteria_culture_enabled()) {
         int x = GOAL_OFFSETS_X[goal_index];

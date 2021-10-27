@@ -50,10 +50,10 @@ int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y
     }
     int desc_offset_x;
     if (amount >= 0) {
-        desc_offset_x = text_draw_number(amount, ' ', " ",
+        desc_offset_x = text_draw_number_with_separator(amount, ' ', " ",
             x_offset, y_offset, font);
     } else {
-        desc_offset_x = text_draw_number(-amount, '-', " ",
+        desc_offset_x = text_draw_number_with_separator(-amount, '-', " ",
             x_offset, y_offset, font);
     }
     return desc_offset_x + lang_text_draw(group, number + amount_offset,

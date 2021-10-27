@@ -52,7 +52,7 @@ static int draw_background(void)
         lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK);
     } else {
         width += lang_text_draw(53, 6, 80 + width, 17, FONT_NORMAL_BLACK);
-        text_draw_number(scenario_criteria_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK);
+        text_draw_number_with_separator(scenario_criteria_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK);
     }
 
     image_draw(image_group(GROUP_RATINGS_BACKGROUND), 60, 48);

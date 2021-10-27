@@ -94,8 +94,8 @@ static void draw_history_graph(int full_size, int x, int y)
     get_y_axis(max_value, &y_max, &y_shift);
     if (full_size) {
         // y axis
-        text_draw_number_centered(y_max, x - 66, y - 3, 60, FONT_SMALL_PLAIN);
-        text_draw_number_centered(y_max / 2, x - 66, y + 96, 60, FONT_SMALL_PLAIN);
+        text_draw_number_centered_with_separator(y_max, x - 66, y - 3, 60, FONT_SMALL_PLAIN);
+        text_draw_number_centered_with_separator(y_max / 2, x - 66, y + 96, 60, FONT_SMALL_PLAIN);
         text_draw_number_centered(0, x - 66, y + 196, 60, FONT_SMALL_PLAIN);
         // x axis
         int start_month, start_year, end_month, end_year;
@@ -284,11 +284,11 @@ static void print_census_info(void)
 
     // Yearly births
     width = text_draw(translation_for(TR_ADVISOR_BIRTHS_LAST_YEAR), 75, 378, FONT_NORMAL_WHITE, 0);
-    text_draw_number(city_population_yearly_births(), '@', "", 75 + width, 378, FONT_NORMAL_WHITE);
+    text_draw_number_with_separator(city_population_yearly_births(), '@', "", 75 + width, 378, FONT_NORMAL_WHITE);
 
     // Yearly deaths
     width = text_draw(translation_for(TR_ADVISOR_DEATHS_LAST_YEAR), 75, 396, FONT_NORMAL_WHITE, 0);
-    text_draw_number(city_population_yearly_deaths(), '@', "", 75 + width, 396, FONT_NORMAL_WHITE);
+    text_draw_number_with_separator(city_population_yearly_deaths(), '@', "", 75 + width, 396, FONT_NORMAL_WHITE);
 }
 
 static void print_history_info(void)
@@ -370,7 +370,7 @@ static int draw_background(void)
 
     image_draw(image_group(GROUP_PANEL_WINDOWS) + 14, 62, 60);
 
-    width = text_draw_number(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
+    width = text_draw_number_with_separator(city_population(), '@', " ", 450, 25, FONT_NORMAL_BLACK);
     text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), 450 + width, 25, FONT_NORMAL_BLACK, 0);
 
     int big_text, top_text, bot_text;

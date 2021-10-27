@@ -588,7 +588,7 @@ static void numerical_range_draw(const numerical_range_widget *w, int x, int y, 
 
 static uint8_t *percentage_string(uint8_t *string, int percentage)
 {
-    int offset = string_from_int(string, percentage, 0);
+    int offset = string_from_int(string, percentage, 0, 0);
     string[offset] = '%';
     string[offset + 1] = 0;
     return string;
@@ -608,9 +608,9 @@ static const uint8_t *display_text_resolution(void)
 {
     uint8_t *str = display_text;
     resolution *r = &available_resolutions[data.config_values[CONFIG_ORIGINAL_WINDOWED_RESOLUTION].new_value];
-    str += string_from_int(str, r->width, 0);
+    str += string_from_int(str, r->width, 0, 0);
     str = string_copy(string_from_ascii("x"), str, 5);
-    string_from_int(str, r->height, 0);
+    string_from_int(str, r->height, 0, 0);
     return display_text;
 }
 
@@ -672,7 +672,7 @@ static const uint8_t *display_text_difficulty(void)
 
 static const uint8_t *display_text_max_grand_temples(void)
 {
-    string_from_int(display_text, data.config_values[CONFIG_GP_CH_MAX_GRAND_TEMPLES].new_value, 0);
+    string_from_int(display_text, data.config_values[CONFIG_GP_CH_MAX_GRAND_TEMPLES].new_value, 0, 0);
     return display_text;
 }
 

@@ -51,9 +51,9 @@ static int draw_background(void)
     lang_text_draw(50, 24, 500, 56, FONT_SMALL_PLAIN);
 
     // xx employed, yy unemployed
-    int width = text_draw_number(city_labor_workers_employed(), '@', " ", 32, 320, FONT_NORMAL_BLACK);
+    int width = text_draw_number_with_separator(city_labor_workers_employed(), '@', " ", 32, 320, FONT_NORMAL_BLACK);
     width += lang_text_draw(50, 12, 32 + width, 320, FONT_NORMAL_BLACK);
-    width += text_draw_number(city_labor_workers_unemployed(), '@', " ", 50 + width, 320, FONT_NORMAL_BLACK);
+    width += text_draw_number_with_separator(city_labor_workers_unemployed(), '@', " ", 50 + width, 320, FONT_NORMAL_BLACK);
     width += lang_text_draw(50, 13, 50 + width, 320, FONT_NORMAL_BLACK);
     text_draw_number(city_labor_unemployment_percentage(), '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
 
@@ -88,12 +88,12 @@ static void draw_foreground(void)
             text_draw_number(cat->priority, '@', " ", 90, y_offset, FONT_NORMAL_WHITE);
         }
         lang_text_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE);
-        text_draw_number(cat->workers_needed, '@', " ", 410, y_offset, FONT_NORMAL_WHITE);
+        text_draw_number_with_separator(cat->workers_needed, '@', " ", 410, y_offset, FONT_NORMAL_WHITE);
         font_t font = FONT_NORMAL_WHITE;
         if (cat->workers_needed != cat->workers_allocated) {
             font = FONT_NORMAL_RED;
         }
-        text_draw_number(cat->workers_allocated, '@', " ", 510, y_offset, font);
+        text_draw_number_with_separator(cat->workers_allocated, '@', " ", 510, y_offset, font);
     }
 }
 

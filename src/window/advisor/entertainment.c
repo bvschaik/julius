@@ -108,7 +108,7 @@ static int draw_background(void)
     text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE), 67, 64, FONT_NORMAL_WHITE, 0);
     text_draw_number(building_count_total(BUILDING_TAVERN), '@', "", 40, 64, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_TAVERN), 150, 64, 100, FONT_NORMAL_WHITE);
-    int width = text_draw_number(city_culture_get_tavern_person_coverage(), '_', " ",
+    int width = text_draw_number_with_separator(city_culture_get_tavern_person_coverage(), '_', " ",
         PEOPLE_OFFSET, 64, FONT_NORMAL_WHITE);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 64, FONT_NORMAL_WHITE);
     int pct_tavern = city_culture_coverage_tavern();
@@ -125,7 +125,7 @@ static int draw_background(void)
     lang_text_draw_amount(8, 34, building_count_total(BUILDING_THEATER), 40, 84, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_THEATER), 150, 84, 100, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_theater_shows(), 230, 84, 100, FONT_NORMAL_WHITE);
-    width = text_draw_number(city_culture_get_theatre_person_coverage(), '_', " ",
+    width = text_draw_number_with_separator(city_culture_get_theatre_person_coverage(), '_', " ",
         PEOPLE_OFFSET, 84, FONT_NORMAL_WHITE);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 84, FONT_NORMAL_WHITE);
     int pct_theater = city_culture_coverage_theater();
@@ -142,7 +142,7 @@ static int draw_background(void)
     lang_text_draw_amount(8, 36, building_count_total(BUILDING_AMPHITHEATER), 40, 104, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_AMPHITHEATER), 150, 104, 100, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_amphitheater_shows(), 230, 104, 100, FONT_NORMAL_WHITE);
-    width = text_draw_number(city_culture_get_ampitheatre_person_coverage(), '@', " ",
+    width = text_draw_number_with_separator(city_culture_get_ampitheatre_person_coverage(), '@', " ",
         PEOPLE_OFFSET, 104, FONT_NORMAL_WHITE);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 104, FONT_NORMAL_WHITE);
     int pct_amphitheater = city_culture_coverage_amphitheater();
@@ -159,7 +159,7 @@ static int draw_background(void)
     text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_ARENA_COVERAGE), 67, 124, FONT_NORMAL_WHITE, 0);
     text_draw_number(building_count_total(BUILDING_ARENA), '@', "", 40, 124, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_ARENA), 150, 124, 100, FONT_NORMAL_WHITE);
-    width = text_draw_number(city_culture_get_arena_person_coverage(), '_', " ", PEOPLE_OFFSET, 124, FONT_NORMAL_WHITE);
+    width = text_draw_number_with_separator(city_culture_get_arena_person_coverage(), '_', " ", PEOPLE_OFFSET, 124, FONT_NORMAL_WHITE);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 124, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_colosseum_shows(), 230, 124, 100, FONT_NORMAL_WHITE);
     int pct = city_culture_coverage_arena();

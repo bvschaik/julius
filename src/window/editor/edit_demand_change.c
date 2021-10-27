@@ -54,7 +54,7 @@ static struct {
 static void create_display_name(int route_id, const uint8_t *city_name)
 {
     uint8_t *dst = route_display_names[route_id];
-    int offset = string_from_int(dst, route_id, 0);
+    int offset = string_from_int(dst, route_id, 0, 0);
     dst[offset++] = ' ';
     dst[offset++] = '-';
     dst[offset++] = ' ';

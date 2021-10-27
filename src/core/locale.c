@@ -128,3 +128,29 @@ int locale_translate_rank_autosaves(void)
             return 0;
     }
 }
+
+uint8_t locale_number_thousands_separator(void)
+{
+    switch (data.last_determined_language) {
+        case LANGUAGE_ENGLISH:
+            return ',';
+    
+        case LANGUAGE_ITALIAN:
+        case LANGUAGE_PORTUGUESE:
+        case LANGUAGE_SPANISH:
+            return '.';
+
+        case LANGUAGE_GERMAN:
+        case LANGUAGE_SWEDISH:
+        case LANGUAGE_POLISH:
+        case LANGUAGE_FRENCH:
+        case LANGUAGE_RUSSIAN:
+        case LANGUAGE_KOREAN:
+        case LANGUAGE_TRADITIONAL_CHINESE:
+        case LANGUAGE_SIMPLIFIED_CHINESE:
+            return ' ';
+
+        default:
+            return 0;
+    }
+}
