@@ -681,7 +681,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ADVISOR_RELIGION_LARARIUMS, "Lararia in der Stadt" },
     {TR_WINDOW_RACE_BET_BUTTON, "Auf ein Pferd wetten" },
     {TR_WINDOW_IN_PROGRESS_BET_BUTTON, "Laufendes Rennen..." },
-    {TR_WINDOW_RACE_BET_TITLE, "Platziere eine Wette auf ein Pferd" },
+    {TR_WINDOW_RACE_BET_TITLE, "Auf Pferderennen wetten" },
     {TR_WINDOW_RACE_BET_AMOUNT, "Betrag" },
     {TR_WINDOW_RACE_BET_DESCRIPTION, "Setzen Sie einen Betrag aus Ihrem persönlichen Vermögen auf ein Wagengespann Ihrer Wahl und verdoppeln Sie Ihren Einsatz, wenn Ihr Pferd gewinnt. Während der Kolosseum-Spiele wird Ihr Gewinn sogar vervierfacht!" },
     {TR_WARNING_BET_VICTORY, "Dein Pferd hat das Rennen im Hippodrom deiner Stadt gewonnen" },
