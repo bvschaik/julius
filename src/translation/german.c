@@ -190,7 +190,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "Dekorationen und Tempel erstrahlen in neuem Glanz und steigern die Attraktivität. Häuser lagern mehr Waren und bleiben auch ohne Dienste und Waren länger bestehen."},
     {TR_BUILDING_PANTHEON_BONUS_DESC, "Ermöglicht den Zugang zu allen Göttern. Hält jährliche Feste ab und reduziert religiöse und kulturelle Gebäudeabgaben um 25%."},
     {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, "Priester reduzieren Nahrungsverbrauch um 20% in Häusern mit Zugang zu einem Tempel der Ceres."},
-    {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, "Tempel des Neptun produzieren Wagenlenker für die Hippodrome."},
+    {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, "Tempel des Neptun produzieren Wagenlenker für das Hippodrom."},
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, "Priester des Merkur reduzieren Geschirr- und Möbelverbrauch um 20% in Häusern mit Zugang zu einem Tempel des Merkur."},
     {TR_BUILDING_GRAND_TEMPLE_MARS_MODULE_1_DESC, "Priester des Mars erzeugen Nahrung, in einer Menge, die sich nach der Anzahl der Häuser richtet, die sie abdecken, und liefern sie an den Versorgungsposten. Gebäudekosten von Forts werden um 25 % reduziert."},
     {TR_BUILDING_GRAND_TEMPLE_VENUS_MODULE_1_DESC, "Der Prachttempel produziert Wein im Verhältnis zur Bevölkerung mit Zugang zu Tempeln der Venus. Priester verteilen ihn an die Häuser."},
