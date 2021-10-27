@@ -299,7 +299,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_FINANCE_LEVIES, "Gebäudekosten"},
     {TR_CONFIRM_DELETE_MONUMENT, "Dieses Monument abreißen?"},
     {TR_SELECT_EPITHET_PROMPT_HEADER, "Widmung auswählen"},
-    {TR_SELECT_EPITHET_PROMPT_TEXT, "Die Wahl einer Widmung wird den Tempel unwiderruflich und dauerhaft auf einen Aspekt seiner Gottheit spezialisieren und die Priester mit göttlicher Macht erfüllen. Die Kosten dafür betragen 1000 Dn."},
+    {TR_SELECT_EPITHET_PROMPT_TEXT, "Die Widmung wird den Tempel unwiderruflich und dauerhaft spezialisieren und die Priester mit göttlicher Macht erfüllen."},
     {TR_BUILDING_INFO_MONTHLY_LEVY, "/ Monat"},
     {TR_BUILDING_MESS_HALL, "Versorgungsposten"},
     {TR_BUILDING_MESS_HALL_DESC, "Der Versorgungsposten sammelt Nahrung aus Silos, um die Soldaten der Stadt zu versorgen. Ein schlecht versorgter Posten verlangsamt die Ausbildung neuer Soldaten und verringert die Moral der Truppen."},
