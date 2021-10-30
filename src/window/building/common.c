@@ -64,7 +64,7 @@ int window_building_get_vertical_offset(building_info_context *c, int new_window
 static int draw_employment_info(building_info_context *c, building *b, int y_offset, int consider_house_covering)
 {
     int text_id;
-    if (b->num_workers >= model_get_building(b->type)->laborers) {
+    if (b->num_workers >= building_get_laborers(b->type)) {
         text_id = 0;
     } else if (city_population() <= 0) {
         text_id = 16; // no people in city
@@ -120,7 +120,7 @@ static void draw_employment_details(building_info_context *c, building *b, int y
         window_building_draw_levy(levy, c->x_offset, y_offset);
     }
 
-    int laborers_needed = model_get_building(b->type)->laborers;
+    int laborers_needed = building_get_laborers(b->type);
     if (laborers_needed) {
         if (text_id) {
             int width = lang_text_draw_amount(8, 12, b->num_workers,

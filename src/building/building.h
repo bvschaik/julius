@@ -231,6 +231,8 @@ int building_mothball_set(building *b, int value);
 
 int building_get_tourism(const building *b);
 
+int building_get_laborers(building_type type);
+
 unsigned char building_stockpiling_toggle(building *b);
 
 int building_get_tourism(const building* b);

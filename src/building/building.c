@@ -5,6 +5,7 @@
 #include "building/industry.h"
 #include "building/granary.h"
 #include "building/menu.h"
+#include "building/model.h"
 #include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
@@ -580,6 +581,17 @@ int building_get_levy(const building *b)
 int building_get_tourism(const building *b)
 {
     return b->is_tourism_venue;
+}
+
+int building_get_laborers(building_type type)
+{
+    model_building *model = model_get_building(type);
+    int workers = model->laborers;
+    // Neptune GT bonus
+    if (type == BUILDING_FOUNTAIN && building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
+        workers /= 2;
+    }
+    return workers;
 }
 
 void building_totals_add_corrupted_house(int unfixable)
