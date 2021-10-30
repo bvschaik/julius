@@ -1,6 +1,7 @@
 #include "city_overlay_other.h"
 
 #include "building/model.h"
+#include "building/monument.h"
 #include "building/roadblock.h"
 #include "city/constants.h"
 #include "city/finance.h"
@@ -44,7 +45,8 @@ static int show_building_tax_income(const building *b)
 
 static int show_building_water(const building *b)
 {
-    return b->type == BUILDING_WELL || b->type == BUILDING_FOUNTAIN || b->type == BUILDING_RESERVOIR;
+    return b->type == BUILDING_WELL || b->type == BUILDING_FOUNTAIN || b->type == BUILDING_RESERVOIR || 
+        (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE && building_monument_gt_module_is_active(NEPTUNE_MODULE_2_CAPACITY_AND_WATER));
 }
 
 static int show_building_sentiment(const building *b)
