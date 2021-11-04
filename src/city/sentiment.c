@@ -246,7 +246,7 @@ static int extra_food_bonus(int types, int required)
     if (required == 0) {
         return 0;
     }
-    int extra = (types - required * SENTIMENT_PER_EXTRA_FOOD);
+    int extra = ((types - required) * SENTIMENT_PER_EXTRA_FOOD);
     return calc_bound(extra, 0, MAX_SENTIMENT_FROM_EXTRA_FOOD);
 }
 
