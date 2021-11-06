@@ -247,7 +247,7 @@ void widget_top_menu_draw(int force)
         text_draw_number_colored_with_separator(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
         width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_GREEN);
-        text_draw_number_colored_with_separator(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_GREEN, COLOR_WHITE);
+        text_draw_number_colored_with_separator(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_GREEN, 0);
 
         lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 540, 5, 100, FONT_NORMAL_GREEN, 0);
     } else if (s_width < 1024) {
