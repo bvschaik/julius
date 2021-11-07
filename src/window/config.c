@@ -1334,6 +1334,7 @@ static void button_close(int save, int param2)
         return;
     }
     if (apply_changed_configs() && save == 1) {
+        config_save();
         window_go_back();
         return;
     }
