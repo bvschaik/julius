@@ -585,7 +585,7 @@ int building_get_tourism(const building *b)
 
 int building_get_laborers(building_type type)
 {
-    model_building *model = model_get_building(type);
+    const model_building *model = model_get_building(type);
     int workers = model->laborers;
     // Neptune GT bonus
     if (type == BUILDING_FOUNTAIN && building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
