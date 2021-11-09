@@ -1487,10 +1487,19 @@ static void spawn_figure_work_camp(building *b)
         if (has_figure_of_type(b, FIGURE_WORK_CAMP_WORKER)) {
             return;
         }
-        figure *f = figure_create(FIGURE_WORK_CAMP_WORKER, road.x, road.y, DIR_4_BOTTOM);
-        f->action_state = FIGURE_ACTION_203_WORK_CAMP_WORKER_CREATED;
-        b->figure_id = f->id;
-        f->building_id = b->id;
+        int spawn_delay = default_spawn_delay(b);
+        if (!spawn_delay) {
+            return;
+        }
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            figure *f = figure_create(FIGURE_WORK_CAMP_WORKER, road.x, road.y, DIR_4_BOTTOM);
+            f->action_state = FIGURE_ACTION_203_WORK_CAMP_WORKER_CREATED;
+            b->figure_id = f->id;
+            f->building_id = b->id;
+        }
+
     }
 }
 
@@ -1503,11 +1512,19 @@ static void spawn_figure_architect_guild(building *b)
         if (has_figure_of_type(b, FIGURE_WORK_CAMP_ARCHITECT)) {
             return;
         }
-        if (building_monument_get_monument(road.x, road.y, RESOURCE_NONE, b->road_network_id, b->distance_from_entry, 0)) {
-            figure *f = figure_create(FIGURE_WORK_CAMP_ARCHITECT, road.x, road.y, DIR_4_BOTTOM);
-            f->action_state = FIGURE_ACTION_206_WORK_CAMP_ARCHITECT_CREATED;
-            b->figure_id = f->id;
-            f->building_id = b->id;
+        int spawn_delay = default_spawn_delay(b);
+        if (!spawn_delay) {
+            return;
+        }
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            if (building_monument_get_monument(road.x, road.y, RESOURCE_NONE, b->road_network_id, b->distance_from_entry, 0)) {
+                figure *f = figure_create(FIGURE_WORK_CAMP_ARCHITECT, road.x, road.y, DIR_4_BOTTOM);
+                f->action_state = FIGURE_ACTION_206_WORK_CAMP_ARCHITECT_CREATED;
+                b->figure_id = f->id;
+                f->building_id = b->id;
+            }
         }
     }
 }
