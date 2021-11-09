@@ -39,7 +39,7 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     int resource = f->collecting_item_id;
     building *warehouse = building_get(warehouse_id);
     building *monument = building_get(f->destination_building_id);
-    int resources_needed = monument->data.monument.resources_needed[resource];
+    int resources_needed = monument->data.monument.resources_needed[resource] - building_monument_resource_in_delivery(monument, resource);
     int num_loads;
     int stored = building_warehouse_get_amount(warehouse, resource);
     if (stored <= CARTLOADS_PER_MONUMENT_DELIVERY) {
@@ -105,7 +105,10 @@ void figure_workcamp_worker_action(figure *f)
                 f->destination_x = dst.x;
                 f->destination_y = dst.y;
                 f->action_state = FIGURE_ACTION_204_WORK_CAMP_WORKER_GETTING_RESOURCES;
-                building_monument_add_delivery(monument_id, f->id, resource, CARTLOADS_PER_MONUMENT_DELIVERY);
+                building *monument = building_get(monument_id);
+                int resources_needed = monument->data.monument.resources_needed[resource] - building_monument_resource_in_delivery(monument, resource);
+                resources_needed = calc_bound(resources_needed, 0, CARTLOADS_PER_MONUMENT_DELIVERY);
+                building_monument_add_delivery(monument_id, f->id, resource, resources_needed);
                 break;
             }
             if (!f->destination_building_id) {

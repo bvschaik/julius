@@ -276,11 +276,7 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
                 continue;
             }
             short needed = b->data.monument.resources_needed[resource];
-            if ((b->next_part_building_id || b->prev_part_building_id) &&
-                (needed - building_monument_resource_in_delivery_multipart(b, resource)) <= 0) {
-                continue;
-            }
-            if ((needed - building_monument_resource_in_delivery(b->id, resource)) <= 0) {
+            if ((needed - building_monument_resource_in_delivery(b, resource)) <= 0) {
                 continue;
             }
             if (!map_has_road_access(b->x, b->y, b->size, 0) ||
@@ -581,7 +577,7 @@ void building_monument_remove_delivery(int figure_id)
     array_trim(monument_deliveries);
 }
 
-int building_monument_resource_in_delivery(int monument_id, int resource_id)
+static int resource_in_delivery(int monument_id, int resource_id)
 {
     int resources = 0;
     monument_delivery *delivery;
@@ -595,7 +591,7 @@ int building_monument_resource_in_delivery(int monument_id, int resource_id)
     return resources;
 }
 
-int building_monument_resource_in_delivery_multipart(building *b, int resource_id)
+static int resource_in_delivery_multipart(building *b, int resource_id)
 {
     int resources = 0;
 
@@ -616,6 +612,15 @@ int building_monument_resource_in_delivery_multipart(building *b, int resource_i
     }
 
     return resources;
+}
+
+int building_monument_resource_in_delivery(building *b, int resource_id)
+{
+    if (b->next_part_building_id || b->prev_part_building_id) {
+        return resource_in_delivery_multipart(b, resource_id);
+    } else {
+        return resource_in_delivery(b->id, resource_id);
+    }
 }
 
 int building_monument_has_monument(building_type type)
