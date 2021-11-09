@@ -1,8 +1,10 @@
 #include "victory_dialog.h"
 
+#include "assets/assets.h"
 #include "city/victory.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
@@ -44,6 +46,10 @@ static void draw_foreground(void)
     graphics_in_dialog();
 
     if (city_victory_state() == VICTORY_STATE_WON) {
+        int image_id = assets_get_image_id("UI_Elements", "Victory_Banner");
+        image_draw(image_id, 88, 137);
+        image_draw(image_id, 512, 137);
+
         large_label_draw(80, 240, 30, focus_button_id == 1);
         if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
             lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_GREEN);

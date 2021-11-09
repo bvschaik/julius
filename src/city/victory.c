@@ -10,6 +10,7 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "sound/music.h"
+#include "sound/speech.h"
 #include "window/mission_end.h"
 #include "window/victory_dialog.h"
 
@@ -142,6 +143,7 @@ void city_victory_check(void)
                 data.force_win = 0;
             } else {
                 city_data.mission.victory_message_shown = 1;
+                sound_speech_play_file("wavs/fanfare_nu2.wav");
                 window_victory_dialog_show();
             }
         }

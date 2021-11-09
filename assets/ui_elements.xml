@@ -161,5 +161,7 @@
     <image id="Stop_Maintain_2" src="Stop_Maintain_2"/> <!-- On hover -->
     <image id="Stop_Maintain_3" src="Stop_Maintain_3"/> <!-- On click -->
     <image id="Stop_Maintain_4" src="Stop_Maintain_4"/> <!-- Button Disabled -->
+	<!-- Victory Banner by Ouaz -->
+	<image id="Victory_Banner" src="Victory_Banner"/>
 </assetlist>
 	
