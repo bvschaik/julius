@@ -199,7 +199,7 @@ void building_destroy_by_enemy(int x, int y, int grid_offset)
     int building_id = map_building_at(grid_offset);
     if (building_id > 0) {
         building *b = building_get(building_id);
-        if (b->state == BUILDING_STATE_IN_USE) {
+        if (b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_MOTHBALLED) {
             city_ratings_peace_building_destroyed(b->type);
             building_destroy_by_collapse(b);
         }
