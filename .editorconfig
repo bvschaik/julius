@@ -9,6 +9,8 @@ cpp_generate_documentation_comments = doxygen_slash_star
 
 # Visual C++ Formatting settings
 
+guidelines = 120
+
 cpp_indent_braces = false
 cpp_indent_multi_line_relative_to = innermost_parenthesis
 cpp_indent_within_parentheses = indent
