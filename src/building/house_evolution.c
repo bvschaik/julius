@@ -357,7 +357,6 @@ static int evolve_large_insula(building *house, house_demands *demands)
         if (status == EVOLVE) {
             building_house_change_to(house, BUILDING_HOUSE_GRAND_INSULA);
         } else if (status == DEVOLVE) {
-            game_undo_disable();
             building_house_devolve_from_large_insula(house);
         }
     }

@@ -429,7 +429,13 @@ void building_house_expand_to_large_palace(building *house)
 
 void building_house_devolve_from_large_insula(building *house)
 {
-    split_size2(house, BUILDING_HOUSE_MEDIUM_INSULA);
+    // Only split the house if it can't be kept merged
+    if (!config_get(CONFIG_GP_CH_ALL_HOUSES_MERGE) && (map_random_get(house->grid_offset) & 7) >= 5) {
+        split_size2(house, BUILDING_HOUSE_MEDIUM_INSULA);
+        game_undo_disable();
+        return;
+    }
+    building_house_change_to(house, BUILDING_HOUSE_MEDIUM_INSULA);
 }
 
 void building_house_devolve_from_large_villa(building *house)
