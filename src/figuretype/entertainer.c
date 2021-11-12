@@ -129,11 +129,13 @@ static building *determine_destination(figure *f)
             if ((type == BUILDING_HIPPODROME || type == BUILDING_COLOSSEUM) && b->data.monument.phase != -1) {
                 continue;
             }
-            if (b->distance_from_entry && b->road_network_id == road_network) {
-                if (type == BUILDING_HIPPODROME && b->prev_part_building_id) {
-                    continue;
-                }
+            if (!b->distance_from_entry || b->road_network_id != road_network) {
+                continue;
             }
+            if (type == BUILDING_HIPPODROME && b->prev_part_building_id) {
+                continue;
+            }
+
             int days_left = use_secondary_entertainment ? b->data.entertainment.days2 : b->data.entertainment.days1;
             int dist = 2 * days_left + calc_maximum_distance(f->x, f->y, b->x, b->y);
             if (dist < min_distance) {
