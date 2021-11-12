@@ -378,7 +378,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.building.barracks_building_id);
     buffer_write_i32(main, city_data.building.barracks_placed);
     buffer_write_i32(main, city_data.building.mess_hall_building_id);
-    for (int i = 0; i < 4; i++) {
+    buffer_write_i32(main, city_data.entertainment.arena_shows);
+    buffer_write_i32(main, city_data.entertainment.arena_no_shows_weighted);
+    for (int i = 0; i < 2; i++) {
         buffer_write_i32(main, city_data.unused.unknown_43d8[i]);
     }
     buffer_write_i32(main, city_data.population.lost_troop_request);
@@ -883,7 +885,9 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     city_data.building.barracks_building_id = buffer_read_i32(main);
     city_data.building.barracks_placed = buffer_read_i32(main);
     city_data.building.mess_hall_building_id = buffer_read_i32(main);
-    for (int i = 0; i < 4; i++) {
+    city_data.entertainment.arena_shows = buffer_read_i32(main); 
+    city_data.entertainment.arena_no_shows_weighted = buffer_read_i32(main);
+    for (int i = 0; i < 2; i++) {
         city_data.unused.unknown_43d8[i] = buffer_read_i32(main);
     }
     city_data.population.lost_troop_request = buffer_read_i32(main);

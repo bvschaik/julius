@@ -13,6 +13,11 @@ int city_entertainment_amphitheater_shows(void)
     return city_data.entertainment.amphitheater_shows;
 }
 
+int city_entertainment_arena_shows(void)
+{
+    return city_data.entertainment.arena_shows;
+}
+
 int city_entertainment_colosseum_shows(void)
 {
     return city_data.entertainment.colosseum_shows;
@@ -44,6 +49,8 @@ void city_entertainment_calculate_shows(void)
     city_data.entertainment.theater_no_shows_weighted = 0;
     city_data.entertainment.amphitheater_shows = 0;
     city_data.entertainment.amphitheater_no_shows_weighted = 0;
+    city_data.entertainment.arena_shows = 0;
+    city_data.entertainment.arena_no_shows_weighted = 0;
     city_data.entertainment.colosseum_shows = 0;
     city_data.entertainment.colosseum_no_shows_weighted = 0;
     city_data.entertainment.hippodrome_shows = 0;
@@ -75,25 +82,38 @@ void city_entertainment_calculate_shows(void)
             city_data.entertainment.amphitheater_no_shows_weighted += 2;
         }
     }
-    static const building_type colosseum_and_arena[] = { BUILDING_COLOSSEUM, BUILDING_ARENA };
-    for (int i = 0; i < 2; i++) {
-        building_type type = colosseum_and_arena[i];
-        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (b->state != BUILDING_STATE_IN_USE) {
-                continue;
-            }
-            if (b->data.entertainment.days1) {
-                city_data.entertainment.colosseum_shows++;
-            } else {
-                city_data.entertainment.colosseum_no_shows_weighted += 3;
-            }
-            if (b->data.entertainment.days2) {
-                city_data.entertainment.colosseum_shows++;
-            } else {
-                city_data.entertainment.colosseum_no_shows_weighted += 3;
-            }
+    for (building *b = building_first_of_type(BUILDING_ARENA); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+        if (b->data.entertainment.days1) {
+            city_data.entertainment.arena_shows++;
+        } else {
+            city_data.entertainment.arena_no_shows_weighted += 3;
+        }
+        if (b->data.entertainment.days2) {
+            city_data.entertainment.arena_shows++;
+        } else {
+            city_data.entertainment.arena_no_shows_weighted += 3;
         }
     }
+
+    for (building *b = building_first_of_type(BUILDING_COLOSSEUM); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+        if (b->data.entertainment.days1) {
+            city_data.entertainment.colosseum_shows++;
+        } else {
+            city_data.entertainment.colosseum_no_shows_weighted += 3;
+        }
+        if (b->data.entertainment.days2) {
+            city_data.entertainment.colosseum_shows++;
+        } else {
+            city_data.entertainment.colosseum_no_shows_weighted += 3;
+        }
+    }
+
     for (building *b = building_first_of_type(BUILDING_HIPPODROME); b; b = b->next_of_type) {
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;

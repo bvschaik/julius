@@ -299,6 +299,8 @@ extern struct city_data_t {
         int32_t amphitheater_no_shows_weighted;
         int32_t colosseum_shows;
         int32_t colosseum_no_shows_weighted;
+        int32_t arena_shows;
+        int32_t arena_no_shows_weighted;
         int32_t hippodrome_shows;
         int32_t hippodrome_no_shows_weighted;
         int32_t venue_needing_shows;

@@ -161,7 +161,7 @@ static int draw_background(void)
     text_draw_number_centered(building_count_active(BUILDING_ARENA), 150, 124, 100, FONT_NORMAL_WHITE);
     width = text_draw_number_with_separator(city_culture_get_arena_person_coverage(), '_', " ", PEOPLE_OFFSET, 124, FONT_NORMAL_WHITE);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 124, FONT_NORMAL_WHITE);
-    text_draw_number_centered(city_entertainment_colosseum_shows(), 230, 124, 100, FONT_NORMAL_WHITE);
+    text_draw_number_centered(city_entertainment_arena_shows(), 230, 124, 100, FONT_NORMAL_WHITE);
     int pct = city_culture_coverage_arena();
     if (pct == 0) {
         lang_text_draw_centered(57, 10, COVERAGE_OFFSET, 124, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
