@@ -21,8 +21,6 @@ void assets_init(void)
         return;
     }
 
-    asset_image_init_array();
-
     const dir_listing *xml_files = dir_find_files_with_extension(ASSETS_DIRECTORY, "xml");
 
     if (!group_create_all(xml_files->num_files) || !asset_image_init_array()) {
