@@ -194,7 +194,7 @@ static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e)
         "The piece of code that caused the crash has been saved to augustus-log.txt.\n\n"
         "If you can, please create an issue by going to:\n\n"
         "https://github.com/Keriew/augustus/issues/new \n\n"
-        "Please attatch augustus-log.txt and your city save to the issue report.\n\n"
+        "Please attach augustus-log.txt and your city save to the issue report.\n\n"
         "With your help, we can avoid this crash in the future.\n\n"
         "Thanks!\n\n"
         "- The Augustus dev team");
