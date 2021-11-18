@@ -68,7 +68,7 @@ static int draw_background(void)
     text_draw_number_centered(building_count_active(BUILDING_HOSPITAL), 150, 172, 100, FONT_NORMAL_WHITE);
 
     int width = text_draw_number(1000 * building_count_active(BUILDING_HOSPITAL), '@', " ",
-        280, 172, FONT_NORMAL_WHITE);
+        280, 172, FONT_NORMAL_WHITE, 0);
     lang_text_draw(56, 6, 280 + width, 172, FONT_NORMAL_WHITE);
 
     int pct_hospital = city_culture_coverage_hospital();

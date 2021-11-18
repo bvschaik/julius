@@ -125,15 +125,15 @@ static void draw_employment_details(building_info_context *c, building *b, int y
         if (text_id) {
             int width = lang_text_draw_amount(8, 12, b->num_workers,
                 c->x_offset + 60, y_offset + 10, FONT_NORMAL_BROWN);
-            width += text_draw_number_with_separator(laborers_needed, '(', "",
-                c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BROWN);
+            width += text_draw_number(laborers_needed, '(', "",
+                c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BROWN, 0);
             lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BROWN);
             lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_NORMAL_BROWN);
         } else {
             int width = lang_text_draw_amount(8, 12, b->num_workers,
                 c->x_offset + 60, y_offset + 16, FONT_NORMAL_BROWN);
-            width += text_draw_number_with_separator(laborers_needed, '(', "",
-                c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BROWN);
+            width += text_draw_number(laborers_needed, '(', "",
+                c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BROWN, 0);
             lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BROWN);
         }
     }
@@ -196,9 +196,9 @@ static void window_building_draw_monument_resources_needed(building_info_context
             int image_id = image_group(GROUP_RESOURCE_ICONS);
             image_draw(image_id + r, c->x_offset + 22, c->y_offset - 105 + r * 20);
             int width = text_draw_number(resources_delivered, '@', "/",
-                c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
+                c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK, 0);
             text_draw_number(total_resources_needed, '@', " ",
-                c->x_offset + 44 + width, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK);
+                c->x_offset + 44 + width, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK, 0);
         }
     } else {
         text_draw_multiline(translation_for(TR_BUILDING_MONUMENT_CONSTRUCTION_ARCHITECT_NEEDED), c->x_offset + 22, c->y_offset + 95,
@@ -222,9 +222,9 @@ void window_building_draw_monument_construction_process(building_info_context *c
         int width = text_draw(translation_for(TR_CONSTRUCTION_PHASE),
             c->x_offset + 22, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
         width += text_draw_number(b->data.monument.phase, '@', "/",
-            c->x_offset + 22 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
+            c->x_offset + 22 + width, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
         width += text_draw_number(building_monument_phases(b->type) - 1, '@', "",
-            c->x_offset + 10 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
+            c->x_offset + 10 + width, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
         text_draw(translation_for(tr_phase_name + b->data.monument.phase - 1),
             c->x_offset + 32 + width, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
         text_draw(translation_for(TR_REQUIRED_RESOURCES), c->x_offset + 22, c->y_offset + 70, FONT_NORMAL_BLACK, 0);

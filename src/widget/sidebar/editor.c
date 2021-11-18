@@ -111,7 +111,7 @@ static void draw_status(void)
     if (invasion_points == 1) {
         lang_text_draw(44, 64, text_offset, 254, FONT_NORMAL_GREEN);
     } else if (invasion_points > 1) {
-        int width = text_draw_number(invasion_points, '@', " ", text_offset - 2, 254, FONT_NORMAL_GREEN);
+        int width = text_draw_number(invasion_points, '@', " ", text_offset - 2, 254, FONT_NORMAL_GREEN, 0);
         lang_text_draw(44, 65, text_offset + width - 8, 254, FONT_NORMAL_GREEN);
     } else {
         editor_invasion first_invasion;

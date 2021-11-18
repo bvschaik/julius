@@ -119,8 +119,8 @@ static void draw_background(void)
 
 static void draw_shadowed_number(int value, int x, int y, color_t color)
 {
-    text_draw_number_colored(value, '@', " ", x + 1, y - 1, FONT_SMALL_PLAIN, COLOR_BLACK);
-    text_draw_number_colored(value, '@', " ", x, y, FONT_SMALL_PLAIN, color);
+    text_draw_number(value, '@', " ", x + 1, y - 1, FONT_SMALL_PLAIN, COLOR_BLACK);
+    text_draw_number(value, '@', " ", x, y, FONT_SMALL_PLAIN, color);
 }
 
 static void draw_empire_object(const empire_object *obj)

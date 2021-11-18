@@ -430,24 +430,24 @@ static void window_building_draw_stocks(building_info_context *c, building *b, i
         font = building_distribution_is_good_accepted(INVENTORY_WHEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + position);
         text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
-            c->x_offset + 64, c->y_offset + position + 6, font);
+            c->x_offset + 64, c->y_offset + position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_VEGETABLES, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + position);
         text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
-            c->x_offset + 174, c->y_offset + position + 6, font);
+            c->x_offset + 174, c->y_offset + position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_FRUIT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + position);
         text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
-            c->x_offset + 284, c->y_offset + position + 6, font);
+            c->x_offset + 284, c->y_offset + position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_MEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_MEAT +
             resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
             c->x_offset + 362, c->y_offset + position);
         text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
-            c->x_offset + 394, c->y_offset + position + 6, font);
+            c->x_offset + 394, c->y_offset + position + 6, font, 0);
     } else {
         window_building_draw_description_at(c, 48, 97, 4);
     }
@@ -456,22 +456,22 @@ static void window_building_draw_stocks(building_info_context *c, building *b, i
         font = building_distribution_is_good_accepted(INVENTORY_POTTERY, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + good_position);
         text_draw_number(b->data.market.inventory[INVENTORY_POTTERY], '@', " ",
-            c->x_offset + 64, c->y_offset + good_position + 6, font);
+            c->x_offset + 64, c->y_offset + good_position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_FURNITURE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + good_position);
         text_draw_number(b->data.market.inventory[INVENTORY_FURNITURE], '@', " ",
-            c->x_offset + 174, c->y_offset + good_position + 6, font);
+            c->x_offset + 174, c->y_offset + good_position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_OIL, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_OIL, c->x_offset + 252, c->y_offset + good_position);
         text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
-            c->x_offset + 284, c->y_offset + good_position + 6, font);
+            c->x_offset + 284, c->y_offset + good_position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_WINE, c->x_offset + 362, c->y_offset + good_position);
         text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
-            c->x_offset + 394, c->y_offset + good_position + 6, font);
+            c->x_offset + 394, c->y_offset + good_position + 6, font, 0);
     }
 }
 
@@ -657,26 +657,26 @@ void window_building_draw_granary(building_info_context *c)
         // wheat
         image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 34, c->y_offset + 68);
         width = text_draw_number(b->data.granary.resource_stored[RESOURCE_WHEAT], '@', " ",
-            c->x_offset + 68, c->y_offset + 75, FONT_NORMAL_BLACK);
+            c->x_offset + 68, c->y_offset + 75, FONT_NORMAL_BLACK, 0);
         lang_text_draw(23, RESOURCE_WHEAT, c->x_offset + 68 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
 
         // vegetables
         image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 34, c->y_offset + 92);
         width = text_draw_number(b->data.granary.resource_stored[RESOURCE_VEGETABLES], '@', " ",
-            c->x_offset + 68, c->y_offset + 99, FONT_NORMAL_BLACK);
+            c->x_offset + 68, c->y_offset + 99, FONT_NORMAL_BLACK, 0);
         lang_text_draw(23, RESOURCE_VEGETABLES, c->x_offset + 68 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
 
         // fruit
         image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 240, c->y_offset + 68);
         width = text_draw_number(b->data.granary.resource_stored[RESOURCE_FRUIT], '@', " ",
-            c->x_offset + 274, c->y_offset + 75, FONT_NORMAL_BLACK);
+            c->x_offset + 274, c->y_offset + 75, FONT_NORMAL_BLACK, 0);
         lang_text_draw(23, RESOURCE_FRUIT, c->x_offset + 274 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
 
         // meat/fish
         image_draw(image_id + RESOURCE_MEAT + resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
             c->x_offset + 240, c->y_offset + 92);
         width = text_draw_number(b->data.granary.resource_stored[RESOURCE_MEAT], '@', " ",
-            c->x_offset + 274, c->y_offset + 99, FONT_NORMAL_BLACK);
+            c->x_offset + 274, c->y_offset + 99, FONT_NORMAL_BLACK, 0);
         lang_text_draw(23, RESOURCE_MEAT, c->x_offset + 274 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
     }
     // cartpusher state
@@ -882,7 +882,7 @@ void window_building_draw_warehouse(building_info_context *c)
             int amount = building_warehouse_get_amount(b, r);
             int image_id = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
             image_draw(image_id, x, y);
-            int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN);
+            int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN, 0);
             lang_text_draw(23, r, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
         }
     }
@@ -1238,7 +1238,7 @@ void window_building_draw_mess_hall(building_info_context *c)
         text_draw(translation_for(hunger_text), c->x_offset + 32 + width, c->y_offset + 126, FONT_NORMAL_BLACK, 0);
 
         width = text_draw(translation_for(TR_BUILDING_MESS_HALL_MONTHS_FOOD_STORED), c->x_offset + 32, c->y_offset + 150, FONT_NORMAL_BLACK, 0);
-        text_draw_number(city_mess_hall_months_food_stored(), '@', " ", c->x_offset + 32 + width, c->y_offset + 150, FONT_NORMAL_BLACK);
+        text_draw_number(city_mess_hall_months_food_stored(), '@', " ", c->x_offset + 32 + width, c->y_offset + 150, FONT_NORMAL_BLACK, 0);
 
         if (city_mess_hall_food_types() == 2) {
             text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_1), c->x_offset + 32, c->y_offset + 175, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);

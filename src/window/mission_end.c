@@ -78,22 +78,22 @@ static void draw_won(void)
     int left_offset = 68;
     int right_offset = left_offset + 10 + 512 * left_width / (left_width + right_width);
     int width = lang_text_draw(148, 0, left_offset, 308, FONT_NORMAL_BLACK);
-    text_draw_number(city_rating_culture(), '@', " ", left_offset + width, 308, FONT_NORMAL_BLACK);
+    text_draw_number(city_rating_culture(), '@', " ", left_offset + width, 308, FONT_NORMAL_BLACK, 0);
 
     width = lang_text_draw(148, 1, right_offset, 308, FONT_NORMAL_BLACK);
-    text_draw_number(city_rating_prosperity(), '@', " ", right_offset + width, 308, FONT_NORMAL_BLACK);
+    text_draw_number(city_rating_prosperity(), '@', " ", right_offset + width, 308, FONT_NORMAL_BLACK, 0);
 
     width = lang_text_draw(148, 2, left_offset, 328, FONT_NORMAL_BLACK);
-    text_draw_number(city_rating_peace(), '@', " ", left_offset + width, 328, FONT_NORMAL_BLACK);
+    text_draw_number(city_rating_peace(), '@', " ", left_offset + width, 328, FONT_NORMAL_BLACK, 0);
 
     width = lang_text_draw(148, 3, right_offset, 328, FONT_NORMAL_BLACK);
-    text_draw_number(city_rating_favor(), '@', " ", right_offset + width, 328, FONT_NORMAL_BLACK);
+    text_draw_number(city_rating_favor(), '@', " ", right_offset + width, 328, FONT_NORMAL_BLACK, 0);
 
     width = lang_text_draw(148, 4, left_offset, 348, FONT_NORMAL_BLACK);
-    text_draw_number_with_separator(city_population(), '@', " ", left_offset + width, 348, FONT_NORMAL_BLACK);
+    text_draw_number(city_population(), '@', " ", left_offset + width, 348, FONT_NORMAL_BLACK, 0);
 
     width = lang_text_draw(148, 5, right_offset, 348, FONT_NORMAL_BLACK);
-    text_draw_number_with_separator(city_finance_treasury(), '@', " ", right_offset + width, 348, FONT_NORMAL_BLACK);
+    text_draw_number(city_finance_treasury(), '@', " ", right_offset + width, 348, FONT_NORMAL_BLACK, 0);
 
     lang_text_draw_centered(13, 1, 64, 388, 512, FONT_NORMAL_BLACK);
 }

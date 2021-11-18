@@ -54,6 +54,6 @@ int string_to_int(const uint8_t *str);
  * @param thousands_separator character to use for separating groups of digits, or 0 for none
  * @return Total number of characters written to dst
  */
-int string_from_int(uint8_t *dst, int value, int force_plus_sign, uint8_t thousands_separator);
+int string_from_int(uint8_t *dst, int value, int force_plus_sign);
 
 #endif // CORE_STRING_H

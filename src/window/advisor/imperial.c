@@ -58,7 +58,7 @@ static void draw_request(int index, const scenario_request *request)
     }
 
     button_border_draw(38, 96 + 42 * index, 560, 40, 0);
-    text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE);
+    text_draw_number(request->amount, '@', " ", 40, 102 + 42 * index, FONT_NORMAL_WHITE, 0);
     int resource_offset = request->resource + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON);
     image_draw(image_group(GROUP_RESOURCE_ICONS) + resource_offset, 110, 100 + 42 * index);
     lang_text_draw(23, request->resource, 150, 102 + 42 * index, FONT_NORMAL_WHITE);
@@ -69,7 +69,7 @@ static void draw_request(int index, const scenario_request *request)
     if (request->resource == RESOURCE_DENARII) {
         // request for money
         int treasury = city_finance_treasury();
-        width = text_draw_number_with_separator(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE);
+        width = text_draw_number(treasury, '@', " ", 40, 120 + 42 * index, FONT_NORMAL_WHITE, 0);
         width += lang_text_draw(52, 44, 40 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
         if (treasury < request->amount) {
             lang_text_draw(52, 48, 80 + width, 120 + 42 * index, FONT_NORMAL_WHITE);
@@ -82,7 +82,7 @@ static void draw_request(int index, const scenario_request *request)
         int amount_stored = city_resource_get_amount_including_granaries(request->resource,
             request->amount, &using_granaries);
         int y_offset = 120 + 42 * index;
-        width = text_draw_number(amount_stored, '@', " ", 40, y_offset, FONT_NORMAL_WHITE);
+        width = text_draw_number(amount_stored, '@', " ", 40, y_offset, FONT_NORMAL_WHITE, COLOR_WHITE);
         if (using_granaries) {
             width += text_draw(translation_for(TR_ADVISOR_IN_STORAGE), 40 + width, y_offset, FONT_NORMAL_WHITE, 0);
         } else {
@@ -106,7 +106,7 @@ static int draw_background(void)
     text_draw(scenario_player_name(), 60, 12, FONT_LARGE_BLACK, 0);
 
     int width = lang_text_draw(52, 0, 60, 44, FONT_NORMAL_BLACK);
-    text_draw_number(city_rating_favor(), '@', " ", 60 + width, 44, FONT_NORMAL_BLACK);
+    text_draw_number(city_rating_favor(), '@', " ", 60 + width, 44, FONT_NORMAL_BLACK, 0);
 
     lang_text_draw_multiline(52, city_rating_favor() / 5 + 22, 60, 60, 544, FONT_NORMAL_BLACK);
 
@@ -155,7 +155,7 @@ static void draw_foreground(void)
 
     button_border_draw(70, 393, 500, 20, focus_button_id == 2);
     width = lang_text_draw(52, city_emperor_salary_rank() + 4, 120, 398, FONT_NORMAL_WHITE);
-    width += text_draw_number(city_emperor_salary_amount(), '@', " ", 120 + width, 398, FONT_NORMAL_WHITE);
+    width += text_draw_number(city_emperor_salary_amount(), '@', " ", 120 + width, 398, FONT_NORMAL_WHITE, 0);
     lang_text_draw(52, 3, 120 + width, 398, FONT_NORMAL_WHITE);
 
     button_border_draw(320, 341, 250, 20, focus_button_id == 3);
@@ -277,13 +277,13 @@ static void write_resource_storage_tooltip(advisor_tooltip_result *r, int resour
     int amount_warehouse = city_resource_count(resource);
     int amount_granary = city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
     uint8_t *text = tooltip_resource_info;
-    text += string_from_int(text, amount_warehouse, 0, 0);
+    text += string_from_int(text, amount_warehouse, 0);
     *text = ' ';
     text++;
     text = string_copy(lang_get_string(52, 43), text, RESOURCE_INFO_MAX_TEXT - (int) (text - tooltip_resource_info));
     *text = '\n';
     text++;
-    text += string_from_int(text, amount_granary, 0, locale_number_thousands_separator());
+    text += string_from_int(text, amount_granary, 0);
     *text = ' ';
     text++;
     text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, RESOURCE_INFO_MAX_TEXT - (int) (text - tooltip_resource_info));

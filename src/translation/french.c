@@ -717,6 +717,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "L'équipe Blanche - fondée par d'anciens gladiateurs. Le combat coule dans leurs veines, et même en hommes libres, ils ne vivent que pour la compétition." },
     {TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION, "L'équipe Verte - les descendants des cavaliers 'Celeres', au temps jadis du Royaume de Rome. Ils se considèrent comme l'élite parmi l'élite." },
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Reprendre la livraison des biens"},
+    {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)

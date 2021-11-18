@@ -250,7 +250,7 @@ static void draw_military_info_text(int x_offset, int y_offset)
     lang_text_draw_centered(138, m->legion_id, x_offset, y_offset + 40, CONTENT_WIDTH, FONT_NORMAL_WHITE);
 
     // Number of soldiers
-    int width = text_draw_number(m->num_figures, '@', " ", x_offset, y_offset + 60, FONT_NORMAL_WHITE);
+    int width = text_draw_number(m->num_figures, '@', " ", x_offset, y_offset + 60, FONT_NORMAL_WHITE, 0);
     lang_text_draw(138, 46 - m->figure_type, x_offset + width, y_offset + 60, FONT_NORMAL_WHITE);
 
     // No soldiers

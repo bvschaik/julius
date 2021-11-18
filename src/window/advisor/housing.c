@@ -38,7 +38,7 @@ static void draw_housing_table()
     for (int i = 0; i <= 19; i++) {
         if (housing_type_counts[i]) {
             lang_text_draw(29, i, x, y_offset + (20 * rows), FONT_NORMAL_GREEN);
-            text_draw_number(housing_type_counts[i], '@', " ", x + 180, y_offset + (20 * rows), FONT_NORMAL_WHITE);
+            text_draw_number(housing_type_counts[i], '@', " ", x + 180, y_offset + (20 * rows), FONT_NORMAL_WHITE, 0);
             if (rows == 11) {
                 x += 280;
                 rows = 0;
@@ -49,18 +49,18 @@ static void draw_housing_table()
     }
 
     text_draw(translation_for(TR_ADVISOR_TOTAL_NUM_HOUSES), 320, y_offset + 180, FONT_NORMAL_GREEN, 0);
-    text_draw_number(calculate_total_housing_buildings(), '@', " ", 500, y_offset + 180, FONT_NORMAL_WHITE);
+    text_draw_number(calculate_total_housing_buildings(), '@', " ", 500, y_offset + 180, FONT_NORMAL_WHITE, 0);
 
     text_draw(translation_for(TR_ADVISOR_AVAILABLE_HOUSING_CAPACITY), 320, y_offset + 200, FONT_NORMAL_GREEN, 0);
-    text_draw_number_with_separator(city_population_open_housing_capacity(), '@', " ", 500, y_offset + 200, FONT_NORMAL_WHITE);
+    text_draw_number(city_population_open_housing_capacity(), '@', " ", 500, y_offset + 200, FONT_NORMAL_WHITE, 0);
 
     text_draw(translation_for(TR_ADVISOR_TOTAL_HOUSING_CAPACITY), 320, y_offset + 220, FONT_NORMAL_GREEN, 0);
-    text_draw_number_with_separator(city_population_total_housing_capacity(), '@', " ", 500, y_offset + 220, FONT_NORMAL_WHITE);
+    text_draw_number(city_population_total_housing_capacity(), '@', " ", 500, y_offset + 220, FONT_NORMAL_WHITE, 0);
 
     for (int i = 0; i <= 3; i++) {
         image_draw(image_group(GROUP_RESOURCE_ICONS) + goods_icons[i], 54, y_offset + 260 + (23 * i));
         text_draw(translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK, 0);
-        text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK);
+        text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK, 0);
     }
 }
 
@@ -78,13 +78,13 @@ static int draw_background(void)
 
     static uint8_t pop[32];
     pop[0] = ' ';
-    string_from_int(pop + 1, city_population(), 0, locale_number_thousands_separator());
+    string_from_int(pop + 1, city_population(), 0);
 
     int x_offset = text_get_width(pop, FONT_NORMAL_BLACK);
     x_offset += lang_text_get_width(CUSTOM_TRANSLATION, TR_ADVISOR_TOTAL_POPULATION, FONT_NORMAL_BLACK);
     x_offset = 620 - x_offset;
 
-    int width = text_draw_number_with_separator(city_population(), 0, "", x_offset, 25, FONT_NORMAL_BLACK);
+    int width = text_draw_number(city_population(), 0, "", x_offset, 25, FONT_NORMAL_BLACK, 0);
     text_draw(translation_for(TR_ADVISOR_TOTAL_POPULATION), x_offset + width, 25, FONT_NORMAL_BLACK, 0);
 
     draw_housing_table();

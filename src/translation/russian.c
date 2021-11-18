@@ -727,6 +727,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "Белая команда - основана бывшими гладиаторами. Бойцовские качества они впитали в себя с молоком матери и даже как свободные люди они живут ради трудностей." },
     {TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION, "Зеленая команда - претендует на происхождение от 'Целересов' - всадников времен Римского царства. Они до сих пор утверждают, что являются лучшими из лучших." },
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Продолжить доставки"},
+    {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
     
 };
 

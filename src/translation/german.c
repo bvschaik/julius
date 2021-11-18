@@ -720,6 +720,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_STOCKPILING_ON, "Ermöglicht das Einlagern in ein Lagerhaus" },
     {TR_TOOLTIP_BUTTON_STOCKPILING_OFF, "Vorratshaltung deaktivieren" },
     {TR_CITY_MESSAGE_SQUALOR, "Verwahrloste Wohnungen und Slums sind ein Problem" },
+    {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
 
 };
 

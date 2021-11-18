@@ -91,7 +91,7 @@ static void draw_background(void)
     for (int resource = 0; resource < RESOURCE_MAX; ++resource) {
         resource_cost = city_games_resource_cost(selected_game_id, resource);
         if (resource_cost) {
-            width += text_draw_number(resource_cost, '@', "", 120 + width, 320, FONT_NORMAL_BLACK);
+            width += text_draw_number(resource_cost, '@', "", 120 + width, 320, FONT_NORMAL_BLACK, 0);
             if (city_resource_get_amount_including_granaries(resource, resource_cost, 0) < resource_cost) {
                 has_resources = 0;
             }

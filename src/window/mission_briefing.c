@@ -80,7 +80,7 @@ static void draw_background(void)
         goal_index++;
         label_draw(16 + x, 32 + y, 15, 1);
         int width = lang_text_draw(62, 11, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
-        text_draw_number_with_separator(scenario_criteria_population(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
+        text_draw_number(scenario_criteria_population(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED, 0);
     }
     if (scenario_criteria_culture_enabled()) {
         int x = GOAL_OFFSETS_X[goal_index];
@@ -88,7 +88,7 @@ static void draw_background(void)
         goal_index++;
         label_draw(16 + x, 32 + y, 15, 1);
         int width = lang_text_draw(62, 12, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
-        text_draw_number(scenario_criteria_culture(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
+        text_draw_number(scenario_criteria_culture(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED, 0);
     }
     if (scenario_criteria_prosperity_enabled()) {
         int x = GOAL_OFFSETS_X[goal_index];
@@ -96,7 +96,7 @@ static void draw_background(void)
         goal_index++;
         label_draw(16 + x, 32 + y, 15, 1);
         int width = lang_text_draw(62, 13, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
-        text_draw_number(scenario_criteria_prosperity(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
+        text_draw_number(scenario_criteria_prosperity(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED, 0);
     }
     if (scenario_criteria_peace_enabled()) {
         int x = GOAL_OFFSETS_X[goal_index];
@@ -104,7 +104,7 @@ static void draw_background(void)
         goal_index++;
         label_draw(16 + x, 32 + y, 15, 1);
         int width = lang_text_draw(62, 14, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
-        text_draw_number(scenario_criteria_peace(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
+        text_draw_number(scenario_criteria_peace(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED, 0);
     }
     if (scenario_criteria_favor_enabled()) {
         int x = GOAL_OFFSETS_X[goal_index];
@@ -112,7 +112,7 @@ static void draw_background(void)
         goal_index++;
         label_draw(16 + x, 32 + y, 15, 1);
         int width = lang_text_draw(62, 15, 16 + x + 8, 32 + y + 3, FONT_NORMAL_RED);
-        text_draw_number(scenario_criteria_favor(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED);
+        text_draw_number(scenario_criteria_favor(), '@', " ", 16 + x + 8 + width, 32 + y + 3, FONT_NORMAL_RED, 0);
     }
     int immediate_goal_text = tutorial_get_immediate_goal_text();
     if (immediate_goal_text) {

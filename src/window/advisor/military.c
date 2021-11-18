@@ -136,7 +136,7 @@ static int draw_background(void)
         image_draw(image_group(GROUP_BULLET), bullet_x, 409);        
         width = text_draw(translation_for(food_text), text_x, 409, FONT_NORMAL_BLACK, 0);
         if (food_text == TR_ADVISOR_LEGION_MONTHS_FOOD_STORED) {
-            text_draw_number(city_mess_hall_months_food_stored(), '@', " ", text_x + width, 409, FONT_NORMAL_BLACK);
+            text_draw_number(city_mess_hall_months_food_stored(), '@', " ", text_x + width, 409, FONT_NORMAL_BLACK, 0);
         }
     }
 
@@ -150,7 +150,7 @@ static int draw_background(void)
         button_border_draw(22, 77 + 44 * i, 560, 40, 0);
         image_draw(image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id, 32, 82 + 44 * i);
         lang_text_draw(138, m->legion_id, 84, 83 + 44 * i, FONT_NORMAL_WHITE);
-        int width = text_draw_number(m->num_figures, '@', " ", 84, 100 + 44 * i, FONT_NORMAL_GREEN);
+        int width = text_draw_number(m->num_figures, '@', " ", 84, 100 + 44 * i, FONT_NORMAL_GREEN, 0);
         switch (m->figure_type) {
             case FIGURE_FORT_LEGIONARY:
                 lang_text_draw(138, 33, 84 + width, 100 + 44 * i, FONT_NORMAL_GREEN);

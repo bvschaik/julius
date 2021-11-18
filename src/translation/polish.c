@@ -723,6 +723,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_STOCKPILING_OFF, "Wyłącz dostawy do magazynu" },
     {TR_TOOLTIP_BUTTON_ACCEPT_WORKERS, "Wstrzymaj dostarczanie zasobów z magazynu" },
     {TR_WINDOW_BUILDING_ARENA_CLOSED, "Arena jest zamknięta. Ptaki zakładają gniazda w opuszczonych siedzeniach." },
+    {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
 
 };
 

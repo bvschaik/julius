@@ -35,6 +35,7 @@ static const char *ini_keys[] = {
     "ui_show_military_sidebar",
     "ui_disable_map_drag",
     "ui_show_max_prosperity",
+    "ui_digit_separator",
     "gameplay_change_max_grand_temples",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",

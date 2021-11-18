@@ -265,11 +265,11 @@ static void draw_temple_info(building_info_context *c, int image_offset)
             FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_group(GROUP_RESOURCE_ICONS) + food, c->x_offset + 112, c->y_offset + 60);
         text_draw_number(b->data.market.inventory[resource_to_inventory(food)], '@', " ",
-            c->x_offset + 132, c->y_offset + 60, font);
+            c->x_offset + 132, c->y_offset + 60, font, 0);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_OIL, c->x_offset + 202, c->y_offset + 60);
         font = building_distribution_is_good_accepted(INVENTORY_OIL, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
-            c->x_offset + 222, c->y_offset + 60, font);
+            c->x_offset + 222, c->y_offset + 60, font, 0);
         text_draw_multiline(translation_for(TR_BUILDING_CERES_TEMPLE_MODULE_DESC),
             c->x_offset + 112, c->y_offset + 90, BLOCK_SIZE * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
@@ -281,7 +281,7 @@ static void draw_temple_info(building_info_context *c, int image_offset)
         font_t font = building_distribution_is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, c->x_offset + 112, c->y_offset + 60);
         text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
-            c->x_offset + 132, c->y_offset + 60, font);
+            c->x_offset + 132, c->y_offset + 60, font, 0);
         text_draw_multiline(translation_for(TR_BUILDING_VENUS_TEMPLE_MODULE_DESC),
             c->x_offset + 112, c->y_offset + 90, BLOCK_SIZE * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
@@ -293,20 +293,20 @@ static void draw_temple_info(building_info_context *c, int image_offset)
     if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WHEAT, c->x_offset + 112, c->y_offset + 60);
         text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
-            c->x_offset + 144, c->y_offset + 66, FONT_NORMAL_BLACK);
+            c->x_offset + 144, c->y_offset + 66, FONT_NORMAL_BLACK, 0);
 
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_VEGETABLES, c->x_offset + 202, c->y_offset + 60);
         text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
-            c->x_offset + 234, c->y_offset + 66, FONT_NORMAL_BLACK);
+            c->x_offset + 234, c->y_offset + 66, FONT_NORMAL_BLACK, 0);
 
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_FRUIT, c->x_offset + 292, c->y_offset + 60);
         text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
-            c->x_offset + 324, c->y_offset + 66, FONT_NORMAL_BLACK);
+            c->x_offset + 324, c->y_offset + 66, FONT_NORMAL_BLACK, 0);
 
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
             resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 372, c->y_offset + 60);
         text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
-            c->x_offset + 404, c->y_offset + 66, FONT_NORMAL_BLACK);
+            c->x_offset + 404, c->y_offset + 66, FONT_NORMAL_BLACK, 0);
 
         if (city_buildings_get_mess_hall()) {
             text_draw_multiline(translation_for(TR_BUILDING_MARS_TEMPLE_MODULE_DESC),
@@ -777,12 +777,12 @@ void window_building_draw_tavern(building_info_context *c)
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, c->x_offset + 32, c->y_offset + 60);
     font_t font = building_distribution_is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
 
-    text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ", c->x_offset + 64, c->y_offset + 66, font);
+    text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ", c->x_offset + 64, c->y_offset + 66, font, 0);
 
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
         resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 142, c->y_offset + 60);
     font = building_distribution_is_good_accepted(INVENTORY_MEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-    text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ", c->x_offset + 174, c->y_offset + 66, font);
+    text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ", c->x_offset + 174, c->y_offset + 66, font, 0);
 
     if (!c->has_road_access) {
         window_building_draw_description_at(c, 96, 69, 25);

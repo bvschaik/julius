@@ -86,7 +86,7 @@ static void draw_background(void)
 
     inner_panel_draw(18, 300, 28, 2);
     text_draw_centered(translation_for(TR_WINDOW_RACE_BET_AMOUNT), 18, 310, 80, FONT_NORMAL_WHITE, 0);
-    int width = text_draw_number(data.bet_amount, '@', " ", 165, 310, FONT_NORMAL_WHITE);
+    int width = text_draw_number(data.bet_amount, '@', " ", 165, 310, FONT_NORMAL_WHITE, 0);
     width += lang_text_draw(50, 15, 165 + width, 310, FONT_NORMAL_WHITE);
     text_draw_with_money(translation_for(TR_PERSONAL_SAVINGS), city_emperor_personal_savings(), " ", "", 284, 310, 175,  FONT_NORMAL_WHITE, 0);
 

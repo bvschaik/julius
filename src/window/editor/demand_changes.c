@@ -70,12 +70,12 @@ static void draw_foreground(void)
         editor_demand_change demand_change;
         scenario_editor_demand_change_get(i, &demand_change);
         if (demand_change.year) {
-            text_draw_number(demand_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK);
+            text_draw_number(demand_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK, 0);
             lang_text_draw_year(scenario_property_start_year() + demand_change.year, x + 35, y + 6, FONT_NORMAL_BLACK);
             int offset = demand_change.resource + resource_image_offset(demand_change.resource, RESOURCE_IMAGE_ICON);
             image_draw(image_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 115, y + 3);
             int width = lang_text_draw(44, 97, x + 140, y + 6, FONT_NORMAL_BLACK);
-            width += text_draw_number(demand_change.route_id, '@', " ", x + 140 + width, y + 6, FONT_NORMAL_BLACK);
+            width += text_draw_number(demand_change.route_id, '@', " ", x + 140 + width, y + 6, FONT_NORMAL_BLACK, 0);
             lang_text_draw(44, demand_change.is_rise ? 99 : 98, x + 140 + width, y + 6, FONT_NORMAL_BLACK);
         } else {
             lang_text_draw_centered(44, 96, x, y + 6, 290, FONT_NORMAL_BLACK);

@@ -66,11 +66,11 @@ void window_entertainment_draw_games_text(int x, int y)
     if (cooldown) {
         text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN_TEXT), x, y + 15, 400, FONT_NORMAL_WHITE, 0);
         int width = text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_COOLDOWN), x + 46, y + 50, FONT_NORMAL_WHITE, 0);
-        text_draw_number(cooldown, '@', "", x + 46 + width, y + 50, FONT_NORMAL_WHITE);
+        text_draw_number(cooldown, '@', "", x + 46 + width, y + 50, FONT_NORMAL_WHITE, 0);
     } else if (city_festival_games_planning_time()) {
         text_draw_centered(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_PREPARING), x, y + 15, 400, FONT_NORMAL_WHITE, 0);
         int width = text_draw(translation_for(text_data[game->id].preparation_text), x + 56, y + 50, FONT_NORMAL_WHITE, 0);
-        text_draw_number(city_festival_games_planning_time(), '@', "", x + 56 + width, y + 50, FONT_NORMAL_WHITE);
+        text_draw_number(city_festival_games_planning_time(), '@', "", x + 56 + width, y + 50, FONT_NORMAL_WHITE, 0);
     } else if (city_festival_games_active()) {
         text_draw_multiline(translation_for(text_data[game->id].ongoing_text), x + 4, y, 400, FONT_NORMAL_WHITE, 0);
     } else {
@@ -106,10 +106,10 @@ static int draw_background(void)
 
     // taverns
     text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE), 67, 64, FONT_NORMAL_WHITE, 0);
-    text_draw_number(building_count_total(BUILDING_TAVERN), '@', "", 40, 64, FONT_NORMAL_WHITE);
+    text_draw_number(building_count_total(BUILDING_TAVERN), '@', "", 40, 64, FONT_NORMAL_WHITE, 0);
     text_draw_number_centered(building_count_active(BUILDING_TAVERN), 150, 64, 100, FONT_NORMAL_WHITE);
-    int width = text_draw_number_with_separator(city_culture_get_tavern_person_coverage(), '_', " ",
-        PEOPLE_OFFSET, 64, FONT_NORMAL_WHITE);
+    int width = text_draw_number(city_culture_get_tavern_person_coverage(), '_', " ",
+        PEOPLE_OFFSET, 64, FONT_NORMAL_WHITE, 0);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 64, FONT_NORMAL_WHITE);
     int pct_tavern = city_culture_coverage_tavern();
     if (pct_tavern == 0) {
@@ -125,8 +125,8 @@ static int draw_background(void)
     lang_text_draw_amount(8, 34, building_count_total(BUILDING_THEATER), 40, 84, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_THEATER), 150, 84, 100, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_theater_shows(), 230, 84, 100, FONT_NORMAL_WHITE);
-    width = text_draw_number_with_separator(city_culture_get_theatre_person_coverage(), '_', " ",
-        PEOPLE_OFFSET, 84, FONT_NORMAL_WHITE);
+    width = text_draw_number(city_culture_get_theatre_person_coverage(), '_', " ",
+        PEOPLE_OFFSET, 84, FONT_NORMAL_WHITE, 0);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 84, FONT_NORMAL_WHITE);
     int pct_theater = city_culture_coverage_theater();
     if (pct_theater == 0) {
@@ -142,8 +142,8 @@ static int draw_background(void)
     lang_text_draw_amount(8, 36, building_count_total(BUILDING_AMPHITHEATER), 40, 104, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_AMPHITHEATER), 150, 104, 100, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_amphitheater_shows(), 230, 104, 100, FONT_NORMAL_WHITE);
-    width = text_draw_number_with_separator(city_culture_get_ampitheatre_person_coverage(), '@', " ",
-        PEOPLE_OFFSET, 104, FONT_NORMAL_WHITE);
+    width = text_draw_number(city_culture_get_ampitheatre_person_coverage(), '@', " ",
+        PEOPLE_OFFSET, 104, FONT_NORMAL_WHITE, 0);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 104, FONT_NORMAL_WHITE);
     int pct_amphitheater = city_culture_coverage_amphitheater();
     if (pct_amphitheater == 0) {
@@ -157,9 +157,9 @@ static int draw_background(void)
 
     //arenas 
     text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_ARENA_COVERAGE), 67, 124, FONT_NORMAL_WHITE, 0);
-    text_draw_number(building_count_total(BUILDING_ARENA), '@', "", 40, 124, FONT_NORMAL_WHITE);
+    text_draw_number(building_count_total(BUILDING_ARENA), '@', "", 40, 124, FONT_NORMAL_WHITE, 0);
     text_draw_number_centered(building_count_active(BUILDING_ARENA), 150, 124, 100, FONT_NORMAL_WHITE);
-    width = text_draw_number_with_separator(city_culture_get_arena_person_coverage(), '_', " ", PEOPLE_OFFSET, 124, FONT_NORMAL_WHITE);
+    width = text_draw_number(city_culture_get_arena_person_coverage(), '_', " ", PEOPLE_OFFSET, 124, FONT_NORMAL_WHITE, 0);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 124, FONT_NORMAL_WHITE);
     text_draw_number_centered(city_entertainment_arena_shows(), 230, 124, 100, FONT_NORMAL_WHITE);
     int pct = city_culture_coverage_arena();

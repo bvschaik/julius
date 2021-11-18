@@ -723,6 +723,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ACCEPT_WORKERS, "Suspender recursos para fábricas e celeiros" },
     {TR_TOOLTIP_BUTTON_STOCKPILING_ON, "Permitir estocagem em um armazém" },
     {TR_TOOLTIP_BUTTON_STOCKPILING_OFF, "Desabilitar estocagem" },
+    {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
 };
 
 void translation_portuguese(const translation_string **strings, int *num_strings)

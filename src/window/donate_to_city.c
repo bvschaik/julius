@@ -66,7 +66,7 @@ static void draw_background(void)
     arrow_buttons[0].x_offset = button_start;
     arrow_buttons[1].x_offset = arrow_buttons[0].x_offset + arrow_buttons[0].size;
 
-    text_draw_number(city_emperor_donate_amount(), '@', " ", button_start + 76, 248, FONT_NORMAL_WHITE);
+    text_draw_number(city_emperor_donate_amount(), '@', " ", button_start + 76, 248, FONT_NORMAL_WHITE, 0);
 
     lang_text_draw_centered(13, 4, 336, 288, 160, FONT_NORMAL_BLACK);
     lang_text_draw_centered(52, 18, 144, 288, 160, FONT_NORMAL_BLACK);

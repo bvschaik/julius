@@ -716,6 +716,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "红队，罗马史上最成功的战车驾驶员，他曾是一名划桨手，救过罗马执政官。" },
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "白队，由曾经的角斗士们组建，他们身体里流淌着战斗的血液，即使早已身获自由，他们依然为挑战而生。" },
     {TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION, "绿队，号称塞丽丝之根，他们曾是罗马王国时期的骑兵，乃精锐中的精锐。" },
+    {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
 };
 
 void translation_simplified_chinese(const translation_string **strings, int *num_strings)

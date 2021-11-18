@@ -142,7 +142,7 @@ static void draw_resource_status_text(int resource, int x, int y, int box_width)
         width += lang_text_draw(54, 5, x + width, y, FONT_NORMAL_WHITE);
         int import_limit = city_resource_import_over(resource);
         if (import_limit > 0) {
-            text_draw_number(import_limit, 0, " ", x + width, y, FONT_NORMAL_WHITE);
+            text_draw_number(import_limit, 0, " ", x + width, y, FONT_NORMAL_WHITE, 0);
         } else {
             text_draw(translation_for(TR_ADVISOR_TRADE_MAX), x + width, y, FONT_NORMAL_WHITE, 0);
         }
@@ -161,7 +161,7 @@ static void draw_resource_status_text(int resource, int x, int y, int box_width)
     } else if (trade_status & TRADE_STATUS_EXPORT) {
         int width = (box_width - 15 - lang_text_get_width(54, 6, FONT_NORMAL_WHITE)) / 2;
         width += lang_text_draw(54, 6, x + width, y, FONT_NORMAL_WHITE);
-        text_draw_number(city_resource_export_over(resource), 0, " ", x + width, y, FONT_NORMAL_WHITE);
+        text_draw_number(city_resource_export_over(resource), 0, " ", x + width, y, FONT_NORMAL_WHITE, 0);
     } else if (trade_flags & TRADE_STATUS_EXPORT) {
         text_draw_centered(translation_for(TR_ADVISOR_TRADE_EXPORTABLE), x, y, box_width, FONT_NORMAL_GREEN, 0);
     } else if (trade_flags_potential & TRADE_STATUS_EXPORT) {
@@ -323,13 +323,13 @@ static void write_resource_storage_tooltip(advisor_tooltip_result *r, int resour
     int amount_warehouse = city_resource_count(resource);
     int amount_granary = city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
     uint8_t *text = tooltip_resource_info;
-    text += string_from_int(text, amount_warehouse, 0, 0);
+    text += string_from_int(text, amount_warehouse, 0);
     *text = ' ';
     text++;
     text = string_copy(lang_get_string(52, 43), text, 200 - (int) (text - tooltip_resource_info));
     *text = '\n';
     text++;
-    text += string_from_int(text, amount_granary, 0, locale_number_thousands_separator());
+    text += string_from_int(text, amount_granary, 0);
     *text = ' ';
     text++;
     text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, 200 - (int) (text - tooltip_resource_info));

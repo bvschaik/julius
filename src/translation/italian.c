@@ -715,6 +715,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GARDEN_WALL_GATE, "Cancello del giardino"},
     {TR_BUILDING_GARDEN_WALL_GATE_DESC, "I cancelli impediscono agli ospiti indesiderati di disturbare la pace dei giardini."},
     {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Il carrettiere sta prendendo le merci da un altro magazzino."},
+    {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
 };
 
 void translation_italian(const translation_string **strings, int *num_strings)

@@ -84,7 +84,7 @@ static void draw_foreground(void)
         if (building_count_industry_total(data.resource) <= 0) {
             lang_text_draw(54, 7, 66, 172, FONT_NORMAL_BLACK);
         } else if (city_resource_is_mothballed(data.resource)) {
-            int width = text_draw_number(total_buildings, '@', " ", 66, 172, FONT_NORMAL_BLACK);
+            int width = text_draw_number(total_buildings, '@', " ", 66, 172, FONT_NORMAL_BLACK, 0);
             if (total_buildings == 1) {
                 lang_text_draw(54, 10, 66 + width, 172, FONT_NORMAL_BLACK);
             } else {
@@ -92,7 +92,7 @@ static void draw_foreground(void)
             }
         } else if (total_buildings == active_buildings) {
             // not mothballed, all working
-            int width = text_draw_number(total_buildings, '@', " ", 66, 172, FONT_NORMAL_BLACK);
+            int width = text_draw_number(total_buildings, '@', " ", 66, 172, FONT_NORMAL_BLACK, 0);
             if (total_buildings == 1) {
                 lang_text_draw(54, 8, 66 + width, 172, FONT_NORMAL_BLACK);
             } else {
@@ -100,10 +100,10 @@ static void draw_foreground(void)
             }
         } else {
             // not mothballed, some working
-            int width = text_draw_number(active_buildings, '@', " ", 66, 172, FONT_NORMAL_BLACK);
+            int width = text_draw_number(active_buildings, '@', " ", 66, 172, FONT_NORMAL_BLACK, 0);
             width += lang_text_draw(54, 12, 66 + width, 172, FONT_NORMAL_BLACK);
             width += text_draw_number(total_buildings - active_buildings, '@', " ",
-                66 + width, 172, FONT_NORMAL_BLACK);
+                66 + width, 172, FONT_NORMAL_BLACK, 0);
             if (active_buildings == 1) {
                 lang_text_draw(54, 13, 66 + width, 172, FONT_NORMAL_BLACK);
             } else {
@@ -137,7 +137,7 @@ static void draw_foreground(void)
             if (trade_quantity == 0) {
                 text_draw(translation_for(TR_ADVISOR_TRADE_NO_LIMIT), x_offset + width, 221, FONT_NORMAL_BLACK, 0);
             } else {
-                text_draw_number(trade_quantity, 0, " ", x_offset + width, 221, FONT_NORMAL_BLACK);
+                text_draw_number(trade_quantity, 0, " ", x_offset + width, 221, FONT_NORMAL_BLACK, 0);
             }
             arrow_buttons_draw(0, 0, import_amount_arrow_buttons, 2);   
         } else {
@@ -157,7 +157,7 @@ static void draw_foreground(void)
             int x_offset = 324 + (220 - lang_text_get_width(54, 6, FONT_NORMAL_BLACK)) / 2;
             int width = lang_text_draw(54, 6, x_offset, 221, FONT_NORMAL_BLACK);
             int trade_quantity = city_resource_export_over(data.resource);
-            text_draw_number(trade_quantity, 0, " ", x_offset + width, 221, FONT_NORMAL_BLACK);
+            text_draw_number(trade_quantity, 0, " ", x_offset + width, 221, FONT_NORMAL_BLACK, 0);
             arrow_buttons_draw(0, 0, export_amount_arrow_buttons, 2);
         } else {
             text_draw_centered(translation_for(TR_ADVISOR_TRADE_NOT_EXPORTING), 324, 221, 282, FONT_NORMAL_BLACK, 0);

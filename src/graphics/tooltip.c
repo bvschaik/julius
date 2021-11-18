@@ -110,7 +110,7 @@ static const uint8_t *get_tooltip_text(const tooltip_context *c)
         text = lang_get_string(c->text_group, c->text_id);
     }
     if (c->has_numeric_prefix) {
-        int offset = string_from_int(composed_tooltip_text, c->numeric_prefix, 0, 0);
+        int offset = string_from_int(composed_tooltip_text, c->numeric_prefix, 0);
         string_copy(text, &composed_tooltip_text[offset], COMPOSED_TOOLTIP_TEXT_MAX - offset);
         text = composed_tooltip_text;
     } else if (c->num_extra_texts > 0) {
@@ -262,41 +262,41 @@ static void draw_senate_tooltip(tooltip_context *c)
 
     // unemployment
     lang_text_draw_colored(68, 148, x + 5, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    width = text_draw_number_colored(city_labor_unemployment_percentage(), '@', "%",
+    width = text_draw_number(city_labor_unemployment_percentage(), '@', "%",
         x + 140, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")",
+    text_draw_number(city_labor_workers_unemployed() - city_labor_workers_needed(), '(', ")",
         x + 140 + width, y + 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
     // ratings
     lang_text_draw_colored(68, 149, x + 5, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(city_rating_culture(), '@', " ",
+    text_draw_number(city_rating_culture(), '@', " ",
         x + 140, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && scenario_criteria_culture_enabled()) {
-        text_draw_number_colored(scenario_criteria_culture(), '(', ")",
+        text_draw_number(scenario_criteria_culture(), '(', ")",
             x + 140 + width, y + 19, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     }
 
     lang_text_draw_colored(68, 150, x + 5, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(city_rating_prosperity(), '@', " ",
+    text_draw_number(city_rating_prosperity(), '@', " ",
         x + 140, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && scenario_criteria_prosperity_enabled()) {
-        text_draw_number_colored(scenario_criteria_prosperity(), '(', ")",
+        text_draw_number(scenario_criteria_prosperity(), '(', ")",
             x + 140 + width, y + 33, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     }
 
     lang_text_draw_colored(68, 151, x + 5, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(city_rating_peace(), '@', " ",
+    text_draw_number(city_rating_peace(), '@', " ",
         x + 140, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && scenario_criteria_peace_enabled()) {
-        text_draw_number_colored(scenario_criteria_peace(), '(', ")",
+        text_draw_number(scenario_criteria_peace(), '(', ")",
             x + 140 + width, y + 47, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     }
 
     lang_text_draw_colored(68, 152, x + 5, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
-    text_draw_number_colored(city_rating_favor(), '@', " ",
+    text_draw_number(city_rating_favor(), '@', " ",
         x + 140, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     if (!scenario_is_open_play() && scenario_criteria_favor_enabled()) {
-        text_draw_number_colored(scenario_criteria_favor(), '(', ")",
+        text_draw_number(scenario_criteria_favor(), '(', ")",
             x + 140 + width, y + 61, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
     }
 }

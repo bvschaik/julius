@@ -231,7 +231,7 @@ static void draw_city_message_text(const lang_message *msg)
                 if (msg->message_type == MESSAGE_TYPE_IMPERIAL) {
                     const scenario_request *request = scenario_request_get(player_message.param1);
                     int y_offset = data.y_text + 86 + lines * 16;
-                    text_draw_number(request->amount, '@', " ", data.x_text + 8, y_offset, FONT_NORMAL_WHITE);
+                    text_draw_number(request->amount, '@', " ", data.x_text + 8, y_offset, FONT_NORMAL_WHITE, 0);
                     image_draw(resource_image(request->resource), data.x_text + 70, y_offset - 5);
                     lang_text_draw(23, request->resource,
                         data.x_text + 100, y_offset, FONT_NORMAL_WHITE);
@@ -410,7 +410,7 @@ static void draw_background_video(void)
             y_text += 8;
         }
         const scenario_request *request = scenario_request_get(player_message.param1);
-        text_draw_number(request->amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE);
+        text_draw_number(request->amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE, 0);
         image_draw(
             image_group(GROUP_RESOURCE_ICONS) + request->resource
             + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON),

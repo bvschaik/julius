@@ -375,8 +375,8 @@ static int draw_extra_info_objective(
         lang_text_draw(text_group, text_id, x_offset + 11, y_offset, FONT_NORMAL_WHITE);
     }
     font_t font = obj->value >= obj->target ? FONT_NORMAL_GREEN : FONT_NORMAL_RED;
-    int width = text_draw_number(obj->value, '@', "", x_offset + 11, y_offset + EXTRA_INFO_LINE_SPACE, font);
-    text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + EXTRA_INFO_LINE_SPACE, font);
+    int width = text_draw_number(obj->value, '@', "", x_offset + 11, y_offset + EXTRA_INFO_LINE_SPACE, font, 0);
+    text_draw_number(obj->target, '(', ")", x_offset + 11 + width, y_offset + EXTRA_INFO_LINE_SPACE, font, 0);
     return EXTRA_INFO_LINE_SPACE * 2;
 }
 
@@ -472,13 +472,13 @@ static int draw_request_buttons(int y_offset)
 
                 // request current / total
                 width += text_draw_number(r->available, 0, "/", width, y_offset + 2,
-                    enough_resource ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+                    enough_resource ? FONT_NORMAL_GREEN : FONT_NORMAL_RED, 0);
                 width += text_draw_number(r->amount, 0, "",
-                    width - 5, y_offset + 2, enough_resource ? FONT_NORMAL_GREEN : FONT_NORMAL_RED);
+                    width - 5, y_offset + 2, enough_resource ? FONT_NORMAL_GREEN : FONT_NORMAL_RED, 0);
 
             } else {
                 width += text_draw_number(r->amount, 0, "",
-                    width, y_offset + 2, FONT_NORMAL_GREEN);
+                    width, y_offset + 2, FONT_NORMAL_GREEN, 0);
 
                 text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_SEND),
                     data.x_offset + 2, y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
@@ -488,7 +488,7 @@ static int draw_request_buttons(int y_offset)
 
             // request time left
             text_draw(string_from_ascii(","), width - 12, y_offset + 2, FONT_NORMAL_GREEN, 0);
-            width += text_draw_number(r->time, 0, "", width, y_offset + 2, font_color);
+            width += text_draw_number(r->time, 0, "", width, y_offset + 2, font_color, 0);
             lang_text_draw_ellipsized(8, 4 + (r->time != 1), width, y_offset + 2,
                 data.width - (width - data.x_offset) - 4, font_color);
         }
@@ -527,7 +527,7 @@ static void draw_extra_info_panel(void)
         int text_width = text_draw_percentage(data.unemployment.percentage,
             data.x_offset + 10, y_offset, FONT_NORMAL_GREEN);
         text_draw_number(data.unemployment.amount, '(', ")",
-            data.x_offset + 10 + text_width, y_offset, FONT_NORMAL_GREEN);
+            data.x_offset + 10 + text_width, y_offset, FONT_NORMAL_GREEN, 0);
 
         y_offset += EXTRA_INFO_VERTICAL_PADDING * 3;
     }
@@ -554,14 +554,14 @@ static void draw_extra_info_panel(void)
         y_offset += EXTRA_INFO_LINE_SPACE + EXTRA_INFO_VERTICAL_PADDING;
 
         font_t font_type = data.gods.angry > 0 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN;
-        int width = text_draw_number(data.gods.angry, 0, "", data.x_offset + 42, y_offset + 2, font_type);
+        int width = text_draw_number(data.gods.angry, 0, "", data.x_offset + 42, y_offset + 2, font_type, 0);
         image_draw(image_group(GROUP_GOD_BOLT), data.x_offset + 42 + width, y_offset - 2);
 
         static int happy_image_id;
         if (!happy_image_id) {
             happy_image_id = assets_get_image_id("UI_Elements", "Happy God Icon");
         }
-        width = text_draw_number(data.gods.happy, 0, "", data.x_offset + 82, y_offset + 2, FONT_NORMAL_GREEN);
+        width = text_draw_number(data.gods.happy, 0, "", data.x_offset + 82, y_offset + 2, FONT_NORMAL_GREEN, 0);
         image_draw(happy_image_id, data.x_offset + 82 + width, y_offset - 2);
 
         y_offset += EXTRA_INFO_VERTICAL_PADDING * 2;

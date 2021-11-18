@@ -49,10 +49,4 @@ int locale_translate_money_dn(void);
  */
 int locale_translate_rank_autosaves(void);
 
-/**
- * Returns a character to use as a thousands-separator in large numbers.
- * @return character value to use as separator, 0 if no separator should be used. 
- */
-uint8_t locale_number_thousands_separator(void);
-
 #endif // CORE_LOCALE_H

@@ -67,9 +67,9 @@ static void draw_foreground(void)
         editor_invasion invasion;
         scenario_editor_invasion_get(i, &invasion);
         if (invasion.type) {
-            text_draw_number(invasion.year, '+', " ", x + 6, y + 6, FONT_NORMAL_BLACK);
+            text_draw_number(invasion.year, '+', " ", x + 6, y + 6, FONT_NORMAL_BLACK, 0);
             lang_text_draw_year(scenario_property_start_year() + invasion.year, x + 60, y + 6, FONT_NORMAL_BLACK);
-            int width = text_draw_number(invasion.amount, '@', " ", x + 120, y + 6, FONT_NORMAL_BLACK);
+            int width = text_draw_number(invasion.amount, '@', " ", x + 120, y + 6, FONT_NORMAL_BLACK, 0);
             lang_text_draw(34, invasion.type, x + 115 + width, y + 6, FONT_NORMAL_BLACK);
         } else {
             lang_text_draw_centered(44, 23, x, y + 6, 290, FONT_NORMAL_BLACK);

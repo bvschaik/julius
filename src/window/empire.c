@@ -170,11 +170,11 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 trade_max = trade_now;
             }
             int text_width = text_draw_number(trade_now, '@', "",
-                x_offset + 104 * index + 150, y_offset + 40, FONT_NORMAL_GREEN);
+                x_offset + 104 * index + 150, y_offset + 40, FONT_NORMAL_GREEN, 0);
             text_width += lang_text_draw(47, 11,
                 x_offset + 104 * index + 148 + text_width, y_offset + 40, FONT_NORMAL_GREEN);
             text_draw_number(trade_max, '@', "",
-                x_offset + 104 * index + 138 + text_width, y_offset + 40, FONT_NORMAL_GREEN);
+                x_offset + 104 * index + 138 + text_width, y_offset + 40, FONT_NORMAL_GREEN, 0);
             index++;
         }
         // city buys
@@ -191,11 +191,11 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
                 trade_max = trade_now;
             }
             int text_width = text_draw_number(trade_now, '@', "",
-                x_offset + 104 * index + 150, y_offset + 71, FONT_NORMAL_GREEN);
+                x_offset + 104 * index + 150, y_offset + 71, FONT_NORMAL_GREEN, 0);
             text_width += lang_text_draw(47, 11,
                 x_offset + 104 * index + 148 + text_width, y_offset + 71, FONT_NORMAL_GREEN);
             text_draw_number(trade_max, '@', "",
-                x_offset + 104 * index + 138 + text_width, y_offset + 71, FONT_NORMAL_GREEN);
+                x_offset + 104 * index + 138 + text_width, y_offset + 71, FONT_NORMAL_GREEN, 0);
             index++;
         }
     } else { // trade is closed

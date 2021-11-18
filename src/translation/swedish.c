@@ -722,6 +722,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Återuppta resursleveranser" },
     {TR_TOOLTIP_BUTTON_STOCKPILING_ON, "Hamstra varor direkt handelsmagasin." },
     {TR_TOOLTIP_BUTTON_STOCKPILING_OFF, "Sluta hamstra varor direkt i handelsmagasin." },
+    {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
 };
 
 void translation_swedish(const translation_string **strings, int *num_strings)

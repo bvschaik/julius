@@ -100,7 +100,7 @@ static void draw_time_left(void)
         int total_months = 12 - game_time_month() + 12 * years;
         label_draw(1, 25, 15, 1);
         int width = lang_text_draw(6, 2, 6, 29, FONT_NORMAL_BLACK);
-        text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
+        text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK, 0);
         city_view_dirty = 1;
     } else if (scenario_criteria_survival_enabled() && !city_victory_has_won()) {
         int years;
@@ -112,7 +112,7 @@ static void draw_time_left(void)
         int total_months = 12 - game_time_month() + 12 * years;
         label_draw(1, 25, 15, 1);
         int width = lang_text_draw(6, 3, 6, 29, FONT_NORMAL_BLACK);
-        text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK);
+        text_draw_number(total_months, '@', " ", 6 + width, 29, FONT_NORMAL_BLACK, 0);
         city_view_dirty = 1;
     }
 }

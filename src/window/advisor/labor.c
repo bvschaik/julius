@@ -51,19 +51,19 @@ static int draw_background(void)
     lang_text_draw(50, 24, 500, 56, FONT_SMALL_PLAIN);
 
     // xx employed, yy unemployed
-    int width = text_draw_number_with_separator(city_labor_workers_employed(), '@', " ", 32, 320, FONT_NORMAL_BLACK);
+    int width = text_draw_number(city_labor_workers_employed(), '@', " ", 32, 320, FONT_NORMAL_BLACK, 0);
     width += lang_text_draw(50, 12, 32 + width, 320, FONT_NORMAL_BLACK);
-    width += text_draw_number_with_separator(city_labor_workers_unemployed(), '@', " ", 50 + width, 320, FONT_NORMAL_BLACK);
+    width += text_draw_number(city_labor_workers_unemployed(), '@', " ", 50 + width, 320, FONT_NORMAL_BLACK, 0);
     width += lang_text_draw(50, 13, 50 + width, 320, FONT_NORMAL_BLACK);
-    text_draw_number(city_labor_unemployment_percentage(), '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK);
+    text_draw_number(city_labor_unemployment_percentage(), '@', "%)", 50 + width, 320, FONT_NORMAL_BLACK, 0);
 
     // wages panel
     inner_panel_draw(64, 350, 32, 2);
     lang_text_draw(50, 14, 70, 359, FONT_NORMAL_WHITE);
-    width = text_draw_number(city_labor_wages(), '@', " ", 230, 359, FONT_NORMAL_WHITE);
+    width = text_draw_number(city_labor_wages(), '@', " ", 230, 359, FONT_NORMAL_WHITE, 0);
     width += lang_text_draw(50, 15, 230 + width, 359, FONT_NORMAL_WHITE);
     width += lang_text_draw(50, 18, 230 + width, 359, FONT_NORMAL_WHITE);
-    text_draw_number(city_labor_wages_rome(), '@', " )", 230 + width, 359, FONT_NORMAL_WHITE);
+    text_draw_number(city_labor_wages_rome(), '@', " )", 230 + width, 359, FONT_NORMAL_WHITE, 0);
 
     // estimated wages
     width = lang_text_draw(50, 19, 64, 390, FONT_NORMAL_BLACK);
@@ -85,15 +85,15 @@ static void draw_foreground(void)
         const labor_category_data *cat = city_labor_category(i);
         if (cat->priority) {
             image_draw(image_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2);
-            text_draw_number(cat->priority, '@', " ", 90, y_offset, FONT_NORMAL_WHITE);
+            text_draw_number(cat->priority, '@', " ", 90, y_offset, FONT_NORMAL_WHITE, 0);
         }
         lang_text_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE);
-        text_draw_number_with_separator(cat->workers_needed, '@', " ", 410, y_offset, FONT_NORMAL_WHITE);
+        text_draw_number(cat->workers_needed, '@', " ", 410, y_offset, FONT_NORMAL_WHITE, 0);
         font_t font = FONT_NORMAL_WHITE;
         if (cat->workers_needed != cat->workers_allocated) {
             font = FONT_NORMAL_RED;
         }
-        text_draw_number_with_separator(cat->workers_allocated, '@', " ", 510, y_offset, font);
+        text_draw_number(cat->workers_allocated, '@', " ", 510, y_offset, font, 0);
     }
 }
 
