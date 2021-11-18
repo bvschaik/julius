@@ -67,7 +67,7 @@ static int draw_background(void)
     text_draw_number_centered(culture, 80, 309, 100, FONT_LARGE_BLACK);
     width = text_draw_number(has_culture_goal ? scenario_criteria_culture() : 0,
         '@', " ", 85, 334, FONT_NORMAL_BLACK, 0);
-    lang_text_draw(53, 5, 85 + width, 334, 0);
+    lang_text_draw(53, 5, 85 + width, 334, FONT_NORMAL_BLACK);
     int has_reached = !has_culture_goal || culture >= scenario_criteria_culture();
     draw_rating_column(110, 274, culture, has_reached);
 
