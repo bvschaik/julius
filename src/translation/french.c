@@ -240,7 +240,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_DEATHS_LAST_YEAR, "Morts l'an dernier :"},
     {TR_ADVISOR_TOTAL_POPULATION, "Résidents"},
     {TR_ADVISOR_IN_STORAGE, "en stock"},
-    {TR_ADVISOR_FROM_GRANARIES, "depuis les greniers"},
+    {TR_ADVISOR_FROM_GRANARIES, "dans les greniers"},
     {TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TITLE, "Expédier depuis les greniers" },
     {TR_ADVISOR_DISPATCHING_FOOD_FROM_GRANARIES_TEXT,"Êtes-vous sûr ?"},
     {TR_ADVISOR_KEEP_STOCKPILING, "Continuer à stocker la ressource"},
@@ -251,11 +251,11 @@ static translation_string all_strings[] = {
     {TR_ADD_MODULE, "Redédier le temple ?"},
     {TR_BUILDING_TEMPLE_MODULE_CONSTRUCTED, "Épithète accordée."},
     {TR_BUILDING_CERES_TEMPLE_QUOTE, "Cérès inventa le soc qui déchire et féconde la terre.\nL'homme lui doit ses premiers fruits,\nDes aliments plus doux, et ses premières lois.\nNous devons tout aux bienfaits de Cérès.\nC'est elle que je vais chanter.\n-Ovide, les Métamorphoses, Livre V"},
-    {TR_BUILDING_NEPTUNE_TEMPLE_QUOTE, "Les flots s'apaisent, alors que Neptune dépose son trident\nSur la mer agitée et lisse son visage sillonné.\nDéjà Triton, à son appel, apparaît au-dessus des vagues;\nSa robe tyrienne couvrant ses épaules d'azur;\nEt dans sa main une conque cave, longue et recourbée.\n-Ovide, les Métamorphoses, Livre I "},
+    {TR_BUILDING_NEPTUNE_TEMPLE_QUOTE, "Les flots s'apaisent, lorsque Neptune dépose son trident\nSur la mer agitée et lisse son visage sillonné.\nDéjà Triton, à son appel, apparaît au-dessus des vagues;\nSa robe tyrienne couvrant ses épaules d'azur;\nEt dans sa main une conque cave, longue et recourbée.\n-Ovide, les Métamorphoses, Livre I "},
     {TR_BUILDING_MERCURY_TEMPLE_QUOTE, "Les bœufs, les grasses brebis, les trépieds,\nLes blondes crinières des chevaux,\nTout cela peut être conquis,\nMais l'âme qui s'est une fois échappée d'entre nos dents,\nNe peut être ressaisie ni rappelée.\n-Homère, L'Illiade, Livre IX "},
     {TR_BUILDING_MARS_TEMPLE_QUOTE, "Non loin se façonnaient pour Mars ce char,\nCes roues rapides dont le fracas réveille les guerriers,\nÉpouvante les cités éperdues, et répand dans les airs,\nLe son éclatant des trompettes.\n-Virgile, l'Énéide, Livre VIII"},
     {TR_BUILDING_VENUS_TEMPLE_QUOTE, "Ô Vénus ! Ô Amour !\nQuels doux transports ravissaient tous mes sens !\nQuel délire agitait mon âme !\nDans quel tendre abandon il me semblait cesser de vivre!\n-Ovide, les Métamorphoses, Livre IX "},
-    {TR_BUILDING_PANTHEON_QUOTE, "S'ouvre dans l'Olympe, le palais de la toute-puissance :\nLe père des dieux, le souverain des hommes,\nRassemble les Immortels sous ses lambris étoilés;\nLà, du haut de son trône, abaissés sur la terre,\nSes regards embrassent l'immensité du monde.\nLes dieux ont pris séance sous ces portiques majestueux.\n-Virgile, L'Énéide, Livre X "},
+    {TR_BUILDING_PANTHEON_QUOTE, "S'ouvre dans l'Olympe, le palais de la toute-puissance :\nLe père des dieux, le souverain des hommes,\nRassemble les Immortels sous ses lambris étoilés;\nLà, du haut de son trône, abaissés sur la terre,\nSes regards embrassent l'immensité du monde.\nLes dieux prirent séance sous ces portiques majestueux.\n-Virgile, L'Énéide, Livre X "},
     {TR_BUILDING_GRAND_TEMPLE_PHASE_1, "(Podium)"},
     {TR_BUILDING_GRAND_TEMPLE_PHASE_2, "(Portico)"},
     {TR_BUILDING_GRAND_TEMPLE_PHASE_3, "(Cella)"},
@@ -717,7 +717,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "L'équipe Blanche - fondée par d'anciens gladiateurs. Le combat coule dans leurs veines, et même en hommes libres, ils ne vivent que pour la compétition." },
     {TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION, "L'équipe Verte - les descendants des cavaliers 'Celeres', au temps jadis du Royaume de Rome. Ils se considèrent comme l'élite parmi l'élite." },
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Reprendre la livraison des biens"},
-    {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
+    {TR_CONFIG_DIGIT_SEPARATOR, "Afficher un séparateur de milliers pour les nombres"},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
