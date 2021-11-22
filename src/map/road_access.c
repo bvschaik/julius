@@ -42,14 +42,14 @@ int map_has_road_access(int x, int y, int size, map_point *road)
 int map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road)
 {
     switch (rotation) {
-        case 1:
+        case 3:
             x = x - size + 1;
             break;
         case 2:
             x = x - size + 1;
             y = y - size + 1;
             break;
-        case 3:
+        case 1:
             y = y - size + 1;
             break;
         default:
