@@ -4,7 +4,7 @@
 #include "city/constants.h"
 #include "core/buffer.h"
 
-#define THEATER_COVERAGE 500
+)#define THEATER_COVERAGE 500
 #define THEATER_UPGRADE_BONUS_COVERAGE 700
 #define AMPHITHEATER_COVERAGE 1200
 #define TAVERN_COVERAGE 1200
