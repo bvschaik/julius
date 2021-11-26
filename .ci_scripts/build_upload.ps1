@@ -71,6 +71,8 @@ if ($repo -eq "release") {
         }
     }
 
+    cd ..\..\..
+
     xcopy /ei res\maps .\maps
     xcopy /ei res\manual .\manual
     7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll assets maps manual
@@ -125,6 +127,7 @@ if (!$packed_assets) {
             Move-Item -Path assets -Destination ..\..\..
         }
     }
+    cd ..\..\..
 }
 
 $assets_file = "assets-$version-$repo.zip"
