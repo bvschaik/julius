@@ -82,7 +82,7 @@ static void draw_request(int index, const scenario_request *request)
         int amount_stored = city_resource_get_amount_including_granaries(request->resource,
             request->amount, &using_granaries);
         int y_offset = 120 + 42 * index;
-        width = text_draw_number(amount_stored, '@', " ", 40, y_offset, FONT_NORMAL_WHITE, COLOR_WHITE);
+        width = text_draw_number(amount_stored, '@', " ", 40, y_offset, FONT_NORMAL_WHITE, 0);
         if (using_granaries) {
             width += text_draw(translation_for(TR_ADVISOR_IN_STORAGE), 40 + width, y_offset, FONT_NORMAL_WHITE, 0);
         } else {
