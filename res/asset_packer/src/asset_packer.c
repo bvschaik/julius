@@ -249,6 +249,8 @@ static void create_frame_xml_line(FILE *xml_file, const layer *l)
     add_attribute_int(xml_file, "src_y", l->src_y);
     add_attribute_int(xml_file, "width", l->width);
     add_attribute_int(xml_file, "height", l->height);
+    add_attribute_enum(xml_file, "invert", l->invert, LAYER_INVERT, 3);
+    add_attribute_enum(xml_file, "rotate", l->rotate, LAYER_ROTATE, 3);
 
     fprintf(xml_file, "/>%s", FORMAT_NEWLINE);
 }

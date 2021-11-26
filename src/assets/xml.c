@@ -26,7 +26,7 @@ static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH]
     { { "id", "src", "width", "height", "group", "image" } }, // image
     { { "src", "group", "image", "src_x", "src_y", "x", "y", "width", "height", "invert", "rotate", "part" }, // layer
     { "frames", "speed", "reversible", "x", "y" } }, // animation
-    { { "src", "src_x", "src_y", "width", "height", "group", "image" } } // frame
+    { { "src", "src_x", "src_y", "width", "height", "group", "image", "invert", "rotate" } } // frame
 };
 
 static void xml_start_assetlist_element(const char **attributes);
@@ -270,6 +270,8 @@ static void xml_start_frame_element(const char **attributes)
     const char *id = 0;
     int src_x = 0;
     int src_y = 0;
+    layer_invert_type invert;
+    layer_rotate_type rotate;
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][0]) == 0) {
             path = attributes[i + 1];
@@ -285,11 +287,27 @@ static void xml_start_frame_element(const char **attributes)
             group = attributes[i + 1];
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][6]) == 0) {
             id = attributes[i + 1];
+        } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][7]) == 0) {
+            if (strcmp(attributes[i + 1], "horizontal") == 0) {
+                invert = INVERT_HORIZONTAL;
+            } else if (strcmp(attributes[i + 1], "vertical") == 0) {
+                invert = INVERT_VERTICAL;
+            } else if (strcmp(attributes[i + 1], "both") == 0) {
+                invert = INVERT_BOTH;
+            }
+        } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[8][0][8]) == 0) {
+            if (strcmp(attributes[i + 1], "90") == 0) {
+                rotate = ROTATE_90_DEGREES;
+            } else if (strcmp(attributes[i + 1], "180") == 0) {
+                rotate = ROTATE_180_DEGREES;
+            } else if (strcmp(attributes[i + 1], "270") == 0) {
+                rotate = ROTATE_270_DEGREES;
+            }
         }
     }
     img->last_layer = &img->first_layer;
     if (!asset_image_add_layer(img, path, group, id, src_x, src_y,
-        0, 0, img->img.width, img->img.height, INVERT_NONE, ROTATE_NONE, PART_BOTH)) {
+        0, 0, img->img.width, img->img.height, invert, rotate, PART_BOTH)) {
         img->active = 0;
         return;
     }
