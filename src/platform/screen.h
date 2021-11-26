@@ -22,6 +22,7 @@ void platform_screen_clear(void);
 void platform_screen_update(void);
 void platform_screen_render(void);
 
-void platform_screen_generate_mouse_cursor_texture(int cursor_id, int scale, const color_t *cursor_colors);
+void platform_screen_generate_mouse_cursor_texture(int cursor_id, int size, const color_t *pixels,
+    int hotspot_x, int hotspot_y);
 
 #endif // PLATFORM_SCREEN_H

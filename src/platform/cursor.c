@@ -14,9 +14,6 @@
 
 #include <string.h>
 
-static char cursor_path[64] = "Color_Cursors/";
-static size_t cursor_path_offset;
-
 static struct {
     SDL_Cursor *cursors[CURSOR_MAX];
     SDL_Surface *surfaces[CURSOR_MAX];
@@ -35,16 +32,36 @@ static const color_t mouse_colors[] = {
     ALPHA_OPAQUE | COLOR_WHITE
 };
 
+static const cursor *get_valid_cursor(const cursor *c)
+{
+    const cursor *current = c;
+    for (int i = 0; i < CURSOR_TYPE_MAX; i++, current++) {
+        if (current->type == CURSOR_TYPE_PNG &&
+            (!config_get(CONFIG_SCREEN_COLOR_CURSORS) || !png_load(current->data))) {
+            continue;
+        }
+        return current;
+    }
+    return 0;
+}
+
 static SDL_Surface *generate_cursor_surface(const cursor *c)
 {
     int size = platform_cursor_get_texture_size(c);
     SDL_Surface *cursor_surface =
         SDL_CreateRGBSurface(0, size, size, 32,
         COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
+    if (!cursor_surface) {
+        return 0;
+    }
     color_t *pixels = cursor_surface->pixels;
     SDL_memset(pixels, 0, sizeof(color_t) * size * size);
-    if (!config_get(CONFIG_SCREEN_COLOR_CURSORS) ||
-        !png_read(cursor_path, pixels, size, size)) {
+    if (c->type == CURSOR_TYPE_PNG) {
+        if (!png_read(c->data, pixels, c->offset_x, c->offset_y,
+                c->width, c->height, 0, 0, size, c->rotated)) {
+            SDL_FreeSurface(cursor_surface);
+        }
+    } else {
         for (int y = 0; y < c->height; y++) {
             for (int x = 0; x < c->width; x++) {
                 pixels[y * size + x] = mouse_colors[c->data[y * c->width + x] - 32];
@@ -69,19 +86,21 @@ void system_init_cursors(int scale_percentage)
 {
     data.current_scale = get_cursor_scale(scale_percentage);
     for (int i = 0; i < CURSOR_MAX; i++) {
-        const cursor *c = input_cursor_data(i, data.current_scale);
+        const cursor *list = input_cursor_data(i, data.current_scale);
         if (data.surfaces[i]) {
             SDL_FreeSurface(data.surfaces[i]);
         }
         if (data.cursors[i]) {
             SDL_FreeCursor(data.cursors[i]);
         }
+        const cursor *c = get_valid_cursor(list);
         data.surfaces[i] = generate_cursor_surface(c);
 #ifndef PLATFORM_USE_SOFTWARE_CURSOR
         data.cursors[i] = SDL_CreateColorCursor(data.surfaces[i], c->hotspot_x, c->hotspot_y);
 #else
         SDL_ShowCursor(SDL_DISABLE);
-        platform_screen_generate_mouse_cursor_texture(i, data.current_scale, data.surfaces[i]->pixels);
+        platform_screen_generate_mouse_cursor_texture(i, data.surfaces[i]->w, data.surfaces[i]->pixels,
+            c->hotspot_x, c->hotspot_y);
 #endif
     }
     system_set_cursor(data.current_shape);
@@ -107,24 +126,8 @@ cursor_scale platform_cursor_get_current_scale(void)
 
 int platform_cursor_get_texture_size(const cursor *c)
 {
-    int width;
-    int height;
-    if (config_get(CONFIG_SCREEN_COLOR_CURSORS)) {
-        if (!cursor_path_offset) {
-            cursor_path_offset = strlen(cursor_path);
-        }
-        strncpy(cursor_path + cursor_path_offset, c->png_path, 64 - cursor_path_offset);
-        if (!png_get_image_size(cursor_path, &width, &height)) {
-            width = c->width;
-            height = c->height;
-        }
-    } else {
-        width = c->width;
-        height = c->height;
-    }
-
     int size = 32;
-    while (size < width || size < height) {
+    while (size < c->width || size < c->height) {
         size *= 2;
     }
     return size;

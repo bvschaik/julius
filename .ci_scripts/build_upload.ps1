@@ -48,10 +48,33 @@ if ("${env:COMPILER}" -eq "msvc") {
 
 $deploy_file = "augustus-$version-$suffix.zip"
 
+$packed_assets = false
+
 if ($repo -eq "release") {
+    echo "Packing the assets"
+
+    cd .\res\asset_packer
+    mkdir build
+    cd build
+
+    $env:path = "C:\msys64\mingw32\bin;${env:path}"
+    cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -D CMAKE_C_COMPILER=i686-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
+    cmake --build . -j 4 --config Release
+    if ($?) {
+        Move-Item -Path ..\..\..\assets
+        .\asset_packer.exe
+        if ($?) {
+            Move-Item -Path packed_assets -Destination ..\..\..\assets
+        } else {
+            echo "Unable to pack the assets. Using the original folder"
+            Move-Item -Path assets -Destination ..\..\..
+        }
+    }
+
     xcopy /ei res\maps .\maps
     xcopy /ei res\manual .\manual
     7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll assets maps manual
+    $packed_assets = true
 } else {
     7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
 }
@@ -81,6 +104,28 @@ if (!$?) {
     throw "Unable to upload"
 }
 echo "Uploaded. URL: https://augustus.josecadete.net/$repo.html"
+
+if (!$packed_assets) {
+    echo "Packing the assets"
+
+    cd .\res\asset_packer
+    mkdir build
+    cd build
+
+    $env:path = "C:\msys64\mingw32\bin;${env:path}"
+    cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -D CMAKE_C_COMPILER=i686-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
+    cmake --build . -j 4 --config Release
+    if ($?) {
+        Move-Item -Path ..\..\..\assets
+        .\asset_packer.exe
+        if ($?) {
+            Move-Item -Path packed_assets -Destination ..\..\..\assets
+        } else {
+            echo "Unable to pack the assets. Using the original folder"
+            Move-Item -Path assets -Destination ..\..\..
+        }
+    }
+}
 
 $assets_file = "assets-$version-$repo.zip"
 7z a "$assets_file" assets

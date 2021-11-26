@@ -24,6 +24,9 @@ ext/SDL2/*/
 .vscode
 ext/mpg123*
 
+# Asset packer
+/res/asset_packer*/build*/
+
 # Android
 *.iml
 .gradle

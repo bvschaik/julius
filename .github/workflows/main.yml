@@ -93,6 +93,7 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEYSTORE_KEY_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_KEY_PASSWORD }}
         run: |
+          ./.ci_scripts/pack_assets.sh
           ./.ci_scripts/run_cmake.sh
           ./.ci_scripts/run_build.sh
       - name: Upload development artifacts

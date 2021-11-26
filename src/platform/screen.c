@@ -8,7 +8,6 @@
 #include "graphics/graphics.h"
 #include "graphics/menu.h"
 #include "graphics/screen.h"
-#include "input/cursor.h"
 #include "platform/android/android.h"
 #include "platform/cursor.h"
 #include "platform/haiku/haiku.h"
@@ -25,7 +24,13 @@ static struct {
     SDL_Renderer *renderer;
     SDL_Texture *texture_ui;
     SDL_Texture *texture_city;
-    SDL_Texture *cursors[CURSOR_MAX];
+    struct {
+        SDL_Texture *texture;
+        int size;
+        struct {
+            int x, y;
+        } hotspot;
+    } cursors[CURSOR_MAX];
 } SDL;
 
 static struct {
@@ -425,18 +430,14 @@ static void draw_software_mouse_cursor(void)
 {
     const mouse *mouse = mouse_get();
     if (!mouse->is_touch) {
-        cursor_shape current_cursor_shape = platform_cursor_get_current_shape();
-        const cursor *c = input_cursor_data(current_cursor_shape, platform_cursor_get_current_scale());
-        if (c) {
-            int size = platform_cursor_get_texture_size(c);
-            size = calc_adjust_with_percentage(size, calc_percentage(100, scale_percentage));
-            SDL_Rect dst;
-            dst.x = mouse->x - c->hotspot_x;
-            dst.y = mouse->y - c->hotspot_y;
-            dst.w = size;
-            dst.h = size;
-            SDL_RenderCopy(SDL.renderer, SDL.cursors[current_cursor_shape], NULL, &dst);
-        }
+        cursor_shape current = platform_cursor_get_current_shape();
+        int size = calc_adjust_with_percentage(SDL.cursors[current].size, calc_percentage(100, scale_percentage));
+        SDL_Rect dst;
+        dst.x = mouse->x - SDL.cursors[current].hotspot.x;
+        dst.y = mouse->y - SDL.cursors[current].hotspot.y;
+        dst.w = size;
+        dst.h = size;
+        SDL_RenderCopy(SDL.renderer, SDL.cursors[current].texture, NULL, &dst);
     }
 }
 #endif
@@ -488,22 +489,24 @@ void platform_screen_render(void)
     SDL_RenderPresent(SDL.renderer);
 }
 
-void platform_screen_generate_mouse_cursor_texture(int cursor_id, int scale, const color_t *cursor_colors)
+void platform_screen_generate_mouse_cursor_texture(int cursor_id, int size, const color_t *pixels,
+    int hotspot_x, int hotspot_y)
 {
-    if (SDL.cursors[cursor_id]) {
-        SDL_DestroyTexture(SDL.cursors[cursor_id]);
-        SDL.cursors[cursor_id] = 0;
+    if (SDL.cursors[cursor_id].texture) {
+        SDL_DestroyTexture(SDL.cursors[cursor_id].texture);
+        SDL_memset(&SDL.cursors[cursor_id], 0, sizeof(SDL.cursors[cursor_id]));
     }
-    const cursor *c = input_cursor_data(cursor_id, scale);
-    int size = platform_cursor_get_texture_size(c);
-    SDL.cursors[cursor_id] = SDL_CreateTexture(SDL.renderer,
+    SDL.cursors[cursor_id].texture = SDL_CreateTexture(SDL.renderer,
         SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STATIC,
         size, size);
-    if (!SDL.cursors[cursor_id]) {
+    if (!SDL.cursors[cursor_id].texture) {
         return;
     }
-    SDL_UpdateTexture(SDL.cursors[cursor_id], NULL, cursor_colors, size * sizeof(color_t));
-    SDL_SetTextureBlendMode(SDL.cursors[cursor_id], SDL_BLENDMODE_BLEND);
+    SDL_UpdateTexture(SDL.cursors[cursor_id].texture, NULL, pixels, size * sizeof(color_t));
+    SDL.cursors[cursor_id].hotspot.x = hotspot_x;
+    SDL.cursors[cursor_id].hotspot.y = hotspot_y;
+    SDL.cursors[cursor_id].size = size;
+    SDL_SetTextureBlendMode(SDL.cursors[cursor_id].texture, SDL_BLENDMODE_BLEND);
 }
 
 void system_set_mouse_position(int *x, int *y)

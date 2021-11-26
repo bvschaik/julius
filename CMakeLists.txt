@@ -243,6 +243,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/file.c
     ${PROJECT_SOURCE_DIR}/src/core/hotkey_config.c
     ${PROJECT_SOURCE_DIR}/src/core/image.c
+    ${PROJECT_SOURCE_DIR}/src/core/image_packer.c
     ${PROJECT_SOURCE_DIR}/src/core/io.c
     ${PROJECT_SOURCE_DIR}/src/core/lang.c
     ${PROJECT_SOURCE_DIR}/src/core/locale.c

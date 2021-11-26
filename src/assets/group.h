@@ -8,6 +8,9 @@
 
 typedef struct {
     char name[XML_STRING_MAX_LENGTH];
+#ifdef BUILDING_ASSET_PACKER
+    char path[XML_STRING_MAX_LENGTH];
+#endif
     int first_image_index;
     int last_image_index;
 } image_groups;
@@ -18,6 +21,8 @@ image_groups *group_get_new(void);
 void group_unload_current(void);
 
 image_groups *group_get_current(void);
+
+int group_get_total(void);
 
 image_groups *group_get_from_id(int id);
 image_groups *group_get_from_name(const char *name);

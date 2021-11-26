@@ -43,13 +43,12 @@ void group_unload_current(void)
 
 image_groups *group_get_from_id(int id)
 {
-    for (int i = 0; i < data.total_groups; i++) {
-        image_groups *current = &data.groups[i];
-        if (current->first_image_index >= id && current->last_image_index <= id) {
-            return current;
-        }
-    }
-    return 0;
+    return &data.groups[id];
+}
+
+int group_get_total(void)
+{
+    return data.total_groups;
 }
 
 image_groups *group_get_from_name(const char *name)

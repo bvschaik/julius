@@ -3,6 +3,8 @@
 
 #include "graphics/window.h"
 
+#define CURSOR_TYPE_MAX 3
+
 typedef enum {
     CURSOR_ARROW = 0,
     CURSOR_SHOVEL = 1,
@@ -13,15 +15,24 @@ typedef enum {
 typedef enum {
     CURSOR_SCALE_1 = 0,
     CURSOR_SCALE_1_5 = 1,
-    CURSOR_SCALE_2 = 2
+    CURSOR_SCALE_2 = 2,
+    CURSOR_SCALE_MAX = 3
 } cursor_scale;
 
+typedef enum {
+    CURSOR_TYPE_PIXMAP = 0,
+    CURSOR_TYPE_PNG = 1,
+} cursor_type;
+
 typedef struct {
-    int hotspot_x;
-    int hotspot_y;
+    cursor_type type;
     int width;
     int height;
-    const char *png_path;
+    int offset_x;
+    int offset_y;
+    int hotspot_x;
+    int hotspot_y;
+    int rotated;
     const char *data;
 } cursor;
 
