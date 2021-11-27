@@ -308,6 +308,7 @@ static void button_ok_cancel(int is_ok, int param2)
             if (!game_file_write_saved_game(filename)) {
                 window_plain_message_dialog_show(TR_SAVEGAME_NOT_ABLE_TO_SAVE_TITLE,
                     TR_SAVEGAME_NOT_ABLE_TO_SAVE_MESSAGE, 1);
+                return;
             }
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {

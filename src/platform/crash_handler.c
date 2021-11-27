@@ -33,7 +33,7 @@ static void display_crash_message(void)
         "- The Augustus dev team");
 }
 
-#if defined(__GNUC__)
+#if defined(__GNUC__) && !defined(_WIN32)
 
 #include <signal.h>
 
