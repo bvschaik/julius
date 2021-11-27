@@ -101,7 +101,8 @@ const uint8_t *smacker_get_frame_video(const smacker s);
 int smacker_get_frame_audio_size(const smacker s, int track);
 
 /**
- * Get audio data for the current frame
+ * Get audio data for the current frame.
+ * Note that for 16-bit audio, the bytes are in system endian-ness.
  * @param s Smacker object
  * @param track Audio track (0-6)
  * @return Audio data
