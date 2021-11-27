@@ -295,7 +295,7 @@ static void xml_start_frame_element(const char **attributes)
             } else if (strcmp(attributes[i + 1], "both") == 0) {
                 invert = INVERT_BOTH;
             }
-        } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[8][0][8]) == 0) {
+        } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][8]) == 0) {
             if (strcmp(attributes[i + 1], "90") == 0) {
                 rotate = ROTATE_90_DEGREES;
             } else if (strcmp(attributes[i + 1], "180") == 0) {
