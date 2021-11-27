@@ -597,6 +597,8 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_TOURIST,  "Traveller"},
     {TR_SAVEGAME_LARGER_VERSION_TITLE, "Incompatible savegame version" },
     {TR_SAVEGAME_LARGER_VERSION_MESSAGE, "The savegame you're trying to load is for a more recent version of Augustus.\nPlease update Augustus to the most recent version." },
+    {TR_SAVEGAME_NOT_ABLE_TO_SAVE_TITLE, "Unable to save the game" },
+    {TR_SAVEGAME_NOT_ABLE_TO_SAVE_MESSAGE, "It was not possible to save the game.\nIt may be because the folder where Caesar 3 keeps the savegames requires administrator access.\nPlease either change the Caesar 3 folder to a place which doesn't require administrator access or run Augustus as administrator (not recommended)." },
     {TR_BUILDING_COLONNADE, "Colonnade" },
     {TR_BUILDING_LARARIUM, "Lararium" },
     {TR_WINDOW_BUILDING_LARARIUM_DESC, "This small shrine is dedicated to the Lares - the ancestral spirits of the Roman people. Small sacrifices and prayers may be made here."},

@@ -286,7 +286,8 @@ static void button_ok_cancel(int is_ok, int param2)
                 data.message_not_exist_start_time = time_get_millis();
                 return;
             } else if (result == -1) {
-                window_plain_message_dialog_show(TR_SAVEGAME_LARGER_VERSION_TITLE, TR_SAVEGAME_LARGER_VERSION_MESSAGE, 1);
+                window_plain_message_dialog_show(TR_SAVEGAME_LARGER_VERSION_TITLE,
+                    TR_SAVEGAME_LARGER_VERSION_MESSAGE, 1);
                 return;
             }
         } else if (data.type == FILE_TYPE_SCENARIO) {
@@ -304,7 +305,10 @@ static void button_ok_cancel(int is_ok, int param2)
             if (!file_has_extension(filename, saved_game_data_expanded.extension)) {
                 file_append_extension(filename, saved_game_data_expanded.extension);
             }
-            game_file_write_saved_game(filename);
+            if (!game_file_write_saved_game(filename)) {
+                window_plain_message_dialog_show(TR_SAVEGAME_NOT_ABLE_TO_SAVE_TITLE,
+                    TR_SAVEGAME_NOT_ABLE_TO_SAVE_MESSAGE, 1);
+            }
             window_city_show();
         } else if (data.type == FILE_TYPE_SCENARIO) {
             if (!file_has_extension(filename, scenario_data.extension)) {
