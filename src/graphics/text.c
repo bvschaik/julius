@@ -334,26 +334,14 @@ int text_draw_number(int value, char prefix, const char *postfix, int x, int y, 
     const font_definition *def = font_definition_for(font);
     int current_x = x;
 
-    if (prefix > ' ') {
-        int num_bytes = 1;
-        int letter_id = font_letter_id(def, &prefix, &num_bytes);
-
-        int width;
-        if (prefix == ' ' || prefix == '_' || letter_id < 0) {
-            width = def->space_width;
-        } else {
-            const image *img = image_letter(letter_id);
-            int height = def->image_y_offset(prefix, img->height, def->line_height);
-            image_draw_letter(def->font, letter_id, current_x, y - height, color);
-            width = def->letter_spacing + img->width;
-        }
-
-        current_x += width;
+    if (prefix) {
+        uint8_t prefix_str[2] = { prefix, 0 };
+        current_x += text_draw(prefix_str, current_x, y, font, color);
     }
 
     uint8_t buffer[NUMBER_BUFFER_LENGTH];
     int length = string_from_int(buffer, value, 0);
-    const char *str = buffer;
+    uint8_t *str = buffer;
 
     int separator_pixels = config_get(CONFIG_UI_DIGIT_SEPARATOR) * 3;
     
@@ -379,7 +367,9 @@ int text_draw_number(int value, char prefix, const char *postfix, int x, int y, 
         length -= num_bytes;
     }
 
-    current_x += text_draw(postfix, current_x, y, font, color);
+    if (postfix && *postfix) {
+        current_x += text_draw(string_from_ascii(postfix), current_x, y, font, color);
+    }
 
     return current_x - x;
 }
@@ -392,7 +382,9 @@ int text_draw_money(int value, int x_offset, int y_offset, font_t font)
     } else {
         postfix = string_from_ascii("Dn");
     }
-    return text_draw_number(value, '@', postfix, x_offset, y_offset, font, 0);
+    int offset = text_draw_number(value, '@', 0, x_offset, y_offset, font, 0);
+    offset += text_draw(postfix, x_offset + offset, y_offset, font, 0);
+    return offset;
 }
 
 void text_draw_with_money(const uint8_t *text, int value, const char *prefix, const char *postfix,

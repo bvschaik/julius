@@ -270,8 +270,8 @@ static void xml_start_frame_element(const char **attributes)
     const char *id = 0;
     int src_x = 0;
     int src_y = 0;
-    layer_invert_type invert;
-    layer_rotate_type rotate;
+    layer_invert_type invert = INVERT_NONE;
+    layer_rotate_type rotate = ROTATE_NONE;
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][0]) == 0) {
             path = attributes[i + 1];
