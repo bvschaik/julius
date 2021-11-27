@@ -336,7 +336,7 @@ int text_draw_number(int value, char prefix, const char *postfix, int x, int y, 
 
     if (prefix) {
         uint8_t prefix_str[2] = { prefix, 0 };
-        current_x += text_draw(prefix_str, current_x, y, font, color);
+        current_x += text_draw(prefix_str, current_x, y, font, color) - def->space_width;
     }
 
     uint8_t buffer[NUMBER_BUFFER_LENGTH];
@@ -369,6 +369,8 @@ int text_draw_number(int value, char prefix, const char *postfix, int x, int y, 
 
     if (postfix && *postfix) {
         current_x += text_draw(string_from_ascii(postfix), current_x, y, font, color);
+    } else {
+        current_x += def->space_width;
     }
 
     return current_x - x;
