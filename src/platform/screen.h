@@ -25,4 +25,6 @@ void platform_screen_render(void);
 void platform_screen_generate_mouse_cursor_texture(int cursor_id, int size, const color_t *pixels,
     int hotspot_x, int hotspot_y);
 
+void platform_screen_show_error_message_box(const char *title, const char *message);
+
 #endif // PLATFORM_SCREEN_H

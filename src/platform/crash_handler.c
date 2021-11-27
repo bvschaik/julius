@@ -1,16 +1,45 @@
 #include "game/system.h"
 
 #include "platform/platform.h"
+#include "platform/screen.h"
 #include "core/log.h"
 
 #include "SDL.h"
 
-#if defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && \
-    !defined(__vita__) && !defined(__SWITCH__) && !defined(__ANDROID__) && \
-    !defined(__HAIKU__) && !defined(__EMSCRIPTEN__)
+#if (defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && \
+   !defined(__vita__) && !defined(__SWITCH__) && !defined(__ANDROID__) && \
+   !defined(__HAIKU__) && !defined(__EMSCRIPTEN__)) || \
+    (defined(_WIN32) && defined(_M_X64))
+#define HAS_STACK_TRACE
+#endif
+
+static void display_crash_message(void)
+{
+    platform_screen_show_error_message_box("Augustus has crashed :(",
+        "There was an unrecoverable error in Augustus, which will now close.\n\n"
+#ifdef HAS_STACK_TRACE
+        "The piece of code that caused the crash has been saved to augustus-log.txt.\n\n"
+#endif
+        "If you can, please create an issue by going to:\n\n"
+        "https://github.com/Keriew/augustus/issues/new \n\n"
+        "Please attach "
+#ifdef HAS_STACK_TRACE
+        "augustus-log.txt and "
+#endif
+        "your city save to the issue report.\n\n"
+        "Also, please describe what you were doing when the game crashed.\n\n"
+        "With your help, we can avoid this crash in the future.\n\n"
+        "Thanks!\n\n"
+        "- The Augustus dev team");
+}
+
+#if defined(__GNUC__)
+
+#include <signal.h>
+
+#ifdef HAS_STACK_TRACE
 
 #include <execinfo.h>
-#include <signal.h>
 
 static void backtrace_print(void)
 {
@@ -23,11 +52,18 @@ static void backtrace_print(void)
         log_info("", stack[i], 0);
     }
 }
+#else
+static void backtrace_print(void)
+{
+    log_info("No stack trace available", 0, 0);
+}
+#endif
 
 static void crash_handler(int sig)
 {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Oops, crashed with signal %d :(", sig);
     backtrace_print();
+    display_crash_message();
     exit_with_status(1);
 }
 
@@ -36,11 +72,13 @@ void system_setup_crash_handler(void)
     signal(SIGSEGV, crash_handler);
 }
 
-#elif defined(_WIN32) && defined(_M_X64)
+#elif defined(_WIN32)
 
 #include <windows.h>
 #include <imagehlp.h>
 #include <stdio.h>
+
+#ifdef HAS_STACK_TRACE
 
 #define log_info_sprintf(...) \
     snprintf(crash_info, 256, __VA_ARGS__); \
@@ -96,11 +134,6 @@ static const char *print_exception_name(DWORD exception_code)
             return "Invalid handle";
     }
     return "Unknown exception";
-}
-
-static void osystem_error(const char *title, const char *text)
-{
-    MessageBox(NULL, text, title, MB_OK | MB_ICONERROR);
 }
 
 static void print_stacktrace(LPEXCEPTION_POINTERS e)
@@ -174,11 +207,15 @@ static void print_stacktrace(LPEXCEPTION_POINTERS e)
     GlobalFree(pSym);
 }
 
+#endif
+
 /** Called by windows if an exception happens. */
 static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e)
 {
     // Prologue.
     log_error("Oops, crashed :(", 0, 0);
+
+#ifdef _M_X64
 
     // Initialize IMAGEHLP.DLL.
     SymInitialize(GetCurrentProcess(), ".", TRUE);
@@ -188,16 +225,12 @@ static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e)
     // Unintialize IMAGEHLP.DLL
     SymCleanup(GetCurrentProcess());
 
+#else
+    log_info("No stack trace available", 0, 0);
+#endif
+
     // Inform user
-    osystem_error("Augustus has crashed :(",
-        "There was an unrecoverable error in Augustus, which will now close.\n\n"
-        "The piece of code that caused the crash has been saved to augustus-log.txt.\n\n"
-        "If you can, please create an issue by going to:\n\n"
-        "https://github.com/Keriew/augustus/issues/new \n\n"
-        "Please attach augustus-log.txt and your city save to the issue report.\n\n"
-        "With your help, we can avoid this crash in the future.\n\n"
-        "Thanks!\n\n"
-        "- The Augustus dev team");
+    display_crash_message();
 
     // this seems to silently close the application
     return EXCEPTION_EXECUTE_HANDLER;

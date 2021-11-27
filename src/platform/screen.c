@@ -509,6 +509,11 @@ void platform_screen_generate_mouse_cursor_texture(int cursor_id, int size, cons
     SDL_SetTextureBlendMode(SDL.cursors[cursor_id].texture, SDL_BLENDMODE_BLEND);
 }
 
+void platform_screen_show_error_message_box(const char *title, const char *message)
+{
+    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, title, message, SDL.window);
+}
+
 void system_set_mouse_position(int *x, int *y)
 {
     *x = calc_bound(*x, 0, screen_width() - 1);
