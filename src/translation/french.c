@@ -597,6 +597,8 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_TOURIST,  "Voyageur"},
     {TR_SAVEGAME_LARGER_VERSION_TITLE, "Version de sauvegarde incompatible" },
     {TR_SAVEGAME_LARGER_VERSION_MESSAGE, "La sauvegarde que vous essayez de charger concerne une version différente d'Augustus.\nVeuillez mettre à jour Augustus vers la version la plus récente." },
+    {TR_SAVEGAME_NOT_ABLE_TO_SAVE_TITLE, "Impossible de sauvegarder la partie" },
+    {TR_SAVEGAME_NOT_ABLE_TO_SAVE_MESSAGE, "La sauvegarde n'a pas pu être effectuée.\nIl se peut que le dossier dans lequel sont conservées les sauvegardes de Caesar 3 nécessite un accès administrateur.\nVeuillez installer Caesar 3 dans un répertoire ne nécessitant pas de droits d'administrateur ou exécutez Augustus en tant qu'administrateur (non recommandé)." },
     {TR_BUILDING_COLONNADE, "Colonnade" },
     {TR_BUILDING_LARARIUM, "Laraire" },
     {TR_WINDOW_BUILDING_LARARIUM_DESC, "Ce petit sanctuaire est dédié aux Lares, esprits ancestraux du peuple romain. De petits sacrifices et prières peuvent y être effectués."},
