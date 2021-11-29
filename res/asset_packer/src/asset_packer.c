@@ -5,6 +5,7 @@
 #include "assets/image.h"
 #include "assets/layer.h"
 #include "assets/xml.h"
+#include "core/array.h"
 #include "core/dir.h"
 #include "core/image_packer.h"
 #include "core/png_read.h"
@@ -26,7 +27,7 @@
 #include <sys/stat.h>
 #endif
 
-#define ASSETS_IMAGE_SIZE 4096
+#define ASSETS_IMAGE_SIZE 2048
 #define CURSOR_IMAGE_SIZE 256
 #define NEW_ASSETS_DIR "packed_assets"
 #define CURSORS_DIR "Color_Cursors"
@@ -51,6 +52,27 @@ static color_t *final_image_pixels;
 static unsigned int final_image_width;
 static unsigned int final_image_height;
 
+typedef struct {
+    int id;
+    char path[FILE_NAME_MAX];
+    image_packer_rect *rect;
+    color_t *pixels;
+} packed_asset;
+
+#define PACKED_ASSETS_BLOCK_SIZE 256
+
+static array(packed_asset) packed_assets;
+
+void new_packed_asset(packed_asset *asset, int index)
+{
+    asset->id = index;
+}
+
+int packed_asset_active(const packed_asset *asset)
+{
+    return asset->path != 0;
+}
+
 static int create_new_directory(const char *name)
 {
 #ifdef _WIN32
@@ -67,13 +89,6 @@ static int create_new_directory(const char *name)
     }
 #endif
 }
-
-static void copy_asset_to_final_image(const layer *l, const image_packer_rect *rect)
-{
-    png_read(l->asset_image_path, final_image_pixels, 0, 0, rect->input.width, rect->input.height,
-        rect->output.x, rect->output.y, final_image_width, rect->output.rotated);
-}
-
 
 static void save_final_image(const char *path)
 {
@@ -145,24 +160,99 @@ static void save_final_image(const char *path)
     png_destroy_write_struct(&png_ptr, &info_ptr);
 }
 
-int is_extra_asset(const layer *l)
+static packed_asset *get_asset_image_from_list(const layer *l)
 {
-    return l->asset_image_path != 0 && l->width != 0 && l->height != 0;
+    packed_asset *asset;
+    array_foreach(packed_assets, asset) {
+        if (strcmp(l->asset_image_path, asset->path) == 0) {
+            return asset;
+        }
+    }
+    return 0;
 }
 
-static unsigned int count_assets_in_group(int group_id)
+static void add_asset_image_to_list(layer *l)
 {
-    int extra_assets = 0;
+    packed_asset *asset = get_asset_image_from_list(l);
+    if (!asset) {
+        array_new_item(packed_assets, 0, asset);
+        if (!asset) {
+            log_error("Out of memory.", 0, 0);
+            return;
+        }
+        snprintf(asset->path, FILE_NAME_MAX, "%s", l->asset_image_path);
+    }
+    l->calculated_image_id = asset->id;
+}
+
+static void get_assets_for_group(int group_id)
+{
     const image_groups *group = group_get_from_id(group_id);
     for (int image_id = group->first_image_index; image_id <= group->last_image_index; image_id++) {
-        const asset_image *image = asset_image_get_from_id(image_id);
-        for (const layer *l = &image->first_layer; l; l = l->next) {
-            if (is_extra_asset(l)) {
-                extra_assets++;
+        asset_image *image = asset_image_get_from_id(image_id);
+        for (layer *l = &image->first_layer; l; l = l->next) {
+            if (l->asset_image_path) {
+                add_asset_image_to_list(l);
             }
         }
     }
-    return extra_assets;
+}
+
+static void populate_asset_rects(image_packer *packer)
+{
+    packed_asset *asset;
+    array_foreach(packed_assets, asset)
+    {
+        int width, height;
+        asset->rect = &packer->rects[asset->id];
+        if (!png_get_image_size(asset->path, &width, &height)) {
+            return;
+        }
+        if (!width || !height) {
+            return;
+        }
+        asset->pixels = malloc(sizeof(color_t) * width * height);
+        if (!asset->pixels) {
+            log_error("Out of memory.", 0, 0);
+            return;
+        }
+        if (!png_read(asset->path, asset->pixels, 0, 0, width, height, 0, 0, width, 0)) {
+            free(asset->pixels);
+            asset->pixels = 0;
+            return;
+        }
+        asset->rect->input.width = width;
+        asset->rect->input.height = height;
+    }
+}
+
+static void copy_to_final_image(const color_t *pixels, const image_packer_rect *rect)
+{
+    if (!rect->output.rotated) {
+        for (unsigned int y = 0; y < rect->input.height; y++) {
+            const color_t *src_pixel = &pixels[y * rect->input.width];
+            color_t *dst_pixel = &final_image_pixels[(y + rect->output.y) * final_image_width + rect->output.x];
+            memcpy(dst_pixel, src_pixel, rect->input.width * sizeof(color_t));
+        }
+    } else {
+        for (unsigned int y = 0; y < rect->input.height; y++) {
+            const color_t *src_pixel = &pixels[y * rect->input.width];
+            color_t *dst_pixel = &final_image_pixels[(rect->output.y + rect->input.width - 1) *
+                final_image_width + y + rect->output.x];
+            for (unsigned int x = 0; x < rect->input.width; x++) {
+                *dst_pixel = *src_pixel++;
+                dst_pixel -= final_image_width;
+            }
+        }
+    }
+}
+
+static void create_final_image(const image_packer *packer)
+{
+    packed_asset *asset;
+    array_foreach(packed_assets, asset) {
+        copy_to_final_image(asset->pixels, asset->rect);
+    }
 }
 
 static void add_attribute_int(FILE *dest, const char *name, int value)
@@ -255,18 +345,21 @@ static void create_frame_xml_line(FILE *xml_file, const layer *l)
     fprintf(xml_file, "/>%s", FORMAT_NEWLINE);
 }
 
-static int pack_layer(const image_packer *packer, layer *l, int rect_id)
+static void pack_layer(const image_packer *packer, layer *l)
 {
-    if (!is_extra_asset(l)) {
-        return 0;
+    if (!l->asset_image_path) {
+        return;
     }
-    image_packer_rect *rect = &packer->rects[rect_id];
+    image_packer_rect *rect = &packer->rects[l->calculated_image_id];
     l->src_x = rect->output.x;
     l->src_y = rect->output.y;
+    if (!rect->output.rotated) {
+        l->width = rect->input.width;
+        l->height = rect->input.height;
+    }
     if (rect->output.rotated) {
-        int width = l->width;
-        l->width = l->height;
-        l->height = width;
+        l->width = rect->input.height;
+        l->height = rect->input.width;
         switch (l->rotate) {
             case ROTATE_90_DEGREES:
                 l->rotate = ROTATE_180_DEGREES;
@@ -283,8 +376,6 @@ static int pack_layer(const image_packer *packer, layer *l, int rect_id)
                 break;
         }
     }
-    copy_asset_to_final_image(l, rect);
-    return 1;
 }
 
 static void pack_group(int group_id)
@@ -295,6 +386,43 @@ static void pack_group(int group_id)
         log_error("Could not retreive a valid group from id", 0, group_id);
         return;
     }
+
+    array_init(packed_assets, PACKED_ASSETS_BLOCK_SIZE, new_packed_asset, packed_asset_active);
+
+    get_assets_for_group(group_id);
+
+    image_packer packer;
+    image_packer_init(&packer, packed_assets.size, ASSETS_IMAGE_SIZE, ASSETS_IMAGE_SIZE);
+
+    packer.options.allow_rotation = 1;
+    packer.options.reduce_image_size = 1;
+
+    log_info("Packing", group->name, 0);
+
+    populate_asset_rects(&packer);
+
+    if (image_packer_pack(&packer) != packed_assets.size) {
+        log_error("Error during pack.", 0, 0);
+        image_packer_free(&packer);
+        return;
+    }
+
+    final_image_width = packer.result.last_image_width;
+    final_image_height = packer.result.last_image_height;
+    final_image_pixels = malloc(sizeof(color_t) * final_image_width * final_image_height);
+    if (!final_image_pixels) {
+        log_error("Out of memory when creating the final image.", 0, 0);
+        image_packer_free(&packer);
+        return;
+    }
+    memset(final_image_pixels, 0, sizeof(color_t) * final_image_width * final_image_height);
+
+    create_final_image(&packer);
+  
+    printf("Info: %d Images packed. Texture size: %dx%d.\n", packed_assets.size,
+        packer.result.last_image_width, packer.result.last_image_height);
+
+    log_info("Creating xml file...", 0, 0);
 
     static char current_dir[FILE_NAME_MAX];
 
@@ -308,54 +436,6 @@ static void pack_group(int group_id)
         return;
     }
 
-    unsigned int num_images = count_assets_in_group(group_id);
-
-    image_packer packer;
-    image_packer_init(&packer, num_images, ASSETS_IMAGE_SIZE, ASSETS_IMAGE_SIZE);
-
-    packer.options.allow_rotation = 1;
-    packer.options.reduce_image_size = 1;
-
-    int rect_id = 0;
-
-    log_info("Packing", group->name, 0);
-
-    for (int image_id = group->first_image_index; image_id <= group->last_image_index; image_id++) {
-        const asset_image *image = asset_image_get_from_id(image_id);
-        for (const layer *l = &image->first_layer; l; l = l->next) {
-            if (is_extra_asset(l)) {
-                image_packer_rect *rect = &packer.rects[rect_id++];
-                rect->input.width = l->width;
-                rect->input.height = l->height;
-            }
-        }
-    }
-
-    if (image_packer_pack(&packer) != num_images) {
-        log_error("Error during pack.", 0, 0);
-        fclose(xml_dest);
-        image_packer_free(&packer);
-        return;
-    }
-
-    printf("Info: %d Images packed. Texture size: %dx%d.\n", num_images,
-    packer.result.last_image_width, packer.result.last_image_height);
-
-    final_image_width = packer.result.last_image_width;
-    final_image_height = packer.result.last_image_height;
-    final_image_pixels = malloc(sizeof(color_t) * final_image_width * final_image_height);
-    if (!final_image_pixels) {
-        log_error("Out of memory when creating the final image.", 0, 0);
-        fclose(xml_dest);
-        image_packer_free(&packer);
-        return;
-    }
-    memset(final_image_pixels, 0, sizeof(color_t) * final_image_width * final_image_height);
-        
-    rect_id = 0;
-
-    log_info("Creating xml file...", 0, 0);
-
     fprintf(xml_dest, "<?xml version=\"1.0\"?>\n");
     fprintf(xml_dest, "<!DOCTYPE assetlist>\n\n");
 
@@ -368,7 +448,7 @@ static void pack_group(int group_id)
         asset_image *image = asset_image_get_from_id(image_id);
         create_image_xml_line(xml_dest, image);
         for (layer *l = &image->first_layer; l; l = l->next) {
-            rect_id += pack_layer(&packer, l, rect_id);
+            pack_layer(&packer, l);
             create_layer_xml_line(xml_dest, l);
         }
         if (image->img.num_animation_sprites) {
@@ -378,7 +458,7 @@ static void pack_group(int group_id)
                     image_id++;
                     asset_image *frame = asset_image_get_from_id(image_id);
                     layer *l = frame->last_layer;
-                    rect_id += pack_layer(&packer, l, rect_id);
+                    pack_layer(&packer, l);
                     create_frame_xml_line(xml_dest, l);
                 }
                 fprintf(xml_dest, "%s%s</animation>%s", FORMAT_IDENT, FORMAT_IDENT, FORMAT_NEWLINE);
@@ -388,6 +468,11 @@ static void pack_group(int group_id)
     }
 
     fprintf(xml_dest, "</assetlist>\n");
+
+    packed_asset *asset;
+    array_foreach(packed_assets, asset) {
+        free(asset->pixels);
+    }
 
     fclose(xml_dest);
     image_packer_free(&packer);
@@ -422,6 +507,7 @@ static void pack_cursors(void)
         for (int j = 0; j < NUM_CURSOR_SIZES; j++) {
             int index = i * NUM_CURSOR_SIZES + j;
             layer *cursor = &cursors[index];
+            cursor->calculated_image_id = index;
             cursor->asset_image_path = malloc(FILE_NAME_MAX);
             if (!cursor->asset_image_path) {
                 log_error("Out of memory.", 0, 0);
@@ -438,6 +524,14 @@ static void pack_cursors(void)
                 image_packer_free(&packer);
                 return;
             }
+            cursor->data = malloc(cursor->width * cursor->height * sizeof(color_t));
+            if (!cursor->data) {
+                log_error("Out of memory.", 0, 0);
+                image_packer_free(&packer);
+                return;
+            }
+            png_read(cursor->asset_image_path, cursor->data, 0, 0,
+                cursor->width, cursor->height, 0, 0, cursor->width, 0);
             packer.rects[index].input.width = cursor->width;
             packer.rects[index].input.height = cursor->height;
         }
@@ -461,7 +555,8 @@ static void pack_cursors(void)
 
     for (int i = 0; i < NUM_CURSOR_NAMES * NUM_CURSOR_SIZES; i++) {
         layer *cursor = &cursors[i];
-        pack_layer(&packer, cursor, i);
+        pack_layer(&packer, cursor);
+        copy_to_final_image(cursor->data, &packer.rects[i]);
         printf("%-16s  %3d     %3d        %3d         %3d\n",
             cursor->asset_image_path + strlen(CURSORS_DIR) + 1,
             packer.rects[i].output.x, packer.rects[i].output.y, cursor->width, cursor->height);
@@ -490,7 +585,6 @@ int main(int argc, char **argv)
     }
 
 #ifdef PACK_XMLS
-
     if (!group_create_all(xml_files->num_files) || !asset_image_init_array()) {
         log_error("Not enough memory to initialize extra assets.", 0, 0);
         return 3;

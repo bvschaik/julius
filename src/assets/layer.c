@@ -124,22 +124,6 @@ color_t layer_get_color_for_image_position(const layer *l, int x, int y)
     return l->data[y * l->width + x];
 }
 
-#ifdef BUILDING_ASSET_PACKER
-static char *copy_attribute(const char *attribute)
-{
-    if (!attribute) {
-        return 0;
-    }
-    char *dest = malloc((strlen(attribute) + 1) * sizeof(char));
-    if (!dest) {
-        log_error("There was no memory to copy the attribute", attribute, 0);
-        return 0;
-    }
-    strcpy(dest, attribute);
-    return dest;
-}
-#endif
-
 layer *layer_add_from_image_path(layer *l, const char *path,
     int src_x, int src_y, int offset_x, int offset_y, int width, int height)
 {
@@ -156,16 +140,33 @@ layer *layer_add_from_image_path(layer *l, const char *path,
     } else {
         snprintf(l->asset_image_path, FILE_NAME_MAX, "%s.png", group_get_current()->name);
     }
-
+#ifndef BUILDING_ASSET_PACKER
     if ((!l->width || !l->height) && !png_get_image_size(l->asset_image_path, &l->width, &l->height)) {
         log_info("Unable to load image", path, 0);
         layer_unload(l);
         return 0;
     }
+#endif
     l->x_offset = offset_x;
     l->y_offset = offset_y;
     return l;
 }
+
+#ifdef BUILDING_ASSET_PACKER
+static char *copy_attribute(const char *attribute)
+{
+    if (!attribute) {
+        return 0;
+    }
+    char *dest = malloc((strlen(attribute) + 1) * sizeof(char));
+    if (!dest) {
+        log_error("There was no memory to copy the attribute", attribute, 0);
+        return 0;
+    }
+    strcpy(dest, attribute);
+    return dest;
+}
+#endif
 
 layer *layer_add_from_image_id(layer *l, const char *group_id, const char *image_id, int offset_x, int offset_y)
 {
