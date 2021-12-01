@@ -2,27 +2,18 @@
 
 set -e
 
+if [[ "$BUILD_TARGET" == "mac" ]] then
+    DISABLE_SYSTEM_LIBS="-DSYSTEM_LIBS=OFF"
+fi
+
 case "$BUILD_TARGET" in
-"appimage"|"vita"|"switch"|"android"|"emscripten")
+"appimage"|"mac"|"vita"|"switch"|"android"|"emscripten")
     mkdir res/asset_packer/build && cd res/asset_packer/build
-    mv ../../../assets .
-    cmake -DCMAKE_BUILD_TYPE=Release ..
+    cmake -DCMAKE_BUILD_TYPE=Release $DISABLE_SYSTEM_LIBS  ..
     make -j4
-    if ./asset_packer; then
-        mv packed_assets ../../../assets
-    else
-        mv assets ../../../assets
-    fi
-    ;;
-"mac")
-    mkdir res/asset_packer/build && cd res/asset_packer/build
-    mv ../../../assets .
-    cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF ..
-    make -j4
-    if ./asset_packer; then
-        mv packed_assets ../../../assets
-    else
-        mv assets ../../../assets
+    ./asset_packer ../../
+    if [ $? -ne 0 ] then
+        rm -rf ../../packed_assets
     fi
     ;;
 esac

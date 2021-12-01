@@ -26,8 +26,8 @@ typedef struct {
  * @param extension Extension of the files to find
  * @return Directory listing
  */
-const dir_listing *dir_find_files_with_extension(const char * dir, const char *extension);
-const dir_listing* dir_append_files_with_extension(const char* extension);
+const dir_listing *dir_find_files_with_extension(const char *dir, const char *extension);
+const dir_listing* dir_append_files_with_extension(const char *extension);
 
 
 /**

@@ -31,7 +31,7 @@
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
 
-#if defined(_WIN32)
+#ifdef LOG_TO_FILE
 #include <string.h>
 #endif
 
@@ -60,8 +60,7 @@ static struct {
     int quit;
 } data = {1, 0};
 
-#if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__) || defined(__ANDROID__)
-/* Log to separate file on windows, since we don't have a console there */
+#ifdef LOG_TO_FILE
 static FILE *log_file = 0;
 
 static void write_log(void *userdata, int category, SDL_LogPriority priority, const char *message)
@@ -545,12 +544,13 @@ static void setup(const julius_args *args)
         SDL_Log("Exiting: SDL create window failed");
         exit_with_status(-2);
     }
-    // this has to come after platform_screen_create, otherwise it fails on Nintendo Switch
-    system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
 
 #ifdef PLATFORM_ENABLE_INIT_CALLBACK
     platform_init_callback();
 #endif
+
+    // This has to come after platform_screen_create, otherwise it fails on Nintendo Switch
+    system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
 
     time_set_millis(SDL_GetTicks());
 

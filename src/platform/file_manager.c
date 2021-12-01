@@ -62,6 +62,7 @@ static wchar_t *utf8_to_wchar(const char *str)
 }
 
 #else // not _WIN32
+#include <errno.h>
 #define fs_dir_type DIR
 #define fs_dir_entry struct dirent
 #define fs_dir_open opendir
@@ -495,5 +496,23 @@ int platform_file_manager_close_file(FILE *stream)
         );
     }
 #endif
-    return result;
+    return result == 0;
 }
+
+int platform_file_manager_create_directory(const char *name)
+{
+#ifdef _WIN32
+    if (CreateDirectoryA(name, 0) != 0) {
+        return 1;
+    } else {
+        return GetLastError() == ERROR_ALREADY_EXISTS;
+    }
+#else
+    if (mkdir(name, 0744) == 0) {
+        return 1;
+    } else {
+        return errno == EEXIST;
+    }
+#endif
+}
+

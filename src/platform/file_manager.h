@@ -76,14 +76,25 @@ FILE *platform_file_manager_open_asset(const char *asset, const char *mode);
 
 
 /**
+ * Closes a file
+ * @param stream A pointer to the FILE structure to close
+ * @return 1 if the file was closed, 0 otherwise
+ */
+int platform_file_manager_close_file(FILE *stream);
+
+
+/**
  * Removes a file
  * @param filename The file to remove
- * @return true if removal was successful, false otherwise
+ * @return 1 if removal was successful, 0 otherwise
  */
 int platform_file_manager_remove_file(const char *filename);
 
-
-int platform_file_manager_close_file(FILE *stream);
-
+/**
+ * Creates a directory
+ * @param path The full path to the new directory
+ * @return 1 if creation was successful, false otherwise
+ */
+int platform_file_manager_create_directory(const char *name);
 
 #endif // PLATFORM_FILE_MANAGER_H

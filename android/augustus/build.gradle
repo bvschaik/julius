@@ -65,14 +65,14 @@ task getVersion {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
-    ndkVersion "22.1.7171670"
+    compileSdkVersion 31
+    buildToolsVersion "31.0.0"
+    ndkVersion "23.1.7779620"
 
     defaultConfig {
         applicationId "com.github.Keriew.augustus"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
 
         versionName getVersion.versionName
         versionCode getVersion.versionCode
@@ -88,7 +88,13 @@ android {
         }
         sourceSets {
             main.res.srcDirs += '../../res/android'
-            main.assets.srcDirs += '../../assets'
+            if (file('../../res/packed_assets').exists()) {
+                println 'Using packed assets'
+                main.assets.srcDirs += '../../res/packed_assets'
+            } else {
+                println 'Packed assets not found. Using regular assets'
+                main.assets.srcDirs += '../../res/assets'
+            }
         }
     }
     signingConfigs {
@@ -132,5 +138,5 @@ repositories {
 
 dependencies {
     implementation project(':SDL2')
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
 }

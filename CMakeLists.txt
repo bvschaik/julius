@@ -150,6 +150,11 @@ if(DRAW_FPS)
   add_definitions(-DDRAW_FPS)
 endif()
 
+set(ASSETS_DIR ${PROJECT_SOURCE_DIR}/res/assets)
+if (EXISTS ${PROJECT_SOURCE_DIR}/res/packed_assets)
+    set(ASSETS_DIR ${PROJECT_SOURCE_DIR}/res/packed_assets)
+endif()
+
 set(EXPAT_FILES
     ext/expat/xmlparse.c
     ext/expat/xmlrole.c
@@ -645,7 +650,7 @@ if(APPLE)
     endforeach (RESOURCE)
     set(${VAR} ${_LIST} PARENT_SCOPE)
     endfunction()
-    resource(ASSET_SOURCES ${PROJECT_SOURCE_DIR}/assets Resources/assets *)
+    resource(ASSET_SOURCES ${ASSETS_DIR} Resources/assets *)
     set(MACOSX_FILES
         ${PROJECT_SOURCE_DIR}/res/augustus.icns
         ${ASSET_SOURCES}
@@ -726,7 +731,7 @@ endif()
 
 if(${TARGET_PLATFORM} STREQUAL "emscripten")
     set(CMAKE_EXECUTABLE_SUFFIX .html)
-    set_target_properties(${SHORT_NAME} PROPERTIES LINK_FLAGS "-lidbfs.js -s SINGLE_FILE=1 -s DEMANGLE_SUPPORT=1 -s DYNCALLS=1 --shell-file ${PROJECT_SOURCE_DIR}/res/shell.html --embed-file ${PROJECT_SOURCE_DIR}/assets@/assets -s INITIAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=0 -s SAFE_HEAP=1 -s INVOKE_RUN=0 -s EXPORTED_FUNCTIONS=[\"_main\"] -s EXPORTED_RUNTIME_METHODS=[\"callMain\",\"FS\"] -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE=[\"$autoResumeAudioContext\"] --bind")
+    set_target_properties(${SHORT_NAME} PROPERTIES LINK_FLAGS "-lidbfs.js -s SINGLE_FILE=1 -s DEMANGLE_SUPPORT=1 -s DYNCALLS=1 --shell-file ${PROJECT_SOURCE_DIR}/res/shell.html --embed-file ${ASSETS_DIR}@/assets -s INITIAL_MEMORY=268435456 -s ALLOW_MEMORY_GROWTH=1 -s DISABLE_DEPRECATED_FIND_EVENT_TARGET_BEHAVIOR=0 -s SAFE_HEAP=1 -s INVOKE_RUN=0 -s EXPORTED_FUNCTIONS=[\"_main\"] -s EXPORTED_RUNTIME_METHODS=[\"callMain\",\"FS\"] -s DEFAULT_LIBRARY_FUNCS_TO_INCLUDE=[\"$autoResumeAudioContext\"] --bind")
 endif()
 
 if(MSVC)
@@ -897,7 +902,7 @@ if(${TARGET_PLATFORM} STREQUAL "vita")
         FILE res/vita/bg.png sce_sys/livearea/contents/bg.png
         FILE res/vita/startup.png sce_sys/livearea/contents/startup.png
         FILE res/vita/template.xml sce_sys/livearea/contents/template.xml
-        FILE assets assets
+        FILE ${ASSETS_DIR} assets
     )
 elseif (${TARGET_PLATFORM} STREQUAL "switch")
     target_link_libraries (${SHORT_NAME}
@@ -937,7 +942,7 @@ elseif (${TARGET_PLATFORM} STREQUAL "switch")
     add_custom_command(TARGET ${SHORT_NAME}
         POST_BUILD
         COMMAND ${DEVKITPRO}/tools/bin/nacptool --create "${SHORT_NAME}" "rsn8887" ${SWITCH_VERSION} ${SHORT_NAME}.nacp
-        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switch/icon0.jpg --nacp=${SHORT_NAME}.nacp --romfsdir="${CMAKE_SOURCE_DIR}/assets"
+        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switch/icon0.jpg --nacp=${SHORT_NAME}.nacp --romfsdir="${ASSETS_DIR}"
     )
 else()
     if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
@@ -968,7 +973,7 @@ else()
         install(FILES "res/augustus_48.png" DESTINATION "share/icons/hicolor/48x48/apps" RENAME "com.github.keriew.augustus.png")
         install(FILES "res/augustus_256.png" DESTINATION "share/icons/hicolor/256x256/apps" RENAME "com.github.keriew.augustus.png")
         install(FILES "res/augustus_512.png" DESTINATION "share/icons/hicolor/512x512/apps" RENAME "com.github.keriew.augustus.png")
-        install(DIRECTORY "assets" DESTINATION "share/augustus-game")
+        install(DIRECTORY "${ASSETS_DIR}/" DESTINATION "share/augustus-game/assets")
     endif()
 
 endif()

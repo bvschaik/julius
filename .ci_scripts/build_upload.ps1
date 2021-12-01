@@ -61,13 +61,12 @@ if ($repo -eq "release") {
     cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -D CMAKE_C_COMPILER=i686-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
     cmake --build . -j 4 --config Release
     if ($?) {
-        Move-Item -Path ..\..\..\assets
-        .\asset_packer.exe
+        .\asset_packer.exe ..\..\
         if ($?) {
-            Move-Item -Path packed_assets -Destination ..\..\..\assets
-        } else {
             echo "Unable to pack the assets. Using the original folder"
-            Move-Item -Path assets -Destination ..\..\..
+            Move-Item -Path ..\..\packed_assets -Destination ..\..\..\assets
+        } else {
+            Move-Item -Path ..\..\assets -Destination ..\..\..\
         }
     }
 
@@ -118,13 +117,12 @@ if (!$packed_assets) {
     cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -D CMAKE_C_COMPILER=i686-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
     cmake --build . -j 4 --config Release
     if ($?) {
-        Move-Item -Path ..\..\..\assets
-        .\asset_packer.exe
-        if ($?) {
-            Move-Item -Path packed_assets -Destination ..\..\..\assets
+        .\asset_packer.exe ..\..\
+        if (!$?) {
+            Move-Item -Path ..\..\packed_assets -Destination ..\..\..\assets
         } else {
             echo "Unable to pack the assets. Using the original folder"
-            Move-Item -Path assets -Destination ..\..\..
+            Move-Item -Path ..\..\assets -Destination ..\..\..\
         }
     }
     cd ..\..\..

@@ -11,6 +11,7 @@ res/version.rc
 res/version.txt
 res/julius.icns
 res/shell.html
+res/packed_assets/
 
 # Build output and data directories
 /build*/

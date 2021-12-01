@@ -4,6 +4,8 @@
 
 #include "SDL.h"
 
+#include <stdlib.h>
+
 int platform_sdl_version_at_least(int major, int minor, int patch)
 {
     SDL_version v;
@@ -18,4 +20,3 @@ void exit_with_status(int status)
 #endif
     exit(status);
 }
-

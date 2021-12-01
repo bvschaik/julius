@@ -7,9 +7,11 @@
 #include "assets/xml.h"
 #include "core/array.h"
 #include "core/dir.h"
+#include "core/file.h"
 #include "core/image_packer.h"
 #include "core/png_read.h"
 #include "graphics/color.h"
+#include "platform/file_manager.h"
 
 #include "png.h"
 
@@ -29,7 +31,7 @@
 
 #define ASSETS_IMAGE_SIZE 2048
 #define CURSOR_IMAGE_SIZE 256
-#define NEW_ASSETS_DIR "packed_assets"
+#define PACKED_ASSETS_DIR "packed_assets"
 #define CURSORS_DIR "Color_Cursors"
 #define BYTES_PER_PIXEL 4
 #define FILE_NAME_MAX 300
@@ -54,7 +56,7 @@ static unsigned int final_image_height;
 
 typedef struct {
     int id;
-    char path[FILE_NAME_MAX];
+    const char *path;
     image_packer_rect *rect;
     color_t *pixels;
 } packed_asset;
@@ -63,196 +65,28 @@ typedef struct {
 
 static array(packed_asset) packed_assets;
 
-void new_packed_asset(packed_asset *asset, int index)
+static int remove_file(const char *filename)
 {
-    asset->id = index;
+    snprintf(current_file, FILE_NAME_MAX, "%s/%s", PACKED_ASSETS_DIR, filename);
+    platform_file_manager_remove_file(current_file);
+    return LIST_CONTINUE;
 }
 
-int packed_asset_active(const packed_asset *asset)
+static int find_packed_assets_dir(const char *dir)
 {
-    return asset->path != 0;
+    return strcmp(dir, PACKED_ASSETS_DIR) == 0 ? LIST_MATCH : LIST_NO_MATCH;
 }
 
-static int create_new_directory(const char *name)
+static int prepare_packed_assets_dir(void)
 {
-#ifdef _WIN32
-    if (CreateDirectoryA(name, 0) != 0) {
-        return 1;
-    } else {
-        return GetLastError() == ERROR_ALREADY_EXISTS;
+    if (platform_file_manager_list_directory_contents(0, TYPE_DIR, 0, find_packed_assets_dir) == LIST_MATCH) {
+        log_info("The packed assets dir exists, deleting its contents", 0, 0);
+        platform_file_manager_list_directory_contents(PACKED_ASSETS_DIR, TYPE_FILE, 0, remove_file);
+    } else if (!platform_file_manager_create_directory(PACKED_ASSETS_DIR)) {
+        log_error("Failed to create directory", PACKED_ASSETS_DIR, 0);
+        return 0;
     }
-#else
-    if (mkdir(name, 0744) == 0) {
-        return 1;
-    } else {
-        return errno == EEXIST;
-    }
-#endif
-}
-
-static void save_final_image(const char *path)
-{
-    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-
-    if (!png_ptr) {
-        log_error("Error creating png structure for", path, 0);
-        return;
-    }
-    png_infop info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr) {
-        log_error("Error creating png structure for", path, 0);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    png_set_compression_level(png_ptr, 3);
-    unsigned int row_size = final_image_width * BYTES_PER_PIXEL;
-
-    FILE *fp = fopen(path, "wb");
-    if (!fp) {
-        log_error("Error creating final png file at", path, 0);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    png_init_io(png_ptr, fp);
-
-    if (setjmp(png_jmpbuf(png_ptr))) {
-        log_error("Error constructing png file", path, 0);
-        fclose(fp);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    png_set_IHDR(png_ptr, info_ptr, final_image_width, final_image_height, 8, PNG_COLOR_TYPE_RGBA,
-        PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-    png_write_info(png_ptr, info_ptr);
-
-    uint8_t *row_pixels = malloc(final_image_width * BYTES_PER_PIXEL);
-    if (!row_pixels) {
-        log_error("Out of memory for png creation", path, 0);
-        fclose(fp);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    memset(row_pixels, 0, final_image_width * BYTES_PER_PIXEL);
-
-    if (setjmp(png_jmpbuf(png_ptr))) {
-        log_error("Error constructing png file", path, 0);
-        free(row_pixels);
-        fclose(fp);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    for (unsigned int y = 0; y < final_image_height; ++y) {
-        uint8_t *pixel = row_pixels;
-        for (unsigned int x = 0; x < final_image_width; x++) {
-            color_t input = final_image_pixels[y * final_image_width + x];
-            *(pixel + 0) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_RED);
-            *(pixel + 1) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_GREEN);
-            *(pixel + 2) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_BLUE);
-            *(pixel + 3) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_ALPHA);
-            pixel += BYTES_PER_PIXEL;
-        }
-        png_write_row(png_ptr, row_pixels);
-    }
-    png_write_end(png_ptr, info_ptr);
-
-    free(row_pixels);
-    fclose(fp);
-    png_destroy_write_struct(&png_ptr, &info_ptr);
-}
-
-static packed_asset *get_asset_image_from_list(const layer *l)
-{
-    packed_asset *asset;
-    array_foreach(packed_assets, asset) {
-        if (strcmp(l->asset_image_path, asset->path) == 0) {
-            return asset;
-        }
-    }
-    return 0;
-}
-
-static void add_asset_image_to_list(layer *l)
-{
-    packed_asset *asset = get_asset_image_from_list(l);
-    if (!asset) {
-        array_new_item(packed_assets, 0, asset);
-        if (!asset) {
-            log_error("Out of memory.", 0, 0);
-            return;
-        }
-        snprintf(asset->path, FILE_NAME_MAX, "%s", l->asset_image_path);
-    }
-    l->calculated_image_id = asset->id;
-}
-
-static void get_assets_for_group(int group_id)
-{
-    const image_groups *group = group_get_from_id(group_id);
-    for (int image_id = group->first_image_index; image_id <= group->last_image_index; image_id++) {
-        asset_image *image = asset_image_get_from_id(image_id);
-        for (layer *l = &image->first_layer; l; l = l->next) {
-            if (l->asset_image_path) {
-                add_asset_image_to_list(l);
-            }
-        }
-    }
-}
-
-static void populate_asset_rects(image_packer *packer)
-{
-    packed_asset *asset;
-    array_foreach(packed_assets, asset)
-    {
-        int width, height;
-        asset->rect = &packer->rects[asset->id];
-        if (!png_get_image_size(asset->path, &width, &height)) {
-            return;
-        }
-        if (!width || !height) {
-            return;
-        }
-        asset->pixels = malloc(sizeof(color_t) * width * height);
-        if (!asset->pixels) {
-            log_error("Out of memory.", 0, 0);
-            return;
-        }
-        if (!png_read(asset->path, asset->pixels, 0, 0, width, height, 0, 0, width, 0)) {
-            free(asset->pixels);
-            asset->pixels = 0;
-            return;
-        }
-        asset->rect->input.width = width;
-        asset->rect->input.height = height;
-    }
-}
-
-static void copy_to_final_image(const color_t *pixels, const image_packer_rect *rect)
-{
-    if (!rect->output.rotated) {
-        for (unsigned int y = 0; y < rect->input.height; y++) {
-            const color_t *src_pixel = &pixels[y * rect->input.width];
-            color_t *dst_pixel = &final_image_pixels[(y + rect->output.y) * final_image_width + rect->output.x];
-            memcpy(dst_pixel, src_pixel, rect->input.width * sizeof(color_t));
-        }
-    } else {
-        for (unsigned int y = 0; y < rect->input.height; y++) {
-            const color_t *src_pixel = &pixels[y * rect->input.width];
-            color_t *dst_pixel = &final_image_pixels[(rect->output.y + rect->input.width - 1) *
-                final_image_width + y + rect->output.x];
-            for (unsigned int x = 0; x < rect->input.width; x++) {
-                *dst_pixel = *src_pixel++;
-                dst_pixel -= final_image_width;
-            }
-        }
-    }
-}
-
-static void create_final_image(const image_packer *packer)
-{
-    packed_asset *asset;
-    array_foreach(packed_assets, asset) {
-        copy_to_final_image(asset->pixels, asset->rect);
-    }
+    return 1;
 }
 
 static void add_attribute_int(FILE *dest, const char *name, int value)
@@ -345,6 +179,182 @@ static void create_frame_xml_line(FILE *xml_file, const layer *l)
     fprintf(xml_file, "/>%s", FORMAT_NEWLINE);
 }
 
+void new_packed_asset(packed_asset *asset, int index)
+{
+    asset->id = index;
+}
+
+int packed_asset_active(const packed_asset *asset)
+{
+    return asset->path != 0;
+}
+
+static packed_asset *get_asset_image_from_list(const layer *l)
+{
+    packed_asset *asset;
+    array_foreach(packed_assets, asset) {
+        if (strcmp(l->asset_image_path, asset->path) == 0) {
+            return asset;
+        }
+    }
+    return 0;
+}
+
+static void add_asset_image_to_list(layer *l)
+{
+    packed_asset *asset = get_asset_image_from_list(l);
+    if (!asset) {
+        array_new_item(packed_assets, 0, asset);
+        if (!asset) {
+            log_error("Out of memory.", 0, 0);
+            return;
+        }
+        asset->path = l->asset_image_path;
+    }
+    l->calculated_image_id = asset->id;
+}
+
+static void get_assets_for_group(int group_id)
+{
+    const image_groups *group = group_get_from_id(group_id);
+    for (int image_id = group->first_image_index; image_id <= group->last_image_index; image_id++) {
+        asset_image *image = asset_image_get_from_id(image_id);
+        for (layer *l = &image->first_layer; l; l = l->next) {
+            if (l->asset_image_path) {
+                add_asset_image_to_list(l);
+            }
+        }
+    }
+}
+
+static void populate_asset_rects(image_packer *packer)
+{
+    packed_asset *asset;
+    array_foreach(packed_assets, asset)
+    {
+        int width, height;
+        asset->rect = &packer->rects[asset->id];
+        if (!png_get_image_size(asset->path, &width, &height)) {
+            return;
+        }
+        if (!width || !height) {
+            return;
+        }
+        asset->pixels = malloc(sizeof(color_t) * width * height);
+        if (!asset->pixels) {
+            log_error("Out of memory.", 0, 0);
+            return;
+        }
+        if (!png_read(asset->path, asset->pixels, 0, 0, width, height, 0, 0, width, 0)) {
+            free(asset->pixels);
+            asset->pixels = 0;
+            return;
+        }
+        asset->rect->input.width = width;
+        asset->rect->input.height = height;
+    }
+}
+
+static void copy_to_final_image(const color_t *pixels, const image_packer_rect *rect)
+{
+    if (!rect->output.rotated) {
+        for (unsigned int y = 0; y < rect->input.height; y++) {
+            const color_t *src_pixel = &pixels[y * rect->input.width];
+            color_t *dst_pixel = &final_image_pixels[(y + rect->output.y) * final_image_width + rect->output.x];
+            memcpy(dst_pixel, src_pixel, rect->input.width * sizeof(color_t));
+        }
+    } else {
+        for (unsigned int y = 0; y < rect->input.height; y++) {
+            const color_t *src_pixel = &pixels[y * rect->input.width];
+            color_t *dst_pixel = &final_image_pixels[(rect->output.y + rect->input.width - 1) *
+                final_image_width + y + rect->output.x];
+            for (unsigned int x = 0; x < rect->input.width; x++) {
+                *dst_pixel = *src_pixel++;
+                dst_pixel -= final_image_width;
+            }
+        }
+    }
+}
+
+static void create_final_image(const image_packer *packer)
+{
+    packed_asset *asset;
+    array_foreach(packed_assets, asset) {
+        copy_to_final_image(asset->pixels, asset->rect);
+    }
+}
+
+static void save_final_image(const char *path)
+{
+    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
+
+    if (!png_ptr) {
+        log_error("Error creating png structure for", path, 0);
+        return;
+    }
+    png_infop info_ptr = png_create_info_struct(png_ptr);
+    if (!info_ptr) {
+        log_error("Error creating png structure for", path, 0);
+        png_destroy_write_struct(&png_ptr, &info_ptr);
+        return;
+    }
+    png_set_compression_level(png_ptr, 3);
+    unsigned int row_size = final_image_width * BYTES_PER_PIXEL;
+
+    FILE *fp = fopen(path, "wb");
+    if (!fp) {
+        log_error("Error creating final png file at", path, 0);
+        png_destroy_write_struct(&png_ptr, &info_ptr);
+        return;
+    }
+    png_init_io(png_ptr, fp);
+
+    if (setjmp(png_jmpbuf(png_ptr))) {
+        log_error("Error constructing png file", path, 0);
+        fclose(fp);
+        png_destroy_write_struct(&png_ptr, &info_ptr);
+        return;
+    }
+    png_set_IHDR(png_ptr, info_ptr, final_image_width, final_image_height, 8, PNG_COLOR_TYPE_RGBA,
+        PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+    png_write_info(png_ptr, info_ptr);
+
+    uint8_t *row_pixels = malloc(final_image_width * BYTES_PER_PIXEL);
+    if (!row_pixels) {
+        log_error("Out of memory for png creation", path, 0);
+        fclose(fp);
+        png_destroy_write_struct(&png_ptr, &info_ptr);
+        return;
+    }
+    memset(row_pixels, 0, final_image_width * BYTES_PER_PIXEL);
+
+    if (setjmp(png_jmpbuf(png_ptr))) {
+        log_error("Error constructing png file", path, 0);
+        free(row_pixels);
+        fclose(fp);
+        png_destroy_write_struct(&png_ptr, &info_ptr);
+        return;
+    }
+    for (unsigned int y = 0; y < final_image_height; ++y) {
+        uint8_t *pixel = row_pixels;
+        for (unsigned int x = 0; x < final_image_width; x++) {
+            color_t input = final_image_pixels[y * final_image_width + x];
+            *(pixel + 0) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_RED);
+            *(pixel + 1) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_GREEN);
+            *(pixel + 2) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_BLUE);
+            *(pixel + 3) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_ALPHA);
+            pixel += BYTES_PER_PIXEL;
+        }
+        png_write_row(png_ptr, row_pixels);
+    }
+    png_write_end(png_ptr, info_ptr);
+
+    free(row_pixels);
+    fclose(fp);
+    png_destroy_write_struct(&png_ptr, &info_ptr);
+}
+
+
 static void pack_layer(const image_packer *packer, layer *l)
 {
     if (!l->asset_image_path) {
@@ -426,8 +436,8 @@ static void pack_group(int group_id)
 
     static char current_dir[FILE_NAME_MAX];
 
-    snprintf(current_dir, FILE_NAME_MAX, "%s/%s/", NEW_ASSETS_DIR, group->name);
-    snprintf(current_file, FILE_NAME_MAX, "%s/%s", NEW_ASSETS_DIR, group->path);
+    snprintf(current_dir, FILE_NAME_MAX, "%s/%s/", PACKED_ASSETS_DIR, group->name);
+    snprintf(current_file, FILE_NAME_MAX, "%s/%s", PACKED_ASSETS_DIR, group->path);
 
     FILE *xml_dest = fopen(current_file, "wb");
 
@@ -477,7 +487,7 @@ static void pack_group(int group_id)
     fclose(xml_dest);
     image_packer_free(&packer);
 
-    snprintf(current_file, FILE_NAME_MAX, "%s/%s.png", NEW_ASSETS_DIR, group->name);
+    snprintf(current_file, FILE_NAME_MAX, "%s/%s.png", PACKED_ASSETS_DIR, group->name);
 
     log_info("Creating png file...", 0, 0);
 
@@ -562,7 +572,7 @@ static void pack_cursors(void)
             packer.rects[i].output.x, packer.rects[i].output.y, cursor->width, cursor->height);
     }
 
-    snprintf(current_file, FILE_NAME_MAX, "%s/%s.png", NEW_ASSETS_DIR, CURSORS_DIR);
+    snprintf(current_file, FILE_NAME_MAX, "%s/%s.png", PACKED_ASSETS_DIR, CURSORS_DIR);
 
     save_final_image(current_file);
 
@@ -573,14 +583,28 @@ static void pack_cursors(void)
 
 int main(int argc, char **argv)
 {
+    int using_custom_path = 0;
+    if (argc == 2) {
+        log_info("Attempting to use the path", argv[1], 0);
+        if (!platform_file_manager_set_base_path(argv[1])) {
+            log_info("Unable to change the base path. Attempting to run from local directory...", 0, 0);
+        } else {
+            using_custom_path = 1;
+        }
+    }
     const dir_listing *xml_files = dir_find_files_with_extension(ASSETS_DIRECTORY, "xml");
     if (xml_files->num_files == 0) {
-        log_error("Please add a valid assets folder to this directory", 0, 0);
+        if (using_custom_path) {
+            log_error("No assets found on", argv[1], 0);
+        }
+        log_error("Please add a valid assets folder to this directory.\n"
+            "Alternatively, you can run as:\n\n"
+            "asset_packer.exe [WORK_DIRECTORY]\n\n"
+            "where WORK_DIRECTORY is the directory where the assets folder is in.", 0, 0);
         return 1;
     }
 
-    if (!create_new_directory(NEW_ASSETS_DIR)) {
-        log_error("Failed to create directory", NEW_ASSETS_DIR, 0);
+    if (!prepare_packed_assets_dir()) {
         return 2;
     }
 
