@@ -118,7 +118,7 @@ if (!$packed_assets) {
     cmake --build . -j 4 --config Release
     if ($?) {
         .\asset_packer.exe ..\..\
-        if (!$?) {
+        if ($?) {
             Move-Item -Path ..\..\packed_assets -Destination ..\..\..\assets
         } else {
             echo "Unable to pack the assets. Using the original folder"

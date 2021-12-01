@@ -1,8 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 set -e
 
-if [[ "$BUILD_TARGET" == "mac" ]] then
+if [[ "$BUILD_TARGET" == "mac" ]]
+then
     DISABLE_SYSTEM_LIBS="-DSYSTEM_LIBS=OFF"
 fi
 
@@ -12,7 +13,8 @@ case "$BUILD_TARGET" in
     cmake -DCMAKE_BUILD_TYPE=Release $DISABLE_SYSTEM_LIBS  ..
     make -j4
     ./asset_packer ../../
-    if [ $? -ne 0 ] then
+    if [ $? -ne 0 ]
+    then
         rm -rf ../../packed_assets
     fi
     ;;
