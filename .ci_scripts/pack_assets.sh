@@ -15,4 +15,3 @@ if [ $? -ne 0 ]
 then
     rm -rf ../../packed_assets
 fi
-;;
