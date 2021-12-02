@@ -65,14 +65,14 @@ task getVersion {
 }
 
 android {
-    compileSdkVersion 31
-    buildToolsVersion "31.0.0"
-    ndkVersion "23.1.7779620"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+    ndkVersion "22.1.7171670"
 
     defaultConfig {
         applicationId "com.github.Keriew.augustus"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 30
 
         versionName getVersion.versionName
         versionCode getVersion.versionCode
