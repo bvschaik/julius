@@ -37,7 +37,12 @@ case "$BUILD_TARGET" in
 	fi
 	;;
 "linux")
-	cp -r assets ./build
+    if [ -d res/packed_assets ]
+	then
+	    cp -r res/packed_assets ./build/assets
+	else
+		cp -r res/assets ./build
+	fi
 	cp -r res/maps ./build	
 	cp -r res/manual ./build	
 	cd build && make -j4
