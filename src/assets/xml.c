@@ -270,6 +270,8 @@ static void xml_start_frame_element(const char **attributes)
     const char *id = 0;
     int src_x = 0;
     int src_y = 0;
+    int width = 0;
+    int height = 0;
     layer_invert_type invert = INVERT_NONE;
     layer_rotate_type rotate = ROTATE_NONE;
     for (int i = 0; i < total_attributes; i += 2) {
@@ -280,9 +282,9 @@ static void xml_start_frame_element(const char **attributes)
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][2]) == 0) {
             src_y = string_to_int(string_from_ascii(attributes[i + 1]));
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][3]) == 0) {
-            img->img.width = string_to_int(string_from_ascii(attributes[i + 1]));
+            width = string_to_int(string_from_ascii(attributes[i + 1]));
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][4]) == 0) {
-            img->img.height = string_to_int(string_from_ascii(attributes[i + 1]));
+            height = string_to_int(string_from_ascii(attributes[i + 1]));
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][5]) == 0) {
             group = attributes[i + 1];
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[3][0][6]) == 0) {
@@ -307,7 +309,7 @@ static void xml_start_frame_element(const char **attributes)
     }
     img->last_layer = &img->first_layer;
     if (!asset_image_add_layer(img, path, group, id, src_x, src_y,
-        0, 0, img->img.width, img->img.height, invert, rotate, PART_BOTH)) {
+        0, 0, width, height, invert, rotate, PART_BOTH)) {
         img->active = 0;
         return;
     }
