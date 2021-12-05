@@ -29,7 +29,8 @@ enum {
     TERRAIN_IMPASSABLE_ENEMY = 0x1237,
     TERRAIN_IMPASSABLE_WOLF = 0xd73f,
     TERRAIN_ELEVATION_ROCK = 0x202,
-    TERRAIN_ALL = 0xffff
+    TERRAIN_ALL = 0xffff,
+    TERRAIN_ORIGINALLY_TREE = 0x10000
 };
 
 int map_terrain_is(int grid_offset, int terrain);
@@ -106,7 +107,8 @@ void map_terrain_clear(void);
 void map_terrain_init_outside_map(void);
 
 void map_terrain_save_state(buffer *buf);
+void map_terrain_save_state_legacy(buffer *buf);
 
-void map_terrain_load_state(buffer *buf);
+void map_terrain_load_state(buffer *buf, int expanded_terrain_data);
 
 #endif // MAP_TERRAIN_H

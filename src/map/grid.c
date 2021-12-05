@@ -221,7 +221,7 @@ void map_grid_and_u8(uint8_t *grid, uint8_t mask)
     }
 }
 
-void map_grid_and_u16(uint16_t *grid, uint16_t mask)
+void map_grid_and_u32(uint32_t *grid, uint32_t mask)
 {
     for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
         grid[i] &= mask;

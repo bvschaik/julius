@@ -4,8 +4,8 @@
 #include "map/ring.h"
 #include "map/routing.h"
 
-static grid_u16 terrain_grid;
-static grid_u16 terrain_grid_backup;
+static grid_u32 terrain_grid;
+static grid_u32 terrain_grid_backup;
 
 int map_terrain_is(int grid_offset, int terrain)
 {
@@ -63,7 +63,7 @@ void map_terrain_remove_with_radius(int x, int y, int size, int radius, int terr
 
 void map_terrain_remove_all(int terrain)
 {
-    map_grid_and_u16(terrain_grid.items, ~terrain);
+    map_grid_and_u32(terrain_grid.items, ~terrain);
 }
 
 int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain)
@@ -210,7 +210,8 @@ int map_terrain_has_only_rocks_trees_in_ring(int x, int y, int distance)
     for (int i = start; i < end; i++) {
         const ring_tile *tile = map_ring_tile(i);
         if (map_ring_is_inside_map(x + tile->x, y + tile->y)) {
-            if (!map_terrain_is(base_offset + tile->grid_offset, TERRAIN_ROCK | TERRAIN_TREE)) {
+            if (!map_terrain_is(base_offset + tile->grid_offset,
+                    TERRAIN_ROCK | TERRAIN_TREE | TERRAIN_ORIGINALLY_TREE)) {
                 return 0;
             }
         }
@@ -349,17 +350,17 @@ void map_terrain_add_triumphal_arch_roads(int x, int y, int orientation)
 
 void map_terrain_backup(void)
 {
-    map_grid_copy_u16(terrain_grid.items, terrain_grid_backup.items);
+    map_grid_copy_u32(terrain_grid.items, terrain_grid_backup.items);
 }
 
 void map_terrain_restore(void)
 {
-    map_grid_copy_u16(terrain_grid_backup.items, terrain_grid.items);
+    map_grid_copy_u32(terrain_grid_backup.items, terrain_grid.items);
 }
 
 void map_terrain_clear(void)
 {
-    map_grid_clear_u16(terrain_grid.items);
+    map_grid_clear_u32(terrain_grid.items);
 }
 
 void map_terrain_init_outside_map(void)
@@ -380,10 +381,32 @@ void map_terrain_init_outside_map(void)
 
 void map_terrain_save_state(buffer *buf)
 {
-    map_grid_save_state_u16(terrain_grid.items, buf);
+    map_grid_save_state_u32(terrain_grid.items, buf);
 }
 
-void map_terrain_load_state(buffer *buf)
+void map_terrain_save_state_legacy(buffer *buf)
 {
-    map_grid_load_state_u16(terrain_grid.items, buf);
+    map_grid_save_state_u32_to_u16(terrain_grid.items, buf);
+}
+
+static void determine_original_trees(void)
+{
+    for (int y = 0; y < GRID_SIZE; y++) {
+        for (int x = 0; x < GRID_SIZE; x++) {
+            if (terrain_grid.items[x + GRID_SIZE * y] & TERRAIN_TREE &&
+                !(terrain_grid.items[x + GRID_SIZE * y] & TERRAIN_WATER)) {
+                terrain_grid.items[x + GRID_SIZE * y] |= TERRAIN_ORIGINALLY_TREE;
+            }
+        }
+    }
+}
+
+void map_terrain_load_state(buffer *buf, int expanded_terrain_data)
+{
+    if (expanded_terrain_data) {
+        map_grid_load_state_u32(terrain_grid.items, buf);
+    } else {
+        map_grid_load_state_u16_to_u32(terrain_grid.items, buf);
+        determine_original_trees();
+    }
 }

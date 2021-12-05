@@ -57,7 +57,7 @@
 
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x86;
+static const int SAVE_GAME_CURRENT_VERSION = 0x87;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
@@ -70,6 +70,7 @@ static const int SAVE_GAME_LAST_STORED_IMAGE_IDS = 0x83;
 // SAVE_GAME_INCREASE_GRANARY_CAPACITY shall be updated if we decide to change granary capacity again.
 static const int SAVE_GAME_INCREASE_GRANARY_CAPACITY = 0x85;
 // static const int SAVE_GAME_ROADBLOCK_DATA_MOVED_FROM_SUBTYPE = 0x86; This define is unneeded for now
+static const int SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION = 0x86;
 
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
@@ -269,6 +270,7 @@ static void init_savegame_data(int version)
     }
 
     int image_grid_size = 52488 * (version > SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION ? 2 : 1);
+    int terrain_grid_size = 52488 * (version > SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION ? 2 : 1);
     int figures_size = 128000 * multiplier;
     int route_figures_size = 1200 * multiplier;
     int route_paths_size = 300000 * multiplier;
@@ -295,7 +297,7 @@ static void init_savegame_data(int version)
     }
     state->edge_grid = create_savegame_piece(26244, 1);
     state->building_grid = create_savegame_piece(52488, 1);
-    state->terrain_grid = create_savegame_piece(52488, 1);
+    state->terrain_grid = create_savegame_piece(terrain_grid_size, 1);
     state->aqueduct_grid = create_savegame_piece(26244, 1);
     state->figure_grid = create_savegame_piece(52488, 1);
     state->bitfields_grid = create_savegame_piece(26244, 1);
@@ -383,7 +385,7 @@ static void init_savegame_data(int version)
 static void scenario_load_from_state(scenario_state *file)
 {
     map_image_load_state_legacy(file->graphic_ids);
-    map_terrain_load_state(file->terrain);
+    map_terrain_load_state(file->terrain, 0);
     map_property_load_state(file->bitfields, file->edge);
     map_random_load_state(file->random);
     map_elevation_load_state(file->elevation);
@@ -399,7 +401,7 @@ static void scenario_load_from_state(scenario_state *file)
 static void scenario_save_to_state(scenario_state *file)
 {
     map_image_save_state_legacy(file->graphic_ids);
-    map_terrain_save_state(file->terrain);
+    map_terrain_save_state_legacy(file->terrain);
     map_property_save_state(file->bitfields, file->edge);
     map_random_save_state(file->random);
     map_elevation_save_state(file->elevation);
@@ -421,7 +423,7 @@ static void savegame_load_from_state(savegame_state *state, int version)
         state->scenario_name);
 
     map_building_load_state(state->building_grid, state->building_damage_grid);
-    map_terrain_load_state(state->terrain_grid);
+    map_terrain_load_state(state->terrain_grid, version > SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION);
     map_aqueduct_load_state(state->aqueduct_grid, state->aqueduct_backup_grid);
     map_figure_load_state(state->figure_grid);
     map_sprite_load_state(state->sprite_grid, state->sprite_backup_grid);

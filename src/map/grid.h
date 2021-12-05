@@ -84,7 +84,7 @@ void map_grid_init_i8(int8_t *grid, int8_t value);
 
 void map_grid_and_u8(uint8_t *grid, uint8_t mask);
 
-void map_grid_and_u16(uint16_t *grid, uint16_t mask);
+void map_grid_and_u32(uint32_t *grid, uint32_t mask);
 
 void map_grid_copy_u8(const uint8_t *src, uint8_t *dst);
 
