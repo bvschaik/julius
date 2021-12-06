@@ -435,9 +435,8 @@ static void determine_granaryman_destination(figure *f, int road_network_id)
         building_granary_remove_resource(granary, f->resource_id, 100);
         return;
     }
-    // nowhere to go to: kill figure
-    f->state = FIGURE_STATE_DEAD;
-    f->is_ghost = 1;
+    // no one will accept, stand idle
+    f->wait_ticks = 2;
 }
 
 static void remove_resource_from_warehouse(figure *f)
@@ -522,10 +521,8 @@ static void determine_warehouseman_destination(figure *f, int road_network_id)
         remove_resource_from_warehouse(f);
         return;
     }
-    // no destination: kill figure
-    f->state = FIGURE_STATE_DEAD;
-    f->is_ghost = 1;
-
+    // no one will accept, stand idle
+    f->wait_ticks = 2;
 }
 
 void figure_warehouseman_action(figure *f)
@@ -558,6 +555,12 @@ void figure_warehouseman_action(figure *f)
                 } else {
                     determine_warehouseman_destination(f, road_network_id);
                 }
+                if (f->loads_sold_or_carrying == 1) {
+                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
+                        8 * f->resource_id - 8 + resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
+                } else {
+                    set_cart_graphic(f);
+                }
             }
             f->image_offset = 0;
             break;
@@ -583,9 +586,10 @@ void figure_warehouseman_action(figure *f)
             f->wait_ticks++;
             if (f->wait_ticks > 4) {
                 b = building_get(f->destination_building_id);
+                int delivered = 1;
                 switch (b->type) {
                     case BUILDING_GRANARY:
-                        building_granary_add_resource(b, f->resource_id, 0);
+                        delivered = building_granary_add_resource(b, f->resource_id, 0);
                         break;
                     case BUILDING_BARRACKS:
                     case BUILDING_GRAND_TEMPLE_MARS:
@@ -593,17 +597,22 @@ void figure_warehouseman_action(figure *f)
                         break;
                     case BUILDING_WAREHOUSE:
                     case BUILDING_WAREHOUSE_SPACE:
-                        building_warehouse_add_resource(b, f->resource_id);
+                        delivered = building_warehouse_add_resource(b, f->resource_id);
                         break;
                     default: // workshop
                         building_workshop_add_raw_material(b);
                         break;
                 }
-                // BUG: what if warehouse/granary is full and returns false?
-                f->action_state = FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY;
-                f->wait_ticks = 0;
-                f->destination_x = f->source_x;
-                f->destination_y = f->source_y;
+                if (delivered) {
+                    f->action_state = FIGURE_ACTION_53_WAREHOUSEMAN_RETURNING_EMPTY;
+                    f->wait_ticks = 0;
+                    f->destination_x = f->source_x;
+                    f->destination_y = f->source_y;
+                } else {
+                    figure_route_remove(f);
+                    f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+                    f->wait_ticks = 2;
+                }
             }
             f->image_offset = 0;
             break;
