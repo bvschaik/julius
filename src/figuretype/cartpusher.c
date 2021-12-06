@@ -17,6 +17,7 @@
 #include "game/resource.h"
 #include "map/road_network.h"
 #include "map/routing_terrain.h"
+#include "map/terrain.h"
 
 static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
@@ -258,6 +259,12 @@ void figure_cartpusher_action(figure *f)
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     building *b = building_get(f->building_id);
 
+    // Fix: even though gardens don't get assigned an id, they're still used for pathfinding
+    // So we just assume that the garden's network id is the sane as the cartpusher's original building
+    if (!road_network_id && map_terrain_is(f->grid_offset, TERRAIN_GARDEN)) {
+        road_network_id = b->road_network_id;
+    }
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
@@ -289,7 +296,7 @@ void figure_cartpusher_action(figure *f)
                 reroute_cartpusher(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
-            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS && road_network_id) {
+            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS) {
                 f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
                 figure_cartpusher_action(f);
                 return;
@@ -310,7 +317,7 @@ void figure_cartpusher_action(figure *f)
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
                 f->wait_ticks = 0;
-            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS && road_network_id) {
+            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS) {
                 f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
                 figure_cartpusher_action(f);
                 return;
@@ -539,6 +546,12 @@ void figure_warehouseman_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
 
+    // Fix: even though gardens don't get assigned an id, they're still used for pathfinding
+    // So we just assume that the garden's network id is the sane as the cartpusher's original building
+    if (!road_network_id && map_terrain_is(f->grid_offset, TERRAIN_GARDEN)) {
+        road_network_id = b->road_network_id;
+    }
+
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);
@@ -580,6 +593,10 @@ void figure_warehouseman_action(figure *f)
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
+            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS) {
+                f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+                figure_warehouseman_action(f);
+                return;
             }
             break;
         case FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING:
@@ -638,7 +655,7 @@ void figure_warehouseman_action(figure *f)
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
-            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS && road_network_id) {
+            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS) {
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
                 figure_warehouseman_action(f);
                 return;
@@ -704,7 +721,7 @@ void figure_warehouseman_action(figure *f)
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
-            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS && road_network_id) {
+            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS) {
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
                 figure_warehouseman_action(f);
                 return;
