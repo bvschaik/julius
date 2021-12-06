@@ -298,7 +298,7 @@ void figure_soldier_action(figure *f)
             f->destination_x = f->formation_position_x.soldier;
             f->destination_y = f->formation_position_y.soldier;
             f->destination_grid_offset = map_grid_offset(f->destination_x, f->destination_y);
-            figure_movement_move_ticks_with_percentage(f, speed_factor,speed_factor_percentage);
+            figure_movement_move_ticks_with_percentage(f, speed_factor, speed_factor_percentage);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_80_SOLDIER_AT_REST;
             } else if (f->direction == DIR_FIGURE_REROUTE) {

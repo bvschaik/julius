@@ -414,8 +414,6 @@ static void spawn_figure_chariot_maker(building *b)
     }
 }
 
-
-
 static void spawn_figure_amphitheater(building *b)
 {
     check_labor_problem(b);
@@ -860,7 +858,6 @@ static void set_school_graphic(building *b)
     b->upgrade_level = b->desirability > 40;
     map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
 }
-
 
 static void spawn_figure_school(building *b)
 {
