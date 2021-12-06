@@ -348,7 +348,7 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TITLE_GRAND_TEMPLE_COMPLETE, "Temple monumental terminé"},
     {TR_CITY_MESSAGE_TEXT_GRAND_TEMPLE_COMPLETE, "Les prêtres et les fidèles affluent vers le nouveau temple monumental pour les rites de consécration. Votre peuple est impressionné par la majesté de vos œuvres et la divinité que vous avez choisie vous comble de faveur."},
     {TR_CITY_MESSAGE_TITLE_MERCURY_BLESSING, "Une bénédiction de Mercure"},
-    {TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING, "Ravi de votre dévouement, Mercure a béni votre industrie en découvrant des matières premières pour vos artisans."},
+    {TR_CITY_MESSAGE_TEXT_MERCURY_BLESSING, "Ravi de votre dévouement, Mercure a béni votre industrie en offrant des matières premières à vos artisans."},
     {TR_FIGURE_TYPE_WORK_CAMP_WORKER, "Contremaître"},
     {TR_FIGURE_TYPE_WORK_CAMP_SLAVE, "Transporteur"},
     {TR_FIGURE_TYPE_WORK_CAMP_ARCHITECT, "Architecte"},
@@ -707,7 +707,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_ROOFED_GARDEN_WALL, "Muret couvert"},
     {TR_BUILDING_GARDEN_WALL_GATE, "Portail de jardin"},
     {TR_BUILDING_GARDEN_WALL_GATE_DESC, "Ce petit portail permet de gérer les allées et venues dans les lieux les plus retirés et paisibles de votre cité."},
-    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Le magasinier est en route pour aller chercher les biens dans un autre lieu de stockage."},
+    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Le magasinier est en route pour aller chercher les biens dans un autre entrepôt."},
     {TR_BUILDING_PALISADE, "Palissade" },
     {TR_BUILDING_PALISADE_DESC, "Cette profonde tranchée, surmontée d'un grand mur de poteaux de bois acérés, protègera votre cité des envahisseurs et des animaux sauvages."},
     {TR_OVERLAY_MOTHBALL, "En pause"},
@@ -720,6 +720,8 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION, "L'équipe Verte - les descendants des cavaliers 'Celeres', au temps jadis du Royaume de Rome. Ils se considèrent comme l'élite parmi l'élite." },
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Reprendre la livraison des biens"},
     {TR_CONFIG_DIGIT_SEPARATOR, "Afficher un séparateur de milliers pour les nombres"},
+    {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR, "Pas de main-d'œuvre" },
+    {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "Le magasinier est en route pour aller chercher les vivres dans un autre grenier."},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
