@@ -56,7 +56,10 @@ void city_overlay_problems_prepare_building(building *b)
         }
     } else if (b->state == BUILDING_STATE_MOTHBALLED) {
         b->show_on_problem_overlay = 1;
+    } else if (!b->num_workers && building_get_laborers(b->type)) {
+        b->show_on_problem_overlay = 1;
     }
+
 }
 
 static int show_building_fire_crime(const building *b)
@@ -256,6 +259,8 @@ static int get_tooltip_problems(tooltip_context *c, const building *b)
         }
     } else if (b->state == BUILDING_STATE_MOTHBALLED) {
         c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_MOTHBALLED;
+    } else if (!b->num_workers && building_get_laborers(b->type)) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR;
     }
     if (c->translation_key) {
         return 1;

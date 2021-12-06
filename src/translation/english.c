@@ -720,6 +720,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION, "The Green team - descendants of the 'Celeres' horsemen from the time of the Kingdom of Rome. They still claim to be the best of the best." },
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Resume resource delivery"},
     {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
+    {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR, "No labor" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
