@@ -691,14 +691,14 @@ void window_building_draw_granary(building_info_context *c)
                 resource_image_offset(resource, RESOURCE_IMAGE_ICON),
                 c->x_offset + 32, c->y_offset + 190);
             if (f->action_state == FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE) {
-                lang_text_draw_multiline(99, 16, c->x_offset + 64, c->y_offset + 190,
+                lang_text_draw_multiline(98, 9, c->x_offset + 64, c->y_offset + 190,
                     BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN);
             } else {
                 lang_text_draw_multiline(99, 17, c->x_offset + 64, c->y_offset + 190,
                     BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN);
             }
         } else {
-            text_draw_multiline(translation_for(TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING), c->x_offset + 64, c->y_offset + 190,
+            text_draw_multiline(translation_for(TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING), c->x_offset + 64, c->y_offset + 190,
                 BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN, 0);
         }
     } else if (b->num_workers) {
@@ -752,10 +752,17 @@ static void draw_button_from_state(int state, int x, int y, building_type type)
         case BUILDING_STORAGE_STATE_GETTING_QUARTER:
             {
                 int image_width = image_get(image_group(GROUP_CONTEXT_ICONS) + 12)->width + 15;
-                int text_width = lang_text_get_width(99, 9, FONT_NORMAL_WHITE);
+                int group_number;
+                if (type == BUILDING_GRANARY) { 
+                    // Check whether to use "getting goods" or "getting food"
+                    group_number = 10;
+                } else {
+                    group_number = 9;
+                }
+                int text_width = lang_text_get_width(99, group_number, FONT_NORMAL_WHITE);
                 int start_x = x + (210 - image_width - text_width) / 2;
                 image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, start_x, y - 2);
-                lang_text_draw(99, 9, start_x + image_width, y, FONT_NORMAL_WHITE);
+                lang_text_draw(99, group_number, start_x + image_width, y, FONT_NORMAL_WHITE);
                 break;
             }
         case BUILDING_STORAGE_STATE_NOT_ACCEPTING:

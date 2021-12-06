@@ -721,6 +721,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Resume resource delivery"},
     {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
     {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR, "No labor" },
+    {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "The cart pusher is on his way to get the food from another granary."},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
