@@ -319,6 +319,9 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
         return;
     }
     building *b = building_get(building_id);
+    if (overlay->type == OVERLAY_PROBLEMS) {
+        city_overlay_problems_prepare_building(b);
+    }
     if (overlay->show_building(b)) {
         if (building_is_farm(b->type)) {
             if (is_drawable_farmhouse(grid_offset, city_view_orientation())) {
@@ -449,9 +452,6 @@ static void draw_building_top(int grid_offset, building *b, int x, int y)
 void city_with_overlay_draw_building_top(int x, int y, int grid_offset)
 {
     building *b = building_get(map_building_at(grid_offset));
-    if (overlay->type == OVERLAY_PROBLEMS) {
-        city_overlay_problems_prepare_building(b);
-    }
     if (overlay->show_building(b)) {
         draw_building_top(grid_offset, b, x, y);
     } else {
