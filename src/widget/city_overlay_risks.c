@@ -40,6 +40,14 @@ void city_overlay_problems_prepare_building(building *b)
         b->show_on_problem_overlay = 1;
         return;
     }
+
+    if (b->state == BUILDING_STATE_MOTHBALLED) {
+        b->show_on_problem_overlay = 1;
+        return;
+    } else if (!b->num_workers && building_get_laborers(b->type)) {
+        b->show_on_problem_overlay = 1;
+        return;
+    }
     if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
         if (!b->has_water_access) {
             b->show_on_problem_overlay = 1;
@@ -54,11 +62,7 @@ void city_overlay_problems_prepare_building(building *b)
         } else if (b->loads_stored <= 0) {
             b->show_on_problem_overlay = 1;
         }
-    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
-        b->show_on_problem_overlay = 1;
-    } else if (!b->num_workers && building_get_laborers(b->type)) {
-        b->show_on_problem_overlay = 1;
-    }
+    } 
 
 }
 
@@ -245,6 +249,10 @@ static int get_tooltip_problems(tooltip_context *c, const building *b)
     }
     if (b->strike_duration_days > 0) {
         c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_STRIKE;
+    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_MOTHBALLED;
+    } else if (!b->num_workers && building_get_laborers(b->type)) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR;
     } else if (b->type == BUILDING_FOUNTAIN || b->type == BUILDING_BATHHOUSE) {
         c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_NO_WATER_ACCESS;
     } else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_CLAY_PIT) {
@@ -257,11 +265,7 @@ static int get_tooltip_problems(tooltip_context *c, const building *b)
         } else if (b->loads_stored <= 0) {
             c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_NO_RESOURCES;
         }
-    } else if (b->state == BUILDING_STATE_MOTHBALLED) {
-        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_MOTHBALLED;
-    } else if (!b->num_workers && building_get_laborers(b->type)) {
-        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR;
-    }
+    } 
     if (c->translation_key) {
         return 1;
     }
