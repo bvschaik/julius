@@ -707,7 +707,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_ROOFED_GARDEN_WALL, "Muret couvert"},
     {TR_BUILDING_GARDEN_WALL_GATE, "Portail de jardin"},
     {TR_BUILDING_GARDEN_WALL_GATE_DESC, "Ce petit portail permet de gérer les allées et venues dans les lieux les plus retirés et paisibles de votre cité."},
-    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Le magasinier est en route pour aller chercher les biens dans un autre entrepôt."},
+    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Le magasinier est parti chercher des biens dans un autre entrepôt."},
     {TR_BUILDING_PALISADE, "Palissade" },
     {TR_BUILDING_PALISADE_DESC, "Cette profonde tranchée, surmontée d'un grand mur de poteaux de bois acérés, protègera votre cité des envahisseurs et des animaux sauvages."},
     {TR_OVERLAY_MOTHBALL, "En pause"},
@@ -721,7 +721,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Reprendre la livraison des biens"},
     {TR_CONFIG_DIGIT_SEPARATOR, "Afficher un séparateur de milliers pour les nombres"},
     {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR, "Pas de main-d'œuvre" },
-    {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "Le magasinier est en route pour aller chercher les vivres dans un autre grenier."},
+    {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "Le magasinier est parti chercher des vivres dans un autre grenier."},
+    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_RETURNING_WITH, "Le magasinier revient avec une livraison." },
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
