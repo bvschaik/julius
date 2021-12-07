@@ -707,7 +707,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_ROOFED_GARDEN_WALL, "Roofed garden wall"},
     {TR_BUILDING_GARDEN_WALL_GATE, "Garden gate"},
     {TR_BUILDING_GARDEN_WALL_GATE_DESC, "This small gate controls the movement of people in and out of your city's most secluded spots."},
-    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "The cart pusher is on his way to get the goods from another warehouse."},
+    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "The cart pusher is on his way to get goods from another warehouse."},
     {TR_BUILDING_PALISADE, "Palisade" },
     {TR_BUILDING_PALISADE_DESC, "This earthen bank, topped by a high wall of sharpened wooden stakes, will keep your city safe from invaders and hostile animals."},
     {TR_OVERLAY_MOTHBALL, "Mothballed"},
@@ -721,7 +721,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Resume resource delivery"},
     {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
     {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR, "No labor" },
-    {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "The cart pusher is on his way to get the food from another granary."},
+    {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "The cart pusher is on his way to get food from another granary."},
+    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_RETURNING_WITH, "The cart pusher is returning with a delivery." },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
