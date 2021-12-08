@@ -623,6 +623,8 @@ static translation_string all_strings[] = {
     { TR_MAP_EDITOR_OPTIONS, "Настройки сценария " },
     { TR_SAVEGAME_LARGER_VERSION_TITLE, "Несовместимая версия сохраненной игры" },
     { TR_SAVEGAME_LARGER_VERSION_MESSAGE, "Сохраненная игра, которую вы пытаетесь загрузить - для более новой версии Augustus.\nПожалуйста обновите Augustus до последней версии." },
+    { TR_SAVEGAME_NOT_ABLE_TO_SAVE_TITLE, "Не возможно сохранить игру" },
+    { TR_SAVEGAME_NOT_ABLE_TO_SAVE_MESSAGE, "Было не возможно сохранить игру.\nМожет быть потому что папка с сохраненными играми Цезаря 3 нуждается доступон админом.\nПожалуйста либо переставьте папку Цезаря 3 в место без нуждения админовских разрешений или запустити Augustus за админа (не рекомендуется)." },
     { TR_BUILDING_COLONNADE, "Колоннада" },
     { TR_BUILDING_LARARIUM, "Ларарий" },
     { TR_WINDOW_BUILDING_LARARIUM_DESC, "Небольшая святыня для богов и предков римского народа. Здесь можно совершать небольшие жертвы и молитвы."},
@@ -728,7 +730,9 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION, "Зеленая команда - претендует на происхождение от 'Целересов' - всадников времен Римского царства. Они до сих пор утверждают, что являются лучшими из лучших." },
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Продолжить доставки"},
     {TR_CONFIG_DIGIT_SEPARATOR, "Разделить цифры"},
-    
+    {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR, "Нет рабочих" },
+    {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "Наша тележка забирает товар из другого амбара."},
+    {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_RETURNING_WITH, "Наша тележка возвращаеться с доставки."},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
