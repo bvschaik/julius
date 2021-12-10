@@ -63,11 +63,4 @@ public class DirectorySelectionActivity extends AppCompatActivity {
             directorySelectionLauncher.launch(Uri.EMPTY);
         }
     }
-
-    private void openDirectorySelector() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        intent.putExtra("android.content.extra.FANCY", true);
-        intent.putExtra("android.content.extra.SHOW_FILESIZE", true);
-    }
 }
