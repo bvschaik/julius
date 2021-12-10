@@ -5,7 +5,6 @@
 
 #include <stdint.h>
 
-void android_toast_message(const char *messge);
 const char *android_show_c3_path_dialog(int again);
 float android_get_screen_density(void);
 int android_get_file_descriptor(const char *filename, const char *mode);

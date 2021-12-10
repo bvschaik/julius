@@ -121,17 +121,6 @@ const char *android_show_c3_path_dialog(int again)
     return get_c3_path();
 }
 
-void android_toast_message(const char *message)
-{
-    java_function_handler handler;
-    if (get_java_method_handler(CLASS_JULIUS_ACTIVITY, "toastMessage", "(Ljava/lang/String;)V", &handler)) {
-        jstring jmessage = (*handler.env)->NewStringUTF(handler.env, message);
-        (*handler.env)->CallVoidMethod(handler.env, handler.activity, handler.method, jmessage);
-        (*handler.env)->DeleteLocalRef(handler.env, jmessage);
-    }
-    destroy_java_function_handler(&handler);
-}
-
 float android_get_screen_density(void)
 {
     java_function_handler handler;
