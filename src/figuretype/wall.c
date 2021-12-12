@@ -116,12 +116,14 @@ static void tower_sentry_pick_target(figure *f)
         return;
     }
     if (f->action_state == FIGURE_ACTION_150_ATTACK ||
-        f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->action_state == FIGURE_ACTION_149_CORPSE ||
+        f->action_state == FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER) {
         return;
     }
     if (f->in_building_wait_ticks) {
         return;
     }
+
     f->wait_ticks_next_target++;
     if (f->wait_ticks_next_target >= 40) {
         f->wait_ticks_next_target = 0;
@@ -237,6 +239,11 @@ void figure_tower_sentry_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_170_TOWER_SENTRY_AT_REST:
+
+            if (b->type != BUILDING_TOWER) {
+                f->state = FIGURE_STATE_DEAD;
+            }
+
             f->image_offset = 0;
             f->wait_ticks++;
             if (f->wait_ticks > 40) {
