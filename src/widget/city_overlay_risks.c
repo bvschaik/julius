@@ -33,6 +33,8 @@ static int is_problem_cartpusher(int figure_id)
 
 void city_overlay_problems_prepare_building(building *b)
 {
+    b = building_main(b);
+
     if (b->house_size) {
         return;
     }
@@ -244,6 +246,8 @@ static int get_tooltip_crime(tooltip_context *c, const building *b)
 
 static int get_tooltip_problems(tooltip_context *c, const building *b)
 {
+    b = building_main(b);
+
     if (b->house_size) {
         return 0;
     }
