@@ -12,12 +12,21 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "map/road_access.h"
+#include "sound/speech.h"
 #include "translation/translation.h"
 #include "window/building/figures.h"
 
 static void draw_vacant_lot(building_info_context *c)
 {
     window_building_prepare_figure_list(c);
+    if (c->can_play_sound) {
+        c->can_play_sound = 0;
+        if (c->figure.count > 0) {
+            window_building_play_figure_phrase(c);
+        } else {
+            sound_speech_play_file("wavs/empty_land.wav");
+        }
+    }
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(128, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_figure_list(c);
@@ -121,12 +130,12 @@ static void draw_happiness_info(building_info_context *c, int y_offset)
 void window_building_draw_house(building_info_context *c)
 {
     c->help_id = 56;
-    window_building_play_sound(c, "wavs/housing.wav");
     building *b = building_get(c->building_id);
     if (b->house_population <= 0) {
         draw_vacant_lot(c);
         return;
     }
+    window_building_play_sound(c, "wavs/housing.wav");
     int level = b->type - 10;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(29, level, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
