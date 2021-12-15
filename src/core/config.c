@@ -57,6 +57,7 @@ static const char *ini_keys[] = {
     "gameplay_change_monuments_boost_culture_rating",
     "gameplay_change_disable_infinite_wolves_spawning",
     "gameplay_change_romers_dont_skip_corners",
+    "gameplay_change_yearly_autosave"
 };
 
 static const char *ini_string_keys[] = {

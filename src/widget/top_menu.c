@@ -4,6 +4,7 @@
 #include "city/constants.h"
 #include "city/finance.h"
 #include "city/population.h"
+#include "core/config.h"
 #include "core/lang.h"
 #include "game/file.h"
 #include "game/settings.h"
@@ -49,7 +50,8 @@ static void menu_options_user_interface(int param);
 static void menu_options_gameplay(int param);
 static void menu_options_city_management(int param);
 static void menu_options_hotkeys(int param);
-static void menu_options_autosave(int param);
+static void menu_options_monthly_autosave(int param);
+static void menu_options_yearly_autosave(int param);
 
 static void menu_help_help(int param);
 static void menu_help_mouse_help(int param);
@@ -73,7 +75,8 @@ static menu_item menu_options[] = {
     {CUSTOM_TRANSLATION, TR_CONFIG_HEADER_GAMEPLAY_CHANGES, menu_options_gameplay, 0},
     {CUSTOM_TRANSLATION, TR_CONFIG_HEADER_CITY_MANAGEMENT_CHANGES, menu_options_city_management, 0},
     {CUSTOM_TRANSLATION, TR_BUTTON_CONFIGURE_HOTKEYS, menu_options_hotkeys, 0},
-    {19, 51, menu_options_autosave, 0}
+    {19, 51, menu_options_monthly_autosave, 0},
+    {CUSTOM_TRANSLATION, TR_BUTTON_YEARLY_AUTOSAVE_OFF, menu_options_yearly_autosave, 0},
 };
 
 static menu_item menu_help[] = {
@@ -101,7 +104,7 @@ static menu_item menu_advisors[] = {
 
 static menu_bar_item menu[] = {
     {1, menu_file, 6},
-    {2, menu_options, 6},
+    {2, menu_options, 7},
     {3, menu_help, 4},
     {4, menu_advisors, 13},
 };
@@ -132,10 +135,17 @@ static void clear_state(void)
     data.focus_sub_menu_id = 0;
 }
 
-static void set_text_for_autosave(void)
+static void set_text_for_monthly_autosave(void)
 {
     menu_update_text(&menu[INDEX_OPTIONS], 5, setting_monthly_autosave() ? 51 : 52);
 }
+
+static void set_text_for_yearly_autosave(void)
+{
+    menu_update_text(&menu[INDEX_OPTIONS], 6, 
+        config_get(CONFIG_GP_CH_YEARLY_AUTOSAVE) ? TR_BUTTON_YEARLY_AUTOSAVE_ON : TR_BUTTON_YEARLY_AUTOSAVE_OFF);
+}
+
 
 static void set_text_for_tooltips(void)
 {
@@ -163,7 +173,8 @@ static void set_text_for_warnings(void)
 
 static void init(void)
 {
-    set_text_for_autosave();
+    set_text_for_monthly_autosave();
+    set_text_for_yearly_autosave();
     set_text_for_tooltips();
     set_text_for_warnings();
 }
@@ -487,10 +498,16 @@ static void menu_options_hotkeys(int param)
     window_hotkey_config_show();
 }
 
-static void menu_options_autosave(int param)
+static void menu_options_monthly_autosave(int param)
 {
     setting_toggle_monthly_autosave();
-    set_text_for_autosave();
+    set_text_for_monthly_autosave();
+}
+
+static void menu_options_yearly_autosave(int param)
+{
+    config_set(CONFIG_GP_CH_YEARLY_AUTOSAVE, !config_get(CONFIG_GP_CH_YEARLY_AUTOSAVE));
+    set_text_for_yearly_autosave();
 }
 
 static void menu_help_help(int param)

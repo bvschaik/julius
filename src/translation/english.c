@@ -723,6 +723,9 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR, "No labor" },
     {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "The cart pusher is on his way to get food from another granary."},
     {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_RETURNING_WITH, "The cart pusher is returning with a delivery." },
+    {TR_BUTTON_YEARLY_AUTOSAVE_OFF, "Yearly autosave OFF"},
+    {TR_BUTTON_YEARLY_AUTOSAVE_ON, "Yearly autosave ON" }
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

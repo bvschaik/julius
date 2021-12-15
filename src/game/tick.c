@@ -29,6 +29,7 @@
 #include "city/sentiment.h"
 #include "city/trade.h"
 #include "city/victory.h"
+#include "core/config.h"
 #include "core/random.h"
 #include "editor/editor.h"
 #include "empire/city.h"
@@ -72,6 +73,7 @@ static void advance_year(void)
 
 static void advance_month(void)
 {
+    int new_year = 0;
     city_migration_reset_newcomers();
     city_health_update();
     scenario_random_event_process();
@@ -97,6 +99,7 @@ static void advance_month(void)
 
     if (game_time_advance_month()) {
         advance_year();
+        new_year = 1;
     } else {
         city_ratings_update(0,1);
     }
@@ -108,6 +111,9 @@ static void advance_month(void)
     tutorial_on_month_tick();
     if (setting_monthly_autosave()) {
         game_file_write_saved_game("autosave.svx");
+    }
+    if (new_year && config_get(CONFIG_GP_CH_YEARLY_AUTOSAVE)) {
+        game_file_write_saved_game("autosave-year.svx");
     }
 }
 
