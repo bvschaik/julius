@@ -220,7 +220,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_WORK_CAMP_DESC, "Les ouvriers se rassemblent ici pour transporter les matériaux vers les chantiers de construction."},
     {TR_HEADER_HOUSING, "Logement"},
     {TR_ADVISOR_HOUSING_ROOM, "Les logements ont de la place pour"},
-    {TR_ADVISOR_HOUSING_NO_ROOM, "Il n'y a plus de place dans les logements."},
+    {TR_ADVISOR_HOUSING_NO_ROOM, "Il n'y a plus de place dans les logements"},
     {TR_ADVISOR_RESIDENCES_DEMANDING_POTTERY, "Résidences exigeant des poteries"},
     {TR_ADVISOR_RESIDENCES_DEMANDING_FURNITURE, "Résidences exigeant des meubles"},
     {TR_ADVISOR_RESIDENCES_DEMANDING_OIL, "Résidences exigeant de l'huile"},
@@ -723,6 +723,9 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_LABOR, "Pas de main-d'œuvre" },
     {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "Le magasinier est parti chercher des vivres dans un autre grenier."},
     {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_RETURNING_WITH, "Le magasinier revient avec une livraison." },
+    {TR_BUTTON_YEARLY_AUTOSAVE_OFF, "Sauvegarde auto /an OFF"},
+    {TR_BUTTON_YEARLY_AUTOSAVE_ON, "Sauvegarde auto /an ON" }
+
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
