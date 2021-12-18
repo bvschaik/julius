@@ -656,8 +656,7 @@ int city_with_overlay_get_tooltip_text(tooltip_context *c, int grid_offset)
         overlay_type != OVERLAY_WATER && overlay_type != OVERLAY_FIRE && overlay_type != OVERLAY_LEVY &&
         overlay_type != OVERLAY_DAMAGE && overlay_type != OVERLAY_NATIVE && overlay_type != OVERLAY_DESIRABILITY &&
         overlay_type != OVERLAY_PROBLEMS && overlay_type != OVERLAY_MOTHBALL && overlay_type != OVERLAY_ENEMY &&
-        overlay_type != OVERLAY_WAREHOUSE
-        ;
+        overlay_type != OVERLAY_WAREHOUSE && overlay_type != OVERLAY_SICKNESS;
     building *b = building_get(building_id);
     if (overlay_requires_house && !b->house_size) {
         return 0;
