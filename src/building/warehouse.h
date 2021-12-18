@@ -4,6 +4,11 @@
 #include "building/building.h"
 #include "map/point.h"
 
+#define FULL_WAREHOUSE 32
+#define THREEQ_WAREHOUSE 24
+#define HALF_WAREHOUSE 16
+#define QUARTER_WAREHOUSE 8
+
 enum {
     WAREHOUSE_ROOM = 0,
     WAREHOUSE_FULL = 1,
@@ -21,8 +26,6 @@ int building_warehouse_get_space_info(building *warehouse);
 int building_warehouse_get_amount(building *warehouse, int resource);
 
 int building_warehouse_add_resource(building *b, int resource);
-
-
 
 int building_warehouse_is_accepting(int resource, building *b);
 int building_warehouse_is_getting(int resource, building *b);

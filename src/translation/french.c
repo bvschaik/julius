@@ -724,8 +724,22 @@ static translation_string all_strings[] = {
     {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "Le magasinier est parti chercher des vivres dans un autre grenier."},
     {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_RETURNING_WITH, "Le magasinier revient avec une livraison." },
     {TR_BUTTON_YEARLY_AUTOSAVE_OFF, "Sauvegarde auto /an OFF"},
-    {TR_BUTTON_YEARLY_AUTOSAVE_ON, "Sauvegarde auto /an ON" }
-
+    {TR_BUTTON_YEARLY_AUTOSAVE_ON, "Sauvegarde auto /an ON" },
+    {TR_BUILDING_DOCK_PLAGUE_DESC, "La peste a été propagée ici par un navire marchand. Ce dock est mis en quarantaine le temps qu'un médecin décontamine le secteur."},
+    {TR_BUILDING_GRANARY_PLAGUE_DESC, "La peste a été propagée ici par un visiteur contaminé. Ce grenier est mis en quarantaine le temps qu'un médecin décontamine le secteur."},
+    {TR_BUILDING_WAREHOUSE_PLAGUE_DESC, "La peste a été propagée ici par un visiteur contaminé. Cet entrepôt est mis en quarantaine le temps qu'un médecin décontamine le secteur."},
+    {TR_BUILDING_FUMIGATION_DESC, "Le bâtiment est en cours de désinfection, la fumigation devrait durer quelques jours."},
+    {TR_OVERLAY_SICKNESS, "Maladies"},
+    {TR_ADVISOR_SICKNESS_LEVEL_LOW, "Très peu de maladies se propagent dans la cité, et le commerce fonctionne parfaitement. Le niveau d'hygiène de la cité permet d'endiguer efficacement les épidémies provenant des cités extérieures."},
+    {TR_ADVISOR_SICKNESS_LEVEL_MEDIUM, "Quelques foyers infectieux se déclarent dans la cité mais la situation est sous contrôle. Assurez-vous d'un niveau d'hygiène correct afin que le commerce ne soit pas perturbé. Les hôpitaux sont efficaces pour prévenir les épidémies."},
+    {TR_ADVISOR_SICKNESS_LEVEL_HIGH, "De nombreuses maladies infectieuses circulent dans certains secteurs de la cité. Si vous ne remédiez pas rapidement à la situation, les bâtiments de commerce risquent de passer en quarantaine. Placez les hôpitaux près des docks, greniers, et entrepôts pour endiguer les épidémies provenant des cités extérieures."},
+    {TR_ADVISOR_SICKNESS_LEVEL_PLAGUE, "La peste s'est déclarée dans la cité et le commerce est fortement perturbé. Des médecins sont réquisitionnés pour décontaminer les lieux les plus touchés par l'épidémie. Il faut absolument rétablir la situation!"},
+    {TR_TOOLTIP_OVERLAY_SICKNESS_LOW, "Très peu de maladies"},
+    {TR_TOOLTIP_OVERLAY_SICKNESS_MEDIUM, "Quelques foyers infectieux"},
+    {TR_TOOLTIP_OVERLAY_SICKNESS_HIGH, "De nombreuses maladies infectieuses circulent"},
+    {TR_TOOLTIP_OVERLAY_SICKNESS_PLAGUE, "Des cas de peste se sont déclarés"},
+    {TR_CITY_MESSAGE_TITLE_SICKNESS, "La peste dans la cité"},
+    {TR_CITY_MESSAGE_TEXT_SICKNESS, "La peste s'est déclarée dans la cité, un bâtiment a été placé en quarantaine et des médecins sont réquisitionnés pour le décontaminer."},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)

@@ -283,6 +283,11 @@ building *building_create(building_type type, int x, int y)
     b->tourism_income_this_year = 0;
     b->upgrade_level = 0;
     b->variant = 0;
+    b->sickness_level = 0;
+    b->sickness_duration = 0;
+    b->sickness_last_doctor_cure = 0;
+    b->fumigation_frame = 0;
+    b->fumigation_direction = 0;
     return b;
 }
 

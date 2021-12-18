@@ -11,4 +11,6 @@ const city_overlay *city_overlay_for_clinic(void);
 
 const city_overlay *city_overlay_for_hospital(void);
 
+const city_overlay *city_overlay_for_sickness(void);
+
 #endif // WIGET_CITY_OVERLAY_HEALTH_H

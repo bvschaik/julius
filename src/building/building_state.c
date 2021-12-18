@@ -207,7 +207,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     write_type_data(buf, b);
     buffer_write_i32(buf, b->tax_income_or_storage);
     buffer_write_u8(buf, b->house_days_without_food);
-    buffer_write_u8(buf, b->ruin_has_plague);
+    buffer_write_u8(buf, b->has_plague);
     buffer_write_i8(buf, b->desirability);
     buffer_write_u8(buf, b->is_deleted);
     buffer_write_u8(buf, b->is_adjacent_to_water);
@@ -230,6 +230,13 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
 
     //strikes
     buffer_write_u8(buf, b->strike_duration_days);
+
+    // sickness
+    buffer_write_u8(buf, b->sickness_level);
+    buffer_write_u8(buf, b->sickness_duration);
+    buffer_write_u8(buf, b->sickness_last_doctor_cure);
+    buffer_write_u8(buf, b->fumigation_frame);
+    buffer_write_u8(buf, b->fumigation_direction);
 
     // New building state code should always be added at the end to preserve savegame retrocompatibility
     // Also, don't forget to update BUILDING_STATE_CURRENT_BUFFER_SIZE and if possible, add a new macro like
@@ -414,7 +421,7 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     read_type_data(buf, b, building_buf_size);
     b->tax_income_or_storage = buffer_read_i32(buf);
     b->house_days_without_food = buffer_read_u8(buf);
-    b->ruin_has_plague = buffer_read_u8(buf);
+    b->has_plague = buffer_read_u8(buf);
     b->desirability = buffer_read_i8(buf);
     b->is_deleted = buffer_read_u8(buf);
     b->is_adjacent_to_water = buffer_read_u8(buf);
@@ -486,6 +493,14 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
 
     if (building_buf_size >= BUILDING_STATE_STRIKES) {
         b->strike_duration_days = buffer_read_u8(buf);
+    }
+
+    if (building_buf_size >= BUILDING_STATE_SICKNESS) {
+        b->sickness_level = buffer_read_u8(buf);
+        b->sickness_duration = buffer_read_u8(buf);
+        b->sickness_last_doctor_cure = buffer_read_u8(buf);
+        b->fumigation_frame = buffer_read_u8(buf);
+        b->fumigation_direction = buffer_read_u8(buf);
     }
 
     // The following code should only be executed if the savegame includes building information that is not 

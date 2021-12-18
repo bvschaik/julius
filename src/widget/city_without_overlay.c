@@ -335,28 +335,85 @@ static void draw_figures(int x, int y, int grid_offset)
     }
 }
 
+static void draw_fumigation(building *b, int x, int y, color_t color_mask)
+{
+    int image_id = image_group(GROUP_FIGURE_EXPLOSION); // smoke image_id
+    image_id += b->fumigation_frame;
+    image_draw_masked(image_id, x, y, color_mask);
+    if (image_id == image_group(GROUP_FIGURE_EXPLOSION) + 3) {
+        b->fumigation_direction = 0;
+    }
+    if (image_id == image_group(GROUP_FIGURE_EXPLOSION)) {
+        b->fumigation_direction = 1;
+    }
+    building_animation_advance_fumigation(b);
+}
+
+static void draw_plague(building *b, int x, int y, color_t color_mask)
+{
+    int x_pos = 0;
+    int y_pos = 0;
+
+    if (b->type == BUILDING_DOCK) {
+        if (b->sickness_last_doctor_cure == 99) {
+            x_pos = x + 68;
+            y_pos = y - 38;
+        } else {
+            x_pos = x + 88;
+            y_pos = y - 84;
+        }
+    } else if (b->type == BUILDING_WAREHOUSE) {
+        if (b->sickness_last_doctor_cure == 99) {
+            x_pos = x + 10;
+            y_pos = y - 64;
+        } else {
+            x_pos = x + 12;
+            y_pos = y - 84;
+        }
+    } else if (b->type == BUILDING_GRANARY) {
+        if (b->sickness_last_doctor_cure == 99) {
+            x_pos = x + 70;
+            y_pos = y - 114;
+        } else {
+            x_pos = x + 80;
+            y_pos = y - 124;
+        }
+    }
+
+    if (x_pos && y_pos) {
+        if (b->sickness_last_doctor_cure == 99) {
+            draw_fumigation(b, x_pos, y_pos, color_mask);
+        } else {
+            b->fumigation_direction = 1;
+            image_draw_masked(image_group(GROUP_PLAGUE_SKULL), x_pos, y_pos, color_mask);
+        }
+    }
+}
+
 static void draw_dock_workers(const building *b, int x, int y, color_t color_mask)
 {
-    int num_dockers = building_dock_count_idle_dockers(b);
-    if (num_dockers > 0) {
-        int image_dock = map_image_at(b->grid_offset);
-        int image_dockers = image_group(GROUP_BUILDING_DOCK_DOCKERS);
-        if (image_dock == image_group(GROUP_BUILDING_DOCK_1)) {
-            image_dockers += 0;
-        } else if (image_dock == image_group(GROUP_BUILDING_DOCK_2)) {
-            image_dockers += 3;
-        } else if (image_dock == image_group(GROUP_BUILDING_DOCK_3)) {
-            image_dockers += 6;
-        } else {
-            image_dockers += 9;
+    if (!b->has_plague) {
+        int num_dockers = building_dock_count_idle_dockers(b);
+        if (num_dockers > 0) {
+            int image_dock = map_image_at(b->grid_offset);
+            int image_dockers = image_group(GROUP_BUILDING_DOCK_DOCKERS);
+            if (image_dock == image_group(GROUP_BUILDING_DOCK_1)) {
+                image_dockers += 0;
+            } else if (image_dock == image_group(GROUP_BUILDING_DOCK_2)) {
+                image_dockers += 3;
+            } else if (image_dock == image_group(GROUP_BUILDING_DOCK_3)) {
+                image_dockers += 6;
+            } else {
+                image_dockers += 9;
+            }
+            if (num_dockers == 2) {
+                image_dockers += 1;
+            } else if (num_dockers == 3) {
+                image_dockers += 2;
+            }
+            const image *img = image_get(image_dockers);
+            image_draw_masked(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
         }
-        if (num_dockers == 2) {
-            image_dockers += 1;
-        } else if (num_dockers == 3) {
-            image_dockers += 2;
-        }
-        const image *img = image_get(image_dockers);
-        image_draw_masked(image_dockers, x + img->sprite_offset_x, y + img->sprite_offset_y, color_mask);
     }
 }
 
@@ -375,15 +432,17 @@ static int get_warehouse_flag_image_id(const building *b)
 
 static void draw_warehouse_flag(const building *b, int x, int y, color_t color_mask)
 {
-    int image_id = get_warehouse_flag_image_id(b);
-    if (!image_id) {
-        return;
+    if (!b->has_plague) {
+        int image_id = get_warehouse_flag_image_id(b);
+        if (!image_id) {
+            return;
+        }
+        image_id += b->data.warehouse.flag_frame;
+        image_draw_masked(image_id, x + 19, y - 56, color_mask);
     }
-    image_id += b->data.warehouse.flag_frame;
-    image_draw_masked(image_id, x + 19, y - 56, color_mask);
 }
 
-static void draw_warehouse_ornaments(const building *b, int x, int y, color_t color_mask)
+static void draw_warehouse_ornaments(int x, int y, color_t color_mask)
 {
     image_draw_masked(image_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask);
 }
@@ -423,12 +482,12 @@ static void draw_animation(int x, int y, int grid_offset)
             if (b->type == BUILDING_DOCK) {
                 draw_dock_workers(b, x, y, color_mask);
             } else if (b->type == BUILDING_WAREHOUSE) {
-                draw_warehouse_ornaments(b, x, y, color_mask);
+                draw_warehouse_ornaments(x, y, color_mask);
                 draw_warehouse_flag(b, x, y, color_mask);
                 building_animation_advance_warehouse_flag(b, get_warehouse_flag_image_id(b));
             } else if (b->type == BUILDING_GRANARY) {
                 draw_granary_stores(img, b, x, y, color_mask);
-            } else if (b->type == BUILDING_BURNING_RUIN && b->ruin_has_plague) {
+            } else if (b->type == BUILDING_BURNING_RUIN && b->has_plague) {
                 image_draw_masked(image_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask);
             }
             int animation_offset = building_animation_offset(b, image_id, grid_offset);
@@ -445,6 +504,10 @@ static void draw_animation(int x, int y, int grid_offset)
                         y + ydiff + img->sprite_offset_y - img->height,
                         color_mask);
                 }
+            }
+
+            if (b->has_plague) {
+                draw_plague(b, x, y, color_mask);
             }
         }
     } else if (map_sprite_bridge_at(grid_offset)) {

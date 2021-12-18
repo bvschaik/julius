@@ -11,6 +11,7 @@
 #include "building/storage.h"
 #include "city/buildings.h"
 #include "city/finance.h"
+#include "city/health.h"
 #include "city/map.h"
 #include "city/message.h"
 #include "city/resource.h"
@@ -89,6 +90,9 @@ int figure_trade_caravan_can_buy(figure *trader, int building_id, int city_id)
         !(config_get(CONFIG_GP_CH_ALLOW_EXPORTING_FROM_GRANARIES) && b->type == BUILDING_GRANARY)) {
         return 0;
     }
+    if (b->has_plague) {
+        return 0;
+    }
     if (trader->trader_amount_bought >= figure_trade_land_trade_units()) {
         return 0;
     }
@@ -119,6 +123,9 @@ int figure_trade_caravan_can_sell(figure *trader, int building_id, int city_id)
 {
     building *b = building_get(building_id);
     if (b->type != BUILDING_WAREHOUSE && b->type != BUILDING_GRANARY) {
+        return 0;
+    }
+    if (b->has_plague) {
         return 0;
     }
     if (trader->loads_sold_or_carrying >= figure_trade_land_trade_units()) {
@@ -504,6 +511,8 @@ void figure_trade_caravan_action(figure *f)
                     if (resource) {
                         trade_route_increase_traded(empire_city_get_route_id(f->empire_city_id), resource);
                         trader_record_bought_resource(f->trader_id, resource);
+                        city_health_update_sickness_level_in_building(f->destination_building_id);
+
                         f->trader_amount_bought++;
                     } else {
                         move_on++;
@@ -516,6 +525,7 @@ void figure_trade_caravan_action(figure *f)
                     if (resource) {
                         trade_route_increase_traded(empire_city_get_route_id(f->empire_city_id), resource);
                         trader_record_sold_resource(f->trader_id, resource);
+                        city_health_update_sickness_level_in_building(f->destination_building_id);
                         f->loads_sold_or_carrying++;
                     } else {
                         move_on++;
@@ -645,6 +655,7 @@ void figure_native_trader_action(figure *f)
                 if (figure_trade_caravan_can_buy(f, f->destination_building_id, 0)) {
                     int resource = trader_get_buy_resource(f->destination_building_id, 0);
                     trader_record_bought_resource(f->trader_id, resource);
+                    city_health_update_sickness_level_in_building(f->destination_building_id);
                     f->trader_amount_bought += 3;
                 } else {
                     map_point tile;

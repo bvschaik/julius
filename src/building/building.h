@@ -47,7 +47,7 @@ typedef struct building {
     short figure_id;
     short figure_id2; // labor seeker or market supplier
     short immigrant_figure_id;
-    short figure_id4; // tower ballista or burning ruin prefect
+    short figure_id4; // tower ballista, burning ruin prefect, doctor healing plague
     unsigned char figure_spawn_delay;
     unsigned char days_since_offering;
     unsigned char figure_roam_direction;
@@ -156,7 +156,7 @@ typedef struct building {
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;
-    unsigned char ruin_has_plague;
+    unsigned char has_plague;
     signed char desirability;
     unsigned char is_deleted;
     unsigned char is_adjacent_to_water;
@@ -177,6 +177,11 @@ typedef struct building {
     unsigned char variant;
     unsigned char upgrade_level;
     unsigned char strike_duration_days;
+    unsigned char sickness_level;
+    unsigned char sickness_duration;
+    unsigned char sickness_last_doctor_cure;
+    unsigned char fumigation_frame;
+    unsigned char fumigation_direction;
 } building;
 
 building *building_get(int id);

@@ -1,6 +1,8 @@
 #include "city_overlay_health.h"
 
+#include "city/health.h"
 #include "game/state.h"
+#include "translation/translation.h"
 
 static int show_building_barber(const building *b)
 {
@@ -20,6 +22,11 @@ static int show_building_clinic(const building *b)
 static int show_building_hospital(const building *b)
 {
     return b->type == BUILDING_HOSPITAL;
+}
+
+static int show_building_sickness(const building *b)
+{
+    return b->type == BUILDING_HOSPITAL || b->type == BUILDING_DOCTOR;
 }
 
 static int show_figure_barber(const figure *f)
@@ -42,6 +49,13 @@ static int show_figure_hospital(const figure *f)
     return f->type == FIGURE_SURGEON;
 }
 
+static int show_figure_sickness(const figure *f)
+{
+    return f->type == FIGURE_SURGEON || f->type == FIGURE_DOCTOR || f->type == FIGURE_DOCKER ||
+           f->type == FIGURE_CART_PUSHER || f->type == FIGURE_TRADE_SHIP || f->type == FIGURE_WAREHOUSEMAN ||
+           f->type == FIGURE_TRADE_CARAVAN || f->type == FIGURE_TRADE_CARAVAN_DONKEY;
+}
+
 static int get_column_height_barber(const building *b)
 {
     return b->house_size && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
@@ -60,6 +74,11 @@ static int get_column_height_clinic(const building *b)
 static int get_column_height_hospital(const building *b)
 {
     return b->house_size && b->data.house.hospital ? b->data.house.hospital / 10 : NO_COLUMN;
+}
+
+static int get_column_height_sickness(const building *b)
+{
+    return b->sickness_level ? b->sickness_level / 10 : NO_COLUMN;
 }
 
 static int get_tooltip_barber(tooltip_context *c, const building *b)
@@ -112,6 +131,20 @@ static int get_tooltip_hospital(tooltip_context *c, const building *b)
     } else {
         return 42;
     }
+}
+
+static int get_tooltip_sickness(tooltip_context *c, const building *b)
+{
+    if (b->sickness_level < LOW_SICKNESS_LEVEL) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_LOW;
+    } else if (b->sickness_level < MEDIUM_SICKNESS_LEVEL) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_MEDIUM;
+    } else if (b->sickness_level < HIGH_SICKNESS_LEVEL) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_HIGH;
+    } else {
+        c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_PLAGUE;
+    }
+    return 0;
 }
 
 const city_overlay *city_overlay_for_barber(void)
@@ -174,6 +207,22 @@ const city_overlay *city_overlay_for_hospital(void)
         get_tooltip_hospital,
         0,
         0
+    };
+    return &overlay;
+}
+
+const city_overlay *city_overlay_for_sickness(void)
+{
+    static city_overlay overlay = {
+            OVERLAY_SICKNESS,
+            COLUMN_COLOR_RED_TO_GREEN,
+            show_building_sickness,
+            show_figure_sickness,
+            get_column_height_sickness,
+            0,
+            get_tooltip_sickness,
+            0,
+            0
     };
     return &overlay;
 }

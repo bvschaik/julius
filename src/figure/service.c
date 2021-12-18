@@ -9,6 +9,7 @@
 #include "core/config.h"
 #include "figuretype/crime.h"
 #include "game/resource.h"
+#include "game/time.h"
 #include "map/building.h"
 #include "map/grid.h"
 
@@ -34,6 +35,42 @@ static int provide_culture(int x, int y, void (*callback)(building *))
         }
     }
     return serviced;
+}
+
+static void provide_healing(int x, int y, void (*callback)(building *, int coverage), int coverage)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, 1, 4, &x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            int building_id = map_building_at(grid_offset);
+            if (building_id) {
+                building *b = building_get(building_id);
+                if (b->sickness_level) {
+                    callback(b, coverage);
+                }
+            }
+        }
+    }
+}
+
+static void provide_sickness(int x, int y, void (*callback)(building *, int sickness_dest), int sickness_dest)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, 1, 2, &x_min, &y_min, &x_max, &y_max);
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            int building_id = map_building_at(grid_offset);
+            if (building_id) {
+                building *b = building_get(building_id);
+                if (b->house_size && b->house_population > 0) {
+                    callback(b, sickness_dest);
+                }
+            }
+        }
+    }
 }
 
 static int provide_entertainment(int x, int y, int shows, void (*callback)(building *, int))
@@ -164,9 +201,31 @@ static void clinic_coverage(building *b)
     b->data.house.clinic = MAX_COVERAGE;
 }
 
+static void sickness_coverage(building *b, int coverage)
+{
+    int day = game_time_day();
+    // not sure because if day is the same but one month later or one year later it will be false
+    if (!b->has_plague && b->sickness_last_doctor_cure != day) {
+        b->sickness_last_doctor_cure = day;
+
+        if (b->sickness_level > coverage) {
+            b->sickness_level -= coverage;
+        } else {
+            b->sickness_level = 0;
+        }
+    }
+}
+
 static void hospital_coverage(building *b)
 {
     b->data.house.hospital = MAX_COVERAGE;
+}
+
+static void cart_pusher_sickness(building *b, int sickness_dest)
+{
+    if (!b->sickness_level) {
+        b->sickness_level = 1 + (sickness_dest / 10);
+    }
 }
 
 static int provide_missionary_coverage(int x, int y)
@@ -516,10 +575,22 @@ int figure_service_provide_coverage(figure *f)
             houses_serviced = provide_culture(x, y, barber_coverage);
             break;
         case FIGURE_DOCTOR:
+            provide_healing(x, y, sickness_coverage, 2);
             houses_serviced = provide_culture(x, y, clinic_coverage);
             break;
         case FIGURE_SURGEON:
+            provide_healing(x, y, sickness_coverage, 10);
             houses_serviced = provide_culture(x, y, hospital_coverage);
+            break;
+        case FIGURE_WAREHOUSEMAN:
+        case FIGURE_DOCKER:
+        case FIGURE_CART_PUSHER:
+            b = building_get(f->building_id);
+            building *dest_b = building_get(f->destination_building_id);
+
+            if (b->sickness_level || dest_b->sickness_level) {
+                provide_sickness(x, y, cart_pusher_sickness, dest_b->sickness_level);
+            }
             break;
         case FIGURE_MISSIONARY:
             houses_serviced = provide_missionary_coverage(x, y);

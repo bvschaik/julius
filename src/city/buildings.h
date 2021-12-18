@@ -54,4 +54,7 @@ void city_buildings_set_mission_post_operational(void);
 
 int city_buildings_unknown_value(void);
 
+int city_buildings_get_closest_plague(int x, int y, int *distance);
+void city_buildings_update_plague(void);
+
 #endif // CITY_BUILDINGS_H

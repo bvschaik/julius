@@ -93,6 +93,8 @@ static const city_overlay *get_city_overlay(void)
             return city_overlay_for_clinic();
         case OVERLAY_HOSPITAL:
             return city_overlay_for_hospital();
+        case OVERLAY_SICKNESS:
+            return city_overlay_for_sickness();
         case OVERLAY_RELIGION:
             return city_overlay_for_religion();
         case OVERLAY_TAX_INCOME:

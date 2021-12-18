@@ -30,6 +30,11 @@ static void destroy_on_fire(building *b, int plagued)
     int was_tent = b->house_size && b->subtype.house_level <= HOUSE_LARGE_TENT;
     b->house_population = 0;
     b->house_size = 0;
+    b->sickness_level = 0;
+    b->sickness_last_doctor_cure = 0;
+    b->fumigation_frame = 0;
+    b->fumigation_direction = 0;
+    b->sickness_duration = 0;
     b->output_resource_id = 0;
     b->distance_from_entry = 0;
     building_clear_related_data(b);
@@ -54,7 +59,7 @@ static void destroy_on_fire(building *b, int plagued)
         b->fire_duration = (b->house_figure_generation_delay & 7) + 1;
         b->fire_proof = 1;
         b->size = 1;
-        b->ruin_has_plague = plagued;
+        b->has_plague = plagued;
         memset(&b->data, 0, sizeof(b->data));
         b->data.rubble.was_tent = was_tent;
         map_building_tiles_add(b->id, b->x, b->y, 1, building_image_get(b), TERRAIN_BUILDING);
@@ -77,7 +82,7 @@ static void destroy_on_fire(building *b, int plagued)
         ruin->fire_duration = (ruin->house_figure_generation_delay & 7) + 1;
         ruin->figure_id4 = 0;
         ruin->fire_proof = 1;
-        ruin->ruin_has_plague = plagued;
+        ruin->has_plague = plagued;
     }
     if (waterside_building) {
         map_routing_update_water();

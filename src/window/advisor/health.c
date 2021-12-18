@@ -9,7 +9,7 @@
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
-#define ADVISOR_HEIGHT 18
+#define ADVISOR_HEIGHT 26
 
 static int get_health_advice(void)
 {
@@ -33,9 +33,18 @@ static int draw_background(void)
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
 
+    int sickness_level = city_health_get_global_sickness_level();
+    int text_id = city_health() / 10 + 16;
+
+    if (sickness_level == SICKNESS_LEVEL_HIGH) {
+        text_id = 18;
+    } else if (sickness_level == SICKNESS_LEVEL_PLAGUE) {
+        text_id = 16;
+    }
+
     lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK);
     if (city_population() >= 200) {
-        lang_text_draw_multiline(56, city_health() / 10 + 16, 60, 46, 512, FONT_NORMAL_BLACK);
+        lang_text_draw_multiline(56, text_id, 60, 46, 512, FONT_NORMAL_BLACK);
     } else {
         lang_text_draw_multiline(56, 15, 60, 46, 512, FONT_NORMAL_BLACK);
     }
@@ -72,6 +81,7 @@ static int draw_background(void)
     lang_text_draw(56, 6, 280 + width, 172, FONT_NORMAL_WHITE);
 
     int pct_hospital = city_culture_coverage_hospital();
+
     if (pct_hospital == 0) {
         lang_text_draw_centered(57, 10, 440, 172, 160, FONT_NORMAL_WHITE);
     } else if (pct_hospital < 100) {
@@ -80,7 +90,17 @@ static int draw_background(void)
         lang_text_draw_centered(57, 21, 440, 172, 160, FONT_NORMAL_WHITE);
     }
 
-    lang_text_draw_multiline(56, 7 + get_health_advice(), 60, 194, 512, FONT_NORMAL_BLACK);
+    int text_height = lang_text_draw_multiline(56, 7 + get_health_advice(), 60, 210, 512, FONT_NORMAL_BLACK);
+
+    if (sickness_level == SICKNESS_LEVEL_LOW) {
+        text_draw_multiline(translation_for(TR_ADVISOR_SICKNESS_LEVEL_LOW), 60, 230 + text_height, 512, FONT_NORMAL_BLACK, 0);
+    } else if (sickness_level == SICKNESS_LEVEL_MEDIUM) {
+        text_draw_multiline(translation_for(TR_ADVISOR_SICKNESS_LEVEL_MEDIUM), 60, 230 + text_height,512,FONT_NORMAL_BLACK, 0);
+    } else if (sickness_level == SICKNESS_LEVEL_HIGH) {
+        text_draw_multiline(translation_for(TR_ADVISOR_SICKNESS_LEVEL_HIGH), 60, 230 + text_height, 512, FONT_NORMAL_BLACK, 0);
+    } else { // plague
+        text_draw_multiline(translation_for(TR_ADVISOR_SICKNESS_LEVEL_PLAGUE), 60, 230 + text_height,512, FONT_NORMAL_BLACK, 0);
+    }
 
     return ADVISOR_HEIGHT;
 }

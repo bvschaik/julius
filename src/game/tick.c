@@ -13,6 +13,7 @@
 #include "building/lighthouse.h"
 #include "building/maintenance.h"
 #include "building/warehouse.h"
+#include "city/buildings.h"
 #include "city/culture.h"
 #include "city/emperor.h"
 #include "city/festival.h"
@@ -134,7 +135,8 @@ static void advance_day(void)
 static void advance_tick(void)
 {
     // NB: these ticks are noop:
-    // 0, 9, 10, 11, 13, 14, 15, 26, 41, 42, 47
+    // 0, 10, 11, 13, 14, 15, 26, 41
+    // max is 49
     switch (game_time_tick()) {
         case 1: city_gods_calculate_moods(1); break;
         case 2: sound_music_update(0); break;
@@ -144,6 +146,7 @@ static void advance_tick(void)
         case 6: map_natives_check_land(); break;
         case 7: map_road_network_update(); break;
         case 8: building_granaries_calculate_stocks(); break;
+        case 9: city_buildings_update_plague(); break;
         case 12: house_service_decay_houses_covered(); break;
         case 16: city_resource_calculate_warehouse_stocks(); break;
         case 17: city_resource_calculate_food_stocks_and_supply_wheat(); break;

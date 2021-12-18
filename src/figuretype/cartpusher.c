@@ -6,6 +6,7 @@
 #include "building/monument.h"
 #include "building/storage.h"
 #include "building/warehouse.h"
+#include "city/health.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -343,6 +344,7 @@ void figure_cartpusher_action(figure *f)
             f->wait_ticks++;
             if (f->wait_ticks > 10) {
                 if (building_warehouse_add_resource(building_get(f->destination_building_id), f->resource_id)) {
+                    city_health_dispatch_sickness(f);
                     f->action_state = FIGURE_ACTION_27_CARTPUSHER_RETURNING;
                     f->wait_ticks = 0;
                     f->destination_x = f->source_x;
@@ -359,6 +361,7 @@ void figure_cartpusher_action(figure *f)
             f->wait_ticks++;
             if (f->wait_ticks > 5) {
                 if (building_granary_add_resource(building_get(f->destination_building_id), f->resource_id, 1)) {
+                    city_health_dispatch_sickness(f);
                     f->action_state = FIGURE_ACTION_27_CARTPUSHER_RETURNING;
                     f->wait_ticks = 0;
                     f->destination_x = f->source_x;
@@ -607,6 +610,9 @@ void figure_warehouseman_action(figure *f)
                 switch (b->type) {
                     case BUILDING_GRANARY:
                         delivered = building_granary_add_resource(b, f->resource_id, 0);
+                        if (delivered) {
+                            city_health_dispatch_sickness(f);
+                        }
                         break;
                     case BUILDING_BARRACKS:
                     case BUILDING_GRAND_TEMPLE_MARS:
@@ -615,6 +621,9 @@ void figure_warehouseman_action(figure *f)
                     case BUILDING_WAREHOUSE:
                     case BUILDING_WAREHOUSE_SPACE:
                         delivered = building_warehouse_add_resource(b, f->resource_id);
+                        if (delivered) {
+                            city_health_dispatch_sickness(f);
+                        }
                         break;
                     default: // workshop
                         building_workshop_add_raw_material(b);
@@ -670,6 +679,7 @@ void figure_warehouseman_action(figure *f)
                 int resource;
                 f->loads_sold_or_carrying = building_granary_remove_for_getting_deliveryman(
                     building_get(f->destination_building_id), building_get(f->building_id), &resource);
+                city_health_dispatch_sickness(f);
                 f->resource_id = resource;
                 f->action_state = FIGURE_ACTION_56_WAREHOUSEMAN_RETURNING_WITH_FOOD;
                 f->wait_ticks = 0;
@@ -732,6 +742,7 @@ void figure_warehouseman_action(figure *f)
             f->wait_ticks++;
             if (f->wait_ticks > 4) {
                 f->loads_sold_or_carrying = 0;
+                city_health_dispatch_sickness(f);
                 while (f->loads_sold_or_carrying < 4 && 0 == building_warehouse_remove_resource(
                     building_get(f->destination_building_id), f->collecting_item_id, 1)) {
                     f->loads_sold_or_carrying++;

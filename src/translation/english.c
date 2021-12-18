@@ -724,8 +724,22 @@ static translation_string all_strings[] = {
     {TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING, "The cart pusher is on his way to get food from another granary."},
     {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_RETURNING_WITH, "The cart pusher is returning with a delivery." },
     {TR_BUTTON_YEARLY_AUTOSAVE_OFF, "Yearly autosave OFF"},
-    {TR_BUTTON_YEARLY_AUTOSAVE_ON, "Yearly autosave ON" }
-
+    {TR_BUTTON_YEARLY_AUTOSAVE_ON, "Yearly autosave ON" },
+    {TR_BUILDING_DOCK_PLAGUE_DESC, "The plague was brought here by a trade ship. This dock is in quarantine while a doctor decontaminates the area."},
+    {TR_BUILDING_GRANARY_PLAGUE_DESC, "The plague was brought here by a contaminated worker. This granary is in quarantine while a doctor decontaminates the area."},
+    {TR_BUILDING_WAREHOUSE_PLAGUE_DESC, "The plague was brought here by a contaminated worker. This warehouse is in quarantine while a doctor decontaminates the area."},
+    {TR_BUILDING_FUMIGATION_DESC, "The building is being disinfected, the fumigation should last a few days."},
+    {TR_OVERLAY_SICKNESS, "Sickness"},
+    {TR_ADVISOR_SICKNESS_LEVEL_LOW, "Very few diseases are spread in the city, and trade is functioning perfectly. The city's level of hygiene allows to effectively stem epidemics from outside cities."},
+    {TR_ADVISOR_SICKNESS_LEVEL_MEDIUM, "Some infectious diseases have appeared in the city, but the situation is under control. Ensure a correct level of hygiene in order for trade to not be impacted. Hospitals are effective at preventing epidemics."},
+    {TR_ADVISOR_SICKNESS_LEVEL_HIGH, "Many infectious diseases spread in some areas of the city. If you do not remedy the situation quickly, trade buildings may be put in quarantine. Build hospitals near docks, granaries, and warehouses to stem epidemics from outside cities."},
+    {TR_ADVISOR_SICKNESS_LEVEL_PLAGUE, "The plague strikes the city and trade is severely impacted. Doctors are requisitioned to decontaminate places being the most afflicted by the epidemic. The situation must absolutely be restored!"},
+    {TR_TOOLTIP_OVERLAY_SICKNESS_LOW, "Very few diseases"},
+    {TR_TOOLTIP_OVERLAY_SICKNESS_MEDIUM, "A few infectious diseases"},
+    {TR_TOOLTIP_OVERLAY_SICKNESS_HIGH, "Many infectious diseases spreading"},
+    {TR_TOOLTIP_OVERLAY_SICKNESS_PLAGUE, "Plague cases breaks out"},
+    {TR_CITY_MESSAGE_TITLE_SICKNESS, "Plague in the city"},
+    {TR_CITY_MESSAGE_TEXT_SICKNESS, "Plague has broken out in the city, a building has been put in quarantine and doctors are requisitioned to decontaminate it."},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

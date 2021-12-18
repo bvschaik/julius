@@ -178,3 +178,20 @@ int building_animation_advance_warehouse_flag(building *b, int image_id)
     }
     return b->data.warehouse.flag_frame;
 }
+
+int building_animation_advance_fumigation(building *b)
+{
+    if (game_animation_should_advance(8)) {
+        if (b->fumigation_direction) {
+            b->fumigation_frame++;
+        } else {
+            b->fumigation_frame--;
+        }
+    }
+
+    if (b->fumigation_frame > 5 || b->fumigation_frame < 0) {
+        b->fumigation_frame = 0;
+    }
+
+    return b->fumigation_frame;
+}

@@ -88,6 +88,16 @@ void figure_delete(figure *f)
                 b->figure_id4 = 0;
             }
             break;
+        case FIGURE_SURGEON:
+        case FIGURE_DOCTOR:
+            // if doctor was going to illness plague building, then remove figure_id4 to the dock
+            if (f->destination_building_id) {
+                building *b_dest = building_get(f->destination_building_id);
+                if (b_dest->figure_id4 && f->id == b_dest->figure_id4) {
+                    b_dest->figure_id4 = 0;
+                }
+            }
+            break;
         case FIGURE_BALLISTA:
         case FIGURE_WATCHTOWER_ARCHER:
             b->figure_id4 = 0;

@@ -267,36 +267,45 @@ static void draw_dock_permission_buttons(int x_offset, int y_offset, int dock_id
 void window_building_draw_dock(building_info_context *c)
 {
     c->help_id = 83;
-    window_building_play_sound(c, "wavs/dock.wav");
+
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(101, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
 
-    if (!c->has_road_access) {
-        window_building_draw_description(c, 69, 25);
-    } else if (b->data.dock.trade_ship_id) {
-        if (c->worker_percentage <= 0) {
-            window_building_draw_description(c, 101, 2);
-        } else if (c->worker_percentage < 50) {
-            window_building_draw_description(c, 101, 3);
-        } else if (c->worker_percentage < 75) {
-            window_building_draw_description(c, 101, 4);
+    if (b->has_plague) {
+        window_building_play_sound(c, "wavs/clinic.wav");
+        if (b->sickness_last_doctor_cure == 99) {
+            window_building_draw_description_from_tr_string(c, TR_BUILDING_FUMIGATION_DESC);
         } else {
-            window_building_draw_description(c, 101, 5);
+            window_building_draw_description_from_tr_string(c, TR_BUILDING_DOCK_PLAGUE_DESC);
         }
     } else {
-        if (c->worker_percentage <= 0) {
-            window_building_draw_description(c, 101, 6);
-        } else if (c->worker_percentage < 50) {
-            window_building_draw_description(c, 101, 7);
-        } else if (c->worker_percentage < 75) {
-            window_building_draw_description(c, 101, 8);
+        window_building_play_sound(c, "wavs/dock.wav");
+        if (!c->has_road_access) {
+            window_building_draw_description(c, 69, 25);
+        } else if (b->data.dock.trade_ship_id) {
+            if (c->worker_percentage <= 0) {
+                window_building_draw_description(c, 101, 2);
+            } else if (c->worker_percentage < 50) {
+                window_building_draw_description(c, 101, 3);
+            } else if (c->worker_percentage < 75) {
+                window_building_draw_description(c, 101, 4);
+            } else {
+                window_building_draw_description(c, 101, 5);
+            }
         } else {
-            window_building_draw_description(c, 101, 9);
+            if (c->worker_percentage <= 0) {
+                window_building_draw_description(c, 101, 6);
+            } else if (c->worker_percentage < 50) {
+                window_building_draw_description(c, 101, 7);
+            } else if (c->worker_percentage < 75) {
+                window_building_draw_description(c, 101, 8);
+            } else {
+                window_building_draw_description(c, 101, 9);
+            }
         }
     }
-
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
@@ -633,11 +642,24 @@ void window_building_draw_granary(building_info_context *c)
 {
     c->help_id = 3;
     data.building_id = c->building_id;
-    window_building_play_sound(c, "wavs/granary.wav");
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(98, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     building *b = building_get(c->building_id);
-    if (!c->has_road_access) {
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+
+    lang_text_draw_centered(98, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+
+    if (b->has_plague) {
+        window_building_play_sound(c, "wavs/clinic.wav");
+    } else {
+        window_building_play_sound(c, "wavs/granary.wav");
+    }
+
+    if (b->has_plague) {
+        if (b->sickness_last_doctor_cure == 99) {
+            window_building_draw_description_from_tr_string(c, TR_BUILDING_FUMIGATION_DESC);
+        } else {
+            window_building_draw_description_from_tr_string(c, TR_BUILDING_GRANARY_PLAGUE_DESC);
+        }
+    } else if (!c->has_road_access) {
         window_building_draw_description_at(c, 40, 69, 25);
     } else if (scenario_property_rome_supplies_wheat()) {
         window_building_draw_description_at(c, 40, 98, 4);
@@ -869,12 +891,26 @@ void window_building_get_tooltip_granary_orders(int *group_id, int *text_id, int
 void window_building_draw_warehouse(building_info_context *c)
 {
     c->help_id = 4;
-    window_building_play_sound(c, "wavs/warehouse.wav");
-    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    lang_text_draw_centered(99, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+
     building *b = building_get(c->building_id);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     data.building_id = c->building_id;
-    if (!c->has_road_access) {
+
+    lang_text_draw_centered(99, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+
+    if (b->has_plague) {
+        window_building_play_sound(c, "wavs/clinic.wav");
+    } else {
+        window_building_play_sound(c, "wavs/warehouse.wav");
+    }
+
+    if (b->has_plague) {
+        if (b->sickness_last_doctor_cure == 99) {
+            window_building_draw_description_from_tr_string(c, TR_BUILDING_FUMIGATION_DESC);
+        } else {
+            window_building_draw_description_from_tr_string(c, TR_BUILDING_WAREHOUSE_PLAGUE_DESC);
+        }
+    } else if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else {
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {

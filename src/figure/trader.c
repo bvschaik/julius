@@ -88,8 +88,6 @@ int trader_has_sold_max(int trader_id)
     return data.traders[trader_id].sold_amount >= figure_trade_sea_trade_units();
 }
 
-
-
 void traders_save_state(buffer *buf)
 {
     for (int i = 0; i < MAX_TRADERS; i++) {

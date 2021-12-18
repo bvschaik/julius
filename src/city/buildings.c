@@ -1,6 +1,11 @@
 #include "buildings.h"
 
 #include "city/data_private.h"
+#include "core/calc.h"
+
+#define NUM_PLAGUE_BUILDINGS sizeof(PLAGUE_BUILDINGS) / sizeof(building_type)
+
+static const building_type PLAGUE_BUILDINGS[] = { BUILDING_DOCK, BUILDING_WAREHOUSE, BUILDING_GRANARY };
 
 int city_buildings_has_senate(void)
 {
@@ -244,4 +249,66 @@ void city_buildings_set_mission_post_operational(void)
 int city_buildings_unknown_value(void)
 {
     return city_data.building.unknown_value;
+}
+
+int city_buildings_get_closest_plague(int x, int y, int *distance)
+{
+    int min_free_building_id = 0;
+    int min_occupied_building_id = 0;
+    int min_occupied_dist = *distance = 10000;
+
+    // Find closest in buildings (docks, granaries or warehouses)
+    for (int i = 0 ; i < NUM_PLAGUE_BUILDINGS; i++) {
+        building_type type = PLAGUE_BUILDINGS[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->has_plague && b->distance_from_entry) {
+                int dist = calc_maximum_distance(x, y, b->x, b->y);
+                if (b->figure_id4) {
+                    if (dist < min_occupied_dist) {
+                        min_occupied_dist = dist;
+                        min_occupied_building_id = b->id;
+                    }
+                } else if (dist < *distance) {
+                    *distance = dist;
+                    min_free_building_id = b->id;
+                }
+            }
+        }
+    }
+
+    if (!min_free_building_id && min_occupied_dist <= 2) {
+        min_free_building_id = min_occupied_building_id;
+        *distance = 2;
+    }
+    return min_free_building_id;
+}
+
+static void update_sickness_duration(int building_id)
+{
+    building *b = building_get(building_id);
+
+    if (b->has_plague) {
+        // Stop plague after time or if doctor heals it
+        if (b->sickness_duration == 99) {
+            b->sickness_duration = 0;
+            b->has_plague = 0;
+            b->sickness_level = 0;
+            b->sickness_last_doctor_cure = 0;
+            b->figure_id4 = 0;
+            b->fumigation_frame = 0;
+            b->fumigation_direction = 0;
+        } else {
+            b->sickness_duration += 1;
+        }
+    }
+}
+
+void city_buildings_update_plague(void)
+{
+    for (int i = 0 ; i < NUM_PLAGUE_BUILDINGS; i++) {
+        building_type type = PLAGUE_BUILDINGS[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            update_sickness_duration(b->id);
+        }
+    }
 }

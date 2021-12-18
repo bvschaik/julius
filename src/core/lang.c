@@ -271,6 +271,10 @@ void load_custom_messages(void)
             MESSAGE_TYPE_GENERAL);
         i += 1;
     }
+
+    m = &data.message_entries[i];
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_SICKNESS, TR_CITY_MESSAGE_TEXT_SICKNESS, 1, MESSAGE_TYPE_DISASTER);
+    i += 1;
 }
 
 
