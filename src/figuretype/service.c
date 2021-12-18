@@ -14,6 +14,8 @@
 #include "map/building.h"
 #include "map/road_access.h"
 
+static const int DOCTOR_HEALING_OFFSETS[] = { 0, 1, 2, 3, 4, 5, 4, 3, 2, 1};
+
 static void roamer_action(figure *f, int num_ticks)
 {
     switch (f->action_state) {
@@ -373,8 +375,11 @@ void figure_doctor_action(figure *f)
             break;
         case FIGURE_ACTION_232_DOCTOR_AT_PLAGUE:
             heal_plague(f);
-            figure_image_increase_offset(f, 10);
-            f->image_id = assets_get_group_id("Health") + f->image_offset;
+            // Nonstandard number of walker animation frames
+            if (f->image_offset >= sizeof DOCTOR_HEALING_OFFSETS / sizeof DOCTOR_HEALING_OFFSETS[0]) {
+                f->image_offset = 0;
+            }
+            f->image_id = assets_get_group_id("Health") + DOCTOR_HEALING_OFFSETS[f->image_offset];
             break;
     }
 }
