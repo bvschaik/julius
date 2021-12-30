@@ -167,8 +167,8 @@ static int change_market_supplier_destination(figure *f, int dst_building_id)
     f->destination_building_id = dst_building_id;
     building *b_dst = building_get(dst_building_id);
     map_point road;
-    if (!map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) &&
-        !map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
+    if (!map_has_road_access_rotation(b_dst->subtype.orientation, b_dst->x, b_dst->y, b_dst->size, &road) &&
+        !map_has_road_access_rotation(b_dst->subtype.orientation, b_dst->x, b_dst->y, 3, &road)) {
         return 0;
     }
     f->action_state = FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE;
@@ -182,6 +182,7 @@ static int recalculate_market_supplier_destination(figure *f)
     int item = f->collecting_item_id;
     building *market = building_get(f->building_id);
     inventory_storage_info info[INVENTORY_MAX];
+
     int road_network = map_road_network_get(f->grid_offset);
     if (!road_network) {
         return 1;
@@ -190,6 +191,7 @@ static int recalculate_market_supplier_destination(figure *f)
         road_network, f->x, f->y, MAX_DISTANCE)) {
         return 0;
     }
+
     if (f->building_id == info[item].building_id) {
         return 1;
     }
@@ -211,6 +213,7 @@ static int recalculate_market_supplier_destination(figure *f)
 
 void figure_supplier_action(figure *f)
 {
+
     f->terrain_usage = TERRAIN_USAGE_ROADS;
     f->use_cross_country = 0;
     f->max_roam_length = 800;

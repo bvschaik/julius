@@ -264,14 +264,14 @@ int map_closest_reachable_road_within_radius(int x, int y, int size, int radius,
 int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, int *x_road, int *y_road)
 {
     switch (rotation) {
-        case 1:
+        case 3:
             x = x - size + 1;
             break;
         case 2:
             x = x - size + 1;
             y = y - size + 1;
             break;
-        case 3:
+        case 1:
             y = y - size + 1;
             break;
         default:

@@ -632,8 +632,8 @@ static void send_supplier_to_destination(figure *f, int dst_building_id)
     f->destination_building_id = dst_building_id;
     building *b_dst = building_get(dst_building_id);
     map_point road;
-    if (map_has_road_access(b_dst->x, b_dst->y, b_dst->size, &road) ||
-        map_has_road_access(b_dst->x, b_dst->y, 3, &road)) {
+    if (map_has_road_access_rotation(b_dst->subtype.orientation, b_dst->x, b_dst->y, b_dst->size, &road) ||
+        map_has_road_access_rotation(b_dst->subtype.orientation, b_dst->x, b_dst->y, 3, &road)) {
         f->action_state = FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE;
         f->destination_x = road.x;
         f->destination_y = road.y;
