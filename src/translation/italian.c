@@ -26,7 +26,7 @@ static translation_string all_strings[] = {
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Cancella"},
     {TR_BUTTON_RESET_DEFAULTS, "Ripristina default"},
-    {TR_BUTTON_CONFIGURE_HOTKEYS, "Configura tasti rapidi"},
+    {TR_BUTTON_CONFIGURE_HOTKEYS, "Tasti rapidi"},
     {TR_CONFIG_TITLE, "Opzioni di configurazione di Augustus"},
     {TR_CONFIG_LANGUAGE_LABEL, "Lingua:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(default)"},
@@ -735,7 +735,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_REJECT_WORKERS, "Riprendi la consegna delle risorse" },
     {TR_TOOLTIP_BUTTON_STOCKPILING_ON, "Attiva accumulo in un magazzino" },
     {TR_TOOLTIP_BUTTON_STOCKPILING_OFF, "Disattiva accumulo" },
-    {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
+    {TR_CONFIG_DIGIT_SEPARATOR, "Raggruppa cifre"},
 };
 
 void translation_italian(const translation_string **strings, int *num_strings)
