@@ -12,6 +12,7 @@
 #include "core/config.h"
 #include "empire/trade_prices.h"
 #include "figure/figure.h"
+#include "map/road_access.h"
 #include "map/routing_terrain.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
