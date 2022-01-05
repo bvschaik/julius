@@ -12,6 +12,7 @@
 #include "core/calc.h"
 #include "core/image.h"
 #include "empire/trade_prices.h"
+#include "figure/figure.h"
 #include "game/tutorial.h"
 #include "map/image.h"
 #include "scenario/property.h"
@@ -308,6 +309,65 @@ int building_warehouse_get_acceptable_quantity(int resource, building *b)
         default:
             return 0;
     }
+}
+
+int building_warehouses_send_resources_to_rome(int resource, int amount)
+{
+    building *b = get_next_warehouse();
+    if (!b) {
+        return amount;
+    }
+    building *initial_warehouse = b;
+
+    // First go for non-getting warehouses
+    do {
+        if (b->state == BUILDING_STATE_IN_USE) {
+            if (!building_warehouse_is_getting(resource, b)) {
+                city_resource_set_last_used_warehouse(b->id);
+                int remaining = building_warehouse_remove_resource(b, resource, amount);
+                if (remaining < amount) {
+                    int loads = amount - remaining;
+                    amount = remaining;
+                    map_point road;
+                    if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, &road)) {
+                        figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM);
+                        f->action_state = FIGURE_ACTION_234_CARTPUSHER_GOING_TO_ROME_CREATED;
+                        f->resource_id = resource;
+                        f->loads_sold_or_carrying = loads;
+                        f->building_id = b->id;
+                    }
+                }
+            }
+        }
+        b = b->next_of_type ? b->next_of_type : building_first_of_type(BUILDING_WAREHOUSE);
+    } while (b != initial_warehouse && amount > 0);
+
+    if (amount <= 0) {
+        return 0;
+    }
+
+    // If that doesn't work, take it anyway
+    do {
+        if (b->state == BUILDING_STATE_IN_USE) {
+            city_resource_set_last_used_warehouse(b->id);
+            int remaining = building_warehouse_remove_resource(b, resource, amount);
+            if (remaining < amount) {
+                int loads = amount - remaining;
+                amount = remaining;
+                map_point road;
+                if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, &road)) {
+                    figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM);
+                    f->action_state = FIGURE_ACTION_234_CARTPUSHER_GOING_TO_ROME_CREATED;
+                    f->resource_id = resource;
+                    f->loads_sold_or_carrying = loads;
+                    f->building_id = b->id;
+                }
+            }
+        }
+        b = b->next_of_type ? b->next_of_type : building_first_of_type(BUILDING_WAREHOUSE);
+    } while (b != initial_warehouse && amount > 0);
+
+    return amount;
 }
 
 int building_warehouses_remove_resource(int resource, int amount)

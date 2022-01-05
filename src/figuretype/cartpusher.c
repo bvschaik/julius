@@ -7,6 +7,7 @@
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/health.h"
+#include "city/map.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -396,6 +397,58 @@ void figure_cartpusher_action(figure *f)
                 f->state = FIGURE_STATE_DEAD;
             }
             break;
+        case FIGURE_ACTION_234_CARTPUSHER_GOING_TO_ROME_CREATED:
+            if (f->loads_sold_or_carrying <= 0) {
+                f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
+            } else if (f->loads_sold_or_carrying == 1) {
+                set_cart_graphic(f);
+            } else {
+                if (f->resource_id == RESOURCE_WHEAT || f->resource_id == RESOURCE_VEGETABLES ||
+                    f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT) {
+                    if (f->loads_sold_or_carrying >= 8) {
+                        f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
+                            CART_OFFSET_8_LOADS_FOOD[f->resource_id];
+                    } else {
+                        f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
+                            CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
+                    }
+                } else {
+                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_RESOURCE) +
+                        CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[f->resource_id];
+                }
+                f->cart_image_id += resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
+            }            const map_tile *entry = city_map_entry_point();
+            f->action_state = FIGURE_ACTION_235_CARTPUSHER_GOING_TO_ROME;
+            f->destination_x = entry->x;
+            f->destination_y = entry->y;
+            break;
+        case FIGURE_ACTION_235_CARTPUSHER_GOING_TO_ROME:
+            if (f->loads_sold_or_carrying <= 0) {
+                f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
+            } else if (f->loads_sold_or_carrying == 1) {
+                set_cart_graphic(f);
+            } else {
+                if (f->resource_id == RESOURCE_WHEAT || f->resource_id == RESOURCE_VEGETABLES ||
+                    f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT) {
+                    if (f->loads_sold_or_carrying >= 8) {
+                        f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
+                            CART_OFFSET_8_LOADS_FOOD[f->resource_id];
+                    } else {
+                        f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
+                            CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
+                    }
+                } else {
+                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_RESOURCE) +
+                        CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[f->resource_id];
+                }
+                f->cart_image_id += resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
+            }            f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+            figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
+            if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
+                f->state = FIGURE_STATE_DEAD;
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
+                figure_route_remove(f);
+            }
     }
     update_image(f);
 }

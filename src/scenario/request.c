@@ -118,9 +118,9 @@ void scenario_request_dispatch(int id)
         city_population_remove_for_troop_request(amount);
         building_warehouses_remove_resource(RESOURCE_WEAPONS, amount);
     } else {
-        int amount_left = building_warehouses_remove_resource(scenario.requests[id].resource, amount);
+        int amount_left = building_warehouses_send_resources_to_rome(scenario.requests[id].resource, amount);
         if (amount_left > 0 && resource_is_food(scenario.requests[id].resource)) {
-            building_granaries_remove_resource(scenario.requests[id].resource, amount_left * RESOURCE_GRANARY_ONE_LOAD);
+            building_granaries_send_resources_to_rome(scenario.requests[id].resource, amount_left * RESOURCE_GRANARY_ONE_LOAD);
         }
     }
 }

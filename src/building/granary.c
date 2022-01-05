@@ -5,11 +5,13 @@
 #include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/finance.h"
+#include "city/map.h"
 #include "city/message.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/config.h"
 #include "empire/trade_prices.h"
+#include "figure/figure.h"
 #include "map/routing_terrain.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -183,6 +185,49 @@ int building_granaries_remove_resource(int resource, int amount)
     for (building *b = building_first_of_type(BUILDING_GRANARY); b && amount; b = b->next_of_type) {
         if (b->state == BUILDING_STATE_IN_USE) {
             amount = building_granary_remove_resource(b, resource, amount);
+        }
+    }
+    return amount;
+}
+
+int building_granaries_send_resources_to_rome(int resource, int amount)
+{
+    // first go for non-getting granaries
+    for (building *b = building_first_of_type(BUILDING_GRANARY); b && amount; b = b->next_of_type) {
+        if (b->state == BUILDING_STATE_IN_USE) {
+            if (!building_granary_is_getting(resource, b)) {
+                int remaining = building_granary_remove_resource(b, resource, amount);
+                if (remaining < amount) {
+                    int loads = amount - remaining;
+                    amount = remaining;
+                    map_point road;
+                    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+                        figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM);
+                        f->action_state = FIGURE_ACTION_234_CARTPUSHER_GOING_TO_ROME_CREATED;
+                        f->resource_id = resource;
+                        f->loads_sold_or_carrying = loads / UNITS_PER_LOAD;
+                        f->building_id = b->id;
+                    }
+                }
+            }
+        }
+    }
+    // if that doesn't work, take it anyway
+    for (building *b = building_first_of_type(BUILDING_GRANARY); b && amount; b = b->next_of_type) {
+        if (b->state == BUILDING_STATE_IN_USE) {
+            int remaining = building_granary_remove_resource(b, resource, amount);
+            if (remaining < amount) {
+                int loads = amount - remaining;
+                amount = remaining;
+                map_point road;
+                if (map_has_road_access(b->x, b->y, b->size, &road)) {
+                    figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM);
+                    f->action_state = FIGURE_ACTION_234_CARTPUSHER_GOING_TO_ROME_CREATED;
+                    f->resource_id = resource;
+                    f->loads_sold_or_carrying = loads / UNITS_PER_LOAD;
+                    f->building_id = b->id;
+                }
+            }
         }
     }
     return amount;

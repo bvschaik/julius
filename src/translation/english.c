@@ -740,6 +740,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_OVERLAY_SICKNESS_PLAGUE, "Plague cases breaks out"},
     {TR_CITY_MESSAGE_TITLE_SICKNESS, "Plague in the city"},
     {TR_CITY_MESSAGE_TEXT_SICKNESS, "Plague has broken out in the city, a building has been put in quarantine and doctors are requisitioned to decontaminate it."},
+    {TR_FIGURES_CARTPUSHER_GOING_TO_ROME, "Delivering the request to Rome"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

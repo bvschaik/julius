@@ -339,16 +339,22 @@ static void draw_cartpusher(building_info_context *c, figure *f)
         if (phrase_height > 60) {
             y_base += 8;
         }
-        if (is_returning) {
-            width = lang_text_draw(129, 16, x_base, y_base, FONT_NORMAL_BROWN);
-            width += lang_text_draw(41, source_building->type, x_base + width, y_base, FONT_NORMAL_BROWN);
-            width += lang_text_draw(129, 14, x_base + width, y_base, FONT_NORMAL_BROWN);
-            lang_text_draw(41, target_building->type, x_base + width, y_base, FONT_NORMAL_BROWN);
+
+        if (f->action_state == FIGURE_ACTION_234_CARTPUSHER_GOING_TO_ROME_CREATED
+            || f->action_state == FIGURE_ACTION_235_CARTPUSHER_GOING_TO_ROME) {
+            text_draw(translation_for(TR_FIGURES_CARTPUSHER_GOING_TO_ROME), x_base, y_base, FONT_NORMAL_BROWN, 0);
         } else {
-            width = lang_text_draw(129, 15, x_base, y_base, FONT_NORMAL_BROWN);
-            width += lang_text_draw(41, target_building->type, x_base + width, y_base, FONT_NORMAL_BROWN);
-            width += lang_text_draw(129, 14, x_base + width, y_base, FONT_NORMAL_BROWN);
-            lang_text_draw(41, source_building->type, x_base + width, y_base, FONT_NORMAL_BROWN);
+            if (is_returning) {
+                width = lang_text_draw(129, 16, x_base, y_base, FONT_NORMAL_BROWN);
+                width += lang_text_draw(41, source_building->type, x_base + width, y_base, FONT_NORMAL_BROWN);
+                width += lang_text_draw(129, 14, x_base + width, y_base, FONT_NORMAL_BROWN);
+                lang_text_draw(41, target_building->type, x_base + width, y_base, FONT_NORMAL_BROWN);
+            } else {
+                width = lang_text_draw(129, 15, x_base, y_base, FONT_NORMAL_BROWN);
+                width += lang_text_draw(41, target_building->type, x_base + width, y_base, FONT_NORMAL_BROWN);
+                width += lang_text_draw(129, 14, x_base + width, y_base, FONT_NORMAL_BROWN);
+                lang_text_draw(41, source_building->type, x_base + width, y_base, FONT_NORMAL_BROWN);
+            }
         }
     }
 }
