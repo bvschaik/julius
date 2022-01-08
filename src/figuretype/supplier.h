@@ -12,4 +12,6 @@ void figure_supplier_action(figure *f);
 
 void figure_delivery_boy_action(figure *f);
 
+void figure_fort_supplier_action(figure *f);
+
 #endif // FIGURETYPE_SUPPLIER_H

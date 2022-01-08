@@ -26,6 +26,8 @@ int map_closest_road_within_radius(int x, int y, int size, int radius, int *x_ro
 
 int map_closest_reachable_road_within_radius(int x, int y, int size, int radius, int *x_road, int *y_road);
 
+int map_closest_reachable_spot_within_radius(int x, int y, int size, int radius, int *x_point, int *y_point);
+
 int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, int *x_road, int *y_road);
 
 int map_road_to_largest_network(int x, int y, int size, int *x_road, int *y_road);

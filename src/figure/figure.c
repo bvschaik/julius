@@ -150,6 +150,13 @@ void figure_delete(figure *f)
                 b->figure_id = 0;
             }
             break;
+        case FIGURE_MESS_HALL_FORT_SUPPLIER:
+        {
+            building *fort = building_get(f->destination_building_id);
+            if (fort->figure_id2 == f->id) {
+                fort->figure_id2 = 0;
+            }
+        }
         default:
             if (f->building_id) {
                 b->figure_id = 0;

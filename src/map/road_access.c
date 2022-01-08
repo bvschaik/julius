@@ -261,6 +261,36 @@ int map_closest_reachable_road_within_radius(int x, int y, int size, int radius,
     return 0;
 }
 
+static int reachable_spot_within_radius(int x, int y, int size, int radius, int *x_point, int *y_point)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int grid_offset = map_grid_offset(xx, yy);
+            if (map_routing_distance(grid_offset) > 0) {
+                if (x_point && y_point) {
+                    *x_point = xx;
+                    *y_point = yy;
+                }
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int map_closest_reachable_spot_within_radius(int x, int y, int size, int radius, int *x_point, int *y_point)
+{
+    for (int r = 1; r <= radius; r++) {
+        if (reachable_spot_within_radius(x, y, size, r, x_point, y_point)) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, int *x_road, int *y_road)
 {
     switch (rotation) {

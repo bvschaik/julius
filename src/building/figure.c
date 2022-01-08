@@ -1526,6 +1526,43 @@ static void spawn_figure_architect_guild(building *b)
     }
 }
 
+static void spawn_figure_fort_supplier(building *fort)
+{
+    building *supply_post = building_get(city_buildings_get_mess_hall());
+
+    if (!supply_post || fort->figure_id2 || !fort->distance_from_entry) {
+        return;
+    }
+
+    if (supply_post->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    
+    int total_food_in_mess_hall = 0;
+
+    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
+        total_food_in_mess_hall += supply_post->data.market.inventory[i];
+    }
+
+    if (!total_food_in_mess_hall) {
+        return;
+    }
+
+    map_point road;
+    if (map_has_road_access(supply_post->x, supply_post->y, supply_post->size, &road)) {
+        figure *f = figure_create(FIGURE_MESS_HALL_FORT_SUPPLIER, road.x, road.y, DIR_4_BOTTOM);
+        f->action_state = FIGURE_ACTION_236_SUPPLY_POST_GOING_TO_FORT;
+        f->destination_x = fort->road_access_x;
+        f->destination_y = fort->road_access_y;
+        f->source_x = road.x;
+        f->source_y = road.y;
+        f->destination_building_id = fort->id;
+        f->building_id = supply_post->id;
+        fort->figure_id2 = f->id;
+    }
+
+}
+
 static void spawn_figure_mess_hall(building *b)
 {
     check_labor_problem(b);
@@ -1547,6 +1584,7 @@ static void spawn_figure_mess_hall(building *b)
         } else {
             return;
         }
+        
         spawn_mess_hall_supplier(b, road.x, road.y, 1);
         if (b->figure_id) {
             b->figure_spawn_delay++;
@@ -1777,6 +1815,7 @@ void building_figure_generate(void)
                     break;
                 case BUILDING_FORT:
                     formation_legion_update_recruit_status(b);
+                    spawn_figure_fort_supplier(b);
                     break;
                 case BUILDING_BARRACKS:
                     spawn_figure_barracks(b);

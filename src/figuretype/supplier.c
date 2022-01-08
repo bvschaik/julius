@@ -361,3 +361,53 @@ void figure_delivery_boy_action(figure *f)
         }
     }
 }
+
+void figure_fort_supplier_action(figure *f)
+{
+    f->is_ghost = 0;
+    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+    figure_image_increase_offset(f, 12);
+
+    building *b = building_get(f->building_id);
+    if (!b || b->state != BUILDING_STATE_IN_USE || b->type != BUILDING_MESS_HALL) {
+        f->state = FIGURE_STATE_DEAD;
+    }
+
+    switch (f->action_state) {
+        case FIGURE_ACTION_150_ATTACK:
+            figure_combat_handle_attack(f);
+            break;
+        case FIGURE_ACTION_149_CORPSE:
+            figure_combat_handle_corpse(f);
+            break;
+        case FIGURE_ACTION_236_SUPPLY_POST_GOING_TO_FORT:
+            figure_movement_move_ticks(f, 1);
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                f->action_state = FIGURE_ACTION_237_SUPPLY_POST_RETURNING_FROM_FORT;
+                f->destination_x = f->source_x;
+                f->destination_y = f->source_y;
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
+                figure_route_remove(f);
+            } else if (f->direction == DIR_FIGURE_LOST) {
+                f->state = FIGURE_STATE_DEAD;
+            }
+            break;
+        case FIGURE_ACTION_237_SUPPLY_POST_RETURNING_FROM_FORT:
+            figure_movement_move_ticks(f, 1);
+            if (f->direction == DIR_FIGURE_REROUTE) {
+                figure_route_remove(f);
+            } else if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
+                f->state = FIGURE_STATE_DEAD;
+            }
+            break;
+    }
+
+    int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
+    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = assets_get_image_id("Military_Buildings", "M Hall death 01") +
+            figure_image_corpse_offset(f);
+    } else {
+        f->image_id = assets_get_image_id("Military_Buildings", "M Hall NE 01") +
+            dir * 12 + f->image_offset;
+    }
+}
