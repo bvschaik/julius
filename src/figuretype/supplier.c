@@ -386,6 +386,7 @@ void figure_fort_supplier_action(figure *f)
                 f->action_state = FIGURE_ACTION_237_SUPPLY_POST_RETURNING_FROM_FORT;
                 f->destination_x = f->source_x;
                 f->destination_y = f->source_y;
+                f->wait_ticks = 20;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {
@@ -393,11 +394,15 @@ void figure_fort_supplier_action(figure *f)
             }
             break;
         case FIGURE_ACTION_237_SUPPLY_POST_RETURNING_FROM_FORT:
-            figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_REROUTE) {
-                figure_route_remove(f);
-            } else if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
-                f->state = FIGURE_STATE_DEAD;
+            if (f->wait_ticks) {
+                f->wait_ticks--;
+            } else {
+                figure_movement_move_ticks(f, 1);
+                if (f->direction == DIR_FIGURE_REROUTE) {
+                    figure_route_remove(f);
+                } else if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
+                    f->state = FIGURE_STATE_DEAD;
+                }
             }
             break;
     }

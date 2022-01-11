@@ -1548,6 +1548,13 @@ static void spawn_figure_fort_supplier(building *fort)
         return;
     }
 
+    int spawn_delay = 20;
+    fort->figure_spawn_delay++;
+    if (fort->figure_spawn_delay <= spawn_delay) {
+        return;
+    }
+
+    fort->figure_spawn_delay = 0;
     map_point road;
     if (map_has_road_access(supply_post->x, supply_post->y, supply_post->size, &road)) {
         figure *f = figure_create(FIGURE_MESS_HALL_FORT_SUPPLIER, road.x, road.y, DIR_4_BOTTOM);
