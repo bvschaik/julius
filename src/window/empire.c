@@ -514,11 +514,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
                     // we only want to handle resource buttons that the selected city trades
                     for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-                        if (empire_object_city_sells_resource(obj->id, resource)) {
+                        if (city->sells_resource[resource]) {
                             generic_buttons_handle_mouse(m, x_offset + 120 + 104 * index_sell, y_offset + 31,
                                 generic_button_trade_resource + resource - 1, 1, &button_id);
                             index_sell++;
-                        } else if (empire_object_city_buys_resource(obj->id, resource)) {
+                        } else if (city->buys_resource[resource]) {
                             generic_buttons_handle_mouse(m, x_offset + 120 + 104 * index_buy, y_offset + 62,
                                 generic_button_trade_resource + resource - 1, 1, &button_id);
                             index_buy++;
@@ -569,7 +569,7 @@ static int get_tooltip_resource(tooltip_context *c)
 
     int item_offset = lang_text_get_width(47, 5, FONT_NORMAL_GREEN);
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (empire_object_city_sells_resource(object_id, r)) {
+        if (city->sells_resource[r]) {
             if (is_mouse_hit(c, x_offset + 60 + item_offset, y_offset + 33, 26)) {
                 return r;
             }
@@ -578,7 +578,7 @@ static int get_tooltip_resource(tooltip_context *c)
     }
     item_offset += lang_text_get_width(47, 4, FONT_NORMAL_GREEN);
     for (int r = RESOURCE_MIN; r <= RESOURCE_MAX; r++) {
-        if (empire_object_city_buys_resource(object_id, r)) {
+        if (city->buys_resource[r]) {
             if (is_mouse_hit(c, x_offset + 110 + item_offset, y_offset + 33, 26)) {
                 return r;
             }
