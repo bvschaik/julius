@@ -563,7 +563,6 @@ static int get_tooltip_resource(tooltip_context *c)
     if (city->type != EMPIRE_CITY_TRADE || city->is_open) {
         return 0;
     }
-    int object_id = empire_selected_object() - 1;
     int x_offset = (data.x_min + data.x_max - 500) / 2;
     int y_offset = data.y_max - 113;
 
@@ -577,7 +576,7 @@ static int get_tooltip_resource(tooltip_context *c)
         }
     }
     item_offset += lang_text_get_width(47, 4, FONT_NORMAL_GREEN);
-    for (int r = RESOURCE_MIN; r <= RESOURCE_MAX; r++) {
+    for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         if (city->buys_resource[r]) {
             if (is_mouse_hit(c, x_offset + 110 + item_offset, y_offset + 33, 26)) {
                 return r;
