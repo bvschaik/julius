@@ -254,6 +254,14 @@ static void extinguish_fire(figure *f)
     }
 }
 
+static int in_combat(figure *f)
+{
+    if (f->action_state == FIGURE_ACTION_150_ATTACK || f->action_state == FIGURE_ACTION_149_CORPSE) {
+        return 1;
+    }
+    return 0;
+}
+
 void figure_prefect_action(figure *f)
 {
     building *b = building_get(f->building_id);
@@ -342,7 +350,7 @@ void figure_prefect_action(figure *f)
                 f->wait_ticks = 50;
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
-            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS && !fight_fire(f, 1)) {
+            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS && !fight_fire(f, 1) && !in_combat(f)) {
                 int x_road, y_road;
                 if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                     f->action_state = FIGURE_ACTION_73_PREFECT_RETURNING;
