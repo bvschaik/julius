@@ -278,8 +278,14 @@ static int set_scroll_speed_from_drag(void)
         delta_y = -t->frame_movement.y;
     }
 
-    data.drag.delta.x += delta_x;
-    data.drag.delta.y += delta_y;
+    if (config_get(CONFIG_UI_INVERSE_MAP_DRAG)) {
+        data.drag.delta.x -= delta_x;
+        data.drag.delta.y -= delta_y;
+    } else {
+        data.drag.delta.x += delta_x;
+        data.drag.delta.y += delta_y;
+    }
+
     if ((delta_x != 0 || delta_y != 0)) {
         if (!data.drag.is_touch) {
             system_mouse_set_relative_mode(1);

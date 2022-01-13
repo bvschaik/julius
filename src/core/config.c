@@ -36,6 +36,7 @@ static const char *ini_keys[] = {
     "ui_disable_map_drag",
     "ui_show_max_prosperity",
     "ui_digit_separator",
+    "ui_inverse_map_drag",
     "gameplay_change_max_grand_temples",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",
