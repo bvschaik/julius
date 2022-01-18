@@ -1,6 +1,7 @@
 #include "data_transfer.h"
 
 #include "building/storage.h"
+#include "city/warning.h"
 
 #include <string.h>
 
@@ -15,9 +16,11 @@ int building_data_transfer_possible(building *b)
 {
     building_data_type data_type = building_data_transfer_data_type_from_building_type(b->type);
     if (data.data_type == DATA_TYPE_NOT_SUPPORTED || data_type == DATA_TYPE_NOT_SUPPORTED) {
+        city_warning_show(WARNING_DATA_PASTE_FAILURE);
         return 0;
     }
     if (data.data_type != data_type) {
+        city_warning_show(WARNING_DATA_PASTE_FAILURE);
         return 0;
     }
 
@@ -27,7 +30,9 @@ int building_data_transfer_possible(building *b)
 int building_data_transfer_copy(building *b)
 {
     building_data_type data_type = building_data_transfer_data_type_from_building_type(b->type);
-    if (data_type != DATA_TYPE_NOT_SUPPORTED) {
+    if (data_type == DATA_TYPE_NOT_SUPPORTED) {
+        city_warning_show(WARNING_DATA_COPY_NOT_SUPPORTED);
+    } else {
         memset(&data, 0, sizeof(data));
         data.data_type = data_type;
     }
@@ -37,26 +42,29 @@ int building_data_transfer_copy(building *b)
     switch (data_type) {
         case DATA_TYPE_ROADBLOCK:
             data.subtype = b->data.roadblock.exceptions;
-            return 1;
+            break;
         case DATA_TYPE_MARKET:
             data.subtype = b->subtype.market_goods;
-            return 1;
+            break;
         case DATA_TYPE_GRANARY:
             storage = building_storage_get(b->storage_id);
             data.storage = *storage;
-            return 1;
+            break;
         case DATA_TYPE_WAREHOUSE:
             storage = building_storage_get(b->storage_id);
             data.storage = *storage;
-            return 1;
+            break;
         case DATA_TYPE_DOCK:
             data.subtype = b->subtype.market_goods;
             data.extended_data[0] = b->data.dock.has_accepted_route_ids;
             data.extended_data[1] = b->data.dock.accepted_route_ids;
-            return 1;
+            break;
         default:
             return 0;
+
     }
+    city_warning_show(WARNING_DATA_COPY_SUCCESS);
+    return 1;
 }
 
 int building_data_transfer_paste(building *b)
@@ -70,22 +78,25 @@ int building_data_transfer_paste(building *b)
     switch (data_type) {
         case DATA_TYPE_ROADBLOCK:
             b->data.roadblock.exceptions = data.subtype;
-            return 1;
+            break;
         case DATA_TYPE_MARKET:
             b->subtype.market_goods = data.subtype;
-            return 1;
+            break;
         case DATA_TYPE_GRANARY:
         case DATA_TYPE_WAREHOUSE:
             building_storage_set_data(b->storage_id, data.storage);
-            return 1;
+            break;
         case DATA_TYPE_DOCK:
             b->subtype.market_goods = data.subtype;
             b->data.dock.has_accepted_route_ids = data.extended_data[0];
             b->data.dock.accepted_route_ids = data.extended_data[1];
-            return 1;
+            break;
         default:
             return 0;
     }
+    city_warning_show(WARNING_DATA_PASTE_SUCCESS);
+    return 1;
+
 }
 
 building_data_type building_data_transfer_data_type_from_building_type(building_type type)

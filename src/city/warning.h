@@ -68,7 +68,11 @@ typedef enum {
     WARNING_THEFT = 74,
     WARNING_WOLF_NEARBY = 75,
     WARNING_BET_VICTORY = 76,
-    WARNING_BET_DEFEAT = 77
+    WARNING_BET_DEFEAT = 77,
+    WARNING_DATA_COPY_SUCCESS = 78,
+    WARNING_DATA_COPY_NOT_SUPPORTED = 79,
+    WARNING_DATA_PASTE_SUCCESS = 80,
+    WARNING_DATA_PASTE_FAILURE = 81,
 } warning_type;
 
 void city_warning_show(warning_type type);
