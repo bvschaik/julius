@@ -56,7 +56,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_INTRO_VIDEO, "Jouer la vidéo d'introduction"},
     {TR_CONFIG_SIDEBAR_INFO, "Afficher des informations supplémentaires dans le panneau latéral"},
     {TR_CONFIG_SMOOTH_SCROLLING, "Activer le défilement doux"},
-    {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Désactiver le défilement de la carte sur le bord de la fenêtre "},
+    {TR_CONFIG_DISABLE_MOUSE_EDGE_SCROLLING, "Désactiver le défilement de la carte sur le bord de la fenêtre"},
     {TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG, "Désactiver le clic droit pour déplacer la vue de la cité"},
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Améliore le retour visuel durant le dégagement du terrain"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Permet de construire tous les temples successivement"},
@@ -735,11 +735,13 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_SICKNESS_LEVEL_HIGH, "De nombreuses maladies infectieuses circulent dans certains secteurs de la cité. Si vous ne remédiez pas rapidement à la situation, les bâtiments de commerce risquent de passer en quarantaine. Placez les hôpitaux près des docks, greniers, et entrepôts pour endiguer les épidémies provenant des cités extérieures."},
     {TR_ADVISOR_SICKNESS_LEVEL_PLAGUE, "La peste s'est déclarée dans la cité et le commerce est fortement perturbé. Des médecins sont réquisitionnés pour décontaminer les lieux les plus touchés par l'épidémie. Il faut absolument rétablir la situation!"},
     {TR_TOOLTIP_OVERLAY_SICKNESS_LOW, "Très peu de maladies"},
-    {TR_TOOLTIP_OVERLAY_SICKNESS_MEDIUM, "Quelques foyers infectieux"},
+    {TR_TOOLTIP_OVERLAY_SICKNESS_MEDIUM, "Quelques maladies infectieuses"},
     {TR_TOOLTIP_OVERLAY_SICKNESS_HIGH, "De nombreuses maladies infectieuses circulent"},
     {TR_TOOLTIP_OVERLAY_SICKNESS_PLAGUE, "Des cas de peste se sont déclarés"},
     {TR_CITY_MESSAGE_TITLE_SICKNESS, "La peste dans la cité"},
     {TR_CITY_MESSAGE_TEXT_SICKNESS, "La peste s'est déclarée dans la cité, un bâtiment a été placé en quarantaine et des médecins sont réquisitionnés pour le décontaminer."},
+    {TR_FIGURES_CARTPUSHER_GOING_TO_ROME, "Va livrer la requête à Rome"},
+    {TR_CONFIG_UI_INVERSE_MAP_DRAG, "Inverser le déplacement de la carte avec le clic droit"}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
