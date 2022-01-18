@@ -10,7 +10,7 @@
 #include "city/population.h"
 #include "core/calc.h"
 
-#define SHRINE_COVERAGE 20
+#define SHRINE_COVERAGE 10
 #define SMALL_TEMPLE_COVERAGE 750
 #define LARGE_TEMPLE_COVERAGE 3000
 #define ORACLE_COVERAGE 500
