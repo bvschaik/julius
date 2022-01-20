@@ -211,6 +211,15 @@ static void determine_cartpusher_destination_food(figure *f, int road_network_id
     f->wait_ticks = 0;
 }
 
+static int cartpusher_carries_food(figure *f)
+{
+    if (f->resource_id == RESOURCE_WHEAT || f->resource_id == RESOURCE_VEGETABLES ||
+        f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT) {
+        return 1;
+    }
+    return 0;
+}
+
 static void update_image(figure *f)
 {
     int dir = figure_image_normalize_direction(
@@ -225,7 +234,7 @@ static void update_image(figure *f)
     if (f->cart_image_id) {
         f->cart_image_id += dir;
         figure_image_set_cart_offset(f, dir);
-        if (f->loads_sold_or_carrying >= 8) {
+        if (f->loads_sold_or_carrying >= 8 && cartpusher_carries_food(f)) {
             f->y_offset_cart -= 40;
         }
     }
@@ -403,8 +412,7 @@ void figure_cartpusher_action(figure *f)
             } else if (f->loads_sold_or_carrying == 1) {
                 set_cart_graphic(f);
             } else {
-                if (f->resource_id == RESOURCE_WHEAT || f->resource_id == RESOURCE_VEGETABLES ||
-                    f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT) {
+                if (cartpusher_carries_food(f)) {
                     if (f->loads_sold_or_carrying >= 8) {
                         f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
                             CART_OFFSET_8_LOADS_FOOD[f->resource_id];
@@ -428,8 +436,7 @@ void figure_cartpusher_action(figure *f)
             } else if (f->loads_sold_or_carrying == 1) {
                 set_cart_graphic(f);
             } else {
-                if (f->resource_id == RESOURCE_WHEAT || f->resource_id == RESOURCE_VEGETABLES ||
-                    f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT) {
+                if (cartpusher_carries_food(f)) {
                     if (f->loads_sold_or_carrying >= 8) {
                         f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
                             CART_OFFSET_8_LOADS_FOOD[f->resource_id];
@@ -842,8 +849,7 @@ void figure_warehouseman_action(figure *f)
             } else if (f->loads_sold_or_carrying == 1) {
                 set_cart_graphic(f);
             } else {
-                if (f->resource_id == RESOURCE_WHEAT || f->resource_id == RESOURCE_VEGETABLES ||
-                    f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT) {
+                if (cartpusher_carries_food(f)) {
                     f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
                         CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
                 } else {
