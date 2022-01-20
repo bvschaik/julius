@@ -304,10 +304,17 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_LOCAL_UPRISING:
         case MESSAGE_BARBARIAN_ATTACK:
         case MESSAGE_CAESAR_ARMY_ATTACK:
+        case MESSAGE_CAESAR_ARMY_CONTINUE:
+        case MESSAGE_CAESAR_ARMY_RETREAT:
         case MESSAGE_ENEMY_ARMY_ATTACK:
         case MESSAGE_DISTANT_BATTLE:
         case MESSAGE_ENEMIES_CLOSING:
         case MESSAGE_ENEMIES_AT_THE_DOOR:
+        case MESSAGE_TROOPS_RETURN_VICTORIOUS:
+        case MESSAGE_TROOPS_RETURN_FAILED:
+        case MESSAGE_DISTANT_BATTLE_LOST_NO_TROOPS:
+        case MESSAGE_DISTANT_BATTLE_LOST_TOO_LATE:
+        case MESSAGE_DISTANT_BATTLE_LOST_TOO_WEAK:
             return MESSAGE_ADVISOR_MILITARY;
 
         case MESSAGE_CAESAR_REQUESTS_GOODS:
@@ -319,6 +326,8 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_REQUEST_REFUSED_OVERDUE:
         case MESSAGE_REQUEST_RECEIVED_LATE:
         case MESSAGE_REQUEST_CAN_COMPLY:
+        case MESSAGE_EMPEROR_CHANGE:
+        case MESSAGE_CAESAR_WRATH:
             return MESSAGE_ADVISOR_IMPERIAL;
 
         case MESSAGE_UNEMPLOYMENT:
@@ -329,17 +338,68 @@ message_advisor city_message_get_advisor(city_message_type message_type)
 
         case MESSAGE_NOT_ENOUGH_FOOD:
         case MESSAGE_FOOD_NOT_DELIVERED:
+        case MESSAGE_POPULATION_500:
+        case MESSAGE_POPULATION_1000:
+        case MESSAGE_POPULATION_2000:
+        case MESSAGE_POPULATION_3000:
+        case MESSAGE_POPULATION_5000:
+        case MESSAGE_POPULATION_10000:
+        case MESSAGE_POPULATION_15000:
+        case MESSAGE_POPULATION_20000:
+        case MESSAGE_POPULATION_25000:
             return MESSAGE_ADVISOR_POPULATION;
 
         case MESSAGE_HEALTH_ILLNESS:
         case MESSAGE_HEALTH_DISEASE:
         case MESSAGE_HEALTH_PESTILENCE:
+        case MESSAGE_SICKNESS:
+        case MESSAGE_CONTAMINATED_WATER:
             return MESSAGE_ADVISOR_HEALTH;
 
         case MESSAGE_GODS_UNHAPPY:
         case MESSAGE_GODS_WRATHFUL:
+        case MESSAGE_AUTO_FESTIVAL_CERES:
+        case MESSAGE_AUTO_FESTIVAL_NEPTUNE:
+        case MESSAGE_AUTO_FESTIVAL_MARS:
+        case MESSAGE_AUTO_FESTIVAL_MERCURY:
+        case MESSAGE_AUTO_FESTIVAL_VENUS:
+        case MESSAGE_GRAND_FESTIVAL:
+        case MESSAGE_LARGE_FESTIVAL:
+        case MESSAGE_SMALL_FESTIVAL:
+        case MESSAGE_BLESSING_FROM_CERES:
+        case MESSAGE_BLESSING_FROM_MARS:
+        case MESSAGE_BLESSING_FROM_MERCURY:
+        case MESSAGE_BLESSING_FROM_MERCURY_ALTERNATE:
+        case MESSAGE_BLESSING_FROM_NEPTUNE:
+        case MESSAGE_BLESSING_FROM_NEPTUNE_ALTERNATE:
+        case MESSAGE_BLESSING_FROM_VENUS:
+        case MESSAGE_BLESSING_FROM_VENUS_ALTERNATE:
+        case MESSAGE_CERES_IS_UPSET:
+        case MESSAGE_MARS_IS_UPSET:
+        case MESSAGE_MERCURY_IS_UPSET:
+        case MESSAGE_NEPTUNE_IS_UPSET:
+        case MESSAGE_VENUS_IS_UPSET:
+        case MESSAGE_WRATH_OF_CERES:
+        case MESSAGE_WRATH_OF_MARS:
+        case MESSAGE_WRATH_OF_MARS_NO_MILITARY:
+        case MESSAGE_WRATH_OF_MERCURY:
+        case MESSAGE_WRATH_OF_NEPTUNE:
+        case MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE:
+        case MESSAGE_WRATH_OF_VENUS:
             return MESSAGE_ADVISOR_RELIGION;
 
+        case MESSAGE_INCREASED_TRADING:
+        case MESSAGE_DECREASED_TRADING:
+        case MESSAGE_PRICE_DECREASED:
+        case MESSAGE_PRICE_INCREASED:
+            return MESSAGE_ADVISOR_TRADE;
+
+        case MESSAGE_PEOPLE_DISGRUNTLED:
+        case MESSAGE_PEOPLE_UNHAPPY:
+        case MESSAGE_PEOPLE_ANGRY:
+        case MESSAGE_RIOT:
+            return MESSAGE_ADVISOR_CHIEF;
+            
         default:
             return MESSAGE_ADVISOR_NONE;
     }
