@@ -378,7 +378,7 @@ static int parse_multibyte_font(
         img->height = char_size;
         img->draw.bitmap_id = 0;
         img->draw.offset = pixel_offset;
-        img->draw.uncompressed_length = img->draw.data_length = char_size * char_size;
+        img->draw.uncompressed_length = img->draw.data_length = img->width * img->height;
         for (int row = 0; row < char_size; row++) {
             uint8_t bits = 0;
             for (int col = 0; col < char_size; col++) {
@@ -535,7 +535,7 @@ static int parse_korean_font(buffer *input, color_t *pixels, int pixel_offset, i
         img->height = char_size;
         img->draw.bitmap_id = 0;
         img->draw.offset = pixel_offset;
-        img->draw.uncompressed_length = img->draw.data_length = char_size * char_size;
+        img->draw.uncompressed_length = img->draw.data_length = img->width * img->height;
         for (int row = 0; row < char_size; row++) {
             unsigned int bits = buffer_read_u16(input);
             if (bytes_per_row == 3) {
