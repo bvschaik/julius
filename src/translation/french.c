@@ -741,7 +741,11 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TITLE_SICKNESS, "La peste dans la cité"},
     {TR_CITY_MESSAGE_TEXT_SICKNESS, "La peste s'est déclarée dans la cité, un bâtiment a été placé en quarantaine et des médecins sont réquisitionnés pour le décontaminer."},
     {TR_FIGURES_CARTPUSHER_GOING_TO_ROME, "Va livrer la requête à Rome"},
-    {TR_CONFIG_UI_INVERSE_MAP_DRAG, "Inverser le déplacement de la carte avec le clic droit"}
+    {TR_CONFIG_UI_INVERSE_MAP_DRAG, "Inverser le déplacement de la carte avec le clic droit"},
+    {TR_CITY_WARNING_DATA_COPY_SUCCESS, "Réglages copiés" },
+    {TR_CITY_WARNING_DATA_COPY_NOT_SUPPORTED, "Impossible de copier des réglages pour ce bâtiment" },
+    {TR_CITY_WARNING_DATA_PASTE_SUCCESS, "Réglages appliqués" },
+    {TR_CITY_WARNING_DATA_PASTE_NOT_SUPPORTED, "Impossible d'appliquer des réglages à ce bâtiment" },
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
