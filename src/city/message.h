@@ -27,6 +27,8 @@ typedef enum {
     MESSAGE_ADVISOR_HEALTH = 6,
     MESSAGE_ADVISOR_RELIGION = 7,
     MESSAGE_ADVISOR_CHIEF = 8,
+    MESSAGE_ADVISOR_FINANCIAL = 9,
+    MESSAGE_ADVISOR_ENTERTAINMENT = 10,
 } message_advisor;
 
 typedef enum {

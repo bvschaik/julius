@@ -315,6 +315,12 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_DISTANT_BATTLE_LOST_NO_TROOPS:
         case MESSAGE_DISTANT_BATTLE_LOST_TOO_LATE:
         case MESSAGE_DISTANT_BATTLE_LOST_TOO_WEAK:
+        case MESSAGE_DISTANT_BATTLE_CITY_RETAKEN:
+        case MESSAGE_SPIRIT_OF_MARS:
+        case MESSAGE_SOLDIERS_STARVING:
+        case MESSAGE_SOLDIERS_STARVING_NO_MESS_HALL:
+        case MESSAGE_GLADIATOR_REVOLT:
+        case MESSAGE_GLADIATOR_REVOLT_FINISHED:
             return MESSAGE_ADVISOR_MILITARY;
 
         case MESSAGE_CAESAR_REQUESTS_GOODS:
@@ -328,6 +334,9 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_REQUEST_CAN_COMPLY:
         case MESSAGE_EMPEROR_CHANGE:
         case MESSAGE_CAESAR_WRATH:
+        case MESSAGE_CAESAR_RESPECT_1:
+        case MESSAGE_CAESAR_RESPECT_2:
+        case MESSAGE_CAESAR_RESPECT_3:
             return MESSAGE_ADVISOR_IMPERIAL;
 
         case MESSAGE_UNEMPLOYMENT:
@@ -386,20 +395,54 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_WRATH_OF_NEPTUNE:
         case MESSAGE_WRATH_OF_NEPTUNE_NO_SEA_TRADE:
         case MESSAGE_WRATH_OF_VENUS:
+        case MESSAGE_LOCAL_UPRISING_MARS:
+        case MESSAGE_GRAND_TEMPLE_COMPLETE:
+        case MESSAGE_PANTHEON_COMPLETE:
             return MESSAGE_ADVISOR_RELIGION;
 
         case MESSAGE_INCREASED_TRADING:
         case MESSAGE_DECREASED_TRADING:
         case MESSAGE_PRICE_DECREASED:
         case MESSAGE_PRICE_INCREASED:
+        case MESSAGE_TRADE_STOPPED:
+        case MESSAGE_LAND_TRADE_DISRUPTED_LANDSLIDES:
+        case MESSAGE_LAND_TRADE_DISRUPTED_SANDSTORMS:
+        case MESSAGE_SEA_TRADE_DISRUPTED:
             return MESSAGE_ADVISOR_TRADE;
 
         case MESSAGE_PEOPLE_DISGRUNTLED:
         case MESSAGE_PEOPLE_UNHAPPY:
         case MESSAGE_PEOPLE_ANGRY:
         case MESSAGE_RIOT:
+        case MESSAGE_EMIGRATION:
+        case MESSAGE_LOOTING:
+        case MESSAGE_THEFT:
             return MESSAGE_ADVISOR_CHIEF;
             
+        case MESSAGE_CITY_IN_DEBT:
+        case MESSAGE_CITY_IN_DEBT_AGAIN:
+        case MESSAGE_CITY_STILL_IN_DEBT:
+            return MESSAGE_ADVISOR_FINANCIAL;
+
+        case MESSAGE_WORKING_COLOSSEUM:
+        case MESSAGE_WORKING_HIPPODROME:
+        case MESSAGE_AN_GAMES_PLANNED:
+        case MESSAGE_IG_GAMES_PLANNED:
+        case MESSAGE_KI_GAMES_PLANNED:
+        case MESSAGE_NG_GAMES_PLANNED:
+        case MESSAGE_OL_GAMES_PLANNED:
+        case MESSAGE_AN_GAMES_START:
+        case MESSAGE_IG_GAMES_START:
+        case MESSAGE_KI_GAMES_START:
+        case MESSAGE_NG_GAMES_START:
+        case MESSAGE_OL_GAMES_START:
+        case MESSAGE_AN_GAMES_END:
+        case MESSAGE_IG_GAMES_END:
+        case MESSAGE_KI_GAMES_END:
+        case MESSAGE_NG_GAMES_END:
+        case MESSAGE_OL_GAMES_END:
+            return MESSAGE_ADVISOR_ENTERTAINMENT;
+
         default:
             return MESSAGE_ADVISOR_NONE;
     }

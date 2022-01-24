@@ -64,8 +64,14 @@ static image_button image_button_military = {
 static image_button image_button_health = {
     0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 18, button_advisor, button_none, ADVISOR_HEALTH, 0, 1
 };
+static image_button image_button_entertainment = {
+    0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 24, button_advisor, button_none, ADVISOR_ENTERTAINMENT, 0, 1
+};
 static image_button image_button_religion = {
     0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 27, button_advisor, button_none, ADVISOR_RELIGION, 0, 1
+};
+static image_button image_button_financial = {
+    0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 30, button_advisor, button_none, ADVISOR_FINANCIAL, 0, 1
 };
 static image_button image_button_chief = {
     0, 0, 27, 27, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 33, button_advisor, button_none, ADVISOR_CHIEF, 0, 1
@@ -463,6 +469,10 @@ static image_button *get_advisor_button(void)
             return &image_button_religion;
         case MESSAGE_ADVISOR_CHIEF:
             return &image_button_chief;
+        case MESSAGE_ADVISOR_ENTERTAINMENT:
+            return &image_button_entertainment;
+        case MESSAGE_ADVISOR_FINANCIAL:
+            return &image_button_financial;
         default:
             return &image_button_help;
     }
