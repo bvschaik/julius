@@ -22,37 +22,33 @@ public class DirectorySelectionActivity extends AppCompatActivity {
         return intent;
     }
 
-    private ActivityResultLauncher<Uri> directorySelectionLauncher;
+    private final ActivityResultLauncher<Uri> directorySelectionLauncher = registerForActivityResult(
+            new ActivityResultContracts.OpenDocumentTree() {
+                @Override
+                @NonNull
+                public Intent createIntent(@NonNull Context context, Uri input) {
+                    Intent intent = super.createIntent(context, input);
+                    intent.addFlags(RW_FLAGS_PERMISSION |
+                            Intent.FLAG_GRANT_PREFIX_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                    intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+                    intent.putExtra("android.content.extra.FANCY", true);
+                    intent.putExtra("android.content.extra.SHOW_FILESIZE", true);
+                    return intent;
+                }
+            },
+            uri -> {
+                if (uri != null) {
+                    getContentResolver().takePersistableUriPermission(uri, RW_FLAGS_PERMISSION);
+                    Intent result = new Intent();
+                    result.setData(uri);
+                    setResult(RESULT_OK, result);
+                    finish();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        directorySelectionLauncher = registerForActivityResult(
-                new ActivityResultContracts.OpenDocumentTree() {
-                    @Override
-                    public @NonNull Intent createIntent(@NonNull Context context, Uri input)
-                    {
-                        Intent intent = super.createIntent(context, input);
-                        intent.addFlags(RW_FLAGS_PERMISSION);
-                        intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
-                        intent.putExtra("android.content.extra.FANCY", true);
-                        intent.putExtra("android.content.extra.SHOW_FILESIZE", true);
-                        return intent;
-                    }
-                },
-                uri -> {
-                    if (uri != null) {
-                        getContentResolver().takePersistableUriPermission(
-                            uri,
-                            Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                        );
-                        Intent result = new Intent();
-                        result.setData(uri);
-                        setResult(RESULT_OK, result);
-                        finish();
-                    }
-                });
 
         setContentView(R.layout.activity_directory_selection);
 
