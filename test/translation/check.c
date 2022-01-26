@@ -16,6 +16,7 @@ int main(void)
     check_language("German", LANGUAGE_GERMAN);
     check_language("Italian", LANGUAGE_ITALIAN);
     check_language("Spanish", LANGUAGE_SPANISH);
+    check_language("Japanese", LANGUAGE_JAPANESE);
     check_language("Korean", LANGUAGE_KOREAN);
     check_language("Polish", LANGUAGE_POLISH);
     check_language("Portuguese", LANGUAGE_PORTUGUESE);
