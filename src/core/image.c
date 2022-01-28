@@ -17,6 +17,7 @@
 #define TRAD_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS)
 #define SIMP_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS)
 #define KOREAN_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS)
+#define JAPANESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS)
 
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET HEADER_SIZE
@@ -30,6 +31,7 @@
 #define CYRILLIC_FONT_DATA_SIZE 1500000
 #define TRAD_CHINESE_FONT_DATA_SIZE 7200000
 #define KOREAN_FONT_DATA_SIZE 7500000
+#define JAPANESE_FONT_DATA_SIZE 15000000 // TODO tweak
 #define SCRATCH_DATA_SIZE 12100000
 
 #define CYRILLIC_FONT_BASE_OFFSET 201
@@ -70,6 +72,7 @@ static const char CHINESE_FONTS_555[NAME_SIZE] = "rome.555";
 static const char CHINESE_FONTS_555_V2[NAME_SIZE] = "rome-v2.555";
 static const char KOREAN_FONTS_555[NAME_SIZE] = "korean.555";
 static const char KOREAN_FONTS_555_V2[NAME_SIZE] = "korean-v2.555";
+static const char JAPANESE_FONTS_555[NAME_SIZE] = "japanese-v2-alpha.555"; // TODO change to final name later
 
 static const char ENEMY_GRAPHICS_SG2[][NAME_SIZE] = {
     "goths.sg2",
@@ -603,6 +606,36 @@ static int load_korean_fonts(void)
     return 1;
 }
 
+static int load_japanese_fonts(void)
+{
+    if (!alloc_font_memory(JAPANESE_FONT_ENTRIES, JAPANESE_FONT_DATA_SIZE)) {
+        return 0;
+    }
+
+    int data_size = io_read_file_into_buffer(JAPANESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    if (!data_size) {
+        log_error("Julius requires extra files for Japanese characters:", JAPANESE_FONTS_555, 0);
+        return 0;
+    }
+
+    buffer input;
+    buffer_init(&input, data.tmp_data, data_size);
+    color_t *pixels = data.font_data;
+    int offset = 0;
+    int num_chars = IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS;
+
+    log_info("Parsing Japanese font", 0, 0);
+    // 4-bit font file
+    offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 12, 1, 0);
+    offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 15, 1, num_chars);
+    offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 20, 1, num_chars*2);
+    log_info("Done parsing Japanese font", 0, 0);
+
+    data.fonts_enabled = MULTIBYTE_IN_FONT;
+    data.font_base_offset = 0;
+    return 1;
+}
+
 int image_load_fonts(encoding_type encoding)
 {
     if (encoding == ENCODING_CYRILLIC) {
@@ -613,6 +646,8 @@ int image_load_fonts(encoding_type encoding)
         return load_simplified_chinese_fonts();
     } else if (encoding == ENCODING_KOREAN) {
         return load_korean_fonts();
+    } else if (encoding == ENCODING_JAPANESE) {
+        return load_japanese_fonts();
     } else {
         free_font_memory();
         return 1;

@@ -91,7 +91,7 @@ int game_init(void)
     int missing_fonts = 0;
     if (!image_load_fonts(encoding_get())) {
         errlog("unable to load font graphics");
-        if (encoding_get() == ENCODING_KOREAN) {
+        if (encoding_get() == ENCODING_KOREAN || encoding_get() == ENCODING_JAPANESE) {
             missing_fonts = 1;
         } else {
             return 0;

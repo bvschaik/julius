@@ -1,5 +1,6 @@
 #include "font.h"
 
+#include "core/encoding_japanese.h"
 #include "core/encoding_trad_chinese.h"
 #include "core/image.h"
 
@@ -14,6 +15,7 @@ static int image_y_offset_cyrillic_large_brown(uint8_t c, int image_height, int 
 static int image_y_offset_cyrillic_normal_brown(uint8_t c, int image_height, int line_height);
 static int image_y_offset_chinese(uint8_t c, int image_height, int line_height);
 static int image_y_offset_korean(uint8_t c, int image_height, int line_height);
+static int image_y_offset_japanese(uint8_t c, int image_height, int line_height);
 
 static const int CHAR_TO_FONT_IMAGE_DEFAULT[] = {
     0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x01,
@@ -150,11 +152,25 @@ static const font_definition DEFINITIONS_KOREAN[] = {
     {FONT_NORMAL_BROWN, 1206, 0, 6, 0, 11, image_y_offset_korean}
 };
 
+static const font_definition DEFINITIONS_JAPANESE[] = {
+    {FONT_NORMAL_PLAIN, 0, IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS * 1, 6, 1, 15, image_y_offset_japanese},
+    {FONT_NORMAL_BLACK, 134, IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS, 6, 0, 11, image_y_offset_japanese},
+    {FONT_NORMAL_WHITE, 268, IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS, 6, 0, 11, image_y_offset_japanese},
+    {FONT_NORMAL_RED, 402, IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS, 6, 0, 11, image_y_offset_japanese},
+    {FONT_LARGE_PLAIN, 536, IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS * 2, 8, 1, 23, image_y_offset_japanese},
+    {FONT_LARGE_BLACK, 670, IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS * 2, 8, 0, 23, image_y_offset_japanese},
+    {FONT_LARGE_BROWN, 804, IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS * 2, 8, 0, 24, image_y_offset_japanese},
+    {FONT_SMALL_PLAIN, 938, 0, 4, 1, 9, image_y_offset_japanese},
+    {FONT_NORMAL_GREEN, 1072, IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS, 6, 0, 11, image_y_offset_japanese},
+    {FONT_NORMAL_BROWN, 1206, IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS, 6, 0, 11, image_y_offset_japanese}
+};
+
 enum {
     MULTIBYTE_NONE = 0,
     MULTIBYTE_TRADITIONAL_CHINESE = 1,
     MULTIBYTE_SIMPLIFIED_CHINESE = 2,
     MULTIBYTE_KOREAN = 3,
+    MULTIBYTE_JAPANESE = 4,
 };
 
 static struct {
@@ -378,6 +394,28 @@ static int image_y_offset_korean(uint8_t c, int image_height, int line_height)
     return image_height - line_height;
 }
 
+static int image_y_offset_japanese(uint8_t c, int image_height, int line_height)
+{
+    if (line_height == 15) {
+        if (c < 0x80) {
+            return -1;
+        } else {
+            return 2;
+        }
+    }
+    if (c < 0x80) {
+        return 0;
+    }
+    if (line_height == 11) {
+        if (image_height == 12) {
+            return 0;
+        } else if (image_height == 15) {
+            return 2;
+        }
+    }
+    return image_height - line_height;
+}
+
 void font_set_encoding(encoding_type encoding)
 {
     data.multibyte = MULTIBYTE_NONE;
@@ -399,6 +437,10 @@ void font_set_encoding(encoding_type encoding)
         data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
         data.font_definitions = DEFINITIONS_KOREAN;
         data.multibyte = MULTIBYTE_KOREAN;
+    } else if (encoding == ENCODING_JAPANESE) {
+        data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
+        data.font_definitions = DEFINITIONS_JAPANESE;
+        data.multibyte = MULTIBYTE_JAPANESE;
     } else {
         data.font_mapping = CHAR_TO_FONT_IMAGE_DEFAULT;
         data.font_definitions = DEFINITIONS_DEFAULT;
@@ -442,6 +484,18 @@ int font_letter_id(const font_definition *def, const uint8_t *str, int *num_byte
             int b1 = str[1] - 0xa1;
             int char_id = b0 * 94 + b1;
             if (b0 < 0 || b1 < 0 || char_id < 0 || char_id >= IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS) {
+                return -1;
+            }
+            return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
+        } else if (data.multibyte == MULTIBYTE_JAPANESE) {
+            int char_id;
+            if (str[0] >= 0xa0 && str[0] < 0xe0) {
+                *num_bytes = 1;
+                char_id = encoding_japanese_sjis_to_image_id(str[0], 0);
+            } else {
+                char_id = encoding_japanese_sjis_to_image_id(str[0], str[1]);
+            }
+            if (char_id == -1) {
                 return -1;
             }
             return IMAGE_FONT_MULTIBYTE_OFFSET + def->multibyte_image_offset + char_id;
