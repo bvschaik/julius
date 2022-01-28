@@ -2,6 +2,7 @@
 #include "translation/translation.h"
 
 static translation_string all_strings[] = {
+    {TR_NO_PATCH_TITLE, "パッチ1.0.1.0がインストールされていません"},
 };
 
 void translation_japanese(const translation_string **strings, int *num_strings)
