@@ -43,6 +43,12 @@ int locale_year_before_ad(void);
 int locale_translate_money_dn(void);
 
 /**
+ * Returns the indent size to use for paragraphs in rich text
+ * @return Indent in pixels
+ */
+int locale_paragraph_indent(void);
+
+/**
  * Returns whether we should use localized filenames for the "Citizen.sav", etc autosaves
  * @return Boolean true if the filenames should be translated, false if we should use English
  */

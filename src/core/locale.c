@@ -111,6 +111,11 @@ int locale_translate_money_dn(void)
     return data.last_determined_language != LANGUAGE_KOREAN;
 }
 
+int locale_paragraph_indent(void)
+{
+    return data.last_determined_language == LANGUAGE_JAPANESE ? 17 : 50;
+}
+
 int locale_translate_rank_autosaves(void)
 {
     switch (data.last_determined_language) {
