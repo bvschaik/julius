@@ -31,7 +31,7 @@
 #define CYRILLIC_FONT_DATA_SIZE 1500000
 #define TRAD_CHINESE_FONT_DATA_SIZE 7200000
 #define KOREAN_FONT_DATA_SIZE 7500000
-#define JAPANESE_FONT_DATA_SIZE 15000000 // TODO tweak
+#define JAPANESE_FONT_DATA_SIZE 11000000
 #define SCRATCH_DATA_SIZE 12100000
 
 #define CYRILLIC_FONT_BASE_OFFSET 201
@@ -72,7 +72,7 @@ static const char CHINESE_FONTS_555[NAME_SIZE] = "rome.555";
 static const char CHINESE_FONTS_555_V2[NAME_SIZE] = "rome-v2.555";
 static const char KOREAN_FONTS_555[NAME_SIZE] = "korean.555";
 static const char KOREAN_FONTS_555_V2[NAME_SIZE] = "korean-v2.555";
-static const char JAPANESE_FONTS_555[NAME_SIZE] = "japanese-v2-alpha.555"; // TODO change to final name later
+static const char JAPANESE_FONTS_555[NAME_SIZE] = "japanese-v2.555";
 
 static const char ENEMY_GRAPHICS_SG2[][NAME_SIZE] = {
     "goths.sg2",
@@ -388,15 +388,17 @@ static int parse_multibyte_font(
                 if (col % 2 == 0) {
                     bits = buffer_read_u8(input);
                 }
-                uint8_t value = bits & 0xf;
-                if (value == 0) {
-                    *pixels = COLOR_SG2_TRANSPARENT;
-                } else {
-                    uint32_t color_value = (value * 16 + value);
-                    *pixels = color_value << 24;
+                if (col < img->width) {
+                    uint8_t value = bits & 0xf;
+                    if (value == 0) {
+                        *pixels = COLOR_SG2_TRANSPARENT;
+                    } else {
+                        uint32_t color_value = (value * 16 + value);
+                        *pixels = color_value << 24;
+                    }
+                    pixels++;
+                    pixel_offset++;
                 }
-                pixels++;
-                pixel_offset++;
                 bits >>= 4;
             }
             for (int s = 0; s < letter_spacing; s++) {
@@ -623,13 +625,18 @@ static int load_japanese_fonts(void)
     color_t *pixels = data.font_data;
     int offset = 0;
     int num_chars = IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS;
+    int num_half_width = 63;
+    int num_full_width = num_chars - num_half_width;
 
     log_info("Parsing Japanese font", 0, 0);
     // 4-bit font file
-    offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 12, 1, 0);
-    offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 15, 1, num_chars);
-    offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 20, 1, num_chars*2);
-    log_info("Done parsing Japanese font", 0, 0);
+    offset = parse_multibyte_font(num_half_width, &input, &pixels[offset], offset, 12, -5, 0);
+    offset = parse_multibyte_font(num_full_width, &input, &pixels[offset], offset, 12, 1, num_half_width);
+    offset = parse_multibyte_font(num_half_width, &input, &pixels[offset], offset, 15, -6, num_chars);
+    offset = parse_multibyte_font(num_full_width, &input, &pixels[offset], offset, 15, 1, num_chars + num_half_width);
+    offset = parse_multibyte_font(num_half_width, &input, &pixels[offset], offset, 20, -9, num_chars*2);
+    offset = parse_multibyte_font(num_full_width, &input, &pixels[offset], offset, 20, 1, num_chars*2 + num_half_width);
+    log_info("Done parsing Japanese font", 0, offset);
 
     data.fonts_enabled = MULTIBYTE_IN_FONT;
     data.font_base_offset = 0;
