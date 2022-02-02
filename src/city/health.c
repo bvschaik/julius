@@ -332,6 +332,10 @@ int city_health_get_global_sickness_level(void)
         plague_incoming = 0;
     }
 
+    if (building_number == 0) {
+        return SICKNESS_LEVEL_LOW;
+    }
+
     int global_rating = building_sickness_level / building_number;
     int global_sickness_level;
 
