@@ -14,6 +14,7 @@ typedef struct {
     int increase_game_speed;
     int rotate_map_left;
     int rotate_map_right;
+    int rotate_map_north;
     int show_advisor;
     int show_overlay;
     int show_overlay_relative;

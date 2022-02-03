@@ -299,7 +299,58 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
         case HOTKEY_PASTE_BUILDING_SETTINGS:
             def->action = &data.hotkey_state.paste_building_settings;
             break;
-        default:
+        case HOTKEY_SHOW_OVERLAY_FOOD_STOCKS:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_FOOD_STOCKS;
+            break;
+        case HOTKEY_SHOW_OVERLAY_ENTERTAINMENT:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_ENTERTAINMENT;
+            break;
+        case HOTKEY_SHOW_OVERLAY_SCHOOL:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_SCHOOL;
+            break;
+        case HOTKEY_SHOW_OVERLAY_LIBRARY:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_LIBRARY;
+            break;
+        case HOTKEY_SHOW_OVERLAY_ACADEMY:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_ACADEMY;
+            break;
+        case HOTKEY_SHOW_OVERLAY_BARBER:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_BARBER;
+            break;
+        case HOTKEY_SHOW_OVERLAY_BATHHOUSE:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_BATHHOUSE;
+            break;
+        case HOTKEY_SHOW_OVERLAY_CLINIC:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_CLINIC;
+            break;
+        case HOTKEY_SHOW_OVERLAY_TAX_INCOME:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_TAVERN;
+            break;
+        case HOTKEY_SHOW_OVERLAY_RELIGION:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_RELIGION;
+            break;
+        case HOTKEY_SHOW_OVERLAY_ROADS:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_ROADS;
+            break;
+        case HOTKEY_ROTATE_MAP_NORTH:
+            def->action = &data.hotkey_state.rotate_map_north;
+            break;
+        case HOTKEY_BUILD_WHEAT_FARM:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_WHEAT_FARM;
+            break;
+		default:
             def->action = 0;
     }
 }

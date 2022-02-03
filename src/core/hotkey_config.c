@@ -85,7 +85,20 @@ static const char *ini_keys[] = {
     "clone_building",
     "copy_building_settings",
     "paste_building_settings",
-    "undo"
+    "undo",
+    "show_overlay_food_stocks",
+    "show_overlay_entertainment",
+    "show_overlay_school",
+    "show_overlay_library",
+    "show_overlay_academy",
+    "show_overlay_barber",
+    "show_overlay_bathhouse",
+    "show_overlay_clinic",
+    "show_overlay_tax_income",
+    "show_overlay_religion",
+    "show_overlay_roads",
+    "rotate_map_north",
+    "build_wheat_farm"
 };
 
 static struct {

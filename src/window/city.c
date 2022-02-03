@@ -472,6 +472,10 @@ static void handle_hotkeys(const hotkeys *h)
         game_orientation_rotate_right();
         window_invalidate();
     }
+    if (h->rotate_map_north) {
+        game_orientation_rotate_north();
+        window_invalidate();
+    }
     if (h->go_to_bookmark) {
         if (map_bookmark_go_to(h->go_to_bookmark - 1)) {
             window_invalidate();
