@@ -746,6 +746,19 @@ static translation_string all_strings[] = {
     {TR_CITY_WARNING_DATA_COPY_NOT_SUPPORTED, "Impossible de copier des réglages pour ce bâtiment" },
     {TR_CITY_WARNING_DATA_PASTE_SUCCESS, "Réglages appliqués" },
     {TR_CITY_WARNING_DATA_PASTE_NOT_SUPPORTED, "Impossible d'appliquer des réglages à ce bâtiment" },
+    {TR_HOTKEY_SHOW_OVERLAY_FOOD_STOCKS, "Stock Vivres"},
+    {TR_HOTKEY_SHOW_OVERLAY_ENTERTAINMENT, "Loisirs" },
+    {TR_HOTKEY_SHOW_OVERLAY_SCHOOL, "Écoles" },
+    {TR_HOTKEY_SHOW_OVERLAY_LIBRARY, "Bibliothèques" },
+    {TR_HOTKEY_SHOW_OVERLAY_ACADEMY, "Universités" },
+    {TR_HOTKEY_SHOW_OVERLAY_BARBER, "Barbiers" },
+    {TR_HOTKEY_SHOW_OVERLAY_BATHHOUSE, "Thermes" },
+    {TR_HOTKEY_SHOW_OVERLAY_CLINIC, "Dispensaires" },
+    {TR_HOTKEY_SHOW_OVERLAY_TAX_INCOME, "Impôts" },
+    {TR_HOTKEY_SHOW_OVERLAY_RELIGION, "Religion" },
+    {TR_HOTKEY_SHOW_OVERLAY_ROADS, "Routes" },
+    {TR_HOTKEY_ROTATE_MAP_NORTH, "Orienter la carte au Nord" },
+    {TR_HOTKEY_BUILD_WHEAT_FARM, "Ferme Blé" }
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
