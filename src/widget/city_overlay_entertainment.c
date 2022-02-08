@@ -79,20 +79,16 @@ static int show_figure_amphitheater(const figure *f)
 
 static int show_figure_arena(const figure *f)
 {
-    if (f->type == FIGURE_GLADIATOR) {
+    if (f->type == FIGURE_GLADIATOR || f->type == FIGURE_LION_TAMER) {
         return get_entertainment_building(f)->type == BUILDING_ARENA;
-    } else if (f->type == FIGURE_LION_TAMER) {
-        return 1;
-    }
+    } 
     return 0;
 }
 
 static int show_figure_colosseum(const figure *f)
 {
-    if (f->type == FIGURE_GLADIATOR) {
+    if (f->type == FIGURE_GLADIATOR || f->type == FIGURE_LION_TAMER) {
         return get_entertainment_building(f)->type == BUILDING_COLOSSEUM;
-    } else if (f->type == FIGURE_LION_TAMER) {
-        return 1;
     }
     return 0;
 }
