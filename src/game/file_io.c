@@ -385,7 +385,7 @@ static void init_savegame_data(int version)
 static void scenario_load_from_state(scenario_state *file)
 {
     map_image_load_state_legacy(file->graphic_ids);
-    map_terrain_load_state(file->terrain, 0);
+    map_terrain_load_state(file->terrain, 0, file->graphic_ids, 1);
     map_property_load_state(file->bitfields, file->edge);
     map_random_load_state(file->random);
     map_elevation_load_state(file->elevation);
@@ -423,7 +423,9 @@ static void savegame_load_from_state(savegame_state *state, int version)
         state->scenario_name);
 
     map_building_load_state(state->building_grid, state->building_damage_grid);
-    map_terrain_load_state(state->terrain_grid, version > SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION);
+    map_terrain_load_state(state->terrain_grid, version > SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION,
+        version <= SAVE_GAME_LAST_STORED_IMAGE_IDS ? state->image_grid : 0,
+        version <= SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION);
     map_aqueduct_load_state(state->aqueduct_grid, state->aqueduct_backup_grid);
     map_figure_load_state(state->figure_grid);
     map_sprite_load_state(state->sprite_grid, state->sprite_backup_grid);

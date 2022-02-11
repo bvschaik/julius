@@ -109,6 +109,6 @@ void map_terrain_init_outside_map(void);
 void map_terrain_save_state(buffer *buf);
 void map_terrain_save_state_legacy(buffer *buf);
 
-void map_terrain_load_state(buffer *buf, int expanded_terrain_data);
+void map_terrain_load_state(buffer *buf, int expanded_terrain_data, buffer *images, int legacy_image_buffer);
 
 #endif // MAP_TERRAIN_H

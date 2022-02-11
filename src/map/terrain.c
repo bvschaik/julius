@@ -1,5 +1,6 @@
 #include "terrain.h"
 
+#include "core/image.h"
 #include "map/grid.h"
 #include "map/ring.h"
 #include "map/routing.h"
@@ -389,24 +390,45 @@ void map_terrain_save_state_legacy(buffer *buf)
     map_grid_save_state_u32_to_u16(terrain_grid.items, buf);
 }
 
-static void determine_original_trees(void)
+static void determine_original_trees(buffer *images, int legacy_buffer)
 {
     for (int y = 0; y < GRID_SIZE; y++) {
         for (int x = 0; x < GRID_SIZE; x++) {
             if (terrain_grid.items[x + GRID_SIZE * y] & TERRAIN_TREE &&
                 !(terrain_grid.items[x + GRID_SIZE * y] & TERRAIN_WATER)) {
                 terrain_grid.items[x + GRID_SIZE * y] |= TERRAIN_ORIGINALLY_TREE;
+                if (images) {
+                    buffer_set(images, (x + GRID_SIZE * y) * (legacy_buffer ? 2 : 4));
+                    int image_id = legacy_buffer ? buffer_read_u16(images) : buffer_read_u32(images);
+                    int image_tree_group = image_group(GROUP_TERRAIN_TREE);
+                    int ring;
+                    if (image_id >= image_tree_group + 8 && image_id < image_tree_group + 16) {
+                        ring = 1;
+                    } else if (image_id >= image_tree_group + 16 && image_id < image_tree_group + 24) {
+                        ring = 2;
+                    } else if (image_id >= image_tree_group + 24 && image_id < image_tree_group + 32) {
+                        ring = 3;
+                    } else {
+                        continue;
+                    }
+                    int start = map_ring_start(1, ring);
+                    int end = map_ring_end(1, ring);
+                    int base_offset = map_grid_offset(x, y);
+                    for (int i = start; i < end; i++) {
+                        map_terrain_add(base_offset + map_ring_tile(i)->grid_offset, TERRAIN_ORIGINALLY_TREE);
+                    }
+                }
             }
         }
     }
 }
 
-void map_terrain_load_state(buffer *buf, int expanded_terrain_data)
+void map_terrain_load_state(buffer *buf, int expanded_terrain_data, buffer *images, int legacy_image_buffer)
 {
     if (expanded_terrain_data) {
         map_grid_load_state_u32(terrain_grid.items, buf);
     } else {
         map_grid_load_state_u16_to_u32(terrain_grid.items, buf);
-        determine_original_trees();
     }
+    determine_original_trees(images, legacy_image_buffer);
 }
