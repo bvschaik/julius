@@ -73,7 +73,7 @@ static void draw_foreground(void)
 
     outer_panel_draw(16, 128, 38, 15);
     int image_offset = data.resource + resource_image_offset(data.resource, RESOURCE_IMAGE_ICON);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 26, 136);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 26, 136, COLOR_MASK_NONE, SCALE_NONE);
 
     lang_text_draw(23, data.resource, 60, 137, FONT_LARGE_BLACK);
 

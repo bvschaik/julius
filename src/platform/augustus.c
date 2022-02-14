@@ -4,11 +4,13 @@
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/lang.h"
+#include "core/log.h"
 #include "core/time.h"
 #include "game/game.h"
 #include "game/settings.h"
 #include "game/system.h"
 #include "graphics/screen.h"
+#include "graphics/window.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 #include "platform/arguments.h"
@@ -17,6 +19,7 @@
 #include "platform/keyboard_input.h"
 #include "platform/platform.h"
 #include "platform/prefs.h"
+#include "platform/renderer.h"
 #include "platform/screen.h"
 #include "platform/touch.h"
 
@@ -88,6 +91,7 @@ static void setup_logging(void)
 static void teardown_logging(void)
 {
     if (log_file) {
+        log_repeated_messages();
         file_close(log_file);
     }
 }
@@ -177,8 +181,7 @@ static void run_and_draw(void)
         text_draw_number(time_after_draw - time_between_run_and_draw,
             'd', "", 70, y_offset_text, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
     }
-    platform_screen_update();
-    platform_screen_render();
+    platform_renderer_render();
 }
 #else
 static void run_and_draw(void)
@@ -188,8 +191,7 @@ static void run_and_draw(void)
     game_run();
     game_draw();
 
-    platform_screen_update();
-    platform_screen_render();
+    platform_renderer_render();
 }
 #endif
 
@@ -245,6 +247,14 @@ static void handle_event(SDL_Event *event)
         case SDL_WINDOWEVENT:
             handle_window_event(&event->window, &data.active);
             break;
+
+#if SDL_VERSION_ATLEAST(2, 0, 2)
+        case SDL_RENDER_TARGETS_RESET:
+#endif
+        case SDL_APP_DIDENTERFOREGROUND:
+            window_invalidate();
+            break;
+
         case SDL_KEYDOWN:
             platform_handle_key_down(&event->key);
             break;
@@ -332,6 +342,7 @@ static void handle_event(SDL_Event *event)
 
 static void teardown(void)
 {
+    log_repeated_messages();
     SDL_Log("Exiting game");
     game_exit();
     platform_screen_destroy();
@@ -391,7 +402,9 @@ static int init_sdl(void)
 #ifdef __ANDROID__
     SDL_SetHint(SDL_HINT_ANDROID_TRAP_BACK_BUTTON, "1");
 #endif
-    SDL_Log("SDL initialized");
+    SDL_version version;
+    SDL_GetVersion(&version);
+    SDL_Log("SDL initialized, version %u.%u.%u", version.major, version.minor, version.patch);
     return 1;
 }
 

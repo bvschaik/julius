@@ -20,12 +20,17 @@ typedef struct {
     tile_color meadow[4];
     tile_color grass[8];
     tile_color road;
+    tile_color wall;
+    tile_color aqueduct;
+    tile_color house[2];
+    tile_color building[2];
+    tile_color black;
 } tile_color_set;
 
 // Since the minimap tiles are only 25 color sets per climate, we just hardcode them.
 // This "hack" is necessary to avoid reloading the climate graphics when selecting
 // a scenario with another climate in the CCK selection screen, which is expensive.
-const tile_color_set MINIMAP_COLOR_SETS[3] = {
+static const tile_color_set MINIMAP_COLOR_SETS[3] = {
     // central
     {
         .water = {{0xff394a7b, 0xff31427b}, {0xff394a7b, 0xff314273}, {0xff313973, 0xff314273}, {0xff31427b, 0xff394a7b}},
@@ -36,7 +41,12 @@ const tile_color_set MINIMAP_COLOR_SETS[3] = {
             {0xff6b8c31, 0xff6b7b29}, {0xff738431, 0xff6b7b29}, {0xff6b7329, 0xff7b8c39}, {0xff527b29, 0xff6b7321},
             {0xff6b8431, 0xff737b31}, {0xff6b7b31, 0xff737b29}, {0xff636b18, 0xff526b21}, {0xff737b31, 0xff737b29}
         },
-        .road = {0xff736b63, 0xff4a3121}
+        .road = {0xff736b63, 0xff4a3121},
+        .wall = {0xffd6d3c6, 0xfff7f3de},
+        .aqueduct = {0xff5282bd, 0xff84baff},
+        .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
+        .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
+        .black = {COLOR_BLACK, COLOR_BLACK}
     },
     // northern
     {
@@ -48,7 +58,12 @@ const tile_color_set MINIMAP_COLOR_SETS[3] = {
             {0xff4a8431, 0xff4a7329}, {0xff527b29, 0xff4a7329}, {0xff526b29, 0xff5a8439}, {0xff397321, 0xff4a6b21},
             {0xff527b31, 0xff5a7331}, {0xff4a7329, 0xff5a7329}, {0xff4a6b18, 0xff316b21}, {0xff527b29, 0xff527329}
         },
-        .road = {0xff736b63, 0xff4a3121}
+        .road = {0xff736b63, 0xff4a3121},
+        .wall = {0xffd6d3c6, 0xfff7f3de},
+        .aqueduct = {0xff5282bd, 0xff84baff},
+        .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
+        .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
+        .black = {COLOR_BLACK, COLOR_BLACK}
     },
     // desert
     {
@@ -60,7 +75,12 @@ const tile_color_set MINIMAP_COLOR_SETS[3] = {
             {0xffbdbd9c, 0xffb5b594}, {0xffc6bda5, 0xffbdbda5}, {0xffbdbd9c, 0xffc6c6ad}, {0xffd6cead, 0xffc6bd9c},
             {0xffa59c7b, 0xffbdb594}, {0xffcecead, 0xffb5ad94}, {0xffc6c6a5, 0xffdedebd}, {0xffcecead, 0xffd6d6b5}
         },
-        .road = {0xff6b5a52, 0xff4a4239}
+        .road = {0xff6b5a52, 0xff4a4239},
+        .wall = {0xffd6d3c6, 0xfff7f3de},
+        .aqueduct = {0xff5282bd, 0xff84baff},
+        .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
+        .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
+        .black = {COLOR_BLACK, COLOR_BLACK}
     }
 };
 
@@ -106,8 +126,8 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         if (map_property_is_draw_tile(grid_offset)) {
             int image_id = image_group(GROUP_MINIMAP_BUILDING);
             switch (map_property_multi_tile_size(grid_offset)) {
-                case 1: image_draw(image_id, x_view, y_view); break;
-                case 2: image_draw(image_id + 1, x_view, y_view - 1); break;
+                case 1: image_draw(image_id, x_view, y_view, COLOR_MASK_NONE, SCALE_NONE); break;
+                case 2: image_draw(image_id + 1, x_view, y_view - 1, COLOR_MASK_NONE, SCALE_NONE); break;
             }
         }
     } else {
@@ -127,8 +147,8 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         } else {
             color = &set->grass[rand & 7];
         }
-        graphics_draw_vertical_line(x_view, y_view, y_view, color->left);
-        graphics_draw_vertical_line(x_view + 1, y_view, y_view, color->right);
+        graphics_draw_line(x_view, x_view, y_view, y_view, color->left);
+        graphics_draw_line(x_view + 1, x_view + 1, y_view, y_view, color->right);
     }
 }
 

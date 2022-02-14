@@ -97,31 +97,31 @@ static void draw_paneling(void)
     // bottom panel background
     graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
     for (int x = data.x_min; x < data.x_max; x += 70) {
-        image_draw(image_base + 3, x, data.y_max - 120);
-        image_draw(image_base + 3, x, data.y_max - 80);
-        image_draw(image_base + 3, x, data.y_max - 40);
+        image_draw(image_base + 3, x, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base + 3, x, data.y_max - 80, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base + 3, x, data.y_max - 40, COLOR_MASK_NONE, SCALE_NONE);
     }
 
     // horizontal bar borders
     for (int x = data.x_min; x < data.x_max; x += 86) {
-        image_draw(image_base + 1, x, data.y_min);
-        image_draw(image_base + 1, x, data.y_max - 120);
-        image_draw(image_base + 1, x, data.y_max - 16);
+        image_draw(image_base + 1, x, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base + 1, x, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base + 1, x, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
     }
 
     // vertical bar borders
     for (int y = data.y_min + 16; y < data.y_max; y += 86) {
-        image_draw(image_base, data.x_min, y);
-        image_draw(image_base, data.x_max - 16, y);
+        image_draw(image_base, data.x_min, y, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base, data.x_max - 16, y, COLOR_MASK_NONE, SCALE_NONE);
     }
 
     // crossbars
-    image_draw(image_base + 2, data.x_min, data.y_min);
-    image_draw(image_base + 2, data.x_min, data.y_max - 120);
-    image_draw(image_base + 2, data.x_min, data.y_max - 16);
-    image_draw(image_base + 2, data.x_max - 16, data.y_min);
-    image_draw(image_base + 2, data.x_max - 16, data.y_max - 120);
-    image_draw(image_base + 2, data.x_max - 16, data.y_max - 16);
+    image_draw(image_base + 2, data.x_min, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 2, data.x_min, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 2, data.x_min, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 2, data.x_max - 16, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 2, data.x_max - 16, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 2, data.x_max - 16, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
 
     graphics_reset_clip_rectangle();
 }
@@ -132,7 +132,7 @@ static void draw_trade_resource(resource_type resource, int trade_max, int x_off
 
     int image_id = resource + image_group(GROUP_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    image_draw(image_id + resource_offset, x_offset + 1, y_offset + 1);
+    image_draw(image_id + resource_offset, x_offset + 1, y_offset + 1, COLOR_MASK_NONE, SCALE_NONE);
 
     if (data.focus_resource == resource) {
         button_border_draw(x_offset - 2, y_offset - 2, 101 + 4, 30, 1);
@@ -140,13 +140,13 @@ static void draw_trade_resource(resource_type resource, int trade_max, int x_off
 
     switch (trade_max) {
         case 15:
-            image_draw(image_group(GROUP_TRADE_AMOUNT), x_offset + 21, y_offset - 1);
+            image_draw(image_group(GROUP_TRADE_AMOUNT), x_offset + 21, y_offset - 1, COLOR_MASK_NONE, SCALE_NONE);
             break;
         case 25:
-            image_draw(image_group(GROUP_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1);
+            image_draw(image_group(GROUP_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1, COLOR_MASK_NONE, SCALE_NONE);
             break;
         case 40:
-            image_draw(image_group(GROUP_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1);
+            image_draw(image_group(GROUP_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1, COLOR_MASK_NONE, SCALE_NONE);
             break;
     }
 }
@@ -221,7 +221,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             x_offset + 40, y_offset + 73, FONT_NORMAL_GREEN);
         lang_text_draw(47, 6, x_offset + index + 40, y_offset + 73, FONT_NORMAL_GREEN);
         int image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1 - city->is_sea_trade;
-        image_draw(image_id, x_offset + 430, y_offset + 65 + 2 * city->is_sea_trade);
+        image_draw(image_id, x_offset + 430, y_offset + 65 + 2 * city->is_sea_trade, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 
@@ -316,7 +316,7 @@ static void draw_background(void)
     data.y_max = s_height <= MAX_HEIGHT ? s_height : data.y_min + MAX_HEIGHT;
 
     if (data.x_min || data.y_min) {
-        graphics_clear_screens();
+        graphics_clear_screen();
     }
 }
 
@@ -369,19 +369,20 @@ static void draw_empire_object(const empire_object *obj)
             return;
         }
     }
-    image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
+    image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y, COLOR_MASK_NONE, SCALE_NONE);
     const image *img = image_get(image_id);
-    if (img->animation_speed_id) {
+    if (img->animation.speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
         image_draw(image_id + new_animation,
-            data.x_draw_offset + x + img->sprite_offset_x,
-            data.y_draw_offset + y + img->sprite_offset_y);
+            data.x_draw_offset + x + img->animation.sprite_offset_x,
+            data.y_draw_offset + y + img->animation.sprite_offset_y,
+            COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 
 static void draw_invasion_warning(int x, int y, int image_id)
 {
-    image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y);
+    image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y, COLOR_MASK_NONE, SCALE_NONE);
 }
 
 static void draw_map(void)
@@ -394,7 +395,7 @@ static void draw_map(void)
     data.x_draw_offset = data.x_min + 16;
     data.y_draw_offset = data.y_min + 16;
     empire_adjust_scroll(&data.x_draw_offset, &data.y_draw_offset);
-    image_draw(image_group(GROUP_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset);
+    image_draw(image_group(GROUP_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset, COLOR_MASK_NONE, SCALE_NONE);
 
     empire_object_foreach(draw_empire_object);
 
@@ -406,9 +407,9 @@ static void draw_map(void)
 static void draw_city_name(const empire_city *city)
 {
     int image_base = image_group(GROUP_EMPIRE_PANELS);
-    image_draw(image_base + 6, data.x_min + 2, data.y_max - 199);
-    image_draw(image_base + 7, data.x_max - 84, data.y_max - 199);
-    image_draw(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181);
+    image_draw(image_base + 6, data.x_min + 2, data.y_max - 199, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 7, data.x_max - 84, data.y_max - 199, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181, COLOR_MASK_NONE, SCALE_NONE);
     if (city) {
         lang_text_draw_centered(21, city->name_id,
             (data.x_min + data.x_max - 332) / 2 + 64, data.y_max - 118, 268, FONT_LARGE_BLACK);

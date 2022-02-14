@@ -68,7 +68,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Fixa 100-års spöken"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Fixa kejsarbyte och överlevnadstid i användaruppdrag"},
 	{TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Visa vagndragarens måldestination när du klickat på en byggnad."},
-    {TR_CONFIG_ENABLE_ZOOM, "Slå på zoom (kan vara långsamt, använder mer RAM-minne)"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Fixa ofullständiga ställningspelare för låga mål"},
     {TR_CONFIG_GRANDFESTIVAL, "Storslagen festival möjliggör ytterligare en gåva från en gud"},
     {TR_CONFIG_JEALOUS_GODS, "Stäng av svartsjuka gudar"},
@@ -98,10 +97,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Handelsmagasin accepterar ingenting när de har byggts"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Hus bygger inte ut över trädgårdar"},																																
 	{TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Strövande medborgare hoppar inte över väghörn"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "Stadsinzoomning kunde inte aktiveras"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
-        "Ditt system har inte tillräckligt med grafikminne för att aktivera stadszoomning.\n"
-        "Stadszoomning har ej aktiverats."},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "Visa det högsta möjliga välståndsbetyg med nuvarande bostäder"},																										  
     {TR_HOTKEY_TITLE, "Augustus kortkommandoinställningar"},
     {TR_HOTKEY_LABEL, "Kortkommando"},

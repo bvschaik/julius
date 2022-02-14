@@ -3,7 +3,8 @@
 #include "core/calc.h"
 #include "core/encoding.h"
 #include "core/string.h"
-#include "platform/screen.h"
+#include "graphics/window.h"
+#include "platform/renderer.h"
 
 #include <string.h>
 #include <psp2/apputil.h>
@@ -117,7 +118,7 @@ const uint8_t *vita_keyboard_get(const uint8_t *initial_text, int max_length)
     init_ime_dialog(initial_text, max_length, SCE_IME_TYPE_BASIC_LATIN, 0);
     int done = 0;
     while (!done) {
-        platform_screen_clear();
+        platform_renderer_clear();
         done = 1;
         int ime_result = update_ime_dialog();
         if (ime_result == IME_DIALOG_RESULT_FINISHED) {
@@ -125,7 +126,8 @@ const uint8_t *vita_keyboard_get(const uint8_t *initial_text, int max_length)
         } else if (ime_result != IME_DIALOG_RESULT_CANCELED) {
             done = 0;
         }
-        platform_screen_render();
+        platform_renderer_render();
     }
+    window_invalidate();
     return final_text;
 }

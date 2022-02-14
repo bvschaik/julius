@@ -61,7 +61,7 @@ static void draw_buttons(void)
     width = lang_text_draw(58, 33, 110, 284, FONT_NORMAL_BLACK);
     width += lang_text_draw_amount(8, 0, city_festival_grand_cost(), 110 + width, 284, FONT_NORMAL_BLACK);
     width += lang_text_draw_amount(8, 10, city_festival_grand_wine(), 120 + width, 284, FONT_NORMAL_BLACK);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, 120 + width, 279);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, 120 + width, 279, COLOR_MASK_NONE, SCALE_NONE);
 
     // greying out of buttons
     if (city_finance_out_of_money()) {
@@ -84,9 +84,9 @@ static void draw_background(void)
     for (int god = 0; god < MAX_GODS; god++) {
         if (god == city_festival_selected_god()) {
             button_border_draw(100 * god + 66, 92, 90, 100, 1);
-            image_draw(image_group(GROUP_PANEL_WINDOWS) + god + 21, 100 * god + 70, 96);
+            image_draw(image_group(GROUP_PANEL_WINDOWS) + god + 21, 100 * god + 70, 96, COLOR_MASK_NONE, SCALE_NONE);
         } else {
-            image_draw(image_group(GROUP_PANEL_WINDOWS) + god + 16, 100 * god + 70, 96);
+            image_draw(image_group(GROUP_PANEL_WINDOWS) + god + 16, 100 * god + 70, 96, COLOR_MASK_NONE, SCALE_NONE);
         }
     }
     draw_buttons();

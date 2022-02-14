@@ -69,7 +69,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "修復人口百歲仍占房BUG"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "修復自定義地圖中皇帝更位和生存時間BUG"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "點擊建筑后覆層上勾畫出行人路徑點"},
-    {TR_CONFIG_ENABLE_ZOOM, "開啟城市縮放功能（游戲速度可能減慢，需要更多運行內存和顯存）"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "修復低目標下無法完成評比任務BUG"},
     {TR_CONFIG_GRANDFESTIVAL, "舉辦豪華節慶獲取神靈更多祝福"},
     {TR_CONFIG_DIFFICULTY, "游戲難度："},
@@ -100,10 +99,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "倉庫和谷倉建造后不接受任何物資"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "住宅擴建不會覆蓋到花園"},
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "間接目標行人不會跳過角落"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "無法開啟城市縮放功能"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
-        "你的系統沒有足夠的顯存來開啟城市縮放功能。\n"
-        "未開啟城市縮放功能。"},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "顯示當前住房可獲得的最高繁榮評比"},
     {TR_HOTKEY_TITLE, "Augustus 熱鍵配置"},
     {TR_HOTKEY_LABEL, "熱鍵"},

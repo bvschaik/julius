@@ -31,7 +31,7 @@ static int get_health_advice(void)
 static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 6, 10, 10);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 6, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
 
     int sickness_level = city_health_get_global_sickness_level();
     int text_id = city_health() / 10 + 16;

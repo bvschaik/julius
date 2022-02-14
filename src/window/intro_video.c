@@ -16,7 +16,7 @@ static const char *intro_videos[NUM_INTRO_VIDEOS] = {"smk/logo.smk", "smk/intro.
 
 static int start_next_video(void)
 {
-    graphics_clear_screens();
+    graphics_clear_screen();
     while (current_video < NUM_INTRO_VIDEOS) {
         if (video_start(intro_videos[current_video++])) {
             video_init(0);
@@ -28,7 +28,7 @@ static int start_next_video(void)
 
 static void draw_background(void)
 {
-    graphics_clear_screens();
+    graphics_clear_screen();
 }
 
 static void draw_foreground(void)

@@ -207,7 +207,7 @@ static void init(void)
 
 static void draw_background(void)
 {
-    graphics_clear_screen(CANVAS_UI);
+    graphics_clear_screen();
 
     window_draw_underlying_window();
 

@@ -133,7 +133,6 @@ static translation_string all_strings[] = {
     { TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Pokaż rozmiar budowy przy przeciąganiu budowy" },
     { TR_CONFIG_ROTATE_MANUALLY, "Obróć bramy i łuk triumfalny skrótem klawiszowym" },
     { TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Pokaż punkty docelowe" },
-    { TR_CONFIG_ENABLE_ZOOM, "Włącz powiększanie/pomniejszanie (może być powolne, wymaga więcej pamięci)" },
     { TR_CONFIG_COMPLETE_RATING_COLUMNS, "Pokaż całe kolumny przy niskich poziomach wyników" },
     { TR_CONFIG_GRANDFESTIVAL, "Wielkie festiwale pozwalają na dodatkowe błogosławieństwo" },
     { TR_CONFIG_JEALOUS_GODS, "Wyłącz zazdrość bogów" },
@@ -538,10 +537,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_WINDOWED_RESOLUTION, "Rozdzielność w oknie:"},
     {TR_CONFIG_YOU_WILL_LOSE_YOUR_CONFIGS, "Stracisz wszystkie spersonalizowane konfiguracje."},
     {TR_CONFIG_YOU_WILL_LOSE_YOUR_HOTKEYS, "Stracisz wszystkie spersonalizowane skróty klawiszowe."},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
-        "Twój system nie ma wystarczająco pamięci graficznej by zezwolić na zoom.\n"
-        "Zoom nie został włączony."},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "Zoom nie mógł zostać włączony"},
     {TR_DOCK_SPECIAL_ORDERS_HEADER, "Instrukcje dla docku"},
     {TR_FIGURE_TYPE_BARKEEP, "Barman" },
     {TR_FIGURE_TYPE_BARKEEP_SUPPLIER, "Dostawca tawerny " },

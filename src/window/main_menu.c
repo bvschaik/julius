@@ -58,13 +58,15 @@ static void draw_version_string(void)
 
 static void draw_background(void)
 {
+    graphics_reset_dialog();
+    graphics_reset_clip_rectangle();
     image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND));
 
     graphics_in_dialog();
     if (!data.logo_image_id) {
         data.logo_image_id = assets_get_image_id("UI_Elements", "Main Menu Banner");
     }
-    image_draw(data.logo_image_id, 110, -50);
+    image_draw(data.logo_image_id, 110, -50, COLOR_MASK_NONE, SCALE_NONE);
     graphics_reset_dialog();
     if (window_is(WINDOW_MAIN_MENU)) {
         draw_version_string();

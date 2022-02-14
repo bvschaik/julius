@@ -7,8 +7,6 @@
 #include "core/log.h"
 #include "core/png_read.h"
 #include "core/string.h"
-#include "graphics/image.h"
-#include "graphics/graphics.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -20,58 +18,131 @@ static void load_dummy_layer(layer *l)
     l->data = &DUMMY_LAYER_DATA;
     l->width = 1;
     l->height = 1;
-    l->is_asset_image_reference = 1;
+    l->calculated_image_id = 0;
 }
 
-void layer_load(layer *l)
-{
 #ifndef BUILDING_ASSET_PACKER
-    const image *layer_image = image_get(l->calculated_image_id);
-    if (layer_image->draw.type == IMAGE_TYPE_EXTRA_ASSET) {
-        // Ugly const removal. The only other way would be to memcpy the image data.
-        // That's a waste of ram, and we're not going to change l->data anyway
-        l->data = (color_t *) image_data(l->calculated_image_id);
-        l->is_asset_image_reference = 1;
-        if (!l->data) {
-            log_error("Problem loading layer from image id", 0, l->calculated_image_id);
-            load_dummy_layer(l);
-        }
-        return;
+static void copy_regular_image(layer *l, color_t *dst, const image *img, const color_t *atlas_pixels, int atlas_width)
+{
+    for (int y = 0; y < l->height; y++) {
+        memcpy(&dst[y * l->width], &atlas_pixels[(y + img->atlas.y_offset) * atlas_width + img->atlas.x_offset],
+            l->width * sizeof(color_t));
     }
-#endif
-    int size = l->width * l->height * sizeof(color_t);
-    l->data = malloc(size);
-    if (!l->data) {
-        log_error("Problem loading layer", l->asset_image_path, 0);
+}
+
+static void copy_isometric_image(layer *l, color_t *dst, const image *img, const color_t *atlas_pixels, int atlas_width)
+{
+    // No difference in image data - keep using the original image
+    if ((l->part == PART_BOTH && graphics_renderer()->isometric_images_are_joined()) ||
+        ((l->part & PART_FOOTPRINT) && !img->top_height)) {
+        copy_regular_image(l, dst, img, atlas_pixels, atlas_width);
+    }
+    int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+    if ((l->part & PART_TOP) && img->top_height) {
+        int height = l->part & PART_FOOTPRINT ? l->height - tiles * FOOTPRINT_HALF_HEIGHT : l->height;
+        asset_image_copy_isometric_top(dst, atlas_pixels, l->width, height,
+            0, 0, l->width, img->atlas.x_offset, img->atlas.y_offset, atlas_width);
+    }
+    if (l->part & PART_FOOTPRINT) {
+        int y_offset;
+        int footprint_height = tiles * FOOTPRINT_HEIGHT;
+        if (graphics_renderer()->isometric_images_are_joined() && img->top_height) {
+            y_offset = l->height - footprint_height;
+        } else {
+            y_offset = img->top_height;
+        }
+        asset_image_copy_isometric_footprint(dst, atlas_pixels, l->width, footprint_height,
+            0, l->height - footprint_height, l->width,
+            img->atlas.x_offset, img->atlas.y_offset + y_offset, atlas_width);
+    }
+}
+
+static void load_layer_from_another_image(layer *l, color_t **main_data, int *main_image_widths)
+{
+    const image *img = image_get(l->calculated_image_id);
+    if (!img) {
+        log_error("Problem loading layer from image id", 0, l->calculated_image_id);
         load_dummy_layer(l);
         return;
     }
-    memset(l->data, 0, size);
-    if (l->asset_image_path) {
-        if (!png_read(l->asset_image_path, l->data, l->src_x, l->src_y, l->width, l->height, 0, 0, l->width, 0)) {
-            free(l->data);
-            log_error("Problem loading layer from file", l->asset_image_path, 0);
+
+    atlas_type type = img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET;
+    if (type == ATLAS_EXTRA_ASSET || type == ATLAS_UNPACKED_EXTRA_ASSET) {
+        const asset_image *asset_img = asset_image_get_from_id(l->calculated_image_id - IMAGE_MAIN_ENTRIES);
+        if (!asset_img) {
+            log_error("Problem loading layer from image id", 0, l->calculated_image_id);
             load_dummy_layer(l);
+            return;
         }
+        l->data = asset_img->data;
         return;
     }
-#ifndef BUILDING_ASSET_PACKER
-    graphics_set_custom_canvas(l->data, l->width, l->height);
-    if (layer_image->draw.type == IMAGE_TYPE_ISOMETRIC) {
-        int tiles = (l->width + 2) / 60;
-        int y_offset = l->height - 30 * tiles;
-        y_offset += 15 * tiles - 15;
-        if (l->part & PART_FOOTPRINT) {
-            image_draw_isometric_footprint_from_draw_tile(l->calculated_image_id, 0, y_offset, 0);
-        }
-        if (l->part & PART_TOP) {
-            image_draw_isometric_top_from_draw_tile(l->calculated_image_id, 0, y_offset, 0);
-        }
-    } else {
-        image_draw(l->calculated_image_id, 0, 0);
+
+    int size = l->width * l->height * sizeof(color_t);
+    color_t *data = malloc(size);
+    if (!data) {
+        log_error("Problem loading layer from image id - out of memory", 0, l->calculated_image_id);
+        load_dummy_layer(l);
+        return;
     }
-    graphics_restore_original_canvas();
+    memset(data, 0, l->width * l->height * sizeof(color_t));
+
+    if (type == ATLAS_EXTERNAL) {
+        if (!image_load_external_pixels(data, l->calculated_image_id, l->width)) {
+            free(data);
+            log_error("Problem loading layer from image id", 0, l->calculated_image_id);
+            load_dummy_layer(l);
+            return;
+        }
+    } else if (type == ATLAS_MAIN) {
+        int atlas_width = main_image_widths[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+        const color_t *atlas_pixels = main_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+        if (!atlas_width || !atlas_pixels) {
+            free(data);
+            log_error("Problem loading layer from image id", 0, l->calculated_image_id);
+            load_dummy_layer(l);
+            return;
+        }
+        if (img->is_isometric) {
+            copy_isometric_image(l, data, img, atlas_pixels, atlas_width);
+        } else {
+            copy_regular_image(l, data, img, atlas_pixels, atlas_width);
+        }
+    }
+    l->calculated_image_id = 0;
+    l->data = data;
+}
 #endif
+
+void layer_load(layer *l, color_t **main_data, int *main_image_widths)
+{
+#ifndef BUILDING_ASSET_PACKER
+    if (l->calculated_image_id) {
+        load_layer_from_another_image(l, main_data, main_image_widths);
+        return;
+    }
+#endif
+    if (!l->asset_image_path) {
+        log_error("No layer source", l->asset_image_path, 0);
+        load_dummy_layer(l);
+        return;
+    }
+
+    int size = l->width * l->height * sizeof(color_t);
+    color_t *data = malloc(size);
+    if (!data) {
+        log_error("Problem loading layer - out of memory", l->asset_image_path, 0);
+        load_dummy_layer(l);
+        return;
+    }
+    memset(data, 0, size);
+    if (!png_read(l->asset_image_path, data, l->src_x, l->src_y, l->width, l->height, 0, 0, l->width, 0)) {
+        free(data);
+        log_error("Problem loading layer from file", l->asset_image_path, 0);
+        load_dummy_layer(l);
+        return;
+    }
+    l->data = data;
 }
 
 void layer_unload(layer *l)
@@ -81,18 +152,13 @@ void layer_unload(layer *l)
     free(l->original_image_group);
     free(l->original_image_id);
 #endif
-    if (!l->is_asset_image_reference) {
-        free(l->data);
+    if (!l->calculated_image_id && l->data != &DUMMY_LAYER_DATA) {
+        free((color_t *)l->data); // Freeing a const pointer. Ugly but necessary
     }
     if (l->prev) {
         free(l);
     } else {
-        l->data = 0;
-        l->asset_image_path = 0;
-#ifdef BUILDING_ASSET_PACKER
-        l->original_image_group = 0;
-        l->original_image_id = 0;
-#endif
+        memset(l, 0, sizeof(layer));
     }
 }
 
@@ -121,19 +187,26 @@ color_t layer_get_color_for_image_position(const layer *l, int x, int y)
     if (x < 0 || x >= l->width || y < 0 || y >= l->height) {
         return ALPHA_TRANSPARENT;
     }
-    return l->data[y * l->width + x];
+    color_t color = l->data[y * l->width + x];
+    if (l->grayscale) {
+        color_t r = (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
+        color_t g = (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN;
+        color_t b = (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE;
+        color_t gray = (r + g + b) / 3;
+        color = (color & COLOR_CHANNEL_ALPHA) | (gray << COLOR_BITSHIFT_RED) |
+            (gray << COLOR_BITSHIFT_GREEN) | (gray << COLOR_BITSHIFT_BLUE);
+    }
+    return color;
 }
 
-layer *layer_add_from_image_path(layer *l, const char *path,
+int layer_add_from_image_path(layer *l, const char *path,
     int src_x, int src_y, int offset_x, int offset_y, int width, int height)
 {
-    if (!l) {
-        return 0;
-    }
     l->src_x = src_x;
     l->src_y = src_y;
     l->width = width;
     l->height = height;
+    l->calculated_image_id = 0;
     l->asset_image_path = malloc(FILE_NAME_MAX * sizeof(char));
     if (path) {
         xml_get_full_image_path(l->asset_image_path, path);
@@ -149,7 +222,7 @@ layer *layer_add_from_image_path(layer *l, const char *path,
 #endif
     l->x_offset = offset_x;
     l->y_offset = offset_y;
-    return l;
+    return 1;
 }
 
 #ifdef BUILDING_ASSET_PACKER
@@ -168,11 +241,29 @@ static char *copy_attribute(const char *attribute)
 }
 #endif
 
-layer *layer_add_from_image_id(layer *l, const char *group_id, const char *image_id, int offset_x, int offset_y)
+#ifndef BUILDING_ASSET_PACKER
+static int determine_layer_height(const image *img, layer_isometric_part part)
 {
-    if (!l) {
+    if (!img->is_isometric || graphics_renderer()->isometric_images_are_joined()) {
+        return img->height;
+    }
+    if (part == PART_BOTH || part == PART_FOOTPRINT) {
+        if (img->top_height) {
+            int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+            return img->height - tiles * FOOTPRINT_HALF_HEIGHT;
+        } else {
+            return img->height;
+        }
+    } else if (part == PART_TOP) {
+        return img->top_height;
+    } else {
         return 0;
     }
+}
+#endif
+
+int layer_add_from_image_id(layer *l, const char *group_id, const char *image_id, int offset_x, int offset_y)
+{
     l->src_x = 0;
     l->src_y = 0;
     l->width = 0;
@@ -189,7 +280,7 @@ layer *layer_add_from_image_id(layer *l, const char *group_id, const char *image
         const asset_image *image = asset_image_get_from_id(group->first_image_index);
         while (image && image->index <= group->last_image_index) {
             if (strcmp(image->id, image_id) == 0) {
-                l->calculated_image_id = image->index + MAIN_ENTRIES;
+                l->calculated_image_id = image->index + IMAGE_MAIN_ENTRIES;
                 original_image = &image->img;
                 break;
             }
@@ -212,7 +303,7 @@ layer *layer_add_from_image_id(layer *l, const char *group_id, const char *image
         return 0;
     }
     l->width = original_image->width;
-    l->height = original_image->height;
+    l->height = determine_layer_height(original_image, l->part);
 #endif
-    return l;
+    return 1;
 }

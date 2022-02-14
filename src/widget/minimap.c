@@ -8,6 +8,7 @@
 #include "figure/formation.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/renderer.h"
 #include "map/building.h"
 #include "map/figure.h"
 #include "map/grid.h"
@@ -38,6 +39,90 @@ static const color_t ENEMY_COLOR_BY_CLIMATE[] = {
     COLOR_MINIMAP_ENEMY_DESERT
 };
 
+typedef struct {
+    color_t left;
+    color_t right;
+} tile_color;
+
+typedef struct {
+    tile_color water[4];
+    tile_color tree[4];
+    tile_color rock[4];
+    tile_color meadow[4];
+    tile_color grass[8];
+    tile_color road;
+    tile_color wall;
+    tile_color aqueduct;
+    tile_color reservoir[2];
+    tile_color house[2];
+    tile_color building[2];
+    tile_color monument[2];
+    tile_color black;
+} tile_color_set;
+
+// Since the minimap tiles are only 25 color sets per climate, we just hardcode them.
+// This "hack" is necessary to avoid reloading the climate graphics when selecting
+// a scenario with another climate in the CCK selection screen, which is expensive.
+static const tile_color_set MINIMAP_COLOR_SETS[3] = {
+    // central
+    {
+        .water = {{0xff394a7b, 0xff31427b}, {0xff394a7b, 0xff314273}, {0xff313973, 0xff314273}, {0xff31427b, 0xff394a7b}},
+        .tree = {{0xff6b8431, 0xff102108}, {0xff103908, 0xff737b29}, {0xff103108, 0xff526b21}, {0xff737b31, 0xff084a10}},
+        .rock = {{0xff948484, 0xff635a4a}, {0xffa59c94, 0xffb5ada5}, {0xffb5ada5, 0xff8c8484}, {0xff635a4a, 0xffa59c94}},
+        .meadow = {{0xffd6bd63, 0xff9c8c39}, {0xff948c39, 0xffd6bd63}, {0xffd6bd63, 0xff9c9439}, {0xff848431, 0xffada54a}},
+        .grass = {
+            {0xff6b8c31, 0xff6b7b29}, {0xff738431, 0xff6b7b29}, {0xff6b7329, 0xff7b8c39}, {0xff527b29, 0xff6b7321},
+            {0xff6b8431, 0xff737b31}, {0xff6b7b31, 0xff737b29}, {0xff636b18, 0xff526b21}, {0xff737b31, 0xff737b29}
+        },
+        .road = {0xff736b63, 0xff4a3121},
+        .wall = {0xffd6d3c6, 0xfff7f3de},
+        .aqueduct = {0xff5282bd, 0xff84baff},
+        .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
+        .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
+        .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
+        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}}, // Edges, center
+        .black = {COLOR_BLACK, COLOR_BLACK}
+    },
+    // northern
+    {
+        .water = {{0xff394a7b, 0xff31427b}, {0xff394a7b, 0xff314273}, {0xff313973, 0xff314273}, {0xff31427b, 0xff394a7b}},
+        .tree = {{0xff527b31, 0xff082108}, {0xff083908, 0xff5a7329}, {0xff082908, 0xff316b21}, {0xff527b29, 0xff084a21}},
+        .rock = {{0xff8c8484, 0xff5a5252}, {0xff9c9c94, 0xffa5a5a5}, {0xffa5a5a5, 0xff848484}, {0xff5a5252, 0xff9c9c94}},
+        .meadow = {{0xff427318, 0xff8c9442}, {0xffb5ad4a, 0xff738c39}, {0xff8c8c39, 0xff6b7b29}, {0xff527331, 0xff5a8442}},
+        .grass = {
+            {0xff4a8431, 0xff4a7329}, {0xff527b29, 0xff4a7329}, {0xff526b29, 0xff5a8439}, {0xff397321, 0xff4a6b21},
+            {0xff527b31, 0xff5a7331}, {0xff4a7329, 0xff5a7329}, {0xff4a6b18, 0xff316b21}, {0xff527b29, 0xff527329}
+        },
+        .road = {0xff736b63, 0xff4a3121},
+        .wall = {0xffd6d3c6, 0xfff7f3de},
+        .aqueduct = {0xff5282bd, 0xff84baff},
+        .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
+        .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
+        .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
+        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}}, // Edges, center
+        .black = {COLOR_BLACK, COLOR_BLACK}
+    },
+    // desert
+    {
+        .water = {{0xff4a84c6, 0xff4a7bc6}, {0xff4a84c6, 0xff4a7bc6}, {0xff4a84c6, 0xff5284c6}, {0xff4a7bbd, 0xff4a7bc6}},
+        .tree = {{0xffa59c7b, 0xff6b7b18}, {0xff214210, 0xffada573}, {0xff526b21, 0xffcec6a5}, {0xffa59c7b, 0xff316321}},
+        .rock = {{0xffa59494, 0xff736352}, {0xffa59c94, 0xffb5ada5}, {0xffb5ada5, 0xff8c847b}, {0xff736352, 0xffbdada5}},
+        .meadow = {{0xff739c31, 0xff9cbd52}, {0xff7bb529, 0xff63ad21}, {0xff9cbd52, 0xff8c944a}, {0xff7ba539, 0xff739c31}},
+        .grass = {
+            {0xffbdbd9c, 0xffb5b594}, {0xffc6bda5, 0xffbdbda5}, {0xffbdbd9c, 0xffc6c6ad}, {0xffd6cead, 0xffc6bd9c},
+            {0xffa59c7b, 0xffbdb594}, {0xffcecead, 0xffb5ad94}, {0xffc6c6a5, 0xffdedebd}, {0xffcecead, 0xffd6d6b5}
+        },
+        .road = {0xff6b5a52, 0xff4a4239},
+        .wall = {0xffd6d3c6, 0xfff7f3de},
+        .aqueduct = {0xff5282bd, 0xff84baff},
+        .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
+        .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
+        .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
+        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}}, // Edges, center
+        .black = {COLOR_BLACK, COLOR_BLACK}
+    }
+};
+
 static struct {
     int absolute_x;
     int absolute_y;
@@ -49,6 +134,7 @@ static struct {
     int height;
     color_t enemy_color;
     color_t *cache;
+    int cache_width;
     struct {
         int x;
         int y;
@@ -125,6 +211,14 @@ static int has_figure_color(figure *f)
     return FIGURE_COLOR_NONE;
 }
 
+static inline void draw_pixel(int x, int y, color_t color)
+{
+    if (x < 0 || x >= data.width || y < 0 || y >= data.height) {
+        return;
+    }
+    data.cache[y * data.cache_width + x] = color;
+}
+
 static int draw_figure(int x_view, int y_view, int grid_offset)
 {
     int color_type = map_figure_foreach_until(grid_offset, has_figure_color);
@@ -139,14 +233,81 @@ static int draw_figure(int x_view, int y_view, int grid_offset)
     } else if (color_type == FIGURE_COLOR_ENEMY) {
         color = data.enemy_color;
     }
-    graphics_draw_horizontal_line(x_view, x_view + 1, y_view, color);
+    draw_pixel(x_view, y_view, color);
+    draw_pixel(x_view + 1, y_view, color);
     return 1;
+}
+
+static inline void draw_tile(int x_offset, int y_offset, const tile_color *colors)
+{
+    draw_pixel(x_offset, y_offset, colors->left);
+    draw_pixel(x_offset + 1, y_offset, colors->right);
+}
+
+static void draw_building(int size, int x_offset, int y_offset, const tile_color *colors)
+{
+    if (size == 1) {
+        draw_tile(x_offset, y_offset, &colors[1]);
+        return;
+    }
+    int width = size * 2;
+    int height = width - 1;
+    y_offset -= size - 1;
+    int start_y = y_offset < 0 ? -y_offset : 0;
+    int end_y = height / 2 + 1;
+    if (end_y + y_offset > data.height) {
+        end_y = data.height - y_offset;
+    }
+    for (int y = start_y; y < end_y; y++) {
+        int x_start = height / 2 - y;
+        int x_end = width - x_start - 1;
+        draw_pixel(x_start + x_offset, y + y_offset, colors[1].left);
+        draw_pixel(x_end + x_offset, y + y_offset, colors[1].right);
+        if (x_start + x_offset < 0) {
+            x_start = -x_offset - 1;
+        }
+        if (x_end + x_offset >= data.width) {
+            x_end = data.width - x_offset;
+        }
+        color_t *value = &data.cache[(y_offset + y) * data.cache_width + x_start + x_offset + 1];
+        for (int x = x_start; x < x_end - 1; x++) {
+            *value++ = ((x + y) & 1) ? colors[0].left : colors[0].right;
+        }
+    }
+    y_offset += height / 2 + 1;
+    start_y = y_offset < 0 ? -y_offset : 0;
+    end_y = height / 2;
+    if (end_y + y_offset > data.height) {
+        end_y = data.height - y_offset;
+    }
+
+    for (int y = start_y; y < end_y; y++) {
+        int x_start = y + 1;
+        int x_end = width - x_start - 1;
+        draw_pixel(x_start + x_offset, y + y_offset, colors[1].left);
+        draw_pixel(x_end + x_offset, y + y_offset, colors[1].right);
+        if (x_start + x_offset < 0) {
+            x_start = -x_offset - 1;
+        }
+        if (x_end + x_offset >= data.width) {
+            x_end = data.width - x_offset;
+        }
+        color_t *value = &data.cache[(y_offset + y) * data.cache_width + x_start + x_offset + 1];
+        for (int x = x_start; x < x_end - 1; x++) {
+            *value++ = ((x + y) & 1) ? colors[0].right : colors[0].left;
+        }
+    }
 }
 
 static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
 {
+    const tile_color_set *set = &MINIMAP_COLOR_SETS[scenario_property_climate()];
+
+    x_view -= data.x_offset;
+    y_view -= data.y_offset;
+
     if (grid_offset < 0) {
-        image_draw(image_group(GROUP_MINIMAP_BLACK), x_view, y_view);
+        draw_tile(x_view, y_view, &set->black);
         return;
     }
 
@@ -164,56 +325,42 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
 
     if (terrain & TERRAIN_BUILDING) {
         if (map_property_is_draw_tile(grid_offset)) {
-            int image_id;
+            const tile_color *colors;
             building *b = building_get(map_building_at(grid_offset));
             if (b->house_size) {
-                image_id = image_group(GROUP_MINIMAP_HOUSE);
+                colors = set->house;
             } else if (b->type == BUILDING_RESERVOIR) {
-                image_id = image_group(GROUP_MINIMAP_AQUEDUCT) - 1;
+                colors = set->reservoir;
+            } else if (building_monument_is_monument(b)) {
+                colors = set->monument;
             } else {
-                image_id = image_group(GROUP_MINIMAP_BUILDING);
+                colors = set->building;
             }
-            if (building_monument_is_monument(b)) {
-                switch (map_property_multi_tile_size(grid_offset)) {
-                    case 2: image_draw(assets_get_image_id("UI_Elements", "2 Mon MapIcon"), x_view, y_view - 1); break;
-                    case 3: image_draw(assets_get_image_id("UI_Elements", "3 Mon MapIcon"), x_view, y_view - 2); break;
-                    case 4: image_draw(assets_get_image_id("UI_Elements", "4 Mon MapIcon"), x_view, y_view - 3); break;
-                    case 5: image_draw(assets_get_image_id("UI_Elements", "5 Mon MapIcon"), x_view, y_view - 4); break;
-                    case 7: image_draw(assets_get_image_id("UI_Elements", "7 Mon MapIcon"), x_view, y_view - 6); break;
-                }
-            } else {
-                switch (map_property_multi_tile_size(grid_offset)) {
-                    case 1: image_draw(image_id, x_view, y_view); break;
-                    case 2: image_draw(image_id + 1, x_view, y_view - 1); break;
-                    case 3: image_draw(image_id + 2, x_view, y_view - 2); break;
-                    case 4: image_draw(image_id + 3, x_view, y_view - 3); break;
-                    case 5: image_draw(image_id + 4, x_view, y_view - 4); break;
-                    case 7: image_draw(assets_get_image_id("UI_Elements", "7x7 Map Icon"), x_view, y_view - 6);
-                }
-            }
+            int size = map_property_multi_tile_size(grid_offset);
+            draw_building(size, x_view, y_view, colors);
         }
-    } else {
-        int rand = map_random_get(grid_offset);
-        int image_id;
-        if (terrain & TERRAIN_ROAD) {
-            image_id = image_group(GROUP_MINIMAP_ROAD);
-        } else if (terrain & TERRAIN_WATER) {
-            image_id = image_group(GROUP_MINIMAP_WATER) + (rand & 3);
-        } else if (terrain & (TERRAIN_SHRUB | TERRAIN_TREE)) {
-            image_id = image_group(GROUP_MINIMAP_TREE) + (rand & 3);
-        } else if (terrain & (TERRAIN_ROCK | TERRAIN_ELEVATION)) {
-            image_id = image_group(GROUP_MINIMAP_ROCK) + (rand & 3);
-        } else if (terrain & TERRAIN_AQUEDUCT) {
-            image_id = image_group(GROUP_MINIMAP_AQUEDUCT);
-        } else if (terrain & TERRAIN_WALL) {
-            image_id = image_group(GROUP_MINIMAP_WALL);
-        } else if (terrain & TERRAIN_MEADOW) {
-            image_id = image_group(GROUP_MINIMAP_MEADOW) + (rand & 3);
-        } else {
-            image_id = image_group(GROUP_MINIMAP_EMPTY_LAND) + (rand & 7);
-        }
-        image_draw(image_id, x_view, y_view);
+        return;
     }
+    int rand = map_random_get(grid_offset);
+    const tile_color *colors;
+    if (terrain & TERRAIN_ROAD) {
+        colors = &set->road;
+    } else if (terrain & TERRAIN_WATER) {
+        colors = &set->water[rand & 3];
+    } else if (terrain & (TERRAIN_SHRUB | TERRAIN_TREE)) {
+        colors = &set->tree[rand & 3];
+    } else if (terrain & (TERRAIN_ROCK | TERRAIN_ELEVATION)) {
+        colors = &set->rock[rand & 3];
+    } else if (terrain & TERRAIN_AQUEDUCT) {
+        colors = &set->aqueduct;
+    } else if (terrain & TERRAIN_WALL) {
+        colors = &set->wall;
+    } else if (terrain & TERRAIN_MEADOW) {
+        colors = &set->meadow[rand & 3];
+    } else {
+        colors = &set->grass[rand & 7];
+    }
+    draw_tile(x_view, y_view, colors);
 }
 
 static void draw_viewport_rectangle(void)
@@ -241,22 +388,29 @@ static void draw_viewport_rectangle(void)
 
 static void prepare_minimap_cache(int width, int height)
 {
-    if (width != data.width || height != data.height) {
-        free(data.cache);
-        data.cache = (color_t *) malloc(sizeof(color_t) * width * height);
+    if (width != data.width || height != data.height || !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
+        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height);
     }
+    data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
 }
 
-static void cache_minimap(void)
+static void clear_minimap(void)
 {
-    graphics_save_to_buffer(data.x_offset, data.y_offset, data.width, data.height, data.cache);
+    for (int y = 0; y < data.height; y++) {
+        color_t *line = &data.cache[y * data.cache_width];
+        for (int x = 0; x < data.cache_width; x++) {
+            line[x] = COLOR_BLACK;
+        }
+    }
 }
 
 static void draw_minimap(void)
 {
     graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
+    clear_minimap();
     foreach_map_tile(draw_minimap_tile);
-    cache_minimap();
+    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
+    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, SCALE_NONE);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
@@ -285,7 +439,7 @@ static void draw_using_cache(int x_offset, int y_offset, int width, int height)
     }
 
     graphics_set_clip_rectangle(x_offset, y_offset, width, height);
-    graphics_draw_from_buffer(x_offset, y_offset, data.width, data.height, data.cache);
+    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP, data.x_offset, data.y_offset, SCALE_NONE);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
 }
@@ -313,9 +467,9 @@ void widget_minimap_draw(int x_offset, int y_offset, int width, int height, int 
         } else {
             draw_using_cache(x_offset, y_offset, width, height);
         }
-        graphics_draw_horizontal_line(x_offset - 1, x_offset - 1 + width, y_offset - 1, COLOR_MINIMAP_DARK);
-        graphics_draw_vertical_line(x_offset - 1, y_offset, y_offset + height, COLOR_MINIMAP_DARK);
-        graphics_draw_vertical_line(x_offset - 1 + width, y_offset,
+        graphics_draw_line(x_offset - 1, x_offset - 1 + width, y_offset - 1, y_offset - 1, COLOR_MINIMAP_DARK);
+        graphics_draw_line(x_offset - 1, x_offset - 1, y_offset, y_offset + height, COLOR_MINIMAP_DARK);
+        graphics_draw_line(x_offset - 1 + width, x_offset - 1 + width, y_offset,
             y_offset + height, COLOR_MINIMAP_LIGHT);
     }
 }

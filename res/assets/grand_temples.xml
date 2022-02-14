@@ -31,37 +31,37 @@
 			<layer src="Ceres_Temple_Construction_75%" x="0" y="8"/>
 		</image>
 		<!-- Note: Ceres Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
-		<image id="Ceres Complex Const 01" width="418" height="234">
+		<image id="Ceres Complex Const 01" width="418" height="234" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="15"/>
 			<layer src="Ceres_Temple_Construction_0%" x="90" y="60"/>
 		</image>
-		<image id="Ceres Complex Const 02" width="418" height="234">
+		<image id="Ceres Complex Const 02" width="418" height="234" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="15"/>
 			<layer src="Ceres_GT_Construction_Shadow_01" x="166" y="41"/>
 			<layer group="this" image="Ceres_LT_25" x="90" y="0"/>
 		</image>
-		<image id="Ceres Complex Const 03" width="418" height="234">
+		<image id="Ceres Complex Const 03" width="418" height="234" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="15"/>
 			<layer src="Ceres_GT_Construction_Shadow_01" x="166" y="41"/>
 			<layer group="this" image="Ceres_LT_50" x="90" y="0"/>
 		</image>
-		<image id="Ceres Complex Const 04" width="418" height="234">
+		<image id="Ceres Complex Const 04" width="418" height="234" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="15"/>
 			<layer src="Ceres_GT_Construction_Shadow_02" x="166" y="41"/>
 			<layer group="this" image="Ceres_LT_75" x="90" y="0"/>
 		</image>
-		<image id="Ceres Complex Const 05" width="418" height="234">
+		<image id="Ceres Complex Const 05" width="418" height="234" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="15"/>
 			<layer src="Ceres_GT_Construction_Shadow_02" x="166" y="41"/>
 			<layer group="71" image="1" x="90" y="0"/>
 		</image>
 		<!-- Note: Ceres Complex ON/OFF States -->
-		<image id="Ceres Complex Off" width="418" height="234">
+		<image id="Ceres Complex Off" width="418" height="234" isometric="true">
 			<layer src="Ceres_Temple_Complex_Base_Layer" x="0" y="3"/>
 			<layer group="71" image="1" x="90" y="0"/>
 			<layer src="Ceres_Temple_Complex_Top_Layer" x="59" y="87"/>
 		</image>
-		<image id="Ceres Complex On" width="418" height="234">
+		<image id="Ceres Complex On" width="418" height="234" isometric="true">
 			<layer src="Ceres_Temple_Complex_Base_Layer" x="0" y="3"/>
 			<layer group="71" image="1" x="90" y="0"/>
 			<layer src="Ceres_Temple_Complex_On_Layer" x="199" y="125"/>
@@ -289,7 +289,7 @@
 			<layer group="this" image="Farmer 11" x="40" y="15"/>
 		</image>
 		<!-- Note: Ceres Complex Module Animation (Priests collect/dristribute food)(USE THIS ONE!!) -->
-		<image id="Ceres Complex Module" width="418" height="234">
+		<image id="Ceres Complex Module" width="418" height="234" isometric="true">
 			<layer group="this" image="Ceres Complex Off"/>
 			<animation speed="6" x="190" y="95" reversible="false">
 				<frame group="this" image="Ceres Module F1"/>
@@ -350,7 +350,7 @@
 			</animation>
 		</image>
 		<!-- Note: Ceres Complex Module2 Animation (Priests reduce food consumption) -->
-		<image id="Ceres Complex Module2" width="418" height="234">
+		<image id="Ceres Complex Module2" width="418" height="234" isometric="true">
 			<layer group="this" image="Ceres Complex Off"/>
 			<animation speed="6" x="190" y="95" reversible="true">
 				<frame src="Ceres_Temple_Complex_Module2_01"/>
@@ -375,42 +375,42 @@
 			<layer src="Mars_Temple_Construction_75%" x="0" y="7"/>
 		</image>
 		<!-- Note: Mars Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
-		<image id="Mars Complex Const 01" width="418" height="223">
+		<image id="Mars Complex Const 01" width="418" height="223" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="4"/>
 			<layer src="Mars_Temple_Construction_0%" x="90" y="49"/>
 		</image>
-		<image id="Mars Complex Const 02" width="418" height="223">
+		<image id="Mars Complex Const 02" width="418" height="223" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="4"/>
 			<layer src="Mars_GT_Construction_Shadow_01" x="163" y="22"/>
 			<layer group="this" image="Mars_LT_25" x="90" y="0"/>
 		</image>
-		<image id="Mars Complex Const 03" width="418" height="223">
+		<image id="Mars Complex Const 03" width="418" height="223" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="4"/>
 			<layer src="Mars_GT_Construction_Shadow_02" x="163" y="22"/>
 			<layer group="this" image="Mars_LT_50" x="90" y="0"/>
 		</image>
-		<image id="Mars Complex Const 04" width="418" height="223">
+		<image id="Mars Complex Const 04" width="418" height="223" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="4"/>
 			<layer src="Mars_GT_Construction_Shadow_02" x="163" y="22"/>
 			<layer group="this" image="Mars_LT_75" x="90" y="0"/>
 		</image>
-		<image id="Mars Complex Const 05" width="418" height="223">
+		<image id="Mars Complex Const 05" width="418" height="223" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="4"/>
 			<layer src="Mars_GT_Construction_Shadow_03" x="163" y="22"/>
 			<layer group="74" image="1" x="90" y="0"/>
 		</image>
 		<!-- Note: Mars Complex ON/OFF States -->
-		<image id="Mars Complex Off" width="418" height="231">
+		<image id="Mars Complex Off" width="418" height="231" isometric="true">
 			<layer src="Mars_Temple_Complex_Base_Layer"/>
 			<layer group="74" image="1" x="90" y="8"/>
 			<layer src="Mars_Temple_Complex_Top_Layer" x="59" y="83"/>
 		</image>
-		<image id="Mars Complex On" width="418" height="231">
+		<image id="Mars Complex On" width="418" height="231" isometric="true">
 			<layer group="this" image="Mars Complex Off"/>
 			<layer src="Mars_Temple_Complex_On_Layer" x="199" y="121"/>
 		</image>
 		<!-- Note: Mars Complex Module Animation (Priests buff Mess Hall) -->
-		<image id="Mars Complex Module" width="418" height="231">
+		<image id="Mars Complex Module" width="418" height="231" isometric="true">
 			<layer group="this" image="Mars Complex Off"/>
 			<animation speed="6" x="191" y="97" reversible="true">
 				<frame src="Mars_Temple_Complex_Module2_01"/>
@@ -419,7 +419,7 @@
 			</animation>
 		</image>
 		<!-- Note: Mars Complex Module2 Animation (Priests reduce goods consumption) -->
-		<image id="Mars Complex Module2" width="418" height="231">
+		<image id="Mars Complex Module2" width="418" height="231" isometric="true">
 			<layer group="this" image="Mars Complex Off"/>
 			<animation speed="6" x="211" y="105" reversible="false">
 				<frame src="Mars_Temple_Complex_Module_01"/>
@@ -446,42 +446,42 @@
 			<layer src="Mercury_Temple_Construction_75%" x="0" y="8"/>
 		</image>
 		<!-- Note: Mercury Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
-		<image id="Mercury Complex Const 01" width="418" height="223">
+		<image id="Mercury Complex Const 01" width="418" height="223" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="4"/>
 			<layer src="Mercury_Temple_Construction_0%" x="150" y="49"/>
 		</image>
-		<image id="Mercury Complex Const 02" width="418" height="223">
+		<image id="Mercury Complex Const 02" width="418" height="223" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="4"/>
 			<layer src="Mercury_GT_Construction_Shadow_01" x="237" y="37"/>
 			<layer group="this" image="Mercury_LT_25" x="150" y="0"/>
 		</image>
-		<image id="Mercury Complex Const 03" width="418" height="223">
+		<image id="Mercury Complex Const 03" width="418" height="223" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="4"/>
 			<layer src="Mercury_GT_Construction_Shadow_02" x="311" y="65"/>
 			<layer group="this" image="Mercury_LT_50" x="150" y="0"/>
 		</image>
-		<image id="Mercury Complex Const 04" width="418" height="223">
+		<image id="Mercury Complex Const 04" width="418" height="223" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="4"/>
 			<layer src="Mercury_GT_Construction_Shadow_02" x="311" y="65"/>
 			<layer group="this" image="Mercury_LT_75" x="150" y="0"/>
 		</image>
-		<image id="Mercury Complex Const 05" width="418" height="223">
+		<image id="Mercury Complex Const 05" width="418" height="223" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="4"/>
 			<layer src="Mercury_GT_Construction_Shadow_02" x="311" y="65"/>
 			<layer group="73" image="1" x="150" y="0"/>
 		</image>
 		<!-- Note: Mercury Complex ON/OFF States -->
-		<image id="Mercury Complex Off" width="418" height="231">
+		<image id="Mercury Complex Off" width="418" height="231" isometric="true">
 			<layer src="Mercury_Temple_Complex_Base_Layer"/>
 			<layer group="73" image="1" x="150" y="8"/>
 			<layer src="Mercury_Temple_Complex_Top_Layer" x="199" y="79"/>
 		</image>
-		<image id="Mercury Complex On" width="418" height="231">
+		<image id="Mercury Complex On" width="418" height="231" isometric="true">
 			<layer group="this" image="Mercury Complex Off"/>
 			<layer src="Mercury_Temple_Complex_On_Layer" x="135" y="117"/>
 		</image>
 		<!-- Note: Mercury Complex Module Animation (Priests reduce Oil/Wine consumption) -->
-		<image id="Mercury Complex Module" width="418" height="231">
+		<image id="Mercury Complex Module" width="418" height="231" isometric="true">
 			<layer group="this" image="Mercury Complex Off"/>
 			<animation speed="5" x="115" y="105" reversible="true">
 				<frame src="Mercury_Temple_Complex_Module_01"/>
@@ -490,7 +490,7 @@
 			</animation>
 		</image>
 		<!-- Note: Mercury Complex Module2 Animation (Priests reduce Pottery/Furniture consumption) -->
-		<image id="Mercury Complex Module2" width="418" height="231">
+		<image id="Mercury Complex Module2" width="418" height="231" isometric="true">
 			<layer group="this" image="Mercury Complex Off"/>
 			<animation speed="5" x="94" y="103" reversible="true">
 				<frame src="Mercury_Temple_Complex_Module2_01"/>
@@ -520,37 +520,37 @@
 			<layer src="Neptune_Temple_Ponds_Off" x="21" y="55"/>
 		</image>
 		<!-- Note: Neptune Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
-		<image id="Neptune Complex Const 01" width="418" height="229">
+		<image id="Neptune Complex Const 01" width="418" height="229" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="10"/>
 			<layer src="Neptune_Temple_Construction_0%" x="150" y="55"/>
 		</image>
-		<image id="Neptune Complex Const 02" width="418" height="229">
+		<image id="Neptune Complex Const 02" width="418" height="229" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="10"/>
 			<layer src="Neptune_GT_Construction_Shadow_01" x="224" y="41"/>
 			<layer group="this" image="Neptune_LT_25" x="150" y="0"/>
 		</image>
-		<image id="Neptune Complex Const 03" width="418" height="229">
+		<image id="Neptune Complex Const 03" width="418" height="229" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="10"/>
 			<layer src="Neptune_GT_Construction_Shadow_02" x="224" y="41"/>
 			<layer group="this" image="Neptune_LT_50" x="150" y="0"/>
 		</image>
-		<image id="Neptune Complex Const 04" width="418" height="229">
+		<image id="Neptune Complex Const 04" width="418" height="229" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="10"/>
 			<layer src="Neptune_GT_Construction_Shadow_02" x="224" y="41"/>
 			<layer group="this" image="Neptune_LT_75" x="150" y="0"/>
 		</image>
-		<image id="Neptune Complex Const 05" width="418" height="229">
+		<image id="Neptune Complex Const 05" width="418" height="229" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="10"/>
 			<layer src="Neptune_GT_Construction_Shadow_02" x="224" y="41"/>
 			<layer group="this" image="Neptune LTemple Off" x="150" y="0"/>
 		</image>
 		<!-- Note: Neptune Complex ON/OFF States -->
-		<image id="Neptune Complex Off" width="418" height="231">
+		<image id="Neptune Complex Off" width="418" height="231" isometric="true">
 			<layer src="Neptune_Temple_Complex_Base_Layer"/>
 			<layer group="this" image="Neptune LTemple Off" x="150" y="2"/>
 			<layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84"/>
 		</image>
-		<image id="Neptune Complex On" width="418" height="231">
+		<image id="Neptune Complex On" width="418" height="231" isometric="true">
 			<layer src="Neptune_Temple_Complex_Base_Layer"/>
 			<layer group="72" image="1" x="150" y="2"/>
 			<layer src="Neptune_Temple_Complex_On_Layer" x="135" y="117"/>
@@ -630,7 +630,7 @@
 			<layer group="206" image="17" x="45" y="30"/>
 		</image>
 		<!-- Note: Neptune Complex Module Animation (Chariot Walkers) -->
-		<image id="Neptune Complex Module" width="418" height="231">
+		<image id="Neptune Complex Module" width="418" height="231" isometric="true">
 			<layer group="this" image="Neptune Complex On"/>
 			<animation speed="6" x="98" y="27" reversible="true">
 				<frame src="Neptune_Temple_Complex_Module2_01"/>
@@ -639,7 +639,7 @@
 			</animation>
 		</image>
 		<!-- Note: Neptune Complex Module2 Animation ON (Fountain ON)(USE THIS ONE!!) -->
-		<image id="Neptune Complex Module2" width="418" height="231">
+		<image id="Neptune Complex Module2" width="418" height="231" isometric="true">
 			<layer group="this" image="Neptune Complex On"/>
 			<animation speed="5" x="98" y="27" reversible="false">
 				<frame group="this" image="Neptune Module F1"/>
@@ -663,7 +663,7 @@
 			</animation>
 		</image>
 		<!-- Note: Neptune Complex Module2 Animation OFF (Fountain OFF) -->
-		<image id="Neptune Complex Off" width="418" height="231">
+		<image id="Neptune Complex Off" width="418" height="231" isometric="true">
 			<layer src="Neptune_Temple_Complex_Base_Layer"/>
 			<layer group="this" image="Neptune LTemple Off" x="150" y="2"/>
 			<layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84"/>
@@ -674,38 +674,38 @@
 			<layer src="Pantheon_Construction_0%"/>
 		</image>
 		<!-- Note: Pantheon Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
-		<image id="Pantheon Const 01" width="418" height="231">
+		<image id="Pantheon Const 01" width="418" height="231" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="12"/>
 			<layer src="Pantheon_Construction_0%" x="150" y="57"/>
 		</image>
-		<image id="Pantheon Const 02" width="418" height="231">
+		<image id="Pantheon Const 02" width="418" height="231" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="12"/>
 			<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
 			<layer src="Pantheon_Construction_25%" x="150" y="53"/>
 		</image>
-		<image id="Pantheon Const 03" width="418" height="231">
+		<image id="Pantheon Const 03" width="418" height="231" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="12"/>
 			<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
 			<layer src="Pantheon_Construction_50%" x="150" y="27"/>
 		</image>
-		<image id="Pantheon Const 04" width="418" height="231">
+		<image id="Pantheon Const 04" width="418" height="231" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="12"/>
 			<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
 			<layer src="Pantheon_Construction_75%" x="150" y="14"/>
 		</image>
-		<image id="Pantheon Const 05" width="418" height="231">
+		<image id="Pantheon Const 05" width="418" height="231" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_02" x="0" y="12"/>
 			<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
 			<layer src="Pantheon_Construction_100%" x="150" y="14"/>
 		</image>
 		<!-- Note: Pantheon Complex ON/OFF States -->
-		<image id="Pantheon Off" src="Pantheon_Temple_Complex_Off" width="418" height="231"/>
-		<image id="Pantheon On" width="418" height="231">
+		<image id="Pantheon Off" src="Pantheon_Temple_Complex_Off" width="418" height="231" isometric="true"/>
+		<image id="Pantheon On" width="418" height="231" isometric="true">
 			<layer group="this" image="Pantheon Off" x="0" y="0"/>
 			<layer src="Pantheon_Temple_Complex_On" x="138" y="119"/>
 		</image>
 		<!-- Note: Pantheon Complex Module Animation (Bonus destination walkers) -->
-		<image id="Pantheon Module" width="418" height="231">
+		<image id="Pantheon Module" width="418" height="231" isometric="true">
 			<layer group="this" image="Pantheon Off"/>
 			<animation speed="5" x="86" y="49" reversible="true">
 				<frame src="Pantheon_Temple_Complex_Module_01"/>
@@ -714,7 +714,7 @@
 			</animation>
 		</image>
 		<!-- Note: Pantheon Complex Module2 Animation (Oracles spawn walkers) -->
-		<image id="Pantheon Module2" width="418" height="231">
+		<image id="Pantheon Module2" width="418" height="231" isometric="true">
 			<layer group="this" image="Pantheon Off"/>
 			<animation speed="5" x="86" y="49" reversible="true">
 				<frame src="Pantheon_Temple_Complex_Module2_01"/>
@@ -739,42 +739,42 @@
 			<layer src="Venus_Temple_Construction_75%" x="0" y="0"/>
 		</image>
 		<!-- Note: Venus Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
-		<image id="Venus Complex Const 01" width="418" height="219">
+		<image id="Venus Complex Const 01" width="418" height="219" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="0"/>
 			<layer src="Venus_Temple_Construction_0%" x="90" y="45"/>
 		</image>
-		<image id="Venus Complex Const 02" width="418" height="219">
+		<image id="Venus Complex Const 02" width="418" height="219" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="0"/>
 			<layer src="Venus_GT_Construction_Shadow_01" x="172" y="28"/>
 			<layer group="this" image="Venus_LT_25" x="90" y="2"/>
 		</image>
-		<image id="Venus Complex Const 03" width="418" height="219">
+		<image id="Venus Complex Const 03" width="418" height="219" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="0"/>
 			<layer src="Venus_GT_Construction_Shadow_01" x="172" y="28"/>
 			<layer group="this" image="Venus_LT_50" x="90" y="2"/>
 		</image>
-		<image id="Venus Complex Const 04" width="418" height="219">
+		<image id="Venus Complex Const 04" width="418" height="219" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="0"/>
 			<layer src="Venus_GT_Construction_Shadow_02" x="172" y="28"/>
 			<layer group="this" image="Venus_LT_75" x="90" y="2"/>
 		</image>
-		<image id="Venus Complex Const 05" width="418" height="219">
+		<image id="Venus Complex Const 05" width="418" height="219" isometric="true">
 			<layer src="Grand_Temple_Construction_Base_01" x="0" y="0"/>
 			<layer src="Venus_GT_Construction_Shadow_02" x="172" y="28"/>
 			<layer group="75" image="1" x="90" y="2"/>
 		</image>
 		<!-- Note: Venus Complex ON/OFF States -->
-		<image id="Venus Complex Off" width="418" height="231">
+		<image id="Venus Complex Off" width="418" height="231" isometric="true">
 			<layer src="Venus_Temple_Complex_Base_Layer"/>
 			<layer group="75" image="1" x="90" y="14"/>
 			<layer src="Venus_Temple_Complex_Top_Layer" x="71" y="79"/>
 		</image>
-		<image id="Venus Complex On" width="418" height="231">
+		<image id="Venus Complex On" width="418" height="231" isometric="true">
 			<layer group="this" image="Venus Complex Off"/>
 			<layer src="Venus_Temple_Complex_On_Layer" x="198" y="121"/>
 		</image>
 		<!-- Note: Venus Complex Module Animation (Priests bless schools, baths & hospitals) -->
-		<image id="Venus Complex Module" width="418" height="231">
+		<image id="Venus Complex Module" width="418" height="231" isometric="true">
 			<layer group="this" image="Venus Complex Off"/>
 			<layer src="Venus_Temple_Complex_Module_Layer" x="185" y="92"/>
 			<animation speed="8" x="225" y="114" reversible="false">
@@ -796,7 +796,7 @@
 			</animation>
 		</image>
 		<!-- Note: Venus Complex Module2 Animation (Priests buff desirability & entertainment) -->
-		<image id="Venus Complex Module2" width="418" height="231">
+		<image id="Venus Complex Module2" width="418" height="231" isometric="true">
 			<layer group="this" image="Venus Complex Off"/>
 			<animation speed="6" x="184" y="92" reversible="true">
 				<frame src="Venus_Temple_Complex_Module2_01"/>

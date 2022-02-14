@@ -69,7 +69,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Consertar falha dos 'fantasmas' de 100 anos"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Consertar troca de Imperador e tempo de sobrevivência em missões personalizadas"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Desenhar caminhos de andarilho após clicar com o botão direito em uma construção"},
-    {TR_CONFIG_ENABLE_ZOOM, "Ativar zoom da cidade (Pode causar lentidão, usa mais memória RAM e GPU)"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Conserta as colunas de índices incompletas em objetivos de índices baixos"},
     {TR_CONFIG_GRANDFESTIVAL, "Festivais Suntuosos permitem bênçãos extras do deus"},
     {TR_CONFIG_DIFFICULTY, "Dificuldade:"},
@@ -98,13 +97,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Armazéns e celeiros são programados para não aceitarem nada ao construídos"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Moradias não se expandem sobre jardins"},
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Andarilhos não pulam esquinas"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "Zoom da cidade não pôde ser ativado"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
-        "O sistema não tem memória gráfica o suficiente para ativar o zoom da cidade.\n"
-        "O zoom da cidade não foi ativado."},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "Mostrar o índice máximo de prosperidade possível com o nível atual de moradias"},
-
-
     {TR_HOTKEY_TITLE, "Configurações de teclas de atalho do Augustus"},
     {TR_HOTKEY_LABEL, "Tecla de atalho"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternativa"},

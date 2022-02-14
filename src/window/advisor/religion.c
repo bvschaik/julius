@@ -58,12 +58,12 @@ static void draw_god_row(god_type god, int y_offset, building_type small_temple,
     int width = lang_text_draw(59, 32 + city_god_happiness(god) / 10, 460, y_offset, FONT_NORMAL_WHITE);
     int bolts = city_god_wrath_bolts(god);
     for (int i = 0; i < bolts / 10; i++) {
-        image_draw(image_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4);
+        image_draw(image_group(GROUP_GOD_BOLT), 10 * i + width + 460, y_offset - 4, COLOR_MASK_NONE, SCALE_NONE);
     }
     int happy_bolts = city_god_happy_bolts(god);
     for (int i = 0; i < happy_bolts; i++) {
         image_draw(assets_get_image_id("UI_Elements", "Happy God Icon"),
-            10 * i + width + 460, y_offset - 4);
+            10 * i + width + 460, y_offset - 4, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 
@@ -110,7 +110,7 @@ static int get_festival_advice(void)
 static void draw_festival_info(void)
 {
     inner_panel_draw(48, 302, 34, 6);
-    image_draw(image_group(GROUP_PANEL_WINDOWS) + 15, 460, 305);
+    image_draw(image_group(GROUP_PANEL_WINDOWS) + 15, 460, 305, COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw(58, 17, 52, 274, FONT_LARGE_BLACK);
 
     int width = lang_text_draw_amount(8, 4, city_festival_months_since_last(), 112, 315, FONT_NORMAL_WHITE);
@@ -129,7 +129,7 @@ static int draw_background(void)
     height_blocks = 27;
     outer_panel_draw(0, 0, 40, height_blocks);
 
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 9, 10, 10);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 9, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
 
     lang_text_draw(59, 0, 60, 12, FONT_LARGE_BLACK);
 

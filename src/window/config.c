@@ -203,7 +203,6 @@ static config_widget all_widgets[CONFIG_PAGES][MAX_WIDGETS] = {
         {TYPE_CHECKBOX, CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE, TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE},
         {TYPE_CHECKBOX, CONFIG_UI_SHOW_CONSTRUCTION_SIZE, TR_CONFIG_SHOW_CONSTRUCTION_SIZE},
         {TYPE_CHECKBOX, CONFIG_UI_HIGHLIGHT_LEGIONS, TR_CONFIG_HIGHLIGHT_LEGIONS},
-        {TYPE_CHECKBOX, CONFIG_UI_ZOOM, TR_CONFIG_ENABLE_ZOOM },
         {TYPE_CHECKBOX, CONFIG_UI_SHOW_MILITARY_SIDEBAR, TR_CONFIG_SHOW_MILITARY_SIDEBAR},
         {TYPE_CHECKBOX, CONFIG_UI_DISABLE_RIGHT_CLICK_MAP_DRAG, TR_CONFIG_DISABLE_RIGHT_CLICK_MAP_DRAG},
         {TYPE_CHECKBOX, CONFIG_UI_SHOW_MAX_PROSPERITY, TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY},
@@ -323,7 +322,7 @@ static struct {
     int show_background_image;
     int has_changes;
     int reload_cursors;
-    color_t *graphics_behind_tab[CONFIG_PAGES];
+    int graphics_behind_tab[CONFIG_PAGES];
 } data;
 
 static int config_change_basic(config_key key);
@@ -349,7 +348,6 @@ static int config_enable_city_sounds(config_key key);
 static int config_set_city_sounds_volume(config_key key);
 
 static int config_change_scroll_speed(config_key key);
-static int config_change_zoom(config_key key);
 
 static int config_set_difficulty(config_key key);
 static int config_enable_gods_effects(config_key key);
@@ -377,7 +375,6 @@ static inline void set_custom_config_changes(void)
     data.config_values[CONFIG_ORIGINAL_CITY_SOUNDS_VOLUME].change_action = config_set_city_sounds_volume;
 
     data.config_values[CONFIG_ORIGINAL_SCROLL_SPEED].change_action = config_change_scroll_speed;
-    data.config_values[CONFIG_UI_ZOOM].change_action = config_change_zoom;
 
     data.config_values[CONFIG_ORIGINAL_DIFFICULTY].change_action = config_set_difficulty;
     data.config_values[CONFIG_ORIGINAL_GODS_EFFECTS].change_action = config_enable_gods_effects;
@@ -585,7 +582,7 @@ static void numerical_range_draw(const numerical_range_widget *w, int x, int y, 
     int width = w->width_blocks * BLOCK_SIZE + extra_width - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
     int scroll_position = (*w->value - w->min) * width / (w->max - w->min);
     image_draw(image_group(GROUP_PANEL_BUTTON) + 37,
-        x + w->x + NUMERICAL_SLIDER_PADDING + scroll_position, y + 2);
+        x + w->x + NUMERICAL_SLIDER_PADDING + scroll_position, y + 2, COLOR_MASK_NONE, SCALE_NONE);
 }
 
 static uint8_t *percentage_string(uint8_t *string, int percentage)
@@ -799,9 +796,8 @@ static void draw_background(void)
         }
         page_buttons[i].x = page_x_offset - 10;
         page_buttons[i].width = width + 15;
-        free(data.graphics_behind_tab[i]);
-        data.graphics_behind_tab[i] = malloc(page_buttons[i].width * 3 * sizeof(color_t));
-        graphics_save_to_buffer(page_buttons[i].x, 75, page_buttons[i].width, 3, data.graphics_behind_tab[i]);
+        data.graphics_behind_tab[i] = graphics_save_to_texture(data.graphics_behind_tab[i],
+            page_buttons[i].x, 75, page_buttons[i].width, 3);
         page_x_offset += width;
     }
 
@@ -847,8 +843,7 @@ static void draw_foreground(void)
             page_buttons[i].width, page_buttons[i].height,
             data.page_focus_button == i + 1);
         if (data.page == i) {
-            graphics_draw_from_buffer(page_buttons[i].x, 75, page_buttons[i].width, 3,
-                data.graphics_behind_tab[i]);
+            graphics_draw_from_texture(data.graphics_behind_tab[i], page_buttons[i].x, 75, page_buttons[i].width, 3);
         } else {
             graphics_fill_rect(page_buttons[i].x, 75, page_buttons[i].width, 3, COLOR_WHITE);
         }
@@ -1235,18 +1230,6 @@ static int config_set_city_sounds_volume(config_key key)
     return 1;
 }
 
-static int config_change_zoom(config_key key)
-{
-    config_change_basic(key);
-    city_view_set_scale(100);
-    if (!system_reload_textures()) {
-        window_plain_message_dialog_show(TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE,
-            TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE, 1);
-        return 0;
-    }
-    return 1;
-}
-
 static int config_change_scroll_speed(config_key key)
 {
     config_change_basic(key);
@@ -1302,6 +1285,7 @@ static int config_change_string_language(config_string_key key)
     }
     strncpy(data.config_string_values[key].original_value,
         data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
+    string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
     return 1;
 }
 

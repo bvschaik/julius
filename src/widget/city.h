@@ -13,7 +13,7 @@ typedef struct {
 void widget_city_draw(void);
 void widget_city_draw_for_figure(int figure_id, pixel_coordinate *coord);
 
-int widget_city_draw_construction_cost_and_size(void);
+void widget_city_draw_construction_cost_and_size(void);
 void widget_city_draw_touch_buttons(void);
 
 int widget_city_has_input(void);

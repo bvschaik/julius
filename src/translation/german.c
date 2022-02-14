@@ -69,7 +69,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Behebe '100 Jahre alte Geister'"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Behebe Wechsel- und Überlebenszeit des Imperators in eigenen Missionen"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Setze Fußgängerwegpunkte durch Rechtsklicken der Zielgebäude"},
-    {TR_CONFIG_ENABLE_ZOOM, "Aktiviere Zoom (langsamer, benötigt mehr RAM)"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Behebe unvollständige Bewertungsspalten bei geringen Zielen"},
     {TR_CONFIG_GRANDFESTIVAL, "Große Feste ermöglichen einen zusätzlichen Segen von einem Gott"},
     {TR_CONFIG_DIFFICULTY, "Schwierigkeit:"},
@@ -98,10 +97,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Lagerhäuser nehmen nach dem Bau nichts an"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Häuser erweitern sich nicht in Gärten"},
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Wandernde Arbeiter kürzen an Ecken nicht ab"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "Stadt-Zoom konnte nicht aktiviert werden."},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
-        "Ihr System verfügt nicht über genügend Grafikspeicher, um den Stadt-Zoom zu aktivieren.\n"
-        "Der Stadt-Zoom wurde nicht aktiviert."},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "Anzeige des maximalen Wohlstands mit aktuellen Behausungen."},
     {TR_HOTKEY_TITLE, "Augustus Schnelltasten"},
     {TR_HOTKEY_LABEL, "Schnelltasten"},

@@ -263,48 +263,55 @@ static void draw_temple_info(building_info_context *c, int image_offset)
         int food = city_resource_ceres_temple_food();
         font_t font = building_distribution_is_good_accepted(resource_to_inventory(food), b) ?
             FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + food, c->x_offset + 112, c->y_offset + 60);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + food, c->x_offset + 112, c->y_offset + 60,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[resource_to_inventory(food)], '@', " ",
             c->x_offset + 132, c->y_offset + 60, font, 0);
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_OIL, c->x_offset + 202, c->y_offset + 60);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_OIL, c->x_offset + 202, c->y_offset + 60,
+            COLOR_MASK_NONE, SCALE_NONE);
         font = building_distribution_is_good_accepted(INVENTORY_OIL, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
             c->x_offset + 222, c->y_offset + 60, font, 0);
         text_draw_multiline(translation_for(TR_BUILDING_CERES_TEMPLE_MODULE_DESC),
             c->x_offset + 112, c->y_offset + 90, BLOCK_SIZE * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
-            c->x_offset + 16, c->y_offset + 45);
+            c->x_offset + 16, c->y_offset + 45, COLOR_MASK_NONE, SCALE_NONE);
         return;
     }
 
     if (building_is_venus_temple(b->type) && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
         font_t font = building_distribution_is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, c->x_offset + 112, c->y_offset + 60);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, c->x_offset + 112, c->y_offset + 60,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
             c->x_offset + 132, c->y_offset + 60, font, 0);
         text_draw_multiline(translation_for(TR_BUILDING_VENUS_TEMPLE_MODULE_DESC),
             c->x_offset + 112, c->y_offset + 90, BLOCK_SIZE * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
-            c->x_offset + BLOCK_SIZE, c->y_offset + 45);
+            c->x_offset + BLOCK_SIZE, c->y_offset + 45, COLOR_MASK_NONE, SCALE_NONE);
 
         return;
     }
 
     if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WHEAT, c->x_offset + 112, c->y_offset + 60);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WHEAT, c->x_offset + 112, c->y_offset + 60,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
             c->x_offset + 144, c->y_offset + 66, FONT_NORMAL_BLACK, 0);
 
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_VEGETABLES, c->x_offset + 202, c->y_offset + 60);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_VEGETABLES, c->x_offset + 202, c->y_offset + 60,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
             c->x_offset + 234, c->y_offset + 66, FONT_NORMAL_BLACK, 0);
 
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_FRUIT, c->x_offset + 292, c->y_offset + 60);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_FRUIT, c->x_offset + 292, c->y_offset + 60,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
             c->x_offset + 324, c->y_offset + 66, FONT_NORMAL_BLACK, 0);
 
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
-            resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 372, c->y_offset + 60);
+            resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 372, c->y_offset + 60,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
             c->x_offset + 404, c->y_offset + 66, FONT_NORMAL_BLACK, 0);
 
@@ -318,13 +325,14 @@ static void draw_temple_info(building_info_context *c, int image_offset)
                 BLOCK_SIZE * c->width_blocks - 132, FONT_NORMAL_BLACK, 0);
         }
 
-        image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS), c->x_offset + 16, c->y_offset + 45);
+        image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS), c->x_offset + 16, c->y_offset + 45,
+            COLOR_MASK_NONE, SCALE_NONE);
 
         return;
     }
 
     image_draw(image_offset + image_group(GROUP_PANEL_WINDOWS),
-        c->x_offset + 180, c->y_offset + 45);
+        c->x_offset + 180, c->y_offset + 45, COLOR_MASK_NONE, SCALE_NONE);
 }
 
 void window_building_draw_temple_ceres(building_info_context *c)
@@ -533,7 +541,8 @@ void draw_grand_temple_venus_wine(building_info_context *c)
 {
     int y = 50;
     data.building_id = c->building_id;
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, c->x_offset + 24, c->y_offset + y - 5);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, c->x_offset + 24, c->y_offset + y - 5,
+        COLOR_MASK_NONE, SCALE_NONE);
     building *b = building_get(c->building_id);
     if (b->loads_stored < 1) {
         lang_text_draw_amount(8, 10, 0, c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
@@ -547,7 +556,8 @@ void draw_grand_temple_mars_military(building_info_context *c)
 {
     int y = 60;
     data.building_id = c->building_id;
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, c->x_offset + 24, c->y_offset + y - 5);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, c->x_offset + 24, c->y_offset + y - 5,
+        COLOR_MASK_NONE, SCALE_NONE);
     building *b = building_get(c->building_id);
     if (b->loads_stored < 1) {
         lang_text_draw_amount(8, 10, 0, c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
@@ -648,7 +658,8 @@ static void draw_grand_temple(building_info_context *c, const char *sound_file,
         inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height + extra_y, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 96 + height + extra_y);
         if (c->height_blocks > 26) {
-            image_draw(banner_id, c->x_offset + 32, c->y_offset + 166 + height + extra_y);
+            image_draw(banner_id, c->x_offset + 32, c->y_offset + 166 + height + extra_y,
+                COLOR_MASK_NONE, SCALE_NONE);
             text_draw_centered_with_linebreaks(translation_for(quote),
                 c->x_offset, c->y_offset + 386 + height + extra_y, BLOCK_SIZE * c->width_blocks - 16, FONT_NORMAL_BLACK, 0);
         }
@@ -774,13 +785,15 @@ void window_building_draw_tavern(building_info_context *c)
     text_draw_centered(translation_for(TR_BUILDING_TAVERN), c->x_offset, c->y_offset + 12,
         BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
 
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, c->x_offset + 32, c->y_offset + 60);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE, c->x_offset + 32, c->y_offset + 60,
+        COLOR_MASK_NONE, SCALE_NONE);
     font_t font = building_distribution_is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
 
     text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ", c->x_offset + 64, c->y_offset + 66, font, 0);
 
     image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
-        resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 142, c->y_offset + 60);
+        resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 142, c->y_offset + 60,
+        COLOR_MASK_NONE, SCALE_NONE);
     font = building_distribution_is_good_accepted(INVENTORY_MEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
     text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ", c->x_offset + 174, c->y_offset + 66, font, 0);
 
@@ -890,7 +903,8 @@ void window_building_draw_colosseum_background(building_info_context *c)
         }
         if (b->type == BUILDING_COLOSSEUM && c->height_blocks > 27) {
             int banner_id = assets_get_image_id("UI_Elements", "Colosseum Banner");
-            image_draw(banner_id, c->x_offset + 32, c->y_offset + 256);
+            image_draw(banner_id, c->x_offset + 32, c->y_offset + 256,
+                COLOR_MASK_NONE, SCALE_NONE);
             draw_games_info(c);
         }
     } else {
@@ -965,10 +979,10 @@ static void draw_policy_image_border(int x, int y, int focused)
 {
     int id = assets_get_image_id("UI_Elements", "Policy Selection Borders");
 
-    image_draw(id + focused, x, y);
-    image_draw(id + 2 + focused, x + 105, y + 5);
-    image_draw(id + 4 + focused, x, y + 90);
-    image_draw(id + 6 + focused, x, y + 5);
+    image_draw(id + focused, x, y, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(id + 2 + focused, x + 105, y + 5, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(id + 4 + focused, x, y + 90, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(id + 6 + focused, x, y + 5, COLOR_MASK_NONE, SCALE_NONE);
 }
 
 void window_building_handle_mouse_lighthouse(const mouse *m, building_info_context *c)
@@ -1008,7 +1022,8 @@ void window_building_draw_lighthouse(building_info_context *c)
     if (b->data.monument.phase == MONUMENT_FINISHED) {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_TIMBER, c->x_offset + 22, c->y_offset + 46);
+        image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_TIMBER, c->x_offset + 22, c->y_offset + 46,
+            COLOR_MASK_NONE, SCALE_NONE);
         int width = lang_text_draw(125, 12, c->x_offset + 50, c->y_offset + 50, FONT_NORMAL_BLACK);
         if (b->loads_stored < 1) {
             lang_text_draw_amount(8, 10, 0, c->x_offset + 50 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
@@ -1041,13 +1056,14 @@ void window_building_draw_lighthouse(building_info_context *c)
             text_draw_multiline(translation_for(sea_trade_policy.items[policy].desc),
                 c->x_offset + 160, c->y_offset + 181, 260, FONT_NORMAL_BLACK, 0);
         }
-        image_draw(sea_trade_policy.items[policy].image_id, c->x_offset + 32, c->y_offset + 150);
+        image_draw(sea_trade_policy.items[policy].image_id, c->x_offset + 32, c->y_offset + 150,
+            COLOR_MASK_NONE, SCALE_NONE);
 
         inner_panel_draw(c->x_offset + 16, c->y_offset + 270, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 278);
 
         image_draw(assets_get_image_id("UI_Elements", "Lighthouse Banner"),
-            c->x_offset + 32, c->y_offset + 350);
+            c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE, SCALE_NONE);
 
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -1113,7 +1129,7 @@ void window_building_draw_hippodrome_background(building_info_context *c)
         }
         if (c->height_blocks > 27) {
             int banner_id = assets_get_image_id("UI_Elements", "Circus Banner");
-            image_draw(banner_id, c->x_offset + 32, c->y_offset + 256);
+            image_draw(banner_id, c->x_offset + 32, c->y_offset + 256, COLOR_MASK_NONE, SCALE_NONE);
         }
 
         text_draw_centered(translation_for(city_data.games.chosen_horse ? TR_WINDOW_IN_PROGRESS_BET_BUTTON : TR_WINDOW_RACE_BET_TITLE), c->x_offset + 88, c->y_offset + 607, 300, FONT_NORMAL_BLACK, 0);

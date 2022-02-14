@@ -67,7 +67,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corregir bug creando fantasmas con 100 años"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corregir cambio de Emperador y tiempo de supervivencia en misiones del editor"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Ver controles de ruta en Capas al hacer clic derecho en un edificio"},
-    {TR_CONFIG_ENABLE_ZOOM, "Habilitar zoom (usa más RAM, puede ralentizar el juego)"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Arreglar columnas de puntuación incompletas con objetivos bajos"},
     {TR_CONFIG_GRANDFESTIVAL, "Super-Festivales permiten bendiciones extras de un dios"},
     {TR_CONFIG_DIFFICULTY, "Dificultad:"},
@@ -96,10 +95,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Los almacenes no aceptan bienes cuando se construyen"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Las residencias no se expanden hacia los jardines"},
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Los caminantes no acortan camino por las esquinas"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "El zoom no se pudo habilitar"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
-        "Tu sistema no posee la capacidad gráfica para habilitar el zoom.\n"
-        "El zoom no ha sido habilitado."},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "Mostrar puntuación de prosperidad máxima obtenible"},
     {TR_HOTKEY_TITLE, "Configuración de atajos de teclado de Augustus"},
     {TR_HOTKEY_LABEL, "Principal"},

@@ -141,7 +141,8 @@ static void draw_background(void)
         int text_x = 20;
 
         if (data.options[i + scrollbar.scroll_position].image_id) {
-            image_draw(data.options[i + scrollbar.scroll_position].image_id, text_x, y_offset + 42);
+            image_draw(data.options[i + scrollbar.scroll_position].image_id, text_x, y_offset + 42,
+                COLOR_MASK_NONE, SCALE_NONE);
             int offset = data.row_size == OPTION_MENU_SMALL_ROW ? 128 : 160;
             text_x += offset;
             text_width -= offset;
@@ -172,15 +173,15 @@ static void draw_background(void)
 static void draw_option_image_border(int x, int y, int focused)
 {
     if (data.row_size == OPTION_MENU_SMALL_ROW) {
-        image_draw(border_image_ids[0] + focused, x, y);
-        image_draw(border_image_ids[0] + 2 + focused, x + 105, y + 5);
-        image_draw(border_image_ids[0] + 4 + focused, x, y + 90);
-        image_draw(border_image_ids[0] + 6 + focused, x, y + 5);
+        image_draw(border_image_ids[0] + focused, x, y, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(border_image_ids[0] + 2 + focused, x + 105, y + 5, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(border_image_ids[0] + 4 + focused, x, y + 90, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(border_image_ids[0] + 6 + focused, x, y + 5, COLOR_MASK_NONE, SCALE_NONE);
     } else {
-        image_draw(border_image_ids[1] + focused, x, y);
-        image_draw(border_image_ids[1] + 2 + focused, x + 146, y + 5);
-        image_draw(border_image_ids[1] + 4 + focused, x, y + 126);
-        image_draw(border_image_ids[1] + 6 + focused, x, y + 5);
+        image_draw(border_image_ids[1] + focused, x, y, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(border_image_ids[1] + 2 + focused, x + 146, y + 5, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(border_image_ids[1] + 4 + focused, x, y + 126, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(border_image_ids[1] + 6 + focused, x, y + 5, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 

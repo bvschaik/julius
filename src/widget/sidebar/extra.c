@@ -417,7 +417,7 @@ static int draw_request_buttons(int y_offset)
             const image *img = image_get(image_id);
             int image_y_offset = (EXTRA_INFO_LINE_SPACE - img->height) / 2;
 
-            image_draw(image_id, width, y_offset + image_y_offset - 2);
+            image_draw(image_id, width, y_offset + image_y_offset - 2, COLOR_MASK_NONE, SCALE_NONE);
 
             int force_text_offset = get_text_offset_for_force_size(r->amount);
 
@@ -436,7 +436,7 @@ static int draw_request_buttons(int y_offset)
             const image *img = image_get(image_id);
             int image_y_offset = (EXTRA_INFO_LINE_SPACE - img->height) / 2;
 
-            image_draw(image_id, width, y_offset + image_y_offset);
+            image_draw(image_id, width, y_offset + image_y_offset, COLOR_MASK_NONE, SCALE_NONE);
 
             width += img->width + 6;
 
@@ -456,7 +456,7 @@ static int draw_request_buttons(int y_offset)
                     if (status == CITY_REQUEST_STATUS_NOT_ENOUGH_RESOURCES) {
                         if (is_stockpiled) {
                             image_draw(assets_get_image_id("UI_Elements", "Store Icon"),
-                                data.x_offset + 5, y_offset + 10);
+                                data.x_offset + 5, y_offset + 10, COLOR_MASK_NONE, SCALE_NONE);
                             text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_UNSTOCK),
                                 data.x_offset + 2, y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
                         } else {
@@ -500,8 +500,8 @@ static int draw_request_buttons(int y_offset)
 static void draw_extra_info_panel(void)
 {
     int panel_blocks = data.height / BLOCK_SIZE;
-    graphics_draw_vertical_line(data.x_offset, data.y_offset, data.y_offset + data.height, COLOR_WHITE);
-    graphics_draw_vertical_line(data.x_offset + data.width - 1, data.y_offset,
+    graphics_draw_line(data.x_offset, data.x_offset, data.y_offset, data.y_offset + data.height, COLOR_WHITE);
+    graphics_draw_line(data.x_offset + data.width - 1, data.x_offset + data.width - 1, data.y_offset,
         data.y_offset + data.height, COLOR_SIDEBAR);
     inner_panel_draw(data.x_offset + 1, data.y_offset, data.width / BLOCK_SIZE, panel_blocks);
 
@@ -555,14 +555,14 @@ static void draw_extra_info_panel(void)
 
         font_t font_type = data.gods.angry > 0 ? FONT_NORMAL_RED : FONT_NORMAL_GREEN;
         int width = text_draw_number(data.gods.angry, 0, "", data.x_offset + 42, y_offset + 2, font_type, 0);
-        image_draw(image_group(GROUP_GOD_BOLT), data.x_offset + 42 + width, y_offset - 2);
+        image_draw(image_group(GROUP_GOD_BOLT), data.x_offset + 42 + width, y_offset - 2, COLOR_MASK_NONE, SCALE_NONE);
 
         static int happy_image_id;
         if (!happy_image_id) {
             happy_image_id = assets_get_image_id("UI_Elements", "Happy God Icon");
         }
         width = text_draw_number(data.gods.happy, 0, "", data.x_offset + 82, y_offset + 2, FONT_NORMAL_GREEN, 0);
-        image_draw(happy_image_id, data.x_offset + 82 + width, y_offset - 2);
+        image_draw(happy_image_id, data.x_offset + 82 + width, y_offset - 2, COLOR_MASK_NONE, SCALE_NONE);
 
         y_offset += EXTRA_INFO_VERTICAL_PADDING * 2;
     }

@@ -49,7 +49,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corregge il bug dei centenari"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Elimina le complicazioni al cambio di Imperatore"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Visualizza il percorso del camminatore cliccando con il tasto destro del mouse su un edificio"},
-    {TR_CONFIG_ENABLE_ZOOM, "Abilità lo zoom (può causare rallentamenti, utilizza più RAM)"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Fissa colonne di valutazione non completate su obiettivi bassi"},
     {TR_CONFIG_GRANDFESTIVAL, "Le grandi feste permettono una benedizione extra da parte di una divinità"},
     {TR_CONFIG_JEALOUS_GODS, "Disabilita gelosia delle divinità"},
@@ -399,10 +398,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_GODS_EFFECTS, "Abilita benedizioni e maledizioni degli dei"},
     {TR_CONFIG_ALLOW_EXPORTING_FROM_GRANARIES, "Permetti ai commercianti di esportare cibo dai granai"},
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "I camminatori ambulanti non prendono scorciatoie"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "Impossibile abilitare lo zoom sulla città"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
-        "Il tuo sistema non ha la memoria video necessaria a zoomare sulla città.\n"
-        "Lo zoom sulla città non è stato attivato."},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "Mostra la massima prosperità raggiungibile"},
     {TR_HOTKEY_COPY_SETTINGS, "Copia le impostazioni degli edifici"},
     {TR_HOTKEY_PASTE_SETTINGS, "Incolla le impostazioni degli edifici"},

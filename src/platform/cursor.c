@@ -5,7 +5,7 @@
 #include "game/system.h"
 #include "graphics/color.h"
 #include "input/cursor.h"
-#include "platform/screen.h"
+#include "platform/renderer.h"
 #include "platform/haiku/haiku.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
@@ -99,7 +99,7 @@ void system_init_cursors(int scale_percentage)
         data.cursors[i] = SDL_CreateColorCursor(data.surfaces[i], c->hotspot_x, c->hotspot_y);
 #else
         SDL_ShowCursor(SDL_DISABLE);
-        platform_screen_generate_mouse_cursor_texture(i, data.surfaces[i]->w, data.surfaces[i]->pixels,
+        platform_renderer_generate_mouse_cursor_texture(i, data.surfaces[i]->w, data.surfaces[i]->pixels,
             c->hotspot_x, c->hotspot_y);
 #endif
     }

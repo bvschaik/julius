@@ -69,7 +69,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Fix 100-year-old ghosts"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Fix Emperor change and survival time in custom missions"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Draw walker waypoints on overlay after right clicking on a building"},
-    {TR_CONFIG_ENABLE_ZOOM, "Enable city zoom (can be slow, uses more RAM and GPU memory)"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Fix uncompleted rating columns on low targets"},
     {TR_CONFIG_GRANDFESTIVAL, "Grand festivals allow extra blessing from a god"},
     {TR_CONFIG_DIFFICULTY, "Difficulty:"},
@@ -100,10 +99,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warehouses and granaries don't accept anything when built"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Houses don't expand into gardens"},
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Roaming walkers don't skip corners"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "City zoom could not be enabled"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
-        "Your system does not have enough graphics memory to enable city zoom.\n"
-        "City zoom has not been enabled."},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "Display max attainable prosperity rating with current housing"},
     {TR_HOTKEY_TITLE, "Augustus hotkey configuration"},
     {TR_HOTKEY_LABEL, "Hotkey"},

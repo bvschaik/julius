@@ -166,7 +166,7 @@ static void draw_background(void)
 static int get_sidebar_x_offset(void)
 {
     int view_x, view_y, view_width, view_height;
-    city_view_get_unscaled_viewport(&view_x, &view_y, &view_width, &view_height);
+    city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
     return view_x + view_width;
 }
 
@@ -225,14 +225,14 @@ static void draw_menu_buttons(void)
         if (building_rotation_type_has_rotations(type)) {
             int image_id = assets_get_image_id("UI_Elements", "Rotate Build Icon");
             image_draw(image_id, item_x_align + icons_drawn * MENU_ICON_WIDTH + MENU_ICON_X_OFFSET,
-                data.y_offset + MENU_Y_OFFSET + MENU_ICON_Y_OFFSET + MENU_ITEM_HEIGHT * i);
+                data.y_offset + MENU_Y_OFFSET + MENU_ICON_Y_OFFSET + MENU_ITEM_HEIGHT * i, COLOR_MASK_NONE, SCALE_NONE);
             icons_drawn++;
         }
 
         if (building_monument_type_is_monument(type)) {
             int image_id = assets_get_image_id("UI_Elements", "Monument Build Icon");
             image_draw(image_id, item_x_align + icons_drawn * MENU_ICON_WIDTH + MENU_ICON_X_OFFSET,
-                data.y_offset + MENU_Y_OFFSET + MENU_ICON_Y_OFFSET + MENU_ITEM_HEIGHT * i);
+                data.y_offset + MENU_Y_OFFSET + MENU_ICON_Y_OFFSET + MENU_ITEM_HEIGHT * i, COLOR_MASK_NONE, SCALE_NONE);
             icons_drawn++;
         }
 

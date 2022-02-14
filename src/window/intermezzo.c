@@ -90,7 +90,7 @@ static void init(intermezzo_type type, void (*callback)(void))
 
 static void draw_background(void)
 {
-    graphics_clear_screens();
+    graphics_clear_screen();
 
     int mission = scenario_is_custom() ? 0 : scenario_campaign_mission();
     int image = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * mission;

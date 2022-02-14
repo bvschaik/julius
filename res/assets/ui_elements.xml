@@ -2,7 +2,6 @@
 <!DOCTYPE assetlist>
 <!-- Unless specifically mentioned, all assets created by Areldir -->
 <assetlist name="UI_Elements">
-	<image id="7x7 Map Icon" src="7x7_Minimap_Icon"/>
 	<image id="Happy God Icon" src="Religion_God_Happy"/>
 	<!-- Note: Banner image for Caravanserai -->
 	<image id="Caravanserai Banner" src="Caravanserai_Banner"/>
@@ -40,12 +39,6 @@
 	<!-- Note: Banner images for Construction Sites -->
 	<image id="Const. Banner 01" src="Construction_Banner_01"/>
 	<image id="Const. Banner 02" src="Construction_Banner_02"/>
-	<!-- Note: Minimap icons for Monuments 2x2, 3x3, 4x4, 5x5 and 7x7 respectively  -->
-	<image id="2 Mon MapIcon" src="2x2_Monument_Icon"/>
-	<image id="3 Mon MapIcon" src="3x3_Monument_Icon"/>
-	<image id="4 Mon MapIcon" src="4x4_Monument_Icon"/>
-	<image id="5 Mon MapIcon" src="5x5_Monument_Icon"/>
-	<image id="7 Mon MapIcon" src="7x7_Monument_Icon"/>
 	<!-- Note: Banner with Augustus Logo for Main Menu  -->
 	<image id="Main Menu Banner" src="Augustus_Main_Menu_Banner_Sml"/>
 	<!-- Note: Border for Campaign Map Selection Screen  -->
@@ -124,7 +117,14 @@
 	<image src="Policy_Selection_Border_Bottom_Hover"/>
 	<image src="Policy_Selection_Border_Left_UnHover"/>
 	<image src="Policy_Selection_Border_Left_Hover"/>
-	<!-- Note: Fix for Hagia Sophia sprite (removes historically inaccurate Islamic minarets, which were added to the building in the 1500s) -->
+    <!-- Note: Lighthouse and Caravanserai Trade Policy Disabled Advisor buttons -->
+    <image id="Sea Trade Policy Off Button">
+        <layer group="179" image="0" grayscale="true"/>
+    </image>
+    <image id="Land Trade Policy Off Button">
+        <layer group="179" image="1" grayscale="true"/>
+    </image>
+    <!-- Note: Fix for Hagia Sophia sprite (removes historically inaccurate Islamic minarets, which were added to the building in the 1500s) -->
 	<image id="H Sophia Fix" src="Hagia_Sophia_Fix"/>
 	<!-- Note: Button for Housing Advisor -->
 	<!-- Button assets created by MSTVD and Areldir -->

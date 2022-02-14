@@ -116,7 +116,7 @@ static void draw_scenario_info(void)
     const int scenario_info_width = 280;
     const int scenario_criteria_x = 420;
 
-    image_draw(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36);
+    image_draw(image_group(GROUP_SCENARIO_IMAGE) + scenario_image_id(), 78, 36, COLOR_MASK_NONE, SCALE_NONE);
 
     text_ellipsize(data.selected_scenario_display, FONT_LARGE_BLACK, scenario_info_width + 10);
     text_draw_centered(data.selected_scenario_display,
@@ -128,7 +128,7 @@ static void draw_scenario_info(void)
         widget_scenario_minimap_draw(332, 119, 286, 300);
         // minimap button: draw mission instructions image
         image_draw(image_group(GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS),
-            toggle_minimap_button.x + 3, toggle_minimap_button.y + 3);
+            toggle_minimap_button.x + 3, toggle_minimap_button.y + 3, COLOR_MASK_NONE, SCALE_NONE);
     } else {
         // minimap button: draw minimap
         widget_scenario_minimap_draw(
@@ -220,11 +220,11 @@ static void draw_background(void)
 {
     image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND) + 25);
 
-    graphics_set_clip_rectangle((screen_width() - WINDOW_WIDTH) / 2, (screen_height() - WINDOW_HEIGHT) / 2,
+    graphics_set_clip_rectangle(0, 0,
         WINDOW_WIDTH, WINDOW_HEIGHT);
     graphics_in_dialog();
     image_draw(image_group(GROUP_CCK_BACKGROUND), (WINDOW_WIDTH - BACKGROUND_WIDTH) / 2,
-        (WINDOW_HEIGHT - BACKGROUND_HEIGHT) / 2);
+        (WINDOW_HEIGHT - BACKGROUND_HEIGHT) / 2, COLOR_MASK_NONE, SCALE_NONE);
     graphics_reset_clip_rectangle();
     inner_panel_draw(280, 242, 2, 12);
     draw_scenario_list();

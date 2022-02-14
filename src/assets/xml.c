@@ -8,6 +8,7 @@
 #include "core/log.h"
 #include "core/png_read.h"
 #include "core/string.h"
+#include "graphics/renderer.h"
 
 #include "expat.h"
 
@@ -17,14 +18,14 @@
 #define XML_BUFFER_SIZE 1024
 #define XML_MAX_DEPTH 4
 #define XML_MAX_ELEMENTS_PER_DEPTH 2
-#define XML_MAX_ATTRIBUTES 12
+#define XML_MAX_ATTRIBUTES 13
 #define XML_TAG_MAX_LENGTH 12
 
 static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_TAG_MAX_LENGTH] = { { "assetlist" }, { "image" }, { "layer", "animation" }, { "frame" } };
 static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG_MAX_LENGTH] = {
     { { "name" } }, // assetlist
-    { { "id", "src", "width", "height", "group", "image" } }, // image
-    { { "src", "group", "image", "src_x", "src_y", "x", "y", "width", "height", "invert", "rotate", "part" }, // layer
+    { { "id", "src", "width", "height", "group", "image", "isometric" }}, // image
+    { { "src", "group", "image", "src_x", "src_y", "x", "y", "width", "height", "invert", "rotate", "part", "grayscale" }, // layer
     { "frames", "speed", "reversible", "x", "y" } }, // animation
     { { "src", "src_x", "src_y", "width", "height", "group", "image", "invert", "rotate" } } // frame
 };
@@ -106,7 +107,7 @@ static void xml_start_assetlist_element(const char **attributes)
 static void xml_start_image_element(const char **attributes)
 {
     int total_attributes = count_xml_attributes(attributes);
-    if (total_attributes > 10 || total_attributes % 2) {
+    if (total_attributes > 12 || total_attributes % 2) {
         data.error = 1;
         return;
     }
@@ -142,11 +143,17 @@ static void xml_start_image_element(const char **attributes)
             group = attributes[i + 1];
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][5]) == 0) {
             id = attributes[i + 1];
+        } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][6]) == 0) {
+            const char *value = attributes[i + 1];
+            if (strcmp(value, "true") == 0 || strcmp(value, "1") == 0 || strcmp(value, "isometric") == 0 ||
+                strcmp(value, "yes") == 0 || strcmp(value, "y") == 0) {
+                img->img.is_isometric = 1;
+            }
         }
     }
     img->last_layer = &img->first_layer;
     if (path || group) {
-        asset_image_add_layer(img, path, group, id, 0, 0, 0, 0, 0, 0, INVERT_NONE, ROTATE_NONE, PART_BOTH);
+        asset_image_add_layer(img, path, group, id, 0, 0, 0, 0, 0, 0, INVERT_NONE, ROTATE_NONE, PART_BOTH, 0);
     }
 }
 
@@ -161,9 +168,10 @@ static void xml_start_layer_element(const char **attributes)
     int offset_y = 0;
     int width = 0;
     int height = 0;
+    int grayscale = 0;
     asset_image *img = data.current_image;
     int total_attributes = count_xml_attributes(attributes);
-    if (total_attributes < 2 || total_attributes > 22 || total_attributes % 2) {
+    if (total_attributes < 2 || total_attributes > 24 || total_attributes % 2) {
         data.error = 1;
         return;
     }
@@ -211,10 +219,16 @@ static void xml_start_layer_element(const char **attributes)
             } else if (strcmp(attributes[i + 1], "top") == 0) {
                 part = PART_TOP;
             }
+        } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][12]) == 0) {
+            const char *value = attributes[i + 1];
+            if (strcmp(value, "true") == 0 || strcmp(value, "1") == 0 || strcmp(value, "grayscale") == 0 ||
+                strcmp(value, "yes") == 0 || strcmp(value, "y") == 0) {
+                grayscale = 1;
+            }
         }
     }
     if (!asset_image_add_layer(img, path, group, id, src_x, src_y,
-        offset_x, offset_y, width, height, invert, rotate, part)) {
+        offset_x, offset_y, width, height, invert, rotate, part, grayscale)) {
         log_info("Invalid layer for image", img->id, 0);
         return;
     }
@@ -223,7 +237,7 @@ static void xml_start_layer_element(const char **attributes)
 static void xml_start_animation_element(const char **attributes)
 {
     asset_image *img = data.current_image;
-    if (img->img.num_animation_sprites) {
+    if (img->img.animation.num_sprites) {
         return;
     }
     int total_attributes = count_xml_attributes(attributes);
@@ -234,22 +248,22 @@ static void xml_start_animation_element(const char **attributes)
 
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][0]) == 0) {
-            img->img.num_animation_sprites = string_to_int(string_from_ascii(attributes[i + 1]));
+            img->img.animation.num_sprites = string_to_int(string_from_ascii(attributes[i + 1]));
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][1]) == 0) {
-            img->img.animation_speed_id = calc_bound(string_to_int(string_from_ascii(attributes[i + 1])), 0, 50);
+            img->img.animation.speed_id = calc_bound(string_to_int(string_from_ascii(attributes[i + 1])), 0, 50);
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][2]) == 0) {
             const char *value = attributes[i + 1];
             if (strcmp(value, "true") == 0 || strcmp(value, "1") == 0 || strcmp(value, "reversible") == 0 ||
                 strcmp(value, "yes") == 0 || strcmp(value, "y") == 0) {
-                img->img.animation_can_reverse = 1;
+                img->img.animation.can_reverse = 1;
             }
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][3]) == 0) {
-            img->img.sprite_offset_x = string_to_int(string_from_ascii(attributes[i + 1]));
+            img->img.animation.sprite_offset_x = string_to_int(string_from_ascii(attributes[i + 1]));
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][4]) == 0) {
-            img->img.sprite_offset_y = string_to_int(string_from_ascii(attributes[i + 1]));
+            img->img.animation.sprite_offset_y = string_to_int(string_from_ascii(attributes[i + 1]));
         }
     }
-    if (!img->img.num_animation_sprites) {
+    if (!img->img.animation.num_sprites) {
         data.in_animation = 1;
     }
 }
@@ -309,24 +323,20 @@ static void xml_start_frame_element(const char **attributes)
     }
     img->last_layer = &img->first_layer;
     if (!asset_image_add_layer(img, path, group, id, src_x, src_y,
-        0, 0, width, height, invert, rotate, PART_BOTH)) {
+        0, 0, width, height, invert, rotate, PART_BOTH, 0)) {
         img->active = 0;
         return;
     }
-    img->img.draw.data_length = img->img.width * img->img.height * sizeof(color_t);
-    img->img.draw.uncompressed_length = img->img.draw.data_length;
 #ifndef BUILDING_ASSET_PACKER
-    if (!img->img.draw.data_length) {
+    if (!img->img.width || !img->img.height) {
         asset_image_unload(img);
         return;
     }
-    img->img.draw.type = IMAGE_TYPE_EXTRA_ASSET;
-    asset_image_load(img);
 #else
     data.current_image->has_frame_elements = 1;
 #endif
     data.current_group->last_image_index = img->index;
-    data.current_image->img.num_animation_sprites++;
+    data.current_image->img.animation.num_sprites++;
 }
 
 static void xml_end_assetlist_element(void)
@@ -339,14 +349,23 @@ static void xml_end_image_element(void)
 {
 #ifndef BUILDING_ASSET_PACKER
     image *img = &data.current_image->img;
-    img->draw.data_length = img->width * img->height * sizeof(color_t);
-    img->draw.uncompressed_length = img->draw.data_length;
-    if (!img->draw.data_length) {
+    if (img->is_isometric) {
+        if ((img->width + 2) % 60) {
+            log_info("Isometric image has invalid width", data.current_image->id, img->width);
+        }
+        int tiles = (img->width + 2) / 60;
+        int footprint_height = 30 * tiles;
+        img->top_height = img->height - footprint_height / 2 - 1;
+        // If we must separate the top from the footprint, we must increase the image height to account for the rows
+        // where there is both a top and a footprint part
+        if (!graphics_renderer()->isometric_images_are_joined()) {
+            img->height = img->top_height + footprint_height;
+        }
+    }
+    if (!img->width || !img->height) {
         asset_image_unload(data.current_image);
         return;
     }
-    img->draw.type = IMAGE_TYPE_EXTRA_ASSET;
-    asset_image_load(data.current_image);
 #endif
 }
 

@@ -25,7 +25,7 @@ void window_building_set_possible_position(int *x_offset, int *y_offset, int wid
     int dialog_height = BLOCK_SIZE * height_blocks;
     int stub;
     int width;
-    city_view_get_unscaled_viewport(&stub, &stub, &width, &stub);
+    city_view_get_viewport(&stub, &stub, &width, &stub);
     width -= MARGIN_POSITION;
 
     if (*y_offset + dialog_height > screen_height() - MARGIN_POSITION) {
@@ -87,7 +87,7 @@ static int draw_employment_info(building_info_context *c, building *b, int y_off
 
 void window_building_draw_levy(int amount, int x_offset, int y_offset)
 {
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + 16, x_offset + 300, y_offset + 5);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + 16, x_offset + 300, y_offset + 5, COLOR_MASK_NONE, SCALE_NONE);
     int width = text_draw_money(abs(amount), x_offset + 320, y_offset + 10, FONT_NORMAL_BROWN);
     if (amount > 0) {
         text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY),
@@ -113,7 +113,7 @@ static void draw_employment_details(building_info_context *c, building *b, int y
 {
     y_offset += c->y_offset;
     image_draw(image_group(GROUP_CONTEXT_ICONS) + 14,
-        c->x_offset + 40, y_offset + 6);
+        c->x_offset + 40, y_offset + 6, COLOR_MASK_NONE, SCALE_NONE);
 
     int levy = building_get_levy(b);
     if (levy) {
@@ -194,7 +194,7 @@ static void window_building_draw_monument_resources_needed(building_info_context
                 b->data.monument.phase);
             int resources_delivered = total_resources_needed - b->data.monument.resources_needed[r];
             int image_id = image_group(GROUP_RESOURCE_ICONS);
-            image_draw(image_id + r, c->x_offset + 22, c->y_offset - 105 + r * 20);
+            image_draw(image_id + r, c->x_offset + 22, c->y_offset - 105 + r * 20, COLOR_MASK_NONE, SCALE_NONE);
             int width = text_draw_number(resources_delivered, '@', "/",
                 c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK, 0);
             text_draw_number(total_resources_needed, '@', " ",
@@ -242,7 +242,7 @@ void window_building_draw_monument_construction_process(building_info_context *c
         if (c->height_blocks > 26) {
             int phase_offset = b->data.monument.phase % 2;
             image_draw(assets_get_image_id("UI_Elements", "Const. Banner 01") +
-                phase_offset, c->x_offset + 32, c->y_offset + 196 + height);
+                phase_offset, c->x_offset + 32, c->y_offset + 196 + height, COLOR_MASK_NONE, SCALE_NONE);
         }
     }
 }

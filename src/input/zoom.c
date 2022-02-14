@@ -24,9 +24,6 @@ static struct {
 
 static void start_touch(const touch *first, const touch *last, int scale)
 {
-    if (!config_get(CONFIG_UI_ZOOM)) {
-        return;
-    }
     data.restore = 0;
     data.touch.active = 1;
     data.input_offset.x = first->current_point.x;
@@ -37,9 +34,6 @@ static void start_touch(const touch *first, const touch *last, int scale)
 
 void zoom_update_touch(const touch *first, const touch *last, int scale)
 {
-    if (!config_get(CONFIG_UI_ZOOM)) {
-        return;
-    }
     if (!data.touch.active) {
         start_touch(first, last, scale);
         return;
@@ -64,15 +58,12 @@ void zoom_update_touch(const touch *first, const touch *last, int scale)
 
 void zoom_end_touch(void)
 {
-    if (!config_get(CONFIG_UI_ZOOM)) {
-        return;
-    }
     data.touch.active = 0;
 }
 
 void zoom_map(const mouse *m)
 {
-    if (!config_get(CONFIG_UI_ZOOM) || data.touch.active || m->is_touch) {
+    if (data.touch.active || m->is_touch) {
         return;
     }
     if (m->middle.went_up) {

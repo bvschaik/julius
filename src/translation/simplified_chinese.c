@@ -69,7 +69,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "修复人口百岁仍占房BUG"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "修复自定义地图中皇帝更位和生存时间BUG"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "点击建筑后覆层上勾画出行人路径点"},
-    {TR_CONFIG_ENABLE_ZOOM, "开启城市缩放功能（游戏速度可能减慢，需要更多运行内存和显存）"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "修复低目标下无法完成评比任务BUG"},
     {TR_CONFIG_GRANDFESTIVAL, "举办豪华节庆获取神灵更多祝福"},
     {TR_CONFIG_DIFFICULTY, "游戏难度："},
@@ -100,10 +99,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "仓库和谷仓建造后不接受任何物资"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "住宅扩建不会覆盖到花园"},
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "间接目标行人不会跳过角落"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "无法开启城市缩放功能"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
-        "你的系统没有足够的显存来开启城市缩放功能。\n"
-        "未开启城市缩放功能。"},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "显示当前住房可获得的最高繁荣评比"},
     {TR_HOTKEY_TITLE, "Augustus 热键配置"},
     {TR_HOTKEY_LABEL, "热键"},

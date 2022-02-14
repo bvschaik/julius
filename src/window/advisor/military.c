@@ -68,7 +68,7 @@ static void init()
 static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 1, 10, 10);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 1, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw(51, 0, 60, 12, FONT_LARGE_BLACK);
 
     lang_text_draw(51, 1, 374, 35, FONT_SMALL_PLAIN);
@@ -115,25 +115,25 @@ static int draw_background(void)
     }
 
     if (num_legions <= 0) {
-        image_draw(image_group(GROUP_BULLET), bullet_x, 359);
+        image_draw(image_group(GROUP_BULLET), bullet_x, 359, COLOR_MASK_NONE, SCALE_NONE);
         lang_text_draw(51, enemy_text_id, text_x, 358, FONT_NORMAL_BLACK);
 
-        image_draw(image_group(GROUP_BULLET), bullet_x, 379);
+        image_draw(image_group(GROUP_BULLET), bullet_x, 379, COLOR_MASK_NONE, SCALE_NONE);
         lang_text_draw(51, distant_battle_text_id, text_x, 378, FONT_NORMAL_BLACK);
     } else {
         // has forts
-        image_draw(image_group(GROUP_BULLET), bullet_x, 349);
+        image_draw(image_group(GROUP_BULLET), bullet_x, 349, COLOR_MASK_NONE, SCALE_NONE);
         int width = lang_text_draw_amount(8, 46, city_military_total_soldiers(), text_x - 5, 348, FONT_NORMAL_BLACK);
         width += lang_text_draw(51, 7, text_x + width, 348, FONT_NORMAL_BLACK);
         lang_text_draw_amount(8, 48, city_military_total_legions(), text_x + width, 348, FONT_NORMAL_BLACK);
 
-        image_draw(image_group(GROUP_BULLET), bullet_x, 369);
+        image_draw(image_group(GROUP_BULLET), bullet_x, 369, COLOR_MASK_NONE, SCALE_NONE);
         lang_text_draw(51, enemy_text_id, text_x, 368, FONT_NORMAL_BLACK);
 
-        image_draw(image_group(GROUP_BULLET), bullet_x, 389);
+        image_draw(image_group(GROUP_BULLET), bullet_x, 389, COLOR_MASK_NONE, SCALE_NONE);
         lang_text_draw(51, distant_battle_text_id, text_x, 388, FONT_NORMAL_BLACK);
 
-        image_draw(image_group(GROUP_BULLET), bullet_x, 409);        
+        image_draw(image_group(GROUP_BULLET), bullet_x, 409, COLOR_MASK_NONE, SCALE_NONE);
         width = text_draw(translation_for(food_text), text_x, 409, FONT_NORMAL_BLACK, 0);
         if (food_text == TR_ADVISOR_LEGION_MONTHS_FOOD_STORED) {
             text_draw_number(city_mess_hall_months_food_stored(), '@', " ", text_x + width, 409, FONT_NORMAL_BLACK, 0);
@@ -148,7 +148,8 @@ static int draw_background(void)
     for (int i = 0; i < 6 && i < num_legions; i++) {
         const formation *m = formation_get(formation_for_legion(i + 1 + scrollbar.scroll_position));
         button_border_draw(22, 77 + 44 * i, 560, 40, 0);
-        image_draw(image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id, 32, 82 + 44 * i);
+        image_draw(image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id, 32, 82 + 44 * i,
+            COLOR_MASK_NONE, SCALE_NONE);
         lang_text_draw(138, m->legion_id, 84, 83 + 44 * i, FONT_NORMAL_WHITE);
         int width = text_draw_number(m->num_figures, '@', " ", 84, 100 + 44 * i, FONT_NORMAL_GREEN, 0);
         switch (m->figure_type) {
@@ -170,20 +171,20 @@ static int draw_background(void)
 
         int image_id = image_group(GROUP_FORT_ICONS);
         button_border_draw(384, 83 + 44 * i, 30, 30, 0);
-        image_draw(image_id, 387, 86 + 44 * i);
+        image_draw(image_id, 387, 86 + 44 * i, COLOR_MASK_NONE, SCALE_NONE);
 
         button_border_draw(464, 83 + 44 * i, 30, 30, 0);
         if (m->is_at_fort) {
-            image_draw(image_id + 2, 467, 86 + 44 * i);
+            image_draw(image_id + 2, 467, 86 + 44 * i, COLOR_MASK_NONE, SCALE_NONE);
         } else {
-            image_draw(image_id + 1, 467, 86 + 44 * i);
+            image_draw(image_id + 1, 467, 86 + 44 * i, COLOR_MASK_NONE, SCALE_NONE);
         }
 
         button_border_draw(544, 83 + 44 * i, 30, 30, 0);
         if (m->empire_service) {
-            image_draw(image_id + 3, 547, 86 + 44 * i);
+            image_draw(image_id + 3, 547, 86 + 44 * i, COLOR_MASK_NONE, SCALE_NONE);
         } else {
-            image_draw(image_id + 4, 547, 86 + 44 * i);
+            image_draw(image_id + 4, 547, 86 + 44 * i, COLOR_MASK_NONE, SCALE_NONE);
         }
     }
 

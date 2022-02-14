@@ -55,7 +55,7 @@ static int get_education_advice(void)
 static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 7, 10, 10);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 7, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw(57, 0, 60, 12, FONT_LARGE_BLACK);
 
     // x population, y school age, z academy age

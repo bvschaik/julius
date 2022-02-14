@@ -4,9 +4,9 @@
 <!-- Unless specifically mentioned, all assets created by Areldir -->
 <assetlist name="Entertainment">
 	<!-- Note: Arena Off Variant -->
-	<image id="Arena OFF" src="Arena_Off"/>
+	<image id="Arena OFF" src="Arena_Off" isometric="true"/>
 	<!-- Note: Arena ON Variant Animation -->
-	<image id="Arena ON" width="178" height="152">
+	<image id="Arena ON" width="178" height="152" isometric="true">
 		<layer group="this" image="Arena OFF"/>
 		<animation speed="9" x="44" y="29" reversible="false">
 			<frame src="Arena_On_01"/>
@@ -18,9 +18,9 @@
 		</animation>
 	</image>
 	<!-- Note: Tavern OFF Variant -->
-	<image id="Tavern OFF" src="Tavern_OFF"/>
+	<image id="Tavern OFF" src="Tavern_OFF" isometric="true"/>
 	<!-- Note: Tavern ON Animations -->
-	<image id="Tavern ON">
+	<image id="Tavern ON" isometric="true">
 		<layer group="this" image="Tavern OFF"/>
 		<animation speed="8" x="11" y="28" reversible="false">
 			<frame src="Tavern_ON_01"/>
@@ -454,7 +454,7 @@
 		<layer src="barkeep_n_12"/>
 	</image>
 	<!-- Note: Theatre Vanilla Assets: USE THIS ONE! -->
-	<image id="Theatre OFF" width="118" height="98">
+	<image id="Theatre OFF" width="118" height="98" isometric="true">
 		<layer group="46" image="0" x="0" y="0"/>
 	</image>
 	<!-- Note: Theatre Vanilla REFERENCE Assets: DO NOT USE THESE ONES! -->
@@ -585,7 +585,7 @@
 		<layer src="Theatre_Fix" x="0" y="0"/>
 	</image>
 	<!-- Note: Theatre Vanilla ON Asset: USE THIS ONE! -->
-	<image id="Theatre ON" width="118" height="98">
+	<image id="Theatre ON" width="118" height="98" isometric="true">
 		<layer group="this" image="Theatre OFF" x="0" y="0"/>
 		<animation speed="5" x="0" y="0" reversible="false">
 			<frame group="this" image="Theatre F1"/>
@@ -612,7 +612,7 @@
 		</animation>
 	</image>
 	<!-- Note: Theatre Upgrade OFF Asset: USE THIS ONE! -->
-	<image id="Theatre Upgrade OFF" width="118" height="101">
+	<image id="Theatre Upgrade OFF" width="118" height="101" isometric="true">
 		<layer group="this" image="Theatre OFF" x="0" y="3"/>
 		<layer src="Theatre_Upgrade_State" x="0" y="0"/>
 	</image>
@@ -744,7 +744,7 @@
 		<layer src="Theatre_Upgrade_State" x="0" y="0"/>
 	</image>
 	<!-- Note: Theatre Upgrade ON Asset: USE THIS ONE! -->
-	<image id="Theatre Upgrade ON" width="118" height="101">
+	<image id="Theatre Upgrade ON" width="118" height="101" isometric="true">
 		<layer group="this" image="Theatre Upgrade OFF" x="0" y="0"/>
 		<animation speed="5" x="0" y="0" reversible="false">
 			<frame group="this" image="Theatre UG F1"/>

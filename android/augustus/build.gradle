@@ -112,6 +112,7 @@ android {
         debug {
             ext.alwaysUpdateBuildId = false
             applicationIdSuffix ".debug"
+            externalNativeBuild.cmake.arguments += "-DDRAW_FPS=1"
         }
         release {
             minifyEnabled false

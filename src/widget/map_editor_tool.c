@@ -14,6 +14,8 @@
 static const int X_VIEW_OFFSETS[MAX_TILES] = {0, -30, 30, 0};
 static const int Y_VIEW_OFFSETS[MAX_TILES] = {0, 15, 15, 30};
 
+static float scale = SCALE_NONE;
+
 static void offset_to_view_offset(int dx, int dy, int *view_dx, int *view_dy)
 {
     // we're assuming map is always oriented north
@@ -24,9 +26,9 @@ static void offset_to_view_offset(int dx, int dy, int *view_dx, int *view_dy)
 static void draw_flat_tile(int x, int y, color_t color_mask)
 {
     if (color_mask == COLOR_MASK_GREEN && scenario_property_climate() != CLIMATE_DESERT) {
-        image_draw_blend_alpha(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, ALPHA_MASK_SEMI_TRANSPARENT & color_mask);
+        image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, ALPHA_MASK_SEMI_TRANSPARENT & color_mask, scale);
     } else {
-        image_draw_blend(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, color_mask);
+        image_blend_footprint_color(x, y, color_mask, scale);
     }
 }
 
@@ -45,8 +47,8 @@ static void draw_partially_blocked(int x, int y, int num_tiles, int *blocked_til
 
 static void draw_building_image(int image_id, int x, int y)
 {
-    image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN);
-    image_draw_isometric_top(image_id, x, y, COLOR_MASK_GREEN);
+    image_draw_isometric_footprint(image_id, x, y, COLOR_MASK_GREEN, scale);
+    image_draw_isometric_top(image_id, x, y, COLOR_MASK_GREEN, scale);
 }
 
 static void draw_building(const map_tile *tile, int x_view, int y_view, building_type type)
@@ -64,7 +66,7 @@ static void draw_building(const map_tile *tile, int x_view, int y_view, building
         for (int i = 0; i < num_tiles; i++) {
             int x_offset = x_view + X_VIEW_OFFSETS[i];
             int y_offset = y_view + Y_VIEW_OFFSETS[i];
-            image_draw_isometric_footprint(image_id, x_offset, y_offset, 0);
+            image_draw_isometric_footprint(image_id, x_offset, y_offset, 0, scale);
         }
     } else {
         int image_id;
@@ -136,6 +138,7 @@ void map_editor_tool_draw(const map_tile *tile)
     }
 
     tool_type type = editor_tool_type();
+    scale = city_view_get_scale() / 100.0f;
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
     switch (type) {

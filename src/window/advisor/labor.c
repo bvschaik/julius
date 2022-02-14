@@ -40,7 +40,7 @@ static int arrow_button_focus;
 static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS), 10, 10);
+    image_draw(image_group(GROUP_ADVISOR_ICONS), 10, 10, COLOR_MASK_NONE, SCALE_NONE);
 
     lang_text_draw(50, 0, 60, 12, FONT_LARGE_BLACK);
 
@@ -84,7 +84,7 @@ static void draw_foreground(void)
         button_border_draw(40, 77 + 25 * i, 560, 22, focus);
         const labor_category_data *cat = city_labor_category(i);
         if (cat->priority) {
-            image_draw(image_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2);
+            image_draw(image_group(GROUP_LABOR_PRIORITY_LOCK), 70, y_offset - 2, COLOR_MASK_NONE, SCALE_NONE);
             text_draw_number(cat->priority, '@', " ", 90, y_offset, FONT_NORMAL_WHITE, 0);
         }
         lang_text_draw(50, i + 1, 170, y_offset, FONT_NORMAL_WHITE);

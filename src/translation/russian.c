@@ -72,7 +72,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Исправлять ошибку '100-летних призраков' населения"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Исправлять смену Императора и время выживания в польз. миссиях"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Отображать маршрут граждан по правому щелчку на здании"},
-    {TR_CONFIG_ENABLE_ZOOM, "Вкл. функцию увеличения камеры (возможны замедления, использует больше ОЗУ и видеопамяти)"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Исправить незавершенные колонны рейтинга"},
     {TR_CONFIG_GRANDFESTIVAL, "Великий фестиваль дает дополнительное благословение от божества"},
     {TR_CONFIG_DIFFICULTY, "Сложность:"},
@@ -103,10 +102,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Склады и амбары ничего не принимают при постройке"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Дома не расширяются в сады"},
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Бродячие граждане не пропускают углы"},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_TITLE, "Увеличение камеры не может быть вкл."},
-    {TR_CONFIG_ZOOM_COULD_NOT_BE_ENABLED_MESSAGE,
-        "В вашей системе недостаточно графической памяти для увеличения камеры.\n"
-        "Увеличение камеры не вкл."},
     {TR_CONFIG_GP_CH_DISABLE_INFINITE_WOLVES_SPAWNING, "Выкл. бесконечных волков"},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "Показывать максимальное достижимый рейтинг процветания с текущим жильем"},
     {TR_HOTKEY_TITLE, "Настройки горячих клавиш Augustus"},

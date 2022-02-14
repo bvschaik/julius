@@ -40,7 +40,7 @@ static void draw_tr_row(int tr_string, int y, int value_last_year, int value_thi
 static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 10, 10, 10);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 10, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
 
     lang_text_draw(60, 0, 60, 12, FONT_LARGE_BLACK);
     inner_panel_draw(64, 48, 34, 5);
@@ -78,8 +78,8 @@ static int draw_background(void)
     draw_tr_row(TR_WINDOW_ADVISOR_TOURISM, 185, city_data.finance.tourism_last_year, city_data.finance.tourism_this_year);
     draw_row(60, 20, 200, last_year->income.donated, this_year->income.donated);
 
-    graphics_draw_horizontal_line(280, 350, 213, COLOR_BLACK);
-    graphics_draw_horizontal_line(420, 490, 213, COLOR_BLACK);
+    graphics_draw_line(280, 350, 213, 213, COLOR_BLACK);
+    graphics_draw_line(420, 490, 213, 213, COLOR_BLACK);
 
     draw_row(60, 10, 218, last_year->income.total, this_year->income.total);
 
@@ -94,8 +94,8 @@ static int draw_background(void)
     draw_row(60, 16, 317, last_year->expenses.sundries, this_year->expenses.sundries);
     draw_tr_row(TR_WINDOW_ADVISOR_FINANCE_INTEREST_TRIBUTE, 332, last_year->expenses.tribute + last_year->expenses.interest, this_year->expenses.tribute + this_year->expenses.interest);
 
-    graphics_draw_horizontal_line(280, 350, 345, COLOR_BLACK);
-    graphics_draw_horizontal_line(420, 490, 345, COLOR_BLACK);
+    graphics_draw_line(280, 350, 345, 345, COLOR_BLACK);
+    graphics_draw_line(420, 490, 345, 345, COLOR_BLACK);
 
     draw_row(60, 17, 350, last_year->expenses.total, this_year->expenses.total);
     draw_row(60, 18, 373, last_year->net_in_out, this_year->net_in_out);

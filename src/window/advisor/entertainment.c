@@ -83,7 +83,7 @@ static void draw_games_info(void)
 {
     inner_panel_draw(48, 302, 34, 6);
     text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_HEADER), 52, 274, FONT_LARGE_BLACK, 0);
-    image_draw(assets_get_image_id("UI_Elements", "HoldGames Banner"), 460, 305);
+    image_draw(assets_get_image_id("UI_Elements", "HoldGames Banner"), 460, 305, COLOR_MASK_NONE, SCALE_NONE);
     window_entertainment_draw_games_text(56, 315);
 }
 
@@ -93,7 +93,7 @@ static int draw_background(void)
     city_culture_calculate();
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 8, 10, 10);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 8, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
 
     lang_text_draw(58, 0, 60, 12, FONT_LARGE_BLACK);
 

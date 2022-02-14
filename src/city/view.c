@@ -4,6 +4,7 @@
 #include "core/config.h"
 #include "core/direction.h"
 #include "graphics/menu.h"
+#include "graphics/renderer.h"
 #include "map/grid.h"
 #include "map/image.h"
 #include "widget/minimap.h"
@@ -183,7 +184,7 @@ int city_view_get_scale(void)
 
 int city_view_get_max_scale(void)
 {
-    return data.max_scale;
+    return 600; // data.max_scale;
 }
 
 void city_view_get_camera(int *x, int *y)
@@ -253,19 +254,15 @@ void city_view_get_selected_tile_pixels(int *x_pixels, int *y_pixels)
 
 int city_view_pixels_to_view_tile(int x_pixels, int y_pixels, view_tile *tile)
 {
-    if (config_get(CONFIG_UI_ZOOM)) {
-        y_pixels -= TOP_MENU_HEIGHT;
-    }
-
-    x_pixels = calc_adjust_with_percentage(x_pixels, data.scale);
-    y_pixels = calc_adjust_with_percentage(y_pixels, data.scale);
-
     if (x_pixels < data.viewport.x ||
             x_pixels >= data.viewport.x + data.viewport.width_pixels ||
             y_pixels < data.viewport.y ||
             y_pixels >= data.viewport.y + data.viewport.height_pixels) {
         return 0;
     }
+
+    x_pixels = calc_adjust_with_percentage(x_pixels, data.scale);
+    y_pixels = calc_adjust_with_percentage(y_pixels, data.scale);
 
     x_pixels += data.camera.pixel.x;
     y_pixels += data.camera.pixel.y;
@@ -369,33 +366,27 @@ void city_view_rotate_right(void)
 
 static void set_viewport(int x_offset, int y_offset, int width, int height)
 {
-    width = calc_adjust_with_percentage(width, data.scale);
-    height = calc_adjust_with_percentage(height, data.scale);
     data.viewport.x = x_offset;
     data.viewport.y = y_offset;
-    data.viewport.width_pixels = width - calc_adjust_with_percentage(2, data.scale);
+    data.viewport.width_pixels = width - 2;
     data.viewport.height_pixels = height;
-    data.viewport.width_tiles = width / TILE_WIDTH_PIXELS;
-    data.viewport.height_tiles = height / HALF_TILE_HEIGHT_PIXELS;
+    data.viewport.width_tiles = calc_adjust_with_percentage(width, data.scale) / TILE_WIDTH_PIXELS;
+    data.viewport.height_tiles = calc_adjust_with_percentage(height, data.scale) / HALF_TILE_HEIGHT_PIXELS;
 }
 
 static void set_viewport_with_sidebar(void)
 {
-    set_viewport(0, config_get(CONFIG_UI_ZOOM) ? 0 : TOP_MENU_HEIGHT, data.screen_width - 160, data.screen_height - TOP_MENU_HEIGHT);
+    set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - 160, data.screen_height - TOP_MENU_HEIGHT);
 }
 
 static void set_viewport_without_sidebar(void)
 {
-    set_viewport(0, config_get(CONFIG_UI_ZOOM) ? 0 : TOP_MENU_HEIGHT, data.screen_width - 40, data.screen_height - TOP_MENU_HEIGHT);
+    set_viewport(0, TOP_MENU_HEIGHT, data.screen_width - 40, data.screen_height - TOP_MENU_HEIGHT);
 }
 
 void city_view_set_scale(int scale)
 {
-    if (config_get(CONFIG_UI_ZOOM)) {
-        scale = calc_bound(scale, 50, data.max_scale);
-    } else {
-        scale = 100;
-    }
+    scale = calc_bound(scale, 50, 600);
     data.scale = scale;
     if (data.sidebar_collapsed) {
         set_viewport_without_sidebar();
@@ -403,11 +394,12 @@ void city_view_set_scale(int scale)
         set_viewport_with_sidebar();
     }
     check_camera_boundaries();
+    graphics_renderer()->update_scale_mode(scale);
 }
 
 void city_view_set_max_scale(int scale)
 {
-    data.max_scale = scale;
+    data.max_scale = 600;
     if (data.scale > scale) {
         city_view_set_scale(scale);
     }
@@ -425,23 +417,12 @@ void city_view_set_viewport(int screen_width, int screen_height)
     check_camera_boundaries();
 }
 
-void city_view_get_scaled_viewport(int *x, int *y, int *width, int *height)
+void city_view_get_viewport(int *x, int *y, int *width, int *height)
 {
     *x = data.viewport.x;
     *y = data.viewport.y;
     *width = data.viewport.width_pixels;
     *height = data.viewport.height_pixels;
-}
-
-void city_view_get_unscaled_viewport(int *x, int *y, int *width, int *height)
-{
-    *x = data.viewport.x;
-    *y = data.viewport.y;
-    if (!data.scale) {
-        data.scale = 100;
-    }
-    *width = (int) ((data.viewport.width_pixels / (float) data.scale) * 100);
-    *height = (int) ((data.viewport.height_pixels / (float) data.scale) * 100);
 }
 
 void city_view_get_viewport_size_tiles(int *width, int *height)

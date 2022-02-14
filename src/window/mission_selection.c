@@ -61,15 +61,19 @@ static void draw_background_images(void)
 
     if (s_width > BACKGROUND_WIDTH || s_height > BACKGROUND_HEIGHT) {
         image_draw_fullscreen_background(image_group(GROUP_EMPIRE_MAP));
-        image_draw(image_group(GROUP_SELECT_MISSION_BACKGROUND), image_offset_x, image_offset_y);
+        image_draw(image_group(GROUP_SELECT_MISSION_BACKGROUND), image_offset_x, image_offset_y,
+            COLOR_MASK_NONE, SCALE_NONE);
         int image_border = assets_get_image_id("UI_Elements", "Mission Selection Border");
-        image_draw(image_border, image_offset_x, image_offset_y);
-        image_draw(image_border + 1, image_offset_x + BORDER_IMAGE_DEPTH, image_offset_y);
-        image_draw(image_border + 2, image_offset_x + BACKGROUND_WIDTH - BORDER_IMAGE_DEPTH, image_offset_y);
+        image_draw(image_border, image_offset_x, image_offset_y, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_border + 1, image_offset_x + BORDER_IMAGE_DEPTH, image_offset_y,
+            COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_border + 2, image_offset_x + BACKGROUND_WIDTH - BORDER_IMAGE_DEPTH, image_offset_y,
+            COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_border + 3, image_offset_x + BORDER_IMAGE_DEPTH,
-            image_offset_y + BACKGROUND_HEIGHT - BORDER_IMAGE_DEPTH - 1);
+            image_offset_y + BACKGROUND_HEIGHT - BORDER_IMAGE_DEPTH - 1, COLOR_MASK_NONE, SCALE_NONE);
     } else {
-        image_draw(image_group(GROUP_SELECT_MISSION_BACKGROUND), image_offset_x, image_offset_y);
+        image_draw(image_group(GROUP_SELECT_MISSION_BACKGROUND), image_offset_x, image_offset_y,
+            COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 
@@ -79,7 +83,7 @@ static void draw_background(void)
 
     draw_background_images();
     graphics_in_dialog();
-    image_draw(image_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0);
+    image_draw(image_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0, COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK);
     if (data.choice) {
         lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK);
@@ -109,14 +113,20 @@ static void draw_foreground(void)
     int y_military = CAMPAIGN_SELECTION[rank].y_military - 4;
     int image_id = image_group(GROUP_SELECT_MISSION_BUTTON);
     if (data.choice == 0) {
-        image_draw(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
-        image_draw(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
+        image_draw(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful,
+            COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military,
+            COLOR_MASK_NONE, SCALE_NONE);
     } else if (data.choice == 1) {
-        image_draw(data.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful);
-        image_draw(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military);
+        image_draw(data.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful,
+            COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military,
+            COLOR_MASK_NONE, SCALE_NONE);
     } else {
-        image_draw(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful);
-        image_draw(data.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military);
+        image_draw(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful,
+            COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(data.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military,
+            COLOR_MASK_NONE, SCALE_NONE);
     }
     graphics_reset_dialog();
 }

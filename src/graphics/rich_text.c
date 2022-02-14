@@ -215,8 +215,8 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
                 }
                 const image *img = image_letter(letter_id);
                 if (!measure_only) {
-                    int height = def->image_y_offset(*str, img->height, def->line_height);
-                    image_draw_letter(def->font, letter_id, x, y - height, color);
+                    int height = def->image_y_offset(*str, img->height + img->y_offset, def->line_height);
+                    image_draw_letter(def->font, letter_id, x, y - height, color, SCALE_NONE);
                 }
                 x += img->width + def->letter_spacing;
             }
@@ -326,10 +326,11 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                     int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
                     if (line < height_lines + scrollbar.scroll_position) {
                         if (line >= scrollbar.scroll_position) {
-                            image_draw(image_id, image_offset_x, y + 8);
+                            image_draw(image_id, image_offset_x, y + 8, COLOR_MASK_NONE, SCALE_NONE);
                         } else {
                             image_draw(image_id, image_offset_x,
-                                y + 8 - data.line_height * (scrollbar.scroll_position - line));
+                                y + 8 - data.line_height * (scrollbar.scroll_position - line),
+                                COLOR_MASK_NONE, SCALE_NONE);
                         }
                     }
                     image_id = 0;

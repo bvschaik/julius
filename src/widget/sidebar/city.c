@@ -158,18 +158,18 @@ static void draw_buttons_expanded(int x_offset)
 static void draw_collapsed_background(void)
 {
     int x_offset = sidebar_common_get_x_offset_collapsed();
-    image_draw(image_group(GROUP_SIDE_PANEL), x_offset, 24);
+    image_draw(image_group(GROUP_SIDE_PANEL), x_offset, 24, COLOR_MASK_NONE, SCALE_NONE);
     draw_buttons_collapsed(x_offset);
     draw_sidebar_remainder(x_offset, 1);
 }
 
 static void draw_expanded_background(int x_offset)
 {
-    image_draw(image_group(GROUP_SIDE_PANEL) + 1, x_offset, 24);
+    image_draw(image_group(GROUP_SIDE_PANEL) + 1, x_offset, 24, COLOR_MASK_NONE, SCALE_NONE);
     draw_buttons_expanded(x_offset);
     draw_overlay_text(x_offset + 4);
     draw_number_of_messages(x_offset);
-    image_draw(window_build_menu_image(), x_offset + 6, 239);
+    image_draw(window_build_menu_image(), x_offset + 6, 239, COLOR_MASK_NONE, SCALE_NONE);
 
     widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
 

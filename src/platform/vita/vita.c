@@ -36,11 +36,6 @@ void platform_init_callback(void)
     center_mouse_cursor();
 }
 
-int chdir(const char *path)
-{
-    return 0;
-}
-
 const char *vita_prepend_path(const char *path)
 {
     if (!prepended_path[0]) {

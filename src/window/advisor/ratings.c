@@ -34,19 +34,19 @@ void draw_rating_column(int x_offset, int y_offset, int value, int has_reached)
         value_to_draw = 25;
     }
 
-    image_draw(image_base, x_offset, y);
+    image_draw(image_base, x_offset, y, COLOR_MASK_NONE, SCALE_NONE);
     for (int i = 0; i < 2 * value_to_draw; i++) {
-        image_draw(image_base + 1, x_offset + 11, --y);
+        image_draw(image_base + 1, x_offset + 11, --y, COLOR_MASK_NONE, SCALE_NONE);
     }
     if (has_reached) {
-        image_draw(image_base + 2, x_offset - 6, y);
+        image_draw(image_base + 2, x_offset - 6, y, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 
 static int draw_background(void)
 {
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 3, 10, 10);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 3, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
     int width = lang_text_draw(53, 0, 60, 12, FONT_LARGE_BLACK);
     if (!scenario_criteria_population_enabled() || scenario_is_open_play()) {
         lang_text_draw(53, 7, 80 + width, 17, FONT_NORMAL_BLACK);
@@ -55,7 +55,7 @@ static int draw_background(void)
         text_draw_number(scenario_criteria_population(), '@', ")", 80 + width, 17, FONT_NORMAL_BLACK, 0);
     }
 
-    image_draw(image_group(GROUP_RATINGS_BACKGROUND), 60, 48);
+    image_draw(image_group(GROUP_RATINGS_BACKGROUND), 60, 48, COLOR_MASK_NONE, SCALE_NONE);
 
     int open_play = scenario_is_open_play();
 

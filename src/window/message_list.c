@@ -121,10 +121,10 @@ static void draw_messages(int total_messages)
         }
         if (msg->is_read) {
             image_draw(image_group(GROUP_MESSAGE_ICON) + 15 + image_offset,
-                data.x_text + 12, data.y_text + 6 + 20 * i);
+                data.x_text + 12, data.y_text + 6 + 20 * i, COLOR_MASK_NONE, SCALE_NONE);
         } else {
             image_draw(image_group(GROUP_MESSAGE_ICON) + 14 + image_offset,
-                data.x_text + 12, data.y_text + 6 + 20 * i);
+                data.x_text + 12, data.y_text + 6 + 20 * i, COLOR_MASK_NONE, SCALE_NONE);
         }
         font_t font = FONT_NORMAL_WHITE;
         if (data.focus_button_id == i + 1) {

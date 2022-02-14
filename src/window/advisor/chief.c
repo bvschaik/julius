@@ -26,7 +26,7 @@
 
 static void draw_title(int y, int text_id)
 {
-    image_draw(image_group(GROUP_BULLET), 32, y + 1);
+    image_draw(image_group(GROUP_BULLET), 32, y + 1, COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw(61, text_id, 52, y, FONT_NORMAL_WHITE);
 
 }
@@ -36,7 +36,7 @@ static int draw_background(void)
     int width;
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 11, 10, 10);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 11, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
 
     lang_text_draw(61, 0, 60, 12, FONT_LARGE_BLACK);
     inner_panel_draw(24, 60, 37, 17);
@@ -101,7 +101,7 @@ static int draw_background(void)
     }
 
     // housing capacity
-    image_draw(image_group(GROUP_BULLET), 32, 126 + 1);
+    image_draw(image_group(GROUP_BULLET), 32, 126 + 1, COLOR_MASK_NONE, SCALE_NONE);
     text_draw(translation_for(TR_HEADER_HOUSING), 52, 126, FONT_NORMAL_WHITE, 0);
 
     if (!city_population_open_housing_capacity()) {

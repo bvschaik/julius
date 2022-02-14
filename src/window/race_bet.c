@@ -78,7 +78,7 @@ static void draw_background(void)
 
     outer_panel_draw(0, 0, data.width_blocks, data.height_blocks);
 
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, 20, 20);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, 20, 20, COLOR_MASK_NONE, SCALE_NONE);
 
     text_draw_centered(translation_for(TR_WINDOW_RACE_BET_TITLE), 0, 20, BLOCK_SIZE * data.width_blocks, FONT_LARGE_BLACK, 0);
 
@@ -115,7 +115,7 @@ static void draw_foreground(void)
     for (int i = 0; i < 4; i++) {
         int slice_id = (2 * i);
         int id = data.focus_button_id == (i + 1) || data.chosen_horse == (i + 1) ? image_id_focus : image_id;
-        image_draw(id + slice_id, 34 + i * 110, 145);
+        image_draw(id + slice_id, 34 + i * 110, 145, COLOR_MASK_NONE, SCALE_NONE);
     }
 
     arrow_buttons_draw(0, 0, amount_buttons, 2);

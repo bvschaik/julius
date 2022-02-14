@@ -35,7 +35,7 @@ static generic_button menu_buttons[] = {
 static int get_sidebar_x_offset(void)
 {
     int view_x, view_y, view_width, view_height;
-    city_view_get_scaled_viewport(&view_x, &view_y, &view_width, &view_height);
+    city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
     return view_x + view_width;
 }
 

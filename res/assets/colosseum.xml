@@ -4,21 +4,21 @@
 <!-- Unless specifically mentioned, all assets created by Areldir -->
 <assetlist name="Colosseum">
 	<!-- Note: Colosseum 0%, 25%, 50% and 75% construction phases respectively -->
-	<image id="Coloseum Cons 01" src="Colosseum_0%_Construction_Phase"/>
-	<image id="Coloseum Cons 02" width="298" height="154">
+	<image id="Coloseum Cons 01" src="Colosseum_0%_Construction_Phase" isometric="true"/>
+	<image id="Coloseum Cons 02" width="298" height="154" isometric="true">
 		<layer group="48" image="0" part="footprint" x="0" y="-59"/>
 		<layer src="Colosseum_25%_Construction_Phase"/>
 	</image>
-	<image id="Coloseum Cons 03" width="298" height="173">
+	<image id="Coloseum Cons 03" width="298" height="173" isometric="true">
 		<layer group="48" image="0" part="footprint" x="0" y="-40"/>
 		<layer src="Colosseum_50%_Construction_Phase"/>
 	</image>
-	<image id="Coloseum Cons 04" width="298" height="186">
+	<image id="Coloseum Cons 04" width="298" height="186" isometric="true">
 		<layer group="48" image="0" part="footprint" x="0" y="-27"/>
 		<layer src="Colosseum_75%_Construction_Phase"/>
 	</image>
 	<!-- Note: Colosseum OFF state -->
-	<image id="Coloseum OFF" width="298" height="213">
+	<image id="Coloseum OFF" width="298" height="213" isometric="true">
 		<layer group="48" image="0" x="0" y="0"/>
 	</image>
 	<!-- Note: Colosseum crowd animation fix (REFERENCE ASSET: DO NOT USE) -->
@@ -85,7 +85,7 @@
 		<layer src="Colosseum_Fight_Overlay"/>
 	</image>
 	<!-- Note: Colosseum Gladiator Fight animations (Fixed vanilla ON state) -->
-	<image id="Col Glad Fight" width="298" height="213">
+	<image id="Col Glad Fight" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
 		<animation speed="5" x="122" y="57" reversible="false">
 			<frame group="this" image="Col Glad fix 01"/>
@@ -104,7 +104,7 @@
 		</animation>
 	</image>
 	<!-- Note: Colosseum 'Naumachia' games animations -->
-	<image id="Col Naumachia" width="298" height="213">
+	<image id="Col Naumachia" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
 		<animation speed="9" x="57" y="12" reversible="false">
 			<frame src="Naumachia_01"/>
@@ -122,7 +122,7 @@
 		</animation>
 	</image>
 	<!-- Note: Colosseum 'Imperial Games' animations -->
-	<image id="Col Imp Games" width="298" height="213">
+	<image id="Col Imp Games" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
 		<animation speed="9" x="57" y="12" reversible="false">
 			<frame src="Imperial_Games_01"/>
@@ -134,7 +134,7 @@
 		</animation>
 	</image>
 	<!-- Note: Colosseum 'Imperial Games' animations -->
-	<image id="Col Exec" width="298" height="213">
+	<image id="Col Exec" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
 		<animation speed="9" x="57" y="12" reversible="false">
 			<frame src="Executions_01"/>

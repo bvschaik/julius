@@ -185,13 +185,13 @@ void window_advisors_draw_dialog_background(void)
 {
     image_draw_fullscreen_background(image_group(GROUP_ADVISOR_BACKGROUND));
     graphics_in_dialog();
-    image_draw(image_group(GROUP_PANEL_WINDOWS) + 13, 0, 432);
+    image_draw(image_group(GROUP_PANEL_WINDOWS) + 13, 0, 432, COLOR_MASK_NONE, SCALE_NONE);
 
     prepare_advisor_image_ids();
 
     for (int i = 0; i < ADVISOR_MAX; i++) {
         int selected = current_advisor && i == (current_advisor % ADVISOR_MAX) - 1;
-        image_draw(advisor_image_ids[selected][i], 45 * i + 8, 441);
+        image_draw(advisor_image_ids[selected][i], 45 * i + 8, 441, COLOR_MASK_NONE, SCALE_NONE);
     }
     graphics_reset_dialog();
 }

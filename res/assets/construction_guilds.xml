@@ -17,9 +17,9 @@
 	<image id="Architect 11" src="architect_11"/>
 	<image id="Architect 12" src="architect_12"/>
 	<!-- Note: Architect's Guild OFF Variant -->
-	<image id="Arch Guild OFF" src="Architects_Guild_OFF"/>
+	<image id="Arch Guild OFF" src="Architects_Guild_OFF" isometric="true"/>
 	<!-- Note: Architect's Guild ON Variant -->
-	<image id="Arch Guild ON">
+	<image id="Arch Guild ON" isometric="true">
 		<layer group="this" image="Arch Guild OFF"/>
 		<animation speed="6" x="0" y="56" reversible="false">
 			<frame src="Architects_Guild_On_01"/>
@@ -155,15 +155,15 @@
 	<image id="Slave N 11" src="slave_n_11"/>
 	<image id="Slave N 12" src="slave_n_12"/>
 	<!-- Note: Workcamp Variants for Central, North and South Climates Respectively -->
-	<image id="Workcamp Central" src="Workcamp_Central"/>
-	<image id="Workcamp North" src="Workcamp_North"/>
-	<image id="Workcamp South" src="Workcamp_South"/>
+	<image id="Workcamp Central" src="Workcamp_Central" isometric="true"/>
+	<image id="Workcamp North" src="Workcamp_North" isometric="true"/>
+	<image id="Workcamp South" src="Workcamp_South" isometric="true"/>
 	<!-- Note: Assets for Surveyors' Post -->
-	<image id="Surveyors Post OFF" width="58" height="59">
+	<image id="Surveyors Post OFF" width="58" height="59" isometric="true">
 		<layer group="67" image="0" x="0" y="0" invert="horizontal"/>
 		<layer src="Surveyors_Post_OFF"/>
 	</image>
-	<image index="52" id="Surveyors Post ON">
+	<image index="52" id="Surveyors Post ON" isometric="true">
 		<layer group="this" image="Surveyors Post OFF"/>
 		<animation speed="6" x="7" y="0" reversible="false">
 			<frame src="Surveyors_Post_ON_01"/>

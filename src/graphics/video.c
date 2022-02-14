@@ -6,6 +6,7 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
+#include "graphics/renderer.h"
 #include "graphics/screen.h"
 #include "sound/device.h"
 #include "sound/music.h"
@@ -30,7 +31,10 @@ static struct {
         int channels;
         int rate;
     } audio;
-
+    struct {
+        color_t *pixels;
+        int width;
+    } buffer;
     int restart_music;
 } data;
 
@@ -90,6 +94,7 @@ static void end_video(void)
     if (data.restart_music) {
         sound_music_update(1);
     }
+    graphics_renderer()->release_custom_image_buffer(CUSTOM_IMAGE_VIDEO);
 }
 
 int video_start(const char *filename)
@@ -100,6 +105,8 @@ int video_start(const char *filename)
     if (load_smk(filename)) {
         sound_music_stop();
         sound_speech_stop();
+        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_VIDEO, data.video.width, data.video.height);
+        data.buffer.pixels = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_VIDEO, &data.buffer.width);
         data.is_playing = 1;
         return 1;
     } else {
@@ -183,61 +190,52 @@ static int get_next_frame(void)
     return draw_frame;
 }
 
-void video_draw(int x_offset, int y_offset)
+static void update_video_frame(void)
 {
-    if (!get_next_frame()) {
-        return;
-    }
-    const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, data.video.width, data.video.height);
-    if (!clip->is_visible) {
-        return;
-    }
     const unsigned char *frame = smacker_get_frame_video(data.s);
     const uint32_t *pal = smacker_get_frame_palette(data.s);
     if (frame && pal) {
-        for (int y = clip->clipped_pixels_top; y < clip->visible_pixels_y; y++) {
-            color_t *pixel = graphics_get_pixel(
-                x_offset + clip->clipped_pixels_left, y + y_offset + clip->clipped_pixels_top);
+        for (int y = 0; y < data.video.height; y++) {
+            color_t *pixel = &data.buffer.pixels[y * data.buffer.width];
             int video_y = data.video.y_scale == SMACKER_Y_SCALE_NONE ? y : y / 2;
             const unsigned char *line = frame + (video_y * data.video.width);
-            for (int x = clip->clipped_pixels_left; x < clip->visible_pixels_x; x++) {
+            for (int x = 0; x < data.video.width; x++) {
                 *pixel = ALPHA_OPAQUE | pal[line[x]];
                 ++pixel;
             }
         }
     }
+    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_VIDEO);
+}
+
+void video_draw(int x_offset, int y_offset)
+{
+    if (get_next_frame()) {
+        update_video_frame();
+    }
+    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x_offset, y_offset, 1.0f);
 }
 
 void video_draw_fullscreen(void)
 {
-    if (!get_next_frame()) {
-        return;
+    if (get_next_frame()) {
+        update_video_frame();
     }
+
     int s_width = screen_width();
     int s_height = screen_height();
-    const unsigned char *frame = smacker_get_frame_video(data.s);
-    const uint32_t *pal = smacker_get_frame_palette(data.s);
-    if (frame && pal) {
-        double scale_w = s_width / (double) data.video.width;
-        double scale_h = s_height / (double) data.video.height * (data.video.y_scale == SMACKER_Y_SCALE_NONE ? 1 : 2);
-        double scale = scale_w < scale_h ? scale_w : scale_h;
-        int video_width = (int) (scale * data.video.width);
-        int video_height = (int) (scale * data.video.height);
-        int x_offset = (s_width - video_width) / 2;
-        int y_offset = (s_height - video_height) / 2;
-        const clip_info *clip = graphics_get_clip_info(x_offset, y_offset, video_width, video_height);
-        if (!clip->is_visible) {
-            return;
-        }
-        for (int y = clip->clipped_pixels_top; y < video_height - clip->clipped_pixels_bottom; y++) {
-            color_t *pixel = graphics_get_pixel(x_offset + clip->clipped_pixels_left, y_offset + y);
-            int x_max = video_width - clip->clipped_pixels_right;
-            int video_y = (int) ((data.video.y_scale == SMACKER_Y_SCALE_NONE ? y : y / 2) / scale);
-            const unsigned char *line = frame + (video_y * data.video.width);
-            for (int x = clip->clipped_pixels_left; x < x_max; x++) {
-                *pixel = ALPHA_OPAQUE | pal[line[(int)(x / scale)]];
-                ++pixel;
-            }
-        }
+    float scale_w = data.video.width / (float) screen_width();
+    float scale_h = data.video.height / (float) screen_height();
+    float scale = scale_w > scale_h ? scale_w : scale_h;
+
+    int x = 0;
+    int y = 0;
+    if (scale == scale_h) {
+        x = (int) ((s_width - data.video.width / scale) / 2 * scale);
     }
+    if (scale == scale_w) {
+        y = (int) ((s_height - data.video.height / scale) / 2 * scale);
+    }
+
+    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x, y, scale);
 }

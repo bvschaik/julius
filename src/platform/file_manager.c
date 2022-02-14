@@ -335,6 +335,8 @@ int platform_file_manager_set_base_path(const char *path)
     }
 #ifdef __ANDROID__
     return android_set_base_path(path);
+#elif defined(__vita__)
+    return 1;
 #else
     return chdir(path) == 0;
 #endif

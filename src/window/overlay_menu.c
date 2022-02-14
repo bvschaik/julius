@@ -91,7 +91,7 @@ static void draw_background(void)
 static int get_sidebar_x_offset(void)
 {
     int view_x, view_y, view_width, view_height;
-    city_view_get_unscaled_viewport(&view_x, &view_y, &view_width, &view_height);
+    city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
     return view_x + view_width;
 }
 
@@ -110,7 +110,8 @@ static void draw_foreground(void)
         }
     }
     if (data.selected_submenu > 0) {
-        image_draw(image_group(GROUP_BULLET), x_offset - 185, 80 + 24 * data.selected_menu);
+        image_draw(image_group(GROUP_BULLET), x_offset - 185, 80 + 24 * data.selected_menu,
+            COLOR_MASK_NONE, SCALE_NONE);
         for (int i = 0; i < data.num_submenu_items; i++) {
             int overlay = SUBMENU_ID_TO_OVERLAY[data.selected_submenu][i];
             int translation = get_overlay_translation(overlay);

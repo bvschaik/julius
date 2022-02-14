@@ -201,7 +201,8 @@ static void draw_permissions_buttons(int x, int y, int buttons, building_info_co
         int rule_id = rules[i];
         button_border_draw(dx, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (building_storage_get_permission(rule_id, building_get(data.building_id))) {
-            image_draw(assets_get_image_id("UI_Elements", "Allowed_Walker_Check"), dx + 4, y + 4);
+            image_draw(assets_get_image_id("UI_Elements", "Allowed_Walker_Check"), dx + 4, y + 4,
+                COLOR_MASK_NONE, SCALE_NONE);
         }
         dx += offsets[i];
     }
@@ -220,7 +221,8 @@ static void draw_granary_permissions_buttons(int x, int y, int buttons)
         int permission = granary_distribution_permissions_buttons[i].parameter1 - 1;
         button_border_draw(x, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (building_storage_get_permission(permission, building_get(data.building_id))) {
-            image_draw(assets_get_image_id("UI_Elements", "Allowed_Walker_Check"), x + 4, y + 4);
+            image_draw(assets_get_image_id("UI_Elements", "Allowed_Walker_Check"), x + 4, y + 4,
+                COLOR_MASK_NONE, SCALE_NONE);
         }
         x += offsets[i];
     }
@@ -359,8 +361,8 @@ void window_building_draw_dock_orders_foreground(building_info_context *c)
         resource_type resource = list->items[i];
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
             resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
-        image_draw(image_id, c->x_offset + 408, y_offset + 46 + 22 * i);
+        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_id, c->x_offset + 408, y_offset + 46 + 22 * i, COLOR_MASK_NONE, SCALE_NONE);
         lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
         button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
         building *b = building_get(c->building_id);
@@ -437,24 +439,25 @@ static void window_building_draw_stocks(building_info_context *c, building *b, i
         b->data.market.inventory[INVENTORY_FRUIT] || b->data.market.inventory[INVENTORY_MEAT]) {
         // food stocks
         font = building_distribution_is_good_accepted(INVENTORY_WHEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + position);
+        image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 32, c->y_offset + position, COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_WHEAT], '@', " ",
             c->x_offset + 64, c->y_offset + position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_VEGETABLES, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + position);
+        image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 142, c->y_offset + position,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_VEGETABLES], '@', " ",
             c->x_offset + 174, c->y_offset + position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_FRUIT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + position);
+        image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 252, c->y_offset + position, COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_FRUIT], '@', " ",
             c->x_offset + 284, c->y_offset + position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_MEAT, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
         image_draw(image_id + RESOURCE_MEAT +
             resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
-            c->x_offset + 362, c->y_offset + position);
+            c->x_offset + 362, c->y_offset + position, COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_MEAT], '@', " ",
             c->x_offset + 394, c->y_offset + position + 6, font, 0);
     } else {
@@ -463,22 +466,26 @@ static void window_building_draw_stocks(building_info_context *c, building *b, i
     // good stocks
     if (draw_goods) {
         font = building_distribution_is_good_accepted(INVENTORY_POTTERY, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + good_position);
+        image_draw(image_id + RESOURCE_POTTERY, c->x_offset + 32, c->y_offset + good_position,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_POTTERY], '@', " ",
             c->x_offset + 64, c->y_offset + good_position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_FURNITURE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + good_position);
+        image_draw(image_id + RESOURCE_FURNITURE, c->x_offset + 142, c->y_offset + good_position,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_FURNITURE], '@', " ",
             c->x_offset + 174, c->y_offset + good_position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_OIL, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_OIL, c->x_offset + 252, c->y_offset + good_position);
+        image_draw(image_id + RESOURCE_OIL, c->x_offset + 252, c->y_offset + good_position,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_OIL], '@', " ",
             c->x_offset + 284, c->y_offset + good_position + 6, font, 0);
 
         font = building_distribution_is_good_accepted(INVENTORY_WINE, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
-        image_draw(image_id + RESOURCE_WINE, c->x_offset + 362, c->y_offset + good_position);
+        image_draw(image_id + RESOURCE_WINE, c->x_offset + 362, c->y_offset + good_position,
+            COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(b->data.market.inventory[INVENTORY_WINE], '@', " ",
             c->x_offset + 394, c->y_offset + good_position + 6, font, 0);
     }
@@ -586,8 +593,8 @@ void window_building_draw_supplier_orders_foreground(building_info_context *c)
         }
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
             resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * row);
-        image_draw(image_id, c->x_offset + 408, y_offset + 46 + 22 * row);
+        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * row, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_id, c->x_offset + 408, y_offset + 46 + 22 * row, COLOR_MASK_NONE, SCALE_NONE);
         lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * row, FONT_NORMAL_WHITE);
         button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * row, 210, 22, data.resource_focus_button_id == row + 1);
         if (building_distribution_is_good_accepted(inventory, b)) {
@@ -634,7 +641,7 @@ void window_building_draw_primary_product_stockpiling(building_info_context *c)
     int y = c->y_offset + primary_product_producer_button_stockpiling->y + 16 * c->height_blocks - 40;
     button_border_draw(x, y, 20, 20, data.primary_product_stockpiling_id);
     if (building_stockpiling_enabled(building_get(c->building_id))) {
-        image_draw(assets_get_image_id("UI_Elements", "Warehousing"), x + 4, y + 4);
+        image_draw(assets_get_image_id("UI_Elements", "Warehousing"), x + 4, y + 4, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 
@@ -677,26 +684,26 @@ void window_building_draw_granary(building_info_context *c)
 
         int image_id = image_group(GROUP_RESOURCE_ICONS);
         // wheat
-        image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 34, c->y_offset + 68);
+        image_draw(image_id + RESOURCE_WHEAT, c->x_offset + 34, c->y_offset + 68, COLOR_MASK_NONE, SCALE_NONE);
         width = text_draw_number(b->data.granary.resource_stored[RESOURCE_WHEAT], '@', " ",
             c->x_offset + 68, c->y_offset + 75, FONT_NORMAL_BLACK, 0);
         lang_text_draw(23, RESOURCE_WHEAT, c->x_offset + 68 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
 
         // vegetables
-        image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 34, c->y_offset + 92);
+        image_draw(image_id + RESOURCE_VEGETABLES, c->x_offset + 34, c->y_offset + 92, COLOR_MASK_NONE, SCALE_NONE);
         width = text_draw_number(b->data.granary.resource_stored[RESOURCE_VEGETABLES], '@', " ",
             c->x_offset + 68, c->y_offset + 99, FONT_NORMAL_BLACK, 0);
         lang_text_draw(23, RESOURCE_VEGETABLES, c->x_offset + 68 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
 
         // fruit
-        image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 240, c->y_offset + 68);
+        image_draw(image_id + RESOURCE_FRUIT, c->x_offset + 240, c->y_offset + 68, COLOR_MASK_NONE, SCALE_NONE);
         width = text_draw_number(b->data.granary.resource_stored[RESOURCE_FRUIT], '@', " ",
             c->x_offset + 274, c->y_offset + 75, FONT_NORMAL_BLACK, 0);
         lang_text_draw(23, RESOURCE_FRUIT, c->x_offset + 274 + width, c->y_offset + 75, FONT_NORMAL_BLACK);
 
         // meat/fish
         image_draw(image_id + RESOURCE_MEAT + resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
-            c->x_offset + 240, c->y_offset + 92);
+            c->x_offset + 240, c->y_offset + 92, COLOR_MASK_NONE, SCALE_NONE);
         width = text_draw_number(b->data.granary.resource_stored[RESOURCE_MEAT], '@', " ",
             c->x_offset + 274, c->y_offset + 99, FONT_NORMAL_BLACK, 0);
         lang_text_draw(23, RESOURCE_MEAT, c->x_offset + 274 + width, c->y_offset + 99, FONT_NORMAL_BLACK);
@@ -711,7 +718,7 @@ void window_building_draw_granary(building_info_context *c)
         if (resource) {
             image_draw(image_group(GROUP_RESOURCE_ICONS) + resource +
                 resource_image_offset(resource, RESOURCE_IMAGE_ICON),
-                c->x_offset + 32, c->y_offset + 190);
+                c->x_offset + 32, c->y_offset + 190, COLOR_MASK_NONE, SCALE_NONE);
             if (f->action_state == FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE) {
                 lang_text_draw_multiline(98, 9, c->x_offset + 64, c->y_offset + 190,
                     BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN);
@@ -733,10 +740,14 @@ void window_building_draw_granary(building_info_context *c)
     }
 
     // Permissions image
-    image_draw(image_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 28, c->y_offset + 19 * c->height_blocks - 140);
-    image_draw(image_group(GROUP_FIGURE_TOWER_SENTRY) + 4, c->x_offset + 128, c->y_offset + 19 * c->height_blocks - 140);
-    image_draw(image_group(GROUP_FIGURE_TRADE_CARAVAN) + 4, c->x_offset + 218, c->y_offset + 19 * c->height_blocks - 140);
-    image_draw(image_group(GROUP_FIGURE_SHIP) + 4, c->x_offset + 308, c->y_offset + 19 * c->height_blocks - 160);
+    image_draw(image_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 28, c->y_offset + 19 * c->height_blocks - 140,
+        COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_group(GROUP_FIGURE_TOWER_SENTRY) + 4,
+        c->x_offset + 128, c->y_offset + 19 * c->height_blocks - 140, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_group(GROUP_FIGURE_TRADE_CARAVAN) + 4,
+        c->x_offset + 218, c->y_offset + 19 * c->height_blocks - 140, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_group(GROUP_FIGURE_SHIP) + 4, c->x_offset + 308, c->y_offset + 19 * c->height_blocks - 160,
+        COLOR_MASK_NONE, SCALE_NONE);
 }
 
 void window_building_draw_granary_foreground(building_info_context *c)
@@ -786,7 +797,7 @@ static void draw_button_from_state(int state, int x, int y, building_type type)
                 }
                 int text_width = lang_text_get_width(99, group_number, FONT_NORMAL_WHITE);
                 int start_x = x + (210 - image_width - text_width) / 2;
-                image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, start_x, y - 2);
+                image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, start_x, y - 2, COLOR_MASK_NONE, SCALE_NONE);
                 lang_text_draw(99, group_number, start_x + image_width, y, FONT_NORMAL_WHITE);
                 break;
             }
@@ -850,8 +861,8 @@ void window_building_draw_granary_orders_foreground(building_info_context *c)
         int resource = list->items[i];
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
             resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
-        image_draw(image_id, c->x_offset + 420, y_offset + 46 + 22 * i);
+        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_id, c->x_offset + 420, y_offset + 46 + 22 * i, COLOR_MASK_NONE, SCALE_NONE);
         lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
         button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
         button_border_draw(c->x_offset + 390, y_offset + 46 + 22 * i, 28, 22, data.partial_resource_focus_button_id == i + 1);
@@ -927,8 +938,8 @@ void window_building_draw_warehouse(building_info_context *c)
             }
             int amount = building_warehouse_get_amount(b, r);
             int image_id = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
-            image_draw(image_id, x, y);
-            int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN, 0);
+            image_draw(image_id, x, y, COLOR_MASK_NONE, SCALE_NONE);
+            int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_SMALL_PLAIN, COLOR_FONT_PLAIN);
             lang_text_draw(23, r, x + 24 + width, y + 7, FONT_SMALL_PLAIN);
         }
     }
@@ -943,7 +954,7 @@ void window_building_draw_warehouse(building_info_context *c)
         if (resource) {
             image_draw(image_group(GROUP_RESOURCE_ICONS) + resource +
                 resource_image_offset(resource, RESOURCE_IMAGE_ICON),
-                c->x_offset + 32, c->y_offset + 220);
+                c->x_offset + 32, c->y_offset + 220, COLOR_MASK_NONE, SCALE_NONE);
             if (f->action_state == FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE) {
                 lang_text_draw_multiline(99, 16, c->x_offset + 64, c->y_offset + 223,
                     BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN);
@@ -957,9 +968,9 @@ void window_building_draw_warehouse(building_info_context *c)
         } else {
             image_draw(image_group(GROUP_RESOURCE_ICONS) + f->collecting_item_id +
                 resource_image_offset(f->collecting_item_id, RESOURCE_IMAGE_ICON),
-                c->x_offset + 32, c->y_offset + 220);
-            text_draw_multiline(translation_for(TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING), c->x_offset + 64, c->y_offset + 223,
-                BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN, 0);
+                c->x_offset + 32, c->y_offset + 220, COLOR_MASK_NONE, SCALE_NONE);
+            text_draw_multiline(translation_for(TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING),
+                c->x_offset + 64, c->y_offset + 223, BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN, 0);
         }
     } else if (b->num_workers) {
         // cartpusher is waiting for orders
@@ -967,9 +978,12 @@ void window_building_draw_warehouse(building_info_context *c)
             BLOCK_SIZE * (c->width_blocks - 3), FONT_NORMAL_BROWN);
     }
 
-    image_draw(image_group(GROUP_FIGURE_MARKET_LADY) + 4, c->x_offset + 32, c->y_offset + BLOCK_SIZE * c->height_blocks - 83);
-    image_draw(image_group(GROUP_FIGURE_TRADE_CARAVAN) + 4, c->x_offset + 128, c->y_offset + BLOCK_SIZE * c->height_blocks - 83);
-    image_draw(image_group(GROUP_FIGURE_SHIP) + 4, c->x_offset + 216, c->y_offset + BLOCK_SIZE * c->height_blocks - 100);
+    image_draw(image_group(GROUP_FIGURE_MARKET_LADY) + 4,
+        c->x_offset + 32, c->y_offset + BLOCK_SIZE * c->height_blocks - 83, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_group(GROUP_FIGURE_TRADE_CARAVAN) + 4,
+        c->x_offset + 128, c->y_offset + BLOCK_SIZE * c->height_blocks - 83, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_group(GROUP_FIGURE_SHIP) + 4,
+        c->x_offset + 216, c->y_offset + BLOCK_SIZE * c->height_blocks - 100, COLOR_MASK_NONE, SCALE_NONE);
 }
 
 void window_building_draw_warehouse_foreground(building_info_context *c)
@@ -1038,8 +1052,8 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
         int resource = list->items[i];
         int image_id = image_group(GROUP_RESOURCE_ICONS) + resource +
             resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i);
-        image_draw(image_id, c->x_offset + 420, y_offset + 46 + 22 * i);
+        image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_id, c->x_offset + 420, y_offset + 46 + 22 * i, COLOR_MASK_NONE, SCALE_NONE);
         lang_text_draw(23, resource, c->x_offset + 72, y_offset + 50 + 22 * i, FONT_NORMAL_WHITE);
         button_border_draw(c->x_offset + 180, y_offset + 46 + 22 * i, 210, 22, data.resource_focus_button_id == i + 1);
         button_border_draw(c->x_offset + 390, y_offset + 46 + 22 * i, 28, 22, data.partial_resource_focus_button_id == i + 1);
@@ -1314,10 +1328,10 @@ static void draw_policy_image_border(int x, int y, int focused)
 {
     int id = assets_get_image_id("UI_Elements", "Policy Selection Borders");
 
-    image_draw(id + focused, x, y);
-    image_draw(id + 2 + focused, x + 105, y + 5);
-    image_draw(id + 4 + focused, x, y + 90);
-    image_draw(id + 6 + focused, x, y + 5);
+    image_draw(id + focused, x, y, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(id + 2 + focused, x + 105, y + 5, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(id + 4 + focused, x, y + 90, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(id + 6 + focused, x, y + 5, COLOR_MASK_NONE, SCALE_NONE);
 }
 
 void window_building_handle_mouse_caravanserai(const mouse *m, building_info_context *c)
@@ -1385,13 +1399,14 @@ void window_building_draw_caravanserai(building_info_context *c)
             text_draw_multiline(translation_for(land_trade_policy.items[policy].desc),
                 c->x_offset + 160, c->y_offset + 181, 260, FONT_NORMAL_BLACK, 0);
         }
-        image_draw(land_trade_policy.items[policy].image_id, c->x_offset + 32, c->y_offset + 150);
+        image_draw(land_trade_policy.items[policy].image_id, c->x_offset + 32, c->y_offset + 150,
+            COLOR_MASK_NONE, SCALE_NONE);
 
         inner_panel_draw(c->x_offset + 16, c->y_offset + 270, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 278);
 
         image_draw(assets_get_image_id("UI_Elements", "Caravanserai Banner"),
-            c->x_offset + 32, c->y_offset + 350);
+            c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE, SCALE_NONE);
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         window_building_draw_monument_caravanserai_construction_process(c);

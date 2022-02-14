@@ -215,19 +215,19 @@ static void refresh_background(void)
     int image_base = image_group(GROUP_TOP_MENU);
     int s_width = screen_width();
     for (int i = 0; i * block_width < s_width; i++) {
-        image_draw(image_base + i % 8, i * block_width, 0);
+        image_draw(image_base + i % 8, i * block_width, 0, COLOR_MASK_NONE, SCALE_NONE);
     }
     // black panels for funds/pop/time
     if (s_width < 800) {
-        image_draw(image_base + 14, 336, 0);
+        image_draw(image_base + 14, 336, 0, COLOR_MASK_NONE, SCALE_NONE);
     } else if (s_width < 1024) {
-        image_draw(image_base + 14, 336, 0);
-        image_draw(image_base + 14, 456, 0);
-        image_draw(image_base + 14, 648, 0);
+        image_draw(image_base + 14, 336, 0, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base + 14, 456, 0, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base + 14, 648, 0, COLOR_MASK_NONE, SCALE_NONE);
     } else {
-        image_draw(image_base + 14, 480, 0);
-        image_draw(image_base + 14, 624, 0);
-        image_draw(image_base + 14, 840, 0);
+        image_draw(image_base + 14, 480, 0, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base + 14, 624, 0, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base + 14, 840, 0, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 

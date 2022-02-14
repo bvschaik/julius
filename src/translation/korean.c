@@ -52,7 +52,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "100세 이상 고령 주민 문제 수정"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "커스텀 임무에서 황제 교체와 생존 시간 문제 수정"},
     {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "건물 오른 클릭 후 오버레이에 보행자 경로 그리기"},
-    {TR_CONFIG_ENABLE_ZOOM, "화면 확대 및 축소 (램사용량 증가, 글꼴 출력 오류)"},
     {TR_CONFIG_GRANDFESTIVAL, "대축제를 개최하여 해당 신들의 추가 축복 "},
     {TR_CONFIG_JEALOUS_GODS, "신들의 질투 비활성화"},
     {TR_CONFIG_GLOBAL_LABOUR, "전역적인 인력 활용 활성화"},

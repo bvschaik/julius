@@ -18,7 +18,7 @@ void arrow_buttons_draw(int x, int y, arrow_button *buttons, int num_buttons)
         if (buttons[i].pressed) {
             image_id += 1;
         }
-        image_draw(image_id, x + buttons[i].x_offset, y + buttons[i].y_offset);
+        image_draw(image_id, x + buttons[i].x_offset, y + buttons[i].y_offset, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 

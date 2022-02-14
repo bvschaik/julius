@@ -73,7 +73,8 @@ void scrollbar_draw(scrollbar_type *scrollbar)
         }
         image_draw(image_group(GROUP_PANEL_BUTTON) + 39,
             scrollbar->x + (SCROLL_BUTTON_WIDTH - SCROLL_DOT_SIZE) / 2,
-            scrollbar->y + offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding);
+            scrollbar->y + offset + SCROLL_BUTTON_HEIGHT + scrollbar->dot_padding,
+            COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 

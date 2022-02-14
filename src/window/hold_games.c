@@ -73,10 +73,10 @@ static void draw_background(void)
         if (i == game->id - 1) {
             button_border_draw(100 * i + 165, 92, 90, 100, 1);
             image_draw(assets_get_image_id("UI_Elements", "Naum Ico S") +
-                (2 * i), 100 * i + 170, 96);
+                (2 * i), 100 * i + 170, 96, COLOR_MASK_NONE, SCALE_NONE);
         } else {
             image_draw(assets_get_image_id("UI_Elements", "Naum Ico DS") +
-                (2 * i), 100 * i + 170, 96);
+                (2 * i), 100 * i + 170, 96, COLOR_MASK_NONE, SCALE_NONE);
         }
     }
     text_draw_multiline(translation_for(game->description_key), 70, 222, 500, FONT_NORMAL_BLACK, 0);
@@ -95,7 +95,7 @@ static void draw_background(void)
             if (city_resource_get_amount_including_granaries(resource, resource_cost, 0) < resource_cost) {
                 has_resources = 0;
             }
-            image_draw(image_group(GROUP_RESOURCE_ICONS) + resource, 120 + width, 316);
+            image_draw(image_group(GROUP_RESOURCE_ICONS) + resource, 120 + width, 316, COLOR_MASK_NONE, SCALE_NONE);
             width += 32;
         }
     }

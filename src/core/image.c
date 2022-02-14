@@ -3,8 +3,11 @@
 #include "assets/assets.h"
 #include "core/buffer.h"
 #include "core/file.h"
+#include "core/image_packer.h"
 #include "core/io.h"
 #include "core/log.h"
+#include "graphics/font.h"
+#include "graphics/renderer.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -14,9 +17,9 @@
 
 #define ENEMY_ENTRIES 801
 #define CYRILLIC_FONT_ENTRIES 2000
-#define TRAD_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS)
-#define SIMP_CHINESE_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS)
-#define KOREAN_FONT_ENTRIES (3 * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS)
+#define BASE_FONT_ENTRIES 1340
+
+#define FONT_STYLES 3
 
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET HEADER_SIZE
@@ -24,22 +27,63 @@
 #define CYRILLIC_FONT_INDEX_OFFSET HEADER_SIZE
 #define CYRILLIC_FONT_INDEX_SIZE ENTRY_SIZE * CYRILLIC_FONT_ENTRIES
 
-#define MAIN_DATA_SIZE 30000000
-#define EMPIRE_DATA_SIZE (2000*1000*4)
+#define MAIN_DATA_SIZE 12100000
 #define ENEMY_DATA_SIZE 2400000
 #define CYRILLIC_FONT_DATA_SIZE 1500000
 #define TRAD_CHINESE_FONT_DATA_SIZE 7200000
 #define KOREAN_FONT_DATA_SIZE 7500000
-#define SCRATCH_DATA_SIZE 12100000
 
 #define CYRILLIC_FONT_BASE_OFFSET 201
 
 #define NAME_SIZE 32
 
+#define IMAGE_TYPE_ISOMETRIC 30
+
 enum {
     NO_EXTRA_FONT = 0,
     FULL_CHARSET_IN_FONT = 1,
     MULTIBYTE_IN_FONT = 2
+};
+
+typedef struct {
+    int offset;
+    int is_compressed;
+    int data_length;
+    int uncompressed_length;
+    int bitmap_id;
+    void *buffer;
+    int original_width;
+} image_draw_data;
+
+typedef struct {
+    int width;
+    int height;
+} multibyte_font_sizes;
+
+typedef struct {
+    const char *name;
+    const char *file_v1;
+    const char *file_v2;
+    int data_size;
+    int entries;
+    int chars;
+    struct {
+        multibyte_font_sizes v1[3];
+        multibyte_font_sizes v2[3];
+    } sizes;
+    int letter_spacing;
+} multibyte_font_data;
+
+typedef enum {
+    MULTIBYTE_FONT_TRADITIONAL_CHINESE = 0,
+    MULTIBYTE_FONT_SIMPLIFIED_CHINESE = 1,
+    MULTIBYTE_FONT_KOREAN = 2,
+    MULTIBYTE_FONT_MAX = 3
+} multibyte_font_type;
+
+static const int FOOTPRINT_X_START_PER_HEIGHT[] = {
+    28, 26, 24, 22, 20, 18, 16, 14, 12, 10, 8, 6, 4, 2, 0,
+    0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28
 };
 
 static const char MAIN_GRAPHICS_SG2[][NAME_SIZE] = {
@@ -62,7 +106,6 @@ static const char EDITOR_GRAPHICS_555[][NAME_SIZE] = {
     "c3map_north.555",
     "c3map_south.555"
 };
-static const char EMPIRE_555[NAME_SIZE] = "The_empire.555";
 
 static const char CYRILLIC_FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
 static const char CYRILLIC_FONTS_555[NAME_SIZE] = "C3_fonts.555";
@@ -116,92 +159,73 @@ static const char ENEMY_GRAPHICS_555[][NAME_SIZE] = {
     "Phoenician.555",
 };
 
+static multibyte_font_data multibyte_font_info[MULTIBYTE_FONT_MAX] = {
+    {
+        .name = "Traditional Chinese",
+        .file_v1 = CHINESE_FONTS_555,
+        .file_v2 = CHINESE_FONTS_555_V2,
+        .data_size = TRAD_CHINESE_FONT_DATA_SIZE,
+        .entries = FONT_STYLES * IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS,
+        .chars = IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS,
+        .sizes = {
+            .v1 = { { 13, 11 }, { 17, 15 }, { 20, 18 } },
+            .v2 = { { 13, 12 }, { 16, 15 }, { 21, 20 } }
+        },
+        .letter_spacing = 1
+    },
+    {
+        .name = "Simplified Chinese",
+        .file_v1 = CHINESE_FONTS_555,
+        .file_v2 = CHINESE_FONTS_555_V2,
+        .data_size = TRAD_CHINESE_FONT_DATA_SIZE,
+        .entries = FONT_STYLES * IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS,
+        .chars = IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS,
+        .sizes = {
+            .v1 = { { 13, 11 }, { 17, 15 }, { 20, 18 } },
+            .v2 = { { 13, 12 }, { 16, 15 }, { 21, 20 } }
+        },
+        .letter_spacing = 1
+    },
+    {
+        .name = "Korean",
+        .file_v1 = KOREAN_FONTS_555,
+        .file_v2 = KOREAN_FONTS_555_V2,
+        .data_size = KOREAN_FONT_DATA_SIZE,
+        .entries = FONT_STYLES * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS,
+        .chars = IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS,
+        .sizes = {
+            .v1 = { { 12, 12 }, { 15, 15 }, { 20, 20 } },
+            .v2 = { { 12, 12 }, { 15, 15 }, { 20, 20 } },
+        },
+        .letter_spacing = 0
+    }
+};
+
 static const image DUMMY_IMAGE;
 
 static struct {
     int current_climate;
+    int current_enemy;
+
     int is_editor;
     int fonts_enabled;
     int font_base_offset;
 
     uint16_t group_image_ids[300];
     char bitmaps[100][200];
-    image main[MAIN_ENTRIES];
+    image main[IMAGE_MAIN_ENTRIES];
     image enemy[ENEMY_ENTRIES];
     image *font;
-    color_t *main_data;
-    color_t *empire_data;
-    color_t *enemy_data;
-    color_t *font_data;
-    uint8_t *tmp_data;
-} data = {.current_climate = -1};
+    image_draw_data *draw_data;
+    image_draw_data *external_draw_data;
 
-int image_init(void)
-{
-    data.enemy_data = (color_t *) malloc(ENEMY_DATA_SIZE);
-    data.main_data = (color_t *) malloc(MAIN_DATA_SIZE);
-    data.empire_data = (color_t *) malloc(EMPIRE_DATA_SIZE);
-    data.tmp_data = (uint8_t *) malloc(SCRATCH_DATA_SIZE);
-    if (!data.main_data || !data.empire_data || !data.enemy_data || !data.tmp_data) {
-        free(data.main_data);
-        free(data.empire_data);
-        free(data.enemy_data);
-        free(data.tmp_data);
-        return 0;
-    }
-    return 1;
-}
+    int external_image_id;
+    int total_external_images;
 
-static void prepare_index(image *images, int size)
-{
-    int offset = 4;
-    for (int i = 1; i < size; i++) {
-        image *img = &images[i];
-        if (img->draw.is_external) {
-            if (!img->draw.offset) {
-                img->draw.offset = 1;
-            }
-        } else {
-            img->draw.offset = offset;
-            offset += img->draw.data_length;
-        }
-    }
-}
-
-static void read_index_entry(buffer *buf, image *img)
-{
-    img->draw.offset = buffer_read_i32(buf);
-    img->draw.data_length = buffer_read_i32(buf);
-    img->draw.uncompressed_length = buffer_read_i32(buf);
-    buffer_skip(buf, 8);
-    img->width = buffer_read_u16(buf);
-    img->height = buffer_read_u16(buf);
-    buffer_skip(buf, 6);
-    img->num_animation_sprites = buffer_read_u16(buf);
-    buffer_skip(buf, 2);
-    img->sprite_offset_x = buffer_read_i16(buf);
-    img->sprite_offset_y = buffer_read_i16(buf);
-    buffer_skip(buf, 10);
-    img->animation_can_reverse = buffer_read_i8(buf);
-    buffer_skip(buf, 1);
-    img->draw.type = buffer_read_u8(buf);
-    img->draw.is_fully_compressed = buffer_read_i8(buf);
-    img->draw.is_external = buffer_read_i8(buf);
-    img->draw.has_compressed_part = buffer_read_i8(buf);
-    buffer_skip(buf, 2);
-    img->draw.bitmap_id = buffer_read_u8(buf);
-    buffer_skip(buf, 1);
-    img->animation_speed_id = buffer_read_u8(buf);
-    buffer_skip(buf, 5);
-}
-
-static void read_index(buffer *buf, image *images, int size)
-{
-    for (int i = 0; i < size; i++) {
-        read_index_entry(buf, &images[i]);
-    }
-    prepare_index(images, size);
-}
+    image_packer packer;
+    int max_image_width;
+    int max_image_height;
+} data;
 
 static void read_header(buffer *buf)
 {
@@ -212,6 +236,141 @@ static void read_header(buffer *buf)
     buffer_read_raw(buf, data.bitmaps, 20000);
 }
 
+static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data)
+{
+    draw_data->offset = buffer_read_i32(buf);
+    draw_data->data_length = buffer_read_i32(buf);
+    draw_data->uncompressed_length = buffer_read_i32(buf);
+    buffer_skip(buf, 8);
+    img->width = buffer_read_u16(buf);
+    img->height = buffer_read_u16(buf);
+    buffer_skip(buf, 6);
+    img->animation.num_sprites = buffer_read_u16(buf);
+    buffer_skip(buf, 2);
+    img->animation.sprite_offset_x = buffer_read_i16(buf);
+    img->animation.sprite_offset_y = buffer_read_i16(buf);
+    buffer_skip(buf, 10);
+    img->animation.can_reverse = buffer_read_i8(buf);
+    buffer_skip(buf, 1);
+    img->is_isometric = buffer_read_u8(buf) == IMAGE_TYPE_ISOMETRIC;
+    draw_data->is_compressed = buffer_read_i8(buf);
+    int is_external = buffer_read_i8(buf);
+    if (is_external) {
+        img->atlas.id = (ATLAS_EXTERNAL << IMAGE_ATLAS_BIT_OFFSET) + data.total_external_images;
+        data.total_external_images++;
+    }
+    img->top_height = buffer_read_i8(buf);
+    buffer_skip(buf, 2);
+    draw_data->bitmap_id = buffer_read_u8(buf);
+    buffer_skip(buf, 1);
+    img->animation.speed_id = buffer_read_u8(buf);
+    buffer_skip(buf, 5);
+}
+
+static int is_external(const image *img)
+{
+    return (img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_EXTERNAL;
+}
+
+static void set_image_heights(image *img, image_draw_data *draw_data)
+{
+    if (draw_data->is_compressed) {
+        img->top_height = img->height;
+    } else if (img->top_height) {
+        int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+        int footprint_height = FOOTPRINT_HEIGHT * tiles;
+        img->top_height = img->height - footprint_height / 2 - 1;
+        // If we must separate the top from the footprint, we must increase the image height to account for the rows
+        // where there is both a top and a footprint part
+        if (!graphics_renderer()->isometric_images_are_joined()) {
+            img->height = img->top_height + footprint_height;
+        }
+    } else {
+        img->top_height = 0;
+    }
+}
+
+static int prepare_images(buffer *buf, image *images, image_draw_data *draw_datas, int size, atlas_type image_type)
+{
+    for (int i = 0; i < size; i++) {
+        read_index_entry(buf, &images[i], &draw_datas[i]);
+        if (!is_external(&images[i])) {
+            set_image_heights(&images[i], &draw_datas[i]);
+        }
+    }
+    if (image_type == ATLAS_MAIN) {
+        data.external_draw_data = malloc(data.total_external_images * sizeof(image_draw_data));
+        if (!data.external_draw_data) {
+            return 0;
+        }
+        memset(data.external_draw_data, 0, data.total_external_images * sizeof(image_draw_data));
+    }
+    return 1;
+}
+
+static void convert_compressed(buffer *buf, const image *img, int buf_length, color_t *dst, int dst_width);
+
+static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *draw_datas,
+    int num_images, atlas_type type)
+{
+    if (image_packer_init(&data.packer, num_images, data.max_image_width, data.max_image_height) != IMAGE_PACKER_OK) {
+        return 0;
+    }
+    data.packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
+    data.packer.options.reduce_image_size = 1;
+    data.packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
+
+    int offset = 4;
+    for (int i = 1; i < num_images; i++) {
+        image *img = &images[i];
+        image_draw_data *draw_data = &draw_datas[i];
+
+        if (is_external(img)) {
+            image_draw_data *external_data = &data.external_draw_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+            memcpy(external_data, draw_data, sizeof(image_draw_data));
+            if (!external_data->offset) {
+                external_data->offset = 1;
+            }
+        } else {
+            draw_data->offset = offset;
+            offset += draw_data->data_length;
+
+            if (!img->is_isometric && draw_data->is_compressed) {
+                draw_data->buffer = malloc(img->width * img->height * sizeof(color_t));
+                if (draw_data->buffer) {
+                    int reduce_width = type != ATLAS_FONT;
+                    if (type == ATLAS_MAIN) {
+                        reduce_width = i < image_group(GROUP_FONT) || i >= image_group(GROUP_FONT) + BASE_FONT_ENTRIES;
+                    }
+                    draw_data->original_width = img->width;
+                    memset(draw_data->buffer, 0, img->width * img->height * sizeof(color_t));
+                    buffer_set(buf, draw_data->offset);
+                    convert_compressed(buf, img, draw_data->data_length, draw_data->buffer, img->width);
+                    image_crop(img, draw_data->buffer, reduce_width);
+                }
+            }
+
+            image_packer_rect *rect = &data.packer.rects[i];
+            rect->input.width = img->width;
+            rect->input.height = img->height;
+        }
+    }
+
+    image_packer_pack(&data.packer);
+
+    for (int i = 0; i < num_images; i++) {
+        image *img = &images[i];
+        if (is_external(img)) {
+            continue;
+        }
+        image_packer_rect *rect = &data.packer.rects[i];
+        img->atlas.id = (type << IMAGE_ATLAS_BIT_OFFSET) + rect->output.image_index;
+        img->atlas.x_offset = rect->output.x;
+        img->atlas.y_offset = rect->output.y;
+    }
+    return 1;
+}
+
 static color_t to_32_bit(uint16_t c)
 {
     return ALPHA_OPAQUE |
@@ -220,124 +379,255 @@ static color_t to_32_bit(uint16_t c)
            ((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
 }
 
-static int convert_uncompressed(buffer *buf, int buf_length, color_t *dst)
+static void convert_uncompressed(buffer *buf, const image *img, color_t *dst, int dst_width)
 {
-    for (int i = 0; i < buf_length; i += 2) {
-        *dst = to_32_bit(buffer_read_u16(buf));
-        dst++;
+    for (int y = 0; y < img->height; y++) {
+        color_t *pixel = &dst[(img->atlas.y_offset + y) * dst_width + img->atlas.x_offset];
+        for (int x = 0; x < img->width; x++) {
+            color_t color = to_32_bit(buffer_read_u16(buf));
+            pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
+        }
     }
-    return buf_length / 2;
 }
 
-static int convert_compressed(buffer *buf, int buf_length, color_t *dst)
+static void copy_compressed(const image *img, image_draw_data *draw_data, color_t *dst, int dst_width)
 {
-    int dst_length = 0;
+    for (int y = 0; y < img->height; y++) {
+        memcpy(&dst[(img->atlas.y_offset + y) * dst_width + img->atlas.x_offset],
+            &((color_t *) draw_data->buffer)[(y + img->y_offset) * draw_data->original_width + img->x_offset],
+            img->width * sizeof(color_t));
+    }
+}
+
+static void convert_compressed(buffer *buf, const image *img, int buf_length, color_t *dst, int dst_width)
+{
+    int y = 0;
+    int x = 0;
     while (buf_length > 0) {
         int control = buffer_read_u8(buf);
         if (control == 255) {
             // next byte = transparent pixels to skip
-            *dst++ = 255;
-            *dst++ = buffer_read_u8(buf);
-            dst_length += 2;
+            int skip = buffer_read_u8(buf);
+            y += skip / img->width;
+            x += skip % img->width;
+            if (x >= img->width) {
+                y++;
+                x -= img->width;
+            }
             buf_length -= 2;
         } else {
             // control = number of concrete pixels
-            *dst++ = control;
             for (int i = 0; i < control; i++) {
-                *dst++ = to_32_bit(buffer_read_u16(buf));
+                dst[(y + img->atlas.y_offset) * dst_width + img->atlas.x_offset + x] = to_32_bit(buffer_read_u16(buf));
+                x++;
+                if (x >= img->width) {
+                    y++;
+                    x -= img->width;
+                }
             }
-            dst_length += control + 1;
             buf_length -= control * 2 + 1;
         }
     }
-    return dst_length;
 }
 
-static void convert_images(image *images, int size, buffer *buf, color_t *dst)
+static void convert_footprint_tile(buffer *buf, const image *img,
+    int x_offset, int y_offset, color_t *dst, int dst_width)
 {
-    color_t *start_dst = dst;
-    dst++; // make sure img->offset > 0
+    for (int y = 0; y < FOOTPRINT_HEIGHT; y++) {
+        int x_start = FOOTPRINT_X_START_PER_HEIGHT[y];
+        int x_max = FOOTPRINT_WIDTH - x_start;
+        for (int x = x_start; x < x_max; x++) {
+            dst[(y + y_offset + img->atlas.y_offset) * dst_width + img->atlas.x_offset + x + x_offset] =
+                to_32_bit(buffer_read_u16(buf));
+        }
+    }
+}
+
+static void convert_isometric_footprint(buffer *buf, const image *img, color_t *dst, int dst_width)
+{
+    int num_tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+    int x_start = (num_tiles - 1) * 30;
+    int y_offset;
+    
+    if (graphics_renderer()->isometric_images_are_joined()) {
+        y_offset = img->height - 30 * num_tiles;
+    } else {
+        y_offset = img->top_height;
+    }
+
+    for (int i = 0; i < num_tiles; i++) {
+        int x = -30 * i + x_start;
+        int y = FOOTPRINT_HALF_HEIGHT * i + y_offset;
+        for (int j = 0; j <= i; j++) {
+            convert_footprint_tile(buf, img, x, y, dst, dst_width);
+            x += 60;
+        }
+    }
+    for (int i = num_tiles - 2; i >= 0; i--) {
+        int x = -30 * i + x_start;
+        int y = FOOTPRINT_HALF_HEIGHT * (num_tiles * 2 - i - 2) + y_offset;
+        for (int j = 0; j <= i; j++) {
+            convert_footprint_tile(buf, img, x, y, dst, dst_width);
+            x += 60;
+        }
+    }
+}
+
+static void convert_images(image *images, image_draw_data *draw_datas, int size, buffer *buf,
+    const image_atlas_data *atlas_data)
+{
     for (int i = 0; i < size; i++) {
         image *img = &images[i];
-        if (img->draw.is_external) {
+        image_draw_data *draw_data = &draw_datas[i];
+        if (is_external(img)) {
             continue;
         }
-        buffer_set(buf, img->draw.offset);
-        int img_offset = (int) (dst - start_dst);
-        if (img->draw.is_fully_compressed) {
-            dst += convert_compressed(buf, img->draw.data_length, dst);
-        } else if (img->draw.has_compressed_part) { // isometric tile
-            dst += convert_uncompressed(buf, img->draw.uncompressed_length, dst);
-            dst += convert_compressed(buf, img->draw.data_length - img->draw.uncompressed_length, dst);
+        buffer_set(buf, draw_data->offset);
+        color_t *dst = atlas_data->buffers[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+        int dst_width = atlas_data->image_widths[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+        if (draw_data->is_compressed) {
+            if (draw_data->buffer) {
+                copy_compressed(img, draw_data, dst, dst_width);
+                free(draw_data->buffer);
+                draw_data->buffer = 0;
+            } else {
+                convert_compressed(buf, img, draw_data->data_length, dst, dst_width);
+            }
+        } else if (img->top_height) {
+            convert_isometric_footprint(buf, img, dst, dst_width);
+            convert_compressed(buf, img, draw_data->data_length - draw_data->uncompressed_length, dst, dst_width);
+        } else if (img->is_isometric) {
+            convert_isometric_footprint(buf, img, dst, dst_width);
         } else {
-            dst += convert_uncompressed(buf, img->draw.data_length, dst);
+            convert_uncompressed(buf, img, dst, dst_width);
         }
-        img->draw.offset = img_offset;
-        img->draw.uncompressed_length /= 2;
     }
 }
 
-static void load_empire(void)
+static void make_font_white(const image *img, const image_atlas_data *atlas_data)
 {
-    int size = io_read_file_into_buffer(EMPIRE_555, MAY_BE_LOCALIZED, data.tmp_data, EMPIRE_DATA_SIZE);
-    if (size != EMPIRE_DATA_SIZE / 2) {
-        log_error("unable to load empire data", EMPIRE_555, 0);
-        return;
+    color_t *pixels = atlas_data->buffers[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+    int width = atlas_data->image_widths[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+    pixels += img->atlas.y_offset * width + img->atlas.x_offset;
+    for (int y = 0; y < img->height; y++) {
+        for (int x = 0; x < img->width; x++) {
+            if ((pixels[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                pixels[x] |= 0x00ffffff;
+            }
+        }
+        pixels += width;
     }
-    buffer buf;
-    buffer_init(&buf, data.tmp_data, size);
-    convert_uncompressed(&buf, size, data.empire_data);
+}
+
+static void make_plain_fonts_white(const image *img_info, const image_atlas_data *atlas_data, int start_offset)
+{
+    int limit = font_definition_for(FONT_NORMAL_BLACK)->image_offset -
+        font_definition_for(FONT_NORMAL_PLAIN)->image_offset;
+    for (int i = 0; i < limit; i++) {
+        make_font_white(&img_info[i + start_offset], atlas_data);
+    }
+    int start_font_offset = start_offset + font_definition_for(FONT_LARGE_PLAIN)->image_offset;
+    limit = font_definition_for(FONT_LARGE_BLACK)->image_offset -
+        font_definition_for(FONT_LARGE_PLAIN)->image_offset;
+    for (int i = 0; i < limit; i++) {
+        make_font_white(&img_info[i + start_font_offset], atlas_data);
+    }
+    start_font_offset = start_offset + font_definition_for(FONT_SMALL_PLAIN)->image_offset;
+    limit = font_definition_for(FONT_NORMAL_GREEN)->image_offset -
+        font_definition_for(FONT_SMALL_PLAIN)->image_offset;
+    for (int i = 0; i < limit; i++) {
+        make_font_white(&img_info[i + start_font_offset], atlas_data);
+    }
 }
 
 int image_load_climate(int climate_id, int is_editor, int force_reload)
 {
-    if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload) {
+    if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload &&
+        graphics_renderer()->has_image_atlas(ATLAS_MAIN)) {
         return 1;
     }
+    graphics_renderer()->get_max_image_size(&data.max_image_width, &data.max_image_height);
+
+    free(data.external_draw_data);
+    data.total_external_images = 0;
 
     const char *filename_bmp = is_editor ? EDITOR_GRAPHICS_555[climate_id] : MAIN_GRAPHICS_555[climate_id];
     const char *filename_idx = is_editor ? EDITOR_GRAPHICS_SG2[climate_id] : MAIN_GRAPHICS_SG2[climate_id];
-
-    if (MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, MAY_BE_LOCALIZED, data.tmp_data, MAIN_INDEX_SIZE)) {
+    uint8_t *tmp_data = malloc(MAIN_DATA_SIZE * sizeof(uint8_t));
+    image_draw_data *draw_data = malloc(IMAGE_MAIN_ENTRIES * sizeof(image_draw_data));
+    if (!tmp_data || !draw_data || MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, MAY_BE_LOCALIZED, tmp_data, MAIN_INDEX_SIZE)) {
+        free(tmp_data);
+        free(draw_data);
         return 0;
     }
+    memset(data.main, 0, sizeof(data.main));
+    memset(draw_data, 0, IMAGE_MAIN_ENTRIES * sizeof(image_draw_data));
 
     buffer buf;
-    buffer_init(&buf, data.tmp_data, HEADER_SIZE);
+    buffer_init(&buf, tmp_data, HEADER_SIZE);
     read_header(&buf);
-    buffer_init(&buf, &data.tmp_data[HEADER_SIZE], ENTRY_SIZE * MAIN_ENTRIES);
-    read_index(&buf, data.main, MAIN_ENTRIES);
-
-    int data_size = io_read_file_into_buffer(filename_bmp, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
-    if (!data_size) {
+    buffer_init(&buf, &tmp_data[HEADER_SIZE], ENTRY_SIZE * IMAGE_MAIN_ENTRIES);
+    if (!prepare_images(&buf, data.main, draw_data, IMAGE_MAIN_ENTRIES, ATLAS_MAIN)) {
+        free(tmp_data);
+        free(draw_data);
         return 0;
     }
-    buffer_init(&buf, data.tmp_data, data_size);
-    convert_images(data.main, MAIN_ENTRIES, &buf, data.main_data);
+
+    int data_size = io_read_file_into_buffer(filename_bmp, MAY_BE_LOCALIZED, tmp_data, MAIN_DATA_SIZE);
+    if (!data_size) {
+        free(tmp_data);
+        free(draw_data);
+        free(data.external_draw_data);
+        data.external_draw_data = 0;
+        return 0;
+    }
+
+    buffer_init(&buf, tmp_data, data_size);
+    if (!crop_and_pack_images(&buf, data.main, draw_data, IMAGE_MAIN_ENTRIES, ATLAS_MAIN)) {
+        free(tmp_data);
+        free(draw_data);
+        free(data.external_draw_data);
+        data.external_draw_data = 0;
+        return 0;
+    }
+
+    const image_atlas_data *atlas_data = graphics_renderer()->prepare_image_atlas(ATLAS_MAIN,
+        data.packer.result.images_needed, data.packer.result.last_image_width, data.packer.result.last_image_height);
+    if (!atlas_data) {
+        image_packer_free(&data.packer);
+        free(tmp_data);
+        free(draw_data);
+        free(data.external_draw_data);
+        data.external_draw_data = 0;
+        return 0;
+    }
+
+    convert_images(data.main, draw_data, IMAGE_MAIN_ENTRIES, &buf, atlas_data);
+    free(draw_data);
+    free(tmp_data);
+    make_plain_fonts_white(data.main, atlas_data, image_group(GROUP_FONT));
     data.current_climate = climate_id;
     data.is_editor = is_editor;
+    assets_init(atlas_data->buffers, atlas_data->image_widths);
+    graphics_renderer()->create_image_atlas(atlas_data);
+    image_packer_free(&data.packer);
 
-    load_empire();
     return 1;
 }
 
 static void free_font_memory(void)
 {
+    graphics_renderer()->free_image_atlas(ATLAS_FONT);
     free(data.font);
-    free(data.font_data);
     data.font = 0;
-    data.font_data = 0;
     data.fonts_enabled = NO_EXTRA_FONT;
 }
 
-static int alloc_font_memory(int font_entries, int font_data_size)
+static int alloc_font_memory(int font_entries)
 {
     free_font_memory();
     data.font = (image*) malloc(font_entries * sizeof(image));
-    data.font_data = (color_t *) malloc(font_data_size);
-    if (!data.font || !data.font_data) {
-        free(data.font);
-        free(data.font_data);
+    if (!data.font) {
         return 0;
     }
     memset(data.font, 0, font_entries * sizeof(image));
@@ -346,259 +636,267 @@ static int alloc_font_memory(int font_entries, int font_data_size)
 
 static int load_cyrillic_fonts(void)
 {
-    if (!alloc_font_memory(CYRILLIC_FONT_ENTRIES, CYRILLIC_FONT_DATA_SIZE)) {
+    uint8_t *tmp_data = malloc(CYRILLIC_FONT_DATA_SIZE * sizeof(uint8_t));
+    image_draw_data *draw_data = malloc(CYRILLIC_FONT_ENTRIES * sizeof(image_draw_data));
+    if (!tmp_data || !draw_data || !alloc_font_memory(CYRILLIC_FONT_ENTRIES)) {
+        free(tmp_data);
+        free(draw_data);
         return 0;
     }
     if (CYRILLIC_FONT_INDEX_SIZE != io_read_file_part_into_buffer(CYRILLIC_FONTS_SG2, MAY_BE_LOCALIZED,
-        data.tmp_data, CYRILLIC_FONT_INDEX_SIZE, CYRILLIC_FONT_INDEX_OFFSET)) {
+        tmp_data, CYRILLIC_FONT_INDEX_SIZE, CYRILLIC_FONT_INDEX_OFFSET)) {
+        free_font_memory();
+        free(tmp_data);
+        free(draw_data);
         return 0;
     }
     buffer buf;
-    buffer_init(&buf, data.tmp_data, CYRILLIC_FONT_INDEX_SIZE);
-    read_index(&buf, data.font, CYRILLIC_FONT_ENTRIES);
-
-    int data_size = io_read_file_into_buffer(CYRILLIC_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
-    if (!data_size) {
+    buffer_init(&buf, tmp_data, CYRILLIC_FONT_INDEX_SIZE);
+    if (!prepare_images(&buf, data.font, draw_data, CYRILLIC_FONT_ENTRIES, ATLAS_FONT)) {
+        free_font_memory();
+        free(tmp_data);
+        free(draw_data);
         return 0;
     }
-    buffer_init(&buf, data.tmp_data, data_size);
-    convert_images(data.font, CYRILLIC_FONT_ENTRIES, &buf, data.font_data);
+
+    int data_size = io_read_file_into_buffer(CYRILLIC_FONTS_555, MAY_BE_LOCALIZED, tmp_data, CYRILLIC_FONT_DATA_SIZE);
+    if (!data_size) {
+        free_font_memory();
+        free(tmp_data);
+        free(draw_data);
+        return 0;
+    }
+
+    buffer_init(&buf, tmp_data, data_size);
+    if (!crop_and_pack_images(&buf, data.font, draw_data, CYRILLIC_FONT_ENTRIES, ATLAS_FONT)) {
+        free_font_memory();
+        free(tmp_data);
+        free(draw_data);
+        return 0;
+    }
+
+    const image_atlas_data *atlas_data = graphics_renderer()->prepare_image_atlas(ATLAS_FONT,
+        data.packer.result.images_needed, data.packer.result.last_image_width, data.packer.result.last_image_height);
+    if (!atlas_data) {
+        image_packer_free(&data.packer);
+        free_font_memory();
+        free(tmp_data);
+        free(draw_data);
+        return 0;
+    }
+
+    convert_images(data.font, draw_data, CYRILLIC_FONT_ENTRIES, &buf, atlas_data);
+    free(tmp_data);
+    free(draw_data);
+    make_plain_fonts_white(data.font, atlas_data, CYRILLIC_FONT_BASE_OFFSET);
+    graphics_renderer()->create_image_atlas(atlas_data);
+    image_packer_free(&data.packer);
 
     data.fonts_enabled = FULL_CHARSET_IN_FONT;
     data.font_base_offset = CYRILLIC_FONT_BASE_OFFSET;
     return 1;
 }
 
-static int parse_multibyte_font(
-    int num_chars, buffer *input, color_t *pixels, int pixel_offset,
-    int char_size, int letter_spacing, int index_offset)
+static void parse_4bit_multibyte_font(buffer *input, color_t *pixels, multibyte_font_sizes *font_size,
+    int letter_spacing, int num_chars, int offset)
 {
     for (int i = 0; i < num_chars; i++) {
-        image *img = &data.font[index_offset + i];
-        img->width = char_size + letter_spacing;
-        img->height = char_size;
-        img->draw.bitmap_id = 0;
-        img->draw.offset = pixel_offset;
-        img->draw.uncompressed_length = img->draw.data_length = char_size * char_size;
-        for (int row = 0; row < char_size; row++) {
+        color_t *letter = &pixels[i * font_size->width * font_size->height];
+        int y_first_opaque = font_size->height;
+        int y_last_opaque = -1;
+        for (int row = 0; row < font_size->height; row++) {
+            color_t *pixel = &letter[row * font_size->width];
             uint8_t bits = 0;
-            for (int col = 0; col < char_size; col++) {
+            for (int col = 0; col < font_size->width - letter_spacing; col++) {
                 if (col % 2 == 0) {
                     bits = buffer_read_u8(input);
                 }
                 uint8_t value = bits & 0xf;
-                if (value == 0) {
-                    *pixels = COLOR_SG2_TRANSPARENT;
-                } else {
+                if (value != 0) {
                     uint32_t color_value = (value * 16 + value);
-                    *pixels = color_value << 24;
+                    *pixel = (color_value << COLOR_BITSHIFT_ALPHA) | COLOR_CHANNEL_RGB;
+                    if (row < y_first_opaque) {
+                        y_first_opaque = row;
+                    }
+                    y_last_opaque = row;
                 }
-                pixels++;
-                pixel_offset++;
+                pixel++;
                 bits >>= 4;
             }
-            for (int s = 0; s < letter_spacing; s++) {
-                *pixels = COLOR_SG2_TRANSPARENT;
-                pixels++;
-                pixel_offset++;
-            }
         }
+        image *img = &data.font[offset + i];
+        img->width = font_size->width;
+        img->y_offset = y_first_opaque;
+        img->height = y_last_opaque - y_first_opaque + 1;
+
+        if (img->height < 0) {
+            img->height = 0;
+        }
+
+        image_packer_rect *rect = &data.packer.rects[offset + i];
+        rect->input.width = img->width;
+        rect->input.height = img->height;
     }
-    return pixel_offset;
 }
 
-static int parse_chinese_font(
-    int num_chars, buffer *input, color_t *pixels, int pixel_offset, int char_size, int index_offset)
+static void parse_1bit_multibyte_font(buffer *input, color_t *pixels, multibyte_font_sizes *font_size,
+    int letter_spacing, int num_chars, int offset)
 {
-    int bytes_per_row = char_size <= 16 ? 2 : 3;
+    int bytes_per_row = (font_size->width - 1) <= 16 ? 2 : 3;
+
     for (int i = 0; i < num_chars; i++) {
-        image *img = &data.font[index_offset + i];
-        img->width = char_size + 1;
-        img->height = char_size - 1;
-        img->draw.bitmap_id = 0;
-        img->draw.offset = pixel_offset;
-        img->draw.uncompressed_length = img->draw.data_length = img->width * img->height;
-        for (int row = 0; row < img->height; row++) {
+        color_t *letter = &pixels[i * font_size->width * font_size->height];
+        int y_first_opaque = font_size->height;
+        int y_last_opaque = -1;
+        for (int row = 0; row < font_size->height; row++) {
+            color_t *pixel = &letter[row * font_size->width];
             unsigned int bits = buffer_read_u16(input);
             if (bytes_per_row == 3) {
                 bits += buffer_read_u8(input) << 16;
             }
             int prev_set = 0;
-            for (int col = 0; col < img->width; col++) {
+            for (int col = 0; col < font_size->width - letter_spacing; col++) {
                 int set = bits & 1;
                 if (set) {
-                    *pixels = ALPHA_OPAQUE;
+                    if (row < y_first_opaque) {
+                        y_first_opaque = row;
+                    }
+                    y_last_opaque = row;
+                    *pixel = COLOR_WHITE;
                 } else if (prev_set) {
-                    *pixels = ALPHA_FONT_SEMI_TRANSPARENT;
-                } else {
-                    *pixels = COLOR_SG2_TRANSPARENT;
+                    *pixel = ALPHA_FONT_SEMI_TRANSPARENT;
                 }
-                pixels++;
-                pixel_offset++;
+                pixel++;
                 bits >>= 1;
                 prev_set = set;
             }
         }
+        image *img = &data.font[offset + i];
+        img->width = font_size->width;
+        img->y_offset = y_first_opaque;
+        img->height = y_last_opaque - y_first_opaque + 1;
+
+        if (img->height < 0) {
+            img->height = 0;
+        }
+
+        image_packer_rect *rect = &data.packer.rects[offset + i];
+        rect->input.width = img->width;
+        rect->input.height = img->height;
     }
-    return pixel_offset;
 }
 
-static int load_traditional_chinese_fonts(void)
+static int load_multibyte_font(multibyte_font_type type)
 {
-    if (!alloc_font_memory(TRAD_CHINESE_FONT_ENTRIES, TRAD_CHINESE_FONT_DATA_SIZE)) {
+    multibyte_font_data *font_info = &multibyte_font_info[type];
+
+    uint8_t *tmp_data = malloc(font_info->data_size * sizeof(uint8_t));
+    if (!tmp_data || !alloc_font_memory(font_info->entries)) {
+        free(tmp_data);
         return 0;
     }
 
+    log_info("Parsing multibyte font", font_info->name, 0);
+
     int file_version = 2;
-    int data_size = io_read_file_into_buffer(CHINESE_FONTS_555_V2, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    int data_size = io_read_file_into_buffer(font_info->file_v2, MAY_BE_LOCALIZED,
+        tmp_data, font_info->data_size);
     if (!data_size) {
         file_version = 1;
-        data_size = io_read_file_into_buffer(CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+        data_size = io_read_file_into_buffer(font_info->file_v1, MAY_BE_LOCALIZED,
+            tmp_data, font_info->data_size);
         if (!data_size) {
-            log_error("Julius requires extra files for Chinese characters:", CHINESE_FONTS_555_V2, 0);
+            free_font_memory();
+            free(tmp_data);
+            log_error("Julius requires extra files for the characters:", font_info->file_v2, 0);
             return 0;
         }
     }
 
     buffer input;
-    buffer_init(&input, data.tmp_data, data_size);
-    color_t *pixels = data.font_data;
-    int offset = 0;
-    int num_chars = IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS;
+    buffer_init(&input, tmp_data, data_size);
+    int num_chars = font_info->chars;
 
-    log_info("Parsing Traditional Chinese font", 0, 0);
-    if (file_version == 2) {
-        // 4-bit font file
-        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 12, 1, 0);
-        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 15, 1, num_chars);
-        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 20, 1, num_chars*2);
-    } else if (file_version == 1) {
-        // Old 1-bit font file
-        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 12, 0);
-        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 16, num_chars);
-        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 20, num_chars * 2);
+    if (image_packer_init(&data.packer, font_info->entries,
+        data.max_image_width, data.max_image_height) != IMAGE_PACKER_OK) {
+        free_font_memory();
+        free(tmp_data);
+        log_error("Internal error loading font", 0, 0);
+        return 0;
     }
-    log_info("Done parsing Traditional Chinese font", 0, 0);
+    data.packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
+    data.packer.options.reduce_image_size = 1;
+    data.packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
 
-    data.fonts_enabled = MULTIBYTE_IN_FONT;
-    data.font_base_offset = 0;
-    return 1;
-}
+    multibyte_font_sizes *font_sizes;
+    void (*parse_multibyte_font)(buffer * input, color_t * pixels, multibyte_font_sizes * font_size,
+        int letter_spacing, int num_chars, int offset);
+    if (file_version == 2) {
+        font_sizes = font_info->sizes.v2;
+        parse_multibyte_font = parse_4bit_multibyte_font;
+    } else {
+        font_sizes = font_info->sizes.v1;
+        parse_multibyte_font = parse_1bit_multibyte_font;
+    }
 
-static int load_simplified_chinese_fonts(void)
-{
-    if (!alloc_font_memory(TRAD_CHINESE_FONT_ENTRIES, TRAD_CHINESE_FONT_DATA_SIZE)) {
+    int font_data_size = (font_sizes[0].width * font_sizes[0].height + font_sizes[1].width * font_sizes[1].height +
+        font_sizes[2].width * font_sizes[2].height) * num_chars * sizeof(color_t);
+
+    color_t *font_data = malloc(font_data_size);
+    if (!font_data) {
+        image_packer_free(&data.packer);
+        free_font_memory();
+        free(tmp_data);
         return 0;
     }
 
-    int file_version = 2;
-    int data_size = io_read_file_into_buffer(CHINESE_FONTS_555_V2, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
-    if (!data_size) {
-        file_version = 1;
-        data_size = io_read_file_into_buffer(CHINESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
-        if (!data_size) {
-            log_error("Julius requires extra files for Chinese characters:", CHINESE_FONTS_555_V2, 0);
-            return 0;
-        }
+    memset(font_data, 0, font_data_size);
+    color_t *font_offset = font_data;
+    for (int i = 0; i < FONT_STYLES; i++) {
+        parse_multibyte_font(&input, font_offset, &font_sizes[i], font_info->letter_spacing, num_chars, num_chars * i);
+        font_offset += font_sizes[i].width * font_sizes[i].height * num_chars;
     }
 
-    buffer input;
-    buffer_init(&input, data.tmp_data, data_size);
-    color_t *pixels = data.font_data;
-    int offset = 0;
-    int num_chars = IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS;
-
-    log_info("Parsing Simplified Chinese font", 0, 0);
-    if (file_version == 2) {
-        // 4-bit font file
-        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 12, 1, 0);
-        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 15, 1, num_chars);
-        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 20, 1, num_chars*2);
-    } else if (file_version == 1) {
-        // Old 1-bit font file
-        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 12, 0);
-        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 16, num_chars);
-        offset = parse_chinese_font(num_chars, &input, &pixels[offset], offset, 19, num_chars * 2);
+    image_packer_pack(&data.packer);
+    const image_atlas_data *atlas_data = graphics_renderer()->prepare_image_atlas(ATLAS_FONT,
+        data.packer.result.images_needed, data.packer.result.last_image_width, data.packer.result.last_image_height);
+    if (!atlas_data) {
+        free(font_data);
+        image_packer_free(&data.packer);
+        free_font_memory();
+        free(tmp_data);
+        return 0;
     }
-    log_info("Done parsing Simplified Chinese font", 0, 0);
 
-    data.fonts_enabled = MULTIBYTE_IN_FONT;
-    data.font_base_offset = 0;
-    return 1;
-}
+    color_t *letter = font_data;
+    for (int i = 0; i < FONT_STYLES; i++) {
+        int offset = i * num_chars;
+        int original_height = font_sizes[i].height;
+        for (int j = 0; j < num_chars; j++) {
+            image *img = &data.font[offset + j];
+            image_packer_rect *rect = &data.packer.rects[offset + j];
+            img->atlas.id = (ATLAS_FONT << IMAGE_ATLAS_BIT_OFFSET) | rect->output.image_index;
+            img->atlas.x_offset = rect->output.x;
+            img->atlas.y_offset = rect->output.y;
 
-static int parse_korean_font(buffer *input, color_t *pixels, int pixel_offset, int char_size, int index_offset)
-{
-    int bytes_per_row = char_size <= 16 ? 2 : 3;
-    for (int i = 0; i < IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS; i++) {
-        image *img = &data.font[index_offset + i];
-        img->width = char_size;
-        img->height = char_size;
-        img->draw.bitmap_id = 0;
-        img->draw.offset = pixel_offset;
-        img->draw.uncompressed_length = img->draw.data_length = char_size * char_size;
-        for (int row = 0; row < char_size; row++) {
-            unsigned int bits = buffer_read_u16(input);
-            if (bytes_per_row == 3) {
-                bits += buffer_read_u8(input) << 16;
+            color_t *dst = atlas_data->buffers[rect->output.image_index];
+            int dst_width = atlas_data->image_widths[rect->output.image_index];
+
+            for (int y = 0; y < img->height; y++) {
+                memcpy(&dst[(img->atlas.y_offset + y) * dst_width + img->atlas.x_offset],
+                    &letter[(img->y_offset + y) * img->width], img->width * sizeof(color_t));
             }
-            int prev_set = 0;
-            for (int col = 0; col < char_size; col++) {
-                int set = bits & 1;
-                if (set) {
-                    *pixels = ALPHA_OPAQUE;
-                } else if (prev_set) {
-                    *pixels = ALPHA_FONT_SEMI_TRANSPARENT;
-                } else {
-                    *pixels = COLOR_SG2_TRANSPARENT;
-                }
-                pixels++;
-                pixel_offset++;
-                bits >>= 1;
-                prev_set = set;
-            }
-        }
-    }
-    return pixel_offset;
-}
-
-static int load_korean_fonts(void)
-{
-    if (!alloc_font_memory(KOREAN_FONT_ENTRIES, KOREAN_FONT_DATA_SIZE)) {
-        return 0;
-    }
-
-    int file_version = 2;
-    int data_size = io_read_file_into_buffer(KOREAN_FONTS_555_V2, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
-    if (!data_size) {
-        file_version = 1;
-        data_size = io_read_file_into_buffer(KOREAN_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
-        if (!data_size) {
-            log_error("Julius requires extra files for Korean characters:", KOREAN_FONTS_555, 0);
-            return 0;
+            letter += original_height * img->width;
         }
     }
 
-    buffer input;
-    buffer_init(&input, data.tmp_data, data_size);
-    color_t *pixels = data.font_data;
-    int offset = 0;
-    int num_chars = IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS;
+    graphics_renderer()->create_image_atlas(atlas_data);
 
-    log_info("Parsing Korean font", 0, 0);
-    if (file_version == 2) {
-        // 4-bit font file
-        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 12, 0, 0);
-        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 15, 0, num_chars);
-        offset = parse_multibyte_font(num_chars, &input, &pixels[offset], offset, 20, 0, num_chars*2);
-    } else if (file_version == 1) {
-        // Old 1-bit font file
-        offset = parse_korean_font(&input, &pixels[offset], offset, 12, 0);
-        offset = parse_korean_font(&input, &pixels[offset], offset, 15, num_chars);
-        offset = parse_korean_font(&input, &pixels[offset], offset, 20, num_chars * 2);
-    }
-    log_info("Done parsing Korean font", 0, 0);
+    log_info("Done parsing font", font_info->name, 0);
 
+    image_packer_free(&data.packer);
+    free(font_data);
+    free(tmp_data);
     data.fonts_enabled = MULTIBYTE_IN_FONT;
     data.font_base_offset = 0;
     return 1;
@@ -609,11 +907,11 @@ int image_load_fonts(encoding_type encoding)
     if (encoding == ENCODING_CYRILLIC) {
         return load_cyrillic_fonts();
     } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
-        return load_traditional_chinese_fonts();
+        return load_multibyte_font(MULTIBYTE_FONT_TRADITIONAL_CHINESE);
     } else if (encoding == ENCODING_SIMPLIFIED_CHINESE) {
-        return load_simplified_chinese_fonts();
+        return load_multibyte_font(MULTIBYTE_FONT_SIMPLIFIED_CHINESE);
     } else if (encoding == ENCODING_KOREAN) {
-        return load_korean_fonts();
+        return load_multibyte_font(MULTIBYTE_FONT_KOREAN);
     } else {
         free_font_memory();
         return 1;
@@ -622,59 +920,236 @@ int image_load_fonts(encoding_type encoding)
 
 int image_load_enemy(int enemy_id)
 {
+    if (enemy_id == data.current_enemy && graphics_renderer()->has_image_atlas(ATLAS_ENEMY)) {
+        return 1;
+    }
+
     const char *filename_bmp = ENEMY_GRAPHICS_555[enemy_id];
     const char *filename_idx = ENEMY_GRAPHICS_SG2[enemy_id];
 
-    if (ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(
-        filename_idx, MAY_BE_LOCALIZED, data.tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET)) {
+    memset(data.enemy, 0, sizeof(data.enemy));
+
+    uint8_t *tmp_data = malloc(ENEMY_DATA_SIZE * sizeof(uint8_t));
+    image_draw_data *draw_data = malloc(ENEMY_ENTRIES * sizeof(image_draw_data));
+
+    if (!tmp_data || ENEMY_INDEX_SIZE != io_read_file_part_into_buffer(
+        filename_idx, MAY_BE_LOCALIZED, tmp_data, ENEMY_INDEX_SIZE, ENEMY_INDEX_OFFSET)) {
+        free(tmp_data);
+        free(draw_data);
         return 0;
     }
 
     buffer buf;
-    buffer_init(&buf, data.tmp_data, ENEMY_INDEX_SIZE);
-    read_index(&buf, data.enemy, ENEMY_ENTRIES);
-
-    int data_size = io_read_file_into_buffer(filename_bmp, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
-    if (!data_size) {
+    buffer_init(&buf, tmp_data, ENEMY_INDEX_SIZE);
+    if (!prepare_images(&buf, data.enemy, draw_data, ENEMY_ENTRIES, ATLAS_ENEMY)) {
+        free(tmp_data);
+        free(draw_data);
         return 0;
     }
-    buffer_init(&buf, data.tmp_data, data_size);
-    convert_images(data.enemy, ENEMY_ENTRIES, &buf, data.enemy_data);
+
+    int data_size = io_read_file_into_buffer(filename_bmp, MAY_BE_LOCALIZED, tmp_data, ENEMY_DATA_SIZE);
+    if (!data_size) {
+        free(tmp_data);
+        free(draw_data);
+        return 0;
+    }
+
+    buffer_init(&buf, tmp_data, data_size);
+    if (!crop_and_pack_images(&buf, data.enemy, draw_data, ENEMY_ENTRIES, ATLAS_ENEMY)) {
+        free(tmp_data);
+        free(draw_data);
+        return 0;
+    }
+
+    const image_atlas_data *atlas_data = graphics_renderer()->prepare_image_atlas(ATLAS_ENEMY,
+        data.packer.result.images_needed, data.packer.result.last_image_width, data.packer.result.last_image_height);
+    if (!atlas_data) {
+        free(tmp_data);
+        free(draw_data);
+        image_packer_free(&data.packer);
+        return 0;
+    }
+
+    convert_images(data.enemy, draw_data, ENEMY_ENTRIES, &buf, atlas_data);
+    free(tmp_data);
+    free(draw_data);
+    data.current_enemy = enemy_id;
+    graphics_renderer()->create_image_atlas(atlas_data);
+    image_packer_free(&data.packer);
+
     return 1;
 }
 
-static const color_t *load_external_data(int image_id)
+int image_is_external(int image_id)
 {
-    image *img = &data.main[image_id];
+    return image_id < IMAGE_MAIN_ENTRIES && is_external(&data.main[image_id]);
+}
+
+static void release_external_buffers(void)
+{
+    for (int i = 0; i < data.total_external_images; i++) {
+        free(data.external_draw_data[i].buffer);
+        data.external_draw_data[i].buffer = 0;
+    }
+}
+
+int image_load_external_pixels(color_t *dst, int image_id, int row_width)
+{
+    const image *img = &data.main[image_id];
+    image_draw_data *draw_data = &data.external_draw_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
     char filename[FILE_NAME_MAX] = "555/";
-    strcpy(&filename[4], data.bitmaps[img->draw.bitmap_id]);
+    strcpy(&filename[4], data.bitmaps[draw_data->bitmap_id]);
     file_change_extension(filename, "555");
-    int size = io_read_file_part_into_buffer(
-        &filename[4], MAY_BE_LOCALIZED, data.tmp_data,
-        img->draw.data_length, img->draw.offset - 1
-    );
-    if (!size) {
-        // try in 555 dir
-        size = io_read_file_part_into_buffer(
-            filename, MAY_BE_LOCALIZED, data.tmp_data,
-            img->draw.data_length, img->draw.offset - 1
+    if (!draw_data->buffer) {
+        draw_data->buffer = malloc(draw_data->data_length * sizeof(uint8_t));
+        if (!draw_data->buffer) {
+            release_external_buffers();
+            draw_data->buffer = malloc(draw_data->data_length * sizeof(uint8_t));
+            if (!draw_data->buffer) {
+                log_error("unable to load external image - out of memory",
+                    data.bitmaps[draw_data->bitmap_id], image_id);
+                return 0;
+            }
+        }
+        int size = io_read_file_part_into_buffer(
+            &filename[4], MAY_BE_LOCALIZED, draw_data->buffer,
+            draw_data->data_length, draw_data->offset - 1
         );
         if (!size) {
-            log_error("unable to load external image",
-                      data.bitmaps[img->draw.bitmap_id], image_id);
-            return NULL;
+            // try in 555 dir
+            size = io_read_file_part_into_buffer(
+                filename, MAY_BE_LOCALIZED, draw_data->buffer,
+                draw_data->data_length, draw_data->offset - 1
+            );
+            if (!size) {
+                log_error("unable to load external image",
+                    data.bitmaps[draw_data->bitmap_id], image_id);
+                free(draw_data->buffer);
+                return 0;
+            }
         }
     }
     buffer buf;
-    buffer_init(&buf, data.tmp_data, size);
-    color_t *dst = (color_t*) &data.tmp_data[4000000];
+    buffer_init(&buf, draw_data->buffer, draw_data->data_length);
     // NB: isometric images are never external
-    if (img->draw.is_fully_compressed) {
-        convert_compressed(&buf, img->draw.data_length, dst);
+    if (draw_data->is_compressed) {
+        convert_compressed(&buf, img, draw_data->data_length, dst, row_width);
     } else {
-        convert_uncompressed(&buf, img->draw.data_length, dst);
+        convert_uncompressed(&buf, img, dst, row_width);
     }
-    return dst;
+    return 1;
+}
+
+void image_load_external_data(int image_id)
+{
+    if (data.external_image_id == image_id && graphics_renderer()->has_custom_image(CUSTOM_IMAGE_EXTERNAL)) {
+        return;
+    }
+    data.external_image_id = image_id;
+    const image *img = &data.main[image_id];
+    graphics_renderer()->create_custom_image(CUSTOM_IMAGE_EXTERNAL, img->width, img->height);
+    int row_width;
+    color_t *dst = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_EXTERNAL, &row_width);
+    if (!dst) {
+        return;
+    }
+    if (image_load_external_pixels(dst, image_id, row_width)) {
+        graphics_renderer()->update_custom_image(CUSTOM_IMAGE_EXTERNAL);
+    }
+    graphics_renderer()->release_custom_image_buffer(CUSTOM_IMAGE_EXTERNAL);
+}
+
+void image_crop(image *img, const color_t *pixels, int reduce_width)
+{
+    if (!img->width || !img->height) {
+        return;
+    }
+    int x_first_opaque = 0;
+    int x_last_opaque = 0;
+    int y_first_opaque = 0;
+    int y_last_opaque = 0;
+
+    int found_opaque = 0;
+
+    // Check all four sides of the rect
+    for (int y = 0; y < img->height; y++) {
+        const color_t *row = &pixels[y * img->width];
+        for (int x = 0; x < img->width; x++) {
+            if ((row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                y_first_opaque = y;
+                y_last_opaque = y;
+                if (reduce_width) {
+                    x_first_opaque = x;
+                    x_last_opaque = x;
+                }
+                found_opaque = 1;
+                break;
+            }
+        }
+        if (found_opaque) {
+            break;
+        }
+    }
+    if (!found_opaque) {
+        img->width = 0;
+        img->height = 0;
+        return;
+    }
+    found_opaque = 0;
+    for (int y = img->height - 1; y > y_last_opaque; y--) {
+        const color_t *row = &pixels[y * img->width];
+        for (int x = img->width - 1; x >= 0; x--) {
+            if ((row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                y_last_opaque = y;
+                if (reduce_width) {
+                    if (x_first_opaque > x) {
+                        x_first_opaque = x;
+                    }
+                    if (x_last_opaque < x) {
+                        x_last_opaque = x;
+                    }
+                }
+                found_opaque = 1;
+                break;
+            }
+        }
+        if (found_opaque) {
+            break;
+        }
+    }
+    if (reduce_width) {
+        found_opaque = 0;
+        for (int x = 0; x < x_first_opaque; x++) {
+            for (int y = y_first_opaque; y < y_last_opaque; y++) {
+                if ((pixels[y * img->width + x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                    x_first_opaque = x;
+                    found_opaque = 1;
+                    break;
+                }
+            }
+            if (found_opaque) {
+                break;
+            }
+        }
+        found_opaque = 0;
+        for (int x = img->width - 1; x > x_last_opaque; x--) {
+            for (int y = y_first_opaque; y < y_last_opaque; y++) {
+                if ((pixels[y * img->width + x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                    x_last_opaque = x;
+                    found_opaque = 1;
+                    break;
+                }
+            }
+            if (found_opaque) {
+                break;
+            }
+        }
+
+        img->x_offset = x_first_opaque;
+        img->width = x_last_opaque - x_first_opaque + 1;
+    }
+    img->y_offset = y_first_opaque;
+    img->height = y_last_opaque - y_first_opaque + 1;
 }
 
 int image_group(int group)
@@ -684,7 +1159,7 @@ int image_group(int group)
 
 const image *image_get(int id)
 {
-    if (id >= 0 && id < MAIN_ENTRIES) {
+    if (id >= 0 && id < IMAGE_MAIN_ENTRIES) {
         return &data.main[id];
     } else {
         return assets_get_image(id);
@@ -711,40 +1186,4 @@ const image *image_get_enemy(int id)
     } else {
         return NULL;
     }
-}
-
-const color_t *image_data(int id)
-{
-    if (id < 0 || id >= MAIN_ENTRIES) {
-        return assets_get_image_data(id);
-    }
-    if (!data.main[id].draw.is_external) {
-        return &data.main_data[data.main[id].draw.offset];
-    } else if (id == image_group(GROUP_EMPIRE_MAP)) {
-        return data.empire_data;
-    } else {
-        return load_external_data(id);
-    }
-}
-
-const color_t *image_data_letter(int letter_id)
-{
-    if (data.fonts_enabled == FULL_CHARSET_IN_FONT) {
-        return &data.font_data[data.font[data.font_base_offset + letter_id].draw.offset];
-    } else if (data.fonts_enabled == MULTIBYTE_IN_FONT && letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
-        return &data.font_data[data.font[data.font_base_offset + letter_id - IMAGE_FONT_MULTIBYTE_OFFSET].draw.offset];
-    } else if (letter_id < IMAGE_FONT_MULTIBYTE_OFFSET) {
-        int image_id = data.group_image_ids[GROUP_FONT] + letter_id;
-        return &data.main_data[data.main[image_id].draw.offset];
-    } else {
-        return NULL;
-    }
-}
-
-const color_t *image_data_enemy(int id)
-{
-    if (data.enemy[id].draw.offset > 0) {
-        return &data.enemy_data[data.enemy[id].draw.offset];
-    }
-    return NULL;
 }

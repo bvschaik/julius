@@ -64,7 +64,7 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons)
                 image_id += 3;
             }
         }
-        image_draw(image_id, x + btn->x_offset, y + btn->y_offset);
+        image_draw(image_id, x + btn->x_offset, y + btn->y_offset, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 

@@ -126,6 +126,7 @@ static void create_image_xml_line(FILE *xml_file, const asset_image *image)
         add_attribute_int(xml_file, "width", image->img.width);
         add_attribute_int(xml_file, "height", image->img.height);
     }
+    add_attribute_bool(xml_file, "isometric", image->img.is_isometric, "true");
     fprintf(xml_file, ">%s", FORMAT_NEWLINE);
 }
 
@@ -144,6 +145,7 @@ static void create_layer_xml_line(FILE *xml_file, const layer *l)
     add_attribute_enum(xml_file, "invert", l->invert, LAYER_INVERT, 3);
     add_attribute_enum(xml_file, "rotate", l->rotate, LAYER_ROTATE, 3);
     add_attribute_enum(xml_file, "part", l->part, LAYER_PART, 2);
+    add_attribute_bool(xml_file, "grayscale", l->grayscale, "true");
 
     fprintf(xml_file, "/>%s", FORMAT_NEWLINE);
 }
@@ -153,12 +155,12 @@ static void create_animation_xml_line(FILE *xml_file, const asset_image *image)
     fprintf(xml_file, "%s%s<animation", FORMAT_IDENT, FORMAT_IDENT);
 
     if (!image->has_frame_elements) {
-        add_attribute_int(xml_file, "frames", image->img.num_animation_sprites);
+        add_attribute_int(xml_file, "frames", image->img.animation.num_sprites);
     }
-    add_attribute_int(xml_file, "speed", image->img.animation_speed_id);
-    add_attribute_int(xml_file, "x", image->img.sprite_offset_x);
-    add_attribute_int(xml_file, "y", image->img.sprite_offset_y);
-    add_attribute_bool(xml_file, "reversible", image->img.animation_can_reverse, "true");
+    add_attribute_int(xml_file, "speed", image->img.animation.speed_id);
+    add_attribute_int(xml_file, "x", image->img.animation.sprite_offset_x);
+    add_attribute_int(xml_file, "y", image->img.animation.sprite_offset_y);
+    add_attribute_bool(xml_file, "reversible", image->img.animation.can_reverse, "true");
 
     fprintf(xml_file, "%s>%s", image->has_frame_elements ? "" : "/", FORMAT_NEWLINE);
 }
@@ -284,7 +286,7 @@ static void create_final_image(const image_packer *packer)
     }
 }
 
-static void save_final_image(const char *path)
+static void save_final_image(const char *path, unsigned int width, unsigned int height, const color_t *pixels)
 {
     png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
 
@@ -299,7 +301,7 @@ static void save_final_image(const char *path)
         return;
     }
     png_set_compression_level(png_ptr, 3);
-    unsigned int row_size = final_image_width * BYTES_PER_PIXEL;
+    unsigned int row_size = width * BYTES_PER_PIXEL;
 
     FILE *fp = fopen(path, "wb");
     if (!fp) {
@@ -315,18 +317,18 @@ static void save_final_image(const char *path)
         png_destroy_write_struct(&png_ptr, &info_ptr);
         return;
     }
-    png_set_IHDR(png_ptr, info_ptr, final_image_width, final_image_height, 8, PNG_COLOR_TYPE_RGBA,
+    png_set_IHDR(png_ptr, info_ptr, width, height, 8, PNG_COLOR_TYPE_RGBA,
         PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
     png_write_info(png_ptr, info_ptr);
 
-    uint8_t *row_pixels = malloc(final_image_width * BYTES_PER_PIXEL);
+    uint8_t *row_pixels = malloc(width * BYTES_PER_PIXEL);
     if (!row_pixels) {
         log_error("Out of memory for png creation", path, 0);
         fclose(fp);
         png_destroy_write_struct(&png_ptr, &info_ptr);
         return;
     }
-    memset(row_pixels, 0, final_image_width * BYTES_PER_PIXEL);
+    memset(row_pixels, 0, width * BYTES_PER_PIXEL);
 
     if (setjmp(png_jmpbuf(png_ptr))) {
         log_error("Error constructing png file", path, 0);
@@ -335,10 +337,10 @@ static void save_final_image(const char *path)
         png_destroy_write_struct(&png_ptr, &info_ptr);
         return;
     }
-    for (unsigned int y = 0; y < final_image_height; ++y) {
+    for (unsigned int y = 0; y < height; ++y) {
         uint8_t *pixel = row_pixels;
-        for (unsigned int x = 0; x < final_image_width; x++) {
-            color_t input = final_image_pixels[y * final_image_width + x];
+        for (unsigned int x = 0; x < width; x++) {
+            color_t input = pixels[y * width + x];
             *(pixel + 0) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_RED);
             *(pixel + 1) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_GREEN);
             *(pixel + 2) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_BLUE);
@@ -353,7 +355,6 @@ static void save_final_image(const char *path)
     fclose(fp);
     png_destroy_write_struct(&png_ptr, &info_ptr);
 }
-
 
 static void pack_layer(const image_packer *packer, layer *l)
 {
@@ -461,10 +462,10 @@ static void pack_group(int group_id)
             pack_layer(&packer, l);
             create_layer_xml_line(xml_dest, l);
         }
-        if (image->img.num_animation_sprites) {
+        if (image->img.animation.num_sprites) {
             create_animation_xml_line(xml_dest, image);
             if (image->has_frame_elements) {
-                for (int i = 0; i < image->img.num_animation_sprites; i++) {
+                for (int i = 0; i < image->img.animation.num_sprites; i++) {
                     image_id++;
                     asset_image *frame = asset_image_get_from_id(image_id);
                     layer *l = frame->last_layer;
@@ -491,7 +492,7 @@ static void pack_group(int group_id)
 
     log_info("Creating png file...", 0, 0);
 
-    save_final_image(current_file);
+    save_final_image(current_file, final_image_width, final_image_height, final_image_pixels);
 
     free(final_image_pixels);
 }
@@ -534,16 +535,17 @@ static void pack_cursors(void)
                 image_packer_free(&packer);
                 return;
             }
-            cursor->data = malloc(cursor->width * cursor->height * sizeof(color_t));
-            if (!cursor->data) {
+            color_t *data = malloc(cursor->width * cursor->height * sizeof(color_t));
+            if (!data) {
                 log_error("Out of memory.", 0, 0);
                 image_packer_free(&packer);
                 return;
             }
-            png_read(cursor->asset_image_path, cursor->data, 0, 0,
+            png_read(cursor->asset_image_path, data, 0, 0,
                 cursor->width, cursor->height, 0, 0, cursor->width, 0);
             packer.rects[index].input.width = cursor->width;
             packer.rects[index].input.height = cursor->height;
+            cursor->data = data;
         }
     }
 
@@ -574,7 +576,7 @@ static void pack_cursors(void)
 
     snprintf(current_file, FILE_NAME_MAX, "%s/%s.png", PACKED_ASSETS_DIR, CURSORS_DIR);
 
-    save_final_image(current_file);
+    save_final_image(current_file, final_image_width, final_image_height, final_image_pixels);
 
     free(final_image_pixels);
 

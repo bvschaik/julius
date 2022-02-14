@@ -35,6 +35,7 @@ static struct {
 
     int image_id_water_first;
     int image_id_water_last;
+    float scale;
 } draw_context;
 
 static void init_draw_context(void)
@@ -47,13 +48,14 @@ static void init_draw_context(void)
     }
     draw_context.image_id_water_first = image_group(GROUP_TERRAIN_WATER);
     draw_context.image_id_water_last = 5 + draw_context.image_id_water_first;
+    draw_context.scale = city_view_get_scale() / 100.0f;
 }
 
 static void draw_footprint(int x, int y, int grid_offset)
 {
     if (grid_offset < 0) {
         // Outside map: draw black tile
-        image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_BLACK), x, y, 0);
+        image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_BLACK), x, y, 0, draw_context.scale);
     } else if (map_property_is_draw_tile(grid_offset)) {
         // Valid grid_offset and leftmost tile -> draw
         color_t color_mask = 0;
@@ -67,7 +69,7 @@ static void draw_footprint(int x, int y, int grid_offset)
             }
             map_image_set(grid_offset, image_id);
         }
-        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask);
+        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask, draw_context.scale);
     }
 }
 
@@ -78,7 +80,7 @@ static void draw_top(int x, int y, int grid_offset)
     }
     int image_id = map_image_at(grid_offset);
     color_t color_mask = 0;
-    image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask);
+    image_draw_isometric_top_from_draw_tile(image_id, x, y, color_mask, draw_context.scale);
 }
 
 static void draw_flags(int x, int y, int grid_offset)
@@ -87,16 +89,16 @@ static void draw_flags(int x, int y, int grid_offset)
     while (figure_id) {
         figure *f = figure_get(figure_id);
         if (!f->is_ghost) {
-            city_draw_figure(f, x, y, 0);
+            city_draw_figure(f, x, y, draw_context.scale, 0);
         }
         figure_id = f->next_figure_id_on_same_tile;
     }
 }
 
-static void set_city_scaled_clip_rectangle(void)
+static void set_city_clip_rectangle(void)
 {
     int x, y, width, height;
-    city_view_get_scaled_viewport(&x, &y, &width, &height);
+    city_view_get_viewport(&x, &y, &width, &height);
     graphics_set_clip_rectangle(x, y, width, height);
 }
 
@@ -114,18 +116,13 @@ static void update_zoom_level(void)
 
 void widget_map_editor_draw(void)
 {
-    if (config_get(CONFIG_UI_ZOOM)) {
-        update_zoom_level();
-        graphics_set_active_canvas(CANVAS_CITY);
-    }
-    set_city_scaled_clip_rectangle();
+    update_zoom_level();
+    set_city_clip_rectangle();
 
     init_draw_context();
     city_view_foreach_map_tile(draw_footprint);
     city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
     map_editor_tool_draw(&data.current_tile);
-
-    graphics_set_active_canvas(CANVAS_UI);
 }
 
 static void update_city_view_coords(int x, int y, map_tile *tile)
@@ -153,7 +150,7 @@ static void scroll_map(const mouse *m)
 static int input_coords_in_map(int x, int y)
 {
     int x_offset, y_offset, width, height;
-    city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
+    city_view_get_viewport(&x_offset, &y_offset, &width, &height);
 
     x -= x_offset;
     y -= y_offset;
@@ -166,7 +163,7 @@ static void handle_touch_scroll(const touch *t)
     if (editor_tool_is_active()) {
         if (t->has_started) {
             int x_offset, y_offset, width, height;
-            city_view_get_unscaled_viewport(&x_offset, &y_offset, &width, &height);
+            city_view_get_viewport(&x_offset, &y_offset, &width, &height);
             scroll_set_custom_margins(x_offset, y_offset, width, height);
         }
         if (t->has_ended) {
@@ -223,7 +220,7 @@ static int handle_cancel_construction_button(const touch *t)
         return 0;
     }
     int x, y, width, height;
-    city_view_get_unscaled_viewport(&x, &y, &width, &height);
+    city_view_get_viewport(&x, &y, &width, &height);
     int box_size = 5 * BLOCK_SIZE;
     width -= box_size;
 

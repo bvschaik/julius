@@ -34,8 +34,7 @@ static struct {
     int y;
     int width;
     int height;
-    int buffer_size;
-    color_t *buffer;
+    int buffer_id;
 } button_tooltip_info;
 
 static void reset_timer(void)
@@ -69,10 +68,9 @@ static void reset_tooltip(tooltip_context *c)
 static void restore_window_under_tooltip_from_buffer(void)
 {
     if (button_tooltip_info.is_active) {
-        graphics_draw_from_buffer(
+        graphics_draw_from_texture(button_tooltip_info.buffer_id,
             button_tooltip_info.x, button_tooltip_info.y,
-            button_tooltip_info.width, button_tooltip_info.height,
-            button_tooltip_info.buffer);
+            button_tooltip_info.width, button_tooltip_info.height);
     }
 }
 
@@ -89,13 +87,7 @@ static void save_window_under_tooltip_to_buffer(int x, int y, int width, int hei
     button_tooltip_info.y = y;
     button_tooltip_info.width = width;
     button_tooltip_info.height = height;
-    int buffer_size = width * height;
-    if (buffer_size > button_tooltip_info.buffer_size) {
-        button_tooltip_info.buffer_size = buffer_size;
-        free(button_tooltip_info.buffer);
-        button_tooltip_info.buffer = (color_t *)malloc(buffer_size * sizeof(color_t));
-    }
-    graphics_save_to_buffer(x, y, width, height, button_tooltip_info.buffer);
+    button_tooltip_info.buffer_id = graphics_save_to_texture(button_tooltip_info.buffer_id, x, y, width, height);
 }
 
 static const uint8_t *get_tooltip_text(const tooltip_context *c)

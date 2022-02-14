@@ -17,10 +17,10 @@ static void init(void)
 
 static void draw_background(void)
 {
-    graphics_clear_screens();
+    graphics_clear_screen();
 
     graphics_in_dialog();
-    image_draw(image_group(GROUP_LOGO), 0, 0);
+    image_draw(image_group(GROUP_LOGO), 0, 0, COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw_centered_colored(13, 7, 160, 462, 320, FONT_NORMAL_PLAIN, COLOR_WHITE);
     graphics_reset_dialog();
 }

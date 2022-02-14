@@ -30,27 +30,6 @@ void system_resize(int width, int height);
 void system_get_max_resolution(int *width, int *height);
 
 /**
- * Reload game textures
- * @return 0 if there was a problem reloading the textures, 1 otherwise
- */
-int system_reload_textures(void);
-
-/**
- * Get the maximum allowed zoom
- * @param width The width to check the zoom
- * @param height The height to check the zoom
- * @return The maximum allowed zoom, truncated between 100 and 200
- */
-int system_get_max_zoom(int width, int height);
-
-/**
- * Saves the screen buffer to memory
- * Even though it is set to "void", uses "color_t" format
- * @return true if saving was successful, false otherwise
- */
-int system_save_screen_buffer(void *pixels);
-
-/**
  * Center window
  */
 void system_center(void);
@@ -171,23 +150,6 @@ void system_move_mouse_cursor(int delta_x, int delta_y);
  * changed to fit in the window
  */
 void system_set_mouse_position(int *x, int *y);
-
-/**
- * Creates a ui framebuffer
- * @return The ui framebuffer
- */
-color_t *system_create_ui_framebuffer(int width, int height);
-
-/**
- * Creates a city framebuffer
- * @return The city framebuffer
- */
-color_t *system_create_city_framebuffer(int width, int height);
-
-/**
- * Releases the city framebuffer
- */
-void system_release_city_framebuffer(void);
 
 /**
  * Sets up the crash handler

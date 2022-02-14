@@ -78,10 +78,6 @@ static int is_unpatched(void)
 
 int game_init(void)
 {
-    if (!image_init()) {
-        errlog("unable to init graphics");
-        return 0;
-    }
     if (!image_load_climate(CLIMATE_CENTRAL, 0, 1)) {
         errlog("unable to load main graphics");
         return 0;
@@ -105,7 +101,6 @@ int game_init(void)
         return 0;
     }
 
-    assets_init();
     init_augustus_building_properties();
     load_custom_messages();
     sound_system_init();
