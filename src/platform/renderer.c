@@ -89,7 +89,7 @@ static struct {
     } unpacked_images[MAX_UNPACKED_IMAGES];
     graphics_renderer_interface renderer_interface;
 #ifdef USE_RENDER_GEOMETRY
-    SDL_ScaleMode city_scale_mode;
+    float city_scale;
 #endif
 } data;
 
@@ -492,16 +492,15 @@ static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
 
 static void set_texture_scale_mode(SDL_Texture *texture, float scale)
 {
-#ifdef USE_RENDER_GEOMETRY
-    if (HAS_RENDER_GEOMETRY) {
-        SDL_ScaleMode current_scale_mode;
-        SDL_GetTextureScaleMode(texture, &current_scale_mode);
-        SDL_ScaleMode desired_scale_mode = data.city_scale_mode;
-        if (current_scale_mode != desired_scale_mode) {
-            SDL_SetTextureScaleMode(texture, desired_scale_mode);
-        }
+    SDL_ScaleMode current_scale_mode;
+    SDL_GetTextureScaleMode(texture, &current_scale_mode);
+    SDL_ScaleMode city_scale_mode = (HAS_RENDER_GEOMETRY && data.city_scale > 2.0f) ?
+        SDL_ScaleModeLinear : SDL_ScaleModeNearest;
+    SDL_ScaleMode texture_scale_mode = scale != 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
+    SDL_ScaleMode desired_scale_mode = data.city_scale == scale ? city_scale_mode : texture_scale_mode;
+    if (current_scale_mode != desired_scale_mode) {
+        SDL_SetTextureScaleMode(texture, desired_scale_mode);
     }
-#endif
 }
 
 static void draw_texture(const image *img, int x, int y, color_t color, float scale)
@@ -909,9 +908,7 @@ static int isometric_images_are_joined(void)
 
 static void update_scale_mode(int city_scale)
 {
-#ifdef USE_RENDER_GEOMETRY
-    data.city_scale_mode = city_scale <= 200 ? SDL_ScaleModeNearest : SDL_ScaleModeLinear;
-#endif
+    data.city_scale = city_scale / 100.0f;
 }
 
 static void create_renderer_interface(void)
