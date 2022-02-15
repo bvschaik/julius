@@ -35,13 +35,13 @@
 // On the arm versions of android, for some reason, atlas textures that are too large will make the renderer fetch
 // some images from the atlas with an off-by-one pixel, making things look terrible. Defining a smaller atlas texture
 // prevents the problem, at the cost of performance due to the extra texture context switching.
-#define ANDROID_MAX_TEXTURE_SIZE 1024
+#define MAX_TEXTURE_SIZE 1024
 #endif
 
 #ifdef __vita__
 // On Vita, due to the small amount of VRAM, having textures that are too large will cause the game to eventually crash
 // when changing climates, due to lack of contiguous memory space. Creating smaller atlases mitigates the issue
-#define VITA_MAX_TEXTURE_SIZE 2048
+#define MAX_TEXTURE_SIZE 2048
 #endif
 
 typedef struct buffer_texture {
@@ -86,7 +86,7 @@ static struct {
         int id;
         time_millis last_used;
         SDL_Texture *texture;
-    } unpacked_assets[MAX_UNPACKED_IMAGES];
+    } unpacked_images[MAX_UNPACKED_IMAGES];
     graphics_renderer_interface renderer_interface;
 #ifdef USE_RENDER_GEOMETRY
     SDL_ScaleMode city_scale_mode;
@@ -336,6 +336,7 @@ static void free_all_textures(void)
             memset(&data.custom_textures[i].img, 0, sizeof(image));
         }
     }
+
     buffer_texture *texture_info = data.texture_buffers.first;
     while (texture_info) {
         buffer_texture *current = texture_info;
@@ -346,6 +347,13 @@ static void free_all_textures(void)
     data.texture_buffers.first = 0;
     data.texture_buffers.last = 0;
     data.texture_buffers.current_id = 0;
+
+    for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
+        if (data.unpacked_images[i].texture) {
+            SDL_DestroyTexture(data.unpacked_images[i].texture);
+        }
+    }
+    memset(data.unpacked_images, 0, sizeof(data.unpacked_images));
 }
 
 static SDL_Texture *get_texture(int texture_id)
@@ -358,8 +366,8 @@ static SDL_Texture *get_texture(int texture_id)
     } else if (type == ATLAS_UNPACKED_EXTRA_ASSET) {
         int unpacked_asset_id = texture_id & IMAGE_ATLAS_BIT_MASK;
         for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
-            if (data.unpacked_assets[i].id == unpacked_asset_id && data.unpacked_assets[i].texture) {
-                return data.unpacked_assets[i].texture;
+            if (data.unpacked_images[i].id == unpacked_asset_id && data.unpacked_images[i].texture) {
+                return data.unpacked_images[i].texture;
             }
         }
         return 0;
@@ -837,17 +845,17 @@ static int has_custom_texture(custom_image_type type)
 
 static void load_unpacked_image(const image *img, const color_t *pixels)
 {
-    int unpacked_asset_id = img->atlas.id & IMAGE_ATLAS_BIT_MASK;
+    int unpacked_image_id = img->atlas.id & IMAGE_ATLAS_BIT_MASK;
     int first_empty = -1;
     int oldest_texture_index = 0;
     for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
-        if (data.unpacked_assets[i].id == unpacked_asset_id && data.unpacked_assets[i].texture) {
+        if (data.unpacked_images[i].id == unpacked_image_id && data.unpacked_images[i].texture) {
             return;
         }
-        if (first_empty == -1 && !data.unpacked_assets[i].texture) {
+        if (first_empty == -1 && !data.unpacked_images[i].texture) {
             first_empty = i;
         }
-        if (data.unpacked_assets[oldest_texture_index].last_used < data.unpacked_assets[i].last_used) {
+        if (data.unpacked_images[oldest_texture_index].last_used < data.unpacked_images[i].last_used) {
             oldest_texture_index = i;
         }
     }
@@ -859,20 +867,20 @@ static void load_unpacked_image(const image *img, const color_t *pixels)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for texture. Reason: %s", SDL_GetError());
         return;
     }
-    data.unpacked_assets[index].last_used = time_get_millis();
-    data.unpacked_assets[index].id = unpacked_asset_id;
+    data.unpacked_images[index].last_used = time_get_millis();
+    data.unpacked_images[index].id = unpacked_image_id;
 
-    if (data.unpacked_assets[index].texture) {
-        SDL_DestroyTexture(data.unpacked_assets[index].texture);
-        data.unpacked_assets[index].texture = 0;
+    if (data.unpacked_images[index].texture) {
+        SDL_DestroyTexture(data.unpacked_images[index].texture);
+        data.unpacked_images[index].texture = 0;
     }
-    data.unpacked_assets[index].texture = SDL_CreateTextureFromSurface(data.renderer, surface);
-    while (!data.unpacked_assets[index].texture) {
+    data.unpacked_images[index].texture = SDL_CreateTextureFromSurface(data.renderer, surface);
+    while (!data.unpacked_images[index].texture) {
         int oldest_texture_index = -1;
         for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
-            if (data.unpacked_assets[i].texture &&
+            if (data.unpacked_images[i].texture &&
                 (oldest_texture_index == -1 ||
-                data.unpacked_assets[oldest_texture_index].last_used < data.unpacked_assets[i].last_used)) {
+                data.unpacked_images[oldest_texture_index].last_used < data.unpacked_images[i].last_used)) {
                 oldest_texture_index = i;
             }
         }
@@ -881,11 +889,11 @@ static void load_unpacked_image(const image *img, const color_t *pixels)
             SDL_FreeSurface(surface);
             return;
         }
-        SDL_DestroyTexture(data.unpacked_assets[oldest_texture_index].texture);
-        data.unpacked_assets[oldest_texture_index].texture = 0;
-        data.unpacked_assets[index].texture = SDL_CreateTextureFromSurface(data.renderer, surface);
+        SDL_DestroyTexture(data.unpacked_images[oldest_texture_index].texture);
+        data.unpacked_images[oldest_texture_index].texture = 0;
+        data.unpacked_images[index].texture = SDL_CreateTextureFromSurface(data.renderer, surface);
     }
-    SDL_SetTextureBlendMode(data.unpacked_assets[index].texture, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureBlendMode(data.unpacked_images[index].texture, SDL_BLENDMODE_BLEND);
     SDL_FreeSurface(surface);
 }
 
@@ -968,21 +976,12 @@ int platform_renderer_init(SDL_Window *window)
         data.max_texture_size.height = info.max_texture_height;
     }
 
-#ifdef __ANDROID__
-    if (data.max_texture_size.width > ANDROID_MAX_TEXTURE_SIZE) {
-        data.max_texture_size.width = ANDROID_MAX_TEXTURE_SIZE;
+#ifdef MAX_TEXTURE_SIZE
+    if (data.max_texture_size.width > MAX_TEXTURE_SIZE) {
+        data.max_texture_size.width = MAX_TEXTURE_SIZE;
     }
-    if (data.max_texture_size.height > ANDROID_MAX_TEXTURE_SIZE) {
-        data.max_texture_size.height = ANDROID_MAX_TEXTURE_SIZE;
-    }
-#endif
-
-#ifdef __vita__
-    if (data.max_texture_size.width > VITA_MAX_TEXTURE_SIZE) {
-        data.max_texture_size.width = VITA_MAX_TEXTURE_SIZE;
-    }
-    if (data.max_texture_size.height > VITA_MAX_TEXTURE_SIZE) {
-        data.max_texture_size.height = VITA_MAX_TEXTURE_SIZE;
+    if (data.max_texture_size.height > MAX_TEXTURE_SIZE) {
+        data.max_texture_size.height = MAX_TEXTURE_SIZE;
     }
 #endif
 

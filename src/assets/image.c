@@ -15,7 +15,6 @@
 #include <string.h>
 
 #define ASSET_ARRAY_SIZE 2000
-#define IMAGES_IN_RAM_ARRAY_SIZE 32
 
 static array(asset_image) asset_images;
 
