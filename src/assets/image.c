@@ -96,14 +96,14 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
         if (l->rotate == ROTATE_NONE || l->rotate == ROTATE_180_DEGREES) {
             image_start_x = l->x_offset < 0 ? 0 : l->x_offset;
             image_start_y = l->y_offset < 0 ? 0 : l->y_offset;
-            image_valid_width = l->width - (l->x_offset < 0 ? -l->x_offset : 0);
-            image_valid_height = l->height - (l->y_offset < 0 ? -l->y_offset : 0);
+            image_valid_width = image_start_x + l->width - (l->x_offset < 0 ? -l->x_offset : 0);
+            image_valid_height = image_start_y + l->height - (l->y_offset < 0 ? -l->y_offset : 0);
             layer_step_x = 1;
         } else {
             image_start_x = l->x_offset < 0 ? 0 : l->x_offset;
             image_start_y = l->y_offset < 0 ? 0 : l->y_offset;
-            image_valid_width = l->height - (l->y_offset < 0 ? -l->y_offset : 0);
-            image_valid_height = l->width - (l->x_offset < 0 ? -l->x_offset : 0);
+            image_valid_width = image_start_y + l->height - (l->y_offset < 0 ? -l->y_offset : 0);
+            image_valid_height = image_start_x + l->width - (l->x_offset < 0 ? -l->x_offset : 0);
             layer_step_x = l->width;
         }
         if (image_valid_width > img->img.width) {

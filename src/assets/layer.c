@@ -223,9 +223,6 @@ const color_t *layer_get_color_for_image_position(const layer *l, int x, int y)
     if (invert & INVERT_VERTICAL) {
         y = l->height - y - 1;
     }
-    if (x < 0 || x >= l->width || y < 0 || y >= l->height) {
-        return ALPHA_TRANSPARENT;
-    }
     return &l->data[y * l->width + x];
 }
 
