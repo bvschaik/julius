@@ -173,9 +173,11 @@ void layer_load(layer *l, color_t **main_data, int *main_image_widths)
         load_dummy_layer(l);
         return;
     }
+#ifndef BUILDING_ASSET_PACKER
     if (l->grayscale) {
         convert_layer_to_grayscale(data, l->width, l->height);
     }
+#endif
 
     l->data = data;
 }
