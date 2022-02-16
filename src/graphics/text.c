@@ -387,6 +387,46 @@ int text_draw_number(int value, char prefix, const char *postfix, int x, int y, 
     return text_draw_number_scaled(value, prefix, postfix, x, y, font, color, SCALE_NONE);
 }
 
+void text_draw_number_finances(int value, int x, int y, font_t font, color_t color)
+{
+    const font_definition *def = font_definition_for(font);
+    int number_width = 10;
+    int current_x = x - number_width;
+
+    uint8_t buffer[NUMBER_BUFFER_LENGTH];
+    int length = string_from_int(buffer, value, 0);
+    uint8_t *str = &buffer[length - 1];
+    int inverted_length = 0;
+
+    int separator_pixels = config_get(CONFIG_UI_DIGIT_SEPARATOR) * 4;
+
+    while (length > 0) {
+        int num_bytes = 1;
+
+        if (*str >= ' ') {
+            int letter_id = font_letter_id(def, str, &num_bytes);
+            int width;
+            if (*str == ' ' || *str == '_' || letter_id < 0) {
+                width = def->space_width;
+            } else {
+                if (*str != '-') {
+                    current_x -= !(inverted_length % 3) ? separator_pixels : 0;
+                }
+                const image *img = image_letter(letter_id);
+                int height = def->image_y_offset(*str, img->height + img->y_offset, def->line_height);
+                image_draw_letter(def->font, letter_id, current_x + (number_width - img->width) / 2, y - height, color, SCALE_NONE);
+                width = def->letter_spacing + img->width;
+            }
+
+            current_x -= number_width;
+        }
+
+        str--;
+        length--;
+        inverted_length++;
+    }
+}
+
 int text_draw_money(int value, int x_offset, int y_offset, font_t font)
 {
     const uint8_t *postfix;
