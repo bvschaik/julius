@@ -853,6 +853,7 @@ static void load_unpacked_image(const image *img, const color_t *pixels)
         }
         if (first_empty == -1 && !data.unpacked_images[i].texture) {
             first_empty = i;
+            break;
         }
         if (data.unpacked_images[oldest_texture_index].last_used < data.unpacked_images[i].last_used) {
             oldest_texture_index = i;

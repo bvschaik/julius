@@ -57,6 +57,22 @@ static void copy_isometric_image(layer *l, color_t *dst, const image *img, const
     }
 }
 
+static void convert_layer_to_grayscale(color_t *pixels, int width, int height)
+{
+    for (int y = 0; y < height; y++) {
+        color_t *color = &pixels[y * width];
+        for (int x = 0; x < width; x++) {
+            color_t r = (*color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
+            color_t g = (*color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN;
+            color_t b = (*color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE;
+            color_t gray = (r + g + b) / 3;
+            *color = (*color & COLOR_CHANNEL_ALPHA) | (gray << COLOR_BITSHIFT_RED) |
+                (gray << COLOR_BITSHIFT_GREEN) | (gray << COLOR_BITSHIFT_BLUE);
+            color++;
+        }
+    }
+}
+
 static void load_layer_from_another_image(layer *l, color_t **main_data, int *main_image_widths)
 {
     const image *img = image_get(l->calculated_image_id);
@@ -65,17 +81,21 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
         load_dummy_layer(l);
         return;
     }
+    
+    const asset_image *asset_img = 0;
 
     atlas_type type = img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET;
     if (type == ATLAS_EXTRA_ASSET || type == ATLAS_UNPACKED_EXTRA_ASSET) {
-        const asset_image *asset_img = asset_image_get_from_id(l->calculated_image_id - IMAGE_MAIN_ENTRIES);
+        asset_img = asset_image_get_from_id(l->calculated_image_id - IMAGE_MAIN_ENTRIES);
         if (!asset_img) {
             log_error("Problem loading layer from image id", 0, l->calculated_image_id);
             load_dummy_layer(l);
             return;
         }
-        l->data = asset_img->data;
-        return;
+        if (!l->grayscale) {
+            l->data = asset_img->data;
+            return;
+        }
     }
 
     int size = l->width * l->height * sizeof(color_t);
@@ -87,7 +107,13 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
     }
     memset(data, 0, l->width * l->height * sizeof(color_t));
 
-    if (type == ATLAS_EXTERNAL) {
+    if (asset_img) {
+        int width = l->width < asset_img->img.width ? l->width : asset_img->img.width;
+        int height = l->height < asset_img->img.height ? l->height : asset_img->img.height;
+        for (int y = 0; y < height; y++) {
+            memcpy(&data[y * l->width], &asset_img->data[y * asset_img->img.width], width * sizeof(color_t));
+        }
+    } else if (type == ATLAS_EXTERNAL) {
         if (!image_load_external_pixels(data, l->calculated_image_id, l->width)) {
             free(data);
             log_error("Problem loading layer from image id", 0, l->calculated_image_id);
@@ -110,6 +136,11 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
         }
     }
     l->calculated_image_id = 0;
+
+    if (l->grayscale) {
+        convert_layer_to_grayscale(data, l->width, l->height);
+    }
+
     l->data = data;
 }
 #endif
@@ -142,6 +173,10 @@ void layer_load(layer *l, color_t **main_data, int *main_image_widths)
         load_dummy_layer(l);
         return;
     }
+    if (l->grayscale) {
+        convert_layer_to_grayscale(data, l->width, l->height);
+    }
+
     l->data = data;
 }
 
@@ -162,7 +197,7 @@ void layer_unload(layer *l)
     }
 }
 
-color_t layer_get_color_for_image_position(const layer *l, int x, int y)
+const color_t *layer_get_color_for_image_position(const layer *l, int x, int y)
 {
     x -= l->x_offset;
     y -= l->y_offset;
@@ -177,6 +212,8 @@ color_t layer_get_color_for_image_position(const layer *l, int x, int y)
         invert ^= INVERT_VERTICAL;
     } else if (l->rotate == ROTATE_180_DEGREES) {
         invert ^= INVERT_BOTH;
+    } else if (l->rotate == ROTATE_270_DEGREES) {
+        invert ^= INVERT_HORIZONTAL;
     }
     if (invert & INVERT_HORIZONTAL) {
         x = l->width - x - 1;
@@ -187,16 +224,7 @@ color_t layer_get_color_for_image_position(const layer *l, int x, int y)
     if (x < 0 || x >= l->width || y < 0 || y >= l->height) {
         return ALPHA_TRANSPARENT;
     }
-    color_t color = l->data[y * l->width + x];
-    if (l->grayscale) {
-        color_t r = (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
-        color_t g = (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN;
-        color_t b = (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE;
-        color_t gray = (r + g + b) / 3;
-        color = (color & COLOR_CHANNEL_ALPHA) | (gray << COLOR_BITSHIFT_RED) |
-            (gray << COLOR_BITSHIFT_GREEN) | (gray << COLOR_BITSHIFT_BLUE);
-    }
-    return color;
+    return &l->data[y * l->width + x];
 }
 
 int layer_add_from_image_path(layer *l, const char *path,

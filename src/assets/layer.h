@@ -52,7 +52,7 @@ typedef struct layer {
 void layer_load(layer *l, color_t **main_data, int *main_image_widths);
 void layer_unload(layer *l);
 
-color_t layer_get_color_for_image_position(const layer *l, int x, int y);
+const color_t *layer_get_color_for_image_position(const layer *l, int x, int y);
 
 int layer_add_from_image_path(layer *l, const char *path, int src_x, int src_y,
     int offset_x, int offset_y, int width, int height);

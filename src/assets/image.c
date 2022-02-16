@@ -90,32 +90,75 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
     }
     memset(data, 0, img->img.width * image_height * sizeof(color_t));
 
-    for (int y = 0; y < image_height; ++y) {
-        color_t *pixel = &data[y * img->img.width];
-        for (int x = 0; x < img->img.width; ++x) {
-            for (const layer *l = img->last_layer; l; l = l->prev) {
-                color_t image_pixel_alpha = *pixel & COLOR_CHANNEL_ALPHA;
-                if (image_pixel_alpha == ALPHA_OPAQUE) {
-                    break;
+    for (const layer *l = img->last_layer; l; l = l->prev) {
+        int image_start_x, image_start_y, image_valid_width, image_valid_height, layer_step_x;
+
+        if (l->rotate == ROTATE_NONE || l->rotate == ROTATE_180_DEGREES) {
+            image_start_x = l->x_offset < 0 ? 0 : l->x_offset;
+            image_start_y = l->y_offset < 0 ? 0 : l->y_offset;
+            image_valid_width = l->width - (l->x_offset < 0 ? -l->x_offset : 0);
+            image_valid_height = l->height - (l->y_offset < 0 ? -l->y_offset : 0);
+            layer_step_x = 1;
+        } else {
+            image_start_x = l->x_offset < 0 ? 0 : l->x_offset;
+            image_start_y = l->y_offset < 0 ? 0 : l->y_offset;
+            image_valid_width = l->height - (l->y_offset < 0 ? -l->y_offset : 0);
+            image_valid_height = l->width - (l->x_offset < 0 ? -l->x_offset : 0);
+            layer_step_x = l->width;
+        }
+        if (image_valid_width > img->img.width) {
+            image_valid_width = img->img.width;
+        }
+        if (image_valid_height > image_height) {
+            image_valid_height = image_height;
+        }
+
+        // The above code is innacurate when a layer is rotated either by 90 or 270 degrees and inverted.
+        // In those cases, we use layer_get_color_for_image_position for every pixel, which is much slower but accurate.
+        int inverts_and_rotates = l->invert != INVERT_NONE &&
+            (l->rotate == ROTATE_90_DEGREES || l->rotate == ROTATE_270_DEGREES);
+
+        if (!inverts_and_rotates) {
+            layer_invert_type invert = l->invert;
+            if (l->rotate == ROTATE_90_DEGREES || l->rotate == ROTATE_180_DEGREES) {
+                invert ^= INVERT_HORIZONTAL;
+            }
+            if (invert & INVERT_HORIZONTAL) {
+                layer_step_x = -layer_step_x;
+            }
+        }
+       
+        for (int y = image_start_y; y < image_valid_height; y++) {
+            color_t *pixel = &data[y * img->img.width + image_start_x];
+            const color_t *layer_pixel;
+            if (!inverts_and_rotates) {
+                layer_pixel = layer_get_color_for_image_position(l, image_start_x, y);
+            }
+            for (int x = image_start_x; x < image_valid_width; x++) {
+                if (inverts_and_rotates) {
+                    layer_pixel = layer_get_color_for_image_position(l, x, y);
                 }
-                color_t layer_pixel = layer_get_color_for_image_position(l, x, y);
-                color_t layer_pixel_alpha = layer_pixel & COLOR_CHANNEL_ALPHA;
-                if (layer_pixel_alpha == ALPHA_TRANSPARENT) {
+                color_t image_pixel_alpha = *pixel & COLOR_CHANNEL_ALPHA;
+                color_t layer_pixel_alpha = *layer_pixel & COLOR_CHANNEL_ALPHA;
+                if (image_pixel_alpha == ALPHA_OPAQUE || layer_pixel_alpha == ALPHA_TRANSPARENT) {
+                    pixel++;
+                    layer_pixel += layer_step_x;
                     continue;
                 }
                 if (image_pixel_alpha == ALPHA_TRANSPARENT) {
-                    *pixel = layer_pixel;
+                    *pixel = *layer_pixel;
                 } else if (layer_pixel_alpha == ALPHA_OPAQUE) {
                     color_t alpha = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
-                    *pixel = COLOR_BLEND_ALPHA_TO_OPAQUE(*pixel, layer_pixel, alpha);
+                    *pixel = COLOR_BLEND_ALPHA_TO_OPAQUE(*pixel, *layer_pixel, alpha);
                 } else {
                     color_t alpha_src = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
                     color_t alpha_dst = layer_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
                     color_t alpha_mix = COLOR_MIX_ALPHA(alpha_src, alpha_dst);
-                    *pixel = COLOR_BLEND_ALPHAS(*pixel, layer_pixel, alpha_src, alpha_dst, alpha_mix);
+                    *pixel = COLOR_BLEND_ALPHAS(*pixel, *layer_pixel, alpha_src, alpha_dst, alpha_mix);
                 }
+                pixel++;
+                layer_pixel += layer_step_x;
             }
-            ++pixel;
         }
     }
 
