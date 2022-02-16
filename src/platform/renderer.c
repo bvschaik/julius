@@ -920,7 +920,9 @@ static int isometric_images_are_joined(void)
 
 static void update_scale_mode(int city_scale)
 {
+#ifdef USE_TEXTURE_SCALE_MODE
     data.city_scale = city_scale / 100.0f;
+#endif
 }
 
 static void create_renderer_interface(void)
