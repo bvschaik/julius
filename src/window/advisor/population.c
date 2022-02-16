@@ -68,7 +68,7 @@ static void get_current_month_year_from_months(int month, int max_months, int *c
     int start_month, start_year, end_month, end_year;
     get_min_max_month_year(max_months, &start_month, &start_year, &end_month, &end_year);
     *current_month = (start_month + month) % 12;
-    *current_year = start_year + month / 12 + (start_month + *current_month > 11 ? 1 : 0);
+    *current_year = start_year + month / 12 + (start_month + (month % 12) > 11 ? 1 : 0);
 }
 
 static void draw_history_graph(int full_size, int x, int y)
@@ -577,6 +577,7 @@ static uint8_t *get_graph_tooltip(int x, int y)
                     offset = string_copy(lang_get_string(20, 1), offset, (int) (offset - tooltip_text));
                 } else {
                     offset = string_copy(lang_get_string(20, 1), offset, (int) (offset - tooltip_text));
+                    offset = string_copy(string_from_ascii(" "), offset, 300 - (int) (offset - tooltip_text));
                     offset += string_from_int(offset, current_year, 0);
                 }
             } else {
