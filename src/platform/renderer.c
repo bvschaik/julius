@@ -19,6 +19,13 @@
 #define HAS_RENDERCOPYF (platform_sdl_version_at_least(2, 0, 10))
 #endif
 
+#if SDL_VERSION_ATLEAST(2, 0, 12)
+#define USE_TEXTURE_SCALE_MODE
+#define HAS_TEXTURE_SCALE_MODE (platform_sdl_version_at_least(2, 0, 12))
+#else
+#define HAS_TEXTURE_SCALE_MODE 0
+#endif
+
 // SDL 2.0.18 still has some drawing bugs with geometry rendering, so we only enable it with SDL 2.0.20
 #if SDL_VERSION_ATLEAST(2, 0, 20)
 #define USE_RENDER_GEOMETRY
@@ -88,7 +95,7 @@ static struct {
         SDL_Texture *texture;
     } unpacked_images[MAX_UNPACKED_IMAGES];
     graphics_renderer_interface renderer_interface;
-#ifdef USE_RENDER_GEOMETRY
+#ifdef USE_TEXTURE_SCALE_MODE
     float city_scale;
 #endif
 } data;
@@ -492,15 +499,19 @@ static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
 
 static void set_texture_scale_mode(SDL_Texture *texture, float scale)
 {
-    SDL_ScaleMode current_scale_mode;
-    SDL_GetTextureScaleMode(texture, &current_scale_mode);
-    SDL_ScaleMode city_scale_mode = (HAS_RENDER_GEOMETRY && data.city_scale > 2.0f) ?
-        SDL_ScaleModeLinear : SDL_ScaleModeNearest;
-    SDL_ScaleMode texture_scale_mode = scale != 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
-    SDL_ScaleMode desired_scale_mode = data.city_scale == scale ? city_scale_mode : texture_scale_mode;
-    if (current_scale_mode != desired_scale_mode) {
-        SDL_SetTextureScaleMode(texture, desired_scale_mode);
+#ifdef USE_TEXTURE_SCALE_MODE
+    if (HAS_TEXTURE_SCALE_MODE) {
+        SDL_ScaleMode current_scale_mode;
+        SDL_GetTextureScaleMode(texture, &current_scale_mode);
+        SDL_ScaleMode city_scale_mode = (HAS_RENDER_GEOMETRY && data.city_scale > 2.0f) ?
+            SDL_ScaleModeLinear : SDL_ScaleModeNearest;
+        SDL_ScaleMode texture_scale_mode = scale != 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
+        SDL_ScaleMode desired_scale_mode = data.city_scale == scale ? city_scale_mode : texture_scale_mode;
+        if (current_scale_mode != desired_scale_mode) {
+            SDL_SetTextureScaleMode(texture, desired_scale_mode);
+        }
     }
+#endif
 }
 
 static void draw_texture(const image *img, int x, int y, color_t color, float scale)
@@ -1002,8 +1013,8 @@ int platform_renderer_create_render_texture(int width, int height)
 {
     destroy_render_texture();
 
-#ifdef USE_RENDER_GEOMETRY
-    if (!HAS_RENDER_GEOMETRY) {
+#ifdef USE_TEXTURE_SCALE_MODE
+    if (!HAS_TEXTURE_SCALE_MODE) {
 #endif
         const char *scale_quality = "linear";
 #ifndef __APPLE__
@@ -1014,7 +1025,7 @@ int platform_renderer_create_render_texture(int width, int height)
         }
 #endif
         SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scale_quality);
-#ifdef USE_RENDER_GEOMETRY
+#ifdef USE_TEXTURE_SCALE_MODE
     }
 #endif
 
@@ -1030,8 +1041,8 @@ int platform_renderer_create_render_texture(int width, int height)
         SDL_SetRenderTarget(data.renderer, data.render_texture);
         SDL_SetRenderDrawBlendMode(data.renderer, SDL_BLENDMODE_BLEND);
 
-#ifdef USE_RENDER_GEOMETRY
-        if (HAS_RENDER_GEOMETRY) {
+#ifdef USE_TEXTURE_SCALE_MODE
+        if (HAS_TEXTURE_SCALE_MODE) {
             SDL_ScaleMode scale_quality = SDL_ScaleModeLinear;
 #ifndef __APPLE__
             if (platform_screen_get_scale() % 100 == 0) {
@@ -1042,7 +1053,7 @@ int platform_renderer_create_render_texture(int width, int height)
         } else {
 #endif
             SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-#ifdef USE_RENDER_GEOMETRY
+#ifdef USE_TEXTURE_SCALE_MODE
         }
 #endif
 
