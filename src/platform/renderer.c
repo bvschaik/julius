@@ -3,6 +3,7 @@
 #include "core/calc.h"
 #include "core/time.h"
 #include "graphics/renderer.h"
+#include "graphics/screen.h"
 #include "platform/cursor.h"
 #include "platform/haiku/haiku.h"
 #include "platform/platform.h"
@@ -65,6 +66,7 @@ static struct {
     SDL_Renderer *renderer;
     SDL_Texture *render_texture;
     int is_software_renderer;
+    int paused;
     struct {
         SDL_Texture *texture;
         int size;
@@ -102,12 +104,18 @@ static struct {
 
 static int save_screen_buffer(color_t *pixels, int x, int y, int width, int height, int row_width)
 {
+    if (data.paused) {
+        return 0;
+    }
     SDL_Rect rect = { x, y, width, height };
     return SDL_RenderReadPixels(data.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels, row_width * sizeof(color_t)) == 0;
 }
 
 static void draw_line(int x_start, int x_end, int y_start, int y_end, color_t color)
 {
+    if (data.paused) {
+        return;
+    }
     SDL_SetRenderDrawColor(data.renderer,
         (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
         (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -118,6 +126,9 @@ static void draw_line(int x_start, int x_end, int y_start, int y_end, color_t co
 
 static void draw_rect(int x_start, int x_end, int y_start, int y_end, color_t color)
 {
+    if (data.paused) {
+        return;
+    }
     SDL_SetRenderDrawColor(data.renderer,
         (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
         (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -129,6 +140,9 @@ static void draw_rect(int x_start, int x_end, int y_start, int y_end, color_t co
 
 static void fill_rect(int x_start, int x_end, int y_start, int y_end, color_t color)
 {
+    if (data.paused) {
+        return;
+    }
     SDL_SetRenderDrawColor(data.renderer,
         (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
         (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -140,29 +154,44 @@ static void fill_rect(int x_start, int x_end, int y_start, int y_end, color_t co
 
 static void set_clip_rectangle(int x, int y, int width, int height)
 {
+    if (data.paused) {
+        return;
+    }
     SDL_Rect clip = { x, y, width, height };
     SDL_RenderSetClipRect(data.renderer, &clip);
 }
 
 static void reset_clip_rectangle(void)
 {
+    if (data.paused) {
+        return;
+    }
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
 static void set_viewport(int x, int y, int width, int height)
 {
+    if (data.paused) {
+        return;
+    }
     SDL_Rect viewport = { x, y, width, height };
     SDL_RenderSetViewport(data.renderer, &viewport);
 }
 
 static void reset_viewport(void)
 {
+    if (data.paused) {
+        return;
+    }
     SDL_RenderSetViewport(data.renderer, NULL);
     SDL_RenderSetClipRect(data.renderer, NULL);
 }
 
 static void clear_screen(void)
 {
+    if (data.paused) {
+        return;
+    }
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
     SDL_RenderClear(data.renderer);
 }
@@ -500,7 +529,7 @@ static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
 static void set_texture_scale_mode(SDL_Texture *texture, float scale)
 {
 #ifdef USE_TEXTURE_SCALE_MODE
-    if (HAS_TEXTURE_SCALE_MODE) {
+    if (!data.paused && HAS_TEXTURE_SCALE_MODE) {
         SDL_ScaleMode current_scale_mode;
         SDL_GetTextureScaleMode(texture, &current_scale_mode);
         SDL_ScaleMode city_scale_mode = (HAS_RENDER_GEOMETRY && data.city_scale > 2.0f) ?
@@ -516,6 +545,9 @@ static void set_texture_scale_mode(SDL_Texture *texture, float scale)
 
 static void draw_texture(const image *img, int x, int y, color_t color, float scale)
 {
+    if (data.paused) {
+        return;
+    }
     if (!color) {
         color = COLOR_MASK_NONE;
     }
@@ -582,6 +614,9 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
 
 static void draw_isometric_top(const image *img, int x, int y, color_t color, float scale)
 {
+    if (data.paused) {
+        return;
+    }
     if (!color) {
         color = COLOR_MASK_NONE;
     }
@@ -636,6 +671,9 @@ static void draw_isometric_top(const image *img, int x, int y, color_t color, fl
 
 static void create_custom_texture(custom_image_type type, int width, int height)
 {
+    if (data.paused) {
+        return;
+    }
     if (data.custom_textures[type].texture) {
         SDL_DestroyTexture(data.custom_textures[type].texture);
         data.custom_textures[type].texture = 0;
@@ -658,7 +696,7 @@ static void create_custom_texture(custom_image_type type, int width, int height)
 
 static color_t *get_custom_texture_buffer(custom_image_type type, int *actual_texture_width)
 {
-    if (!data.custom_textures[type].texture) {
+    if (data.paused || !data.custom_textures[type].texture) {
         return 0;
     }
 
@@ -692,7 +730,7 @@ static void release_custom_texture_buffer(custom_image_type type)
 static void update_custom_texture(custom_image_type type)
 {
 #ifndef __vita__
-    if (!data.custom_textures[type].texture || !data.custom_textures[type].buffer) {
+    if (data.paused || !data.custom_textures[type].texture || !data.custom_textures[type].buffer) {
         return;
     }
     int width, height;
@@ -717,6 +755,9 @@ static buffer_texture *get_saved_texture_info(int texture_id)
 
 static int save_to_texture(int texture_id, int x, int y, int width, int height)
 {
+    if (data.paused) {
+        return 0;
+    }
     SDL_Texture *former_target = SDL_GetRenderTarget(data.renderer);
     if (!former_target) {
         return 0;
@@ -787,6 +828,9 @@ static int save_to_texture(int texture_id, int x, int y, int width, int height)
 
 static void draw_saved_texture(int texture_id, int x, int y, int width, int height)
 {
+    if (data.paused) {
+        return;
+    }
     buffer_texture *texture_info = get_saved_texture_info(texture_id);
     if (!texture_info) {
         return;
@@ -840,6 +884,9 @@ static void create_blend_texture(custom_image_type type)
 
 static void draw_custom_texture(custom_image_type type, int x, int y, float scale)
 {
+    if (data.paused) {
+        return;
+    }
     if (type == CUSTOM_IMAGE_RED_FOOTPRINT || type == CUSTOM_IMAGE_GREEN_FOOTPRINT) {
         if (!data.custom_textures[type].texture) {
             create_blend_texture(type);
@@ -855,6 +902,9 @@ static int has_custom_texture(custom_image_type type)
 
 static void load_unpacked_image(const image *img, const color_t *pixels)
 {
+    if (data.paused) {
+        return;
+    }
     int unpacked_image_id = img->atlas.id & IMAGE_ATLAS_BIT_MASK;
     int first_empty = -1;
     int oldest_texture_index = 0;
@@ -986,6 +1036,7 @@ int platform_renderer_init(SDL_Window *window)
         data.max_texture_size.width = info.max_texture_width;
         data.max_texture_size.height = info.max_texture_height;
     }
+    data.paused = 0;
 
 #ifdef MAX_TEXTURE_SIZE
     if (data.max_texture_size.width > MAX_TEXTURE_SIZE) {
@@ -1013,6 +1064,9 @@ static void destroy_render_texture(void)
 
 int platform_renderer_create_render_texture(int width, int height)
 {
+    if (data.paused) {
+        return 1;
+    }
     destroy_render_texture();
 
 #ifdef USE_TEXTURE_SCALE_MODE
@@ -1096,6 +1150,9 @@ static void draw_software_mouse_cursor(void)
 
 void platform_renderer_render(void)
 {
+    if (data.paused) {
+        return;
+    }
     SDL_SetRenderTarget(data.renderer, NULL);
     SDL_RenderCopy(data.renderer, data.render_texture, NULL, NULL);
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR
@@ -1108,6 +1165,9 @@ void platform_renderer_render(void)
 void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, const color_t *pixels,
     int hotspot_x, int hotspot_y)
 {
+    if (data.paused) {
+        return;
+    }
     if (data.cursors[cursor_id].texture) {
         SDL_DestroyTexture(data.cursors[cursor_id].texture);
         SDL_memset(&data.cursors[cursor_id], 0, sizeof(data.cursors[cursor_id]));
@@ -1125,6 +1185,17 @@ void platform_renderer_generate_mouse_cursor_texture(int cursor_id, int size, co
     SDL_SetTextureBlendMode(data.cursors[cursor_id].texture, SDL_BLENDMODE_BLEND);
 }
 
+void platform_renderer_pause(void)
+{
+    SDL_SetRenderTarget(data.renderer, NULL);
+    data.paused = 1;
+}
+
+void platform_renderer_resume(void)
+{
+    data.paused = 0;
+    SDL_SetRenderTarget(data.renderer, data.render_texture);
+}
 
 void platform_renderer_destroy(void)
 {

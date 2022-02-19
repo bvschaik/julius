@@ -18,6 +18,10 @@ void platform_renderer_clear(void);
 
 void platform_renderer_render(void);
 
+void platform_renderer_pause(void);
+
+void platform_renderer_resume(void);
+
 void platform_renderer_destroy(void);
 
 #endif // PLATFORM_RENDERER_H

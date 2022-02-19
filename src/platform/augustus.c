@@ -238,6 +238,20 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
             SDL_Log("Window %d hidden", (unsigned int) event->windowID);
             *window_active = 0;
             break;
+        default:
+            break;
+
+    }
+}
+
+static int handle_event_immediate(void *param1, SDL_Event *event)
+{
+    switch (event->type) {
+        case SDL_APP_WILLENTERBACKGROUND:
+            platform_renderer_pause();
+            return 0;
+        default:
+            return 1;
     }
 }
 
@@ -247,14 +261,21 @@ static void handle_event(SDL_Event *event)
         case SDL_WINDOWEVENT:
             handle_window_event(&event->window, &data.active);
             break;
-
+        case SDL_APP_DIDENTERFOREGROUND:
+            platform_renderer_resume();
 #if SDL_VERSION_ATLEAST(2, 0, 2)
         case SDL_RENDER_TARGETS_RESET:
 #endif
-        case SDL_APP_DIDENTERFOREGROUND:
             window_invalidate();
             break;
-
+#if SDL_VERSION_ATLEAST(2, 0, 4)
+        case SDL_RENDER_DEVICE_RESET:
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_WARNING,
+                "Render device lost",
+                "The rendering context was lost.The game will likely blackscreen.\n\n"
+                "Please restart the game to fix the issue.",
+                NULL);
+#endif
         case SDL_KEYDOWN:
             platform_handle_key_down(&event->key);
             break;
@@ -392,6 +413,7 @@ static int init_sdl(void)
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
         return 0;
     }
+    SDL_SetEventFilter(handle_event_immediate, 0);
     platform_joystick_init();
 #if SDL_VERSION_ATLEAST(2, 0, 10)
     SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
