@@ -779,6 +779,11 @@ static int save_to_texture(int texture_id, int x, int y, int width, int height)
             }
             return 0;
         }
+#ifdef USE_TEXTURE_SCALE_MODE
+        if (HAS_TEXTURE_SCALE_MODE) {
+            SDL_SetTextureScaleMode(texture, SDL_ScaleModeNearest);
+        }
+#endif
     } else {
         texture = texture_info->texture;
     }
@@ -1194,6 +1199,7 @@ void platform_renderer_pause(void)
 void platform_renderer_resume(void)
 {
     data.paused = 0;
+    platform_renderer_create_render_texture(screen_width(), screen_height());
     SDL_SetRenderTarget(data.renderer, data.render_texture);
 }
 

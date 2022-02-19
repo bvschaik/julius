@@ -406,6 +406,9 @@ static void clear_minimap(void)
 
 static void draw_minimap(void)
 {
+    if (!data.cache) {
+        return;
+    }
     graphics_set_clip_rectangle(data.x_offset, data.y_offset, data.width, data.height);
     clear_minimap();
     foreach_map_tile(draw_minimap_tile);
