@@ -511,15 +511,18 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate *coord)
 {
     int x_cam, y_cam;
     city_view_get_camera(&x_cam, &y_cam);
+    int scale = city_view_get_scale();
 
     int grid_offset = figure_get(figure_id)->grid_offset;
     int x, y;
     city_view_grid_offset_to_xy_view(grid_offset, &x, &y);
 
+    city_view_set_scale(100);
     city_view_set_camera(x - 2, y - 6);
 
     widget_city_draw_for_figure(figure_id, coord);
 
+    city_view_set_scale(scale);
     city_view_set_camera(x_cam, y_cam);
 }
 
