@@ -27,7 +27,8 @@
 #define HAS_TEXTURE_SCALE_MODE 0
 #endif
 
-// SDL 2.0.18 still has some drawing bugs with geometry rendering, so we only enable it with SDL 2.0.20
+// Even though geometry rendering is supported since SDL 2.0.18, that version still has some drawing bugs, so we only
+// enable geometry rendering with SDL 2.0.20. Also, the software renderer also has drawing bugs, so it's also disabled.
 #if SDL_VERSION_ATLEAST(2, 0, 20)
 #define USE_RENDER_GEOMETRY
 #define HAS_RENDER_GEOMETRY (platform_sdl_version_at_least(2, 0, 20) && !data.is_software_renderer)

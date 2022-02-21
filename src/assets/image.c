@@ -289,7 +289,7 @@ asset_image *asset_image_create(void)
 }
 
 #ifndef BUILDING_ASSET_PACKER
-static void copy_asset_to_atlas_image(color_t *dst, const asset_image *img, int src_width, int dst_width)
+static void copy_asset_to_final_image(color_t *dst, const asset_image *img, int src_width, int dst_width)
 {
     if (!graphics_renderer()->isometric_images_are_joined() && img->img.is_isometric) {
         int tiles = (img->img.width + 2) / (FOOTPRINT_WIDTH + 2);
@@ -384,12 +384,24 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
             if (!image->img.is_isometric) {
                 image_crop(&image->img, image->data, 1);
             }
-            copy_asset_to_atlas_image(atlas_data->buffers[rect->output.image_index], image, original_width,
+            copy_asset_to_final_image(atlas_data->buffers[rect->output.image_index], image, original_width,
                 atlas_data->image_widths[rect->output.image_index]);
             free((color_t *) image->data); // Freeing a const pointer - ugly but necessary
 
             image->data = 0;
         } else {
+            if (image->img.is_isometric && !graphics_renderer()->isometric_images_are_joined()) {
+                size_t size = image->img.width * image->img.height * sizeof(color_t);
+                color_t *data = malloc(size);
+                if (!data) {
+                    log_error("Unable to create data for asset. The game may crash. Asset index:", 0, image->index);
+                } else {
+                    memset(data, 0, size);
+                    copy_asset_to_final_image(data, image, image->img.width, image->img.width);
+                    free((color_t *) image->data); // Freeing a const pointer - ugly but necessary
+                    image->data = data;
+                }
+            }
             image->img.atlas.id += total_unpacked_assets++;
         }
     }
