@@ -30,6 +30,17 @@ static struct warning *new_warning(void)
 
 void city_warning_show(warning_type type)
 {
+    const uint8_t *text;
+    if (type == WARNING_ORIENTATION) {
+        text = lang_get_string(17, city_view_orientation());
+    } else {
+        text = lang_get_string(19, type - 2);
+    }
+    city_warning_show_custom(text);
+}
+
+void city_warning_show_custom(const uint8_t *text)
+{
     if (!setting_warnings()) {
         return;
     }
@@ -39,12 +50,6 @@ void city_warning_show(warning_type type)
     }
     w->in_use = 1;
     w->time = time_get_millis();
-    const uint8_t *text;
-    if (type == WARNING_ORIENTATION) {
-        text = lang_get_string(17, city_view_orientation());
-    } else {
-        text = lang_get_string(19, type - 2);
-    }
     string_copy(text, w->text, MAX_TEXT);
 }
 
