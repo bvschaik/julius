@@ -685,6 +685,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_COPY_SETTINGS, "Copy building settings" },
     {TR_HOTKEY_PASTE_SETTINGS, "Paste building settings" },
     {TR_WINDOW_ADVISOR_RELIGION_LARARIUMS, "Lararia in the city" },
+    {TR_WINDOW_RACE_YOUR_BET, "Your bet"},
     {TR_WINDOW_RACE_BET_BUTTON, "Bet on a horse"},
     {TR_WINDOW_IN_PROGRESS_BET_BUTTON, "Race in progress..."},
     {TR_WINDOW_RACE_BET_TITLE, "Place a bet on a horse"},

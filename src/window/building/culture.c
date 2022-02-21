@@ -819,10 +819,10 @@ void window_building_draw_tavern(building_info_context *c)
     return;
 }
 
-static void draw_games_info(building_info_context *c)
+static void draw_games_info(building_info_context *c, int y_offset)
 {
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 470, c->width_blocks - 2, 6);
-    window_entertainment_draw_games_text(c->x_offset + 32, c->y_offset + 480);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + y_offset + 214, c->width_blocks - 2, 6);
+    window_entertainment_draw_games_text(c->x_offset + 32, c->y_offset + y_offset + 224);
 }
 
 int window_building_handle_mouse_colosseum(const mouse *m, building_info_context *c)
@@ -832,7 +832,7 @@ int window_building_handle_mouse_colosseum(const mouse *m, building_info_context
     if (b->data.monument.phase != MONUMENT_FINISHED) {
         return 0;
     }
-    if (generic_buttons_handle_mouse(m, c->x_offset + 88, c->y_offset + 535,
+    if (generic_buttons_handle_mouse(m, c->x_offset + 88, c->y_offset + (c->height_blocks > 27 ? 535 : 335),
                                      hold_games_button, 1, &data.focus_button_id)) {
         return 1;
     }
@@ -901,11 +901,15 @@ void window_building_draw_colosseum_background(building_info_context *c)
                 }
             }
         }
-        if (b->type == BUILDING_COLOSSEUM && c->height_blocks > 27) {
-            int banner_id = assets_get_image_id("UI_Elements", "Colosseum Banner");
-            image_draw(banner_id, c->x_offset + 32, c->y_offset + 256,
-                COLOR_MASK_NONE, SCALE_NONE);
-            draw_games_info(c);
+        if (b->type == BUILDING_COLOSSEUM) {
+            int extra_y_offset = 56;
+            if (c->height_blocks > 27) {
+                extra_y_offset += 200;
+                int banner_id = assets_get_image_id("UI_Elements", "Colosseum Banner");
+                image_draw(banner_id, c->x_offset + 32, c->y_offset + extra_y_offset,
+                    COLOR_MASK_NONE, SCALE_NONE);
+            }
+            draw_games_info(c, extra_y_offset);
         }
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -924,7 +928,7 @@ void window_building_draw_colosseum_foreground(building_info_context *c)
     }
 
     if (!city_festival_games_active() && !city_festival_games_planning_time() && !city_festival_games_cooldown()) {
-        button_border_draw(c->x_offset + 88, c->y_offset + 535,
+        button_border_draw(c->x_offset + 88, c->y_offset + (c->height_blocks > 27 ? 535 : 335),
             300, 20, data.focus_button_id == 1);
     }
 }
@@ -1080,8 +1084,8 @@ int window_building_handle_mouse_hippodrome(const mouse *m, building_info_contex
     if (b->data.monument.phase != MONUMENT_FINISHED) {
         return 0;
     }
-    if (generic_buttons_handle_mouse(m, c->x_offset + 88, c->y_offset + 603,
-                                     race_bet_button, 1, &data.focus_button_id)) {
+    if (!city_data.games.chosen_horse && generic_buttons_handle_mouse(m, c->x_offset + 88,
+        c->y_offset + (c->height_blocks > 27 ? 603 : 380), race_bet_button, 1, &data.focus_button_id)) {
         return 1;
     }
     return 0;
@@ -1095,8 +1099,10 @@ void window_building_draw_hippodrome_foreground(building_info_context *c)
         return;
     }
 
-    button_border_draw(c->x_offset + 88, c->y_offset + 603,
-                       300, 20, data.focus_button_id == 1);
+    if (!city_data.games.chosen_horse) {
+        button_border_draw(c->x_offset + 88, c->y_offset + (c->height_blocks > 27 ? 603 : 380),
+                           300, 20, data.focus_button_id == 1);
+    }
 }
 
 void window_building_draw_hippodrome_background(building_info_context *c)
@@ -1127,12 +1133,26 @@ void window_building_draw_hippodrome_background(building_info_context *c)
         } else {
             lang_text_draw(73, 5, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         }
+        int extra_y_offset = 33;
         if (c->height_blocks > 27) {
+            extra_y_offset += 223;
             int banner_id = assets_get_image_id("UI_Elements", "Circus Banner");
-            image_draw(banner_id, c->x_offset + 32, c->y_offset + 256, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw(banner_id, c->x_offset + 32, c->y_offset + extra_y_offset, COLOR_MASK_NONE, SCALE_NONE);
         }
 
-        text_draw_centered(translation_for(city_data.games.chosen_horse ? TR_WINDOW_IN_PROGRESS_BET_BUTTON : TR_WINDOW_RACE_BET_TITLE), c->x_offset + 88, c->y_offset + 607, 300, FONT_NORMAL_BLACK, 0);
+        if (city_data.games.chosen_horse) {
+            text_draw_with_money(translation_for(TR_WINDOW_RACE_YOUR_BET), city_data.games.bet_amount, " - ", "",
+                c->x_offset + 32, c->y_offset + extra_y_offset + 215, 438, FONT_NORMAL_BLACK, 0);
+            int image_id = assets_get_image_id("UI_Elements", "Hipp_Blues_UH");
+            image_draw(image_id + (city_data.games.chosen_horse - 1) * 2,
+                c->x_offset + 32, c->y_offset + extra_y_offset + 240, COLOR_MASK_NONE, SCALE_NONE);
+
+            text_draw_multiline(translation_for(TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION +
+                city_data.games.chosen_horse - 1), c->x_offset + 132, c->y_offset + extra_y_offset + 240, 338,
+                FONT_NORMAL_BLACK, 0);
+        }
+        text_draw_centered(translation_for(city_data.games.chosen_horse ? TR_WINDOW_IN_PROGRESS_BET_BUTTON :
+            TR_WINDOW_RACE_BET_TITLE), c->x_offset + 88, c->y_offset + extra_y_offset + 351, 300, FONT_NORMAL_BLACK, 0);
     } else {
         window_building_draw_monument_hippodrome_construction_process(c);
     }

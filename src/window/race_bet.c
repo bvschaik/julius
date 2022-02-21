@@ -15,8 +15,6 @@
 #include "race_bet.h"
 #include "translation/translation.h"
 
-static translation_key button_tooltips[] = {TR_WINDOW_RACE_BET_BLUE_HORSE, TR_WINDOW_RACE_BET_RED_HORSE, TR_WINDOW_RACE_BET_WHITE_HORSE, TR_WINDOW_RACE_BET_GREEN_HORSE};
-static translation_key team_descriptions[] = { TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION, TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION };
 static void arrow_button_bet(int is_down, int param2);
 static void button_horse_selection(int option, int param2);
 static void button_confirm(int option, int param2);
@@ -92,15 +90,19 @@ static void draw_background(void)
 
     translation_key horse_description = 0;
     if (data.focus_button_id) {
-        horse_description = team_descriptions[data.focus_button_id - 1];
+        horse_description = TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION + data.focus_button_id - 1;
     } else if (data.chosen_horse) {
-        horse_description = team_descriptions[data.chosen_horse - 1];
+        horse_description = TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION + data.chosen_horse - 1;
     }
     if (horse_description) {
         text_draw_multiline(translation_for(horse_description), 25, 250, 438, FONT_NORMAL_BLACK, 0);
     }
 
-    text_draw_centered(translation_for(data.in_progress_bet ? TR_WINDOW_IN_PROGRESS_BET_BUTTON : TR_WINDOW_RACE_BET_BUTTON), 90, 358, 300, FONT_NORMAL_BLACK, 0);
+    int button_enabled = data.bet_amount > 0 && data.chosen_horse != 0 && !data.in_progress_bet;
+
+    text_draw_centered(translation_for(data.in_progress_bet ? TR_WINDOW_IN_PROGRESS_BET_BUTTON :
+        TR_WINDOW_RACE_BET_BUTTON), 90, 358, 300, button_enabled ? FONT_NORMAL_BLACK : FONT_NORMAL_PLAIN,
+        button_enabled ? 0 : COLOR_FONT_LIGHT_GRAY);
 
     graphics_reset_dialog();
 }
@@ -120,7 +122,9 @@ static void draw_foreground(void)
 
     arrow_buttons_draw(0, 0, amount_buttons, 2);
 
-    button_border_draw(90, 354, 300, 20, !data.in_progress_bet && data.focus_button_id3 == 1);
+    int button_enabled = data.bet_amount > 0 && data.chosen_horse != 0 && !data.in_progress_bet;
+
+    button_border_draw(90, 354, 300, 20, button_enabled && data.focus_button_id3 == 1);
     image_buttons_draw(0, 0, image_button_close, 1);
 
     graphics_reset_dialog();
@@ -183,7 +187,7 @@ static void handle_tooltip(tooltip_context *c)
         c->text_id = 2;
     } else if (data.focus_button_id) {
         c->type = TOOLTIP_BUTTON;
-        c->translation_key = button_tooltips[data.focus_button_id - 1];
+        c->translation_key = TR_WINDOW_RACE_BET_BLUE_HORSE + data.focus_button_id - 1;
     }
 }
 
