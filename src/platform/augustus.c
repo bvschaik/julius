@@ -266,6 +266,7 @@ static void handle_event(SDL_Event *event)
 #if SDL_VERSION_ATLEAST(2, 0, 2)
         case SDL_RENDER_TARGETS_RESET:
 #endif
+            platform_renderer_invalidate_target_textures();
             window_invalidate();
             break;
 #if SDL_VERSION_ATLEAST(2, 0, 4)

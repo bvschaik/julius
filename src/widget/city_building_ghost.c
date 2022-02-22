@@ -465,7 +465,7 @@ static void draw_single_reservoir(int x, int y, int has_water)
     if (has_water) {
         const image *img = image_get(image_id);
         int x_water = x - 58 + img->animation.sprite_offset_x - 2;
-        int y_water = y + img->animation.sprite_offset_y - (img->height - 90);
+        int y_water = y + img->animation.sprite_offset_y - (img->height - (img->height == 161 ? 135 : 90));
         image_draw(image_id + 1, x_water, y_water, COLOR_MASK_NONE, scale);
     }
 }

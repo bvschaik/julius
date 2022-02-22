@@ -1131,6 +1131,20 @@ int platform_renderer_lost_render_texture(void)
     return !data.render_texture && data.renderer;
 }
 
+void platform_renderer_invalidate_target_textures(void)
+{
+    if (data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture) {
+        SDL_DestroyTexture(data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture);
+        data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture = 0;
+        create_blend_texture(CUSTOM_IMAGE_RED_FOOTPRINT);
+    }
+    if (data.custom_textures[CUSTOM_IMAGE_GREEN_FOOTPRINT].texture) {
+        SDL_DestroyTexture(data.custom_textures[CUSTOM_IMAGE_GREEN_FOOTPRINT].texture);
+        data.custom_textures[CUSTOM_IMAGE_GREEN_FOOTPRINT].texture = 0;
+        create_blend_texture(CUSTOM_IMAGE_GREEN_FOOTPRINT);
+    }
+}
+
 void platform_renderer_clear(void)
 {
     clear_screen();
