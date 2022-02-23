@@ -584,8 +584,9 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
     if (img->animation.num_sprites
         && map_property_is_draw_tile(grid_offset)
         && b->type == BUILDING_HIPPODROME) {
+        int y_offset = graphics_renderer()->isometric_images_are_joined() ? 90 : 165;
         image_draw(image_id + 1,
-            x + img->animation.sprite_offset_x, y + img->animation.sprite_offset_y - img->height + 90,
+            x + img->animation.sprite_offset_x, y + img->animation.sprite_offset_y - img->height + y_offset,
             draw_building_as_deleted(b) ? COLOR_MASK_RED : COLOR_MASK_NONE, draw_context.scale
         );
     }

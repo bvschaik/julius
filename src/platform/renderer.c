@@ -861,6 +861,8 @@ static void create_blend_texture(custom_image_type type)
     SDL_RenderGetClipRect(data.renderer, &former_clip);
 
     SDL_SetRenderTarget(data.renderer, texture);
+    SDL_RenderSetClipRect(data.renderer, 0);
+    SDL_RenderSetViewport(data.renderer, 0);
     SDL_SetRenderDrawColor(data.renderer, 0xff, 0xff, 0xff, 0xff);
     color_t color = type == CUSTOM_IMAGE_RED_FOOTPRINT ? COLOR_MASK_RED : COLOR_MASK_GREEN;
     SDL_RenderClear(data.renderer);

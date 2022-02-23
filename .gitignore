@@ -3,7 +3,8 @@
 *.kdev4
 .vs
 .vscode
-/CMakeSettings.json
+/CMakeSettings.json*
+/CMakePresets.json*
 
 # Generated resources
 src/platform/version.c

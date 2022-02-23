@@ -430,6 +430,9 @@ void asset_image_copy_isometric_top(color_t *dst, const color_t *src, int width,
 void asset_image_copy_isometric_footprint(color_t *dst, const color_t *src, int width, int height,
     int dst_x_offset, int dst_y_offset, int dst_width, int src_x_offset, int src_y_offset, int src_width)
 {
+    if (src_y_offset < 0) {
+        src_y_offset = 0;
+    }
     int half_height = height / 2;
     for (int y = 0; y < height; y++) {
         int x_read = 2 + 4 * (y < half_height ? y : height - 1 - y);
