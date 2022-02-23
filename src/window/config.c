@@ -580,7 +580,12 @@ static void numerical_range_draw(const numerical_range_widget *w, int x, int y, 
     inner_panel_draw(x + w->x, y + 4, w->width_blocks + extra_width / 16, 1);
 
     int width = w->width_blocks * BLOCK_SIZE + extra_width - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE;
-    int scroll_position = (*w->value - w->min) * width / (w->max - w->min);
+    int scroll_position;
+    if (w->min != w->max) {
+        scroll_position = (*w->value - w->min) * width / (w->max - w->min);
+    } else {
+        scroll_position = width / 2;
+    }
     image_draw(image_group(GROUP_PANEL_BUTTON) + 37,
         x + w->x + NUMERICAL_SLIDER_PADDING + scroll_position, y + 2, COLOR_MASK_NONE, SCALE_NONE);
 }
@@ -920,6 +925,9 @@ static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numeri
         }
     } else if (!m->left.went_down || !is_numerical_range(w, m, x, y)) {
         return 0;
+    }
+    if (w->min == w->max) {
+        return 1;
     }
     int extra_width = data.widgets_per_page[data.page] > NUM_VISIBLE_ITEMS ? 0 : 64;
     int slider_width = w->width_blocks * BLOCK_SIZE - NUMERICAL_SLIDER_PADDING * 2 - NUMERICAL_DOT_SIZE + extra_width;
