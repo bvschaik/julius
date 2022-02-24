@@ -130,7 +130,7 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
        
         for (int y = image_start_y; y < image_valid_height; y++) {
             color_t *pixel = &data[y * img->img.width + image_start_x];
-            const color_t *layer_pixel;
+            const color_t *layer_pixel = 0;
             if (!inverts_and_rotates) {
                 layer_pixel = layer_get_color_for_image_position(l, image_start_x, y);
             }

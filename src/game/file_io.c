@@ -422,6 +422,9 @@ static void savegame_load_from_state(savegame_state *state, int version)
         state->player_name,
         state->scenario_name);
 
+    scenario_load_state(state->scenario);
+    scenario_map_init();
+
     map_building_load_state(state->building_grid, state->building_damage_grid);
     map_terrain_load_state(state->terrain_grid, version > SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION,
         version <= SAVE_GAME_LAST_STORED_IMAGE_IDS ? state->image_grid : 0,
@@ -472,7 +475,6 @@ static void savegame_load_from_state(savegame_state *state, int version)
     figure_name_load_state(state->figure_names);
     city_culture_load_state(state->culture_coverage);
 
-    scenario_load_state(state->scenario);
     scenario_criteria_load_state(state->max_game_year);
     scenario_earthquake_load_state(state->earthquake);
     city_message_load_state(state->messages, state->message_extra,
@@ -506,7 +508,6 @@ static void savegame_load_from_state(savegame_state *state, int version)
             version > SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION);
     }
     map_image_clear();
-    scenario_map_init();
     map_image_update_all();
 }
 
