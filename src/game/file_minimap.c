@@ -1,12 +1,18 @@
-#include "minimap.h"
+#include "file_minimap.h"
 
+#include "building/building.h"
 #include "city/view.h"
+#include "figure/figure.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "map/building.h"
+#include "map/figure.h"
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
 #include "scenario/property.h"
+
+#include <string.h>
 
 typedef struct {
     color_t left;
@@ -64,34 +70,16 @@ const tile_color_set MINIMAP_COLOR_SETS[3] = {
     }
 };
 
+#define MINIMAP_WIDTH_TILES (FILE_MINIMAP_IMAGE_WIDTH / 2)
+#define MINIMAP_HEIGHT_TILES FILE_MINIMAP_IMAGE_HEIGHT
+#define MINIMAP_X_OFFSET ((VIEW_X_MAX - MINIMAP_WIDTH_TILES) / 2)
+#define MINIMAP_Y_OFFSET (((VIEW_Y_MAX - MINIMAP_HEIGHT_TILES) / 2) & ~1) // ensure even height
+
 static struct {
-    int absolute_x;
-    int absolute_y;
-    int width_tiles;
-    int height_tiles;
-    int x_offset;
-    int y_offset;
+    color_t screen[FILE_MINIMAP_IMAGE_WIDTH * FILE_MINIMAP_IMAGE_HEIGHT];
+    color_t dst[FILE_MINIMAP_IMAGE_WIDTH * FILE_MINIMAP_IMAGE_HEIGHT];
+    const file_buffers *buffers;
 } data;
-
-static void foreach_map_tile(map_callback *callback)
-{
-    city_view_foreach_minimap_tile(
-        data.x_offset, data.y_offset, data.absolute_x, data.absolute_y,
-        data.width_tiles, data.height_tiles, callback);
-}
-
-static void set_bounds(int x_offset, int y_offset, int width, int height)
-{
-    data.width_tiles = width / 2;
-    data.height_tiles = height;
-    data.x_offset = x_offset;
-    data.y_offset = y_offset;
-    data.absolute_x = (VIEW_X_MAX - data.width_tiles) / 2;
-    data.absolute_y = (VIEW_Y_MAX - data.height_tiles) / 2;
-
-    // ensure even height
-    data.absolute_y &= ~1;
-}
 
 static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
 {
@@ -99,21 +87,44 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         return;
     }
 
-    int terrain = map_terrain_get(grid_offset);
+    int terrain = map_terrain_get_from_buffer(data.buffers->map_terrain, grid_offset);
+    building b;
+    // exception for fort ground: display as empty land
+    if (terrain & TERRAIN_BUILDING && data.buffers->buildings) {
+        building_get_from_buffer(data.buffers->buildings,
+            map_building_from_buffer(data.buffers->map_building, grid_offset), &b);
+        if (b.type == BUILDING_FORT_GROUND) {
+            terrain = 0;
+        }
+    }
 
     if (terrain & TERRAIN_BUILDING) {
-        // Native huts/fields
-        if (map_property_is_draw_tile(grid_offset)) {
-            int image_id = image_group(GROUP_MINIMAP_BUILDING);
-            switch (map_property_multi_tile_size(grid_offset)) {
+        // For scenarios these can be Native huts/fields
+        if (map_property_is_draw_tile_from_buffer(data.buffers->map_edge, grid_offset)) {
+            int image_id;
+            if (data.buffers->buildings && b.house_size) {
+                image_id = image_group(GROUP_MINIMAP_HOUSE);
+            } else if (data.buffers->buildings && b.type == BUILDING_RESERVOIR) {
+                image_id = image_group(GROUP_MINIMAP_AQUEDUCT) - 1;
+            } else {
+                image_id = image_group(GROUP_MINIMAP_BUILDING);
+            }
+            switch (map_property_multi_tile_size_from_buffer(data.buffers->map_bitfields, grid_offset)) {
                 case 1: image_draw(image_id, x_view, y_view); break;
                 case 2: image_draw(image_id + 1, x_view, y_view - 1); break;
+                case 3: image_draw(image_id + 2, x_view, y_view - 2); break;
+                case 4: image_draw(image_id + 3, x_view, y_view - 3); break;
+                case 5: image_draw(image_id + 4, x_view, y_view - 4); break;
             }
         }
+    } else if (terrain & TERRAIN_AQUEDUCT) {
+        image_draw(image_group(GROUP_MINIMAP_AQUEDUCT), x_view, y_view);
+    } else if (terrain & TERRAIN_WALL) {
+        image_draw(image_group(GROUP_MINIMAP_WALL), x_view, y_view);
     } else {
-        int rand = map_random_get(grid_offset);
+        int rand = map_random_get_from_buffer(data.buffers->map_random, grid_offset);
         const tile_color *color;
-        const tile_color_set *set = &MINIMAP_COLOR_SETS[scenario_property_climate()];
+        const tile_color_set *set = &MINIMAP_COLOR_SETS[data.buffers->climate];
         if (terrain & TERRAIN_WATER) {
             color = &set->water[rand & 3];
         } else if (terrain & (TERRAIN_SHRUB | TERRAIN_TREE)) {
@@ -132,10 +143,21 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
     }
 }
 
-void widget_scenario_minimap_draw(int x_offset, int y_offset, int width, int height)
+const color_t *game_file_minimap_create(const file_buffers *buffers)
 {
-    set_bounds(x_offset, y_offset, width + 2, height);
-    graphics_set_clip_rectangle(x_offset, y_offset, width, height);
-    foreach_map_tile(draw_minimap_tile);
+    data.buffers = buffers;
+
+    graphics_save_to_buffer(0, 0, FILE_MINIMAP_IMAGE_WIDTH, FILE_MINIMAP_IMAGE_HEIGHT, data.screen);
+    graphics_fill_rect(0, 0, FILE_MINIMAP_IMAGE_WIDTH, FILE_MINIMAP_IMAGE_HEIGHT, 0);
+    city_view_set_custom_lookup(buffers->grid_start, buffers->grid_width,
+        buffers->grid_height, buffers->grid_border_size);
+    city_view_foreach_minimap_tile(0, 0, MINIMAP_X_OFFSET, MINIMAP_Y_OFFSET,
+        MINIMAP_WIDTH_TILES, MINIMAP_HEIGHT_TILES, draw_minimap_tile);
+    graphics_set_clip_rectangle(0, 0, FILE_MINIMAP_IMAGE_WIDTH, FILE_MINIMAP_IMAGE_HEIGHT);
     graphics_reset_clip_rectangle();
+    city_view_restore_lookup();
+    graphics_save_to_buffer(0, 0, FILE_MINIMAP_IMAGE_WIDTH, FILE_MINIMAP_IMAGE_HEIGHT, data.dst);
+    graphics_draw_from_buffer(0, 0, FILE_MINIMAP_IMAGE_WIDTH, FILE_MINIMAP_IMAGE_HEIGHT, data.screen);
+
+    return data.dst;
 }

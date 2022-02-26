@@ -20,6 +20,9 @@ int city_view_orientation(void);
 
 void city_view_reset_orientation(void);
 
+void city_view_set_custom_lookup(int start_offset, int width, int height, int border_size);
+void city_view_restore_lookup(void);
+
 void city_view_get_camera(int *x, int *y);
 void city_view_get_pixel_offset(int *x, int *y);
 void city_view_get_camera_in_pixels(int *x, int *y);

@@ -58,6 +58,11 @@ void window_popup_dialog_show(popup_dialog_type type, void (*okFunc)(int), int h
 void widget_minimap_invalidate(void)
 {}
 
+const void *game_file_minimap_create(const void *buffers)
+{
+    return 0;
+}
+
 int window_building_info_get_building_type(void)
 {
     return 0;

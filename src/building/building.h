@@ -141,6 +141,8 @@ typedef struct {
 
 building *building_get(int id);
 
+void building_get_from_buffer(buffer *buf, int id, building *b);
+
 building *building_main(building *b);
 
 building *building_next(building *b);
