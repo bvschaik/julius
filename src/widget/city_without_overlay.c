@@ -25,7 +25,6 @@
 #include "game/resource.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "graphics/renderer.h"
 #include "graphics/window.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -508,11 +507,10 @@ static void draw_animation(int x, int y, int grid_offset)
                     image_draw(image_id + img->animation.start_offset + animation_offset + 5, x + 77, y - 49,
                         color_mask, draw_context.scale);
                 } else {
-                    int y_offset = graphics_renderer()->isometric_images_are_joined() ? 15 : 30;
-                    int ydiff = y_offset * map_property_multi_tile_size(grid_offset) + 15;
+                    int y_offset = img->top_height > 0 ? img->top_height - FOOTPRINT_HALF_HEIGHT : 0;
                     image_draw(image_id + img->animation.start_offset + animation_offset,
                         x + img->animation.sprite_offset_x,
-                        y + ydiff + img->animation.sprite_offset_y - img->height,
+                        y + img->animation.sprite_offset_y - y_offset,
                         color_mask, draw_context.scale);
                 }
             }
@@ -584,9 +582,9 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
     if (img->animation.num_sprites
         && map_property_is_draw_tile(grid_offset)
         && b->type == BUILDING_HIPPODROME) {
-        int y_offset = graphics_renderer()->isometric_images_are_joined() ? 90 : 165;
         image_draw(image_id + 1,
-            x + img->animation.sprite_offset_x, y + img->animation.sprite_offset_y - img->height + y_offset,
+            x + img->animation.sprite_offset_x,
+            y + img->animation.sprite_offset_y - img->top_height + FOOTPRINT_HALF_HEIGHT,
             draw_building_as_deleted(b) ? COLOR_MASK_RED : COLOR_MASK_NONE, draw_context.scale
         );
     }

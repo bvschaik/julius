@@ -464,9 +464,9 @@ static void draw_single_reservoir(int x, int y, int has_water)
     draw_building(image_id, x, y);
     if (has_water) {
         const image *img = image_get(image_id);
-        int x_water = x - 58 + img->animation.sprite_offset_x - 2;
-        int y_water = y + img->animation.sprite_offset_y - (img->height - (img->height == 161 ? 135 : 90));
-        image_draw(image_id + 1, x_water, y_water, COLOR_MASK_NONE, scale);
+        int x_water = x - FOOTPRINT_WIDTH + img->animation.sprite_offset_x - 2;
+        int y_water = y + img->animation.sprite_offset_y - img->top_height + FOOTPRINT_HALF_HEIGHT * 3;
+        image_draw(image_id + 1, x_water, y_water, COLOR_MASK_BUILDING_GHOST, scale);
     }
 }
 

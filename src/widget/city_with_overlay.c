@@ -11,7 +11,6 @@
 #include "game/state.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
-#include "graphics/renderer.h"
 #include "map/bridge.h"
 #include "map/building.h"
 #include "map/figure.h"
@@ -557,11 +556,10 @@ static void draw_animation(int x, int y, int grid_offset)
                     if (animation_offset > img->animation.num_sprites) {
                         animation_offset = img->animation.num_sprites;
                     }
-                    int y_offset = graphics_renderer()->isometric_images_are_joined() ? 15 : 30;
-                    int ydiff = y_offset * map_property_multi_tile_size(grid_offset) + 15;
+                    int y_offset = img->top_height > 0 ? img->top_height - FOOTPRINT_HALF_HEIGHT : 0;
                     image_draw(image_id + img->animation.start_offset + animation_offset,
                         x + img->animation.sprite_offset_x,
-                        y + ydiff + img->animation.sprite_offset_y - img->height,
+                        y + img->animation.sprite_offset_y - y_offset,
                         color_mask, scale);
                 }
             }

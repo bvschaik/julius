@@ -186,8 +186,6 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
     if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
         assets_load_unpacked_asset(image_id);
     }
-    int num_tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-    y -= FOOTPRINT_HALF_HEIGHT * (num_tiles - 1);
-    y -= img->top_height - FOOTPRINT_HALF_HEIGHT * num_tiles;
+    y -= img->top_height - FOOTPRINT_HALF_HEIGHT;
     graphics_renderer()->draw_isometric_top(img, x, y, color_mask, scale);
 }
