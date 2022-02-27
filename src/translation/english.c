@@ -757,7 +757,10 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_OVERLAY_RELIGION, "Religion overlay" },
     {TR_HOTKEY_SHOW_OVERLAY_ROADS, "Roads overlay" },
     {TR_HOTKEY_ROTATE_MAP_NORTH, "Rotate map to North" },
-    {TR_HOTKEY_BUILD_WHEAT_FARM, "Wheat farm" }
+    {TR_HOTKEY_BUILD_WHEAT_FARM, "Wheat farm" },
+    {TR_CONFIG_UI_MESSAGE_ALERTS, "Show new messages as alerts instead of popups"},
+    {TR_HOTKEY_SHOW_MESSAGES, "Show messages"},   
+    {TR_HOTKEY_SHOW_EMPIRE_MAP, "Show empire map"}     
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -40,7 +40,9 @@
 #include "widget/sidebar/city.h"
 #include "widget/sidebar/military.h"
 #include "window/advisors.h"
+#include "window/empire.h"
 #include "window/file_dialog.h"
+#include "window/message_list.h"
 
 static void draw_background(void)
 {
@@ -508,6 +510,17 @@ static void handle_hotkeys(const hotkeys *h)
     if (h->show_overlay_relative) {
         show_overlay_from_grid_offset(widget_city_current_grid_offset());
     }
+
+    if (h->show_empire_map) {
+        if (!window_is(WINDOW_EMPIRE)) {
+            window_empire_show();
+        }
+    }
+
+    if (h->show_messages) {
+        window_message_list_show();
+    }
+
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)

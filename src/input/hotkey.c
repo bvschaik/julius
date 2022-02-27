@@ -350,6 +350,13 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             def->action = &data.hotkey_state.building;
             def->value = BUILDING_WHEAT_FARM;
             break;
+        case HOTKEY_SHOW_EMPIRE_MAP:
+            def->action = &data.hotkey_state.show_empire_map;
+            break;
+        case HOTKEY_SHOW_MESSAGES:
+            def->action = &data.hotkey_state.show_messages;
+            break;
+
 		default:
             def->action = 0;
     }

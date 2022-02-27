@@ -32,6 +32,8 @@ typedef struct {
     int copy_building_settings;
     int paste_building_settings;
     int undo;
+    int show_empire_map;
+    int show_messages;
 } hotkeys;
 
 void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings);

@@ -1,5 +1,7 @@
 #include "message.h"
 
+#include "city/warning.h"
+#include "core/config.h"
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/lang.h"
@@ -187,6 +189,12 @@ void city_message_post(int use_popup, int message_type, int param1, int param2)
         data.problem_count = 1;
         window_invalidate();
     }
+
+    if (config_get(CONFIG_UI_MESSAGE_ALERTS)) {
+        city_warning_show_console(lang_get_message(text_id)->title.text);
+        use_popup = 0;
+    }
+
     if (use_popup && window_is(WINDOW_CITY)) {
         show_message_popup(id);
     } else if (use_popup) {
