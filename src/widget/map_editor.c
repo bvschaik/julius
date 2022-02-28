@@ -53,24 +53,22 @@ static void init_draw_context(void)
 
 static void draw_footprint(int x, int y, int grid_offset)
 {
-    if (grid_offset < 0) {
-        // Outside map: draw black tile
-        image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_BLACK), x, y, 0, draw_context.scale);
-    } else if (map_property_is_draw_tile(grid_offset)) {
-        // Valid grid_offset and leftmost tile -> draw
-        color_t color_mask = 0;
-        int image_id = map_image_at(grid_offset);
-        if (draw_context.advance_water_animation &&
-            image_id >= draw_context.image_id_water_first &&
-            image_id <= draw_context.image_id_water_last) {
-            image_id++;
-            if (image_id > draw_context.image_id_water_last) {
-                image_id = draw_context.image_id_water_first;
-            }
-            map_image_set(grid_offset, image_id);
-        }
-        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask, draw_context.scale);
+    if (grid_offset < 0 || !map_property_is_draw_tile(grid_offset)) {
+        return;
     }
+    // Valid grid_offset and leftmost tile -> draw
+    color_t color_mask = 0;
+    int image_id = map_image_at(grid_offset);
+    if (draw_context.advance_water_animation &&
+        image_id >= draw_context.image_id_water_first &&
+        image_id <= draw_context.image_id_water_last) {
+        image_id++;
+        if (image_id > draw_context.image_id_water_last) {
+            image_id = draw_context.image_id_water_first;
+        }
+        map_image_set(grid_offset, image_id);
+    }
+    image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask, draw_context.scale);
 }
 
 static void draw_top(int x, int y, int grid_offset)
@@ -118,11 +116,15 @@ void widget_map_editor_draw(void)
 {
     update_zoom_level();
     set_city_clip_rectangle();
-
+    
     init_draw_context();
+    int x, y, width, height;
+    city_view_get_viewport(&x, &y, &width, &height);
+    graphics_fill_rect(x, y, width, height, COLOR_BLACK);
     city_view_foreach_map_tile(draw_footprint);
     city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
     map_editor_tool_draw(&data.current_tile);
+    graphics_reset_clip_rectangle();
 }
 
 static void update_city_view_coords(int x, int y, map_tile *tile)

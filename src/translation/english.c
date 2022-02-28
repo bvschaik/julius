@@ -65,6 +65,9 @@ static translation_string all_strings[] = {
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "Highlight legion on cursor hover"},
     {TR_CONFIG_ROTATE_MANUALLY, "Rotate Gatehouse and Triumph Arch by hotkey"},
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Enable military sidebar"},
+    {TR_CONFIG_UI_INVERSE_MAP_DRAG, "Inverse dragging map with right mouse button"},
+    {TR_CONFIG_UI_MESSAGE_ALERTS, "Show new messages as alerts instead of popups"},
+    {TR_CONFIG_UI_SHOW_GRID_DURING_CONSTRUCTION, "Show grid during construction and on the map editor"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Fix immigration bug on very hard"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Fix 100-year-old ghosts"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Fix Emperor change and survival time in custom missions"},
@@ -740,7 +743,6 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TITLE_SICKNESS, "Plague in the city"},
     {TR_CITY_MESSAGE_TEXT_SICKNESS, "Plague has broken out in the city, a building has been put in quarantine and doctors or surgeons are requisitioned to decontaminate it."},
     {TR_FIGURES_CARTPUSHER_GOING_TO_ROME, "Delivering the request to Rome"},
-    {TR_CONFIG_UI_INVERSE_MAP_DRAG, "Inverse dragging map with right mouse button"},
     {TR_CITY_WARNING_DATA_COPY_SUCCESS, "Settings copied" },
     {TR_CITY_WARNING_DATA_COPY_NOT_SUPPORTED, "Can't copy from this building" },
     {TR_CITY_WARNING_DATA_PASTE_SUCCESS, "Settings pasted" },
@@ -758,7 +760,6 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_OVERLAY_ROADS, "Roads overlay" },
     {TR_HOTKEY_ROTATE_MAP_NORTH, "Rotate map to North" },
     {TR_HOTKEY_BUILD_WHEAT_FARM, "Wheat farm" },
-    {TR_CONFIG_UI_MESSAGE_ALERTS, "Show new messages as alerts instead of popups"},
     {TR_HOTKEY_SHOW_MESSAGES, "Show messages"},   
     {TR_HOTKEY_SHOW_EMPIRE_MAP, "Show empire map"}     
 };

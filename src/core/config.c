@@ -36,6 +36,8 @@ static const char *ini_keys[] = {
     "ui_show_max_prosperity",
     "ui_digit_separator",
     "ui_inverse_map_drag",
+    "ui_message_alerts",
+    "ui_show_grid_during_construction",
     "gameplay_change_max_grand_temples",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",
@@ -58,7 +60,6 @@ static const char *ini_keys[] = {
     "gameplay_change_disable_infinite_wolves_spawning",
     "gameplay_change_romers_dont_skip_corners",
     "gameplay_change_yearly_autosave",
-    "ui_message_alerts"
 };
 
 static const char *ini_string_keys[] = {

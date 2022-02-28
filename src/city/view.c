@@ -1,8 +1,10 @@
 #include "view.h"
 
+#include "building/construction.h"
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/direction.h"
+#include "editor/editor.h"
 #include "graphics/menu.h"
 #include "graphics/renderer.h"
 #include "map/grid.h"
@@ -434,6 +436,12 @@ void city_view_get_viewport_size_tiles(int *width, int *height)
 int city_view_is_sidebar_collapsed(void)
 {
     return data.sidebar_collapsed;
+}
+
+int city_view_should_show_grid(void)
+{
+    return config_get(CONFIG_UI_SHOW_GRID_DURING_CONSTRUCTION) &&
+        (editor_is_active() || building_construction_type() != BUILDING_NONE);
 }
 
 void city_view_start_sidebar_toggle(void)

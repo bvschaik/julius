@@ -59,6 +59,8 @@ void city_view_get_viewport_size_tiles(int *width, int *height);
 
 int city_view_is_sidebar_collapsed(void);
 
+int city_view_should_show_grid(void);
+
 void city_view_start_sidebar_toggle(void);
 
 void city_view_toggle_sidebar(void);
