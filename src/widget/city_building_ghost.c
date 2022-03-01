@@ -269,7 +269,6 @@ static void image_draw_farm(building_type type, int image_id, int x, int y, colo
     }
 }
 
-
 static void draw_regular_building(building_type type, int image_id, int x, int y, int grid_offset,
     int num_tiles, int *blocked_tiles)
 {
@@ -1054,6 +1053,58 @@ int city_building_ghost_mark_deleting(const map_tile *tile)
     return 1;
 }
 
+static void draw_grid_tile(int x, int y, int grid_offset)
+{
+    static int image_id = 0;
+    if (!image_id) {
+        image_id = assets_get_image_id("UI_Elements", "Grid_Full");
+    }
+    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        return;
+    }
+    image_draw(image_id, x, y, COLOR_MASK_NONE, scale);
+}
+
+static void draw_grid_around_building(int grid_offset, int size, int orientation, int x, int y)
+{
+    int num_tiles = size * size;
+    city_view_foreach_tile_in_range(grid_offset, size, 2, draw_grid_tile);
+    for (int i = 0; i < num_tiles; i++) {
+        draw_grid_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], grid_offset + TILE_GRID_OFFSETS[orientation][i]);
+    }
+}
+
+static void draw_partial_grid(int grid_offset, int x, int y, building_type type)
+{
+    int size = building_properties_for_type(type)->size;
+    int orientation_index = city_view_orientation() / 2;
+    if (building_is_farm(type) || type == BUILDING_DRAGGABLE_RESERVOIR || type == BUILDING_WAREHOUSE) {
+        size = 3;
+        if (type == BUILDING_DRAGGABLE_RESERVOIR) {
+            grid_offset += RESERVOIR_GRID_OFFSETS[orientation_index];
+        }
+    }
+    draw_grid_around_building(grid_offset, size, orientation_index, x, y);
+    if (building_is_fort(type)) {
+        grid_offset += FORT_GROUND_GRID_OFFSETS[building_rotation_get_rotation()][orientation_index];
+        int ground_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
+        int x_ground = x + FORT_GROUND_X_VIEW_OFFSETS[ground_index];
+        int y_ground = y + FORT_GROUND_Y_VIEW_OFFSETS[ground_index];
+        draw_grid_around_building(grid_offset, 4, ground_index, x_ground, y_ground);
+    } else if (type == BUILDING_HIPPODROME) {
+        building_rotation_force_two_orientations();
+        orientation_index = building_rotation_get_building_orientation(building_rotation_get_rotation()) / 2;
+        int grid_offset2 = grid_offset + building_rotation_get_delta_with_rotation(5);
+        int grid_offset3 = grid_offset + building_rotation_get_delta_with_rotation(10);
+        int x_part2 = x + HIPPODROME_X_VIEW_OFFSETS[orientation_index];
+        int y_part2 = y + HIPPODROME_Y_VIEW_OFFSETS[orientation_index];
+        int x_part3 = x_part2 + HIPPODROME_X_VIEW_OFFSETS[orientation_index];
+        int y_part3 = y_part2 + HIPPODROME_Y_VIEW_OFFSETS[orientation_index];
+        draw_grid_around_building(grid_offset2, size, orientation_index, x_part2, y_part2);
+        draw_grid_around_building(grid_offset3, size, orientation_index, x_part3, y_part3);
+    }
+}
+
 void city_building_ghost_draw(const map_tile *tile)
 {
     if (!tile->grid_offset || scroll_in_progress()) {
@@ -1066,6 +1117,10 @@ void city_building_ghost_draw(const map_tile *tile)
     scale = city_view_get_scale() / 100.0f;
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
+
+    if (!city_view_should_show_grid()) {
+        draw_partial_grid(tile->grid_offset, x, y, type);
+    }
 
     switch (type) {
         case BUILDING_DRAGGABLE_RESERVOIR:

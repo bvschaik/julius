@@ -163,5 +163,7 @@
     <image id="Stop_Maintain_4" src="Stop_Maintain_4"/> <!-- Button Disabled -->
 	<!-- Victory Banner by Ouaz -->
 	<image id="Victory_Banner" src="Victory_Banner"/>
+    <!-- Grid image by crudelios -->
+    <image id="Grid_Full" src="Grid_Full"/>
 </assetlist>
 	
