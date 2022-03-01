@@ -87,6 +87,28 @@ static int should_change_destination(const figure *f, int building_id, int x_dst
     return distance_current / 2 > distance_new;
 }
 
+static void validate_action_for_old_destination(figure *f)
+{
+    if (f->type == FIGURE_CART_PUSHER) {
+        building *b = building_get(f->destination_building_id);
+        switch (f->action_state) {
+            case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
+            case FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY:
+            case FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
+                if (building_is_workshop(b->type)) {
+                    f->action_state = FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP;
+                } else if (b->type == BUILDING_GRANARY) {
+                    f->action_state = FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY;
+                } else {
+                    f->action_state = FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+}
+
 static void set_destination(figure *f, int action, int building_id, int x_dst, int y_dst)
 {
     f->action_state = action;
@@ -96,6 +118,8 @@ static void set_destination(figure *f, int action, int building_id, int x_dst, i
         f->destination_building_id = building_id;
         f->destination_x = x_dst;
         f->destination_y = y_dst;
+    } else {
+        validate_action_for_old_destination(f);
     }
 }
 
