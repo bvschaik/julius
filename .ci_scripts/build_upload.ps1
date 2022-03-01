@@ -48,7 +48,7 @@ if ("${env:COMPILER}" -eq "msvc") {
 
 $deploy_file = "augustus-$version-$suffix.zip"
 
-$packed_assets = false
+$packed_assets = $false
 
 if ($repo -eq "release") {
     echo "Packing the assets"
@@ -62,13 +62,14 @@ if ($repo -eq "release") {
     if ($?) {
         .\asset_packer.exe ..\..\
         if ($?) {
-            $packed_assets = true
             Move-Item -Path ..\..\packed_assets -Destination ..\..\..\assets
+            $packed_assets = $true
         }
     }
     if (!$packed_assets) {
         echo "Unable to pack the assets. Using the original folder"
         Move-Item -Path ..\..\assets -Destination ..\..\..\
+        $packed_assets = $true
     }
 
     cd ..\..\..
@@ -76,7 +77,6 @@ if ($repo -eq "release") {
     xcopy /ei res\maps .\maps
     xcopy /ei res\manual .\manual
     7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll assets maps manual
-    $packed_assets = true
 } else {
     7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
 }
@@ -119,8 +119,8 @@ if (!$packed_assets) {
     if ($?) {
         .\asset_packer.exe ..\..\
         if ($?) {
-            $packed_assets = true
             Move-Item -Path ..\..\packed_assets -Destination ..\..\..\assets
+            $packed_assets = $true
         }
     }
     if (!$packed_assets) {
