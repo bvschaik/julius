@@ -57,8 +57,7 @@ if ($repo -eq "release") {
     mkdir build
     cd build
 
-    $env:path = "C:\msys64\mingw32\bin;${env:path}"
-    cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -D CMAKE_C_COMPILER=i686-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
+    cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -D CMAKE_C_COMPILER=x86_64-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
     cmake --build . -j 4 --config Release
     if ($?) {
         .\asset_packer.exe ..\..\
