@@ -1062,7 +1062,7 @@ static void draw_grid_tile(int x, int y, int grid_offset)
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         return;
     }
-    image_draw(image_id, x, y, COLOR_MASK_NONE, scale);
+    image_draw(image_id, x, y, COLOR_GRID, scale);
 }
 
 static void draw_grid_around_building(int grid_offset, int size, int orientation, int x, int y)
