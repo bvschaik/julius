@@ -35,10 +35,16 @@ void image_blend_footprint_color(int x, int y, color_t color, float scale)
 
 static color_t base_color_for_font(font_t font)
 {
-    if (font == FONT_NORMAL_PLAIN || font == FONT_LARGE_PLAIN || font == FONT_SMALL_PLAIN) {
-        return COLOR_FONT_PLAIN;
+    switch (font) {
+        case FONT_SMALL_PLAIN:
+        case FONT_NORMAL_PLAIN:
+        case FONT_LARGE_PLAIN:
+        case FONT_NORMAL_BROWN:
+        case FONT_LARGE_BROWN:
+            return COLOR_FONT_PLAIN;
+        default:
+            return COLOR_MASK_NONE;
     }
-    return COLOR_MASK_NONE;
 }
 
 static void draw_multibyte_letter(font_t font, const image *img, int x, int y, color_t color, float scale)

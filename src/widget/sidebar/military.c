@@ -243,11 +243,13 @@ static void draw_military_info_text(int x_offset, int y_offset)
     const formation *m = formation_get(legion->formation_id);
     update_legion_info(legion, m);
 
-    int formation_image = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
+    int formation_image_id = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
+    const image *formation_image = image_get(formation_image_id);
 
     // Legion name
-    image_draw(formation_image,
-        x_offset + (CONTENT_WIDTH - image_get(formation_image)->width) / 2, y_offset + 12, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(formation_image_id,
+        x_offset + (CONTENT_WIDTH - formation_image->width - formation_image->x_offset) / 2, y_offset + 12,
+        COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw_centered(138, m->legion_id, x_offset, y_offset + 40, CONTENT_WIDTH, FONT_NORMAL_WHITE);
 
     // Number of soldiers

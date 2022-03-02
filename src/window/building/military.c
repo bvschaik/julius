@@ -180,7 +180,6 @@ int window_building_handle_mouse_barracks(const mouse *m, building_info_context 
     return 0;
 }
 
-
 int window_building_handle_mouse_grand_temple_mars(const mouse *m, building_info_context *c)
 {
     if (generic_buttons_handle_mouse(m, c->x_offset + 285, c->y_offset + 55,
@@ -245,7 +244,7 @@ void window_building_draw_legion_info(building_info_context *c)
     int icon_image_id = image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id;
     const image *icon_image = image_get(icon_image_id);
     int icon_height = icon_image->height;
-    image_draw(icon_image_id, c->x_offset + 16 + (40 - icon_image->width) / 2, c->y_offset + 16,
+    image_draw(icon_image_id, c->x_offset + 16 + (40 - icon_image->width - icon_image->x_offset) / 2, c->y_offset + 16,
         COLOR_MASK_NONE, SCALE_NONE);
     // standard flag
     int flag_image_id = image_group(GROUP_FIGURE_FORT_FLAGS);
@@ -259,15 +258,16 @@ void window_building_draw_legion_info(building_info_context *c)
     }
     const image *flag_image = image_get(flag_image_id);
     int flag_height = flag_image->height;
-    image_draw(flag_image_id, c->x_offset + 16 + (40 - flag_image->width) / 2, c->y_offset + 16 + icon_height,
-        COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(flag_image_id, c->x_offset + 16 + (40 - flag_image->width - flag_image->x_offset) / 2,
+        c->y_offset + 16 + icon_height, COLOR_MASK_NONE, SCALE_NONE);
     // standard pole and morale ball
     int morale_offset = m->morale / 5;
     if (morale_offset > 20) {
         morale_offset = 20;
     }
-    int image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - morale_offset;
-    image_draw(image_id, c->x_offset + 16 + (40 - image_get(image_id)->width) / 2,
+    int pole_image_id = image_group(GROUP_FIGURE_FORT_STANDARD_POLE) + 20 - morale_offset;
+    const image *pole_image = image_get(pole_image_id);
+    image_draw(pole_image_id, c->x_offset + 16 + (40 - pole_image->width - pole_image->x_offset * 2) / 2,
         c->y_offset + 16 + icon_height + flag_height, COLOR_MASK_NONE, SCALE_NONE);
 
     // number of soldiers
