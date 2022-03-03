@@ -973,6 +973,9 @@ static void draw_shipyard_wharf(const map_tile *tile, int x, int y, building_typ
 {
     int dir_absolute, dir_relative;
     int blocked = map_water_determine_orientation_size2(tile->x, tile->y, 1, &dir_absolute, &dir_relative);
+    if (blocked) {
+        dir_relative = 0;
+    }
     if (city_finance_out_of_money()) {
         blocked = 1;
     }
@@ -1053,13 +1056,29 @@ int city_building_ghost_mark_deleting(const map_tile *tile)
     return 1;
 }
 
+static int is_water_building(void)
+{
+    switch (ghost_building.type) {
+        case BUILDING_DOCK:
+        case BUILDING_SHIPYARD:
+        case BUILDING_WHARF:
+        case BUILDING_LOW_BRIDGE:
+        case BUILDING_SHIP_BRIDGE:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
 static void draw_grid_tile(int x, int y, int grid_offset)
 {
     static int image_id = 0;
     if (!image_id) {
         image_id = assets_get_image_id("UI_Elements", "Grid_Full");
     }
-    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+    if (map_terrain_is(grid_offset, TERRAIN_BUILDING) || map_terrain_is(grid_offset, TERRAIN_ROCK) ||
+        map_terrain_is(grid_offset, TERRAIN_ACCESS_RAMP) || map_terrain_is(grid_offset, TERRAIN_ELEVATION) ||
+        (map_terrain_is(grid_offset, TERRAIN_WATER) && !is_water_building())) {
         return;
     }
     image_draw(image_id, x, y, COLOR_GRID, scale);
@@ -1111,6 +1130,7 @@ void city_building_ghost_draw(const map_tile *tile)
         return;
     }
     building_type type = building_construction_type();
+    ghost_building.type = type;
     if (building_construction_draw_as_constructing() || type == BUILDING_NONE || type == BUILDING_CLEAR_LAND) {
         return;
     }
