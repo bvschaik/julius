@@ -106,6 +106,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDIT_TITLE, "新しいホットキーを押してください"},
     {TR_HOTKEY_DUPLICATE_TITLE, "ホットキーは使用中です"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "このキー操作は次の操作に割り当てられています:"},
+    {TR_WARNING_SCREENSHOT_SAVED, "保存したスクリーンショット： "}, // TODO: Google translate
 };
 
 void translation_japanese(const translation_string **strings, int *num_strings)

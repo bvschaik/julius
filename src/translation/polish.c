@@ -107,7 +107,9 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Przełącz informacje o bitwach"},
     {TR_HOTKEY_EDIT_TITLE, "Wprowadź skrót"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Ta kombinacja klawiszowa już jest wyznaczona dla tej czynności:"},
-    {TR_HOTKEY_DUPLICATE_TITLE, "Klawisz już użyty"},};
+    {TR_HOTKEY_DUPLICATE_TITLE, "Klawisz już użyty"},
+    {TR_WARNING_SCREENSHOT_SAVED, "Zapisano zrzut ekranu: "}, // TODO: Google translate
+};
 
 void translation_polish(const translation_string **strings, int *num_strings)
 {

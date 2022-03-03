@@ -107,7 +107,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "战斗信息切换"},
     {TR_HOTKEY_EDIT_TITLE, "按下新热键"},
     {TR_HOTKEY_DUPLICATE_TITLE, "热键已占用"},
-    {TR_HOTKEY_DUPLICATE_MESSAGE, "该键位已设定为以下功能:"}
+    {TR_HOTKEY_DUPLICATE_MESSAGE, "该键位已设定为以下功能:"},
+    {TR_WARNING_SCREENSHOT_SAVED, "截图已保存: "}, // TODO: Google translate
 };
 
 void translation_simplified_chinese(const translation_string **strings, int *num_strings)

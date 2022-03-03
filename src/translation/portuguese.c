@@ -108,6 +108,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDIT_TITLE, "Nova tecla de atalho"},
     {TR_HOTKEY_DUPLICATE_TITLE, "Atalho já utilizado"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Esta combinação de teclas já está designada para a seguinte ação:"},
+    {TR_WARNING_SCREENSHOT_SAVED, "Captura de tela salva: "},
 };
 
 void translation_portuguese(const translation_string **strings, int *num_strings)

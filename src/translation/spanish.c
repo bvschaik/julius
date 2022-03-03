@@ -108,6 +108,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDIT_TITLE, "Presiona la nueva tecla"},
     {TR_HOTKEY_DUPLICATE_TITLE, "Atajo actualmente en uso"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Esta combinación de teclas está actualmente en uso por la siguiente acción:"},
+    {TR_WARNING_SCREENSHOT_SAVED, "Captura de pantalla guardada: "}, // TODO: Google translate
 };
 
 void translation_spanish(const translation_string **strings, int *num_strings)
