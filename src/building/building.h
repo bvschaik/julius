@@ -102,6 +102,9 @@ typedef struct building {
             unsigned char is_stockpiling;
             unsigned char orientation;
             short fishing_boat_id;
+            unsigned char age_months;
+            unsigned char average_production_per_month;
+            short production_current_month;
         } industry;
         struct {
             unsigned char num_shows;

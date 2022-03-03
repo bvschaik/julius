@@ -89,6 +89,7 @@ static void advance_month(void)
     formation_update_monthly_morale_at_rest();
     city_message_decrease_delays();
     city_sentiment_decrement_blessing_boost();
+    building_industry_advance_stats();
     building_industry_start_strikes();
     building_trim();
 

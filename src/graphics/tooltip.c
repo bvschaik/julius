@@ -152,6 +152,12 @@ static void draw_button_tooltip(tooltip_context *c)
     } else {
         x = c->mouse_x - width - 20;
     }
+    if (x + width > screen_width() - 20) {
+        x = c->mouse_x - width - 20;
+    }
+    if (x < 20) {
+        x = 20;
+    }
 
     switch (window_get_id()) {
         case WINDOW_ADVISORS:
@@ -188,6 +194,13 @@ static void draw_button_tooltip(tooltip_context *c)
                 y = c->mouse_y - 62;
             }
             break;
+    }
+
+    if (y + height > screen_height() - 1) {
+        y = screen_height() - 1 - height;
+    }
+    if (y < 20) {
+        y = 20;
     }
 
     save_window_under_tooltip_to_buffer(x, y, width, height);

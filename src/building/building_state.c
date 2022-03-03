@@ -133,8 +133,17 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_u8(buf, b->data.industry.has_raw_materials);
         buffer_write_u8(buf, 0);
         buffer_write_u8(buf, b->data.industry.curse_days_left);
-        for (int i = 0; i < 6; i++) {
-            buffer_write_u8(buf, 0);
+        if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_POTTERY_WORKSHOP) {
+            buffer_write_u8(buf, b->data.industry.age_months);
+            buffer_write_u8(buf, b->data.industry.average_production_per_month);
+            buffer_write_i16(buf, b->data.industry.production_current_month);
+            for (int i = 0; i < 2; i++) {
+                buffer_write_u8(buf, 0);
+            }
+        } else {
+            for (int i = 0; i < 6; i++) {
+                buffer_write_u8(buf, 0);
+            }
         }
         buffer_write_i16(buf, b->data.industry.fishing_boat_id);
     } else {
@@ -353,7 +362,14 @@ static void read_type_data(buffer *buf, building *b, int building_buf_size)
         b->data.industry.has_raw_materials = buffer_read_u8(buf);
         buffer_skip(buf, 1);
         b->data.industry.curse_days_left = buffer_read_u8(buf);
-        buffer_skip(buf, 6);
+        if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_POTTERY_WORKSHOP) {
+            b->data.industry.age_months = buffer_read_u8(buf);
+            b->data.industry.average_production_per_month = buffer_read_u8(buf);
+            b->data.industry.production_current_month = buffer_read_i16(buf);
+            buffer_skip(buf, 2);
+        } else {
+            buffer_skip(buf, 6);
+        }
         b->data.industry.fishing_boat_id = buffer_read_i16(buf);
     } else {
         buffer_skip(buf, 26);

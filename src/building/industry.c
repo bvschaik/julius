@@ -16,6 +16,8 @@
 #define MAX_STORAGE 16
 #define INFINITE 10000
 
+#define RECORD_PRODUCTION_MONTHS 12
+
 #define MERCURY_BLESSING_LOADS 3
 
 enum {
@@ -258,8 +260,14 @@ int building_industry_has_produced_resource(building *b)
     return b->data.industry.progress >= max_progress(b);
 }
 
+static void update_production_stats(building *b)
+{
+    b->data.industry.production_current_month += 100;
+}
+
 void building_industry_start_new_production(building *b)
 {
+    update_production_stats(b);
     b->data.industry.progress = 0;
     if (b->subtype.workshop_type) {
         if (b->loads_stored) {
@@ -401,6 +409,27 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int road_
         return min_building->id;
     }
     return 0;
+}
+
+void building_industry_advance_stats(void)
+{
+    for (int i = MIN_FARM; i <= MAX_WORKSHOP; i++) {
+        building_type type = INDUSTRY_TYPES[i];
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED) {
+                continue;
+            }
+            if (b->data.industry.age_months < RECORD_PRODUCTION_MONTHS) {
+                b->data.industry.age_months++;
+            }
+            int sum_months = b->data.industry.average_production_per_month * (b->data.industry.age_months - 1);
+            int pending_production_percentage = calc_percentage(b->data.industry.progress, max_progress(b));
+            pending_production_percentage = calc_bound(pending_production_percentage, 0, 100);
+            sum_months += b->data.industry.production_current_month + pending_production_percentage;
+            b->data.industry.average_production_per_month = sum_months / b->data.industry.age_months;
+            b->data.industry.production_current_month = -pending_production_percentage;
+        }
+    }
 }
 
 void building_industry_start_strikes(void)

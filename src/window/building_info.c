@@ -3,7 +3,6 @@
 #include "building/barracks.h"
 #include "building/culture.h"
 #include "building/house_evolution.h"
-#include "building/industry.h"
 #include "building/model.h"
 #include "building/monument.h"
 #include "building/warehouse.h"
@@ -37,6 +36,7 @@
 #include "window/building/distribution.h"
 #include "window/building/figures.h"
 #include "window/building/government.h"
+#include "window/building/industry.h"
 #include "window/building/house.h"
 #include "window/building/military.h"
 #include "window/building/terrain.h"
@@ -914,7 +914,8 @@ static int handle_specific_building_info_mouse(const mouse *m)
             } else {
                 window_building_handle_mouse_warehouse(m, &context);
             }
-        } else if ((btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) || btype == BUILDING_PANTHEON) {
+        } else if ((btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) ||
+            btype == BUILDING_PANTHEON) {
             window_building_handle_mouse_grand_temple(m, &context);
         } else if (btype == BUILDING_LIGHTHOUSE) {
             window_building_handle_mouse_lighthouse(m, &context);
@@ -1007,6 +1008,11 @@ static void get_tooltip(tooltip_context *c)
         window_building_granary_get_tooltip_distribution_permissions(&translation);
     } else if (btype == BUILDING_WAREHOUSE) {
         window_building_warehouse_get_tooltip_distribution_permissions(&translation);
+    }
+    if (!text_id && !group_id && !translation) {
+        if (btype >= BUILDING_WHEAT_FARM && btype <= BUILDING_POTTERY_WORKSHOP) {
+            window_building_industry_get_tooltip(&context, &translation);
+        }
     }
     if (text_id || group_id || translation) {
         c->type = TOOLTIP_BUTTON;
