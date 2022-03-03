@@ -488,6 +488,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY_TOOLTIP, "Efficiency is the ratio between how much the building can produce in a year versus what it actually produced the past year." },
     {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_RAW_MATERIALS, "This building has low efficiency. This could be due to a lack of a close destination for the final goods." },
     {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_WORKSHOPS, "This building has low efficiency. This could be due to a lack of a constant supply of raw materials or of a close destination for the final goods." },
+    {TR_BUILDING_WINDOW_INDUSTRY_WHARF_AVERAGE_CATCH, "Average monthly catch:" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE, "Taverns" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_HEADER, "Games" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC, "Sponsor Great Games at your Colosseum, costing personal funds and resources from your city." },

@@ -294,6 +294,7 @@ void figure_fishing_boat_action(figure *f)
                 f->wait_ticks = 0;
                 b->figure_spawn_delay = 1;
                 b->data.industry.has_fish++;
+                b->data.industry.production_current_month += 100;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
             } else if (f->direction == DIR_FIGURE_LOST) {

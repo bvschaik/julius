@@ -340,6 +340,14 @@ void window_building_draw_wharf(building_info_context *c)
         window_building_draw_description(c, 102, text_id);
     }
 
+    int width = lang_text_draw(CUSTOM_TRANSLATION, TR_BUILDING_WINDOW_INDUSTRY_WHARF_AVERAGE_CATCH,
+        c->x_offset + 16, c->y_offset + 110, FONT_NORMAL_BLACK);
+    width += text_draw_number(b->data.industry.average_production_per_month, '@', "",
+        c->x_offset + 16 + width, c->y_offset + 110, FONT_NORMAL_BLACK, 0);
+    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
+        resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 16 + width, c->y_offset + 110,
+        COLOR_MASK_NONE, SCALE_NONE);
+
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
 }

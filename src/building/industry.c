@@ -423,7 +423,8 @@ void building_industry_advance_stats(void)
                 b->data.industry.age_months++;
             }
             int sum_months = b->data.industry.average_production_per_month * (b->data.industry.age_months - 1);
-            int pending_production_percentage = calc_percentage(b->data.industry.progress, max_progress(b));
+            int pending_production_percentage = b->type == BUILDING_WHARF ?
+                0 : calc_percentage(b->data.industry.progress, max_progress(b));
             pending_production_percentage = calc_bound(pending_production_percentage, 0, 100);
             sum_months += b->data.industry.production_current_month + pending_production_percentage;
             b->data.industry.average_production_per_month = sum_months / b->data.industry.age_months;
