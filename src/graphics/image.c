@@ -39,8 +39,6 @@ static color_t base_color_for_font(font_t font)
         case FONT_SMALL_PLAIN:
         case FONT_NORMAL_PLAIN:
         case FONT_LARGE_PLAIN:
-        case FONT_NORMAL_BROWN:
-        case FONT_LARGE_BROWN:
             return COLOR_FONT_PLAIN;
         default:
             return COLOR_MASK_NONE;
@@ -66,6 +64,10 @@ static void draw_multibyte_letter(font_t font, const image *img, int x, int y, c
         case FONT_LARGE_BLACK:
             graphics_renderer()->draw_image(img, x + 1, y + 1, 0xffcead9c, scale);
             graphics_renderer()->draw_image(img, x, y, COLOR_BLACK, scale);
+            break;
+        case FONT_NORMAL_BROWN:
+        case FONT_LARGE_BROWN:
+            graphics_renderer()->draw_image(img, x, y, COLOR_FONT_PLAIN, scale);
             break;
         default: // Plain + brown
             if (!color) {
