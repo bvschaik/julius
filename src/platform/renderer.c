@@ -797,25 +797,13 @@ static int save_to_texture(int texture_id, int x, int y, int width, int height)
     }
 
     SDL_Rect former_viewport;
-    SDL_Rect former_clip;
     SDL_RenderGetViewport(data.renderer, &former_viewport);
-    SDL_RenderGetClipRect(data.renderer, &former_clip);
-    int former_width, former_height;
-    SDL_QueryTexture(former_target, 0, 0, &former_width, &former_height);
-
-    SDL_Rect rect = { 0, 0, former_width, former_height };
-    SDL_RenderSetClipRect(data.renderer, &rect);
-    SDL_RenderSetViewport(data.renderer, &rect);
-    if (x + former_viewport.x + width >= former_width) {
-        width = former_width - x - former_viewport.x - 1;
-    }
     SDL_Rect src_rect = { x + former_viewport.x, y + former_viewport.y, width, height };
     SDL_Rect dst_rect = { 0, 0, width, height };
     SDL_SetRenderTarget(data.renderer, texture);
     SDL_RenderCopy(data.renderer, former_target, &src_rect, &dst_rect);
     SDL_SetRenderTarget(data.renderer, former_target);
     SDL_RenderSetViewport(data.renderer, &former_viewport);
-    SDL_RenderSetClipRect(data.renderer, &former_clip);
 
     if (!texture_info) {
         texture_info = malloc(sizeof(buffer_texture));
@@ -860,7 +848,7 @@ static void draw_saved_texture(int texture_id, int x, int y, int width, int heig
         return;
     }
     SDL_Rect src_coords = { 0, 0, texture_info->width, texture_info->height };
-    SDL_Rect dst_coords = { x, y, texture_info->width, height };
+    SDL_Rect dst_coords = { x, y, width, height };
     SDL_RenderCopy(data.renderer, texture_info->texture, &src_coords, &dst_coords);
 }
 
