@@ -15,7 +15,7 @@
 		<image id="Farmer 10" src="farmer_10"/>
 		<image id="Farmer 11" src="farmer_11"/>
 		<!-- Note: Ceres Complex Reference Assets DO NOT USE -->
-		<image id="Ceres_LT_0">
+		<image id="Ceres_LT_0" isometric="true">
 			<layer src="Ceres_Temple_Construction_0%"/>
 		</image>
 		<image id="Ceres_LT_25" width="178" height="159">
@@ -359,7 +359,7 @@
 			</animation>
 		</image>
 		<!-- Note: Mars Complex Reference Assets DO NOT USE -->
-		<image id="Mars_LT_0">
+		<image id="Mars_LT_0" isometric="true">
 			<layer src="Mars_Temple_Construction_0%"/>
 		</image>
 		<image id="Mars_LT_25" width="178" height="148">
@@ -430,7 +430,7 @@
 			</animation>
 		</image>
 		<!-- Note: Mercury Complex Reference Assets DO NOT USE -->
-		<image id="Mercury_LT_0">
+		<image id="Mercury_LT_0" isometric="true">
 			<layer src="Mercury_Temple_Construction_0%"/>
 		</image>
 		<image id="Mercury_LT_25" width="178" height="148">
@@ -499,7 +499,7 @@
 			</animation>
 		</image>
 		<!-- Note: Neptune Complex Reference Assets DO NOT USE -->
-		<image id="Neptune_LT_0">
+		<image id="Neptune_LT_0" isometric="true">
 			<layer src="Neptune_Temple_Construction_0%"/>
 		</image>
 		<image id="Neptune_LT_25" width="178" height="154">
@@ -723,7 +723,7 @@
 			</animation>
 		</image>
 		<!-- Note: Venus Complex Reference Assets DO NOT USE -->
-		<image id="Venus_LT_0">
+		<image id="Venus_LT_0" isometric="true">
 			<layer src="Venus_Temple_Construction_0%"/>
 		</image>
 		<image id="Venus_LT_25" width="178" height="142">
