@@ -413,7 +413,7 @@ static void determine_original_trees(buffer *images, int legacy_buffer)
                     }
                     int start = map_ring_start(1, ring);
                     int end = map_ring_end(1, ring);
-                    int base_offset = map_grid_offset(x, y);
+                    int base_offset = x + GRID_SIZE * y;
                     for (int i = start; i < end; i++) {
                         int current_offset = base_offset + map_ring_tile(i)->grid_offset;
                         if (map_grid_is_valid_offset(current_offset)) {
