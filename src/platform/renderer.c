@@ -838,7 +838,7 @@ static int save_to_texture(int texture_id, int x, int y, int width, int height)
     return texture_info->id;
 }
 
-static void draw_saved_texture(int texture_id, int x, int y, int width, int height)
+static void draw_saved_texture(int texture_id, int x, int y)
 {
     if (data.paused) {
         return;
@@ -848,7 +848,7 @@ static void draw_saved_texture(int texture_id, int x, int y, int width, int heig
         return;
     }
     SDL_Rect src_coords = { 0, 0, texture_info->width, texture_info->height };
-    SDL_Rect dst_coords = { x, y, width, height };
+    SDL_Rect dst_coords = { x, y, texture_info->width, texture_info->height };
     SDL_RenderCopy(data.renderer, texture_info->texture, &src_coords, &dst_coords);
 }
 

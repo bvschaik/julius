@@ -803,7 +803,7 @@ static void draw_background(void)
         }
         page_buttons[i].x = page_x_offset - 10;
         page_buttons[i].width = width + 15;
-        data.graphics_behind_tab[i] = graphics_save_to_texture(data.graphics_behind_tab[i],
+        data.graphics_behind_tab[i] = graphics_save_to_image(data.graphics_behind_tab[i],
             page_buttons[i].x, 75, page_buttons[i].width, 3);
         page_x_offset += width;
     }
@@ -850,7 +850,7 @@ static void draw_foreground(void)
             page_buttons[i].width, page_buttons[i].height,
             data.page_focus_button == i + 1);
         if (data.page == i) {
-            graphics_draw_from_texture(data.graphics_behind_tab[i], page_buttons[i].x, 75, page_buttons[i].width, 3);
+            graphics_draw_from_image(data.graphics_behind_tab[i], page_buttons[i].x, 75);
         } else {
             graphics_fill_rect(page_buttons[i].x, 75, page_buttons[i].width, 3, COLOR_WHITE);
         }

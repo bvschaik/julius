@@ -20,7 +20,7 @@ void graphics_draw_inset_rect(int x, int y, int width, int height);
 void graphics_fill_rect(int x, int y, int width, int height, color_t color);
 void graphics_shade_rect(int x, int y, int width, int height, int darkness);
 
-int graphics_save_to_texture(int image_id, int x, int y, int width, int height);
-void graphics_draw_from_texture(int image_id, int x, int y, int width, int height);
+int graphics_save_to_image(int image_id, int x, int y, int width, int height);
+void graphics_draw_from_image(int image_id, int x, int y);
 
 #endif // GRAPHICS_GRAPHICS_H

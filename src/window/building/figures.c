@@ -500,7 +500,7 @@ void window_building_draw_figure_list(building_info_context *c)
     } else {
         for (int i = 0; i < c->figure.count; i++) {
             button_border_draw(c->x_offset + 60 * i + 25, c->y_offset + 45, 52, 52, i == c->figure.selected_index);
-            graphics_draw_from_texture(data.figure_images[i], c->x_offset + 27 + 60 * i, c->y_offset + 47, 48, 48);
+            graphics_draw_from_image(data.figure_images[i], c->x_offset + 27 + 60 * i, c->y_offset + 47);
         }
         draw_figure_info(c, c->figure.figure_ids[c->figure.selected_index]);
     }
@@ -532,7 +532,7 @@ void window_building_prepare_figure_list(building_info_context *c)
         pixel_coordinate coord = { 0, 0 };
         for (int i = 0; i < c->figure.count; i++) {
             draw_figure_in_city(c->figure.figure_ids[i], &coord);
-            data.figure_images[i] = graphics_save_to_texture(data.figure_images[i], coord.x, coord.y, 48, 48);
+            data.figure_images[i] = graphics_save_to_image(data.figure_images[i], coord.x, coord.y, 48, 48);
         }
         widget_city_draw();
     }
