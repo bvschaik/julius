@@ -778,13 +778,11 @@ static int save_to_texture(int texture_id, int x, int y, int width, int height)
         if (texture_info) {
             SDL_DestroyTexture(texture_info->texture);
             texture_info->texture = 0;
+            texture_info->tex_width = 0;
+            texture_info->tex_height = 0;
         }
         texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET, width, height);
         if (!texture) {
-            if (texture_info) {
-                texture_info->tex_width = 0;
-                texture_info->tex_height = 0;
-            }
             return 0;
         }
 #ifdef USE_TEXTURE_SCALE_MODE

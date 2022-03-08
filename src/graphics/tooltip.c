@@ -68,8 +68,7 @@ static void reset_tooltip(tooltip_context *c)
 static void restore_window_under_tooltip_from_buffer(void)
 {
     if (button_tooltip_info.is_active) {
-        graphics_draw_from_image(button_tooltip_info.buffer_id,
-            button_tooltip_info.x, button_tooltip_info.y);
+        graphics_draw_from_image(button_tooltip_info.buffer_id, button_tooltip_info.x, button_tooltip_info.y);
     }
 }
 
@@ -349,7 +348,6 @@ static void draw_tooltip(tooltip_context *c)
     } else if (c->type == TOOLTIP_SENATE) {
         draw_senate_tooltip(c);
     }
-
 }
 
 void tooltip_invalidate(void)
