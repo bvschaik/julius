@@ -18,6 +18,7 @@ static struct {
 void assets_init(color_t **main_images, int *main_image_widths)
 {
     if (graphics_renderer()->has_image_atlas(ATLAS_EXTRA_ASSET)) {
+        asset_image_reload_climate();
         return;
     }
 
@@ -89,5 +90,13 @@ void assets_load_unpacked_asset(int image_id)
     if (!img) {
         return;
     }
-    graphics_renderer()->load_unpacked_image(&img->img, img->data);
+    const color_t *data;
+    if (img->is_reference) {
+        asset_image *referenced_asset =
+            asset_image_get_from_id(img->first_layer.calculated_image_id - IMAGE_MAIN_ENTRIES);
+        data = referenced_asset->data;
+    } else {
+        data = img->data;
+    }
+    graphics_renderer()->load_unpacked_image(&img->img, data);
 }

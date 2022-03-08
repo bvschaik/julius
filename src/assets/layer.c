@@ -99,6 +99,9 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             l->data = asset_img->data;
             return;
         }
+        while(asset_img->is_reference) {
+            asset_img = asset_image_get_from_id(asset_img->first_layer.calculated_image_id - IMAGE_MAIN_ENTRIES);
+        }
     }
 
     int size = l->width * l->height * sizeof(color_t);

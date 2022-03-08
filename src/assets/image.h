@@ -12,6 +12,7 @@ typedef struct {
     layer *last_layer;
     image img;
     const color_t *data;
+    int is_reference;
 #ifdef BUILDING_ASSET_PACKER
     int has_frame_elements;
     int has_defined_size;
@@ -29,6 +30,7 @@ asset_image *asset_image_get_from_id(int image_id);
 int asset_image_init_array(void);
 asset_image *asset_image_create(void);
 int asset_image_load_all(color_t **main_images, int *main_image_widths);
+void asset_image_reload_climate(void);
 
 void asset_image_copy_isometric_footprint(color_t *dst, const color_t *src, int width, int height,
     int dst_x_offset, int dst_y_offset, int dst_width, int src_x_offset, int src_y_offset, int src_width);
