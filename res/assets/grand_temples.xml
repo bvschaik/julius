@@ -332,7 +332,7 @@
 			<layer src="Neptune_Temple_Complex_Module_OFF" x="98" y="27"/>
 		</image>
 		<!-- Note: Pantheon Reference Assets DO NOT USE -->
-		<image id="Pantheon_Const_00">
+		<image id="Pantheon_Const_00" isometric="true">
 			<layer src="Pantheon_Construction_0%"/>
 		</image>
 		<!-- Note: Pantheon Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
