@@ -435,6 +435,7 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
 
 void asset_image_reload_climate(void)
 {
+#ifndef BUILDING_ASSET_PACKER
     asset_image *current_image;
     array_foreach(asset_images, current_image) {
         if (current_image->is_reference) {
@@ -448,6 +449,7 @@ void asset_image_reload_climate(void)
             current_image->img.height = referenced->height;
         }
     }
+#endif
 }
 
 void asset_image_copy_isometric_top(color_t *dst, const color_t *src, int width, int height,
