@@ -760,6 +760,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_OVERLAY_BARBER, "Barber overlay" },
     {TR_HOTKEY_SHOW_OVERLAY_BATHHOUSE, "Baths overlay" },
     {TR_HOTKEY_SHOW_OVERLAY_CLINIC, "Clinics overlay" },
+    {TR_HOTKEY_SHOW_OVERLAY_SICKNESS, "Sickness overlay" },
     {TR_HOTKEY_SHOW_OVERLAY_TAX_INCOME, "Tax Income overlay" },
     {TR_HOTKEY_SHOW_OVERLAY_RELIGION, "Religion overlay" },
     {TR_HOTKEY_SHOW_OVERLAY_ROADS, "Roads overlay" },
