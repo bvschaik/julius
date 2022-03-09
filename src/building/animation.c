@@ -12,6 +12,16 @@
 #include "map/image.h"
 #include "map/sprite.h"
 
+static void advance_monument_secondary_animation(building *b)
+{
+    if (b->type == BUILDING_GRAND_TEMPLE_CERES && b->data.monument.upgrades == 1) {
+        b->data.monument.secondary_frame++;
+        if (b->data.monument.secondary_frame > 4) {
+            b->data.monument.secondary_frame = 0;
+        }
+    }
+}
+
 int building_animation_offset(building *b, int image_id, int grid_offset)
 {
     if (b->type == BUILDING_FOUNTAIN && (b->num_workers <= 0 || !b->has_water_access)) {
@@ -155,6 +165,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
         // Absolutely normal case
         new_sprite = map_sprite_animation_at(grid_offset) + 1;
         if (new_sprite > img->animation.num_sprites) {
+            advance_monument_secondary_animation(b);
             new_sprite = 1;
         }
     }

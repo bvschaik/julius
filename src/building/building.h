@@ -144,8 +144,9 @@ typedef struct building {
         struct {
             short resources_needed[16];
             int upgrades;
-            int progress;
+            short progress;
             short phase;
+            short secondary_frame;
         } monument;
         struct {
             unsigned char was_tent;

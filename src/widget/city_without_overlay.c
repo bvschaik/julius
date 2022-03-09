@@ -475,6 +475,18 @@ static void draw_granary_stores(const image *img, const building *b, int x, int 
     }
 }
 
+static void draw_ceres_module_crops(int x, int y, int image_offset, color_t color_mask)
+{
+    int image_id = assets_get_image_id("Grand_Temples", "Ceres Module 1 Crop");
+    image_draw(image_id + image_offset, x, y, color_mask, draw_context.scale);
+}
+
+static void draw_neptune_fountain(int x, int y, int image_offset, color_t color_mask)
+{
+    int image_id = assets_get_image_id("Grand_Temples", "Neptune Module 2 Fountain");
+    image_draw(image_id + image_offset, x, y, color_mask, draw_context.scale);
+}
+
 static void draw_animation(int x, int y, int grid_offset)
 {
     int image_id = map_image_at(grid_offset);
@@ -483,7 +495,7 @@ static void draw_animation(int x, int y, int grid_offset)
         if (map_property_is_draw_tile(grid_offset)) {
             int building_id = map_building_at(grid_offset);
             building *b = building_get(building_id);
-            int color_mask = 0;
+            color_t color_mask = 0;
             if (draw_building_as_deleted(b) || map_property_is_deleted(grid_offset)) {
                 color_mask = COLOR_MASK_RED;
             }
@@ -499,6 +511,14 @@ static void draw_animation(int x, int y, int grid_offset)
                 image_draw(image_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask, draw_context.scale);
             }
             int animation_offset = building_animation_offset(b, image_id, grid_offset);
+            if (b->type == BUILDING_GRAND_TEMPLE_CERES && b->data.monument.upgrades == 1 && animation_offset > 0) {
+                int y_offset = img->top_height > 0 ? img->top_height - FOOTPRINT_HALF_HEIGHT : 0;
+                draw_ceres_module_crops(x + 190, y + 95 - y_offset, b->data.monument.secondary_frame, color_mask);
+            }
+            if (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE && b->data.monument.upgrades == 2 && animation_offset > 0) {
+                int y_offset = img->top_height > 0 ? img->top_height - FOOTPRINT_HALF_HEIGHT : 0;
+                draw_neptune_fountain(x + 98, y + 27 - y_offset, (animation_offset - 1) % 5, color_mask);
+            }
             if (b->type != BUILDING_HIPPODROME && animation_offset > 0) {
                 if (animation_offset > img->animation.num_sprites) {
                     animation_offset = img->animation.num_sprites;
