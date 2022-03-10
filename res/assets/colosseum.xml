@@ -17,96 +17,35 @@
 		<layer group="48" image="0" part="footprint" x="0" y="-27"/>
 		<layer src="Colosseum_75%_Construction_Phase"/>
 	</image>
-	<!-- Note: Colosseum OFF state -->
-	<image id="Coloseum OFF" width="298" height="213" isometric="true">
-		<layer group="48" image="0" x="0" y="0"/>
-	</image>
-	<!-- Note: Colosseum crowd animation fix (REFERENCE ASSET: DO NOT USE) -->
-	<image id="Col Crowd Fix" width="157" height="61">
-		<layer group="48" image="14" x="0" y="0"/>
-		<layer src="Colosseum_ON_Overlay"/>
-	</image>
 	<!-- Note: Colosseum ON state -->
 	<image id="Coloseum ON" width="298" height="213">
-		<layer group="this" image="Coloseum OFF" x="0" y="0"/>
-		<layer group="this" image="Col Crowd Fix" x="70" y="33"/>
-	</image>
-	<!-- Note: Colosseum gladiator fighting animation fix (REFERENCE ASSETS: DO NOT USE) -->
-	<image id="Col Glad fix 01" width="53" height="41">
-		<layer group="48" image="1" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 02" width="53" height="41">
-		<layer group="48" image="2" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 03" width="53" height="41">
-		<layer group="48" image="3" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 04" width="53" height="41">
-		<layer group="48" image="4" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 05" width="53" height="41">
-		<layer group="48" image="5" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 06" width="53" height="41">
-		<layer group="48" image="6" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 07" width="53" height="41">
-		<layer group="48" image="7" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 08" width="53" height="41">
-		<layer group="48" image="8" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 09" width="53" height="41">
-		<layer group="48" image="9" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 10" width="53" height="41">
-		<layer group="48" image="10" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 11" width="53" height="41">
-		<layer group="48" image="11" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 12" width="53" height="41">
-		<layer group="48" image="12" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
-	</image>
-	<image id="Col Glad fix 13" width="53" height="41">
-		<layer group="48" image="13" x="0" y="0"/>
-		<layer src="Colosseum_Fight_Overlay"/>
+        <layer group="48"/>
+        <layer group="48" image="14" x="70" y="33"/>
+        <layer src="Colosseum_ON_Overlay" x="70" y="33"/>
 	</image>
 	<!-- Note: Colosseum Gladiator Fight animations (Fixed vanilla ON state) -->
 	<image id="Col Glad Fight" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
 		<animation speed="5" x="122" y="57" reversible="false">
-			<frame group="this" image="Col Glad fix 01"/>
-			<frame group="this" image="Col Glad fix 02"/>
-			<frame group="this" image="Col Glad fix 03"/>
-			<frame group="this" image="Col Glad fix 04"/>
-			<frame group="this" image="Col Glad fix 05"/>
-			<frame group="this" image="Col Glad fix 06"/>
-			<frame group="this" image="Col Glad fix 07"/>
-			<frame group="this" image="Col Glad fix 08"/>
-			<frame group="this" image="Col Glad fix 09"/>
-			<frame group="this" image="Col Glad fix 10"/>
-			<frame group="this" image="Col Glad fix 11"/>
-			<frame group="this" image="Col Glad fix 12"/>
-			<frame group="this" image="Col Glad fix 13"/>
-		</animation>
+			<frame group="48" image="1"/>
+            <frame group="48" image="2"/>
+            <frame group="48" image="3"/>
+            <frame group="48" image="4"/>
+            <frame group="48" image="5"/>
+            <frame group="48" image="6"/>
+            <frame group="48" image="7"/>
+            <frame group="48" image="8"/>
+            <frame group="48" image="9"/>
+            <frame group="48" image="10"/>
+            <frame group="48" image="11"/>
+            <frame group="48" image="12"/>
+            <frame group="48" image="13"/>
+        </animation>
 	</image>
 	<!-- Note: Colosseum 'Naumachia' games animations -->
 	<image id="Col Naumachia" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
-		<animation speed="9" x="57" y="12" reversible="false">
+		<animation speed="9" x="100" y="58" reversible="false">
 			<frame src="Naumachia_01"/>
 			<frame src="Naumachia_02"/>
 			<frame src="Naumachia_03"/>
@@ -124,7 +63,7 @@
 	<!-- Note: Colosseum 'Imperial Games' animations -->
 	<image id="Col Imp Games" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
-		<animation speed="9" x="57" y="12" reversible="false">
+		<animation speed="9" x="90" y="34" reversible="false">
 			<frame src="Imperial_Games_01"/>
 			<frame src="Imperial_Games_02"/>
 			<frame src="Imperial_Games_03"/>
@@ -133,10 +72,10 @@
 			<frame src="Imperial_Games_06"/>
 		</animation>
 	</image>
-	<!-- Note: Colosseum 'Imperial Games' animations -->
+	<!-- Note: Colosseum 'Executions' animations -->
 	<image id="Col Exec" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
-		<animation speed="9" x="57" y="12" reversible="false">
+		<animation speed="9" x="100" y="43" reversible="false">
 			<frame src="Executions_01"/>
 			<frame src="Executions_02"/>
 			<frame src="Executions_03"/>
@@ -145,4 +84,9 @@
 			<frame src="Executions_06"/>
 		</animation>
 	</image>
+    <!-- Note: Colosseum Overlays -->
+    <image src="Colosseum_Fight_Overlay" id="Col Base Overlay"/>
+    <image src="Naumachia_Overlay"/>
+    <image src="Imperial_Games_Overlay"/>
+    <image src="Executions_Overlay"/>
 </assetlist>

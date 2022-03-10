@@ -1143,9 +1143,16 @@ void window_building_draw_hippodrome_background(building_info_context *c)
         if (city_data.games.chosen_horse) {
             text_draw_with_money(translation_for(TR_WINDOW_RACE_YOUR_BET), city_data.games.bet_amount, " - ", "",
                 c->x_offset + 32, c->y_offset + extra_y_offset + 215, 438, FONT_NORMAL_BLACK, 0);
-            int image_id = assets_get_image_id("UI_Elements", "Hipp_Blues_UH");
-            image_draw(image_id + (city_data.games.chosen_horse - 1) * 2,
-                c->x_offset + 32, c->y_offset + extra_y_offset + 240, COLOR_MASK_NONE, SCALE_NONE);
+            int image_id = assets_get_image_id("UI_Elements", "Hipp_Team_Blue");
+            int border = assets_get_image_id("UI_Elements", "Hipp_Border_First") + 4;
+
+            image_draw(image_id + (city_data.games.chosen_horse - 1),
+                c->x_offset + 37, c->y_offset + extra_y_offset + 245, COLOR_MASK_NONE, SCALE_NONE);
+
+            image_draw(border, c->x_offset + 32, c->y_offset + extra_y_offset + 240, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw(border + 1, c->x_offset + 32, c->y_offset + extra_y_offset + 245, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw(border + 2, c->x_offset + 32, c->y_offset + extra_y_offset + 327, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw(border + 3, c->x_offset + 109, c->y_offset + extra_y_offset + 245, COLOR_MASK_NONE, SCALE_NONE);
 
             text_draw_multiline(translation_for(TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION +
                 city_data.games.chosen_horse - 1), c->x_offset + 132, c->y_offset + extra_y_offset + 240, 338,

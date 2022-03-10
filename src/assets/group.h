@@ -26,5 +26,6 @@ int group_get_total(void);
 
 image_groups *group_get_from_id(int id);
 image_groups *group_get_from_name(const char *name);
+image_groups *group_get_from_image_index(int index);
 
 #endif // ASSETS_GROUP_H

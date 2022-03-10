@@ -80,7 +80,7 @@
 	<image id="s pond north off" isometric="true">
 		<layer src="2x2_Pond_A_OFF"/>
 	</image>
-	<image index="22" id="s pond north on" isometric="true">
+	<image id="s pond north on" isometric="true">
 		<layer group="this" image="s pond north off"/>
 		<layer src="2x2_Pond_A_01" x="27" y="16"/>
 		<animation speed="8" x="27" y="16" reversible="false">
@@ -120,14 +120,14 @@
 		<layer group="this" image="l pond north off"/>
 		<layer src="3x3_Pond_A_01" x="42"/>
 		<animation speed="10" x="42" y="0" reversible="false">
-			<frame index="43" src="3x3_Pond_A_01"/>
-			<frame index="44" src="3x3_Pond_A_02"/>
-			<frame index="45" src="3x3_Pond_A_03"/>
-			<frame index="46" src="3x3_Pond_A_04"/>
-			<frame index="47" src="3x3_Pond_A_05"/>
-			<frame index="48" src="3x3_Pond_A_06"/>
-			<frame index="49" src="3x3_Pond_A_07"/>
-			<frame index="50" src="3x3_Pond_A_08"/>
+			<frame src="3x3_Pond_A_01"/>
+			<frame src="3x3_Pond_A_02"/>
+			<frame src="3x3_Pond_A_03"/>
+			<frame src="3x3_Pond_A_04"/>
+			<frame src="3x3_Pond_A_05"/>
+			<frame src="3x3_Pond_A_06"/>
+			<frame src="3x3_Pond_A_07"/>
+			<frame src="3x3_Pond_A_08"/>
 		</animation>
 	</image>
 	<!-- Note: Large pond OFF and ON variants respectively FOR SOUTHERN CLIMATES -->
@@ -137,7 +137,7 @@
 	<image id="l pond south on" isometric="true">
 		<layer group="this" image="l pond south off"/>
 		<layer src="3x3_Pond_B_01" x="33" y="29"/>
-		<animation speed="10" x="33" y="29" reversible="false">
+		<animation speed="10" x="33" y="28" reversible="false">
 			<frame src="3x3_Pond_B_01"/>
 			<frame src="3x3_Pond_B_02"/>
 			<frame src="3x3_Pond_B_03"/>
@@ -148,15 +148,15 @@
 			<frame src="3x3_Pond_B_08"/>
 			<frame src="3x3_Pond_B_09"/>
 			<frame src="3x3_Pond_B_10"/>
-			<frame src="3x3_Pond_B_11"/>
-			<frame src="3x3_Pond_B_12"/>
-			<frame src="3x3_Pond_B_13"/>
-			<frame src="3x3_Pond_B_14"/>
-			<frame src="3x3_Pond_B_15"/>
-			<frame src="3x3_Pond_B_16"/>
-			<frame src="3x3_Pond_B_17"/>
-			<frame src="3x3_Pond_B_18"/>
-			<frame src="3x3_Pond_B_19"/>
+			<frame src="3x3_Pond_B_09"/>
+			<frame src="3x3_Pond_B_08"/>
+			<frame src="3x3_Pond_B_07"/>
+			<frame src="3x3_Pond_B_06"/>
+			<frame src="3x3_Pond_B_05"/>
+			<frame src="3x3_Pond_B_04"/>
+			<frame src="3x3_Pond_B_03"/>
+			<frame src="3x3_Pond_B_02"/>
+			<frame src="3x3_Pond_B_01"/>
 		</animation>
 	</image>
 	<!-- Note: Assets for 'Small Statue 2' and 'Small Statue 3' respectively -->

@@ -163,7 +163,7 @@
 		<layer group="67" image="0" x="0" y="0" invert="horizontal"/>
 		<layer src="Surveyors_Post_OFF"/>
 	</image>
-	<image index="52" id="Surveyors Post ON" isometric="true">
+	<image id="Surveyors Post ON" isometric="true">
 		<layer group="this" image="Surveyors Post OFF"/>
 		<animation speed="6" x="7" y="0" reversible="false">
 			<frame src="Surveyors_Post_ON_01"/>

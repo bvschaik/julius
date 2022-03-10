@@ -10,32 +10,32 @@
 	<!-- Note: Mess Hall ON Animations for Central, North and South Climates Respectively -->
 	<image id="Mess ON Central" isometric="true">
 		<layer group="this" image="Mess OFF Central"/>
-		<animation speed="6" x="0" y="47" reversible="false">
-			<frame src="Mess_Hall_Central_Anim_01"/>
-			<frame src="Mess_Hall_Central_Anim_02"/>
-			<frame src="Mess_Hall_Central_Anim_03"/>
-			<frame src="Mess_Hall_Central_Anim_04"/>
-			<frame src="Mess_Hall_Central_Anim_05"/>
+        <animation speed="6" x="13" y="47" reversible="false">
+			<frame src="Mess_Hall_Anim_01"/>
+			<frame src="Mess_Hall_Anim_02"/>
+			<frame src="Mess_Hall_Anim_03"/>
+			<frame src="Mess_Hall_Anim_04"/>
+			<frame src="Mess_Hall_Anim_05"/>
 		</animation>
 	</image>
 	<image id="Mess ON North" isometric="true">
 		<layer group="this" image="Mess OFF North"/>
-		<animation speed="6" x="0" y="47" reversible="false">
-			<frame src="Mess_Hall_North_Anim_01"/>
-			<frame src="Mess_Hall_North_Anim_02"/>
-			<frame src="Mess_Hall_North_Anim_03"/>
-			<frame src="Mess_Hall_North_Anim_04"/>
-			<frame src="Mess_Hall_North_Anim_05"/>
+        <animation speed="6" x="13" y="47" reversible="false">
+            <frame src="Mess_Hall_Anim_01"/>
+            <frame src="Mess_Hall_Anim_02"/>
+            <frame src="Mess_Hall_Anim_03"/>
+            <frame src="Mess_Hall_Anim_04"/>
+            <frame src="Mess_Hall_Anim_05"/>
 		</animation>
 	</image>
 	<image id="Mess ON South" isometric="true">
 		<layer group="this" image="Mess OFF South"/>
-		<animation speed="6" x="0" y="47" reversible="false">
-			<frame src="Mess_Hall_South_Anim_01"/>
-			<frame src="Mess_Hall_South_Anim_02"/>
-			<frame src="Mess_Hall_South_Anim_03"/>
-			<frame src="Mess_Hall_South_Anim_04"/>
-			<frame src="Mess_Hall_South_Anim_05"/>
+        <animation speed="6" x="13" y="47" reversible="false">
+            <frame src="Mess_Hall_Anim_01"/>
+            <frame src="Mess_Hall_Anim_02"/>
+            <frame src="Mess_Hall_Anim_03"/>
+            <frame src="Mess_Hall_Anim_04"/>
+            <frame src="Mess_Hall_Anim_05"/>
 		</animation>
 	</image>
 	<!-- Note: Mess Hall Walker Portrait -->

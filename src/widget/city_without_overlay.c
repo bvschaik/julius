@@ -19,6 +19,7 @@
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/view.h"
+#include "core/calc.h"
 #include "core/config.h"
 #include "core/time.h"
 #include "figure/formation_legion.h"
@@ -511,30 +512,34 @@ static void draw_animation(int x, int y, int grid_offset)
                 image_draw(image_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask, draw_context.scale);
             }
             int animation_offset = building_animation_offset(b, image_id, grid_offset);
-            if (b->type == BUILDING_GRAND_TEMPLE_CERES && b->data.monument.upgrades == 1 && animation_offset > 0) {
-                int y_offset = img->top_height > 0 ? img->top_height - FOOTPRINT_HALF_HEIGHT : 0;
-                draw_ceres_module_crops(x + 190, y + 95 - y_offset, b->data.monument.secondary_frame, color_mask);
-            }
-            if (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE && b->data.monument.upgrades == 2 && animation_offset > 0) {
-                int y_offset = img->top_height > 0 ? img->top_height - FOOTPRINT_HALF_HEIGHT : 0;
-                draw_neptune_fountain(x + 98, y + 27 - y_offset, (animation_offset - 1) % 5, color_mask);
-            }
             if (b->type != BUILDING_HIPPODROME && animation_offset > 0) {
+                int y_offset = img->top_height > 0 ? img->top_height - FOOTPRINT_HALF_HEIGHT : 0;
                 if (animation_offset > img->animation.num_sprites) {
                     animation_offset = img->animation.num_sprites;
+                }
+                if (b->type == BUILDING_GRAND_TEMPLE_CERES && b->data.monument.upgrades == 1) {
+                    draw_ceres_module_crops(x + 190, y + 95 - y_offset, b->data.monument.secondary_frame, color_mask);
+                }
+                if (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE && b->data.monument.upgrades == 2) {
+                    draw_neptune_fountain(x + 98, y + 27 - y_offset, (animation_offset - 1) % 5, color_mask);
                 }
                 if (b->type == BUILDING_GRANARY) {
                     image_draw(image_id + img->animation.start_offset + animation_offset + 5, x + 77, y - 49,
                         color_mask, draw_context.scale);
                 } else {
-                    int y_offset = img->top_height > 0 ? img->top_height - FOOTPRINT_HALF_HEIGHT : 0;
                     image_draw(image_id + img->animation.start_offset + animation_offset,
                         x + img->animation.sprite_offset_x,
                         y + img->animation.sprite_offset_y - y_offset,
                         color_mask, draw_context.scale);
                 }
+                if (b->type == BUILDING_COLOSSEUM) {
+                    int festival_id = calc_bound(city_festival_games_active(), 0, 4);
+                    int extra_x = festival_id ? 57 : 127;
+                    int extra_y = festival_id ? 12 : 93;
+                    int overlay_id = assets_get_image_id("Colosseum", "Col Base Overlay") + festival_id;
+                    image_draw(overlay_id, x + extra_x, y + extra_y - y_offset, color_mask, draw_context.scale);
+                }
             }
-
             if (b->has_plague) {
                 draw_plague(b, x, y, color_mask);
             }

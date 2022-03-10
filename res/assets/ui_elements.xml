@@ -91,15 +91,20 @@
 	<!-- Note: Hippodrome racing UI button -->
 	<image id="Hipp_Racing_Button" src="Hippodrome_Betting_Select_Button"/>
 	<!-- Note: Hippodrome team selection buttons -->
-	<image id="Hipp_Blues_UH" src="Hippodrome_Team_Select_Blues_UH"/>
-	<image id="Hipp_Blues_H" src="Hippodrome_Team_Select_Blues_H"/>
-	<image id="Hipp_Reds_UH" src="Hippodrome_Team_Select_Reds_UH"/>
-	<image id="Hipp_Reds_H" src="Hippodrome_Team_Select_Reds_H"/>
-	<image id="Hipp_Whites_UH" src="Hippodrome_Team_Select_Whites_UH"/>
-	<image id="Hipp_Whites_H" src="Hippodrome_Team_Select_Whites_H"/>
-	<image id="Hipp_Greens_UH" src="Hippodrome_Team_Select_Greens_UH"/>
-	<image id="Hipp_Greens_H" src="Hippodrome_Team_Select_Greens_H"/>
-	<!-- Note: Caravanserai Trade Policy -->
+	<image src="Hippodrome_Team_Select_Blue" id="Hipp_Team_Blue" />
+	<image src="Hippodrome_Team_Select_Red"/>
+	<image src="Hippodrome_Team_Select_White"/>
+	<image src="Hippodrome_Team_Select_Green"/>
+    <!-- Note: Hippodrome team selection button borders -->
+    <image src="Hippodrome_Team_Select_Border_Top_UnHover" id="Hipp_Border_First"/>
+    <image src="Hippodrome_Team_Select_Border_Left_UnHover"/>
+    <image src="Hippodrome_Team_Select_Border_Bottom_UnHover"/>
+    <image src="Hippodrome_Team_Select_Border_Right_UnHover"/>
+    <image src="Hippodrome_Team_Select_Border_Top_Hover"/>
+    <image src="Hippodrome_Team_Select_Border_Left_Hover"/>
+    <image src="Hippodrome_Team_Select_Border_Bottom_Hover"/>
+    <image src="Hippodrome_Team_Select_Border_Right_Hover"/>
+    <!-- Note: Caravanserai Trade Policy -->
 	<image id="Trade Policy" src="Trade_Policy_Icon"/>
 	<image id="Trade Policy 1" src="Trade_Policy_1"/>
 	<image id="Trade Policy 2" src="Trade_Policy_2"/>

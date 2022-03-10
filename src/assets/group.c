@@ -64,3 +64,14 @@ image_groups *group_get_from_name(const char *name)
     }
     return 0;
 }
+
+image_groups *group_get_from_image_index(int index)
+{
+    for (int i = 0; i < data.total_groups; i++) {
+        image_groups *current = &data.groups[i];
+        if (index >= current->first_image_index && index <= current->last_image_index) {
+            return current;
+        }
+    }
+    return 0;
+}

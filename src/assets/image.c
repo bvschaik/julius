@@ -58,25 +58,50 @@ static int has_top_part(const asset_image *img)
     return 0;
 }
 
+static int is_single_layer_unchanged_image(const asset_image *img)
+{
+    if (!img->active || &img->first_layer != img->last_layer) {
+        return 0;
+    }
+    const layer *l = img->last_layer;
+    return img->img.width == l->width && img->img.height == l->height &&
+        l->x_offset == 0 && l->y_offset == 0 &&
+        l->invert == INVERT_NONE && l->rotate == ROTATE_NONE && !l->grayscale;
+}
+
+static void make_similar_images_references(const asset_image *img)
+{
+    const image_groups *group = group_get_from_image_index(img->index);
+    for (int i = img->index + 1; i <= group->last_image_index; i++) {
+        asset_image *reference = asset_image_get_from_id(i);
+        if (is_single_layer_unchanged_image(reference) && reference->last_layer->asset_image_path &&
+            strcmp(reference->last_layer->asset_image_path, img->last_layer->asset_image_path) == 0 &&
+            reference->last_layer->src_x == img->last_layer->src_x &&
+            reference->last_layer->src_y == img->last_layer->src_y) {
+            reference->last_layer->calculated_image_id = img->index + IMAGE_MAIN_ENTRIES;
+            reference->is_reference = 1;
+        }
+    }
+}
+
 #ifndef BUILDING_ASSET_PACKER
 static int load_image(asset_image *img, color_t **main_images, int *main_image_widths)
 {
-    // Special cases for images which are a single layer
-    if (&img->first_layer == img->last_layer) {
+    if (img->is_reference) {
+        return 1;
+    }
+    if (is_single_layer_unchanged_image(img)) {
         layer *l = img->last_layer;
-        if (img->img.width == l->width && img->img.height == l->height &&
-            l->x_offset == 0 && l->y_offset == 0 &&
-            l->invert == INVERT_NONE && l->rotate == ROTATE_NONE && !l->grayscale) {
-            if (!l->calculated_image_id) {
-                layer_load(l, main_images, main_image_widths);
-                img->data = l->data;
-                l->data = 0;
-                layer_unload(l);
-            } else {
-                img->is_reference = 1;
-            }
-            return 1;
+        if (!l->calculated_image_id) {
+            layer_load(l, main_images, main_image_widths);
+            img->data = l->data;
+            l->data = 0;
+            make_similar_images_references(img);
+            layer_unload(l);
+        } else {
+            img->is_reference = 1;
         }
+        return 1;
     }
     load_image_layers(img, main_images, main_image_widths);
 
