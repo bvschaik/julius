@@ -226,7 +226,17 @@ int building_image_get(building *b)
         case BUILDING_FORUM:
             return image_group(GROUP_BUILDING_FORUM);
         case BUILDING_FOUNTAIN:
-            return image_group(GROUP_BUILDING_FOUNTAIN_1);
+            if (b->upgrade_level == 3) {
+                return scenario_property_climate() == CLIMATE_DESERT ?
+                    assets_get_image_id("Econ_Logistics", "Fountain_Desert_Fix") :
+                    image_group(GROUP_BUILDING_FOUNTAIN_4);
+            } else if (b->upgrade_level == 2) {
+                return image_group(GROUP_BUILDING_FOUNTAIN_3);
+            } else if (b->upgrade_level == 1) {
+                return image_group(GROUP_BUILDING_FOUNTAIN_2);
+            } else {
+                return image_group(GROUP_BUILDING_FOUNTAIN_1);
+            }
         case BUILDING_WELL:
             return image_group(GROUP_BUILDING_WELL);
         case BUILDING_RESERVOIR:

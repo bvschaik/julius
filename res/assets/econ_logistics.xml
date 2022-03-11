@@ -73,5 +73,22 @@
 			<frame src="Lighthouse_ON_05"/>
 		</animation>
 	</image>
+    <!-- Note: Fix for flickering upgraded fountain on desert maps (Image provided by Ouaz and crudelios)-->
+    <image id="Frame_Flickering_Fix">
+        <layer group="53" image="7"/>
+        <layer src="Fountain_Color_Fix" x="3" y="23"/>
+    </image>
+    <image id="Fountain_Desert_Fix" isometric="true">
+        <layer group="53"/>
+        <animation speed="4" x="9" y="-17" reversible="false">
+            <frame group="53" image="1"/>
+            <frame group="53" image="2"/>
+            <frame group="53" image="3"/>
+            <frame group="53" image="4"/>
+            <frame group="53" image="5"/>
+            <frame group="53" image="6"/>
+            <frame group="this" image="Frame_Flickering_Fix"/>
+        </animation>
+    </image>
 </assetlist>
 	

@@ -196,22 +196,16 @@ void map_water_supply_update_reservoir_fountain(void)
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
-        int des = b->desirability;
-        int image_id;
-        if (des > 60) {
-            image_id = image_group(GROUP_BUILDING_FOUNTAIN_4);
+        if (b->desirability > 60) {
             b->upgrade_level = 3;
-        } else if (des > 40) {
-            image_id = image_group(GROUP_BUILDING_FOUNTAIN_3);
+        } else if (b->desirability > 40) {
             b->upgrade_level = 2;
-        } else if (des > 20) {
-            image_id = image_group(GROUP_BUILDING_FOUNTAIN_2);
+        } else if (b->desirability > 20) {
             b->upgrade_level = 1;
         } else {
-            image_id = image_group(GROUP_BUILDING_FOUNTAIN_1);
             b->upgrade_level = 0;
         }
-        map_building_tiles_add(b->id, b->x, b->y, 1, image_id, TERRAIN_BUILDING);
+        map_building_tiles_add(b->id, b->x, b->y, 1, building_image_get(b), TERRAIN_BUILDING);
         if (map_terrain_is(b->grid_offset, TERRAIN_RESERVOIR_RANGE) && b->num_workers) {
             b->has_water_access = 1;
             map_terrain_add_with_radius(b->x, b->y, 1,
