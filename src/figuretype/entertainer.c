@@ -407,6 +407,7 @@ void figure_entertainer_action(figure *f)
                     f->action_state = FIGURE_ACTION_95_ENTERTAINER_RETURNING;
                     f->destination_x = x_road;
                     f->destination_y = y_road;
+                    figure_route_remove(f);
                 } else {
                     f->state = FIGURE_STATE_DEAD;
                 }
