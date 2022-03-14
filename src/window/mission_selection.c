@@ -64,13 +64,7 @@ static void draw_background_images(void)
         image_draw(image_group(GROUP_SELECT_MISSION_BACKGROUND), image_offset_x, image_offset_y,
             COLOR_MASK_NONE, SCALE_NONE);
         int image_border = assets_get_image_id("UI_Elements", "Mission Selection Border");
-        image_draw(image_border, image_offset_x, image_offset_y, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(image_border + 1, image_offset_x + BORDER_IMAGE_DEPTH, image_offset_y,
-            COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(image_border + 2, image_offset_x + BACKGROUND_WIDTH - BORDER_IMAGE_DEPTH, image_offset_y,
-            COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(image_border + 3, image_offset_x + BORDER_IMAGE_DEPTH,
-            image_offset_y + BACKGROUND_HEIGHT - BORDER_IMAGE_DEPTH - 1, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw_border(image_border, image_offset_x, image_offset_y, COLOR_MASK_NONE);
     } else {
         image_draw(image_group(GROUP_SELECT_MISSION_BACKGROUND), image_offset_x, image_offset_y,
             COLOR_MASK_NONE, SCALE_NONE);

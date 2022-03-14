@@ -117,17 +117,12 @@ static void draw_foreground(void)
 {
     graphics_in_dialog_with_size(BLOCK_SIZE * data.width_blocks, BLOCK_SIZE * data.height_blocks);
 
-    int border_id = assets_get_image_id("UI_Elements", "Hipp_Border_First");
+    int border_id = assets_get_image_id("UI_Elements", "Image Border Small");
 
     for (int i = 0; i < 4; i++) {
-        int current_border_id = border_id;
-        if (data.focus_button_id == (i + 1) || data.chosen_horse == (i + 1)) {
-            current_border_id += 4;
-        }
-        image_draw(current_border_id, 34 + i * 110, 145, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(current_border_id + 1, 34 + i * 110, 150, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(current_border_id + 2, 34 + i * 110, 232, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(current_border_id + 3, 111 + i * 110, 150, COLOR_MASK_NONE, SCALE_NONE);
+        color_t color = data.focus_button_id == (i + 1) || data.chosen_horse == (i + 1) ?
+            COLOR_BORDER_RED : COLOR_BORDER_GREEN;
+        image_draw_border(border_id, 34 + i * 110, 145, color);
     }
 
     arrow_buttons_draw(0, 0, amount_buttons, 2);

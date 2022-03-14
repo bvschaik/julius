@@ -3,7 +3,22 @@
 <!-- Unless specifically mentioned, all assets created by Areldir -->
 <assetlist name="UI_Elements">
 	<image id="Happy God Icon" src="Religion_God_Happy"/>
-	<!-- Note: Banner image for Caravanserai -->
+    <!-- Note: Image borders -->
+    <image src="Image_Border_Small_Top" id="Image Border Small"/>
+    <image src="Image_Border_Small_Left"/>
+    <image src="Image_Border_Small_Bottom"/>
+    <image src="Image_Border_Small_Right"/>
+    <image src="Image_Border_Medium_Top" id="Image Border Medium"/>
+    <image src="Image_Border_Medium_Left"/>
+    <image src="Image_Border_Medium_Bottom"/>
+    <image src="Image_Border_Medium_Right"/>
+    <image src="Image_Border_Large_Top" id="Image Border Large"/>
+    <image src="Image_Border_Large_Left"/>
+    <image src="Image_Border_Large_Bottom"/>
+    <image src="Image_Border_Large_Right"/>
+    <!-- Note: highlight image -->
+    <image src="Image_Highlight" id="Highlight"/>
+    <!-- Note: Banner image for Caravanserai -->
 	<image id="Caravanserai Banner" src="Caravanserai_Banner"/>
 	<!-- Note: Banner image for Lighthouse -->
 	<image id="Lighthouse Banner" src="Lighthouse_Banner"/>
@@ -27,25 +42,16 @@
 	<image id="Panth M2 Icon" src="Pantheon_Temple_Complex_Module2_Banner"/>
 	<image id="Venus M Icon" src="Venus_Temple_Complex_Module_Banner"/>
 	<image id="Venus M2 Icon" src="Venus_Temple_Complex_Module2_Banner"/>
-	<!-- Note: Banner Border images for Module Selection UI Hover and UnHover variants -->
-	<image src="Module_Selection_Border_Top_UnHover" id="Monument Mod Selection Borders"/>
-	<image src="Module_Selection_Border_Top_Hover"/>
-	<image src="Module_Selection_Border_Right_UnHover"/>
-	<image src="Module_Selection_Border_Right_Hover"/>
-	<image src="Module_Selection_Border_Bottom_UnHover"/>
-	<image src="Module_Selection_Border_Bottom_Hover"/>
-	<image src="Module_Selection_Border_Left_UnHover"/>
-	<image src="Module_Selection_Border_Left_Hover"/>
 	<!-- Note: Banner images for Construction Sites -->
 	<image id="Const. Banner 01" src="Construction_Banner_01"/>
 	<image id="Const. Banner 02" src="Construction_Banner_02"/>
 	<!-- Note: Banner with Augustus Logo for Main Menu  -->
 	<image id="Main Menu Banner" src="Augustus_Main_Menu_Banner_Sml"/>
 	<!-- Note: Border for Campaign Map Selection Screen  -->
-	<image id="Mission Selection Border" src="Map_Selection_Overlay_Border_Left"/>
-	<image src="Map_Selection_Overlay_Border_Top"/>
-	<image src="Map_Selection_Overlay_Border_Right"/>
+	<image id="Mission Selection Border" src="Map_Selection_Overlay_Border_Top"/>
+	<image src="Map_Selection_Overlay_Border_Left"/>
 	<image src="Map_Selection_Overlay_Border_Bottom"/>
+	<image src="Map_Selection_Overlay_Border_Right"/>
 	<!-- Note: Image next to 'Hold Games' button in Entertainment Advisor -->
 	<image id="HoldGames Banner" width="126" height="88">
 		<layer group="159" image="47" x="-11" y="-9"/>
@@ -64,13 +70,10 @@
 		<layer group="this" image="T Pillar BG R" x="81" y="0"/>
 		<layer group="this" image="T Pillar BG L" x="0" y="0"/>
 	</image>
-	<!-- Note: UI Icons for Colosseum Games: "Imperial Games", "Naumachia" and "Executions" respectively, with selected and deselected variants -->
-	<image id="Naum Ico S" src="Naumachia_UI_Button_Selected"/>
-	<image id="Naum Ico DS" src="Naumachia_UI_Button_Deselected"/>
-	<image id="ImpG Ico S" src="Imperial_Games_UI_Button_Selected"/>
-	<image id="ImpG Ico DS" src="Imperial_Games_UI_Button_Deselected"/>
-	<image id="Exec Ico S" src="Executions_UI_Button_Selected"/>
-	<image id="Exec Ico DS" src="Executions_UI_Button_Deselected"/>
+	<!-- Note: UI Icons for Colosseum Games: "Imperial Games", "Naumachia" and "Executions" respectively -->
+	<image src="Naumachia_UI_Button" id="Naumachia Icon"/>
+	<image src="Imperial_Games_UI_Button"/>
+	<image src="Executions_UI_Button"/>
 	<!-- Note: Banner images for Hippodrome and Colosseum respectively -->
 	<image id="Circus Banner" src="Circus_Banner"/>
 	<image id="Colosseum Banner" src="Colosseum_Banner"/>
@@ -95,15 +98,6 @@
 	<image src="Hippodrome_Team_Select_Red"/>
 	<image src="Hippodrome_Team_Select_White"/>
 	<image src="Hippodrome_Team_Select_Green"/>
-    <!-- Note: Hippodrome team selection button borders -->
-    <image src="Hippodrome_Team_Select_Border_Top_UnHover" id="Hipp_Border_First"/>
-    <image src="Hippodrome_Team_Select_Border_Left_UnHover"/>
-    <image src="Hippodrome_Team_Select_Border_Bottom_UnHover"/>
-    <image src="Hippodrome_Team_Select_Border_Right_UnHover"/>
-    <image src="Hippodrome_Team_Select_Border_Top_Hover"/>
-    <image src="Hippodrome_Team_Select_Border_Left_Hover"/>
-    <image src="Hippodrome_Team_Select_Border_Bottom_Hover"/>
-    <image src="Hippodrome_Team_Select_Border_Right_Hover"/>
     <!-- Note: Caravanserai Trade Policy -->
 	<image id="Trade Policy" src="Trade_Policy_Icon"/>
 	<image id="Trade Policy 1" src="Trade_Policy_1"/>
@@ -114,14 +108,6 @@
 	<image id="Sea Trade Policy 1" src="Sea_Trade_Policy_1"/>
 	<image id="Sea Trade Policy 2" src="Sea_Trade_Policy_2"/>
 	<image id="Sea Trade Policy 3" src="Sea_Trade_Policy_3"/>
-	<image src="Policy_Selection_Border_Top_UnHover" id="Policy Selection Borders"/>
-	<image src="Policy_Selection_Border_Top_Hover"/>
-	<image src="Policy_Selection_Border_Right_UnHover"/>
-	<image src="Policy_Selection_Border_Right_Hover"/>
-	<image src="Policy_Selection_Border_Bottom_UnHover"/>
-	<image src="Policy_Selection_Border_Bottom_Hover"/>
-	<image src="Policy_Selection_Border_Left_UnHover"/>
-	<image src="Policy_Selection_Border_Left_Hover"/>
     <!-- Note: Lighthouse and Caravanserai Trade Policy Disabled Advisor buttons -->
     <image id="Sea Trade Policy Off Button">
         <layer group="179" image="0" grayscale="true"/>

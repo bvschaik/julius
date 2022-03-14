@@ -154,6 +154,22 @@ void image_draw_fullscreen_background(int image_id)
     draw_fullscreen_borders();
 }
 
+void image_draw_border(int base_image_id, int x, int y, color_t color)
+{
+    const image *top_border = image_get(base_image_id);
+    const image *left_border = image_get(base_image_id + 1);
+    const image *right_border = image_get(base_image_id + 3);
+
+    int top_y_offset = top_border->height + top_border->y_offset;
+
+    image_draw(base_image_id, x, y, color, SCALE_NONE);
+    image_draw(base_image_id + 1, x, y + top_y_offset, color, SCALE_NONE);
+    image_draw(base_image_id + 2, x, y + top_y_offset + left_border->height + left_border->y_offset, color, SCALE_NONE);
+    image_draw(base_image_id + 3,
+        x + top_border->width + top_border->x_offset - right_border->width - right_border->y_offset, y + top_y_offset,
+        color, SCALE_NONE);
+}
+
 void image_draw_isometric_footprint(int image_id, int x, int y, color_t color_mask, float scale)
 {
     const image *img = image_get(image_id);

@@ -979,16 +979,6 @@ void window_building_draw_arena(building_info_context *c)
 
 }
 
-static void draw_policy_image_border(int x, int y, int focused)
-{
-    int id = assets_get_image_id("UI_Elements", "Policy Selection Borders");
-
-    image_draw(id + focused, x, y, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(id + 2 + focused, x + 105, y + 5, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(id + 4 + focused, x, y + 90, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(id + 6 + focused, x, y + 5, COLOR_MASK_NONE, SCALE_NONE);
-}
-
 void window_building_handle_mouse_lighthouse(const mouse *m, building_info_context *c)
 {
     generic_buttons_handle_mouse(
@@ -998,7 +988,9 @@ void window_building_handle_mouse_lighthouse(const mouse *m, building_info_conte
 
 void window_building_draw_lighthouse_foreground(building_info_context *c)
 {
-    draw_policy_image_border(c->x_offset + 32, c->y_offset + 150, data.lighthouse_focus_button_id == 1);
+    int id = assets_get_image_id("UI_Elements", "Image Border Medium");
+    image_draw_border(id, c->x_offset + 32, c->y_offset + 150,
+        data.lighthouse_focus_button_id == 1 ? COLOR_BORDER_RED : COLOR_BORDER_GREEN);
 }
 
 static void apply_policy(int selected_policy)
@@ -1066,8 +1058,10 @@ void window_building_draw_lighthouse(building_info_context *c)
         inner_panel_draw(c->x_offset + 16, c->y_offset + 270, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 278);
 
-        image_draw(assets_get_image_id("UI_Elements", "Lighthouse Banner"),
-            c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE, SCALE_NONE);
+        if (c->height_blocks >= 38) {
+            image_draw(assets_get_image_id("UI_Elements", "Lighthouse Banner"),
+                c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE, SCALE_NONE);
+        }
 
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -1133,33 +1127,30 @@ void window_building_draw_hippodrome_background(building_info_context *c)
         } else {
             lang_text_draw(73, 5, c->x_offset + 32, c->y_offset + 202, FONT_NORMAL_BROWN);
         }
-        int extra_y_offset = 33;
+        int y_offset = 33;
         if (c->height_blocks > 27) {
-            extra_y_offset += 223;
+            y_offset += 223;
             int banner_id = assets_get_image_id("UI_Elements", "Circus Banner");
-            image_draw(banner_id, c->x_offset + 32, c->y_offset + extra_y_offset, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw(banner_id, c->x_offset + 32, c->y_offset + y_offset, COLOR_MASK_NONE, SCALE_NONE);
         }
 
         if (city_data.games.chosen_horse) {
             text_draw_with_money(translation_for(TR_WINDOW_RACE_YOUR_BET), city_data.games.bet_amount, " - ", "",
-                c->x_offset + 32, c->y_offset + extra_y_offset + 215, 438, FONT_NORMAL_BLACK, 0);
+                c->x_offset + 32, c->y_offset + y_offset + 215, 438, FONT_NORMAL_BLACK, 0);
             int image_id = assets_get_image_id("UI_Elements", "Hipp_Team_Blue");
-            int border = assets_get_image_id("UI_Elements", "Hipp_Border_First") + 4;
+            int border = assets_get_image_id("UI_Elements", "Image Border Small");
 
             image_draw(image_id + (city_data.games.chosen_horse - 1),
-                c->x_offset + 37, c->y_offset + extra_y_offset + 245, COLOR_MASK_NONE, SCALE_NONE);
+                c->x_offset + 37, c->y_offset + y_offset + 245, COLOR_MASK_NONE, SCALE_NONE);
 
-            image_draw(border, c->x_offset + 32, c->y_offset + extra_y_offset + 240, COLOR_MASK_NONE, SCALE_NONE);
-            image_draw(border + 1, c->x_offset + 32, c->y_offset + extra_y_offset + 245, COLOR_MASK_NONE, SCALE_NONE);
-            image_draw(border + 2, c->x_offset + 32, c->y_offset + extra_y_offset + 327, COLOR_MASK_NONE, SCALE_NONE);
-            image_draw(border + 3, c->x_offset + 109, c->y_offset + extra_y_offset + 245, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw_border(border, c->x_offset + 32, c->y_offset + y_offset + 240, COLOR_BORDER_RED, SCALE_NONE);
 
             text_draw_multiline(translation_for(TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION +
-                city_data.games.chosen_horse - 1), c->x_offset + 132, c->y_offset + extra_y_offset + 240, 338,
+                city_data.games.chosen_horse - 1), c->x_offset + 132, c->y_offset + y_offset + 240, 338,
                 FONT_NORMAL_BLACK, 0);
         }
         text_draw_centered(translation_for(city_data.games.chosen_horse ? TR_WINDOW_IN_PROGRESS_BET_BUTTON :
-            TR_WINDOW_RACE_BET_TITLE), c->x_offset + 88, c->y_offset + extra_y_offset + 351, 300, FONT_NORMAL_BLACK, 0);
+            TR_WINDOW_RACE_BET_TITLE), c->x_offset + 88, c->y_offset + y_offset + 351, 300, FONT_NORMAL_BLACK, 0);
     } else {
         window_building_draw_monument_hippodrome_construction_process(c);
     }

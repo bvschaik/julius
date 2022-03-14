@@ -79,8 +79,8 @@ static int init(int title, int subtitle, option_menu_item *options, int num_opti
     }
 
     if (!border_image_ids[0]) {
-        border_image_ids[0] = assets_get_image_id("UI_Elements", "Policy Selection Borders");
-        border_image_ids[1] = assets_get_image_id("UI_Elements", "Monument Mod Selection Borders");
+        border_image_ids[0] = assets_get_image_id("UI_Elements", "Image Border Medium");
+        border_image_ids[1] = assets_get_image_id("UI_Elements", "Image Border Large");
     }
     return 1;
 }
@@ -170,27 +170,13 @@ static void draw_background(void)
     graphics_reset_dialog();
 }
 
-static void draw_option_image_border(int x, int y, int focused)
-{
-    if (data.row_size == OPTION_MENU_SMALL_ROW) {
-        image_draw(border_image_ids[0] + focused, x, y, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(border_image_ids[0] + 2 + focused, x + 105, y + 5, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(border_image_ids[0] + 4 + focused, x, y + 90, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(border_image_ids[0] + 6 + focused, x, y + 5, COLOR_MASK_NONE, SCALE_NONE);
-    } else {
-        image_draw(border_image_ids[1] + focused, x, y, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(border_image_ids[1] + 2 + focused, x + 146, y + 5, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(border_image_ids[1] + 4 + focused, x, y + 126, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(border_image_ids[1] + 6 + focused, x, y + 5, COLOR_MASK_NONE, SCALE_NONE);
-    }
-}
-
 static void draw_foreground(void)
 {
     graphics_in_dialog_with_size(16 * data.width_blocks, 16 * data.height_blocks);
     for (int i = 0; i < data.visible_options; i++) {
         if (data.options[i + scrollbar.scroll_position].image_id) {
-            draw_option_image_border(20, buttons[i + 2].y + 2, data.focus_button_id == i + 3);
+            color_t color = data.focus_button_id == i + 3 ? COLOR_BORDER_RED : COLOR_BORDER_GREEN;
+            image_draw_border(border_image_ids[data.row_size], 20, buttons[i + 2].y + 2, color);
         }
     }
 

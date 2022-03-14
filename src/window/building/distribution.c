@@ -1324,16 +1324,6 @@ static void window_building_draw_monument_caravanserai_construction_process(buil
         TR_BUILDING_CARAVANSERAI_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
 }
 
-static void draw_policy_image_border(int x, int y, int focused)
-{
-    int id = assets_get_image_id("UI_Elements", "Policy Selection Borders");
-
-    image_draw(id + focused, x, y, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(id + 2 + focused, x + 105, y + 5, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(id + 4 + focused, x, y + 90, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(id + 6 + focused, x, y + 5, COLOR_MASK_NONE, SCALE_NONE);
-}
-
 void window_building_handle_mouse_caravanserai(const mouse *m, building_info_context *c)
 {
     generic_buttons_handle_mouse(
@@ -1343,7 +1333,9 @@ void window_building_handle_mouse_caravanserai(const mouse *m, building_info_con
 
 void window_building_draw_caravanserai_foreground(building_info_context *c)
 {
-    draw_policy_image_border(c->x_offset + 32, c->y_offset + 150, data.caravanserai_focus_button_id == 1);
+    int id = assets_get_image_id("UI_Elements", "Image Border Medium");
+    image_draw_border(id, c->x_offset + 32, c->y_offset + 150,
+        data.caravanserai_focus_button_id == 1 ? COLOR_BORDER_RED : COLOR_BORDER_GREEN);
 }
 
 static void apply_policy(int selected_policy)
@@ -1405,8 +1397,10 @@ void window_building_draw_caravanserai(building_info_context *c)
         inner_panel_draw(c->x_offset + 16, c->y_offset + 270, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 278);
 
-        image_draw(assets_get_image_id("UI_Elements", "Caravanserai Banner"),
-            c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE, SCALE_NONE);
+        if (c->height_blocks >= 38) {
+            image_draw(assets_get_image_id("UI_Elements", "Caravanserai Banner"),
+                c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE, SCALE_NONE);
+        }
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         window_building_draw_monument_caravanserai_construction_process(c);
