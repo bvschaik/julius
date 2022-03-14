@@ -746,14 +746,12 @@ static void draw_pond(const map_tile *tile, int x, int y, int type)
     int grid_offset = tile->grid_offset;
     int num_tiles = (type == BUILDING_LARGE_POND) ? 9 : 4;
     int blocked_tiles[9];
-    int blocked = 0;
     if (city_finance_out_of_money()) {
-        blocked = 1;
         for (int i = 0; i < num_tiles; i++) {
             blocked_tiles[i] = 1;
         }
     } else {
-        blocked = is_blocked_for_building(grid_offset, num_tiles, blocked_tiles);
+        is_blocked_for_building(grid_offset, num_tiles, blocked_tiles);
     }
 
     int has_water = 0;

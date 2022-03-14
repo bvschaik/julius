@@ -1143,7 +1143,7 @@ void window_building_draw_hippodrome_background(building_info_context *c)
             image_draw(image_id + (city_data.games.chosen_horse - 1),
                 c->x_offset + 37, c->y_offset + y_offset + 245, COLOR_MASK_NONE, SCALE_NONE);
 
-            image_draw_border(border, c->x_offset + 32, c->y_offset + y_offset + 240, COLOR_BORDER_RED, SCALE_NONE);
+            image_draw_border(border, c->x_offset + 32, c->y_offset + y_offset + 240, COLOR_BORDER_RED);
 
             text_draw_multiline(translation_for(TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION +
                 city_data.games.chosen_horse - 1), c->x_offset + 132, c->y_offset + y_offset + 240, 338,

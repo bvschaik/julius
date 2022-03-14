@@ -133,7 +133,7 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_u8(buf, b->data.industry.has_raw_materials);
         buffer_write_u8(buf, 0);
         buffer_write_u8(buf, b->data.industry.curse_days_left);
-        if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_POTTERY_WORKSHOP || b->type == BUILDING_WHARF) {
+        if ((b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_POTTERY_WORKSHOP) || b->type == BUILDING_WHARF) {
             buffer_write_u8(buf, b->data.industry.age_months);
             buffer_write_u8(buf, b->data.industry.average_production_per_month);
             buffer_write_i16(buf, b->data.industry.production_current_month);

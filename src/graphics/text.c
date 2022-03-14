@@ -405,19 +405,14 @@ void text_draw_number_finances(int value, int x, int y, font_t font, color_t col
 
         if (*str >= ' ') {
             int letter_id = font_letter_id(def, str, &num_bytes);
-            int width;
-            if (*str == ' ' || *str == '_' || letter_id < 0) {
-                width = def->space_width;
-            } else {
+            if (*str != ' ' && *str != '_' && letter_id >= 0) {
                 if (*str != '-') {
                     current_x -= !(inverted_length % 3) ? separator_pixels : 0;
                 }
                 const image *img = image_letter(letter_id);
                 int height = def->image_y_offset(*str, img->height + img->y_offset, def->line_height);
                 image_draw_letter(def->font, letter_id, current_x + (number_width - img->width) / 2, y - height, color, SCALE_NONE);
-                width = def->letter_spacing + img->width;
             }
-
             current_x -= number_width;
         }
 
