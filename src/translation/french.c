@@ -108,7 +108,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDIT_TITLE, "Appuyez sur une touche"},
     {TR_HOTKEY_DUPLICATE_TITLE, "Raccourci déjà utilisé"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Cette combinaison de touches est déjà affectée à l'action suivante :"},
-    {TR_WARNING_SCREENSHOT_SAVED, "Capture d'écran enregistrée: "}, // TODO: Google translate
+    {TR_WARNING_SCREENSHOT_SAVED, "Capture d'écran enregistrée : "},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
