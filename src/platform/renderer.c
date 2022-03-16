@@ -497,7 +497,7 @@ static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
 {
     int tiles = (img->width + 2) / 60;
     int half_width = tiles * 30 - 1;
-    int half_height = tiles * 15;
+    int half_height = tiles * 15 - 1;
 
     int texture_width, texture_height;
     SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
@@ -507,7 +507,7 @@ static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
     float minu = (src_coords->x + texture_coord_correction) / (float) texture_width;
     float minv = (src_coords->y + texture_coord_correction) / (float) texture_height;
     float medu = (src_coords->x + half_width) / (float) texture_width;
-    float medv = (src_coords->y + src_coords->h - half_height) / (float) texture_height;
+    float medv = (src_coords->y + src_coords->h - half_height + 0.5f) / (float) texture_height;
     float maxu = (src_coords->x + src_coords->w - texture_coord_correction) / (float) texture_width;
     float maxv = (src_coords->y + src_coords->h) / (float) texture_height;
 
@@ -516,7 +516,7 @@ static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
     float minx = dst_coords->x - dst_coord_correction;
     float miny = dst_coords->y;
     float medx = dst_coords->x + half_width / scale;
-    float medy = dst_coords->y + dst_coords->h - half_height / scale;
+    float medy = dst_coords->y + dst_coords->h - (half_height - 0.5f) / scale;
     float maxx = dst_coords->x + dst_coords->w + dst_coord_correction;
     float maxy = dst_coords->y + dst_coords->h;
 
