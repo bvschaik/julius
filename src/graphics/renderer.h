@@ -55,12 +55,15 @@ typedef struct {
     void (*draw_image)(const image *img, int x, int y, color_t color, float scale);
     void (*draw_isometric_top)(const image *img, int x, int y, color_t color, float scale);
 
-    void (*create_custom_image)(custom_image_type type, int width, int height);
+    void (*create_custom_image)(custom_image_type type, int width, int height, int is_yuv);
     int (*has_custom_image)(custom_image_type type);
     color_t *(*get_custom_image_buffer)(custom_image_type type, int *actual_texture_width);
     void (*release_custom_image_buffer)(custom_image_type type);
     void (*update_custom_image)(custom_image_type type);
+    void (*update_custom_image_yuv)(custom_image_type type, const uint8_t *y_data, int y_width,
+        const uint8_t *cb_data, int cb_width, const uint8_t *cr_data, int cr_width);
     void (*draw_custom_image)(custom_image_type type, int x, int y, float scale);
+    int (*supports_yuv_image_format)(void);
 
     int (*save_image_from_screen)(int image_id, int x, int y, int width, int height);
     void (*draw_image_to_screen)(int image_id, int x, int y);

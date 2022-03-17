@@ -1047,7 +1047,7 @@ void image_load_external_data(int image_id)
     }
     data.external_image_id = image_id;
     const image *img = &data.main[image_id];
-    graphics_renderer()->create_custom_image(CUSTOM_IMAGE_EXTERNAL, img->width, img->height);
+    graphics_renderer()->create_custom_image(CUSTOM_IMAGE_EXTERNAL, img->width, img->height, 0);
     int row_width;
     color_t *dst = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_EXTERNAL, &row_width);
     if (!dst) {

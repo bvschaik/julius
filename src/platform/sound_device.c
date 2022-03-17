@@ -365,7 +365,7 @@ static int custom_audio_stream_active(void)
     return custom_music.buffer != 0;
 }
 
-static int put_custom_audio_stream(const Uint8 *audio_data, int len)
+static int put_custom_audio_stream(const void *audio_data, int len)
 {
     if (!audio_data || len <= 0 || !custom_audio_stream_active()) {
         return 0;
@@ -429,6 +429,7 @@ static void custom_music_callback(void *dummy, Uint8 *dst, int len)
     if (custom_music.use_audiostream) {
         bytes_copied = SDL_AudioStreamGet(custom_music.stream, mix_buffer, len);
         if (bytes_copied <= 0) {
+            free(mix_buffer);
             return;
         }
     } else {
@@ -460,14 +461,15 @@ static void custom_music_callback(void *dummy, Uint8 *dst, int len)
     free(mix_buffer);
 }
 
-void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate,
-    const unsigned char *audio_data, int len)
+void sound_device_use_custom_music_player(int bitdepth, int num_channels, int rate, const void *audio_data, int len)
 {
     SDL_AudioFormat format;
     if (bitdepth == 8) {
         format = AUDIO_U8;
     } else if (bitdepth == 16) {
         format = AUDIO_S16SYS;
+    } else if (bitdepth == 32) {
+        format = AUDIO_F32;
     } else {
         log_error("Custom music bitdepth not supported:", 0, bitdepth);
         return;
@@ -491,7 +493,7 @@ void sound_device_use_custom_music_player(int bitdepth, int num_channels, int ra
     Mix_HookMusic(custom_music_callback, 0);
 }
 
-void sound_device_write_custom_music_data(const unsigned char *audio_data, int len)
+void sound_device_write_custom_music_data(const void *audio_data, int len)
 {
     if (!audio_data || len <= 0 || !custom_audio_stream_active()) {
         return;

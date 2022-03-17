@@ -389,7 +389,7 @@ static void draw_viewport_rectangle(void)
 static void prepare_minimap_cache(int width, int height)
 {
     if (width != data.width || height != data.height || !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
-        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height);
+        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, width, height, 0);
     }
     data.cache = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache_width);
 }
