@@ -17,11 +17,13 @@
 #include "figure/formation_legion.h"
 #include "game/resource.h"
 #include "game/settings.h"
+#include "game/state.h"
 #include "graphics/arrow_button.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/menu.h"
 #include "graphics/panel.h"
@@ -51,11 +53,16 @@
 #define REQUEST_MONTHS_LEFT_FOR_RED_WARNING 3
 
 static void button_game_speed(int is_down, int param2);
+static void button_toggle_play_paused(int param1, int param2);
 static void button_handle_request(int index, int param2);
 
 static arrow_button arrow_buttons_speed[] = {
     {11, 30, 17, 24, button_game_speed, 1, 0},
     {35, 30, 15, 24, button_game_speed, 0, 0},
+};
+
+static image_button play_paused_button = {
+    115, 30, 24, 24, IB_NORMAL, 0, 0, button_toggle_play_paused, button_none, 0, 0, 1, "UI_Elements", "Pause Button"
 };
 
 static generic_button buttons_emperor_requests[] = {
@@ -65,6 +72,8 @@ static generic_button buttons_emperor_requests[] = {
     {2, 172, 158, 20, button_handle_request, button_none, 3, 0},
     {2, 220, 158, 20, button_handle_request, button_none, 4, 0}
 };
+
+static const char *play_pause_button_image_names[] = { "Pause Button", "Play Button" };
 
 typedef struct {
     int value;
@@ -617,7 +626,11 @@ static void draw_extra_info_buttons(void)
         draw_extra_info_panel();
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) {
+        if (!play_paused_button.pressed) {
+            play_paused_button.image_name = play_pause_button_image_names[game_state_is_paused()];
+        }
         arrow_buttons_draw(data.x_offset, data.y_offset, arrow_buttons_speed, 2);
+        image_buttons_draw(data.x_offset, data.y_offset, &play_paused_button, 1);
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS && data.active_requests) {
         for (int i = 0; i < data.visible_requests; i++) {
@@ -636,7 +649,8 @@ void sidebar_extra_draw_foreground(void)
 int sidebar_extra_handle_mouse(const mouse *m)
 {
     if ((data.info_to_display & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) &&
-        arrow_buttons_handle_mouse(m, data.x_offset, data.y_offset, arrow_buttons_speed, 2, 0)) {
+        (arrow_buttons_handle_mouse(m, data.x_offset, data.y_offset, arrow_buttons_speed, 2, 0) ||
+        image_buttons_handle_mouse(m, data.x_offset, data.y_offset, &play_paused_button, 1, 0))) {
         return 1;
     }
     if ((data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) &&
@@ -655,6 +669,12 @@ static void button_game_speed(int is_down, int param2)
         setting_increase_game_speed();
     }
 }
+
+static void button_toggle_play_paused(int param1, int param2)
+{
+    game_state_toggle_paused();
+}
+
 
 static void confirm_nothing(int accepted, int checked)
 {}
@@ -725,4 +745,9 @@ static void button_handle_request(int index, int param2)
                 break;
         }
     }
+}
+
+sidebar_extra_display sidebar_extra_information_displayed(void)
+{
+    return data.info_to_display;
 }

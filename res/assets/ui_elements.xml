@@ -156,5 +156,12 @@
 	<image id="Victory_Banner" src="Victory_Banner"/>
     <!-- Grid image by crudelios -->
     <image id="Grid_Full" src="Grid_Full"/>
+    <!-- Note: Buttons for play/pause game -->
+    <!-- Button assets created by Ouaz -->
+    <image src="Play_Button_Idle" id="Play Button"/>
+    <image src="Play_Button_Idle"/>
+    <image src="Play_Button_Click"/>
+    <image src="Pause_Button_Idle" id="Pause Button"/>
+    <image src="Pause_Button_Idle"/>
+    <image src="Pause_Button_Click"/>
 </assetlist>
-	
