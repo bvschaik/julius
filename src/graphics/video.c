@@ -6,6 +6,7 @@
 #include "core/smacker.h"
 #include "core/time.h"
 #include "game/settings.h"
+#include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/renderer.h"
 #include "graphics/screen.h"
@@ -182,6 +183,7 @@ static void end_video(void)
     if (data.restart_music) {
         sound_music_update(1);
     }
+    system_show_cursor();
     graphics_renderer()->release_custom_image_buffer(CUSTOM_IMAGE_VIDEO);
 }
 
@@ -342,6 +344,11 @@ void video_draw(int x_offset, int y_offset)
 
 void video_draw_fullscreen(void)
 {
+    if (setting_fullscreen()) {
+        system_hide_cursor();
+    } else {
+        system_show_cursor();
+    }
     get_next_frame();
     if (data.video.draw_frame) {
         update_video_frame();

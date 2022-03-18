@@ -71,6 +71,16 @@ void system_init_cursors(int scale_percentage);
 void system_set_cursor(int cursor_id);
 
 /**
+ * Show the mouse cursor
+ */
+void system_show_cursor(void);
+
+/**
+ * Hide the mouse cursor
+ */
+void system_hide_cursor(void);
+
+/**
  * Get the key corresponding to the symbol in the current layout
  * @param name Name of the key
  * @return Corresponding key, or KEY_TYPE_NONE if the key does not exist on the layout

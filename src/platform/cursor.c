@@ -114,6 +114,16 @@ void system_set_cursor(int cursor_id)
 #endif
 }
 
+void system_show_cursor(void)
+{
+    SDL_ShowCursor(SDL_ENABLE);
+}
+
+void system_hide_cursor(void)
+{
+    SDL_ShowCursor(SDL_DISABLE);
+}
+
 cursor_shape platform_cursor_get_current_shape(void)
 {
     return data.current_shape;
