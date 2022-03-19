@@ -92,6 +92,11 @@ static void update_buildings(void)
                 if (b->subtype.house_level >= HOUSE_SMALL_VILLA) {
                     value += 4;
                     range += 1;
+                } else if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
+                    // tents normally confer -3, -2, -1, 0, 0, 0 (range=3)
+                    // now this becomes -1, 0, 0, 0, 0, 0 (range=1)
+                    value += 2;
+                    range = 1;
                 } else {
                     value += 2;
                 }
