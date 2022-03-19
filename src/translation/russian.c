@@ -763,11 +763,17 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_OVERLAY_BARBER, "Слой парикмахерских" },
     {TR_HOTKEY_SHOW_OVERLAY_BATHHOUSE, "Слой бань" },
     {TR_HOTKEY_SHOW_OVERLAY_CLINIC, "Слой клиник" },
+    {TR_HOTKEY_SHOW_OVERLAY_SICKNESS, "Слой болезни" },
     {TR_HOTKEY_SHOW_OVERLAY_TAX_INCOME, "Слой налог" },
     {TR_HOTKEY_SHOW_OVERLAY_RELIGION, "Слой религии" },
     {TR_HOTKEY_SHOW_OVERLAY_ROADS, "Слой дорог" },
     {TR_HOTKEY_ROTATE_MAP_NORTH, "Повернуть карту на север" },
     {TR_HOTKEY_BUILD_WHEAT_FARM, "Пшеничных ферм" },
+    {TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY, "Эффективность:" },
+    {TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY_TOOLTIP, "Эффективность — это соотношение между тем, сколько здание может произвести за год, и тем, что оно фактически произвело за последний год." },
+    {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_RAW_MATERIALS, "Это здание имеет низкую эффективность. Это может быть связано с отсутствием ближайшего пункта назначения для готовых товаров." },
+    {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_WORKSHOPS, "Это здание имеет низкую эффективность. Это может быть связано с отсутствием постоянных поставок сырья или с близкого расположения места для готовых товаров." },
+    {TR_BUILDING_WINDOW_INDUSTRY_WHARF_AVERAGE_CATCH, "Среднемесячный улов:" },
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
