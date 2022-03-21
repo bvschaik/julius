@@ -438,12 +438,6 @@ int city_view_is_sidebar_collapsed(void)
     return data.sidebar_collapsed;
 }
 
-int city_view_should_show_grid(void)
-{
-    return config_get(CONFIG_UI_SHOW_GRID_DURING_CONSTRUCTION) &&
-        (editor_is_active() || building_construction_type() != BUILDING_NONE);
-}
-
 void city_view_start_sidebar_toggle(void)
 {
     set_viewport_without_sidebar();

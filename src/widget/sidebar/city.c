@@ -4,6 +4,7 @@
 #include "city/message.h"
 #include "city/view.h"
 #include "city/warning.h"
+#include "core/config.h"
 #include "core/direction.h"
 #include "game/orientation.h"
 #include "game/state.h"
@@ -43,7 +44,7 @@ static void button_help(int param1, int param2);
 static void button_go_to_problem(int param1, int param2);
 static void button_advisors(int param1, int param2);
 static void button_empire(int param1, int param2);
-static void button_mission_briefing(int param1, int param2);
+static void button_toggle_grid(int param1, int param2);
 static void button_rotate_north(int param1, int param2);
 static void button_rotate(int clockwise, int param2);
 
@@ -92,7 +93,7 @@ static image_button buttons_build_expanded[] = {
 static image_button buttons_top_expanded[] = {
     {7, 155, 71, 23, IB_NORMAL, GROUP_SIDEBAR_ADVISORS_EMPIRE, 0, button_advisors, button_none, 0, 0, 1},
     {84, 155, 71, 23, IB_NORMAL, GROUP_SIDEBAR_ADVISORS_EMPIRE, 3, button_empire, button_help, 0, MESSAGE_DIALOG_EMPIRE_MAP, 1},
-    {7, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 0, button_mission_briefing, button_none, 0, 0, 1},
+    {7, 184, 33, 22, IB_NORMAL, 0, 0, button_toggle_grid, button_none, 0, 0, 1, "UI_Elements", "Toggle Grid Button" },
     {46, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 3, button_rotate_north, button_none, 0, 0, 1},
     {84, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 6, button_rotate, button_none, 0, 0, 1},
     {123, 184, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 9, button_rotate, button_none, 1, 0, 1},
@@ -340,11 +341,9 @@ static void button_empire(int param1, int param2)
     window_empire_show_checked();
 }
 
-static void button_mission_briefing(int param1, int param2)
+static void button_toggle_grid(int param1, int param2)
 {
-    if (!scenario_is_custom()) {
-        window_mission_briefing_show_review();
-    }
+    config_set(CONFIG_UI_SHOW_GRID, config_get(CONFIG_UI_SHOW_GRID) ^ 1);
 }
 
 static void button_rotate_north(int param1, int param2)

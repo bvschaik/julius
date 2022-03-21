@@ -67,7 +67,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Activer la barre latérale militaire"},
     {TR_CONFIG_UI_INVERSE_MAP_DRAG, "Inverser le déplacement de la carte avec le clic droit"},    
     {TR_CONFIG_UI_MESSAGE_ALERTS, "Remplacer les messages urgents par des bandeaux d'alerte"},
-    {TR_CONFIG_UI_SHOW_GRID_DURING_CONSTRUCTION, "Afficher la grille durant la construction et sur l'éditeur de carte"},
+    {TR_CONFIG_UI_SHOW_GRID, "Afficher la grille"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corrige le bug d'immigration en mode très difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corrige le bug des fantômes de 100 ans"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corrige \"Nouvel Empereur\" et la survie des parties créees avec l'éditeur"},

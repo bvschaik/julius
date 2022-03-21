@@ -43,26 +43,17 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons)
         int image_id = 0;
         if (btn->image_collection) {
             image_id = image_group(btn->image_collection) + btn->image_offset;
-            if (btn->enabled) {
-                if (btn->pressed) {
-                    image_id += 2;
-                } else if (btn->focused) {
-                    image_id += 1;
-                }
-            } else {
-                image_id += 3;
-            }
         } else if (btn->assetlist_name) {
             image_id = assets_get_image_id(btn->assetlist_name, btn->image_name);
-            if (btn->enabled) {
-                if (btn->pressed) {
-                    image_id += 2;
-                } else if (btn->focused) {
-                    image_id += 1;
-                }
-            } else {
-                image_id += 3;
+        }
+        if (btn->enabled) {
+            if (btn->pressed) {
+                image_id += 2;
+            } else if (btn->focused) {
+                image_id += 1;
             }
+        } else {
+            image_id += 3;
         }
         image_draw(image_id, x + btn->x_offset, y + btn->y_offset, COLOR_MASK_NONE, SCALE_NONE);
     }

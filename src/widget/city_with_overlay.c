@@ -1,5 +1,6 @@
 #include "city_with_overlay.h"
 
+#include "assets/assets.h"
 #include "building/animation.h"
 #include "building/construction.h"
 #include "building/granary.h"
@@ -385,6 +386,14 @@ static void draw_footprint(int x, int y, int grid_offset)
         } else {
             image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0, scale);
         }
+    }
+    if (config_get(CONFIG_UI_SHOW_GRID) && map_property_is_draw_tile(grid_offset) && !map_building_at(grid_offset)) {
+        static color_t grid_alpha = ALPHA_TRANSPARENT;
+        static int grid_id = 0;
+        if (!grid_id) {
+            grid_id = assets_get_image_id("UI_Elements", "Grid_Full");
+        }
+        image_draw(grid_id, x, y, COLOR_GRID, scale);
     }
 }
 

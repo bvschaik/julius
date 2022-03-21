@@ -1136,7 +1136,7 @@ void city_building_ghost_draw(const map_tile *tile)
     int x, y;
     city_view_get_selected_tile_pixels(&x, &y);
 
-    if (!city_view_should_show_grid()) {
+    if (!config_get(CONFIG_UI_SHOW_GRID) && config_get(CONFIG_UI_SHOW_PARTIAL_GRID_AROUND_CONSTRUCTION)) {
         draw_partial_grid(tile->grid_offset, x, y, type);
     }
 

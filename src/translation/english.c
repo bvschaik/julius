@@ -67,7 +67,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Enable military sidebar"},
     {TR_CONFIG_UI_INVERSE_MAP_DRAG, "Inverse dragging map with right mouse button"},
     {TR_CONFIG_UI_MESSAGE_ALERTS, "Show new messages as alerts instead of popups"},
-    {TR_CONFIG_UI_SHOW_GRID_DURING_CONSTRUCTION, "Show grid during construction and on the map editor"},
+    {TR_CONFIG_UI_SHOW_GRID, "Show grid"},
+    {TR_CONFIG_UI_SHOW_PARTIAL_GRID_AROUND_CONSTRUCTION, "Show partial grid around construction"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Fix immigration bug on very hard"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Fix 100-year-old ghosts"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Fix Emperor change and survival time in custom missions"},
@@ -766,8 +767,9 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_OVERLAY_ROADS, "Roads overlay" },
     {TR_HOTKEY_ROTATE_MAP_NORTH, "Rotate map to North" },
     {TR_HOTKEY_BUILD_WHEAT_FARM, "Wheat farm" },
-    {TR_HOTKEY_SHOW_MESSAGES, "Show messages"},   
-    {TR_HOTKEY_SHOW_EMPIRE_MAP, "Show empire map"}     
+    {TR_HOTKEY_SHOW_MESSAGES, "Show messages"},
+    {TR_HOTKEY_SHOW_EMPIRE_MAP, "Show empire map"},
+    {TR_TOGGLE_GRID, "Toggle grid"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

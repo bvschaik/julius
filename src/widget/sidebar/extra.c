@@ -62,7 +62,7 @@ static arrow_button arrow_buttons_speed[] = {
 };
 
 static image_button play_paused_button = {
-    115, 30, 24, 24, IB_NORMAL, 0, 0, button_toggle_play_paused, button_none, 0, 0, 1, "UI_Elements", "Pause Button"
+    108, 29, 39, 26, IB_NORMAL, 0, 0, button_toggle_play_paused, button_none, 0, 0, 1, "UI_Elements", "Pause Button"
 };
 
 static generic_button buttons_emperor_requests[] = {
@@ -747,7 +747,7 @@ static void button_handle_request(int index, int param2)
     }
 }
 
-sidebar_extra_display sidebar_extra_information_displayed(void)
+int sidebar_extra_is_information_displayed(sidebar_extra_display display)
 {
-    return data.info_to_display;
+    return (data.info_to_display & display) != 0;
 }

@@ -23,6 +23,6 @@ void sidebar_extra_draw_foreground(void);
 
 int sidebar_extra_handle_mouse(const mouse *m);
 
-sidebar_extra_display sidebar_extra_information_displayed(void);
+int sidebar_extra_is_information_displayed(sidebar_extra_display display);
 
 #endif // WIDGET_SIDEBAR_FILLER_H

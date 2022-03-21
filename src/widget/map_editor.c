@@ -1,5 +1,6 @@
 #include "map_editor.h"
 
+#include "assets/assets.h"
 #include "city/view.h"
 #include "core/config.h"
 #include "editor/tool.h"
@@ -69,6 +70,14 @@ static void draw_footprint(int x, int y, int grid_offset)
         map_image_set(grid_offset, image_id);
     }
     image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask, draw_context.scale);
+    if (config_get(CONFIG_UI_SHOW_GRID)) {
+        static color_t grid_alpha = ALPHA_TRANSPARENT;
+        static int grid_id = 0;
+        if (!grid_id) {
+            grid_id = assets_get_image_id("UI_Elements", "Grid_Full");
+        }
+        image_draw(grid_id, x, y, COLOR_GRID, draw_context.scale);
+    }
 }
 
 static void draw_top(int x, int y, int grid_offset)

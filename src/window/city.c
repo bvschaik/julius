@@ -38,6 +38,7 @@
 #include "widget/city_with_overlay.h"
 #include "widget/top_menu.h"
 #include "widget/sidebar/city.h"
+#include "widget/sidebar/extra.h"
 #include "widget/sidebar/military.h"
 #include "window/advisors.h"
 #include "window/empire.h"
@@ -113,6 +114,9 @@ static void draw_foreground(void)
         draw_time_left();
         if (mouse_get()->is_touch) {
             widget_city_draw_touch_buttons();
+            if (sidebar_extra_is_information_displayed(SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)) {
+                draw_paused_banner();
+            }
         } else {
             draw_paused_banner();
         }
@@ -561,7 +565,11 @@ static void get_tooltip(tooltip_context *c)
     }
     if (text_id) {
         c->type = TOOLTIP_BUTTON;
-        c->text_id = text_id;
+        if (text_id == 42) {
+            c->translation_key = TR_TOGGLE_GRID;
+        } else {
+            c->text_id = text_id;
+        }
         return;
     }
     widget_city_get_tooltip(c);

@@ -37,7 +37,7 @@ typedef struct {
     tooltip_extra_text_type extra_text_type;
     int extra_text_groups[TOOLTIP_MAX_EXTRA_VALUES];
     int extra_text_ids[TOOLTIP_MAX_EXTRA_VALUES];
-    uint8_t *precomposed_text;
+    const uint8_t *precomposed_text;
 } tooltip_context;
 
 void tooltip_invalidate(void);

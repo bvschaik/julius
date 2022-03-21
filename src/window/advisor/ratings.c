@@ -3,18 +3,22 @@
 #include "city/ratings.h"
 #include "core/calc.h"
 #include "core/config.h"
+#include "core/lang.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
+#include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
+#include "window/mission_briefing.h"
 
 #define ADVISOR_HEIGHT 27
 
 static void button_rating(int rating, int param2);
+static void button_mission_briefing(int param1, int param2);
 
 static generic_button rating_buttons[] = {
     { 80, 286, 110, 66, button_rating, button_none, SELECTED_RATING_CULTURE, 0},
@@ -23,7 +27,12 @@ static generic_button rating_buttons[] = {
     {440, 286, 110, 66, button_rating, button_none, SELECTED_RATING_FAVOR, 0},
 };
 
+static image_button show_briefing_button = {
+    588, 391, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 0, button_mission_briefing, button_none, 0, 0, 1
+};
+
 static int focus_button_id;
+static int mission_briefing_focused;
 
 void draw_rating_column(int x_offset, int y_offset, int value, int has_reached)
 {
@@ -58,6 +67,10 @@ static int draw_background(void)
     image_draw(image_group(GROUP_RATINGS_BACKGROUND), 60, 48, COLOR_MASK_NONE, SCALE_NONE);
 
     int open_play = scenario_is_open_play();
+
+    if (!scenario_is_custom()) {
+        button_border_draw(585, 388, 39, 28, 0);
+    }
 
     // culture
     int culture = city_rating_culture();
@@ -170,17 +183,31 @@ static void draw_foreground(void)
     button_border_draw(200, 286, 110, 66, focus_button_id == SELECTED_RATING_PROSPERITY);
     button_border_draw(320, 286, 110, 66, focus_button_id == SELECTED_RATING_PEACE);
     button_border_draw(440, 286, 110, 66, focus_button_id == SELECTED_RATING_FAVOR);
+    if (!scenario_is_custom()) {
+        image_buttons_draw(0, 0, &show_briefing_button, 1);
+    }
 }
 
 static int handle_mouse(const mouse *m)
 {
-    return generic_buttons_handle_mouse(m, 0, 0, rating_buttons, 4, &focus_button_id);
+    int handled = generic_buttons_handle_mouse(m, 0, 0, rating_buttons, 4, &focus_button_id);
+    if (!scenario_is_custom()) {
+        handled |= image_buttons_handle_mouse(m, 0, 0, &show_briefing_button, 1, &mission_briefing_focused);
+    }
+    return handled;
 }
 
 static void button_rating(int rating, int param2)
 {
     city_rating_select(rating);
     window_invalidate();
+}
+
+static void button_mission_briefing(int param1, int param2)
+{
+    if (!scenario_is_custom()) {
+        window_mission_briefing_show_review();
+    }
 }
 
 static void get_tooltip_text(advisor_tooltip_result *r)
@@ -198,6 +225,9 @@ static void get_tooltip_text(advisor_tooltip_result *r)
         case SELECTED_RATING_FAVOR:
             r->text_id = 105;
             break;
+    }
+    if (mission_briefing_focused) {
+        r->precomposed_text = lang_get_string(68, 42);
     }
 }
 

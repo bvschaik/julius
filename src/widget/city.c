@@ -189,7 +189,7 @@ static void draw_construction_buttons(void)
 
 void widget_city_draw_touch_buttons(void)
 {
-    if (!(sidebar_extra_information_displayed() & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)) {
+    if (!sidebar_extra_is_information_displayed(SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)) {
         draw_pause_button();
     }
     draw_construction_buttons();
@@ -197,7 +197,7 @@ void widget_city_draw_touch_buttons(void)
 
 static int is_pause_button(int x, int y)
 {
-    return !(sidebar_extra_information_displayed() & SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) && 
+    return !sidebar_extra_is_information_displayed(SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) &&
         x < 4 * BLOCK_SIZE + 4 && y >= 24 && y < 56 + 4 * BLOCK_SIZE;
 }
 
