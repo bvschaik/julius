@@ -8,6 +8,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "figure/formation.h"
+#include "game/settings.h"
 #include "game/time.h"
 #include "graphics/window.h"
 #include "sound/effect.h"
@@ -136,6 +137,20 @@ static void play_sound(int text_id)
     }
 }
 
+static int is_invasion_message(int message_type)
+{
+    switch (message_type) {
+        case MESSAGE_LOCAL_UPRISING:
+        case MESSAGE_BARBARIAN_ATTACK:
+        case MESSAGE_CAESAR_ARMY_ATTACK:
+        case MESSAGE_LOCAL_UPRISING_MARS:
+        case MESSAGE_ENEMY_ARMY_ATTACK:
+            return 1;
+        default:
+            return 0;
+    }
+}
+
 static void show_message_popup(int message_id)
 {
     city_message *msg = &data.messages[message_id];
@@ -144,6 +159,9 @@ static void show_message_popup(int message_id)
     int text_id = city_message_get_text_id(msg->message_type);
     if (!has_video(text_id)) {
         play_sound(text_id);
+    }
+    if (is_invasion_message(msg->message_type) && setting_game_speed() > 70) {
+        setting_set_default_game_speed();
     }
     window_message_dialog_show_city_message(text_id,
         msg->year, msg->month, msg->param1, msg->param2,

@@ -261,18 +261,18 @@ static int get_tooltip_crime(tooltip_context *c, const building *b)
 
 static int get_tooltip_problems(tooltip_context *c, const building *b)
 {
-    const building *main = b;
+    const building *main_building = b;
 
     int guard = 0;
     while (guard < 9) {
-        if (main->prev_part_building_id <= 0) {
+        if (main_building->prev_part_building_id <= 0) {
             break;
         }
-        main = building_get(main->prev_part_building_id);
+        main_building = building_get(main_building->prev_part_building_id);
         guard++;
     }
     if (guard < 9) {
-        b = main;
+        b = main_building;
     }
     if (b->house_size) {
         return 0;

@@ -268,6 +268,11 @@ void setting_decrease_game_speed(void)
     }
 }
 
+void setting_set_default_game_speed(void)
+{
+    data.game_speed = 70;
+}
+
 int setting_scroll_speed(void)
 {
     return data.scroll_speed;

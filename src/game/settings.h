@@ -47,6 +47,7 @@ void setting_reset_sound(set_sound_type type, int enabled, int volume);
 int setting_game_speed(void);
 void setting_increase_game_speed(void);
 void setting_decrease_game_speed(void);
+void setting_set_default_game_speed(void);
 
 int setting_scroll_speed(void);
 void setting_increase_scroll_speed(void);

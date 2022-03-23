@@ -89,7 +89,7 @@ static int load_mpg(const char *filename)
     static char mpg_filename[FILE_NAME_MAX];
     strncpy(mpg_filename, filename, FILE_NAME_MAX - 1);
     file_change_extension(mpg_filename, "mpg");
-    if (strncmp(mpg_filename, "smk/", 4) == 0) {
+    if (strncmp(mpg_filename, "smk/", 4) == 0 || strncmp(mpg_filename, "smk\\", 4) == 0) {
         mpg_filename[0] = 'm';
         mpg_filename[1] = 'p';
         mpg_filename[2] = 'g';

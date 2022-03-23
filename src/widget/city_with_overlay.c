@@ -388,7 +388,6 @@ static void draw_footprint(int x, int y, int grid_offset)
         }
     }
     if (config_get(CONFIG_UI_SHOW_GRID) && map_property_is_draw_tile(grid_offset) && !map_building_at(grid_offset)) {
-        static color_t grid_alpha = ALPHA_TRANSPARENT;
         static int grid_id = 0;
         if (!grid_id) {
             grid_id = assets_get_image_id("UI_Elements", "Grid_Full");
