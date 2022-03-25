@@ -61,7 +61,7 @@ void zoom_end_touch(void)
     data.touch.active = 0;
 }
 
-void zoom_map(const mouse *m)
+void zoom_map(const mouse *m, int current_zoom)
 {
     if (data.touch.active || m->is_touch) {
         return;
@@ -74,7 +74,13 @@ void zoom_map(const mouse *m)
     }
     if (m->scrolled != SCROLL_NONE) {
         data.restore = 0;
-        data.delta = (m->scrolled == SCROLL_DOWN) ? ZOOM_DELTA : -ZOOM_DELTA;
+        int multiplier;
+        if (current_zoom >= 200) {
+            multiplier = current_zoom / 200;
+        } else {
+            multiplier = 1;
+        }
+        data.delta = (m->scrolled == SCROLL_DOWN ? ZOOM_DELTA : -ZOOM_DELTA) * multiplier;
         if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
             speed_clear(&data.step);
             speed_set_target(&data.step, ZOOM_STEP, SPEED_CHANGE_IMMEDIATE, 1);
@@ -100,9 +106,7 @@ int zoom_update_value(int *zoom, int max, pixel_offset *camera_position)
         }
         if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
             step = speed_get_delta(&data.step);
-            if (*zoom > 100) {
-                step *= 2;
-            }
+            step *= (*zoom / 100) + 1;
             if (!step) {
                 return 1;
             }

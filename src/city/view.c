@@ -25,7 +25,6 @@ static struct {
     int sidebar_collapsed;
     int orientation;
     int scale;
-    int max_scale;
     struct {
         view_tile tile;
         pixel_offset pixel;
@@ -48,23 +47,48 @@ static int view_to_grid_offset_lookup[VIEW_X_MAX][VIEW_Y_MAX];
 
 static void check_camera_boundaries(void)
 {
+    int max_scale = city_view_get_max_scale();
+    if (max_scale < data.scale) {
+        city_view_set_scale(max_scale);
+        return;
+    }
+    int grid_height = map_grid_height() * 2;
     int x_min = (VIEW_X_MAX - map_grid_width()) / 2;
-    int y_min = (VIEW_Y_MAX - 2 * map_grid_height()) / 2;
-    if (data.camera.tile.x < x_min - 1) {
-        data.camera.tile.x = x_min - 1;
-        data.camera.pixel.x = 0;
+    int y_min = (VIEW_Y_MAX - grid_height) / 2;
+    if (data.viewport.width_tiles >= map_grid_width() + 4) {
+        data.camera.tile.x = x_min - 1 - (data.viewport.width_tiles - map_grid_width()) / 2;
+        data.camera.pixel.x = TILE_WIDTH_PIXELS -
+            ((calc_adjust_with_percentage(data.viewport.width_pixels + 2, data.scale) / 2) % TILE_WIDTH_PIXELS);
+    } else {
+        if (data.camera.tile.x < x_min - 1) {
+            data.camera.tile.x = x_min - 1;
+            data.camera.pixel.x = 0;
+        }
+        int max_x_tile = VIEW_X_MAX - x_min - data.viewport.width_tiles;
+        int max_x_pixel = TILE_WIDTH_PIXELS -
+            (calc_adjust_with_percentage(data.viewport.width_pixels + 2, data.scale) % TILE_WIDTH_PIXELS);
+        if (data.camera.tile.x > max_x_tile || (data.camera.tile.x == max_x_tile && data.camera.pixel.x > max_x_pixel)) {
+            data.camera.tile.x = max_x_tile;
+            data.camera.pixel.x = max_x_pixel;
+        }
     }
-    if (data.camera.tile.x >= VIEW_X_MAX - x_min - data.viewport.width_tiles) {
-        data.camera.tile.x = VIEW_X_MAX - x_min - data.viewport.width_tiles;
-        data.camera.pixel.x = 0;
-    }
-    if (data.camera.tile.y < y_min - 2) {
-        data.camera.tile.y = y_min - 1;
-        data.camera.pixel.y = 0;
-    }
-    if (data.camera.tile.y >= ((VIEW_Y_MAX - y_min - data.viewport.height_tiles) & ~1)) {
-        data.camera.tile.y = VIEW_Y_MAX - y_min - data.viewport.height_tiles;
-        data.camera.pixel.y = 0;
+    if (data.viewport.height_tiles >= grid_height + 4) {
+        data.camera.tile.y = (y_min - (data.viewport.height_tiles - grid_height) / 2) & ~1;
+        data.camera.pixel.y = TILE_HEIGHT_PIXELS -
+            (((calc_adjust_with_percentage(data.viewport.height_pixels, data.scale) + TILE_HEIGHT_PIXELS) / 2) %
+            TILE_HEIGHT_PIXELS);
+    } else {    
+        if (data.camera.tile.y < y_min - 2) {
+            data.camera.tile.y = y_min - 1;
+            data.camera.pixel.y = 0;
+        }
+        int max_y_tile = (VIEW_Y_MAX - y_min - data.viewport.height_tiles) & ~1;
+        int max_y_pixel = TILE_HEIGHT_PIXELS -
+                (calc_adjust_with_percentage(data.viewport.height_pixels, data.scale) % TILE_HEIGHT_PIXELS);
+        if (data.camera.tile.y > max_y_tile || (data.camera.tile.y == max_y_tile && data.camera.pixel.y > max_y_pixel)) {
+            data.camera.tile.y = max_y_tile;
+            data.camera.pixel.y = max_y_pixel;
+        }
     }
     data.camera.tile.y &= ~1;
 }
@@ -186,7 +210,14 @@ int city_view_get_scale(void)
 
 int city_view_get_max_scale(void)
 {
-    return 600; // data.max_scale;
+    int max_x_pixels = (map_grid_width() + 4) * TILE_WIDTH_PIXELS;
+    int max_y_pixels = (map_grid_height() * 2 + 4) * HALF_TILE_HEIGHT_PIXELS;
+
+    int max_x_scale = calc_percentage(max_x_pixels, data.viewport.width_pixels);
+    int max_y_scale = calc_percentage(max_y_pixels, data.viewport.height_pixels);
+    int max_scale = max_x_scale > max_y_scale ? max_x_scale : max_y_scale;
+
+    return max_scale < 100 ? 100 : max_scale;
 }
 
 void city_view_get_camera(int *x, int *y)
@@ -388,7 +419,7 @@ static void set_viewport_without_sidebar(void)
 
 void city_view_set_scale(int scale)
 {
-    scale = calc_bound(scale, 50, 600);
+    scale = calc_bound(scale, 50, city_view_get_max_scale());
     data.scale = scale;
     if (data.sidebar_collapsed) {
         set_viewport_without_sidebar();
@@ -397,14 +428,6 @@ void city_view_set_scale(int scale)
     }
     check_camera_boundaries();
     graphics_renderer()->update_scale_mode(scale);
-}
-
-void city_view_set_max_scale(int scale)
-{
-    data.max_scale = 600;
-    if (data.scale > scale) {
-        city_view_set_scale(scale);
-    }
 }
 
 void city_view_set_viewport(int screen_width, int screen_height)
