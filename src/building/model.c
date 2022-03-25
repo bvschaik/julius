@@ -192,7 +192,7 @@ int model_load(void)
     return 1;
 }
 
-const model_building MODEL_ROADBLOCK = { 40,0,0,0,0 };
+const model_building MODEL_ROADBLOCK = { 12,0,0,0,0 };
 const model_building MODEL_WORK_CAMP = { 150,-10,2,3,4,20 };
 const model_building MODEL_ARCHITECT_GUILD = { 200,-8,1,2,4,12 };
 const model_building MODEL_GRAND_TEMPLE_CERES = { 2500,20,2,-4,5,50 };
@@ -221,6 +221,7 @@ const model_building *model_get_building(building_type type)
 {
     switch (type) {
         case BUILDING_ROADBLOCK:
+        case BUILDING_GARDEN_WALL_GATE:
             return &MODEL_ROADBLOCK;
         case BUILDING_WORKCAMP:
             return &MODEL_WORK_CAMP;
@@ -274,8 +275,7 @@ const model_building *model_get_building(building_type type)
         type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT ||
         type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_GARDEN_WALL ||
         type == BUILDING_COLONNADE || type == BUILDING_GARDEN_WALL || 
-        type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_GARDEN_PATH ||
-        type == BUILDING_GARDEN_WALL_GATE) {
+        type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_GARDEN_PATH) {
         return &buildings[41];
     }
 
