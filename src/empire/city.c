@@ -17,6 +17,8 @@
 
 #define MAX_CITIES 41
 #define RESOURCES_TO_TRADER_RATIO 60
+#define LAND_TRADER_DELAY_TICKS 4
+#define SEA_TRADER_DELAY_TICKS 30
 
 static empire_city cities[MAX_CITIES];
 
@@ -249,6 +251,14 @@ void empire_city_force_sell(int route, int resource)
 
 static int generate_trader(int city_id, empire_city *city)
 {
+    // Check timeout before city can send another trader
+    if (city->trader_entry_delay > 0) {
+        city->trader_entry_delay--;
+        return 0;
+    }
+    city->trader_entry_delay = city->is_sea_trade ? SEA_TRADER_DELAY_TICKS : LAND_TRADER_DELAY_TICKS;
+
+    // Check that we have space to trade
     int trade_potential = 0;
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         if (city->buys_resource[r] || city->sells_resource[r]) {
@@ -258,39 +268,19 @@ static int generate_trader(int city_id, empire_city *city)
     if (trade_potential <= 0) {
         return 0;
     }
-    int max_traders = calc_bound(trade_potential / RESOURCES_TO_TRADER_RATIO + 1, 1, 3);
-    int index;
-    if (max_traders == 1) {
-        if (!city->trader_figure_ids[0]) {
-            index = 0;
-        } else {
-            return 0;
-        }
-    } else if (max_traders == 2) {
-        if (!city->trader_figure_ids[0]) {
-            index = 0;
-        } else if (!city->trader_figure_ids[1]) {
-            index = 1;
-        } else {
-            return 0;
-        }
-    } else { // 3
-        if (!city->trader_figure_ids[0]) {
-            index = 0;
-        } else if (!city->trader_figure_ids[1]) {
-            index = 1;
-        } else if (!city->trader_figure_ids[2]) {
-            index = 2;
-        } else {
-            return 0;
+
+    // Find a slot to hold a trader
+    int max_traders = calc_bound(trade_potential / RESOURCES_TO_TRADER_RATIO + 1, 1, EMPIRE_CITY_MAX_TRADERS);
+    int index = -1;
+    for (int i = 0; i < max_traders; i++) {
+        if (!city->trader_figure_ids[i]) {
+            index = i;
+            break;
         }
     }
-
-    if (city->trader_entry_delay > 0) {
-        city->trader_entry_delay--;
+    if (index == -1) {
         return 0;
     }
-    city->trader_entry_delay = city->is_sea_trade ? 30 : 4;
 
     if (city->is_sea_trade) {
         // generate ship
@@ -346,7 +336,7 @@ void empire_city_generate_trader(void)
 
 void empire_city_remove_trader(int city_id, int figure_id)
 {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < EMPIRE_CITY_MAX_TRADERS; i++) {
         if (cities[city_id].trader_figure_ids[i] == figure_id) {
             cities[city_id].trader_figure_ids[i] = 0;
         }
@@ -399,7 +389,7 @@ void empire_city_save_state(buffer *buf)
         buffer_write_i16(buf, city->empire_object_id);
         buffer_write_u8(buf, city->is_sea_trade);
         buffer_write_u8(buf, 0);
-        for (int f = 0; f < 3; f++) {
+        for (int f = 0; f < EMPIRE_CITY_MAX_TRADERS; f++) {
             buffer_write_i16(buf, city->trader_figure_ids[f]);
         }
         for (int p = 0; p < 10; p++) {
@@ -431,7 +421,7 @@ void empire_city_load_state(buffer *buf)
         city->empire_object_id = buffer_read_i16(buf);
         city->is_sea_trade = buffer_read_u8(buf);
         buffer_skip(buf, 1);
-        for (int f = 0; f < 3; f++) {
+        for (int f = 0; f < EMPIRE_CITY_MAX_TRADERS; f++) {
             city->trader_figure_ids[f] = buffer_read_i16(buf);
         }
         buffer_skip(buf, 10);

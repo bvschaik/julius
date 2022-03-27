@@ -4,6 +4,8 @@
 #include "core/buffer.h"
 #include "game/resource.h"
 
+#define EMPIRE_CITY_MAX_TRADERS 3
+
 typedef struct {
     int in_use;
     int type;
@@ -16,7 +18,7 @@ typedef struct {
     int trader_entry_delay;
     int empire_object_id;
     int is_sea_trade;
-    int trader_figure_ids[3];
+    int trader_figure_ids[EMPIRE_CITY_MAX_TRADERS];
 } empire_city;
 
 void empire_city_clear_all(void);
