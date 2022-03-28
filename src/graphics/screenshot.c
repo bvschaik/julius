@@ -202,17 +202,6 @@ static void show_saved_notice(const char *filename)
     city_warning_show_custom(notice_text);
 }
 
-static void show_saved_notice(const char *filename)
-{
-    uint8_t notice_text[FILE_NAME_MAX];
-    const uint8_t *prefix = translation_for(TR_WARNING_SCREENSHOT_SAVED);
-    string_copy(prefix, notice_text, FILE_NAME_MAX);
-    int prefix_length = string_length(prefix);
-    string_copy(string_from_ascii(filename), &notice_text[prefix_length], FILE_NAME_MAX - prefix_length);
-
-    city_warning_show_custom(notice_text);
-}
-
 static void create_window_screenshot(void)
 {
     int width = screen_width();
