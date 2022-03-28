@@ -943,6 +943,41 @@ static int load_multibyte_font(multibyte_font_type type)
     return 1;
 }
 
+static int load_japanese_fonts(void)
+{
+    if (!alloc_font_memory(JAPANESE_FONT_ENTRIES, JAPANESE_FONT_DATA_SIZE)) {
+        return 0;
+    }
+
+    int data_size = io_read_file_into_buffer(JAPANESE_FONTS_555, MAY_BE_LOCALIZED, data.tmp_data, SCRATCH_DATA_SIZE);
+    if (!data_size) {
+        log_error("Julius requires extra files for Japanese characters:", JAPANESE_FONTS_555, 0);
+        return 0;
+    }
+
+    buffer input;
+    buffer_init(&input, data.tmp_data, data_size);
+    color_t *pixels = data.font_data;
+    int offset = 0;
+    int num_chars = IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS;
+    int num_half_width = 63;
+    int num_full_width = num_chars - num_half_width;
+
+    log_info("Parsing Japanese font", 0, 0);
+    // 4-bit font file
+    offset = parse_multibyte_font(num_half_width, &input, &pixels[offset], offset, 12, -5, 0);
+    offset = parse_multibyte_font(num_full_width, &input, &pixels[offset], offset, 12, 1, num_half_width);
+    offset = parse_multibyte_font(num_half_width, &input, &pixels[offset], offset, 15, -6, num_chars);
+    offset = parse_multibyte_font(num_full_width, &input, &pixels[offset], offset, 15, 1, num_chars + num_half_width);
+    offset = parse_multibyte_font(num_half_width, &input, &pixels[offset], offset, 20, -9, num_chars*2);
+    offset = parse_multibyte_font(num_full_width, &input, &pixels[offset], offset, 20, 1, num_chars*2 + num_half_width);
+    log_info("Done parsing Japanese font", 0, offset);
+
+    data.fonts_enabled = MULTIBYTE_IN_FONT;
+    data.font_base_offset = 0;
+    return 1;
+}
+
 int image_load_fonts(encoding_type encoding)
 {
     if (encoding == ENCODING_CYRILLIC) {
