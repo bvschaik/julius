@@ -769,7 +769,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_BUILD_WHEAT_FARM, "Wheat farm" },
     {TR_HOTKEY_SHOW_MESSAGES, "Show messages"},
     {TR_HOTKEY_SHOW_EMPIRE_MAP, "Show empire map"},
-    {TR_TOGGLE_GRID, "Toggle grid"}
+    {TR_TOGGLE_GRID, "Toggle grid"},
+    {TR_WARNING_SCREENSHOT_SAVED, "Screenshot saved: "}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

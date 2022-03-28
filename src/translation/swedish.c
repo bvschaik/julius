@@ -756,7 +756,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_OVERLAY_RELIGION, "Religionsöversikt" },
     {TR_HOTKEY_SHOW_OVERLAY_ROADS, "Vägöversikt" },
     {TR_HOTKEY_ROTATE_MAP_NORTH, "Rotera kartan mot norr" },
-    {TR_HOTKEY_BUILD_WHEAT_FARM, "Veteodlingsöversikt" }
+    {TR_HOTKEY_BUILD_WHEAT_FARM, "Veteodlingsöversikt" },
+    {TR_WARNING_SCREENSHOT_SAVED, "Skärmdumpen sparad: "} // TODO: Google translate
 };
 
 void translation_swedish(const translation_string **strings, int *num_strings)

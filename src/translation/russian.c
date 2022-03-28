@@ -774,6 +774,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_RAW_MATERIALS, "Это здание имеет низкую эффективность. Это может быть связано с отсутствием ближайшего пункта назначения для готовых товаров." },
     {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_WORKSHOPS, "Это здание имеет низкую эффективность. Это может быть связано с отсутствием постоянных поставок сырья или с близкого расположения места для готовых товаров." },
     {TR_BUILDING_WINDOW_INDUSTRY_WHARF_AVERAGE_CATCH, "Среднемесячный улов:" },
+    {TR_WARNING_SCREENSHOT_SAVED, "Скриншот сохранен: "} // TODO: Google translate
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)

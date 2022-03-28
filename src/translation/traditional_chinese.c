@@ -735,6 +735,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_OVERLAY_SICKNESS_PLAGUE, "病例爆發"},
     {TR_CITY_MESSAGE_TITLE_SICKNESS, "城市中的瘟疫"},
     {TR_CITY_MESSAGE_TEXT_SICKNESS, "瘟疫在城市裡爆發，一座建築已被封鎖，醫師正前往消毒。"},
+    {TR_WARNING_SCREENSHOT_SAVED, "截圖已保存: "} // TODO: Google translate
 };
 
 void translation_traditional_chinese(const translation_string **strings, int *num_strings)

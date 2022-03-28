@@ -717,6 +717,7 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_SQUALOR, "Verwahrloste Wohnungen und Slums sind ein Problem" },
     {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
 
+    {TR_WARNING_SCREENSHOT_SAVED, "Screenshot gespeichert: "}, // TODO: Google translate
 };
 
 void translation_german(const translation_string **strings, int *num_strings)

@@ -750,8 +750,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_OVERLAY_SICKNESS_PLAGUE, "Focolaio di peste" },
     {TR_CITY_MESSAGE_TITLE_SICKNESS, "La peste è in città" },
     {TR_CITY_MESSAGE_TEXT_SICKNESS, "La peste è arrivata in città, un edificio è stato messo in quarantena e i dottori sono stati assegnati alla sanificazione." },
-    {TR_FIGURES_CARTPUSHER_GOING_TO_ROME, "Porta a Roma le merci richieste dall'imperatore" }
-
+    {TR_FIGURES_CARTPUSHER_GOING_TO_ROME, "Porta a Roma le merci richieste dall'imperatore" },
+    {TR_WARNING_SCREENSHOT_SAVED, "Schermata salvata: "} // TODO: Google translate
 };
 
 void translation_italian(const translation_string **strings, int *num_strings)

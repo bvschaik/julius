@@ -1,17 +1,20 @@
 #include "screenshot.h"
 
 #include "city/view.h"
+#include "city/warning.h"
 #include "core/buffer.h"
 #include "core/config.h"
 #include "core/file.h"
 #include "core/log.h"
-#include "game/system.h"
+#include "core/string.h"
+#include "graphics/screen.h"
 #include "graphics/graphics.h"
 #include "graphics/menu.h"
 #include "graphics/renderer.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
 #include "map/grid.h"
+#include "translation/translation.h"
 #include "widget/city_without_overlay.h"
 
 #include "png.h"
@@ -188,6 +191,17 @@ static void image_finish(void)
     png_write_end(screenshot.png_ptr, screenshot.info_ptr);
 }
 
+static void show_saved_notice(const char *filename)
+{
+    uint8_t notice_text[FILE_NAME_MAX];
+    const uint8_t *prefix = translation_for(TR_WARNING_SCREENSHOT_SAVED);
+    string_copy(prefix, notice_text, FILE_NAME_MAX);
+    int prefix_length = string_length(prefix);
+    string_copy(string_from_ascii(filename), &notice_text[prefix_length], FILE_NAME_MAX - prefix_length);
+
+    city_warning_show_custom(notice_text);
+}
+
 static void create_window_screenshot(void)
 {
     int width = screen_width();
@@ -213,6 +227,7 @@ static void create_window_screenshot(void)
 
     image_finish();
     log_info("Saved screenshot:", filename, 0);
+    show_saved_notice(filename);
     image_free();
 }
 
@@ -292,6 +307,7 @@ static void create_full_city_screenshot(void)
     if (!error) {
         image_finish();
         log_info("Saved full city screenshot:", filename, 0);
+        show_saved_notice(filename);
     }
     image_free();
 }

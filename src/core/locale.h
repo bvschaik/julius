@@ -15,6 +15,7 @@ typedef enum {
     LANGUAGE_ITALIAN,
     LANGUAGE_SPANISH,
     // Translations done by other publishers
+    LANGUAGE_JAPANESE,
     LANGUAGE_KOREAN,
     LANGUAGE_POLISH,
     LANGUAGE_PORTUGUESE,
@@ -42,6 +43,12 @@ int locale_year_before_ad(void);
  * @return Boolean true for the translated version, false to use fixed string 'Dn'
  */
 int locale_translate_money_dn(void);
+
+/**
+ * Returns the indent size to use for paragraphs in rich text
+ * @return Indent in pixels
+ */
+int locale_paragraph_indent(void);
 
 /**
  * Returns whether we should use localized filenames for the "Citizen.sav", etc autosaves

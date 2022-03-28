@@ -767,7 +767,8 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_ROTATE_MAP_NORTH, "Orienter la carte au Nord" },
     {TR_HOTKEY_BUILD_WHEAT_FARM, "Ferme (Blé)" },
     {TR_HOTKEY_SHOW_MESSAGES, "Afficher les messages"},   
-    {TR_HOTKEY_SHOW_EMPIRE_MAP, "Afficher la carte de l'Empire"}
+    {TR_HOTKEY_SHOW_EMPIRE_MAP, "Afficher la carte de l'Empire"},
+    {TR_WARNING_SCREENSHOT_SAVED, "Capture d'écran enregistrée : "}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)

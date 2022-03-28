@@ -719,7 +719,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ACCEPT_WORKERS, "Wstrzymaj dostarczanie zasobów z magazynu" },
     {TR_WINDOW_BUILDING_ARENA_CLOSED, "Arena jest zamknięta. Ptaki zakładają gniazda w opuszczonych siedzeniach." },
     {TR_CONFIG_DIGIT_SEPARATOR, "Separate digits"},
-
+    {TR_WARNING_SCREENSHOT_SAVED, "Zapisano zrzut ekranu: "} // TODO: Google translate
 };
 
 void translation_polish(const translation_string **strings, int *num_strings)
