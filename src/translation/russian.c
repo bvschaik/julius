@@ -774,7 +774,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_BUILD_WHEAT_FARM, "Пшеничных ферм" },
     {TR_HOTKEY_SHOW_MESSAGES, "Показать сообщения"},
     {TR_HOTKEY_SHOW_EMPIRE_MAP, "Показать карту империи"},
-    {TR_TOGGLE_GRID, "Переключить сетку"}
+    {TR_TOGGLE_GRID, "Переключить сетку"},
     {TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY, "Эффективность:" },
     {TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY_TOOLTIP, "Эффективность — это соотношение между тем, сколько здание может произвести за год, и тем, что оно фактически произвело за последний год." },
     {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_RAW_MATERIALS, "Это здание имеет низкую эффективность. Это может быть связано с отсутствием ближайшего пункта назначения для готовых товаров." },
