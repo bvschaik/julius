@@ -98,6 +98,7 @@ static void create_blank_map(int size)
     scenario_map_init();
     clear_map_data();
     map_image_init_edges();
+    city_view_set_scale(100);
     city_view_set_camera(76, 152);
     city_view_reset_orientation();
 }

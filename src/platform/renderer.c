@@ -1,6 +1,7 @@
 #include "renderer.h"
 
 #include "core/calc.h"
+#include "core/config.h"
 #include "core/time.h"
 #include "graphics/renderer.h"
 #include "graphics/screen.h"
@@ -473,6 +474,8 @@ static void draw_isometric_footprint_raw(const image *img, SDL_Texture *texture,
     SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
 
     float texture_coord_correction = scale == 1.0f ? 0.0f : 0.5f;
+    float grid_correction = (config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) * 0.75f;
+    texture_coord_correction += grid_correction;
 
     float minu = (src_coords->x + texture_coord_correction) / (float) texture_width;
     float minv = (src_coords->y + texture_coord_correction) / (float) texture_height;
@@ -482,13 +485,14 @@ static void draw_isometric_footprint_raw(const image *img, SDL_Texture *texture,
     float maxv = (src_coords->y + height - texture_coord_correction) / (float) texture_height;
 
     float dst_coord_correction = scale == 1.0f ? 0.5f : 1.0f / scale;
+    grid_correction /= scale;
 
-    float minx = dst_coords->x - dst_coord_correction;
-    float miny = dst_coords->y;
+    float minx = dst_coords->x - dst_coord_correction + grid_correction;
+    float miny = dst_coords->y + grid_correction;
     float medx = dst_coords->x + half_width / scale;
     float medy = dst_coords->y + half_height / scale;
-    float maxx = dst_coords->x + dst_coord_correction + width / scale;
-    float maxy = dst_coords->y + height / scale;
+    float maxx = dst_coords->x + dst_coord_correction + width / scale - grid_correction;
+    float maxy = dst_coords->y + height / scale - grid_correction;
 
     const float uv[8] = { medu, minv, minu, medv, medu, maxv, maxu, medv };
     const float xy[8] = { medx, miny, minx, medy, medx, maxy, maxx, medy };
