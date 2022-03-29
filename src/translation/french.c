@@ -67,7 +67,8 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_MILITARY_SIDEBAR, "Activer la barre latérale militaire"},
     {TR_CONFIG_UI_INVERSE_MAP_DRAG, "Inverser le déplacement de la carte avec le clic droit"},    
     {TR_CONFIG_UI_MESSAGE_ALERTS, "Remplacer les messages urgents par des bandeaux d'alerte"},
-    {TR_CONFIG_UI_SHOW_GRID, "Afficher la grille"},
+    {TR_CONFIG_UI_SHOW_GRID, "Afficher la grille complète"},
+    {TR_CONFIG_UI_SHOW_PARTIAL_GRID_AROUND_CONSTRUCTION, "Afficher la grille partielle en plaçant un bâtiment"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corrige le bug d'immigration en mode très difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corrige le bug des fantômes de 100 ans"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corrige \"Nouvel Empereur\" et la survie des parties créees avec l'éditeur"},
@@ -487,8 +488,8 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE, "Tavernes" },
     {TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY, "Rendement :" },
     {TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY_TOOLTIP, "Le rendement correspond au ratio entre la production potentielle d'un bâtiment sur une année et sa production effective sur l'année passée." },
-    {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_RAW_MATERIALS, "Ce bâtiment a un rendement faible, peut-être dû à un manque de points de livraison proches pour la production." },
-    {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_WORKSHOPS, "Ce bâtiment a un rendement faible, peut-être dû à un apport irrégulier en matières premières ou à un manque de points de livraison proches pour la production." },
+    {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_RAW_MATERIALS, "Ce bâtiment a un rendement faible, peut-être dû à un manque de lieux de livraison à proximité." },
+    {TR_BUILDING_WINDOW_INDUSTRY_LOW_EFFICIENCY_WORKSHOPS, "Ce bâtiment a un rendement faible, peut-être dû à un apport irrégulier en matières premières ou à un manque de lieux de livraison à proximité." },
     {TR_BUILDING_WINDOW_INDUSTRY_WHARF_AVERAGE_CATCH, "Prise moyenne mensuelle :" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_HEADER, "Jeux" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_GAMES_DESC, "Financer les Grands Jeux du Colisée avec vos fonds personnels et les ressources de votre cité." },
@@ -766,8 +767,9 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_OVERLAY_ROADS, "Routes" },
     {TR_HOTKEY_ROTATE_MAP_NORTH, "Orienter la carte au Nord" },
     {TR_HOTKEY_BUILD_WHEAT_FARM, "Ferme (Blé)" },
-    {TR_HOTKEY_SHOW_MESSAGES, "Afficher les messages"},   
+    {TR_HOTKEY_SHOW_MESSAGES, "Afficher les messages"},
     {TR_HOTKEY_SHOW_EMPIRE_MAP, "Afficher la carte de l'Empire"},
+    {TR_TOGGLE_GRID, "Grille (on/off)"},
     {TR_WARNING_SCREENSHOT_SAVED, "Capture d'écran enregistrée : "}
 };
 
