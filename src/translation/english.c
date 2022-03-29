@@ -108,6 +108,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDIT_TITLE, "Press new hotkey"},
     {TR_HOTKEY_DUPLICATE_TITLE, "Hotkey already used"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "This key combination is already assigned to the following action:"},
+    {TR_WARNING_SCREENSHOT_SAVED, "Screenshot saved: "},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -20,7 +20,7 @@ jobs:
           - name: Linux x64
             os: ubuntu-20.04
             cache-key: linux-x64
-            SDL_VERSION: 2.0.16
+            SDL_VERSION: 2.0.20
             SDL_MIXER_VERSION: 2.0.4
             MPG123_VERSION: 1.26.5
             BUILD_TARGET: linux
@@ -36,7 +36,7 @@ jobs:
           - name: macOS
             os: macos-latest
             cache-key: macos
-            SDL_VERSION: 2.0.16
+            SDL_VERSION: 2.0.20
             SDL_MIXER_VERSION: 2.0.4
             BUILD_TARGET: mac
             DEPLOY: mac
@@ -51,18 +51,18 @@ jobs:
           - name: Android
             os: ubuntu-20.04
             cache-key: android
-            SDL_VERSION: 2.0.16
+            SDL_VERSION: 2.0.20
             SDL_MIXER_VERSION: 2.0.4
             BUILD_TARGET: android
             DEPLOY: android
-          - name: Emscripten
-            os: ubuntu-20.04
-            cache-key: emscripten
-            SDL_VERSION: 2.0.16
-            SDL_MIXER_VERSION: 2.0.4
-            MPG123_VERSION: 1.26.5
-            BUILD_TARGET: emscripten
-            DEPLOY: emscripten
+          # - name: Emscripten
+          #   os: ubuntu-20.04
+          #   cache-key: emscripten
+          #   SDL_VERSION: 2.0.20
+          #   SDL_MIXER_VERSION: 2.0.4
+          #   MPG123_VERSION: 1.26.5
+          #   BUILD_TARGET: emscripten
+          #   DEPLOY: emscripten
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
     env:
@@ -124,7 +124,7 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: windows-latest
     env:
-      SDL_VERSION: 2.0.16
+      SDL_VERSION: 2.0.20
       SDL_MIXER_VERSION: 2.0.4
       COMPILER: ${{ matrix.COMPILER }}
       SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
@@ -136,6 +136,14 @@ jobs:
         with:
           path: deps
           key: windows-${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
+      - name: Set up MSYS2
+        if: matrix.COMPILER == 'mingw-32'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw32
+          location: D:\
+          install: mingw-w64-i686-gcc
+          update: true
       - name: Set up environment
         run: ./.ci_scripts/install_sdl.ps1
       - name: Build and test

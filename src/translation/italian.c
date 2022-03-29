@@ -108,6 +108,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDIT_TITLE, "Premi un nuovo tasto"},
     {TR_HOTKEY_DUPLICATE_TITLE, "Scorciatoia già utilizzata"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Questa scorciatoia è già stata assegnata all'azione seguente:"},
+    {TR_WARNING_SCREENSHOT_SAVED, "Schermata salvata: "}, // TODO: Google translate
 };
 
 void translation_italian(const translation_string **strings, int *num_strings)

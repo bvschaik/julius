@@ -3,7 +3,8 @@
 *.kdev4
 .vs
 .vscode
-/CMakeSettings.json
+/CMakeSettings.json*
+/CMakePresets.json*
 
 # Generated resources
 src/platform/version.c
@@ -11,7 +12,7 @@ res/version.rc
 res/version.txt
 res/julius.icns
 res/shell.html
-res/*assets
+res/*asset*
 
 # Build output and data directories
 /build*/

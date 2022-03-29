@@ -100,6 +100,7 @@ typedef enum {
     TR_HOTKEY_EDIT_TITLE,
     TR_HOTKEY_DUPLICATE_TITLE,
     TR_HOTKEY_DUPLICATE_MESSAGE,
+    TR_WARNING_SCREENSHOT_SAVED,
     TRANSLATION_MAX_KEY
 } translation_key;
 
@@ -116,6 +117,7 @@ void translation_english(const translation_string **strings, int *num_strings);
 void translation_french(const translation_string **strings, int *num_strings);
 void translation_german(const translation_string **strings, int *num_strings);
 void translation_italian(const translation_string **strings, int *num_strings);
+void translation_japanese(const translation_string **strings, int *num_strings);
 void translation_korean(const translation_string **strings, int *num_strings);
 void translation_polish(const translation_string **strings, int *num_strings);
 void translation_portuguese(const translation_string **strings, int *num_strings);
