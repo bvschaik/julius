@@ -717,31 +717,23 @@ static int load_cyrillic_fonts(void)
     return 1;
 }
 
-static void parse_4bit_multibyte_font(buffer *input, color_t *pixels, multibyte_font_sizes *font_size,
-    int letter_spacing, int is_half_width, int num_chars, int offset)
+static int parse_4bit_multibyte_font(buffer *input, color_t *pixels, multibyte_font_sizes *font_size,
+    int letter_spacing, int num_chars, int num_half_width, int offset)
 {
-    int width_input;
-    int width_output;
-    if (is_half_width) {
-        width_input = font_size->width - letter_spacing;
-        width_output = font_size->half_width;
-    } else {
-        width_input = font_size->width - letter_spacing;
-        width_output = font_size->width;
-    }
-    int height = font_size->height;
+    int pixel_offset = 0;
     for (int i = 0; i < num_chars; i++) {
-        color_t *letter = &pixels[i * width_output * height];
-        int y_first_opaque = height;
+        int width = i < num_half_width ? font_size->half_width : font_size->width;
+        color_t *letter = &pixels[pixel_offset];
+        int y_first_opaque = font_size->height;
         int y_last_opaque = -1;
-        for (int row = 0; row < height; row++) {
-            color_t *pixel = &letter[row * width_output];
+        for (int row = 0; row < font_size->height; row++) {
+            color_t *pixel = &letter[row * width];
             uint8_t bits = 0;
-            for (int col = 0; col < width_input; col++) {
+            for (int col = 0; col < font_size->width - letter_spacing; col++) {
                 if (col % 2 == 0) {
                     bits = buffer_read_u8(input);
                 }
-                if (col < width_output) {
+                if (col < width) {
                     uint8_t value = bits & 0xf;
                     if (value != 0) {
                         uint32_t color_value = (value * 16 + value);
@@ -757,7 +749,7 @@ static void parse_4bit_multibyte_font(buffer *input, color_t *pixels, multibyte_
             }
         }
         image *img = &data.font[offset + i];
-        img->width = width_output;
+        img->width = width;
         img->y_offset = y_first_opaque;
         img->height = y_last_opaque - y_first_opaque + 1;
 
@@ -768,20 +760,24 @@ static void parse_4bit_multibyte_font(buffer *input, color_t *pixels, multibyte_
         image_packer_rect *rect = &data.packer.rects[offset + i];
         rect->input.width = img->width;
         rect->input.height = img->height;
+
+        pixel_offset += width * font_size->height;
     }
+    return pixel_offset;
 }
 
-static void parse_1bit_multibyte_font(buffer *input, color_t *pixels, multibyte_font_sizes *font_size,
-    int letter_spacing, int is_half_width, int num_chars, int offset)
+static int parse_1bit_multibyte_font(buffer *input, color_t *pixels, multibyte_font_sizes *font_size,
+    int letter_spacing, int num_chars, int num_half_width, int offset)
 {
-    int bytes_per_row = (font_size->width - 1) <= 16 ? 2 : 3;
-
+    int pixel_offset = 0;
     for (int i = 0; i < num_chars; i++) {
-        color_t *letter = &pixels[i * font_size->width * font_size->height];
+        int width = i < num_half_width ? font_size->half_width : font_size->width;
+        int bytes_per_row = (width - 1) <= 16 ? 2 : 3;
+        color_t *letter = &pixels[pixel_offset];
         int y_first_opaque = font_size->height;
         int y_last_opaque = -1;
         for (int row = 0; row < font_size->height; row++) {
-            color_t *pixel = &letter[row * font_size->width];
+            color_t *pixel = &letter[row * width];
             unsigned int bits = buffer_read_u16(input);
             if (bytes_per_row == 3) {
                 bits += buffer_read_u8(input) << 16;
@@ -804,7 +800,7 @@ static void parse_1bit_multibyte_font(buffer *input, color_t *pixels, multibyte_
             }
         }
         image *img = &data.font[offset + i];
-        img->width = font_size->width;
+        img->width = width;
         img->y_offset = y_first_opaque;
         img->height = y_last_opaque - y_first_opaque + 1;
 
@@ -815,7 +811,10 @@ static void parse_1bit_multibyte_font(buffer *input, color_t *pixels, multibyte_
         image_packer_rect *rect = &data.packer.rects[offset + i];
         rect->input.width = img->width;
         rect->input.height = img->height;
+
+        pixel_offset += width * font_size->height;
     }
+    return pixel_offset;
 }
 
 static int load_multibyte_font(multibyte_font_type type)
@@ -863,8 +862,8 @@ static int load_multibyte_font(multibyte_font_type type)
     data.packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
 
     multibyte_font_sizes *font_sizes;
-    void (*parse_multibyte_font)(buffer *input, color_t *pixels, multibyte_font_sizes *font_size, int letter_spacing,
-        int is_half_width, int num_chars, int offset);
+    int (*parse_multibyte_font)(buffer *input, color_t *pixels, multibyte_font_sizes *font_size,
+        int letter_spacing, int num_chars, int num_half_width, int offset);
     if (file_version == 2) {
         font_sizes = font_info->sizes.v2;
         parse_multibyte_font = parse_4bit_multibyte_font;
@@ -890,12 +889,8 @@ static int load_multibyte_font(multibyte_font_type type)
     memset(font_data, 0, font_data_size);
     color_t *font_offset = font_data;
     for (int i = 0; i < FONT_STYLES; i++) {
-        parse_multibyte_font(&input, font_offset, &font_sizes[i], font_info->letter_spacing, 1,
-            num_half_width, num_chars * i);
-        font_offset += font_sizes[i].half_width * font_sizes[i].height * num_half_width;
-        parse_multibyte_font(&input, font_offset, &font_sizes[i],
-            font_info->letter_spacing, 0, num_full_width, num_chars * i + num_half_width);
-        font_offset += font_sizes[i].width * font_sizes[i].height * num_full_width;
+        font_offset += parse_multibyte_font(&input, font_offset, &font_sizes[i], font_info->letter_spacing,
+            num_chars, num_half_width, num_chars * i);
     }
 
     image_packer_pack(&data.packer);
