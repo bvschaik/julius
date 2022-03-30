@@ -5,6 +5,7 @@
 #include "core/image_group.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
+#include "graphics/screen.h"
 
 enum {
     TOUCH_DRAG_NONE = 0,
@@ -90,9 +91,11 @@ void scrollbar_draw(scrollbar_type *scrollbar)
 
 static int touch_inside_scrollable_area(const scrollbar_type *scrollbar, const touch *t)
 {
+    int x = t->start_point.x - screen_dialog_offset_x();
+    int y = t->start_point.y - screen_dialog_offset_y();
     return scrollbar->max_scroll_position > 0 &&
-        t->start_point.x >= scrollbar->x - scrollbar->scrollable_width && t->start_point.x <= scrollbar->x - 2 &&
-        t->start_point.y >= scrollbar->y && t->start_point.y < scrollbar->y + scrollbar->height;
+        x >= scrollbar->x - scrollbar->scrollable_width && x <= scrollbar->x - 2 &&
+        y >= scrollbar->y && y < scrollbar->y + scrollbar->height;
 }
 
 static int handle_touch(scrollbar_type *scrollbar, const touch *t)
