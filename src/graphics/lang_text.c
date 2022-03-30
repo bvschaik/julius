@@ -44,6 +44,12 @@ void lang_text_draw_ellipsized(int group, int number, int x_offset, int y_offset
 
 int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, font_t font)
 {
+    return lang_text_draw_amount_colored(group, number, amount, x_offset, y_offset, font, COLOR_MASK_NONE);
+}
+
+int lang_text_draw_amount_colored(int group, int number, int amount, int x_offset, int y_offset,
+    font_t font, color_t color)
+{
     int amount_offset = 1;
     if (amount == 1 || amount == -1) {
         amount_offset = 0;
@@ -51,13 +57,13 @@ int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y
     int desc_offset_x;
     if (amount >= 0) {
         desc_offset_x = text_draw_number(amount, ' ', " ",
-            x_offset, y_offset, font, 0);
+            x_offset, y_offset, font, color);
     } else {
         desc_offset_x = text_draw_number(-amount, '-', " ",
-            x_offset, y_offset, font, 0);
+            x_offset, y_offset, font, color);
     }
-    return desc_offset_x + lang_text_draw(group, number + amount_offset,
-        x_offset + desc_offset_x, y_offset, font);
+    return desc_offset_x + lang_text_draw_colored(group, number + amount_offset,
+        x_offset + desc_offset_x, y_offset, font, color);
 }
 
 int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font)

@@ -169,4 +169,8 @@
     <image src="Button_Grid_Idle" id="Toggle Grid Button"/>
     <image src="Button_Grid_Hover"/>
     <image src="Button_Grid_Click"/>
+	<!-- Note: Grayscale wine icon for disabled grand festival -->
+    <image id="Grand Festival Wine Disabled">
+        <layer group="129" image="7" grayscale="true"/>
+    </image>
 </assetlist>

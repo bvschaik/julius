@@ -17,6 +17,8 @@ void lang_text_draw_centered_colored(
 void lang_text_draw_ellipsized(int group, int number, int x_offset, int y_offset, int box_width, font_t font);
 
 int lang_text_draw_amount(int group, int number, int amount, int x_offset, int y_offset, font_t font);
+int lang_text_draw_amount_colored(int group, int number, int amount, int x_offset, int y_offset,
+    font_t font, color_t color);
 
 int lang_text_draw_year(int year, int x_offset, int y_offset, font_t font);
 void lang_text_draw_month_year_max_width(

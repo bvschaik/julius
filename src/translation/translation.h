@@ -765,6 +765,7 @@ typedef enum {
     TR_HOTKEY_SHOW_EMPIRE_MAP,
     TR_TOGGLE_GRID,
     TR_WARNING_SCREENSHOT_SAVED,
+    TR_OUT_OF_MONEY,
     TRANSLATION_MAX_KEY
 } translation_key;
 

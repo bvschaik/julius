@@ -67,7 +67,7 @@ static void draw_background(void)
         graphics_draw_rect(178 + 32 * i, 221, 27, 27, COLOR_BLACK);
         lang_text_draw_centered(50, 27 + i, 178 + 32 * i, 224, 27, FONT_LARGE_BLACK);
         if (i >= data.max_items) {
-            graphics_shade_rect(179 + 32 * i, 222, 25, 25, 1);
+            graphics_shade_rect(179 + 32 * i, 222, 25, 25, 8);
         }
     }
 
