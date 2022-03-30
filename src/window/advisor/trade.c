@@ -39,7 +39,9 @@ static void button_empire(int param1, int param2);
 static void button_policy(int param1, int param2);
 static void button_resource(int resource_index, int param2);
 
-static scrollbar_type scrollbar = { 580, RESOURCE_Y_OFFSET, RESOURCE_ROW_HEIGHT * MAX_VISIBLE_ROWS, on_scroll, 4 };
+static scrollbar_type scrollbar = {
+    580, RESOURCE_Y_OFFSET, RESOURCE_ROW_HEIGHT * MAX_VISIBLE_ROWS, 560, MAX_VISIBLE_ROWS, on_scroll, 0, 4
+};
 
 static generic_button resource_buttons[] = {
     {375, 392, 200, 24, button_prices, button_none, 1, 0},
@@ -98,7 +100,7 @@ static void init(void)
 {
     city_resource_determine_available();
     data.list = city_resource_get_potential();
-    scrollbar_init(&scrollbar, 0, data.list->size - MAX_VISIBLE_ROWS);
+    scrollbar_init(&scrollbar, 0, data.list->size);
     if (data.list->size > MAX_VISIBLE_ROWS) {
         data.margin_right = 48;
     }
@@ -185,7 +187,7 @@ static int draw_background(void)
     lang_text_draw_centered(54, 30, 160, 398, 200, FONT_NORMAL_BLACK);
 
     if (data.list->size > MAX_VISIBLE_ROWS) {
-        inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / 16 - 3);
+        inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / BLOCK_SIZE - 3);
     }
 
     int land_policy_available = building_monument_working(BUILDING_CARAVANSERAI);
@@ -215,7 +217,7 @@ static int draw_background(void)
 
 static void draw_foreground(void)
 {
-    inner_panel_draw(16, RESOURCE_Y_OFFSET - 2, 38 - data.margin_right / 16, 21);
+    inner_panel_draw(16, RESOURCE_Y_OFFSET - 2, 38 - data.margin_right / BLOCK_SIZE, 21);
 
     int y_offset = RESOURCE_Y_OFFSET;
     for (int i = 0; i < data.list->size && i < MAX_VISIBLE_ROWS; i++) {
@@ -268,11 +270,8 @@ static void on_scroll(void)
 
 static int handle_mouse(const mouse *m)
 {
-    if (scrollbar_handle_mouse(&scrollbar, m)) {
-        return 1;
-    }
-    int result = generic_buttons_handle_mouse(m, 0, 0, resource_buttons, MAX_VISIBLE_ROWS + 4, &data.focus_button_id);
-    return result;
+    return scrollbar_handle_mouse(&scrollbar, m) ||
+        generic_buttons_handle_mouse(m, 0, 0, resource_buttons, MAX_VISIBLE_ROWS + 4, &data.focus_button_id);
 }
 
 static void apply_policy(int selected_policy)

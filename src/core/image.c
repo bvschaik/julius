@@ -69,7 +69,6 @@ typedef struct {
     const char *file_v1;
     const char *file_v2;
     int data_size;
-    int entries;
     int chars;
     int half_width_chars;
     struct {
@@ -172,7 +171,6 @@ static multibyte_font_data multibyte_font_info[MULTIBYTE_FONT_MAX] = {
         .file_v1 = CHINESE_FONTS_555,
         .file_v2 = CHINESE_FONTS_555_V2,
         .data_size = TRAD_CHINESE_FONT_DATA_SIZE,
-        .entries = FONT_STYLES * IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS,
         .chars = IMAGE_FONT_MULTIBYTE_TRAD_CHINESE_MAX_CHARS,
         .sizes = {
             .v1 = { { 13, 11 }, { 17, 15 }, { 20, 18 } },
@@ -185,7 +183,6 @@ static multibyte_font_data multibyte_font_info[MULTIBYTE_FONT_MAX] = {
         .file_v1 = CHINESE_FONTS_555,
         .file_v2 = CHINESE_FONTS_555_V2,
         .data_size = TRAD_CHINESE_FONT_DATA_SIZE,
-        .entries = FONT_STYLES * IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS,
         .chars = IMAGE_FONT_MULTIBYTE_SIMP_CHINESE_MAX_CHARS,
         .sizes = {
             .v1 = { { 13, 11 }, { 17, 15 }, { 20, 18 } },
@@ -198,20 +195,16 @@ static multibyte_font_data multibyte_font_info[MULTIBYTE_FONT_MAX] = {
         .file_v1 = KOREAN_FONTS_555,
         .file_v2 = KOREAN_FONTS_555_V2,
         .data_size = KOREAN_FONT_DATA_SIZE,
-        .entries = FONT_STYLES * IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS,
         .chars = IMAGE_FONT_MULTIBYTE_KOREAN_MAX_CHARS,
         .sizes = {
             .v1 = { { 12, 12 }, { 15, 15 }, { 20, 20 } },
             .v2 = { { 12, 12 }, { 15, 15 }, { 20, 20 } },
-        },
-        .letter_spacing = 0
+        }
     },
     {
         .name = "Japanese",
-        .file_v1 = 0,
         .file_v2 = JAPANESE_FONTS_555,
         .data_size = JAPANESE_FONT_DATA_SIZE,
-        .entries = FONT_STYLES * IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS,
         .chars = IMAGE_FONT_MULTIBYTE_JAPANESE_MAX_CHARS,
         .half_width_chars = JAPANESE_HALF_WIDTH_CHARS,
         .sizes = {
@@ -821,8 +814,10 @@ static int load_multibyte_font(multibyte_font_type type)
 {
     multibyte_font_data *font_info = &multibyte_font_info[type];
 
+    int entries = FONT_STYLES * font_info->chars;
+
     uint8_t *tmp_data = malloc(font_info->data_size * sizeof(uint8_t));
-    if (!tmp_data || !alloc_font_memory(font_info->entries)) {
+    if (!tmp_data || !alloc_font_memory(entries)) {
         free(tmp_data);
         return 0;
     }
@@ -850,8 +845,7 @@ static int load_multibyte_font(multibyte_font_type type)
     int num_half_width = font_info->half_width_chars;
     int num_full_width = num_chars - num_half_width;
 
-    if (image_packer_init(&data.packer, font_info->entries,
-        data.max_image_width, data.max_image_height) != IMAGE_PACKER_OK) {
+    if (image_packer_init(&data.packer, entries, data.max_image_width, data.max_image_height) != IMAGE_PACKER_OK) {
         free_font_memory();
         free(tmp_data);
         log_error("Internal error loading font", 0, 0);

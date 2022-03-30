@@ -56,7 +56,7 @@ static generic_button file_buttons[] = {
     {160, 304, 288, 16, button_select_file, button_none, 11, 0},
 };
 
-static scrollbar_type scrollbar = { 464, 120, 206, on_scroll };
+static scrollbar_type scrollbar = {464, 120, 206, 320, NUM_FILES_IN_VIEW, on_scroll, 1};
 
 typedef struct {
     char extension[4];
@@ -160,7 +160,7 @@ static void init(file_type type, file_dialog_type dialog_type)
             data.file_list = dir_find_files_with_extension(".", saved_game_data_expanded.extension);
         }
     }
-    scrollbar_init(&scrollbar, 0, data.file_list->num_files - NUM_FILES_IN_VIEW);
+    scrollbar_init(&scrollbar, 0, data.file_list->num_files);
     scroll_to_typed_text();
 
     strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
@@ -229,15 +229,17 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (input_box_handle_mouse(m_dialog, &file_name_input) ||
+    data.focus_button_id = 0;
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog) ||
+        input_box_handle_mouse(m_dialog, &file_name_input) ||
         generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, NUM_FILES_IN_VIEW, &data.focus_button_id) ||
-        image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0) ||
-        scrollbar_handle_mouse(&scrollbar, m_dialog)) {
+        image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0)) {
         return;
     }
     if (input_go_back_requested(m, h)) {
         input_box_stop(&file_name_input);
         window_go_back();
+        return;
     }
 
     if (should_scroll_to_typed_text()) {

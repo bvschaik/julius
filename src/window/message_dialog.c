@@ -544,6 +544,9 @@ static int handle_input_video(const mouse *m_dialog, const lang_message *msg)
 
 static int handle_input_normal(const mouse *m_dialog, const lang_message *msg)
 {
+    if (rich_text_handle_mouse(m_dialog)) {
+        return 1;
+    }
     if (msg->type == TYPE_MANUAL && image_buttons_handle_mouse(
         m_dialog, data.x + 16, data.y + BLOCK_SIZE * msg->height_blocks - 36, &image_button_back, 1, 0)) {
         return 1;
@@ -567,7 +570,6 @@ static int handle_input_normal(const mouse *m_dialog, const lang_message *msg)
         &image_button_close, 1, 0)) {
         return 1;
     }
-    rich_text_handle_mouse(m_dialog);
     int text_id = rich_text_get_clicked_link(m_dialog);
     if (text_id >= 0) {
         if (data.num_history < MAX_HISTORY - 1) {
