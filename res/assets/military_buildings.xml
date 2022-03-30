@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
-
 <!-- Unless specifically mentioned, all assets created by Areldir -->
 <assetlist name="Military_Buildings">
 	<!-- Note: Mess Hall Variants for Central, North and South Climates Respectively -->
@@ -10,7 +9,7 @@
 	<!-- Note: Mess Hall ON Animations for Central, North and South Climates Respectively -->
 	<image id="Mess ON Central" isometric="true">
 		<layer group="this" image="Mess OFF Central"/>
-        <animation speed="6" x="13" y="47" reversible="false">
+		<animation speed="6" x="13" y="47" reversible="false">
 			<frame src="Mess_Hall_Anim_01"/>
 			<frame src="Mess_Hall_Anim_02"/>
 			<frame src="Mess_Hall_Anim_03"/>
@@ -20,22 +19,22 @@
 	</image>
 	<image id="Mess ON North" isometric="true">
 		<layer group="this" image="Mess OFF North"/>
-        <animation speed="6" x="13" y="47" reversible="false">
-            <frame src="Mess_Hall_Anim_01"/>
-            <frame src="Mess_Hall_Anim_02"/>
-            <frame src="Mess_Hall_Anim_03"/>
-            <frame src="Mess_Hall_Anim_04"/>
-            <frame src="Mess_Hall_Anim_05"/>
+		<animation speed="6" x="13" y="47" reversible="false">
+			<frame src="Mess_Hall_Anim_01"/>
+			<frame src="Mess_Hall_Anim_02"/>
+			<frame src="Mess_Hall_Anim_03"/>
+			<frame src="Mess_Hall_Anim_04"/>
+			<frame src="Mess_Hall_Anim_05"/>
 		</animation>
 	</image>
 	<image id="Mess ON South" isometric="true">
 		<layer group="this" image="Mess OFF South"/>
-        <animation speed="6" x="13" y="47" reversible="false">
-            <frame src="Mess_Hall_Anim_01"/>
-            <frame src="Mess_Hall_Anim_02"/>
-            <frame src="Mess_Hall_Anim_03"/>
-            <frame src="Mess_Hall_Anim_04"/>
-            <frame src="Mess_Hall_Anim_05"/>
+		<animation speed="6" x="13" y="47" reversible="false">
+			<frame src="Mess_Hall_Anim_01"/>
+			<frame src="Mess_Hall_Anim_02"/>
+			<frame src="Mess_Hall_Anim_03"/>
+			<frame src="Mess_Hall_Anim_04"/>
+			<frame src="Mess_Hall_Anim_05"/>
 		</animation>
 	</image>
 	<!-- Note: Mess Hall Walker Portrait -->
@@ -161,11 +160,11 @@
 	<image id="Watchtower C ON" isometric="true">
 		<layer group="this" image="Watchtower C OFF"/>
 		<animation speed="8" x="54" y="49" reversible="false">
-			<frame src="Watchtower_Central_ON_01"/>
-			<frame src="Watchtower_Central_ON_02"/>
-			<frame src="Watchtower_Central_ON_03"/>
-			<frame src="Watchtower_Central_ON_04"/>
-			<frame src="Watchtower_Central_ON_05"/>
+			<frame src="Watchtower_ON_01"/>
+			<frame src="Watchtower_ON_02"/>
+			<frame src="Watchtower_ON_03"/>
+			<frame src="Watchtower_ON_04"/>
+			<frame src="Watchtower_ON_05"/>
 		</animation>
 	</image>
 	<!-- Note: Watchtower OFF and ON states for North Climate Respectively -->
@@ -173,11 +172,11 @@
 	<image id="Watchtower N ON" isometric="true">
 		<layer group="this" image="Watchtower N OFF"/>
 		<animation speed="8" x="54" y="49" reversible="false">
-			<frame src="Watchtower_North_ON_01"/>
-			<frame src="Watchtower_North_ON_02"/>
-			<frame src="Watchtower_North_ON_03"/>
-			<frame src="Watchtower_North_ON_04"/>
-			<frame src="Watchtower_North_ON_05"/>
+			<frame src="Watchtower_ON_01"/>
+			<frame src="Watchtower_ON_02"/>
+			<frame src="Watchtower_ON_03"/>
+			<frame src="Watchtower_ON_04"/>
+			<frame src="Watchtower_ON_05"/>
 		</animation>
 	</image>
 	<!-- Note: Watchtower OFF and ON states for South Climate Respectively -->
@@ -185,11 +184,47 @@
 	<image id="Watchtower S ON" isometric="true">
 		<layer group="this" image="Watchtower S OFF"/>
 		<animation speed="8" x="54" y="49" reversible="false">
-			<frame src="Watchtower_South_ON_01"/>
-			<frame src="Watchtower_South_ON_02"/>
-			<frame src="Watchtower_South_ON_03"/>
-			<frame src="Watchtower_South_ON_04"/>
-			<frame src="Watchtower_South_ON_05"/>
+			<frame src="Watchtower_ON_01"/>
+			<frame src="Watchtower_ON_02"/>
+			<frame src="Watchtower_ON_03"/>
+			<frame src="Watchtower_ON_04"/>
+			<frame src="Watchtower_ON_05"/>
+		</animation>
+	</image>
+	<!-- Note: ROTATED Watchtower OFF and ON states for Central Climate Respectively -->
+	<image id="Watchtower C OFF R" src="Watchtower_Central_OFF_r" isometric="true"/>
+	<image id="Watchtower C ON R" isometric="true">
+		<layer group="this" image="Watchtower C OFF R"/>
+		<animation speed="8" x="0" y="49" reversible="false">
+			<frame src="Watchtower_ON_01_r"/>
+			<frame src="Watchtower_ON_02_r"/>
+			<frame src="Watchtower_ON_03_r"/>
+			<frame src="Watchtower_ON_04_r"/>
+			<frame src="Watchtower_ON_05_r"/>
+		</animation>
+	</image>
+	<!-- Note: ROTATED Watchtower OFF and ON states for North Climate Respectively -->
+	<image id="Watchtower N OFF R" src="Watchtower_North_OFF_r" isometric="true"/>
+	<image id="Watchtower N ON R" isometric="true">
+		<layer group="this" image="Watchtower N OFF R"/>
+		<animation speed="8" x="0" y="49" reversible="false">
+			<frame src="Watchtower_ON_01_r"/>
+			<frame src="Watchtower_ON_02_r"/>
+			<frame src="Watchtower_ON_03_r"/>
+			<frame src="Watchtower_ON_04_r"/>
+			<frame src="Watchtower_ON_05_r"/>
+		</animation>
+	</image>
+	<!-- Note: ROTATED Watchtower OFF and ON states for South Climate Respectively -->
+	<image id="Watchtower S OFF R" src="Watchtower_South_OFF_r" isometric="true"/>
+	<image id="Watchtower S ON R" isometric="true">
+		<layer group="this" image="Watchtower S OFF R"/>
+		<animation speed="8" x="0" y="49" reversible="false">
+			<frame src="Watchtower_ON_01_r"/>
+			<frame src="Watchtower_ON_02_r"/>
+			<frame src="Watchtower_ON_03_r"/>
+			<frame src="Watchtower_ON_04_r"/>
+			<frame src="Watchtower_ON_05_r"/>
 		</animation>
 	</image>
 	<!-- Note: Assets for Palisade CENTRAL CLIMATE all directions and intersection variants. There are 6 variants for each direction of straight wall (01-06 & 07r-12r), which could randomize? -->
