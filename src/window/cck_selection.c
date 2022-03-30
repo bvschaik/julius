@@ -66,7 +66,7 @@ static generic_button file_buttons[] = {
     {18, 444, 252, 16, button_select_item, button_none, 14, 0},
 };
 
-static scrollbar_type scrollbar = { 276, 210, 256, on_scroll, 8, 1 };
+static scrollbar_type scrollbar = {276, 210, 256, 260, MAX_SCENARIOS, on_scroll, 1, 8, 1};
 
 static struct {
     int focus_button_id;
@@ -87,7 +87,7 @@ static void init(void)
     data.focus_toggle_button = 0;
     data.show_minimap = 0;
     button_select_item(0, 0);
-    scrollbar_init(&scrollbar, 0, data.scenarios->num_files - MAX_SCENARIOS);
+    scrollbar_init(&scrollbar, 0, data.scenarios->num_files);
 }
 
 static void draw_scenario_list(void)
@@ -249,17 +249,11 @@ static void draw_foreground(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
-        return;
-    }
-    if (image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0)) {
-        return;
-    }
-    if (image_buttons_handle_mouse(m_dialog, 0, 0, &back_button, 1, 0) ||
-        generic_buttons_handle_mouse(m_dialog, 0, 0, &toggle_minimap_button, 1, &data.focus_toggle_button)) {
-        return;
-    }
-    if (generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, MAX_SCENARIOS, &data.focus_button_id)) {
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog) ||
+        image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0) ||
+        image_buttons_handle_mouse(m_dialog, 0, 0, &back_button, 1, 0) ||
+        generic_buttons_handle_mouse(m_dialog, 0, 0, &toggle_minimap_button, 1, &data.focus_toggle_button) ||
+        generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, MAX_SCENARIOS, &data.focus_button_id)) {
         return;
     }
     if (h->enter_pressed) {

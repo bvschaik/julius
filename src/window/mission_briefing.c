@@ -151,6 +151,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 
+    if (rich_text_handle_mouse(m_dialog)) {
+        return;
+    }
     if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0)) {
         return;
     }
@@ -159,7 +162,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
             return;
         }
     }
-    rich_text_handle_mouse(m_dialog);
 }
 
 static void button_back(int param1, int param2)
