@@ -77,11 +77,11 @@ static void draw_background(void)
         if (i == game->id - 1) {
             border_color = COLOR_BORDER_GREEN;
             highlight_color = COLOR_MASK_NONE;
+            button_border_draw(100 * i + 166, 92, 90, 100, 1);
         } else {
             border_color = COLOR_BORDER_RED;
             highlight_color = COLOR_BLACK;
         }
-        button_border_draw(100 * i + 165, 92, 90, 100, 1);
         image_draw_border(border_image_id, 100 * i + 170, 96, border_color);
         image_draw(base_image_id + i, 100 * i + 175, 101, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(highlight_image_id, 100 * i + 175, 101, highlight_color, SCALE_NONE);
