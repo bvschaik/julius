@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
-
 <!-- Unless specifically mentioned, all assets created by Areldir -->
 <assetlist name="Aesthetics">
 	<!-- Note: Assets for 'Ornamental Pine Tree', 'Ornamental Fir Tree', 'Ornamental Oak Tree', 'Ornamental Elm Tree', 'Ornamental Fig Tree', 'Ornamental Plum Tree', 'Ornamental Palm Tree' and 'Ornamental Date Tree' respectively -->
@@ -246,6 +245,31 @@
 	<image id="D Hedge 09" src="Dark_Green_Hedge_Intersection_03" isometric="true"/>
 	<image id="D Hedge 10" src="Dark_Green_Hedge_Intersection_04" isometric="true"/>
 	<image id="D Hedge 11" src="Dark_Green_Hedge_Intersections_4w" isometric="true"/>
+	<!-- Note: Assets for 'Hedge Gates' including both directions/colours -->
+	<image id="L Hedge Gate" isometric="true">
+		<layer src="Light_Green_Hedge_Gate"/>
+		<animation speed="1" x="0" y="0" reversible="false">
+			<frame src="Light_Green_Hedge_Gate_Top"/>
+		</animation>
+	</image>
+	<image id="L Hedge Gate R" isometric="true">
+		<layer src="Light_Green_Hedge_R_Gate"/>
+		<animation speed="1" x="0" y="0" reversible="false">
+			<frame src="Light_Green_Hedge_R_Gate_Top"/>
+		</animation>
+	</image>
+	<image id="D Hedge Gate" isometric="true">
+		<layer src="Dark_Green_Hedge_Gate"/>
+		<animation speed="1" x="0" y="0" reversible="false">
+			<frame src="Dark_Green_Hedge_Gate_Top"/>
+		</animation>
+	</image>
+	<image id="D Hedge Gate R" isometric="true">
+		<layer src="Dark_Green_Hedge_R_Gate"/>
+		<animation speed="1" x="0" y="0" reversible="false">
+			<frame src="Dark_Green_Hedge_R_Gate_Top"/>
+		</animation>
+	</image>
 	<!-- Note: Assets for 'Garden path' all directions and intersection variants -->
 	<image id="Garden Path 01" src="Path_Corner_01" isometric="true"/>
 	<image id="Garden Path 02" src="Path_Corner_02" isometric="true"/>
@@ -311,31 +335,28 @@
 	<image id="R Garden Wall 09" src="Garden_Wall_B_Intersection_03" isometric="true"/>
 	<image id="R Garden Wall 10" src="Garden_Wall_B_Intersection_04" isometric="true"/>
 	<image id="R Garden Wall 11" src="Garden_Wall_B_Intersection_4w" isometric="true"/>
-
-    <!-- Note: Rotation variants for Vanilla Small Statue -->
-    <!-- Assets created by Lizzaran -->
-    <image id="V Small Statue R" width="58" height="53" isometric="true">
-        <layer group="61" image="0" part="footprint" x="0" y="0" />
-        <layer src="Small_Statue_Rotated" />
-    </image>
-
-    <!-- Note: Assets for 'Garden colonnade' all directions and intersection variants -->
-    <!-- Assets created by Lizzaran -->
-    <image id="G Colonnade 01" src="Colonnade" isometric="true"/>
-    <image id="G Colonnade 02" src="Colonnade_R" isometric="true"/>
-    <image id="G Colonnade 03" src="Colonnade_Corner_01" isometric="true"/>
-    <image id="G Colonnade 04" src="Colonnade_Corner_02" isometric="true"/>
-    <image id="G Colonnade 05" src="Colonnade_Corner_03" isometric="true"/>
-    <image id="G Colonnade 06" src="Colonnade_Corner_04" isometric="true"/>
-    <image id="G Colonnade 07" src="Colonnade_Intersection_01" isometric="true"/>
-    <image id="G Colonnade 08" src="Colonnade_Intersection_02" isometric="true"/>
-    <image id="G Colonnade 09" src="Colonnade_Intersection_03" isometric="true"/>
-    <image id="G Colonnade 10" src="Colonnade_Intersection_04" isometric="true"/>
-    <image id="G Colonnade 11" src="Colonnade_Intersection_4w" isometric="true"/>
-
-    <!-- Note: Vanilla Small Statue -->
-    <!-- Assets created by Lizzaran -->
-    <image id="V Small Statue" isometric="true">
-        <layer group="61" image="0" x="0" y="0" />
-    </image>
+	<!-- Note: Rotation variants for Vanilla Small Statue -->
+	<!-- Assets created by Lizzaran -->
+	<image id="V Small Statue R" width="58" height="53" isometric="true">
+		<layer group="61" image="0" part="footprint" x="0" y="0"/>
+		<layer src="Small_Statue_Rotated"/>
+	</image>
+	<!-- Note: Assets for 'Garden colonnade' all directions and intersection variants -->
+	<!-- Assets created by Lizzaran -->
+	<image id="G Colonnade 01" src="Colonnade" isometric="true"/>
+	<image id="G Colonnade 02" src="Colonnade_R" isometric="true"/>
+	<image id="G Colonnade 03" src="Colonnade_Corner_01" isometric="true"/>
+	<image id="G Colonnade 04" src="Colonnade_Corner_02" isometric="true"/>
+	<image id="G Colonnade 05" src="Colonnade_Corner_03" isometric="true"/>
+	<image id="G Colonnade 06" src="Colonnade_Corner_04" isometric="true"/>
+	<image id="G Colonnade 07" src="Colonnade_Intersection_01" isometric="true"/>
+	<image id="G Colonnade 08" src="Colonnade_Intersection_02" isometric="true"/>
+	<image id="G Colonnade 09" src="Colonnade_Intersection_03" isometric="true"/>
+	<image id="G Colonnade 10" src="Colonnade_Intersection_04" isometric="true"/>
+	<image id="G Colonnade 11" src="Colonnade_Intersection_4w" isometric="true"/>
+	<!-- Note: Vanilla Small Statue -->
+	<!-- Assets created by Lizzaran -->
+	<image id="V Small Statue" isometric="true">
+		<layer group="61" image="0" x="0" y="0"/>
+	</image>
 </assetlist>
