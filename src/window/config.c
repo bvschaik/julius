@@ -954,16 +954,20 @@ static int numerical_range_handle_mouse(const mouse *m, int x, int y, int numeri
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
+    data.focus_button = 0;
+
     if (data.active_numerical_range) {
         numerical_range_handle_mouse(m_dialog, NUMERICAL_RANGE_X, 0, data.active_numerical_range);
         return;
     }
+
     if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
+        data.page_focus_button = 0;
+        data.bottom_focus_button = 0;
         return;
     }
-    int handled = 0;
-    data.focus_button = 0;
 
+    int handled = 0;
     for (int i = 0; i < NUM_VISIBLE_ITEMS && i < data.widgets_per_page[data.page]; i++) {
         config_widget *w = data.widgets[i + data.starting_option + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;

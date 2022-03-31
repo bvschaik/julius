@@ -270,6 +270,7 @@ static void on_scroll(void)
 
 static int handle_mouse(const mouse *m)
 {
+    data.focus_button_id = 0;
     return scrollbar_handle_mouse(&scrollbar, m) ||
         generic_buttons_handle_mouse(m, 0, 0, resource_buttons, MAX_VISIBLE_ROWS + 4, &data.focus_button_id);
 }

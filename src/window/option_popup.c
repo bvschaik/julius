@@ -203,6 +203,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
     const mouse *m_dialog = mouse_in_dialog_with_size(m, data.width_blocks * 16, data.height_blocks * 16);
     if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
+        data.focus_button_id = 0;
         return;
     }
     generic_buttons_handle_mouse(m_dialog, 0, 0, buttons, data.visible_options + 2, &data.focus_button_id);

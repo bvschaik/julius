@@ -223,14 +223,15 @@ static void draw_foreground(void)
 
 static int handle_mouse(const mouse *m)
 {
+    focus_additional_button_id = 0;
     if (scrollbar_handle_mouse(&scrollbar, m)) {
+        focus_button_id = 0;
         return 1;
     }
     int buttons = 3 * num_legions;
     if (buttons > MAX_BUTTONS) {
         buttons = MAX_BUTTONS;
     }
-    focus_additional_button_id = 0;
     int result = generic_buttons_handle_mouse(m, 0, 0, fort_buttons, buttons, &focus_button_id);
     if (result == 0) {
         int num_legions_not_at_fort = get_num_legions_not_at_fort();
