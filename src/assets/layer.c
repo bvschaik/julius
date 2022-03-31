@@ -68,7 +68,7 @@ static void convert_layer_to_grayscale(color_t *pixels, int width, int height)
             color_t r = (*color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
             color_t g = (*color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN;
             color_t b = (*color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE;
-            color_t gray = (r + g + b) / 3;
+            color_t gray = r * 0.299f + g * 0.587f + b * 0.114f;
             *color = (*color & COLOR_CHANNEL_ALPHA) | (gray << COLOR_BITSHIFT_RED) |
                 (gray << COLOR_BITSHIFT_GREEN) | (gray << COLOR_BITSHIFT_BLUE);
             color++;
