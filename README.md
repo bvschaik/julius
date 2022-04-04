@@ -4,6 +4,10 @@
 
 Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh)
 
+**Note:** For reasons beyond our control, the download server is offline. You can
+[**download the latest 3.1.0 version from the release page**](https://github.com/Keriew/augustus/releases/tag/v3.1.0#Assets),
+but you can't download the latest unstable build until the problem with the server is settled.
+
   
 | Platform | Latest release | Unstable build |
 |----------|----------------|----------------|

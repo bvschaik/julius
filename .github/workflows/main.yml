@@ -101,6 +101,7 @@ jobs:
           UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
         run: |
           ./.ci_scripts/build_upload.sh
+        continue-on-error: true
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -153,6 +154,7 @@ jobs:
         env:
           UPLOAD_TOKEN: ${{ secrets.UPLOAD_TOKEN }}
         run: ./.ci_scripts/build_upload.ps1
+        continue-on-error: true
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
