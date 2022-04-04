@@ -28,6 +28,7 @@ ext/mpg123*
 
 # Asset packer
 /res/asset_packer*/build*/
+/res/asset_packer/.ionide/
 
 # Android
 *.iml
@@ -47,3 +48,7 @@ local.properties
 /android/play-publisher.json
 /android/augustus/src/main/play
 /android/julius/src/main/play
+
+# lib files
+ext/SDL2/*.zip
+ext/SDL2/*.tar.gz
