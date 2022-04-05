@@ -182,6 +182,7 @@ typedef enum {
     MESSAGE_IG_GAMES_START = 153,
     MESSAGE_IG_GAMES_END = 154,
     MESSAGE_SICKNESS = 155,
+    MESSAGE_CAESAR_ANGER = 156,
 
 } city_message_type;
 

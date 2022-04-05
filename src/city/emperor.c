@@ -94,15 +94,15 @@ static void process_caesar_invasion(void)
     if (city_data.figure.imperial_soldiers && !cheated_invasion) {
         // caesar invasion in progress
         city_data.emperor.invasion.duration_day_countdown--;
-        if (city_data.ratings.favor >= 35 && city_data.emperor.invasion.duration_day_countdown < 176) {
-            formation_caesar_pause();
-        } else if (city_data.ratings.favor >= 22) {
+        if (city_data.ratings.favor >= difficulty_favor_to_stop_emperor_attack() && city_data.emperor.invasion.duration_day_countdown < 176) {
+            formation_caesar_retreat();
+            if (!city_data.emperor.invasion.retreat_message_shown) {
+                city_data.emperor.invasion.retreat_message_shown = 1;
+                city_message_post(1, MESSAGE_CAESAR_ARMY_RETREAT, 0, 0);
+            }
+        } else if (city_data.ratings.favor >= difficulty_favor_to_pause_emperor_attack()) {
             if (city_data.emperor.invasion.duration_day_countdown > 0) {
-                formation_caesar_retreat();
-                if (!city_data.emperor.invasion.retreat_message_shown) {
-                    city_data.emperor.invasion.retreat_message_shown = 1;
-                    city_message_post(1, MESSAGE_CAESAR_ARMY_RETREAT, 0, 0);
-                }
+                formation_caesar_pause();
             } else if (city_data.emperor.invasion.duration_day_countdown == 0) {
                 // a year has passed (11 months), siege goes on
                 city_message_post(1, MESSAGE_CAESAR_ARMY_CONTINUE, 0, 0);
@@ -113,7 +113,7 @@ static void process_caesar_invasion(void)
         // player defeated caesar army
         city_data.emperor.invasion.size = 0;
         city_data.emperor.invasion.soldiers_killed = 0;
-        if (city_data.ratings.favor < 35) {
+        if (city_data.ratings.favor < difficulty_favor_to_stop_emperor_attack()) {
             city_ratings_change_favor(10);
             if (city_data.emperor.invasion.count < 2) {
                 city_message_post(1, MESSAGE_CAESAR_RESPECT_1, 0, 0);
@@ -129,7 +129,7 @@ static void process_caesar_invasion(void)
             city_data.emperor.invasion.warnings_given++;
             city_data.emperor.invasion.days_until_invasion = 192;
             if (city_data.emperor.invasion.warnings_given <= 1) {
-                city_message_post(1, MESSAGE_CAESAR_WRATH, 0, 0);
+                city_message_post(1, MESSAGE_CAESAR_ANGER, 0, 0);
             }
         }
     } else {

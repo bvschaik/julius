@@ -17,4 +17,9 @@ int difficulty_adjust_levies(int amount);
 
 int difficulty_adjust_soldier_food_consumption(int amount);
 
+int difficulty_favor_to_pause_emperor_attack(void);
+
+int difficulty_favor_to_stop_emperor_attack(void);
+
+
 #endif // GAME_DIFFICULTY_H

@@ -363,6 +363,7 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_CAESAR_RESPECT_1:
         case MESSAGE_CAESAR_RESPECT_2:
         case MESSAGE_CAESAR_RESPECT_3:
+        case MESSAGE_CAESAR_ANGER:
             return MESSAGE_ADVISOR_IMPERIAL;
 
         case MESSAGE_UNEMPLOYMENT:
