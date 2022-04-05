@@ -517,7 +517,7 @@ static void handle_hotkeys(const hotkeys *h)
 
     if (h->show_empire_map) {
         if (!window_is(WINDOW_EMPIRE)) {
-            window_empire_show();
+            window_empire_show_checked();
         }
     }
 
