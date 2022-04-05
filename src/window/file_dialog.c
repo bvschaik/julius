@@ -132,7 +132,9 @@ static void init(file_type type, file_dialog_type dialog_type)
 
     if (strlen(data.file_data->last_loaded_file) > 0) {
         encoding_from_utf8(data.file_data->last_loaded_file, data.typed_name, FILE_NAME_MAX);
-        file_remove_extension((char *) data.typed_name);
+        if (data.dialog_type == FILE_DIALOG_SAVE) {
+            file_remove_extension((char *) data.typed_name);
+        }
     } else if (dialog_type == FILE_DIALOG_SAVE) {
         // Suggest default filename
         string_copy(lang_get_string(9, type == FILE_TYPE_SCENARIO ? 7 : 6), data.typed_name, FILE_NAME_MAX);
