@@ -153,10 +153,12 @@ static void make_similar_images_references(const asset_image *img)
 
 void asset_image_check_and_handle_reference(asset_image *img)
 {
+#ifndef BUILDING_ASSET_PACKER
     if (get_image_reference_type(img) != IMAGE_ORIGINAL && img->first_layer.calculated_image_id) {
         img->is_reference = 1;
         translate_reference_position(img);
     }
+#endif
 }
 
 #ifndef BUILDING_ASSET_PACKER
