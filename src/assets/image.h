@@ -19,6 +19,8 @@ typedef struct {
 #endif
 } asset_image;
 
+void asset_image_check_and_handle_reference(asset_image *img);
+
 int asset_image_add_layer(asset_image *img,
     const char *path, const char *group_id, const char *image_id,
     int src_x, int src_y, int offset_x, int offset_y, int width, int height,

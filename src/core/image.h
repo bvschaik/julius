@@ -74,25 +74,34 @@ int image_load_enemy(int enemy_id);
 
 /**
  * Indicates whether an image is external or not
- * @param image_id Image to check
+ * @param img Image to check
  * @return 1 if image is external, 0 otherwise
  */
-int image_is_external(int image_id);
+int image_is_external(const image *img);
 
 /**
  * Loads the pixel data of an external image
  * @param dst The pixel buffer where the image data will be stored
- * @param image_id Image to load
+ * @param img Image to load
  * @param row_width The width of the pixel buffer, in pixels
  * @return 1 if successful, 0 otherwise
  */
-int image_load_external_pixels(color_t *dst, int image_id, int row_width);
+int image_load_external_pixels(color_t *dst, const image *img, int row_width);
 
 /**
  * Loads the external data of an image
- * @param image_id Image to load
+ * @param img Image to load
  */
-void image_load_external_data(int image_id);
+void image_load_external_data(const image *img);
+
+/**
+ * Gets the real width and height of an external image
+ * @param img Image to check
+ * @param width The variable to set the width
+ * @param height The variable to set the height
+ * @return 1 if the dimensions could be set, 0 otherwise
+ */
+int image_get_external_dimensions(const image *img, int *width, int *height);
 
 /**
  * Crops the transparent pixels around an image

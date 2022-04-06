@@ -17,7 +17,10 @@
     <image src="Image_Border_Large_Bottom"/>
     <image src="Image_Border_Large_Right"/>
     <!-- Note: highlight image -->
-    <image src="Image_Highlight" id="Highlight"/>
+    <image src="Image_Highlight_Top" id="Highlight"/>
+	<image src="Image_Highlight_Left"/>
+	<image src="Image_Highlight_Bottom"/>
+	<image src="Image_Highlight_Right"/>
     <!-- Note: Banner image for Caravanserai -->
 	<image id="Caravanserai Banner" src="Caravanserai_Banner"/>
 	<!-- Note: Banner image for Lighthouse -->
@@ -55,11 +58,15 @@
 	<!-- Note: Image next to 'Hold Games' button in Entertainment Advisor -->
 	<image id="HoldGames Banner" width="126" height="88">
 		<layer group="159" image="47" x="-11" y="-9"/>
-		<layer src="HoldGames_Banner_Border" x="0" y="0"/>
 	</image>
+	<!-- Note: Border for image next to 'Hold Games' button in Entertainment Advisor -->
+	<image src="HoldGames_Banner_Border_Top" id="HoldGames Banner Border"/>
+	<image src="HoldGames_Banner_Border_Left"/>
+	<image src="HoldGames_Banner_Border_Bottom"/>
+	<image src="HoldGames_Banner_Border_Right"/>
 	<!-- Note: Tourism Pillar Banner Parts (REFERENCE ASSETS: DO NOT USE) -->
 	<image id="T Pillar BG R" width="10" height="235">
-		<layer group="195" image="0" x="510" y="0"/>
+		<layer group="195" image="0" x="-510" y="0"/>
 	</image>
 	<image id="T Pillar BG L" width="9" height="235">
 		<layer group="195" image="0" x="0" y="0"/>

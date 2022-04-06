@@ -84,7 +84,7 @@ static void draw_background(void)
         }
         image_draw_border(border_image_id, 100 * i + 170, 96, border_color);
         image_draw(base_image_id + i, 100 * i + 175, 101, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(highlight_image_id, 100 * i + 175, 101, highlight_color, SCALE_NONE);
+        image_draw_border(highlight_image_id, 100 * i + 175, 101, highlight_color);
     }
     text_draw_multiline(translation_for(game->description_key), 70, 222, 500, FONT_NORMAL_BLACK, 0);
 

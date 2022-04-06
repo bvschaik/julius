@@ -56,6 +56,7 @@ typedef struct {
     int bitmap_id;
     void *buffer;
     int original_width;
+    int original_height;
 } image_draw_data;
 
 typedef struct {
@@ -270,6 +271,8 @@ static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data
     int is_external = buffer_read_i8(buf);
     if (is_external) {
         img->atlas.id = (ATLAS_EXTERNAL << IMAGE_ATLAS_BIT_OFFSET) + data.total_external_images;
+        draw_data->original_width = img->width;
+        draw_data->original_height = img->height;
         data.total_external_images++;
     }
     img->top_height = buffer_read_i8(buf);
@@ -278,11 +281,6 @@ static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data
     buffer_skip(buf, 1);
     img->animation.speed_id = buffer_read_u8(buf);
     buffer_skip(buf, 5);
-}
-
-static int is_external(const image *img)
-{
-    return (img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_EXTERNAL;
 }
 
 static void set_image_heights(image *img, image_draw_data *draw_data)
@@ -307,7 +305,7 @@ static int prepare_images(buffer *buf, image *images, image_draw_data *draw_data
 {
     for (int i = 0; i < size; i++) {
         read_index_entry(buf, &images[i], &draw_datas[i]);
-        if (!is_external(&images[i])) {
+        if (!image_is_external(&images[i])) {
             set_image_heights(&images[i], &draw_datas[i]);
         }
     }
@@ -321,7 +319,8 @@ static int prepare_images(buffer *buf, image *images, image_draw_data *draw_data
     return 1;
 }
 
-static void convert_compressed(buffer *buf, const image *img, int buf_length, color_t *dst, int dst_width);
+static void convert_compressed(buffer *buf, int width, int x_offset, int y_offset,
+    int buf_length, color_t *dst, int dst_width);
 
 static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *draw_datas,
     int num_images, atlas_type type)
@@ -338,7 +337,7 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
         image *img = &images[i];
         image_draw_data *draw_data = &draw_datas[i];
 
-        if (is_external(img)) {
+        if (image_is_external(img)) {
             image_draw_data *external_data = &data.external_draw_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
             memcpy(external_data, draw_data, sizeof(image_draw_data));
             if (!external_data->offset) {
@@ -356,9 +355,11 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
                         reduce_width = i < image_group(GROUP_FONT) || i >= image_group(GROUP_FONT) + BASE_FONT_ENTRIES;
                     }
                     draw_data->original_width = img->width;
+                    draw_data->original_height = img->height;
                     memset(draw_data->buffer, 0, img->width * img->height * sizeof(color_t));
                     buffer_set(buf, draw_data->offset);
-                    convert_compressed(buf, img, draw_data->data_length, draw_data->buffer, img->width);
+                    convert_compressed(buf, img->width, img->atlas.x_offset, img->atlas.y_offset,
+                        draw_data->data_length, draw_data->buffer, img->width);
                     image_crop(img, draw_data->buffer, reduce_width);
                 }
             }
@@ -373,7 +374,7 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
 
     for (int i = 0; i < num_images; i++) {
         image *img = &images[i];
-        if (is_external(img)) {
+        if (image_is_external(img)) {
             continue;
         }
         image_packer_rect *rect = &data.packer.rects[i];
@@ -392,11 +393,12 @@ static color_t to_32_bit(uint16_t c)
            ((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
 }
 
-static void convert_uncompressed(buffer *buf, const image *img, color_t *dst, int dst_width)
+static void convert_uncompressed(buffer *buf, int width, int height, int x_offset, int y_offset,
+    color_t *dst, int dst_width)
 {
-    for (int y = 0; y < img->height; y++) {
-        color_t *pixel = &dst[(img->atlas.y_offset + y) * dst_width + img->atlas.x_offset];
-        for (int x = 0; x < img->width; x++) {
+    for (int y = 0; y < height; y++) {
+        color_t *pixel = &dst[(y_offset + y) * dst_width + x_offset];
+        for (int x = 0; x < width; x++) {
             color_t color = to_32_bit(buffer_read_u16(buf));
             pixel[x] = color == COLOR_SG2_TRANSPARENT ? ALPHA_TRANSPARENT : color;
         }
@@ -412,7 +414,8 @@ static void copy_compressed(const image *img, image_draw_data *draw_data, color_
     }
 }
 
-static void convert_compressed(buffer *buf, const image *img, int buf_length, color_t *dst, int dst_width)
+static void convert_compressed(buffer *buf, int width, int x_offset, int y_offset,
+    int buf_length, color_t *dst, int dst_width)
 {
     int y = 0;
     int x = 0;
@@ -421,21 +424,21 @@ static void convert_compressed(buffer *buf, const image *img, int buf_length, co
         if (control == 255) {
             // next byte = transparent pixels to skip
             int skip = buffer_read_u8(buf);
-            y += skip / img->width;
-            x += skip % img->width;
-            if (x >= img->width) {
+            y += skip / width;
+            x += skip % width;
+            if (x >= width) {
                 y++;
-                x -= img->width;
+                x -= width;
             }
             buf_length -= 2;
         } else {
             // control = number of concrete pixels
             for (int i = 0; i < control; i++) {
-                dst[(y + img->atlas.y_offset) * dst_width + img->atlas.x_offset + x] = to_32_bit(buffer_read_u16(buf));
+                dst[(y + y_offset) * dst_width + x_offset + x] = to_32_bit(buffer_read_u16(buf));
                 x++;
-                if (x >= img->width) {
+                if (x >= width) {
                     y++;
-                    x -= img->width;
+                    x -= width;
                 }
             }
             buf_length -= control * 2 + 1;
@@ -492,7 +495,7 @@ static void convert_images(image *images, image_draw_data *draw_datas, int size,
     for (int i = 0; i < size; i++) {
         image *img = &images[i];
         image_draw_data *draw_data = &draw_datas[i];
-        if (is_external(img)) {
+        if (image_is_external(img)) {
             continue;
         }
         buffer_set(buf, draw_data->offset);
@@ -504,15 +507,18 @@ static void convert_images(image *images, image_draw_data *draw_datas, int size,
                 free(draw_data->buffer);
                 draw_data->buffer = 0;
             } else {
-                convert_compressed(buf, img, draw_data->data_length, dst, dst_width);
+                convert_compressed(buf, img->width, img->atlas.x_offset, img->atlas.y_offset,
+                    draw_data->data_length, dst, dst_width);
             }
         } else if (img->top_height) {
             convert_isometric_footprint(buf, img, dst, dst_width);
-            convert_compressed(buf, img, draw_data->data_length - draw_data->uncompressed_length, dst, dst_width);
+            convert_compressed(buf, img->width, img->atlas.x_offset, img->atlas.y_offset,
+                draw_data->data_length - draw_data->uncompressed_length, dst, dst_width);
         } else if (img->is_isometric) {
             convert_isometric_footprint(buf, img, dst, dst_width);
         } else {
-            convert_uncompressed(buf, img, dst, dst_width);
+            convert_uncompressed(buf, img->width, img->height, img->atlas.x_offset, img->atlas.y_offset,
+                dst, dst_width);
         }
     }
 }
@@ -1012,9 +1018,9 @@ int image_load_enemy(int enemy_id)
     return 1;
 }
 
-int image_is_external(int image_id)
+int image_is_external(const image *img)
 {
-    return image_id < IMAGE_MAIN_ENTRIES && is_external(&data.main[image_id]);
+    return (img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_EXTERNAL;
 }
 
 static void release_external_buffers(void)
@@ -1025,9 +1031,8 @@ static void release_external_buffers(void)
     }
 }
 
-int image_load_external_pixels(color_t *dst, int image_id, int row_width)
+int image_load_external_pixels(color_t *dst, const image *img, int row_width)
 {
-    const image *img = &data.main[image_id];
     image_draw_data *draw_data = &data.external_draw_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
     char filename[FILE_NAME_MAX] = "555/";
     strcpy(&filename[4], data.bitmaps[draw_data->bitmap_id]);
@@ -1039,7 +1044,7 @@ int image_load_external_pixels(color_t *dst, int image_id, int row_width)
             draw_data->buffer = malloc(draw_data->data_length * sizeof(uint8_t));
             if (!draw_data->buffer) {
                 log_error("unable to load external image - out of memory",
-                    data.bitmaps[draw_data->bitmap_id], image_id);
+                    data.bitmaps[draw_data->bitmap_id], 0);
                 return 0;
             }
         }
@@ -1055,7 +1060,7 @@ int image_load_external_pixels(color_t *dst, int image_id, int row_width)
             );
             if (!size) {
                 log_error("unable to load external image",
-                    data.bitmaps[draw_data->bitmap_id], image_id);
+                    data.bitmaps[draw_data->bitmap_id], 0);
                 free(draw_data->buffer);
                 return 0;
             }
@@ -1065,30 +1070,47 @@ int image_load_external_pixels(color_t *dst, int image_id, int row_width)
     buffer_init(&buf, draw_data->buffer, draw_data->data_length);
     // NB: isometric images are never external
     if (draw_data->is_compressed) {
-        convert_compressed(&buf, img, draw_data->data_length, dst, row_width);
+        convert_compressed(&buf, draw_data->original_width, 0, 0, draw_data->data_length, dst, row_width);
     } else {
-        convert_uncompressed(&buf, img, dst, row_width);
+        convert_uncompressed(&buf, draw_data->original_width, draw_data->original_height, 0, 0, dst, row_width);
     }
     return 1;
 }
 
-void image_load_external_data(int image_id)
+void image_load_external_data(const image *img)
 {
-    if (data.external_image_id == image_id && graphics_renderer()->has_custom_image(CUSTOM_IMAGE_EXTERNAL)) {
+    int external_image_id = img->atlas.id & IMAGE_ATLAS_BIT_MASK;
+    if (data.external_image_id == external_image_id && graphics_renderer()->has_custom_image(CUSTOM_IMAGE_EXTERNAL)) {
         return;
     }
-    data.external_image_id = image_id;
-    const image *img = &data.main[image_id];
-    graphics_renderer()->create_custom_image(CUSTOM_IMAGE_EXTERNAL, img->width, img->height, 0);
+    data.external_image_id = external_image_id;
+    image_draw_data *draw_data = &data.external_draw_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+    graphics_renderer()->create_custom_image(CUSTOM_IMAGE_EXTERNAL, draw_data->original_width,
+        draw_data->original_height, 0);
     int row_width;
     color_t *dst = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_EXTERNAL, &row_width);
     if (!dst) {
         return;
     }
-    if (image_load_external_pixels(dst, image_id, row_width)) {
+    if (image_load_external_pixels(dst, img, row_width)) {
         graphics_renderer()->update_custom_image(CUSTOM_IMAGE_EXTERNAL);
     }
     graphics_renderer()->release_custom_image_buffer(CUSTOM_IMAGE_EXTERNAL);
+}
+
+int image_get_external_dimensions(const image *img, int *width, int *height)
+{
+    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) != ATLAS_EXTERNAL) {
+        return 0;
+    }
+    image_draw_data *draw_data = &data.external_draw_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
+    if (width) {
+        *width = draw_data->original_width;
+    }
+    if (height) {
+        *height = draw_data->original_height;
+    }
+    return 1;
 }
 
 void image_crop(image *img, const color_t *pixels, int reduce_width)
@@ -1152,7 +1174,7 @@ void image_crop(image *img, const color_t *pixels, int reduce_width)
     if (reduce_width) {
         found_opaque = 0;
         for (int x = 0; x < x_first_opaque; x++) {
-            for (int y = y_first_opaque; y < y_last_opaque; y++) {
+            for (int y = y_first_opaque; y <= y_last_opaque; y++) {
                 if ((pixels[y * img->width + x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
                     x_first_opaque = x;
                     found_opaque = 1;
@@ -1165,7 +1187,7 @@ void image_crop(image *img, const color_t *pixels, int reduce_width)
         }
         found_opaque = 0;
         for (int x = img->width - 1; x > x_last_opaque; x--) {
-            for (int y = y_first_opaque; y < y_last_opaque; y++) {
+            for (int y = y_first_opaque; y <= y_last_opaque; y++) {
                 if ((pixels[y * img->width + x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
                     x_last_opaque = x;
                     found_opaque = 1;

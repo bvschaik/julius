@@ -366,6 +366,8 @@ static void xml_end_image_element(void)
         asset_image_unload(data.current_image);
         return;
     }
+
+    asset_image_check_and_handle_reference(data.current_image);
 #endif
 }
 

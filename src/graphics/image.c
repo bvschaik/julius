@@ -11,8 +11,8 @@
 void image_draw(int image_id, int x, int y, color_t color, float scale)
 {
     const image *img = image_get(image_id);
-    if (image_is_external(image_id)) {
-        image_load_external_data(image_id);
+    if (image_is_external(img)) {
+        image_load_external_data(img);
     } else if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
         assets_load_unpacked_asset(image_id);
     }
@@ -80,7 +80,6 @@ static void draw_multibyte_letter(font_t font, const image *img, int x, int y, c
 
 void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color, float scale)
 {
-
     const image *img = image_letter(letter_id);
     if (letter_id >= IMAGE_FONT_MULTIBYTE_OFFSET) {
         draw_multibyte_letter(font, img, x, y, color, scale);
@@ -113,8 +112,8 @@ static inline void draw_fullscreen_background(int image_id)
             y = (int) ((s_height - img->height / scale) / 2 * scale);
         }
         const image *img = image_get(image_id);
-        if (image_is_external(image_id)) {
-            image_load_external_data(image_id);
+        if (image_is_external(img)) {
+            image_load_external_data(img);
         } else if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
             assets_load_unpacked_asset(image_id);
         }

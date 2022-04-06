@@ -18,6 +18,12 @@
 
 static array(asset_image) asset_images;
 
+typedef enum {
+    IMAGE_ORIGINAL = 0,
+    IMAGE_TRANSLATED_REFERENCE = 1,
+    IMAGE_FULL_REFERENCE = 2
+} image_reference_type;
+
 static void load_image_layers(asset_image *img, color_t **main_images, int *main_image_widths)
 {
     for (layer *l = img->last_layer; l; l = l->prev) {
@@ -58,15 +64,75 @@ static int has_top_part(const asset_image *img)
     return 0;
 }
 
-static int is_single_layer_unchanged_image(const asset_image *img)
+static image_reference_type get_image_reference_type(const asset_image *img)
 {
     if (!img->active || &img->first_layer != img->last_layer) {
-        return 0;
+        return IMAGE_ORIGINAL;
     }
     const layer *l = img->last_layer;
-    return img->img.width == l->width && img->img.height == l->height &&
-        l->x_offset == 0 && l->y_offset == 0 &&
-        l->invert == INVERT_NONE && l->rotate == ROTATE_NONE && !l->grayscale;
+    if (l->invert != INVERT_NONE || l->rotate != ROTATE_NONE || l->part != PART_BOTH || l->grayscale) {
+        return IMAGE_ORIGINAL;
+    }
+    return img->img.width == l->width && img->img.height == l->height && l->x_offset == 0 && l->y_offset == 0 ?
+        IMAGE_FULL_REFERENCE : IMAGE_TRANSLATED_REFERENCE;
+}
+
+static void translate_reference_position(asset_image *img)
+{
+    layer *l = &img->first_layer;
+    int width;
+    int height;
+    if (l->calculated_image_id >= IMAGE_MAIN_ENTRIES) {
+        const asset_image *referenced = asset_image_get_from_id(l->calculated_image_id - IMAGE_MAIN_ENTRIES);
+        img->img.atlas.id = referenced->img.atlas.id;
+        img->img.x_offset = referenced->img.x_offset;
+        img->img.y_offset = referenced->img.y_offset;
+        img->img.atlas.x_offset = referenced->img.atlas.x_offset;
+        img->img.atlas.y_offset = referenced->img.atlas.y_offset;
+        width = referenced->img.width;
+        height = referenced->img.height;
+    } else {
+        const image *referenced = image_get(l->calculated_image_id);
+        img->img.atlas.id = referenced->atlas.id;
+        img->img.x_offset = referenced->x_offset;
+        img->img.y_offset = referenced->y_offset;
+        img->img.atlas.x_offset = referenced->atlas.x_offset;
+        img->img.atlas.y_offset = referenced->atlas.y_offset;
+        width = referenced->width;
+        height = referenced->height;
+    }
+    if (img->img.width > width) {
+        img->img.width = width;
+    }
+    if (img->img.height > height) {
+        img->img.height = height;
+    }
+    if (l->x_offset >= 0) {
+        img->img.x_offset += l->x_offset;
+        img->img.width -= l->x_offset;
+    } else {
+        img->img.atlas.x_offset -= l->x_offset;
+        int remaining_width = width - img->img.width - img->img.atlas.x_offset;
+        if (remaining_width < 0) {
+            img->img.width += remaining_width;
+        }
+    }
+    if (l->y_offset >= 0) {
+        img->img.y_offset += l->y_offset;
+        img->img.height -= l->y_offset;
+    } else {
+        img->img.atlas.y_offset -= l->y_offset;
+        int remaining_height = height - img->img.height - img->img.atlas.y_offset;
+        if (remaining_height < 0) {
+            img->img.height += remaining_height;
+        }
+    }
+    if (img->img.width <= 0 || img->img.height <= 0) {
+        img->img.width = 0;
+        img->img.height = 0;
+    }
+    l->width = img->img.width;
+    l->height = img->img.height;
 }
 
 static void make_similar_images_references(const asset_image *img)
@@ -74,23 +140,29 @@ static void make_similar_images_references(const asset_image *img)
     const image_groups *group = group_get_from_image_index(img->index);
     for (int i = img->index + 1; i <= group->last_image_index; i++) {
         asset_image *reference = asset_image_get_from_id(i);
-        if (is_single_layer_unchanged_image(reference) && reference->last_layer->asset_image_path &&
+        if (get_image_reference_type(reference) != IMAGE_ORIGINAL && reference->last_layer->asset_image_path &&
             strcmp(reference->last_layer->asset_image_path, img->last_layer->asset_image_path) == 0 &&
             reference->last_layer->src_x == img->last_layer->src_x &&
             reference->last_layer->src_y == img->last_layer->src_y) {
             reference->last_layer->calculated_image_id = img->index + IMAGE_MAIN_ENTRIES;
             reference->is_reference = 1;
+            translate_reference_position(reference);
         }
+    }
+}
+
+void asset_image_check_and_handle_reference(asset_image *img)
+{
+    if (get_image_reference_type(img) != IMAGE_ORIGINAL && img->first_layer.calculated_image_id) {
+        img->is_reference = 1;
+        translate_reference_position(img);
     }
 }
 
 #ifndef BUILDING_ASSET_PACKER
 static int load_image(asset_image *img, color_t **main_images, int *main_image_widths)
 {
-    if (img->is_reference) {
-        return 1;
-    }
-    if (is_single_layer_unchanged_image(img)) {
+    if (get_image_reference_type(img) == IMAGE_FULL_REFERENCE) {
         layer *l = img->last_layer;
         if (!l->calculated_image_id) {
             layer_load(l, main_images, main_image_widths);
@@ -98,10 +170,8 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
             l->data = 0;
             make_similar_images_references(img);
             layer_unload(l);
-        } else {
-            img->is_reference = 1;
+            return 1;
         }
-        return 1;
     }
     load_image_layers(img, main_images, main_image_widths);
 
@@ -366,15 +436,10 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
 
     asset_image *current_image;
     array_foreach(asset_images, current_image) {
-        load_image(current_image, main_images, main_image_widths);
-
         if (current_image->is_reference) {
-            const image *referenced = image_get(current_image->first_layer.calculated_image_id);
-            current_image->img.atlas.id = referenced->atlas.id;
-            current_image->img.atlas.x_offset = referenced->atlas.x_offset;
-            current_image->img.atlas.y_offset = referenced->atlas.y_offset;
             continue;
         }
+        load_image(current_image, main_images, main_image_widths);
 
         int width = current_image->img.width;
         int height = current_image->img.height;
@@ -416,11 +481,10 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
     array_foreach(asset_images, current_image) {
         if (current_image->is_reference) {
             const image *referenced = image_get(current_image->first_layer.calculated_image_id);
-            current_image->img.atlas.id = referenced->atlas.id;
-            current_image->img.atlas.x_offset = referenced->atlas.x_offset;
-            current_image->img.atlas.y_offset = referenced->atlas.y_offset;
-            current_image->img.width = referenced->width;
-            current_image->img.height = referenced->height;
+            if (image_is_external(referenced)) {
+                free((color_t *) current_image->data); // Freeing a const pointer - ugly but necessary
+                current_image->data = 0;
+            }
         } else if (graphics_renderer()->should_pack_image(current_image->img.width, current_image->img.height)) {
             image_packer_rect *rect = &packer.rects[i];
             current_image->img.atlas.x_offset = rect->output.x;
@@ -463,15 +527,8 @@ void asset_image_reload_climate(void)
 #ifndef BUILDING_ASSET_PACKER
     asset_image *current_image;
     array_foreach(asset_images, current_image) {
-        if (current_image->is_reference) {
-            const image *referenced = image_get(current_image->first_layer.calculated_image_id);
-            current_image->img.x_offset = referenced->x_offset;
-            current_image->img.y_offset = referenced->y_offset;
-            current_image->img.atlas.id = referenced->atlas.id;
-            current_image->img.atlas.x_offset = referenced->atlas.x_offset;
-            current_image->img.atlas.y_offset = referenced->atlas.y_offset;
-            current_image->img.width = referenced->width;
-            current_image->img.height = referenced->height;
+        if (current_image->is_reference && (current_image->img.atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_MAIN) {
+            translate_reference_position(current_image);
         }
     }
 #endif

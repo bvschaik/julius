@@ -85,10 +85,11 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
         return;
     }
     
-    const asset_image *asset_img = 0;
+    asset_image *asset_img = 0;
 
     atlas_type type = img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET;
-    if (type == ATLAS_EXTRA_ASSET || type == ATLAS_UNPACKED_EXTRA_ASSET) {
+    if (type == ATLAS_EXTRA_ASSET || type == ATLAS_UNPACKED_EXTRA_ASSET ||
+        l->calculated_image_id >= IMAGE_MAIN_ENTRIES) {
         asset_img = asset_image_get_from_id(l->calculated_image_id - IMAGE_MAIN_ENTRIES);
         if (!asset_img) {
             log_error("Problem loading layer from image id", 0, l->calculated_image_id);
@@ -96,31 +97,59 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             return;
         }
         while (asset_img->is_reference) {
-            asset_img = asset_image_get_from_id(asset_img->first_layer.calculated_image_id - IMAGE_MAIN_ENTRIES);
+            if (asset_img->first_layer.calculated_image_id >= IMAGE_MAIN_ENTRIES) {
+                asset_img = asset_image_get_from_id(asset_img->first_layer.calculated_image_id - IMAGE_MAIN_ENTRIES);
+            } else {
+                if (type == ATLAS_MAIN) {
+                    asset_img = 0;
+                } else if (type == ATLAS_EXTERNAL && !asset_img->data) {
+                    layer *asset_img_layer = &asset_img->first_layer;
+                    int layer_image_id = asset_img_layer->calculated_image_id;
+                    layer_load(asset_img_layer, main_data, main_image_widths);
+                    asset_img_layer->calculated_image_id = layer_image_id;
+                    asset_img->data = asset_img_layer->data;
+                    asset_img_layer->data = 0;
+                }
+                break;
+            }
         }
-        if (!l->grayscale) {
+        if (!l->grayscale && asset_img && asset_img->img.width == l->width && asset_img->img.height == l->height &&
+            l->x_offset == 0 && l->y_offset == 0 && type != ATLAS_EXTERNAL) {
             l->data = asset_img->data;
             return;
         }
     }
 
-    int size = l->width * l->height * sizeof(color_t);
+    int width;
+    int height;
+    if (type == ATLAS_EXTERNAL && !asset_img) {
+        image_get_external_dimensions(img, &width, &height);
+    } else {
+        width = l->width;
+        height = l->height;
+    }
+
+    int size = width * height * sizeof(color_t);
     color_t *data = malloc(size);
     if (!data) {
         log_error("Problem loading layer from image id - out of memory", 0, l->calculated_image_id);
         load_dummy_layer(l);
         return;
     }
-    memset(data, 0, l->width * l->height * sizeof(color_t));
+    memset(data, 0, width * height * sizeof(color_t));
 
     if (asset_img) {
-        int width = l->width < asset_img->img.width ? l->width : asset_img->img.width;
-        int height = l->height < asset_img->img.height ? l->height : asset_img->img.height;
-        for (int y = 0; y < height; y++) {
-            memcpy(&data[y * l->width], &asset_img->data[y * asset_img->img.width], width * sizeof(color_t));
+        int asset_img_width;
+        int asset_img_height;
+        if (image_is_external(&asset_img->img)) {
+            image_get_external_dimensions(&asset_img->img, &asset_img_width, &asset_img_height);
+        } else {
+            asset_img_width = asset_img->img.width;
+            asset_img_height = asset_img->img.height;
         }
+        copy_regular_image(l, data, img, asset_img->data, asset_img_width);
     } else if (type == ATLAS_EXTERNAL) {
-        if (!image_load_external_pixels(data, l->calculated_image_id, l->width)) {
+        if (!image_load_external_pixels(data, img, width)) {
             free(data);
             log_error("Problem loading layer from image id", 0, l->calculated_image_id);
             load_dummy_layer(l);
