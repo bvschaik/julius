@@ -70,7 +70,9 @@ static image_reference_type get_image_reference_type(const asset_image *img)
         return IMAGE_ORIGINAL;
     }
     const layer *l = img->last_layer;
-    if (l->invert != INVERT_NONE || l->rotate != ROTATE_NONE || l->part != PART_BOTH || l->grayscale) {
+    if (l->invert != INVERT_NONE || l->rotate != ROTATE_NONE || l->part != PART_BOTH || l->grayscale ||
+        (image_get(img->first_layer.calculated_image_id)->is_isometric &&
+            !graphics_renderer()->isometric_images_are_joined())) {
         return IMAGE_ORIGINAL;
     }
     return img->img.width == l->width && img->img.height == l->height && l->x_offset == 0 && l->y_offset == 0 ?
@@ -112,7 +114,7 @@ static void translate_reference_position(asset_image *img)
         img->img.width -= l->x_offset;
     } else {
         img->img.atlas.x_offset -= l->x_offset;
-        int remaining_width = width - img->img.width - img->img.atlas.x_offset;
+        int remaining_width = width - img->img.width;
         if (remaining_width < 0) {
             img->img.width += remaining_width;
         }
@@ -122,7 +124,7 @@ static void translate_reference_position(asset_image *img)
         img->img.height -= l->y_offset;
     } else {
         img->img.atlas.y_offset -= l->y_offset;
-        int remaining_height = height - img->img.height - img->img.atlas.y_offset;
+        int remaining_height = height - img->img.height;
         if (remaining_height < 0) {
             img->img.height += remaining_height;
         }
@@ -156,7 +158,9 @@ void asset_image_check_and_handle_reference(asset_image *img)
 #ifndef BUILDING_ASSET_PACKER
     if (get_image_reference_type(img) != IMAGE_ORIGINAL && img->first_layer.calculated_image_id) {
         img->is_reference = 1;
-        translate_reference_position(img);
+        if (img->first_layer.calculated_image_id < IMAGE_MAIN_ENTRIES) {
+            translate_reference_position(img);
+        }
     }
 #endif
 }
@@ -482,8 +486,9 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
 
     array_foreach(asset_images, current_image) {
         if (current_image->is_reference) {
-            const image *referenced = image_get(current_image->first_layer.calculated_image_id);
-            if (image_is_external(referenced)) {
+            if (current_image->first_layer.calculated_image_id >= IMAGE_MAIN_ENTRIES) {
+                translate_reference_position(current_image);
+            } else if (image_is_external(image_get(current_image->first_layer.calculated_image_id))) {
                 free((color_t *) current_image->data); // Freeing a const pointer - ugly but necessary
                 current_image->data = 0;
             }
