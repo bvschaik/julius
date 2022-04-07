@@ -49,8 +49,8 @@ typedef struct {
     void (*reset_clip_rectangle)(void);
 
     void (*draw_line)(int x_start, int x_end, int y_start, int y_end, color_t color);
-    void (*draw_rect)(int x, int y, int width, int height, color_t color);
-    void (*fill_rect)(int x, int y, int width, int height, color_t color);
+    void (*draw_rect)(int x_start, int x_end, int y_start, int y_end, color_t color);
+    void (*fill_rect)(int x_start, int x_end, int y_start, int y_end, color_t color);
 
     void (*draw_image)(const image *img, int x, int y, color_t color, float scale);
     void (*draw_isometric_top)(const image *img, int x, int y, color_t color, float scale);

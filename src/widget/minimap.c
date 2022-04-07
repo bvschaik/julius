@@ -33,18 +33,16 @@ enum {
     REFRESH_CAMERA_MOVED = 2
 };
 
-static const color_t ENEMY_COLOR_BY_CLIMATE[] = {
-    COLOR_MINIMAP_ENEMY_CENTRAL,
-    COLOR_MINIMAP_ENEMY_NORTHERN,
-    COLOR_MINIMAP_ENEMY_DESERT
-};
-
 typedef struct {
     color_t left;
     color_t right;
 } tile_color;
 
 typedef struct {
+    tile_color soldier;
+    tile_color selected_soldier;
+    tile_color enemy;
+    tile_color wolf;
     tile_color water[4];
     tile_color tree[4];
     tile_color rock[4];
@@ -66,6 +64,10 @@ typedef struct {
 static const tile_color_set MINIMAP_COLOR_SETS[3] = {
     // central
     {
+        .soldier = {COLOR_MINIMAP_SOLDIER, COLOR_MINIMAP_SOLDIER},
+        .selected_soldier = {COLOR_MINIMAP_SELECTED_SOLDIER, COLOR_MINIMAP_SELECTED_SOLDIER},
+        .enemy = {COLOR_MINIMAP_ENEMY_CENTRAL, COLOR_MINIMAP_ENEMY_CENTRAL},
+        .wolf = {COLOR_MINIMAP_WOLF, COLOR_MINIMAP_WOLF},
         .water = {{0xff394a7b, 0xff31427b}, {0xff394a7b, 0xff314273}, {0xff313973, 0xff314273}, {0xff31427b, 0xff394a7b}},
         .tree = {{0xff6b8431, 0xff102108}, {0xff103908, 0xff737b29}, {0xff103108, 0xff526b21}, {0xff737b31, 0xff084a10}},
         .rock = {{0xff948484, 0xff635a4a}, {0xffa59c94, 0xffb5ada5}, {0xffb5ada5, 0xff8c8484}, {0xff635a4a, 0xffa59c94}},
@@ -85,6 +87,10 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
     },
     // northern
     {
+        .soldier = {COLOR_MINIMAP_SOLDIER, COLOR_MINIMAP_SOLDIER},
+        .selected_soldier = {COLOR_MINIMAP_SELECTED_SOLDIER, COLOR_MINIMAP_SELECTED_SOLDIER},
+        .enemy = {COLOR_MINIMAP_ENEMY_NORTHERN, COLOR_MINIMAP_ENEMY_NORTHERN},
+        .wolf = {COLOR_MINIMAP_WOLF, COLOR_MINIMAP_WOLF},
         .water = {{0xff394a7b, 0xff31427b}, {0xff394a7b, 0xff314273}, {0xff313973, 0xff314273}, {0xff31427b, 0xff394a7b}},
         .tree = {{0xff527b31, 0xff082108}, {0xff083908, 0xff5a7329}, {0xff082908, 0xff316b21}, {0xff527b29, 0xff084a21}},
         .rock = {{0xff8c8484, 0xff5a5252}, {0xff9c9c94, 0xffa5a5a5}, {0xffa5a5a5, 0xff848484}, {0xff5a5252, 0xff9c9c94}},
@@ -104,6 +110,10 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
     },
     // desert
     {
+        .soldier = {COLOR_MINIMAP_SOLDIER, COLOR_MINIMAP_SOLDIER},
+        .selected_soldier = {COLOR_MINIMAP_SELECTED_SOLDIER, COLOR_MINIMAP_SELECTED_SOLDIER},
+        .enemy = {COLOR_MINIMAP_ENEMY_DESERT, COLOR_MINIMAP_ENEMY_DESERT},
+        .wolf = {COLOR_MINIMAP_WOLF, COLOR_MINIMAP_WOLF},
         .water = {{0xff4a84c6, 0xff4a7bc6}, {0xff4a84c6, 0xff4a7bc6}, {0xff4a84c6, 0xff5284c6}, {0xff4a7bbd, 0xff4a7bc6}},
         .tree = {{0xffa59c7b, 0xff6b7b18}, {0xff214210, 0xffada573}, {0xff526b21, 0xffcec6a5}, {0xffa59c7b, 0xff316321}},
         .rock = {{0xffa59494, 0xff736352}, {0xffa59c94, 0xffb5ada5}, {0xffb5ada5, 0xff8c847b}, {0xff736352, 0xffbdada5}},
@@ -132,7 +142,6 @@ static struct {
     int y_offset;
     int width;
     int height;
-    color_t enemy_color;
     color_t *cache;
     int cache_width;
     struct {
@@ -219,29 +228,28 @@ static inline void draw_pixel(int x, int y, color_t color)
     data.cache[y * data.cache_width + x] = color;
 }
 
-static int draw_figure(int x_view, int y_view, int grid_offset)
+static inline void draw_tile(int x_offset, int y_offset, const tile_color *colors)
+{
+    draw_pixel(x_offset, y_offset, colors->left);
+    draw_pixel(x_offset + 1, y_offset, colors->right);
+}
+
+static int draw_figure(int x_view, int y_view, int grid_offset, const tile_color_set *set)
 {
     int color_type = map_figure_foreach_until(grid_offset, has_figure_color);
     if (color_type == FIGURE_COLOR_NONE) {
         return 0;
     }
-    color_t color = COLOR_MINIMAP_WOLF;
+    const tile_color *color = &set->wolf;
     if (color_type == FIGURE_COLOR_SOLDIER) {
-        color = COLOR_MINIMAP_SOLDIER;
+        color = &set->soldier;
     } else if (color_type == FIGURE_COLOR_SELECTED_SOLDIER) {
-        color = COLOR_MINIMAP_SELECTED_SOLDIER;
+        color = &set->selected_soldier;
     } else if (color_type == FIGURE_COLOR_ENEMY) {
-        color = data.enemy_color;
+        color = &set->enemy;
     }
-    draw_pixel(x_view, y_view, color);
-    draw_pixel(x_view + 1, y_view, color);
+    draw_tile(x_view, y_view, color);
     return 1;
-}
-
-static inline void draw_tile(int x_offset, int y_offset, const tile_color *colors)
-{
-    draw_pixel(x_offset, y_offset, colors->left);
-    draw_pixel(x_offset + 1, y_offset, colors->right);
 }
 
 static void draw_building(int size, int x_offset, int y_offset, const tile_color *colors)
@@ -307,11 +315,10 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
     y_view -= data.y_offset;
 
     if (grid_offset < 0) {
-        draw_tile(x_view, y_view, &set->black);
         return;
     }
 
-    if (draw_figure(x_view, y_view, grid_offset)) {
+    if (draw_figure(x_view, y_view, grid_offset, set)) {
         return;
     }
 
@@ -420,7 +427,6 @@ static void draw_minimap(void)
 
 static void draw_uncached(int x_offset, int y_offset, int width, int height)
 {
-    data.enemy_color = ENEMY_COLOR_BY_CLIMATE[scenario_property_climate()];
     prepare_minimap_cache(width, height);
     set_bounds(x_offset, y_offset, width, height);
     draw_minimap();
@@ -465,6 +471,7 @@ void widget_minimap_draw(int x_offset, int y_offset, int width, int height, int 
 {
     int refresh_type = should_refresh(force);
     if (refresh_type != REFRESH_NOT_NEEDED) {
+        graphics_fill_rect(x_offset, y_offset, width, height, COLOR_BLACK);
         if (refresh_type == REFRESH_FULL) {
             draw_uncached(x_offset, y_offset, width, height);
         } else {
