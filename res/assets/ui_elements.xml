@@ -3,25 +3,25 @@
 <!-- Unless specifically mentioned, all assets created by Areldir -->
 <assetlist name="UI_Elements">
 	<image id="Happy God Icon" src="Religion_God_Happy"/>
-    <!-- Note: Image borders -->
-    <image src="Image_Border_Small_Top" id="Image Border Small"/>
-    <image src="Image_Border_Small_Left"/>
-    <image src="Image_Border_Small_Bottom"/>
-    <image src="Image_Border_Small_Right"/>
-    <image src="Image_Border_Medium_Top" id="Image Border Medium"/>
-    <image src="Image_Border_Medium_Left"/>
-    <image src="Image_Border_Medium_Bottom"/>
-    <image src="Image_Border_Medium_Right"/>
-    <image src="Image_Border_Large_Top" id="Image Border Large"/>
-    <image src="Image_Border_Large_Left"/>
-    <image src="Image_Border_Large_Bottom"/>
-    <image src="Image_Border_Large_Right"/>
-    <!-- Note: highlight image -->
-    <image src="Image_Highlight_Top" id="Highlight"/>
+	<!-- Note: Image borders -->
+	<image src="Image_Border_Small_Top" id="Image Border Small"/>
+	<image src="Image_Border_Small_Left"/>
+	<image src="Image_Border_Small_Bottom"/>
+	<image src="Image_Border_Small_Right"/>
+	<image src="Image_Border_Medium_Top" id="Image Border Medium"/>
+	<image src="Image_Border_Medium_Left"/>
+	<image src="Image_Border_Medium_Bottom"/>
+	<image src="Image_Border_Medium_Right"/>
+	<image src="Image_Border_Large_Top" id="Image Border Large"/>
+	<image src="Image_Border_Large_Left"/>
+	<image src="Image_Border_Large_Bottom"/>
+	<image src="Image_Border_Large_Right"/>
+	<!-- Note: highlight image -->
+	<image src="Image_Highlight_Top" id="Highlight"/>
 	<image src="Image_Highlight_Left"/>
 	<image src="Image_Highlight_Bottom"/>
 	<image src="Image_Highlight_Right"/>
-    <!-- Note: Banner image for Caravanserai -->
+	<!-- Note: Banner image for Caravanserai -->
 	<image id="Caravanserai Banner" src="Caravanserai_Banner"/>
 	<!-- Note: Banner image for Lighthouse -->
 	<image id="Lighthouse Banner" src="Lighthouse_Banner"/>
@@ -101,11 +101,11 @@
 	<!-- Note: Hippodrome racing UI button -->
 	<image id="Hipp_Racing_Button" src="Hippodrome_Betting_Select_Button"/>
 	<!-- Note: Hippodrome team selection buttons -->
-	<image src="Hippodrome_Team_Select_Blue" id="Hipp_Team_Blue" />
+	<image src="Hippodrome_Team_Select_Blue" id="Hipp_Team_Blue"/>
 	<image src="Hippodrome_Team_Select_Red"/>
 	<image src="Hippodrome_Team_Select_White"/>
 	<image src="Hippodrome_Team_Select_Green"/>
-    <!-- Note: Caravanserai Trade Policy -->
+	<!-- Note: Caravanserai Trade Policy -->
 	<image id="Trade Policy" src="Trade_Policy_Icon"/>
 	<image id="Trade Policy 1" src="Trade_Policy_1"/>
 	<image id="Trade Policy 2" src="Trade_Policy_2"/>
@@ -115,14 +115,14 @@
 	<image id="Sea Trade Policy 1" src="Sea_Trade_Policy_1"/>
 	<image id="Sea Trade Policy 2" src="Sea_Trade_Policy_2"/>
 	<image id="Sea Trade Policy 3" src="Sea_Trade_Policy_3"/>
-    <!-- Note: Lighthouse and Caravanserai Trade Policy Disabled Advisor buttons -->
-    <image id="Sea Trade Policy Off Button">
-        <layer group="179" image="0" grayscale="true"/>
-    </image>
-    <image id="Land Trade Policy Off Button">
-        <layer group="179" image="1" grayscale="true"/>
-    </image>
-    <!-- Note: Fix for Hagia Sophia sprite (removes historically inaccurate Islamic minarets, which were added to the building in the 1500s) -->
+	<!-- Note: Lighthouse and Caravanserai Trade Policy Disabled Advisor buttons -->
+	<image id="Sea Trade Policy Off Button">
+		<layer group="179" image="0" grayscale="true"/>
+	</image>
+	<image id="Land Trade Policy Off Button">
+		<layer group="179" image="1" grayscale="true"/>
+	</image>
+	<!-- Note: Fix for Hagia Sophia sprite (removes historically inaccurate Islamic minarets, which were added to the building in the 1500s) -->
 	<image id="H Sophia Fix" src="Hagia_Sophia_Fix"/>
 	<!-- Note: Button for Housing Advisor -->
 	<!-- Button assets created by MSTVD and Areldir -->
@@ -146,38 +146,65 @@
 	<image id="Unmothball_2" src="Unmothball_2"/>
 	<image id="Unmothball_3" src="Unmothball_3"/>
 	<image id="Unmothball_4" src="Unmothball_4"/>
-    <!-- Note: Checkmark toggle for allowed walkers -->
-    <!-- Image created by Ouaz and released by him under the CC-BY-SA 3.0 license -->
-    <image id="Allowed_Walker_Check" src="Allowed_Walker_Checkmark"/>
-    <!-- Warehousing icon by Ouaz -->
-    <image id="Warehousing" src="Warehousing"/>
-    <image id="Maintain_1" src="Maintain_1"/> <!-- Normal -->
-    <image id="Maintain_2" src="Maintain_2"/> <!-- On hover -->
-    <image id="Maintain_3" src="Maintain_3"/> <!-- On click -->
-    <image id="Maintain_4" src="Maintain_4"/> <!-- Button Disabled -->
-    <image id="Stop_Maintain_1" src="Stop_Maintain_1"/> <!-- Normal -->
-    <image id="Stop_Maintain_2" src="Stop_Maintain_2"/> <!-- On hover -->
-    <image id="Stop_Maintain_3" src="Stop_Maintain_3"/> <!-- On click -->
-    <image id="Stop_Maintain_4" src="Stop_Maintain_4"/> <!-- Button Disabled -->
+	<!-- Note: Checkmark toggle for allowed walkers -->
+	<!-- Image created by Ouaz and released by him under the CC-BY-SA 3.0 license -->
+	<image id="Allowed_Walker_Check" src="Allowed_Walker_Checkmark"/>
+	<!-- Warehousing icon by Ouaz -->
+	<image id="Warehousing" src="Warehousing"/>
+	<image id="Maintain_1" src="Maintain_1"/>
+	<!-- Normal -->
+	<image id="Maintain_2" src="Maintain_2"/>
+	<!-- On hover -->
+	<image id="Maintain_3" src="Maintain_3"/>
+	<!-- On click -->
+	<image id="Maintain_4" src="Maintain_4"/>
+	<!-- Button Disabled -->
+	<image id="Stop_Maintain_1" src="Stop_Maintain_1"/>
+	<!-- Normal -->
+	<image id="Stop_Maintain_2" src="Stop_Maintain_2"/>
+	<!-- On hover -->
+	<image id="Stop_Maintain_3" src="Stop_Maintain_3"/>
+	<!-- On click -->
+	<image id="Stop_Maintain_4" src="Stop_Maintain_4"/>
+	<!-- Button Disabled -->
 	<!-- Victory Banner by Ouaz -->
 	<image id="Victory_Banner" src="Victory_Banner"/>
-    <!-- Grid image by crudelios -->
-    <image id="Grid_Full" src="Grid_Full"/>
-    <!-- Note: Buttons for play/pause game -->
-    <!-- Button assets created by Ouaz -->
-    <image src="Play_Button_Idle" id="Play Button"/>
-    <image src="Play_Button_Idle"/>
-    <image src="Play_Button_Click"/>
-    <image src="Pause_Button_Idle" id="Pause Button"/>
-    <image src="Pause_Button_Idle"/>
-    <image src="Pause_Button_Click"/>
-    <!-- Note: Buttons for show/hide grid -->
-    <!-- Button assets created by Ouaz -->
-    <image src="Button_Grid_Idle" id="Toggle Grid Button"/>
-    <image src="Button_Grid_Hover"/>
-    <image src="Button_Grid_Click"/>
+	<!-- Grid image by crudelios -->
+	<image id="Grid_Full" src="Grid_Full"/>
+	<!-- Note: Buttons for play/pause game -->
+	<!-- Button assets created by Ouaz -->
+	<image src="Play_Button_Idle" id="Play Button"/>
+	<image src="Play_Button_Idle"/>
+	<image src="Play_Button_Click"/>
+	<image src="Pause_Button_Idle" id="Pause Button"/>
+	<image src="Pause_Button_Idle"/>
+	<image src="Pause_Button_Click"/>
+	<!-- Note: Buttons for show/hide grid -->
+	<!-- Button assets created by Ouaz -->
+	<image src="Button_Grid_Idle" id="Toggle Grid Button"/>
+	<image src="Button_Grid_Hover"/>
+	<image src="Button_Grid_Click"/>
 	<!-- Note: Grayscale wine icon for disabled grand festival -->
-    <image id="Grand Festival Wine Disabled">
-        <layer group="129" image="7" grayscale="true"/>
-    </image>
+	<image id="Grand Festival Wine Disabled">
+		<layer group="129" image="7" grayscale="true"/>
+	</image>
+	<!-- Note: Top UI bar element for dynamic Denarii, Population and Date counting -->
+	<image id="Top_UI_Panel_L" width="20" height="24">
+		<layer group="871" image="14" x="0" y="0"/>
+	</image>
+	<image id="Top_UI_Panel_R" width="20" height="24">
+		<layer group="871" image="14" x="100" y="0"/>
+	</image>
+	<image id="Top_UI_Panel_M1" width="20" height="24">
+		<layer group="871" image="14" x="20" y="0"/>
+	</image>
+	<image id="Top_UI_Panel_M2" width="20" height="24">
+		<layer group="871" image="14" x="40" y="0"/>
+	</image>
+	<image id="Top_UI_Panel_M3" width="20" height="24">
+		<layer group="871" image="14" x="60" y="0"/>
+	</image>
+	<image id="Top_UI_Panel_M4" width="20" height="24">
+		<layer group="871" image="14" x="80" y="0"/>
+	</image>
 </assetlist>
