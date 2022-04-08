@@ -294,15 +294,15 @@
 	<image id="Pal Wall S 20" src="Palisade_S_20" isometric="true"/>
 	<image id="Pal Wall S 21" src="Palisade_S_21" isometric="true"/>
 	<!-- Note: Fort climate variants -->
-	<image id="Fort_Main_Central">
+	<image id="Fort_Main_Central" isometric="true">
 		<layer group="63" image="11"/>
 		<layer src="Fort_Main_Layer_Central"/>
 	</image>
-	<image id="Fort_Main_South">
+	<image id="Fort_Main_South" isometric="true">
 		<layer group="63" image="11"/>
 		<layer src="Fort_Main_Layer_North"/>
 	</image>
-	<image id="Fort_Main_North">
+	<image id="Fort_Main_North" isometric="true">
 		<layer group="63" image="11"/>
 		<layer src="Fort_Main_Layer_South"/>
 	</image>
