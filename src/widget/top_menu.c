@@ -1,9 +1,11 @@
 #include "top_menu.h"
 
+#include "assets/assets.h"
 #include "building/construction.h"
 #include "city/constants.h"
 #include "city/finance.h"
 #include "city/population.h"
+#include "core/calc.h"
 #include "core/config.h"
 #include "core/lang.h"
 #include "game/file.h"
@@ -37,6 +39,10 @@ enum {
     INFO_POPULATION = 2,
     INFO_DATE = 3
 };
+
+#define BLACK_PANEL_BLOCK_WIDTH 20
+#define BLACK_PANEL_MIDDLE_BLOCKS 4
+#define BLACK_PANEL_TOTAL_BLOCKS 6
 
 static void menu_file_replay_map(int param);
 static void menu_file_load_game(int param);
@@ -217,18 +223,35 @@ static void refresh_background(void)
     for (int i = 0; i * block_width < s_width; i++) {
         image_draw(image_base + i % 8, i * block_width, 0, COLOR_MASK_NONE, SCALE_NONE);
     }
-    // black panels for funds/pop/time
-    if (s_width < 800) {
-        image_draw(image_base + 14, 336, 0, COLOR_MASK_NONE, SCALE_NONE);
-    } else if (s_width < 1024) {
-        image_draw(image_base + 14, 336, 0, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(image_base + 14, 456, 0, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(image_base + 14, 648, 0, COLOR_MASK_NONE, SCALE_NONE);
-    } else {
-        image_draw(image_base + 14, 480, 0, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(image_base + 14, 624, 0, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(image_base + 14, 840, 0, COLOR_MASK_NONE, SCALE_NONE);
+}
+
+static int draw_black_panel(int x, int y, int width)
+{
+    int blocks = (width / BLACK_PANEL_BLOCK_WIDTH) - 1;
+    if ((width % BLACK_PANEL_BLOCK_WIDTH) > 0) {
+        blocks++;
     }
+
+    image_draw(image_group(GROUP_TOP_MENU) + 14, x, y, COLOR_MASK_NONE, SCALE_NONE);
+    if (blocks <= BLACK_PANEL_MIDDLE_BLOCKS) {
+        return BLACK_PANEL_TOTAL_BLOCKS * BLACK_PANEL_BLOCK_WIDTH;
+    }
+    static int black_panel_base_id;
+    if (!black_panel_base_id) {
+        black_panel_base_id = assets_get_image_id("UI_Elements", "Top_UI_Panel");
+    }
+    int x_offset = BLACK_PANEL_BLOCK_WIDTH * (BLACK_PANEL_MIDDLE_BLOCKS + 1);
+    blocks -= BLACK_PANEL_MIDDLE_BLOCKS;
+
+    for (int i = 0; i < blocks; i++) {
+        image_draw(black_panel_base_id + (i % BLACK_PANEL_MIDDLE_BLOCKS) + 1, x + x_offset, y,
+            COLOR_MASK_NONE, SCALE_NONE);
+        x_offset += BLACK_PANEL_BLOCK_WIDTH;
+    }
+
+    image_draw(black_panel_base_id + 5, x + x_offset, y, COLOR_MASK_NONE, SCALE_NONE);
+
+    return x_offset + BLACK_PANEL_BLOCK_WIDTH;
 }
 
 void widget_top_menu_draw(int force)
@@ -249,45 +272,67 @@ void widget_top_menu_draw(int force)
     if (treasury < 0) {
         treasure_color = COLOR_FONT_RED;
     }
+    int draw_panel_pop_date;
+    font_t pop_date_font;
+    color_t pop_color;
+    color_t date_color;
     if (s_width < 800) {
-        data.offset_funds = 338;
-        data.offset_population = 453;
-        data.offset_date = 547;
-
-        int width = lang_text_draw_colored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasure_color);
-        text_draw_number(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
-
-        width = lang_text_draw(6, 1, 458, 5, FONT_NORMAL_GREEN);
-        text_draw_number(city_population(), '@', " ", 450 + width, 5, FONT_NORMAL_GREEN, 0);
-
-        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), 540, 5, 100, FONT_NORMAL_GREEN, 0);
+        data.offset_funds = 330;
+        data.offset_population = 450;
+        data.offset_date = 540;
+        draw_panel_pop_date = 0;
+        pop_date_font = FONT_NORMAL_GREEN;
+        pop_color = COLOR_MASK_NONE;
+        date_color = COLOR_MASK_NONE;
     } else if (s_width < 1024) {
-        data.offset_funds = 338;
-        data.offset_population = 458;
-        data.offset_date = 652;
-
-        int width = lang_text_draw_colored(6, 0, 350, 5, FONT_NORMAL_PLAIN, treasure_color);
-        text_draw_number(treasury, '@', " ", 346 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
-
-        width = lang_text_draw_colored(6, 1, 470, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-        text_draw_number(city_population(), '@', " ", 466 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-
-        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(),
-            655, 5, 110, FONT_NORMAL_PLAIN, COLOR_FONT_YELLOW);
+        data.offset_funds = 330;
+        data.offset_population = 450;
+        data.offset_date = 650;
+        draw_panel_pop_date = 1;
+        pop_date_font = FONT_NORMAL_PLAIN;
+        pop_color = COLOR_WHITE;
+        date_color = COLOR_FONT_YELLOW;
     } else {
-        data.offset_funds = 493;
-        data.offset_population = 637;
-        data.offset_date = 852;
-
-        int width = lang_text_draw_colored(6, 0, 495, 5, FONT_NORMAL_PLAIN, treasure_color);
-        text_draw_number(treasury, '@', " ", 501 + width, 5, FONT_NORMAL_PLAIN, treasure_color);
-
-        width = lang_text_draw_colored(6, 1, 645, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-        text_draw_number(city_population(), '@', " ", 651 + width, 5, FONT_NORMAL_PLAIN, COLOR_WHITE);
-
-        lang_text_draw_month_year_max_width(game_time_month(), game_time_year(),
-            850, 5, 110, FONT_NORMAL_PLAIN, COLOR_FONT_YELLOW);
+        data.offset_funds = 490;
+        data.offset_population = 635;
+        data.offset_date = 850;
+        draw_panel_pop_date = 1;
+        pop_date_font = FONT_NORMAL_PLAIN;
+        pop_color = COLOR_WHITE;
+        date_color = COLOR_FONT_YELLOW;
     }
+
+    int text_width = text_get_width(lang_get_string(6, 0), FONT_NORMAL_PLAIN);
+    text_width += calc_digits_in_number(treasury) * 11;
+    int panel_width = draw_black_panel(data.offset_funds, 0, text_width);
+    int x_offset = (panel_width - text_width) / 2;
+
+    int width = lang_text_draw_colored(6, 0, data.offset_funds + x_offset, 5, FONT_NORMAL_PLAIN, treasure_color);
+    text_draw_number(treasury, '@', " ", data.offset_funds - 6 + x_offset + width, 5, FONT_NORMAL_PLAIN, treasure_color);
+
+    if (draw_panel_pop_date) {
+        int text_width = text_get_width(lang_get_string(6, 1), pop_date_font);
+        text_width += calc_digits_in_number(city_population()) * 11;
+        panel_width = draw_black_panel(data.offset_population, 0, text_width);
+        x_offset = (panel_width - text_width) / 2;
+    } else {
+        x_offset = 0;
+    }
+
+    width = lang_text_draw_colored(6, 1, data.offset_population + x_offset, 5, pop_date_font, pop_color);
+    text_draw_number(city_population(), '@', " ", data.offset_population - 6 + x_offset + width, 5,
+        pop_date_font, pop_color);
+
+    if (draw_panel_pop_date) {
+        panel_width = draw_black_panel(data.offset_date, 0, 100);
+        x_offset = (panel_width - 100) / 2;
+    } else {
+        x_offset = 0;
+    }
+
+    lang_text_draw_month_year_max_width(game_time_month(), game_time_year(), data.offset_date + x_offset, 5, 100,
+        pop_date_font, date_color);
+
     drawn.treasury = treasury;
     drawn.population = city_population();
     drawn.month = game_time_month();

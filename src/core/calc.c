@@ -1,5 +1,22 @@
 #include "core/calc.h"
 
+int calc_digits_in_number(int value)
+{
+    if (value == 0) {
+        return 1;
+    }
+    int total_digits = 0;
+    if (value < 0) {
+        value = -value;
+        total_digits++;
+    }
+    while (value) {
+        total_digits++;
+        value /= 10;
+    }
+    return total_digits;
+}
+
 int calc_adjust_with_percentage(int value, int percentage)
 {
     return percentage * value / 100;

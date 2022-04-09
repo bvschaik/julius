@@ -10,6 +10,14 @@
  * Calculation functions.
  */
 
+
+/**
+ * Calculates the number of digits a value has
+ * @param value Value to calculate the number of digits
+ * @return The number of digits, including the minus sign if negative
+ */
+int calc_digits_in_number(int value);
+
 /**
  * Adjusts the value with the percentage
  * @param value Value to adjust

@@ -1,5 +1,7 @@
 #include "core/string.h"
 
+#include "core/calc.h"
+
 int string_equals(const uint8_t *a, const uint8_t *b)
 {
     while (*a && *b && *a == *b) {
@@ -100,29 +102,7 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign)
         value = -value;
         total_chars = 1;
     }
-    int num_digits;
-    if (value < 10) {
-        num_digits = 1;
-    } else if (value < 100) {
-        num_digits = 2;
-    } else if (value < 1000) {
-        num_digits = 3;
-    } else if (value < 10000) {
-        num_digits = 4;
-    } else if (value < 100000) {
-        num_digits = 5;
-    } else if (value < 1000000) {
-        num_digits = 6;
-    } else if (value < 10000000) {
-        num_digits = 7;
-    } else if (value < 100000000) {
-        num_digits = 8;
-    } else if (value < 1000000000) {
-        num_digits = 9;
-    } else {
-        num_digits = 0;
-    }
-
+    int num_digits = calc_digits_in_number(value);
     total_chars += num_digits;
 
     dst[num_digits] = 0;

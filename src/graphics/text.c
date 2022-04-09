@@ -108,6 +108,49 @@ int text_get_width(const uint8_t *str, font_t font)
     return width;
 }
 
+int text_get_number_width(int value, char prefix, const char *postfix, font_t font)
+{
+    const font_definition *def = font_definition_for(font);
+
+    int width = 0;
+
+    if (prefix) {
+        uint8_t prefix_str[2] = { prefix, 0 };
+        width += text_get_width(prefix_str, font);
+    }
+
+    uint8_t buffer[NUMBER_BUFFER_LENGTH];
+    int length = string_from_int(buffer, value, 0);
+    uint8_t *str = buffer;
+
+    int separator_pixels = config_get(CONFIG_UI_DIGIT_SEPARATOR) * 3;
+
+    while (length > 0) {
+        int num_bytes = 1;
+
+        if (*str >= ' ') {
+            int letter_id = font_letter_id(def, str, &num_bytes);
+            if (*str == ' ' || *str == '_' || letter_id < 0) {
+                width += def->space_width;
+            } else {
+                const image *img = image_letter(letter_id);
+                width += def->letter_spacing + img->width;
+            }
+            if (length == 4 || length == 7) {
+                width += separator_pixels;
+            }
+        }
+
+        str += num_bytes;
+        length -= num_bytes;
+    }
+
+    if (postfix && *postfix) {
+        width += text_get_width(string_from_ascii(postfix), font);
+    }
+    return width;
+}
+
 static int get_letter_width(const uint8_t *str, const font_definition *def, int *num_bytes)
 {
     *num_bytes = 1;

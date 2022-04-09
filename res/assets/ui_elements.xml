@@ -189,22 +189,22 @@
 		<layer group="129" image="7" grayscale="true"/>
 	</image>
 	<!-- Note: Top UI bar element for dynamic Denarii, Population and Date counting -->
-	<image id="Top_UI_Panel_L" width="20" height="24">
-		<layer group="871" image="14" x="0" y="0"/>
+	<image id="Top_UI_Panel" width="20" height="24">
+		<layer group="11" image="14" x="0" y="0"/>
 	</image>
-	<image id="Top_UI_Panel_R" width="20" height="24">
-		<layer group="871" image="14" x="100" y="0"/>
+	<image width="20" height="24">
+		<layer group="11" image="14" x="-20" y="0"/>
 	</image>
-	<image id="Top_UI_Panel_M1" width="20" height="24">
-		<layer group="871" image="14" x="20" y="0"/>
+	<image width="20" height="24">
+		<layer group="11" image="14" x="-40" y="0"/>
 	</image>
-	<image id="Top_UI_Panel_M2" width="20" height="24">
-		<layer group="871" image="14" x="40" y="0"/>
+	<image width="20" height="24">
+		<layer group="11" image="14" x="-60" y="0"/>
 	</image>
-	<image id="Top_UI_Panel_M3" width="20" height="24">
-		<layer group="871" image="14" x="60" y="0"/>
+	<image width="20" height="24">
+		<layer group="11" image="14" x="-80" y="0"/>
 	</image>
-	<image id="Top_UI_Panel_M4" width="20" height="24">
-		<layer group="871" image="14" x="80" y="0"/>
+	<image width="20" height="24">
+		<layer group="11" image="14" x="-100" y="0"/>
 	</image>
 </assetlist>

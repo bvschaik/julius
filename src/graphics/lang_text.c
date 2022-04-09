@@ -111,7 +111,9 @@ void lang_text_draw_month_year_max_width(
                 text_draw_number(year, ' ', " ", x_offset + width, y_offset, font, color);
             lang_text_draw_colored(20, 1, x_offset + width, y_offset, font, color);
         } else {
-            width += negative_padding + lang_text_draw_colored(20, 1, x_offset + width, y_offset, font, color);
+            width += space_width;
+            width += negative_padding + lang_text_draw_colored(20, 1, x_offset + width, y_offset,
+                font, color);
             text_draw_number(year, ' ', " ", x_offset + width, y_offset, font, color);
         }
     } else {

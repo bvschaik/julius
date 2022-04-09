@@ -39,10 +39,10 @@ typedef struct {
 } tile_color;
 
 typedef struct {
-    tile_color soldier;
-    tile_color selected_soldier;
-    tile_color enemy;
-    tile_color wolf;
+    color_t soldier;
+    color_t selected_soldier;
+    color_t enemy;
+    color_t wolf;
     tile_color water[4];
     tile_color tree[4];
     tile_color rock[4];
@@ -55,7 +55,6 @@ typedef struct {
     tile_color house[2];
     tile_color building[2];
     tile_color monument[2];
-    tile_color black;
 } tile_color_set;
 
 // Since the minimap tiles are only 25 color sets per climate, we just hardcode them.
@@ -64,10 +63,10 @@ typedef struct {
 static const tile_color_set MINIMAP_COLOR_SETS[3] = {
     // central
     {
-        .soldier = {COLOR_MINIMAP_SOLDIER, COLOR_MINIMAP_SOLDIER},
-        .selected_soldier = {COLOR_MINIMAP_SELECTED_SOLDIER, COLOR_MINIMAP_SELECTED_SOLDIER},
-        .enemy = {COLOR_MINIMAP_ENEMY_CENTRAL, COLOR_MINIMAP_ENEMY_CENTRAL},
-        .wolf = {COLOR_MINIMAP_WOLF, COLOR_MINIMAP_WOLF},
+        .soldier = COLOR_MINIMAP_SOLDIER,
+        .selected_soldier = COLOR_MINIMAP_SELECTED_SOLDIER,
+        .enemy = COLOR_MINIMAP_ENEMY_CENTRAL,
+        .wolf = COLOR_MINIMAP_WOLF,
         .water = {{0xff394a7b, 0xff31427b}, {0xff394a7b, 0xff314273}, {0xff313973, 0xff314273}, {0xff31427b, 0xff394a7b}},
         .tree = {{0xff6b8431, 0xff102108}, {0xff103908, 0xff737b29}, {0xff103108, 0xff526b21}, {0xff737b31, 0xff084a10}},
         .rock = {{0xff948484, 0xff635a4a}, {0xffa59c94, 0xffb5ada5}, {0xffb5ada5, 0xff8c8484}, {0xff635a4a, 0xffa59c94}},
@@ -82,15 +81,14 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
         .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
         .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
         .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
-        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}}, // Edges, center
-        .black = {COLOR_BLACK, COLOR_BLACK}
+        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}} // Edges, center
     },
     // northern
     {
-        .soldier = {COLOR_MINIMAP_SOLDIER, COLOR_MINIMAP_SOLDIER},
-        .selected_soldier = {COLOR_MINIMAP_SELECTED_SOLDIER, COLOR_MINIMAP_SELECTED_SOLDIER},
-        .enemy = {COLOR_MINIMAP_ENEMY_NORTHERN, COLOR_MINIMAP_ENEMY_NORTHERN},
-        .wolf = {COLOR_MINIMAP_WOLF, COLOR_MINIMAP_WOLF},
+        .soldier = COLOR_MINIMAP_SOLDIER,
+        .selected_soldier = COLOR_MINIMAP_SELECTED_SOLDIER,
+        .enemy = COLOR_MINIMAP_ENEMY_NORTHERN,
+        .wolf = COLOR_MINIMAP_WOLF,
         .water = {{0xff394a7b, 0xff31427b}, {0xff394a7b, 0xff314273}, {0xff313973, 0xff314273}, {0xff31427b, 0xff394a7b}},
         .tree = {{0xff527b31, 0xff082108}, {0xff083908, 0xff5a7329}, {0xff082908, 0xff316b21}, {0xff527b29, 0xff084a21}},
         .rock = {{0xff8c8484, 0xff5a5252}, {0xff9c9c94, 0xffa5a5a5}, {0xffa5a5a5, 0xff848484}, {0xff5a5252, 0xff9c9c94}},
@@ -105,15 +103,14 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
         .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
         .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
         .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
-        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}}, // Edges, center
-        .black = {COLOR_BLACK, COLOR_BLACK}
+        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}} // Edges, center
     },
     // desert
     {
-        .soldier = {COLOR_MINIMAP_SOLDIER, COLOR_MINIMAP_SOLDIER},
-        .selected_soldier = {COLOR_MINIMAP_SELECTED_SOLDIER, COLOR_MINIMAP_SELECTED_SOLDIER},
-        .enemy = {COLOR_MINIMAP_ENEMY_DESERT, COLOR_MINIMAP_ENEMY_DESERT},
-        .wolf = {COLOR_MINIMAP_WOLF, COLOR_MINIMAP_WOLF},
+        .soldier = COLOR_MINIMAP_SOLDIER,
+        .selected_soldier = COLOR_MINIMAP_SELECTED_SOLDIER,
+        .enemy = COLOR_MINIMAP_ENEMY_DESERT,
+        .wolf = COLOR_MINIMAP_WOLF,
         .water = {{0xff4a84c6, 0xff4a7bc6}, {0xff4a84c6, 0xff4a7bc6}, {0xff4a84c6, 0xff5284c6}, {0xff4a7bbd, 0xff4a7bc6}},
         .tree = {{0xffa59c7b, 0xff6b7b18}, {0xff214210, 0xffada573}, {0xff526b21, 0xffcec6a5}, {0xffa59c7b, 0xff316321}},
         .rock = {{0xffa59494, 0xff736352}, {0xffa59c94, 0xffb5ada5}, {0xffb5ada5, 0xff8c847b}, {0xff736352, 0xffbdada5}},
@@ -128,8 +125,7 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
         .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
         .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
         .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
-        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}}, // Edges, center
-        .black = {COLOR_BLACK, COLOR_BLACK}
+        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}} // Edges, center
     }
 };
 
@@ -240,15 +236,16 @@ static int draw_figure(int x_view, int y_view, int grid_offset, const tile_color
     if (color_type == FIGURE_COLOR_NONE) {
         return 0;
     }
-    const tile_color *color = &set->wolf;
+    color_t color = set->wolf;
     if (color_type == FIGURE_COLOR_SOLDIER) {
-        color = &set->soldier;
+        color = set->soldier;
     } else if (color_type == FIGURE_COLOR_SELECTED_SOLDIER) {
-        color = &set->selected_soldier;
+        color = set->selected_soldier;
     } else if (color_type == FIGURE_COLOR_ENEMY) {
-        color = &set->enemy;
+        color = set->enemy;
     }
-    draw_tile(x_view, y_view, color);
+    draw_pixel(x_view, y_view, color);
+    draw_pixel(x_view + 1, y_view, color);
     return 1;
 }
 
