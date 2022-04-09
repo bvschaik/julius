@@ -41,6 +41,8 @@ static const building_type connectable_buildings[] = {
     BUILDING_ROOFED_GARDEN_WALL,
     BUILDING_GARDEN_WALL_GATE,
     BUILDING_PALISADE,
+    BUILDING_HEDGE_GATE_DARK,
+    BUILDING_HEDGE_GATE_LIGHT,
 };
 
 static const int MAX_CONNECTABLE_BUILDINGS = sizeof(connectable_buildings) / sizeof(building_type);
@@ -222,8 +224,7 @@ int building_connectable_get_hedge_offset(int grid_offset)
     int tiles[MAX_TILES] = { 0 };
     for (int i = 0; i < MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
-        if (!map_terrain_is(offset, TERRAIN_BUILDING) && !map_property_is_constructing(offset))
-        {
+        if (!map_terrain_is(offset, TERRAIN_BUILDING) && !map_property_is_constructing(offset)) {
             continue;
         }
         building *b = building_get(map_building_at(offset));
@@ -257,8 +258,8 @@ int building_connectable_get_hedge_gate_offset(int grid_offset)
             continue;
         }
         building *b = building_get(map_building_at(offset));
-        if (is_hedge_wall(b->type) ||
-            (map_property_is_constructing(offset) && !map_terrain_is(offset, TERRAIN_ROAD) && is_hedge_wall(building_construction_type()))) {
+        if (is_hedge_wall(b->type) || (map_property_is_constructing(offset) && !map_terrain_is(offset, TERRAIN_ROAD)
+            && is_hedge_wall(building_construction_type()))) {
             tiles[i] = 1;
         }
     }
