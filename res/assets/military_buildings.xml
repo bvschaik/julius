@@ -308,36 +308,37 @@
 	</image>
 	<!-- Note: Fort unit flag climate variants -->
 	<image id="Fort_Jav_Flag_Central">
-		<layer group="66" image="1"/>
-	</image>
-	<image id="Fort_Cav_Flag_Central">
 		<layer group="66" image="2"/>
 	</image>
-	<image id="Fort_Leg_Flag_Central">
+	<image id="Fort_Cav_Flag_Central">
 		<layer group="66" image="3"/>
 	</image>
+	<image id="Fort_Leg_Flag_Central">
+		<layer group="66" image="4"/>
+	</image>
 	<image id="Fort_Jav_Flag_South">
-		<layer group="66" image="1"/>
+		<layer group="66" image="2"/>
 		<layer src="Fort_Flag_Layer_South"/>
 	</image>
 	<image id="Fort_Cav_Flag_South">
-		<layer group="66" image="2"/>
+		<layer group="66" image="3"/>
 		<layer src="Fort_Flag_Layer_South"/>
 	</image>
 	<image id="Fort_Leg_Flag_South">
-		<layer group="66" image="3"/>
+		<layer group="66" image="4"/>
 		<layer src="Fort_Flag_Layer_South"/>
 	</image>
 	<image id="Fort_Jav_Flag_North">
-		<layer group="66" image="1"/>
-		<layer src="Fort_Flag_Layer_North"/>
-	</image>
-	<image id="Fort_Cav_Flag_North">
 		<layer group="66" image="2"/>
 		<layer src="Fort_Flag_Layer_North"/>
 	</image>
-	<image id="Fort_Leg_Flag_North">
+	<image id="Fort_Cav_Flag_North">
 		<layer group="66" image="3"/>
 		<layer src="Fort_Flag_Layer_North"/>
 	</image>
+	<image id="Fort_Leg_Flag_North">
+		<layer group="66" image="4"/>
+		<layer src="Fort_Flag_Layer_North"/>
+	</image>
 </assetlist>
+
