@@ -216,7 +216,7 @@ static int is_hedge_wall_or_gate(building_type type)
 
 static int is_hedge_wall(building_type type)
 {
-    return type == BUILDING_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL;
+    return type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT;
 }
 
 int building_connectable_get_hedge_offset(int grid_offset)
