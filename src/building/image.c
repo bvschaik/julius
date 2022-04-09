@@ -771,6 +771,10 @@ int building_image_get(building *b)
             }
         case BUILDING_GARDEN_WALL_GATE:
             return assets_get_image_id("Aesthetics", "Garden Gate") + building_connectable_get_garden_gate_offset(b->grid_offset);
+        case BUILDING_HEDGE_GATE_LIGHT:
+            return assets_get_image_id("Aesthetics", "L Hedge Gate") + building_connectable_get_hedge_gate_offset(b->grid_offset);
+        case BUILDING_HEDGE_GATE_DARK:
+            return assets_get_image_id("Aesthetics", "D Hedge Gate") + building_connectable_get_hedge_gate_offset(b->grid_offset);
         case BUILDING_PALISADE:
             switch (scenario_property_climate()) {
                 case CLIMATE_NORTHERN:

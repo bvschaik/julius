@@ -222,6 +222,8 @@ const model_building *model_get_building(building_type type)
     switch (type) {
         case BUILDING_ROADBLOCK:
         case BUILDING_GARDEN_WALL_GATE:
+        case BUILDING_HEDGE_GATE_DARK:
+        case BUILDING_HEDGE_GATE_LIGHT:
             return &MODEL_ROADBLOCK;
         case BUILDING_WORKCAMP:
             return &MODEL_WORK_CAMP;
