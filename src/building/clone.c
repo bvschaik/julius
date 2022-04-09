@@ -52,6 +52,10 @@ static building_type get_clone_type_from_building(building *b)
             }
             return BUILDING_GARDEN_WALL;
         }
+        case BUILDING_HEDGE_GATE_LIGHT:
+            return BUILDING_HEDGE_LIGHT;
+        case BUILDING_HEDGE_GATE_DARK:
+            return BUILDING_HEDGE_DARK;
         default:
             return clone_type;
     }

@@ -437,7 +437,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
     int blocked_tiles[MAX_TILES];
     int orientation_index = city_view_orientation() / 2;
 
-    if (building_connectable_gate_type(type) && map_terrain_get(grid_offset) == TERRAIN_ROAD) {
+    if (building_connectable_gate_type(type) && map_terrain_get(grid_offset) & TERRAIN_ROAD) {
         type = building_connectable_gate_type(type);
     }
 
