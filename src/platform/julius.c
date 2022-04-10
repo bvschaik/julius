@@ -497,7 +497,7 @@ static int pre_init(const char *custom_data_dir)
         if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
             pref_save_data_dir(user_dir);
 #ifdef __ANDROID__
-            android_toast_message("C3 files found. Path saved.");
+            SDL_AndroidShowToast("C3 files found. Path saved.", 0, 0, 0, 0);
 #endif
             return 1;
         }

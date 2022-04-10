@@ -2,7 +2,6 @@ package com.github.bvschaik.julius;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.widget.Toast;
 
 import org.libsdl.app.SDLActivity;
 
@@ -39,14 +38,6 @@ public class JuliusMainActivity extends SDLActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    public void toastMessage(final String message) {
-        runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     public float getScreenDensity() {
