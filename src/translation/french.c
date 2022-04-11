@@ -713,8 +713,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LIGHTHOUSE_NEEDS_WORKERS, "Le Phare manque de main-d'œuvre pour entretenir son feu. Les navires se frayent péniblement un chemin jusqu'à nos docks."},
     {TR_BUILDING_CARAVANSERAI_NEEDS_WORKERS, "Le Caravansérail manque de main-d'œuvre et ne pourra pas satisfaire toutes les caravanes."},
     {TR_BUILDING_ROOFED_GARDEN_WALL, "Muret couvert"},
-    {TR_BUILDING_GARDEN_WALL_GATE, "Portail de jardin"},
-    {TR_BUILDING_GARDEN_WALL_GATE_DESC, "Ce petit portail permet de gérer les allées et venues dans les lieux les plus retirés et paisibles de votre cité."},
+    {TR_BUILDING_GARDEN_WALL_GATE, "Arche de jardin"},
+    {TR_BUILDING_GARDEN_WALL_GATE_DESC, "Cette petite arche permet de gérer les allées et venues dans les lieux les plus retirés et paisibles de votre cité."},
     {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "Le magasinier est parti chercher des biens dans un autre entrepôt."},
     {TR_BUILDING_PALISADE, "Palissade" },
     {TR_BUILDING_PALISADE_DESC, "Cette profonde tranchée, surmontée d'un grand mur de poteaux de bois acérés, protègera votre cité des envahisseurs et des animaux sauvages."},
@@ -770,7 +770,10 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_MESSAGES, "Afficher les messages"},
     {TR_HOTKEY_SHOW_EMPIRE_MAP, "Afficher la carte de l'Empire"},
     {TR_TOGGLE_GRID, "Grille (on/off)"},
-    {TR_WARNING_SCREENSHOT_SAVED, "Capture d'écran enregistrée : "}
+    {TR_WARNING_SCREENSHOT_SAVED, "Capture d'écran enregistrée : "},
+    {TR_OUT_OF_MONEY, "Faillite"},
+    {TR_CITY_MESSAGE_TITLE_EMPERORS_WRATH, "Fureur de l'Empereur" },
+    {TR_CITY_MESSAGE_TEXT_EMPERORS_WRATH, "Vous êtes tombé en disgrâce auprès de César et ce dernier a ordonné votre arrestation. À moins d'améliorer l'estime que l'Empereur vous porte, ses légions d'élite envahiront bientôt votre cité." }
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
