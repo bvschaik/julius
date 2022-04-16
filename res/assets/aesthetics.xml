@@ -359,4 +359,12 @@
 	<image id="V Small Statue" isometric="true">
 		<layer group="61" image="0" x="0" y="0"/>
 	</image>
+	<!-- Note: Assets for 'plaza' variants -->
+	<!-- Assets created by Ouaz -->
+	<image id="plaza_var_01" src="plaza_01" isometric="true"/>
+	<image id="plaza_var_02" src="plaza_02" isometric="true"/>
+	<image id="plaza_var_03" src="plaza_03" isometric="true"/>
+	<image id="plaza_var_04" src="plaza_04" isometric="true"/>
+	<image id="plaza_var_05" src="plaza_05" isometric="true"/>
+	<image id="plaza_var_06" src="plaza_06" isometric="true"/>
 </assetlist>
