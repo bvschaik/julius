@@ -645,10 +645,6 @@ void figure_enemy_caesar_legionary_action(figure *f)
 
     int dir = get_direction(f);
 
-    if (f->direction == DIR_FIGURE_ATTACK) {
-        f->image_id = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir +
-            8 * ((f->attack_image_offset - 12) / 2);
-    }
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             if (f->attack_image_offset >= 12) {
@@ -670,7 +666,12 @@ void figure_enemy_caesar_legionary_action(figure *f)
             }
             break;
         default:
-            f->image_id = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + 48 + dir + 8 * f->image_offset;
+            if (f->direction == DIR_FIGURE_ATTACK) {
+                    f->image_id = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + dir +
+                        8 * ((f->image_offset) / 2);
+            } else {
+                f->image_id = image_group(GROUP_FIGURE_CAESAR_LEGIONARY) + 48 + dir + 8 * f->image_offset;
+            }
             break;
     }
 }
