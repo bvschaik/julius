@@ -63,7 +63,7 @@ static void draw_background_images(void)
         image_draw_fullscreen_background(image_group(GROUP_EMPIRE_MAP));
         image_draw(image_group(GROUP_SELECT_MISSION_BACKGROUND), image_offset_x, image_offset_y,
             COLOR_MASK_NONE, SCALE_NONE);
-        int image_border = assets_get_image_id("UI_Elements", "Mission Selection Border");
+        int image_border = assets_get_image_id("UI", "Mission Selection Border");
         image_draw_border(image_border, image_offset_x, image_offset_y, COLOR_MASK_NONE);
     } else {
         image_draw(image_group(GROUP_SELECT_MISSION_BACKGROUND), image_offset_x, image_offset_y,

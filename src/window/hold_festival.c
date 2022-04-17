@@ -55,7 +55,7 @@ static void draw_buttons(void)
     if (city_finance_out_of_money()) {
         font = FONT_NORMAL_PLAIN;
         color = COLOR_FONT_LIGHT_GRAY;
-        wine_image_id = assets_get_image_id("UI_Elements", "Grand Festival Wine Disabled");
+        wine_image_id = assets_get_image_id("UI", "Grand Festival Wine Disabled");
     } else {
         font = FONT_NORMAL_BLACK;
         color = COLOR_MASK_NONE;
@@ -74,7 +74,7 @@ static void draw_buttons(void)
     if (city_festival_out_of_wine() && !city_finance_out_of_money()) {
         font = FONT_NORMAL_PLAIN;
         color = COLOR_FONT_LIGHT_GRAY;
-        wine_image_id = assets_get_image_id("UI_Elements", "Grand Festival Wine Disabled");        
+        wine_image_id = assets_get_image_id("UI", "Grand Festival Wine Disabled");        
     }
 
     // grand festival

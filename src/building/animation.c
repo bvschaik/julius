@@ -89,13 +89,13 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     //if (b->type == BUILDING_HIPPODROME) {
     //    switch (city_festival_games_active()) {
     //    case 1:
-    //        map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Colosseum"), "Col Naumachia"));
+    //        map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Entertainment"), "Col Naumachia"));
     //        break;
     //    case 2:
-    //        map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Colosseum"), "Col Naumachia"));
+    //        map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Entertainment"), "Col Naumachia"));
     //        break;
     //    case 3:
-    //        map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Colosseum"), "Col Naumachia"));
+    //        map_image_set(grid_offset, assets_get_image_id(assets_get_group_id("Entertainment"), "Col Naumachia"));
     //        break;
     //    default:
     //        map_image_set(grid_offset, image_group(GROUP_BUILDING_HIPPODROME_1));

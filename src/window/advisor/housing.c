@@ -68,7 +68,7 @@ static void draw_housing_table()
 static int draw_background(void)
 {
     if (!housing_advisor_image) {
-        housing_advisor_image = assets_get_image_id("UI_Elements", "Housing Advisor Button");
+        housing_advisor_image = assets_get_image_id("UI", "Housing Advisor Button");
     }
 
     outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);

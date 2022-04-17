@@ -46,7 +46,7 @@ static void draw_foreground(void)
     graphics_in_dialog();
 
     if (city_victory_state() == VICTORY_STATE_WON) {
-        int image_id = assets_get_image_id("UI_Elements", "Victory_Banner");
+        int image_id = assets_get_image_id("UI", "Victory_Banner");
         image_draw(image_id, 88, 137, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_id, 512, 137, COLOR_MASK_NONE, SCALE_NONE);
 

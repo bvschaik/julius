@@ -238,7 +238,7 @@ static int draw_black_panel(int x, int y, int width)
     }
     static int black_panel_base_id;
     if (!black_panel_base_id) {
-        black_panel_base_id = assets_get_image_id("UI_Elements", "Top_UI_Panel");
+        black_panel_base_id = assets_get_image_id("UI", "Top_UI_Panel");
     }
     int x_offset = BLACK_PANEL_BLOCK_WIDTH * (BLACK_PANEL_MIDDLE_BLOCKS + 1);
     blocks -= BLACK_PANEL_MIDDLE_BLOCKS;

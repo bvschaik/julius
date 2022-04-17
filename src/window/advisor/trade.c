@@ -199,7 +199,7 @@ static int draw_background(void)
     if (land_policy_available) {
         image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1;
     } else {
-        image_id = assets_get_image_id("UI_Elements", "Land Trade Policy Off Button");
+        image_id = assets_get_image_id("UI", "Land Trade Policy Off Button");
     }
     image_draw(image_id, 51, 394, COLOR_MASK_NONE, SCALE_NONE);
 
@@ -208,7 +208,7 @@ static int draw_background(void)
     if (sea_policy_available) {
         image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE);
     } else {
-        image_id = assets_get_image_id("UI_Elements", "Sea Trade Policy Off Button");
+        image_id = assets_get_image_id("UI", "Sea Trade Policy Off Button");
     }
     image_draw(image_id, 99, 394, COLOR_MASK_NONE, SCALE_NONE);
 
@@ -289,7 +289,7 @@ static void show_policy(trade_policy_type policy_type)
 {
     data.policy_type = policy_type;
     if (!policy_options[policy_type].items[0].image_id) {
-        int base_policy_image = assets_get_image_id("UI_Elements",
+        int base_policy_image = assets_get_image_id("UI",
             policy_options[policy_type].base_image_name);
         policy_options[policy_type].items[0].image_id = base_policy_image + 1;
         policy_options[policy_type].items[1].image_id = base_policy_image + 2;

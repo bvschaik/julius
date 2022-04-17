@@ -66,7 +66,7 @@ static void draw_background(void)
         graphics_in_dialog();
         outer_panel_draw(162, 32, 20, 22);
         if (!data.logo_image_id) {
-            data.logo_image_id = assets_get_image_id("UI_Elements", "Main Menu Banner");
+            data.logo_image_id = assets_get_image_id("UI", "Main Menu Banner");
         }
         image_draw(data.logo_image_id, 176, 50, COLOR_MASK_NONE, SCALE_NONE);
         graphics_reset_dialog();

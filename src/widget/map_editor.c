@@ -75,7 +75,7 @@ static void draw_footprint(int x, int y, int grid_offset)
         (draw_context.scale <= 2.0f || !graphics_renderer()->isometric_images_are_joined())) {
         static int grid_id = 0;
         if (!grid_id) {
-            grid_id = assets_get_image_id("UI_Elements", "Grid_Full");
+            grid_id = assets_get_image_id("UI", "Grid_Full");
         }
         image_draw(grid_id, x, y, COLOR_GRID, draw_context.scale);
     }

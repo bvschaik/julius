@@ -169,7 +169,7 @@ static void draw_footprint(int x, int y, int grid_offset)
             (draw_context.scale <= 2.0f || !graphics_renderer()->isometric_images_are_joined())) {
             static int grid_id = 0;
             if (!grid_id) {
-                grid_id = assets_get_image_id("UI_Elements", "Grid_Full");
+                grid_id = assets_get_image_id("UI", "Grid_Full");
             }
             image_draw(grid_id, x, y, COLOR_GRID, draw_context.scale);
         }
@@ -444,7 +444,7 @@ static int get_warehouse_flag_image_id(const building *b)
         return 0;
     }
     int image_offset = (permissions - 1) * WAREHOUSE_FLAG_FRAMES;
-    int image_id = assets_get_image_id("Warehouse_Flags", "Warehouse_Flag_Market") + image_offset;
+    int image_id = assets_get_image_id("Logistics", "Warehouse_Flag_Market") + image_offset;
     return image_id;
 }
 
@@ -487,13 +487,13 @@ static void draw_granary_stores(const image *img, const building *b, int x, int 
 
 static void draw_ceres_module_crops(int x, int y, int image_offset, color_t color_mask)
 {
-    int image_id = assets_get_image_id("Grand_Temples", "Ceres Module 1 Crop");
+    int image_id = assets_get_image_id("Religion", "Ceres Module 1 Crop");
     image_draw(image_id + image_offset, x, y, color_mask, draw_context.scale);
 }
 
 static void draw_neptune_fountain(int x, int y, int image_offset, color_t color_mask)
 {
-    int image_id = assets_get_image_id("Grand_Temples", "Neptune Module 2 Fountain");
+    int image_id = assets_get_image_id("Religion", "Neptune Module 2 Fountain");
     image_draw(image_id + image_offset, x, y, color_mask, draw_context.scale);
 }
 
@@ -545,7 +545,7 @@ static void draw_animation(int x, int y, int grid_offset)
                     int festival_id = calc_bound(city_festival_games_active(), 0, 4);
                     int extra_x = festival_id ? 57 : 127;
                     int extra_y = festival_id ? 12 : 93;
-                    int overlay_id = assets_get_image_id("Colosseum", "Col Base Overlay") + festival_id;
+                    int overlay_id = assets_get_image_id("Entertainment", "Col Base Overlay") + festival_id;
                     image_draw(overlay_id, x + extra_x, y + extra_y - y_offset, color_mask, draw_context.scale);
                 }
             }

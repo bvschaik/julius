@@ -69,9 +69,9 @@ static void draw_background(void)
 
     outer_panel_draw(48, 48, 34, 22);
     text_draw_centered(translation_for(game->header_key), 48, 60, 544, FONT_LARGE_BLACK, 0);
-    int border_image_id = assets_get_image_id("UI_Elements", "Image Border Small");
-    int highlight_image_id = assets_get_image_id("UI_Elements", "Highlight");
-    int base_image_id = assets_get_image_id("UI_Elements", "Naumachia Icon");
+    int border_image_id = assets_get_image_id("UI", "Image Border Small");
+    int highlight_image_id = assets_get_image_id("UI", "Highlight");
+    int base_image_id = assets_get_image_id("UI", "Naumachia Icon");
     for (int i = 0; i < MAX_GAMES; i++) {
         color_t border_color, highlight_color;
         if (i == game->id - 1) {

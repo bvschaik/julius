@@ -36,7 +36,7 @@ void assets_init(color_t **main_images, int *main_image_widths)
 
     // By default, if the requested image is not found, the roadblock image will be shown.
     // This ensures compatibility with previous release versions of Augustus, which only had roadblocks
-    data.roadblock_image_id = assets_get_group_id("Roadblocks");
+    data.roadblock_image_id = assets_get_group_id("Logistics");
     data.roadblock_image = asset_image_get_from_id(data.roadblock_image_id - IMAGE_MAIN_ENTRIES);
 }
 

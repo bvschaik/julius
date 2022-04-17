@@ -702,7 +702,7 @@ void window_building_draw_grand_temple_ceres(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_farm.wav", TR_BUILDING_GRAND_TEMPLE_CERES_DESC,
         TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC,
-        assets_get_image_id("UI_Elements", "Ceres L Banner"),
+        assets_get_image_id("UI", "Ceres L Banner"),
         TR_BUILDING_CERES_TEMPLE_QUOTE, GOD_CERES, 0);
 }
 
@@ -710,7 +710,7 @@ void window_building_draw_grand_temple_neptune(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_ship.wav", TR_BUILDING_GRAND_TEMPLE_NEPTUNE_DESC,
         TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC,
-        assets_get_image_id("UI_Elements", "Nept L Banner"),
+        assets_get_image_id("UI", "Nept L Banner"),
         TR_BUILDING_NEPTUNE_TEMPLE_QUOTE, GOD_NEPTUNE, 0);
 }
 
@@ -718,7 +718,7 @@ void window_building_draw_grand_temple_mercury(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_comm.wav", TR_BUILDING_GRAND_TEMPLE_MERCURY_DESC,
         TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC,
-        assets_get_image_id("UI_Elements", "Merc L Banner"),
+        assets_get_image_id("UI", "Merc L Banner"),
         TR_BUILDING_MERCURY_TEMPLE_QUOTE, GOD_MERCURY, 0);
 }
 
@@ -726,7 +726,7 @@ void window_building_draw_grand_temple_mars(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS_DESC,
         TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC,
-        assets_get_image_id("UI_Elements", "Mars L Banner"),
+        assets_get_image_id("UI", "Mars L Banner"),
         TR_BUILDING_MARS_TEMPLE_QUOTE, GOD_MARS, 50);
 }
 
@@ -734,14 +734,14 @@ void window_building_draw_grand_temple_venus(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/temple_love.wav", TR_BUILDING_GRAND_TEMPLE_VENUS_DESC,
         TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC,
-        assets_get_image_id("UI_Elements", "Venus L Banner"),
+        assets_get_image_id("UI", "Venus L Banner"),
         TR_BUILDING_VENUS_TEMPLE_QUOTE, GOD_VENUS, 20);
 }
 
 void window_building_draw_pantheon(building_info_context *c)
 {
     draw_grand_temple(c, "wavs/oracle.wav", TR_BUILDING_PANTHEON_DESC, TR_BUILDING_PANTHEON_BONUS_DESC,
-        assets_get_image_id("UI_Elements", "Panth L Banner"),
+        assets_get_image_id("UI", "Panth L Banner"),
         TR_BUILDING_PANTHEON_QUOTE, GOD_PANTHEON, 0);
 }
 
@@ -905,7 +905,7 @@ void window_building_draw_colosseum_background(building_info_context *c)
             int extra_y_offset = 56;
             if (c->height_blocks > 27) {
                 extra_y_offset += 200;
-                int banner_id = assets_get_image_id("UI_Elements", "Colosseum Banner");
+                int banner_id = assets_get_image_id("UI", "Colosseum Banner");
                 image_draw(banner_id, c->x_offset + 32, c->y_offset + extra_y_offset,
                     COLOR_MASK_NONE, SCALE_NONE);
             }
@@ -988,7 +988,7 @@ void window_building_handle_mouse_lighthouse(const mouse *m, building_info_conte
 
 void window_building_draw_lighthouse_foreground(building_info_context *c)
 {
-    int id = assets_get_image_id("UI_Elements", "Image Border Medium");
+    int id = assets_get_image_id("UI", "Image Border Medium");
     image_draw_border(id, c->x_offset + 32, c->y_offset + 150,
         data.lighthouse_focus_button_id == 1 ? COLOR_BORDER_RED : COLOR_BORDER_GREEN);
 }
@@ -1036,7 +1036,7 @@ void window_building_draw_lighthouse(building_info_context *c)
         }
 
         if (!sea_trade_policy.items[0].image_id) {
-            int base_policy_image = assets_get_image_id("UI_Elements",
+            int base_policy_image = assets_get_image_id("UI",
                 sea_trade_policy.base_image_name);
             sea_trade_policy.items[0].image_id = base_policy_image;
             sea_trade_policy.items[1].image_id = base_policy_image + 1;
@@ -1059,7 +1059,7 @@ void window_building_draw_lighthouse(building_info_context *c)
         window_building_draw_employment(c, 278);
 
         if (c->height_blocks >= 38) {
-            image_draw(assets_get_image_id("UI_Elements", "Lighthouse Banner"),
+            image_draw(assets_get_image_id("UI", "Lighthouse Banner"),
                 c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE, SCALE_NONE);
         }
 
@@ -1130,15 +1130,15 @@ void window_building_draw_hippodrome_background(building_info_context *c)
         int y_offset = 33;
         if (c->height_blocks > 27) {
             y_offset += 223;
-            int banner_id = assets_get_image_id("UI_Elements", "Circus Banner");
+            int banner_id = assets_get_image_id("UI", "Circus Banner");
             image_draw(banner_id, c->x_offset + 32, c->y_offset + y_offset, COLOR_MASK_NONE, SCALE_NONE);
         }
 
         if (city_data.games.chosen_horse) {
             text_draw_with_money(translation_for(TR_WINDOW_RACE_YOUR_BET), city_data.games.bet_amount, " - ", "",
                 c->x_offset + 32, c->y_offset + y_offset + 215, 438, FONT_NORMAL_BLACK, 0);
-            int image_id = assets_get_image_id("UI_Elements", "Hipp_Team_Blue");
-            int border = assets_get_image_id("UI_Elements", "Image Border Small");
+            int image_id = assets_get_image_id("UI", "Hipp_Team_Blue");
+            int border = assets_get_image_id("UI", "Image Border Small");
 
             image_draw(image_id + (city_data.games.chosen_horse - 1),
                 c->x_offset + 37, c->y_offset + y_offset + 245, COLOR_MASK_NONE, SCALE_NONE);
@@ -1245,7 +1245,7 @@ static void generate_module_image_id(int index)
     if (option->image_id) {
         return;
     }
-    option->image_id = assets_get_image_id("UI_Elements",
+    option->image_id = assets_get_image_id("UI",
         temple_module_options[index].image_id);
 }
 

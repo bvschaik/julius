@@ -129,8 +129,8 @@ static generic_button go_to_caravanserai_action_button[] = {
 };
 
 static image_button image_buttons_maintain[] = {
-    {324, 0, 30, 19, IB_NORMAL, 0, 0, storage_toggle_permissions, button_none, 5, 0, 1, "UI_Elements", "Maintain_1"},
-    {324, 0, 30, 19, IB_NORMAL, 0, 0, storage_toggle_permissions, button_none, 5, 0, 1, "UI_Elements", "Stop_Maintain_1"},
+    {324, 0, 30, 19, IB_NORMAL, 0, 0, storage_toggle_permissions, button_none, 5, 0, 1, "UI", "Maintain_1"},
+    {324, 0, 30, 19, IB_NORMAL, 0, 0, storage_toggle_permissions, button_none, 5, 0, 1, "UI", "Stop_Maintain_1"},
 };
 
 static struct {
@@ -201,7 +201,7 @@ static void draw_permissions_buttons(int x, int y, int buttons, building_info_co
         int rule_id = rules[i];
         button_border_draw(dx, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (building_storage_get_permission(rule_id, building_get(data.building_id))) {
-            image_draw(assets_get_image_id("UI_Elements", "Allowed_Walker_Check"), dx + 4, y + 4,
+            image_draw(assets_get_image_id("UI", "Allowed_Walker_Check"), dx + 4, y + 4,
                 COLOR_MASK_NONE, SCALE_NONE);
         }
         dx += offsets[i];
@@ -221,7 +221,7 @@ static void draw_granary_permissions_buttons(int x, int y, int buttons)
         int permission = granary_distribution_permissions_buttons[i].parameter1 - 1;
         button_border_draw(x, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (building_storage_get_permission(permission, building_get(data.building_id))) {
-            image_draw(assets_get_image_id("UI_Elements", "Allowed_Walker_Check"), x + 4, y + 4,
+            image_draw(assets_get_image_id("UI", "Allowed_Walker_Check"), x + 4, y + 4,
                 COLOR_MASK_NONE, SCALE_NONE);
         }
         x += offsets[i];
@@ -643,7 +643,7 @@ void window_building_draw_primary_product_stockpiling(building_info_context *c)
     int y = c->y_offset + primary_product_producer_button_stockpiling->y + BLOCK_SIZE * c->height_blocks - 40;
     button_border_draw(x, y, 20, 20, data.primary_product_stockpiling_id);
     if (building_stockpiling_enabled(building_get(c->building_id))) {
-        image_draw(assets_get_image_id("UI_Elements", "Warehousing"), x + 4, y + 4, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(assets_get_image_id("UI", "Warehousing"), x + 4, y + 4, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 
@@ -1352,7 +1352,7 @@ void window_building_handle_mouse_caravanserai(const mouse *m, building_info_con
 
 void window_building_draw_caravanserai_foreground(building_info_context *c)
 {
-    int id = assets_get_image_id("UI_Elements", "Image Border Medium");
+    int id = assets_get_image_id("UI", "Image Border Medium");
     image_draw_border(id, c->x_offset + 32, c->y_offset + 150,
         data.caravanserai_focus_button_id == 1 ? COLOR_BORDER_RED : COLOR_BORDER_GREEN);
 }
@@ -1394,7 +1394,7 @@ void window_building_draw_caravanserai(building_info_context *c)
                 BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
         }
         if (!land_trade_policy.items[0].image_id) {
-            int base_policy_image = assets_get_image_id("UI_Elements",
+            int base_policy_image = assets_get_image_id("UI",
                 land_trade_policy.base_image_name);
             land_trade_policy.items[0].image_id = base_policy_image;
             land_trade_policy.items[1].image_id = base_policy_image + 1;
@@ -1417,7 +1417,7 @@ void window_building_draw_caravanserai(building_info_context *c)
         window_building_draw_employment(c, 278);
 
         if (c->height_blocks >= 38) {
-            image_draw(assets_get_image_id("UI_Elements", "Caravanserai Banner"),
+            image_draw(assets_get_image_id("UI", "Caravanserai Banner"),
                 c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE, SCALE_NONE);
         }
     } else {

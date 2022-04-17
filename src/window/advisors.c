@@ -170,9 +170,9 @@ static void prepare_advisor_image_ids(void)
     for (int i = 0; i < ADVISOR_MAX; i++) {
         if (i == (ADVISOR_HOUSING - 1)) {
             reduce = 1;
-            advisor_image_ids[0][ADVISOR_HOUSING - 1] = assets_get_image_id("UI_Elements",
+            advisor_image_ids[0][ADVISOR_HOUSING - 1] = assets_get_image_id("UI",
                 "Housing Advisor Button");
-            advisor_image_ids[1][ADVISOR_HOUSING - 1] = assets_get_image_id("UI_Elements",
+            advisor_image_ids[1][ADVISOR_HOUSING - 1] = assets_get_image_id("UI",
                 "Housing Advisor Button Selected");
         } else {
             advisor_image_ids[0][i] = image_group(GROUP_ADVISOR_ICONS) + i - reduce;

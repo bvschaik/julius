@@ -60,8 +60,8 @@ static image_button image_buttons_advisor[] = {
 };
 
 static image_button image_button_mothball[] = {
-    {400, 3, 24, 24, IB_NORMAL, 0, 0, button_mothball, button_none, 0, 0, 1, "UI_Elements", "Mothball_1"},
-    {400, 3, 24, 24, IB_NORMAL, 0, 0, button_mothball, button_none, 0, 0, 1, "UI_Elements", "Unmothball_1"}
+    {400, 3, 24, 24, IB_NORMAL, 0, 0, button_mothball, button_none, 0, 0, 1, "UI", "Mothball_1"},
+    {400, 3, 24, 24, IB_NORMAL, 0, 0, button_mothball, button_none, 0, 0, 1, "UI", "Unmothball_1"}
 };
 
 static generic_button generic_button_monument_construction[] = {

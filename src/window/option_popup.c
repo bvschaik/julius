@@ -79,8 +79,8 @@ static int init(int title, int subtitle, option_menu_item *options, int num_opti
     }
 
     if (!border_image_ids[0]) {
-        border_image_ids[0] = assets_get_image_id("UI_Elements", "Image Border Medium");
-        border_image_ids[1] = assets_get_image_id("UI_Elements", "Image Border Large");
+        border_image_ids[0] = assets_get_image_id("UI", "Image Border Medium");
+        border_image_ids[1] = assets_get_image_id("UI", "Image Border Large");
     }
     return 1;
 }

@@ -104,7 +104,7 @@ static void draw_background(void)
         TR_WINDOW_RACE_BET_BUTTON), 90, 358, 300, button_enabled ? FONT_NORMAL_BLACK : FONT_NORMAL_PLAIN,
         button_enabled ? 0 : COLOR_FONT_LIGHT_GRAY);
 
-    int image_id = assets_get_image_id("UI_Elements", "Hipp_Team_Blue");
+    int image_id = assets_get_image_id("UI", "Hipp_Team_Blue");
 
     for (int i = 0; i < 4; i++) {
         image_draw(image_id + i, 39 + i * 110, 150, COLOR_MASK_NONE, SCALE_NONE);
@@ -117,7 +117,7 @@ static void draw_foreground(void)
 {
     graphics_in_dialog_with_size(BLOCK_SIZE * data.width_blocks, BLOCK_SIZE * data.height_blocks);
 
-    int border_id = assets_get_image_id("UI_Elements", "Image Border Small");
+    int border_id = assets_get_image_id("UI", "Image Border Small");
 
     for (int i = 0; i < 4; i++) {
         color_t color = data.focus_button_id == (i + 1) || data.chosen_horse == (i + 1) ?
