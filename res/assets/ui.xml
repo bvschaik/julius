@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
 <!-- Unless specifically mentioned, all assets created by Areldir -->
-<assetlist name="UI_Elements">
+<assetlist name="UI">
 	<image id="Happy God Icon" src="Religion_God_Happy"/>
 	<!-- Note: Image borders -->
 	<image src="Image_Border_Small_Top" id="Image Border Small"/>
