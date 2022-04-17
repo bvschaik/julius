@@ -156,8 +156,14 @@
 	<image id="Slave N 12" src="slave_n_12"/>
 	<!-- Note: Workcamp Variants for Central, North and South Climates Respectively -->
 	<image id="Workcamp Central" src="Workcamp_Central" isometric="true"/>
-	<image id="Workcamp North" src="Workcamp_North" isometric="true"/>
-	<image id="Workcamp South" src="Workcamp_South" isometric="true"/>
+	<image id="Workcamp North" width="178" height="113" isometric="true">
+		<layer group="this" image="Workcamp Central" x="0" y="0"/>
+		<layer src="Workcamp_North" x="0" y="57"/>
+	</image>
+	<image id="Workcamp South" width="178" height="113" isometric="true">
+		<layer group="this" image="Workcamp Central" x="0" y="0"/>
+		<layer src="Workcamp_South" x="0" y="57"/>
+	</image>
 	<!-- Note: Assets for Surveyors' Post -->
 	<image id="Surveyors Post OFF" width="58" height="59" isometric="true">
 		<layer group="67" image="0" x="0" y="0" invert="horizontal"/>

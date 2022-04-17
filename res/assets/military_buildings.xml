@@ -4,8 +4,14 @@
 <assetlist name="Military_Buildings">
 	<!-- Note: Mess Hall Variants for Central, North and South Climates Respectively -->
 	<image id="Mess OFF Central" src="Mess_Hall_Central_OFF" isometric="true"/>
-	<image id="Mess OFF North" src="Mess_Hall_North_OFF" isometric="true"/>
-	<image id="Mess OFF South" src="Mess_Hall_South_OFF" isometric="true"/>
+	<image id="Mess OFF North" isometric="true">
+		<layer group="this" image="Mess OFF Central" x="0" y="0"/>
+		<layer src="Mess_Hall_North_OFF" x="0" y="70"/>
+	</image>
+	<image id="Mess OFF South" isometric="true">
+		<layer group="this" image="Mess OFF Central" x="0" y="0"/>
+		<layer src="Mess_Hall_South_OFF" x="0" y="70"/>
+	</image>
 	<!-- Note: Mess Hall ON Animations for Central, North and South Climates Respectively -->
 	<image id="Mess ON Central" isometric="true">
 		<layer group="this" image="Mess OFF Central"/>
