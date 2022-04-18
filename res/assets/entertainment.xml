@@ -205,9 +205,14 @@
 	</image>
 	<!-- Note: Tavern OFF Variant -->
 	<image id="Tavern OFF" src="Tavern_OFF" isometric="true"/>
+	<!-- Note: Tavern Variant supplied with wine/food but not working/missing employees -->
+	<image id="Tavern Supp" isometric="true">
+		<layer group="this" image="Tavern OFF"/>
+		<layer src="Tavern_Supplied" x="9" y="33"/>
+	</image>
 	<!-- Note: Tavern ON Animations -->
 	<image id="Tavern ON" isometric="true">
-		<layer group="this" image="Tavern OFF"/>
+		<layer group="this" image="Tavern Supp"/>
 		<animation speed="8" x="11" y="28" reversible="false">
 			<frame src="Tavern_ON_01"/>
 			<frame src="Tavern_ON_02"/>
@@ -216,8 +221,6 @@
 			<frame src="Tavern_ON_05"/>
 		</animation>
 	</image>
-	<!-- Note: Tavern Variant supplied with wine/food but not working/missing employees -->
-	<image id="Tavern Supp" src="Tavern_Supplied"/>
 	<!-- Note: Barkeep Portrait -->
 	<image id="Barkeep Portrait">
 		<layer group="190" image="2"/>

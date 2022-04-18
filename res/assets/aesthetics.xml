@@ -216,14 +216,38 @@
 	<!-- Note: Assets for 'Small Blue Column', 'Small Green Column', 'Small Orange Column', 'Small Red Column' and 'Small Yellow Column' respectively, with rotation variants -->
 	<image id="sml col B" src="Small_Column_Blue" isometric="true"/>
 	<image id="sml col B R" src="Small_Column_Blue_Rotated" isometric="true"/>
-	<image id="sml col G" src="Small_Column_Green" isometric="true"/>
-	<image id="sml col G R" src="Small_Column_Green_Rotated" isometric="true"/>
-	<image id="sml col O" src="Small_Column_Orange" isometric="true"/>
-	<image id="sml col O R" src="Small_Column_Orange_Rotated" isometric="true"/>
-	<image id="sml col R" src="Small_Column_Red" isometric="true"/>
-	<image id="sml col R R" src="Small_Column_Red_Rotated" isometric="true"/>
-	<image id="sml col Y" src="Small_Column_Yellow" isometric="true"/>
-	<image id="sml col Y R" src="Small_Column_Yellow_Rotated" isometric="true"/>
+	<image id="sml col G" isometric="true">
+		<layer group="this" image="sml col B"/>
+		<layer src="Small_Column_Green" x="27" y="21"/>
+	</image>
+	<image id="sml col G R" isometric="true">
+		<layer group="this" image="sml col B R"/>
+		<layer src="Small_Column_Green" x="27" y="21"/>
+	</image>
+	<image id="sml col O" isometric="true">
+		<layer group="this" image="sml col B"/>
+		<layer src="Small_Column_Orange" x="27" y="21"/>
+	</image>
+	<image id="sml col O R" isometric="true">
+		<layer group="this" image="sml col B R"/>
+		<layer src="Small_Column_Orange" x="27" y="21"/>
+	</image>
+	<image id="sml col R" isometric="true">
+		<layer group="this" image="sml col B"/>
+		<layer src="Small_Column_Red" x="27" y="21"/>
+	</image>
+	<image id="sml col R R" isometric="true">
+		<layer group="this" image="sml col B R"/>
+		<layer src="Small_Column_Red" x="27" y="21"/>
+	</image>
+	<image id="sml col Y" isometric="true">
+		<layer group="this" image="sml col B"/>
+		<layer src="Small_Column_Yellow" x="27" y="21"/>
+	</image>
+	<image id="sml col Y R" isometric="true">
+		<layer group="this" image="sml col B R"/>
+		<layer src="Small_Column_Yellow" x="27" y="21"/>
+	</image>
 	<!-- Note: Assets for 'Sunlit Hedge' including all directions and intersection variants -->
 	<image id="L Hedge 01" src="Light_Green_Hedge" isometric="true"/>
 	<image id="L Hedge 02" src="Light_Green_Hedge_R" isometric="true"/>
@@ -364,19 +388,19 @@
 	</image>
 	<!-- Note: Assets for 'plaza' variants -->
 	<!-- Assets created by Ouaz -->
-    <image id="Plazas" isometric="true">
-        <layer group="58"/>
-    </image>
-    <image src="plaza_01" isometric="true"/>
-    <image src="plaza_02" isometric="true"/>
-    <image id="Plazas" isometric="true">
-        <layer group="58" image="1"/>
-    </image>
+	<image id="Plazas" isometric="true">
+		<layer group="58"/>
+	</image>
+	<image src="plaza_01" isometric="true"/>
+	<image src="plaza_02" isometric="true"/>
+	<image id="Plazas" isometric="true">
+		<layer group="58" image="1"/>
+	</image>
 	<image src="plaza_03" isometric="true"/>
 	<image src="plaza_04" isometric="true"/>
-    <image id="Plazas" isometric="true">
-        <layer group="58" image="2"/>
-    </image>
+	<image id="Plazas" isometric="true">
+		<layer group="58" image="2"/>
+	</image>
 	<image src="plaza_05" isometric="true"/>
 	<image src="plaza_06" isometric="true"/>
 </assetlist>
