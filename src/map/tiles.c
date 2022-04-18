@@ -1,5 +1,6 @@
 #include "tiles.h"
 
+#include "assets/assets.h"
 #include "city/map.h"
 #include "city/view.h"
 #include "core/direction.h"
@@ -307,8 +308,8 @@ static void set_plaza_image(int x, int y, int grid_offset)
     if (map_terrain_is(grid_offset, TERRAIN_ROAD) &&
         map_property_is_plaza_or_earthquake(grid_offset) &&
         !map_image_at(grid_offset)) {
-        int image_id = image_group(GROUP_TERRAIN_PLAZA);
         if (is_two_tile_square_plaza(grid_offset)) {
+            int image_id = image_group(GROUP_TERRAIN_PLAZA);
             if (map_random_get(grid_offset) & 1) {
                 image_id += 7;
             } else {
@@ -317,11 +318,12 @@ static void set_plaza_image(int x, int y, int grid_offset)
             map_building_tiles_add(0, x, y, 2, image_id, TERRAIN_ROAD);
         } else {
             // single tile plaza
-            switch ((x & 1) + (y & 1)) {
-                case 2: image_id += 1; break;
-                case 1: image_id += 2; break;
+            static int image_id;
+            if (!image_id) {
+                image_id = assets_get_image_id("Aesthetics", "Plazas");
             }
-            map_image_set(grid_offset, image_id);
+            int image_offset = (x + y) % 9;
+            map_image_set(grid_offset, image_id + image_offset);
         }
     }
 }

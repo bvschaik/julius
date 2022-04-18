@@ -364,10 +364,19 @@
 	</image>
 	<!-- Note: Assets for 'plaza' variants -->
 	<!-- Assets created by Ouaz -->
-	<image id="plaza_var_01" src="plaza_01" isometric="true"/>
-	<image id="plaza_var_02" src="plaza_02" isometric="true"/>
-	<image id="plaza_var_03" src="plaza_03" isometric="true"/>
-	<image id="plaza_var_04" src="plaza_04" isometric="true"/>
-	<image id="plaza_var_05" src="plaza_05" isometric="true"/>
-	<image id="plaza_var_06" src="plaza_06" isometric="true"/>
+    <image id="Plazas" isometric="true">
+        <layer group="58"/>
+    </image>
+    <image src="plaza_01" isometric="true"/>
+    <image src="plaza_02" isometric="true"/>
+    <image id="Plazas" isometric="true">
+        <layer group="58" image="1"/>
+    </image>
+	<image src="plaza_03" isometric="true"/>
+	<image src="plaza_04" isometric="true"/>
+    <image id="Plazas" isometric="true">
+        <layer group="58" image="2"/>
+    </image>
+	<image src="plaza_05" isometric="true"/>
+	<image src="plaza_06" isometric="true"/>
 </assetlist>
