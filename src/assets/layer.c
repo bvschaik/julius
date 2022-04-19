@@ -68,7 +68,7 @@ static void convert_layer_to_grayscale(color_t *pixels, int width, int height)
             color_t r = (*color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
             color_t g = (*color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN;
             color_t b = (*color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE;
-            color_t gray = r * 0.299f + g * 0.587f + b * 0.114f;
+            color_t gray = (color_t) (r * 0.299f + g * 0.587f + b * 0.114f);
             *color = (*color & COLOR_CHANNEL_ALPHA) | (gray << COLOR_BITSHIFT_RED) |
                 (gray << COLOR_BITSHIFT_GREEN) | (gray << COLOR_BITSHIFT_BLUE);
             color++;
@@ -114,7 +114,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             }
         }
         if (!l->grayscale && asset_img && asset_img->img.width == l->width && asset_img->img.height == l->height &&
-            l->x_offset == 0 && l->y_offset == 0 && type != ATLAS_EXTERNAL) {
+            l->x_offset == 0 && l->y_offset == 0 && type != ATLAS_EXTERNAL && (!asset_img->img.is_isometric || l->part == PART_BOTH)) {
             l->data = asset_img->data;
             return;
         }
@@ -147,7 +147,11 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             asset_img_width = asset_img->img.width;
             asset_img_height = asset_img->img.height;
         }
-        copy_regular_image(l, data, img, asset_img->data, asset_img_width);
+        if (img->is_isometric) {
+            copy_isometric_image(l, data, img, asset_img->data, asset_img_width);
+        } else {
+            copy_regular_image(l, data, img, asset_img->data, asset_img_width);
+        }
     } else if (type == ATLAS_EXTERNAL) {
         if (!image_load_external_pixels(data, img, width)) {
             free(data);
