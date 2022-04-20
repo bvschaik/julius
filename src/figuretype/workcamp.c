@@ -271,7 +271,8 @@ void figure_workcamp_engineer_action(figure *f)
             if (!building_monument_has_unfinished_monuments()) {
                 f->state = FIGURE_STATE_DEAD;
             } else {
-                int monument_id = building_monument_get_monument(b->x, b->y, RESOURCE_NONE, b->road_network_id, b->distance_from_entry, &dst);
+                int monument_id = building_monument_get_monument(b->x, b->y, RESOURCE_NONE,
+                    b->road_network_id, b->distance_from_entry, &dst);
                 if (monument_id && !building_monument_is_construction_halted(building_get(monument_id))) {
                     f->destination_building_id = monument_id;
                     f->destination_x = dst.x;
@@ -316,15 +317,13 @@ void figure_workcamp_engineer_action(figure *f)
                     }
                 } else {
                     f->wait_ticks++;
-                    f->image_id = assets_get_group_id("Logistics") + f->image_offset;
+                    f->image_id = assets_get_image_id("Logistics", "Architect 01") + f->image_offset;
                 }
-
             } else {
                 if (f->direction == DIR_FIGURE_REROUTE) {
                     figure_route_remove(f);
                 }
                 figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
-
             }
             break;
     }
