@@ -33,7 +33,8 @@ static void copy_regular_image(layer *l, color_t *dst, const image *img, const c
     }
 }
 
-static void copy_isometric_image(layer *l, color_t *dst, const image *img, const color_t *atlas_pixels, int atlas_width)
+static void copy_isometric_image(layer *l, color_t *dst, const image *img, const color_t *atlas_pixels, int atlas_width,
+    int is_extra_asset)
 {
     // No difference in image data - keep using the original image
     if ((l->part == PART_BOTH && graphics_renderer()->isometric_images_are_joined()) ||
@@ -49,7 +50,7 @@ static void copy_isometric_image(layer *l, color_t *dst, const image *img, const
     if (l->part & PART_FOOTPRINT) {
         int y_offset;
         int footprint_height = tiles * FOOTPRINT_HEIGHT;
-        if (graphics_renderer()->isometric_images_are_joined() && img->top_height) {
+        if (is_extra_asset || (graphics_renderer()->isometric_images_are_joined() && img->top_height)) {
             y_offset = l->height - footprint_height;
         } else {
             y_offset = img->top_height;
@@ -148,7 +149,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             asset_img_height = asset_img->img.height;
         }
         if (img->is_isometric) {
-            copy_isometric_image(l, data, img, asset_img->data, asset_img_width);
+            copy_isometric_image(l, data, img, asset_img->data, asset_img_width, 1);
         } else {
             copy_regular_image(l, data, img, asset_img->data, asset_img_width);
         }
@@ -169,7 +170,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             return;
         }
         if (img->is_isometric) {
-            copy_isometric_image(l, data, img, atlas_pixels, atlas_width);
+            copy_isometric_image(l, data, img, atlas_pixels, atlas_width, 0);
         } else {
             copy_regular_image(l, data, img, atlas_pixels, atlas_width);
         }
