@@ -62,7 +62,7 @@ static void draw_background(void)
     graphics_reset_clip_rectangle();
     image_draw_fullscreen_background(image_group(GROUP_INTERMEZZO_BACKGROUND));
 
-    if (window_is(WINDOW_MAIN_MENU)) {
+    if (!window_is(WINDOW_FILE_DIALOG)) {
         graphics_in_dialog();
         outer_panel_draw(162, 32, 20, 22);
         if (!data.logo_image_id) {
