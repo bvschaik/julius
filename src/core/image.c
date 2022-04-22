@@ -631,6 +631,9 @@ int image_load_climate(int climate_id, int is_editor, int force_reload)
     graphics_renderer()->create_image_atlas(atlas_data);
     image_packer_free(&data.packer);
 
+    // Fix engineer's post animation offset
+    data.main[image_group(GROUP_BUILDING_ENGINEERS_POST)].animation.sprite_offset_y += 1;
+
     return 1;
 }
 
