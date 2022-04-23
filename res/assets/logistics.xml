@@ -203,7 +203,7 @@
 	<!-- Note: Caravanserai OFF Variant for Northern/Central and Southern Climates Respectively -->
 	<image id="Caravanserai N OFF" src="Caravanserai_n_OFF" isometric="true"/>
 	<image id="Caravanserai S OFF" width="238" height="148" isometric="true">
-		<layer src="Caravanserai_n_OFF" part="footprint" x="0" y="-7"/>
+		<layer group="this" image="Caravanserai N OFF" part="footprint" x="0" y="-7"/>
 		<layer src="Caravanserai_s_OFF" x="0" y="0"/>
 	</image>
 	<!-- Note: Caravanserai ON Variant for Northern/Central Climate -->

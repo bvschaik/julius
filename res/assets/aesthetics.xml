@@ -417,12 +417,12 @@
 	</image>
 	<image src="plaza_01" isometric="true"/>
 	<image src="plaza_02" isometric="true"/>
-	<image id="Plazas" isometric="true">
+	<image isometric="true">
 		<layer group="58" image="1"/>
 	</image>
 	<image src="plaza_03" isometric="true"/>
 	<image src="plaza_04" isometric="true"/>
-	<image id="Plazas" isometric="true">
+	<image isometric="true">
 		<layer group="58" image="2"/>
 	</image>
 	<image src="plaza_05" isometric="true"/>
