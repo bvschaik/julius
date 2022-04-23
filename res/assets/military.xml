@@ -490,16 +490,16 @@
 	</image>
 	<!-- Note: Fort climate variants -->
 	<image id="Fort_Main_Central" isometric="true">
-		<layer group="63" image="11"/>
-		<layer src="Fort_Main_Layer_Central"/>
+		<layer group="63" image="Fort_Main_Central"/>
+		<layer src="Fort_Main_Layer_Central" x="0" y="0"/>
 	</image>
 	<image id="Fort_Main_South" isometric="true">
-		<layer group="63" image="11"/>
-		<layer src="Fort_Main_Layer_North"/>
+		<layer group="this" image="Fort_Main_Central"/>
+		<layer src="Fort_Main_Layer_North" x="0" y="72"/>
 	</image>
 	<image id="Fort_Main_North" isometric="true">
-		<layer group="63" image="11"/>
-		<layer src="Fort_Main_Layer_South"/>
+		<layer group="this" image="11"/>
+		<layer src="Fort_Main_Layer_South" x="0" y="72"/>
 	</image>
 	<!-- Note: Fort unit flag climate variants -->
 	<image id="Fort_Jav_Flag_Central">

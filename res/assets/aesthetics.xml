@@ -69,12 +69,28 @@
 		<layer group="59" image="3" x="0" y="28"/>
 		<layer src="Date_Tree_Path"/>
 	</image>
-	<!-- Note: Assets for 'Ornamental Blue Pavilion', 'Ornamental Red Pavilion', 'Ornamental Orange Pavilion', 'Ornamental Yellow Pavilion' and 'Ornamental Green Pavilion' respectively -->
+	<!-- Note: Assets for 'Blue Pavilion', 'Red Pavilion', 'Orange Pavilion', 'Yellow Pavilion', 'Green Pavilion' and 'Purple Pavilion' respectively -->
 	<image id="pavilion blue" src="Pavilion_Blue" isometric="true"/>
-	<image id="pavilion red" src="Pavilion_Red" isometric="true"/>
-	<image id="pavilion orange" src="Pavilion_Orange" isometric="true"/>
-	<image id="pavilion yellow" src="Pavilion_Yellow" isometric="true"/>
-	<image id="pavilion green" src="Pavilion_Green" isometric="true"/>
+	<image id="pavilion red" isometric="true">
+		<layer group="this" image="pavilion blue" x="0" y="0"/>
+		<layer src="Pavilion_Red" x="18" y="0"/>
+	</image>
+	<image id="pavilion orange" isometric="true">
+		<layer group="this" image="pavilion blue" x="0" y="0"/>
+		<layer src="Pavilion_Orange" x="18" y="0"/>
+	</image>
+	<image id="pavilion yellow" isometric="true">
+		<layer group="this" image="pavilion blue" x="0" y="0"/>
+		<layer src="Pavilion_Yellow" x="18" y="0"/>
+	</image>
+	<image id="pavilion green" isometric="true">
+		<layer group="this" image="pavilion blue" x="0" y="0"/>
+		<layer src="Pavilion_Green" x="18" y="0"/>
+	</image>
+	<image id="pavilion purple" isometric="true">
+		<layer group="this" image="pavilion blue" x="0" y="0"/>
+		<layer src="Pavilion_Purple" x="18" y="0"/>
+	</image>
 	<!-- Note: Small pond OFF and ON variants respectively FOR NORTHERN AND CENTRAL CLIMATES -->
 	<image id="s pond north off" isometric="true">
 		<layer src="2x2_Pond_A_OFF"/>
@@ -248,6 +264,14 @@
 		<layer group="this" image="sml col B R"/>
 		<layer src="Small_Column_Yellow" x="27" y="21"/>
 	</image>
+	<image id="sml col P" isometric="true">
+		<layer group="this" image="sml col B"/>
+		<layer src="Small_Column_Purple" x="27" y="21"/>
+	</image>
+	<image id="sml col Y P" isometric="true">
+		<layer group="this" image="sml col B R"/>
+		<layer src="Small_Column_Purple" x="27" y="21"/>
+	</image>
 	<!-- Note: Assets for 'Sunlit Hedge' including all directions and intersection variants -->
 	<image id="L Hedge 01" src="Light_Green_Hedge" isometric="true"/>
 	<image id="L Hedge 02" src="Light_Green_Hedge_R" isometric="true"/>
@@ -393,12 +417,12 @@
 	</image>
 	<image src="plaza_01" isometric="true"/>
 	<image src="plaza_02" isometric="true"/>
-	<image isometric="true">
+	<image id="Plazas" isometric="true">
 		<layer group="58" image="1"/>
 	</image>
 	<image src="plaza_03" isometric="true"/>
 	<image src="plaza_04" isometric="true"/>
-	<image isometric="true">
+	<image id="Plazas" isometric="true">
 		<layer group="58" image="2"/>
 	</image>
 	<image src="plaza_05" isometric="true"/>

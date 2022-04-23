@@ -4,11 +4,26 @@
 <assetlist name="Logistics">
 	<!-- Note: Roadblock asset and colour variants -->
 	<image id="roadblock" src="Roadblock_New_Red" isometric="true"/>
-	<image id="roadblock_blue" src="Roadblock_New_Blue" isometric="true"/>
-	<image id="roadblock_purple" src="Roadblock_New_Purple" isometric="true"/>
-	<image id="roadblock_green" src="Roadblock_New_Green" isometric="true"/>
-	<image id="roadblock_yellow" src="Roadblock_New_Yellow" isometric="true"/>
-	<image id="roadblock_orange" src="Roadblock_New_Orange" isometric="true"/>
+	<image id="roadblock_blue" isometric="true">
+		<layer group="this" image="roadblock" x="0" y="0"/>
+		<layer src="Roadblock_New_Blue" x="10" y="4"/>
+	</image>
+	<image id="roadblock_purple" isometric="true">
+		<layer group="this" image="roadblock" x="0" y="0"/>
+		<layer src="Roadblock_New_Purple" x="10" y="4"/>
+	</image>
+	<image id="roadblock_green" isometric="true">
+		<layer group="this" image="roadblock" x="0" y="0"/>
+		<layer src="Roadblock_New_Green" x="10" y="4"/>
+	</image>
+	<image id="roadblock_yellow" isometric="true">
+		<layer group="this" image="roadblock" x="0" y="0"/>
+		<layer src="Roadblock_New_Yellow" x="10" y="4"/>
+	</image>
+	<image id="roadblock_orange" isometric="true">
+		<layer group="this" image="roadblock" x="0" y="0"/>
+		<layer src="Roadblock_New_Orange" x="10" y="4"/>
+	</image>
 	<!-- Note: Architect animation frames 01-12 -->
 	<image id="Architect 01" src="architect_01"/>
 	<image id="Architect 02" src="architect_02"/>
@@ -188,7 +203,7 @@
 	<!-- Note: Caravanserai OFF Variant for Northern/Central and Southern Climates Respectively -->
 	<image id="Caravanserai N OFF" src="Caravanserai_n_OFF" isometric="true"/>
 	<image id="Caravanserai S OFF" width="238" height="148" isometric="true">
-		<layer group="this" image="Caravanserai N OFF" part="footprint" x="0" y="-7"/>
+		<layer src="Caravanserai_n_OFF" part="footprint" x="0" y="-7"/>
 		<layer src="Caravanserai_s_OFF" x="0" y="0"/>
 	</image>
 	<!-- Note: Caravanserai ON Variant for Northern/Central Climate -->
@@ -256,7 +271,7 @@
 	<!-- Note: Lighthouse ON Variant -->
 	<image id="Lighthouse ON" isometric="true">
 		<layer group="this" image="Lighthouse OFF"/>
-		<animation speed="5" x="74" y="1" reversible="false">
+		<animation speed="5" x="78" y="18" reversible="false">
 			<frame src="Lighthouse_ON_01"/>
 			<frame src="Lighthouse_ON_02"/>
 			<frame src="Lighthouse_ON_03"/>
