@@ -284,7 +284,7 @@ static void set_native_target_building(formation *m)
             case BUILDING_ROADBLOCK:
             case BUILDING_GARDEN_WALL_GATE:
             case BUILDING_HEDGE_GATE_DARK:
-            case BUILDING_HEDGE_LIGHT:
+            case BUILDING_HEDGE_GATE_LIGHT:
                 break;
             default:
                 {
