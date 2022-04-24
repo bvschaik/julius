@@ -651,14 +651,22 @@ int building_image_get(building *b)
                 (orientation % 2) * building_properties_for_type(b->type)->rotation_offset;
         }
         case BUILDING_WATCHTOWER:
+        {
+            int image_id = 0;
             switch (scenario_property_climate()) {
                 case CLIMATE_NORTHERN:
-                    return assets_get_image_id("Military", "Watchtower N ON");
+                    image_id = assets_get_image_id("Military", "Watchtower N ON");
+                    break;
                 case CLIMATE_DESERT:
-                    return assets_get_image_id("Military", "Watchtower S ON");
+                    image_id = assets_get_image_id("Military", "Watchtower S ON");
+                    break;
                 default:
-                    return assets_get_image_id("Military", "Watchtower C ON");
+                    image_id = assets_get_image_id("Military", "Watchtower C ON");
+                    break;
             }
+            int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
+            return image_id + (orientation % 2) * building_properties_for_type(b->type)->rotation_offset;
+        }
         case BUILDING_SMALL_MAUSOLEUM:
             switch (b->data.monument.phase) {
                 case MONUMENT_START:

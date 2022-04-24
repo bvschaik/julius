@@ -277,6 +277,7 @@ void map_orientation_update_buildings(void)
             case BUILDING_HORSE_STATUE:
             case BUILDING_SMALL_MAUSOLEUM:
             case BUILDING_DECORATIVE_COLUMN:
+            case BUILDING_WATCHTOWER:
                 map_building_tiles_add(i, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
                 break;
             case BUILDING_ROADBLOCK:
