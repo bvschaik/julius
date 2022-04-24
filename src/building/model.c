@@ -106,10 +106,6 @@ static void override_model_data(void)
     buildings[BUILDING_FORT_LEGIONARIES].laborers = 0;
     buildings[BUILDING_FORT_MOUNTED].laborers = 0;
     buildings[BUILDING_FORT].laborers = 0;
-
-    houses[HOUSE_SMALL_HOVEL].water = 1;
-    houses[HOUSE_LARGE_HOVEL].water = 1;
-    houses[HOUSE_SMALL_CASA].water = 1;
 }
 
 int model_load(void)
