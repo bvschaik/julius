@@ -443,7 +443,17 @@ int building_image_get(building *b)
                 return image_id;
             }
         case BUILDING_FORT:
-            return image_group(GROUP_BUILDING_FORT);
+        case BUILDING_FORT_JAVELIN:
+        case BUILDING_FORT_LEGIONARIES:
+        case BUILDING_FORT_MOUNTED:
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    return assets_get_image_id("Military", "Fort_Main_North");
+                case CLIMATE_DESERT:
+                    return assets_get_image_id("Military", "Fort_Main_South");
+                default:
+                    return assets_get_image_id("Military", "Fort_Main_Central");
+            }
         case BUILDING_FORT_GROUND:
             return image_group(GROUP_BUILDING_FORT) + 1;
         case BUILDING_NATIVE_HUT:

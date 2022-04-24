@@ -868,16 +868,18 @@ static void draw_fort(const map_tile *tile, int x, int y)
 
     color_t color_mask = blocked ? COLOR_MASK_BUILDING_GHOST_RED : COLOR_MASK_BUILDING_GHOST;
 
-    int image_id = image_group(GROUP_BUILDING_FORT);
+    const building_properties *props = building_properties_for_type(BUILDING_FORT);
+    int image_id = get_new_building_image_id(tile->x, tile->y, tile->grid_offset, BUILDING_FORT, props);
+    int image_id_grounds = image_group(GROUP_BUILDING_FORT) + 1;
     if (orientation_index == 0 || orientation_index == 3) {
         // draw fort first, then ground
         draw_building(image_id, x, y, color_mask);
         draw_building_tiles(x, y, num_tiles_fort, blocked_tiles_fort);
-        draw_building(image_id + 1, x_ground, y_ground, color_mask);
+        draw_building(image_id_grounds, x_ground, y_ground, color_mask);
         draw_building_tiles(x_ground, y_ground, num_tiles_ground, blocked_tiles_ground);
     } else {
         // draw ground first, then fort
-        draw_building(image_id + 1, x_ground, y_ground, color_mask);
+        draw_building(image_id_grounds, x_ground, y_ground, color_mask);
         draw_building_tiles(x_ground, y_ground, num_tiles_ground, blocked_tiles_ground);
         draw_building(image_id, x, y, color_mask);
         draw_building_tiles(x, y, num_tiles_fort, blocked_tiles_fort);

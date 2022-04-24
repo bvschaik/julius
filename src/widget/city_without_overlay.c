@@ -35,6 +35,7 @@
 #include "map/property.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
+#include "scenario/property.h"
 #include "sound/city.h"
 #include "widget/city_bridge.h"
 #include "widget/city_building_ghost.h"
@@ -558,16 +559,19 @@ static void draw_animation(int x, int y, int grid_offset)
     } else if (building_get(map_building_at(grid_offset))->type == BUILDING_FORT) {
         if (map_property_is_draw_tile(grid_offset)) {
             building *fort = building_get(map_building_at(grid_offset));
-            int offset = 0;
+            int image_id = assets_get_image_id("Military", "Fort_Jav_Flag_Central");
             switch (fort->subtype.fort_figure_type) {
-                case FIGURE_FORT_LEGIONARY: offset = 4; break;
-                case FIGURE_FORT_MOUNTED: offset = 3; break;
-                case FIGURE_FORT_JAVELIN: offset = 2; break;
+                case FIGURE_FORT_LEGIONARY: image_id += 2; break;
+                case FIGURE_FORT_MOUNTED: image_id += 1; break;
+                case FIGURE_FORT_JAVELIN: break;
             }
-            if (offset) {
-                image_draw(image_group(GROUP_BUILDING_FORT) + offset, x + 81, y + 5,
-                    draw_building_as_deleted(fort) ? COLOR_MASK_RED : COLOR_MASK_NONE, draw_context.scale);
+            switch (scenario_property_climate()) {
+                case CLIMATE_DESERT: image_id += 3; break;
+                case CLIMATE_NORTHERN: image_id += 6; break;
+                default: break;
             }
+            image_draw(image_id, x + 81, y + 5,
+                draw_building_as_deleted(fort) ? COLOR_MASK_RED : COLOR_MASK_NONE, draw_context.scale);
         }
     } else if (building_get(map_building_at(grid_offset))->type == BUILDING_GATEHOUSE) {
         int xy = map_property_multi_tile_xy(grid_offset);

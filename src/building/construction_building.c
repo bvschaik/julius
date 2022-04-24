@@ -36,7 +36,7 @@
 static void add_fort(int type, building *fort)
 {
     fort->prev_part_building_id = 0;
-    map_building_tiles_add(fort->id, fort->x, fort->y, fort->size, image_group(GROUP_BUILDING_FORT), TERRAIN_BUILDING);
+    map_building_tiles_add(fort->id, fort->x, fort->y, fort->size, building_image_get(fort), TERRAIN_BUILDING);
     if (type == BUILDING_FORT_LEGIONARIES) {
         fort->subtype.fort_figure_type = FIGURE_FORT_LEGIONARY;
     } else if (type == BUILDING_FORT_JAVELIN) {
