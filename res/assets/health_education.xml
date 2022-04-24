@@ -19,12 +19,12 @@
 	<!-- Assets created by Areldir -->
 	<!-- Note: Fix for Academy pixel clipping -->
 	<image id="Academy_Fix" isometric="true">
-		<layer group="42" image="0" x="0" y="0"/>
+		<layer group="43" image="0" x="0" y="0"/>
 		<layer src="Academy_Fix_Layer" x="150" y="27"/>
 	</image>
 	<!-- Note: Academy Upgrade Asset -->
 	<image id="Upgraded_Academy" isometric="true">
-		<layer group="42" image="0" x="0" y="0"/>
+		<layer group="43" image="0" x="0" y="0"/>
 		<layer src="Academy_Upgrade_State" x="6" y="20"/>
 	</image>
     <!-- Note: Doctor Healing animation frames 01-11 -->

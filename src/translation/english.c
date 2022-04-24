@@ -773,7 +773,8 @@ static translation_string all_strings[] = {
     {TR_WARNING_SCREENSHOT_SAVED, "Screenshot saved: "},
     {TR_OUT_OF_MONEY, "Out of money"},
     {TR_CITY_MESSAGE_TITLE_EMPERORS_WRATH, "Emperor's anger" },
-    {TR_CITY_MESSAGE_TEXT_EMPERORS_WRATH, "You have fallen from Caesar's grace and so he has ordered your arrest. Unless you restore your favor with the emperor, his elite legionaries will soon invade your city." }
+    {TR_CITY_MESSAGE_TEXT_EMPERORS_WRATH, "You have fallen from Caesar's grace and so he has ordered your arrest. Unless you restore your favor with the emperor, his elite legionaries will soon invade your city." },
+    {TR_BUILDING_ACADEMY_UPGRADE_DESC, "Upgraded Academy Text Placeholder"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

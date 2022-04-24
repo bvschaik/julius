@@ -932,6 +932,15 @@ static void spawn_figure_library(building *b)
     }
 }
 
+static void set_academy_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    b->upgrade_level = b->desirability >= 60;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
+}
+
 static void spawn_figure_academy(building *b)
 {
     check_labor_problem(b);
@@ -940,6 +949,7 @@ static void spawn_figure_academy(building *b)
     }
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        set_academy_graphic(b);
         spawn_labor_seeker(b, road.x, road.y, 50);
         int spawn_delay = default_spawn_delay(b);
         if (!spawn_delay) {
