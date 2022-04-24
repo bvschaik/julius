@@ -271,7 +271,7 @@
 	<!-- Note: Lighthouse ON Variant -->
 	<image id="Lighthouse ON" isometric="true">
 		<layer group="this" image="Lighthouse OFF"/>
-		<animation speed="5" x="78" y="18" reversible="false">
+		<animation speed="5" x="78" y="17" reversible="false">
 			<frame src="Lighthouse_ON_01"/>
 			<frame src="Lighthouse_ON_02"/>
 			<frame src="Lighthouse_ON_03"/>
