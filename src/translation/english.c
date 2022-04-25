@@ -184,12 +184,12 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_MARS_DESC, "Grand temple of Mars" },
     {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, "Grand temple of Venus" },
     {TR_BUILDING_PANTHEON_DESC, "Pantheon" },
-    {TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, "Cartpushers from farms move 50% faster." },
-    {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Grants +1 range for fountains and wells and +2 for reservoirs. Water services labor is reduced by 50%. Trading ships travel 25% faster." },
-    {TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, "Land and sea traders have an additional 50% capacity. Land traders move 25% faster." },
-    {TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Trains soldiers like a barracks. Four extra forts may be built." },
-    {TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "City gardens, statues, and temples glow with increased beauty, increasing their desirability. Houses stock more goods and devolve more slowly." },
-    {TR_BUILDING_PANTHEON_BONUS_DESC, "Provides access to all gods. Holds annual festivals and reduces religious and cultural building levies by 25%." }, // Note to translators: This one changed from the previous version, please update.
+    {TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, "Ceres inspires cartpushers from your city's farms to move 50% faster." },
+    {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Neptune grants an additional +1 range for fountains and wells and +2 for reservoirs. Water services labor is also reduced by 50% and trading ships travel 25% faster." }, // Note to translators: This one changed from the previous version, please update.
+    {TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, "Mercury blesses your traders by land and sea with an additional 50% capacity, and inspires land traders to move 25% faster." }, // Note to translators: This one changed from the previous version, please update.
+    {TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Mars exhorts your citizens to enlist, dispatching recruits to your city's forts, and allowing four additional forts to be built." }, // Note to translators: This one changed from the previous version, please update.
+    {TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "Venus graces your city's gardens, statues and temples to glow with beauty, improving their desirability. Houses also hold more goods, and devolve more slowly." }, // Note to translators: This one changed from the previous version, please update.
+    {TR_BUILDING_PANTHEON_BONUS_DESC, "The Pantheon provides access to your citizens to worship all the gods. Annual festivals are also held here, and religious and cultural building levies are reduced by 25%." }, // Note to translators: This one changed from the previous version, please update.
     {TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, "Priests reduce food consumption by 20%." },
     {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, "Temples produce charioteers for the hippodrome." },
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, "Priests reduce pottery and furniture consumption by 20%." },
