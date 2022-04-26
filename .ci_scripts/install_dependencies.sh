@@ -144,7 +144,7 @@ then
         --disable-feature-report \
         --disable-equalizer \
         --disable-buffer"
-      SDL_CONFIGURE_OPTIONS="--host=wasm32-unknown-emscripten --disable-assembly --disable-threads --disable-cpuinfo"
+      SDL_CONFIGURE_OPTIONS="--host=wasm32-unknown-emscripten --disable-assembly --disable-cpuinfo"
       SDL_MIXER_CONFIGURE_OPTIONS="--host=wasm32-unknown-emscripten --enable-music-mp3-mpg123-shared=no"
     fi
     install_sdl_lib "SDL2" $SDL_VERSION "$SDL_CONFIGURE_OPTIONS"
