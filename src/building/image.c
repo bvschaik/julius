@@ -182,7 +182,7 @@ int building_image_get(building *b)
             }
         case BUILDING_ACADEMY:
             if (!b->upgrade_level) {
-                return image_group(GROUP_BUILDING_ACADEMY);
+                return assets_get_image_id("Health_Education", "Academy_Fix");
             } else {
                 return assets_get_image_id("Health_Education", "Upgraded_Academy");
             }
