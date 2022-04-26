@@ -56,6 +56,12 @@ static building_type get_clone_type_from_building(building *b)
             return BUILDING_HEDGE_LIGHT;
         case BUILDING_HEDGE_GATE_DARK:
             return BUILDING_HEDGE_DARK;
+        case BUILDING_PAVILION_BLUE:
+        case BUILDING_PAVILION_GREEN:
+        case BUILDING_PAVILION_ORANGE:
+        case BUILDING_PAVILION_RED:
+        case BUILDING_PAVILION_YELLOW:
+            return BUILDING_PAVILION_BLUE;
         default:
             return clone_type;
     }
