@@ -388,7 +388,5 @@
 			<frame id="Warehouse_Flag_All_8" src="flag_all_traders_a8"/>
 		</animation>
 	</image>
-	<!-- Note: 3x3 construction base footprint (Asset by Areldir) REFERENCE ASSET: DO NOT USE! -->
-	<image id="const_base_3x3" src="Construction_Base_3x3" isometric="true"/>
 </assetlist>
 	
