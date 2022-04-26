@@ -262,7 +262,10 @@
 		</animation>
 	</image>
 	<!-- Note: Lighthouse Construction 01-04 are the 0%, 25%, 50%, and 75% construction phases respectively -->
-	<image id="Lighthouse Const 01" src="Lighthouse_Construction_01" isometric="true"/>
+	<image id="Lighthouse Const 01" isometric="true">
+		<layer group="this" image="const_base_3x3" x="0" y="0"/>
+		<layer src="Lighthouse_Construction_01" x="0" y="0"/>
+	</image>
 	<image id="Lighthouse Const 02" src="Lighthouse_Construction_02" isometric="true"/>
 	<image id="Lighthouse Const 03" src="Lighthouse_Construction_03" isometric="true"/>
 	<image id="Lighthouse Const 04" src="Lighthouse_Construction_04" isometric="true"/>
@@ -296,7 +299,7 @@
 			<frame group="this" image="Frame_Flickering_Fix"/>
 		</animation>
 	</image>
-	<!-- Assets created by Ouaz -->
+	<!-- Warehouse Flags (Assets created by Ouaz) -->
 	<image id="Warehouse_Flag_Market_1" src="flag_market_trade_a1"/>
 	<image id="Warehouse_Flag_Market">
 		<layer group="this" image="Warehouse_Flag_Market_1"/>
@@ -388,5 +391,7 @@
 			<frame id="Warehouse_Flag_All_8" src="flag_all_traders_a8"/>
 		</animation>
 	</image>
+	<!-- Note: 3x3 construction base footprint (Asset by Areldir) REFERENCE ASSET: DO NOT USE! -->
+	<image id="const_base_3x3" src="Construction_Base_3x3" isometric="true"/>
 </assetlist>
 	

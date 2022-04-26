@@ -9,24 +9,25 @@
 	</image>
 	<!-- Note: Ceres Complex Reference Assets DO NOT USE -->
 	<image id="Ceres_LT_0" isometric="true">
-		<layer src="Ceres_Temple_Construction_0%"/>
+		<layer group="logistics" image="const_base_3x3" x="0" y="0"/>
+		<layer src="Ceres_Temple_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Ceres_LT_25" width="178" height="159">
 		<layer group="71" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Ceres_Temple_Construction_25%" x="0" y="59"/>
+		<layer src="Ceres_Temple_Construction_02" x="0" y="59"/>
 	</image>
 	<image id="Ceres_LT_50" width="178" height="159">
 		<layer group="71" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Ceres_Temple_Construction_50%" x="0" y="26"/>
+		<layer src="Ceres_Temple_Construction_03" x="0" y="26"/>
 	</image>
 	<image id="Ceres_LT_75" width="178" height="159">
 		<layer group="71" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Ceres_Temple_Construction_75%" x="0" y="8"/>
+		<layer src="Ceres_Temple_Construction_04" x="0" y="8"/>
 	</image>
 	<!-- Note: Ceres Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
 	<image id="Ceres Complex Const 01" width="418" height="234" isometric="true">
 		<layer src="Grand_Temple_Construction_Base_01" x="0" y="15"/>
-		<layer src="Ceres_Temple_Construction_0%" x="90" y="60"/>
+		<layer group="this" image="Ceres_LT_0" x="90" y="60"/>
 	</image>
 	<image id="Ceres Complex Const 02" width="418" height="234" isometric="true">
 		<layer src="Grand_Temple_Construction_Base_01" x="0" y="15"/>
@@ -94,24 +95,25 @@
 	</image>
 	<!-- Note: Mars Complex Reference Assets DO NOT USE -->
 	<image id="Mars_LT_0" isometric="true">
-		<layer src="Mars_Temple_Construction_0%"/>
+		<layer group="logistics" image="const_base_3x3" x="0" y="0"/>
+		<layer src="Mars_Temple_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Mars_LT_25" width="178" height="148">
 		<layer group="74" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Mars_Temple_Construction_25%" x="0" y="44"/>
+		<layer src="Mars_Temple_Construction_02" x="0" y="44"/>
 	</image>
 	<image id="Mars_LT_50" width="178" height="148">
 		<layer group="74" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Mars_Temple_Construction_50%" x="0" y="27"/>
+		<layer src="Mars_Temple_Construction_03" x="0" y="27"/>
 	</image>
 	<image id="Mars_LT_75" width="178" height="148">
 		<layer group="74" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Mars_Temple_Construction_75%" x="0" y="7"/>
+		<layer src="Mars_Temple_Construction_04" x="0" y="7"/>
 	</image>
 	<!-- Note: Mars Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
 	<image id="Mars Complex Const 01" width="418" height="223" isometric="true">
 		<layer src="Grand_Temple_Construction_Base_01" x="0" y="4"/>
-		<layer src="Mars_Temple_Construction_0%" x="90" y="49"/>
+		<layer group="this" image="Mars_LT_0" x="90" y="49"/>
 	</image>
 	<image id="Mars Complex Const 02" width="418" height="223" isometric="true">
 		<layer src="Grand_Temple_Construction_Base_01" x="0" y="4"/>
@@ -165,24 +167,25 @@
 	</image>
 	<!-- Note: Mercury Complex Reference Assets DO NOT USE -->
 	<image id="Mercury_LT_0" isometric="true">
-		<layer src="Mercury_Temple_Construction_0%"/>
+		<layer group="logistics" image="const_base_3x3" x="0" y="0"/>
+		<layer src="Mercury_Temple_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Mercury_LT_25" width="178" height="148">
 		<layer group="73" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Mercury_Temple_Construction_25%" x="0" y="41"/>
+		<layer src="Mercury_Temple_Construction_02" x="0" y="41"/>
 	</image>
 	<image id="Mercury_LT_50" width="178" height="148">
 		<layer group="73" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Mercury_Temple_Construction_50%" x="0" y="16"/>
+		<layer src="Mercury_Temple_Construction_03" x="0" y="16"/>
 	</image>
 	<image id="Mercury_LT_75" width="178" height="148">
 		<layer group="73" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Mercury_Temple_Construction_75%" x="0" y="8"/>
+		<layer src="Mercury_Temple_Construction_04" x="0" y="8"/>
 	</image>
 	<!-- Note: Mercury Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
 	<image id="Mercury Complex Const 01" width="418" height="223" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="4"/>
-		<layer src="Mercury_Temple_Construction_0%" x="150" y="49"/>
+		<layer group="this" image="Mercury_LT_0" x="150" y="49"/>
 	</image>
 	<image id="Mercury Complex Const 02" width="418" height="223" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="4"/>
@@ -234,19 +237,20 @@
 	</image>
 	<!-- Note: Neptune Complex Reference Assets DO NOT USE -->
 	<image id="Neptune_LT_0" isometric="true">
-		<layer src="Neptune_Temple_Construction_0%"/>
+		<layer group="logistics" image="const_base_3x3" x="0" y="0"/>
+		<layer src="Neptune_Temple_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Neptune_LT_25" width="178" height="154">
 		<layer group="72" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Neptune_Temple_Construction_25%" x="0" y="50"/>
+		<layer src="Neptune_Temple_Construction_02" x="0" y="50"/>
 	</image>
 	<image id="Neptune_LT_50" width="178" height="154">
 		<layer group="72" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Neptune_Temple_Construction_50%" x="0" y="29"/>
+		<layer src="Neptune_Temple_Construction_03" x="0" y="29"/>
 	</image>
 	<image id="Neptune_LT_75" width="178" height="154">
 		<layer group="72" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Neptune_Temple_Construction_75%" x="0" y="8"/>
+		<layer src="Neptune_Temple_Construction_04" x="0" y="8"/>
 	</image>
 	<!-- Note: Neptune Large Temple Off state for NO Reservoir Access -->
 	<image id="Neptune LTemple Off" width="178" height="154">
@@ -256,7 +260,7 @@
 	<!-- Note: Neptune Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
 	<image id="Neptune Complex Const 01" width="418" height="229" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="10"/>
-		<layer src="Neptune_Temple_Construction_0%" x="150" y="55"/>
+		<layer group="this" image="Neptune_LT_0" x="150" y="55"/>
 	</image>
 	<image id="Neptune Complex Const 02" width="418" height="229" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="10"/>
@@ -338,32 +342,33 @@
 	</image>
 	<!-- Note: Pantheon Reference Assets DO NOT USE -->
 	<image id="Pantheon_Const_00" isometric="true">
-		<layer src="Pantheon_Construction_0%"/>
+		<layer group="logistics" image="const_base_3x3" x="0" y="0"/>
+		<layer src="Pantheon_Construction_01" x="0" y="0"/>
 	</image>
 	<!-- Note: Pantheon Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
 	<image id="Pantheon Const 01" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
-		<layer src="Pantheon_Construction_0%" x="150" y="57"/>
+		<layer group="this" image="Pantheon_Const_00" x="150" y="57"/>
 	</image>
 	<image id="Pantheon Const 02" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
 		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
-		<layer src="Pantheon_Construction_25%" x="150" y="53"/>
+		<layer src="Pantheon_Construction_02" x="150" y="53"/>
 	</image>
 	<image id="Pantheon Const 03" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
 		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
-		<layer src="Pantheon_Construction_50%" x="150" y="27"/>
+		<layer src="Pantheon_Construction_03" x="150" y="27"/>
 	</image>
 	<image id="Pantheon Const 04" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
 		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
-		<layer src="Pantheon_Construction_75%" x="150" y="14"/>
+		<layer src="Pantheon_Construction_04" x="150" y="14"/>
 	</image>
 	<image id="Pantheon Const 05" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
 		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
-		<layer src="Pantheon_Construction_100%" x="150" y="14"/>
+		<layer src="Pantheon_Construction_05" x="150" y="14"/>
 	</image>
 	<!-- Note: Pantheon Complex ON/OFF States -->
 	<image id="Pantheon Off" src="Pantheon_Temple_Complex_Off" width="418" height="231" isometric="true"/>
@@ -391,24 +396,25 @@
 	</image>
 	<!-- Note: Venus Complex Reference Assets DO NOT USE -->
 	<image id="Venus_LT_0" isometric="true">
-		<layer src="Venus_Temple_Construction_0%"/>
+		<layer group="logistics" image="const_base_3x3" x="0" y="0"/>
+		<layer src="Venus_Temple_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Venus_LT_25" width="178" height="142">
 		<layer group="75" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Venus_Temple_Construction_25%" x="0" y="34"/>
+		<layer src="Venus_Temple_Construction_02" x="0" y="34"/>
 	</image>
 	<image id="Venus_LT_50" width="178" height="142">
 		<layer group="75" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Venus_Temple_Construction_50%" x="0" y="20"/>
+		<layer src="Venus_Temple_Construction_03" x="0" y="20"/>
 	</image>
 	<image id="Venus_LT_75" width="178" height="142">
 		<layer group="75" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Venus_Temple_Construction_75%" x="0" y="0"/>
+		<layer src="Venus_Temple_Construction_04" x="0" y="0"/>
 	</image>
 	<!-- Note: Venus Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
 	<image id="Venus Complex Const 01" width="418" height="219" isometric="true">
 		<layer src="Grand_Temple_Construction_Base_01" x="0" y="0"/>
-		<layer src="Venus_Temple_Construction_0%" x="90" y="45"/>
+		<layer group="this" image="Venus_LT_0" x="90" y="45"/>
 	</image>
 	<image id="Venus Complex Const 02" width="418" height="219" isometric="true">
 		<layer src="Grand_Temple_Construction_Base_01" x="0" y="0"/>
@@ -480,7 +486,7 @@
 	<!-- Note: Nymphaeum ON Animation -->
 	<image id="Nymphaeum ON" width="178" height="158" isometric="true">
 		<layer group="this" image="Nymphaeum OFF"/>
-		<animation speed="5" x="66" y="86" reversible="false">
+		<animation speed="5" x="79" y="95" reversible="false">
 			<frame src="Nymphaeum_ON_01"/>
 			<frame src="Nymphaeum_ON_02"/>
 			<frame src="Nymphaeum_ON_03"/>
@@ -490,7 +496,10 @@
 		</animation>
 	</image>
 	<!-- Note: Large Mausoleum Construction 0% Phase -->
-	<image id="Mausoleum L Cons" src="Mausoleum_Large_Construction_0%" isometric="true"/>
+	<image id="Mausoleum L Cons" isometric="true">
+		<layer group="logistics" image="const_base_3x3" x="0" y="0"/>
+		<layer src="Mausoleum_Large_Construction_01" x="0" y="0"/>
+	</image>
 	<!-- Note: Large Mausoleum asset -->
 	<image id="Mausoleum L" src="Mausoleum_Large" isometric="true"/>
 	<!-- Note: Small Mausoleum Construction 0% Phase -->
