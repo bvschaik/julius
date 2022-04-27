@@ -207,4 +207,9 @@
 	<image width="20" height="24">
 		<layer group="11" image="14" x="-100" y="0"/>
 	</image>
+	<!-- Note: Border for Large UI Banners (ie. UI elements for Monuments) -->
+	<image src="LargeBanner_Border_Top" id="Large_Banner_Border"/>
+	<image src="LargeBanner_Border_Left"/>
+	<image src="LargeBanner_Border_Bottom"/>
+	<image src="LargeBanner_Border_Right"/>
 </assetlist>
