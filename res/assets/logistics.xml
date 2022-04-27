@@ -185,21 +185,6 @@
 		<layer group="this" image="Workcamp Central" x="0" y="0"/>
 		<layer src="Workcamp_South" x="0" y="57"/>
 	</image>
-	<!-- Note: Assets for Surveyors' Post -->
-	<image id="Surveyors Post OFF" width="58" height="59" isometric="true">
-		<layer group="67" image="0" x="0" y="0" invert="horizontal"/>
-		<layer src="Surveyors_Post_OFF"/>
-	</image>
-	<image id="Surveyors Post ON" isometric="true">
-		<layer group="this" image="Surveyors Post OFF"/>
-		<animation speed="6" x="7" y="0" reversible="false">
-			<frame src="Surveyors_Post_ON_01"/>
-			<frame src="Surveyors_Post_ON_02"/>
-			<frame src="Surveyors_Post_ON_03"/>
-			<frame src="Surveyors_Post_ON_04"/>
-			<frame src="Surveyors_Post_ON_05"/>
-		</animation>
-	</image>
 	<!-- Note: Caravanserai OFF Variant for Northern/Central and Southern Climates Respectively -->
 	<image id="Caravanserai N OFF" src="Caravanserai_n_OFF" isometric="true"/>
 	<image id="Caravanserai S OFF" width="238" height="148" isometric="true">

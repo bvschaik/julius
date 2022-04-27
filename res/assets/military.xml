@@ -15,7 +15,8 @@
 	<!-- Note: Mess Hall ON Animations for Central, North and South Climates Respectively -->
 	<image id="Mess ON Central" isometric="true">
 		<layer group="this" image="Mess OFF Central"/>
-		<animation speed="6" x="13" y="47" reversible="false">
+		<layer src="Mess_Hall_ON" x="12" y="62"/>
+		<animation speed="6" x="70" y="48" reversible="false">
 			<frame src="Mess_Hall_Anim_01"/>
 			<frame src="Mess_Hall_Anim_02"/>
 			<frame src="Mess_Hall_Anim_03"/>
@@ -25,7 +26,8 @@
 	</image>
 	<image id="Mess ON North" isometric="true">
 		<layer group="this" image="Mess OFF North"/>
-		<animation speed="6" x="13" y="47" reversible="false">
+		<layer src="Mess_Hall_ON" x="12" y="62"/>
+		<animation speed="6" x="70" y="48" reversible="false">
 			<frame src="Mess_Hall_Anim_01"/>
 			<frame src="Mess_Hall_Anim_02"/>
 			<frame src="Mess_Hall_Anim_03"/>
@@ -35,7 +37,8 @@
 	</image>
 	<image id="Mess ON South" isometric="true">
 		<layer group="this" image="Mess OFF South"/>
-		<animation speed="6" x="13" y="47" reversible="false">
+		<layer src="Mess_Hall_ON" x="12" y="62"/>
+		<animation speed="6" x="70" y="48" reversible="false">
 			<frame src="Mess_Hall_Anim_01"/>
 			<frame src="Mess_Hall_Anim_02"/>
 			<frame src="Mess_Hall_Anim_03"/>
@@ -165,7 +168,8 @@
 	<image id="Watchtower C OFF" src="Watchtower_Central_OFF" isometric="true"/>
 	<image id="Watchtower C ON" isometric="true">
 		<layer group="this" image="Watchtower C OFF"/>
-		<animation speed="8" x="54" y="49" reversible="false">
+		<layer src="Watchtower_ON_Static" x="82" y="49"/>
+		<animation speed="8" x="56" y="66" reversible="false">
 			<frame src="Watchtower_ON_01"/>
 			<frame src="Watchtower_ON_02"/>
 			<frame src="Watchtower_ON_03"/>
@@ -177,7 +181,8 @@
 	<image id="Watchtower N OFF" src="Watchtower_North_OFF" isometric="true"/>
 	<image id="Watchtower N ON" isometric="true">
 		<layer group="this" image="Watchtower N OFF"/>
-		<animation speed="8" x="54" y="49" reversible="false">
+		<layer src="Watchtower_ON_Static" x="82" y="49"/>
+		<animation speed="8" x="56" y="66" reversible="false">
 			<frame src="Watchtower_ON_01"/>
 			<frame src="Watchtower_ON_02"/>
 			<frame src="Watchtower_ON_03"/>
@@ -189,7 +194,8 @@
 	<image id="Watchtower S OFF" src="Watchtower_South_OFF" isometric="true"/>
 	<image id="Watchtower S ON" isometric="true">
 		<layer group="this" image="Watchtower S OFF"/>
-		<animation speed="8" x="54" y="49" reversible="false">
+		<layer src="Watchtower_ON_Static" x="82" y="49"/>
+		<animation speed="8" x="56" y="66" reversible="false">
 			<frame src="Watchtower_ON_01"/>
 			<frame src="Watchtower_ON_02"/>
 			<frame src="Watchtower_ON_03"/>
@@ -201,7 +207,8 @@
 	<image id="Watchtower C OFF R" src="Watchtower_Central_OFF_r" isometric="true"/>
 	<image id="Watchtower C ON R" isometric="true">
 		<layer group="this" image="Watchtower C OFF R"/>
-		<animation speed="8" x="0" y="49" reversible="false">
+		<layer src="Watchtower_ON_Static_r" x="7" y="49"/>
+		<animation speed="8" x="54" y="66" reversible="false">
 			<frame src="Watchtower_ON_01_r"/>
 			<frame src="Watchtower_ON_02_r"/>
 			<frame src="Watchtower_ON_03_r"/>
@@ -213,7 +220,8 @@
 	<image id="Watchtower N OFF R" src="Watchtower_North_OFF_r" isometric="true"/>
 	<image id="Watchtower N ON R" isometric="true">
 		<layer group="this" image="Watchtower N OFF R"/>
-		<animation speed="8" x="0" y="49" reversible="false">
+		<layer src="Watchtower_ON_Static_r" x="7" y="49"/>
+		<animation speed="8" x="54" y="66" reversible="false">
 			<frame src="Watchtower_ON_01_r"/>
 			<frame src="Watchtower_ON_02_r"/>
 			<frame src="Watchtower_ON_03_r"/>
@@ -225,7 +233,8 @@
 	<image id="Watchtower S OFF R" src="Watchtower_South_OFF_r" isometric="true"/>
 	<image id="Watchtower S ON R" isometric="true">
 		<layer group="this" image="Watchtower S OFF R"/>
-		<animation speed="8" x="0" y="49" reversible="false">
+		<layer src="Watchtower_ON_Static_r" x="7" y="49"/>
+		<animation speed="8" x="54" y="66" reversible="false">
 			<frame src="Watchtower_ON_01_r"/>
 			<frame src="Watchtower_ON_02_r"/>
 			<frame src="Watchtower_ON_03_r"/>

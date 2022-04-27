@@ -141,7 +141,8 @@
 	<image id="Mars Complex Off" width="418" height="231" isometric="true">
 		<layer src="Mars_Temple_Complex_Base_Layer"/>
 		<layer group="74" image="1" x="90" y="8"/>
-		<layer src="Mars_Temple_Complex_Top_Layer" x="59" y="83"/>
+		<layer src="Ceres_Temple_Complex_Top_Layer" x="59" y="83"/>
+		<layer src="Mars_Temple_Complex_Top_Layer" x="213" y="153"/>
 	</image>
 	<image id="Mars Complex On" width="418" height="231" isometric="true">
 		<layer group="this" image="Mars Complex Off"/>
@@ -288,13 +289,13 @@
 	<image id="Neptune Complex Off" width="418" height="231" isometric="true">
 		<layer src="Neptune_Temple_Complex_Base_Layer"/>
 		<layer group="this" image="Neptune LTemple Off" x="150" y="2"/>
-		<layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84"/>
+		<layer src="Ceres_Temple_Complex_Top_Layer" x="189" y="84" invert="horizontal"/>
 	</image>
 	<image id="Neptune Complex On" width="418" height="231" isometric="true">
 		<layer src="Neptune_Temple_Complex_Base_Layer"/>
 		<layer group="72" image="1" x="150" y="2"/>
 		<layer src="Neptune_Temple_Complex_On_Layer" x="135" y="117"/>
-		<layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84"/>
+		<layer src="Ceres_Temple_Complex_Top_Layer" x="189" y="84" invert="horizontal"/>
 	</image>
 	<!-- Note: Neptune Complex Module Animation (Chariot Walkers) -->
 	<image id="Neptune Complex Module" width="418" height="231" isometric="true">
@@ -339,7 +340,7 @@
 	<image id="Neptune Complex Off" width="418" height="231" isometric="true">
 		<layer src="Neptune_Temple_Complex_Base_Layer"/>
 		<layer group="this" image="Neptune LTemple Off" x="150" y="2"/>
-		<layer src="Neptune_Temple_Complex_Top_Layer" x="189" y="84"/>
+		<layer src="Ceres_Temple_Complex_Top_Layer" x="189" y="84" invert="horizontal"/>
 		<layer src="Neptune_Temple_Complex_Module_OFF" x="98" y="27"/>
 	</image>
 	<!-- Note: Pantheon Reference Assets DO NOT USE -->
@@ -442,7 +443,7 @@
 	<image id="Venus Complex Off" width="418" height="231" isometric="true">
 		<layer src="Venus_Temple_Complex_Base_Layer"/>
 		<layer group="75" image="1" x="90" y="14"/>
-		<layer src="Venus_Temple_Complex_Top_Layer" x="71" y="79"/>
+		<layer src="Mercury_Temple_Complex_Top_Layer" x="71" y="79" invert="horizontal"/>
 	</image>
 	<image id="Venus Complex On" width="418" height="231" isometric="true">
 		<layer group="this" image="Venus Complex Off"/>
