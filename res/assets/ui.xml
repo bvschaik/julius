@@ -212,4 +212,11 @@
 	<image src="LargeBanner_Border_Left"/>
 	<image src="LargeBanner_Border_Bottom"/>
 	<image src="LargeBanner_Border_Right"/>
+	<!-- Note: UI Panels for custom resources -->
+	<image id="Panelling_Bricks_01" src="Panelling_Bricks_01"/>
+	<image id="Panelling_Bricks_02" src="Panelling_Bricks_02"/>
+	<image id="Panelling_Sand_01" src="Panelling_Sand_01"/>
+	<image id="Panelling_Sand_02" src="Panelling_Sand_02"/>
+	<image id="Panelling_Stone_01" src="Panelling_Stone_01"/>
+	<image id="Panelling_Stone_02" src="Panelling_Stone_02"/>
 </assetlist>

@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="Industry">
+	<!-- Note: Brickworks ON animation reference DO NOT USE! -->
+	<image id="Brickworks_On_01" width="86" height="26">
+		<layer src="Brickworks_ON_Static" x="0" y="0"/>
+		<layer src="Brickworks_ON_01" x="69" y="0"/>
+	</image>
+	<image id="Brickworks_On_02" width="86" height="26">
+		<layer src="Brickworks_ON_Static" x="0" y="0"/>
+		<layer src="Brickworks_ON_02" x="69" y="0"/>
+	</image>
+	<image id="Brickworks_On_03" width="86" height="26">
+		<layer src="Brickworks_ON_Static" x="0" y="0"/>
+		<layer src="Brickworks_ON_03" x="69" y="0"/>
+	</image>
+	<image id="Brickworks_On_04" width="86" height="26">
+		<layer src="Brickworks_ON_Static" x="0" y="0"/>
+		<layer src="Brickworks_ON_04" x="69" y="0"/>
+	</image>
+	<image id="Brickworks_On_05" width="86" height="26">
+		<layer src="Brickworks_ON_Static" x="0" y="0"/>
+		<layer src="Brickworks_ON_05" x="69" y="0"/>
+	</image>
+	<image id="Brickworks_On_06" width="86" height="26">
+		<layer src="Brickworks_ON_Static" x="0" y="0"/>
+		<layer src="Brickworks_ON_06" x="69" y="0"/>
+	</image>
+	<!-- Note: Brickworks OFF Variant -->
+	<image id="Brickworks_C_OFF" src="Brickworks_c_OFF" width="118" height="80" isometric="true"/>
+	<image id="Brickworks_N_OFF" width="118" height="80" isometric="true">
+		<layer group="this" image="Brickworks_C_OFF" x="0" y="0"/>
+		<layer src="Brickworks_n_OFF" x="0" y="32"/>
+	</image>
+	<image id="Brickworks_S_OFF" width="118" height="80" isometric="true">
+		<layer group="this" image="Brickworks_C_OFF" x="0" y="0"/>
+		<layer src="Brickworks_s_OFF" x="0" y="32"/>
+	</image>
+	<!-- Note: Brickworks ON Variant -->
+	<image id="Brickworks_C_ON" width="118" height="80" isometric="true">
+		<layer group="this" image="Brickworks_C_OFF"/>
+		<animation speed="6" x="10" y="35" reversible="false">
+			<frame group="this" image="Brickworks_On_01"/>
+			<frame group="this" image="Brickworks_On_02"/>
+			<frame group="this" image="Brickworks_On_03"/>
+			<frame group="this" image="Brickworks_On_04"/>
+			<frame group="this" image="Brickworks_On_05"/>
+			<frame group="this" image="Brickworks_On_06"/>
+		</animation>
+	</image>
+	<image id="Brickworks_N_ON" width="118" height="80" isometric="true">
+		<layer group="this" image="Brickworks_N_OFF"/>
+		<animation speed="6" x="10" y="35" reversible="false">
+			<frame group="this" image="Brickworks_On_01"/>
+			<frame group="this" image="Brickworks_On_02"/>
+			<frame group="this" image="Brickworks_On_03"/>
+			<frame group="this" image="Brickworks_On_04"/>
+			<frame group="this" image="Brickworks_On_05"/>
+			<frame group="this" image="Brickworks_On_06"/>
+		</animation>
+	</image>
+	<image id="Brickworks_S_ON" width="118" height="80" isometric="true">
+		<layer group="this" image="Brickworks_S_OFF"/>
+		<animation speed="6" x="10" y="35" reversible="false">
+			<frame group="this" image="Brickworks_On_01"/>
+			<frame group="this" image="Brickworks_On_02"/>
+			<frame group="this" image="Brickworks_On_03"/>
+			<frame group="this" image="Brickworks_On_04"/>
+			<frame group="this" image="Brickworks_On_05"/>
+			<frame group="this" image="Brickworks_On_06"/>
+		</animation>
+	</image>
+</assetlist>

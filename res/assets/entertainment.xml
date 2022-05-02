@@ -210,15 +210,36 @@
 		<layer group="this" image="Tavern OFF"/>
 		<layer src="Tavern_Supplied" x="9" y="33"/>
 	</image>
+	<!-- Note: Tavern ON animation reference DO NOT USE! -->
+	<image id="Tavern_ON_01" width="118" height="82">
+		<layer src="Tavern_Supplied" x="9" y="33"/>
+		<layer src="Tavern_ON_01" x="11" y="28"/>
+	</image>
+	<image id="Tavern_ON_02" width="118" height="82">
+		<layer src="Tavern_Supplied" x="9" y="33"/>
+		<layer src="Tavern_ON_02" x="11" y="28"/>
+	</image>
+	<image id="Tavern_ON_03" width="118" height="82">
+		<layer src="Tavern_Supplied" x="9" y="33"/>
+		<layer src="Tavern_ON_03" x="11" y="28"/>
+	</image>
+	<image id="Tavern_ON_04" width="118" height="82">
+		<layer src="Tavern_Supplied" x="9" y="33"/>
+		<layer src="Tavern_ON_04" x="11" y="28"/>
+	</image>
+	<image id="Tavern_ON_05" width="118" height="82">
+		<layer src="Tavern_Supplied" x="9" y="33"/>
+		<layer src="Tavern_ON_05" x="11" y="28"/>
+	</image>
 	<!-- Note: Tavern ON Animations -->
 	<image id="Tavern ON" isometric="true">
-		<layer group="this" image="Tavern Supp"/>
-		<animation speed="8" x="11" y="28" reversible="false">
-			<frame src="Tavern_ON_01"/>
-			<frame src="Tavern_ON_02"/>
-			<frame src="Tavern_ON_03"/>
-			<frame src="Tavern_ON_04"/>
-			<frame src="Tavern_ON_05"/>
+		<layer group="this" image="Tavern OFF"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="Tavern_ON_01"/>
+			<frame group="this" image="Tavern_ON_02"/>
+			<frame group="this" image="Tavern_ON_03"/>
+			<frame group="this" image="Tavern_ON_04"/>
+			<frame group="this" image="Tavern_ON_05"/>
 		</animation>
 	</image>
 	<!-- Note: Barkeep Portrait -->

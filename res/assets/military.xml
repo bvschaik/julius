@@ -12,38 +12,66 @@
 		<layer group="this" image="Mess OFF Central" x="0" y="0"/>
 		<layer src="Mess_Hall_South_OFF" x="0" y="70"/>
 	</image>
+	<!-- Note: Mess Hall ON animation reference DO NOT USE! -->
+	<image id="Mess_Hall_Anim_01" width="178" height="121">
+		<layer src="Mess_Hall_ON" x="12" y="62"/>
+		<layer src="Mess_Hall_Anim_01" x="70" y="48"/>
+		<layer src="Watchtower_ON_01" x="129" y="67"/>
+		<layer src="Watchtower_ON_01" x="169" y="48"/>
+	</image>
+	<image id="Mess_Hall_Anim_02" width="178" height="121">
+		<layer src="Mess_Hall_ON" x="12" y="62"/>
+		<layer src="Mess_Hall_Anim_02" x="70" y="48"/>
+		<layer src="Watchtower_ON_02" x="129" y="67"/>
+		<layer src="Watchtower_ON_02" x="169" y="48"/>
+	</image>
+	<image id="Mess_Hall_Anim_03" width="178" height="121">
+		<layer src="Mess_Hall_ON" x="12" y="62"/>
+		<layer src="Mess_Hall_Anim_03" x="70" y="48"/>
+		<layer src="Watchtower_ON_03" x="129" y="67"/>
+		<layer src="Watchtower_ON_03" x="169" y="48"/>
+	</image>
+	<image id="Mess_Hall_Anim_04" width="178" height="121">
+		<layer src="Mess_Hall_ON" x="12" y="62"/>
+		<layer src="Mess_Hall_Anim_04" x="70" y="48"/>
+		<layer src="Watchtower_ON_04" x="129" y="67"/>
+		<layer src="Watchtower_ON_04" x="169" y="48"/>
+	</image>
+	<image id="Mess_Hall_Anim_05" width="178" height="121">
+		<layer src="Mess_Hall_ON" x="12" y="62"/>
+		<layer src="Mess_Hall_Anim_05" x="70" y="48"/>
+		<layer src="Watchtower_ON_05" x="129" y="67"/>
+		<layer src="Watchtower_ON_05" x="169" y="48"/>
+	</image>
 	<!-- Note: Mess Hall ON Animations for Central, North and South Climates Respectively -->
 	<image id="Mess ON Central" isometric="true">
 		<layer group="this" image="Mess OFF Central"/>
-		<layer src="Mess_Hall_ON" x="12" y="62"/>
-		<animation speed="6" x="70" y="48" reversible="false">
-			<frame src="Mess_Hall_Anim_01"/>
-			<frame src="Mess_Hall_Anim_02"/>
-			<frame src="Mess_Hall_Anim_03"/>
-			<frame src="Mess_Hall_Anim_04"/>
-			<frame src="Mess_Hall_Anim_05"/>
+		<animation speed="6" x="0" y="0" reversible="false">
+			<frame group="this" image="Mess_Hall_Anim_01"/>
+			<frame group="this" image="Mess_Hall_Anim_02"/>
+			<frame group="this" image="Mess_Hall_Anim_03"/>
+			<frame group="this" image="Mess_Hall_Anim_04"/>
+			<frame group="this" image="Mess_Hall_Anim_05"/>
 		</animation>
 	</image>
 	<image id="Mess ON North" isometric="true">
 		<layer group="this" image="Mess OFF North"/>
-		<layer src="Mess_Hall_ON" x="12" y="62"/>
-		<animation speed="6" x="70" y="48" reversible="false">
-			<frame src="Mess_Hall_Anim_01"/>
-			<frame src="Mess_Hall_Anim_02"/>
-			<frame src="Mess_Hall_Anim_03"/>
-			<frame src="Mess_Hall_Anim_04"/>
-			<frame src="Mess_Hall_Anim_05"/>
+		<animation speed="6" x="0" y="0" reversible="false">
+			<frame group="this" image="Mess_Hall_Anim_01"/>
+			<frame group="this" image="Mess_Hall_Anim_02"/>
+			<frame group="this" image="Mess_Hall_Anim_03"/>
+			<frame group="this" image="Mess_Hall_Anim_04"/>
+			<frame group="this" image="Mess_Hall_Anim_05"/>
 		</animation>
 	</image>
 	<image id="Mess ON South" isometric="true">
 		<layer group="this" image="Mess OFF South"/>
-		<layer src="Mess_Hall_ON" x="12" y="62"/>
-		<animation speed="6" x="70" y="48" reversible="false">
-			<frame src="Mess_Hall_Anim_01"/>
-			<frame src="Mess_Hall_Anim_02"/>
-			<frame src="Mess_Hall_Anim_03"/>
-			<frame src="Mess_Hall_Anim_04"/>
-			<frame src="Mess_Hall_Anim_05"/>
+		<animation speed="6" x="0" y="0" reversible="false">
+			<frame group="this" image="Mess_Hall_Anim_01"/>
+			<frame group="this" image="Mess_Hall_Anim_02"/>
+			<frame group="this" image="Mess_Hall_Anim_03"/>
+			<frame group="this" image="Mess_Hall_Anim_04"/>
+			<frame group="this" image="Mess_Hall_Anim_05"/>
 		</animation>
 	</image>
 	<!-- Note: Mess Hall Walker Portrait -->
@@ -164,82 +192,117 @@
 	<image id="M Hall N 10" src="mess_walker_n_10"/>
 	<image id="M Hall N 11" src="mess_walker_n_11"/>
 	<image id="M Hall N 12" src="mess_walker_n_12"/>
+	<!-- Note: Watchtower ON animation reference DO NOT USE! -->
+	<image id="Watchtower_ON_01" width="118" height="106">
+		<layer src="Watchtower_ON_Static" x="82" y="49"/>
+		<layer src="Watchtower_ON_01" x="56" y="66"/>
+	</image>
+	<image id="Watchtower_ON_02" width="118" height="106">
+		<layer src="Watchtower_ON_Static" x="82" y="49"/>
+		<layer src="Watchtower_ON_02" x="56" y="66"/>
+	</image>
+	<image id="Watchtower_ON_03" width="118" height="106">
+		<layer src="Watchtower_ON_Static" x="82" y="49"/>
+		<layer src="Watchtower_ON_03" x="56" y="66"/>
+	</image>
+	<image id="Watchtower_ON_04" width="118" height="106">
+		<layer src="Watchtower_ON_Static" x="82" y="49"/>
+		<layer src="Watchtower_ON_04" x="56" y="66"/>
+	</image>
+	<image id="Watchtower_ON_05" width="118" height="106">
+		<layer src="Watchtower_ON_Static" x="82" y="49"/>
+		<layer src="Watchtower_ON_05" x="56" y="66"/>
+	</image>
+	<image id="Watchtower_ON_01_r" width="118" height="106">
+		<layer src="Watchtower_ON_Static" x="7" y="49"/>
+		<layer src="Watchtower_ON_01" x="54" y="66" invert="horizontal"/>
+	</image>
+	<image id="Watchtower_ON_02_r" width="118" height="106">
+		<layer src="Watchtower_ON_Static" x="7" y="49"/>
+		<layer src="Watchtower_ON_02" x="54" y="66" invert="horizontal"/>
+	</image>
+	<image id="Watchtower_ON_03_r" width="118" height="106">
+		<layer src="Watchtower_ON_Static" x="7" y="49"/>
+		<layer src="Watchtower_ON_03" x="54" y="66" invert="horizontal"/>
+	</image>
+	<image id="Watchtower_ON_04_r" width="118" height="106">
+		<layer src="Watchtower_ON_Static" x="7" y="49"/>
+		<layer src="Watchtower_ON_04" x="54" y="66" invert="horizontal"/>
+	</image>
+	<image id="Watchtower_ON_05_r" width="118" height="106">
+		<layer src="Watchtower_ON_Static" x="7" y="49"/>
+		<layer src="Watchtower_ON_05" x="54" y="66" invert="horizontal"/>
+	</image>
 	<!-- Note: Watchtower OFF and ON states for Central Climate Respectively -->
 	<image id="Watchtower C OFF" src="Watchtower_Central_OFF" isometric="true"/>
 	<image id="Watchtower C ON" isometric="true">
 		<layer group="this" image="Watchtower C OFF"/>
-		<layer src="Watchtower_ON_Static" x="82" y="49"/>
-		<animation speed="8" x="56" y="66" reversible="false">
-			<frame src="Watchtower_ON_01"/>
-			<frame src="Watchtower_ON_02"/>
-			<frame src="Watchtower_ON_03"/>
-			<frame src="Watchtower_ON_04"/>
-			<frame src="Watchtower_ON_05"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="Watchtower_ON_01"/>
+			<frame group="this" image="Watchtower_ON_02"/>
+			<frame group="this" image="Watchtower_ON_03"/>
+			<frame group="this" image="Watchtower_ON_04"/>
+			<frame group="this" image="Watchtower_ON_05"/>
 		</animation>
 	</image>
 	<!-- Note: Watchtower OFF and ON states for North Climate Respectively -->
 	<image id="Watchtower N OFF" src="Watchtower_North_OFF" isometric="true"/>
 	<image id="Watchtower N ON" isometric="true">
 		<layer group="this" image="Watchtower N OFF"/>
-		<layer src="Watchtower_ON_Static" x="82" y="49"/>
-		<animation speed="8" x="56" y="66" reversible="false">
-			<frame src="Watchtower_ON_01"/>
-			<frame src="Watchtower_ON_02"/>
-			<frame src="Watchtower_ON_03"/>
-			<frame src="Watchtower_ON_04"/>
-			<frame src="Watchtower_ON_05"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="Watchtower_ON_01"/>
+			<frame group="this" image="Watchtower_ON_02"/>
+			<frame group="this" image="Watchtower_ON_03"/>
+			<frame group="this" image="Watchtower_ON_04"/>
+			<frame group="this" image="Watchtower_ON_05"/>
 		</animation>
 	</image>
 	<!-- Note: Watchtower OFF and ON states for South Climate Respectively -->
 	<image id="Watchtower S OFF" src="Watchtower_South_OFF" isometric="true"/>
 	<image id="Watchtower S ON" isometric="true">
 		<layer group="this" image="Watchtower S OFF"/>
-		<layer src="Watchtower_ON_Static" x="82" y="49"/>
-		<animation speed="8" x="56" y="66" reversible="false">
-			<frame src="Watchtower_ON_01"/>
-			<frame src="Watchtower_ON_02"/>
-			<frame src="Watchtower_ON_03"/>
-			<frame src="Watchtower_ON_04"/>
-			<frame src="Watchtower_ON_05"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="Watchtower_ON_01"/>
+			<frame group="this" image="Watchtower_ON_02"/>
+			<frame group="this" image="Watchtower_ON_03"/>
+			<frame group="this" image="Watchtower_ON_04"/>
+			<frame group="this" image="Watchtower_ON_05"/>
 		</animation>
 	</image>
 	<!-- Note: ROTATED Watchtower OFF and ON states for Central Climate Respectively -->
 	<image id="Watchtower C OFF R" src="Watchtower_Central_OFF_r" isometric="true"/>
 	<image id="Watchtower C ON R" isometric="true">
 		<layer group="this" image="Watchtower C OFF R"/>
-		<layer src="Watchtower_ON_Static_r" x="7" y="49"/>
-		<animation speed="8" x="54" y="66" reversible="false">
-			<frame src="Watchtower_ON_01_r"/>
-			<frame src="Watchtower_ON_02_r"/>
-			<frame src="Watchtower_ON_03_r"/>
-			<frame src="Watchtower_ON_04_r"/>
-			<frame src="Watchtower_ON_05_r"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="Watchtower_ON_01_r"/>
+			<frame group="this" image="Watchtower_ON_02_r"/>
+			<frame group="this" image="Watchtower_ON_03_r"/>
+			<frame group="this" image="Watchtower_ON_04_r"/>
+			<frame group="this" image="Watchtower_ON_05_r"/>
 		</animation>
 	</image>
 	<!-- Note: ROTATED Watchtower OFF and ON states for North Climate Respectively -->
 	<image id="Watchtower N OFF R" src="Watchtower_North_OFF_r" isometric="true"/>
 	<image id="Watchtower N ON R" isometric="true">
 		<layer group="this" image="Watchtower N OFF R"/>
-		<layer src="Watchtower_ON_Static_r" x="7" y="49"/>
-		<animation speed="8" x="54" y="66" reversible="false">
-			<frame src="Watchtower_ON_01_r"/>
-			<frame src="Watchtower_ON_02_r"/>
-			<frame src="Watchtower_ON_03_r"/>
-			<frame src="Watchtower_ON_04_r"/>
-			<frame src="Watchtower_ON_05_r"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="Watchtower_ON_01_r"/>
+			<frame group="this" image="Watchtower_ON_02_r"/>
+			<frame group="this" image="Watchtower_ON_03_r"/>
+			<frame group="this" image="Watchtower_ON_04_r"/>
+			<frame group="this" image="Watchtower_ON_05_r"/>
 		</animation>
 	</image>
 	<!-- Note: ROTATED Watchtower OFF and ON states for South Climate Respectively -->
 	<image id="Watchtower S OFF R" src="Watchtower_South_OFF_r" isometric="true"/>
 	<image id="Watchtower S ON R" isometric="true">
 		<layer group="this" image="Watchtower S OFF R"/>
-		<layer src="Watchtower_ON_Static_r" x="7" y="49"/>
-		<animation speed="8" x="54" y="66" reversible="false">
-			<frame src="Watchtower_ON_01_r"/>
-			<frame src="Watchtower_ON_02_r"/>
-			<frame src="Watchtower_ON_03_r"/>
-			<frame src="Watchtower_ON_04_r"/>
-			<frame src="Watchtower_ON_05_r"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="Watchtower_ON_01_r"/>
+			<frame group="this" image="Watchtower_ON_02_r"/>
+			<frame group="this" image="Watchtower_ON_03_r"/>
+			<frame group="this" image="Watchtower_ON_04_r"/>
+			<frame group="this" image="Watchtower_ON_05_r"/>
 		</animation>
 	</image>
 	<!-- Note: Assets for Palisade CENTRAL CLIMATE all directions and intersection variants. There are 6 variants for each direction of straight wall (01-06 & 07r-12r), which could randomize? -->
@@ -249,23 +312,29 @@
 	</image>
 	<image id="Pal Wall C 02" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
-		<layer src="Palisade_02" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_02" x="5" y="16"/>
 	</image>
 	<image id="Pal Wall C 03" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
-		<layer src="Palisade_03" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_02" x="21" y="21"/>
 	</image>
 	<image id="Pal Wall C 04" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
-		<layer src="Palisade_04" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_02" x="5" y="16"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall C 05" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
-		<layer src="Palisade_05" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall C 06" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
-		<layer src="Palisade_06" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_06" x="12" y="18"/>
 	</image>
 	<image id="Pal Wall C 07" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
@@ -273,23 +342,29 @@
 	</image>
 	<image id="Pal Wall C 08" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
-		<layer src="Palisade_08" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_02" x="39" y="16" invert="horizontal"/>
 	</image>
 	<image id="Pal Wall C 09" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
-		<layer src="Palisade_09" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_02" x="23" y="21" invert="horizontal"/>
 	</image>
 	<image id="Pal Wall C 10" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
-		<layer src="Palisade_10" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_02" x="39" y="16" invert="horizontal"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall C 11" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
-		<layer src="Palisade_11" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall C 12" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
-		<layer src="Palisade_12" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_06" x="18" y="18" invert="horizontal"/>
 	</image>
 	<image id="Pal Wall C 13" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
@@ -334,23 +409,29 @@
 	</image>
 	<image id="Pal Wall N 02" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
-		<layer src="Palisade_02" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_02" x="5" y="16"/>
 	</image>
 	<image id="Pal Wall N 03" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
-		<layer src="Palisade_03" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_02" x="21" y="21"/>
 	</image>
 	<image id="Pal Wall N 04" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
-		<layer src="Palisade_04" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_02" x="5" y="16"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall N 05" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
-		<layer src="Palisade_05" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall N 06" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
-		<layer src="Palisade_06" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_06" x="12" y="18"/>
 	</image>
 	<image id="Pal Wall N 07" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
@@ -358,23 +439,29 @@
 	</image>
 	<image id="Pal Wall N 08" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
-		<layer src="Palisade_08" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_02" x="39" y="16" invert="horizontal"/>
 	</image>
 	<image id="Pal Wall N 09" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
-		<layer src="Palisade_09" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_02" x="23" y="21" invert="horizontal"/>
 	</image>
 	<image id="Pal Wall N 10" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
-		<layer src="Palisade_10" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_02" x="39" y="16" invert="horizontal"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall N 11" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
-		<layer src="Palisade_11" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall N 12" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
-		<layer src="Palisade_12" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_06" x="18" y="18" invert="horizontal"/>
 	</image>
 	<image id="Pal Wall N 13" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_N" x="0" y="10"/>
@@ -419,23 +506,29 @@
 	</image>
 	<image id="Pal Wall S 02" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
-		<layer src="Palisade_02" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_02" x="5" y="16"/>
 	</image>
 	<image id="Pal Wall S 03" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
-		<layer src="Palisade_03" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_02" x="21" y="21"/>
 	</image>
 	<image id="Pal Wall S 04" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
-		<layer src="Palisade_04" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_02" x="5" y="16"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall S 05" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
-		<layer src="Palisade_05" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall S 06" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
-		<layer src="Palisade_06" x="0" y="0"/>
+		<layer src="Palisade_01" x="0" y="0"/>
+		<layer src="Palisade_06" x="12" y="18"/>
 	</image>
 	<image id="Pal Wall S 07" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
@@ -443,23 +536,29 @@
 	</image>
 	<image id="Pal Wall S 08" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
-		<layer src="Palisade_08" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_02" x="39" y="16" invert="horizontal"/>
 	</image>
 	<image id="Pal Wall S 09" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
-		<layer src="Palisade_09" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_02" x="23" y="21" invert="horizontal"/>
 	</image>
 	<image id="Pal Wall S 10" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
-		<layer src="Palisade_10" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_02" x="39" y="16" invert="horizontal"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall S 11" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
-		<layer src="Palisade_11" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_05" x="23" y="21"/>
 	</image>
 	<image id="Pal Wall S 12" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
-		<layer src="Palisade_12" x="0" y="0"/>
+		<layer src="Palisade_07" x="0" y="0"/>
+		<layer src="Palisade_06" x="18" y="18" invert="horizontal"/>
 	</image>
 	<image id="Pal Wall S 13" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_S" x="0" y="10"/>
