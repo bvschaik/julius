@@ -332,6 +332,7 @@ static void xml_start_frame_element(const char **attributes)
         asset_image_unload(img);
         return;
     }
+    asset_image_check_and_handle_reference(img);
 #else
     data.current_image->has_frame_elements = 1;
 #endif
