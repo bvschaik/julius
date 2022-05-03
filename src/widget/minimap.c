@@ -29,12 +29,6 @@ enum {
     FIGURE_COLOR_WOLF = 4
 };
 
-enum {
-    REFRESH_NOT_NEEDED = 0,
-    REFRESH_FULL = 1,
-    REFRESH_CAMERA_MOVED = 2
-};
-
 typedef struct {
     color_t left;
     color_t right;
@@ -180,6 +174,7 @@ static struct {
         int offset_x;
         int offset_y;
         float scale;
+        float max_scale;
     } minimap;
     struct {
         int stride;
@@ -228,11 +223,14 @@ static void set_bounds(int x_offset, int y_offset, int width, int height)
     data.screen.width_tiles = width / 2;
     data.screen.height_tiles = height;
 
-    data.minimap.width = data.functions->map.width();
-    data.minimap.height = data.functions->map.height() * 2;
-    data.minimap.x = (VIEW_X_MAX - data.minimap.width) / 2;
-    data.minimap.y = (VIEW_Y_MAX - data.minimap.height) / 2;
+    float max_scale_width = data.minimap.width * 2 / (float) data.screen.width;
+    float max_scale_height = data.minimap.height / (float) data.screen.height;
 
+    data.minimap.max_scale = max_scale_width > max_scale_height ? max_scale_width : max_scale_height;
+}
+
+static void position_minimap(void)
+{
     if (data.functions->viewport) {
         data.functions->viewport(&data.viewport.x, &data.viewport.y, &data.viewport.width, &data.viewport.height);
 
@@ -240,6 +238,10 @@ static void set_bounds(int x_offset, int y_offset, int width, int height)
         float scale_height = data.viewport.height / (float) data.screen.height_tiles;
 
         data.minimap.scale = scale_width > scale_height ? scale_width : scale_height;
+
+        if (data.minimap.scale > data.minimap.max_scale) {
+            data.minimap.scale = data.minimap.max_scale;
+        }
     }
 
     if (data.minimap.scale < 1.0f) {
@@ -468,20 +470,23 @@ static void prepare_minimap_cache(void)
 {
     if (data.functions->map.width() != data.minimap.width || data.functions->map.height() * 2 != data.minimap.height ||
         !graphics_renderer()->has_custom_image(CUSTOM_IMAGE_MINIMAP)) {
-        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, data.functions->map.width() * 2,
-            data.functions->map.height() * 2, 0);
+        data.minimap.width = data.functions->map.width();
+        data.minimap.height = data.functions->map.height() * 2;
+        data.minimap.x = (VIEW_X_MAX - data.minimap.width) / 2;
+        data.minimap.y = (VIEW_Y_MAX - data.minimap.height) / 2;
+
+        graphics_renderer()->create_custom_image(CUSTOM_IMAGE_MINIMAP, data.minimap.width * 2, data.minimap.height, 0);
     }
     data.cache.buffer = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_MINIMAP, &data.cache.stride);
 }
 
 static void clear_minimap(void)
 {
-    memset(data.cache.buffer, 0, data.functions->map.height() * 2 * data.cache.stride * sizeof(color_t));
+    memset(data.cache.buffer, 0, data.minimap.height * data.cache.stride * sizeof(color_t));
 }
 
 void widget_minimap_draw(int x_offset, int y_offset, int width, int height, int force)
 {
-    set_bounds(x_offset, y_offset, width, height);
     graphics_set_clip_rectangle(x_offset, y_offset, width, height);
     graphics_fill_rect(x_offset, y_offset, width, height, COLOR_BLACK);
 
@@ -491,11 +496,13 @@ void widget_minimap_draw(int x_offset, int y_offset, int width, int height, int 
             return;
         }
         clear_minimap();
+        set_bounds(x_offset, y_offset, width, height);
         foreach_map_tile(draw_minimap_tile);
         graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
         data.refresh_requested = 0;
     }
-    
+
+    position_minimap();
     graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP,
         (data.screen.x - data.minimap.offset_x) * data.minimap.scale, (data.screen.y - data.minimap.offset_y) *
         data.minimap.scale, data.minimap.scale);
