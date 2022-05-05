@@ -548,8 +548,8 @@ void asset_image_copy_isometric_top(color_t *dst, const color_t *src, int width,
     for (int y = 0; y < height; y++) {
         const color_t *src_row = &src[(src_y_offset + y) * src_width + src_x_offset];
         color_t *dst_row = &dst[(dst_y_offset + y) * dst_width + dst_x_offset];
-        int footprint_row = y - height - 1 - tiles * FOOTPRINT_HALF_HEIGHT;
-        int half_top_pixels_in_row = (footprint_row < 0 ? width : width - 2 + 4 * footprint_row) / 2;
+        int footprint_row = y - height - 1 + tiles * FOOTPRINT_HALF_HEIGHT;
+        int half_top_pixels_in_row = (footprint_row < 0 ? width : width - 2 - 4 * footprint_row) / 2;
         memcpy(dst_row, src_row, half_top_pixels_in_row * sizeof(color_t));
         src_row += width - half_top_pixels_in_row;
         dst_row += width - half_top_pixels_in_row;

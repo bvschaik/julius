@@ -17,7 +17,7 @@
 		<layer src="Colosseum_75%_Construction_Phase"/>
 	</image>
 	<!-- Note: Colosseum ON state -->
-	<image id="Coloseum ON" width="298" height="213">
+	<image id="Coloseum ON" width="298" height="213" isometric="true">
 		<layer group="48"/>
 		<layer group="48" image="14" x="70" y="33"/>
 		<layer src="Colosseum_ON_Overlay" x="70" y="33"/>

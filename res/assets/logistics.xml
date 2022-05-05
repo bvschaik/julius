@@ -267,7 +267,7 @@
 		<layer src="Cart_Depot_OFF_N" x="0" y="36"/>
 	</image>
 	<image id="Cart Depot S OFF" isometric="true">
-		<layer group="this" image="Tavern OFF"/>
+		<layer group="this" image="Cart Depot C OFF"/>
 		<layer src="Cart_Depot_OFF_S" x="0" y="36"/>
 	</image>
 	<!-- Note: Cart Depot ON Variants for Northern, Central and Southern Climates Respectively -->

@@ -301,7 +301,6 @@ static void save_final_image(const char *path, unsigned int width, unsigned int 
         return;
     }
     png_set_compression_level(png_ptr, 3);
-    unsigned int row_size = width * BYTES_PER_PIXEL;
 
     FILE *fp = fopen(path, "wb");
     if (!fp) {
