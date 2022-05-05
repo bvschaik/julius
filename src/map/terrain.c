@@ -1,5 +1,6 @@
 #include "terrain.h"
 
+#include "city/map.h"
 #include "core/image.h"
 #include "map/grid.h"
 #include "map/ring.h"
@@ -160,6 +161,25 @@ int map_terrain_exists_tile_in_radius_with_type(int x, int y, int size, int radi
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             if (map_terrain_is(map_grid_offset(xx, yy), terrain)) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+int map_terrain_exists_rock_in_radius(int x, int y, int size, int radius)
+{
+    int x_min, y_min, x_max, y_max;
+    map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
+
+    for (int yy = y_min; yy <= y_max; yy++) {
+        for (int xx = x_min; xx <= x_max; xx++) {
+            int offset = map_grid_offset(xx, yy);
+            if (offset == city_map_entry_flag()->grid_offset || offset == city_map_exit_flag()->grid_offset) {
+                continue;
+            }
+            if (map_terrain_is(offset, TERRAIN_ROCK)) {
                 return 1;
             }
         }

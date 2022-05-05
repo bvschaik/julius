@@ -1024,7 +1024,7 @@ int building_construction_can_place_on_terrain(int x, int y, int *warning_id)
             return 0;
         }
     } else if (data.required_terrain.rock) {
-        if (!map_terrain_exists_tile_in_radius_with_type(x, y, 2, 1, TERRAIN_ROCK)) {
+        if (!map_terrain_exists_rock_in_radius(x, y, 2, 1)) {
             set_warning(warning_id, WARNING_ROCK_NEEDED);
             return 0;
         }
