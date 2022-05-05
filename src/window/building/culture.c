@@ -675,7 +675,9 @@ static void draw_grand_temple(building_info_context *c, const char *sound_file,
         inner_panel_draw(c->x_offset + 16, c->y_offset + 86 + height + extra_y, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 96 + height + extra_y);
         if (c->height_blocks > 26) {
-            image_draw(banner_id, c->x_offset + 32, c->y_offset + 166 + height + extra_y,
+            image_draw_border(assets_get_image_id("UI", "Large_Banner_Border"),
+                c->x_offset + 32, c->y_offset + 166 + height + extra_y, COLOR_MASK_NONE);
+            image_draw(banner_id, c->x_offset + 37, c->y_offset + 171 + height + extra_y,
                 COLOR_MASK_NONE, SCALE_NONE);
             text_draw_centered_with_linebreaks(translation_for(quote),
                 c->x_offset, c->y_offset + 386 + height + extra_y, BLOCK_SIZE * c->width_blocks - 16, FONT_NORMAL_BLACK, 0);
@@ -1076,8 +1078,10 @@ void window_building_draw_lighthouse(building_info_context *c)
         window_building_draw_employment(c, 278);
 
         if (c->height_blocks >= 38) {
+            image_draw_border(assets_get_image_id("UI", "Large_Banner_Border"),
+                c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE);
             image_draw(assets_get_image_id("UI", "Lighthouse Banner"),
-                c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE, SCALE_NONE);
+                c->x_offset + 37, c->y_offset + 355, COLOR_MASK_NONE, SCALE_NONE);
         }
 
     } else {
@@ -1148,7 +1152,9 @@ void window_building_draw_hippodrome_background(building_info_context *c)
         if (c->height_blocks > 27) {
             y_offset += 223;
             int banner_id = assets_get_image_id("UI", "Circus Banner");
-            image_draw(banner_id, c->x_offset + 32, c->y_offset + y_offset, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw_border(assets_get_image_id("UI", "Large_Banner_Border"),
+                c->x_offset + 32, c->y_offset + y_offset, COLOR_MASK_NONE);
+            image_draw(banner_id, c->x_offset + 37, c->y_offset + y_offset + 5, COLOR_MASK_NONE, SCALE_NONE);
         }
 
         if (city_data.games.chosen_horse) {

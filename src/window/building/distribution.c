@@ -1417,8 +1417,10 @@ void window_building_draw_caravanserai(building_info_context *c)
         window_building_draw_employment(c, 278);
 
         if (c->height_blocks >= 38) {
+            image_draw_border(assets_get_image_id("UI", "Large_Banner_Border"),
+                c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE);
             image_draw(assets_get_image_id("UI", "Caravanserai Banner"),
-                c->x_offset + 32, c->y_offset + 350, COLOR_MASK_NONE, SCALE_NONE);
+                c->x_offset + 37, c->y_offset + 355, COLOR_MASK_NONE, SCALE_NONE);
         }
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);

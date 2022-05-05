@@ -241,8 +241,10 @@ void window_building_draw_monument_construction_process(building_info_context *c
         }
         if (c->height_blocks > 26) {
             int phase_offset = b->data.monument.phase % 2;
+            image_draw_border(assets_get_image_id("UI", "Large_Banner_Border"),
+                c->x_offset + 32, c->y_offset + 196 + height, COLOR_MASK_NONE);
             image_draw(assets_get_image_id("UI", "Const. Banner 01") +
-                phase_offset, c->x_offset + 32, c->y_offset + 196 + height, COLOR_MASK_NONE, SCALE_NONE);
+                phase_offset, c->x_offset + 37, c->y_offset + 201 + height, COLOR_MASK_NONE, SCALE_NONE);
         }
     }
 }
