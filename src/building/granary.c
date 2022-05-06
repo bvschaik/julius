@@ -46,10 +46,11 @@ int building_granary_is_accepting(int resource, building *b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
     int amount = get_amount(b, resource);
-    if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING) ||
+    if (!b->has_plague &&
+        ((s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS && amount < THREEQUARTERS_GRANARY) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_GRANARY) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER && amount < QUARTER_GRANARY)) {
+        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER && amount < QUARTER_GRANARY))) {
         return 1;
     } else {
         return 0;
@@ -60,10 +61,11 @@ int building_granary_is_getting(int resource, building *b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
     int amount = get_amount(b, resource);
-    if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
+    if (!b->has_plague &&
+        ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS && amount < THREEQUARTERS_GRANARY) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_GRANARY) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER && amount < QUARTER_GRANARY)) {
+        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER && amount < QUARTER_GRANARY))) {
         return 1;
     } else {
         return 0;
@@ -73,10 +75,11 @@ int building_granary_is_getting(int resource, building *b)
 int building_granary_is_gettable(int resource, building *b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
-    if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
+    if (!b->has_plague &&
+        ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER)) {
+        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER))) {
         return 1;
     } else {
         return 0;
@@ -132,9 +135,6 @@ int building_granary_add_resource(building *granary, int resource, int is_produc
         return 0; // no space
     }
     if (building_granary_is_not_accepting(resource, granary)) {
-        return 0;
-    }
-    if (granary->has_plague) {
         return 0;
     }
     if (is_produced) {
@@ -426,6 +426,7 @@ int building_getting_granary_for_storing(int x, int y, int resource, int road_ne
     if (!resource_is_food(resource)) {
         return 0;
     }
+    
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }

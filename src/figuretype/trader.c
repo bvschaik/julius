@@ -337,7 +337,7 @@ static int get_closest_storage(const figure *f, int x, int y, int city_id, map_p
     int min_distance = INFINITE;
     building *min_building = 0;
     for (building *b = building_first_of_type(BUILDING_WAREHOUSE); b; b = b->next_of_type) {
-        if (b->state != BUILDING_STATE_IN_USE || !b->has_road_access || b->distance_from_entry <= 0 ||
+        if (b->state != BUILDING_STATE_IN_USE || b->has_plague|| !b->has_road_access || b->distance_from_entry <= 0 ||
             !building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, b)) {
             continue;
         }
@@ -383,7 +383,7 @@ static int get_closest_storage(const figure *f, int x, int y, int city_id, map_p
         }
     }
     for (building *b = building_first_of_type(BUILDING_GRANARY); b; b = b->next_of_type) {
-        if (b->state != BUILDING_STATE_IN_USE || !b->has_road_access || b->distance_from_entry <= 0 ||
+        if (b->state != BUILDING_STATE_IN_USE || b->has_plague || !b->has_road_access || b->distance_from_entry <= 0 ||
             !building_storage_get_permission(BUILDING_STORAGE_PERMISSION_TRADERS, b)) {
             continue;
         }

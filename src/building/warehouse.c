@@ -65,9 +65,6 @@ int building_warehouse_add_resource(building *b, int resource)
     if (b->id <= 0) {
         return 0;
     }
-    if (b->has_plague) {
-        return 0;
-    }
     if (building_warehouse_is_not_accepting(resource, building_main(b))) {
         return 0;
     }
@@ -244,10 +241,11 @@ int building_warehouse_is_accepting(int resource, building *b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
     int amount = building_warehouse_get_amount(b, resource);
-    if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING) ||
+    if (!b->has_plague &&
+        ((s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS && amount < THREEQ_WAREHOUSE) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_WAREHOUSE) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER && amount < QUARTER_WAREHOUSE)) {
+        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER && amount < QUARTER_WAREHOUSE))) {
         return 1;
     } else {
         return 0;
@@ -258,10 +256,11 @@ int building_warehouse_is_getting(int resource, building *b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
     int amount = building_warehouse_get_amount(b, resource);
-    if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
+    if (!b->has_plague && 
+        ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS && amount < THREEQ_WAREHOUSE) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_WAREHOUSE) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER && amount < QUARTER_WAREHOUSE)) {
+        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER && amount < QUARTER_WAREHOUSE))) {
         return 1;
     } else {
         return 0;
@@ -271,10 +270,11 @@ int building_warehouse_is_getting(int resource, building *b)
 int building_warehouse_is_gettable(int resource, building *b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
-    if ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
+    if (!b->has_plague &&
+        ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
         (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER)) {
+        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER))) {
         return 1;
     } else {
         return 0;
