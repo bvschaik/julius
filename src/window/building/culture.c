@@ -924,9 +924,10 @@ void window_building_draw_colosseum_background(building_info_context *c)
             int extra_y_offset = 56;
             if (c->height_blocks > 27) {
                 extra_y_offset += 200;
-                int banner_id = assets_get_image_id("UI", "Colosseum Banner");
-                image_draw(banner_id, c->x_offset + 32, c->y_offset + extra_y_offset,
-                    COLOR_MASK_NONE, SCALE_NONE);
+                image_draw_border(assets_get_image_id("UI", "Large_Banner_Border"),
+                    c->x_offset + 32, c->y_offset + extra_y_offset, COLOR_MASK_NONE);
+                image_draw(assets_get_image_id("UI", "Colosseum Banner"),
+                    c->x_offset + 37, c->y_offset + extra_y_offset + 5, COLOR_MASK_NONE, SCALE_NONE);
             }
             draw_games_info(c, extra_y_offset);
         }
