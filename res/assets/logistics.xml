@@ -234,28 +234,69 @@
 		<layer group="this" image="Workcamp Central" x="0" y="0"/>
 		<layer src="Workcamp_South" x="0" y="57"/>
 	</image>
-	<!-- Note: Caravanserai OFF Variant for Northern/Central and Southern Climates Respectively -->
-	<image id="Caravanserai N OFF" src="Caravanserai_n_OFF" isometric="true"/>
-	<image id="Caravanserai S OFF" width="238" height="148" isometric="true">
-		<layer group="this" image="Caravanserai N OFF" part="footprint" x="0" y="-7"/>
-		<layer src="Caravanserai_s_OFF" x="0" y="0"/>
+	<!-- Note: Caravanserai ON animation references DO NOT USE! -->
+	<image id="Caravanserai_CN_On_01" width="238" height="155">
+		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
+		<layer src="Caravanserai_CN_ON_01" x="86" y="46"/>
 	</image>
-	<!-- Note: Caravanserai ON Variant for Northern/Central Climate -->
-	<image id="Caravanserai N ON" width="238" height="155" isometric="true">
-		<layer group="this" image="Caravanserai N OFF"/>
-		<animation speed="8" x="44" y="38" reversible="true">
-			<frame src="Caravanserai_n_ON_01"/>
-			<frame src="Caravanserai_n_ON_02"/>
-			<frame src="Caravanserai_n_ON_03"/>
+	<image id="Caravanserai_CN_On_02" width="238" height="155">
+		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
+		<layer src="Caravanserai_CN_ON_02" x="86" y="46"/>
+	</image>
+	<image id="Caravanserai_CN_On_03" width="238" height="155">
+		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
+		<layer src="Caravanserai_CN_ON_03" x="86" y="46"/>
+	</image>
+	<image id="Caravanserai_S_On_01" width="238" height="155">
+		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
+		<layer src="Caravanserai_S_ON_01" x="79" y="37"/>
+	</image>
+	<image id="Caravanserai_S_On_02" width="238" height="155">
+		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
+		<layer src="Caravanserai_S_On_02" x="79" y="37"/>
+	</image>
+	<image id="Caravanserai_S_On_03" width="238" height="155">
+		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
+		<layer src="Caravanserai_S_On_03" x="79" y="37"/>
+	</image>
+	<!-- Note: Caravanserai OFF Variant for Central, Northern and Southern Climates Respectively -->
+	<image id="Caravanserai_C_OFF" width="238" height="155" isometric="true">
+		<layer src="Caravanserai_Base" x="0" y="12"/>
+		<layer src="Caravanserai_C_Top" x="18" y="7"/>
+	</image>
+	<image id="Caravanserai_N_OFF" width="238" height="155" isometric="true">
+		<layer src="Caravanserai_Base" x="0" y="12"/>
+		<layer src="Caravanserai_N_Top" x="18" y="0"/>
+	</image>
+	<image id="Caravanserai_S_OFF" width="238" height="155" isometric="true">
+		<layer src="Caravanserai_Base" x="0" y="12"/>
+		<layer src="Caravanserai_S_Top" x="15" y="7"/>
+	</image>
+	<!-- Note: Caravanserai ON Variant for Central Climate -->
+	<image id="Caravanserai_C_ON" width="238" height="155" isometric="true">
+		<layer group="this" image="Caravanserai_C_OFF"/>
+		<animation speed="8" x="0" y="0" reversible="true">
+			<frame group="this" image="Caravanserai_CN_On_01"/>
+			<frame group="this" image="Caravanserai_CN_On_02"/>
+			<frame group="this" image="Caravanserai_CN_On_03"/>
+		</animation>
+	</image>
+	<!-- Note: Caravanserai ON Variant for Northern Climate -->
+	<image id="Caravanserai_N_ON" width="238" height="155" isometric="true">
+		<layer group="this" image="Caravanserai_N_OFF"/>
+		<animation speed="8" x="0" y="0" reversible="true">
+			<frame group="this" image="Caravanserai_CN_On_01"/>
+			<frame group="this" image="Caravanserai_CN_On_02"/>
+			<frame group="this" image="Caravanserai_CN_On_03"/>
 		</animation>
 	</image>
 	<!-- Note: Caravanserai ON Variant for Southern Climate -->
-	<image id="Caravanserai S ON" width="238" height="148" isometric="true">
-		<layer group="this" image="Caravanserai S OFF"/>
-		<animation speed="8" x="44" y="30" reversible="true">
-			<frame src="Caravanserai_s_ON_01"/>
-			<frame src="Caravanserai_s_ON_02"/>
-			<frame src="Caravanserai_s_ON_03"/>
+	<image id="Caravanserai_S_ON" width="238" height="155" isometric="true">
+		<layer group="this" image="Caravanserai_S_OFF"/>
+		<animation speed="8" x="0" y="0" reversible="true">
+			<frame group="this" image="Caravanserai_S_On_01"/>
+			<frame group="this" image="Caravanserai_S_On_02"/>
+			<frame group="this" image="Caravanserai_S_On_03"/>
 		</animation>
 	</image>
 	<!-- Note: Caravanserai Construction 0% Phase -->
@@ -423,4 +464,3 @@
 		</animation>
 	</image>
 </assetlist>
-	
