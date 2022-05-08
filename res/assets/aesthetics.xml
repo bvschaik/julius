@@ -300,26 +300,30 @@
 	<image id="D Hedge 10" src="Dark_Green_Hedge_Intersection_04" isometric="true"/>
 	<image id="D Hedge 11" src="Dark_Green_Hedge_Intersections_4w" isometric="true"/>
 	<!-- Note: Assets for 'Hedge Gates' including both directions/colours -->
-	<image id="L Hedge Gate" isometric="true">
-		<layer src="Light_Green_Hedge_Gate"/>
+	<image id="L Hedge Gate" width="58" height="56" isometric="true">
+		<layer src="Light_Green_Hedge_Gate" x="0" y="8"/>
+		<layer src="Light_Green_Hedge_Gate_Top" x="15" y="0"/>
 		<animation speed="1" x="15" y="0" reversible="false">
 			<frame src="Light_Green_Hedge_Gate_Top"/>
 		</animation>
 	</image>
-	<image id="L Hedge Gate R" isometric="true">
-		<layer src="Light_Green_Hedge_R_Gate"/>
+	<image id="L Hedge Gate R" width="58" height="56" isometric="true">
+		<layer src="Light_Green_Hedge_R_Gate" x="24" y="8"/>
+		<layer src="Light_Green_Hedge_R_Gate_Top" x="0" y="0"/>
 		<animation speed="1" x="0" y="0" reversible="false">
 			<frame src="Light_Green_Hedge_R_Gate_Top"/>
 		</animation>
 	</image>
-	<image id="D Hedge Gate" isometric="true">
-		<layer src="Dark_Green_Hedge_Gate"/>
+	<image id="D Hedge Gate" width="58" height="56" isometric="true">
+		<layer src="Dark_Green_Hedge_Gate" x="0" y="8"/>
+		<layer src="Dark_Green_Hedge_Gate_Top" x="15" y="0"/>
 		<animation speed="1" x="15" y="0" reversible="false">
 			<frame src="Dark_Green_Hedge_Gate_Top"/>
 		</animation>
 	</image>
-	<image id="D Hedge Gate R" isometric="true">
-		<layer src="Dark_Green_Hedge_R_Gate"/>
+	<image id="D Hedge Gate R" width="58" height="56" isometric="true">
+		<layer src="Dark_Green_Hedge_R_Gate" x="24" y="8"/>
+		<layer src="Dark_Green_Hedge_R_Gate_Top" x="0" y="0"/>
 		<animation speed="1" x="0" y="0" reversible="false">
 			<frame src="Dark_Green_Hedge_R_Gate_Top"/>
 		</animation>
@@ -365,14 +369,16 @@
 	<image id="C Garden Wall 10" src="Garden_Wall_A_Intersection_04" isometric="true"/>
 	<image id="C Garden Wall 11" src="Garden_Wall_A_Intersection_4w" isometric="true"/>
 	<!-- Note: Assets for 'Garden wall gate' with rotation variant -->
-	<image id="Garden Gate" isometric="true">
-		<layer src="Garden_Gate"/>
-		<animation speed="1" x="0" y="0" reversible="false">
+	<image id="Garden Gate" width="58" height="56" isometric="true">
+		<layer src="Garden_Gate" x="0" y="12"/>
+		<layer src="Garden_Gate_Top" x="6" y="0"/>
+		<animation speed="1" x="6" y="0" reversible="false">
 			<frame src="Garden_Gate_Top"/>
 		</animation>
 	</image>
-	<image id="Garden Gate R" isometric="true">
-		<layer src="Garden_Gate_R"/>
+	<image id="Garden Gate R" width="58" height="56" isometric="true">
+		<layer src="Garden_Gate_R" x="23" y="12"/>
+		<layer src="Garden_Gate_R_Top" x="0" y="0"/>
 		<animation speed="1" x="0" y="0" reversible="false">
 			<frame src="Garden_Gate_R_Top"/>
 		</animation>
