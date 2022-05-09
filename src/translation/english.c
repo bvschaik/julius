@@ -774,7 +774,9 @@ static translation_string all_strings[] = {
     {TR_OUT_OF_MONEY, "Out of money"},
     {TR_CITY_MESSAGE_TITLE_EMPERORS_WRATH, "Emperor's anger" },
     {TR_CITY_MESSAGE_TEXT_EMPERORS_WRATH, "You have fallen from Caesar's grace and so he has ordered your arrest. Unless you restore your favor with the emperor, his elite legionaries will soon invade your city." },
-    {TR_BUILDING_ACADEMY_UPGRADE_DESC, "This academy is operational. Local development allowed your citizens to expand the building, providing more space for orations and research."}
+    {TR_BUILDING_ACADEMY_UPGRADE_DESC, "This academy is operational. Local development allowed your citizens to expand the building, providing more space for orations and research."},
+    {TR_BUILDING_PALISADE_GATE, "Palisade gate"},
+    {TR_BUILDING_PALISADE_GATE_DESC, "Palisade gate description placeholder"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

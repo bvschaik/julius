@@ -29,6 +29,7 @@ int building_type_is_roadblock(building_type type)
         case BUILDING_GARDEN_WALL_GATE:
         case BUILDING_HEDGE_GATE_DARK:
         case BUILDING_HEDGE_GATE_LIGHT:
+        case BUILDING_PALISADE_GATE:
             return 1;
         default:
             return 0;

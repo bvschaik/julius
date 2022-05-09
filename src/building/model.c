@@ -268,6 +268,7 @@ const model_building *model_get_building(building_type type)
         case BUILDING_CARAVANSERAI:
             return &MODEL_CARAVANSERAI;
         case BUILDING_PALISADE:
+        case BUILDING_PALISADE_GATE:
             return &MODEL_PALISADE;
         default:
             break;

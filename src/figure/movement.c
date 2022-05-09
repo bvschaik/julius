@@ -214,6 +214,7 @@ static void advance_route_tile(figure *f, int roaming_enabled)
                     building *b = building_get(map_building_at(target_grid_offset));
                     switch (b->type) {
                         case BUILDING_PALISADE:
+                        case BUILDING_PALISADE_GATE:
                             max_damage = PALISADE_HP;
                             break;
                         default:

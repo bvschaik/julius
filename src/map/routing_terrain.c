@@ -174,6 +174,12 @@ static int get_land_type_noncitizen(int grid_offset)
                     break;
             }
             break;
+        case BUILDING_GARDEN_WALL_GATE:
+        case BUILDING_ROADBLOCK:
+        case BUILDING_HEDGE_GATE_DARK:
+        case BUILDING_HEDGE_GATE_LIGHT:
+            type = NONCITIZEN_0_PASSABLE;
+            break;
     }
     return type;
 }
@@ -187,12 +193,12 @@ static void map_routing_update_land_noncitizen(void)
             int terrain = map_terrain_get(grid_offset);
             if (terrain & TERRAIN_GATEHOUSE) {
                 terrain_land_noncitizen.items[grid_offset] = NONCITIZEN_4_GATEHOUSE;
+            } else if (terrain & TERRAIN_BUILDING) {
+                terrain_land_noncitizen.items[grid_offset] = get_land_type_noncitizen(grid_offset);
             } else if (terrain & TERRAIN_ROAD) {
                 terrain_land_noncitizen.items[grid_offset] = NONCITIZEN_0_PASSABLE;
             } else if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE)) {
                 terrain_land_noncitizen.items[grid_offset] = NONCITIZEN_2_CLEARABLE;
-            } else if (terrain & TERRAIN_BUILDING) {
-                terrain_land_noncitizen.items[grid_offset] = get_land_type_noncitizen(grid_offset);
             } else if (terrain & TERRAIN_AQUEDUCT) {
                 terrain_land_noncitizen.items[grid_offset] = NONCITIZEN_2_CLEARABLE;
             } else if (terrain & TERRAIN_WALL) {
