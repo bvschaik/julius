@@ -412,8 +412,8 @@ int building_connectable_get_palisade_offset(int grid_offset)
             continue;
         }
         building *b = building_get(map_building_at(offset));
-        if (b->type == BUILDING_PALISADE ||
-            (map_property_is_constructing(offset) && building_construction_type() == BUILDING_PALISADE)) {
+        if (is_palisade_wall_or_gate(b->type) ||
+            (map_property_is_constructing(offset) && is_palisade_wall_or_gate(building_construction_type()))) {
             tiles[i] = 1;
         }
     }
