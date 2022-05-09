@@ -93,10 +93,17 @@ static void xml_start_assetlist_element(const char **attributes)
         data.error = 1;
         return;
     }
+    char *name = 0;
     if (strcmp(attributes[0], XML_FILE_ATTRIBUTES[0][0][0]) == 0) {
-        strncpy(data.current_group->name, attributes[1], XML_STRING_MAX_LENGTH - 1);
+        size_t name_length = strlen(attributes[1]);
+        name = malloc(sizeof(char) * (name_length + 1));
+        if (name) {
+            strcpy(name, attributes[1]);
+            data.current_group->name = name;
+        }
     }
-    if (*data.current_group->name == '\0') {
+    if (!name || *name == '\0') {
+        free(name);
         data.error = 1;
         return;
     }
@@ -126,7 +133,12 @@ static void xml_start_image_element(const char **attributes)
     const char *id = 0;
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][0]) == 0) {
-            strncpy(img->id, attributes[i + 1], XML_STRING_MAX_LENGTH - 1);
+            size_t img_id_length = strlen(attributes[i + 1]);
+            char *img_id = malloc(sizeof(char) * (img_id_length + 1));
+            if (img_id) {
+                strcpy(img_id, attributes[i + 1]);
+                img->id = img_id;
+            }
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][1]) == 0) {
             path = attributes[i + 1];
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[1][0][2]) == 0) {
@@ -470,7 +482,15 @@ void xml_process_assetlist_file(const char *xml_file_name)
     }
 #ifdef BUILDING_ASSET_PACKER
     else {
-        strncpy(group_get_current()->path, xml_file_name, XML_STRING_MAX_LENGTH - 1);
+        size_t xml_file_name_length = strlen(xml_file_name);
+        char *path = malloc(sizeof(char *) * (xml_file_name_length + 1));
+        if (!path) {
+            data.error = 1;
+            group_unload_current();
+        } else {
+            strcpy(path, xml_file_name);
+            group_get_current()->path = path;
+        }
     }
 #endif
 

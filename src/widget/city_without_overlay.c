@@ -531,7 +531,7 @@ static void draw_animation(int x, int y, int grid_offset)
                     draw_ceres_module_crops(x + 190, y + 95 - y_offset, b->data.monument.secondary_frame, color_mask);
                 }
                 if (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE && b->data.monument.upgrades == 2) {
-                    draw_neptune_fountain(x + 98, y + 27 - y_offset, (animation_offset - 1) % 5, color_mask);
+                    draw_neptune_fountain(x + 98, y + 87 - y_offset, (animation_offset - 1) % 5, color_mask);
                 }
                 if (b->type == BUILDING_GRANARY) {
                     image_draw(image_id + img->animation.start_offset + animation_offset + 5, x + 77, y - 49,

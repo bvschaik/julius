@@ -7,9 +7,9 @@
 #include <stdint.h>
 
 typedef struct {
-    char name[XML_STRING_MAX_LENGTH];
+    const char *name;
 #ifdef BUILDING_ASSET_PACKER
-    char path[XML_STRING_MAX_LENGTH];
+    const char *path;
 #endif
     int first_image_index;
     int last_image_index;

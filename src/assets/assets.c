@@ -62,7 +62,7 @@ int assets_get_image_id(const char *assetlist_name, const char *image_name)
     }
     const asset_image *image = asset_image_get_from_id(group->first_image_index);
     while (image && image->index <= group->last_image_index) {
-        if (strcmp(image->id, image_name) == 0) {
+        if (image->id && strcmp(image->id, image_name) == 0) {
             return image->index + IMAGE_MAIN_ENTRIES;
         }
         image = asset_image_get_from_id(image->index + 1);

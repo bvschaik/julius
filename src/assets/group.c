@@ -37,6 +37,10 @@ void group_unload_current(void)
         asset_image_unload(image);
         image = asset_image_get_from_id(image->index - 1);
     }
+    free((char *) group->name);
+#ifdef BUILDING_ASSET_PACKER
+    free((char *) group->path);
+#endif
     memset(group, 0, sizeof(image_groups));
     data.total_groups--;
 }

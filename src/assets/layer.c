@@ -346,7 +346,7 @@ int layer_add_from_image_id(layer *l, const char *group_id, const char *image_id
         const image_groups *group = group_get_current();
         const asset_image *image = asset_image_get_from_id(group->first_image_index);
         while (image && image->index <= group->last_image_index) {
-            if (strcmp(image->id, image_id) == 0) {
+            if (image->id && strcmp(image->id, image_id) == 0) {
                 l->calculated_image_id = image->index + IMAGE_MAIN_ENTRIES;
                 original_image = &image->img;
                 break;

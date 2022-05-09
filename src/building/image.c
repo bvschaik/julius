@@ -698,9 +698,11 @@ int building_image_get(building *b)
                 default:
                     switch (scenario_property_climate()) {
                         case CLIMATE_DESERT:
-                            return assets_get_image_id("Logistics", "Caravanserai S ON");
+                            return assets_get_image_id("Logistics", "Caravanserai_S_ON");
+                        case CLIMATE_NORTHERN:
+                            return assets_get_image_id("Logistics", "Caravanserai_N_ON");
                         default:
-                            return assets_get_image_id("Logistics", "Caravanserai N ON");
+                            return assets_get_image_id("Logistics", "Caravanserai_C_ON");
                     }
             }
         case BUILDING_PINE_TREE:

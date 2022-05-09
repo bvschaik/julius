@@ -362,7 +362,9 @@ asset_image *asset_image_get_from_id(int image_id)
 void asset_image_unload(asset_image *img)
 {
     unload_image_layers(img);
+    free((char *) img->id);
     free((color_t *) img->data); // Freeing a const pointer - ugly but necessary
+    img->id = 0;
     img->data = 0;
     img->active = 0;
 }

@@ -7,7 +7,7 @@
 typedef struct {
     int index;
     int active;
-    char id[XML_STRING_MAX_LENGTH];
+    const char *id;
     layer first_layer;
     layer *last_layer;
     image img;
