@@ -305,6 +305,149 @@
 			<frame group="this" image="Watchtower_ON_05_r"/>
 		</animation>
 	</image>
+	<!-- Note: Walled Watchtower Variant ON animation reference DO NOT USE! -->
+	<image id="WT_W_ON_01" width="118" height="97">
+		<layer src="Watchtower_ON_Static" x="39" y="57"/>
+		<layer src="Watchtower_ON_01" x="96" y="37"/>
+	</image>
+	<image id="WT_W_ON_02" width="118" height="97">
+		<layer src="Watchtower_ON_Static" x="39" y="57"/>
+		<layer src="Watchtower_ON_02" x="96" y="37"/>
+	</image>
+	<image id="WT_W_ON_03" width="118" height="97">
+		<layer src="Watchtower_ON_Static" x="39" y="57"/>
+		<layer src="Watchtower_ON_03" x="96" y="37"/>
+	</image>
+	<image id="WT_W_ON_04" width="118" height="97">
+		<layer src="Watchtower_ON_Static" x="39" y="57"/>
+		<layer src="Watchtower_ON_04" x="96" y="37"/>
+	</image>
+	<image id="WT_W_ON_05" width="118" height="97">
+		<layer src="Watchtower_ON_Static" x="39" y="57"/>
+		<layer src="Watchtower_ON_05" x="96" y="37"/>
+	</image>
+	<image id="WT_W_ON_01_r" width="118" height="97">
+		<layer src="Watchtower_ON_Static" x="50" y="57"/>
+		<layer src="Watchtower_ON_01" x="14" y="37" invert="horizontal"/>
+	</image>
+	<image id="WT_W_ON_02_r" width="118" height="97">
+		<layer src="Watchtower_ON_Static" x="50" y="57"/>
+		<layer src="Watchtower_ON_02" x="14" y="37" invert="horizontal"/>
+	</image>
+	<image id="WT_W_ON_03_r" width="118" height="97">
+		<layer src="Watchtower_ON_Static" x="50" y="57"/>
+		<layer src="Watchtower_ON_03" x="14" y="37" invert="horizontal"/>
+	</image>
+	<image id="WT_W_ON_04_r" width="118" height="97">
+		<layer src="Watchtower_ON_Static" x="50" y="57"/>
+		<layer src="Watchtower_ON_04" x="14" y="37" invert="horizontal"/>
+	</image>
+	<image id="WT_W_ON_05_r" width="118" height="97">
+		<layer src="Watchtower_ON_Static" x="50" y="57"/>
+		<layer src="Watchtower_ON_05" x="14" y="37" invert="horizontal"/>
+	</image>
+	<!-- Note: Walled Watchtower Variant OFF and ON states for Central Climate -->
+	<image id="Watchtower_W_C_OFF" width="118" height="97" isometric="true">
+		<layer src="Palisade_Terrain_C" x="0" y="52"/>
+		<layer src="Palisade_Terrain_C" x="30" y="67"/>
+		<layer src="Palisade_Terrain_C" x="60" y="52"/>
+		<layer src="Watchtower_Walled" x="0" y="0"/>
+	</image>
+	<image id="Watchtower_W_C_ON" width="118" height="97" isometric="true">
+		<layer group="this" image="Watchtower_W_C_OFF"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="WT_W_ON_01"/>
+			<frame group="this" image="WT_W_ON_02"/>
+			<frame group="this" image="WT_W_ON_03"/>
+			<frame group="this" image="WT_W_ON_04"/>
+			<frame group="this" image="WT_W_ON_05"/>
+		</animation>
+	</image>
+	<!-- Note: Walled Watchtower Variant OFF and ON states for Northern Climate -->
+	<image id="Watchtower_W_N_OFF" width="118" height="97" isometric="true">
+		<layer src="Palisade_Terrain_N" x="0" y="52"/>
+		<layer src="Palisade_Terrain_N" x="30" y="67"/>
+		<layer src="Palisade_Terrain_N" x="60" y="52"/>
+		<layer src="Watchtower_Walled" x="0" y="0"/>
+	</image>
+	<image id="Watchtower_W_N_ON" width="118" height="97" isometric="true">
+		<layer group="this" image="Watchtower_W_N_OFF"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="WT_W_ON_01"/>
+			<frame group="this" image="WT_W_ON_02"/>
+			<frame group="this" image="WT_W_ON_03"/>
+			<frame group="this" image="WT_W_ON_04"/>
+			<frame group="this" image="WT_W_ON_05"/>
+		</animation>
+	</image>
+	<!-- Note: Walled Watchtower Variant OFF and ON states for Southern Climate -->
+	<image id="Watchtower_W_S_OFF" width="118" height="97" isometric="true">
+		<layer src="Palisade_Terrain_S" x="0" y="52"/>
+		<layer src="Palisade_Terrain_S" x="30" y="67"/>
+		<layer src="Palisade_Terrain_S" x="60" y="52"/>
+		<layer src="Watchtower_Walled" x="0" y="0"/>
+	</image>
+	<image id="Watchtower_W_S_ON" width="118" height="97" isometric="true">
+		<layer group="this" image="Watchtower_W_S_OFF"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="WT_W_ON_01"/>
+			<frame group="this" image="WT_W_ON_02"/>
+			<frame group="this" image="WT_W_ON_03"/>
+			<frame group="this" image="WT_W_ON_04"/>
+			<frame group="this" image="WT_W_ON_05"/>
+		</animation>
+	</image>
+	<!-- Note: ROTATED Walled Watchtower Variant OFF and ON states for Central Climate -->
+	<image id="Watchtower_W_C_OFF_R" width="118" height="97" isometric="true">
+		<layer src="Palisade_Terrain_C" x="0" y="52"/>
+		<layer src="Palisade_Terrain_C" x="30" y="67"/>
+		<layer src="Palisade_Terrain_C" x="60" y="52"/>
+		<layer src="Watchtower_Walled_R" x="0" y="0"/>
+	</image>
+	<image id="Watchtower_W_C_ON_R" width="118" height="97" isometric="true">
+		<layer group="this" image="Watchtower_W_C_OFF_R"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="WT_W_ON_01_r"/>
+			<frame group="this" image="WT_W_ON_02_r"/>
+			<frame group="this" image="WT_W_ON_03_r"/>
+			<frame group="this" image="WT_W_ON_04_r"/>
+			<frame group="this" image="WT_W_ON_05_r"/>
+		</animation>
+	</image>
+	<!-- Note: ROTATED Walled Watchtower Variant OFF and ON states for Northern Climate -->
+	<image id="Watchtower_W_N_OFF_R" width="118" height="97" isometric="true">
+		<layer src="Palisade_Terrain_N" x="0" y="52"/>
+		<layer src="Palisade_Terrain_N" x="30" y="67"/>
+		<layer src="Palisade_Terrain_N" x="60" y="52"/>
+		<layer src="Watchtower_Walled_R" x="0" y="0"/>
+	</image>
+	<image id="Watchtower_W_N_ON_R" width="118" height="97" isometric="true">
+		<layer group="this" image="Watchtower_W_N_OFF_R"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="WT_W_ON_01_r"/>
+			<frame group="this" image="WT_W_ON_02_r"/>
+			<frame group="this" image="WT_W_ON_03_r"/>
+			<frame group="this" image="WT_W_ON_04_r"/>
+			<frame group="this" image="WT_W_ON_05_r"/>
+		</animation>
+	</image>
+	<!-- Note: ROTATED Walled Watchtower Variant OFF and ON states for Southern Climate -->
+	<image id="Watchtower_W_S_OFF_R" width="118" height="97" isometric="true">
+		<layer src="Palisade_Terrain_S" x="0" y="52"/>
+		<layer src="Palisade_Terrain_S" x="30" y="67"/>
+		<layer src="Palisade_Terrain_S" x="60" y="52"/>
+		<layer src="Watchtower_Walled_R" x="0" y="0"/>
+	</image>
+	<image id="Watchtower_W_S_ON_R" width="118" height="97" isometric="true">
+		<layer group="this" image="Watchtower_W_S_OFF_R"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="WT_W_ON_01_r"/>
+			<frame group="this" image="WT_W_ON_02_r"/>
+			<frame group="this" image="WT_W_ON_03_r"/>
+			<frame group="this" image="WT_W_ON_04_r"/>
+			<frame group="this" image="WT_W_ON_05_r"/>
+		</animation>
+	</image>
 	<!-- Note: Assets for Palisade CENTRAL CLIMATE all directions and intersection variants. There are 6 variants for each direction of straight wall (01-06 & 07r-12r), which could randomize? -->
 	<image id="Pal Wall C 01" width="58" height="40" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="10"/>
@@ -611,6 +754,34 @@
 			<frame src="Palisade_Gate_R_Top"/>
 		</animation>
 	</image>
+	<!-- Note: Assets for 'Palisade tower' with rotation and climate variants -->
+	<image id="Palisade_Tower_C" width="58" height="75" isometric="true">
+		<layer src="Palisade_Terrain_C" x="0" y="45"/>
+		<layer src="Palisade_Tower" x="0" y="0"/>
+	</image>
+	<image id="Palisade_Tower_C_R" width="58" height="75" isometric="true">
+		<layer src="Palisade_Terrain_C" x="0" y="45"/>
+		<layer src="Palisade_Tower" x="0" y="0"/>
+		<layer src="Palisade_Tower_R" x="12" y="41"/>
+	</image>
+	<image id="Palisade_Tower_N" width="58" height="75" isometric="true">
+		<layer src="Palisade_Terrain_N" x="0" y="45"/>
+		<layer src="Palisade_Tower" x="0" y="0"/>
+	</image>
+	<image id="Palisade_Tower_N_R" width="58" height="75" isometric="true">
+		<layer src="Palisade_Terrain_N" x="0" y="45"/>
+		<layer src="Palisade_Tower" x="0" y="0"/>
+		<layer src="Palisade_Tower_R" x="12" y="41"/>
+	</image>
+	<image id="Palisade_Tower_S" width="58" height="75" isometric="true">
+		<layer src="Palisade_Terrain_S" x="0" y="45"/>
+		<layer src="Palisade_Tower" x="0" y="0"/>
+	</image>
+	<image id="Palisade_Tower_S_R" width="58" height="75" isometric="true">
+		<layer src="Palisade_Terrain_S" x="0" y="45"/>
+		<layer src="Palisade_Tower" x="0" y="0"/>
+		<layer src="Palisade_Tower_R" x="12" y="41"/>
+	</image>
 	<!-- Note: Fort climate variants -->
 	<image id="Fort_Main_Central" isometric="true">
 		<layer group="66" image="0" x="0" y="0"/>
@@ -657,6 +828,436 @@
 	<image id="Fort_Leg_Flag_North">
 		<layer group="66" image="4"/>
 		<layer src="Fort_Flag_Layer_North"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Portrait -->
+	<image id="barracks_worker_portrait">
+		<layer group="190" image="3"/>
+		<layer src="barracks_worker_portrait_overlay"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Death animation frames 01-08 -->
+	<image id="barracks_worker_death_01">
+		<layer group="108 " image="101"/>
+		<layer src="barracks_worker_death_01"/>
+	</image>
+	<image id="barracks_worker_death_02">
+		<layer group="108 " image="102"/>
+		<layer src="barracks_worker_death_02"/>
+	</image>
+	<image id="barracks_worker_death_03">
+		<layer group="108 " image="103"/>
+		<layer src="barracks_worker_death_03"/>
+	</image>
+	<image id="barracks_worker_death_04">
+		<layer group="108 " image="104"/>
+		<layer src="barracks_worker_death_04"/>
+	</image>
+	<image id="barracks_worker_death_05">
+		<layer group="108 " image="105"/>
+		<layer src="barracks_worker_death_05"/>
+	</image>
+	<image id="barracks_worker_death_06">
+		<layer group="108 " image="106"/>
+		<layer src="barracks_worker_death_06"/>
+	</image>
+	<image id="barracks_worker_death_07">
+		<layer group="108 " image="107"/>
+		<layer src="barracks_worker_death_07"/>
+	</image>
+	<image id="barracks_worker_death_08">
+		<layer group="108 " image="108"/>
+		<layer src="barracks_worker_death_08"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames NORTH-EAST DIRECTION 01-12 -->
+	<image id="barracks_worker_ne_01">
+		<layer group="107" image="102"/>
+		<layer src="barracks_worker_ne_01"/>
+	</image>
+	<image id="barracks_worker_ne_02">
+		<layer group="108" image="7"/>
+		<layer src="barracks_worker_ne_02"/>
+	</image>
+	<image id="barracks_worker_ne_03">
+		<layer group="108" image="15"/>
+		<layer src="barracks_worker_ne_03"/>
+	</image>
+	<image id="barracks_worker_ne_04">
+		<layer group="108" image="23"/>
+		<layer src="barracks_worker_ne_04"/>
+	</image>
+	<image id="barracks_worker_ne_05">
+		<layer group="108" image="31"/>
+		<layer src="barracks_worker_ne_05"/>
+	</image>
+	<image id="barracks_worker_ne_06">
+		<layer group="108" image="39"/>
+		<layer src="barracks_worker_ne_06"/>
+	</image>
+	<image id="barracks_worker_ne_07">
+		<layer group="108" image="47"/>
+		<layer src="barracks_worker_ne_07"/>
+	</image>
+	<image id="barracks_worker_ne_08">
+		<layer group="108" image="55"/>
+		<layer src="barracks_worker_ne_08"/>
+	</image>
+	<image id="barracks_worker_ne_09">
+		<layer group="108" image="63"/>
+		<layer src="barracks_worker_ne_09"/>
+	</image>
+	<image id="barracks_worker_ne_10">
+		<layer group="108" image="71"/>
+		<layer src="barracks_worker_ne_10"/>
+	</image>
+	<image id="barracks_worker_ne_11">
+		<layer group="108" image="79"/>
+		<layer src="barracks_worker_ne_11"/>
+	</image>
+	<image id="barracks_worker_ne_12">
+		<layer group="108" image="87"/>
+		<layer src="barracks_worker_ne_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames EAST DIRECTION 01-12 -->
+	<image id="barracks_worker_e_01">
+		<layer group="108" image="0"/>
+		<layer src="barracks_worker_e_01"/>
+	</image>
+	<image id="barracks_worker_e_02">
+		<layer group="108" image="8"/>
+		<layer src="barracks_worker_e_02"/>
+	</image>
+	<image id="barracks_worker_e_03">
+		<layer group="108" image="16"/>
+		<layer src="barracks_worker_e_03"/>
+	</image>
+	<image id="barracks_worker_e_04">
+		<layer group="108" image="24"/>
+		<layer src="barracks_worker_e_04"/>
+	</image>
+	<image id="barracks_worker_e_05">
+		<layer group="108" image="32"/>
+		<layer src="barracks_worker_e_05"/>
+	</image>
+	<image id="barracks_worker_e_06">
+		<layer group="108" image="40"/>
+		<layer src="barracks_worker_e_06"/>
+	</image>
+	<image id="barracks_worker_e_07">
+		<layer group="108" image="48"/>
+		<layer src="barracks_worker_e_07"/>
+	</image>
+	<image id="barracks_worker_e_08">
+		<layer group="108" image="56"/>
+		<layer src="barracks_worker_e_08"/>
+	</image>
+	<image id="barracks_worker_e_09">
+		<layer group="108" image="64"/>
+		<layer src="barracks_worker_e_09"/>
+	</image>
+	<image id="barracks_worker_e_10">
+		<layer group="108" image="72"/>
+		<layer src="barracks_worker_e_10"/>
+	</image>
+	<image id="barracks_worker_e_11">
+		<layer group="108" image="80"/>
+		<layer src="barracks_worker_e_11"/>
+	</image>
+	<image id="barracks_worker_e_12">
+		<layer group="108" image="88"/>
+		<layer src="barracks_worker_e_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="barracks_worker_se_01">
+		<layer group="108" image="1"/>
+		<layer src="barracks_worker_se_01"/>
+	</image>
+	<image id="barracks_worker_se_02">
+		<layer group="108" image="9"/>
+		<layer src="barracks_worker_se_02"/>
+	</image>
+	<image id="barracks_worker_se_03">
+		<layer group="108" image="17"/>
+		<layer src="barracks_worker_se_03"/>
+	</image>
+	<image id="barracks_worker_se_04">
+		<layer group="108" image="25"/>
+		<layer src="barracks_worker_se_04"/>
+	</image>
+	<image id="barracks_worker_se_05">
+		<layer group="108" image="33"/>
+		<layer src="barracks_worker_se_05"/>
+	</image>
+	<image id="barracks_worker_se_06">
+		<layer group="108" image="41"/>
+		<layer src="barracks_worker_se_06"/>
+	</image>
+	<image id="barracks_worker_se_07">
+		<layer group="108" image="49"/>
+		<layer src="barracks_worker_se_07"/>
+	</image>
+	<image id="barracks_worker_se_08">
+		<layer group="108" image="57"/>
+		<layer src="barracks_worker_se_08"/>
+	</image>
+	<image id="barracks_worker_se_09">
+		<layer group="108" image="65"/>
+		<layer src="barracks_worker_se_09"/>
+	</image>
+	<image id="barracks_worker_se_10">
+		<layer group="108" image="73"/>
+		<layer src="barracks_worker_se_10"/>
+	</image>
+	<image id="barracks_worker_se_11">
+		<layer group="108" image="81"/>
+		<layer src="barracks_worker_se_11"/>
+	</image>
+	<image id="barracks_worker_se_12">
+		<layer group="108" image="89"/>
+		<layer src="barracks_worker_se_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames SOUTH DIRECTION 01-12 -->
+	<image id="barracks_worker_s_01">
+		<layer group="108" image="2"/>
+		<layer src="barracks_worker_s_01"/>
+	</image>
+	<image id="barracks_worker_s_02">
+		<layer group="108" image="10"/>
+		<layer src="barracks_worker_s_02"/>
+	</image>
+	<image id="barracks_worker_s_03">
+		<layer group="108" image="18"/>
+		<layer src="barracks_worker_s_03"/>
+	</image>
+	<image id="barracks_worker_s_04">
+		<layer group="108" image="26"/>
+		<layer src="barracks_worker_s_04"/>
+	</image>
+	<image id="barracks_worker_s_05">
+		<layer group="108" image="34"/>
+		<layer src="barracks_worker_s_05"/>
+	</image>
+	<image id="barracks_worker_s_06">
+		<layer group="108" image="42"/>
+		<layer src="barracks_worker_s_06"/>
+	</image>
+	<image id="barracks_worker_s_07">
+		<layer group="108" image="50"/>
+		<layer src="barracks_worker_s_07"/>
+	</image>
+	<image id="barracks_worker_s_08">
+		<layer group="108" image="58"/>
+		<layer src="barracks_worker_s_08"/>
+	</image>
+	<image id="barracks_worker_s_09">
+		<layer group="108" image="66"/>
+		<layer src="barracks_worker_s_09"/>
+	</image>
+	<image id="barracks_worker_s_10">
+		<layer group="108" image="74"/>
+		<layer src="barracks_worker_s_10"/>
+	</image>
+	<image id="barracks_worker_s_11">
+		<layer group="108" image="82"/>
+		<layer src="barracks_worker_s_11"/>
+	</image>
+	<image id="barracks_worker_s_12">
+		<layer group="108" image="90"/>
+		<layer src="barracks_worker_s_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="barracks_worker_sw_01">
+		<layer group="108" image="3"/>
+		<layer src="barracks_worker_sw_01"/>
+	</image>
+	<image id="barracks_worker_sw_02">
+		<layer group="108" image="11"/>
+		<layer src="barracks_worker_sw_02"/>
+	</image>
+	<image id="barracks_worker_sw_03">
+		<layer group="108" image="19"/>
+		<layer src="barracks_worker_sw_03"/>
+	</image>
+	<image id="barracks_worker_sw_04">
+		<layer group="108" image="27"/>
+		<layer src="barracks_worker_sw_04"/>
+	</image>
+	<image id="barracks_worker_sw_05">
+		<layer group="108" image="35"/>
+		<layer src="barracks_worker_sw_05"/>
+	</image>
+	<image id="barracks_worker_sw_06">
+		<layer group="108" image="43"/>
+		<layer src="barracks_worker_sw_06"/>
+	</image>
+	<image id="barracks_worker_sw_07">
+		<layer group="108" image="51"/>
+		<layer src="barracks_worker_sw_07"/>
+	</image>
+	<image id="barracks_worker_sw_08">
+		<layer group="108" image="59"/>
+		<layer src="barracks_worker_sw_08"/>
+	</image>
+	<image id="barracks_worker_sw_09">
+		<layer group="108" image="67"/>
+		<layer src="barracks_worker_sw_09"/>
+	</image>
+	<image id="barracks_worker_sw_10">
+		<layer group="108" image="75"/>
+		<layer src="barracks_worker_sw_10"/>
+	</image>
+	<image id="barracks_worker_sw_11">
+		<layer group="108" image="83"/>
+		<layer src="barracks_worker_sw_11"/>
+	</image>
+	<image id="barracks_worker_sw_12">
+		<layer group="108" image="91"/>
+		<layer src="barracks_worker_sw_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames WEST DIRECTION 01-12 -->
+	<image id="barracks_worker_w_01">
+		<layer group="108" image="4"/>
+		<layer src="barracks_worker_w_01"/>
+	</image>
+	<image id="barracks_worker_w_02">
+		<layer group="108" image="12"/>
+		<layer src="barracks_worker_w_02"/>
+	</image>
+	<image id="barracks_worker_w_03">
+		<layer group="108" image="20"/>
+		<layer src="barracks_worker_w_03"/>
+	</image>
+	<image id="barracks_worker_w_04">
+		<layer group="108" image="28"/>
+		<layer src="barracks_worker_w_04"/>
+	</image>
+	<image id="barracks_worker_w_05">
+		<layer group="108" image="36"/>
+		<layer src="barracks_worker_w_05"/>
+	</image>
+	<image id="barracks_worker_w_06">
+		<layer group="108" image="44"/>
+		<layer src="barracks_worker_w_06"/>
+	</image>
+	<image id="barracks_worker_w_07">
+		<layer group="108" image="52"/>
+		<layer src="barracks_worker_w_07"/>
+	</image>
+	<image id="barracks_worker_w_08">
+		<layer group="108" image="60"/>
+		<layer src="barracks_worker_w_08"/>
+	</image>
+	<image id="barracks_worker_w_09">
+		<layer group="108" image="68"/>
+		<layer src="barracks_worker_w_09"/>
+	</image>
+	<image id="barracks_worker_w_10">
+		<layer group="108" image="76"/>
+		<layer src="barracks_worker_w_10"/>
+	</image>
+	<image id="barracks_worker_w_11">
+		<layer group="108" image="84"/>
+		<layer src="barracks_worker_w_11"/>
+	</image>
+	<image id="barracks_worker_w_12">
+		<layer group="108" image="92"/>
+		<layer src="barracks_worker_w_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="barracks_worker_nw_01">
+		<layer group="108" image="5"/>
+		<layer src="barracks_worker_nw_01"/>
+	</image>
+	<image id="barracks_worker_nw_02">
+		<layer group="108" image="13"/>
+		<layer src="barracks_worker_nw_02"/>
+	</image>
+	<image id="barracks_worker_nw_03">
+		<layer group="108" image="21"/>
+		<layer src="barracks_worker_nw_03"/>
+	</image>
+	<image id="barracks_worker_nw_04">
+		<layer group="108" image="29"/>
+		<layer src="barracks_worker_nw_04"/>
+	</image>
+	<image id="barracks_worker_nw_05">
+		<layer group="108" image="37"/>
+		<layer src="barracks_worker_nw_05"/>
+	</image>
+	<image id="barracks_worker_nw_06">
+		<layer group="108" image="45"/>
+		<layer src="barracks_worker_nw_06"/>
+	</image>
+	<image id="barracks_worker_nw_07">
+		<layer group="108" image="53"/>
+		<layer src="barracks_worker_nw_07"/>
+	</image>
+	<image id="barracks_worker_nw_08">
+		<layer group="108" image="61"/>
+		<layer src="barracks_worker_nw_08"/>
+	</image>
+	<image id="barracks_worker_nw_09">
+		<layer group="108" image="69"/>
+		<layer src="barracks_worker_nw_09"/>
+	</image>
+	<image id="barracks_worker_nw_10">
+		<layer group="108" image="77"/>
+		<layer src="barracks_worker_nw_10"/>
+	</image>
+	<image id="barracks_worker_nw_11">
+		<layer group="108" image="85"/>
+		<layer src="barracks_worker_nw_11"/>
+	</image>
+	<image id="barracks_worker_nw_12">
+		<layer group="108" image="93"/>
+		<layer src="barracks_worker_nw_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames NORTH DIRECTION 01-12 -->
+	<image id="barracks_worker_n_01">
+		<layer group="108" image="6"/>
+		<layer src="barracks_worker_n_01"/>
+	</image>
+	<image id="barracks_worker_n_02">
+		<layer group="108" image="14"/>
+		<layer src="barracks_worker_n_02"/>
+	</image>
+	<image id="barracks_worker_n_03">
+		<layer group="108" image="22"/>
+		<layer src="barracks_worker_n_03"/>
+	</image>
+	<image id="barracks_worker_n_04">
+		<layer group="108" image="30"/>
+		<layer src="barracks_worker_n_04"/>
+	</image>
+	<image id="barracks_worker_n_05">
+		<layer group="108" image="38"/>
+		<layer src="barracks_worker_n_05"/>
+	</image>
+	<image id="barracks_worker_n_06">
+		<layer group="108" image="46"/>
+		<layer src="barracks_worker_n_06"/>
+	</image>
+	<image id="barracks_worker_n_07">
+		<layer group="108" image="54"/>
+		<layer src="barracks_worker_n_07"/>
+	</image>
+	<image id="barracks_worker_n_08">
+		<layer group="108" image="62"/>
+		<layer src="barracks_worker_n_08"/>
+	</image>
+	<image id="barracks_worker_n_09">
+		<layer group="108" image="70"/>
+		<layer src="barracks_worker_n_09"/>
+	</image>
+	<image id="barracks_worker_n_10">
+		<layer group="108" image="78"/>
+		<layer src="barracks_worker_n_10"/>
+	</image>
+	<image id="barracks_worker_n_11">
+		<layer group="108" image="86"/>
+		<layer src="barracks_worker_n_11"/>
+	</image>
+	<image id="barracks_worker_n_12">
+		<layer group="108" image="94"/>
+		<layer src="barracks_worker_n_12"/>
 	</image>
 </assetlist>
 
