@@ -225,7 +225,7 @@ static struct {
     int fonts_enabled;
     int font_base_offset;
 
-    uint16_t group_image_ids[300];
+    uint16_t group_image_ids[IMAGE_MAX_GROUPS];
     char bitmaps[100][200];
     image main[IMAGE_MAIN_ENTRIES];
     image enemy[ENEMY_ENTRIES];
@@ -244,7 +244,7 @@ static struct {
 static void read_header(buffer *buf)
 {
     buffer_skip(buf, 80); // header integers
-    for (int i = 0; i < 300; i++) {
+    for (int i = 0; i < IMAGE_MAX_GROUPS; i++) {
         data.group_image_ids[i] = buffer_read_u16(buf);
     }
     buffer_read_raw(buf, data.bitmaps, 20000);

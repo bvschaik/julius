@@ -360,9 +360,18 @@ int layer_add_from_image_id(layer *l, const char *group_id, const char *image_id
         }
     } else {
         int group = string_to_int(string_from_ascii(group_id));
-        int id = image_id ? string_to_int(string_from_ascii(image_id)) : 0;
-        l->calculated_image_id = image_group(group) + id;
-        original_image = image_get(l->calculated_image_id);
+        if (group >= 0 && group < IMAGE_MAX_GROUPS) {
+            int id = image_id ? string_to_int(string_from_ascii(image_id)) : 0;
+            l->calculated_image_id = image_group(group) + id;
+        } else {
+            log_info("Image group is out of range", group_id, 0);
+        }
+        if (l->calculated_image_id >= 0 && l->calculated_image_id < IMAGE_MAIN_ENTRIES) {
+            original_image = image_get(l->calculated_image_id);
+        } else {
+            log_info("Image id is out of range", 0, l->calculated_image_id);
+            l->calculated_image_id = 0;
+        }
     }
     if (!original_image) {
         log_error("Unable to find image for group id", group_id, 0);
