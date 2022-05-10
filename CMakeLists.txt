@@ -880,6 +880,7 @@ if(${TARGET_PLATFORM} STREQUAL "vita")
         m
         SceAppUtil_stub
         SceAudio_stub
+        SceAudioIn_stub
         SceCommonDialog_stub
         SceCtrl_stub
         SceDisplay_stub
