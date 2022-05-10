@@ -250,8 +250,8 @@ static void position_minimap(void)
 
     int adjusted_camera_x = (data.viewport.x - data.minimap.x) * 2;
     int adjusted_camera_y = data.viewport.y - data.minimap.y;
-    int minimap_width_pixels = (data.minimap.width * 2) / data.minimap.scale;
-    int minimap_height_pixels = data.minimap.height / data.minimap.scale;
+    int minimap_width_pixels = (int) ((data.minimap.width * 2) / data.minimap.scale);
+    int minimap_height_pixels = (int) (data.minimap.height / data.minimap.scale);
 
     data.minimap.offset_x = (minimap_width_pixels - data.screen.width) / 2;
     data.minimap.offset_y = (minimap_height_pixels - data.screen.height) / 2;
@@ -265,8 +265,8 @@ static void position_minimap(void)
                 }
             } else if ((adjusted_camera_x + data.viewport.width * 2) / data.minimap.scale >
                 data.minimap.offset_x + data.screen.width) {
-                data.minimap.offset_x = (adjusted_camera_x + data.viewport.width * 2) / data.minimap.scale -
-                    data.screen.width;
+                data.minimap.offset_x = (int) ((adjusted_camera_x + data.viewport.width * 2) / data.minimap.scale -
+                    data.screen.width);
             }
         }
         if (minimap_height_pixels > data.screen.height) {
@@ -277,8 +277,8 @@ static void position_minimap(void)
                 }
             } else if ((adjusted_camera_y + data.viewport.height) / data.minimap.scale >
                 data.minimap.offset_y + data.screen.height) {
-                data.minimap.offset_y = (adjusted_camera_y + data.viewport.height) / data.minimap.scale -
-                    data.screen.height;
+                data.minimap.offset_y = (int) ((adjusted_camera_y + data.viewport.height) / data.minimap.scale -
+                    data.screen.height);
             }
         }
     }
@@ -449,8 +449,7 @@ static void draw_viewport_rectangle(void)
     if (!data.functions->viewport) {
         return;
     }
-    int x_offset = 2 * (data.viewport.x - data.minimap.x) - 2 / 30;
-    x_offset /= data.minimap.scale;
+    int x_offset = (int) ((2 * (data.viewport.x - data.minimap.x) - 2 / 30) / data.minimap.scale);
     x_offset += data.screen.x - data.minimap.offset_x;
     if (x_offset < data.screen.x) {
         x_offset = data.screen.x;
@@ -458,11 +457,11 @@ static void draw_viewport_rectangle(void)
     if (x_offset + 2 * data.viewport.width + 4 > data.screen.x + data.screen.width) {
         x_offset -= 2;
     }
-    int y_offset = data.viewport.y - data.minimap.y + 2;
-    y_offset /= data.minimap.scale;
+    int y_offset = (int) ((data.viewport.y - data.minimap.y + 2) / data.minimap.scale);
     y_offset += data.screen.y - data.minimap.offset_y;
     graphics_draw_rect(x_offset, y_offset,
-        (data.viewport.width * 2) / data.minimap.scale + 4, data.viewport.height / data.minimap.scale - 4,
+        (int) ((data.viewport.width * 2) / data.minimap.scale + 4),
+        (int) (data.viewport.height / data.minimap.scale - 4),
         COLOR_MINIMAP_VIEWPORT);
 }
 
@@ -504,8 +503,8 @@ void widget_minimap_draw(int x_offset, int y_offset, int width, int height, int 
 
     position_minimap();
     graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP,
-        (data.screen.x - data.minimap.offset_x) * data.minimap.scale, (data.screen.y - data.minimap.offset_y) *
-        data.minimap.scale, data.minimap.scale);
+        (int) ((data.screen.x - data.minimap.offset_x) * data.minimap.scale),
+        (int) ((data.screen.y - data.minimap.offset_y) * data.minimap.scale), data.minimap.scale);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
     
@@ -524,8 +523,8 @@ static void update_mouse_grid_offset(int x_view, int y_view, int grid_offset)
 
 static int get_mouse_grid_offset(const mouse *m)
 {
-    data.mouse.x = (m->x - data.screen.x) * data.minimap.scale + data.minimap.offset_x;
-    data.mouse.y = (m->y - data.screen.y) * data.minimap.scale + data.minimap.offset_y;
+    data.mouse.x = (int) ((m->x - data.screen.x) * data.minimap.scale + data.minimap.offset_x);
+    data.mouse.y = (int) ((m->y - data.screen.y) * data.minimap.scale + data.minimap.offset_y);
     data.mouse.grid_offset = 0;
     foreach_map_tile(update_mouse_grid_offset);
     return data.mouse.grid_offset;
