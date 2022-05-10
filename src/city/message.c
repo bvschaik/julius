@@ -160,9 +160,6 @@ static void show_message_popup(int message_id)
     if (!has_video(text_id)) {
         play_sound(text_id);
     }
-    if (is_invasion_message(msg->message_type) && setting_game_speed() > 70) {
-        setting_set_default_game_speed();
-    }
     window_message_dialog_show_city_message(text_id,
         msg->year, msg->month, msg->param1, msg->param2,
         city_message_get_advisor(msg->message_type), 1);
@@ -212,7 +209,9 @@ void city_message_post(int use_popup, int message_type, int param1, int param2)
         city_warning_show_console(lang_get_message(text_id)->title.text);
         use_popup = 0;
     }
-
+    if (is_invasion_message(msg->message_type) && setting_game_speed() > 70) {
+        setting_set_default_game_speed();
+    }
     if (use_popup && window_is(WINDOW_CITY)) {
         show_message_popup(id);
     } else if (use_popup) {
