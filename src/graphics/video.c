@@ -291,7 +291,7 @@ static void get_next_frame(void)
             }
         }
     } else {
-        plm_decode(data.plm, (now_millis - data.video.start_render_millis) / 1000.0);
+        plm_decode(data.plm, (now_millis - data.video.start_render_millis + 1) / 1000.0);
         data.video.start_render_millis = now_millis;
         if (plm_has_ended(data.plm)) {
             close_decoder();
@@ -338,6 +338,7 @@ void video_draw(int x_offset, int y_offset)
     get_next_frame();
     if (data.video.draw_frame) {
         update_video_frame();
+        data.video.draw_frame = 0;
     }
     graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x_offset, y_offset, 1.0f);
 }
