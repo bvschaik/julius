@@ -238,6 +238,12 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
             SDL_Log("Window %d hidden", (unsigned int) event->windowID);
             *window_active = 0;
             break;
+
+        case SDL_WINDOWEVENT_EXPOSED:
+            SDL_Log("Window %d exposed", (unsigned int) event->windowID);
+            window_invalidate();
+            break;
+
         default:
             break;
 
