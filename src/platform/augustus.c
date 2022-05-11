@@ -417,11 +417,17 @@ static int init_sdl(void)
 #endif
 
     if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) != 0) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
-        return 0;
+        // Try starting SDL without joystick support
+        if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO) != 0) {
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not initialize SDL: %s", SDL_GetError());
+            return 0;
+        } else {
+            SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Could not enable joystick support");
+        }
+    } else {
+        platform_joystick_init();
     }
     SDL_SetEventFilter(handle_event_immediate, 0);
-    platform_joystick_init();
 #if SDL_VERSION_ATLEAST(2, 0, 10)
     SDL_SetHint(SDL_HINT_MOUSE_TOUCH_EVENTS, "0");
     SDL_SetHint(SDL_HINT_TOUCH_MOUSE_EVENTS, "0");
