@@ -71,4 +71,11 @@
 			<frame group="this" image="Brickworks_On_06"/>
 		</animation>
 	</image>
+	<!-- Note: Smoke Animation Frames -->
+	<image src="Smoke_Anim_01" id="Smoke_Anim"/>
+	<image src="Smoke_Anim_02"/>
+	<image src="Smoke_Anim_03"/>
+	<image src="Smoke_Anim_04"/>
+	<image src="Smoke_Anim_05"/>
+	<image src="Smoke_Anim_06"/>
 </assetlist>
