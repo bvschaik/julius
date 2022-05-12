@@ -378,7 +378,7 @@ static int create_last_image(image_packer *packer, unsigned int remaining_area)
               packer->result.last_image_height == data->image_height) {
             packer->result.images_needed++;
             total_images_packed += images_packed_in_loop;
-            remaining_area -= images_packed_in_loop;
+            remaining_area -= area_packed_in_loop;
             needed_width = (unsigned int) sqrt(remaining_area * image_ratio) + 1;
             needed_height = (unsigned int) sqrt(remaining_area / image_ratio) + 1;
             width_increase_step = needed_width / 64 + 1;
