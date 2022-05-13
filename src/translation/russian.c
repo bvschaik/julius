@@ -202,12 +202,12 @@ static translation_string all_strings[] = {
     { TR_BUILDING_GRAND_TEMPLE_MARS_DESC, "Великий храм Марса" },
     { TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, "Великий храм Венеры" },
     { TR_BUILDING_PANTHEON_DESC, "Пантеон" },
-    { TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, "Носильщики с ферм передвигаются 50% быстрее." },
-    { TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Фонтанам и резервуарам требуются меньше рабочих, их радиус действия увеличивается. Торговые корабли передвигаются 25% быстрее." },
-    { TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, "У наземных и морских торговцев увеличивается вместимость на 50%. Наземные торговцы передвигаются на 25% быстрее." },
-    { TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Тренирует солдат как казармы. Увеличивает макисмальное кол-во фортов на 4." },
-    { TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "Городские сады, статуи и храмы сияют с большой красотой, увеличивая свою привлекательность. Дома получают больше товаров и их деградация происходит медленнее." },
-    { TR_BUILDING_PANTHEON_BONUS_DESC, "Предоставляет доступ ко всем богам. Проводит ежегодные праздники и снижает сборы религиозных и культурных зданий на 25%." },
+    { TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, "Церера вдохновляет ваших носильщиках с ферм передвигаться 50% быстрее." },
+    { TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Нептун дарует увеличение радиуса +1 вашим фонтанам и +2 резервуарам и сокращает потребность в рабочей силе вдвое. Торговые корабли передвигаются 25% быстрее." },
+    { TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, "Меркурий благословляет ваших торговцев по суше и морю дополнительным объемом товаров на 50%, а также вдохновляет сухопутных торговцев двигаться на 25% быстрее." },
+    { TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Марс призывает ваших жителей вступить в армию, отправляя новобранцев в форты вашего города и позволяя построить четыре дополнительных форта." },
+    { TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "Венера одаривает сады, статуи и храмы вашего города сиянием красоты, повышая их привлекательность. Дома также вмещают больше товаров и медленнее деградируются." },
+    { TR_BUILDING_PANTHEON_BONUS_DESC, "Пантеон предоставляет вашим гражданам доступ к поклонению всем богам. Здесь также проводятся ежегодные фестивали, а сборы с религиозных и культурных зданий снижаются на 25%." },
     { TR_BUILDING_GRAND_TEMPLE_CERES_MODULE_1_DESC, "Жрецы уменьшают потребление еды на 20%." },
     { TR_BUILDING_GRAND_TEMPLE_NEPTUNE_MODULE_1_DESC, "Храмы выпускают возничих для ипподрома." },
     { TR_BUILDING_GRAND_TEMPLE_MERCURY_MODULE_1_DESC, "Жрецы сокращают потребление посуды и мебели на 20%." },
@@ -785,6 +785,8 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TITLE_EMPERORS_WRATH, "Злость императора" },
     {TR_CITY_MESSAGE_TEXT_EMPERORS_WRATH, "Вы лишились милости Цезаря, и поэтому он приказал вас арестовать. Если вы не восстановите свою благосклонность к императору, его элитные легионеры вскоре вторгнутся в ваш город." },
     {TR_BUILDING_ACADEMY_UPGRADE_DESC, "Эта академия работает. Местное развитие позволило вашим горожанам расширить здание, предоставив больше места для речей и исследований."},
+    {TR_BUILDING_PALISADE_GATE, "Частокольные ворота"},
+    {TR_BUILDING_PALISADE_GATE_DESC, "Palisade gate description placeholder"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
