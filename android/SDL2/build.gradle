@@ -1,5 +1,37 @@
 apply plugin: 'com.android.library'
 
+def findLibrary(String prefix) {
+    def extPath = project.file("../../ext/SDL2")
+    def files = extPath.list({f, name -> name.startsWith("$prefix-")})
+    if (files.length == 0) {
+        throw new IllegalStateException("$prefix source not found, please extract the source to a subdirectory named '$prefix-2.0.*' in: " + extPath.absolutePath)
+    } else if (files.length > 1) {
+        throw new IllegalStateException("Multiple $prefix source folders found, please make sure there is only one folder named '$prefix-2.0.*' in: " + extPath.absolutePath)
+    }
+    return new File(extPath, files[0])
+}
+
+task findSDL2 {
+    def path = findLibrary("SDL2")
+    ext.sourcePath = path
+    ext.includePath = new File(path, "include")
+}
+
+task findSDL2Mixer {
+    def path = findLibrary("SDL2_mixer")
+    ext.sourcePath = path
+    // SDL2_mixer doesn't have a dedicated directory for includes. If we use the root dir as
+    // include_path, the whole source dir is packaged in the .aar, which is not what we want.
+    // Workaround: copy the headers to our own directory for includes.
+    def includeTarget = layout.buildDirectory.dir("sdl2_mixer_includes")
+    copy {
+        from path
+        include "*.h"
+        into includeTarget
+    }
+    ext.includePath = includeTarget.get().asFile
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -22,9 +54,11 @@ android {
             }
         }
         sourceSets {
-            main.java.srcDirs += '../../ext/SDL2'
-            main.java.excludes += '**/android-project-ant/**'
+            main.java.srcDirs += "${findSDL2.sourcePath}/android-project/app/src/main/java"
         }
+    }
+    buildFeatures {
+        prefabPublishing true
     }
     buildTypes {
         debug {
@@ -38,6 +72,14 @@ android {
     externalNativeBuild {
         ndkBuild {
             path '../../ext/SDL2/Android.mk'
+        }
+    }
+    prefab {
+        SDL2 {
+            headers "${findSDL2.includePath}"
+        }
+        SDL2_mixer {
+            headers "${findSDL2Mixer.includePath}"
         }
     }
 }

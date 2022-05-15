@@ -80,7 +80,7 @@ android {
         externalNativeBuild {
             cmake {
                 version "3.18.1"
-                arguments "-DTARGET_PLATFORM=android", "-DSYSTEM_LIBS=OFF"
+                arguments "-DTARGET_PLATFORM=android", "-DSYSTEM_LIBS=OFF","-DANDROID_STL=none"
             }
         }
         ndk {
@@ -89,6 +89,9 @@ android {
         sourceSets {
             main.res.srcDirs += '../../res/android'
         }
+    }
+    buildFeatures {
+        prefab true
     }
     signingConfigs {
         release {
