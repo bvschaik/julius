@@ -33,13 +33,13 @@ task findSDL2Mixer {
 }
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 32
     buildToolsVersion "30.0.3"
-    ndkVersion "22.1.7171670"
+    ndkVersion "23.1.7779620"
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 32
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
@@ -82,6 +82,7 @@ android {
             headers "${findSDL2Mixer.includePath}"
         }
     }
+    namespace 'com.github.bvschaik.julius.sdl2'
 }
 
 repositories {
