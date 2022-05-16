@@ -644,8 +644,9 @@ static void draw_isometric_top(const image *img, int x, int y, color_t color, fl
     set_texture_scale_mode(texture, scale);
 
     int x_offset = img->atlas.x_offset;
-    int y_offset = img->atlas.y_offset + 1;
-    int height = img->top_height;
+    int y_offset = img->atlas.y_offset;
+    int height = img->top_height + 1;
+    y -= 1;
 
 #ifdef USE_RENDER_GEOMETRY
     if (HAS_RENDER_GEOMETRY) {
