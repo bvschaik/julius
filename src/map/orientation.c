@@ -15,6 +15,7 @@
 #include "map/building_tiles.h"
 #include "map/data.h"
 #include "map/grid.h"
+#include "map/natives.h"
 #include "map/property.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
@@ -73,6 +74,8 @@ void map_orientation_change(int counter_clockwise)
     map_orientation_update_buildings();
     map_bridge_update_after_rotate(counter_clockwise);
     map_routing_update_walls();
+
+    map_natives_check_land(0);
 
     figure_tower_sentry_reroute();
     figure_hippodrome_horse_reroute();

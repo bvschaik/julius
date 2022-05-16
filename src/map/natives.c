@@ -184,10 +184,12 @@ void map_natives_init_editor(void)
     }
 }
 
-void map_natives_check_land(void)
+void map_natives_check_land(int update_behavior)
 {
     map_property_clear_all_native_land();
-    city_military_decrease_native_attack_duration();
+    if (update_behavior) {
+        city_military_decrease_native_attack_duration();
+    }
 
     building_type native_buildings[] = { BUILDING_NATIVE_HUT, BUILDING_NATIVE_MEETING };
     int native_size[] = { 1, 2 };
@@ -201,10 +203,10 @@ void map_natives_check_land(void)
             }
             if (b->sentiment.native_anger >= 100) {
                 mark_native_land(b->x, b->y, native_size[i], native_radius[i]);
-                if (has_building_on_native_land(b->x, b->y, native_size[i], native_radius[i])) {
+                if (update_behavior && has_building_on_native_land(b->x, b->y, native_size[i], native_radius[i])) {
                     city_military_start_native_attack();
                 }
-            } else {
+            } else if (update_behavior) {
                 b->sentiment.native_anger++;
             }
         }

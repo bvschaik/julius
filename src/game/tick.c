@@ -144,7 +144,7 @@ static void advance_tick(void)
         case 3: widget_minimap_invalidate(); break;
         case 4: city_emperor_update(); break;
         case 5: formation_update_all(0); break;
-        case 6: map_natives_check_land(); break;
+        case 6: map_natives_check_land(1); break;
         case 7: map_road_network_update(); break;
         case 8: building_granaries_calculate_stocks(); break;
         case 9: city_buildings_update_plague(); break;
