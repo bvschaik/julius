@@ -364,6 +364,10 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
                 }
             }
 
+            // Don't load original placeholder images
+            if (type == ATLAS_MAIN && i >= 6145 && i <= 6192) {
+                continue;
+            }
             image_packer_rect *rect = &data.packer.rects[i];
             rect->input.width = img->width;
             rect->input.height = img->height;
@@ -496,6 +500,10 @@ static void convert_images(image *images, image_draw_data *draw_datas, int size,
         image *img = &images[i];
         image_draw_data *draw_data = &draw_datas[i];
         if (image_is_external(img)) {
+            continue;
+        }
+        // Don't load original placeholder images
+        if (atlas_data->type == ATLAS_MAIN && i >= 6145 && i <= 6192) {
             continue;
         }
         buffer_set(buf, draw_data->offset);
