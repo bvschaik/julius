@@ -254,6 +254,8 @@ void figure_tower_sentry_action(figure *f)
                     f->destination_x = x_tile;
                     f->destination_y = y_tile;
                     figure_route_remove(f);
+                } else {
+                    f->state = FIGURE_STATE_DEAD;            
                 }
             }
             break;
