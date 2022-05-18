@@ -64,6 +64,7 @@ static int has_top_part(const asset_image *img)
     return 0;
 }
 
+#ifndef BUILDING_ASSET_PACKER
 static image_reference_type get_image_reference_type(const asset_image *img)
 {
     if (!img->active || &img->first_layer != img->last_layer) {
@@ -153,19 +154,6 @@ static void make_similar_images_references(const asset_image *img)
     }
 }
 
-void asset_image_check_and_handle_reference(asset_image *img)
-{
-#ifndef BUILDING_ASSET_PACKER
-    if (get_image_reference_type(img) != IMAGE_ORIGINAL && img->first_layer.calculated_image_id) {
-        img->is_reference = 1;
-        if (img->first_layer.calculated_image_id < IMAGE_MAIN_ENTRIES) {
-            translate_reference_position(img);
-        }
-    }
-#endif
-}
-
-#ifndef BUILDING_ASSET_PACKER
 static int load_image(asset_image *img, color_t **main_images, int *main_image_widths)
 {
     if (get_image_reference_type(img) == IMAGE_FULL_REFERENCE) {
@@ -538,6 +526,18 @@ void asset_image_reload_climate(void)
     array_foreach(asset_images, current_image) {
         if (current_image->is_reference && (current_image->img.atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_MAIN) {
             translate_reference_position(current_image);
+        }
+    }
+#endif
+}
+
+void asset_image_check_and_handle_reference(asset_image *img)
+{
+#ifndef BUILDING_ASSET_PACKER
+    if (get_image_reference_type(img) != IMAGE_ORIGINAL && img->first_layer.calculated_image_id) {
+        img->is_reference = 1;
+        if (img->first_layer.calculated_image_id < IMAGE_MAIN_ENTRIES) {
+            translate_reference_position(img);
         }
     }
 #endif
