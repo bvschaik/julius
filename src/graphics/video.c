@@ -7,7 +7,6 @@
 #include "core/time.h"
 #include "game/settings.h"
 #include "game/system.h"
-#include "graphics/graphics.h"
 #include "graphics/renderer.h"
 #include "graphics/screen.h"
 #include "sound/device.h"
@@ -16,7 +15,7 @@
 
 #include "pl_mpeg/pl_mpeg.h"
 
-#include "string.h"
+#include <string.h>
 
 typedef enum {
     VIDEO_TYPE_NONE = 0,
@@ -370,5 +369,6 @@ void video_draw_fullscreen(void)
         y = (int) ((s_height - data.video.height / scale) / 2 * scale);
     }
 
+    graphics_renderer()->clear_screen();
     graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x, y, scale);
 }

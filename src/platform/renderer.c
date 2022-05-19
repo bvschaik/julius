@@ -1210,6 +1210,9 @@ static void draw_software_mouse_cursor(void)
     const mouse *mouse = mouse_get();
     if (!mouse->is_touch) {
         cursor_shape current = platform_cursor_get_current_shape();
+        if (current == CURSOR_DISABLED) {
+            return;
+        }
         int size = calc_adjust_with_percentage(data.cursors[current].size,
             calc_percentage(100, platform_screen_get_scale()));
         SDL_Rect dst;

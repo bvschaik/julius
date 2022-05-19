@@ -9,7 +9,8 @@ typedef enum {
     CURSOR_ARROW = 0,
     CURSOR_SHOVEL = 1,
     CURSOR_SWORD = 2,
-    CURSOR_MAX,
+    CURSOR_DISABLED = 3,
+    CURSOR_MAX = 4,
 } cursor_shape;
 
 typedef enum {

@@ -5,9 +5,6 @@
 #include "graphics/renderer.h"
 #include "graphics/screen.h"
 
-#include <stdlib.h>
-#include <string.h>
-
 void image_draw(int image_id, int x, int y, color_t color, float scale)
 {
     const image *img = image_get(image_id);
