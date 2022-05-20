@@ -328,20 +328,20 @@ void formation_change_morale(formation *m, int amount)
 void formation_update_morale_after_death(formation *m)
 {
     formation_calculate_figures();
-    int pct_dead = calc_percentage(1, m->num_figures);
+    int pct_dead = calc_percentage(1, m->num_figures + 1);
     int morale;
     if (pct_dead < 8) {
-        morale = -5;
+        morale = -4;
     } else if (pct_dead < 10) {
-        morale = -7;
+        morale = -6;
     } else if (pct_dead < 14) {
-        morale = -10;
+        morale = -8;
     } else if (pct_dead < 20) {
-        morale = -12;
+        morale = -10;
     } else if (pct_dead < 30) {
-        morale = -15;
+        morale = -12;
     } else {
-        morale = -20;
+        morale = -16;
     }
     formation_change_morale(m, morale);
 }
