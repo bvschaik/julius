@@ -85,6 +85,7 @@ static cursor_scale get_cursor_scale(int scale_percentage)
 
 void system_init_cursors(int scale_percentage)
 {
+    data.disabled = 0;
     data.current_scale = get_cursor_scale(scale_percentage);
     for (int i = 0; i < CURSOR_MAX; i++) {
         const cursor *list = input_cursor_data(i, data.current_scale);
