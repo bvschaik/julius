@@ -4,9 +4,6 @@
 
 Chat: [Discord](http://www.discord.gg/GamerZakh) (kindly hosted by GamerZakh)
 
-**Note:** The download server is temporarily down. For now, you can
-[**download the latest stable 3.1.0 version from the release page**](https://github.com/Keriew/augustus/releases/tag/v3.1.0#Assets).
-
 | Platform | Latest release | Unstable build |
 |----------|----------------|----------------|
 | Windows  | [![Download](https://augustus.josecadete.net/badge/release/windows.svg)](https://augustus.josecadete.net/download/latest/release/windows) | [![Download](https://augustus.josecadete.net/badge/development/windows.svg)](https://augustus.josecadete.net/download/latest/development/windows)  [(Download development assets)](https://augustus.josecadete.net/download/latest/development/assets) | 
