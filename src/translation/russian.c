@@ -786,7 +786,7 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_EMPERORS_WRATH, "Вы лишились милости Цезаря, и поэтому он приказал вас арестовать. Если вы не восстановите свою благосклонность к императору, его элитные легионеры вскоре вторгнутся в ваш город." },
     {TR_BUILDING_ACADEMY_UPGRADE_DESC, "Эта академия работает. Местное развитие позволило вашим горожанам расширить здание, предоставив больше места для речей и исследований."},
     {TR_BUILDING_PALISADE_GATE, "Частокольные ворота"},
-    {TR_BUILDING_PALISADE_GATE_DESC, "Palisade gate description placeholder"},
+    {TR_BUILDING_PALISADE_GATE_DESC, "Эти узкие деревянные ворота контролируют движение людей внутрь и наружу оборонительных сооружений вашего города."},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
