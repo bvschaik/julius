@@ -14,11 +14,11 @@ jobs:
       matrix:
         include:
           - name: Linux AppImage
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             BUILD_TARGET: appimage
             DEPLOY: appimage
           - name: Linux x64
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             cache-key: linux-x64
             SDL_VERSION: 2.0.22
             SDL_MIXER_VERSION: 2.0.4
@@ -41,7 +41,7 @@ jobs:
             BUILD_TARGET: mac
             DEPLOY: mac
           - name: PS Vita
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             BUILD_TARGET: vita
             DEPLOY: vita
           - name: Nintendo Switch
@@ -49,14 +49,14 @@ jobs:
             BUILD_TARGET: switch
             DEPLOY: switch
           - name: Android
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             cache-key: android
             SDL_VERSION: 2.0.22
             SDL_MIXER_VERSION: 2.0.4
             BUILD_TARGET: android
             DEPLOY: android
           - name: Emscripten
-            os: ubuntu-20.04
+            os: ubuntu-22.04
             cache-key: emscripten
             BUILD_TARGET: emscripten
             DEPLOY: emscripten
