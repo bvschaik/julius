@@ -436,4 +436,9 @@
 	</image>
 	<image src="plaza_05" isometric="true"/>
 	<image src="plaza_06" isometric="true"/>
+	<!-- Note: Asset for 'Medium Statue' rotation variant -->
+	<image id="Med_Statue_R" width="118" height="79" isometric="true">
+		<layer group="61 " image="1" part="footprint" x="0" y="0"/>
+		<layer src="Med_Statue_R" x="10" y="0"/>
+	</image>
 </assetlist>
