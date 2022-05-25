@@ -105,7 +105,7 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
         },
         .road = {0xff736b63, 0xff4a3121},
         .wall = {0xffd6d3c6, 0xfff7f3de},
-        .aqueduct = {0xff5282bd, 0xff84baff},
+        .aqueduct = {0xff84baff, 0xff5282bd},
         .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
         .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
         .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
@@ -127,7 +127,7 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
         },
         .road = {0xff736b63, 0xff4a3121},
         .wall = {0xffd6d3c6, 0xfff7f3de},
-        .aqueduct = {0xff5282bd, 0xff84baff},
+        .aqueduct = {0xff84baff, 0xff5282bd},
         .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
         .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
         .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
@@ -149,7 +149,7 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
         },
         .road = {0xff6b5a52, 0xff4a4239},
         .wall = {0xffd6d3c6, 0xfff7f3de},
-        .aqueduct = {0xff5282bd, 0xff84baff},
+        .aqueduct = {0xff84baff, 0xff5282bd},
         .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
         .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
         .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
@@ -337,10 +337,15 @@ static int draw_figure(int x_view, int y_view, int grid_offset, const tile_color
     return 1;
 }
 
-static void draw_building(int size, int x_offset, int y_offset, const tile_color *colors)
+static void draw_building(int size, int x_offset, int y_offset, const tile_color *colors, int is_house)
 {
     if (size == 1) {
-        draw_tile(x_offset, y_offset, &colors[1]);
+        if (is_house) {
+            draw_pixel(x_offset, y_offset, colors[1].right);
+            draw_pixel(x_offset + 1, y_offset, colors[1].left);
+        } else {
+            draw_tile(x_offset, y_offset, &colors[0]);
+        }
         return;
     }
     int width = size * 2;
@@ -352,14 +357,14 @@ static void draw_building(int size, int x_offset, int y_offset, const tile_color
     for (int y = start_y; y < end_y; y++) {
         int x_start = height / 2 - y;
         int x_end = width - x_start - 1;
-        draw_pixel(x_start + x_offset, y + y_offset, colors[1].left);
-        draw_pixel(x_end + x_offset, y + y_offset, colors[1].right);
+        draw_pixel(x_start + x_offset, y + y_offset, colors[0].left);
+        draw_pixel(x_end + x_offset, y + y_offset, colors[0].right);
         if (x_start + x_offset < 0) {
             x_start = -x_offset - 1;
         }
         color_t *value = &data.cache.buffer[(y_offset + y) * data.cache.stride + x_start + x_offset + 1];
         for (int x = x_start; x < x_end - 1; x++) {
-            *value++ = ((x + y) & 1) ? colors[0].left : colors[0].right;
+            *value++ = ((size + x + y) & 1) ? colors[1].left : colors[1].right;
         }
     }
     y_offset += height / 2 + 1;
@@ -369,14 +374,14 @@ static void draw_building(int size, int x_offset, int y_offset, const tile_color
     for (int y = start_y; y < end_y; y++) {
         int x_start = y + 1;
         int x_end = width - x_start - 1;
-        draw_pixel(x_start + x_offset, y + y_offset, colors[1].left);
-        draw_pixel(x_end + x_offset, y + y_offset, colors[1].right);
+        draw_pixel(x_start + x_offset, y + y_offset, colors[0].left);
+        draw_pixel(x_end + x_offset, y + y_offset, colors[0].right);
         if (x_start + x_offset < 0) {
             x_start = -x_offset - 1;
         }
         color_t *value = &data.cache.buffer[(y_offset + y) * data.cache.stride + x_start + x_offset + 1];
         for (int x = x_start; x < x_end - 1; x++) {
-            *value++ = ((x + y) & 1) ? colors[0].right : colors[0].left;
+            *value++ = ((x + y) & 1) ? colors[1].left : colors[1].right;
         }
     }
 }
@@ -403,10 +408,12 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
     if (terrain & TERRAIN_BUILDING) {
         if (data.functions->offset.is_draw_tile(grid_offset)) {
             const tile_color *colors;
+            int is_house = 0;
             if (data.functions->building) {
                 building *b = data.functions->building(data.functions->offset.building_id(grid_offset));
                 if (b->house_size) {
                     colors = set->house;
+                    is_house = 1;
                 } else if (b->type == BUILDING_RESERVOIR) {
                     colors = set->reservoir;
                 } else if (building_monument_is_monument(b)) {
@@ -418,7 +425,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
                 colors = set->building;
             }
             int size = data.functions->offset.tile_size(grid_offset);
-            draw_building(size, x_view, y_view, colors);
+            draw_building(size, x_view, y_view, colors, is_house);
         }
         return;
     }
