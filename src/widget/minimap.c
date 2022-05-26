@@ -340,8 +340,65 @@ static int draw_figure(int x_view, int y_view, int grid_offset)
     return 1;
 }
 
-static void draw_building(int size, int x_offset, int y_offset, const building_tile_color *colors)
+static int building_is_industry(building_type type)
 {
+    return building_is_raw_resource_producer(type) || building_is_workshop(type) || type == BUILDING_WHARF;
+}
+
+static int building_is_military(building_type type)
+{
+    return building_is_fort(type) || type == BUILDING_FORT_GROUND || type == BUILDING_FORT ||
+        type == BUILDING_BARRACKS || type == BUILDING_MILITARY_ACADEMY || type == BUILDING_MESS_HALL ||
+        type == BUILDING_TOWER || type == BUILDING_WATCHTOWER || type == BUILDING_GATEHOUSE ||
+        type == BUILDING_PALISADE_GATE;
+}
+
+static int building_is_aesthetic(building_type type)
+{
+    return (type >= BUILDING_SMALL_POND && type <= BUILDING_OBELISK) || type == BUILDING_TRIUMPHAL_ARCH ||
+        (type >= BUILDING_HORSE_STATUE && type <= BUILDING_COLONNADE) || type == BUILDING_GARDEN_PATH ||
+        (type >= BUILDING_ROOFED_GARDEN_WALL && type <= BUILDING_HEDGE_GATE_LIGHT);
+}
+
+static int building_is_water_structure(building_type type)
+{
+    return type == BUILDING_RESERVOIR || type == BUILDING_FOUNTAIN || type == BUILDING_WELL;
+}
+
+static void draw_building(int x_offset, int y_offset, int grid_offset)
+{
+    if (!data.functions->offset.is_draw_tile(grid_offset)) {
+        return;
+    }
+
+    const building_tile_color *colors = &minimap_colors.building;
+    int size = data.functions->offset.tile_size(grid_offset);
+
+    if (data.functions->building) {
+        building *b = data.functions->building(data.functions->offset.building_id(grid_offset));
+
+        // Palisades are drawn like walls
+        if (b->type == BUILDING_PALISADE) {
+            draw_tile(x_offset, y_offset, &minimap_colors.wall);
+            return;
+        }
+
+        if (b->house_size) {
+            colors = &minimap_colors.house;
+        } else if (building_is_water_structure(b->type)) {
+            colors = &minimap_colors.water_structure;
+        } else if (building_monument_is_monument(b)) {
+            colors = &minimap_colors.monument;
+        } else if (building_is_farm(b->type)) {
+            colors = &minimap_colors.farm;
+        } else if (building_is_industry(b->type)) {
+            colors = &minimap_colors.industry;
+        } else if (building_is_military(b->type)) {
+            colors = &minimap_colors.military;
+        } else if (building_is_aesthetic(b->type)) {
+            colors = &minimap_colors.aesthetics;
+        } 
+    }
     if (size == 1) {
         // The 1x1 house image is inverted for some reason
         if (colors == &minimap_colors.house) {
@@ -390,31 +447,6 @@ static void draw_building(int size, int x_offset, int y_offset, const building_t
     }
 }
 
-static int building_is_industry(building_type type)
-{
-    return building_is_raw_resource_producer(type) || building_is_workshop(type) || type == BUILDING_WHARF;
-}
-
-static int building_is_military(building_type type)
-{
-    return building_is_fort(type) || type == BUILDING_FORT_GROUND || type == BUILDING_FORT ||
-        type == BUILDING_BARRACKS || type == BUILDING_MILITARY_ACADEMY || type == BUILDING_MESS_HALL ||
-        type == BUILDING_TOWER || type == BUILDING_WATCHTOWER || type == BUILDING_GATEHOUSE ||
-        type == BUILDING_PALISADE_GATE;
-}
-
-static int building_is_aesthetic(building_type type)
-{
-    return (type >= BUILDING_SMALL_POND && type <= BUILDING_OBELISK) || type == BUILDING_TRIUMPHAL_ARCH ||
-        (type >= BUILDING_HORSE_STATUE && type <= BUILDING_COLONNADE) || type == BUILDING_GARDEN_PATH ||
-        (type >= BUILDING_ROOFED_GARDEN_WALL && type <= BUILDING_HEDGE_GATE_LIGHT);
-}
-
-static int building_is_water_structure(building_type type)
-{
-    return type == BUILDING_RESERVOIR || type == BUILDING_FOUNTAIN || type == BUILDING_WELL;
-}
-
 static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
 {
     if (grid_offset < 0) {
@@ -427,36 +459,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
     int terrain = data.functions->offset.terrain(grid_offset);
 
     if (terrain & TERRAIN_BUILDING) {
-        if (data.functions->offset.is_draw_tile(grid_offset)) {
-            const building_tile_color *colors;
-            if (data.functions->building) {
-                building *b = data.functions->building(data.functions->offset.building_id(grid_offset));
-                if (b->house_size) {
-                    colors = &minimap_colors.house;
-                } else if (building_is_water_structure(b->type)) {
-                    colors = &minimap_colors.water_structure;
-                } else if (building_monument_is_monument(b)) {
-                    colors = &minimap_colors.monument;
-                } else if (building_is_farm(b->type)) {
-                    colors = &minimap_colors.farm;
-                } else if (building_is_industry(b->type)) {
-                    colors = &minimap_colors.industry;
-                } else if (building_is_military(b->type)) {
-                    colors = &minimap_colors.military;
-                } else if (building_is_aesthetic(b->type)) {
-                    colors = &minimap_colors.aesthetics;
-                } else if (b->type == BUILDING_PALISADE) {
-                    draw_tile(x_view, y_view, &minimap_colors.wall);
-                    return;
-                } else {
-                    colors = &minimap_colors.building;
-                }
-            } else {
-                colors = &minimap_colors.building;
-            }
-            int size = data.functions->offset.tile_size(grid_offset);
-            draw_building(size, x_view, y_view, colors);
-        }
+        draw_building(x_view, y_view, grid_offset);
         return;
     }
     int rand = data.functions->offset.random(grid_offset);
