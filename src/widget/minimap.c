@@ -134,7 +134,7 @@ static struct {
     const tile_color_climate_variants *climate;
     tile_color wall;
     tile_color aqueduct;
-    building_tile_color reservoir;
+    building_tile_color water_structure;
     building_tile_color house;
     building_tile_color building;
     building_tile_color monument;
@@ -146,16 +146,16 @@ static struct {
     .soldier = COLOR_MINIMAP_SOLDIER,
     .selected_soldier = COLOR_MINIMAP_SELECTED_SOLDIER,
     .wolf = COLOR_MINIMAP_WOLF,
-    .wall     = {0xffd6d3c6, 0xfff7f3de},
+    .wall = {0xffd6d3c6, 0xfff7f3de},
     .aqueduct = {0xff84baff, 0xff5282bd},
-    .reservoir  = { .edges = {0xff5282bd, 0xff5282bd}, .center = {0xff84baff, 0xff84baff} },
-    .house      = { .edges = {0xffffb28c, 0xffd65110}, .center = {0xffef824a, 0xffffa273} },
-    .building   = { .edges = {0xfffffbde, 0xffefd34a}, .center = {0xfffff3c6, 0xffffebb5} },
-    .monument   = { .edges = {0xfff5deff, 0xffb84aef}, .center = {0xffe9c6ff, 0xffdfb5ff} },
-    .farm       = { .edges = {0xff81ef4a, 0xffe8ffde}, .center = {0xffdcffc6, 0xffd5ffb5} },
-    .industry   = { .edges = {0xff6b2900, 0xffb6896d}, .center = {0xffb2602e, 0xff9d3c01} },
-    .aesthetics = { .edges = {0xff019d7a, 0xffc4e1da}, .center = {0xff81d5c2, 0xff1ac6a0} },
-    .military   = { .edges = {0xff4e4e4e, 0xffb6b8b8}, .center = {0xff8c8c8c, 0xff6d6e6e} }
+    .water_structure = { .edges = {0xff5282bd, 0xff5282bd}, .center = {0xff84baff, 0xff84baff} },
+    .house           = { .edges = {0xffffb28c, 0xffd65110}, .center = {0xffef824a, 0xffffa273} },
+    .building        = { .edges = {0xfffffbde, 0xffefd34a}, .center = {0xfffff3c6, 0xffffebb5} },
+    .monument        = { .edges = {0xfff5deff, 0xffb84aef}, .center = {0xffe9c6ff, 0xffdfb5ff} },
+    .farm            = { .edges = {0xff81ef4a, 0xffe8ffde}, .center = {0xffdcffc6, 0xffd5ffb5} },
+    .industry        = { .edges = {0xff6b2900, 0xffb6896d}, .center = {0xffb2602e, 0xff9d3c01} },
+    .aesthetics      = { .edges = {0xff019d7a, 0xffc4e1da}, .center = {0xff81d5c2, 0xff1ac6a0} },
+    .military        = { .edges = {0xff4e4e4e, 0xffb6b8b8}, .center = {0xff8c8c8c, 0xff6d6e6e} }
 };
 
 static struct {
@@ -398,15 +398,21 @@ static int building_is_industry(building_type type)
 static int building_is_military(building_type type)
 {
     return building_is_fort(type) || type == BUILDING_FORT_GROUND || type == BUILDING_FORT ||
-        type == BUILDING_BARRACKS || type == BUILDING_MILITARY_ACADEMY || type == BUILDING_MESS_HALL;
+        type == BUILDING_BARRACKS || type == BUILDING_MILITARY_ACADEMY || type == BUILDING_MESS_HALL ||
+        type == BUILDING_TOWER || type == BUILDING_WATCHTOWER || type == BUILDING_GATEHOUSE ||
+        type == BUILDING_PALISADE_GATE;
 }
 
 static int building_is_aesthetic(building_type type)
 {
-    return (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE) || type == BUILDING_TRIUMPHAL_ARCH ||
-        type == BUILDING_SMALL_POND || type == BUILDING_LARGE_POND ||
-        (type >= BUILDING_PAVILION_BLUE && type <= BUILDING_OBELISK) ||
-        type == BUILDING_HORSE_STATUE || (type >= BUILDING_LEGION_STATUE && type <= BUILDING_COLONNADE);
+    return (type >= BUILDING_SMALL_POND && type <= BUILDING_OBELISK) || type == BUILDING_TRIUMPHAL_ARCH ||
+        (type >= BUILDING_HORSE_STATUE && type <= BUILDING_COLONNADE) || type == BUILDING_GARDEN_PATH ||
+        (type >= BUILDING_ROOFED_GARDEN_WALL && type <= BUILDING_HEDGE_GATE_LIGHT);
+}
+
+static int building_is_water_structure(building_type type)
+{
+    return type == BUILDING_RESERVOIR || type == BUILDING_FOUNTAIN || type == BUILDING_WELL;
 }
 
 static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
@@ -419,12 +425,6 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         return;
     }
     int terrain = data.functions->offset.terrain(grid_offset);
-    // exception for fort ground: display as empty land
-    if (terrain & TERRAIN_BUILDING && data.functions->building) {
-        if (data.functions->building(data.functions->offset.building_id(grid_offset))->type == BUILDING_FORT_GROUND) {
-            terrain = 0;
-        }
-    }
 
     if (terrain & TERRAIN_BUILDING) {
         if (data.functions->offset.is_draw_tile(grid_offset)) {
@@ -433,8 +433,8 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
                 building *b = data.functions->building(data.functions->offset.building_id(grid_offset));
                 if (b->house_size) {
                     colors = &minimap_colors.house;
-                } else if (b->type == BUILDING_RESERVOIR) {
-                    colors = &minimap_colors.reservoir;
+                } else if (building_is_water_structure(b->type)) {
+                    colors = &minimap_colors.water_structure;
                 } else if (building_monument_is_monument(b)) {
                     colors = &minimap_colors.monument;
                 } else if (building_is_farm(b->type)) {
@@ -445,6 +445,9 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
                     colors = &minimap_colors.military;
                 } else if (building_is_aesthetic(b->type)) {
                     colors = &minimap_colors.aesthetics;
+                } else if (b->type == BUILDING_PALISADE) {
+                    draw_tile(x_view, y_view, &minimap_colors.wall);
+                    return;
                 } else {
                     colors = &minimap_colors.building;
                 }
