@@ -437,8 +437,16 @@
 	<image src="plaza_05" isometric="true"/>
 	<image src="plaza_06" isometric="true"/>
 	<!-- Note: Asset for 'Medium Statue' rotation variant -->
+	<!-- Assets created by Areldir -->
 	<image id="Med_Statue_R" width="118" height="79" isometric="true">
 		<layer group="61 " image="1" part="footprint" x="0" y="0"/>
 		<layer src="Med_Statue_R" x="10" y="0"/>
 	</image>
+	<!-- Note: Assets for 'Gladiator Statue' with rotation variant -->
+	<!-- Assets created by Lizzaran -->
+	<image id="Gladiator_Statue" src="Gladiator_Statue" isometric="true"/>
+	<image id="Gladiator_Statue_R" src="Gladiator_Statue_R" isometric="true"/>
+	<!-- Note: Assets for 'Garden' - additional variant -->
+	<!-- Assets created by Areldir -->
+	<image id="Garden_Alt_01" src="Garden_01" isometric="true"/>
 </assetlist>
