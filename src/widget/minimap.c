@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "building/building.h"
+#include "building/industry.h"
 #include "building/monument.h"
 #include "city/view.h"
 #include "core/calc.h"
@@ -33,6 +34,21 @@ typedef struct {
     color_t left;
     color_t right;
 } tile_color;
+
+typedef struct {
+    color_t enemy;
+    tile_color water[4];
+    tile_color tree[4];
+    tile_color rock[4];
+    tile_color meadow[4];
+    tile_color grass[8];
+    tile_color road;
+} tile_color_climate_variants;
+
+typedef struct {
+    tile_color edges;
+    tile_color center;
+} building_tile_color;
 
 typedef struct {
     scenario_climate(*climate)(void);
@@ -68,33 +84,10 @@ static minimap_functions functions = {
     .viewport = get_viewport
 };
 
-typedef struct {
-    color_t soldier;
-    color_t selected_soldier;
-    color_t enemy;
-    color_t wolf;
-    tile_color water[4];
-    tile_color tree[4];
-    tile_color rock[4];
-    tile_color meadow[4];
-    tile_color grass[8];
-    tile_color road;
-    tile_color wall;
-    tile_color aqueduct;
-    tile_color reservoir[2];
-    tile_color house[2];
-    tile_color building[2];
-    tile_color monument[2];
-} tile_color_set;
-
-// Since the minimap tiles are only 25 color sets per climate, we just hardcode them.
-static const tile_color_set MINIMAP_COLOR_SETS[3] = {
+static const tile_color_climate_variants CLIMATE_VARIANTS[3] = {
     // central
     {
-        .soldier = COLOR_MINIMAP_SOLDIER,
-        .selected_soldier = COLOR_MINIMAP_SELECTED_SOLDIER,
         .enemy = COLOR_MINIMAP_ENEMY_CENTRAL,
-        .wolf = COLOR_MINIMAP_WOLF,
         .water = {{0xff394a7b, 0xff31427b}, {0xff394a7b, 0xff314273}, {0xff313973, 0xff314273}, {0xff31427b, 0xff394a7b}},
         .tree = {{0xff6b8431, 0xff102108}, {0xff103908, 0xff737b29}, {0xff103108, 0xff526b21}, {0xff737b31, 0xff084a10}},
         .rock = {{0xff948484, 0xff635a4a}, {0xffa59c94, 0xffb5ada5}, {0xffb5ada5, 0xff8c8484}, {0xff635a4a, 0xffa59c94}},
@@ -104,19 +97,10 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
             {0xff6b8431, 0xff737b31}, {0xff6b7b31, 0xff737b29}, {0xff636b18, 0xff526b21}, {0xff737b31, 0xff737b29}
         },
         .road = {0xff736b63, 0xff4a3121},
-        .wall = {0xffd6d3c6, 0xfff7f3de},
-        .aqueduct = {0xff84baff, 0xff5282bd},
-        .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
-        .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
-        .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
-        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}} // Edges, center
     },
     // northern
     {
-        .soldier = COLOR_MINIMAP_SOLDIER,
-        .selected_soldier = COLOR_MINIMAP_SELECTED_SOLDIER,
         .enemy = COLOR_MINIMAP_ENEMY_NORTHERN,
-        .wolf = COLOR_MINIMAP_WOLF,
         .water = {{0xff394a7b, 0xff31427b}, {0xff394a7b, 0xff314273}, {0xff313973, 0xff314273}, {0xff31427b, 0xff394a7b}},
         .tree = {{0xff527b31, 0xff082108}, {0xff083908, 0xff5a7329}, {0xff082908, 0xff316b21}, {0xff527b29, 0xff084a21}},
         .rock = {{0xff8c8484, 0xff5a5252}, {0xff9c9c94, 0xffa5a5a5}, {0xffa5a5a5, 0xff848484}, {0xff5a5252, 0xff9c9c94}},
@@ -126,19 +110,10 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
             {0xff527b31, 0xff5a7331}, {0xff4a7329, 0xff5a7329}, {0xff4a6b18, 0xff316b21}, {0xff527b29, 0xff527329}
         },
         .road = {0xff736b63, 0xff4a3121},
-        .wall = {0xffd6d3c6, 0xfff7f3de},
-        .aqueduct = {0xff84baff, 0xff5282bd},
-        .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
-        .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
-        .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
-        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}} // Edges, center
     },
     // desert
     {
-        .soldier = COLOR_MINIMAP_SOLDIER,
-        .selected_soldier = COLOR_MINIMAP_SELECTED_SOLDIER,
         .enemy = COLOR_MINIMAP_ENEMY_DESERT,
-        .wolf = COLOR_MINIMAP_WOLF,
         .water = {{0xff4a84c6, 0xff4a7bc6}, {0xff4a84c6, 0xff4a7bc6}, {0xff4a84c6, 0xff5284c6}, {0xff4a7bbd, 0xff4a7bc6}},
         .tree = {{0xffa59c7b, 0xff6b7b18}, {0xff214210, 0xffada573}, {0xff526b21, 0xffcec6a5}, {0xffa59c7b, 0xff316321}},
         .rock = {{0xffa59494, 0xff736352}, {0xffa59c94, 0xffb5ada5}, {0xffb5ada5, 0xff8c847b}, {0xff736352, 0xffbdada5}},
@@ -148,13 +123,39 @@ static const tile_color_set MINIMAP_COLOR_SETS[3] = {
             {0xffa59c7b, 0xffbdb594}, {0xffcecead, 0xffb5ad94}, {0xffc6c6a5, 0xffdedebd}, {0xffcecead, 0xffd6d6b5}
         },
         .road = {0xff6b5a52, 0xff4a4239},
-        .wall = {0xffd6d3c6, 0xfff7f3de},
-        .aqueduct = {0xff84baff, 0xff5282bd},
-        .reservoir = {{0xff5282bd, 0xff5282bd}, {0xff84baff, 0xff84baff}}, // Edges, center
-        .house = {{0xffffb28c, 0xffd65110}, {0xffef824a, 0xffffa273}}, // Edges, center
-        .building = {{0xfffffbde, 0xffefd34a}, {0xfffff3c6, 0xffffebb5}}, // Edges, center
-        .monument = {{0xfff5deff, 0xffb84aef}, {0xffe9c6ff, 0xffdfb5ff}} // Edges, center
     }
+};
+
+static struct {
+    color_t soldier;
+    color_t selected_soldier;
+    color_t enemy;
+    color_t wolf;
+    const tile_color_climate_variants *climate;
+    tile_color wall;
+    tile_color aqueduct;
+    building_tile_color reservoir;
+    building_tile_color house;
+    building_tile_color building;
+    building_tile_color monument;
+    building_tile_color farm;
+    building_tile_color industry;
+    building_tile_color aesthetics;
+    building_tile_color military;
+} minimap_colors = {
+    .soldier = COLOR_MINIMAP_SOLDIER,
+    .selected_soldier = COLOR_MINIMAP_SELECTED_SOLDIER,
+    .wolf = COLOR_MINIMAP_WOLF,
+    .wall     = {0xffd6d3c6, 0xfff7f3de},
+    .aqueduct = {0xff84baff, 0xff5282bd},
+    .reservoir  = { .edges = {0xff5282bd, 0xff5282bd}, .center = {0xff84baff, 0xff84baff} },
+    .house      = { .edges = {0xffffb28c, 0xffd65110}, .center = {0xffef824a, 0xffffa273} },
+    .building   = { .edges = {0xfffffbde, 0xffefd34a}, .center = {0xfffff3c6, 0xffffebb5} },
+    .monument   = { .edges = {0xfff5deff, 0xffb84aef}, .center = {0xffe9c6ff, 0xffdfb5ff} },
+    .farm       = { .edges = {0xff81ef4a, 0xffe8ffde}, .center = {0xffdcffc6, 0xffd5ffb5} },
+    .industry   = { .edges = {0xff6b2900, 0xffb6896d}, .center = {0xffb2602e, 0xff9d3c01} },
+    .aesthetics = { .edges = {0xff019d7a, 0xffc4e1da}, .center = {0xff81d5c2, 0xff1ac6a0} },
+    .military   = { .edges = {0xff4e4e4e, 0xffb6b8b8}, .center = {0xff8c8c8c, 0xff6d6e6e} }
 };
 
 static struct {
@@ -214,7 +215,7 @@ static void foreach_map_tile(map_callback *callback)
         data.minimap.width, data.minimap.height, callback);
 }
 
-static void set_bounds(int x_offset, int y_offset, int width, int height)
+static void setup_minimap(int x_offset, int y_offset, int width, int height)
 {
     data.screen.x = x_offset;
     data.screen.y = y_offset;
@@ -227,6 +228,8 @@ static void set_bounds(int x_offset, int y_offset, int width, int height)
     float max_scale_height = data.minimap.height / (float) data.screen.height;
 
     data.minimap.max_scale = max_scale_width > max_scale_height ? max_scale_width : max_scale_height;
+
+    minimap_colors.climate = &CLIMATE_VARIANTS[data.functions->climate()];
 }
 
 static void position_minimap(void)
@@ -315,7 +318,7 @@ static inline void draw_tile(int x_offset, int y_offset, const tile_color *color
     draw_pixel(x_offset + 1, y_offset, colors->right);
 }
 
-static int draw_figure(int x_view, int y_view, int grid_offset, const tile_color_set *set)
+static int draw_figure(int x_view, int y_view, int grid_offset)
 {
     if (!data.functions->offset.figure) {
         return 0;
@@ -324,27 +327,28 @@ static int draw_figure(int x_view, int y_view, int grid_offset, const tile_color
     if (color_type == FIGURE_COLOR_NONE) {
         return 0;
     }
-    color_t color = set->wolf;
+    color_t color = minimap_colors.wolf;
     if (color_type == FIGURE_COLOR_SOLDIER) {
-        color = set->soldier;
+        color = minimap_colors.soldier;
     } else if (color_type == FIGURE_COLOR_SELECTED_SOLDIER) {
-        color = set->selected_soldier;
+        color = minimap_colors.selected_soldier;
     } else if (color_type == FIGURE_COLOR_ENEMY) {
-        color = set->enemy;
+        color = minimap_colors.climate->enemy;
     }
     draw_pixel(x_view, y_view, color);
     draw_pixel(x_view + 1, y_view, color);
     return 1;
 }
 
-static void draw_building(int size, int x_offset, int y_offset, const tile_color *colors, int is_house)
+static void draw_building(int size, int x_offset, int y_offset, const building_tile_color *colors)
 {
     if (size == 1) {
-        if (is_house) {
-            draw_pixel(x_offset, y_offset, colors[1].right);
-            draw_pixel(x_offset + 1, y_offset, colors[1].left);
+        // The 1x1 house image is inverted for some reason
+        if (colors == &minimap_colors.house) {
+            draw_pixel(x_offset, y_offset, colors->center.right);
+            draw_pixel(x_offset + 1, y_offset, colors->center.left);
         } else {
-            draw_tile(x_offset, y_offset, &colors[0]);
+            draw_tile(x_offset, y_offset, &colors->edges);
         }
         return;
     }
@@ -357,14 +361,14 @@ static void draw_building(int size, int x_offset, int y_offset, const tile_color
     for (int y = start_y; y < end_y; y++) {
         int x_start = height / 2 - y;
         int x_end = width - x_start - 1;
-        draw_pixel(x_start + x_offset, y + y_offset, colors[0].left);
-        draw_pixel(x_end + x_offset, y + y_offset, colors[0].right);
+        draw_pixel(x_start + x_offset, y + y_offset, colors->edges.left);
+        draw_pixel(x_end + x_offset, y + y_offset, colors->edges.right);
         if (x_start + x_offset < 0) {
             x_start = -x_offset - 1;
         }
         color_t *value = &data.cache.buffer[(y_offset + y) * data.cache.stride + x_start + x_offset + 1];
         for (int x = x_start; x < x_end - 1; x++) {
-            *value++ = ((size + x + y) & 1) ? colors[1].left : colors[1].right;
+            *value++ = ((size + x + y) & 1) ? colors->center.left : colors->center.right;
         }
     }
     y_offset += height / 2 + 1;
@@ -374,27 +378,44 @@ static void draw_building(int size, int x_offset, int y_offset, const tile_color
     for (int y = start_y; y < end_y; y++) {
         int x_start = y + 1;
         int x_end = width - x_start - 1;
-        draw_pixel(x_start + x_offset, y + y_offset, colors[0].left);
-        draw_pixel(x_end + x_offset, y + y_offset, colors[0].right);
+        draw_pixel(x_start + x_offset, y + y_offset, colors->edges.left);
+        draw_pixel(x_end + x_offset, y + y_offset, colors->edges.right);
         if (x_start + x_offset < 0) {
             x_start = -x_offset - 1;
         }
         color_t *value = &data.cache.buffer[(y_offset + y) * data.cache.stride + x_start + x_offset + 1];
         for (int x = x_start; x < x_end - 1; x++) {
-            *value++ = ((x + y) & 1) ? colors[1].left : colors[1].right;
+            *value++ = ((x + y) & 1) ? colors->center.left : colors->center.right;
         }
     }
 }
 
+static int building_is_industry(building_type type)
+{
+    return building_is_raw_resource_producer(type) || building_is_workshop(type) || type == BUILDING_WHARF;
+}
+
+static int building_is_military(building_type type)
+{
+    return building_is_fort(type) || type == BUILDING_FORT_GROUND || type == BUILDING_FORT ||
+        type == BUILDING_BARRACKS || type == BUILDING_MILITARY_ACADEMY || type == BUILDING_MESS_HALL;
+}
+
+static int building_is_aesthetic(building_type type)
+{
+    return (type >= BUILDING_SMALL_STATUE && type <= BUILDING_LARGE_STATUE) || type == BUILDING_TRIUMPHAL_ARCH ||
+        type == BUILDING_SMALL_POND || type == BUILDING_LARGE_POND ||
+        (type >= BUILDING_PAVILION_BLUE && type <= BUILDING_OBELISK) ||
+        type == BUILDING_HORSE_STATUE || (type >= BUILDING_LEGION_STATUE && type <= BUILDING_COLONNADE);
+}
+
 static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
 {
-    const tile_color_set *set = &MINIMAP_COLOR_SETS[data.functions->climate()];
-
     if (grid_offset < 0) {
         return;
     }
 
-    if (draw_figure(x_view, y_view, grid_offset, set)) {
+    if (draw_figure(x_view, y_view, grid_offset)) {
         return;
     }
     int terrain = data.functions->offset.terrain(grid_offset);
@@ -407,46 +428,52 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
 
     if (terrain & TERRAIN_BUILDING) {
         if (data.functions->offset.is_draw_tile(grid_offset)) {
-            const tile_color *colors;
-            int is_house = 0;
+            const building_tile_color *colors;
             if (data.functions->building) {
                 building *b = data.functions->building(data.functions->offset.building_id(grid_offset));
                 if (b->house_size) {
-                    colors = set->house;
-                    is_house = 1;
+                    colors = &minimap_colors.house;
                 } else if (b->type == BUILDING_RESERVOIR) {
-                    colors = set->reservoir;
+                    colors = &minimap_colors.reservoir;
                 } else if (building_monument_is_monument(b)) {
-                    colors = set->monument;
+                    colors = &minimap_colors.monument;
+                } else if (building_is_farm(b->type)) {
+                    colors = &minimap_colors.farm;
+                } else if (building_is_industry(b->type)) {
+                    colors = &minimap_colors.industry;
+                } else if (building_is_military(b->type)) {
+                    colors = &minimap_colors.military;
+                } else if (building_is_aesthetic(b->type)) {
+                    colors = &minimap_colors.aesthetics;
                 } else {
-                    colors = set->building;
+                    colors = &minimap_colors.building;
                 }
             } else {
-                colors = set->building;
+                colors = &minimap_colors.building;
             }
             int size = data.functions->offset.tile_size(grid_offset);
-            draw_building(size, x_view, y_view, colors, is_house);
+            draw_building(size, x_view, y_view, colors);
         }
         return;
     }
     int rand = data.functions->offset.random(grid_offset);
     const tile_color *colors;
     if (terrain & TERRAIN_ROAD) {
-        colors = &set->road;
+        colors = &minimap_colors.climate->road;
     } else if (terrain & TERRAIN_WATER) {
-        colors = &set->water[rand & 3];
+        colors = &minimap_colors.climate->water[rand & 3];
     } else if (terrain & (TERRAIN_SHRUB | TERRAIN_TREE)) {
-        colors = &set->tree[rand & 3];
+        colors = &minimap_colors.climate->tree[rand & 3];
     } else if (terrain & (TERRAIN_ROCK | TERRAIN_ELEVATION)) {
-        colors = &set->rock[rand & 3];
+        colors = &minimap_colors.climate->rock[rand & 3];
     } else if (terrain & TERRAIN_AQUEDUCT) {
-        colors = &set->aqueduct;
+        colors = &minimap_colors.aqueduct;
     } else if (terrain & TERRAIN_WALL) {
-        colors = &set->wall;
+        colors = &minimap_colors.wall;
     } else if (terrain & TERRAIN_MEADOW) {
-        colors = &set->meadow[rand & 3];
+        colors = &minimap_colors.climate->meadow[rand & 3];
     } else {
-        colors = &set->grass[rand & 7];
+        colors = &minimap_colors.climate->grass[rand & 7];
     }
     draw_tile(x_view, y_view, colors);
 }
@@ -502,7 +529,7 @@ void widget_minimap_draw(int x_offset, int y_offset, int width, int height, int 
             return;
         }
         clear_minimap();
-        set_bounds(x_offset, y_offset, width, height);
+        setup_minimap(x_offset, y_offset, width, height);
         foreach_map_tile(draw_minimap_tile);
         graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
         data.refresh_requested = 0;
