@@ -459,7 +459,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
             blocked_tiles[i] = 0;
         }
     }
-    if (type >= BUILDING_ROADBLOCK || type == BUILDING_LIBRARY || type == BUILDING_SMALL_STATUE) {
+    if (type >= BUILDING_ROADBLOCK || type == BUILDING_LIBRARY || type == BUILDING_SMALL_STATUE || type == BUILDING_MEDIUM_STATUE) {
         image_id = get_new_building_image_id(tile->x, tile->y, grid_offset, type, props);
         draw_regular_building(type, image_id, x_view, y_view, grid_offset, num_tiles, blocked_tiles);
     } else {
