@@ -439,7 +439,7 @@
 	<!-- Note: Asset for 'Medium Statue' rotation variant -->
 	<!-- Assets created by Areldir -->
 	<image id="Med_Statue_R" width="118" height="79" isometric="true">
-		<layer group="61 " image="1" part="footprint" x="0" y="0"/>
+		<layer group="61 " image="1" part="footprint" x="0" y="0" invert="horizontal"/>
 		<layer src="Med_Statue_R" x="10" y="0"/>
 	</image>
 	<!-- Note: Assets for 'Gladiator Statue' with rotation variant -->
