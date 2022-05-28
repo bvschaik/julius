@@ -672,8 +672,9 @@ int building_image_get(building *b)
                     image_id = assets_get_image_id("Military", "Watchtower C ON");
                     break;
             }
-            int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
-            return image_id + (orientation % 2) * building_properties_for_type(b->type)->rotation_offset;
+            
+            int offset = building_variant_get_offset_with_rotation(b->type, b->variant);
+            return image_id + offset;
         }
         case BUILDING_SMALL_MAUSOLEUM:
             switch (b->data.monument.phase) {

@@ -5,7 +5,7 @@
 #include "city/view.h"
 #include "core/image.h"
 
-#define BUILDINGS_WITH_VARIANTS 6
+#define BUILDINGS_WITH_VARIANTS 10
 #define CITY_DIRECTION_ANY -1
 #define MAX_VARIANTS_PER_BUILDING 12
 
@@ -22,6 +22,10 @@ static struct building_variant variants[BUILDINGS_WITH_VARIANTS] = {
     {12, BUILDING_DECORATIVE_COLUMN, {1,0,3,2,5,4,7,6,9,8,11,10}, 1},
     {12, BUILDING_DECORATIVE_COLUMN, {0,1,2,3,4,5,6,7,8,9,10,11}, 2},
     {12, BUILDING_DECORATIVE_COLUMN, {1,0,3,2,5,4,7,6,9,8,11,10}, 3},
+    {4, BUILDING_WATCHTOWER, {0,21,52,73}, 0},
+    {4, BUILDING_WATCHTOWER, {21,0,73,52}, 1},
+    {4, BUILDING_WATCHTOWER, {0,21,52,73}, 2},
+    {4, BUILDING_WATCHTOWER, {21,0,73,52}, 3},
     {6, BUILDING_ROADBLOCK, {0,1,2,3,4,5}, CITY_DIRECTION_ANY},
 };
 
@@ -31,6 +35,7 @@ int building_variant_has_variants(building_type type)
         case BUILDING_PAVILION_BLUE:
         case BUILDING_DECORATIVE_COLUMN:
         case BUILDING_ROADBLOCK:
+        case BUILDING_WATCHTOWER:
             return 1;
         default:
             return 0;
@@ -78,6 +83,16 @@ int building_variant_get_image_id_with_rotation(building_type type, int rotation
     int image_id = group_id + image_offset;
 
     return image_id;
+}
+
+int building_variant_get_offset_with_rotation(building_type type, int rotation)
+{
+    struct building_variant *variant = get_variant_data(type);
+
+    if (!variant) {
+        return 0;
+    }
+    return variant->variants_offsets[rotation];
 }
 
 int building_variant_get_number_of_variants(building_type type)
