@@ -774,7 +774,9 @@ static translation_string all_strings[] = {
     {TR_OUT_OF_MONEY, "Faillite"},
     {TR_CITY_MESSAGE_TITLE_EMPERORS_WRATH, "Fureur de l'Empereur" },
     {TR_CITY_MESSAGE_TEXT_EMPERORS_WRATH, "Vous êtes tombé en disgrâce auprès de César et ce dernier a ordonné votre arrestation. À moins d'améliorer l'estime que l'Empereur vous porte, ses légions d'élite envahiront bientôt votre cité." },
-    {TR_BUILDING_ACADEMY_UPGRADE_DESC, "Cette université est opérationnelle. Le développement de la zone a permis d'agrandir le bâtiment, permettant la tenue de nombreuses conférences et recherches."}
+    {TR_BUILDING_ACADEMY_UPGRADE_DESC, "Cette université est opérationnelle. Le développement de la zone a permis d'agrandir le bâtiment, permettant la tenue de nombreuses conférences et recherches."},
+    {TR_BUILDING_PALISADE_GATE, "Portail de palissade"},
+    {TR_BUILDING_PALISADE_GATE_DESC, "Cet étroit portail en bois permet de contrôler le passage des citoyens à travers les défenses de la cité."}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
