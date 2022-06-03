@@ -16,7 +16,10 @@
 
 #define ASSET_ARRAY_SIZE 2000
 
-static array(asset_image) asset_images;
+static struct {
+    array(asset_image) asset_images;
+    int total_isometric_images;
+} data;
 
 typedef enum {
     IMAGE_ORIGINAL = 0,
@@ -42,28 +45,6 @@ static void unload_image_layers(asset_image *img)
     img->last_layer = &img->first_layer;
 }
 
-static int has_top_part(const asset_image *img)
-{
-    int tiles = (img->img.width + 2) / (FOOTPRINT_WIDTH + 2);
-    for (int y = 0; y < img->img.top_height; y++) {
-        const color_t *row = &img->data[y * img->img.width];
-        int footprint_row = y - img->img.height - 1 - tiles * FOOTPRINT_HALF_HEIGHT;
-        int half_top_pixels_in_row = (footprint_row < 0 ? img->img.width : img->img.width - 2 + 4 * footprint_row) / 2;
-        for (int x = 0; x < half_top_pixels_in_row; x++) {
-            if ((row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
-                return 1;
-            }
-        }
-        row += img->img.width - half_top_pixels_in_row;
-        for (int x = 0; x < half_top_pixels_in_row; x++) {
-            if ((row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
-                return 1;
-            }
-        }
-    }
-    return 0;
-}
-
 #ifndef BUILDING_ASSET_PACKER
 static image_reference_type get_image_reference_type(const asset_image *img)
 {
@@ -71,13 +52,13 @@ static image_reference_type get_image_reference_type(const asset_image *img)
         return IMAGE_ORIGINAL;
     }
     const layer *l = img->last_layer;
-    if (l->invert != INVERT_NONE || l->rotate != ROTATE_NONE || l->part != PART_BOTH || l->grayscale ||
-        (image_get(img->first_layer.calculated_image_id)->is_isometric &&
-            !graphics_renderer()->isometric_images_are_joined())) {
+    if (l->invert != INVERT_NONE || l->rotate != ROTATE_NONE || l->part != PART_BOTH || l->grayscale) {
         return IMAGE_ORIGINAL;
     }
-    return img->img.width == l->width && img->img.height == l->height && l->x_offset == 0 && l->y_offset == 0 ?
+    int reference = img->img.width == l->width && img->img.height == l->height && l->x_offset == 0 && l->y_offset == 0 ?
         IMAGE_FULL_REFERENCE : IMAGE_TRANSLATED_REFERENCE;
+    return reference == IMAGE_TRANSLATED_REFERENCE && image_get(l->calculated_image_id)->is_isometric ?
+        IMAGE_ORIGINAL : reference;
 }
 
 static void translate_reference_position(asset_image *img)
@@ -92,8 +73,12 @@ static void translate_reference_position(asset_image *img)
         img->img.y_offset = referenced->img.y_offset;
         img->img.atlas.x_offset = referenced->img.atlas.x_offset;
         img->img.atlas.y_offset = referenced->img.atlas.y_offset;
+        img->img.top = referenced->img.top;
         width = referenced->img.width;
         height = referenced->img.height;
+        if (img->img.top) {
+            height += img->img.top->original.height;
+        }
     } else {
         const image *referenced = image_get(l->calculated_image_id);
         img->img.atlas.id = referenced->atlas.id;
@@ -101,14 +86,22 @@ static void translate_reference_position(asset_image *img)
         img->img.y_offset = referenced->y_offset;
         img->img.atlas.x_offset = referenced->atlas.x_offset;
         img->img.atlas.y_offset = referenced->atlas.y_offset;
+        img->img.top = referenced->top;
         width = referenced->width;
         height = referenced->height;
+        if (img->img.top) {
+            height += img->img.top->original.height;
+        }
     }
     if (img->img.width > width) {
         img->img.width = width;
     }
     if (img->img.height > height) {
         img->img.height = height;
+    }
+    // Isometric images don't need translation
+    if (img->img.is_isometric) {
+        return;
     }
     if (l->x_offset >= 0) {
         img->img.x_offset += l->x_offset;
@@ -154,11 +147,60 @@ static void make_similar_images_references(const asset_image *img)
     }
 }
 
+static int has_top_part(const image *img, const color_t *pixels)
+{
+    int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+    int top_height = img->height - tiles * FOOTPRINT_HEIGHT;
+    for (int y = 0; y < top_height; y++) {
+        const color_t *row = &pixels[y * img->width];
+        int footprint_row = y - img->height - 1 - tiles * FOOTPRINT_HALF_HEIGHT;
+        int half_top_pixels_in_row = (footprint_row < 0 ? img->width : img->width - 2 + 4 * footprint_row) / 2;
+        for (int x = 0; x < half_top_pixels_in_row; x++) {
+            if ((row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                return 1;
+            }
+        }
+        row += img->width - half_top_pixels_in_row;
+        for (int x = 0; x < half_top_pixels_in_row; x++) {
+            if ((row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+void split_top_and_footprint(const image *img, color_t *dst, const color_t *src, int src_height)
+{
+    int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+
+    // Copy the top
+    for (int y = 0; y < img->top->height; y++) {
+        const color_t *src_row = &src[y * img->width];
+        color_t *dst_row = &dst[y * img->width];
+        int footprint_row = y - img->top->height - 1 + tiles * FOOTPRINT_HALF_HEIGHT;
+        int half_top_pixels_in_row = (footprint_row < 0 ? img->width : img->width - 2 - 4 * footprint_row) / 2;
+        memcpy(dst_row, src_row, half_top_pixels_in_row * sizeof(color_t));
+        src_row += img->width - half_top_pixels_in_row;
+        dst_row += img->width - half_top_pixels_in_row;
+        memcpy(dst_row, src_row, half_top_pixels_in_row * sizeof(color_t));
+    }
+
+    image_copy_info copy = {
+        .src = { 0, src_height - tiles * FOOTPRINT_HEIGHT, img->width, src_height, src },
+        .dst = { 0, img->atlas.y_offset, img->width, img->height + img->top->height, dst },
+        .rect = { 0, 0, img->width, img->height }
+    };
+
+    image_copy_isometric_footprint(&copy);
+}
+
 static int load_image(asset_image *img, color_t **main_images, int *main_image_widths)
 {
-    if (get_image_reference_type(img) == IMAGE_FULL_REFERENCE) {
+    image_reference_type reference_type = get_image_reference_type(img);
+    if (reference_type == IMAGE_FULL_REFERENCE) {
         layer *l = img->last_layer;
-        if (!l->calculated_image_id) {
+        if (!l->calculated_image_id && !img->img.is_isometric) {
             layer_load(l, main_images, main_image_widths);
             img->data = l->data;
             l->data = 0;
@@ -169,21 +211,13 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
     }
     load_image_layers(img, main_images, main_image_widths);
 
-    int image_height;
-
-    if (!img->img.is_isometric || graphics_renderer()->isometric_images_are_joined()) {
-        image_height = img->img.height;
-    } else {
-        int tiles = (img->img.width + 2) / (FOOTPRINT_WIDTH + 2);
-        image_height = img->img.height - tiles * FOOTPRINT_HALF_HEIGHT;
-    }
-
-    color_t *data = malloc(img->img.width * image_height * sizeof(color_t));
+    color_t *data = malloc(img->img.width * img->img.height * sizeof(color_t));
     if (!data) {
         log_error("Error creating image - out of memory", 0, 0);
+        unload_image_layers(img);
         return 0;
     }
-    memset(data, 0, img->img.width * image_height * sizeof(color_t));
+    memset(data, 0, img->img.width * img->img.height * sizeof(color_t));
 
     for (const layer *l = img->last_layer; l; l = l->prev) {
         int image_start_x, image_start_y, image_valid_width, image_valid_height, layer_step_x;
@@ -204,8 +238,8 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
         if (image_valid_width > img->img.width) {
             image_valid_width = img->img.width;
         }
-        if (image_valid_height > image_height) {
-            image_valid_height = image_height;
+        if (image_valid_height > img->img.height) {
+            image_valid_height = img->img.height;
         }
 
         // The above code is innacurate when a layer is rotated either by 90 or 270 degrees and inverted.
@@ -257,9 +291,44 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
         }
     }
 
-    img->data = data;
+    // The top and footprint parts of the image need to be split
+    if (img->img.is_isometric) {
+        int tiles = (img->img.width + 2) / (FOOTPRINT_WIDTH + 2);
+        int footprint_height = tiles * FOOTPRINT_HEIGHT;
+
+        if (has_top_part(&img->img, data)) {
+            img->img.top = malloc(sizeof(image));
+            if (!img->img.top) {
+                log_error("Error creating image - out of memory", 0, 0);
+                unload_image_layers(img);
+                return 0;
+            }
+            memset(img->img.top, 0, sizeof(image));
+            img->img.top->width = img->img.width;
+            img->img.top->height = img->img.height - footprint_height / 2 - 1;
+            img->img.top->original.height = img->img.top->height;
+            img->img.atlas.y_offset = img->img.top->height;
+            color_t *new_data = malloc(sizeof(color_t) * (img->img.height + img->img.top->height) * img->img.width);
+            if (!new_data) {
+                log_error("Error creating image - out of memory", 0, 0);
+                unload_image_layers(img);
+                return 0;
+            }
+            memset(new_data, 0, sizeof(color_t) * (footprint_height + img->img.top->height) *img->img.width);
+            split_top_and_footprint(&img->img, new_data, data, img->img.height);
+
+            img->img.height = footprint_height;
+            free(data);
+            data = new_data;
+        }
+        if (reference_type == IMAGE_FULL_REFERENCE) {
+            make_similar_images_references(img);
+        }
+    }
 
     unload_image_layers(img);
+
+    img->data = data;
 
     return 1;
 }
@@ -287,6 +356,11 @@ static layer *create_layer_for_image(asset_image *img)
     memset(l, 0, sizeof(layer));
     l->prev = img->last_layer;
     return l;
+}
+
+void asset_image_count_isometric(void)
+{
+    data.total_isometric_images++;
 }
 
 int asset_image_add_layer(asset_image *img,
@@ -340,11 +414,11 @@ int asset_image_add_layer(asset_image *img,
 
 asset_image *asset_image_get_from_id(int image_id)
 {
-    asset_image *last = array_last(asset_images);
+    asset_image *last = array_last(data.asset_images);
     if (image_id < 0 || !last || image_id > last->index) {
         return 0;
     }
-    return array_item(asset_images, image_id);
+    return array_item(data.asset_images, image_id);
 }
 
 void asset_image_unload(asset_image *img)
@@ -352,9 +426,14 @@ void asset_image_unload(asset_image *img)
     unload_image_layers(img);
     free((char *) img->id);
     free((color_t *) img->data); // Freeing a const pointer - ugly but necessary
+    if (!img->is_reference) {
+        free(img->img.top);
+    }
+    free(img->img.animation);
     img->id = 0;
     img->data = 0;
     img->active = 0;
+    memset(&img->img, 0, sizeof(image));
 }
 
 static void new_image(asset_image *img, int index)
@@ -370,51 +449,21 @@ static int is_image_active(const asset_image *img)
 
 int asset_image_init_array(void)
 {
+    data.total_isometric_images = 0;
     asset_image *image;
-    array_foreach(asset_images, image)
+    array_foreach(data.asset_images, image)
     {
         asset_image_unload(image);
     }
-    return array_init(asset_images, ASSET_ARRAY_SIZE, new_image, is_image_active);
+    return array_init(data.asset_images, ASSET_ARRAY_SIZE, new_image, is_image_active);
 }
 
 asset_image *asset_image_create(void)
 {
     asset_image *result;
-    array_new_item(asset_images, 1, result);
+    array_new_item(data.asset_images, 1, result);
     return result;
 }
-
-#ifndef BUILDING_ASSET_PACKER
-static void copy_asset_to_final_image(color_t *dst, const asset_image *img, int src_width, int dst_width)
-{
-    if (!graphics_renderer()->isometric_images_are_joined() && img->img.is_isometric) {
-        int tiles = (img->img.width + 2) / (FOOTPRINT_WIDTH + 2);
-        asset_image_copy_isometric_top(dst, img->data, img->img.width, img->img.top_height,
-            img->img.atlas.x_offset, img->img.atlas.y_offset, dst_width, 0, 0, src_width);
-        asset_image_copy_isometric_footprint(dst, img->data, img->img.width, img->img.height - img->img.top_height,
-            img->img.atlas.x_offset, img->img.atlas.y_offset + img->img.top_height, dst_width,
-            0, img->img.top_height - tiles * FOOTPRINT_HALF_HEIGHT, src_width);
-    } else {
-        for (int y = 0; y < img->img.height; y++) {
-            memcpy(&dst[(y + img->img.atlas.y_offset) * dst_width + img->img.atlas.x_offset],
-                &img->data[(y + img->img.y_offset) * src_width + img->img.x_offset], img->img.width * sizeof(color_t));
-        }
-    }
-}
-
-static void trim_image(asset_image *img)
-{
-    // Don't draw the top part if it's empty
-    if (!has_top_part(img)) {
-        if (!graphics_renderer()->isometric_images_are_joined()) {
-            img->img.height -= img->img.top_height;
-            img->img.y_offset = img->img.top_height;
-        }
-        img->img.top_height = 0;
-    }
-}
-#endif
 
 int asset_image_load_all(color_t **main_images, int *main_image_widths)
 {
@@ -422,7 +471,8 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
     image_packer packer;
     int max_width, max_height;
     graphics_renderer()->get_max_image_size(&max_width, &max_height);
-    if (image_packer_init(&packer, asset_images.size, max_width, max_height) != IMAGE_PACKER_OK) {
+    if (image_packer_init(&packer, data.asset_images.size + data.total_isometric_images,
+            max_width, max_height) != IMAGE_PACKER_OK) {
         log_error("Failed to init image packer", 0, 0);
         return 0;
     }
@@ -431,34 +481,55 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
     packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
 
     asset_image *current_image;
-    array_foreach(asset_images, current_image) {
+    int rect = 0;
+    array_foreach(data.asset_images, current_image) {
         if (current_image->is_reference) {
             continue;
         }
         load_image(current_image, main_images, main_image_widths);
+        int top_height = current_image->img.top ? current_image->img.top->height : 0;
 
-        int width = current_image->img.width;
-        int height = current_image->img.height;
+        if (graphics_renderer()->should_pack_image(current_image->img.width, current_image->img.height + top_height)) {
+            image *img_to_crop = 0;
+            int width;
+            int height;
 
-        if (graphics_renderer()->should_pack_image(current_image->img.width, current_image->img.height)) {
             if (current_image->img.is_isometric) {
-                trim_image(current_image);
+                if (current_image->img.top) {
+                    img_to_crop = current_image->img.top;
+                }
             } else {
-                image_crop(&current_image->img, current_image->data, 1);
+                img_to_crop = &current_image->img;
+            }
+            if (img_to_crop) {
+                width = img_to_crop->width;
+                height = img_to_crop->height;
+                image_crop(img_to_crop, current_image->data);
             }
             current_image->img.atlas.id = ATLAS_EXTRA_ASSET << IMAGE_ATLAS_BIT_OFFSET;
-            packer.rects[i].input.width = current_image->img.width;
-            packer.rects[i].input.height = current_image->img.height;
+            packer.rects[rect].input.width = current_image->img.width;
+            packer.rects[rect].input.height = current_image->img.height;
+
+            if (current_image->img.is_isometric && img_to_crop) {
+                rect++;
+                img_to_crop->atlas.id = ATLAS_EXTRA_ASSET << IMAGE_ATLAS_BIT_OFFSET;
+                packer.rects[rect].input.width = img_to_crop->width;
+                packer.rects[rect].input.height = img_to_crop->height;
+            }
 
             // Uncrop image for now, crop it later again
-            if (!current_image->img.is_isometric) {
-                current_image->img.x_offset = 0;
-                current_image->img.y_offset = 0;
-                current_image->img.width = width;
-                current_image->img.height = height;
+            if (img_to_crop) {
+                img_to_crop->x_offset = 0;
+                img_to_crop->y_offset = 0;
+                img_to_crop->width = width;
+                img_to_crop->height = height;
             }
+            rect++;
         } else {
             current_image->img.atlas.id = ATLAS_UNPACKED_EXTRA_ASSET << IMAGE_ATLAS_BIT_OFFSET;
+            if (current_image->img.top) {
+                current_image->img.top->atlas.id = ATLAS_UNPACKED_EXTRA_ASSET << IMAGE_ATLAS_BIT_OFFSET;
+            }
         }
     }
 
@@ -473,8 +544,11 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
     }
 
     int total_unpacked_assets = 0;
+    rect = 0;
 
-    array_foreach(asset_images, current_image) {
+    array_foreach(data.asset_images, current_image) {
+        int top_height = current_image->img.top ? current_image->img.top->height : 0;
+
         if (current_image->is_reference) {
             if (current_image->first_layer.calculated_image_id >= IMAGE_MAIN_ENTRIES) {
                 translate_reference_position(current_image);
@@ -482,35 +556,57 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
                 free((color_t *) current_image->data); // Freeing a const pointer - ugly but necessary
                 current_image->data = 0;
             }
-        } else if (graphics_renderer()->should_pack_image(current_image->img.width, current_image->img.height)) {
-            image_packer_rect *rect = &packer.rects[i];
-            current_image->img.atlas.x_offset = rect->output.x;
-            current_image->img.atlas.y_offset = rect->output.y;
-            current_image->img.atlas.id += rect->output.image_index;
+        } else if (graphics_renderer()->should_pack_image(current_image->img.width, current_image->img.height + top_height)) {
             int original_width = current_image->img.width;
-            if (!current_image->img.is_isometric) {
-                image_crop(&current_image->img, current_image->data, 1);
+            int original_height = current_image->img.height;
+            if (current_image->img.top) {
+                original_height += current_image->img.top->original.height;
             }
-            copy_asset_to_final_image(atlas_data->buffers[rect->output.image_index], current_image, original_width,
-                atlas_data->image_widths[rect->output.image_index]);
+            int original_y_offset = current_image->img.atlas.y_offset;
+            if (!current_image->img.is_isometric) {
+                image_crop(&current_image->img, current_image->data);
+            }
+            current_image->img.atlas.x_offset = packer.rects[rect].output.x;
+            current_image->img.atlas.y_offset = packer.rects[rect].output.y;
+            current_image->img.atlas.id += packer.rects[rect].output.image_index;
+            int dst_side = atlas_data->image_widths[packer.rects[rect].output.image_index];
+            image_copy_info copy = {
+                .src = { current_image->img.x_offset, current_image->img.y_offset + original_y_offset,
+                    original_width, original_height, current_image->data },
+                .dst = { current_image->img.atlas.x_offset, current_image->img.atlas.y_offset,
+                    dst_side, dst_side, atlas_data->buffers[packer.rects[rect].output.image_index] },
+                .rect = { 0, 0, current_image->img.width, current_image->img.height }
+            };
+            image_copy(&copy);
+            if (current_image->img.top) {
+                rect++;
+                image *top = current_image->img.top;
+                int top_width = top->width;
+                int top_height = top->original.height;
+                top->atlas.x_offset = packer.rects[rect].output.x;
+                top->atlas.y_offset = packer.rects[rect].output.y;
+                top->atlas.id += packer.rects[rect].output.image_index;
+                dst_side = atlas_data->image_widths[packer.rects[rect].output.image_index];
+                image_crop(top, current_image->data);
+                image_copy_info copy = {
+                    .src = { top->x_offset, top->y_offset, top_width, top_height, current_image->data },
+                    .dst = { top->atlas.x_offset, top->atlas.y_offset,
+                        dst_side, dst_side, atlas_data->buffers[packer.rects[rect].output.image_index] },
+                    .rect = { 0, 0, top->width, top->height }
+                };
+                image_copy(&copy);
+            }
+
             free((color_t *) current_image->data); // Freeing a const pointer - ugly but necessary
 
             current_image->data = 0;
+            rect++;
         } else {
-            if (current_image->img.is_isometric && !graphics_renderer()->isometric_images_are_joined()) {
-                size_t size = current_image->img.width * current_image->img.height * sizeof(color_t);
-                color_t *data = malloc(size);
-                if (!data) {
-                    log_error("Unable to create data for asset. The game may crash. Asset index:",
-                        0, current_image->index);
-                } else {
-                    memset(data, 0, size);
-                    copy_asset_to_final_image(data, current_image, current_image->img.width, current_image->img.width);
-                    free((color_t *) current_image->data); // Freeing a const pointer - ugly but necessary
-                    current_image->data = data;
-                }
+            current_image->img.atlas.id += total_unpacked_assets;
+            if (current_image->img.top) {
+                current_image->img.top->atlas.id += total_unpacked_assets;
             }
-            current_image->img.atlas.id += total_unpacked_assets++;
+            total_unpacked_assets++;
         }
     }
     image_packer_free(&packer);
@@ -523,7 +619,7 @@ void asset_image_reload_climate(void)
 {
 #ifndef BUILDING_ASSET_PACKER
     asset_image *current_image;
-    array_foreach(asset_images, current_image) {
+    array_foreach(data.asset_images, current_image) {
         if (current_image->is_reference && (current_image->img.atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_MAIN) {
             translate_reference_position(current_image);
         }
@@ -541,35 +637,4 @@ void asset_image_check_and_handle_reference(asset_image *img)
         }
     }
 #endif
-}
-
-void asset_image_copy_isometric_top(color_t *dst, const color_t *src, int width, int height,
-    int dst_x_offset, int dst_y_offset, int dst_width, int src_x_offset, int src_y_offset, int src_width)
-{
-    int tiles = (width + 2) / (FOOTPRINT_WIDTH + 2);
-    for (int y = 0; y < height; y++) {
-        const color_t *src_row = &src[(src_y_offset + y) * src_width + src_x_offset];
-        color_t *dst_row = &dst[(dst_y_offset + y) * dst_width + dst_x_offset];
-        int footprint_row = y - height - 1 + tiles * FOOTPRINT_HALF_HEIGHT;
-        int half_top_pixels_in_row = (footprint_row < 0 ? width : width - 2 - 4 * footprint_row) / 2;
-        memcpy(dst_row, src_row, half_top_pixels_in_row * sizeof(color_t));
-        src_row += width - half_top_pixels_in_row;
-        dst_row += width - half_top_pixels_in_row;
-        memcpy(dst_row, src_row, half_top_pixels_in_row * sizeof(color_t));
-    }
-}
-
-void asset_image_copy_isometric_footprint(color_t *dst, const color_t *src, int width, int height,
-    int dst_x_offset, int dst_y_offset, int dst_width, int src_x_offset, int src_y_offset, int src_width)
-{
-    if (src_y_offset < 0) {
-        src_y_offset = 0;
-    }
-    int half_height = height / 2;
-    for (int y = 0; y < height; y++) {
-        int x_read = 2 + 4 * (y < half_height ? y : height - 1 - y);
-        int x_skip = (width - x_read) / 2;
-        memcpy(&dst[(dst_y_offset + y) * dst_width + dst_x_offset + x_skip],
-            &src[(src_y_offset + y) * src_width + src_x_offset + x_skip], x_read * sizeof(color_t));
-    }
 }

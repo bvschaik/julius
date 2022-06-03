@@ -235,6 +235,7 @@ static struct {
 
     int external_image_id;
     int total_external_images;
+    int images_with_tops;
 
     image_packer packer;
     int max_image_width;
@@ -259,13 +260,25 @@ static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data
     img->width = buffer_read_u16(buf);
     img->height = buffer_read_u16(buf);
     buffer_skip(buf, 6);
-    img->animation.num_sprites = buffer_read_u16(buf);
-    buffer_skip(buf, 2);
-    img->animation.sprite_offset_x = buffer_read_i16(buf);
-    img->animation.sprite_offset_y = buffer_read_i16(buf);
-    buffer_skip(buf, 10);
-    img->animation.can_reverse = buffer_read_i8(buf);
-    buffer_skip(buf, 1);
+    int num_sprites = buffer_read_u16(buf);
+    if (num_sprites) {
+        img->animation = malloc(sizeof(image_animation));
+        if (!img->animation) {
+            log_error("Not enough memory to add animations. The game will probably crash.", 0, 0);
+            buffer_skip(buf, 18);
+        } else {
+            memset(img->animation, 0, sizeof(image_animation));
+            img->animation->num_sprites = num_sprites;
+            buffer_skip(buf, 2);
+            img->animation->sprite_offset_x = buffer_read_i16(buf);
+            img->animation->sprite_offset_y = buffer_read_i16(buf);
+            buffer_skip(buf, 10);
+            img->animation->can_reverse = buffer_read_i8(buf);
+            buffer_skip(buf, 1);
+        }
+    } else {
+        buffer_skip(buf, 18);
+    }
     img->is_isometric = buffer_read_u8(buf) == IMAGE_TYPE_ISOMETRIC;
     draw_data->is_compressed = buffer_read_i8(buf);
     int is_external = buffer_read_i8(buf);
@@ -275,29 +288,37 @@ static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data
         draw_data->original_height = img->height;
         data.total_external_images++;
     }
-    img->top_height = buffer_read_i8(buf);
+    int top_height = buffer_read_i8(buf);
+    if (top_height && img->is_isometric) {
+        img->top = malloc(sizeof(image));
+        if (!img->top) {
+            log_error("Not enough memory to add animations. The game will probably crash.", 0, 0);
+        }
+        memset(img->top, 0, sizeof(image));
+        img->top->height = top_height;
+        img->top->width = img->width;
+    }
     buffer_skip(buf, 2);
     draw_data->bitmap_id = buffer_read_u8(buf);
     buffer_skip(buf, 1);
-    img->animation.speed_id = buffer_read_u8(buf);
+    if (img->animation) {
+        img->animation->speed_id = buffer_read_u8(buf);
+    } else {
+        buffer_skip(buf, 1);
+    }
     buffer_skip(buf, 5);
 }
 
 static void set_image_heights(image *img, image_draw_data *draw_data)
 {
-    if (draw_data->is_compressed) {
-        img->top_height = img->height;
-    } else if (img->top_height) {
+    if (img->top) {
         int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
         int footprint_height = FOOTPRINT_HEIGHT * tiles;
-        img->top_height = img->height - footprint_height / 2 - 1;
+        img->top->height = img->height - footprint_height / 2 - 1;
         // If we must separate the top from the footprint, we must increase the image height to account for the rows
         // where there is both a top and a footprint part
-        if (!graphics_renderer()->isometric_images_are_joined()) {
-            img->height = img->top_height + footprint_height;
-        }
-    } else {
-        img->top_height = 0;
+        img->height = footprint_height;
+        data.images_with_tops++;
     }
 }
 
@@ -325,7 +346,8 @@ static void convert_compressed(buffer *buf, int width, int x_offset, int y_offse
 static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *draw_datas,
     int num_images, atlas_type type)
 {
-    if (image_packer_init(&data.packer, num_images, data.max_image_width, data.max_image_height) != IMAGE_PACKER_OK) {
+    if (image_packer_init(&data.packer, num_images + data.images_with_tops,
+            data.max_image_width, data.max_image_height) != IMAGE_PACKER_OK) {
         return 0;
     }
     data.packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
@@ -333,7 +355,7 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
     data.packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
 
     int offset = 4;
-    for (int i = 1; i < num_images; i++) {
+    for (int i = 1, rect = 1; i < num_images; i++, rect++) {
         image *img = &images[i];
         image_draw_data *draw_data = &draw_datas[i];
 
@@ -343,48 +365,68 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
             if (!external_data->offset) {
                 external_data->offset = 1;
             }
-        } else {
-            draw_data->offset = offset;
-            offset += draw_data->data_length;
+            continue;
+        }
+        draw_data->offset = offset;
+        offset += draw_data->data_length;
 
-            if (!img->is_isometric && draw_data->is_compressed) {
-                draw_data->buffer = malloc(img->width * img->height * sizeof(color_t));
-                if (draw_data->buffer) {
-                    int reduce_width = type != ATLAS_FONT;
-                    if (type == ATLAS_MAIN) {
-                        reduce_width = i < image_group(GROUP_FONT) || i >= image_group(GROUP_FONT) + BASE_FONT_ENTRIES;
-                    }
-                    draw_data->original_width = img->width;
-                    draw_data->original_height = img->height;
-                    memset(draw_data->buffer, 0, img->width * img->height * sizeof(color_t));
-                    buffer_set(buf, draw_data->offset);
-                    convert_compressed(buf, img->width, img->atlas.x_offset, img->atlas.y_offset,
-                        draw_data->data_length, draw_data->buffer, img->width);
-                    image_crop(img, draw_data->buffer, reduce_width);
+        // Don't load original placeholder images
+        if (type == ATLAS_MAIN && i >= 6145 && i <= 6192) {
+            continue;
+        }
+        img->original.width = img->width;
+        if (!img->is_isometric && draw_data->is_compressed) {
+            draw_data->buffer = malloc(img->width * img->height * sizeof(color_t));
+            if (draw_data->buffer) {
+                draw_data->original_width = img->width;
+                draw_data->original_height = img->height;
+                memset(draw_data->buffer, 0, img->width * img->height * sizeof(color_t));
+                buffer_set(buf, draw_data->offset);
+                convert_compressed(buf, img->width, 0, 0, draw_data->data_length, draw_data->buffer, img->width);
+                image_crop(img, draw_data->buffer);
+            }
+        }
+        data.packer.rects[rect].input.width = img->width;
+        data.packer.rects[rect].input.height = img->height;
+        if (img->top) {
+            draw_data->buffer = malloc(img->top->width * img->top->height * sizeof(color_t));
+            if (draw_data->buffer) {
+                draw_data->original_width = img->top->width;
+                draw_data->original_height = img->top->height;
+                img->top->original.height = img->top->height;
+                memset(draw_data->buffer, 0, img->top->width * img->top->height * sizeof(color_t));
+                buffer_set(buf, draw_data->offset + draw_data->uncompressed_length);
+                convert_compressed(buf, img->top->width, 0, 0,
+                    draw_data->data_length - draw_data->uncompressed_length, draw_data->buffer, img->top->width);
+                image_crop(img->top, draw_data->buffer);
+                if (!img->top->height) {
+                    free(img->top);
+                    img->top = 0;
+                } else {
+                    rect++;
+                    data.packer.rects[rect].input.width = img->top->width;
+                    data.packer.rects[rect].input.height = img->top->height;
                 }
             }
-
-            // Don't load original placeholder images
-            if (type == ATLAS_MAIN && i >= 6145 && i <= 6192) {
-                continue;
-            }
-            image_packer_rect *rect = &data.packer.rects[i];
-            rect->input.width = img->width;
-            rect->input.height = img->height;
         }
     }
 
     image_packer_pack(&data.packer);
 
-    for (int i = 0; i < num_images; i++) {
+    for (int i = 0, rect = 0; i < num_images; i++, rect++) {
         image *img = &images[i];
         if (image_is_external(img)) {
             continue;
         }
-        image_packer_rect *rect = &data.packer.rects[i];
-        img->atlas.id = (type << IMAGE_ATLAS_BIT_OFFSET) + rect->output.image_index;
-        img->atlas.x_offset = rect->output.x;
-        img->atlas.y_offset = rect->output.y;
+        img->atlas.id = (type << IMAGE_ATLAS_BIT_OFFSET) + data.packer.rects[rect].output.image_index;
+        img->atlas.x_offset = data.packer.rects[rect].output.x;
+        img->atlas.y_offset = data.packer.rects[rect].output.y;
+        if (img->top) {
+            rect++;
+            img->top->atlas.id = (type << IMAGE_ATLAS_BIT_OFFSET) + data.packer.rects[rect].output.image_index;
+            img->top->atlas.x_offset = data.packer.rects[rect].output.x;
+            img->top->atlas.y_offset = data.packer.rects[rect].output.y;
+        }
     }
     return 1;
 }
@@ -467,17 +509,10 @@ static void convert_isometric_footprint(buffer *buf, const image *img, color_t *
 {
     int num_tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
     int x_start = (num_tiles - 1) * 30;
-    int y_offset;
-    
-    if (graphics_renderer()->isometric_images_are_joined()) {
-        y_offset = img->height - 30 * num_tiles;
-    } else {
-        y_offset = img->top_height;
-    }
 
     for (int i = 0; i < num_tiles; i++) {
         int x = -30 * i + x_start;
-        int y = FOOTPRINT_HALF_HEIGHT * i + y_offset;
+        int y = FOOTPRINT_HALF_HEIGHT * i;
         for (int j = 0; j <= i; j++) {
             convert_footprint_tile(buf, img, x, y, dst, dst_width);
             x += 60;
@@ -485,7 +520,7 @@ static void convert_isometric_footprint(buffer *buf, const image *img, color_t *
     }
     for (int i = num_tiles - 2; i >= 0; i--) {
         int x = -30 * i + x_start;
-        int y = FOOTPRINT_HALF_HEIGHT * (num_tiles * 2 - i - 2) + y_offset;
+        int y = FOOTPRINT_HALF_HEIGHT * (num_tiles * 2 - i - 2);
         for (int j = 0; j <= i; j++) {
             convert_footprint_tile(buf, img, x, y, dst, dst_width);
             x += 60;
@@ -518,12 +553,13 @@ static void convert_images(image *images, image_draw_data *draw_datas, int size,
                 convert_compressed(buf, img->width, img->atlas.x_offset, img->atlas.y_offset,
                     draw_data->data_length, dst, dst_width);
             }
-        } else if (img->top_height) {
-            convert_isometric_footprint(buf, img, dst, dst_width);
-            convert_compressed(buf, img->width, img->atlas.x_offset, img->atlas.y_offset,
-                draw_data->data_length - draw_data->uncompressed_length, dst, dst_width);
         } else if (img->is_isometric) {
             convert_isometric_footprint(buf, img, dst, dst_width);
+            if (img->top) {
+                color_t *dst_top = atlas_data->buffers[img->top->atlas.id & IMAGE_ATLAS_BIT_MASK];
+                int dst_width_top = atlas_data->image_widths[img->top->atlas.id & IMAGE_ATLAS_BIT_MASK];
+                copy_compressed(img->top, draw_data, dst_top, dst_width_top);
+            }
         } else {
             convert_uncompressed(buf, img->width, img->height, img->atlas.x_offset, img->atlas.y_offset,
                 dst, dst_width);
@@ -575,14 +611,21 @@ int image_load_climate(int climate_id, int is_editor, int force_reload)
     }
     graphics_renderer()->get_max_image_size(&data.max_image_width, &data.max_image_height);
 
+    for (int i = 0; i < IMAGE_MAIN_ENTRIES; i++) {
+        free(data.main[i].top);
+        free(data.main[i].animation);
+    }
+
     free(data.external_draw_data);
     data.total_external_images = 0;
+    data.images_with_tops = 0;
 
     const char *filename_bmp = is_editor ? EDITOR_GRAPHICS_555[climate_id] : MAIN_GRAPHICS_555[climate_id];
     const char *filename_idx = is_editor ? EDITOR_GRAPHICS_SG2[climate_id] : MAIN_GRAPHICS_SG2[climate_id];
     uint8_t *tmp_data = malloc(MAIN_DATA_SIZE * sizeof(uint8_t));
-    image_draw_data *draw_data = malloc(IMAGE_MAIN_ENTRIES * sizeof(image_draw_data));
-    if (!tmp_data || !draw_data || MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, MAY_BE_LOCALIZED, tmp_data, MAIN_INDEX_SIZE)) {
+    image_draw_data *draw_data = malloc((IMAGE_MAIN_ENTRIES + data.images_with_tops) * sizeof(image_draw_data));
+    if (!tmp_data || !draw_data ||
+        MAIN_INDEX_SIZE != io_read_file_into_buffer(filename_idx, MAY_BE_LOCALIZED, tmp_data, MAIN_INDEX_SIZE)) {
         free(tmp_data);
         free(draw_data);
         return 0;
@@ -640,7 +683,11 @@ int image_load_climate(int climate_id, int is_editor, int force_reload)
     image_packer_free(&data.packer);
 
     // Fix engineer's post animation offset
-    data.main[image_group(GROUP_BUILDING_ENGINEERS_POST)].animation.sprite_offset_y += 1;
+    if (!is_editor) {
+        data.main[image_group(GROUP_BUILDING_ENGINEERS_POST)].animation->sprite_offset_y += 1;
+    }
+
+    data.images_with_tops = 0;
 
     return 1;
 }
@@ -734,6 +781,8 @@ static int parse_4bit_multibyte_font(buffer *input, color_t *pixels, multibyte_f
     for (int i = 0; i < num_chars; i++) {
         int width = i < num_half_width ? font_size->half_width : font_size->width;
         color_t *letter = &pixels[pixel_offset];
+        int x_first_opaque = width;
+        int x_last_opaque = -1;
         int y_first_opaque = font_size->height;
         int y_last_opaque = -1;
         for (int row = 0; row < font_size->height; row++) {
@@ -748,6 +797,12 @@ static int parse_4bit_multibyte_font(buffer *input, color_t *pixels, multibyte_f
                     if (value != 0) {
                         uint32_t color_value = (value * 16 + value);
                         *pixel = (color_value << COLOR_BITSHIFT_ALPHA) | COLOR_CHANNEL_RGB;
+                        if (col < x_first_opaque) {
+                            x_first_opaque = col;
+                        }
+                        if (col > x_last_opaque) {
+                            x_last_opaque = col;
+                        }
                         if (row < y_first_opaque) {
                             y_first_opaque = row;
                         }
@@ -759,10 +814,15 @@ static int parse_4bit_multibyte_font(buffer *input, color_t *pixels, multibyte_f
             }
         }
         image *img = &data.font[offset + i];
-        img->width = width;
+        img->width = x_last_opaque - x_first_opaque + 1;
+        img->x_offset = x_first_opaque;
+        img->original.width = width;
         img->y_offset = y_first_opaque;
         img->height = y_last_opaque - y_first_opaque + 1;
 
+        if (img->width < 0) {
+            img->width = 0;
+        }
         if (img->height < 0) {
             img->height = 0;
         }
@@ -784,6 +844,8 @@ static int parse_1bit_multibyte_font(buffer *input, color_t *pixels, multibyte_f
         int width = i < num_half_width ? font_size->half_width : font_size->width;
         int bytes_per_row = (width - 1) <= 16 ? 2 : 3;
         color_t *letter = &pixels[pixel_offset];
+        int x_first_opaque = width;
+        int x_last_opaque = -1;
         int y_first_opaque = font_size->height;
         int y_last_opaque = -1;
         for (int row = 0; row < font_size->height; row++) {
@@ -795,14 +857,18 @@ static int parse_1bit_multibyte_font(buffer *input, color_t *pixels, multibyte_f
             int prev_set = 0;
             for (int col = 0; col < font_size->width - letter_spacing; col++) {
                 int set = bits & 1;
-                if (set) {
+                if (set || prev_set) {
+                    *pixel = set ? COLOR_WHITE : ALPHA_FONT_SEMI_TRANSPARENT;
+                    if (col < x_first_opaque) {
+                        x_first_opaque = col;
+                    }
+                    if (col > x_last_opaque) {
+                        x_last_opaque = col;
+                    }
                     if (row < y_first_opaque) {
                         y_first_opaque = row;
                     }
                     y_last_opaque = row;
-                    *pixel = COLOR_WHITE;
-                } else if (prev_set) {
-                    *pixel = ALPHA_FONT_SEMI_TRANSPARENT;
                 }
                 pixel++;
                 bits >>= 1;
@@ -810,10 +876,15 @@ static int parse_1bit_multibyte_font(buffer *input, color_t *pixels, multibyte_f
             }
         }
         image *img = &data.font[offset + i];
-        img->width = width;
+        img->width = x_last_opaque - x_first_opaque + 1;
+        img->x_offset = x_first_opaque;
+        img->original.width = width;
         img->y_offset = y_first_opaque;
         img->height = y_last_opaque - y_first_opaque + 1;
 
+        if (img->width < 0) {
+            img->width = 0;
+        }
         if (img->height < 0) {
             img->height = 0;
         }
@@ -931,9 +1002,9 @@ static int load_multibyte_font(multibyte_font_type type)
 
             for (int y = 0; y < img->height; y++) {
                 memcpy(&dst[(img->atlas.y_offset + y) * dst_width + img->atlas.x_offset],
-                    &letter[(img->y_offset + y) * img->width], img->width * sizeof(color_t));
+                    &letter[(img->y_offset + y) * img->original.width + img->x_offset], img->width * sizeof(color_t));
             }
-            letter += original_height * img->width;
+            letter += original_height * img->original.width;
         }
     }
 
@@ -1124,7 +1195,7 @@ int image_get_external_dimensions(const image *img, int *width, int *height)
     return 1;
 }
 
-void image_crop(image *img, const color_t *pixels, int reduce_width)
+void image_crop(image *img, const color_t *pixels)
 {
     if (!img->width || !img->height) {
         return;
@@ -1143,10 +1214,8 @@ void image_crop(image *img, const color_t *pixels, int reduce_width)
             if ((row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
                 y_first_opaque = y;
                 y_last_opaque = y;
-                if (reduce_width) {
-                    x_first_opaque = x;
-                    x_last_opaque = x;
-                }
+                x_first_opaque = x;
+                x_last_opaque = x;
                 found_opaque = 1;
                 break;
             }
@@ -1166,13 +1235,11 @@ void image_crop(image *img, const color_t *pixels, int reduce_width)
         for (int x = img->width - 1; x >= 0; x--) {
             if ((row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
                 y_last_opaque = y;
-                if (reduce_width) {
-                    if (x_first_opaque > x) {
-                        x_first_opaque = x;
-                    }
-                    if (x_last_opaque < x) {
-                        x_last_opaque = x;
-                    }
+                if (x_first_opaque > x) {
+                    x_first_opaque = x;
+                }
+                if (x_last_opaque < x) {
+                    x_last_opaque = x;
                 }
                 found_opaque = 1;
                 break;
@@ -1182,38 +1249,36 @@ void image_crop(image *img, const color_t *pixels, int reduce_width)
             break;
         }
     }
-    if (reduce_width) {
-        found_opaque = 0;
-        for (int x = 0; x < x_first_opaque; x++) {
-            for (int y = y_first_opaque; y <= y_last_opaque; y++) {
-                if ((pixels[y * img->width + x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
-                    x_first_opaque = x;
-                    found_opaque = 1;
-                    break;
-                }
-            }
-            if (found_opaque) {
+    found_opaque = 0;
+    for (int x = 0; x < x_first_opaque; x++) {
+        for (int y = y_first_opaque; y <= y_last_opaque; y++) {
+            if ((pixels[y * img->width + x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                x_first_opaque = x;
+                found_opaque = 1;
                 break;
             }
         }
-        found_opaque = 0;
-        for (int x = img->width - 1; x > x_last_opaque; x--) {
-            for (int y = y_first_opaque; y <= y_last_opaque; y++) {
-                if ((pixels[y * img->width + x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
-                    x_last_opaque = x;
-                    found_opaque = 1;
-                    break;
-                }
-            }
-            if (found_opaque) {
-                break;
-            }
+        if (found_opaque) {
+            break;
         }
-
-        img->x_offset = x_first_opaque;
-        img->width = x_last_opaque - x_first_opaque + 1;
     }
+    found_opaque = 0;
+    for (int x = img->width - 1; x > x_last_opaque; x--) {
+        for (int y = y_first_opaque; y <= y_last_opaque; y++) {
+            if ((pixels[y * img->width + x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                x_last_opaque = x;
+                found_opaque = 1;
+                break;
+            }
+        }
+        if (found_opaque) {
+            break;
+        }
+    }
+
+    img->x_offset = x_first_opaque;
     img->y_offset = y_first_opaque;
+    img->width = x_last_opaque - x_first_opaque + 1;
     img->height = y_last_opaque - y_first_opaque + 1;
 }
 
@@ -1250,5 +1315,60 @@ const image *image_get_enemy(int id)
         return &data.enemy[id];
     } else {
         return NULL;
+    }
+}
+
+static void determine_max_width_and_height(const image_copy_info *copy, int *width, int *height)
+{
+    int max_src_width = copy->src.width - copy->src.x;
+    int max_dst_width = copy->dst.width - copy->dst.x;
+    *width = copy->rect.width > max_src_width ? max_src_width : copy->rect.width;
+    if (*width > max_dst_width) {
+        *width = max_dst_width;
+    }
+    int max_src_height = copy->src.height - copy->src.y;
+    int max_dst_height = copy->dst.height - copy->dst.y;
+    *height = copy->rect.height > max_src_height ? max_src_height : copy->rect.height;
+    if (*height > max_dst_height) {
+        *height = max_dst_height;
+    }
+}
+
+void image_copy(const image_copy_info *copy)
+{
+    int width, height;
+    determine_max_width_and_height(copy, &width, &height);
+    if (width <= 0 || height <= 0) {
+        return;
+    }
+    color_t *dst = &copy->dst.pixels[(copy->dst.y + copy->rect.y_offset) * copy->dst.width +
+        copy->dst.x + copy->rect.x_offset];
+    const color_t *src = &copy->src.pixels[copy->src.y * copy->src.width + copy->src.x];
+    for (int y = 0; y < height; y++) {
+        memcpy(&dst[y * copy->dst.width], &src[y * copy->src.width], width * sizeof(color_t));
+    }
+}
+
+void image_copy_isometric_footprint(const image_copy_info *copy)
+{
+    int width, height;
+    determine_max_width_and_height(copy, &width, &height);
+    if (width <= 0 || height <= 0) {
+        return;
+    }
+    int half_height = height / 2;
+    color_t *dst = &copy->dst.pixels[(copy->dst.y + copy->rect.y_offset) * copy->dst.width +
+        copy->dst.x + copy->rect.x_offset];
+    const color_t *src = &copy->src.pixels[copy->src.y * copy->src.width + copy->src.x];
+
+    for (int y = 0; y < height; y++) {
+        int x_read = 2 + 4 * (y < half_height ? y : height - 1 - y);
+        int x_skip = (copy->rect.width - x_read) / 2;
+        if (x_skip > width) {
+            continue;
+        } else if (x_skip + x_read > width) {
+            x_read = width - x_skip;
+        }
+        memcpy(&dst[y * copy->dst.width] + x_skip, &src[y * copy->src.width + x_skip], x_read * sizeof(color_t));
     }
 }

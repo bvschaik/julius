@@ -160,6 +160,7 @@ static void xml_start_image_element(const char **attributes)
             if (strcmp(value, "true") == 0 || strcmp(value, "1") == 0 || strcmp(value, "isometric") == 0 ||
                 strcmp(value, "yes") == 0 || strcmp(value, "y") == 0) {
                 img->img.is_isometric = 1;
+                asset_image_count_isometric();
             }
         }
     }
@@ -249,7 +250,7 @@ static void xml_start_layer_element(const char **attributes)
 static void xml_start_animation_element(const char **attributes)
 {
     asset_image *img = data.current_image;
-    if (img->img.animation.num_sprites) {
+    if (img->img.animation) {
         return;
     }
     int total_attributes = count_xml_attributes(attributes);
@@ -257,25 +258,31 @@ static void xml_start_animation_element(const char **attributes)
         data.error = 1;
         return;
     }
+    img->img.animation = malloc(sizeof(image_animation));
+    if (!img->img.animation) {
+        data.error = 1;
+        return;
+    }
+    memset(img->img.animation, 0, sizeof(image_animation));
 
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][0]) == 0) {
-            img->img.animation.num_sprites = string_to_int(string_from_ascii(attributes[i + 1]));
+            img->img.animation->num_sprites = string_to_int(string_from_ascii(attributes[i + 1]));
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][1]) == 0) {
-            img->img.animation.speed_id = calc_bound(string_to_int(string_from_ascii(attributes[i + 1])), 0, 50);
+            img->img.animation->speed_id = calc_bound(string_to_int(string_from_ascii(attributes[i + 1])), 0, 50);
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][2]) == 0) {
             const char *value = attributes[i + 1];
             if (strcmp(value, "true") == 0 || strcmp(value, "1") == 0 || strcmp(value, "reversible") == 0 ||
                 strcmp(value, "yes") == 0 || strcmp(value, "y") == 0) {
-                img->img.animation.can_reverse = 1;
+                img->img.animation->can_reverse = 1;
             }
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][3]) == 0) {
-            img->img.animation.sprite_offset_x = string_to_int(string_from_ascii(attributes[i + 1]));
+            img->img.animation->sprite_offset_x = string_to_int(string_from_ascii(attributes[i + 1]));
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][1][4]) == 0) {
-            img->img.animation.sprite_offset_y = string_to_int(string_from_ascii(attributes[i + 1]));
+            img->img.animation->sprite_offset_y = string_to_int(string_from_ascii(attributes[i + 1]));
         }
     }
-    if (!img->img.animation.num_sprites) {
+    if (!img->img.animation->num_sprites) {
         data.in_animation = 1;
     }
 }
@@ -349,7 +356,7 @@ static void xml_start_frame_element(const char **attributes)
     data.current_image->has_frame_elements = 1;
 #endif
     data.current_group->last_image_index = img->index;
-    data.current_image->img.animation.num_sprites++;
+    data.current_image->img.animation->num_sprites++;
 }
 
 static void xml_end_assetlist_element(void)
@@ -363,16 +370,8 @@ static void xml_end_image_element(void)
 #ifndef BUILDING_ASSET_PACKER
     image *img = &data.current_image->img;
     if (img->is_isometric) {
-        if ((img->width + 2) % 60) {
+        if (((img->width + 2) % (FOOTPRINT_WIDTH + 2)) != 0) {
             log_info("Isometric image has invalid width", data.current_image->id, img->width);
-        }
-        int tiles = (img->width + 2) / 60;
-        int footprint_height = 30 * tiles;
-        img->top_height = img->height - footprint_height / 2 - 1;
-        // If we must separate the top from the footprint, we must increase the image height to account for the rows
-        // where there is both a top and a footprint part
-        if (!graphics_renderer()->isometric_images_are_joined()) {
-            img->height = img->top_height + footprint_height;
         }
     }
     if (!img->width || !img->height) {

@@ -53,7 +53,6 @@ typedef struct {
     void (*fill_rect)(int x_start, int x_end, int y_start, int y_end, color_t color);
 
     void (*draw_image)(const image *img, int x, int y, color_t color, float scale);
-    void (*draw_isometric_top)(const image *img, int x, int y, color_t color, float scale);
 
     void (*create_custom_image)(custom_image_type type, int width, int height, int is_yuv);
     int (*has_custom_image)(custom_image_type type);
@@ -79,8 +78,6 @@ typedef struct {
     void (*load_unpacked_image)(const image *img, const color_t *pixels);
 
     int (*should_pack_image)(int width, int height);
-
-    int (*isometric_images_are_joined)(void);
 
     void (*update_scale_mode)(int city_scale);
 } graphics_renderer_interface;

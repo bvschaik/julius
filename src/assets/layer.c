@@ -22,45 +22,6 @@ static void load_dummy_layer(layer *l)
 }
 
 #ifndef BUILDING_ASSET_PACKER
-static void copy_regular_image(layer *l, color_t *dst, const image *img, const color_t *atlas_pixels, int atlas_width)
-{
-    int height = l->height - img->y_offset;
-    int width = l->width - img->x_offset;
-    for (int y = 0; y < height; y++) {
-        memcpy(&dst[(y + img->y_offset) * l->width + img->x_offset],
-            &atlas_pixels[(y + img->atlas.y_offset) * atlas_width + img->atlas.x_offset],
-            width * sizeof(color_t));
-    }
-}
-
-static void copy_isometric_image(layer *l, color_t *dst, const image *img, const color_t *atlas_pixels, int atlas_width,
-    int is_extra_asset)
-{
-    // No difference in image data - keep using the original image
-    if ((l->part == PART_BOTH && graphics_renderer()->isometric_images_are_joined()) ||
-        ((l->part & PART_FOOTPRINT) && !img->top_height)) {
-        copy_regular_image(l, dst, img, atlas_pixels, atlas_width);
-    }
-    int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-    if ((l->part & PART_TOP) && img->top_height) {
-        int height = l->part & PART_FOOTPRINT ? l->height - tiles * FOOTPRINT_HALF_HEIGHT : l->height;
-        asset_image_copy_isometric_top(dst, atlas_pixels, l->width, height,
-            0, 0, l->width, img->atlas.x_offset, img->atlas.y_offset, atlas_width);
-    }
-    if (l->part & PART_FOOTPRINT) {
-        int y_offset;
-        int footprint_height = tiles * FOOTPRINT_HEIGHT;
-        if (is_extra_asset || (graphics_renderer()->isometric_images_are_joined() && img->top_height)) {
-            y_offset = l->height - footprint_height;
-        } else {
-            y_offset = img->top_height;
-        }
-        asset_image_copy_isometric_footprint(dst, atlas_pixels, l->width, footprint_height,
-            0, l->height - footprint_height, l->width,
-            img->atlas.x_offset, img->atlas.y_offset + y_offset, atlas_width);
-    }
-}
-
 static void convert_layer_to_grayscale(color_t *pixels, int width, int height)
 {
     for (int y = 0; y < height; y++) {
@@ -115,7 +76,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             }
         }
         if (!l->grayscale && asset_img && asset_img->img.width == l->width && asset_img->img.height == l->height &&
-            l->x_offset == 0 && l->y_offset == 0 && type != ATLAS_EXTERNAL && (!asset_img->img.is_isometric || l->part == PART_BOTH)) {
+            l->x_offset == 0 && l->y_offset == 0 && type != ATLAS_EXTERNAL && !asset_img->img.is_isometric) {
             l->data = asset_img->data;
             return;
         }
@@ -147,11 +108,36 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
         } else {
             asset_img_width = asset_img->img.width;
             asset_img_height = asset_img->img.height;
+            if (asset_img->img.top) {
+                asset_img_height += asset_img->img.top->height;
+            }
         }
-        if (img->is_isometric) {
-            copy_isometric_image(l, data, img, asset_img->data, asset_img_width, 1);
+        // No difference in image data - keep using the original image
+        if (!img->is_isometric || ((l->part & PART_FOOTPRINT) && !img->top)) {
+            image_copy_info copy = {
+                .src = { 0, img->atlas.y_offset, asset_img_width, asset_img_height, asset_img->data },
+                .dst = { 0, 0, l->width, l->height, data },
+                .rect = { 0, 0, img->width, img->height }
+            };
+            image_copy(&copy);
         } else {
-            copy_regular_image(l, data, img, asset_img->data, asset_img_width);
+            int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+            if ((l->part & PART_TOP) && img->top) {
+                image_copy_info copy = {
+                    .src = { 0, 0, asset_img_width, asset_img_height, asset_img->data },
+                    .dst = { 0, 0, l->width, l->height, data },
+                    .rect = { 0, 0, img->top->width, img->top->height }
+                };
+                image_copy(&copy);
+            }
+            if (l->part & PART_FOOTPRINT) {
+                image_copy_info copy = {
+                    .src = { 0, img->atlas.y_offset, asset_img_width, asset_img_height, asset_img->data },
+                    .dst = { 0, l->height - tiles * FOOTPRINT_HEIGHT, l->width, l->height, data },
+                    .rect = { 0, 0, img->width, img->height }
+                };
+                image_copy_isometric_footprint(&copy);
+            }
         }
     } else if (type == ATLAS_EXTERNAL) {
         if (!image_load_external_pixels(data, img, width)) {
@@ -169,10 +155,34 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             load_dummy_layer(l);
             return;
         }
-        if (img->is_isometric) {
-            copy_isometric_image(l, data, img, atlas_pixels, atlas_width, 0);
+        // No difference in image data - keep using the original image
+        if (!img->is_isometric || ((l->part & PART_FOOTPRINT) && !img->top)) {
+            image_copy_info copy = {
+                .src = { img->atlas.x_offset, img->atlas.y_offset, atlas_width, atlas_width, atlas_pixels },
+                .dst = { 0, 0, l->width, l->height, data },
+                .rect = { img->x_offset, img->y_offset, img->width, img->height }
+            };
+            image_copy(&copy);
         } else {
-            copy_regular_image(l, data, img, atlas_pixels, atlas_width);
+            int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+            if ((l->part & PART_TOP) && img->top) {
+                int top_width = main_image_widths[img->top->atlas.id & IMAGE_ATLAS_BIT_MASK];
+                const color_t *top_pixels = main_data[img->top->atlas.id & IMAGE_ATLAS_BIT_MASK];
+                image_copy_info copy = {
+                    .src = { img->top->atlas.x_offset, img->top->atlas.y_offset, top_width, top_width, top_pixels },
+                    .dst = { 0, 0, l->width, l->height, data },
+                    .rect = { img->top->x_offset, img->top->y_offset, img->top->width, img->top->height }
+                };
+                image_copy(&copy);
+            }
+            if (l->part & PART_FOOTPRINT) {
+                image_copy_info copy = {
+                    .src = { img->atlas.x_offset, img->atlas.y_offset, atlas_width, atlas_width, atlas_pixels},
+                    .dst = { 0, l->height - tiles * FOOTPRINT_HEIGHT, l->width, l->height, data },
+                    .rect = { img->x_offset, img->y_offset, img->width, img->height }
+                };
+                image_copy_isometric_footprint(&copy);
+            }
         }
     }
     l->calculated_image_id = 0;
@@ -311,20 +321,18 @@ static char *copy_attribute(const char *attribute)
 #ifndef BUILDING_ASSET_PACKER
 static int determine_layer_height(const image *img, layer_isometric_part part)
 {
-    if (!img->is_isometric || graphics_renderer()->isometric_images_are_joined()) {
+    if (!img->is_isometric) {
         return img->height + img->y_offset;
     }
-    if (part == PART_BOTH || part == PART_FOOTPRINT) {
-        if (img->top_height) {
-            int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-            return img->height - tiles * FOOTPRINT_HALF_HEIGHT;
-        } else {
-            return img->height;
-        }
-    } else if (part == PART_TOP) {
-        return img->top_height;
-    } else {
-        return 0;
+    switch (part) {
+        case PART_BOTH:
+        case PART_FOOTPRINT:
+            // The original top height already includes half the footprint height
+            return img->top ? img->top->original.height + img->height / 2 : img->height;
+        case PART_TOP:
+            return img->top ? img->top->original.height : 0;
+        default:
+            return 0;
     }
 }
 #endif

@@ -35,15 +35,6 @@
 #define HAS_TEXTURE_SCALE_MODE 0
 #endif
 
-// Even though geometry rendering is supported since SDL 2.0.18, that version still has some drawing bugs, so we only
-// enable geometry rendering with SDL 2.0.20. Also, the software renderer also has drawing bugs, so it's also disabled.
-#if SDL_VERSION_ATLEAST(2, 0, 20)
-#define USE_RENDER_GEOMETRY
-#define HAS_RENDER_GEOMETRY (platform_sdl_version_at_least(2, 0, 20) && !data.is_software_renderer)
-#else
-#define HAS_RENDER_GEOMETRY 0
-#endif
-
 #define MAX_UNPACKED_IMAGES 10
 
 #define MAX_PACKED_IMAGE_SIZE 64000
@@ -107,9 +98,7 @@ static struct {
     } unpacked_images[MAX_UNPACKED_IMAGES];
     graphics_renderer_interface renderer_interface;
     int supports_yuv_textures;
-#ifdef USE_TEXTURE_SCALE_MODE
     float city_scale;
-#endif
 } data;
 
 static int save_screen_buffer(color_t *pixels, int x, int y, int width, int height, int row_width)
@@ -424,132 +413,25 @@ static SDL_Texture *get_texture(int texture_id)
     return data.texture_lists[type][texture_id & IMAGE_ATLAS_BIT_MASK];
 }
 
-#ifdef USE_RENDER_GEOMETRY
-static const SDL_Color *convert_color(color_t color)
+static void set_texture_color_and_scale_mode(SDL_Texture *texture, color_t color, float scale)
 {
-    static SDL_Color new_color;
-    new_color.a = (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA;
-    new_color.r = (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED;
-    new_color.g = (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN;
-    new_color.b = (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE;
-    return &new_color;
-}
+    SDL_SetTextureColorMod(texture,
+        (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
+        (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
+        (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
+    SDL_SetTextureAlphaMod(texture, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
 
-static void draw_texture_raw(const image *img, SDL_Texture *texture,
-    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale)
-{
-    int texture_width, texture_height;
-    SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
-
-    float minu = src_coords->x / (float) texture_width;
-    float minv = src_coords->y / (float) texture_height;
-    float maxu = (src_coords->x + img->width) / (float) texture_width;
-    float maxv = (src_coords->y + img->height) / (float) texture_height;
-
-    float minx = dst_coords->x;
-    float miny = dst_coords->y;
-    float maxx = dst_coords->x + dst_coords->w;
-    float maxy = dst_coords->y + dst_coords->h;
-
-    const float uv[8] = { maxu, minv, minu, minv, minu, maxv, maxu, maxv };
-    const float xy[8] = { maxx, miny, minx, miny, minx, maxy, maxx, maxy };
-    const int indices[6] = { 0, 1, 2, 0, 2, 3 };
-
-    SDL_RenderGeometryRaw(data.renderer, texture, xy, 2 * sizeof(float), convert_color(color), 0,
-        uv, 2 * sizeof(float), 4, indices, sizeof(indices) / sizeof(int), sizeof(int));
-}
-
-static void draw_isometric_footprint_raw(const image *img, SDL_Texture *texture,
-    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale)
-{
-    int tiles = (img->width + 2) / 60;
-    int width = tiles * 60 - 2;
-    int half_width = tiles * 30 - 1;
-    int height = tiles * 30;
-    int half_height = tiles * 15;
-
-    int texture_width, texture_height;
-    SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
-
-    float texture_coord_correction = scale == 1.0f ? 0.0f : 0.5f;
-    float grid_correction = (config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) * 0.75f;
-    texture_coord_correction += grid_correction;
-
-    float minu = (src_coords->x + texture_coord_correction) / (float) texture_width;
-    float minv = (src_coords->y + texture_coord_correction) / (float) texture_height;
-    float medu = (src_coords->x + half_width) / (float) texture_width;
-    float medv = (src_coords->y + half_height) / (float) texture_height;
-    float maxu = (src_coords->x + width - texture_coord_correction) / (float) texture_width;
-    float maxv = (src_coords->y + height - texture_coord_correction) / (float) texture_height;
-
-    float dst_coord_correction = scale == 1.0f ? 0.5f : 1.0f / scale;
-    grid_correction /= scale;
-
-    float minx = dst_coords->x - dst_coord_correction + grid_correction;
-    float miny = dst_coords->y + grid_correction;
-    float medx = dst_coords->x + half_width / scale;
-    float medy = dst_coords->y + half_height / scale;
-    float maxx = dst_coords->x + dst_coord_correction + width / scale - grid_correction;
-    float maxy = dst_coords->y + height / scale - grid_correction;
-
-    const float uv[8] = { medu, minv, minu, medv, medu, maxv, maxu, medv };
-    const float xy[8] = { medx, miny, minx, medy, medx, maxy, maxx, medy };
-    const int indices[6] = { 0, 1, 2, 0, 2, 3 };
-
-    SDL_RenderGeometryRaw(data.renderer, texture, xy, 2 * sizeof(float), convert_color(color), 0,
-        uv, 2 * sizeof(float), 4, indices, sizeof(indices) / sizeof(int), sizeof(int));
-}
-
-static void draw_isometric_top_raw(const image *img, SDL_Texture *texture,
-    const SDL_Rect *src_coords, const SDL_FRect *dst_coords, color_t color, float scale)
-{
-    int tiles = (img->width + 2) / 60;
-    int half_width = tiles * 30 - 1;
-    int half_height = tiles * 15;
-
-    int texture_width, texture_height;
-    SDL_QueryTexture(texture, 0, 0, &texture_width, &texture_height);
-
-    float texture_coord_correction = scale == 1.0f ? 0.0f : 0.5f;
-
-    float minu = (src_coords->x + texture_coord_correction) / (float) texture_width;
-    float minv = (src_coords->y + texture_coord_correction) / (float) texture_height;
-    float medu = (src_coords->x + half_width) / (float) texture_width;
-    float medv = (src_coords->y + src_coords->h - half_height) / (float) texture_height;
-    float maxu = (src_coords->x + src_coords->w - texture_coord_correction) / (float) texture_width;
-    float maxv = (src_coords->y + src_coords->h) / (float) texture_height;
-
-    float dst_coord_correction = scale == 1.0f ? 0.0f : 1.0f / scale;
-
-    float minx = dst_coords->x - dst_coord_correction;
-    float miny = dst_coords->y;
-    float medx = dst_coords->x + half_width / scale;
-    float medy = dst_coords->y + dst_coords->h - half_height / scale;
-    float maxx = dst_coords->x + dst_coords->w + dst_coord_correction;
-    float maxy = dst_coords->y + dst_coords->h;
-
-    const float uv[10] = { minu, minv, maxu, minv, medu, medv, minu, maxv, maxu, maxv };
-    const float xy[10] = { minx, miny, maxx, miny, medx, medy, minx, maxy, maxx, maxy };
-    const int indices[9] = { 0, 1, 2, 0, 2, 3, 1, 2, 4 };
-
-    SDL_RenderGeometryRaw(data.renderer, texture, xy, 2 * sizeof(float), convert_color(color), 0,
-        uv, 2 * sizeof(float), 5, indices, sizeof(indices) / sizeof(int), sizeof(int));
-}
-#endif
-
-static void set_texture_scale_mode(SDL_Texture *texture, float scale)
-{
 #ifdef USE_TEXTURE_SCALE_MODE
-    if (!data.paused && HAS_TEXTURE_SCALE_MODE) {
-        SDL_ScaleMode current_scale_mode;
-        SDL_GetTextureScaleMode(texture, &current_scale_mode);
-        SDL_ScaleMode city_scale_mode = (HAS_RENDER_GEOMETRY && data.city_scale > 2.0f) ?
-            SDL_ScaleModeLinear : SDL_ScaleModeNearest;
-        SDL_ScaleMode texture_scale_mode = scale != 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
-        SDL_ScaleMode desired_scale_mode = data.city_scale == scale ? city_scale_mode : texture_scale_mode;
-        if (current_scale_mode != desired_scale_mode) {
-            SDL_SetTextureScaleMode(texture, desired_scale_mode);
-        }
+    if (!HAS_TEXTURE_SCALE_MODE) {
+        return;
+    }
+    SDL_ScaleMode current_scale_mode;
+    SDL_GetTextureScaleMode(texture, &current_scale_mode);
+    SDL_ScaleMode city_scale_mode = data.city_scale > 2.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
+    SDL_ScaleMode texture_scale_mode = scale != 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
+    SDL_ScaleMode desired_scale_mode = data.city_scale == scale ? city_scale_mode : texture_scale_mode;
+    if (current_scale_mode != desired_scale_mode) {
+        SDL_SetTextureScaleMode(texture, desired_scale_mode);
     }
 #endif
 }
@@ -568,116 +450,34 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
         return;
     }
 
-    set_texture_scale_mode(texture, scale);
+    set_texture_color_and_scale_mode(texture, color, scale);
 
     x += img->x_offset;
     y += img->y_offset;
-    int x_offset = img->atlas.x_offset;
-    int y_offset = img->atlas.y_offset;
-    int height = img->height;
 
-    if (img->is_isometric && img->top_height) {
-        if (!data.renderer_interface.isometric_images_are_joined()) {
-            y_offset += img->top_height;
-            height -= img->top_height;
-        } else {
-            height = (img->width + 2) / 2;
-            y_offset += img->height - height;
-        }
-    }
+    // The renderer draws the textures off-by-one when "scale * 100" is a multiple of 8, this fixes that rendering bug
+    // by properly offseting the textures
+    int src_correction = (((int) (scale * 100)) % 8) == 0 ? 1 : 0;
 
-#ifdef USE_RENDER_GEOMETRY
-    if (HAS_RENDER_GEOMETRY) {
-        SDL_Rect src_coords = { x_offset, y_offset, img->width, height };
-        SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
-        if (img->is_isometric) {
-            draw_isometric_footprint_raw(img, texture, &src_coords, &dst_coords, color, scale);
-        } else {
-            draw_texture_raw(img, texture, &src_coords, &dst_coords, color, scale);
-        }
-        return;
-    }
-#endif
+    SDL_Rect src_coords = { img->atlas.x_offset + src_correction, img->atlas.y_offset + src_correction,
+        img->width - src_correction, img->height - src_correction };
 
-    SDL_SetTextureColorMod(texture,
-        (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
-        (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
-        (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
-    SDL_SetTextureAlphaMod(texture, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
+    // When zooming out, instead of drawing the grid image, we reduce the isometric textures' size,
+    // which ends up simulating a grid without any performance penalty
+    int grid_correction = (img->is_isometric && config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) ? 2 : 0;
 
-    int texture_coord_correction = scale != 1.0f && img->is_isometric ? 1 : 0;
-
-    SDL_Rect src_coords = { x_offset + texture_coord_correction, y_offset + texture_coord_correction,
-        img->width - texture_coord_correction, height - texture_coord_correction };
 
 #ifdef USE_RENDERCOPYF
     if (HAS_RENDERCOPYF) {
-        SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
+        SDL_FRect dst_coords = { (x + grid_correction) / scale, (y + grid_correction) / scale,
+            (img->width - grid_correction) / scale, (img->height - grid_correction) / scale };
         SDL_RenderCopyF(data.renderer, texture, &src_coords, &dst_coords);
         return;
     }
 #endif
 
-    SDL_Rect dst_coords = { (int) round(x / scale), (int) round(y / scale),
-        (int) round(img->width / scale), (int) round(height / scale) };
-    SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
-}
-
-static void draw_isometric_top(const image *img, int x, int y, color_t color, float scale)
-{
-    if (data.paused) {
-        return;
-    }
-    if (!color) {
-        color = COLOR_MASK_NONE;
-    }
-
-    if (!img->is_isometric || !img->top_height) {
-        return;
-    }
-    SDL_Texture *texture = get_texture(img->atlas.id);
-
-    if (!texture) {
-        return;
-    }
-
-    set_texture_scale_mode(texture, scale);
-
-    int x_offset = img->atlas.x_offset;
-    int y_offset = img->atlas.y_offset;
-    int height = img->top_height + 1;
-    y -= 1;
-
-#ifdef USE_RENDER_GEOMETRY
-    if (HAS_RENDER_GEOMETRY) {
-        SDL_Rect src_coords = { x_offset, y_offset, img->width, height };
-        SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
-        draw_isometric_top_raw(img, texture, &src_coords, &dst_coords, color, scale);
-        return;
-    }
-#endif
-
-    SDL_SetTextureColorMod(texture,
-        (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
-        (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
-        (color & COLOR_CHANNEL_BLUE) >> COLOR_BITSHIFT_BLUE);
-    SDL_SetTextureAlphaMod(texture, (color & COLOR_CHANNEL_ALPHA) >> COLOR_BITSHIFT_ALPHA);
-
-    int texture_coord_correction = scale == 1.0f ? 0 : 1;
-
-    SDL_Rect src_coords = { x_offset + texture_coord_correction, y_offset + texture_coord_correction,
-        img->width - texture_coord_correction, height - texture_coord_correction };
-
-#ifdef USE_RENDERCOPYF
-    if (HAS_RENDERCOPYF) {
-        SDL_FRect dst_coords = { x / scale, y / scale, img->width / scale, height / scale };
-        SDL_RenderCopyF(data.renderer, texture, &src_coords, &dst_coords);
-        return;
-    }
-#endif
-
-    SDL_Rect dst_coords = { (int) round(x / scale), (int) round(y / scale),
-        (int) round(img->width / scale), (int) round(height / scale) };
+    SDL_Rect dst_coords = { (int) round((x + grid_correction) / scale), (int) round((y + grid_correction) / scale),
+        (int) round((img->width - grid_correction) / scale), (int) round((img->height - grid_correction) / scale) };
     SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
 }
 
@@ -964,7 +764,12 @@ static void load_unpacked_image(const image *img, const color_t *pixels)
     }
     int index = first_empty != -1 ? first_empty : oldest_texture_index;
 
-    SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) pixels, img->width, img->height, 32,
+    int image_height = img->height;
+    if (img->top) {
+        image_height += img->top->height;
+    }
+
+    SDL_Surface *surface = SDL_CreateRGBSurfaceFrom((void *) pixels, img->width, image_height, 32,
         img->width * sizeof(color_t), COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
     if (!surface) {
         SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for texture. Reason: %s", SDL_GetError());
@@ -1005,11 +810,6 @@ static int should_pack_image(int width, int height)
     return width * height < MAX_PACKED_IMAGE_SIZE;
 }
 
-static int isometric_images_are_joined(void)
-{
-    return HAS_RENDER_GEOMETRY;
-}
-
 static void update_scale_mode(int city_scale)
 {
 #ifdef USE_TEXTURE_SCALE_MODE
@@ -1033,7 +833,6 @@ static void create_renderer_interface(void)
     data.renderer_interface.draw_rect = draw_rect;
     data.renderer_interface.fill_rect = fill_rect;
     data.renderer_interface.draw_image = draw_texture;
-    data.renderer_interface.draw_isometric_top = draw_isometric_top;
     data.renderer_interface.create_custom_image = create_custom_texture;
     data.renderer_interface.has_custom_image = has_custom_texture;
     data.renderer_interface.get_custom_image_buffer = get_custom_texture_buffer;
@@ -1052,7 +851,6 @@ static void create_renderer_interface(void)
     data.renderer_interface.free_image_atlas = free_texture_atlas_and_data;
     data.renderer_interface.load_unpacked_image = load_unpacked_image;
     data.renderer_interface.should_pack_image = should_pack_image;
-    data.renderer_interface.isometric_images_are_joined = isometric_images_are_joined;
     data.renderer_interface.update_scale_mode = update_scale_mode;
 
     graphics_renderer_set_interface(&data.renderer_interface);

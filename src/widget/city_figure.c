@@ -240,9 +240,8 @@ static void adjust_pixel_offset(const figure *f, int *pixel_x, int *pixel_y)
 
 
     const image *img = f->is_enemy_image ? image_get_enemy(f->image_id) : image_get(f->image_id);
-    *pixel_x += x_offset - img->animation.sprite_offset_x;
-    *pixel_y += y_offset - img->animation.sprite_offset_y;
-
+    *pixel_x += x_offset - (img->animation ? img->animation->sprite_offset_x : 0);
+    *pixel_y += y_offset - (img->animation ? img->animation->sprite_offset_y : 0);
 }
 
 static void draw_figure(const figure *f, int x, int y, float scale, int highlight)

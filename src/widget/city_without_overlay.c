@@ -166,8 +166,7 @@ static void draw_footprint(int x, int y, int grid_offset)
             map_image_set(grid_offset, image_id);
         }
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask, draw_context.scale);
-        if (!building_id && config_get(CONFIG_UI_SHOW_GRID) &&
-            (draw_context.scale <= 2.0f || !graphics_renderer()->isometric_images_are_joined())) {
+        if (!building_id && config_get(CONFIG_UI_SHOW_GRID) && draw_context.scale <= 2.0f) {
             static int grid_id = 0;
             if (!grid_id) {
                 grid_id = assets_get_image_id("UI", "Grid_Full");
@@ -430,8 +429,10 @@ static void draw_dock_workers(const building *b, int x, int y, color_t color_mas
                 image_dockers += 2;
             }
             const image *img = image_get(image_dockers);
-            image_draw(image_dockers, x + img->animation.sprite_offset_x, y + img->animation.sprite_offset_y,
-                color_mask, draw_context.scale);
+            if (img->animation) {
+                image_draw(image_dockers, x + img->animation->sprite_offset_x, y + img->animation->sprite_offset_y,
+                    color_mask, draw_context.scale);
+            }
         }
     }
 }
@@ -468,10 +469,12 @@ static void draw_warehouse_ornaments(int x, int y, color_t color_mask)
 
 static void draw_granary_stores(const image *img, const building *b, int x, int y, color_t color_mask)
 {
-    image_draw(image_group(GROUP_BUILDING_GRANARY) + 1,
-        x + img->animation.sprite_offset_x,
-        y + 60 + img->animation.sprite_offset_y - img->height,
-        color_mask, draw_context.scale);
+    if (img->animation) {
+        image_draw(image_group(GROUP_BUILDING_GRANARY) + 1,
+            x + img->animation->sprite_offset_x,
+            y + 60 + img->animation->sprite_offset_y - img->height,
+            color_mask, draw_context.scale);
+    }
     if (b->data.granary.resource_stored[RESOURCE_NONE] < FULL_GRANARY) {
         image_draw(image_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask, draw_context.scale);
     }
@@ -502,7 +505,7 @@ static void draw_animation(int x, int y, int grid_offset)
 {
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
-    if (img->animation.num_sprites) {
+    if (img->animation) {
         if (map_property_is_draw_tile(grid_offset)) {
             int building_id = map_building_at(grid_offset);
             building *b = building_get(building_id);
@@ -523,9 +526,9 @@ static void draw_animation(int x, int y, int grid_offset)
             }
             int animation_offset = building_animation_offset(b, image_id, grid_offset);
             if (b->type != BUILDING_HIPPODROME && animation_offset > 0) {
-                int y_offset = img->top_height > 0 ? img->top_height - FOOTPRINT_HALF_HEIGHT + 1 : 0;
-                if (animation_offset > img->animation.num_sprites) {
-                    animation_offset = img->animation.num_sprites;
+                int y_offset = img->top ? img->top->original.height - FOOTPRINT_HALF_HEIGHT + 1 : 0;
+                if (animation_offset > img->animation->num_sprites) {
+                    animation_offset = img->animation->num_sprites;
                 }
                 if (b->type == BUILDING_GRAND_TEMPLE_CERES && b->data.monument.upgrades == 1) {
                     draw_ceres_module_crops(x + 190, y + 95 - y_offset, b->data.monument.secondary_frame, color_mask);
@@ -534,12 +537,12 @@ static void draw_animation(int x, int y, int grid_offset)
                     draw_neptune_fountain(x + 98, y + 87 - y_offset, (animation_offset - 1) % 5, color_mask);
                 }
                 if (b->type == BUILDING_GRANARY) {
-                    image_draw(image_id + img->animation.start_offset + animation_offset + 5, x + 77, y - 49,
+                    image_draw(image_id + img->animation->start_offset + animation_offset + 5, x + 77, y - 49,
                         color_mask, draw_context.scale);
                 } else {
-                    image_draw(image_id + img->animation.start_offset + animation_offset,
-                        x + img->animation.sprite_offset_x,
-                        y + img->animation.sprite_offset_y - y_offset,
+                    image_draw(image_id + img->animation->start_offset + animation_offset,
+                        x + img->animation->sprite_offset_x,
+                        y + img->animation->sprite_offset_y - y_offset,
                         color_mask, draw_context.scale);
                 }
                 if (b->type == BUILDING_COLOSSEUM) {
@@ -617,12 +620,11 @@ static void draw_hippodrome_ornaments(int x, int y, int grid_offset)
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
     building *b = building_get(map_building_at(grid_offset));
-    if (img->animation.num_sprites
-        && map_property_is_draw_tile(grid_offset)
-        && b->type == BUILDING_HIPPODROME) {
+    if (img->animation && map_property_is_draw_tile(grid_offset) && b->type == BUILDING_HIPPODROME) {
+        int top_height = img->top ? img->top->original.height : 0;
         image_draw(image_id + 1,
-            x + img->animation.sprite_offset_x,
-            y + img->animation.sprite_offset_y - img->top_height + FOOTPRINT_HALF_HEIGHT,
+            x + img->animation->sprite_offset_x,
+            y + img->animation->sprite_offset_y - top_height + FOOTPRINT_HALF_HEIGHT,
             draw_building_as_deleted(b) ? COLOR_MASK_RED : COLOR_MASK_NONE, draw_context.scale
         );
     }

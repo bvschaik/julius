@@ -27,29 +27,64 @@
  */
 
 /**
- * Image metadata
+ * Image animation metadata
  */
 typedef struct {
+    int num_sprites;
+    int sprite_offset_x;
+    int sprite_offset_y;
+    int can_reverse;
+    int speed_id;
+    int start_offset;
+} image_animation;
+
+/**
+ * Image metadata
+ */
+typedef struct image {
     int x_offset;
     int y_offset;
     int width;
     int height;
+    union {
+        int width;
+        int height;
+    } original;
     int is_isometric;
-    int top_height;
-    struct {
-        int num_sprites;
-        int sprite_offset_x;
-        int sprite_offset_y;
-        int can_reverse;
-        int speed_id;
-        int start_offset;
-    } animation;
+    struct image *top;
+    image_animation *animation;
     struct {
         int id;
         int x_offset;
         int y_offset;
     } atlas;
 } image;
+
+/**
+ * Image copy information
+ */
+typedef struct {
+    struct {
+        int x;
+        int y;
+        int width;
+        int height;
+        const color_t *pixels;
+    } src;
+    struct {
+        int x;
+        int y;
+        int width;
+        int height;
+        color_t *pixels;
+    } dst;
+    struct {
+        int x_offset;
+        int y_offset;
+        int width;
+        int height;
+    } rect;
+} image_copy_info;
 
 /**
  * Loads the image collection for the specified climate
@@ -108,9 +143,8 @@ int image_get_external_dimensions(const image *img, int *width, int *height);
  * Crops the transparent pixels around an image
  * @param img The image to crop
  * @param pixels The pixel data of the image
- * @param reduce_width Whether to crop the width as well
  */
-void image_crop(image *img, const color_t *pixels, int reduce_width);
+void image_crop(image *img, const color_t *pixels);
 
 /**
  * Gets the image id of the first image in the group
@@ -139,5 +173,17 @@ const image *image_letter(int letter_id);
  * @return Enemy image
  */
 const image *image_get_enemy(int id);
+
+/**
+ * Copies an image
+ * @param copy The copy information
+ */
+void image_copy(const image_copy_info *copy);
+
+/**
+ * Copies an isometric footprint
+ * @param copy The copy information
+ */
+void image_copy_isometric_footprint(const image_copy_info *copy);
 
 #endif // CORE_IMAGE_H

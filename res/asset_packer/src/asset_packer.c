@@ -155,12 +155,12 @@ static void create_animation_xml_line(FILE *xml_file, const asset_image *image)
     fprintf(xml_file, "%s%s<animation", FORMAT_IDENT, FORMAT_IDENT);
 
     if (!image->has_frame_elements) {
-        add_attribute_int(xml_file, "frames", image->img.animation.num_sprites);
+        add_attribute_int(xml_file, "frames", image->img.animation->num_sprites);
     }
-    add_attribute_int(xml_file, "speed", image->img.animation.speed_id);
-    add_attribute_int(xml_file, "x", image->img.animation.sprite_offset_x);
-    add_attribute_int(xml_file, "y", image->img.animation.sprite_offset_y);
-    add_attribute_bool(xml_file, "reversible", image->img.animation.can_reverse, "true");
+    add_attribute_int(xml_file, "speed", image->img.animation->speed_id);
+    add_attribute_int(xml_file, "x", image->img.animation->sprite_offset_x);
+    add_attribute_int(xml_file, "y", image->img.animation->sprite_offset_y);
+    add_attribute_bool(xml_file, "reversible", image->img.animation->can_reverse, "true");
 
     fprintf(xml_file, "%s>%s", image->has_frame_elements ? "" : "/", FORMAT_NEWLINE);
 }
@@ -461,10 +461,10 @@ static void pack_group(int group_id)
             pack_layer(&packer, l);
             create_layer_xml_line(xml_dest, l);
         }
-        if (image->img.animation.num_sprites) {
+        if (image->img.animation) {
             create_animation_xml_line(xml_dest, image);
             if (image->has_frame_elements) {
-                for (int i = 0; i < image->img.animation.num_sprites; i++) {
+                for (int i = 0; i < image->img.animation->num_sprites; i++) {
                     image_id++;
                     asset_image *frame = asset_image_get_from_id(image_id);
                     layer *l = frame->last_layer;

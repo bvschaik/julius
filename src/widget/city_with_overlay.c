@@ -389,7 +389,7 @@ static void draw_footprint(int x, int y, int grid_offset)
         }
     }
     if (config_get(CONFIG_UI_SHOW_GRID) && map_property_is_draw_tile(grid_offset) && !map_building_at(grid_offset) &&
-        (scale <= 2.0f || !graphics_renderer()->isometric_images_are_joined())) {
+        scale <= 2.0f) {
         static int grid_id = 0;
         if (!grid_id) {
             grid_id = assets_get_image_id("UI", "Grid_Full");
@@ -444,9 +444,11 @@ static void draw_building_top(int grid_offset, building *b, int x, int y)
     }
     if (b->type == BUILDING_GRANARY) {
         const image *img = image_get(map_image_at(grid_offset));
-        image_draw(image_group(GROUP_BUILDING_GRANARY) + 1,
-            x + img->animation.sprite_offset_x, y + img->animation.sprite_offset_y - 30 - (img->height - 90),
-            color_mask, scale);
+        if (img->animation) {
+            image_draw(image_group(GROUP_BUILDING_GRANARY) + 1,
+                x + img->animation->sprite_offset_x, y + img->animation->sprite_offset_y - 30 - (img->height - 90),
+                color_mask, scale);
+        }
         if (b->data.granary.resource_stored[RESOURCE_NONE] < FULL_GRANARY) {
             image_draw(image_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask, scale);
             if (b->data.granary.resource_stored[RESOURCE_NONE] < THREEQUARTERS_GRANARY) {
@@ -539,15 +541,17 @@ static void draw_animation(int x, int y, int grid_offset)
 
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
-    if (img->animation.num_sprites && draw) {
+    if (img->animation && draw) {
         if (map_property_is_draw_tile(grid_offset)) {
             building *b = building_get(map_building_at(grid_offset));
             int color_mask = draw_building_as_deleted(b) ? COLOR_MASK_RED : 0;
             if (b->type == BUILDING_GRANARY) {
-                image_draw(image_group(GROUP_BUILDING_GRANARY) + 1,
-                    x + img->animation.sprite_offset_x,
-                    y + 60 + img->animation.sprite_offset_y - img->height,
-                    color_mask, scale);
+                if (img->animation) {
+                    image_draw(image_group(GROUP_BUILDING_GRANARY) + 1,
+                        x + img->animation->sprite_offset_x,
+                        y + 60 + img->animation->sprite_offset_y - img->height,
+                        color_mask, scale);
+                }
                 if (b->data.granary.resource_stored[RESOURCE_NONE] < FULL_GRANARY) {
                     image_draw(image_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask, scale);
                 }
@@ -563,13 +567,13 @@ static void draw_animation(int x, int y, int grid_offset)
             } else {
                 int animation_offset = building_animation_offset(b, image_id, grid_offset);
                 if (animation_offset > 0) {
-                    if (animation_offset > img->animation.num_sprites) {
-                        animation_offset = img->animation.num_sprites;
+                    if (animation_offset > img->animation->num_sprites) {
+                        animation_offset = img->animation->num_sprites;
                     }
-                    int y_offset = img->top_height > 0 ? img->top_height - FOOTPRINT_HALF_HEIGHT + 1 : 0;
-                    image_draw(image_id + img->animation.start_offset + animation_offset,
-                        x + img->animation.sprite_offset_x,
-                        y + img->animation.sprite_offset_y - y_offset,
+                    int y_offset = img->top ? img->top->original.height - FOOTPRINT_HALF_HEIGHT + 1 : 0;
+                    image_draw(image_id + img->animation->start_offset + animation_offset,
+                        x + img->animation->sprite_offset_x,
+                        y + img->animation->sprite_offset_y - y_offset,
                         color_mask, scale);
                 }
             }

@@ -153,11 +153,11 @@ static void draw_empire_object(const empire_object *obj)
     }
     image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y, COLOR_MASK_NONE, SCALE_NONE);
     const image *img = image_get(image_id);
-    if (img->animation.speed_id) {
+    if (img->animation && img->animation->speed_id) {
         int new_animation = empire_object_update_animation(obj, image_id);
         image_draw(image_id + new_animation,
-            data.x_draw_offset + x + img->animation.sprite_offset_x,
-            data.y_draw_offset + y + img->animation.sprite_offset_y,
+            data.x_draw_offset + x + img->animation->sprite_offset_x,
+            data.y_draw_offset + y + img->animation->sprite_offset_y,
             COLOR_MASK_NONE, SCALE_NONE);
     }
 }

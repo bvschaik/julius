@@ -67,10 +67,12 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_GRANARY && b->num_workers < model_get_building(b->type)->laborers) {
         return 0;
     }
-    if (building_monument_is_monument(b) && (b->type != BUILDING_ORACLE && b->type != BUILDING_NYMPHAEUM && (b->num_workers <= 0 || b->data.monument.phase != MONUMENT_FINISHED))) {
+    if (building_monument_is_monument(b) && (b->type != BUILDING_ORACLE && b->type != BUILDING_NYMPHAEUM &&
+        (b->num_workers <= 0 || b->data.monument.phase != MONUMENT_FINISHED))) {
         return 0;
     }
-    if ((b->type == BUILDING_ARCHITECT_GUILD || b->type == BUILDING_MESS_HALL || b->type == BUILDING_ARENA) && b->num_workers <= 0) {
+    if ((b->type == BUILDING_ARCHITECT_GUILD || b->type == BUILDING_MESS_HALL || b->type == BUILDING_ARENA)
+        && b->num_workers <= 0) {
         return 0;
     }
     if (b->type == BUILDING_TAVERN && (b->num_workers <= 0 || !b->data.market.inventory[4])) { //wine
@@ -106,7 +108,10 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     //}
 
     const image *img = image_get(image_id);
-    if (!game_animation_should_advance(img->animation.speed_id)) {
+    if (!img->animation) {
+        return 0;
+    }
+    if (!game_animation_should_advance(img->animation->speed_id)) {
         return map_sprite_animation_at(grid_offset) & 0x7f;
     }
     // advance animation
@@ -143,7 +148,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
                 }
             }
         }
-    } else if (img->animation.can_reverse) {
+    } else if (img->animation->can_reverse) {
         if (map_sprite_animation_at(grid_offset) & 0x80) {
             is_reverse = 1;
         }
@@ -156,15 +161,15 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
             }
         } else {
             new_sprite = current_sprite + 1;
-            if (new_sprite > img->animation.num_sprites) {
-                new_sprite = img->animation.num_sprites;
+            if (new_sprite > img->animation->num_sprites) {
+                new_sprite = img->animation->num_sprites;
                 is_reverse = 1;
             }
         }
     } else {
         // Absolutely normal case
         new_sprite = map_sprite_animation_at(grid_offset) + 1;
-        if (new_sprite > img->animation.num_sprites) {
+        if (new_sprite > img->animation->num_sprites) {
             advance_monument_secondary_animation(b);
             new_sprite = 1;
         }
@@ -177,14 +182,17 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
 int building_animation_advance_warehouse_flag(building *b, int image_id)
 {
     const image *img = assets_get_image(image_id);
-    if (!img->animation.speed_id) {
+    if (!img->animation) {
         return 0;
     }
-    if (game_animation_should_advance(img->animation.speed_id)) {
+    if (!img->animation->speed_id) {
+        return 0;
+    }
+    if (game_animation_should_advance(img->animation->speed_id)) {
         b->data.warehouse.flag_frame++;
     }
 
-    if (b->data.warehouse.flag_frame > img->animation.num_sprites) {
+    if (b->data.warehouse.flag_frame > img->animation->num_sprites) {
         b->data.warehouse.flag_frame = 0;
     }
     return b->data.warehouse.flag_frame;
