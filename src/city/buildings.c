@@ -293,7 +293,7 @@ static void update_sickness_duration(int building_id)
             b->sickness_duration = 0;
             b->has_plague = 0;
             b->sickness_level = 0;
-            b->sickness_last_doctor_cure = 0;
+            b->sickness_doctor_cure = 0;
             b->figure_id4 = 0;
             b->fumigation_frame = 0;
             b->fumigation_direction = 0;

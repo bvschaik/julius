@@ -183,7 +183,7 @@ typedef struct building {
     unsigned char strike_duration_days;
     unsigned char sickness_level;
     unsigned char sickness_duration;
-    unsigned char sickness_last_doctor_cure;
+    unsigned char sickness_doctor_cure;
     unsigned char fumigation_frame;
     unsigned char fumigation_direction;
 } building;

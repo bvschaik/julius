@@ -3,8 +3,10 @@
 #include "building/destruction.h"
 #include "building/granary.h"
 #include "building/warehouse.h"
+#include "city/culture.h"
 #include "city/data_private.h"
 #include "city/message.h"
+#include "city/population.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/tutorial.h"
@@ -201,31 +203,64 @@ static void cause_disease(int total_people)
     }
 }
 
-static void increase_sickness_level_in_building(building *b)
+static int get_sickness_reduction_ratio(void)
+{
+    int city_global_coverage_percent = city_health();
+    int city_hospital_coverage_percent = city_culture_coverage_hospital();
+    int base_hospital_coverage = 750;
+    int population = city_population();
+
+    if (population < 1000) { // before 1000 hab there is no malus
+        city_hospital_coverage_percent = 0;
+    } else {
+        // there are hospitals, use real coverage to get malus
+        if (city_hospital_coverage_percent) {
+            city_hospital_coverage_percent = 100 - city_hospital_coverage_percent;
+        } else { // else use base coverage
+            city_hospital_coverage_percent = 100 - calc_percentage(base_hospital_coverage, population);
+        }
+    }
+
+    int reduction_ratio = city_global_coverage_percent - city_hospital_coverage_percent;
+
+    // can't have a raise of sickness_level in case of healing level is poor reduction is set to 0
+    if (reduction_ratio < 0) {
+        reduction_ratio = 0;                    
+    }
+
+    return reduction_ratio;
+}
+
+static void increase_sickness_level_in_building(building *b, int reduction_ratio)
 {
     if (!b->has_plague) {
         if(b->sickness_level) {
+            // increase by 5
             b->sickness_level += 5;
 
             if (b->sickness_level > MAX_SICKNESS_LEVEL) {
                 b->sickness_level = MAX_SICKNESS_LEVEL;
             }
+            // then apply reduction
+            b->sickness_level = b->sickness_level - (b->sickness_level * reduction_ratio / 100);
         }
     }
 }
 
 static void increase_sickness_level_in_buildings(void)
 {
+    int reduction_ratio = get_sickness_reduction_ratio();
+
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            increase_sickness_level_in_building(b);
+            increase_sickness_level_in_building(b, reduction_ratio);
         }
     }
 
     for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            increase_sickness_level_in_building(b);
+            increase_sickness_level_in_building(b, reduction_ratio);
         }
     }
 }

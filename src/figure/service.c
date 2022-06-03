@@ -201,21 +201,6 @@ static void clinic_coverage(building *b)
     b->data.house.clinic = MAX_COVERAGE;
 }
 
-static void sickness_coverage(building *b, int coverage)
-{
-    int day = game_time_day();
-    // not sure because if day is the same but one month later or one year later it will be false
-    if (!b->has_plague && b->sickness_last_doctor_cure != day) {
-        b->sickness_last_doctor_cure = day;
-
-        if (b->sickness_level > coverage) {
-            b->sickness_level -= coverage;
-        } else {
-            b->sickness_level = 0;
-        }
-    }
-}
-
 static void hospital_coverage(building *b)
 {
     b->data.house.hospital = MAX_COVERAGE;
@@ -575,11 +560,9 @@ int figure_service_provide_coverage(figure *f)
             houses_serviced = provide_culture(x, y, barber_coverage);
             break;
         case FIGURE_DOCTOR:
-            provide_healing(x, y, sickness_coverage, 2);
             houses_serviced = provide_culture(x, y, clinic_coverage);
             break;
         case FIGURE_SURGEON:
-            provide_healing(x, y, sickness_coverage, 10);
             houses_serviced = provide_culture(x, y, hospital_coverage);
             break;
         case FIGURE_WAREHOUSEMAN:

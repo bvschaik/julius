@@ -281,7 +281,7 @@ void window_building_draw_dock(building_info_context *c)
 
     if (b->has_plague) {
         window_building_play_sound(c, "wavs/clinic.wav");
-        if (b->sickness_last_doctor_cure == 99) {
+        if (b->sickness_doctor_cure == 99) {
             window_building_draw_description_from_tr_string(c, TR_BUILDING_FUMIGATION_DESC);
         } else {
             window_building_draw_description_from_tr_string(c, TR_BUILDING_DOCK_PLAGUE_DESC);
@@ -663,7 +663,7 @@ void window_building_draw_granary(building_info_context *c)
     }
 
     if (b->has_plague) {
-        if (b->sickness_last_doctor_cure == 99) {
+        if (b->sickness_doctor_cure == 99) {
             window_building_draw_description_from_tr_string(c, TR_BUILDING_FUMIGATION_DESC);
         } else {
             window_building_draw_description_from_tr_string(c, TR_BUILDING_GRANARY_PLAGUE_DESC);
@@ -924,7 +924,7 @@ void window_building_draw_warehouse(building_info_context *c)
     }
 
     if (b->has_plague) {
-        if (b->sickness_last_doctor_cure == 99) {
+        if (b->sickness_doctor_cure == 99) {
             window_building_draw_description_from_tr_string(c, TR_BUILDING_FUMIGATION_DESC);
         } else {
             window_building_draw_description_from_tr_string(c, TR_BUILDING_WAREHOUSE_PLAGUE_DESC);

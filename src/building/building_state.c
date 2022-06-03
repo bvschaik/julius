@@ -243,7 +243,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     // sickness
     buffer_write_u8(buf, b->sickness_level);
     buffer_write_u8(buf, b->sickness_duration);
-    buffer_write_u8(buf, b->sickness_last_doctor_cure);
+    buffer_write_u8(buf, b->sickness_doctor_cure);
     buffer_write_u8(buf, b->fumigation_frame);
     buffer_write_u8(buf, b->fumigation_direction);
 
@@ -514,7 +514,7 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     if (building_buf_size >= BUILDING_STATE_SICKNESS) {
         b->sickness_level = buffer_read_u8(buf);
         b->sickness_duration = buffer_read_u8(buf);
-        b->sickness_last_doctor_cure = buffer_read_u8(buf);
+        b->sickness_doctor_cure = buffer_read_u8(buf);
         b->fumigation_frame = buffer_read_u8(buf);
         b->fumigation_direction = buffer_read_u8(buf);
     }

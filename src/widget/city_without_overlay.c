@@ -373,7 +373,7 @@ static void draw_plague(building *b, int x, int y, color_t color_mask)
     int y_pos = 0;
 
     if (b->type == BUILDING_DOCK) {
-        if (b->sickness_last_doctor_cure == 99) {
+        if (b->sickness_doctor_cure == 99) {
             x_pos = x + 68;
             y_pos = y - 38;
         } else {
@@ -381,7 +381,7 @@ static void draw_plague(building *b, int x, int y, color_t color_mask)
             y_pos = y - 84;
         }
     } else if (b->type == BUILDING_WAREHOUSE) {
-        if (b->sickness_last_doctor_cure == 99) {
+        if (b->sickness_doctor_cure == 99) {
             x_pos = x + 10;
             y_pos = y - 64;
         } else {
@@ -389,7 +389,7 @@ static void draw_plague(building *b, int x, int y, color_t color_mask)
             y_pos = y - 84;
         }
     } else if (b->type == BUILDING_GRANARY) {
-        if (b->sickness_last_doctor_cure == 99) {
+        if (b->sickness_doctor_cure == 99) {
             x_pos = x + 70;
             y_pos = y - 114;
         } else {
@@ -399,7 +399,7 @@ static void draw_plague(building *b, int x, int y, color_t color_mask)
     }
 
     if (x_pos && y_pos) {
-        if (b->sickness_last_doctor_cure == 99) {
+        if (b->sickness_doctor_cure == 99) {
             draw_fumigation(b, x_pos, y_pos, color_mask);
         } else {
             b->fumigation_direction = 1;

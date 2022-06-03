@@ -31,7 +31,7 @@ static void destroy_on_fire(building *b, int plagued)
     b->house_population = 0;
     b->house_size = 0;
     b->sickness_level = 0;
-    b->sickness_last_doctor_cure = 0;
+    b->sickness_doctor_cure = 0;
     b->fumigation_frame = 0;
     b->fumigation_direction = 0;
     b->sickness_duration = 0;

@@ -322,7 +322,7 @@ static void heal_plague(figure *f)
         if (building_with_plague->sickness_duration < 95) {
             building_with_plague->sickness_duration = 95;
         }
-        building_with_plague->sickness_last_doctor_cure = 99; // Use sickness_last_doctor_cure = 99 to know if doctor is currently healing building
+        building_with_plague->sickness_doctor_cure = 99; // Use sickness_doctor_cure = 99 to know if doctor is currently healing building (Need to stay 99 for retro-compatibility)
     } else {
         f->wait_ticks = 1;
     }
