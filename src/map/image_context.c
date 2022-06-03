@@ -352,7 +352,12 @@ const terrain_image *map_image_context_get_elevation(int grid_offset, int elevat
 {
     int tiles[MAX_TILES];
     for (int i = 0; i < MAX_TILES; i++) {
-        tiles[i] = map_elevation_at(grid_offset + map_grid_direction_delta(i)) >= elevation ? 1 : 0;
+        int target_offset = grid_offset + map_grid_direction_delta(i);
+        if (map_terrain_get(target_offset) == TERRAIN_MAP_EDGE) {
+            tiles[i] = 1;
+        } else {
+            tiles[i] = map_elevation_at(grid_offset + map_grid_direction_delta(i)) >= elevation ? 1 : 0;
+        }
     }
     return get_image(CONTEXT_ELEVATION, tiles);
 }

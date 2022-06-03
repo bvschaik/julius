@@ -2,6 +2,7 @@
 
 #include "map/data.h"
 #include "map/grid.h"
+#include "map/terrain.h"
 
 static grid_u8 elevation;
 
@@ -23,11 +24,12 @@ void map_elevation_clear(void)
 static void fix_cliff_tiles(int grid_offset)
 {
     // reduce elevation when the surrounding tiles are at least 2 lower
+    // treat edges as being equal elevations
     int max = elevation.items[grid_offset] - 1;
-    if (elevation.items[grid_offset + map_grid_delta(-1, 0)] < max ||
-        elevation.items[grid_offset + map_grid_delta(0, -1)] < max ||
-        elevation.items[grid_offset + map_grid_delta(1, 0)] < max ||
-        elevation.items[grid_offset + map_grid_delta(0, 1)] < max) {
+    if ((elevation.items[grid_offset + map_grid_delta(-1, 0)] < max && map_terrain_get(grid_offset + map_grid_delta(-1, 0)) != TERRAIN_MAP_EDGE) ||
+        (elevation.items[grid_offset + map_grid_delta(0, -1)] < max && map_terrain_get(grid_offset + map_grid_delta(0, -1)) != TERRAIN_MAP_EDGE) ||
+        (elevation.items[grid_offset + map_grid_delta(1, 0)] < max && map_terrain_get(grid_offset + map_grid_delta(1, 0)) != TERRAIN_MAP_EDGE) ||
+        (elevation.items[grid_offset + map_grid_delta(0, 1)] < max && map_terrain_get(grid_offset + map_grid_delta(0, 1)) != TERRAIN_MAP_EDGE)) {
         elevation.items[grid_offset]--;
     }
 }

@@ -30,7 +30,8 @@ enum {
     TERRAIN_IMPASSABLE_WOLF = 0xd73f,
     TERRAIN_ELEVATION_ROCK = 0x202,
     TERRAIN_ALL = 0xffff,
-    TERRAIN_ORIGINALLY_TREE = 0x10000
+    TERRAIN_ORIGINALLY_TREE = 0x10000,
+    TERRAIN_MAP_EDGE = TERRAIN_TREE | TERRAIN_WATER
 };
 
 int map_terrain_is(int grid_offset, int terrain);

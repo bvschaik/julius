@@ -394,7 +394,7 @@ void map_terrain_init_outside_map(void)
         int y_outside_map = y < y_start || y >= y_start + map_height;
         for (int x = 0; x < GRID_SIZE; x++) {
             if (y_outside_map || x < x_start || x >= x_start + map_width) {
-                terrain_grid.items[x + GRID_SIZE * y] = TERRAIN_TREE | TERRAIN_WATER;
+                terrain_grid.items[x + GRID_SIZE * y] = TERRAIN_MAP_EDGE;
             }
         }
     }
