@@ -5,27 +5,27 @@
 	<!-- Note: Colosseum 0%, 25%, 50% and 75% construction phases respectively -->
 	<image id="Coloseum Cons 01" src="Colosseum_0%_Construction_Phase" isometric="true"/>
 	<image id="Coloseum Cons 02" width="298" height="154" isometric="true">
-		<layer group="48" image="0" part="footprint" x="0" y="-59"/>
-		<layer src="Colosseum_25%_Construction_Phase"/>
+		<layer group="48" image="0" part="footprint" x="0" y="-58"/>
+		<layer src="Colosseum_25%_Construction_Phase" x="0" y="1"/>
 	</image>
 	<image id="Coloseum Cons 03" width="298" height="173" isometric="true">
-		<layer group="48" image="0" part="footprint" x="0" y="-40"/>
-		<layer src="Colosseum_50%_Construction_Phase"/>
+		<layer group="48" image="0" part="footprint" x="0" y="-39"/>
+		<layer src="Colosseum_50%_Construction_Phase" x="0" y="1"/>
 	</image>
 	<image id="Coloseum Cons 04" width="298" height="186" isometric="true">
-		<layer group="48" image="0" part="footprint" x="0" y="-27"/>
-		<layer src="Colosseum_75%_Construction_Phase"/>
+		<layer group="48" image="0" part="footprint" x="0" y="-26"/>
+		<layer src="Colosseum_75%_Construction_Phase" x="0" y="1"/>
 	</image>
 	<!-- Note: Colosseum ON state -->
 	<image id="Coloseum ON" width="298" height="213" isometric="true">
 		<layer group="48"/>
-		<layer group="48" image="14" x="70" y="33"/>
-		<layer src="Colosseum_ON_Overlay" x="70" y="33"/>
+		<layer group="48" image="14" x="70" y="34"/>
+		<layer src="Colosseum_ON_Overlay" x="70" y="34"/>
 	</image>
 	<!-- Note: Colosseum Gladiator Fight animations (Fixed vanilla ON state) -->
 	<image id="Col Glad Fight" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
-		<animation speed="5" x="122" y="57" reversible="false">
+		<animation speed="5" x="122" y="58" reversible="false">
 			<frame group="48" image="1"/>
 			<frame group="48" image="2"/>
 			<frame group="48" image="3"/>
@@ -44,7 +44,7 @@
 	<!-- Note: Colosseum 'Naumachia' games animations -->
 	<image id="Col Naumachia" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
-		<animation speed="9" x="100" y="58" reversible="false">
+		<animation speed="9" x="100" y="59" reversible="false">
 			<frame src="Naumachia_01"/>
 			<frame src="Naumachia_02"/>
 			<frame src="Naumachia_03"/>
@@ -62,7 +62,7 @@
 	<!-- Note: Colosseum 'Imperial Games' animations -->
 	<image id="Col Imp Games" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
-		<animation speed="9" x="90" y="34" reversible="false">
+		<animation speed="9" x="90" y="35" reversible="false">
 			<frame src="Imperial_Games_01"/>
 			<frame src="Imperial_Games_02"/>
 			<frame src="Imperial_Games_03"/>
@@ -74,7 +74,7 @@
 	<!-- Note: Colosseum 'Executions' animations -->
 	<image id="Col Exec" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
-		<animation speed="9" x="100" y="43" reversible="false">
+		<animation speed="9" x="100" y="44" reversible="false">
 			<frame src="Executions_01"/>
 			<frame src="Executions_02"/>
 			<frame src="Executions_03"/>
@@ -97,77 +97,77 @@
 	<image id="Circus NWSE 03" src="Circus_NW-SE_0%_Construction_Front_Part" isometric="true"/>
 	<!-- Note: Circus 25% construction phase -->
 	<image id="Circus NESW 13" width="298" height="156" isometric="true">
-		<layer group="213" image="0" part="footprint" x="0" y="-79"/>
+		<layer group="213" image="0" part="footprint" x="0" y="-78"/>
 		<layer src="Circus_NE-SW_25%_Construction_Back_Part"/>
 	</image>
 	<image id="Circus NWSE 13" width="298" height="155" isometric="true">
-		<layer group="214" image="0" part="footprint" x="0" y="-79"/>
+		<layer group="214" image="0" part="footprint" x="0" y="-78"/>
 		<layer src="Circus_NW-SE_25%_Construction_Back_Part"/>
 	</image>
 	<image id="Circus NESW 12" width="298" height="150" isometric="true">
-		<layer group="213" image="2" part="footprint" x="0" y="-31"/>
+		<layer group="213" image="2" part="footprint" x="0" y="-30"/>
 		<layer src="Circus_NE-SW_25%_Construction_Middle_Part"/>
 	</image>
 	<image id="Circus NWSE 12" width="298" height="150" isometric="true">
-		<layer group="214" image="2" part="footprint" x="0" y="-31"/>
+		<layer group="214" image="2" part="footprint" x="0" y="-30"/>
 		<layer src="Circus_NW-SE_25%_Construction_Middle_Part"/>
 	</image>
 	<image id="Circus NESW 11" width="298" height="150" isometric="true">
-		<layer group="213" image="4" part="footprint" x="0" y="-31"/>
+		<layer group="213" image="4" part="footprint" x="0" y="-30"/>
 		<layer src="Circus_NE-SW_25%_Construction_Front_Part"/>
 	</image>
 	<image id="Circus NWSE 11" width="298" height="150" isometric="true">
-		<layer group="214" image="4" part="footprint" x="0" y="-32"/>
+		<layer group="214" image="4" part="footprint" x="0" y="-31"/>
 		<layer src="Circus_NW-SE_25%_Construction_Front_Part"/>
 	</image>
 	<!-- Note: Circus 50% construction phase  -->
 	<image id="Circus NESW 23" width="298" height="179" isometric="true">
-		<layer group="213" image="0" part="footprint" x="0" y="-56"/>
+		<layer group="213" image="0" part="footprint" x="0" y="-55"/>
 		<layer src="Circus_NE-SW_50%_Construction_Back_Part"/>
 	</image>
 	<image id="Circus NWSE 23" width="298" height="178" isometric="true">
-		<layer group="214" image="0" part="footprint" x="0" y="-56"/>
+		<layer group="214" image="0" part="footprint" x="0" y="-55"/>
 		<layer src="Circus_NW-SE_50%_Construction_Back_Part"/>
 	</image>
 	<image id="Circus NESW 22" width="298" height="164" isometric="true">
-		<layer group="213" image="2" part="footprint" x="0" y="-17"/>
+		<layer group="213" image="2" part="footprint" x="0" y="-16"/>
 		<layer src="Circus_NE-SW_50%_Construction_Middle_Part"/>
 	</image>
 	<image id="Circus NWSE 22" width="298" height="164" isometric="true">
-		<layer group="214" image="2" part="footprint" x="0" y="-17"/>
+		<layer group="214" image="2" part="footprint" x="0" y="-16"/>
 		<layer src="Circus_NW-SE_50%_Construction_Middle_Part"/>
 	</image>
 	<image id="Circus NESW 21" width="298" height="165" isometric="true">
-		<layer group="213" image="4" part="footprint" x="0" y="-16"/>
+		<layer group="213" image="4" part="footprint" x="0" y="-15"/>
 		<layer src="Circus_NE-SW_50%_Construction_Front_Part"/>
 	</image>
 	<image id="Circus NWSE 21" width="298" height="165" isometric="true">
-		<layer group="214" image="4" part="footprint" x="0" y="-17"/>
+		<layer group="214" image="4" part="footprint" x="0" y="-16"/>
 		<layer src="Circus_NW-SE_50%_Construction_Front_Part"/>
 	</image>
 	<!-- Note: Circus 75% construction phase for NE-SW Orientation -->
 	<image id="Circus NESW 33" width="298" height="210" isometric="true">
-		<layer group="213" image="0" part="footprint" x="0" y="-25"/>
+		<layer group="213" image="0" part="footprint" x="0" y="-24"/>
 		<layer src="Circus_NE-SW_75%_Construction_Back_Part"/>
 	</image>
 	<image id="Circus NWSE 33" width="298" height="208" isometric="true">
-		<layer group="214" image="0" part="footprint" x="0" y="-26"/>
+		<layer group="214" image="0" part="footprint" x="0" y="-25"/>
 		<layer src="Circus_NW-SE_75%_Construction_Back_Part"/>
 	</image>
 	<image id="Circus NESW 32" width="298" height="179" isometric="true">
-		<layer group="213" image="2" part="footprint" x="0" y="-2"/>
+		<layer group="213" image="2" part="footprint" x="0" y="-1"/>
 		<layer src="Circus_NE-SW_75%_Construction_Middle_Part"/>
 	</image>
 	<image id="Circus NWSE 32" width="298" height="181" isometric="true">
-		<layer group="214" image="2" part="footprint" x="0" y="0"/>
+		<layer group="214" image="2" part="footprint" x="0" y="1"/>
 		<layer src="Circus_NW-SE_75%_Construction_Middle_Part"/>
 	</image>
 	<image id="Circus NESW 31" width="298" height="181" isometric="true">
-		<layer group="213" image="4" part="footprint" x="0" y="0"/>
+		<layer group="213" image="4" part="footprint" x="0" y="1"/>
 		<layer src="Circus_NE-SW_75%_Construction_Front_Part"/>
 	</image>
 	<image id="Circus NWSE 31" width="298" height="181" isometric="true">
-		<layer group="214" image="4" part="footprint" x="0" y="-1"/>
+		<layer group="214" image="4" part="footprint" x="0" y="0"/>
 		<layer src="Circus_NW-SE_75%_Construction_Front_Part"/>
 	</image>
 	<!-- Note: Circus 100% construction phase for NE-SW Orientation Front, middle and back respectively -->
@@ -665,10 +665,10 @@
 	</image>
 	<!-- Note: Theatre Vanilla ON Asset: USE THIS ONE! -->
 	<image id="Theatre ON" width="118" height="98" isometric="true">
-		<layer group="46"/>
-		<layer group="191" x="34" y="30"/>
-		<layer src="Theatre_Fix" x="74" y="22"/>
-		<animation speed="5" x="60" y="30" reversible="false">
+		<layer group="46" y="1"/>
+		<layer group="191" x="34" y="31"/>
+		<layer src="Theatre_Fix" x="74" y="23"/>
+		<animation speed="5" x="60" y="31" reversible="false">
 			<frame group="46" image="1"/>
 			<frame group="46" image="2"/>
 			<frame group="46" image="3"/>
@@ -694,15 +694,15 @@
 	</image>
 	<!-- Note: Theatre Upgrade OFF Asset: USE THIS ONE! -->
 	<image id="Theatre Upgrade OFF" width="118" height="101" isometric="true">
-		<layer group="46" y="3"/>
+		<layer group="46" y="4"/>
 		<layer src="Theatre_Upgrade_State"/>
 	</image>
 	<!-- Note: Theatre Upgrade ON Asset: USE THIS ONE! -->
 	<image id="Theatre Upgrade ON" width="118" height="101" isometric="true">
-		<layer group="46" y="3"/>
-		<layer group="191" x="34" y="34"/>
-		<layer src="Theatre_Fix" x="74" y="26"/>
-		<layer src="Theatre_Upgrade_State"/>
+		<layer group="46" y="4"/>
+		<layer group="191" x="34" y="35"/>
+		<layer src="Theatre_Fix" x="74" y="27"/>
+		<layer src="Theatre_Upgrade_State" x="0" y="0"/>
 		<animation speed="5" x="60" y="34" reversible="false">
 			<frame group="46" image="1"/>
 			<frame group="46" image="2"/>

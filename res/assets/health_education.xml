@@ -13,8 +13,8 @@
 	</image>
 	<!-- Note: Library Downgrade Asset: USE THIS ONE! -->
 	<image id="Downgraded_Library" width="118" height="101" isometric="true">
-		<layer group="this" image="Library Ref 01" x="0" y="29"/>
-		<layer src="Library_Downgrade_State" x="22" y="0"/>
+		<layer group="this" image="Library Ref 01" x="0" y="30"/>
+		<layer src="Library_Downgrade_State" x="22" y="1"/>
 	</image>
 	<!-- Assets created by Areldir -->
 	<!-- Note: Fix for Academy pixel clipping -->
