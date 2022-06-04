@@ -4,8 +4,8 @@
 <assetlist name="Health_Education">
 	<!-- Note: School Upgrade Asset -->
 	<image id="Upgraded_School" width="118" height="110" isometric="true">
-		<layer group="41" x="0" y="18"/>
-		<layer src="School_Upgrade_State" x="1" y="0"/>
+		<layer group="41" x="0" y="19"/>
+		<layer src="School_Upgrade_State" x="1" y="1"/>
 	</image>
 	<!-- Note: Library Cropped Reference Asset: DO NOT USE! -->
 	<image id="Library Ref 01" width="118" height="72">

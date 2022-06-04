@@ -18,7 +18,7 @@
 	</image>
 	<!-- Note: Colosseum ON state -->
 	<image id="Coloseum ON" width="298" height="213" isometric="true">
-		<layer group="48"/>
+		<layer group="48" y="1"/>
 		<layer group="48" image="14" x="70" y="34"/>
 		<layer src="Colosseum_ON_Overlay" x="70" y="34"/>
 	</image>

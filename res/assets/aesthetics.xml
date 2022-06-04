@@ -8,66 +8,66 @@
 		<layer src="Ornamental_Tree_01_Top_Layer" x="29" y="38"/>
 	</image>
 	<image id="ornamental fir" width="58" height="62" isometric="true">
-		<layer group="59" image="2" x="0" y="30"/>
+		<layer group="59" image="2" x="0" y="31"/>
 		<layer src="Ornamental_Tree_06_Top_Layer" x="0" y="0"/>
 	</image>
 	<image id="ornamental oak" width="58" height="55" isometric="true">
-		<layer group="59" image="2" x="0" y="23"/>
+		<layer group="59" image="2" x="0" y="24"/>
 		<layer src="Ornamental_Tree_02_Top_Layer" x="0" y="0"/>
 	</image>
 	<image id="ornamental elm" width="58" height="55" isometric="true">
-		<layer group="59" image="2" x="0" y="23"/>
+		<layer group="59" image="2" x="0" y="24"/>
 		<layer src="Ornamental_Tree_07_Top_Layer" x="0" y="0"/>
 	</image>
 	<image id="ornamental fig" width="58" height="55" isometric="true">
-		<layer group="59" image="2" x="0" y="23"/>
+		<layer group="59" image="2" x="0" y="24"/>
 		<layer src="Ornamental_Tree_03_Top_Layer" x="0" y="0"/>
 	</image>
 	<image id="ornamental plum" width="58" height="55" isometric="true">
-		<layer group="59" image="2" x="0" y="23"/>
+		<layer group="59" image="2" x="0" y="24"/>
 		<layer src="Ornamental_Tree_08_Top_Layer" x="0" y="0"/>
 	</image>
 	<image id="ornamental palm" width="58" height="54" isometric="true">
-		<layer group="59" image="2" x="0" y="22"/>
+		<layer group="59" image="2" x="0" y="23"/>
 		<layer src="Ornamental_Tree_04_Top_Layer" x="0" y="0"/>
 	</image>
 	<image id="ornamental date" width="58" height="54" isometric="true">
-		<layer group="59" image="2" x="0" y="22"/>
+		<layer group="59" image="2" x="0" y="23"/>
 		<layer src="Ornamental_Tree_05_Top_Layer" x="0" y="0"/>
 	</image>
 	<!-- Note: Assets for 'Ornamental Pine Tree Path', 'Ornamental Fir Tree Path', 'Ornamental Oak Tree Path', 'Ornamental Elm Tree Path',  -->
 	<!--  'Ornamental Fig Tree Path', 'Ornamental Plum Tree Path', 'Ornamental Palm Tree Path' and 'Ornamental Date Tree Path' respectively -->
 	<image id="path orn pine" width="58" height="71" isometric="true">
-		<layer group="59" image="3" x="0" y="39"/>
-		<layer src="Pine_Tree_Path"/>
+		<layer group="59" image="3" x="0" y="40"/>
+		<layer src="Pine_Tree_Path" y="0"/>
 	</image>
 	<image id="path orn fir" width="58" height="72" isometric="true">
-		<layer group="59" image="3" x="0" y="40"/>
-		<layer src="Fir_Tree_Path"/>
+		<layer group="59" image="3" x="0" y="41"/>
+		<layer src="Fir_Tree_Path" y="0"/>
 	</image>
 	<image id="path orn oak" width="58" height="60" isometric="true">
-		<layer group="59" image="3" x="0" y="28"/>
-		<layer src="Oak_Tree_Path"/>
+		<layer group="59" image="3" x="0" y="29"/>
+		<layer src="Oak_Tree_Path" y="0"/>
 	</image>
 	<image id="path orn elm" width="58" height="60" isometric="true">
-		<layer group="59" image="3" x="0" y="28"/>
-		<layer src="Elm_Tree_Path"/>
+		<layer group="59" image="3" x="0" y="29"/>
+		<layer src="Elm_Tree_Path" y="0"/>
 	</image>
 	<image id="path orn fig" width="58" height="53" isometric="true">
-		<layer group="59" image="3" x="0" y="21"/>
-		<layer src="Fig_Tree_Path"/>
+		<layer group="59" image="3" x="0" y="22"/>
+		<layer src="Fig_Tree_Path" y="0"/>
 	</image>
 	<image id="path orn plum" width="58" height="53" isometric="true">
-		<layer group="59" image="3" x="0" y="21"/>
-		<layer src="Plum_Tree_Path"/>
+		<layer group="59" image="3" x="0" y="22"/>
+		<layer src="Plum_Tree_Path" y="0"/>
 	</image>
 	<image id="path orn palm" width="58" height="65" isometric="true">
-		<layer group="59" image="3" x="0" y="33"/>
-		<layer src="Palm_Tree_Path"/>
+		<layer group="59" image="3" x="0" y="34"/>
+		<layer src="Palm_Tree_Path" y="0"/>
 	</image>
 	<image id="path orn date" width="58" height="60" isometric="true">
-		<layer group="59" image="3" x="0" y="28"/>
-		<layer src="Date_Tree_Path"/>
+		<layer group="59" image="3" x="0" y="29"/>
+		<layer src="Date_Tree_Path" y="0"/>
 	</image>
 	<!-- Note: Assets for 'Blue Pavilion', 'Red Pavilion', 'Orange Pavilion', 'Yellow Pavilion', 'Green Pavilion' and 'Purple Pavilion' respectively -->
 	<image id="pavilion blue" src="Pavilion_Blue" isometric="true"/>
@@ -185,27 +185,27 @@
 	</image>
 	<!-- Note: Rotated assets for the garden paths, including vanilla (if needed) -->
 	<image id="path pine r" width="58" height="71" isometric="true">
-		<layer group="59" image="3" x="0" y="39" invert="horizontal"/>
+		<layer group="59" image="3" x="0" y="40" invert="horizontal"/>
 		<layer src="Pine_Tree_Path_Rotated"/>
 	</image>
 	<image id="path fir r" width="58" height="72" isometric="true">
-		<layer group="59" image="3" x="0" y="40" invert="horizontal"/>
+		<layer group="59" image="3" x="0" y="41" invert="horizontal"/>
 		<layer src="Fir_Tree_Path_Rotated"/>
 	</image>
 	<image id="path oak r" width="58" height="60" isometric="true">
-		<layer group="59" image="3" x="0" y="28" invert="horizontal"/>
+		<layer group="59" image="3" x="0" y="29" invert="horizontal"/>
 		<layer src="Oak_Tree_Path_Rotated"/>
 	</image>
 	<image id="path elm r" width="58" height="60" isometric="true">
-		<layer group="59" image="3" x="0" y="28" invert="horizontal"/>
+		<layer group="59" image="3" x="0" y="29" invert="horizontal"/>
 		<layer src="Elm_Tree_Path_Rotated"/>
 	</image>
 	<image id="path fig r" width="58" height="53" isometric="true">
-		<layer group="59" image="3" x="0" y="21" invert="horizontal"/>
+		<layer group="59" image="3" x="0" y="22" invert="horizontal"/>
 		<layer src="Fig_Tree_Path_Rotated"/>
 	</image>
 	<image id="path plum r" width="58" height="53" isometric="true">
-		<layer group="59" image="3" x="0" y="21" invert="horizontal"/>
+		<layer group="59" image="3" x="0" y="22" invert="horizontal"/>
 		<layer src="Plum_Tree_Path_Rotated"/>
 	</image>
 	<image id="path palm r" width="58" height="65" isometric="true">
@@ -213,12 +213,12 @@
 		<layer src="Palm_Tree_Path_Rotated"/>
 	</image>
 	<image id="path date r" width="58" height="60" isometric="true">
-		<layer group="59" image="3" x="0" y="28" invert="horizontal"/>
+		<layer group="59" image="3" x="0" y="29" invert="horizontal"/>
 		<layer src="Date_Tree_Path_Rotated"/>
 	</image>
 	<image id="garden path r" width="58" height="32" isometric="true">
-		<layer group="59" image="3" x="0" y="0" invert="horizontal"/>
-		<layer src="Garden_Path_Rotated"/>
+		<layer group="59" image="3" x="0" y="1" invert="horizontal"/>
+		<layer src="Garden_Path_Rotated" y="1"/>
 	</image>
 	<!-- Note: Assets for 'Legionary Statue' with rotation variant -->
 	<image id="legio statue" src="Legionary_Statue" isometric="true"/>
@@ -439,8 +439,8 @@
 	<!-- Note: Asset for 'Medium Statue' rotation variant -->
 	<!-- Assets created by Areldir -->
 	<image id="Med_Statue_R" width="118" height="79" isometric="true">
-		<layer group="61 " image="1" part="footprint" x="0" y="0" invert="horizontal"/>
-		<layer src="Med_Statue_R" x="10" y="0"/>
+		<layer group="61 " image="1" part="footprint" x="0" y="1" invert="horizontal"/>
+		<layer src="Med_Statue_R" x="10" y="1"/>
 	</image>
 	<!-- Note: Assets for 'Gladiator Statue' with rotation variant -->
 	<!-- Assets created by Lizzaran -->
