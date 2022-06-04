@@ -17,6 +17,8 @@
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/point.h"
+#include "map/random.h"
+#include "map/terrain.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 
@@ -251,6 +253,36 @@ void figure_wolf_action(figure *f)
         f->image_id = image_group(GROUP_FIGURE_WOLF) + 152 + dir;
     } else {
         f->image_id = image_group(GROUP_FIGURE_WOLF) + dir + 8 * f->image_offset;
+    }
+}
+
+static int terrain_blocked_for_animals(int grid_offset)
+{
+    return map_terrain_is(grid_offset, TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
+        TERRAIN_BUILDING | TERRAIN_SHRUB );
+}
+
+void figure_animal_try_nudge_at(int building_center_tile_grid_offset, int animal_tile_offset, int building_size)
+{
+    int figure_id = map_figure_at(animal_tile_offset);
+    figure *f = figure_get(figure_id);
+    if ((f->type == FIGURE_SHEEP || f->type == FIGURE_ZEBRA) 
+        && f->action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
+        const int num_tiles = building_size * 4;
+        const int *tile_deltas = map_grid_adjacent_offsets(building_size);
+        const int random_value = map_random_get(animal_tile_offset);
+        for (int i = 0; i < num_tiles; i++) {
+            int current_tile_delta = tile_deltas[(random_value + i) % num_tiles];
+            int target_grid_offset = building_center_tile_grid_offset + current_tile_delta;
+            if (terrain_blocked_for_animals(target_grid_offset)) {
+                continue;
+            }
+            f->action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
+            f->destination_x = map_grid_offset_to_x(target_grid_offset);
+            f->destination_y = map_grid_offset_to_y(target_grid_offset);
+            f->roam_length = 0;
+            break;
+        }
     }
 }
 
