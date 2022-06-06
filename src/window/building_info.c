@@ -204,6 +204,11 @@ static int get_height_id(void)
     return 0;
 }
 
+static int has_mothball_button(void)
+{
+    return model_get_building(building_get(context.building_id)->type)->laborers;
+}
+
 static void draw_mothball_button(int x, int y)
 {
     building *b = building_get(context.building_id);
@@ -864,11 +869,8 @@ static void draw_foreground(void)
         image_buttons_draw(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
             image_buttons_advisor, 1);
     }
-    if (!context.storage_show_special_orders && !building_monument_is_unfinished_monument(b)) {
-        int workers_needed = model_get_building(building_get(context.building_id)->type)->laborers;
-        if (workers_needed) {
+    if (!context.storage_show_special_orders && !building_monument_is_unfinished_monument(b) && has_mothball_button()) {
             draw_mothball_button(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40);
-        }
     }
 }
 
@@ -963,12 +965,14 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
                 generic_button_monument_construction, 1, &focus_monument_construction_button_id);
         } else {
-            if (b->state == BUILDING_STATE_MOTHBALLED) {
-                handled |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
-                    image_button_mothball, 2, &focus_mothball_image_button_id);
-            } else {
-                handled |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
-                    image_button_mothball, 1, &focus_mothball_image_button_id);
+            if (has_mothball_button()) {
+                if (b->state == BUILDING_STATE_MOTHBALLED) {
+                    handled |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
+                        image_button_mothball, 2, &focus_mothball_image_button_id);
+                } else {
+                    handled |= image_buttons_handle_mouse(m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
+                        image_button_mothball, 1, &focus_mothball_image_button_id);
+                }
             }
         }
     }
@@ -993,7 +997,7 @@ static void get_tooltip(tooltip_context *c)
     int btype = b->type;
     if (focus_image_button_id) {
         text_id = focus_image_button_id;
-    } else if (focus_mothball_image_button_id) {
+    } else if (focus_mothball_image_button_id && has_mothball_button()) {
         if (!building_monument_is_unfinished_monument(b)) {
             if (building_get(context.building_id)->state == BUILDING_STATE_MOTHBALLED) {
                 translation = TR_TOOLTIP_BUTTON_MOTHBALL_OFF;
