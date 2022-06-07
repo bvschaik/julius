@@ -668,7 +668,7 @@
 		<layer group="46" y="1"/>
 		<layer group="191" x="34" y="31"/>
 		<layer src="Theatre_Fix" x="74" y="23"/>
-		<animation speed="5" x="60" y="31" reversible="false">
+		<animation speed="5" x="60" y="32" reversible="false">
 			<frame group="46" image="1"/>
 			<frame group="46" image="2"/>
 			<frame group="46" image="3"/>
@@ -703,7 +703,7 @@
 		<layer group="191" x="34" y="35"/>
 		<layer src="Theatre_Fix" x="74" y="27"/>
 		<layer src="Theatre_Upgrade_State" x="0" y="0"/>
-		<animation speed="5" x="60" y="34" reversible="false">
+		<animation speed="5" x="60" y="35" reversible="false">
 			<frame group="46" image="1"/>
 			<frame group="46" image="2"/>
 			<frame group="46" image="3"/>

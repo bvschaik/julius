@@ -463,4 +463,30 @@
 			<frame id="Warehouse_Flag_All_8" src="flag_all_traders_a8"/>
 		</animation>
 	</image>
+	<!-- Note: Builder worker animation frames 01-12 -->
+	<image id="Builder_01" src="Builder_01"/>
+	<image id="Builder_02" src="Builder_02"/>
+	<image id="Builder_03" src="Builder_03"/>
+	<image id="Builder_04" src="Builder_04"/>
+	<image id="Builder_05" src="Builder_05"/>
+	<image id="Builder_06" src="Builder_06"/>
+	<image id="Builder_07" src="Builder_07"/>
+	<image id="Builder_08" src="Builder_08"/>
+	<image id="Builder_09" src="Builder_09"/>
+	<image id="Builder_10" src="Builder_10"/>
+	<image id="Builder_11" src="Builder_11"/>
+	<image id="Builder_12" src="Builder_12"/>
+	<!-- Note: Chiselling worker animation frames 01-12 -->
+	<image id="Chisel_NE_01" src="Chisel_NE_01"/>
+	<image id="Chisel_NE_02" src="Chisel_NE_02"/>
+	<image id="Chisel_NE_03" src="Chisel_NE_03"/>
+	<image id="Chisel_NE_04" src="Chisel_NE_04"/>
+	<image id="Chisel_NE_05" src="Chisel_NE_05"/>
+	<image id="Chisel_NE_06" src="Chisel_NE_06"/>
+	<image id="Chisel_NE_07" src="Chisel_NE_06"/>
+	<image id="Chisel_NE_08" src="Chisel_NE_05"/>
+	<image id="Chisel_NE_09" src="Chisel_NE_04"/>
+	<image id="Chisel_NE_10" src="Chisel_NE_03"/>
+	<image id="Chisel_NE_11" src="Chisel_NE_02"/>
+	<image id="Chisel_NE_12" src="Chisel_NE_01"/>
 </assetlist>
