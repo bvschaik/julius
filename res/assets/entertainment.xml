@@ -6,21 +6,21 @@
 	<image id="Coloseum Cons 01" src="Colosseum_0%_Construction_Phase" isometric="true"/>
 	<image id="Coloseum Cons 02" width="298" height="154" isometric="true">
 		<layer group="48" image="0" part="footprint" x="0" y="-58"/>
-		<layer src="Colosseum_25%_Construction_Phase" x="0" y="1"/>
+		<layer src="Colosseum_25%_Construction_Phase" x="0" y="0"/>
 	</image>
 	<image id="Coloseum Cons 03" width="298" height="173" isometric="true">
 		<layer group="48" image="0" part="footprint" x="0" y="-39"/>
-		<layer src="Colosseum_50%_Construction_Phase" x="0" y="1"/>
+		<layer src="Colosseum_50%_Construction_Phase" x="0" y="0"/>
 	</image>
 	<image id="Coloseum Cons 04" width="298" height="186" isometric="true">
 		<layer group="48" image="0" part="footprint" x="0" y="-26"/>
-		<layer src="Colosseum_75%_Construction_Phase" x="0" y="1"/>
+		<layer src="Colosseum_75%_Construction_Phase" x="0" y="0"/>
 	</image>
 	<!-- Note: Colosseum ON state -->
 	<image id="Coloseum ON" width="298" height="213" isometric="true">
 		<layer group="48" y="1"/>
 		<layer group="48" image="14" x="70" y="34"/>
-		<layer src="Colosseum_ON_Overlay" x="70" y="34"/>
+		<layer src="Colosseum_ON_Overlay" x="70" y="33"/>
 	</image>
 	<!-- Note: Colosseum Gladiator Fight animations (Fixed vanilla ON state) -->
 	<image id="Col Glad Fight" width="298" height="213" isometric="true">
@@ -666,9 +666,9 @@
 	<!-- Note: Theatre Vanilla ON Asset: USE THIS ONE! -->
 	<image id="Theatre ON" width="118" height="98" isometric="true">
 		<layer group="46" y="1"/>
-		<layer group="191" x="34" y="31"/>
-		<layer src="Theatre_Fix" x="74" y="23"/>
-		<animation speed="5" x="60" y="32" reversible="false">
+		<layer group="191" x="34" y="30"/>
+		<layer src="Theatre_Fix" x="74" y="22"/>
+		<animation speed="5" x="60" y="31" reversible="false">
 			<frame group="46" image="1"/>
 			<frame group="46" image="2"/>
 			<frame group="46" image="3"/>
@@ -700,10 +700,10 @@
 	<!-- Note: Theatre Upgrade ON Asset: USE THIS ONE! -->
 	<image id="Theatre Upgrade ON" width="118" height="101" isometric="true">
 		<layer group="46" y="4"/>
-		<layer group="191" x="34" y="35"/>
-		<layer src="Theatre_Fix" x="74" y="27"/>
+		<layer group="191" x="34" y="34"/>
+		<layer src="Theatre_Fix" x="74" y="26"/>
 		<layer src="Theatre_Upgrade_State" x="0" y="0"/>
-		<animation speed="5" x="60" y="35" reversible="false">
+		<animation speed="5" x="60" y="34" reversible="false">
 			<frame group="46" image="1"/>
 			<frame group="46" image="2"/>
 			<frame group="46" image="3"/>

@@ -219,4 +219,8 @@
 	<image id="Panelling_Sand_02" src="Panelling_Sand_02"/>
 	<image id="Panelling_Stone_01" src="Panelling_Stone_01"/>
 	<image id="Panelling_Stone_02" src="Panelling_Stone_02"/>
+	<!-- Note: Standards for custom legions -->
+	<image id="11Legion_Elephants" src="11Legion_Elephants"/>
+	<image id="13Legion_Bulls" src="13Legion_Bulls"/>
+	<image id="14Legion_Centaurs" src="14Legion_Centaurs"/>
 </assetlist>
