@@ -459,6 +459,13 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     // by properly offseting the textures
     int src_correction = (((int) (scale * 100)) % 8) == 0 ? 1 : 0;
 
+    // On Android, when linear filtering is enabled, the src coordinates become incorrect, causing a visual glitch
+#ifdef __ANDROID__
+    if (data.city_scale > 2.0f) {
+        src_correction = 1;
+    }
+#endif
+
     SDL_Rect src_coords = { img->atlas.x_offset + src_correction, img->atlas.y_offset + src_correction,
         img->width - src_correction, img->height - src_correction };
 

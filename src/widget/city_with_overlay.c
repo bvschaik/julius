@@ -570,7 +570,7 @@ static void draw_animation(int x, int y, int grid_offset)
                     if (animation_offset > img->animation->num_sprites) {
                         animation_offset = img->animation->num_sprites;
                     }
-                    int y_offset = img->top ? img->top->original.height - FOOTPRINT_HALF_HEIGHT + 1 : 0;
+                    int y_offset = img->top ? img->top->original.height - FOOTPRINT_HALF_HEIGHT : 0;
                     image_draw(image_id + img->animation->start_offset + animation_offset,
                         x + img->animation->sprite_offset_x,
                         y + img->animation->sprite_offset_y - y_offset,

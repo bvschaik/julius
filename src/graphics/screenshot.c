@@ -279,13 +279,13 @@ static void create_full_city_screenshot(void)
     int current_height = base_height;
     while ((size = image_request_rows())) {
         int y_offset = current_height + IMAGE_HEIGHT_CHUNK > max_height ?
-            IMAGE_HEIGHT_CHUNK - (max_height - current_height) : 0;
+            IMAGE_HEIGHT_CHUNK - (max_height - current_height) - TILE_Y_SIZE: 0;
         for (int width = 0; width < city_width_pixels; width += canvas_width) {
             int image_section_width = canvas_width;
             int x_offset = 0;
             if (canvas_width + width > city_width_pixels) {
                 image_section_width = city_width_pixels - width;
-                x_offset = canvas_width - image_section_width - TILE_X_SIZE;
+                x_offset = canvas_width - image_section_width - TILE_X_SIZE * 2;
             }
             city_view_set_camera_from_pixel_position(min_width + width, current_height);
             city_without_overlay_draw(0, 0, &dummy_tile);
@@ -303,7 +303,6 @@ static void create_full_city_screenshot(void)
     city_view_set_scale(old_scale);
     graphics_reset_clip_rectangle();
     city_view_set_camera_from_pixel_position(original_camera_pixels.x, original_camera_pixels.y);
-    error = 1;
     if (!error) {
         image_finish();
         log_info("Saved full city screenshot:", filename, 0);

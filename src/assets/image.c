@@ -76,9 +76,6 @@ static void translate_reference_position(asset_image *img)
         img->img.top = referenced->img.top;
         width = referenced->img.width;
         height = referenced->img.height;
-        if (img->img.top) {
-            height += img->img.top->original.height;
-        }
     } else {
         const image *referenced = image_get(l->calculated_image_id);
         img->img.atlas.id = referenced->atlas.id;
@@ -89,9 +86,6 @@ static void translate_reference_position(asset_image *img)
         img->img.top = referenced->top;
         width = referenced->width;
         height = referenced->height;
-        if (img->img.top) {
-            height += img->img.top->original.height;
-        }
     }
     if (img->img.width > width) {
         img->img.width = width;
@@ -305,7 +299,7 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
             }
             memset(img->img.top, 0, sizeof(image));
             img->img.top->width = img->img.width;
-            img->img.top->height = img->img.height - footprint_height / 2 - 1;
+            img->img.top->height = img->img.height - footprint_height / 2;
             img->img.top->original.height = img->img.top->height;
             img->img.atlas.y_offset = img->img.top->height;
             color_t *new_data = malloc(sizeof(color_t) * (img->img.height + img->img.top->height) * img->img.width);

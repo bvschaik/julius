@@ -274,7 +274,7 @@ static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data
             img->animation->sprite_offset_y = buffer_read_i16(buf);
             buffer_skip(buf, 10);
             img->animation->can_reverse = buffer_read_i8(buf);
-            buffer_skip(buf, 1);
+            buffer_skip(buf, 1); 
         }
     } else {
         buffer_skip(buf, 18);
@@ -288,15 +288,13 @@ static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data
         draw_data->original_height = img->height;
         data.total_external_images++;
     }
-    int top_height = buffer_read_i8(buf);
-    if (top_height && img->is_isometric) {
+    int has_top = buffer_read_i8(buf);
+    if (has_top && img->is_isometric) {
         img->top = malloc(sizeof(image));
         if (!img->top) {
             log_error("Not enough memory to add animations. The game will probably crash.", 0, 0);
         }
         memset(img->top, 0, sizeof(image));
-        img->top->height = top_height;
-        img->top->width = img->width;
     }
     buffer_skip(buf, 2);
     draw_data->bitmap_id = buffer_read_u8(buf);
@@ -309,25 +307,18 @@ static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data
     buffer_skip(buf, 5);
 }
 
-static void set_image_heights(image *img, image_draw_data *draw_data)
-{
-    if (img->top) {
-        int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
-        int footprint_height = FOOTPRINT_HEIGHT * tiles;
-        img->top->height = img->height - footprint_height / 2 - 1;
-        // If we must separate the top from the footprint, we must increase the image height to account for the rows
-        // where there is both a top and a footprint part
-        img->height = footprint_height;
-        data.images_with_tops++;
-    }
-}
-
 static int prepare_images(buffer *buf, image *images, image_draw_data *draw_datas, int size, atlas_type image_type)
 {
     for (int i = 0; i < size; i++) {
-        read_index_entry(buf, &images[i], &draw_datas[i]);
-        if (!image_is_external(&images[i])) {
-            set_image_heights(&images[i], &draw_datas[i]);
+        image *img = &images[i];
+        read_index_entry(buf, img, &draw_datas[i]);
+        if (!image_is_external(&images[i]) && img->top) {
+            int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
+            int footprint_height = FOOTPRINT_HEIGHT * tiles;
+            img->top->height = img->height - footprint_height / 2;
+            img->top->width = img->width;
+            img->height = footprint_height;
+            data.images_with_tops++;
         }
     }
     if (image_type == ATLAS_MAIN) {

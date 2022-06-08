@@ -284,22 +284,15 @@ static void draw_regular_building(building_type type, int image_id, int x, int y
         image_draw_warehouse(image_id, x, y, color);
     } else if (type == BUILDING_GRANARY) {
         image_draw_isometric_footprint(image_id, x, y, color, scale);
-        const image *img = image_get(image_id + 1);
-        if (img->animation) {
-            image_draw(image_id + 1,
-                x + img->animation->sprite_offset_x - 32, y + img->animation->sprite_offset_y - 64, color, scale);
-        }
-        } else if (type == BUILDING_HOUSE_VACANT_LOT) {
+        image_draw(image_id + 1, x - 32, y - 64, color, scale);
+    } else if (type == BUILDING_HOUSE_VACANT_LOT) {
         draw_building(image_group(GROUP_BUILDING_HOUSE_VACANT_LOT), x, y, color);
     } else if (type == BUILDING_TRIUMPHAL_ARCH) {
         draw_building(image_id, x, y, color);
-        const image *img = image_get(image_id + 1);
-        if (image_id == image_group(GROUP_BUILDING_TRIUMPHAL_ARCH) && img->animation) {
-            image_draw(image_id + 1,
-                x + img->animation->sprite_offset_x + 4, y + img->animation->sprite_offset_y - 51, color, scale);
-        } else if (img->animation) {
-            image_draw(image_id + 1,
-                x + img->animation->sprite_offset_x - 33, y + img->animation->sprite_offset_y - 56, color, scale);
+        if (image_id == image_group(GROUP_BUILDING_TRIUMPHAL_ARCH)) {
+            image_draw(image_id + 1, x + 4, y - 51, color, scale);
+        } else {
+            image_draw(image_id + 1, x - 33, y - 56, color, scale);
         }
     } else if (type != BUILDING_CLEAR_LAND) {
         draw_building(image_id, x, y, color);
@@ -750,11 +743,7 @@ static void draw_bathhouse(const map_tile *tile, int x, int y)
     }
     draw_building(image_id, x, y, color);
     if (has_water) {
-        const image *img = image_get(image_id);
-        if (img->animation) {
-            image_draw(image_id - 1, x + img->animation->sprite_offset_x - 7, y + img->animation->sprite_offset_y + 6,
-                color, scale);
-        }
+        image_draw(image_id - 1, x - 7, y + 6, color, scale);
     }
     draw_building_tiles(x, y, num_tiles, blocked_tiles);
 }

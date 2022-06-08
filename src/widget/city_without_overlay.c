@@ -526,7 +526,7 @@ static void draw_animation(int x, int y, int grid_offset)
             }
             int animation_offset = building_animation_offset(b, image_id, grid_offset);
             if (b->type != BUILDING_HIPPODROME && animation_offset > 0) {
-                int y_offset = img->top ? img->top->original.height - FOOTPRINT_HALF_HEIGHT + 1 : 0;
+                int y_offset = img->top ? img->top->original.height - FOOTPRINT_HALF_HEIGHT : 0;
                 if (animation_offset > img->animation->num_sprites) {
                     animation_offset = img->animation->num_sprites;
                 }
