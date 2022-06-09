@@ -82,19 +82,19 @@
 	</image>
 	<!-- Note: Ceres Complex Module Extra Animation (Priests collect/dristribute food)(USE THIS ONE!!) -->
 	<image src="Ceres_Temple_Complex_Module_01" id="Ceres Module 1 Crop"/>
-	<image src="Ceres_Temple_Complex_Module_02">
+	<image>
 		<layer src="Ceres_Temple_Complex_Module_01"/>
 		<layer src="Ceres_Temple_Complex_Module_02" x="6" y="23"/>
 	</image>
-	<image src="Ceres_Temple_Complex_Module_03">
+	<image>
 		<layer src="Ceres_Temple_Complex_Module_01"/>
 		<layer src="Ceres_Temple_Complex_Module_03" x="5" y="17"/>
 	</image>
-	<image src="Ceres_Temple_Complex_Module_04">
+	<image>
 		<layer src="Ceres_Temple_Complex_Module_01"/>
 		<layer src="Ceres_Temple_Complex_Module_04" x="5" y="5"/>
 	</image>
-	<image src="Ceres_Temple_Complex_Module_05">
+	<image>
 		<layer src="Ceres_Temple_Complex_Module_01"/>
 		<layer src="Ceres_Temple_Complex_Module_05" x="5" y="5"/>
 	</image>
