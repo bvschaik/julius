@@ -784,7 +784,7 @@
 	</image>
 	<!-- Note: Fort climate variants -->
 	<image id="Fort_Main_Central" isometric="true">
-		<layer group="66" image="0" x="0" y="1"/>
+		<layer group="66" image="0" x="0" y="0"/>
 		<layer src="Fort_Main_Layer_Central" x="0" y="0"/>
 	</image>
 	<image id="Fort_Main_South" isometric="true">
