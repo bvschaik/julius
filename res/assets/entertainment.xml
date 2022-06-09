@@ -853,87 +853,87 @@
 	<!-- Note: Theatre ON reference assets (DO NOT USE!) -->
 	<image id="Theatre_UP_ON_01" width="63" height="34">
 		<layer group="this" image="Theatre_ON_01" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_02" width="63" height="34">
 		<layer group="this" image="Theatre_ON_02" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_03" width="63" height="34">
 		<layer group="this" image="Theatre_ON_03" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_04" width="63" height="34">
 		<layer group="this" image="Theatre_ON_04" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_05" width="63" height="34">
 		<layer group="this" image="Theatre_ON_05" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_06" width="63" height="34">
 		<layer group="this" image="Theatre_ON_06" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_07" width="63" height="34">
 		<layer group="this" image="Theatre_ON_07" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_08" width="63" height="34">
 		<layer group="this" image="Theatre_ON_08" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_09" width="63" height="34">
 		<layer group="this" image="Theatre_ON_09" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_10" width="63" height="34">
 		<layer group="this" image="Theatre_ON_10" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_11" width="63" height="34">
 		<layer group="this" image="Theatre_ON_11" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_12" width="63" height="34">
 		<layer group="this" image="Theatre_ON_12" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_13" width="63" height="34">
 		<layer group="this" image="Theatre_ON_13" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_14" width="63" height="34">
 		<layer group="this" image="Theatre_ON_14" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_15" width="63" height="34">
 		<layer group="this" image="Theatre_ON_15" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_16" width="63" height="34">
 		<layer group="this" image="Theatre_ON_16" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_17" width="63" height="34">
 		<layer group="this" image="Theatre_ON_17" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_18" width="63" height="34">
 		<layer group="this" image="Theatre_ON_18" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_19" width="63" height="34">
 		<layer group="this" image="Theatre_ON_19" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_20" width="63" height="34">
 		<layer group="this" image="Theatre_ON_20" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<image id="Theatre_UP_ON_21" width="63" height="34">
 		<layer group="this" image="Theatre_ON_21" x="0" y="0"/>
-		<layer src="Theatre_Upgrade_State" x="-29" y="-31"/>
+		<layer src="Theatre_Upgrade_State" x="-34" y="-34"/>
 	</image>
 	<!-- Note: Theatre Upgrade ON Asset: USE THIS ONE! -->
 	<image id="Theatre Upgrade ON" width="118" height="101" isometric="true">
