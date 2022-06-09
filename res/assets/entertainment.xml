@@ -711,33 +711,138 @@
 		<layer group="88" image="95"/>
 		<layer src="barkeep_n_12"/>
 	</image>
+	<!-- Note: Theatre ON reference assets (DO NOT USE!) -->
+	<image id="Theatre_ON_01" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="1" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_02" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="2" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_03" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="3" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_04" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="4" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_05" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="5" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_06" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="6" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_07" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="7" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_08" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="8" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_09" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="9" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_10" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="10" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_11" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="11" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_12" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="12" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_13" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="13" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_14" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="14" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_15" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="15" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_16" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="16" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_17" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="17" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_18" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="18" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_19" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="19" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_20" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="20" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
+	<image id="Theatre_ON_21" width="63" height="34">
+		<layer group="191" x="0" y="0"/>
+		<layer group="46" image="21" x="26" y="1"/>
+		<layer src="Theatre_Fix" x="40" y="-8"/>
+	</image>
 	<!-- Note: Theatre Vanilla ON Asset: USE THIS ONE! -->
 	<image id="Theatre ON" width="118" height="98" isometric="true">
-		<layer group="46" y="1"/>
-		<layer group="191" x="34" y="30"/>
-		<layer src="Theatre_Fix" x="74" y="22"/>
-		<animation speed="5" x="60" y="30" reversible="false">
-			<frame group="46" image="1"/>
-			<frame group="46" image="2"/>
-			<frame group="46" image="3"/>
-			<frame group="46" image="4"/>
-			<frame group="46" image="5"/>
-			<frame group="46" image="6"/>
-			<frame group="46" image="7"/>
-			<frame group="46" image="8"/>
-			<frame group="46" image="9"/>
-			<frame group="46" image="10"/>
-			<frame group="46" image="11"/>
-			<frame group="46" image="12"/>
-			<frame group="46" image="13"/>
-			<frame group="46" image="14"/>
-			<frame group="46" image="15"/>
-			<frame group="46" image="16"/>
-			<frame group="46" image="17"/>
-			<frame group="46" image="18"/>
-			<frame group="46" image="19"/>
-			<frame group="46" image="20"/>
-			<frame group="46" image="21"/>
+		<layer group="46" y="0"/>
+		<layer src="Theatre_Fix" x="74" y="23"/>
+		<animation speed="5" x="34" y="31" reversible="false">
+			<frame group="this" image="Theatre_ON_01"/>
+			<frame group="this" image="Theatre_ON_02"/>
+			<frame group="this" image="Theatre_ON_03"/>
+			<frame group="this" image="Theatre_ON_04"/>
+			<frame group="this" image="Theatre_ON_05"/>
+			<frame group="this" image="Theatre_ON_06"/>
+			<frame group="this" image="Theatre_ON_07"/>
+			<frame group="this" image="Theatre_ON_08"/>
+			<frame group="this" image="Theatre_ON_09"/>
+			<frame group="this" image="Theatre_ON_10"/>
+			<frame group="this" image="Theatre_ON_11"/>
+			<frame group="this" image="Theatre_ON_12"/>
+			<frame group="this" image="Theatre_ON_13"/>
+			<frame group="this" image="Theatre_ON_14"/>
+			<frame group="this" image="Theatre_ON_15"/>
+			<frame group="this" image="Theatre_ON_16"/>
+			<frame group="this" image="Theatre_ON_17"/>
+			<frame group="this" image="Theatre_ON_18"/>
+			<frame group="this" image="Theatre_ON_19"/>
+			<frame group="this" image="Theatre_ON_20"/>
+			<frame group="this" image="Theatre_ON_21"/>
 		</animation>
 	</image>
 	<!-- Note: Theatre Upgrade OFF Asset: USE THIS ONE! -->
@@ -745,34 +850,118 @@
 		<layer group="46" y="3"/>
 		<layer src="Theatre_Upgrade_State"/>
 	</image>
+	<!-- Note: Theatre ON reference assets (DO NOT USE!) -->
+	<image id="Theatre_UP_ON_01" width="63" height="34">
+		<layer group="this" image="Theatre_ON_01" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_02" width="63" height="34">
+		<layer group="this" image="Theatre_ON_02" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_03" width="63" height="34">
+		<layer group="this" image="Theatre_ON_03" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_04" width="63" height="34">
+		<layer group="this" image="Theatre_ON_04" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_05" width="63" height="34">
+		<layer group="this" image="Theatre_ON_05" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_06" width="63" height="34">
+		<layer group="this" image="Theatre_ON_06" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_07" width="63" height="34">
+		<layer group="this" image="Theatre_ON_07" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_08" width="63" height="34">
+		<layer group="this" image="Theatre_ON_08" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_09" width="63" height="34">
+		<layer group="this" image="Theatre_ON_09" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_10" width="63" height="34">
+		<layer group="this" image="Theatre_ON_10" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_11" width="63" height="34">
+		<layer group="this" image="Theatre_ON_11" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_12" width="63" height="34">
+		<layer group="this" image="Theatre_ON_12" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_13" width="63" height="34">
+		<layer group="this" image="Theatre_ON_13" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_14" width="63" height="34">
+		<layer group="this" image="Theatre_ON_14" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_15" width="63" height="34">
+		<layer group="this" image="Theatre_ON_15" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_16" width="63" height="34">
+		<layer group="this" image="Theatre_ON_16" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_17" width="63" height="34">
+		<layer group="this" image="Theatre_ON_17" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_18" width="63" height="34">
+		<layer group="this" image="Theatre_ON_18" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_19" width="63" height="34">
+		<layer group="this" image="Theatre_ON_19" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_20" width="63" height="34">
+		<layer group="this" image="Theatre_ON_20" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
+	<image id="Theatre_UP_ON_21" width="63" height="34">
+		<layer group="this" image="Theatre_ON_21" x="0" y="0"/>
+		<layer src="Theatre_Fix" x="-29" y="-31"/>
+	</image>
 	<!-- Note: Theatre Upgrade ON Asset: USE THIS ONE! -->
 	<image id="Theatre Upgrade ON" width="118" height="101" isometric="true">
 		<layer group="46" y="3"/>
-		<layer group="191" x="34" y="34"/>
 		<layer src="Theatre_Fix" x="74" y="26"/>
 		<layer src="Theatre_Upgrade_State" x="0" y="0"/>
-		<animation speed="5" x="60" y="34" reversible="false">
-			<frame group="46" image="1"/>
-			<frame group="46" image="2"/>
-			<frame group="46" image="3"/>
-			<frame group="46" image="4"/>
-			<frame group="46" image="5"/>
-			<frame group="46" image="6"/>
-			<frame group="46" image="7"/>
-			<frame group="46" image="8"/>
-			<frame group="46" image="9"/>
-			<frame group="46" image="10"/>
-			<frame group="46" image="11"/>
-			<frame group="46" image="12"/>
-			<frame group="46" image="13"/>
-			<frame group="46" image="14"/>
-			<frame group="46" image="15"/>
-			<frame group="46" image="16"/>
-			<frame group="46" image="17"/>
-			<frame group="46" image="18"/>
-			<frame group="46" image="19"/>
-			<frame group="46" image="20"/>
-			<frame group="46" image="21"/>
+		<animation speed="5" x="60" y="35" reversible="false">
+			<frame group="this" image="Theatre_UP_ON_01"/>
+			<frame group="this" image="Theatre_UP_ON_02"/>
+			<frame group="this" image="Theatre_UP_ON_03"/>
+			<frame group="this" image="Theatre_UP_ON_04"/>
+			<frame group="this" image="Theatre_UP_ON_05"/>
+			<frame group="this" image="Theatre_UP_ON_06"/>
+			<frame group="this" image="Theatre_UP_ON_07"/>
+			<frame group="this" image="Theatre_UP_ON_08"/>
+			<frame group="this" image="Theatre_UP_ON_09"/>
+			<frame group="this" image="Theatre_UP_ON_10"/>
+			<frame group="this" image="Theatre_UP_ON_11"/>
+			<frame group="this" image="Theatre_UP_ON_12"/>
+			<frame group="this" image="Theatre_UP_ON_13"/>
+			<frame group="this" image="Theatre_UP_ON_14"/>
+			<frame group="this" image="Theatre_UP_ON_15"/>
+			<frame group="this" image="Theatre_UP_ON_16"/>
+			<frame group="this" image="Theatre_UP_ON_17"/>
+			<frame group="this" image="Theatre_UP_ON_18"/>
+			<frame group="this" image="Theatre_UP_ON_19"/>
+			<frame group="this" image="Theatre_UP_ON_20"/>
+			<frame group="this" image="Theatre_UP_ON_21"/>
 		</animation>
 	</image>
 </assetlist>
