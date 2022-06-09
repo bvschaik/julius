@@ -94,11 +94,11 @@
 	<image src="Imperial_Games_Overlay"/>
 	<image src="Executions_Overlay"/>
 	<!-- Note: Circus 0% construction phase -->
-	<image id="Circus NESW 01" isometric="true">
+	<image id="Circus NESW 01" width="298" height="159" isometric="true">
 		<layer group="this" image="Cons_Base_5x5" x="0" y="9"/>
 		<layer src="Circus_Construction_01_Back_Part" x="0" y="0"/>
 	</image>
-	<image id="Circus NWSE 01" isometric="true">
+	<image id="Circus NWSE 01" width="298" height="159" isometric="true">
 		<layer group="this" image="Cons_Base_5x5" x="0" y="9"/>
 		<layer src="Circus_Construction_01_R_Back_Part" x="0" y="0"/>
 	</image>
