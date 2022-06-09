@@ -82,10 +82,22 @@
 	</image>
 	<!-- Note: Ceres Complex Module Extra Animation (Priests collect/dristribute food)(USE THIS ONE!!) -->
 	<image src="Ceres_Temple_Complex_Module_01" id="Ceres Module 1 Crop"/>
-	<image src="Ceres_Temple_Complex_Module_02"/>
-	<image src="Ceres_Temple_Complex_Module_03"/>
-	<image src="Ceres_Temple_Complex_Module_04"/>
-	<image src="Ceres_Temple_Complex_Module_05"/>
+	<image src="Ceres_Temple_Complex_Module_02">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Temple_Complex_Module_02" x="6" y="23"/>
+	</image>
+	<image src="Ceres_Temple_Complex_Module_03">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Temple_Complex_Module_03" x="5" y="17"/>
+	</image>
+	<image src="Ceres_Temple_Complex_Module_04">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Temple_Complex_Module_04" x="5" y="5"/>
+	</image>
+	<image src="Ceres_Temple_Complex_Module_05">
+		<layer src="Ceres_Temple_Complex_Module_01"/>
+		<layer src="Ceres_Temple_Complex_Module_05" x="5" y="5"/>
+	</image>
 	<!-- Note: Ceres Complex Module2 Animation Reference Assets (DO NOT USE!!) -->
 	<image id="Ceres_Temple_Complex_Module2_01" width="146" height="95">
 		<layer src="Ceres_Temple_Complex_Module2_Base" x="0" y="0"/>
@@ -418,16 +430,29 @@
 		</animation>
 	</image>
 	<!-- Note: Neptune Complex Module2 Extra Animation (Fountain ON)(USE THIS ONE!!) -->
-	<image src="Neptune_Temple_Complex_Module_01" id="Neptune Module 2 Fountain"/>
-	<image src="Neptune_Temple_Complex_Module_02"/>
-	<image src="Neptune_Temple_Complex_Module_03"/>
-	<image src="Neptune_Temple_Complex_Module_04"/>
-	<image src="Neptune_Temple_Complex_Module_05"/>
+	<image src="Neptune_Temple_Complex_Module_01" id="Neptune Module 2 Fountain">
+		<layer src="Neptune_Temple_Complex_Module_OFF"/>
+		<layer src="Neptune_Temple_Complex_Module_01" x="39" y="47"/>
+	</image>
+	<image src="Neptune_Temple_Complex_Module_02">
+		<layer src="Neptune_Temple_Complex_Module_OFF"/>
+		<layer src="Neptune_Temple_Complex_Module_02" x="39" y="47"/>
+	</image>
+	<image src="Neptune_Temple_Complex_Module_03">
+		<layer src="Neptune_Temple_Complex_Module_OFF"/>
+		<layer src="Neptune_Temple_Complex_Module_03" x="39" y="47"/>
+	</image>
+	<image src="Neptune_Temple_Complex_Module_04">
+		<layer src="Neptune_Temple_Complex_Module_OFF"/>
+		<layer src="Neptune_Temple_Complex_Module_04" x="39" y="47"/>
+	</image>
+	<image src="Neptune_Temple_Complex_Module_05">
+		<layer src="Neptune_Temple_Complex_Module_OFF"/>
+		<layer src="Neptune_Temple_Complex_Module_05" x="39" y="47"/>
+	</image>
 	<!-- Note: Neptune Complex Module2 Animation OFF (Fountain OFF) -->
 	<image id="Neptune Complex Off" width="418" height="231" isometric="true">
-		<layer src="Neptune_Temple_Complex_Base_Layer"/>
-		<layer group="this" image="Neptune LTemple Off" x="150" y="2"/>
-		<layer src="Ceres_Temple_Complex_Top_Layer" x="189" y="84" invert="horizontal"/>
+		<layer group="this" image="Neptune Complex Off" x="0" y="0"/>
 		<layer src="Neptune_Temple_Complex_Module_OFF" x="98" y="27"/>
 	</image>
 	<!-- Note: Pantheon Reference Assets DO NOT USE -->
@@ -443,17 +468,20 @@
 	<image id="Pantheon Const 02" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
 		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
-		<layer src="Pantheon_Construction_02" x="150" y="53"/>
+		<layer src="Pantheon_Construction_Base" x="150" y="55"/>
+		<layer src="Pantheon_Construction_02" x="178" y="53"/>
 	</image>
 	<image id="Pantheon Const 03" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
 		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
-		<layer src="Pantheon_Construction_03" x="150" y="27"/>
+		<layer src="Pantheon_Construction_Base" x="150" y="55"/>
+		<layer src="Pantheon_Construction_03" x="169" y="27"/>
 	</image>
 	<image id="Pantheon Const 04" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
 		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
-		<layer src="Pantheon_Construction_04" x="150" y="14"/>
+		<layer src="Pantheon_Construction_Base" x="150" y="55"/>
+		<layer src="Pantheon_Construction_04" x="172" y="14"/>
 	</image>
 	<image id="Pantheon Const 05" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
