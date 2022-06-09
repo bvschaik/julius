@@ -430,25 +430,29 @@
 		</animation>
 	</image>
 	<!-- Note: Neptune Complex Module2 Extra Animation (Fountain ON)(USE THIS ONE!!) -->
-	<image src="Neptune_Temple_Complex_Module_01" id="Neptune Module 2 Fountain">
+	<image id="Neptune Module 2 Fountain">
 		<layer src="Neptune_Temple_Complex_Module_OFF"/>
 		<layer src="Neptune_Temple_Complex_Module_01" x="39" y="47"/>
 	</image>
-	<image src="Neptune_Temple_Complex_Module_02">
+	<image>
 		<layer src="Neptune_Temple_Complex_Module_OFF"/>
-		<layer src="Neptune_Temple_Complex_Module_02" x="39" y="47"/>
+		<layer src="Neptune_Temple_Complex_Module_01" x="39" y="47"/>
+		<layer src="Neptune_Temple_Complex_Module_02" x="50" y="47"/>
 	</image>
-	<image src="Neptune_Temple_Complex_Module_03">
+	<image>
 		<layer src="Neptune_Temple_Complex_Module_OFF"/>
-		<layer src="Neptune_Temple_Complex_Module_03" x="39" y="47"/>
+		<layer src="Neptune_Temple_Complex_Module_01" x="39" y="47"/>
+		<layer src="Neptune_Temple_Complex_Module_03" x="50" y="47"/>
 	</image>
-	<image src="Neptune_Temple_Complex_Module_04">
+	<image>
 		<layer src="Neptune_Temple_Complex_Module_OFF"/>
-		<layer src="Neptune_Temple_Complex_Module_04" x="39" y="47"/>
+		<layer src="Neptune_Temple_Complex_Module_01" x="39" y="47"/>
+		<layer src="Neptune_Temple_Complex_Module_04" x="50" y="47"/>
 	</image>
-	<image src="Neptune_Temple_Complex_Module_05">
+	<image>
 		<layer src="Neptune_Temple_Complex_Module_OFF"/>
-		<layer src="Neptune_Temple_Complex_Module_05" x="39" y="47"/>
+		<layer src="Neptune_Temple_Complex_Module_01" x="39" y="47"/>
+		<layer src="Neptune_Temple_Complex_Module_05" x="50" y="47"/>
 	</image>
 	<!-- Note: Neptune Complex Module2 Animation OFF (Fountain OFF) -->
 	<image id="Neptune Complex Off" width="418" height="231" isometric="true">
