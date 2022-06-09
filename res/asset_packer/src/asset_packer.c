@@ -237,20 +237,20 @@ static void populate_asset_rects(image_packer *packer)
         int width, height;
         asset->rect = &packer->rects[asset->id];
         if (!png_get_image_size(asset->path, &width, &height)) {
-            return;
+            continue;
         }
         if (!width || !height) {
-            return;
+            continue;
         }
         asset->pixels = malloc(sizeof(color_t) * width * height);
         if (!asset->pixels) {
             log_error("Out of memory.", 0, 0);
-            return;
+            continue;
         }
         if (!png_read(asset->path, asset->pixels, 0, 0, width, height, 0, 0, width, 0)) {
             free(asset->pixels);
             asset->pixels = 0;
-            return;
+            continue;
         }
         asset->rect->input.width = width;
         asset->rect->input.height = height;
