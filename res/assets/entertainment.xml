@@ -5,7 +5,7 @@
 	<!-- Note: Construction base reference asset (DO NOT USE!) -->
 	<image id="Cons_Base_5x5" src="Construction_Base_5x5" isometric="true"/>
 	<!-- Note: Colosseum 0%, 25%, 50% and 75% construction phases respectively -->
-	<image id="Coloseum Cons 01" src="Colosseum_0%_Construction_Phase" width="298" height="160" isometric="true">
+	<image id="Coloseum Cons 01" width="298" height="160" isometric="true">
 		<layer group="this" image="Cons_Base_5x5" x="0" y="10"/>
 		<layer src="Colosseum_Construction_Phase_01" x="0" y="0"/>
 	</image>
