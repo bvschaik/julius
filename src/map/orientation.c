@@ -249,7 +249,7 @@ void map_orientation_update_buildings(void)
 {
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
-        if (b->state == BUILDING_STATE_UNUSED) {
+        if (b->state == BUILDING_STATE_UNUSED || b->state == BUILDING_STATE_DELETED_BY_GAME) {
             continue;
         }
         switch (b->type) {
