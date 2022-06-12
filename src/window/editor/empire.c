@@ -335,6 +335,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY) {
                     data.selected_city = empire_city_get_for_object(selected_object - 1);
                 }
+                if (input_go_back_requested(m, h)) {
+                    empire_clear_selected_object();
+                    window_invalidate();
+                }
             } else if (input_go_back_requested(m, h)) {
                 window_editor_map_show();
             }

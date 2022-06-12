@@ -258,31 +258,23 @@ static void draw_city_info(const empire_object *object)
 
 static void draw_roman_army_info(const empire_object *object)
 {
-    if (city_military_distant_battle_roman_army_is_traveling()) {
-        if (city_military_distant_battle_roman_months_traveled() == object->distant_battle_travel_months) {
-            int x_offset = (data.x_min + data.x_max - 240) / 2;
-            int y_offset = data.y_max - 68;
-            int text_id;
-            if (city_military_distant_battle_roman_army_is_traveling_forth()) {
-                text_id = 15;
-            } else {
-                text_id = 16;
-            }
-            lang_text_draw_multiline(47, text_id, x_offset, y_offset, 240, FONT_NORMAL_GREEN);
-        }
+    int x_offset = (data.x_min + data.x_max - 240) / 2;
+    int y_offset = data.y_max - 68;
+    int text_id;
+    if (city_military_distant_battle_roman_army_is_traveling_forth()) {
+        text_id = 15;
+    } else {
+        text_id = 16;
     }
+    lang_text_draw_multiline(47, text_id, x_offset, y_offset, 240, FONT_NORMAL_GREEN);
 }
 
 static void draw_enemy_army_info(const empire_object *object)
 {
-    if (city_military_months_until_distant_battle() > 0) {
-        if (city_military_distant_battle_enemy_months_traveled() == object->distant_battle_travel_months) {
-            lang_text_draw_multiline(47, 14,
-                (data.x_min + data.x_max - 240) / 2,
-                data.y_max - 68,
-                240, FONT_NORMAL_GREEN);
-        }
-    }
+    lang_text_draw_multiline(47, 14,
+        (data.x_min + data.x_max - 240) / 2,
+        data.y_max - 68,
+        240, FONT_NORMAL_GREEN);
 }
 
 static void draw_object_info(void)
@@ -295,11 +287,21 @@ static void draw_object_info(void)
                 draw_city_info(object);
                 break;
             case EMPIRE_OBJECT_ROMAN_ARMY:
-                draw_roman_army_info(object);
-                break;
+                if (city_military_distant_battle_roman_army_is_traveling()) {
+                    if (city_military_distant_battle_roman_months_traveled() == object->distant_battle_travel_months) {
+                        draw_roman_army_info(object);
+                        break;
+                    }
+                }
             case EMPIRE_OBJECT_ENEMY_ARMY:
-                draw_enemy_army_info(object);
-                break;
+                if (city_military_months_until_distant_battle() > 0) {
+                    if (city_military_distant_battle_enemy_months_traveled() == object->distant_battle_travel_months) {
+                        draw_enemy_army_info(object);
+                        break;
+                    }
+                }
+            default:
+                lang_text_draw_centered(47, 8, data.x_min, data.y_max - 48, data.x_max - data.x_min, FONT_NORMAL_GREEN);
         }
     } else {
         lang_text_draw_centered(47, 8, data.x_min, data.y_max - 48, data.x_max - data.x_min, FONT_NORMAL_GREEN);
@@ -538,9 +540,32 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 }
             }
         }
+        // allow de-selection only for objects that are currently selected/drawn, otherwise exit empire map
         if (input_go_back_requested(m, h)) {
-            empire_clear_selected_object();
-            window_invalidate();
+            switch (obj->type) {
+                case EMPIRE_OBJECT_CITY:
+                    empire_clear_selected_object();
+                    window_invalidate();
+                    break;
+                case EMPIRE_OBJECT_ROMAN_ARMY:
+                    if (city_military_distant_battle_roman_army_is_traveling()) {
+                        if (city_military_distant_battle_roman_months_traveled() == obj->distant_battle_travel_months) {
+                            empire_clear_selected_object();
+                            window_invalidate();
+                            break;
+                        }
+                    }
+                case EMPIRE_OBJECT_ENEMY_ARMY:
+                    if (city_military_months_until_distant_battle() > 0) {
+                        if (city_military_distant_battle_enemy_months_traveled() == obj->distant_battle_travel_months) {
+                            empire_clear_selected_object();
+                            window_invalidate();
+                            break;
+                        }
+                    }
+                default:
+                    window_city_show();
+            }
         }
     } else {
         if (input_go_back_requested(m, h)) {
