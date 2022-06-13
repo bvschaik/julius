@@ -76,4 +76,6 @@ void game_time_save_state(buffer *buf);
  */
 void game_time_load_state(buffer *buf);
 
+void game_time_load_basic_info(buffer *buf, int *month, int *year);
+
 #endif // GAME_TIME_H

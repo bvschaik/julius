@@ -14,6 +14,12 @@ int map_building_at(int grid_offset)
     return map_grid_is_valid_offset(grid_offset) ? buildings_grid.items[grid_offset] : 0;
 }
 
+int map_building_from_buffer(buffer *buildings, int grid_offset)
+{
+    buffer_set(buildings, grid_offset * sizeof(uint16_t));
+    return buffer_read_u16(buildings);
+}
+
 void map_building_set(int grid_offset, int building_id)
 {
     buildings_grid.items[grid_offset] = building_id;

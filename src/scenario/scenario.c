@@ -440,6 +440,86 @@ void scenario_load_state(buffer *buf)
     scenario.is_saved = 1;
 }
 
+void scenario_description_from_buffer(buffer *buf, uint8_t *description)
+{
+    buffer_set(buf, 404);
+    buffer_read_raw(buf, description, MAX_BRIEF_DESCRIPTION);
+}
+
+int scenario_climate_from_buffer(buffer *buf)
+{
+    buffer_set(buf, 1704);
+    return buffer_read_u8(buf);
+}
+
+int scenario_invasions_from_buffer(buffer *buf)
+{
+    buffer_set(buf, 214);
+    int num_invasions = 0;
+    for (int i = 0; i < MAX_INVASIONS; i++) {
+        if (buffer_read_i16(buf)) {
+            num_invasions++;
+        }
+    }
+    return num_invasions;
+}
+
+int scenario_image_id_from_buffer(buffer *buf)
+{
+    buffer_set(buf, 1010);
+    return buffer_read_i16(buf);
+}
+
+int scenario_rank_from_buffer(buffer *buf)
+{
+    buffer_set(buf, 1014);
+    return buffer_read_i16(buf);
+
+}
+
+void scenario_open_play_info_from_buffer(buffer *buf, int *is_open_play, int *open_play_id)
+{
+    buffer_set(buf, 1012);
+    *is_open_play = buffer_read_i16(buf);
+    buffer_set(buf, 1718);
+    *open_play_id = buffer_read_u8(buf);
+}
+
+int scenario_start_year_from_buffer(buffer *buf)
+{
+    buffer_set(buf, 0);
+    return buffer_read_i16(buf);
+}
+
+void scenario_objectives_from_buffer(buffer *buf, scenario_win_criteria *win_criteria)
+{
+    buffer_set(buf, 1572);
+    win_criteria->culture.goal = buffer_read_i32(buf);
+    win_criteria->prosperity.goal = buffer_read_i32(buf);
+    win_criteria->peace.goal = buffer_read_i32(buf);
+    win_criteria->favor.goal = buffer_read_i32(buf);
+    win_criteria->culture.enabled = buffer_read_u8(buf);
+    win_criteria->prosperity.enabled = buffer_read_u8(buf);
+    win_criteria->peace.enabled = buffer_read_u8(buf);
+    win_criteria->favor.enabled = buffer_read_u8(buf);
+    win_criteria->time_limit.enabled = buffer_read_i32(buf);
+    win_criteria->time_limit.years = buffer_read_i32(buf);
+    win_criteria->survival_time.enabled = buffer_read_i32(buf);
+    win_criteria->survival_time.years = buffer_read_i32(buf);
+    buffer_skip(buf, 8);
+    win_criteria->population.enabled = buffer_read_i32(buf);
+    win_criteria->population.goal = buffer_read_i32(buf);
+}
+
+void scenario_map_data_from_buffer(buffer *buf, int *width, int *height, int *grid_start, int *grid_border_size)
+{
+    buffer_set(buf, 388);
+    *width = buffer_read_i32(buf);
+    *height = buffer_read_i32(buf);
+    *grid_start = buffer_read_i32(buf);
+    *grid_border_size = buffer_read_i32(buf);
+}
+
 void scenario_settings_init(void)
 {
     scenario.settings.campaign_mission = 0;

@@ -47,6 +47,7 @@
 #include "scenario/map.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
+#include "widget/minimap.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -98,6 +99,7 @@ static struct {
     int num_pieces;
     file_piece pieces[10];
     scenario_state state;
+    char last_loaded_scenario[FILE_NAME_MAX];
 } scenario_data;
 
 typedef struct {
@@ -187,11 +189,47 @@ typedef struct {
     buffer *deliveries;
 } savegame_state;
 
+typedef struct {
+    struct {
+        int burning_totals;
+        int image_grid;
+        int terrain_grid;
+        int figures;
+        int route_figures;
+        int route_paths;
+        int formations;
+        int buildings;
+        int building_list_burning;
+        int building_list_small;
+        int building_list_large;
+        int building_storages;
+        int monument_deliveries;
+    } piece_sizes;
+    struct {
+        int culture1;
+        int culture2;
+        int culture3;
+        int military;
+        int industry;
+        int support;
+    } building_counts;
+    int has_image_grid;
+    int has_monument_deliveries;
+} savegame_version_data;
+
 static struct {
     int num_pieces;
     file_piece pieces[100];
     savegame_state state;
 } savegame_data;
+
+static struct {
+    minimap_functions functions;
+    int version;
+    int city_width;
+    int city_height;
+    scenario_climate climate;
+} minimap_data;
 
 static void init_file_piece(file_piece *piece, int size, int compressed)
 {
@@ -229,12 +267,20 @@ static void clear_savegame_pieces(void)
     savegame_data.num_pieces = 0;
 }
 
+static int reset_scenario_pieces(void)
+{
+    if (scenario_data.num_pieces == 0) {
+        return 0;
+    }
+    for (int i = 0; i < scenario_data.num_pieces; i++) {
+        buffer_reset(&scenario_data.pieces[i].buf);
+    }
+    return 1;
+}
+
 static void init_scenario_data(void)
 {
-    if (scenario_data.num_pieces > 0) {
-        for (int i = 0; i < scenario_data.num_pieces; i++) {
-            buffer_reset(&scenario_data.pieces[i].buf);
-        }
+    if (reset_scenario_pieces()) {
         return;
     }
     scenario_state *state = &scenario_data.state;
@@ -250,54 +296,64 @@ static void init_scenario_data(void)
     state->end_marker = create_scenario_piece(4);
 }
 
-static void init_savegame_data(int version)
+static void get_version_data(savegame_version_data *version_data, int version)
 {
-    clear_savegame_pieces();
-
     int multiplier = 1;
     int count_multiplier = 1;
-    int burning_totals_size = 8;
+    version_data->piece_sizes.burning_totals = 8;
     if (version > SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION) {
         multiplier = 5;
     }
     if (version > SAVE_GAME_LAST_STATIC_VERSION) {
         multiplier = PIECE_SIZE_DYNAMIC;
-        burning_totals_size = 4;
+        version_data->piece_sizes.burning_totals = 4;
     }
 
     if (version > SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION) {
         count_multiplier = PIECE_SIZE_DYNAMIC;
     }
 
-    int image_grid_size = 52488 * (version > SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION ? 2 : 1);
-    int terrain_grid_size = 52488 * (version > SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION ? 2 : 1);
-    int figures_size = 128000 * multiplier;
-    int route_figures_size = 1200 * multiplier;
-    int route_paths_size = 300000 * multiplier;
-    int formations_size = 6400 * multiplier;
-    int buildings_size = 256000 * multiplier;
-    int building_list_burning_size = 1000 * multiplier;
-    int building_list_small_size = 1000 * multiplier;
-    int building_list_large_size = 4000 * multiplier;
-    int building_storages_size = 6400 * multiplier;
+    version_data->piece_sizes.image_grid = 52488 * (version > SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION ? 2 : 1);
+    version_data->piece_sizes.terrain_grid = 52488 * (version > SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION ? 2 : 1);
+    version_data->piece_sizes.figures = 128000 * multiplier;
+    version_data->piece_sizes.route_figures = 1200 * multiplier;
+    version_data->piece_sizes.route_paths = 300000 * multiplier;
+    version_data->piece_sizes.formations = 6400 * multiplier;
+    version_data->piece_sizes.buildings = 256000 * multiplier;
+    version_data->piece_sizes.building_list_burning = 1000 * multiplier;
+    version_data->piece_sizes.building_list_small = 1000 * multiplier;
+    version_data->piece_sizes.building_list_large = 4000 * multiplier;
+    version_data->piece_sizes.building_storages = 6400 * multiplier;
+    version_data->piece_sizes.monument_deliveries = version > SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION ?
+        PIECE_SIZE_DYNAMIC : 3200;
 
-    int building_count_culture1 = 132 * count_multiplier;
-    int building_count_culture2 = 32 * count_multiplier;
-    int building_count_culture3 = 40 * count_multiplier;
-    int building_count_military = 16 * count_multiplier;
-    int building_count_industry = 128 * count_multiplier;
-    int building_count_support = 24 * count_multiplier;
+    version_data->building_counts.culture1 = 132 * count_multiplier;
+    version_data->building_counts.culture2 = 32 * count_multiplier;
+    version_data->building_counts.culture3 = 40 * count_multiplier;
+    version_data->building_counts.military = 16 * count_multiplier;
+    version_data->building_counts.industry = 128 * count_multiplier;
+    version_data->building_counts.support = 24 * count_multiplier;
 
+    version_data->has_image_grid = version <= SAVE_GAME_LAST_STORED_IMAGE_IDS;
+    version_data->has_monument_deliveries = version > SAVE_GAME_LAST_NO_DELIVERIES_VERSION;
+}
+
+static void init_savegame_data(int version)
+{
+    clear_savegame_pieces();
+
+    savegame_version_data version_data;
+    get_version_data(&version_data, version);
 
     savegame_state *state = &savegame_data.state;
     state->scenario_campaign_mission = create_savegame_piece(4, 0);
     state->file_version = create_savegame_piece(4, 0);
-    if (version <= SAVE_GAME_LAST_STORED_IMAGE_IDS) {
-        state->image_grid = create_savegame_piece(image_grid_size, 1);
+    if (version_data.has_image_grid) {
+        state->image_grid = create_savegame_piece(version_data.piece_sizes.image_grid, 1);
     }
     state->edge_grid = create_savegame_piece(26244, 1);
     state->building_grid = create_savegame_piece(52488, 1);
-    state->terrain_grid = create_savegame_piece(terrain_grid_size, 1);
+    state->terrain_grid = create_savegame_piece(version_data.piece_sizes.terrain_grid, 1);
     state->aqueduct_grid = create_savegame_piece(26244, 1);
     state->figure_grid = create_savegame_piece(52488, 1);
     state->bitfields_grid = create_savegame_piece(26244, 1);
@@ -308,27 +364,27 @@ static void init_savegame_data(int version)
     state->building_damage_grid = create_savegame_piece(26244, 1);
     state->aqueduct_backup_grid = create_savegame_piece(26244, 1);
     state->sprite_backup_grid = create_savegame_piece(26244, 1);
-    state->figures = create_savegame_piece(figures_size, 1);
-    state->route_figures = create_savegame_piece(route_figures_size, 1);
-    state->route_paths = create_savegame_piece(route_paths_size, 1);
-    state->formations = create_savegame_piece(formations_size, 1);
+    state->figures = create_savegame_piece(version_data.piece_sizes.figures, 1);
+    state->route_figures = create_savegame_piece(version_data.piece_sizes.route_figures, 1);
+    state->route_paths = create_savegame_piece(version_data.piece_sizes.route_paths, 1);
+    state->formations = create_savegame_piece(version_data.piece_sizes.formations, 1);
     state->formation_totals = create_savegame_piece(12, 0);
     state->city_data = create_savegame_piece(36136, 1);
     state->city_faction_unknown = create_savegame_piece(2, 0);
     state->player_name = create_savegame_piece(64, 0);
     state->city_faction = create_savegame_piece(4, 0);
-    state->buildings = create_savegame_piece(buildings_size, 1);
+    state->buildings = create_savegame_piece(version_data.piece_sizes.buildings, 1);
     state->city_view_orientation = create_savegame_piece(4, 0);
     state->game_time = create_savegame_piece(20, 0);
     state->building_extra_highest_id_ever = create_savegame_piece(8, 0);
     state->random_iv = create_savegame_piece(8, 0);
     state->city_view_camera = create_savegame_piece(8, 0);
-    state->building_count_culture1 = create_savegame_piece(building_count_culture1, 0);
+    state->building_count_culture1 = create_savegame_piece(version_data.building_counts.culture1, 0);
     state->city_graph_order = create_savegame_piece(8, 0);
     state->emperor_change_time = create_savegame_piece(8, 0);
     state->empire = create_savegame_piece(12, 0);
     state->empire_cities = create_savegame_piece(2706, 1);
-    state->building_count_industry = create_savegame_piece(building_count_industry, 0);
+    state->building_count_industry = create_savegame_piece(version_data.building_counts.industry, 0);
     state->trade_prices = create_savegame_piece(128, 0);
     state->figure_names = create_savegame_piece(84, 0);
     state->culture_coverage = create_savegame_piece(60, 0);
@@ -341,7 +397,7 @@ static void init_savegame_data(int version)
     state->population_messages = create_savegame_piece(10, 0);
     state->message_counts = create_savegame_piece(80, 0);
     state->message_delays = create_savegame_piece(80, 0);
-    state->building_list_burning_totals = create_savegame_piece(burning_totals_size, 0);
+    state->building_list_burning_totals = create_savegame_piece(version_data.piece_sizes.burning_totals, 0);
     state->figure_sequence = create_savegame_piece(4, 0);
     state->scenario_settings = create_savegame_piece(12, 0);
     state->invasion_warnings = create_savegame_piece(3232, 1);
@@ -349,15 +405,15 @@ static void init_savegame_data(int version)
     state->city_sounds = create_savegame_piece(8960, 0);
     state->building_extra_highest_id = create_savegame_piece(4, 0);
     state->figure_traders = create_savegame_piece(4804, 0);
-    state->building_list_burning = create_savegame_piece(building_list_burning_size, 1);
-    state->building_list_small = create_savegame_piece(building_list_small_size, 1);
-    state->building_list_large = create_savegame_piece(building_list_large_size, 1);
+    state->building_list_burning = create_savegame_piece(version_data.piece_sizes.building_list_burning, 1);
+    state->building_list_small = create_savegame_piece(version_data.piece_sizes.building_list_small, 1);
+    state->building_list_large = create_savegame_piece(version_data.piece_sizes.building_list_large, 1);
     state->tutorial_part1 = create_savegame_piece(32, 0);
-    state->building_count_military = create_savegame_piece(building_count_military, 0);
+    state->building_count_military = create_savegame_piece(version_data.building_counts.military, 0);
     state->enemy_army_totals = create_savegame_piece(20, 0);
-    state->building_storages = create_savegame_piece(building_storages_size, 0);
-    state->building_count_culture2 = create_savegame_piece(building_count_culture2, 0);
-    state->building_count_support = create_savegame_piece(building_count_support, 0);
+    state->building_storages = create_savegame_piece(version_data.piece_sizes.building_storages, 0);
+    state->building_count_culture2 = create_savegame_piece(version_data.building_counts.culture2, 0);
+    state->building_count_support = create_savegame_piece(version_data.building_counts.support, 0);
     state->tutorial_part2 = create_savegame_piece(4, 0);
     state->gladiator_revolt = create_savegame_piece(16, 0);
     state->trade_route_limit = create_savegame_piece(1280, 1);
@@ -365,7 +421,7 @@ static void init_savegame_data(int version)
     state->building_barracks_tower_sentry = create_savegame_piece(4, 0);
     state->building_extra_sequence = create_savegame_piece(4, 0);
     state->routing_counters = create_savegame_piece(16, 0);
-    state->building_count_culture3 = create_savegame_piece(building_count_culture3, 0);
+    state->building_count_culture3 = create_savegame_piece(version_data.building_counts.culture3, 0);
     state->enemy_armies = create_savegame_piece(900, 0);
     state->city_entry_exit_xy = create_savegame_piece(16, 0);
     state->last_invasion_id = create_savegame_piece(2, 0);
@@ -375,10 +431,8 @@ static void init_savegame_data(int version)
     state->tutorial_part3 = create_savegame_piece(4, 0);
     state->city_entry_exit_grid_offset = create_savegame_piece(8, 0);
     state->end_marker = create_savegame_piece(284, 0); // 71x 4-bytes emptiness
-    if (version > SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION) {
-        state->deliveries = create_savegame_piece(PIECE_SIZE_DYNAMIC, 0);
-    } else if (version > SAVE_GAME_LAST_NO_DELIVERIES_VERSION) {
-        state->deliveries = create_savegame_piece(3200, 0);
+    if (version_data.has_monument_deliveries) {
+        state->deliveries = create_savegame_piece(version_data.piece_sizes.monument_deliveries, 0);
     }
 }
 
@@ -593,9 +647,8 @@ static void savegame_save_to_state(savegame_state *state)
     building_monument_delivery_save_state(state->deliveries);
 }
 
-int game_file_io_read_scenario(const char *filename)
+static int load_scenario_to_buffers(const char *filename)
 {
-    log_info("Loading scenario", filename, 0);
     init_scenario_data();
     FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
     if (!fp) {
@@ -610,8 +663,113 @@ int game_file_io_read_scenario(const char *filename)
         }
     }
     file_close(fp);
+    return 1;
+}
 
+int game_file_io_read_scenario(const char *filename)
+{
+    log_info("Loading scenario", filename, 0);
+    if (strcmp(scenario_data.last_loaded_scenario, filename) != 0) {
+        if (!load_scenario_to_buffers(filename)) {
+            return 0;
+        }
+    }
     scenario_load_from_state(&scenario_data.state);
+    scenario_data.last_loaded_scenario[0] = 0;
+    return 1;
+}
+
+static int scenario_terrain_at(int grid_offset)
+{
+    return map_terrain_get_from_buffer_16(scenario_data.state.terrain, grid_offset);
+}
+
+static int scenario_tile_size_at(int grid_offset)
+{
+    return map_property_multi_tile_size_from_buffer(scenario_data.state.bitfields, grid_offset);
+}
+
+static int scenario_is_draw_tile_at(int grid_offset)
+{
+    return map_property_is_draw_tile_from_buffer(scenario_data.state.edge, grid_offset);
+}
+
+static int scenario_random_at(int grid_offset)
+{
+    return map_random_get_from_buffer(scenario_data.state.random, grid_offset);
+}
+
+static scenario_climate get_climate(void)
+{
+    return minimap_data.climate;
+}
+
+static int map_width(void)
+{
+    return minimap_data.city_width;
+}
+
+static int map_height(void)
+{
+    return minimap_data.city_height;
+}
+
+static void set_viewport(int *x, int *y, int *width, int *height)
+{
+    *x = 0;
+    *y = 0;
+    *width = minimap_data.city_width;
+    *height = minimap_data.city_height;
+}
+
+int game_file_io_read_scenario_info(const char *filename, scenario_info *info)
+{
+    if (strcmp(scenario_data.last_loaded_scenario, filename) != 0) {
+        if (!load_scenario_to_buffers(filename)) {
+            return 0;
+        }
+    }
+
+    strncpy(scenario_data.last_loaded_scenario, filename, FILE_NAME_MAX - 1);
+
+    const scenario_state *state = &scenario_data.state;
+
+    scenario_description_from_buffer(state->scenario, info->description);
+    info->image_id = scenario_image_id_from_buffer(state->scenario);
+    info->climate = scenario_climate_from_buffer(state->scenario);
+    info->total_invasions = scenario_invasions_from_buffer(state->scenario);
+    info->player_rank = scenario_rank_from_buffer(state->scenario);
+    info->start_year = scenario_start_year_from_buffer(state->scenario);
+    scenario_open_play_info_from_buffer(state->scenario, &info->is_open_play, &info->open_play_id);
+
+    if (!info->is_open_play) {
+        scenario_objectives_from_buffer(state->scenario, &info->win_criteria);
+    }
+    int grid_start;
+    int grid_border_size;
+
+    scenario_map_data_from_buffer(state->scenario, &minimap_data.city_width, &minimap_data.city_height,
+        &grid_start, &grid_border_size);
+    minimap_data.version = 0;
+    minimap_data.climate = info->climate;
+    minimap_data.functions.building = 0;
+    minimap_data.functions.climate = get_climate;
+    minimap_data.functions.map.width = map_width;
+    minimap_data.functions.map.height = map_height;
+    minimap_data.functions.viewport = set_viewport;
+    minimap_data.functions.offset.building_id = 0;
+    minimap_data.functions.offset.figure = 0;
+    minimap_data.functions.offset.is_draw_tile = scenario_is_draw_tile_at;
+    minimap_data.functions.offset.random = scenario_random_at;
+    minimap_data.functions.offset.terrain = scenario_terrain_at;
+    minimap_data.functions.offset.tile_size = scenario_tile_size_at;
+
+    city_view_set_custom_lookup(grid_start, minimap_data.city_width, minimap_data.city_height, grid_border_size);
+    widget_minimap_update(&minimap_data.functions);
+    city_view_restore_lookup();
+
+    reset_scenario_pieces();
+
     return 1;
 }
 
@@ -689,19 +847,27 @@ static int write_compressed_chunk(FILE *fp, const void *buffer, int bytes_to_wri
     return 1;
 }
 
+static int prepare_dynamic_piece(FILE *fp, file_piece *piece)
+{
+    if (piece->dynamic) {
+        int size = read_int32(fp);
+        if (!size) {
+            return 0;
+        }
+        uint8_t *data = malloc(size);
+        memset(data, 0, size);
+        buffer_init(&piece->buf, data, size);
+    }
+    return 1;
+}
+
 static int savegame_read_from_file(FILE *fp)
 {
     for (int i = 0; i < savegame_data.num_pieces; i++) {
         file_piece *piece = &savegame_data.pieces[i];
         int result = 0;
-        if (piece->dynamic) {
-            int size = read_int32(fp);
-            if (!size) {
-                continue;
-            }
-            uint8_t *data = malloc(size);
-            memset(data, 0, size);
-            buffer_init(&piece->buf, data, size);
+        if (!prepare_dynamic_piece(fp, piece)) {
+            continue;
         }
         if (piece->compressed) {
             result = read_compressed_chunk(fp, piece->buf.data, piece->buf.size);
@@ -778,6 +944,243 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     }
     savegame_load_from_state(&savegame_data.state, version);
     return 1;
+}
+
+static int skip_piece(FILE *fp, int size, int compressed)
+{
+    if (size == PIECE_SIZE_DYNAMIC) {
+        size = read_int32(fp);
+        if (!size) {
+            return 1;
+        }
+    }
+    if (!compressed) {
+        return fseek(fp, size, SEEK_CUR) == 0;
+    }
+    int input_size = read_int32(fp);
+    if ((unsigned int) input_size == UNCOMPRESSED) {
+        return fseek(fp, size, SEEK_CUR) == 0;
+    }
+    return fseek(fp, input_size, SEEK_CUR) == 0;
+}
+
+static void free_file_piece(file_piece *piece)
+{
+    buffer_reset(&piece->buf);
+    free(piece->buf.data);
+}
+
+static int savegame_terrain_at(int grid_offset)
+{
+    if (minimap_data.version <= SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION) {
+        return map_terrain_get_from_buffer_16(savegame_data.state.terrain_grid, grid_offset);
+    } else {
+        return map_terrain_get_from_buffer_32(savegame_data.state.terrain_grid, grid_offset);
+    }
+}
+
+static int savegame_tile_size_at(int grid_offset)
+{
+    return map_property_multi_tile_size_from_buffer(savegame_data.state.bitfields_grid, grid_offset);
+}
+
+static int savegame_is_draw_tile_at(int grid_offset)
+{
+    return map_property_is_draw_tile_from_buffer(savegame_data.state.edge_grid, grid_offset);
+}
+
+static int savegame_random_at(int grid_offset)
+{
+    return map_random_get_from_buffer(savegame_data.state.random_grid, grid_offset);
+}
+
+static int savegame_get_building_id(int grid_offset)
+{
+    return map_building_from_buffer(savegame_data.state.building_grid, grid_offset);
+}
+
+static building *savegame_building(int id)
+{
+    static building b;
+    building_get_from_buffer(savegame_data.state.buildings, id, &b,
+        minimap_data.version > SAVE_GAME_LAST_STATIC_VERSION, minimap_data.version);
+    return &b;
+}
+
+static int savegame_read_file_info(FILE *fp, saved_game_info *info, int version)
+{
+    clear_savegame_pieces();
+
+    savegame_version_data version_data;
+    get_version_data(&version_data, version);
+
+    file_piece city_data, game_time, terrain_grid, random_grid, scenario;
+    file_piece bitfields_grid, edge_grid, building_grid, buildings;
+
+    savegame_state *state = &savegame_data.state;
+
+    init_file_piece(&city_data, 36136, 0);
+    init_file_piece(&game_time, 20, 0);
+    init_file_piece(&terrain_grid, version_data.piece_sizes.terrain_grid, 0);
+    init_file_piece(&random_grid, 26244, 0);
+    init_file_piece(&edge_grid, 26244, 0);
+    init_file_piece(&bitfields_grid, 26244, 0);
+    init_file_piece(&scenario, 1720, 0);
+    init_file_piece(&building_grid, 52488, 0);
+    init_file_piece(&buildings, version_data.piece_sizes.buildings, 0);
+
+    state->terrain_grid = &terrain_grid.buf;
+    state->random_grid = &random_grid.buf;
+    state->edge_grid = &edge_grid.buf;
+    state->bitfields_grid = &bitfields_grid.buf;
+    state->building_grid = &building_grid.buf;
+    state->buildings = &buildings.buf;
+
+    info->mission = read_int32(fp);
+
+    skip_piece(fp, 4, 0);
+    if (version_data.has_image_grid) {
+        skip_piece(fp, version_data.piece_sizes.image_grid, 1);
+    }
+
+    if (!read_compressed_chunk(fp, edge_grid.buf.data, edge_grid.buf.size)) {
+        return 0;
+    }
+
+    if (!read_compressed_chunk(fp, building_grid.buf.data, building_grid.buf.size)) {
+        return 0;
+    }
+
+    if (!read_compressed_chunk(fp, terrain_grid.buf.data, terrain_grid.buf.size)) {
+        return 0;
+    }
+
+    skip_piece(fp, 26244, 1);
+    skip_piece(fp, 52488, 1);
+
+    if (!read_compressed_chunk(fp, bitfields_grid.buf.data, bitfields_grid.buf.size)) {
+        return 0;
+    }
+
+    skip_piece(fp, 26244, 1);
+
+    if (fread(random_grid.buf.data, 1, random_grid.buf.size, fp) != random_grid.buf.size) {
+        return 0;
+    }
+
+    skip_piece(fp, 26244, 1);
+    skip_piece(fp, 26244, 1);
+    skip_piece(fp, 26244, 1);
+    skip_piece(fp, 26244, 1);
+    skip_piece(fp, 26244, 1);
+    skip_piece(fp, version_data.piece_sizes.figures, 1);
+    skip_piece(fp, version_data.piece_sizes.route_figures, 1);
+    skip_piece(fp, version_data.piece_sizes.route_paths, 1);
+    skip_piece(fp, version_data.piece_sizes.formations, 1);
+    skip_piece(fp, 12, 0);
+
+    if (!read_compressed_chunk(fp, city_data.buf.data, city_data.buf.size)) {
+        return 0;
+    }
+
+    skip_piece(fp, 2, 0);
+    skip_piece(fp, 64, 0);
+    skip_piece(fp, 4, 0);
+
+    if (!prepare_dynamic_piece(fp, &buildings) || !read_compressed_chunk(fp, buildings.buf.data, buildings.buf.size)) {
+        return 0;
+    }
+
+    skip_piece(fp, 4, 0);
+
+    if (fread(game_time.buf.data, 1, game_time.buf.size, fp) != game_time.buf.size) {
+        return 0;
+    }
+
+    skip_piece(fp, 8, 0);
+    skip_piece(fp, 8, 0);
+    skip_piece(fp, 8, 0);
+    skip_piece(fp, version_data.building_counts.culture1, 0);
+    skip_piece(fp, 8, 0);
+    skip_piece(fp, 8, 0);
+    skip_piece(fp, 12, 0);
+    skip_piece(fp, 2706, 1);
+    skip_piece(fp, version_data.building_counts.industry, 0);
+    skip_piece(fp, 128, 0);
+    skip_piece(fp, 84, 0);
+    skip_piece(fp, 60, 0);
+
+    if (fread(scenario.buf.data, 1, scenario.buf.size, fp) != scenario.buf.size) {
+        return 0;
+    }
+
+    skip_piece(fp, 4, 0);
+    skip_piece(fp, 60, 0);
+    skip_piece(fp, 4, 0);
+    skip_piece(fp, 16000, 1);
+    skip_piece(fp, 12, 0);
+    skip_piece(fp, 10, 0);
+    skip_piece(fp, 80, 0);
+    skip_piece(fp, 80, 0);
+    skip_piece(fp, version_data.piece_sizes.burning_totals, 0);
+    skip_piece(fp, 4, 0);
+    skip_piece(fp, 12, 0);
+    skip_piece(fp, 3232, 1);
+
+    info->custom_mission = read_int32(fp);
+
+    city_data_load_basic_info(&city_data.buf, &info->population, &info->treasury);
+    game_time_load_basic_info(&game_time.buf, &info->month, &info->year);
+
+    int grid_start;
+    int grid_border_size;
+
+    minimap_data.version = version;
+    scenario_map_data_from_buffer(&scenario.buf, &minimap_data.city_width, &minimap_data.city_height,
+        &grid_start, &grid_border_size);
+    minimap_data.climate = scenario_climate_from_buffer(&scenario.buf);
+    minimap_data.functions.building = savegame_building;
+    minimap_data.functions.climate = get_climate;
+    minimap_data.functions.map.width = map_width;
+    minimap_data.functions.map.height = map_height;
+    minimap_data.functions.viewport = set_viewport;
+    minimap_data.functions.offset.building_id = savegame_get_building_id;
+    minimap_data.functions.offset.figure = 0;
+    minimap_data.functions.offset.is_draw_tile = savegame_is_draw_tile_at;
+    minimap_data.functions.offset.random = savegame_random_at;
+    minimap_data.functions.offset.terrain = savegame_terrain_at;
+    minimap_data.functions.offset.tile_size = savegame_tile_size_at;
+
+    city_view_set_custom_lookup(grid_start, minimap_data.city_width, minimap_data.city_height, grid_border_size);
+    widget_minimap_update(&minimap_data.functions);
+    city_view_restore_lookup();
+
+    free_file_piece(&city_data);
+    free_file_piece(&game_time);
+    free_file_piece(&terrain_grid);
+    free_file_piece(&scenario);
+    free_file_piece(&random_grid);
+    free_file_piece(&edge_grid);
+    free_file_piece(&bitfields_grid);
+    free_file_piece(&building_grid);
+    free_file_piece(&buildings);
+
+    return 1;
+}
+
+int game_file_io_read_saved_game_info(const char *filename, saved_game_info *info)
+{
+    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+    if (!fp) {
+        return 0;
+    }
+    int result = 0;
+    int version = get_savegame_version(fp);
+    if (version && version <= SAVE_GAME_CURRENT_VERSION) {
+        result = savegame_read_file_info(fp, info, version);
+    }
+    file_close(fp);
+    return result;
 }
 
 int game_file_io_write_saved_game(const char *filename)

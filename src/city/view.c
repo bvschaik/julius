@@ -165,6 +165,36 @@ static void calculate_lookup(void)
     }
 }
 
+void city_view_set_custom_lookup(int start_offset, int width, int height, int border_size)
+{
+    reset_lookup();
+
+    int start_x = border_size / 2;
+    int end_x = GRID_SIZE - start_x;
+    int start_y = (start_offset - start_x) / GRID_SIZE;
+    int end_y = start_y + height;
+
+    int x_view_start = VIEW_X_MAX - 1 - start_y;
+    int y_view_start = 1 + start_y;
+
+    for (int y = start_y; y < end_y; y++) {
+        int x_view = x_view_start + start_x;
+        int y_view = y_view_start + start_x;
+        for (int x = start_x; x < end_x; x++) {
+            view_to_grid_offset_lookup[x_view / 2][y_view] = x + GRID_SIZE * y;
+            x_view++;
+            y_view++;
+        }
+        x_view_start--;
+        y_view_start++;
+    }
+}
+
+void city_view_restore_lookup(void)
+{
+    calculate_lookup();
+}
+
 static void adjust_camera_position_for_pixels(void)
 {
     while (data.camera.pixel.x < 0) {

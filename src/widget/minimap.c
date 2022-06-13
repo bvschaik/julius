@@ -6,7 +6,6 @@
 #include "building/monument.h"
 #include "city/view.h"
 #include "core/calc.h"
-#include "figure/figure.h"
 #include "figure/formation.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -17,7 +16,6 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
-#include "scenario/property.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -49,28 +47,9 @@ typedef struct {
     tile_color edges;
     tile_color center;
 } building_tile_color;
-
-typedef struct {
-    scenario_climate(*climate)(void);
-    building *(*building)(int id);
-    struct {
-        int (*width)(void);
-        int (*height)(void);
-    } map;
-    struct {
-        int (*figure)(int grid_offset, int (*callback)(figure *f));
-        int (*terrain)(int grid_offset);
-        int (*building_id)(int grid_offset);
-        int (*is_draw_tile)(int grid_offset);
-        int (*tile_size)(int grid_offset);
-        int (*random)(int grid_offset);
-    } offset;
-    void (*viewport)(int *x, int *y, int *width, int *height);
-} minimap_functions;
-
 static void get_viewport(int *x, int *y, int *width, int *height);
 
-static minimap_functions functions = {
+static minimap_functions default_functions = {
     .climate = scenario_property_climate,
     .map.width = map_grid_width,
     .map.height = map_grid_height,
@@ -194,9 +173,7 @@ static struct {
         int width;
         int height;
     } viewport;
-} data = {
-    .functions = &functions
-};
+} data;
 
 static void get_viewport(int *x, int *y, int *width, int *height)
 {
@@ -228,23 +205,21 @@ static void setup_minimap(int x_offset, int y_offset, int width, int height)
     float max_scale_height = data.minimap.height / (float) data.screen.height;
 
     data.minimap.max_scale = max_scale_width > max_scale_height ? max_scale_width : max_scale_height;
-
-    minimap_colors.climate = &CLIMATE_VARIANTS[data.functions->climate()];
 }
 
-static void position_minimap(void)
+static void position_minimap(int x_offset, int y_offset, int width, int height)
 {
-    if (data.functions->viewport) {
-        data.functions->viewport(&data.viewport.x, &data.viewport.y, &data.viewport.width, &data.viewport.height);
+    setup_minimap(x_offset, y_offset, width, height);
 
-        float scale_width = data.viewport.width / (float) data.screen.width_tiles;
-        float scale_height = data.viewport.height / (float) data.screen.height_tiles;
+    data.functions->viewport(&data.viewport.x, &data.viewport.y, &data.viewport.width, &data.viewport.height);
 
-        data.minimap.scale = scale_width > scale_height ? scale_width : scale_height;
+    float scale_width = data.viewport.width / (float) data.screen.width_tiles;
+    float scale_height = data.viewport.height / (float) data.screen.height_tiles;
 
-        if (data.minimap.scale > data.minimap.max_scale) {
-            data.minimap.scale = data.minimap.max_scale;
-        }
+    data.minimap.scale = scale_width > scale_height ? scale_width : scale_height;
+
+    if (data.minimap.scale > data.minimap.max_scale) {
+        data.minimap.scale = data.minimap.max_scale;
     }
 
     if (data.minimap.scale < 1.0f) {
@@ -259,30 +234,28 @@ static void position_minimap(void)
     data.minimap.offset_x = (minimap_width_pixels - data.screen.width) / 2;
     data.minimap.offset_y = (minimap_height_pixels - data.screen.height) / 2;
 
-    if (data.functions->viewport) {
-        if (minimap_width_pixels > data.screen.width) {
-            if (data.minimap.offset_x > adjusted_camera_x) {
-                data.minimap.offset_x = adjusted_camera_x;
-                if (data.minimap.offset_x < 0) {
-                    data.minimap.offset_x = 0;
-                }
-            } else if ((adjusted_camera_x + data.viewport.width * 2) / data.minimap.scale >
-                data.minimap.offset_x + data.screen.width) {
-                data.minimap.offset_x = (int) ((adjusted_camera_x + data.viewport.width * 2) / data.minimap.scale -
-                    data.screen.width);
+    if (minimap_width_pixels > data.screen.width) {
+        if (data.minimap.offset_x > adjusted_camera_x) {
+            data.minimap.offset_x = adjusted_camera_x;
+            if (data.minimap.offset_x < 0) {
+                data.minimap.offset_x = 0;
             }
+        } else if ((adjusted_camera_x + data.viewport.width * 2) / data.minimap.scale >
+            data.minimap.offset_x + data.screen.width) {
+            data.minimap.offset_x = (int) ((adjusted_camera_x + data.viewport.width * 2) / data.minimap.scale -
+                data.screen.width);
         }
-        if (minimap_height_pixels > data.screen.height) {
-            if (data.minimap.offset_y > adjusted_camera_y) {
-                data.minimap.offset_y = adjusted_camera_y;
-                if (data.minimap.offset_y < 0) {
-                    data.minimap.offset_y = 0;
-                }
-            } else if ((adjusted_camera_y + data.viewport.height) / data.minimap.scale >
-                data.minimap.offset_y + data.screen.height) {
-                data.minimap.offset_y = (int) ((adjusted_camera_y + data.viewport.height) / data.minimap.scale -
-                    data.screen.height);
+    }
+    if (minimap_height_pixels > data.screen.height) {
+        if (data.minimap.offset_y > adjusted_camera_y) {
+            data.minimap.offset_y = adjusted_camera_y;
+            if (data.minimap.offset_y < 0) {
+                data.minimap.offset_y = 0;
             }
+        } else if ((adjusted_camera_y + data.viewport.height) / data.minimap.scale >
+            data.minimap.offset_y + data.screen.height) {
+            data.minimap.offset_y = (int) ((adjusted_camera_y + data.viewport.height) / data.minimap.scale -
+                data.screen.height);
         }
     }
 }
@@ -486,9 +459,6 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
 
 static void draw_viewport_rectangle(void)
 {
-    if (!data.functions->viewport) {
-        return;
-    }
     int x_offset = (int) ((2 * (data.viewport.x - data.minimap.x) - 2 / 30) / data.minimap.scale);
     x_offset += data.screen.x - data.minimap.offset_x;
     if (x_offset < data.screen.x) {
@@ -524,30 +494,42 @@ static void clear_minimap(void)
     memset(data.cache.buffer, 0, data.minimap.height * data.cache.stride * sizeof(color_t));
 }
 
-void widget_minimap_draw(int x_offset, int y_offset, int width, int height, int force)
+void widget_minimap_update(const minimap_functions *functions)
 {
-    graphics_set_clip_rectangle(x_offset, y_offset, width, height);
-    graphics_fill_rect(x_offset, y_offset, width, height, COLOR_BLACK);
-
-    if (data.refresh_requested || force) {
-        prepare_minimap_cache();
-        if (!data.cache.buffer) {
-            return;
-        }
-        clear_minimap();
-        setup_minimap(x_offset, y_offset, width, height);
-        foreach_map_tile(draw_minimap_tile);
-        graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
-        data.refresh_requested = 0;
+    data.functions = functions ? functions : &default_functions;
+    prepare_minimap_cache();
+    if (!data.cache.buffer) {
+        return;
     }
+    clear_minimap();
+    minimap_colors.climate = &CLIMATE_VARIANTS[data.functions->climate()];
+    foreach_map_tile(draw_minimap_tile);
+    graphics_renderer()->update_custom_image(CUSTOM_IMAGE_MINIMAP);
+}
 
-    position_minimap();
+void widget_minimap_draw(int x_offset, int y_offset, int width, int height)
+{
+    if (!data.cache.buffer) {
+        return;
+    }
+    position_minimap(x_offset, y_offset, width, height);
     graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP,
         (int) ((data.screen.x - data.minimap.offset_x) * data.minimap.scale),
         (int) ((data.screen.y - data.minimap.offset_y) * data.minimap.scale), data.minimap.scale);
+}
+
+void widget_minimap_draw_decorated(int x_offset, int y_offset, int width, int height)
+{
+    graphics_set_clip_rectangle(x_offset, y_offset, width, height);
+    graphics_fill_rect(x_offset, y_offset, width, height, COLOR_BLACK);
+    if (data.refresh_requested) {
+        widget_minimap_update(0);
+        data.refresh_requested = 0;
+    }
+    widget_minimap_draw(x_offset, y_offset, width, height);
     draw_viewport_rectangle();
     graphics_reset_clip_rectangle();
-    
+
     graphics_draw_line(x_offset - 1, x_offset - 1 + width, y_offset - 1, y_offset - 1, COLOR_MINIMAP_DARK);
     graphics_draw_line(x_offset - 1, x_offset - 1, y_offset, y_offset + height, COLOR_MINIMAP_DARK);
     graphics_draw_line(x_offset - 1 + width, x_offset - 1 + width, y_offset,

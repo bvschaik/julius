@@ -45,6 +45,12 @@ int map_property_is_draw_tile(int grid_offset)
     return edge_grid.items[grid_offset] & EDGE_LEFTMOST_TILE;
 }
 
+int map_property_is_draw_tile_from_buffer(buffer *edge, int grid_offset)
+{
+    buffer_set(edge, grid_offset);
+    return buffer_read_u8(edge) & EDGE_LEFTMOST_TILE;
+}
+
 void map_property_mark_draw_tile(int grid_offset)
 {
     edge_grid.items[grid_offset] |= EDGE_LEFTMOST_TILE;
@@ -108,6 +114,19 @@ void map_property_clear_multi_tile_xy(int grid_offset)
 int map_property_multi_tile_size(int grid_offset)
 {
     switch (bitfields_grid.items[grid_offset] & BIT_SIZES) {
+        case BIT_SIZE2: return 2;
+        case BIT_SIZE3: return 3;
+        case BIT_SIZE4: return 4;
+        case BIT_SIZE5: return 5;
+        case BIT_SIZE7: return 7;
+        default: return 1;
+    }
+}
+
+int map_property_multi_tile_size_from_buffer(buffer *bitfields, int grid_offset)
+{
+    buffer_set(bitfields, grid_offset);
+    switch (buffer_read_u8(bitfields) & BIT_SIZES) {
         case BIT_SIZE2: return 2;
         case BIT_SIZE3: return 3;
         case BIT_SIZE4: return 4;

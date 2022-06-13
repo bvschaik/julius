@@ -40,6 +40,10 @@ int map_terrain_is_superset(int grid_offset, int terrain_sum);
 
 int map_terrain_get(int grid_offset);
 
+int map_terrain_get_from_buffer_16(buffer *buf, int grid_offset);
+
+int map_terrain_get_from_buffer_32(buffer *buf, int grid_offset);
+
 void map_terrain_set(int grid_offset, int terrain);
 
 void map_terrain_add(int grid_offset, int terrain);

@@ -776,7 +776,17 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_EMPERORS_WRATH, "You have fallen from Caesar's grace and so he has ordered your arrest. Unless you restore your favor with the emperor, his elite legionaries will soon invade your city." },
     {TR_BUILDING_ACADEMY_UPGRADE_DESC, "This academy is operational. Local development allowed your citizens to expand the building, providing more space for orations and research."},
     {TR_BUILDING_PALISADE_GATE, "Palisade gate"},
-    {TR_BUILDING_PALISADE_GATE_DESC, "This narrow wooden gateway controls the movement of people in and out of your city's defences."}
+    {TR_BUILDING_PALISADE_GATE_DESC, "This narrow wooden gateway controls the movement of people in and out of your city's defences."},
+    {TR_SAVE_DIALOG_INVALID_FILE, "Invalid file"},
+    {TR_SAVE_DIALOG_SELECT_FILE, "Select a file"},
+    {TR_SAVE_DIALOG_FUNDS, "Funds:"},
+    {TR_SAVE_DIALOG_POPULATION, "Population:"},
+    {TR_SAVE_DIALOG_DATE, "Date:"},
+    {TR_SAVE_DIALOG_CUSTOM_SCENARIO, "Custom scenario"},
+    {TR_SAVE_DIALOG_FIRST_MISSION, "First mission"},
+    {TR_SAVE_DIALOG_MISSION, "Mission"},
+    {TR_SAVE_DIALOG_MILITARY, "Military"},
+    {TR_SAVE_DIALOG_PEACEFUL, "Peaceful"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

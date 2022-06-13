@@ -97,3 +97,10 @@ void game_time_load_state(buffer *buf)
     data.year = buffer_read_i32(buf);
     data.total_days = buffer_read_i32(buf);
 }
+
+void game_time_load_basic_info(buffer *buf, int *month, int *year)
+{
+    buffer_skip(buf, 8);
+    *month = buffer_read_i32(buf);
+    *year = buffer_read_i32(buf);
+}

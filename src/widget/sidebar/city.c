@@ -172,8 +172,8 @@ static void draw_expanded_background(int x_offset)
     draw_overlay_text(x_offset + 4);
     draw_number_of_messages(x_offset);
     image_draw(window_build_menu_image(), x_offset + 6, 239, COLOR_MASK_NONE, SCALE_NONE);
-
-    widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
+    widget_minimap_update(0);
+    widget_minimap_draw_decorated(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT);
 
     draw_sidebar_remainder(x_offset, 0);
 }
@@ -214,7 +214,7 @@ void widget_sidebar_city_draw_foreground(void)
         int x_offset = sidebar_common_get_x_offset_expanded();
         draw_buttons_expanded(x_offset);
         draw_overlay_text(x_offset + 4);
-        widget_minimap_draw(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+        widget_minimap_draw_decorated(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT);
         draw_number_of_messages(x_offset);
     }
     sidebar_extra_draw_foreground();

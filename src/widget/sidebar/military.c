@@ -348,7 +348,8 @@ static void draw_background(int x_offset)
     image_draw(image_group(GROUP_SIDE_PANEL) + 1, x_offset, 24, COLOR_MASK_NONE, SCALE_NONE);
     image_buttons_draw(x_offset, 24, buttons_title_close, 2);
     lang_text_draw_centered(61, 5, x_offset, 32, 117, FONT_NORMAL_GREEN);
-    widget_minimap_draw(x_offset + 8, 59, MINIMAP_WIDTH, MINIMAP_HEIGHT, 1);
+    widget_minimap_update(0);
+    widget_minimap_draw_decorated(x_offset + 8, 59, MINIMAP_WIDTH, MINIMAP_HEIGHT);
     draw_military_panel_background(x_offset);
     draw_legion_buttons(x_offset, Y_OFFSET_PANEL_START);
     int extra_height = sidebar_extra_draw_background(x_offset, MILITARY_PANEL_HEIGHT,
@@ -385,7 +386,7 @@ static void draw_military_panel_foreground(int x_offset)
 
 static void draw_foreground(int x_offset)
 {
-    widget_minimap_draw(x_offset + 8, 59, MINIMAP_WIDTH, MINIMAP_HEIGHT, 0);
+    widget_minimap_draw_decorated(x_offset + 8, 59, MINIMAP_WIDTH, MINIMAP_HEIGHT);
     image_buttons_draw(x_offset, 24, buttons_title_close, 2);
     lang_text_draw_centered(61, 5, x_offset, 32, 117, FONT_NORMAL_GREEN);
     draw_military_panel_foreground(x_offset);

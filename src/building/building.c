@@ -48,6 +48,20 @@ building *building_get(int id)
     return array_item(data.buildings, id);
 }
 
+void building_get_from_buffer(buffer *buf, int id, building *b, int includes_building_size, int save_version)
+{
+    buffer_set(buf, 0);
+    int building_buf_size = BUILDING_STATE_ORIGINAL_BUFFER_SIZE;
+    int buf_skip = 0;
+
+    if (includes_building_size) {
+        building_buf_size = buffer_read_i32(buf);
+        buf_skip = 4;
+    }
+    buffer_set(buf, building_buf_size * id + buf_skip);
+    building_state_load_from_buffer(buf, b, building_buf_size, save_version);
+}
+
 int building_count(void)
 {
     return data.buildings.size;

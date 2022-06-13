@@ -192,6 +192,25 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     game_state_unpause();
 }
 
+static void load_empire_data(int is_custom_scenario, int empire_id)
+{
+    empire_load(is_custom_scenario, empire_id);
+    scenario_distant_battle_set_roman_travel_months();
+    scenario_distant_battle_set_enemy_travel_months();
+}
+
+static int load_scenario_data(const char *scenario_file)
+{
+    if (!game_file_io_read_scenario(scenario_file)) {
+        return 0;
+    }
+
+    trade_prices_reset();
+    load_empire_data(1, scenario_empire_id());
+    city_view_reset_orientation();
+    return 1;
+}
+
 static int load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file)
 {
     if (!file_exists(scenario_file, NOT_LOCALIZED)) {
@@ -199,16 +218,11 @@ static int load_custom_scenario(const uint8_t *scenario_name, const char *scenar
     }
 
     clear_scenario_data();
-    game_file_load_scenario_data(scenario_file);
+    if (!load_scenario_data(scenario_file)) {
+        return 0;
+    }
     initialize_scenario_data(scenario_name);
     return 1;
-}
-
-static void load_empire_data(int is_custom_scenario, int empire_id)
-{
-    empire_load(is_custom_scenario, empire_id);
-    scenario_distant_battle_set_roman_travel_months();
-    scenario_distant_battle_set_enemy_travel_months();
 }
 
 /**
@@ -367,19 +381,8 @@ int game_file_start_scenario(const char *scenario_file)
     uint8_t scenario_name[FILE_NAME_MAX];
     encoding_from_utf8(scenario_file, scenario_name, FILE_NAME_MAX);
     file_remove_extension((char *) scenario_name);
+    scenario_set_custom(2);
     return start_scenario(scenario_name, scenario_file);
-}
-
-int game_file_load_scenario_data(const char *scenario_file)
-{
-    if (!game_file_io_read_scenario(scenario_file)) {
-        return 0;
-    }
-
-    trade_prices_reset();
-    load_empire_data(1, scenario_empire_id());
-    city_view_reset_orientation();
-    return 1;
 }
 
 int game_file_load_saved_game(const char *filename)

@@ -16,6 +16,9 @@ typedef void (map_callback)(int x, int y, int grid_offset);
 
 void city_view_init(void);
 
+void city_view_set_custom_lookup(int start_offset, int width, int height, int border_size);
+void city_view_restore_lookup(void);
+
 int city_view_orientation(void);
 
 void city_view_reset_orientation(void);

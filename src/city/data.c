@@ -1115,3 +1115,11 @@ void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown
 
     load_entry_exit(entry_exit_xy, entry_exit_grid_offset);
 }
+
+void city_data_load_basic_info(buffer *main, int *population, int *treasury)
+{
+    buffer_skip(main, 18080);
+    *treasury = buffer_read_i32(main);
+    buffer_skip(main, 20);
+    *population = buffer_read_i32(main);
+}

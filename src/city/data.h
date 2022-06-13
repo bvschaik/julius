@@ -15,4 +15,6 @@ void city_data_save_state(buffer *main, buffer *faction, buffer *faction_unknown
 void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown, buffer *graph_order,
                           buffer *entry_exit_xy, buffer *entry_exit_grid_offset, int has_separate_import_limits);
 
+void city_data_load_basic_info(buffer *main, int *population, int *treasury);
+
 #endif // CITY_DATA_H
