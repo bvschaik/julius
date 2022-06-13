@@ -427,7 +427,14 @@ static void set_texture_color_and_scale_mode(SDL_Texture *texture, color_t color
     }
     SDL_ScaleMode current_scale_mode;
     SDL_GetTextureScaleMode(texture, &current_scale_mode);
+
+    // Android doesn't look very good with linear scaling in the city, so we just disable it
+#ifndef __ANDROID__
     SDL_ScaleMode city_scale_mode = data.city_scale > 2.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
+#else
+    SDL_ScaleMode city_scale_mode = SDL_ScaleModeNearest;
+#endif
+
     SDL_ScaleMode texture_scale_mode = scale != 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
     SDL_ScaleMode desired_scale_mode = data.city_scale == scale ? city_scale_mode : texture_scale_mode;
     if (current_scale_mode != desired_scale_mode) {
@@ -458,13 +465,6 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     // The renderer draws the textures off-by-one when "scale * 100" is a multiple of 8, this fixes that rendering bug
     // by properly offseting the textures
     int src_correction = (((int) (scale * 100)) % 8) == 0 ? 1 : 0;
-
-    // On Android, when linear filtering is enabled, the src coordinates become incorrect, causing a visual glitch
-#ifdef __ANDROID__
-    if (data.city_scale > 2.0f) {
-        src_correction = 1;
-    }
-#endif
 
     SDL_Rect src_coords = { img->atlas.x_offset + src_correction, img->atlas.y_offset + src_correction,
         img->width - src_correction, img->height - src_correction };
