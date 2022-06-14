@@ -217,6 +217,9 @@ static void draw_mission_info(int x_offset, int y_offset, int box_size)
 static void draw_background(void)
 {
     window_draw_underlying_window();
+    if (*data.selected_file) {
+        data.has_valid_info = game_file_io_read_saved_game_info(data.selected_file, &data.info);
+    }
     data.redraw_full_window = 1;
 }
 
@@ -439,7 +442,7 @@ static void button_select_file(int index, int param2)
         string_copy(data.typed_name, data.previously_seen_typed_name, FILE_NAME_MAX);
         input_box_refresh_text(&file_name_input);
         data.message_not_exist_start_time = 0;
-        data.has_valid_info = game_file_io_read_saved_game_info(get_chosen_filename(), &data.info);
+        window_request_refresh();
     }
     if (data.dialog_type != FILE_DIALOG_DELETE && data.double_click) {
         data.double_click = 0;
