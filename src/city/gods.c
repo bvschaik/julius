@@ -109,7 +109,7 @@ static void perform_small_curse(god_type god)
             if (scenario_invasion_start_from_mars()) {
                 city_message_post(1, MESSAGE_MARS_IS_UPSET, 0, 0);
             } else {
-                city_message_post(1, MESSAGE_WRATH_OF_MARS_NO_MILITARY, 0, 0);
+                city_message_post(1, MESSAGE_WRATH_OF_MARS_NO_NATIVES, 0, 0);
             }
             break;
         case GOD_VENUS:

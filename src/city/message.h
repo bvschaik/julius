@@ -183,6 +183,7 @@ typedef enum {
     MESSAGE_IG_GAMES_END = 154,
     MESSAGE_SICKNESS = 155,
     MESSAGE_CAESAR_ANGER = 156,
+    MESSAGE_WRATH_OF_MARS_NO_NATIVES = 157,
 
 } city_message_type;
 

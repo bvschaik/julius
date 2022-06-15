@@ -424,6 +424,7 @@ message_advisor city_message_get_advisor(city_message_type message_type)
         case MESSAGE_LOCAL_UPRISING_MARS:
         case MESSAGE_GRAND_TEMPLE_COMPLETE:
         case MESSAGE_PANTHEON_COMPLETE:
+        case MESSAGE_WRATH_OF_MARS_NO_NATIVES:
             return MESSAGE_ADVISOR_RELIGION;
 
         case MESSAGE_INCREASED_TRADING:

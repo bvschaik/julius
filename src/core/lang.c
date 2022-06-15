@@ -281,6 +281,10 @@ void load_custom_messages(void)
     m->video.text = (uint8_t *) "smk/Emp_send_army.smk";
     m->urgent = 1;
     i += 1;
+
+    m = &data.message_entries[i];
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_MARS_MINOR_CURSE_PREVENTED, TR_CITY_MESSAGE_TEXT_MARS_MINOR_CURSE_PREVENTED, 1, MESSAGE_TYPE_GENERAL);
+    i += 1;
 }
 
 
