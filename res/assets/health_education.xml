@@ -27,11 +27,20 @@
 		<layer group="43" image="0" x="0" y="0"/>
 		<layer src="Academy_Upgrade_State" x="6" y="20"/>
 	</image>
-    <!-- Note: Doctor Healing animation frames 01-11 -->
-    <image id="Doctor heal" src="Doctor_heal_plague_01"/>
-    <image src="Doctor_heal_plague_02"/>
-    <image src="Doctor_heal_plague_03"/>
-    <image src="Doctor_heal_plague_04"/>
-    <image src="Doctor_heal_plague_05"/>
-    <image src="Doctor_heal_plague_06"/>
+	<!-- Note: Doctor Healing animation frames 01-11 -->
+	<image id="Doctor heal" src="Doctor_heal_plague_01"/>
+	<image src="Doctor_heal_plague_02"/>
+	<image src="Doctor_heal_plague_03"/>
+	<image src="Doctor_heal_plague_04"/>
+	<image src="Doctor_heal_plague_05"/>
+	<image src="Doctor_heal_plague_06"/>
+	<!-- Note: College Building Asset -->
+	<image id="College" src="College"/>
+	<!-- Note: Great Library Construction Phases -->
+	<image id="GLib_Cons_01" src="Great_Library_Construction_01"/>
+	<image id="GLib_Cons_02" src="Great_Library_Construction_02"/>
+	<image id="GLib_Cons_03" src="Great_Library_Construction_03"/>
+	<image id="GLib_Cons_04" src="Great_Library_Construction_04"/>
+	<!-- Note: Great Library Building Asset -->
+	<image id="Great_Library" src="Great_Library"/>
 </assetlist>
