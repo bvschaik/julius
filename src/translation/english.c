@@ -788,7 +788,7 @@ static translation_string all_strings[] = {
     {TR_SAVE_DIALOG_MILITARY, "Military"},
     {TR_SAVE_DIALOG_PEACEFUL, "Peaceful"},
     {TR_CITY_MESSAGE_TITLE_MARS_MINOR_CURSE_PREVENTED, "Wrath of Mars" },
-    {TR_CITY_MESSAGE_TEXT_MARS_MINOR_CURSE_PREVENTED, "Mars is enraged! We have little to be afraid in such a peaceful land, but that peace won't last forever." },
+    {TR_CITY_MESSAGE_TEXT_MARS_MINOR_CURSE_PREVENTED, "Mars is enraged! We have little to be afraid of in such a peaceful land, but be sure, that peace will not last forever!" },
 
 };
 
