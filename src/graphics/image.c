@@ -27,7 +27,7 @@ void image_draw_enemy(int image_id, int x, int y, float scale)
 void image_blend_footprint_color(int x, int y, color_t color, float scale)
 {
     graphics_renderer()->draw_custom_image(color == COLOR_MASK_GREEN ?
-        CUSTOM_IMAGE_GREEN_FOOTPRINT : CUSTOM_IMAGE_RED_FOOTPRINT, x, y, scale);
+        CUSTOM_IMAGE_GREEN_FOOTPRINT : CUSTOM_IMAGE_RED_FOOTPRINT, x, y, scale, 0);
 }
 
 static color_t base_color_for_font(font_t font)

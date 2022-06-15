@@ -61,7 +61,7 @@ typedef struct {
     void (*update_custom_image)(custom_image_type type);
     void (*update_custom_image_yuv)(custom_image_type type, const uint8_t *y_data, int y_width,
         const uint8_t *cb_data, int cb_width, const uint8_t *cr_data, int cr_width);
-    void (*draw_custom_image)(custom_image_type type, int x, int y, float scale);
+    void (*draw_custom_image)(custom_image_type type, int x, int y, float scale, int disable_filtering);
     int (*supports_yuv_image_format)(void);
 
     int (*save_image_from_screen)(int image_id, int x, int y, int width, int height);

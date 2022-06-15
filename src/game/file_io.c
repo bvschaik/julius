@@ -1007,9 +1007,6 @@ static building *savegame_building(int id)
     // buildings saved after the caravanserai need to have their offset pushed back by 1
     int offset = minimap_data.version <= SAVE_GAME_LAST_CARAVANSERAI_WRONG_OFFSET && minimap_data.caravanserai_id &&
         id > minimap_data.caravanserai_id ? -1 : 0;
-    if (offset) {
-        int a = 1;
-    }
     building_get_from_buffer(savegame_data.state.buildings, id, &b,
         minimap_data.version > SAVE_GAME_LAST_STATIC_VERSION, minimap_data.version, offset);
     return &b;

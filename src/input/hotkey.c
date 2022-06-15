@@ -34,6 +34,7 @@ typedef struct {
     int resize_to;
     int save_screenshot;
     int save_city_screenshot;
+    int save_minimap_screenshot;
 } global_hotkeys;
 
 static struct {
@@ -218,6 +219,9 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             break;
         case HOTKEY_SAVE_CITY_SCREENSHOT:
             def->action = &data.global_hotkey_state.save_city_screenshot;
+            break;
+        case HOTKEY_SAVE_MINIMAP_SCREENSHOT:
+            def->action = &data.global_hotkey_state.save_minimap_screenshot;
             break;
         case HOTKEY_BUILD_VACANT_HOUSE:
             def->action = &data.hotkey_state.building;
@@ -547,10 +551,13 @@ void hotkey_handle_global_keys(void)
         system_set_fullscreen(!setting_fullscreen());
     }
     if (data.global_hotkey_state.save_screenshot) {
-        graphics_save_screenshot(0);
+        graphics_save_screenshot(SCREENSHOT_DISPLAY);
     }
     if (data.global_hotkey_state.save_city_screenshot) {
-        graphics_save_screenshot(1);
+        graphics_save_screenshot(SCREENSHOT_FULL_CITY);
+    }
+    if (data.global_hotkey_state.save_minimap_screenshot) {
+        graphics_save_screenshot(SCREENSHOT_MINIMAP);
     }
 }
 

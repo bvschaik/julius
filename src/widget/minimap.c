@@ -515,7 +515,7 @@ void widget_minimap_draw(int x_offset, int y_offset, int width, int height)
     position_minimap(x_offset, y_offset, width, height);
     graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_MINIMAP,
         (int) ((data.screen.x - data.minimap.offset_x) * data.minimap.scale),
-        (int) ((data.screen.y - data.minimap.offset_y) * data.minimap.scale), data.minimap.scale);
+        (int) ((data.screen.y - data.minimap.offset_y) * data.minimap.scale), data.minimap.scale, 0);
 }
 
 void widget_minimap_draw_decorated(int x_offset, int y_offset, int width, int height)

@@ -99,6 +99,7 @@ static struct {
     graphics_renderer_interface renderer_interface;
     int supports_yuv_textures;
     float city_scale;
+    int disable_linear_filter;
 } data;
 
 static int save_screen_buffer(color_t *pixels, int x, int y, int width, int height, int row_width)
@@ -191,7 +192,7 @@ static void clear_screen(void)
     if (data.paused) {
         return;
     }
-    SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
+    SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0);
     SDL_RenderClear(data.renderer);
 }
 
@@ -437,6 +438,9 @@ static void set_texture_color_and_scale_mode(SDL_Texture *texture, color_t color
 
     SDL_ScaleMode texture_scale_mode = scale != 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
     SDL_ScaleMode desired_scale_mode = data.city_scale == scale ? city_scale_mode : texture_scale_mode;
+    if (data.disable_linear_filter) {
+        desired_scale_mode = SDL_ScaleModeNearest;
+    }
     if (current_scale_mode != desired_scale_mode) {
         SDL_SetTextureScaleMode(texture, desired_scale_mode);
     }
@@ -731,7 +735,7 @@ static void create_blend_texture(custom_image_type type)
     data.custom_textures[type].img.atlas.id = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
 }
 
-static void draw_custom_texture(custom_image_type type, int x, int y, float scale)
+static void draw_custom_texture(custom_image_type type, int x, int y, float scale, int disable_filtering)
 {
     if (data.paused) {
         return;
@@ -741,7 +745,9 @@ static void draw_custom_texture(custom_image_type type, int x, int y, float scal
             create_blend_texture(type);
         }
     }
+    data.disable_linear_filter = disable_filtering;
     draw_texture(&data.custom_textures[type].img, x, y, 0, scale);
+    data.disable_linear_filter = 0;
 }
 
 static int has_custom_texture(custom_image_type type)
