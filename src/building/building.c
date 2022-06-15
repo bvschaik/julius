@@ -48,7 +48,8 @@ building *building_get(int id)
     return array_item(data.buildings, id);
 }
 
-void building_get_from_buffer(buffer *buf, int id, building *b, int includes_building_size, int save_version)
+void building_get_from_buffer(buffer *buf, int id, building *b, int includes_building_size, int save_version,
+    int buffer_offset)
 {
     buffer_set(buf, 0);
     int building_buf_size = BUILDING_STATE_ORIGINAL_BUFFER_SIZE;
@@ -58,6 +59,7 @@ void building_get_from_buffer(buffer *buf, int id, building *b, int includes_bui
         building_buf_size = buffer_read_i32(buf);
         buf_skip = 4;
     }
+    buf_skip += buffer_offset;
     buffer_set(buf, building_buf_size * id + buf_skip);
     building_state_load_from_buffer(buf, b, building_buf_size, save_version);
 }

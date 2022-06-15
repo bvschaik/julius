@@ -190,7 +190,8 @@ typedef struct building {
 
 building *building_get(int id);
 
-void building_get_from_buffer(buffer *buf, int id, building *b, int includes_building_size, int save_version);
+void building_get_from_buffer(buffer *buf, int id, building *b, int includes_building_size, int save_version,
+    int buffer_offset);
 
 int building_count(void);
 

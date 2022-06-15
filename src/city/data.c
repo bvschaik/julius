@@ -673,7 +673,7 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     for (int i = 0; i < 231; i++) {
         city_data.unused.unknown_2924[i] = buffer_read_i8(main);
     }
-    city_data.sentiment.crime_cooldown = buffer_read_i8(main);
+    city_data.sentiment.crime_cooldown = buffer_read_i8(main); 
     city_data.building.caravanserai_building_id = buffer_read_i32(main);
     city_data.caravanserai.total_food = buffer_read_i32(main);
     for (int i = 0; i < RESOURCE_MAX; i++) {
@@ -1116,10 +1116,12 @@ void city_data_load_state(buffer *main, buffer *faction, buffer *faction_unknown
     load_entry_exit(entry_exit_xy, entry_exit_grid_offset);
 }
 
-void city_data_load_basic_info(buffer *main, int *population, int *treasury)
+void city_data_load_basic_info(buffer *main, int *population, int *treasury, int *caravanserai_id)
 {
     buffer_skip(main, 18080);
     *treasury = buffer_read_i32(main);
     buffer_skip(main, 20);
     *population = buffer_read_i32(main);
+    buffer_skip(main, 10596);
+    *caravanserai_id = buffer_read_i32(main);
 }

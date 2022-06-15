@@ -4,6 +4,7 @@
 #include "game/resource.h"
 
 #define SAVE_GAME_ROADBLOCK_DATA_MOVED_FROM_SUBTYPE 0x86
+#define SAVE_GAME_CARAVANSERAI_OFFSET_FIX 0x88
 
 static int is_industry_type(const building *b)
 {
@@ -13,6 +14,9 @@ static int is_industry_type(const building *b)
 
 static void write_type_data(buffer *buf, const building *b)
 {
+    // This function should ALWAYS write 42 bytes.
+    // If you don't need to write 42 bytes, write zeroes at the end.
+    // If you need more than 42 bytes, don't use the type data.
     if (building_is_house(b->type)) {
         for (int i = 0; i < INVENTORY_MAX; i++) {
             buffer_write_i16(buf, b->data.house.inventory[i]);
@@ -53,7 +57,8 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_i16(buf, b->data.monument.progress);
         buffer_write_i16(buf, b->data.monument.phase);
         buffer_write_u8(buf, b->data.market.fetch_inventory_id);
-    // As above, Ceres and Venus temples are both monuments and suppliers 
+        buffer_write_u8(buf, 0);
+        // As above, Ceres and Venus temples are both monuments and suppliers 
     } else if (b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
         for (int i = 0; i < RESOURCE_MAX; i++) {
             buffer_write_i16(buf, b->data.monument.resources_needed[i]);
@@ -253,8 +258,11 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     // up until that point in Augustus' development
 }
 
-static void read_type_data(buffer *buf, building *b, int building_buf_size)
+static void read_type_data(buffer *buf, building *b, int version)
 {
+    // This function should ALWAYS read 42 bytes.
+    // The only exception is for Caravanserai on old savegame versions, which due to an oversight only read 41 bytes.
+    // If you don't need to read 42 bytes, skip the unneeded ones.
     if (building_is_house(b->type)) {
         for (int i = 0; i < INVENTORY_MAX; i++) {
             b->data.house.inventory[i] = buffer_read_i16(buf);
@@ -295,7 +303,12 @@ static void read_type_data(buffer *buf, building *b, int building_buf_size)
         b->data.monument.progress = buffer_read_i16(buf);
         b->data.monument.phase = buffer_read_i16(buf);
         b->data.market.fetch_inventory_id = buffer_read_u8(buf);
-    // As above, Ceres and Venus temples are both monuments and suppliers 
+        // Old savegame versions had a bug where the caravanserai's building type data size was off by 1
+        // Old save versions don't need to skip the byte, while new save versions do
+        if (version >= SAVE_GAME_CARAVANSERAI_OFFSET_FIX) {
+            buffer_skip(buf, 1);
+        }
+        // As above, Ceres and Venus temples are both monuments and suppliers 
     } else if (b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
         for (int i = 0; i < RESOURCE_MAX; i++) {
             b->data.monument.resources_needed[i] = buffer_read_i16(buf);
@@ -434,7 +447,7 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     b->house_tax_coverage = buffer_read_u8(buf);
     b->house_pantheon_access = buffer_read_u8(buf);
     b->formation_id = buffer_read_i16(buf);
-    read_type_data(buf, b, building_buf_size);
+    read_type_data(buf, b, save_version);
     b->tax_income_or_storage = buffer_read_i32(buf);
     b->house_days_without_food = buffer_read_u8(buf);
     b->has_plague = buffer_read_u8(buf);

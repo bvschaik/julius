@@ -58,7 +58,7 @@
 
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x87;
+static const int SAVE_GAME_CURRENT_VERSION = 0x88;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
@@ -72,7 +72,7 @@ static const int SAVE_GAME_LAST_STORED_IMAGE_IDS = 0x83;
 static const int SAVE_GAME_INCREASE_GRANARY_CAPACITY = 0x85;
 // static const int SAVE_GAME_ROADBLOCK_DATA_MOVED_FROM_SUBTYPE = 0x86; This define is unneeded for now
 static const int SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION = 0x86;
-
+static const int SAVE_GAME_LAST_CARAVANSERAI_WRONG_OFFSET = 0x87;
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -228,6 +228,7 @@ static struct {
     int version;
     int city_width;
     int city_height;
+    int caravanserai_id;
     scenario_climate climate;
 } minimap_data;
 
@@ -1002,8 +1003,15 @@ static int savegame_get_building_id(int grid_offset)
 static building *savegame_building(int id)
 {
     static building b;
+    // Old savegame versions had a bug where the caravanserai's building save data size was one byte too small, so all
+    // buildings saved after the caravanserai need to have their offset pushed back by 1
+    int offset = minimap_data.version <= SAVE_GAME_LAST_CARAVANSERAI_WRONG_OFFSET && minimap_data.caravanserai_id &&
+        id > minimap_data.caravanserai_id ? -1 : 0;
+    if (offset) {
+        int a = 1;
+    }
     building_get_from_buffer(savegame_data.state.buildings, id, &b,
-        minimap_data.version > SAVE_GAME_LAST_STATIC_VERSION, minimap_data.version);
+        minimap_data.version > SAVE_GAME_LAST_STATIC_VERSION, minimap_data.version, offset);
     return &b;
 }
 
@@ -1129,7 +1137,7 @@ static int savegame_read_file_info(FILE *fp, saved_game_info *info, int version)
 
     info->custom_mission = read_int32(fp);
 
-    city_data_load_basic_info(&city_data.buf, &info->population, &info->treasury);
+    city_data_load_basic_info(&city_data.buf, &info->population, &info->treasury, &minimap_data.caravanserai_id);
     game_time_load_basic_info(&game_time.buf, &info->month, &info->year);
 
     int grid_start;
