@@ -8,6 +8,8 @@
 #include "building/rotation.h"
 #include "city/view.h"
 #include "city/warning.h"
+#include "core/lang.h"
+#include "core/string.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -34,6 +36,10 @@
 #define MENU_ICON_Y_OFFSET 3
 
 #define SUBMENU_NONE -1
+
+#define TOOLTIP_TEXT_LENGTH 1000
+
+static uint8_t tooltip_text[TOOLTIP_TEXT_LENGTH];
 
 static void button_menu_index(int param1, int param2);
 static void button_menu_item(int item);
@@ -356,6 +362,62 @@ static void button_menu_item(int item)
     }
 }
 
+static inline int remanining_length(const uint8_t *index)
+{
+    return TOOLTIP_TEXT_LENGTH - (index - tooltip_text);
+}
+
+static void generate_tooltip_text_for_monument(building_type monument)
+{
+    int phases = building_monument_phases(monument);
+    uint8_t *index = tooltip_text;
+    index += string_from_int(index, phases, 0);
+    index = string_copy(string_from_ascii(" "), index, remanining_length(index));
+
+    index = string_copy(lang_get_string(CUSTOM_TRANSLATION, TR_TOOLTIP_MONUMENT_PHASES),
+        index, remanining_length(index));
+    index = string_copy(lang_get_string(CUSTOM_TRANSLATION, TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS),
+        index, remanining_length(index));
+
+    int resources_needed[RESOURCE_MAX] = { 0 };
+
+    for (int phase = 1; phase <= phases; phase++) {
+        for (int r = 0; r < RESOURCE_MAX; r++) {
+            resources_needed[r] += building_monument_resources_needed_for_monument_type(monument, r, phase);
+        }
+    }
+
+    int has_listed_resource = 0;
+
+    for (int r = 1; r < RESOURCE_MAX; r++) {
+        if (resources_needed[r]) {
+            if (has_listed_resource) {
+                index = string_copy(string_from_ascii(", "), index, remanining_length(index));
+            }
+            index += string_from_int(index, resources_needed[r], 0);
+            index = string_copy(string_from_ascii(" "), index, remanining_length(index));
+            index = string_copy(lang_get_string(23, r), index, remanining_length(index));
+            has_listed_resource = 1;
+        }
+    }
+}
+
+static void get_tooltip(tooltip_context *c)
+{
+    if (!data.focus_button_id) {
+        return;
+    }
+
+    int button = button_index_to_submenu_item(data.focus_button_id - 1);
+    building_type type = building_menu_type(data.selected_submenu, button);
+
+    if (building_monument_type_is_monument(type)) {
+        generate_tooltip_text_for_monument(type);
+        c->precomposed_text = tooltip_text;
+        c->type = TOOLTIP_BUTTON;
+    }
+}
+
 void window_build_menu_show(int submenu)
 {
     if (submenu == SUBMENU_NONE || submenu == data.selected_submenu) {
@@ -368,7 +430,7 @@ void window_build_menu_show(int submenu)
             draw_background,
             draw_foreground,
             handle_input,
-            0
+            get_tooltip
         };
         window_show(&window);
     }

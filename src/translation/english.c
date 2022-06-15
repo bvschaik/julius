@@ -790,7 +790,8 @@ static translation_string all_strings[] = {
     {TR_SAVE_DIALOG_PEACEFUL, "Peaceful"},
     {TR_CITY_MESSAGE_TITLE_MARS_MINOR_CURSE_PREVENTED, "Wrath of Mars" },
     {TR_CITY_MESSAGE_TEXT_MARS_MINOR_CURSE_PREVENTED, "Mars is enraged! We have little to be afraid of in such a peaceful land, but be sure, that peace will not last forever!" },
-
+    {TR_TOOLTIP_MONUMENT_PHASES, "phases. "},
+    {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Resource requirements:\n"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
