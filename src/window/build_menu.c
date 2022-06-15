@@ -369,12 +369,10 @@ static inline int remanining_length(const uint8_t *index)
 
 static void generate_tooltip_text_for_monument(building_type monument)
 {
-    int phases = building_monument_phases(monument);
+    int phases = building_monument_phases(monument) - 1;
     uint8_t *index = tooltip_text;
     index += string_from_int(index, phases, 0);
-    index = string_copy(string_from_ascii(" "), index, remanining_length(index));
-
-    index = string_copy(lang_get_string(CUSTOM_TRANSLATION, TR_TOOLTIP_MONUMENT_PHASES),
+    index = string_copy(lang_get_string(CUSTOM_TRANSLATION, TR_TOOLTIP_MONUMENT_PHASE + (phases != 1 ? 1 : 0)),
         index, remanining_length(index));
     index = string_copy(lang_get_string(CUSTOM_TRANSLATION, TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS),
         index, remanining_length(index));
