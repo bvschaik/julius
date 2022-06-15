@@ -14,6 +14,8 @@
 
 #define NUM_PLAGUE_BUILDINGS sizeof(PLAGUE_BUILDINGS) / sizeof(building_type)
 
+#define BASE_HOSPITAL_COVERAGE 750
+
 static const building_type PLAGUE_BUILDINGS[] = { BUILDING_DOCK, BUILDING_WAREHOUSE, BUILDING_GRANARY };
 
 
@@ -173,21 +175,7 @@ static void cause_disease(int total_people)
             }
         }
     }
-    // kill people in tents
-    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
-        building *next_of_type = 0; // building_destroy_by_plague changes the building type
-        for (building *b = building_first_of_type(type); b; b = next_of_type) {
-            next_of_type = b->next_of_type;
-            if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
-                people_to_kill -= b->house_population;
-                building_destroy_by_plague(b);
-                if (people_to_kill <= 0) {
-                    return;
-                }
-            }
-        }
-    }
-    // kill anyone
+    // kill anyone, starting with tents and working up the housing levels
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
         building *next_of_type = 0; // building_destroy_by_plague changes the building type
         for (building *b = building_first_of_type(type); b; b = next_of_type) {
@@ -205,25 +193,17 @@ static void cause_disease(int total_people)
 
 static int get_sickness_reduction_ratio(void)
 {
-    int city_global_coverage_percent = city_health();
-    int city_hospital_coverage_percent = city_culture_coverage_hospital();
-    int base_hospital_coverage = 750;
     int population = city_population();
 
-    if (population < 1000) { // before 1000 hab there is no malus
-        city_hospital_coverage_percent = 0;
-    } else {
-        // there are hospitals, use real coverage to get malus
-        if (city_hospital_coverage_percent) {
-            city_hospital_coverage_percent = 100 - city_hospital_coverage_percent;
-        } else { // else use base coverage
-            city_hospital_coverage_percent = 100 - calc_percentage(base_hospital_coverage, population);
-        }
+    int missing_hospital_coverage = 100 - city_culture_coverage_hospital();
+    // If there are no hospitals, we use a base coverage
+    if (missing_hospital_coverage == 100) {
+        missing_hospital_coverage -= calc_percentage(BASE_HOSPITAL_COVERAGE, population);
     }
 
-    int reduction_ratio = city_global_coverage_percent - city_hospital_coverage_percent;
+    int reduction_ratio = city_health() - calc_bound(missing_hospital_coverage, 0, 100);
 
-    // can't have a raise of sickness_level in case of healing level is poor reduction is set to 0
+    // Can't have a raise of sickness_level in case of healing level is poor reduction is set to 0
     if (reduction_ratio < 0) {
         reduction_ratio = 0;                    
     }
@@ -242,7 +222,7 @@ static void increase_sickness_level_in_building(building *b, int reduction_ratio
                 b->sickness_level = MAX_SICKNESS_LEVEL;
             }
             // then apply reduction
-            b->sickness_level = b->sickness_level - (b->sickness_level * reduction_ratio / 100);
+            b->sickness_level -= calc_adjust_with_percentage(b->sickness_level, reduction_ratio);
         }
     }
 }
@@ -280,21 +260,32 @@ void city_health_update(void)
                 continue;
             }
             total_population += b->house_population;
+            int has_health_access = b->data.house.clinic + b->data.house.hospital;
+            int house_healthy_population = 0;
             if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
-                if (b->data.house.clinic) {
-                    healthy_population += b->house_population;
+                if (has_health_access) {
+                    house_healthy_population += b->house_population;
                 } else {
-                    healthy_population += b->house_population / 4;
+                    house_healthy_population += b->house_population / 4;
                 }
-            } else if (b->data.house.clinic) {
+            } else if (has_health_access) {
                 if (b->house_days_without_food == 0) {
-                    healthy_population += b->house_population;
+                    house_healthy_population += b->house_population;
                 } else {
-                    healthy_population += b->house_population / 4;
+                    house_healthy_population += b->house_population / 4;
                 }
             } else if (b->house_days_without_food == 0) {
-                healthy_population += b->house_population / 4;
+                house_healthy_population += b->house_population / 4;
             }
+            if (house_healthy_population < b->house_population) {
+                if (b->data.house.bathhouse) {
+                    house_healthy_population += b->house_population / 4;
+                }
+                if (b->data.house.barber) {
+                    house_healthy_population += b->house_population / 8;
+                }
+            }
+            healthy_population += calc_bound(house_healthy_population, 0, b->house_population);
         }
     }
     city_data.health.target_value = calc_percentage(healthy_population, total_population);

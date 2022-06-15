@@ -37,24 +37,6 @@ static int provide_culture(int x, int y, void (*callback)(building *))
     return serviced;
 }
 
-static void provide_healing(int x, int y, void (*callback)(building *, int coverage), int coverage)
-{
-    int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 1, 4, &x_min, &y_min, &x_max, &y_max);
-    for (int yy = y_min; yy <= y_max; yy++) {
-        for (int xx = x_min; xx <= x_max; xx++) {
-            int grid_offset = map_grid_offset(xx, yy);
-            int building_id = map_building_at(grid_offset);
-            if (building_id) {
-                building *b = building_get(building_id);
-                if (b->sickness_level) {
-                    callback(b, coverage);
-                }
-            }
-        }
-    }
-}
-
 static void provide_sickness(int x, int y, void (*callback)(building *, int sickness_dest), int sickness_dest)
 {
     int x_min, y_min, x_max, y_max;
