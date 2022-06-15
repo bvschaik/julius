@@ -379,22 +379,18 @@ static void generate_tooltip_text_for_monument(building_type monument)
     index = string_copy(lang_get_string(CUSTOM_TRANSLATION, TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS),
         index, remanining_length(index));
 
-    int resources_needed[RESOURCE_MAX] = { 0 };
-
-    for (int phase = 1; phase <= phases; phase++) {
-        for (int r = 0; r < RESOURCE_MAX; r++) {
-            resources_needed[r] += building_monument_resources_needed_for_monument_type(monument, r, phase);
-        }
-    }
-
     int has_listed_resource = 0;
 
     for (int r = 1; r < RESOURCE_MAX; r++) {
-        if (resources_needed[r]) {
+        int amount = 0;
+        for (int phase = 1; phase <= phases; phase++) {
+            amount += building_monument_resources_needed_for_monument_type(monument, r, phase);
+        }
+        if (amount) {
             if (has_listed_resource) {
                 index = string_copy(string_from_ascii(", "), index, remanining_length(index));
             }
-            index += string_from_int(index, resources_needed[r], 0);
+            index += string_from_int(index, amount, 0);
             index = string_copy(string_from_ascii(" "), index, remanining_length(index));
             index = string_copy(lang_get_string(23, r), index, remanining_length(index));
             has_listed_resource = 1;
