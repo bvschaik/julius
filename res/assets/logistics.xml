@@ -495,4 +495,24 @@
 	<image id="Chisel_NE_10" src="Chisel_NE_03"/>
 	<image id="Chisel_NE_11" src="Chisel_NE_02"/>
 	<image id="Chisel_NE_12" src="Chisel_NE_01"/>
+	<!-- Note: Engineers' Post Upgrade State (Assets by Areldir) -->
+	<image id="Eng_Post_Upgrade_OFF" width="178" height="198" isometric="true">
+		<layer group="81" image="0" y="22"/>
+		<layer src="Engineers_Post_Upgrade_Base" x="0" y="12"/>
+	</image>
+	<image id="Eng_Post_Upgrade_ON" width="178" height="198" isometric="true">
+		<layer group="this" image="Eng_Post_Upgrade_OFF"/>
+		<animation speed="5" x="24" y="0" reversible="false">
+			<frame src="Engineers_Post_Upgrade_ON_01"/>
+			<frame src="Engineers_Post_Upgrade_ON_02"/>
+			<frame src="Engineers_Post_Upgrade_ON_03"/>
+			<frame src="Engineers_Post_Upgrade_ON_04"/>
+			<frame src="Engineers_Post_Upgrade_ON_05"/>
+			<frame src="Engineers_Post_Upgrade_ON_06"/>
+			<frame src="Engineers_Post_Upgrade_ON_07"/>
+			<frame src="Engineers_Post_Upgrade_ON_08"/>
+			<frame src="Engineers_Post_Upgrade_ON_09"/>
+			<frame src="Engineers_Post_Upgrade_ON_10"/>
+		</animation>
+	</image>
 </assetlist>
