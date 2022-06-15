@@ -23,8 +23,8 @@
 		<layer src="Ceres_Temple_Construction_03" x="0" y="26"/>
 	</image>
 	<image id="Ceres_LT_75" width="178" height="159">
-		<layer group="71" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Ceres_Temple_Construction_04" x="0" y="8"/>
+		<layer group="this" image="Ceres_LT_50" x="0" y="0"/>
+		<layer src="Ceres_Temple_Construction_04" x="44" y="8"/>
 	</image>
 	<!-- Note: Ceres Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
 	<image id="Ceres Complex Const 01" width="418" height="234" isometric="true">
@@ -134,8 +134,8 @@
 		<layer src="Mars_Temple_Construction_03" x="0" y="27"/>
 	</image>
 	<image id="Mars_LT_75" width="178" height="148">
-		<layer group="74" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Mars_Temple_Construction_04" x="0" y="7"/>
+		<layer group="this" image="Mars_LT_50" x="0" y="0"/>
+		<layer src="Mars_Temple_Construction_04" x="27" y="7"/>
 	</image>
 	<!-- Note: Mars Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
 	<image id="Mars Complex Const 01" width="418" height="223" isometric="true">
@@ -241,8 +241,8 @@
 		<layer src="Mercury_Temple_Construction_03" x="0" y="16"/>
 	</image>
 	<image id="Mercury_LT_75" width="178" height="148">
-		<layer group="73" image="1" part="footprint" x="0" y="0"/>
-		<layer src="Mercury_Temple_Construction_04" x="0" y="8"/>
+		<layer group="this" image="Mercury_LT_50" x="0" y="0"/>
+		<layer src="Mercury_Temple_Construction_04" x="51" y="8"/>
 	</image>
 	<!-- Note: Mercury Complex Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
 	<image id="Mercury Complex Const 01" width="418" height="223" isometric="true">
@@ -357,17 +357,17 @@
 	</image>
 	<image id="Neptune Complex Const 03" width="418" height="229" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="10"/>
-		<layer src="Neptune_GT_Construction_Shadow_02" x="224" y="41"/>
+		<layer src="Neptune_GT_Construction_Shadow_02" x="284" y="57"/>
 		<layer group="this" image="Neptune_LT_50" x="150" y="0"/>
 	</image>
 	<image id="Neptune Complex Const 04" width="418" height="229" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="10"/>
-		<layer src="Neptune_GT_Construction_Shadow_02" x="224" y="41"/>
+		<layer src="Neptune_GT_Construction_Shadow_02" x="284" y="57"/>
 		<layer group="this" image="Neptune_LT_75" x="150" y="0"/>
 	</image>
 	<image id="Neptune Complex Const 05" width="418" height="229" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="10"/>
-		<layer src="Neptune_GT_Construction_Shadow_02" x="224" y="41"/>
+		<layer src="Neptune_GT_Construction_Shadow_02" x="284" y="57"/>
 		<layer group="this" image="Neptune LTemple Off" x="150" y="0"/>
 	</image>
 	<!-- Note: Neptune Complex ON/OFF States -->
@@ -471,25 +471,25 @@
 	</image>
 	<image id="Pantheon Const 02" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
-		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
+		<layer src="Pantheon_Construction_Shadow_01" x="309" y="71"/>
 		<layer src="Pantheon_Construction_Base" x="150" y="55"/>
 		<layer src="Pantheon_Construction_02" x="178" y="53"/>
 	</image>
 	<image id="Pantheon Const 03" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
-		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
+		<layer src="Pantheon_Construction_Shadow_01" x="309" y="71"/>
 		<layer src="Pantheon_Construction_Base" x="150" y="55"/>
 		<layer src="Pantheon_Construction_03" x="169" y="27"/>
 	</image>
 	<image id="Pantheon Const 04" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
-		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
+		<layer src="Pantheon_Construction_Shadow_01" x="309" y="71"/>
 		<layer src="Pantheon_Construction_Base" x="150" y="55"/>
 		<layer src="Pantheon_Construction_04" x="172" y="14"/>
 	</image>
 	<image id="Pantheon Const 05" width="418" height="231" isometric="true">
 		<layer group="this" image="GT_Cons_Base_r" x="0" y="12"/>
-		<layer src="Pantheon_Construction_Shadow_01" x="287" y="56"/>
+		<layer src="Pantheon_Construction_Shadow_01" x="309" y="71"/>
 		<layer src="Pantheon_Construction_05" x="150" y="14"/>
 	</image>
 	<!-- Note: Pantheon Complex ON/OFF States -->
