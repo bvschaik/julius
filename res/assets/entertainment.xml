@@ -227,9 +227,9 @@
 		<layer group="214" image="0" part="footprint" x="0" y="-26"/>
 		<layer src="Circus_Construction_04_R_Back_Part"/>
 	</image>
-	<image id="Circus NESW 32" width="298" height="179" isometric="true">
-		<layer group="213" image="2" part="footprint" x="0" y="-2"/>
-		<layer src="Circus_Construction_04_Middle_Part"/>
+	<image id="Circus NESW 32" width="298" height="181" isometric="true">
+		<layer group="213" image="2" x="0" y="0"/>
+		<layer src="Circus_Construction_04_Middle_Part" y="2"/>
 	</image>
 	<image id="Circus NWSE 32" width="298" height="181" isometric="true">
 		<layer group="214" image="2" part="footprint" x="0" y="0"/>
