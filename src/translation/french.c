@@ -126,6 +126,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_RESIZE_TO_1024, "Redimensionner en 1024x768"},
     {TR_HOTKEY_SAVE_SCREENSHOT, "Capturer l'écran de jeu"},
     {TR_HOTKEY_SAVE_CITY_SCREENSHOT, "Capturer la cité entière"},
+    {TR_HOTKEY_SAVE_MINIMAP_SCREENSHOT, "Capturer la mini-carte"},
     {TR_HOTKEY_BUILD_CLONE, "Cloner l'objet sous le curseur"},
     {TR_HOTKEY_LOAD_FILE, "Charger une partie"},
     {TR_HOTKEY_SAVE_FILE, "Sauvegarder une partie"},
@@ -776,7 +777,22 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_EMPERORS_WRATH, "Vous êtes tombé en disgrâce auprès de César et ce dernier a ordonné votre arrestation. À moins d'améliorer l'estime que l'Empereur vous porte, ses légions d'élite envahiront bientôt votre cité." },
     {TR_BUILDING_ACADEMY_UPGRADE_DESC, "Cette université est opérationnelle. Le développement de la zone a permis d'agrandir le bâtiment, permettant la tenue de nombreuses conférences et recherches."},
     {TR_BUILDING_PALISADE_GATE, "Portail de palissade"},
-    {TR_BUILDING_PALISADE_GATE_DESC, "Cet étroit portail en bois permet de contrôler le passage des citoyens à travers les défenses de la cité."}
+    {TR_BUILDING_PALISADE_GATE_DESC, "Cet étroit portail en bois permet de contrôler le passage des citoyens à travers les défenses de la cité."},
+    {TR_SAVE_DIALOG_INVALID_FILE, "Fichier invalide"},
+    {TR_SAVE_DIALOG_SELECT_FILE, "Choisir un fichier"},
+    {TR_SAVE_DIALOG_FUNDS, "Fonds :"},
+    {TR_SAVE_DIALOG_POPULATION, "Population :"},
+    {TR_SAVE_DIALOG_DATE, "Date :"},
+    {TR_SAVE_DIALOG_CUSTOM_SCENARIO, "Scénario bâtisseur"},
+    {TR_SAVE_DIALOG_FIRST_MISSION, "Première mission"},
+    {TR_SAVE_DIALOG_MISSION, "Mission"},
+    {TR_SAVE_DIALOG_MILITARY, "Militaire"},
+    {TR_SAVE_DIALOG_PEACEFUL, "Paisible"},
+    {TR_CITY_MESSAGE_TITLE_MARS_MINOR_CURSE_PREVENTED, "Courroux de Mars" },
+    {TR_CITY_MESSAGE_TEXT_MARS_MINOR_CURSE_PREVENTED, "Mars est furieux! Nous avons peu à craindre sur des terres aussi paisibles, mais prenez garde, la paix n'est jamais éternelle !" },
+    {TR_TOOLTIP_MONUMENT_PHASE, " phase. "},
+    {TR_TOOLTIP_MONUMENT_PHASES, " phases. "},
+    {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Ressources nécessaires :\n"}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
