@@ -2,6 +2,7 @@
 
 #include "building/destruction.h"
 #include "building/granary.h"
+#include "building/model.h"
 #include "building/warehouse.h"
 #include "city/culture.h"
 #include "city/data_private.h"
@@ -259,33 +260,27 @@ void city_health_update(void)
             if (b->state != BUILDING_STATE_IN_USE || !b->house_size || !b->house_population) {
                 continue;
             }
+            int house_health = calc_bound(b->subtype.house_level, 0, 10);
+            if (b->data.house.clinic && b->data.house.hospital) {
+                house_health += 50;
+            } else if (b->data.house.hospital) {
+                house_health += 40;
+            } else if (b->data.house.clinic) {
+                house_health += 30;
+            }
+            if (b->data.house.bathhouse) {
+                house_health += 20;
+            }
+            if (b->data.house.barber) {
+                house_health += 10;
+            }
+            house_health += b->data.house.num_foods * 15;
+
+            int health_cap = (model_get_house(b->subtype.house_level)->food_types && !b->data.house.num_foods) ?
+                40 : 100;
+            house_health = calc_bound(house_health, 0, health_cap);
             total_population += b->house_population;
-            int has_health_access = b->data.house.clinic + b->data.house.hospital;
-            int house_healthy_population = 0;
-            if (b->subtype.house_level <= HOUSE_LARGE_TENT) {
-                if (has_health_access) {
-                    house_healthy_population += b->house_population;
-                } else {
-                    house_healthy_population += b->house_population / 4;
-                }
-            } else if (has_health_access) {
-                if (b->house_days_without_food == 0) {
-                    house_healthy_population += b->house_population;
-                } else {
-                    house_healthy_population += b->house_population / 4;
-                }
-            } else if (b->house_days_without_food == 0) {
-                house_healthy_population += b->house_population / 4;
-            }
-            if (house_healthy_population < b->house_population) {
-                if (b->data.house.bathhouse) {
-                    house_healthy_population += b->house_population / 4;
-                }
-                if (b->data.house.barber) {
-                    house_healthy_population += b->house_population / 8;
-                }
-            }
-            healthy_population += calc_bound(house_healthy_population, 0, b->house_population);
+            healthy_population += calc_adjust_with_percentage(b->house_population, house_health);
         }
     }
     city_data.health.target_value = calc_percentage(healthy_population, total_population);
