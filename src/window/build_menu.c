@@ -23,7 +23,7 @@
 #include "widget/sidebar/city.h"
 #include "window/city.h"
 
-#define MENU_X_OFFSET 290
+#define MENU_X_OFFSET 298
 #define MENU_Y_OFFSET 110
 #define MENU_ITEM_HEIGHT 24
 #define MENU_ITEM_WIDTH 208
@@ -34,6 +34,7 @@
 #define MENU_ICON_WIDTH 14
 #define MENU_ICON_X_OFFSET 3
 #define MENU_ICON_Y_OFFSET 3
+#define MENU_ITEM_MONEY_OFFSET 82
 
 #define SUBMENU_NONE -1
 
@@ -186,7 +187,7 @@ static void draw_menu_buttons(void)
 {
     int x_offset = get_sidebar_x_offset();
     int item_index = -1;
-    int item_x_align = x_offset - MENU_X_OFFSET - 8;
+    int item_x_align = x_offset - MENU_X_OFFSET;
     for (int i = 0; i < data.num_items; i++) {
         item_index = building_menu_next_index(data.selected_submenu, item_index);
         label_draw(item_x_align, data.y_offset + MENU_Y_OFFSET + MENU_ITEM_HEIGHT * i, 18,
@@ -217,7 +218,8 @@ static void draw_menu_buttons(void)
             cost = model_get_building(BUILDING_LARGE_TEMPLE_CERES)->cost;
         }
         if (cost) {
-            text_draw_money(cost, x_offset - 82, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
+            text_draw_money(cost, x_offset - MENU_ITEM_MONEY_OFFSET,
+                data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
                 FONT_NORMAL_GREEN);
         }
 
@@ -398,7 +400,8 @@ static void generate_tooltip_text_for_monument(building_type monument)
 
 static void get_tooltip(tooltip_context *c)
 {
-    if (!data.focus_button_id) {
+    if (!data.focus_button_id ||
+        mouse_get()->x > get_sidebar_x_offset() - MENU_X_OFFSET + MENU_ICON_WIDTH * 3) {
         return;
     }
 
