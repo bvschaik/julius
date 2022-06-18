@@ -154,6 +154,7 @@ static int get_height_id(void)
             case BUILDING_HEDGE_GATE_DARK:
             case BUILDING_HEDGE_GATE_LIGHT:
             case BUILDING_PALISADE_GATE:
+            case BUILDING_GLADIATOR_STATUE:
                 return 1;
 
             case BUILDING_SENATE:
@@ -684,7 +685,8 @@ static void draw_background(void)
             btype == BUILDING_SMALL_STATUE_ALT_B ||
             btype == BUILDING_LEGION_STATUE ||
             btype == BUILDING_DECORATIVE_COLUMN ||
-            btype == BUILDING_HORSE_STATUE) {
+            btype == BUILDING_HORSE_STATUE ||
+            btype == BUILDING_GLADIATOR_STATUE) {
             window_building_draw_statue(&context);
         } else if (btype == BUILDING_LARGE_STATUE) {
             window_building_draw_large_statue(&context);

@@ -819,6 +819,12 @@ int building_image_get(building *b)
             }
         case BUILDING_PALISADE_GATE:
             return assets_get_image_id("Military", "Palisade_Gate") + building_connectable_get_palisade_gate_offset(b->grid_offset);
+        case BUILDING_GLADIATOR_STATUE:
+        {
+            int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
+            return assets_get_image_id("Aesthetics", "Gladiator_Statue") +
+                (orientation % 2) * building_properties_for_type(b->type)->rotation_offset;
+        }
         default:
             return 0;
     }

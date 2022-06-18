@@ -275,6 +275,7 @@ void map_orientation_update_buildings(void)
             case BUILDING_SMALL_STATUE:
             case BUILDING_SMALL_STATUE_ALT:
             case BUILDING_SMALL_STATUE_ALT_B:
+            case BUILDING_GLADIATOR_STATUE:
             case BUILDING_MEDIUM_STATUE:
             case BUILDING_LEGION_STATUE:
             case BUILDING_PAVILION_BLUE:

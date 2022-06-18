@@ -792,7 +792,8 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_MARS_MINOR_CURSE_PREVENTED, "Mars is enraged! We have little to be afraid of in such a peaceful land, but be sure, that peace will not last forever!" },
     {TR_TOOLTIP_MONUMENT_PHASE, " phase. "},
     {TR_TOOLTIP_MONUMENT_PHASES, " phases. "},
-    {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Resource requirements:\n"}
+    {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Resource requirements:\n"},
+    {TR_BUILDING_GLADIATOR_STATUE, "Gladiator statue"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
