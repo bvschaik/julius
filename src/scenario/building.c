@@ -70,9 +70,27 @@ int scenario_building_allowed(int building_type)
         case BUILDING_LARGE_STATUE:
         case BUILDING_SMALL_STATUE_ALT:
         case BUILDING_SMALL_STATUE_ALT_B:
+        case BUILDING_HORSE_STATUE:
+        case BUILDING_LEGION_STATUE:
+        case BUILDING_GLADIATOR_STATUE:
+        case BUILDING_OBELISK:
+        case BUILDING_SMALL_POND:
+        case BUILDING_LARGE_POND:
+        case BUILDING_MENU_STATUES:
             return scenario.allowed_buildings[ALLOWED_BUILDING_STATUES];
         case BUILDING_GARDENS:
+        case BUILDING_MENU_TREES:
+        case BUILDING_MENU_PATHS:
+        case BUILDING_HEDGE_DARK:
+        case BUILDING_HEDGE_LIGHT:
+        case BUILDING_PAVILION_BLUE:
+        case BUILDING_COLONNADE:
+        case BUILDING_GARDEN_WALL:
+        case BUILDING_ROOFED_GARDEN_WALL:
+        case BUILDING_DECORATIVE_COLUMN:
             return scenario.allowed_buildings[ALLOWED_BUILDING_GARDENS];
+        case BUILDING_MENU_PARKS:
+            return scenario.allowed_buildings[ALLOWED_BUILDING_GARDENS] || scenario.allowed_buildings[ALLOWED_BUILDING_STATUES];
         case BUILDING_PLAZA:
             return scenario.allowed_buildings[ALLOWED_BUILDING_PLAZA];
         case BUILDING_ENGINEERS_POST:

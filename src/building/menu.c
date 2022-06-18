@@ -183,6 +183,15 @@ static void enable_normal(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_CARAVANSERAI);
     enable_if_allowed(enabled, type, BUILDING_PALISADE);
     enable_if_allowed(enabled, type, BUILDING_GLADIATOR_STATUE);
+    enable_if_allowed(enabled, type, BUILDING_HEDGE_DARK);
+    enable_if_allowed(enabled, type, BUILDING_HEDGE_LIGHT);
+    enable_if_allowed(enabled, type, BUILDING_DECORATIVE_COLUMN);
+    enable_if_allowed(enabled, type, BUILDING_COLONNADE);
+    enable_if_allowed(enabled, type, BUILDING_PAVILION_BLUE);
+    enable_if_allowed(enabled, type, BUILDING_LARGE_POND);
+    enable_if_allowed(enabled, type, BUILDING_SMALL_POND);
+    enable_if_allowed(enabled, type, BUILDING_ROOFED_GARDEN_WALL);
+    enable_if_allowed(enabled, type, BUILDING_GARDEN_WALL);
 
 
     if (type == BUILDING_TRIUMPHAL_ARCH) {
@@ -295,12 +304,12 @@ static void disable_resources(int *enabled, building_type type)
 void building_menu_update(void)
 {
     tutorial_build_buttons tutorial_buttons = tutorial_get_build_buttons();
-    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
+    for (int sub = 0; sub < BUILD_MENU_ITEM_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
             int building_type = MENU_BUILDING_TYPE[sub][item];
             int *menu_item = &menu_enabled[sub][item];
-            // first 12 items always disabled
-            if (sub < 12) {
+            // first 12 items and parks always disabled at the start
+            if ((sub < 12) || (sub == 18)) {
                 *menu_item = 0;
             } else {
                 *menu_item = 1;
