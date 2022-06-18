@@ -304,7 +304,7 @@ static void disable_resources(int *enabled, building_type type)
 void building_menu_update(void)
 {
     tutorial_build_buttons tutorial_buttons = tutorial_get_build_buttons();
-    for (int sub = 0; sub < BUILD_MENU_ITEM_MAX; sub++) {
+    for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
             int building_type = MENU_BUILDING_TYPE[sub][item];
             int *menu_item = &menu_enabled[sub][item];
