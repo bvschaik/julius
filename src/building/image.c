@@ -691,7 +691,10 @@ int building_image_get(building *b)
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Mausoleum L Cons");
                 default:
-                    return assets_get_image_id("Religion", "Mausoleum L");
+                {
+                    int offset = building_variant_get_offset_with_rotation(b->type, b->variant);
+                    return assets_get_image_id("Religion", "Mausoleum L") + offset;
+                }
             }
         case BUILDING_NYMPHAEUM:
             switch (b->data.monument.phase) {
