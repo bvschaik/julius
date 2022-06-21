@@ -803,6 +803,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_MONUMENT_PHASE, " этап. "},
     {TR_TOOLTIP_MONUMENT_PHASES, " этапы. "},
     {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Требования к ресурсам:\n"},
+    {TR_BUILDING_GLADIATOR_STATUE, "Статуя гладиатора"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
