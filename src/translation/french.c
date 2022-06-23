@@ -548,8 +548,8 @@ static translation_string all_strings[] = {
     {TR_WINDOW_GAMES_NOT_ENOUGH_RESOURCES, "Pas assez de ressources stockées." },
     {TR_WINDOW_GAMES_NO_VENUE, "Lieu non construit ou manquant d'employés." },
     {TR_BUILDING_SMALL_TEMPLE_PHASE_1, "(Construction)" },
-    {TR_BUILDING_SMALL_TEMPLE_PHASE_1_TEXT, "Les maçons et les ingénieurs bâtissent soigneusement cette structure à partir d'un marbre étincelant." },
-    {TR_BUILDING_SMALL_TEMPLE_CONSTRUCTION_DESC, "La construction de ce temple nécessitera des matériaux stockés dans un entrepôt, des ouvriers d'un camp de travail, et des architectes d'une guilde des architectes." },
+    {TR_BUILDING_SMALL_TEMPLE_PHASE_1_TEXT, "Maçons et ingénieurs bâtissent cette structure sacrée à partir d'un marbre étincelant." },
+    {TR_BUILDING_SMALL_TEMPLE_CONSTRUCTION_DESC, "Bâtir ce temple requiert des matériaux stockés dans un entrepôt, des ouvriers d'un camp de travail, et des architectes de la guilde du même nom." },
     {TR_CITY_MESSAGE_TEXT_NAVAL_GAMES_PLANNING, "L'eau des réservoirs de la cité remplit lentement le Colisée. Les charpentiers commencent à assembler des navires de guerre alors que les gladiateurs s'entraînent au combat naval. Bientôt les Combats Navals commenceront !" },
     {TR_CITY_MESSAGE_TEXT_NAVAL_GAMES_STARTING, "Le Colisée est devenu un lac artificiel alors que les gladiateurs reconstituent de grandes victoires romaines en mer. Le sang et l'eau se mélangent alors que la foule exulte. La Naumachie - les Combats Navals - ont commencé !" },
     {TR_CITY_MESSAGE_TEXT_NAVAL_GAMES_ENDING, "Un long processus de nettoyage et de drainage commence pour rendre au Colisée son usage habituel. Votre peuple parlera de cet extraordinaire spectacle aquatique pendant des années." },
@@ -666,7 +666,7 @@ static translation_string all_strings[] = {
     {TR_SIDEBAR_EXTRA_REQUESTS_UNSTOCK, "Arrêter stockage"},
     {TR_TOOLTIP_ADVISOR_HOUSING_GRAPH_BUTTON, "Afficher les graphiques de population" },
     {TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON, "Consulter le rapport sur le logement" },
-    {TR_BUILDING_MONUMENT_CONSTRUCTION_ARCHITECT_NEEDED, "Ce monument dispose de tous les matériaux nécessaires pour cette phase et attend un architecte qualifié de la guilde des architectes pour superviser sa construction." },
+    {TR_BUILDING_MONUMENT_CONSTRUCTION_ARCHITECT_NEEDED, "Tous les matériaux requis pour cette phase ont été livrés. Un architecte de la guilde des architectes est attendu pour superviser la construction." },
     {TR_RETURN_ALL_TO_FORT, "Tous rentrer" },
     {TR_TOOLTIP_ADVISOR_ENTERTAINMENT_GAMES_BUTTON, "Informations sur les Jeux" },
     {TR_WINDOW_BUILDING_GOVERNMENT_LARGE_STATUE_WATER_WARNING, "Cette statue serait encore plus fabuleuse si sa fontaine fonctionnait. Il lui suffirait juste d'un accès à l'eau." },
@@ -792,7 +792,8 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_MARS_MINOR_CURSE_PREVENTED, "Mars est furieux! Nous avons peu à craindre sur des terres aussi paisibles, mais prenez garde, la paix n'est jamais éternelle !" },
     {TR_TOOLTIP_MONUMENT_PHASE, " phase. "},
     {TR_TOOLTIP_MONUMENT_PHASES, " phases. "},
-    {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Ressources nécessaires :\n"}
+    {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Ressources nécessaires :\n"},
+    {TR_BUILDING_GLADIATOR_STATUE, "Statue de gladiateur"}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
