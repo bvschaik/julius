@@ -113,7 +113,9 @@ static int is_file(int mode)
 }
 #endif
 
-#ifndef __ANDROID__
+#ifdef __ANDROID__
+static const char *assets_directory = ASSETS_DIRECTORY;
+#else
 #define MAX_ASSET_DIRS 10
 
 #ifndef CUSTOM_ASSETS_DIR
@@ -168,12 +170,10 @@ static int write_base_path_to(char *dest)
 
 static void set_assets_directory(void)
 {
+#ifndef __ANDROID__
     if (*assets_directory) {
         return;
     }
-#ifdef __ANDROID__
-    strncpy(assets_directory, ASSETS_DIRECTORY, FILE_NAME_MAX - 1);
-#else
     // Find assets directory from list
     for (int i = 0; i < MAX_ASSET_DIRS && ASSET_DIRS[i]; ++i) {
         // Special case - home directory
