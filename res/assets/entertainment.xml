@@ -93,12 +93,12 @@
 	<image id="Col Imp Games" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
 		<animation speed="9" x="90" y="34" reversible="false">
-			<frame src="Imperial_Games_01"/>
-			<frame src="Imperial_Games_02"/>
-			<frame src="Imperial_Games_03"/>
-			<frame src="Imperial_Games_04"/>
-			<frame src="Imperial_Games_05"/>
-			<frame src="Imperial_Games_06"/>
+			<frame group="this" image="Imperial_Games_01"/>
+			<frame group="this" image="Imperial_Games_02"/>
+			<frame group="this" image="Imperial_Games_03"/>
+			<frame group="this" image="Imperial_Games_04"/>
+			<frame group="this" image="Imperial_Games_05"/>
+			<frame group="this" image="Imperial_Games_06"/>
 		</animation>
 	</image>
 	<!-- Note: Colosseum 'Executions' animation frames: DO NOT USE!  -->
@@ -130,12 +130,12 @@
 	<image id="Col Exec" width="298" height="213" isometric="true">
 		<layer group="this" image="Coloseum ON"/>
 		<animation speed="9" x="100" y="43" reversible="false">
-			<frame src="Executions_01"/>
-			<frame src="Executions_02"/>
-			<frame src="Executions_03"/>
-			<frame src="Executions_04"/>
-			<frame src="Executions_05"/>
-			<frame src="Executions_06"/>
+			<frame group="this" image="Executions_01"/>
+			<frame group="this" image="Executions_02"/>
+			<frame group="this" image="Executions_03"/>
+			<frame group="this" image="Executions_04"/>
+			<frame group="this" image="Executions_05"/>
+			<frame group="this" image="Executions_06"/>
 		</animation>
 	</image>
 	<!-- Note: Colosseum Overlays -->
