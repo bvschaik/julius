@@ -318,15 +318,17 @@ int scroll_drag_end(void)
 
     if (!data.drag.is_touch) {
         system_mouse_set_relative_mode(0);
+        speed_set_target(&data.speed.x, 0, SPEED_CHANGE_IMMEDIATE, 0);
+        speed_set_target(&data.speed.y, 0, SPEED_CHANGE_IMMEDIATE, 0);
     } else if (has_scrolled) {
         const touch *t = touch_get_earliest();
         speed_set_target(&data.speed.x, -t->frame_movement.x, SPEED_CHANGE_IMMEDIATE, 1);
         speed_set_target(&data.speed.y, -t->frame_movement.y, SPEED_CHANGE_IMMEDIATE, 1);
+        data.x_align_direction = speed_get_current_direction(&data.speed.x);
+        data.y_align_direction = speed_get_current_direction(&data.speed.y);
+        speed_set_target(&data.speed.x, 0, SCROLL_DRAG_DECAY_TIME, 1);
+        speed_set_target(&data.speed.y, 0, SCROLL_DRAG_DECAY_TIME, 1);
     }
-    data.x_align_direction = speed_get_current_direction(&data.speed.x);
-    data.y_align_direction = speed_get_current_direction(&data.speed.y);
-    speed_set_target(&data.speed.x, 0, SCROLL_DRAG_DECAY_TIME, 1);
-    speed_set_target(&data.speed.y, 0, SCROLL_DRAG_DECAY_TIME, 1);
 
     return has_scrolled;
 }
