@@ -332,8 +332,8 @@ static void create_minimap_screenshot(void)
         return;
     }
 
-    int width_pixels = map_grid_width() * MINIMAP_SCALE * 2;
-    int height_pixels = map_grid_height() * MINIMAP_SCALE * 2;
+    int width_pixels = map_grid_width() * (int) MINIMAP_SCALE * 2;
+    int height_pixels = map_grid_height() * (int) MINIMAP_SCALE * 2;
 
     if (!image_create(width_pixels, height_pixels, 1, height_pixels)) {
         log_error("Unable to set memory for minimap screenshot", 0, 0);

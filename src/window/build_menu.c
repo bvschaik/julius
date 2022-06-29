@@ -366,7 +366,7 @@ static void button_menu_item(int item)
 
 static inline int remanining_length(const uint8_t *index)
 {
-    return TOOLTIP_TEXT_LENGTH - (index - tooltip_text);
+    return TOOLTIP_TEXT_LENGTH - (int) (index - tooltip_text);
 }
 
 static void generate_tooltip_text_for_monument(building_type monument)

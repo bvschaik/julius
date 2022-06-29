@@ -452,7 +452,7 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
     } else if (terrain & TERRAIN_MEADOW) {
         colors = &minimap_colors.climate->meadow[rand & 3];
     } else if (terrain & TERRAIN_GARDEN) {
-        colors = &minimap_colors.aesthetics;
+        colors = &minimap_colors.aesthetics.edges;
     } else {
         colors = &minimap_colors.climate->grass[rand & 7];
     }
