@@ -530,14 +530,14 @@ static void draw_animation(int x, int y, int grid_offset)
 {
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
-    if (map_property_is_draw_tile(grid_offset)) {
-        int building_id = map_building_at(grid_offset);
-        building *b = building_get(building_id);
-        color_t color_mask = 0;
-        if (draw_building_as_deleted(b) || map_property_is_deleted(grid_offset)) {
-            color_mask = COLOR_MASK_RED;
-        }
-        if (img->animation) {
+    int building_id = map_building_at(grid_offset);
+    building *b = building_get(building_id);
+    color_t color_mask = 0;
+    if (draw_building_as_deleted(b) || map_property_is_deleted(grid_offset)) {
+        color_mask = COLOR_MASK_RED;
+    }
+    if (img->animation) {
+        if (map_property_is_draw_tile(grid_offset)) {
             if (b->type == BUILDING_DOCK) {
                 draw_dock_workers(b, x, y, color_mask);
             } else if (b->type == BUILDING_WAREHOUSE) {
@@ -578,10 +578,12 @@ static void draw_animation(int x, int y, int grid_offset)
                     image_draw(overlay_id, x + extra_x, y + extra_y - y_offset, color_mask, draw_context.scale);
                 }
             }
+            if (b->has_plague) {
+                draw_plague(b, x, y, color_mask);
+            }
         }
-        if (b->has_plague) {
-            draw_plague(b, x, y, color_mask);
-        }
+    } else if (map_property_is_draw_tile(grid_offset) && building_id && b->has_plague) {
+        draw_plague(b, x, y, color_mask);
     } else if (map_sprite_bridge_at(grid_offset)) {
         city_draw_bridge(x, y, draw_context.scale, grid_offset);
     } else if (building_get(map_building_at(grid_offset))->type == BUILDING_FORT) {
