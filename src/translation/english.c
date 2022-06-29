@@ -596,6 +596,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_OVERLAY_PROBLEMS_CARTPUSHER, "Waiting for the cartpusher" },
     {TR_TOOLTIP_OVERLAY_PROBLEMS_NO_RESOURCES, "No resources available" },
     {TR_TOOLTIP_OVERLAY_PROBLEMS_MOTHBALLED, "Building mothballed" },
+    {TR_TOOLTIP_OVERLAY_PROBLEMS_PLAGUE, "Building has plague"},
     {TR_WINDOW_BUILDING_TOURISM_DISABLED, "Too many buildings of this type-- travellers avoid this place." },
     {TR_WINDOW_BUILDING_TOURISM_ANNUAL, "Income from travellers this year:" },
     {TR_WINDOW_BUILDING_WHARF_MOTHBALLED, "Your Trade Advisor ordered a halt to fish production."},

@@ -366,21 +366,16 @@ static void draw_fumigation(building *b, int x, int y, color_t color_mask)
     building_animation_advance_fumigation(b);
 }
 
-static void get_plague_icon_position_for_house(building *b, int *x, int *y)
+static void get_plague_icon_position_for_house(building *b, int *x, int *y, int is_fumigating)
 {
-    if (b->house_size == 1) {
-        *x = 18;
-        *y = -32;
-    } else if (b->house_size == 2) {
-        *x = 40;
-        *y = -55;
-        return;
-    } else if (b->house_size == 3) {
-        *x = 60;
-        *y = -80;
-    } else if (b->house_size == 4) {
-        *x = 80;
-        *y = -105;
+    const image *img = image_get(building_image_get(b));
+    int icon_id = is_fumigating ? image_group(GROUP_FIGURE_EXPLOSION) + 3 : image_group(GROUP_PLAGUE_SKULL);
+
+    *x = (img->width - image_get(icon_id)->width) / 2;
+    *y = -image_get(icon_id)->height / 2;
+
+    if (img->top) {
+        *y -= img->top->original.height;
     }
 }
 
@@ -391,7 +386,7 @@ static void draw_plague(building *b, int x, int y, color_t color_mask)
     int is_fumigating = b->sickness_doctor_cure == 99;
 
     if (building_is_house(b->type)) {
-        get_plague_icon_position_for_house(b, &x_pos, &y_pos);
+        get_plague_icon_position_for_house(b, &x_pos, &y_pos, is_fumigating);
         if (x_pos || y_pos) {
             x_pos += x;
             y_pos += y;

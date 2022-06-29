@@ -35,9 +35,6 @@ void city_overlay_problems_prepare_building(building *b)
 {
     b = building_main(b);
 
-    if (b->house_size) {
-        return;
-    }
     if (b->strike_duration_days > 0) {
         b->show_on_problem_overlay = 1;
         return;
@@ -274,8 +271,8 @@ static int get_tooltip_problems(tooltip_context *c, const building *b)
     if (guard < 9) {
         b = main_building;
     }
-    if (b->house_size) {
-        return 0;
+    if (b->has_plague) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_PLAGUE;
     }
     if (b->strike_duration_days > 0) {
         c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_STRIKE;
