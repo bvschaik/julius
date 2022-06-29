@@ -475,8 +475,8 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
 
     // When zooming out, instead of drawing the grid image, we reduce the isometric textures' size,
     // which ends up simulating a grid without any performance penalty
-    int grid_correction = (img->is_isometric && config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) ? 2 : 0;
-    grid_correction -= src_correction;
+    int grid_correction = (img->is_isometric && config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) ?
+            2 : -src_correction;
 
 #ifdef USE_RENDERCOPYF
     if (HAS_RENDERCOPYF) {
