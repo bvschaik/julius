@@ -160,6 +160,10 @@ static void draw_construction_buttons(void)
     city_view_get_viewport(&x, &y, &width, &height);
     int x_offset = width - 4 * BLOCK_SIZE;
     int y_offset = 40;
+    if (sidebar_extra_is_information_displayed(SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) && width < 680
+            && game_state_is_paused()) {
+        y_offset = 100;
+    }
     inner_panel_draw(x_offset, y_offset, 3, 2);
     button_border_draw(x_offset, y_offset, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
     // Use clip rectangle to remove the border of the "X" image
@@ -169,7 +173,11 @@ static void draw_construction_buttons(void)
     graphics_reset_clip_rectangle();
 
     if (building_construction_can_rotate()) {
-        x_offset = 4 * BLOCK_SIZE + 8;
+        if (!sidebar_extra_is_information_displayed(SIDEBAR_EXTRA_DISPLAY_GAME_SPEED)) {
+            x_offset = 4 * BLOCK_SIZE + 8;
+        } else {
+            x_offset = 16;
+        }
         inner_panel_draw(x_offset, y_offset, 3, 2);
         button_border_draw(x_offset, y_offset, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
         graphics_set_clip_rectangle(x_offset + 8, y_offset + 6, 37, 24);
@@ -209,20 +217,34 @@ static int is_cancel_construction_button(int x, int y)
     int touch_width = 5 * BLOCK_SIZE;
     int touch_height = 22 + 4 * BLOCK_SIZE;
     int x_offset = width - touch_width;
-    int y_offset = 24;
+    int y_offset = (sidebar_extra_is_information_displayed(SIDEBAR_EXTRA_DISPLAY_GAME_SPEED) && width < 680
+            && game_state_is_paused()) ? 84 : 24;
+
     return x >= x_offset && x < x_offset + touch_width && y >= y_offset && y < y_offset + touch_height;
 }
 
 static int is_rotate_forward_button(int x, int y)
 {
-    return x >= 4 * BLOCK_SIZE + 4 && x < 7 * BLOCK_SIZE + 4 &&
-        y >= 24 && y < 56 + 4 * BLOCK_SIZE;
+    int city_x, city_y, width, height;
+    city_view_get_viewport(&city_x, &city_y, &width, &height);
+
+    int sidebar_pause_button = sidebar_extra_is_information_displayed(SIDEBAR_EXTRA_DISPLAY_GAME_SPEED);
+    int x_offset = sidebar_pause_button ? 16 : 4 * BLOCK_SIZE + 4;
+    int y_offset = sidebar_pause_button && width < 680 && game_state_is_paused() ? 84 : 24;
+    return x >= x_offset && x < x_offset + 3 * BLOCK_SIZE &&
+        y >= y_offset && y < y_offset + 4 * BLOCK_SIZE;
 }
 
 static int is_rotate_backward_button(int x, int y)
 {
-    return x >= 7 * BLOCK_SIZE + 4 && x < 10 * BLOCK_SIZE + 4 &&
-        y >= 24 && y < 56 + 4 * BLOCK_SIZE;
+    int city_x, city_y, width, height;
+    city_view_get_viewport(&city_x, &city_y, &width, &height);
+
+    int sidebar_pause_button = sidebar_extra_is_information_displayed(SIDEBAR_EXTRA_DISPLAY_GAME_SPEED);
+    int x_offset = sidebar_pause_button ? 4 * BLOCK_SIZE + 4: 7 * BLOCK_SIZE + 4;
+    int y_offset = sidebar_pause_button && width < 680 && game_state_is_paused() ? 84 : 24;
+    return x >= x_offset && x < x_offset + 3 * BLOCK_SIZE &&
+        y >= y_offset && y < y_offset + 4 * BLOCK_SIZE;
 }
 
 // INPUT HANDLING
@@ -634,6 +656,7 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
     if (!city_view_is_sidebar_collapsed() && widget_minimap_handle_mouse(m)) {
         return;
     }
+    scroll_map(m);
     if (m->is_touch) {
         const touch *t = touch_get_earliest();
         if (!t->in_use) {
@@ -654,7 +677,6 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
             data.capture_input = 0;
         }
     }
-    scroll_map(m);
     if (m->right.went_up || h->escape_pressed) {
         data.capture_input = 0;
         city_warning_clear_all();
