@@ -330,7 +330,7 @@ static int building_is_aesthetic(building_type type)
 {
     return (type >= BUILDING_SMALL_POND && type <= BUILDING_OBELISK) || type == BUILDING_TRIUMPHAL_ARCH ||
         (type >= BUILDING_HORSE_STATUE && type <= BUILDING_COLONNADE) || type == BUILDING_GARDEN_PATH ||
-        (type >= BUILDING_ROOFED_GARDEN_WALL && type <= BUILDING_HEDGE_GATE_LIGHT);
+        (type >= BUILDING_ROOFED_GARDEN_WALL && type <= BUILDING_HEDGE_GATE_LIGHT) || type == BUILDING_GARDENS;
 }
 
 static int building_is_water_structure(building_type type)
@@ -451,6 +451,8 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
         colors = &minimap_colors.wall;
     } else if (terrain & TERRAIN_MEADOW) {
         colors = &minimap_colors.climate->meadow[rand & 3];
+    } else if (terrain & TERRAIN_GARDEN) {
+        colors = &minimap_colors.aesthetics;
     } else {
         colors = &minimap_colors.climate->grass[rand & 7];
     }
