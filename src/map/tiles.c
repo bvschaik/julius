@@ -218,6 +218,10 @@ static void clear_garden_image(int x, int y, int grid_offset)
 static void set_garden_image(int x, int y, int grid_offset)
 {
     int image_id;
+    static int alt_garden_image_id;
+    if (!alt_garden_image_id) {
+        alt_garden_image_id = assets_get_image_id("Aesthetics", "Garden_Alt_01");
+    }
     if (map_terrain_is(grid_offset, TERRAIN_GARDEN) && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
         if (!map_image_at(grid_offset)) {
             image_id = image_group(GROUP_TERRAIN_GARDEN);
@@ -241,7 +245,7 @@ static void set_garden_image(int x, int y, int grid_offset)
                             image_id += 2;
                             break;
                         case 1: case 3:
-                            image_id += 3;
+                            image_id = alt_garden_image_id;
                             break;
                     }
                 } else {
@@ -250,7 +254,7 @@ static void set_garden_image(int x, int y, int grid_offset)
                             image_id += 1;
                             break;
                         case 0: case 2:
-                            image_id += 3;
+                            image_id = alt_garden_image_id;
                             break;
                     }
 
