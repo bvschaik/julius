@@ -55,7 +55,7 @@ static void draw_population_info(building_info_context *c, int y_offset)
         width += text_draw_number(-b->house_population_room, '@', " ",
             c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_BROWN, 0);
         lang_text_draw(127, 21, c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_BROWN);
-    } else if (b->house_population_room > 0) {
+    } else if (b->house_population_room > 0 && !b->has_plague) {
         width += lang_text_draw(127, 22, c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_BROWN);
         text_draw_number(b->house_population_room, '@', " ",
             c->x_offset + 50 + width, y_offset + 14, FONT_NORMAL_BROWN, 0);
@@ -197,7 +197,10 @@ void window_building_draw_house(building_info_context *c)
     text_draw_number(b->data.house.inventory[INVENTORY_WINE], '@', " ",
         c->x_offset + 394, c->y_offset + y_amount, FONT_NORMAL_BROWN, 0);
 
-    if (b->data.house.evolve_text_id == 62) {
+    if (b->has_plague) {
+        lang_text_draw_multiline(CUSTOM_TRANSLATION, TR_BUILDING_HOUSE_DISEASE_DESC,
+            c->x_offset + 32, c->y_offset + 70, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK);
+    } else if (b->data.house.evolve_text_id == 62) {
         int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id,
             c->x_offset + 32, c->y_offset + 60, FONT_NORMAL_BLACK);
         width += lang_text_draw_colored(41, building_get(c->worst_desirability_building_id)->type,

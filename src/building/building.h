@@ -195,6 +195,8 @@ void building_get_from_buffer(buffer *buf, int id, building *b, int includes_bui
 
 int building_count(void);
 
+int building_count_by_type(building_type type);
+
 int building_find(building_type type);
 
 building *building_first_of_type(building_type type);

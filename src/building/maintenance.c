@@ -42,7 +42,8 @@ void building_maintenance_update_burning_ruins(void)
     building_list_burning_clear();
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
-        if ((b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED) || b->type != BUILDING_BURNING_RUIN) {
+        if ((b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED) ||
+            b->type != BUILDING_BURNING_RUIN) {
             continue;
         }
         if (b->fire_duration < 0) {
@@ -118,7 +119,8 @@ int building_maintenance_get_closest_burning_ruin(int x, int y, int *distance)
     for (int i = 0; i < burning_size; i++) {
         int building_id = building_list_burning_item(i);
         building *b = building_get(building_id);
-        if ((b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_MOTHBALLED) && b->type == BUILDING_BURNING_RUIN && !b->has_plague && b->distance_from_entry) {
+        if ((b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_MOTHBALLED) &&
+            b->type == BUILDING_BURNING_RUIN && !b->has_plague && b->distance_from_entry) {
             int dist = calc_maximum_distance(x, y, b->x, b->y);
             if (b->figure_id4) {
                 if (dist < min_occupied_dist) {
@@ -237,7 +239,8 @@ void building_maintenance_check_rome_access(void)
             continue;
         }
         if (b->house_size) {
-            int x_road, y_road;
+            int x_road = 0;
+            int y_road = 0;
             if (!map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                 // no road: eject people
                 b->distance_from_entry = 0;
@@ -269,6 +272,8 @@ void building_maintenance_check_rome_access(void)
                     b->state = BUILDING_STATE_UNDO;
                 }
             }
+            b->road_access_x = x_road;
+            b->road_access_y = y_road;
         } else if (b->type == BUILDING_WAREHOUSE) {
             b->distance_from_entry = 0;
             int x_road, y_road;

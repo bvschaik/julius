@@ -7,6 +7,7 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "core/config.h"
+#include "core/random.h"
 #include "figuretype/crime.h"
 #include "game/resource.h"
 #include "game/time.h"
@@ -47,7 +48,9 @@ static void provide_sickness(int x, int y, void (*callback)(building *, int sick
             int building_id = map_building_at(grid_offset);
             if (building_id) {
                 building *b = building_get(building_id);
-                if (b->house_size && b->house_population > 0) {
+                random_generate_next();
+                // 1/16 chance of spreading sickness
+                if (b->house_size && b->house_population > 0 && !(random_short() & 0xf)) {
                     callback(b, sickness_dest);
                 }
             }

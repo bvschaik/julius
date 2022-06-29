@@ -247,15 +247,27 @@ static int fight_plague(figure *f, int force)
 {
     int building_with_plague = 0;
 
-    // find in docks
-    for (building *dock = building_first_of_type(BUILDING_DOCK); dock; dock = dock->next_of_type) {
-        if (dock->has_plague) {
-            building_with_plague = dock->id;
-            break;
+    // Find in houses
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *house = building_first_of_type(type); house; house = house->next_of_type) {
+            if (house->has_plague) {
+                building_with_plague = house->id;
+                break;
+            }
         }
     }
 
-    // if no docks, find in warehouses
+    // If no houses, find in docks
+    if (!building_with_plague) {
+        for (building *dock = building_first_of_type(BUILDING_DOCK); dock; dock = dock->next_of_type) {
+            if (dock->has_plague) {
+                building_with_plague = dock->id;
+                break;
+            }
+        }
+    }
+
+    // If no docks, find in warehouses
     if (!building_with_plague) {
         for (building *warehouse = building_first_of_type(BUILDING_WAREHOUSE); warehouse; warehouse = warehouse->next_of_type) {
             if (warehouse->has_plague) {
@@ -264,7 +276,7 @@ static int fight_plague(figure *f, int force)
             }
         }
 
-        // if no warehouse, find in granaries
+        // If no warehouse, find in granaries
         if (!building_with_plague) {
             for (building *granary = building_first_of_type(BUILDING_GRANARY); granary; granary = granary->next_of_type) {
                 if (granary->has_plague) {
@@ -275,7 +287,7 @@ static int fight_plague(figure *f, int force)
         }
     }
 
-    // no plague in buildings
+    // No plague in buildings
     if (!building_with_plague) {
         return 0;
     }
@@ -350,10 +362,12 @@ void figure_doctor_action(figure *f)
 
     // special actions
     if (!fight_plague(f, 0)) {
+        f->terrain_usage = TERRAIN_USAGE_ROADS;
         culture_action(f, GROUP_FIGURE_DOCTOR_SURGEON);
     }
     switch (f->action_state) {
         case FIGURE_ACTION_231_DOCTOR_GOING_TO_PLAGUE:
+            f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_232_DOCTOR_AT_PLAGUE;

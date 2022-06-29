@@ -737,6 +737,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_DOCK_PLAGUE_DESC, "The plague was brought here by a trade ship. This dock is in quarantine while a doctor or surgeon decontaminates the area."},
     {TR_BUILDING_GRANARY_PLAGUE_DESC, "The plague was brought here by a contaminated worker. This granary is in quarantine while a doctor or surgeon decontaminates the area."},
     {TR_BUILDING_WAREHOUSE_PLAGUE_DESC, "The plague was brought here by a contaminated worker. This warehouse is in quarantine while a doctor or surgeon decontaminates the area."},
+    {TR_BUILDING_HOUSE_DISEASE_DESC, "Disease has struck this house due to low health and some people have died. This house is in quarantine while a doctor or surgeon decontaminates the area."},
     {TR_BUILDING_FUMIGATION_DESC, "The building is being disinfected, the fumigation should last a few days."},
     {TR_OVERLAY_SICKNESS, "Sickness"},
     {TR_ADVISOR_SICKNESS_LEVEL_LOW, "Very few diseases are spread in the city, and trade is functioning perfectly. The city's level of hygiene allows to effectively stem epidemics from outside cities."},

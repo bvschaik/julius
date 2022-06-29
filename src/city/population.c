@@ -382,7 +382,6 @@ int calculate_total_housing_buildings(void)
 
 int *calculate_number_of_each_housing_type(void)
 {
-
     static int housing_type_counts[20] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
     for (int i = 0; i <= 19; i++) {

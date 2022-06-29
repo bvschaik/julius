@@ -366,13 +366,38 @@ static void draw_fumigation(building *b, int x, int y, color_t color_mask)
     building_animation_advance_fumigation(b);
 }
 
+static void get_plague_icon_position_for_house(building *b, int *x, int *y)
+{
+    if (b->house_size == 1) {
+        *x = 18;
+        *y = -32;
+    } else if (b->house_size == 2) {
+        *x = 40;
+        *y = -55;
+        return;
+    } else if (b->house_size == 3) {
+        *x = 60;
+        *y = -80;
+    } else if (b->house_size == 4) {
+        *x = 80;
+        *y = -105;
+    }
+}
+
 static void draw_plague(building *b, int x, int y, color_t color_mask)
 {
     int x_pos = 0;
     int y_pos = 0;
+    int is_fumigating = b->sickness_doctor_cure == 99;
 
-    if (b->type == BUILDING_DOCK) {
-        if (b->sickness_doctor_cure == 99) {
+    if (building_is_house(b->type)) {
+        get_plague_icon_position_for_house(b, &x_pos, &y_pos);
+        if (x_pos || y_pos) {
+            x_pos += x;
+            y_pos += y;
+        }
+    } else if (b->type == BUILDING_DOCK) {
+        if (is_fumigating) {
             x_pos = x + 68;
             y_pos = y - 38;
         } else {
@@ -380,7 +405,7 @@ static void draw_plague(building *b, int x, int y, color_t color_mask)
             y_pos = y - 84;
         }
     } else if (b->type == BUILDING_WAREHOUSE) {
-        if (b->sickness_doctor_cure == 99) {
+        if (is_fumigating) {
             x_pos = x + 10;
             y_pos = y - 64;
         } else {
@@ -388,7 +413,7 @@ static void draw_plague(building *b, int x, int y, color_t color_mask)
             y_pos = y - 84;
         }
     } else if (b->type == BUILDING_GRANARY) {
-        if (b->sickness_doctor_cure == 99) {
+        if (is_fumigating) {
             x_pos = x + 70;
             y_pos = y - 114;
         } else {
@@ -398,7 +423,7 @@ static void draw_plague(building *b, int x, int y, color_t color_mask)
     }
 
     if (x_pos && y_pos) {
-        if (b->sickness_doctor_cure == 99) {
+        if (is_fumigating) {
             draw_fumigation(b, x_pos, y_pos, color_mask);
         } else {
             b->fumigation_direction = 1;
@@ -505,14 +530,14 @@ static void draw_animation(int x, int y, int grid_offset)
 {
     int image_id = map_image_at(grid_offset);
     const image *img = image_get(image_id);
-    if (img->animation) {
-        if (map_property_is_draw_tile(grid_offset)) {
-            int building_id = map_building_at(grid_offset);
-            building *b = building_get(building_id);
-            color_t color_mask = 0;
-            if (draw_building_as_deleted(b) || map_property_is_deleted(grid_offset)) {
-                color_mask = COLOR_MASK_RED;
-            }
+    if (map_property_is_draw_tile(grid_offset)) {
+        int building_id = map_building_at(grid_offset);
+        building *b = building_get(building_id);
+        color_t color_mask = 0;
+        if (draw_building_as_deleted(b) || map_property_is_deleted(grid_offset)) {
+            color_mask = COLOR_MASK_RED;
+        }
+        if (img->animation) {
             if (b->type == BUILDING_DOCK) {
                 draw_dock_workers(b, x, y, color_mask);
             } else if (b->type == BUILDING_WAREHOUSE) {
@@ -553,9 +578,9 @@ static void draw_animation(int x, int y, int grid_offset)
                     image_draw(overlay_id, x + extra_x, y + extra_y - y_offset, color_mask, draw_context.scale);
                 }
             }
-            if (b->has_plague) {
-                draw_plague(b, x, y, color_mask);
-            }
+        }
+        if (b->has_plague) {
+            draw_plague(b, x, y, color_mask);
         }
     } else if (map_sprite_bridge_at(grid_offset)) {
         city_draw_bridge(x, y, draw_context.scale, grid_offset);

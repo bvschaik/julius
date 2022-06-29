@@ -108,7 +108,7 @@ int house_population_create_immigrants(int num_people)
     // houses with plenty of room
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE && to_immigrate > 0; type++) {
         for (building *b = building_first_of_type(type); b && to_immigrate > 0; b = b->next_of_type) {
-            if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
+            if (b->state != BUILDING_STATE_IN_USE || !b->house_size || b->has_plague) {
                 continue;
             }
             if (b->distance_from_entry > 0 && b->house_population_room >= 8 && !b->immigrant_figure_id) {
@@ -125,7 +125,7 @@ int house_population_create_immigrants(int num_people)
     // houses with less room
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE && to_immigrate > 0; type++) {
         for (building *b = building_first_of_type(type); b && to_immigrate > 0; b = b->next_of_type) {
-            if (b->state != BUILDING_STATE_IN_USE || !b->house_size) {
+            if (b->state != BUILDING_STATE_IN_USE || !b->house_size || b->has_plague) {
                 continue;
             }
             if (b->distance_from_entry > 0 && b->house_population_room > 0 && !b->immigrant_figure_id) {
@@ -146,7 +146,9 @@ int house_population_create_emigrants(int num_people)
 {
     int to_emigrate = num_people;
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type < BUILDING_HOUSE_LARGE_INSULA && to_emigrate > 0; type++) {
-        for (building *b = building_first_of_type(type); b && to_emigrate > 0; b = b->next_of_type) {
+        building *next_of_type = 0;  // figure_create_emigrant can change the building type to vacant lot
+        for (building *b = building_first_of_type(type); b && to_emigrate > 0; b = next_of_type) {
+            next_of_type = b->next_of_type;
             if (b->state != BUILDING_STATE_IN_USE || !b->house_size || b->house_population <= 0) {
                 continue;
             }

@@ -69,6 +69,17 @@ int building_count(void)
     return data.buildings.size;
 }
 
+int building_count_by_type(building_type type)
+{
+    int num_by_type = 0;
+    for (building *b = data.first_of_type[type]; b; b = b->next_of_type) {
+        if (b->state == BUILDING_STATE_IN_USE) {
+            num_by_type++;
+        }
+    }
+    return num_by_type;
+}
+
 int building_find(building_type type)
 {
     for (building *b = data.first_of_type[type]; b; b = b->next_of_type) {

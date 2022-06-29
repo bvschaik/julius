@@ -257,6 +257,24 @@ int city_buildings_get_closest_plague(int x, int y, int *distance)
     int min_occupied_building_id = 0;
     int min_occupied_dist = *distance = 10000;
 
+    // Find closest in houses
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->has_plague && b->distance_from_entry) {
+                int dist = calc_maximum_distance(x, y, b->x, b->y);
+                if (b->figure_id4) {
+                    if (dist < min_occupied_dist) {
+                        min_occupied_dist = dist;
+                        min_occupied_building_id = b->id;
+                    }
+                } else if (dist < *distance) {
+                    *distance = dist;
+                    min_free_building_id = b->id;
+                }
+            }
+        }
+    }
+
     // Find closest in buildings (docks, granaries or warehouses)
     for (int i = 0 ; i < NUM_PLAGUE_BUILDINGS; i++) {
         building_type type = PLAGUE_BUILDINGS[i];
@@ -305,6 +323,12 @@ static void update_sickness_duration(int building_id)
 
 void city_buildings_update_plague(void)
 {
+    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            update_sickness_duration(b->id);
+        }
+    }
+
     for (int i = 0 ; i < NUM_PLAGUE_BUILDINGS; i++) {
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
