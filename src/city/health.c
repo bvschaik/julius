@@ -14,12 +14,20 @@
 #include "game/tutorial.h"
 #include "scenario/property.h"
 
+#define SICKNESS_SPREAD_DIVISION_FACTOR 4
+
 #define NUM_PLAGUE_BUILDINGS sizeof(PLAGUE_BUILDINGS) / sizeof(building_type)
-
-#define BASE_HOSPITAL_COVERAGE 750
-
 static const building_type PLAGUE_BUILDINGS[] = { BUILDING_DOCK, BUILDING_WAREHOUSE, BUILDING_GRANARY };
 
+static int is_plague_building(building_type type)
+{
+    for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
+        if (type == PLAGUE_BUILDINGS[i]) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 int city_health(void)
 {
@@ -56,7 +64,7 @@ static void cause_disease_in_building(int building_id)
         b->has_plague = 1;
         b->sickness_duration = 0;
 
-        if (b->type == BUILDING_WAREHOUSE || b->type == BUILDING_GRANARY || b->type == BUILDING_DOCK) {
+        if (is_plague_building(b->type)) {
             city_message_post(1, MESSAGE_SICKNESS, b->type, b->grid_offset);
         }
     }
@@ -69,8 +77,8 @@ void city_health_update_sickness_level_in_building(int building_id)
     if (!b->has_plague && b->state == BUILDING_STATE_IN_USE) {
         b->sickness_level += 1;
 
-        if (b->sickness_level > MAX_SICKNESS_LEVEL) {
-            b->sickness_level = MAX_SICKNESS_LEVEL;
+        if (b->sickness_level > 2 * MAX_SICKNESS_LEVEL) {
+            b->sickness_level = 2 * MAX_SICKNESS_LEVEL;
         }
     }
 }
@@ -80,18 +88,20 @@ void city_health_dispatch_sickness(figure *f)
     building *b = building_get(f->building_id);
     building *dest_b = building_get(f->destination_building_id);
 
-    // dispatch sickness level sub value between granaries, warehouses and docks
-    if ((dest_b->type == BUILDING_GRANARY || dest_b->type == BUILDING_WAREHOUSE || dest_b->type == BUILDING_DOCK) &&
-        b->sickness_level && b->sickness_level > dest_b->sickness_level) {
-        int value = b->sickness_level == 1 ? 1 : b->sickness_level / 2;
-        if (dest_b->sickness_level < value) {
-            dest_b->sickness_level = value;
+    // Dispatch sickness level sub value between granaries, warehouses and docks
+    if (is_plague_building(dest_b->type) && b->sickness_level && b->sickness_level > dest_b->sickness_level) {
+        int value = b->sickness_level <= SICKNESS_SPREAD_DIVISION_FACTOR ? 1 :
+            b->sickness_level / SICKNESS_SPREAD_DIVISION_FACTOR;
+        dest_b->sickness_level += value;
+        if (dest_b->sickness_level > b->sickness_level) {
+            dest_b->sickness_level = b->sickness_level;
         }
-    } else if ((b->type == BUILDING_GRANARY || b->type == BUILDING_WAREHOUSE || b->type == BUILDING_DOCK) &&
-        dest_b->sickness_level && dest_b->sickness_level > b->sickness_level) {
-        int value = dest_b->sickness_level == 1 ? 1 : dest_b->sickness_level / 2;
-        if (b->sickness_level < value) {
-            b->sickness_level = value;
+    } else if (is_plague_building(b->type) && dest_b->sickness_level && dest_b->sickness_level > b->sickness_level) {
+        int value = b->sickness_level <= SICKNESS_SPREAD_DIVISION_FACTOR ? 1 :
+            b->sickness_level / SICKNESS_SPREAD_DIVISION_FACTOR;
+        b->sickness_level += value;
+        if (b->sickness_level > dest_b->sickness_level) {
+            b->sickness_level = dest_b->sickness_level;
         }
     }
 }
@@ -105,7 +115,7 @@ static int cause_disease(void)
         for (building *b = building_first_of_type(type); b; b = next_of_type) {
             next_of_type = b->next_of_type;
             if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
-                if (b->sickness_level == MAX_SICKNESS_LEVEL) {
+                if (b->sickness_level >= MAX_SICKNESS_LEVEL) {
                     sick_people = 1;
                     if (city_health() < 40) {
                         building_destroy_by_plague(b);
@@ -139,7 +149,7 @@ static int cause_disease(void)
     for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (b->sickness_level == MAX_SICKNESS_LEVEL) {
+            if (b->sickness_level >= MAX_SICKNESS_LEVEL) {
                 cause_disease_in_building(b->id);
             }
         }
