@@ -189,7 +189,7 @@
 		<layer src="Pine_Tree_Path_Rotated"/>
 	</image>
 	<image id="path fir r" width="58" height="72" isometric="true">
-		<layer group="59" image="3" x="0" y="40" invert="horizontal"/>
+		<layer group="this" image="garden path r" x="0" y="40"/>
 		<layer src="Fir_Tree_Path_Rotated"/>
 	</image>
 	<image id="path oak r" width="58" height="60" isometric="true">
