@@ -795,7 +795,11 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_MONUMENT_PHASE, " phase. "},
     {TR_TOOLTIP_MONUMENT_PHASES, " phases. "},
     {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Resource requirements:\n"},
-    {TR_BUILDING_GLADIATOR_STATUE, "Gladiator statue"}
+    {TR_BUILDING_GLADIATOR_STATUE, "Gladiator statue"},
+    {TR_ADVISOR_NO_ACTIVE_COLOSSEUM, "No active colosseum in the city"},
+    {TR_ADVISOR_ACTIVE_COLOSSEUM, "The city is served by a colosseum"},
+    {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "No active hippodrome in the city"},
+    {TR_ADVISOR_ACTIVE_HIPPODROME, "The city is served by an hippodrome"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -31,8 +31,9 @@ static int get_health_advice(void)
 
 static void print_health_building_info(int y_offset, building_type type, int population_served, int coverage)
 {
-    static int building_id_to_string_id[] = { 28, 30, 24, 26 };
-    lang_text_draw_amount(8, building_id_to_string_id[type - BUILDING_DOCTOR],
+    static const int BUILDING_ID_TO_STRING_ID[] = { 28, 30, 24, 26 };
+
+    lang_text_draw_amount(8, BUILDING_ID_TO_STRING_ID[type - BUILDING_DOCTOR],
         building_count_total(type), 40, y_offset, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_total(type), 150, y_offset, 100, FONT_NORMAL_WHITE);
 
