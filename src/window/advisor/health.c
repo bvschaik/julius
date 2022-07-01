@@ -81,7 +81,6 @@ static int draw_background(void)
 
     int population = city_population();
 
-    // bathhouses
     int people_covered = city_health_get_population_with_baths_access();
     print_health_building_info(112, BUILDING_BATHHOUSE, people_covered, calc_percentage(people_covered, population));
 
@@ -96,15 +95,8 @@ static int draw_background(void)
 
     int text_height = lang_text_draw_multiline(56, 7 + get_health_advice(), 60, 210, 512, FONT_NORMAL_BLACK);
 
-    if (sickness_level == SICKNESS_LEVEL_LOW) {
-        text_draw_multiline(translation_for(TR_ADVISOR_SICKNESS_LEVEL_LOW), 60, 230 + text_height, 512, FONT_NORMAL_BLACK, 0);
-    } else if (sickness_level == SICKNESS_LEVEL_MEDIUM) {
-        text_draw_multiline(translation_for(TR_ADVISOR_SICKNESS_LEVEL_MEDIUM), 60, 230 + text_height,512,FONT_NORMAL_BLACK, 0);
-    } else if (sickness_level == SICKNESS_LEVEL_HIGH) {
-        text_draw_multiline(translation_for(TR_ADVISOR_SICKNESS_LEVEL_HIGH), 60, 230 + text_height, 512, FONT_NORMAL_BLACK, 0);
-    } else { // plague
-        text_draw_multiline(translation_for(TR_ADVISOR_SICKNESS_LEVEL_PLAGUE), 60, 230 + text_height,512, FONT_NORMAL_BLACK, 0);
-    }
+    text_draw_multiline(translation_for(TR_ADVISOR_SICKNESS_LEVEL_LOW + sickness_level),
+        60, 230 + text_height, 512, FONT_NORMAL_BLACK, 0);
 
     return ADVISOR_HEIGHT;
 }
