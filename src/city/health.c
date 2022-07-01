@@ -259,7 +259,10 @@ static void adjust_sickness_level_in_plague_buildings(int hospital_coverage_bonu
             }
             int decrease_percentage = city_health();
             decrease_percentage += calc_adjust_with_percentage(decrease_percentage, hospital_coverage_bonus);
-            b->sickness_level = calc_adjust_with_percentage(b->sickness_level, decrease_percentage);
+            if (decrease_percentage > 100) {
+                decrease_percentage = 100;
+            }
+            b->sickness_level -= calc_adjust_with_percentage(b->sickness_level, decrease_percentage);
         }
     }
 }
@@ -355,7 +358,7 @@ int city_health_get_global_sickness_level(void)
             next_of_type = b->next_of_type;
             if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
                 building_number++;
-                building_sickness_level += b->sickness_level;
+                building_sickness_level += calc_boud(b->sickness_level, 0, MAX_SICKNESS_LEVEL);
 
                 if (b->sickness_level > max_sickness_level) {
                     max_sickness_level = b->sickness_level;
@@ -368,7 +371,7 @@ int city_health_get_global_sickness_level(void)
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             building_number++;
-            building_sickness_level += b->sickness_level;
+            building_sickness_level += calc_boud(b->sickness_level, 0, MAX_SICKNESS_LEVEL);
             if (b->sickness_level > max_sickness_level) {
                 max_sickness_level = b->sickness_level;
             }
