@@ -510,7 +510,7 @@ void window_building_draw_figure_list(building_info_context *c)
 static void draw_figure_in_city(int figure_id, pixel_coordinate *coord)
 {
     int x_cam, y_cam;
-    city_view_get_camera(&x_cam, &y_cam);
+    city_view_get_camera_in_pixels(&x_cam, &y_cam);
     int scale = city_view_get_scale();
 
     int grid_offset = figure_get(figure_id)->grid_offset;
@@ -523,7 +523,7 @@ static void draw_figure_in_city(int figure_id, pixel_coordinate *coord)
     widget_city_draw_for_figure(figure_id, coord);
 
     city_view_set_scale(scale);
-    city_view_set_camera(x_cam, y_cam);
+    city_view_set_camera_from_pixel_position(x_cam, y_cam);
 }
 
 void window_building_prepare_figure_list(building_info_context *c)

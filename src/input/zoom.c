@@ -8,7 +8,7 @@
 #include <math.h>
 
 #define ZOOM_STEP 2
-#define ZOOM_DELTA 20
+#define ZOOM_DELTA 25
 
 static struct {
     int delta;
