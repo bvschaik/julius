@@ -415,9 +415,10 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.sentiment.message_delay);
     buffer_write_i32(main, city_data.sentiment.low_mood_cause);
     buffer_write_i32(main, city_data.figure.security_breach_duration);
-    for (int i = 0; i < 4; i++) {
-        buffer_write_i32(main, city_data.unused.unknown_446c[i]);
-    }
+    buffer_write_i32(main, city_data.health.population_access.clinic);
+    buffer_write_i32(main, city_data.health.population_access.baths);
+    buffer_write_i32(main, city_data.health.population_access.barber);
+    buffer_write_i32(main, city_data.unused.unknown_446c[3]);
     buffer_write_i32(main, city_data.emperor.selected_gift_size);
     buffer_write_i32(main, city_data.emperor.months_since_gift);
     buffer_write_i32(main, city_data.emperor.gift_overdose_penalty);
@@ -922,9 +923,10 @@ static void load_main_data(buffer *main, int has_separate_import_limits)
     city_data.sentiment.message_delay = buffer_read_i32(main);
     city_data.sentiment.low_mood_cause = buffer_read_i32(main);
     city_data.figure.security_breach_duration = buffer_read_i32(main);
-    for (int i = 0; i < 4; i++) {
-        city_data.unused.unknown_446c[i] = buffer_read_i32(main);
-    }
+    city_data.health.population_access.clinic = buffer_read_i32(main);
+    city_data.health.population_access.baths = buffer_read_i32(main);
+    city_data.health.population_access.barber = buffer_read_i32(main);
+    city_data.unused.unknown_446c[3] = buffer_read_i32(main);
     city_data.emperor.selected_gift_size = buffer_read_i32(main);
     city_data.emperor.months_since_gift = buffer_read_i32(main);
     city_data.emperor.gift_overdose_penalty = buffer_read_i32(main);

@@ -29,4 +29,8 @@ void city_health_add_hospital_workers(int amount);
 
 int city_health_get_global_sickness_level(void);
 
+int city_health_get_population_with_clinic_access(void);
+int city_health_get_population_with_barber_access(void);
+int city_health_get_population_with_baths_access(void);
+
 #endif // CITY_HEALTH_H

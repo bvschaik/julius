@@ -241,6 +241,11 @@ extern struct city_data_t {
         int32_t num_hospital_workers;
         int32_t target_value;
         int32_t value;
+        struct {
+            int32_t clinic;
+            int32_t barber;
+            int32_t baths;
+        } population_access;
     } health;
     struct {
         int32_t culture;

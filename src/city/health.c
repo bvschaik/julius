@@ -1,5 +1,6 @@
 #include "health.h"
 
+#include "building/count.h"
 #include "building/destruction.h"
 #include "building/granary.h"
 #include "building/house.h"
@@ -278,6 +279,9 @@ void city_health_update(void)
     int healthy_population = 0;
     int population_health_offset = calc_bound((city_population() - 1) / 1000 * 2, 0, 10);
     int hospital_coverage_bonus = city_culture_coverage_hospital() / 20 * 5;
+    city_data.health.population_access.clinic = 0;
+    city_data.health.population_access.barber = 0;
+    city_data.health.population_access.baths = 0;
 
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
@@ -291,21 +295,25 @@ void city_health_update(void)
             int house_health = calc_bound(b->subtype.house_level, 0, 10);
             if (b->data.house.clinic && b->data.house.hospital) {
                 house_health += 50;
+                city_data.health.population_access.clinic += b->house_population;
             } else if (b->data.house.hospital) {
                 house_health += 40;
             } else if (b->data.house.clinic) {
                 house_health += 30;
+                city_data.health.population_access.clinic += b->house_population;
             }
             if (b->data.house.bathhouse) {
                 house_health += 20;
+                city_data.health.population_access.baths += b->house_population;
             }
             if (b->data.house.barber) {
                 house_health += 10;
+                city_data.health.population_access.barber += b->house_population;
             }
             house_health += b->data.house.num_foods * 15;
 
-            int mausuleum_health = building_count_by_type(BUILDING_SMALL_MAUSOLEUM);
-            mausuleum_health += building_count_by_type(BUILDING_LARGE_MAUSOLEUM) * 2;
+            int mausuleum_health = building_count_active(BUILDING_SMALL_MAUSOLEUM);
+            mausuleum_health += building_count_active(BUILDING_LARGE_MAUSOLEUM) * 2;
 
             house_health += calc_bound(mausuleum_health, 0, 10);
 
@@ -358,7 +366,7 @@ int city_health_get_global_sickness_level(void)
             next_of_type = b->next_of_type;
             if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
                 building_number++;
-                building_sickness_level += calc_boud(b->sickness_level, 0, MAX_SICKNESS_LEVEL);
+                building_sickness_level += calc_bound(b->sickness_level, 0, MAX_SICKNESS_LEVEL);
 
                 if (b->sickness_level > max_sickness_level) {
                     max_sickness_level = b->sickness_level;
@@ -371,7 +379,7 @@ int city_health_get_global_sickness_level(void)
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             building_number++;
-            building_sickness_level += calc_boud(b->sickness_level, 0, MAX_SICKNESS_LEVEL);
+            building_sickness_level += calc_bound(b->sickness_level, 0, MAX_SICKNESS_LEVEL);
             if (b->sickness_level > max_sickness_level) {
                 max_sickness_level = b->sickness_level;
             }
@@ -406,4 +414,19 @@ int city_health_get_global_sickness_level(void)
     }
 
     return global_sickness_level;
+}
+
+int city_health_get_population_with_clinic_access(void)
+{
+    return city_data.health.population_access.clinic;
+}
+
+int city_health_get_population_with_barber_access(void)
+{
+    return city_data.health.population_access.barber;
+}
+
+int city_health_get_population_with_baths_access(void)
+{
+    return city_data.health.population_access.baths;
 }
