@@ -806,6 +806,10 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_MONUMENT_PHASES, " этапы. "},
     {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Требования к ресурсам:\n"},
     {TR_BUILDING_GLADIATOR_STATUE, "Статуя гладиатора"},
+    {TR_ADVISOR_NO_ACTIVE_COLOSSEUM, "Нет действующего Колизея в городе"},
+    {TR_ADVISOR_ACTIVE_COLOSSEUM, "Город обслуживает Колизей"},
+    {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "Нет действующего Ипподрома в городе"},
+    {TR_ADVISOR_ACTIVE_HIPPODROME, "Город обслуживает Ипподром"}
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
