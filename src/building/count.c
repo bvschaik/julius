@@ -172,6 +172,7 @@ void building_count_update(void)
             case BUILDING_SMALL_MAUSOLEUM:
             case BUILDING_LARGE_MAUSOLEUM:
                 increase_count(type, b->data.monument.phase == MONUMENT_FINISHED, b->upgrade_level);
+                break;
             // industry
             case BUILDING_WHEAT_FARM:
                 increase_industry_count(RESOURCE_WHEAT, b->num_workers > 0);
