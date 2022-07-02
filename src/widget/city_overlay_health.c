@@ -26,7 +26,9 @@ static int show_building_hospital(const building *b)
 
 static int show_building_sickness(const building *b)
 {
-    return b->type == BUILDING_HOSPITAL || b->type == BUILDING_DOCTOR;
+    return b->type == BUILDING_HOSPITAL || b->type == BUILDING_DOCTOR ||
+           b->type == BUILDING_BARBER || b->type == BUILDING_BATHHOUSE ||
+           b->type == BUILDING_SMALL_MAUSOLEUM || b->type == BUILDING_LARGE_MAUSOLEUM;
 }
 
 static int show_figure_barber(const figure *f)
@@ -53,7 +55,8 @@ static int show_figure_sickness(const figure *f)
 {
     return f->type == FIGURE_SURGEON || f->type == FIGURE_DOCTOR || f->type == FIGURE_DOCKER ||
            f->type == FIGURE_CART_PUSHER || f->type == FIGURE_TRADE_SHIP || f->type == FIGURE_WAREHOUSEMAN ||
-           f->type == FIGURE_TRADE_CARAVAN || f->type == FIGURE_TRADE_CARAVAN_DONKEY;
+           f->type == FIGURE_TRADE_CARAVAN || f->type == FIGURE_TRADE_CARAVAN_DONKEY || f->type == FIGURE_BARBER ||
+           f->type == FIGURE_BATHHOUSE_WORKER;
 }
 
 static int get_column_height_barber(const building *b)
