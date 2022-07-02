@@ -756,7 +756,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_OVERLAY_RELIGION, "Religionsöversikt" },
     {TR_HOTKEY_SHOW_OVERLAY_ROADS, "Vägöversikt" },
     {TR_HOTKEY_ROTATE_MAP_NORTH, "Rotera kartan mot norr" },
-    {TR_HOTKEY_BUILD_WHEAT_FARM, "Veteodling"},
+    {TR_HOTKEY_BUILD_WHEAT_FARM, "Veteodling" },
 	{TR_HOTKEY_SHOW_MESSAGES, "Visa meddelanden"},
     {TR_HOTKEY_SHOW_EMPIRE_MAP, "Visa imperiekartan"},
     {TR_TOGGLE_GRID, "Slå av/på rutnät"},
@@ -766,7 +766,27 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_EMPERORS_WRATH, "Caesar är oerhört besviken på dig och har därför beordrat att du skall arresteras. Såvida du inte ökar ditt anseende hos kejsaren, kommer hans elitlegionärer snart att anfalla din stad." },
     {TR_BUILDING_ACADEMY_UPGRADE_DESC, "Den här högskolan är i bruk. Förädlingen av närområdet har lett till att byggnaden har expanderats. Nu finns det utrymme för fler deklamationer och forskning."},
 	{TR_BUILDING_PALISADE_GATE, "Pålverksport"},
-    {TR_BUILDING_PALISADE_GATE_DESC, "Denna smala träport styr vilka invånare som får röra sig in och ut ur din stads försvar."}
+    {TR_BUILDING_PALISADE_GATE_DESC, "Denna smala träport styr vilka invånare som får röra sig in och ut ur din stads försvar."},
+	{TR_SAVE_DIALOG_INVALID_FILE, "Ogiltig fil"},
+    {TR_SAVE_DIALOG_SELECT_FILE, "Välj en fil"},
+    {TR_SAVE_DIALOG_FUNDS, "Kapital:"},
+    {TR_SAVE_DIALOG_POPULATION, "Befolkningsmängd:"},
+    {TR_SAVE_DIALOG_DATE, "Datum:"},
+    {TR_SAVE_DIALOG_CUSTOM_SCENARIO, "Anpassat scenario"},
+    {TR_SAVE_DIALOG_FIRST_MISSION, "Första uppdraget"},
+    {TR_SAVE_DIALOG_MISSION, "Uppdrag"},
+    {TR_SAVE_DIALOG_MILITARY, "Farlig"},
+    {TR_SAVE_DIALOG_PEACEFUL, "Fredlig"},
+    {TR_CITY_MESSAGE_TITLE_MARS_MINOR_CURSE_PREVENTED, "Mars Vrede" },
+    {TR_CITY_MESSAGE_TEXT_MARS_MINOR_CURSE_PREVENTED, "Mars är ursinnig! Det finns lite att frukta i det här fredliga landet, men var så säker, fred kommer inte vara för evigt!" },
+    {TR_TOOLTIP_MONUMENT_PHASE, " fas. "},
+    {TR_TOOLTIP_MONUMENT_PHASES, " faser. "},
+    {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Resursbehov:\n"},
+    {TR_BUILDING_GLADIATOR_STATUE, "Gladiatorstaty"},
+    {TR_ADVISOR_NO_ACTIVE_COLOSSEUM, "Inget fungerande colossem i staden"},
+    {TR_ADVISOR_ACTIVE_COLOSSEUM, "Staden har ett fungerande colosseum"},
+    {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "Ingen fungerande hippodrom i staden"},
+    {TR_ADVISOR_ACTIVE_HIPPODROME, "Staden har en fungerande hippodrom"}
 };
 
 void translation_swedish(const translation_string **strings, int *num_strings)
