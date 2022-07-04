@@ -809,7 +809,8 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_NO_ACTIVE_COLOSSEUM, "Нет действующего Колизея в городе"},
     {TR_ADVISOR_ACTIVE_COLOSSEUM, "Город обслуживает Колизей"},
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "Нет действующего Ипподрома в городе"},
-    {TR_ADVISOR_ACTIVE_HIPPODROME, "Город обслуживает Ипподром"}
+    {TR_ADVISOR_ACTIVE_HIPPODROME, "Город обслуживает Ипподром"},
+    {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Миссионерские посты"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
