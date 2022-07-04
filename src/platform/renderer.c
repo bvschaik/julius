@@ -39,10 +39,11 @@
 
 #define MAX_PACKED_IMAGE_SIZE 64000
 
-#ifdef __ANDROID__
+#if defined(__ANDROID__) || defined(__EMSCRIPTEN__)
 // On the arm versions of android, for some reason, atlas textures that are too large will make the renderer fetch
 // some images from the atlas with an off-by-one pixel, making things look terrible. Defining a smaller atlas texture
 // prevents the problem, at the cost of performance due to the extra texture context switching.
+// This also happens on emscripten for android, hence the emscripten inclusion.
 #define MAX_TEXTURE_SIZE 1024
 #endif
 
@@ -908,14 +909,21 @@ int platform_renderer_init(SDL_Window *window)
         data.max_texture_size.height = info.max_texture_height;
     }
     data.paused = 0;
-
+   
 #ifdef MAX_TEXTURE_SIZE
-    if (data.max_texture_size.width > MAX_TEXTURE_SIZE) {
-        data.max_texture_size.width = MAX_TEXTURE_SIZE;
+#ifdef __EMSCRIPTEN__
+    int is_android = EM_ASM_INT(return navigator.userAgent.toLowerCase().indexOf("android") > -1);
+    if (is_android) {
+#endif
+        if (data.max_texture_size.width > MAX_TEXTURE_SIZE) {
+            data.max_texture_size.width = MAX_TEXTURE_SIZE;
+        }
+        if (data.max_texture_size.height > MAX_TEXTURE_SIZE) {
+            data.max_texture_size.height = MAX_TEXTURE_SIZE;
+        }
+#ifdef __EMSCRIPTEN__
     }
-    if (data.max_texture_size.height > MAX_TEXTURE_SIZE) {
-        data.max_texture_size.height = MAX_TEXTURE_SIZE;
-    }
+#endif
 #endif
 
     SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0xff);
