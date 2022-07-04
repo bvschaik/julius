@@ -32,7 +32,6 @@ static generic_button hold_games_button[] = {
     {102, 370, 300, 20, button_hold_games, button_none, 0, 0},
 };
 
-
 struct games_text {
     translation_key preparation_text;
     translation_key ongoing_text;
@@ -197,7 +196,7 @@ static void draw_foreground(void)
 
 static int handle_mouse(const mouse *m)
 {
-    return generic_buttons_handle_mouse(m, 0, 0, hold_games_button, 2, &focus_button_id);
+    return generic_buttons_handle_mouse(m, 0, 0, hold_games_button, 1, &focus_button_id);
 }
 
 static void button_hold_games(int param1, int param2)
