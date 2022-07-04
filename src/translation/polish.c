@@ -799,7 +799,8 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_NO_ACTIVE_COLOSSEUM, "Brak czynnego koloseum w mieście" },
     {TR_ADVISOR_ACTIVE_COLOSSEUM, "Miasto posiada czynne koloseum" },
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "Brak czynnego hipodromu" },
-    {TR_ADVISOR_ACTIVE_HIPPODROME, "Miasto posiada czynny hipodrom" }
+    {TR_ADVISOR_ACTIVE_HIPPODROME, "Miasto posiada czynny hipodrom" },
+    {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Misje" }
 };
 
 void translation_polish(const translation_string **strings, int *num_strings)

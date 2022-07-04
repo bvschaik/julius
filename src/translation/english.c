@@ -799,7 +799,8 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_NO_ACTIVE_COLOSSEUM, "No active colosseum in the city"},
     {TR_ADVISOR_ACTIVE_COLOSSEUM, "The city is served by a colosseum"},
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "No active hippodrome in the city"},
-    {TR_ADVISOR_ACTIVE_HIPPODROME, "The city is served by an hippodrome"}
+    {TR_ADVISOR_ACTIVE_HIPPODROME, "The city is served by an hippodrome"},
+    {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Mission posts"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

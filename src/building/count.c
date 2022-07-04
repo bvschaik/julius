@@ -126,6 +126,7 @@ void building_count_update(void)
             case BUILDING_SCHOOL:
             case BUILDING_LIBRARY:
             case BUILDING_ACADEMY:
+            case BUILDING_MISSION_POST:
             // health
             case BUILDING_BARBER:
             case BUILDING_BATHHOUSE:

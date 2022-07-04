@@ -4,12 +4,13 @@
 #include "city/culture.h"
 #include "city/houses.h"
 #include "city/population.h"
+#include "core/lang.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 
-#define ADVISOR_HEIGHT 16
+#define ADVISOR_HEIGHT 17
 
 static int get_education_advice(void)
 {
@@ -71,7 +72,7 @@ static int draw_background(void)
     lang_text_draw(57, 5, 290, 86, FONT_SMALL_PLAIN);
     lang_text_draw(57, 6, 478, 86, FONT_SMALL_PLAIN);
 
-    inner_panel_draw(32, 100, 36, 4);
+    inner_panel_draw(32, 100, 36, 5);
 
     // schools
     lang_text_draw_amount(8, 18, building_count_total(BUILDING_SCHOOL), 40, 105, FONT_NORMAL_WHITE);
@@ -121,7 +122,20 @@ static int draw_background(void)
         lang_text_draw_centered(57, 21, 420, 145, 200, FONT_NORMAL_WHITE);
     }
 
-    lang_text_draw_multiline(57, 22 + get_education_advice(), 60, 180, 512, FONT_NORMAL_BLACK);
+    // Mission posts
+    int count = building_count_total(BUILDING_MISSION_POST);
+    width = text_draw_number(count, ' ', " ", 40, 165, FONT_NORMAL_WHITE, 0);
+
+    if (count == 1) {
+        text_draw(lang_get_string(28, 80), 40 + width, 165, FONT_NORMAL_WHITE, 0);
+    } else {
+        text_draw(translation_for(TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS), 40 + width, 165, FONT_NORMAL_WHITE, 0);
+    }
+
+    text_draw_number_centered(building_count_active(BUILDING_MISSION_POST), 150, 165, 100, FONT_NORMAL_WHITE);
+
+
+    lang_text_draw_multiline(57, 22 + get_education_advice(), 60, 195, 512, FONT_NORMAL_BLACK);
 
     return ADVISOR_HEIGHT;
 }
