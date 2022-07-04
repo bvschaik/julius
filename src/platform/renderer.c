@@ -6,6 +6,7 @@
 #include "graphics/renderer.h"
 #include "graphics/screen.h"
 #include "platform/cursor.h"
+#include "platform/emscripten/emscripten.h"
 #include "platform/haiku/haiku.h"
 #include "platform/platform.h"
 #include "platform/screen.h"
