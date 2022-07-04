@@ -107,7 +107,7 @@ static int draw_background(void)
 
     // taverns
     text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE), 67, 64, FONT_NORMAL_WHITE, 0);
-    text_draw_number(building_count_total(BUILDING_TAVERN), '@', "", 40, 64, FONT_NORMAL_WHITE, 0);
+    text_draw_number(building_count_total(BUILDING_TAVERN), '@', " ", 40, 64, FONT_NORMAL_WHITE, 0);
     text_draw_number_centered(building_count_active(BUILDING_TAVERN), 150, 64, 100, FONT_NORMAL_WHITE);
     int width = text_draw_number(city_culture_get_tavern_person_coverage(), '_', " ",
         PEOPLE_OFFSET, 64, FONT_NORMAL_WHITE, 0);
