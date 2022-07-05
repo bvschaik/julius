@@ -79,7 +79,7 @@ typedef struct {
 
     int (*should_pack_image)(int width, int height);
 
-    void (*update_scale_mode)(int city_scale);
+    void (*update_scale)(int city_scale);
 } graphics_renderer_interface;
 
 const graphics_renderer_interface *graphics_renderer(void);

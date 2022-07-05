@@ -10,7 +10,6 @@ typedef struct {
     short text_number;
     void (*left_click_handler)(int param);
     int parameter;
-    int hidden;
 } menu_item;
 
 typedef struct {

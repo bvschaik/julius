@@ -120,59 +120,60 @@ static void draw_footprint(int x, int y, int grid_offset)
 {
     sound_city_progress_ambient();
     building_construction_record_view_position(x, y, grid_offset);
-    if (grid_offset >= 0 && map_property_is_draw_tile(grid_offset)) {
-        // Valid grid_offset and leftmost tile -> draw
-        int building_id = map_building_at(grid_offset);
-        color_t color_mask = 0;
-        if (building_id) {
-            building *b = building_get(building_id);
-            if (draw_building_as_deleted(b)) {
-                color_mask = COLOR_MASK_RED;
+    if (grid_offset < 0 || !map_property_is_draw_tile(grid_offset)) {
+        return;
+    }
+    // Valid grid_offset and leftmost tile -> draw
+    int building_id = map_building_at(grid_offset);
+    color_t color_mask = 0;
+    if (building_id) {
+        building *b = building_get(building_id);
+        if (draw_building_as_deleted(b)) {
+            color_mask = COLOR_MASK_RED;
+        }
+        int view_x, view_y, view_width, view_height;
+        city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
+
+        if (b->state == BUILDING_STATE_IN_USE) {
+            int direction;
+            if (x < view_x + 100) {
+                direction = SOUND_DIRECTION_LEFT;
+            } else if (x > view_x + view_width - 100) {
+                direction = SOUND_DIRECTION_RIGHT;
+            } else {
+                direction = SOUND_DIRECTION_CENTER;
             }
-            int view_x, view_y, view_width, view_height;
-            city_view_get_viewport(&view_x, &view_y, &view_width, &view_height);
-            
-            if (b->state == BUILDING_STATE_IN_USE) {
-                int direction;
-                if (x < view_x + 100) {
-                    direction = SOUND_DIRECTION_LEFT;
-                } else if (x > view_x + view_width - 100) {
-                    direction = SOUND_DIRECTION_RIGHT;
-                } else {
-                    direction = SOUND_DIRECTION_CENTER;
-                }
-                if (building_monument_is_unfinished_monument(b)) {
-                    sound_city_mark_construction_site_view(direction);
-                } else {
-                    sound_city_mark_building_view(b->type, b->num_workers, direction);
-                }
+            if (building_monument_is_unfinished_monument(b)) {
+                sound_city_mark_construction_site_view(direction);
+            } else {
+                sound_city_mark_building_view(b->type, b->num_workers, direction);
             }
         }
-        if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
-            sound_city_mark_building_view(BUILDING_GARDENS, 0, SOUND_DIRECTION_CENTER);
+    }
+    if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
+        sound_city_mark_building_view(BUILDING_GARDENS, 0, SOUND_DIRECTION_CENTER);
+    }
+    int image_id = map_image_at(grid_offset);
+    if (map_property_is_constructing(grid_offset)) { //&&
+        //  !building_is_connectable(building_construction_type())) {
+        image_id = image_group(GROUP_TERRAIN_OVERLAY);
+    }
+    if (draw_context.advance_water_animation &&
+        image_id >= draw_context.image_id_water_first &&
+        image_id <= draw_context.image_id_water_last) {
+        image_id++;
+        if (image_id > draw_context.image_id_water_last) {
+            image_id = draw_context.image_id_water_first;
         }
-        int image_id = map_image_at(grid_offset);
-        if (map_property_is_constructing(grid_offset)) { //&&
-          //  !building_is_connectable(building_construction_type())) {
-            image_id = image_group(GROUP_TERRAIN_OVERLAY);
+        map_image_set(grid_offset, image_id);
+    }
+    image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask, draw_context.scale);
+    if (!building_id && config_get(CONFIG_UI_SHOW_GRID) && draw_context.scale <= 2.0f) {
+        static int grid_id = 0;
+        if (!grid_id) {
+            grid_id = assets_get_image_id("UI", "Grid_Full");
         }
-        if (draw_context.advance_water_animation &&
-            image_id >= draw_context.image_id_water_first &&
-            image_id <= draw_context.image_id_water_last) {
-            image_id++;
-            if (image_id > draw_context.image_id_water_last) {
-                image_id = draw_context.image_id_water_first;
-            }
-            map_image_set(grid_offset, image_id);
-        }
-        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask, draw_context.scale);
-        if (!building_id && config_get(CONFIG_UI_SHOW_GRID) && draw_context.scale <= 2.0f) {
-            static int grid_id = 0;
-            if (!grid_id) {
-                grid_id = assets_get_image_id("UI", "Grid_Full");
-            }
-            image_draw(grid_id, x, y, COLOR_GRID, draw_context.scale);
-        }
+        image_draw(grid_id, x, y, COLOR_GRID, draw_context.scale);
     }
 }
 

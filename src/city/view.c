@@ -457,7 +457,7 @@ void city_view_set_scale(int scale)
         set_viewport_with_sidebar();
     }
     check_camera_boundaries();
-    graphics_renderer()->update_scale_mode(scale);
+    graphics_renderer()->update_scale(scale);
 }
 
 void city_view_set_viewport(int screen_width, int screen_height)

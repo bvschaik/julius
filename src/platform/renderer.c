@@ -76,7 +76,6 @@ static struct {
             int x, y;
         } hotspot;
     } cursors[CURSOR_MAX];
-
     SDL_Texture **texture_lists[ATLAS_MAX];
     image_atlas_data atlas_data[ATLAS_MAX];
     struct {
@@ -825,11 +824,9 @@ static int should_pack_image(int width, int height)
     return width * height < MAX_PACKED_IMAGE_SIZE;
 }
 
-static void update_scale_mode(int city_scale)
+static void update_scale(int city_scale)
 {
-#ifdef USE_TEXTURE_SCALE_MODE
     data.city_scale = city_scale / 100.0f;
-#endif
 }
 
 static int supports_yuv_texture(void)
@@ -866,7 +863,7 @@ static void create_renderer_interface(void)
     data.renderer_interface.free_image_atlas = free_texture_atlas_and_data;
     data.renderer_interface.load_unpacked_image = load_unpacked_image;
     data.renderer_interface.should_pack_image = should_pack_image;
-    data.renderer_interface.update_scale_mode = update_scale_mode;
+    data.renderer_interface.update_scale = update_scale;
 
     graphics_renderer_set_interface(&data.renderer_interface);
 }

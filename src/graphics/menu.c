@@ -55,9 +55,6 @@ static void calculate_menu_dimensions(menu_bar_item *menu)
     int height_pixels = MENU_ITEM_HEIGHT;
     for (int i = 0; i < menu->num_items; i++) {
         menu_item *sub = &menu->items[i];
-        if (sub->hidden) {
-            continue;
-        }
         int width_pixels = lang_text_get_width(
             sub->text_group, sub->text_number, FONT_NORMAL_BLACK);
         if (width_pixels > max_width) {
@@ -80,9 +77,6 @@ void menu_draw(menu_bar_item *menu, int focus_item_id)
     int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
     for (int i = 0; i < menu->num_items; i++) {
         menu_item *sub = &menu->items[i];
-        if (sub->hidden) {
-            continue;
-        }
         if (i == focus_item_id - 1) {
             graphics_fill_rect(menu->x_start, y_offset - 4,
                 BLOCK_SIZE * menu->calculated_width_blocks, 20, COLOR_BLACK);
@@ -100,9 +94,6 @@ static int get_menu_item(const mouse *m, menu_bar_item *menu)
 {
     int y_offset = TOP_MENU_HEIGHT + MENU_BASE_TEXT_Y_OFFSET * 2;
     for (int i = 0; i < menu->num_items; i++) {
-        if (menu->items[i].hidden) {
-            continue;
-        }
         if (menu->x_start <= m->x &&
             menu->x_start + BLOCK_SIZE * menu->calculated_width_blocks > m->x &&
             y_offset - 2 <= m->y &&
