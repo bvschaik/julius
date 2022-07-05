@@ -15,12 +15,14 @@ static struct {
     asset_image *roadblock_image;
 } data;
 
-void assets_init(color_t **main_images, int *main_image_widths)
+void assets_init(int force_reload, color_t **main_images, int *main_image_widths)
 {
-    if (graphics_renderer()->has_image_atlas(ATLAS_EXTRA_ASSET)) {
+    if (graphics_renderer()->has_image_atlas(ATLAS_EXTRA_ASSET) && !force_reload) {
         asset_image_reload_climate();
         return;
     }
+
+    graphics_renderer()->free_image_atlas(ATLAS_EXTRA_ASSET);
 
     const dir_listing *xml_files = dir_find_files_with_extension(ASSETS_DIRECTORY, "xml");
 

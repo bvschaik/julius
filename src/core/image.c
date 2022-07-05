@@ -686,9 +686,7 @@ int image_load_climate(int climate_id, int is_editor, int force_reload)
     free_draw_data(draw_data, IMAGE_MAIN_ENTRIES);
     free(tmp_data);
     make_plain_fonts_white(data.main, atlas_data, image_group(GROUP_FONT));
-    data.current_climate = climate_id;
-    data.is_editor = is_editor;
-    assets_init(atlas_data->buffers, atlas_data->image_widths);
+    assets_init(data.is_editor != is_editor, atlas_data->buffers, atlas_data->image_widths);
     graphics_renderer()->create_image_atlas(atlas_data);
     image_packer_free(&data.packer);
 
@@ -696,6 +694,9 @@ int image_load_climate(int climate_id, int is_editor, int force_reload)
     if (!is_editor) {
         data.main[image_group(GROUP_BUILDING_ENGINEERS_POST)].animation->sprite_offset_y += 1;
     }
+
+    data.current_climate = climate_id;
+    data.is_editor = is_editor;
 
     data.images_with_tops = 0;
 

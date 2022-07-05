@@ -8,7 +8,7 @@
 
 #define PATH_ROTATE_OFFSET 56
 
-void assets_init(color_t **main_images, int *main_image_widths);
+void assets_init(int force_reload, color_t **main_images, int *main_image_widths);
 
 int assets_get_group_id(const char *assetlist_name);
 
