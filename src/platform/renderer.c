@@ -109,7 +109,8 @@ static int save_screen_buffer(color_t *pixels, int x, int y, int width, int heig
         return 0;
     }
     SDL_Rect rect = { x, y, width, height };
-    return SDL_RenderReadPixels(data.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels, row_width * sizeof(color_t)) == 0;
+    return SDL_RenderReadPixels(data.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels,
+        row_width * sizeof(color_t)) == 0;
 }
 
 static void draw_line(int x_start, int x_end, int y_start, int y_end, color_t color)
@@ -332,7 +333,8 @@ static int create_texture_atlas(const image_atlas_data *atlas_data)
             32, atlas_data->image_widths[i] * sizeof(color_t),
             COLOR_CHANNEL_RED, COLOR_CHANNEL_GREEN, COLOR_CHANNEL_BLUE, COLOR_CHANNEL_ALPHA);
         if (!surface) {
-            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for texture. Reason: %s", SDL_GetError());
+            SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create surface for texture. Reason: %s",
+                SDL_GetError());
             free_texture_atlas(atlas_data->type);
             return 0;
         }
@@ -430,13 +432,7 @@ static void set_texture_color_and_scale_mode(SDL_Texture *texture, color_t color
     SDL_ScaleMode current_scale_mode;
     SDL_GetTextureScaleMode(texture, &current_scale_mode);
 
-    // Android doesn't look very good with linear scaling in the city, so we just disable it
-#ifndef __ANDROID__
-    SDL_ScaleMode city_scale_mode = data.city_scale > 2.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
-#else
     SDL_ScaleMode city_scale_mode = SDL_ScaleModeNearest;
-#endif
-
     SDL_ScaleMode texture_scale_mode = scale != 1.0f ? SDL_ScaleModeLinear : SDL_ScaleModeNearest;
     SDL_ScaleMode desired_scale_mode = data.city_scale == scale ? city_scale_mode : texture_scale_mode;
     if (data.disable_linear_filter) {
