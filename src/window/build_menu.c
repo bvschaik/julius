@@ -359,8 +359,8 @@ static void button_menu_item(int item)
         window_city_show();
     }
 
-    if (building_construction_can_rotate() && !mouse_get()->is_touch) {
-        city_warning_show(WARNING_VARIANT_TOGGLE);
+    if (building_construction_can_rotate()) {
+        building_rotation_setup_rotation();
     }
 }
 

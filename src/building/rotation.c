@@ -5,8 +5,11 @@
 #include "building/construction.h"
 #include "building/properties.h"
 #include "city/view.h"
+#include "city/warning.h"
 #include "core/config.h"
 #include "core/direction.h"
+#include "core/lang.h"
+#include "core/string.h"
 #include "core/time.h"
 #include "map/grid.h"
 
@@ -17,7 +20,57 @@ static struct {
     int rotation;
     int extra_rotation;
     int road_orientation;
+    uint8_t rotation_text[100];
+    int warning_id;
 } data = { 0, 0, 1 };
+
+static int get_num_rotations(building_type type)
+{
+    int variants = building_construction_type_num_cycles(type);
+    if (variants > 1) {
+        return variants;
+    }
+    variants = building_variant_get_number_of_variants(type);
+    if (variants > 0) {
+        return variants;
+    }
+    variants = building_connectable_num_variants(type);
+    if (variants > 0) {
+        return variants;
+    }
+    if (building_properties_for_type(type)->rotation_offset) {
+        return 2;
+    }
+    switch (type) {
+        case BUILDING_MENU_LARGE_TEMPLES:
+        case BUILDING_MENU_SMALL_TEMPLES:
+            return 5;
+        case BUILDING_FORT_JAVELIN:
+        case BUILDING_FORT_LEGIONARIES:
+        case BUILDING_FORT_MOUNTED:
+        case BUILDING_WAREHOUSE:
+            return 4;
+        case BUILDING_HIPPODROME:
+        case BUILDING_GATEHOUSE:
+        case BUILDING_TRIUMPHAL_ARCH:
+            return 2;
+        default:
+            return 0;
+    }
+}
+
+static void update_rotation_message(void)
+{
+    uint8_t *cursor = data.rotation_text;
+    building_type type = building_construction_type();
+    cursor += string_from_int(cursor, data.extra_rotation + 1, 0);
+    cursor = string_copy(string_from_ascii("/"), cursor, 100 - (cursor - data.rotation_text));
+    cursor += string_from_int(cursor, get_num_rotations(type), 0);
+    cursor = string_copy(string_from_ascii(" "), cursor, 100 - (cursor - data.rotation_text));
+    string_copy(lang_get_string(28, type), cursor, 100 - (cursor - data.rotation_text));
+
+    data.warning_id = city_warning_show_custom(data.rotation_text, data.warning_id);
+}
 
 static void rotate_forward(void)
 {
@@ -27,9 +80,11 @@ static void rotate_forward(void)
     if (data.rotation > MAX_ROTATION) {
         data.rotation = 0;
     }
-    if (data.extra_rotation >= MAX_BIG_ROTATION) {
+    building_type type = building_construction_type();
+    if (data.extra_rotation >= get_num_rotations(type)) {
         data.extra_rotation = 0;
     }
+    update_rotation_message();
 }
 
 static void rotate_backward()
@@ -41,8 +96,9 @@ static void rotate_backward()
         data.rotation = MAX_ROTATION;
     }
     if (data.extra_rotation < 0) {
-        data.extra_rotation = MAX_BIG_ROTATION;
+        data.extra_rotation = get_num_rotations(building_construction_type()) - 1;
     }
+    update_rotation_message();
 }
 
 int building_rotation_get_road_orientation(void)
@@ -84,6 +140,14 @@ void building_rotation_reset_rotation(void)
 {
     data.rotation = 0;
     data.extra_rotation = 0;
+}
+
+void building_rotation_setup_rotation(void)
+{
+    building_rotation_reset_rotation();
+    data.warning_id = 0;
+
+    update_rotation_message();
 }
 
 int building_rotation_get_building_orientation(int building_rotation)

@@ -213,7 +213,7 @@ static void show_saved_notice(const char *filename)
     int prefix_length = string_length(prefix);
     string_copy(string_from_ascii(filename), &notice_text[prefix_length], FILE_NAME_MAX - prefix_length);
 
-    city_warning_show_custom(notice_text);
+    city_warning_show_custom(notice_text, 0);
 }
 
 static void create_window_screenshot(void)

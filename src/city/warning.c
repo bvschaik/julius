@@ -20,11 +20,11 @@ struct warning {
 
 static struct warning warnings[MAX_WARNINGS];
 
-static struct warning *new_warning(void)
+static int new_warning(void)
 {
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (!warnings[i].in_use) {
-            return &warnings[i];
+            return i + 1;
         }
     }
     return 0;
@@ -70,21 +70,25 @@ void city_warning_show(warning_type type)
     } else {
         text = lang_get_string(19, type - 2);
     }
-    city_warning_show_custom(text);
+    city_warning_show_custom(text, 0);
 }
 
-void city_warning_show_custom(const uint8_t *text)
+int city_warning_show_custom(const uint8_t *text, int position)
 {
     if (!setting_warnings()) {
-        return;
+        return 0;
     }
-    struct warning *w = new_warning();
-    if (!w) {
-        return;
+    if (position <= 0 || position > MAX_WARNINGS || !warnings[position - 1].in_use) {
+        position = new_warning();
     }
+    if (!position) {
+        return 0;
+    }
+    struct warning *w = &warnings[position - 1];
     w->in_use = 1;
     w->time = time_get_millis();
     string_copy(text, w->text, MAX_TEXT);
+    return position;
 }
 
 int city_has_warnings(void)
@@ -124,10 +128,11 @@ void city_warning_clear_outdated(void)
 
 void city_warning_show_console(uint8_t *warning_text)
 {
-    struct warning *w = new_warning();
-    if (!w) {
+    int position = new_warning();
+    if (!position) {
         return;
     }
+    struct warning *w = &warnings[position - 1];
     w->in_use = 1;
     w->time = time_get_millis();
     string_copy(warning_text, w->text, MAX_TEXT);

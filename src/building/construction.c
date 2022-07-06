@@ -112,6 +112,19 @@ int building_construction_type_can_cycle(building_type type)
     return 0;
 }
 
+int building_construction_type_num_cycles(building_type type)
+{
+    for (int i = 0; i < BUILDING_CYCLES; i++) {
+        int size = building_cycles[i].size;
+        for (int j = 0; j < size; j++) {
+            if (building_cycles[i].array[j] == type) {
+                return size * building_cycles[i].rotations_to_next;
+            }
+        }
+    }
+    return 1;
+}
+
 int building_construction_cycle_forward(void)
 {
     if (data.type == BUILDING_NONE) {
@@ -634,7 +647,6 @@ int building_construction_is_updatable(void)
             return 0;
     }
 }
-
 
 void building_construction_cancel(void)
 {

@@ -456,6 +456,7 @@ int building_connectable_get_palisade_gate_offset(int grid_offset)
     }
     return get_image_offset(CONTEXT_GARDEN_GATE, tiles, rotation, terrain_tiles, grid_offset);
 }
+
 int building_is_connectable(building_type type)
 {
     for (int i = 0; i < MAX_CONNECTABLE_BUILDINGS; i++) {
@@ -464,6 +465,24 @@ int building_is_connectable(building_type type)
         }
     }
     return 0;
+}
+
+int building_connectable_num_variants(building_type type)
+{
+    if (!building_is_connectable(type)) {
+        return 0;
+    }
+    switch (type) {
+        case BUILDING_HEDGE_DARK:
+        case BUILDING_HEDGE_LIGHT:
+        case BUILDING_COLONNADE:
+        case BUILDING_GARDEN_WALL:
+        case BUILDING_ROOFED_GARDEN_WALL:
+        case BUILDING_PALISADE:
+            return BUILDING_CONNECTABLE_ROTATION_LIMIT_HEDGES;
+        default:
+            return BUILDING_CONNECTABLE_ROTATION_LIMIT_PATHS;
+    }
 }
 
 void building_connectable_update_connections_for_type(building_type type)
