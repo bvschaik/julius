@@ -538,7 +538,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_GAMES_OPTION_4, "Jeux Olympiques" },
     {TR_WINDOW_GAMES_OPTION_5, "Jeux Romains" },
     {TR_WINDOW_GAMES_OPTION_1_DESC, "Le Colisée sera inondé pour reconstituer une grande bataille navale. Augmente la vitesse de déplacement de vos troupes et leur force dans les batailles lointaines pendant 12 mois." },
-    {TR_WINDOW_GAMES_OPTION_2_DESC, "Le Colisée accueillera des chasses d'animaux sauvages, réjouissant les plébéiens. Criminels, émeutes et révoltes seront réprimés pendant 12 mois. Les gladiateurs défendront la cité lors des prochaines invasions." },
+    {TR_WINDOW_GAMES_OPTION_2_DESC, "Le Colisée accueillera des combats de bêtes féroces et des exécutions réjouissant la plèbe. Crimes, émeutes et révoltes seront réfrénés pendant 12 mois. Les dresseurs de lions défendront la cité lors des prochaines invasions." },
     {TR_WINDOW_GAMES_OPTION_3_DESC, "Le Colisée accueillera des jeux en l'honneur des dieux au premier jour de l'année prochaine, sollicitant fortune et prospérité. Les quotas commerciaux seront doublés l'année prochaine." },
     {TR_WINDOW_GAMES_OPTION_4_DESC, "L'Hippodrome accueillera les Jeux Olympiques. Des foules de visiteurs afflueront vers votre cité, et si vos athlètes l'honorent bien, vous obtiendrez une augmentation permanente du tourisme et de l'estime." },
     {TR_WINDOW_GAMES_OPTION_5_DESC, "Le Colisée accueillera les Jeux Romains. Des compétiteurs afflueront de tout l'Empire vers votre cité, désireux de prouver leur valeur. Ces célébrations vous apporteront l'estime de l'Empereur et de votre peuple pendant 12 mois." },
@@ -738,12 +738,12 @@ static translation_string all_strings[] = {
     {TR_BUILDING_DOCK_PLAGUE_DESC, "La peste a été propagée ici par un navire marchand. Ce dock est mis en quarantaine le temps qu'un médecin ou chirurgien décontamine le secteur."},
     {TR_BUILDING_GRANARY_PLAGUE_DESC, "La peste a été propagée ici par un visiteur contaminé. Ce grenier est mis en quarantaine le temps qu'un médecin ou chirurgien décontamine le secteur."},
     {TR_BUILDING_WAREHOUSE_PLAGUE_DESC, "La peste a été propagée ici par un visiteur contaminé. Cet entrepôt est mis en quarantaine le temps qu'un médecin ou chirurgien décontamine le secteur."},
-    {TR_BUILDING_HOUSE_DISEASE_DESC, "La maladie a frappé ici en raison d'un manque d'hygiène, causant la mort de certains résidents. Cette maison est mise en quarantaine le temps qu'un médecin ou chirurgien décontamine le secteur."},
+    {TR_BUILDING_HOUSE_DISEASE_DESC, "La maladie a frappé ici en raison d'un manque d'hygiène, et certains résidents ont péri. Cette maison est mise en quarantaine le temps qu'un médecin ou chirurgien décontamine le secteur."},
     {TR_BUILDING_FUMIGATION_DESC, "Le bâtiment est en cours de désinfection. La fumigation devrait durer quelques jours."},
     {TR_OVERLAY_SICKNESS, "Maladies"},
     {TR_ADVISOR_SICKNESS_LEVEL_LOW, "Très peu de maladies se propagent dans la cité. Le niveau satisfaisant d'hygiène dans la cité permet d'endiguer efficacement les épidémies provenant des cités extérieures."},
-    {TR_ADVISOR_SICKNESS_LEVEL_MEDIUM, "Quelques foyers infectieux se déclarent dans la cité mais la situation est sous contrôle. Construisez suffisamment de structures d'hygiène afin que vos citoyens restent en bonne santé."},
-    {TR_ADVISOR_SICKNESS_LEVEL_HIGH, "De nombreuses maladies infectieuses circulent dans certains secteurs de la cité. Si vous n'agissez pas rapidement, des bâtiments risquent de passer en quarantaine. Construisez des structures d'hygiène afin d'endiguer les épidémies provenant des cités extérieures."},
+    {TR_ADVISOR_SICKNESS_LEVEL_MEDIUM, "Quelques foyers infectieux se déclarent dans la cité mais la situation est sous contrôle. Veillez à un niveau d'hygiène adéquat afin de prévenir les épidémies."},
+    {TR_ADVISOR_SICKNESS_LEVEL_HIGH, "De nombreuses maladies infectieuses circulent dans certains secteurs de la cité. Si vous n'agissez pas rapidement, des bâtiments risquent de passer en quarantaine. Un meilleur accès aux structures d'hygiène permettrait de combattre efficacement les épidémies."},
     {TR_ADVISOR_SICKNESS_LEVEL_PLAGUE, "La peste s'est déclarée dans la cité et certains bâtiments sont gravement touchés. Médecins et chirurgiens sont réquisitionnés pour décontaminer les lieux frappés par l'épidémie. Il faut absolument rétablir la situation !"},
     {TR_TOOLTIP_OVERLAY_SICKNESS_LOW, "Très peu de maladies"},
     {TR_TOOLTIP_OVERLAY_SICKNESS_MEDIUM, "Quelques maladies infectieuses"},
@@ -799,7 +799,8 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_NO_ACTIVE_COLOSSEUM, "Aucun colisée actif dans la cité"},
     {TR_ADVISOR_ACTIVE_COLOSSEUM, "La cité profite d'un colisée"},
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "Aucun hippodrome actif dans la cité"},
-    {TR_ADVISOR_ACTIVE_HIPPODROME, "La cité profite d'un hippodrome"}
+    {TR_ADVISOR_ACTIVE_HIPPODROME, "La cité profite d'un hippodrome"},
+    {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Missions"}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
