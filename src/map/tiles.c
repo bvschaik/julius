@@ -1187,6 +1187,7 @@ void map_tiles_add_entry_exit_flags(void)
             }
         }
         int grid_offset_flag = city_map_set_entry_flag(x_tile, y_tile);
+        map_terrain_remove(grid_offset_flag, TERRAIN_MEADOW);
         map_terrain_add(grid_offset_flag, TERRAIN_ROCK);
         int orientation = (city_view_orientation() + entry_orientation) % 8;
         map_image_set(grid_offset_flag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + orientation / 2);
@@ -1201,6 +1202,7 @@ void map_tiles_add_entry_exit_flags(void)
             }
         }
         int grid_offset_flag = city_map_set_exit_flag(x_tile, y_tile);
+        map_terrain_remove(grid_offset_flag, TERRAIN_MEADOW);
         map_terrain_add(grid_offset_flag, TERRAIN_ROCK);
         int orientation = (city_view_orientation() + exit_orientation) % 8;
         map_image_set(grid_offset_flag, image_group(GROUP_TERRAIN_ENTRY_EXIT_FLAGS) + 4 + orientation / 2);
