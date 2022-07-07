@@ -381,7 +381,7 @@ static int has_deleted_building(int grid_offset)
 static int terrain_on_water_overlay(void)
 {
     return
-        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB |
+        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_SHRUB | TERRAIN_MEADOW |
         TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_AQUEDUCT | TERRAIN_ELEVATION |
         TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
