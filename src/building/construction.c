@@ -1004,17 +1004,8 @@ void building_construction_place(void)
         return;
     }
 
-    if (data.type == BUILDING_MENU_SMALL_TEMPLES) {
-        data.sub_type++;
-        if (data.sub_type > BUILDING_SMALL_TEMPLE_VENUS) {
-            data.sub_type = BUILDING_SMALL_TEMPLE_CERES;
-        }
-    }
-    if (data.type == BUILDING_MENU_LARGE_TEMPLES) {
-        data.sub_type++;
-        if (data.sub_type > BUILDING_LARGE_TEMPLE_VENUS) {
-            data.sub_type = BUILDING_LARGE_TEMPLE_CERES;
-        }
+    if (data.type == BUILDING_MENU_SMALL_TEMPLES || data.type == BUILDING_MENU_LARGE_TEMPLES) {
+        building_rotation_rotate_forward();
     }
     formation_move_herds_away(x_end, y_end);
     city_finance_process_construction(placement_cost);
