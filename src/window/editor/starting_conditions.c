@@ -112,7 +112,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 static void button_rank(int param1, int param2)
 {
     window_select_list_show(screen_dialog_offset_x() + 40, screen_dialog_offset_y() + 56,
-                            32, 10, scenario_editor_set_player_rank);
+                            32, 11, scenario_editor_set_player_rank);
 }
 
 static void button_start_year(int param1, int param2)
