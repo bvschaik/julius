@@ -487,7 +487,7 @@ static void draw_foreground(void)
 
 static int handle_mouse(const mouse *m)
 {
-    return generic_buttons_handle_mouse(m, 0, 0, graph_buttons, 3, &focus_button_id);
+    return generic_buttons_handle_mouse(m, 0, 0, graph_buttons, 2, &focus_button_id);
 }
 
 static void button_graph(int param1, int param2)
