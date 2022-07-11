@@ -126,14 +126,18 @@ int building_rotation_get_rotation_with_limit(int limit)
 
 void building_rotation_rotate_forward(void)
 {
-    rotate_forward();
-    data.road_orientation = data.road_orientation == 1 ? 2 : 1;
+    if (building_rotation_type_has_rotations(building_construction_type())) {
+        rotate_forward();
+        data.road_orientation = data.road_orientation == 1 ? 2 : 1;
+    }
 }
 
 void building_rotation_rotate_backward(void)
 {
-    rotate_backward();
-    data.road_orientation = data.road_orientation == 1 ? 2 : 1;
+    if (building_rotation_type_has_rotations(building_construction_type())) {
+        rotate_backward();
+        data.road_orientation = data.road_orientation == 1 ? 2 : 1;
+    }
 }
 
 void building_rotation_reset_rotation(void)

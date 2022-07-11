@@ -69,6 +69,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_UI_MESSAGE_ALERTS, "Show new messages as alerts instead of popups"},
     {TR_CONFIG_UI_SHOW_GRID, "Show grid"},
     {TR_CONFIG_UI_SHOW_PARTIAL_GRID_AROUND_CONSTRUCTION, "Show partial grid around construction"},
+    {TR_CONFIG_UI_ALWAYS_SHOW_ROTATION_BUTTONS, "Always show rotation buttons"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Fix immigration bug on very hard"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Fix 100-year-old ghosts"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Fix Emperor change and survival time in custom missions"},
