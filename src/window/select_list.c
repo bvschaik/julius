@@ -129,6 +129,20 @@ static void draw_foreground(void)
     }
 }
 
+static int click_outside_window(const mouse *m)
+{
+    int width;
+    int height;
+    if (data.num_items > MAX_ITEMS_PER_LIST) {
+        width = 26 * BLOCK_SIZE;
+        height = 20 * items_in_first_list() + 24;
+    } else {
+        width = 13 * BLOCK_SIZE;
+        height = 20 * data.num_items + 24;
+    }
+    return m->left.went_up && (m->x < data.x || m->x >= data.x + width || m->y < data.y || m->y >= data.y + height);
+}
+
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (data.num_items > MAX_ITEMS_PER_LIST) {
@@ -146,7 +160,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
             return;
         }
     }
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h) || click_outside_window(m)) {
         window_go_back();
     }
 }

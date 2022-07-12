@@ -980,6 +980,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
             }
         } else if (w->type == TYPE_SELECT) {
             generic_button *btn = &select_buttons[w->subtype];
+            btn->parameter1 = y + w->y_offset;
             int focus = 0;
             handled |= generic_buttons_handle_mouse(m_dialog, 0, y + w->y_offset, btn, 1, &focus);
             if (focus) {
@@ -1024,12 +1025,12 @@ static void button_hotkeys(int param1, int param2)
     window_hotkey_config_show();
 }
 
-static void button_language_select(int param1, int param2)
+static void button_language_select(int height, int param2)
 {
     const generic_button *btn = &select_buttons[SELECT_LANGUAGE];
     window_select_list_show_text(
-        screen_dialog_offset_x() + btn->x + btn->width - 10,
-        screen_dialog_offset_y() + 45,
+        screen_dialog_offset_x() + btn->x,
+        screen_dialog_offset_y() + height + btn->height,
         data.language_options, data.num_language_options, set_language
     );
 }
