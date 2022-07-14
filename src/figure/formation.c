@@ -505,6 +505,11 @@ void formation_set_home(formation *m, int x, int y)
     m->y_home = y;
 }
 
+void formation_retreat(formation *m)
+{
+    m->months_low_morale = 1;
+}
+
 static void clear_figures(void)
 {
     for (int i = 1; i < formations.size; i++) {

@@ -801,7 +801,9 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_ACTIVE_COLOSSEUM, "The city is served by a colosseum"},
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "No active hippodrome in the city"},
     {TR_ADVISOR_ACTIVE_HIPPODROME, "The city is served by an hippodrome"},
-    {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Mission posts"}
+    {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Mission posts"},
+    {TR_CITY_MESSAGE_TITLE_ENEMIES_LEAVING, "Enemies retreating"},
+    {TR_CITY_MESSAGE_TEXT_ENEMIES_LEAVING, "Humpf! Your puny city has nothing else worth destroying. We'll be leaving for now, but beware, we can always come back!"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

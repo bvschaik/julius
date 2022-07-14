@@ -241,7 +241,7 @@ int formation_rioter_get_target_building_for_robbery(int x, int y, int *x_tile, 
     return best_building->id;
 }
 
-static void set_enemy_target_building(formation *m)
+static int set_enemy_target_building(formation *m)
 {
     int attack = m->attack_type;
     if (attack == FORMATION_ATTACK_RANDOM) {
@@ -259,6 +259,10 @@ static void set_enemy_target_building(formation *m)
         } else {
             formation_set_destination_building(m, best_building->x, best_building->y, best_building->id);
         }
+        return 1;
+    } else {
+        formation_retreat(m);
+        return 0;
     }
 }
 
@@ -299,6 +303,8 @@ static void set_native_target_building(formation *m)
     }
     if (min_building) {
         formation_set_destination_building(m, min_building->x, min_building->y, min_building->id);
+    } else {
+        formation_retreat(m);
     }
 }
 
@@ -583,7 +589,10 @@ static void update_enemy_formation(formation *m, int *roman_distance)
             army->destination_y = y_tile;
             army->destination_building_id = 0;
         } else {
-            set_enemy_target_building(m);
+            if (!set_enemy_target_building(m) && !army->started_retreating) {
+                army->started_retreating = 1;
+                city_message_post(1, MESSAGE_ENEMIES_LEAVING, 0, 0);
+            }
             army->destination_x = m->destination_x;
             army->destination_y = m->destination_y;
             army->destination_building_id = m->destination_building_id;

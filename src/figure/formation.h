@@ -173,6 +173,7 @@ void formation_clear_monthly_counters(formation *m);
 void formation_set_destination(formation *m, int x, int y);
 void formation_set_destination_building(formation *m, int x, int y, int building_id);
 void formation_set_home(formation *m, int x, int y);
+void formation_retreat(formation *m);
 
 void formation_move_herds_away(int x, int y);
 

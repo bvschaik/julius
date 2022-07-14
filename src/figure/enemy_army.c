@@ -27,6 +27,7 @@ void enemy_armies_clear(void)
         enemy_armies[i].destination_y = 0;
         enemy_armies[i].destination_building_id = 0;
         enemy_armies[i].ignore_roman_soldiers = 0;
+        enemy_armies[i].started_retreating = 0;
     }
     totals.enemy_formations = 0;
     totals.enemy_strength = 0;
