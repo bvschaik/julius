@@ -141,6 +141,9 @@ static void draw_pause_icon(int x_offset, int y_offset)
 
 static void draw_pause_button(void)
 {
+    if (!mouse_get()->is_touch) {
+        return;
+    }
     inner_panel_draw(16, 40, 3, 2);
     button_border_draw(16, 40, 3 * BLOCK_SIZE, 2 * BLOCK_SIZE, 0);
     if (game_state_is_paused()) {
