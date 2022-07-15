@@ -6,6 +6,7 @@
 #include "city/ratings.h"
 #include "city/request.h"
 #include "city/resource.h"
+#include "core/calc.h"
 #include "core/lang.h"
 #include "core/string.h"
 #include "empire/city.h"
@@ -171,7 +172,9 @@ static void draw_foreground(void)
 
 static int handle_mouse(const mouse *m)
 {
-    return generic_buttons_handle_mouse(m, 0, 0, imperial_buttons, 8, &focus_button_id);
+    int request_count = city_request_has_troop_request() + scenario_request_count_visible();
+    request_count = calc_bound(request_count, 0, CITY_REQUEST_MAX_ACTIVE);
+    return generic_buttons_handle_mouse(m, 0, 0, imperial_buttons, 3 + request_count, &focus_button_id);
 }
 
 static void button_donate_to_city(int param1, int param2)
