@@ -259,11 +259,8 @@ static int set_enemy_target_building(formation *m)
         } else {
             formation_set_destination_building(m, best_building->x, best_building->y, best_building->id);
         }
-        return 1;
-    } else {
-        formation_retreat(m);
-        return 0;
     }
+    return best_building != 0;
 }
 
 static void set_native_target_building(formation *m)
@@ -528,6 +525,17 @@ static void update_enemy_movement(formation *m, int roman_distance)
     }
 }
 
+static int formation_fully_in_city(const formation *m)
+{
+    for (int n = 0; n < MAX_FORMATION_FIGURES; n++) {
+        figure *f = figure_get(m->figures[n]);
+        if (f->state != FIGURE_STATE_DEAD && f->is_ghost) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 static void update_enemy_formation(formation *m, int *roman_distance)
 {
     enemy_army *army = enemy_army_get_editable(m->invasion_id);
@@ -589,9 +597,9 @@ static void update_enemy_formation(formation *m, int *roman_distance)
             army->destination_y = y_tile;
             army->destination_building_id = 0;
         } else {
-            if (!set_enemy_target_building(m) && !army->started_retreating) {
-                army->started_retreating = 1;
+            if (!set_enemy_target_building(m) && !army->started_retreating && formation_fully_in_city(m)) {
                 city_message_post(1, MESSAGE_ENEMIES_LEAVING, 0, 0);
+                army->started_retreating = 1;
             }
             army->destination_x = m->destination_x;
             army->destination_y = m->destination_y;
@@ -600,9 +608,11 @@ static void update_enemy_formation(formation *m, int *roman_distance)
     }
     m->enemy_legion_index = army->num_legions++;
     m->wait_ticks++;
-    formation_set_destination_building(m,
-        army->destination_x, army->destination_y, army->destination_building_id
-    );
+    if (!army->started_retreating) {
+        formation_set_destination_building(m, army->destination_x, army->destination_y, army->destination_building_id);
+    } else {
+        formation_retreat(m);
+    }
 
     update_enemy_movement(m, *roman_distance);
 }
