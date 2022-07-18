@@ -69,6 +69,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_UI_MESSAGE_ALERTS, "Remplacer les messages urgents par des bandeaux d'alerte"},
     {TR_CONFIG_UI_SHOW_GRID, "Afficher la grille complète"},
     {TR_CONFIG_UI_SHOW_PARTIAL_GRID_AROUND_CONSTRUCTION, "Afficher la grille partielle en plaçant un bâtiment"},
+    {TR_CONFIG_UI_ALWAYS_SHOW_ROTATION_BUTTONS, "Toujours afficher les boutons de rotation"},
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corrige le bug d'immigration en mode très difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corrige le bug des fantômes de 100 ans"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corrige \"Nouvel Empereur\" et la survie des parties créees avec l'éditeur"},
@@ -639,7 +640,7 @@ static translation_string all_strings[] = {
     {TR_BUTTON_HALT_MONUMENT_CONSTRUCTION, "Suspendre la construction" },
     {TR_BUTTON_RESUME_MONUMENT_CONSTRUCTION, "Reprendre la construction" },
     {TR_RESOURCE_FISH, "Poisson" },
-    {TR_WARNING_VARIANT_TOGGLE, "Variants du bâtiment disponibles avec la touche rotation"},
+    {TR_WARNING_VARIANT_TOGGLE, "Variantes du bâtiment disponibles avec la touche rotation"},
     {TR_BUILDING_SCHOOL_UPGRADE_DESC, "Cette école est opérationnelle. Le développement de la zone a permis d'agrandir le bâtiment. Davantage d'enfants peuvent y étudier."},
     {TR_BUILDING_THEATRE_UPGRADE_DESC, "Ce théâtre est opérationnel. Le développement de la zone a permis d'agrandir le bâtiment. Un public plus nombreux peut assister aux représentations." },
     {TR_BUILDING_LIBRARY_UPGRADE_DESC, "Cette bibliothèque est opérationnelle. Le développement de la zone a permis d'agrandir le bâtiment. De nouveaux parchemins et coins de lectures sont disponibles." },
@@ -800,7 +801,9 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_ACTIVE_COLOSSEUM, "La cité profite d'un colisée"},
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "Aucun hippodrome actif dans la cité"},
     {TR_ADVISOR_ACTIVE_HIPPODROME, "La cité profite d'un hippodrome"},
-    {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Missions"}
+    {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Missions"},
+    {TR_CITY_MESSAGE_TITLE_ENEMIES_LEAVING, "L'ennemi se retire"},
+    {TR_CITY_MESSAGE_TEXT_ENEMIES_LEAVING, "Humpf! Votre cité de pacotille n'a plus rien d'intéressant à détruire. Nous partons pour l'instant, mais rassurez-vous, nous reviendrons très vite !"}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
