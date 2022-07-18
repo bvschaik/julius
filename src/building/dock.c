@@ -355,6 +355,14 @@ void building_dock_get_ship_request_tile(const building *dock, ship_dock_request
                     default: dx = -1; dy = 2; break;
                 }
             }
+            if (!map_terrain_is(grid_offset, TERRAIN_WATER) || terrain_water.items[grid_offset] == WATER_N1_BLOCKED) {
+                switch (dock->data.dock.orientation) {
+                    case 0: dx = 1; dy = 0; break;
+                    case 1: dx = 2; dy = 1; break;
+                    case 2: dx = 1; dy = 4; break;
+                    default: dx = -2; dy = 1; break;
+                }
+            }
             break;
         case SHIP_DOCK_REQUEST_4_SECOND_QUEUE:
         default:
@@ -370,6 +378,14 @@ void building_dock_get_ship_request_tile(const building *dock, ship_dock_request
                     case 0: dx = 2; dy = -1; break;
                     case 1: dx = 3; dy = 2; break;
                     case 2: dx = 0; dy = 3; break;
+                    default: dx = -1; dy = 0; break;
+                }
+            }
+            if (!map_terrain_is(grid_offset, TERRAIN_WATER) || terrain_water.items[grid_offset] == WATER_N1_BLOCKED) {
+                switch (dock->data.dock.orientation) {
+                    case 0: dx = 0; dy = -3; break;
+                    case 1: dx = 5; dy = 0; break;
+                    case 2: dx = 0; dy = 4; break;
                     default: dx = -1; dy = 0; break;
                 }
             }
