@@ -757,6 +757,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_UI_MESSAGE_ALERTS, "Показывать новые сообщения в виде предупреждений, а не всплывающих окон"},
     {TR_CONFIG_UI_SHOW_GRID, "Вкл. сетку"},
     {TR_CONFIG_UI_SHOW_PARTIAL_GRID_AROUND_CONSTRUCTION, "Вкл. сетку частично вокруг строения"},
+    {TR_CONFIG_UI_ALWAYS_SHOW_ROTATION_BUTTONS, "Всегда показывать кнопки поворота"},
     {TR_CITY_WARNING_DATA_COPY_SUCCESS, "Настройки скопированы" },
     {TR_CITY_WARNING_DATA_COPY_NOT_SUPPORTED, "Невозможно скопировать с этого здания" },
     {TR_CITY_WARNING_DATA_PASTE_SUCCESS, "Настройки вставлены" },
@@ -811,6 +812,8 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "Нет действующего Ипподрома в городе"},
     {TR_ADVISOR_ACTIVE_HIPPODROME, "Город обслуживает Ипподром"},
     {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Миссионерские посты"},
+    {TR_CITY_MESSAGE_TITLE_ENEMIES_LEAVING, "Враги отступают"},
+    {TR_CITY_MESSAGE_TEXT_ENEMIES_LEAVING, "Хм! В вашем ничтожном городе больше нет ничего, что стоило бы разрушить. Мы уходим, но берегитесь, мы всегда можем вернуться!"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
