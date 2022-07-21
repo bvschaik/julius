@@ -445,8 +445,7 @@ int asset_image_init_array(void)
 {
     data.total_isometric_images = 0;
     asset_image *image;
-    array_foreach(data.asset_images, image)
-    {
+    array_foreach(data.asset_images, image) {
         asset_image_unload(image);
     }
     return array_init(data.asset_images, ASSET_ARRAY_SIZE, new_image, is_image_active);
@@ -604,7 +603,7 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
         }
     }
     image_packer_free(&packer);
-    graphics_renderer()->create_image_atlas(atlas_data);
+    graphics_renderer()->create_image_atlas(atlas_data, 1);
 #endif
     return 1;
 }

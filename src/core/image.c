@@ -609,7 +609,7 @@ static void release_external_buffers(void)
     }
 }
 
-int image_load_climate(int climate_id, int is_editor, int force_reload)
+int image_load_climate(int climate_id, int is_editor, int force_reload, int keep_atlas_buffers)
 {
     if (climate_id == data.current_climate && is_editor == data.is_editor && !force_reload &&
         graphics_renderer()->has_image_atlas(ATLAS_MAIN)) {
@@ -686,8 +686,10 @@ int image_load_climate(int climate_id, int is_editor, int force_reload)
     free_draw_data(draw_data, IMAGE_MAIN_ENTRIES);
     free(tmp_data);
     make_plain_fonts_white(data.main, atlas_data, image_group(GROUP_FONT));
-    assets_init(data.is_editor != is_editor, atlas_data->buffers, atlas_data->image_widths);
-    graphics_renderer()->create_image_atlas(atlas_data);
+    if (!keep_atlas_buffers) {
+        assets_init(data.is_editor != is_editor, atlas_data->buffers, atlas_data->image_widths);
+    }
+    graphics_renderer()->create_image_atlas(atlas_data, !keep_atlas_buffers);
     image_packer_free(&data.packer);
 
     // Fix engineer's post animation offset
@@ -779,7 +781,7 @@ static int load_cyrillic_fonts(void)
     free(tmp_data);
     free_draw_data(draw_data, CYRILLIC_FONT_ENTRIES);
     make_plain_fonts_white(data.font, atlas_data, CYRILLIC_FONT_BASE_OFFSET);
-    graphics_renderer()->create_image_atlas(atlas_data);
+    graphics_renderer()->create_image_atlas(atlas_data, 1);
     image_packer_free(&data.packer);
 
     data.fonts_enabled = FULL_CHARSET_IN_FONT;
@@ -1021,7 +1023,7 @@ static int load_multibyte_font(multibyte_font_type type)
         }
     }
 
-    graphics_renderer()->create_image_atlas(atlas_data);
+    graphics_renderer()->create_image_atlas(atlas_data, 1);
 
     log_info("Done parsing font", font_info->name, 0);
 
@@ -1113,7 +1115,7 @@ int image_load_enemy(int enemy_id)
     free(tmp_data);
     free_draw_data(draw_data, ENEMY_ENTRIES);
     data.current_enemy = enemy_id;
-    graphics_renderer()->create_image_atlas(atlas_data);
+    graphics_renderer()->create_image_atlas(atlas_data, 1);
     image_packer_free(&data.packer);
 
     return 1;

@@ -5,14 +5,20 @@
 
 static struct {
     int total_groups;
+    int groups_in_memory;
     image_groups *groups;
 } data;
 
 int group_create_all(int total)
 {
-    data.groups = malloc(sizeof(image_groups) * total);
-    if (!data.groups) {
-        return 0;
+    if (data.groups_in_memory < total) {
+        free(data.groups);
+        data.groups_in_memory = 0;
+        data.groups = malloc(sizeof(image_groups) * total);
+        if (!data.groups) {
+            return 0;
+        }
+        data.groups_in_memory = total;
     }
     memset(data.groups, 0, sizeof(image_groups) * total);
     data.total_groups = 0;
@@ -26,6 +32,9 @@ image_groups *group_get_new(void)
 
 image_groups *group_get_current(void)
 {
+    if (data.total_groups == 0) {
+        return 0;
+    }
     return &data.groups[data.total_groups - 1];
 }
 

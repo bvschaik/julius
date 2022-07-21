@@ -803,7 +803,23 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_ACTIVE_HIPPODROME, "The city is served by an hippodrome"},
     {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Mission posts"},
     {TR_CITY_MESSAGE_TITLE_ENEMIES_LEAVING, "Enemies retreating"},
-    {TR_CITY_MESSAGE_TEXT_ENEMIES_LEAVING, "Humpf! Your puny city has nothing else worth destroying. We'll be leaving for now, but beware, we can always come back!"}
+    {TR_CITY_MESSAGE_TEXT_ENEMIES_LEAVING, "Humpf! Your puny city has nothing else worth destroying. We'll be leaving for now, but beware, we can always come back!"},
+    {TR_WINDOW_ASSET_PREVIEWER_TITLE, "Asset Previewer"},
+    {TR_WINDOW_ASSET_PREVIEWER_GROUP, "Group:"},
+    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN, "Terrain:"},
+    {TR_WINDOW_ASSET_PREVIEWER_ZOOM, "Zoom:"},
+    {TR_WINDOW_ASSET_PREVIEWER_PLAY_ANIMATIONS, "Play animations"},
+    {TR_WINDOW_ASSET_PREVIEWER_REFRESH, "Refresh"},
+    {TR_WINDOW_ASSET_PREVIEWER_QUIT, "Quit"},
+    {TR_WINDOW_ASSET_PREVIEWER_ASSET, "Asset:"},
+    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_NONE, "None" },
+    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_CENTRAL, "Central"},
+    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_NORTHERN, "Northern"},
+    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_DESERT, "Desert"},
+    {TR_WINDOW_ASSET_PREVIEWER_NO_ASSETS, "No assets"},
+    {TR_WINDOW_ASSET_PREVIEWER_UNNAMED_ASSET, "( unnamed asset )"},
+    {TR_WINDOW_ASSET_PREVIEWER_ANIMATION_FRAME, "( animation frame )"},
+    {TR_WINDOW_ASSET_PREVIEWER_SHOW_ANIMATION_FRAMES, "Show animation frames"},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

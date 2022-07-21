@@ -224,7 +224,7 @@ static void draw_foreground(void)
 static int handle_mouse(const mouse *m)
 {
     focus_additional_button_id = 0;
-    if (scrollbar_handle_mouse(&scrollbar, m)) {
+    if (scrollbar_handle_mouse(&scrollbar, m, 1)) {
         focus_button_id = 0;
         return 1;
     }

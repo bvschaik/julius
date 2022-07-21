@@ -6,8 +6,9 @@ typedef struct {
     int display_scale_percentage;
     int cursor_scale_percentage;
     int force_windowed;
-} julius_args;
+    int launch_asset_previewer;
+} augustus_args;
 
-int platform_parse_arguments(int argc, char **argv, julius_args *output_args);
+int platform_parse_arguments(int argc, char **argv, augustus_args *output_args);
 
 #endif // PLATFORM_ARGUMENTS_H

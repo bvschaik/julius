@@ -55,8 +55,9 @@ void scrollbar_draw(scrollbar_type *scrollbar);
  * Handles mouse interaction with the scrollbar and scroll wheel
  * @param scrollbar Scrollbar
  * @param m Mouse state
+ * @param in_dialog Whether we are inside a centered dialog box
  * @return True if any interaction was handled
  */
-int scrollbar_handle_mouse(scrollbar_type *scrollbar, const mouse *m);
+int scrollbar_handle_mouse(scrollbar_type *scrollbar, const mouse *m, int in_dialog);
 
 #endif // GRAPHICS_SCROLLBAR_H

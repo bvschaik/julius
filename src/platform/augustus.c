@@ -22,6 +22,7 @@
 #include "platform/renderer.h"
 #include "platform/screen.h"
 #include "platform/touch.h"
+#include "window/asset_previewer.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.h"
 
@@ -554,7 +555,7 @@ static int pre_init(const char *custom_data_dir)
     return 0;
 }
 
-static void setup(const julius_args *args)
+static void setup(const augustus_args *args)
 {
     system_setup_crash_handler();
     setup_logging();
@@ -601,8 +602,10 @@ static void setup(const julius_args *args)
     system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
 
     time_set_millis(SDL_GetTicks());
+    
+    int result = args->launch_asset_previewer ? window_asset_previewer_show() : game_init();
 
-    if (!game_init()) {
+    if (!result) {
         SDL_Log("Exiting: game init failed");
         exit_with_status(2);
     }
@@ -613,7 +616,7 @@ static void setup(const julius_args *args)
 
 int main(int argc, char **argv)
 {
-    julius_args args;
+    augustus_args args;
     platform_parse_arguments(argc, argv, &args);
 
     setup(&args);

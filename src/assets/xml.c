@@ -449,7 +449,7 @@ static void clear_xml_info(void)
     data.finished = 0;
 }
 
-void xml_process_assetlist_file(const char *xml_file_name)
+int xml_process_assetlist_file(const char *xml_file_name)
 {
     log_info("Loading assetlist file", xml_file_name, 0);
 
@@ -457,7 +457,7 @@ void xml_process_assetlist_file(const char *xml_file_name)
 
     if (!xml_file) {
         log_error("Error opening assetlist file", xml_file_name, 0);
-        return;
+        return 0;
     }
 
     XML_Parser parser = XML_ParserCreate(NULL);
@@ -497,6 +497,8 @@ void xml_process_assetlist_file(const char *xml_file_name)
 
     XML_ParserFree(parser);
     file_close(xml_file);
+
+    return !data.error;
 }
 
 void xml_get_full_image_path(char *full_path, const char *image_file_name)

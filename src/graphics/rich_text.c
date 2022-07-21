@@ -372,7 +372,7 @@ void rich_text_draw_scrollbar(void)
 
 int rich_text_handle_mouse(const mouse *m)
 {
-    return scrollbar_handle_mouse(&scrollbar, m);
+    return scrollbar_handle_mouse(&scrollbar, m, 1);
 }
 
 static void on_scroll(void)

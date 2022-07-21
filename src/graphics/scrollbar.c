@@ -89,21 +89,25 @@ void scrollbar_draw(scrollbar_type *scrollbar)
     }
 }
 
-static int touch_inside_scrollable_area(const scrollbar_type *scrollbar, const touch *t)
+static int touch_inside_scrollable_area(const scrollbar_type *scrollbar, const touch *t, int in_dialog)
 {
-    int x = t->start_point.x - screen_dialog_offset_x();
-    int y = t->start_point.y - screen_dialog_offset_y();
+    int x = t->start_point.x;
+    int y = t->start_point.y;
+    if (in_dialog) {
+        x -= screen_dialog_offset_x();
+        y -= screen_dialog_offset_y();
+    }
     return scrollbar->max_scroll_position > 0 &&
         x >= scrollbar->x - scrollbar->scrollable_width && x <= scrollbar->x - 2 &&
         y >= scrollbar->y && y < scrollbar->y + scrollbar->height;
 }
 
-static int handle_touch(scrollbar_type *scrollbar, const touch *t)
+static int handle_touch(scrollbar_type *scrollbar, const touch *t, int in_dialog)
 {
     int old_position = scrollbar->scroll_position;
     int active = scrollbar->touch_drag_state == TOUCH_DRAG_IN_PROGRESS;
 
-    if (t->has_started && touch_inside_scrollable_area(scrollbar, t)) {
+    if (t->has_started && touch_inside_scrollable_area(scrollbar, t, in_dialog)) {
         scrollbar->touch_drag_state = TOUCH_DRAG_PENDING;
         scrollbar->position_on_touch = scrollbar->scroll_position;
     }
@@ -118,7 +122,6 @@ static int handle_touch(scrollbar_type *scrollbar, const touch *t)
     }
     if (t->has_ended) {
         scrollbar->touch_drag_state = TOUCH_DRAG_NONE;
-        // decay scrollbar movement
     }
     if (scrollbar->on_scroll_callback && old_position != scrollbar->scroll_position) {
         scrollbar->on_scroll_callback();
@@ -160,7 +163,7 @@ static int handle_scrollbar_dot(scrollbar_type *scrollbar, const mouse *m)
     return 1;
 }
 
-int scrollbar_handle_mouse(scrollbar_type *scrollbar, const mouse *m)
+int scrollbar_handle_mouse(scrollbar_type *scrollbar, const mouse *m, int in_dialog)
 {
     if (scrollbar->max_scroll_position <= 0) {
         return 0;
@@ -186,7 +189,7 @@ int scrollbar_handle_mouse(scrollbar_type *scrollbar, const mouse *m)
             return 1;
         }
     }
-    if (m->is_touch && handle_touch(scrollbar, touch_get_earliest())) {
+    if (m->is_touch && handle_touch(scrollbar, touch_get_earliest(), in_dialog)) {
         return 1;
     }
     return handle_scrollbar_dot(scrollbar, m);

@@ -204,6 +204,16 @@ static void get_max_image_size(int *width, int *height)
     *height = data.max_texture_size.height;
 }
 
+static void free_unpacked_assets(void)
+{
+    for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
+        if (data.unpacked_images[i].texture) {
+            SDL_DestroyTexture(data.unpacked_images[i].texture);
+        }
+    }
+    memset(data.unpacked_images, 0, sizeof(data.unpacked_images));
+}
+
 static void free_texture_atlas(atlas_type type)
 {
     if (!data.texture_lists[type]) {
@@ -217,6 +227,10 @@ static void free_texture_atlas(atlas_type type)
         }
     }
     free(list);
+
+    if (type == ATLAS_EXTRA_ASSET) {
+        free_unpacked_assets();
+    }
 }
 
 static void free_atlas_data_buffers(atlas_type type)
@@ -307,7 +321,7 @@ static const image_atlas_data *prepare_texture_atlas(atlas_type type, int num_im
     return atlas_data;
 }
 
-static int create_texture_atlas(const image_atlas_data *atlas_data)
+static int create_texture_atlas(const image_atlas_data *atlas_data, int delete_buffers)
 {
     if (!atlas_data || atlas_data != &data.atlas_data[atlas_data->type] || !atlas_data->num_images) {
         return 0;
@@ -340,8 +354,10 @@ static int create_texture_atlas(const image_atlas_data *atlas_data)
         }
         list[i] = SDL_CreateTextureFromSurface(data.renderer, surface);
         SDL_FreeSurface(surface);
-        free(atlas_data->buffers[i]);
-        atlas_data->buffers[i] = 0;
+        if (delete_buffers) {
+            free(atlas_data->buffers[i]);
+            atlas_data->buffers[i] = 0;
+        }
         if (!list[i]) {
             SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture. Reason: %s", SDL_GetError());
             free_texture_atlas(atlas_data->type);
@@ -350,13 +366,23 @@ static int create_texture_atlas(const image_atlas_data *atlas_data)
         SDL_SetTextureBlendMode(list[i], SDL_BLENDMODE_BLEND);
     }
 #endif
-    free_atlas_data_buffers(atlas_data->type);
+    if (delete_buffers) {
+        free_atlas_data_buffers(atlas_data->type);
+    }
     return 1;
 }
 
 static int has_texture_atlas(atlas_type type)
 {
     return data.texture_lists[type] != 0;
+}
+
+static const image_atlas_data *get_texture_atlas(atlas_type type)
+{
+    if (!has_texture_atlas(type)) {
+        return 0;
+    }
+    return &data.atlas_data[type];
 }
 
 static void free_all_textures(void)
@@ -386,13 +412,6 @@ static void free_all_textures(void)
     data.texture_buffers.first = 0;
     data.texture_buffers.last = 0;
     data.texture_buffers.current_id = 0;
-
-    for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
-        if (data.unpacked_images[i].texture) {
-            SDL_DestroyTexture(data.unpacked_images[i].texture);
-        }
-    }
-    memset(data.unpacked_images, 0, sizeof(data.unpacked_images));
 }
 
 static SDL_Texture *get_texture(int texture_id)
@@ -855,6 +874,7 @@ static void create_renderer_interface(void)
     data.renderer_interface.get_max_image_size = get_max_image_size;
     data.renderer_interface.prepare_image_atlas = prepare_texture_atlas;
     data.renderer_interface.create_image_atlas = create_texture_atlas;
+    data.renderer_interface.get_image_atlas = get_texture_atlas;
     data.renderer_interface.has_image_atlas = has_texture_atlas;
     data.renderer_interface.free_image_atlas = free_texture_atlas_and_data;
     data.renderer_interface.load_unpacked_image = load_unpacked_image;

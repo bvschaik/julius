@@ -388,7 +388,7 @@ int window_building_handle_mouse_dock(const mouse *m, building_info_context *c)
     data.building_id = c->building_id;
     data.permission_focus_button_id = 0;
     data.focus_button_id = 0;
-    return scrollbar_handle_mouse(&dock_scrollbar, m) ||
+    return scrollbar_handle_mouse(&dock_scrollbar, m, 1) ||
         generic_buttons_handle_mouse(m, c->x_offset + 16, c->y_offset + 270 + 5, dock_distribution_permissions_buttons,
             dock_distribution_permissions_buttons_count, &data.permission_focus_button_id) ||
         generic_buttons_handle_mouse(m, c->x_offset + 80, c->y_offset + BLOCK_SIZE * c->height_blocks - 34,

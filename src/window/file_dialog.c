@@ -327,7 +327,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     int focus_id = data.focus_button_id;
     int scroll_position = scrollbar.scroll_position;
     data.focus_button_id = 0;
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog) ||
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog, 1) ||
         input_box_handle_mouse(m_dialog, &file_name_input) ||
         generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, NUM_FILES_IN_VIEW, &data.focus_button_id) ||
         image_buttons_handle_mouse(m_dialog, 0, 0, image_buttons, 2, 0)) {

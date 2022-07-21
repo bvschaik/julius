@@ -42,6 +42,16 @@ void assets_init(int force_reload, color_t **main_images, int *main_image_widths
     data.roadblock_image = asset_image_get_from_id(data.roadblock_image_id - IMAGE_MAIN_ENTRIES);
 }
 
+int assets_load_single_group(const char *file_name, color_t **main_images, int *main_image_widths)
+{
+    if (!group_create_all(1) || !asset_image_init_array()) {
+        log_error("Not enough memory to initialize extra assets. The game will probably crash.", 0, 0);
+        return 0;
+    }
+    graphics_renderer()->free_image_atlas(ATLAS_EXTRA_ASSET);
+    return xml_process_assetlist_file(file_name) && asset_image_load_all(main_images, main_image_widths);
+}
+
 int assets_get_group_id(const char *assetlist_name)
 {
     image_groups *group = group_get_from_name(assetlist_name);

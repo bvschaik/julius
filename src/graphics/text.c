@@ -548,6 +548,13 @@ void text_draw_number_centered_prefix(int value, char prefix, int x_offset, int 
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
+void text_draw_number_centered_postfix(int value, const char *postfix, int x_offset, int y_offset, int box_width, font_t font)
+{
+    uint8_t str[NUMBER_BUFFER_LENGTH];
+    number_to_string(str, value, 0, postfix);
+    text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
+}
+
 void text_draw_number_centered_colored(
     int value, int x_offset, int y_offset, int box_width, font_t font, color_t color)
 {

@@ -88,12 +88,12 @@ static void clear_scroll_speed(void)
     data.y_align_direction = SPEED_DIRECTION_STOPPED;
 }
 
-static int get_arrow_key_value(key* arrow)
+static int get_arrow_key_value(key* arrow, int window_scroll)
 {
     if (arrow->state == KEY_STATE_AXIS) {
         return arrow->value;
     }
-    if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
+    if (window_scroll && config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
         return arrow->state != KEY_STATE_UNPRESSED;
     }
     if (arrow->state == KEY_STATE_PRESSED) {
@@ -106,9 +106,9 @@ static int get_arrow_key_value(key* arrow)
     return 0;
 }
 
-static float get_normalized_arrow_key_value(key *arrow)
+static float get_normalized_arrow_key_value(key *arrow, int window_scroll)
 {
-    int value = get_arrow_key_value(arrow);
+    int value = get_arrow_key_value(arrow, window_scroll);
     if (value == SCROLL_KEY_PRESSED) {
         return 1.0f;
     }
@@ -333,19 +333,19 @@ int scroll_drag_end(void)
     return has_scrolled;
 }
 
-static int set_arrow_input(key* arrow, const key* opposite_arrow, float* modifier)
+static int set_arrow_input(key* arrow, const key* opposite_arrow, float* modifier, int window_scroll)
 {
-    if (get_arrow_key_value(arrow) && (!opposite_arrow || !is_arrow_active(opposite_arrow))) {
+    if (get_arrow_key_value(arrow, window_scroll) && (!opposite_arrow || !is_arrow_active(opposite_arrow))) {
         if (arrow->state == KEY_STATE_AXIS) {
             data.constant_input = 1;
-            *modifier = get_normalized_arrow_key_value(arrow);
+            *modifier = get_normalized_arrow_key_value(arrow, window_scroll);
         }
         return 1;
     }
     return 0;
 }
 
-static int get_direction(const mouse* m)
+static int get_direction(const mouse* m, int window_scroll)
 {
     int is_inside_window = m->is_inside_window;
     int width = screen_width();
@@ -380,7 +380,7 @@ static int get_direction(const mouse* m)
     // NOTE: using <= width/height (instead of <) to compensate for rounding
     // errors caused by scaling the display. SDL adds a 1px border to either
     // the right or the bottom when the aspect ratio does not match exactly.
-    if (((!m->is_touch && !config_get(CONFIG_UI_DISABLE_MOUSE_EDGE_SCROLLING)) || data.limits.active) &&
+    if (window_scroll && ((!m->is_touch && !config_get(CONFIG_UI_DISABLE_MOUSE_EDGE_SCROLLING)) || data.limits.active) &&
         (x >= 0 && x <= width && y >= 0 && y <= height)) {
         if (x < border) {
             left = 1;
@@ -400,10 +400,10 @@ static int get_direction(const mouse* m)
         }
     }
     // keyboard/joystick arrow keys
-    left |= set_arrow_input(&data.arrow_key.left, 0, &data.speed.modifier_x);
-    right |= set_arrow_input(&data.arrow_key.right, &data.arrow_key.left, &data.speed.modifier_x);
-    top |= set_arrow_input(&data.arrow_key.up, 0, &data.speed.modifier_y);
-    bottom |= set_arrow_input(&data.arrow_key.down, &data.arrow_key.up, &data.speed.modifier_y);
+    left |= set_arrow_input(&data.arrow_key.left, 0, &data.speed.modifier_x, window_scroll);
+    right |= set_arrow_input(&data.arrow_key.right, &data.arrow_key.left, &data.speed.modifier_x, window_scroll);
+    top |= set_arrow_input(&data.arrow_key.up, 0, &data.speed.modifier_y, window_scroll);
+    bottom |= set_arrow_input(&data.arrow_key.down, &data.arrow_key.up, &data.speed.modifier_y, window_scroll);
 
     if (data.constant_input) {
         if (!data.speed.modifier_x) {
@@ -444,7 +444,7 @@ static int set_scroll_speed_from_input(const mouse* m, scroll_type type)
     if (set_scroll_speed_from_drag()) {
         return 1;
     }
-    int direction = get_direction(m);
+    int direction = get_direction(m, 1);
     if (direction == DIR_8_NONE) {
         time_millis time = config_get(CONFIG_UI_SMOOTH_SCROLLING) ? SCROLL_REGULAR_DECAY_TIME : SPEED_CHANGE_IMMEDIATE;
         speed_set_target(&data.speed.x, 0, time, 1);
@@ -498,6 +498,14 @@ static int set_scroll_speed_from_input(const mouse* m, scroll_type type)
         speed_set_target(&data.speed.y, (int)(max_speed_y * data.speed.modifier_y), SPEED_CHANGE_IMMEDIATE, 1);
     }
     return 1;
+}
+
+int scroll_for_menu(const mouse *m)
+{
+    if (!should_scroll()) {
+        return DIR_8_NONE;
+    }
+    return get_direction(m, 0);
 }
 
 int scroll_get_delta(const mouse* m, pixel_offset* delta, scroll_type type)

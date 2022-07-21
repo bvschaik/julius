@@ -78,7 +78,7 @@ static int is_unpatched(void)
 
 int game_init(void)
 {
-    if (!image_load_climate(CLIMATE_CENTRAL, 0, 1)) {
+    if (!image_load_climate(CLIMATE_CENTRAL, 0, 1, 0)) {
         errlog("unable to load main graphics");
         return 0;
     }
@@ -129,7 +129,7 @@ static int reload_language(int is_editor, int reload_images)
         errlog("unable to load font graphics");
         return 0;
     }
-    if (!image_load_climate(scenario_property_climate(), is_editor, reload_images)) {
+    if (!image_load_climate(scenario_property_climate(), is_editor, reload_images, 0)) {
         errlog("unable to load main graphics");
         return 0;
     }

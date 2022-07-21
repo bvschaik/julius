@@ -250,7 +250,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     const mouse *m_dialog = mouse_in_dialog(m);
     data.focus_toggle_button = 0;
     data.focus_button_id = 0;
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog) ||
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog, 1) ||
         image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0) ||
         image_buttons_handle_mouse(m_dialog, 0, 0, &back_button, 1, 0) ||
         generic_buttons_handle_mouse(m_dialog, 0, 0, &toggle_minimap_button, 1, &data.focus_toggle_button) ||

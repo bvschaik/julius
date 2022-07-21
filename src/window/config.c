@@ -962,7 +962,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
 
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog)) {
+    if (scrollbar_handle_mouse(&scrollbar, m_dialog, 1)) {
         data.page_focus_button = 0;
         data.bottom_focus_button = 0;
         return;
