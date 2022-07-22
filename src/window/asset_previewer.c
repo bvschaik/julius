@@ -276,6 +276,9 @@ static int update_asset_groups_list(void)
         int size = (int) strlen(original_file) + 1;
         uint8_t *file = malloc(sizeof(uint8_t) * size);
         encoding_from_utf8(original_file, file, size);
+        if (string_equals(file, currently_open_file)) {
+            data.active_group_index = i;
+        }
         data.xml_file_names[i] = file;
     }
 
@@ -721,6 +724,9 @@ static void refresh_window(void)
     int asset_index = data.total_entries > 0 ? data.entries[scrollbar.scroll_position].index : 0;
     int group_changed = update_asset_groups_list();
     load_assets(group_changed);
+    if (group_changed) {
+        asset_index = 0;
+    }
     recalculate_selected_index();
     window_invalidate();
     for (int i = 0; i < data.total_entries; i++) {
