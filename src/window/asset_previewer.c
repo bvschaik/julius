@@ -115,9 +115,13 @@ static struct {
 
 static void update_entries(void)
 {
-    int total_images = data.active_group->last_image_index - data.active_group->first_image_index + 1;
     data.total_entries = 0;
     free(data.entries);
+    data.entries = 0;
+    if (!data.active_group) {
+        return;
+    }
+    int total_images = data.active_group->last_image_index - data.active_group->first_image_index + 1;
     data.entries = malloc(sizeof(asset_entry) * total_images);
     if (!data.entries) {
         log_error("Not enough memory", 0, 0);
@@ -243,9 +247,25 @@ static int load_climate(int force)
     return 1;
 }
 
-static void get_asset_groups(void)
+static int update_asset_groups_list(void)
 {
+    static uint8_t currently_open_file[FILE_NAME_MAX];
+
+    if (data.xml_files) {
+        string_copy(data.xml_file_names[data.active_group_index], currently_open_file, FILE_NAME_MAX);
+        for (int i = 0; i < data.xml_files->num_files; i++) {
+            free((uint8_t *) data.xml_file_names[i]);
+        }
+        free((uint8_t **) data.xml_file_names);
+        data.xml_file_names = 0;
+    }
+
     data.xml_files = dir_find_files_with_extension(ASSETS_DIRECTORY, "xml");
+
+    if (data.xml_files->num_files == 0) {
+        data.active_group_index = 0;
+        return 0;
+    }
 
     data.xml_file_names = malloc(sizeof(uint8_t *) * data.xml_files->num_files);
     static char original_file[FILE_NAME_MAX];
@@ -259,16 +279,22 @@ static void get_asset_groups(void)
         data.xml_file_names[i] = file;
     }
 
+    if (data.active_group_index >= data.xml_files->num_files) {
+        data.active_group_index = data.xml_files->num_files - 1;
+    }
+
+    return string_equals(currently_open_file, data.xml_file_names[data.active_group_index]) != 1;
+}
+
+static void create_selection_lists(void)
+{
     data.terrain_texts[TERRAIN_NONE] = lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_TERRAIN_NONE);
     data.terrain_texts[TERRAIN_CENTRAL] =
         lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_TERRAIN_CENTRAL);
     data.terrain_texts[TERRAIN_NORTHERN] =
         lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_TERRAIN_NORTHERN);
     data.terrain_texts[TERRAIN_DESERT] = lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_TERRAIN_DESERT);
-}
 
-static void create_zoom_selection_list(void)
-{
     for (int i = 0; i < TOTAL_ZOOM_VALUES; i++) {
         if (data.zoom_texts[i]) {
             continue;
@@ -294,14 +320,9 @@ static void set_initial_options(void)
 
 static int init(void)
 {
-    get_asset_groups();
-
-    if (data.xml_files->num_files == 0) {
-        log_error("No asset files found", 0, 0);
-        return 0;
-    }
     set_initial_options();
-    create_zoom_selection_list();
+    update_asset_groups_list();
+    create_selection_lists();
     random_generate_pool();
     sound_music_play_editor();
     return load_climate(1);
@@ -380,8 +401,13 @@ static void draw_background(void)
         data.x_offset_top + 16, 24, 530, FONT_LARGE_BLACK);
 
     lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_GROUP, data.x_offset_top + 16, 69, FONT_NORMAL_BLACK);
-    text_draw_centered(data.xml_file_names[data.active_group_index], data.x_offset_top + 16, 89, 180,
-        FONT_NORMAL_BLACK, COLOR_MASK_NONE);
+    if (data.xml_files->num_files > 0) {
+        text_draw_centered(data.xml_file_names[data.active_group_index], data.x_offset_top + 16, 89, 180,
+            FONT_NORMAL_BLACK, COLOR_MASK_NONE);
+    } else {
+        const uint8_t *no_groups_text = lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_NO_GROUPS);
+        text_draw_centered(no_groups_text, data.x_offset_top + 16, 89, 180, FONT_NORMAL_PLAIN, COLOR_FONT_GRAY);
+    }
     lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_TERRAIN,
         data.x_offset_top + 216, 69, FONT_NORMAL_BLACK);
     text_draw_centered(data.terrain_texts[data.terrain], data.x_offset_top + 216, 89, 140,
@@ -505,7 +531,13 @@ static void draw_foreground(void)
         const generic_button *btn = &buttons[i];
         int x_offset = btn->x + data.x_offset_top + 16;
         int width = btn->width;
+        int is_focused = data.focus_button_id == (i + 1);
         switch (btn->parameter1) {
+            case BUTTON_CHANGE_ASSET_GROUP:
+                if (data.xml_files->num_files == 0) {
+                    is_focused = 0;
+                }
+                break;
             case BUTTON_TOGGLE_ANIMATIONS:
                 width = 20;
                 break;
@@ -517,7 +549,7 @@ static void draw_foreground(void)
             default:
                 break;
         }
-        button_border_draw(x_offset, btn->y + 60, width, btn->height, data.focus_button_id == (i + 1));
+        button_border_draw(x_offset, btn->y + 60, width, btn->height, is_focused);
     }
 
     draw_asset_list(8, 10 * BLOCK_SIZE);
@@ -687,7 +719,8 @@ static void recalculate_selected_index(void)
 static void refresh_window(void)
 {
     int asset_index = data.total_entries > 0 ? data.entries[scrollbar.scroll_position].index : 0;
-    load_assets(0);
+    int group_changed = update_asset_groups_list();
+    load_assets(group_changed);
     recalculate_selected_index();
     window_invalidate();
     for (int i = 0; i < data.total_entries; i++) {
@@ -704,8 +737,10 @@ static void button_top(int option, int param2)
     generic_button *btn = &buttons[option];
     switch (option) {
         case BUTTON_CHANGE_ASSET_GROUP:
-            window_select_list_show_text(btn->x + data.x_offset_top + 16, btn->y + 60 + btn->height,
-                data.xml_file_names, data.xml_files->num_files, change_asset_group);
+            if (data.xml_files->num_files > 0) {
+                window_select_list_show_text(btn->x + data.x_offset_top + 16, btn->y + 60 + btn->height,
+                    data.xml_file_names, data.xml_files->num_files, change_asset_group);
+            }
             return;
         case BUTTON_CHANGE_TERRAIN:
             window_select_list_show_text(btn->x + data.x_offset_top + 16, btn->y + 60 + btn->height,

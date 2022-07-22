@@ -806,6 +806,7 @@ static translation_string all_strings[] = {
     {TR_CITY_MESSAGE_TEXT_ENEMIES_LEAVING, "Humpf! Your puny city has nothing else worth destroying. We'll be leaving for now, but beware, we can always come back!"},
     {TR_WINDOW_ASSET_PREVIEWER_TITLE, "Asset Previewer"},
     {TR_WINDOW_ASSET_PREVIEWER_GROUP, "Group:"},
+    {TR_WINDOW_ASSET_PREVIEWER_NO_GROUPS, "( no groups )"},
     {TR_WINDOW_ASSET_PREVIEWER_TERRAIN, "Terrain:"},
     {TR_WINDOW_ASSET_PREVIEWER_ZOOM, "Zoom:"},
     {TR_WINDOW_ASSET_PREVIEWER_PLAY_ANIMATIONS, "Play animations"},
