@@ -343,6 +343,10 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_TAX_INCOME;
             break;
+        case HOTKEY_SHOW_OVERLAY_MOTHBALL:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_MOTHBALL;
+            break;
         case HOTKEY_SHOW_OVERLAY_RELIGION:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_RELIGION;

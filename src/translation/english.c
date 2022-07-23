@@ -767,6 +767,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_SHOW_OVERLAY_CLINIC, "Clinics overlay" },
     {TR_HOTKEY_SHOW_OVERLAY_SICKNESS, "Sickness overlay" },
     {TR_HOTKEY_SHOW_OVERLAY_TAX_INCOME, "Tax Income overlay" },
+    {TR_HOTKEY_SHOW_OVERLAY_MOTHBALL, "Mothballed overlay" },
     {TR_HOTKEY_SHOW_OVERLAY_RELIGION, "Religion overlay" },
     {TR_HOTKEY_SHOW_OVERLAY_ROADS, "Roads overlay" },
     {TR_HOTKEY_ROTATE_MAP_NORTH, "Rotate map to North" },
