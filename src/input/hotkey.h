@@ -8,6 +8,7 @@ typedef struct {
     // fixed keys with multiple functions
     int enter_pressed;
     int escape_pressed;
+    int f5_pressed;
     // keys with specific function
     int cycle_legion;
     int decrease_game_speed;

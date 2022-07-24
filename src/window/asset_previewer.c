@@ -11,6 +11,7 @@
 #include "core/file.h"
 #include "core/random.h"
 #include "core/string.h"
+#include "core/time.h"
 #include "game/animation.h"
 #include "game/settings.h"
 #include "game/system.h"
@@ -57,6 +58,8 @@ typedef enum {
 #define NUM_GRASS_TILES 58
 
 #define ASSET_BUTTON_SIZE 18
+
+#define REFRESHED_INFO_TIME_MS 5000
 
 static void button_asset_entry(int index, int param2);
 static void button_top(int option, int param2);
@@ -111,6 +114,8 @@ static struct {
         int frame;
         int reversed;
     } animation;
+    time_t last_refresh;
+    int showing_refresh_info;
 } data;
 
 static void update_entries(void)
@@ -251,7 +256,7 @@ static int update_asset_groups_list(void)
 {
     static uint8_t currently_open_file[FILE_NAME_MAX];
 
-    if (data.xml_files) {
+    if (data.xml_files && data.xml_files->num_files > 0) {
         string_copy(data.xml_file_names[data.active_group_index], currently_open_file, FILE_NAME_MAX);
         for (int i = 0; i < data.xml_files->num_files; i++) {
             free((uint8_t *) data.xml_file_names[i]);
@@ -384,6 +389,22 @@ static void draw_asset(void)
     }
 }
 
+static void draw_refreshed_info(void)
+{
+    const uint8_t *text = lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_ASSETS_REFRESHED);
+    int label_width = text_get_width(text, FONT_NORMAL_WHITE) + 100;
+    label_width -= label_width % BLOCK_SIZE;
+    int x_offset = (screen_width() - label_width) / 2;
+    int y_offset = BLOCK_SIZE * 8;
+    label_draw(x_offset, y_offset, label_width / BLOCK_SIZE, 1);
+    image_draw(image_group(GROUP_CONTEXT_ICONS) + 15, x_offset + 2, y_offset + 2,
+    COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_group(GROUP_CONTEXT_ICONS) + 15, x_offset + label_width - 36, y_offset + 2,
+        COLOR_MASK_NONE, SCALE_NONE);
+
+    text_draw_centered(text, x_offset, y_offset + 4, label_width, FONT_NORMAL_WHITE, 0);
+}
+
 static void draw_background(void)
 {
     graphics_clear_screen();
@@ -429,6 +450,11 @@ static void draw_background(void)
         data.x_offset_top + 546, 34, 80, FONT_NORMAL_BLACK);
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_QUIT,
         data.x_offset_top + 546, 79, 80, FONT_NORMAL_BLACK);
+
+    if (data.showing_refresh_info) {
+        draw_refreshed_info();
+    }
+
 }
 
 static void encode_asset_id(const char *id)
@@ -528,6 +554,7 @@ static void advance_animation_frame(const image *img)
     }
 }
 
+
 static void draw_foreground(void)
 {
     for (int i = 0; i < NUM_BUTTONS; i++) {
@@ -556,6 +583,16 @@ static void draw_foreground(void)
     }
 
     draw_asset_list(8, 10 * BLOCK_SIZE);
+
+    if (data.showing_refresh_info && time_get_millis() - data.last_refresh > REFRESHED_INFO_TIME_MS) {
+        data.showing_refresh_info = 0;
+        window_invalidate();
+    }
+    if (data.last_refresh > 0 && !data.showing_refresh_info &&
+        time_get_millis() - data.last_refresh <= REFRESHED_INFO_TIME_MS) {
+        data.showing_refresh_info = 1;
+        window_invalidate();
+    }
 
     if (data.total_entries == 0) {
         return;
@@ -599,6 +636,9 @@ static void handle_arrow_keys(int direction)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
+    if (h->f5_pressed) {
+        button_top(BUTTON_REFRESH, 0);
+    }
     handle_arrow_keys(scroll_for_menu(m));
     if (scrollbar_handle_mouse(&scrollbar, m, 0)) {
         return;
@@ -729,6 +769,8 @@ static void refresh_window(void)
     }
     recalculate_selected_index();
     window_invalidate();
+    data.last_refresh = time_get_millis();
+    data.showing_refresh_info = 0;
     for (int i = 0; i < data.total_entries; i++) {
         if (data.entries[i].index == asset_index) {
             scroll_to_index(i, 1);

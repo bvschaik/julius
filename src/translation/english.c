@@ -822,6 +822,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ASSET_PREVIEWER_UNNAMED_ASSET, "( unnamed asset )"},
     {TR_WINDOW_ASSET_PREVIEWER_ANIMATION_FRAME, "( animation frame )"},
     {TR_WINDOW_ASSET_PREVIEWER_SHOW_ANIMATION_FRAMES, "Show animation frames"},
+    {TR_WINDOW_ASSET_PREVIEWER_ASSETS_REFRESHED, "Assets refreshed"},   
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

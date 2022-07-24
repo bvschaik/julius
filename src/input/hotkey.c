@@ -429,7 +429,7 @@ static int allocate_mapping_memory(int total_definitions, int total_arrows)
 
 void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
 {
-    int total_definitions = 2; // Enter and ESC are fixed hotkeys
+    int total_definitions = 3; // Enter, ESC and F5 are fixed hotkeys
     int total_arrows = 0;
     for (int i = 0; i < num_mappings; i++) {
         hotkey_action action = mappings[i].action;
@@ -457,7 +457,13 @@ void hotkey_install_mapping(hotkey_mapping *mappings, int num_mappings)
     data.definitions[1].repeatable = 0;
     data.definitions[1].value = 1;
 
-    data.num_definitions = 2;
+    data.definitions[2].action = &data.hotkey_state.f5_pressed;
+    data.definitions[2].key = KEY_TYPE_F5;
+    data.definitions[2].modifiers = 0;
+    data.definitions[2].repeatable = 0;
+    data.definitions[2].value = 1;
+
+    data.num_definitions = 3;
 
     for (int i = 0; i < num_mappings; i++) {
         hotkey_action action = mappings[i].action;
@@ -493,6 +499,9 @@ void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
     int found_action = 0;
     for (int i = 0; i < data.num_definitions; i++) {
         hotkey_definition *def = &data.definitions[i];
+        if (window_is(WINDOW_ASSET_PREVIEWER) && key == KEY_TYPE_F5 && def->action != &data.hotkey_state.f5_pressed) {
+            continue;
+        }
         if (def->key == key && def->modifiers == modifiers && (!repeat || def->repeatable)) {
             *(def->action) = def->value;
             found_action = 1;
