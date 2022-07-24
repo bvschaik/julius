@@ -339,6 +339,7 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_PLUM_PATH:
         case BUILDING_PALM_PATH:
         case BUILDING_DATE_PATH:
+        case BUILDING_GARDEN_PATH:
         case BUILDING_PAVILION_BLUE:
         case BUILDING_PAVILION_RED:
         case BUILDING_PAVILION_ORANGE:
@@ -347,6 +348,9 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_SMALL_STATUE_ALT:
         case BUILDING_SMALL_STATUE_ALT_B:
         case BUILDING_OBELISK:
+        case BUILDING_HORSE_STATUE:
+        case BUILDING_LEGION_STATUE:
+        case BUILDING_GLADIATOR_STATUE:
             overlay = OVERLAY_DESIRABILITY;
             break;
         case BUILDING_MISSION_POST:
