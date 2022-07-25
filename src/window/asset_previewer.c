@@ -276,7 +276,7 @@ static int update_asset_groups_list(void)
     static char original_file[FILE_NAME_MAX];
 
     for (int i = 0; i < data.xml_files->num_files; i++) {
-        strncpy(original_file, data.xml_files->files[i], FILE_NAME_MAX);
+        strncpy(original_file, data.xml_files->files[i], FILE_NAME_MAX - 1);
         file_remove_extension(original_file);
         int size = (int) strlen(original_file) + 1;
         uint8_t *file = malloc(sizeof(uint8_t) * size);
