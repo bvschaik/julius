@@ -451,16 +451,22 @@ static void handle_hotkeys(const hotkeys *h)
         cycle_legion();
     }
     if (h->rotate_map_left) {
-        game_orientation_rotate_left();
-        window_invalidate();
+        if (!building_construction_in_progress()) {
+            game_orientation_rotate_left();
+            window_invalidate();
+        }
     }
     if (h->rotate_map_right) {
-        game_orientation_rotate_right();
-        window_invalidate();
+        if (!building_construction_in_progress()) {
+            game_orientation_rotate_right();
+            window_invalidate();
+        }
     }
     if (h->rotate_map_north) {
-        game_orientation_rotate_north();
-        window_invalidate();
+        if (!building_construction_in_progress()) {
+            game_orientation_rotate_north();
+            window_invalidate();
+        }
     }
     if (h->go_to_bookmark) {
         if (map_bookmark_go_to(h->go_to_bookmark - 1)) {
