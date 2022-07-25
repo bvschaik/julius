@@ -114,7 +114,7 @@ static struct {
         int frame;
         int reversed;
     } animation;
-    time_t last_refresh;
+    time_millis last_refresh;
     int showing_refresh_info;
 } data;
 
