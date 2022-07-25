@@ -482,9 +482,9 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     x += img->x_offset;
     y += img->y_offset;
 
-    // The renderer draws the textures off-by-one when "scale * 100" is a multiple of 8, this fixes that rendering bug
-    // by properly offseting the textures
-    int src_correction = (((int) (scale * 100)) % 8) == 0 ? 1 : 0;
+    // The renderer draws the textures off-by-one when "scale * 100" is a multiple of 8, or when zooming out enough,
+    // this fixes that rendering bug by properly offseting the textures
+    int src_correction = (scale > 2.5f || (((int) (scale * 100)) % 8) == 0) ? 1 : 0;
 
     SDL_Rect src_coords = { img->atlas.x_offset + src_correction, img->atlas.y_offset + src_correction,
         img->width - src_correction, img->height - src_correction };
@@ -492,7 +492,7 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     // When zooming out, instead of drawing the grid image, we reduce the isometric textures' size,
     // which ends up simulating a grid without any performance penalty
     int grid_correction = (img->is_isometric && config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) ?
-            2 : -src_correction;
+        2 : -src_correction;
 
 #ifdef USE_RENDERCOPYF
     if (HAS_RENDERCOPYF) {

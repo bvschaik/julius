@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define TOLERABLE_AREA_DIFFERENCE_PERCENTAGE 2.0f
-
 typedef struct empty_area {
     unsigned int x, y;
     unsigned int width, height;
