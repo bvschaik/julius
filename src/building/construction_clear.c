@@ -139,7 +139,7 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                 map_aqueduct_remove(grid_offset);
             } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 if (!measure_only && map_bridge_count_figures(grid_offset) > 0) {
-                    city_warning_show(WARNING_PEOPLE_ON_BRIDGE);
+                    city_warning_show(WARNING_PEOPLE_ON_BRIDGE, NEW_WARNING_SLOT);
                 } else if (confirm.bridge_confirmed == 1) {
                     map_bridge_remove(grid_offset, measure_only);
                     items_placed++;

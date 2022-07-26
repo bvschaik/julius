@@ -436,7 +436,7 @@ static void draw_background(void)
         data.x_offset_top + 216, 69, FONT_NORMAL_BLACK);
     text_draw_centered(data.terrain_texts[data.terrain], data.x_offset_top + 216, 89, 140,
         FONT_NORMAL_BLACK, COLOR_MASK_NONE);
-    int width = lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_ZOOM,
+    int width = lang_text_draw(CUSTOM_TRANSLATION, TR_ZOOM,
         data.x_offset_top + 376, 69, FONT_NORMAL_BLACK);
     int inverted_scale = calc_percentage(100, data.scale);
     text_draw_number_centered_postfix(inverted_scale, "%",
@@ -572,7 +572,7 @@ static void draw_foreground(void)
                 width = 20;
                 break;
             case BUTTON_CHANGE_ZOOM:
-                width = lang_text_get_width(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_ZOOM, FONT_NORMAL_BLACK);
+                width = lang_text_get_width(CUSTOM_TRANSLATION, TR_ZOOM, FONT_NORMAL_BLACK);
                 x_offset += width;
                 width = btn->width - width;
                 break;

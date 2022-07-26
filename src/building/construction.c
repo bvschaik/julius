@@ -234,7 +234,7 @@ static int place_houses(int measure_only, int x_start, int y_start, int x_end, i
     if (!measure_only) {
         building_construction_warning_check_food_stocks(BUILDING_HOUSE_VACANT_LOT);
         if (needs_road_warning) {
-            city_warning_show(WARNING_HOUSE_TOO_FAR_FROM_ROAD);
+            city_warning_show(WARNING_HOUSE_TOO_FAR_FROM_ROAD, NEW_WARNING_SLOT);
         }
         map_routing_update_land();
         window_invalidate();
@@ -876,7 +876,7 @@ void building_construction_place(void)
     }
     if (city_finance_out_of_money()) {
         map_property_clear_constructing_and_deleted();
-        city_warning_show(WARNING_OUT_OF_MONEY);
+        city_warning_show(WARNING_OUT_OF_MONEY, NEW_WARNING_SLOT);
         return;
     }
 
@@ -892,7 +892,7 @@ void building_construction_place(void)
         } else {
             map_property_clear_constructing_and_deleted();
         }
-        city_warning_show(enemy_type == FIGURE_WOLF ? WARNING_WOLF_NEARBY : WARNING_ENEMY_NEARBY);
+        city_warning_show(enemy_type == FIGURE_WOLF ? WARNING_WOLF_NEARBY : WARNING_ENEMY_NEARBY, NEW_WARNING_SLOT);
         return;
     }
 
@@ -920,21 +920,21 @@ void building_construction_place(void)
     } else if (type == BUILDING_LOW_BRIDGE) {
         int length = map_bridge_add(x_end, y_end, 0);
         if (length <= 1) {
-            city_warning_show(WARNING_SHORE_NEEDED);
+            city_warning_show(WARNING_SHORE_NEEDED, NEW_WARNING_SLOT);
             return;
         }
         placement_cost *= length;
     } else if (type == BUILDING_SHIP_BRIDGE) {
         int length = map_bridge_add(x_end, y_end, 1);
         if (length <= 1) {
-            city_warning_show(WARNING_SHORE_NEEDED);
+            city_warning_show(WARNING_SHORE_NEEDED, NEW_WARNING_SLOT);
             return;
         }
         placement_cost *= length;
     } else if (type == BUILDING_AQUEDUCT) {
         int cost;
         if (!building_construction_place_aqueduct(x_start, y_start, x_end, y_end, &cost)) {
-            city_warning_show(WARNING_CLEAR_LAND_NEEDED);
+            city_warning_show(WARNING_CLEAR_LAND_NEEDED, NEW_WARNING_SLOT);
             return;
         }
         placement_cost = cost;
@@ -944,7 +944,7 @@ void building_construction_place(void)
         struct reservoir_info info;
         if (!place_reservoir_and_aqueducts(0, x_start, y_start, x_end, y_end, &info)) {
             map_property_clear_constructing_and_deleted();
-            city_warning_show(WARNING_CLEAR_LAND_NEEDED);
+            city_warning_show(WARNING_CLEAR_LAND_NEEDED, NEW_WARNING_SLOT);
             return;
         }
         if (info.place_reservoir_at_start == PLACE_RESERVOIR_YES) {

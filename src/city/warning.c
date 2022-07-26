@@ -15,22 +15,14 @@
 struct warning {
     int in_use;
     time_millis time;
+    int id;
     uint8_t text[MAX_TEXT];
 };
 
 static struct warning warnings[MAX_WARNINGS];
+static int current_id;
 
-static int new_warning(void)
-{
-    for (int i = 0; i < MAX_WARNINGS; i++) {
-        if (!warnings[i].in_use) {
-            return i + 1;
-        }
-    }
-    return 0;
-}
-
-void city_warning_show(warning_type type)
+int city_warning_show(warning_type type, int id)
 {
     const uint8_t *text;
     if (type == WARNING_ORIENTATION) {
@@ -70,17 +62,33 @@ void city_warning_show(warning_type type)
     } else {
         text = lang_get_string(19, type - 2);
     }
-    city_warning_show_custom(text, 0);
+    return city_warning_show_custom(text, id);
 }
 
-int city_warning_show_custom(const uint8_t *text, int position)
+static int get_warning_slot(int id)
+{
+    if (id != 0) {
+        for (int i = 0; i < MAX_WARNINGS; i++) {
+            if (warnings[i].id == id && warnings[i].in_use) {
+                return i + 1;
+            }
+        }
+    }
+    for (int i = 0; i < MAX_WARNINGS; i++) {
+        if (!warnings[i].in_use) {
+            warnings[i].id = ++current_id;
+            return i + 1;
+        }
+    }
+    return 0;
+}
+
+int city_warning_show_custom(const uint8_t *text, int id)
 {
     if (!setting_warnings()) {
         return 0;
     }
-    if (position <= 0 || position > MAX_WARNINGS || !warnings[position - 1].in_use) {
-        position = new_warning();
-    }
+    int position = get_warning_slot(id);
     if (!position) {
         return 0;
     }
@@ -88,7 +96,7 @@ int city_warning_show_custom(const uint8_t *text, int position)
     w->in_use = 1;
     w->time = time_get_millis();
     string_copy(text, w->text, MAX_TEXT);
-    return position;
+    return w->id;
 }
 
 int city_has_warnings(void)
@@ -101,10 +109,10 @@ int city_has_warnings(void)
     return 0;
 }
 
-const uint8_t *city_warning_get(int id)
+const uint8_t *city_warning_get(int position)
 {
-    if (warnings[id].in_use) {
-        return warnings[id].text;
+    if (warnings[position].in_use) {
+        return warnings[position].text;
     }
     return 0;
 }
@@ -128,7 +136,7 @@ void city_warning_clear_outdated(void)
 
 void city_warning_show_console(uint8_t *warning_text)
 {
-    int position = new_warning();
+    int position = get_warning_slot(NEW_WARNING_SLOT);
     if (!position) {
         return;
     }

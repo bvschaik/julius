@@ -10,6 +10,7 @@
 #include "core/config.h"
 #include "core/direction.h"
 #include "core/image_group.h"
+#include "core/lang.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
 #include "game/cheats.h"
@@ -32,6 +33,7 @@
 #include "sound/city.h"
 #include "sound/speech.h"
 #include "sound/effect.h"
+#include "translation/translation.h"
 #include "widget/city_with_overlay.h"
 #include "widget/city_without_overlay.h"
 #include "widget/city_pause_menu.h"
@@ -54,6 +56,20 @@ static void set_city_clip_rectangle(void)
     graphics_set_clip_rectangle(x, y, width, height);
 }
 
+static void display_zoom_warning(int zoom)
+{
+    static uint8_t zoom_string[100];
+    static int warning_id;
+    if (!*zoom_string) {
+        uint8_t *cursor = string_copy(lang_get_string(CUSTOM_TRANSLATION, TR_ZOOM), zoom_string, 100);
+        string_copy(string_from_ascii(" "), cursor, (int) (cursor - zoom_string));
+    }
+    int position = string_length(lang_get_string(CUSTOM_TRANSLATION, TR_ZOOM)) + 1;
+    position += string_from_int(zoom_string + position, zoom, 0);
+    string_copy(string_from_ascii("%"), zoom_string + position, 100 - position);
+    warning_id = city_warning_show_custom(zoom_string, warning_id);
+}
+
 static void update_zoom_level(void)
 {
     int zoom = city_view_get_scale();
@@ -62,6 +78,7 @@ static void update_zoom_level(void)
     if (zoom_update_value(&zoom, city_view_get_max_scale(), &offset)) {
         city_view_set_scale(zoom);
         city_view_set_camera_from_pixel_position(offset.x, offset.y);
+        display_zoom_warning(zoom);
         sound_city_decay_views();
     }
 }

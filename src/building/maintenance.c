@@ -401,8 +401,8 @@ void building_maintenance_check_rome_access(void)
         building_destroy_last_placed();
     } else if (problem_grid_offset) {
         // parts of city disconnected
-        city_warning_show(WARNING_CITY_BOXED_IN);
-        city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH);
+        city_warning_show(WARNING_CITY_BOXED_IN, NEW_WARNING_SLOT);
+        city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH, NEW_WARNING_SLOT);
         city_view_go_to_grid_offset(problem_grid_offset);
     }
 }

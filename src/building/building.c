@@ -166,7 +166,7 @@ building *building_create(building_type type, int x, int y)
     building *b;
     array_new_item(data.buildings, 1, b);
     if (!b) {
-        city_warning_show(WARNING_DATA_LIMIT_REACHED);
+        city_warning_show(WARNING_DATA_LIMIT_REACHED, NEW_WARNING_SLOT);
         return array_first(data.buildings);
     }
 

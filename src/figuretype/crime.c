@@ -86,10 +86,10 @@ void figure_crime_loot_storage(figure *f, int resource, int building_id)
 
     if (storage->type == BUILDING_GRANARY) {
         building_granary_remove_resource(storage, resource, 100);
-        city_warning_show(WARNING_GRANARY_BREAKIN);
+        city_warning_show(WARNING_GRANARY_BREAKIN, NEW_WARNING_SLOT);
     } else {
         building_warehouse_remove_resource(storage, resource, 1);
-        city_warning_show(WARNING_WAREHOUSE_BREAKIN);
+        city_warning_show(WARNING_WAREHOUSE_BREAKIN, NEW_WARNING_SLOT);
     }
 
     city_message_apply_sound_interval(MESSAGE_CAT_THEFT);
@@ -109,7 +109,7 @@ static void figure_crime_steal_money(figure *f)
     }
     city_message_apply_sound_interval(MESSAGE_CAT_THEFT);
     city_message_post_with_popup_delay(MESSAGE_CAT_THEFT, MESSAGE_THEFT, money_stolen, f->grid_offset);
-    city_warning_show(WARNING_THEFT);
+    city_warning_show(WARNING_THEFT, NEW_WARNING_SLOT);
     city_finance_process_stolen(money_stolen);
 }
 

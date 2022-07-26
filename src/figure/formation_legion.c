@@ -129,7 +129,7 @@ void formation_legion_move_to(formation *m, int x, int y)
     m->is_at_fort = 0;
 
     if (m->morale <= 20) {
-        city_warning_show(WARNING_LEGION_MORALE_TOO_LOW);
+        city_warning_show(WARNING_LEGION_MORALE_TOO_LOW, NEW_WARNING_SLOT);
     }
     for (int i = 0; i < MAX_FORMATION_FIGURES && m->figures[i]; i++) {
         figure *f = figure_get(m->figures[i]);

@@ -305,10 +305,10 @@ static void place_earthquake_flag(const map_tile *tile)
         if (scenario_editor_earthquake_severity()) {
             scenario_editor_set_earthquake_point(tile->x, tile->y);
         } else {
-            city_warning_show(WARNING_EDITOR_NO_EARTHQUAKE_SCHEDULED);
+            city_warning_show(WARNING_EDITOR_NO_EARTHQUAKE_SCHEDULED, NEW_WARNING_SLOT);
         }
     } else {
-        city_warning_show(warning);
+        city_warning_show(warning, NEW_WARNING_SLOT);
     }
 }
 
@@ -318,7 +318,7 @@ static void place_flag(const map_tile *tile, void (*update)(int x, int y))
     if (editor_tool_can_place_flag(data.type, tile, &warning)) {
         update(tile->x, tile->y);
     } else {
-        city_warning_show(warning);
+        city_warning_show(warning, NEW_WARNING_SLOT);
     }
 }
 
@@ -328,7 +328,7 @@ static void place_flag_with_id(const map_tile *tile, void (*update)(int id, int 
     if (editor_tool_can_place_flag(data.type, tile, &warning)) {
         update(data.id, tile->x, tile->y);
     } else {
-        city_warning_show(warning);
+        city_warning_show(warning, NEW_WARNING_SLOT);
     }
 }
 
@@ -362,7 +362,7 @@ static void place_building(const map_tile *tile)
         map_building_tiles_add(b->id, tile->x, tile->y, size, image_id, TERRAIN_BUILDING);
         scenario_editor_updated_terrain();
     } else {
-        city_warning_show(WARNING_EDITOR_CANNOT_PLACE);
+        city_warning_show(WARNING_EDITOR_CANNOT_PLACE, NEW_WARNING_SLOT);
     }
 }
 
@@ -398,7 +398,7 @@ static void place_access_ramp(const map_tile *tile)
         update_terrain_after_elevation_changes();
         scenario_editor_updated_terrain();
     } else {
-        city_warning_show(WARNING_EDITOR_CANNOT_PLACE);
+        city_warning_show(WARNING_EDITOR_CANNOT_PLACE, NEW_WARNING_SLOT);
     }
 }
 

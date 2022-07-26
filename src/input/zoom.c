@@ -74,13 +74,17 @@ void zoom_map(const mouse *m, int current_zoom)
     }
     if (m->scrolled != SCROLL_NONE) {
         data.restore = 0;
-        int multiplier;
-        if (current_zoom >= 200) {
-            multiplier = current_zoom / 200;
+        int zoom_offset;
+        int zoom_delta;
+        if (m->scrolled == SCROLL_DOWN) {
+            zoom_offset = 0;
+            zoom_delta = ZOOM_DELTA;
         } else {
-            multiplier = 1;
+            zoom_offset = -1;
+            zoom_delta = -ZOOM_DELTA;
         }
-        data.delta = (m->scrolled == SCROLL_DOWN ? ZOOM_DELTA : -ZOOM_DELTA) * multiplier;
+        int multiplier = (current_zoom + zoom_offset) / 100 + 1;
+        data.delta = zoom_delta * multiplier;
         if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
             speed_clear(&data.step);
             speed_set_target(&data.step, ZOOM_STEP, SPEED_CHANGE_IMMEDIATE, 1);

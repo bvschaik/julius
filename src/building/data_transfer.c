@@ -16,14 +16,13 @@ int building_data_transfer_possible(building *b)
 {
     building_data_type data_type = building_data_transfer_data_type_from_building_type(b->type);
     if (data.data_type == DATA_TYPE_NOT_SUPPORTED || data_type == DATA_TYPE_NOT_SUPPORTED) {
-        city_warning_show(WARNING_DATA_PASTE_FAILURE);
+        city_warning_show(WARNING_DATA_PASTE_FAILURE, NEW_WARNING_SLOT);
         return 0;
     }
     if (data.data_type != data_type) {
-        city_warning_show(WARNING_DATA_PASTE_FAILURE);
+        city_warning_show(WARNING_DATA_PASTE_FAILURE, NEW_WARNING_SLOT);
         return 0;
     }
-
     return 1;
 }
 
@@ -31,7 +30,7 @@ int building_data_transfer_copy(building *b)
 {
     building_data_type data_type = building_data_transfer_data_type_from_building_type(b->type);
     if (data_type == DATA_TYPE_NOT_SUPPORTED) {
-        city_warning_show(WARNING_DATA_COPY_NOT_SUPPORTED);
+        city_warning_show(WARNING_DATA_COPY_NOT_SUPPORTED, NEW_WARNING_SLOT);
     } else {
         memset(&data, 0, sizeof(data));
         data.data_type = data_type;
@@ -63,7 +62,7 @@ int building_data_transfer_copy(building *b)
             return 0;
 
     }
-    city_warning_show(WARNING_DATA_COPY_SUCCESS);
+    city_warning_show(WARNING_DATA_COPY_SUCCESS, NEW_WARNING_SLOT);
     return 1;
 }
 
@@ -94,7 +93,7 @@ int building_data_transfer_paste(building *b)
         default:
             return 0;
     }
-    city_warning_show(WARNING_DATA_PASTE_SUCCESS);
+    city_warning_show(WARNING_DATA_PASTE_SUCCESS, NEW_WARNING_SLOT);
     return 1;
 
 }

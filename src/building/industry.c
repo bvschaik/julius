@@ -152,7 +152,7 @@ static void force_strike(int num_strikes)
         }
     }
     if (random_industry_strikes(num_strikes)) {
-        city_warning_show(WARNING_SECESSION);
+        city_warning_show(WARNING_SECESSION, NEW_WARNING_SLOT);
     }
 }
 
@@ -461,6 +461,6 @@ void building_industry_start_strikes(void)
     city_data.building.num_striking_industries += strikes;
 
     if (strikes) {
-        city_warning_show(WARNING_SECESSION);
+        city_warning_show(WARNING_SECESSION, NEW_WARNING_SLOT);
     }
 }

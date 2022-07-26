@@ -75,12 +75,14 @@ typedef enum {
     WARNING_DATA_PASTE_FAILURE = 81,
 } warning_type;
 
-void city_warning_show(warning_type type);
-int city_warning_show_custom(const uint8_t *text, int position);
+#define NEW_WARNING_SLOT 0
+
+int city_warning_show(warning_type type, int id);
+int city_warning_show_custom(const uint8_t *text, int id);
 
 int city_has_warnings(void);
 
-const uint8_t *city_warning_get(int id);
+const uint8_t *city_warning_get(int position);
 
 void city_warning_clear_all(void);
 void city_warning_clear_outdated(void);

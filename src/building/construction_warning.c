@@ -24,7 +24,7 @@ void building_construction_warning_reset(void)
 
 static void show(warning_type warning)
 {
-    city_warning_show(warning);
+    city_warning_show(warning, NEW_WARNING_SLOT);
     has_warning = 1;
 }
 

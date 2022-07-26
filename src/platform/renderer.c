@@ -100,6 +100,7 @@ static struct {
     graphics_renderer_interface renderer_interface;
     int supports_yuv_textures;
     float city_scale;
+    int should_correct_texture_offset;
     int disable_linear_filter;
 } data;
 
@@ -482,9 +483,7 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     x += img->x_offset;
     y += img->y_offset;
 
-    // The renderer draws the textures off-by-one when "scale * 100" is a multiple of 8, or when zooming out enough,
-    // this fixes that rendering bug by properly offseting the textures
-    int src_correction = (scale > 2.5f || (((int) (scale * 100)) % 8) == 0) ? 1 : 0;
+    int src_correction = scale == data.city_scale && data.should_correct_texture_offset ? 1 : 0;
 
     SDL_Rect src_coords = { img->atlas.x_offset + src_correction, img->atlas.y_offset + src_correction,
         img->width - src_correction, img->height - src_correction };
@@ -841,6 +840,9 @@ static int should_pack_image(int width, int height)
 
 static void update_scale(int city_scale)
 {
+    // The renderer draws the textures off-by-one when "scale * 100" is a multiple of 8, or when zooming out enough,
+    // this fixes that rendering bug by properly offseting the textures
+    data.should_correct_texture_offset = (city_scale > 250 && (city_scale % 100) != 0) || (city_scale % 8) == 0;
     data.city_scale = city_scale / 100.0f;
 }
 
