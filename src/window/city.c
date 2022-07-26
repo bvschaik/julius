@@ -438,6 +438,9 @@ static void handle_hotkeys(const hotkeys *h)
     if (h->show_overlay) {
         show_overlay(h->show_overlay);
     }
+    if (h->show_overlay_relative) {
+        show_overlay_from_grid_offset(widget_city_current_grid_offset());
+    }
     if (h->toggle_overlay) {
         exit_military_command();
         game_state_toggle_overlay();
@@ -515,21 +518,14 @@ static void handle_hotkeys(const hotkeys *h)
             building_data_transfer_paste(b);
         }
     }
-
-    if (h->show_overlay_relative) {
-        show_overlay_from_grid_offset(widget_city_current_grid_offset());
-    }
-
     if (h->show_empire_map) {
         if (!window_is(WINDOW_EMPIRE)) {
             window_empire_show_checked();
         }
     }
-
     if (h->show_messages) {
         window_message_list_show();
     }
-
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
