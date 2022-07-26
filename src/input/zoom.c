@@ -4,6 +4,7 @@
 #include "core/config.h"
 #include "core/speed.h"
 #include "graphics/menu.h"
+#include "input/hotkey.h"
 
 #include <math.h>
 
@@ -78,13 +79,16 @@ void zoom_map(const mouse *m, int current_zoom)
         int zoom_delta;
         if (m->scrolled == SCROLL_DOWN) {
             zoom_offset = 0;
-            zoom_delta = ZOOM_DELTA;
+            zoom_delta = hotkey_shift_pressed() ? 1 : ZOOM_DELTA;
         } else {
             zoom_offset = -1;
-            zoom_delta = -ZOOM_DELTA;
+            zoom_delta = hotkey_shift_pressed() ? -1 : -ZOOM_DELTA;
         }
         int multiplier = (current_zoom + zoom_offset) / 100 + 1;
-        data.delta = zoom_delta * multiplier;
+        data.delta = zoom_delta;
+        if (!hotkey_shift_pressed()) {
+            data.delta *= multiplier;
+        }
         if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
             speed_clear(&data.step);
             speed_set_target(&data.step, ZOOM_STEP, SPEED_CHANGE_IMMEDIATE, 1);

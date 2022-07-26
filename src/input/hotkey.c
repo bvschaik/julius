@@ -44,6 +44,7 @@ static struct {
     int num_definitions;
     arrow_definition *arrows;
     int num_arrows;
+    int shift_pressed;
 } data;
 
 static void set_definition_for_action(hotkey_action action, hotkey_definition *def)
@@ -489,6 +490,8 @@ void hotkey_reset_state(void)
 
 void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
 {
+    data.shift_pressed = modifiers == KEY_MOD_SHIFT;
+
     if (window_is(WINDOW_HOTKEY_EDITOR)) {
         window_hotkey_editor_key_pressed(key, modifiers);
         return;
@@ -520,6 +523,8 @@ void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
 
 void hotkey_key_released(key_type key, key_modifier_type modifiers)
 {
+    data.shift_pressed = modifiers == KEY_MOD_SHIFT;
+
     if (window_is(WINDOW_HOTKEY_EDITOR)) {
         window_hotkey_editor_key_released(key, modifiers);
         return;
@@ -533,6 +538,11 @@ void hotkey_key_released(key_type key, key_modifier_type modifiers)
             arrow->action(0);
         }
     }
+}
+
+int hotkey_shift_pressed(void)
+{
+    return data.shift_pressed;
 }
 
 static void confirm_exit(int accepted, int checked)
