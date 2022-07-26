@@ -371,8 +371,11 @@ static void draw_asset(void)
     int height = screen_height() - y_start;
     float scale = data.scale / 100.0f;
 
-    int x_offset = calc_adjust_with_percentage(x_start + (int) (width - img->width / scale) / 2, data.scale);
-    int y_offset = calc_adjust_with_percentage(y_start + (int) (height - img->height / scale) / 2, data.scale);
+    int asset_width = img->is_isometric ? img->width : img->original.width;
+    int asset_height = img->is_isometric ? img->height : img->original.height;
+
+    int x_offset = calc_adjust_with_percentage(x_start + (int) (width - asset_width / scale) / 2, data.scale);
+    int y_offset = calc_adjust_with_percentage(y_start + (int) (height - asset_height / scale) / 2, data.scale);
     if (img->is_isometric) {
         y_offset += img->height / 2;
         image_draw_isometric_top_from_draw_tile(image_id, x_offset, y_offset, COLOR_MASK_NONE, scale);

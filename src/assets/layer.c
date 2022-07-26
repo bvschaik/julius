@@ -98,19 +98,13 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
         load_dummy_layer(l);
         return;
     }
-    memset(data, 0, width * height * sizeof(color_t));
+    memset(data, 0, size);
 
     if (asset_img) {
-        int asset_img_width;
-        int asset_img_height;
-        if (image_is_external(&asset_img->img)) {
-            image_get_external_dimensions(&asset_img->img, &asset_img_width, &asset_img_height);
-        } else {
-            asset_img_width = asset_img->img.width;
-            asset_img_height = asset_img->img.height;
-            if (asset_img->img.top) {
-                asset_img_height += asset_img->img.top->height;
-            }
+        int asset_img_width = asset_img->img.width;
+        int asset_img_height = asset_img->img.height;
+        if (asset_img->img.top) {
+            asset_img_height += asset_img->img.top->height;
         }
         // No difference in image data - keep using the original image
         if (!img->is_isometric || ((l->part & PART_FOOTPRINT) && !img->top)) {
@@ -145,6 +139,28 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             log_error("Problem loading layer from image id", 0, l->calculated_image_id);
             load_dummy_layer(l);
             return;
+        }
+        if (l->x_offset != 0 || l->y_offset != 0 || l->width != width || l->height != height) {
+            color_t *new_data = malloc(l->width * l->height * sizeof(color_t));
+            if (!new_data) {
+                free(data);
+                log_error("Problem loading layer from image id", 0, l->calculated_image_id);
+                load_dummy_layer(l);
+                return;
+            }
+            int src_x_offset = l->x_offset < 0 ? -l->x_offset : 0;
+            int src_y_offset = l->y_offset < 0 ? -l->y_offset : 0;
+            int rect_x_offset = l->x_offset > 0 ? l->x_offset : 0;
+            int rect_y_offset = l->y_offset > 0 ? l->y_offset : 0;
+            
+            image_copy_info copy = {
+                .src = { src_x_offset, src_y_offset, width, height, data },
+                .dst = { 0, 0, l->width, l->height, new_data },
+                .rect = { rect_x_offset, rect_y_offset, l->width, l->height }
+            };
+            image_copy(&copy);
+            free(data);
+            data = new_data;
         }
     } else if (type == ATLAS_MAIN) {
         int atlas_width = main_image_widths[img->atlas.id & IMAGE_ATLAS_BIT_MASK];

@@ -46,7 +46,7 @@ typedef struct image {
     int y_offset;
     int width;
     int height;
-    union {
+    struct {
         int width;
         int height;
     } original;

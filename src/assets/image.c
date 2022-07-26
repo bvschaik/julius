@@ -95,6 +95,8 @@ static void translate_reference_position(asset_image *img)
     }
     // Isometric images don't need translation
     if (img->img.is_isometric) {
+        img->img.original.width = img->img.width;
+        img->img.original.height = img->img.height;
         return;
     }
     if (l->x_offset >= 0) {
@@ -123,6 +125,8 @@ static void translate_reference_position(asset_image *img)
     }
     l->width = img->img.width;
     l->height = img->img.height;
+    img->img.original.width = img->img.width;
+    img->img.original.height = img->img.height;
 }
 
 static void make_similar_images_references(const asset_image *img)
@@ -191,6 +195,9 @@ void split_top_and_footprint(const image *img, color_t *dst, const color_t *src,
 
 static int load_image(asset_image *img, color_t **main_images, int *main_image_widths)
 {
+    img->img.original.width = img->img.width;
+    img->img.original.height = img->img.height;
+
     image_reference_type reference_type = get_image_reference_type(img);
     if (reference_type == IMAGE_FULL_REFERENCE) {
         layer *l = img->last_layer;
@@ -300,6 +307,7 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
             memset(img->img.top, 0, sizeof(image));
             img->img.top->width = img->img.width;
             img->img.top->height = img->img.height - footprint_height / 2;
+            img->img.top->original.width = img->img.top->width;
             img->img.top->original.height = img->img.top->height;
             img->img.atlas.y_offset = img->img.top->height;
             color_t *new_data = malloc(sizeof(color_t) * (img->img.height + img->img.top->height) * img->img.width);
@@ -484,9 +492,6 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
 
         if (graphics_renderer()->should_pack_image(current_image->img.width, current_image->img.height + top_height)) {
             image *img_to_crop = 0;
-            int width;
-            int height;
-
             if (current_image->img.is_isometric) {
                 if (current_image->img.top) {
                     img_to_crop = current_image->img.top;
@@ -495,8 +500,6 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
                 img_to_crop = &current_image->img;
             }
             if (img_to_crop) {
-                width = img_to_crop->width;
-                height = img_to_crop->height;
                 image_crop(img_to_crop, current_image->data);
             }
             current_image->img.atlas.id = ATLAS_EXTRA_ASSET << IMAGE_ATLAS_BIT_OFFSET;
@@ -514,8 +517,8 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
             if (img_to_crop) {
                 img_to_crop->x_offset = 0;
                 img_to_crop->y_offset = 0;
-                img_to_crop->width = width;
-                img_to_crop->height = height;
+                img_to_crop->width = img_to_crop->original.width;
+                img_to_crop->height = img_to_crop->original.height;
             }
             rect++;
         } else {

@@ -54,9 +54,9 @@ typedef struct {
     int data_length;
     int uncompressed_length;
     int bitmap_id;
+    int width;
+    int height;
     void *buffer;
-    int original_width;
-    int original_height;
 } image_draw_data;
 
 typedef struct {
@@ -256,8 +256,8 @@ static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data
     draw_data->data_length = buffer_read_i32(buf);
     draw_data->uncompressed_length = buffer_read_i32(buf);
     buffer_skip(buf, 8);
-    img->width = buffer_read_u16(buf);
-    img->height = buffer_read_u16(buf);
+    img->original.width = img->width = buffer_read_u16(buf);
+    img->original.height = img->height = buffer_read_u16(buf);
     buffer_skip(buf, 6);
     int num_sprites = buffer_read_u16(buf);
     if (num_sprites) {
@@ -283,8 +283,6 @@ static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data
     int is_external = buffer_read_i8(buf);
     if (is_external) {
         img->atlas.id = (ATLAS_EXTERNAL << IMAGE_ATLAS_BIT_OFFSET) + data.total_external_images;
-        draw_data->original_width = img->width;
-        draw_data->original_height = img->height;
         data.total_external_images++;
     }
     int has_top = buffer_read_i8(buf);
@@ -355,6 +353,8 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
             if (!external_data->offset) {
                 external_data->offset = 1;
             }
+            external_data->width = img->original.width;
+            external_data->height = img->original.height;
             continue;
         }
         draw_data->offset = offset;
@@ -364,12 +364,9 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
         if (type == ATLAS_MAIN && i >= 6145 && i <= 6192) {
             continue;
         }
-        img->original.width = img->width;
         if (!img->is_isometric && draw_data->is_compressed) {
             draw_data->buffer = malloc(img->width * img->height * sizeof(color_t));
             if (draw_data->buffer) {
-                draw_data->original_width = img->width;
-                draw_data->original_height = img->height;
                 memset(draw_data->buffer, 0, img->width * img->height * sizeof(color_t));
                 buffer_set(buf, draw_data->offset);
                 convert_compressed(buf, img->width, 0, 0, draw_data->data_length, draw_data->buffer, img->width);
@@ -381,8 +378,7 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
         if (img->top) {
             draw_data->buffer = malloc(img->top->width * img->top->height * sizeof(color_t));
             if (draw_data->buffer) {
-                draw_data->original_width = img->top->width;
-                draw_data->original_height = img->top->height;
+                img->top->original.width = img->top->width;
                 img->top->original.height = img->top->height;
                 memset(draw_data->buffer, 0, img->top->width * img->top->height * sizeof(color_t));
                 buffer_set(buf, draw_data->offset + draw_data->uncompressed_length);
@@ -445,7 +441,7 @@ static void copy_compressed(const image *img, image_draw_data *draw_data, color_
 {
     for (int y = 0; y < img->height; y++) {
         memcpy(&dst[(img->atlas.y_offset + y) * dst_width + img->atlas.x_offset],
-            &((color_t *) draw_data->buffer)[(y + img->y_offset) * draw_data->original_width + img->x_offset],
+            &((color_t *) draw_data->buffer)[(y + img->y_offset) * img->original.width + img->x_offset],
             img->width * sizeof(color_t));
     }
 }
@@ -832,6 +828,7 @@ static int parse_4bit_multibyte_font(buffer *input, color_t *pixels, multibyte_f
         img->width = x_last_opaque - x_first_opaque + 1;
         img->x_offset = x_first_opaque;
         img->original.width = width;
+        img->original.height = font_size->height;
         img->y_offset = y_first_opaque;
         img->height = y_last_opaque - y_first_opaque + 1;
 
@@ -894,6 +891,7 @@ static int parse_1bit_multibyte_font(buffer *input, color_t *pixels, multibyte_f
         img->width = x_last_opaque - x_first_opaque + 1;
         img->x_offset = x_first_opaque;
         img->original.width = width;
+        img->original.height = font_size->height;
         img->y_offset = y_first_opaque;
         img->height = y_last_opaque - y_first_opaque + 1;
 
@@ -1165,9 +1163,9 @@ int image_load_external_pixels(color_t *dst, const image *img, int row_width)
     buffer_init(&buf, draw_data->buffer, draw_data->data_length);
     // NB: isometric images are never external
     if (draw_data->is_compressed) {
-        convert_compressed(&buf, draw_data->original_width, 0, 0, draw_data->data_length, dst, row_width);
+        convert_compressed(&buf, draw_data->width, 0, 0, draw_data->data_length, dst, row_width);
     } else {
-        convert_uncompressed(&buf, draw_data->original_width, draw_data->original_height, 0, 0, dst, row_width);
+        convert_uncompressed(&buf, draw_data->width, draw_data->height, 0, 0, dst, row_width);
     }
     return 1;
 }
@@ -1179,9 +1177,8 @@ void image_load_external_data(const image *img)
         return;
     }
     data.external_image_id = external_image_id;
-    image_draw_data *draw_data = &data.external_draw_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
-    graphics_renderer()->create_custom_image(CUSTOM_IMAGE_EXTERNAL, draw_data->original_width,
-        draw_data->original_height, 0);
+    image_draw_data *draw_data = &data.external_draw_data[external_image_id];
+    graphics_renderer()->create_custom_image(CUSTOM_IMAGE_EXTERNAL, draw_data->width, draw_data->height, 0);
     int row_width;
     color_t *dst = graphics_renderer()->get_custom_image_buffer(CUSTOM_IMAGE_EXTERNAL, &row_width);
     if (!dst) {
@@ -1200,10 +1197,10 @@ int image_get_external_dimensions(const image *img, int *width, int *height)
     }
     image_draw_data *draw_data = &data.external_draw_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
     if (width) {
-        *width = draw_data->original_width;
+        *width = draw_data->width;
     }
     if (height) {
-        *height = draw_data->original_height;
+        *height = draw_data->height;
     }
     return 1;
 }
