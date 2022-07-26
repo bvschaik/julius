@@ -371,11 +371,10 @@ static void draw_asset(void)
     int height = screen_height() - y_start;
     float scale = data.scale / 100.0f;
 
-    int image_height = (img->is_isometric && img->top) ? (img->height + img->top->original.height) : img->height;
     int x_offset = calc_adjust_with_percentage(x_start + (int) (width - img->width / scale) / 2, data.scale);
-    int y_offset = calc_adjust_with_percentage(y_start + (int) (height - image_height / scale) / 2, data.scale);
+    int y_offset = calc_adjust_with_percentage(y_start + (int) (height - img->height / scale) / 2, data.scale);
     if (img->is_isometric) {
-        y_offset += image_height / 2;
+        y_offset += img->height / 2;
         image_draw_isometric_top_from_draw_tile(image_id, x_offset, y_offset, COLOR_MASK_NONE, scale);
         image_draw_isometric_footprint_from_draw_tile(image_id, x_offset, y_offset, COLOR_MASK_NONE, scale);
     } else {
