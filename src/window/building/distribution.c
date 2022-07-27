@@ -14,6 +14,8 @@
 #include "city/military.h"
 #include "city/resource.h"
 #include "city/trade_policy.h"
+#include "core/lang.h"
+#include "core/string.h"
 #include "empire/city.h"
 #include "empire/object.h"
 #include "figure/figure.h"
@@ -346,7 +348,7 @@ void window_building_draw_dock_foreground(building_info_context *c)
         BLOCK_SIZE * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
     lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + BLOCK_SIZE * c->height_blocks - 30,
         BLOCK_SIZE * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-    draw_dock_permission_buttons(c->x_offset + 16, c->y_offset + 270 + 5, c->building_id);
+    draw_dock_permission_buttons(c->x_offset + 16, c->y_offset + 275, c->building_id);
     scrollbar_draw(&dock_scrollbar);
 }
 
@@ -1138,6 +1140,70 @@ void window_building_granary_get_tooltip_distribution_permissions(int *translati
         default:
             break;
     }
+}
+
+const uint8_t *window_building_dock_get_tooltip(building_info_context *c)
+{
+    int x_offset = c->x_offset + 16;
+    int y_offset = c->y_offset + 270;
+    const building *dock = building_get(c->building_id);
+    if (dock->type != BUILDING_DOCK) {
+        return 0;
+    }
+    int width = dock_distribution_permissions_buttons_count > data.dock_max_cities_visible ? 140 : 170;
+    int height = 20;
+    const mouse *m = mouse_get();
+
+    for (int i = 0; i < dock_distribution_permissions_buttons_count; i++) {
+        if (i < dock_scrollbar.scroll_position || i - dock_scrollbar.scroll_position >= data.dock_max_cities_visible) {
+            continue;
+        }
+        int y_pos = y_offset + 22 * (i - dock_scrollbar.scroll_position);
+        if (m->x < x_offset || m->y < y_pos || m->x > x_offset + width || m->y > y_pos + height) {
+            continue;
+        }
+        empire_city *city = empire_city_get(dock_distribution_permissions_buttons[i].parameter2);
+        if (!city) {
+            return 0;
+        }
+        static uint8_t text[400];
+        uint8_t *cursor = text;
+        cursor = string_copy(lang_get_string(47, 5), cursor, 400 - (int) (cursor - text));
+        cursor = string_copy(string_from_ascii(": "), cursor, 400 - (int) (cursor - text));
+        int traded = 0;
+        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+            if (!city->sells_resource[resource]) {
+                continue;
+            }
+            if (traded > 0) {
+                cursor = string_copy(string_from_ascii(", "), cursor, 400 - (int) (cursor - text));                
+            }
+            traded++;
+            cursor = string_copy(lang_get_string(23, resource), cursor, 400 - (int) (cursor - text));
+        }
+        if (traded == 0) {
+            cursor = string_copy(lang_get_string(23, 0), cursor, 400 - (int) (cursor - text));
+        }
+        cursor = string_copy(string_from_ascii("\n"), cursor, 400 - (int) (cursor - text));
+        cursor = string_copy(lang_get_string(47, 4), cursor, 400 - (int) (cursor - text));
+        cursor = string_copy(string_from_ascii(": "), cursor, 400 - (int) (cursor - text));
+        traded = 0;
+        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+            if (!city->buys_resource[resource]) {
+                continue;
+            }
+            if (traded > 0) {
+                cursor = string_copy(string_from_ascii(", "), cursor, 400 - (int) (cursor - text));
+            }
+            traded++;
+            cursor = string_copy(lang_get_string(23, resource), cursor, 400 - (int) (cursor - text));
+        }
+        if (traded == 0) {
+            cursor = string_copy(lang_get_string(23, 0), cursor, 400 - (int) (cursor - text));
+        }
+        return text;
+    }
+    return 0;
 }
 
 void window_building_primary_product_producer_stockpiling_tooltip(int *translation)
