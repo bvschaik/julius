@@ -11,15 +11,17 @@
 #define MAX_WARNINGS 5
 #define MAX_TEXT 100
 #define TIMEOUT_MS 15000
+#define TIMEOUT_FLASH 30
 
-struct warning {
+typedef struct {
     int in_use;
     time_millis time;
     int id;
+    int flashing;
     uint8_t text[MAX_TEXT];
-};
+} warning;
 
-static struct warning warnings[MAX_WARNINGS];
+static warning warnings[MAX_WARNINGS];
 static int current_id;
 
 int city_warning_show(warning_type type, int id)
@@ -65,19 +67,28 @@ int city_warning_show(warning_type type, int id)
     return city_warning_show_custom(text, id);
 }
 
-static int get_warning_slot(int id)
+static warning *get_warning_slot(int id, const uint8_t *text)
 {
     if (id != 0) {
         for (int i = 0; i < MAX_WARNINGS; i++) {
             if (warnings[i].id == id && warnings[i].in_use) {
-                return i + 1;
+                return &warnings[i];
             }
+        }
+    }
+    for (int i = 0; i < MAX_WARNINGS; i++) {
+        if (warnings[i].in_use && string_equals(warnings[i].text, text)) {
+            if (warnings[i].time != time_get_millis()) {
+                warnings[i].flashing = 1;
+            }
+            return &warnings[i];
         }
     }
     for (int i = 0; i < MAX_WARNINGS; i++) {
         if (!warnings[i].in_use) {
             warnings[i].id = ++current_id;
-            return i + 1;
+            warnings[i].flashing = 0;
+            return &warnings[i];
         }
     }
     return 0;
@@ -88,14 +99,15 @@ int city_warning_show_custom(const uint8_t *text, int id)
     if (!setting_warnings()) {
         return 0;
     }
-    int position = get_warning_slot(id);
-    if (!position) {
+    warning *w = get_warning_slot(id, text);
+    if (!w) {
         return 0;
     }
-    struct warning *w = &warnings[position - 1];
     w->in_use = 1;
     w->time = time_get_millis();
-    string_copy(text, w->text, MAX_TEXT);
+    if (!w->flashing) {
+        string_copy(text, w->text, MAX_TEXT);
+    }
     return w->id;
 }
 
@@ -112,7 +124,14 @@ int city_has_warnings(void)
 const uint8_t *city_warning_get(int position)
 {
     if (warnings[position].in_use) {
-        return warnings[position].text;
+        if (warnings[position].flashing) {
+            if (time_get_millis() - warnings[position].time > TIMEOUT_FLASH) {
+                warnings[position].flashing = 0;
+                window_request_refresh();
+            }
+        } else {
+            return warnings[position].text;
+        }
     }
     return 0;
 }
@@ -132,16 +151,4 @@ void city_warning_clear_outdated(void)
             window_request_refresh();
         }
     }
-}
-
-void city_warning_show_console(uint8_t *warning_text)
-{
-    int position = get_warning_slot(NEW_WARNING_SLOT);
-    if (!position) {
-        return;
-    }
-    struct warning *w = &warnings[position - 1];
-    w->in_use = 1;
-    w->time = time_get_millis();
-    string_copy(warning_text, w->text, MAX_TEXT);
 }

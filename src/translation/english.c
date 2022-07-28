@@ -822,7 +822,17 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ASSET_PREVIEWER_UNNAMED_ASSET, "( unnamed asset )"},
     {TR_WINDOW_ASSET_PREVIEWER_ANIMATION_FRAME, "( animation frame )"},
     {TR_WINDOW_ASSET_PREVIEWER_SHOW_ANIMATION_FRAMES, "Show animation frames"},
-    {TR_WINDOW_ASSET_PREVIEWER_ASSETS_REFRESHED, "Assets refreshed"},   
+    {TR_WINDOW_ASSET_PREVIEWER_ASSETS_REFRESHED, "Assets refreshed" },
+    {TR_CHEAT_ADDED_MONEY, "Added money"},
+    {TR_CHEAT_STARTED_INVASION, "Started invasion"},
+    {TR_CHEAT_YEAR_ADVANCED, "Year advanced"},
+    {TR_CHEAT_CASTED_BLESSING, "Casted blessing"},
+    {TR_CHEAT_TOGGLE_TOOLTIPS, "Show tooltip toggled"},
+    {TR_CHEAT_KILLED_ALL_WALKERS, "Killed all walkers"},
+    {TR_CHEAT_FINISHED_MONUMENTS, "Monuments finished"},
+    {TR_CHEAT_UPDATED_MONUMENTS, "Monuments updated"},
+    {TR_CHEAT_UNLOCKED_ALL_BUILDINGS, "All buildings unlocked"},
+    {TR_CHEAT_INCITED_RIOT, "Incited a riot"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

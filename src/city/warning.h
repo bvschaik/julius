@@ -87,6 +87,4 @@ const uint8_t *city_warning_get(int position);
 void city_warning_clear_all(void);
 void city_warning_clear_outdated(void);
 
-void city_warning_show_console(uint8_t *warning_text);
-
 #endif // CITY_WARNING_H

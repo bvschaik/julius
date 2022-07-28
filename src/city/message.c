@@ -206,7 +206,7 @@ void city_message_post(int use_popup, int message_type, int param1, int param2)
     }
 
     if (config_get(CONFIG_UI_MESSAGE_ALERTS)) {
-        city_warning_show_console(lang_get_message(text_id)->title.text);
+        city_warning_show_custom(lang_get_message(text_id)->title.text, NEW_WARNING_SLOT);
         use_popup = 0;
     }
     if (is_invasion_message(msg->message_type) && setting_game_speed() > 70) {
