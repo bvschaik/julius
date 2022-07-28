@@ -302,7 +302,7 @@ static void show_policy(trade_policy_type policy_type)
 
 static void button_prices(int param1, int param2)
 {
-    window_trade_prices_show();
+    window_trade_prices_show(17, 53, 622, 334);
 }
 
 static void button_empire(int param1, int param2)

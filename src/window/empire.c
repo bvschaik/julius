@@ -28,6 +28,7 @@
 #include "window/popup_dialog.h"
 #include "window/resource_settings.h"
 #include "window/trade_opened.h"
+#include "window/trade_prices.h"
 
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
@@ -35,6 +36,7 @@
 static void button_help(int param1, int param2);
 static void button_return_to_city(int param1, int param2);
 static void button_advisor(int advisor, int param2);
+static void button_show_prices(int param1, int param2);
 static void button_open_trade(int param1, int param2);
 static void button_show_resource_window(int resource, int param2);
 
@@ -47,6 +49,10 @@ static image_button image_button_return_to_city[] = {
 static image_button image_button_advisor[] = {
     {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 12, button_advisor, button_none, ADVISOR_TRADE, 0, 1}
 };
+static image_button image_button_show_prices[] = {
+    {-4, 0, 24, 24, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 30, button_show_prices, button_none, 0, 0, 1}
+};
+
 static generic_button generic_button_trade_resource[] = {
     {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WHEAT, 0},
     {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_VEGETABLES , 0},
@@ -423,6 +429,7 @@ static void draw_panel_buttons(const empire_city *city)
     image_buttons_draw(data.x_min + 20, data.y_max - 44, image_button_help, 1);
     image_buttons_draw(data.x_max - 44, data.y_max - 44, image_button_return_to_city, 1);
     image_buttons_draw(data.x_max - 44, data.y_max - 100, image_button_advisor, 1);
+    image_buttons_draw(data.x_min + 24, data.y_max - 100, image_button_show_prices, 1);
     if (city) {
         if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
             button_border_draw((data.x_min + data.x_max - 500) / 2 + 30, data.y_max - 49, 440,
@@ -501,6 +508,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (button_id) {
         data.focus_button_id = 3;
     }
+    image_buttons_handle_mouse(m, data.x_min + 24, data.y_max - 100, image_button_show_prices, 1, &button_id);
+    if (button_id) {
+        data.focus_button_id = 4;
+    }
+    button_id = 0;
     determine_selected_object(m);
     int selected_object = empire_selected_object();
     if (selected_object) {
@@ -650,6 +662,10 @@ static void get_tooltip(tooltip_context *c)
             case 1: c->text_id = 1; break;
             case 2: c->text_id = 2; break;
             case 3: c->text_id = 69; break;
+            case 4:
+                c->text_group = 54;
+                c->text_id = 2;
+                break;
         }
     } else {
         get_tooltip_trade_route_type(c);
@@ -669,6 +685,11 @@ static void button_return_to_city(int param1, int param2)
 static void button_advisor(int advisor, int param2)
 {
     window_advisors_show_advisor(advisor);
+}
+
+static void button_show_prices(int param1, int param2)
+{
+    window_trade_prices_show(0, 0, screen_width(), screen_height());
 }
 
 static void button_show_resource_window(int resource, int param2)
