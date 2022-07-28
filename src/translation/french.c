@@ -823,6 +823,16 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ASSET_PREVIEWER_ANIMATION_FRAME, "( frame d'animation )"},
     {TR_WINDOW_ASSET_PREVIEWER_SHOW_ANIMATION_FRAMES, "Voir frames d'animation"},
     {TR_WINDOW_ASSET_PREVIEWER_ASSETS_REFRESHED, "Assets actualisés"},
+    {TR_CHEAT_ADDED_MONEY, "Fonds ajoutés"},
+    {TR_CHEAT_STARTED_INVASION, "Invasion lancée"},
+    {TR_CHEAT_YEAR_ADVANCED, "Année suivante"},
+    {TR_CHEAT_CASTED_BLESSING, "Bénédiction reçue"},
+    {TR_CHEAT_TOGGLE_TOOLTIPS, "Infobulles on/off"},
+    {TR_CHEAT_KILLED_ALL_WALKERS, "Tous les marcheurs tués"},
+    {TR_CHEAT_FINISHED_MONUMENTS, "Monuments terminés"},
+    {TR_CHEAT_UPDATED_MONUMENTS, "Monuments mis à jour"},
+    {TR_CHEAT_UNLOCKED_ALL_BUILDINGS, "Tous les bâtiments débloqués"},
+    {TR_CHEAT_INCITED_RIOT, "Émeute déclenchée"}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
