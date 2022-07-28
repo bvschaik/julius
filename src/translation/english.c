@@ -745,7 +745,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_SICKNESS_LEVEL_LOW, "Disease is a rare occurance in the city. The high standard of healthcare provided to residents effectively stems epidemics spreading here from other regions."},
     {TR_ADVISOR_SICKNESS_LEVEL_MEDIUM, "Some infectious diseases have appeared in the city, but the situation is under control. A sufficiently high level of healthcare will mitigate the impact of epidemics in the city."},
     {TR_ADVISOR_SICKNESS_LEVEL_HIGH, "Infectious diseases spread in areas of the city. If the situation is not remedied soon, some buildings may be quarantined. Greater access to healthcare would effectively stem epidemics spreading here."},
-    {TR_ADVISOR_SICKNESS_LEVEL_PLAGUE, "The plague has come to the city! Many residents fall ill and quarantined buildings are severely impacted. What few doctors and surgeons are available have been requisitioned to decontaminate the most afflicted places. Action must be taken!"},
+    { TR_ADVISOR_SICKNESS_LEVEL_PLAGUE, "The plague has come to the city! Many residents fall ill and some buildings may have been quarantined or burned to prevent further spreading. What few doctors and surgeons are available have been requisitioned to decontaminate the most afflicted places. Action must be taken!" },
     {TR_TOOLTIP_OVERLAY_SICKNESS_LOW, "Very few diseases"},
     {TR_TOOLTIP_OVERLAY_SICKNESS_MEDIUM, "A few infectious diseases"},
     {TR_TOOLTIP_OVERLAY_SICKNESS_HIGH, "Many infectious diseases spreading"},
