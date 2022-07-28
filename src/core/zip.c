@@ -635,8 +635,11 @@ static int pk_explode_data(struct pk_decomp_buffer *buf)
             buf->output_buffer_ptr -= 4096;
         }
     }
-    // Flush buffer
-    buf->output_func(&buf->output_buffer[4096], buf->output_buffer_ptr - 4096, buf->token);
+    int remaining_bytes = buf->output_buffer_ptr - 4096;
+    if (remaining_bytes > 0) {
+        // Flush buffer if needed
+        buf->output_func(&buf->output_buffer[4096], remaining_bytes, buf->token);
+    }
     return token;
 }
 
