@@ -498,6 +498,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (button_id) {
         data.focus_button_id = 3;
     }
+    button_id = 0;
     determine_selected_object(m);
     int selected_object = empire_selected_object();
     if (selected_object) {
