@@ -815,6 +815,17 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Миссионерские посты"},
     {TR_CITY_MESSAGE_TITLE_ENEMIES_LEAVING, "Враги отступают"},
     {TR_CITY_MESSAGE_TEXT_ENEMIES_LEAVING, "Хм! В вашем ничтожном городе больше нет ничего, что стоило бы разрушить. Мы уходим, но берегитесь, мы всегда можем вернуться!"},
+    {TR_ZOOM, "Увеличение:"},
+    {TR_CHEAT_ADDED_MONEY, "Деньги добавлены"},
+    {TR_CHEAT_STARTED_INVASION, "Вторжение началось"},
+    {TR_CHEAT_YEAR_ADVANCED, "Год продвинулся"},
+    {TR_CHEAT_CASTED_BLESSING, "Благословение получено"},
+    {TR_CHEAT_TOGGLE_TOOLTIPS, "Show tooltip toggled"},
+    {TR_CHEAT_KILLED_ALL_WALKERS, "Все люди убиты"},
+    {TR_CHEAT_FINISHED_MONUMENTS, "Памятники завершены"},
+    {TR_CHEAT_UPDATED_MONUMENTS, "Памятники обновлены"},
+    {TR_CHEAT_UNLOCKED_ALL_BUILDINGS, "Все здания разблокированы для использования"},
+    {TR_CHEAT_INCITED_RIOT, "Были спровоцированы беспорядки"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
