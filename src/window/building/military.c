@@ -484,7 +484,7 @@ void window_building_draw_legion_info_foreground(building_info_context *c)
     lang_text_draw_multiline(138, text_id, c->x_offset + 24, c->y_offset + 292,
         BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_GREEN);
 
-    if (!m->is_at_fort) {
+    if (!m->is_at_fort && !m->in_distant_battle) {
         button_border_draw(c->x_offset + BLOCK_SIZE * (c->width_blocks - 18) / 2,
             c->y_offset + BLOCK_SIZE * c->height_blocks - 48, 288, 32, data.return_button_id == 1);
         lang_text_draw_centered(138, 58, c->x_offset + BLOCK_SIZE * (c->width_blocks - 18) / 2,
