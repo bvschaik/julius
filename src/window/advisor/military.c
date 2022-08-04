@@ -132,7 +132,7 @@ static int draw_background(void)
         image_draw(image_id, 403, 86 + 44 * i);
 
         button_border_draw(480, 83 + 44 * i, 30, 30, 0);
-        if (m->is_at_fort) {
+        if (m->is_at_fort || m->in_distant_battle) {
             image_draw(image_id + 2, 483, 86 + 44 * i);
         } else {
             image_draw(image_id + 1, 483, 86 + 44 * i);
