@@ -371,7 +371,7 @@ void formation_update_monthly_morale_deployed(void)
         if (f->is_legion) {
             if (!f->is_at_fort && !f->in_distant_battle) {
                 if (f->morale <= 20 && !f->months_low_morale && !f->months_very_low_morale) {
-                    change_all_morale(-10, 10);
+                    change_all_morale(-5, 10);
                 }
                 if (f->morale <= 10) {
                     f->months_very_low_morale++;
@@ -381,7 +381,7 @@ void formation_update_monthly_morale_deployed(void)
             }
         } else { // enemy
             if (f->morale <= 20 && !f->months_low_morale && !f->months_very_low_morale) {
-                change_all_morale(10, -10);
+                change_all_morale(5, -10);
             }
             if (f->morale <= 10) {
                 f->months_very_low_morale++;
