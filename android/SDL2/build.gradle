@@ -13,6 +13,12 @@ def findLibrary(String prefix) {
 
 task findSDL2 {
     def path = findLibrary("SDL2")
+    // Copy SDL Android sources, since Android Studio no longer
+    // appears to recognize source sets outside the project root
+    copy {
+        from new File(path, "android-project/app/src/main/java")
+        into new File(projectDir, "src/main/java")
+    }
     ext.sourcePath = path
     ext.includePath = new File(path, "include")
 }
@@ -52,9 +58,6 @@ android {
                         'SUPPORT_MOD_MODPLUG=false',
                         'SUPPORT_MID_TIMIDITY=false'
             }
-        }
-        sourceSets {
-            main.java.srcDirs += "${findSDL2.sourcePath}/android-project/app/src/main/java"
         }
     }
     buildFeatures {
