@@ -5,6 +5,7 @@
 #include "building/granary.h"
 #include "building/house.h"
 #include "building/model.h"
+#include "building/monument.h"
 #include "building/warehouse.h"
 #include "city/culture.h"
 #include "city/data_private.h"
@@ -238,6 +239,11 @@ static void adjust_sickness_level_in_house(building *b, int health, int populati
             delta += population_health_offset;
         }
 
+        // Neptune GT reduces the delta by 5
+        if (building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
+            delta -= 5;
+        }
+
         // If delta is positive, it is reduced depending on house health, global health and hospital access
         if (delta > 0) {
             int delta_decrease_percentage = city_health();
@@ -277,7 +283,7 @@ void city_health_update(void)
     }
     int total_population = 0;
     int healthy_population = 0;
-    int population_health_offset = calc_bound((city_population() - 1) / 1000 * 2, 0, 10);
+    int population_health_offset = calc_bound((city_population() - 1) / 1000, 0, 10);
     int hospital_coverage_bonus = city_culture_coverage_hospital() / 20 * 5;
     city_data.health.population_access.clinic = 0;
     city_data.health.population_access.barber = 0;

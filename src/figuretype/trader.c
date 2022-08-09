@@ -967,7 +967,7 @@ int figure_trade_land_trade_units()
 
     if (building_monument_working(BUILDING_GRAND_TEMPLE_MERCURY)) {
         int add_unit = 0;
-        int monument_id = building_monument_has_monument(BUILDING_GRAND_TEMPLE_MERCURY);
+        int monument_id = building_monument_get_id(BUILDING_GRAND_TEMPLE_MERCURY);
         building *b = building_get(monument_id);
 
         int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);

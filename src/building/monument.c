@@ -623,7 +623,7 @@ int building_monument_resource_in_delivery(building *b, int resource_id)
     }
 }
 
-int building_monument_has_monument(building_type type)
+int building_monument_get_id(building_type type)
 {
     building *b = building_first_of_type(type);
     if (!building_monument_type_is_monument(type) || !b) {
@@ -664,7 +664,7 @@ int building_monument_has_labour_problems(building *b)
 
 int building_monument_working(building_type type)
 {
-    int monument_id = building_monument_has_monument(type);
+    int monument_id = building_monument_get_id(type);
     building *b = building_get(monument_id);
     if (!monument_id) {
         return 0;
