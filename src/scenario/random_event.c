@@ -82,11 +82,11 @@ static void contaminate_water(void)
             int change;
             int health_rate = city_health();
             if (health_rate > 80) {
-                change = -50;
-            } else if (health_rate > 60) {
                 change = -40;
+            } else if (health_rate > 60) {
+                change = -30;
             } else {
-                change = -25;
+                change = -20;
             }
             city_health_change(change);
             city_message_post(1, MESSAGE_CONTAMINATED_WATER, 0, 0);
