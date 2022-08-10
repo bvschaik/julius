@@ -187,7 +187,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, "Grand temple of Venus" },
     {TR_BUILDING_PANTHEON_DESC, "Pantheon" },
     {TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, "Ceres inspires cartpushers from your city's farms to move 50% faster." },
-    {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Neptune grants an additional +1 range for fountains and wells and +2 for reservoirs. Water services labor is also reduced by 50% and trading ships travel 25% faster." }, // Note to translators: This one changed from the previous version, please update.
+    {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Neptune grants an additional +1 range for fountains and wells and +2 for reservoirs. Water services labor is also reduced by 50% and trading ships travel 25% faster. Sickness increase in houses is greatly hindered." }, // Note to translators: This one changed from the previous version, please update.
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, "Mercury blesses your traders by land and sea with an additional 50% capacity, and inspires land traders to move 25% faster." }, // Note to translators: This one changed from the previous version, please update.
     {TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Mars exhorts your citizens to enlist, dispatching recruits to your city's forts, and allowing four additional forts to be built." }, // Note to translators: This one changed from the previous version, please update.
     {TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "Venus graces your city's gardens, statues and temples to glow with beauty, improving their desirability. Houses also hold more goods, and devolve more slowly." }, // Note to translators: This one changed from the previous version, please update.
@@ -539,7 +539,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_GAMES_OPTION_4, "Hold Olympic Games" },
     {TR_WINDOW_GAMES_OPTION_5, "Hold Roman Games" },
     {TR_WINDOW_GAMES_OPTION_1_DESC, "The Colosseum will be flooded to re-enact a great naval battle. The movement speed of your troops and their strength in distant battles will be increased for the next year." },
-    {TR_WINDOW_GAMES_OPTION_2_DESC, "The Colosseum will host gruesome animal hunts and executions by wild beasts, delighting the plebeian masses. Crime, riots, and revolts will be suppressed for the next year. Gladiators will help defend the city from the next invasion." },
+    {TR_WINDOW_GAMES_OPTION_2_DESC, "The Colosseum will host gruesome animal hunts and executions by wild beasts, delighting the plebeian masses. Crime, riots, and revolts will be suppressed for the next year. Lion tamers will help defend the city from the next invasion." },
     {TR_WINDOW_GAMES_OPTION_3_DESC, "The Colosseum will host games in honor of the gods on the first day of next year, beseeching fortune and prosperity. Trade quotas will be doubled next year." },
     {TR_WINDOW_GAMES_OPTION_4_DESC, "The Hippodrome will host the Olympic Games. Your city will host throngs of visitors, and if your athletes honor your city well you will gain a permanent increase in tourism and favor." },
     {TR_WINDOW_GAMES_OPTION_5_DESC, "The Colosseum will host the Roman Games, with people travelling to your city from across the empire to compete. Such a grand spectacle will surely earn you the favor of both the Emperor and the common people for the next year." },
