@@ -12,6 +12,7 @@
 #include "city/trade.h"
 #include "core/config.h"
 #include "core/random.h"
+#include "game/difficulty.h"
 #include "scenario/data.h"
 #include "scenario/property.h"
 
@@ -25,7 +26,7 @@ enum {
     EVENT_CLAY_PIT_FLOODED = 7
 };
 
-#define COOLDOWN_MONTHS 24
+#define COOLDOWN_MONTHS_ROME_WAGE_CHANGE 12
 
 static const int RANDOM_EVENT_PROBABILITY[128] = {
     0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 3, 0, 0, 0, 0,
@@ -40,7 +41,8 @@ static const int RANDOM_EVENT_PROBABILITY[128] = {
 
 static void raise_wages(void)
 {
-    if (scenario.random_events.raise_wages && city_data.labor.months_since_last_wage_change > COOLDOWN_MONTHS / 2) {
+    if (scenario.random_events.raise_wages &&
+        city_data.labor.months_since_last_wage_change > COOLDOWN_MONTHS_ROME_WAGE_CHANGE) {
         if (city_labor_raise_wages_rome()) {
             city_data.labor.months_since_last_wage_change = 0;
             city_message_post(1, MESSAGE_ROME_RAISES_WAGES, 0, 0);
@@ -50,7 +52,8 @@ static void raise_wages(void)
 
 static void lower_wages(void)
 {
-    if (scenario.random_events.lower_wages && city_data.labor.months_since_last_wage_change > COOLDOWN_MONTHS / 2) {
+    if (scenario.random_events.lower_wages &&
+        city_data.labor.months_since_last_wage_change > COOLDOWN_MONTHS_ROME_WAGE_CHANGE) {
         if (city_labor_lower_wages_rome()) {
             city_data.labor.months_since_last_wage_change = 0;
             city_message_post(1, MESSAGE_ROME_LOWERS_WAGES, 0, 0);
@@ -62,7 +65,7 @@ static void disrupt_land_trade(void)
 {
     if (scenario.random_events.land_trade_problem) {
         if (city_trade_has_land_trade_route() &&
-            city_data.trade.months_since_last_land_trade_problem > COOLDOWN_MONTHS) {
+            city_data.trade.months_since_last_land_trade_problem > difficulty_random_event_cooldown_months()) {
             city_trade_start_land_trade_problems(48);
             city_data.trade.months_since_last_land_trade_problem = 0;
             if (scenario_property_climate() == CLIMATE_DESERT) {
@@ -77,7 +80,8 @@ static void disrupt_land_trade(void)
 static void disrupt_sea_trade(void)
 {
     if (scenario.random_events.sea_trade_problem) {
-        if (city_trade_has_sea_trade_route() && city_data.trade.months_since_last_sea_trade_problem > COOLDOWN_MONTHS) {
+        if (city_trade_has_sea_trade_route() &&
+            city_data.trade.months_since_last_sea_trade_problem > difficulty_random_event_cooldown_months()) {
             city_trade_start_sea_trade_problems(48);
             city_data.trade.months_since_last_sea_trade_problem = 0;
             city_message_post(1, MESSAGE_SEA_TRADE_DISRUPTED, 0, 0);
@@ -88,7 +92,8 @@ static void disrupt_sea_trade(void)
 static void contaminate_water(void)
 {
     if (scenario.random_events.contaminated_water) {
-        if (city_population() > 200 && city_data.health.months_since_last_contaminated_water > COOLDOWN_MONTHS) {
+        if (city_population() > 200 &&
+            city_data.health.months_since_last_contaminated_water > difficulty_random_event_cooldown_months()) {
             int change;
             int health_rate = city_health();
             if (health_rate > 80) {
@@ -108,7 +113,7 @@ static void contaminate_water(void)
 static void destroy_iron_mine(void)
 {
     if (scenario.random_events.iron_mine_collapse &&
-        city_data.building.months_since_last_destroyed_iron_mine > COOLDOWN_MONTHS) {
+        city_data.building.months_since_last_destroyed_iron_mine > difficulty_random_event_cooldown_months()) {
         if(config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if(building_find(BUILDING_IRON_MINE)) {
                 city_finance_process_sundry(250);
@@ -127,7 +132,7 @@ static void destroy_iron_mine(void)
 static void destroy_clay_pit(void)
 {
     if (scenario.random_events.clay_pit_flooded &&
-        city_data.building.months_since_last_flooded_clay_pit > COOLDOWN_MONTHS) {
+        city_data.building.months_since_last_flooded_clay_pit > difficulty_random_event_cooldown_months()) {
         if(config_get(CONFIG_GP_CH_RANDOM_COLLAPSES_TAKE_MONEY)) {
             if(building_find(BUILDING_CLAY_PIT)) {
                 city_finance_process_sundry(250);

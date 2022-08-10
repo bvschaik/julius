@@ -13,12 +13,13 @@ static const struct {
     int food_per_soldier;
     int favor_to_pause_emperor_attack;
     int favor_to_stop_emperor_attack;
+    int random_events_cooldown_months;
 } data[] = {
-    { 300,  40, 70, 80,   0, 10, -3, 16, 20 }, // very easy
-    { 200,  60, 60, 75,   0,  9, -3, 17, 22 }, // easy
-    { 150,  80, 50, 70,  50,  8, -2, 18, 24 }, // normal
-    { 100, 100, 50, 65, 100,  7,  0, 20, 27 }, // hard
-    {  75, 120, 40, 60, 100,  6,  1, 22, 30 }  // very hard
+    { 300,  40, 70, 80,   0, 10, -3, 16, 20, 36 }, // very easy
+    { 200,  60, 60, 75,   0,  9, -3, 17, 22, 30 }, // easy
+    { 150,  80, 50, 70,  50,  8, -2, 18, 24, 24 }, // normal
+    { 100, 100, 50, 65, 100,  7,  0, 20, 27, 18 }, // hard
+    {  75, 120, 40, 60, 100,  6,  1, 22, 30, 12 }  // very hard
 };
 
 int difficulty_starting_favor(void)
@@ -74,4 +75,9 @@ int difficulty_favor_to_pause_emperor_attack(void)
 int difficulty_favor_to_stop_emperor_attack(void)
 {
     return data[setting_difficulty()].favor_to_stop_emperor_attack;
+}
+
+int difficulty_random_event_cooldown_months(void)
+{
+    return data[setting_difficulty()].random_events_cooldown_months;
 }
