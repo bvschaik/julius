@@ -24,6 +24,7 @@
 #include "map/road_network.h"
 #include "map/routing.h"
 #include "map/routing_terrain.h"
+#include "map/terrain.h"
 #include "map/tiles.h"
 #include "scenario/property.h"
 #include "sound/effect.h"
@@ -280,8 +281,8 @@ void building_maintenance_check_rome_access(void)
             // Try to match the road network/access point to the loading bay first
             int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 1, &x_road, &y_road);
             // If there's no road access to the loading bay, use any tile touching the warehouse
-            if (road_grid_offset < 0) {
-                map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 3, &x_road, &y_road);
+            if (road_grid_offset < 0 || !map_terrain_is(road_grid_offset, TERRAIN_ROAD)) {
+                road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 3, &x_road, &y_road);
             }
             if (road_grid_offset >= 0) {
                 b->road_network_id = map_road_network_get(road_grid_offset);
