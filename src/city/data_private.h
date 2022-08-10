@@ -53,6 +53,8 @@ extern struct city_data_t {
         int8_t unknown_value;
         int32_t mess_hall_building_id;
         int32_t num_striking_industries;
+        uint16_t months_since_last_destroyed_iron_mine;
+        uint16_t months_since_last_flooded_clay_pit;
     } building;
     struct {
         int16_t animals;
@@ -199,6 +201,7 @@ extern struct city_data_t {
     struct {
         int32_t wages;
         int32_t wages_rome;
+        int32_t months_since_last_wage_change;
         int32_t workers_available;
         int32_t workers_employed;
         int32_t workers_unemployed;
@@ -241,6 +244,7 @@ extern struct city_data_t {
         int32_t num_hospital_workers;
         int32_t target_value;
         int32_t value;
+        int32_t months_since_last_contaminated_water;
         struct {
             int32_t clinic;
             int32_t barber;
@@ -395,6 +399,8 @@ extern struct city_data_t {
         int16_t num_sea_routes;
         int16_t land_trade_problem_duration;
         int16_t sea_trade_problem_duration;
+        uint16_t months_since_last_land_trade_problem;
+        uint16_t months_since_last_sea_trade_problem;
         int32_t caravan_import_resource;
         int32_t caravan_backup_import_resource;
         int32_t docker_import_resource;

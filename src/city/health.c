@@ -18,18 +18,8 @@
 
 #define SICKNESS_SPREAD_DIVISION_FACTOR 4
 
-#define NUM_PLAGUE_BUILDINGS sizeof(PLAGUE_BUILDINGS) / sizeof(building_type)
+#define NUM_PLAGUE_BUILDINGS (sizeof(PLAGUE_BUILDINGS) / sizeof(building_type))
 static const building_type PLAGUE_BUILDINGS[] = { BUILDING_DOCK, BUILDING_WAREHOUSE, BUILDING_GRANARY };
-
-static int is_plague_building(building_type type)
-{
-    for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
-        if (type == PLAGUE_BUILDINGS[i]) {
-            return 1;
-        }
-    }
-    return 0;
-}
 
 int city_health(void)
 {
@@ -39,6 +29,16 @@ int city_health(void)
 void city_health_change(int amount)
 {
     city_data.health.value = calc_bound(city_data.health.value + amount, 0, 100);
+}
+
+static int is_plague_building(building_type type)
+{
+    for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
+        if (type == PLAGUE_BUILDINGS[i]) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 static void cause_disease_in_building(int building_id)

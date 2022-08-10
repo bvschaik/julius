@@ -255,7 +255,7 @@ static void set_extra_info_objectives(void)
 static int count_happy_gods(void)
 {
     int happy_gods = 0;
-    for (int god = 0; god < 5; god++) {
+    for (int god = 0; god < MAX_GODS; god++) {
         if (city_god_happy_bolts(god) > 0) {
             happy_gods++;
         }
