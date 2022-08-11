@@ -97,7 +97,7 @@ static int load_mpg(const char *filename)
     if (!path) {
         return 0;
     }
-    FILE *mpg = file_open(mpg_filename, "rb");
+    FILE *mpg = file_open(path, "rb");
     data.plm = plm_create_with_file(mpg, 1);
 
     if (!data.plm) {
