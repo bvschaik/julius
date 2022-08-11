@@ -187,7 +187,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_VENUS_DESC, "Temple monumental de Vénus"},
     {TR_BUILDING_PANTHEON_DESC, "Panthéon"},
     {TR_BUILDING_GRAND_TEMPLE_CERES_BONUS_DESC, "Cérès stimule les charretiers des fermes de la cité, les poussant à se déplacer 50 % plus vite."},
-    {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Neptune accorde +1 en portée pour les fontaines et puits et +2 pour les réservoirs. La main-d'œuvre du service des eaux est réduite de 50 % et les navires marchands voyagent 25 % plus vite."},
+    {TR_BUILDING_GRAND_TEMPLE_NEPTUNE_BONUS_DESC, "Neptune accorde +1 de portée aux fontaines et puits, +2 aux réservoirs. Le service des eaux requiert -50 % d'employés, les navires marchands voyagent 25 % plus vite. Les maladies dans les maisons chutent fortement."},
     {TR_BUILDING_GRAND_TEMPLE_MERCURY_BONUS_DESC, "Mercure gratifie les marchands terrestres et maritimes d'une capacité supplémentaire de 50 %, et encourage les marchands terrestres à se déplacer 25 % plus vite."},
     {TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC, "Mars exhorte vos citoyens à s'enrôler, formant des recrues pour les forts de votre cité, et permettant la construction de quatre forts supplémentaires."},
     {TR_BUILDING_GRAND_TEMPLE_VENUS_BONUS_DESC, "Vénus illumine de sa beauté les jardins, statues et temples de la cité, augmentant leur attrait. Les logements stockent plus de biens et régressent plus lentement."},
