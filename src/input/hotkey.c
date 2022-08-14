@@ -312,6 +312,10 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_ENTERTAINMENT;
             break;
+        case HOTKEY_SHOW_OVERLAY_EDUCATION:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_EDUCATION;
+            break;
         case HOTKEY_SHOW_OVERLAY_SCHOOL:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_SCHOOL;
@@ -336,6 +340,10 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_CLINIC;
             break;
+        case HOTKEY_SHOW_OVERLAY_HOSPITAL:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_HOSPITAL;
+            break;
         case HOTKEY_SHOW_OVERLAY_SICKNESS:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_SICKNESS;
@@ -343,6 +351,14 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
         case HOTKEY_SHOW_OVERLAY_TAX_INCOME:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_TAX_INCOME;
+            break;
+        case HOTKEY_SHOW_OVERLAY_DESIRABILITY:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_DESIRABILITY;
+            break;
+        case HOTKEY_SHOW_OVERLAY_SENTIMENT:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_SENTIMENT;
             break;
         case HOTKEY_SHOW_OVERLAY_MOTHBALL:
             def->action = &data.hotkey_state.show_overlay;
@@ -355,6 +371,10 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
         case HOTKEY_SHOW_OVERLAY_ROADS:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_ROADS;
+            break;
+        case HOTKEY_SHOW_OVERLAY_LEVY:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_LEVY;
             break;
         case HOTKEY_ROTATE_MAP_NORTH:
             def->action = &data.hotkey_state.rotate_map_north;
