@@ -343,6 +343,10 @@ void figure_tower_sentry_reroute(void)
         if (f->type != FIGURE_TOWER_SENTRY || map_routing_is_wall_passable(f->grid_offset)) {
             continue;
         }
+        if (f->action_state == FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER ||
+            (f->action_state == FIGURE_ACTION_150_ATTACK && f->action_state_before_attack == FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER)) {
+            continue;
+        }
         // tower sentry got off wall due to rotation
         int x_tile, y_tile;
         if (map_routing_wall_tile_in_radius(f->x, f->y, 2, &x_tile, &y_tile)) {
