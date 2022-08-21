@@ -639,13 +639,13 @@ static void determine_warehouseman_destination(figure *f, int road_network_id, i
     f->wait_ticks = 2;
 }
 
-static void warehouseman_initial_action(figure *f, int remove_resources)
+static void warehouseman_initial_action(figure *f, int road_network_id, int remove_resources)
 {
     building *b = building_get(f->building_id);
-    int road_network_id = map_road_network_get(f->grid_offset);
     f->is_ghost = 1;
     f->wait_ticks++;
     if (f->wait_ticks > 2) {
+        f->wait_ticks = 0;
         if (b->type == BUILDING_GRANARY) {
             determine_granaryman_destination(f, road_network_id, remove_resources);
         } else {
@@ -688,7 +688,7 @@ void figure_warehouseman_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
-            warehouseman_initial_action(f, 1);
+            warehouseman_initial_action(f, road_network_id, 1);
             break;
         }
         case FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE:
@@ -896,7 +896,7 @@ void figure_warehouseman_action(figure *f)
             }
             break;
         case FIGURE_ACTION_233_WAREHOUSEMAN_RECONSIDER_TARGET:
-            warehouseman_initial_action(f, 0);
+            warehouseman_initial_action(f, road_network_id, 0);
             break;
     }
     update_image(f);
