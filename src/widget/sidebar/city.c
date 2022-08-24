@@ -272,9 +272,16 @@ int widget_sidebar_city_handle_mouse_build_menu(const mouse *m)
     }
 }
 
-int widget_sidebar_city_get_tooltip_text(void)
+int widget_sidebar_city_get_tooltip_text(tooltip_context *c)
 {
-    return data.focus_button_for_tooltip;
+    if (data.focus_button_for_tooltip) {
+        if (data.focus_button_for_tooltip == 42) {
+            c->translation_key = TR_TOGGLE_GRID;
+            return 0;
+        }
+        return data.focus_button_for_tooltip;
+    }
+    return sidebar_extra_get_tooltip(c);
 }
 
 static void slide_finished(void)

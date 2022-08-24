@@ -115,6 +115,7 @@ static struct {
     int next_invasion;
     int visible_requests;
     int active_requests;
+    int objectives_y_offset;
     int request_buttons_y_offset;
     int focused_request_button_id;
     int selected_request_id;
@@ -579,6 +580,8 @@ static void draw_extra_info_panel(void)
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
         y_offset += EXTRA_INFO_LINE_SPACE;
 
+        data.objectives_y_offset = y_offset;
+
         y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 1, &data.objectives.culture, 0);
         y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 2, &data.objectives.prosperity, 0);
         y_offset += draw_extra_info_objective(data.x_offset, y_offset, 53, 3, &data.objectives.peace, 0);
@@ -659,6 +662,56 @@ int sidebar_extra_handle_mouse(const mouse *m)
         return 1;
     }
     return 0;
+}
+
+int sidebar_extra_get_tooltip(tooltip_context *c)
+{
+    if (!sidebar_extra_is_information_displayed(SIDEBAR_EXTRA_DISPLAY_RATINGS)) {
+        return 0;
+    }
+    const mouse *m = mouse_get();
+    if (m->x < data.x_offset + 2 || m->x >= data.x_offset + data.width - 2 ||  m->y < data.objectives_y_offset ||
+        m->y >= data.objectives_y_offset + EXTRA_INFO_LINE_SPACE * 8) {
+        return 0;
+    }
+    int text_id = 0;
+    selected_rating rating = (m->y - data.objectives_y_offset) / (EXTRA_INFO_LINE_SPACE * 2) + 1;
+    switch (rating) {
+        case SELECTED_RATING_CULTURE:
+            if (data.objectives.culture.value <= 90) {
+                text_id = 9 + city_rating_explanation_for(SELECTED_RATING_CULTURE);
+            } else {
+                text_id = 50;
+            }
+            break;
+        case SELECTED_RATING_PROSPERITY:
+        {
+            if (data.objectives.prosperity.value <= 90) {
+                text_id = 16 + city_rating_explanation_for(SELECTED_RATING_PROSPERITY);
+            } else {
+                text_id = 51;
+            }
+            break;
+        }
+        case SELECTED_RATING_PEACE:
+            if (data.objectives.peace.value <= 90) {
+                text_id = 41 + city_rating_explanation_for(SELECTED_RATING_PEACE);
+            } else {
+                text_id = 52;
+            }
+            break;
+        case SELECTED_RATING_FAVOR:
+            if (data.objectives.favor.value <= 90) {
+                text_id = 27 + city_rating_explanation_for(SELECTED_RATING_FAVOR);
+            } else {
+                text_id = 53;
+            }
+            break;
+        default:
+            return 0;
+    }
+    c->text_group = 53;
+    return text_id;
 }
 
 static void button_game_speed(int is_down, int param2)

@@ -115,7 +115,7 @@ static int draw_background(void)
         case SELECTED_RATING_CULTURE:
             lang_text_draw(53, 1, 72, 359, FONT_NORMAL_WHITE);
             if (culture <= 90) {
-                lang_text_draw_multiline(53, 9 + city_rating_selected_explanation(),
+                lang_text_draw_multiline(53, 9 + city_rating_explanation_for(SELECTED_RATING_CULTURE),
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 50, 72, 374, 496, FONT_NORMAL_WHITE);
@@ -126,7 +126,7 @@ static int draw_background(void)
             int line_width;
             lang_text_draw(53, 2, 72, 359, FONT_NORMAL_WHITE);
             if (prosperity <= 90) {
-                line_width = lang_text_draw_multiline(53, 16 + city_rating_selected_explanation(),
+                line_width = lang_text_draw_multiline(53, 16 + city_rating_explanation_for(SELECTED_RATING_PROSPERITY),
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 line_width = lang_text_draw_multiline(53, 51, 72, 374, 496, FONT_NORMAL_WHITE);
@@ -143,7 +143,7 @@ static int draw_background(void)
         case SELECTED_RATING_PEACE:
             lang_text_draw(53, 3, 72, 359, FONT_NORMAL_WHITE);
             if (peace <= 90) {
-                lang_text_draw_multiline(53, 41 + city_rating_selected_explanation(),
+                lang_text_draw_multiline(53, 41 + city_rating_explanation_for(SELECTED_RATING_PEACE),
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 52, 72, 374, 496, FONT_NORMAL_WHITE);
@@ -152,7 +152,7 @@ static int draw_background(void)
         case SELECTED_RATING_FAVOR:
             lang_text_draw(53, 4, 72, 359, FONT_NORMAL_WHITE);
             if (favor <= 90) {
-                lang_text_draw_multiline(53, 27 + city_rating_selected_explanation(),
+                lang_text_draw_multiline(53, 27 + city_rating_explanation_for(SELECTED_RATING_FAVOR),
                     72, 374, 496, FONT_NORMAL_WHITE);
             } else {
                 lang_text_draw_multiline(53, 53, 72, 374, 496, FONT_NORMAL_WHITE);

@@ -561,16 +561,12 @@ static void get_tooltip(tooltip_context *c)
         if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && formation_get_selected()) {
             text_id = widget_sidebar_military_get_tooltip_text(c);
         } else {
-            text_id = widget_sidebar_city_get_tooltip_text();
+            text_id = widget_sidebar_city_get_tooltip_text(c);
         }
     }
-    if (text_id) {
+    if (text_id || c->translation_key) {
         c->type = TOOLTIP_BUTTON;
-        if (text_id == 42) {
-            c->translation_key = TR_TOGGLE_GRID;
-        } else {
-            c->text_id = text_id;
-        }
+        c->text_id = text_id;
         return;
     }
     widget_city_get_tooltip(c);

@@ -1,6 +1,7 @@
 #ifndef WIDGET_SIDEBAR_FILLER_H
 #define WIDGET_SIDEBAR_FILLER_H
 
+#include "graphics/tooltip.h"
 #include "input/mouse.h"
 
 typedef enum {
@@ -22,6 +23,8 @@ int sidebar_extra_draw_background(int x_offset, int y_offset, int width, int hei
 void sidebar_extra_draw_foreground(void);
 
 int sidebar_extra_handle_mouse(const mouse *m);
+
+int sidebar_extra_get_tooltip(tooltip_context *c);
 
 int sidebar_extra_is_information_displayed(sidebar_extra_display display);
 

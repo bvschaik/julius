@@ -18,7 +18,7 @@ int city_rating_favor(void);
 
 selected_rating city_rating_selected(void);
 void city_rating_select(selected_rating rating);
-int city_rating_selected_explanation(void);
+int city_rating_explanation_for(selected_rating rating);
 
 void city_ratings_reduce_prosperity_after_bailout(void);
 

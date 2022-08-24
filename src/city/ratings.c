@@ -47,9 +47,9 @@ void city_rating_select(selected_rating rating)
     city_data.ratings.selected = rating;
 }
 
-int city_rating_selected_explanation(void)
+int city_rating_explanation_for(selected_rating rating)
 {
-    switch (city_data.ratings.selected) {
+    switch (rating) {
         case SELECTED_RATING_CULTURE:
             return city_data.ratings.culture_explanation;
         case SELECTED_RATING_PROSPERITY:
