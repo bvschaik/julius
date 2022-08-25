@@ -136,6 +136,16 @@ const uint8_t *city_warning_get(int position)
     return 0;
 }
 
+void city_warning_clear_id(int id)
+{
+    for (int i = 0; i < MAX_WARNINGS; i++) {
+        if (warnings[i].id == id) {
+            warnings[i].in_use = 0;
+            return;
+        }
+    }
+}
+
 void city_warning_clear_all(void)
 {
     for (int i = 0; i < MAX_WARNINGS; i++) {

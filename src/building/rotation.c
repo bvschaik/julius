@@ -154,6 +154,12 @@ void building_rotation_setup_rotation(void)
     update_rotation_message();
 }
 
+void building_rotation_remove_rotation(void)
+{
+    city_warning_clear_id(data.warning_id);
+    data.warning_id = 0;
+}
+
 int building_rotation_get_building_orientation(int building_rotation)
 {
     return (2 * building_rotation + city_view_orientation()) % 8;

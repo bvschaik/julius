@@ -358,10 +358,6 @@ static void button_menu_item(int item)
         data.selected_submenu = SUBMENU_NONE;
         window_city_show();
     }
-
-    if (building_construction_can_rotate()) {
-        building_rotation_setup_rotation();
-    }
 }
 
 static inline int remanining_length(const uint8_t *index)

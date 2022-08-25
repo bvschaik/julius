@@ -84,6 +84,7 @@ int city_has_warnings(void);
 
 const uint8_t *city_warning_get(int position);
 
+void city_warning_clear_id(int id);
 void city_warning_clear_all(void);
 void city_warning_clear_outdated(void);
 

@@ -477,6 +477,9 @@ int building_construction_can_rotate(void)
 
 void building_construction_set_type(building_type type)
 {
+    if (type != data.type) {
+        building_rotation_remove_rotation();
+    }
     data.type = type;
     data.sub_type = BUILDING_NONE;
     data.in_progress = 0;
@@ -529,6 +532,9 @@ void building_construction_set_type(building_type type)
                 break;
         }
     }
+    if (building_construction_can_rotate()) {
+        building_rotation_setup_rotation();
+    }
 }
 
 void building_construction_clear_type(void)
@@ -536,6 +542,7 @@ void building_construction_clear_type(void)
     data.cost_preview = 0;
     data.sub_type = BUILDING_NONE;
     data.type = BUILDING_NONE;
+    building_rotation_remove_rotation();
 }
 
 building_type building_construction_type(void)

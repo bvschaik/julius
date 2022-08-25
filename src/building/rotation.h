@@ -19,6 +19,7 @@ void building_rotation_rotate_forward(void);
 void building_rotation_rotate_backward(void);
 void building_rotation_reset_rotation(void);
 void building_rotation_setup_rotation(void);
+void building_rotation_remove_rotation(void);
 
 int building_rotation_type_has_rotations(building_type type);
 
