@@ -121,7 +121,7 @@ static int store_destination_map_point(int building_id, map_point *dst)
         map_point_store_result(b->x + 1, b->y + 1, dst);
     } else if (b->has_road_access == 1) {
         map_point_store_result(b->x, b->y, dst);
-    } else if (!map_has_road_access(b->x, b->y, 3, dst)) {
+    } else if (!map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, dst)) {
         return 0;
     }
     return 1;
