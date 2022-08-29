@@ -138,14 +138,18 @@ static int get_tooltip_hospital(tooltip_context *c, const building *b)
 
 static int get_tooltip_sickness(tooltip_context *c, const building *b)
 {
-    if (b->sickness_level < LOW_SICKNESS_LEVEL) {
-        c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_LOW;
-    } else if (b->sickness_level < MEDIUM_SICKNESS_LEVEL) {
-        c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_MEDIUM;
-    } else if (b->sickness_level < HIGH_SICKNESS_LEVEL) {
-        c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_HIGH;
-    } else {
-        c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_PLAGUE;
+    if (building_is_house(b->type) || b->type == BUILDING_DOCK || b->type == BUILDING_WAREHOUSE || b->type == BUILDING_GRANARY) {
+        if (b->sickness_level < 1) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_NONE;
+        } else if (b->sickness_level < LOW_SICKNESS_LEVEL) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_LOW;
+        } else if (b->sickness_level < MEDIUM_SICKNESS_LEVEL) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_MEDIUM;
+        } else if (b->sickness_level < HIGH_SICKNESS_LEVEL) {
+            c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_HIGH;
+        } else {
+            c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_PLAGUE;
+        }        
     }
     return 0;
 }
