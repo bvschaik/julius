@@ -145,7 +145,7 @@ static int cause_disease(void)
     }
 
     if (sick_people) {
-        city_message_post(1, MESSAGE_HEALTH_PESTILENCE, 0, 0);
+        city_message_post(1, MESSAGE_SICKNESS, 0, 0);
     }
 
     for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
