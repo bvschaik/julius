@@ -111,6 +111,8 @@ void city_health_dispatch_sickness(figure *f)
 static int cause_disease(void)
 {
     int sick_people = 0;
+    building_type sick_building_type = 0;
+    int grid_offset = 0;
     // Kill people who have sickness level to max in houses
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
         building *next_of_type = 0; // building_destroy_by_plague changes the building type
@@ -119,6 +121,8 @@ static int cause_disease(void)
             if (b->state == BUILDING_STATE_IN_USE && b->house_size && b->house_population) {
                 if (b->sickness_level >= MAX_SICKNESS_LEVEL) {
                     sick_people = 1;
+                    sick_building_type = b->type;
+                    grid_offset = b->grid_offset;
                     if (city_health() < 40) {
                         building_destroy_by_plague(b);
                     } else {
@@ -145,7 +149,7 @@ static int cause_disease(void)
     }
 
     if (sick_people) {
-        city_message_post(1, MESSAGE_SICKNESS, 0, 0);
+        city_message_post_with_popup_delay(1, MESSAGE_SICKNESS, sick_building_type, grid_offset);
     }
 
     for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
