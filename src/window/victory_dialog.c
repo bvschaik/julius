@@ -13,6 +13,8 @@
 #include "sound/music.h"
 #include "window/city.h"
 
+#define MAX_RANK 10
+
 static void button_accept(int param1, int param2);
 static void button_continue_governing(int months, int param2);
 
@@ -24,6 +26,21 @@ static generic_button victory_buttons[] = {
 
 static int focus_button_id = 0;
 
+static int get_next_rank(void)
+{
+    int current_rank = 0;
+    if (scenario_is_custom()) {
+        current_rank = scenario_property_player_rank();
+    } else {
+        current_rank = scenario_campaign_rank();
+    }
+    if (current_rank < MAX_RANK) {
+        return current_rank + 1;
+    } else {
+        return MAX_RANK;
+    }
+}
+
 static void draw_background(void)
 {
     window_draw_underlying_window();    	
@@ -33,7 +50,7 @@ static void draw_background(void)
     if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
         lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
         lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK);
-        lang_text_draw_centered(32, scenario_campaign_rank() + 1, 48, 194, 544, FONT_LARGE_BLACK);
+        lang_text_draw_centered(32, get_next_rank(), 48, 194, 544, FONT_LARGE_BLACK);
     } else {
         text_draw_centered(scenario_player_name(), 48, 144, 512, FONT_LARGE_BLACK, 0);
         lang_text_draw_multiline(62, 26, 140, 175, 360, FONT_NORMAL_BLACK);
