@@ -149,7 +149,7 @@ static int cause_disease(void)
     }
 
     if (sick_people) {
-        city_message_post_with_popup_delay(1, MESSAGE_SICKNESS, sick_building_type, grid_offset);
+        city_message_post_with_popup_delay(MESSAGE_CAT_ILLNESS, MESSAGE_SICKNESS, sick_building_type, grid_offset);
     }
 
     for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
