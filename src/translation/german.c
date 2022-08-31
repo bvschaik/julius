@@ -748,6 +748,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_SICKNESS_LEVEL_MEDIUM, "Einige Infektionskrankheiten sind in der Stadt aufgetreten, aber die Situation ist unter Kontrolle. Ein ausreichend hohes Niveau der Gesundheitsversorgung wird die Auswirkungen von Epidemien in der Stadt abmildern."},
     {TR_ADVISOR_SICKNESS_LEVEL_HIGH, "Ansteckende Krankheiten verbreiten sich in verschiedenen Teilen der Stadt. Wenn hier nicht bald Abhilfe geschaffen wird, könnten einige Gebäude unter Quarantäne gestellt werden. Ein besserer Zugang zur Gesundheitsversorgung würde die Ausbreitung von Epidemien in der Stadt wirksam eindämmen."},
     {TR_ADVISOR_SICKNESS_LEVEL_PLAGUE, "Die Pest ist in die Stadt gekommen! Viele Einwohner erkranken und einige Gebäude wurden unter Quarantäne gestellt oder niedergebrannt, um eine weitere Ausbreitung zu verhindern. Die wenigen Ärzte und Chirurgen, die zur Verfügung stehen, wurden angefordert, um die am stärksten betroffenen Orte zu dekontaminieren. Es muss gehandelt werden!"},
+    {TR_TOOLTIP_OVERLAY_SICKNESS_NONE, "Keine Krankheiten"},
     {TR_TOOLTIP_OVERLAY_SICKNESS_LOW, "Sehr wenige Krankheiten"},
     {TR_TOOLTIP_OVERLAY_SICKNESS_MEDIUM, "Einige Infektionskrankheiten"},
     {TR_TOOLTIP_OVERLAY_SICKNESS_HIGH, "Viele Infektionskrankheiten verbreiten sich"},
