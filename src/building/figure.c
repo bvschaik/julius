@@ -775,11 +775,11 @@ static void spawn_figure_market(building *b)
 
 static void spawn_caravanserai_supplier(building *b, int x, int y)
 {
-    if (b->figure_id2) {
-        figure *f = figure_get(b->figure_id2);
+    if (b->figure_id) {
+        figure *f = figure_get(b->figure_id);
         if (f->state != FIGURE_STATE_ALIVE ||
             (f->type != FIGURE_CARAVANSERAI_SUPPLIER && f->type != FIGURE_LABOR_SEEKER)) {
-            b->figure_id2 = 0;
+            b->figure_id = 0;
         }
         return;
     }
@@ -789,18 +789,18 @@ static void spawn_caravanserai_supplier(building *b, int x, int y)
     }
     figure *f = figure_create(FIGURE_CARAVANSERAI_SUPPLIER, x, y, DIR_0_TOP);
     f->building_id = b->id;
-    b->figure_id2 = f->id;
+    b->figure_id = f->id;
     f->collecting_item_id = b->data.market.fetch_inventory_id;
     send_supplier_to_destination(f, dst_building_id);
 }
 
 static void spawn_lighthouse_supplier(building *b, int x, int y)
 {
-    if (b->figure_id2) {
-        figure *f = figure_get(b->figure_id2);
+    if (b->figure_id) {
+        figure *f = figure_get(b->figure_id);
         if (f->state != FIGURE_STATE_ALIVE ||
             (f->type != FIGURE_LIGHTHOUSE_SUPPLIER && f->type != FIGURE_LABOR_SEEKER)) {
-            b->figure_id2 = 0;
+            b->figure_id = 0;
         }
         return;
     }
@@ -810,7 +810,7 @@ static void spawn_lighthouse_supplier(building *b, int x, int y)
     }
     figure *f = figure_create(FIGURE_LIGHTHOUSE_SUPPLIER, x, y, DIR_0_TOP);
     f->building_id = b->id;
-    b->figure_id2 = f->id;
+    b->figure_id = f->id;
     f->collecting_item_id = RESOURCE_TIMBER; // Raw Resource
     send_supplier_to_destination(f, dst_building_id);
 }
