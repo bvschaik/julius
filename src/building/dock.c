@@ -4,17 +4,26 @@
 #include "city/buildings.h"
 #include "city/resource.h"
 #include "empire/city.h"
+#include "empire/empire.h"
+#include "figure/figure.h"
+#include "figure/trader.h"
+#include "figuretype/trader.h"
+#include "game/resource.h"
 #include "map/figure.h"
 #include "map/grid.h"
 #include "map/routing.h"
+#include "map/routing_data.h"
 #include "map/terrain.h"
 #include "scenario/map.h"
-#include "empire/empire.h"
-#include "figure/trader.h"
-#include "figuretype/trader.h"
-#include "map/routing_data.h"
+
+#include <string.h>
 
 #define MAX_DISTANCE_FOR_REROUTING 50
+
+typedef struct handled_good {
+    unsigned char road_network_id;
+    int goods[RESOURCE_MAX - 1];
+} handled_good;
 
 int building_dock_count_idle_dockers(const building *dock)
 {
@@ -115,14 +124,78 @@ int building_dock_can_export_to_ship(building *dock, int ship_id)
     return 0;
 }
 
-static int get_free_destination(int ship_id, int exclude_dock_id, map_point *tile)
+// returns a list of goods that have been "handled" (i.e. the dock allowed for it to be traded) for each road network a ship has visited
+static void get_already_handled_goods(handled_good *handled_goods, int ship_id)
+{
+    memset(handled_goods, 0, sizeof(handled_good) * MAX_DOCKS);
+    figure *ship = figure_get(ship_id);
+
+    // loop through the docks
+    for (int i = 0; i < MAX_DOCKS; i++) {
+        // check and see if the ship has visited this dock
+        if (!figure_trader_ship_already_docked_at(ship, i)) {
+            continue;
+        }
+
+        // get the actual dock
+        int dock_id = city_buildings_get_working_dock(i);
+        if (!dock_id) {
+            continue;
+        }
+        building *dock = building_get(dock_id);
+
+        // find the handled_good that is on this road network or find the next one that hasn't been assigned to a road network yet
+        handled_good *current_handled_good;
+        for (int j = 0; j < MAX_DOCKS; j++) {
+            current_handled_good = &handled_goods[j];
+            if (!current_handled_good->road_network_id || current_handled_good->road_network_id == dock->road_network_id) {
+                break;
+            }
+        }
+
+        // assign the road network (in case this is a new one) and add the goods this dock handles
+        current_handled_good->road_network_id = dock->road_network_id;
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+            if (building_distribution_is_good_accepted(r - 1, dock)) {
+                current_handled_good->goods[r - 1] = 1;
+            }
+        }
+    }
+}
+
+static int all_dock_goods_already_handled(handled_good *handled_goods, building *dock, figure *ship)
+{
+    for (int i = 0; i < MAX_DOCKS; i++) {
+        handled_good *handled_good = &handled_goods[i];
+        if (handled_good->road_network_id != dock->road_network_id) {
+            continue;
+        }
+        // we've visited docks on this road network
+        for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+            if (!empire_can_import_resource_from_city(ship->empire_city_id, r) && !empire_can_export_resource_to_city(ship->empire_city_id, r)) {
+                // the ship doesn't buy or sell this good
+                continue;
+            }
+            if (building_distribution_is_good_accepted(r - 1, dock) && !handled_good->goods[r - 1]) {
+                // this dock accepts a good that all previous docks on this road network did not accept
+                return 0;
+            }
+        }
+        // all goods at this dock have already been handled on this road network
+        return 1;
+    }
+    // no matching road networks, assume unhandled
+    return 0;
+}
+
+static int get_free_destination(int ship_id, int exclude_dock_id, map_point *tile, handled_good *handled_goods)
 {
     figure *ship = figure_get(ship_id);
     int importing_dock_id = 0;
     int exporting_dock_id = 0;
     int dock_id = 0;
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < MAX_DOCKS; i++) {
         dock_id = city_buildings_get_working_dock(i);
         if (!dock_id ||
             dock_id == exclude_dock_id ||
@@ -133,6 +206,10 @@ static int get_free_destination(int ship_id, int exclude_dock_id, map_point *til
 
         building *dock = building_get(dock_id);
         if (dock->data.dock.trade_ship_id) {
+            continue;
+        }
+
+        if (all_dock_goods_already_handled(handled_goods, dock, ship)) {
             continue;
         }
 
@@ -154,13 +231,13 @@ static int get_free_destination(int ship_id, int exclude_dock_id, map_point *til
 }
 
 
-static int get_queue_destination(int ship_id, int exclude_dock_id, ship_dock_request_type request_type, map_point *tile)
+static int get_queue_destination(int ship_id, int exclude_dock_id, ship_dock_request_type request_type, map_point *tile, handled_good *handled_goods)
 {
     figure *ship = figure_get(ship_id);
     int importing_dock_id = 0;
     int exporting_dock_id = 0;
 
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < MAX_DOCKS; i++) {
         int dock_id = city_buildings_get_working_dock(i);
         if (!dock_id ||
             dock_id == exclude_dock_id ||
@@ -169,6 +246,10 @@ static int get_queue_destination(int ship_id, int exclude_dock_id, ship_dock_req
             continue;
         }
         building *dock = building_get(dock_id);
+        if (all_dock_goods_already_handled(handled_goods, dock, ship)) {
+            continue;
+        }
+
         map_point requested_tile;
         building_dock_get_ship_request_tile(dock, request_type, &requested_tile);
 
@@ -218,13 +299,17 @@ int building_dock_get_destination(int ship_id, int exclude_dock_id, map_point *t
     if (!city_buildings_has_working_dock()) {
         return 0;
     }
+
+    handled_good handled_goods[MAX_DOCKS];
+    get_already_handled_goods(handled_goods, ship_id);
+
     int dock_id = 0;
-    if ((dock_id = get_free_destination(ship_id, exclude_dock_id, tile))) {
+    if ((dock_id = get_free_destination(ship_id, exclude_dock_id, tile, handled_goods))) {
         return dock_id;
-    } else if ((dock_id = get_queue_destination(ship_id, exclude_dock_id, SHIP_DOCK_REQUEST_2_FIRST_QUEUE, tile))) {
+    } else if ((dock_id = get_queue_destination(ship_id, exclude_dock_id, SHIP_DOCK_REQUEST_2_FIRST_QUEUE, tile, handled_goods))) {
         return dock_id;
     } else {
-        return get_queue_destination(ship_id, exclude_dock_id, SHIP_DOCK_REQUEST_4_SECOND_QUEUE, tile);
+        return get_queue_destination(ship_id, exclude_dock_id, SHIP_DOCK_REQUEST_4_SECOND_QUEUE, tile, handled_goods);
     }
 }
 
@@ -234,7 +319,7 @@ int building_dock_get_closer_free_destination(int ship_id, ship_dock_request_typ
     int distance_to_destination = figure_trader_ship_get_distance_to_dock(ship, ship->destination_building_id);
     int min_distance_import = -1, min_distance_export = -1;
     int nearest_import_dock_id = 0, nearest_export_dock_id = 0;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < MAX_DOCKS; i++) {
         int dock_id = city_buildings_get_working_dock(i);
         if (!dock_id) {
             continue;

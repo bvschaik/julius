@@ -745,7 +745,7 @@ static int record_dock(figure *ship, int dock_id)
     if (dock->data.dock.trade_ship_id != 0 && dock->data.dock.trade_ship_id != ship->id) {
         return 0;
     }
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < MAX_DOCKS; i++) {
         if (dock_id == city_buildings_get_working_dock(i)) {
             ship->building_id |= 1 << i;
             dock->data.dock.trade_ship_id = ship->id;
@@ -1036,14 +1036,19 @@ int figure_trade_sea_trade_units()
 
 int figure_trader_ship_docked_once_at_dock(figure *ship, int dock_id)
 {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < MAX_DOCKS; i++) {
         if (dock_id == city_buildings_get_working_dock(i)) {
-            if (ship->building_id & 1 << i) {
+            if (figure_trader_ship_already_docked_at(ship, i)) {
                 return 1;
             }
         }
     }
     return 0;
+}
+
+int figure_trader_ship_already_docked_at(figure *ship, int dock_num)
+{
+    return ship->building_id & (1 << dock_num);
 }
 
 // if ship is moored, do not forward to another dock unless it has more than one third of capacity available.

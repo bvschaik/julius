@@ -4,6 +4,8 @@
 #include "building/building.h"
 #include "map/point.h"
 
+#define MAX_DOCKS 10
+
 typedef enum {
     SHIP_DOCK_REQUEST_1_DOCKING = 1,
     SHIP_DOCK_REQUEST_2_FIRST_QUEUE = 2,
