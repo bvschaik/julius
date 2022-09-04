@@ -580,8 +580,14 @@ static void handle_input(const mouse *m, const hotkeys *h)
             }
         }
     } else {
-        if (input_go_back_requested(m, h)) {
-            window_city_show();
+        if (m->right.went_down) {
+            scroll_drag_start(0);
+        }
+        if (m->right.went_up) {
+            int has_scrolled = scroll_drag_end();
+            if (!has_scrolled && input_go_back_requested(m, h)) {
+                window_city_show();
+            }
         }
     }
 }
