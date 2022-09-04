@@ -29,19 +29,16 @@ if ("${env:COMPILER}" -eq "msvc") {
     CopyFile build/Release/augustus.exe .
     CopyFile ext\SDL2\SDL2-${env:SDL_VERSION}\lib\x64\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\lib\x64\SDL2_mixer.dll .
-    CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\lib\x64\libmpg123-0.dll .
 } elseif ("${env:COMPILER}" -eq "mingw-32") {
     $suffix = "windows"
     CopyFile build/augustus.exe .
     CopyFile ext\SDL2\SDL2-${env:SDL_VERSION}\i686-w64-mingw32\bin\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\i686-w64-mingw32\bin\SDL2_mixer.dll .
-    CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\i686-w64-mingw32\bin\libmpg123-0.dll .
 } elseif ("${env:COMPILER}" -eq "mingw-64") {
     $suffix = "windows-64bit"
     CopyFile build/augustus.exe .
     CopyFile ext\SDL2\SDL2-${env:SDL_VERSION}\x86_64-w64-mingw32\bin\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\x86_64-w64-mingw32\bin\SDL2_mixer.dll .
-    CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\x86_64-w64-mingw32\bin\libmpg123-0.dll .
 } else {
     throw "Unknown compiler: ${env:COMPILER}"
 }
@@ -76,9 +73,9 @@ if ($repo -eq "release") {
 
     xcopy /ei res\maps .\maps
     xcopy /ei res\manual .\manual
-    7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll assets maps manual
+    7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll assets maps manual
 } else {
-    7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll libmpg123-0.dll
+    7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll
 }
 
 if (!$?) {
