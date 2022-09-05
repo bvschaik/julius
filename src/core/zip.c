@@ -720,35 +720,6 @@ static void zip_output_func(uint8_t *buffer, int length, struct pk_token *token)
     }
 }
 
-int zip_compress(const void *input_buffer, int input_length,
-                 void *output_buffer, int *output_length)
-{
-    struct pk_token token;
-    struct pk_comp_buffer *buf = (struct pk_comp_buffer *) malloc(sizeof(struct pk_comp_buffer));
-
-    if (!buf) {
-        return 0;
-    }
-
-    memset(buf, 0, sizeof(struct pk_comp_buffer));
-    memset(&token, 0, sizeof(struct pk_token));
-    token.input_data = (const uint8_t *) input_buffer;
-    token.input_length = input_length;
-    token.output_data = (uint8_t *) output_buffer;
-    token.output_length = *output_length;
-
-    int ok = 1;
-    int pk_error = pk_implode(zip_input_func, zip_output_func, buf, &token, 4096);
-    if (pk_error || token.stop) {
-        log_error("COMP Error occurred while compressing.", 0, 0);
-        ok = 0;
-    } else {
-        *output_length = token.output_ptr;
-    }
-    free(buf);
-    return ok;
-}
-
 int zip_decompress(const void *input_buffer, int input_length,
                    void *output_buffer, int *output_length)
 {
