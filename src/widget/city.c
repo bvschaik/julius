@@ -621,18 +621,21 @@ static void handle_mouse(const mouse *m)
     if (m->left.went_up) {
         build_end();
     }
-    if (m->right.went_down && input_coords_in_city(m->x, m->y) && !building_construction_type()) {
+    if (m->right.went_down && input_coords_in_city(m->x, m->y)) {
         scroll_drag_start(0);
     }
     if (m->right.went_up) {
-        if (!building_construction_type()) {
-            int has_scrolled = scroll_drag_end();
-            if (!has_scrolled && handle_right_click_allow_building_info(tile)) {
-                window_building_info_show(tile->grid_offset);
-            }
-        } else {
+        if (scroll_drag_end()) {
+            return;
+        }
+        if (building_construction_type()) {
             building_construction_cancel();
             window_request_refresh();
+            return;
+        }
+        if (handle_right_click_allow_building_info(tile)) {
+            window_building_info_show(tile->grid_offset);
+            return;
         }
     }
 }
