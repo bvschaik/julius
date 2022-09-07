@@ -632,7 +632,8 @@ static void draw_elevated_figures(int x, int y, int grid_offset)
     while (figure_id > 0) {
         figure *f = figure_get(figure_id);
         if ((f->use_cross_country && !f->is_ghost && !f->dont_draw_elevated) || f->height_adjusted_ticks) {
-            city_draw_figure(f, x, y, draw_context.scale, 0);
+            int highlight = f->formation_id > 0 && f->formation_id == draw_context.highlighted_formation;
+            city_draw_figure(f, x, y, draw_context.scale, highlight);
         }
         figure_id = f->next_figure_id_on_same_tile;
     }
