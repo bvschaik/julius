@@ -49,7 +49,7 @@ static struct {
     int capture_input;
 } data;
 
-static void set_city_clip_rectangle(void)
+void set_city_clip_rectangle(void)
 {
     int x, y, width, height;
     city_view_get_viewport(&x, &y, &width, &height);

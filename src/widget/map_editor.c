@@ -106,13 +106,6 @@ static void draw_flags(int x, int y, int grid_offset)
     }
 }
 
-static void set_city_clip_rectangle(void)
-{
-    int x, y, width, height;
-    city_view_get_viewport(&x, &y, &width, &height);
-    graphics_set_clip_rectangle(x, y, width, height);
-}
-
 static void display_zoom_warning(int zoom)
 {
     static uint8_t zoom_string[100];
