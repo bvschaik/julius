@@ -122,7 +122,7 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: windows-latest
     env:
-      SDL_VERSION: 2.24.0
+      SDL_VERSION: 2.0.20
       SDL_MIXER_VERSION: 2.6.2
       COMPILER: ${{ matrix.COMPILER }}
       SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
