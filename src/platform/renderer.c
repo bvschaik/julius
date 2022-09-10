@@ -40,7 +40,7 @@
 
 #define MAX_PACKED_IMAGE_SIZE 64000
 
-#if (defined(__ANDROID__) || defined(__EMSCRIPTEN__)) AND NOT SDL_VERSION_ATLEAST(2, 24, 0)
+#if (defined(__ANDROID__) || defined(__EMSCRIPTEN__)) && !SDL_VERSION_ATLEAST(2, 24, 0)
 // On the arm versions of android, on SDL < 2.24.0, atlas textures that are too large will make the renderer fetch
 // some images from the atlas with an off-by-one pixel, making things look terrible. Defining a smaller atlas texture
 // prevents the problem, at the cost of performance due to the extra texture context switching.
