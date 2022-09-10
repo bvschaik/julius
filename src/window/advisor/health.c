@@ -60,17 +60,10 @@ static int draw_background(void)
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 6, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
 
     int sickness_level = city_health_get_global_sickness_level();
-    int text_id = city_health() / 10 + 16;
-
-    if (sickness_level == SICKNESS_LEVEL_HIGH) {
-        text_id = 18;
-    } else if (sickness_level == SICKNESS_LEVEL_PLAGUE) {
-        text_id = 16;
-    }
 
     lang_text_draw(56, 0, 60, 12, FONT_LARGE_BLACK);
     if (city_population() >= 200) {
-        lang_text_draw_multiline(56, text_id, 60, 46, 512, FONT_NORMAL_BLACK);
+        lang_text_draw_multiline(56, city_health() / 10 + 16, 60, 46, 512, FONT_NORMAL_BLACK);
     } else {
         lang_text_draw_multiline(56, 15, 60, 46, 512, FONT_NORMAL_BLACK);
     }

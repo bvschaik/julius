@@ -396,31 +396,18 @@ int city_health_get_global_sickness_level(void)
         }
     }
 
-    int plague_incoming;
-
-    if (max_sickness_level >= HIGH_SICKNESS_LEVEL) {
-        plague_incoming = 2;
-    } else if (max_sickness_level >= MEDIUM_SICKNESS_LEVEL) {
-        plague_incoming = 1;
-    } else {
-        plague_incoming = 0;
-    }
-
     if (building_number == 0) {
         return SICKNESS_LEVEL_LOW;
     }
 
-    int global_rating = building_sickness_level / building_number;
-    int global_sickness_level;
+    int global_sickness_level = SICKNESS_LEVEL_LOW;
 
-    if (global_rating < LOW_SICKNESS_LEVEL && !plague_incoming) {
-        global_sickness_level = SICKNESS_LEVEL_LOW;
-    } else if (global_rating < MEDIUM_SICKNESS_LEVEL && !plague_incoming) {
-        global_sickness_level = SICKNESS_LEVEL_MEDIUM;
-    } else if (global_rating < HIGH_SICKNESS_LEVEL && plague_incoming == 1) {
-        global_sickness_level = SICKNESS_LEVEL_HIGH;
-    } else {
+    if (max_sickness_level == MAX_SICKNESS_LEVEL) { // one or many houses is plagued
         global_sickness_level = SICKNESS_LEVEL_PLAGUE;
+    } else if (max_sickness_level >= HIGH_SICKNESS_LEVEL) { // one or many houses have sickness_level >= 90
+        global_sickness_level = SICKNESS_LEVEL_HIGH;
+    } else if (max_sickness_level >= MEDIUM_SICKNESS_LEVEL) { // one or many houses have sickness_level >= 60
+        global_sickness_level = SICKNESS_LEVEL_MEDIUM;
     }
 
     return global_sickness_level;
