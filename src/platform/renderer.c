@@ -40,6 +40,14 @@
 
 #define MAX_PACKED_IMAGE_SIZE 64000
 
+#if (defined(__ANDROID__) || defined(__EMSCRIPTEN__)) AND NOT SDL_VERSION_ATLEAST(2, 24, 0)
+// On the arm versions of android, on SDL < 2.24.0, atlas textures that are too large will make the renderer fetch
+// some images from the atlas with an off-by-one pixel, making things look terrible. Defining a smaller atlas texture
+// prevents the problem, at the cost of performance due to the extra texture context switching.
+// This also happens on emscripten for android, hence the emscripten inclusion.
+#define MAX_TEXTURE_SIZE 1024
+#endif
+
 #ifdef __vita__
 // On Vita, due to the small amount of VRAM, having textures that are too large will cause the game to eventually crash
 // when changing climates, due to lack of contiguous memory space. Creating smaller atlases mitigates the issue

@@ -50,7 +50,7 @@ jobs:
           - name: Android
             os: ubuntu-20.04
             cache-key: android
-            SDL_VERSION: 2.24.0
+            SDL_VERSION: 2.0.20
             SDL_MIXER_VERSION: 2.6.2
             BUILD_TARGET: android
             DEPLOY: android
