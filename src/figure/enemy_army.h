@@ -3,6 +3,8 @@
 
 #include "core/buffer.h"
 
+#define MAX_ENEMY_ARMIES 125
+
 typedef struct {
     int formation_id;
     int layout;

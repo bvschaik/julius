@@ -1,7 +1,5 @@
 #include "enemy_army.h"
 
-#define MAX_ENEMY_ARMIES 125
-
 #include "figure/formation.h"
 #include "map/soldier_strength.h"
 

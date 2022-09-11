@@ -60,7 +60,7 @@
 
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x89;
+static const int SAVE_GAME_CURRENT_VERSION = 0x8a;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
@@ -76,6 +76,7 @@ static const int SAVE_GAME_INCREASE_GRANARY_CAPACITY = 0x85;
 static const int SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION = 0x86;
 static const int SAVE_GAME_LAST_CARAVANSERAI_WRONG_OFFSET = 0x87;
 static const int SAVE_GAME_LAST_ZIP_COMPRESSION = 0x88;
+static const int SAVE_GAME_LAST_ENEMY_ARMIES_BUFFER_BUG = 0x89;
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -207,6 +208,7 @@ typedef struct {
         int building_list_large;
         int building_storages;
         int monument_deliveries;
+        int enemy_armies;
     } piece_sizes;
     struct {
         int culture1;
@@ -328,8 +330,8 @@ static void get_version_data(savegame_version_data *version_data, int version)
     version_data->piece_sizes.building_list_small = 1000 * multiplier;
     version_data->piece_sizes.building_list_large = 4000 * multiplier;
     version_data->piece_sizes.building_storages = 6400 * multiplier;
-    version_data->piece_sizes.monument_deliveries = version > SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION ?
-        PIECE_SIZE_DYNAMIC : 3200;
+    version_data->piece_sizes.monument_deliveries = version > SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION ? PIECE_SIZE_DYNAMIC : 3200;
+    version_data->piece_sizes.enemy_armies = version > SAVE_GAME_LAST_ENEMY_ARMIES_BUFFER_BUG ? (MAX_ENEMY_ARMIES * sizeof(int) * 9) : 900;
 
     version_data->building_counts.culture1 = 132 * count_multiplier;
     version_data->building_counts.culture2 = 32 * count_multiplier;
@@ -426,7 +428,7 @@ static void init_savegame_data(int version)
     state->building_extra_sequence = create_savegame_piece(4, 0);
     state->routing_counters = create_savegame_piece(16, 0);
     state->building_count_culture3 = create_savegame_piece(version_data.building_counts.culture3, 0);
-    state->enemy_armies = create_savegame_piece(900, 0);
+    state->enemy_armies = create_savegame_piece(version_data.piece_sizes.enemy_armies, 0);
     state->city_entry_exit_xy = create_savegame_piece(16, 0);
     state->last_invasion_id = create_savegame_piece(2, 0);
     state->building_extra_corrupt_houses = create_savegame_piece(8, 0);
