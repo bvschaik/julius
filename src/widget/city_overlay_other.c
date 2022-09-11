@@ -391,17 +391,14 @@ static void draw_footprint_water(int x, int y, float scale, int grid_offset)
     if (!map_property_is_draw_tile(grid_offset)) {
         return;
     }
-    if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
-        if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
-        } else {
-            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0, scale);
-        }
+    int is_building = map_terrain_is(grid_offset, TERRAIN_BUILDING);
+    if (map_terrain_is(grid_offset, terrain_on_water_overlay()) && !is_building) {
+        image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0, scale);
     } else if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
         // display grass
         int image_id = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0, scale);
-    } else if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+    } else if (is_building) {
         building *b = building_get(map_building_at(grid_offset));
         int terrain = map_terrain_get(grid_offset);
         if (b->id && (b->has_well_access || (b->house_size && b->has_water_access))) {
