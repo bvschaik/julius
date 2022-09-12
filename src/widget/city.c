@@ -708,17 +708,21 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
             data.capture_input = 0;
         }
     }
-    if (m->right.went_up || h->escape_pressed) {
+    
+    zoom_map(m, city_view_get_scale());
+
+    if ((!m->is_touch && m->left.went_down)
+        || (m->is_touch && m->left.went_up && touch_was_click(touch_get_earliest()))) {
+        military_map_click(legion_formation_id, tile);
+    }
+
+    if (m->right.went_down && input_coords_in_city(m->x, m->y)) {
+        scroll_drag_start(0);
+    }
+    if ((m->right.went_up && !scroll_drag_end()) || h->escape_pressed) {
         data.capture_input = 0;
         city_warning_clear_all();
         window_city_show();
-    } else {
-        update_city_view_coords(m->x, m->y, tile);
-        zoom_map(m, city_view_get_scale());
-        if ((!m->is_touch && m->left.went_down)
-            || (m->is_touch && m->left.went_up && touch_was_click(touch_get_earliest()))) {
-            military_map_click(legion_formation_id, tile);
-        }
     }
 }
 
