@@ -328,6 +328,7 @@ static void set_initial_options(void)
 
 static int init(void)
 {
+    image_load_fonts(encoding_get());
     set_initial_options();
     update_asset_groups_list();
     create_selection_lists();
