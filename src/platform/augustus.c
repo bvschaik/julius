@@ -290,6 +290,11 @@ static void handle_event(SDL_Event *event)
         case SDL_KEYUP:
             platform_handle_key_up(&event->key);
             break;
+#if defined(__ANDROID__) && SDL_VERSION_ATLEAST(2, 24, 0)
+        case SDL_TEXTEDITING:
+            platform_handle_editing_text(&event->editExt);
+            break;
+#endif
         case SDL_TEXTINPUT:
             platform_handle_text(&event->text);
             break;

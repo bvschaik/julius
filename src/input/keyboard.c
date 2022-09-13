@@ -14,6 +14,7 @@ static struct {
     void (*capture_numeric_callback)(int);
 
     uint8_t *text;
+    int editing_length;
     int cursor_position;
     int length;
     int max_length;
@@ -360,26 +361,38 @@ static int keyboard_character(uint8_t *text)
     return bytes;
 }
 
-void keyboard_text(const char *text_utf8)
+void keyboard_editing_text(const char *text_utf8)
 {
+    for (int i = 0; i < data.editing_length; i++) {
+        keyboard_backspace();
+    }
+    data.editing_length = keyboard_text(text_utf8);
+}
+
+int keyboard_text(const char *text_utf8)
+{
+    data.editing_length = 0;
     if (data.capture_numeric) {
         char c = text_utf8[0];
         if (c >= '0' && c <= '9') {
             data.capture_numeric_callback(c - '0');
         }
-        return;
+        return 1;
     }
     if (!data.capture) {
-        return;
+        return 1;
     }
 
     uint8_t internal_char[100];
     encoding_from_utf8(text_utf8, internal_char, 100);
 
     int index = 0;
+    int length = 0;
     while (internal_char[index]) {
         index += keyboard_character(&internal_char[index]);
+        length++;
     }
+    return length;
 }
 
 const uint8_t *keyboard_get_text(void)

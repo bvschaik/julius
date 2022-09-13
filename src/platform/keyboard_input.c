@@ -322,6 +322,11 @@ void platform_handle_key_up(SDL_KeyboardEvent *event)
     hotkey_key_released(key, mod);
 }
 
+void platform_handle_editing_text(SDL_TextEditingEvent *event)
+{
+    keyboard_editing_text(event->text);
+}
+
 void platform_handle_text(SDL_TextInputEvent *event)
 {
     keyboard_text(event->text);
