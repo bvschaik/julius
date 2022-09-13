@@ -398,7 +398,7 @@ int city_health_get_global_sickness_level(void)
 
     if (max_sickness_level < MAX_SICKNESS_LEVEL) {
         for (building *b = building_first_of_type(BUILDING_BURNING_RUIN); b; b = b->next_of_type) {
-            if (b->state != BUILDING_STATE_IN_USE && b->has_plague) {
+            if (b->state == BUILDING_STATE_IN_USE && b->has_plague) {
                 max_sickness_level = MAX_SICKNESS_LEVEL;
                 break;
             }
