@@ -1035,6 +1035,8 @@ static int load_multibyte_font(multibyte_font_type type)
 
 int image_load_fonts(encoding_type encoding)
 {
+    graphics_renderer()->get_max_image_size(&data.max_image_width, &data.max_image_height);
+
     if (encoding == ENCODING_CYRILLIC) {
         return load_cyrillic_fonts();
     } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
@@ -1056,6 +1058,8 @@ int image_load_enemy(int enemy_id)
     if (enemy_id == data.current_enemy && graphics_renderer()->has_image_atlas(ATLAS_ENEMY)) {
         return 1;
     }
+
+    graphics_renderer()->get_max_image_size(&data.max_image_width, &data.max_image_height);
 
     const char *filename_bmp = ENEMY_GRAPHICS_555[enemy_id];
     const char *filename_idx = ENEMY_GRAPHICS_SG2[enemy_id];
