@@ -65,7 +65,7 @@ void house_service_decay_houses_covered(void)
 {
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
-        if (b->state != BUILDING_STATE_UNUSED && b->type != BUILDING_TOWER) {
+        if (b->state != BUILDING_STATE_UNUSED && b->type != BUILDING_TOWER && b->type != BUILDING_WATCHTOWER) {
             if (b->houses_covered <= 1) {
                 b->houses_covered = 0;
             } else {
