@@ -61,6 +61,10 @@ int city_warning_show(warning_type type, int id)
         text = translation_for(TR_CITY_WARNING_DATA_PASTE_NOT_SUPPORTED);
     } else if (type == WARNING_DATA_PASTE_SUCCESS) {
         text = translation_for(TR_CITY_WARNING_DATA_PASTE_SUCCESS);
+    } else if (type == WARNING_DATA_MOTHBALL_ON) {
+        text = translation_for(TR_CITY_WARNING_DATA_MOTHBALL_ON);
+    } else if (type == WARNING_DATA_MOTHBALL_OFF) {
+        text = translation_for(TR_CITY_WARNING_DATA_MOTHBALL_OFF);
     } else {
         text = lang_get_string(19, type - 2);
     }

@@ -288,6 +288,10 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             def->action = &data.hotkey_state.building;
             def->value = BUILDING_DOCTOR;
             break;
+        case HOTKEY_BUILD_BARBER:
+            def->action = &data.hotkey_state.building;
+            def->value = BUILDING_BARBER;
+            break;
         case HOTKEY_BUILD_ROADBLOCK:
             def->action = &data.hotkey_state.building;
             def->value = BUILDING_ROADBLOCK;
@@ -297,6 +301,9 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             break;
         case HOTKEY_UNDO:
             def->action = &data.hotkey_state.undo;
+            break;
+        case HOTKEY_MOTHBALL_TOGGLE:
+            def->action = &data.hotkey_state.mothball_toggle;
             break;
         case HOTKEY_COPY_BUILDING_SETTINGS:
             def->action = &data.hotkey_state.copy_building_settings;

@@ -498,6 +498,20 @@ static void handle_hotkeys(const hotkeys *h)
         game_undo_perform();
         window_invalidate();
     }
+    if (h->mothball_toggle) {
+        int building_id = map_building_at(widget_city_current_grid_offset());
+        if (building_id) {
+            building *b = building_main(building_get(building_id));
+            building_mothball_toggle(b);
+            if (b->state == BUILDING_STATE_IN_USE) {
+                city_warning_clear_all();
+                city_warning_show(WARNING_DATA_MOTHBALL_OFF, NEW_WARNING_SLOT);
+            } else if (b->state == BUILDING_STATE_MOTHBALLED) {
+                city_warning_clear_all();
+                city_warning_show(WARNING_DATA_MOTHBALL_ON, NEW_WARNING_SLOT);
+            }
+        }
+    }
     if (h->clone_building) {
         building_type type = building_clone_type_from_grid_offset(widget_city_current_grid_offset());
         if (type) {

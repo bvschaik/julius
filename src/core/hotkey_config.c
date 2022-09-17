@@ -34,6 +34,7 @@ static const char *ini_keys[] = {
     "build_prefecture",
     "build_engineers_post",
     "build_doctor",
+    "build_barber",
     "build_granary",
     "build_warehouse",
     "build_market",
@@ -87,6 +88,7 @@ static const char *ini_keys[] = {
     "copy_building_settings",
     "paste_building_settings",
     "undo",
+    "mothball_toggle",
     "show_overlay_food_stocks",
     "show_overlay_entertainment",
     "show_overlay_education",
@@ -160,6 +162,7 @@ static void init_defaults(void)
     set_mapping(KEY_TYPE_END, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_RIGHT);
     set_layout_mapping("R", KEY_TYPE_R, KEY_MOD_NONE, HOTKEY_ROTATE_BUILDING);
     set_layout_mapping("Q", KEY_TYPE_Q, KEY_MOD_NONE, HOTKEY_BUILD_CLONE);
+    set_layout_mapping("X", KEY_TYPE_X, KEY_MOD_NONE, HOTKEY_MOTHBALL_TOGGLE);
     set_mapping(KEY_TYPE_1, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_LABOR);
     set_mapping(KEY_TYPE_2, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_MILITARY);
     set_mapping(KEY_TYPE_3, KEY_MOD_NONE, HOTKEY_SHOW_ADVISOR_IMPERIAL);
