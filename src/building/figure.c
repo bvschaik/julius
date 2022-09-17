@@ -221,10 +221,6 @@ static void spawn_figure_tower(building *b)
             f->building_id = b->id;
             f->action_state = FIGURE_ACTION_180_BALLISTA_CREATED;
         }
-        has_figure_of_type(b, FIGURE_TOWER_SENTRY);
-        if (b->figure_id <= 0) {
-            building_barracks_request_tower_sentry();
-        }
     }
 }
 
@@ -1665,7 +1661,6 @@ static void spawn_figure_watchtower(building *b)
         int spawn_delay;
 
         if (!b->figure_id4) { // Don't spawn watchmen until they get sentry from the barracks
-            building_barracks_request_tower_sentry();
             return;
         }
 
@@ -1714,7 +1709,6 @@ static void update_native_crop_progress(building *b)
 void building_figure_generate(void)
 {
     int patrician_generated = 0;
-    building_barracks_decay_tower_sentry_request();
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {

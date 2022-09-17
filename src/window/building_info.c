@@ -342,7 +342,9 @@ static void init(int grid_offset)
                 break;
             case BUILDING_BARRACKS:
                 context.barracks_soldiers_requested = formation_legion_recruits_needed();
-                context.barracks_soldiers_requested += building_barracks_has_tower_sentry_request();
+                if (building_barracks_get_unmanned_tower(b, 0)) {
+                    context.barracks_soldiers_requested++;
+                }
                 break;
             default:
                 if (b->house_size) {

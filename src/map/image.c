@@ -86,11 +86,6 @@ void map_image_save_state_legacy(buffer *buf)
     map_grid_save_state_u32_to_u16(images.items, buf);
 }
 
-void map_image_save_state(buffer *buf)
-{
-    map_grid_save_state_u32(images.items, buf);
-}
-
 void map_image_load_state_legacy(buffer *buf)
 {
     map_grid_load_state_u16_to_u32(images.items, buf);

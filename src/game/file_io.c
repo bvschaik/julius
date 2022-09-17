@@ -60,7 +60,7 @@
 
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x8a;
+static const int SAVE_GAME_CURRENT_VERSION = 0x8b;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
@@ -77,6 +77,7 @@ static const int SAVE_GAME_LAST_ORIGINAL_TERRAIN_DATA_SIZE_VERSION = 0x86;
 static const int SAVE_GAME_LAST_CARAVANSERAI_WRONG_OFFSET = 0x87;
 static const int SAVE_GAME_LAST_ZIP_COMPRESSION = 0x88;
 static const int SAVE_GAME_LAST_ENEMY_ARMIES_BUFFER_BUG = 0x89;
+static const int SAVE_GAME_LAST_BARRACKS_TOWER_SENTRY_REQUEST = 0x8a;
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -220,6 +221,7 @@ typedef struct {
     } building_counts;
     int has_image_grid;
     int has_monument_deliveries;
+    int has_barracks_tower_sentry_request;
 } savegame_version_data;
 
 static struct {
@@ -342,6 +344,7 @@ static void get_version_data(savegame_version_data *version_data, int version)
 
     version_data->has_image_grid = version <= SAVE_GAME_LAST_STORED_IMAGE_IDS;
     version_data->has_monument_deliveries = version > SAVE_GAME_LAST_NO_DELIVERIES_VERSION;
+    version_data->has_barracks_tower_sentry_request = version <= SAVE_GAME_LAST_BARRACKS_TOWER_SENTRY_REQUEST;
 }
 
 static void init_savegame_data(int version)
@@ -424,7 +427,9 @@ static void init_savegame_data(int version)
     state->gladiator_revolt = create_savegame_piece(16, 0);
     state->trade_route_limit = create_savegame_piece(1280, 1);
     state->trade_route_traded = create_savegame_piece(1280, 1);
-    state->building_barracks_tower_sentry = create_savegame_piece(4, 0);
+    if (version_data.has_barracks_tower_sentry_request) {
+        state->building_barracks_tower_sentry = create_savegame_piece(4, 0);
+    }
     state->building_extra_sequence = create_savegame_piece(4, 0);
     state->routing_counters = create_savegame_piece(16, 0);
     state->building_count_culture3 = create_savegame_piece(version_data.building_counts.culture3, 0);
@@ -513,7 +518,6 @@ static void savegame_load_from_state(savegame_state *state, int version)
         state->building_extra_corrupt_houses,
         version > SAVE_GAME_LAST_STATIC_VERSION,
         version);
-    building_barracks_load_state(state->building_barracks_tower_sentry);
     city_view_load_state(state->city_view_orientation, state->city_view_camera);
     game_time_load_state(state->game_time);
     random_load_state(state->random_iv);
@@ -607,7 +611,6 @@ static void savegame_save_to_state(savegame_state *state)
         state->building_extra_highest_id_ever,
         state->building_extra_sequence,
         state->building_extra_corrupt_houses);
-    building_barracks_save_state(state->building_barracks_tower_sentry);
     city_view_save_state(state->city_view_orientation, state->city_view_camera);
     game_time_save_state(state->game_time);
     random_save_state(state->random_iv);

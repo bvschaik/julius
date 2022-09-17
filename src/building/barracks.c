@@ -16,8 +16,6 @@
 
 #define INFINITE 10000
 
-static int tower_sentry_request = 0;
-
 static int is_valid_destination(building *b, int road_network_id)
 {
     return b->state == BUILDING_STATE_IN_USE && map_has_road_access(b->x, b->y, b->size, 0) &&
@@ -154,7 +152,7 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
     return formation_id ? 1 : 0;
 }
 
-static building *get_unmanned_tower(building_type type, building *barracks, map_point *road)
+static building *get_unmanned_tower_of_type(building_type type, building *barracks, map_point *road)
 {
     for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
         if (b->state == BUILDING_STATE_IN_USE && b->num_workers > 0 &&
@@ -167,23 +165,23 @@ static building *get_unmanned_tower(building_type type, building *barracks, map_
     return 0;
 }
 
+building *building_barracks_get_unmanned_tower(building *barracks, map_point *road)
+{
+    building *tower = get_unmanned_tower_of_type(BUILDING_TOWER, barracks, road);
+    if (tower) {
+        return tower;
+    }
+    tower = get_unmanned_tower_of_type(BUILDING_WATCHTOWER, barracks, road);
+    return tower;
+}
+
 int building_barracks_create_tower_sentry(building *barracks, int x, int y)
 {
     map_point road;
-    if (tower_sentry_request <= 0) {
+    building *tower = building_barracks_get_unmanned_tower(barracks, &road);
+    if (!tower) {
         return 0;
     }
-    building *tower = 0;
-
-    tower = get_unmanned_tower(BUILDING_TOWER, barracks, &road);
-    if (!tower) { // If no unmanned towers, check watchtowers
-        tower = get_unmanned_tower(BUILDING_WATCHTOWER, barracks, &road);
-        if (!tower) {
-            return 0;
-        }
-    }
-
-
     figure *f = figure_create(FIGURE_TOWER_SENTRY, x, y, DIR_0_TOP);
     f->action_state = FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER;
     if (map_has_road_access(tower->x, tower->y, tower->size, &road)) {
@@ -195,33 +193,6 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
     tower->figure_id = f->id;
     f->building_id = tower->id;
     return 1;
-}
-
-void building_barracks_request_tower_sentry(void)
-{
-    tower_sentry_request = 2;
-}
-
-void building_barracks_decay_tower_sentry_request(void)
-{
-    if (tower_sentry_request > 0) {
-        tower_sentry_request--;
-    }
-}
-
-int building_barracks_has_tower_sentry_request(void)
-{
-    return tower_sentry_request;
-}
-
-void building_barracks_save_state(buffer *buf)
-{
-    buffer_write_i32(buf, tower_sentry_request);
-}
-
-void building_barracks_load_state(buffer *buf)
-{
-    tower_sentry_request = buffer_read_i32(buf);
 }
 
 void building_barracks_toggle_priority(building *barracks)
