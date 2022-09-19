@@ -5,6 +5,8 @@
 #include "building/construction.h"
 #include "building/data_transfer.h"
 #include "building/menu.h"
+#include "building/model.h"
+#include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/type.h"
@@ -41,6 +43,7 @@
 #include "widget/sidebar/extra.h"
 #include "widget/sidebar/military.h"
 #include "window/advisors.h"
+#include "window/building_info.h"
 #include "window/empire.h"
 #include "window/file_dialog.h"
 #include "window/message_list.h"
@@ -378,6 +381,27 @@ static void show_overlay_from_grid_offset(int grid_offset)
     }
 }
 
+static int has_storage_orders(building_type type)
+{
+    return type == BUILDING_WAREHOUSE ||
+        type == BUILDING_WAREHOUSE_SPACE ||
+        type == BUILDING_GRANARY ||
+        type == BUILDING_MARKET ||
+        type == BUILDING_DOCK ||
+        type == BUILDING_MESS_HALL ||
+        type == BUILDING_TAVERN ||
+        type == BUILDING_ROADBLOCK ||
+        type == BUILDING_CARAVANSERAI ||
+        type == BUILDING_GARDEN_WALL_GATE ||
+        type == BUILDING_HEDGE_GATE_DARK ||
+        type == BUILDING_HEDGE_GATE_LIGHT ||
+        type == BUILDING_PALISADE_GATE ||
+        (type == BUILDING_SMALL_TEMPLE_CERES && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) ||
+        (type == BUILDING_LARGE_TEMPLE_CERES && building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) ||
+        (type == BUILDING_SMALL_TEMPLE_VENUS && building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD)) ||
+        (type == BUILDING_LARGE_TEMPLE_VENUS && building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD));
+}
+
 static void cycle_legion(void)
 {
     static int current_legion_id = 1;
@@ -500,15 +524,26 @@ static void handle_hotkeys(const hotkeys *h)
     }
     if (h->mothball_toggle) {
         int building_id = map_building_at(widget_city_current_grid_offset());
-        if (building_id) {
+        building *b = building_main(building_get(building_id));
+        if (building_id && model_get_building(b->type)->laborers) {
+                building_mothball_toggle(b);
+                if (b->state == BUILDING_STATE_IN_USE) {
+                    city_warning_clear_all();
+                    city_warning_show(WARNING_DATA_MOTHBALL_OFF, NEW_WARNING_SLOT);
+                } else if (b->state == BUILDING_STATE_MOTHBALLED) {
+                    city_warning_clear_all();
+                    city_warning_show(WARNING_DATA_MOTHBALL_ON, NEW_WARNING_SLOT);
+                }
+        }
+    }
+    if (h->storage_order) {
+        int grid_offset = widget_city_current_grid_offset();
+        int building_id = map_building_at(grid_offset);       
+        if (building_id) {   
             building *b = building_main(building_get(building_id));
-            building_mothball_toggle(b);
-            if (b->state == BUILDING_STATE_IN_USE) {
-                city_warning_clear_all();
-                city_warning_show(WARNING_DATA_MOTHBALL_OFF, NEW_WARNING_SLOT);
-            } else if (b->state == BUILDING_STATE_MOTHBALLED) {
-                city_warning_clear_all();
-                city_warning_show(WARNING_DATA_MOTHBALL_ON, NEW_WARNING_SLOT);
+            if (has_storage_orders(b->type)) {
+                    window_building_info_show(grid_offset);
+                    window_building_info_show_storage_orders();
             }
         }
     }

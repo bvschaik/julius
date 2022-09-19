@@ -305,6 +305,9 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
         case HOTKEY_MOTHBALL_TOGGLE:
             def->action = &data.hotkey_state.mothball_toggle;
             break;
+        case HOTKEY_STORAGE_ORDER:
+            def->action = &data.hotkey_state.storage_order;
+            break;
         case HOTKEY_COPY_BUILDING_SETTINGS:
             def->action = &data.hotkey_state.copy_building_settings;
             break;
