@@ -122,6 +122,8 @@ typedef struct {
         int x_home;
         int y_home;
     } prev;
+
+    int target_formation_id;
 } formation;
 
 void formations_clear(void);
@@ -182,6 +184,6 @@ void formation_calculate_figures(void);
 void formation_update_all(int second_time);
 
 void formations_save_state(buffer *buf, buffer *totals);
-void formations_load_state(buffer *buf, buffer *totals, int includes_buffer_size);
+void formations_load_state(buffer *buf, buffer *totals, int version);
 
 #endif // FIGURE_FORMATION_H

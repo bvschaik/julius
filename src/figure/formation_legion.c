@@ -112,21 +112,36 @@ static int prepare_to_move(formation *m)
     return 1;
 }
 
-void formation_legion_move_to(formation *m, int x, int y)
+void formation_legion_move_to(formation *m, const map_tile *tile)
 {
     map_routing_calculate_distances(m->x_home, m->y_home);
-    if (map_routing_distance(map_grid_offset(x, y)) <= 0) {
+    if (map_routing_distance(tile->grid_offset) <= 0) {
         return; // unable to route there
     }
-    if (x == m->x_home && y == m->y_home) {
+    if (tile->x == m->x_home && tile->y == m->y_home) {
         return; // use formation_legion_return_home
     }
     if (m->cursed_by_mars) {
         return;
     }
-    m->standard_x = x;
-    m->standard_y = y;
+    m->standard_x = tile->x;
+    m->standard_y = tile->y;
     m->is_at_fort = 0;
+    m->target_formation_id = 0;
+
+    int figure_id = map_figure_at(tile->grid_offset);
+    while (figure_id) {
+        figure *f = figure_get(figure_id);
+        if (f->formation_id) {
+            formation *formation = formation_get(f->formation_id);
+            if (!formation->is_legion) {
+                m->target_formation_id = formation->id;
+                break;
+            }
+        }
+        
+        figure_id = f->next_figure_id_on_same_tile;
+    }
 
     if (m->morale <= 20) {
         city_warning_show(WARNING_LEGION_MORALE_TOO_LOW, NEW_WARNING_SLOT);
@@ -317,9 +332,26 @@ static int is_legion(figure *f)
     return 0;
 }
 
+static int is_herd(figure *f)
+{
+    if (figure_is_herd(f)) {
+        return f->formation_id;
+    }
+    return 0;
+}
+
 int formation_legion_at_grid_offset(int grid_offset)
 {
     return map_figure_foreach_until(grid_offset, is_legion);
+}
+
+int formation_legion_or_herd_at_grid_offset(int grid_offset)
+{
+    int formation_id = map_figure_foreach_until(grid_offset, is_legion);
+    if (formation_id) {
+        return formation_id;
+    }
+    return map_figure_foreach_until(grid_offset, is_herd);
 }
 
 int formation_legion_at_building(int grid_offset)

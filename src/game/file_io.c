@@ -503,7 +503,7 @@ static void savegame_load_from_state(savegame_state *state, int version)
     map_elevation_load_state(state->elevation_grid);
     figure_load_state(state->figures, state->figure_sequence, version > SAVE_GAME_LAST_STATIC_VERSION);
     figure_route_load_state(state->route_figures, state->route_paths);
-    formations_load_state(state->formations, state->formation_totals, version > SAVE_GAME_LAST_STATIC_VERSION);
+    formations_load_state(state->formations, state->formation_totals, version);
 
     city_data_load_state(state->city_data,
         state->city_faction,

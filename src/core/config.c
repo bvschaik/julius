@@ -62,6 +62,7 @@ static const char *ini_keys[] = {
     "gameplay_change_disable_infinite_wolves_spawning",
     "gameplay_change_romers_dont_skip_corners",
     "gameplay_change_yearly_autosave",
+    "gameplay_change_auto_kill_animals",
 };
 
 static const char *ini_string_keys[] = {

@@ -20,6 +20,7 @@
 #define FORMATION_ARRAY_SIZE_STEP 50
 #define ORIGINAL_BUFFER_SIZE_PER_FORMATION 128
 #define CURRENT_BUFFER_SIZE_PER_FORMATION 128
+#define SAVE_GAME_LAST_STATIC_VERSION 0x78
 
 static array(formation) formations;
 
@@ -80,6 +81,7 @@ formation *formation_create_legion(int building_id, int x, int y, figure_type ty
     building *fort_ground = building_get(building_get(building_id)->next_part_building_id);
     m->x = m->standard_x = m->x_home = fort_ground->x;
     m->y = m->standard_y = m->y_home = fort_ground->y;
+    m->target_formation_id = 0;
 
     data.num_legions++;
     if (m->id > data.id_last_in_use) {
@@ -112,6 +114,7 @@ static formation *formation_create(int figure_type, int layout, int orientation,
     } else {
         f->layout = layout;
     }
+    f->target_formation_id = 0;
     return f;
 }
 
@@ -697,6 +700,7 @@ void formations_save_state(buffer *buf, buffer *totals)
 {
     int buf_size = 4 + formations.size * CURRENT_BUFFER_SIZE_PER_FORMATION;
     uint8_t *buf_data = malloc(buf_size);
+    memset(buf_data, 0, buf_size);
     buffer_init(buf, buf_data, buf_size);
     buffer_write_i32(buf, CURRENT_BUFFER_SIZE_PER_FORMATION);
 
@@ -759,7 +763,8 @@ void formations_save_state(buffer *buf, buffer *totals)
         buffer_write_u8(buf, f->invasion_id);
         buffer_write_u8(buf, f->herd_wolf_spawn_delay);
         buffer_write_u8(buf, f->herd_direction);
-        buffer_skip(buf, 17);
+        buffer_write_i32(buf, f->target_formation_id);
+        buffer_skip(buf, 13);
         buffer_write_i16(buf, f->invasion_sequence);
     }
     buffer_write_i32(totals, data.id_last_in_use);
@@ -767,7 +772,7 @@ void formations_save_state(buffer *buf, buffer *totals)
     buffer_write_i32(totals, data.num_legions);
 }
 
-void formations_load_state(buffer *buf, buffer *totals, int includes_buffer_size)
+void formations_load_state(buffer *buf, buffer *totals, int version)
 {
     data.id_last_in_use = buffer_read_i32(totals);
     data.id_last_legion = buffer_read_i32(totals);
@@ -777,7 +782,7 @@ void formations_load_state(buffer *buf, buffer *totals, int includes_buffer_size
     int formation_buf_size = ORIGINAL_BUFFER_SIZE_PER_FORMATION;
     int buf_size = buf->size;
 
-    if (includes_buffer_size) {
+    if (version > SAVE_GAME_LAST_STATIC_VERSION) {
         formation_buf_size = buffer_read_i32(buf);
         buf_size -= 4;
     }
@@ -851,7 +856,8 @@ void formations_load_state(buffer *buf, buffer *totals, int includes_buffer_size
         f->invasion_id = buffer_read_u8(buf);
         f->herd_wolf_spawn_delay = buffer_read_u8(buf);
         f->herd_direction = buffer_read_u8(buf);
-        buffer_skip(buf, 17);
+        f->target_formation_id = buffer_read_i32(buf);
+        buffer_skip(buf, 13);
         f->invasion_sequence = buffer_read_i16(buf);
 
         if (formation_buf_size > CURRENT_BUFFER_SIZE_PER_FORMATION) {
@@ -865,4 +871,12 @@ void formations_load_state(buffer *buf, buffer *totals, int includes_buffer_size
 
     // Reduce number of available formations to improve performance
     formations.size = highest_id_in_use + 1;
+
+    // old saves did not write formations to a zeroed out buffer, so check for invalid target_formation_ids
+    for (int i = 0; i < formations.size; i++) {
+        formation *f = array_item(formations, i);
+        if (f->target_formation_id < 0 || f->target_formation_id >= formations.size) {
+            f->target_formation_id = 0;
+        }
+    }
 }

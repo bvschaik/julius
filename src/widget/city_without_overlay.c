@@ -703,22 +703,38 @@ static void draw_connectable_construction_ghost(int x, int y, int grid_offset)
     image_draw_isometric_top_from_draw_tile(image_id, x, y, COLOR_MASK_BUILDING_GHOST, draw_context.scale);
 }
 
+static int get_highlighted_formation_id(const map_tile *tile)
+{
+    if (!config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
+        return 0;
+    }
+    int highlighted_formation_id = formation_legion_or_herd_at_grid_offset(tile->grid_offset);
+    if (highlighted_formation_id <= 0) {
+        return 0;
+    }
+    formation *highlighted_formation = formation_get(highlighted_formation_id);
+    if (highlighted_formation->in_distant_battle) {
+        return 0;
+    }
+    int selected_formation_id = formation_get_selected();
+    // don't highlight friendly legions if we've already selected one
+    if (selected_formation_id && highlighted_formation_id != selected_formation_id && !highlighted_formation->is_herd) {
+        return 0;
+    }
+    // don't highlight herds unless we have a formation selected
+    if (!selected_formation_id && highlighted_formation->is_herd) {
+        return 0;
+    }
+    if (config_get(CONFIG_GP_CH_AUTO_KILL_ANIMALS) && highlighted_formation->is_herd) {
+        return 0;
+    }
+    return highlighted_formation_id;
+}
+
 void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile)
 {
-    int highlighted_formation = 0;
-    if (config_get(CONFIG_UI_HIGHLIGHT_LEGIONS)) {
-        highlighted_formation = formation_legion_at_grid_offset(tile->grid_offset);
-        if (highlighted_formation > 0) {
-            int selected_formation = formation_get_selected();
-            if (selected_formation && highlighted_formation != selected_formation) {
-                highlighted_formation = 0;
-            }
-            if (formation_get(highlighted_formation)->in_distant_battle) {
-                highlighted_formation = 0;
-            }
-        }
-    }
-    init_draw_context(selected_figure_id, figure_coord, highlighted_formation);
+    int highlighted_formation_id = get_highlighted_formation_id(tile);
+    init_draw_context(selected_figure_id, figure_coord, highlighted_formation_id);
     int x, y, width, height;
     city_view_get_viewport(&x, &y, &width, &height);
     graphics_fill_rect(x, y, width, height, COLOR_BLACK);
