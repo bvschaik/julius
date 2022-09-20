@@ -839,6 +839,12 @@ static translation_string all_strings[] = {
 	{TR_SAVEGAME_NOT_ABLE_TO_SAVE_TITLE, "Kunde inte spara spelet" },
 	{TR_TOOLTIP_OVERLAY_PROBLEMS_PLAGUE, "Pesten finns i byggnaden"},
 	{TR_WINDOW_RACE_YOUR_BET, "Din satsning"},
+	{TR_CONFIG_AUTO_KILL_ANIMALS, "Invånare kommer självmant döda ofarliga djur"},
+	{TR_HOTKEY_MOTHBALL_TOGGLE, "Tag ur bruk/Börja använda byggnad" },
+	{TR_HOTKEY_SPECIAL_ORDERS, "Visa byggnadens specialbeställningar" },
+	{TR_CITY_WARNING_DATA_MOTHBALL_ON, "Byggnaden är tagen ur bruk" },
+	{TR_CITY_WARNING_DATA_MOTHBALL_OFF, "Byggnaden är i bruk igen" },
+	{TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE_HOUSES, "Visa hur långt brunnar och fontäner når när hus byggs"},
 };
 
 void translation_swedish(const translation_string **strings, int *num_strings)

@@ -349,7 +349,6 @@ static translation_string all_strings[] = {
     {TR_DOCK_SPECIAL_ORDERS_HEADER, "Dock instructions"},
     {TR_TEMPLE_SPECIAL_ORDERS_HEADER, "Temple instructions"},
     {TR_TAVERN_SPECIAL_ORDERS_HEADER, "Tavern instructions"},
-    {TR_GENERAL_SPECIAL_ORDERS_HEADER, "Show storage orders"},
     {TR_WARNING_NO_MESS_HALL, "You must first build a supply post to feed your soldiers."},
     {TR_WARNING_MAX_GRAND_TEMPLES, "No more Grand temples can be built."},
     {TR_CITY_MESSAGE_TITLE_GRAND_TEMPLE_COMPLETE, "Grand temple completed"},
