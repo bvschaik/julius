@@ -82,6 +82,7 @@ void figure_route_add(figure *f)
         int can_travel;
         switch (f->terrain_usage) {
             case TERRAIN_USAGE_ENEMY:
+                // check to see if we can reach our destination by going around the city walls
                 can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
                     f->destination_x, f->destination_y, f->destination_building_id, 5000);
                 if (!can_travel) {
