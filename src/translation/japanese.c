@@ -1,4 +1,4 @@
-﻿#include "translation/common.h"
+#include "translation/common.h"
 #include "translation/translation.h"
 
 static translation_string all_strings[] = {
