@@ -61,6 +61,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Improve visual feedback when clearing land"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Allow building each temple in succession"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Show range when building reservoirs, fountains and wells"},
+    {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE_HOUSES, "Show range of fountains and wells when building houses"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Show draggable construction size"},
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "Highlight legion on cursor hover"},
     {TR_CONFIG_ROTATE_MANUALLY, "Rotate Gatehouse and Triumph Arch by hotkey"},
