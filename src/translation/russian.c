@@ -171,7 +171,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Эта комбинация клавиш уже назначена на следующее действие:"},
     {TR_BUILDING_ROADBLOCK, "Дорожный блок"},
     {TR_BUILDING_ROADBLOCK_DESC, "Блокирует проход бесцельно бродящим гражданам"},
-    {TR_BUILDING_MOTHBALL_TOGGLE, "Выкл./вкл. здание" },
+    { TR_HOTKEY_MOTHBALL_TOGGLE, "Выкл./вкл. здание" },
     { TR_HOTKEY_EDIT_TITLE, "Введите новую клавишу" },
     { TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MAINTENANCE, "Переключить доступ префектам и инженерам" },
     { TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_PRIEST, "Переключить доступ жрецам" },

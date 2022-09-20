@@ -48,6 +48,8 @@
 #include "window/file_dialog.h"
 #include "window/message_list.h"
 
+static int mothball_warning_id;
+
 static void draw_background(void)
 {
     widget_sidebar_city_draw_background();
@@ -526,14 +528,12 @@ static void handle_hotkeys(const hotkeys *h)
         int building_id = map_building_at(widget_city_current_grid_offset());
         building *b = building_main(building_get(building_id));
         if (building_id && model_get_building(b->type)->laborers) {
-                building_mothball_toggle(b);
-                if (b->state == BUILDING_STATE_IN_USE) {
-                    city_warning_clear_all();
-                    city_warning_show(WARNING_DATA_MOTHBALL_OFF, NEW_WARNING_SLOT);
-                } else if (b->state == BUILDING_STATE_MOTHBALLED) {
-                    city_warning_clear_all();
-                    city_warning_show(WARNING_DATA_MOTHBALL_ON, NEW_WARNING_SLOT);
-                }
+            building_mothball_toggle(b);
+            if (b->state == BUILDING_STATE_IN_USE) {
+                mothball_warning_id = city_warning_show(WARNING_DATA_MOTHBALL_OFF, mothball_warning_id);
+            } else if (b->state == BUILDING_STATE_MOTHBALLED) {
+                mothball_warning_id = city_warning_show(WARNING_DATA_MOTHBALL_ON, mothball_warning_id);
+            }
         }
     }
     if (h->storage_order) {
