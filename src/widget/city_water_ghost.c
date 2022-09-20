@@ -9,11 +9,12 @@
 
 #include <string.h>
 
-static enum {
+enum {
     WATER_ACCESS_NONE = 0b00,
     WATER_ACCESS_WELL = 0b01,
     WATER_ACCESS_FOUNTAIN = 0b10
-} water_access;
+};
+
 static uint8_t has_water_access[GRID_SIZE * GRID_SIZE];
 static building_type last_building_type = BUILDING_NONE;
 static int last_well_count = 0;

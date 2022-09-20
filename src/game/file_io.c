@@ -820,7 +820,7 @@ static void write_int32(FILE *fp, int value)
     fwrite(&data, 1, 4, fp);
 }
 
-static int zlib_decompress(const void *input_buffer, int input_length, void *output_buffer, int output_length)
+static int zlib_decompress(void *input_buffer, int input_length, void *output_buffer, int output_length)
 {
     z_stream strm;
 
@@ -866,7 +866,7 @@ static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read, int 
     }
 }
 
-static int zlib_compress(const void *input_buffer, int input_length, void *output_buffer, int *output_length)
+static int zlib_compress(void *input_buffer, int input_length, void *output_buffer, int *output_length)
 {
     z_stream strm;
     strm.zalloc = Z_NULL;
@@ -890,7 +890,7 @@ static int zlib_compress(const void *input_buffer, int input_length, void *outpu
     return 1;
 }
 
-static int write_compressed_chunk(FILE *fp, const void *buffer, int bytes_to_write)
+static int write_compressed_chunk(FILE *fp, void *buffer, int bytes_to_write)
 {
     if (bytes_to_write > COMPRESS_BUFFER_SIZE) {
         return 0;
