@@ -60,6 +60,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_VISUAL_FEEDBACK_ON_DELETE, "Улучшить наглядность очистки земли"},
     {TR_CONFIG_ALLOW_CYCLING_TEMPLES, "Разрешить строительство всех типов храмов по очереди"},
     {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE, "Отображать область водоснабжения при строительстве резервуара"},
+    {TR_CONFIG_SHOW_WATER_STRUCTURE_RANGE_HOUSES, "Показать область водоснабжения колодцев и фонтанов при стройке домов"},
     {TR_CONFIG_SHOW_CONSTRUCTION_SIZE, "Отображать размер здания при строительстве с зажатой клавишей мыши"},
     {TR_CONFIG_HIGHLIGHT_LEGIONS, "Подсвечивать легион под курсором"},
     {TR_CONFIG_ROTATE_MANUALLY, "Поворачивать ворота и Триумфальную арку с помощью горячей клавиши"},
