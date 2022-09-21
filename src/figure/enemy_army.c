@@ -189,6 +189,9 @@ void enemy_armies_load_state(buffer *buf, buffer *totals_buf)
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
         enemy_armies[i].ignore_roman_soldiers = buffer_read_i32(buf);
     }
+    for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
+        enemy_armies[i].started_retreating = 0;
+    }
     totals.enemy_formations = buffer_read_i32(totals_buf);
     totals.enemy_strength = buffer_read_i32(totals_buf);
     totals.legion_formations = buffer_read_i32(totals_buf);
