@@ -187,9 +187,6 @@ static void route_queue_from_to(int src_x, int src_y, int dst_x, int dst_y, int 
     int dest = map_grid_offset(dst_x, dst_y);
     ordered_enqueue(map_grid_offset(src_x, src_y), 1, 0);
     int tiles = 0;
-    if (!valid_offset(dest) || !callback(dest)) {
-        return;
-    }
     while (queue.tail) {
         int offset = ordered_queue_pop();
         if (offset == dest || (max_tiles && ++tiles > max_tiles)) {
