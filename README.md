@@ -60,9 +60,9 @@ Augustus changes are explained in detail in the comprehensive manual. Below you 
 
 | Language | Manual |
 |----------|--------|
-|English   |[Download](https://github.com/Keriew/augustus/raw/master/res/manual/augustus_manual_3_1.pdf)|
+|English   |[Download](https://github.com/Keriew/augustus/raw/master/res/manual/augustus_manual_en_3_2.pdf)|
 |Chinese   |[Download](https://github.com/Keriew/augustus/raw/master/res/translated_manuals/augustus_manual_chinese_3.0.pdf)|
-|French   |[Download](https://github.com/Keriew/augustus/raw/master/res/translated_manuals/augustus_manual_french_3.1.pdf)|
+|French   |[Download](https://github.com/Keriew/augustus/raw/master/res/translated_manuals/augustus_manual_french_3.2.pdf)|
 |Polish   |[Download](https://github.com/Keriew/augustus/raw/master/res/translated_manuals/augustus_manual_polish_3.0.pdf)|
 |Russian   |[Download](https://github.com/Keriew/augustus/raw/master/res/translated_manuals/augustus_manual_russian_3.0.pdf)|
 
