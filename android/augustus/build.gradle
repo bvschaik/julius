@@ -129,7 +129,7 @@ android {
             path "../../CMakeLists.txt"
         }
     }
-    namespace 'com.github.bvschaik.julius'
+    namespace 'com.github.Keriew.augustus'
 }
 
 /** play {

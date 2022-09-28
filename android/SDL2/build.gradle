@@ -32,6 +32,7 @@ task findSDL2Mixer {
     def includeTarget = layout.buildDirectory.dir("sdl2_mixer_includes")
     copy {
         from path
+        from "$path/include"
         include "*.h"
         into includeTarget
     }
@@ -84,7 +85,7 @@ android {
             headers "${findSDL2Mixer.includePath}"
         }
     }
-    namespace 'com.github.bvschaik.julius.sdl2'
+    namespace 'com.github.Keriew.augustus.sdl2'
 }
 
 repositories {
