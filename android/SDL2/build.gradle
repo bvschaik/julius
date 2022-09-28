@@ -31,12 +31,9 @@ task findSDL2Mixer {
     // Workaround: copy the headers to our own directory for includes.
     def includeTarget = layout.buildDirectory.dir("sdl2_mixer_includes")
     copy {
-        from path {
-            include "*.h"
-        }
-        from "$path/include" {
-            include "*.h"
-        }
+        from path
+        include "*.h"
+        from "$path/include"
         into includeTarget
     }
     ext.includePath = includeTarget.get().asFile
