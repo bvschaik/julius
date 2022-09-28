@@ -30,7 +30,7 @@ static void set_fountain_access(int x, int y, int grid_offset)
     has_water_access[grid_offset] |= WATER_ACCESS_FOUNTAIN;
 }
 
-static void update_water_access()
+static void update_water_access(void)
 {
     memset(has_water_access, 0, sizeof(uint8_t) * GRID_SIZE * GRID_SIZE);
     for (building *b = building_first_of_type(BUILDING_WELL); b; b = b->next_of_type) {
@@ -51,7 +51,7 @@ static void draw_water_access(int x, int y, int grid_offset)
     }
 }
 
-void city_water_ghost_draw_water_structure_ranges()
+void city_water_ghost_draw_water_structure_ranges(void)
 {
     building_type type = building_construction_type();
     // we're counting the number of buildings using the building linked list rather than the counts in building/counts.c

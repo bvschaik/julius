@@ -112,7 +112,7 @@ static void draw_background(void)
     graphics_reset_dialog();
 }
 
-static int active_image_buttons()
+static int active_image_buttons(void)
 {
     return city_finance_out_of_money() ? 3 : 4;
 }

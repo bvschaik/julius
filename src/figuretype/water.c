@@ -165,7 +165,8 @@ void figure_shipwreck_action(figure *f)
     f->image_id = image_group(GROUP_FIGURE_SHIPWRECK) + f->image_offset / 16;
 }
 
-static int fishing_boat_percentage_speed() {
+static int fishing_boat_percentage_speed(void)
+{
     if (building_monument_working(BUILDING_LIGHTHOUSE)) {
         return 10;
     }

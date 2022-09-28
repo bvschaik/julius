@@ -21,7 +21,7 @@
 
 static int housing_advisor_image;
 
-static void draw_housing_table()
+static void draw_housing_table(void)
 {
     int *housing_type_counts;
     int *houses_demanding_goods;

@@ -113,7 +113,7 @@ static void button_click(int type, int param2)
     }
 }
 
-void window_city_pause_menu_show()
+void window_city_pause_menu_show(void)
 {
     window_type window = {
             WINDOW_CITY_MAIN_MENU,

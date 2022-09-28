@@ -56,6 +56,6 @@ void building_granary_warehouse_curse(int big);
 
 int building_granary_is_getting(int resource, building* b);
 
-void building_granary_update_built_granaries_capacity();
+void building_granary_update_built_granaries_capacity(void);
 
 #endif // BUILDING_GRANARY_H

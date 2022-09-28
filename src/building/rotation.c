@@ -87,7 +87,7 @@ static void rotate_forward(void)
     update_rotation_message();
 }
 
-static void rotate_backward()
+static void rotate_backward(void)
 {
     building_construction_cycle_back();
     data.rotation -= 1;

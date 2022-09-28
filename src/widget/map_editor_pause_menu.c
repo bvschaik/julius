@@ -113,7 +113,7 @@ static void button_click(int type, int param2)
     }
 }
 
-void window_map_editor_pause_menu_show()
+void window_map_editor_pause_menu_show(void)
 {
     window_type window = {
             WINDOW_EDITOR_MAP,

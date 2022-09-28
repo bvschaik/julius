@@ -61,7 +61,7 @@ static int focus_button_id;
 static int focus_additional_button_id;
 static int num_legions;
 
-static void init()
+static void init(void)
 {
     num_legions = formation_get_num_legions();
     scrollbar_init(&scrollbar, 0, num_legions);

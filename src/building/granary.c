@@ -636,7 +636,7 @@ void building_granary_warehouse_curse(int big)
     }
 }
 
-void building_granary_update_built_granaries_capacity()
+void building_granary_update_built_granaries_capacity(void)
 {
     for (building *b = building_first_of_type(BUILDING_GRANARY); b; b = b->next_of_type) {
         int total_units = 0;

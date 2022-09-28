@@ -44,7 +44,7 @@ static void warehouse_orders(int index, int param2);
 static void market_orders(int index, int param2);
 static void storage_toggle_permissions(int index, int param2);
 static void button_stockpiling(int param1, int param2);
-static void init_dock_permission_buttons();
+static void init_dock_permission_buttons(void);
 static void draw_dock_permission_buttons(int x_offset, int y_offset, int dock_id);
 static void on_dock_cities_scroll(void);
 static int dock_cities_scroll_position(void);
@@ -230,7 +230,7 @@ static void draw_granary_permissions_buttons(int x, int y, int buttons)
     }
 }
 
-static void init_dock_permission_buttons()
+static void init_dock_permission_buttons(void)
 {
     dock_distribution_permissions_buttons_count = 0;
     for (int route_id = 0; route_id < 20; route_id++) {

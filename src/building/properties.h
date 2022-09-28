@@ -20,6 +20,6 @@ typedef struct {
 
 const building_properties *building_properties_for_type(building_type type);
 
-void init_augustus_building_properties();
+void init_augustus_building_properties(void);
 
 #endif // BUILDING_PROPERTIES_H

@@ -277,7 +277,7 @@ int map_water_supply_is_well_unnecessary(int well_id, int radius)
     return num_houses ? WELL_UNNECESSARY_FOUNTAIN : WELL_UNNECESSARY_NO_HOUSES;
 }
 
-int map_water_supply_fountain_radius()
+int map_water_supply_fountain_radius(void)
 {
     int radius = scenario_property_climate() == CLIMATE_DESERT ? FOUNTAIN_RADIUS - 1 : FOUNTAIN_RADIUS;
     if (building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
@@ -287,7 +287,7 @@ int map_water_supply_fountain_radius()
     return radius;
 }
 
-int map_water_supply_reservoir_radius()
+int map_water_supply_reservoir_radius(void)
 {
     int radius = RESERVOIR_RADIUS;
     if (building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
@@ -297,7 +297,7 @@ int map_water_supply_reservoir_radius()
     return radius;
 }
 
-int map_water_supply_well_radius()
+int map_water_supply_well_radius(void)
 {
     int radius = WELL_RADIUS;
     if (building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {

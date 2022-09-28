@@ -388,7 +388,7 @@ static int draw_background(void)
     void (*big_graph)(int, int, int);
     void (*top_graph)(int, int, int);
     void (*bot_graph)(int, int, int);
-    void (*info_panel)();
+    void (*info_panel)(void);
 
     switch (graph_order) {
         default:

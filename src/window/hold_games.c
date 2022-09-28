@@ -135,7 +135,7 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void close_window()
+static void close_window(void)
 {
     if (data.return_to_city) {
         window_city_show();

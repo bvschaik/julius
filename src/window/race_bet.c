@@ -52,7 +52,7 @@ static struct {
     int height_blocks;
 } data;
 
-static int init()
+static int init(void)
 {
     if (window_is(WINDOW_RACE_BET)) {
         // don't show popup over popup
@@ -201,7 +201,7 @@ static void button_close(int param1, int param2)
     window_go_back();
 }
 
-void window_race_bet_show()
+void window_race_bet_show(void)
 {
     if (init()) {
         window_type window = {
