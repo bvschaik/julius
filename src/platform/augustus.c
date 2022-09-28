@@ -292,7 +292,7 @@ static void handle_event(SDL_Event *event)
             break;
 #if defined(__ANDROID__) && SDL_VERSION_ATLEAST(2, 24, 0)
         case SDL_TEXTEDITING:
-            platform_handle_editing_text(&event->editExt);
+            platform_handle_editing_text(&event->edit);
             break;
 #endif
         case SDL_TEXTINPUT:

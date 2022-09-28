@@ -28,7 +28,6 @@
             android:name=".AugustusMainActivity"
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|uiMode|density|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-            android:exported="true"
             android:launchMode="singleInstance"
             android:exported="true"
             android:preferMinimalPostProcessing="true"
