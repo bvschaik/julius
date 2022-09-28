@@ -58,10 +58,13 @@ endif()
 
 if (CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
+    if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 5.0)
+        set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion -Wstrict-prototypes ${CMAKE_C_FLAGS}")
+    endif()
 endif()
 
-# Fix bug in cmake that expects the resource compiler for mingw to have the toolchain prefix in the name
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24.0 AND MINGW)
+# Fix bug in cmake 3.24.0 that expects the resource compiler for mingw to have the toolchain prefix in the name
+if (CMAKE_VERSION VERSION_EQUAL 3.24.0 AND MINGW)
     set(CMAKE_RC_COMPILER "windres")
 endif()
 

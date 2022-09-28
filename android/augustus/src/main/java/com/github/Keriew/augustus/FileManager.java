@@ -12,15 +12,17 @@ import java.util.HashMap;
 
 public class FileManager {
     private static Uri baseUri = Uri.EMPTY;
-    private static HashMap<Uri, HashMap<String, FileInfo>> directoryStructureCache = new HashMap<>();
+    private static final HashMap<Uri, HashMap<String, FileInfo>> directoryStructureCache = new HashMap<>();
 
     private static final int FILE_TYPE_DIR = 1;
     private static final int FILE_TYPE_FILE = 2;
 
+    @SuppressWarnings("unused")
     public static String getC3Path() {
         return baseUri.toString();
     }
 
+    @SuppressWarnings("unused")
     public static int setBaseUri(String path) {
         directoryStructureCache.clear();
         if (baseUri != Uri.EMPTY) {
@@ -109,6 +111,7 @@ public class FileManager {
         }
     }
 
+    @SuppressWarnings("unused")
     public static String[] getDirectoryFileList(AugustusMainActivity activity, String dir, int type, String ext) {
         ArrayList<String> fileList = new ArrayList<>();
 
@@ -160,6 +163,7 @@ public class FileManager {
         }
     }
 
+    @SuppressWarnings("unused")
     public static int openFileDescriptor(AugustusMainActivity activity, String filePath, String mode) {
         try {
             if (baseUri == Uri.EMPTY) {
@@ -216,10 +220,10 @@ public class FileManager {
 
     private static class FileInfo {
         static FileInfo base;
-        private String documentId;
-        private String name;
-        private String mimeType;
-        private Uri parent;
+        private final String documentId;
+        private final String name;
+        private final String mimeType;
+        private final Uri parent;
         private Uri uri;
 
         private FileInfo(String documentId, String name, String mimeType, Uri parent) {
