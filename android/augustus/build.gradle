@@ -67,7 +67,7 @@ task getVersion {
 android {
     compileSdkVersion 33
     buildToolsVersion "33.0.0"
-    ndkVersion "25.0.8775105"
+    ndkVersion "25.1.8937393"
 
     defaultConfig {
         applicationId "com.github.Keriew.augustus"
@@ -143,5 +143,5 @@ repositories {
 
 dependencies {
     implementation project(':SDL2')
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
 }
