@@ -815,7 +815,7 @@ plm_samples_t *plm_audio_decode(plm_audio_t *self);
 // -----------------------------------------------------------------------------
 // plm (high-level interface) implementation
 
-typedef struct plm_t {
+struct plm_t {
 	plm_demux_t *demux;
 	double time;
 	int has_ended;
@@ -839,7 +839,7 @@ typedef struct plm_t {
 
 	plm_audio_decode_callback audio_decode_callback;
 	void *audio_decode_callback_user_data;
-} plm_t;
+};
 
 int plm_init_decoders(plm_t *self);
 void plm_handle_end(plm_t *self);
@@ -1324,7 +1324,7 @@ enum plm_buffer_mode {
 	PLM_BUFFER_MODE_APPEND
 };
 
-typedef struct plm_buffer_t {
+struct plm_buffer_t {
 	size_t bit_index;
 	size_t capacity;
 	size_t length;
@@ -1338,7 +1338,7 @@ typedef struct plm_buffer_t {
 	void *load_callback_user_data;
 	uint8_t *bytes;
 	enum plm_buffer_mode mode;
-} plm_buffer_t;
+};
 
 typedef struct {
 	int16_t index;
@@ -1685,7 +1685,7 @@ static const int PLM_START_PACK = 0xBA;
 static const int PLM_START_END = 0xB9;
 static const int PLM_START_SYSTEM = 0xBB;
 
-typedef struct plm_demux_t {
+struct plm_demux_t {
 	plm_buffer_t *buffer;
 	int destroy_buffer_when_done;
 	double system_clock_ref;
@@ -1704,7 +1704,7 @@ typedef struct plm_demux_t {
 	int num_video_streams;
 	plm_packet_t current_packet;
 	plm_packet_t next_packet;
-} plm_demux_t;
+};
 
 
 void plm_demux_buffer_seek(plm_demux_t *self, size_t pos);
@@ -2555,7 +2555,7 @@ typedef struct {
 	int v;
 } plm_video_motion_t;
 
-typedef struct plm_video_t {
+struct plm_video_t {
 	double framerate;
 	double time;
 	int frames_decoded;
@@ -2606,7 +2606,7 @@ typedef struct plm_video_t {
 
 	int has_reference_frame;
 	int assume_no_b_frames;
-} plm_video_t;
+};
 
 static inline uint8_t plm_clamp(int n) {
 	if (n > 255) {
@@ -3692,7 +3692,7 @@ static const plm_quantizer_spec_t PLM_AUDIO_QUANT_TAB[] = {
 	{ 65535, 0, 16 }   // 17
 };
 
-typedef struct plm_audio_t {
+struct plm_audio_t {
 	double time;
 	int samples_decoded;
 	int samplerate_index;
@@ -3717,7 +3717,7 @@ typedef struct plm_audio_t {
 	float D[1024];
 	float V[2][1024];
 	float U[32];
-} plm_audio_t;
+};
 
 int plm_audio_find_frame_sync(plm_audio_t *self);
 int plm_audio_decode_header(plm_audio_t *self);
