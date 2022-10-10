@@ -20,6 +20,6 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
  * @param house House to determine worst building for
  * @return Worst desirability building ID
  */
-int building_house_determine_worst_desirability_building(const building *house);
+building_type building_house_determine_worst_desirability_building_type(const building *house);
 
 #endif // BUILDING_HOUSE_EVOLUTION_H

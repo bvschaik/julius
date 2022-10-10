@@ -298,9 +298,9 @@ void figure_tower_sentry_action(figure *f)
             }
             break;
         case FIGURE_ACTION_174_TOWER_SENTRY_GOING_TO_TOWER:
-            f->terrain_usage = TERRAIN_USAGE_ROADS;
+            f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
             if (config_get(CONFIG_GP_CH_TOWER_SENTRIES_GO_OFFROAD)) {
-                f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+                f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
             }
 
             f->is_ghost = 0;

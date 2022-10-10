@@ -83,6 +83,8 @@ static int get_height_id(void)
             case TERRAIN_INFO_WALL:
             case TERRAIN_INFO_GARDEN:
                 return 1;
+            case TERRAIN_INFO_HIGHWAY:
+                return 7;
             default:
                 return 5;
         }
@@ -320,6 +322,8 @@ static void init(int grid_offset)
         context.terrain_type = TERRAIN_INFO_RUBBLE;
     } else if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
         context.terrain_type = TERRAIN_INFO_WALL;
+    } else if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+        context.terrain_type = TERRAIN_INFO_HIGHWAY;
     } else if (!context.building_id) {
         context.terrain_type = TERRAIN_INFO_EMPTY;
     } else {
@@ -348,8 +352,8 @@ static void init(int grid_offset)
                 break;
             default:
                 if (b->house_size) {
-                    context.worst_desirability_building_id = building_house_determine_worst_desirability_building(b);
-                    building_house_determine_evolve_text(b, context.worst_desirability_building_id);
+                    context.worst_desirability_building_type = building_house_determine_worst_desirability_building_type(b);
+                    building_house_determine_evolve_text(b, context.worst_desirability_building_type);
                 }
                 break;
         }

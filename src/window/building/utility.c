@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/roadblock.h"
+#include "city/finance.h"
 #include "core/image.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -12,7 +13,7 @@
 #include "map/water_supply.h"
 #include "translation/translation.h"
 #include "window/building_info.h"
-
+#include "window/building/figures.h"
 
 static void go_to_orders(int param1, int param2);
 static void toggle_figure_state(int index, int param2);
@@ -348,6 +349,18 @@ void window_building_draw_native_meeting(building_info_context *c)
 void window_building_draw_native_crops(building_info_context *c)
 {
     draw_native(c, 133);
+}
+
+void window_building_draw_highway(building_info_context *c)
+{
+    //c->help_id = 0;
+    //window_building_play_sound(c, "wavs/aquaduct.wav");
+    window_building_prepare_figure_list(c);
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    lang_text_draw_centered(CUSTOM_TRANSLATION, TR_BUILDING_HIGHWAY, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+    window_building_draw_figure_list(c);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 150, CUSTOM_TRANSLATION, TR_BUILDING_HIGHWAY_DESC);
+    window_building_draw_levy(HIGHWAY_LEVY_MONTHLY, c->x_offset - 270, c->y_offset + BLOCK_SIZE * c->height_blocks - 110);
 }
 
 void toggle_figure_state(int index, int param2)

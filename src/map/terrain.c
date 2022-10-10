@@ -317,7 +317,14 @@ int map_terrain_get_adjacent_road_or_clear_land(int x, int y, int size, int *x_t
     return 0;
 }
 
-static void add_road(int grid_offset)
+static void add_road_if_no_highway(int grid_offset)
+{
+    if (!map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+        map_terrain_add(grid_offset, TERRAIN_ROAD);
+    }
+}
+
+static void add_road_if_clear(int grid_offset)
 {
     if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
         map_terrain_add(grid_offset, TERRAIN_ROAD);
@@ -333,22 +340,22 @@ void map_terrain_add_roadblock_road(int x, int y)
 void map_terrain_add_gatehouse_roads(int x, int y, int orientation)
 {
     // roads under gatehouse
-    map_terrain_add(map_grid_offset(x, y), TERRAIN_ROAD);
-    map_terrain_add(map_grid_offset(x + 1, y), TERRAIN_ROAD);
-    map_terrain_add(map_grid_offset(x, y + 1), TERRAIN_ROAD);
-    map_terrain_add(map_grid_offset(x + 1, y + 1), TERRAIN_ROAD);
+    add_road_if_no_highway(map_grid_offset(x, y));
+    add_road_if_no_highway(map_grid_offset(x + 1, y));
+    add_road_if_no_highway(map_grid_offset(x, y + 1));
+    add_road_if_no_highway(map_grid_offset(x + 1, y + 1));
 
     // free roads before/after gate
     if (orientation == 1) {
-        add_road(map_grid_offset(x, y - 1));
-        add_road(map_grid_offset(x + 1, y - 1));
-        add_road(map_grid_offset(x, y + 2));
-        add_road(map_grid_offset(x + 1, y + 2));
+        add_road_if_clear(map_grid_offset(x, y - 1));
+        add_road_if_clear(map_grid_offset(x + 1, y - 1));
+        add_road_if_clear(map_grid_offset(x, y + 2));
+        add_road_if_clear(map_grid_offset(x + 1, y + 2));
     } else if (orientation == 2) {
-        add_road(map_grid_offset(x - 1, y));
-        add_road(map_grid_offset(x - 1, y + 1));
-        add_road(map_grid_offset(x + 2, y));
-        add_road(map_grid_offset(x + 2, y + 1));
+        add_road_if_clear(map_grid_offset(x - 1, y));
+        add_road_if_clear(map_grid_offset(x - 1, y + 1));
+        add_road_if_clear(map_grid_offset(x + 2, y));
+        add_road_if_clear(map_grid_offset(x + 2, y + 1));
     }
 }
 

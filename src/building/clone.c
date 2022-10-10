@@ -105,6 +105,8 @@ building_type building_clone_type_from_grid_offset(int grid_offset)
             return BUILDING_PLAZA;
         }
         return BUILDING_ROAD;
+    } else if (terrain & TERRAIN_HIGHWAY) {
+        return BUILDING_HIGHWAY;
     }
 
     return BUILDING_NONE;

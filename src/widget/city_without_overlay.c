@@ -35,6 +35,9 @@
 #include "map/property.h"
 #include "map/sprite.h"
 #include "map/terrain.h"
+#ifndef NDEBUG
+#include "platform/debug.h"
+#endif
 #include "scenario/property.h"
 #include "sound/city.h"
 #include "widget/city_bridge.h"
@@ -740,6 +743,9 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
     graphics_fill_rect(x, y, width, height, COLOR_BLACK);
     int should_mark_deleting = city_building_ghost_mark_deleting(tile);
     city_view_foreach_valid_map_tile(draw_footprint, 0, 0);
+#ifndef NDEBUG
+    debug_draw_city();
+#endif
     if (!should_mark_deleting) {
         city_view_foreach_valid_map_tile(
             draw_top,

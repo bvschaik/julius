@@ -6,6 +6,8 @@
 #include "core/random.h"
 #include "map/ring.h"
 #include "map/building.h"
+#include "map/tiles.h"
+#include "map/water_supply.h"
 
 static struct {
     int paused;
@@ -24,6 +26,8 @@ void game_state_init(void)
     random_generate_pool();
 
     city_warning_clear_all();
+    map_tiles_init();
+    map_water_supply_init();
 }
 
 int game_state_is_paused(void)

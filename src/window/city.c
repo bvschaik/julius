@@ -183,6 +183,8 @@ static int get_building_type_from_grid_offset(int grid_offset)
             return BUILDING_PLAZA;
         }
         return BUILDING_ROAD;
+    } else if (terrain & TERRAIN_HIGHWAY) {
+        return BUILDING_HIGHWAY;
     }
 
     return BUILDING_NONE;
@@ -197,6 +199,7 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_ROAD:
         case BUILDING_ROADBLOCK:
         case BUILDING_GARDEN_WALL_GATE:
+        case BUILDING_HIGHWAY:
             overlay = OVERLAY_ROADS;
             break;
         case BUILDING_AQUEDUCT:

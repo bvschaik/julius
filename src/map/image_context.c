@@ -405,7 +405,7 @@ const terrain_image *map_image_context_get_wall_gatehouse(int grid_offset)
 
 static void set_tiles_road(int grid_offset, int tiles[MAX_TILES])
 {
-    fill_matches(grid_offset, TERRAIN_ROAD, 1, 0, tiles);
+    fill_matches(grid_offset, TERRAIN_ROAD | TERRAIN_HIGHWAY, 1, 0, tiles);
     for (int i = 0; i < MAX_TILES; i += 2) {
         int offset = grid_offset + map_grid_direction_delta(i);
         if (map_terrain_is(offset, TERRAIN_GATEHOUSE)) {

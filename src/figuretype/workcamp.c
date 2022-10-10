@@ -67,7 +67,7 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
 
 void figure_workcamp_worker_action(figure *f)
 {
-    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     building *b = building_get(f->building_id);
     int monument_id;
     int warehouse_id;
@@ -175,7 +175,7 @@ void figure_workcamp_worker_action(figure *f)
 void figure_workcamp_slave_action(figure *f)
 {
     f->is_ghost = 0;
-    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
     figure *leader = figure_get(f->leading_figure_id);
@@ -252,7 +252,7 @@ void figure_workcamp_slave_action(figure *f)
 
 void figure_workcamp_engineer_action(figure *f)
 {
-    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     building *b = building_get(f->building_id);
     building *monument;
     map_point dst;

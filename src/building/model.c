@@ -216,6 +216,7 @@ const model_building MODEL_LARGE_MAUSOLEUM = { 750,-10,1,3,6,0 };
 const model_building MODEL_WATCHTOWER = { 100,-6,1,2,3,8, };
 const model_building MODEL_CARAVANSERAI = { 500,-10,2,3,4,20 };
 const model_building MODEL_PALISADE = { 6,0,0,0,0,0 };
+const model_building MODEL_HIGHWAY = { 100,-4,1,2,3,0 };
 
 const model_building *model_get_building(building_type type)
 {
@@ -270,6 +271,8 @@ const model_building *model_get_building(building_type type)
         case BUILDING_PALISADE:
         case BUILDING_PALISADE_GATE:
             return &MODEL_PALISADE;
+        case BUILDING_HIGHWAY:
+            return &MODEL_HIGHWAY;
         default:
             break;
     }

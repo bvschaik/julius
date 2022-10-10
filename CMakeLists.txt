@@ -7,6 +7,10 @@ set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS default vita switch android 
 string(TOLOWER ${TARGET_PLATFORM} TARGET_PLATFORM)
 
 option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
+option(DRAW_ROUTING "Draw routing debug information." OFF)
+option(DRAW_HIGHWAY_TERRAIN "Draw highway debug information." OFF)
+option(DRAW_ROAD_NETWORK_IDS "Draw road network IDs for debugging." OFF)
+option(DRAW_TILE_COORDS "Draw tile coordinates." OFF)
 option(SYSTEM_LIBS "Use system libraries when available." ON)
 option(EMSCRIPTEN_LOAD_SDL_PORTS "Load SDL and SDL_mixer emscripten ports instead of compiling them" OFF)
 option(LINK_MPG123 "Link mpg123 statically to Julius instead of relying on a library." OFF)
@@ -154,7 +158,19 @@ if(${TARGET_PLATFORM} STREQUAL "emscripten")
 endif()
 
 if(DRAW_FPS)
-  add_definitions(-DDRAW_FPS)
+    add_definitions(-DDRAW_FPS)
+endif()
+if(DRAW_ROUTING)
+    add_definitions(-DDRAW_ROUTING)
+endif()
+if(DRAW_HIGHWAY_TERRAIN)
+    add_definitions(-DDRAW_HIGHWAY_TERRAIN)
+endif()
+if(DRAW_TILE_COORDS)
+    add_definitions(-DDRAW_TILE_COORDS)
+endif()
+if(DRAW_ROAD_NETWORK_IDS)
+    add_definitions(-DDRAW_ROAD_NETWORK_IDS)
 endif()
 
 set(ASSETS_DIR ${PROJECT_SOURCE_DIR}/res/assets)
@@ -223,6 +239,9 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.c
 )
 
+if("${CMAKE_BUILD_TYPE}" MATCHES "Debug")
+    list(APPEND PLATFORM_FILES ${PROJECT_SOURCE_DIR}/src/platform/debug.c)
+endif()
 if (${TARGET_PLATFORM} STREQUAL "vita")
     set(PLATFORM_FILES
         ${PLATFORM_FILES}

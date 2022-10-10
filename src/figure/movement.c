@@ -249,7 +249,7 @@ static void advance_route_tile(figure *f, int roaming_enabled)
         if (!map_routing_is_wall_passable(target_grid_offset)) {
             f->direction = DIR_FIGURE_REROUTE;
         }
-    } else if (map_terrain_is(target_grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP)) {
+    } else if (map_terrain_is(target_grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP | TERRAIN_HIGHWAY)) {
         if (roaming_enabled && map_terrain_is(target_grid_offset, TERRAIN_BUILDING)) {
             building* b = building_get(map_building_at(target_grid_offset));
             if (b->type == BUILDING_GATEHOUSE) {
@@ -283,6 +283,10 @@ static void advance_route_tile(figure *f, int roaming_enabled)
 
 static void walk_ticks(figure *f, int num_ticks, int roaming_enabled)
 {
+    int terrain = map_terrain_get(map_grid_offset(f->x, f->y));
+    if (terrain & TERRAIN_HIGHWAY) {
+        num_ticks *= 2;
+    }
     while (num_ticks > 0) {
         num_ticks--;
         f->progress_on_tile++;
@@ -420,6 +424,10 @@ void figure_movement_move_ticks_tower_sentry(figure *f, int num_ticks)
 
 void figure_movement_follow_ticks(figure *f, int num_ticks)
 {
+    int terrain = map_terrain_get(map_grid_offset(f->x, f->y));
+    if (terrain & TERRAIN_HIGHWAY) {
+        num_ticks *= 2;
+    }
     const figure *leader = figure_get(f->leading_figure_id);
     if (f->x == f->source_x && f->y == f->source_y) {
         f->is_ghost = 1;
@@ -456,6 +464,11 @@ void figure_movement_follow_ticks_with_percentage(figure* f, int num_ticks, int 
         num_ticks--;
     }
     f->progress_to_next_tick = (char) progress;
+    
+    int terrain = map_terrain_get(map_grid_offset(f->x, f->y));
+    if (terrain & TERRAIN_HIGHWAY) {
+        num_ticks *= 2;
+    }
 
     const figure* leader = figure_get(f->leading_figure_id);
     if (f->x == f->source_x && f->y == f->source_y) {

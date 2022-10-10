@@ -31,13 +31,20 @@ void map_routing_update_land(void)
 static int get_land_type_citizen_building(int grid_offset)
 {
     building *b = building_get(map_building_at(grid_offset));
+    int terrain = map_terrain_get(grid_offset);
     int type = CITIZEN_N1_BLOCKED;
     switch (b->type) {
         default:
             return CITIZEN_N1_BLOCKED;
         case BUILDING_WAREHOUSE:
-        case BUILDING_GATEHOUSE:
             type = CITIZEN_0_ROAD;
+            break;
+        case BUILDING_GATEHOUSE:
+            if (terrain & TERRAIN_HIGHWAY) {
+                type = CITIZEN_1_HIGHWAY;
+            } else {
+                type = CITIZEN_0_ROAD;
+            }
             break;
         case BUILDING_ROADBLOCK:
             type = CITIZEN_0_ROAD;
@@ -120,6 +127,8 @@ void map_routing_update_land_citizen(void)
             int terrain = map_terrain_get(grid_offset);
             if (terrain & TERRAIN_ROAD) {
                 terrain_land_citizen.items[grid_offset] = CITIZEN_0_ROAD;
+            } else if (terrain & TERRAIN_HIGHWAY) {
+                terrain_land_citizen.items[grid_offset] = CITIZEN_1_HIGHWAY;
             } else if (terrain & (TERRAIN_RUBBLE | TERRAIN_ACCESS_RAMP | TERRAIN_GARDEN)) {
                 terrain_land_citizen.items[grid_offset] = CITIZEN_2_PASSABLE_TERRAIN;
             } else if (terrain & (TERRAIN_BUILDING | TERRAIN_GATEHOUSE)) {
@@ -196,6 +205,8 @@ static void map_routing_update_land_noncitizen(void)
             } else if (terrain & TERRAIN_BUILDING) {
                 terrain_land_noncitizen.items[grid_offset] = get_land_type_noncitizen(grid_offset);
             } else if (terrain & TERRAIN_ROAD) {
+                terrain_land_noncitizen.items[grid_offset] = NONCITIZEN_0_PASSABLE;
+            } else if (terrain & TERRAIN_HIGHWAY) {
                 terrain_land_noncitizen.items[grid_offset] = NONCITIZEN_0_PASSABLE;
             } else if (terrain & (TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE)) {
                 terrain_land_noncitizen.items[grid_offset] = NONCITIZEN_2_CLEARABLE;
@@ -340,8 +351,8 @@ int map_routing_wall_tile_in_radius(int x, int y, int radius, int *x_wall, int *
 
 int map_routing_citizen_is_passable(int grid_offset)
 {
-    return terrain_land_citizen.items[grid_offset] == CITIZEN_0_ROAD ||
-        terrain_land_citizen.items[grid_offset] == CITIZEN_2_PASSABLE_TERRAIN;
+    return terrain_land_citizen.items[grid_offset] >= CITIZEN_0_ROAD ||
+        terrain_land_citizen.items[grid_offset] <= CITIZEN_2_PASSABLE_TERRAIN;
 }
 
 int map_routing_citizen_is_road(int grid_offset)

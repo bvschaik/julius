@@ -309,7 +309,7 @@ void figure_entertainer_action(figure *f)
 {
     building *b = building_get(f->building_id);
     f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART);
-    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     f->use_cross_country = 0;
     f->max_roam_length = 512;
     figure_image_increase_offset(f, 12);
@@ -400,6 +400,7 @@ void figure_entertainer_action(figure *f)
             break;
         case FIGURE_ACTION_94_ENTERTAINER_ROAMING:
             f->is_ghost = 0;
+            f->terrain_usage = TERRAIN_USAGE_ROADS;
             f->roam_length++;
             if (f->roam_length >= f->max_roam_length) {
                 int x_road, y_road;
@@ -415,6 +416,7 @@ void figure_entertainer_action(figure *f)
             figure_movement_roam_ticks(f, speed_factor);
             break;
         case FIGURE_ACTION_95_ENTERTAINER_RETURNING:
+            f->terrain_usage = TERRAIN_USAGE_ROADS;
             figure_movement_move_ticks(f, speed_factor);
             if (f->direction == DIR_FIGURE_AT_DESTINATION ||
                 f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {

@@ -17,7 +17,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 
-void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain)
+void map_building_tiles_add_remove(int building_id, int x, int y, int size, int image_id, int terrain_to_add, int terrain_to_remove)
 {
     if (!map_grid_is_inside(x, y, size)) {
         return;
@@ -44,8 +44,8 @@ void map_building_tiles_add(int building_id, int x, int y, int size, int image_i
     for (int dy = 0; dy < size; dy++) {
         for (int dx = 0; dx < size; dx++) {
             int grid_offset = map_grid_offset(x + dx, y + dy);
-            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
-            map_terrain_add(grid_offset, terrain);
+            map_terrain_remove(grid_offset, terrain_to_remove);
+            map_terrain_add(grid_offset, terrain_to_add);
             map_building_set(grid_offset, building_id);
             map_property_clear_constructing(grid_offset);
             map_property_set_multi_tile_size(grid_offset, size);
@@ -54,6 +54,11 @@ void map_building_tiles_add(int building_id, int x, int y, int size, int image_i
                 dx == x_leftmost && dy == y_leftmost);
         }
     }
+}
+
+void map_building_tiles_add(int building_id, int x, int y, int size, int image_id, int terrain)
+{
+    map_building_tiles_add_remove(building_id, x, y, size, image_id, terrain, TERRAIN_CLEARABLE);
 }
 
 static void set_crop_tile(int building_id, int x, int y, int dx, int dy, int crop_image_id, int growth)

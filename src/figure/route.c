@@ -114,6 +114,18 @@ void figure_route_add(figure *f)
                 can_travel = map_routing_citizen_can_travel_over_road_garden(f->x, f->y,
                     f->destination_x, f->destination_y);
                 break;
+            case TERRAIN_USAGE_PREFER_ROADS_HIGHWAY:
+                can_travel = map_routing_citizen_can_travel_over_road_garden_highway(f->x, f->y,
+                    f->destination_x, f->destination_y);
+                if (!can_travel) {
+                    can_travel = map_routing_citizen_can_travel_over_land(f->x, f->y,
+                        f->destination_x, f->destination_y);
+                }
+                break;
+            case TERRAIN_USAGE_ROADS_HIGHWAY:
+                can_travel = map_routing_citizen_can_travel_over_road_garden_highway(f->x, f->y,
+                    f->destination_x, f->destination_y);
+                break;
             default:
                 can_travel = map_routing_citizen_can_travel_over_land(f->x, f->y,
                     f->destination_x, f->destination_y);

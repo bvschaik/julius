@@ -515,4 +515,55 @@
 			<frame src="Engineers_Post_Upgrade_ON_10"/>
 		</animation>
 	</image>
+	<image id="Highway_Placement" src="Highway_Placement" isometric="true"/>
+	<image id="Highway_Tile_Start" src="Highway0001" isometric="true"/>
+	<image src="Highway0002" isometric="true"/>
+	<image src="Highway0003" isometric="true"/>
+	<image src="Highway0004" isometric="true"/>
+	<image src="Highway0005" isometric="true"/>
+	<image src="Highway0006" isometric="true"/>
+	<image src="Highway0007" isometric="true"/>
+	<image src="Highway0008" isometric="true"/>
+	<image src="Highway0009" isometric="true"/>
+	<image src="Highway0010" isometric="true"/>
+	<image src="Highway0011" isometric="true"/>
+	<image src="Highway0012" isometric="true"/>
+	<image src="Highway0013" isometric="true"/>
+	<image src="Highway0014" isometric="true"/>
+	<image src="Highway0015" isometric="true"/>
+	<image src="Highway0016" isometric="true"/>
+	<image src="Highway0017" isometric="true"/>
+	<image src="Highway0018" isometric="true"/>
+	<image id="Aqueduct_Bridge_Left_Water" isometric="true" width="58" height="58">
+		<layer group="19" />
+		<layer src="Aqueduct_Mask_Left" y="28" mask="alpha" />
+	</image>
+	<image id="Aqueduct_Bridge_Right_Water" isometric="true" width="58" height="57">
+		<layer group="19" image="1" />
+		<layer src="Aqueduct_Mask_Right" y="27" mask="alpha" />
+	</image>
+	<image id="Aqueduct_Bridge_Left_Empty" isometric="true" width="58" height="58">
+		<layer group="19" image="15" />
+		<layer src="Aqueduct_Mask_Left" y="28" mask="alpha" />
+	</image>
+	<image id="Aqueduct_Bridge_Right_Empty" isometric="true" width="58" height="57">
+		<layer group="19" image="16" />
+		<layer src="Aqueduct_Mask_Right" y="27" mask="alpha" />
+	</image>
+	<image id="Highway_Aqueduct_Full_Start" isometric="true" width="58" height="58">
+		<layer src="Highway0001" y="26"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Water" />
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway0001" y="25"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Water" />
+	</image>
+	<image id="Highway_Aqueduct_Empty_Start" isometric="true" width="58" height="58">
+		<layer src="Highway0010" y="26"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Empty" />
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway0010" y="25"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Empty" />
+	</image>
 </assetlist>

@@ -810,6 +810,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_MONUMENT_PHASES, " phases. "},
     {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Resource requirements:\n"},
     {TR_BUILDING_GLADIATOR_STATUE, "Gladiator statue"},
+    { TR_BUILDING_HIGHWAY, "Highway" },
+    { TR_BUILDING_HIGHWAY_DESC, "Highways allow citizens to reach their destination more quickly." },
     {TR_ADVISOR_NO_ACTIVE_COLOSSEUM, "No active colosseum in the city"},
     {TR_ADVISOR_ACTIVE_COLOSSEUM, "The city is served by the colosseum"},
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "No active hippodrome in the city"},

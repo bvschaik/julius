@@ -60,7 +60,7 @@
 
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x8b;
+static const int SAVE_GAME_CURRENT_VERSION = 0x8c;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
@@ -78,6 +78,7 @@ static const int SAVE_GAME_LAST_CARAVANSERAI_WRONG_OFFSET = 0x87;
 static const int SAVE_GAME_LAST_ZIP_COMPRESSION = 0x88;
 static const int SAVE_GAME_LAST_ENEMY_ARMIES_BUFFER_BUG = 0x89;
 static const int SAVE_GAME_LAST_BARRACKS_TOWER_SENTRY_REQUEST = 0x8a;
+// static const int SAVE_GAME_LAST_WITHOUT_HIGHWAYS = 0x8b; no actual changes to how games are saved. Crudelios just wants this here
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 

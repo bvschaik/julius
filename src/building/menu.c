@@ -11,7 +11,7 @@
 static const building_type MENU_BUILDING_TYPE[BUILD_MENU_MAX][BUILD_MENU_ITEM_MAX] = {
     {BUILDING_HOUSE_VACANT_LOT, 0},
     {BUILDING_CLEAR_LAND, 0},
-    {BUILDING_ROAD, 0},
+    {BUILDING_ROAD, BUILDING_HIGHWAY, 0},
     {BUILDING_DRAGGABLE_RESERVOIR, BUILDING_AQUEDUCT, BUILDING_FOUNTAIN, BUILDING_WELL, 0},
     {BUILDING_BARBER, BUILDING_BATHHOUSE, BUILDING_DOCTOR, BUILDING_HOSPITAL, 0},
     {BUILDING_MENU_SMALL_TEMPLES, BUILDING_MENU_LARGE_TEMPLES, BUILDING_MENU_GRAND_TEMPLES, BUILDING_LARARIUM, BUILDING_ORACLE, BUILDING_SMALL_MAUSOLEUM, BUILDING_LARGE_MAUSOLEUM, BUILDING_NYMPHAEUM, 0},
@@ -105,6 +105,7 @@ static void enable_normal(int *enabled, building_type type)
     enable_house(enabled, type);
     enable_clear(enabled, type);
     enable_if_allowed(enabled, type, BUILDING_ROAD);
+    enable_if_allowed(enabled, type, BUILDING_HIGHWAY);
     enable_if_allowed(enabled, type, BUILDING_DRAGGABLE_RESERVOIR);
     enable_if_allowed(enabled, type, BUILDING_AQUEDUCT);
     enable_if_allowed(enabled, type, BUILDING_FOUNTAIN);

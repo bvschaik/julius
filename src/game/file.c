@@ -145,6 +145,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     map_tiles_update_all_empty_land();
     map_tiles_update_all_meadow();
     map_tiles_update_all_roads();
+    map_tiles_update_all_highways();
     map_tiles_update_all_plazas();
     map_tiles_update_all_walls();
     map_tiles_update_all_aqueducts(0);

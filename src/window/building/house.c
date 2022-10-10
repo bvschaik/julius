@@ -203,7 +203,7 @@ void window_building_draw_house(building_info_context *c)
     } else if (b->data.house.evolve_text_id == 62) {
         int width = lang_text_draw(127, 40 + b->data.house.evolve_text_id,
             c->x_offset + 32, c->y_offset + 60, FONT_NORMAL_BLACK);
-        width += lang_text_draw_colored(41, building_get(c->worst_desirability_building_id)->type,
+        width += lang_text_draw_colored(41, c->worst_desirability_building_type,
             c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_PLAIN, COLOR_FONT_RED);
         text_draw((uint8_t *) ")", c->x_offset + 32 + width, c->y_offset + 60, FONT_NORMAL_BLACK, 0);
         lang_text_draw_multiline(127, 41 + b->data.house.evolve_text_id,

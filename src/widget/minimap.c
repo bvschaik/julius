@@ -41,6 +41,7 @@ typedef struct {
     tile_color meadow[4];
     tile_color grass[8];
     tile_color road;
+    tile_color highway;
 } tile_color_climate_variants;
 
 typedef struct {
@@ -76,6 +77,7 @@ static const tile_color_climate_variants CLIMATE_VARIANTS[3] = {
             {0xff6b8431, 0xff737b31}, {0xff6b7b31, 0xff737b29}, {0xff636b18, 0xff526b21}, {0xff737b31, 0xff737b29}
         },
         .road = {0xff736b63, 0xff4a3121},
+        .highway = {0xffb3aba3, 0xff9a8171},
     },
     // northern
     {
@@ -89,6 +91,7 @@ static const tile_color_climate_variants CLIMATE_VARIANTS[3] = {
             {0xff527b31, 0xff5a7331}, {0xff4a7329, 0xff5a7329}, {0xff4a6b18, 0xff316b21}, {0xff527b29, 0xff527329}
         },
         .road = {0xff736b63, 0xff4a3121},
+        .highway = {0xffb3aba3, 0xff9a8171},
     },
     // desert
     {
@@ -102,6 +105,7 @@ static const tile_color_climate_variants CLIMATE_VARIANTS[3] = {
             {0xffa59c7b, 0xffbdb594}, {0xffcecead, 0xffb5ad94}, {0xffc6c6a5, 0xffdedebd}, {0xffcecead, 0xffd6d6b5}
         },
         .road = {0xff6b5a52, 0xff4a4239},
+        .highway = {0xffb3aba3, 0xff9a8171},
     }
 };
 
@@ -437,16 +441,18 @@ static void draw_minimap_tile(int x_view, int y_view, int grid_offset)
     }
     int rand = data.functions->offset.random(grid_offset);
     const tile_color *colors;
-    if (terrain & TERRAIN_ROAD) {
+    if (terrain & TERRAIN_AQUEDUCT) {
+        colors = &minimap_colors.aqueduct;
+    } else if (terrain & TERRAIN_ROAD) {
         colors = &minimap_colors.climate->road;
+    } else if (terrain & TERRAIN_HIGHWAY) {
+        colors = &minimap_colors.climate->highway;
     } else if (terrain & TERRAIN_WATER) {
         colors = &minimap_colors.climate->water[rand & 3];
     } else if (terrain & (TERRAIN_SHRUB | TERRAIN_TREE)) {
         colors = &minimap_colors.climate->tree[rand & 3];
     } else if (terrain & (TERRAIN_ROCK | TERRAIN_ELEVATION)) {
         colors = &minimap_colors.climate->rock[rand & 3];
-    } else if (terrain & TERRAIN_AQUEDUCT) {
-        colors = &minimap_colors.aqueduct;
     } else if (terrain & TERRAIN_WALL) {
         colors = &minimap_colors.wall;
     } else if (terrain & TERRAIN_MEADOW) {

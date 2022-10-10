@@ -464,7 +464,7 @@ void figure_trade_caravan_action(figure *f)
     int move_speed = trader_bonus_speed();
 
     f->is_ghost = 0;
-    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
     switch (f->action_state) {
@@ -566,7 +566,7 @@ void figure_trade_caravan_donkey_action(figure *f)
     int move_speed = trader_bonus_speed();
 
     f->is_ghost = 0;
-    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
 

@@ -98,8 +98,7 @@ static int init(build_menu_group submenu)
     data.num_items = building_menu_count_items(submenu);
     data.y_offset = Y_MENU_OFFSETS[data.num_items];
     if (submenu == BUILD_MENU_VACANT_HOUSE ||
-        submenu == BUILD_MENU_CLEAR_LAND ||
-        submenu == BUILD_MENU_ROAD) {
+        submenu == BUILD_MENU_CLEAR_LAND) {
         button_menu_item(0);
         return 0;
     } else {

@@ -29,6 +29,7 @@ ext/mpg123*
 # Asset packer
 /res/asset_packer*/build*/
 /res/asset_packer/.ionide/
+/res/asset_packer/CMakeSettings.json*
 
 # Android
 *.iml

@@ -239,7 +239,7 @@ void figure_emigrant_action(figure *f)
 void figure_homeless_action(figure *f)
 {
     figure_image_increase_offset(f, 12);
-    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
 
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:

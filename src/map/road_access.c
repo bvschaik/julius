@@ -510,6 +510,7 @@ int map_road_to_largest_network_caravanserai(int x, int y, int *x_road, int *y_r
 
 static int terrain_is_road_like(int grid_offset)
 {
+    // highways don't count for roamers or for building road access, so they aren't checked here
     return map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_ACCESS_RAMP) ? 1 : 0;
 }
 

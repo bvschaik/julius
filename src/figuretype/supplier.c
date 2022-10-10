@@ -214,7 +214,7 @@ static int recalculate_market_supplier_destination(figure *f)
 void figure_supplier_action(figure *f)
 {
 
-    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     f->use_cross_country = 0;
     f->max_roam_length = 800;
 
@@ -308,7 +308,7 @@ void figure_supplier_action(figure *f)
 void figure_delivery_boy_action(figure *f)
 {
     f->is_ghost = 0;
-    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
 
@@ -365,7 +365,7 @@ void figure_delivery_boy_action(figure *f)
 void figure_fort_supplier_action(figure *f)
 {
     f->is_ghost = 0;
-    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
     figure_image_increase_offset(f, 12);
 
     building *b = building_get(f->building_id);

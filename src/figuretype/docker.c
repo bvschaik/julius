@@ -377,7 +377,7 @@ void figure_docker_action(figure *f)
             b->data.dock.trade_ship_id = 0;
         }
     }
-    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
             figure_combat_handle_attack(f);

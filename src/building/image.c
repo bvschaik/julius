@@ -828,6 +828,8 @@ int building_image_get(building *b)
             return assets_get_image_id("Aesthetics", "Gladiator_Statue") +
                 (orientation % 2) * building_properties_for_type(b->type)->rotation_offset;
         }
+        case BUILDING_HIGHWAY:
+            return assets_get_image_id("Logistics", "Highway_Placement");
         default:
             return 0;
     }
