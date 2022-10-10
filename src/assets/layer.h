@@ -26,6 +26,12 @@ typedef enum {
     PART_BOTH = 3
 } layer_isometric_part;
 
+typedef enum {
+    LAYER_MASK_NONE = 0,
+    LAYER_MASK_GRAYSCALE = 1,
+    LAYER_MASK_ALPHA = 2
+} layer_mask;
+
 typedef struct layer {
     char *asset_image_path;
     int calculated_image_id;
@@ -35,10 +41,10 @@ typedef struct layer {
     int y_offset;
     int width;
     int height;
-    int grayscale;
     layer_invert_type invert;
     layer_rotate_type rotate;
     layer_isometric_part part;
+    layer_mask mask;
     const color_t *data;
     struct layer *prev;
     // Extra layer information specific for the asset packer

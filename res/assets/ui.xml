@@ -117,10 +117,10 @@
 	<image id="Sea Trade Policy 3" src="Sea_Trade_Policy_3"/>
 	<!-- Note: Lighthouse and Caravanserai Trade Policy Disabled Advisor buttons -->
 	<image id="Sea Trade Policy Off Button">
-		<layer group="179" image="0" grayscale="true"/>
+		<layer group="179" image="0" mask="grayscale"/>
 	</image>
 	<image id="Land Trade Policy Off Button">
-		<layer group="179" image="1" grayscale="true"/>
+		<layer group="179" image="1" mask="grayscale"/>
 	</image>
 	<!-- Note: Fix for Hagia Sophia sprite (removes historically inaccurate Islamic minarets, which were added to the building in the 1500s) -->
 	<image id="H Sophia Fix" src="Hagia_Sophia_Fix"/>
@@ -186,7 +186,7 @@
 	<image src="Button_Grid_Click"/>
 	<!-- Note: Grayscale wine icon for disabled grand festival -->
 	<image id="Grand Festival Wine Disabled">
-		<layer group="129" image="7" grayscale="true"/>
+		<layer group="129" image="7" mask="grayscale"/>
 	</image>
 	<!-- Note: Top UI bar element for dynamic Denarii, Population and Date counting -->
 	<image id="Top_UI_Panel" width="20" height="24">

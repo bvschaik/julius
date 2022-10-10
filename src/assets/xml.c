@@ -25,7 +25,7 @@ static const char XML_FILE_ELEMENTS[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][X
 static const char XML_FILE_ATTRIBUTES[XML_MAX_DEPTH][XML_MAX_ELEMENTS_PER_DEPTH][XML_MAX_ATTRIBUTES][XML_TAG_MAX_LENGTH] = {
     { { "name" } }, // assetlist
     { { "id", "src", "width", "height", "group", "image", "isometric" }}, // image
-    { { "src", "group", "image", "src_x", "src_y", "x", "y", "width", "height", "invert", "rotate", "part", "grayscale" }, // layer
+    { { "src", "group", "image", "src_x", "src_y", "x", "y", "width", "height", "invert", "rotate", "part", "mask" }, // layer
     { "frames", "speed", "reversible", "x", "y" } }, // animation
     { { "src", "src_x", "src_y", "width", "height", "group", "image", "invert", "rotate" } } // frame
 };
@@ -181,7 +181,6 @@ static void xml_start_layer_element(const char **attributes)
     int offset_y = 0;
     int width = 0;
     int height = 0;
-    int grayscale = 0;
     asset_image *img = data.current_image;
     int total_attributes = count_xml_attributes(attributes);
     if (total_attributes < 2 || total_attributes > 24 || total_attributes % 2) {
@@ -191,6 +190,7 @@ static void xml_start_layer_element(const char **attributes)
     layer_invert_type invert = INVERT_NONE;
     layer_rotate_type rotate = ROTATE_NONE;
     layer_isometric_part part = PART_BOTH;
+    layer_mask mask = LAYER_MASK_NONE;
     for (int i = 0; i < total_attributes; i += 2) {
         if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][0]) == 0) {
             path = attributes[i + 1];
@@ -233,15 +233,15 @@ static void xml_start_layer_element(const char **attributes)
                 part = PART_TOP;
             }
         } else if (strcmp(attributes[i], XML_FILE_ATTRIBUTES[2][0][12]) == 0) {
-            const char *value = attributes[i + 1];
-            if (strcmp(value, "true") == 0 || strcmp(value, "1") == 0 || strcmp(value, "grayscale") == 0 ||
-                strcmp(value, "yes") == 0 || strcmp(value, "y") == 0) {
-                grayscale = 1;
+            if (strcmp(attributes[i + 1], "grayscale") == 0) {
+                mask = LAYER_MASK_GRAYSCALE;
+            } else if (strcmp(attributes[i + 1], "alpha") == 0) {
+                mask = LAYER_MASK_ALPHA;
             }
         }
     }
     if (!asset_image_add_layer(img, path, group, id, src_x, src_y,
-        offset_x, offset_y, width, height, invert, rotate, part, grayscale)) {
+        offset_x, offset_y, width, height, invert, rotate, part, mask)) {
         log_info("Invalid layer for image", img->id, 0);
         return;
     }

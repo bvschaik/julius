@@ -75,8 +75,9 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
                 break;
             }
         }
-        if (!l->grayscale && asset_img && asset_img->img.width == l->width && asset_img->img.height == l->height &&
-            l->x_offset == 0 && l->y_offset == 0 && type != ATLAS_EXTERNAL && !asset_img->img.is_isometric) {
+        if (l->mask == LAYER_MASK_NONE && asset_img && asset_img->img.width == l->width &&
+            asset_img->img.height == l->height && l->x_offset == 0 && l->y_offset == 0 && type != ATLAS_EXTERNAL &&
+            !asset_img->img.is_isometric) {
             l->data = asset_img->data;
             return;
         }
@@ -203,7 +204,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
     }
     l->calculated_image_id = 0;
 
-    if (l->grayscale) {
+    if (l->mask == LAYER_MASK_GRAYSCALE) {
         convert_layer_to_grayscale(data, l->width, l->height);
     }
 
@@ -240,7 +241,7 @@ void layer_load(layer *l, color_t **main_data, int *main_image_widths)
         return;
     }
 #ifndef BUILDING_ASSET_PACKER
-    if (l->grayscale) {
+    if (l->mask == LAYER_MASK_GRAYSCALE) {
         convert_layer_to_grayscale(data, l->width, l->height);
     }
 #endif

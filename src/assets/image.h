@@ -24,7 +24,7 @@ void asset_image_check_and_handle_reference(asset_image *img);
 int asset_image_add_layer(asset_image *img,
     const char *path, const char *group_id, const char *image_id,
     int src_x, int src_y, int offset_x, int offset_y, int width, int height,
-    layer_invert_type invert, layer_rotate_type rotate, layer_isometric_part part, int grayscale);
+    layer_invert_type invert, layer_rotate_type rotate, layer_isometric_part part, layer_mask mask);
 void asset_image_unload(asset_image *img);
 
 asset_image *asset_image_get_from_id(int image_id);

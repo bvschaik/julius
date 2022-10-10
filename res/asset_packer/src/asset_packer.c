@@ -47,6 +47,7 @@
 static const char *LAYER_PART[] = { "footprint", "top" };
 static const char *LAYER_ROTATE[] = { "90", "180", "270" };
 static const char *LAYER_INVERT[] = { "horizontal", "vertical", "both" };
+static const char *LAYER_MASK[] = { "grayscale", "alpha" };
 
 static char current_file[FILE_NAME_MAX];
 
@@ -145,7 +146,7 @@ static void create_layer_xml_line(FILE *xml_file, const layer *l)
     add_attribute_enum(xml_file, "invert", l->invert, LAYER_INVERT, 3);
     add_attribute_enum(xml_file, "rotate", l->rotate, LAYER_ROTATE, 3);
     add_attribute_enum(xml_file, "part", l->part, LAYER_PART, 2);
-    add_attribute_bool(xml_file, "grayscale", l->grayscale, "true");
+    add_attribute_enum(xml_file, "mask", l->mask, LAYER_MASK, 2);
 
     fprintf(xml_file, "/>%s", FORMAT_NEWLINE);
 }
