@@ -47,9 +47,9 @@ typedef struct layer {
     layer_mask mask;
     const color_t *data;
     struct layer *prev;
+    struct layer *next;
     // Extra layer information specific for the asset packer
 #ifdef BUILDING_ASSET_PACKER
-    struct layer *next;
     char *original_image_group;
     char *original_image_id;
 #endif

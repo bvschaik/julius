@@ -27,11 +27,16 @@ typedef enum {
     IMAGE_FULL_REFERENCE = 2
 } image_reference_type;
 
-static void load_image_layers(asset_image *img, color_t **main_images, int *main_image_widths)
+static int load_image_layers(asset_image *img, color_t **main_images, int *main_image_widths)
 {
+    int has_alpha_mask = 0;
     for (layer *l = img->last_layer; l; l = l->prev) {
+        if (l->mask == LAYER_MASK_ALPHA) {
+            has_alpha_mask = 1;
+        }
         layer_load(l, main_images, main_image_widths);
     }
+    return has_alpha_mask;
 }
 
 static void unload_image_layers(asset_image *img)
@@ -210,7 +215,7 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
             return 1;
         }
     }
-    load_image_layers(img, main_images, main_image_widths);
+    int has_alpha_mask = load_image_layers(img, main_images, main_image_widths);
 
     color_t *data = malloc(img->img.width * img->img.height * sizeof(color_t));
     if (!data) {
@@ -220,7 +225,10 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
     }
     memset(data, 0, img->img.width * img->img.height * sizeof(color_t));
 
-    for (const layer *l = img->last_layer; l; l = l->prev) {
+    // Images with an alpha mask layer need to be loaded from first to last, which is slower
+    const layer *l = has_alpha_mask ? &img->first_layer : img->last_layer;
+
+    while (l) {
         int image_start_x, image_start_y, image_valid_width, image_valid_height, layer_step_x;
 
         if (l->rotate == ROTATE_NONE || l->rotate == ROTATE_180_DEGREES) {
@@ -257,7 +265,7 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
                 layer_step_x = -layer_step_x;
             }
         }
-       
+
         for (int y = image_start_y; y < image_valid_height; y++) {
             color_t *pixel = &data[y * img->img.width + image_start_x];
             const color_t *layer_pixel = 0;
@@ -289,12 +297,12 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
                     continue;
                 }
                 color_t layer_pixel_alpha = *layer_pixel & COLOR_CHANNEL_ALPHA;
-                if (image_pixel_alpha == ALPHA_OPAQUE || layer_pixel_alpha == ALPHA_TRANSPARENT) {
+                if ((image_pixel_alpha == ALPHA_OPAQUE && !has_alpha_mask) || layer_pixel_alpha == ALPHA_TRANSPARENT) {
                     pixel++;
                     layer_pixel += layer_step_x;
                     continue;
                 }
-                if (image_pixel_alpha == ALPHA_TRANSPARENT) {
+                if (image_pixel_alpha == ALPHA_TRANSPARENT || (layer_pixel_alpha == ALPHA_OPAQUE && has_alpha_mask)) {
                     *pixel = *layer_pixel;
                 } else if (layer_pixel_alpha == ALPHA_OPAQUE) {
                     color_t alpha = image_pixel_alpha >> COLOR_BITSHIFT_ALPHA;
@@ -309,6 +317,7 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
                 layer_pixel += layer_step_x;
             }
         }
+        l = has_alpha_mask ? l->next : l->prev;
     }
 
     // The top and footprint parts of the image need to be split
@@ -424,11 +433,9 @@ int asset_image_add_layer(asset_image *img,
             img->img.height = current_layer->width;
         }
     }
-#ifdef BUILDING_ASSET_PACKER
     if (img->last_layer != current_layer) {
         img->last_layer->next = current_layer;
     }
-#endif
     img->last_layer = current_layer;
     return 1;
 }
