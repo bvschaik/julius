@@ -368,6 +368,11 @@ int layer_add_from_image_id(layer *l, const char *group_id, const char *image_id
 #else
     const image *original_image = 0;
     if (strcmp(group_id, "this") == 0) {
+        if (!image_id) {
+            log_error("No image ID provided for the current layer", 0, 0);
+            layer_unload(l);
+            return 0;
+        }
         const image_groups *group = group_get_current();
         const asset_image *image = asset_image_get_from_id(group->first_image_index);
         while (image && image->index <= group->last_image_index) {
