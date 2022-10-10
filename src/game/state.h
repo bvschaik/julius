@@ -44,6 +44,8 @@ int game_state_is_paused(void);
 
 void game_state_toggle_paused(void);
 
+void game_state_pause(void);
+
 void game_state_unpause(void);
 
 int game_state_overlay(void);

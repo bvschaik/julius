@@ -844,7 +844,10 @@ static translation_string all_strings[] = {
     {TR_CHEAT_FINISHED_MONUMENTS, "Monuments finished"},
     {TR_CHEAT_UPDATED_MONUMENTS, "Monuments updated"},
     {TR_CHEAT_UNLOCKED_ALL_BUILDINGS, "All buildings unlocked"},
-    {TR_CHEAT_INCITED_RIOT, "Incited a riot"}
+    {TR_CHEAT_INCITED_RIOT, "Incited a riot"},
+    {TR_CITY_MESSAGE_TITLE_ROAD_TO_ROME_WARNING, "City Inacessible" },
+    {TR_CITY_MESSAGE_TEXT_ROAD_TO_ROME_WARNING, "The road to Rome is obstructed. Unless we immediately restore the access to the imperial highway, the engineers from Rome will be forced to take action." },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

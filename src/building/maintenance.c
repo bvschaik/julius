@@ -14,6 +14,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "figuretype/migrant.h"
+#include "game/state.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
 #include "map/building.h"
@@ -29,11 +30,14 @@
 #include "scenario/property.h"
 #include "sound/effect.h"
 
-static int fire_spread_direction = 0;
+static struct {
+    int fire_spread_direction;
+    int obstruction_message_displayed;
+} data;
 
 void building_maintenance_update_fire_direction(void)
 {
-    fire_spread_direction = random_byte() & 7;
+    data.fire_spread_direction = random_byte() & 7;
 }
 
 void building_maintenance_update_burning_ruins(void)
@@ -74,17 +78,17 @@ void building_maintenance_update_burning_ruins(void)
         if ((b->house_figure_generation_delay & 3) != (random_byte() & 3)) {
             continue;
         }
-        int dir1 = fire_spread_direction - 1;
+        int dir1 = data.fire_spread_direction - 1;
         if (dir1 < 0) {
             dir1 = 7;
         }
-        int dir2 = fire_spread_direction + 1;
+        int dir2 = data.fire_spread_direction + 1;
         if (dir2 > 7) {
             dir2 = 0;
         }
 
         int grid_offset = b->grid_offset;
-        int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(fire_spread_direction));
+        int next_building_id = map_building_at(grid_offset + map_grid_direction_delta(data.fire_spread_direction));
         if (next_building_id && !building_get(next_building_id)->fire_proof) {
             building_destroy_by_fire(building_get(next_building_id));
             sound_effect_play(SOUND_EFFECT_EXPLOSION);
@@ -380,9 +384,16 @@ void building_maintenance_check_rome_access(void)
         }
     }
     const map_tile *exit_point = city_map_exit_point();
+
     if (!map_routing_distance(exit_point->grid_offset)) {
         // no route through city
         if (city_population() <= 0) {
+            return;
+        }
+        if (!data.obstruction_message_displayed) {
+            data.obstruction_message_displayed = 1;
+            city_message_post(1, MESSAGE_ROAD_TO_ROME_WARNING, 0, 0);
+            game_state_pause();
             return;
         }
         for (int i = 0; i < 15; i++) {
@@ -410,5 +421,7 @@ void building_maintenance_check_rome_access(void)
         city_warning_show(WARNING_CITY_BOXED_IN, NEW_WARNING_SLOT);
         city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH, NEW_WARNING_SLOT);
         city_view_go_to_grid_offset(problem_grid_offset);
+    } else {
+        data.obstruction_message_displayed = 0;
     }
 }

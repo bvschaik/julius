@@ -31,6 +31,11 @@ int game_state_is_paused(void)
     return data.paused;
 }
 
+void game_state_pause(void)
+{
+    data.paused = 1;
+}
+
 void game_state_unpause(void)
 {
     data.paused = 0;
