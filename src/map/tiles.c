@@ -875,8 +875,6 @@ int map_tiles_clear_highway(int grid_offset, int measure_only)
 {
     int items_cleared = 0;
     int terrain = map_terrain_get(grid_offset);
-    int x = map_grid_offset_to_x(grid_offset);
-    int y = map_grid_offset_to_y(grid_offset);
     int highway_terrain = TERRAIN_HIGHWAY_TOP_LEFT;
     for (int i = 0; i < 4; i++) {
         if (terrain & highway_terrain) {

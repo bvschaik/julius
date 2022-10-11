@@ -295,7 +295,7 @@ void figure_cartpusher_action(figure *f)
     building *b = building_get(f->building_id);
 
     // Fix: even though gardens and some buildings don't get assigned a network id, they're still used for pathfinding
-    // So we just assume that the garden's network id is the sane as the cartpusher's original building
+    // So we just assume that the network id is the same as the cartpusher's original building
     if (!road_network_id &&
         (map_terrain_is(f->grid_offset, TERRAIN_GARDEN) || map_terrain_is(f->grid_offset, TERRAIN_BUILDING))) {
         road_network_id = b->road_network_id;
@@ -674,9 +674,10 @@ void figure_warehouseman_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
 
-    // Fix: even though gardens don't get assigned an id, they're still used for pathfinding
-    // So we just assume that the garden's network id is the sane as the cartpusher's original building
-    if (!road_network_id && map_terrain_is(f->grid_offset, TERRAIN_GARDEN)) {
+    // Fix: even though gardens and some buildings don't get assigned a network id, they're still used for pathfinding
+    // So we just assume that the network id is the same as the cartpusher's original building
+    if (!road_network_id &&
+        (map_terrain_is(f->grid_offset, TERRAIN_GARDEN) || map_terrain_is(f->grid_offset, TERRAIN_BUILDING))) {
         road_network_id = b->road_network_id;
     }
 

@@ -78,8 +78,6 @@ static void draw_tile_coords(int x, int y, int grid_offset)
 #ifdef DRAW_ROAD_NETWORK_IDS
 static void draw_road_network_id(int x, int y, int grid_offset)
 {
-    int tx = map_grid_offset_to_x(grid_offset);
-    int ty = map_grid_offset_to_y(grid_offset);
     int road_network_id = map_road_network_get(grid_offset);
     uint8_t text[20];
     string_from_int(text, road_network_id, 0);

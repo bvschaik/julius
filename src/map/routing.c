@@ -218,8 +218,6 @@ static void route_queue_from_to(int src_x, int src_y, int dst_x, int dst_y, int 
             if (receive_highway_bonus(offset, i)) {
                 dist--;
             }
-            int next_x = map_grid_offset_to_x(next_offset);
-            int next_y = map_grid_offset_to_y(next_offset);
             if (valid_offset(next_offset, dist) && callback(offset, next_offset, i)) {
                 ordered_enqueue(next_offset, dist, remaining_dist);
             }
