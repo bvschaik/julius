@@ -360,6 +360,11 @@ int map_routing_citizen_is_road(int grid_offset)
     return terrain_land_citizen.items[grid_offset] == CITIZEN_0_ROAD;
 }
 
+int map_routing_citizen_is_highway(int grid_offset)
+{
+    return terrain_land_citizen.items[grid_offset] == CITIZEN_1_HIGHWAY;
+}
+
 int map_routing_citizen_is_passable_terrain(int grid_offset)
 {
     return terrain_land_citizen.items[grid_offset] == CITIZEN_2_PASSABLE_TERRAIN;

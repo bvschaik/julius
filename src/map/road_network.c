@@ -45,7 +45,11 @@ static int mark_road_network(int grid_offset, uint8_t network_id)
         for (int i = 0; i < 4; i++) {
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
             if (map_routing_citizen_is_passable(new_offset) && !network.items[new_offset]) {
-                if (map_routing_citizen_is_road(new_offset) || map_terrain_is(new_offset, TERRAIN_ACCESS_RAMP)) {
+                if (
+                    map_routing_citizen_is_road(new_offset) ||
+                    map_terrain_is(new_offset, TERRAIN_ACCESS_RAMP) ||
+                    map_routing_citizen_is_highway(new_offset)
+                ) {
                     network.items[new_offset] = network_id;
                     size++;
                     if (next_offset == -1) {

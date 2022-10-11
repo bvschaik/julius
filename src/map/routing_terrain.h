@@ -12,6 +12,7 @@ int map_routing_wall_tile_in_radius(int x, int y, int radius, int *x_wall, int *
 
 int map_routing_citizen_is_passable(int grid_offset);
 int map_routing_citizen_is_road(int grid_offset);
+int map_routing_citizen_is_highway(int grid_offset);
 int map_routing_citizen_is_passable_terrain(int grid_offset);
 
 int map_routing_noncitizen_is_passable(int grid_offset);
