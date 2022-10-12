@@ -806,7 +806,7 @@ static void set_highway_image(int x, int y, int grid_offset)
         int highway_image_offset = 0;
         for (int d = 0; d < 4; d++) {
             if (!map_terrain_is(grid_offset + highway_wall_direction_offsets[d], TERRAIN_HIGHWAY)) {
-                highway_image_offset = d + 1;
+                highway_image_offset = ((d + city_view_orientation() / 2) % 4) + 1;
                 if (!map_terrain_is(grid_offset + highway_wall_direction_offsets[(d + 1) % 4], TERRAIN_HIGHWAY)) {
                     highway_image_offset += 4;
                     break;

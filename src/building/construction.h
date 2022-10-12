@@ -35,6 +35,8 @@ void building_construction_cancel(void);
 
 void building_construction_update(int x, int y, int grid_offset);
 
+void building_construction_offset_start_from_orientation(int *x, int *y, int size);
+
 void building_construction_place(void);
 
 int building_construction_can_place_on_terrain(int x, int y, int *warning_id);

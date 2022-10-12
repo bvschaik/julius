@@ -329,11 +329,7 @@ int building_construction_place_building(building_type type, int x, int y)
     } else if (type == BUILDING_TRIUMPHAL_ARCH) {
         building_orientation = map_orientation_for_triumphal_arch(x, y);
     }
-    switch (city_view_orientation()) {
-        case DIR_2_RIGHT: x = x - size + 1; break;
-        case DIR_4_BOTTOM: x = x - size + 1; y = y - size + 1; break;
-        case DIR_6_LEFT: y = y - size + 1; break;
-    }
+    building_construction_offset_start_from_orientation(&x, &y, size);
     // extra checks
     if (type == BUILDING_GATEHOUSE) {
         if (!map_tiles_are_clear(x, y, size, terrain_mask)) {

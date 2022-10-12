@@ -876,6 +876,15 @@ static figure_type nearby_enemy_type(int x_start, int y_start, int x_end, int y_
     return FIGURE_NONE;
 }
 
+void building_construction_offset_start_from_orientation(int *x, int *y, int size)
+{
+    switch (city_view_orientation()) {
+        case DIR_2_RIGHT: *x = *x - size + 1; break;
+        case DIR_4_BOTTOM: *x = *x - size + 1; *y = *y - size + 1; break;
+        case DIR_6_LEFT: *y = *y - size + 1; break;
+    }
+}
+
 void building_construction_place(void)
 {
     data.cost_preview = 0;
