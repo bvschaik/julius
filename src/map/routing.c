@@ -320,7 +320,7 @@ static int callback_calc_distance_build_wall(int next_offset, int dist)
     return 1;
 }
 
-static int callback_calc_distance_build_highway(int next_offset, int dist)
+static int can_build_highway(int next_offset, int dist)
 {
     int size = 2;
     for (int x = 0; x < size; x++) {
@@ -328,11 +328,18 @@ static int callback_calc_distance_build_highway(int next_offset, int dist)
             int offset = next_offset + x + GRID_SIZE * y;
             int terrain = terrain_land_citizen.items[offset];
             if (terrain != CITIZEN_4_CLEAR_TERRAIN && terrain != CITIZEN_0_ROAD && terrain != CITIZEN_1_HIGHWAY && terrain != CITIZEN_N3_AQUEDUCT) {
-                return 1;
+                return 0;
             }
         }
     }
-    enqueue(next_offset, dist);
+    return 1;
+}
+
+static int callback_calc_distance_build_highway(int next_offset, int dist)
+{
+    if (can_build_highway(next_offset, dist)) {
+        enqueue(next_offset, dist);
+    }
     return 1;
 }
 
@@ -425,16 +432,22 @@ static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aquedu
 
 int map_routing_calculate_distances_for_building(routed_building_type type, int x, int y)
 {
-    if (type == ROUTED_BUILDING_WALL) {
-        route_queue_all_from(map_grid_offset(x, y), DIRECTIONS_NO_DIAGONALS, callback_calc_distance_build_wall, 0, 1);
-        return 1;
-    }
-    if (type == ROUTED_BUILDING_HIGHWAY) {
-        route_queue_all_from(map_grid_offset(x, y), DIRECTIONS_NO_DIAGONALS, callback_calc_distance_build_highway, 0, 2);
-        return 1;
-    }
-    clear_data();
     int source_offset = map_grid_offset(x, y);
+    if (type == ROUTED_BUILDING_WALL) {
+        route_queue_all_from(source_offset, DIRECTIONS_NO_DIAGONALS, callback_calc_distance_build_wall, 0, 1);
+        return 1;
+    }
+
+    clear_data();
+
+    if (type == ROUTED_BUILDING_HIGHWAY) {
+        if (!can_build_highway(source_offset, 1)) {
+            return 0;
+        }
+        route_queue_all_from(source_offset, DIRECTIONS_NO_DIAGONALS, callback_calc_distance_build_highway, 0, 2);
+        return 1;
+    }
+
     if (!map_can_place_initial_road_or_aqueduct(source_offset, type != ROUTED_BUILDING_ROAD)) {
         return 0;
     }

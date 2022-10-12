@@ -652,6 +652,7 @@ int building_construction_is_updatable(void)
         case BUILDING_GARDENS:
         case BUILDING_HOUSE_VACANT_LOT:
         case BUILDING_PALISADE:
+        case BUILDING_HIGHWAY:
             return 1;
         default:
             return 0;
@@ -662,9 +663,7 @@ void building_construction_cancel(void)
 {
     map_property_clear_constructing_and_deleted();
     if (data.in_progress && building_construction_is_updatable()) {
-        if (building_construction_is_updatable()) {
-            game_undo_restore_map(1);
-        }
+        game_undo_restore_map(1);
         data.in_progress = 0;
         data.cost_preview = 0;
     } else {
