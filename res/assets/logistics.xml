@@ -549,8 +549,8 @@
 		<layer src="Highway0001"/>
 		<layer src="Highway0009"/>
 	</image>
-	<image src="Highway0010" isometric="true" width="58" height="32">
-		<image isometric="true"/>
+	<image src="Highway0010" isometric="true" width="58" height="32"/>
+	<image isometric="true">
 		<layer src="Highway0010"/>
 		<layer src="Highway0002"/>
 	</image>
