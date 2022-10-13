@@ -308,10 +308,18 @@ int layer_add_from_image_path(layer *l, const char *path,
         snprintf(l->asset_image_path, FILE_NAME_MAX, "%s.png", group_get_current()->name);
     }
 #ifndef BUILDING_ASSET_PACKER
-    if ((!l->width || !l->height) && !png_get_image_size(l->asset_image_path, &l->width, &l->height)) {
-        log_info("Unable to load image", path, 0);
-        layer_unload(l);
-        return 0;
+    if (!l->width || !l->height) {
+        if (!png_get_image_size(l->asset_image_path, &width, &height)) {
+            log_info("Unable to load image", path, 0);
+            layer_unload(l);
+            return 0;
+        }
+        if (!l->width) {
+            l->width = width;
+        }
+        if (!l->height) {
+            l->height = height;
+        }
     }
 #endif
     l->x_offset = offset_x;
