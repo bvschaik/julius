@@ -516,69 +516,69 @@
 		</animation>
 	</image>
 	<image id="Highway_Placement" src="Highway_Placement" isometric="true"/>
-	<image id="Highway_Tile_Start" src="Highway0001" isometric="true" width="58" height="32"/>
-	<image isometric="true" width="58" height="32">
+	<image id="Highway_Tile_Start" src="Highway0001" isometric="true"/>
+	<image isometric="true">
 		<layer src="Highway0001"/>
 		<layer src="Highway0002"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0001"/>
 		<layer src="Highway0003"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0001"/>
 		<layer src="Highway0004"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0001"/>
 		<layer src="Highway0005"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0001"/>
 		<layer src="Highway0006"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0001"/>
 		<layer src="Highway0007"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0001"/>
 		<layer src="Highway0008"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0001"/>
 		<layer src="Highway0009"/>
 	</image>
-	<image src="Highway0010" isometric="true" width="58" height="32"/>
+	<image src="Highway0010" isometric="true"/>
 	<image isometric="true">
 		<layer src="Highway0010"/>
 		<layer src="Highway0002"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0010"/>
 		<layer src="Highway0003"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0010"/>
 		<layer src="Highway0004"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0010"/>
 		<layer src="Highway0005"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0010"/>
 		<layer src="Highway0006"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0010"/>
 		<layer src="Highway0007"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0010"/>
 		<layer src="Highway0008"/>
 	</image>
-	<image isometric="true" width="58" height="32">
+	<image isometric="true">
 		<layer src="Highway0010"/>
 		<layer src="Highway0009"/>
 	</image>
