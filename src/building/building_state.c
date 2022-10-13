@@ -345,6 +345,9 @@ static void read_type_data(buffer *buf, building *b, int version)
         for (int i = 0; i < RESOURCE_MAX; i++) {
             b->data.monument.resources_needed[i] = buffer_read_i16(buf);
         }
+        if (b->data.monument.resources_needed[RESOURCE_NONE] < 0) {
+            b->data.monument.resources_needed[RESOURCE_NONE] = 1;
+        }
         b->data.monument.upgrades = buffer_read_i32(buf);
         b->data.monument.progress = buffer_read_i16(buf);
         b->data.monument.phase = buffer_read_i16(buf);

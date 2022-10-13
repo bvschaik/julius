@@ -499,7 +499,7 @@ int building_monument_needs_resources(building *b)
         return 0;
     }
     for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-        if (b->data.monument.resources_needed[resource]) {
+        if (b->data.monument.resources_needed[resource] > 0) {
             return 1;
         }
     }

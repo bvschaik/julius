@@ -289,18 +289,19 @@ void figure_workcamp_engineer_action(figure *f)
             break;
         case FIGURE_ACTION_207_WORK_CAMP_ARCHITECT_GOING_TO_MONUMENT:
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
-                f->action_state = FIGURE_ACTION_208_WORK_CAMP_ARCHITECT_WORKING_ON_MONUMENT;
-                monument = building_get(f->destination_building_id);
-                if (!building_monument_access_point(monument, &dst) || b->data.monument.phase == MONUMENT_FINISHED) {
-                    f->state = FIGURE_STATE_DEAD;
+            monument = building_get(f->destination_building_id);
+            if (monument->state == BUILDING_STATE_UNUSED || !building_monument_access_point(monument, &dst) || b->data.monument.phase == MONUMENT_FINISHED) {
+                f->state = FIGURE_STATE_DEAD;
+            } else {
+                if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
+                    f->action_state = FIGURE_ACTION_208_WORK_CAMP_ARCHITECT_WORKING_ON_MONUMENT;
+                    figure_movement_set_cross_country_destination(f, dst.x, dst.y);
+                    f->wait_ticks = 1;
+                } else if (f->direction == DIR_FIGURE_REROUTE) {
+                    figure_route_remove(f);
                 }
-                figure_movement_set_cross_country_destination(f, dst.x, dst.y);
-                f->wait_ticks = 1;
-            } else if (f->direction == DIR_FIGURE_REROUTE) {
-                figure_route_remove(f);
+                figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
             }
-            figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
             break;
         case FIGURE_ACTION_208_WORK_CAMP_ARCHITECT_WORKING_ON_MONUMENT:
             figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
