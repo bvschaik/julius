@@ -156,7 +156,7 @@ jobs:
         with:
           name: ${{ matrix.name }}
           path: deploy\
-      - uses: actions/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1
       - name: Send Webhook Notification
         if: always()
         env:
