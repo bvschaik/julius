@@ -182,7 +182,7 @@ static void update_tree_image(int x, int y, int grid_offset)
         }
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
-        map_aqueduct_set(grid_offset, 0);
+        map_aqueduct_remove(grid_offset);
     }
 }
 
@@ -357,7 +357,7 @@ static void determine_garden_tile(int x, int y, int grid_offset)
     if (image_id >= base_image && image_id <= base_image + 6) {
         map_terrain_add(grid_offset, TERRAIN_GARDEN);
         map_property_clear_constructing(grid_offset);
-        map_aqueduct_set(grid_offset, 0);
+        map_aqueduct_remove(grid_offset);
     }
 }
 
@@ -1022,7 +1022,7 @@ static void set_meadow_image(int x, int y, int grid_offset)
         }
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
-        map_aqueduct_set(grid_offset, 0);
+        map_aqueduct_remove(grid_offset);
     }
 }
 
@@ -1103,12 +1103,12 @@ static void set_aqueduct(int grid_offset)
         map_property_clear_plaza_or_earthquake(grid_offset);
     }
     set_aqueduct_image(grid_offset, is_road, img);
-    map_aqueduct_set(grid_offset, img->aqueduct_offset);
+    map_aqueduct_set_image(grid_offset, img->aqueduct_offset);
 }
 
 static void update_aqueduct_tile(int x, int y, int grid_offset)
 {
-    if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) && map_aqueduct_at(grid_offset) <= 15) {
+    if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT) && map_aqueduct_image_at(grid_offset) <= 15) {
         set_aqueduct(grid_offset);
     }
 }
@@ -1170,7 +1170,7 @@ static void set_rubble_image(int x, int y, int grid_offset)
         map_image_set(grid_offset, image_group(GROUP_TERRAIN_RUBBLE) + (map_random_get(grid_offset) & 7));
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
-        map_aqueduct_set(grid_offset, 0);
+        map_aqueduct_remove(grid_offset);
     }
 }
 
@@ -1251,7 +1251,7 @@ static int get_access_ramp_image_offset(int x, int y)
 
 static void set_elevation_aqueduct_image(int grid_offset)
 {
-    if (map_aqueduct_at(grid_offset) <= 15 && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+    if (map_aqueduct_image_at(grid_offset) <= 15 && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         set_aqueduct(grid_offset);
     }
 }

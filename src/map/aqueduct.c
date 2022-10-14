@@ -2,39 +2,46 @@
 
 #include "map/grid.h"
 
-/**
- * The aqueduct grid is used in two ways:
- * 1) to mark water/no water (0/1, see map/water_supply.c)
- * 2) to store image IDs for the aqueduct (0-15)
- * This leads to some strange results
- */
+#define WATER_ACCESS_OFFSET 7
+#define IMAGE_MASK 0x7f
+
 static grid_u8 aqueduct;
 static grid_u8 aqueduct_backup;
 
-int map_aqueduct_at(int grid_offset)
+int map_aqueduct_has_water_access_at(int grid_offset)
 {
-    return aqueduct.items[grid_offset];
+    return aqueduct.items[grid_offset] >> WATER_ACCESS_OFFSET;
 }
 
-void map_aqueduct_set(int grid_offset, int value)
+int map_aqueduct_image_at(int grid_offset)
 {
-    aqueduct.items[grid_offset] = value;
+    return aqueduct.items[grid_offset] & IMAGE_MASK;
+}
+
+void map_aqueduct_set_water_access(int grid_offset, int value)
+{
+    aqueduct.items[grid_offset] = (value << WATER_ACCESS_OFFSET) | (aqueduct.items[grid_offset] & IMAGE_MASK);
+}
+
+void map_aqueduct_set_image(int grid_offset, int value)
+{
+    aqueduct.items[grid_offset] = (aqueduct.items[grid_offset] & ~IMAGE_MASK) | value;
 }
 
 void map_aqueduct_remove(int grid_offset)
 {
     aqueduct.items[grid_offset] = 0;
-    if (aqueduct.items[grid_offset + map_grid_delta(0, -1)] == 5) {
-        aqueduct.items[grid_offset + map_grid_delta(0, -1)] = 1;
+    if (map_aqueduct_image_at(grid_offset + map_grid_delta(0, -1)) == 5) {
+        map_aqueduct_set_image(grid_offset + map_grid_delta(0, -1), 1);
     }
-    if (aqueduct.items[grid_offset + map_grid_delta(1, 0)] == 6) {
-        aqueduct.items[grid_offset + map_grid_delta(1, 0)] = 2;
+    if (map_aqueduct_image_at(grid_offset + map_grid_delta(1, 0)) == 6) {
+        map_aqueduct_set_image(grid_offset + map_grid_delta(1, 0), 2);
     }
-    if (aqueduct.items[grid_offset + map_grid_delta(0, 1)] == 5) {
-        aqueduct.items[grid_offset + map_grid_delta(0, 1)] = 3;
+    if (map_aqueduct_image_at(grid_offset + map_grid_delta(0, 1)) == 5) {
+        map_aqueduct_set_image(grid_offset + map_grid_delta(0, 1), 3);
     }
-    if (aqueduct.items[grid_offset + map_grid_delta(-1, 0)] == 6) {
-        aqueduct.items[grid_offset + map_grid_delta(-1, 0)] = 4;
+    if (map_aqueduct_image_at(grid_offset + map_grid_delta(-1, 0)) == 6) {
+        map_aqueduct_set_image(grid_offset + map_grid_delta(-1, 0), 4);
     }
 }
 

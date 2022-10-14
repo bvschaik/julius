@@ -3,9 +3,12 @@
 
 #include "core/buffer.h"
 
-int map_aqueduct_at(int grid_offset);
 
-void map_aqueduct_set(int grid_offset, int value);
+int map_aqueduct_has_water_access_at(int grid_offset);
+int map_aqueduct_image_at(int grid_offset);
+
+void map_aqueduct_set_water_access(int grid_offset, int value);
+void map_aqueduct_set_image(int grid_offset, int value);
 
 /**
  * Removes aqueduct and updates adjacent aqueduct tiles

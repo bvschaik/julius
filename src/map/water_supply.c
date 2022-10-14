@@ -34,17 +34,6 @@ static struct {
     int tail;
 } queue;
 
-static int image_without_water = 0;
-static int highway_image_with_water = 0;
-static int highway_image_without_water = 0;
-
-void map_water_supply_init(void)
-{
-    image_without_water = image_group(GROUP_BUILDING_AQUEDUCT_NO_WATER);
-    highway_image_with_water = assets_get_image_id("Logistics", "Highway_Aqueduct_Full_Start");
-    highway_image_without_water = assets_get_image_id("Logistics", "Highway_Aqueduct_Empty_Start");
-}
-
 static void mark_well_access(int well_id, int radius)
 {
     building *well = building_get(well_id);
@@ -89,11 +78,12 @@ static void set_all_aqueducts_to_no_water(void)
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
             if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
-                map_aqueduct_set(grid_offset, 0);
+                int had_water_access = map_aqueduct_has_water_access_at(grid_offset);
+                map_aqueduct_set_water_access(grid_offset, 0);
                 int image_id = map_image_at(grid_offset);
-                if (image_id < image_without_water) {
+                if (image_id < image_group(GROUP_BUILDING_AQUEDUCT_NO_WATER)) {
                     map_image_set(grid_offset, image_id + 15);
-                } else if (image_id >= highway_image_with_water && image_id < highway_image_without_water) {
+                } else if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY) && had_water_access) {
                     map_image_set(grid_offset, image_id + 18);
                 }
             }
@@ -114,12 +104,15 @@ static void fill_aqueducts_from_offset(int grid_offset)
         if (++guard >= GRID_SIZE * GRID_SIZE) {
             break;
         }
-        map_aqueduct_set(grid_offset, 1);
+        int had_water_access = map_aqueduct_has_water_access_at(grid_offset);
+        map_aqueduct_set_water_access(grid_offset, 1);
         int image_id = map_image_at(grid_offset);
-        if (image_id >= image_without_water && image_id < highway_image_with_water) {
+        if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+            if (!had_water_access) {
+                map_image_set(grid_offset, image_id - 18);
+            }
+        } else if (image_id >= image_group(GROUP_BUILDING_AQUEDUCT_NO_WATER)) {
             map_image_set(grid_offset, image_id - 15);
-        } else if (image_id >= highway_image_without_water) {
-            map_image_set(grid_offset, image_id - 18);
         }
         next_offset = -1;
         for (int i = 0; i < 4; i++) {
@@ -134,7 +127,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
                     }
                 }
             } else if (map_terrain_is(new_offset, TERRAIN_AQUEDUCT)) {
-                if (!map_aqueduct_at(new_offset)) {
+                if (!map_aqueduct_has_water_access_at(new_offset)) {
                     if (next_offset == -1) {
                         next_offset = new_offset;
                     } else {
@@ -266,7 +259,6 @@ void map_water_supply_update_reservoir_fountain(void)
             b->has_water_access = 0;
         }
     }
-
 }
 
 int map_water_supply_is_well_unnecessary(int well_id, int radius)

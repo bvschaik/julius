@@ -27,7 +27,6 @@ void game_state_init(void)
 
     city_warning_clear_all();
     map_tiles_init();
-    map_water_supply_init();
 }
 
 int game_state_is_paused(void)

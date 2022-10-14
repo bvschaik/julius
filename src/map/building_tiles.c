@@ -182,7 +182,7 @@ void map_building_tiles_remove(int building_id, int x, int y)
             map_property_set_multi_tile_size(grid_offset, 1);
             map_property_clear_multi_tile_xy(grid_offset);
             map_property_mark_draw_tile(grid_offset);
-            map_aqueduct_set(grid_offset, 0);
+            map_aqueduct_remove(grid_offset);
             map_building_set(grid_offset, 0);
             map_building_damage_clear(grid_offset);
             map_sprite_clear_tile(grid_offset);
@@ -221,7 +221,7 @@ void map_building_tiles_set_rubble(int building_id, int x, int y, int size)
             }
             map_property_clear_constructing(grid_offset);
             map_property_set_multi_tile_size(grid_offset, 1);
-            map_aqueduct_set(grid_offset, 0);
+            map_aqueduct_remove(grid_offset);
             map_building_set(grid_offset, 0);
             map_building_damage_clear(grid_offset);
             map_sprite_clear_tile(grid_offset);
