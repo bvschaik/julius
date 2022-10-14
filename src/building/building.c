@@ -434,6 +434,7 @@ void building_update_state(void)
     }
     if (road_recalc) {
         map_tiles_update_all_roads();
+        map_tiles_update_all_highways();
     }
 }
 

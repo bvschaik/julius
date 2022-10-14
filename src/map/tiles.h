@@ -22,6 +22,7 @@ void map_tiles_update_area_roads(int x, int y, int size);
 int map_tiles_set_road(int x, int y);
 
 void map_tiles_update_all_highways(void);
+void map_tiles_update_area_highways(int x, int y, int size);
 int map_tiles_set_highway(int x, int y);
 int map_tiles_clear_highway(int grid_offset, int measure_only);
 

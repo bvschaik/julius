@@ -220,6 +220,7 @@ static void add_to_map(int type, building *b, int size,
             map_orientation_update_buildings();
             map_terrain_add_gatehouse_roads(b->x, b->y, orientation);
             map_tiles_update_area_roads(b->x, b->y, 5);
+            map_tiles_update_area_highways(b->x, b->y, 3);
             map_tiles_update_all_plazas();
             map_tiles_update_area_walls(b->x, b->y, 5);
             break;
