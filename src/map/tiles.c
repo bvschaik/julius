@@ -696,6 +696,27 @@ int map_tiles_is_paved_road(int grid_offset)
     return 0;
 }
 
+static int get_highway_wall_offset(int grid_offset)
+{
+    int wall_offset = 0;
+    int no_walled_terrain = TERRAIN_HIGHWAY | TERRAIN_ROAD | TERRAIN_GATEHOUSE;
+    for (int d = 0; d < 4; d++) {
+        int direction_offset = grid_offset + highway_wall_direction_offsets[d];
+        // should this side have a wall?
+        if (!map_terrain_is(direction_offset, no_walled_terrain)) {
+            wall_offset = ((d + city_view_orientation() / 2) % 4) + 1;
+            int next_direction_offset = grid_offset + highway_wall_direction_offsets[(d + 1) % 4];
+            // is this a corner?
+            if (!map_terrain_is(next_direction_offset, no_walled_terrain)) {
+                // increment by 4 to get the corner image
+                wall_offset += 4;
+                break;
+            }
+        }
+    }
+    return wall_offset;
+}
+
 static void set_aqueduct_image(int grid_offset, int is_road, const terrain_image *img)
 {
     int group_offset = img->group_offset;
@@ -734,17 +755,7 @@ static void set_aqueduct_image(int grid_offset, int is_road, const terrain_image
         if (water_offset) {
             new_image_id += HIGHWAY_WALL_VARIANTS * 2;
         }
-        int highway_wall_offset = 0;
-        for (int d = 0; d < 4; d++) {
-            if (!map_terrain_is(grid_offset + highway_wall_direction_offsets[d], TERRAIN_HIGHWAY)) {
-                highway_wall_offset = ((d + city_view_orientation() / 2) % 4) + 1;
-                if (!map_terrain_is(grid_offset + highway_wall_direction_offsets[(d + 1) % 4], TERRAIN_HIGHWAY)) {
-                    highway_wall_offset += 4;
-                    break;
-                }
-            }
-        }
-        new_image_id += highway_wall_offset;
+        new_image_id += get_highway_wall_offset(grid_offset);
         if (city_view_orientation() == 2 || city_view_orientation() == 6) {
             new_image_id += aqueduct_orientation_offset;
         }
@@ -794,22 +805,7 @@ static void set_highway_image(int x, int y, int grid_offset)
         const terrain_image *img = map_image_context_get_aqueduct(grid_offset, 0);
         set_aqueduct_image(grid_offset, 0, img);
     } else {
-        int highway_image_offset = 0;
-        int open_terrain = TERRAIN_HIGHWAY | TERRAIN_ROAD | TERRAIN_GATEHOUSE;
-        for (int d = 0; d < 4; d++) {
-            int direction_offset = grid_offset + highway_wall_direction_offsets[d];
-            // should this side have a wall?
-            if (!map_terrain_is(direction_offset, open_terrain)) {
-                highway_image_offset = ((d + city_view_orientation() / 2) % 4) + 1;
-                int next_direction_offset = grid_offset + highway_wall_direction_offsets[(d + 1) % 4];
-                // is this a corner?
-                if (!map_terrain_is(next_direction_offset, open_terrain)) {
-                    // increment by 4 to get the corner image
-                    highway_image_offset += 4;
-                    break;
-                }
-            }
-        }
+        int highway_image_offset = get_highway_wall_offset(grid_offset);
         int random = (map_random_get(grid_offset) & 1);
         if (random > 0) {
             // increment by 9 to get a variant
