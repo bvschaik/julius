@@ -1,6 +1,7 @@
 #include "tiles.h"
 
 #include "assets/assets.h"
+#include "building/building.h"
 #include "city/map.h"
 #include "city/view.h"
 #include "core/direction.h"
@@ -696,18 +697,34 @@ int map_tiles_is_paved_road(int grid_offset)
     return 0;
 }
 
+static int is_highway_access(int grid_offset)
+{
+    if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY | TERRAIN_ROAD | TERRAIN_GATEHOUSE | TERRAIN_ACCESS_RAMP)) {
+        return 1;
+    }
+    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        const building *b = building_get(map_building_at(grid_offset));
+        if (b->type == BUILDING_GRANARY) {
+            return grid_offset == b->grid_offset + map_grid_delta(1, 0) ||
+                grid_offset == b->grid_offset + map_grid_delta(0, 1) ||
+                grid_offset == b->grid_offset + map_grid_delta(2, 1) ||
+                grid_offset == b->grid_offset + map_grid_delta(1, 2);
+        }
+    }
+    return 0;
+}
+
 static int get_highway_wall_offset(int grid_offset)
 {
     int wall_offset = 0;
-    int no_walled_terrain = TERRAIN_HIGHWAY | TERRAIN_ROAD | TERRAIN_GATEHOUSE;
     for (int d = 0; d < 4; d++) {
         int direction_offset = grid_offset + highway_wall_direction_offsets[d];
         // should this side have a wall?
-        if (!map_terrain_is(direction_offset, no_walled_terrain)) {
+        if (!is_highway_access(direction_offset)) {
             wall_offset = ((d + city_view_orientation() / 2) % 4) + 1;
             int next_direction_offset = grid_offset + highway_wall_direction_offsets[(d + 1) % 4];
             // is this a corner?
-            if (!map_terrain_is(next_direction_offset, no_walled_terrain)) {
+            if (!is_highway_access(next_direction_offset)) {
                 // increment by 4 to get the corner image
                 wall_offset += 4;
                 break;
