@@ -450,7 +450,7 @@ static void init_savegame_data(int version)
 
 static void scenario_load_from_state(scenario_state *file)
 {
-    map_image_load_state_legacy(file->graphic_ids);
+    map_image_load_state(file->graphic_ids);
     map_terrain_load_state(file->terrain, 0, file->graphic_ids, 1);
     map_property_load_state(file->bitfields, file->edge);
     map_random_load_state(file->random);
@@ -466,7 +466,7 @@ static void scenario_load_from_state(scenario_state *file)
 
 static void scenario_save_to_state(scenario_state *file)
 {
-    map_image_save_state_legacy(file->graphic_ids);
+    map_image_save_state(file->graphic_ids);
     map_terrain_save_state_legacy(file->terrain);
     map_property_save_state(file->bitfields, file->edge);
     map_random_save_state(file->random);
