@@ -94,7 +94,7 @@ static void set_all_aqueducts_to_no_water(void)
                 if (image_id < image_without_water) {
                     map_image_set(grid_offset, image_id + 15);
                 } else if (image_id >= highway_image_with_water && image_id < highway_image_without_water) {
-                    map_image_set(grid_offset, image_id + 2);
+                    map_image_set(grid_offset, image_id + 18);
                 }
             }
         }
@@ -119,7 +119,7 @@ static void fill_aqueducts_from_offset(int grid_offset)
         if (image_id >= image_without_water && image_id < highway_image_with_water) {
             map_image_set(grid_offset, image_id - 15);
         } else if (image_id >= highway_image_without_water) {
-            map_image_set(grid_offset, image_id - 2);
+            map_image_set(grid_offset, image_id - 18);
         }
         next_offset = -1;
         for (int i = 0; i < 4; i++) {

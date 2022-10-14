@@ -615,16 +615,192 @@
 		<layer src="Highway_Base_1" y="28"/>
 		<layer group="this" image="Aqueduct_Bridge_Left_Water"/>
 	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_1" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Water"/>
+		<layer src="Highway_Barrier_1" x="24" y="39"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_1" y="28"/>
+		<layer src="Highway_Barrier_3" x="28" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Water"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_1" y="28"/>
+		<layer src="Highway_Barrier_4" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Water"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_1" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Water"/>
+		<layer src="Highway_Barrier_2" y="40"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_1" y="28"/>
+		<layer src="Highway_Barrier_3" x="28" y="28" width="28"/>
+		<layer src="Highway_Barrier_1" x="22" y="40" width="33"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Water"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_1" y="28"/>
+		<layer src="Highway_Barrier_3" x="28" y="28"/>
+		<layer src="Highway_Barrier_4" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Water"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_1" y="28"/>
+		<layer src="Highway_Barrier_4" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Water"/>
+		<layer src="Highway_Barrier_2" y="42"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_1" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Water"/>
+		<layer src="Highway_Barrier_2" y="40"/>
+		<layer src="Highway_Barrier_1" x="26" y="38" width="32"/>
+	</image>
 	<image isometric="true" width="58" height="57">
 		<layer src="Highway_Base_1" y="27"/>
 		<layer group="this" image="Aqueduct_Bridge_Right_Water"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_1" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Water"/>
+		<layer src="Highway_Barrier_1" x="24" y="38"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_1" y="27"/>
+		<layer src="Highway_Barrier_3" x="28" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Water"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_1" y="27"/>
+		<layer src="Highway_Barrier_4" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Water"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_1" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Water"/>
+		<layer src="Highway_Barrier_2" y="39"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_1" y="27"/>
+		<layer src="Highway_Barrier_3" x="28" y="27" width="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Water"/>
+		<layer src="Highway_Barrier_1" x="22" y="39" width="33"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_1" y="27"/>
+		<layer src="Highway_Barrier_3" x="28" y="27"/>
+		<layer src="Highway_Barrier_4" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Water"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_1" y="27"/>
+		<layer src="Highway_Barrier_4" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Water"/>
+		<layer src="Highway_Barrier_2" y="41"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_1" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Water"/>
+		<layer src="Highway_Barrier_2" y="39"/>
+		<layer src="Highway_Barrier_1" x="26" y="37" width="32"/>
 	</image>
 	<image id="Highway_Aqueduct_Empty_Start" isometric="true" width="58" height="58">
 		<layer src="Highway_Base_2" y="28"/>
 		<layer group="this" image="Aqueduct_Bridge_Left_Empty"/>
 	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_2" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Empty"/>
+		<layer src="Highway_Barrier_1" x="24" y="39"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_2" y="28"/>
+		<layer src="Highway_Barrier_3" x="28" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Empty"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_2" y="28"/>
+		<layer src="Highway_Barrier_4" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Empty"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_2" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Empty"/>
+		<layer src="Highway_Barrier_2" y="40"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_2" y="28"/>
+		<layer src="Highway_Barrier_3" x="28" y="28" width="28"/>
+		<layer src="Highway_Barrier_1" x="22" y="40" width="33"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Empty"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_2" y="28"/>
+		<layer src="Highway_Barrier_3" x="28" y="28"/>
+		<layer src="Highway_Barrier_4" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Empty"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_2" y="28"/>
+		<layer src="Highway_Barrier_4" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Empty"/>
+		<layer src="Highway_Barrier_2" y="42"/>
+	</image>
+	<image isometric="true" width="58" height="58">
+		<layer src="Highway_Base_2" y="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Left_Empty"/>
+		<layer src="Highway_Barrier_2" y="40"/>
+		<layer src="Highway_Barrier_1" x="26" y="38" width="32"/>
+	</image>
 	<image isometric="true" width="58" height="57">
 		<layer src="Highway_Base_2" y="27"/>
 		<layer group="this" image="Aqueduct_Bridge_Right_Empty"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_2" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Empty"/>
+		<layer src="Highway_Barrier_1" x="24" y="38"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_2" y="27"/>
+		<layer src="Highway_Barrier_3" x="28" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Empty"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_2" y="27"/>
+		<layer src="Highway_Barrier_4" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Empty"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_2" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Empty"/>
+		<layer src="Highway_Barrier_2" y="39"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_2" y="27"/>
+		<layer src="Highway_Barrier_3" x="28" y="27" width="28"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Empty"/>
+		<layer src="Highway_Barrier_1" x="22" y="39" width="33"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_2" y="27"/>
+		<layer src="Highway_Barrier_3" x="28" y="27"/>
+		<layer src="Highway_Barrier_4" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Empty"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_2" y="27"/>
+		<layer src="Highway_Barrier_4" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Empty"/>
+		<layer src="Highway_Barrier_2" y="41"/>
+	</image>
+	<image isometric="true" width="58" height="57">
+		<layer src="Highway_Base_2" y="27"/>
+		<layer group="this" image="Aqueduct_Bridge_Right_Empty"/>
+		<layer src="Highway_Barrier_2" y="39"/>
+		<layer src="Highway_Barrier_1" x="26" y="37" width="32"/>
 	</image>
 </assetlist>

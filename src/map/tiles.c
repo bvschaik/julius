@@ -28,11 +28,13 @@
 #define FORBIDDEN_TERRAIN_RUBBLE (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |\
             TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 
+#define HIGHWAY_WALL_VARIANTS 9
+
 static int aqueduct_include_construction = 0;
 static int highway_top_tile_offsets[4] = { 0, -GRID_SIZE, -1, -GRID_SIZE - 1 };
 static int highway_wall_direction_offsets[4] = { 1, -GRID_SIZE, -1, GRID_SIZE };
-static int highway_image_with_water = 0;
-static int highway_image_without_water = 0;
+static int highway_image_with_water;
+static int highway_image_without_water;
 
 void map_tiles_init(void)
 {
@@ -724,11 +726,27 @@ static void set_aqueduct_image(int grid_offset, int is_road, const terrain_image
     int new_image_id = image_aqueduct + water_offset + group_offset;
     if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
         new_image_id = assets_get_image_id("Logistics", "Highway_Aqueduct_Full_Start");
+        int aqueduct_orientation_offset = HIGHWAY_WALL_VARIANTS;
         if (map_terrain_is(grid_offset - 1, TERRAIN_AQUEDUCT) || map_terrain_is(grid_offset + 1, TERRAIN_AQUEDUCT)) {
-            new_image_id += 1;
+            new_image_id += HIGHWAY_WALL_VARIANTS;
+            aqueduct_orientation_offset = -HIGHWAY_WALL_VARIANTS;
         }
         if (water_offset) {
-            new_image_id += 2;
+            new_image_id += HIGHWAY_WALL_VARIANTS * 2;
+        }
+        int highway_wall_offset = 0;
+        for (int d = 0; d < 4; d++) {
+            if (!map_terrain_is(grid_offset + highway_wall_direction_offsets[d], TERRAIN_HIGHWAY)) {
+                highway_wall_offset = ((d + city_view_orientation() / 2) % 4) + 1;
+                if (!map_terrain_is(grid_offset + highway_wall_direction_offsets[(d + 1) % 4], TERRAIN_HIGHWAY)) {
+                    highway_wall_offset += 4;
+                    break;
+                }
+            }
+        }
+        new_image_id += highway_wall_offset;
+        if (city_view_orientation() == 2 || city_view_orientation() == 6) {
+            new_image_id += aqueduct_orientation_offset;
         }
     }
     map_image_set(grid_offset, new_image_id);
