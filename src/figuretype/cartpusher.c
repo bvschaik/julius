@@ -316,8 +316,11 @@ void figure_cartpusher_action(figure *f)
             if (b->state != BUILDING_STATE_IN_USE || b->figure_id != f->id) {
                 f->state = FIGURE_STATE_DEAD;
             }
+            if (!road_network_id) {
+                f->state = FIGURE_STATE_DEAD;
+            }
             f->wait_ticks++;
-            if (f->wait_ticks > 30) {
+            if (f->wait_ticks > 30 && road_network_id) {
                 determine_cartpusher_destination(f, b, road_network_id);
             }
             f->image_offset = 0;
