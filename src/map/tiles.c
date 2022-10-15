@@ -815,7 +815,7 @@ static void set_road_image(int x, int y, int grid_offset)
 
 static void set_highway_image(int x, int y, int grid_offset)
 {
-    if (!map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+    if (!map_terrain_is(grid_offset, TERRAIN_HIGHWAY) || map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
         return;
     }
     if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
