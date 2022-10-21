@@ -131,21 +131,8 @@ then
       source ${PWD}/emsdk/emsdk_env.sh
       CONFIGURE_PREFIX="emconfigure"
       MAKE_PREFIX="emmake"
-      MPG123_CONFIGURE_OPTIONS="\
-        --with-cpu=generic_fpu \
-        --disable-fifo \
-        --disable-network \
-        --disable-shared \
-        --enable-static \
-        --disable-ntom \
-        --disable-downsample \
-        --disable-icy \
-        --disable-messages \
-        --disable-feature-report \
-        --disable-equalizer \
-        --disable-buffer"
-      SDL_CONFIGURE_OPTIONS="--host=wasm32-unknown-emscripten --disable-assembly --disable-threads --disable-cpuinfo"
-      SDL_MIXER_CONFIGURE_OPTIONS="--host=wasm32-unknown-emscripten --enable-music-mp3-mpg123-shared=no"
+      SDL_CONFIGURE_OPTIONS="--host=wasm32-unknown-emscripten --disable-assembly --disable-cpuinfo"
+      SDL_MIXER_CONFIGURE_OPTIONS="--host=wasm32-unknown-emscripten"
     fi
     install_sdl_lib "SDL2" $SDL_VERSION "$SDL_CONFIGURE_OPTIONS"
     if [ ! -z "$MPG123_VERSION" ]
