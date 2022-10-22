@@ -175,7 +175,7 @@ static int draw_background(void)
     lang_text_draw_centered(57, has_colosseum ? 21 : 10, COVERAGE_OFFSET, 143, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
 
     // hippodromes
-    int has_hippodrome = building_count_active(BUILDING_COLOSSEUM) ? 1 : 0;
+    int has_hippodrome = building_count_active(BUILDING_HIPPODROME) ? 1 : 0;
     lang_text_draw(CUSTOM_TRANSLATION, TR_ADVISOR_NO_ACTIVE_HIPPODROME + has_hippodrome, 40, 163, FONT_NORMAL_WHITE);
     lang_text_draw_centered(57, has_hippodrome ? 21 : 10, COVERAGE_OFFSET, 163, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
 
