@@ -90,14 +90,15 @@ static void draw_foreground(void)
             }
         } else {
             // not mothballed, some working
+            int idle_buildings = total_buildings - active_buildings;
             int width = text_draw_number(active_buildings, '@', " ", 98, 172, FONT_NORMAL_BLACK);
             width += lang_text_draw(54, 12, 98 + width, 172, FONT_NORMAL_BLACK);
-            width += text_draw_number(total_buildings - active_buildings, '@', " ",
+            width += text_draw_number(idle_buildings, '@', " ",
                 98 + width, 172, FONT_NORMAL_BLACK);
-            if (active_buildings == 1) {
-                lang_text_draw(54, 13, 98 + width, 172, FONT_NORMAL_BLACK);
-            } else {
+            if (idle_buildings == 1) {
                 lang_text_draw(54, 14, 98 + width, 172, FONT_NORMAL_BLACK);
+            } else {
+                lang_text_draw(54, 13, 98 + width, 172, FONT_NORMAL_BLACK);
             }
         }
     } else if (data.resource != RESOURCE_MEAT || !scenario_building_allowed(BUILDING_WHARF)) {
