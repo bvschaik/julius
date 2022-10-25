@@ -810,6 +810,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_MONUMENT_PHASES, " phases. "},
     {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Ressources nécessaires :\n"},
     {TR_BUILDING_GLADIATOR_STATUE, "Statue de gladiateur"},
+    { TR_BUILDING_HIGHWAY, "Voie romaine" },
+    { TR_BUILDING_HIGHWAY_DESC, "Les voies romaines permettent aux citoyens d'atteindre leur destination plus rapidement." },
     {TR_ADVISOR_NO_ACTIVE_COLOSSEUM, "Aucun colisée actif dans la cité"},
     {TR_ADVISOR_ACTIVE_COLOSSEUM, "La cité jouit d'un colisée"},
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "Aucun hippodrome actif dans la cité"},
@@ -844,7 +846,10 @@ static translation_string all_strings[] = {
     {TR_CHEAT_FINISHED_MONUMENTS, "Monuments terminés"},
     {TR_CHEAT_UPDATED_MONUMENTS, "Monuments mis à jour"},
     {TR_CHEAT_UNLOCKED_ALL_BUILDINGS, "Tous les bâtiments débloqués"},
-    {TR_CHEAT_INCITED_RIOT, "Émeute déclenchée"}
+    {TR_CHEAT_INCITED_RIOT, "Émeute déclenchée"},
+    {TR_CITY_MESSAGE_TITLE_ROAD_TO_ROME_WARNING, "Cité inaccessible" },
+    {TR_CITY_MESSAGE_TEXT_ROAD_TO_ROME_WARNING, "La Route de Rome est bloquée. À moins que l'accès à la Voie impériale soit immédiatemment restauré, les ingénieurs de Rome vont devoir agir." },
+
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
