@@ -809,6 +809,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_MONUMENT_PHASES, " этапы. "},
     {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Требования к ресурсам:\n"},
     {TR_BUILDING_GLADIATOR_STATUE, "Статуя гладиатора"},
+    { TR_BUILDING_HIGHWAY, "Шоссе" },
+    { TR_BUILDING_HIGHWAY_DESC, "Шоссе позволяют гражданам быстрее добраться до места назначения."},
     {TR_ADVISOR_NO_ACTIVE_COLOSSEUM, "Нет действующего Колизея в городе"},
     {TR_ADVISOR_ACTIVE_COLOSSEUM, "Город обслуживает Колизей"},
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "Нет действующего Ипподрома в городе"},
@@ -844,6 +846,8 @@ static translation_string all_strings[] = {
     {TR_CHEAT_UPDATED_MONUMENTS, "Памятники обновлены"},
     {TR_CHEAT_UNLOCKED_ALL_BUILDINGS, "Все здания разблокированы для использования"},
     {TR_CHEAT_INCITED_RIOT, "Были спровоцированы беспорядки"},
+    {TR_CITY_MESSAGE_TITLE_ROAD_TO_ROME_WARNING, "Город недоступен" },
+    {TR_CITY_MESSAGE_TEXT_ROAD_TO_ROME_WARNING, "Дорога в Рим заблокирована. Если мы немедленно не восстановим доступ к имперскому шоссе, инженеры из Рима будут вынуждены принять меры." },
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
