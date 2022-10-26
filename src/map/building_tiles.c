@@ -193,7 +193,7 @@ void map_building_tiles_remove(int building_id, int x, int y)
                 map_image_set(grid_offset,
                     image_group(GROUP_TERRAIN_UGLY_GRASS) +
                     (map_random_get(grid_offset) & 7));
-                map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
+                map_terrain_remove(grid_offset, TERRAIN_CLEARABLE & ~TERRAIN_HIGHWAY);
             }
         }
     }
