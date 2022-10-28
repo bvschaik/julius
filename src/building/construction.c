@@ -584,6 +584,10 @@ int building_construction_in_progress(void)
 
 void building_construction_start(int x, int y, int grid_offset)
 {
+    if (data.type == BUILDING_HIGHWAY) {
+        building_construction_offset_start_from_orientation(&x, &y, 2);
+        grid_offset = map_grid_offset(x, y);
+    }
     data.start.grid_offset = grid_offset;
     data.start.x = data.end.x = x;
     data.start.y = data.end.y = y;
@@ -676,6 +680,10 @@ void building_construction_update(int x, int y, int grid_offset)
 {
     building_type type = building_construction_type();
     if (grid_offset) {
+        if (type == BUILDING_HIGHWAY) {
+            building_construction_offset_start_from_orientation(&x, &y, 2);
+            grid_offset = map_grid_offset(x, y);
+        }
         data.end.x = x;
         data.end.y = y;
         data.end.grid_offset = grid_offset;

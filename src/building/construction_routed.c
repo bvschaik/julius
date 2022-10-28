@@ -133,9 +133,6 @@ int building_construction_place_road(int measure_only, int x_start, int y_start,
 int building_construction_place_highway(int measure_only, int x_start, int y_start, int x_end, int y_end)
 {
     game_undo_restore_map(0);
-    building_construction_offset_start_from_orientation(&x_start, &y_start, 2);
-    building_construction_offset_start_from_orientation(&x_end, &y_end, 2);
-
     int start_offset = map_grid_offset(x_start, y_start);
     int end_offset = map_grid_offset(x_end, y_end);
     int forbidden_terrain_mask =
