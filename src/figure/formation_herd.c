@@ -173,9 +173,9 @@ static int can_spawn_wolf(formation *m)
     return 0;
 }
 
-static void update_herd_formation(formation *m)
+static void update_herd_formation(formation *m, int infinite_wolves_spawning)
 {
-    if (can_spawn_wolf(m)) {
+    if (infinite_wolves_spawning && can_spawn_wolf(m)) {
         // spawn new wolf
         if (!map_terrain_is(map_grid_offset(m->x, m->y), TERRAIN_IMPASSABLE_WOLF)) {
             figure *wolf = figure_create(m->figure_type, m->x, m->y, DIR_0_TOP);
@@ -256,7 +256,7 @@ void formation_herd_update(void)
         formation *m = formation_get(i);
         int infinite_wolves_spawning = m->figure_type == FIGURE_WOLF && !config_get(CONFIG_GP_CH_DISABLE_INFINITE_WOLVES_SPAWNING);
         if (m->in_use && m->is_herd && !m->is_legion && (m->num_figures > 0 || infinite_wolves_spawning)) {
-            update_herd_formation(m);
+            update_herd_formation(m, infinite_wolves_spawning);
         }
     }
 }
