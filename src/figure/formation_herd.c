@@ -16,6 +16,17 @@
 #include "scenario/property.h"
 #include "sound/effect.h"
 
+#define FREE_TILE_SEARCH_RADIUS 4
+#define ANIMAL_MOVE_WAIT_TICKS 401
+#define SHEEP_ROAM_DISTANCE 8
+#define SHEEP_ROAM_DELAY 20
+#define ZEBRA_ROAM_DISTANCE 20
+#define ZEBRA_ROAM_DELAY 4
+#define WOLF_ROAM_DISTANCE 16
+#define WOLF_ROAM_DELAY 6
+#define WOLF_SPAWN_DELAY_TICKS 32
+
+// Look for a free tile, in the neighborhood of (x,y)
 static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_tile, int *y_tile)
 {
     unsigned short disallowed_terrain = ~(TERRAIN_ACCESS_RAMP | TERRAIN_MEADOW);
@@ -23,7 +34,7 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_t
     int x_found = 0, y_found = 0;
 
     int x_min, y_min, x_max, y_max;
-    map_grid_get_area(x, y, 1, 4, &x_min, &y_min, &x_max, &y_max);
+    map_grid_get_area(x, y, 1, FREE_TILE_SEARCH_RADIUS, &x_min, &y_min, &x_max, &y_max);
 
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
@@ -51,6 +62,7 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_t
     return tile_found;
 }
 
+// Try to find an open destination point (x_tile,y_tile) in the general direction, at the given distance
 static int get_roaming_destination(int formation_id, int allow_negative_desirability,
                                    int x, int y, int distance, int direction, int *x_tile, int *y_tile)
 {
@@ -59,6 +71,7 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
         target_direction = direction;
         allow_negative_desirability = 1;
     }
+    // Do up to 4 checks to find a place to walk to
     for (int i = 0; i < 4; i++) {
         int x_target, y_target;
         switch (target_direction) {
@@ -106,13 +119,12 @@ static int get_roaming_destination(int formation_id, int allow_negative_desirabi
         } else if (y_target >= map_grid_height() - 1) {
             y_target = map_grid_height() - 2;
         }
+        // If we can find a free tile in this direction, return 1
         if (get_free_tile(x_target, y_target, allow_negative_desirability, x_tile, y_tile)) {
             return 1;
         }
-        target_direction += 2;
-        if (target_direction > 6) {
-            target_direction = 0;
-        }
+        // ...otherwise turn right and try again
+        target_direction = (target_direction + 2) % 8;
     }
     return 0;
 }
@@ -128,7 +140,7 @@ static void move_animals(const formation *m, int attacking_animals)
             f->action_state == FIGURE_ACTION_150_ATTACK) {
             continue;
         }
-        f->wait_ticks = 401;
+        f->wait_ticks = ANIMAL_MOVE_WAIT_TICKS;
         if (attacking_animals) {
             int target_id = figure_combat_get_target_for_wolf(f->x, f->y, 6);
             if (target_id) {
@@ -153,7 +165,7 @@ static int can_spawn_wolf(formation *m)
 {
     if (m->num_figures < m->max_figures && m->figure_type == FIGURE_WOLF) {
         m->herd_wolf_spawn_delay++;
-        if (m->herd_wolf_spawn_delay > 32) {
+        if (m->herd_wolf_spawn_delay > WOLF_SPAWN_DELAY_TICKS) {
             m->herd_wolf_spawn_delay = 0;
             return 1;
         }
@@ -186,20 +198,18 @@ static void update_herd_formation(formation *m)
     int allow_negative_desirability;
     switch (m->figure_type) {
         case FIGURE_SHEEP:
-            roam_distance = 8;
-            roam_delay = 20;
+            roam_distance = SHEEP_ROAM_DISTANCE;
+            roam_delay = SHEEP_ROAM_DELAY;
             allow_negative_desirability = 0;
-            attacking_animals = 0;
             break;
         case FIGURE_ZEBRA:
-            roam_distance = 20;
-            roam_delay = 4;
+            roam_distance = ZEBRA_ROAM_DISTANCE;
+            roam_delay = ZEBRA_ROAM_DELAY;
             allow_negative_desirability = 0;
-            attacking_animals = 0;
             break;
         case FIGURE_WOLF:
-            roam_distance = 16;
-            roam_delay = 6;
+            roam_distance = WOLF_ROAM_DISTANCE;
+            roam_delay = WOLF_ROAM_DELAY;
             allow_negative_desirability = 1;
             for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
                 int figure_id = m->figures[fig];
@@ -230,7 +240,7 @@ static void update_herd_formation(formation *m)
                     if (m->figure_type == FIGURE_WOLF && city_sound_update_march_wolf()) {
                         sound_effect_play(SOUND_EFFECT_WOLF_HOWL);
                     }
-                    move_animals(m, attacking_animals);
+                    move_animals(m, 0);
                 }
             }
         }
