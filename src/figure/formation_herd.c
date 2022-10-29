@@ -172,22 +172,15 @@ static void update_herd_formation(formation *m)
             wolf->wait_ticks = wolf->id & 0x1f;
         }
     }
-    int attacking_animals = 0;
-    for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
-        int figure_id = m->figures[fig];
-        if (figure_id > 0 && figure_get(figure_id)->action_state == FIGURE_ACTION_150_ATTACK) {
-            attacking_animals++;
-        }
-    }
-    if (m->missile_attack_timeout) {
-        attacking_animals = 1;
-    }
+
     if (m->figures[0]) {
         figure *f = figure_get(m->figures[0]);
         if (f->state == FIGURE_STATE_ALIVE) {
             formation_set_home(m, f->x, f->y);
         }
     }
+
+    int attacking_animals = 0;
     int roam_distance;
     int roam_delay;
     int allow_negative_desirability;
@@ -208,6 +201,15 @@ static void update_herd_formation(formation *m)
             roam_distance = 16;
             roam_delay = 6;
             allow_negative_desirability = 1;
+            for (int fig = 0; fig < MAX_FORMATION_FIGURES; fig++) {
+                int figure_id = m->figures[fig];
+                if (figure_id > 0 && figure_get(figure_id)->action_state == FIGURE_ACTION_150_ATTACK) {
+                    attacking_animals++;
+                }
+            }
+            if (m->missile_attack_timeout) {
+                attacking_animals = 1;
+            }
             break;
         default:
             return;
