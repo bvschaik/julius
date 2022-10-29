@@ -54,8 +54,8 @@ static int get_free_tile(int x, int y, int allow_negative_desirability, int *x_t
 static int get_roaming_destination(int formation_id, int allow_negative_desirability,
                                    int x, int y, int distance, int direction, int *x_tile, int *y_tile)
 {
-    int target_direction = (formation_id + random_byte()) & 6;
-    if (direction) {
+    int target_direction = (formation_id + random_byte()) & 7;
+    if (direction >= DIR_0_TOP && direction < DIR_8_NONE) {
         target_direction = direction;
         allow_negative_desirability = 1;
     }
@@ -222,7 +222,7 @@ static void update_herd_formation(formation *m)
             int x_tile, y_tile;
             if (get_roaming_destination(m->id, allow_negative_desirability, m->x_home, m->y_home,
                     roam_distance, m->herd_direction, &x_tile, &y_tile)) {
-                m->herd_direction = 0;
+                m->herd_direction = DIR_8_NONE;
                 if (formation_enemy_move_formation_to(m, x_tile, y_tile, &x_tile, &y_tile)) {
                     formation_set_destination(m, x_tile, y_tile);
                     if (m->figure_type == FIGURE_WOLF && city_sound_update_march_wolf()) {
