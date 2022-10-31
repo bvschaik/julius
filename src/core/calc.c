@@ -7,12 +7,11 @@ int calc_adjust_with_percentage(int value, int percentage)
 
 int calc_percentage(int value, int total)
 {
+    int ret = 0;
     if (total) {
-        int value_times_100 = 100 * value;
-        return value_times_100 / total;
-    } else {
-        return 0;
+        ret = (value * 100) / total;
     }
+    return ret;
 }
 
 static int get_delta(int value1, int value2)

@@ -6,8 +6,7 @@ void buffer_init(buffer *buf, void *data, int size)
 {
     buf->data = data;
     buf->size = size;
-    buf->index = 0;
-    buf->overflow = 0;
+    buffer_reset(buf);
 }
 
 void buffer_reset(buffer *buf)
@@ -23,11 +22,8 @@ void buffer_set(buffer *buf, int offset)
 
 static int check_size(buffer *buf, int size)
 {
-    if (buf->index + size > buf->size) {
-        buf->overflow = 1;
-        return 0;
-    }
-    return 1;
+    buf->overflow = (buf->index + size) > buf->size;
+    return !buf->overflow;
 }
 
 void buffer_write_u8(buffer *buf, uint8_t value)
