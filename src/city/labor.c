@@ -11,6 +11,7 @@
 #include "core/calc.h"
 #include "core/random.h"
 #include "game/time.h"
+#include "scenario/data.h"
 #include "scenario/property.h"
 
 #define MAX_CATS 10
@@ -108,22 +109,25 @@ int city_labor_wages_rome(void)
 
 int city_labor_raise_wages_rome(void)
 {
-    if (city_data.labor.wages_rome >= 45) {
+    if (city_data.labor.wages_rome >= scenario.random_events.max_wages) {
         return 0;
     }
     city_data.labor.wages_rome += 1 + (random_byte_alt() & 3);
-    if (city_data.labor.wages_rome > 45) {
-        city_data.labor.wages_rome = 45;
+    if (city_data.labor.wages_rome > scenario.random_events.max_wages) {
+        city_data.labor.wages_rome = scenario.random_events.max_wages;
     }
     return 1;
 }
 
 int city_labor_lower_wages_rome(void)
 {
-    if (city_data.labor.wages_rome <= 5) {
+    if (city_data.labor.wages_rome <= scenario.random_events.min_wages) {
         return 0;
     }
     city_data.labor.wages_rome -= 1 + (random_byte_alt() & 3);
+    if (city_data.labor.wages_rome < scenario.random_events.min_wages) {
+        city_data.labor.wages_rome = scenario.random_events.min_wages;
+    }
     return 1;
 }
 

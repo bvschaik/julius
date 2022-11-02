@@ -126,6 +126,7 @@
 	<image id="H Sophia Fix" src="Hagia_Sophia_Fix"/>
 	<!-- Note: Button for Housing Advisor -->
 	<!-- Button assets created by MSTVD and Areldir -->
+	<image id="Village" src="Housing_Advisor_UH" width="40" height="40"/>
 	<image id="Housing Advisor Button" width="40" height="40">
 		<layer group="128" image="9" x="0" y="0"/>
 		<layer src="Advisor_Button_UH" x="0" y="0"/>
@@ -223,4 +224,10 @@
 	<image id="11Legion_Elephants" src="11Legion_Elephants"/>
 	<image id="13Legion_Bulls" src="13Legion_Bulls"/>
 	<image id="14Legion_Centaurs" src="14Legion_Centaurs"/>
+	<image id="LandRouteDot" width="5" height="5">
+		<layer group="181" image="7"/>
+	</image>
+	<image id="SeaRouteDot" width="5" height="5">
+		<layer group="182" image="7"/>
+	</image>
 </assetlist>

@@ -287,6 +287,7 @@ set(CORE_FILES
     ${PROJECT_SOURCE_DIR}/src/core/string.c
     ${PROJECT_SOURCE_DIR}/src/core/time.c
     ${PROJECT_SOURCE_DIR}/src/core/zip.c
+    ${PROJECT_SOURCE_DIR}/src/core/zlib_helper.c
 )
 
 set(BUILDING_FILES
@@ -369,6 +370,7 @@ set(CITY_FILES
 set(EMPIRE_FILES
     ${PROJECT_SOURCE_DIR}/src/empire/city.c
     ${PROJECT_SOURCE_DIR}/src/empire/empire.c
+    ${PROJECT_SOURCE_DIR}/src/empire/empire_xml.c
     ${PROJECT_SOURCE_DIR}/src/empire/object.c
     ${PROJECT_SOURCE_DIR}/src/empire/trade_prices.c
     ${PROJECT_SOURCE_DIR}/src/empire/trade_route.c

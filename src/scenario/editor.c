@@ -4,6 +4,7 @@
 #include "core/string.h"
 #include "map/grid.h"
 #include "scenario/data.h"
+#include "scenario/empire.h"
 #include "scenario/property.h"
 
 #include <string.h>
@@ -92,6 +93,9 @@ void scenario_editor_create(int map_size)
     for (int i = 0; i < MAX_INVASIONS; i++) {
         scenario.invasions[i].from = 8;
     }
+
+    scenario.random_events.max_wages = 45;
+    scenario.random_events.min_wages = 5;
 
     scenario.is_saved = 1;
 }
@@ -248,7 +252,7 @@ void scenario_editor_demand_change_get(int index, editor_demand_change *demand_c
     demand_change->year = scenario.demand_changes[index].year;
     demand_change->resource = scenario.demand_changes[index].resource;
     demand_change->route_id = scenario.demand_changes[index].route_id;
-    demand_change->is_rise = scenario.demand_changes[index].is_rise;
+    demand_change->amount = scenario.demand_changes[index].amount;
 }
 
 static void sort_demand_changes(void)
@@ -276,7 +280,7 @@ void scenario_editor_demand_change_delete(int index)
     scenario.demand_changes[index].year = 0;
     scenario.demand_changes[index].resource = 0;
     scenario.demand_changes[index].route_id = 0;
-    scenario.demand_changes[index].is_rise = 0;
+    scenario.demand_changes[index].amount = 0;
     sort_demand_changes();
     scenario.is_saved = 0;
 }
@@ -286,7 +290,7 @@ void scenario_editor_demand_change_save(int index, editor_demand_change *demand_
     scenario.demand_changes[index].year = demand_change->year;
     scenario.demand_changes[index].resource = demand_change->resource;
     scenario.demand_changes[index].route_id = demand_change->route_id;
-    scenario.demand_changes[index].is_rise = demand_change->is_rise;
+    scenario.demand_changes[index].amount = demand_change->amount;
     sort_demand_changes();
     scenario.is_saved = 0;
 }
@@ -347,6 +351,18 @@ void scenario_editor_change_empire(int change)
         scenario.empire.id = 0;
     }
     scenario.is_saved = 0;
+}
+
+void scenario_editor_set_custom_empire(const uint8_t *filename)
+{
+    scenario.empire.id = SCENARIO_CUSTOM_EMPIRE;
+    string_copy(filename, scenario.empire.custom_name, sizeof(scenario.empire.custom_name));
+}
+
+void scenario_editor_unset_custom_empire(void)
+{
+    scenario.empire.id = 0;
+    memset(scenario.empire.custom_name, 0, sizeof(scenario.empire.custom_name));
 }
 
 int scenario_editor_is_building_allowed(int id)

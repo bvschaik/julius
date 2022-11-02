@@ -24,7 +24,9 @@ static void button_emperor_year(int param1, int param2);
 static void button_sea_trade_toggle(int param1, int param2);
 static void button_land_trade_toggle(int param1, int param2);
 static void button_raise_wages_toggle(int param1, int param2);
+static void button_max_wages(int param1, int param2);
 static void button_lower_wages_toggle(int param1, int param2);
+static void button_min_wages(int param1, int param2);
 static void button_contamination_toggle(int param1, int param2);
 static void button_iron_mine_toggle(int param1, int param2);
 static void button_clay_pit_toggle(int param1, int param2);
@@ -39,7 +41,9 @@ static generic_button buttons[] = {
     {216, 196, 100, 24, button_sea_trade_toggle, button_none},
     {216, 226, 100, 24, button_land_trade_toggle, button_none},
     {216, 256, 100, 24, button_raise_wages_toggle, button_none},
+    {465, 256, 100, 24, button_max_wages, button_none},
     {216, 286, 100, 24, button_lower_wages_toggle, button_none},
+    {465, 286, 100, 24, button_min_wages, button_none},
     {216, 316, 100, 24, button_contamination_toggle, button_none},
     {216, 346, 100, 24, button_iron_mine_toggle, button_none},
     {216, 376, 100, 24, button_clay_pit_toggle, button_none},
@@ -56,7 +60,7 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    outer_panel_draw(16, 32, 30, 26);
+    outer_panel_draw(16, 32, 32, 26);
 
     lang_text_draw(38, 0, 32, 48, FONT_LARGE_BLACK);
     lang_text_draw_centered(13, 3, 16, 424, 480, FONT_NORMAL_BLACK);
@@ -113,24 +117,30 @@ static void draw_foreground(void)
     button_border_draw(216, 256, 100, 24, focus_button_id == 9);
     lang_text_draw_centered(18, scenario_editor_raise_wages_enabled(), 216, 262, 100, FONT_NORMAL_BLACK);
     lang_text_draw(38, 13, 346, 264, FONT_SMALL_PLAIN);
+    lang_text_draw(CUSTOM_TRANSLATION, TR_EDITOR_MAX_WAGES, 405, 264, FONT_SMALL_PLAIN);
+    button_border_draw(465, 256, 50, 24, focus_button_id == 10);
+    text_draw_number_centered(scenario_editor_get_max_wages(), 465, 262, 50, FONT_NORMAL_BLACK);
 
     lang_text_draw(38, 7, 36, 292, FONT_NORMAL_BLACK);
-    button_border_draw(216, 286, 100, 24, focus_button_id == 10);
+    button_border_draw(216, 286, 100, 24, focus_button_id == 11);
     lang_text_draw_centered(18, scenario_editor_lower_wages_enabled(), 216, 292, 100, FONT_NORMAL_BLACK);
     lang_text_draw(38, 13, 346, 294, FONT_SMALL_PLAIN);
+    lang_text_draw(CUSTOM_TRANSLATION, TR_EDITOR_MIN_WAGES, 405, 294, FONT_SMALL_PLAIN);
+    button_border_draw(465, 286, 50, 24, focus_button_id == 12);
+    text_draw_number_centered(scenario_editor_get_min_wages(), 465, 292, 50, FONT_NORMAL_BLACK);
 
     lang_text_draw(38, 8, 36, 322, FONT_NORMAL_BLACK);
-    button_border_draw(216, 316, 100, 24, focus_button_id == 11);
+    button_border_draw(216, 316, 100, 24, focus_button_id == 13);
     lang_text_draw_centered(18, scenario_editor_contaminated_water_enabled(), 216, 322, 100, FONT_NORMAL_BLACK);
     lang_text_draw(38, 13, 346, 324, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 9, 36, 352, FONT_NORMAL_BLACK);
-    button_border_draw(216, 346, 100, 24, focus_button_id == 12);
+    button_border_draw(216, 346, 100, 24, focus_button_id == 14);
     lang_text_draw_centered(18, scenario_editor_iron_mine_collapse_enabled(), 216, 352, 100, FONT_NORMAL_BLACK);
     lang_text_draw(38, 13, 346, 354, FONT_SMALL_PLAIN);
 
     lang_text_draw(38, 10, 36, 382, FONT_NORMAL_BLACK);
-    button_border_draw(216, 376, 100, 24, focus_button_id == 13);
+    button_border_draw(216, 376, 100, 24, focus_button_id == 15);
     lang_text_draw_centered(18, scenario_editor_clay_pit_flooded_enabled(), 216, 382, 100, FONT_NORMAL_BLACK);
     lang_text_draw(38, 13, 346, 384, FONT_SMALL_PLAIN);
 
@@ -139,7 +149,7 @@ static void draw_foreground(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 13, &focus_button_id)) {
+    if (generic_buttons_handle_mouse(mouse_in_dialog(m), 0, 0, buttons, 15, &focus_button_id)) {
         return;
     }
     if (input_go_back_requested(m, h)) {
@@ -201,10 +211,30 @@ static void button_raise_wages_toggle(int param1, int param2)
     window_request_refresh();
 }
 
+static void set_max_wages(int amount)
+{
+    scenario_editor_set_max_wages(amount);
+}
+
+static void button_max_wages(int param1, int param2)
+{
+    window_numeric_input_show(400, 256, 2, 99, set_max_wages);
+}
+
 static void button_lower_wages_toggle(int param1, int param2)
 {
     scenario_editor_lower_wages_toggle_enabled();
     window_request_refresh();
+}
+
+static void set_min_wages(int amount)
+{
+    scenario_editor_set_min_wages(amount);
+}
+
+static void button_min_wages(int param1, int param2)
+{
+    window_numeric_input_show(400, 286, 2, 99, set_min_wages);
 }
 
 static void button_contamination_toggle(int param1, int param2)

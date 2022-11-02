@@ -33,17 +33,25 @@ void scenario_demand_change_process(void)
         if (city_id < 0) {
             city_id = 0;
         }
-        if (scenario.demand_changes[i].is_rise) {
-            if (trade_route_increase_limit(route, resource) && empire_city_is_trade_route_open(route)) {
-                city_message_post(1, MESSAGE_INCREASED_TRADING, city_id, resource);
-            }
+
+        int success = 1;
+        int last_amount = trade_route_limit(route, resource);
+        int amount = scenario.demand_changes[i].amount;
+        if (amount == DEMAND_CHANGE_LEGACY_IS_RISE) {
+            success = trade_route_legacy_increase_limit(route, resource);
+        } else if (amount == DEMAND_CHANGE_LEGACY_IS_FALL) {
+            success = trade_route_legacy_decrease_limit(route, resource);
         } else {
-            if (trade_route_decrease_limit(route, resource) && empire_city_is_trade_route_open(route)) {
-                if (trade_route_limit(route, resource) > 0) {
-                    city_message_post(1, MESSAGE_DECREASED_TRADING, city_id, resource);
-                } else {
-                    city_message_post(1, MESSAGE_TRADE_STOPPED, city_id, resource);
-                }
+            trade_route_set_limit(route, resource, amount);
+        }
+        if (success && empire_city_is_trade_route_open(route)) {
+            int change = amount - last_amount;
+            if (amount > 0 && change > 0) {
+                city_message_post(1, MESSAGE_INCREASED_TRADING, city_id, resource);
+            } else if (amount > 0 && change < 0) {
+                city_message_post(1, MESSAGE_DECREASED_TRADING, city_id, resource);
+            } else if (amount <= 0) {
+                city_message_post(1, MESSAGE_TRADE_STOPPED, city_id, resource);
             }
         }
     }

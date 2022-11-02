@@ -4,6 +4,7 @@
 #include "empire/city.h"
 #include "empire/trade_route.h"
 #include "game/difficulty.h"
+#include "game/file_io.h"
 #include "game/settings.h"
 #include "scenario/data.h"
 
@@ -96,7 +97,7 @@ void scenario_save_state(buffer *buf)
         buffer_write_u8(buf, scenario.demand_changes[i].route_id);
     }
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
-        buffer_write_u8(buf, scenario.demand_changes[i].is_rise);
+        buffer_write_i32(buf, scenario.demand_changes[i].amount);
     }
 
     // price changes
@@ -125,7 +126,9 @@ void scenario_save_state(buffer *buf)
     buffer_write_i32(buf, scenario.random_events.sea_trade_problem);
     buffer_write_i32(buf, scenario.random_events.land_trade_problem);
     buffer_write_i32(buf, scenario.random_events.raise_wages);
+    buffer_write_i32(buf, scenario.random_events.max_wages);
     buffer_write_i32(buf, scenario.random_events.lower_wages);
+    buffer_write_i32(buf, scenario.random_events.min_wages);
     buffer_write_i32(buf, scenario.random_events.contaminated_water);
     buffer_write_i32(buf, scenario.random_events.iron_mine_collapse);
     buffer_write_i32(buf, scenario.random_events.clay_pit_flooded);
@@ -223,12 +226,13 @@ void scenario_save_state(buffer *buf)
     buffer_write_u8(buf, scenario.empire.distant_battle_roman_travel_months);
     buffer_write_u8(buf, scenario.empire.distant_battle_enemy_travel_months);
     buffer_write_u8(buf, scenario.open_play_scenario_id);
+    buffer_write_raw(buf, scenario.empire.custom_name, sizeof(scenario.empire.custom_name));
     buffer_write_u8(buf, 0);
 
     scenario.is_saved = 1;
 }
 
-void scenario_load_state(buffer *buf)
+void scenario_load_state(buffer *buf, int version)
 {
     scenario.start_year = buffer_read_i16(buf);
     buffer_skip(buf, 2);
@@ -307,8 +311,16 @@ void scenario_load_state(buffer *buf)
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         scenario.demand_changes[i].route_id = buffer_read_u8(buf);
     }
-    for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
-        scenario.demand_changes[i].is_rise = buffer_read_u8(buf);
+    if (version <= SCENARIO_LAST_UNVERSIONED) {
+        for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
+            int is_rise = buffer_read_u8(buf);
+            int amount = is_rise ? DEMAND_CHANGE_LEGACY_IS_RISE : DEMAND_CHANGE_LEGACY_IS_FALL;
+            scenario.demand_changes[i].amount = amount;
+        }
+    } else {
+        for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
+            scenario.demand_changes[i].amount = buffer_read_i32(buf);
+        }
     }
 
     // price changes
@@ -337,7 +349,19 @@ void scenario_load_state(buffer *buf)
     scenario.random_events.sea_trade_problem = buffer_read_i32(buf);
     scenario.random_events.land_trade_problem = buffer_read_i32(buf);
     scenario.random_events.raise_wages = buffer_read_i32(buf);
+    if (version > SCENARIO_LAST_NO_WAGE_LIMITS) {
+        scenario.random_events.max_wages = buffer_read_i32(buf);
+    }
+    if (!scenario.random_events.max_wages) {
+        scenario.random_events.max_wages = 45;
+    }
     scenario.random_events.lower_wages = buffer_read_i32(buf);
+    if (version > SCENARIO_LAST_NO_WAGE_LIMITS) {
+        scenario.random_events.min_wages = buffer_read_i32(buf);
+    }
+    if (!scenario.random_events.min_wages) {
+        scenario.random_events.min_wages = 5;
+    }
     scenario.random_events.contaminated_water = buffer_read_i32(buf);
     scenario.random_events.iron_mine_collapse = buffer_read_i32(buf);
     scenario.random_events.clay_pit_flooded = buffer_read_i32(buf);
@@ -435,6 +459,9 @@ void scenario_load_state(buffer *buf)
     scenario.empire.distant_battle_roman_travel_months = buffer_read_u8(buf);
     scenario.empire.distant_battle_enemy_travel_months = buffer_read_u8(buf);
     scenario.open_play_scenario_id = buffer_read_u8(buf);
+    if (version > SCENARIO_LAST_UNVERSIONED) {
+        buffer_read_raw(buf, scenario.empire.custom_name, sizeof(scenario.empire.custom_name));
+    }
     buffer_skip(buf, 1);
 
     scenario.is_saved = 1;
@@ -446,9 +473,15 @@ void scenario_description_from_buffer(buffer *buf, uint8_t *description)
     buffer_read_raw(buf, description, MAX_BRIEF_DESCRIPTION);
 }
 
-int scenario_climate_from_buffer(buffer *buf)
+int scenario_climate_from_buffer(buffer *buf, int version)
 {
-    buffer_set(buf, 1704);
+    if (version <= SCENARIO_LAST_UNVERSIONED) {
+        buffer_set(buf, 1704);
+    } else if (version <= SCENARIO_LAST_NO_WAGE_LIMITS) {
+        buffer_set(buf, 1764);
+    } else {
+        buffer_set(buf, 1772);
+    }
     return buffer_read_u8(buf);
 }
 
@@ -477,11 +510,17 @@ int scenario_rank_from_buffer(buffer *buf)
 
 }
 
-void scenario_open_play_info_from_buffer(buffer *buf, int *is_open_play, int *open_play_id)
+void scenario_open_play_info_from_buffer(buffer *buf, int version, int *is_open_play, int *open_play_id)
 {
     buffer_set(buf, 1012);
     *is_open_play = buffer_read_i16(buf);
-    buffer_set(buf, 1718);
+    if (version <= SCENARIO_LAST_UNVERSIONED) {
+        buffer_set(buf, 1718);
+    } else if (version <= SCENARIO_LAST_NO_WAGE_LIMITS) {
+        buffer_set(buf, 1778);
+    } else {
+        buffer_set(buf, 1786);
+    }
     *open_play_id = buffer_read_u8(buf);
 }
 
@@ -491,9 +530,15 @@ int scenario_start_year_from_buffer(buffer *buf)
     return buffer_read_i16(buf);
 }
 
-void scenario_objectives_from_buffer(buffer *buf, scenario_win_criteria *win_criteria)
+void scenario_objectives_from_buffer(buffer *buf, int version, scenario_win_criteria *win_criteria)
 {
-    buffer_set(buf, 1572);
+    if (version <= SCENARIO_LAST_UNVERSIONED) {
+        buffer_set(buf, 1572);
+    } else if (version <= SCENARIO_LAST_NO_WAGE_LIMITS) {
+        buffer_set(buf, 1632);
+    } else {
+        buffer_set(buf, 1640);
+    }
     win_criteria->culture.goal = buffer_read_i32(buf);
     win_criteria->prosperity.goal = buffer_read_i32(buf);
     win_criteria->peace.goal = buffer_read_i32(buf);

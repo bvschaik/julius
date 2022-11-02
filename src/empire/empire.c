@@ -11,6 +11,9 @@
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
+#include "empire/empire_xml.h"
+#include "game/file_io.h"
+#include "scenario/empire.h"
 
 #include <string.h>
 
@@ -33,6 +36,11 @@ static struct {
 
 void empire_load(int is_custom_scenario, int empire_id)
 {
+    // empire has already been loaded from the scenario or save file at this point
+    if (empire_id == SCENARIO_CUSTOM_EMPIRE) {
+        return;
+    }
+
     char raw_data[EMPIRE_DATA_SIZE];
     const char *filename = is_custom_scenario ? "c32.emp" : "c3.emp";
 
@@ -54,7 +62,7 @@ void empire_load(int is_custom_scenario, int empire_id)
         memset(raw_data, 0, EMPIRE_DATA_SIZE);
     }
     buffer_init(&buf, raw_data, EMPIRE_DATA_SIZE);
-    empire_object_load(&buf);
+    empire_object_load(&buf, SCENARIO_LAST_UNVERSIONED);
 }
 
 static void check_scroll_boundaries(void)
@@ -66,11 +74,8 @@ static void check_scroll_boundaries(void)
     data.scroll_y = calc_bound(data.scroll_y, 0, max_y);
 }
 
-void empire_load_editor(int empire_id, int viewport_width, int viewport_height)
+void empire_center_on_our_city(int viewport_width, int viewport_height)
 {
-    empire_load(1, empire_id);
-    empire_object_init_cities();
-
     const empire_object *our_city = empire_object_get_our_city();
 
     data.viewport_width = viewport_width;
@@ -85,6 +90,13 @@ void empire_load_editor(int empire_id, int viewport_width, int viewport_height)
     check_scroll_boundaries();
 }
 
+void empire_load_editor(int empire_id, int viewport_width, int viewport_height)
+{
+    empire_load(1, empire_id);
+    empire_object_init_cities(empire_id);
+    empire_center_on_our_city(viewport_width, viewport_height);
+}
+
 void empire_init_scenario(void)
 {
     data.scroll_x = data.initial_scroll_x;
@@ -92,7 +104,7 @@ void empire_init_scenario(void)
     data.viewport_width = EMPIRE_WIDTH;
     data.viewport_height = EMPIRE_HEIGHT;
 
-    empire_object_init_cities();
+    empire_object_init_cities(scenario_empire_id());
 }
 
 void empire_set_viewport(int width, int height)

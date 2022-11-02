@@ -107,8 +107,9 @@ static void prepare_map_for_editing(void)
 {
     image_load_climate(scenario_property_climate(), 1, 0, 0);
 
-    empire_load(1, scenario_empire_id());
-    empire_object_init_cities();
+    int empire_id = scenario_empire_id();
+    empire_load(1, empire_id);
+    empire_object_init_cities(empire_id);
 
     figure_init_scenario();
     figure_create_editor_flags();

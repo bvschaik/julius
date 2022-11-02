@@ -9,6 +9,8 @@ typedef struct {
     int enter_pressed;
     int escape_pressed;
     int f5_pressed;
+    int delete_pressed;
+    int backspace_pressed;
     // keys with specific function
     int cycle_legion;
     int decrease_game_speed;

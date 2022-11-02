@@ -10,13 +10,15 @@ int trade_route_limit(int route_id, resource_type resource);
 
 int trade_route_traded(int route_id, resource_type resource);
 
+void trade_route_set_limit(int route_id, resource_type resource, int amount);
+
 /**
  * Increases the trade limit of the resource
  * @param route_id Trade route
  * @param resource Resource
  * @return True on success, false if the limit couldn't be increased
  */
-int trade_route_increase_limit(int route_id, resource_type resource);
+int trade_route_legacy_increase_limit(int route_id, resource_type resource);
 
 /**
  * Decreases the trade limit of the resource
@@ -24,7 +26,7 @@ int trade_route_increase_limit(int route_id, resource_type resource);
  * @param resource Resource
  * @return True on success, false if the limit couldn't be decreased
  */
-int trade_route_decrease_limit(int route_id, resource_type resource);
+int trade_route_legacy_decrease_limit(int route_id, resource_type resource);
 
 void trade_route_increase_traded(int route_id, resource_type resource);
 

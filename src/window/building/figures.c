@@ -107,7 +107,8 @@ static void draw_trader(building_info_context *c, figure *f)
     f = get_head_of_caravan(f);
     const empire_city *city = empire_city_get(f->empire_city_id);
     int width = lang_text_draw(64, f->type, c->x_offset + 40, c->y_offset + 110, FONT_NORMAL_BROWN);
-    lang_text_draw(21, city->name_id, c->x_offset + 40 + width, c->y_offset + 110, FONT_NORMAL_BROWN);
+    const uint8_t *city_name = empire_city_get_name(city);
+    text_draw(city_name, c->x_offset + 40 + width, c->y_offset + 110, FONT_NORMAL_BROWN, 0);
 
 
     width = lang_text_draw(129, 1, c->x_offset + 40, c->y_offset + 130, FONT_NORMAL_BROWN);

@@ -2,10 +2,14 @@
 #define EMPIRE_OBJECT_H
 
 #include "core/buffer.h"
+#include "empire/type.h"
+#include "game/resource.h"
+
+#define MAX_EMPIRE_OBJECTS 200
 
 typedef struct {
     int id;
-    int type;
+    empire_object_type type;
     int animation_index;
     int x;
     int y;
@@ -23,15 +27,35 @@ typedef struct {
     int invasion_years;
 } empire_object;
 
-void empire_object_load(buffer *buf);
+typedef struct {
+    int in_use;
+    empire_city_type city_type;
+    int city_name_id;
+    uint8_t city_custom_name[50];
+    int trade_route_open;
+    int trade_route_cost;
+    int city_sells_resource[RESOURCE_MAX];
+    int city_buys_resource[RESOURCE_MAX];
+    empire_object obj;
+} full_empire_object;
 
-void empire_object_init_cities(void);
+void empire_object_clear(void);
+
+void empire_object_load(buffer *buf, int version);
+
+void empire_object_save(buffer *buf);
+
+void empire_object_init_cities(int empire_id);
 
 int empire_object_init_distant_battle_travel_months(int object_type);
 
-const empire_object *empire_object_get(int object_id);
+full_empire_object *empire_object_get_full(int object_id);
+
+empire_object *empire_object_get(int object_id);
 
 const empire_object *empire_object_get_our_city(void);
+
+const empire_object *empire_object_get_trade_city(int trade_route_id);
 
 void empire_object_foreach(void (*callback)(const empire_object *));
 

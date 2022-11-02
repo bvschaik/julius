@@ -120,8 +120,11 @@ typedef struct {
     int month;
     int resource;
     int route_id;
-    int is_rise;
+    int amount;
 } demand_change_t;
+
+#define DEMAND_CHANGE_LEGACY_IS_RISE 9999
+#define DEMAND_CHANGE_LEGACY_IS_FALL -9999
 
 typedef struct {
     struct win_criteria_t population;
@@ -168,6 +171,7 @@ extern struct scenario_t {
         int expansion_year;
         int distant_battle_roman_travel_months;
         int distant_battle_enemy_travel_months;
+        uint8_t custom_name[50];
     } empire;
 
     request_t requests[MAX_REQUESTS];
@@ -197,7 +201,9 @@ extern struct scenario_t {
         int sea_trade_problem;
         int land_trade_problem;
         int raise_wages;
+        int max_wages;
         int lower_wages;
+        int min_wages;
         int contaminated_water;
         int iron_mine_collapse;
         int clay_pit_flooded;

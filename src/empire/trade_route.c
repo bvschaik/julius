@@ -25,7 +25,12 @@ int trade_route_traded(int route_id, resource_type resource)
     return data[route_id][resource].traded;
 }
 
-int trade_route_increase_limit(int route_id, resource_type resource)
+void trade_route_set_limit(int route_id, resource_type resource, int amount)
+{
+    data[route_id][resource].limit = amount;
+}
+
+int trade_route_legacy_increase_limit(int route_id, resource_type resource)
 {
     switch (data[route_id][resource].limit) {
         case 0: data[route_id][resource].limit = 15; break;
@@ -36,7 +41,7 @@ int trade_route_increase_limit(int route_id, resource_type resource)
     return 1;
 }
 
-int trade_route_decrease_limit(int route_id, resource_type resource)
+int trade_route_legacy_decrease_limit(int route_id, resource_type resource)
 {
     switch (data[route_id][resource].limit) {
         case 40: data[route_id][resource].limit = 25; break;

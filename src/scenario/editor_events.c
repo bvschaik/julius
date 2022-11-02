@@ -104,6 +104,17 @@ void scenario_editor_raise_wages_toggle_enabled(void)
     scenario.is_saved = 0;
 }
 
+void scenario_editor_set_max_wages(int amount)
+{
+    scenario.random_events.max_wages = amount;
+    scenario.is_saved = 0;
+}
+
+int scenario_editor_get_max_wages(void)
+{
+    return scenario.random_events.max_wages;
+}
+
 int scenario_editor_lower_wages_enabled(void)
 {
     return scenario.random_events.lower_wages;
@@ -113,6 +124,17 @@ void scenario_editor_lower_wages_toggle_enabled(void)
 {
     scenario.random_events.lower_wages = !scenario.random_events.lower_wages;
     scenario.is_saved = 0;
+}
+
+void scenario_editor_set_min_wages(int amount)
+{
+    scenario.random_events.min_wages = amount;
+    scenario.is_saved = 0;
+}
+
+int scenario_editor_get_min_wages(void)
+{
+    return scenario.random_events.min_wages;
 }
 
 int scenario_editor_contaminated_water_enabled(void)

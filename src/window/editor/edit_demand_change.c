@@ -26,7 +26,7 @@
 static void button_year(int param1, int param2);
 static void button_resource(int param1, int param2);
 static void button_route(int param1, int param2);
-static void button_toggle_rise(int param1, int param2);
+static void button_amount(int param1, int param2);
 static void button_delete(int param1, int param2);
 static void button_save(int param1, int param2);
 
@@ -34,7 +34,7 @@ static generic_button buttons[] = {
     {30, 152, 60, 25, button_year, button_none},
     {190, 152, 120, 25, button_resource, button_none},
     {420, 152, 200, 25, button_route, button_none},
-    {350, 192, 100, 25, button_toggle_rise, button_none},
+    {350, 192, 100, 25, button_amount, button_none},
     {30, 230, 250, 25, button_delete, button_none},
     {320, 230, 100, 25, button_save, button_none}
 };
@@ -70,7 +70,8 @@ static void init(int id)
     for (int i = 1; i < MAX_ROUTES; i++) {
         empire_city *city = empire_city_get(empire_city_get_for_trade_route(i));
         if (city && (city->type == EMPIRE_CITY_TRADE || city->type == EMPIRE_CITY_FUTURE_TRADE)) {
-            create_display_name(i, lang_get_string(21, city->name_id));
+            const uint8_t *city_name = empire_city_get_name(city);
+            create_display_name(i, city_name);
 
             data.route_ids[data.num_routes] = i;
             data.route_names[data.num_routes] = route_display_names[i];
@@ -106,7 +107,7 @@ static void draw_foreground(void)
 
     lang_text_draw(44, 100, 60, 198, FONT_NORMAL_BLACK);
     button_border_draw(350, 192, 100, 25, data.focus_button_id == 4);
-    lang_text_draw_centered(44, data.demand_change.is_rise ? 99 : 98, 350, 198, 100, FONT_NORMAL_BLACK);
+    text_draw_number_centered(data.demand_change.amount, 350, 198, 100, FONT_NORMAL_BLACK);
 
     button_border_draw(30, 230, 250, 25, data.focus_button_id == 5);
     lang_text_draw_centered(44, 101, 30, 236, 250, FONT_NORMAL_BLACK);
@@ -158,9 +159,14 @@ static void button_route(int param1, int param2)
         data.route_names, data.num_routes, set_route_id);
 }
 
-static void button_toggle_rise(int param1, int param2)
+static void set_change_amount(int value)
 {
-    data.demand_change.is_rise = !data.demand_change.is_rise;
+    data.demand_change.amount = value;
+}
+
+static void button_amount(int param1, int param2)
+{
+    window_numeric_input_show(screen_dialog_offset_x() + 100, screen_dialog_offset_y() + 50, 3, 999, set_change_amount);
 }
 
 static void button_delete(int param1, int param2)

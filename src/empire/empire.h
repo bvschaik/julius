@@ -4,6 +4,7 @@
 #include "core/buffer.h"
 
 void empire_load(int is_custom_scenario, int empire_id);
+void empire_center_on_our_city(int viewport_width, int viewport_height);
 void empire_load_editor(int empire_id, int viewport_width, int viewport_height);
 
 void empire_init_scenario(void);

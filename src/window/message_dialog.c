@@ -218,8 +218,9 @@ static void draw_city_message_text(const lang_message *msg)
         case MESSAGE_TYPE_TRADE_CHANGE:
             image_draw(resource_image(player_message.param2), data.x + 64, data.y_text + 40,
                 COLOR_MASK_NONE, SCALE_NONE);
-            lang_text_draw(21, empire_city_get(player_message.param1)->name_id,
-                data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE);
+            empire_city *city = empire_city_get(player_message.param1);
+            const uint8_t *city_name = empire_city_get_name(city);
+            text_draw(city_name, data.x + 100, data.y_text + 44, FONT_NORMAL_WHITE, 0);
             rich_text_draw(msg->content.text,
                 data.x_text + 8, data.y_text + 86, BLOCK_SIZE * (data.text_width_blocks - 1),
                 data.text_height_blocks - 1, 0);

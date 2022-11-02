@@ -267,8 +267,10 @@ static void draw_dock_permission_buttons(int x_offset, int y_offset, int dock_id
                 FONT_NORMAL_RED);
         }
         empire_city *city = empire_city_get(button->parameter2);
-        lang_text_draw(21, city->name_id, x_offset + (scrollbar_shown ? 10 : 30), y_offset + 4 + button->y,
-            FONT_NORMAL_WHITE);
+        const uint8_t *city_name = empire_city_get_name(city);
+        int x = x_offset + (scrollbar_shown ? 10 : 30);
+        int y = y_offset + 4 + button->y;
+        text_draw(city_name, x, y, FONT_NORMAL_WHITE, 0);
     }
 }
 

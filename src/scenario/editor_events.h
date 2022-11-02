@@ -24,9 +24,13 @@ void scenario_editor_land_trade_problem_toggle_enabled(void);
 
 int scenario_editor_raise_wages_enabled(void);
 void scenario_editor_raise_wages_toggle_enabled(void);
+void scenario_editor_set_max_wages(int amount);
+int scenario_editor_get_max_wages(void);
 
 int scenario_editor_lower_wages_enabled(void);
 void scenario_editor_lower_wages_toggle_enabled(void);
+void scenario_editor_set_min_wages(int amount);
+int scenario_editor_get_min_wages(void);
 
 int scenario_editor_contaminated_water_enabled(void);
 void scenario_editor_contaminated_water_toggle_enabled(void);

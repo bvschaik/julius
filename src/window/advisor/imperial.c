@@ -119,8 +119,9 @@ static int draw_background(void)
         button_border_draw(38, 96, 560, 40, 0);
         image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS, 50, 106, COLOR_MASK_NONE, SCALE_NONE);
         width = lang_text_draw(52, 72, 80, 102, FONT_NORMAL_WHITE);
-        lang_text_draw(21, empire_city_get(city_military_distant_battle_city())->name_id,
-            80 + width, 102, FONT_NORMAL_WHITE);
+        empire_city *city = empire_city_get(city_military_distant_battle_city());
+        const uint8_t *city_name = empire_city_get_name(city);
+        text_draw(city_name, 80 + width, 102, FONT_NORMAL_WHITE, 0);
         int strength_text_id;
         int enemy_strength = city_military_distant_battle_enemy_strength();
         if (enemy_strength < 46) {

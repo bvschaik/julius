@@ -1,5 +1,6 @@
 #include "top_menu_editor.h"
 
+#include "empire/empire.h"
 #include "game/file_editor.h"
 #include "game/game.h"
 #include "game/system.h"
@@ -7,7 +8,9 @@
 #include "graphics/menu.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
+#include "scenario/editor.h"
 #include "scenario/editor_map.h"
+#include "scenario/empire.h"
 #include "scenario/scenario.h"
 #include "translation/translation.h"
 #include "window/config.h"
@@ -37,6 +40,7 @@ static void menu_resets_fish(int param);
 static void menu_resets_invasions(int param);
 
 static void menu_empire_choose(int param);
+static void menu_empire_custom(int param);
 
 static menu_item menu_file[] = {
     {7, 1, menu_file_new_map, 0},
@@ -65,6 +69,7 @@ static menu_item menu_resets[] = {
 
 static menu_item menu_empire[] = {
     {149, 1, menu_empire_choose, 0},
+    {CUSTOM_TRANSLATION, TR_EDITOR_CHOOSE_CUSTOM_EMPIRE, menu_empire_custom, 0},
 };
 
 static menu_bar_item menu[] = {
@@ -72,7 +77,7 @@ static menu_bar_item menu[] = {
     {2, menu_options, 3},
     {3, menu_help, 2},
     {10, menu_resets, 3},
-    {149, menu_empire, 1},
+    {149, menu_empire, 2},
 };
 
 #define INDEX_OPTIONS 1
@@ -298,5 +303,14 @@ static void menu_empire_choose(int param)
 {
     clear_state();
     window_go_back();
+    scenario_editor_unset_custom_empire();
+    empire_load(1, scenario_empire_id());
     window_editor_empire_show();
+}
+
+static void menu_empire_custom(int param)
+{
+    clear_state();
+    window_go_back();
+    window_file_dialog_show(FILE_TYPE_EMPIRE, FILE_DIALOG_LOAD);
 }
