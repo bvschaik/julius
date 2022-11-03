@@ -383,7 +383,7 @@ int xml_process_assetlist_file(const char *xml_file_name)
         size_t xml_file_name_length = strlen(xml_file_name);
         char *path = malloc(sizeof(char *) * (xml_file_name_length + 1));
         if (!path) {
-            data.error = 1;
+            error = 1;
             group_unload_current();
         } else {
             strcpy(path, xml_file_name);
