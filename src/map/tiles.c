@@ -34,11 +34,13 @@
 static int aqueduct_include_construction = 0;
 static int highway_top_tile_offsets[4] = { 0, -GRID_SIZE, -1, -GRID_SIZE - 1 };
 static int highway_wall_direction_offsets[4] = { 1, -GRID_SIZE, -1, GRID_SIZE };
+static int highway_image_start;
 static int highway_image_with_water;
 static int highway_image_without_water;
 
 void map_tiles_init(void)
 {
+    highway_image_start = assets_get_image_id("Logistics", "Highway_Tile_Start");
     highway_image_with_water = assets_get_image_id("Logistics", "Highway_Aqueduct_Full_Start");
     highway_image_without_water = assets_get_image_id("Logistics", "Highway_Aqueduct_Empty_Start");
 }
@@ -763,7 +765,7 @@ static void set_aqueduct_image(int grid_offset, int is_road, const terrain_image
     }
     int new_image_id = image_aqueduct + water_offset + group_offset;
     if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
-        new_image_id = assets_get_image_id("Logistics", "Highway_Aqueduct_Full_Start");
+        new_image_id = highway_image_with_water;
         int aqueduct_orientation_offset = HIGHWAY_WALL_VARIANTS;
         if (map_terrain_is(grid_offset - 1, TERRAIN_AQUEDUCT) || map_terrain_is(grid_offset + 1, TERRAIN_AQUEDUCT)) {
             new_image_id += HIGHWAY_WALL_VARIANTS;
@@ -823,13 +825,9 @@ static void set_highway_image(int x, int y, int grid_offset)
         set_aqueduct_image(grid_offset, 0, img);
     } else {
         int highway_image_offset = get_highway_wall_offset(grid_offset);
-        int random = (map_random_get(grid_offset) & 1);
-        if (random > 0) {
-            // increment by 9 to get a variant
-            highway_image_offset += 9;
-        }
-        int image_id = assets_get_image_id("Logistics", "Highway_Tile_Start");
-        image_id += highway_image_offset;
+        int random = (map_random_get(grid_offset) & 3);
+        highway_image_offset += HIGHWAY_WALL_VARIANTS * random;
+        int image_id = highway_image_start + highway_image_offset;
         map_image_set(grid_offset, image_id);
     }
     map_property_set_multi_tile_size(grid_offset, 1);

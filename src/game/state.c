@@ -26,7 +26,6 @@ void game_state_init(void)
     random_generate_pool();
 
     city_warning_clear_all();
-    map_tiles_init();
 }
 
 int game_state_is_paused(void)

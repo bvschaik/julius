@@ -613,6 +613,7 @@ static void savegame_load_from_state(savegame_state *state, int version)
         empire_object_load(state->custom_empire, scenario_version);
     }
     map_image_clear();
+    map_tiles_init();
     map_image_update_all();
 }
 

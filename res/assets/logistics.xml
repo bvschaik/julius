@@ -515,12 +515,36 @@
 			<frame src="Engineers_Post_Upgrade_ON_10"/>
 		</animation>
 	</image>
-	<image id="Highway_Placement" width="118" height="60" isometric="true">
-		<layer src="Highway_Base_2" x="30"/>
-		<layer src="Highway_Base_1" y="15"/>
-		<layer src="Highway_Base_1" x="60" y="15"/>
-		<layer src="Highway_Base_2" x="30" y="30"/>
+
+	<!-- Highway sprites -->
+
+	<!-- Aqueduct bridges without roads underneath -->
+	<image id="Aqueduct_Bridge_Left_Water" isometric="true" width="58" height="58">
+		<layer group="19"/>
+		<layer src="Aqueduct_Mask_Left" y="28" mask="alpha"/>
 	</image>
+	<image id="Aqueduct_Bridge_Right_Water" isometric="true" width="58" height="57">
+		<layer group="19" image="1"/>
+		<layer src="Aqueduct_Mask_Right" y="27" mask="alpha"/>
+	</image>
+	<image id="Aqueduct_Bridge_Left_Empty" isometric="true" width="58" height="58">
+		<layer group="19" image="15"/>
+		<layer src="Aqueduct_Mask_Left" y="28" mask="alpha"/>
+	</image>
+	<image id="Aqueduct_Bridge_Right_Empty" isometric="true" width="58" height="57">
+		<layer group="19" image="16"/>
+		<layer src="Aqueduct_Mask_Right" y="27" mask="alpha"/>
+	</image>
+
+	<!-- Placement -->
+	<image id="Highway_Placement" width="118" height="60" isometric="true">
+		<layer src="Highway_Base_1" x="30"/>
+		<layer src="Highway_Base_2" y="15"/>
+		<layer src="Highway_Base_3" x="60" y="15"/>
+		<layer src="Highway_Base_4" x="30" y="30"/>
+	</image>
+
+	<!-- Variation 1 -->
 	<image id="Highway_Tile_Start" src="Highway_Base_1" isometric="true"/>
 	<image isometric="true">
 		<layer src="Highway_Base_1"/>
@@ -558,6 +582,8 @@
 		<layer src="Highway_Barrier_2" y="12"/>
 		<layer src="Highway_Barrier_1" x="26" y="10" width="32"/>
 	</image>
+
+	<!-- Variation 2 -->
 	<image src="Highway_Base_2" isometric="true"/>
 	<image isometric="true">
 		<layer src="Highway_Base_2"/>
@@ -595,22 +621,86 @@
 		<layer src="Highway_Barrier_2" y="12"/>
 		<layer src="Highway_Barrier_1" x="26" y="10" width="32"/>
 	</image>
-	<image id="Aqueduct_Bridge_Left_Water" isometric="true" width="58" height="58">
-		<layer group="19"/>
-		<layer src="Aqueduct_Mask_Left" y="28" mask="alpha"/>
+
+	<!-- Variation 3 -->
+	<image src="Highway_Base_3" isometric="true"/>
+	<image isometric="true">
+		<layer src="Highway_Base_3"/>
+		<layer src="Highway_Barrier_1" x="24" y="11"/>
 	</image>
-	<image id="Aqueduct_Bridge_Right_Water" isometric="true" width="58" height="57">
-		<layer group="19" image="1"/>
-		<layer src="Aqueduct_Mask_Right" y="27" mask="alpha"/>
+	<image isometric="true">
+		<layer src="Highway_Base_3"/>
+		<layer src="Highway_Barrier_3" x="28"/>
 	</image>
-	<image id="Aqueduct_Bridge_Left_Empty" isometric="true" width="58" height="58">
-		<layer group="19" image="15"/>
-		<layer src="Aqueduct_Mask_Left" y="28" mask="alpha"/>
+	<image isometric="true">
+		<layer src="Highway_Base_3"/>
+		<layer src="Highway_Barrier_4"/>
 	</image>
-	<image id="Aqueduct_Bridge_Right_Empty" isometric="true" width="58" height="57">
-		<layer group="19" image="16"/>
-		<layer src="Aqueduct_Mask_Right" y="27" mask="alpha"/>
+	<image isometric="true">
+		<layer src="Highway_Base_3"/>
+		<layer src="Highway_Barrier_2" y="12"/>
 	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_3"/>
+		<layer src="Highway_Barrier_3" x="28" width="28"/>
+		<layer src="Highway_Barrier_1" x="22" y="12" width="33"/>
+	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_3"/>
+		<layer src="Highway_Barrier_3" x="28"/>
+		<layer src="Highway_Barrier_4"/>
+	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_3"/>
+		<layer src="Highway_Barrier_4"/>
+		<layer src="Highway_Barrier_2" y="14"/>
+	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_3"/>
+		<layer src="Highway_Barrier_2" y="12"/>
+		<layer src="Highway_Barrier_1" x="26" y="10" width="32"/>
+	</image>
+
+	<!-- Variation 4 -->
+	<image src="Highway_Base_4" isometric="true"/>
+	<image isometric="true">
+		<layer src="Highway_Base_4"/>
+		<layer src="Highway_Barrier_1" x="24" y="11"/>
+	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_4"/>
+		<layer src="Highway_Barrier_3" x="28"/>
+	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_4"/>
+		<layer src="Highway_Barrier_4"/>
+	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_4"/>
+		<layer src="Highway_Barrier_2" y="12"/>
+	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_4"/>
+		<layer src="Highway_Barrier_3" x="28" width="28"/>
+		<layer src="Highway_Barrier_1" x="22" y="12" width="33"/>
+	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_4"/>
+		<layer src="Highway_Barrier_3" x="28"/>
+		<layer src="Highway_Barrier_4"/>
+	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_4"/>
+		<layer src="Highway_Barrier_4"/>
+		<layer src="Highway_Barrier_2" y="14"/>
+	</image>
+	<image isometric="true">
+		<layer src="Highway_Base_4"/>
+		<layer src="Highway_Barrier_2" y="12"/>
+		<layer src="Highway_Barrier_1" x="26" y="10" width="32"/>
+	</image>
+
+	<!-- Aqueduct full left -->
 	<image id="Highway_Aqueduct_Full_Start" isometric="true" width="58" height="58">
 		<layer src="Highway_Base_1" y="28"/>
 		<layer group="this" image="Aqueduct_Bridge_Left_Water"/>
@@ -659,6 +749,8 @@
 		<layer src="Highway_Barrier_2" y="40"/>
 		<layer src="Highway_Barrier_1" x="26" y="38" width="32"/>
 	</image>
+
+	<!-- Aqueduct full right -->
 	<image isometric="true" width="58" height="57">
 		<layer src="Highway_Base_1" y="27"/>
 		<layer group="this" image="Aqueduct_Bridge_Right_Water"/>
@@ -707,6 +799,8 @@
 		<layer src="Highway_Barrier_2" y="39"/>
 		<layer src="Highway_Barrier_1" x="26" y="37" width="32"/>
 	</image>
+
+	<!-- Aqueduct empty left -->
 	<image id="Highway_Aqueduct_Empty_Start" isometric="true" width="58" height="58">
 		<layer src="Highway_Base_2" y="28"/>
 		<layer group="this" image="Aqueduct_Bridge_Left_Empty"/>
@@ -755,6 +849,8 @@
 		<layer src="Highway_Barrier_2" y="40"/>
 		<layer src="Highway_Barrier_1" x="26" y="38" width="32"/>
 	</image>
+
+	<!-- Aqueduct empty right -->
 	<image isometric="true" width="58" height="57">
 		<layer src="Highway_Base_2" y="27"/>
 		<layer group="this" image="Aqueduct_Bridge_Right_Empty"/>

@@ -2,6 +2,7 @@
 #define SCENARIO_DATA_H
 
 #include "map/point.h"
+#include "scenario/property.h"
 #include "scenario/types.h"
 
 #include <stdint.h>
@@ -149,7 +150,7 @@ extern struct scenario_t {
     uint8_t scenario_name[MAX_SCENARIO_NAME];
 
     int start_year;
-    int climate;
+    scenario_climate climate;
     int player_rank;
 
     int initial_funds;

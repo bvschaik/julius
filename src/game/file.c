@@ -137,6 +137,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     scenario_map_init();
 
     // initialize grids
+    map_tiles_init();
     map_tiles_update_all_elevation();
     map_tiles_update_all_water();
     map_tiles_update_all_earthquake();
