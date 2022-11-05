@@ -9,98 +9,37 @@
 #include "map/orientation.h"
 #include "map/tiles.h"
 
-#include <stdlib.h>
-#include <string.h>
+static grid_u32 images;
+static grid_u32 images_backup;
 
-typedef struct {
-    uint32_t *ids;
-    int total;
-} tile_images;
-
-static tile_images images[GRID_SIZE * GRID_SIZE];
-static tile_images images_backup[GRID_SIZE * GRID_SIZE];
-
-uint32_t map_image_at(int grid_offset)
+unsigned int map_image_at(int grid_offset)
 {
-    return images[grid_offset].total ? images[grid_offset].ids[0] : 0;
+    return images.items[grid_offset];
 }
 
 void map_image_set(int grid_offset, int image_id)
 {
-    tile_images *image = &images[grid_offset];
-    free(image->ids);
-    image->total = 0;
-    if (image_id <= 0) {
-        image->ids = 0;
-        return;
-    }
-    image->ids = malloc(sizeof(uint32_t));
-    if (image->ids) {
-        image->total = 1;
-        image->ids[0] = image_id;
-    }
-}
-
-void map_image_add(int grid_offset, int image_id)
-{
-    if (image_id <= 0) {
-        return;
-    }
-    tile_images *image = &images[grid_offset];
-    if (image->total == 0) {
-        map_image_set(grid_offset, image_id);
-        return;
-    }
-    uint32_t *ids = realloc(image->ids, sizeof(uint32_t) * (image->total + 1));
-    if (ids) {
-        image->ids = ids;
-        image->ids[image->total] = image_id;
-        image->total++;
-    }
-}
-
-static void copy_tile_image(tile_images *dst, const tile_images *src)
-{
-    free(dst->ids);
-    dst->total = 0;
-    if (!src->total) {
-        dst->ids = 0;
-        return;
-    }
-    dst->ids = malloc(sizeof(tile_images) * src->total);
-    if (!dst->ids) {
-        return;
-    }
-    memcpy(dst->ids, src->ids, sizeof(tile_images) * src->total);
-    dst->total = src->total;
+    images.items[grid_offset] = image_id;
 }
 
 void map_image_backup(void)
 {
-    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
-        copy_tile_image(&images_backup[i], &images[i]);
-    }
+    map_grid_copy_u32(images.items, images_backup.items);
 }
 
 void map_image_restore(void)
 {
-    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
-        copy_tile_image(&images[i], &images_backup[i]);
-    }
+    map_grid_copy_u32(images_backup.items, images.items);
 }
 
 void map_image_restore_at(int grid_offset)
 {
-    copy_tile_image(&images[grid_offset], &images_backup[grid_offset]);
+    images.items[grid_offset] = images_backup.items[grid_offset];
 }
 
 void map_image_clear(void)
 {
-    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
-        free(images[i].ids);
-        images[i].ids = 0;
-        images[i].total = 0;
-    }
+    map_grid_clear_u32(images.items);
 }
 
 void map_image_init_edges(void)
@@ -108,14 +47,14 @@ void map_image_init_edges(void)
     int width, height;
     map_grid_size(&width, &height);
     for (int x = 1; x < width; x++) {
-        map_image_set(map_grid_offset(x, height), 1);
+        images.items[map_grid_offset(x, height)] = 1;
     }
     for (int y = 1; y < height; y++) {
-        map_image_set(map_grid_offset(width, y), 2);
+        images.items[map_grid_offset(width, y)] = 2;
     }
-    map_image_set(map_grid_offset(0, height), 3);
-    map_image_set(map_grid_offset(width, 0), 4);
-    map_image_set(map_grid_offset(width, height), 5);
+    images.items[map_grid_offset(0, height)] = 3;
+    images.items[map_grid_offset(width, 0)] = 4;
+    images.items[map_grid_offset(width, height)] = 5;
 }
 
 void map_image_update_all(void)
@@ -142,17 +81,12 @@ void map_image_update_all(void)
     }
 }
 
-void map_image_save_state(buffer *buf)
+void map_image_save_state_legacy(buffer *buf)
 {
-    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
-        uint16_t value = images[i].total ? (uint16_t) images[i].ids[0] : 0;
-        buffer_write_u16(buf, value);
-    }
+    map_grid_save_state_u32_to_u16(images.items, buf);
 }
 
-void map_image_load_state(buffer *buf)
+void map_image_load_state_legacy(buffer *buf)
 {
-    for (int i = 0; i < GRID_SIZE * GRID_SIZE; i++) {
-        map_image_set(i, buffer_read_u16(buf));
-    }
+    map_grid_load_state_u16_to_u32(images.items, buf);
 }
