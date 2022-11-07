@@ -64,7 +64,7 @@
 #define UNCOMPRESSED 0x80000000
 #define PIECE_SIZE_DYNAMIC 0
 
-static const int SAVE_GAME_CURRENT_VERSION = 0x8e;
+static const int SAVE_GAME_CURRENT_VERSION = 0x8f;
 
 static const int SAVE_GAME_LAST_ORIGINAL_LIMITS_VERSION = 0x66;
 static const int SAVE_GAME_LAST_SMALLER_IMAGE_ID_VERSION = 0x76;
@@ -85,6 +85,9 @@ static const int SAVE_GAME_LAST_BARRACKS_TOWER_SENTRY_REQUEST = 0x8a;
 // static const int SAVE_GAME_LAST_WITHOUT_HIGHWAYS = 0x8b; no actual changes to how games are saved. Crudelios just wants this here
 static const int SAVE_GAME_LAST_UNVERSIONED_SCENARIOS = 0x8c;
 static const int SAVE_GAME_LAST_EMPIRE_RESOURCES_ALWAYS_WRITE = 0x8d;
+// the difference between this version and UNVERSIONED_SCENARIOS above is this one actually saves the scenario version
+// in the data, whereas the previous one did a lookup based on the save version
+static const int SAVE_GAME_LAST_NO_SCENARIO_VERSION = 0x8e;
 
 static char compress_buffer[COMPRESS_BUFFER_SIZE];
 
@@ -118,6 +121,7 @@ static struct {
 typedef struct {
     buffer *scenario_campaign_mission;
     buffer *file_version;
+    buffer *scenario_version;
     buffer *image_grid;
     buffer *edge_grid;
     buffer *building_grid;
@@ -233,6 +237,7 @@ typedef struct {
     int has_monument_deliveries;
     int has_barracks_tower_sentry_request;
     int has_custom_empires;
+    int has_scenario_version;
 } savegame_version_data;
 
 static struct {
@@ -371,6 +376,7 @@ static void get_version_data(savegame_version_data *version_data, int version)
         version_data->piece_sizes.scenario = 1838;
         version_data->has_custom_empires = 1;
     }
+    version_data->has_scenario_version = version > SAVE_GAME_LAST_NO_SCENARIO_VERSION;
 }
 
 static void init_savegame_data(int version)
@@ -383,6 +389,9 @@ static void init_savegame_data(int version)
     savegame_state *state = &savegame_data.state;
     state->scenario_campaign_mission = create_savegame_piece(4, 0);
     state->file_version = create_savegame_piece(4, 0);
+    if (version_data.has_scenario_version) {
+        state->scenario_version = create_savegame_piece(4, 0);
+    }
     if (version_data.has_image_grid) {
         state->image_grid = create_savegame_piece(version_data.piece_sizes.image_grid, 1);
     }
@@ -506,25 +515,29 @@ static void scenario_save_to_state(scenario_state *file)
     buffer_skip(file->end_marker, 4);
 }
 
-static int save_version_to_scenario_version(int save_version) {
+static int save_version_to_scenario_version(int save_version, buffer *buf) {
     if (save_version <= SAVE_GAME_LAST_UNVERSIONED_SCENARIOS) {
         return SCENARIO_LAST_UNVERSIONED;
     }
     if (save_version <= SAVE_GAME_LAST_EMPIRE_RESOURCES_ALWAYS_WRITE) {
         return SCENARIO_LAST_EMPIRE_RESOURCES_ALWAYS_WRITE;
     }
-    return SCENARIO_CURRENT_VERSION;
+    if (save_version <= SAVE_GAME_LAST_NO_SCENARIO_VERSION) {
+        return SCENARIO_LAST_NO_SAVE_VERSION_WRITE;
+    }
+    int scenario_version = buffer_read_i32(buf);
+    return scenario_version;
 }
 
 static void savegame_load_from_state(savegame_state *state, int version)
 {
+    int scenario_version = save_version_to_scenario_version(version, state->scenario_version);
     scenario_settings_load_state(state->scenario_campaign_mission,
         state->scenario_settings,
         state->scenario_is_custom,
         state->player_name,
         state->scenario_name);
 
-    int scenario_version = save_version_to_scenario_version(version);
     scenario_load_state(state->scenario, scenario_version);
     scenario_map_init();
 
@@ -619,6 +632,7 @@ static void savegame_load_from_state(savegame_state *state, int version)
 static void savegame_save_to_state(savegame_state *state)
 {
     buffer_write_i32(state->file_version, SAVE_GAME_CURRENT_VERSION);
+    buffer_write_i32(state->scenario_version, SCENARIO_CURRENT_VERSION);
 
     scenario_settings_save_state(state->scenario_campaign_mission,
         state->scenario_settings,
@@ -1123,13 +1137,14 @@ static int savegame_read_file_info(FILE *fp, saved_game_info *info, int version)
 
     savegame_version_data version_data;
     get_version_data(&version_data, version);
-    int scenario_version = save_version_to_scenario_version(version);
 
+    file_piece scenario_version_data;
     file_piece city_data, game_time, terrain_grid, random_grid, scenario;
     file_piece bitfields_grid, edge_grid, building_grid, buildings;
 
     savegame_state *state = &savegame_data.state;
 
+    init_file_piece(&scenario_version_data, 4, 0);
     init_file_piece(&city_data, 36136, 0);
     init_file_piece(&game_time, 20, 0);
     init_file_piece(&terrain_grid, version_data.piece_sizes.terrain_grid, 0);
@@ -1147,9 +1162,14 @@ static int savegame_read_file_info(FILE *fp, saved_game_info *info, int version)
     state->building_grid = &building_grid.buf;
     state->buildings = &buildings.buf;
 
-    info->mission = read_int32(fp);
 
-    skip_piece(fp, 4, 0);
+    info->mission = read_int32(fp);
+    skip_piece(fp, 4, 0); // file version
+    if (version_data.has_scenario_version) {
+        fread(scenario_version_data.buf.data, 1, 4, fp);
+    }
+
+    int scenario_version = save_version_to_scenario_version(version, &scenario_version_data.buf);
     if (version_data.has_image_grid) {
         skip_piece(fp, version_data.piece_sizes.image_grid, 1);
     }
@@ -1266,6 +1286,7 @@ static int savegame_read_file_info(FILE *fp, saved_game_info *info, int version)
     widget_minimap_update(&minimap_data.functions);
     city_view_restore_lookup();
 
+    free_file_piece(&scenario_version_data);
     free_file_piece(&city_data);
     free_file_piece(&game_time);
     free_file_piece(&terrain_grid);

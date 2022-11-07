@@ -25,13 +25,14 @@ typedef struct {
     scenario_win_criteria win_criteria;
 } scenario_info;
 
-static const int SCENARIO_CURRENT_VERSION = 6;
+static const int SCENARIO_CURRENT_VERSION = 7;
 
 static const int SCENARIO_LAST_UNVERSIONED = 1;
 static const int SCENARIO_LAST_NO_WAGE_LIMITS = 2;
 static const int SCENARIO_LAST_EMPIRE_OBJECT_BUFFERS = 3;
 static const int SCENARIO_LAST_EMPIRE_RESOURCES_U8 = 4;
 static const int SCENARIO_LAST_EMPIRE_RESOURCES_ALWAYS_WRITE = 5;
+static const int SCENARIO_LAST_NO_SAVE_VERSION_WRITE = 6;
 
 int game_file_io_read_scenario(const char *filename);
 
