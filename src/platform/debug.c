@@ -68,10 +68,10 @@ static void draw_tile_coords(int x, int y, int grid_offset)
     int len = string_length(text);
     string_copy(",", text + len, 2);
     len++;
-    string_from_int(text + len, ty, 0);
-    text_draw_centered(text, x, y + 4, 58, FONT_SMALL_PLAIN, COLOR_WHITE);
-    //string_from_int(text, grid_offset, 0);
-    //text_draw_centered(text, x, y + 10, 58, FONT_SMALL_PLAIN, COLOR_WHITE);
+    //string_from_int(text + len, ty, 0);
+    //text_draw_centered(text, x, y + 4, 58, FONT_SMALL_PLAIN, COLOR_WHITE);
+    string_from_int(text, grid_offset, 0);
+    text_draw_centered(text, x, y + 10, 58, FONT_SMALL_PLAIN, COLOR_WHITE);
 }
 #endif
 

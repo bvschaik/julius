@@ -33,6 +33,7 @@
 #include "widget/city_overlay_other.h"
 #include "widget/city_overlay_risks.h"
 #include "widget/city_without_overlay.h"
+#include "widget/city_draw_highway.h"
 
 static const city_overlay *overlay = 0;
 static float scale = SCALE_NONE;
@@ -360,7 +361,9 @@ static void draw_footprint(int x, int y, int grid_offset)
         overlay->draw_custom_footprint(x, y, scale, grid_offset);
     } else if (map_property_is_draw_tile(grid_offset)) {
         int terrain = map_terrain_get(grid_offset);
-        if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
+        if (terrain & TERRAIN_HIGHWAY) {
+            city_draw_highway_footprint(x, y, scale, grid_offset);
+        } else if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
             if (terrain & TERRAIN_ROAD) {
                 // Draw the equivalent road tile.
                 int image_id = image_group(GROUP_TERRAIN_ROAD);

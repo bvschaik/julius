@@ -13,6 +13,7 @@
 static struct {
     int roadblock_image_id;
     asset_image *roadblock_image;
+    int asset_lookup[ASSET_MAX_KEY];
 } data;
 
 void assets_init(int force_reload, color_t **main_images, int *main_image_widths)
@@ -40,6 +41,10 @@ void assets_init(int force_reload, color_t **main_images, int *main_image_widths
     // This ensures compatibility with previous release versions of Augustus, which only had roadblocks
     data.roadblock_image_id = assets_get_group_id("Logistics");
     data.roadblock_image = asset_image_get_from_id(data.roadblock_image_id - IMAGE_MAIN_ENTRIES);
+    data.asset_lookup[ASSET_HIGHWAY_BASE_START] = assets_get_image_id("Logistics", "Highway_Base_Start");
+    data.asset_lookup[ASSET_HIGHWAY_BARRIER_START] = assets_get_image_id("Logistics", "Highway_Barrier_Start");
+    data.asset_lookup[ASSET_AQUEDUCT_WITH_WATER] = assets_get_image_id("Logistics", "Aqueduct_Bridge_Left_Water");
+    data.asset_lookup[ASSET_AQUEDUCT_WITHOUT_WATER] = assets_get_image_id("Logistics", "Aqueduct_Bridge_Left_Empty");
 }
 
 int assets_load_single_group(const char *file_name, color_t **main_images, int *main_image_widths)
@@ -82,6 +87,11 @@ int assets_get_image_id(const char *assetlist_name, const char *image_name)
     log_info("Asset image not found: ", image_name, 0);
     log_info("Asset group is: ", assetlist_name, 0);
     return data.roadblock_image_id;
+}
+
+int assets_lookup_image_id(asset_id id)
+{
+    return data.asset_lookup[id];
 }
 
 const image *assets_get_image(int image_id)

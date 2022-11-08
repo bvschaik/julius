@@ -10,6 +10,7 @@
 #include "map/random.h"
 #include "map/terrain.h"
 #include "translation/translation.h"
+#include "widget/city_draw_highway.h"
 
 enum crime_level {
     NO_CRIME = 0,
@@ -407,6 +408,8 @@ static void draw_footprint_native(int x, int y, float scale, int grid_offset)
     } else {
         if (map_property_is_native_land(grid_offset)) {
             image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + 1, x, y, 0, scale);
+        } else if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+            city_draw_highway_footprint(x, y, scale, grid_offset);
         } else {
             image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0, scale);
         }

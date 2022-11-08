@@ -279,8 +279,7 @@ static void init(int grid_offset)
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
     context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE);
-    context.aqueduct_has_water = map_aqueduct_has_water_access_at(grid_offset)
-        && map_image_at(grid_offset) - image_group(GROUP_BUILDING_AQUEDUCT) < 15;
+    context.aqueduct_has_water = map_aqueduct_has_water_access_at(grid_offset);
 
     city_resource_determine_available();
     context.type = BUILDING_INFO_TERRAIN;

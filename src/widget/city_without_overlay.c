@@ -43,6 +43,7 @@
 #include "widget/city_bridge.h"
 #include "widget/city_building_ghost.h"
 #include "widget/city_figure.h"
+#include "widget/city_draw_highway.h"
 
 #define OFFSET(x,y) (x + GRID_SIZE * y)
 
@@ -170,7 +171,11 @@ static void draw_footprint(int x, int y, int grid_offset)
         }
         map_image_set(grid_offset, image_id);
     }
-    image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask, draw_context.scale);
+    if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+        city_draw_highway_footprint(x, y, draw_context.scale, grid_offset);
+    } else {
+        image_draw_isometric_footprint_from_draw_tile(image_id, x, y, color_mask, draw_context.scale);
+    }
     if (!building_id && config_get(CONFIG_UI_SHOW_GRID) && draw_context.scale <= 2.0f) {
         static int grid_id = 0;
         if (!grid_id) {
