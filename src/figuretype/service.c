@@ -71,7 +71,7 @@ void figure_destination_priest_action(figure *f)
 {
     building *b = building_get(f->building_id);
     building *destination = building_get(f->destination_building_id);
-    f->terrain_usage = TERRAIN_USAGE_ROADS;
+    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     if (b->state != BUILDING_STATE_IN_USE || (b->figure_id4 != f->id && b->figure_id2 != f->id) || destination->state != BUILDING_STATE_IN_USE) {
         f->state = FIGURE_STATE_DEAD;
     }
