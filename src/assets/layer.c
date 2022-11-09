@@ -397,9 +397,9 @@ int layer_add_from_image_id(layer *l, const char *group_id, const char *image_id
             return 0;
         }
     } else {
-        int group = string_to_int(string_from_ascii(group_id));
+        int group = atoi(group_id);
         if (group >= 0 && group < IMAGE_MAX_GROUPS) {
-            int id = image_id ? string_to_int(string_from_ascii(image_id)) : 0;
+            int id = image_id ? atoi(image_id) : 0;
             l->calculated_image_id = image_group(group) + id;
         } else {
             log_info("Image group is out of range", group_id, 0);

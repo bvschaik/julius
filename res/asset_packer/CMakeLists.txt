@@ -55,7 +55,8 @@ set(CORE_FILES
     ${MAIN_DIR}/src/core/image_packer.c
     ${MAIN_DIR}/src/core/png_read.c
     ${MAIN_DIR}/src/core/string.c
-    ${MAIN_DIR}/src/core/xml_parser.c)
+    ${MAIN_DIR}/src/core/xml_parser.c
+)
 
 set(ASSETS_FILES
     ${MAIN_DIR}/src/assets/xml.c

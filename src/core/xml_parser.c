@@ -65,7 +65,7 @@ static void XMLCALL start_element(void *unused, const char *name, const char **a
         return;
     }
     data.current_element = element;
-    if (!element->on_enter(element, attributes, count_attributes(attributes))) {
+    if (!element->on_enter(attributes, count_attributes(attributes))) {
         data.error = 1;
     }
     if (data.error) {
@@ -130,6 +130,62 @@ int xml_parser_parse(const char *buffer, int buffer_size, int is_final)
         return 0;
     }
     return 1;
+}
+
+static const char *get_attribute_value(const char **attributes, const char *key)
+{
+    if (!key) {
+        return 0;
+    }
+    int i = 0;
+    while (attributes[i]) {
+        if (!attributes[i + 1]) {
+            return 0;
+        }
+        if (strcmp(attributes[i], key) == 0) {
+            return attributes[i + 1];
+        }
+        i += 2;
+    }
+    return 0;
+}
+
+int xml_parser_get_attribute_int(const char **attributes, const char *key)
+{
+    const char *value = get_attribute_value(attributes, key);
+    if (!value) {
+        return 0;
+    }
+    return atoi(value);
+}
+
+const char *xml_parser_get_attribute_string(const char **attributes, const char *key)
+{
+    return get_attribute_value(attributes, key);
+}
+
+int xml_parser_get_attribute_bool(const char **attributes, const char *key)
+{
+    const char *value = get_attribute_value(attributes, key);
+    if (!value) {
+        return 0;
+    }
+    return strcmp(value, "true") == 0 || strcmp(value, "1") == 0 || strcmp(value, key) == 0 ||
+        strcmp(value, "yes") == 0 || strcmp(value, "y") == 0;
+}
+
+int xml_parser_get_attribute_enum(const char **attributes, const char *key, const char **values, int total_values)
+{
+    const char *value = get_attribute_value(attributes, key);
+    if (!value) {
+        return 0;
+    }
+    for (int i = 0; i < total_values; i++) {
+        if (strcmp(value, values[i]) == 0) {
+            return i + 1;
+        }
+    }
+    return 0;
 }
 
 void xml_parser_reset(void)
