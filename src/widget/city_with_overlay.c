@@ -361,7 +361,7 @@ static void draw_footprint(int x, int y, int grid_offset)
         overlay->draw_custom_footprint(x, y, scale, grid_offset);
     } else if (map_property_is_draw_tile(grid_offset)) {
         int terrain = map_terrain_get(grid_offset);
-        if (terrain & TERRAIN_HIGHWAY) {
+        if (terrain & TERRAIN_HIGHWAY && !(terrain & TERRAIN_GATEHOUSE)) {
             city_draw_highway_footprint(x, y, scale, grid_offset);
         } else if (terrain & (TERRAIN_AQUEDUCT | TERRAIN_WALL)) {
             if (terrain & TERRAIN_ROAD) {

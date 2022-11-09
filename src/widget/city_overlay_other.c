@@ -393,7 +393,7 @@ static void draw_footprint_water(int x, int y, float scale, int grid_offset)
         return;
     }
     int is_building = map_terrain_is(grid_offset, TERRAIN_BUILDING);
-    if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+    if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY) && !map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
         city_draw_highway_footprint(x, y, scale, grid_offset);
     } else if (map_terrain_is(grid_offset, terrain_on_water_overlay()) && !is_building) {
         image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0, scale);
@@ -556,7 +556,7 @@ static int get_desirability_image_offset(int desirability)
 static void draw_footprint_desirability(int x, int y, float scale, int grid_offset)
 {
     color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
-    if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+    if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY) && !map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
         city_draw_highway_footprint(x, y, scale, grid_offset);
     } else if (map_terrain_is(grid_offset, terrain_on_desirability_overlay())
         && !map_terrain_is(grid_offset, TERRAIN_BUILDING)) {

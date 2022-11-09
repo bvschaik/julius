@@ -408,7 +408,7 @@ static void draw_footprint_native(int x, int y, float scale, int grid_offset)
     } else {
         if (map_property_is_native_land(grid_offset)) {
             image_draw_isometric_footprint_from_draw_tile(image_group(GROUP_TERRAIN_DESIRABILITY) + 1, x, y, 0, scale);
-        } else if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+        } else if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY) && !map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
             city_draw_highway_footprint(x, y, scale, grid_offset);
         } else {
             image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0, scale);
