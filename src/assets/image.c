@@ -27,93 +27,14 @@ typedef enum {
     IMAGE_FULL_REFERENCE = 2
 } image_reference_type;
 
-#include "png.h"
-
-#define BYTES_PER_PIXEL 4
-
-static int image_id = 0;
-
-static void save_final_image(const char *path, unsigned int width, unsigned int height, const color_t *pixels)
-{
-    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
-
-    if (!png_ptr) {
-        log_error("Error creating png structure for", path, 0);
-        return;
-    }
-    png_infop info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr) {
-        log_error("Error creating png structure for", path, 0);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    png_set_compression_level(png_ptr, 3);
-
-    FILE *fp = fopen(path, "wb");
-    if (!fp) {
-        log_error("Error creating final png file at", path, 0);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    png_init_io(png_ptr, fp);
-
-    if (setjmp(png_jmpbuf(png_ptr))) {
-        log_error("Error constructing png file", path, 0);
-        fclose(fp);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    png_set_IHDR(png_ptr, info_ptr, width, height, 8, PNG_COLOR_TYPE_RGBA,
-        PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-    png_write_info(png_ptr, info_ptr);
-
-    uint8_t *row_pixels = malloc(width * BYTES_PER_PIXEL);
-    if (!row_pixels) {
-        log_error("Out of memory for png creation", path, 0);
-        fclose(fp);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    memset(row_pixels, 0, width * BYTES_PER_PIXEL);
-
-    if (setjmp(png_jmpbuf(png_ptr))) {
-        log_error("Error constructing png file", path, 0);
-        free(row_pixels);
-        fclose(fp);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    for (unsigned int y = 0; y < height; ++y) {
-        uint8_t *pixel = row_pixels;
-        for (unsigned int x = 0; x < width; x++) {
-            color_t input = pixels[y * width + x];
-            *(pixel + 0) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_RED);
-            *(pixel + 1) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_GREEN);
-            *(pixel + 2) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_BLUE);
-            *(pixel + 3) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_ALPHA);
-            pixel += BYTES_PER_PIXEL;
-        }
-        png_write_row(png_ptr, row_pixels);
-    }
-    png_write_end(png_ptr, info_ptr);
-
-    free(row_pixels);
-    fclose(fp);
-    png_destroy_write_struct(&png_ptr, &info_ptr);
-}
-
 static int load_image_layers(asset_image *img, color_t **main_images, int *main_image_widths)
 {
     int has_alpha_mask = 0;
-    static int i = 0;
-    char path[300];
     for (layer *l = img->last_layer; l; l = l->prev) {
         if (l->mask == LAYER_MASK_ALPHA) {
             has_alpha_mask = 1;
         }
         layer_load(l, main_images, main_image_widths);
-        snprintf(path, 300, "image-%d-layer-%d.png", image_id, i++);
-        save_final_image(path, l->width, l->height, l->data);
     }
     return has_alpha_mask;
 }
@@ -279,7 +200,6 @@ void split_top_and_footprint(const image *img, color_t *dst, const color_t *src,
 
 static int load_image(asset_image *img, color_t **main_images, int *main_image_widths)
 {
-    image_id++;
     img->img.original.width = img->img.width;
     img->img.original.height = img->img.height;
 
