@@ -9,7 +9,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "editor/empire.h"
-#include "empire/empire_xml.h"
+#include "empire/xml.h"
 #include "game/file.h"
 #include "game/file_editor.h"
 #include "game/file_io.h"

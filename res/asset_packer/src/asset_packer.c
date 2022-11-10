@@ -616,6 +616,8 @@ int main(int argc, char **argv)
         return 3;
     }
 
+    
+
     for (int i = 0; i < xml_files->num_files; ++i) {
         xml_process_assetlist_file(xml_files->files[i]);
     }
