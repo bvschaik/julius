@@ -32,6 +32,7 @@ static struct {
     int in_animation;
     image_groups *current_group;
     asset_image *current_image;
+    int pre_initialized;
 } data;
 
 static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
@@ -250,6 +251,12 @@ static void xml_end_animation_element(void)
     data.in_animation = 0;
 }
 
+void xml_init(void)
+{
+    xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS);
+    data.pre_initialized = 1;
+}
+
 int xml_process_assetlist_file(const char *xml_file_name)
 {
     log_info("Loading assetlist file", xml_file_name, 0);
@@ -261,11 +268,15 @@ int xml_process_assetlist_file(const char *xml_file_name)
         return 0;
     }
 
-    xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS);
-
     char buffer[XML_BUFFER_SIZE];
     int done = 0;
     int error = 0;
+
+    if (data.pre_initialized) {
+        xml_parser_reset();
+    } else {
+        xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS);
+    }
 
     do {
         size_t bytes_read = fread(buffer, 1, XML_BUFFER_SIZE, xml_file);
@@ -296,10 +307,19 @@ int xml_process_assetlist_file(const char *xml_file_name)
 
     data.finished = 0;
 
-    xml_parser_free();
+    if (!data.pre_initialized) {
+        xml_parser_free();
+    }
+
     file_close(xml_file);
 
     return !error;
+}
+
+void xml_finish(void)
+{
+    xml_parser_free();
+    data.pre_initialized = 0;
 }
 
 void xml_get_full_image_path(char *full_path, const char *image_file_name)

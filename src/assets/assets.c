@@ -31,9 +31,13 @@ void assets_init(int force_reload, color_t **main_images, int *main_image_widths
         log_error("Not enough memory to initialize extra assets. The game will probably crash.", 0, 0);
     }
 
+    xml_init();
+
     for (int i = 0; i < xml_files->num_files; ++i) {
         xml_process_assetlist_file(xml_files->files[i]);
     }
+
+    xml_finish();
 
     asset_image_load_all(main_images, main_image_widths);
 

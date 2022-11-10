@@ -1,0 +1,100 @@
+INFO: Augustus version 3.2.0.70-d21de71a
+INFO: Initializing SDL
+INFO: SDL initialized, version 2.0.22
+INFO: Loading game from working directory
+INFO: No key found on layout for  [
+INFO: No key found on layout for  ]
+INFO: No key found on layout for  =
+ERROR: 'c3.eng' or 'c3_mm.eng' files not found or too large.
+INFO: Loading game from base path C:\Users\MJ02963\ownCloud\Caesar3\julius\build\
+INFO: Location:  C:\Users\MJ02963\AppData\Roaming\augustus\augustus\
+INFO: Loading game from user pref C:\Users\MJ02963\ownCloud\Caesar3
+INFO: No key found on layout for  [ (message repeats 1 time)
+INFO: No key found on layout for  ] (message repeats 1 time)
+INFO: No key found on layout for  = (message repeats 1 time)
+INFO: 'c3.eng' or 'c3_mm.eng' files not found or too large. (message repeats 1 time)
+INFO: Config key  enable_audio  1
+INFO: Config key  master_volume  100
+INFO: Config key  enable_audio_in_videos  1
+INFO: Config key  video_volume  100
+INFO: Config key  ui_walker_waypoints  1
+INFO: Config key  gameplay_fix_immigration
+INFO: Config key  gameplay_fix_100y_ghosts
+INFO: Config key  screen_display_scale  100
+INFO: Config key  screen_cursor_scale  100
+INFO: Config key  screen_color_cursors  1
+INFO: Config key  ui_sidebar_info  1
+INFO: Config key  ui_show_intro_video
+INFO: Config key  ui_smooth_scrolling  1
+INFO: Config key  ui_disable_mouse_edge_scrolling  1
+INFO: Config key  ui_visual_feedback_on_delete
+INFO: Config key  ui_allow_cycling_temples  1
+INFO: Config key  ui_show_water_structure_range  1
+INFO: Config key  ui_show_water_structure_range_houses
+INFO: Config key  ui_show_construction_size  1
+INFO: Config key  ui_highlight_legions  1
+INFO: Config key  ui_show_military_sidebar  1
+INFO: Config key  ui_disable_map_drag
+INFO: Config key  ui_show_max_prosperity
+INFO: Config key  ui_digit_separator  1
+INFO: Config key  ui_inverse_map_drag
+INFO: Config key  ui_message_alerts
+INFO: Config key  ui_show_grid
+INFO: Config key  ui_show_partial_grid_around_construction
+INFO: Config key  ui_always_show_rotation_buttons
+INFO: Config key  gameplay_change_max_grand_temples  2
+INFO: Config key  gameplay_change_jealous_gods  1
+INFO: Config key  gameplay_change_global_labour  1
+INFO: Config key  gameplay_change_retire_at_60  1
+INFO: Config key  gameplay_change_fixed_workers  1
+INFO: Config key  gameplay_wolves_block
+INFO: Config key  gameplay_buyers_dont_distribute  1
+INFO: Config key  gameplay_change_getting_granaries_go_offroad  1
+INFO: Config key  gameplay_change_granaries_get_double  1
+INFO: Config key  gameplay_change_allow_exporting_from_granaries
+INFO: Config key  gameplay_change_tower_sentries_go_offroad  1
+INFO: Config key  gameplay_change_farms_deliver_close  1
+INFO: Config key  gameplay_change_only_deliver_to_accepting_granaries  1
+INFO: Config key  gameplay_change_all_houses_merge  1
+INFO: Config key  gameplay_change_random_mine_or_pit_collapses_take_money  1
+INFO: Config key  gameplay_change_multiple_barracks
+INFO: Config key  gameplay_change_warehouses_dont_accept  1
+INFO: Config key  gameplay_change_houses_dont_expand_into_gardens  1
+INFO: Config key  gameplay_change_monuments_boost_culture_rating
+INFO: Config key  gameplay_change_disable_infinite_wolves_spawning
+INFO: Config key  gameplay_change_romers_dont_skip_corners
+INFO: Config key  gameplay_change_yearly_autosave
+INFO: Config key  gameplay_change_auto_kill_animals
+INFO: Config key  ui_language_dir
+INFO: Config value  
+INFO: No key found on layout for  [
+INFO: No key found on layout for  ]
+INFO: No key found on layout for  =
+INFO: Detected language:  English
+INFO: Detected encoding:  1252
+INFO: Creating screen 1366 x 705, windowed, driver: windows
+INFO: Creating renderer
+INFO: Loaded renderer: direct3d
+INFO: Render texture created (1366 x 705)
+INFO: Trying asset path at  C:\Users\MJ02963\ownCloud\Caesar3\julius\build\/assets
+INFO: Asset path detected at  C:\Users\MJ02963\ownCloud\Caesar3\julius\build\/assets
+ERROR: Unable to open png file  Color_Cursors.png
+INFO: Creating atlas texture with size 3245x3245
+INFO: Loading assetlist file  aesthetics.xml
+INFO: Creating atlas texture with size 997x997
+INFO: Window 1 shown
+INFO: Window 1 exposed
+INFO: Loading assetlist file  health_education.xml
+INFO: Creating atlas texture with size 598x598
+INFO: Loading assetlist file  ui.xml
+INFO: Creating atlas texture with size 1274x1274
+INFO: Unable to open png file  Color_Cursors.png (message repeats 2 times)
+INFO: Loading assetlist file  logistics.xml
+INFO: Creating atlas texture with size 903x903
+INFO: Creating atlas texture with size 903x903
+INFO: Loading assetlist file  Industry.xml
+INFO: Creating atlas texture with size 248x248
+INFO: Loading assetlist file  entertainment.xml
+INFO: Creating atlas texture with size 950x950
+INFO: Loading assetlist file  logistics.xml (message repeats 1 time)
+INFO: Exiting game
