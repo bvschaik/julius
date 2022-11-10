@@ -19,6 +19,7 @@
 #include "core/zlib_helper.h"
 #include "empire/city.h"
 #include "empire/empire.h"
+#include "empire/empire_xml.h"
 #include "empire/object.h"
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"

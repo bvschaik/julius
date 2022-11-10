@@ -8,20 +8,17 @@ typedef struct {
     const char *name;
     int (*on_enter)(const char **attributes, int total_attributes);
     void (*on_exit)(void);
-    const char *parent_names;
+    const char *parent_name;
 } xml_parser_element;
 
 int xml_parser_init(const xml_parser_element *elements, int total_elements);
 
 int xml_parser_parse(const char *buffer, int buffer_size, int is_final);
 
-int xml_parser_has_attribute(const char **attributes, const char *key);
 int xml_parser_get_attribute_int(const char **attributes, const char *key);
 const char *xml_parser_get_attribute_string(const char **attributes, const char *key);
-char *xml_parser_copy_attribute_string(const char **attributes, const char *key);
 int xml_parser_get_attribute_bool(const char **attributes, const char *key);
-int xml_parser_get_attribute_enum(const char **attributes, const char *key,
-    const char **values, int total_values, int start_offset);
+int xml_parser_get_attribute_enum(const char **attributes, const char *key, const char **values, int total_values);
 
 void xml_parser_reset(void);
 
