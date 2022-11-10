@@ -10,21 +10,15 @@
 
 static struct {
     xml_parser_element *elements;
-    const xml_parser_element **parents;
-    int depth;
     int total_elements;
     int error;
     XML_Parser parser;
     const xml_parser_element *current_element;
 } data;
 
-static int dummy_element_on_enter(const char **attributes, int total_attributes)
-{
-    return 1;
-}
-
 static void dummy_element_on_exit(void)
-{}
+{
+}
 
 static const xml_parser_element *get_element_from_name(const char *name)
 {
@@ -39,29 +33,15 @@ static const xml_parser_element *get_element_from_name(const char *name)
     return 0;
 }
 
-static int compare_multiple(const char *string, const char *match)
-{
-    const char *next;
-    do {
-        next = strchr(string, '|');
-        int length = next ? (next - string) : strlen(string);
-        if (strncmp(string, match, length) == 0) {
-            return 1;
-        }
-        string = next + 1;
-    } while (next);
-    return 0;
-}
-
 static int is_proper_child(const xml_parser_element *element)
 {
     if (data.current_element == 0) {
-        return element->parent_names == 0;
+        return element->parent_name == 0;
     }
-    if (element->parent_names == 0) {
+    if (element->parent_name == 0) {
         return 0;
     }
-    return compare_multiple(element->parent_names, data.current_element->name);
+    return strcmp(data.current_element->name, element->parent_name) == 0;
 }
 
 static int count_attributes(const char **attributes)
@@ -82,12 +62,9 @@ static void XMLCALL start_element(void *unused, const char *name, const char **a
     if (!element || !is_proper_child(element)) {
         data.error = 1;
         log_error("Invalid XML parameter", name, 0);
-        XML_StopParser(data.parser, XML_FALSE);
         return;
     }
     data.current_element = element;
-    data.parents[data.depth] = element;
-    data.depth++;
     if (!element->on_enter(attributes, count_attributes(attributes))) {
         data.error = 1;
     }
@@ -108,12 +85,7 @@ static void XMLCALL end_element(void *unused, const char *name)
         return;
     }
     data.current_element->on_exit();
-    if (data.depth) {
-        data.depth--;
-        data.current_element = data.parents[data.depth];
-    } else {
-        data.current_element = 0;
-    }
+    data.current_element = get_element_from_name(data.current_element->parent_name);
 }
 
 int xml_parser_init(const xml_parser_element *elements, int total_elements)
@@ -122,7 +94,6 @@ int xml_parser_init(const xml_parser_element *elements, int total_elements)
 
     size_t elements_size = sizeof(xml_parser_element) * total_elements;
     data.elements = malloc(elements_size);
-    data.parents = malloc(sizeof(xml_parser_element *) * total_elements);
     if (!data.elements) {
         data.error = 1;
         return 0;
@@ -137,13 +108,10 @@ int xml_parser_init(const xml_parser_element *elements, int total_elements)
     
     for (int i = 0; i < data.total_elements; i++) {
         xml_parser_element *element = &data.elements[i];
-        if (!element->name) {
+        if (!element->name || !element->on_enter) {
             xml_parser_free();
             data.error = 1;
             return 0;
-        }
-        if (!element->on_enter) {
-            element->on_enter = dummy_element_on_enter;
         }
         if (!element->on_exit) {
             element->on_exit = dummy_element_on_exit;
@@ -182,11 +150,6 @@ static const char *get_attribute_value(const char **attributes, const char *key)
     return 0;
 }
 
-int xml_parser_has_attribute(const char **attributes, const char *key)
-{
-    return get_attribute_value(attributes, key) != 0;
-}
-
 int xml_parser_get_attribute_int(const char **attributes, const char *key)
 {
     const char *value = get_attribute_value(attributes, key);
@@ -201,21 +164,6 @@ const char *xml_parser_get_attribute_string(const char **attributes, const char 
     return get_attribute_value(attributes, key);
 }
 
-char *xml_parser_copy_attribute_string(const char **attributes, const char *key)
-{
-    const char *value = get_attribute_value(attributes, key);
-    if (!value) {
-        return 0;
-    }
-    size_t value_size = strlen(value);
-    char *result = malloc(sizeof(char) * (value_size + 1));
-    if (!result) {
-        return 0;
-    }
-    strncpy(result, value, value_size);
-    return result;
-}
-
 int xml_parser_get_attribute_bool(const char **attributes, const char *key)
 {
     const char *value = get_attribute_value(attributes, key);
@@ -226,19 +174,18 @@ int xml_parser_get_attribute_bool(const char **attributes, const char *key)
         strcmp(value, "yes") == 0 || strcmp(value, "y") == 0;
 }
 
-int xml_parser_get_attribute_enum(const char **attributes, const char *key,
-    const char **values, int total_values, int start_offset)
+int xml_parser_get_attribute_enum(const char **attributes, const char *key, const char **values, int total_values)
 {
     const char *value = get_attribute_value(attributes, key);
     if (!value) {
-        return start_offset - 1;
+        return 0;
     }
     for (int i = 0; i < total_values; i++) {
-        if (values[i] && compare_multiple(values[i], value)) {
-            return i + start_offset;
+        if (strcmp(value, values[i]) == 0) {
+            return i + 1;
         }
     }
-    return start_offset - 1;
+    return 0;
 }
 
 void xml_parser_reset(void)
@@ -256,8 +203,6 @@ void xml_parser_free(void)
     data.error = 0;
 
     free(data.elements);
-    free(data.parents);
     data.elements = 0;
-    data.parents = 0;
     data.total_elements = 0;
 }
