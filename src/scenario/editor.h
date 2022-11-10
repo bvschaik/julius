@@ -62,7 +62,7 @@ void scenario_editor_update_brief_description(const uint8_t *new_description);
 void scenario_editor_set_enemy(int enemy_id);
 
 void scenario_editor_change_empire(int change);
-void scenario_editor_set_custom_empire(const uint8_t *file_name);
+void scenario_editor_set_custom_empire(const char *file_name);
 void scenario_editor_unset_custom_empire(void);
 
 int scenario_editor_is_building_allowed(int id);

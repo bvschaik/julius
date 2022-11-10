@@ -286,16 +286,16 @@ static void draw_panel_buttons(const empire_city *city)
     }
 }
 
-static void draw_coordinates()
+static void draw_coordinates(void)
 {
     if (scenario.empire.id != SCENARIO_CUSTOM_EMPIRE) {
         return;
     }
-    mouse *m = mouse_get();
+    const mouse *m = mouse_get();
     uint8_t text[20];
     string_from_int(text, m->x - data.x_draw_offset, 0);
     int len = string_length(text);
-    string_copy(", ", text + len, 3);
+    string_copy(string_from_ascii(", "), text + len, 3);
     len += 2;
     string_from_int(text + len, m->y - data.y_draw_offset, 0);
     text_draw_centered(text, data.x_min + 20, data.y_min + 20, 58, FONT_NORMAL_BLACK, 0);
@@ -334,7 +334,7 @@ static void determine_selected_object(const mouse *m)
     window_invalidate();
 }
 
-static void refresh_empire()
+static void refresh_empire(void)
 {
     if (scenario.empire.id != SCENARIO_CUSTOM_EMPIRE) {
         return;

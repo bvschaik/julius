@@ -353,10 +353,10 @@ void scenario_editor_change_empire(int change)
     scenario.is_saved = 0;
 }
 
-void scenario_editor_set_custom_empire(const uint8_t *filename)
+void scenario_editor_set_custom_empire(const char *filename)
 {
     scenario.empire.id = SCENARIO_CUSTOM_EMPIRE;
-    string_copy(filename, scenario.empire.custom_name, sizeof(scenario.empire.custom_name));
+    strncpy(scenario.empire.custom_name, filename, sizeof(scenario.empire.custom_name) - 1);
 }
 
 void scenario_editor_unset_custom_empire(void)

@@ -425,7 +425,7 @@ static void button_ok_cancel(int is_ok, int param2)
         } else if (data.type == FILE_TYPE_EMPIRE) {
             int result = empire_xml_parse_file(filename);
             if (result) {
-                scenario_editor_set_custom_empire(string_from_ascii(filename));
+                scenario_editor_set_custom_empire(filename);
                 window_editor_empire_show();
             } else {
                 window_plain_message_dialog_show(TR_EDITOR_UNABLE_TO_LOAD_EMPIRE_TITLE, TR_EDITOR_UNABLE_TO_LOAD_EMPIRE_MESSAGE, 1);

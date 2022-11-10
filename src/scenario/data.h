@@ -172,7 +172,7 @@ extern struct scenario_t {
         int expansion_year;
         int distant_battle_roman_travel_months;
         int distant_battle_enemy_travel_months;
-        uint8_t custom_name[50];
+        char custom_name[50];
     } empire;
 
     request_t requests[MAX_REQUESTS];

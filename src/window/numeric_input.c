@@ -1,5 +1,6 @@
 #include "numeric_input.h"
 
+#include "core/string.h"
 #include "graphics/color.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -102,7 +103,7 @@ static void draw_foreground(void)
             data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
 
     graphics_draw_rect(data.x + 21, data.y + 171, 25, 25, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
-    text_draw_centered("X", data.x + 21, data.y + 177, 25, FONT_NORMAL_PLAIN, COLOR_RED);
+    text_draw_centered(string_from_ascii("X"), data.x + 21, data.y + 177, 25, FONT_NORMAL_PLAIN, COLOR_RED);
     graphics_draw_rect(data.x + 51, data.y + 171, 55, 25, data.focus_button_id == 13 ? COLOR_FONT_BLUE : COLOR_BLACK);
     lang_text_draw_centered_colored(44, 17, data.x + 51, data.y + 177, 55, FONT_NORMAL_PLAIN,
             data.focus_button_id == 13 ? COLOR_FONT_BLUE : COLOR_BLACK);
