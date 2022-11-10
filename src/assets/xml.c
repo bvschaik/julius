@@ -63,16 +63,11 @@ static int xml_start_assetlist_element(const char **attributes, int total_attrib
     if (total_attributes != 2) {
         return 0;
     }
-    const char *name = xml_parser_get_attribute_string(attributes, "name");
+    const char *name = xml_parser_copy_attribute_string(attributes, "name");
     if (!name || *name == '\0') {
         return 0;
     }
-    char *group_name = malloc(sizeof(char) * (strlen(name) + 1));
-    if (!group_name) {
-        return 0;
-    }
-    strcpy(group_name, name);
-    data.current_group->name = group_name;
+    data.current_group->name = name;
     data.current_image = 0;
     set_asset_image_base_path(data.current_group->name);
     return 1;
@@ -93,14 +88,7 @@ static int xml_start_image_element(const char **attributes, int total_attributes
     data.current_group->last_image_index = img->index;
     data.current_image = img;
 
-    const char *id = xml_parser_get_attribute_string(attributes, "id");
-    if (id) {
-        char *img_id = malloc(sizeof(char) * (strlen(id) + 1));
-        if (img_id) {
-            strcpy(img_id, id);
-            img->id = img_id;
-        }
-    }
+    img->id = xml_parser_copy_attribute_string(attributes, "id");
     const char *path = xml_parser_get_attribute_string(attributes, "src");
     img->img.width = xml_parser_get_attribute_int(attributes, "width");
     img->img.height = xml_parser_get_attribute_int(attributes, "height");
@@ -142,10 +130,10 @@ static int xml_start_layer_element(const char **attributes, int total_attributes
     int offset_y = xml_parser_get_attribute_int(attributes, "y");
     int width = xml_parser_get_attribute_int(attributes, "width");
     int height = xml_parser_get_attribute_int(attributes, "height");
-    layer_invert_type invert = xml_parser_get_attribute_enum(attributes, "invert", INVERT_VALUES, 3);
-    layer_rotate_type rotate = xml_parser_get_attribute_enum(attributes, "rotate", ROTATE_VALUES, 3);
-    layer_isometric_part part = xml_parser_get_attribute_enum(attributes, "part", part_values, 2);
-    layer_mask mask = xml_parser_get_attribute_enum(attributes, "mask", mask_values, 2);
+    layer_invert_type invert = xml_parser_get_attribute_enum(attributes, "invert", INVERT_VALUES, 3, INVERT_HORIZONTAL);
+    layer_rotate_type rotate = xml_parser_get_attribute_enum(attributes, "rotate", ROTATE_VALUES, 3, ROTATE_90_DEGREES);
+    layer_isometric_part part = xml_parser_get_attribute_enum(attributes, "part", part_values, 2, PART_FOOTPRINT);
+    layer_mask mask = xml_parser_get_attribute_enum(attributes, "mask", mask_values, 2, LAYER_MASK_GRAYSCALE);
 
     if (!asset_image_add_layer(img, path, group, image, src_x, src_y,
         offset_x, offset_y, width, height, invert, rotate, part == PART_NONE ? PART_BOTH : part, mask)) {
@@ -198,8 +186,8 @@ static int xml_start_frame_element(const char **attributes, int total_attributes
     int src_y = xml_parser_get_attribute_int(attributes, "src_y");
     int width = xml_parser_get_attribute_int(attributes, "width");
     int height = xml_parser_get_attribute_int(attributes, "height");
-    layer_invert_type invert = xml_parser_get_attribute_enum(attributes, "invert", INVERT_VALUES, 3);
-    layer_rotate_type rotate = xml_parser_get_attribute_enum(attributes, "rotate", ROTATE_VALUES, 3);
+    layer_invert_type invert = xml_parser_get_attribute_enum(attributes, "invert", INVERT_VALUES, 3, INVERT_HORIZONTAL);
+    layer_rotate_type rotate = xml_parser_get_attribute_enum(attributes, "rotate", ROTATE_VALUES, 3, ROTATE_90_DEGREES);
 
     img->last_layer = &img->first_layer;
     if (!asset_image_add_layer(img, path, group, image, src_x, src_y,
