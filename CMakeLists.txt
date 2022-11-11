@@ -63,11 +63,6 @@ if (CMAKE_COMPILER_IS_GNUCC)
     endif()
 endif()
 
-# Fix bug in cmake that expects the resource compiler for mingw to have the toolchain prefix in the name
-if (CMAKE_VERSION VERSION_GREATER_EQUAL 3.24.0 AND MINGW)
-    set(CMAKE_RC_COMPILER "windres")
-endif()
-
 set(PROJECT_VERSION_MAJOR 1)
 set(PROJECT_VERSION_MINOR 7)
 set(PROJECT_VERSION_PATCH 0)
