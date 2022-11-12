@@ -1104,6 +1104,30 @@ static void draw_highway(const map_tile *tile, int x, int y)
     draw_regular_building(BUILDING_HIGHWAY, image_id, x, y, grid_offset, num_tiles, blocked_tiles);
 }
 
+static void draw_grand_temple_neptune_range(int x, int y, int grid_offset)
+{
+    image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_BLUE, scale);
+}
+
+static void draw_grand_temple_neptune(const map_tile *tile, int x, int y)
+{
+    color_t color_mask;
+    const building_properties *props = building_properties_for_type(BUILDING_GRAND_TEMPLE_NEPTUNE);
+    int num_tiles = props->size * props->size;
+    int blocked[MAX_TILES];
+    if (city_finance_out_of_money() || is_blocked_for_building(tile->grid_offset, props->size, blocked)) {
+        image_blend_footprint_color(x, y, COLOR_MASK_RED, scale);
+        color_mask = COLOR_MASK_BUILDING_GHOST_RED;
+    } else {
+        color_mask = COLOR_MASK_BUILDING_GHOST;
+    }
+    // need to add 2 for the bonus the Neptune GT will add
+    int radius = map_water_supply_reservoir_radius() + 2;
+    city_view_foreach_tile_in_range(tile->grid_offset, props->size, radius, draw_grand_temple_neptune_range);
+    int image_id = get_new_building_image_id(tile->x, tile->y, tile->grid_offset, BUILDING_GRAND_TEMPLE_NEPTUNE, props);
+    draw_regular_building(BUILDING_GRAND_TEMPLE_NEPTUNE, image_id, x, y, tile->grid_offset, num_tiles, blocked);
+}
+
 int city_building_ghost_mark_deleting(const map_tile *tile)
 {
     int construction_type = building_construction_type();
@@ -1257,6 +1281,9 @@ void city_building_ghost_draw(const map_tile *tile)
             break;
         case BUILDING_HIGHWAY:
             draw_highway(tile, x, y);
+            break;
+        case BUILDING_GRAND_TEMPLE_NEPTUNE:
+            draw_grand_temple_neptune(tile, x, y);
             break;
         default:
             draw_default(tile, x, y, type);
