@@ -80,6 +80,7 @@ static struct {
 static void init(void)
 {
     data.scenarios = dir_find_files_with_extension(".", "map");
+    data.scenarios = dir_append_files_with_extension("mapx");
     data.focus_button_id = 0;
     data.focus_toggle_button = 0;
     data.show_minimap = 0;
