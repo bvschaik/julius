@@ -203,13 +203,7 @@ static void draw_resource(resource_type resource, int trade_max, int x_offset, i
     int image_id = resource + image_group(GROUP_EDITOR_EMPIRE_RESOURCES);
     int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
     image_draw(image_id + resource_offset, x_offset + 1, y_offset + 1, COLOR_MASK_NONE, SCALE_NONE);
-    if (trade_max < 20) {
-        image_draw(image_group(GROUP_EDITOR_TRADE_AMOUNT), x_offset + 21, y_offset - 1, COLOR_MASK_NONE, SCALE_NONE);
-    } else if (trade_max < 32) {
-        image_draw(image_group(GROUP_EDITOR_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1, COLOR_MASK_NONE, SCALE_NONE);
-    } else {
-        image_draw(image_group(GROUP_EDITOR_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1, COLOR_MASK_NONE, SCALE_NONE);
-    }
+    window_empire_draw_resource_shields(trade_max, x_offset, y_offset);
 }
 
 static void draw_city_info(const empire_city *city)

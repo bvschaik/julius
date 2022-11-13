@@ -36,6 +36,18 @@
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
 
+typedef struct {
+    int x;
+    int y;
+} px_point;
+static px_point trade_amount_px_offsets[5] = {
+    { 2, 0 },
+    { 5, 2 },
+    { 8, 4 },
+    { 0, 3 },
+    { 4, 6 },
+};
+
 static void button_help(int param1, int param2);
 static void button_return_to_city(int param1, int param2);
 static void button_advisor(int advisor, int param2);
@@ -147,12 +159,40 @@ static void draw_trade_resource(resource_type resource, int trade_max, int x_off
         button_border_draw(x_offset - 2, y_offset - 2, 101 + 4, 30, 1);
     }
 
-    if (trade_max < 20) {
-        image_draw(image_group(GROUP_TRADE_AMOUNT), x_offset + 21, y_offset - 1, COLOR_MASK_NONE, SCALE_NONE);
-    } else if (trade_max < 32) {
-        image_draw(image_group(GROUP_TRADE_AMOUNT) + 1, x_offset + 17, y_offset - 1, COLOR_MASK_NONE, SCALE_NONE);
+    window_empire_draw_resource_shields(trade_max, x_offset, y_offset);
+}
+
+void window_empire_draw_resource_shields(int trade_max, int x_offset, int y_offset)
+{
+    int num_bronze_shields = (trade_max % 100) / 20 + 1;
+    if (trade_max >= 600) {
+        num_bronze_shields = 5;
+    }
+
+    int top_left_x;
+    if (num_bronze_shields == 1) {
+        top_left_x = x_offset + 19;
+    } else if (num_bronze_shields == 2) {
+        top_left_x = x_offset + 15;
     } else {
-        image_draw(image_group(GROUP_TRADE_AMOUNT) + 2, x_offset + 13, y_offset - 1, COLOR_MASK_NONE, SCALE_NONE);
+        top_left_x = x_offset + 11;
+    }
+    int top_left_y = y_offset - 1;
+    int bronze_shield = image_group(GROUP_TRADE_AMOUNT);
+    for (int i = 0; i < num_bronze_shields; i++) {
+        px_point pt = trade_amount_px_offsets[i];
+        image_draw(bronze_shield, top_left_x + pt.x, top_left_y + pt.y, COLOR_MASK_NONE, SCALE_NONE);
+    }
+
+    int num_gold_shields = trade_max / 100;
+    if (num_gold_shields > 5) {
+        num_gold_shields = 5;
+    }
+    top_left_x = x_offset - 1;
+    top_left_y = y_offset + 22;
+    int gold_shield = assets_lookup_image_id(ASSET_GOLD_SHIELD);
+    for (int i = 0; i < num_gold_shields; i++) {
+        image_draw(gold_shield, top_left_x + i * 3, top_left_y, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
 

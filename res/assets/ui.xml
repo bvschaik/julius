@@ -230,4 +230,5 @@
 	<image id="SeaRouteDot" width="5" height="5">
 		<layer group="182" image="7"/>
 	</image>
+	<image id="GoldShield" src="empire_gold_shield" />
 </assetlist>
