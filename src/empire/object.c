@@ -49,6 +49,12 @@ void empire_object_clear(void)
 
 void empire_object_load(buffer *buf, int version)
 {
+    empire_object_clear();
+    // we're loading a scenario that does not have a custom empire
+    if (buf->size == sizeof(int) && buffer_read_i32(buf) == 0) {
+        return;
+    }
+
     for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
         full_empire_object *full = &objects[i];
         empire_object *obj = &full->obj;
