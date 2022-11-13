@@ -32,7 +32,7 @@ static struct {
     int in_animation;
     image_groups *current_group;
     asset_image *current_image;
-    int pre_initialized;
+    int initialized;
 } data;
 
 static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
@@ -63,16 +63,11 @@ static int xml_start_assetlist_element(const char **attributes, int total_attrib
     if (total_attributes != 2) {
         return 0;
     }
-    const char *name = xml_parser_get_attribute_string(attributes, "name");
+    const char *name = xml_parser_copy_attribute_string(attributes, "name");
     if (!name || *name == '\0') {
         return 0;
     }
-    char *group_name = malloc(sizeof(char) * (strlen(name) + 1));
-    if (!group_name) {
-        return 0;
-    }
-    strcpy(group_name, name);
-    data.current_group->name = group_name;
+    data.current_group->name = name;
     data.current_image = 0;
     set_asset_image_base_path(data.current_group->name);
     return 1;
@@ -93,14 +88,7 @@ static int xml_start_image_element(const char **attributes, int total_attributes
     data.current_group->last_image_index = img->index;
     data.current_image = img;
 
-    const char *id = xml_parser_get_attribute_string(attributes, "id");
-    if (id) {
-        char *img_id = malloc(sizeof(char) * (strlen(id) + 1));
-        if (img_id) {
-            strcpy(img_id, id);
-            img->id = img_id;
-        }
-    }
+    img->id = xml_parser_copy_attribute_string(attributes, "id");
     const char *path = xml_parser_get_attribute_string(attributes, "src");
     img->img.width = xml_parser_get_attribute_int(attributes, "width");
     img->img.height = xml_parser_get_attribute_int(attributes, "height");
@@ -142,10 +130,10 @@ static int xml_start_layer_element(const char **attributes, int total_attributes
     int offset_y = xml_parser_get_attribute_int(attributes, "y");
     int width = xml_parser_get_attribute_int(attributes, "width");
     int height = xml_parser_get_attribute_int(attributes, "height");
-    layer_invert_type invert = xml_parser_get_attribute_enum(attributes, "invert", INVERT_VALUES, 3);
-    layer_rotate_type rotate = xml_parser_get_attribute_enum(attributes, "rotate", ROTATE_VALUES, 3);
-    layer_isometric_part part = xml_parser_get_attribute_enum(attributes, "part", part_values, 2);
-    layer_mask mask = xml_parser_get_attribute_enum(attributes, "mask", mask_values, 2);
+    layer_invert_type invert = xml_parser_get_attribute_enum(attributes, "invert", INVERT_VALUES, 3, INVERT_HORIZONTAL);
+    layer_rotate_type rotate = xml_parser_get_attribute_enum(attributes, "rotate", ROTATE_VALUES, 3, ROTATE_90_DEGREES);
+    layer_isometric_part part = xml_parser_get_attribute_enum(attributes, "part", part_values, 2, PART_FOOTPRINT);
+    layer_mask mask = xml_parser_get_attribute_enum(attributes, "mask", mask_values, 2, LAYER_MASK_GRAYSCALE);
 
     if (!asset_image_add_layer(img, path, group, image, src_x, src_y,
         offset_x, offset_y, width, height, invert, rotate, part == PART_NONE ? PART_BOTH : part, mask)) {
@@ -198,8 +186,8 @@ static int xml_start_frame_element(const char **attributes, int total_attributes
     int src_y = xml_parser_get_attribute_int(attributes, "src_y");
     int width = xml_parser_get_attribute_int(attributes, "width");
     int height = xml_parser_get_attribute_int(attributes, "height");
-    layer_invert_type invert = xml_parser_get_attribute_enum(attributes, "invert", INVERT_VALUES, 3);
-    layer_rotate_type rotate = xml_parser_get_attribute_enum(attributes, "rotate", ROTATE_VALUES, 3);
+    layer_invert_type invert = xml_parser_get_attribute_enum(attributes, "invert", INVERT_VALUES, 3, INVERT_HORIZONTAL);
+    layer_rotate_type rotate = xml_parser_get_attribute_enum(attributes, "rotate", ROTATE_VALUES, 3, ROTATE_90_DEGREES);
 
     img->last_layer = &img->first_layer;
     if (!asset_image_add_layer(img, path, group, image, src_x, src_y,
@@ -253,8 +241,10 @@ static void xml_end_animation_element(void)
 
 void xml_init(void)
 {
-    xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS);
-    data.pre_initialized = 1;
+    if (!data.initialized) {
+        xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS);
+        data.initialized = 1;
+    }
 }
 
 int xml_process_assetlist_file(const char *xml_file_name)
@@ -272,11 +262,7 @@ int xml_process_assetlist_file(const char *xml_file_name)
     int done = 0;
     int error = 0;
 
-    if (data.pre_initialized) {
-        xml_parser_reset();
-    } else {
-        xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS);
-    }
+    xml_parser_reset();
 
     do {
         size_t bytes_read = fread(buffer, 1, XML_BUFFER_SIZE, xml_file);
@@ -307,10 +293,6 @@ int xml_process_assetlist_file(const char *xml_file_name)
 
     data.finished = 0;
 
-    if (!data.pre_initialized) {
-        xml_parser_free();
-    }
-
     file_close(xml_file);
 
     return !error;
@@ -319,7 +301,7 @@ int xml_process_assetlist_file(const char *xml_file_name)
 void xml_finish(void)
 {
     xml_parser_free();
-    data.pre_initialized = 0;
+    data.initialized = 0;
 }
 
 void xml_get_full_image_path(char *full_path, const char *image_file_name)

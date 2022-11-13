@@ -58,6 +58,7 @@ int assets_load_single_group(const char *file_name, color_t **main_images, int *
         log_error("Not enough memory to initialize extra assets. The game will probably crash.", 0, 0);
         return 0;
     }
+    xml_init();
     graphics_renderer()->free_image_atlas(ATLAS_EXTRA_ASSET);
     return xml_process_assetlist_file(file_name) && asset_image_load_all(main_images, main_image_widths);
 }
