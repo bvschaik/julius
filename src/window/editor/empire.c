@@ -23,6 +23,8 @@
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
 
+#define OUR_CITY -1
+
 static void button_change_empire(int is_up, int param2);
 static void button_ok(int param1, int param2);
 
@@ -183,7 +185,8 @@ static void draw_resource(resource_type resource, int trade_max, int x_offset, i
 {
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
     int image_id = resource + image_group(GROUP_EDITOR_EMPIRE_RESOURCES);
-    int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+    // Never change meat -> fish for our city's resources
+    int resource_offset = trade_max == OUR_CITY ? 0 : resource_image_offset(resource, RESOURCE_IMAGE_ICON);
     image_draw(image_id + resource_offset, x_offset + 1, y_offset + 1);
     switch (trade_max) {
         case 15:
@@ -220,7 +223,7 @@ static void draw_city_info(const empire_city *city)
             int resource_x_offset = x_offset + 30 + width;
             for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
                 if (empire_object_city_sells_resource(city->empire_object_id, r)) {
-                    draw_resource(r, 0, resource_x_offset, y_offset - 9);
+                    draw_resource(r, OUR_CITY, resource_x_offset, y_offset - 9);
                     resource_x_offset += 32;
                 }
             }
