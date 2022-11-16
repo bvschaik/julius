@@ -37,15 +37,15 @@ static struct {
     int invasion_path_idx;
 } data;
 
-static int xml_start_empire(const char **attributes, int total_attributes);
-static int xml_start_city(const char **attributes, int total_attributes);
-static int xml_start_buys(const char **attributes, int total_attributes);
-static int xml_start_sells(const char **attributes, int total_attributes);
-static int xml_start_waypoints(const char **attributes, int total_attributes);
-static int xml_start_resource(const char **attributes, int total_attributes);
-static int xml_start_trade_point(const char **attributes, int total_attributes);
-static int xml_start_invasion_path(const char **attributes, int total_attributes);
-static int xml_start_battle(const char **attributes, int total_attributes);
+static int xml_start_empire(void);
+static int xml_start_city(void);
+static int xml_start_buys(void);
+static int xml_start_sells(void);
+static int xml_start_waypoints(void);
+static int xml_start_resource(void);
+static int xml_start_trade_point(void);
+static int xml_start_invasion_path(void);
+static int xml_start_battle(void);
 
 static void xml_end_city(void);
 static void xml_end_sells_buys_or_waypoints(void);
@@ -65,9 +65,9 @@ static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "battle", xml_start_battle, 0, "path"},
 };
 
-static int xml_start_empire(const char **attributes, int total_attributes)
+static int xml_start_empire(void)
 {
-    data.version = xml_parser_get_attribute_int(attributes, "version");
+    data.version = xml_parser_get_attribute_int("version");
     if (!data.version) {
         data.success = 0;
         log_error("No version set", 0, 0);
@@ -76,7 +76,7 @@ static int xml_start_empire(const char **attributes, int total_attributes)
     return 1;
 }
 
-static int xml_start_city(const char **attributes, int total_attributes)
+static int xml_start_city(void)
 {
     if (data.next_empire_obj_id + 1 >= MAX_EMPIRE_OBJECTS) {
         data.success = 0;
@@ -84,7 +84,7 @@ static int xml_start_city(const char **attributes, int total_attributes)
         return 0;
     }
 
-    if (total_attributes < 2 || total_attributes % 2) {
+    if (xml_parser_get_total_attributes() < 2) {
         log_error("Wrong number of attributes for the city", 0, 0);
         return 0;
     }
@@ -104,15 +104,15 @@ static int xml_start_city(const char **attributes, int total_attributes)
     static const char *city_types[5] = { "roman", "ours", "trade", 0, "distant" };
     static const char *trade_route_types[2] = { "land", "sea" };
 
-    const char *name = xml_parser_get_attribute_string(attributes, "name");
+    const char *name = xml_parser_get_attribute_string("name");
     if (name) {
         string_copy(string_from_ascii(name), city_obj->city_custom_name, sizeof(city_obj->city_custom_name));
     }
 
-    city_obj->obj.x = xml_parser_get_attribute_int(attributes, "x");
-    city_obj->obj.y = xml_parser_get_attribute_int(attributes, "y");
+    city_obj->obj.x = xml_parser_get_attribute_int("x");
+    city_obj->obj.y = xml_parser_get_attribute_int("y");
 
-    int city_type = xml_parser_get_attribute_enum(attributes, "type", city_types, 5, EMPIRE_CITY_DISTANT_ROMAN);
+    int city_type = xml_parser_get_attribute_enum("type", city_types, 5, EMPIRE_CITY_DISTANT_ROMAN);
     if (city_type < EMPIRE_CITY_DISTANT_ROMAN) {
         city_obj->city_type = EMPIRE_CITY_TRADE;
     } else {
@@ -143,7 +143,7 @@ static int xml_start_city(const char **attributes, int total_attributes)
         route_obj->obj.type = EMPIRE_OBJECT_LAND_TRADE_ROUTE;
         route_obj->obj.trade_route_id = city_obj->obj.trade_route_id;
 
-        route_obj->obj.type = xml_parser_get_attribute_enum(attributes, "trade_route_type",
+        route_obj->obj.type = xml_parser_get_attribute_enum("trade_route_type",
             trade_route_types, 2, EMPIRE_OBJECT_LAND_TRADE_ROUTE);
         if (route_obj->obj.type < EMPIRE_OBJECT_LAND_TRADE_ROUTE) {
             route_obj->obj.type = EMPIRE_OBJECT_LAND_TRADE_ROUTE;
@@ -154,7 +154,7 @@ static int xml_start_city(const char **attributes, int total_attributes)
             route_obj->obj.image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1;
         }
 
-        city_obj->trade_route_cost = xml_parser_get_attribute_int(attributes, "trade_route_cost");
+        city_obj->trade_route_cost = xml_parser_get_attribute_int("trade_route_cost");
         if (!city_obj->trade_route_cost) {
             city_obj->trade_route_cost = 500;
         }
@@ -163,25 +163,25 @@ static int xml_start_city(const char **attributes, int total_attributes)
     return 1;
 }
 
-static int xml_start_buys(const char **attributes, int total_attributes)
+static int xml_start_buys(void)
 {
     data.current_city_list = LIST_BUYS;
     return 1;
 }
 
-static int xml_start_sells(const char **attributes, int total_attributes)
+static int xml_start_sells(void)
 {
     data.current_city_list = LIST_SELLS;
     return 1;
 }
 
-static int xml_start_waypoints(const char **attributes, int total_attributes)
+static int xml_start_waypoints(void)
 {
     data.current_city_list = LIST_TRADE_WAYPOINTS;
     return 1;
 }
 
-static int xml_start_resource(const char **attributes, int total_attributes)
+static int xml_start_resource(void)
 {
     if (data.current_city_id == -1) {
         data.success = 0;
@@ -193,12 +193,6 @@ static int xml_start_resource(const char **attributes, int total_attributes)
         return 0;
     }
 
-    if (total_attributes % 2) {
-        data.success = 0;
-        log_error("Malformed xml in resource element", 0, 0);
-        return 0;
-    }
-
     static const char *resource_types[] = {
         "wheat", "vegetables", "fruit", "olives", "vines", "meat|fish", "wine", "oil", "iron",
         "timber|wood", "clay", "marble", "weapons", "furniture", "pottery"
@@ -206,20 +200,20 @@ static int xml_start_resource(const char **attributes, int total_attributes)
     
     full_empire_object *city_obj = empire_object_get_full(data.current_city_id);
 
-    if (!xml_parser_has_attribute(attributes, "type")) {
+    if (!xml_parser_has_attribute("type")) {
         data.success = 0;
         log_error("Unable to find resource type attribute", 0, 0);
         return 0;
     }
-    resource_type resource = xml_parser_get_attribute_enum(attributes, "type", resource_types, 15, RESOURCE_WHEAT);
+    resource_type resource = xml_parser_get_attribute_enum("type", resource_types, 15, RESOURCE_WHEAT);
     if (resource == RESOURCE_NONE) {
         data.success = 0;
-        log_error("Unable to determine resource type", xml_parser_get_attribute_string(attributes, "type"), 0);
+        log_error("Unable to determine resource type", xml_parser_get_attribute_string("type"), 0);
         return 0;
     }
 
-    int amount = xml_parser_has_attribute(attributes, "amount") ?
-        xml_parser_get_attribute_int(attributes, "amount") : 1;
+    int amount = xml_parser_has_attribute("amount") ?
+        xml_parser_get_attribute_int("amount") : 1;
 
     if (data.current_city_list == LIST_BUYS) {
         city_obj->city_buys_resource[resource] = amount;
@@ -230,7 +224,7 @@ static int xml_start_resource(const char **attributes, int total_attributes)
     return 1;
 }
 
-static int xml_start_trade_point(const char **attributes, int total_attributes)
+static int xml_start_trade_point(void)
 {
     if (data.current_city_id == -1) {
         data.success = 0;
@@ -252,19 +246,19 @@ static int xml_start_trade_point(const char **attributes, int total_attributes)
     obj->in_use = 1;
     obj->obj.type = EMPIRE_OBJECT_TRADE_WAYPOINT;
     obj->obj.trade_route_id = data.current_trade_route_id;
-    obj->obj.x = xml_parser_get_attribute_int(attributes, "x");
-    obj->obj.y = xml_parser_get_attribute_int(attributes, "y");
+    obj->obj.x = xml_parser_get_attribute_int("x");
+    obj->obj.y = xml_parser_get_attribute_int("y");
 
     return 1;
 }
 
-static int xml_start_invasion_path(const char **attributes, int total_attributes)
+static int xml_start_invasion_path(void)
 {
     data.current_invasion_path_id++;
     return 1;
 }
 
-static int xml_start_battle(const char **attributes, int total_attributes)
+static int xml_start_battle(void)
 {
     if (data.next_empire_obj_id >= MAX_EMPIRE_OBJECTS) {
         data.success = 0;
@@ -287,8 +281,8 @@ static int xml_start_battle(const char **attributes, int total_attributes)
     battle_obj->obj.type = EMPIRE_OBJECT_BATTLE_ICON;
     battle_obj->obj.invasion_path_id = data.current_invasion_path_id;
     battle_obj->obj.image_id = image_group(GROUP_EMPIRE_BATTLE);
-    battle_obj->obj.x = xml_parser_get_attribute_int(attributes, "x");
-    battle_obj->obj.y = xml_parser_get_attribute_int(attributes, "y");
+    battle_obj->obj.x = xml_parser_get_attribute_int("x");
+    battle_obj->obj.y = xml_parser_get_attribute_int("y");
     data.invasion_path_ids[data.invasion_path_idx] = battle_obj->obj.id;
     data.invasion_path_idx++;
 
