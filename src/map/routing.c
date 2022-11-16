@@ -31,6 +31,10 @@ static const int HIGHWAY_DIRECTIONS[] = {
     TERRAIN_HIGHWAY_BOTTOM_LEFT | TERRAIN_HIGHWAY_BOTTOM_RIGHT, // right
     TERRAIN_HIGHWAY_TOP_LEFT | TERRAIN_HIGHWAY_BOTTOM_LEFT, // down
     TERRAIN_HIGHWAY_TOP_LEFT | TERRAIN_HIGHWAY_TOP_RIGHT, // left
+    0,
+    0,
+    0,
+    0
 };
 
 static map_routing_distance_grid distance;
@@ -195,7 +199,7 @@ static int receive_highway_bonus(int offset, int direction)
     return 0;
 }
 
-static void route_queue_from_to(int src_x, int src_y, int dst_x, int dst_y, int max_tiles,
+static void route_queue_from_to(int src_x, int src_y, int dst_x, int dst_y, int num_directions, int max_tiles,
     int (*callback)(int offset, int next_offset, int direction))
 {
     clear_data();
@@ -212,11 +216,11 @@ static void route_queue_from_to(int src_x, int src_y, int dst_x, int dst_y, int 
         int x = map_grid_offset_to_x(offset);
         int y = map_grid_offset_to_y(offset);
         distance.possible.items[offset] = 1;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < num_directions; i++) {
             int next_offset = offset + ROUTE_OFFSETS[i];
             int remaining_dist = distance_left(x + ROUTE_OFFSETS_X[i], y + ROUTE_OFFSETS_Y[i]);
             int dist = 2 + distance.determined.items[offset];
-            if (receive_highway_bonus(offset, i)) {
+            if (receive_highway_bonus(next_offset, i)) {
                 dist--;
             }
             if (valid_offset(next_offset, dist) && callback(offset, next_offset, i)) {
@@ -554,10 +558,10 @@ static int callback_travel_citizen_land(int offset, int next_offset, int directi
     return 0;
 }
 
-int map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y)
+int map_routing_citizen_can_travel_over_land(int src_x, int src_y, int dst_x, int dst_y, int num_directions)
 {
     ++stats.total_routes_calculated;
-    route_queue_from_to(src_x, src_y, dst_x, dst_y, 0, callback_travel_citizen_land);
+    route_queue_from_to(src_x, src_y, dst_x, dst_y, num_directions, 0, callback_travel_citizen_land);
     return distance.determined.items[map_grid_offset(dst_x, dst_y)] != 0;
 }
 
@@ -570,7 +574,7 @@ static int callback_travel_citizen_road_garden(int offset, int next_offset, int 
     return 0;
 }
 
-int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y)
+int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int dst_x, int dst_y, int num_directions)
 {
     int dst_offset = map_grid_offset(dst_x, dst_y);
     if (terrain_land_citizen.items[dst_offset] != CITIZEN_0_ROAD &&
@@ -578,7 +582,7 @@ int map_routing_citizen_can_travel_over_road_garden(int src_x, int src_y, int ds
         return 0;
     }
     ++stats.total_routes_calculated;
-    route_queue_from_to(src_x, src_y, dst_x, dst_y, 0, callback_travel_citizen_road_garden);
+    route_queue_from_to(src_x, src_y, dst_x, dst_y, num_directions, 0, callback_travel_citizen_road_garden);
     return distance.determined.items[dst_offset] != 0;
 }
 
@@ -591,7 +595,7 @@ static int callback_travel_citizen_road_garden_highway(int offset, int next_offs
     return 0;
 }
 
-int map_routing_citizen_can_travel_over_road_garden_highway(int src_x, int src_y, int dst_x, int dst_y)
+int map_routing_citizen_can_travel_over_road_garden_highway(int src_x, int src_y, int dst_x, int dst_y, int num_directions)
 {
     int dst_offset = map_grid_offset(dst_x, dst_y);
     if (terrain_land_citizen.items[dst_offset] < CITIZEN_0_ROAD ||
@@ -599,7 +603,7 @@ int map_routing_citizen_can_travel_over_road_garden_highway(int src_x, int src_y
         return 0;
     }
     ++stats.total_routes_calculated;
-    route_queue_from_to(src_x, src_y, dst_x, dst_y, 0, callback_travel_citizen_road_garden_highway);
+    route_queue_from_to(src_x, src_y, dst_x, dst_y, num_directions, 0, callback_travel_citizen_road_garden_highway);
     return distance.determined.items[dst_offset] != 0;
 }
 
@@ -612,10 +616,10 @@ static int callback_travel_walls(int offset, int next_offset, int direction)
     return 0;
 }
 
-int map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y)
+int map_routing_can_travel_over_walls(int src_x, int src_y, int dst_x, int dst_y, int num_directions)
 {
     ++stats.total_routes_calculated;
-    route_queue_from_to(src_x, src_y, dst_x, dst_y, 0, callback_travel_walls);
+    route_queue_from_to(src_x, src_y, dst_x, dst_y, num_directions, 0, callback_travel_walls);
     return distance.determined.items[map_grid_offset(dst_x, dst_y)] != 0;
 }
 
@@ -648,7 +652,8 @@ static int callback_travel_noncitizen_land(int offset, int next_offset, int dire
 }
 
 int map_routing_noncitizen_can_travel_over_land(
-    int src_x, int src_y, int dst_x, int dst_y, int only_through_building_id, int max_tiles)
+    int src_x, int src_y, int dst_x, int dst_y, int num_directions, int only_through_building_id, int max_tiles
+)
 {
     ++stats.total_routes_calculated;
     ++stats.enemy_routes_calculated;
@@ -656,9 +661,9 @@ int map_routing_noncitizen_can_travel_over_land(
         state.through_building_id = only_through_building_id;
         // due to formation offsets, the destination building may not be the same as the "through building" (a.k.a. target building)
         state.dest_building_id = map_building_at(map_grid_offset(dst_x, dst_y));
-        route_queue_from_to(src_x, src_y, dst_x, dst_y, 0, callback_travel_noncitizen_land_through_building);
+        route_queue_from_to(src_x, src_y, dst_x, dst_y, num_directions, 0, callback_travel_noncitizen_land_through_building);
     } else {
-        route_queue_from_to(src_x, src_y, dst_x, dst_y, max_tiles, callback_travel_noncitizen_land);
+        route_queue_from_to(src_x, src_y, dst_x, dst_y, num_directions, max_tiles, callback_travel_noncitizen_land);
     }
     return distance.determined.items[map_grid_offset(dst_x, dst_y)] != 0;
 }
@@ -671,10 +676,10 @@ static int callback_travel_noncitizen_through_everything(int offset, int next_of
     return 0;
 }
 
-int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y)
+int map_routing_noncitizen_can_travel_through_everything(int src_x, int src_y, int dst_x, int dst_y, int num_directions)
 {
     ++stats.total_routes_calculated;
-    route_queue_from_to(src_x, src_y, dst_x, dst_y, 0, callback_travel_noncitizen_through_everything);
+    route_queue_from_to(src_x, src_y, dst_x, dst_y, num_directions, 0, callback_travel_noncitizen_through_everything);
     return distance.determined.items[map_grid_offset(dst_x, dst_y)] != 0;
 }
 

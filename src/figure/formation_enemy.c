@@ -331,7 +331,7 @@ int formation_enemy_move_formation_to(const formation *m, int x, int y, int *x_t
             formation_layout_position_x(m->layout, i),
             formation_layout_position_y(m->layout, i)) - base_offset;
     }
-    map_routing_noncitizen_can_travel_over_land(x, y, -1, -1, 0, 600);
+    map_routing_noncitizen_can_travel_over_land(x, y, -1, -1, 8, 0, 600);
     for (int r = 0; r <= 10; r++) {
         int x_min, y_min, x_max, y_max;
         map_grid_get_area(x, y, 1, r, &x_min, &y_min, &x_max, &y_max);
@@ -581,7 +581,7 @@ static void update_enemy_formation(formation *m, int *roman_distance)
         army->home_y = m->y_home;
         army->layout = m->layout;
         *roman_distance = 0;
-        map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, -2, -2, 100000, 300);
+        map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, -2, -2, 8, 100000, 300);
         int x_tile, y_tile;
         if (map_soldier_strength_get_max(m->x_home, m->y_home, 16, &x_tile, &y_tile)) {
             *roman_distance = 1;

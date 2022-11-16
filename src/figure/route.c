@@ -84,51 +84,51 @@ void figure_route_add(figure *f)
             case TERRAIN_USAGE_ENEMY:
                 // check to see if we can reach our destination by going around the city walls
                 can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
-                    f->destination_x, f->destination_y, f->destination_building_id, 5000);
+                    f->destination_x, f->destination_y, direction_limit, f->destination_building_id, 5000);
                 if (!can_travel) {
                     can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
-                        f->destination_x, f->destination_y, 0, 25000);
+                        f->destination_x, f->destination_y, direction_limit, 0, 25000);
                     if (!can_travel) {
                         can_travel = map_routing_noncitizen_can_travel_through_everything(
-                            f->x, f->y, f->destination_x, f->destination_y);
+                            f->x, f->y, f->destination_x, f->destination_y, direction_limit);
                     }
                 }
                 break;
             case TERRAIN_USAGE_WALLS:
                 can_travel = map_routing_can_travel_over_walls(f->x, f->y,
-                    f->destination_x, f->destination_y);
+                    f->destination_x, f->destination_y, 4);
                 break;
             case TERRAIN_USAGE_ANIMAL:
                 can_travel = map_routing_noncitizen_can_travel_over_land(f->x, f->y,
-                    f->destination_x, f->destination_y, -1, 5000);
+                    f->destination_x, f->destination_y, direction_limit, -1, 5000);
                 break;
             case TERRAIN_USAGE_PREFER_ROADS:
                 can_travel = map_routing_citizen_can_travel_over_road_garden(f->x, f->y,
-                    f->destination_x, f->destination_y);
+                    f->destination_x, f->destination_y, direction_limit);
                 if (!can_travel) {
                     can_travel = map_routing_citizen_can_travel_over_land(f->x, f->y,
-                        f->destination_x, f->destination_y);
+                        f->destination_x, f->destination_y, direction_limit);
                 }
                 break;
             case TERRAIN_USAGE_ROADS:
                 can_travel = map_routing_citizen_can_travel_over_road_garden(f->x, f->y,
-                    f->destination_x, f->destination_y);
+                    f->destination_x, f->destination_y, direction_limit);
                 break;
             case TERRAIN_USAGE_PREFER_ROADS_HIGHWAY:
                 can_travel = map_routing_citizen_can_travel_over_road_garden_highway(f->x, f->y,
-                    f->destination_x, f->destination_y);
+                    f->destination_x, f->destination_y, direction_limit);
                 if (!can_travel) {
                     can_travel = map_routing_citizen_can_travel_over_land(f->x, f->y,
-                        f->destination_x, f->destination_y);
+                        f->destination_x, f->destination_y, direction_limit);
                 }
                 break;
             case TERRAIN_USAGE_ROADS_HIGHWAY:
                 can_travel = map_routing_citizen_can_travel_over_road_garden_highway(f->x, f->y,
-                    f->destination_x, f->destination_y);
+                    f->destination_x, f->destination_y, direction_limit);
                 break;
             default:
                 can_travel = map_routing_citizen_can_travel_over_land(f->x, f->y,
-                    f->destination_x, f->destination_y);
+                    f->destination_x, f->destination_y, direction_limit);
                 break;
         }
         if (can_travel) {
