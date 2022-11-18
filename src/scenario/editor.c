@@ -361,6 +361,9 @@ void scenario_editor_set_custom_empire(const char *filename)
 
 void scenario_editor_unset_custom_empire(void)
 {
+    if (scenario.empire.id != SCENARIO_CUSTOM_EMPIRE) {
+        return;
+    }
     scenario.empire.id = 0;
     memset(scenario.empire.custom_name, 0, sizeof(scenario.empire.custom_name));
 }
