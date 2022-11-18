@@ -68,7 +68,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "修復非常困難不來人BUG"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "修復人口百歲仍占房BUG"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "修復自定義地圖中皇帝更位和生存時間BUG"},
-    {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "點選建築后覆層上勾畫出行人路徑點"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "修復低目標下無法完成評比任務BUG"},
     {TR_CONFIG_GRANDFESTIVAL, "舉辦豪華節慶獲取神靈更多祝福"},
     {TR_CONFIG_DIFFICULTY, "遊戲難度："},

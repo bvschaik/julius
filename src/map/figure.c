@@ -16,7 +16,7 @@ int map_figure_at(int grid_offset)
 
 void map_figure_add(figure *f)
 {
-    if (!map_grid_is_valid_offset(f->grid_offset)) {
+    if (!map_grid_is_valid_offset(f->grid_offset) || f->faction_id == FIGURE_FACTION_ROAMER_PREVIEW) {
         return;
     }
     f->figures_on_same_tile_index = 0;
@@ -64,7 +64,9 @@ void map_figure_delete(figure *f)
         f->next_figure_id_on_same_tile = 0;
         return;
     }
-
+    if (f->faction_id == FIGURE_FACTION_ROAMER_PREVIEW) {
+        return;
+    }
     if (figures.items[f->grid_offset] == f->id) {
         figures.items[f->grid_offset] = f->next_figure_id_on_same_tile;
     } else {

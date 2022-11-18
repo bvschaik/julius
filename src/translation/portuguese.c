@@ -68,7 +68,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Consertar falha durante a imigração na dificuldade máxima"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Consertar falha dos 'fantasmas' de 100 anos"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Consertar troca de Imperador e tempo de sobrevivência em missões personalizadas"},
-    {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Desenhar caminhos de andarilho após clicar com o botão direito em uma construção"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Conserta as colunas de índices incompletas em objetivos de índices baixos"},
     {TR_CONFIG_GRANDFESTIVAL, "Festivais Suntuosos permitem bênçãos extras do deus"},
     {TR_CONFIG_DIFFICULTY, "Dificuldade:"},

@@ -386,6 +386,9 @@ static int can_attack_animal(int figure_category, int opponent_category, formati
 
 void figure_combat_attack_figure_at(figure *f, int grid_offset)
 {
+    if (f->faction_id == FIGURE_FACTION_ROAMER_PREVIEW) {
+        return;
+    }
     int figure_category = figure_properties_for_type(f->type)->category;
     if (figure_category <= FIGURE_CATEGORY_INACTIVE || figure_category >= FIGURE_CATEGORY_CRIMINAL ||
             f->action_state == FIGURE_ACTION_150_ATTACK) {

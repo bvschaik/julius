@@ -13,6 +13,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
+#include "figure/roamer_preview.h"
 #include "game/cheats.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -47,6 +48,7 @@ static struct {
     map_tile selected_tile;
     int new_start_grid_offset;
     int capture_input;
+    int routing_grid_offset;
 } data;
 
 void set_city_clip_rectangle(void)
@@ -620,6 +622,24 @@ static void handle_mouse(const mouse *m)
     }
     if (m->left.went_up) {
         build_end();
+        if (!building_construction_type()) {
+            if (config_get(CONFIG_UI_SHOW_ROAMING_PATH)) {
+                int grid_offset = tile->grid_offset;
+                int building_id = map_building_at(tile->grid_offset);
+                building *b;
+                if (building_id) {
+                    b = building_main(building_get(building_id));
+                    grid_offset = b->grid_offset;
+                }
+                if (data.routing_grid_offset != grid_offset) {
+                    data.routing_grid_offset = grid_offset;
+                    figure_roamer_preview_reset(building_id ? b->type : BUILDING_NONE);
+                    if (building_id) {
+                        figure_roamer_preview_create(b->type, b->grid_offset, b->x, b->y);
+                    }
+                }
+            }
+        }
     }
     if (m->right.went_down && input_coords_in_city(m->x, m->y)) {
         scroll_drag_start(0);
@@ -774,4 +794,10 @@ void widget_city_clear_current_tile(void)
     data.selected_tile.y = -1;
     data.selected_tile.grid_offset = 0;
     data.current_tile.grid_offset = 0;
+    data.routing_grid_offset = 0;
+}
+
+void widget_city_clear_routing_grid_offset(void)
+{
+    data.routing_grid_offset = 0;    
 }

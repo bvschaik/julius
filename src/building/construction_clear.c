@@ -4,6 +4,7 @@
 #include "building/monument.h"
 #include "city/warning.h"
 #include "core/config.h"
+#include "figure/roamer_preview.h"
 #include "figuretype/migrant.h"
 #include "game/undo.h"
 #include "graphics/window.h"
@@ -191,6 +192,7 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
         map_routing_update_walls();
         map_routing_update_water();
         building_update_state();
+        figure_roamer_preview_reset(BUILDING_CLEAR_LAND);
         window_invalidate();
     }
     return items_placed;

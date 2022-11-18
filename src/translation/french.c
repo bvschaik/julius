@@ -74,7 +74,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corrige le bug d'immigration en mode très difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corrige le bug des fantômes de 100 ans"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corrige \"Nouvel Empereur\" et la survie des parties créees avec l'éditeur"},
-    {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Un clic droit sur un bâtiment affiche les points de passage"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Corrige les colonnes d'évaluation incomplètes"},
     {TR_CONFIG_GRANDFESTIVAL, "Les grandes fêtes permettent une bénédiction supplémentaire d'un dieu"},
     {TR_CONFIG_DIFFICULTY, "Difficulté :"},

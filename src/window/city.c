@@ -17,6 +17,7 @@
 #include "core/config.h"
 #include "figure/formation.h"
 #include "figure/formation_legion.h"
+#include "figure/roamer_preview.h"
 #include "game/orientation.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -52,6 +53,9 @@ static int mothball_warning_id;
 
 static void draw_background(void)
 {
+    if (window_is(WINDOW_CITY)) {
+        figure_roamer_preview_reset(building_construction_type());
+    }
     widget_sidebar_city_draw_background();
     widget_top_menu_draw(1);
 }
@@ -151,6 +155,76 @@ static void exit_military_command(void)
     }
 }
 
+static void show_roamers_for_overlay(int overlay)
+{
+    switch (overlay) {
+        case OVERLAY_FIRE:
+        case OVERLAY_CRIME:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_PREFECTURE);
+            break;
+        case OVERLAY_DAMAGE:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_ENGINEERS_POST);
+            break;
+        case OVERLAY_TAVERN:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_TAVERN);
+            break;
+        case OVERLAY_THEATER:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_THEATER);
+            break;
+        case OVERLAY_AMPHITHEATER:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_AMPHITHEATER);
+            break;
+        case OVERLAY_ARENA:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_ARENA);
+            break;
+        case OVERLAY_COLOSSEUM:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_COLOSSEUM);
+            break;
+        case OVERLAY_HIPPODROME:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_HIPPODROME);
+            break;
+        case OVERLAY_SCHOOL:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_SCHOOL);
+            break;
+        case OVERLAY_LIBRARY:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_LIBRARY);
+            break;
+        case OVERLAY_ACADEMY:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_ACADEMY);
+            break;
+        case OVERLAY_BARBER:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_BARBER);
+            break;
+        case OVERLAY_BATHHOUSE:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_BATHHOUSE);
+            break;
+        case OVERLAY_CLINIC:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_DOCTOR);
+            break;
+        case OVERLAY_HOSPITAL:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_HOSPITAL);
+            break;
+        case OVERLAY_TAX_INCOME:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_FORUM);
+            figure_roamer_preview_create_all_for_building_type(BUILDING_FORUM_UPGRADED);
+            figure_roamer_preview_create_all_for_building_type(BUILDING_SENATE);
+            figure_roamer_preview_create_all_for_building_type(BUILDING_SENATE_UPGRADED);
+            break;
+        case OVERLAY_FOOD_STOCKS:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_MARKET);
+            break;
+        case OVERLAY_SICKNESS:
+            figure_roamer_preview_create_all_for_building_type(BUILDING_DOCTOR);
+            figure_roamer_preview_create_all_for_building_type(BUILDING_HOSPITAL);
+            break;
+        case OVERLAY_NONE:
+        default:
+            figure_roamer_preview_reset_building_types();
+            break;
+    }
+    widget_city_clear_routing_grid_offset();
+}
+
 static void show_overlay(int overlay)
 {
     exit_military_command();
@@ -160,6 +234,7 @@ static void show_overlay(int overlay)
         game_state_set_overlay(overlay);
     }
     city_with_overlay_update();
+    show_roamers_for_overlay(overlay);
     window_invalidate();
 }
 
@@ -664,6 +739,7 @@ void window_city_draw(void)
 
 void window_city_show(void)
 {
+    show_roamers_for_overlay(game_state_overlay());
     if (formation_get_selected()) {
         formation_set_selected(0);
         if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && widget_sidebar_military_exit()) {

@@ -67,7 +67,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Fixa invandringsproblem med svårighetsgraden Väldigt Svårt"},																	
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Fixa 100-års spöken"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Fixa kejsarbyte och överlevnadstid i användaruppdrag"},
-	{TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Visa vagndragarens måldestination när du klickat på en byggnad."},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Fixa ofullständiga ställningspelare för låga mål"},
     {TR_CONFIG_GRANDFESTIVAL, "Storslagen festival möjliggör ytterligare en gåva från en gud"},
     {TR_CONFIG_JEALOUS_GODS, "Stäng av svartsjuka gudar"},

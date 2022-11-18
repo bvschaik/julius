@@ -23,6 +23,7 @@
 #include "core/config.h"
 #include "core/time.h"
 #include "figure/formation_legion.h"
+#include "figure/roamer_preview.h"
 #include "game/resource.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -120,6 +121,25 @@ static int has_adjacent_deletion(int grid_offset)
     return 0;
 }
 
+static void draw_roamer_frequency(int x, int y, int grid_offset)
+{
+    int travel_frequency = figure_roamer_preview_get_frequency(grid_offset);
+    if (travel_frequency > 0 && travel_frequency <= FIGURE_ROAMER_PREVIEW_MAX_PASSAGES) {
+        static const color_t frequency_colors[] = {
+            0x663377ff, 0x662266ee, 0x661155dd, 0x660044cc, 0x660033c4, 0x660022bb, 0x660011a4, 0x66000088
+        };
+        image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y,
+            frequency_colors[travel_frequency - 1], draw_context.scale);
+    } else if (travel_frequency == FIGURE_ROAMER_PREVIEW_ENTRY_TILE) {
+        image_blend_footprint_color(x, y, COLOR_MASK_GREEN, draw_context.scale);
+    } else if (travel_frequency == FIGURE_ROAMER_PREVIEW_EXIT_TILE) {
+        image_blend_footprint_color(x, y, COLOR_MASK_RED, draw_context.scale);
+    } else if (travel_frequency == FIGURE_ROAMER_PREVIEW_ENTRY_EXIT_TILE) {
+        image_draw_isometric_footprint(image_group(GROUP_TERRAIN_FLAT_TILE),
+            x, y, COLOR_MASK_FOOTPRINT_GHOST, draw_context.scale);
+    }
+}
+
 static void draw_footprint(int x, int y, int grid_offset)
 {
     sound_city_progress_ambient();
@@ -183,6 +203,7 @@ static void draw_footprint(int x, int y, int grid_offset)
         }
         image_draw(grid_id, x, y, COLOR_GRID, draw_context.scale);
     }
+    draw_roamer_frequency(x, y, grid_offset);
 }
 
 static void draw_hippodrome_spectators(const building *b, int x, int y, color_t color_mask)

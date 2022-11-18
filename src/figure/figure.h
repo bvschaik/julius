@@ -6,6 +6,8 @@
 #include "figure/action.h"
 #include "figure/type.h"
 
+#define FIGURE_FACTION_ROAMER_PREVIEW 2
+
 typedef struct {
     int id;
 
@@ -22,7 +24,7 @@ typedef struct {
     unsigned char use_cross_country;
     unsigned char is_friendly;
     unsigned char state;
-    unsigned char faction_id; // 1 = city, 0 = enemy
+    unsigned char faction_id; // 2 = roamer preview, 1 = city, 0 = enemy
     unsigned char action_state_before_attack;
     signed char direction;
     signed char previous_tile_direction;

@@ -132,7 +132,6 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_TOTAL_POPULATION, "Razem mieszkańców"},
     { TR_CONFIG_TITLE, "Augustus - konfiguracja" },
     { TR_CONFIG_ROTATE_MANUALLY, "Obróć bramy i łuk triumfalny skrótem klawiszowym" },
-    { TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Pokaż punkty docelowe" },
     { TR_CONFIG_COMPLETE_RATING_COLUMNS, "Pokaż całe kolumny przy niskich poziomach wyników" },
     { TR_CONFIG_GRANDFESTIVAL, "Wielkie festiwale pozwalają na dodatkowe błogosławieństwo" },
     { TR_CONFIG_JEALOUS_GODS, "Wyłącz zazdrość bogów" },

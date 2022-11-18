@@ -66,7 +66,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Corregir bug impidiendo inmigración en Muy Difícil"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corregir bug creando fantasmas con 100 años"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Corregir cambio de Emperador y tiempo de supervivencia en misiones del editor"},
-    {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Ver controles de ruta en Capas al hacer clic derecho en un edificio"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Arreglar columnas de puntuación incompletas con objetivos bajos"},
     {TR_CONFIG_GRANDFESTIVAL, "Super-Festivales permiten bendiciones extras de un dios"},
     {TR_CONFIG_DIFFICULTY, "Dificultad:"},

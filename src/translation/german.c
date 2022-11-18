@@ -74,7 +74,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Behebe Immigrationsfehler auf 'Sehr schwierig'"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Behebe '100 Jahre alte Geister'"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Behebe Wechsel- und Überlebenszeit des Imperators in eigenen Missionen"},
-    {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Setze Fußgängerwegpunkte durch Rechtsklicken der Zielgebäude"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Behebe unvollständige Bewertungsspalten bei geringen Zielen"},
     {TR_CONFIG_GRANDFESTIVAL, "Große Feste ermöglichen einen zusätzlichen Segen von einem Gott"},
     {TR_CONFIG_DIFFICULTY, "Schwierigkeit:"},

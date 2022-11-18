@@ -48,7 +48,6 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FIX_IMMIGRATION_BUG, "Correggi il bug dell'immigrazione al livello molto difficile"},
     {TR_CONFIG_FIX_100_YEAR_GHOSTS, "Corregge il bug dei centenari"},
     {TR_CONFIG_FIX_EDITOR_EVENTS, "Elimina le complicazioni al cambio di Imperatore"},
-    {TR_CONFIG_DRAW_WALKER_WAYPOINTS, "Visualizza il percorso del camminatore cliccando con il tasto destro del mouse su un edificio"},
     {TR_CONFIG_COMPLETE_RATING_COLUMNS, "Fissa colonne di valutazione non completate su obiettivi bassi"},
     {TR_CONFIG_GRANDFESTIVAL, "Le grandi feste permettono una benedizione extra da parte di una divinità"},
     {TR_CONFIG_JEALOUS_GODS, "Disabilita gelosia delle divinità"},

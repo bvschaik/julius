@@ -12,6 +12,7 @@
 #include "core/image_group.h"
 #include "figure/figure.h"
 #include "figure/formation_legion.h"
+#include "figure/roamer_preview.h"
 #include "figure/phrase.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -241,36 +242,6 @@ static int center_in_city(int element_width_pixels)
     return x + margin;
 }
 
-void highlight_waypoints(building *b) // highlight the 4 routing tiles for roams from this building
-{
-    map_clear_highlights();
-    if (b->type == BUILDING_FORT || b->house_size) { // building doesn't send roamers
-        return;
-    }
-    int hx, hy, roadx, roady;
-    hx = b->x; hy = b->y - 8;
-    map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady)) {
-        map_highlight_set(map_grid_offset(roadx, roady));
-    }
-    hx = b->x + 8; hy = b->y;
-    map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady)) {
-        map_highlight_set(map_grid_offset(roadx, roady));
-    }
-    hx = b->x; hy = b->y + 8;
-    map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady)) {
-        map_highlight_set(map_grid_offset(roadx, roady));
-    }
-    hx = b->x - 8; hy = b->y;
-    map_grid_bound(&hx, &hy);
-    if (map_closest_road_within_radius(hx, hy, 1, 6, &roadx, &roady)) {
-        map_highlight_set(map_grid_offset(roadx, roady));
-    }
-    window_invalidate();
-}
-
 static void init(int grid_offset)
 {
     context.can_play_sound = 1;
@@ -329,8 +300,6 @@ static void init(int grid_offset)
         building *b = building_get(context.building_id);
         context.type = BUILDING_INFO_BUILDING;
         context.worker_percentage = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-        highlight_waypoints(b);
-
         switch (b->type) {
             case BUILDING_FORT_GROUND:
                 context.building_id = b->prev_part_building_id;
@@ -410,6 +379,8 @@ static void init(int grid_offset)
                 }
                 break;
         }
+        figure_roamer_preview_reset(b->type);
+        figure_roamer_preview_create(b->type, b->grid_offset, b->x, b->y);
     }
     // figures
     context.figure.selected_index = 0;

@@ -7,7 +7,6 @@
 static grid_u16 buildings_grid;
 static grid_u8 damage_grid;
 static grid_u8 rubble_type_grid;
-static grid_u8 highlight_grid;
 
 int map_building_at(int grid_offset)
 {
@@ -30,26 +29,6 @@ void map_building_damage_clear(int grid_offset)
     damage_grid.items[grid_offset] = 0;
 }
 
-void map_highlight_set(int grid_offset)
-{
-    highlight_grid.items[grid_offset] = 1;
-}
-
-void map_highlight_clear(int grid_offset)
-{
-    highlight_grid.items[grid_offset] = 0;
-}
-
-int map_is_highlighted(int grid_offset)
-{
-    if (config_get(CONFIG_UI_WALKER_WAYPOINTS)) {
-        return highlight_grid.items[grid_offset];
-    }
-    else {    
-        return 0;
-    }
-}
-
 int map_building_damage_increase(int grid_offset)
 {
     return ++damage_grid.items[grid_offset];
@@ -70,11 +49,6 @@ void map_building_clear(void)
     map_grid_clear_u16(buildings_grid.items);
     map_grid_clear_u8(damage_grid.items);
     map_grid_clear_u8(rubble_type_grid.items);
-}
-
-void map_clear_highlights(void)
-{
-    map_grid_clear_u8(highlight_grid.items);
 }
 
 void map_building_save_state(buffer *buildings, buffer *damage)

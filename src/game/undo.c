@@ -12,6 +12,7 @@
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "core/image.h"
+#include "figure/roamer_preview.h"
 #include "game/resource.h"
 #include "graphics/window.h"
 #include "map/aqueduct.h"
@@ -299,6 +300,7 @@ void game_undo_perform(void)
     }
     map_routing_update_land();
     map_routing_update_walls();
+    figure_roamer_preview_reset(building_construction_type());
     data.num_buildings = 0;
 }
 

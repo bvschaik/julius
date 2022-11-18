@@ -8,6 +8,7 @@
 #include "city/view.h"
 #include "core/config.h"
 #include "core/log.h"
+#include "figure/roamer_preview.h"
 #include "game/resource.h"
 #include "game/state.h"
 #include "graphics/graphics.h"
@@ -352,6 +353,24 @@ void city_with_overlay_draw_building_footprint(int x, int y, int grid_offset, in
     }
 }
 
+static void draw_roamer_frequency(int x, int y, int grid_offset)
+{
+    int travel_frequency = figure_roamer_preview_get_frequency(grid_offset);
+    if (travel_frequency > 0 && travel_frequency <= FIGURE_ROAMER_PREVIEW_MAX_PASSAGES) {
+        static color_t frequency_colors[] = {
+            0x663377ff, 0x662266ee, 0x661155dd, 0x660044cc, 0x660033c4, 0x660022bb, 0x660011a4, 0x66000088
+        };
+        image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, frequency_colors[travel_frequency - 1], scale);
+    } else if (travel_frequency == FIGURE_ROAMER_PREVIEW_ENTRY_TILE) {
+        image_blend_footprint_color(x, y, COLOR_MASK_GREEN, scale);
+    } else if (travel_frequency == FIGURE_ROAMER_PREVIEW_EXIT_TILE) {
+        image_blend_footprint_color(x, y, COLOR_MASK_RED, scale);
+    } else if (travel_frequency == FIGURE_ROAMER_PREVIEW_ENTRY_EXIT_TILE) {
+        image_draw_isometric_footprint(image_group(GROUP_TERRAIN_FLAT_TILE),
+            x, y, COLOR_MASK_FOOTPRINT_GHOST, scale);
+    }
+}
+
 static void draw_footprint(int x, int y, int grid_offset)
 {
     building_construction_record_view_position(x, y, grid_offset);
@@ -374,17 +393,14 @@ static void draw_footprint(int x, int y, int grid_offset)
                     const terrain_image *img = map_image_context_get_dirt_road(grid_offset);
                     image_id += img->group_offset + img->item_offset + 49;
                 }
-                image_draw_isometric_footprint_from_draw_tile(image_id, x, y,
-                    map_is_highlighted(grid_offset) ? COLOR_BLUE : 0, scale);
+                image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0, scale);
             } else {    
                 // display grass
                 int image_id = image_group(GROUP_TERRAIN_GRASS_1) + (map_random_get(grid_offset) & 7);
-                image_draw_isometric_footprint_from_draw_tile(image_id, x, y,
-                    map_is_highlighted(grid_offset) ? COLOR_BLUE : 0, scale);
+                image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0, scale);
             }
         } else if ((terrain & TERRAIN_ROAD) && !(terrain & TERRAIN_BUILDING)) {
-            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y,
-                map_is_highlighted(grid_offset) ? COLOR_BLUE : 0, scale);
+            image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0, scale);
         } else if (terrain & TERRAIN_BUILDING) {
             city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
         } else {
@@ -399,6 +415,7 @@ static void draw_footprint(int x, int y, int grid_offset)
         }
         image_draw(grid_id, x, y, COLOR_GRID, scale);
     }
+    draw_roamer_frequency(x, y, grid_offset);
 }
 
 static void draw_overlay_column(int x, int y, int height, column_color_type color_type)
@@ -638,7 +655,6 @@ static void draw_custom_layer(int x, int y, int grid_offset)
     overlay->draw_custom_layer(x, y, scale, grid_offset);
 }
 
-
 void city_with_overlay_draw(const map_tile *tile)
 {
     if (!select_city_overlay()) {
@@ -664,6 +680,7 @@ void city_with_overlay_draw(const map_tile *tile)
         city_view_foreach_map_tile(draw_figures);
         city_view_foreach_map_tile(deletion_draw_terrain_top);
         city_view_foreach_map_tile(deletion_draw_animations);
+        city_building_ghost_draw(tile);
         city_view_foreach_map_tile(draw_elevated_figures);
     }
     if (overlay->draw_custom_layer) {
