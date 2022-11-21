@@ -131,7 +131,9 @@ static void move_to_next_tile(figure *f)
 {
     int old_x = f->x;
     int old_y = f->y;
-    map_figure_delete(f);
+    if (f->faction_id != FIGURE_FACTION_ROAMER_PREVIEW) {
+        map_figure_delete(f);
+    }
     switch (f->direction) {
         default:
             return;
@@ -161,7 +163,9 @@ static void move_to_next_tile(figure *f)
             break;
     }
     f->grid_offset += map_grid_direction_delta(f->direction);
-    map_figure_add(f);
+    if (f->faction_id != FIGURE_FACTION_ROAMER_PREVIEW) {
+        map_figure_add(f);
+    }
     if (map_terrain_is(f->grid_offset, TERRAIN_ROAD)) {
         f->is_on_road = 1;
         if (map_terrain_is(f->grid_offset, TERRAIN_WATER)) { // bridge
@@ -170,7 +174,9 @@ static void move_to_next_tile(figure *f)
     } else {
         f->is_on_road = 0;
     }
-    figure_combat_attack_figure_at(f, f->grid_offset);
+    if (f->faction_id != FIGURE_FACTION_ROAMER_PREVIEW) {
+        figure_combat_attack_figure_at(f, f->grid_offset);
+    }
     f->previous_tile_x = old_x;
     f->previous_tile_y = old_y;
 }
@@ -280,7 +286,6 @@ static void advance_route_tile(figure *f, int roaming_enabled)
     }
 }
 
-
 static void walk_ticks(figure *f, int num_ticks, int roaming_enabled)
 {
     int terrain = map_terrain_get(map_grid_offset(f->x, f->y));
@@ -293,7 +298,9 @@ static void walk_ticks(figure *f, int num_ticks, int roaming_enabled)
         if (f->progress_on_tile < 15) {
             advance_tick(f);
         } else {
-            figure_service_provide_coverage(f);
+            if (f->faction_id != FIGURE_FACTION_ROAMER_PREVIEW) {
+                figure_service_provide_coverage(f);
+            }
             f->progress_on_tile = 15;
             if (f->routing_path_id <= 0) {
                 figure_route_add(f);
@@ -307,7 +314,9 @@ static void walk_ticks(figure *f, int num_ticks, int roaming_enabled)
             f->previous_tile_direction = f->direction;
             f->progress_on_tile = 0;
             move_to_next_tile(f);
-            advance_tick(f);
+            if (f->faction_id != FIGURE_FACTION_ROAMER_PREVIEW) {
+                advance_tick(f);
+            }
         }
     }
 }
@@ -520,8 +529,10 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
             f->progress_on_tile = 15;
             f->roam_random_counter++;
             int came_from_direction = (f->previous_tile_direction + 4) % 8;
-            if (figure_service_provide_coverage(f)) {
-                return;
+            if (f->faction_id != FIGURE_FACTION_ROAMER_PREVIEW) {
+                if (figure_service_provide_coverage(f)) {
+                    return;
+                }
             }
             int road_tiles[8];
             int permission = get_permission_for_figure_type(f);
@@ -606,7 +617,9 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
             f->previous_tile_direction = f->direction;
             f->progress_on_tile = 0;
             move_to_next_tile(f);
-            advance_tick(f);
+            if (f->faction_id != FIGURE_FACTION_ROAMER_PREVIEW) {
+                advance_tick(f);
+            }
         }
     }
 }

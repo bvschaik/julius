@@ -14,6 +14,5 @@ void figure_roamer_preview_create_all_for_building_type(building_type type);
 void figure_roamer_preview_reset(building_type type);
 void figure_roamer_preview_reset_building_types(void);
 int figure_roamer_preview_get_frequency(int grid_offset);
-void figure_roamer_preview_add_grid_offset_to_travelled_path(int grid_offset);
 
 #endif // FIGURE_ROAMER_PREVIEW_H

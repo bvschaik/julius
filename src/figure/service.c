@@ -508,10 +508,6 @@ int figure_service_provide_coverage(figure *f)
     int houses_serviced = 0;
     int x = f->x;
     int y = f->y;
-    if (f->faction_id == FIGURE_FACTION_ROAMER_PREVIEW) {
-        figure_roamer_preview_add_grid_offset_to_travelled_path(f->grid_offset);
-        return 0;
-    }
     building *b;
     switch (f->type) {
         case FIGURE_PATRICIAN:

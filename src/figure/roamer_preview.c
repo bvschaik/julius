@@ -126,16 +126,16 @@ static int roam_length_for_figure_type(figure_type type)
         case FIGURE_ACTOR:
         case FIGURE_GLADIATOR:
         case FIGURE_LION_TAMER:
+            return 34;
         case FIGURE_CHARIOTEER:
-            return 512;
-        case FIGURE_SCHOOL_CHILD:
+            return 68;
         case FIGURE_MISSIONARY:
-            return 192;
+            return 12;
         case FIGURE_ENGINEER:
         case FIGURE_PREFECT:
-            return 640;
+            return 42;
         default:
-            return 384;
+            return 25;
     }
 }
 
@@ -218,8 +218,7 @@ void figure_roamer_preview_create(building_type b_type, int grid_offset, int x, 
 
     int roam_length = roam_length_for_figure_type(fig_type);
 
-    int num_ticks = fig_type == FIGURE_CHARIOTEER || fig_type == FIGURE_SCHOOL_CHILD ? 2 : 1;
-    int should_return = fig_type == FIGURE_SCHOOL_CHILD ? 0 : 1;
+    int should_return = fig_type != FIGURE_SCHOOL_CHILD;
 
     for (int i = 0; i < TOTAL_ROAMERS; i++) {
         figure roamer;
@@ -229,9 +228,6 @@ void figure_roamer_preview_create(building_type b_type, int grid_offset, int x, 
         roamer.source_x = roamer.destination_x = roamer.previous_tile_x = road.x;
         roamer.source_y = roamer.destination_y = roamer.previous_tile_y = road.y;
         roamer.terrain_usage = TERRAIN_USAGE_ROADS;
-        roamer.cross_country_x = 15 * road.x;
-        roamer.cross_country_y = 15 * road.y;
-        roamer.progress_on_tile = 15;
         roamer.direction = DIR_0_TOP;
         roamer.faction_id = FIGURE_FACTION_ROAMER_PREVIEW;
         roamer.type = fig_type;
@@ -250,7 +246,11 @@ void figure_roamer_preview_create(building_type b_type, int grid_offset, int x, 
         }
         init_roaming(&roamer, i * 2, x, y);
         while (++roamer.roam_length <= roamer.max_roam_length) {
-            figure_movement_roam_ticks(&roamer, num_ticks);
+            if (data.travelled_tiles.items[roamer.grid_offset] < FIGURE_ROAMER_PREVIEW_MAX_PASSAGES) {
+                data.travelled_tiles.items[roamer.grid_offset]++;
+            }
+            roamer.progress_on_tile = 15;
+            figure_movement_roam_ticks(&roamer, 1);
         }
         figure_route_remove(&roamer);
         if (!should_return || !has_closest_road) {
@@ -260,7 +260,11 @@ void figure_roamer_preview_create(building_type b_type, int grid_offset, int x, 
         roamer.destination_y = y_road;
         while (roamer.direction != DIR_FIGURE_AT_DESTINATION &&
             roamer.direction != DIR_FIGURE_REROUTE && roamer.direction != DIR_FIGURE_LOST) {
-            figure_movement_move_ticks(&roamer, num_ticks);
+            if (data.travelled_tiles.items[roamer.grid_offset] < FIGURE_ROAMER_PREVIEW_MAX_PASSAGES) {
+                data.travelled_tiles.items[roamer.grid_offset]++;
+            }
+            roamer.progress_on_tile = 15;
+            figure_movement_move_ticks(&roamer, 1);
         }
         figure_route_remove(&roamer);
         if (roamer.direction == DIR_FIGURE_AT_DESTINATION) {
@@ -326,14 +330,6 @@ void figure_roamer_preview_reset_building_types(void)
 {
     data.stored_building_types = 0;
     figure_roamer_preview_reset(BUILDING_NONE);
-}
-
-void figure_roamer_preview_add_grid_offset_to_travelled_path(int grid_offset)
-{
-    if (map_grid_is_valid_offset(grid_offset) &&
-        data.travelled_tiles.items[grid_offset] < FIGURE_ROAMER_PREVIEW_MAX_PASSAGES) {
-        data.travelled_tiles.items[grid_offset]++;
-    }
 }
 
 int figure_roamer_preview_get_frequency(int grid_offset)
