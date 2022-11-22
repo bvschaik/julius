@@ -59,7 +59,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define COMPRESS_BUFFER_SIZE 3000000
+#define COMPRESS_BUFFER_SIZE 1000000
 #define UNCOMPRESSED 0x80000000
 #define PIECE_SIZE_DYNAMIC 0
 
@@ -88,7 +88,8 @@ static const int SAVE_GAME_LAST_EMPIRE_RESOURCES_ALWAYS_WRITE = 0x8d;
 // in the data, whereas the previous one did a lookup based on the save version
 static const int SAVE_GAME_LAST_NO_SCENARIO_VERSION = 0x8e;
 
-static char compress_buffer[COMPRESS_BUFFER_SIZE];
+static char *compress_buffer;
+int compress_buffer_size;
 
 typedef struct {
     buffer buf;
@@ -378,9 +379,25 @@ static void get_version_data(savegame_version_data *version_data, int version)
     version_data->has_scenario_version = version > SAVE_GAME_LAST_NO_SCENARIO_VERSION;
 }
 
+static void prepare_compressed_buffer(void)
+{
+    compress_buffer = malloc(sizeof(char) * COMPRESS_BUFFER_SIZE);
+    if (compress_buffer) {
+        compress_buffer_size = COMPRESS_BUFFER_SIZE;
+    }
+}
+
+static void free_compressed_buffer(void)
+{
+    free(compress_buffer);
+    compress_buffer_size = 0;
+}
+
 static void init_savegame_data(int version)
 {
     clear_savegame_pieces();
+
+    prepare_compressed_buffer();
 
     savegame_version_data version_data;
     get_version_data(&version_data, version);
@@ -757,8 +774,13 @@ static void write_int32(FILE *fp, int value)
 
 static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read, int read_as_zlib)
 {
-    if (bytes_to_read > COMPRESS_BUFFER_SIZE) {
-        return 0;
+    if (bytes_to_read > compress_buffer_size) {
+        char *new_compress_buffer = realloc(compress_buffer, sizeof(char) * bytes_to_read);
+        if (!new_compress_buffer) {
+            return 0;
+        }
+        compress_buffer = new_compress_buffer;
+        compress_buffer_size = bytes_to_read;
     }
     int input_size = read_int32(fp);
     if ((unsigned int)input_size == UNCOMPRESSED) {
@@ -785,8 +807,13 @@ static int read_compressed_savegame_chunk(FILE *fp, void *buffer, int bytes_to_r
 
 static int write_compressed_chunk(FILE *fp, void *buffer, int bytes_to_write)
 {
-    if (bytes_to_write > COMPRESS_BUFFER_SIZE) {
-        return 0;
+    if (bytes_to_write > compress_buffer_size) {
+        char *new_compress_buffer = realloc(compress_buffer, sizeof(char) * bytes_to_write);
+        if (!new_compress_buffer) {
+            return 0;
+        }
+        compress_buffer = new_compress_buffer;
+        compress_buffer_size = bytes_to_write;
     }
     int output_size = 0;
     if (zlib_helper_compress(buffer, bytes_to_write, compress_buffer, COMPRESS_BUFFER_SIZE, &output_size)) {
@@ -1055,6 +1082,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
         log_info("Savegame version", 0, version);
         init_savegame_data(version);
         result = savegame_read_from_file(fp, version);
+        free_compressed_buffer();
     }
     file_close(fp);
     if (!result) {
@@ -1308,7 +1336,9 @@ int game_file_io_read_saved_game_info(const char *filename, saved_game_info *inf
     int result = 0;
     int version = get_savegame_version(fp);
     if (version && version <= SAVE_GAME_CURRENT_VERSION) {
+        prepare_compressed_buffer();
         result = savegame_read_file_info(fp, info, version);
+        free_compressed_buffer();
     }
     file_close(fp);
     return result;
@@ -1327,6 +1357,7 @@ int game_file_io_write_saved_game(const char *filename)
         return 0;
     }
     savegame_write_to_file(fp);
+    free_compressed_buffer();
     file_close(fp);
     return 1;
 }
