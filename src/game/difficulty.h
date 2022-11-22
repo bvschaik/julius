@@ -23,5 +23,6 @@ int difficulty_favor_to_stop_emperor_attack(void);
 
 int difficulty_random_event_cooldown_months(void);
 
+int difficulty_high_salary_punishment(void);
 
 #endif // GAME_DIFFICULTY_H

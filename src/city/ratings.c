@@ -10,6 +10,7 @@
 #include "city/victory.h"
 #include "core/calc.h"
 #include "core/config.h"
+#include "game/difficulty.h"
 #include "game/time.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
@@ -561,14 +562,14 @@ static void update_favor_rating(int is_yearly_update, int is_monthly_update)
         if (city_data.emperor.player_rank != 0) {
             if (salary_delta > 0) {
                 // salary too high
-                city_data.ratings.favor -= salary_delta;
+                city_data.ratings.favor -= salary_delta + difficulty_high_salary_punishment();
                 city_data.ratings.favor_salary_penalty = salary_delta + 1;
             } else if (salary_delta < 0) {
                 // salary lower than rank
                 city_data.ratings.favor += 1;
             }
         } else if (salary_delta > 0) {
-            city_data.ratings.favor -= salary_delta;
+            city_data.ratings.favor -= salary_delta + difficulty_high_salary_punishment();
             city_data.ratings.favor_salary_penalty = salary_delta;
         }
         // milestone
