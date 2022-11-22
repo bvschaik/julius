@@ -246,11 +246,6 @@ void city_buildings_set_mission_post_operational(void)
     city_data.building.mission_post_operational = 1;
 }
 
-int city_buildings_unknown_value(void)
-{
-    return city_data.building.unknown_value;
-}
-
 int city_buildings_get_closest_plague(int x, int y, int *distance)
 {
     int min_free_building_id = 0;

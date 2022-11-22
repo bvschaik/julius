@@ -38,8 +38,6 @@ void city_gods_reset(void)
         god->blessing_done = 0;
         god->small_curse_done = 0;
         god->happy_bolts = 0;
-        god->unused2 = 0;
-        god->unused3 = 0;
         god->months_since_festival = 0;
     }
     city_data.religion.angry_message_delay = 0;
