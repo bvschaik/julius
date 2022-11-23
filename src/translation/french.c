@@ -103,9 +103,10 @@ static translation_string all_strings[] = {
     {TR_CONFIG_MULTIPLE_BARRACKS, "Autoriser la construction de plusieurs casernes"},
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Les entrepôts et les greniers n'acceptent rien par défaut"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Les logements ne s'étendent pas sur les jardins"},
-    {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Les marcheurs itinérants ne coupent pas les virages"},
+    {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Les marcheurs aléatoires ne coupent pas les virages"},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "Afficher la prospérité maximale atteignable avec le logement actuel"},
     {TR_CONFIG_AUTO_KILL_ANIMALS, "Les citoyens abattent automatiquement les animaux inoffensifs"},
+    {TR_CONFIG_SHOW_ROAMING_PATH, "Visualiser les chemins empruntés par les marcheurs aléatoires"},
     {TR_HOTKEY_TITLE, "Configuration raccourcis clavier"},
     {TR_HOTKEY_LABEL, "Touche"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},
@@ -171,7 +172,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Afficher les infos de bataille"},
     {TR_HOTKEY_EDIT_TITLE, "Appuyez sur une touche"},
     {TR_BUILDING_ROADBLOCK, "Barrage routier" },
-    {TR_BUILDING_ROADBLOCK_DESC, "Les barrages routiers stoppent les citoyens itinérants."},
+    {TR_BUILDING_ROADBLOCK_DESC, "Les barrages routiers stoppent les citoyens n'ayant pas de destination précise (marcheurs aléatoires)."},
     {TR_BUILDING_ARCHITECT_GUILD, "Guilde des architectes"},
     {TR_BUILDING_ARCHITECT_GUILD_DESC, "Ici, les architectes travaillent sans relâche afin de construire des monuments pour la gloire de Rome."},
     {TR_BUILDING_GRAND_TEMPLE_ADD_MODULE, "Accorder une épithète au temple"},
@@ -848,7 +849,14 @@ static translation_string all_strings[] = {
     {TR_CHEAT_INCITED_RIOT, "Émeute déclenchée"},
     {TR_CITY_MESSAGE_TITLE_ROAD_TO_ROME_WARNING, "Cité inaccessible" },
     {TR_CITY_MESSAGE_TEXT_ROAD_TO_ROME_WARNING, "La Route de Rome est bloquée. À moins que l'accès à la Voie impériale soit immédiatemment restauré, les ingénieurs de Rome vont devoir agir." },
-
+    {TR_EDITOR_CHOOSE_CUSTOM_EMPIRE, "Empire personnalisé"},
+    {TR_EDITOR_CUSTOM_EMPIRE_TITLE, "Chargement d'un empire"},
+    {TR_EDITOR_UNABLE_TO_LOAD_EMPIRE_TITLE, "Impossible de charger l'empire personnalisé"},
+    {TR_EDITOR_UNABLE_TO_LOAD_EMPIRE_MESSAGE, "Veuillez consulter le fichier augustus-log.txt situé dans le dossier Augustus pour plus de détails."},
+    {TR_EDITOR_SHORT_ROUTE_TEXT, "rt"},
+    {TR_EDITOR_REFRESH_EMPIRE, "Actualiser (F5)"},
+    {TR_EDITOR_MAX_WAGES, "max"},
+    {TR_EDITOR_MIN_WAGES, "min"},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)

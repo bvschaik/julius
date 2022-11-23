@@ -106,7 +106,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_ROAMERS_DONT_SKIP_CORNERS, "Roaming walkers don't skip corners"},
     {TR_CONFIG_SHOW_MAX_POSSIBLE_PROSPERITY, "Display max attainable prosperity rating with current housing"},
     {TR_CONFIG_AUTO_KILL_ANIMALS, "Citizens will automatically kill harmless animals"},
-    {TR_CONFIG_SHOW_ROAMING_PATH, "Show paths travelled by roamers when constructing or right-clicking a building"},
+    {TR_CONFIG_SHOW_ROAMING_PATH, "Preview paths travelled by roaming walkers"},
     {TR_HOTKEY_TITLE, "Augustus hotkey configuration"},
     {TR_HOTKEY_LABEL, "Hotkey"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},
