@@ -117,6 +117,10 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                     b->figure_id = homeless->id;
                 }
                 if (b->state != BUILDING_STATE_DELETED_BY_PLAYER) {
+                    if (b->type == BUILDING_SHIPYARD && b->figure_id) {
+                        figure *f = figure_get(b->figure_id);
+                        f->state = FIGURE_STATE_DEAD;
+                    }
                     items_placed++;
                     game_undo_add_building(b);
                 }
