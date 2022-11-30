@@ -131,9 +131,9 @@ static void draw_roamer_frequency(int x, int y, int grid_offset)
         image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y,
             frequency_colors[travel_frequency - 1], draw_context.scale);
     } else if (travel_frequency == FIGURE_ROAMER_PREVIEW_ENTRY_TILE) {
-        image_blend_footprint_color(x, y, COLOR_MASK_GREEN, draw_context.scale);
-    } else if (travel_frequency == FIGURE_ROAMER_PREVIEW_EXIT_TILE) {
         image_blend_footprint_color(x, y, COLOR_MASK_RED, draw_context.scale);
+    } else if (travel_frequency == FIGURE_ROAMER_PREVIEW_EXIT_TILE) {
+        image_blend_footprint_color(x, y, COLOR_MASK_GREEN, draw_context.scale);
     } else if (travel_frequency == FIGURE_ROAMER_PREVIEW_ENTRY_EXIT_TILE) {
         image_draw_isometric_footprint(image_group(GROUP_TERRAIN_FLAT_TILE),
             x, y, COLOR_MASK_FOOTPRINT_GHOST, draw_context.scale);
