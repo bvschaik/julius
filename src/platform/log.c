@@ -39,7 +39,9 @@ static int count_archived_message(void)
         log_repeated_messages();
     }
     strncpy(previous_log_messages[old_message_index++].buffer, log_buffer, MSG_SIZE);
-    previous_log_messages[old_message_index].count = 0;
+    if (old_message_index < MAX_OLD_MESSAGES) {
+        previous_log_messages[old_message_index].count = 0;
+    }
     return 0;
 }
 
