@@ -1,6 +1,6 @@
 #include "formation_layout.h"
 
-#include "figure/formation.h"
+#include "map/grid.h"
 
 static const int FORMATION_LAYOUT_POSITION_X[FORMATION_MAX][MAX_FORMATION_FIGURES] = {
     {0, 1, 0, 1, -1, -1, 0, 1, -1, 2, 2, 2, 0, 1, -1, 2},
@@ -41,4 +41,15 @@ int formation_layout_position_x(int layout, int index)
 int formation_layout_position_y(int layout, int index)
 {
     return FORMATION_LAYOUT_POSITION_Y[layout][index];
+}
+
+void formation_layout_position(int layout, int index, formation *m, uint8_t *x, uint8_t *y)
+{
+    int offs_x = formation_layout_position_x(layout, index);
+    int offs_y = formation_layout_position_y(layout, index);
+    int dest_x = m->destination_x + offs_x;
+    int dest_y = m->destination_y + offs_y;
+    map_grid_bound(&dest_x, &dest_y);
+    *x = dest_x;
+    *y = dest_y;
 }
