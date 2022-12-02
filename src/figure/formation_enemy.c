@@ -542,7 +542,7 @@ static void update_enemy_formation(formation *m, int *roman_distance)
         army->home_y = m->y_home;
         army->layout = m->layout;
         *roman_distance = 0;
-        map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, -2, -2, 100000, 300);
+        map_routing_noncitizen_can_travel_over_land(m->x_home, m->y_home, -1, -1, 100000, 300);
         int x_tile, y_tile;
         if (map_soldier_strength_get_max(m->x_home, m->y_home, 16, &x_tile, &y_tile)) {
             *roman_distance = 1;
