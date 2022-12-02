@@ -13,7 +13,10 @@ case "$BUILD_TARGET" in
 	cd release && zip -r julius_switch.zip julius
 	;;
 "mac")
-	cd build && make -j4 && make test && make install
+	cd build
+	make -j4
+	make test
+	make install
 	echo "Creating disk image"
 	hdiutil create -volname Julius -srcfolder julius.app -ov -format UDZO julius.dmg
 	;;
