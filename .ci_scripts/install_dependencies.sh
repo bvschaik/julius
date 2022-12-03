@@ -121,7 +121,7 @@ then
   then
     install_sdl_macos "SDL2" $SDL_VERSION
     install_sdl_macos "SDL2_mixer" $SDL_MIXER_VERSION
-  elif [ "$BUILD_TARGET" == "android" ] || [ "$BUILD_TARGET" == "codeql-java" ]
+  elif [ "$BUILD_TARGET" == "android" ]
   then
     install_sdl_android "SDL2" $SDL_VERSION
     install_sdl_android "SDL2_mixer" $SDL_MIXER_VERSION
