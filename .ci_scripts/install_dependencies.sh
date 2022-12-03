@@ -112,7 +112,7 @@ function install_sdl_android {
 }
 
 mkdir -p deps
-if [ "$BUILD_TARGET" == "appimage" ]
+if [ "$BUILD_TARGET" == "appimage" ] || [ "$BUILD_TARGET" == "codeql-cpp" ]
 then
   sudo apt-get update && sudo apt-get -y install libgl1-mesa-dev libsdl2-dev libsdl2-mixer-dev
 elif [ ! -z "$SDL_VERSION" ] && [ ! -z "$SDL_MIXER_VERSION" ]
@@ -121,7 +121,7 @@ then
   then
     install_sdl_macos "SDL2" $SDL_VERSION
     install_sdl_macos "SDL2_mixer" $SDL_MIXER_VERSION
-  elif [ "$BUILD_TARGET" == "android" ]
+  elif [ "$BUILD_TARGET" == "android" ] || [ "$BUILD_TARGET" == "codeql-java" ]
   then
     install_sdl_android "SDL2" $SDL_VERSION
     install_sdl_android "SDL2_mixer" $SDL_MIXER_VERSION
