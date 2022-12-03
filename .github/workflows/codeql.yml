@@ -38,6 +38,8 @@ jobs:
 
     env:
       BUILD_TARGET: "codeql-${{matrix.language}}"
+      SDL_VERSION: 2.26.1
+      SDL_MIXER_VERSION: 2.6.2
 
     steps:
     - name: Checkout repository
@@ -55,6 +57,9 @@ jobs:
         # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         # queries: security-extended,security-and-quality
 
+    - name: Set up environment
+      run: |
+        ./.ci_scripts/install_dependencies.sh
 
     # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
     # If this step fails, then you should remove it and run the build manually (see below)
