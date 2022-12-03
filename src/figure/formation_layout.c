@@ -42,14 +42,3 @@ int formation_layout_position_y(int layout, int index)
 {
     return FORMATION_LAYOUT_POSITION_Y[layout][index];
 }
-
-void formation_layout_position(int layout, int index, formation *m, uint8_t *x, uint8_t *y)
-{
-    int offs_x = formation_layout_position_x(layout, index);
-    int offs_y = formation_layout_position_y(layout, index);
-    int dest_x = m->destination_x + offs_x;
-    int dest_y = m->destination_y + offs_y;
-    map_grid_bound(&dest_x, &dest_y);
-    *x = dest_x;
-    *y = dest_y;
-}
