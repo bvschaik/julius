@@ -38,8 +38,8 @@ jobs:
 
     env:
       BUILD_TARGET: "codeql-${{matrix.language}}"
-      SDL_VERSION: 2.26.1
-      SDL_MIXER_VERSION: 2.6.2
+      SDL_VERSION: 2.0.22
+      SDL_MIXER_VERSION: 2.0.4
 
     steps:
     - name: Checkout repository
