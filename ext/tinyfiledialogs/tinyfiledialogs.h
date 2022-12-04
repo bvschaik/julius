@@ -146,12 +146,6 @@ int tinyfd_messageBoxW(
 		/* returns 0 for cancel/no , 1 for ok/yes */
 
 /* windows only - utf-16 version */
-wchar_t const * tinyfd_inputBoxW(
-	wchar_t const * const aTitle, /* NULL or L"" */
-	wchar_t const * const aMessage, /* NULL or L"" may NOT contain \n nor \t */
-	wchar_t const * const aDefaultInput ); /* L"" , if NULL it's a passwordBox */
-
-/* windows only - utf-16 version */
 wchar_t const * tinyfd_selectFolderDialogW(
 	wchar_t const * const aTitle, /* NULL or L"" */
 	wchar_t const * const aDefaultPath); /* NULL or L"" */
