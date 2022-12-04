@@ -182,17 +182,6 @@ char const * tinyfd_selectFolderDialog(
 	char const * const aDefaultPath ) ; /* NULL or "" */
 		/* returns NULL on cancel */
 
-char const * tinyfd_colorChooser(
-	char const * const aTitle , /* NULL or "" */
-	char const * const aDefaultHexRGB , /* NULL or "#FF0000" */
-	unsigned char const aDefaultRGB[3] , /* { 0 , 255 , 255 } */
-	unsigned char aoResultRGB[3] ) ; /* { 0 , 0 , 0 } */
-		/* returns the hexcolor as a string "#FF0000" */
-		/* aoResultRGB also contains the result */
-		/* aDefaultRGB is used only if aDefaultHexRGB is NULL */
-		/* aDefaultRGB and aoResultRGB can be the same array */
-		/* returns NULL on cancel */
-
 
 /************ NOT CROSS PLATFORM SECTION STARTS HERE ************************/
 #ifdef _WIN32
@@ -238,19 +227,6 @@ wchar_t const * tinyfd_selectFolderDialogW(
 	wchar_t const * const aTitle, /* NULL or L"" */
 	wchar_t const * const aDefaultPath); /* NULL or L"" */
 		/* returns NULL on cancel */
-
-/* windows only - utf-16 version */
-wchar_t const * tinyfd_colorChooserW(
-	wchar_t const * const aTitle, /* NULL or L"" */
-	wchar_t const * const aDefaultHexRGB, /* NULL or L"#FF0000" */
-	unsigned char const aDefaultRGB[3] , /* { 0 , 255 , 255 } */
-	unsigned char aoResultRGB[3] ) ; /* { 0 , 0 , 0 } */
-		/* returns the hexcolor as a string L"#FF0000" */
-		/* aoResultRGB also contains the result */
-		/* aDefaultRGB is used only if aDefaultHexRGB is NULL */
-		/* aDefaultRGB and aoResultRGB can be the same array */
-		/* returns NULL on cancel */
-
 
 #endif /*TINYFD_NOLIB*/
 #else /*_WIN32*/
