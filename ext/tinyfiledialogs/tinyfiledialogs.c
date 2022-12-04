@@ -148,20 +148,6 @@ int tinyfd_forceConsole = 0 ; /* 0 (default) or 1 */
   if the package dialog (and a console is present) or dialog.exe is installed.
   on windows it only make sense for console applications */
 
-char tinyfd_response[1024];
-/* if you pass "tinyfd_query" as aTitle,
-the functions will not display the dialogs
-but and return 0 for console mode, 1 for graphic mode.
-tinyfd_response is then filled with the retain solution.
-possible values for tinyfd_response are (all lowercase)
-for graphic mode:
-  windows_wchar windows
-  applescript kdialog zenity zenity3 matedialog qarma
-  python2-tkinter python3-tkinter python-dbus perl-dbus
-  gxmessage gmessage xmessage xdialog gdialog
-for console mode:
-  dialog whiptail basicinput no_solution */
-
 static int gWarningDisplayed = 0 ;
 
 static char const gTitle[]="missing software! (we will try basic console input)";
@@ -745,8 +731,6 @@ int tinyfd_messageBoxW(
         int lBoxReturnValue;
         UINT aCode;
 
-        if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return 1; }
-
         if (aIconType && !wcscmp(L"warning", aIconType))
         {
                 aCode = MB_ICONWARNING;
@@ -846,8 +830,6 @@ wchar_t const * tinyfd_inputBoxW(
         size_t lTitleLen;
         size_t lMessageLen;
         size_t lDialogStringLen;
-
-        if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t const *)1; }
 
         lTitleLen =  aTitle ? wcslen(aTitle) : 0 ;
         lMessageLen =  aMessage ? wcslen(aMessage) : 0 ;
@@ -1152,8 +1134,6 @@ wchar_t const * tinyfd_selectFolderDialogW(
         BROWSEINFOW bInfo;
         LPITEMIDLIST lpItem;
         HRESULT lHResult;
-
-        if (aTitle&&!wcscmp(aTitle, L"tinyfd_query")){ strcpy(tinyfd_response, "windows_wchar"); return (wchar_t const *)1; }
 
         lHResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
 
@@ -1658,7 +1638,6 @@ int tinyfd_messageBox(
         if ((!tinyfd_forceConsole || !(GetConsoleWindow() || dialogPresent()))
                 && (!getenv("SSH_CLIENT") || getenv("DISPLAY")))
         {
-                if (aTitle&&!strcmp(aTitle, "tinyfd_query")){ strcpy(tinyfd_response, "windows"); return 1; }
                 if (tinyfd_winUtf8)
                 {
                         return messageBoxWinGui8(
@@ -1673,13 +1652,11 @@ int tinyfd_messageBox(
         else
         if ( dialogPresent() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return 0;}
                 return messageBoxWinConsole(
                                         aTitle,aMessage,aDialogType,aIconType,aDefaultButton);
         }
         else
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
                 if (!gWarningDisplayed && !tinyfd_forceConsole )
                 {
                         gWarningDisplayed = 1;
@@ -1766,20 +1743,17 @@ char const * tinyfd_inputBox(
                 dialogPresent()))
                 && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
                 lBuff[0]='\0';
                 return inputBoxWinGui(lBuff, aTitle, aMessage, aDefaultInput);
         }
         else
         if ( dialogPresent() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
                 lBuff[0]='\0';
                 return inputBoxWinConsole(lBuff,aTitle,aMessage,aDefaultInput);
         }
         else
         {
-      if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
       lBuff[0]='\0';
       if (!gWarningDisplayed && !tinyfd_forceConsole)
       {
@@ -1834,7 +1808,6 @@ char const * tinyfd_selectFolderDialog(
         if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
           && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"windows");return (char const *)1;}
                 if (tinyfd_winUtf8)
                 {
 #ifndef TINYFD_NOSELECTFOLDERWIN
@@ -1849,12 +1822,10 @@ char const * tinyfd_selectFolderDialog(
         else
         if ( dialogPresent() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
                 p = selectFolderDialogWinConsole(lBuff,aTitle,aDefaultPath);
         }
         else
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
                 p = tinyfd_inputBox(aTitle, "Select folder","");
         }
 
@@ -2668,15 +2639,10 @@ int tinyfd_messageBox(
 
         lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
         lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
-        if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
-        {
-                lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
-        }
+        lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
 
         if ( osascriptPresent( ) )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return 1;}
-
                 strcpy( lDialogString , "osascript ");
                 if ( ! osx9orBetter() ) strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
                 strcat( lDialogString , " -e 'try' -e 'set {vButton} to {button returned} of ( display dialog \"") ;
@@ -2756,8 +2722,6 @@ int tinyfd_messageBox(
         }
         else if ( kdialogPresent() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return 1;}
-
                 strcpy( lDialogString , "kdialog" ) ;
                 strcat( lDialogString , " --" ) ;
                 if ( aDialogType && ( ! strcmp( "okcancel" , aDialogType )
@@ -2820,22 +2784,18 @@ int tinyfd_messageBox(
         {
                 if ( zenityPresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return 1;}
                         strcpy( lDialogString , "szAnswer=$(zenity" ) ;
                 }
                 else if ( matedialogPresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return 1;}
                         strcpy( lDialogString , "szAnswer=$(matedialog" ) ;
                 }
                 else if ( shellementaryPresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return 1;}
                         strcpy( lDialogString , "szAnswer=$(shellementary" ) ;
                 }
                 else
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return 1;}
                         strcpy( lDialogString , "szAnswer=$(qarma" ) ;
                 }
                 strcat(lDialogString, " --");
@@ -2906,8 +2866,6 @@ int tinyfd_messageBox(
         }
         else if ( !gxmessagePresent() && !gmessagePresent() && !gdialogPresent() && !xdialogPresent() && tkinter2Present() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return 1;}
-
                 strcpy( lDialogString , gPython2Name ) ;
                 if ( ! isTerminalRunning( ) && isDarwin( ) )
                 {
@@ -3007,8 +2965,6 @@ else :\n\tprint 1\n\"" ) ;
     }
         else if ( !gxmessagePresent() && !gmessagePresent() && !gdialogPresent() && !xdialogPresent() && tkinter3Present() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python3-tkinter");return 1;}
-
                 strcpy( lDialogString , gPython3Name ) ;
                 strcat( lDialogString ,
                         " -S -c \"import tkinter;from tkinter import messagebox;root=tkinter.Tk();root.withdraw();");
@@ -3098,17 +3054,14 @@ else :\n\tprint(1)\n\"" ) ;
         {
                 if ( gxmessagePresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return 1;}
                         strcpy( lDialogString , "gxmessage");
                 }
                 else if ( gmessagePresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gmessage");return 1;}
                         strcpy( lDialogString , "gmessage");
                 }
                 else
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"xmessage");return 1;}
                         strcpy( lDialogString , "xmessage");
                 }
 
@@ -3164,19 +3117,16 @@ else :\n\tprint(1)\n\"" ) ;
         {
                 if ( gdialogPresent( ) )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gdialog");return 1;}
                         lWasGraphicDialog = 1 ;
                         strcpy( lDialogString , "(gdialog " ) ;
                 }
                 else if ( xdialogPresent( ) )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"xdialog");return 1;}
                         lWasGraphicDialog = 1 ;
                         strcpy( lDialogString , "(Xdialog " ) ;
                 }
                 else if ( dialogName( ) )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return 0;}
                         if ( isTerminalRunning( ) )
                         {
                                 strcpy( lDialogString , "(dialog " ) ;
@@ -3192,12 +3142,10 @@ else :\n\tprint(1)\n\"" ) ;
                 }
                 else if ( isTerminalRunning( ) )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"whiptail");return 0;}
                         strcpy( lDialogString , "(whiptail " ) ;
                 }
                 else
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"whiptail");return 0;}
                         lWasXterm = 1 ;
                         strcpy( lDialogString , terminalName() ) ;
                         strcat( lDialogString , "'(whiptail " ) ;
@@ -3307,7 +3255,6 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
         }
         else if (  !isTerminalRunning() && terminalName() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
                 strcpy( lDialogString , terminalName() ) ;
                 strcat( lDialogString , "'" ) ;
                 if ( !gWarningDisplayed && !tinyfd_forceConsole)
@@ -3375,7 +3322,6 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
         }
         else if ( !isTerminalRunning() && pythonDbusPresent() && !strcmp("ok" , aDialogType) )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python-dbus");return 1;}
                 strcpy( lDialogString , gPythonName ) ;
                 strcat( lDialogString ," -c \"import dbus;bus=dbus.SessionBus();");
                 strcat( lDialogString ,"notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');" ) ;
@@ -3400,8 +3346,6 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
         }
         else if ( !isTerminalRunning() && (perlPresent() >= 2)  && !strcmp("ok" , aDialogType) )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"perl-dbus");return 1;}
-
                 sprintf( lDialogString , "perl -e \"use Net::DBus;\
                                                                  my \\$sessionBus = Net::DBus->session;\
                                                                  my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
@@ -3412,8 +3356,6 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
         }
         else if ( !isTerminalRunning() && notifysendPresent() && !strcmp("ok" , aDialogType) )
         {
-
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"notifysend");return 1;}
                 strcpy( lDialogString , "notify-send" ) ;
                 if ( aIconType && strlen(aIconType) )
                 {
@@ -3438,7 +3380,6 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
         }
         else
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return 0;}
                 if ( !gWarningDisplayed && !tinyfd_forceConsole)
                 {
                         gWarningDisplayed = 1 ;
@@ -3579,14 +3520,10 @@ char const * tinyfd_inputBox(
 
         lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
         lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
-        if ( !aTitle || strcmp(aTitle,"tinyfd_query") )
-        {
-                lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
-        }
+        lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
 
         if ( osascriptPresent( ) )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
                 strcpy( lDialogString , "osascript ");
                 if ( ! osx9orBetter() ) strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
                 strcat( lDialogString , " -e 'try' -e 'display dialog \"") ;
@@ -3620,7 +3557,6 @@ char const * tinyfd_inputBox(
         }
         else if ( kdialogPresent() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
                 strcpy( lDialogString , "szAnswer=$(kdialog" ) ;
 
                 if ( ! aDefaultInput )
@@ -3656,22 +3592,18 @@ char const * tinyfd_inputBox(
         {
                 if ( zenityPresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
                         strcpy( lDialogString , "szAnswer=$(zenity" ) ;
                 }
                 else if ( matedialogPresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
                         strcpy( lDialogString ,  "szAnswer=$(matedialog" ) ;
                 }
                 else if ( shellementaryPresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char const *)1;}
                         strcpy( lDialogString , "szAnswer=$(shellementary" ) ;
                 }
                 else
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
                         strcpy( lDialogString ,  "szAnswer=$(qarma" ) ;
                 }
                 strcat( lDialogString ," --entry" ) ;
@@ -3705,12 +3637,10 @@ char const * tinyfd_inputBox(
         else if ( gxmessagePresent() || gmessagePresent() )
         {
                 if ( gxmessagePresent() ) {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gxmessage");return (char const *)1;}
                         strcpy( lDialogString , "szAnswer=$(gxmessage -buttons Ok:1,Cancel:0 -center \"");
                 }
                 else
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gmessage");return (char const *)1;}
                         strcpy( lDialogString , "szAnswer=$(gmessage -buttons Ok:1,Cancel:0 -center \"");
                 }
 
@@ -3735,7 +3665,6 @@ char const * tinyfd_inputBox(
         }
         else if ( !gdialogPresent() && !xdialogPresent() && tkinter2Present( ) )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return (char const *)1;}
                 strcpy( lDialogString , gPython2Name ) ;
                 if ( ! isTerminalRunning( ) && isDarwin( ) )
                 {
@@ -3785,7 +3714,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
         }
         else if ( !gdialogPresent() && !xdialogPresent() && tkinter3Present( ) )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python3-tkinter");return (char const *)1;}
                 strcpy( lDialogString , gPython3Name ) ;
                 strcat( lDialogString ,
                         " -S -c \"import tkinter; from tkinter import simpledialog;root=tkinter.Tk();root.withdraw();");
@@ -3824,20 +3752,17 @@ frontmost of process \\\"Python\\\" to true' ''');");
         {
                 if ( gdialogPresent( ) )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"gdialog");return (char const *)1;}
                         lWasGraphicDialog = 1 ;
                         lWasGdialog = 1 ;
                         strcpy( lDialogString , "(gdialog " ) ;
                 }
                 else if ( xdialogPresent( ) )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"xdialog");return (char const *)1;}
                         lWasGraphicDialog = 1 ;
                         strcpy( lDialogString , "(Xdialog " ) ;
                 }
                 else if ( dialogName( ) )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
                         if ( isTerminalRunning( ) )
                         {
                                 strcpy( lDialogString , "(dialog " ) ;
@@ -3853,12 +3778,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 }
                 else if ( isTerminalRunning( ) )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"whiptail");return (char const *)0;}
                         strcpy( lDialogString , "(whiptail " ) ;
                 }
                 else
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"whiptail");return (char const *)0;}
                         lWasXterm = 1 ;
                         strcpy( lDialogString , terminalName() ) ;
                         strcat( lDialogString , "'(whiptail " ) ;
@@ -3930,7 +3853,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
         }
         else if ( ! isTerminalRunning( ) && terminalName() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
                 lWasBasicXterm = 1 ;
                 strcpy( lDialogString , terminalName() ) ;
                 strcat( lDialogString , "'" ) ;
@@ -3964,12 +3886,10 @@ frontmost of process \\\"Python\\\" to true' ''');");
         else if ( !gWarningDisplayed && ! isTerminalRunning( ) && ! terminalName() ) {
 			gWarningDisplayed = 1 ;
 			tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
-			if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"no_solution");return (char const *)0;}
 			return NULL;
         }
         else
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"basicinput");return (char const *)0;}
                 if ( !gWarningDisplayed && !tinyfd_forceConsole)
                 {
                         gWarningDisplayed = 1 ;
@@ -4107,7 +4027,6 @@ char const * tinyfd_selectFolderDialog(
 
         if ( osascriptPresent( ))
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"applescript");return (char const *)1;}
                 strcpy( lDialogString , "osascript ");
                 if ( ! osx9orBetter() ) strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
                 strcat( lDialogString , " -e 'try' -e 'POSIX path of ( choose folder ");
@@ -4130,7 +4049,6 @@ char const * tinyfd_selectFolderDialog(
         }
         else if ( kdialogPresent() )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"kdialog");return (char const *)1;}
                 strcpy( lDialogString , "kdialog" ) ;
                 strcat( lDialogString , " --getexistingdirectory " ) ;
 
@@ -4160,22 +4078,18 @@ char const * tinyfd_selectFolderDialog(
         {
                 if ( zenityPresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char const *)1;}
                         strcpy( lDialogString , "zenity" ) ;
                 }
                 else if ( matedialogPresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char const *)1;}
                         strcpy( lDialogString , "matedialog" ) ;
                 }
                 else if ( shellementaryPresent() )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char const *)1;}
                         strcpy( lDialogString , "shellementary" ) ;
                 }
                 else
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char const *)1;}
                         strcpy( lDialogString , "qarma" ) ;
                 }
                 strcat( lDialogString , " --file-selection --directory" ) ;
@@ -4196,7 +4110,6 @@ char const * tinyfd_selectFolderDialog(
         }
         else if ( !xdialogPresent() && tkinter2Present( ) )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python2-tkinter");return (char const *)1;}
                 strcpy( lDialogString , gPython2Name ) ;
                 if ( ! isTerminalRunning( ) && isDarwin( ) )
                 {
@@ -4229,7 +4142,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
         }
         else if ( !xdialogPresent() && tkinter3Present( ) )
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"python3-tkinter");return (char const *)1;}
                 strcpy( lDialogString , gPython3Name ) ;
                 strcat( lDialogString ,
                         " -S -c \"import tkinter;from tkinter import filedialog;root=tkinter.Tk();root.withdraw();");
@@ -4252,18 +4164,15 @@ frontmost of process \\\"Python\\\" to true' ''');");
         {
                 if ( xdialogPresent( ) )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"xdialog");return (char const *)1;}
                         lWasGraphicDialog = 1 ;
                         strcpy( lDialogString , "(Xdialog " ) ;
                 }
                 else if ( isTerminalRunning( ) )
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
                         strcpy( lDialogString , "(dialog " ) ;
                 }
                 else
                 {
-                        if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
                         lWasXterm = 1 ;
                         strcpy( lDialogString , terminalName() ) ;
                         strcat( lDialogString , "'(" ) ;
@@ -4322,7 +4231,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
         }
         else
         {
-                if (aTitle&&!strcmp(aTitle,"tinyfd_query")){return tinyfd_inputBox(aTitle,NULL,NULL);}
+                if (aTitle){return tinyfd_inputBox(aTitle,NULL,NULL);}
                 p = tinyfd_inputBox(aTitle, "Select folder","");
                 if ( !p || ! strlen( p ) || ! dirExists( p ) )
                 {
