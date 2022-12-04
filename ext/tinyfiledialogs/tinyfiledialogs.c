@@ -113,10 +113,7 @@ misrepresented as being the original software.
   #define _WIN32_WINNT 0x0500
  #endif
  #include <windows.h>
- /*#define TINYFD_NOSELECTFOLDERWIN*/
- #ifndef TINYFD_NOSELECTFOLDERWIN
-  #include <shlobj.h>
- #endif /*TINYFD_NOSELECTFOLDERWIN*/
+ #include <shlobj.h>
  #include <conio.h>
  #include <commdlg.h>
  #define TINYFD_NOCCSUNICODE
@@ -921,7 +918,6 @@ static char const * inputBoxWinGui(
 }
 
 
-#ifndef TINYFD_NOSELECTFOLDERWIN
 static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
 {
         if (uMsg == BFFM_INITIALIZED)
@@ -1009,7 +1005,6 @@ static char const * selectFolderDialogWinGui8(
 
         return aoBuff;
 }
-#endif /*TINYFD_NOSELECTFOLDERWIN*/
 
 
 static int messageBoxWinGuiA(
@@ -1098,7 +1093,6 @@ static int messageBoxWinGuiA(
 }
 
 
-#ifndef TINYFD_NOSELECTFOLDERWIN
 static char const * selectFolderDialogWinGuiA(
         char * const aoBuff ,
         char const * const aTitle , /*  NULL or "" */
@@ -1138,307 +1132,6 @@ static char const * selectFolderDialogWinGuiA(
         }
 		return lRetval;
 }
-#endif /*TINYFD_NOSELECTFOLDERWIN*/
-
-static int dialogPresent(void)
-{
-        static int lDialogPresent = -1 ;
-        char lBuff [MAX_PATH_OR_CMD] ;
-        FILE * lIn ;
-        char const * lString = "dialog.exe";
-        if ( lDialogPresent < 0 )
-        {
-                if (!(lIn = _popen("where dialog.exe","r")))
-                {
-                        lDialogPresent = 0 ;
-                        return 0 ;
-                }
-                while ( fgets( lBuff , sizeof( lBuff ) , lIn ) != NULL )
-                {}
-                _pclose( lIn ) ;
-                if ( lBuff[strlen( lBuff ) -1] == '\n' )
-                {
-                        lBuff[strlen( lBuff ) -1] = '\0' ;
-                }
-                if ( strcmp(lBuff+strlen(lBuff)-strlen(lString),lString) )
-                {
-                        lDialogPresent = 0 ;
-                }
-                else
-                {
-                        lDialogPresent = 1 ;
-                }
-        }
-        return lDialogPresent;
-}
-
-
-static int messageBoxWinConsole(
-    char const * const aTitle , /* NULL or "" */
-    char const * const aMessage , /* NULL or ""  may contain \n and \t */
-    char const * const aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
-    char const * const aIconType , /* "info" "warning" "error" "question" */
-    int const aDefaultButton ) /* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
-{
-        char lDialogString[MAX_PATH_OR_CMD];
-        char lDialogFile[MAX_PATH_OR_CMD];
-        FILE * lIn;
-        char lBuff [MAX_PATH_OR_CMD] = "";
-
-        strcpy( lDialogString , "dialog " ) ;
-        if ( aTitle && strlen(aTitle) )
-        {
-                strcat(lDialogString, "--title \"") ;
-                strcat(lDialogString, aTitle) ;
-                strcat(lDialogString, "\" ") ;
-        }
-
-        if ( aDialogType && ( !strcmp( "okcancel" , aDialogType )
-                || !strcmp("yesno", aDialogType) || !strcmp("yesnocancel", aDialogType) ) )
-        {
-                strcat(lDialogString, "--backtitle \"") ;
-                strcat(lDialogString, "tab: move focus") ;
-                strcat(lDialogString, "\" ") ;
-        }
-
-        if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
-        {
-                if ( ! aDefaultButton )
-                {
-                        strcat( lDialogString , "--defaultno " ) ;
-                }
-                strcat( lDialogString ,
-                                "--yes-label \"Ok\" --no-label \"Cancel\" --yesno " ) ;
-        }
-        else if ( aDialogType && ! strcmp( "yesno" , aDialogType ) )
-        {
-                if ( ! aDefaultButton )
-                {
-                        strcat( lDialogString , "--defaultno " ) ;
-                }
-                strcat( lDialogString , "--yesno " ) ;
-        }
-        else if (aDialogType && !strcmp("yesnocancel", aDialogType))
-        {
-                if (!aDefaultButton)
-                {
-                        strcat(lDialogString, "--defaultno ");
-                }
-                strcat(lDialogString, "--menu ");
-        }
-        else
-        {
-                strcat( lDialogString , "--msgbox " ) ;
-        }
-
-        strcat( lDialogString , "\"" ) ;
-        if ( aMessage && strlen(aMessage) )
-        {
-                replaceSubStr( aMessage , "\n" , "\\n" , lBuff ) ;
-                strcat(lDialogString, lBuff) ;
-                lBuff[0]='\0';
-        }
-        strcat(lDialogString, "\" ");
-
-        if (aDialogType && !strcmp("yesnocancel", aDialogType))
-        {
-                strcat(lDialogString, "0 60 0 Yes \"\" No \"\"");
-                strcat(lDialogString, "2>>");
-        }
-        else
-        {
-                strcat(lDialogString, "10 60");
-                strcat(lDialogString, " && echo 1 > ");
-        }
-
-        strcpy(lDialogFile, getenv("USERPROFILE"));
-        strcat(lDialogFile, "\\AppData\\Local\\Temp\\tinyfd.txt");
-        strcat(lDialogString, lDialogFile);
-
-        /*if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;*/
-        system( lDialogString ) ;
-
-        if (!(lIn = fopen(lDialogFile, "r")))
-        {
-                remove(lDialogFile);
-                return 0 ;
-        }
-        while (fgets(lBuff, sizeof(lBuff), lIn) != NULL)
-        {}
-        fclose(lIn);
-        remove(lDialogFile);
-    if ( lBuff[strlen( lBuff ) -1] == '\n' )
-    {
-        lBuff[strlen( lBuff ) -1] = '\0' ;
-    }
-
-        /* if (tinyfd_verbose) printf("lBuff: %s\n", lBuff); */
-        if ( ! strlen(lBuff) )
-        {
-                return 0;
-        }
-
-        if (aDialogType && !strcmp("yesnocancel", aDialogType))
-        {
-                if (lBuff[0] == 'Y') return 1;
-                else return 2;
-        }
-
-        return 1;
-}
-
-
-static char const * inputBoxWinConsole(
-        char * const aoBuff ,
-        char const * const aTitle , /* NULL or "" */
-        char const * const aMessage , /* NULL or "" may NOT contain \n nor \t */
-        char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
-{
-        char lDialogString[MAX_PATH_OR_CMD];
-        char lDialogFile[MAX_PATH_OR_CMD];
-        FILE * lIn;
-        int lResult;
-
-        strcpy(lDialogFile, getenv("USERPROFILE"));
-        strcat(lDialogFile, "\\AppData\\Local\\Temp\\tinyfd.txt");
-        strcpy(lDialogString , "echo|set /p=1 >" ) ;
-        strcat(lDialogString, lDialogFile);
-        strcat( lDialogString , " & " ) ;
-
-        strcat( lDialogString , "dialog " ) ;
-        if ( aTitle && strlen(aTitle) )
-        {
-                strcat(lDialogString, "--title \"") ;
-                strcat(lDialogString, aTitle) ;
-                strcat(lDialogString, "\" ") ;
-        }
-
-        strcat(lDialogString, "--backtitle \"") ;
-        strcat(lDialogString, "tab: move focus") ;
-        if ( ! aDefaultInput )
-        {
-                strcat(lDialogString, " (sometimes nothing, no blink nor star, is shown in text field)") ;
-        }
-
-        strcat(lDialogString, "\" ") ;
-
-        if ( ! aDefaultInput )
-        {
-                strcat( lDialogString , "--insecure --passwordbox" ) ;
-        }
-        else
-        {
-                strcat( lDialogString , "--inputbox" ) ;
-        }
-        strcat( lDialogString , " \"" ) ;
-        if ( aMessage && strlen(aMessage) )
-        {
-                strcat(lDialogString, aMessage) ;
-        }
-        strcat(lDialogString,"\" 10 60 ") ;
-        if ( aDefaultInput && strlen(aDefaultInput) )
-        {
-                strcat(lDialogString, "\"") ;
-                strcat(lDialogString, aDefaultInput) ;
-                strcat(lDialogString, "\" ") ;
-        }
-
-        strcat(lDialogString, "2>>");
-        strcpy(lDialogFile, getenv("USERPROFILE"));
-        strcat(lDialogFile, "\\AppData\\Local\\Temp\\tinyfd.txt");
-        strcat(lDialogString, lDialogFile);
-        strcat(lDialogString, " || echo 0 > ");
-        strcat(lDialogString, lDialogFile);
-
-        /* printf( "lDialogString: %s\n" , lDialogString ) ; */
-        system( lDialogString ) ;
-
-        if (!(lIn = fopen(lDialogFile, "r")))
-        {
-                remove(lDialogFile);
-                return 0 ;
-        }
-        while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
-        {}
-        fclose(lIn);
-
-        wipefile(lDialogFile);
-        remove(lDialogFile);
-    if ( aoBuff[strlen( aoBuff ) -1] == '\n' )
-    {
-        aoBuff[strlen( aoBuff ) -1] = '\0' ;
-    }
-        /* printf( "aoBuff: %s\n" , aoBuff ) ; */
-
-        /* printf( "aoBuff: %s len: %lu \n" , aoBuff , strlen(aoBuff) ) ; */
-    lResult =  strncmp( aoBuff , "1" , 1) ? 0 : 1 ;
-        /* printf( "lResult: %d \n" , lResult ) ; */
-    if ( ! lResult )
-    {
-                return NULL ;
-        }
-        /* printf( "aoBuff+1: %s\n" , aoBuff+1 ) ; */
-        return aoBuff+3 ;
-}
-
-
-static char const * selectFolderDialogWinConsole(
-        char * const aoBuff ,
-        char const * const aTitle , /*  NULL or "" */
-        char const * const aDefaultPath ) /* NULL or "" */
-{
-        char lDialogString [MAX_PATH_OR_CMD] ;
-        char lString [MAX_PATH_OR_CMD] ;
-        FILE * lIn ;
-
-        strcpy( lDialogString , "dialog " ) ;
-        if ( aTitle && strlen(aTitle) )
-        {
-                strcat(lDialogString, "--title \"") ;
-                strcat(lDialogString, aTitle) ;
-                strcat(lDialogString, "\" ") ;
-        }
-
-        strcat(lDialogString, "--backtitle \"") ;
-        strcat(lDialogString,
-                "tab: focus | /: populate | spacebar: fill text field | ok: TEXT FIELD ONLY") ;
-        strcat(lDialogString, "\" ") ;
-
-        strcat( lDialogString , "--dselect \"" ) ;
-        if ( aDefaultPath && strlen(aDefaultPath) )
-        {
-                /* dialog.exe uses unix separators even on windows */
-                strcpy(lString, aDefaultPath) ;
-                ensureFinalSlash(lString);
-                replaceChr( lString , '\\' , '/' ) ;
-                strcat(lDialogString, lString) ;
-        }
-        else
-        {
-                /* dialog.exe needs at least one separator */
-                strcat(lDialogString, "./") ;
-        }
-        strcat(lDialogString, "\" 0 60 2>");
-        strcpy(lString, getenv("USERPROFILE"));
-        strcat(lString, "\\AppData\\Local\\Temp\\tinyfd.txt");
-        strcat(lDialogString, lString);
-
-        /* printf( "lDialogString: %s\n" , lDialogString ) ; */
-        system( lDialogString ) ;
-
-        if (!(lIn = fopen(lString, "r")))
-        {
-                remove(lString);
-                return NULL;
-        }
-        while (fgets(aoBuff, MAX_PATH_OR_CMD, lIn) != NULL)
-        {}
-        fclose(lIn);
-        remove(lString);
-        replaceChr( aoBuff , '/' , '\\' ) ;
-        /* printf( "aoBuff: %s\n" , aoBuff ) ; */
-        return aoBuff;
-}
 
 
 int tinyfd_messageBox(
@@ -1450,92 +1143,15 @@ int tinyfd_messageBox(
 {
         char lChar ;
 
-        if (!getenv("SSH_CLIENT") || getenv("DISPLAY"))
+        if (tinyfd_winUtf8)
         {
-                if (tinyfd_winUtf8)
-                {
-                        return messageBoxWinGui8(
-                                aTitle, aMessage, aDialogType, aIconType, aDefaultButton);
-                }
-                else
-                {
-                        return messageBoxWinGuiA(
-                                aTitle, aMessage, aDialogType, aIconType, aDefaultButton);
-                }
-        }
-        else
-        if ( dialogPresent() )
-        {
-                return messageBoxWinConsole(
-                                        aTitle,aMessage,aDialogType,aIconType,aDefaultButton);
+                return messageBoxWinGui8(
+                        aTitle, aMessage, aDialogType, aIconType, aDefaultButton);
         }
         else
         {
-                if (!gWarningDisplayed )
-                {
-                        gWarningDisplayed = 1;
-                        printf("\n\n%s\n", gTitle);
-                        printf("%s\n\n", tinyfd_needs);
-                }
-                if ( aTitle && strlen(aTitle) )
-                {
-                        printf("\n%s\n\n", aTitle);
-                }
-                if ( aDialogType && !strcmp("yesno",aDialogType) )
-                {
-                        do
-                        {
-                                if ( aMessage && strlen(aMessage) )
-                                {
-                                        printf("%s\n",aMessage);
-                                }
-                                printf("y/n: ");
-                                lChar = (char) tolower( _getch() ) ;
-                                printf("\n\n");
-                        }
-                        while ( lChar != 'y' && lChar != 'n' ) ;
-                        return lChar == 'y' ? 1 : 0 ;
-                }
-                else if ( aDialogType && !strcmp("okcancel",aDialogType) )
-                {
-                        do
-                        {
-                                if ( aMessage && strlen(aMessage) )
-                                {
-                                        printf("%s\n",aMessage);
-                                }
-                                printf("[O]kay/[C]ancel: ");
-                                lChar = (char) tolower( _getch() ) ;
-                                printf("\n\n");
-                        }
-                        while ( lChar != 'o' && lChar != 'c' ) ;
-                        return lChar == 'o' ? 1 : 0 ;
-                }
-                else if (aDialogType && !strcmp("yesnocancel", aDialogType))
-                {
-                        do
-                        {
-                                if (aMessage && strlen(aMessage))
-                                {
-                                        printf("%s\n", aMessage);
-                                }
-                                printf("[Y]es/[N]o/[C]ancel: ");
-                                lChar = (char)tolower(_getch());
-                                printf("\n\n");
-                        } while (lChar != 'y' && lChar != 'n' && lChar != 'c');
-                        return (lChar == 'y') ? 1 : (lChar == 'n') ? 2 : 0 ;
-                }
-                else
-                {
-                        if ( aMessage && strlen(aMessage) )
-                        {
-                                printf("%s\n\n",aMessage);
-                        }
-                        printf("press enter to continue ");
-                        lChar = (char) _getch() ;
-                        printf("\n\n");
-                        return 1 ;
-                }
+                return messageBoxWinGuiA(
+                        aTitle, aMessage, aDialogType, aIconType, aDefaultButton);
         }
 }
 
@@ -1547,66 +1163,9 @@ char const * tinyfd_inputBox(
         char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
 {
         static char lBuff [MAX_PATH_OR_CMD] ;
-        char * lEOF;
 
-        DWORD mode = 0;
-        HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
-
-        if (!getenv("SSH_CLIENT") || getenv("DISPLAY"))
-        {
-                lBuff[0]='\0';
-                return inputBoxWinGui(lBuff, aTitle, aMessage, aDefaultInput);
-        }
-        else
-        if ( dialogPresent() )
-        {
-                lBuff[0]='\0';
-                return inputBoxWinConsole(lBuff,aTitle,aMessage,aDefaultInput);
-        }
-        else
-        {
-      lBuff[0]='\0';
-      if (!gWarningDisplayed)
-      {
-          gWarningDisplayed = 1 ;
-          printf("\n\n%s\n", gTitle);
-          printf("%s\n\n", tinyfd_needs);
-      }
-      if ( aTitle && strlen(aTitle) )
-      {
-          printf("\n%s\n\n", aTitle);
-      }
-      if ( aMessage && strlen(aMessage) )
-      {
-          printf("%s\n",aMessage);
-      }
-      printf("(ctrl-Z + enter to cancel): ");
-      if ( ! aDefaultInput )
-      {
-          GetConsoleMode(hStdin,&mode);
-          SetConsoleMode(hStdin,mode & (~ENABLE_ECHO_INPUT) );
-      }
-      lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
-      if ( ! lEOF )
-      {
-          return NULL;
-      }
-      if ( ! aDefaultInput )
-      {
-          SetConsoleMode(hStdin,mode);
-          printf("\n");
-      }
-      printf("\n");
-      if ( strchr(lBuff,27) )
-      {
-          return NULL ;
-      }
-      if ( lBuff[strlen( lBuff ) -1] == '\n' )
-      {
-          lBuff[strlen( lBuff ) -1] = '\0' ;
-      }
-      return lBuff ;
-  }
+        lBuff[0]='\0';
+        return inputBoxWinGui(lBuff, aTitle, aMessage, aDefaultInput);
 }
 
 
@@ -1616,29 +1175,14 @@ char const * tinyfd_selectFolderDialog(
 {
     static char lBuff [MAX_PATH_OR_CMD] ;
         char const * p ;
-        if (!getenv("SSH_CLIENT") || getenv("DISPLAY"))
+        if (tinyfd_winUtf8)
         {
-                if (tinyfd_winUtf8)
-                {
-#ifndef TINYFD_NOSELECTFOLDERWIN
-                        p = selectFolderDialogWinGui8(lBuff, aTitle, aDefaultPath);
-                }
-                else
-                {
-                        p = selectFolderDialogWinGuiA(lBuff, aTitle, aDefaultPath);
-#endif /*TINYFD_NOSELECTFOLDERWIN*/
-                }
-        }
-        else
-        if ( dialogPresent() )
-        {
-                p = selectFolderDialogWinConsole(lBuff,aTitle,aDefaultPath);
+                p = selectFolderDialogWinGui8(lBuff, aTitle, aDefaultPath);
         }
         else
         {
-                p = tinyfd_inputBox(aTitle, "Select folder","");
+                p = selectFolderDialogWinGuiA(lBuff, aTitle, aDefaultPath);
         }
-
         if ( ! p || ! strlen( p ) || ! dirExists( p ) )
         {
                 return NULL ;
