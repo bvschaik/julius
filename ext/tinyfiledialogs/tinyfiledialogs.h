@@ -95,17 +95,6 @@ misrepresented as being the original software.
 
 #ifdef USE_TINYFILEDIALOGS
 
-/* #define TINYFD_NOLIB */
-/* On windows, define TINYFD_NOLIB here
-if you don't want to include the code creating the graphic dialogs.
-Then you won't need to link against Comdlg32.lib and Ole32.lib */
-
-/* if tinydialogs.c is compiled as C++ code rather than C code,
-you may need to comment out:
-extern "C" {
-and the corresponding closing bracket near the end of this file:
-}
-*/
 #ifdef	__cplusplus
 extern "C" {
 #endif
@@ -185,7 +174,6 @@ char const * tinyfd_selectFolderDialog(
 
 /************ NOT CROSS PLATFORM SECTION STARTS HERE ************************/
 #ifdef _WIN32
-#ifndef TINYFD_NOLIB
 
 /* windows only - utf-16 version */
 int tinyfd_messageBoxW(
@@ -228,7 +216,6 @@ wchar_t const * tinyfd_selectFolderDialogW(
 	wchar_t const * const aDefaultPath); /* NULL or L"" */
 		/* returns NULL on cancel */
 
-#endif /*TINYFD_NOLIB*/
 #endif /*_WIN32 */
 
 #ifdef	__cplusplus
