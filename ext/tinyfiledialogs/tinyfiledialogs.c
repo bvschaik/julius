@@ -118,7 +118,6 @@ misrepresented as being the original software.
  #include <commdlg.h>
  #define TINYFD_NOCCSUNICODE
  #define SLASH "\\"
- int tinyfd_winUtf8 = 1 ; /* on windows string char can be 0:MBCS or 1:UTF-8 */
 #else
  #include <limits.h>
  #include <unistd.h>
@@ -271,53 +270,6 @@ static void wipefile(char const * const aFilename)
 
 #ifdef _WIN32
 
-static int replaceChr( char * const aString ,
-                                           char const aOldChr ,
-                                           char const aNewChr )
-{
-        char * p ;
-        int lRes = 0 ;
-
-        if ( ! aString )
-        {
-                return 0 ;
-        }
-
-        if ( aOldChr == aNewChr )
-        {
-                return 0 ;
-        }
-
-        p = aString ;
-        while ( (p = strchr( p , aOldChr )) )
-        {
-                * p = aNewChr ;
-                p ++ ;
-                lRes = 1 ;
-        }
-        return lRes ;
-}
-
-
-static void wipefileW(wchar_t const * const aFilename)
-{
-        int i;
-        struct _stat st;
-        FILE * lIn;
-
-        if (_wstat(aFilename, &st) == 0)
-        {
-                if ((lIn = _wfopen(aFilename, L"w")))
-                {
-                        for (i = 0; i < st.st_size; i++)
-                        {
-                                fputc('A', lIn);
-                        }
-                }
-                fclose(lIn);
-        }
-}
-
 
 #if !defined(WC_ERR_INVALID_CHARS)
 /* undefined prior to Vista, so not yet in MINGW header file */
@@ -339,15 +291,6 @@ static int sizeUtf8(wchar_t const * const aUtf16string)
 }
 
 
-static int sizeMbcs(wchar_t const * const aMbcsString)
-{
-        int lRes = WideCharToMultiByte(CP_ACP, 0,
-                aMbcsString, -1, NULL, 0, NULL, NULL);
-        /* DWORD licic = GetLastError(); */
-        return lRes;
-}
-
-
 static wchar_t * utf8to16(char const * const aUtf8string)
 {
         wchar_t * lUtf16string ;
@@ -361,22 +304,6 @@ static wchar_t * utf8to16(char const * const aUtf8string)
                 return NULL;
         }
         return lUtf16string;
-}
-
-
-static wchar_t * mbcsTo16(char const * const aMbcsString)
-{
-        wchar_t * lMbcsString;
-        int lSize = sizeUtf16(aMbcsString);
-        lMbcsString = (wchar_t *)malloc(lSize * sizeof(wchar_t));
-        lSize = MultiByteToWideChar(CP_ACP, 0,
-                aMbcsString, -1, lMbcsString, lSize);
-        if (lSize == 0)
-        {
-                free(lMbcsString);
-                return NULL;
-        }
-        return lMbcsString;
 }
 
 
@@ -396,22 +323,6 @@ static char * utf16to8(wchar_t const * const aUtf16string)
 }
 
 
-static char * utf16toMbcs(wchar_t const * const aUtf16string)
-{
-        char * lMbcsString;
-        int lSize = sizeMbcs(aUtf16string);
-        lMbcsString = (char *)malloc(lSize);
-        lSize = WideCharToMultiByte(CP_ACP, 0,
-                aUtf16string, -1, lMbcsString, lSize, NULL, NULL);
-        if (lSize == 0)
-        {
-                free(lMbcsString);
-                return NULL;
-        }
-        return lMbcsString;
-}
-
-
 static int dirExists(char const * const aDirPath)
 {
         struct _stat lInfo;
@@ -427,19 +338,10 @@ static int dirExists(char const * const aDirPath)
 		if ( (lDirLen == 2) && (aDirPath[1] == ':') )
 			return 1;
 
-        if (tinyfd_winUtf8)
-        {
-                lTmpWChar = utf8to16(aDirPath);
-                lStatRet = _wstat(lTmpWChar, &lInfo);
-                free(lTmpWChar);
-                if (lStatRet != 0)
-                        return 0;
-                else if (lInfo.st_mode & S_IFDIR)
-                        return 1;
-                else
-                        return 0;
-        }
-        else if (_stat(aDirPath, &lInfo) != 0)
+        lTmpWChar = utf8to16(aDirPath);
+        lStatRet = _wstat(lTmpWChar, &lInfo);
+        free(lTmpWChar);
+        if (lStatRet != 0)
                 return 0;
         else if (lInfo.st_mode & S_IFDIR)
                 return 1;
@@ -460,28 +362,15 @@ static int fileExists(char const * const aFilePathAndName)
                 return 0;
         }
 
-        if (tinyfd_winUtf8)
-        {
-                lTmpWChar = utf8to16(aFilePathAndName);
-                lStatRet = _wstat(lTmpWChar, &lInfo);
-                free(lTmpWChar);
-                if (lStatRet != 0)
-                        return 0;
-                else if (lInfo.st_mode & _S_IFREG)
-                        return 1;
-                else
-                        return 0;
-        }
-        else
-        {
-                lIn = fopen(aFilePathAndName, "r");
-                if (!lIn)
-                {
-                        return 0;
-                }
-                fclose(lIn);
+        lTmpWChar = utf8to16(aFilePathAndName);
+        lStatRet = _wstat(lTmpWChar, &lInfo);
+        free(lTmpWChar);
+        if (lStatRet != 0)
+                return 0;
+        else if (lInfo.st_mode & _S_IFREG)
                 return 1;
-        }
+        else
+                return 0;
 }
 
 #endif /* _WIN32 */
@@ -543,45 +432,6 @@ int tinyfd_messageBoxW(
         }
 }
 
-
-static int messageBoxWinGui8(
-        char const * const aTitle, /* NULL or "" */
-        char const * const aMessage, /* NULL or ""  may contain \n and \t */
-        char const * const aDialogType, /* "ok" "okcancel" */
-        char const * const aIconType, /* "info" "warning" "error" "question" */
-        int const aDefaultButton) /* 0 for cancel, 1 for ok */
-{
-        int lIntRetVal;
-        wchar_t * lTitle;
-        wchar_t * lMessage;
-        wchar_t * lDialogType;
-        wchar_t * lIconType;
-
-        lTitle = utf8to16(aTitle);
-        lMessage = utf8to16(aMessage);
-        lDialogType = utf8to16(aDialogType);
-        lIconType = utf8to16(aIconType);
-
-        lIntRetVal = tinyfd_messageBoxW(lTitle, lMessage,
-                                                                lDialogType, lIconType, aDefaultButton );
-
-        free(lTitle);
-        free(lMessage);
-        free(lDialogType);
-        free(lIconType);
-
-        return lIntRetVal ;
-}
-
-
-static int __stdcall BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
-{
-        if (uMsg == BFFM_INITIALIZED)
-        {
-                SendMessage(hwnd, BFFM_SETSELECTION, TRUE, pData);
-        }
-        return 0;
-}
 
 static int __stdcall BrowseCallbackProcW(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM pData)
 {
@@ -663,105 +513,6 @@ static char const * selectFolderDialogWinGui8(
 }
 
 
-static int messageBoxWinGuiA(
-    char const * const aTitle , /* NULL or "" */
-    char const * const aMessage , /* NULL or ""  may contain \n and \t */
-    char const * const aDialogType , /* "ok" "okcancel" */
-    char const * const aIconType , /* "info" "warning" "error" "question" */
-    int const aDefaultButton ) /* 0 for cancel, 1 for ok */
-{
-        int lBoxReturnValue;
-    UINT aCode ;
-
-        if ( aIconType && ! strcmp( "warning" , aIconType ) )
-        {
-                aCode = MB_ICONWARNING ;
-        }
-        else if ( aIconType && ! strcmp("error", aIconType))
-        {
-                aCode = MB_ICONERROR ;
-        }
-        else if ( aIconType && ! strcmp("question", aIconType))
-        {
-                aCode = MB_ICONQUESTION ;
-        }
-        else
-        {
-                aCode = MB_ICONINFORMATION ;
-        }
-
-        if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
-        {
-                aCode += MB_OKCANCEL ;
-                if ( ! aDefaultButton )
-                {
-                        aCode += MB_DEFBUTTON2 ;
-                }
-        }
-        else
-        {
-                aCode += MB_OK ;
-        }
-
-        aCode += MB_TOPMOST;
-
-        lBoxReturnValue = MessageBoxA(GetForegroundWindow(), aMessage, aTitle, aCode);
-
-        if ( ( ( aDialogType
-                && strcmp("okcancel", aDialogType)))
-                || (lBoxReturnValue == IDOK)
-                || (lBoxReturnValue == IDYES) )
-        {
-                return 1 ;
-        }
-        else
-        {
-                return 0 ;
-        }
-}
-
-
-static char const * selectFolderDialogWinGuiA(
-        char * const aoBuff ,
-        char const * const aTitle , /*  NULL or "" */
-        char const * const aDefaultPath ) /* NULL or "" */
-{
-        BROWSEINFOA bInfo ;
-        LPITEMIDLIST lpItem ;
-        HRESULT lHResult ;
-		char * lRetval = NULL ;
-
-        lHResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
-
-        /* we can't use aDefaultPath */
-        bInfo.hwndOwner = GetForegroundWindow();
-        bInfo.pidlRoot = NULL ;
-        bInfo.pszDisplayName = aoBuff ;
-        bInfo.lpszTitle = aTitle && strlen(aTitle) ? aTitle : NULL;
-        if (lHResult == S_OK || lHResult == S_FALSE)
-        {
-                bInfo.ulFlags = BIF_USENEWUI;
-        }
-        bInfo.lpfn = BrowseCallbackProc;
-        bInfo.lParam = (LPARAM)aDefaultPath;
-        bInfo.iImage = -1 ;
-        bInfo.ulFlags |= BIF_RETURNONLYFSDIRS;
-
-        lpItem = SHBrowseForFolderA( & bInfo ) ;
-        if ( lpItem )
-        {
-                SHGetPathFromIDListA( lpItem , aoBuff ) ;
-				lRetval = aoBuff;
-        }
-
-        if (lHResult==S_OK || lHResult==S_FALSE)
-        {
-                CoUninitialize();
-        }
-		return lRetval;
-}
-
-
 int tinyfd_messageBox(
         char const * const aTitle , /* NULL or "" */
         char const * const aMessage , /* NULL or ""  may contain \n and \t */
@@ -769,18 +520,26 @@ int tinyfd_messageBox(
         char const * const aIconType , /* "info" "warning" "error" "question" */
         int const aDefaultButton ) /* 0 for cancel, 1 for ok */
 {
-        char lChar ;
+        int lIntRetVal;
+        wchar_t * lTitle;
+        wchar_t * lMessage;
+        wchar_t * lDialogType;
+        wchar_t * lIconType;
 
-        if (tinyfd_winUtf8)
-        {
-                return messageBoxWinGui8(
-                        aTitle, aMessage, aDialogType, aIconType, aDefaultButton);
-        }
-        else
-        {
-                return messageBoxWinGuiA(
-                        aTitle, aMessage, aDialogType, aIconType, aDefaultButton);
-        }
+        lTitle = utf8to16(aTitle);
+        lMessage = utf8to16(aMessage);
+        lDialogType = utf8to16(aDialogType);
+        lIconType = utf8to16(aIconType);
+
+        lIntRetVal = tinyfd_messageBoxW(lTitle, lMessage,
+                                        lDialogType, lIconType, aDefaultButton );
+
+        free(lTitle);
+        free(lMessage);
+        free(lDialogType);
+        free(lIconType);
+
+        return lIntRetVal ;
 }
 
 
@@ -790,14 +549,7 @@ char const * tinyfd_selectFolderDialog(
 {
     static char lBuff [MAX_PATH_OR_CMD] ;
         char const * p ;
-        if (tinyfd_winUtf8)
-        {
-                p = selectFolderDialogWinGui8(lBuff, aTitle, aDefaultPath);
-        }
-        else
-        {
-                p = selectFolderDialogWinGuiA(lBuff, aTitle, aDefaultPath);
-        }
+        p = selectFolderDialogWinGui8(lBuff, aTitle, aDefaultPath);
         if ( ! p || ! strlen( p ) || ! dirExists( p ) )
         {
                 return NULL ;
