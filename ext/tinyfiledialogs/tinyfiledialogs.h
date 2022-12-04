@@ -148,16 +148,6 @@ char const * tinyfd_inputBox(
 	char const * const aDefaultInput ) ;  /* "" , if NULL it's a passwordBox */
 		/* returns NULL on cancel */
 
-char const * tinyfd_openFileDialog(
-	char const * const aTitle , /* NULL or "" */
-	char const * const aDefaultPathAndFile , /* NULL or "" */
-	int const aNumOfFilterPatterns , /* 0 */
-	char const * const * const aFilterPatterns , /* NULL | {"*.jpg","*.png"} */
-	char const * const aSingleFilterDescription , /* NULL | "image files" */
-	int const aAllowMultipleSelects ) ; /* 0 or 1 */
-		/* in case of multiple files, the separator is | */
-		/* returns NULL on cancel */
-
 char const * tinyfd_selectFolderDialog(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aDefaultPath ) ; /* NULL or "" */
@@ -181,17 +171,6 @@ wchar_t const * tinyfd_inputBoxW(
 	wchar_t const * const aTitle, /* NULL or L"" */
 	wchar_t const * const aMessage, /* NULL or L"" may NOT contain \n nor \t */
 	wchar_t const * const aDefaultInput ); /* L"" , if NULL it's a passwordBox */
-
-/* windows only - utf-16 version */
-wchar_t const * tinyfd_openFileDialogW(
-	wchar_t const * const aTitle, /* NULL or L"" */
-	wchar_t const * const aDefaultPathAndFile, /* NULL or L"" */
-	int const aNumOfFilterPatterns , /* 0 */
-	wchar_t const * const * const aFilterPatterns, /* NULL {L"*.jpg",L"*.png"} */
-	wchar_t const * const aSingleFilterDescription, /* NULL or L"image files" */
-	int const aAllowMultipleSelects ) ; /* 0 or 1 */
-		/* in case of multiple files, the separator is | */
-		/* returns NULL on cancel */
 
 /* windows only - utf-16 version */
 wchar_t const * tinyfd_selectFolderDialogW(
