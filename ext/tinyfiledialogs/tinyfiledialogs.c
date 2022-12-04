@@ -141,13 +141,6 @@ int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
                         hide errors and warnings from called dialog*/
 
-int tinyfd_forceConsole = 0 ; /* 0 (default) or 1 */
-/* for unix & windows: 0 (graphic mode) or 1 (console mode).
-0: try to use a graphic solution, if it fails then it uses console mode.
-1: forces all dialogs into console mode even when the X server is present,
-  if the package dialog (and a console is present) or dialog.exe is installed.
-  on windows it only make sense for console applications */
-
 static int gWarningDisplayed = 0 ;
 
 static char const gTitle[]="missing software! (we will try basic console input)";
@@ -1457,8 +1450,7 @@ int tinyfd_messageBox(
 {
         char lChar ;
 
-        if ((!tinyfd_forceConsole || !(GetConsoleWindow() || dialogPresent()))
-                && (!getenv("SSH_CLIENT") || getenv("DISPLAY")))
+        if (!getenv("SSH_CLIENT") || getenv("DISPLAY"))
         {
                 if (tinyfd_winUtf8)
                 {
@@ -1479,7 +1471,7 @@ int tinyfd_messageBox(
         }
         else
         {
-                if (!gWarningDisplayed && !tinyfd_forceConsole )
+                if (!gWarningDisplayed )
                 {
                         gWarningDisplayed = 1;
                         printf("\n\n%s\n", gTitle);
@@ -1560,10 +1552,7 @@ char const * tinyfd_inputBox(
         DWORD mode = 0;
         HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
 
-        if ((!tinyfd_forceConsole || !(
-                GetConsoleWindow() ||
-                dialogPresent()))
-                && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
+        if (!getenv("SSH_CLIENT") || getenv("DISPLAY"))
         {
                 lBuff[0]='\0';
                 return inputBoxWinGui(lBuff, aTitle, aMessage, aDefaultInput);
@@ -1577,7 +1566,7 @@ char const * tinyfd_inputBox(
         else
         {
       lBuff[0]='\0';
-      if (!gWarningDisplayed && !tinyfd_forceConsole)
+      if (!gWarningDisplayed)
       {
           gWarningDisplayed = 1 ;
           printf("\n\n%s\n", gTitle);
@@ -1627,8 +1616,7 @@ char const * tinyfd_selectFolderDialog(
 {
     static char lBuff [MAX_PATH_OR_CMD] ;
         char const * p ;
-        if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
-          && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
+        if (!getenv("SSH_CLIENT") || getenv("DISPLAY"))
         {
                 if (tinyfd_winUtf8)
                 {
@@ -2009,13 +1997,6 @@ static int whiptailPresent(void)
 }
 
 
-
-static int graphicMode(void)
-{
-        return !tinyfd_forceConsole;
-}
-
-
 static int xmessagePresent(void)
 {
         static int lXmessagePresent = -1 ;
@@ -2023,7 +2004,7 @@ static int xmessagePresent(void)
         {
                 lXmessagePresent = detectPresence("xmessage");/*if not tty,not on osxpath*/
         }
-        return lXmessagePresent && graphicMode( ) ;
+        return lXmessagePresent;
 }
 
 
@@ -2034,7 +2015,7 @@ static int gxmessagePresent(void)
     {
         lGxmessagePresent = detectPresence("gxmessage") ;
     }
-    return lGxmessagePresent && graphicMode( ) ;
+    return lGxmessagePresent;
 }
 
 
@@ -2045,7 +2026,7 @@ static int gmessagePresent(void)
         {
                 lGmessagePresent = detectPresence("gmessage") ;
         }
-        return lGmessagePresent && graphicMode( ) ;
+        return lGmessagePresent;
 }
 
 
@@ -2056,7 +2037,7 @@ static int notifysendPresent(void)
     {
         lNotifysendPresent = detectPresence("notify-send") ;
     }
-    return lNotifysendPresent && graphicMode( ) ;
+    return lNotifysendPresent;
 }
 
 
@@ -2080,7 +2061,7 @@ static int perlPresent(void)
                         if (tinyfd_verbose) printf("perl-dbus %d\n", lPerlPresent);
                 }
     }
-    return graphicMode() ? lPerlPresent : 0 ;
+    return lPerlPresent;
 }
 
 
@@ -2091,7 +2072,7 @@ static int xdialogPresent(void)
     {
         lXdialogPresent = detectPresence("Xdialog") ;
     }
-    return lXdialogPresent && graphicMode( ) ;
+    return lXdialogPresent;
 }
 
 
@@ -2102,7 +2083,7 @@ static int gdialogPresent(void)
     {
         lGdialoglPresent = detectPresence( "gdialog" ) ;
     }
-    return lGdialoglPresent && graphicMode( ) ;
+    return lGdialoglPresent;
 }
 
 
@@ -2114,7 +2095,7 @@ static int osascriptPresent(void)
                 gWarningDisplayed |= !!getenv("SSH_TTY");
                 lOsascriptPresent = detectPresence( "osascript" ) ;
     }
-        return lOsascriptPresent && graphicMode() && !getenv("SSH_TTY") ;
+        return lOsascriptPresent && !getenv("SSH_TTY") ;
 }
 
 
@@ -2125,7 +2106,7 @@ static int qarmaPresent(void)
         {
                 lQarmaPresent = detectPresence("qarma") ;
         }
-        return lQarmaPresent && graphicMode( ) ;
+        return lQarmaPresent;
 }
 
 
@@ -2136,7 +2117,7 @@ static int matedialogPresent(void)
         {
                 lMatedialogPresent = detectPresence("matedialog") ;
         }
-        return lMatedialogPresent && graphicMode( ) ;
+        return lMatedialogPresent;
 }
 
 
@@ -2147,7 +2128,7 @@ static int shellementaryPresent(void)
         {
                 lShellementaryPresent = 0 ; /*detectPresence("shellementary"); shellementary is not ready yet */
         }
-        return lShellementaryPresent && graphicMode( ) ;
+        return lShellementaryPresent;
 }
 
 
@@ -2158,7 +2139,7 @@ static int zenityPresent(void)
         {
                 lZenityPresent = detectPresence("zenity") ;
         }
-        return lZenityPresent && graphicMode( ) ;
+        return lZenityPresent;
 }
 
 
@@ -2199,7 +2180,7 @@ static int zenity3Present(void)
                         pclose( lIn ) ;
                 }
         }
-        return graphicMode() ? lZenity3Present : 0 ;
+        return lZenity3Present;
 }
 
 
@@ -2252,7 +2233,7 @@ static int kdialogPresent(void)
 			}
 		}
 	}
-	return graphicMode() ? lKdialogPresent : 0 ;
+	return lKdialogPresent;
 }
 
 
@@ -2369,7 +2350,7 @@ static int tkinter2Present(void)
                 }
                 if (tinyfd_verbose) printf("lTkinter2Present %d\n", lTkinter2Present) ;
         }
-        return lTkinter2Present && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
+        return lTkinter2Present && !(isDarwin() && getenv("SSH_TTY") );
 }
 
 
@@ -2390,7 +2371,7 @@ static int tkinter3Present(void)
                 }
                 if (tinyfd_verbose) printf("lTkinter3Present %d\n", lTkinter3Present) ;
         }
-        return lTkinter3Present && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
+        return lTkinter3Present && !(isDarwin() && getenv("SSH_TTY") );
 }
 
 
@@ -2423,7 +2404,7 @@ notify=dbus.Interface(notif,'org.freedesktop.Notifications');\nexcept:\n\tprint(
                 if (tinyfd_verbose) printf("lDbusPresent %d\n", lDbusPresent) ;
                 if (tinyfd_verbose) printf("gPythonName %s\n", gPythonName) ;
         }
-        return lDbusPresent && graphicMode() && !(isDarwin() && getenv("SSH_TTY") );
+        return lDbusPresent && !(isDarwin() && getenv("SSH_TTY") );
 }
 
 
@@ -3079,7 +3060,7 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
         {
                 strcpy( lDialogString , terminalName() ) ;
                 strcat( lDialogString , "'" ) ;
-                if ( !gWarningDisplayed && !tinyfd_forceConsole)
+                if ( !gWarningDisplayed )
                 {
                         gWarningDisplayed = 1 ;
                         strcat( lDialogString , "echo \"" ) ;
@@ -3202,7 +3183,7 @@ tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
         }
         else
         {
-                if ( !gWarningDisplayed && !tinyfd_forceConsole)
+                if ( !gWarningDisplayed )
                 {
                         gWarningDisplayed = 1 ;
                         printf("\n\n%s\n", gTitle);
@@ -3678,12 +3659,12 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 lWasBasicXterm = 1 ;
                 strcpy( lDialogString , terminalName() ) ;
                 strcat( lDialogString , "'" ) ;
-                if ( !gWarningDisplayed && !tinyfd_forceConsole)
+                if ( !gWarningDisplayed )
                 {
 					gWarningDisplayed = 1 ;
 					tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
                 }
-                if ( aTitle && strlen(aTitle) && !tinyfd_forceConsole)
+                if ( aTitle && strlen(aTitle) )
                 {
                         strcat( lDialogString , "echo \"" ) ;
                         strcat( lDialogString, aTitle) ;
@@ -3712,7 +3693,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
         }
         else
         {
-                if ( !gWarningDisplayed && !tinyfd_forceConsole)
+                if ( !gWarningDisplayed )
                 {
                         gWarningDisplayed = 1 ;
                         tinyfd_messageBox(gTitle,tinyfd_needs,"ok","warning",0);
