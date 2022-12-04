@@ -116,10 +116,10 @@ Or you can use the UTF-16 (wchar) prototypes at the end of ths file.*/
 int tinyfd_messageBox(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or "" may contain \n \t */
-	char const * const aDialogType , /* "ok" "okcancel" "yesno" "yesnocancel" */
+	char const * const aDialogType , /* "ok" "okcancel" */
 	char const * const aIconType , /* "info" "warning" "error" "question" */
 	int const aDefaultButton ) ;
-		/* 0 for cancel/no , 1 for ok/yes , 2 for no in yesnocancel */
+		/* 0 for cancel, 1 for ok */
 
 char const * tinyfd_inputBox(
 	char const * const aTitle , /* NULL or "" */
@@ -140,10 +140,10 @@ char const * tinyfd_selectFolderDialog(
 int tinyfd_messageBoxW(
 	wchar_t const * const aTitle , /* NULL or L"" */
 	wchar_t const * const aMessage, /* NULL or L"" may contain \n \t */
-	wchar_t const * const aDialogType, /* L"ok" L"okcancel" L"yesno" */
+	wchar_t const * const aDialogType, /* L"ok" L"okcancel" */
 	wchar_t const * const aIconType, /* L"info" L"warning" L"error" L"question" */
 	int const aDefaultButton ); /* 0 for cancel/no , 1 for ok/yes */
-		/* returns 0 for cancel/no , 1 for ok/yes */
+		/* returns 0 for cancel, 1 for ok */
 
 /* windows only - utf-16 version */
 wchar_t const * tinyfd_selectFolderDialogW(
