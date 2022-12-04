@@ -120,20 +120,6 @@ extern int tinyfd_forceConsole;  /* 0 (default) or 1 */
   if the package dialog (and a console is present) or dialog.exe is installed.
   on windows it only make sense for console applications */
 
-extern char tinyfd_response[1024];
-/* if you pass "tinyfd_query" as aTitle,
-the functions will not display the dialogs
-but will return 0 for console mode, 1 for graphic mode.
-tinyfd_response is then filled with the retain solution.
-possible values for tinyfd_response are (all lowercase)
-for graphic mode:
-  windows_wchar windows
-  applescript kdialog zenity zenity3 matedialog qarma
-  python2-tkinter python3-tkinter python-dbus perl-dbus
-  gxmessage gmessage xmessage xdialog gdialog
-for console mode:
-  dialog whiptail basicinput no_solution */
-
 int tinyfd_messageBox(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or "" may contain \n \t */
