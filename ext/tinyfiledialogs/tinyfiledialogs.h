@@ -113,13 +113,6 @@ unless your code is really prepared for UTF-8 on windows, leave this on MBSC.
 Or you can use the UTF-16 (wchar) prototypes at the end of ths file.*/
 #endif
 
-extern int tinyfd_forceConsole;  /* 0 (default) or 1 */
-/* for unix & windows: 0 (graphic mode) or 1 (console mode).
-0: try to use a graphic solution, if it fails then it uses console mode.
-1: forces all dialogs into console mode even when an X server is present,
-  if the package dialog (and a console is present) or dialog.exe is installed.
-  on windows it only make sense for console applications */
-
 int tinyfd_messageBox(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or "" may contain \n \t */
@@ -204,7 +197,6 @@ wchar_t const * tinyfd_selectFolderDialogW(
 - File and path names are tested before return, they are valid.
 - If you pass only a path instead of path + filename,
   make sure it ends with a separator.
-- tinyfd_forceConsole=1; at run time, forces dialogs into console mode.
 - On windows, console mode only make sense for console applications.
 - On windows, Console mode is not implemented for wchar_T UTF-16.
 - Mutiple selects are not allowed in console mode.
