@@ -190,66 +190,6 @@ char const tinyfd_needs[] = "\
 #pragma warning(disable:4706) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
 #endif
 
-static char * getPathWithoutFinalSlash(
-        char * const aoDestination, /* make sure it is allocated, use _MAX_PATH */
-        char const * const aSource) /* aoDestination and aSource can be the same */
-{
-        char const * lTmp ;
-        if ( aSource )
-        {
-                lTmp = strrchr(aSource, '/');
-                if (!lTmp)
-                {
-                        lTmp = strrchr(aSource, '\\');
-                }
-                if (lTmp)
-                {
-                        strncpy(aoDestination, aSource, lTmp - aSource );
-                        aoDestination[lTmp - aSource] = '\0';
-                }
-                else
-                {
-                        * aoDestination = '\0';
-                }
-        }
-        else
-        {
-                * aoDestination = '\0';
-        }
-        return aoDestination;
-}
-
-
-static char * getLastName(
-        char * const aoDestination, /* make sure it is allocated */
-        char const * const aSource)
-{
-        /* copy the last name after '/' or '\' */
-        char const * lTmp ;
-        if ( aSource )
-        {
-                lTmp = strrchr(aSource, '/');
-                if (!lTmp)
-                {
-                        lTmp = strrchr(aSource, '\\');
-                }
-                if (lTmp)
-                {
-                        strcpy(aoDestination, lTmp + 1);
-                }
-                else
-                {
-                        strcpy(aoDestination, aSource);
-                }
-        }
-        else
-        {
-                * aoDestination = '\0';
-        }
-        return aoDestination;
-}
-
-
 static void ensureFinalSlash( char * const aioString )
 {
         if ( aioString && strlen( aioString ) )
@@ -296,18 +236,6 @@ static void replaceSubStr( char const * const aSource ,
                 p = pOccurence + lOldSubLen ;
         }
         strcat( aoDestination , p ) ;
-}
-
-
-static int filenameValid( char const * const aFileNameWithoutPath )
-{
-        if ( ! aFileNameWithoutPath
-          || ! strlen(aFileNameWithoutPath)
-          || strpbrk(aFileNameWithoutPath , "\\/:*?\"<>|") )
-        {
-                return 0 ;
-        }
-        return 1 ;
 }
 
 #ifndef _WIN32
@@ -398,66 +326,6 @@ static void wipefileW(wchar_t const * const aFilename)
                 }
                 fclose(lIn);
         }
-}
-
-
-static wchar_t * getPathWithoutFinalSlashW(
-        wchar_t * const aoDestination, /* make sure it is allocated, use _MAX_PATH */
-        wchar_t const * const aSource) /* aoDestination and aSource can be the same */
-{
-        wchar_t const * lTmp;
-        if (aSource)
-        {
-                lTmp = wcsrchr(aSource, L'/');
-                if (!lTmp)
-                {
-                        lTmp = wcsrchr(aSource, L'\\');
-                }
-                if (lTmp)
-                {
-                        wcsncpy(aoDestination, aSource, lTmp - aSource);
-                        aoDestination[lTmp - aSource] = L'\0';
-                }
-                else
-                {
-                        *aoDestination = L'\0';
-                }
-        }
-        else
-        {
-                *aoDestination = L'\0';
-        }
-        return aoDestination;
-}
-
-
-static wchar_t * getLastNameW(
-        wchar_t * const aoDestination, /* make sure it is allocated */
-        wchar_t const * const aSource)
-{
-        /* copy the last name after '/' or '\' */
-        wchar_t const * lTmp;
-        if (aSource)
-        {
-                lTmp = wcsrchr(aSource, L'/');
-                if (!lTmp)
-                {
-                        lTmp = wcsrchr(aSource, L'\\');
-                }
-                if (lTmp)
-                {
-                        wcscpy(aoDestination, lTmp + 1);
-                }
-                else
-                {
-                        wcscpy(aoDestination, aSource);
-                }
-        }
-        else
-        {
-                *aoDestination = L'\0';
-        }
-        return aoDestination;
 }
 
 
@@ -627,52 +495,6 @@ static int fileExists(char const * const aFilePathAndName)
 }
 
 #endif /* _WIN32 */
-
-/* source and destination can be the same or ovelap*/
-static char const * ensureFilesExist(char * const aDestination,
-        char const * const aSourcePathsAndNames)
-{
-        char * lDestination = aDestination;
-        char const * p;
-        char const * p2;
-        size_t lLen;
-
-        if (!aSourcePathsAndNames)
-        {
-                return NULL;
-        }
-        lLen = strlen(aSourcePathsAndNames);
-        if (!lLen)
-        {
-                return NULL;
-        }
-
-        p = aSourcePathsAndNames;
-        while ((p2 = strchr(p, '|')) != NULL)
-        {
-                lLen = p2 - p;
-                memmove(lDestination, p, lLen);
-                lDestination[lLen] = '\0';
-                if (fileExists(lDestination))
-                {
-                        lDestination += lLen;
-                        *lDestination = '|';
-                        lDestination++;
-                }
-                p = p2 + 1;
-        }
-        if (fileExists(p))
-        {
-                lLen = strlen(p);
-                memmove(lDestination, p, lLen);
-                lDestination[lLen] = '\0';
-        }
-        else
-        {
-                *(lDestination - 1) = '\0';
-        }
-        return aDestination;
-}
 
 #ifdef _WIN32
 
