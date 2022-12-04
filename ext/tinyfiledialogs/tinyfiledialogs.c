@@ -124,7 +124,7 @@ misrepresented as being the original software.
  #include <commdlg.h>
  #define TINYFD_NOCCSUNICODE
  #define SLASH "\\"
- int tinyfd_winUtf8 = 0 ; /* on windows string char can be 0:MBCS or 1:UTF-8 */
+ int tinyfd_winUtf8 = 1 ; /* on windows string char can be 0:MBCS or 1:UTF-8 */
 #else
  #include <limits.h>
  #include <unistd.h>
