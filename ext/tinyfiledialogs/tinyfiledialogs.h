@@ -145,8 +145,6 @@ for graphic mode:
 for console mode:
   dialog whiptail basicinput no_solution */
 
-void tinyfd_beep(void);
-
 int tinyfd_notifyPopup(
 	char const * const aTitle, /* NULL or "" */
 	char const * const aMessage, /* NULL or "" may contain \n \t */

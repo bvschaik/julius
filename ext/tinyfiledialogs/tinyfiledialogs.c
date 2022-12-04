@@ -496,18 +496,7 @@ static int dirExists(char const * const aDirPath)
 }
 
 
-void tinyfd_beep(void)
-{
-        printf("\a");
-}
-
 #else /* ndef TINYFD_NOLIB */
-
-void tinyfd_beep(void)
-{
-        Beep(440,300);
-}
-
 
 static void wipefileW(wchar_t const * const aFilename)
 {
@@ -3527,39 +3516,6 @@ static int graphicMode(void)
 }
 
 
-static int pactlPresent(void)
-{
-        static int lPactlPresent = -1 ;
-        if ( lPactlPresent < 0 )
-        {
-                lPactlPresent = detectPresence("pactl") ;
-        }
-        return lPactlPresent ;
-}
-
-
-static int speakertestPresent(void)
-{
-        static int lSpeakertestPresent = -1 ;
-        if ( lSpeakertestPresent < 0 )
-        {
-                lSpeakertestPresent = detectPresence("speaker-test") ;
-        }
-        return lSpeakertestPresent ;
-}
-
-
-static int beepexePresent(void)
-{
-        static int lBeepexePresent = -1 ;
-        if ( lBeepexePresent < 0 )
-        {
-                lBeepexePresent = detectPresence("beep.exe") ;
-        }
-        return lBeepexePresent ;
-}
-
-
 static int xmessagePresent(void)
 {
         static int lXmessagePresent = -1 ;
@@ -3625,30 +3581,6 @@ static int perlPresent(void)
                 }
     }
     return graphicMode() ? lPerlPresent : 0 ;
-}
-
-
-static int afplayPresent(void)
-{
-        static int lAfplayPresent = -1 ;
-        char lBuff [MAX_PATH_OR_CMD] ;
-        FILE * lIn ;
-
-        if ( lAfplayPresent < 0 )
-        {
-                lAfplayPresent = detectPresence("afplay") ;
-                if ( lAfplayPresent )
-                {
-                        lIn = popen( "test -e /System/Library/Sounds/Ping.aiff || echo Ping" , "r" ) ;
-                        if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
-                        {
-                                lAfplayPresent = 2 ;
-                        }
-                        pclose( lIn ) ;
-                        if (tinyfd_verbose) printf("afplay %d\n", lAfplayPresent);
-                }
-        }
-        return graphicMode() ? lAfplayPresent : 0 ;
 }
 
 
@@ -4001,55 +3933,6 @@ static void sigHandler(int sig)
         if ( ( lIn = popen( "pactl unload-module module-sine" , "r" ) ) )
         {
                 pclose( lIn ) ;
-        }
-}
-
-void tinyfd_beep(void)
-{
-        char lDialogString [256] ;
-        FILE * lIn ;
-
-        if ( osascriptPresent() )
-        {
-                if ( afplayPresent() >= 2 )
-                {
-                        strcpy( lDialogString , "afplay /System/Library/Sounds/Ping.aiff") ;
-                }
-                else
-                {
-                        strcpy( lDialogString , "osascript -e 'tell application \"System Events\" to beep'") ;
-                }
-        }
-        else if ( pactlPresent() )
-        {
-                signal(SIGINT, sigHandler);
-                /*strcpy( lDialogString , "pactl load-module module-sine frequency=440;sleep .3;pactl unload-module module-sine" ) ;*/
-                strcpy( lDialogString , "thnum=$(pactl load-module module-sine frequency=440);sleep .3;pactl unload-module $thnum" ) ;
-        }
-        else if ( speakertestPresent() )
-        {
-                /*strcpy( lDialogString , "timeout -k .3 .3 speaker-test --frequency 440 --test sine > /dev/tty" ) ;*/
-                strcpy( lDialogString , "( speaker-test -t sine -f 440 > /dev/tty )& pid=$!;sleep .3; kill -9 $pid" ) ;
-        }
-        else if ( beepexePresent() )
-        {
-                strcpy( lDialogString , "beep.exe 440 300" ) ;
-        }
-        else
-        {
-                strcpy( lDialogString , "printf '\a' > /dev/tty" ) ;
-        }
-
-        if (tinyfd_verbose) printf( "lDialogString: %s\n" , lDialogString ) ;
-
-        if ( ( lIn = popen( lDialogString , "r" ) ) )
-        {
-                pclose( lIn ) ;
-        }
-
-        if ( pactlPresent() )
-        {
-                signal(SIGINT, SIG_DFL);
         }
 }
 
@@ -7325,8 +7208,6 @@ if (!lTheHexColor)
 
 tinyfd_messageBox("The selected hexcolor is",
         lTheHexColor, "ok", "info", 1);
-
-        tinyfd_beep();
 
         return 0;
 }
