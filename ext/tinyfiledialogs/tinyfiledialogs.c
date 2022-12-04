@@ -104,7 +104,6 @@ misrepresented as being the original software.
 #include "tinyfiledialogs.h"
 
 #ifdef USE_TINYFILEDIALOGS
-/* #define TINYFD_NOLIB */
 
 #ifdef _WIN32
  #ifdef __BORLANDC__
@@ -113,13 +112,11 @@ misrepresented as being the original software.
  #ifndef _WIN32_WINNT
   #define _WIN32_WINNT 0x0500
  #endif
- #ifndef TINYFD_NOLIB
-  #include <windows.h>
-  /*#define TINYFD_NOSELECTFOLDERWIN*/
-  #ifndef TINYFD_NOSELECTFOLDERWIN
-   #include <shlobj.h>
-  #endif /*TINYFD_NOSELECTFOLDERWIN*/
- #endif
+ #include <windows.h>
+ /*#define TINYFD_NOSELECTFOLDERWIN*/
+ #ifndef TINYFD_NOSELECTFOLDERWIN
+  #include <shlobj.h>
+ #endif /*TINYFD_NOSELECTFOLDERWIN*/
  #include <conio.h>
  #include <commdlg.h>
  #define TINYFD_NOCCSUNICODE
@@ -144,11 +141,7 @@ int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
                         hide errors and warnings from called dialog*/
 
-#if defined(TINYFD_NOLIB) && defined(_WIN32)
-int tinyfd_forceConsole = 1 ;
-#else
 int tinyfd_forceConsole = 0 ; /* 0 (default) or 1 */
-#endif
 /* for unix & windows: 0 (graphic mode) or 1 (console mode).
 0: try to use a graphic solution, if it fails then it uses console mode.
 1: forces all dialogs into console mode even when the X server is present,
@@ -169,11 +162,7 @@ for graphic mode:
 for console mode:
   dialog whiptail basicinput no_solution */
 
-#if defined(TINYFD_NOLIB) && defined(_WIN32)
-static int gWarningDisplayed = 1 ;
-#else
 static int gWarningDisplayed = 0 ;
-#endif
 
 static char const gTitle[]="missing software! (we will try basic console input)";
 
@@ -353,28 +342,6 @@ static int fileExists( char const * const aFilePathAndName )
         return 1 ;
 }
 
-#elif defined(TINYFD_NOLIB)
-
-static int fileExists( char const * const aFilePathAndName )
-{
-        FILE * lIn ;
-        if ( ! aFilePathAndName || ! strlen(aFilePathAndName) )
-        {
-                return 0 ;
-        }
-
-        if ( tinyfd_winUtf8 )
-                return 1; /* we cannot test */
-
-        lIn = fopen( aFilePathAndName , "r" ) ;
-        if ( ! lIn )
-        {
-                return 0 ;
-        }
-        fclose( lIn ) ;
-        return 1 ;
-}
-
 #endif
 
 
@@ -427,26 +394,6 @@ static int replaceChr( char * const aString ,
         return lRes ;
 }
 
-#ifdef TINYFD_NOLIB
-
-static int dirExists(char const * const aDirPath)
-{
-        struct stat lInfo;
-
-        if (!aDirPath || !strlen(aDirPath))
-                return 0;
-        if (stat(aDirPath, &lInfo) != 0)
-                return 0;
-        else if ( tinyfd_winUtf8 )
-                return 1; /* we cannot test */
-        else if (lInfo.st_mode & S_IFDIR)
-                return 1;
-        else
-                return 0;
-}
-
-
-#else /* ndef TINYFD_NOLIB */
 
 static void wipefileW(wchar_t const * const aFilename)
 {
@@ -693,7 +640,6 @@ static int fileExists(char const * const aFilePathAndName)
         }
 }
 
-#endif /* TINYFD_NOLIB */
 #endif /* _WIN32 */
 
 /* source and destination can be the same or ovelap*/
@@ -743,7 +689,6 @@ static char const * ensureFilesExist(char * const aDestination,
 }
 
 #ifdef _WIN32
-#ifndef TINYFD_NOLIB
 
 static int __stdcall EnumThreadWndProc(HWND hwnd, LPARAM lParam)
 {
@@ -1951,8 +1896,6 @@ static char const * selectFolderDialogWinGuiA(
 }
 #endif /*TINYFD_NOSELECTFOLDERWIN*/
 
-#endif /* TINYFD_NOLIB */
-
 static int dialogPresent(void)
 {
         static int lDialogPresent = -1 ;
@@ -2387,7 +2330,6 @@ int tinyfd_messageBox(
 {
         char lChar ;
 
-#ifndef TINYFD_NOLIB
         if ((!tinyfd_forceConsole || !(GetConsoleWindow() || dialogPresent()))
                 && (!getenv("SSH_CLIENT") || getenv("DISPLAY")))
         {
@@ -2404,7 +2346,6 @@ int tinyfd_messageBox(
                 }
         }
         else
-#endif /* TINYFD_NOLIB */
         if ( dialogPresent() )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return 0;}
@@ -2492,7 +2433,6 @@ char const * tinyfd_inputBox(
         static char lBuff [MAX_PATH_OR_CMD] ;
         char * lEOF;
 
-#ifndef TINYFD_NOLIB
         DWORD mode = 0;
         HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
 
@@ -2506,7 +2446,6 @@ char const * tinyfd_inputBox(
                 return inputBoxWinGui(lBuff, aTitle, aMessage, aDefaultInput);
         }
         else
-#endif /* TINYFD_NOLIB */
         if ( dialogPresent() )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
@@ -2532,25 +2471,21 @@ char const * tinyfd_inputBox(
           printf("%s\n",aMessage);
       }
       printf("(ctrl-Z + enter to cancel): ");
-#ifndef TINYFD_NOLIB
       if ( ! aDefaultInput )
       {
           GetConsoleMode(hStdin,&mode);
           SetConsoleMode(hStdin,mode & (~ENABLE_ECHO_INPUT) );
       }
-#endif /* TINYFD_NOLIB */
       lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
       if ( ! lEOF )
       {
           return NULL;
       }
-#ifndef TINYFD_NOLIB
       if ( ! aDefaultInput )
       {
           SetConsoleMode(hStdin,mode);
           printf("\n");
       }
-#endif /* TINYFD_NOLIB */
       printf("\n");
       if ( strchr(lBuff,27) )
       {
@@ -2576,7 +2511,6 @@ char const * tinyfd_saveFileDialog(
         char lString[MAX_PATH_OR_CMD] ;
         char const * p ;
         lBuff[0]='\0';
-#ifndef TINYFD_NOLIB
         if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
           && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
         {
@@ -2593,7 +2527,6 @@ char const * tinyfd_saveFileDialog(
                 }
         }
         else
-#endif /* TINYFD_NOLIB */
         if ( dialogPresent() )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
@@ -2634,7 +2567,6 @@ char const * tinyfd_openFileDialog(
 {
         static char lBuff[MAX_MULTIPLE_FILES*MAX_PATH_OR_CMD];
         char const * p ;
-#ifndef TINYFD_NOLIB
         if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
           && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
         {
@@ -2653,7 +2585,6 @@ char const * tinyfd_openFileDialog(
                 }
         }
         else
-#endif /* TINYFD_NOLIB */
         if ( dialogPresent() )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
@@ -2689,7 +2620,6 @@ char const * tinyfd_selectFolderDialog(
 {
     static char lBuff [MAX_PATH_OR_CMD] ;
         char const * p ;
-#ifndef TINYFD_NOLIB
         if ( ( !tinyfd_forceConsole || !( GetConsoleWindow() || dialogPresent() ) )
           && ( !getenv("SSH_CLIENT") || getenv("DISPLAY") ) )
         {
@@ -2706,7 +2636,6 @@ char const * tinyfd_selectFolderDialog(
                 }
         }
         else
-#endif /* TINYFD_NOLIB */
         if ( dialogPresent() )
         {
                 if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"dialog");return (char const *)0;}
