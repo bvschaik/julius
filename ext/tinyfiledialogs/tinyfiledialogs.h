@@ -145,12 +145,6 @@ for graphic mode:
 for console mode:
   dialog whiptail basicinput no_solution */
 
-int tinyfd_notifyPopup(
-	char const * const aTitle, /* NULL or "" */
-	char const * const aMessage, /* NULL or "" may contain \n \t */
-	char const * const aIconType); /* "info" "warning" "error" */
-		/* return has only meaning for tinyfd_query */
-
 int tinyfd_messageBox(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or "" may contain \n \t */
@@ -203,12 +197,6 @@ char const * tinyfd_colorChooser(
 /************ NOT CROSS PLATFORM SECTION STARTS HERE ************************/
 #ifdef _WIN32
 #ifndef TINYFD_NOLIB
-
-/* windows only - utf-16 version */
-int tinyfd_notifyPopupW(
-	wchar_t const * const aTitle, /* NULL or L"" */
-	wchar_t const * const aMessage, /* NULL or L"" may contain \n \t */
-	wchar_t const * const aIconType); /* L"info" L"warning" L"error" */
 
 /* windows only - utf-16 version */
 int tinyfd_messageBoxW(
