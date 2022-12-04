@@ -229,17 +229,6 @@ wchar_t const * tinyfd_selectFolderDialogW(
 		/* returns NULL on cancel */
 
 #endif /*TINYFD_NOLIB*/
-#else /*_WIN32*/
-
-/* unix zenity only */
-char const * tinyfd_arrayDialog(
-	char const * const aTitle , /* NULL or "" */
-	int const aNumOfColumns , /* 2 */
-	char const * const * const aColumns, /* {"Column 1","Column 2"} */
-	int const aNumOfRows, /* 2 */
-	char const * const * const aCells);
-		/* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
-
 #endif /*_WIN32 */
 
 #ifdef	__cplusplus
