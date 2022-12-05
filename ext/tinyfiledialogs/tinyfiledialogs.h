@@ -105,14 +105,6 @@ extern int tinyfd_verbose; /* 0 (default) or 1 : on unix, prints the command lin
 extern int tinyfd_silent; /* 1 (default) or 0 : on unix,
                           hide errors and warnings from called dialog*/
 
-#ifdef _WIN32
-/* for UTF-16 use the functions at the end of this files */
-extern int tinyfd_winUtf8; /* 0 (default MBCS) or 1 (UTF-8)*/
-/* on windows string char can be 0:MBCS or 1:UTF-8
-unless your code is really prepared for UTF-8 on windows, leave this on MBSC.
-Or you can use the UTF-16 (wchar) prototypes at the end of ths file.*/
-#endif
-
 int tinyfd_messageBox(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aMessage , /* NULL or "" may contain \n \t */
@@ -131,27 +123,6 @@ char const * tinyfd_selectFolderDialog(
 	char const * const aTitle , /* NULL or "" */
 	char const * const aDefaultPath ) ; /* NULL or "" */
 		/* returns NULL on cancel */
-
-
-/************ NOT CROSS PLATFORM SECTION STARTS HERE ************************/
-#ifdef _WIN32
-
-/* windows only - utf-16 version */
-int tinyfd_messageBoxW(
-	wchar_t const * const aTitle , /* NULL or L"" */
-	wchar_t const * const aMessage, /* NULL or L"" may contain \n \t */
-	wchar_t const * const aDialogType, /* L"ok" L"okcancel" */
-	wchar_t const * const aIconType, /* L"info" L"warning" L"error" L"question" */
-	int const aDefaultButton ); /* 0 for cancel/no , 1 for ok/yes */
-		/* returns 0 for cancel, 1 for ok */
-
-/* windows only - utf-16 version */
-wchar_t const * tinyfd_selectFolderDialogW(
-	wchar_t const * const aTitle, /* NULL or L"" */
-	wchar_t const * const aDefaultPath); /* NULL or L"" */
-		/* returns NULL on cancel */
-
-#endif /*_WIN32 */
 
 #ifdef	__cplusplus
 }
