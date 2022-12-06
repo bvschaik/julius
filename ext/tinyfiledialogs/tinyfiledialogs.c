@@ -1,72 +1,11 @@
 /*
-  Note: This source code has been changed from the original to be better usable with julius.
-  ----  If you are interested in this product, please download its original version from the links below.
+Note: This file is a heavily stripped-down version of Tinyfiledialogs, customized for Julius.
 
-  _________
- /         \ tinyfiledialogs.c v3.3.8 [Nov 4, 2018] zlib licence
- |tiny file| Unique code file created [November 9, 2014]
- | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
- \____  ___/ http://tinyfiledialogs.sourceforge.net
-      \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
-         ____________________________________________
-        |                                            |
-        |   email: tinyfiledialogs at ysengrin.com   |
-        |____________________________________________|
-         ___________________________________________________________________
-        |                                                                   |
-        | the windows only wchar_t UTF-16 prototypes are in the header file |
-        |___________________________________________________________________|
+If you are interested in Tinyfiledialogs, please download its original version from the links below.
 
-Please upvote my stackoverflow answer https://stackoverflow.com/a/47651444
-
-tiny file dialogs (cross-platform C C++)
-InputBox PasswordBox MessageBox ColorPicker
-OpenFileDialog SaveFileDialog SelectFolderDialog
-Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-SSH supported via automatic switch to console mode or X11 forwarding
-
-one C file + a header (add them to your C or C++ project) with 8 functions:
-- beep
-- notify popup (tray)
-- message & question
-- input & password
-- save file
-- open file(s)
-- select folder
-- color picker
-
-Complements OpenGL Vulkan GLFW GLUT GLUI VTK SFML TGUI
-SDL Ogre Unity3d ION OpenCV CEGUI MathGL GLM CPW GLOW
-Open3D IMGUI MyGUI GLT NGL STB & GUI less programs
-
-NO INIT
-NO MAIN LOOP
-NO LINKING
-NO INCLUDE
-
-The dialogs can be forced into console mode
-
-Windows (XP to 10) ASCII MBCS UTF-8 UTF-16
-- native code & vbs create the graphic dialogs
-- enhanced console mode can use dialog.exe from
-http://andrear.altervista.org/home/cdialog.php
-- basic console input
-
-Unix (command line calls) ASCII UTF-8
-- applescript, kdialog, zenity
-- python (2 or 3) + tkinter + python-dbus (optional)
-- dialog (opens a console if needed)
-- basic console input
-The same executable can run across desktops & distributions
-
-C89 & C++98 compliant: tested with C & C++ compilers
-VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC ZapCC
-on Windows Mac Linux Bsd Solaris Minix Raspbian
-using Gnome Kde Enlightenment Mate Cinnamon Budgie Unity Lxde Lxqt Xfce
-WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
-
-Bindings for LUA and C# dll, Haskell
-Included in LWJGL(java), Rust, Allegrobasic
+Tinyfiledialogs:
+Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
+http://tinyfiledialogs.sourceforge.net
 
 Thanks for contributions, bug corrections & thorough testing to:
 - Don Heyse http://ldglite.sf.net for bug corrections & thorough testing!
@@ -116,8 +55,6 @@ misrepresented as being the original software.
  #include <shlobj.h>
  #include <conio.h>
  #include <commdlg.h>
- #define TINYFD_NOCCSUNICODE
- #define SLASH "\\"
 #else
  #include <limits.h>
  #include <unistd.h>
@@ -125,13 +62,10 @@ misrepresented as being the original software.
  #include <termios.h>
  #include <sys/utsname.h>
  #include <signal.h> /* on old systems try <sys/signal.h> instead */
- #define SLASH "/"
 #endif /* _WIN32 */
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
-
-char const tinyfd_version [8] = "3.3.8";
 
 int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
@@ -181,19 +115,6 @@ char const tinyfd_needs[] = "\
 
 #define RETURN_CACHED_INT(setter) static int result = -1; if (result == -1) { result = setter; } return result;
 
-static void ensureFinalSlash( char * const aioString )
-{
-        if ( aioString && strlen( aioString ) )
-        {
-                char * lastcar = aioString + strlen( aioString ) - 1 ;
-                if ( strncmp( lastcar , SLASH , 1 ) )
-                {
-                        strcat( lastcar , SLASH ) ;
-                }
-        }
-}
-
-
 static void replaceSubStr( char const * const aSource ,
                                                    char const * const aOldSubStr ,
                                                    char const * const aNewSubStr ,
@@ -228,47 +149,6 @@ static void replaceSubStr( char const * const aSource ,
         }
         strcat( aoDestination , p ) ;
 }
-
-#ifndef _WIN32
-
-static int fileExists( char const * const aFilePathAndName )
-{
-        FILE * lIn ;
-        if ( ! aFilePathAndName || ! strlen(aFilePathAndName) )
-        {
-                return 0 ;
-        }
-        lIn = fopen( aFilePathAndName , "r" ) ;
-        if ( ! lIn )
-        {
-                return 0 ;
-        }
-        fclose( lIn ) ;
-        return 1 ;
-}
-
-#endif
-
-
-static void wipefile(char const * const aFilename)
-{
-        int i;
-        struct stat st;
-        FILE * lIn;
-
-        if (stat(aFilename, &st) == 0)
-        {
-                if ((lIn = fopen(aFilename, "w")))
-                {
-                        for (i = 0; i < st.st_size; i++)
-                        {
-                                fputc('A', lIn);
-                        }
-                }
-                fclose(lIn);
-        }
-}
-
 
 #ifdef _WIN32
 
@@ -1933,16 +1813,8 @@ static char const * selectFolderUsingInputBox(char const * const aTitle) /* NULL
         lIn = popen( lDialogString , "r" );
         if ( ! lIn  )
         {
-                if ( fileExists("/tmp/tinyfd.txt") )
-                {
-                        wipefile("/tmp/tinyfd.txt");
-                        remove("/tmp/tinyfd.txt");
-                }
-                if ( fileExists("/tmp/tinyfd0.txt") )
-                {
-                        wipefile("/tmp/tinyfd0.txt");
-                        remove("/tmp/tinyfd0.txt");
-                }
+                remove("/tmp/tinyfd.txt");
+                remove("/tmp/tinyfd0.txt");
                 free(lDialogString);
                 return NULL ;
         }
@@ -1951,16 +1823,8 @@ static char const * selectFolderUsingInputBox(char const * const aTitle) /* NULL
 
         pclose( lIn ) ;
 
-        if ( fileExists("/tmp/tinyfd.txt") )
-        {
-                wipefile("/tmp/tinyfd.txt");
-                remove("/tmp/tinyfd.txt");
-        }
-        if ( fileExists("/tmp/tinyfd0.txt") )
-        {
-                wipefile("/tmp/tinyfd0.txt");
-                remove("/tmp/tinyfd0.txt");
-        }
+        remove("/tmp/tinyfd.txt");
+        remove("/tmp/tinyfd0.txt");
 
         /* printf( "len Buff: %lu\n" , strlen(lBuff) ) ; */
         /* printf( "lBuff0: %s\n" , lBuff ) ; */
