@@ -113,12 +113,6 @@ int tinyfd_messageBox(
 	int const aDefaultButton ) ;
 		/* 0 for cancel, 1 for ok */
 
-char const * tinyfd_inputBox(
-	char const * const aTitle , /* NULL or "" */
-	char const * const aMessage , /* NULL or "" may NOT contain \n \t on windows */
-	char const * const aDefaultInput ) ;  /* "" , if NULL it's a passwordBox */
-		/* returns NULL on cancel */
-
 char const * tinyfd_selectFolderDialog(
 	char const * const aTitle); /* NULL or "" */
 		/* returns NULL on cancel */
