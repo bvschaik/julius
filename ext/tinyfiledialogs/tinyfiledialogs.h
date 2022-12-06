@@ -120,8 +120,7 @@ char const * tinyfd_inputBox(
 		/* returns NULL on cancel */
 
 char const * tinyfd_selectFolderDialog(
-	char const * const aTitle , /* NULL or "" */
-	char const * const aDefaultPath ) ; /* NULL or "" */
+	char const * const aTitle); /* NULL or "" */
 		/* returns NULL on cancel */
 
 #ifdef	__cplusplus
