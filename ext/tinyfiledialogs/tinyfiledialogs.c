@@ -71,10 +71,6 @@ int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
 int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
                         hide errors and warnings from called dialog*/
 
-static int gWarningDisplayed = 0 ;
-
-static char const gTitle[]="missing software! (we will try basic console input)";
-
 #ifdef _WIN32
 char const tinyfd_needs[] = "\
  ___________\n\
@@ -114,41 +110,6 @@ char const tinyfd_needs[] = "\
 #endif
 
 #define RETURN_CACHED_INT(setter) static int result = -1; if (result == -1) { result = setter; } return result;
-
-static void replaceSubStr( char const * const aSource ,
-                                                   char const * const aOldSubStr ,
-                                                   char const * const aNewSubStr ,
-                                                   char * const aoDestination )
-{
-        char const * pOccurence ;
-        char const * p ;
-        char const * lNewSubStr = "" ;
-        size_t lOldSubLen = strlen( aOldSubStr ) ;
-
-        if ( ! aSource )
-        {
-                * aoDestination = '\0' ;
-                return ;
-        }
-        if ( ! aOldSubStr )
-        {
-                strcpy( aoDestination , aSource ) ;
-                return ;
-        }
-        if ( aNewSubStr )
-        {
-                lNewSubStr = aNewSubStr ;
-        }
-        p = aSource ;
-        * aoDestination = '\0' ;
-        while ( ( pOccurence = strstr( p , aOldSubStr ) ) != NULL )
-        {
-                strncat( aoDestination , p , pOccurence - p ) ;
-                strcat( aoDestination , lNewSubStr ) ;
-                p = pOccurence + lOldSubLen ;
-        }
-        strcat( aoDestination , p ) ;
-}
 
 #ifdef _WIN32
 
@@ -205,7 +166,6 @@ int tinyfd_messageBox(
     char const * const aIconType, /* "info" "warning" "error" "question" */
     int const aDefaultButton) /* 0 for cancel, 1 for ok */
 {
-    int lIntRetVal;
     wchar_t * wTitle = utf8to16(aTitle);
     wchar_t * wMessage = utf8to16(aMessage);
 
@@ -268,7 +228,7 @@ char const * tinyfd_selectFolderDialog(char const * const aTitle) /* NULL or "" 
         bInfo.ulFlags = BIF_USENEWUI;
     }
     bInfo.lpfn = BrowseCallbackProcW;
-    bInfo.lParam = NULL;
+    bInfo.lParam = 0;
     bInfo.iImage = -1;
     bInfo.ulFlags |= BIF_RETURNONLYFSDIRS;
 
@@ -296,9 +256,49 @@ char const * tinyfd_selectFolderDialog(char const * const aTitle) /* NULL or "" 
 
 #else /* unix */
 
+static int gWarningDisplayed = 0 ;
+
+static char const gTitle[]="missing software! (we will try basic console input)";
+
 static char gPython2Name[16];
 static char gPython3Name[16];
 static char gPythonName[16];
+
+static void replaceSubStr( char const * const aSource ,
+                                                   char const * const aOldSubStr ,
+                                                   char const * const aNewSubStr ,
+                                                   char * const aoDestination )
+{
+        char const * pOccurence ;
+        char const * p ;
+        char const * lNewSubStr = "" ;
+        size_t lOldSubLen = strlen( aOldSubStr ) ;
+
+        if ( ! aSource )
+        {
+                * aoDestination = '\0' ;
+                return ;
+        }
+        if ( ! aOldSubStr )
+        {
+                strcpy( aoDestination , aSource ) ;
+                return ;
+        }
+        if ( aNewSubStr )
+        {
+                lNewSubStr = aNewSubStr ;
+        }
+        p = aSource ;
+        * aoDestination = '\0' ;
+        while ( ( pOccurence = strstr( p , aOldSubStr ) ) != NULL )
+        {
+                strncat( aoDestination , p , pOccurence - p ) ;
+                strcat( aoDestination , lNewSubStr ) ;
+                p = pOccurence + lOldSubLen ;
+        }
+        strcat( aoDestination , p ) ;
+}
+
 
 static int isDarwin(void)
 {
