@@ -368,15 +368,12 @@ static int __stdcall BrowseCallbackProcW(HWND hwnd, UINT uMsg, LPARAM lp, LPARAM
     return 0;
 }
 
-char const * tinyfd_selectFolderDialog(
-    char const * const aTitle, /* NULL or "" */
-    char const * const aDefaultPath) /* NULL or "" */
+char const * tinyfd_selectFolderDialog(char const * const aTitle) /* NULL or "" */
 {
     static char resultBuff[MAX_PATH_OR_CMD];
     static wchar_t wBuff[MAX_PATH_OR_CMD];
 
     wchar_t *wTitle = utf8to16(aTitle);
-    wchar_t *wDefaultPath = utf8to16(aDefaultPath);
 
     BROWSEINFOW bInfo;
     HRESULT hResult = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
@@ -389,7 +386,7 @@ char const * tinyfd_selectFolderDialog(
         bInfo.ulFlags = BIF_USENEWUI;
     }
     bInfo.lpfn = BrowseCallbackProcW;
-    bInfo.lParam = (LPARAM)wDefaultPath;
+    bInfo.lParam = NULL;
     bInfo.iImage = -1;
     bInfo.ulFlags |= BIF_RETURNONLYFSDIRS;
 
@@ -403,7 +400,6 @@ char const * tinyfd_selectFolderDialog(
     }
 
     free(wTitle);
-    free(wDefaultPath);
 
     if (!dirExists(wBuff)) {
         return NULL;
@@ -2342,9 +2338,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
 }
 
 
-char const * tinyfd_selectFolderDialog(
-        char const * const aTitle , /* "" */
-        char const * const aDefaultPath ) /* "" */
+char const * tinyfd_selectFolderDialog(char const * const aTitle)
 {
         static char lBuff [MAX_PATH_OR_CMD] ;
         char lDialogString [MAX_PATH_OR_CMD] ;
@@ -2360,16 +2354,10 @@ char const * tinyfd_selectFolderDialog(
                 if ( ! osx9orBetter() ) strcat( lDialogString , " -e 'tell application \"System Events\"' -e 'Activate'");
                 strcat( lDialogString , " -e 'try' -e 'POSIX path of ( choose folder ");
                 if ( aTitle && strlen(aTitle) )
-                {
+                { 
                 strcat(lDialogString, "with prompt \"") ;
                 strcat(lDialogString, aTitle) ;
                 strcat(lDialogString, "\" ") ;
-                }
-                if ( aDefaultPath && strlen(aDefaultPath) )
-                {
-                        strcat(lDialogString, "default location \"") ;
-                        strcat(lDialogString, aDefaultPath ) ;
-                        strcat(lDialogString , "\" " ) ;
                 }
                 strcat( lDialogString , ")' " ) ;
                 strcat(lDialogString, "-e 'on error number -128' " ) ;
@@ -2381,20 +2369,7 @@ char const * tinyfd_selectFolderDialog(
                 strcpy( lDialogString , "kdialog" ) ;
                 strcat( lDialogString , " --getexistingdirectory " ) ;
 
-                if ( aDefaultPath && strlen(aDefaultPath) )
-                {
-                        if ( aDefaultPath[0] != '/' )
-                        {
-                                strcat(lDialogString, "$PWD/") ;
-                        }
-                        strcat(lDialogString, "\"") ;
-                        strcat(lDialogString, aDefaultPath ) ;
-                        strcat(lDialogString , "\"" ) ;
-                }
-                else
-                {
-                        strcat(lDialogString, "$PWD/") ;
-                }
+                strcat(lDialogString, "$PWD/") ;
 
                 if ( aTitle && strlen(aTitle) )
                 {
@@ -2429,12 +2404,6 @@ char const * tinyfd_selectFolderDialog(
                         strcat(lDialogString, aTitle) ;
                         strcat(lDialogString, "\"") ;
                 }
-                if ( aDefaultPath && strlen(aDefaultPath) )
-                {
-                        strcat(lDialogString, " --filename=\"") ;
-                        strcat(lDialogString, aDefaultPath) ;
-                        strcat(lDialogString, "\"") ;
-                }
                 if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
         }
         else if ( !xdialogPresent() && tkinter2Present( ) )
@@ -2461,12 +2430,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
                         strcat(lDialogString, aTitle) ;
                         strcat(lDialogString, "',") ;
             }
-        if ( aDefaultPath && strlen(aDefaultPath) )
-        {
-                                strcat(lDialogString, "initialdir='") ;
-                                strcat(lDialogString, aDefaultPath ) ;
-                                strcat(lDialogString , "'" ) ;
-                }
                 strcat( lDialogString , ")\"" ) ;
         }
         else if ( !xdialogPresent() && tkinter3Present( ) )
@@ -2480,12 +2443,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
                         strcat(lDialogString, "title='") ;
                         strcat(lDialogString, aTitle) ;
                         strcat(lDialogString, "',") ;
-                }
-                if ( aDefaultPath && strlen(aDefaultPath) )
-                {
-                        strcat(lDialogString, "initialdir='") ;
-                        strcat(lDialogString, aDefaultPath ) ;
-                        strcat(lDialogString , "'" ) ;
                 }
                 strcat( lDialogString , ") )\"" ) ;
         }
@@ -2525,12 +2482,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 }
 
                 strcat( lDialogString , "--dselect \"" ) ;
-                if ( aDefaultPath && strlen(aDefaultPath) )
-                {
-                        strcat(lDialogString, aDefaultPath) ;
-                        ensureFinalSlash(lDialogString);
-                }
-                else if ( ! isTerminalRunning( ) && !lWasGraphicDialog )
+                if ( ! isTerminalRunning( ) && !lWasGraphicDialog )
                 {
                         strcat(lDialogString, getenv("HOME")) ;
                         strcat(lDialogString, "/");
