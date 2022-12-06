@@ -1713,10 +1713,7 @@ else :\n\tprint(1)\n\"" ) ;
 
 
 /* returns NULL on cancel */
-char const * tinyfd_inputBox(
-        char const * const aTitle , /* NULL or "" */
-        char const * const aMessage , /* NULL or "" may NOT contain \n nor \t */
-        char const * const aDefaultInput ) /* "" , if NULL it's a passwordBox */
+static char const * selectFolderUsingInputBox(char const * const aTitle) /* NULL or "" */
 {
         static char lBuff[MAX_PATH_OR_CMD];
         char * lDialogString = NULL;
@@ -1731,121 +1728,13 @@ char const * tinyfd_inputBox(
         struct termios newt ;
         char * lEOF;
         size_t lTitleLen ;
-        size_t lMessageLen ;
 
         lBuff[0]='\0';
 
         lTitleLen =  aTitle ? strlen(aTitle) : 0 ;
-        lMessageLen =  aMessage ? strlen(aMessage) : 0 ;
-        lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen + lMessageLen );
+        lDialogString = (char *) malloc( MAX_PATH_OR_CMD + lTitleLen );
 
-        if ( osascriptPresent( ) )
-        {
-                strcpy( lDialogString , "osascript ");
-                strcat( lDialogString , " -e 'try' -e 'display dialog \"") ;
-                if ( aMessage && strlen(aMessage) )
-                {
-                        strcat(lDialogString, aMessage) ;
-                }
-                strcat(lDialogString, "\" ") ;
-                strcat(lDialogString, "default answer \"") ;
-                if ( aDefaultInput && strlen(aDefaultInput) )
-                {
-                        strcat(lDialogString, aDefaultInput) ;
-                }
-                strcat(lDialogString, "\" ") ;
-                if ( ! aDefaultInput )
-                {
-                        strcat(lDialogString, "hidden answer true ") ;
-                }
-                if ( aTitle && strlen(aTitle) )
-                {
-                        strcat(lDialogString, "with title \"") ;
-                        strcat(lDialogString, aTitle) ;
-                        strcat(lDialogString, "\" ") ;
-                }
-                strcat(lDialogString, "with icon note' ") ;
-                strcat(lDialogString, "-e '\"1\" & text returned of result' " );
-                strcat(lDialogString, "-e 'on error number -128' " ) ;
-                strcat(lDialogString, "-e '0' " );
-                strcat(lDialogString, "-e 'end try'") ;
-        }
-        else if ( kdialogPresent() )
-        {
-                strcpy( lDialogString , "szAnswer=$(kdialog" ) ;
-
-                if ( ! aDefaultInput )
-                {
-                        strcat(lDialogString, " --password ") ;
-                }
-                else
-                {
-                        strcat(lDialogString, " --inputbox ") ;
-
-                }
-                strcat(lDialogString, "\"") ;
-                if ( aMessage && strlen(aMessage) )
-                {
-                        strcat(lDialogString, aMessage ) ;
-                }
-                strcat(lDialogString , "\" \"" ) ;
-                if ( aDefaultInput && strlen(aDefaultInput) )
-                {
-                        strcat(lDialogString, aDefaultInput ) ;
-                }
-                strcat(lDialogString , "\"" ) ;
-                if ( aTitle && strlen(aTitle) )
-                {
-                        strcat(lDialogString, " --title \"") ;
-                        strcat(lDialogString, aTitle) ;
-                        strcat(lDialogString, "\"") ;
-                }
-                strcat( lDialogString ,
-                        ");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
-        }
-        else if ( zenityPresent() || matedialogPresent() || qarmaPresent() )
-        {
-                if ( zenityPresent() )
-                {
-                        strcpy( lDialogString , "szAnswer=$(zenity" ) ;
-                }
-                else if ( matedialogPresent() )
-                {
-                        strcpy( lDialogString ,  "szAnswer=$(matedialog" ) ;
-                }
-                else
-                {
-                        strcpy( lDialogString ,  "szAnswer=$(qarma" ) ;
-                }
-                strcat( lDialogString ," --entry" ) ;
-
-                if ( aTitle && strlen(aTitle) )
-                {
-                        strcat(lDialogString, " --title=\"") ;
-                        strcat(lDialogString, aTitle) ;
-                        strcat(lDialogString, "\"") ;
-                }
-                if ( aMessage && strlen(aMessage) )
-                {
-                        strcat(lDialogString, " --text=\"") ;
-                        strcat(lDialogString, aMessage) ;
-                        strcat(lDialogString, "\"") ;
-                }
-                if ( aDefaultInput && strlen(aDefaultInput) )
-                {
-                        strcat(lDialogString, " --entry-text=\"") ;
-                        strcat(lDialogString, aDefaultInput) ;
-                        strcat(lDialogString, "\"") ;
-                }
-                else
-                {
-                        strcat(lDialogString, " --hide-text") ;
-                }
-                if (tinyfd_silent) strcat( lDialogString , " 2>/dev/null ");
-                strcat( lDialogString ,
-                                ");if [ $? = 0 ];then echo 1$szAnswer;else echo 0$szAnswer;fi");
-        }
-        else if ( gxmessagePresent() || gmessagePresent() )
+        if ( gxmessagePresent() || gmessagePresent() )
         {
                 if ( gxmessagePresent() ) {
                         strcpy( lDialogString , "szAnswer=$(gxmessage -buttons Ok:1,Cancel:0 -center \"");
@@ -1855,10 +1744,6 @@ char const * tinyfd_inputBox(
                         strcpy( lDialogString , "szAnswer=$(gmessage -buttons Ok:1,Cancel:0 -center \"");
                 }
 
-                if ( aMessage && strlen(aMessage) )
-                {
-                        strcat( lDialogString , aMessage ) ;
-                }
                 strcat(lDialogString, "\"" ) ;
                 if ( aTitle && strlen(aTitle) )
                 {
@@ -1867,97 +1752,8 @@ char const * tinyfd_inputBox(
                         strcat(lDialogString, "\" " ) ;
                 }
                 strcat(lDialogString, " -entrytext \"" ) ;
-                if ( aDefaultInput && strlen(aDefaultInput) )
-                {
-                        strcat( lDialogString , aDefaultInput ) ;
-                }
                 strcat(lDialogString, "\"" ) ;
                 strcat( lDialogString , ");echo $?$szAnswer");
-        }
-        else if ( !gdialogPresent() && !xdialogPresent() && tkinter2Present( ) )
-        {
-                strcpy( lDialogString , gPython2Name ) ;
-                if ( ! isTerminalRunning( ) && isDarwin( ) )
-                {
-                strcat( lDialogString , " -i" ) ;  /* for osx without console */
-                }
-
-                strcat( lDialogString ,
-" -S -c \"import Tkinter,tkSimpleDialog;root=Tkinter.Tk();root.withdraw();");
-
-                if ( isDarwin( ) )
-                {
-                        strcat( lDialogString ,
-"import os;os.system('''/usr/bin/osascript -e 'tell app \\\"Finder\\\" to set \
-frontmost of process \\\"Python\\\" to true' ''');");
-                }
-
-                strcat( lDialogString ,"res=tkSimpleDialog.askstring(" ) ;
-                if ( aTitle && strlen(aTitle) )
-                {
-                        strcat(lDialogString, "title='") ;
-                        strcat(lDialogString, aTitle) ;
-                        strcat(lDialogString, "',") ;
-                }
-                if ( aMessage && strlen(aMessage) )
-                {
-
-                        strcat(lDialogString, "prompt='") ;
-                        lpDialogString = lDialogString + strlen(lDialogString);
-                        replaceSubStr( aMessage , "\n" , "\\n" , lpDialogString ) ;
-                        strcat(lDialogString, "',") ;
-                }
-                if ( aDefaultInput )
-                {
-                        if ( strlen(aDefaultInput) )
-                        {
-                                strcat(lDialogString, "initialvalue='") ;
-                                strcat(lDialogString, aDefaultInput) ;
-                                strcat(lDialogString, "',") ;
-                        }
-                }
-                else
-                {
-                        strcat(lDialogString, "show='*'") ;
-                }
-                strcat(lDialogString, ");\nif res is None :\n\tprint 0");
-                strcat(lDialogString, "\nelse :\n\tprint '1'+res\n\"" ) ;
-        }
-        else if ( !gdialogPresent() && !xdialogPresent() && tkinter3Present( ) )
-        {
-                strcpy( lDialogString , gPython3Name ) ;
-                strcat( lDialogString ,
-                        " -S -c \"import tkinter; from tkinter import simpledialog;root=tkinter.Tk();root.withdraw();");
-                strcat( lDialogString ,"res=simpledialog.askstring(" ) ;
-                if ( aTitle && strlen(aTitle) )
-                {
-                        strcat(lDialogString, "title='") ;
-                        strcat(lDialogString, aTitle) ;
-                        strcat(lDialogString, "',") ;
-                }
-                if ( aMessage && strlen(aMessage) )
-                {
-
-                        strcat(lDialogString, "prompt='") ;
-                        lpDialogString = lDialogString + strlen(lDialogString);
-                        replaceSubStr( aMessage , "\n" , "\\n" , lpDialogString ) ;
-                        strcat(lDialogString, "',") ;
-                }
-                if ( aDefaultInput )
-                {
-                        if ( strlen(aDefaultInput) )
-                        {
-                                strcat(lDialogString, "initialvalue='") ;
-                                strcat(lDialogString, aDefaultInput) ;
-                                strcat(lDialogString, "',") ;
-                        }
-                }
-                else
-                {
-                        strcat(lDialogString, "show='*'") ;
-                }
-                strcat(lDialogString, ");\nif res is None :\n\tprint(0)");
-                strcat(lDialogString, "\nelse :\n\tprint('1'+res)\n\"" ) ;
         }
         else if ( gdialogPresent() || xdialogPresent() || dialogName() || whiptailPresent() )
         {
@@ -2009,14 +1805,14 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 {
                         strcat(lDialogString, "--backtitle \"") ;
                         strcat(lDialogString, "tab: move focus") ;
-                        if ( ! aDefaultInput && !lWasGdialog )
+                        if ( !lWasGdialog )
                         {
                                 strcat(lDialogString, " (sometimes nothing, no blink nor star, is shown in text field)") ;
                         }
                         strcat(lDialogString, "\" ") ;
                 }
 
-                if ( aDefaultInput || lWasGdialog )
+                if ( lWasGdialog )
                 {
                         strcat( lDialogString , "--inputbox" ) ;
                 }
@@ -2029,17 +1825,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
                         strcat( lDialogString , "--passwordbox" ) ;
                 }
                 strcat( lDialogString , " \"" ) ;
-                if ( aMessage && strlen(aMessage) )
-                {
-                        strcat(lDialogString, aMessage) ;
-                }
                 strcat(lDialogString,"\" 10 60 ") ;
-                if ( aDefaultInput && strlen(aDefaultInput) )
-                {
-                        strcat(lDialogString, "\"") ;
-                        strcat(lDialogString, aDefaultInput) ;
-                        strcat(lDialogString, "\" ") ;
-                }
                 if ( lWasGraphicDialog )
                 {
                         strcat(lDialogString,") 2>/tmp/tinyfd.txt;\
@@ -2080,15 +1866,8 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 }
 
                 strcat( lDialogString , "echo \"" ) ;
-                if ( aMessage && strlen(aMessage) )
-                {
-                        strcat( lDialogString, aMessage) ;
-                }
                 strcat( lDialogString , "\";read " ) ;
-                if ( ! aDefaultInput )
-                {
-                        strcat( lDialogString , "-s " ) ;
-                }
+                strcat( lDialogString , "-s " ) ;
                 strcat( lDialogString , "-p \"" ) ;
                 strcat( lDialogString , "(esc+enter to cancel): \" ANSWER " ) ;
                 strcat( lDialogString , ";echo 1$ANSWER >/tmp/tinyfd.txt';" ) ;
@@ -2110,18 +1889,11 @@ frontmost of process \\\"Python\\\" to true' ''');");
                 {
                         printf("\n%s\n", aTitle);
                 }
-                if ( aMessage && strlen(aMessage) )
-                {
-                        printf("\n%s\n",aMessage);
-                }
                 printf("(esc+enter to cancel): "); fflush(stdout);
-                if ( ! aDefaultInput )
-                {
-                        tcgetattr(STDIN_FILENO, & oldt) ;
-                        newt = oldt ;
-                        newt.c_lflag &= ~ECHO ;
-                        tcsetattr(STDIN_FILENO, TCSANOW, & newt);
-                }
+                tcgetattr(STDIN_FILENO, & oldt) ;
+                newt = oldt ;
+                newt.c_lflag &= ~ECHO ;
+                tcsetattr(STDIN_FILENO, TCSANOW, & newt);
 
                 lEOF = fgets(lBuff, MAX_PATH_OR_CMD, stdin);
                 /* printf("lbuff<%c><%d>\n",lBuff[0],lBuff[0]); */
@@ -2142,11 +1914,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
                         }
                 }
 
-                if ( ! aDefaultInput )
-                {
-                        tcsetattr(STDIN_FILENO, TCSANOW, & oldt);
-                        printf("\n");
-                }
+                tcsetattr(STDIN_FILENO, TCSANOW, & oldt);
                 printf("\n");
                 if ( strchr(lBuff,27) )
                 {
@@ -2345,7 +2113,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
             }
         }
     } else {
-        p = tinyfd_inputBox(aTitle ? aTitle : "Select folder", NULL, NULL);
+        p = selectFolderUsingInputBox(aTitle ? aTitle : "Select folder");
         if (!dirExists(p)) {
             return NULL;
         }
