@@ -1,71 +1,15 @@
 /*
-  Note: This source code has been changed from the original to be better usable with julius.
-  ----  If you are interested in this product, please download its original version from the links below.
-  _________
- /         \ tinyfiledialogs.h v3.3.8 [Nov 4, 2018] zlib licence
- |tiny file| Unique header file created [November 9, 2014]
- | dialogs | Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
- \____  ___/ http://tinyfiledialogs.sourceforge.net
-      \|     git clone http://git.code.sf.net/p/tinyfiledialogs/code tinyfd
-		 ____________________________________________
-		|                                            |
-		|   email: tinyfiledialogs at ysengrin.com   |
-		|____________________________________________|
-         ________________________________________________________________________
-        |                                                                        |
-        | the windows only wchar_t UTF-16 prototypes are at the end of this file |
-        |________________________________________________________________________|
+Note: This file is a heavily stripped-down version of Tinyfiledialogs, customized for Julius.
 
-Please upvote my stackoverflow answer https://stackoverflow.com/a/47651444
+If you are interested in Tinyfiledialogs, please download its original version from the links below.
 
-tiny file dialogs (cross-platform C C++)
-InputBox PasswordBox MessageBox ColorPicker
-OpenFileDialog SaveFileDialog SelectFolderDialog
-Native dialog library for WINDOWS MAC OSX GTK+ QT CONSOLE & more
-SSH supported via automatic switch to console mode or X11 forwarding
+Tinyfiledialogs:
+Copyright (c) 2014 - 2018 Guillaume Vareille http://ysengrin.com
+http://tinyfiledialogs.sourceforge.net
 
-one C file + a header (add them to your C or C++ project) with 8 functions:
-- beep
-- notify popup (tray)
-- message & question
-- input & password
-- save file
-- open file(s)
-- select folder
-- color picker
-
-Complements OpenGL Vulkan GLFW GLUT GLUI VTK SFML TGUI
-SDL Ogre Unity3d ION OpenCV CEGUI MathGL GLM CPW GLOW
-Open3D IMGUI MyGUI GLT NGL STB & GUI less programs
-
-NO INIT
-NO MAIN LOOP
-NO LINKING
-NO INCLUDE
-
-The dialogs can be forced into console mode
-
-Windows (XP to 10) ASCII MBCS UTF-8 UTF-16
-- native code & vbs create the graphic dialogs
-- enhanced console mode can use dialog.exe from
-http://andrear.altervista.org/home/cdialog.php
-- basic console input
-
-Unix (command line calls) ASCII UTF-8
-- applescript, kdialog, zenity
-- python (2 or 3) + tkinter + python-dbus (optional)
-- dialog (opens a console if needed)
-- basic console input
-The same executable can run across desktops & distributions
-
-C89 & C++98 compliant: tested with C & C++ compilers
-VisualStudio MinGW-gcc GCC Clang TinyCC OpenWatcom-v2 BorlandC SunCC ZapCC
-on Windows Mac Linux Bsd Solaris Minix Raspbian
-using Gnome Kde Enlightenment Mate Cinnamon Budgie Unity Lxde Lxqt Xfce
-WindowMaker IceWm Cde Jds OpenBox Awesome Jwm Xdm
-
-Bindings for LUA and C# dll, Haskell
-Included in LWJGL(java), Rust, Allegrobasic
+Thanks for contributions, bug corrections & thorough testing to:
+- Don Heyse http://ldglite.sf.net for bug corrections & thorough testing!
+- Paul Rouget
 
 - License -
 
@@ -99,7 +43,6 @@ misrepresented as being the original software.
 extern "C" {
 #endif
 
-extern char const tinyfd_version[8]; /* contains tinyfd current version number */
 extern char const tinyfd_needs[]; /* info about requirements */
 extern int tinyfd_verbose; /* 0 (default) or 1 : on unix, prints the command line calls */
 extern int tinyfd_silent; /* 1 (default) or 0 : on unix,
@@ -124,50 +67,3 @@ char const * tinyfd_selectFolderDialog(
 #endif /* USE_TINYFILEDIALOGS */
 
 #endif /* TINYFILEDIALOGS_H */
-
-/*
-- This is not for android nor ios.
-- The code is pure C, perfectly compatible with C++.
-- the windows only wchar_t (utf-16) prototypes are in the header file
-- windows is fully supported from XP to 10 (maybe even older versions)
-- C# & LUA via dll, see example files
-- OSX supported from 10.4 to latest (maybe even older versions)
-- Avoid using " and ' in titles and messages.
-- There's one file filter only, it may contain several patterns.
-- If no filter description is provided,
-  the list of patterns will become the description.
-- char const * filterPatterns[3] = { "*.obj" , "*.stl" , "*.dxf" } ;
-- On windows char defaults to MBCS, set tinyfd_winUtf8=1 to use UTF-8
-- On windows link against Comdlg32.lib and Ole32.lib
-  This linking is not compulsary for console mode (see above).
-- On unix: it tries command line calls, so no such need.
-- On unix you need one of the following:
-  applescript, kdialog, zenity, matedialog, shellementary, qarma,
-  python (2 or 3)/tkinter/python-dbus (optional), Xdialog
-  or dialog (opens terminal if running without console) or xterm.
-- One of those is already included on most (if not all) desktops.
-- In the absence of those it will use gdialog, gxmessage or whiptail
-  with a textinputbox.
-- If nothing is found, it switches to basic console input,
-  it opens a console if needed (requires xterm + bash).
-- Use windows separators on windows and unix separators on unix.
-- String memory is preallocated statically for all the returned values.
-- File and path names are tested before return, they are valid.
-- If you pass only a path instead of path + filename,
-  make sure it ends with a separator.
-- On windows, console mode only make sense for console applications.
-- On windows, Console mode is not implemented for wchar_T UTF-16.
-- Mutiple selects are not allowed in console mode.
-- The package dialog must be installed to run in enhanced console mode.
-  It is already installed on most unix systems.
-- On osx, the package dialog can be installed via
-  http://macappstore.org/dialog or http://macports.org
-- On windows, for enhanced console mode,
-  dialog.exe should be copied somewhere on your executable path.
-  It can be found at the bottom of the following page:
-  http://andrear.altervista.org/home/cdialog.php
-- If dialog is missing, it will switch to basic console input.
-- You can query the type of dialog that will be use.
-- MinGW needs gcc >= v4.9 otherwise some headers are incomplete.
-- The Hello World (and a bit more) is on the sourceforge site:
-*/
