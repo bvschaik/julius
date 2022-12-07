@@ -100,7 +100,7 @@ void widget_map_editor_draw(void)
 
     init_draw_context();
     city_view_foreach_map_tile(draw_footprint);
-    city_view_foreach_valid_map_tile(draw_flags, draw_top, 0);
+    city_view_foreach_valid_map_tile_row(draw_flags, draw_top, 0);
     map_editor_tool_draw(&data.current_tile);
 
     graphics_reset_clip_rectangle();
