@@ -378,8 +378,8 @@ void game_file_write_mission_saved_game(void)
         rank = 11;
     }
     const char *filename = MISSION_SAVED_GAMES[rank];
+    char localized_filename[FILE_NAME_MAX];
     if (locale_translate_rank_autosaves()) {
-        char localized_filename[FILE_NAME_MAX];
         encoding_to_utf8(lang_get_string(32, rank), localized_filename, FILE_NAME_MAX,
             encoding_system_uses_decomposed());
         strcat(localized_filename, ".sav");
