@@ -314,26 +314,32 @@
 	<!-- Note: Cart Depot ON Variants for Northern, Central and Southern Climates Respectively -->
 	<image id="Cart Depot N ON" isometric="true">
 		<layer group="this" image="Cart Depot N OFF"/>
-		<animation speed="7" x="47" y="31" reversible="true">
+		<animation speed="6" x="47" y="31" reversible="false">
 			<frame src="Cart_Depot_ON_01"/>
 			<frame src="Cart_Depot_ON_02"/>
 			<frame src="Cart_Depot_ON_03"/>
+			<frame src="Cart_Depot_ON_04"/>
+			<frame src="Cart_Depot_ON_05"/>
 		</animation>
 	</image>
 	<image id="Cart Depot C ON" isometric="true">
 		<layer group="this" image="Cart Depot C OFF"/>
-		<animation speed="7" x="47" y="31" reversible="true">
+		<animation speed="6" x="47" y="31" reversible="false">
 			<frame src="Cart_Depot_ON_01"/>
 			<frame src="Cart_Depot_ON_02"/>
 			<frame src="Cart_Depot_ON_03"/>
+			<frame src="Cart_Depot_ON_04"/>
+			<frame src="Cart_Depot_ON_05"/>
 		</animation>
 	</image>
 	<image id="Cart Depot S ON" isometric="true">
 		<layer group="this" image="Cart Depot S OFF"/>
-		<animation speed="7" x="47" y="31" reversible="true">
+		<animation speed="6" x="47" y="31" reversible="false">
 			<frame src="Cart_Depot_ON_01"/>
 			<frame src="Cart_Depot_ON_02"/>
 			<frame src="Cart_Depot_ON_03"/>
+			<frame src="Cart_Depot_ON_04"/>
+			<frame src="Cart_Depot_ON_05"/>
 		</animation>
 	</image>
 	<!-- Note: Lighthouse Construction 01-04 are the 0%, 25%, 50%, and 75% construction phases respectively -->
@@ -495,37 +501,15 @@
 	<image id="Chisel_NE_10" src="Chisel_NE_03"/>
 	<image id="Chisel_NE_11" src="Chisel_NE_02"/>
 	<image id="Chisel_NE_12" src="Chisel_NE_01"/>
-	<!-- Note: Engineers' Post Upgrade State (Assets by Areldir) -->
-	<image id="Eng_Post_Upgrade_OFF" width="178" height="198" isometric="true">
-		<layer group="81" image="0" y="22"/>
-		<layer src="Engineers_Post_Upgrade_Base" x="0" y="12"/>
-	</image>
-	<image id="Eng_Post_Upgrade_ON" width="178" height="198" isometric="true">
-		<layer group="this" image="Eng_Post_Upgrade_OFF"/>
-		<animation speed="5" x="24" y="0" reversible="false">
-			<frame src="Engineers_Post_Upgrade_ON_01"/>
-			<frame src="Engineers_Post_Upgrade_ON_02"/>
-			<frame src="Engineers_Post_Upgrade_ON_03"/>
-			<frame src="Engineers_Post_Upgrade_ON_04"/>
-			<frame src="Engineers_Post_Upgrade_ON_05"/>
-			<frame src="Engineers_Post_Upgrade_ON_06"/>
-			<frame src="Engineers_Post_Upgrade_ON_07"/>
-			<frame src="Engineers_Post_Upgrade_ON_08"/>
-			<frame src="Engineers_Post_Upgrade_ON_09"/>
-			<frame src="Engineers_Post_Upgrade_ON_10"/>
-		</animation>
-	</image>
-
-	<!-- Highway sprites -->
-	<!-- Placement -->
+	<!-- Note: Highway sprites (Assets by Marwana, with additions from Areldir and PrettyFlower) -->
+	<!-- Note: Highway Placement -->
 	<image id="Highway_Placement" width="118" height="60" isometric="true">
 		<layer src="Highway_Base_1" x="30"/>
 		<layer src="Highway_Base_2" y="15"/>
 		<layer src="Highway_Base_3" x="60" y="15"/>
 		<layer src="Highway_Base_4" x="30" y="30"/>
 	</image>
-
-	<!-- Bases -->
+	<!-- Note: Highway Bases -->
 	<image id="Highway_Base_Start" src="Highway_Base_1" isometric="true"/>
 	<image src="Highway_Base_2" isometric="true"/>
 	<image src="Highway_Base_3" isometric="true"/>
@@ -542,8 +526,7 @@
 	<image src="Highway_Base_14" isometric="true"/>
 	<image src="Highway_Base_15" isometric="true"/>
 	<image src="Highway_Base_16" isometric="true"/>
-
-	<!-- Straight barriers -->
+	<!-- Note: Highway Straight barriers -->
 	<image id="Highway_Barrier_Start" isometric="true" width="58" height="30">
 		<layer src="Highway_Barrier_1" x="24" y="11"/>
 	</image>
@@ -556,8 +539,7 @@
 	<image isometric="true" width="58" height="30">
 		<layer src="Highway_Barrier_2" y="12"/>
 	</image>
-
-	<!-- Corner barriers -->
+	<!-- Note: Highway Corner barriers -->
 	<image isometric="true" width="58" height="30">
 		<layer src="Highway_Barrier_3" x="28" width="28"/>
 		<layer src="Highway_Barrier_1" x="22" y="12" width="33"/>
@@ -574,8 +556,7 @@
 		<layer src="Highway_Barrier_2" y="12" width="32"/>
 		<layer src="Highway_Barrier_1" x="26" y="10" width="32"/>
 	</image>
-
-	<!-- Aqueduct bridges without roads underneath -->
+	<!-- Note: Aqueduct bridges without roads underneath -->
 	<image id="Aqueduct_Bridge_Left_Water" isometric="true" width="58" height="58">
 		<layer group="19"/>
 		<layer src="Aqueduct_Mask_Left" y="28" mask="alpha"/>
@@ -591,5 +572,10 @@
 	<image id="Aqueduct_Bridge_Right_Empty" isometric="true" width="58" height="57">
 		<layer group="19" image="16"/>
 		<layer src="Aqueduct_Mask_Right" y="27" mask="alpha"/>
+	</image>
+	<!-- Note: Forum upgrade asset (Asset by Areldir)-->
+	<image id="Upgraded_Forum" isometric="true">
+		<layer group="63" image="0"/>
+		<layer src="Forum_Upgrade" x="0" y="0"/>
 	</image>
 </assetlist>
