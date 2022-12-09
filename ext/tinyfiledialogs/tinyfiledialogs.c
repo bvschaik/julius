@@ -299,18 +299,6 @@ static void replaceSubStr( char const * const aSource ,
 }
 
 
-static int isDarwin(void)
-{
-        static int lsIsDarwin = -1 ;
-        struct utsname lUtsname ;
-        if ( lsIsDarwin < 0 )
-        {
-                lsIsDarwin = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Darwin") ;
-        }
-        return lsIsDarwin ;
-}
-
-
 static int dirExists(char const * const dirPath)
 {
     if (!dirPath || !strlen(dirPath)) {
@@ -444,19 +432,7 @@ static char const * terminalName(void)
                         return NULL ;
                 }
 
-                if ( isDarwin() )
-                {
-                        if ( copyAndDetectPresence(lTerminalName , "/opt/X11/bin/xterm" ) )
-                        {
-                                strcat(lTerminalName , " -fa 'DejaVu Sans Mono' -fs 10 -title tinyfiledialogs -e " ) ;
-                                strcat(lTerminalName , lShellName ) ;
-                        }
-                        else
-                        {
-                                strcpy(lTerminalName , "" ) ;
-                        }
-                }
-                else if ( copyAndDetectPresence(lTerminalName,"xterm") ) /*good (small without parameters)*/
+                if ( copyAndDetectPresence(lTerminalName,"xterm") ) /*good (small without parameters)*/
                 {
                         strcat(lTerminalName , " -fa 'DejaVu Sans Mono' -fs 10 -title tinyfiledialogs -e " ) ;
                         strcat(lTerminalName , lShellName ) ;
@@ -764,7 +740,7 @@ static int tkinter2Present(void)
                 }
                 if (tinyfd_verbose) printf("lTkinter2Present %d\n", lTkinter2Present) ;
         }
-        return lTkinter2Present && !(isDarwin() && getenv("SSH_TTY") );
+        return lTkinter2Present;
 }
 
 
@@ -785,7 +761,7 @@ static int tkinter3Present(void)
                 }
                 if (tinyfd_verbose) printf("lTkinter3Present %d\n", lTkinter3Present) ;
         }
-        return lTkinter3Present && !(isDarwin() && getenv("SSH_TTY") );
+        return lTkinter3Present;
 }
 
 
@@ -978,20 +954,8 @@ int tinyfd_messageBox(
         else if ( !gxmessagePresent() && !gmessagePresent() && !gdialogPresent() && !xdialogPresent() && tkinter2Present() )
         {
                 strcpy( lDialogString , gPython2Name ) ;
-                if ( ! isTerminalRunning( ) && isDarwin( ) )
-                {
-                        strcat( lDialogString , " -i" ) ;  /* for osx without console */
-                }
-
                 strcat( lDialogString ,
 " -S -c \"import Tkinter,tkMessageBox;root=Tkinter.Tk();root.withdraw();");
-
-                if ( isDarwin( ) )
-                {
-                        strcat( lDialogString ,
-"import os;os.system('''/usr/bin/osascript -e 'tell app \\\"Finder\\\" to set \
-frontmost of process \\\"Python\\\" to true' ''');");
-                }
 
                 strcat( lDialogString ,"res=tkMessageBox." ) ;
                 if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
@@ -1562,17 +1526,7 @@ char const * tinyfd_selectFolderDialog(char const * const aTitle)
         strcat(dialogString, "--dselect \"./\" 0 60 ) 2>&1 ");
     } else if (tkinter2Present()) {
         strcpy(dialogString, gPython2Name);
-        if (!isTerminalRunning() && isDarwin()) {
-            strcat(dialogString, " -i");  /* for osx without console */
-        }
         strcat(dialogString, " -S -c \"import Tkinter,tkFileDialog;root=Tkinter.Tk();root.withdraw();");
-
-        if (isDarwin()) {
-            strcat(dialogString,
-"import os;os.system('''/usr/bin/osascript -e 'tell app \\\"Finder\\\" to set \
-frontmost of process \\\"Python\\\" to true' ''');");
-        }
-
         strcat(dialogString, "print tkFileDialog.askdirectory(");
         if (aTitle && strlen(aTitle)) {
             strcat(dialogString, "title='");
