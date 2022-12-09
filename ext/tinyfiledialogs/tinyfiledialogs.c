@@ -426,71 +426,6 @@ static int isTerminalRunning(void)
 }
 
 
-static char const * dialogNameOnly(void)
-{
-        static char lDialogName[128] = "*" ;
-        if ( lDialogName[0] == '*' )
-        {
-                int result = 0;
-                if ( isDarwin() )
-                {
-                        result = copyAndDetectPresence(lDialogName, "/opt/local/bin/dialog" ) ;
-                }
-                if ( ! result )
-                {
-                        result = copyAndDetectPresence(lDialogName , "dialog" ) ;
-                }
-                if ( ! result )
-                {
-                        strcpy(lDialogName , "" ) ;
-                }
-        }
-    return lDialogName ;
-}
-
-
-int isDialogVersionBetter09b(void)
-{
-        char const * lDialogName ;
-        char * lVersion ;
-        int lMajor ;
-        int lMinor ;
-        int lDate ;
-        int lResult ;
-        char * lMinorP ;
-        char * lLetter ;
-        char lBuff[128] ;
-
-        /*char lTest[128] = " 0.9b-20031126" ;*/
-
-        lDialogName = dialogNameOnly() ;
-        if ( ! strlen(lDialogName) || !(lVersion = (char *) getVersion(lDialogName)) ) return 0 ;
-        /*lVersion = lTest ;*/
-        /*printf("lVersion %s\n", lVersion);*/
-        strcpy(lBuff,lVersion);
-        lMajor = atoi( strtok(lVersion," ,.-") ) ;
-        /*printf("lMajor %d\n", lMajor);*/
-        lMinorP = strtok(0," ,.-abcdefghijklmnopqrstuvxyz");
-        lMinor = atoi( lMinorP ) ;
-        /*printf("lMinor %d\n", lMinor );*/
-        lDate = atoi( strtok(0," ,.-") ) ;
-        if (lDate<0) lDate = - lDate;
-        /*printf("lDate %d\n", lDate);*/
-        lLetter = lMinorP + strlen(lMinorP) ;
-        strcpy(lVersion,lBuff);
-        strtok(lLetter," ,.-");
-        /*printf("lLetter %s\n", lLetter);*/
-        lResult = (lMajor > 0) || ( ( lMinor == 9 ) && (*lLetter == 'b') && (lDate >= 20031126) );
-        /*printf("lResult %d\n", lResult);*/
-        return lResult;
-}
-
-
-static int whiptailPresentOnly(void)
-{
-    RETURN_CACHED_INT(detectPresence("whiptail"));
-}
-
 static char const * terminalName(void)
 {
         static char lTerminalName[128] = "*" ;
@@ -503,15 +438,11 @@ static char const * terminalName(void)
                 {
                         strcpy(lShellName , "bash -c " ) ; /*good for basic input*/
                 }
-				else if ( strlen(dialogNameOnly()) || whiptailPresentOnly() )
-				{
-						strcpy(lShellName , "sh -c " ) ; /*good enough for dialog & whiptail*/
-				}
-				else
-				{
-					strcpy(lTerminalName , "" ) ;
-					return NULL ;
-				}
+                else
+                {
+                        strcpy(lTerminalName , "" ) ;
+                        return NULL ;
+                }
 
                 if ( isDarwin() )
                 {
@@ -602,36 +533,6 @@ static char const * terminalName(void)
         else
         {
                 return NULL ;
-        }
-}
-
-
-static char const * dialogName(void)
-{
-    char const * lDialogName ;
-    lDialogName = dialogNameOnly( ) ;
-        if ( strlen(lDialogName) && ( isTerminalRunning() || terminalName() ) )
-        {
-                return lDialogName ;
-        }
-        else
-        {
-                return NULL ;
-        }
-}
-
-
-static int whiptailPresent(void)
-{
-        int lWhiptailPresent ;
-    lWhiptailPresent = whiptailPresentOnly( ) ;
-        if ( lWhiptailPresent && ( isTerminalRunning() || terminalName() ) )
-        {
-                return lWhiptailPresent ;
-        }
-        else
-        {
-                return 0 ;
         }
 }
 
@@ -899,8 +800,6 @@ int tinyfd_messageBox(
         char * lDialogString = NULL ;
         char * lpDialogString;
         FILE * lIn ;
-        int lWasGraphicDialog = 0 ;
-        int lWasXterm = 0 ;
         int lResult ;
         char lChar ;
         struct termios infoOri;
@@ -1242,42 +1141,15 @@ else :\n\tprint(1)\n\"" ) ;
                 }
                 strcat( lDialogString , " ; echo $? ");
         }
-        else if ( xdialogPresent() || gdialogPresent() || dialogName() || whiptailPresent() )
+        else if ( xdialogPresent() || gdialogPresent() )
         {
                 if ( gdialogPresent( ) )
                 {
-                        lWasGraphicDialog = 1 ;
                         strcpy( lDialogString , "(gdialog " ) ;
                 }
                 else if ( xdialogPresent( ) )
                 {
-                        lWasGraphicDialog = 1 ;
                         strcpy( lDialogString , "(Xdialog " ) ;
-                }
-                else if ( dialogName( ) )
-                {
-                        if ( isTerminalRunning( ) )
-                        {
-                                strcpy( lDialogString , "(dialog " ) ;
-                        }
-                        else
-                        {
-                                lWasXterm = 1 ;
-                                strcpy( lDialogString , terminalName() ) ;
-                                strcat( lDialogString , "'(" ) ;
-                                strcat( lDialogString , dialogName() ) ;
-                                strcat( lDialogString , " " ) ;
-                        }
-                }
-                else if ( isTerminalRunning( ) )
-                {
-                        strcpy( lDialogString , "(whiptail " ) ;
-                }
-                else
-                {
-                        lWasXterm = 1 ;
-                        strcpy( lDialogString , terminalName() ) ;
-                        strcat( lDialogString , "'(whiptail " ) ;
                 }
 
                 if ( aTitle && strlen(aTitle) )
@@ -1285,16 +1157,6 @@ else :\n\tprint(1)\n\"" ) ;
                         strcat(lDialogString, "--title \"") ;
                         strcat(lDialogString, aTitle) ;
                         strcat(lDialogString, "\" ") ;
-                }
-
-                if ( !xdialogPresent() && !gdialogPresent() )
-                {
-                        if ( aDialogType && !strcmp( "okcancel" , aDialogType ) )
-                        {
-                                strcat(lDialogString, "--backtitle \"") ;
-                                strcat(lDialogString, "tab: move focus") ;
-                                strcat(lDialogString, "\" ") ;
-                        }
                 }
 
                 if ( aDialogType && ! strcmp( "okcancel" , aDialogType ) )
@@ -1318,25 +1180,8 @@ else :\n\tprint(1)\n\"" ) ;
                 }
                 strcat(lDialogString, "\" ");
 
-                if ( lWasGraphicDialog )
-                {
-                        strcat(lDialogString,
-                                "10 60 ) 2>&1;if [ $? = 0 ];then echo 1;else echo 0;fi");
-                }
-                else
-                {
-                        strcat(lDialogString, "10 60 >/dev/tty) 2>&1;if [ $? = 0 ];");
-                        if ( lWasXterm )
-                        {
-                                strcat( lDialogString ,
-"then\n\techo 1\nelse\n\techo 0\nfi >/tmp/tinyfd.txt';cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
-                        }
-                        else
-                        {
-                                strcat(lDialogString,
-                                        "then echo 1;else echo 0;fi;clear >/dev/tty");
-                        }
-                }
+                strcat(lDialogString,
+                        "10 60 ) 2>&1;if [ $? = 0 ];then echo 1;else echo 0;fi");
         }
         else if (  !isTerminalRunning() && terminalName() )
         {
@@ -1469,8 +1314,6 @@ static char const * selectFolderUsingInputBox(char const * const aTitle) /* NULL
         FILE * lIn ;
         int lResult ;
         int lWasGdialog = 0 ;
-        int lWasGraphicDialog = 0 ;
-        int lWasXterm = 0 ;
         int lWasBasicXterm = 0 ;
         struct termios oldt ;
         struct termios newt ;
@@ -1503,43 +1346,16 @@ static char const * selectFolderUsingInputBox(char const * const aTitle) /* NULL
                 strcat(lDialogString, "\"" ) ;
                 strcat( lDialogString , ");echo $?$szAnswer");
         }
-        else if ( gdialogPresent() || xdialogPresent() || dialogName() || whiptailPresent() )
+        else if ( gdialogPresent() || xdialogPresent() )
         {
                 if ( gdialogPresent( ) )
                 {
-                        lWasGraphicDialog = 1 ;
                         lWasGdialog = 1 ;
                         strcpy( lDialogString , "(gdialog " ) ;
                 }
                 else if ( xdialogPresent( ) )
                 {
-                        lWasGraphicDialog = 1 ;
                         strcpy( lDialogString , "(Xdialog " ) ;
-                }
-                else if ( dialogName( ) )
-                {
-                        if ( isTerminalRunning( ) )
-                        {
-                                strcpy( lDialogString , "(dialog " ) ;
-                        }
-                        else
-                        {
-                                lWasXterm = 1 ;
-                                strcpy( lDialogString , terminalName() ) ;
-                                strcat( lDialogString , "'(" ) ;
-                                strcat( lDialogString , dialogName() ) ;
-                                strcat( lDialogString , " " ) ;
-                        }
-                }
-                else if ( isTerminalRunning( ) )
-                {
-                        strcpy( lDialogString , "(whiptail " ) ;
-                }
-                else
-                {
-                        lWasXterm = 1 ;
-                        strcpy( lDialogString , terminalName() ) ;
-                        strcat( lDialogString , "'(whiptail " ) ;
                 }
 
                 if ( aTitle && strlen(aTitle) )
@@ -1549,52 +1365,19 @@ static char const * selectFolderUsingInputBox(char const * const aTitle) /* NULL
                         strcat(lDialogString, "\" ") ;
                 }
 
-                if ( !xdialogPresent() && !gdialogPresent() )
-                {
-                        strcat(lDialogString, "--backtitle \"") ;
-                        strcat(lDialogString, "tab: move focus") ;
-                        if ( !lWasGdialog )
-                        {
-                                strcat(lDialogString, " (sometimes nothing, no blink nor star, is shown in text field)") ;
-                        }
-                        strcat(lDialogString, "\" ") ;
-                }
-
                 if ( lWasGdialog )
                 {
                         strcat( lDialogString , "--inputbox" ) ;
                 }
                 else
                 {
-                        if ( !lWasGraphicDialog && dialogName() && isDialogVersionBetter09b() )
-                        {
-                                strcat( lDialogString , "--insecure " ) ;
-                        }
                         strcat( lDialogString , "--passwordbox" ) ;
                 }
                 strcat( lDialogString , " \"" ) ;
                 strcat(lDialogString,"\" 10 60 ") ;
-                if ( lWasGraphicDialog )
-                {
-                        strcat(lDialogString,") 2>/tmp/tinyfd.txt;\
-        if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
-        tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
-                }
-                else
-                {
-                        strcat(lDialogString,">/dev/tty ) 2>/tmp/tinyfd.txt;\
-        if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
-        tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
-
-                        if ( lWasXterm )
-                        {
-                strcat(lDialogString," >/tmp/tinyfd0.txt';cat /tmp/tinyfd0.txt");
-                        }
-                        else
-                        {
-                                strcat(lDialogString, "; clear >/dev/tty") ;
-                        }
-                }
+                strcat(lDialogString,") 2>/tmp/tinyfd.txt;\
+if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
+tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
         }
         else if ( ! isTerminalRunning( ) && terminalName() )
         {
@@ -1729,8 +1512,6 @@ char const * tinyfd_selectFolderDialog(char const * const aTitle)
     static char resultBuff[MAX_PATH_OR_CMD];
     char dialogString[MAX_PATH_OR_CMD];
     char const *p;
-    int lWasGraphicDialog = 0;
-    int lWasXterm = 0;
     resultBuff[0]='\0';
 
     if (osascriptPresent()) {
@@ -1771,7 +1552,15 @@ char const * tinyfd_selectFolderDialog(char const * const aTitle)
             strcat(dialogString, "\"");
         }
         if (tinyfd_silent) strcat(dialogString, " 2>/dev/null ");
-    } else if (!xdialogPresent() && tkinter2Present()) {
+    } else if (xdialogPresent()) {
+        strcpy(dialogString, "(Xdialog ");
+        if (aTitle && strlen(aTitle)) {
+            strcat(dialogString, "--title \"");
+            strcat(dialogString, aTitle);
+            strcat(dialogString, "\" ");
+        }
+        strcat(dialogString, "--dselect \"./\" 0 60 ) 2>&1 ");
+    } else if (tkinter2Present()) {
         strcpy(dialogString, gPython2Name);
         if (!isTerminalRunning() && isDarwin()) {
             strcat(dialogString, " -i");  /* for osx without console */
@@ -1791,7 +1580,7 @@ frontmost of process \\\"Python\\\" to true' ''');");
             strcat(dialogString, "',");
         }
         strcat(dialogString, ")\"");
-    } else if (!xdialogPresent() && tkinter3Present()) {
+    } else if (tkinter3Present()) {
         strcpy(dialogString, gPython3Name);
         strcat(dialogString,
             " -S -c \"import tkinter;from tkinter import filedialog;root=tkinter.Tk();root.withdraw();");
@@ -1802,48 +1591,6 @@ frontmost of process \\\"Python\\\" to true' ''');");
             strcat(dialogString, "',");
         }
         strcat(dialogString, ") )\"");
-    } else if (xdialogPresent() || dialogName()) {
-        if (xdialogPresent()) {
-            lWasGraphicDialog = 1;
-            strcpy(dialogString, "(Xdialog ");
-        } else if (isTerminalRunning()) {
-            strcpy(dialogString, "(dialog ");
-        } else {
-            lWasXterm = 1;
-            strcpy(dialogString, terminalName());
-            strcat(dialogString, "'(");
-            strcat(dialogString, dialogName());
-            strcat(dialogString, " ");
-        }
-        if (aTitle && strlen(aTitle)) {
-            strcat(dialogString, "--title \"");
-            strcat(dialogString, aTitle);
-            strcat(dialogString, "\" ");
-        }
-        if (!xdialogPresent() && !gdialogPresent()) {
-            strcat(dialogString, "--backtitle \"");
-            strcat(dialogString, "tab: focus | /: populate | spacebar: fill text field | ok: TEXT FIELD ONLY");
-            strcat(dialogString, "\" ");
-        }
-
-        strcat(dialogString, "--dselect \"");
-        if (!isTerminalRunning() && !lWasGraphicDialog) {
-            strcat(dialogString, getenv("HOME"));
-            strcat(dialogString, "/");
-        } else {
-            strcat(dialogString, "./");
-        }
-
-        if (lWasGraphicDialog) {
-            strcat(dialogString, "\" 0 60 ) 2>&1 ");
-        } else {
-            strcat(dialogString, "\" 0 60  >/dev/tty) ");
-            if (lWasXterm) {
-                strcat(dialogString, "2>/tmp/tinyfd.txt';cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
-            } else {
-                strcat(dialogString, "2>&1 ; clear >/dev/tty");
-            }
-        }
     } else {
         p = selectFolderUsingInputBox(aTitle ? aTitle : "Select folder");
         if (!dirExists(p)) {
