@@ -67,8 +67,8 @@ misrepresented as being the original software.
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
 #define MAX_MULTIPLE_FILES 32
 
-int tinyfd_verbose = 0 ; /* on unix: prints the command line calls */
-int tinyfd_silent = 1 ; /* 1 (default) or 0 : on unix,
+int tinyfd_verbose = 1 ; /* on unix: prints the command line calls */
+int tinyfd_silent = 0 ; /* 1 (default) or 0 : on unix,
                         hide errors and warnings from called dialog*/
 
 #ifdef _WIN32
@@ -262,7 +262,6 @@ static char const gTitle[]="missing software! (we will try basic console input)"
 
 static char gPython2Name[16];
 static char gPython3Name[16];
-static char gPythonName[16];
 
 static void replaceSubStr( char const * const aSource ,
                                                    char const * const aOldSubStr ,
@@ -652,35 +651,6 @@ static int gmessagePresent(void)
     RETURN_CACHED_INT(detectPresence("gmessage"));
 }
 
-static int notifysendPresent(void)
-{
-    RETURN_CACHED_INT(detectPresence("notify-send"));
-}
-
-static int perlPresent(void)
-{
-        static int lPerlPresent = -1 ;
-        char lBuff [MAX_PATH_OR_CMD] ;
-        FILE * lIn ;
-
-        if ( lPerlPresent < 0 )
-        {
-                lPerlPresent = detectPresence("perl") ;
-                if ( lPerlPresent )
-                {
-                        lIn = popen( "perl -MNet::DBus -e \"Net::DBus->session->get_service('org.freedesktop.Notifications')\" 2>&1" , "r" ) ;
-                        if ( fgets( lBuff , sizeof( lBuff ) , lIn ) == NULL )
-                        {
-                                lPerlPresent = 2 ;
-                        }
-                        pclose( lIn ) ;
-                        if (tinyfd_verbose) printf("perl-dbus %d\n", lPerlPresent);
-                }
-    }
-    return lPerlPresent;
-}
-
-
 static int xdialogPresent(void)
 {
     RETURN_CACHED_INT(detectPresence("Xdialog"));
@@ -915,49 +885,6 @@ static int tkinter3Present(void)
                 if (tinyfd_verbose) printf("lTkinter3Present %d\n", lTkinter3Present) ;
         }
         return lTkinter3Present && !(isDarwin() && getenv("SSH_TTY") );
-}
-
-
-static int pythonDbusPresent(void)
-{
-    static int lDbusPresent = -1 ;
-        char lPythonCommand[300];
-        char lPythonParams[256] =
-"-c \"try:\n\timport dbus;bus=dbus.SessionBus();\
-notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');\
-notify=dbus.Interface(notif,'org.freedesktop.Notifications');\nexcept:\n\tprint(0);\"";
-
-        if ( lDbusPresent < 0 )
-        {
-                lDbusPresent = 0 ;
-                if ( python2Present() )
-                {
-                        strcpy(gPythonName , gPython2Name ) ;
-                        sprintf( lPythonCommand , "%s %s" , gPythonName , lPythonParams ) ;
-                        lDbusPresent = tryCommand(lPythonCommand) ;
-                }
-
-                if ( ! lDbusPresent && python3Present() )
-                {
-                        strcpy(gPythonName , gPython3Name ) ;
-                        sprintf( lPythonCommand , "%s %s" , gPythonName , lPythonParams ) ;
-                        lDbusPresent = tryCommand(lPythonCommand) ;
-                }
-
-                if (tinyfd_verbose) printf("lDbusPresent %d\n", lDbusPresent) ;
-                if (tinyfd_verbose) printf("gPythonName %s\n", gPythonName) ;
-        }
-        return lDbusPresent && !(isDarwin() && getenv("SSH_TTY") );
-}
-
-
-static void sigHandler(int sig)
-{
-        FILE * lIn ;
-        if ( ( lIn = popen( "pactl unload-module module-sine" , "r" ) ) )
-        {
-                pclose( lIn ) ;
-        }
 }
 
 
@@ -1447,7 +1374,7 @@ else :\n\tprint(1)\n\"" ) ;
                                 "if echo \"$answer\" | grep -iq \"^o\";then\n");
                         strcat( lDialogString , "\techo 1\nelse\n\techo 0\nfi" ) ;
                 }
-                else
+                else 
                 {
                         strcat(lDialogString , "echo -n \"press enter to continue \"; ");
                         strcat( lDialogString , "stty sane -echo;" ) ;
@@ -1456,64 +1383,6 @@ else :\n\tprint(1)\n\"" ) ;
                 }
                 strcat( lDialogString ,
                         " >/tmp/tinyfd.txt';cat /tmp/tinyfd.txt;rm /tmp/tinyfd.txt");
-        }
-        else if ( !isTerminalRunning() && pythonDbusPresent() && !strcmp("ok" , aDialogType) )
-        {
-                strcpy( lDialogString , gPythonName ) ;
-                strcat( lDialogString ," -c \"import dbus;bus=dbus.SessionBus();");
-                strcat( lDialogString ,"notif=bus.get_object('org.freedesktop.Notifications','/org/freedesktop/Notifications');" ) ;
-                strcat( lDialogString ,"notify=dbus.Interface(notif,'org.freedesktop.Notifications');" ) ;
-                strcat( lDialogString ,"notify.Notify('',0,'" ) ;
-                if ( aIconType && strlen(aIconType) )
-                {
-                        strcat( lDialogString , aIconType ) ;
-                }
-                strcat(lDialogString, "','") ;
-                if ( aTitle && strlen(aTitle) )
-                {
-                        strcat(lDialogString, aTitle) ;
-                }
-                strcat(lDialogString, "','") ;
-                if ( aMessage && strlen(aMessage) )
-                {
-                        lpDialogString = lDialogString + strlen(lDialogString);
-                        replaceSubStr( aMessage , "\n" , "\\n" , lpDialogString ) ;
-                }
-                strcat(lDialogString, "','','',5000)\"") ;
-        }
-        else if ( !isTerminalRunning() && (perlPresent() >= 2)  && !strcmp("ok" , aDialogType) )
-        {
-                sprintf( lDialogString , "perl -e \"use Net::DBus;\
-                                                                 my \\$sessionBus = Net::DBus->session;\
-                                                                 my \\$notificationsService = \\$sessionBus->get_service('org.freedesktop.Notifications');\
-                                                                 my \\$notificationsObject = \\$notificationsService->get_object('/org/freedesktop/Notifications',\
-                                                                 'org.freedesktop.Notifications');\
-                                                                 my \\$notificationId;\\$notificationId = \\$notificationsObject->Notify(shift, 0, '%s', '%s', '%s', [], {}, -1);\" ",
-                                                                 aIconType?aIconType:"", aTitle?aTitle:"", aMessage?aMessage:"" ) ;
-        }
-        else if ( !isTerminalRunning() && notifysendPresent() && !strcmp("ok" , aDialogType) )
-        {
-                strcpy( lDialogString , "notify-send" ) ;
-                if ( aIconType && strlen(aIconType) )
-                {
-                        strcat( lDialogString , " -i '" ) ;
-                        strcat( lDialogString , aIconType ) ;
-                        strcat( lDialogString , "'" ) ;
-                }
-        strcat( lDialogString , " \"" ) ;
-                if ( aTitle && strlen(aTitle) )
-                {
-                        strcat(lDialogString, aTitle) ;
-                        strcat( lDialogString , " | " ) ;
-                }
-                if ( aMessage && strlen(aMessage) )
-                {
-            replaceSubStr( aMessage , "\n\t" , " |  " , lBuff ) ;
-            replaceSubStr( aMessage , "\n" , " | " , lBuff ) ;
-            replaceSubStr( aMessage , "\t" , "  " , lBuff ) ;
-                        strcat(lDialogString, lBuff) ;
-                }
-                strcat( lDialogString , "\"" ) ;
         }
         else
         {
@@ -1597,7 +1466,6 @@ static char const * selectFolderUsingInputBox(char const * const aTitle) /* NULL
 {
         static char lBuff[MAX_PATH_OR_CMD];
         char * lDialogString = NULL;
-        char * lpDialogString;
         FILE * lIn ;
         int lResult ;
         int lWasGdialog = 0 ;
