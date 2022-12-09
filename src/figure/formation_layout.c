@@ -35,10 +35,10 @@ static const int FORMATION_LAYOUT_POSITION_Y[FORMATION_MAX][MAX_FORMATION_FIGURE
 
 int formation_layout_position_x(int layout, int index)
 {
-    return FORMATION_LAYOUT_POSITION_X[layout][index];
+    return FORMATION_LAYOUT_POSITION_X[layout][index % MAX_FORMATION_FIGURES];
 }
 
 int formation_layout_position_y(int layout, int index)
 {
-    return FORMATION_LAYOUT_POSITION_Y[layout][index];
+    return FORMATION_LAYOUT_POSITION_Y[layout][index % MAX_FORMATION_FIGURES];
 }

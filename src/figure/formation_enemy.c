@@ -480,6 +480,7 @@ static void update_enemy_movement(formation *m, int roman_distance)
             army->home_x;
         int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
             army->home_y;
+        map_grid_bound(&x_offset, &y_offset);
         int x_tile, y_tile;
         if (formation_enemy_move_formation_to(m, x_offset, y_offset, &x_tile, &y_tile)) {
             formation_set_destination(m, x_tile, y_tile);
@@ -490,6 +491,7 @@ static void update_enemy_movement(formation *m, int roman_distance)
             army->destination_x;
         int y_offset = LAYOUT_ORIENTATION_OFFSETS[layout][m->orientation / 2][2 * m->enemy_legion_index + 1] +
             army->destination_y;
+        map_grid_bound(&x_offset, &y_offset);
         int x_tile, y_tile;
         if (formation_enemy_move_formation_to(m, x_offset, y_offset, &x_tile, &y_tile)) {
             formation_set_destination(m, x_tile, y_tile);
