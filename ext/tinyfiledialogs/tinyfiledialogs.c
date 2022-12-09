@@ -1283,16 +1283,8 @@ static char const * selectFolderUsingInputBox(char const * const aTitle) /* NULL
                         strcat(lDialogString, "\" ") ;
                 }
 
-                if ( lWasGdialog )
-                {
-                        strcat( lDialogString , "--inputbox" ) ;
-                }
-                else
-                {
-                        strcat( lDialogString , "--passwordbox" ) ;
-                }
-                strcat( lDialogString , " \"" ) ;
-                strcat(lDialogString,"\" 10 60 ") ;
+                strcat( lDialogString , "--inputbox" ) ;
+                strcat( lDialogString , " \"\" 10 60 ") ;
                 strcat(lDialogString,") 2>/tmp/tinyfd.txt;\
 if [ $? = 0 ];then tinyfdBool=1;else tinyfdBool=0;fi;\
 tinyfdRes=$(cat /tmp/tinyfd.txt);echo $tinyfdBool$tinyfdRes") ;
