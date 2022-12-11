@@ -458,7 +458,7 @@ static int add_figure(int formation_id, int figure_id, int deployed, int damage,
             return fig;
         }
     }
-    return 0; // shouldn't happen
+    return 0; // can happen on large invasions
 }
 
 void formation_move_herds_away(int x, int y)

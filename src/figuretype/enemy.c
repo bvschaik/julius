@@ -25,7 +25,7 @@ static void enemy_initial(figure *f, formation *m)
     figure_route_remove(f);
     f->wait_ticks--;
     if (f->wait_ticks <= 0) {
-        if (f->is_ghost && f->index_in_formation == 0) {
+        if (f->is_ghost && f->index_in_formation == 0 && m->figures[0] == f->id) {
             if (m->layout == FORMATION_ENEMY_MOB) {
                 sound_speech_play_file("wavs/drums.wav");
             } else if (m->layout == FORMATION_ENEMY12) {
