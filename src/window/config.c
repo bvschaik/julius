@@ -1065,7 +1065,9 @@ static void cancel_values(void)
 
 static int config_change_basic(config_key key)
 {
-    config_set(key, data.config_values[key].new_value);
+    if (key < CONFIG_MAX_ENTRIES) {
+        config_set(key, data.config_values[key].new_value);
+    }
     data.config_values[key].original_value = data.config_values[key].new_value;
     return 1;
 }
