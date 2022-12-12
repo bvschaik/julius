@@ -7477,7 +7477,7 @@ int encoding_japanese_sjis_to_image_id(uint8_t first, uint8_t second)
     } else if (first == 0x81 && second >= 0x40 && second <= 0x9f) {
         // frequently used but only 20 chars out of 188 used in the block
         return image_id_punctuation_81[second - 0x40];
-    } else if (first >= 0x80 && first <= 0x98 && image_id_block_indexes[first - 0x80] >= 0) {
+    } else if (first <= 0x98 && image_id_block_indexes[first - 0x80] >= 0) {
         // character from frequently used block
         int block_index = image_id_block_indexes[first - 0x80];
         int char_index = second - 0x40 - (second >= 0x80 ? 1 : 0);

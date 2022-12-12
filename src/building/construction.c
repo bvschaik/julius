@@ -667,6 +667,7 @@ void building_construction_cancel(void)
 {
     map_property_clear_constructing_and_deleted();
     if (data.in_progress && building_construction_is_updatable()) {
+        game_undo_restore_building_state();
         game_undo_restore_map(1);
         data.in_progress = 0;
         data.cost_preview = 0;

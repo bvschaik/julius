@@ -35,7 +35,7 @@ jobs:
           - name: macOS
             os: macos-latest
             cache-key: macos
-            SDL_VERSION: 2.26.0
+            SDL_VERSION: 2.26.1
             SDL_MIXER_VERSION: 2.6.2
             BUILD_TARGET: mac
             DEPLOY: mac
@@ -50,7 +50,7 @@ jobs:
           - name: Android
             os: ubuntu-20.04
             cache-key: android
-            SDL_VERSION: 2.24.2
+            SDL_VERSION: 2.26.1
             SDL_MIXER_VERSION: 2.6.2
             BUILD_TARGET: android
             DEPLOY: android

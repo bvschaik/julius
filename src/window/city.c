@@ -504,11 +504,7 @@ static void cycle_legion(void)
         if (current_legion_id > 0) {
             const formation *m = formation_get(current_legion_id);
             city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));
-            if (config_get(CONFIG_UI_SHOW_MILITARY_SIDEBAR) && window_is(WINDOW_CITY_MILITARY)) {
-                window_city_military_show(current_legion_id);
-            } else {
-                window_invalidate();
-            }
+            window_city_military_show(current_legion_id);
         }
     }
 }

@@ -669,19 +669,19 @@ void city_with_overlay_draw(const map_tile *tile)
     int should_mark_deleting = city_building_ghost_mark_deleting(tile);
     city_view_foreach_map_tile(draw_footprint);
     if (!should_mark_deleting) {
-        city_view_foreach_valid_map_tile(
+        city_view_foreach_valid_map_tile_row(
             draw_figures,
             draw_top,
             draw_animation
         );
         city_building_ghost_draw(tile);
-        city_view_foreach_map_tile(draw_elevated_figures);
+        city_view_foreach_valid_map_tile(draw_elevated_figures);
     } else {
-        city_view_foreach_map_tile(draw_figures);
-        city_view_foreach_map_tile(deletion_draw_terrain_top);
-        city_view_foreach_map_tile(deletion_draw_animations);
+        city_view_foreach_valid_map_tile(draw_figures);
+        city_view_foreach_valid_map_tile(deletion_draw_terrain_top);
+        city_view_foreach_valid_map_tile(deletion_draw_animations);
         city_building_ghost_draw(tile);
-        city_view_foreach_map_tile(draw_elevated_figures);
+        city_view_foreach_valid_map_tile(draw_elevated_figures);
     }
     if (overlay->draw_custom_layer) {
         city_view_foreach_map_tile(draw_custom_layer);

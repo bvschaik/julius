@@ -1,4 +1,6 @@
 #include "../src/core/zip.h"
+#include "../src/figure/type.h"
+#include "../src/map/grid.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -441,6 +443,28 @@ static int is_exception_building_grid(int global_offset, int part_offset)
     return 0;
 }
 
+static int is_exception_figures(int global_offset, int part_offset)
+{
+    // herd animals have a bug where their destination_x/y can get set outside
+    // the map bounds
+    int figures_start = global_offset - part_offset;
+    int figure_num = part_offset / 128;
+    int figure_offset = figure_num * 128 + figures_start;
+    int type = to_ushort(&file1_data[figure_offset + 10]);
+    if (type < FIGURE_SHEEP || type > FIGURE_ZEBRA) {
+        return 0;
+    }
+    int figure_part_offset = part_offset % 128;
+    if (figure_part_offset != 28 && figure_part_offset != 29) {
+        return 0;
+    }
+    unsigned char old_val = file1_data[global_offset];
+    if (old_val < GRID_SIZE) {
+        return 0;
+    }
+    return 1;
+}
+
 static int is_exception(int index, int global_offset, int part_offset)
 {
     if (index == index_of_part("city_sounds")) {
@@ -478,6 +502,9 @@ static int is_exception(int index, int global_offset, int part_offset)
         if (to_uint(&file1_data[global_offset - part_offset]) == 0 || to_uint(&file2_data[global_offset - part_offset]) == 0) {
             return 1;
         }
+    }
+    if (index == index_of_part("figures")) {
+        return is_exception_figures(global_offset, part_offset);
     }
     return 0;
 }

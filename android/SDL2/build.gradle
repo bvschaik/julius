@@ -26,22 +26,12 @@ task findSDL2 {
 task findSDL2Mixer {
     def path = findLibrary("SDL2_mixer")
     ext.sourcePath = path
-    // SDL2_mixer doesn't have a dedicated directory for includes. If we use the root dir as
-    // include_path, the whole source dir is packaged in the .aar, which is not what we want.
-    // Workaround: copy the headers to our own directory for includes.
-    def includeTarget = layout.buildDirectory.dir("sdl2_mixer_includes")
-    copy {
-        from path
-        include "*.h"
-        from "$path/include"
-        into includeTarget
-    }
-    ext.includePath = includeTarget.get().asFile
+    ext.includePath = new File(path, "include")
 }
 
 android {
     compileSdkVersion 33
-    buildToolsVersion "33.0.0"
+    buildToolsVersion "33.0.1"
     ndkVersion "25.1.8937393"
 
     defaultConfig {

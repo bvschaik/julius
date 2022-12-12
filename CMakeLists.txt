@@ -67,11 +67,6 @@ if (CMAKE_COMPILER_IS_GNUCC)
     endif()
 endif()
 
-# Fix bug in cmake 3.24.0 that expects the resource compiler for mingw to have the toolchain prefix in the name
-if (CMAKE_VERSION VERSION_EQUAL 3.24.0 AND MINGW)
-    set(CMAKE_RC_COMPILER "windres")
-endif()
-
 set(PROJECT_VERSION_MAJOR 3)
 set(PROJECT_VERSION_MINOR 2)
 set(PROJECT_VERSION_PATCH 0)
@@ -809,7 +804,7 @@ if(APPLE)
 
     set_target_properties(${SHORT_NAME} PROPERTIES
         MACOSX_BUNDLE TRUE
-        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/Info.plist")
+        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/macos/Info.plist")
 
     set(DIRS "")
     set(LIBS "")
@@ -835,6 +830,15 @@ if(APPLE)
         include(BundleUtilities)
         fixup_bundle(${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app \"${LIBS}\" \"${DIRS}\")
     " BUNDLE DESTINATION ${CMAKE_BINARY_DIR})
+
+    # perform ad-hoc codesigning
+	set(codesignCommand "codesign --verbose=4 --force --deep --options=runtime --timestamp=none --sign -")
+	set(codesignCommandWithEntitlements "${codesignCommand} --entitlements \"${PROJECT_SOURCE_DIR}/res/macos/Entitlements.plist\"")
+	install(CODE "
+		execute_process(COMMAND
+			${codesignCommandWithEntitlements} \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\"
+		)
+	")
 endif()
 
 if(SDL2_INCLUDE_DIR)

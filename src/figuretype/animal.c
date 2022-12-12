@@ -124,6 +124,17 @@ void figure_seagulls_action(figure *f)
     }
 }
 
+static void herd_get_destination(int index, const formation *m, uint8_t *x, uint8_t *y)
+{
+    int offset_x = formation_layout_position_x(FORMATION_HERD, index);
+    int offset_y = formation_layout_position_y(FORMATION_HERD, index);
+    int destination_x = m->destination_x + offset_x;
+    int destination_y = m->destination_y + offset_y;
+    map_grid_bound(&destination_x, &destination_y);
+    *x = destination_x;
+    *y = destination_y;
+}
+
 void figure_sheep_action(figure *f)
 {
     const formation *m = formation_get(f->formation_id);
@@ -145,10 +156,7 @@ void figure_sheep_action(figure *f)
             if (f->wait_ticks > 400) {
                 f->wait_ticks = f->id & 0x1f;
                 f->action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-                f->destination_x = m->destination_x
-                    + formation_layout_position_x(FORMATION_HERD, f->index_in_formation);
-                f->destination_y = m->destination_y
-                    + formation_layout_position_y(FORMATION_HERD, f->index_in_formation);
+                herd_get_destination(f->index_in_formation, m, &f->destination_x, &f->destination_y);
                 f->roam_length = 0;
             }
             break;
@@ -200,10 +208,7 @@ void figure_wolf_action(figure *f)
             if (f->wait_ticks > 400) {
                 f->wait_ticks = f->id & 0x1f;
                 f->action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-                f->destination_x = m->destination_x
-                    + formation_layout_position_x(FORMATION_HERD, f->index_in_formation);
-                f->destination_y = m->destination_y
-                    + formation_layout_position_y(FORMATION_HERD, f->index_in_formation);
+                herd_get_destination(f->index_in_formation, m, &f->destination_x, &f->destination_y);
                 f->roam_length = 0;
             }
             break;
@@ -307,10 +312,7 @@ void figure_zebra_action(figure *f)
             if (f->wait_ticks > 200) {
                 f->wait_ticks = f->id & 0x1f;
                 f->action_state = FIGURE_ACTION_197_HERD_ANIMAL_MOVING;
-                f->destination_x = m->destination_x
-                    + formation_layout_position_x(FORMATION_HERD, f->index_in_formation);
-                f->destination_y = m->destination_y
-                    + formation_layout_position_y(FORMATION_HERD, f->index_in_formation);
+                herd_get_destination(f->index_in_formation, m, &f->destination_x, &f->destination_y);
                 f->roam_length = 0;
             }
             break;

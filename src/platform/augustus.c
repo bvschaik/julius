@@ -446,8 +446,8 @@ static const char *ask_for_data_dir(int again)
         if (!result) {
             return NULL;
         }
-        }
-    return tinyfd_selectFolderDialog("Please select your Caesar 3 folder", NULL);
+    }
+    return tinyfd_selectFolderDialog("Please select your Caesar 3 folder");
 #endif
     }
 #endif

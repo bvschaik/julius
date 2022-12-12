@@ -11,9 +11,11 @@ case "$BUILD_TARGET" in
 	;;
 "mac")
 	cp -r res/maps ./build	
-	cp -r res/manual ./build	
-	cd build && make -j4 && make install && \
-	echo "Creating disk image" && \
+	cp -r res/manual ./build
+	cd build
+	make -j4
+	make install
+	echo "Creating disk image"
 	hdiutil create -volname Augustus -srcfolder augustus.app -ov -format UDZO augustus.dmg
 	if [[ "$GITHUB_REF" =~ ^refs/tags/v ]]
 	then
@@ -22,12 +24,13 @@ case "$BUILD_TARGET" in
 		zip -r augustus.zip augustus.dmg 	
 	fi
 	;;
-"appimage")	
+"appimage")
 	cp -r res/maps ./build	
 	cp -r res/manual ./build	
-	cd build && make -j4 && \
-	make DESTDIR=AppDir install && \
-	cd .. && \
+	cd build
+	make -j4
+	make DESTDIR=AppDir install
+	cd ..
 	./.ci_scripts/package_appimage.sh
 	if [[ "$GITHUB_REF" =~ ^refs/tags/v ]]	
 	then
