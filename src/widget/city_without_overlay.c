@@ -768,7 +768,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
     city_view_get_viewport(&x, &y, &width, &height);
     graphics_fill_rect(x, y, width, height, COLOR_BLACK);
     int should_mark_deleting = city_building_ghost_mark_deleting(tile);
-    city_view_foreach_valid_map_tile(draw_footprint, 0, 0);
+    city_view_foreach_valid_map_tile(draw_footprint);
 #ifndef NDEBUG
     debug_draw_city();
 #endif
