@@ -70,5 +70,5 @@ void city_water_ghost_draw_water_structure_ranges(void)
     last_building_type = type;
     last_well_count = num_wells;
     last_fountain_count = num_fountains;
-    city_view_foreach_map_tile(draw_water_access);
+    city_view_foreach_valid_map_tile(draw_water_access);
 }
