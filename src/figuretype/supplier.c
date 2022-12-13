@@ -187,8 +187,7 @@ static int recalculate_market_supplier_destination(figure *f)
     if (!road_network) {
         return 1;
     }
-    if (!building_distribution_get_inventory_storages(info, BUILDING_MARKET,
-        road_network, f->x, f->y, MAX_DISTANCE)) {
+    if (!building_distribution_get_inventory_storages_for_figure(info, BUILDING_MARKET, road_network, f, MAX_DISTANCE)) {
         return 0;
     }
 

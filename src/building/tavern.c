@@ -13,8 +13,7 @@ int building_tavern_get_storage_destination(building *tavern)
         return 0;
     }
     inventory_storage_info data[INVENTORY_MAX];
-    if (!building_distribution_get_inventory_storages(data, BUILDING_TAVERN, 
-            tavern->road_network_id, tavern->road_access_x, tavern->road_access_y, INFINITE)) {
+    if (!building_distribution_get_inventory_storages_for_building(data, tavern, INFINITE)) {
         return 0;
     }
     if (building_distribution_is_good_accepted(INVENTORY_WINE, tavern) &&

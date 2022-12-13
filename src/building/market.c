@@ -3,7 +3,6 @@
 #include "building/distribution.h"
 #include "scenario/property.h"
 
-#define MAX_DISTANCE 40
 #define MAX_FOOD 600
 
 int building_market_get_max_food_stock(building* market)
@@ -94,8 +93,7 @@ int building_market_get_storage_destination(building* market)
         return 0;
     }
     inventory_storage_info info[INVENTORY_MAX];
-    if (!building_distribution_get_inventory_storages(info, BUILDING_MARKET,
-        market->road_network_id, market->road_access_x, market->road_access_y, MAX_DISTANCE)) {
+    if (!building_distribution_get_inventory_storages_for_building(info, market, MARKET_MAX_DISTANCE)) {
         return 0;
     }
     int fetch_inventory = building_market_fetch_inventory(market, info, needed_inventory);

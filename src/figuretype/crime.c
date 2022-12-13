@@ -45,8 +45,7 @@ int get_looter_destination(figure *f)
 {
     inventory_storage_info info[INVENTORY_MAX];
     looter_destination possible_destinations[INVENTORY_MAX];
-    if (!building_distribution_get_inventory_storages(info, 0,
-        0, f->x, f->y, MAX_LOOTING_DISTANCE)) {
+    if (!building_distribution_get_inventory_storages_for_figure(info, 0, 0, f, MAX_LOOTING_DISTANCE)) {
         return 0;
     }
 

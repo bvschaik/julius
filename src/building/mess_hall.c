@@ -34,8 +34,7 @@ int building_mess_hall_get_storage_destination(building *mess_hall)
         return 0;
     }
     inventory_storage_info data[INVENTORY_MAX];
-    if (!building_distribution_get_inventory_storages(data, BUILDING_MESS_HALL,
-            mess_hall->road_network_id, mess_hall->road_access_x, mess_hall->road_access_y, MAX_DISTANCE)) {
+    if (!building_distribution_get_inventory_storages_for_building(data, mess_hall, MAX_DISTANCE)) {
         return 0;
     }
     // Prefer whichever food we don't have

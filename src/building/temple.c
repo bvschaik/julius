@@ -38,8 +38,7 @@ int building_temple_get_storage_destination(building *temple)
     }
 
     inventory_storage_info data[INVENTORY_MAX];
-    if (!building_distribution_get_inventory_storages(data, temple->type,
-            temple->road_network_id, temple->road_access_x, temple->road_access_y, INFINITE)) {
+    if (!building_distribution_get_inventory_storages_for_building(data, temple, INFINITE)) {
         return 0;
     }
 

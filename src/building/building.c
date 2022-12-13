@@ -15,6 +15,7 @@
 #include "city/population.h"
 #include "city/warning.h"
 #include "core/array.h"
+#include "core/calc.h"
 #include "core/log.h"
 #include "figure/formation_legion.h"
 #include "game/difficulty.h"
@@ -46,6 +47,13 @@ static struct {
 building *building_get(int id)
 {
     return array_item(data.buildings, id);
+}
+
+int building_dist(int x, int y, int w, int h, building *b)
+{
+    int size = building_properties_for_type(b->type)->size;
+    int dist = calc_box_distance(x, y, w, h, b->x, b->y, size, size);
+    return dist;
 }
 
 void building_get_from_buffer(buffer *buf, int id, building *b, int includes_building_size, int save_version,

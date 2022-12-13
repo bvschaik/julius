@@ -7,6 +7,7 @@
 #include "building/count.h"
 #include "building/image.h"
 #include "building/industry.h"
+#include "building/market.h"
 #include "building/monument.h"
 #include "building/model.h"
 #include "building/properties.h"
@@ -1101,6 +1102,35 @@ static void draw_road(const map_tile *tile, int x, int y)
     }
 }
 
+static void draw_market_range(int x, int y, int grid_offset)
+{
+    image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_GREY, data.scale);
+}
+
+static void draw_market(const map_tile *tile, int x, int y)
+{
+    int grid_offset = tile->grid_offset;
+    const int building_size = 2;
+    const int num_tiles = 4;
+    int blocked_tiles[4];
+    int blocked = 0;
+    if (city_finance_out_of_money()) {
+        blocked = 1;
+        for (int i = 0; i < num_tiles; i++) {
+            blocked_tiles[i] = 1;
+        }
+    } else {
+        blocked = is_blocked_for_building(grid_offset, building_size, blocked_tiles);
+    }
+    if (config_get(CONFIG_UI_SHOW_MARKET_RANGE)) {
+        city_view_foreach_tile_in_range(tile->grid_offset, 2, MARKET_MAX_DISTANCE, draw_market_range);
+    }
+    int image_id = image_group(building_properties_for_type(BUILDING_MARKET)->image_group);
+    color_t color = blocked ? COLOR_MASK_BUILDING_GHOST_RED : COLOR_MASK_BUILDING_GHOST;
+    draw_building(image_id, x, y, color);
+    draw_building_tiles(x, y, num_tiles, blocked_tiles);
+}
+
 static void draw_highway(const map_tile *tile, int x, int y)
 {
     const building_properties *props = building_properties_for_type(BUILDING_HIGHWAY);
@@ -1310,6 +1340,9 @@ void city_building_ghost_draw(const map_tile *tile)
             break;
         case BUILDING_ROAD:
             draw_road(tile, x, y);
+            break;
+        case BUILDING_MARKET:
+            draw_market(tile, x, y);
             break;
         case BUILDING_HOUSE_VACANT_LOT:
             if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE_HOUSES)) {

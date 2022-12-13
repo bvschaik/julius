@@ -25,8 +25,7 @@ int building_lighthouse_get_storage_destination(building *lighthouse)
     }
 
     inventory_storage_info data[RESOURCE_MAX];
-    if (!building_distribution_get_raw_material_storages(data, BUILDING_LIGHTHOUSE,
-                                                      lighthouse->road_network_id, lighthouse->road_access_x, lighthouse->road_access_y, INFINITE)) {
+    if (!building_distribution_get_raw_material_storages_for_building(data, lighthouse, INFINITE)) {
         return 0;
     }
 

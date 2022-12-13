@@ -53,6 +53,23 @@ int calc_maximum_distance(int x1, int y1, int x2, int y2)
     return distance_x > distance_y ? distance_x : distance_y;
 }
 
+int calc_box_distance(int ax, int ay, int aw, int ah, int bx, int by, int bw, int bh)
+{
+    int left = ax + aw <= bx;
+    int right = ax >= bx + bw;
+    int bottom = ay + ah <= by;
+    int top = ay >= by + bh;
+    if (bottom && left) return calc_maximum_distance(ax + aw, ay + ah, bx, by);
+    if (top && left) return calc_maximum_distance(ax + aw, ay, bx, by + bh);
+    if (top && right) return calc_maximum_distance(ax, ay, bx + bw, by + bh);
+    if (bottom && right) return calc_maximum_distance(ax, ay + ah, bx + bw, by);
+    if (left) return bx - (ax + aw);
+    if (right) return ax - (bx + bw);
+    if (bottom) return by - (ay + ah);
+    if (top) return ay - (by + bh);
+    return -1;
+}
+
 direction_type calc_general_direction(int x_from, int y_from, int x_to, int y_to)
 {
     if (x_from < x_to) {
