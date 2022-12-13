@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define XML_TOTAL_ELEMENTS 11
+#define XML_TOTAL_ELEMENTS 14
 
 typedef enum {
     LIST_NONE = -1,
@@ -25,6 +25,18 @@ typedef enum {
     LIST_TRADE_WAYPOINTS = 3
 } city_list;
 
+typedef enum {
+    DISTANT_BATTLE_PATH_NONE,
+    DISTANT_BATTLE_PATH_ROMAN,
+    DISTANT_BATTLE_PATH_ENEMY
+} distant_battle_path_type;
+
+typedef struct {
+    int x;
+    int y;
+    int num_months;
+} waypoint;
+
 static struct {
     int success;
     int version;
@@ -32,9 +44,13 @@ static struct {
     int current_city_id;
     int current_trade_route_id;
     city_list current_city_list;
+    int has_vulnerable_city;
     int current_invasion_path_id;
     int invasion_path_ids[10];
     int invasion_path_idx;
+    distant_battle_path_type distant_battle_path_type;
+    waypoint distant_battle_waypoints[50];
+    int distant_battle_wapoint_idx;
 } data;
 
 static int xml_start_empire(void);
@@ -46,10 +62,13 @@ static int xml_start_resource(void);
 static int xml_start_trade_point(void);
 static int xml_start_invasion_path(void);
 static int xml_start_battle(void);
+static int xml_start_distant_battle_path(void);
+static int xml_start_distant_battle_waypoint(void);
 
 static void xml_end_city(void);
 static void xml_end_sells_buys_or_waypoints(void);
 static void xml_end_invasion_path(void);
+static void xml_end_distant_battle_path(void);
 
 static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "empire", xml_start_empire },
@@ -63,6 +82,9 @@ static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "invasion_paths", 0, 0, "empire" },
     { "path", xml_start_invasion_path, xml_end_invasion_path, "invasion_paths"},
     { "battle", xml_start_battle, 0, "path"},
+    { "distant_battle_paths", 0, 0, "empire" },
+    { "path", xml_start_distant_battle_path, xml_end_distant_battle_path, "distant_battle_paths" },
+    { "waypoint", xml_start_distant_battle_waypoint, 0, "path" },
 };
 
 static int xml_start_empire(void)
@@ -101,7 +123,7 @@ static int xml_start_city(void)
     city_obj->obj.width = 44;
     city_obj->obj.height = 36;
 
-    static const char *city_types[5] = { "roman", "ours", "trade", 0, "distant" };
+    static const char *city_types[6] = { "roman", "ours", "trade", 0, "distant", "vulnerable" };
     static const char *trade_route_types[2] = { "land", "sea" };
 
     const char *name = xml_parser_get_attribute_string("name");
@@ -112,7 +134,7 @@ static int xml_start_city(void)
     city_obj->obj.x = xml_parser_get_attribute_int("x");
     city_obj->obj.y = xml_parser_get_attribute_int("y");
 
-    int city_type = xml_parser_get_attribute_enum("type", city_types, 5, EMPIRE_CITY_DISTANT_ROMAN);
+    int city_type = xml_parser_get_attribute_enum("type", city_types, 6, EMPIRE_CITY_DISTANT_ROMAN);
     if (city_type < EMPIRE_CITY_DISTANT_ROMAN) {
         city_obj->city_type = EMPIRE_CITY_TRADE;
     } else {
@@ -127,6 +149,10 @@ static int xml_start_city(void)
             break;
         case EMPIRE_CITY_DISTANT_FOREIGN:
             city_obj->obj.image_id = image_group(GROUP_EMPIRE_FOREIGN_CITY);
+            break;
+        case EMPIRE_CITY_VULNERABLE_ROMAN:
+            city_obj->obj.image_id = image_group(GROUP_EMPIRE_CITY_DISTANT_ROMAN);
+            data.has_vulnerable_city = 1;
             break;
         default:
             city_obj->obj.image_id = image_group(GROUP_EMPIRE_CITY_TRADE);
@@ -289,6 +315,69 @@ static int xml_start_battle(void)
     return 1;
 }
 
+static int xml_start_distant_battle_path(void)
+{
+    if (!data.has_vulnerable_city) {
+        data.success = 0;
+        log_error("Must have a vulnerable city to set up distant battle paths", 0, 0);
+        return 0;
+    } else if (!xml_parser_has_attribute("type")) {
+        data.success = 0;
+        log_error("Unable to find type attribute on distant battle path", 0, 0);
+        return 0;
+    } else if (!xml_parser_has_attribute("start_x")) {
+        data.success = 0;
+        log_error("Unable to find start_x attribute on distant battle path", 0, 0);
+        return 0;
+    } else if (!xml_parser_has_attribute("start_y")) {
+        data.success = 0;
+        log_error("Unable to find start_y attribute on distant battle path", 0, 0);
+        return 0;
+    }
+
+    const char *type = xml_parser_get_attribute_string("type");
+    if (strcmp(type, "roman") == 0) {
+        data.distant_battle_path_type = DISTANT_BATTLE_PATH_ROMAN;
+    } else if (strcmp(type, "enemy") == 0) {
+        data.distant_battle_path_type = DISTANT_BATTLE_PATH_ENEMY;
+    } else {
+        data.success = 0;
+        log_error("Distant battle path type must be \"roman\" or \"enemy\"", type, 0);
+        return 0;
+    }
+
+    waypoint *w = &data.distant_battle_waypoints[data.distant_battle_wapoint_idx];
+    w->x = xml_parser_get_attribute_int("start_x");
+    w->y = xml_parser_get_attribute_int("start_y");
+    w->num_months = 0;
+    data.distant_battle_wapoint_idx++;
+    return 1;
+}
+
+static int xml_start_distant_battle_waypoint(void)
+{
+    if (!xml_parser_has_attribute("num_months")) {
+        data.success = 0;
+        log_error("Unable to find num_months attribute on distant battle path", 0, 0);
+        return 0;
+    } else if (!xml_parser_has_attribute("x")) {
+        data.success = 0;
+        log_error("Unable to find x attribute on distant battle path", 0, 0);
+        return 0;
+    } else if (!xml_parser_has_attribute("y")) {
+        data.success = 0;
+        log_error("Unable to find y attribute on distant battle path", 0, 0);
+        return 0;
+    }
+
+    waypoint *w = &data.distant_battle_waypoints[data.distant_battle_wapoint_idx];
+    w->x = xml_parser_get_attribute_int("x");
+    w->y = xml_parser_get_attribute_int("y");
+    w->num_months = xml_parser_get_attribute_int("num_months");
+    data.distant_battle_wapoint_idx++;
+    return 1;
+}
+
 static void xml_end_city(void)
 {
     data.current_city_id = -1;
@@ -312,6 +401,52 @@ static void xml_end_invasion_path(void)
     data.invasion_path_idx = 0;
 }
 
+static void xml_end_distant_battle_path(void)
+{
+    empire_object_type obj_type = 0;
+    int image_id = 0;
+    if (data.distant_battle_path_type == DISTANT_BATTLE_PATH_ROMAN) {
+        obj_type = EMPIRE_OBJECT_ROMAN_ARMY;
+        image_id = GROUP_EMPIRE_ROMAN_ARMY;
+    } else if (data.distant_battle_path_type == DISTANT_BATTLE_PATH_ENEMY) {
+        obj_type = EMPIRE_OBJECT_ENEMY_ARMY;
+        image_id = GROUP_EMPIRE_ENEMY_ARMY;
+    } else {
+        data.success = 0;
+        log_error("Invalid distant battle path type", 0, data.distant_battle_path_type);
+        return;
+    }
+
+    int month = 1;
+    for (int i = 1; i < data.distant_battle_wapoint_idx; i++) {
+        waypoint *last = &data.distant_battle_waypoints[i - 1];
+        waypoint *current = &data.distant_battle_waypoints[i];
+        int x_diff = current->x - last->x;
+        int y_diff = current->y - last->y;
+        for (int j = 0; j < current->num_months; j++) {
+            if (data.next_empire_obj_id >= MAX_EMPIRE_OBJECTS) {
+                data.success = 0;
+                log_error("Too many objects", 0, data.next_empire_obj_id);
+                return;
+            }
+            full_empire_object *army_obj = empire_object_get_full(data.next_empire_obj_id);
+            army_obj->obj.id = data.next_empire_obj_id;
+            data.next_empire_obj_id++;
+            army_obj->in_use = 1;
+            army_obj->obj.type = obj_type;
+            army_obj->obj.image_id = image_group(image_id);
+            army_obj->obj.x = (double)j / current->num_months * x_diff + last->x;
+            army_obj->obj.y = (double)j / current->num_months * y_diff + last->y;
+            army_obj->obj.distant_battle_travel_months = month;
+            month++;
+        }
+    }
+
+    data.distant_battle_path_type = DISTANT_BATTLE_PATH_NONE;
+    memset(data.distant_battle_waypoints, 0, sizeof(data.distant_battle_waypoints));
+    data.distant_battle_wapoint_idx = 0;
+}
+
 static void reset_data(void)
 {
     data.success = 1;
@@ -319,9 +454,13 @@ static void reset_data(void)
     data.current_city_id = -1;
     data.current_trade_route_id = -1;
     data.current_city_list = LIST_NONE;
+    data.has_vulnerable_city = 0;
     data.current_invasion_path_id = 0;
     memset(data.invasion_path_ids, 0, sizeof(data.invasion_path_ids));
     data.invasion_path_idx = 0;
+    data.distant_battle_path_type = DISTANT_BATTLE_PATH_NONE;
+    memset(data.distant_battle_waypoints, 0, sizeof(data.distant_battle_waypoints));
+    data.distant_battle_wapoint_idx = 0;
 }
 
 static void set_trade_coords(const empire_object *our_city)
