@@ -154,7 +154,7 @@ static void draw_trader(building_info_context *c, figure *f)
             if (trader_bought_resources(trader_id, r)) {
                 width += text_draw_number(trader_bought_resources(trader_id, r),
                     '@', " ", c->x_offset + 40 + width, y_base, FONT_NORMAL_BROWN, 0);
-                int image_id = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = resource_get_data(r)->image.icon;
                 image_draw(image_id, c->x_offset + 40 + width, y_base - 3, COLOR_MASK_NONE, SCALE_NONE);
                 width += 25;
             }
@@ -166,7 +166,7 @@ static void draw_trader(building_info_context *c, figure *f)
             if (trader_sold_resources(trader_id, r)) {
                 width += text_draw_number(trader_sold_resources(trader_id, r),
                     '@', " ", c->x_offset + 40 + width, y_base, FONT_NORMAL_BROWN, 0);
-                int image_id = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = resource_get_data(r)->image.icon;
                 image_draw(image_id, c->x_offset + 40 + width, y_base - 3, COLOR_MASK_NONE, SCALE_NONE);
                 width += 25;
             }
@@ -177,7 +177,7 @@ static void draw_trader(building_info_context *c, figure *f)
         width = lang_text_draw(129, 2, c->x_offset + 40, y_base, FONT_NORMAL_BROWN);
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
             if (city->buys_resource[r]) {
-                int image_id = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = resource_get_data(r)->image.icon;
                 image_draw(image_id, c->x_offset + 40 + width, y_base - 3, COLOR_MASK_NONE, SCALE_NONE);
                 width += 25;
             }
@@ -187,7 +187,7 @@ static void draw_trader(building_info_context *c, figure *f)
         width = lang_text_draw(129, 3, c->x_offset + 40, y_base, FONT_NORMAL_BROWN);
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
             if (city->sells_resource[r]) {
-                int image_id = image_group(GROUP_RESOURCE_ICONS) + r + resource_image_offset(r, RESOURCE_IMAGE_ICON);
+                int image_id = resource_get_data(r)->image.icon;
                 image_draw(image_id, c->x_offset + 40 + width, y_base - 3, COLOR_MASK_NONE, SCALE_NONE);
                 width += 25;
             }
@@ -312,8 +312,7 @@ static void draw_cartpusher(building_info_context *c, figure *f)
 
     if (f->action_state != FIGURE_ACTION_132_DOCKER_IDLING && f->resource_id) {
         int resource = f->resource_id;
-        image_draw(image_group(GROUP_RESOURCE_ICONS) +
-            resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+        image_draw(resource_get_data(resource)->image.icon,
             c->x_offset + 92 + width, c->y_offset + 135, COLOR_MASK_NONE, SCALE_NONE);
     }
 
@@ -378,26 +377,16 @@ static void draw_supplier(building_info_context *c, figure *f)
         width = lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BROWN);
     }
 
+    resource_type resource = f->collecting_item_id;
+
     if (f->action_state == FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE) {
         width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_BROWN);
-        int resource;
-        if (f->type == FIGURE_LIGHTHOUSE_SUPPLIER) {
-            resource = f->collecting_item_id;
-        } else {
-            resource = resource_from_inventory(f->collecting_item_id);
-        }
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+        image_draw(resource_get_data(resource)->image.icon,
             c->x_offset + 90 + width, c->y_offset + 135, COLOR_MASK_NONE, SCALE_NONE);
     } else if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING) {
-        int resource;
-        if (f->type == FIGURE_LIGHTHOUSE_SUPPLIER) {
-            resource = f->collecting_item_id;
-        } else {
-            resource = resource_from_inventory(f->collecting_item_id);
-        }
         if (resource != RESOURCE_NONE) {
             width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_BROWN);
-            image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+            image_draw(resource_get_data(resource)->image.icon,
                 c->x_offset + 90 + width, c->y_offset + 135, COLOR_MASK_NONE, SCALE_NONE);
         }
     }
@@ -418,14 +407,14 @@ static void draw_monument_worker(building_info_context *c, figure *f)
 
     if (f->action_state == FIGURE_ACTION_204_WORK_CAMP_WORKER_GETTING_RESOURCES) {
         width += lang_text_draw(129, 17, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_BROWN);
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+        image_draw(resource_get_data(resource)->image.icon,
             c->x_offset + 90 + width, c->y_offset + 135, COLOR_MASK_NONE, SCALE_NONE);
     } else if (f->action_state == FIGURE_ACTION_205_WORK_CAMP_WORKER_GOING_TO_MONUMENT ||
         f->action_state == FIGURE_ACTION_209_WORK_CAMP_SLAVE_FOLLOWING ||
         f->action_state == FIGURE_ACTION_210_WORK_CAMP_SLAVE_GOING_TO_MONUMENT ||
         f->action_state == FIGURE_ACTION_211_WORK_CAMP_SLAVE_DELIVERING_RESOURCES) {
         width += lang_text_draw(129, 18, c->x_offset + 90 + width, c->y_offset + 139, FONT_NORMAL_BROWN);
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON),
+        image_draw(resource_get_data(resource)->image.icon,
             c->x_offset + 90 + width, c->y_offset + 135, COLOR_MASK_NONE, SCALE_NONE);
     }
     if (c->figure.phrase_id >= 0) {

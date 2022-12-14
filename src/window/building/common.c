@@ -87,7 +87,7 @@ static int draw_employment_info(building_info_context *c, building *b, int y_off
 
 void window_building_draw_levy(int amount, int x_offset, int y_offset)
 {
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + 16, x_offset + 300, y_offset + 5, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(resource_get_data(RESOURCE_DENARII)->image.icon, x_offset + 300, y_offset + 5, COLOR_MASK_NONE, SCALE_NONE);
     int width = text_draw_money(abs(amount), x_offset + 320, y_offset + 10, FONT_NORMAL_BROWN);
     if (amount > 0) {
         text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY),
@@ -192,9 +192,8 @@ static void window_building_draw_monument_resources_needed(building_info_context
         for (int r = RESOURCE_TIMBER; r <= RESOURCE_MARBLE; r++) {
             int total_resources_needed = building_monument_resources_needed_for_monument_type(b->type, r,
                 b->data.monument.phase);
-            int resources_delivered = total_resources_needed - b->data.monument.resources_needed[r];
-            int image_id = image_group(GROUP_RESOURCE_ICONS);
-            image_draw(image_id + r, c->x_offset + 22, c->y_offset - 105 + r * 20, COLOR_MASK_NONE, SCALE_NONE);
+            int resources_delivered = total_resources_needed - b->resources[r];
+            image_draw(resource_get_data(r)->image.icon, c->x_offset + 22, c->y_offset - 105 + r * 20, COLOR_MASK_NONE, SCALE_NONE);
             int width = text_draw_number(resources_delivered, '@', "/",
                 c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK, 0);
             text_draw_number(total_resources_needed, '@', " ",

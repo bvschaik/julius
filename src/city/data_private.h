@@ -351,8 +351,6 @@ extern struct city_data_t {
     struct {
         int16_t space_in_warehouses[RESOURCE_MAX];
         int16_t stored_in_warehouses[RESOURCE_MAX];
-        int32_t space_in_workshops[6];
-        int32_t stored_in_workshops[6];
         int16_t trade_status[RESOURCE_MAX];
         int16_t export_status_before_stockpiling[RESOURCE_MAX];
         int16_t import_over[RESOURCE_MAX];

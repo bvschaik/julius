@@ -387,7 +387,7 @@ static void generate_tooltip_text_for_monument(building_type monument)
             }
             index += string_from_int(index, amount, 0);
             index = string_copy(string_from_ascii(" "), index, remanining_length(index));
-            index = string_copy(lang_get_string(23, r), index, remanining_length(index));
+            index = string_copy(resource_get_data(r)->text, index, remanining_length(index));
             has_listed_resource = 1;
         }
     }

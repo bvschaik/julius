@@ -123,9 +123,9 @@ void building_storage_save_state(buffer *buf);
 /**
  * Load data
  * @param buf Buffer to read from
- * @param includes_storage_size true if buf first includes the size, in bytes, of each storage element, false otherwise
+ * @param version The save version
  */
-void building_storage_load_state(buffer *buf, int includes_storage_size);
+void building_storage_load_state(buffer *buf, int version);
 
 
 

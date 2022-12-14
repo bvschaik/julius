@@ -22,7 +22,7 @@
 
 typedef struct handled_good {
     unsigned char road_network_id;
-    int goods[RESOURCE_MAX - 1];
+    int goods[RESOURCE_MAX];
 } handled_good;
 
 int building_dock_count_idle_dockers(const building *dock)
@@ -74,9 +74,9 @@ int building_dock_accepts_ship(int ship_id, int dock_id)
     if (!building_dock_can_trade_with_route(city->route_id, dock_id)) {
         return 0;
     }
-    for (int resource = RESOURCE_WHEAT; resource < RESOURCE_MAX; resource++) {
+    for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
         if (city->sells_resource[resource] || city->buys_resource[resource]) {
-            if (building_distribution_is_good_accepted(resource - 1, dock)) {
+            if (building_distribution_is_good_accepted(resource, dock)) {
                 return 1;
             }
         }
@@ -97,10 +97,10 @@ int building_dock_can_import_from_ship(building *dock, int ship_id)
     }
 
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (building_distribution_is_good_accepted(r - 1, dock)) {
+        if (building_distribution_is_good_accepted(r, dock)) {
             return 1;
         }
-    }
+    }   
     return 0;
 }
 
@@ -117,7 +117,7 @@ int building_dock_can_export_to_ship(building *dock, int ship_id)
     }
 
     for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (building_distribution_is_good_accepted(r - 1, dock)) {
+        if (building_distribution_is_good_accepted(r, dock)) {
             return 1;
         }
     }
@@ -156,8 +156,8 @@ static void get_already_handled_goods(handled_good *handled_goods, int ship_id)
         // assign the road network (in case this is a new one) and add the goods this dock handles
         current_handled_good->road_network_id = dock->road_network_id;
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-            if (building_distribution_is_good_accepted(r - 1, dock)) {
-                current_handled_good->goods[r - 1] = 1;
+            if (building_distribution_is_good_accepted(r, dock)) {
+                current_handled_good->goods[r] = 1;
             }
         }
     }
@@ -176,7 +176,7 @@ static int all_dock_goods_already_handled(handled_good *handled_goods, building 
                 // the ship doesn't buy or sell this good
                 continue;
             }
-            if (building_distribution_is_good_accepted(r - 1, dock) && !handled_good->goods[r - 1]) {
+            if (building_distribution_is_good_accepted(r, dock) && !handled_good->goods[r]) {
                 // this dock accepts a good that all previous docks on this road network did not accept
                 return 0;
             }

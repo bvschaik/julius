@@ -58,7 +58,7 @@ static void draw_housing_table(void)
     text_draw_number(city_population_total_housing_capacity(), '@', " ", 500, y_offset + 220, FONT_NORMAL_WHITE, 0);
 
     for (int i = 0; i <= 3; i++) {
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + goods_icons[i], 54, y_offset + 260 + (23 * i),
+        image_draw(resource_get_data(goods_icons[i])->image.icon, 54, y_offset + 260 + (23 * i),
             COLOR_MASK_NONE, SCALE_NONE);
         text_draw(translation_for(goods_demand_strings[i]), 90, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK, 0);
         text_draw_number(houses_demanding_goods[i], '@', " ", 450, y_offset + 263 + (23 * i), FONT_NORMAL_BLACK, 0);

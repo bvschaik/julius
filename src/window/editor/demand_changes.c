@@ -103,8 +103,8 @@ static void draw_foreground(void)
         if (demand_change.year) {
             text_draw_number(demand_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK, 0);
             lang_text_draw_year(scenario_property_start_year() + demand_change.year, x + 35, y + 6, FONT_NORMAL_BLACK);
-            int offset = demand_change.resource + resource_image_offset(demand_change.resource, RESOURCE_IMAGE_ICON);
-            image_draw(image_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 115, y + 3, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw(resource_get_data(demand_change.resource)->image.editor.icon, x + 115, y + 3,
+                COLOR_MASK_NONE, SCALE_NONE);
             int width = lang_text_draw(CUSTOM_TRANSLATION, TR_EDITOR_SHORT_ROUTE_TEXT, x + 140, y + 6, FONT_NORMAL_BLACK);
             width += text_draw_number(demand_change.route_id, '@', " ", x + 140 + width, y + 6, FONT_NORMAL_BLACK, 0);
             int amount = calc_current_trade(&demand_change, i);

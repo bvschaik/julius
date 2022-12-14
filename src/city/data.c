@@ -4,6 +4,8 @@
 #include "city/data_private.h"
 #include "city/gods.h"
 #include "game/difficulty.h"
+#include "game/resource.h"
+#include "game/save_version.h"
 #include "scenario/property.h"
 
 #include <string.h>
@@ -132,12 +134,6 @@ static void save_main_data(buffer *main)
     }
     for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
         buffer_write_i32(main, city_data.resource.granary_food_stored[i]);
-    }
-    for (int i = 0; i < 6; i++) {
-        buffer_write_i32(main, city_data.resource.stored_in_workshops[i]);
-    }
-    for (int i = 0; i < 6; i++) {
-        buffer_write_i32(main, city_data.resource.space_in_workshops[i]);
     }
     buffer_write_i32(main, city_data.resource.granary_total_stored);
     buffer_write_i32(main, city_data.resource.food_types_available);
@@ -489,8 +485,10 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.figure.attacking_natives);
 }
 
-static void load_main_data(buffer *main, int has_separate_import_limits, int discard_unused_values)
+static void load_main_data(buffer *main, int version)
 {
+    int has_separate_import_limits = version > SAVE_GAME_LAST_JOINED_IMPORT_EXPORT_VERSION;
+    int discard_unused_values = version > SAVE_GAME_LAST_UNKNOWN_UNUSED_CITY_DATA;
     if (!discard_unused_values) {
         buffer_skip(main, 18076);
     }
@@ -554,8 +552,8 @@ static void load_main_data(buffer *main, int has_separate_import_limits, int dis
     city_data.trade.months_since_last_land_trade_problem = buffer_read_u16(main);
     city_data.trade.months_since_last_sea_trade_problem = buffer_read_u16(main);
     if (has_separate_import_limits) {
-        for (int i = 0; i < RESOURCE_MAX; i++) {
-            city_data.resource.import_over[i] = buffer_read_i16(main);
+        for (int i = 0; i < resource_total_mapped(); i++) {
+            city_data.resource.import_over[resource_remap(i)] = buffer_read_i16(main);
         }
     } else {
         buffer_skip(main, 32);
@@ -572,38 +570,35 @@ static void load_main_data(buffer *main, int has_separate_import_limits, int dis
     city_data.building.senate_building_id = buffer_read_i32(main);
     city_data.trade.land_policy = buffer_read_u8(main);
     city_data.trade.sea_policy = buffer_read_u8(main);
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        city_data.resource.space_in_warehouses[i] = buffer_read_i16(main);
+    for (int i = 0; i < resource_total_mapped(); i++) {
+        city_data.resource.space_in_warehouses[resource_remap(i)] = buffer_read_i16(main);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        city_data.resource.stored_in_warehouses[i] = buffer_read_i16(main);
+    for (int i = 0; i < resource_total_mapped(); i++) {
+        city_data.resource.stored_in_warehouses[resource_remap(i)] = buffer_read_i16(main);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        city_data.resource.trade_status[i] = buffer_read_i16(main);
+    for (int i = 0; i < resource_total_mapped(); i++) {
+        city_data.resource.trade_status[resource_remap(i)] = buffer_read_i16(main);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        city_data.resource.export_over[i] = buffer_read_i16(main);
+    for (int i = 0; i < resource_total_mapped(); i++) {
+        city_data.resource.export_over[resource_remap(i)] = buffer_read_i16(main);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        city_data.resource.mothballed[i] = buffer_read_i16(main);
+    for (int i = 0; i < resource_total_mapped(); i++) {
+        city_data.resource.mothballed[resource_remap(i)] = buffer_read_i16(main);
     }
     if (!discard_unused_values) {
         buffer_skip(main, 2);
     }
-    for (int i = 0; i < RESOURCE_MAX_FOOD; i++) {
-        city_data.resource.granary_food_stored[i] = buffer_read_i32(main);
+    for (int i = 0; i < resource_total_food_mapped(); i++) {
+        city_data.resource.granary_food_stored[resource_remap(i)] = buffer_read_i32(main);
     }
-    for (int i = 0; i < 6; i++) {
-        city_data.resource.stored_in_workshops[i] = buffer_read_i32(main);
-    }
-    for (int i = 0; i < 6; i++) {
-        city_data.resource.space_in_workshops[i] = buffer_read_i32(main);
+    if (version <= SAVE_GAME_LAST_STATIC_RESOURCES) {
+        buffer_skip(main, 6 * sizeof(int32_t) * 2); // skip space in workshops and stored in workshops
     }
     city_data.resource.granary_total_stored = buffer_read_i32(main);
     city_data.resource.food_types_available = buffer_read_i32(main);
     city_data.resource.food_types_eaten = buffer_read_i32(main);
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        city_data.resource.export_status_before_stockpiling[i] = buffer_read_i16(main);
+    for (int i = 0; i < resource_total_mapped(); i++) {
+        city_data.resource.export_status_before_stockpiling[resource_remap(i)] = buffer_read_i16(main);
     }
     if (!discard_unused_values) {
         buffer_skip(main, 231);
@@ -611,8 +606,8 @@ static void load_main_data(buffer *main, int has_separate_import_limits, int dis
     city_data.sentiment.crime_cooldown = buffer_read_i8(main); 
     city_data.building.caravanserai_building_id = buffer_read_i32(main);
     city_data.caravanserai.total_food = buffer_read_i32(main);
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        city_data.resource.stockpiled[i] = buffer_read_i32(main);
+    for (int i = 0; i < resource_total_mapped(); i++) {
+        city_data.resource.stockpiled[resource_remap(i)] = buffer_read_i32(main);
     }
     city_data.resource.food_supply_months = buffer_read_i32(main);
     city_data.resource.granaries.operating = buffer_read_i32(main);
@@ -999,12 +994,13 @@ static void load_main_data(buffer *main, int has_separate_import_limits, int dis
         buffer_skip(main, 232);
     }
     if (!has_separate_import_limits) {
-        for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
-            if (city_data.resource.trade_status[i] == TRADE_STATUS_IMPORT) {
-                city_data.resource.import_over[i] = city_data.resource.export_over[i];
-                city_data.resource.export_over[i] = 0;
+        for (int i = RESOURCE_MIN; i < RESOURCE_MAX_LEGACY; i++) {
+            resource_type resource = resource_remap(i);
+            if (city_data.resource.trade_status[resource] == TRADE_STATUS_IMPORT) {
+                city_data.resource.import_over[resource] = city_data.resource.export_over[resource];
+                city_data.resource.export_over[resource] = 0;
             } else {
-                city_data.resource.import_over[i] = 0;
+                city_data.resource.import_over[resource] = 0;
             }
         }
     }
@@ -1043,22 +1039,26 @@ void city_data_save_state(buffer *main, buffer *graph_order,
 }
 
 void city_data_load_state(buffer *main, buffer *graph_order,
-    buffer *entry_exit_xy, buffer *entry_exit_grid_offset, int has_separate_import_limits, int discard_unused_values)
+    buffer *entry_exit_xy, buffer *entry_exit_grid_offset, int version)
 {
-    load_main_data(main, has_separate_import_limits, discard_unused_values);
+    load_main_data(main, version);
 
     city_data.population.graph_order = buffer_read_i32(graph_order);
 
     load_entry_exit(entry_exit_xy, entry_exit_grid_offset);
 }
 
-void city_data_load_basic_info(buffer *main, int *population, int *treasury, int *caravanserai_id,
-    int discard_unused_values)
+void city_data_load_basic_info(buffer *main, int *population, int *treasury, int *caravanserai_id, int version)
 {
+    int discard_unused_values = version > SAVE_GAME_LAST_UNKNOWN_UNUSED_CITY_DATA;
+    int discard_workshop_bytes = (version > SAVE_GAME_LAST_STATIC_RESOURCES) ? 6 * sizeof(int32_t) * 2 : 0;
+    int total_new_resources = resource_total_mapped() - RESOURCE_MAX_LEGACY;
+    int total_new_food = resource_total_food_mapped() - RESOURCE_MAX_FOOD_LEGACY;
+    int new_resources_bytes_offset = total_new_resources * 7 * sizeof(int16_t) + total_new_food * sizeof(int32_t);
     buffer_skip(main, discard_unused_values ? 4 : 18080);
     *treasury = buffer_read_i32(main);
     buffer_skip(main, discard_unused_values ? 16 : 20);
     *population = buffer_read_i32(main);
-    buffer_skip(main, discard_unused_values ? 10363 : 10596);
+    buffer_skip(main, discard_unused_values ? 10363 - discard_workshop_bytes + new_resources_bytes_offset : 10596);
     *caravanserai_id = buffer_read_i32(main);
 }

@@ -33,7 +33,7 @@ static const struct {
 static struct {
     int x;
     int y;
-    int inventory[INVENTORY_MAX];
+    int inventory[RESOURCE_MAX];
     int sentiment;
     int population;
 } merge_data;
@@ -74,7 +74,7 @@ void building_house_change_to_vacant_lot(building *house)
 
 static void prepare_for_merge(int building_id, int num_tiles)
 {
-    for (int i = 0; i < INVENTORY_MAX; i++) {
+    for (int i = 0; i < RESOURCE_MAX; i++) {
         merge_data.inventory[i] = 0;
     }
     merge_data.population = 0;
@@ -87,8 +87,8 @@ static void prepare_for_merge(int building_id, int num_tiles)
             if (house->id != building_id && house->house_size) {
                 merge_data.population += house->house_population;
                 merge_data.sentiment += house->house_population * house->sentiment.house_happiness;
-                for (int inv = 0; inv < INVENTORY_MAX; inv++) {
-                    merge_data.inventory[inv] += house->data.house.inventory[inv];
+                for (int inv = 0; inv < RESOURCE_MAX; inv++) {
+                    merge_data.inventory[inv] += house->resources[inv];
                     house->house_population = 0;
                     house->state = BUILDING_STATE_DELETED_BY_GAME;
                 }
@@ -108,8 +108,8 @@ static void merge(building *b)
     if (b->house_population) {
         b->sentiment.house_happiness = merge_data.sentiment / b->house_population;
     }
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        b->data.house.inventory[i] += merge_data.inventory[i];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        b->resources[i] += merge_data.inventory[i];
     }
     map_building_tiles_remove(b->id, b->x, b->y);
     b->x = merge_data.x;
@@ -265,8 +265,8 @@ static void create_splitted_house_tile(building *main_house, building_type type,
 {
     building *house = building_create(type, x, y);
     house->house_population = population;
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        house->data.house.inventory[i] = inventory[i];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        house->resources[i] = inventory[i];
     }
     copy_house_data(house, main_house);
     house->distance_from_entry = 0;
@@ -276,11 +276,11 @@ static void create_splitted_house_tile(building *main_house, building_type type,
 
 static void split_size2(building *house, building_type new_type)
 {
-    int inventory_per_tile[INVENTORY_MAX];
-    int inventory_remainder[INVENTORY_MAX];
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        inventory_per_tile[i] = house->data.house.inventory[i] / 4;
-        inventory_remainder[i] = house->data.house.inventory[i] % 4;
+    int inventory_per_tile[RESOURCE_MAX];
+    int inventory_remainder[RESOURCE_MAX];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        inventory_per_tile[i] = house->resources[i] / 4;
+        inventory_remainder[i] = house->resources[i] % 4;
     }
     int population_per_tile = house->house_population / 4;
     int population_remainder = house->house_population % 4;
@@ -294,8 +294,8 @@ static void split_size2(building *house, building_type new_type)
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
     house->house_is_merged = 0;
     house->house_population = population_per_tile + population_remainder;
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        house->data.house.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        house->resources[i] = inventory_per_tile[i] + inventory_remainder[i];
     }
     house->distance_from_entry = 0;
 
@@ -310,11 +310,11 @@ static void split_size2(building *house, building_type new_type)
 
 static void split_size3(building *house)
 {
-    int inventory_per_tile[INVENTORY_MAX];
-    int inventory_remainder[INVENTORY_MAX];
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        inventory_per_tile[i] = house->data.house.inventory[i] / 9;
-        inventory_remainder[i] = house->data.house.inventory[i] % 9;
+    int inventory_per_tile[RESOURCE_MAX];
+    int inventory_remainder[RESOURCE_MAX];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        inventory_per_tile[i] = house->resources[i] / 9;
+        inventory_remainder[i] = house->resources[i] % 9;
     }
     int population_per_tile = house->house_population / 9;
     int population_remainder = house->house_population % 9;
@@ -328,8 +328,8 @@ static void split_size3(building *house)
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
     house->house_is_merged = 0;
     house->house_population = population_per_tile + population_remainder;
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        house->data.house.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        house->resources[i] = inventory_per_tile[i] + inventory_remainder[i];
     }
     house->distance_from_entry = 0;
 
@@ -377,8 +377,8 @@ void building_house_expand_to_large_insula(building *house)
     house->size = house->house_size = 2;
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
     house->house_population += merge_data.population;
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        house->data.house.inventory[i] += merge_data.inventory[i];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        house->resources[i] += merge_data.inventory[i];
     }
     map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
@@ -397,8 +397,8 @@ void building_house_expand_to_large_villa(building *house)
     house->size = house->house_size = 3;
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
     house->house_population += merge_data.population;
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        house->data.house.inventory[i] += merge_data.inventory[i];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        house->resources[i] += merge_data.inventory[i];
     }
     map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
@@ -417,8 +417,8 @@ void building_house_expand_to_large_palace(building *house)
     house->size = house->house_size = 4;
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
     house->house_population += merge_data.population;
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        house->data.house.inventory[i] += merge_data.inventory[i];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        house->resources[i] += merge_data.inventory[i];
     }
     map_building_tiles_remove(house->id, house->x, house->y);
     house->x = merge_data.x;
@@ -440,11 +440,11 @@ void building_house_devolve_from_large_insula(building *house)
 
 void building_house_devolve_from_large_villa(building *house)
 {
-    int inventory_per_tile[INVENTORY_MAX];
-    int inventory_remainder[INVENTORY_MAX];
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        inventory_per_tile[i] = house->data.house.inventory[i] / 6;
-        inventory_remainder[i] = house->data.house.inventory[i] % 6;
+    int inventory_per_tile[RESOURCE_MAX];
+    int inventory_remainder[RESOURCE_MAX];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        inventory_per_tile[i] = house->resources[i] / 6;
+        inventory_remainder[i] = house->resources[i] % 6;
     }
     int population_per_tile = house->house_population / 6;
     int population_remainder = house->house_population % 6;
@@ -458,15 +458,15 @@ void building_house_devolve_from_large_villa(building *house)
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
     house->house_is_merged = 0;
     house->house_population = population_per_tile + population_remainder;
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        house->data.house.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        house->resources[i] = inventory_per_tile[i] + inventory_remainder[i];
     }
     house->distance_from_entry = 0;
 
     map_building_tiles_add(house->id, house->x, house->y, house->size,
         building_image_get(house), TERRAIN_BUILDING);
 
-// the other tiles (new buildings)
+    // the other tiles (new buildings)
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
         house->x + 2, house->y, population_per_tile, inventory_per_tile);
     create_splitted_house_tile(house, BUILDING_HOUSE_MEDIUM_INSULA,
@@ -481,11 +481,11 @@ void building_house_devolve_from_large_villa(building *house)
 
 void building_house_devolve_from_large_palace(building *house)
 {
-    int inventory_per_tile[INVENTORY_MAX];
-    int inventory_remainder[INVENTORY_MAX];
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        inventory_per_tile[i] = house->data.house.inventory[i] / 8;
-        inventory_remainder[i] = house->data.house.inventory[i] % 8;
+    int inventory_per_tile[RESOURCE_MAX];
+    int inventory_remainder[RESOURCE_MAX];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        inventory_per_tile[i] = house->resources[i] / 8;
+        inventory_remainder[i] = house->resources[i] % 8;
     }
     int population_per_tile = house->house_population / 8;
     int population_remainder = house->house_population % 8;
@@ -499,8 +499,8 @@ void building_house_devolve_from_large_palace(building *house)
     house->is_adjacent_to_water = map_terrain_is_adjacent_to_water(house->x, house->y, house->size);
     house->house_is_merged = 0;
     house->house_population = population_per_tile + population_remainder;
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        house->data.house.inventory[i] = inventory_per_tile[i] + inventory_remainder[i];
+    for (int i = 0; i < RESOURCE_MAX; i++) {
+        house->resources[i] = inventory_per_tile[i] + inventory_remainder[i];
     }
     house->distance_from_entry = 0;
 

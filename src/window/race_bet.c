@@ -76,7 +76,7 @@ static void draw_background(void)
 
     outer_panel_draw(0, 0, data.width_blocks, data.height_blocks);
 
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, 20, 20, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(resource_get_data(RESOURCE_DENARII)->image.icon, 20, 20, COLOR_MASK_NONE, SCALE_NONE);
 
     text_draw_centered(translation_for(TR_WINDOW_RACE_BET_TITLE), 0, 20, BLOCK_SIZE * data.width_blocks, FONT_LARGE_BLACK, 0);
 

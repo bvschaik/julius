@@ -7,9 +7,11 @@
 
 static struct {
     building_data_type data_type;
-    int subtype;
+    unsigned char resource[RESOURCE_MAX];
     building_storage storage;
-    int extended_data[16];
+    char i8;
+    short i16;
+    int i32;
 } data;
 
 int building_data_transfer_possible(building *b)
@@ -40,10 +42,10 @@ int building_data_transfer_copy(building *b)
 
     switch (data_type) {
         case DATA_TYPE_ROADBLOCK:
-            data.subtype = b->data.roadblock.exceptions;
+            data.i16 = b->data.roadblock.exceptions;
             break;
         case DATA_TYPE_MARKET:
-            data.subtype = b->subtype.market_goods;
+            memcpy(data.resource, b->accepted_goods, sizeof(unsigned char) * RESOURCE_MAX);
             break;
         case DATA_TYPE_GRANARY:
             storage = building_storage_get(b->storage_id);
@@ -54,9 +56,9 @@ int building_data_transfer_copy(building *b)
             data.storage = *storage;
             break;
         case DATA_TYPE_DOCK:
-            data.subtype = b->subtype.market_goods;
-            data.extended_data[0] = b->data.dock.has_accepted_route_ids;
-            data.extended_data[1] = b->data.dock.accepted_route_ids;
+            memcpy(data.resource, b->accepted_goods, sizeof(unsigned char) * RESOURCE_MAX);
+            data.i8 = b->data.dock.has_accepted_route_ids;
+            data.i32 = b->data.dock.accepted_route_ids;
             break;
         default:
             return 0;
@@ -76,19 +78,19 @@ int building_data_transfer_paste(building *b)
 
     switch (data_type) {
         case DATA_TYPE_ROADBLOCK:
-            b->data.roadblock.exceptions = data.subtype;
+            b->data.roadblock.exceptions = data.i16;
             break;
         case DATA_TYPE_MARKET:
-            b->subtype.market_goods = data.subtype;
+            memcpy(b->accepted_goods, data.resource, sizeof(unsigned char) * RESOURCE_MAX);
             break;
         case DATA_TYPE_GRANARY:
         case DATA_TYPE_WAREHOUSE:
             building_storage_set_data(b->storage_id, data.storage);
             break;
         case DATA_TYPE_DOCK:
-            b->subtype.market_goods = data.subtype;
-            b->data.dock.has_accepted_route_ids = data.extended_data[0];
-            b->data.dock.accepted_route_ids = data.extended_data[1];
+            memcpy(b->accepted_goods, data.resource, sizeof(unsigned char) * RESOURCE_MAX);
+            b->data.dock.has_accepted_route_ids = data.i8;
+            b->data.dock.accepted_route_ids = data.i32;
             break;
         default:
             return 0;

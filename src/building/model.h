@@ -65,6 +65,6 @@ const model_building *model_get_building(building_type type);
  */
 const model_house *model_get_house(house_level level);
 
-int model_house_uses_inventory(house_level level, inventory_type inventory);
+int model_house_uses_inventory(house_level level, resource_type inventory);
 
 #endif // BUILDING_MODEL_H

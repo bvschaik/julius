@@ -264,7 +264,7 @@ int xml_process_assetlist_file(const char *xml_file_name)
     do {
         size_t bytes_read = fread(buffer, 1, XML_BUFFER_SIZE, xml_file);
         done = bytes_read < sizeof(buffer);
-        if (!xml_parser_parse(buffer, bytes_read, done)) {
+        if (!xml_parser_parse(buffer, (unsigned int) bytes_read, done)) {
             log_error("Error parsing file", xml_file_name, 0);
             error = 1;
             break;

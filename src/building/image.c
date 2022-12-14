@@ -384,10 +384,7 @@ int building_image_get(building *b)
             if (b->loads_stored <= 0 || b->subtype.warehouse_resource_id == RESOURCE_NONE) {
                 return image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
             } else {
-                return image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) +
-                    4 * (b->subtype.warehouse_resource_id - 1) +
-                    resource_image_offset(b->subtype.warehouse_resource_id, RESOURCE_IMAGE_STORAGE) +
-                    b->loads_stored - 1;
+                return resource_get_data(b->subtype.warehouse_resource_id)->image.storage + b->loads_stored - 1;
             }
         case BUILDING_HIPPODROME:
             {

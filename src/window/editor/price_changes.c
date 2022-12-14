@@ -73,8 +73,8 @@ static void draw_foreground(void)
         if (price_change.year) {
             text_draw_number(price_change.year, '+', " ", x + 10, y + 6, FONT_NORMAL_BLACK, 0);
             lang_text_draw_year(scenario_property_start_year() + price_change.year, x + 65, y + 6, FONT_NORMAL_BLACK);
-            int offset = price_change.resource + resource_image_offset(price_change.resource, RESOURCE_IMAGE_ICON);
-            image_draw(image_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, x + 140, y + 3, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw(resource_get_data(price_change.resource)->image.editor.icon, x + 140, y + 3,
+                COLOR_MASK_NONE, SCALE_NONE);
             int width = lang_text_draw(44, price_change.is_rise ? 104 : 103, x + 170, y + 6, FONT_NORMAL_BLACK);
             text_draw_number(price_change.amount, '@', " ", x + 170 + width, y + 6, FONT_NORMAL_BLACK, 0);
         } else {

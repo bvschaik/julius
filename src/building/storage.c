@@ -5,11 +5,14 @@
 #include "core/array.h"
 #include "core/calc.h"
 #include "core/log.h"
+#include "game/resource.h"
+#include "game/save_version.h"
 
 #define STORAGE_ARRAY_SIZE_STEP 200
 
 #define STORAGE_ORIGINAL_BUFFER_SIZE 32
-#define STORAGE_CURRENT_BUFFER_SIZE 26
+#define STORAGE_STATIC_BUFFER_SIZE 10
+#define STORAGE_CURRENT_BUFFER_SIZE STORAGE_STATIC_BUFFER_SIZE + RESOURCE_MAX
 
 typedef struct {
     int id;
@@ -178,6 +181,7 @@ void building_storage_cycle_partial_resource_state(int storage_id, resource_type
     }
     array_item(storages, storage_id)->storage.resource_state[resource_id] = state;
 }
+
 void building_storage_accept_none(int storage_id)
 {
     data_storage *s = array_item(storages, storage_id);
@@ -206,14 +210,17 @@ void building_storage_save_state(buffer *buf)
     }
 }
 
-void building_storage_load_state(buffer *buf, int includes_storage_size)
+void building_storage_load_state(buffer *buf, int version)
 {
     int storage_buf_size = STORAGE_ORIGINAL_BUFFER_SIZE;
     int buf_size = buf->size;
+    int includes_storage_size = version > SAVE_GAME_LAST_STATIC_VERSION;
+    int num_resources = RESOURCE_MAX_LEGACY;
 
     if (includes_storage_size) {
         storage_buf_size = buffer_read_i32(buf);
         buf_size -= 4;
+        num_resources = storage_buf_size - STORAGE_STATIC_BUFFER_SIZE;
     }
 
     int storages_to_load = buf_size / storage_buf_size;
@@ -231,8 +238,8 @@ void building_storage_load_state(buffer *buf, int includes_storage_size)
         s->building_id = buffer_read_i32(buf);
         s->in_use = buffer_read_u8(buf);
         s->storage.empty_all = buffer_read_u8(buf);
-        for (int r = 0; r < RESOURCE_MAX; r++) {
-            s->storage.resource_state[r] = buffer_read_u8(buf);
+        for (int r = 0; r < num_resources; r++) {
+            s->storage.resource_state[resource_remap(r)] = buffer_read_u8(buf);
         }
         if (!includes_storage_size) {
             buffer_skip(buf, 6); // unused resource states

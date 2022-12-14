@@ -204,10 +204,8 @@ static void draw_map(void)
 static void draw_resource(resource_type resource, int trade_max, int x_offset, int y_offset)
 {
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
-    int image_id = resource + image_group(GROUP_EDITOR_EMPIRE_RESOURCES);
-    // Never change meat -> fish for our city's resources
-    int resource_offset = trade_max == OUR_CITY ? 0 : resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    image_draw(image_id + resource_offset, x_offset + 1, y_offset + 1, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(resource_get_data(resource)->image.editor.empire, x_offset + 1, y_offset + 1,
+        COLOR_MASK_NONE, SCALE_NONE);
     window_empire_draw_resource_shields(trade_max, x_offset, y_offset);
 }
 

@@ -423,7 +423,7 @@ static int draw_request_buttons(int y_offset)
         buttons_emperor_requests[i].height = 20;
         int width = data.x_offset + 10;
         if (r->resource == RESOURCE_TROOPS) {
-            int image_id = image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WEAPONS;
+            int image_id = resource_get_data(RESOURCE_WEAPONS)->image.icon;
             const image *img = image_get(image_id);
             int image_y_offset = (EXTRA_INFO_LINE_SPACE - img->height) / 2;
 
@@ -440,9 +440,7 @@ static int draw_request_buttons(int y_offset)
             text_draw_centered(translation_for(TR_SIDEBAR_EXTRA_REQUESTS_SEND),
                 data.x_offset + 2, y_offset + 25, 158, FONT_NORMAL_GREEN, 0);
         } else {
-            int resource_offset = r->resource + resource_image_offset(r->resource, RESOURCE_IMAGE_ICON);
-
-            int image_id = image_group(GROUP_RESOURCE_ICONS) + resource_offset;
+            int image_id = resource_get_data(r->resource)->image.icon;
             const image *img = image_get(image_id);
             int image_y_offset = (EXTRA_INFO_LINE_SPACE - img->height) / 2;
 

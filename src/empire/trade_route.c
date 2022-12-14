@@ -82,9 +82,9 @@ void trade_routes_save_state(buffer *limit, buffer *traded)
 void trade_routes_load_state(buffer *limit, buffer *traded)
 {
     for (int route_id = 0; route_id < MAX_ROUTES; route_id++) {
-        for (int r = 0; r < RESOURCE_MAX; r++) {
-            data[route_id][r].limit = buffer_read_i32(limit);
-            data[route_id][r].traded = buffer_read_i32(traded);
+        for (int r = 0; r < resource_total_mapped(); r++) {
+            data[route_id][resource_remap(r)].limit = buffer_read_i32(limit);
+            data[route_id][resource_remap(r)].traded = buffer_read_i32(traded);
         }
     }
 }

@@ -39,7 +39,7 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id)
     int resource = f->collecting_item_id;
     building *warehouse = building_get(warehouse_id);
     building *monument = building_get(f->destination_building_id);
-    int resources_needed = monument->data.monument.resources_needed[resource] - building_monument_resource_in_delivery(monument, resource);
+    int resources_needed = monument->resources[resource] - building_monument_resource_in_delivery(monument, resource);
     int num_loads;
     int stored = building_warehouse_get_amount(warehouse, resource);
     if (stored <= CARTLOADS_PER_MONUMENT_DELIVERY) {
@@ -106,7 +106,7 @@ void figure_workcamp_worker_action(figure *f)
                 f->destination_y = dst.y;
                 f->action_state = FIGURE_ACTION_204_WORK_CAMP_WORKER_GETTING_RESOURCES;
                 building *monument = building_get(monument_id);
-                int resources_needed = monument->data.monument.resources_needed[resource] - building_monument_resource_in_delivery(monument, resource);
+                int resources_needed = monument->resources[resource] - building_monument_resource_in_delivery(monument, resource);
                 resources_needed = calc_bound(resources_needed, 0, CARTLOADS_PER_MONUMENT_DELIVERY);
                 building_monument_add_delivery(monument_id, f->id, resource, resources_needed);
                 break;
@@ -312,8 +312,8 @@ void figure_workcamp_engineer_action(figure *f)
                 if (f->wait_ticks >= 384) {
                     f->state = FIGURE_STATE_DEAD;
                     monument = building_get(f->destination_building_id);
-                    monument->data.monument.resources_needed[RESOURCE_NONE]--;
-                    if (monument->data.monument.resources_needed[RESOURCE_NONE] <= 0) {
+                    monument->resources[RESOURCE_NONE]--;
+                    if (monument->resources[RESOURCE_NONE] <= 0) {
                         building_monument_progress(monument);
                     }
                 } else {

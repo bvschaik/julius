@@ -8,79 +8,80 @@
 
 #include <string.h>
 
-static const int INVENTORY_SEARCH_ORDER[INVENTORY_MAX] = {
-    INVENTORY_WHEAT, INVENTORY_VEGETABLES, INVENTORY_FRUIT, INVENTORY_MEAT,
-    INVENTORY_POTTERY, INVENTORY_FURNITURE, INVENTORY_OIL, INVENTORY_WINE
-};
-
-int building_distribution_is_good_accepted(inventory_type resource, building *b)
+int building_distribution_is_good_accepted(resource_type resource, building *b)
 {
-    int goods_bit = 1 << resource;
-    return !(b->subtype.market_goods & goods_bit);
+    return b->accepted_goods[resource] > 0;
 }
 
-void building_distribution_toggle_good_accepted(inventory_type resource, building *b)
+void building_distribution_toggle_good_accepted(resource_type resource, building *b)
 {
-    int goods_bit = 1 << resource;
-    b->subtype.market_goods ^= goods_bit;
+    if (b->accepted_goods[resource] == 0) {
+        b->accepted_goods[resource] = 1;
+    } else {
+        b->accepted_goods[resource] = 0;
+    }
 }
 
 void building_distribution_unaccept_all_goods(building *b)
 {
-    b->subtype.market_goods = 0xffff;
+    memset(b->accepted_goods, 0, sizeof(b->accepted_goods));
 }
 
 void building_distribution_update_demands(building *b)
 {
-    if (b->data.market.pottery_demand) {
-        b->data.market.pottery_demand--;
-    }
-    if (b->data.market.furniture_demand) {
-        b->data.market.furniture_demand--;
-    }
-    if (b->data.market.oil_demand) {
-        b->data.market.oil_demand--;
-    }
-    if (b->data.market.wine_demand) {
-        b->data.market.wine_demand--;
+    for (resource_type resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+        if (!resource_is_good(resource) || !resource_get_data(resource)->is_inventory) {
+            continue;
+        }
+        if (b->accepted_goods[resource] > 1) {
+            b->accepted_goods[resource]--;
+        }
     }
 }
 
-int building_distribution_fetch(const building *b, inventory_storage_info *info,
-    int min_stock, int pick_first, int allowed)
+// TODO swap resource ID's so search goes in correct order
+/** static const int INVENTORY_SEARCH_ORDER[INVENTORY_MAX] = {
+    INVENTORY_WHEAT, INVENTORY_VEGETABLES, INVENTORY_FRUIT, INVENTORY_MEAT,
+    INVENTORY_POTTERY, INVENTORY_FURNITURE, INVENTORY_OIL, INVENTORY_WINE
+}; **/
+
+resource_type building_distribution_fetch(const building *b, inventory_storage_info *info,
+    int min_stock, int pick_first, const int allowed[RESOURCE_MAX])
 {
-    int inventory = INVENTORY_NONE;
+    resource_type resource = RESOURCE_NONE;
     if (!min_stock) {
         min_stock = 1;
     }
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        int current_inventory = INVENTORY_SEARCH_ORDER[i];
-        if (inventory_is_set(allowed, current_inventory) &&
-            info[current_inventory].building_id && b->data.market.inventory[current_inventory] < min_stock) {
+    for (resource_type current_resource = RESOURCE_MIN; current_resource < RESOURCE_MAX; current_resource++) {
+        if (!resource_get_data(current_resource)->is_inventory) {
+            continue;
+        }
+        if (allowed[current_resource] &&
+            info[current_resource].building_id && b->resources[current_resource] < min_stock) {
             if (pick_first) {
-                return current_inventory;
+                return current_resource;
             }
-            min_stock = b->data.market.inventory[current_inventory];
-            inventory = current_inventory;
+            min_stock = b->resources[current_resource];
+            resource = current_resource;
         }
     }
-    return inventory;
+    return resource;
 }
 
 static void update_food_resource(inventory_storage_info *info, resource_type resource, const building *b, int distance)
 {
-    if (distance < info->min_distance && b->data.granary.resource_stored[resource]) {
-        info->min_distance = distance;
-        info->building_id = b->id;
+    if (distance < info[resource].min_distance && b->resources[resource]) {
+        info[resource].min_distance = distance;
+        info[resource].building_id = b->id;
     }
 }
 
 static void update_good_resource(inventory_storage_info *info, resource_type resource, building *b, int distance)
 {
-    if (distance < info->min_distance &&
+    if (distance < info[resource].min_distance &&
         !city_resource_is_stockpiled(resource) && building_warehouse_get_amount(b, resource) > 0) {
-        info->min_distance = distance;
-        info->building_id = b->id;
+        info[resource].min_distance = distance;
+        info[resource].building_id = b->id;
     }
 }
 
@@ -95,9 +96,9 @@ static int is_invalid_destination(building *b, int permission, int road_network)
 static int building_distribution_get_inventory_storages(inventory_storage_info *info, building_type type,
     int road_network, int x, int y, int w, int h, int max_distance)
 {
-    for (int i = 0; i < INVENTORY_MAX; i++) {
-        info[i].min_distance = max_distance;
-        info[i].building_id = 0;
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        info[r].min_distance = max_distance;
+        info[r].building_id = 0;
     }
 
     int permission;
@@ -115,10 +116,11 @@ static int building_distribution_get_inventory_storages(inventory_storage_info *
         }
         int distance = building_dist(x, y, w, h, b);
 
-        update_food_resource(&info[INVENTORY_WHEAT], RESOURCE_WHEAT, b, distance);
-        update_food_resource(&info[INVENTORY_VEGETABLES], RESOURCE_VEGETABLES, b, distance);
-        update_food_resource(&info[INVENTORY_FRUIT], RESOURCE_FRUIT, b, distance);
-        update_food_resource(&info[INVENTORY_MEAT], RESOURCE_MEAT, b, distance);
+        for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
+            if (resource_is_food(r) && resource_get_data(r)->is_inventory) {
+                update_food_resource(info, r, b, distance);
+            }
+        }
     }
     for (building *b = building_first_of_type(BUILDING_WAREHOUSE); b; b = b->next_of_type) {
         if (type && is_invalid_destination(b, permission, road_network)) {
@@ -126,13 +128,14 @@ static int building_distribution_get_inventory_storages(inventory_storage_info *
         }
         int distance = building_dist(x, y, w, h, b);
 
-        update_good_resource(&info[INVENTORY_WINE], RESOURCE_WINE, b, distance);
-        update_good_resource(&info[INVENTORY_OIL], RESOURCE_OIL, b, distance);
-        update_good_resource(&info[INVENTORY_POTTERY], RESOURCE_POTTERY, b, distance);
-        update_good_resource(&info[INVENTORY_FURNITURE], RESOURCE_FURNITURE, b, distance);
+        for (int r = RESOURCE_MAX_FOOD; r < RESOURCE_MAX; r++) {
+            if (resource_is_good(r) && resource_get_data(r)->is_inventory) {
+                update_good_resource(info, r, b, distance);
+            }
+        }
     }
 
-    for (int i = 0; i < INVENTORY_MAX; i++) {
+    for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
         if (info[i].building_id) {
             return 1;
         }
@@ -143,9 +146,9 @@ static int building_distribution_get_inventory_storages(inventory_storage_info *
 static int building_distribution_get_raw_material_storages(inventory_storage_info *info, building_type type,
     int road_network, int x, int y, int w, int h, int max_distance)
 {
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        info[i].min_distance = max_distance;
-        info[i].building_id = 0;
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        info[r].min_distance = max_distance;
+        info[r].building_id = 0;
     }
 
     int permission = BUILDING_STORAGE_PERMISSION_MARKET;
@@ -156,10 +159,11 @@ static int building_distribution_get_raw_material_storages(inventory_storage_inf
         }
         int distance = building_dist(x, y, w, h, b);
 
-        update_good_resource(&info[RESOURCE_IRON], RESOURCE_IRON, b, distance);
-        update_good_resource(&info[RESOURCE_TIMBER], RESOURCE_TIMBER, b, distance);
-        update_good_resource(&info[RESOURCE_CLAY], RESOURCE_CLAY, b, distance);
-        update_good_resource(&info[RESOURCE_MARBLE], RESOURCE_MARBLE, b, distance);
+        for (resource_type r = RESOURCE_MAX_FOOD; r < RESOURCE_MAX; r++) {
+            if (resource_is_raw_material(r)) {
+                update_good_resource(info, r, b, distance);
+            }
+        }
     }
 
     for (int i = 0; i < RESOURCE_MAX; i++) {
@@ -173,21 +177,27 @@ static int building_distribution_get_raw_material_storages(inventory_storage_inf
 int building_distribution_get_inventory_storages_for_building(inventory_storage_info *info, building *start, int max_distance) 
 {
     int size = building_properties_for_type(start->type)->size;
-    return building_distribution_get_inventory_storages(info, start->type, start->road_network_id, start->x, start->y, size, size, max_distance);
+    return building_distribution_get_inventory_storages(info, start->type, start->road_network_id,
+        start->x, start->y, size, size, max_distance);
 }
 
 int building_distribution_get_raw_material_storages_for_building(inventory_storage_info *info, building *start, int max_distance)
 {
     int size = building_properties_for_type(start->type)->size;
-    return building_distribution_get_raw_material_storages(info, start->type, start->road_network_id, start->x, start->y, size, size, max_distance);
+    return building_distribution_get_raw_material_storages(info, start->type, start->road_network_id,
+        start->x, start->y, size, size, max_distance);
 }
 
-int building_distribution_get_inventory_storages_for_figure(inventory_storage_info *info, building_type type, int road_network, figure *start, int max_distance)
+int building_distribution_get_inventory_storages_for_figure(inventory_storage_info *info, building_type type,
+    int road_network, figure *start, int max_distance)
 {
-    return building_distribution_get_inventory_storages(info, type, road_network, start->x, start->y, 1, 1, max_distance);
+    return building_distribution_get_inventory_storages(info, type, road_network,
+        start->x, start->y, 1, 1, max_distance);
 }
 
-int building_distribution_get_raw_material_storages_for_figure(inventory_storage_info *info, building_type type, int road_network, figure *start, int max_distance)
+int building_distribution_get_raw_material_storages_for_figure(inventory_storage_info *info, building_type type,
+    int road_network, figure *start, int max_distance)
 {
-    return building_distribution_get_raw_material_storages(info, type, road_network, start->x, start->y, 1, 1, max_distance);
+    return building_distribution_get_raw_material_storages(info, type, road_network,
+        start->x, start->y, 1, 1, max_distance);
 }

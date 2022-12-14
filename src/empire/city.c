@@ -13,6 +13,7 @@
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "figuretype/trader.h"
+#include "game/resource.h"
 #include "scenario/map.h"
 
 #include <string.h>
@@ -418,11 +419,11 @@ void empire_city_load_state(buffer *buf)
         city->name_id = buffer_read_u8(buf);
         city->route_id = buffer_read_u8(buf);
         city->is_open = buffer_read_u8(buf);
-        for (int r = 0; r < RESOURCE_MAX; r++) {
-            city->buys_resource[r] = buffer_read_u8(buf);
+        for (int r = 0; r < resource_total_mapped(); r++) {
+            city->buys_resource[resource_remap(r)] = buffer_read_u8(buf);
         }
-        for (int r = 0; r < RESOURCE_MAX; r++) {
-            city->sells_resource[r] = buffer_read_u8(buf);
+        for (int r = 0; r < resource_total_mapped(); r++) {
+            city->sells_resource[resource_remap(r)] = buffer_read_u8(buf);
         }
         city->cost_to_open = buffer_read_i16(buf);
         buffer_skip(buf, 2);

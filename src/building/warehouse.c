@@ -182,9 +182,7 @@ void building_warehouse_space_set_image(building *space, int resource)
     if (space->loads_stored <= 0) {
         image_id = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
     } else {
-        image_id = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) +
-            4 * (resource - 1) + resource_image_offset(resource, RESOURCE_IMAGE_STORAGE) +
-            space->loads_stored - 1;
+        image_id = resource_get_data(resource)->image.storage + space->loads_stored - 1;
     }
     map_image_set(space->grid_offset, image_id);
 }
@@ -568,7 +566,7 @@ static int determine_granary_accept_foods(int resources[RESOURCE_MAX_FOOD], int 
             continue;
         }
         int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-        if (pct_workers >= 100 && b->data.granary.resource_stored[RESOURCE_NONE] >= 100) {
+        if (pct_workers >= 100 && b->resources[RESOURCE_NONE] >= 100) {
             const building_storage *s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
                 for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
@@ -597,7 +595,7 @@ static int determine_granary_get_foods(int resources[RESOURCE_MAX_FOOD], int roa
             continue;
         }
         int pct_workers = calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
-        if (pct_workers >= 100 && b->data.granary.resource_stored[RESOURCE_NONE] > 100) {
+        if (pct_workers >= 100 && b->resources[RESOURCE_NONE] > 100) {
             const building_storage *s = building_storage_get(b->storage_id);
             if (!s->empty_all) {
                 for (int r = 0; r < RESOURCE_MAX_FOOD; r++) {
@@ -702,15 +700,12 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     space = warehouse;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
-        if (space->id > 0 && space->loads_stored > 0) {
-            if (!city_resource_is_stockpiled(space->subtype.warehouse_resource_id)) {
-                int workshop_type = resource_to_workshop_type(space->subtype.warehouse_resource_id);
-                if (workshop_type != WORKSHOP_NONE && city_resource_has_workshop_with_room(workshop_type) &&
-                    building_has_workshop_for_raw_material_with_room(workshop_type, warehouse->road_network_id)) {
-                    *resource = space->subtype.warehouse_resource_id;
-                    return WAREHOUSE_TASK_DELIVERING;
-                }
-            }
+        if (space->id > 0 && space->loads_stored > 0 &&
+            !city_resource_is_stockpiled(space->subtype.warehouse_resource_id) &&
+            building_has_workshop_for_raw_material_with_room(space->subtype.warehouse_resource_id,
+                warehouse->road_network_id)) {
+            *resource = space->subtype.warehouse_resource_id;
+            return WAREHOUSE_TASK_DELIVERING;
         }
     }
     // deliver food to getting granary

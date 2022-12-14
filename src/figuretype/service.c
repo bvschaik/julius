@@ -92,7 +92,7 @@ void figure_destination_priest_action(figure *f)
         case FIGURE_ACTION_214_DESTINATION_MARS_PRIEST_CREATED:
             f->destination_x = destination->road_access_x;
             f->destination_y = destination->road_access_y;
-            int market_units = b->data.market.inventory[f->collecting_item_id];
+            int market_units = b->resources[f->collecting_item_id];
             int num_loads;
             int max_units = MAX_FOOD_STOCKED_MESS_HALL - market_units;
 
@@ -122,7 +122,7 @@ void figure_destination_priest_action(figure *f)
                 return;
             }
 
-            b->data.market.inventory[f->collecting_item_id] -= (100 * num_loads);
+            b->resources[f->collecting_item_id] -= (100 * num_loads);
 
             // create delivery boys
             int priest_id = f->id;

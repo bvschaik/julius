@@ -112,11 +112,11 @@ void traders_load_state(buffer *buf)
         struct trader *t = &data.traders[i];
         t->bought_amount = buffer_read_i32(buf);
         t->sold_amount = buffer_read_i32(buf);
-        for (int r = 0; r < RESOURCE_MAX; r++) {
-            t->bought_resources[r] = buffer_read_u8(buf);
+        for (int r = 0; r < resource_total_mapped(); r++) {
+            t->bought_resources[resource_remap(r)] = buffer_read_u8(buf);
         }
-        for (int r = 0; r < RESOURCE_MAX; r++) {
-            t->sold_resources[r] = buffer_read_u8(buf);
+        for (int r = 0; r < resource_total_mapped(); r++) {
+            t->sold_resources[resource_remap(r)] = buffer_read_u8(buf);
         }
         t->bought_value = buffer_read_i32(buf);
         t->sold_value = buffer_read_i32(buf);

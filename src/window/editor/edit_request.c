@@ -68,7 +68,7 @@ static void draw_foreground(void)
     text_draw_number_centered(data.request.amount, 330, 158, 80, FONT_NORMAL_BLACK);
 
     button_border_draw(430, 152, 100, 25, data.focus_button_id == 3);
-    lang_text_draw_centered(23, data.request.resource, 430, 158, 100, FONT_NORMAL_BLACK);
+    text_draw_centered(resource_get_data(data.request.resource)->text, 430, 158, 100, FONT_NORMAL_BLACK, COLOR_MASK_NONE);
 
     lang_text_draw(44, 24, 40, 196, FONT_NORMAL_BLACK);
     button_border_draw(70, 190, 140, 25, data.focus_button_id == 4);

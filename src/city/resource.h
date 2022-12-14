@@ -53,8 +53,6 @@ void city_resource_toggle_stockpiled(resource_type resource);
 int city_resource_is_mothballed(resource_type resource);
 void city_resource_toggle_mothballed(resource_type resource);
 
-int city_resource_has_workshop_with_room(int workshop_type);
-
 void city_resource_add_produced_to_granary(int amount);
 void city_resource_add_to_granary(resource_type food, int amount);
 void city_resource_remove_from_granary(resource_type food, int amount);
@@ -64,11 +62,9 @@ void city_resource_remove_from_warehouse(resource_type resource, int amount);
 void city_resource_calculate_warehouse_stocks(void);
 
 void city_resource_determine_available(void);
-int city_resource_ceres_temple_food(void);
+resource_type city_resource_ceres_temple_food(void);
 
 void city_resource_calculate_food_stocks_and_supply_wheat(void);
-
-void city_resource_calculate_workshop_stocks(void);
 
 void city_resource_consume_food(void);
 

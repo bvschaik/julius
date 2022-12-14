@@ -20,68 +20,80 @@
 #define DELIVERY_ARRAY_SIZE_STEP 200
 #define ORIGINAL_DELIVERY_BUFFER_SIZE 16
 #define MODULES_PER_TEMPLE 2
+#define ARCHITECTS RESOURCE_NONE
+#define NOTHING 0
 #define INFINITE 10000
 
-static int grand_temple_resources[6][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 20, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 16, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 28, 12, 0, 0, 0 },
-    { 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+static const int grand_temple_resources[6][RESOURCE_MAX] = {
+    { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 20 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8, [RESOURCE_MARBLE] = 20 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8, [RESOURCE_MARBLE] = 16 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8, [RESOURCE_CLAY] = 28, [RESOURCE_MARBLE] = 12 },
+    { [ARCHITECTS] = 4 },
+    { NOTHING }
 };
+
 static int pantheon_resources[6][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 16, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 32, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 40, 32, 0, 0, 0 },
-    { 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 16 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_MARBLE] = 16 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_MARBLE] = 32 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 32, [RESOURCE_CLAY] = 40, [RESOURCE_MARBLE] = 32 },
+    { [ARCHITECTS] = 4 },
+    { NOTHING }
 };
+
 static int lighthouse_resources[5][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 12, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 8, 0, 0, 0 },
-    { 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 20, 8, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 12 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_MARBLE] = 12 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_MARBLE] = 8 },
+    { [ARCHITECTS] = 4, [RESOURCE_TIMBER] = 8,  [RESOURCE_CLAY] = 20, [RESOURCE_MARBLE] = 8 },
+    { NOTHING }
 };
+
 static int colosseum_resources[5][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 16, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 16, 0, 0, 0 },
-    { 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 16, 12, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 12 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_MARBLE] = 16 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 12, [RESOURCE_MARBLE] = 16 },
+    { [ARCHITECTS] = 4, [RESOURCE_TIMBER] = 12, [RESOURCE_CLAY] = 16, [RESOURCE_MARBLE] = 12 },
+    { NOTHING }
 };
+
 static int hippodrome_resources[5][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 32, 0, 0, 0 },
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 0, 32, 0, 0, 0 },
-    { 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 32, 46, 32, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 32 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_MARBLE] = 32 },
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_MARBLE] = 32 },
+    { [ARCHITECTS] = 4, [RESOURCE_TIMBER] = 32, [RESOURCE_CLAY] = 46, [RESOURCE_MARBLE] = 32 },
+    { NOTHING }
 };
+
 static int oracle_lt_resources[2][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 2 },
+    { NOTHING }
 };
+
 static int large_temple_resources[2][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 4 },
+    { NOTHING }
 };
+
 static int nymphaeum_resources[2][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 4 },
+    { NOTHING }
 };
+
 static int small_mausoleum_resources[2][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 2 },
+    { NOTHING }
 };
+
 static int large_mausoleum_resources[2][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 4 },
+    { NOTHING }
 };
+
 static int caravanserai_resources[2][RESOURCE_MAX] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 8, 6, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+    { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 6, [RESOURCE_CLAY] = 8, [RESOURCE_MARBLE] = 6 },
+    { NOTHING }
 };
 
 static const building_type MONUMENT_BUILDING_TYPES[] = {
@@ -120,7 +132,7 @@ array(monument_delivery) monument_deliveries;
 int building_monument_deliver_resource(building *b, int resource)
 {
     if (b->id <= 0 || !building_monument_is_monument(b) ||
-        b->data.monument.resources_needed[resource] <= 0) {
+        b->resources[resource] <= 0) {
         return 0;
     }
 
@@ -128,11 +140,11 @@ int building_monument_deliver_resource(building *b, int resource)
         b = building_get(b->prev_part_building_id);
     }
 
-    b->data.monument.resources_needed[resource]--;
+    b->resources[resource]--;
 
     while (b->next_part_building_id) {
         b = building_get(b->next_part_building_id);
-        b->data.monument.resources_needed[resource]--;
+        b->resources[resource]--;
     }
     return 1;
 }
@@ -275,7 +287,7 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
                 (!resource && building_monument_needs_resources(b))) {
                 continue;
             }
-            short needed = b->data.monument.resources_needed[resource];
+            short needed = b->resources[resource];
             if ((needed - building_monument_resource_in_delivery(b, resource)) <= 0) {
                 continue;
             }
@@ -362,7 +374,7 @@ void building_monument_set_phase(building *b, int phase)
     map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
     if (b->data.monument.phase != MONUMENT_FINISHED) {
         for (int resource = 0; resource < RESOURCE_MAX; resource++) {
-            b->data.monument.resources_needed[resource] =
+            b->resources[resource] =
                 building_monument_resources_needed_for_monument_type(b->type, resource,
                 b->data.monument.phase);
         }
@@ -422,7 +434,7 @@ int building_monument_needs_resource(building *b, int resource)
     if (b->data.monument.phase == MONUMENT_FINISHED) {
         return 0;
     }
-    return (b->data.monument.resources_needed[resource]);
+    return (b->resources[resource]);
 }
 
 void building_monuments_set_construction_phase(int phase)
@@ -487,7 +499,7 @@ void building_monument_finish_monuments(void)
             }
             building_monument_set_phase(b, MONUMENT_FINISHED);
             for (int resource = 0; resource < RESOURCE_MAX; resource++) {
-                b->data.monument.resources_needed[resource] = 0;
+                b->resources[resource] = 0;
             }
         }
     }
@@ -499,7 +511,7 @@ int building_monument_needs_resources(building *b)
         return 0;
     }
     for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-        if (b->data.monument.resources_needed[resource] > 0) {
+        if (b->resources[resource] > 0) {
             return 1;
         }
     }
@@ -730,7 +742,7 @@ static void delivery_load(buffer *buf, monument_delivery *delivery, int size)
 {
     delivery->walker_id = buffer_read_i32(buf);
     delivery->destination_id = buffer_read_i32(buf);
-    delivery->resource = buffer_read_i32(buf);
+    delivery->resource = resource_remap(buffer_read_i32(buf));
     delivery->cartloads = buffer_read_i32(buf);
 
     if (size > ORIGINAL_DELIVERY_BUFFER_SIZE) {

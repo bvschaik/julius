@@ -222,8 +222,7 @@ static void draw_foreground(void)
     int y_offset = RESOURCE_Y_OFFSET;
     for (int i = 0; i < data.list->size && i < MAX_VISIBLE_ROWS; i++) {
         int resource = data.list->items[i + scrollbar.scroll_position];
-        int image_offset = resource + resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-        int image_id = image_group(GROUP_RESOURCE_ICONS) + image_offset;
+        int image_id = resource_get_data(resource)->image.icon;
         const image *img = image_get(image_id);
         int base_y = (RESOURCE_ROW_HEIGHT - img->height) / 2;
         image_draw(image_id, 32, y_offset + base_y, COLOR_MASK_NONE, SCALE_NONE);
@@ -232,7 +231,7 @@ static void draw_foreground(void)
         if (data.focus_button_id - 5 == i) {
             button_border_draw(64, y_offset, 512 - data.margin_right, RESOURCE_ROW_HEIGHT, 1);
         }
-        lang_text_draw(23, resource, 72, y_offset + 17, FONT_NORMAL_WHITE);
+        text_draw(resource_get_data(resource)->text, 72, y_offset + 17, FONT_NORMAL_WHITE, COLOR_MASK_NONE);
         int amount = city_resource_count(resource);
         if (resource_is_food(resource)) {
             amount += city_resource_count_food_on_granaries(resource) / 100;

@@ -99,7 +99,7 @@ static void draw_foreground(void)
     lang_text_draw_year(scenario_property_start_year() + data.demand_change.year, 100, 158, FONT_NORMAL_BLACK);
 
     button_border_draw(190, 152, 120, 25, data.focus_button_id == 2);
-    lang_text_draw_centered(23, data.demand_change.resource, 190, 158, 120, FONT_NORMAL_BLACK);
+    text_draw_centered(resource_get_data(data.demand_change.resource)->text, 190, 158, 120, FONT_NORMAL_BLACK, COLOR_MASK_NONE);
 
     lang_text_draw(44, 97, 330, 158, FONT_NORMAL_BLACK);
     button_border_draw(420, 152, 200, 25, data.focus_button_id == 3);

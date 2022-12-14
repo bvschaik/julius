@@ -102,7 +102,7 @@ static void draw_background(void)
             if (city_resource_get_amount_including_granaries(resource, resource_cost, 0) < resource_cost) {
                 has_resources = 0;
             }
-            image_draw(image_group(GROUP_RESOURCE_ICONS) + resource, 120 + width, 316, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw(resource_get_data(resource)->image.icon, 120 + width, 316, COLOR_MASK_NONE, SCALE_NONE);
             width += 32;
         }
     }

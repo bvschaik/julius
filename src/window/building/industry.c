@@ -39,7 +39,7 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
     window_building_play_sound(c, sound_file);
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10,
+    image_draw(resource_get_data(resource)->image.icon, c->x_offset + 10, c->y_offset + 10,
         COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10,
         BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
@@ -122,7 +122,7 @@ static void draw_raw_material(
     window_building_play_sound(c, sound_file);
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10,
+    image_draw(resource_get_data(resource)->image.icon, c->x_offset + 10, c->y_offset + 10,
         COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10,
         BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
@@ -195,7 +195,7 @@ static void draw_workshop(
     window_building_play_sound(c, sound_file);
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + resource, c->x_offset + 10, c->y_offset + 10,
+    image_draw(resource_get_data(resource)->image.icon, c->x_offset + 10, c->y_offset + 10,
         COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10,
         BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
@@ -207,7 +207,7 @@ static void draw_workshop(
     lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 40, FONT_NORMAL_BLACK);
 
     if (!b->strike_duration_days) {
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + input_resource, c->x_offset + 32, c->y_offset + 56,
+        image_draw(resource_get_data(input_resource)->image.icon, c->x_offset + 32, c->y_offset + 56,
             COLOR_MASK_NONE, SCALE_NONE);
         width = lang_text_draw(group_id, 12, c->x_offset + 60, c->y_offset + 60, FONT_NORMAL_BLACK);
         if (b->loads_stored < 1) {
@@ -315,15 +315,14 @@ void window_building_draw_wharf(building_info_context *c)
     window_building_play_sound(c, "wavs/wharf.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(102, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
-        resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON),
+    image_draw(resource_get_data(RESOURCE_FISH)->image.icon,
         c->x_offset + 10, c->y_offset + 10, COLOR_MASK_NONE, SCALE_NONE);
 
     building *b = building_get(c->building_id);
 
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
-    } else if (city_resource_is_mothballed(RESOURCE_MEAT)) {
+    } else if (city_resource_is_mothballed(RESOURCE_FISH)) {
         window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_WHARF_MOTHBALLED);
     } else if (!b->data.industry.fishing_boat_id) {
         window_building_draw_description(c, 102, 2);
@@ -344,8 +343,7 @@ void window_building_draw_wharf(building_info_context *c)
         c->x_offset + 16, c->y_offset + 110, FONT_NORMAL_BLACK);
     width += text_draw_number(b->data.industry.average_production_per_month, '@', "",
         c->x_offset + 16 + width, c->y_offset + 110, FONT_NORMAL_BLACK, 0);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_MEAT +
-        resource_image_offset(RESOURCE_MEAT, RESOURCE_IMAGE_ICON), c->x_offset + 16 + width, c->y_offset + 110,
+    image_draw(resource_get_data(RESOURCE_FISH)->image.icon, c->x_offset + 16 + width, c->y_offset + 110,
         COLOR_MASK_NONE, SCALE_NONE);
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);

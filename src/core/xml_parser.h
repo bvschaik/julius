@@ -33,7 +33,7 @@ int xml_parser_init(const xml_parser_element *elements, int total_elements);
  * @param is_final Whether this is the last piece of the xml string. If you're passing a single string, this should be set to 1.
  * @return 1 if parsing was successful, 0 otherwise.
  */
-int xml_parser_parse(const char *buffer, int buffer_size, int is_final);
+int xml_parser_parse(const char *buffer, unsigned int buffer_size, int is_final);
 
 /**
  * @brief Get the total number of attributes for the current element.

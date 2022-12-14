@@ -151,9 +151,10 @@ static void draw_trade_resource(resource_type resource, int trade_max, int x_off
 {
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
 
-    int image_id = resource + image_group(GROUP_EMPIRE_RESOURCES);
-    int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    image_draw(image_id + resource_offset, x_offset + 1, y_offset + 1, COLOR_MASK_NONE, SCALE_NONE);
+    // TODO_RESOURCE
+    //  int image_id = resource + image_group(GROUP_EMPIRE_RESOURCES);
+  //  int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
+    image_draw(resource_get_data(resource)->image.empire /*image_id + resource_offset*/, x_offset + 1, y_offset + 1, COLOR_MASK_NONE, SCALE_NONE);
 
     if (data.focus_resource == resource) {
         button_border_draw(x_offset - 2, y_offset - 2, 101 + 4, 30, 1);
@@ -375,11 +376,11 @@ void draw_trade_dots(const empire_object *trade_route, int x_draw_offset, int y_
     double x_factor = x_diff / dist;
     double y_factor = y_diff / dist;
     static const int dot_spacing = 15;
-    int num_dots = ceil(dist / dot_spacing);
+    int num_dots = (int) ceil(dist / dot_spacing);
     int image_id = trade_route->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE ? assets_get_image_id("UI", "LandRouteDot") : assets_get_image_id("UI", "SeaRouteDot");
     for (int j = 0; j < num_dots; j++) {
-        int x = x_factor * j * 15 + start_x;
-        int y = y_factor * j * 15 + start_y;
+        int x = (int) (x_factor * j * 15 + start_x);
+        int y = (int) (y_factor * j * 15 + start_y);
         image_draw(image_id, x_draw_offset + x, y_draw_offset + y, COLOR_MASK_NONE, SCALE_NONE);
     }
 }
@@ -740,7 +741,7 @@ static void get_tooltip(tooltip_context *c)
     int resource = data.focus_resource ? data.focus_resource : get_tooltip_resource(c);
     if (resource) {
         c->type = TOOLTIP_BUTTON;
-        c->text_id = 131 + resource;
+        c->precomposed_text = resource_get_data(resource)->text;
     } else if (data.focus_button_id) {
         c->type = TOOLTIP_BUTTON;
         switch (data.focus_button_id) {

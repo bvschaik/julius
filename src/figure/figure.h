@@ -154,6 +154,6 @@ int figure_target_is_alive(const figure *f);
 
 void figure_save_state(buffer *list, buffer *seq);
 
-void figure_load_state(buffer *list, buffer *seq, int includes_figure_size);
+void figure_load_state(buffer *list, buffer *seq, int version);
 
 #endif // FIGURE_FIGURE_H

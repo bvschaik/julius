@@ -53,15 +53,6 @@ static const building_type INDUSTRY_TYPES[] = {
     BUILDING_GRAND_TEMPLE_VENUS,
 };
 
-static const building_type OUTPUT_TYPE_TO_INDUSTRY[] = {
-    BUILDING_NONE,
-    BUILDING_OIL_WORKSHOP,
-    BUILDING_WINE_WORKSHOP,
-    BUILDING_WEAPONS_WORKSHOP,
-    BUILDING_FURNITURE_WORKSHOP,
-    BUILDING_POTTERY_WORKSHOP
-};
-
 int building_is_farm(building_type type)
 {
     return type >= BUILDING_WHEAT_FARM && type <= BUILDING_PIG_FARM;
@@ -79,7 +70,7 @@ int building_is_workshop(building_type type)
 
 static int max_progress(const building *b)
 {
-    return b->subtype.workshop_type ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
+    return building_is_workshop(b->type) ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;
 }
 
 static void update_farm_image(const building *b)
@@ -195,7 +186,7 @@ void building_industry_update_production(void)
                 continue;
             }
 
-            if (b->subtype.workshop_type && !b->loads_stored) {
+            if (building_is_workshop(b->type) && !b->loads_stored) {
                 continue;
             }
 
@@ -269,13 +260,11 @@ void building_industry_start_new_production(building *b)
 {
     update_production_stats(b);
     b->data.industry.progress = 0;
-    if (b->subtype.workshop_type) {
-        if (b->loads_stored) {
-            if (b->loads_stored > 1) {
-                b->data.industry.has_raw_materials = 1;
-            }
-            b->loads_stored--;
+    if (building_is_workshop(b->type) && b->loads_stored) {
+        if (b->loads_stored > 1) {
+            b->data.industry.has_raw_materials = 1;
         }
+        b->loads_stored--;
     }
     if (building_is_farm(b->type)) {
         update_farm_image(b);
@@ -334,9 +323,12 @@ void building_workshop_add_raw_material(building *b)
     }
 }
 
-int building_has_workshop_for_raw_material_with_room(int workshop_type, int road_network_id)
+int building_has_workshop_for_raw_material_with_room(int resource, int road_network_id)
 {
-    building_type type = OUTPUT_TYPE_TO_INDUSTRY[workshop_type];
+    building_type type = resource_get_data(resource)->workshop;
+    if (type == BUILDING_NONE) {
+        return 0;
+    }
     for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
         if (b->state == BUILDING_STATE_IN_USE && b->has_road_access && b->distance_from_entry > 0 &&
             b->road_network_id == road_network_id && b->loads_stored < 2) {
@@ -346,19 +338,17 @@ int building_has_workshop_for_raw_material_with_room(int workshop_type, int road
     return 0;
 }
 
-int building_get_workshop_for_raw_material_with_room(int x, int y,
-    int resource, int road_network_id, map_point *dst)
+int building_get_workshop_for_raw_material_with_room(int x, int y, int resource, int road_network_id, map_point *dst)
 {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
-    int output_type = resource_to_workshop_type(resource);
-    if (output_type == WORKSHOP_NONE) {
+    building_type type = resource_get_data(resource)->workshop;
+    if (type == BUILDING_NONE) {
         return 0;
     }
     int min_dist = INFINITE;
     building *min_building = 0;
-    building_type type = OUTPUT_TYPE_TO_INDUSTRY[output_type];
     for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
         if (b->state != BUILDING_STATE_IN_USE || !b->has_road_access || b->distance_from_entry <= 0 ||
             b->road_network_id != road_network_id || b->loads_stored >= 2) {
@@ -385,13 +375,12 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int road_
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
-    int output_type = resource_to_workshop_type(resource);
-    if (output_type == WORKSHOP_NONE) {
+    building_type type = resource_get_data(resource)->workshop;
+    if (type == BUILDING_NONE) {
         return 0;
     }
     int min_dist = INFINITE;
     building *min_building = 0;
-    building_type type = OUTPUT_TYPE_TO_INDUSTRY[output_type];
     for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
         if (b->state != BUILDING_STATE_IN_USE ||
             !b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {

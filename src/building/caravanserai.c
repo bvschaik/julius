@@ -8,24 +8,13 @@
 
 #define INFINITE 10000
 
-static int get_needed_food(building *caravanserai)
+static void get_needed_food(building *caravanserai, int needed_food[RESOURCE_MAX])
 {
-    int food_needed = INVENTORY_FLAG_NONE;
-
-    if (building_distribution_is_good_accepted(INVENTORY_WHEAT, caravanserai)) {
-        inventory_set(&food_needed, INVENTORY_WHEAT);
+    needed_food[RESOURCE_NONE] = 0;
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        needed_food[r] = resource_is_food(r) && resource_get_data(r)->is_inventory &&
+            building_distribution_is_good_accepted(r, caravanserai);
     }
-    if (building_distribution_is_good_accepted(INVENTORY_VEGETABLES, caravanserai)) {
-        inventory_set(&food_needed, INVENTORY_VEGETABLES);
-    }
-    if (building_distribution_is_good_accepted(INVENTORY_FRUIT, caravanserai)) {
-        inventory_set(&food_needed, INVENTORY_FRUIT);
-    }
-    if (building_distribution_is_good_accepted(INVENTORY_MEAT, caravanserai)) {
-        inventory_set(&food_needed, INVENTORY_MEAT);
-    }
-
-    return food_needed;
 }
 
 int building_caravanserai_enough_foods(building *caravanserai)
@@ -33,39 +22,52 @@ int building_caravanserai_enough_foods(building *caravanserai)
     int food_required_monthly = trade_caravan_count() * FOOD_PER_TRADER_MONTHLY;
     int total_food_in_caravanserai = 0;
 
-    for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; ++i) {
-        total_food_in_caravanserai += caravanserai->data.market.inventory[i];
+    for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
+        if (resource_is_food(r)) {
+            total_food_in_caravanserai += caravanserai->resources[r];            
+        }
     }
 
     return total_food_in_caravanserai >= food_required_monthly;
 }
 
+static int has_inventory_needs(const int needed[RESOURCE_MAX])
+{
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        if (needed[r]) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int building_caravanserai_get_storage_destination(building *caravanserai)
 {
-    int food_needed = get_needed_food(caravanserai);
+    int food_needed[RESOURCE_MAX];
+    get_needed_food(caravanserai, food_needed);
 
-    if (food_needed == INVENTORY_FLAG_NONE) {
+    if (!has_inventory_needs(food_needed)) {
         return 0;
     }
-    inventory_storage_info data[INVENTORY_MAX];
+    inventory_storage_info data[RESOURCE_MAX];
     if (!building_distribution_get_inventory_storages_for_building(data, caravanserai, INFINITE)) {
         return 0;
     }
     // Prefer whichever food we don't have
     int fetch_inventory = building_distribution_fetch(caravanserai, data, 0, 1, food_needed);
-    if (fetch_inventory != INVENTORY_NONE) {
+    if (fetch_inventory != RESOURCE_NONE) {
         caravanserai->data.market.fetch_inventory_id = fetch_inventory;
         return data[fetch_inventory].building_id;
     }
     // Then prefer smallest stock below baseline stock
     fetch_inventory = building_distribution_fetch(caravanserai, data, BASELINE_STOCK, 0, food_needed);
-    if (fetch_inventory != INVENTORY_NONE) {
+    if (fetch_inventory != RESOURCE_NONE) {
         caravanserai->data.market.fetch_inventory_id = fetch_inventory;
         return data[fetch_inventory].building_id;
     }
     // All items well stocked: pick food below threshold
     fetch_inventory = building_distribution_fetch(caravanserai, data, MAX_FOOD, 0, food_needed);
-    if (fetch_inventory != INVENTORY_NONE) {
+    if (fetch_inventory != RESOURCE_NONE) {
         caravanserai->data.market.fetch_inventory_id = fetch_inventory;
         return data[fetch_inventory].building_id;
     }

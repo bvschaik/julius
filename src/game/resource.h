@@ -1,6 +1,9 @@
 #ifndef GAME_RESOURCE_H
 #define GAME_RESOURCE_H
 
+#include "building/type.h"
+#include "core/lang.h"
+
 /**
  * @file
  * Type definitions for resources
@@ -17,6 +20,7 @@ typedef enum {
     RESOURCE_OLIVES = 4,
     RESOURCE_VINES = 5,
     RESOURCE_MEAT = 6,
+    RESOURCE_FISH = 6,
     RESOURCE_WINE = 7,
     RESOURCE_OIL = 8,
     RESOURCE_IRON = 9,
@@ -31,63 +35,75 @@ typedef enum {
     // helper constants
     RESOURCE_MIN = 1,
     RESOURCE_MAX = 16,
+    RESOURCE_MAX_LEGACY = 16,
     RESOURCE_MIN_FOOD = 1,
     RESOURCE_MAX_FOOD = 7,
+    RESOURCE_MAX_FOOD_LEGACY = 7,
     RESOURCE_MIN_RAW = 9,
-    RESOURCE_MAX_RAW = 13
+    RESOURCE_MAX_RAW = 13,
+    RESOURCE_TOTAL_SPECIAL = 2
 } resource_type;
 
-typedef enum {
-    INVENTORY_NONE = -1,
-    INVENTORY_WHEAT = 0,
-    INVENTORY_VEGETABLES = 1,
-    INVENTORY_FRUIT = 2,
-    INVENTORY_MEAT = 3,
-    INVENTORY_WINE = 4,
-    INVENTORY_OIL = 5,
-    INVENTORY_FURNITURE = 6,
-    INVENTORY_POTTERY = 7,
-    // helper constants
-    INVENTORY_MIN_FOOD = 0,
-    INVENTORY_MAX_FOOD = 4,
-    INVENTORY_MIN_GOOD = 4,
-    INVENTORY_MAX_GOOD = 8,
-    INVENTORY_MAX = 8,
-    // inventory flags
-    INVENTORY_FLAG_NONE = 0,
-    INVENTORY_FLAG_ALL_FOODS = 0x0f,
-    INVENTORY_FLAG_ALL_GOODS = 0xf0,
-    INVENTORY_FLAG_ALL = 0xff
-} inventory_type;
+#define LEGACY_INVENTORY_MAX 8
 
 typedef enum {
-    WORKSHOP_NONE = 0,
-    WORKSHOP_OLIVES_TO_OIL = 1,
-    WORKSHOP_VINES_TO_WINE = 2,
-    WORKSHOP_IRON_TO_WEAPONS = 3,
-    WORKSHOP_TIMBER_TO_FURNITURE = 4,
-    WORKSHOP_CLAY_TO_POTTERY = 5
-} workshop_type;
+    RESOURCE_ORIGINAL_VERSION = 0,
+    RESOURCE_CURRENT_VERSION = 1
+} resource_version;
 
 typedef enum {
-    RESOURCE_IMAGE_STORAGE = 0,
-    RESOURCE_IMAGE_CART = 1,
-    RESOURCE_IMAGE_FOOD_CART = 2,
-    RESOURCE_IMAGE_ICON = 3
-} resource_image_type;
+    RESOURCE_FLAG_NONE = 0,
+    RESOURCE_FLAG_FOOD = 1,
+    RESOURCE_FLAG_RAW_MATERIAL = 2,
+    RESOURCE_FLAG_GOOD = 4,
+    RESOURCE_FLAG_SPECIAL = 8
+} resource_flags;
 
-int resource_image_offset(resource_type resource, resource_image_type type);
+typedef struct {
+    resource_type type;
+    resource_flags flags;
+    const uint8_t *text;
+    int is_inventory;
+    building_type industry;
+    building_type workshop;
+    struct {
+        int storage;
+        struct {
+            int single_load;
+            int multiple_loads;
+            int eight_loads;
+        } cart;
+        int icon;
+        int empire;
+        struct {
+            int icon;
+            int empire;
+        } editor;
+    } image;
+    struct {
+        int buy;
+        int sell;
+    } default_trade_price;
+} resource_data;
+
+void resource_init(void);
 
 int resource_is_food(resource_type resource);
 
-workshop_type resource_to_workshop_type(resource_type resource);
+int resource_is_raw_material(resource_type resource);
 
-int inventory_is_set(int inventory, int flag);
+int resource_is_good(resource_type resource);
 
-void inventory_set(int *inventory, int flag);
+const resource_data *resource_get_data(resource_type resource);
 
-int resource_from_inventory(int inventory_id);
+void resource_set_mapping(int version);
 
-int resource_to_inventory(resource_type resource);
+resource_type resource_map_legacy_inventory(int id);
+
+resource_type resource_remap(int id);
+
+int resource_total_mapped(void);
+
+int resource_total_food_mapped(void);
 
 #endif // GAME_RESOURCE_H

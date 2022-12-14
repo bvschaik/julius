@@ -329,12 +329,7 @@ static int market_supplier_phrase(figure *f)
     if (f->action_state == FIGURE_ACTION_145_SUPPLIER_GOING_TO_STORAGE) {
         return 7;
     } else if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING) {
-        int resource;
-        if (f->type == FIGURE_LIGHTHOUSE_SUPPLIER) {
-            resource = f->collecting_item_id;
-        } else {
-            resource = resource_from_inventory(f->collecting_item_id);
-        }
+        resource_type resource = f->collecting_item_id;
         if (resource != RESOURCE_NONE) {
             return 8;
         } else {

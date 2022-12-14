@@ -38,7 +38,7 @@ static void draw_background(void)
     graphics_in_dialog();
 
     outer_panel_draw(96, 144, 30, 15);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, 112, 160, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(resource_get_data(RESOURCE_DENARII)->image.icon, 112, 160, COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw_centered(52, 69, 144, 160, 416, FONT_LARGE_BLACK);
 
     int width = lang_text_draw(52, 50, 144, 304, FONT_NORMAL_BLACK);

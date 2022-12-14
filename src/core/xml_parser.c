@@ -35,7 +35,7 @@ static int compare_multiple(const char *string, const char *match)
     const char *next;
     do {
         next = strchr(string, '|');
-        int length = next ? (next - string) : strlen(string);
+        size_t length = next ? (next - string) : strlen(string);
         if (strncmp(string, match, length) == 0) {
             return 1;
         }
@@ -167,7 +167,7 @@ int xml_parser_init(const xml_parser_element *elements, int total_elements)
     return 1;
 }
 
-int xml_parser_parse(const char *buffer, int buffer_size, int is_final)
+int xml_parser_parse(const char *buffer, unsigned int buffer_size, int is_final)
 {
     if (data.error) {
         return 0;

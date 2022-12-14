@@ -525,16 +525,16 @@ static void draw_granary_stores(const image *img, const building *b, int x, int 
             y + 60 + img->animation->sprite_offset_y - img->height,
             color_mask, draw_context.scale);
     }
-    if (b->data.granary.resource_stored[RESOURCE_NONE] < FULL_GRANARY) {
+    if (b->resources[RESOURCE_NONE] < FULL_GRANARY) {
         image_draw(image_group(GROUP_BUILDING_GRANARY) + 2, x + 33, y - 60, color_mask, draw_context.scale);
     }
-    if (b->data.granary.resource_stored[RESOURCE_NONE] < THREEQUARTERS_GRANARY) {
+    if (b->resources[RESOURCE_NONE] < THREEQUARTERS_GRANARY) {
         image_draw(image_group(GROUP_BUILDING_GRANARY) + 3, x + 56, y - 50, color_mask, draw_context.scale);
     }
-    if (b->data.granary.resource_stored[RESOURCE_NONE] < HALF_GRANARY) {
+    if (b->resources[RESOURCE_NONE] < HALF_GRANARY) {
         image_draw(image_group(GROUP_BUILDING_GRANARY) + 4, x + 91, y - 50, color_mask, draw_context.scale);
     }
-    if (b->data.granary.resource_stored[RESOURCE_NONE] < QUARTER_GRANARY) {
+    if (b->resources[RESOURCE_NONE] < QUARTER_GRANARY) {
         image_draw(image_group(GROUP_BUILDING_GRANARY) + 5, x + 117, y - 62, color_mask, draw_context.scale);
     }
 }

@@ -130,8 +130,8 @@ static void draw_foreground(void)
     if (request.resource) {
         lang_text_draw_year(scenario_property_start_year() + request.year, 222, 165, FONT_NORMAL_BLACK);
         int width = text_draw_number(request.amount, '@', " ", 312, 165, FONT_NORMAL_BLACK, 0);
-        int offset = request.resource + resource_image_offset(request.resource, RESOURCE_IMAGE_ICON);
-        image_draw(image_group(GROUP_EDITOR_RESOURCE_ICONS) + offset, 322 + width, 160, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(resource_get_data(request.resource)->image.editor.icon,
+            322 + width, 160, COLOR_MASK_NONE, SCALE_NONE);
     } else {
         lang_text_draw_centered(44, 19, 212, 165, 250, FONT_NORMAL_BLACK);
     }

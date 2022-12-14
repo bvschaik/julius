@@ -72,13 +72,12 @@ static void draw_foreground(void)
     graphics_in_dialog();
 
     outer_panel_draw(16, 128, 38, 15);
-    int image_offset = data.resource + resource_image_offset(data.resource, RESOURCE_IMAGE_ICON);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, 26, 136, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(resource_get_data(data.resource)->image.icon, 26, 136, COLOR_MASK_NONE, SCALE_NONE);
 
-    lang_text_draw(23, data.resource, 60, 137, FONT_LARGE_BLACK);
+    text_draw(resource_get_data(data.resource)->text, 60, 137, FONT_LARGE_BLACK, COLOR_MASK_NONE);
 
     if (empire_can_produce_resource(data.resource) ||
-        (data.resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF))) {
+        (data.resource == RESOURCE_FISH && scenario_building_allowed(BUILDING_WHARF))) {
         int total_buildings = building_count_industry_total(data.resource);
         int active_buildings = building_count_industry_active(data.resource);
         if (building_count_industry_total(data.resource) <= 0) {

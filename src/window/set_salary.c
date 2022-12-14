@@ -57,7 +57,7 @@ static void draw_foreground(void)
     int dialog_width = get_dialog_width();
     int dialog_x = 128 - (dialog_width - MIN_DIALOG_WIDTH) / 2;
     outer_panel_draw(dialog_x, 32, dialog_width / BLOCK_SIZE, 25);
-    image_draw(image_group(GROUP_RESOURCE_ICONS) + RESOURCE_DENARII, dialog_x + 16, 48, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(resource_get_data(RESOURCE_DENARII)->image.icon, dialog_x + 16, 48, COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw_centered(52, 15, dialog_x + 48, 48, dialog_width - 64, FONT_LARGE_BLACK);
 
     inner_panel_draw(144, 80, 22, 15);

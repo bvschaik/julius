@@ -43,20 +43,20 @@ typedef struct {
 
 int get_looter_destination(figure *f)
 {
-    inventory_storage_info info[INVENTORY_MAX];
-    looter_destination possible_destinations[INVENTORY_MAX];
+    inventory_storage_info info[RESOURCE_MAX];
+    looter_destination possible_destinations[RESOURCE_MAX];
     if (!building_distribution_get_inventory_storages_for_figure(info, 0, 0, f, MAX_LOOTING_DISTANCE)) {
         return 0;
     }
 
-    int resource = 0;
+    resource_type resource = RESOURCE_NONE;
     int building_id = 0;
     int options = 0;
 
-    for (int i = 0; i < INVENTORY_MAX; ++i) {
-        if (info[i].building_id > 0) {
-            possible_destinations[options].building_id = info[i].building_id;
-            possible_destinations[options].resource = i;
+    for (resource_type r = 0; r < RESOURCE_MAX; r++) {
+        if (info[r].building_id > 0) {
+            possible_destinations[options].building_id = info[r].building_id;
+            possible_destinations[options].resource = r;
             options += 1;
         }
     }
@@ -66,7 +66,7 @@ int get_looter_destination(figure *f)
         building_id = possible_destinations[random_index].building_id;
 
         building *storage = building_get(building_id);
-        resource = resource_from_inventory(possible_destinations[random_index].resource);
+        resource = possible_destinations[random_index].resource;
 
         f->destination_x = storage->road_access_x;
         f->destination_y = storage->road_access_y;

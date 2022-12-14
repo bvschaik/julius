@@ -144,9 +144,7 @@ static void init(int text_id, void (*background_callback)(void))
 
 static int resource_image(int resource)
 {
-    int image_id = image_group(GROUP_RESOURCE_ICONS) + resource;
-    image_id += resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    return image_id;
+    return resource_get_data(resource)->image.icon;
 }
 
 static int is_event_message(const lang_message *msg)
@@ -246,8 +244,8 @@ static void draw_city_message_text(const lang_message *msg)
                     text_draw_number(request->amount, '@', " ", data.x_text + 8, y_offset, FONT_NORMAL_WHITE, 0);
                     image_draw(resource_image(request->resource), data.x_text + 70, y_offset - 5,
                         COLOR_MASK_NONE, SCALE_NONE);
-                    lang_text_draw(23, request->resource,
-                        data.x_text + 100, y_offset, FONT_NORMAL_WHITE);
+                    text_draw(resource_get_data(request->resource)->text,
+                        data.x_text + 100, y_offset, FONT_NORMAL_WHITE, COLOR_MASK_NONE);
                     if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
                         int width = lang_text_draw_amount(8, 4, request->months_to_comply,
                             data.x_text + 200, y_offset, FONT_NORMAL_WHITE);
@@ -424,11 +422,9 @@ static void draw_background_video(void)
         }
         const scenario_request *request = scenario_request_get(player_message.param1);
         text_draw_number(request->amount, '@', " ", data.x + 8, y_text, FONT_NORMAL_WHITE, 0);
-        image_draw(
-            image_group(GROUP_RESOURCE_ICONS) + request->resource
-            + resource_image_offset(request->resource, RESOURCE_IMAGE_ICON),
+        image_draw(resource_get_data(request->resource)->image.icon,
             data.x + 70, y_text - 5, COLOR_MASK_NONE, SCALE_NONE);
-        lang_text_draw(23, request->resource, data.x + 100, y_text, FONT_NORMAL_WHITE);
+        text_draw(resource_get_data(request->resource)->text, data.x + 100, y_text, FONT_NORMAL_WHITE, COLOR_MASK_NONE);
         if (request->state == REQUEST_STATE_NORMAL || request->state == REQUEST_STATE_OVERDUE) {
             width = lang_text_draw_amount(8, 4, request->months_to_comply, data.x + 200, y_text, FONT_NORMAL_WHITE);
             lang_text_draw(12, 2, data.x + 200 + width, y_text, FONT_NORMAL_WHITE);

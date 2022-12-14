@@ -11,7 +11,7 @@
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
-#include "game/file_io.h"
+#include "game/save_version.h"
 #include "scenario/empire.h"
 
 #include <string.h>

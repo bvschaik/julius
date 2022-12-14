@@ -550,6 +550,10 @@ static char *file_to_buffer(const char *filename, int *output_length)
     rewind(file);
 
     char *buffer = malloc(size);
+    if (!buffer) {
+        log_error("Error opening empire file", filename, 0);
+        return 0;
+    }
     memset(buffer, 0, size);
     if (!buffer) {
         log_error("Unable to allocate buffer to read XML file", filename, 0);
@@ -557,7 +561,7 @@ static char *file_to_buffer(const char *filename, int *output_length)
         file_close(file);
         return 0;
     }
-    *output_length = fread(buffer, 1, size, file);
+    *output_length = (int) fread(buffer, 1, size, file);
     if (*output_length > size) {
         log_error("Unable to read file into buffer", filename, 0);
         free(buffer);

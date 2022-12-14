@@ -21,14 +21,23 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 
-static const int CART_OFFSET_MULTIPLE_LOADS_FOOD[] = {0, 0, 8, 16, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-static const int CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[] = {0, 0, 0, 0, 0, 8, 0, 16, 24, 32, 40, 48, 56, 64, 72, 80};
-static const int CART_OFFSET_8_LOADS_FOOD[] = {0, 40, 48, 56, 0, 0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-
-static void set_cart_graphic(figure *f)
+static int cartpusher_carries_food(figure *f)
 {
-    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART) +
-        8 * f->resource_id + resource_image_offset(f->resource_id, RESOURCE_IMAGE_CART);
+    return resource_is_food(f->resource_id);
+}
+
+static void set_cart_graphic(figure *f, int always_carries_resource)
+{
+    int carried = f->loads_sold_or_carrying == 0 ? always_carries_resource : f->loads_sold_or_carrying;
+    if (carried == 0 || f->resource_id == RESOURCE_NONE) {
+        f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART);
+    } else if (carried == 1) {
+        f->cart_image_id = resource_get_data(f->resource_id)->image.cart.single_load;
+    } else if (cartpusher_carries_food(f) && carried >= 8) {
+        f->cart_image_id = resource_get_data(f->resource_id)->image.cart.eight_loads;        
+    } else {
+        f->cart_image_id = resource_get_data(f->resource_id)->image.cart.multiple_loads;
+    }
 }
 
 static int should_change_destination(const figure *f, int building_id, int x_dst, int y_dst)
@@ -235,15 +244,6 @@ static void determine_cartpusher_destination_food(figure *f, int road_network_id
     f->wait_ticks = 0;
 }
 
-static int cartpusher_carries_food(figure *f)
-{
-    if (f->resource_id == RESOURCE_WHEAT || f->resource_id == RESOURCE_VEGETABLES ||
-        f->resource_id == RESOURCE_FRUIT || f->resource_id == RESOURCE_MEAT) {
-        return 1;
-    }
-    return 0;
-}
-
 static void update_image(figure *f)
 {
     int dir = figure_image_normalize_direction(
@@ -309,7 +309,7 @@ void figure_cartpusher_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_20_CARTPUSHER_INITIAL:
-            set_cart_graphic(f);
+            set_cart_graphic(f, 1);
             if (!map_routing_citizen_is_passable(f->grid_offset)) {
                 f->state = FIGURE_STATE_DEAD;
             }
@@ -326,7 +326,7 @@ void figure_cartpusher_action(figure *f)
             f->image_offset = 0;
             break;
         case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
-            set_cart_graphic(f);
+            set_cart_graphic(f, 1);
             figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_24_CARTPUSHER_AT_WAREHOUSE;
@@ -346,7 +346,7 @@ void figure_cartpusher_action(figure *f)
             }
             break;
         case FIGURE_ACTION_22_CARTPUSHER_DELIVERING_TO_GRANARY:
-            set_cart_graphic(f);
+            set_cart_graphic(f, 1);
             figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_25_CARTPUSHER_AT_GRANARY;
@@ -367,7 +367,7 @@ void figure_cartpusher_action(figure *f)
             }
             break;
         case FIGURE_ACTION_23_CARTPUSHER_DELIVERING_TO_WORKSHOP:
-            set_cart_graphic(f);
+            set_cart_graphic(f, 1);
             figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP;
@@ -435,49 +435,15 @@ void figure_cartpusher_action(figure *f)
             }
             break;
         case FIGURE_ACTION_234_CARTPUSHER_GOING_TO_ROME_CREATED:
-            if (f->loads_sold_or_carrying <= 0) {
-                f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
-            } else if (f->loads_sold_or_carrying == 1) {
-                set_cart_graphic(f);
-            } else {
-                if (cartpusher_carries_food(f)) {
-                    if (f->loads_sold_or_carrying >= 8) {
-                        f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                            CART_OFFSET_8_LOADS_FOOD[f->resource_id];
-                    } else {
-                        f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                            CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
-                    }
-                } else {
-                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_RESOURCE) +
-                        CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[f->resource_id];
-                }
-                f->cart_image_id += resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
-            }            const map_tile *entry = city_map_entry_point();
+            set_cart_graphic(f, 0);
+            const map_tile *entry = city_map_entry_point();
             f->action_state = FIGURE_ACTION_235_CARTPUSHER_GOING_TO_ROME;
             f->destination_x = entry->x;
             f->destination_y = entry->y;
             break;
         case FIGURE_ACTION_235_CARTPUSHER_GOING_TO_ROME:
-            if (f->loads_sold_or_carrying <= 0) {
-                f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
-            } else if (f->loads_sold_or_carrying == 1) {
-                set_cart_graphic(f);
-            } else {
-                if (cartpusher_carries_food(f)) {
-                    if (f->loads_sold_or_carrying >= 8) {
-                        f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                            CART_OFFSET_8_LOADS_FOOD[f->resource_id];
-                    } else {
-                        f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                            CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
-                    }
-                } else {
-                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_RESOURCE) +
-                        CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[f->resource_id];
-                }
-                f->cart_image_id += resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
-            }            f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
+            set_cart_graphic(f, 0);
+            f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
             figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
@@ -654,12 +620,7 @@ static void warehouseman_initial_action(figure *f, int road_network_id, int remo
         } else {
             determine_warehouseman_destination(f, road_network_id, remove_resources);
         }
-        if (f->loads_sold_or_carrying == 1) {
-            f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                8 * f->resource_id - 8 + resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
-        } else {
-            set_cart_graphic(f);
-        }
+        set_cart_graphic(f, 1);
     }
     f->image_offset = 0;
 }
@@ -696,12 +657,7 @@ void figure_warehouseman_action(figure *f)
             break;
         }
         case FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE:
-            if (f->loads_sold_or_carrying == 1) {
-                f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                    8 * f->resource_id - 8 + resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
-            } else {
-                set_cart_graphic(f);
-            }
+            set_cart_graphic(f, 1);
             figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->action_state = FIGURE_ACTION_52_WAREHOUSEMAN_AT_DELIVERY_BUILDING;
@@ -808,20 +764,7 @@ void figure_warehouseman_action(figure *f)
                 f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
             }
             // update graphic
-            if (f->loads_sold_or_carrying <= 0) {
-                f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
-            } else if (f->loads_sold_or_carrying == 1) {
-                set_cart_graphic(f);
-            } else {
-                if (f->loads_sold_or_carrying >= 8) {
-                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                        CART_OFFSET_8_LOADS_FOOD[f->resource_id];
-                } else {
-                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                        CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
-                }
-                f->cart_image_id += resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
-            }
+            set_cart_graphic(f, 0);
             figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 for (int i = 0; i < f->loads_sold_or_carrying; i++) {
@@ -872,21 +815,7 @@ void figure_warehouseman_action(figure *f)
             break;
         case FIGURE_ACTION_59_WAREHOUSEMAN_RETURNING_WITH_RESOURCE:
             f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
-            // update graphic
-            if (f->loads_sold_or_carrying <= 0) {
-                f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
-            } else if (f->loads_sold_or_carrying == 1) {
-                set_cart_graphic(f);
-            } else {
-                if (cartpusher_carries_food(f)) {
-                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) +
-                        CART_OFFSET_MULTIPLE_LOADS_FOOD[f->resource_id];
-                } else {
-                    f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_RESOURCE) +
-                        CART_OFFSET_MULTIPLE_LOADS_NON_FOOD[f->resource_id];
-                }
-                f->cart_image_id += resource_image_offset(f->resource_id, RESOURCE_IMAGE_FOOD_CART);
-            }
+            set_cart_graphic(f, 0);
             figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 for (int i = 0; i < f->loads_sold_or_carrying; i++) {

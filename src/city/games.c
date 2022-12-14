@@ -27,10 +27,18 @@ static void executions_start(int id);
 static void imperial_games_start(int id);
 
 games_type ALL_GAMES[MAX_GAMES] = {
-    {1, TR_WINDOW_GAMES_OPTION_1, TR_WINDOW_GAMES_OPTION_1_DESC, MESSAGE_NG_GAMES_PLANNED, 1500, 100, 1, 32, 12, BUILDING_COLOSSEUM, 1, {0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,}, naval_battle_start},
-    {2, TR_WINDOW_GAMES_OPTION_5, TR_WINDOW_GAMES_OPTION_5_DESC, MESSAGE_IG_GAMES_PLANNED, 800, 150, 1, 32, 12, BUILDING_COLOSSEUM, 0, {0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,}, imperial_games_start},
-    {3, TR_WINDOW_GAMES_OPTION_2, TR_WINDOW_GAMES_OPTION_2_DESC, MESSAGE_AN_GAMES_PLANNED, 800, 150, 1, 32, 12, BUILDING_COLOSSEUM, 0, {0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,}, executions_start},
-    //{4, TR_WINDOW_GAMES_OPTION_4, TR_WINDOW_GAMES_OPTION_4_DESC, 100, 1, 32, 120, BUILDING_HIPPODROME, {0,1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,}}
+    {
+        1, TR_WINDOW_GAMES_OPTION_1, TR_WINDOW_GAMES_OPTION_1_DESC, MESSAGE_NG_GAMES_PLANNED, 1500, 100, 1, 32, 12,
+        BUILDING_COLOSSEUM, 1, { [RESOURCE_WINE] = 1, [RESOURCE_TIMBER] = 1 }, naval_battle_start
+    },
+    {
+        2, TR_WINDOW_GAMES_OPTION_5, TR_WINDOW_GAMES_OPTION_5_DESC, MESSAGE_IG_GAMES_PLANNED, 800, 150, 1, 32, 12,
+        BUILDING_COLOSSEUM, 0, { [RESOURCE_WHEAT] = 2, [RESOURCE_OIL] = 1 }, imperial_games_start
+    },
+    {
+        3, TR_WINDOW_GAMES_OPTION_2, TR_WINDOW_GAMES_OPTION_2_DESC, MESSAGE_AN_GAMES_PLANNED, 800, 150, 1, 32, 12,
+        BUILDING_COLOSSEUM, 0, { [RESOURCE_MEAT] = 2 }, executions_start
+    }
 };
 
 
@@ -105,7 +113,6 @@ void city_games_schedule(int game_id)
             if (resource_cost > 0 && resource_is_food(resource)) {
                 building_granaries_remove_resource(resource, resource_cost * RESOURCE_GRANARY_ONE_LOAD);
             }
-
         }
     }
 

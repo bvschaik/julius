@@ -8,6 +8,7 @@
 #include "core/string.h"
 #include "core/time.h"
 #include "figure/formation.h"
+#include "game/resource.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "graphics/window.h"
@@ -673,6 +674,21 @@ void city_message_save_state(buffer *messages, buffer *extra, buffer *counts, bu
     buffer_write_u8(population, data.population_shown.pop25000);
 }
 
+static void update_message_param_if_resource(city_message *msg)
+{
+    switch (msg->message_type) {
+        case MESSAGE_INCREASED_TRADING:
+        case MESSAGE_DECREASED_TRADING:
+        case MESSAGE_TRADE_STOPPED:
+        case MESSAGE_PRICE_INCREASED:
+        case MESSAGE_PRICE_DECREASED:
+            msg->param2 = resource_remap(msg->param2);
+            break;
+        default:
+            break;
+    }
+}
+
 void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, buffer *delays, buffer *population)
 {
     for (int i = 0; i < MAX_MESSAGES; i++) {
@@ -684,6 +700,7 @@ void city_message_load_state(buffer *messages, buffer *extra, buffer *counts, bu
         msg->sequence = buffer_read_i16(messages);
         msg->is_read = buffer_read_u8(messages);
         msg->month = buffer_read_u8(messages);
+        update_message_param_if_resource(msg);
         buffer_skip(messages, 2);
     }
 

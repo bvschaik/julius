@@ -20,10 +20,19 @@
 #define ORIGINAL_BUFFER_SIZE_SUPPORT 24
 #define CURRENT_BUFFER_SIZE_SUPPORT 24
 #define ORIGINAL_BUFFER_SIZE_INDUSTRY 128
-#define CURRENT_BUFFER_SIZE_INDUSTRY 128
+#define CURRENT_BUFFER_SIZE_INDUSTRY 8 * RESOURCE_MAX
 
+#define NUM_BUFFERS 6
 
+static const int ORIGINAL_BUFFER_SIZES[NUM_BUFFERS] = {
+    ORIGINAL_BUFFER_SIZE_INDUSTRY, ORIGINAL_BUFFER_SIZE_CULTURE1, ORIGINAL_BUFFER_SIZE_CULTURE2,
+    ORIGINAL_BUFFER_SIZE_CULTURE3, ORIGINAL_BUFFER_SIZE_MILITARY, ORIGINAL_BUFFER_SIZE_SUPPORT
+};
 
+static const int CURRENT_BUFFER_SIZES[NUM_BUFFERS] = {
+    CURRENT_BUFFER_SIZE_INDUSTRY, CURRENT_BUFFER_SIZE_CULTURE1, CURRENT_BUFFER_SIZE_CULTURE2,
+    CURRENT_BUFFER_SIZE_CULTURE3, CURRENT_BUFFER_SIZE_MILITARY, CURRENT_BUFFER_SIZE_SUPPORT
+};
 
 typedef enum {
     BUFFER_INDUSTRY,
@@ -33,7 +42,6 @@ typedef enum {
     BUFFER_MILITARY,
     BUFFER_SUPPORT,
 } count_buffers;
-
 
 struct record {
     int active;
@@ -226,7 +234,7 @@ void building_count_update(void)
                 if (b->num_workers > 0) {
                     city_buildings_add_working_wharf(!b->data.industry.fishing_boat_id);
                 }
-                increase_industry_count(RESOURCE_MEAT, b->num_workers > 0 && b->data.industry.fishing_boat_id);
+                increase_industry_count(RESOURCE_FISH, b->num_workers > 0 && b->data.industry.fishing_boat_id);
                 break;
             case BUILDING_DOCK:
                 if (b->num_workers > 0 && b->has_water_access) {
@@ -311,14 +319,11 @@ int building_count_industry_total(resource_type resource)
 void building_count_save_state(buffer *industry, buffer *culture1, buffer *culture2,
     buffer *culture3, buffer *military, buffer *support)
 {
-    int buffer_sizes[] = { CURRENT_BUFFER_SIZE_INDUSTRY,CURRENT_BUFFER_SIZE_CULTURE1,CURRENT_BUFFER_SIZE_CULTURE2,CURRENT_BUFFER_SIZE_CULTURE3, CURRENT_BUFFER_SIZE_MILITARY, CURRENT_BUFFER_SIZE_SUPPORT };
-    buffer *buffer_pointers[] = { industry,culture1,culture2,culture3,military,support };
-    int buffer_count = 6;
+    buffer *buffer_pointers[NUM_BUFFERS] = { industry, culture1, culture2, culture3, military, support };
 
-
-    for (int i = 0; i < buffer_count; i++) {
+    for (int i = 0; i < NUM_BUFFERS; i++) {
         buffer *buf = buffer_pointers[i];
-        int buf_size = buffer_sizes[i] + 4; // Extra 4 bytes to store buffer size
+        int buf_size = CURRENT_BUFFER_SIZES[i] + 4; // Extra 4 bytes to store buffer size
         uint8_t *buf_data = malloc(buf_size);
         buffer_init(buf, buf_data, buf_size);
         buffer_write_i32(buf, buf_size);
@@ -417,24 +422,24 @@ void building_count_save_state(buffer *industry, buffer *culture1, buffer *cultu
 void building_count_load_state(buffer *industry, buffer *culture1, buffer *culture2,
     buffer *culture3, buffer *military, buffer *support, int includes_buffer_size)
 {
-    int buf_sizes[] = { ORIGINAL_BUFFER_SIZE_INDUSTRY,ORIGINAL_BUFFER_SIZE_CULTURE1,ORIGINAL_BUFFER_SIZE_CULTURE2,ORIGINAL_BUFFER_SIZE_CULTURE3,ORIGINAL_BUFFER_SIZE_MILITARY,ORIGINAL_BUFFER_SIZE_SUPPORT };
-    int current_buf_sizes[] = { CURRENT_BUFFER_SIZE_INDUSTRY,CURRENT_BUFFER_SIZE_CULTURE1,CURRENT_BUFFER_SIZE_CULTURE2,CURRENT_BUFFER_SIZE_CULTURE3, CURRENT_BUFFER_SIZE_MILITARY, CURRENT_BUFFER_SIZE_SUPPORT };
-    buffer *buf_pointers[] = { industry,culture1,culture2,culture3,military,support };
-    int buffer_count = 6;
+    buffer *buffer_pointers[NUM_BUFFERS] = { industry, culture1, culture2, culture3, military, support };
+    int buffer_sizes[NUM_BUFFERS];
 
     if (includes_buffer_size) {
-        for (int i = 0; i < buffer_count; i++) {
-            buf_sizes[i] = buffer_read_i32(buf_pointers[i]);
-            buf_sizes[i] -= 4;
+        for (int i = 0; i < NUM_BUFFERS; i++) {
+            buffer_sizes[i] = buffer_read_i32(buffer_pointers[i]);
+            buffer_sizes[i] -= 4;
         }
+    } else {
+        memcpy(buffer_sizes, ORIGINAL_BUFFER_SIZES, sizeof(int) * NUM_BUFFERS);
     }
 
     // industry
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        data.industry[i].total = buffer_read_i32(industry);
+    for (int i = 0; i < resource_total_mapped(); i++) {
+        data.industry[resource_remap(i)].total = buffer_read_i32(industry);
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        data.industry[i].active = buffer_read_i32(industry);
+    for (int i = 0; i < resource_total_mapped(); i++) {
+        data.industry[resource_remap(i)].active = buffer_read_i32(industry);
     }
 
     // culture 1
@@ -474,7 +479,7 @@ void building_count_load_state(buffer *industry, buffer *culture1, buffer *cultu
 
     // Arena counts upgraded culture ratings buildings
 
-    if (buf_sizes[BUFFER_CULTURE_1] > ORIGINAL_BUFFER_SIZE_CULTURE1) {
+    if (buffer_sizes[BUFFER_CULTURE_1] > ORIGINAL_BUFFER_SIZE_CULTURE1) {
         data.buildings[BUILDING_ARENA].total = buffer_read_i32(culture1);
         data.buildings[BUILDING_ARENA].active = buffer_read_i32(culture1);
         data.buildings[BUILDING_ARENA].upgraded = buffer_read_i32(culture1);
@@ -521,11 +526,9 @@ void building_count_load_state(buffer *industry, buffer *culture1, buffer *cultu
     data.buildings[BUILDING_FOUNTAIN].total = buffer_read_i32(support);
     data.buildings[BUILDING_FOUNTAIN].active = buffer_read_i32(support);
 
-
-    for (int i = 0; i < buffer_count; i++) {
-        if (buf_sizes[i] > current_buf_sizes[i]) {
-            buffer_skip(buf_pointers[i], buf_sizes[i] - current_buf_sizes[i]);
+    for (int i = 0; i < NUM_BUFFERS; i++) {
+        if (buffer_sizes[i] > CURRENT_BUFFER_SIZES[i]) {
+            buffer_skip(buffer_pointers[i], buffer_sizes[i] - CURRENT_BUFFER_SIZES[i]);
         }
     }
-
 }

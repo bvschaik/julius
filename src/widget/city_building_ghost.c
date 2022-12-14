@@ -1178,15 +1178,11 @@ static void draw_grand_temple_neptune_range(int x, int y, int grid_offset)
 
 static void draw_grand_temple_neptune(const map_tile *tile, int x, int y)
 {
-    color_t color_mask;
     const building_properties *props = building_properties_for_type(BUILDING_GRAND_TEMPLE_NEPTUNE);
     int num_tiles = props->size * props->size;
     int blocked[MAX_TILES];
     if (city_finance_out_of_money() || is_blocked_for_building(tile->grid_offset, props->size, blocked)) {
         image_blend_footprint_color(x, y, COLOR_MASK_RED, data.scale);
-        color_mask = COLOR_MASK_BUILDING_GHOST_RED;
-    } else {
-        color_mask = COLOR_MASK_BUILDING_GHOST;
     }
     // need to add 2 for the bonus the Neptune GT will add
     int radius = map_water_supply_reservoir_radius() + 2;

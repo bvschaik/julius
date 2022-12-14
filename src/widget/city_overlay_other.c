@@ -127,8 +127,10 @@ static int get_column_height_food_stocks(const building *b)
     if (b->house_size && model_get_house(b->subtype.house_level)->food_types) {
         int pop = b->house_population;
         int stocks = 0;
-        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            stocks += b->data.house.inventory[i];
+        for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
+            if (resource_is_food(r) && resource_get_data(r)->is_inventory) {
+                stocks += b->resources[r];
+            }
         }
         int pct_stocks = calc_percentage(stocks, pop);
         if (pct_stocks <= 0) {
@@ -224,8 +226,10 @@ static int get_tooltip_food_stocks(tooltip_context *c, const building *b)
         return 104;
     } else {
         int stocks_present = 0;
-        for (int i = INVENTORY_MIN_FOOD; i < INVENTORY_MAX_FOOD; i++) {
-            stocks_present += b->data.house.inventory[i];
+        for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
+            if (resource_is_food(r) && resource_get_data(r)->is_inventory) {
+                stocks_present += b->resources[r];
+            }
         }
         int stocks_per_pop = calc_percentage(stocks_present, b->house_population);
         if (stocks_per_pop <= 0) {

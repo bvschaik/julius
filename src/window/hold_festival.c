@@ -59,7 +59,7 @@ static void draw_buttons(void)
     } else {
         font = FONT_NORMAL_BLACK;
         color = COLOR_MASK_NONE;
-        wine_image_id = image_group(GROUP_RESOURCE_ICONS) + RESOURCE_WINE;
+        wine_image_id = resource_get_data(RESOURCE_WINE)->image.icon;
     }
     // small festival
     button_border_draw(102, 216, 430, 26, color == COLOR_MASK_NONE && focus_button_id == 6);

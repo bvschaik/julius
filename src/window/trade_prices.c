@@ -90,9 +90,8 @@ static void draw_background(void)
     }
 
 
-    for (int i = 1; i < 16; i++) {
-        int image_offset = i + resource_image_offset(i, RESOURCE_IMAGE_ICON);
-        image_draw(image_group(GROUP_RESOURCE_ICONS) + image_offset, icon_shift + 30 * i, 194,
+    for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
+        image_draw(resource_get_data(i)->image.icon, icon_shift + 30 * i, 194,
             COLOR_MASK_NONE, SCALE_NONE);
 
         if (!four_line || no_policy) {
@@ -192,7 +191,7 @@ static void get_tooltip(tooltip_context *c)
         return;
     }
     c->type = TOOLTIP_BUTTON;
-    c->text_id = 131 + resource;
+    c->precomposed_text = resource_get_data(resource)->text;
 }
 
 void window_trade_prices_show(int shade_x, int shade_y, int shade_width, int shade_height)
