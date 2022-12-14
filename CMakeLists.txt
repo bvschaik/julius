@@ -8,7 +8,6 @@ string(TOLOWER ${TARGET_PLATFORM} TARGET_PLATFORM)
 
 option(DRAW_FPS "Draw FPS on the top left corner of the window." OFF)
 option(SYSTEM_LIBS "Use system libraries when available." ON)
-option(EMSCRIPTEN_LOAD_SDL_PORTS "Load SDL and SDL_mixer emscripten ports instead of compiling them" OFF)
 option(LINK_MPG123 "Link mpg123 statically to Julius instead of relying on a library." OFF)
 
 if(${TARGET_PLATFORM} STREQUAL "vita" AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -615,7 +614,7 @@ set(SOURCE_FILES
     ${EMSCRIPTEN_FILES}
 )
 
-if(${TARGET_PLATFORM} STREQUAL "emscripten" AND EMSCRIPTEN_LOAD_SDL_PORTS)
+if(${TARGET_PLATFORM} STREQUAL "emscripten")
     set(USE_FLAGS "-s USE_SDL=2 -s USE_SDL_MIXER=2 -s SDL2_MIXER_FORMATS=[\"mp3\"] -s USE_MPG123=1")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
@@ -643,9 +642,6 @@ else()
 
     find_package(SDL2 REQUIRED)
     find_package(SDL2_mixer REQUIRED)
-    if(${TARGET_PLATFORM} STREQUAL "emscripten")
-        set(LINK_MPG123 true)
-    endif()
 endif()
 
 if(LINK_MPG123)
