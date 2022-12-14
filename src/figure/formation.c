@@ -14,13 +14,13 @@
 #include "figure/formation_herd.h"
 #include "figure/formation_legion.h"
 #include "figure/properties.h"
+#include "game/save_version.h"
 #include "map/grid.h"
 #include "sound/effect.h"
 
 #define FORMATION_ARRAY_SIZE_STEP 50
 #define ORIGINAL_BUFFER_SIZE_PER_FORMATION 128
 #define CURRENT_BUFFER_SIZE_PER_FORMATION 128
-#define SAVE_GAME_LAST_STATIC_VERSION 0x78
 
 static array(formation) formations;
 
