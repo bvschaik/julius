@@ -21,7 +21,6 @@ out/
 cmake-build-debug
 /data
 ext/SDL2/*/
-ext/mpg123*
 
 # Android
 *.iml
