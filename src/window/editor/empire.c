@@ -32,6 +32,7 @@
 
 static void button_change_empire(int is_up, int param2);
 static void button_ok(int param1, int param2);
+static void button_toggle_invasions(int param1, int param2);
 static void button_refresh(int param1, int param2);
 
 static arrow_button arrow_buttons_empire[] = {
@@ -40,7 +41,8 @@ static arrow_button arrow_buttons_empire[] = {
 };
 static generic_button generic_buttons[] = {
     {84, 48, 100, 24, button_ok, button_none, 0, 0},
-    {204, 48, 150, 24, button_refresh, button_none, 0, 0},
+    {204, 48, 150, 24, button_toggle_invasions, button_none, 0, 0},
+    {374, 48, 150, 24, button_refresh, button_none, 0, 0},
 };
 
 static struct {
@@ -279,7 +281,10 @@ static void draw_panel_buttons(const empire_city *city)
 
     if (scenario.empire.id == SCENARIO_CUSTOM_EMPIRE) {
         button_border_draw(data.x_min + 224, data.y_max - 52, 150, 24, data.focus_button_id == 2);
-        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_REFRESH_EMPIRE, data.x_min + 224, data.y_max - 45, 150, FONT_NORMAL_GREEN);
+        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_TOGGLE_INVASIONS, data.x_min + 224, data.y_max - 45, 150, FONT_NORMAL_GREEN);
+
+        button_border_draw(data.x_min + 394, data.y_max - 52, 150, 24, data.focus_button_id == 3);
+        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_REFRESH_EMPIRE, data.x_min + 394, data.y_max - 45, 150, FONT_NORMAL_GREEN);
     }
 }
 
@@ -367,7 +372,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     data.focus_button_id = 0;
     if (!arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2, 0)) {
         if (!generic_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100,
-            generic_buttons, 2, &data.focus_button_id)) {
+            generic_buttons, 3, &data.focus_button_id)) {
             determine_selected_object(m);
             int selected_object = empire_selected_object();
             if (selected_object) {
@@ -403,6 +408,11 @@ static void button_change_empire(int is_down, int param2)
 static void button_ok(int param1, int param2)
 {
     window_editor_map_show();
+}
+
+static void button_toggle_invasions(int param1, int param2)
+{
+    data.show_battle_objects = !data.show_battle_objects;
 }
 
 static void button_refresh(int param1, int param2)
