@@ -181,7 +181,7 @@ static int image_write_canvas(void)
 {
     const color_t *canvas;
     color_t *buffer = 0;
-    buffer = malloc(screenshot.width * screenshot.height * sizeof(color_t));
+    buffer = malloc(sizeof(color_t) * screenshot.width * screenshot.height);
     if (!graphics_renderer()->save_screen_buffer(buffer, 0, 0, screen_width(), screen_height(), screen_width())) {
         free(buffer);
         return 0;

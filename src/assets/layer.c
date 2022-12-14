@@ -92,7 +92,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
         height = l->height;
     }
 
-    int size = width * height * sizeof(color_t);
+    size_t size = sizeof(color_t) * width * height;
     color_t *data = malloc(size);
     if (!data) {
         log_error("Problem loading layer from image id - out of memory", 0, l->calculated_image_id);
@@ -142,7 +142,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             return;
         }
         if (l->x_offset != 0 || l->y_offset != 0 || l->width != width || l->height != height) {
-            color_t *new_data = malloc(l->width * l->height * sizeof(color_t));
+            color_t *new_data = malloc(sizeof(color_t) * l->width * l->height);
             if (!new_data) {
                 free(data);
                 log_error("Problem loading layer from image id", 0, l->calculated_image_id);
@@ -226,7 +226,7 @@ void layer_load(layer *l, color_t **main_data, int *main_image_widths)
         return;
     }
 
-    int size = l->width * l->height * sizeof(color_t);
+    size_t size = sizeof(color_t) * l->width * l->height;
     color_t *data = malloc(size);
     if (!data) {
         log_error("Problem loading layer - out of memory", l->asset_image_path, 0);

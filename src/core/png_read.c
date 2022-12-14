@@ -120,7 +120,7 @@ static int load_image(void)
     }
     color_t *dst = data.last_png.pixels;
     if (data.last_png.buffer_size < data.last_png.width * data.last_png.height) {
-        dst = realloc(data.last_png.pixels, data.last_png.width * data.last_png.height * sizeof(color_t));
+        dst = realloc(data.last_png.pixels, sizeof(color_t) * data.last_png.width * data.last_png.height);
         if (!dst) {
             free(row);
             log_error("Unable to load png file. Out of memory", 0, 0);

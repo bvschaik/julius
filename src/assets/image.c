@@ -217,13 +217,13 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
     }
     int has_alpha_mask = load_image_layers(img, main_images, main_image_widths);
 
-    color_t *data = malloc(img->img.width * img->img.height * sizeof(color_t));
+    color_t *data = malloc(sizeof(color_t) * img->img.width * img->img.height);
     if (!data) {
         log_error("Error creating image - out of memory", 0, 0);
         unload_image_layers(img);
         return 0;
     }
-    memset(data, 0, img->img.width * img->img.height * sizeof(color_t));
+    memset(data, 0, sizeof(color_t) * img->img.width * img->img.height);
 
     // Images with an alpha mask layer need to be loaded from first to last, which is slower
     const layer *l = has_alpha_mask ? &img->first_layer : img->last_layer;

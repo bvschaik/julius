@@ -319,8 +319,8 @@ static int create_last_image(image_packer *packer, unsigned int remaining_area)
 {
     internal_data *data = packer->internal_data;
 
-    float image_ratio = data->image_width / (float) data->image_height;
-    unsigned int needed_width = (unsigned int) sqrt(remaining_area * image_ratio) + 1;
+    double image_ratio = data->image_width / (double) data->image_height;
+    unsigned int needed_width = (unsigned int) sqrt(image_ratio * remaining_area) + 1;
     unsigned int needed_height = (unsigned int) sqrt(remaining_area / image_ratio) + 1;
     unsigned int width_increase_step = needed_width / 64 + 1;
     unsigned int height_increase_step = needed_height / 64 + 1;
@@ -377,7 +377,7 @@ static int create_last_image(image_packer *packer, unsigned int remaining_area)
             packer->result.images_needed++;
             total_images_packed += images_packed_in_loop;
             remaining_area -= area_packed_in_loop;
-            needed_width = (unsigned int) sqrt(remaining_area * image_ratio) + 1;
+            needed_width = (unsigned int) sqrt(image_ratio * remaining_area) + 1;
             needed_height = (unsigned int) sqrt(remaining_area / image_ratio) + 1;
             width_increase_step = needed_width / 64 + 1;
             height_increase_step = needed_height / 64 + 1;

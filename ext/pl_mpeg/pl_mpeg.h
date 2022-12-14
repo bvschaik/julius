@@ -2841,8 +2841,8 @@ int plm_video_decode_sequence_header(plm_video_t *self) {
 
 
 	// Allocate one big chunk of data for all 3 frames = 9 planes
-	size_t luma_plane_size = self->luma_width * self->luma_height;
-	size_t chroma_plane_size = self->chroma_width * self->chroma_height;
+	size_t luma_plane_size = (size_t) self->luma_width * self->luma_height;
+	size_t chroma_plane_size = (size_t) self->chroma_width * self->chroma_height;
 	size_t frame_data_size = (luma_plane_size + 2 * chroma_plane_size);
 
 	self->frames_data = (uint8_t*)malloc(frame_data_size * 3);
@@ -2855,8 +2855,8 @@ int plm_video_decode_sequence_header(plm_video_t *self) {
 }
 
 void plm_video_init_frame(plm_video_t *self, plm_frame_t *frame, uint8_t *base) {
-	size_t luma_plane_size = self->luma_width * self->luma_height;
-	size_t chroma_plane_size = self->chroma_width * self->chroma_height;
+	size_t luma_plane_size = (size_t) self->luma_width * self->luma_height;
+	size_t chroma_plane_size = (size_t) self->chroma_width * self->chroma_height;
 
 	frame->width = self->width;
 	frame->height = self->height;

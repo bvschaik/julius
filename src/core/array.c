@@ -11,7 +11,7 @@ int array_add_blocks(void ***data, int *blocks, int items_per_block, int item_si
     }
     *data = new_block_pointer;
     for (int i = 0; i < num_blocks; i++) {
-        void *new_block = malloc(items_per_block * item_size);
+        void *new_block = malloc((size_t) item_size * items_per_block);
         if (!new_block) {
             return 0;
         }

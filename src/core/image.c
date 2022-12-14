@@ -365,9 +365,9 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
             continue;
         }
         if (!img->is_isometric && draw_data->is_compressed) {
-            draw_data->buffer = malloc(img->width * img->height * sizeof(color_t));
+            draw_data->buffer = malloc(sizeof(color_t) * img->width * img->height);
             if (draw_data->buffer) {
-                memset(draw_data->buffer, 0, img->width * img->height * sizeof(color_t));
+                memset(draw_data->buffer, 0, sizeof(color_t) * img->width * img->height);
                 buffer_set(buf, draw_data->offset);
                 convert_compressed(buf, img->width, 0, 0, draw_data->data_length, draw_data->buffer, img->width);
                 image_crop(img, draw_data->buffer);
@@ -376,11 +376,11 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
         data.packer.rects[rect].input.width = img->width;
         data.packer.rects[rect].input.height = img->height;
         if (img->top) {
-            draw_data->buffer = malloc(img->top->width * img->top->height * sizeof(color_t));
+            draw_data->buffer = malloc(sizeof(color_t) * img->top->width * img->top->height);
             if (draw_data->buffer) {
                 img->top->original.width = img->top->width;
                 img->top->original.height = img->top->height;
-                memset(draw_data->buffer, 0, img->top->width * img->top->height * sizeof(color_t));
+                memset(draw_data->buffer, 0, sizeof(color_t) * img->top->width * img->top->height);
                 buffer_set(buf, draw_data->offset + draw_data->uncompressed_length);
                 convert_compressed(buf, img->top->width, 0, 0,
                     draw_data->data_length - draw_data->uncompressed_length, draw_data->buffer, img->top->width);
@@ -967,11 +967,11 @@ static int load_multibyte_font(multibyte_font_type type)
         parse_multibyte_font = parse_1bit_multibyte_font;
     }
 
-    int font_data_size = (font_sizes[0].width * font_sizes[0].height + font_sizes[1].width * font_sizes[1].height +
-        font_sizes[2].width * font_sizes[2].height) * num_full_width * sizeof(color_t);
-    font_data_size += (font_sizes[0].half_width * font_sizes[0].height +
+    size_t font_data_size = sizeof(color_t) * (font_sizes[0].width * font_sizes[0].height + font_sizes[1].width * font_sizes[1].height +
+        font_sizes[2].width * font_sizes[2].height) * num_full_width;
+    font_data_size += sizeof(color_t) * (font_sizes[0].half_width * font_sizes[0].height +
         font_sizes[1].half_width * font_sizes[1].height +
-        font_sizes[2].half_width * font_sizes[2].height) * num_half_width * sizeof(color_t);
+        font_sizes[2].half_width * font_sizes[2].height) * num_half_width;
 
     color_t *font_data = malloc(font_data_size);
     if (!font_data) {

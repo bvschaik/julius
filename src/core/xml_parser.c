@@ -232,7 +232,7 @@ char *xml_parser_copy_attribute_string(const char *key)
     if (!result) {
         return 0;
     }
-    strncpy(result, value, value_size + 1);
+    strcpy(result, value);
     return result;
 }
 
