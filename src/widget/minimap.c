@@ -499,7 +499,7 @@ static void prepare_minimap_cache(void)
 
 static void clear_minimap(void)
 {
-    memset(data.cache.buffer, 0, data.minimap.height * data.cache.stride * sizeof(color_t));
+    memset(data.cache.buffer, 0, sizeof(color_t) * data.minimap.height * data.cache.stride);
 }
 
 void widget_minimap_update(const minimap_functions *functions)

@@ -310,7 +310,7 @@ static const image_atlas_data *prepare_texture_atlas(atlas_type type, int num_im
     for (int i = 0; i < num_images; i++) {
         atlas_data->image_widths[i] = i == num_images - 1 ? last_width : data.max_texture_size.width;
         atlas_data->image_heights[i] = i == num_images - 1 ? last_height : data.max_texture_size.height;
-        int size = atlas_data->image_widths[i] * atlas_data->image_heights[i] * sizeof(color_t);
+        size_t size = sizeof(color_t) * atlas_data->image_widths[i] * atlas_data->image_heights[i];
         atlas_data->buffers[i] = malloc(size);
         if (!atlas_data->buffers[i]) {
             reset_atlas_data(type);
