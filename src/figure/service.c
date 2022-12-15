@@ -345,7 +345,7 @@ static void collect_offerings_from_house(building *house, building *temple)
     // offerings are generated, not removed from house stores    
     if (house->days_since_offering >= MARS_OFFERING_FREQUENCY) {
         for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (!resource_is_food(r) || !resource_get_data(r)->is_inventory) {
+            if (!resource_get_data(r)->is_inventory) {
                 continue;
             }
             if (house->resources[r]) {
@@ -372,7 +372,7 @@ static void distribute_market_resources(building *b, building *market)
     int max_food_stocks = 4 * b->house_highest_population;
     int food_types_stored_max = 0;
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (!resource_is_food(r) || !resource_get_data(r)->is_inventory) {
+        if (!resource_get_data(r)->is_inventory) {
             continue;
         }
         if (b->resources[r] >= max_food_stocks) {
@@ -382,7 +382,7 @@ static void distribute_market_resources(building *b, building *market)
     const model_house *model = model_get_house(level);
     if (model->food_types) {
         for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (!resource_is_food(r) || !resource_get_data(r)->is_inventory || b->resources[r] >= max_food_stocks ||
+            if (!resource_get_data(r)->is_inventory || b->resources[r] >= max_food_stocks ||
                 !building_distribution_is_good_accepted(r, market)) {
                 continue;
             }

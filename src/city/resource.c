@@ -279,9 +279,6 @@ void city_resource_determine_available(void)
         }
     }
     for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
-        if (i == RESOURCE_OLIVES || i == RESOURCE_VINES) {
-            continue;
-        }
         if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
             (i == RESOURCE_FISH && scenario_building_allowed(BUILDING_WHARF))) {
             available.food_list.items[available.food_list.size++] = i;
@@ -296,14 +293,14 @@ resource_type city_resource_ceres_temple_food(void)
 {
     // locally produced
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (resource_is_food(r) && can_produce_resource(r)) {
+        if (can_produce_resource(r)) {
             return r;
         }
     }
 
     // imported, if no food is locally produced
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (resource_is_food(r) && empire_can_import_resource_potentially(r)) {
+        if (empire_can_import_resource_potentially(r)) {
             return r;
         }
     }
@@ -410,7 +407,7 @@ static int house_consume_food(void)
             }
             int foodtypes_available = 0;
             for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-                if (b->resources[r] && resource_is_food(r) && resource_get_data(r)->is_inventory) {
+                if (b->resources[r] && resource_get_data(r)->is_inventory) {
                     foodtypes_available++;
                 }
             }
@@ -426,7 +423,7 @@ static int house_consume_food(void)
                 b->data.house.num_foods = 1;
             } else if (num_types > 0) {
                 for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-                    if (!resource_is_food(r) || !resource_get_data(r)->is_inventory) {
+                    if (!resource_get_data(r)->is_inventory) {
                         continue;
                     }
                     if (b->resources[r] >= amount_per_type) {
@@ -464,9 +461,7 @@ static int mess_hall_consume_food(void)
     int amount_for_type = 0;
 
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (resource_is_food(r)) {
-            total_food_in_mess_hall += b->resources[r];
-        }
+        total_food_in_mess_hall += b->resources[r];
     }
 
     city_data.mess_hall.total_food = total_food_in_mess_hall;
@@ -476,9 +471,6 @@ static int mess_hall_consume_food(void)
 
     if (total_food_in_mess_hall > 0) {
         for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (!resource_is_food(r)) {
-                continue;
-            }
             proportionate_amount = food_required * b->resources[r] / total_food_in_mess_hall;
             if (proportionate_amount > 0) {
                 amount_for_type = calc_bound((int) ceil(proportionate_amount), 0, b->resources[r]);
@@ -528,9 +520,7 @@ static int caravanserai_consume_food(void)
     int amount_for_type = 0;
 
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (resource_is_food(r)) {
-            total_food_in_caravanserai += b->resources[r];
-        }
+        total_food_in_caravanserai += b->resources[r];
     }
 
     city_data.caravanserai.total_food = total_food_in_caravanserai;
@@ -541,9 +531,6 @@ static int caravanserai_consume_food(void)
     }
 
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (!resource_is_food(r)) {
-            continue;
-        }
         proportionate_amount = food_required * b->resources[r] / total_food_in_caravanserai;
         if (proportionate_amount > 0) {
             amount_for_type = calc_bound(proportionate_amount, 0, b->resources[r]);

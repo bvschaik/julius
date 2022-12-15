@@ -23,9 +23,7 @@ int building_caravanserai_enough_foods(building *caravanserai)
     int total_food_in_caravanserai = 0;
 
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (resource_is_food(r)) {
-            total_food_in_caravanserai += caravanserai->resources[r];            
-        }
+        total_food_in_caravanserai += caravanserai->resources[r];            
     }
 
     return total_food_in_caravanserai >= food_required_monthly;

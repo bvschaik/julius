@@ -43,4 +43,10 @@ typedef enum {
     SCENARIO_LAST_NO_STATIC_RESOURCES = 7
 } scenario_version;
 
+typedef enum {
+    SAVEGAME_STATUS_NEWER_VERSION = -1,
+    SAVEGAME_STATUS_INVALID = 0,
+    SAVEGAME_STATUS_OK = 1
+} savegame_load_status;
+
 #endif // GAME_SAVE_VERSION_H

@@ -152,7 +152,7 @@ void window_building_draw_house(building_info_context *c)
     // food inventory
     if (model_get_house(b->subtype.house_level)->food_types) {
         for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (!resource_is_food(r) || !resource_get_data(r)->is_inventory) {
+            if (!resource_get_data(r)->is_inventory) {
                 continue;
             }
             image_draw(resource_get_data(r)->image.icon, c->x_offset + x_offset, c->y_offset + y_content,
@@ -171,8 +171,8 @@ void window_building_draw_house(building_info_context *c)
     y_content += 35;
     y_amount += 35;
 
-    for (resource_type r = RESOURCE_MAX_FOOD; r < RESOURCE_MAX; r++) {
-        if (!resource_is_good(r) || !resource_get_data(r)->is_inventory) {
+    for (resource_type r = RESOURCE_MIN_GOOD; r < RESOURCE_MAX_GOOD; r++) {
+        if (!resource_get_data(r)->is_inventory) {
             continue;
         }
         image_draw(resource_get_data(r)->image.icon, c->x_offset + x_offset, c->y_offset + y_content,

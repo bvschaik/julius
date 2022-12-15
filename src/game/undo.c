@@ -1,7 +1,8 @@
 #include "undo.h"
 
-#include "building/house.h"
 #include "building/construction.h"
+#include "building/house.h"
+#include "building/image.h"
 #include "building/industry.h"
 #include "building/menu.h"
 #include "building/monument.h"
@@ -189,18 +190,7 @@ static void add_building_to_terrain(building *b)
         return;
     }
     if (building_is_farm(b->type)) {
-        int image_offset;
-        switch (b->type) {
-            default:
-            case BUILDING_WHEAT_FARM: image_offset = 0; break;
-            case BUILDING_VEGETABLE_FARM: image_offset = 5; break;
-            case BUILDING_FRUIT_FARM: image_offset = 10; break;
-            case BUILDING_OLIVE_FARM: image_offset = 15; break;
-            case BUILDING_VINES_FARM: image_offset = 20; break;
-            case BUILDING_PIG_FARM: image_offset = 25; break;
-        }
-        map_building_tiles_add_farm(b->id, b->x, b->y,
-            image_group(GROUP_BUILDING_FARM_CROPS) + image_offset, 0);
+        map_building_tiles_add_farm(b->id, b->x, b->y, building_image_get_base_farm_crop(b->type), 0);
     } else {
         int size = building_properties_for_type(b->type)->size;
         if (building_is_house(b->type) && b->house_is_merged) {

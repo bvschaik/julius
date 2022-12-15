@@ -1548,9 +1548,7 @@ static void spawn_figure_fort_supplier(building *fort)
     int total_food_in_mess_hall = 0;
 
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (resource_is_food(r)) {
-            total_food_in_mess_hall += supply_post->resources[r];
-        }
+        total_food_in_mess_hall += supply_post->resources[r];
     }
 
     if (!total_food_in_mess_hall) {

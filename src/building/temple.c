@@ -62,9 +62,6 @@ int building_temple_mars_food_to_deliver(building *temple, int mess_hall_id)
     int next;
     building *mess_hall = building_get(mess_hall_id);
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (!resource_is_food(r)) {
-            continue;
-        }
         next = temple->resources[r];
         if (next > most_stocked_food_id && next >= 100 && mess_hall->resources[r] <= MAX_MESS_HALL_FOOD) {
             most_stocked_food_id = r;

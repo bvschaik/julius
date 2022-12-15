@@ -14,6 +14,12 @@ static const resource_type resource_mappings[][RESOURCE_ALL] = {
         RESOURCE_NONE, RESOURCE_WHEAT, RESOURCE_VEGETABLES, RESOURCE_FRUIT, RESOURCE_OLIVES, RESOURCE_VINES,
         RESOURCE_MEAT, RESOURCE_WINE, RESOURCE_OIL, RESOURCE_IRON, RESOURCE_TIMBER, RESOURCE_CLAY, RESOURCE_MARBLE,
         RESOURCE_WEAPONS, RESOURCE_FURNITURE, RESOURCE_POTTERY, RESOURCE_DENARII, RESOURCE_TROOPS
+    },
+    {
+        RESOURCE_NONE, RESOURCE_WHEAT, RESOURCE_VEGETABLES, RESOURCE_FRUIT, RESOURCE_MEAT,
+        RESOURCE_CLAY, RESOURCE_TIMBER, RESOURCE_OLIVES, RESOURCE_VINES, RESOURCE_IRON, RESOURCE_MARBLE,
+        RESOURCE_POTTERY, RESOURCE_FURNITURE, RESOURCE_OIL, RESOURCE_WINE, RESOURCE_WEAPONS,
+        RESOURCE_DENARII, RESOURCE_TROOPS
     }
 };
 
@@ -129,7 +135,13 @@ void resource_set_mapping(int version)
             mapping.total_resources = RESOURCE_MAX_LEGACY;
             mapping.total_food_resources = RESOURCE_MAX_FOOD_LEGACY;
             break;
-        case RESOURCE_CURRENT_VERSION:
+        case RESOURCE_DYNAMIC_VERSION:
+            mapping.resources = resource_mappings[RESOURCE_ORIGINAL_VERSION];
+            mapping.inventory = 0;
+            mapping.total_resources = RESOURCE_MAX_LEGACY;
+            mapping.total_food_resources = RESOURCE_MAX_FOOD_LEGACY;
+            break;
+        case RESOURCE_REORDERED_VERSION:
         default:
             mapping.resources = 0;
             mapping.inventory = 0;

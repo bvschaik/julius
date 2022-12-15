@@ -1,5 +1,6 @@
 #include "industry.h"
 
+#include "building/image.h"
 #include "building/list.h"
 #include "building/monument.h"
 #include "city/data_private.h"
@@ -75,8 +76,7 @@ static int max_progress(const building *b)
 
 static void update_farm_image(const building *b)
 {
-    map_building_tiles_add_farm(b->id, b->x, b->y,
-        image_group(GROUP_BUILDING_FARM_CROPS) + 5 * (b->output_resource_id - 1),
+    map_building_tiles_add_farm(b->id, b->x, b->y, building_image_get_base_farm_crop(b->type),
         b->data.industry.progress);
 }
 

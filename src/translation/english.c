@@ -796,6 +796,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_PALISADE_GATE, "Palisade gate"},
     {TR_BUILDING_PALISADE_GATE_DESC, "This narrow wooden gateway controls the movement of people in and out of your city's defences."},
     {TR_SAVE_DIALOG_INVALID_FILE, "Invalid file"},
+    {TR_SAVE_DIALOG_INCOMPATIBLE_VERSION, "Incompatible version"},
     {TR_SAVE_DIALOG_SELECT_FILE, "Select a file"},
     {TR_SAVE_DIALOG_FUNDS, "Funds:"},
     {TR_SAVE_DIALOG_POPULATION, "Population:"},

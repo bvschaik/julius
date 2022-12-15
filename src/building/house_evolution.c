@@ -150,7 +150,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, int
     int foodtypes_required = model->food_types;
     int foodtypes_available = 0;
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (house->resources[r] && resource_is_food(r) && resource_get_data(r)->is_inventory) {
+        if (house->resources[r] && resource_get_data(r)->is_inventory) {
             foodtypes_available++;
         }
     }
@@ -630,7 +630,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     int foodtypes_required = model->food_types;
     int foodtypes_available = 0;
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (house->resources[r] && resource_is_food(r) && resource_get_data(r)->is_inventory) {
+        if (house->resources[r] && resource_get_data(r)->is_inventory) {
             foodtypes_available++;
         }
     }

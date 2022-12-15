@@ -11,36 +11,45 @@
 
 /**
  * Resource types
+ *
+ * If you add a new resource, please follow the order: food -> raw materials -> goods, as the game expects resources
+ * to be in that order.
+ *
+ * If you add a resource to the end of the food, raw materials or goods list, please update the "RESOURCE_MAX_*" value
+ * Same if you add it to the start of a food, raw materials or goods list, in which case you need to update the
+ * "RESOURCE_MIN_*" value.
  */
 typedef enum {
     RESOURCE_NONE = 0,
-    RESOURCE_WHEAT = 1,
-    RESOURCE_VEGETABLES = 2,
-    RESOURCE_FRUIT = 3,
-    RESOURCE_OLIVES = 4,
-    RESOURCE_VINES = 5,
-    RESOURCE_MEAT = 6,
-    RESOURCE_FISH = 6,
-    RESOURCE_WINE = 7,
-    RESOURCE_OIL = 8,
-    RESOURCE_IRON = 9,
-    RESOURCE_TIMBER = 10,
-    RESOURCE_CLAY = 11,
-    RESOURCE_MARBLE = 12,
-    RESOURCE_WEAPONS = 13,
-    RESOURCE_FURNITURE = 14,
-    RESOURCE_POTTERY = 15,
-    RESOURCE_DENARII = 16,
-    RESOURCE_TROOPS = 17,
+    RESOURCE_WHEAT,
+    RESOURCE_VEGETABLES,
+    RESOURCE_FRUIT,
+    RESOURCE_MEAT,
+    RESOURCE_FISH = RESOURCE_MEAT,
+    RESOURCE_CLAY,
+    RESOURCE_TIMBER,
+    RESOURCE_OLIVES,
+    RESOURCE_VINES,
+    RESOURCE_IRON,
+    RESOURCE_MARBLE,
+    RESOURCE_POTTERY,
+    RESOURCE_FURNITURE,
+    RESOURCE_OIL,
+    RESOURCE_WINE,
+    RESOURCE_WEAPONS,
+    RESOURCE_DENARII,
+    RESOURCE_TROOPS,
     // helper constants
-    RESOURCE_MIN = 1,
-    RESOURCE_MAX = 16,
-    RESOURCE_MAX_LEGACY = 16,
-    RESOURCE_MIN_FOOD = 1,
-    RESOURCE_MAX_FOOD = 7,
+    RESOURCE_MIN_FOOD = RESOURCE_WHEAT,
+    RESOURCE_MAX_FOOD = RESOURCE_FISH + 1,
+    RESOURCE_MIN_RAW = RESOURCE_CLAY,
+    RESOURCE_MAX_RAW = RESOURCE_MARBLE + 1,
+    RESOURCE_MIN_GOOD = RESOURCE_POTTERY,
+    RESOURCE_MAX_GOOD = RESOURCE_WEAPONS + 1,
+    RESOURCE_MIN = RESOURCE_MIN_FOOD,
+    RESOURCE_MAX = RESOURCE_MAX_GOOD,
     RESOURCE_MAX_FOOD_LEGACY = 7,
-    RESOURCE_MIN_RAW = 9,
-    RESOURCE_MAX_RAW = 13,
+    RESOURCE_MAX_LEGACY = 16,
     RESOURCE_TOTAL_SPECIAL = 2
 } resource_type;
 
@@ -48,7 +57,9 @@ typedef enum {
 
 typedef enum {
     RESOURCE_ORIGINAL_VERSION = 0,
-    RESOURCE_CURRENT_VERSION = 1
+    RESOURCE_DYNAMIC_VERSION = 1,
+    RESOURCE_REORDERED_VERSION = 2,
+    RESOURCE_CURRENT_VERSION = 2
 } resource_version;
 
 typedef enum {

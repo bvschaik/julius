@@ -13,6 +13,7 @@
 #include "game/file.h"
 #include "game/file_editor.h"
 #include "game/file_io.h"
+#include "game/save_version.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -94,7 +95,7 @@ static struct {
         saved_game_info save_game;
         scenario_info scenario;
     } info;
-    int has_valid_info;
+    savegame_load_status savegame_info_status;
     int redraw_full_window;
 } data;
 
@@ -238,9 +239,9 @@ static void draw_background(void)
     window_draw_underlying_window();
     if (*data.selected_file) {
         if (data.type == FILE_TYPE_SAVED_GAME) {
-            data.has_valid_info = game_file_io_read_saved_game_info(data.selected_file, &data.info.save_game);
+            data.savegame_info_status = game_file_io_read_saved_game_info(data.selected_file, &data.info.save_game);
         } else {
-            data.has_valid_info = game_file_io_read_scenario_info(data.selected_file, &data.info.scenario);
+            data.savegame_info_status = game_file_io_read_scenario_info(data.selected_file, &data.info.scenario);
         }
     }
     data.redraw_full_window = 1;
@@ -282,7 +283,7 @@ static void draw_foreground(void)
 
         // Saved game info
         if (*data.selected_file && data.type != FILE_TYPE_EMPIRE) {
-            if (data.has_valid_info) {
+            if (data.savegame_info_status == SAVEGAME_STATUS_OK) {
                 if (data.type == FILE_TYPE_SAVED_GAME) {
                     draw_mission_info(362, 356, 246);
                     text_draw(translation_for(TR_SAVE_DIALOG_FUNDS), 362, 376, FONT_NORMAL_BLACK, 0);
@@ -298,7 +299,9 @@ static void draw_foreground(void)
                     widget_minimap_draw(352, 80, 266, 352);
                 }
             } else {
-                text_draw_centered(translation_for(TR_SAVE_DIALOG_INVALID_FILE), 362, 241, 246, FONT_LARGE_BLACK, 0);
+                translation_key key = data.savegame_info_status == SAVEGAME_STATUS_INVALID ?
+                    TR_SAVE_DIALOG_INVALID_FILE : TR_SAVE_DIALOG_INCOMPATIBLE_VERSION;
+                text_draw_centered(translation_for(key), 362, 241, 246, FONT_LARGE_BLACK, 0);
             }
         } else {
             text_draw_centered(translation_for(TR_SAVE_DIALOG_SELECT_FILE), 362, 246, 246, FONT_NORMAL_BLACK, 0);

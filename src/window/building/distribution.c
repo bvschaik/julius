@@ -433,7 +433,7 @@ void dock_cities_set_scroll_position(int scroll_position)
 static int has_food_stocks(const building *b)
 {
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (b->resources[r] && resource_is_food(r) && resource_get_data(r)->is_inventory) {
+        if (b->resources[r] && resource_get_data(r)->is_inventory) {
             return 1;
         }
     }
@@ -451,7 +451,7 @@ static void window_building_draw_stocks(building_info_context *c, building *b, i
     // food stocks
     if (always_show_food || has_food_stocks(b)) {
         for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (!resource_is_food(r) || !resource_get_data(r)->is_inventory) {
+            if (!resource_get_data(r)->is_inventory) {
                 continue;
             }
             font = building_distribution_is_good_accepted(r, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
@@ -469,8 +469,8 @@ static void window_building_draw_stocks(building_info_context *c, building *b, i
 
     // good stocks
     if (draw_goods) {
-        for (resource_type r = RESOURCE_MAX_FOOD; r < RESOURCE_MAX; r++) {
-            if (!resource_is_good(r) || !resource_get_data(r)->is_inventory) {
+        for (resource_type r = RESOURCE_MIN_GOOD; r < RESOURCE_MAX_GOOD; r++) {
+            if (!resource_get_data(r)->is_inventory) {
                 continue;
             }
             font = building_distribution_is_good_accepted(r, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
@@ -684,9 +684,6 @@ void window_building_draw_granary(building_info_context *c)
 
         // wheat
         for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (!resource_is_food(r)) {
-                continue;
-            }
             image_draw(resource_get_data(r)->image.icon, c->x_offset + base_x_offset, c->y_offset + base_y_offset, COLOR_MASK_NONE, SCALE_NONE);
             width = text_draw_number(b->resources[r], '@', " ", c->x_offset + base_x_offset + 34, c->y_offset + base_y_offset + 7, FONT_NORMAL_BLACK, 0);
             text_draw(resource_get_data(r)->text, c->x_offset + base_x_offset + 34 + width, c->y_offset + base_y_offset + 7, FONT_NORMAL_BLACK, COLOR_MASK_NONE);

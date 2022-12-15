@@ -249,33 +249,12 @@ static void image_draw_warehouse(int image_id, int x, int y, color_t color)
     }
 }
 
-static int get_crop_image_id(building_type type)
-{
-    switch (type) {
-        case BUILDING_WHEAT_FARM:
-            return image_group(GROUP_BUILDING_FARM_CROPS);
-        case BUILDING_VEGETABLE_FARM:
-            return image_group(GROUP_BUILDING_FARM_CROPS) + 5;
-        case BUILDING_FRUIT_FARM:
-            return image_group(GROUP_BUILDING_FARM_CROPS) + 10;
-        case BUILDING_OLIVE_FARM:
-            return image_group(GROUP_BUILDING_FARM_CROPS) + 15;
-        case BUILDING_VINES_FARM:
-            return image_group(GROUP_BUILDING_FARM_CROPS) + 20;
-        case BUILDING_PIG_FARM:
-            return image_group(GROUP_BUILDING_FARM_CROPS) + 25;
-        default:
-            return image_group(GROUP_BUILDING_FARM_CROPS);
-            break;
-    }
-}
-
 static void image_draw_farm(building_type type, int image_id, int x, int y, color_t color)
 {
     // Custom draw order to properly draw isometric tops
     const int draw_order[9] = { 0, 2, 5, 1, 3, 7, 4, 6, 8 };
     int orientation_index = city_view_orientation() / 2;
-    int crop_image = get_crop_image_id(type);
+    int crop_image = building_image_get_base_farm_crop(type);
     for (int i = 0; i < 9; i++) {
         int j = draw_order[i];
         switch (FARM_TILES[orientation_index][j]) {

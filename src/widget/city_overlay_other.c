@@ -128,7 +128,7 @@ static int get_column_height_food_stocks(const building *b)
         int pop = b->house_population;
         int stocks = 0;
         for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (resource_is_food(r) && resource_get_data(r)->is_inventory) {
+            if (resource_get_data(r)->is_inventory) {
                 stocks += b->resources[r];
             }
         }
@@ -227,7 +227,7 @@ static int get_tooltip_food_stocks(tooltip_context *c, const building *b)
     } else {
         int stocks_present = 0;
         for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (resource_is_food(r) && resource_get_data(r)->is_inventory) {
+            if (resource_get_data(r)->is_inventory) {
                 stocks_present += b->resources[r];
             }
         }

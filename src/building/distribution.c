@@ -117,7 +117,7 @@ static int building_distribution_get_inventory_storages(inventory_storage_info *
         int distance = building_dist(x, y, w, h, b);
 
         for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (resource_is_food(r) && resource_get_data(r)->is_inventory) {
+            if (resource_get_data(r)->is_inventory) {
                 update_food_resource(info, r, b, distance);
             }
         }
@@ -128,8 +128,8 @@ static int building_distribution_get_inventory_storages(inventory_storage_info *
         }
         int distance = building_dist(x, y, w, h, b);
 
-        for (int r = RESOURCE_MAX_FOOD; r < RESOURCE_MAX; r++) {
-            if (resource_is_good(r) && resource_get_data(r)->is_inventory) {
+        for (int r = RESOURCE_MIN_GOOD; r < RESOURCE_MAX_GOOD; r++) {
+            if (resource_get_data(r)->is_inventory) {
                 update_good_resource(info, r, b, distance);
             }
         }
