@@ -188,20 +188,26 @@ void window_building_play_sound(building_info_context *c, const char *sound_file
 static void window_building_draw_monument_resources_needed(building_info_context *c)
 {
     building *b = building_get(c->building_id);
+    int y_offset = 95;
     if (building_monument_needs_resources(b)) {
-        for (int r = RESOURCE_TIMBER; r <= RESOURCE_MARBLE; r++) {
-            int total_resources_needed = building_monument_resources_needed_for_monument_type(b->type, r,
+        for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+            int resource_needed_amount = building_monument_resources_needed_for_monument_type(b->type, r,
                 b->data.monument.phase);
-            int resources_delivered = total_resources_needed - b->resources[r];
-            image_draw(resource_get_data(r)->image.icon, c->x_offset + 22, c->y_offset - 105 + r * 20, COLOR_MASK_NONE, SCALE_NONE);
-            int width = text_draw_number(resources_delivered, '@', "/",
-                c->x_offset + 54, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK, 0);
-            text_draw_number(total_resources_needed, '@', " ",
-                c->x_offset + 44 + width, c->y_offset + 10 + r * 20 - 106, FONT_NORMAL_BLACK, 0);
+            if (!resource_needed_amount) {
+                continue;
+            }
+            int resource_delivered_amount = resource_needed_amount - b->resources[r];
+            image_draw(resource_get_data(r)->image.icon, c->x_offset + 22, c->y_offset + y_offset,
+                COLOR_MASK_NONE, SCALE_NONE);
+            int width = text_draw_number(resource_delivered_amount, '@', "/",
+                c->x_offset + 54, c->y_offset + y_offset + 5, FONT_NORMAL_BLACK, 0);
+            text_draw_number(resource_needed_amount, '@', " ",
+                c->x_offset + 44 + width, c->y_offset + +y_offset + 5, FONT_NORMAL_BLACK, 0);
+            y_offset += 20;
         }
     } else {
-        text_draw_multiline(translation_for(TR_BUILDING_MONUMENT_CONSTRUCTION_ARCHITECT_NEEDED), c->x_offset + 22, c->y_offset + 95,
-            BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(translation_for(TR_BUILDING_MONUMENT_CONSTRUCTION_ARCHITECT_NEEDED),
+            c->x_offset + 22, c->y_offset + 95, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     }
 }
 

@@ -73,8 +73,6 @@ void city_view_save_scenario_state(buffer *camera);
 
 void city_view_load_scenario_state(buffer *camera);
 
-void city_view_foreach_map_tile(map_callback *callback);
-
 void city_view_foreach_valid_map_tile(map_callback *callback);
 
 void city_view_foreach_valid_map_tile_row(map_callback *callback1, map_callback *callback2, map_callback *callback3);

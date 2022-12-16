@@ -780,7 +780,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         );
         if (!selected_figure_id) {
             if (building_is_connectable(building_construction_type())) {
-                city_view_foreach_map_tile(draw_connectable_construction_ghost);
+                city_view_foreach_valid_map_tile(draw_connectable_construction_ghost);
             }
             city_building_ghost_draw(tile);
         }

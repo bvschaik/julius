@@ -69,22 +69,9 @@ static image_button image_button_show_prices[] = {
 };
 
 static generic_button generic_button_trade_resource[] = {
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WHEAT, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_VEGETABLES , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_FRUIT , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_OLIVES , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_VINES , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_MEAT, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WINE , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_OIL , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_IRON , 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_TIMBER, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_CLAY, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_MARBLE, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_WEAPONS, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_FURNITURE, 0},
-    {0, 0, 101, 27, button_show_resource_window, button_none, RESOURCE_POTTERY, 0}
+    {0, 0, 101, 27, button_show_resource_window, button_none, 0, 0},
 };
+
 static generic_button generic_button_open_trade[] = {
     {30, 56, 440, 26, button_open_trade, button_none, 0, 0}
 };
@@ -151,10 +138,7 @@ static void draw_trade_resource(resource_type resource, int trade_max, int x_off
 {
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
 
-    // TODO_RESOURCE
-    //  int image_id = resource + image_group(GROUP_EMPIRE_RESOURCES);
-  //  int resource_offset = resource_image_offset(resource, RESOURCE_IMAGE_ICON);
-    image_draw(resource_get_data(resource)->image.empire /*image_id + resource_offset*/, x_offset + 1, y_offset + 1, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(resource_get_data(resource)->image.empire, x_offset + 1, y_offset + 1, COLOR_MASK_NONE, SCALE_NONE);
 
     if (data.focus_resource == resource) {
         button_border_draw(x_offset - 2, y_offset - 2, 101 + 4, 30, 1);
@@ -609,13 +593,14 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
                     // we only want to handle resource buttons that the selected city trades
                     for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+                        data.focus_resource = resource;
                         if (city->sells_resource[resource]) {
                             generic_buttons_handle_mouse(m, x_offset + 120 + 124 * index_sell, y_offset + 31,
-                                generic_button_trade_resource + resource - 1, 1, &button_id);
+                                generic_button_trade_resource, 1, &button_id);
                             index_sell++;
                         } else if (city->buys_resource[resource]) {
                             generic_buttons_handle_mouse(m, x_offset + 120 + 124 * index_buy, y_offset + 62,
-                                generic_button_trade_resource + resource - 1, 1, &button_id);
+                                generic_button_trade_resource, 1, &button_id);
                             index_buy++;
                         }
 
@@ -623,6 +608,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
                             data.focus_resource = resource;
                             // if we're focusing any button we can skip further checks
                             break;
+                        } else {
+                            data.focus_resource = 0;
                         }
                     }
                 } else {
@@ -778,9 +765,9 @@ static void button_show_prices(int param1, int param2)
     window_trade_prices_show(0, 0, screen_width(), screen_height());
 }
 
-static void button_show_resource_window(int resource, int param2)
+static void button_show_resource_window(int param1, int param2)
 {
-    window_resource_settings_show(resource);
+    window_resource_settings_show(data.focus_resource);
 }
 
 static void confirmed_open_trade(int accepted, int checked)
