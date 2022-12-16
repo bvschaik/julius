@@ -218,11 +218,6 @@ static int xml_start_resource(void)
         log_error("Resource not in buy or sell tag", 0, 0);
         return 0;
     }
-
-    static const char *resource_types[] = {
-        "wheat", "vegetables", "fruit", "olives", "vines", "meat|fish", "wine", "oil", "iron",
-        "timber|wood", "clay", "marble", "weapons", "furniture", "pottery"
-    };
     
     full_empire_object *city_obj = empire_object_get_full(data.current_city_id);
 
@@ -231,7 +226,7 @@ static int xml_start_resource(void)
         log_error("Unable to find resource type attribute", 0, 0);
         return 0;
     }
-    resource_type resource = xml_parser_get_attribute_enum("type", resource_types, 15, RESOURCE_WHEAT);
+    resource_type resource = xml_parser_get_attribute_enum("type", resource_type_names, 15, RESOURCE_WHEAT);
     if (resource == RESOURCE_NONE) {
         data.success = 0;
         log_error("Unable to determine resource type", xml_parser_get_attribute_string("type"), 0);

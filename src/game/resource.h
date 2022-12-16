@@ -53,6 +53,8 @@ typedef enum {
     RESOURCE_TOTAL_SPECIAL = 2
 } resource_type;
 
+extern const char *resource_type_names[RESOURCE_MAX];
+
 #define LEGACY_INVENTORY_MAX 8
 
 typedef enum {

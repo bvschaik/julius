@@ -9,6 +9,11 @@
 
 #define RESOURCE_ALL (RESOURCE_MAX + RESOURCE_TOTAL_SPECIAL)
 
+const char *resource_type_names[RESOURCE_MAX] = {
+   "wheat", "vegetables", "fruit", "meat|fish", "clay", "timber|wood", "olives",
+   "vines", "iron", "marble", "pottery", "furniture", "oil", "wine", "weapons"
+};
+
 static const resource_type resource_mappings[][RESOURCE_ALL] = {
     {
         RESOURCE_NONE, RESOURCE_WHEAT, RESOURCE_VEGETABLES, RESOURCE_FRUIT, RESOURCE_OLIVES, RESOURCE_VINES,
