@@ -141,7 +141,7 @@ local uLong adler32_combine_(uLong adler1, uLong adler2, z_off64_t len2)
     return sum1 | (sum2 << 16);
 }
 
-uLong ZEXPORT adler32_combine(uLong adler1, uLong adler2, z_off64_t len2)
+uLong ZEXPORT adler32_combine(uLong adler1, uLong adler2, z_off_t len2)
 {
     return adler32_combine_(adler1, adler2, len2);
 }
