@@ -980,6 +980,7 @@ int game_file_io_read_scenario_info(const char *filename, scenario_info *info)
 int game_file_io_write_scenario(const char *filename)
 {
     log_info("Saving scenario", filename, 0);
+    resource_set_mapping(RESOURCE_CURRENT_VERSION);
     init_scenario_data(SCENARIO_CURRENT_VERSION);
     scenario_save_to_state(&scenario_data.state);
 
@@ -1391,6 +1392,7 @@ int game_file_io_read_saved_game_info(const char *filename, saved_game_info *inf
 
 int game_file_io_write_saved_game(const char *filename)
 {
+    resource_set_mapping(RESOURCE_CURRENT_VERSION);
     init_savegame_data(SAVE_GAME_CURRENT_VERSION);
 
     log_info("Saving game", filename, 0);

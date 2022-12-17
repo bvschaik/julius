@@ -458,6 +458,7 @@ static void button_ok_cancel(int is_ok, int param2)
             game_file_editor_write_scenario(filename);
             window_editor_map_show();
         }
+        strncpy(chosen_filename, filename, FILE_NAME_MAX);
     } else if (data.dialog_type == FILE_DIALOG_DELETE) {
         if (game_file_delete_saved_game(filename)) {
             dir_find_files_with_extension(".", data.file_data->extension);
@@ -465,7 +466,6 @@ static void button_ok_cancel(int is_ok, int param2)
 
             if (scrollbar.scroll_position + NUM_FILES_IN_VIEW >= data.file_list->num_files) {
                 --scrollbar.scroll_position;
-
             }
             if (scrollbar.scroll_position < 0) {
                 scrollbar.scroll_position = 0;
