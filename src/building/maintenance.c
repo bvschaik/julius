@@ -380,6 +380,9 @@ void building_maintenance_check_rome_access(void)
                 b->distance_from_entry = map_routing_distance(road_grid_offset);
                 b->road_access_x = x_road;
                 b->road_access_y = y_road;
+                b->has_road_access = 1;
+            } else {
+                b->has_road_access = 0;
             }
         }
     }
