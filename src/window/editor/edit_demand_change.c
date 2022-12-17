@@ -145,7 +145,12 @@ static void set_resource(int value)
 
 static void button_resource(int param1, int param2)
 {
-    window_select_list_show(screen_dialog_offset_x() + 320, screen_dialog_offset_y() + 40, 23, 16, set_resource);
+    static const uint8_t *resource_texts[RESOURCE_MAX];
+    for (resource_type resource = RESOURCE_NONE; resource < RESOURCE_MAX; resource++) {
+        resource_texts[resource] = resource_get_data(resource)->text;
+    }
+    window_select_list_show_text(screen_dialog_offset_x() + 320, screen_dialog_offset_y() + 40,
+        resource_texts, RESOURCE_MAX, set_resource);
 }
 
 static void set_route_id(int index)
