@@ -9,11 +9,6 @@
 
 #define RESOURCE_ALL (RESOURCE_MAX + RESOURCE_TOTAL_SPECIAL)
 
-const char *resource_type_names[RESOURCE_MAX] = {
-   "wheat", "vegetables", "fruit", "meat|fish", "clay", "timber|wood", "olives",
-   "vines", "iron", "marble", "pottery", "furniture", "oil", "wine", "weapons"
-};
-
 static const resource_type resource_mappings[][RESOURCE_ALL] = {
     {
         RESOURCE_NONE, RESOURCE_WHEAT, RESOURCE_VEGETABLES, RESOURCE_FRUIT, RESOURCE_OLIVES, RESOURCE_VINES,
@@ -43,28 +38,28 @@ static struct {
 
 static resource_data resource_info[RESOURCE_ALL] = {
     [RESOURCE_NONE]       = { .type = RESOURCE_NONE },
-    [RESOURCE_WHEAT]      = { .type = RESOURCE_WHEAT,      .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_WHEAT_FARM,         .default_trade_price = {  28,  22 }, .is_inventory = 1 },
-    [RESOURCE_VEGETABLES] = { .type = RESOURCE_VEGETABLES, .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_VEGETABLE_FARM,     .default_trade_price = {  38,  30 }, .is_inventory = 1 },
-    [RESOURCE_FRUIT]      = { .type = RESOURCE_FRUIT,      .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_FRUIT_FARM,         .default_trade_price = {  38,  30 }, .is_inventory = 1 },
-    [RESOURCE_OLIVES]     = { .type = RESOURCE_OLIVES,     .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_OLIVE_FARM,         .default_trade_price = {  42,  34 }, .workshop = BUILDING_OIL_WORKSHOP },
-    [RESOURCE_VINES]      = { .type = RESOURCE_VINES,      .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_VINES_FARM,         .default_trade_price = {  44,  36 }, .workshop = BUILDING_WINE_WORKSHOP },
-    [RESOURCE_MEAT]       = { .type = RESOURCE_MEAT,       .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_PIG_FARM,           .default_trade_price = {  44,  36 }, .is_inventory = 1 },
-    [RESOURCE_WINE]       = { .type = RESOURCE_WINE,       .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_WINE_WORKSHOP,      .default_trade_price = { 215, 160 }, .is_inventory = 1 },
-    [RESOURCE_OIL]        = { .type = RESOURCE_OIL,        .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_OIL_WORKSHOP,       .default_trade_price = { 180, 140 }, .is_inventory = 1 },
-    [RESOURCE_IRON]       = { .type = RESOURCE_IRON,       .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_IRON_MINE,          .default_trade_price = {  60,  40 }, .workshop = BUILDING_WEAPONS_WORKSHOP },
-    [RESOURCE_TIMBER]     = { .type = RESOURCE_TIMBER,     .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_TIMBER_YARD,        .default_trade_price = {  50,  35 }, .workshop = BUILDING_FURNITURE_WORKSHOP },
-    [RESOURCE_CLAY]       = { .type = RESOURCE_CLAY,       .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_CLAY_PIT,           .default_trade_price = {  40,  30 }, .workshop = BUILDING_POTTERY_WORKSHOP },
-    [RESOURCE_MARBLE]     = { .type = RESOURCE_MARBLE,     .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_MARBLE_QUARRY,      .default_trade_price = { 200, 140 } },
-    [RESOURCE_WEAPONS]    = { .type = RESOURCE_WEAPONS,    .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_WEAPONS_WORKSHOP,   .default_trade_price = { 250, 180 } },
-    [RESOURCE_FURNITURE]  = { .type = RESOURCE_FURNITURE,  .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_FURNITURE_WORKSHOP, .default_trade_price = { 200, 150 }, .is_inventory = 1 },
-    [RESOURCE_POTTERY]    = { .type = RESOURCE_POTTERY,    .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_POTTERY_WORKSHOP,   .default_trade_price = { 180, 140 }, .is_inventory = 1 },
+    [RESOURCE_WHEAT]      = { .type = RESOURCE_WHEAT,      .flags = RESOURCE_FLAG_FOOD,         .xml_attr_name = "wheat",       .industry = BUILDING_WHEAT_FARM,         .default_trade_price = {  28,  22 }, .is_inventory = 1 },
+    [RESOURCE_VEGETABLES] = { .type = RESOURCE_VEGETABLES, .flags = RESOURCE_FLAG_FOOD,         .xml_attr_name = "vegetables",  .industry = BUILDING_VEGETABLE_FARM,     .default_trade_price = {  38,  30 }, .is_inventory = 1 },
+    [RESOURCE_FRUIT]      = { .type = RESOURCE_FRUIT,      .flags = RESOURCE_FLAG_FOOD,         .xml_attr_name = "fruit",       .industry = BUILDING_FRUIT_FARM,         .default_trade_price = {  38,  30 }, .is_inventory = 1 },
+    [RESOURCE_OLIVES]     = { .type = RESOURCE_OLIVES,     .flags = RESOURCE_FLAG_RAW_MATERIAL, .xml_attr_name = "olives",      .industry = BUILDING_OLIVE_FARM,         .default_trade_price = {  42,  34 }, .workshop = BUILDING_OIL_WORKSHOP },
+    [RESOURCE_VINES]      = { .type = RESOURCE_VINES,      .flags = RESOURCE_FLAG_RAW_MATERIAL, .xml_attr_name = "vines",       .industry = BUILDING_VINES_FARM,         .default_trade_price = {  44,  36 }, .workshop = BUILDING_WINE_WORKSHOP },
+    [RESOURCE_MEAT]       = { .type = RESOURCE_MEAT,       .flags = RESOURCE_FLAG_FOOD,         .xml_attr_name = "meat|fish",   .industry = BUILDING_PIG_FARM,           .default_trade_price = {  44,  36 }, .is_inventory = 1 },
+    [RESOURCE_WINE]       = { .type = RESOURCE_WINE,       .flags = RESOURCE_FLAG_GOOD,         .xml_attr_name = "wine",        .industry = BUILDING_WINE_WORKSHOP,      .default_trade_price = { 215, 160 }, .is_inventory = 1 },
+    [RESOURCE_OIL]        = { .type = RESOURCE_OIL,        .flags = RESOURCE_FLAG_GOOD,         .xml_attr_name = "oil",         .industry = BUILDING_OIL_WORKSHOP,       .default_trade_price = { 180, 140 }, .is_inventory = 1 },
+    [RESOURCE_IRON]       = { .type = RESOURCE_IRON,       .flags = RESOURCE_FLAG_RAW_MATERIAL, .xml_attr_name = "iron",        .industry = BUILDING_IRON_MINE,          .default_trade_price = {  60,  40 }, .workshop = BUILDING_WEAPONS_WORKSHOP },
+    [RESOURCE_TIMBER]     = { .type = RESOURCE_TIMBER,     .flags = RESOURCE_FLAG_RAW_MATERIAL, .xml_attr_name = "timber|wood", .industry = BUILDING_TIMBER_YARD,        .default_trade_price = {  50,  35 }, .workshop = BUILDING_FURNITURE_WORKSHOP },
+    [RESOURCE_CLAY]       = { .type = RESOURCE_CLAY,       .flags = RESOURCE_FLAG_RAW_MATERIAL, .xml_attr_name = "clay",        .industry = BUILDING_CLAY_PIT,           .default_trade_price = {  40,  30 }, .workshop = BUILDING_POTTERY_WORKSHOP },
+    [RESOURCE_MARBLE]     = { .type = RESOURCE_MARBLE,     .flags = RESOURCE_FLAG_RAW_MATERIAL, .xml_attr_name = "marble",      .industry = BUILDING_MARBLE_QUARRY,      .default_trade_price = { 200, 140 } },
+    [RESOURCE_WEAPONS]    = { .type = RESOURCE_WEAPONS,    .flags = RESOURCE_FLAG_GOOD,         .xml_attr_name = "weapons",     .industry = BUILDING_WEAPONS_WORKSHOP,   .default_trade_price = { 250, 180 } },
+    [RESOURCE_FURNITURE]  = { .type = RESOURCE_FURNITURE,  .flags = RESOURCE_FLAG_GOOD,         .xml_attr_name = "furniture",   .industry = BUILDING_FURNITURE_WORKSHOP, .default_trade_price = { 200, 150 }, .is_inventory = 1 },
+    [RESOURCE_POTTERY]    = { .type = RESOURCE_POTTERY,    .flags = RESOURCE_FLAG_GOOD,         .xml_attr_name = "pottery",     .industry = BUILDING_POTTERY_WORKSHOP,   .default_trade_price = { 180, 140 }, .is_inventory = 1 },
     [RESOURCE_DENARII]    = { .type = RESOURCE_DENARII,    .flags = RESOURCE_FLAG_SPECIAL },
     [RESOURCE_TROOPS]     = { .type = RESOURCE_TROOPS,     .flags = RESOURCE_FLAG_SPECIAL }
 };
 
 // TODO when separating fish from meat this goes to the main resource array
 static resource_data fish_resource = {
-    .type = RESOURCE_FISH, .flags = RESOURCE_FLAG_FOOD, .industry = BUILDING_WHARF, .default_trade_price = { 44, 36 }, .is_inventory = 1
+    .type = RESOURCE_FISH, .flags = RESOURCE_FLAG_FOOD, .xml_attr_name = "meat|fish", .industry = BUILDING_WHARF, .default_trade_price = { 44, 36 }, .is_inventory = 1
 };
 
 int resource_is_food(resource_type resource)

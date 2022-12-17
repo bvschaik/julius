@@ -16,6 +16,8 @@ typedef struct {
     const char *parent_names;  /**< A list of valid parent names. If the element can have more than one parent, it should be separated by a "|"".*/
 } xml_parser_element;
 
+int xml_parser_compare_multiple(const char *string, const char *match);
+
 /**
  * @brief Initiates the xml parser structure.
  * 

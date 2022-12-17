@@ -53,8 +53,6 @@ typedef enum {
     RESOURCE_TOTAL_SPECIAL = 2
 } resource_type;
 
-extern const char *resource_type_names[RESOURCE_MAX];
-
 #define LEGACY_INVENTORY_MAX 8
 
 typedef enum {
@@ -76,6 +74,7 @@ typedef struct {
     resource_type type;
     resource_flags flags;
     const uint8_t *text;
+    const char *xml_attr_name;
     int is_inventory;
     building_type industry;
     building_type workshop;

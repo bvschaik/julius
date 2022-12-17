@@ -30,7 +30,7 @@ static int dummy_element_on_enter(void)
 static void dummy_element_on_exit(void)
 {}
 
-static int compare_multiple(const char *string, const char *match)
+int xml_parser_compare_multiple(const char *string, const char *match)
 {
     const char *next;
     do {
@@ -52,7 +52,7 @@ static int is_proper_child(const xml_parser_element *element)
     if (element->parent_names == 0) {
         return 0;
     }
-    return compare_multiple(element->parent_names, data.current_element->name);
+    return xml_parser_compare_multiple(element->parent_names, data.current_element->name);
 }
 
 static const xml_parser_element *get_element_from_name(const char *name)
@@ -254,7 +254,7 @@ int xml_parser_get_attribute_enum(const char *key,
         return start_offset - 1;
     }
     for (int i = 0; i < total_values; i++) {
-        if (values[i] && compare_multiple(values[i], value)) {
+        if (values[i] && xml_parser_compare_multiple(values[i], value)) {
             return i + start_offset;
         }
     }

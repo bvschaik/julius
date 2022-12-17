@@ -87,6 +87,21 @@ static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "waypoint", xml_start_distant_battle_waypoint, 0, "path" },
 };
 
+static resource_type get_resource_from_attr(const char *key)
+{
+    const char *value = xml_parser_get_attribute_string(key);
+    if (!value) {
+        return RESOURCE_NONE;
+    }
+    for (resource_type i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
+        const char *resource_name = resource_get_data(i)->xml_attr_name;
+        if (xml_parser_compare_multiple(resource_name, value)) {
+            return i;
+        }
+    }
+    return RESOURCE_NONE;
+}
+
 static int xml_start_empire(void)
 {
     data.version = xml_parser_get_attribute_int("version");
@@ -226,7 +241,7 @@ static int xml_start_resource(void)
         log_error("Unable to find resource type attribute", 0, 0);
         return 0;
     }
-    resource_type resource = xml_parser_get_attribute_enum("type", resource_type_names, 15, RESOURCE_WHEAT);
+    resource_type resource = get_resource_from_attr("type");
     if (resource == RESOURCE_NONE) {
         data.success = 0;
         log_error("Unable to determine resource type", xml_parser_get_attribute_string("type"), 0);
