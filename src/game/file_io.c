@@ -354,15 +354,14 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
     version_data->piece_sizes.monument_deliveries = version > SAVE_GAME_LAST_STATIC_MONUMENT_DELIVERIES_VERSION ? PIECE_SIZE_DYNAMIC : 3200;
     version_data->piece_sizes.enemy_armies = version > SAVE_GAME_LAST_ENEMY_ARMIES_BUFFER_BUG ? (MAX_ENEMY_ARMIES * sizeof(int) * 9) : 900;
     version_data->piece_sizes.graph_order = version > SAVE_GAME_LAST_UNKNOWN_UNUSED_CITY_DATA ? 4 : 8;
-    if (version <= SAVE_GAME_LAST_UNKNOWN_UNUSED_CITY_DATA) {
+    // Due to an oversight, we only reduced the city_data buffer size when we added dynamic resources
+    if (version <= SAVE_GAME_LAST_STATIC_RESOURCES) {
         version_data->piece_sizes.city_data = 36136;
     } else {
         version_data->piece_sizes.city_data = 11885;
-        if (version > SAVE_GAME_LAST_STATIC_RESOURCES) {
-            version_data->piece_sizes.city_data -= sizeof(int32_t) * 6 * 2;
-            version_data->piece_sizes.city_data += total_new_resources * 18;
-            version_data->piece_sizes.city_data += total_new_food * 4;
-        }
+        version_data->piece_sizes.city_data -= sizeof(int32_t) * 6 * 2;
+        version_data->piece_sizes.city_data += total_new_resources * 18;
+        version_data->piece_sizes.city_data += total_new_food * 4;
     }
     version_data->piece_sizes.empire_cities = 2706;
     if (version > SAVE_GAME_LAST_STATIC_RESOURCES) {
