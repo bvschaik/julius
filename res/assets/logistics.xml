@@ -573,9 +573,4 @@
 		<layer group="19" image="16"/>
 		<layer src="Aqueduct_Mask_Right" y="27" mask="alpha"/>
 	</image>
-	<!-- Note: Forum upgrade asset (Asset by Areldir)-->
-	<image id="Upgraded_Forum" isometric="true">
-		<layer group="63" image="0"/>
-		<layer src="Forum_Upgrade" x="0" y="0"/>
-	</image>
 </assetlist>

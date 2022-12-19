@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="Administration">
+	<!-- Note: Forum upgrade asset -->
+	<image id="Upgraded_Forum" isometric="true">
+		<layer group="63" image="0"/>
+		<layer src="Forum_Upgrade" x="0" y="0"/>
+	</image>
+	<!-- Note: Basilica Building OFF State Asset -->
+	<image id="Basilica_OFF" src="Basilica_Off" isometric="true"/>
+	<!-- Note: Basilica Building ON State Asset -->
+	<image id="Basilica_ON" isometric="true"/>
+		<layer group="this" image="Basilica_OFF" x="0" y="0"/>
+		<layer src="Basilica_On" x="0" y="0"/>
+	</image>
+</assetlist>
