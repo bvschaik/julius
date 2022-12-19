@@ -70,7 +70,7 @@ typedef struct building {
     unsigned char house_pantheon_access;
     short formation_id;
     signed char monthly_levy;
-    union {
+    struct {
         struct {
             short queued_docker_id;
             unsigned char num_ships;
