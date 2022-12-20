@@ -216,6 +216,8 @@
 	<!-- Note: UI Panels for custom resources -->
 	<image id="Panelling_Bricks_01" src="Panelling_Bricks_01"/>
 	<image id="Panelling_Bricks_02" src="Panelling_Bricks_02"/>
+	<image id="Panelling_Gold_01" src="Panelling_Gold_01"/>
+	<image id="Panelling_Gold_02" src="Panelling_Gold_02"/>
 	<image id="Panelling_Sand_01" src="Panelling_Sand_01"/>
 	<image id="Panelling_Sand_02" src="Panelling_Sand_02"/>
 	<image id="Panelling_Stone_01" src="Panelling_Stone_01"/>

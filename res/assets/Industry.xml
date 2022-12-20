@@ -71,6 +71,203 @@
 			<frame group="this" image="Brickworks_On_06"/>
 		</animation>
 	</image>
+	<!-- Note: Bricks Cart -->
+	<image id="Brick_Cart_NE">
+		<layer group="97" image="0" x="0" y="0"/>
+		<layer src="Brick_Cart_NE" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_E">
+		<layer group="97" image="1" x="0" y="0"/>
+		<layer src="Brick_Cart_E" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_SE">
+		<layer group="97" image="2" x="0" y="0"/>
+		<layer src="Brick_Cart_SE" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_S">
+		<layer group="97" image="3" x="0" y="0"/>
+		<layer src="Brick_Cart_S" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_SW">
+		<layer group="97" image="4" x="0" y="0"/>
+		<layer src="Brick_Cart_SW" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_W">
+		<layer group="97" image="5" x="0" y="0"/>
+		<layer src="Brick_Cart_W" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_NW">
+		<layer group="97" image="6" x="0" y="0"/>
+		<layer src="Brick_Cart_NW" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_N">
+		<layer group="97" image="7" x="0" y="0"/>
+		<layer src="Brick_Cart_N" x="0" y="0"/>
+	</image>
+	<!-- Note: Bricks Getting Cart -->
+	<image id="Brick_Cart_Getting_NE">
+		<layer group="97" image="0" x="0" y="0"/>
+		<layer src="Brick_Cart_Getting_NE" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_Getting_E">
+		<layer group="97" image="1" x="0" y="0"/>
+		<layer src="Brick_Cart_Getting_E" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_Getting_SE">
+		<layer group="97" image="2" x="0" y="0"/>
+		<layer src="Brick_Cart_Getting_SE" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_Getting_S">
+		<layer group="97" image="3" x="0" y="0"/>
+		<layer src="Brick_Cart_Getting_S" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_Getting_SW">
+		<layer group="97" image="4" x="0" y="0"/>
+		<layer src="Brick_Cart_Getting_SW" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_Getting_W">
+		<layer group="97" image="5" x="0" y="0"/>
+		<layer src="Brick_Cart_Getting_W" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_Getting_NW">
+		<layer group="97" image="6" x="0" y="0"/>
+		<layer src="Brick_Cart_Getting_NW" x="0" y="0"/>
+	</image>
+	<image id="Brick_Cart_Getting_N">
+		<layer group="97" image="7" x="0" y="0"/>
+		<layer src="Brick_Cart_Getting_N" x="0" y="0"/>
+	</image>
+	<!-- Note: Bricks Warehouse Tiles -->
+	<image id="Warehouse_Bricks_01" width="58" height="46" isometric="true">
+		<layer group="83" image="0" x="0" y="5"/>
+		<layer src="Warehouse_Bricks_01" x="0" y="0"/>
+	</image>
+	<image id="Warehouse_Bricks_02" width="58" height="46" isometric="true">
+		<layer group="83" image="0" x="0" y="5"/>
+		<layer src="Warehouse_Bricks_02" x="0" y="0"/>
+	</image>
+	<image id="Warehouse_Bricks_03" width="58" height="46" isometric="true">
+		<layer group="83" image="0" x="0" y="5"/>
+		<layer src="Warehouse_Bricks_03" x="0" y="0"/>
+	</image>
+	<image id="Warehouse_Bricks_04" width="58" height="46" isometric="true">
+		<layer group="83" image="0" x="0" y="5"/>
+		<layer src="Warehouse_Bricks_04" x="0" y="0"/>
+	</image>
+	<!-- Note: Gold Mine ON animation reference DO NOT USE! -->
+	<image id="Gold_Mine_ON_01" width="37" height="36">
+		<layer group="39" image="1" x="0" y="0"/>
+		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	</image>
+	<image id="Gold_Mine_ON_02" width="37" height="36">
+		<layer group="39" image="2" x="0" y="0"/>
+		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	</image>
+	<image id="Gold_Mine_ON_03" width="37" height="36">
+		<layer group="39" image="3" x="0" y="0"/>
+		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	</image>
+	<image id="Gold_Mine_ON_04" width="37" height="36">
+		<layer group="39" image="4" x="0" y="0"/>
+		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	</image>
+	<image id="Gold_Mine_ON_05" width="37" height="36">
+		<layer group="39" image="5" x="0" y="0"/>
+		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	</image>
+	<image id="Gold_Mine_ON_06" width="37" height="36">
+		<layer group="39" image="6" x="0" y="0"/>
+		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	</image>
+	<!-- Note: Gold Mine OFF Variant -->
+	<image id="Gold_Mine_ON_01" width="118" height="60" isometric="true">
+		<layer group="39" image="0" x="0" y="0"/>
+		<layer src="Gold_Mine_OFF" x="0" y="0"/>
+	</image>
+	<!-- Note: Gold Mine ON Variant -->
+	<!-- Note: Gold Cart -->
+	<image id="Gold_Cart_NE">
+		<layer group="97" image="0" x="0" y="0"/>
+		<layer src="Gold_Cart_NE" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_E">
+		<layer group="97" image="1" x="0" y="0"/>
+		<layer src="Gold_Cart_E" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_SE">
+		<layer group="97" image="2" x="0" y="0"/>
+		<layer src="Gold_Cart_SE" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_S">
+		<layer group="97" image="3" x="0" y="0"/>
+		<layer src="Gold_Cart_S" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_SW">
+		<layer group="97" image="4" x="0" y="0"/>
+		<layer src="Gold_Cart_SW" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_W">
+		<layer group="97" image="5" x="0" y="0"/>
+		<layer src="Gold_Cart_W" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_NW">
+		<layer group="97" image="6" x="0" y="0"/>
+		<layer src="Gold_Cart_NW" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_N">
+		<layer group="97" image="7" x="0" y="0"/>
+		<layer src="Gold_Cart_N" x="0" y="0"/>
+	</image>
+	<!-- Note: Gold Getting Cart -->
+	<image id="Gold_Cart_Getting_NE">
+		<layer group="97" image="0" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_NE" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_Getting_E">
+		<layer group="97" image="1" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_E" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_Getting_SE">
+		<layer group="97" image="2" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_SE" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_Getting_S">
+		<layer group="97" image="3" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_S" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_Getting_SW">
+		<layer group="97" image="4" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_SW" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_Getting_W">
+		<layer group="97" image="5" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_W" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_Getting_NW">
+		<layer group="97" image="6" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_NW" x="0" y="0"/>
+	</image>
+	<image id="Gold_Cart_Getting_N">
+		<layer group="97" image="7" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_N" x="0" y="0"/>
+	</image>
+	<!-- Note: Gold Warehouse Tiles -->
+	<image id="Warehouse_Gold_01" isometric="true">
+		<layer group="83" image="0" x="0" y="0"/>
+		<layer src="Warehouse_Gold_01" x="0" y="0"/>
+	</image>
+	<image id="Warehouse_Gold_02" isometric="true">
+		<layer group="83" image="0" x="0" y="0"/>
+		<layer src="Warehouse_Gold_02" x="0" y="0"/>
+	</image>
+	<image id="Warehouse_Gold_03" isometric="true">
+		<layer group="83" image="0" x="0" y="0"/>
+		<layer src="Warehouse_Gold_03" x="0" y="0"/>
+	</image>
+	<image id="Warehouse_Gold_04" isometric="true">
+		<layer group="83" image="0" x="0" y="0"/>
+		<layer src="Warehouse_Gold_04" x="0" y="0"/>
+	</image>
 	<!-- Note: Smoke Animation Frames -->
 	<image src="Smoke_Anim_01" id="Smoke_Anim"/>
 	<image src="Smoke_Anim_02"/>
