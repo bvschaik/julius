@@ -1271,28 +1271,28 @@
 	</image>
 	<!-- Note: Armoury ON animation reference DO NOT USE! -->
 	<image id="Armoury_Anim_01" width="118" height="83">
-		<layer src="Mess_Hall_ON" x="1" y="25"/>
-		<layer src="Mess_Hall_Anim_01" x="44" y="35"/>
+		<layer src="Armoury_Top" x="1" y="25"/>
+		<layer src="Armoury_ON_01" x="44" y="35"/>
 		<layer src="Watchtower_ON_01" x="102" y="15"/>
 	</image>
 	<image id="Armoury_Anim_02" width="118" height="83">
-		<layer src="Mess_Hall_ON" x="1" y="25"/>
-		<layer src="Mess_Hall_Anim_02" x="44" y="35"/>
+		<layer src="Armoury_Top" x="1" y="25"/>
+		<layer src="Armoury_ON_02" x="44" y="35"/>
 		<layer src="Watchtower_ON_02" x="102" y="15"/>
 	</image>
 	<image id="Armoury_Anim_03" width="118" height="83">
-		<layer src="Mess_Hall_ON" x="1" y="25"/>
-		<layer src="Mess_Hall_Anim_03" x="44" y="35"/>
+		<layer src="Armoury_Top" x="1" y="25"/>
+		<layer src="Armoury_ON_03" x="44" y="35"/>
 		<layer src="Watchtower_ON_03" x="102" y="15"/>
 	</image>
 	<image id="Armoury_Anim_04" width="118" height="83">
-		<layer src="Mess_Hall_ON" x="1" y="25"/>
-		<layer src="Mess_Hall_Anim_02" x="44" y="35"/>
+		<layer src="Armoury_Top" x="1" y="25"/>
+		<layer src="Armoury_ON_02" x="44" y="35"/>
 		<layer src="Watchtower_ON_04" x="102" y="15"/>
 	</image>
 	<image id="Armoury_Anim_05" width="118" height="83">
-		<layer src="Mess_Hall_ON" x="1" y="25"/>
-		<layer src="Mess_Hall_Anim_01" x="44" y="35"/>
+		<layer src="Armoury_Top" x="1" y="25"/>
+		<layer src="Armoury_ON_01" x="44" y="35"/>
 		<layer src="Watchtower_ON_05" x="102" y="15"/>
 	</image>
 	<!-- Note: Armoury ON Animations for Central, North and South Climates Respectively -->
