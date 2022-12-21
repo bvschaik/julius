@@ -285,7 +285,7 @@
 	<!-- Note: Sand Pit ON - Climate Variants -->
 	<image id="Sand_Pit_C_ON" width="118" height="60" isometric="true">
 		<layer group="this" image="Sand_Pit_C_OFF"/>
-		<animation speed="6" x="33" y="19" reversible="false">
+		<animation speed="6" x="33" y="19" reversible="true">
 			<frame src="Sand_Pit_ON_01"/>
 			<frame src="Sand_Pit_ON_02"/>
 			<frame src="Sand_Pit_ON_03"/>
@@ -296,7 +296,7 @@
 	</image>
 	<image id="Sand_Pit_N_ON" width="118" height="60" isometric="true">
 		<layer group="this" image="Sand_Pit_N_OFF"/>
-		<animation speed="6" x="33" y="19" reversible="false">
+		<animation speed="6" x="33" y="19" reversible="true">
 			<frame src="Sand_Pit_ON_01"/>
 			<frame src="Sand_Pit_ON_02"/>
 			<frame src="Sand_Pit_ON_03"/>
@@ -307,7 +307,7 @@
 	</image>
 	<image id="Sand_Pit_S_ON" width="118" height="60" isometric="true">
 		<layer group="this" image="Sand_Pit_S_OFF"/>
-		<animation speed="6" x="33" y="19" reversible="false">
+		<animation speed="6" x="33" y="19" reversible="true">
 			<frame src="Sand_Pit_ON_01"/>
 			<frame src="Sand_Pit_ON_02"/>
 			<frame src="Sand_Pit_ON_03"/>
@@ -403,41 +403,70 @@
 	<image id="Stone_Quarry_C_OFF" src="Stone_Quarry_C_OFF" width="118" height="62" isometric="true"/>
 	<image id="Stone_Quarry_N_OFF" src="Stone_Quarry_N_OFF" width="118" height="62" isometric="true"/>
 	<image id="Stone_Quarry_S_OFF" src="Stone_Quarry_S_OFF" width="118" height="62" isometric="true"/>
+	<!-- Note: Plain Stone Quarry ON animation reference DO NOT USE! -->
+	<image id="Stone_Quarry_ON_01" width="48" height="49">
+		<layer src="Stone_Quarry_ON_Base" x="0" y="0"/>
+		<layer src="Stone_Quarry_ON" x="32" y="33"/>
+	</image>
+	<image id="Stone_Quarry_ON_02" width="48" height="49">
+		<layer src="Stone_Quarry_ON_Base" x="0" y="0"/>
+		<layer src="Stone_Quarry_ON" x="32" y="31"/>
+	</image>
+	<image id="Stone_Quarry_ON_03" width="48" height="49">
+		<layer src="Stone_Quarry_ON_Base" x="0" y="0"/>
+		<layer src="Stone_Quarry_ON" x="32" y="29"/>
+	</image>
+	<image id="Stone_Quarry_ON_04" width="48" height="49">
+		<layer src="Stone_Quarry_ON_Base" x="0" y="0"/>
+		<layer src="Stone_Quarry_ON" x="32" y="27"/>
+	</image>
+	<image id="Stone_Quarry_ON_05" width="48" height="49">
+		<layer src="Stone_Quarry_ON_Base" x="0" y="0"/>
+		<layer src="Stone_Quarry_ON" x="32" y="25"/>
+	</image>
+	<image id="Stone_Quarry_ON_06" width="48" height="49">
+		<layer src="Stone_Quarry_ON_Base" x="0" y="0"/>
+		<layer src="Stone_Quarry_ON" x="32" y="23"/>
+	</image>
+	<image id="Stone_Quarry_ON_07" width="48" height="49">
+		<layer src="Stone_Quarry_ON_Base" x="0" y="0"/>
+		<layer src="Stone_Quarry_ON" x="32" y="21"/>
+	</image>
 	<!-- Note: Plain Stone Quarry ON - Climate Variants -->
 	<image id="Stone_Quarry_C_ON" width="118" height="62" isometric="true">
 		<layer group="this" image="Stone_Quarry_C_OFF"/>
-		<animation speed="6" x="18" y="0" reversible="false">
-			<frame src="Stone_Quarry_ON_01"/>
-			<frame src="Stone_Quarry_ON_02"/>
-			<frame src="Stone_Quarry_ON_03"/>
-			<frame src="Stone_Quarry_ON_04"/>
-			<frame src="Stone_Quarry_ON_05"/>
-			<frame src="Stone_Quarry_ON_06"/>
-			<frame src="Stone_Quarry_ON_07"/>
+		<animation speed="6" x="18" y="0" reversible="true">
+			<frame group="this" image="Stone_Quarry_ON_01"/>
+			<frame group="this" image="Stone_Quarry_ON_02"/>
+			<frame group="this" image="Stone_Quarry_ON_03"/>
+			<frame group="this" image="Stone_Quarry_ON_04"/>
+			<frame group="this" image="Stone_Quarry_ON_05"/>
+			<frame group="this" image="Stone_Quarry_ON_06"/>
+			<frame group="this" image="Stone_Quarry_ON_07"/>
 		</animation>
 	</image>
 	<image id="Stone_Quarry_N_ON" width="118" height="62" isometric="true">
 		<layer group="this" image="Stone_Quarry_N_OFF"/>
-		<animation speed="6" x="18" y="0" reversible="false">
-			<frame src="Stone_Quarry_ON_01"/>
-			<frame src="Stone_Quarry_ON_02"/>
-			<frame src="Stone_Quarry_ON_03"/>
-			<frame src="Stone_Quarry_ON_04"/>
-			<frame src="Stone_Quarry_ON_05"/>
-			<frame src="Stone_Quarry_ON_06"/>
-			<frame src="Stone_Quarry_ON_07"/>
+		<animation speed="6" x="18" y="0" reversible="true">
+			<frame group="this" image="Stone_Quarry_ON_01"/>
+			<frame group="this" image="Stone_Quarry_ON_02"/>
+			<frame group="this" image="Stone_Quarry_ON_03"/>
+			<frame group="this" image="Stone_Quarry_ON_04"/>
+			<frame group="this" image="Stone_Quarry_ON_05"/>
+			<frame group="this" image="Stone_Quarry_ON_06"/>
+			<frame group="this" image="Stone_Quarry_ON_07"/>
 		</animation>
 	</image>
 	<image id="Stone_Quarry_S_ON" width="118" height="62" isometric="true">
 		<layer group="this" image="Stone_Quarry_S_OFF"/>
-		<animation speed="6" x="18" y="0" reversible="false">
-			<frame src="Stone_Quarry_ON_01"/>
-			<frame src="Stone_Quarry_ON_02"/>
-			<frame src="Stone_Quarry_ON_03"/>
-			<frame src="Stone_Quarry_ON_04"/>
-			<frame src="Stone_Quarry_ON_05"/>
-			<frame src="Stone_Quarry_ON_06"/>
-			<frame src="Stone_Quarry_ON_07"/>
+		<animation speed="6" x="18" y="0" reversible="true">
+			<frame group="this" image="Stone_Quarry_ON_01"/>
+			<frame group="this" image="Stone_Quarry_ON_02"/>
+			<frame group="this" image="Stone_Quarry_ON_03"/>
+			<frame group="this" image="Stone_Quarry_ON_04"/>
+			<frame group="this" image="Stone_Quarry_ON_05"/>
+			<frame group="this" image="Stone_Quarry_ON_06"/>
+			<frame group="this" image="Stone_Quarry_ON_07"/>
 		</animation>
 	</image>
 	<!-- Note: Plain Stone Cart -->
