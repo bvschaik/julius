@@ -167,7 +167,7 @@
 	<!-- Note: Gold Mine ON - Climate Variants -->
 	<image id="Gold_Mine_C_ON" width="118" height="67" isometric="true">
 		<layer group="this" image="Gold_Mine_C_OFF"/>
-		<animation speed="6" x="19" y="32" reversible="false">
+		<animation speed="18" x="19" y="32" reversible="false">
 			<frame src="Gold_Mine_ON_01"/>
 			<frame src="Gold_Mine_ON_02"/>
 			<frame src="Gold_Mine_ON_03"/>
@@ -177,7 +177,7 @@
 	</image>
 	<image id="Gold_Mine_N_ON" width="118" height="67" isometric="true">
 		<layer group="this" image="Gold_Mine_N_OFF"/>
-		<animation speed="6" x="19" y="32" reversible="false">
+		<animation speed="18" x="19" y="32" reversible="false">
 			<frame src="Gold_Mine_ON_01"/>
 			<frame src="Gold_Mine_ON_02"/>
 			<frame src="Gold_Mine_ON_03"/>
@@ -187,7 +187,7 @@
 	</image>
 	<image id="Gold_Mine_S_ON" width="118" height="67" isometric="true">
 		<layer group="this" image="Gold_Mine_S_OFF"/>
-		<animation speed="6" x="19" y="32" reversible="false">
+		<animation speed="18" x="19" y="32" reversible="false">
 			<frame src="Gold_Mine_ON_01"/>
 			<frame src="Gold_Mine_ON_02"/>
 			<frame src="Gold_Mine_ON_03"/>
@@ -285,7 +285,7 @@
 	<!-- Note: Sand Pit ON - Climate Variants -->
 	<image id="Sand_Pit_C_ON" width="118" height="60" isometric="true">
 		<layer group="this" image="Sand_Pit_C_OFF"/>
-		<animation speed="6" x="33" y="19" reversible="true">
+		<animation speed="12" x="33" y="4" reversible="true">
 			<frame src="Sand_Pit_ON_01"/>
 			<frame src="Sand_Pit_ON_02"/>
 			<frame src="Sand_Pit_ON_03"/>
@@ -296,7 +296,7 @@
 	</image>
 	<image id="Sand_Pit_N_ON" width="118" height="60" isometric="true">
 		<layer group="this" image="Sand_Pit_N_OFF"/>
-		<animation speed="6" x="33" y="19" reversible="true">
+		<animation speed="12" x="33" y="4" reversible="true">
 			<frame src="Sand_Pit_ON_01"/>
 			<frame src="Sand_Pit_ON_02"/>
 			<frame src="Sand_Pit_ON_03"/>
@@ -307,7 +307,7 @@
 	</image>
 	<image id="Sand_Pit_S_ON" width="118" height="60" isometric="true">
 		<layer group="this" image="Sand_Pit_S_OFF"/>
-		<animation speed="6" x="33" y="19" reversible="true">
+		<animation speed="12" x="33" y="4" reversible="true">
 			<frame src="Sand_Pit_ON_01"/>
 			<frame src="Sand_Pit_ON_02"/>
 			<frame src="Sand_Pit_ON_03"/>
@@ -435,7 +435,7 @@
 	<!-- Note: Plain Stone Quarry ON - Climate Variants -->
 	<image id="Stone_Quarry_C_ON" width="118" height="62" isometric="true">
 		<layer group="this" image="Stone_Quarry_C_OFF"/>
-		<animation speed="6" x="18" y="0" reversible="true">
+		<animation speed="10" x="18" y="-15" reversible="true">
 			<frame group="this" image="Stone_Quarry_ON_01"/>
 			<frame group="this" image="Stone_Quarry_ON_02"/>
 			<frame group="this" image="Stone_Quarry_ON_03"/>
@@ -447,7 +447,7 @@
 	</image>
 	<image id="Stone_Quarry_N_ON" width="118" height="62" isometric="true">
 		<layer group="this" image="Stone_Quarry_N_OFF"/>
-		<animation speed="6" x="18" y="0" reversible="true">
+		<animation speed="10" x="18" y="-15" reversible="true">
 			<frame group="this" image="Stone_Quarry_ON_01"/>
 			<frame group="this" image="Stone_Quarry_ON_02"/>
 			<frame group="this" image="Stone_Quarry_ON_03"/>
@@ -459,7 +459,7 @@
 	</image>
 	<image id="Stone_Quarry_S_ON" width="118" height="62" isometric="true">
 		<layer group="this" image="Stone_Quarry_S_OFF"/>
-		<animation speed="6" x="18" y="0" reversible="true">
+		<animation speed="10" x="18" y="-15" reversible="true">
 			<frame group="this" image="Stone_Quarry_ON_01"/>
 			<frame group="this" image="Stone_Quarry_ON_02"/>
 			<frame group="this" image="Stone_Quarry_ON_03"/>
