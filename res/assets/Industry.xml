@@ -168,31 +168,31 @@
 	<image id="Gold_Mine_C_ON" width="118" height="67" isometric="true">
 		<layer group="this" image="Gold_Mine_C_OFF"/>
 		<animation speed="6" x="0" y="0" reversible="false">
-			<frame group="this" image="Gold_Mine_ON_01"/>
-			<frame group="this" image="Gold_Mine_ON_02"/>
-			<frame group="this" image="Gold_Mine_ON_03"/>
-			<frame group="this" image="Gold_Mine_ON_04"/>
-			<frame group="this" image="Gold_Mine_ON_05"/>
+			<frame src="Gold_Mine_ON_01"/>
+			<frame src="Gold_Mine_ON_02"/>
+			<frame src="Gold_Mine_ON_03"/>
+			<frame src="Gold_Mine_ON_04"/>
+			<frame src="Gold_Mine_ON_05"/>
 		</animation>
 	</image>
 	<image id="Gold_Mine_N_ON" width="118" height="67" isometric="true">
 		<layer group="this" image="Gold_Mine_N_OFF"/>
 		<animation speed="6" x="0" y="0" reversible="false">
-			<frame group="this" image="Gold_Mine_ON_01"/>
-			<frame group="this" image="Gold_Mine_ON_02"/>
-			<frame group="this" image="Gold_Mine_ON_03"/>
-			<frame group="this" image="Gold_Mine_ON_04"/>
-			<frame group="this" image="Gold_Mine_ON_05"/>
+			<frame src="Gold_Mine_ON_01"/>
+			<frame src="Gold_Mine_ON_02"/>
+			<frame src="Gold_Mine_ON_03"/>
+			<frame src="Gold_Mine_ON_04"/>
+			<frame src="Gold_Mine_ON_05"/>
 		</animation>
 	</image>
 	<image id="Gold_Mine_S_ON" width="118" height="67" isometric="true">
 		<layer group="this" image="Gold_Mine_S_OFF"/>
 		<animation speed="6" x="0" y="0" reversible="false">
-			<frame group="this" image="Gold_Mine_ON_01"/>
-			<frame group="this" image="Gold_Mine_ON_02"/>
-			<frame group="this" image="Gold_Mine_ON_03"/>
-			<frame group="this" image="Gold_Mine_ON_04"/>
-			<frame group="this" image="Gold_Mine_ON_05"/>
+			<frame src="Gold_Mine_ON_01"/>
+			<frame src="Gold_Mine_ON_02"/>
+			<frame src="Gold_Mine_ON_03"/>
+			<frame src="Gold_Mine_ON_04"/>
+			<frame src="Gold_Mine_ON_05"/>
 		</animation>
 	</image>
 	<!-- Note: Gold Cart -->
