@@ -12,6 +12,7 @@ static struct {
     xml_parser_element *elements;
     const xml_parser_element **parents;
     int depth;
+    int error_depth;
     int total_elements;
     int error;
     XML_Parser parser;
@@ -82,30 +83,38 @@ static void XMLCALL start_element(void *unused, const char *name, const char **a
     if (data.error) {
         return;
     }
+    data.depth++;
+    if (data.error_depth) {
+        return;
+    }
     const xml_parser_element *element = get_element_from_name(name);
     if (!element) {
-        data.error = 1;
+        data.error_depth = data.depth;
         log_error("Invalid XML element", name, 0);
-        XML_StopParser(data.parser, XML_FALSE);
         return;
     }
     data.current_element = element;
     data.attributes.current = attributes;
     data.attributes.total = count_attributes(attributes);
     if (data.attributes.total % 2) {
-        data.error = 1;
+        data.error_depth = data.depth;
         log_error("Malformed attributes for the element", name, 0);
         XML_StopParser(data.parser, XML_FALSE);
-        return;
+    } else if (!element->on_enter()) {
+        data.error_depth = data.depth;
     }
-    data.parents[data.depth] = element;
-    data.depth++;
-    
-    if (!element->on_enter()) {
-        data.error = 1;
+    if (!data.error_depth) {
+        data.parents[data.depth - 1] = element;
     }
-    if (data.error) {
-        XML_StopParser(data.parser, XML_FALSE);
+}
+
+static void reduce_current_depth(void)
+{
+    if (data.depth > 1) {
+        data.depth--;
+        data.current_element = data.parents[data.depth - 1];
+    } else {
+        data.current_element = 0;
     }
 }
 
@@ -114,21 +123,28 @@ static void XMLCALL end_element(void *unused, const char *name)
     if (data.error) {
         return;
     }
+    if (data.error_depth) {
+        if (data.error_depth == data.depth) {
+            data.error_depth = 0;
+            data.attributes.current = 0;
+            data.attributes.total = 0;
+            reduce_current_depth();
+        } else {
+            data.depth--;
+        }
+        return;
+    }
     if (!data.current_element || strcmp(data.current_element->name, name) != 0) {
         data.error = 1;
-        log_error("Invalid XML parameter", name, 0);
+        log_error("XML mismatch between element open and close", name, 0);
         XML_StopParser(data.parser, XML_FALSE);
         return;
     }
+
     data.attributes.current = 0;
     data.attributes.total = 0;
     data.current_element->on_exit();
-    if (data.depth > 1) {
-        data.depth--;
-        data.current_element = data.parents[data.depth - 1];
-    } else {
-        data.current_element = 0;
-    }
+    reduce_current_depth();
 }
 
 int xml_parser_init(const xml_parser_element *elements, int total_elements)
@@ -173,7 +189,11 @@ int xml_parser_parse(const char *buffer, unsigned int buffer_size, int is_final)
         return 0;
     }
     if (XML_Parse(data.parser, buffer, (int) buffer_size, is_final) == XML_STATUS_ERROR) {
-        data.error = 1;
+        if (!data.error) {
+            log_error("XML parse error:", XML_ErrorString(XML_GetErrorCode(data.parser)), 0);
+            log_error("Line:", 0, XML_GetCurrentLineNumber(data.parser));
+            data.error = 1;
+        }
         return 0;
     }
     return 1;
@@ -269,6 +289,7 @@ void xml_parser_reset(void)
     XML_SetElementHandler(data.parser, start_element, end_element);
 
     data.depth = 0;
+    data.error_depth = 0;
     data.current_element = 0;
     data.attributes.current = 0;
     data.attributes.total = 0;
@@ -287,6 +308,7 @@ void xml_parser_free(void)
     data.parents = 0;
     data.total_elements = 0;
     data.depth = 0;
+    data.error_depth = 0;
     data.current_element = 0;
     data.attributes.current = 0;
     data.attributes.total = 0;
