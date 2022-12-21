@@ -154,37 +154,47 @@
 		<layer group="83" image="0" x="0" y="5"/>
 		<layer src="Warehouse_Bricks_04" x="0" y="0"/>
 	</image>
-	<!-- Note: Gold Mine ON animation reference DO NOT USE! -->
-	<image id="Gold_Mine_ON_01" width="37" height="36">
-		<layer group="39" image="1" x="0" y="0"/>
-		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	<!-- Note: Gold Mine OFF - Climate Variants -->
+	<image id="Gold_Mine_C_OFF" width="118" height="67" isometric="true">
+		<layer src="Gold_Mine_C_OFF" x="0" y="0"/>
 	</image>
-	<image id="Gold_Mine_ON_02" width="37" height="36">
-		<layer group="39" image="2" x="0" y="0"/>
-		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	<image id="Gold_Mine_N_OFF" width="118" height="67" isometric="true">
+		<layer src="Gold_Mine_N_OFF" x="0" y="0"/>
 	</image>
-	<image id="Gold_Mine_ON_03" width="37" height="36">
-		<layer group="39" image="3" x="0" y="0"/>
-		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	<image id="Gold_Mine_S_OFF" width="118" height="67" isometric="true">
+		<layer src="Gold_Mine_S_OFF" x="0" y="0"/>
 	</image>
-	<image id="Gold_Mine_ON_04" width="37" height="36">
-		<layer group="39" image="4" x="0" y="0"/>
-		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	<!-- Note: Gold Mine ON - Climate Variants -->
+	<image id="Gold_Mine_C_ON" width="118" height="67" isometric="true">
+		<layer group="this" image="Gold_Mine_C_OFF"/>
+		<animation speed="6" x="0" y="0" reversible="false">
+			<frame group="this" image="Gold_Mine_ON_01"/>
+			<frame group="this" image="Gold_Mine_ON_02"/>
+			<frame group="this" image="Gold_Mine_ON_03"/>
+			<frame group="this" image="Gold_Mine_ON_04"/>
+			<frame group="this" image="Gold_Mine_ON_05"/>
+		</animation>
 	</image>
-	<image id="Gold_Mine_ON_05" width="37" height="36">
-		<layer group="39" image="5" x="0" y="0"/>
-		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	<image id="Gold_Mine_N_ON" width="118" height="67" isometric="true">
+		<layer group="this" image="Gold_Mine_N_OFF"/>
+		<animation speed="6" x="0" y="0" reversible="false">
+			<frame group="this" image="Gold_Mine_ON_01"/>
+			<frame group="this" image="Gold_Mine_ON_02"/>
+			<frame group="this" image="Gold_Mine_ON_03"/>
+			<frame group="this" image="Gold_Mine_ON_04"/>
+			<frame group="this" image="Gold_Mine_ON_05"/>
+		</animation>
 	</image>
-	<image id="Gold_Mine_ON_06" width="37" height="36">
-		<layer group="39" image="6" x="0" y="0"/>
-		<layer src="Gold_Mine_ON" x="0" y="0"/>
+	<image id="Gold_Mine_S_ON" width="118" height="67" isometric="true">
+		<layer group="this" image="Gold_Mine_S_OFF"/>
+		<animation speed="6" x="0" y="0" reversible="false">
+			<frame group="this" image="Gold_Mine_ON_01"/>
+			<frame group="this" image="Gold_Mine_ON_02"/>
+			<frame group="this" image="Gold_Mine_ON_03"/>
+			<frame group="this" image="Gold_Mine_ON_04"/>
+			<frame group="this" image="Gold_Mine_ON_05"/>
+		</animation>
 	</image>
-	<!-- Note: Gold Mine OFF Variant -->
-	<image id="Gold_Mine_ON_01" width="118" height="60" isometric="true">
-		<layer group="39" image="0" x="0" y="0"/>
-		<layer src="Gold_Mine_OFF" x="0" y="0"/>
-	</image>
-	<!-- Note: Gold Mine ON Variant -->
 	<!-- Note: Gold Cart -->
 	<image id="Gold_Cart_NE">
 		<layer group="97" image="0" x="0" y="0"/>
