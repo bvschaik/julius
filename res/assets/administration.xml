@@ -8,16 +8,16 @@
 		<layer src="Forum_Upgrade" x="0" y="27"/>
 	</image>
 	<!-- Note: Basilica Building OFF State -->
-	<image id="Basilica_OFF" src="Basilica_Off" width="238" height="161" isometric="true">
-		<!-- Note: Basilica Building ON State -->
-		<image id="Basilica_ON" width="238" height="161" isometric="true"/>
+	<image id="Basilica_OFF" src="Basilica_OFF" width="238" height="161" isometric="true"/>
+	<!-- Note: Basilica Building ON State -->
+	<image id="Basilica_ON" width="238" height="161" isometric="true">
 		<layer group="this" image="Basilica_OFF" x="0" y="0"/>
-		<layer src="Basilica_On" x="45" y="78"/>
+		<layer src="Basilica_ON" x="45" y="78"/>
 	</image>
 	<!-- Note: City Mint OFF -->
-	<image id="City_Mint_OFF" src="City_Mint_OFF" isometric="true"/>
+	<image id="City_Mint_OFF" src="City_Mint_OFF" width="178" height="117" isometric="true"/>
 	<!-- Note: City Mint OFF - Alternative red-roofed asset -->
-	<image id="City_Mint_OFF_Alt" isometric="true">
+	<image id="City_Mint_OFF_Alt" width="178" height="117" isometric="true">
 		<layer group="this" image="City_Mint_OFF" x="0" y="0"/>
 		<layer src="City_Mint_OFF_Alt" x="13" y="0"/>
 	</image>
@@ -43,7 +43,7 @@
 		<layer src="City_Mint_ON_05" x="59" y="78"/>
 	</image>
 	<!-- Note: City Mint ON -->
-	<image id="City_Mint_ON" isometric="true">
+	<image id="City_Mint_ON" width="178" height="117" isometric="true">
 		<layer group="this" image="City_Mint_OFF"/>
 		<animation speed="6" x="0" y="0" reversible="false">
 			<frame group="this" image="City_Mint_ON_01"/>
@@ -54,7 +54,7 @@
 		</animation>
 	</image>
 	<!-- Note: City Mint ON - Alternative red-roofed asset -->
-	<image id="City_Mint_ON_Alt" isometric="true">
+	<image id="City_Mint_ON_Alt" width="178" height="117" isometric="true">
 		<layer group="this" image="City_Mint_OFF_Alt"/>
 		<animation speed="6" x="0" y="0" reversible="false">
 			<frame group="this" image="City_Mint_ON_01"/>
