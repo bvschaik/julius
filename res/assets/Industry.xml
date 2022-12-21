@@ -140,19 +140,19 @@
 	<!-- Note: Bricks Warehouse Tiles -->
 	<image id="Warehouse_Bricks_01" width="58" height="46" isometric="true">
 		<layer group="83" image="0" x="0" y="5"/>
-		<layer src="Warehouse_Bricks_01" x="0" y="0"/>
+		<layer src="Warehouse_Bricks_01" x="27" y="12"/>
 	</image>
 	<image id="Warehouse_Bricks_02" width="58" height="46" isometric="true">
 		<layer group="83" image="0" x="0" y="5"/>
-		<layer src="Warehouse_Bricks_02" x="0" y="0"/>
+		<layer src="Warehouse_Bricks_02" x="14" y="0"/>
 	</image>
 	<image id="Warehouse_Bricks_03" width="58" height="46" isometric="true">
 		<layer group="83" image="0" x="0" y="5"/>
-		<layer src="Warehouse_Bricks_03" x="0" y="0"/>
+		<layer src="Warehouse_Bricks_03" x="3" y="0"/>
 	</image>
 	<image id="Warehouse_Bricks_04" width="58" height="46" isometric="true">
 		<layer group="83" image="0" x="0" y="5"/>
-		<layer src="Warehouse_Bricks_04" x="0" y="0"/>
+		<layer src="Warehouse_Bricks_04" x="3" y="0"/>
 	</image>
 	<!-- Note: Gold Mine OFF - Climate Variants -->
 	<image id="Gold_Mine_C_OFF" width="118" height="67" isometric="true">
@@ -167,7 +167,7 @@
 	<!-- Note: Gold Mine ON - Climate Variants -->
 	<image id="Gold_Mine_C_ON" width="118" height="67" isometric="true">
 		<layer group="this" image="Gold_Mine_C_OFF"/>
-		<animation speed="6" x="0" y="0" reversible="false">
+		<animation speed="6" x="19" y="32" reversible="false">
 			<frame src="Gold_Mine_ON_01"/>
 			<frame src="Gold_Mine_ON_02"/>
 			<frame src="Gold_Mine_ON_03"/>
@@ -177,7 +177,7 @@
 	</image>
 	<image id="Gold_Mine_N_ON" width="118" height="67" isometric="true">
 		<layer group="this" image="Gold_Mine_N_OFF"/>
-		<animation speed="6" x="0" y="0" reversible="false">
+		<animation speed="6" x="19" y="32" reversible="false">
 			<frame src="Gold_Mine_ON_01"/>
 			<frame src="Gold_Mine_ON_02"/>
 			<frame src="Gold_Mine_ON_03"/>
@@ -187,7 +187,7 @@
 	</image>
 	<image id="Gold_Mine_S_ON" width="118" height="67" isometric="true">
 		<layer group="this" image="Gold_Mine_S_OFF"/>
-		<animation speed="6" x="0" y="0" reversible="false">
+		<animation speed="6" x="19" y="32" reversible="false">
 			<frame src="Gold_Mine_ON_01"/>
 			<frame src="Gold_Mine_ON_02"/>
 			<frame src="Gold_Mine_ON_03"/>
@@ -202,7 +202,7 @@
 	</image>
 	<image id="Gold_Cart_E" width="39" height="39">
 		<layer group="97" image="1" x="0" y="0"/>
-		<layer src="Gold_Cart_E" x="0" y="0"/>
+		<layer src="Gold_Cart_E" x="15" y="10"/>
 	</image>
 	<image id="Gold_Cart_SE" width="39" height="39">
 		<layer group="97" image="2" x="0" y="0"/>
@@ -231,11 +231,11 @@
 	<!-- Note: Gold Getting Cart -->
 	<image id="Gold_Cart_Getting_NE" width="39" height="39">
 		<layer group="97" image="0" x="0" y="0"/>
-		<layer src="Gold_Cart_Getting_NE" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_NE" x="15" y="4"/>
 	</image>
 	<image id="Gold_Cart_Getting_E" width="39" height="39">
 		<layer group="97" image="1" x="0" y="0"/>
-		<layer src="Gold_Cart_Getting_E" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_E" x="15" y="5"/>
 	</image>
 	<image id="Gold_Cart_Getting_SE" width="39" height="39">
 		<layer group="97" image="2" x="0" y="0"/>
@@ -243,7 +243,7 @@
 	</image>
 	<image id="Gold_Cart_Getting_S" width="39" height="39">
 		<layer group="97" image="3" x="0" y="0"/>
-		<layer src="Gold_Cart_Getting_S" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_S" x="15" y="7"/>
 	</image>
 	<image id="Gold_Cart_Getting_SW" width="39" height="39">
 		<layer group="97" image="4" x="0" y="0"/>
@@ -255,28 +255,28 @@
 	</image>
 	<image id="Gold_Cart_Getting_NW" width="39" height="39">
 		<layer group="97" image="6" x="0" y="0"/>
-		<layer src="Gold_Cart_Getting_NW" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_NW" x="9" y="4"/>
 	</image>
 	<image id="Gold_Cart_Getting_N" width="39" height="39">
 		<layer group="97" image="7" x="0" y="0"/>
-		<layer src="Gold_Cart_Getting_N" x="0" y="0"/>
+		<layer src="Gold_Cart_Getting_N" x="15" y="4"/>
 	</image>
 	<!-- Note: Gold Warehouse Tiles -->
 	<image id="Warehouse_Gold_01" isometric="true">
 		<layer group="83" image="0" x="0" y="0"/>
-		<layer src="Warehouse_Gold_01" x="0" y="0"/>
+		<layer src="Warehouse_Gold_01" x="20" y="14"/>
 	</image>
 	<image id="Warehouse_Gold_02" isometric="true">
 		<layer group="83" image="0" x="0" y="0"/>
-		<layer src="Warehouse_Gold_02" x="0" y="0"/>
+		<layer src="Warehouse_Gold_02" x="20" y="1"/>
 	</image>
 	<image id="Warehouse_Gold_03" isometric="true">
 		<layer group="83" image="0" x="0" y="0"/>
-		<layer src="Warehouse_Gold_03" x="0" y="0"/>
+		<layer src="Warehouse_Gold_03" x="9" y="1"/>
 	</image>
 	<image id="Warehouse_Gold_04" isometric="true">
 		<layer group="83" image="0" x="0" y="0"/>
-		<layer src="Warehouse_Gold_04" x="0" y="0"/>
+		<layer src="Warehouse_Gold_04" x="9" y="1"/>
 	</image>
 	<!-- Note: Sand Pit OFF - Climate Variants -->
 	<image id="Sand_Pit_C_OFF" src="Sand_Pit_C_OFF" width="118" height="60" isometric="true"/>
@@ -385,19 +385,19 @@
 	<!-- Note: Sand Warehouse Tiles -->
 	<image id="Warehouse_Sand_01" width="58" height="45" isometric="true">
 		<layer group="83" image="0" x="0" y="4"/>
-		<layer src="Warehouse_Sand_01" x="0" y="0"/>
+		<layer src="Warehouse_Sand_01" x="20" y="12"/>
 	</image>
 	<image id="Warehouse_Sand_02" width="58" height="45" isometric="true">
 		<layer group="83" image="0" x="0" y="4"/>
-		<layer src="Warehouse_Sand_02" x="0" y="0"/>
+		<layer src="Warehouse_Sand_02" x="20" y="7"/>
 	</image>
 	<image id="Warehouse_Sand_03" width="58" height="45" isometric="true">
 		<layer group="83" image="0" x="0" y="4"/>
-		<layer src="Warehouse_Sand_03" x="0" y="0"/>
+		<layer src="Warehouse_Sand_03" x="18" y="0"/>
 	</image>
 	<image id="Warehouse_Sand_04" width="58" height="45" isometric="true">
 		<layer group="83" image="0" x="0" y="4"/>
-		<layer src="Warehouse_Sand_04" x="0" y="0"/>
+		<layer src="Warehouse_Sand_04" x="4" y="0"/>
 	</image>
 	<!-- Note: Plain Stone Quarry OFF - Climate Variants -->
 	<image id="Stone_Quarry_C_OFF" src="Stone_Quarry_C_OFF" width="118" height="62" isometric="true"/>
@@ -538,19 +538,19 @@
 	<!-- Note: Plain Stone Warehouse Tiles -->
 	<image id="Warehouse_Stone_01" width="58" height="53" isometric="true">
 		<layer group="83" image="0" x="0" y="12"/>
-		<layer src="Warehouse_Stone_01" x="0" y="0"/>
+		<layer src="Warehouse_Stone_01" x="32" y="15"/>
 	</image>
 	<image id="Warehouse_Stone_02" width="58" height="53" isometric="true">
 		<layer group="83" image="0" x="0" y="12"/>
-		<layer src="Warehouse_Stone_02" x="0" y="0"/>
+		<layer src="Warehouse_Stone_02" x="18" y="0"/>
 	</image>
 	<image id="Warehouse_Stone_03" width="58" height="53" isometric="true">
 		<layer group="83" image="0" x="0" y="12"/>
-		<layer src="Warehouse_Stone_03" x="0" y="0"/>
+		<layer src="Warehouse_Stone_03" x="4" y="0"/>
 	</image>
 	<image id="Warehouse_Stone_04" width="58" height="53" isometric="true">
 		<layer group="83" image="0" x="0" y="12"/>
-		<layer src="Warehouse_Stone_04" x="0" y="0"/>
+		<layer src="Warehouse_Stone_04" x="4" y="0"/>
 	</image>
 	<!-- Note: Smoke Animation Frames -->
 	<image src="Smoke_Anim_01" id="Smoke_Anim"/>
