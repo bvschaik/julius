@@ -363,19 +363,13 @@ int building_construction_place_building(building_type type, int x, int y)
         }
     }
     int waterside_orientation_abs = 0, waterside_orientation_rel = 0;
-    if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
-        if (map_water_determine_orientation_size2(
-            x, y, 0, &waterside_orientation_abs, &waterside_orientation_rel)) {
+    if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF || type == BUILDING_DOCK) {
+        if (map_water_determine_orientation(x, y, building_properties_for_type(type)->size, 0,
+                &waterside_orientation_abs, &waterside_orientation_rel, 1, 0)) {
             city_warning_show(WARNING_SHORE_NEEDED, NEW_WARNING_SLOT);
             return 0;
         }
-    } else if (type == BUILDING_DOCK) {
-        if (map_water_determine_orientation_size3(
-            x, y, 0, &waterside_orientation_abs, &waterside_orientation_rel)) {
-            city_warning_show(WARNING_SHORE_NEEDED, NEW_WARNING_SLOT);
-            return 0;
-        }
-        if (!building_dock_is_connected_to_open_water(x, y)) {
+        if (type == BUILDING_DOCK && !building_dock_is_connected_to_open_water(x, y)) {
             city_warning_show(WARNING_DOCK_OPEN_WATER_NEEDED, NEW_WARNING_SLOT);
             return 0;
         }

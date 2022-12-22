@@ -831,15 +831,11 @@ void building_construction_update(int x, int y, int grid_offset)
             !city_buildings_has_hippodrome()) {
             mark_construction(x, y, 5, TERRAIN_ALL, 0);
         }
-    } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF) {
-        if (!map_water_determine_orientation_size2(x, y, 1, 0, 0)) {
+    } else if (type == BUILDING_SHIPYARD || type == BUILDING_WHARF || type == BUILDING_DOCK) {
+        if (!map_water_determine_orientation(x, y, building_properties_for_type(type)->size, 1, 0, 0, 1, 0)) {
             data.draw_as_constructing = 1;
         }
-    } else if (type == BUILDING_DOCK) {
-        if (!map_water_determine_orientation_size3(x, y, 1, 0, 0)) {
-            data.draw_as_constructing = 1;
-        }
-    } else if (data.required_terrain.meadow || data.required_terrain.rock || data.required_terrain.tree ||
+    } if (data.required_terrain.meadow || data.required_terrain.rock || data.required_terrain.tree ||
         data.required_terrain.water || data.required_terrain.wall || data.required_terrain.distant_water) {
         // never mark as constructing
     } else {

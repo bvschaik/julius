@@ -4,13 +4,32 @@
 #include "figure/figure.h"
 #include "map/point.h"
 
+#define MAP_WATER_WATERSIDE_ROWS_NEEDED 3
+
+typedef struct {
+    struct {
+        int x;
+        int y;
+    } start;
+    struct {
+        int x;
+        int y;
+    } outer_step;
+    struct {
+        int x;
+        int y;
+    } inner_step;
+    int inner_length;
+} waterside_tile_loop;
+
 void map_water_add_building(int building_id, int x, int y, int size);
 
-int map_water_determine_orientation_size2(int x, int y, int adjust_xy,
-    int *orientation_absolute, int *orientation_relative);
+int map_water_determine_orientation(int x, int y, int size, int adjust_xy,
+    int *orientation_absolute, int *orientation_relative, int check_water_in_front, int *blocked);
 
-int map_water_determine_orientation_size3(int x, int y, int adjust_xy,
-    int *orientation_absolute, int *orientation_relative);
+const waterside_tile_loop *map_water_get_waterside_tile_loop(int direction, int size);
+
+int map_water_has_water_in_front(int x, int y, const waterside_tile_loop *loop, int *land_tiles);
 
 int map_water_get_wharf_for_new_fishing_boat(figure *boat, map_point *tile);
 
