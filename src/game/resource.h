@@ -2,6 +2,7 @@
 #define GAME_RESOURCE_H
 
 #include "building/type.h"
+#include "city/warning.h"
 #include "core/lang.h"
 
 /**
@@ -79,6 +80,10 @@ typedef struct {
     building_type industry;
     building_type workshop;
     struct {
+        warning_type needed;
+        warning_type create_industry;
+    } warning;
+    struct {
         int storage;
         struct {
             int single_load;
@@ -105,6 +110,10 @@ int resource_is_food(resource_type resource);
 int resource_is_raw_material(resource_type resource);
 
 int resource_is_good(resource_type resource);
+
+resource_type resource_get_from_industry(building_type industry);
+
+resource_type resource_get_raw_material_for_good(resource_type good);
 
 const resource_data *resource_get_data(resource_type resource);
 

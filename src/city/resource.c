@@ -5,6 +5,7 @@
 #include "building/industry.h"
 #include "building/model.h"
 #include "building/monument.h"
+#include "city/buildings.h"
 #include "city/data_private.h"
 #include "city/message.h"
 #include "city/military.h"
@@ -556,7 +557,7 @@ void city_resource_consume_food(void)
 
     int total_consumed = house_consume_food() + mess_hall_consume_food() + caravanserai_consume_food();
 
-    if (city_military_total_soldiers_in_city() > 0 && !city_data.building.mess_hall_building_id &&
+    if (city_military_total_soldiers_in_city() > 0 && !city_buildings_has_mess_hall() &&
         !city_data.mess_hall.missing_mess_hall_warning_shown) {
         city_data.mess_hall.food_percentage_missing_this_month = 100;
         city_message_post(1, MESSAGE_SOLDIERS_STARVING_NO_MESS_HALL, 0, 0);

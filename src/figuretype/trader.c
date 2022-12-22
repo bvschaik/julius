@@ -30,6 +30,7 @@
 #include "figure/movement.h"
 #include "figure/route.h"
 #include "figure/trader.h"
+#include "figure/visited_buildings.h"
 #include "map/routing.h"
 #include "map/routing_path.h"
 #include "scenario/map.h"
@@ -745,14 +746,8 @@ static int record_dock(figure *ship, int dock_id)
     if (dock->data.dock.trade_ship_id != 0 && dock->data.dock.trade_ship_id != ship->id) {
         return 0;
     }
-    for (int i = 0; i < MAX_DOCKS; i++) {
-        if (dock_id == city_buildings_get_working_dock(i)) {
-            ship->building_id |= 1 << i;
-            dock->data.dock.trade_ship_id = ship->id;
-            return 1;
-        }
-    }
-    return 0;
+    ship->last_visited_index = figure_visited_buildings_add(ship->last_visited_index, dock_id);
+    return 1;
 }
 
 void figure_trade_ship_action(figure *f)
@@ -774,7 +769,6 @@ void figure_trade_ship_action(figure *f)
             f->trader_amount_bought = 0;
             f->is_ghost = 1;
             f->wait_ticks++;
-            f->building_id = 0;
             if (f->wait_ticks > 20) {
                 f->wait_ticks = 0;
                 map_point queue_tile;
@@ -1032,23 +1026,6 @@ int figure_trade_sea_trade_units(void)
     }
 
     return unit;
-}
-
-int figure_trader_ship_docked_once_at_dock(figure *ship, int dock_id)
-{
-    for (int i = 0; i < MAX_DOCKS; i++) {
-        if (dock_id == city_buildings_get_working_dock(i)) {
-            if (figure_trader_ship_already_docked_at(ship, i)) {
-                return 1;
-            }
-        }
-    }
-    return 0;
-}
-
-int figure_trader_ship_already_docked_at(figure *ship, int dock_num)
-{
-    return ship->building_id & (1 << dock_num);
 }
 
 // if ship is moored, do not forward to another dock unless it has more than one third of capacity available.

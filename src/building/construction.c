@@ -842,7 +842,6 @@ void building_construction_update(int x, int y, int grid_offset)
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
             !(type == BUILDING_BARRACKS && city_buildings_has_barracks() &&
             !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) &&
-            !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center()) &&
             !(type == BUILDING_MESS_HALL && city_buildings_has_mess_hall()) &&
             !building_monument_get_id(type) &&
             !(building_monument_is_grand_temple(type) &&

@@ -76,11 +76,12 @@ static void draw_foreground(void)
 
     text_draw(resource_get_data(data.resource)->text, 60, 137, FONT_LARGE_BLACK, COLOR_MASK_NONE);
 
+    int total_buildings = building_count_total(resource_get_data(data.resource)->industry);
+
     if (empire_can_produce_resource(data.resource) ||
         (data.resource == RESOURCE_FISH && scenario_building_allowed(BUILDING_WHARF))) {
-        int total_buildings = building_count_industry_total(data.resource);
-        int active_buildings = building_count_industry_active(data.resource);
-        if (building_count_industry_total(data.resource) <= 0) {
+        int active_buildings = building_count_active(resource_get_data(data.resource)->industry);
+        if (total_buildings <= 0) {
             lang_text_draw(54, 7, 66, 172, FONT_NORMAL_BLACK);
         } else if (city_resource_is_mothballed(data.resource)) {
             int width = text_draw_number(total_buildings, '@', " ", 66, 172, FONT_NORMAL_BLACK, 0);
@@ -170,7 +171,7 @@ static void draw_foreground(void)
         }
     }
 
-    if (building_count_industry_total(data.resource) > 0) {
+    if (total_buildings > 0) {
         button_border_draw(66, 250, 496, 30, data.focus_button_id == 1);
         if (city_resource_is_mothballed(data.resource)) {
             lang_text_draw_centered(54, 17, 82, 259, 464, FONT_NORMAL_BLACK);
@@ -254,7 +255,7 @@ static void button_trade_up_down(int trade_type, int is_down)
 
 static void button_toggle_industry(int param1, int param2)
 {
-    if (building_count_industry_total(data.resource) > 0) {
+    if (building_count_total(resource_get_data(data.resource)->industry) > 0) {
         city_resource_toggle_mothballed(data.resource);
     }
 }

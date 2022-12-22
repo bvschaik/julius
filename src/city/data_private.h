@@ -22,33 +22,9 @@ typedef struct {
 
 extern struct city_data_t {
     struct {
-        int16_t senate_placed;
-        uint8_t senate_x;
-        uint8_t senate_y;
-        int16_t senate_grid_offset;
-        int32_t senate_building_id;
-        int32_t hippodrome_placed;
-        int8_t barracks_x;
-        int8_t barracks_y;
-        int16_t barracks_grid_offset;
-        int32_t barracks_building_id;
-        int32_t barracks_placed;
-        int8_t distribution_center_x;
-        int8_t distribution_center_y;
-        int16_t distribution_center_grid_offset;
-        int32_t distribution_center_building_id;
-        int32_t distribution_center_placed;
-        int32_t trade_center_building_id;
         int8_t triumphal_arches_available;
         int8_t triumphal_arches_placed;
-        int16_t working_wharfs;
-        int32_t caravanserai_building_id;
-        int32_t shipyard_boats_requested;
-        int16_t working_docks;
-        int16_t working_dock_ids[10];
-        int32_t mission_post_operational;
-        map_point main_native_meeting;
-        int32_t mess_hall_building_id;
+        int16_t legacy_working_dock_ids[10];
         int32_t num_striking_industries;
         uint16_t months_since_last_destroyed_iron_mine;
         uint16_t months_since_last_flooded_clay_pit;
@@ -238,7 +214,6 @@ extern struct city_data_t {
         int8_t crime_cooldown;
     } sentiment;
     struct {
-        int32_t num_hospital_workers;
         int32_t target_value;
         int32_t value;
         int32_t months_since_last_contaminated_water;

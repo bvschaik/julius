@@ -15,7 +15,7 @@ void city_trade_update(void)
     city_data.trade.num_sea_routes = 0;
     city_data.trade.num_land_routes = 0;
     // Wine types
-    city_data.resource.wine_types_available = building_count_industry_total(RESOURCE_WINE) > 0 ? 1 : 0;
+    city_data.resource.wine_types_available = building_count_total(resource_get_data(RESOURCE_WINE)->industry) > 0 ? 1 : 0;
     if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
         city_data.resource.wine_types_available += 1;
     }

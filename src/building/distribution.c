@@ -8,7 +8,7 @@
 
 #include <string.h>
 
-int building_distribution_is_good_accepted(resource_type resource, building *b)
+int building_distribution_is_good_accepted(resource_type resource, const building *b)
 {
     return b->accepted_goods[resource] > 0;
 }

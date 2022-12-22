@@ -3,6 +3,7 @@
 #include "building/connectable.h"
 #include "building/count.h"
 #include "building/dock.h"
+#include "building/entertainment.h"
 #include "building/figure.h"
 #include "building/government.h"
 #include "building/granary.h"
@@ -165,7 +166,7 @@ static void advance_tick(void)
         case 30: widget_minimap_invalidate(); break;
         case 31: building_figure_generate(); break;
         case 32: city_trade_update(); break;
-        case 33: building_count_update(); city_culture_update_coverage(); break;
+        case 33: building_entertainment_run_shows(); city_culture_update_coverage(); break;
         case 34: building_government_distribute_treasury(); break;
         case 35: house_service_decay_culture(); break;
         case 36: house_service_calculate_culture_aggregates(); break;
