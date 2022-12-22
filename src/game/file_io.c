@@ -953,6 +953,7 @@ int game_file_io_read_scenario_info(const char *filename, scenario_info *info)
 
     scenario_map_data_from_buffer(state->scenario, &minimap_data.city_width, &minimap_data.city_height,
         &grid_start, &grid_border_size);
+    info->map_size = minimap_data.city_width;
     minimap_data.version = 0;
     minimap_data.climate = info->climate;
     minimap_data.functions.building = 0;
