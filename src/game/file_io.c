@@ -28,6 +28,7 @@
 #include "figure/name.h"
 #include "figure/route.h"
 #include "figure/trader.h"
+#include "figure/visited_buildings.h"
 #include "game/save_version.h"
 #include "game/time.h"
 #include "game/tutorial.h"
@@ -183,6 +184,7 @@ typedef struct {
     buffer *end_marker;
     buffer *deliveries;
     buffer *custom_empire;
+    buffer *visited_buildings;
 } savegame_state;
 
 typedef struct {
@@ -226,6 +228,8 @@ typedef struct {
         int scenario_version;
         int city_faction_info;
         int resource_version;
+        int static_building_counts;
+        int visited_buildings;
     } features;
 } savegame_version_data;
 
@@ -393,6 +397,8 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
     version_data->features.scenario_version = version > SAVE_GAME_LAST_NO_SCENARIO_VERSION;
     version_data->features.city_faction_info = version <= SAVE_GAME_LAST_UNKNOWN_UNUSED_CITY_DATA;
     version_data->features.resource_version = version > SAVE_GAME_LAST_STATIC_RESOURCES;
+    version_data->features.static_building_counts = version <= SAVE_GAME_LAST_GLOBAL_BUILDING_INFO;
+    version_data->features.visited_buildings = version > SAVE_GAME_LAST_GLOBAL_BUILDING_INFO;
 }
 
 static void init_savegame_data(savegame_version version)
@@ -446,12 +452,16 @@ static void init_savegame_data(savegame_version version)
     state->building_extra_highest_id_ever = create_savegame_piece(8, 0);
     state->random_iv = create_savegame_piece(8, 0);
     state->city_view_camera = create_savegame_piece(8, 0);
-    state->building_count_culture1 = create_savegame_piece(version_data.building_counts.culture1, 0);
+    if (version_data.features.static_building_counts) {
+        state->building_count_culture1 = create_savegame_piece(version_data.building_counts.culture1, 0);
+    }
     state->city_graph_order = create_savegame_piece(version_data.piece_sizes.graph_order, 0);
     state->emperor_change_time = create_savegame_piece(8, 0);
     state->empire = create_savegame_piece(12, 0);
     state->empire_cities = create_savegame_piece(2706, 1);
-    state->building_count_industry = create_savegame_piece(version_data.building_counts.industry, 0);
+    if (version_data.features.static_building_counts) {
+        state->building_count_industry = create_savegame_piece(version_data.building_counts.industry, 0);
+    }
     state->trade_prices = create_savegame_piece(version_data.piece_sizes.trade_prices, 0);
     state->figure_names = create_savegame_piece(84, 0);
     state->culture_coverage = create_savegame_piece(60, 0);
@@ -476,11 +486,15 @@ static void init_savegame_data(savegame_version version)
     state->building_list_small = create_savegame_piece(version_data.piece_sizes.building_list_small, 1);
     state->building_list_large = create_savegame_piece(version_data.piece_sizes.building_list_large, 1);
     state->tutorial_part1 = create_savegame_piece(32, 0);
-    state->building_count_military = create_savegame_piece(version_data.building_counts.military, 0);
+    if (version_data.features.static_building_counts) {
+        state->building_count_military = create_savegame_piece(version_data.building_counts.military, 0);
+    }
     state->enemy_army_totals = create_savegame_piece(20, 0);
     state->building_storages = create_savegame_piece(version_data.piece_sizes.building_storages, 0);
-    state->building_count_culture2 = create_savegame_piece(version_data.building_counts.culture2, 0);
-    state->building_count_support = create_savegame_piece(version_data.building_counts.support, 0);
+    if (version_data.features.static_building_counts) {
+        state->building_count_culture2 = create_savegame_piece(version_data.building_counts.culture2, 0);
+        state->building_count_support = create_savegame_piece(version_data.building_counts.support, 0);
+    }
     state->tutorial_part2 = create_savegame_piece(4, 0);
     state->gladiator_revolt = create_savegame_piece(16, 0);
     state->trade_route_limit = create_savegame_piece(version_data.piece_sizes.trade_route_limit, 1);
@@ -490,7 +504,9 @@ static void init_savegame_data(savegame_version version)
     }
     state->building_extra_sequence = create_savegame_piece(4, 0);
     state->routing_counters = create_savegame_piece(16, 0);
-    state->building_count_culture3 = create_savegame_piece(version_data.building_counts.culture3, 0);
+    if (version_data.features.static_building_counts) {
+        state->building_count_culture3 = create_savegame_piece(version_data.building_counts.culture3, 0);
+    }
     state->enemy_armies = create_savegame_piece(version_data.piece_sizes.enemy_armies, 0);
     state->city_entry_exit_xy = create_savegame_piece(16, 0);
     state->last_invasion_id = create_savegame_piece(2, 0);
@@ -505,6 +521,9 @@ static void init_savegame_data(savegame_version version)
     }
     if (version_data.features.custom_empires) {
         state->custom_empire = create_savegame_piece(PIECE_SIZE_DYNAMIC, 1);
+    }
+    if (version_data.features.visited_buildings) {
+        state->visited_buildings = create_savegame_piece(PIECE_SIZE_DYNAMIC, 1);
     }
 }
 
@@ -593,13 +612,6 @@ static void savegame_load_from_state(savegame_state *state, savegame_version ver
     city_view_load_state(state->city_view_orientation, state->city_view_camera);
     game_time_load_state(state->game_time);
     random_load_state(state->random_iv);
-    building_count_load_state(state->building_count_industry,
-        state->building_count_culture1,
-        state->building_count_culture2,
-        state->building_count_culture3,
-        state->building_count_military,
-        state->building_count_support,
-        version > SAVE_GAME_LAST_STATIC_BUILDING_COUNT_VERSION);
     if (version < SAVE_GAME_INCREASE_GRANARY_CAPACITY) {
         building_granary_update_built_granaries_capacity();
     }
@@ -646,6 +658,11 @@ static void savegame_load_from_state(savegame_state *state, savegame_version ver
     if (version > SAVE_GAME_LAST_UNVERSIONED_SCENARIOS) {
         empire_object_load(state->custom_empire, scenario_version);
     }
+    if (version <= SAVE_GAME_LAST_GLOBAL_BUILDING_INFO) {
+        figure_visited_buildings_migrate();
+    } else {
+        figure_visited_buildings_load_state(state->visited_buildings);
+    }
     map_image_clear();
     map_image_update_all();
 }
@@ -689,12 +706,6 @@ static void savegame_save_to_state(savegame_state *state)
     city_view_save_state(state->city_view_orientation, state->city_view_camera);
     game_time_save_state(state->game_time);
     random_save_state(state->random_iv);
-    building_count_save_state(state->building_count_industry,
-        state->building_count_culture1,
-        state->building_count_culture2,
-        state->building_count_culture3,
-        state->building_count_military,
-        state->building_count_support);
 
     scenario_emperor_change_save_state(state->emperor_change_time, state->emperor_change_state);
     empire_save_state(state->empire);
@@ -730,6 +741,7 @@ static void savegame_save_to_state(savegame_state *state)
 
     building_monument_delivery_save_state(state->deliveries);
     empire_object_save(state->custom_empire);
+    figure_visited_buildings_save_state(state->visited_buildings);
 }
 
 static int get_scenario_version(FILE *fp)

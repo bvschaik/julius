@@ -164,6 +164,17 @@ static int cause_disease(void)
     return sick_people;
 }
 
+static int count_hospital_workers(void)
+{
+    int total_workers = 0;
+    for (const building *b = building_first_of_type(BUILDING_HOSPITAL); b; b = b->next_of_type) {
+        if (b->state == BUILDING_STATE_IN_USE) {
+            total_workers += b->num_workers;
+        }
+    }
+    return total_workers;
+}
+
 static void cause_plague(int total_people)
 {
     if (cause_disease()) {
@@ -188,12 +199,13 @@ static void cause_plague(int total_people)
         return;
     }
     city_health_change(10);
-    int people_to_kill = sick_people - city_data.health.num_hospital_workers;
+    int num_hospital_workers = count_hospital_workers();
+    int people_to_kill = sick_people - num_hospital_workers;
     if (people_to_kill <= 0) {
         city_message_post(1, MESSAGE_HEALTH_ILLNESS, 0, 0);
         return;
     }
-    if (city_data.health.num_hospital_workers > 0) {
+    if (num_hospital_workers > 0) {
         city_message_post(1, MESSAGE_HEALTH_DISEASE, 0, 0);
     } else {
         city_message_post(1, MESSAGE_HEALTH_PESTILENCE, 0, 0);
@@ -352,16 +364,6 @@ void city_health_update(void)
     adjust_sickness_level_in_plague_buildings(hospital_coverage_bonus);
 
     cause_plague(total_population);
-}
-
-void city_health_reset_hospital_workers(void)
-{
-    city_data.health.num_hospital_workers = 0;
-}
-
-void city_health_add_hospital_workers(int amount)
-{
-    city_data.health.num_hospital_workers += amount;
 }
 
 int city_health_get_global_sickness_level(void)

@@ -17,6 +17,7 @@
 #include "core/array.h"
 #include "core/calc.h"
 #include "core/log.h"
+#include "figure/figure.h"
 #include "figure/formation_legion.h"
 #include "game/difficulty.h"
 #include "game/save_version.h"
@@ -338,33 +339,12 @@ void building_clear_related_data(building *b)
         building_storage_delete(b->storage_id);
         b->storage_id = 0;
     }
-    if (b->type == BUILDING_SENATE_UPGRADED) {
-        city_buildings_remove_senate(b);
-    }
-    if (b->type == BUILDING_DOCK) {
-        city_buildings_remove_dock();
-    }
-    if (b->type == BUILDING_BARRACKS) {
-        city_buildings_remove_barracks(b);
-    }
-    if (b->type == BUILDING_DISTRIBUTION_CENTER_UNUSED) {
-        city_buildings_remove_distribution_center(b);
-    }
     if (b->type == BUILDING_FORT) {
         formation_legion_delete_for_fort(b);
-    }
-    if (b->type == BUILDING_HIPPODROME) {
-        city_buildings_remove_hippodrome();
-    }
-    if (b->type == BUILDING_CARAVANSERAI) {
-        city_buildings_remove_caravanserai();
     }
     if (b->type == BUILDING_TRIUMPHAL_ARCH) {
         city_buildings_remove_triumphal_arch();
         building_menu_update();
-    }
-    if (b->type == BUILDING_MESS_HALL) {
-        city_buildings_remove_mess_hall();
     }
 }
 
@@ -391,8 +371,7 @@ void building_update_state(void)
     int road_recalc = 0;
     int aqueduct_recalc = 0;
     building *b;
-    array_foreach(data.buildings, b)
-    {
+    array_foreach(data.buildings, b) {
         if (b->state == BUILDING_STATE_CREATED) {
             b->state = BUILDING_STATE_IN_USE;
         }
@@ -425,6 +404,11 @@ void building_update_state(void)
             building_delete(b);
         } else if (b->state == BUILDING_STATE_DELETED_BY_GAME) {
             building_delete(b);
+        } else if (b->immigrant_figure_id) {
+            const figure *f = figure_get(b->immigrant_figure_id);
+            if (f->state != FIGURE_STATE_ALIVE || f->destination_building_id != i) {
+                b->immigrant_figure_id = 0;
+            }
         }
     }
     if (wall_recalc) {
@@ -462,6 +446,32 @@ void building_update_desirability(void)
             case 4: b->desirability += 16; break;
             default: b->desirability += 18; break;
         }
+    }
+}
+
+int building_is_active(const building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return 0;
+    }
+    if (b->house_size) {
+        return 1;
+    }
+    switch (b->type) {
+        case BUILDING_RESERVOIR:
+        case BUILDING_FOUNTAIN:
+            return b->has_water_access;
+        case BUILDING_ORACLE:
+        case BUILDING_NYMPHAEUM:
+        case BUILDING_SMALL_MAUSOLEUM:
+        case BUILDING_LARGE_MAUSOLEUM:
+            return b->data.monument.phase == MONUMENT_FINISHED;
+        case BUILDING_WHARF:
+            return b->num_workers > 0 && b->data.industry.fishing_boat_id;
+        case BUILDING_DOCK:
+            return b->num_workers > 0 && b->has_water_access;
+        default:
+            return b->num_workers > 0;
     }
 }
 

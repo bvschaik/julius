@@ -51,7 +51,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.sentiment.value);
     buffer_write_i32(main, city_data.health.target_value);
     buffer_write_i32(main, city_data.health.value);
-    buffer_write_i32(main, city_data.health.num_hospital_workers);
+    for (int i = 0; i < 4; i++) {
+        buffer_write_u8(main, 0);
+    }
     buffer_write_i32(main, city_data.population.population);
     buffer_write_i32(main, city_data.population.population_last_year);
     buffer_write_i32(main, city_data.population.school_age);
@@ -111,10 +113,9 @@ static void save_main_data(buffer *main)
     buffer_write_u8(main, city_data.map.exit_point.x);
     buffer_write_u8(main, city_data.map.exit_point.y);
     buffer_write_i16(main, city_data.map.exit_point.grid_offset);
-    buffer_write_u8(main, city_data.building.senate_x);
-    buffer_write_u8(main, city_data.building.senate_y);
-    buffer_write_i16(main, city_data.building.senate_grid_offset);
-    buffer_write_i32(main, city_data.building.senate_building_id);
+    for (int i = 0; i < 8; i++) {
+        buffer_write_u8(main, 0);
+    }
     buffer_write_u8(main, city_data.trade.land_policy);
     buffer_write_u8(main, city_data.trade.sea_policy);
     for (int i = 0; i < RESOURCE_MAX; i++) {
@@ -142,7 +143,9 @@ static void save_main_data(buffer *main)
         buffer_write_i16(main, city_data.resource.export_status_before_stockpiling[i]);
     }
     buffer_write_i8(main, city_data.sentiment.crime_cooldown);
-    buffer_write_i32(main, city_data.building.caravanserai_building_id);
+    for (int i = 0; i < 4; i++) {
+        buffer_write_u8(main, 0);
+    }
     buffer_write_i32(main, city_data.caravanserai.total_food);
     for (int i = 0; i < RESOURCE_MAX; i++) {
         buffer_write_i32(main, city_data.resource.stockpiled[i]);
@@ -239,7 +242,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.houses.missing.barber);
     buffer_write_i32(main, city_data.houses.missing.bathhouse);
     buffer_write_i32(main, city_data.houses.missing.food);
-    buffer_write_i32(main, city_data.building.hippodrome_placed);
+    for (int i = 0; i < 4; i++) {
+        buffer_write_u8(main, 0);
+    }
     buffer_write_i32(main, city_data.houses.missing.clinic);
     buffer_write_i32(main, city_data.houses.missing.hospital);
     buffer_write_i32(main, city_data.houses.requiring.barber);
@@ -301,8 +306,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.finance.last_year.income.donated);
     buffer_write_i32(main, city_data.finance.this_year.income.donated);
     buffer_write_i32(main, city_data.emperor.donate_amount);
-    for (int i = 0; i < 10; i++) {
-        buffer_write_i16(main, city_data.building.working_dock_ids[i]);
+    for (int i = 0; i < 20; i++) {
+        buffer_write_u8(main, 0);
     }
     buffer_write_u16(main, city_data.building.months_since_last_destroyed_iron_mine);
     buffer_write_u16(main, city_data.building.months_since_last_flooded_clay_pit);
@@ -312,9 +317,9 @@ static void save_main_data(buffer *main)
     buffer_write_i16(main, city_data.trade.num_land_routes);
     buffer_write_i16(main, city_data.trade.sea_trade_problem_duration);
     buffer_write_i16(main, city_data.trade.land_trade_problem_duration);
-    buffer_write_i16(main, city_data.building.working_docks);
-    buffer_write_i16(main, city_data.building.senate_placed);
-    buffer_write_i16(main, city_data.building.working_wharfs);
+    for (int i = 0; i < 6; i++) {
+        buffer_write_u8(main, 0);
+    }
     buffer_write_i16(main, city_data.finance.stolen_this_year);
     buffer_write_i16(main, city_data.finance.stolen_last_year);
     buffer_write_i32(main, city_data.trade.docker_import_resource);
@@ -322,12 +327,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.emperor.debt_state);
     buffer_write_i32(main, city_data.emperor.months_in_debt);
     buffer_write_i32(main, city_data.finance.cheated_money);
-    buffer_write_i8(main, city_data.building.barracks_x);
-    buffer_write_i8(main, city_data.building.barracks_y);
-    buffer_write_i16(main, city_data.building.barracks_grid_offset);
-    buffer_write_i32(main, city_data.building.barracks_building_id);
-    buffer_write_i32(main, city_data.building.barracks_placed);
-    buffer_write_i32(main, city_data.building.mess_hall_building_id);
+    for (int i = 0; i < 16; i++) {
+        buffer_write_u8(main, 0);
+    }
     buffer_write_i32(main, city_data.entertainment.arena_shows);
     buffer_write_i32(main, city_data.entertainment.arena_no_shows_weighted);
     buffer_write_i32(main, city_data.population.lost_troop_request);
@@ -379,9 +381,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.ratings.favor_last_year);
     buffer_write_i32(main, city_data.ratings.favor_change);
     buffer_write_i32(main, city_data.military.native_attack_duration);
-    buffer_write_i32(main, city_data.building.mission_post_operational);
-    buffer_write_i32(main, city_data.building.main_native_meeting.x);
-    buffer_write_i32(main, city_data.building.main_native_meeting.y);
+    for (int i = 0; i < 12; i++) {
+        buffer_write_u8(main, 0);
+    }
     buffer_write_i32(main, city_data.finance.wage_rate_paid_last_year);
     buffer_write_i32(main, city_data.resource.food_needed_per_month);
     buffer_write_i32(main, city_data.resource.granaries.understaffed);
@@ -399,11 +401,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.ratings.peace_riot_cause);
     buffer_write_i32(main, city_data.finance.estimated_tax_income);
     buffer_write_i32(main, city_data.mission.tutorial_senate_built);
-    buffer_write_i8(main, city_data.building.distribution_center_x);
-    buffer_write_i8(main, city_data.building.distribution_center_y);
-    buffer_write_i16(main, city_data.building.distribution_center_grid_offset);
-    buffer_write_i32(main, city_data.building.distribution_center_building_id);
-    buffer_write_i32(main, city_data.building.distribution_center_placed);
+    for (int i = 0; i < 12; i++) {
+        buffer_write_u8(main, 0);
+    }
     buffer_write_i32(main, city_data.mess_hall.food_types);
     buffer_write_i32(main, city_data.mess_hall.food_stress_cumulative);
     buffer_write_i32(main, city_data.mess_hall.mess_hall_warning_shown);
@@ -415,7 +415,9 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.figure.looters);
     buffer_write_i32(main, city_data.figure.robbers);
     buffer_write_i32(main, city_data.figure.protesters);
-    buffer_write_i32(main, city_data.building.shipyard_boats_requested);
+    for (int i = 0; i < 4; i++) {
+        buffer_write_u8(main, 0);
+    }
     buffer_write_i32(main, city_data.figure.enemies);
     buffer_write_i32(main, city_data.sentiment.wages);
     buffer_write_i32(main, city_data.population.people_in_tents);
@@ -447,7 +449,9 @@ static void save_main_data(buffer *main)
     buffer_write_i8(main, city_data.sound.die_citizen);
     buffer_write_i8(main, city_data.sound.die_soldier);
     buffer_write_i8(main, city_data.sound.shoot_arrow);
-    buffer_write_i32(main, city_data.building.trade_center_building_id);
+    for (int i = 0; i < 4; i++) {
+        buffer_write_u8(main, 0);
+    }
     buffer_write_i32(main, city_data.figure.soldiers);
     buffer_write_i8(main, city_data.sound.hit_soldier);
     buffer_write_i8(main, city_data.sound.hit_spear);
@@ -497,7 +501,7 @@ static void load_main_data(buffer *main, int version)
     city_data.sentiment.value = buffer_read_i32(main);
     city_data.health.target_value = buffer_read_i32(main);
     city_data.health.value = buffer_read_i32(main);
-    city_data.health.num_hospital_workers = buffer_read_i32(main);
+    buffer_skip(main, 4);
     if (!discard_unused_values) {
         buffer_skip(main, 4);
     }
@@ -564,10 +568,7 @@ static void load_main_data(buffer *main, int version)
     city_data.map.exit_point.x = buffer_read_u8(main);
     city_data.map.exit_point.y = buffer_read_u8(main);
     city_data.map.exit_point.grid_offset = buffer_read_i16(main);
-    city_data.building.senate_x = buffer_read_u8(main);
-    city_data.building.senate_y = buffer_read_u8(main);
-    city_data.building.senate_grid_offset = buffer_read_i16(main);
-    city_data.building.senate_building_id = buffer_read_i32(main);
+    buffer_skip(main, 8);
     city_data.trade.land_policy = buffer_read_u8(main);
     city_data.trade.sea_policy = buffer_read_u8(main);
     for (int i = 0; i < resource_total_mapped(); i++) {
@@ -604,7 +605,7 @@ static void load_main_data(buffer *main, int version)
         buffer_skip(main, 231);
     }
     city_data.sentiment.crime_cooldown = buffer_read_i8(main); 
-    city_data.building.caravanserai_building_id = buffer_read_i32(main);
+    buffer_skip(main, 4);
     city_data.caravanserai.total_food = buffer_read_i32(main);
     for (int i = 0; i < resource_total_mapped(); i++) {
         city_data.resource.stockpiled[resource_remap(i)] = buffer_read_i32(main);
@@ -710,7 +711,7 @@ static void load_main_data(buffer *main, int version)
     if (!discard_unused_values) {
         buffer_skip(main, 8);
     }
-    city_data.building.hippodrome_placed = buffer_read_i32(main);
+    buffer_skip(main, 4);
     city_data.houses.missing.clinic = buffer_read_i32(main);
     city_data.houses.missing.hospital = buffer_read_i32(main);
     city_data.houses.requiring.barber = buffer_read_i32(main);
@@ -781,8 +782,12 @@ static void load_main_data(buffer *main, int version)
     city_data.finance.last_year.income.donated = buffer_read_i32(main);
     city_data.finance.this_year.income.donated = buffer_read_i32(main);
     city_data.emperor.donate_amount = buffer_read_i32(main);
-    for (int i = 0; i < 10; i++) {
-        city_data.building.working_dock_ids[i] = buffer_read_i16(main);
+    if (version <= SAVE_GAME_LAST_GLOBAL_BUILDING_INFO) {
+        for (int i = 0; i < 10; i++) {
+            city_data.building.legacy_working_dock_ids[i] = buffer_read_i16(main);
+        }
+    } else {
+        buffer_skip(main, 20);
     }
     city_data.building.months_since_last_destroyed_iron_mine = buffer_read_u16(main);
     city_data.building.months_since_last_flooded_clay_pit = buffer_read_u16(main);
@@ -792,9 +797,7 @@ static void load_main_data(buffer *main, int version)
     city_data.trade.num_land_routes = buffer_read_i16(main);
     city_data.trade.sea_trade_problem_duration = buffer_read_i16(main);
     city_data.trade.land_trade_problem_duration = buffer_read_i16(main);
-    city_data.building.working_docks = buffer_read_i16(main);
-    city_data.building.senate_placed = buffer_read_i16(main);
-    city_data.building.working_wharfs = buffer_read_i16(main);
+    buffer_skip(main, 6);
     if (!discard_unused_values) {
         buffer_skip(main, 2);
     }
@@ -805,13 +808,8 @@ static void load_main_data(buffer *main, int version)
     city_data.emperor.debt_state = buffer_read_i32(main);
     city_data.emperor.months_in_debt = buffer_read_i32(main);
     city_data.finance.cheated_money = buffer_read_i32(main);
-    city_data.building.barracks_x = buffer_read_i8(main);
-    city_data.building.barracks_y = buffer_read_i8(main);
-    city_data.building.barracks_grid_offset = buffer_read_i16(main);
-    city_data.building.barracks_building_id = buffer_read_i32(main);
-    city_data.building.barracks_placed = buffer_read_i32(main);
-    city_data.building.mess_hall_building_id = buffer_read_i32(main);
-    city_data.entertainment.arena_shows = buffer_read_i32(main); 
+    buffer_skip(main, 16);
+    city_data.entertainment.arena_shows = buffer_read_i32(main);
     city_data.entertainment.arena_no_shows_weighted = buffer_read_i32(main);
     if (!discard_unused_values) {
         buffer_skip(main, 8);
@@ -877,9 +875,7 @@ static void load_main_data(buffer *main, int version)
     if (!discard_unused_values) {
         buffer_skip(main, 4);
     }
-    city_data.building.mission_post_operational = buffer_read_i32(main);
-    city_data.building.main_native_meeting.x = buffer_read_i32(main);
-    city_data.building.main_native_meeting.y = buffer_read_i32(main);
+    buffer_skip(main, 12);
     city_data.finance.wage_rate_paid_last_year = buffer_read_i32(main);
     city_data.resource.food_needed_per_month = buffer_read_i32(main);
     city_data.resource.granaries.understaffed = buffer_read_i32(main);
@@ -903,11 +899,7 @@ static void load_main_data(buffer *main, int version)
     city_data.ratings.peace_riot_cause = buffer_read_i32(main);
     city_data.finance.estimated_tax_income = buffer_read_i32(main);
     city_data.mission.tutorial_senate_built = buffer_read_i32(main);
-    city_data.building.distribution_center_x = buffer_read_i8(main);
-    city_data.building.distribution_center_y = buffer_read_i8(main);
-    city_data.building.distribution_center_grid_offset = buffer_read_i16(main);
-    city_data.building.distribution_center_building_id = buffer_read_i32(main);
-    city_data.building.distribution_center_placed = buffer_read_i32(main);
+    buffer_skip(main, 12);
     city_data.mess_hall.food_types = buffer_read_i32(main);
     city_data.mess_hall.food_stress_cumulative = buffer_read_i32(main);
     city_data.mess_hall.mess_hall_warning_shown = buffer_read_i32(main);
@@ -919,7 +911,7 @@ static void load_main_data(buffer *main, int version)
     city_data.figure.looters = buffer_read_i32(main);
     city_data.figure.robbers = buffer_read_i32(main);
     city_data.figure.protesters = buffer_read_i32(main);
-    city_data.building.shipyard_boats_requested = buffer_read_i32(main);
+    buffer_skip(main, 4);
     city_data.figure.enemies = buffer_read_i32(main);
     city_data.sentiment.wages = buffer_read_i32(main);
     city_data.population.people_in_tents = buffer_read_i32(main);
@@ -951,7 +943,7 @@ static void load_main_data(buffer *main, int version)
     city_data.sound.die_citizen = buffer_read_i8(main);
     city_data.sound.die_soldier = buffer_read_i8(main);
     city_data.sound.shoot_arrow = buffer_read_i8(main);
-    city_data.building.trade_center_building_id = buffer_read_i32(main);
+    buffer_skip(main, 4);
     city_data.figure.soldiers = buffer_read_i32(main);
     city_data.sound.hit_soldier = buffer_read_i8(main);
     city_data.sound.hit_spear = buffer_read_i8(main);

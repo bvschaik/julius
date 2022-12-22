@@ -75,7 +75,6 @@ static void determine_meeting_center(void)
 
 void map_natives_init(void)
 {
-    int meeting_center_set = 0;
     int image_hut = scenario_building_image_native_hut();
     int image_meeting = scenario_building_image_native_meeting();
     int image_crops = scenario_building_image_native_crops();
@@ -122,9 +121,6 @@ void map_natives_init(void)
                     map_building_set(grid_offset + map_grid_delta(0, 1), b->id);
                     map_building_set(grid_offset + map_grid_delta(1, 1), b->id);
                     mark_native_land(b->x, b->y, 2, 6);
-                    if (!meeting_center_set) {
-                        city_buildings_set_main_native_meeting_center(b->x, b->y);
-                    }
                     break;
                 case BUILDING_NATIVE_HUT:
                     b->sentiment.native_anger = 100;

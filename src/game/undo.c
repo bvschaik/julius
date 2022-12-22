@@ -224,30 +224,13 @@ void game_undo_perform(void)
                             building_storage_reset_building_ids();
                         }
                         break;
-                    case BUILDING_SENATE_UPGRADED:
-                        city_buildings_add_senate(b);
-                        break;
-                    case BUILDING_DOCK:
-                        city_buildings_add_dock();
-                        break;
-                    case BUILDING_BARRACKS:
-                        city_buildings_add_barracks(b);
-                        break;
-                    case BUILDING_DISTRIBUTION_CENTER_UNUSED:
-                        city_buildings_add_distribution_center(b);
-                        break;
-                    case BUILDING_HIPPODROME:
-                        city_buildings_add_hippodrome();
-                        break;
                     case BUILDING_TRIUMPHAL_ARCH:
                         city_buildings_build_triumphal_arch();
                         building_menu_update();
-                        if (building_construction_type() == BUILDING_TRIUMPHAL_ARCH && !building_menu_is_enabled(BUILDING_TRIUMPHAL_ARCH)) {
+                        if (building_construction_type() == BUILDING_TRIUMPHAL_ARCH &&
+                            !building_menu_is_enabled(BUILDING_TRIUMPHAL_ARCH)) {
                             building_construction_clear_type();
                         }
-                        break;
-                    case BUILDING_MESS_HALL:
-                        city_buildings_add_mess_hall(b);
                         break;
                 }
                 if (building_is_house(b->type)) {

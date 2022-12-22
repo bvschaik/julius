@@ -89,7 +89,7 @@ static void destroy_on_fire(building *b, int plagued)
     }
 }
 
-static void destroy_linked_parts(building *b, int on_fire)
+static void destroy_linked_parts(building *b, int on_fire, int plagued)
 {
     building *part = b;
     for (int i = 0; i < 9; i++) {
@@ -99,7 +99,7 @@ static void destroy_linked_parts(building *b, int on_fire)
         int part_id = part->prev_part_building_id;
         part = building_get(part_id);
         if (on_fire) {
-            destroy_on_fire(part, 0);
+            destroy_on_fire(part, plagued);
         } else {
             map_building_tiles_set_rubble(part_id, part->x, part->y, part->size);
             part->state = BUILDING_STATE_RUBBLE;
@@ -114,7 +114,7 @@ static void destroy_linked_parts(building *b, int on_fire)
             break;
         }
         if (on_fire) {
-            destroy_on_fire(part, 0);
+            destroy_on_fire(part, plagued);
         } else {
             map_building_tiles_set_rubble(part->id, part->x, part->y, part->size);
             part->state = BUILDING_STATE_RUBBLE;
@@ -136,23 +136,25 @@ void building_destroy_by_collapse(building *b)
     b->state = BUILDING_STATE_RUBBLE;
     map_building_tiles_set_rubble(b->id, b->x, b->y, b->size);
     figure_create_explosion_cloud(b->x, b->y, b->size);
-    destroy_linked_parts(b, 0);
+    destroy_linked_parts(b, 0, 0);
 }
 
 void building_destroy_by_fire(building *b)
 {
     destroy_on_fire(b, 0);
-    destroy_linked_parts(b, 1);
+    destroy_linked_parts(b, 1, 0);
 }
 
 void building_destroy_by_plague(building *b)
 {
     destroy_on_fire(b, 1);
+    destroy_linked_parts(b, 1, 1);
 }
 
 void building_destroy_by_rioter(building *b)
 {
     destroy_on_fire(b, 0);
+    destroy_linked_parts(b, 1, 0);
 }
 
 int building_destroy_first_of_type(building_type type)
@@ -163,9 +165,7 @@ int building_destroy_first_of_type(building_type type)
     }
     int grid_offset = b->grid_offset;
     game_undo_disable();
-    b->state = BUILDING_STATE_RUBBLE;
-    map_building_tiles_set_rubble(b->id, b->x, b->y, b->size);
-    sound_effect_play(SOUND_EFFECT_EXPLOSION);
+    building_destroy_by_collapse(b);
     map_routing_update_land();
     return grid_offset;
 }

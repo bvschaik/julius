@@ -27,6 +27,7 @@
 #include "figure/name.h"
 #include "figure/route.h"
 #include "figure/trader.h"
+#include "figure/visited_buildings.h"
 #include "figuretype/animal.h"
 #include "figuretype/water.h"
 #include "game/animation.h"
@@ -110,6 +111,7 @@ static void clear_scenario_data(void)
     formations_clear();
     building_monument_initialize_deliveries();
     figure_route_clear_all();
+    figure_visited_buildings_init();
 
     game_time_init(2098);
 
@@ -157,6 +159,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
     figure_create_fishing_points();
     figure_create_herds();
     figure_create_flotsam();
+    figure_visited_buildings_init();
 
     map_routing_update_all();
 

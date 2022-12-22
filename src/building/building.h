@@ -228,6 +228,8 @@ int building_is_statue_garden_temple(building_type type);
 
 int building_is_fort(building_type type);
 
+int building_is_active(const building *b);
+
 int building_is_primary_product_producer(building_type type);
 
 int building_mothball_toggle(building *b);

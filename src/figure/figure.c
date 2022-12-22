@@ -11,13 +11,14 @@
 #include "figure/name.h"
 #include "figure/route.h"
 #include "figure/trader.h"
+#include "figure/visited_buildings.h"
 #include "map/figure.h"
 #include "map/grid.h"
 
 #define FIGURE_ARRAY_SIZE_STEP 1000
 
 #define FIGURE_ORIGINAL_BUFFER_SIZE 128
-#define FIGURE_CURRENT_BUFFER_SIZE 128
+#define FIGURE_CURRENT_BUFFER_SIZE 130
 
 static struct {
     int created_sequence;
@@ -172,6 +173,7 @@ void figure_delete(figure *f)
     if (f->immigrant_building_id) {
         building_get(f->immigrant_building_id)->immigrant_figure_id = 0;
     }
+    figure_visited_buildings_remove_list(f->last_visited_index);
     figure_route_remove(f);
     map_figure_delete(f);
 
@@ -350,6 +352,7 @@ static void figure_save(buffer *buf, const figure *f)
     buffer_write_i16(buf, f->attacker_id1);
     buffer_write_i16(buf, f->attacker_id2);
     buffer_write_i16(buf, f->opponent_id);
+    buffer_write_i16(buf, f->last_visited_index);
 }
 
 static int get_resource_id(figure_type type, int resource)
@@ -475,6 +478,9 @@ static void figure_load(buffer *buf, figure *f, int figure_buf_size, int version
     f->attacker_id1 = buffer_read_i16(buf);
     f->attacker_id2 = buffer_read_i16(buf);
     f->opponent_id = buffer_read_i16(buf);
+    if (version > SAVE_GAME_LAST_GLOBAL_BUILDING_INFO) {
+        f->last_visited_index = buffer_read_i16(buf);
+    }
 
     // The following code should only be executed if the savegame includes figure information that is not 
     // supported on this specific version of Augustus. The extra bytes in the buffer must be skipped in order
@@ -494,8 +500,7 @@ void figure_save_state(buffer *list, buffer *seq)
     buffer_write_i32(list, FIGURE_CURRENT_BUFFER_SIZE);
 
     figure *f;
-    array_foreach(data.figures, f)
-    {
+    array_foreach(data.figures, f) {
         figure_save(list, f);
     }
 }

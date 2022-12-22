@@ -280,6 +280,16 @@ void window_building_draw_pottery_workshop(building_info_context *c)
     draw_workshop(c, 1, "wavs/pottery_workshop.wav", 126, RESOURCE_POTTERY, RESOURCE_CLAY);
 }
 
+static int shipyard_boats_needed(void)
+{
+    for (const building *wharf = building_first_of_type(BUILDING_WHARF); wharf; wharf = wharf->next_of_type) {
+        if (wharf->num_workers > 0 && !wharf->data.industry.fishing_boat_id) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void window_building_draw_shipyard(building_info_context *c)
 {
     c->help_id = 82;
@@ -296,7 +306,7 @@ void window_building_draw_shipyard(building_info_context *c)
         int width = lang_text_draw(100, 2, c->x_offset + 32, c->y_offset + 56, FONT_NORMAL_BLACK);
         width += text_draw_percentage(pct_done, c->x_offset + 32 + width, c->y_offset + 56, FONT_NORMAL_BLACK);
         lang_text_draw(100, 3, c->x_offset + 32 + width, c->y_offset + 56, FONT_NORMAL_BLACK);
-        if (city_buildings_shipyard_boats_requested()) {
+        if (shipyard_boats_needed()) {
             lang_text_draw_multiline(100, 5, c->x_offset + 32, c->y_offset + 80,
                 BLOCK_SIZE * (c->width_blocks - 6), FONT_NORMAL_BLACK);
         } else {

@@ -1244,7 +1244,6 @@ static void spawn_figure_mission_post(building *b)
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
         if (city_population() > 0) {
-            city_buildings_set_mission_post_operational();
             b->figure_spawn_delay++;
             if (b->figure_spawn_delay > 1) {
                 b->figure_spawn_delay = 0;
