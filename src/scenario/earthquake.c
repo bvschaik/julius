@@ -60,7 +60,7 @@ void scenario_earthquake_init(void)
 
 static int can_advance_earthquake_to_tile(int x, int y)
 {
-    if (map_terrain_is(map_grid_offset(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER)) {
+    if (map_terrain_is(map_grid_offset(x, y), TERRAIN_ELEVATION | TERRAIN_ROCK | TERRAIN_WATER | TERRAIN_ACCESS_RAMP)) {
         return 0;
     } else {
         return 1;
