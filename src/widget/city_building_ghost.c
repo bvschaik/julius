@@ -993,9 +993,9 @@ static void draw_waterside_building(const map_tile *tile, int x, int y, building
     int offset_multiplier = type == BUILDING_DOCK ? 12 : 1;
     int image_id = image_group(props->image_group) + props->image_offset + dir_relative * offset_multiplier;
 
-    const waterside_tile_loop *loop = map_water_get_waterside_tile_loop(dir_relative, props->size);
+    const waterside_tile_loop *loop = map_water_get_waterside_tile_loop(dir_absolute, props->size);
     int land_tiles[5 * MAP_WATER_WATERSIDE_ROWS_NEEDED];
-    int has_water_in_front = map_water_has_water_in_front(tile->x, tile->y, loop, land_tiles);
+    int has_water_in_front = map_water_has_water_in_front(tile->x, tile->y, 1, loop, land_tiles);
 
     color_t color = blocked || !has_water_in_front ? COLOR_MASK_BUILDING_GHOST_RED : COLOR_MASK_BUILDING_GHOST;
 
@@ -1012,18 +1012,22 @@ static void draw_waterside_building(const map_tile *tile, int x, int y, building
         return;
     }
 
+    loop = map_water_get_waterside_tile_loop(dir_relative, props->size);
     int dx = loop->start.x;
     int dy = loop->start.y;
     int index = 0;
 
-    for (int outer = 0; outer < 3; outer++) {
+    for (int outer = 0; outer < MAP_WATER_WATERSIDE_ROWS_NEEDED; outer++) {
         for (int inner = 0; inner < loop->inner_length; inner++) {
-            if (land_tiles[index]) {
-                image_blend_footprint_color(x + X_VIEW_OFFSET(dx, dy), y + Y_VIEW_OFFSET(dx, dy),
-                    COLOR_MASK_RED, data.scale);
-            } else {
-                image_draw_isometric_footprint(image_group(GROUP_TERRAIN_FLAT_TILE),
-                    x + X_VIEW_OFFSET(dx, dy), y + Y_VIEW_OFFSET(dx, dy), COLOR_MASK_FOOTPRINT_GHOST, data.scale);
+            // Don't highlight over the dock, which is already highlighted by the blocked tiles
+            if (outer > 0 || inner == 0 || inner == loop->inner_length - 1) {
+                if (land_tiles[index]) {
+                    image_blend_footprint_color(x + X_VIEW_OFFSET(dx, dy), y + Y_VIEW_OFFSET(dx, dy),
+                        COLOR_MASK_RED, data.scale);
+                } else {
+                    image_draw_isometric_footprint(image_group(GROUP_TERRAIN_FLAT_TILE),
+                        x + X_VIEW_OFFSET(dx, dy), y + Y_VIEW_OFFSET(dx, dy), COLOR_MASK_FOOTPRINT_GHOST, data.scale);
+                }
             }
             dx += loop->inner_step.x;
             dy += loop->inner_step.y;

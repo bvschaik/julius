@@ -29,7 +29,7 @@ int map_water_determine_orientation(int x, int y, int size, int adjust_xy,
 
 const waterside_tile_loop *map_water_get_waterside_tile_loop(int direction, int size);
 
-int map_water_has_water_in_front(int x, int y, const waterside_tile_loop *loop, int *land_tiles);
+int map_water_has_water_in_front(int x, int y, int adjust_xy, const waterside_tile_loop *loop, int *land_tiles);
 
 int map_water_get_wharf_for_new_fishing_boat(figure *boat, map_point *tile);
 
