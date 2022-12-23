@@ -53,7 +53,7 @@ int get_looter_destination(figure *f)
     int building_id = 0;
     int options = 0;
 
-    for (resource_type r = 0; r < RESOURCE_MAX; r++) {
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         if (info[r].building_id > 0) {
             possible_destinations[options].building_id = info[r].building_id;
             possible_destinations[options].resource = r;
