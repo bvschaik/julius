@@ -982,7 +982,8 @@ static void draw_hippodrome(const map_tile *tile, int x, int y)
 
 static void draw_waterside_building(const map_tile *tile, int x, int y, building_type type)
 {
-    int dir_absolute, dir_relative = 0;
+    int dir_absolute = 0;
+    int dir_relative = 0;
     const building_properties *props = building_properties_for_type(type);
     int blocked_tiles[9];
     int blocked = map_water_determine_orientation(tile->x, tile->y, props->size, 1, &dir_absolute, &dir_relative,
