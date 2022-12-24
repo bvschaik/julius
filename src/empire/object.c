@@ -56,6 +56,10 @@ void empire_object_load(buffer *buf, int version)
         return;
     }
 
+    if (version <= SCENARIO_LAST_UNVERSIONED) {
+        resource_set_mapping(RESOURCE_ORIGINAL_VERSION);
+    }
+
     for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
         full_empire_object *full = &objects[i];
         empire_object *obj = &full->obj;
