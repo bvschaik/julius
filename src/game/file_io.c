@@ -1306,12 +1306,16 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
     skip_piece(fp, 8, 0);
     skip_piece(fp, 8, 0);
     skip_piece(fp, 8, 0);
-    skip_piece(fp, version_data.building_counts.culture1, 0);
+    if (version_data.features.static_building_counts) {
+        skip_piece(fp, version_data.building_counts.culture1, 0);
+    }
     skip_piece(fp, version_data.piece_sizes.graph_order, 0);
     skip_piece(fp, 8, 0);
     skip_piece(fp, 12, 0);
     skip_piece(fp, 2706, 1);
-    skip_piece(fp, version_data.building_counts.industry, 0);
+    if (version_data.features.static_building_counts) {
+        skip_piece(fp, version_data.building_counts.industry, 0);
+    }
     skip_piece(fp, version_data.piece_sizes.trade_prices, 0);
     skip_piece(fp, 84, 0);
     skip_piece(fp, 60, 0);
