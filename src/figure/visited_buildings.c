@@ -86,8 +86,7 @@ void figure_visited_buildings_load_state(buffer *buf)
         log_error("Unable to allocate enought memory for the visited docks array. The game will now crash.", 0, 0);
     }
     for (int i = 0; i < visited_buildings_to_load; i++) {
-        visited_building *visited;
-        array_new_item(visited_buildings, 0, visited);
+        visited_building *visited = array_next(visited_buildings);
         visited->building_id = buffer_read_i32(buf);
         visited->prev_index = buffer_read_i32(buf);
     }
