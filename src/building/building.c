@@ -274,7 +274,7 @@ building *building_create(building_type type, int x, int y)
         b->resources[RESOURCE_NONE] = FULL_GRANARY;
     }
 
-    if (type == BUILDING_MARKET) {
+    if (type == BUILDING_MARKET || type == BUILDING_DOCK) {
         // Set it as accepting all goods
         for (int i = 0; i < RESOURCE_MAX; i++) {
             b->accepted_goods[i] = 1;
