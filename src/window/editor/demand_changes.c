@@ -51,12 +51,14 @@ static void draw_background(void)
     window_editor_map_draw_all();
 }
 
-static int calc_current_trade(editor_demand_change *change, int idx)
+static int calc_current_trade(editor_demand_change *from_change, int idx)
 {
-    int amount = trade_route_limit(change->route_id, change->resource);
+    int amount = trade_route_limit(from_change->route_id, from_change->resource);
     for (int i = 0; i < MAX_DEMAND_CHANGES && i <= idx; i++) {
         editor_demand_change change;
         scenario_editor_demand_change_get(i, &change);
+        if (change.resource != from_change->resource || change.route_id != from_change->route_id)
+            continue;
         if (change.amount == DEMAND_CHANGE_LEGACY_IS_RISE) {
             if (amount == 0) {
                 amount = 15;
