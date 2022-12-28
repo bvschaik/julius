@@ -590,7 +590,11 @@ static void load_main_data(buffer *main, int version)
         buffer_skip(main, 2);
     }
     for (int i = 0; i < resource_total_food_mapped(); i++) {
-        city_data.resource.granary_food_stored[resource_remap(i)] = buffer_read_i32(main);
+        int amount = buffer_read_i32(main);
+        resource_type resource = resource_remap(i);
+        if (resource_is_food(resource)) {
+            city_data.resource.granary_food_stored[resource] = amount;
+        }
     }
     if (version <= SAVE_GAME_LAST_STATIC_RESOURCES) {
         buffer_skip(main, 6 * sizeof(int32_t) * 2); // skip space in workshops and stored in workshops
