@@ -157,6 +157,8 @@ static void exit_military_command(void)
 
 static void show_roamers_for_overlay(int overlay)
 {
+    figure_roamer_preview_reset_building_types();
+
     switch (overlay) {
         case OVERLAY_FIRE:
         case OVERLAY_CRIME:
@@ -219,7 +221,6 @@ static void show_roamers_for_overlay(int overlay)
             break;
         case OVERLAY_NONE:
         default:
-            figure_roamer_preview_reset_building_types();
             break;
     }
     widget_city_clear_routing_grid_offset();

@@ -181,7 +181,7 @@ static void init_roaming(figure *f, int roam_dir, int x, int y)
 void figure_roamer_preview_create(building_type b_type, int grid_offset, int x, int y)
 {
     if (!config_get(CONFIG_UI_SHOW_ROAMING_PATH)) {
-        figure_roamer_preview_reset(BUILDING_NONE);
+        figure_roamer_preview_reset_building_types();
         return;
     }
 
