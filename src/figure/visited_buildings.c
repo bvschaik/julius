@@ -24,7 +24,7 @@ static int visited_building_in_use(const visited_building *visited)
 void figure_visited_buildings_init(void)
 {
     if (!array_init(visited_buildings, VISITED_BUILDINGS_ARRAY_SIZE_STEP, visited_building_create, visited_building_in_use)) {
-        log_error("Unable to allocate enought memory for the visited docks array. The game will now crash.", 0, 0);
+        log_error("Unable to allocate enough memory for the visited docks array. The game will now crash.", 0, 0);
     }
 }
 
@@ -83,7 +83,7 @@ void figure_visited_buildings_load_state(buffer *buf)
 
     if (!array_init(visited_buildings, VISITED_BUILDINGS_ARRAY_SIZE_STEP, visited_building_create, visited_building_in_use) ||
         !array_expand(visited_buildings, visited_buildings_to_load)) {
-        log_error("Unable to allocate enought memory for the visited docks array. The game will now crash.", 0, 0);
+        log_error("Unable to allocate enough memory for the visited docks array. The game will now crash.", 0, 0);
     }
     for (int i = 0; i < visited_buildings_to_load; i++) {
         visited_building *visited = array_next(visited_buildings);
@@ -95,7 +95,7 @@ void figure_visited_buildings_load_state(buffer *buf)
 void figure_visited_buildings_migrate(void)
 {
     if (!array_init(visited_buildings, VISITED_BUILDINGS_ARRAY_SIZE_STEP, visited_building_create, visited_building_in_use)) {
-        log_error("Unable to allocate enought memory for the visited docks array. The game will now crash.", 0, 0);
+        log_error("Unable to allocate enough memory for the visited docks array. The game will now crash.", 0, 0);
     }
     for (int i = 0; i < figure_count(); i++) {
         figure *f = figure_get(i);
