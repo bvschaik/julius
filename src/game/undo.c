@@ -270,6 +270,7 @@ void game_undo_perform(void)
                 building_get(data.buildings[i].id)->state = BUILDING_STATE_UNDO;
             }
         }
+        building_update_state();
     }
     map_routing_update_land();
     map_routing_update_walls();
