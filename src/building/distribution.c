@@ -39,12 +39,6 @@ void building_distribution_update_demands(building *b)
     }
 }
 
-// TODO swap resource ID's so search goes in correct order
-/** static const int INVENTORY_SEARCH_ORDER[INVENTORY_MAX] = {
-    INVENTORY_WHEAT, INVENTORY_VEGETABLES, INVENTORY_FRUIT, INVENTORY_MEAT,
-    INVENTORY_POTTERY, INVENTORY_FURNITURE, INVENTORY_OIL, INVENTORY_WINE
-}; **/
-
 resource_type building_distribution_fetch(const building *b, inventory_storage_info *info,
     int min_stock, int pick_first, const int allowed[RESOURCE_MAX])
 {

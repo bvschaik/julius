@@ -481,9 +481,6 @@ static void figure_load(buffer *buf, figure *f, int figure_buf_size, int version
     if (version > SAVE_GAME_LAST_GLOBAL_BUILDING_INFO) {
         f->last_visited_index = buffer_read_i16(buf);
     }
-    if (f->last_visited_index) {
-        int a = 1;
-    }
 
     // The following code should only be executed if the savegame includes figure information that is not 
     // supported on this specific version of Augustus. The extra bytes in the buffer must be skipped in order
