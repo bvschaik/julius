@@ -13,9 +13,28 @@
 
 static int highway_wall_direction_offsets[4] = { 1, -GRID_SIZE, -1, GRID_SIZE };
 
-static int is_highway_access(int grid_offset)
+static int has_adjacent_road(int adjacent_grid_offset, int direction_index)
 {
-    if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY | TERRAIN_ROAD | TERRAIN_GATEHOUSE | TERRAIN_ACCESS_RAMP)) {
+    int right_direction = highway_wall_direction_offsets[(direction_index + 3) % 4];
+    int left_direction = highway_wall_direction_offsets[(direction_index + 1) % 4];
+    int left_has_road = map_terrain_is(adjacent_grid_offset + left_direction, TERRAIN_ROAD);
+    int right_has_road = map_terrain_is(adjacent_grid_offset + right_direction, TERRAIN_ROAD);
+    if (left_has_road && right_has_road) {
+        return 1;
+    } else if (left_has_road && map_terrain_is(adjacent_grid_offset + left_direction * 2, TERRAIN_ROAD)) {
+        return 1;
+    } else if (right_has_road && map_terrain_is(adjacent_grid_offset + right_direction * 2, TERRAIN_ROAD)) {
+        return 1;
+    }
+    return 0;
+}
+
+static int is_highway_access(int grid_offset, int direction_index)
+{
+    if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY | TERRAIN_GATEHOUSE | TERRAIN_ACCESS_RAMP)) {
+        return 1;
+    }
+    if (map_terrain_is(grid_offset, TERRAIN_ROAD) && !has_adjacent_road(grid_offset, direction_index)) {
         return 1;
     }
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
@@ -30,23 +49,27 @@ static int is_highway_access(int grid_offset)
     return 0;
 }
 
-static void draw_wall_image(int grid_offset, int d, int x, int y, float scale)
+static void draw_wall_image(int grid_offset, int direction_index, int x, int y, float scale)
 {
-    int direction_offset = grid_offset + highway_wall_direction_offsets[d];
-    if (is_highway_access(direction_offset)) {
+    int direction = highway_wall_direction_offsets[direction_index];
+
+    int direction_offset = grid_offset + direction;
+    if (is_highway_access(direction_offset, direction_index)) {
         return;
     }
 
-    int last_direction_offset = grid_offset + highway_wall_direction_offsets[(d + 3) % 4];
+    int last_direction_index = (direction_index + 3) % 4;
+    int last_direction_offset = grid_offset + highway_wall_direction_offsets[last_direction_index];
     // last barrier was a corner and will handle the rendering
-    if (!is_highway_access(last_direction_offset)) {
+    if (!is_highway_access(last_direction_offset, last_direction_index)) {
         return;
     }
 
-    int wall_offset = (d + city_view_orientation() / 2) % 4;
-    int next_direction_offset = grid_offset + highway_wall_direction_offsets[(d + 1) % 4];
+    int wall_offset = (direction_index + city_view_orientation() / 2) % 4;
+    int next_direction_index = (direction_index + 1) % 4;
+    int next_direction_offset = grid_offset + highway_wall_direction_offsets[next_direction_index];
     // is this a corner?
-    if (!is_highway_access(next_direction_offset)) {
+    if (!is_highway_access(next_direction_offset, next_direction_index)) {
         // increment by 4 to get the corner image
         wall_offset += 4;
     }

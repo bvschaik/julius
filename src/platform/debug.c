@@ -88,16 +88,16 @@ static void draw_road_network_id(int x, int y, int grid_offset)
 void debug_draw_city(void)
 {
 #ifdef DRAW_ROUTING
-    city_view_foreach_valid_map_tile(draw_routing, 0, 0);
+    city_view_foreach_valid_map_tile(draw_routing);
 #endif
 #ifdef DRAW_HIGHWAY_TERRAIN
-    city_view_foreach_valid_map_tile(draw_highway_terrain, 0, 0);
+    city_view_foreach_valid_map_tile(draw_highway_terrain);
 #endif
 #ifdef DRAW_TILE_COORDS
-    city_view_foreach_valid_map_tile(draw_tile_coords, 0, 0);
+    city_view_foreach_valid_map_tile(draw_tile_coords);
 #endif
 #ifdef DRAW_ROAD_NETWORK_IDS
-    city_view_foreach_valid_map_tile(draw_road_network_id, 0, 0);
+    city_view_foreach_valid_map_tile(draw_road_network_id);
 #endif
 }
 
