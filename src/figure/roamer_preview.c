@@ -1,5 +1,6 @@
 #include "roamer_preview.h"
 
+#include "building/construction.h"
 #include "building/industry.h"
 #include "building/properties.h"
 #include "core/config.h"
@@ -201,6 +202,8 @@ void figure_roamer_preview_create(building_type b_type, int grid_offset, int x, 
     data.travelled_tiles.items[grid_offset] = SHOWN_BUILDING_OFFSET;
 
     int b_size = building_is_farm(b_type) ? 3 : building_properties_for_type(b_type)->size;
+
+    building_construction_offset_start_from_orientation(&x, &y, b_size);
 
     map_point road;
     if (!map_has_road_access(x, y, b_size, &road)) {
