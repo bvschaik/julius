@@ -623,21 +623,15 @@ static void handle_mouse(const mouse *m)
     if (m->left.went_up) {
         build_end();
         if (!building_construction_type()) {
-            if (config_get(CONFIG_UI_SHOW_ROAMING_PATH)) {
-                int grid_offset = tile->grid_offset;
-                int building_id = map_building_at(tile->grid_offset);
-                building *b;
-                if (building_id) {
-                    b = building_main(building_get(building_id));
-                    grid_offset = b->grid_offset;
-                }
-                if (data.routing_grid_offset != grid_offset) {
-                    data.routing_grid_offset = grid_offset;
-                    figure_roamer_preview_reset(building_id ? b->type : BUILDING_NONE);
-                    if (building_id) {
-                        figure_roamer_preview_create(b->type, b->grid_offset, b->x, b->y);
-                    }
-                }
+            int grid_offset = tile->grid_offset;
+            int building_id = map_building_at(grid_offset);
+            if (building_id) {
+                building *b = building_main(building_get(building_id));
+                grid_offset = b->grid_offset;
+            }
+            if (data.routing_grid_offset != grid_offset) {
+                data.routing_grid_offset = grid_offset;
+                widget_city_setup_routing_preview();
             }
         }
     }
@@ -800,4 +794,21 @@ void widget_city_clear_current_tile(void)
 void widget_city_clear_routing_grid_offset(void)
 {
     data.routing_grid_offset = 0;    
+}
+
+void widget_city_setup_routing_preview(void)
+{
+    if (!config_get(CONFIG_UI_SHOW_ROAMING_PATH)) {
+        figure_roamer_preview_reset_building_types();
+        return;
+    }
+    
+    int building_id = map_building_at(data.routing_grid_offset);
+    if (building_id) {
+        building *b = building_main(building_get(building_id));
+        figure_roamer_preview_reset(b->type);
+        figure_roamer_preview_create(b->type, b->x, b->y);
+    } else {
+        figure_roamer_preview_reset(building_construction_type());        
+    }
 }

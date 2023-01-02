@@ -54,7 +54,7 @@ static int mothball_warning_id;
 static void draw_background(void)
 {
     if (window_is(WINDOW_CITY)) {
-        figure_roamer_preview_reset(building_construction_type());
+        widget_city_setup_routing_preview();
     }
     widget_sidebar_city_draw_background();
     widget_top_menu_draw(1);

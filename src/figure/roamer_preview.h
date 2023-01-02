@@ -9,7 +9,7 @@
 #define FIGURE_ROAMER_PREVIEW_EXIT_TILE 10
 #define FIGURE_ROAMER_PREVIEW_ENTRY_EXIT_TILE 11
 
-void figure_roamer_preview_create(building_type b_type, int grid_offset, int x, int y);
+void figure_roamer_preview_create(building_type b_type, int x, int y);
 void figure_roamer_preview_create_all_for_building_type(building_type type);
 void figure_roamer_preview_reset(building_type type);
 void figure_roamer_preview_reset_building_types(void);

@@ -391,7 +391,7 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
     return 0;
 }
 
-static void set_roamer_path(building_type type, const map_tile *tile, int is_blocked)
+static void set_roamer_path(building_type type, int size, const map_tile *tile, int is_blocked)
 {
     if (data.roamer_preview.grid_offset == tile->grid_offset && data.roamer_preview.type == type) {
         return;
@@ -399,16 +399,20 @@ static void set_roamer_path(building_type type, const map_tile *tile, int is_blo
     figure_roamer_preview_reset(type);
     data.roamer_preview.type = type;
     data.roamer_preview.grid_offset = tile->grid_offset;
+    int grid_x = tile->x;
+    int grid_y = tile->y;
+    building_construction_offset_start_from_orientation(&grid_x, &grid_y, size);
+    
     if (!is_blocked) {
-        figure_roamer_preview_create(type, tile->grid_offset, tile->x, tile->y);
+        figure_roamer_preview_create(type, grid_x, grid_y);
     } else {
         int building_id = map_building_at(tile->grid_offset);
         if (!building_id) {
             return;
         }
         building *b = building_main(building_get(building_id));
-        if (b->type == type && b->grid_offset == tile->grid_offset) {
-            figure_roamer_preview_create(type, tile->grid_offset, tile->x, tile->y);
+        if (b->type == type && b->x == grid_x && b->y == grid_y) {
+            figure_roamer_preview_create(type, grid_x, grid_y);
         }
     }
 }
@@ -463,7 +467,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
         image_id = get_building_image_id(tile->x, tile->y, type, props);
         draw_regular_building(type, image_id, x_view, y_view, grid_offset, num_tiles, blocked_tiles);
     }
-    set_roamer_path(type, tile, has_blocked_tiles(num_tiles, blocked_tiles));
+    set_roamer_path(type, building_size, tile, has_blocked_tiles(num_tiles, blocked_tiles));
 }
 
 static void draw_single_reservoir(int x, int y, color_t color, int has_water, int draw_blocked)
@@ -743,7 +747,7 @@ static void draw_bathhouse(const map_tile *tile, int x, int y)
         image_draw(image_id - 1, x - 7, y + 6, color, data.scale);
     }
     draw_building_tiles(x, y, num_tiles, blocked_tiles);
-    set_roamer_path(BUILDING_BATHHOUSE, tile, has_blocked_tiles(num_tiles, blocked_tiles));
+    set_roamer_path(BUILDING_BATHHOUSE, building_size, tile, has_blocked_tiles(num_tiles, blocked_tiles));
 }
 
 static void draw_pond(const map_tile *tile, int x, int y, int type)
@@ -977,7 +981,7 @@ static void draw_hippodrome(const map_tile *tile, int x, int y)
     }
     int is_blocked = has_blocked_tiles(num_tiles, blocked_tiles1) || has_blocked_tiles(num_tiles, blocked_tiles2) ||
         has_blocked_tiles(num_tiles, blocked_tiles3);
-    set_roamer_path(BUILDING_HIPPODROME, tile, is_blocked);
+    set_roamer_path(BUILDING_HIPPODROME, building_block_size, tile, is_blocked);
 }
 
 static void draw_waterside_building(const map_tile *tile, int x, int y, building_type type)
@@ -1102,6 +1106,7 @@ static void draw_market(const map_tile *tile, int x, int y)
     color_t color = blocked ? COLOR_MASK_BUILDING_GHOST_RED : COLOR_MASK_BUILDING_GHOST;
     draw_building(image_id, x, y, color);
     draw_building_tiles(x, y, num_tiles, blocked_tiles);
+    set_roamer_path(BUILDING_MARKET, building_size, tile, blocked);
 }
 
 static void draw_highway(const map_tile *tile, int x, int y)
@@ -1162,7 +1167,7 @@ static void draw_grand_temple_neptune(const map_tile *tile, int x, int y)
     city_view_foreach_tile_in_range(tile->grid_offset, props->size, radius, draw_grand_temple_neptune_range);
     int image_id = get_new_building_image_id(tile->x, tile->y, tile->grid_offset, BUILDING_GRAND_TEMPLE_NEPTUNE, props);
     draw_regular_building(BUILDING_GRAND_TEMPLE_NEPTUNE, image_id, x, y, tile->grid_offset, num_tiles, blocked);
-    set_roamer_path(BUILDING_GRAND_TEMPLE_NEPTUNE, tile, has_blocked_tiles(num_tiles, blocked));
+    set_roamer_path(BUILDING_GRAND_TEMPLE_NEPTUNE, props->size, tile, has_blocked_tiles(num_tiles, blocked));
 }
 
 int city_building_ghost_mark_deleting(const map_tile *tile)

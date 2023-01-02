@@ -1,6 +1,5 @@
 #include "roamer_preview.h"
 
-#include "building/construction.h"
 #include "building/industry.h"
 #include "building/properties.h"
 #include "core/config.h"
@@ -179,7 +178,7 @@ static void init_roaming(figure *f, int roam_dir, int x, int y)
     }
 }
 
-void figure_roamer_preview_create(building_type b_type, int grid_offset, int x, int y)
+void figure_roamer_preview_create(building_type b_type, int x, int y)
 {
     if (!config_get(CONFIG_UI_SHOW_ROAMING_PATH)) {
         figure_roamer_preview_reset_building_types();
@@ -195,6 +194,8 @@ void figure_roamer_preview_create(building_type b_type, int grid_offset, int x, 
         return;
     }
 
+    int grid_offset = map_grid_offset(x, y);
+
     if (data.travelled_tiles.items[grid_offset] == SHOWN_BUILDING_OFFSET) {
         return;
     }
@@ -202,8 +203,6 @@ void figure_roamer_preview_create(building_type b_type, int grid_offset, int x, 
     data.travelled_tiles.items[grid_offset] = SHOWN_BUILDING_OFFSET;
 
     int b_size = building_is_farm(b_type) ? 3 : building_properties_for_type(b_type)->size;
-
-    building_construction_offset_start_from_orientation(&x, &y, b_size);
 
     map_point road;
     if (!map_has_road_access(x, y, b_size, &road)) {
@@ -296,7 +295,7 @@ void figure_roamer_preview_create_all_for_building_type(building_type type)
         return;
     }
     for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-        figure_roamer_preview_create(type, b->grid_offset, b->x, b->y);
+        figure_roamer_preview_create(type, b->x, b->y);
     }
     data.types[data.stored_building_types] = type;
     data.stored_building_types++;
@@ -323,7 +322,7 @@ void figure_roamer_preview_reset(building_type type)
     if (show_other_roamers) {
         for (int i = 0; i < data.stored_building_types; i++) {
             for (building *b = building_first_of_type(data.types[i]); b; b = b->next_of_type) {
-                figure_roamer_preview_create(b->type, b->grid_offset, b->x, b->y);
+                figure_roamer_preview_create(b->type, b->x, b->y);
             }
         }
     }
