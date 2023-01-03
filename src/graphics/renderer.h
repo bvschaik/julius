@@ -53,6 +53,7 @@ typedef struct {
     void (*fill_rect)(int x_start, int x_end, int y_start, int y_end, color_t color);
 
     void (*draw_image)(const image *img, int x, int y, color_t color, float scale);
+    void (*draw_silhouette)(const image *img, int x, int y, color_t color, float scale);
 
     void (*create_custom_image)(custom_image_type type, int width, int height, int is_yuv);
     int (*has_custom_image)(custom_image_type type);

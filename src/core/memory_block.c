@@ -18,8 +18,8 @@ int core_memory_block_ensure_size(memory_block *block, size_t size)
     if (size <= block->size) {
         return 1;
     }
-    char *new_mem = realloc(block->memory, sizeof(char) * size);
-    if (new_mem == NULL) {
+    void *new_mem = realloc(block->memory, sizeof(char) * size);
+    if (!new_mem) {
         return 0;
     }
     block->memory = new_mem;

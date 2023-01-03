@@ -23,5 +23,6 @@ void image_blend_footprint_color(int x, int y, color_t color, float scale);
 
 void image_draw_isometric_top(int image_id, int x, int y, color_t color_mask, float scale);
 void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t color_mask, float scale);
+void image_draw_set_isometric_top_from_draw_tile(int image_id, int x, int y, color_t color_mask, float scale);
 
 #endif // GRAPHICS_IMAGE_H

@@ -4,7 +4,7 @@
 #include <stddef.h>
 
 typedef struct {
-    char *memory;
+    void *memory;
     size_t size;
 } memory_block;
 

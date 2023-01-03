@@ -495,14 +495,18 @@ static color_t get_sentiment_color(int sentiment)
 
 static void draw_sentiment_values(int x, int y, float scale, int grid_offset)
 {
-    if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        int building_id = map_building_at(grid_offset);
-        building *b = building_get(building_id);
-        if (!b || !b->house_population) {
-            return;
-        }
-        color_t color = get_sentiment_color(b->sentiment.house_happiness);
-        image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, color, scale);
+    if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        return;
+    }
+    int building_id = map_building_at(grid_offset);
+    building *b = building_get(building_id);
+    if (!b || !b->house_population) {
+        return;
+    }
+    color_t color = get_sentiment_color(b->sentiment.house_happiness);
+    image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, color, scale);
+    if (map_property_is_draw_tile(grid_offset)) {
+        image_draw_set_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color, scale);
     }
 }
 

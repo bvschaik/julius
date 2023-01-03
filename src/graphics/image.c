@@ -215,3 +215,16 @@ void image_draw_isometric_top_from_draw_tile(int image_id, int x, int y, color_t
     y -= img->top->original.height - FOOTPRINT_HALF_HEIGHT;
     graphics_renderer()->draw_image(img->top, x, y, color_mask, scale);
 }
+
+void image_draw_set_isometric_top_from_draw_tile(int image_id, int x, int y, color_t color_mask, float scale)
+{
+    const image *img = image_get(image_id);
+    if (!img->top) {
+        return;
+    }
+    if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
+        assets_load_unpacked_asset(image_id);
+    }
+    y -= img->top->original.height - FOOTPRINT_HALF_HEIGHT;
+    graphics_renderer()->draw_silhouette(img->top, x, y, color_mask, scale);
+}

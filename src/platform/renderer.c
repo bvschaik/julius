@@ -64,6 +64,12 @@ typedef struct buffer_texture {
     struct buffer_texture *next;
 } buffer_texture;
 
+typedef struct silhouette_texture {
+    const image *img;
+    SDL_Texture *texture;
+    struct silhouette_texture *next;
+} silhouette_texture;
+
 static struct {
     SDL_Renderer *renderer;
     SDL_Texture *render_texture;
@@ -92,6 +98,7 @@ static struct {
         buffer_texture *last;
         int current_id;
     } texture_buffers;
+    silhouette_texture *silhouettes;
     struct {
         int id;
         time_millis last_used;
@@ -403,6 +410,15 @@ static void free_all_textures(void)
         }
     }
 
+    silhouette_texture *silhouette = data.silhouettes;
+    while (silhouette) {
+        silhouette_texture *current = silhouette;
+        silhouette = silhouette->next;
+        SDL_DestroyTexture(current->texture);
+        free(current);
+    }
+    data.silhouettes = 0;
+
     buffer_texture *texture_info = data.texture_buffers.first;
     while (texture_info) {
         buffer_texture *current = texture_info;
@@ -439,6 +455,10 @@ static SDL_Texture *get_texture(int texture_id)
 
 static void set_texture_color_and_scale_mode(SDL_Texture *texture, color_t color, float scale)
 {
+    if (!color) {
+        color = COLOR_MASK_NONE;
+    }
+
     SDL_SetTextureColorMod(texture,
         (color & COLOR_CHANNEL_RED) >> COLOR_BITSHIFT_RED,
         (color & COLOR_CHANNEL_GREEN) >> COLOR_BITSHIFT_GREEN,
@@ -469,9 +489,7 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     if (data.paused) {
         return;
     }
-    if (!color) {
-        color = COLOR_MASK_NONE;
-    }
+
     SDL_Texture *texture = get_texture(img->atlas.id);
 
     if (!texture) {
@@ -750,6 +768,109 @@ static void create_blend_texture(custom_image_type type)
     data.custom_textures[type].img.atlas.id = (ATLAS_CUSTOM << IMAGE_ATLAS_BIT_OFFSET) | type;
 }
 
+static SDL_Texture *get_silhouette_texture(const image *img)
+{
+    if (data.paused) {
+        return 0;
+    }
+    silhouette_texture *last_silhouette = 0;
+
+    for (silhouette_texture *silhouette = data.silhouettes; silhouette; silhouette = silhouette->next) {
+        last_silhouette = silhouette;
+        if (silhouette->img == img) {
+            return silhouette->texture;
+        }
+    }
+    SDL_Texture *texture = SDL_CreateTexture(data.renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET,
+        img->width, img->height);
+    if (!texture) {
+        return 0;
+    }
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    SDL_Texture *original_texture = get_texture(img->atlas.id);
+    SDL_Texture *former_target = SDL_GetRenderTarget(data.renderer);
+    SDL_Rect former_viewport;
+    SDL_Rect former_clip;
+    SDL_BlendMode former_blend_mode;
+    SDL_RenderGetViewport(data.renderer, &former_viewport);
+    SDL_RenderGetClipRect(data.renderer, &former_clip);
+    SDL_GetRenderDrawBlendMode(data.renderer, &former_blend_mode);
+
+    SDL_SetRenderTarget(data.renderer, texture);
+    SDL_Rect rect = { 0, 0, img->width, img->height };
+    SDL_RenderSetClipRect(data.renderer, &rect);
+    SDL_RenderSetViewport(data.renderer, &rect);
+
+    SDL_Rect src_coords = { img->atlas.x_offset, img->atlas.y_offset, img->width, img->height };
+
+    set_texture_color_and_scale_mode(original_texture, 0, 1.0f);
+
+    SDL_RenderCopy(data.renderer, original_texture, &src_coords, 0);
+
+    SDL_SetRenderDrawBlendMode(data.renderer, SDL_BLENDMODE_ADD);
+
+    SDL_SetRenderDrawColor(data.renderer, 0xff, 0xff, 0xff, 0xff);
+    SDL_RenderFillRect(data.renderer, 0);
+
+    SDL_SetRenderDrawBlendMode(data.renderer, SDL_BLENDMODE_MOD);
+
+    // We want the same color as the "flat tile" image
+    SDL_SetRenderDrawColor(data.renderer, 0xd6, 0xf3, 0xd6, 0xff);
+    SDL_RenderFillRect(data.renderer, 0);
+
+    SDL_SetRenderTarget(data.renderer, former_target);
+    SDL_RenderSetViewport(data.renderer, &former_viewport);
+    SDL_RenderSetClipRect(data.renderer, &former_clip);
+    SDL_SetRenderDrawBlendMode(data.renderer, former_blend_mode);
+
+    silhouette_texture *new_silhouette = malloc(sizeof(silhouette_texture));
+    if (!new_silhouette) {
+        SDL_DestroyTexture(texture);
+        return 0;
+    }
+    new_silhouette->img = img;
+    new_silhouette->texture = texture;
+    new_silhouette->next = 0;
+
+    if (last_silhouette) {
+        last_silhouette->next = new_silhouette;
+    } else {
+        data.silhouettes = new_silhouette;
+    }
+
+    return texture;
+}
+
+static void draw_silhouetted_texture(const image *img, int x, int y, color_t color, float scale)
+{
+    SDL_Texture *texture = get_silhouette_texture(img);
+    if (!texture) {
+        return;
+    }
+
+    set_texture_color_and_scale_mode(texture, color, scale);
+
+    x += img->x_offset;
+    y += img->y_offset;
+
+    // When zooming out, instead of drawing the grid image, we reduce the isometric textures' size,
+    // which ends up simulating a grid without any performance penalty
+    int grid_correction = (img->is_isometric && config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) ? 2 : 0;
+
+#ifdef USE_RENDERCOPYF
+    if (HAS_RENDERCOPYF) {
+        SDL_FRect dst_coords = { (x + grid_correction) / scale, (y + grid_correction) / scale,
+            (img->width - grid_correction) / scale, (img->height - grid_correction) / scale };
+        SDL_RenderCopyF(data.renderer, texture, 0, &dst_coords);
+        return;
+    }
+#endif
+
+    SDL_Rect dst_coords = { (int) round((x + grid_correction) / scale), (int) round((y + grid_correction) / scale),
+        (int) round((img->width - grid_correction) / scale), (int) round((img->height - grid_correction) / scale) };
+    SDL_RenderCopy(data.renderer, texture, 0, &dst_coords);
+}
+
 static void draw_custom_texture(custom_image_type type, int x, int y, float scale, int disable_filtering)
 {
     if (data.paused) {
@@ -862,6 +983,7 @@ static void create_renderer_interface(void)
     data.renderer_interface.draw_rect = draw_rect;
     data.renderer_interface.fill_rect = fill_rect;
     data.renderer_interface.draw_image = draw_texture;
+    data.renderer_interface.draw_silhouette = draw_silhouetted_texture;
     data.renderer_interface.create_custom_image = create_custom_texture;
     data.renderer_interface.has_custom_image = has_custom_texture;
     data.renderer_interface.get_custom_image_buffer = get_custom_texture_buffer;

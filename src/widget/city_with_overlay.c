@@ -525,7 +525,6 @@ static void draw_top(int x, int y, int grid_offset)
                 image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask, scale);
             }
         }
-
     }
 }
 
