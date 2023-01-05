@@ -686,4 +686,45 @@
 		<layer src="Mausoleum_Large_Alt" x="0" y="0"/>
 		<layer src="Mausoleum_Large_Alt_R" x="31" y="87"/>
 	</image>
+	<!-- Note: Altar Assets for Each God WITH ROTATION VARIANTS (Original Assets by MonoNavidegno, Tweaked by Areldir) -->
+	<image id="Altar_Ceres" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Ceres" x="9" y="0"/>
+	</image>
+	<image id="Altar_Ceres_R" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Ceres_R" x="11" y="0"/>
+	</image>
+	<image id="Altar_Mars" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Mars" x="9" y="0"/>
+	</image>
+	<image id="Altar_Mars_R" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Mars_R" x="10" y="0"/>
+	</image>
+	<image id="Altar_Mercury" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Mercury" x="10" y="0"/>
+	</image>
+	<image id="Altar_Mercury_R" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Mercury_R" x="12" y="0"/>
+	</image>
+	<image id="Altar_Neptune" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Neptune" x="10" y="0"/>
+	</image>
+	<image id="Altar_Neptune_R" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Neptune_R" x="13" y="0"/>
+	</image>
+	<image id="Altar_Venus" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Venus" x="10" y="0"/>
+	</image>
+	<image id="Altar_Venus_R" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Venus_R" x="12" y="0"/>
+	</image>
 </assetlist>

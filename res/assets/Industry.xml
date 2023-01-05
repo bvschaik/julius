@@ -399,6 +399,8 @@
 		<layer group="83" image="0" x="0" y="4"/>
 		<layer src="Warehouse_Sand_04" x="4" y="0"/>
 	</image>
+	<!-- Note: Sand Overlay for Supplied Workshop -->
+	<image id="Sand_Supplied_Workshop" src="Sand_Supplied_Workshop" width="25" height="21"/>
 	<!-- Note: Plain Stone Quarry OFF - Climate Variants -->
 	<image id="Stone_Quarry_C_OFF" src="Stone_Quarry_C_OFF" width="118" height="62" isometric="true"/>
 	<image id="Stone_Quarry_N_OFF" src="Stone_Quarry_N_OFF" width="118" height="62" isometric="true"/>
