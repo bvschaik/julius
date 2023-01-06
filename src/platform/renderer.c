@@ -212,6 +212,18 @@ static void get_max_image_size(int *width, int *height)
     *height = data.max_texture_size.height;
 }
 
+static void free_silhouettes(void)
+{
+    silhouette_texture *silhouette = data.silhouettes;
+    while (silhouette) {
+        silhouette_texture *current = silhouette;
+        silhouette = silhouette->next;
+        SDL_DestroyTexture(current->texture);
+        free(current);
+    }
+    data.silhouettes = 0;
+}
+
 static void free_unpacked_assets(void)
 {
     for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
@@ -410,14 +422,7 @@ static void free_all_textures(void)
         }
     }
 
-    silhouette_texture *silhouette = data.silhouettes;
-    while (silhouette) {
-        silhouette_texture *current = silhouette;
-        silhouette = silhouette->next;
-        SDL_DestroyTexture(current->texture);
-        free(current);
-    }
-    data.silhouettes = 0;
+    free_silhouettes();
 
     buffer_texture *texture_info = data.texture_buffers.first;
     while (texture_info) {
@@ -853,22 +858,26 @@ static void draw_silhouetted_texture(const image *img, int x, int y, color_t col
     x += img->x_offset;
     y += img->y_offset;
 
+    int src_correction = scale == data.city_scale && data.should_correct_texture_offset ? 1 : 0;
+    SDL_Rect src_coords = { src_correction, src_correction, img->width - src_correction, img->height - src_correction };
+
     // When zooming out, instead of drawing the grid image, we reduce the isometric textures' size,
     // which ends up simulating a grid without any performance penalty
-    int grid_correction = (img->is_isometric && config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) ? 2 : 0;
+    int grid_correction = (img->is_isometric && config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) ? 2 :
+        -src_correction;
 
 #ifdef USE_RENDERCOPYF
     if (HAS_RENDERCOPYF) {
         SDL_FRect dst_coords = { (x + grid_correction) / scale, (y + grid_correction) / scale,
             (img->width - grid_correction) / scale, (img->height - grid_correction) / scale };
-        SDL_RenderCopyF(data.renderer, texture, 0, &dst_coords);
+        SDL_RenderCopyF(data.renderer, texture, &src_coords, &dst_coords);
         return;
     }
 #endif
 
     SDL_Rect dst_coords = { (int) round((x + grid_correction) / scale), (int) round((y + grid_correction) / scale),
         (int) round((img->width - grid_correction) / scale), (int) round((img->height - grid_correction) / scale) };
-    SDL_RenderCopy(data.renderer, texture, 0, &dst_coords);
+    SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
 }
 
 static void draw_custom_texture(custom_image_type type, int x, int y, float scale, int disable_filtering)
@@ -1141,6 +1150,8 @@ int platform_renderer_lost_render_texture(void)
 
 void platform_renderer_invalidate_target_textures(void)
 {
+    free_silhouettes();
+
     if (data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture) {
         SDL_DestroyTexture(data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture);
         data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture = 0;

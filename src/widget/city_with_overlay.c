@@ -376,9 +376,10 @@ static void draw_footprint(int x, int y, int grid_offset)
     building_construction_record_view_position(x, y, grid_offset);
     if (grid_offset < 0) {
         return;
-    } else if (overlay->draw_custom_footprint) {
-        overlay->draw_custom_footprint(x, y, scale, grid_offset);
-    } else if (map_property_is_draw_tile(grid_offset)) {
+    } else if (overlay->draw_custom_footprint && overlay->draw_custom_footprint(x, y, scale, grid_offset)) {
+        return;
+    }
+    if (map_property_is_draw_tile(grid_offset)) {
         int terrain = map_terrain_get(grid_offset);
         if (terrain & TERRAIN_HIGHWAY && !(terrain & TERRAIN_GATEHOUSE)) {
             city_draw_highway_footprint(x, y, scale, grid_offset);
@@ -510,24 +511,25 @@ void city_with_overlay_draw_building_top(int x, int y, int grid_offset)
 
 static void draw_top(int x, int y, int grid_offset)
 {
-    if (overlay->draw_custom_top) {
-        overlay->draw_custom_top(x, y, scale, grid_offset);
-    } else if (map_property_is_draw_tile(grid_offset)) {
-        if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset)) {
-            city_with_overlay_draw_building_top(x, y, grid_offset);
-        } else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
-                color_t color_mask = 0;
-                if (map_property_is_deleted(grid_offset) && !is_multi_tile_terrain(grid_offset)) {
-                    color_mask = COLOR_MASK_RED;
-                }
-                // terrain
-                image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask, scale);
+    if (overlay->draw_custom_top && overlay->draw_custom_top(x, y, scale, grid_offset)) {
+        return;
+    }
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return;
+    }
+    if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_building_at(grid_offset)) {
+        city_with_overlay_draw_building_top(x, y, grid_offset);
+    } else if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        if (!map_terrain_is(grid_offset, TERRAIN_WALL | TERRAIN_AQUEDUCT | TERRAIN_ROAD)) {
+            color_t color_mask = 0;
+            if (map_property_is_deleted(grid_offset) && !is_multi_tile_terrain(grid_offset)) {
+                color_mask = COLOR_MASK_RED;
             }
+            // terrain
+            image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask, scale);
         }
     }
 }
-
 static void draw_animation(int x, int y, int grid_offset)
 {
     int draw = 0;

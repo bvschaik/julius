@@ -55,11 +55,6 @@ static int show_building_sentiment(const building *b)
     return b->house_size > 0;
 }
 
-static int show_building_desirability(const building *b)
-{
-    return 0;
-}
-
 static int show_building_roads(const building *b)
 {
     return building_type_is_roadblock(b->type) || b->type == BUILDING_GATEHOUSE;
@@ -391,10 +386,10 @@ static int terrain_on_water_overlay(void)
         TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE | TERRAIN_HIGHWAY;
 }
 
-static void draw_footprint_water(int x, int y, float scale, int grid_offset)
+static int draw_footprint_water(int x, int y, float scale, int grid_offset)
 {
     if (!map_property_is_draw_tile(grid_offset)) {
-        return;
+        return 1;
     }
     int is_building = map_terrain_is(grid_offset, TERRAIN_BUILDING);
     if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY) && !map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
@@ -445,12 +440,13 @@ static void draw_footprint_water(int x, int y, float scale, int grid_offset)
         }
         image_draw_isometric_footprint_from_draw_tile(image_id, x, y, 0, scale);
     }
+    return 1;
 }
 
-static void draw_top_water(int x, int y, float scale, int grid_offset)
+static int draw_top_water(int x, int y, float scale, int grid_offset)
 {
     if (!map_property_is_draw_tile(grid_offset)) {
-        return;
+        return 1;
     }
     if (map_terrain_is(grid_offset, terrain_on_water_overlay())) {
         if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
@@ -463,6 +459,7 @@ static void draw_top_water(int x, int y, float scale, int grid_offset)
     } else if (map_building_at(grid_offset)) {
         city_with_overlay_draw_building_top(x, y, grid_offset);
     }
+    return 1;
 }
 
 const city_overlay *city_overlay_for_water(void)
@@ -493,21 +490,60 @@ static color_t get_sentiment_color(int sentiment)
     return color;
 }
 
-static void draw_sentiment_values(int x, int y, float scale, int grid_offset)
+static void blend_color_to_footprint(int x, int y, int size, color_t color, float scale)
+{
+    int total_steps = size * 2 - 1;
+    int tiles = 1;
+
+    for (int step = 1; step <= total_steps; step++) {
+        if (tiles % 2) {
+            image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, color, scale);
+        }
+        int y_offset = 15 + 15 * (tiles % 2);
+
+        for (int i = 1; i <= tiles / 2; i++) {
+            image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y - y_offset, color, scale);
+            image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y + y_offset, color, scale);
+            y_offset += 30;
+        }
+        x += 30;
+        step < size ? tiles++ : tiles--;
+    }
+}
+
+static int draw_sentiment_footprint(int x, int y, float scale, int grid_offset)
 {
     if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-        return;
+        return 0;
     }
     int building_id = map_building_at(grid_offset);
     building *b = building_get(building_id);
     if (!b || !b->house_population) {
-        return;
+        return 0;
     }
-    color_t color = get_sentiment_color(b->sentiment.house_happiness);
-    image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, color, scale);
     if (map_property_is_draw_tile(grid_offset)) {
+        city_with_overlay_draw_building_footprint(x, y, grid_offset, 0);
+        blend_color_to_footprint(x, y, b->house_size, get_sentiment_color(b->sentiment.house_happiness), scale);
+    }
+    return 1;
+}
+
+static int draw_sentiment_top(int x, int y, float scale, int grid_offset)
+{
+    if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        return 0;
+    }
+    int building_id = map_building_at(grid_offset);
+    building *b = building_get(building_id);
+    if (!b || !b->house_population) {
+        return 0;
+    }
+    if (map_property_is_draw_tile(grid_offset)) {
+        city_with_overlay_draw_building_top(x, y, grid_offset);
+        color_t color = get_sentiment_color(b->sentiment.house_happiness);
         image_draw_set_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color, scale);
     }
+    return 1;
 }
 
 const city_overlay *city_overlay_for_sentiment(void)
@@ -520,9 +556,9 @@ const city_overlay *city_overlay_for_sentiment(void)
         get_column_height_none,
         get_tooltip_sentiment,
         0,
-        0,
-        0,
-        draw_sentiment_values
+        draw_sentiment_footprint,
+        draw_sentiment_top,
+        0
     };
     return &overlay;
 }
@@ -561,7 +597,7 @@ static int get_desirability_image_offset(int desirability)
     }
 }
 
-static void draw_footprint_desirability(int x, int y, float scale, int grid_offset)
+static int draw_footprint_desirability(int x, int y, float scale, int grid_offset)
 {
     color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
     if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY) && !map_terrain_is(grid_offset, TERRAIN_GATEHOUSE)) {
@@ -592,9 +628,10 @@ static void draw_footprint_desirability(int x, int y, float scale, int grid_offs
     } else {
         image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, color_mask, scale);
     }
+    return 1;
 }
 
-static void draw_top_desirability(int x, int y, float scale, int grid_offset)
+static int draw_top_desirability(int x, int y, float scale, int grid_offset)
 {
     color_t color_mask = map_property_is_deleted(grid_offset) ? COLOR_MASK_RED : 0;
     if (map_terrain_is(grid_offset, terrain_on_desirability_overlay())
@@ -621,6 +658,7 @@ static void draw_top_desirability(int x, int y, float scale, int grid_offset)
     } else {
         image_draw_isometric_top_from_draw_tile(map_image_at(grid_offset), x, y, color_mask, scale);
     }
+    return 1;
 }
 
 const city_overlay *city_overlay_for_desirability(void)
@@ -628,7 +666,7 @@ const city_overlay *city_overlay_for_desirability(void)
     static city_overlay overlay = {
         OVERLAY_DESIRABILITY,
         COLUMN_COLOR_GREEN,
-        show_building_desirability,
+        show_building_none,
         show_figure_none,
         get_column_height_none,
         get_tooltip_desirability,

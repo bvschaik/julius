@@ -388,10 +388,10 @@ static int terrain_on_native_overlay(void)
         TERRAIN_GARDEN | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE;
 }
 
-static void draw_footprint_native(int x, int y, float scale, int grid_offset)
+static int draw_footprint_native(int x, int y, float scale, int grid_offset)
 {
     if (!map_property_is_draw_tile(grid_offset)) {
-        return;
+        return 1;
     }
     if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
@@ -414,12 +414,13 @@ static void draw_footprint_native(int x, int y, float scale, int grid_offset)
             image_draw_isometric_footprint_from_draw_tile(map_image_at(grid_offset), x, y, 0, scale);
         }
     }
+    return 1;
 }
 
-static void draw_top_native(int x, int y, float scale, int grid_offset)
+static int draw_top_native(int x, int y, float scale, int grid_offset)
 {
     if (!map_property_is_draw_tile(grid_offset)) {
-        return;
+        return 1;
     }
     if (map_terrain_is(grid_offset, terrain_on_native_overlay())) {
         if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
@@ -432,6 +433,7 @@ static void draw_top_native(int x, int y, float scale, int grid_offset)
     } else if (map_building_at(grid_offset)) {
         city_with_overlay_draw_building_top(x, y, grid_offset);
     }
+    return 1;
 }
 
 const city_overlay *city_overlay_for_native(void)
