@@ -243,10 +243,11 @@ int system_can_scale_display(int *min_scale, int *max_scale)
     int width, height;
     SDL_GetWindowSize(SDL.window, &width, &height);
 #ifdef __ANDROID__
-    int maxOrientation1 = get_max_scale_percentage(width, height);
-    int maxOrientation2 = get_max_scale_percentage(height, width);
-    if (maxOrientation1 < 100 && maxOrientation2 < 100) {
-        SDL_Log("Not allowing scale on Android: %d x %d = max scale %d or %d", width, height, maxOrientation1, maxOrientation2);
+    int max_scale_current_orientation = get_max_scale_percentage(width, height);
+    int max_scale_alternative_orientation = get_max_scale_percentage(height, width);
+    if (max_scale_current_orientation < 100 && max_scale_alternative_orientation < 100) {
+        SDL_Log("Not allowing scale on Android: %d x %d = max scale %d or %d",
+            width, height, max_scale_current_orientation, max_scale_alternative_orientation);
         return 0;
     }
 #endif
