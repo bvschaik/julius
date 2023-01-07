@@ -522,13 +522,13 @@ static void draw_background(void)
             window_building_draw_pottery_workshop(&context);
         } else if (btype == BUILDING_MARKET) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders(&context, translation_for(TR_MARKET_SPECIAL_ORDERS_HEADER));
+                window_building_draw_distributor_orders(&context, translation_for(TR_MARKET_SPECIAL_ORDERS_HEADER));
             } else {
                 window_building_draw_market(&context);
             }
         } else if (btype == BUILDING_MESS_HALL) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders(&context, translation_for(TR_MESS_HALL_SPECIAL_ORDERS_HEADER));
+                window_building_draw_distributor_orders(&context, translation_for(TR_MESS_HALL_SPECIAL_ORDERS_HEADER));
             } else {
                 window_building_draw_mess_hall(&context);
             }
@@ -578,7 +578,7 @@ static void draw_background(void)
             window_building_draw_library(&context);
         } else if (btype == BUILDING_SMALL_TEMPLE_CERES || btype == BUILDING_LARGE_TEMPLE_CERES) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders(&context, translation_for(TR_TEMPLE_SPECIAL_ORDERS_HEADER));
+                window_building_draw_distributor_orders(&context, translation_for(TR_TEMPLE_SPECIAL_ORDERS_HEADER));
             } else {
                 window_building_draw_temple_ceres(&context);
             }
@@ -590,7 +590,7 @@ static void draw_background(void)
             window_building_draw_temple_mars(&context);
         } else if (btype == BUILDING_SMALL_TEMPLE_VENUS || btype == BUILDING_LARGE_TEMPLE_VENUS) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders(&context, translation_for(TR_TEMPLE_SPECIAL_ORDERS_HEADER));
+                window_building_draw_distributor_orders(&context, translation_for(TR_TEMPLE_SPECIAL_ORDERS_HEADER));
             } else {
                 window_building_draw_temple_venus(&context);
             }
@@ -612,7 +612,7 @@ static void draw_background(void)
             window_building_draw_mess_hall(&context);
         } else if (btype == BUILDING_TAVERN) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders(&context, translation_for(TR_TAVERN_SPECIAL_ORDERS_HEADER));
+                window_building_draw_distributor_orders(&context, translation_for(TR_TAVERN_SPECIAL_ORDERS_HEADER));
             } else {
                 window_building_draw_tavern(&context);
             }
@@ -643,7 +643,7 @@ static void draw_background(void)
             window_building_draw_shipyard(&context);
         } else if (btype == BUILDING_DOCK) {
             if (context.storage_show_special_orders) {
-                window_building_draw_dock_orders(&context);
+                window_building_draw_distributor_orders(&context, translation_for(TR_DOCK_SPECIAL_ORDERS_HEADER));
             } else {
                 window_building_draw_dock(&context);
             }
@@ -709,7 +709,8 @@ static void draw_background(void)
             window_building_draw_watchtower(&context);
         } else if (btype == BUILDING_CARAVANSERAI) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders(&context, translation_for(TR_CARAVANSERAI_SPECIAL_ORDERS_HEADER));
+                window_building_draw_distributor_orders(&context,
+                    translation_for(TR_CARAVANSERAI_SPECIAL_ORDERS_HEADER));
             } else {
                 window_building_draw_caravanserai(&context);
             }
@@ -760,35 +761,35 @@ static void draw_foreground(void)
             }
         } else if (btype == BUILDING_MARKET) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders_foreground(&context);
+                window_building_draw_distributor_orders_foreground(&context);
             } else {
-                window_building_supplier_draw_foreground(&context);
+                window_building_distributor_draw_foreground(&context);
             }
         } else if (btype == BUILDING_TAVERN) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders_foreground(&context);
+                window_building_draw_distributor_orders_foreground(&context);
             } else {
-                window_building_supplier_draw_foreground(&context);
+                window_building_distributor_draw_foreground(&context);
             }
         } else if (btype == BUILDING_MESS_HALL) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders_foreground(&context);
+                window_building_draw_distributor_orders_foreground(&context);
             } else {
-                window_building_supplier_draw_foreground(&context);
+                window_building_distributor_draw_foreground(&context);
             }
         } else if (building_is_venus_temple(btype) && b->data.monument.phase <= 0 &&
             building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders_foreground(&context);
+                window_building_draw_distributor_orders_foreground(&context);
             } else {
-                window_building_supplier_draw_foreground(&context);
+                window_building_distributor_draw_foreground(&context);
             }
         } else if (building_is_ceres_temple(btype) && b->data.monument.phase <= 0 &&
             building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD)) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders_foreground(&context);
+                window_building_draw_distributor_orders_foreground(&context);
             } else {
-                window_building_supplier_draw_foreground(&context);
+                window_building_distributor_draw_foreground(&context);
             }
         } else if (btype == BUILDING_ROADBLOCK) {
             if (context.storage_show_special_orders) {
@@ -798,7 +799,7 @@ static void draw_foreground(void)
             }
         } else if (btype == BUILDING_DOCK) {
             if (context.storage_show_special_orders) {
-                window_building_draw_dock_orders_foreground(&context);
+                window_building_draw_distributor_orders_foreground(&context);
             } else {
                 window_building_draw_dock_foreground(&context);
             }
@@ -810,9 +811,9 @@ static void draw_foreground(void)
         } else if (btype == BUILDING_CARAVANSERAI &&
             b->data.monument.phase == MONUMENT_FINISHED) {
             if (context.storage_show_special_orders) {
-                window_building_draw_supplier_orders_foreground(&context);
+                window_building_draw_distributor_orders_foreground(&context);
             } else {
-                window_building_supplier_draw_foreground(&context);
+                window_building_distributor_draw_foreground(&context);
                 window_building_draw_caravanserai_foreground(&context);
             }
         } else if (btype == BUILDING_COLOSSEUM) {
@@ -868,12 +869,14 @@ static int handle_specific_building_info_mouse(const mouse *m)
 
         if (building_has_supplier_inventory(btype)) {
             if (context.storage_show_special_orders) {
-                window_building_handle_mouse_supplier_orders(m, &context);
+                return window_building_handle_mouse_distributor_orders(m, &context);
             } else {
                 if (btype == BUILDING_CARAVANSERAI) {
-                    window_building_handle_mouse_caravanserai(m, &context);
+                    if (window_building_handle_mouse_caravanserai(m, &context)) {
+                        return 1;
+                    }
                 }
-                window_building_handle_mouse_supplier(m, &context);
+                return window_building_handle_mouse_distributor(m, &context);
             }
         } else if (btype == BUILDING_ROADBLOCK) {
             if (context.storage_show_special_orders) {
@@ -883,14 +886,14 @@ static int handle_specific_building_info_mouse(const mouse *m)
             }
         } else if (btype == BUILDING_DOCK) {
             if (context.storage_show_special_orders) {
-                return window_building_handle_mouse_dock_orders(m, &context);
+                return window_building_handle_mouse_distributor_orders(m, &context);
             } else {
                 return window_building_handle_mouse_dock(m, &context);
             }
         } else if (btype == BUILDING_BARRACKS) {
             return window_building_handle_mouse_barracks(m, &context);
         } else if (btype == BUILDING_GRAND_TEMPLE_MARS) {
-            window_building_handle_mouse_grand_temple_mars(m, &context);
+            return window_building_handle_mouse_grand_temple_mars(m, &context);
         } else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
                 return window_building_handle_mouse_granary_orders(m, &context);
@@ -899,19 +902,19 @@ static int handle_specific_building_info_mouse(const mouse *m)
             }
         } else if (btype == BUILDING_WAREHOUSE) {
             if (context.storage_show_special_orders) {
-                window_building_handle_mouse_warehouse_orders(m, &context);
+                return window_building_handle_mouse_warehouse_orders(m, &context);
             } else {
-                window_building_handle_mouse_warehouse(m, &context);
+                return window_building_handle_mouse_warehouse(m, &context);
             }
         } else if ((btype >= BUILDING_GRAND_TEMPLE_CERES && btype <= BUILDING_GRAND_TEMPLE_VENUS) ||
             btype == BUILDING_PANTHEON) {
-            window_building_handle_mouse_grand_temple(m, &context);
+            return window_building_handle_mouse_grand_temple(m, &context);
         } else if (btype == BUILDING_LIGHTHOUSE) {
-            window_building_handle_mouse_lighthouse(m, &context);
+            return window_building_handle_mouse_lighthouse(m, &context);
         } else if (btype == BUILDING_COLOSSEUM) {
-            window_building_handle_mouse_colosseum(m, &context);
+            return window_building_handle_mouse_colosseum(m, &context);
         } else if (btype == BUILDING_HIPPODROME) {
-            window_building_handle_mouse_hippodrome(m, &context);
+            return window_building_handle_mouse_hippodrome(m, &context);
         } else if (btype == BUILDING_GARDEN_WALL_GATE || btype == BUILDING_HEDGE_GATE_DARK || btype == BUILDING_HEDGE_GATE_LIGHT || btype == BUILDING_PALISADE_GATE) {
             if (context.storage_show_special_orders) {
                 return window_building_handle_mouse_roadblock_orders(m, &context);
@@ -919,7 +922,7 @@ static int handle_specific_building_info_mouse(const mouse *m)
                 return window_building_handle_mouse_garden_gate(m, &context);
             }
         } else if (building_is_primary_product_producer(btype)) {
-            window_building_handle_mouse_primary_product_producer(m, &context);
+            return window_building_handle_mouse_primary_product_producer(m, &context);
         }
     }
     return 0;

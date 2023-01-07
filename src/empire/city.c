@@ -14,6 +14,7 @@
 #include "empire/type.h"
 #include "figuretype/trader.h"
 #include "game/resource.h"
+#include "scenario/building.h"
 #include "scenario/map.h"
 
 #include <string.h>
@@ -117,44 +118,26 @@ int can_produce_resource(int resource)
     return 0;
 }
 
-static int get_raw_resource(int resource)
-{
-    switch (resource) {
-        case RESOURCE_POTTERY:
-            return RESOURCE_CLAY;
-        case RESOURCE_FURNITURE:
-            return RESOURCE_TIMBER;
-        case RESOURCE_OIL:
-            return RESOURCE_OLIVES;
-        case RESOURCE_WINE:
-            return RESOURCE_VINES;
-        case RESOURCE_WEAPONS:
-            return RESOURCE_IRON;
-        default:
-            return resource;
-    }
-}
-
 int empire_can_produce_resource(int resource)
 {
-    int raw_resource = get_raw_resource(resource);
+    resource_type raw_resource = resource_get_raw_material_for_good(resource);
     // finished goods: check imports of raw materials
-    if (raw_resource != resource && empire_can_import_resource(raw_resource)) {
-        return 1;
+    if (raw_resource != RESOURCE_NONE) {
+        return empire_can_import_resource(raw_resource) || can_produce_resource(raw_resource);
     }
     // check if we can produce the raw materials
-    return can_produce_resource(raw_resource);
+    return can_produce_resource(resource);
 }
 
 int empire_can_produce_resource_potentially(int resource)
 {
-    int raw_resource = get_raw_resource(resource);
+    resource_type raw_resource = resource_get_raw_material_for_good(resource);
     // finished goods: check imports of raw materials
-    if (raw_resource != resource && empire_can_import_resource_potentially(raw_resource)) {
-        return 1;
+    if (raw_resource != RESOURCE_NONE) {
+        return empire_can_import_resource_potentially(raw_resource) || can_produce_resource(raw_resource);
     }
     // check if we can produce the raw materials
-    return can_produce_resource(raw_resource);
+    return can_produce_resource(resource);
 }
 
 int empire_city_get_for_object(int empire_object_id)
@@ -436,5 +419,10 @@ void empire_city_load_state(buffer *buf)
             city->trader_figure_ids[f] = buffer_read_i16(buf);
         }
         buffer_skip(buf, 10);
+        // Fix - on old saves, fish resources were enabled simply if a wharf existed
+        if (city->type == EMPIRE_CITY_OURS && scenario_building_allowed(BUILDING_WHARF) &&
+            resource_total_mapped() == RESOURCE_MAX_LEGACY) {
+            city->sells_resource[RESOURCE_FISH] = 1;
+        }
     }
 }

@@ -123,7 +123,8 @@ void window_building_draw_large_statue(building_info_context *c)
     building *b = building_get(c->building_id);
     window_building_draw_statue(c);
     if (!b->has_water_access) {
-        window_building_draw_description_from_tr_string_at(c, TR_WINDOW_BUILDING_GOVERNMENT_LARGE_STATUE_WATER_WARNING, 48);
+        window_building_draw_description_at(c, CUSTOM_TRANSLATION,
+            TR_WINDOW_BUILDING_GOVERNMENT_LARGE_STATUE_WATER_WARNING, 48);
     }
 }
 
@@ -143,8 +144,9 @@ void window_building_draw_pond(building_info_context * c)
     window_building_play_sound(c, "wavs/fountain.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     
-    text_draw_centered(translation_for(TR_BUILDING_WINDOW_POND), c->x_offset, c->y_offset + 25, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_description_from_tr_string_at(c, TR_BUILDING_POND_DESC, 96);
+    text_draw_centered(translation_for(TR_BUILDING_WINDOW_POND),
+        c->x_offset, c->y_offset + 25, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    window_building_draw_description_at(c, CUSTOM_TRANSLATION, TR_BUILDING_POND_DESC, 96);
 }
 
 void window_building_draw_obelisk(building_info_context* c)
@@ -153,6 +155,7 @@ void window_building_draw_obelisk(building_info_context* c)
     window_building_play_sound(c, "wavs/statue.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
-    text_draw_centered(translation_for(TR_BUILDING_OBELISK), c->x_offset, c->y_offset + 25, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_description_from_tr_string_at(c, TR_BUILDING_OBELISK_DESC, 96);
+    text_draw_centered(translation_for(TR_BUILDING_OBELISK),
+        c->x_offset, c->y_offset + 25, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
+    window_building_draw_description_at(c, CUSTOM_TRANSLATION, TR_BUILDING_OBELISK_DESC, 96);
 }

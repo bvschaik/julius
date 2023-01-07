@@ -216,7 +216,7 @@ void window_building_draw_school(building_info_context *c)
     } else if (building_get(c->building_id)->num_workers <= 0) {
         window_building_draw_description(c, 85, 2);
     } else if (building_get(c->building_id)->upgrade_level) {
-        window_building_draw_description_from_tr_string(c, TR_BUILDING_SCHOOL_UPGRADE_DESC);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_SCHOOL_UPGRADE_DESC);
     } else {
         window_building_draw_description(c, 85, 3);
     }
@@ -238,7 +238,7 @@ void window_building_draw_academy(building_info_context *c)
     } else if (building_get(c->building_id)->num_workers <= 0) {
         window_building_draw_description(c, 86, 2);
     } else if (building_get(c->building_id)->upgrade_level) {
-        window_building_draw_description_from_tr_string(c, TR_BUILDING_ACADEMY_UPGRADE_DESC);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_ACADEMY_UPGRADE_DESC);
     } else {
         window_building_draw_description(c, 86, 3);
     }
@@ -259,7 +259,7 @@ void window_building_draw_library(building_info_context *c)
     } else if (building_get(c->building_id)->num_workers <= 0) {
         window_building_draw_description(c, 87, 2);
     } else if (building_get(c->building_id)->upgrade_level) {
-        window_building_draw_description_from_tr_string(c, TR_BUILDING_LIBRARY_UPGRADE_DESC);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_LIBRARY_UPGRADE_DESC);
     } else {
         window_building_draw_description(c, 87, 3);
     }
@@ -407,7 +407,7 @@ void window_building_draw_theater(building_info_context *c)
     } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 72, 4);
     } else if (b->upgrade_level) {
-        window_building_draw_description_from_tr_string(c, TR_BUILDING_THEATRE_UPGRADE_DESC);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_THEATRE_UPGRADE_DESC);
     } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, 72, 2);
     } else if (b->data.entertainment.days1) {
@@ -622,7 +622,7 @@ void window_building_draw_lararium(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_LARARIUM),
         c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_description_from_tr_string_at(c, TR_WINDOW_BUILDING_LARARIUM_DESC, 96);
+    window_building_draw_description_at(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_LARARIUM_DESC, 96);
 }
 
 static void draw_grand_temple(building_info_context *c, const char *sound_file,
@@ -826,7 +826,8 @@ void window_building_draw_tavern(building_info_context *c)
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 156, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 158);
-    window_building_draw_description_from_tr_string_at(c, TR_BUILDING_TAVERN_DESC_5 ,BLOCK_SIZE * c->height_blocks - 110);
+    window_building_draw_description_at(c, CUSTOM_TRANSLATION,
+        TR_BUILDING_TAVERN_DESC_5, BLOCK_SIZE * c->height_blocks - 110);
     return;
 }
 
@@ -889,7 +890,7 @@ void window_building_draw_colosseum_background(building_info_context *c)
                 c->x_offset + 22, c->y_offset + 56, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
         } else {
             if (active_games && active_games <= 3 && b->type == BUILDING_COLOSSEUM) {
-                window_building_draw_description_from_tr_string(c, TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG +
+                window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_ADVISOR_ENTERTAINMENT_UNDERWAY_NG +
                     ((active_games - 1) * 2));
                 int width = text_draw(translation_for(TR_WINDOW_BUILDING_GAMES_REMAINING_DURATION),
                     c->x_offset + 32, c->y_offset + 222, FONT_NORMAL_BROWN, 0);
@@ -975,25 +976,24 @@ void window_building_draw_arena(building_info_context *c)
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (b->num_workers <= 0) {
-        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_CLOSED);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_ARENA_CLOSED);
     } else if (!b->data.entertainment.num_shows) {
-        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NO_SHOWS);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_ARENA_NO_SHOWS);
     } else if (b->data.entertainment.num_shows == 2) {
-        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_BOTH_SHOWS);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_ARENA_BOTH_SHOWS);
     } else if (b->data.entertainment.days1) {
-        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS);
     } else if (b->data.entertainment.days2) {
-        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_ARENA_NEEDS_LIONS);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_ARENA_NEEDS_LIONS);
     }   
     if (b->type == BUILDING_ARENA) {
         window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 90, 74, 1);
     }
-
 }
 
-void window_building_handle_mouse_lighthouse(const mouse *m, building_info_context *c)
+int window_building_handle_mouse_lighthouse(const mouse *m, building_info_context *c)
 {
-    generic_buttons_handle_mouse(
+    return generic_buttons_handle_mouse(
         m, c->x_offset + 32, c->y_offset + 150,
         go_to_lighthouse_action_button, 1, &data.lighthouse_focus_button_id);
 }

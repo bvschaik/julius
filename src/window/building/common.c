@@ -159,18 +159,6 @@ void window_building_draw_description(building_info_context *c, int text_group, 
         BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK);
 }
 
-void window_building_draw_description_from_tr_string(building_info_context *c, int translation_key)
-{
-    text_draw_multiline(translation_for(translation_key), c->x_offset + 32, c->y_offset + 56,
-        BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
-}
-
-void window_building_draw_description_from_tr_string_at(building_info_context *c, int translation_key, int y_offset)
-{
-    text_draw_multiline(translation_for(translation_key), c->x_offset + 32, c->y_offset + y_offset,
-        BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
-}
-
 void window_building_draw_description_at(building_info_context *c, int y_offset, int text_group, int text_id)
 {
     lang_text_draw_multiline(text_group, text_id, c->x_offset + 32, c->y_offset + y_offset,
@@ -218,7 +206,7 @@ void window_building_draw_monument_construction_process(building_info_context *c
 
     if (b->data.monument.phase != MONUMENT_FINISHED) {
         if (!c->has_road_access) {
-            window_building_draw_description_from_tr_string(c,
+            window_building_draw_description(c, CUSTOM_TRANSLATION,
                 TR_WINDOW_BUILDING_INFO_WARNING_NO_MONUMENT_ROAD_ACCESS);
             text_draw_multiline(translation_for(tr_construction_desc),
                 c->x_offset + 22, c->y_offset + 180, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);

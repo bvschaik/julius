@@ -354,10 +354,6 @@ const uint8_t *lang_get_string(int group, int index)
     if (group == 96 && !index) {
         return translation_for(TR_BUILDING_SMALL_TEMPLE_VENUS_NAME);
     }
-    if (((group == 23 && index == 6) || (group == 27 && index == 6) || (group == 68 && index == 137))
-        && scenario_building_allowed(BUILDING_WHARF)) {
-        return translation_for(TR_RESOURCE_FISH);
-    }
 
     if (group == 130) {
         switch (index) {

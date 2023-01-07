@@ -21,6 +21,12 @@ static const resource_type resource_mappings[][RESOURCE_ALL] = {
         RESOURCE_CLAY, RESOURCE_TIMBER, RESOURCE_OLIVES, RESOURCE_VINES, RESOURCE_IRON, RESOURCE_MARBLE,
         RESOURCE_POTTERY, RESOURCE_FURNITURE, RESOURCE_OIL, RESOURCE_WINE, RESOURCE_WEAPONS,
         RESOURCE_DENARII, RESOURCE_TROOPS
+    },
+    {
+        RESOURCE_NONE, RESOURCE_WHEAT, RESOURCE_VEGETABLES, RESOURCE_FRUIT, RESOURCE_MEAT, RESOURCE_FISH,
+        RESOURCE_CLAY, RESOURCE_TIMBER, RESOURCE_OLIVES, RESOURCE_VINES, RESOURCE_IRON, RESOURCE_MARBLE,
+        RESOURCE_POTTERY, RESOURCE_FURNITURE, RESOURCE_OIL, RESOURCE_WINE, RESOURCE_WEAPONS,
+        RESOURCE_DENARII, RESOURCE_TROOPS
     }
 };
 
@@ -35,6 +41,7 @@ static struct {
     int total_resources;
     int total_food_resources;
     int special_resources;
+    int joined_meat_and_fish;
 } mapping;
 
 static resource_data resource_info[RESOURCE_ALL] = {
@@ -42,7 +49,8 @@ static resource_data resource_info[RESOURCE_ALL] = {
     [RESOURCE_WHEAT]      = { .type = RESOURCE_WHEAT,      .xml_attr_name = "wheat",       .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_WHEAT_FARM,         .default_trade_price = {  28,  22 }, .is_inventory = 1 },
     [RESOURCE_VEGETABLES] = { .type = RESOURCE_VEGETABLES, .xml_attr_name = "vegetables",  .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_VEGETABLE_FARM,     .default_trade_price = {  38,  30 }, .is_inventory = 1 },
     [RESOURCE_FRUIT]      = { .type = RESOURCE_FRUIT,      .xml_attr_name = "fruit",       .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_FRUIT_FARM,         .default_trade_price = {  38,  30 }, .is_inventory = 1 },
-    [RESOURCE_MEAT]       = { .type = RESOURCE_MEAT,       .xml_attr_name = "meat|fish",   .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_PIG_FARM,           .default_trade_price = {  44,  36 }, .is_inventory = 1 },
+    [RESOURCE_MEAT]       = { .type = RESOURCE_MEAT,       .xml_attr_name = "meat",        .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_PIG_FARM,           .default_trade_price = {  44,  36 }, .is_inventory = 1 },
+    [RESOURCE_FISH]       = { .type = RESOURCE_FISH,       .xml_attr_name = "fish",        .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_WHARF,              .default_trade_price = {  44,  36 }, .is_inventory = 1 },
     [RESOURCE_CLAY]       = { .type = RESOURCE_CLAY,       .xml_attr_name = "clay",        .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_CLAY_PIT,           .default_trade_price = {  40,  30 }, .workshop = BUILDING_POTTERY_WORKSHOP,   .warning = { WARNING_CLAY_NEEDED,   WARNING_BUILD_CLAY_PIT    } },
     [RESOURCE_TIMBER]     = { .type = RESOURCE_TIMBER,     .xml_attr_name = "timber|wood", .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_TIMBER_YARD,        .default_trade_price = {  50,  35 }, .workshop = BUILDING_FURNITURE_WORKSHOP, .warning = { WARNING_TIMBER_NEEDED, WARNING_BUILD_TIMBER_YARD } },
     [RESOURCE_OLIVES]     = { .type = RESOURCE_OLIVES,     .xml_attr_name = "olives",      .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_OLIVE_FARM,         .default_trade_price = {  42,  34 }, .workshop = BUILDING_OIL_WORKSHOP,       .warning = { WARNING_OLIVES_NEEDED, WARNING_BUILD_OLIVE_FARM  } },
@@ -56,11 +64,6 @@ static resource_data resource_info[RESOURCE_ALL] = {
     [RESOURCE_WEAPONS]    = { .type = RESOURCE_WEAPONS,    .xml_attr_name = "weapons",     .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_WEAPONS_WORKSHOP,   .default_trade_price = { 250, 180 } },
     [RESOURCE_DENARII]    = { .type = RESOURCE_DENARII,    .flags = RESOURCE_FLAG_SPECIAL },
     [RESOURCE_TROOPS]     = { .type = RESOURCE_TROOPS,     .flags = RESOURCE_FLAG_SPECIAL }
-};
-
-// TODO when separating fish from meat this goes to the main resource array
-static resource_data fish_resource = {
-    .type = RESOURCE_FISH, .flags = RESOURCE_FLAG_FOOD, .xml_attr_name = "meat|fish", .industry = BUILDING_WHARF, .default_trade_price = { 44, 36 }, .is_inventory = 1
 };
 
 int resource_is_food(resource_type resource)
@@ -127,15 +130,15 @@ void resource_init(void)
         info->image.editor.empire = image_group(GROUP_EDITOR_EMPIRE_RESOURCES) + i;
     }
 
-    fish_resource.text = lang_get_string(CUSTOM_TRANSLATION, TR_RESOURCE_FISH);
-    fish_resource.image.cart.single_load = image_group(GROUP_FIGURE_CARTPUSHER_CART) + 696;
-    fish_resource.image.cart.multiple_loads = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 56;
-    fish_resource.image.cart.eight_loads = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 88;
-    fish_resource.image.storage = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) + 60;
-    fish_resource.image.icon = image_group(GROUP_RESOURCE_ICONS) + 17;
-    fish_resource.image.empire = image_group(GROUP_EMPIRE_RESOURCES) + 17;
-    fish_resource.image.editor.icon = image_group(GROUP_EDITOR_RESOURCE_ICONS) + 17;
-    fish_resource.image.editor.empire = image_group(GROUP_EDITOR_EMPIRE_RESOURCES) + 17;
+    resource_info[RESOURCE_FISH].text = lang_get_string(CUSTOM_TRANSLATION, TR_RESOURCE_FISH);
+    resource_info[RESOURCE_FISH].image.cart.single_load = image_group(GROUP_FIGURE_CARTPUSHER_CART) + 696;
+    resource_info[RESOURCE_FISH].image.cart.multiple_loads = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 56;
+    resource_info[RESOURCE_FISH].image.cart.eight_loads = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 88;
+    resource_info[RESOURCE_FISH].image.storage = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) + 60;
+    resource_info[RESOURCE_FISH].image.icon = image_group(GROUP_RESOURCE_ICONS) + 17;
+    resource_info[RESOURCE_FISH].image.empire = image_group(GROUP_EMPIRE_RESOURCES) + 17;
+    resource_info[RESOURCE_FISH].image.editor.icon = image_group(GROUP_EDITOR_RESOURCE_ICONS) + 17;
+    resource_info[RESOURCE_FISH].image.editor.empire = image_group(GROUP_EDITOR_EMPIRE_RESOURCES) + 17;
 
     resource_info[RESOURCE_NONE].text = lang_get_string(23, 0);
 
@@ -148,45 +151,61 @@ void resource_init(void)
 
 const resource_data *resource_get_data(resource_type resource)
 {
-    if (resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF)) {
-        return &fish_resource;
-    }
     return &resource_info[resource];
 }
 
 void resource_set_mapping(int version)
 {
-    switch (version) {    
+    mapping.joined_meat_and_fish = version < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION;
+    switch (version) {
         case RESOURCE_ORIGINAL_VERSION:
-            mapping.resources = resource_mappings[RESOURCE_ORIGINAL_VERSION];
+            mapping.resources = resource_mappings[0];
             mapping.inventory = legacy_inventory_mapping;
             mapping.total_resources = RESOURCE_MAX_LEGACY;
             mapping.total_food_resources = RESOURCE_MAX_FOOD_LEGACY;
+            mapping.joined_meat_and_fish = 1;
             break;
         case RESOURCE_DYNAMIC_VERSION:
-            mapping.resources = resource_mappings[RESOURCE_ORIGINAL_VERSION];
+            mapping.resources = resource_mappings[0];
             mapping.inventory = 0;
             mapping.total_resources = RESOURCE_MAX_LEGACY;
             mapping.total_food_resources = RESOURCE_MAX_FOOD_LEGACY;
+            mapping.joined_meat_and_fish = 1;
             break;
         case RESOURCE_REORDERED_VERSION:
+            mapping.resources = resource_mappings[1];
+            mapping.inventory = 0;
+            mapping.total_resources = RESOURCE_MAX_LEGACY;
+            mapping.total_food_resources = 5;
+            mapping.joined_meat_and_fish = 1;
+            break;
+        case RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION:
         default:
             mapping.resources = 0;
             mapping.inventory = 0;
             mapping.total_resources = RESOURCE_MAX;
             mapping.total_food_resources = RESOURCE_MAX_FOOD;
+            mapping.joined_meat_and_fish = 0;
             break;
     }
 }
 
 resource_type resource_map_legacy_inventory(int id)
 {
-    return mapping.inventory ? mapping.inventory[id] : id;
+    resource_type resource = mapping.inventory ? mapping.inventory[id] : id;
+    if (mapping.joined_meat_and_fish && resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF)) {
+        return RESOURCE_FISH;
+    }
+    return resource;
 }
 
 resource_type resource_remap(int id)
 {
-    return mapping.resources ? mapping.resources[id] : id;
+    resource_type resource = mapping.resources ? mapping.resources[id] : id;
+    if (mapping.joined_meat_and_fish && resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF)) {
+        return RESOURCE_FISH;
+    }
+    return resource;
 }
 
 int resource_total_mapped(void)

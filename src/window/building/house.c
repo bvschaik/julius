@@ -151,8 +151,10 @@ void window_building_draw_house(building_info_context *c)
 
     // food inventory
     if (model_get_house(b->subtype.house_level)->food_types) {
-        for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (!resource_get_data(r)->is_inventory) {
+        const resource_list *list = city_resource_get_available_foods();
+        for (int i = 0; i < list->size; i++) {
+            resource_type r = list->items[i];
+            if (!resource_get_data(r)->is_inventory || (list->size > 4 && !b->resources[r])) {
                 continue;
             }
             image_draw(resource_get_data(r)->image.icon, c->x_offset + x_offset, c->y_offset + y_content,

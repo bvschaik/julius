@@ -333,7 +333,7 @@ void window_building_draw_wharf(building_info_context *c)
     if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (city_resource_is_mothballed(RESOURCE_FISH)) {
-        window_building_draw_description_from_tr_string(c, TR_WINDOW_BUILDING_WHARF_MOTHBALLED);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_WHARF_MOTHBALLED);
     } else if (!b->data.industry.fishing_boat_id) {
         window_building_draw_description(c, 102, 2);
     } else {

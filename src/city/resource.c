@@ -43,7 +43,7 @@ int city_resource_count(resource_type resource)
     return city_data.resource.stored_in_warehouses[resource];
 }
 
-int city_resource_get_amount_including_granaries(int resource, int amount, int *checked_granaries)
+int city_resource_get_amount_including_granaries(resource_type resource, int amount, int *checked_granaries)
 {
     if (checked_granaries) {
         *checked_granaries = 0;
@@ -270,43 +270,39 @@ void city_resource_determine_available(void)
     potential.resource_list.size = 0;
     potential.food_list.size = 0;
 
-    for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
-        if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
-            (i == RESOURCE_FISH && scenario_building_allowed(BUILDING_WHARF))) {
-            available.resource_list.items[available.resource_list.size++] = i;
-            potential.resource_list.items[potential.resource_list.size++] = i;
-        } else if (empire_can_produce_resource_potentially(i) || empire_can_import_resource_potentially(i)) {
-            potential.resource_list.items[potential.resource_list.size++] = i;
-        }
-    }
-    for (int i = RESOURCE_MIN_FOOD; i < RESOURCE_MAX_FOOD; i++) {
-        if (empire_can_produce_resource(i) || empire_can_import_resource(i) ||
-            (i == RESOURCE_FISH && scenario_building_allowed(BUILDING_WHARF))) {
-            available.food_list.items[available.food_list.size++] = i;
-            potential.food_list.items[potential.food_list.size++] = i;
-        } else if (empire_can_produce_resource_potentially(i) || empire_can_import_resource_potentially(i)) {
-            potential.food_list.items[potential.food_list.size++] = i;
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        if (empire_can_produce_resource(r) || empire_can_import_resource(r)) {
+            available.resource_list.items[available.resource_list.size++] = r;
+            potential.resource_list.items[potential.resource_list.size++] = r;
+            if (resource_is_food(r)) {
+                available.food_list.items[available.food_list.size++] = r;
+                potential.food_list.items[potential.food_list.size++] = r;               
+            }
+        } else if (empire_can_produce_resource_potentially(r) || empire_can_import_resource_potentially(r)) {
+            potential.resource_list.items[potential.resource_list.size++] = r;
+            if (resource_is_food(r)) {
+                potential.food_list.items[potential.food_list.size++] = r;
+            }
         }
     }
 }
 
 resource_type city_resource_ceres_temple_food(void)
 {
+    resource_type imported = RESOURCE_NONE;
+
     // locally produced
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
         if (can_produce_resource(r)) {
             return r;
         }
-    }
-
-    // imported, if no food is locally produced
-    for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (empire_can_import_resource_potentially(r)) {
-            return r;
+        if (imported == RESOURCE_NONE && empire_can_import_resource_potentially(r)) {
+            imported = r;
         }
     }
 
-    return RESOURCE_NONE;
+    // imported, if no food is locally produced
+    return imported;
 }
 
 static void calculate_available_food(void)

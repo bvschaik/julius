@@ -78,8 +78,7 @@ static void draw_foreground(void)
 
     int total_buildings = building_count_total(resource_get_data(data.resource)->industry);
 
-    if (empire_can_produce_resource(data.resource) ||
-        (data.resource == RESOURCE_FISH && scenario_building_allowed(BUILDING_WHARF))) {
+    if (empire_can_produce_resource(data.resource)) {
         int active_buildings = building_count_active(resource_get_data(data.resource)->industry);
         if (total_buildings <= 0) {
             lang_text_draw(54, 7, 66, 172, FONT_NORMAL_BLACK);
