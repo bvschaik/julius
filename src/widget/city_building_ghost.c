@@ -470,7 +470,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
     set_roamer_path(type, building_size, tile, has_blocked_tiles(num_tiles, blocked_tiles));
 }
 
-static void draw_single_reservoir(int x, int y, color_t color, int has_water, int draw_blocked)
+static void draw_single_reservoir(int grid_offset, int x, int y, color_t color, int has_water, int draw_blocked)
 {
     int image_id = image_group(GROUP_BUILDING_RESERVOIR);
     draw_building(image_id, x, y, color);
@@ -486,6 +486,21 @@ static void draw_single_reservoir(int x, int y, color_t color, int has_water, in
     if (data.reservoir_range.blocked && draw_blocked) {
         for (int i = 0; i < 9; i++) {
             image_blend_footprint_color(x + view_offset_x(i), y + view_offset_y(i), COLOR_MASK_RED, data.scale);
+        }
+    }
+    if (grid_offset)
+    {
+        int num_tiles = 9;
+        int orientation_index = city_view_orientation() / 2;
+
+        grid_offset += GRID_OFFSET(-1, -1);
+
+        for (int i = 0; i < num_tiles; i++) {
+            int tile_offset = grid_offset + tile_grid_offset(orientation_index, i);
+
+            if (map_has_figure_at(tile_offset)) {
+                figure_animal_try_nudge_at(grid_offset, tile_offset, 3);
+            } 
         }
     }
 }
@@ -579,7 +594,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
                     city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3,
                         map_water_supply_reservoir_radius(), draw_second_reservoir_range);
                 }
-                draw_single_reservoir(x_start, y_start, color, has_water, 1);
+                draw_single_reservoir(0, x_start, y_start, color, has_water, 1);
             }
         }
     }
@@ -608,12 +623,12 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
         city_view_foreach_tile_in_range(tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3,
             map_water_supply_reservoir_radius(), draw_second_reservoir_range);
     }
-    draw_single_reservoir(x, y, color, has_water, drawing_two_reservoirs);
+    draw_single_reservoir(tile->grid_offset, x, y, color, has_water, drawing_two_reservoirs);
     if (!drawing_two_reservoirs) {
         draw_building_tiles(x, y, 9, blocked_tiles);
     }
     if (draw_later) {
-        draw_single_reservoir(x_start, y_start, color, has_water, 1);
+        draw_single_reservoir(0, x_start, y_start, color, has_water, 1);
     }
 }
 
