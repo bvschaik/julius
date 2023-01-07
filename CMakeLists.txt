@@ -1,4 +1,5 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.9)
+include(CheckIPOSupported)
 include(CMakeDependentOption)
 
 set(TARGET_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: vita switch android emscripten. Leave blank for no cross compilation")
@@ -657,6 +658,11 @@ if(${TARGET_PLATFORM} STREQUAL "emscripten")
 endif()
 
 if(MSVC)
+    cmake_policy(SET CMP0069 NEW)
+    check_ipo_supported(RESULT result)
+    if(result)
+        set_property(TARGET julius PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+    endif()
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
 endif()
 
