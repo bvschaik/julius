@@ -823,18 +823,34 @@ static SDL_Texture *get_silhouette_texture(const image *img)
     SDL_SetRenderDrawColor(data.renderer, 0xd6, 0xf3, 0xd6, 0xff);
     SDL_RenderFillRect(data.renderer, 0);
 
+    // Copy our created texture to a surface and then to a new texture, to get rid of the "target texture" issues
+    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, img->width, img->height, 32, SDL_PIXELFORMAT_ABGR8888);
+    if (!surface) {
+        SDL_DestroyTexture(texture);
+        return 0;
+    }
+    SDL_RenderReadPixels(data.renderer, 0, 0, surface->pixels, surface->pitch);
+
     SDL_SetRenderTarget(data.renderer, former_target);
     SDL_RenderSetViewport(data.renderer, &former_viewport);
     SDL_RenderSetClipRect(data.renderer, &former_clip);
     SDL_SetRenderDrawBlendMode(data.renderer, former_blend_mode);
 
+    SDL_Texture *final_texture = SDL_CreateTextureFromSurface(data.renderer, surface);
+
+    SDL_DestroyTexture(texture);
+
+    if (!final_texture) {
+        return 0;
+    }
+
     silhouette_texture *new_silhouette = malloc(sizeof(silhouette_texture));
     if (!new_silhouette) {
-        SDL_DestroyTexture(texture);
+        SDL_DestroyTexture(final_texture);
         return 0;
     }
     new_silhouette->img = img;
-    new_silhouette->texture = texture;
+    new_silhouette->texture = final_texture;
     new_silhouette->next = 0;
 
     if (last_silhouette) {
@@ -1150,8 +1166,6 @@ int platform_renderer_lost_render_texture(void)
 
 void platform_renderer_invalidate_target_textures(void)
 {
-    free_silhouettes();
-
     if (data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture) {
         SDL_DestroyTexture(data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture);
         data.custom_textures[CUSTOM_IMAGE_RED_FOOTPRINT].texture = 0;
