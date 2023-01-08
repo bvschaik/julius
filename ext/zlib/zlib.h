@@ -27,7 +27,7 @@
   Comments) 1950 to 1952 in the files http://tools.ietf.org/html/rfc1950
   (zlib format), rfc1951 (deflate format) and rfc1952 (gzip format).
 
-  Changed for Julius by José Cadete (crudelios) on 11 Feb 2020.
+  Changed for Julius by JosÃ© Cadete (crudelios) on 11 Feb 2020.
   The library was heavily trimmed, with many files removed or reduced to make
   it lightweight. Therefore, do not use this version in your projects.
 */
