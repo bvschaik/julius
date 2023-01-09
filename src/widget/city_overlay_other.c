@@ -518,7 +518,7 @@ static int draw_sentiment_footprint(int x, int y, float scale, int grid_offset)
     }
     int building_id = map_building_at(grid_offset);
     building *b = building_get(building_id);
-    if (!b || !b->house_population) {
+    if (!b || !b->house_population || b->is_deleted || map_property_is_deleted(b->grid_offset)) {
         return 0;
     }
     if (map_property_is_draw_tile(grid_offset)) {
@@ -535,7 +535,7 @@ static int draw_sentiment_top(int x, int y, float scale, int grid_offset)
     }
     int building_id = map_building_at(grid_offset);
     building *b = building_get(building_id);
-    if (!b || !b->house_population) {
+    if (!b || !b->house_population || b->is_deleted || map_property_is_deleted(b->grid_offset)) {
         return 0;
     }
     if (map_property_is_draw_tile(grid_offset)) {

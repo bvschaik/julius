@@ -805,6 +805,9 @@ static SDL_Texture *get_silhouette_texture(const image *img)
     SDL_Rect rect = { 0, 0, img->width, img->height };
     SDL_RenderSetClipRect(data.renderer, &rect);
     SDL_RenderSetViewport(data.renderer, &rect);
+    SDL_SetRenderDrawBlendMode(data.renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(data.renderer, 0, 0, 0, 0);
+    SDL_RenderClear(data.renderer);
 
     SDL_Rect src_coords = { img->atlas.x_offset, img->atlas.y_offset, img->width, img->height };
 
