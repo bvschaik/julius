@@ -658,7 +658,6 @@ endif()
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-    # add_compile_options(/utf-8)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
 endif()
 
