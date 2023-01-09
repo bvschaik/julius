@@ -19,7 +19,7 @@
  *     Cosmin Truta
  *   See also "Contributing Authors", below.
  *
- * Changed for Julius by José Cadete (crudelios) on 11 Feb 2020.
+ * Changed for Julius by JosÃ© Cadete (crudelios) on 11 Feb 2020.
  * The library was heavily trimmed, with many files or unused code/comments
  * removed and compiler settings disabled to make it lightweight.
  * Therefore, do not use this version in your projects.
