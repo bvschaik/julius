@@ -824,7 +824,8 @@ static SDL_Texture *get_silhouette_texture(const image *img)
     SDL_RenderFillRect(data.renderer, 0);
 
     // Copy our created texture to a surface and then to a new texture, to get rid of the "target texture" issues
-    SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, img->width, img->height, 32, SDL_PIXELFORMAT_ABGR8888);
+    SDL_Surface *surface = SDL_CreateRGBSurface(0, img->width, img->height, 32,
+        0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
     if (!surface) {
         SDL_DestroyTexture(texture);
         return 0;
