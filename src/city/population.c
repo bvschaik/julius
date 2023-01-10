@@ -2,7 +2,6 @@
 
 #include "building/building.h"
 #include "building/house_population.h"
-#include "building/model.h"
 #include "city/data_private.h"
 #include "core/calc.h"
 #include "core/config.h"
@@ -358,81 +357,6 @@ static void yearly_recalculate_population(void)
     city_data.population.total_all_years += city_data.population.population;
     city_data.population.total_years++;
     city_data.population.average_per_year = city_data.population.total_all_years / city_data.population.total_years;
-}
-
-int calculate_total_housing_buildings(void)
-{
-    int total = 0;
-    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
-        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (b->state == BUILDING_STATE_UNUSED ||
-                b->state == BUILDING_STATE_UNDO ||
-                b->state == BUILDING_STATE_DELETED_BY_GAME ||
-                b->state == BUILDING_STATE_DELETED_BY_PLAYER) {
-                continue;
-            }
-            if (b->house_population > 0) {
-                total += 1;
-            }
-        }
-    }
-
-    return total;
-}
-
-int *calculate_number_of_each_housing_type(void)
-{
-    static int housing_type_counts[20] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
-    for (int i = 0; i <= 19; i++) {
-        housing_type_counts[i] = 0;
-    }
-
-    for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
-        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (b->state == BUILDING_STATE_UNUSED ||
-                b->state == BUILDING_STATE_UNDO ||
-                b->state == BUILDING_STATE_DELETED_BY_GAME ||
-                b->state == BUILDING_STATE_DELETED_BY_PLAYER ||
-                !b->house_size) {
-                continue;
-            }
-            housing_type_counts[b->subtype.house_level] += 1;
-        }
-    }
-
-    return housing_type_counts;
-}
-
-int *calculate_houses_demanding_goods(int *housing_type_counts)
-{
-    const model_house *model;
-    static int houses_demanding_goods[4] = { 0, 0, 0, 0 };
-
-    for (int i = 0; i <= 3; i++) {
-        houses_demanding_goods[i] = 0;
-    }
-
-    for (int i = 0; i <= 19; i++) {
-        model = model_get_house(i);
-        if (model->pottery) {
-            houses_demanding_goods[0] += housing_type_counts[i];
-        }
-
-        if (model->furniture) {
-            houses_demanding_goods[1] += housing_type_counts[i];
-        }
-
-        if (model->oil) {
-            houses_demanding_goods[2] += housing_type_counts[i];
-        }
-
-        if (model->wine) {
-            houses_demanding_goods[3] += housing_type_counts[i];
-        }
-    }
-
-    return houses_demanding_goods;
 }
 
 static int calculate_people_per_house_type(void)

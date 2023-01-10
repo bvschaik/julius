@@ -454,8 +454,8 @@ int building_is_active(const building *b)
     if (b->state != BUILDING_STATE_IN_USE) {
         return 0;
     }
-    if (b->house_size) {
-        return 1;
+    if (building_is_house(b->type)) {
+        return b->house_size > 0 && b->house_population > 0;
     }
     switch (b->type) {
         case BUILDING_RESERVOIR:

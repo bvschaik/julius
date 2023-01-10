@@ -66,15 +66,9 @@ void city_population_set_graph_order(int order);
 
 int city_population_open_housing_capacity(void);
 
-int calculate_total_housing_buildings(void);
-
 int city_population_open_housing_capacity(void);
 
 int city_population_total_housing_capacity(void);
-
-int * calculate_number_of_each_housing_type(void);
-
-int * calculate_houses_demanding_goods(int * housing_type_counts);
 
 int city_population_yearly_deaths(void);
 
