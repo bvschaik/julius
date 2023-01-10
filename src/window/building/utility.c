@@ -140,7 +140,7 @@ void window_building_draw_roadblock(building_info_context *c)
     window_building_play_sound(c, "wavs/prefecture.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(28, 115, c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description_at(c, CUSTOM_TRANSLATION, TR_BUILDING_ROADBLOCK_DESC, 96);
+    window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_ROADBLOCK_DESC);
 }
 
 void window_building_draw_roadblock_foreground(building_info_context *c)
@@ -204,7 +204,7 @@ void window_building_draw_garden_gate(building_info_context *c)
     window_building_play_sound(c, "wavs/garden.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_GARDEN_WALL_GATE), c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_description_at(c, CUSTOM_TRANSLATION, TR_BUILDING_GARDEN_WALL_GATE_DESC, 96);
+    window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_GARDEN_WALL_GATE_DESC);
 }
 
 void window_building_draw_palisade_gate(building_info_context *c)
@@ -213,7 +213,7 @@ void window_building_draw_palisade_gate(building_info_context *c)
     window_building_play_sound(c, "wavs/gatehouse.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_PALISADE_GATE), c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_description_at(c, CUSTOM_TRANSLATION, TR_BUILDING_PALISADE_GATE_DESC, 96);
+    window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_PALISADE_GATE_DESC);
 }
 
 void window_building_draw_garden_gate_foreground(building_info_context *c)

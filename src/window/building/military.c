@@ -602,7 +602,7 @@ void window_building_draw_palisade(building_info_context *c)
     window_building_play_sound(c, "wavs/wall.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_PALISADE), c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_description_at(c, CUSTOM_TRANSLATION,
-        TR_BUILDING_PALISADE_DESC, BLOCK_SIZE * c->height_blocks - 158);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 158, CUSTOM_TRANSLATION,
+        TR_BUILDING_PALISADE_DESC);
 }
 

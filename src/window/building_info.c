@@ -487,7 +487,7 @@ static void draw_background(void)
     } else if (context.type == BUILDING_INFO_TERRAIN) {
         window_building_draw_terrain(&context);
     } else if (context.type == BUILDING_INFO_BUILDING) {
-        int btype = building_get(context.building_id)->type;
+        building_type btype = building_get(context.building_id)->type;
         if (building_is_house(btype)) {
             window_building_draw_house(&context);
         } else if (btype == BUILDING_WHEAT_FARM) {
