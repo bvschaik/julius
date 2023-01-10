@@ -680,6 +680,7 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_LOOTER, "Pillard" },
     {TR_FIGURE_TYPE_ROBBER, "Voleur" },
     {TR_OVERLAY_SENTIMENT, "Humeur" },
+    {TR_OVERLAY_EFFICIENCY, "Rendement" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_NO_COVERAGE, "Personne" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_FULL_COVERAGE, "Tout le monde" },
     {TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY, "Sélectionner une politique commerciale terrestre"},

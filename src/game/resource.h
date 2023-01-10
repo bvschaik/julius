@@ -80,6 +80,7 @@ typedef struct {
     int is_inventory;
     building_type industry;
     building_type workshop;
+    int production_per_month;
     struct {
         warning_type needed;
         warning_type create_industry;
@@ -121,6 +122,10 @@ const resource_data *resource_get_data(resource_type resource);
 void resource_set_mapping(int version);
 
 resource_type resource_map_legacy_inventory(int id);
+
+resource_type resource_produced_by_building_type(int building_type);
+
+int resource_production_per_month(resource_type);
 
 resource_type resource_remap(int id);
 

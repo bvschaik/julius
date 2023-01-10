@@ -661,6 +661,7 @@ static translation_string all_strings[] = {
     {TR_FIGURE_TYPE_LOOTER, "劫匪" },
     {TR_FIGURE_TYPE_ROBBER, "强盗" },
     {TR_OVERLAY_SENTIMENT, "情    绪" },
+    {TR_OVERLAY_EFFICIENCY, "效    率" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_NO_COVERAGE, "没有人" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_FULL_COVERAGE, "所有人" },
     {TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY, "选择一项陆地贸易政策"},

@@ -1,5 +1,6 @@
 #include "city_overlay_other.h"
 
+#include "building/industry.h"
 #include "building/model.h"
 #include "building/monument.h"
 #include "building/roadblock.h"
@@ -16,6 +17,7 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
+#include "scenario/property.h"
 #include "translation/translation.h"
 #include "widget/city_draw_highway.h"
 
@@ -46,7 +48,7 @@ static int show_building_tax_income(const building *b)
 
 static int show_building_water(const building *b)
 {
-    return b->type == BUILDING_WELL || b->type == BUILDING_FOUNTAIN || b->type == BUILDING_RESERVOIR || 
+    return b->type == BUILDING_WELL || b->type == BUILDING_FOUNTAIN || b->type == BUILDING_RESERVOIR ||
         (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE && building_monument_gt_module_is_active(NEPTUNE_MODULE_2_CAPACITY_AND_WATER));
 }
 
@@ -82,6 +84,11 @@ static int show_figure_religion(const figure *f)
     return f->type == FIGURE_PRIEST || f->type == FIGURE_PRIEST_SUPPLIER;
 }
 
+static int show_figure_efficiency(const figure *f)
+{
+    return f->type == FIGURE_CART_PUSHER || f->type == FIGURE_LABOR_SEEKER;
+}
+
 static int show_figure_food_stocks(const figure *f)
 {
     if (f->type == FIGURE_MARKET_SUPPLIER || f->type == FIGURE_MARKET_TRADER ||
@@ -115,6 +122,15 @@ static int show_figure_none(const figure *f)
 static int get_column_height_religion(const building *b)
 {
     return b->house_size && b->data.house.num_gods ? b->data.house.num_gods * 18 / 10 : NO_COLUMN;
+}
+
+static int get_column_height_efficiency(const building *b)
+{
+    int percentage = building_get_efficiency(b);
+    if (percentage == -1) {
+        return NO_COLUMN;
+    }
+    return calc_bound(percentage/10, 1, 10);
 }
 
 static int get_column_height_food_stocks(const building *b)
@@ -210,6 +226,33 @@ static int get_tooltip_religion(tooltip_context *c, const building *b)
     } else {
         return 18; // >5 gods, shouldn't happen...
     }
+}
+
+static int get_tooltip_efficiency(tooltip_context *c, const building *b)
+{
+    int efficiency = building_get_efficiency(b);
+    if (efficiency == -1) {
+        return 0;
+    }
+    if (efficiency == 0) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_EFFICIENCY_0;
+    }
+    else if (efficiency < 25) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_EFFICIENCY_1;
+    }
+    else if (efficiency < 50) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_EFFICIENCY_2;
+    }
+    else if (efficiency < 80) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_EFFICIENCY_3;
+    }
+    else if (efficiency < 95) {
+        c->translation_key = TR_TOOLTIP_OVERLAY_EFFICIENCY_4;
+    }
+    else {
+        c->translation_key = TR_TOOLTIP_OVERLAY_EFFICIENCY_5;
+    }
+    return 0;
 }
 
 static int get_tooltip_food_stocks(tooltip_context *c, const building *b)
@@ -333,6 +376,22 @@ const city_overlay *city_overlay_for_religion(void)
         get_column_height_religion,
         0,
         get_tooltip_religion,
+        0,
+        0
+    };
+    return &overlay;
+}
+
+const city_overlay *city_overlay_for_efficiency(void)
+{
+    static city_overlay overlay = {
+        OVERLAY_EFFICIENCY,
+        COLUMN_COLOR_GREEN_TO_RED,
+        show_building_roads,
+        show_figure_efficiency,
+        get_column_height_efficiency,
+        0,
+        get_tooltip_efficiency,
         0,
         0
     };

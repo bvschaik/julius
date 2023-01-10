@@ -672,6 +672,7 @@ static translation_string all_strings[] = {
     { TR_FIGURE_TYPE_LOOTER, "Мародер" },
     { TR_FIGURE_TYPE_ROBBER, "Грабитель" },
     { TR_OVERLAY_SENTIMENT, "Настроение" },
+    { TR_OVERLAY_EFFICIENCY, "Эффективность" },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_NO_COVERAGE, "Никого" },
     { TR_WINDOW_ADVISOR_ENTERTAINMENT_FULL_COVERAGE, "Всех" },
     { TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY, "Выберите политику наземной торговли"},

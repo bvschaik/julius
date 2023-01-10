@@ -15,24 +15,6 @@
 #include "scenario/property.h"
 #include "translation/translation.h"
 
-static int PRODUCTION_PER_MONTH_PER_RESOURCE[] =
-{
-    0, 160, 80, 80, 80, 80, 80, 40, 40, 80, 80, 80, 40, 40, 40, 40
-};
-
-static int get_building_efficiency(const building *b, resource_type resource)
-{
-    if (b->data.industry.age_months == 0 || !resource) {
-        return 0;
-    }
-    int production_for_resource = PRODUCTION_PER_MONTH_PER_RESOURCE[resource];
-    if (resource == RESOURCE_WHEAT && scenario_property_climate() == CLIMATE_NORTHERN) {
-        production_for_resource /= 2;
-    }
-    int result = calc_percentage(b->data.industry.average_production_per_month, production_for_resource);
-    return calc_bound(result, 0, 100);
-}
-
 static void draw_farm(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource)
 {
     c->help_id = help_id;
@@ -50,7 +32,7 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
     width += text_draw_percentage(pct_grown, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
     lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
 
-    int efficiency = get_building_efficiency(b, resource);
+    int efficiency = building_get_efficiency(b);
 
     width = lang_text_draw(CUSTOM_TRANSLATION, TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY,
         c->x_offset + 32, c->y_offset + 70, FONT_NORMAL_BLACK);
@@ -133,7 +115,7 @@ static void draw_raw_material(
     width += text_draw_percentage(pct_done, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
     lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
 
-    int efficiency = get_building_efficiency(b, resource);
+    int efficiency = building_get_efficiency(b);
 
     width = lang_text_draw(CUSTOM_TRANSLATION, TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY,
         c->x_offset + 32, c->y_offset + 70, FONT_NORMAL_BLACK);
@@ -217,7 +199,7 @@ static void draw_workshop(
         }
     }
 
-    int efficiency = get_building_efficiency(b, resource);
+    int efficiency = building_get_efficiency(b);
 
     width = lang_text_draw(CUSTOM_TRANSLATION, TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY,
         c->x_offset + 32, c->y_offset + 78, FONT_NORMAL_BLACK);

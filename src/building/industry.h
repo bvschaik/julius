@@ -7,6 +7,10 @@
 int building_is_farm(building_type type);
 int building_is_raw_resource_producer(building_type type);
 int building_is_workshop(building_type type);
+/** Returns 0-100 representing building efficiency, or -1 if building type does
+ * not have efficiency. Wharfs are calculated against an arbitrary benchmark. */
+int building_get_efficiency(const building *b);
+
 
 void building_industry_update_production(void);
 void building_industry_update_wheat_production(void);

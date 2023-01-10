@@ -558,6 +558,7 @@ static translation_string all_strings[] = {
     {TR_OPTION_MENU_APPLY, "Zastosuj" },
     {TR_OVERLAY_ARENA_COL, "Arena" },
     {TR_OVERLAY_SENTIMENT, "Nastrój" },
+    {TR_OVERLAY_EFFICIENCY, "Efektywność"},
     {TR_OVERLAY_TAVERN, "Tawerna" },
     {TR_RESOURCE_FISH, "Ryby" },
     {TR_SAVEGAME_LARGER_VERSION_TITLE, "Niezgodna wersja stanu gry"},

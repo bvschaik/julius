@@ -69,6 +69,21 @@ int building_is_workshop(building_type type)
     return type >= BUILDING_WINE_WORKSHOP && type <= BUILDING_POTTERY_WORKSHOP;
 }
 
+int building_get_efficiency(const building *b)
+{
+    if (b->state == BUILDING_STATE_MOTHBALLED) {
+        return -1;
+    }
+    int resource = resource_produced_by_building_type(b->type);
+    if (b->data.industry.age_months == 0 || !resource) {
+        return -1;
+    }
+    int production_for_resource = resource_production_per_month(resource);
+
+    int percentage = calc_percentage(b->data.industry.average_production_per_month, production_for_resource);
+    return calc_bound(percentage, 0, 100);
+}
+
 static int max_progress(const building *b)
 {
     return building_is_workshop(b->type) ? MAX_PROGRESS_WORKSHOP : MAX_PROGRESS_RAW;

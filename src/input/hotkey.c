@@ -314,6 +314,10 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
         case HOTKEY_PASTE_BUILDING_SETTINGS:
             def->action = &data.hotkey_state.paste_building_settings;
             break;
+        case HOTKEY_SHOW_OVERLAY_EFFICIENCY:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_EFFICIENCY;
+            break;
         case HOTKEY_SHOW_OVERLAY_FOOD_STOCKS:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_FOOD_STOCKS;
