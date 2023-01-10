@@ -139,6 +139,7 @@ void trade_prices_save_state(buffer *buf)
 
 void trade_prices_load_state(buffer *buf)
 {
+    trade_prices_reset();
     for (int i = 0; i < resource_total_mapped(); i++) {
         prices[resource_remap(i)].buy = buffer_read_i32(buf);
         prices[resource_remap(i)].sell = buffer_read_i32(buf);

@@ -394,6 +394,7 @@ void empire_city_save_state(buffer *buf)
 
 void empire_city_load_state(buffer *buf)
 {
+    empire_city_clear_all();
     for (int i = 0; i < EMPIRE_CITY_MAX_CITIES; i++) {
         empire_city *city = &cities[i];
         city->in_use = buffer_read_u8(buf);

@@ -1037,6 +1037,7 @@ void city_data_save_state(buffer *main, buffer *graph_order,
 void city_data_load_state(buffer *main, buffer *graph_order,
     buffer *entry_exit_xy, buffer *entry_exit_grid_offset, int version)
 {
+    memset(&city_data, 0, sizeof(city_data));
     load_main_data(main, version);
 
     city_data.population.graph_order = buffer_read_i32(graph_order);

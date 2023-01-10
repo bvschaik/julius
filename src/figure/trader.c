@@ -108,6 +108,7 @@ void traders_save_state(buffer *buf)
 
 void traders_load_state(buffer *buf)
 {
+    traders_clear();
     for (int i = 0; i < MAX_TRADERS; i++) {
         struct trader *t = &data.traders[i];
         t->bought_amount = buffer_read_i32(buf);
