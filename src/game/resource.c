@@ -134,8 +134,8 @@ void resource_init(void)
 
     resource_info[RESOURCE_FISH].text = lang_get_string(CUSTOM_TRANSLATION, TR_RESOURCE_FISH);
     resource_info[RESOURCE_FISH].image.cart.single_load = image_group(GROUP_FIGURE_CARTPUSHER_CART) + 696;
-    resource_info[RESOURCE_FISH].image.cart.multiple_loads = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 56;
-    resource_info[RESOURCE_FISH].image.cart.eight_loads = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 88;
+    resource_info[RESOURCE_FISH].image.cart.multiple_loads = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 32;
+    resource_info[RESOURCE_FISH].image.cart.eight_loads = image_group(GROUP_FIGURE_CARTPUSHER_CART_MULTIPLE_FOOD) + 72;
     resource_info[RESOURCE_FISH].image.storage = image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_FILLED) + 60;
     resource_info[RESOURCE_FISH].image.icon = image_group(GROUP_RESOURCE_ICONS) + 17;
     resource_info[RESOURCE_FISH].image.empire = image_group(GROUP_EMPIRE_RESOURCES) + 17;
