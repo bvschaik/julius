@@ -10,7 +10,7 @@ static void get_needed_food(building *mess_hall, int needed_food[RESOURCE_MAX])
 {
     needed_food[RESOURCE_NONE] = 0;
     for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        needed_food[r] = resource_is_food(r) && resource_get_data(r)->is_inventory &&
+        needed_food[r] = resource_is_food(r) && resource_is_inventory(r) &&
             building_distribution_is_good_accepted(r, mess_hall);
     }
 }

@@ -29,11 +29,8 @@ void building_distribution_unaccept_all_goods(building *b)
 
 void building_distribution_update_demands(building *b)
 {
-    for (resource_type resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-        if (!resource_is_good(resource) || !resource_get_data(resource)->is_inventory) {
-            continue;
-        }
-        if (b->accepted_goods[resource] > 1) {
+    for (resource_type resource = RESOURCE_MIN_NON_FOOD; resource < RESOURCE_MAX_NON_FOOD; resource++) {
+        if (resource_is_inventory(resource) && b->accepted_goods[resource] > 1) {
             b->accepted_goods[resource]--;
         }
     }
@@ -47,7 +44,7 @@ resource_type building_distribution_fetch(const building *b, inventory_storage_i
         min_stock = 1;
     }
     for (resource_type current_resource = RESOURCE_MIN; current_resource < RESOURCE_MAX; current_resource++) {
-        if (!resource_get_data(current_resource)->is_inventory) {
+        if (!resource_is_inventory(current_resource)) {
             continue;
         }
         if (allowed[current_resource] &&
@@ -111,7 +108,7 @@ static int building_distribution_get_inventory_storages(inventory_storage_info *
         int distance = building_dist(x, y, w, h, b);
 
         for (int r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (resource_get_data(r)->is_inventory) {
+            if (resource_is_inventory(r)) {
                 update_food_resource(info, r, b, distance);
             }
         }
@@ -122,8 +119,8 @@ static int building_distribution_get_inventory_storages(inventory_storage_info *
         }
         int distance = building_dist(x, y, w, h, b);
 
-        for (int r = RESOURCE_MIN_GOOD; r < RESOURCE_MAX_GOOD; r++) {
-            if (resource_get_data(r)->is_inventory) {
+        for (int r = RESOURCE_MIN_NON_FOOD; r < RESOURCE_MAX_NON_FOOD; r++) {
+            if (resource_is_inventory(r)) {
                 update_good_resource(info, r, b, distance);
             }
         }

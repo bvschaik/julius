@@ -43,12 +43,10 @@ typedef enum {
     // helper constants
     RESOURCE_MIN_FOOD = RESOURCE_WHEAT,
     RESOURCE_MAX_FOOD = RESOURCE_FISH + 1,
-    RESOURCE_MIN_RAW = RESOURCE_CLAY,
-    RESOURCE_MAX_RAW = RESOURCE_MARBLE + 1,
-    RESOURCE_MIN_GOOD = RESOURCE_POTTERY,
-    RESOURCE_MAX_GOOD = RESOURCE_WEAPONS + 1,
+    RESOURCE_MIN_NON_FOOD = RESOURCE_MAX_FOOD,
+    RESOURCE_MAX_NON_FOOD = RESOURCE_WEAPONS + 1,
     RESOURCE_MIN = RESOURCE_MIN_FOOD,
-    RESOURCE_MAX = RESOURCE_MAX_GOOD,
+    RESOURCE_MAX = RESOURCE_MAX_NON_FOOD,
     RESOURCE_MAX_FOOD_LEGACY = 7,
     RESOURCE_MAX_LEGACY = 16,
     RESOURCE_TOTAL_SPECIAL = 2
@@ -67,9 +65,8 @@ typedef enum {
 typedef enum {
     RESOURCE_FLAG_NONE = 0,
     RESOURCE_FLAG_FOOD = 1,
-    RESOURCE_FLAG_RAW_MATERIAL = 2,
-    RESOURCE_FLAG_GOOD = 4,
-    RESOURCE_FLAG_SPECIAL = 8
+    RESOURCE_FLAG_STORABLE = 2,
+    RESOURCE_FLAG_INVENTORY = 4 | RESOURCE_FLAG_STORABLE // Inventory goods are always storable
 } resource_flags;
 
 typedef struct {
@@ -77,7 +74,6 @@ typedef struct {
     resource_flags flags;
     const uint8_t *text;
     const char *xml_attr_name;
-    int is_inventory;
     building_type industry;
     building_type workshop;
     int production_per_month;
@@ -111,7 +107,7 @@ int resource_is_food(resource_type resource);
 
 int resource_is_raw_material(resource_type resource);
 
-int resource_is_good(resource_type resource);
+int resource_is_inventory(resource_type resource);
 
 resource_type resource_get_from_industry(building_type industry);
 

@@ -47,25 +47,24 @@ static struct {
 
 static resource_data resource_info[RESOURCE_ALL] = {
     [RESOURCE_NONE]       = { .type = RESOURCE_NONE },
-    [RESOURCE_WHEAT]      = { .type = RESOURCE_WHEAT,      .xml_attr_name = "wheat",       .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_WHEAT_FARM,         .production_per_month = 160, .default_trade_price = {  28,  22 }, .is_inventory = 1 },
-    [RESOURCE_VEGETABLES] = { .type = RESOURCE_VEGETABLES, .xml_attr_name = "vegetables",  .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_VEGETABLE_FARM,     .production_per_month = 80,  .default_trade_price = {  38,  30 }, .is_inventory = 1 },
-    [RESOURCE_FRUIT]      = { .type = RESOURCE_FRUIT,      .xml_attr_name = "fruit",       .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_FRUIT_FARM,         .production_per_month = 80,  .default_trade_price = {  38,  30 }, .is_inventory = 1 },
-    [RESOURCE_MEAT]       = { .type = RESOURCE_MEAT,       .xml_attr_name = "meat",        .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_PIG_FARM,           .production_per_month = 80,  .default_trade_price = {  44,  36 }, .is_inventory = 1 },
-    //                                                                                                                                                                   // wharf production/month is arbitrary, used for efficiency overlay
-    [RESOURCE_FISH]       = { .type = RESOURCE_FISH,       .xml_attr_name = "fish",        .flags = RESOURCE_FLAG_FOOD,         .industry = BUILDING_WHARF,              .production_per_month = 100, .default_trade_price = {  44,  36 }, .is_inventory = 1 },
-    [RESOURCE_CLAY]       = { .type = RESOURCE_CLAY,       .xml_attr_name = "clay",        .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_CLAY_PIT,           .production_per_month = 80,  .default_trade_price = {  40,  30 }, .workshop = BUILDING_POTTERY_WORKSHOP,   .warning = { WARNING_CLAY_NEEDED,   WARNING_BUILD_CLAY_PIT    } },
-    [RESOURCE_TIMBER]     = { .type = RESOURCE_TIMBER,     .xml_attr_name = "timber|wood", .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_TIMBER_YARD,        .production_per_month = 40,  .default_trade_price = {  50,  35 }, .workshop = BUILDING_FURNITURE_WORKSHOP, .warning = { WARNING_TIMBER_NEEDED, WARNING_BUILD_TIMBER_YARD } },
-    [RESOURCE_OLIVES]     = { .type = RESOURCE_OLIVES,     .xml_attr_name = "olives",      .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_OLIVE_FARM,         .production_per_month = 40,  .default_trade_price = {  42,  34 }, .workshop = BUILDING_OIL_WORKSHOP,       .warning = { WARNING_OLIVES_NEEDED, WARNING_BUILD_OLIVE_FARM  } },
-    [RESOURCE_VINES]      = { .type = RESOURCE_VINES,      .xml_attr_name = "vines",       .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_VINES_FARM,         .production_per_month = 80,  .default_trade_price = {  44,  36 }, .workshop = BUILDING_WINE_WORKSHOP,      .warning = { WARNING_VINES_NEEDED,  WARNING_BUILD_VINES_FARM  } },
-    [RESOURCE_IRON]       = { .type = RESOURCE_IRON,       .xml_attr_name = "iron",        .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_IRON_MINE,          .production_per_month = 80,  .default_trade_price = {  60,  40 }, .workshop = BUILDING_WEAPONS_WORKSHOP,   .warning = { WARNING_IRON_NEEDED,   WARNING_BUILD_IRON_MINE   } },
-    [RESOURCE_MARBLE]     = { .type = RESOURCE_MARBLE,     .xml_attr_name = "marble",      .flags = RESOURCE_FLAG_RAW_MATERIAL, .industry = BUILDING_MARBLE_QUARRY,      .production_per_month = 80,  .default_trade_price = { 200, 140 } },
-    [RESOURCE_POTTERY]    = { .type = RESOURCE_POTTERY,    .xml_attr_name = "pottery",     .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_POTTERY_WORKSHOP,   .production_per_month = 40,  .default_trade_price = { 180, 140 }, .is_inventory = 1 },
-    [RESOURCE_FURNITURE]  = { .type = RESOURCE_FURNITURE,  .xml_attr_name = "furniture",   .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_FURNITURE_WORKSHOP, .production_per_month = 40,  .default_trade_price = { 200, 150 }, .is_inventory = 1 },
-    [RESOURCE_OIL]        = { .type = RESOURCE_OIL,        .xml_attr_name = "oil",         .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_OIL_WORKSHOP,       .production_per_month = 40,  .default_trade_price = { 180, 140 }, .is_inventory = 1 },
-    [RESOURCE_WINE]       = { .type = RESOURCE_WINE,       .xml_attr_name = "wine",        .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_WINE_WORKSHOP,      .production_per_month = 40,  .default_trade_price = { 215, 160 }, .is_inventory = 1 },
-    [RESOURCE_WEAPONS]    = { .type = RESOURCE_WEAPONS,    .xml_attr_name = "weapons",     .flags = RESOURCE_FLAG_GOOD,         .industry = BUILDING_WEAPONS_WORKSHOP,   .production_per_month = 40,  .default_trade_price = { 250, 180 } },
-    [RESOURCE_DENARII]    = { .type = RESOURCE_DENARII,    .flags = RESOURCE_FLAG_SPECIAL },
-    [RESOURCE_TROOPS]     = { .type = RESOURCE_TROOPS,     .flags = RESOURCE_FLAG_SPECIAL }
+    [RESOURCE_WHEAT]      = { .type = RESOURCE_WHEAT,      .xml_attr_name = "wheat",       .flags = RESOURCE_FLAG_FOOD | RESOURCE_FLAG_INVENTORY, .industry = BUILDING_WHEAT_FARM,         .production_per_month = 160, .default_trade_price = {  28,  22 } },
+    [RESOURCE_VEGETABLES] = { .type = RESOURCE_VEGETABLES, .xml_attr_name = "vegetables",  .flags = RESOURCE_FLAG_FOOD | RESOURCE_FLAG_INVENTORY, .industry = BUILDING_VEGETABLE_FARM,     .production_per_month = 80,  .default_trade_price = {  38,  30 } },
+    [RESOURCE_FRUIT]      = { .type = RESOURCE_FRUIT,      .xml_attr_name = "fruit",       .flags = RESOURCE_FLAG_FOOD | RESOURCE_FLAG_INVENTORY, .industry = BUILDING_FRUIT_FARM,         .production_per_month = 80,  .default_trade_price = {  38,  30 } },
+    [RESOURCE_MEAT]       = { .type = RESOURCE_MEAT,       .xml_attr_name = "meat",        .flags = RESOURCE_FLAG_FOOD | RESOURCE_FLAG_INVENTORY, .industry = BUILDING_PIG_FARM,           .production_per_month = 80,  .default_trade_price = {  44,  36 } },
+    [RESOURCE_FISH]       = { .type = RESOURCE_FISH,       .xml_attr_name = "fish",        .flags = RESOURCE_FLAG_FOOD | RESOURCE_FLAG_INVENTORY, .industry = BUILDING_WHARF,              .production_per_month = 100, .default_trade_price = {  44,  36 } },
+    [RESOURCE_CLAY]       = { .type = RESOURCE_CLAY,       .xml_attr_name = "clay",        .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_CLAY_PIT,           .production_per_month = 80,  .default_trade_price = {  40,  30 }, .workshop = BUILDING_POTTERY_WORKSHOP,   .warning = { WARNING_CLAY_NEEDED,   WARNING_BUILD_CLAY_PIT    } },
+    [RESOURCE_TIMBER]     = { .type = RESOURCE_TIMBER,     .xml_attr_name = "timber|wood", .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_TIMBER_YARD,        .production_per_month = 40,  .default_trade_price = {  50,  35 }, .workshop = BUILDING_FURNITURE_WORKSHOP, .warning = { WARNING_TIMBER_NEEDED, WARNING_BUILD_TIMBER_YARD } },
+    [RESOURCE_OLIVES]     = { .type = RESOURCE_OLIVES,     .xml_attr_name = "olives",      .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_OLIVE_FARM,         .production_per_month = 40,  .default_trade_price = {  42,  34 }, .workshop = BUILDING_OIL_WORKSHOP,       .warning = { WARNING_OLIVES_NEEDED, WARNING_BUILD_OLIVE_FARM  } },
+    [RESOURCE_VINES]      = { .type = RESOURCE_VINES,      .xml_attr_name = "vines",       .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_VINES_FARM,         .production_per_month = 80,  .default_trade_price = {  44,  36 }, .workshop = BUILDING_WINE_WORKSHOP,      .warning = { WARNING_VINES_NEEDED,  WARNING_BUILD_VINES_FARM  } },
+    [RESOURCE_IRON]       = { .type = RESOURCE_IRON,       .xml_attr_name = "iron",        .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_IRON_MINE,          .production_per_month = 80,  .default_trade_price = {  60,  40 }, .workshop = BUILDING_WEAPONS_WORKSHOP,   .warning = { WARNING_IRON_NEEDED,   WARNING_BUILD_IRON_MINE   } },
+    [RESOURCE_MARBLE]     = { .type = RESOURCE_MARBLE,     .xml_attr_name = "marble",      .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_MARBLE_QUARRY,      .production_per_month = 80,  .default_trade_price = { 200, 140 } },
+    [RESOURCE_POTTERY]    = { .type = RESOURCE_POTTERY,    .xml_attr_name = "pottery",     .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_POTTERY_WORKSHOP,   .production_per_month = 40,  .default_trade_price = { 180, 140 } },
+    [RESOURCE_FURNITURE]  = { .type = RESOURCE_FURNITURE,  .xml_attr_name = "furniture",   .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_FURNITURE_WORKSHOP, .production_per_month = 40,  .default_trade_price = { 200, 150 } },
+    [RESOURCE_OIL]        = { .type = RESOURCE_OIL,        .xml_attr_name = "oil",         .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_OIL_WORKSHOP,       .production_per_month = 40,  .default_trade_price = { 180, 140 } },
+    [RESOURCE_WINE]       = { .type = RESOURCE_WINE,       .xml_attr_name = "wine",        .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_WINE_WORKSHOP,      .production_per_month = 40,  .default_trade_price = { 215, 160 } },
+    [RESOURCE_WEAPONS]    = { .type = RESOURCE_WEAPONS,    .xml_attr_name = "weapons",     .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_WEAPONS_WORKSHOP,   .production_per_month = 40,  .default_trade_price = { 250, 180 } },
+    [RESOURCE_DENARII]    = { .type = RESOURCE_DENARII },
+    [RESOURCE_TROOPS]     = { .type = RESOURCE_TROOPS  }
 };
 
 int resource_is_food(resource_type resource)
@@ -75,12 +74,12 @@ int resource_is_food(resource_type resource)
 
 int resource_is_raw_material(resource_type resource)
 {
-    return (resource_info[resource].flags & RESOURCE_FLAG_RAW_MATERIAL) != 0;
+    return resource_info[resource].workshop != BUILDING_NONE;
 }
 
-int resource_is_good(resource_type resource)
+int resource_is_inventory(resource_type resource)
 {
-    return (resource_info[resource].flags & RESOURCE_FLAG_GOOD) != 0;
+    return (resource_info[resource].flags & RESOURCE_FLAG_INVENTORY) != 0;
 }
 
 resource_type resource_get_from_industry(building_type industry)
@@ -97,11 +96,9 @@ resource_type resource_get_from_industry(building_type industry)
 
 resource_type resource_get_raw_material_for_good(resource_type good)
 {
-    if (resource_is_good(good)) {
-        for (resource_type raw_material = RESOURCE_MIN_RAW; raw_material < RESOURCE_MAX_RAW; raw_material++) {
-            if (resource_info[raw_material].workshop == resource_info[good].industry) {
-                return raw_material;
-            }
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        if (resource_info[r].workshop == resource_info[good].industry) {
+            return r;
         }
     }
     return RESOURCE_NONE;

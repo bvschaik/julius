@@ -404,7 +404,7 @@ static int house_consume_food(void)
             }
             int foodtypes_available = 0;
             for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-                if (b->resources[r] && resource_get_data(r)->is_inventory) {
+                if (b->resources[r] && resource_is_inventory(r)) {
                     foodtypes_available++;
                 }
             }
@@ -420,7 +420,7 @@ static int house_consume_food(void)
                 b->data.house.num_foods = 1;
             } else if (num_types > 0) {
                 for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-                    if (!resource_get_data(r)->is_inventory) {
+                    if (!resource_is_inventory(r)) {
                         continue;
                     }
                     if (b->resources[r] >= amount_per_type) {

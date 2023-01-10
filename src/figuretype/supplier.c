@@ -121,22 +121,12 @@ static int take_resource_from_generic_building(figure *f, int building_id)
 
 static int take_resource_from_warehouse(figure *f, int warehouse_id, int max_amount)
 {
-    int lighthouse_supplier = f->type == FIGURE_LIGHTHOUSE_SUPPLIER;
-    resource_type resource = f->collecting_item_id;
-    if (lighthouse_supplier) {
-        if (!resource_is_raw_material(resource)) {
-            return 0;
-        }
-    } else if (!resource_is_good(resource)) {
-        return 0;
-    }
-
     building *warehouse = building_get(warehouse_id);
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return take_resource_from_generic_building(f, warehouse_id);
     }
     int num_loads;
-    int stored = building_warehouse_get_amount(warehouse, resource);
+    int stored = building_warehouse_get_amount(warehouse, f->collecting_item_id);
     if (stored < max_amount) {
         num_loads = stored;
     } else {
@@ -145,10 +135,10 @@ static int take_resource_from_warehouse(figure *f, int warehouse_id, int max_amo
     if (num_loads <= 0) {
         return 0;
     }
-    building_warehouse_remove_resource(warehouse, resource, num_loads);
+    building_warehouse_remove_resource(warehouse, f->collecting_item_id, num_loads);
 
     // create delivery boys
-    if (!lighthouse_supplier) {
+    if (f->type != FIGURE_LIGHTHOUSE_SUPPLIER) {
         int supplier_id = f->id;
         int boy1 = figure_supplier_create_delivery_boy(supplier_id, supplier_id, FIGURE_DELIVERY_BOY);
         if (num_loads > 1) {

@@ -373,7 +373,7 @@ int window_building_handle_mouse_dock(const mouse *m, building_info_context *c)
 static int has_food_stocks(const building *b)
 {
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (b->resources[r] && resource_get_data(r)->is_inventory) {
+        if (b->resources[r] && resource_is_inventory(r)) {
             return 1;
         }
     }
@@ -393,7 +393,7 @@ static void window_building_draw_stocks(building_info_context *c, building *b, i
         const resource_list *list = city_resource_get_potential_foods();
         for (int i = 0; i < list->size; i++) {
             resource_type r = list->items[i];
-            if (!resource_get_data(r)->is_inventory || (list->size > 4 && !b->resources[r])) {
+            if (!resource_is_inventory(r) || (list->size > 4 && !b->resources[r])) {
                 continue;
             }
             font = building_distribution_is_good_accepted(r, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
@@ -412,8 +412,8 @@ static void window_building_draw_stocks(building_info_context *c, building *b, i
 
     // good stocks
     if (draw_goods) {
-        for (resource_type r = RESOURCE_MIN_GOOD; r < RESOURCE_MAX_GOOD; r++) {
-            if (!resource_get_data(r)->is_inventory) {
+        for (resource_type r = RESOURCE_MIN_NON_FOOD; r < RESOURCE_MAX_NON_FOOD; r++) {
+            if (!resource_is_inventory(r)) {
                 continue;
             }
             font = building_distribution_is_good_accepted(r, b) ? FONT_NORMAL_BLACK : FONT_NORMAL_RED;
@@ -459,7 +459,7 @@ static int distributor_handles_resource(resource_type resource, building_type ty
     if (type == BUILDING_DOCK) {
         return 1;
     }
-    if (!resource_get_data(resource)->is_inventory) {
+    if (!resource_is_inventory(resource)) {
         return 0;
     }
     if (type == BUILDING_MARKET) {

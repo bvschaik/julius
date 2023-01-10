@@ -314,7 +314,7 @@ static void draw_temple_info(building_info_context *c, int image_offset)
 
     if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
         for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (!resource_get_data(r)->is_inventory) {
+            if (!resource_is_inventory(r)) {
                 continue;
             }
             image_draw(resource_get_data(r)->image.icon, c->x_offset + x_offset, c->y_offset + 60,

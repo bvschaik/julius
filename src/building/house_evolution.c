@@ -150,7 +150,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, int
     int foodtypes_required = model->food_types;
     int foodtypes_available = 0;
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (house->resources[r] && resource_get_data(r)->is_inventory) {
+        if (house->resources[r] && resource_is_inventory(r)) {
             foodtypes_available++;
         }
     }
@@ -527,9 +527,13 @@ static void consume_resources(building *b)
         consumption_reduction[RESOURCE_FURNITURE] += 10;
     }
 
-    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (!resource_is_good(r) || !resource_get_data(r)->is_inventory) {
+    for (resource_type r = RESOURCE_MIN_NON_FOOD; r < RESOURCE_MAX_NON_FOOD; r++) {
+        if (!resource_is_inventory(r)) {
             continue;
+        }
+        // mars module 2 - all goods reduced by 10% 
+        if (b->data.house.temple_mars && building_monument_gt_module_is_active(MARS_MODULE_2_ALL_GOODS)) {
+            consumption_reduction[r] += 10;
         }
         if (!consumption_reduction[r] ||
             (game_time_total_months() % (100 / consumption_reduction[r]))) {
@@ -630,7 +634,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     int foodtypes_required = model->food_types;
     int foodtypes_available = 0;
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (house->resources[r] && resource_get_data(r)->is_inventory) {
+        if (house->resources[r] && resource_is_inventory(r)) {
             foodtypes_available++;
         }
     }
