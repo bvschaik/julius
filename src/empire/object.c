@@ -7,6 +7,7 @@
 #include "empire/type.h"
 #include "game/animation.h"
 #include "game/save_version.h"
+#include "scenario/building.h"
 #include "scenario/data.h"
 #include "scenario/empire.h"
 
@@ -165,6 +166,12 @@ void empire_object_load(buffer *buf, int version)
 
         if (version > SCENARIO_LAST_UNVERSIONED) {
             buffer_read_raw(buf, full->city_custom_name, sizeof(full->city_custom_name));
+        }
+
+        // Fix - on old saves, fish resources were enabled simply if a wharf existed
+        if (full->city_type == EMPIRE_CITY_OURS && scenario_building_allowed(BUILDING_WHARF) &&
+            resource_total_mapped() == RESOURCE_MAX_LEGACY) {
+            full->city_sells_resource[RESOURCE_FISH] = 1;
         }
     }
 
