@@ -87,11 +87,11 @@
 		<layer group="this" image="Architect 12" x="36" y="1"/>
 	</image>
 	<!-- Note: Architect's Guild OFF Variant -->
-	<image id="Arch Guild OFF" src="Architects_Guild_OFF" width="118" height="104" isometric="true"/>
+	<image id="Arch Guild OFF" src="Architects_Guild_OFF" width="118" height="105" isometric="true"/>
 	<!-- Note: Architect's Guild ON Variant -->
 	<image id="Arch Guild ON" width="118" height="104" isometric="true">
 		<layer group="this" image="Arch Guild OFF"/>
-		<animation speed="6" x="0" y="56" reversible="false">
+		<animation speed="6" x="0" y="57" reversible="false">
 			<frame group="this" image="Architects_Guild_On_01"/>
 			<frame group="this" image="Architects_Guild_On_02"/>
 			<frame group="this" image="Architects_Guild_On_03"/>
