@@ -622,13 +622,7 @@ static int contains_non_stockpiled_food(building *space, const int *resources)
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
-    if (resource == RESOURCE_WHEAT || resource == RESOURCE_VEGETABLES ||
-        resource == RESOURCE_FRUIT || resource == RESOURCE_MEAT) {
-        if (resources[resource] > 0) {
-            return 1;
-        }
-    }
-    return 0;
+    return resource_is_food(resource) && resources[resource] > 0;
 }
 
 int building_warehouse_determine_worker_task(building *warehouse, int *resource)
