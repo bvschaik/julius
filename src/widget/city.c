@@ -613,16 +613,19 @@ static void handle_mouse(const mouse *m)
         if (config_get(CONFIG_UI_ALWAYS_SHOW_ROTATION_BUTTONS) && handle_construction_buttons(m->x, m->y, 0)) {
             return;
         }
-        if (!building_construction_in_progress()) {
-            build_start(tile);
+        if (building_construction_type()) {
+            if (!building_construction_in_progress()) {
+                build_start(tile);
+            }
+            build_move(tile);
         }
-        build_move(tile);
-    } else if (m->left.is_down || building_construction_in_progress()) {
+    } else if (building_construction_type() && (m->left.is_down || building_construction_in_progress())) {
         build_move(tile);
     }
     if (m->left.went_up) {
-        build_end();
-        if (!building_construction_type()) {
+        if (building_construction_type()) {
+            build_end();
+        } else {
             int grid_offset = tile->grid_offset;
             int building_id = map_building_at(grid_offset);
             if (building_id) {

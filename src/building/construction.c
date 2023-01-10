@@ -542,6 +542,7 @@ void building_construction_clear_type(void)
     data.cost_preview = 0;
     data.sub_type = BUILDING_NONE;
     data.type = BUILDING_NONE;
+    data.in_progress = 0;
     building_rotation_remove_rotation();
 }
 
