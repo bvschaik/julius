@@ -192,7 +192,7 @@ static void check_charioteer_access(int type)
     }
 }
 
-static void check_raw_material_acces(building_type type)
+static void check_raw_material_access(building_type type)
 {
     resource_type good = resource_get_from_industry(type);
     if (good == RESOURCE_NONE) {
@@ -203,7 +203,7 @@ static void check_raw_material_acces(building_type type)
         return;
     }
     const resource_data *data = resource_get_data(raw_material);
-    if (building_count_active(raw_material) <= 0) {
+    if (building_count_active(data->industry) <= 0) {
         if (city_resource_count(good) <= 0 && city_resource_count(raw_material) <= 0) {
             show(data->warning.needed);
             if (empire_can_produce_resource(raw_material)) {
@@ -233,7 +233,7 @@ void building_construction_warning_check_all(building_type type, int x, int y, i
     check_wall(type, x, y, size);
     check_water(type, x, y);
 
-    check_raw_material_acces(type);
+    check_raw_material_access(type);
 
     check_road_access(type, x, y, size);
 }
