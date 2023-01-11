@@ -69,7 +69,7 @@ static resource_data resource_info[RESOURCE_ALL] = {
 
 int resource_is_food(resource_type resource)
 {
-    return (resource_info[resource].flags & RESOURCE_FLAG_FOOD) != 0;
+    return (resource_info[resource].flags & RESOURCE_FLAG_FOOD) == RESOURCE_FLAG_FOOD;
 }
 
 int resource_is_raw_material(resource_type resource)
@@ -79,7 +79,7 @@ int resource_is_raw_material(resource_type resource)
 
 int resource_is_inventory(resource_type resource)
 {
-    return (resource_info[resource].flags & RESOURCE_FLAG_INVENTORY) != 0;
+    return (resource_info[resource].flags & RESOURCE_FLAG_INVENTORY) == RESOURCE_FLAG_INVENTORY;
 }
 
 resource_type resource_get_from_industry(building_type industry)
