@@ -3,6 +3,7 @@
 #include "assets/assets.h"
 #include "building/count.h"
 #include "building/house.h"
+#include "building/house_population.h"
 #include "building/model.h"
 #include "city/migration.h"
 #include "city/population.h"
@@ -115,5 +116,6 @@ const advisor_window_type *window_advisor_housing(void)
     static const advisor_window_type window = {
         draw_background
     };
+    house_population_update_room();
     return &window;
 }

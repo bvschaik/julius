@@ -148,13 +148,17 @@ static void get_already_handled_goods(handled_goods *handled, int ship_id)
 
         // find the handled_good that is on this road network or find the next one that hasn't
         // been assigned to a road network yet
-        handled_goods_by_road_network *network;
+        handled_goods_by_road_network *network = 0;
         for (int j = 0; j < handled->max_networks; j++) {
             network = &handled->networks[j];
             if (!network->road_network_id ||
                 network->road_network_id == dock->road_network_id) {
                 break;
             }
+        }
+
+        if (!network) {
+            return;
         }
 
         // assign the road network (in case this is a new one) and add the goods this dock handles

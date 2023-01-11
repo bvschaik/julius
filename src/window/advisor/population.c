@@ -281,11 +281,11 @@ static void print_society_info(void)
 
     // Percent patricians
     width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_VILLAS_PALACES), 75, 342, FONT_NORMAL_WHITE, 0);
-    text_draw_percentage(percentage_city_population_in_villas_palaces(), 75 + width, 342, FONT_NORMAL_WHITE);
+    text_draw_percentage(city_population_percentage_in_villas_palaces(), 75 + width, 342, FONT_NORMAL_WHITE);
 
     // Percent impoverished
     width = text_draw(translation_for(TR_ADVISOR_PERCENTAGE_IN_TENTS_SHACKS), 75, 360, FONT_NORMAL_WHITE, 0);
-    text_draw_percentage(percentage_city_population_in_tents_shacks(), 75 + width, 360, FONT_NORMAL_WHITE);
+    text_draw_percentage(city_population_percentage_in_tents_shacks(), 75 + width, 360, FONT_NORMAL_WHITE);
 
     // Average tax
     width = text_draw(translation_for(TR_ADVISOR_AVERAGE_TAX), 75, 378, FONT_NORMAL_WHITE, 0);

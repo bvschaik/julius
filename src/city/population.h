@@ -78,8 +78,8 @@ int city_population_average_age(void);
 
 int city_population_percent_in_workforce(void);
 
-int percentage_city_population_in_tents_shacks(void);
+int city_population_percentage_in_tents_shacks(void);
 
-int percentage_city_population_in_villas_palaces(void);
+int city_population_percentage_in_villas_palaces(void);
 
 #endif // CITY_POPULATION_H

@@ -382,7 +382,7 @@ static char *get_chosen_filename(void)
     }
 
     // We should use the typed name, which needs to be converted to UTF-8...
-    static char typed_file[FILE_NAME_MAX + 1];
+    static char typed_file[FILE_NAME_MAX];
     encoding_to_utf8(data.typed_name, typed_file, FILE_NAME_MAX, encoding_system_uses_decomposed());
     return typed_file;
 }
@@ -401,7 +401,7 @@ static void button_ok_cancel(int is_ok, int param2)
     if (data.type == FILE_TYPE_EMPIRE) {
         strncpy(filename, "custom_empires/", FILE_NAME_MAX - 1);
     }
-    strncat(filename, chosen_filename, FILE_NAME_MAX - 1);
+    strncat(filename, chosen_filename, sizeof(filename) - strlen(filename) - 1);
 
     if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(filename, NOT_LOCALIZED)) {
         data.message_not_exist_start_time = time_get_millis();

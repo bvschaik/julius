@@ -447,7 +447,7 @@ int city_population_yearly_births(void)
     return city_data.population.yearly_births;
 }
 
-int percentage_city_population_in_tents_shacks(void)
+int city_population_percentage_in_tents_shacks(void)
 {
     if (!city_data.population.population) {
         return 0;
@@ -456,7 +456,7 @@ int percentage_city_population_in_tents_shacks(void)
     return calc_percentage(city_data.population.people_in_tents_shacks, city_data.population.population);
 }
 
-int percentage_city_population_in_villas_palaces(void)
+int city_population_percentage_in_villas_palaces(void)
 {
     if (!city_data.population.population) {
         return 0;
