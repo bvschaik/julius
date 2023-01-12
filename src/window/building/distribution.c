@@ -515,6 +515,17 @@ void window_building_draw_distributor_orders_foreground(building_info_context *c
             lang_active_id = TR_TEMPLE_DISTRIBUTING;
             lang_inactive_id = TR_TEMPLE_NOT_DISTRIBUTING;
             break;
+        case BUILDING_TAVERN:
+            lang_group = CUSTOM_TRANSLATION;
+            lang_active_id = TR_TAVERN_USING;
+            lang_inactive_id = TR_TAVERN_NOT_USING;
+            break;
+        case BUILDING_CARAVANSERAI:
+        case BUILDING_MESS_HALL:
+            lang_group = 99;
+            lang_active_id = 10;
+            lang_inactive_id = 8;
+            break;
         default:
             lang_group = 99;
             lang_active_id = 7;
@@ -749,7 +760,7 @@ void window_building_draw_granary_orders(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - (scrollbar_shown ? 4 : 2), 21);
 }
 
-static void draw_button_from_state(int state, int x, int y, building_type type)
+static void draw_button_from_state(int state, int x, int y, building_type type, resource_type resource)
 {
     switch (state) {
         case BUILDING_STORAGE_STATE_GETTING:
@@ -759,7 +770,7 @@ static void draw_button_from_state(int state, int x, int y, building_type type)
             {
                 int image_width = image_get(image_group(GROUP_CONTEXT_ICONS) + 12)->width + 15;
                 int group_number;
-                if (type == BUILDING_GRANARY) { 
+                if (resource_is_food(resource)) { 
                     // Check whether to use "getting goods" or "getting food"
                     group_number = 10;
                 } else {
@@ -822,7 +833,7 @@ static void draw_resource_orders_buttons(int x, int y, const resource_list *list
         button_border_draw(x + 148, y_offset, 210, 22, data.resource_focus_button_id == i + 1);
         button_border_draw(x + 358, y_offset, 28, 22, data.partial_resource_focus_button_id == i + 1);
 
-        draw_button_from_state(storage->resource_state[resource], x + 148, y_offset + 5, type);
+        draw_button_from_state(storage->resource_state[resource], x + 148, y_offset + 5, type, resource);
     }
 }
 
