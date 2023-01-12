@@ -77,33 +77,16 @@ static void enable_cycling_temples_if_allowed(building_type type)
     menu_enabled[sub][0] = 1;
 }
 
-static int monument_has_required_resources(building_type type)
-{
-    int phases = building_monument_phases(type);
-    if (!phases) {
-        return 1;
-    }
-    for (int phase = 1; phase < phases; phase++) {
-        for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-            if (building_monument_resources_needed_for_monument_type(type, r, phase) > 0 &&
-                !empire_can_produce_resource_potentially(r)) {
-                return 0;
-            }
-        }
-    }
-    return 1;
-}
-
 static int can_get_required_resource(building_type type)
 {
     switch (type) {
         case BUILDING_TAVERN:
             return empire_can_produce_resource_potentially(RESOURCE_WINE) &&
-                monument_has_required_resources(type);
+                building_monument_has_required_resources_to_build(type);
         case BUILDING_LIGHTHOUSE:
             return empire_can_produce_resource_potentially(RESOURCE_TIMBER);
         default:
-            return monument_has_required_resources(type);
+            return building_monument_has_required_resources_to_build(type);
     }
 }
 

@@ -39,6 +39,7 @@ int building_monument_needs_resources(building *b);
 int building_monument_progress(building *b);
 int building_monument_has_labour_problems(building *b);
 int building_monument_working(building_type type);
+int building_monument_has_required_resources_to_build(building_type type);
 int building_monument_resources_needed_for_monument_type(building_type type, int resource, int phase);
 int building_monument_resource_in_delivery(building *b, int resource_id);
 void building_monument_remove_delivery(int figure_id);

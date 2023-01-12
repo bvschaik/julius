@@ -1,5 +1,6 @@
 #include "city.h"
 
+#include "building/monument.h"
 #include "core/calc.h"
 #include "core/lang.h"
 #include "core/string.h"
@@ -115,7 +116,12 @@ int can_produce_resource(int resource)
             return 1;
         }
     }
-    return 0;
+
+    // Wine can also be produced via Venus Grand Temple
+    // Potential bug: if venus grand temples were to require wine to be built, we would crash here with a stack overflow
+    return resource == RESOURCE_WINE && scenario_building_allowed(BUILDING_MENU_GRAND_TEMPLES) &&
+        scenario_building_allowed(BUILDING_GRAND_TEMPLE_VENUS) &&
+        building_monument_has_required_resources_to_build(BUILDING_GRAND_TEMPLE_VENUS);
 }
 
 int empire_can_produce_resource(int resource)
