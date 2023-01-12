@@ -160,7 +160,7 @@ typedef struct building {
     } sentiment;
     unsigned char show_on_problem_overlay;
     unsigned char house_tavern_wine_access;
-    unsigned char house_tavern_meat_access;
+    unsigned char house_tavern_food_access;
     unsigned char house_arena_gladiator;
     unsigned char house_arena_lion;
     unsigned char is_tourism_venue;

@@ -43,9 +43,15 @@ typedef struct {
 
 int get_looter_destination(figure *f)
 {
-    inventory_storage_info info[RESOURCE_MAX];
+    resource_storage_info info[RESOURCE_MAX] = { 0 };
+
+    // Check everything
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        info[r].needed = 1;
+    }
+
     looter_destination possible_destinations[RESOURCE_MAX];
-    if (!building_distribution_get_inventory_storages_for_figure(info, 0, 0, f, MAX_LOOTING_DISTANCE)) {
+    if (!building_distribution_get_resource_storages_for_figure(info, 0, 0, f, MAX_LOOTING_DISTANCE)) {
         return 0;
     }
 

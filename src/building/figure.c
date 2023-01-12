@@ -1098,7 +1098,9 @@ static void spawn_figure_tavern(building *b)
             b->figure_spawn_delay = 0;
             if (!has_figure_of_type(b, FIGURE_BARKEEP) && b->resources[RESOURCE_WINE] > 21) {
                 b->resources[RESOURCE_WINE] -= 20;
-                b->resources[RESOURCE_MEAT] -= calc_bound(40, 40, b->resources[RESOURCE_MEAT]);
+                int resource_decay = b->resources[RESOURCE_MEAT] && b->resources[RESOURCE_FISH] ? 20 : 40;
+                b->resources[RESOURCE_MEAT] -= calc_bound(resource_decay, resource_decay, b->resources[RESOURCE_MEAT]);
+                b->resources[RESOURCE_FISH] -= calc_bound(resource_decay, resource_decay, b->resources[RESOURCE_FISH]);
                 create_roaming_figure(b, road.x, road.y, FIGURE_BARKEEP);
             }
         }

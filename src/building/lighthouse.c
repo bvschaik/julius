@@ -24,12 +24,13 @@ int building_lighthouse_get_storage_destination(building *lighthouse)
         return 0;
     }
 
-    inventory_storage_info data[RESOURCE_MAX];
-    if (!building_distribution_get_raw_material_storages_for_building(data, lighthouse, INFINITE)) {
+    resource_storage_info info[RESOURCE_MAX] = { 0 };
+    if (!building_distribution_get_handled_resources_for_building(lighthouse, info) || 
+        !building_distribution_get_resource_storages_for_building(info, lighthouse, INFINITE)) {
         return 0;
     }
 
-    return data[RESOURCE_TIMBER].building_id;
+    return info[RESOURCE_TIMBER].building_id;
 }
 
 int building_lighthouse_is_fully_functional(void)

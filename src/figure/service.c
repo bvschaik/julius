@@ -122,7 +122,7 @@ static void tavern_coverage(building *b, int products)
     if (products) {
         b->house_tavern_wine_access = MAX_COVERAGE;
         if (products > 1) {
-            b->house_tavern_meat_access = MAX_COVERAGE;
+            b->house_tavern_food_access = MAX_COVERAGE;
         }
     }
 }
@@ -659,9 +659,18 @@ int figure_service_provide_coverage(figure *f)
             houses_serviced = provide_culture(x, y, hippodrome_coverage);
             break;
         case FIGURE_BARKEEP:
+        {
             b = building_get(f->building_id);
-            houses_serviced = provide_entertainment(x, y, b->resources[RESOURCE_WINE] ? b->resources[RESOURCE_MEAT] ? 2 : 1 : 0, tavern_coverage);
+            int tavern_goods = 0;
+            if (b->resources[RESOURCE_WINE]) {
+                tavern_goods = 1;
+                if (b->resources[RESOURCE_MEAT] || b->resources[RESOURCE_FISH]) {
+                    tavern_goods = 2;
+                }
+            }
+            houses_serviced = provide_entertainment(x, y, tavern_goods, tavern_coverage);
             break;
+        }
         case FIGURE_ENGINEER:
         case FIGURE_WORK_CAMP_ARCHITECT:
             {

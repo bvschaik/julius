@@ -27,7 +27,7 @@ void house_service_decay_culture(void)
             decay(&b->data.house.colosseum_lion);
             decay(&b->house_arena_gladiator);
             decay(&b->house_arena_lion);
-            decay(&b->house_tavern_meat_access);
+            decay(&b->house_tavern_food_access);
             decay(&b->house_tavern_wine_access);
             decay(&b->data.house.hippodrome);
             decay(&b->data.house.school);
@@ -98,7 +98,7 @@ void house_service_calculate_culture_aggregates(void)
 
             if (b->house_tavern_wine_access) {
                 b->data.house.entertainment += 10;
-                if (b->house_tavern_meat_access) {
+                if (b->house_tavern_food_access) {
                     b->data.house.entertainment += 5;
                 }
             }

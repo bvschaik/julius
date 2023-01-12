@@ -29,31 +29,32 @@ int building_temple_get_storage_destination(building *temple)
         return 0;
     }
 
-    resource_type resource = city_resource_ceres_temple_food();
-    if (resource == RESOURCE_NONE) {
-        return 0;
-    }
-    if (!building_distribution_is_good_accepted(resource, temple) &&
-        (!building_distribution_is_good_accepted(RESOURCE_OIL, temple) || temple->accepted_goods[RESOURCE_OIL] <= 1)) {
+    resource_type food = city_resource_ceres_temple_food();
+
+    if (food == RESOURCE_NONE) {
         return 0;
     }
 
-    inventory_storage_info data[RESOURCE_MAX];
-    if (!building_distribution_get_inventory_storages_for_building(data, temple, INFINITE)) {
+    resource_storage_info info[RESOURCE_MAX] = { 0 };
+    if (!building_distribution_get_handled_resources_for_building(temple, info)) {
+        return 0;
+    }
+    info[RESOURCE_OIL].needed = temple->accepted_goods[RESOURCE_OIL] > 1;
+
+    if (!building_distribution_get_resource_storages_for_building(info, temple, INFINITE)) {
         return 0;
     }
 
-    if (building_distribution_is_good_accepted(resource, temple) &&
-        data[resource].building_id && temple->resources[resource] < MAX_FOOD) {
-        temple->data.market.fetch_inventory_id = resource;
-        return data[resource].building_id;
+    // Get food if below threshold
+    if (info[food].building_id && temple->resources[food] < MAX_FOOD) {
+        temple->data.market.fetch_inventory_id = food;
+        return info[food].building_id;
     }
-    if (building_distribution_is_good_accepted(RESOURCE_OIL, temple) && temple->accepted_goods[RESOURCE_OIL] > 1 &&
-        data[RESOURCE_OIL].building_id && temple->resources[RESOURCE_OIL] < BASELINE_STOCK) {
-        temple->data.market.fetch_inventory_id = RESOURCE_OIL;
-        return data[RESOURCE_OIL].building_id;
-    }
-    return 0;
+
+    // Otherwise get allowed oil depending on stock
+    resource_type fetch_resource = building_distribution_fetch(temple, info, BASELINE_STOCK, 0);
+    temple->data.market.fetch_inventory_id = fetch_resource;
+    return info[fetch_resource].building_id;
 }
 
 int building_temple_mars_food_to_deliver(building *temple, int mess_hall_id)

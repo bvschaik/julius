@@ -44,39 +44,44 @@ static int is_good_wanted(building *market, resource_type resource)
     return market->accepted_goods[resource] > 1;
 }
 
-void building_market_get_needed_inventory(building *market, int needed[RESOURCE_MAX])
+int building_market_get_needed_inventory(building *market, resource_storage_info info[RESOURCE_MAX])
 {
-    needed[RESOURCE_NONE] = 0;
+    int needed = 0;
     for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX_FOOD; r++) {
-        needed[r] = !scenario_property_rome_supplies_wheat() &&
-            resource_is_inventory(r) && building_distribution_is_good_accepted(r, market);
+        info[r].needed = building_distribution_resource_is_handled(r, BUILDING_MARKET) &&
+            !scenario_property_rome_supplies_wheat() && building_distribution_is_good_accepted(r, market);
+        if (!needed && info[r].needed) {
+            needed = 1;
+        }
     }
     for (resource_type r = RESOURCE_MIN_NON_FOOD; r < RESOURCE_MAX_NON_FOOD; r++) {
-        needed[r] = resource_is_inventory(r) && is_good_wanted(market, r);
+        info[r].needed = building_distribution_resource_is_handled(r, BUILDING_MARKET) && is_good_wanted(market, r);
+        if (!needed && info[r].needed) {
+            needed = 1;
+        }
     }
+    return needed;
 }
 
-resource_type building_market_fetch_inventory(building *market, inventory_storage_info *info,
-    const int needed[RESOURCE_MAX])
+resource_type building_market_fetch_inventory(building *market, resource_storage_info info[RESOURCE_MAX])
 {
     // Prefer whichever good we don't have
-    resource_type fetch_inventory = building_distribution_fetch(market, info, 0, 1, needed);
+    resource_type fetch_inventory = building_distribution_fetch(market, info, 0, 1);
     if (fetch_inventory != RESOURCE_NONE) {
         return fetch_inventory;
     }
     // Then prefer smallest stock below baseline stock
-    fetch_inventory = building_distribution_fetch(market, info, BASELINE_STOCK, 0, needed);
+    fetch_inventory = building_distribution_fetch(market, info, BASELINE_STOCK, 0);
     if (fetch_inventory != RESOURCE_NONE) {
         return fetch_inventory;
     }
 
-    int needed_foods[RESOURCE_MAX] = { 0 };
-    for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        needed_foods[r] = needed[r];
+    for (resource_type r = RESOURCE_MIN_NON_FOOD; r < RESOURCE_MAX_NON_FOOD; r++) {
+        info[r].needed = 0;
     }
 
     // All items well stocked: pick food below threshold
-    fetch_inventory = building_distribution_fetch(market, info, MAX_FOOD, 0, needed_foods);
+    fetch_inventory = building_distribution_fetch(market, info, MAX_FOOD, 0);
     if (fetch_inventory != RESOURCE_NONE) {
         return fetch_inventory;
     }
@@ -84,31 +89,14 @@ resource_type building_market_fetch_inventory(building *market, inventory_storag
     return RESOURCE_NONE;
 }
 
-static int has_inventory_needs(const int needed[RESOURCE_MAX])
-{
-    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (needed[r]) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
 int building_market_get_storage_destination(building *market)
 {
-    int needed_inventory[RESOURCE_MAX];
-    building_market_get_needed_inventory(market, needed_inventory);
-    if (!has_inventory_needs(needed_inventory)) {
+    resource_storage_info info[RESOURCE_MAX] = { 0 };
+    if (!building_market_get_needed_inventory(market, info) ||
+        !building_distribution_get_resource_storages_for_building(info, market, MARKET_MAX_DISTANCE)) {
         return 0;
     }
-    inventory_storage_info info[RESOURCE_MAX];
-    if (!building_distribution_get_inventory_storages_for_building(info, market, MARKET_MAX_DISTANCE)) {
-        return 0;
-    }
-    int fetch_inventory = building_market_fetch_inventory(market, info, needed_inventory);
-    if (fetch_inventory == RESOURCE_NONE) {
-        return 0;
-    }
+    int fetch_inventory = building_market_fetch_inventory(market, info);
     market->data.market.fetch_inventory_id = fetch_inventory;
     return info[fetch_inventory].building_id;
 }

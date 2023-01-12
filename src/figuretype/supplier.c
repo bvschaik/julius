@@ -164,27 +164,18 @@ static int change_market_supplier_destination(figure *f, int dst_building_id)
     return 1;
 }
 
-static int has_inventory_needs(const int needed[RESOURCE_MAX])
-{
-    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (needed[r]) {
-            return 1;
-        }
-    }
-    return 0;
-}
-
 static int recalculate_market_supplier_destination(figure *f)
 {
     int item = f->collecting_item_id;
     building *market = building_get(f->building_id);
-    inventory_storage_info info[RESOURCE_MAX];
+    resource_storage_info info[RESOURCE_MAX] = { 0 };
 
     int road_network = map_road_network_get(f->grid_offset);
     if (!road_network) {
         return 1;
     }
-    if (!building_distribution_get_inventory_storages_for_figure(info, BUILDING_MARKET, road_network, f, MAX_DISTANCE)) {
+    if (!building_market_get_needed_inventory(market, info) ||
+        !building_distribution_get_resource_storages_for_figure(info, BUILDING_MARKET, road_network, f, MAX_DISTANCE)) {
         return 0;
     }
 
@@ -194,12 +185,7 @@ static int recalculate_market_supplier_destination(figure *f)
     if (info[item].building_id) {
         return change_market_supplier_destination(f, info[item].building_id);
     }
-    int needed_inventory[RESOURCE_MAX];
-    building_market_get_needed_inventory(market, needed_inventory);
-    if (!has_inventory_needs(needed_inventory)) {
-        return 0;
-    }
-    resource_type fetch_inventory = building_market_fetch_inventory(market, info, needed_inventory);
+    resource_type fetch_inventory = building_market_fetch_inventory(market, info);
     if (fetch_inventory == RESOURCE_NONE) {
         return 0;
     }

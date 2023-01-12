@@ -138,7 +138,7 @@ static int get_column_height_tavern(const building *b)
     if (!b->house_size || !b->house_tavern_wine_access) {
         return NO_COLUMN;
     }
-    return (((b->house_tavern_wine_access / 10) * 2) + (b->house_tavern_meat_access / 10)) / 3;
+    return (((b->house_tavern_wine_access / 10) * 2) + (b->house_tavern_food_access / 10)) / 3;
 }
 
 static int get_tooltip_entertainment(tooltip_context *c, const building *b)
@@ -230,13 +230,13 @@ static int get_tooltip_tavern(tooltip_context *c, const building *b)
     } else if (b->house_tavern_wine_access <= 20) {
         c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_2;
     } else if (b->data.house.hippodrome <= 80) {
-        if (!b->house_tavern_meat_access) {
+        if (!b->house_tavern_food_access) {
             c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_3;
         } else {
             c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_4;
         }
     } else {
-        if (!b->house_tavern_meat_access) {
+        if (!b->house_tavern_food_access) {
             c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_5;
         } else {
             c->translation_key = TR_TOOLTIP_OVERLAY_TAVERN_6;

@@ -454,33 +454,6 @@ void window_building_distributor_draw_foreground(building_info_context *c)
         BLOCK_SIZE * (c->width_blocks - 10), FONT_NORMAL_BLACK);
 }
 
-static int distributor_handles_resource(resource_type resource, building_type type)
-{
-    if (type == BUILDING_DOCK) {
-        return 1;
-    }
-    if (!resource_is_inventory(resource)) {
-        return 0;
-    }
-    if (type == BUILDING_MARKET) {
-        return 1;
-    }
-    if ((type == BUILDING_CARAVANSERAI || type == BUILDING_MESS_HALL) && resource_is_food(resource)) {
-        return 1;
-    }
-    if (type == BUILDING_TAVERN && (resource == RESOURCE_WINE || resource == RESOURCE_MEAT)) {
-        return 1;
-    }
-    if ((type == BUILDING_SMALL_TEMPLE_VENUS || type == BUILDING_LARGE_TEMPLE_VENUS) && resource == RESOURCE_WINE) {
-        return 1;
-    }
-    if ((type == BUILDING_SMALL_TEMPLE_CERES || type == BUILDING_LARGE_TEMPLE_CERES) &&
-        (resource == city_resource_ceres_temple_food() || resource == RESOURCE_OIL)) {
-        return 1;
-    }
-    return 0;
-}
-
 static void set_distributed_resources(building_type type)
 {
     for (int i = 0; i < data.available_resources.size; i++) {
@@ -489,7 +462,7 @@ static void set_distributed_resources(building_type type)
     data.available_resources.size = 0;
     const resource_list *list = city_resource_get_potential();
     for (int i = 0; i < list->size; i++) {
-        if (distributor_handles_resource(list->items[i], type)) {
+        if (building_distribution_resource_is_handled(list->items[i], type)) {
             data.available_resources.items[data.available_resources.size++] = list->items[i];
         }
     }

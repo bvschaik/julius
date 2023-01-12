@@ -139,7 +139,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_u8(buf, b->figure_roam_direction);
     buffer_write_u8(buf, b->has_water_access);
     buffer_write_u8(buf, b->house_tavern_wine_access);
-    buffer_write_u8(buf, b->house_tavern_meat_access);
+    buffer_write_u8(buf, b->house_tavern_food_access);
     buffer_write_i16(buf, b->prev_part_building_id);
     buffer_write_i16(buf, b->next_part_building_id);
     buffer_write_i16(buf, b->loads_stored);
@@ -445,7 +445,7 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     b->figure_roam_direction = buffer_read_u8(buf);
     b->has_water_access = buffer_read_u8(buf);
     b->house_tavern_wine_access = buffer_read_u8(buf);
-    b->house_tavern_meat_access = buffer_read_u8(buf);
+    b->house_tavern_food_access = buffer_read_u8(buf);
     b->prev_part_building_id = buffer_read_i16(buf);
     b->next_part_building_id = buffer_read_i16(buf);
     b->loads_stored = buffer_read_i16(buf);
