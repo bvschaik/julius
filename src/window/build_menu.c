@@ -376,7 +376,7 @@ static void generate_tooltip_text_for_monument(building_type monument)
 
     int has_listed_resource = 0;
 
-    for (int r = 1; r < RESOURCE_MAX; r++) {
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         int amount = 0;
         for (int phase = 1; phase <= phases; phase++) {
             amount += building_monument_resources_needed_for_monument_type(monument, r, phase);

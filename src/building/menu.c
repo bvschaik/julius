@@ -1,5 +1,6 @@
 #include "menu.h"
 
+#include "building/monument.h"
 #include "city/buildings.h"
 #include "core/config.h"
 #include "empire/city.h"
@@ -76,9 +77,39 @@ static void enable_cycling_temples_if_allowed(building_type type)
     menu_enabled[sub][0] = 1;
 }
 
+static int monument_has_required_resources(building_type type)
+{
+    int phases = building_monument_phases(type);
+    if (!phases) {
+        return 1;
+    }
+    for (int phase = 1; phase < phases; phase++) {
+        for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+            if (building_monument_resources_needed_for_monument_type(type, r, phase) > 0 &&
+                !empire_can_produce_resource_potentially(r)) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+static int can_get_required_resource(building_type type)
+{
+    switch (type) {
+        case BUILDING_TAVERN:
+            return empire_can_produce_resource_potentially(RESOURCE_WINE) &&
+                monument_has_required_resources(type);
+        case BUILDING_LIGHTHOUSE:
+            return empire_can_produce_resource_potentially(RESOURCE_TIMBER);
+        default:
+            return monument_has_required_resources(type);
+    }
+}
+
 static void enable_if_allowed(int *enabled, building_type menu_building_type, building_type type)
 {
-    if (menu_building_type == type && scenario_building_allowed(type)) {
+    if (menu_building_type == type && scenario_building_allowed(type) && can_get_required_resource(type)) {
         *enabled = 1;
         if (type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES) {
             enable_cycling_temples_if_allowed(type);
@@ -194,7 +225,6 @@ static void enable_normal(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_ROOFED_GARDEN_WALL);
     enable_if_allowed(enabled, type, BUILDING_GARDEN_WALL);
 
-
     if (type == BUILDING_TRIUMPHAL_ARCH) {
         if (city_buildings_triumphal_arch_available()) {
             *enabled = 1;
@@ -206,7 +236,6 @@ static void enable_normal(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_MENU_PATHS);
     enable_if_allowed(enabled, type, BUILDING_MENU_STATUES);
     enable_if_allowed(enabled, type, BUILDING_MENU_GOV_RES);
-
 }
 
 static void enable_tutorial1_start(int *enabled, building_type type)
@@ -285,21 +314,13 @@ static void enable_tutorial2_after_450(int *enabled, building_type type)
 
 static void disable_resources(int *enabled, building_type type)
 {
-    disable_raw(enabled, type, BUILDING_WHEAT_FARM, RESOURCE_WHEAT);
-    disable_raw(enabled, type, BUILDING_VEGETABLE_FARM, RESOURCE_VEGETABLES);
-    disable_raw(enabled, type, BUILDING_FRUIT_FARM, RESOURCE_FRUIT);
-    disable_raw(enabled, type, BUILDING_PIG_FARM, RESOURCE_MEAT);
-    disable_raw(enabled, type, BUILDING_OLIVE_FARM, RESOURCE_OLIVES);
-    disable_raw(enabled, type, BUILDING_VINES_FARM, RESOURCE_VINES);
-    disable_raw(enabled, type, BUILDING_CLAY_PIT, RESOURCE_CLAY);
-    disable_raw(enabled, type, BUILDING_TIMBER_YARD, RESOURCE_TIMBER);
-    disable_raw(enabled, type, BUILDING_IRON_MINE, RESOURCE_IRON);
-    disable_raw(enabled, type, BUILDING_MARBLE_QUARRY, RESOURCE_MARBLE);
-    disable_finished(enabled, type, BUILDING_POTTERY_WORKSHOP, RESOURCE_POTTERY);
-    disable_finished(enabled, type, BUILDING_FURNITURE_WORKSHOP, RESOURCE_FURNITURE);
-    disable_finished(enabled, type, BUILDING_OIL_WORKSHOP, RESOURCE_OIL);
-    disable_finished(enabled, type, BUILDING_WINE_WORKSHOP, RESOURCE_WINE);
-    disable_finished(enabled, type, BUILDING_WEAPONS_WORKSHOP, RESOURCE_WEAPONS);
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        if (resource_is_food(r) || resource_is_raw_material(r)) {
+            disable_raw(enabled, type, resource_get_data(r)->industry, r);
+        } else {
+            disable_finished(enabled, type, resource_get_data(r)->industry, r);
+        }
+    }
 }
 
 void building_menu_update(void)
@@ -343,7 +364,6 @@ void building_menu_update(void)
                     enable_normal(menu_item, building_type);
                     break;
             }
-
             disable_resources(menu_item, building_type);
         }
     }
