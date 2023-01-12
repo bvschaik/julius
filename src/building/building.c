@@ -2,6 +2,7 @@
 
 #include "building/building_state.h"
 #include "building/building_variant.h"
+#include "building/distribution.h"
 #include "building/industry.h"
 #include "building/granary.h"
 #include "building/menu.h"
@@ -274,10 +275,11 @@ building *building_create(building_type type, int x, int y)
         b->resources[RESOURCE_NONE] = FULL_GRANARY;
     }
 
-    if (type == BUILDING_MARKET || type == BUILDING_DOCK) {
-        // Set it as accepting all goods
-        for (int i = 0; i < RESOURCE_MAX; i++) {
-            b->accepted_goods[i] = 1;
+    if (type == BUILDING_MARKET || type == BUILDING_DOCK ||
+        type == BUILDING_MESS_HALL || type == BUILDING_CARAVANSERAI) {
+        // Set it as accepting all available goods
+        for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+            b->accepted_goods[r] = building_distribution_resource_is_handled(r, type);
         }
     }
 

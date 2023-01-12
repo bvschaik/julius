@@ -181,7 +181,6 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
         return;
     }
     // priority 5: granary forced when on stockpile
-
     dst_building_id = building_granary_for_storing(f->x, f->y,
         b->output_resource_id, road_network_id, 1, &understaffed_storages, &dst);
     if (config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {

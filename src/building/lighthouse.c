@@ -25,8 +25,8 @@ int building_lighthouse_get_storage_destination(building *lighthouse)
     }
 
     resource_storage_info info[RESOURCE_MAX] = { 0 };
-    if (!building_distribution_get_handled_resources_for_building(lighthouse, info) || 
-        !building_distribution_get_resource_storages_for_building(info, lighthouse, INFINITE)) {
+    info[RESOURCE_TIMBER].needed = 1;
+    if (!building_distribution_get_resource_storages_for_building(info, lighthouse, INFINITE)) {
         return 0;
     }
 
