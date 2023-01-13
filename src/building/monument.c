@@ -702,7 +702,7 @@ int building_monument_has_required_resources_to_build(building_type type)
     for (int phase = 1; phase < phases; phase++) {
         for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
             if (building_monument_resources_needed_for_monument_type(type, r, phase) > 0 &&
-                !empire_can_produce_resource_potentially(r)) {
+                !empire_can_produce_resource_potentially(r) && !empire_can_import_resource_potentially(r)) {
                 return 0;
             }
         }
