@@ -459,7 +459,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_TAVERN_DESC_1, "This tavern has no workers, and cannot open for business." },
     {TR_BUILDING_TAVERN_DESC_2, "This tavern has no wine, and cannot open for business." },
     {TR_BUILDING_TAVERN_DESC_3, "This tavern provides entertainment as long as the wine keeps flowing. A supply of meat or fish would increase its appeal." },
-    {TR_BUILDING_TAVERN_DESC_4, "Plentiful wine and the smell of roasted meat draw a lively crowd to this tavern for gambling, music, and merriment." },
+    {TR_BUILDING_TAVERN_DESC_4, "Plentiful wine and the smell of roasted food draw a lively crowd to this tavern for gambling, music, and merriment." },
     {TR_FIGURE_TYPE_BARKEEP, "Barkeep" },
     {TR_FIGURE_TYPE_BARKEEP_SUPPLIER, "Tavern supplier" },
     {TR_OVERLAY_TAVERN, "Tavern" },
