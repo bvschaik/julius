@@ -828,7 +828,7 @@ void window_building_draw_tavern(building_info_context *c)
     } else if (!b->resources[RESOURCE_WINE]) {
         text_draw_multiline(translation_for(TR_BUILDING_TAVERN_DESC_2),
             c->x_offset + 32, c->y_offset + 96, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
-    } else if (!b->resources[RESOURCE_MEAT] || !b->resources[RESOURCE_FISH]) {
+    } else if (!b->resources[RESOURCE_MEAT] && !b->resources[RESOURCE_FISH]) {
         text_draw_multiline(translation_for(TR_BUILDING_TAVERN_DESC_3),
             c->x_offset + 32, c->y_offset + 96, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     } else {
