@@ -85,7 +85,7 @@ static int can_get_required_resource(building_type type)
                 empire_can_import_resource_potentially(RESOURCE_WINE);
         case BUILDING_LIGHTHOUSE:
             return (empire_can_produce_resource_potentially(RESOURCE_TIMBER) ||
-                empire_can_import_resource_potentially(RESOURCE_WINE)) &&
+                empire_can_import_resource_potentially(RESOURCE_TIMBER)) &&
                 building_monument_has_required_resources_to_build(type);
         default:
             return building_monument_has_required_resources_to_build(type);
