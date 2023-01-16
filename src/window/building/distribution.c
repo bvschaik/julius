@@ -517,8 +517,8 @@ void window_building_draw_distributor_orders_foreground(building_info_context *c
             break;
         case BUILDING_TAVERN:
             lang_group = CUSTOM_TRANSLATION;
-            lang_active_id = TR_TAVERN_USING;
-            lang_inactive_id = TR_TAVERN_NOT_USING;
+            lang_active_id = TR_TAVERN_FETCHING;
+            lang_inactive_id = TR_TAVERN_NOT_FETCHING;
             break;
         case BUILDING_CARAVANSERAI:
         case BUILDING_MESS_HALL:
