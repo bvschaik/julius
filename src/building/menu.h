@@ -52,4 +52,6 @@ int building_menu_is_enabled(building_type type);
  */
 int building_menu_has_changed(void);
 
+int building_menu_get_submenu_for_type(building_type type);
+
 #endif // BUILDING_MENU_H

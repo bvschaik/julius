@@ -298,46 +298,11 @@ static void button_menu_index(int param1, int param2)
 static int set_submenu_for_type(building_type type)
 {
     build_menu_group current_menu = data.selected_submenu;
-    switch (type) {
-        case BUILDING_MENU_FARMS:
-            data.selected_submenu = BUILD_MENU_FARMS;
-            break;
-        case BUILDING_MENU_RAW_MATERIALS:
-            data.selected_submenu = BUILD_MENU_RAW_MATERIALS;
-            break;
-        case BUILDING_MENU_WORKSHOPS:
-            data.selected_submenu = BUILD_MENU_WORKSHOPS;
-            break;
-        case BUILDING_MENU_SMALL_TEMPLES:
-            data.selected_submenu = BUILD_MENU_SMALL_TEMPLES;
-            break;
-        case BUILDING_MENU_LARGE_TEMPLES:
-            data.selected_submenu = BUILD_MENU_LARGE_TEMPLES;
-            break;
-        case BUILDING_FORT:
-            data.selected_submenu = BUILD_MENU_FORTS;
-            break;
-        case BUILDING_MENU_GRAND_TEMPLES:
-            data.selected_submenu = BUILD_MENU_GRAND_TEMPLES;
-            break;
-        case BUILDING_MENU_PARKS:
-            data.selected_submenu = BUILD_MENU_PARKS;
-            break;
-        case BUILDING_MENU_TREES:
-            data.selected_submenu = BUILD_MENU_TREES;
-            break;
-        case BUILDING_MENU_PATHS:
-            data.selected_submenu = BUILD_MENU_PATHS;
-            break;
-        case BUILDING_MENU_GOV_RES:
-            data.selected_submenu = BUILD_MENU_GOV_RES;
-            break;
-        case BUILDING_MENU_STATUES:
-            data.selected_submenu = BUILD_MENU_STATUES;
-            break;
-        default:
-            return 0;
+    build_menu_group new_menu = building_menu_get_submenu_for_type(type);
+    if (!new_menu) {
+        return 0;
     }
+    data.selected_submenu = new_menu;
     return current_menu != data.selected_submenu;
 }
 

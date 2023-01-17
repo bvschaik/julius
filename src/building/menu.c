@@ -92,10 +92,15 @@ static int can_get_required_resource(building_type type)
     }
 }
 
+static int is_building_type_allowed(building_type type)
+{
+    return scenario_building_allowed(type) && can_get_required_resource(type);
+}
+
 static void enable_if_allowed(int *enabled, building_type menu_building_type, building_type type)
 {
-    if (menu_building_type == type && scenario_building_allowed(type) && can_get_required_resource(type)) {
-        *enabled = 1;
+    if (menu_building_type == type) {
+        *enabled = is_building_type_allowed(type);
         if (type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES) {
             enable_cycling_temples_if_allowed(type);
         }
@@ -113,6 +118,16 @@ static void disable_finished(int *enabled, building_type menu_building_type, bui
 {
     if (type == menu_building_type && !empire_can_produce_resource_potentially(resource)) {
         *enabled = 0;
+    }
+}
+
+static void disable_if_no_enabled_submenu_items(int *enabled, int submenu)
+{
+    for (int item = 0; item < BUILD_MENU_ITEM_MAX && MENU_BUILDING_TYPE[submenu][item]; item++) {
+        if (!is_building_type_allowed(MENU_BUILDING_TYPE[submenu][item])) {
+            *enabled = 0;
+            return;
+        }
     }
 }
 
@@ -315,8 +330,8 @@ void building_menu_update(void)
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
             int building_type = MENU_BUILDING_TYPE[sub][item];
             int *menu_item = &menu_enabled[sub][item];
-            // first 12 items and parks always disabled at the start
-            if ((sub < 12) || (sub == 18)) {
+            // first 12 items, parks and grand temples always disabled at the start
+            if (sub < 12 || sub == 18 || sub == 21) {
                 *menu_item = 0;
             } else {
                 *menu_item = 1;
@@ -350,6 +365,13 @@ void building_menu_update(void)
                     break;
             }
             disable_resources(menu_item, building_type);
+
+            if (*menu_item) {
+                int submenu = building_menu_get_submenu_for_type(building_type);
+                if (submenu) {
+                    disable_if_no_enabled_submenu_items(menu_item, submenu);
+                }
+            }
         }
     }
     changed = 1;
@@ -415,4 +437,36 @@ int building_menu_has_changed(void)
         return 1;
     }
     return 0;
+}
+
+int building_menu_get_submenu_for_type(building_type type)
+{
+    switch (type) {
+        case BUILDING_MENU_FARMS:
+            return BUILD_MENU_FARMS;
+        case BUILDING_MENU_RAW_MATERIALS:
+            return BUILD_MENU_RAW_MATERIALS;
+        case BUILDING_MENU_WORKSHOPS:
+            return BUILD_MENU_WORKSHOPS;
+        case BUILDING_MENU_SMALL_TEMPLES:
+            return BUILD_MENU_SMALL_TEMPLES;
+        case BUILDING_MENU_LARGE_TEMPLES:
+            return BUILD_MENU_LARGE_TEMPLES;
+        case BUILDING_FORT:
+            return BUILD_MENU_FORTS;
+        case BUILDING_MENU_GRAND_TEMPLES:
+            return BUILD_MENU_GRAND_TEMPLES;
+        case BUILDING_MENU_PARKS:
+            return BUILD_MENU_PARKS;
+        case BUILDING_MENU_TREES:
+            return BUILD_MENU_TREES;
+        case BUILDING_MENU_PATHS:
+            return BUILD_MENU_PATHS;
+        case BUILDING_MENU_GOV_RES:
+            return BUILD_MENU_GOV_RES;
+        case BUILDING_MENU_STATUES:
+            return BUILD_MENU_STATUES;
+        default:
+            return 0;
+    }
 }
