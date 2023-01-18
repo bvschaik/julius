@@ -264,7 +264,8 @@ static void draw_coordinates(void)
         y_coord = m->y - data.y_draw_offset;
     }
 
-    show_coords(data.x_min + 20, data.y_min + 20, string_from_ascii("Current coords: "), x_coord, y_coord);
+    show_coords(data.x_min + 20, data.y_min + 20,
+        lang_get_string(CUSTOM_TRANSLATION, TR_EDITOR_CURRENT_COORDS), x_coord, y_coord);
     if (!(m->left.is_down && !is_outside_map(m->x, m->y))) {
         draw_preview_image(m->x, m->y, 0, ALPHA_FONT_SEMI_TRANSPARENT, 0);
     }
@@ -272,7 +273,8 @@ static void draw_coordinates(void)
     if (data.picked_coord_enabled) {
         x_coord = data.picked_coord_x + data.x_draw_offset;
         y_coord = data.picked_coord_y + data.y_draw_offset;
-        show_coords(data.x_min + 20, data.y_min + 50, string_from_ascii("Selected coords: "), data.picked_coord_x, data.picked_coord_y);
+        show_coords(data.x_min + 20, data.y_min + 50,
+            lang_get_string(CUSTOM_TRANSLATION, TR_EDITOR_SELECTED_COORDS), data.picked_coord_x, data.picked_coord_y);
         if (!draw_preview_image(x_coord, y_coord, 0, ALPHA_FONT_SEMI_TRANSPARENT, 1)) {
             graphics_draw_rect(x_coord - 3, y_coord - 3, 7, 7, COLOR_BLACK);
             graphics_draw_rect(x_coord - 1, y_coord - 1, 3, 3, COLOR_WHITE);
@@ -388,6 +390,12 @@ static void draw_panel_buttons(const empire_city *city)
 
         button_border_draw(data.x_min + 314, data.y_max - 52, 150, 24, data.focus_button_id == 3);
         lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_REFRESH_EMPIRE, data.x_min + 314, data.y_max - 45, 150, FONT_NORMAL_GREEN);
+
+        int width = lang_text_get_width(CUSTOM_TRANSLATION, TR_EDITOR_CITY_PREVIEW, FONT_NORMAL_GREEN);
+
+        if (data.x_min + 564 + width < data.x_max) {
+            lang_text_draw(CUSTOM_TRANSLATION, TR_EDITOR_CITY_PREVIEW, data.x_max - 96 - width, data.y_max - 45, FONT_NORMAL_GREEN);
+        }
 
         button_border_draw(data.x_max - 92, data.y_max - 100, 72, 72, data.preview_button_focused);
     }

@@ -870,6 +870,9 @@ static translation_string all_strings[] = {
     {TR_EDITOR_SHORT_ROUTE_TEXT, "rt"},
     {TR_EDITOR_TOGGLE_INVASIONS, "Toggle invasions"},
     {TR_EDITOR_REFRESH_EMPIRE, "Refresh (F5)"},
+    {TR_EDITOR_CITY_PREVIEW, "City image preview: "},
+    {TR_EDITOR_CURRENT_COORDS, "Current coords: "},
+    {TR_EDITOR_SELECTED_COORDS, "Selected coords: "},
     {TR_EDITOR_MAX_WAGES, "Up to"},
     {TR_EDITOR_MIN_WAGES, "Down to"},
 };
