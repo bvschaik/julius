@@ -34,15 +34,19 @@ static void button_change_empire(int is_up, int param2);
 static void button_ok(int param1, int param2);
 static void button_toggle_invasions(int param1, int param2);
 static void button_refresh(int param1, int param2);
+static void button_cycle_preview(int param1, int param2);
 
 static arrow_button arrow_buttons_empire[] = {
     {8, 48, 17, 24, button_change_empire, 1, 0},
     {32, 48, 15, 24, button_change_empire, 0, 0}
 };
 static generic_button generic_buttons[] = {
-    {84, 48, 100, 24, button_ok, button_none, 0, 0},
-    {204, 48, 150, 24, button_toggle_invasions, button_none, 0, 0},
-    {374, 48, 150, 24, button_refresh, button_none, 0, 0},
+    {4, 48, 100, 24, button_ok, button_none, 0, 0},
+    {124, 48, 150, 24, button_toggle_invasions, button_none, 0, 0},
+    {294, 48, 150, 24, button_refresh, button_none, 0, 0},
+};
+static generic_button preview_button[] = {
+    {0, 0, 72, 72, button_cycle_preview, button_none, 0, 0},
 };
 
 static struct {
@@ -54,6 +58,11 @@ static struct {
     int is_scrolling;
     int finished_scroll;
     int show_battle_objects;
+    int preview_image_group;
+    int preview_button_focused;
+    int picked_coord_x;
+    int picked_coord_y;
+    int picked_coord_enabled;
 } data;
 
 static void update_screen_size(void)
@@ -80,6 +89,8 @@ static void init(void)
 {
     update_screen_size();
     data.selected_button = 0;
+    data.picked_coord_enabled = 0;
+    data.preview_image_group = 0;
     int selected_object = empire_selected_object();
     if (selected_object) {
         data.selected_city = empire_city_get_for_object(selected_object - 1);
@@ -125,6 +136,27 @@ static void draw_paneling(void)
     graphics_reset_clip_rectangle();
 }
 
+static int draw_preview_image(int x, int y, int center, color_t color_mask, int draw_borders)
+{
+    if (!data.preview_image_group) {
+        return 0;
+    }
+
+    int image_id = image_group(data.preview_image_group);
+    const image *img = image_get(image_id);
+    int x_offset = x + (center - img->width) / 2;
+    int y_offset = y + (center - img->height) / 2;
+    image_draw(image_id, x_offset, y_offset, color_mask, SCALE_NONE);
+    if (img->animation && img->animation->speed_id) {
+        image_draw(image_id + 1, x_offset + img->animation->sprite_offset_x,
+            y_offset + img->animation->sprite_offset_y, color_mask, SCALE_NONE);
+    }
+    if (draw_borders) {
+        graphics_draw_rect(x_offset, y_offset, img->width, img->height, COLOR_BLACK);
+    }
+    return 1;
+}
+
 static void draw_background(void)
 {
     update_screen_size();
@@ -132,6 +164,7 @@ static void draw_background(void)
         graphics_clear_screen();
     }
     draw_paneling();
+    draw_preview_image(data.x_max - 92, data.y_max - 100, 72, COLOR_MASK_NONE, 0);
 }
 
 static void draw_shadowed_number(int value, int x, int y, color_t color)
@@ -182,6 +215,71 @@ static void draw_empire_object(const empire_object *obj)
     }
 }
 
+static void show_coords(int x_offset, int y_offset, const uint8_t *title, int x_coord, int y_coord)
+{
+    uint8_t text[100];
+    int len = 0;
+    string_copy(title, text, 100);
+    len = string_length(text);
+    string_from_int(text + len, x_coord, 0);
+    len = string_length(text);
+    string_copy(string_from_ascii(", "), text + len, 100 - len);
+    len += 2;
+    string_from_int(text + len, y_coord, 0);
+
+    graphics_draw_rect(x_offset, y_offset, 220, 25, COLOR_BLACK);
+    graphics_fill_rect(x_offset + 1, y_offset + 1, 218, 23, COLOR_WHITE);
+
+    text_draw_centered(text, x_offset, y_offset + 7, 220, FONT_NORMAL_BLACK, 0);
+}
+
+static int is_outside_map(int x, int y)
+{
+    return (x < data.x_min + 16 || x >= data.x_max - 16 ||
+            y < data.y_min + 16 || y >= data.y_max - 120);
+}
+
+static void draw_coordinates(void)
+{
+    if (scenario.empire.id != SCENARIO_CUSTOM_EMPIRE) {
+        return;
+    }
+    const mouse *m = mouse_get();
+
+    int x_coord;
+    int y_coord;
+
+    if (m->x < data.x_min + 16) {
+        x_coord = data.x_min + 16 - data.x_draw_offset;
+    } else if (m->x >= data.x_max - 16) {
+        x_coord = data.x_max - 17 - data.x_draw_offset;
+    } else {
+        x_coord = m->x - data.x_draw_offset;
+    }
+    if (m->y < data.y_min + 16) {
+        y_coord = data.y_min + 16 - data.y_draw_offset;
+    } else if (m->y >= data.y_max - 120) {
+        y_coord = data.y_max - 121 - data.y_draw_offset;
+    } else {
+        y_coord = m->y - data.y_draw_offset;
+    }
+
+    show_coords(data.x_min + 20, data.y_min + 20, string_from_ascii("Current coords: "), x_coord, y_coord);
+    if (!(m->left.is_down && !is_outside_map(m->x, m->y))) {
+        draw_preview_image(m->x, m->y, 0, ALPHA_FONT_SEMI_TRANSPARENT, 0);
+    }
+
+    if (data.picked_coord_enabled) {
+        x_coord = data.picked_coord_x + data.x_draw_offset;
+        y_coord = data.picked_coord_y + data.y_draw_offset;
+        show_coords(data.x_min + 20, data.y_min + 50, string_from_ascii("Selected coords: "), data.picked_coord_x, data.picked_coord_y);
+        if (!draw_preview_image(x_coord, y_coord, 0, ALPHA_FONT_SEMI_TRANSPARENT, 1)) {
+            graphics_draw_rect(x_coord - 3, y_coord - 3, 7, 7, COLOR_BLACK);
+            graphics_draw_rect(x_coord - 1, y_coord - 1, 3, 3, COLOR_WHITE);
+        }
+    }
+}
+
 static void draw_map(void)
 {
     int viewport_width = map_viewport_width();
@@ -197,6 +295,8 @@ static void draw_map(void)
         COLOR_MASK_NONE, SCALE_NONE);
 
     empire_object_foreach(draw_empire_object);
+
+    draw_coordinates();
 
     graphics_reset_clip_rectangle();
 }
@@ -262,8 +362,12 @@ static void draw_city_info(const empire_city *city)
 
 static void draw_panel_buttons(const empire_city *city)
 {
+    int x_offset;
     if (scenario_empire_id() != SCENARIO_CUSTOM_EMPIRE) {
         arrow_buttons_draw(data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2);
+        x_offset = 104;
+    } else {
+        x_offset = 24;
     }
 
     if (city) {
@@ -274,31 +378,19 @@ static void draw_panel_buttons(const empire_city *city)
     }
     lang_text_draw(151, scenario_empire_id(), data.x_min + 220, data.y_max - 45, FONT_NORMAL_GREEN);
 
-    button_border_draw(data.x_min + 104, data.y_max - 52, 100, 24, data.focus_button_id == 1);
-    lang_text_draw_centered(44, 7, data.x_min + 104, data.y_max - 45, 100, FONT_NORMAL_GREEN);
+
+    button_border_draw(data.x_min + x_offset, data.y_max - 52, 100, 24, data.focus_button_id == 1);
+    lang_text_draw_centered(44, 7, data.x_min + x_offset, data.y_max - 45, 100, FONT_NORMAL_GREEN);
 
     if (scenario.empire.id == SCENARIO_CUSTOM_EMPIRE) {
-        button_border_draw(data.x_min + 224, data.y_max - 52, 150, 24, data.focus_button_id == 2);
-        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_TOGGLE_INVASIONS, data.x_min + 224, data.y_max - 45, 150, FONT_NORMAL_GREEN);
+        button_border_draw(data.x_min + 144, data.y_max - 52, 150, 24, data.focus_button_id == 2);
+        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_TOGGLE_INVASIONS, data.x_min + 144, data.y_max - 45, 150, FONT_NORMAL_GREEN);
 
-        button_border_draw(data.x_min + 394, data.y_max - 52, 150, 24, data.focus_button_id == 3);
-        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_REFRESH_EMPIRE, data.x_min + 394, data.y_max - 45, 150, FONT_NORMAL_GREEN);
-    }
-}
+        button_border_draw(data.x_min + 314, data.y_max - 52, 150, 24, data.focus_button_id == 3);
+        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_REFRESH_EMPIRE, data.x_min + 314, data.y_max - 45, 150, FONT_NORMAL_GREEN);
 
-static void draw_coordinates(void)
-{
-    if (scenario.empire.id != SCENARIO_CUSTOM_EMPIRE) {
-        return;
+        button_border_draw(data.x_max - 92, data.y_max - 100, 72, 72, data.preview_button_focused);
     }
-    const mouse *m = mouse_get();
-    uint8_t text[20];
-    string_from_int(text, m->x - data.x_draw_offset, 0);
-    int len = string_length(text);
-    string_copy(string_from_ascii(", "), text + len, 3);
-    len += 2;
-    string_from_int(text + len, m->y - data.y_draw_offset, 0);
-    text_draw_centered(text, data.x_min + 20, data.y_min + 20, 58, FONT_NORMAL_BLACK, 0);
 }
 
 static void draw_foreground(void)
@@ -315,13 +407,6 @@ static void draw_foreground(void)
         }
     }
     draw_panel_buttons(city);
-    draw_coordinates();
-}
-
-static int is_outside_map(int x, int y)
-{
-    return (x < data.x_min + 16 || x >= data.x_max - 16 ||
-            y < data.y_min + 16 || y >= data.y_max - 120);
 }
 
 static void determine_selected_object(const mouse *m)
@@ -368,30 +453,48 @@ static void handle_input(const mouse *m, const hotkeys *h)
         }
     }
     data.focus_button_id = 0;
-    if (!arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2, 0)) {
-        if (!generic_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100,
-            generic_buttons, 3, &data.focus_button_id)) {
-            determine_selected_object(m);
-            int selected_object = empire_selected_object();
-            if (selected_object) {
-                if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY) {
-                    data.selected_city = empire_city_get_for_object(selected_object - 1);
-                }
-                if (input_go_back_requested(m, h)) {
-                    empire_clear_selected_object();
-                    window_invalidate();
-                }
-            } else {
-                if (m->right.went_down) {
-                    scroll_drag_start(0);
-                }
-                if (m->right.went_up) {
-                    int has_scrolled = scroll_drag_end();
-                    if (!has_scrolled && input_go_back_requested(m, h)) {
-                        window_editor_map_show();
-                    }
+    int x_offset = scenario.empire.id == SCENARIO_CUSTOM_EMPIRE ? 20 : 100;
+    if (scenario.empire.id != SCENARIO_CUSTOM_EMPIRE &&
+        arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2, 0)) {
+        return;
+    }
+    if (generic_buttons_handle_mouse(m, data.x_min + x_offset, data.y_max - 100, generic_buttons,
+        scenario.empire.id == SCENARIO_CUSTOM_EMPIRE ? 3 : 1, &data.focus_button_id)) {
+        return;
+    }
+    if (scenario.empire.id == SCENARIO_CUSTOM_EMPIRE &&
+        generic_buttons_handle_mouse(m, data.x_max - 92, data.y_max - 100,
+            preview_button, 1, &data.preview_button_focused)) {
+        return;
+    }
+    determine_selected_object(m);
+    int selected_object = empire_selected_object();
+    if (selected_object) {
+        if (empire_object_get(selected_object - 1)->type == EMPIRE_OBJECT_CITY) {
+            data.selected_city = empire_city_get_for_object(selected_object - 1);
+        }
+        if (input_go_back_requested(m, h)) {
+            empire_clear_selected_object();
+            window_invalidate();
+        }
+    } else {
+        if (m->right.went_down) {
+            scroll_drag_start(0);
+        }
+        if (m->right.went_up) {
+            int has_scrolled = scroll_drag_end();
+            if (!has_scrolled && input_go_back_requested(m, h)) {
+                if (data.picked_coord_enabled) {
+                    data.picked_coord_enabled = 0;
+                } else {
+                    window_editor_map_show();
                 }
             }
+        }
+        if (m->left.is_down && !is_outside_map(m->x, m->y)) {
+            data.picked_coord_enabled = 1;
+            data.picked_coord_x = m->x - data.x_draw_offset;
+            data.picked_coord_y = m->y - data.y_draw_offset;
         }
     }
 }
@@ -411,6 +514,28 @@ static void button_ok(int param1, int param2)
 static void button_toggle_invasions(int param1, int param2)
 {
     data.show_battle_objects = !data.show_battle_objects;
+}
+
+static void button_cycle_preview(int param1, int param2)
+{
+    switch (data.preview_image_group) {
+        case GROUP_EMPIRE_CITY:
+            data.preview_image_group = GROUP_EMPIRE_CITY_DISTANT_ROMAN;
+            break;
+        case GROUP_EMPIRE_CITY_DISTANT_ROMAN:
+            data.preview_image_group = GROUP_EMPIRE_FOREIGN_CITY;
+            break;
+        case GROUP_EMPIRE_FOREIGN_CITY:
+            data.preview_image_group = GROUP_EMPIRE_CITY_TRADE;
+            break;
+        case GROUP_EMPIRE_CITY_TRADE:
+            data.preview_image_group = 0;
+            break;
+        default:
+            data.preview_image_group = GROUP_EMPIRE_CITY;
+            break;
+    }
+    window_request_refresh();
 }
 
 static void button_refresh(int param1, int param2)

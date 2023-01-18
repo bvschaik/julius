@@ -135,8 +135,6 @@ static int xml_start_city(void)
     city_obj->city_type = EMPIRE_CITY_TRADE;
     city_obj->obj.image_id = image_group(GROUP_EMPIRE_CITY_TRADE);
     city_obj->trade_route_cost = 500;
-    city_obj->obj.width = 44;
-    city_obj->obj.height = 36;
 
     static const char *city_types[6] = { "roman", "ours", "trade", 0, "distant", "vulnerable" };
     static const char *trade_route_types[2] = { "land", "sea" };
@@ -145,9 +143,6 @@ static int xml_start_city(void)
     if (name) {
         string_copy(string_from_ascii(name), city_obj->city_custom_name, sizeof(city_obj->city_custom_name));
     }
-
-    city_obj->obj.x = xml_parser_get_attribute_int("x");
-    city_obj->obj.y = xml_parser_get_attribute_int("y");
 
     int city_type = xml_parser_get_attribute_enum("type", city_types, 6, EMPIRE_CITY_DISTANT_ROMAN);
     if (city_type < EMPIRE_CITY_DISTANT_ROMAN) {
@@ -173,6 +168,14 @@ static int xml_start_city(void)
             city_obj->obj.image_id = image_group(GROUP_EMPIRE_CITY_TRADE);
             break;
     }
+
+    const image *img = image_get(city_obj->obj.image_id);
+
+    city_obj->obj.width = img->width;
+    city_obj->obj.height = img->height;
+
+    city_obj->obj.x = xml_parser_get_attribute_int("x") - city_obj->obj.width / 2;
+    city_obj->obj.y = xml_parser_get_attribute_int("y") - city_obj->obj.height / 2;
 
     if (city_obj->city_type == EMPIRE_CITY_TRADE) {
         full_empire_object *route_obj = empire_object_get_full(data.next_empire_obj_id);

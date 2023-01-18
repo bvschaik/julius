@@ -4,6 +4,7 @@
 #include "building/menu.h"
 #include "city/military.h"
 #include "city/warning.h"
+#include "core/calc.h"
 #include "core/image_group.h"
 #include "empire/city.h"
 #include "empire/empire.h"
@@ -35,6 +36,8 @@
 
 #define MAX_WIDTH 2032
 #define MAX_HEIGHT 1136
+
+#define TRADE_DOT_SPACING 10
 
 typedef struct {
     int x;
@@ -352,39 +355,44 @@ static void draw_background(void)
     }
 }
 
-void draw_trade_dots(const empire_object *trade_route, int x_draw_offset, int y_draw_offset, int start_x, int start_y, int end_x, int end_y)
+int draw_trade_dots(const empire_object *trade_route, int x_draw_offset, int y_draw_offset,
+    int start_x, int start_y, int end_x, int end_y, int remaining)
 {
     int x_diff = end_x - start_x;
     int y_diff = end_y - start_y;
-    double dist = sqrt(x_diff * x_diff + y_diff * y_diff);
-    double x_factor = x_diff / dist;
-    double y_factor = y_diff / dist;
-    static const int dot_spacing = 15;
-    int num_dots = (int) ceil(dist / dot_spacing);
+    int dist = (int) sqrt(x_diff * x_diff + y_diff * y_diff);
+    int x_factor = calc_percentage(x_diff, dist);
+    int y_factor = calc_percentage(y_diff, dist);
+    int offset = TRADE_DOT_SPACING - remaining;
+    dist -= offset;
+    int num_dots = dist / TRADE_DOT_SPACING;
+    remaining = dist % TRADE_DOT_SPACING;
     int image_id = trade_route->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE ? assets_get_image_id("UI", "LandRouteDot") : assets_get_image_id("UI", "SeaRouteDot");
-    for (int j = 0; j < num_dots; j++) {
-        int x = (int) (x_factor * j * 15 + start_x);
-        int y = (int) (y_factor * j * 15 + start_y);
+    for (int j = 0; j <= num_dots; j++) {
+        int x = calc_adjust_with_percentage(j * TRADE_DOT_SPACING + offset, x_factor) + start_x;
+        int y = calc_adjust_with_percentage(j * TRADE_DOT_SPACING + offset, y_factor) + start_y;
         image_draw(image_id, x_draw_offset + x, y_draw_offset + y, COLOR_MASK_NONE, SCALE_NONE);
     }
+    return remaining;
 }
 
-void window_empire_draw_trade_waypoints(const empire_object *trade_route, int x_draw_offset, int y_draw_offset)
+void window_empire_draw_trade_waypoints(const empire_object *trade_route, int x_offset, int y_offset)
 {
     const empire_object *our_city = empire_object_get_our_city();
     const empire_object *trade_city = empire_object_get_trade_city(trade_route->trade_route_id);
     int last_x = our_city->x + 25;
     int last_y = our_city->y + 25;
+    int remaining = TRADE_DOT_SPACING;
     for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
         empire_object *obj = empire_object_get(i);
         if (obj->type != EMPIRE_OBJECT_TRADE_WAYPOINT || obj->trade_route_id != trade_route->trade_route_id) {
             continue;
         }
-        draw_trade_dots(trade_route, x_draw_offset, y_draw_offset, last_x, last_y, obj->x, obj->y);
+        remaining = draw_trade_dots(trade_route, x_offset, y_offset, last_x, last_y, obj->x, obj->y, remaining);
         last_x = obj->x;
         last_y = obj->y;
     }
-    draw_trade_dots(trade_route, x_draw_offset, y_draw_offset, last_x, last_y, trade_city->x + 25, trade_city->y + 25);
+    draw_trade_dots(trade_route, x_offset, y_offset, last_x, last_y, trade_city->x + 25, trade_city->y + 25, remaining);
 }
 
 static void draw_empire_object(const empire_object *obj)
