@@ -201,7 +201,8 @@ static void draw_empire_object(const empire_object *obj)
             data.x_draw_offset + x + 7, data.y_draw_offset + y - 9,
             obj->type == EMPIRE_OBJECT_ROMAN_ARMY ? COLOR_WHITE : COLOR_FONT_RED);
     }
-    if (scenario_empire_id() == SCENARIO_CUSTOM_EMPIRE && (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE)) {
+    if (scenario_empire_id() == SCENARIO_CUSTOM_EMPIRE &&
+        (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE)) {
         window_empire_draw_trade_waypoints(obj, data.x_draw_offset, data.y_draw_offset);
     }
     image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y, COLOR_MASK_NONE, SCALE_NONE);
@@ -386,15 +387,18 @@ static void draw_panel_buttons(const empire_city *city)
 
     if (scenario.empire.id == SCENARIO_CUSTOM_EMPIRE) {
         button_border_draw(data.x_min + 144, data.y_max - 52, 150, 24, data.focus_button_id == 2);
-        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_TOGGLE_INVASIONS, data.x_min + 144, data.y_max - 45, 150, FONT_NORMAL_GREEN);
+        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_TOGGLE_INVASIONS,
+            data.x_min + 144, data.y_max - 45, 150, FONT_NORMAL_GREEN);
 
         button_border_draw(data.x_min + 314, data.y_max - 52, 150, 24, data.focus_button_id == 3);
-        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_REFRESH_EMPIRE, data.x_min + 314, data.y_max - 45, 150, FONT_NORMAL_GREEN);
+        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_REFRESH_EMPIRE,
+            data.x_min + 314, data.y_max - 45, 150, FONT_NORMAL_GREEN);
 
         int width = lang_text_get_width(CUSTOM_TRANSLATION, TR_EDITOR_CITY_PREVIEW, FONT_NORMAL_GREEN);
 
         if (data.x_min + 564 + width < data.x_max) {
-            lang_text_draw(CUSTOM_TRANSLATION, TR_EDITOR_CITY_PREVIEW, data.x_max - 96 - width, data.y_max - 45, FONT_NORMAL_GREEN);
+            lang_text_draw(CUSTOM_TRANSLATION, TR_EDITOR_CITY_PREVIEW,
+                data.x_max - 96 - width, data.y_max - 45, FONT_NORMAL_GREEN);
         }
 
         button_border_draw(data.x_max - 92, data.y_max - 100, 72, 72, data.preview_button_focused);
@@ -499,7 +503,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 }
             }
         }
-        if (m->left.is_down && !is_outside_map(m->x, m->y)) {
+        if (scenario.empire.id == SCENARIO_CUSTOM_EMPIRE && m->left.is_down && !is_outside_map(m->x, m->y)) {
             data.picked_coord_enabled = 1;
             data.picked_coord_x = m->x - data.x_draw_offset;
             data.picked_coord_y = m->y - data.y_draw_offset;
