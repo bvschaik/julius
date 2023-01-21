@@ -331,10 +331,10 @@ void scenario_load_state(buffer *buf, int version)
         scenario.price_changes[i].month = buffer_read_u8(buf);
     }
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
-        scenario.price_changes[i].resource = buffer_read_u8(buf);
+        scenario.price_changes[i].resource = resource_remap(buffer_read_u8(buf));
     }
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
-        scenario.price_changes[i].amount = resource_remap(buffer_read_u8(buf));
+        scenario.price_changes[i].amount = buffer_read_u8(buf);
     }
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         scenario.price_changes[i].is_rise = buffer_read_u8(buf);
