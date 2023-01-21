@@ -275,12 +275,14 @@ building *building_create(building_type type, int x, int y)
         b->resources[RESOURCE_NONE] = FULL_GRANARY;
     }
 
-    if (type == BUILDING_MARKET || type == BUILDING_DOCK ||
-        type == BUILDING_MESS_HALL || type == BUILDING_CARAVANSERAI) {
-        // Set it as accepting all available goods
-        for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-            b->accepted_goods[r] = building_distribution_resource_is_handled(r, type);
-        }
+    // Set it as accepting all available goods
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        b->accepted_goods[r] = building_distribution_resource_is_handled(r, type);
+    }
+
+    // Exception for Venus temples which should never accept wine by default to prevent unwanted evolutions
+    if (type == BUILDING_SMALL_TEMPLE_VENUS || type == BUILDING_LARGE_TEMPLE_VENUS) {
+        b->accepted_goods[RESOURCE_WINE] = 0;
     }
 
     if (type == BUILDING_WAREHOUSE || type == BUILDING_HIPPODROME) {
