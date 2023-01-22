@@ -90,6 +90,7 @@ static const char *ini_keys[] = {
     "undo",
     "mothball_toggle",
     "storage_order",
+    "show_overlay_efficiency",
     "show_overlay_food_stocks",
     "show_overlay_entertainment",
     "show_overlay_education",
