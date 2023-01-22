@@ -29,7 +29,7 @@ int building_count_grand_temples_active(void)
 int building_count_active(building_type type)
 {
     int active = 0;
-    for (const building *b = building_first_of_type(type); b; b = b->next_of_type) {
+    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
         if (building_is_active(b) && b == building_main(b)) {
             active++;
         }
@@ -40,7 +40,7 @@ int building_count_active(building_type type)
 int building_count_total(building_type type)
 {
     int total = 0;
-    for (const building *b = building_first_of_type(type); b; b = b->next_of_type) {
+    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
         if (b->state == BUILDING_STATE_IN_USE && b == building_main(b)) {
             total++;
         }
@@ -51,7 +51,7 @@ int building_count_total(building_type type)
 int building_count_upgraded(building_type type)
 {
     int upgraded = 0;
-    for (const building *b = building_first_of_type(type); b; b = b->next_of_type) {
+    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
         if (b->state == BUILDING_STATE_IN_USE && b->upgrade_level > 0 && b == building_main(b)) {
             upgraded++;
         }
