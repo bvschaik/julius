@@ -6,7 +6,7 @@
 
 #define FOOD_PER_SOLDIER_MONTHLY 4
 #define FOOD_PER_TRADER_MONTHLY 10
-#define RESOURCE_GRANARY_ONE_LOAD 100
+#define RESOURCE_ONE_LOAD 100
 
 typedef struct {
     int size;

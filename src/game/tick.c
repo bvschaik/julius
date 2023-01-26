@@ -138,7 +138,7 @@ static void advance_day(void)
 static void advance_tick(void)
 {
     // NB: these ticks are noop:
-    // 0, 10, 11, 13, 14, 15, 18, 26, 41
+    // 0, 10, 11, 13, 14, 15, 18, 26, 41, 46
     // max is 49
     switch (game_time_tick()) {
         case 1: city_gods_calculate_moods(1); break;
@@ -178,7 +178,6 @@ static void advance_tick(void)
         case 43: building_maintenance_update_burning_ruins(); break;
         case 44: building_maintenance_check_fire_collapse(); break;
         case 45: figure_generate_criminals(); break;
-        case 46: building_industry_update_wheat_production(); break;
         case 47: city_games_decrement_duration(); break;
         case 48: house_service_decay_tax_collector(); break;
         case 49: city_culture_calculate(); break;

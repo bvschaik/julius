@@ -1716,7 +1716,8 @@ void building_figure_generate(void)
             b->show_on_problem_overlay = 1;
             continue;
         }
-        if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_HIPPODROME && b->prev_part_building_id)) {
+        if (b->type == BUILDING_WAREHOUSE_SPACE || (b->type == BUILDING_HIPPODROME && b->prev_part_building_id) ||
+            building_monument_is_unfinished_monument(b)) {
             continue;
         }
 
@@ -1724,7 +1725,8 @@ void building_figure_generate(void)
         // range of building types
         if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE) {
             patrician_generated = spawn_patrician(b, patrician_generated);
-        } else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_POTTERY_WORKSHOP) {
+        } else if (building_is_raw_resource_producer(b->type) ||
+            building_is_farm(b->type) || building_is_workshop(b->type)) {
             spawn_figure_industry(b);
         } else if (b->type >= BUILDING_SENATE && b->type <= BUILDING_FORUM_UPGRADED) {
             spawn_figure_senate_forum(b);
@@ -1769,14 +1771,10 @@ void building_figure_generate(void)
                     spawn_figure_theater(b);
                     break;
                 case BUILDING_HIPPODROME:
-                    if (b->data.monument.phase == MONUMENT_FINISHED) {
-                        spawn_figure_hippodrome(b);
-                    }
+                    spawn_figure_hippodrome(b);
                     break;
                 case BUILDING_COLOSSEUM:
-                    if (b->data.monument.phase == MONUMENT_FINISHED) {
-                        spawn_figure_colosseum(b);
-                    }
+                    spawn_figure_colosseum(b);
                     break;
                 case BUILDING_ARENA:
                     spawn_figure_colosseum(b);
@@ -1846,23 +1844,17 @@ void building_figure_generate(void)
                     spawn_figure_mess_hall(b);
                     break;
                 case BUILDING_GRAND_TEMPLE_MARS:
-                    if (b->data.monument.phase == MONUMENT_FINISHED) {
-                        spawn_figure_grand_temple_mars(b);
-                    }
+                    spawn_figure_grand_temple_mars(b);
                     break;
                 case BUILDING_GRAND_TEMPLE_CERES:
                 case BUILDING_GRAND_TEMPLE_NEPTUNE:
                 case BUILDING_GRAND_TEMPLE_MERCURY:
                 case BUILDING_GRAND_TEMPLE_VENUS:
                 case BUILDING_PANTHEON:
-                    if (b->data.monument.phase == MONUMENT_FINISHED) {
-                        spawn_figure_temple(b);
-                    }
+                    spawn_figure_temple(b);
                     break;
                 case BUILDING_LIGHTHOUSE:
-                    if (b->data.monument.phase == MONUMENT_FINISHED) {
-                        spawn_figure_lighthouse(b);
-                    }
+                    spawn_figure_lighthouse(b);
                     break;
                 case BUILDING_TAVERN:
                     spawn_figure_tavern(b);
@@ -1871,9 +1863,7 @@ void building_figure_generate(void)
                     spawn_figure_watchtower(b);
                     break;
                 case BUILDING_CARAVANSERAI:
-                    if (b->data.monument.phase == MONUMENT_FINISHED) {
-                        spawn_figure_caravanserai(b);
-                    }
+                    spawn_figure_caravanserai(b);
                     break;
             }
         }

@@ -333,9 +333,7 @@ void building_maintenance_check_rome_access(void)
                 b->road_access_x = x_road;
                 b->road_access_y = y_road;
             }
-        } else if (b->type == BUILDING_LIGHTHOUSE || b->type == BUILDING_LARGE_MAUSOLEUM ||
-            b->type == BUILDING_NYMPHAEUM ||
-            (b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS)) {
+        } else if (b->size == 3 && building_monument_is_unfinished_monument(b)) {
             b->distance_from_entry = 0;
             int x_road, y_road;
             int road_grid_offset = map_road_to_largest_network_lighthouse(b->x, b->y, &x_road, &y_road);

@@ -413,7 +413,7 @@ void figure_cartpusher_action(figure *f)
         case FIGURE_ACTION_26_CARTPUSHER_AT_WORKSHOP:
             f->wait_ticks++;
             if (f->wait_ticks > 5) {
-                building_workshop_add_raw_material(building_get(f->destination_building_id));
+                building_workshop_add_raw_material(building_get(f->destination_building_id), f->resource_id);
                 f->action_state = FIGURE_ACTION_27_CARTPUSHER_RETURNING;
                 f->wait_ticks = 0;
                 f->destination_x = f->source_x;
@@ -695,7 +695,7 @@ void figure_warehouseman_action(figure *f)
                         }
                         break;
                     default: // workshop
-                        building_workshop_add_raw_material(b);
+                        building_workshop_add_raw_material(b, f->resource_id);
                         break;
                 }
                 if (delivered) {

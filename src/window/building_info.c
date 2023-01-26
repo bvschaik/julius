@@ -510,6 +510,8 @@ static void draw_background(void)
             window_building_draw_timber_yard(&context);
         } else if (btype == BUILDING_CLAY_PIT) {
             window_building_draw_clay_pit(&context);
+        } else if (btype == BUILDING_GOLD_MINE) {
+            window_building_draw_gold_mine(&context);
         } else if (btype == BUILDING_WINE_WORKSHOP) {
             window_building_draw_wine_workshop(&context);
         } else if (btype == BUILDING_OIL_WORKSHOP) {
@@ -520,6 +522,8 @@ static void draw_background(void)
             window_building_draw_furniture_workshop(&context);
         } else if (btype == BUILDING_POTTERY_WORKSHOP) {
             window_building_draw_pottery_workshop(&context);
+        } else if (btype == BUILDING_CITY_MINT) {
+            window_building_draw_city_mint(&context);
         } else if (btype == BUILDING_MARKET) {
             if (context.storage_show_special_orders) {
                 window_building_draw_distributor_orders(&context, translation_for(TR_MARKET_SPECIAL_ORDERS_HEADER));

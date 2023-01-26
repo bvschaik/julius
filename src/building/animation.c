@@ -1,6 +1,7 @@
 #include "animation.h"
 
 #include "assets/assets.h"
+#include "building/count.h"
 #include "building/image.h"
 #include "building/industry.h"
 #include "building/model.h"
@@ -51,8 +52,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_MARBLE_QUARRY && (b->num_workers <= 0 || b->strike_duration_days > 0)) {
         map_sprite_animation_set(grid_offset, 1);
         return 1;
-    } else if ((b->type == BUILDING_IRON_MINE || b->type == BUILDING_CLAY_PIT ||
-        b->type == BUILDING_TIMBER_YARD) && (b->num_workers <= 0 || b->strike_duration_days > 0)) {
+    } else if (building_is_raw_resource_producer(b->type) && (b->num_workers <= 0 || b->strike_duration_days > 0)) {
         return 0;
     }
     if (b->type == BUILDING_GLADIATOR_SCHOOL) {
@@ -69,6 +69,11 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     }
     if (building_monument_is_monument(b) && (b->type != BUILDING_ORACLE && b->type != BUILDING_NYMPHAEUM &&
         (b->num_workers <= 0 || b->data.monument.phase != MONUMENT_FINISHED))) {
+        return 0;
+    }
+    if (b->type == BUILDING_CITY_MINT &&
+        (b->loads_stored < BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN || b->num_workers <= 0 ||
+        (building_count_active(BUILDING_SENATE) == 0 && building_count_active(BUILDING_SENATE_UPGRADED) == 0))) {
         return 0;
     }
     if ((b->type == BUILDING_ARCHITECT_GUILD || b->type == BUILDING_MESS_HALL || b->type == BUILDING_ARENA)

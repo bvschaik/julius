@@ -509,6 +509,7 @@ void building_construction_set_type(building_type type)
                 break;
             case BUILDING_MARBLE_QUARRY:
             case BUILDING_IRON_MINE:
+            case BUILDING_GOLD_MINE:
                 data.required_terrain.rock = 1;
                 break;
             case BUILDING_TIMBER_YARD:
@@ -841,6 +842,7 @@ void building_construction_update(int x, int y, int grid_offset)
         // never mark as constructing
     } else {
         if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
+            !(type == BUILDING_CITY_MINT && (city_buildings_has_city_mint() || !city_buildings_has_senate())) &&
             !(type == BUILDING_BARRACKS && city_buildings_has_barracks() &&
             !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) &&
             !(type == BUILDING_MESS_HALL && city_buildings_has_mess_hall()) &&

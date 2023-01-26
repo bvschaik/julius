@@ -4,6 +4,7 @@
 #include "city/resource.h"
 #include "core/array.h"
 #include "core/calc.h"
+#include "core/config.h"
 #include "core/log.h"
 #include "game/resource.h"
 #include "game/save_version.h"
@@ -77,6 +78,9 @@ int building_storage_create(void)
         return 0;
     }
     storage->in_use = 1;
+    if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
+        building_storage_accept_none(storage->id);
+    }
     return storage->id;
 }
 
@@ -238,6 +242,9 @@ void building_storage_load_state(buffer *buf, int version)
         s->building_id = buffer_read_i32(buf);
         s->in_use = buffer_read_u8(buf);
         s->storage.empty_all = buffer_read_u8(buf);
+        if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
+            building_storage_accept_none(s->id);
+        }
         for (int r = 0; r < num_resources; r++) {
             s->storage.resource_state[resource_remap(r)] = buffer_read_u8(buf);
         }

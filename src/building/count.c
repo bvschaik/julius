@@ -41,7 +41,7 @@ int building_count_total(building_type type)
 {
     int total = 0;
     for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-        if (b->state == BUILDING_STATE_IN_USE && b == building_main(b)) {
+        if ((b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_CREATED) && b == building_main(b)) {
             total++;
         }
     }
@@ -52,7 +52,7 @@ int building_count_upgraded(building_type type)
 {
     int upgraded = 0;
     for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-        if (b->state == BUILDING_STATE_IN_USE && b->upgrade_level > 0 && b == building_main(b)) {
+        if ((b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_CREATED) && b->upgrade_level > 0 && b == building_main(b)) {
             upgraded++;
         }
     }

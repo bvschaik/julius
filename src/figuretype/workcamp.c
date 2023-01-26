@@ -171,7 +171,6 @@ void figure_workcamp_worker_action(figure *f)
     }
 }
 
-
 void figure_workcamp_slave_action(figure *f)
 {
     f->is_ghost = 0;

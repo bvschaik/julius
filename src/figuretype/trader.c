@@ -405,7 +405,7 @@ static int get_closest_storage(const figure *f, int x, int y, int city_id, map_p
                 !empire_can_import_resource_from_city(city_id, resource)) {
                 continue;
             }
-            if (building_granary_resource_amount(RESOURCE_NONE, b) >= 4 * RESOURCE_GRANARY_ONE_LOAD) {
+            if (building_granary_resource_amount(RESOURCE_NONE, b) >= 4 * RESOURCE_ONE_LOAD) {
                 distance_penalty -= 32;
             } else {
                 distance_penalty -= 16;

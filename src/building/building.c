@@ -213,63 +213,7 @@ building *building_create(building_type type, int x, int y)
         b->subtype.house_level = 0;
     }
 
-    // input/output resources
-    switch (type) {
-        case BUILDING_WHEAT_FARM:
-            b->output_resource_id = RESOURCE_WHEAT;
-            break;
-        case BUILDING_VEGETABLE_FARM:
-            b->output_resource_id = RESOURCE_VEGETABLES;
-            break;
-        case BUILDING_FRUIT_FARM:
-            b->output_resource_id = RESOURCE_FRUIT;
-            break;
-        case BUILDING_OLIVE_FARM:
-            b->output_resource_id = RESOURCE_OLIVES;
-            break;
-        case BUILDING_VINES_FARM:
-            b->output_resource_id = RESOURCE_VINES;
-            break;
-        case BUILDING_PIG_FARM:
-            b->output_resource_id = RESOURCE_MEAT;
-            break;
-        case BUILDING_MARBLE_QUARRY:
-            b->output_resource_id = RESOURCE_MARBLE;
-            break;
-        case BUILDING_IRON_MINE:
-            b->output_resource_id = RESOURCE_IRON;
-            break;
-        case BUILDING_TIMBER_YARD:
-            b->output_resource_id = RESOURCE_TIMBER;
-            break;
-        case BUILDING_CLAY_PIT:
-            b->output_resource_id = RESOURCE_CLAY;
-            break;
-        case BUILDING_WINE_WORKSHOP:
-            b->output_resource_id = RESOURCE_WINE;
-            break;
-        case BUILDING_OIL_WORKSHOP:
-            b->output_resource_id = RESOURCE_OIL;
-            break;
-        case BUILDING_WEAPONS_WORKSHOP:
-            b->output_resource_id = RESOURCE_WEAPONS;
-            break;
-        case BUILDING_FURNITURE_WORKSHOP:
-            b->output_resource_id = RESOURCE_FURNITURE;
-            break;
-        case BUILDING_POTTERY_WORKSHOP:
-            b->output_resource_id = RESOURCE_POTTERY;
-            break;
-        case BUILDING_GRAND_TEMPLE_VENUS:
-            b->output_resource_id = RESOURCE_WINE;
-            break;
-        case BUILDING_WHARF:
-            b->output_resource_id = RESOURCE_FISH;
-            break;
-        default:
-            b->output_resource_id = RESOURCE_NONE;
-            break;
-    }
+    b->output_resource_id = resource_get_from_industry(type);
 
     if (type == BUILDING_GRANARY) {
         b->resources[RESOURCE_NONE] = FULL_GRANARY;
@@ -460,6 +404,9 @@ int building_is_active(const building *b)
     }
     if (building_is_house(b->type)) {
         return b->house_size > 0 && b->house_population > 0;
+    }
+    if (building_monument_is_unfinished_monument(b)) {
+        return 0;
     }
     switch (b->type) {
         case BUILDING_RESERVOIR:

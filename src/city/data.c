@@ -99,8 +99,8 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.culture.average_desirability);
     buffer_write_i32(main, city_data.finance.tourism_rating);
     buffer_write_i32(main, city_data.finance.tourism_last_month);
-    buffer_write_i32(main, city_data.finance.tourism_last_year);
-    buffer_write_i16(main, city_data.finance.tourism_this_year);
+    buffer_write_i32(main, city_data.finance.misc_last_year);
+    buffer_write_i16(main, city_data.finance.misc_this_year);
     buffer_write_i16(main, city_data.resource.last_used_warehouse);
     buffer_write_u16(main, city_data.trade.months_since_last_land_trade_problem);
     buffer_write_u16(main, city_data.trade.months_since_last_sea_trade_problem);
@@ -550,8 +550,8 @@ static void load_main_data(buffer *main, int version)
     city_data.culture.average_desirability = buffer_read_i32(main);
     city_data.finance.tourism_rating = buffer_read_i32(main);
     city_data.finance.tourism_last_month = buffer_read_i32(main);
-    city_data.finance.tourism_last_year = buffer_read_i32(main);
-    city_data.finance.tourism_this_year = buffer_read_i16(main);
+    city_data.finance.misc_last_year = buffer_read_i32(main);
+    city_data.finance.misc_this_year = buffer_read_i16(main);
     city_data.resource.last_used_warehouse = buffer_read_i16(main);
     city_data.trade.months_since_last_land_trade_problem = buffer_read_u16(main);
     city_data.trade.months_since_last_sea_trade_problem = buffer_read_u16(main);

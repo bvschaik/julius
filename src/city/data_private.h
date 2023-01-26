@@ -108,8 +108,8 @@ extern struct city_data_t {
         int32_t tourism_rating;
         int32_t tourism_last_month;
         int32_t tourism_lowest_factor;
-        int32_t tourism_last_year;
-        int16_t tourism_this_year;
+        int32_t misc_last_year;
+        int16_t misc_this_year;
         int16_t tourist_spawn_delay;
     } finance;
     struct {

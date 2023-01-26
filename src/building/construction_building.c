@@ -103,9 +103,6 @@ static void add_warehouse(building *b)
     int corner = building_rotation_get_corner(2 * building_rotation_get_rotation());
 
     b->storage_id = building_storage_create();
-    if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
-        building_storage_accept_none(b->storage_id);
-    }
     b->prev_part_building_id = 0;
     map_building_tiles_add(b->id, b->x + x_offset[corner], b->y + y_offset[corner], 1,
         image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
@@ -163,9 +160,6 @@ static void add_to_map(int type, building *b, int size,
         // distribution
         case BUILDING_GRANARY:
             b->storage_id = building_storage_create();
-            if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
-                building_storage_accept_none(b->storage_id);
-            }
             add_building(b);
             map_tiles_update_area_roads(b->x, b->y, 5);
             break;
@@ -175,14 +169,15 @@ static void add_to_map(int type, building *b, int size,
             building_distribution_unaccept_all_goods(b);
             break;
         case BUILDING_LARGE_TEMPLE_VENUS:
-            map_tiles_update_area_roads(b->x, b->y, 5);
-            building_monument_set_phase(b, MONUMENT_START);
-            building_distribution_unaccept_all_goods(b);
-            break;
+            building_distribution_unaccept_all_goods(b); // Fallthrough
         case BUILDING_LARGE_TEMPLE_CERES:
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
         case BUILDING_LARGE_TEMPLE_MERCURY:
         case BUILDING_LARGE_TEMPLE_MARS:
+        case BUILDING_LARGE_MAUSOLEUM:
+        case BUILDING_NYMPHAEUM:
+        case BUILDING_LIGHTHOUSE:
+        case BUILDING_CITY_MINT:
             map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_set_phase(b, MONUMENT_START);
             break;
@@ -258,10 +253,6 @@ static void add_to_map(int type, building *b, int size,
             map_tiles_update_area_roads(b->x, b->y, 9);
             building_monument_set_phase(b, MONUMENT_START);
             break;
-        case BUILDING_LIGHTHOUSE:
-            map_tiles_update_area_roads(b->x, b->y, 5);
-            building_monument_set_phase(b, MONUMENT_START);
-            break;
         case BUILDING_MESS_HALL:
             b->data.market.is_mess_hall = 1;
             add_building(b);
@@ -277,11 +268,6 @@ static void add_to_map(int type, building *b, int size,
         case BUILDING_SMALL_MAUSOLEUM:
             b->subtype.orientation = building_rotation_get_rotation();
             map_tiles_update_area_roads(b->x, b->y, 4);
-            building_monument_set_phase(b, MONUMENT_START);
-            break;
-        case BUILDING_LARGE_MAUSOLEUM:
-        case BUILDING_NYMPHAEUM:
-            map_tiles_update_area_roads(b->x, b->y, 5);
             building_monument_set_phase(b, MONUMENT_START);
             break;
         case BUILDING_CARAVANSERAI:
@@ -389,13 +375,9 @@ int building_construction_place_building(building_type type, int x, int y)
         }
     }
 
-    if (building_monument_type_is_monument(type)) {
-        if (!empire_has_access_to_resource(RESOURCE_CLAY) ||
-            !empire_has_access_to_resource(RESOURCE_TIMBER) ||
-            !empire_has_access_to_resource(RESOURCE_MARBLE)) {
-            city_warning_show(WARNING_RESOURCES_NOT_AVAILABLE, NEW_WARNING_SLOT);
-            return 0;
-        }
+    if (!building_monument_has_required_resources_to_build(type)) {
+        city_warning_show(WARNING_RESOURCES_NOT_AVAILABLE, NEW_WARNING_SLOT);
+        return 0;
     }
 
     if (building_monument_get_id(type) && !building_monument_type_is_mini_monument(type)) {
@@ -430,6 +412,21 @@ int building_construction_place_building(building_type type, int x, int y)
         }
     }
     if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
+        city_warning_show(WARNING_ONE_BUILDING_OF_TYPE, NEW_WARNING_SLOT);
+        return 0;
+    }
+    if (type == BUILDING_CITY_MINT) {
+        if (city_buildings_has_city_mint()) {
+            city_warning_show(WARNING_ONE_BUILDING_OF_TYPE, NEW_WARNING_SLOT);
+            return 0;
+        }
+        if (!city_buildings_has_senate()) {
+            city_warning_show(WARNING_SENATE_NEEDED, NEW_WARNING_SLOT);
+            city_warning_show(WARNING_BUILD_SENATE, NEW_WARNING_SLOT);
+            return 0;
+        }
+    }
+    if (type == BUILDING_LIGHTHOUSE && city_buildings_has_lighthouse()) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE, NEW_WARNING_SLOT);
         return 0;
     }

@@ -327,7 +327,7 @@ static void write_resource_storage_tooltip(advisor_tooltip_result *r, int resour
 {
     static uint8_t tooltip_resource_info[200];
     int amount_warehouse = city_resource_count(resource);
-    int amount_granary = city_resource_count_food_on_granaries(resource) / RESOURCE_GRANARY_ONE_LOAD;
+    int amount_granary = city_resource_count_food_on_granaries(resource) / RESOURCE_ONE_LOAD;
     uint8_t *text = tooltip_resource_info;
     text += string_from_int(text, amount_warehouse, 0);
     *text = ' ';

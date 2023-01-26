@@ -130,7 +130,7 @@ static int get_column_height_efficiency(const building *b)
     if (percentage == -1) {
         return NO_COLUMN;
     }
-    return calc_bound(percentage/10, 1, 10);
+    return calc_bound(percentage / 10, 1, 10);
 }
 
 static int get_column_height_food_stocks(const building *b)

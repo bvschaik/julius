@@ -33,6 +33,7 @@ typedef enum {
     RESOURCE_VINES,
     RESOURCE_IRON,
     RESOURCE_MARBLE,
+    RESOURCE_GOLD,
     RESOURCE_POTTERY,
     RESOURCE_FURNITURE,
     RESOURCE_OIL,
@@ -47,9 +48,16 @@ typedef enum {
     RESOURCE_MAX_NON_FOOD = RESOURCE_WEAPONS + 1,
     RESOURCE_MIN = RESOURCE_MIN_FOOD,
     RESOURCE_MAX = RESOURCE_MAX_NON_FOOD,
+    RESOURCE_TOTAL_SPECIAL = 2,
+
+    // Values for old versions
     RESOURCE_MAX_FOOD_LEGACY = 7,
+    RESOURCE_MAX_FOOD_REORDERED = 5,
+    RESOURCE_MAX_FOOD_WITH_FISH = 6,
+
     RESOURCE_MAX_LEGACY = 16,
-    RESOURCE_TOTAL_SPECIAL = 2
+    RESOURCE_MAX_WITH_FISH = 17,
+    RESOURCE_MAX_WITH_GOLD = 18
 } resource_type;
 
 #define LEGACY_INVENTORY_MAX 8
@@ -59,7 +67,8 @@ typedef enum {
     RESOURCE_DYNAMIC_VERSION = 1,
     RESOURCE_REORDERED_VERSION = 2,
     RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION = 3,
-    RESOURCE_CURRENT_VERSION = RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION
+    RESOURCE_HAS_GOLD_VERSION = 4,
+    RESOURCE_CURRENT_VERSION = RESOURCE_HAS_GOLD_VERSION
 } resource_version;
 
 typedef enum {
@@ -116,6 +125,8 @@ resource_type resource_get_raw_material_for_good(resource_type good);
 const resource_data *resource_get_data(resource_type resource);
 
 void resource_set_mapping(int version);
+
+int resource_mapping_get_version(void);
 
 resource_type resource_map_legacy_inventory(int id);
 

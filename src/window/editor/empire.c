@@ -309,7 +309,9 @@ static void draw_resource(resource_type resource, int trade_max, int x_offset, i
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
     image_draw(resource_get_data(resource)->image.editor.empire, x_offset + 1, y_offset + 1,
         COLOR_MASK_NONE, SCALE_NONE);
-    window_empire_draw_resource_shields(trade_max, x_offset, y_offset);
+    if (trade_max != OUR_CITY) {
+        window_empire_draw_resource_shields(trade_max, x_offset, y_offset);
+    }
 }
 
 static void draw_city_info(const empire_city *city)

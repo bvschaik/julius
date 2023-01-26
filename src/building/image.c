@@ -225,6 +225,22 @@ int building_image_get(const building *b)
             return image_group(GROUP_BUILDING_PREFECTURE);
         case BUILDING_MARBLE_QUARRY:
             return image_group(GROUP_BUILDING_MARBLE_QUARRY);
+        case BUILDING_GOLD_MINE:
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    return assets_get_image_id("Industry", "Gold_Mine_N_ON");
+                case CLIMATE_DESERT:
+                    return assets_get_image_id("Industry", "Gold_Mine_S_ON");
+                default:
+                    return assets_get_image_id("Industry", "Gold_Mine_C_ON");
+            }
+        case BUILDING_CITY_MINT:
+            switch (b->data.monument.phase) {
+                case MONUMENT_START:
+                    return assets_get_image_id("Logistics", "Lighthouse Const 01");
+                default:
+                    return building_variant_get_image_id_with_rotation(b->type, b->variant);
+            }
         case BUILDING_IRON_MINE:
             return image_group(GROUP_BUILDING_IRON_MINE);
         case BUILDING_TIMBER_YARD:

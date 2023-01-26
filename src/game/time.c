@@ -41,7 +41,7 @@ int game_time_year(void)
 
 int game_time_advance_tick(void)
 {
-    if (++data.tick >= 50) {
+    if (++data.tick >= GAME_TIME_TICKS_PER_DAY) {
         data.tick = 0;
         return 1;
     }
@@ -51,7 +51,7 @@ int game_time_advance_tick(void)
 int game_time_advance_day(void)
 {
     data.total_days++;
-    if (++data.day >= 16) {
+    if (++data.day >= GAME_TIME_DAYS_PER_MONTH) {
         data.day = 0;
         return 1;
     }
@@ -60,7 +60,7 @@ int game_time_advance_day(void)
 
 int game_time_advance_month(void)
 {
-    if (++data.month >= 12) {
+    if (++data.month >= GAME_TIME_MONTHS_PER_YEAR) {
         data.month = 0;
         return 1;
     }
@@ -72,12 +72,14 @@ void game_time_advance_year(void)
     ++data.year;
 }
 
-int game_time_total_months(void) {
-    return (int)floor(data.total_days / 16);
+int game_time_total_months(void)
+{
+    return data.total_days / GAME_TIME_DAYS_PER_MONTH;
 }
 
-int game_time_total_years(void) {
-    return (int)floor(game_time_total_months() / 12);
+int game_time_total_years(void)
+{
+    return game_time_total_months() / GAME_TIME_MONTHS_PER_YEAR;
 }
 
 void game_time_save_state(buffer *buf)

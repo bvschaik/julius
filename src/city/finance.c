@@ -72,10 +72,10 @@ void city_finance_treasury_add(int amount)
     city_data.finance.treasury += amount;
 }
 
-void city_finance_treasury_add_tourism(int amount)
+void city_finance_treasury_add_miscellaneous(int amount)
 {
     city_finance_treasury_add(amount);
-    city_data.finance.tourism_this_year += amount;
+    city_data.finance.misc_this_year += amount;
 }
 
 
@@ -459,8 +459,8 @@ static void copy_amounts_to_last_year(void)
     this_year->income.donated = 0;
 
     //tourism 
-    city_data.finance.tourism_last_year = city_data.finance.tourism_this_year;
-    city_data.finance.tourism_this_year = 0;
+    city_data.finance.misc_last_year = city_data.finance.misc_this_year;
+    city_data.finance.misc_this_year = 0;
 }
 
 static void pay_tribute(void)

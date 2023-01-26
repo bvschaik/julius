@@ -12,7 +12,7 @@ static const building DUMMY_BUILDING;
 static const building *get_first_working_building(building_type type)
 {
     for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-        if (b->state == BUILDING_STATE_IN_USE) {
+        if (b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_CREATED) {
             return b;
         }
     }
@@ -26,6 +26,13 @@ int city_buildings_has_senate(void)
         senate = get_first_working_building(BUILDING_SENATE_UPGRADED);
     }
     return senate->id != 0;
+}
+
+int city_buildings_has_governor_house(void)
+{
+    return get_first_working_building(BUILDING_GOVERNORS_HOUSE)->id != 0 ||
+        get_first_working_building(BUILDING_GOVERNORS_VILLA)->id != 0 ||
+        get_first_working_building(BUILDING_GOVERNORS_PALACE)->id != 0;
 }
 
 int city_buildings_has_barracks(void)
@@ -43,6 +50,11 @@ int city_buildings_has_mess_hall(void)
     return city_buildings_get_mess_hall() != 0;
 }
 
+int city_buildings_has_city_mint(void)
+{
+    return get_first_working_building(BUILDING_CITY_MINT)->id != 0;
+}
+
 int city_buildings_get_mess_hall(void)
 {
     return get_first_working_building(BUILDING_MESS_HALL)->id;
@@ -51,6 +63,11 @@ int city_buildings_get_mess_hall(void)
 int city_buildings_has_hippodrome(void)
 {
     return get_first_working_building(BUILDING_HIPPODROME)->id != 0;
+}
+
+int city_buildings_has_lighthouse(void)
+{
+    return get_first_working_building(BUILDING_LIGHTHOUSE)->id != 0;
 }
 
 int city_buildings_has_caravanserai(void)

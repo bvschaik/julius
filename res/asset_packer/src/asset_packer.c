@@ -34,7 +34,6 @@
 #define PACKED_ASSETS_DIR "packed_assets"
 #define CURSORS_DIR "Color_Cursors"
 #define BYTES_PER_PIXEL 4
-#define FILE_NAME_MAX 300
 
 #ifdef FORMAT_XML
 #define FORMAT_NEWLINE "\n"

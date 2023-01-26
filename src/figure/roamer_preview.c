@@ -100,11 +100,13 @@ static figure_type building_type_to_figure_type(building_type type)
         case BUILDING_TIMBER_YARD:
         case BUILDING_IRON_MINE:
         case BUILDING_MARBLE_QUARRY:
+        case BUILDING_GOLD_MINE:
         case BUILDING_POTTERY_WORKSHOP:
         case BUILDING_OIL_WORKSHOP:
         case BUILDING_WINE_WORKSHOP:
         case BUILDING_FURNITURE_WORKSHOP:
         case BUILDING_WEAPONS_WORKSHOP:
+        case BUILDING_CITY_MINT:
         case BUILDING_WORKCAMP:
         case BUILDING_ARCHITECT_GUILD:
         case BUILDING_WHARF:

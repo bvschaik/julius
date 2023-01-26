@@ -75,7 +75,7 @@ static int draw_background(void)
     // income
     draw_row(60, 8, 155, last_year->income.taxes, this_year->income.taxes);
     draw_row(60, 9, 170, last_year->income.exports, this_year->income.exports);
-    draw_tr_row(TR_WINDOW_ADVISOR_TOURISM, 185, city_data.finance.tourism_last_year, city_data.finance.tourism_this_year);
+    draw_tr_row(TR_WINDOW_ADVISOR_TOURISM, 185, city_data.finance.misc_last_year, city_data.finance.misc_this_year);
     draw_row(60, 20, 200, last_year->income.donated, this_year->income.donated);
 
     graphics_draw_line(280, 350, 213, 213, COLOR_BLACK);

@@ -1,5 +1,6 @@
 #include "resource.h"
 
+#include "assets/assets.h"
 #include "building/industry.h"
 #include "building/type.h"
 #include "core/image.h"
@@ -28,6 +29,12 @@ static const resource_type resource_mappings[][RESOURCE_ALL] = {
         RESOURCE_CLAY, RESOURCE_TIMBER, RESOURCE_OLIVES, RESOURCE_VINES, RESOURCE_IRON, RESOURCE_MARBLE,
         RESOURCE_POTTERY, RESOURCE_FURNITURE, RESOURCE_OIL, RESOURCE_WINE, RESOURCE_WEAPONS,
         RESOURCE_DENARII, RESOURCE_TROOPS
+    },
+    {
+        RESOURCE_NONE, RESOURCE_WHEAT, RESOURCE_VEGETABLES, RESOURCE_FRUIT, RESOURCE_MEAT, RESOURCE_FISH,
+        RESOURCE_CLAY, RESOURCE_TIMBER, RESOURCE_OLIVES, RESOURCE_VINES, RESOURCE_IRON, RESOURCE_MARBLE, RESOURCE_GOLD,
+        RESOURCE_POTTERY, RESOURCE_FURNITURE, RESOURCE_OIL, RESOURCE_WINE, RESOURCE_WEAPONS,
+        RESOURCE_DENARII, RESOURCE_TROOPS
     }
 };
 
@@ -37,6 +44,7 @@ static const resource_type legacy_inventory_mapping[LEGACY_INVENTORY_MAX] = {
 };
 
 static struct {
+    resource_version version;
     const resource_type *resources;
     const resource_type *inventory;
     int total_resources;
@@ -58,12 +66,13 @@ static resource_data resource_info[RESOURCE_ALL] = {
     [RESOURCE_VINES]      = { .type = RESOURCE_VINES,      .xml_attr_name = "vines",       .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_VINES_FARM,         .production_per_month = 80,  .default_trade_price = {  44,  36 }, .workshop = BUILDING_WINE_WORKSHOP,      .warning = { WARNING_VINES_NEEDED,  WARNING_BUILD_VINES_FARM  } },
     [RESOURCE_IRON]       = { .type = RESOURCE_IRON,       .xml_attr_name = "iron",        .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_IRON_MINE,          .production_per_month = 80,  .default_trade_price = {  60,  40 }, .workshop = BUILDING_WEAPONS_WORKSHOP,   .warning = { WARNING_IRON_NEEDED,   WARNING_BUILD_IRON_MINE   } },
     [RESOURCE_MARBLE]     = { .type = RESOURCE_MARBLE,     .xml_attr_name = "marble",      .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_MARBLE_QUARRY,      .production_per_month = 80,  .default_trade_price = { 200, 140 } },
+    [RESOURCE_GOLD]       = { .type = RESOURCE_GOLD,       .xml_attr_name = "gold",        .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_GOLD_MINE,          .production_per_month = 20,  .default_trade_price = { 350, 250 }, .workshop = BUILDING_CITY_MINT,          .warning = { WARNING_GOLD_NEEDED,   WARNING_BUILD_GOLD_MINE   } },
     [RESOURCE_POTTERY]    = { .type = RESOURCE_POTTERY,    .xml_attr_name = "pottery",     .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_POTTERY_WORKSHOP,   .production_per_month = 40,  .default_trade_price = { 180, 140 } },
     [RESOURCE_FURNITURE]  = { .type = RESOURCE_FURNITURE,  .xml_attr_name = "furniture",   .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_FURNITURE_WORKSHOP, .production_per_month = 40,  .default_trade_price = { 200, 150 } },
     [RESOURCE_OIL]        = { .type = RESOURCE_OIL,        .xml_attr_name = "oil",         .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_OIL_WORKSHOP,       .production_per_month = 40,  .default_trade_price = { 180, 140 } },
     [RESOURCE_WINE]       = { .type = RESOURCE_WINE,       .xml_attr_name = "wine",        .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_WINE_WORKSHOP,      .production_per_month = 40,  .default_trade_price = { 215, 160 } },
     [RESOURCE_WEAPONS]    = { .type = RESOURCE_WEAPONS,    .xml_attr_name = "weapons",     .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_WEAPONS_WORKSHOP,   .production_per_month = 40,  .default_trade_price = { 250, 180 } },
-    [RESOURCE_DENARII]    = { .type = RESOURCE_DENARII },
+    [RESOURCE_DENARII]    = { .type = RESOURCE_DENARII,    .industry = BUILDING_CITY_MINT, .production_per_month = 200 },
     [RESOURCE_TROOPS]     = { .type = RESOURCE_TROOPS  }
 };
 
@@ -84,11 +93,12 @@ int resource_is_inventory(resource_type resource)
 
 resource_type resource_get_from_industry(building_type industry)
 {
-    if (building_is_farm(industry) || building_is_raw_resource_producer(industry) || building_is_workshop(industry)) {
-        for (resource_type resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-            if (resource_info[resource].industry == industry) {
-                return resource;
-            }
+    if (industry == resource_info[RESOURCE_DENARII].industry) {
+        return RESOURCE_DENARII;
+    }
+    for (resource_type resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+        if (resource_info[resource].industry == industry) {
+            return resource;
         }
     }
     return RESOURCE_NONE;
@@ -139,6 +149,16 @@ void resource_init(void)
     resource_info[RESOURCE_FISH].image.editor.icon = image_group(GROUP_EDITOR_RESOURCE_ICONS) + 17;
     resource_info[RESOURCE_FISH].image.editor.empire = image_group(GROUP_EDITOR_EMPIRE_RESOURCES) + 17;
 
+    resource_info[RESOURCE_GOLD].text = lang_get_string(CUSTOM_TRANSLATION, TR_RESOURCE_GOLD);
+    resource_info[RESOURCE_GOLD].image.cart.single_load = assets_get_image_id("Industry", "Gold_Cart_NE");
+    resource_info[RESOURCE_GOLD].image.cart.multiple_loads = assets_get_image_id("Industry", "Gold_Cart_Getting_NE");
+    resource_info[RESOURCE_GOLD].image.cart.eight_loads = assets_get_image_id("Industry", "Gold_Cart_Getting_NE");
+    resource_info[RESOURCE_GOLD].image.storage = assets_get_image_id("Industry", "Warehouse_Gold_01");
+    resource_info[RESOURCE_GOLD].image.icon = assets_get_image_id("UI", "Panelling_Gold_01");
+    resource_info[RESOURCE_GOLD].image.empire = assets_get_image_id("UI", "Panelling_Gold_02");
+    resource_info[RESOURCE_GOLD].image.editor.icon = assets_get_image_id("UI", "Panelling_Gold_01");
+    resource_info[RESOURCE_GOLD].image.editor.empire = assets_get_image_id("UI", "Panelling_Gold_02");
+
     resource_info[RESOURCE_NONE].text = lang_get_string(23, 0);
 
     resource_info[RESOURCE_DENARII].image.icon = image_group(GROUP_RESOURCE_ICONS) + 16;
@@ -155,6 +175,7 @@ const resource_data *resource_get_data(resource_type resource)
 
 void resource_set_mapping(int version)
 {
+    mapping.version = version;
     mapping.joined_meat_and_fish = version < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION;
     switch (version) {
         case RESOURCE_ORIGINAL_VERSION:
@@ -175,10 +196,17 @@ void resource_set_mapping(int version)
             mapping.resources = resource_mappings[1];
             mapping.inventory = 0;
             mapping.total_resources = RESOURCE_MAX_LEGACY;
-            mapping.total_food_resources = 5;
+            mapping.total_food_resources = RESOURCE_MAX_FOOD_REORDERED;
             mapping.joined_meat_and_fish = 1;
             break;
         case RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION:
+            mapping.resources = resource_mappings[2];
+            mapping.inventory = 0;
+            mapping.total_resources = RESOURCE_MAX_WITH_FISH;
+            mapping.total_food_resources = RESOURCE_MAX_FOOD_WITH_FISH;
+            mapping.joined_meat_and_fish = 0;
+            break;
+        case RESOURCE_HAS_GOLD_VERSION:
         default:
             mapping.resources = 0;
             mapping.inventory = 0;
@@ -196,6 +224,11 @@ resource_type resource_map_legacy_inventory(int id)
         return RESOURCE_FISH;
     }
     return resource;
+}
+
+int resource_mapping_get_version(void)
+{
+    return mapping.version;
 }
 
 resource_type resource_produced_by_building_type(int building_type)

@@ -111,7 +111,7 @@ void city_games_schedule(int game_id)
         if (resource_cost) {
             resource_cost = building_warehouses_remove_resource(resource, resource_cost);
             if (resource_cost > 0 && resource_is_food(resource)) {
-                building_granaries_remove_resource(resource, resource_cost * RESOURCE_GRANARY_ONE_LOAD);
+                building_granaries_remove_resource(resource, resource_cost * RESOURCE_ONE_LOAD);
             }
         }
     }

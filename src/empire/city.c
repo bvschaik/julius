@@ -16,6 +16,7 @@
 #include "figuretype/trader.h"
 #include "game/resource.h"
 #include "scenario/building.h"
+#include "scenario/empire.h"
 #include "scenario/map.h"
 
 #include <string.h>
@@ -398,8 +399,37 @@ void empire_city_save_state(buffer *buf)
     }
 }
 
-void empire_city_load_state(buffer *buf)
+static void set_gold_production(empire_city *city)
 {
+
+    switch (city->name_id) {
+        case 4:
+        case 6:
+        case 7:
+        case 30:
+        case 36:
+        case 38:
+            if (city->sells_resource[RESOURCE_IRON] > 0) {
+                city->sells_resource[RESOURCE_GOLD] = 1;
+                if (city->type != EMPIRE_CITY_OURS) {
+                    trade_route_set_limit(city->route_id, RESOURCE_GOLD, 5);
+                }
+            }
+    }
+}
+
+void empire_city_update_gold_trading(void)
+{
+    if (scenario_empire_id() == SCENARIO_CUSTOM_EMPIRE) {
+        return;
+    }
+    for (int i = 0; i < EMPIRE_CITY_MAX_CITIES; i++) {
+        set_gold_production(&cities[i]);
+    }
+}
+
+void empire_city_load_state(buffer *buf)
+{   
     empire_city_clear_all();
     for (int i = 0; i < EMPIRE_CITY_MAX_CITIES; i++) {
         empire_city *city = &cities[i];
@@ -426,10 +456,14 @@ void empire_city_load_state(buffer *buf)
             city->trader_figure_ids[f] = buffer_read_i16(buf);
         }
         buffer_skip(buf, 10);
-        // Fix - on old saves, fish resources were enabled simply if a wharf existed
-        if (city->type == EMPIRE_CITY_OURS && scenario_building_allowed(BUILDING_WHARF) &&
-            resource_total_mapped() == RESOURCE_MAX_LEGACY) {
-            city->sells_resource[RESOURCE_FISH] = 1;
+        // Update resource production and trading
+        if (resource_mapping_get_version() < RESOURCE_HAS_GOLD_VERSION) {
+            set_gold_production(city);
+            if (resource_mapping_get_version() < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
+                if (city->type == EMPIRE_CITY_OURS && city->sells_resource[RESOURCE_FISH]) {
+                    city->sells_resource[RESOURCE_MEAT] = 1;
+                }
+            }
         }
     }
 }

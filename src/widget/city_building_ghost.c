@@ -363,6 +363,9 @@ static int is_fully_blocked(int map_x, int map_y, building_type type, int buildi
     if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
         return 1;
     }
+    if (type == BUILDING_CITY_MINT && (!city_buildings_has_senate() || city_buildings_has_city_mint())) {
+        return 1;
+    }
     if (type == BUILDING_CARAVANSERAI && city_buildings_has_caravanserai()) {
         return 1;
     }

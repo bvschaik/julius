@@ -640,6 +640,9 @@ static void savegame_load_from_state(savegame_state *state, savegame_version ver
     building_storage_load_state(state->building_storages, version);
     scenario_gladiator_revolt_load_state(state->gladiator_revolt);
     trade_routes_load_state(state->trade_route_limit, state->trade_route_traded);
+    if (version <= SAVE_GAME_LAST_NO_GOLD_AND_MINTING) {
+        empire_city_update_gold_trading();
+    }
     map_routing_load_state(state->routing_counters);
     enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
     scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);

@@ -503,6 +503,10 @@ const uint8_t *lang_get_string(int group, int index)
                 return translation_for(TR_BUILDING_GLADIATOR_STATUE);
             case BUILDING_HIGHWAY:
                 return translation_for(TR_BUILDING_HIGHWAY);
+            case BUILDING_GOLD_MINE:
+                return translation_for(TR_BUILDING_GOLD_MINE);
+            case BUILDING_CITY_MINT:
+                return translation_for(TR_BUILDING_CITY_MINT);
             default:
                 break;
         }
