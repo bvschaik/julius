@@ -180,127 +180,58 @@ int building_monument_deliver_resource(building *b, int resource)
 
 int building_monument_access_point(building *b, map_point *dst)
 {
+    if (b->size < 3 || b->type == BUILDING_HIPPODROME) {
+        dst->x = b->x;
+        dst->y = b->y;
+        return 1;
+    }
     int dx = b->x - b->road_access_x;
     int dy = b->y - b->road_access_y;
-    switch (b->type) {
-        default:
-            return 0;
-        case BUILDING_LARGE_TEMPLE_CERES:
-        case BUILDING_LARGE_TEMPLE_NEPTUNE:
-        case BUILDING_LARGE_TEMPLE_MERCURY:
-        case BUILDING_LARGE_TEMPLE_MARS:
-        case BUILDING_LARGE_TEMPLE_VENUS:
-        case BUILDING_LIGHTHOUSE:
-        case BUILDING_NYMPHAEUM:
-        case BUILDING_LARGE_MAUSOLEUM:
-        case BUILDING_CITY_MINT:
-            if (dx == -1 && dy == -3) {
-                dst->x = b->x + 1;
-                dst->y = b->y + 2;
-            } else if (dx == 1 && dy == -1) {
-                dst->x = b->x;
-                dst->y = b->y + 1;
-            } else if (dx == -1 && dy == 1) {
-                dst->x = b->x + 1;
-                dst->y = b->y;
-            } else if (dx == -3 && dy == -1) {
-                dst->x = b->x + 2;
-                dst->y = b->y + 1;
-            } else {
-                return 0;
-            }
-            return 1;
-        case BUILDING_GRAND_TEMPLE_CERES:
-        case BUILDING_GRAND_TEMPLE_NEPTUNE:
-        case BUILDING_GRAND_TEMPLE_MERCURY:
-        case BUILDING_GRAND_TEMPLE_MARS:
-        case BUILDING_GRAND_TEMPLE_VENUS:
-        case BUILDING_PANTHEON:
-            if (dx == -3 && dy == -7) {
-                dst->x = b->x + 3;
-                dst->y = b->y + 6;
-            } else if (dx == 1 && dy == -3) {
-                dst->x = b->x;
-                dst->y = b->y + 3;
-            } else if (dx == -3 && dy == 1) {
-                dst->x = b->x + 3;
-                dst->y = b->y;
-            } else if (dx == -7 && dy == -3) {
-                dst->x = b->x + 6;
-                dst->y = b->y + 3;
-            } else {
-                return 0;
-            }
-            return 1;
-        case BUILDING_COLOSSEUM:
-            if (dx == -2 && dy == -5) {
-                dst->x = b->x + 2;
-                dst->y = b->y + 4;
-            } else if (dx == 1 && dy == -2) {
-                dst->x = b->x;
-                dst->y = b->y + 2;
-            } else if (dx == -2 && dy == 1) {
-                dst->x = b->x + 2;
-                dst->y = b->y;
-            } else if (dx == -5 && dy == -2) {
-                dst->x = b->x + 4;
-                dst->y = b->y + 2;
-            } else {
-                return 0;
-            }
-            return 1;
-        case BUILDING_ORACLE:
-        case BUILDING_SMALL_MAUSOLEUM:
-        case BUILDING_HIPPODROME:
-            dst->x = b->x;
-            dst->y = b->y;
-            return 1;
-        case BUILDING_CARAVANSERAI:
-            if (dx == -2 && dy == -4) {
-                dst->x = b->x + 2;
-                dst->y = b->y + 3;
-            } else if (dx == -1 && dy == -4) {
-                dst->x = b->x + 1;
-                dst->y = b->y + 3;
-            } else if (dx == 1 && dy == -1) {
-                dst->x = b->x;
-                dst->y = b->y + 1;
-            } else if (dx == 1 && dy == -2) {
-                dst->x = b->x;
-                dst->y = b->y + 2;
-            } else if (dx == -2 && dy == 1) {
-                dst->x = b->x + 2;
-                dst->y = b->y;
-            } else if (dx == -1 && dy == 1) {
-                dst->x = b->x + 1;
-                dst->y = b->y;
-            } else if (dx == -4 && dy == -1) {
-                dst->x = b->x + 3;
-                dst->y = b->y + 1;
-            } else if (dx == -4 && dy == -2) {
-                dst->x = b->x + 3;
-                dst->y = b->y + 2;
-            } else {
-                return 0;
-            }
-            return 1;
-    }
-/**
-    int half_size = size / 2;
+    int half_size = b->size / 2;
+    int even_size = b->size % 2;
 
-    if (dx == -half_size && dy == -size) {
+    if (dx == -half_size && dy == -b->size) {
         dst->x = b->x + half_size;
-        dst->y = b->y + size - 1;
-    } else if (dx == 1 && dy == -half_size) {
+        dst->y = b->y + b->size - 1;
+        return 1;
+    } if (dx == 1 && dy == -half_size) {
         dst->x = b->x;
         dst->y = b->y + half_size;
-    } else if (dx == -half_size && dy == 1) {
+        return 1;
+    }
+    if (dx == -half_size && dy == 1) {
         dst->x = b->x + half_size;
         dst->y = b->y;
-    } else if (dx == -size && dy == -half_size) {
-        dst->x = b->x + size - 1;
+        return 1;
+    }
+    if (dx == -b->size && dy == -half_size) {
+        dst->x = b->x + b->size - 1;
         dst->y = b->y + half_size;
-    }**/
+        return 1;
+    }
+    if (!even_size) {
+        return 0;
+    }
+    if (dx == -1 && dy == -b->size) {
+        dst->x = b->x + 1;
+        dst->y = b->y + b->size - 1;
+        return 1;
+    }
+    if (dx == 1 && dy == -1) {
+        dst->x = b->x;
+        dst->y = b->y + 1;
+        return 1;
+    }
+    if (dx == -1 && dy == 1) {
+        dst->x = b->x + 1;
+        dst->y = b->y;
+        return 1;
+    }
+    if (dx == -b->size && dy == -1) {
+        dst->x = b->x + b->size - 1;
+        dst->y = b->y + 1;
+        return 1;
+    }
     return 0;
 }
 

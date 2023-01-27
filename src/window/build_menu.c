@@ -360,7 +360,7 @@ static void generate_tooltip_text_for_monument(building_type monument)
 
 static void get_tooltip(tooltip_context *c)
 {
-    if (!data.focus_button_id ||
+    if (!data.focus_button_id || data.selected_submenu == SUBMENU_NONE ||
         mouse_get()->x > get_sidebar_x_offset() - MENU_X_OFFSET + MENU_ICON_WIDTH * 3) {
         return;
     }
