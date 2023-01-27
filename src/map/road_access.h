@@ -34,13 +34,7 @@ int map_road_to_largest_network(int x, int y, int size, int *x_road, int *y_road
 
 int map_road_to_largest_network_hippodrome(int x, int y, int *x_road, int *y_road, int rotated);
 
-int map_road_to_largest_network_grand_temple(int x, int y, int* x_road, int* y_road);
-
-int map_road_to_largest_network_colosseum(int x, int y, int* x_road, int* y_road);
-
-int map_road_to_largest_network_lighthouse(int x, int y, int* x_road, int* y_road);
-
-int map_road_to_largest_network_caravanserai(int x, int y, int *x_road, int *y_road);
+int map_road_to_largest_network_monument(int x, int y, int size, int *x_road, int *y_road);
 
 int map_get_adjacent_road_tiles_for_roaming(int grid_offset, int *road_tiles, int p);
 

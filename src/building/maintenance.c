@@ -243,12 +243,13 @@ void building_maintenance_check_rome_access(void)
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }
+        int road_grid_offset = -1;
+        int x_road = 0;
+        int y_road = 0;
+        b->distance_from_entry = 0;
         if (b->house_size) {
-            int x_road = 0;
-            int y_road = 0;
             if (!map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
                 // no road: eject people
-                b->distance_from_entry = 0;
                 b->house_unreachable_ticks++;
                 if (b->house_unreachable_ticks > 4) {
                     if (b->house_population) {
@@ -258,131 +259,66 @@ void building_maintenance_check_rome_access(void)
                     }
                     b->state = BUILDING_STATE_UNDO;
                 }
-            } else if (map_routing_distance(map_grid_offset(x_road, y_road))) {
-                // reachable from rome
-                b->distance_from_entry = map_routing_distance(map_grid_offset(x_road, y_road));
-                b->house_unreachable_ticks = 0;
-            } else if (map_closest_reachable_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
-                b->distance_from_entry = map_routing_distance(map_grid_offset(x_road, y_road));
-                b->house_unreachable_ticks = 0;
             } else {
-                // no reachable road in radius
-                if (!b->house_unreachable_ticks) {
-                    problem_grid_offset = b->grid_offset;
-                }
-                b->house_unreachable_ticks++;
-                if (b->house_unreachable_ticks > 8) {
-                    b->distance_from_entry = 0;
+                int distance = map_routing_distance(map_grid_offset(x_road, y_road));
+                if (distance) {
+                    // reachable from rome
+                    b->distance_from_entry = distance;
                     b->house_unreachable_ticks = 0;
-                    b->state = BUILDING_STATE_UNDO;
+                } else if (map_closest_reachable_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                    b->distance_from_entry = map_routing_distance(map_grid_offset(x_road, y_road));
+                    b->house_unreachable_ticks = 0;
+                } else {
+                    // no reachable road in radius
+                    if (!b->house_unreachable_ticks) {
+                        b->distance_from_entry = 1;
+                        problem_grid_offset = b->grid_offset;
+                    }
+                    b->house_unreachable_ticks++;
+                    if (b->house_unreachable_ticks > 8) {
+                        b->house_unreachable_ticks = 0;
+                        b->state = BUILDING_STATE_UNDO;
+                    }
                 }
+                b->road_access_x = x_road;
+                b->road_access_y = y_road;
             }
-            b->road_access_x = x_road;
-            b->road_access_y = y_road;
         } else if (b->type == BUILDING_WAREHOUSE) {
-            b->distance_from_entry = 0;
-            int x_road, y_road;
             // Try to match the road network/access point to the loading bay first
-            int road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 1, &x_road, &y_road);
+            road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 1, &x_road, &y_road);
             // If there's no road access to the loading bay, use any tile touching the warehouse
             if (road_grid_offset < 0 || !map_terrain_is(road_grid_offset, TERRAIN_ROAD)) {
                 road_grid_offset = map_road_to_largest_network_rotation(b->subtype.orientation, b->x, b->y, 3, &x_road, &y_road);
             }
-            if (road_grid_offset >= 0) {
-                b->road_network_id = map_road_network_get(road_grid_offset);
-                b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
-            }
         } else if (b->type == BUILDING_WAREHOUSE_SPACE) {
-            b->distance_from_entry = 0;
             building *main_building = building_main(b);
             b->road_network_id = main_building->road_network_id;
             b->distance_from_entry = main_building->distance_from_entry;
             b->road_access_x = main_building->road_access_x;
             b->road_access_y = main_building->road_access_y;
         } else if (b->type == BUILDING_HIPPODROME) {
-            b->distance_from_entry = 0;
-            int x_road, y_road;
-            int rotated = b->subtype.orientation;
-            int road_grid_offset = map_road_to_largest_network_hippodrome(b->x, b->y, &x_road, &y_road, rotated);
-            if (road_grid_offset >= 0) {
-                b->road_network_id = map_road_network_get(road_grid_offset);
-                b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
-            }
-        } else if ((b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) ||
-            (b->type == BUILDING_PANTHEON)) {
-            b->distance_from_entry = 0;
-            int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_grand_temple(b->x, b->y, &x_road, &y_road);
-            if (road_grid_offset >= 0) {
-                b->road_network_id = map_road_network_get(road_grid_offset);
-                b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
-            }
-        } else if (b->type == BUILDING_COLOSSEUM) {
-            b->distance_from_entry = 0;
-            int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_colosseum(b->x, b->y, &x_road, &y_road);
-            if (road_grid_offset >= 0) {
-                b->road_network_id = map_road_network_get(road_grid_offset);
-                b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
-            }
-        } else if (b->size == 3 && building_monument_is_unfinished_monument(b)) {
-            b->distance_from_entry = 0;
-            int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_lighthouse(b->x, b->y, &x_road, &y_road);
-            if (road_grid_offset >= 0) {
-                b->road_network_id = map_road_network_get(road_grid_offset);
-                b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
-            }
-        } else if (b->type == BUILDING_CARAVANSERAI) {
-            b->distance_from_entry = 0;
-            int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network_caravanserai(b->x, b->y, &x_road, &y_road);
-            if (road_grid_offset >= 0) {
-                b->road_network_id = map_road_network_get(road_grid_offset);
-                b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
-            }
+            int rotated = b->subtype.orientation != 0;
+            road_grid_offset = map_road_to_largest_network_hippodrome(b->x, b->y, &x_road, &y_road, rotated);
+        } else if (building_monument_is_unfinished_monument(b)) {
+            road_grid_offset = map_road_to_largest_network_monument(b->x, b->y, b->size, &x_road, &y_road);
         } else if (b->type == BUILDING_FORT) {
-            b->distance_from_entry = 0;
-            int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network(b->x, b->y, b->size, &x_road, &y_road);
+            road_grid_offset = map_road_to_largest_network(b->x, b->y, b->size, &x_road, &y_road);
             if (road_grid_offset < 0) {
                 int reachable = map_closest_reachable_spot_within_radius(b->x, b->y, b->size, 1, &x_road, &y_road);
                 if (reachable) {
                     road_grid_offset = map_grid_offset(x_road, y_road);
                 }
             }
-            if (road_grid_offset >= 0) {
-                b->road_network_id = map_road_network_get(road_grid_offset);
-                b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
-            }
         } else { // other building
-            b->distance_from_entry = 0;
-            int x_road, y_road;
-            int road_grid_offset = map_road_to_largest_network(b->x, b->y, b->size, &x_road, &y_road);
-            if (road_grid_offset >= 0) {
-                b->road_network_id = map_road_network_get(road_grid_offset);
-                b->distance_from_entry = map_routing_distance(road_grid_offset);
-                b->road_access_x = x_road;
-                b->road_access_y = y_road;
-                b->has_road_access = 1;
-            } else {
-                b->has_road_access = 0;
-            }
+            road_grid_offset = map_road_to_largest_network(b->x, b->y, b->size, &x_road, &y_road);
         }
+        if (road_grid_offset >= 0) {
+            b->road_network_id = map_road_network_get(road_grid_offset);
+            b->distance_from_entry = map_routing_distance(road_grid_offset);
+            b->road_access_x = x_road;
+            b->road_access_y = y_road;
+        }
+        b->has_road_access = b->distance_from_entry > 0 && b->house_unreachable_ticks == 0;
     }
     const map_tile *exit_point = city_map_exit_point();
 

@@ -510,13 +510,9 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         }
     }
 
+    // Backwards compatibility - double the current progress of industry buildings, except for wheat farms
     if (save_version < SAVE_GAME_LAST_NO_GOLD_AND_MINTING && b->output_resource_id && b->type != BUILDING_WHEAT_FARM) {
-        // Backwards compatibility - double the current progress of industry buildings, except for wheat farms
         b->data.industry.progress *= 2;
-        int max_progress = building_industry_get_max_progress(b);
-        if (b->data.industry.progress > max_progress) {
-            b->data.industry.progress = max_progress;
-        }
     }
 
     // To keep backward savegame compatibility, only fill more recent building struct elements

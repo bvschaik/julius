@@ -121,11 +121,10 @@ void figure_immigrant_action(figure *f)
             f->image_offset = 0;
             f->wait_ticks--;
             if (f->wait_ticks <= 0) {
-                int x_road, y_road;
-                if (map_closest_road_within_radius(b->x, b->y, b->size, 2, &x_road, &y_road)) {
+                if (b->has_road_access) {
                     f->action_state = FIGURE_ACTION_2_IMMIGRANT_ARRIVING;
-                    f->destination_x = x_road;
-                    f->destination_y = y_road;
+                    f->destination_x = b->road_access_x;
+                    f->destination_y = b->road_access_y;
                     f->roam_length = 0;
                 } else {
                     f->state = FIGURE_STATE_DEAD;
