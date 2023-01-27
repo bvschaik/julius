@@ -33,7 +33,7 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
         BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
 
     building *b = building_get(c->building_id);
-    int pct_grown = calc_percentage(b->data.industry.progress, 200);
+    int pct_grown = calc_percentage(b->data.industry.progress, building_industry_get_max_progress(b));
     int width = lang_text_draw(group_id, 2, c->x_offset + 32, c->y_offset + 44, FONT_NORMAL_BLACK);
     width += text_draw_percentage(pct_grown, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);
     lang_text_draw(group_id, 3, c->x_offset + 32 + width, c->y_offset + 44, FONT_NORMAL_BLACK);

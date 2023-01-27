@@ -1294,7 +1294,6 @@ static void spawn_figure_wharf(building *b)
         if (b->figure_spawn_delay) {
             b->figure_spawn_delay = 0;
             b->data.industry.has_fish = 0;
-            b->output_resource_id = RESOURCE_FISH;
             figure *f = figure_create(FIGURE_CART_PUSHER, road.x, road.y, DIR_4_BOTTOM);
             f->action_state = FIGURE_ACTION_20_CARTPUSHER_INITIAL;
             f->resource_id = RESOURCE_FISH;

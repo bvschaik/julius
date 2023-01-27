@@ -32,9 +32,6 @@ int building_is_farm(building_type type)
 
 int building_is_raw_resource_producer(building_type type)
 {
-    if (building_is_farm(type) || type == BUILDING_WHARF) {
-        return 0;
-    }
     return resource_is_raw_material(resource_get_from_industry(type));
 }
 
@@ -61,14 +58,14 @@ int building_get_efficiency(const building *b)
 
 int building_industry_get_max_progress(const building *b)
 {
-    int monthly_production = resource_production_per_month(resource_get_from_industry(b->type));
-    return calc_percentage(GAME_TIME_DAYS_PER_MONTH * model_get_building(b->type)->laborers, monthly_production);
+    int monthly_production = resource_production_per_month(b->output_resource_id);
+    return calc_percentage(GAME_TIME_DAYS_PER_MONTH * 2 * model_get_building(b->type)->laborers, monthly_production);
 }
 
 static void update_farm_image(const building *b)
 {
     map_building_tiles_add_farm(b->id, b->x, b->y, building_image_get_base_farm_crop(b->type),
-        b->data.industry.progress);
+        calc_percentage(b->data.industry.progress, building_industry_get_max_progress(b)));
 }
 
 static int random_industry_strikes(int num_strikes)
@@ -141,7 +138,7 @@ static void update_venus_gt_production(void)
     }
 }
 
-static void update_city_mint_production(void)
+static void update_city_mint_production(int new_day)
 {
     if (building_count_active(BUILDING_SENATE) == 0 && building_count_active(BUILDING_SENATE_UPGRADED) == 0) {
         return;
@@ -161,7 +158,7 @@ static void update_city_mint_production(void)
         return;
     }
 
-    if (b->data.industry.curse_days_left) {
+    if (b->data.industry.curse_days_left && new_day) {
         b->data.industry.curse_days_left--;
         return;
     }
@@ -185,7 +182,7 @@ static void update_city_mint_production(void)
     }
 }
 
-void building_industry_update_production(void)
+void building_industry_update_production(int new_day)
 {
     int striking_buildings = 0;
 
@@ -198,12 +195,14 @@ void building_industry_update_production(void)
 
             if (b->strike_duration_days > 0) {
                 striking_buildings++;
-                b->strike_duration_days--;
-                if (city_data.sentiment.value > 50) {
-                    b->strike_duration_days -= 3;
-                }
-                if (city_data.sentiment.value > 65) {
-                    b->strike_duration_days = 0;
+                if (new_day) {
+                    b->strike_duration_days--;
+                    if (city_data.sentiment.value > 50) {
+                        b->strike_duration_days -= 3;
+                    }
+                    if (city_data.sentiment.value > 65) {
+                        b->strike_duration_days = 0;
+                    }
                 }
                 if (b->strike_duration_days == 0) {
                     city_data.building.num_striking_industries--;
@@ -223,10 +222,12 @@ void building_industry_update_production(void)
             }
 
             if (b->data.industry.curse_days_left) {
-                b->data.industry.curse_days_left--;
+                if (new_day) {
+                    b->data.industry.curse_days_left--;
+                }
                 continue;
             }
-            if (b->data.industry.blessing_days_left) {
+            if (b->data.industry.blessing_days_left && new_day) {
                 b->data.industry.blessing_days_left--;
             }
             b->data.industry.progress += b->num_workers;
@@ -244,11 +245,13 @@ void building_industry_update_production(void)
         }
     }
 
-    update_venus_gt_production();
-    update_city_mint_production();
+    update_city_mint_production(new_day);
 
-    int num_strikes = city_data.building.num_striking_industries - striking_buildings;
-    force_strike(num_strikes);
+    if (new_day) {
+        update_venus_gt_production();
+        int num_strikes = city_data.building.num_striking_industries - striking_buildings;
+        force_strike(num_strikes);
+    }
 }
 
 int building_stockpiling_enabled(building *b)

@@ -2,6 +2,7 @@
 
 #include "building/image.h"
 #include "building/industry.h"
+#include "core/calc.h"
 #include "core/image.h"
 #include "core/image_group.h"
 #include "map/building_tiles.h"
@@ -67,7 +68,7 @@ void map_image_update_all(void)
         }
         if (building_is_farm(b->type)) {
             map_building_tiles_add_farm(b->id, b->x, b->y, building_image_get_base_farm_crop(b->type),
-                b->data.industry.progress);
+                calc_percentage(b->data.industry.progress, building_industry_get_max_progress(b)));
             continue;
         }
         int image_id = building_image_get(b);

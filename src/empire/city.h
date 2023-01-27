@@ -77,6 +77,8 @@ const uint8_t *empire_city_get_name(const empire_city *city);
 
 void empire_city_save_state(buffer *buf);
 
+int empire_city_can_mine_gold(int city_name_id);
+
 void empire_city_update_gold_trading(void);
 
 void empire_city_load_state(buffer *buf);

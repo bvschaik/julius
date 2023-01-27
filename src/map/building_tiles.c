@@ -112,7 +112,7 @@ void map_building_tiles_add_farm(int building_id, int x, int y, int crop_image_i
                 dx == x_leftmost && dy == y_leftmost);
         }
     }
-    int growth = progress / 10;
+    int growth = progress / 5;
     int growth_per_tile = growth / 5;
     int growth_remaining = growth % 5;
 

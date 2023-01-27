@@ -399,22 +399,28 @@ void empire_city_save_state(buffer *buf)
     }
 }
 
+int empire_city_can_mine_gold(int city_name_id)
+{
+    switch (city_name_id) {
+        case 4:  // Mediolanum
+        case 6:  // Carthago
+        case 7:  // Tarraco
+        case 30: // Lugdunum
+        case 36: // Londinium
+        case 38: // Sarmizegetusa
+            return 1;
+        default:
+            return 0;
+    }
+}
+
 static void set_gold_production(empire_city *city)
 {
-
-    switch (city->name_id) {
-        case 4:
-        case 6:
-        case 7:
-        case 30:
-        case 36:
-        case 38:
-            if (city->sells_resource[RESOURCE_IRON] > 0) {
-                city->sells_resource[RESOURCE_GOLD] = 1;
-                if (city->type != EMPIRE_CITY_OURS) {
-                    trade_route_set_limit(city->route_id, RESOURCE_GOLD, 5);
-                }
-            }
+    if (empire_city_can_mine_gold(city->name_id) && city->sells_resource[RESOURCE_IRON]) {
+        city->sells_resource[RESOURCE_GOLD] = 1;
+        if (city->type != EMPIRE_CITY_OURS) {
+            trade_route_set_limit(city->route_id, RESOURCE_GOLD, 5);
+        }
     }
 }
 
@@ -425,6 +431,22 @@ void empire_city_update_gold_trading(void)
     }
     for (int i = 0; i < EMPIRE_CITY_MAX_CITIES; i++) {
         set_gold_production(&cities[i]);
+    }
+}
+
+static void update_resource_production_and_trading(empire_city *city)
+{
+    if (resource_mapping_get_version() < RESOURCE_HAS_GOLD_VERSION) {
+        set_gold_production(city);
+        if (resource_mapping_get_version() < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
+            if (city->type == EMPIRE_CITY_OURS) {
+                if (city->sells_resource[RESOURCE_FISH]) {
+                    city->sells_resource[RESOURCE_MEAT] = 1;
+                } else if (scenario_building_allowed(BUILDING_WHARF)) {
+                    city->sells_resource[RESOURCE_FISH] = 1;
+                }
+            }
+        }
     }
 }
 
@@ -456,14 +478,6 @@ void empire_city_load_state(buffer *buf)
             city->trader_figure_ids[f] = buffer_read_i16(buf);
         }
         buffer_skip(buf, 10);
-        // Update resource production and trading
-        if (resource_mapping_get_version() < RESOURCE_HAS_GOLD_VERSION) {
-            set_gold_production(city);
-            if (resource_mapping_get_version() < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
-                if (city->type == EMPIRE_CITY_OURS && city->sells_resource[RESOURCE_FISH]) {
-                    city->sells_resource[RESOURCE_MEAT] = 1;
-                }
-            }
-        }
+        update_resource_production_and_trading(city);
     }
 }

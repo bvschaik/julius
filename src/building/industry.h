@@ -13,7 +13,7 @@ int building_is_workshop(building_type type);
  * not have efficiency. Wharfs are calculated against an arbitrary benchmark. */
 int building_get_efficiency(const building *b);
 
-void building_industry_update_production(void);
+void building_industry_update_production(int new_day);
 
 int building_industry_get_max_progress(const building *b);
 

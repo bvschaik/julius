@@ -61,7 +61,7 @@ static const monument_type pantheon = {
 };
 
 static const monument_type lighthouse = {
-    .phases = 5,
+    .phases    = 5,
     .resources = {
         { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 12 },
         { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_MARBLE] = 12 },
@@ -72,7 +72,7 @@ static const monument_type lighthouse = {
 };
 
 static const monument_type colosseum = {
-    .phases = 5,
+    .phases    = 5,
     .resources = {
         { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 12 },
         { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_MARBLE] = 16 },
@@ -83,7 +83,7 @@ static const monument_type colosseum = {
 };
 
 static const monument_type hippodrome = {
-    .phases = 5,
+    .phases    = 5,
     .resources = {
         { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 32 },
         { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_MARBLE] = 32 },
@@ -94,7 +94,7 @@ static const monument_type hippodrome = {
 };
 
 static const monument_type oracle_and_small_mausuleum = {
-    .phases = 2,
+    .phases    = 2,
     .resources = {
         { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 2 },
         { NOTHING }
@@ -102,7 +102,7 @@ static const monument_type oracle_and_small_mausuleum = {
 };
 
 static const monument_type large_temple_nymphaeum_and_large_mausuleum = {
-    .phases = 2,
+    .phases    = 2,
     .resources = {
         { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 4 },
         { NOTHING }
@@ -111,7 +111,7 @@ static const monument_type large_temple_nymphaeum_and_large_mausuleum = {
 
 
 static const monument_type caravanserai = {
-    .phases = 2,
+    .phases    = 2,
     .resources = {
         { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 6, [RESOURCE_CLAY] = 8, [RESOURCE_MARBLE] = 6 },
         { NOTHING }
@@ -119,7 +119,7 @@ static const monument_type caravanserai = {
 };
 
 static const monument_type city_mint = {
-    .phases = 2,
+    .phases    = 2,
     .resources = {
         { [ARCHITECTS] = 2, [RESOURCE_TIMBER] = 6, [RESOURCE_CLAY] = 8, [RESOURCE_IRON] = 4 },
         { NOTHING }
@@ -200,12 +200,12 @@ int building_monument_access_point(building *b, map_point *dst)
             } else if (dx == 1 && dy == -1) {
                 dst->x = b->x;
                 dst->y = b->y + 1;
-            } else if (dx == -3 && dy == -1) {
-                dst->x = b->x + 2;
-                dst->y = b->y + 1;
             } else if (dx == -1 && dy == 1) {
                 dst->x = b->x + 1;
                 dst->y = b->y;
+            } else if (dx == -3 && dy == -1) {
+                dst->x = b->x + 2;
+                dst->y = b->y + 1;
             } else {
                 return 0;
             }
@@ -285,6 +285,22 @@ int building_monument_access_point(building *b, map_point *dst)
             }
             return 1;
     }
+/**
+    int half_size = size / 2;
+
+    if (dx == -half_size && dy == -size) {
+        dst->x = b->x + half_size;
+        dst->y = b->y + size - 1;
+    } else if (dx == 1 && dy == -half_size) {
+        dst->x = b->x;
+        dst->y = b->y + half_size;
+    } else if (dx == -half_size && dy == 1) {
+        dst->x = b->x + half_size;
+        dst->y = b->y;
+    } else if (dx == -size && dy == -half_size) {
+        dst->x = b->x + size - 1;
+        dst->y = b->y + half_size;
+    }**/
     return 0;
 }
 
