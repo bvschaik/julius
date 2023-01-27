@@ -217,8 +217,8 @@ const model_building MODEL_WATCHTOWER = { 100,-6,1,2,3,8, };
 const model_building MODEL_CARAVANSERAI = { 500,-10,2,3,4,20 };
 const model_building MODEL_PALISADE = { 6,0,0,0,0,0 };
 const model_building MODEL_HIGHWAY = { 100,-4,1,2,3,0 };
-const model_building MODEL_GOLD_MINE = { 100,-6,1,1,4,20 };
-const model_building MODEL_CITY_MINT = { 250,-3,1,1,3,50 };
+const model_building MODEL_GOLD_MINE = { 100,-6,1,1,4,30 };
+const model_building MODEL_CITY_MINT = { 250,-3,1,1,3,40 };
 
 const model_building *model_get_building(building_type type)
 {
