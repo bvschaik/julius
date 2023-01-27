@@ -88,6 +88,9 @@ void city_military_decrease_native_attack_duration(void)
 {
     if (city_data.military.native_attack_duration) {
         city_data.military.native_attack_duration--;
+    } else {
+        // Restart native attack
+        formation_get(NATIVE_FORMATION)->months_low_morale = 0;
     }
 }
 

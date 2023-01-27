@@ -230,7 +230,7 @@ static void advance_route_tile(figure *f, int roaming_enabled)
                     break;
                 }
                 case DESTROYABLE_AQUEDUCT_GARDEN:
-                    if (map_terrain_is(target_grid_offset, TERRAIN_GARDEN | TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE)) {
+                    if (map_terrain_is(target_grid_offset, TERRAIN_ACCESS_RAMP | TERRAIN_RUBBLE)) {
                         cause_damage = 0;
                     } else {
                         max_damage = BUILDING_HP;

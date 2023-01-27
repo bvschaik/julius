@@ -2,6 +2,7 @@
 
 #include "building/building.h"
 #include "building/list.h"
+#include "building/properties.h"
 #include "city/buildings.h"
 #include "city/military.h"
 #include "core/calc.h"
@@ -41,10 +42,11 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
                     type != BUILDING_NATIVE_HUT &&
                     type != BUILDING_NATIVE_MEETING &&
                     type != BUILDING_NATIVE_CROPS &&
-                    type != BUILDING_ROADBLOCK
-                    ) {
+                    type != BUILDING_ROADBLOCK) {
                     return 1;
                 }
+            } else if (map_terrain_is(map_grid_offset(xx, yy), TERRAIN_AQUEDUCT | TERRAIN_WALL | TERRAIN_GARDEN)) {
+                return 1;
             }
         }
     }
@@ -53,9 +55,7 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
 
 static void determine_meeting_center(void)
 {
-
     // Determine closest meeting center for hut
-
     for (building *b = building_first_of_type(BUILDING_NATIVE_HUT); b; b = b->next_of_type) {
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
@@ -188,18 +188,18 @@ void map_natives_check_land(int update_behavior)
     }
 
     building_type native_buildings[] = { BUILDING_NATIVE_HUT, BUILDING_NATIVE_MEETING };
-    int native_size[] = { 1, 2 };
-    int native_radius[] = { 3, 6 };
 
     for (int i = 0; i < 2; i++) {
         building_type type = native_buildings[i];
+        int size = building_properties_for_type(type)->size;
+        int radius = size * 2;
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state != BUILDING_STATE_IN_USE) {
                 continue;
             }
             if (b->sentiment.native_anger >= 100) {
-                mark_native_land(b->x, b->y, native_size[i], native_radius[i]);
-                if (update_behavior && has_building_on_native_land(b->x, b->y, native_size[i], native_radius[i])) {
+                mark_native_land(b->x, b->y, size, radius);
+                if (update_behavior && has_building_on_native_land(b->x, b->y, size, radius)) {
                     city_military_start_native_attack();
                 }
             } else if (update_behavior) {

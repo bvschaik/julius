@@ -1,10 +1,12 @@
 #include "formation_enemy.h"
 
 #include "building/building.h"
+#include "building/properties.h"
 #include "city/buildings.h"
 #include "city/figures.h"
 #include "city/gods.h"
 #include "city/message.h"
+#include "city/military.h"
 #include "core/calc.h"
 #include "core/random.h"
 #include "figure/enemy_army.h"
@@ -264,6 +266,42 @@ static int set_enemy_target_building(formation *m)
     return best_building != 0;
 }
 
+
+int get_structures_on_native_land(int *dst_x, int *dst_y)
+{
+    int meeting_x, meeting_y;
+    city_buildings_main_native_meeting_center(&meeting_x, &meeting_y);
+
+    building_type native_buildings[] = { BUILDING_NATIVE_MEETING, BUILDING_NATIVE_HUT };
+    int min_distance = INFINITE;
+
+    for (int i = 0; i < 2 && min_distance == INFINITE; i++) {
+        building_type type = native_buildings[i];
+        int size = building_properties_for_type(type)->size;
+        int radius = size * 2;
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE) {
+                continue;
+            }
+            int x_min, y_min, x_max, y_max;
+            map_grid_get_area(b->x, b->y, size, radius, &x_min, &y_min, &x_max, &y_max);
+            for (int yy = y_min; yy <= y_max; yy++) {
+                for (int xx = x_min; xx <= x_max; xx++) {
+                    if (map_terrain_is(map_grid_offset(xx, yy), TERRAIN_AQUEDUCT | TERRAIN_WALL | TERRAIN_GARDEN)) {
+                        int distance = calc_maximum_distance(meeting_x, meeting_y, xx, yy);
+                        if (distance < min_distance) {
+                            min_distance = distance;
+                            *dst_x = xx;
+                            *dst_y = yy;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return min_distance < INFINITE;
+}
+
 static void set_native_target_building(formation *m)
 {
     int meeting_x, meeting_y;
@@ -302,7 +340,13 @@ static void set_native_target_building(formation *m)
     if (min_building) {
         formation_set_destination_building(m, min_building->x, min_building->y, min_building->id);
     } else {
-        formation_retreat(m);
+        int dst_x, dst_y;
+        int has_target = get_structures_on_native_land(&dst_x, &dst_y);
+        if (has_target) {
+            formation_set_destination_building(m, dst_x, dst_y, 0);
+        } else {
+            formation_retreat(m);
+        }
     }
 }
 
@@ -641,5 +685,7 @@ void formation_enemy_update(void)
             }
         }
     }
-    set_native_target_building(formation_get(0));
+    if (city_military_is_native_attack_active()) {
+        set_native_target_building(formation_get(NATIVE_FORMATION));
+    }
 }

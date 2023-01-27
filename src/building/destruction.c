@@ -212,7 +212,13 @@ void building_destroy_by_enemy(int x, int y, int grid_offset)
         if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
             figure_kill_tower_sentries_at(x, y);
         }
-        map_building_tiles_set_rubble(0, x, y, 1);
+        if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
+            map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
+            map_tiles_update_region_empty_land(x, y, x, y);
+            map_tiles_update_all_gardens();
+        } else {
+            map_building_tiles_set_rubble(0, x, y, 1);
+        }
     }
     figure_tower_sentry_reroute();
     map_tiles_update_area_walls(x, y, 3);
