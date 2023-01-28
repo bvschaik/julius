@@ -401,6 +401,89 @@
 	</image>
 	<!-- Note: Sand Overlay for Supplied Workshop -->
 	<image id="Sand_Supplied_Workshop" src="Sand_Supplied_Workshop" width="25" height="21"/>
+	<!-- Note: Silver Cart -->
+	<image id="Silver_Cart_NE" width="39" height="39">
+		<layer group="97" image="0" x="0" y="0"/>
+		<layer src="Silver_Cart_NE" x="0" y="0"/>
+	</image>
+	<image id="Silver_Cart_E" width="39" height="39">
+		<layer group="97" image="1" x="0" y="0"/>
+		<layer src="Silver_Cart_E" x="15" y="10"/>
+	</image>
+	<image id="Silver_Cart_SE" width="39" height="39">
+		<layer group="97" image="2" x="0" y="0"/>
+		<layer src="Silver_Cart_SE" x="0" y="0"/>
+	</image>
+	<image id="Silver_Cart_S" width="39" height="39">
+		<layer group="97" image="3" x="0" y="0"/>
+		<layer src="Silver_Cart_S" x="0" y="0"/>
+	</image>
+	<image id="Silver_Cart_SW" width="39" height="39">
+		<layer group="97" image="4" x="0" y="0"/>
+		<layer src="Silver_Cart_SW" x="0" y="0"/>
+	</image>
+	<image id="Silver_Cart_W" width="39" height="39">
+		<layer group="97" image="5" x="0" y="0"/>
+		<layer src="Silver_Cart_W" x="0" y="0"/>
+	</image>
+	<image id="Silver_Cart_NW" width="39" height="39">
+		<layer group="97" image="6" x="0" y="0"/>
+		<layer src="Silver_Cart_NW" x="0" y="0"/>
+	</image>
+	<image id="Silver_Cart_N" width="39" height="39">
+		<layer group="97" image="7" x="0" y="0"/>
+		<layer src="Silver_Cart_N" x="0" y="0"/>
+	</image>
+	<!-- Note: Silver Getting Cart -->
+	<image id="Silver_Cart_Getting_NE" width="39" height="39">
+		<layer group="97" image="0" x="0" y="0"/>
+		<layer src="Silver_Cart_Getting_NE" x="15" y="4"/>
+	</image>
+	<image id="Silver_Cart_Getting_E" width="39" height="39">
+		<layer group="97" image="1" x="0" y="0"/>
+		<layer src="Silver_Cart_Getting_E" x="15" y="5"/>
+	</image>
+	<image id="Silver_Cart_Getting_SE" width="39" height="39">
+		<layer group="97" image="2" x="0" y="0"/>
+		<layer src="Silver_Cart_Getting_SE" x="0" y="0"/>
+	</image>
+	<image id="Silver_Cart_Getting_S" width="39" height="39">
+		<layer group="97" image="3" x="0" y="0"/>
+		<layer src="Silver_Cart_Getting_S" x="15" y="7"/>
+	</image>
+	<image id="Silver_Cart_Getting_SW" width="39" height="39">
+		<layer group="97" image="4" x="0" y="0"/>
+		<layer src="Silver_Cart_Getting_SW" x="0" y="0"/>
+	</image>
+	<image id="Silver_Cart_Getting_W" width="39" height="39">
+		<layer group="97" image="5" x="0" y="0"/>
+		<layer src="Silver_Cart_Getting_W" x="0" y="0"/>
+	</image>
+	<image id="Silver_Cart_Getting_NW" width="39" height="39">
+		<layer group="97" image="6" x="0" y="0"/>
+		<layer src="Silver_Cart_Getting_NW" x="9" y="4"/>
+	</image>
+	<image id="Silver_Cart_Getting_N" width="39" height="39">
+		<layer group="97" image="7" x="0" y="0"/>
+		<layer src="Silver_Cart_Getting_N" x="15" y="4"/>
+	</image>
+	<!-- Note: Silver Warehouse Tiles -->
+	<image id="Warehouse_Silver_01" isometric="true">
+		<layer group="83" image="0" x="0" y="0"/>
+		<layer src="Warehouse_Silver_01" x="20" y="14"/>
+	</image>
+	<image id="Warehouse_Silver_02" isometric="true">
+		<layer group="83" image="0" x="0" y="0"/>
+		<layer src="Warehouse_Silver_02" x="20" y="1"/>
+	</image>
+	<image id="Warehouse_Silver_03" isometric="true">
+		<layer group="83" image="0" x="0" y="0"/>
+		<layer src="Warehouse_Silver_03" x="9" y="1"/>
+	</image>
+	<image id="Warehouse_Silver_04" isometric="true">
+		<layer group="83" image="0" x="0" y="0"/>
+		<layer src="Warehouse_Silver_04" x="9" y="1"/>
+	</image>
 	<!-- Note: Plain Stone Quarry OFF - Climate Variants -->
 	<image id="Stone_Quarry_C_OFF" src="Stone_Quarry_C_OFF" width="118" height="62" isometric="true"/>
 	<image id="Stone_Quarry_N_OFF" src="Stone_Quarry_N_OFF" width="118" height="62" isometric="true"/>

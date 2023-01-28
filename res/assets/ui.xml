@@ -220,6 +220,8 @@
 	<image id="Panelling_Gold_02" src="Panelling_Gold_02"/>
 	<image id="Panelling_Sand_01" src="Panelling_Sand_01"/>
 	<image id="Panelling_Sand_02" src="Panelling_Sand_02"/>
+	<image id="Panelling_Silver_01" src="Panelling_Silver_01"/>
+	<image id="Panelling_Silver_02" src="Panelling_Silver_02"/>
 	<image id="Panelling_Stone_01" src="Panelling_Stone_01"/>
 	<image id="Panelling_Stone_02" src="Panelling_Stone_02"/>
 	<!-- Note: Standards for custom legions -->
