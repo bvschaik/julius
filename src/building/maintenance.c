@@ -318,7 +318,10 @@ void building_maintenance_check_rome_access(void)
             b->road_access_x = x_road;
             b->road_access_y = y_road;
         }
-        b->has_road_access = b->distance_from_entry > 0 && b->house_unreachable_ticks == 0;
+        if (b->type != BUILDING_WAREHOUSE && b->type != BUILDING_WAREHOUSE_SPACE && b->type != BUILDING_GRANARY &&
+            b->house_unreachable_ticks == 0) {
+            b->has_road_access = b->distance_from_entry > 0;
+        }
     }
     const map_tile *exit_point = city_map_exit_point();
 
