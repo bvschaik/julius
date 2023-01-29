@@ -12,6 +12,7 @@
 #include "building/storage.h"
 #include "city/buildings.h"
 #include "city/finance.h"
+#include "core/calc.h"
 #include "core/image.h"
 #include "figure/roamer_preview.h"
 #include "game/resource.h"
@@ -190,7 +191,8 @@ static void add_building_to_terrain(building *b)
         return;
     }
     if (building_is_farm(b->type)) {
-        map_building_tiles_add_farm(b->id, b->x, b->y, building_image_get_base_farm_crop(b->type), 0);
+        map_building_tiles_add_farm(b->id, b->x, b->y, building_image_get_base_farm_crop(b->type),
+            calc_percentage(b->data.industry.progress, building_industry_get_max_progress(b)));
     } else {
         int size = building_properties_for_type(b->type)->size;
         if (building_is_house(b->type) && b->house_is_merged) {
