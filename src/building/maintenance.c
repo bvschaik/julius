@@ -300,7 +300,7 @@ void building_maintenance_check_rome_access(void)
             int rotated = b->subtype.orientation != 0;
             road_grid_offset = map_road_to_largest_network_hippodrome(b->x, b->y, &x_road, &y_road, rotated);
         } else if (building_monument_is_unfinished_monument(b)) {
-            road_grid_offset = map_road_to_largest_network_monument(b->x, b->y, b->size, &x_road, &y_road);
+            road_grid_offset = map_road_to_largest_network_monument_construction(b->x, b->y, b->size, &x_road, &y_road);
         } else if (b->type == BUILDING_FORT) {
             road_grid_offset = map_road_to_largest_network(b->x, b->y, b->size, &x_road, &y_road);
             if (road_grid_offset < 0) {

@@ -325,57 +325,22 @@ static void init(int grid_offset)
                 }
                 break;
         }
-        context.has_road_access = 0;
         switch (b->type) {
             case BUILDING_GRANARY:
-                if (map_has_road_access_granary(b->x, b->y, 0)) {
-                    context.has_road_access = 1;
-                }
+                context.has_road_access = map_has_road_access_granary(b->x, b->y, 0);
                 break;
             case BUILDING_HIPPODROME:
-                if (map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation)) {
-                    context.has_road_access = 1;
-                }
+                context.has_road_access = map_has_road_access_hippodrome_rotation(b->x, b->y, 0, b->subtype.orientation);
                 break;
             case BUILDING_WAREHOUSE:
-                if (map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0)) {
-                    context.has_road_access = 1;
-                }
+                context.has_road_access = map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, 0);
                 context.warehouse_space_text = building_warehouse_get_space_info(b);
                 break;
-            case BUILDING_GRAND_TEMPLE_CERES:
-            case BUILDING_GRAND_TEMPLE_NEPTUNE:
-            case BUILDING_GRAND_TEMPLE_MERCURY:
-            case BUILDING_GRAND_TEMPLE_MARS:
-            case BUILDING_GRAND_TEMPLE_VENUS:
-            case BUILDING_PANTHEON:
-                if (map_has_road_access_monument_size7(b->x, b->y, 0)) {
-                    context.has_road_access = 1;
-                }
-                break;
-            case BUILDING_COLOSSEUM:
-                if (map_has_road_access_monument_size5(b->x, b->y, 0)) {
-                    context.has_road_access = 1;
-                }
-                break;
-            case BUILDING_LIGHTHOUSE:
-            case BUILDING_LARGE_TEMPLE_CERES:
-            case BUILDING_LARGE_TEMPLE_MARS:
-            case BUILDING_LARGE_TEMPLE_MERCURY:
-            case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            case BUILDING_LARGE_TEMPLE_VENUS:
-                if (map_has_road_access_monument_size3(b->x, b->y, 0)) {
-                    context.has_road_access = 1;
-                }
-                break;
-            case BUILDING_CARAVANSERAI:
-                if (map_has_road_access_monument_size4(b->x, b->y, 0)) {
-                    context.has_road_access = 1;
-                }
-                break;
             default:
-                if (map_has_road_access(b->x, b->y, b->size, 0)) {
-                    context.has_road_access = 1;
+                if (building_monument_is_unfinished_monument(b)) {
+                    context.has_road_access = map_has_road_access_monument_construction(b->x, b->y, b->size);
+                } else {
+                    context.has_road_access = map_has_road_access(b->x, b->y, b->size, 0);
                 }
                 break;
         }
