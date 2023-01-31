@@ -311,16 +311,17 @@ static void draw_temple_info(building_info_context *c, int image_offset)
     }
 
     int x_offset = 112;
-
     if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
-        for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-            if (!resource_is_inventory(r)) {
+        const resource_list *list = city_resource_get_potential_foods();
+        for (int i = 0; i < list->size; i++) {
+            resource_type r = list->items[i];
+            if (!resource_is_inventory(r) || (list->size > 4 && !b->resources[r])) {
                 continue;
             }
             image_draw(resource_get_data(r)->image.icon, c->x_offset + x_offset, c->y_offset + 60,
                 COLOR_MASK_NONE, SCALE_NONE);
             text_draw_number(b->resources[r], '@', " ",
-                c->x_offset + 144, c->y_offset + 66, FONT_NORMAL_BLACK, 0);
+                c->x_offset + x_offset + 32, c->y_offset + 66, FONT_NORMAL_BLACK, 0);
 
             x_offset += 90;
         }
