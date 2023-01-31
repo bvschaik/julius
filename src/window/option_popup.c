@@ -154,10 +154,10 @@ static void draw_background(void)
                 Y_OFFSET_PER_OPTION[data.row_size] / 16 - 1);
         }
         text_draw_multiline(translation_for(data.options[i + scrollbar.scroll_position].header),
-            text_x, y_offset + 49, text_width - 4,
+            text_x, y_offset + 49, text_width - 8,
             data.selected_option == i + scrollbar.scroll_position + 1 ? FONT_NORMAL_WHITE : FONT_NORMAL_BLACK, 0);
         text_draw_multiline(translation_for(data.options[i + scrollbar.scroll_position].desc),
-            text_x, y_offset + 69, text_width - 4,
+            text_x, y_offset + 69, text_width - 8,
             data.selected_option == i + scrollbar.scroll_position + 1 ? FONT_NORMAL_WHITE : FONT_NORMAL_BLACK, 0);
 
 
