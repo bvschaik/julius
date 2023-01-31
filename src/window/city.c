@@ -230,10 +230,9 @@ static void show_overlay(int overlay)
 {
     exit_military_command();
     if (game_state_overlay() == overlay) {
-        game_state_set_overlay(OVERLAY_NONE);
-    } else {
-        game_state_set_overlay(overlay);
+        overlay = OVERLAY_NONE;
     }
+    game_state_set_overlay(overlay);
     city_with_overlay_update();
     show_roamers_for_overlay(overlay);
     window_invalidate();
@@ -545,6 +544,7 @@ static void handle_hotkeys(const hotkeys *h)
     if (h->toggle_overlay) {
         exit_military_command();
         game_state_toggle_overlay();
+        show_roamers_for_overlay(game_state_overlay());
         city_with_overlay_update();
         window_invalidate();
     }
