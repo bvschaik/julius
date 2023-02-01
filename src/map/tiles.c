@@ -821,10 +821,14 @@ void map_tiles_update_area_highways(int x, int y, int size)
 
 int map_tiles_set_highway(int x, int y)
 {
+    int items = 0;
     int terrain = TERRAIN_HIGHWAY_TOP_LEFT;
     for (int xx = x; xx <= x + 1; xx++) {
         for (int yy = y; yy <= y + 1; yy++) {
             int grid_offset = map_grid_offset(xx, yy);
+            if (!map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+                items++;
+            }
             map_terrain_remove(grid_offset, TERRAIN_ROAD);
             map_terrain_add(grid_offset, terrain);
             map_property_clear_constructing(grid_offset);
@@ -833,7 +837,7 @@ int map_tiles_set_highway(int x, int y)
     }
     foreach_region_tile(x - 1, y - 1, x + 2, y + 2, set_highway_image);
     foreach_region_tile(x - 1, y - 1, x + 2, y + 2, set_road_image);
-    return 1;
+    return items;
 }
 
 static int clear_highway_from_top(int grid_offset, int measure_only)

@@ -722,6 +722,7 @@ void building_construction_update(int x, int y, int grid_offset)
         int items_placed = building_construction_place_highway(1, data.start.x, data.start.y, x, y);
         if (items_placed >= 0) {
             current_cost *= items_placed;
+            current_cost /= 4; // Highway special case: cost is 100dn per 2x2 tiles, so it's 1/4 the price per tile
         }
     } else if (type == BUILDING_PLAZA) {
         int items_placed = place_plaza(data.start.x, data.start.y, x, y);
@@ -944,6 +945,7 @@ void building_construction_place(void)
         placement_cost *= building_construction_place_road(0, x_start, y_start, x_end, y_end);
     } else if (type == BUILDING_HIGHWAY) {
         placement_cost *= building_construction_place_highway(0, x_start, y_start, x_end, y_end);
+        placement_cost /= 4; // Highway special case: cost is 100dn per 2x2 tiles, so it's 1/4 the price per tile
     } else if (type == BUILDING_PLAZA) {
         placement_cost *= place_plaza(x_start, y_start, x_end, y_end);
     } else if (type == BUILDING_GARDENS) {

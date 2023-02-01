@@ -31,26 +31,6 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
     *items = 0;
     int grid_offset = map_grid_offset(x_end, y_end);
     int distance = 0;
-    int step_size = 1;
-    if (type == ROUTED_BUILDING_HIGHWAY) {
-        step_size = 2;
-        // the distance grid will be zeroes if we aren't aligned with the start by step_size,
-        // so find the closest adjacent grid_offset and set our end point there
-        if (abs(x_end - x_start) % 2 == 1 || abs(y_end - y_start) % 2 == 1) {
-            int min_distance = 10000;
-            for (int i = 0; i < 8; i++) {
-                int new_grid_offset = grid_offset + map_grid_direction_delta(i);
-                int new_dist = map_routing_distance(new_grid_offset);
-                if (new_dist > 0 && new_dist < min_distance) {
-                    min_distance = new_dist;
-                    x_end = map_grid_offset_to_x(new_grid_offset);
-                    y_end = map_grid_offset_to_y(new_grid_offset);
-                }
-            }
-            grid_offset = map_grid_offset(x_end, y_end);
-        }
-    }
-    
     int guard = 0;
     // reverse routing
     while (1) {
@@ -86,7 +66,7 @@ static int place_routed_building(int x_start, int y_start, int x_end, int y_end,
         int routed = 0;
         for (int i = 0; i < 4; i++) {
             int index = direction_indices[direction][i];
-            int new_grid_offset = grid_offset + map_grid_direction_delta(index) * step_size;
+            int new_grid_offset = grid_offset + map_grid_direction_delta(index);
             int new_dist = map_routing_distance(new_grid_offset);
             if (new_dist > 0 && new_dist < distance) {
                 grid_offset = new_grid_offset;

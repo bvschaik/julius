@@ -1153,11 +1153,11 @@ static void draw_highway(const map_tile *tile, int x, int y)
     int any_non_highway = 0;
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset + tile_grid_offset(orientation_index, i);
-        if (!map_terrain_is(tile_offset, TERRAIN_HIGHWAY)) {
+        if (map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR) && !map_terrain_is(tile_offset, TERRAIN_HIGHWAY)) {
             any_non_highway = 1;
         }
     }
-    if (!any_non_highway) {
+    if (any_non_highway) {
         for (int i = 0; i < num_tiles; i++) {
             blocked_tiles[i] = 1;
         }
