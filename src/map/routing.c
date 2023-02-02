@@ -332,10 +332,10 @@ static int can_build_highway(int next_offset, int dist, int check_highway_routin
     for (int x = 0; x < size; x++) {
         for (int y = 0; y < size; y++) {
             int offset = next_offset + map_grid_delta(x, y);
-            int terrain = terrain_land_citizen.items[offset];
-            if (terrain != CITIZEN_4_CLEAR_TERRAIN && terrain != CITIZEN_0_ROAD && terrain != CITIZEN_1_HIGHWAY && terrain != CITIZEN_N3_AQUEDUCT) {
+            int terrain = map_terrain_get(offset);
+            if (terrain & TERRAIN_NOT_CLEAR & ~TERRAIN_HIGHWAY & ~TERRAIN_AQUEDUCT & ~TERRAIN_ROAD) {
                 return 0;
-            } else if (terrain == CITIZEN_N3_AQUEDUCT && !map_can_place_highway_under_aqueduct(offset, check_highway_routing)) {
+            } else if (!map_can_place_highway_under_aqueduct(offset, check_highway_routing)) {
                 return 0;
             }
         }

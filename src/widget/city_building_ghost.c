@@ -1150,19 +1150,6 @@ static void draw_highway(const map_tile *tile, int x, int y)
         }
     }
 
-    int any_non_highway = 0;
-    for (int i = 0; i < num_tiles; i++) {
-        int tile_offset = grid_offset + tile_grid_offset(orientation_index, i);
-        if (map_terrain_is(tile_offset, TERRAIN_NOT_CLEAR) && !map_terrain_is(tile_offset, TERRAIN_HIGHWAY)) {
-            any_non_highway = 1;
-        }
-    }
-    if (any_non_highway) {
-        for (int i = 0; i < num_tiles; i++) {
-            blocked_tiles[i] = 1;
-        }
-    }
-
     int image_id = get_new_building_image_id(tile->x, tile->y, grid_offset, BUILDING_HIGHWAY, props);
     draw_regular_building(BUILDING_HIGHWAY, image_id, x, y, grid_offset, num_tiles, blocked_tiles);
 }
