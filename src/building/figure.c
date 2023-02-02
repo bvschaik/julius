@@ -1096,7 +1096,7 @@ static void spawn_figure_tavern(building *b)
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
-            if (!has_figure_of_type(b, FIGURE_BARKEEP) && b->resources[RESOURCE_WINE] > 21) {
+            if (!has_figure_of_type(b, FIGURE_BARKEEP) && b->resources[RESOURCE_WINE] >= 20) {
                 b->resources[RESOURCE_WINE] -= 20;
                 int resource_decay = b->resources[RESOURCE_MEAT] && b->resources[RESOURCE_FISH] ? 20 : 40;
                 b->resources[RESOURCE_MEAT] -= calc_bound(resource_decay, resource_decay, b->resources[RESOURCE_MEAT]);
