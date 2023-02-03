@@ -177,15 +177,15 @@ static int xml_start_city(void)
     city_obj->obj.x = xml_parser_get_attribute_int("x") - city_obj->obj.width / 2;
     city_obj->obj.y = xml_parser_get_attribute_int("y") - city_obj->obj.height / 2;
 
-    if (city_obj->city_type == EMPIRE_CITY_TRADE) {
+    if (city_obj->city_type == EMPIRE_CITY_TRADE || city_obj->city_type == EMPIRE_CITY_FUTURE_TRADE) {
         full_empire_object *route_obj = empire_object_get_full(data.next_empire_obj_id);
         route_obj->obj.id = data.next_empire_obj_id;
-        city_obj->obj.trade_route_id = route_obj->obj.id;
-        data.current_trade_route_id = route_obj->obj.id;
+        city_obj->obj.trade_route_id = data.current_trade_route_id;
         data.next_empire_obj_id++;
         route_obj->in_use = 1;
         route_obj->obj.type = EMPIRE_OBJECT_LAND_TRADE_ROUTE;
-        route_obj->obj.trade_route_id = city_obj->obj.trade_route_id;
+        route_obj->obj.trade_route_id = data.current_trade_route_id;
+        data.current_trade_route_id++;
 
         route_obj->obj.type = xml_parser_get_attribute_enum("trade_route_type",
             trade_route_types, 2, EMPIRE_OBJECT_LAND_TRADE_ROUTE);
@@ -273,7 +273,7 @@ static int xml_start_trade_point(void)
         data.success = 0;
         log_error("Trade point not trade_points tag", 0, 0);
         return 0;
-    } else if (data.current_trade_route_id == -1) {
+    } else if (!empire_object_get_full(data.current_city_id)->trade_route_cost) {
         data.success = 0;
         log_error("Attempting to parse trade point in a city that can't trade", 0, 0);
         return 0;
@@ -394,7 +394,6 @@ static int xml_start_distant_battle_waypoint(void)
 static void xml_end_city(void)
 {
     data.current_city_id = -1;
-    data.current_trade_route_id = -1;
     data.current_city_list = LIST_NONE;
 }
 
@@ -465,7 +464,7 @@ static void reset_data(void)
     data.success = 1;
     data.next_empire_obj_id = 0;
     data.current_city_id = -1;
-    data.current_trade_route_id = -1;
+    data.current_trade_route_id = 0;
     data.current_city_list = LIST_NONE;
     data.has_vulnerable_city = 0;
     data.current_invasion_path_id = 0;
