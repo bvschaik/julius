@@ -914,7 +914,7 @@ void building_construction_place(void)
     figure_type enemy_type = nearby_enemy_type(x_start, y_start, x_end, y_end);
 
     if (type != BUILDING_CLEAR_LAND && enemy_type != FIGURE_NONE) {
-        if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT) {
+        if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT || type == BUILDING_HIGHWAY) {
             game_undo_restore_map(0);
         } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || building_is_connectable(type)) {
             game_undo_restore_map(1);
