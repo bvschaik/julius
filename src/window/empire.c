@@ -38,7 +38,6 @@
 #define MAX_HEIGHT 1136
 
 #define TRADE_DOT_SPACING 10
-#define BORDER_EDGE_SPACING 50
 
 typedef struct {
     int x;
@@ -365,13 +364,18 @@ int draw_images_at_interval(int image_id, int x_draw_offset, int y_draw_offset,
     int x_factor = calc_percentage(x_diff, dist);
     int y_factor = calc_percentage(y_diff, dist);
     int offset = interval - remaining;
+    if (offset > dist) {
+        return offset;
+    }
     dist -= offset;
     int num_dots = dist / interval;
     remaining = dist % interval;
-    for (int j = 0; j <= num_dots; j++) {
-        int x = calc_adjust_with_percentage(j * interval + offset, x_factor) + start_x;
-        int y = calc_adjust_with_percentage(j * interval + offset, y_factor) + start_y;
-        image_draw(image_id, x_draw_offset + x, y_draw_offset + y, COLOR_MASK_NONE, SCALE_NONE);
+    if (image_id) {
+        for (int j = 0; j <= num_dots; j++) {
+            int x = calc_adjust_with_percentage(j * interval + offset, x_factor) + start_x;
+            int y = calc_adjust_with_percentage(j * interval + offset, y_factor) + start_y;
+            image_draw(image_id, x_draw_offset + x, y_draw_offset + y, COLOR_MASK_NONE, SCALE_NONE);
+        }
     }
     return remaining;
 }
@@ -408,37 +412,52 @@ void window_empire_draw_border(const empire_object *border, int x_offset, int y_
     }
     int last_x = first_edge->x;
     int last_y = first_edge->y;
-    int remaining = BORDER_EDGE_SPACING;
-    const image *img = image_get(border->image_id);
-    int animation_offset = 0;
-    if (img->animation && img->animation->speed_id) {
-        animation_offset = empire_object_update_animation(border, border->image_id);
-    }
+    int image_id = first_edge->image_id;
+    int remaining = border->width;
 
-    for (int i = first_edge->id; i < MAX_EMPIRE_OBJECTS; i++) {
+    // Align the coordinate to the base of the border flag's mast
+    x_offset -= 0;
+    y_offset -= 14;
+
+    for (int i = first_edge->id + 1; i < MAX_EMPIRE_OBJECTS; i++) {
         empire_object *obj = empire_object_get(i);
         if (obj->type != EMPIRE_OBJECT_BORDER_EDGE) {
             break;
         }
-        if (!animation_offset) {
-            remaining = draw_images_at_interval(border->image_id, x_offset, y_offset, last_x, last_y, obj->x, obj->y,
-            BORDER_EDGE_SPACING, remaining);
+        int animation_offset = 0;
+        int x = x_offset;
+        int y = y_offset;
+        if (image_id) {
+            const image *img = image_get(image_id);
+            draw_images_at_interval(image_id, x, y, last_x, last_y, obj->x, obj->y, border->width, remaining);
+            if (img->animation && img->animation->speed_id) {
+                animation_offset = empire_object_update_animation(obj, image_id);
+                x += img->animation->sprite_offset_x;
+                y += img->animation->sprite_offset_y;
+            }
+            remaining = draw_images_at_interval(image_id + animation_offset, x, y, last_x, last_y, obj->x, obj->y,
+                border->width, remaining);
         } else {
-            draw_images_at_interval(border->image_id, x_offset, y_offset, last_x, last_y, obj->x, obj->y,
-                BORDER_EDGE_SPACING, remaining);
-            remaining = draw_images_at_interval(border->image_id + animation_offset,
-                x_offset + img->animation->sprite_offset_x, y_offset + img->animation->sprite_offset_y,
-                last_x, last_y, obj->x, obj->y, BORDER_EDGE_SPACING, remaining);
+            remaining = border->width;
         }
         last_x = obj->x;
         last_y = obj->y;
+        image_id = obj->image_id;
     }
-    draw_images_at_interval(border->image_id, x_offset, y_offset, last_x, last_y, first_edge->x, first_edge->y,
-        BORDER_EDGE_SPACING, remaining);
+    if (!image_id) {
+        return;
+    }
+    int animation_offset = 0;
+    const image *img = image_get(image_id);
+    if (img->animation && img->animation->speed_id) {
+        animation_offset = empire_object_update_animation(border, image_id);
+    }
+    draw_images_at_interval(image_id, x_offset, y_offset, last_x, last_y, first_edge->x, first_edge->y,
+        border->width, remaining);
     if (animation_offset) {
-        draw_images_at_interval(border->image_id + animation_offset,
+        draw_images_at_interval(image_id + animation_offset,
                 x_offset + img->animation->sprite_offset_x, y_offset + img->animation->sprite_offset_y,
-                last_x, last_y, first_edge->x, first_edge->y, BORDER_EDGE_SPACING, remaining);
+                last_x, last_y, first_edge->x, first_edge->y, border->width, remaining);
     }
 }
 

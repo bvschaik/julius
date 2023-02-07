@@ -19,6 +19,8 @@
 #include <string.h>
 
 #define XML_TOTAL_ELEMENTS 16
+#define BASE_BORDER_FLAG_IMAGE_ID 3323
+#define BORDER_EDGE_DEFAULT_SPACING 50
 
 typedef enum {
     LIST_NONE = -1,
@@ -139,7 +141,10 @@ static int xml_start_border(void)
     data.next_empire_obj_id++;
     obj->in_use = 1;
     obj->obj.type = EMPIRE_OBJECT_BORDER;
-    obj->obj.image_id = 3323;
+    obj->obj.width = xml_parser_get_attribute_int("density");
+    if (obj->obj.width == 0) {
+        obj->obj.width = BORDER_EDGE_DEFAULT_SPACING;
+    }
     data.border_status = BORDER_STATUS_CREATING;
     return 1;
 }
@@ -158,6 +163,7 @@ static int xml_start_border_edge(void)
     obj->obj.type = EMPIRE_OBJECT_BORDER_EDGE;
     obj->obj.x = xml_parser_get_attribute_int("x");
     obj->obj.y = xml_parser_get_attribute_int("y");
+    obj->obj.image_id = xml_parser_get_attribute_bool("hidden") ? 0 : BASE_BORDER_FLAG_IMAGE_ID;
 
     return 1;
 }
