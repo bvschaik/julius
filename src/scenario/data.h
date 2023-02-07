@@ -1,6 +1,7 @@
 #ifndef SCENARIO_DATA_H
 #define SCENARIO_DATA_H
 
+#include "core/file.h"
 #include "map/point.h"
 #include "scenario/property.h"
 #include "scenario/types.h"
@@ -172,7 +173,7 @@ extern struct scenario_t {
         int expansion_year;
         int distant_battle_roman_travel_months;
         int distant_battle_enemy_travel_months;
-        char custom_name[50];
+        char custom_name[FILE_NAME_MAX];
     } empire;
 
     request_t requests[MAX_REQUESTS];

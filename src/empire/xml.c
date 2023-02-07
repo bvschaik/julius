@@ -18,7 +18,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define XML_TOTAL_ELEMENTS 14
+#define XML_TOTAL_ELEMENTS 16
 
 typedef enum {
     LIST_NONE = -1,
@@ -32,6 +32,12 @@ typedef enum {
     DISTANT_BATTLE_PATH_ROMAN,
     DISTANT_BATTLE_PATH_ENEMY
 } distant_battle_path_type;
+
+enum {
+    BORDER_STATUS_NONE = 0,
+    BORDER_STATUS_CREATING,
+    BORDER_STATUS_DONE
+};
 
 typedef struct {
     int x;
@@ -53,9 +59,12 @@ static struct {
     distant_battle_path_type distant_battle_path_type;
     waypoint distant_battle_waypoints[50];
     int distant_battle_wapoint_idx;
+    int border_status;
 } data;
 
 static int xml_start_empire(void);
+static int xml_start_border(void);
+static int xml_start_border_edge(void);
 static int xml_start_city(void);
 static int xml_start_buys(void);
 static int xml_start_sells(void);
@@ -67,6 +76,7 @@ static int xml_start_battle(void);
 static int xml_start_distant_battle_path(void);
 static int xml_start_distant_battle_waypoint(void);
 
+static void xml_end_border(void);
 static void xml_end_city(void);
 static void xml_end_sells_buys_or_waypoints(void);
 static void xml_end_invasion_path(void);
@@ -74,6 +84,8 @@ static void xml_end_distant_battle_path(void);
 
 static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "empire", xml_start_empire },
+    { "border", xml_start_border, xml_end_border, "empire" },
+    { "edge", xml_start_border_edge, 0, "border" },
     { "cities", 0, 0, "empire" },
     { "city", xml_start_city, xml_end_city, "cities" },
     { "buys", xml_start_buys, xml_end_sells_buys_or_waypoints, "city" },
@@ -112,6 +124,41 @@ static int xml_start_empire(void)
         log_error("No version set", 0, 0);
         return 0;
     }
+    return 1;
+}
+
+static int xml_start_border(void)
+{
+    if (data.border_status != BORDER_STATUS_NONE) {
+        data.success = 0;
+        log_error("Border is being set twice", 0, 0);
+        return 0;
+    }
+    full_empire_object *obj = empire_object_get_full(data.next_empire_obj_id);
+    obj->obj.id = data.next_empire_obj_id;
+    data.next_empire_obj_id++;
+    obj->in_use = 1;
+    obj->obj.type = EMPIRE_OBJECT_BORDER;
+    obj->obj.image_id = 3323;
+    data.border_status = BORDER_STATUS_CREATING;
+    return 1;
+}
+
+static int xml_start_border_edge(void)
+{
+    if (data.border_status != BORDER_STATUS_CREATING) {
+        data.success = 0;
+        log_error("Border edge is being wrongly added", 0, 0);
+        return 0;
+    }
+    full_empire_object *obj = empire_object_get_full(data.next_empire_obj_id);
+    obj->obj.id = data.next_empire_obj_id;
+    data.next_empire_obj_id++;
+    obj->in_use = 1;
+    obj->obj.type = EMPIRE_OBJECT_BORDER_EDGE;
+    obj->obj.x = xml_parser_get_attribute_int("x");
+    obj->obj.y = xml_parser_get_attribute_int("y");
+
     return 1;
 }
 
@@ -393,6 +440,13 @@ static int xml_start_distant_battle_waypoint(void)
     return 1;
 }
 
+static void xml_end_border(void)
+{
+    if (data.border_status == BORDER_STATUS_CREATING) {
+        data.border_status = BORDER_STATUS_DONE;
+    }
+}
+
 static void xml_end_city(void)
 {
     data.current_city_id = -1;
@@ -475,6 +529,7 @@ static void reset_data(void)
     data.distant_battle_path_type = DISTANT_BATTLE_PATH_NONE;
     memset(data.distant_battle_waypoints, 0, sizeof(data.distant_battle_waypoints));
     data.distant_battle_wapoint_idx = 0;
+    data.border_status = BORDER_STATUS_NONE;
 }
 
 static void set_trade_coords(const empire_object *our_city)

@@ -178,12 +178,17 @@ static void draw_empire_object(const empire_object *obj)
     int x = obj->x;
     int y = obj->y;
     int image_id = obj->image_id;
-
+    if (obj->type == EMPIRE_OBJECT_TRADE_WAYPOINT || obj->type == EMPIRE_OBJECT_BORDER_EDGE) {
+        return;
+    }
     if (!data.show_battle_objects && (
         obj->type == EMPIRE_OBJECT_BATTLE_ICON ||
         obj->type == EMPIRE_OBJECT_ROMAN_ARMY ||
         obj->type == EMPIRE_OBJECT_ENEMY_ARMY)) {
         return;
+    }
+    if (obj->type == EMPIRE_OBJECT_BORDER) {
+        window_empire_draw_border(obj, data.x_draw_offset, data.y_draw_offset);
     }
     if (obj->type == EMPIRE_OBJECT_CITY) {
         const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));

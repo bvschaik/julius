@@ -38,6 +38,7 @@
 #define MAX_HEIGHT 1136
 
 #define TRADE_DOT_SPACING 10
+#define BORDER_EDGE_SPACING 50
 
 typedef struct {
     int x;
@@ -385,10 +386,10 @@ void window_empire_draw_trade_waypoints(const empire_object *trade_route, int x_
     int image_id = trade_route->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE ?
         assets_get_image_id("UI", "LandRouteDot") :
         assets_get_image_id("UI", "SeaRouteDot");
-    for (int i = 0; i < MAX_EMPIRE_OBJECTS; i++) {
+    for (int i = trade_route->id + 1; i < MAX_EMPIRE_OBJECTS; i++) {
         empire_object *obj = empire_object_get(i);
         if (obj->type != EMPIRE_OBJECT_TRADE_WAYPOINT || obj->trade_route_id != trade_route->trade_route_id) {
-            continue;
+            break;
         }
         remaining = draw_images_at_interval(image_id, x_offset, y_offset, last_x, last_y, obj->x, obj->y,
             TRADE_DOT_SPACING, remaining);
@@ -399,8 +400,53 @@ void window_empire_draw_trade_waypoints(const empire_object *trade_route, int x_
         TRADE_DOT_SPACING, remaining);
 }
 
+void window_empire_draw_border(const empire_object *border, int x_offset, int y_offset)
+{
+    const empire_object *first_edge = empire_object_get(border->id + 1);
+    if (first_edge->type != EMPIRE_OBJECT_BORDER_EDGE) {
+        return;
+    }
+    int last_x = first_edge->x;
+    int last_y = first_edge->y;
+    int remaining = BORDER_EDGE_SPACING;
+    const image *img = image_get(border->image_id);
+    int animation_offset = 0;
+    if (img->animation && img->animation->speed_id) {
+        animation_offset = empire_object_update_animation(border, border->image_id);
+    }
+
+    for (int i = first_edge->id; i < MAX_EMPIRE_OBJECTS; i++) {
+        empire_object *obj = empire_object_get(i);
+        if (obj->type != EMPIRE_OBJECT_BORDER_EDGE) {
+            break;
+        }
+        if (!animation_offset) {
+            remaining = draw_images_at_interval(border->image_id, x_offset, y_offset, last_x, last_y, obj->x, obj->y,
+            BORDER_EDGE_SPACING, remaining);
+        } else {
+            draw_images_at_interval(border->image_id, x_offset, y_offset, last_x, last_y, obj->x, obj->y,
+                BORDER_EDGE_SPACING, remaining);
+            remaining = draw_images_at_interval(border->image_id + animation_offset,
+                x_offset + img->animation->sprite_offset_x, y_offset + img->animation->sprite_offset_y,
+                last_x, last_y, obj->x, obj->y, BORDER_EDGE_SPACING, remaining);
+        }
+        last_x = obj->x;
+        last_y = obj->y;
+    }
+    draw_images_at_interval(border->image_id, x_offset, y_offset, last_x, last_y, first_edge->x, first_edge->y,
+        BORDER_EDGE_SPACING, remaining);
+    if (animation_offset) {
+        draw_images_at_interval(border->image_id + animation_offset,
+                x_offset + img->animation->sprite_offset_x, y_offset + img->animation->sprite_offset_y,
+                last_x, last_y, first_edge->x, first_edge->y, BORDER_EDGE_SPACING, remaining);
+    }
+}
+
 static void draw_empire_object(const empire_object *obj)
 {
+    if (obj->type == EMPIRE_OBJECT_TRADE_WAYPOINT || obj->type == EMPIRE_OBJECT_BORDER_EDGE) {
+        return;
+    }
     if (obj->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE || obj->type == EMPIRE_OBJECT_SEA_TRADE_ROUTE) {
         if (!empire_city_is_trade_route_open(obj->trade_route_id)) {
             return;
@@ -419,7 +465,9 @@ static void draw_empire_object(const empire_object *obj)
         y = obj->y;
         image_id = obj->image_id;
     }
-
+    if (obj->type == EMPIRE_OBJECT_BORDER) {
+        window_empire_draw_border(obj, data.x_draw_offset, data.y_draw_offset);
+    }
     if (obj->type == EMPIRE_OBJECT_CITY) {
         const empire_city *city = empire_city_get(empire_city_get_for_object(obj->id));
         if (city->type == EMPIRE_CITY_DISTANT_FOREIGN ||
