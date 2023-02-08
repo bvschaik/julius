@@ -18,9 +18,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#define XML_TOTAL_ELEMENTS 16
+#define XML_TOTAL_ELEMENTS 17
 #define BASE_BORDER_FLAG_IMAGE_ID 3323
+#define BASE_ORNAMENT_IMAGE_ID 3356
 #define BORDER_EDGE_DEFAULT_SPACING 50
+#define TOTAL_ORNAMENTS 20
 
 typedef enum {
     LIST_NONE = -1,
@@ -47,6 +49,36 @@ typedef struct {
     int num_months;
 } waypoint;
 
+static const char *ORNAMENTS[TOTAL_ORNAMENTS] = {
+    "The Stonehenge",
+    "Gallic Wheat",
+    "The Pyrenees",
+    "Iberian Aqueduct",
+    "Triumphal Arch",
+    "West Desert Wheat",
+    "Lighthouse of Alexandria",
+    "West Desert Palm Trees",
+    "Trade Ship",
+    "Waterside Palm Trees",
+    "Colosseum",
+    "The Alps",
+    "Roman Tree",
+    "Greek Mountain Range",
+    "The Parthenon",
+    "The Pyramids",
+    "The Hagia Sophia",
+    "East Desert Palm Trees",
+    "East Desert Wheat",
+    "Trade Camel"
+};
+
+map_point ORNAMENT_POSITIONS[TOTAL_ORNAMENTS] = {
+    {  247,  81 }, {  361, 356 }, {  254, 428 }, {  199, 590 }, {  275, 791 },
+    {  423, 802 }, { 1465, 883 }, {  518, 764 }, {  691, 618 }, {  742, 894 },
+    {  726, 468 }, {  502, 280 }, {  855, 551 }, { 1014, 443 }, { 1158, 698 },
+    { 1431, 961 }, { 1300, 500 }, { 1347, 648 }, { 1707, 783 }, { 1704, 876 }
+};
+
 static struct {
     int success;
     int version;
@@ -62,9 +94,11 @@ static struct {
     waypoint distant_battle_waypoints[50];
     int distant_battle_wapoint_idx;
     int border_status;
+    char added_ornaments[TOTAL_ORNAMENTS];
 } data;
 
 static int xml_start_empire(void);
+static int xml_start_ornament(void);
 static int xml_start_border(void);
 static int xml_start_border_edge(void);
 static int xml_start_city(void);
@@ -86,6 +120,7 @@ static void xml_end_distant_battle_path(void);
 
 static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "empire", xml_start_empire },
+    { "ornament", xml_start_ornament, 0, "empire" },
     { "border", xml_start_border, xml_end_border, "empire" },
     { "edge", xml_start_border_edge, 0, "border" },
     { "cities", 0, 0, "empire" },
@@ -126,6 +161,32 @@ static int xml_start_empire(void)
         log_error("No version set", 0, 0);
         return 0;
     }
+    return 1;
+}
+
+static int xml_start_ornament(void)
+{
+    if (!xml_parser_has_attribute("type")) {
+        log_info("No ornament type specified", 0, 0);
+        return 1;
+    }
+    int ornament_id = xml_parser_get_attribute_enum("type", ORNAMENTS, TOTAL_ORNAMENTS, 0);
+    if (ornament_id == -1) {
+        log_info("Invalid ornament type specified", 0, 0);
+        return 1;
+    }
+    if (data.added_ornaments[ornament_id]) {
+        return 1;
+    }
+    data.added_ornaments[ornament_id] = 1;
+    full_empire_object *obj = empire_object_get_full(data.next_empire_obj_id);
+    obj->obj.id = data.next_empire_obj_id;
+    data.next_empire_obj_id++;
+    obj->in_use = 1;
+    obj->obj.type = EMPIRE_OBJECT_ORNAMENT;
+    obj->obj.image_id = BASE_ORNAMENT_IMAGE_ID + ornament_id;
+    obj->obj.x = ORNAMENT_POSITIONS[ornament_id].x;
+    obj->obj.y = ORNAMENT_POSITIONS[ornament_id].y;
     return 1;
 }
 
@@ -536,6 +597,7 @@ static void reset_data(void)
     memset(data.distant_battle_waypoints, 0, sizeof(data.distant_battle_waypoints));
     data.distant_battle_wapoint_idx = 0;
     data.border_status = BORDER_STATUS_NONE;
+    memset(data.added_ornaments, 0, sizeof(data.added_ornaments));
 }
 
 static void set_trade_coords(const empire_object *our_city)
