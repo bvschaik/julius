@@ -14,6 +14,7 @@ typedef struct {
     int (*on_enter)(void);     /**< A pointer to a function that should be called when the parser finds an element with this name. Can be NULL. */
     void (*on_exit)(void);     /**< A pointer to a function that should be called when the parser gets to the end tag of the element with this name. Can be NULL. */
     const char *parent_names;  /**< A list of valid parent names. If the element can have more than one parent, it should be separated by a "|"".*/
+    void (*on_text)(const char *text); /**< A pointer to a function that should be called when the parser finds text inside a tag. Can be NULL. */
 } xml_parser_element;
 
 int xml_parser_compare_multiple(const char *string, const char *match);

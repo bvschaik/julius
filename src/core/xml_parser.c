@@ -7,6 +7,13 @@
 #include <string.h>
 
 #define XML_HASH_SEED 0x12345678
+#define XML_ELEMENT_TEXT_BASE_LENGTH 64
+
+typedef struct {
+    char *text;
+    int current_size;
+    int capacity;
+} element_text;
 
 static struct {
     xml_parser_element *elements;
@@ -21,6 +28,7 @@ static struct {
         const char **current;
         int total;
     } attributes;
+    element_text *texts;
 } data;
 
 static int dummy_element_on_enter(void)
@@ -118,6 +126,28 @@ static void reduce_current_depth(void)
     }
 }
 
+static void append_to_text(element_text *text_data, const char *text, int length)
+{
+    if (text_data->current_size + length > text_data->capacity) {
+        int new_capacity = text_data->capacity ? text_data->capacity * 2 : XML_ELEMENT_TEXT_BASE_LENGTH;
+        while (new_capacity < length + text_data->current_size) {
+            new_capacity *= 2;
+        }
+        char *new_text = realloc(text_data->text, new_capacity);
+        if (!new_text) {
+            length = text_data->capacity - text_data->current_size;
+        } else {
+            text_data->text = new_text;
+            text_data->capacity = new_capacity;
+        }
+    }
+    if (length == 0) {
+        return;
+    }
+    memcpy(text_data->text + text_data->current_size, text, length);
+    text_data->current_size += length;
+}
+
 static void XMLCALL end_element(void *unused, const char *name)
 {
     if (data.error) {
@@ -140,11 +170,42 @@ static void XMLCALL end_element(void *unused, const char *name)
         XML_StopParser(data.parser, XML_FALSE);
         return;
     }
-
+    if (data.current_element->on_text) {
+        element_text *current_text = &data.texts[data.depth];
+        if (current_text->text) {
+            // Remove trailing paragraph
+            if (current_text->text[current_text->current_size - 1] == '\n') {
+                current_text->current_size--;
+            }
+            append_to_text(current_text, "\0", 1);
+            // Remove beginning empty text
+            const char *text = current_text->text;
+            while ((*text == '\n' || *text == ' ') && *text) {
+                text++;
+            }
+            if (*text) {
+                data.current_element->on_text(text);
+            }
+            free(current_text->text);
+            memset(current_text, 0, sizeof(element_text));
+        }
+    }
     data.attributes.current = 0;
     data.attributes.total = 0;
     data.current_element->on_exit();
     reduce_current_depth();
+}
+
+static void handle_element_text(void *unused, const char *text, int length)
+{
+    if (data.current_element->on_text) {
+        // Remove whitespace at beginning
+        while (*text == ' ' && length) {
+            text++;
+            length--;
+        }
+        append_to_text(&data.texts[data.depth], text, length);
+    }
 }
 
 int xml_parser_init(const xml_parser_element *elements, int total_elements)
@@ -154,18 +215,28 @@ int xml_parser_init(const xml_parser_element *elements, int total_elements)
     size_t elements_size = sizeof(xml_parser_element) * total_elements;
     data.elements = malloc(elements_size);
     data.parents = malloc(sizeof(xml_parser_element *) * total_elements);
-    if (!data.elements) {
+    data.texts = malloc(sizeof(element_text) * total_elements);
+    if (!data.elements || !data.parents || !data.texts) {
+        free(data.elements);
+        free(data.parents);
+        free(data.texts);
+        data.elements = 0;
+        data.parents = 0;
+        data.texts = 0;
         data.error = 1;
         return 0;
     }
     data.total_elements = total_elements;
 
     memcpy(data.elements, elements, elements_size);
+    memset(data.parents, 0, sizeof(xml_parser_element *) * total_elements);
+    memset(data.texts, 0, sizeof(element_text *) * total_elements);
 
     data.parser = XML_ParserCreate(NULL);
     XML_SetHashSalt(data.parser, XML_HASH_SEED);
     XML_SetElementHandler(data.parser, start_element, end_element);
-    
+    XML_SetCharacterDataHandler(data.parser, handle_element_text);
+
     for (int i = 0; i < data.total_elements; i++) {
         xml_parser_element *element = &data.elements[i];
         if (!element->name) {
@@ -304,8 +375,10 @@ void xml_parser_free(void)
 
     free(data.elements);
     free(data.parents);
+    free(data.texts);
     data.elements = 0;
     data.parents = 0;
+    data.texts = 0;
     data.total_elements = 0;
     data.depth = 0;
     data.error_depth = 0;
