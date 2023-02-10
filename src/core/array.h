@@ -30,7 +30,7 @@ struct { \
  * @param in_use_callback A function to check if the current position has a valid item. Can be null.
  *        If null, it is assumed that every item in the array is valid.
  *        The function should have the following signature:
- *        int(<item> *). <item> is the current array item. Should return 1 if the item is being used.
+ *        int(const <item> *). <item> is the current array item. Should return 1 if the item is being used.
  * @return Whether memory was properly allocated.
  */
 #define array_init(a, size, new_item_callback, in_use_callback) \

@@ -585,13 +585,13 @@ void scenario_fix_patch_trade(int mission_id) {
     // Damascus, allow import of marble and marble buildings
     if (mission_id == 15) {
         empire_city_force_sell(1, RESOURCE_MARBLE);
-        trade_route_init(1, RESOURCE_MARBLE, 25);        
+        trade_route_set(1, RESOURCE_MARBLE, 25);        
         scenario.allowed_buildings[ALLOWED_BUILDING_LARGE_TEMPLES] = 1;
         scenario.allowed_buildings[ALLOWED_BUILDING_ORACLE] = 1;
     // Caesarea, allow import of clay (for monuments)
     } else if (mission_id == 14) {
         empire_city_force_sell(3, RESOURCE_CLAY);
-        trade_route_init(3, RESOURCE_CLAY, 15);
+        trade_route_set(3, RESOURCE_CLAY, 15);
     }
 }
 

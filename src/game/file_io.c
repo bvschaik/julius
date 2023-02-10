@@ -367,13 +367,21 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
         version_data->piece_sizes.city_data += total_new_resources * 18;
         version_data->piece_sizes.city_data += total_new_food * 4;
     }
-    version_data->piece_sizes.empire_cities = 2706;
-    if (version > SAVE_GAME_LAST_STATIC_RESOURCES) {
-        version_data->piece_sizes.empire_cities += total_new_resources * 2;
+    if (version <= SAVE_GAME_LAST_STATIC_RESOURCES) {
+        // Bug - this should have acconted the new resource types, but since it hasn't before,
+        // let's keep it to prevent crashes on opening. This is outdated anyway and was only available for unstable builds.
+        version_data->piece_sizes.empire_cities = 2706;
+    } else {
+        version_data->piece_sizes.empire_cities = PIECE_SIZE_DYNAMIC;
     }
     version_data->piece_sizes.trade_prices = 8 * resource_total_mapped();
-    version_data->piece_sizes.trade_route_limit = 20 * 4 * resource_total_mapped();
-    version_data->piece_sizes.trade_route_traded = 20 * 4 * resource_total_mapped();
+    if (version <= SAVE_GAME_LAST_STATIC_SCENARIO_OBJECTS) {
+        version_data->piece_sizes.trade_route_limit = 20 * 4 * resource_total_mapped();
+        version_data->piece_sizes.trade_route_traded = 20 * 4 * resource_total_mapped();
+    } else {
+        version_data->piece_sizes.trade_route_limit = PIECE_SIZE_DYNAMIC;
+        version_data->piece_sizes.trade_route_traded = PIECE_SIZE_DYNAMIC;
+    }
     version_data->piece_sizes.figure_traders = 1604 + 100 * 2 * resource_total_mapped();
 
     version_data->building_counts.culture1 = 132 * count_multiplier;
@@ -458,7 +466,7 @@ static void init_savegame_data(savegame_version version)
     state->city_graph_order = create_savegame_piece(version_data.piece_sizes.graph_order, 0);
     state->emperor_change_time = create_savegame_piece(8, 0);
     state->empire = create_savegame_piece(12, 0);
-    state->empire_cities = create_savegame_piece(2706, 1);
+    state->empire_cities = create_savegame_piece(version_data.piece_sizes.empire_cities, 1);
     if (version_data.features.static_building_counts) {
         state->building_count_industry = create_savegame_piece(version_data.building_counts.industry, 0);
     }
@@ -618,7 +626,7 @@ static void savegame_load_from_state(savegame_state *state, savegame_version ver
 
     scenario_emperor_change_load_state(state->emperor_change_time, state->emperor_change_state);
     empire_load_state(state->empire);
-    empire_city_load_state(state->empire_cities);
+    empire_city_load_state(state->empire_cities, version);
     trade_prices_load_state(state->trade_prices);
     figure_name_load_state(state->figure_names);
     city_culture_load_state(state->culture_coverage);
@@ -639,7 +647,7 @@ static void savegame_load_from_state(savegame_state *state, savegame_version ver
 
     building_storage_load_state(state->building_storages, version);
     scenario_gladiator_revolt_load_state(state->gladiator_revolt);
-    trade_routes_load_state(state->trade_route_limit, state->trade_route_traded);
+    trade_routes_load_state(state->trade_route_limit, state->trade_route_traded, version);
     if (version <= SAVE_GAME_LAST_NO_GOLD_AND_MINTING) {
         empire_city_update_gold_trading();
     }
@@ -1315,7 +1323,7 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
     skip_piece(fp, version_data.piece_sizes.graph_order, 0);
     skip_piece(fp, 8, 0);
     skip_piece(fp, 12, 0);
-    skip_piece(fp, 2706, 1);
+    skip_piece(fp, version_data.piece_sizes.empire_cities, 1);
     if (version_data.features.static_building_counts) {
         skip_piece(fp, version_data.building_counts.industry, 0);
     }

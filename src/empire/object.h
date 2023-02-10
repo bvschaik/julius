@@ -5,8 +5,6 @@
 #include "empire/type.h"
 #include "game/resource.h"
 
-#define MAX_EMPIRE_OBJECTS 200
-
 typedef struct {
     int id;
     empire_object_type type;
@@ -41,6 +39,8 @@ typedef struct {
 
 void empire_object_clear(void);
 
+int empire_object_count(void);
+
 void empire_object_load(buffer *buf, int version);
 
 void empire_object_save(buffer *buf);
@@ -50,6 +50,8 @@ void empire_object_init_cities(int empire_id);
 int empire_object_init_distant_battle_travel_months(int object_type);
 
 full_empire_object *empire_object_get_full(int object_id);
+
+full_empire_object *empire_object_get_new(void);
 
 empire_object *empire_object_get(int object_id);
 

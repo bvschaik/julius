@@ -4,7 +4,13 @@
 #include "core/buffer.h"
 #include "game/resource.h"
 
-void trade_route_init(int route_id, resource_type resource, int limit);
+#define LEGACY_MAX_ROUTES 20
+
+int trade_route_init(void);
+
+int trade_route_new(void);
+
+void trade_route_set(int route_id, resource_type resource, int limit);
 
 int trade_route_limit(int route_id, resource_type resource);
 
@@ -36,6 +42,6 @@ int trade_route_limit_reached(int route_id, resource_type resource);
 
 void trade_routes_save_state(buffer *limit, buffer *traded);
 
-void trade_routes_load_state(buffer *limit, buffer *traded);
+void trade_routes_load_state(buffer *limit, buffer *traded, int version);
 
 #endif // EMPIRE_TRADE_ROUTE_H

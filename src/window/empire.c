@@ -390,7 +390,7 @@ void window_empire_draw_trade_waypoints(const empire_object *trade_route, int x_
     int image_id = trade_route->type == EMPIRE_OBJECT_LAND_TRADE_ROUTE ?
         assets_get_image_id("UI", "LandRouteDot") :
         assets_get_image_id("UI", "SeaRouteDot");
-    for (int i = trade_route->id + 1; i < MAX_EMPIRE_OBJECTS; i++) {
+    for (int i = trade_route->id + 1; i < empire_object_count(); i++) {
         empire_object *obj = empire_object_get(i);
         if (obj->type != EMPIRE_OBJECT_TRADE_WAYPOINT || obj->trade_route_id != trade_route->trade_route_id) {
             break;
@@ -419,7 +419,7 @@ void window_empire_draw_border(const empire_object *border, int x_offset, int y_
     x_offset -= 0;
     y_offset -= 14;
 
-    for (int i = first_edge->id + 1; i < MAX_EMPIRE_OBJECTS; i++) {
+    for (int i = first_edge->id + 1; i < empire_object_count(); i++) {
         empire_object *obj = empire_object_get(i);
         if (obj->type != EMPIRE_OBJECT_BORDER_EDGE) {
             break;

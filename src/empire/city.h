@@ -5,7 +5,6 @@
 #include "empire/type.h"
 #include "game/resource.h"
 
-#define EMPIRE_CITY_MAX_CITIES 41
 #define EMPIRE_CITY_MAX_TRADERS 3
 
 typedef struct {
@@ -26,6 +25,8 @@ typedef struct {
 void empire_city_clear_all(void);
 
 empire_city *empire_city_get(int city_id);
+
+empire_city *empire_city_get_new(void);
 
 int empire_city_get_route_id(int city_id);
 
@@ -81,6 +82,6 @@ int empire_city_can_mine_gold(int city_name_id);
 
 void empire_city_update_gold_trading(void);
 
-void empire_city_load_state(buffer *buf);
+void empire_city_load_state(buffer *buf, int version);
 
 #endif // EMPIRE_CITY_H
