@@ -177,19 +177,10 @@ static int xml_start_empire(void)
     return 1;
 }
 
-static int xml_start_ornament(void)
+static void add_ornament(int ornament_id)
 {
-    if (!xml_parser_has_attribute("type")) {
-        log_info("No ornament type specified", 0, 0);
-        return 1;
-    }
-    int ornament_id = xml_parser_get_attribute_enum("type", ORNAMENTS, TOTAL_ORNAMENTS, 0);
-    if (ornament_id == -1) {
-        log_info("Invalid ornament type specified", 0, 0);
-        return 1;
-    }
     if (data.added_ornaments[ornament_id]) {
-        return 1;
+        return;
     }
     data.added_ornaments[ornament_id] = 1;
     full_empire_object *obj = empire_object_get_full(data.next_empire_obj_id);
@@ -204,6 +195,26 @@ static int xml_start_ornament(void)
     }
     obj->obj.x = ORNAMENT_POSITIONS[ornament_id].x;
     obj->obj.y = ORNAMENT_POSITIONS[ornament_id].y;
+}
+
+static int xml_start_ornament(void)
+{
+    if (!xml_parser_has_attribute("type")) {
+        log_info("No ornament type specified", 0, 0);
+        return 1;
+    }
+    int ornament_id = xml_parser_get_attribute_enum("type", ORNAMENTS, TOTAL_ORNAMENTS, 0);
+    if (ornament_id == -1) {
+        if (strcmp("all", xml_parser_get_attribute_string("type")) == 0) {
+            for (int i = 0; i < TOTAL_ORNAMENTS; i++) {
+                add_ornament(i);
+            }
+        } else {
+            log_info("Invalid ornament type specified", 0, 0);
+        }
+    } else {
+        add_ornament(ornament_id);
+    }
     return 1;
 }
 
