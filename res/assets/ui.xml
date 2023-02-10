@@ -235,4 +235,7 @@
 		<layer group="182" image="7"/>
 	</image>
 	<image id="GoldShield" src="empire_gold_shield" />
+	<image id="Ireland_Map" src="Hibernia" />
+	<image id="Mount Etna" src="Etna" />
+	<image id="Colossus of Rhodes" src="Rhodes" />
 </assetlist>

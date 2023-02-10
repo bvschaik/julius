@@ -34,7 +34,7 @@ static void fix_image_ids(void)
             if (!objects[i].in_use) {
                 continue;
             }
-            if (objects[i].obj.image_id) {
+            if (objects[i].obj.image_id && objects[i].obj.image_id < IMAGE_MAIN_ENTRIES) {
                 objects[i].obj.image_id += offset;
                 if (objects[i].obj.expanded.image_id) {
                     objects[i].obj.expanded.image_id += offset;

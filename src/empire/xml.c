@@ -22,7 +22,7 @@
 #define BASE_BORDER_FLAG_IMAGE_ID 3323
 #define BASE_ORNAMENT_IMAGE_ID 3356
 #define BORDER_EDGE_DEFAULT_SPACING 50
-#define TOTAL_ORNAMENTS 20
+#define ORIGINAL_ORNAMENTS 20
 
 typedef enum {
     LIST_NONE = -1,
@@ -49,7 +49,7 @@ typedef struct {
     int num_months;
 } waypoint;
 
-static const char *ORNAMENTS[TOTAL_ORNAMENTS] = {
+static const char *ORNAMENTS[] = {
     "The Stonehenge",
     "Gallic Wheat",
     "The Pyrenees",
@@ -60,7 +60,7 @@ static const char *ORNAMENTS[TOTAL_ORNAMENTS] = {
     "West Desert Palm Trees",
     "Trade Ship",
     "Waterside Palm Trees",
-    "Colosseum",
+    "Colosseum|The Colosseum",
     "The Alps",
     "Roman Tree",
     "Greek Mountain Range",
@@ -69,14 +69,19 @@ static const char *ORNAMENTS[TOTAL_ORNAMENTS] = {
     "The Hagia Sophia",
     "East Desert Palm Trees",
     "East Desert Wheat",
-    "Trade Camel"
+    "Trade Camel",
+    "Mount Etna",
+    "Colossus of Rhodes"
 };
+
+#define TOTAL_ORNAMENTS (sizeof(ORNAMENTS) / sizeof(const char *))
 
 map_point ORNAMENT_POSITIONS[TOTAL_ORNAMENTS] = {
     {  247,  81 }, {  361, 356 }, {  254, 428 }, {  199, 590 }, {  275, 791 },
     {  423, 802 }, { 1465, 883 }, {  518, 764 }, {  691, 618 }, {  742, 894 },
     {  726, 468 }, {  502, 280 }, {  855, 551 }, { 1014, 443 }, { 1158, 698 },
-    { 1431, 961 }, { 1300, 500 }, { 1347, 648 }, { 1707, 783 }, { 1704, 876 }
+    { 1431, 961 }, { 1300, 500 }, { 1347, 648 }, { 1707, 783 }, { 1704, 876 },
+    {  829, 720 }, { 1347, 745 }
 };
 
 static struct {
@@ -161,6 +166,14 @@ static int xml_start_empire(void)
         log_error("No version set", 0, 0);
         return 0;
     }
+    if (xml_parser_get_attribute_bool("show_ireland")) {
+        full_empire_object *obj = empire_object_get_full(data.next_empire_obj_id);
+        obj->obj.id = data.next_empire_obj_id;
+        data.next_empire_obj_id++;
+        obj->in_use = 1;
+        obj->obj.type = EMPIRE_OBJECT_ORNAMENT;
+        obj->obj.image_id = assets_get_image_id("UI", "Ireland_Map");
+    }
     return 1;
 }
 
@@ -184,7 +197,11 @@ static int xml_start_ornament(void)
     data.next_empire_obj_id++;
     obj->in_use = 1;
     obj->obj.type = EMPIRE_OBJECT_ORNAMENT;
-    obj->obj.image_id = BASE_ORNAMENT_IMAGE_ID + ornament_id;
+    if (ornament_id < ORIGINAL_ORNAMENTS) {
+        obj->obj.image_id = BASE_ORNAMENT_IMAGE_ID + ornament_id;
+    } else {
+        obj->obj.image_id = assets_get_image_id("UI", ORNAMENTS[ornament_id]);
+    }
     obj->obj.x = ORNAMENT_POSITIONS[ornament_id].x;
     obj->obj.y = ORNAMENT_POSITIONS[ornament_id].y;
     return 1;
