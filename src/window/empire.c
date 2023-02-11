@@ -518,6 +518,11 @@ static void draw_empire_object(const empire_object *obj)
             return;
         }
     }
+    if (obj->type == EMPIRE_OBJECT_ORNAMENT) {
+        if (image_id < 0) {
+            image_id = assets_lookup_image_id(ASSET_FIRST_ORNAMENT) - 1 - image_id;
+        }
+    }
     image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y, COLOR_MASK_NONE, SCALE_NONE);
     const image *img = image_get(image_id);
     if (img->animation && img->animation->speed_id) {

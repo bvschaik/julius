@@ -168,7 +168,7 @@ static int xml_start_empire(void)
         full_empire_object *obj = empire_object_get_new();
         obj->in_use = 1;
         obj->obj.type = EMPIRE_OBJECT_ORNAMENT;
-        obj->obj.image_id = assets_get_image_id("UI", "Ireland_Map");
+        obj->obj.image_id = -1;
     }
     return 1;
 }
@@ -190,7 +190,7 @@ static void add_ornament(int ornament_id)
     if (ornament_id < ORIGINAL_ORNAMENTS) {
         obj->obj.image_id = BASE_ORNAMENT_IMAGE_ID + ornament_id;
     } else {
-        obj->obj.image_id = assets_get_image_id("UI", ORNAMENTS[ornament_id]);
+        obj->obj.image_id = ORIGINAL_ORNAMENTS - ornament_id - 2;
     }
     obj->obj.x = ORNAMENT_POSITIONS[ornament_id].x;
     obj->obj.y = ORNAMENT_POSITIONS[ornament_id].y;

@@ -50,6 +50,7 @@ void assets_init(int force_reload, color_t **main_images, int *main_image_widths
     data.asset_lookup[ASSET_AQUEDUCT_WITH_WATER] = assets_get_image_id("Logistics", "Aqueduct_Bridge_Left_Water");
     data.asset_lookup[ASSET_AQUEDUCT_WITHOUT_WATER] = assets_get_image_id("Logistics", "Aqueduct_Bridge_Left_Empty");
     data.asset_lookup[ASSET_GOLD_SHIELD] = assets_get_image_id("UI", "GoldShield");
+    data.asset_lookup[ASSET_FIRST_ORNAMENT] = assets_get_image_id("UI", "First Ornament");
 }
 
 int assets_load_single_group(const char *file_name, color_t **main_images, int *main_image_widths)
