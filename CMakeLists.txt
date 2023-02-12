@@ -46,13 +46,7 @@ endif()
 
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
-if (CMAKE_VERSION VERSION_LESS 3.1)
-    if (CMAKE_COMPILER_IS_GNUCC)
-        set(CMAKE_C_FLAGS "-std=gnu99 ${CMAKE_C_FLAGS}")
-    endif()
-else()
-    set(CMAKE_C_STANDARD 99)
-endif()
+set(CMAKE_C_STANDARD 99)
 
 if (CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
