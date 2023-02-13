@@ -367,7 +367,7 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
         version_data->piece_sizes.city_data += total_new_resources * 18;
         version_data->piece_sizes.city_data += total_new_food * 4;
     }
-    if (version <= SAVE_GAME_LAST_STATIC_RESOURCES) {
+    if (version <= SAVE_GAME_LAST_STATIC_SCENARIO_OBJECTS) {
         // Bug - this should have acconted the new resource types, but since it hasn't before,
         // let's keep it to prevent crashes on opening. This is outdated anyway and was only available for unstable builds.
         version_data->piece_sizes.empire_cities = 2706;
