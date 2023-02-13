@@ -532,6 +532,11 @@ static void draw_empire_object(const empire_object *obj)
             data.y_draw_offset + y + img->animation->sprite_offset_y,
             COLOR_MASK_NONE, SCALE_NONE);
     }
+    // Manually fix the Hagia Sophia
+    if (obj->image_id == 8122) {
+        image_id = assets_lookup_image_id(ASSET_HAGIA_SOPHIA_FIX);
+        image_draw(image_id, data.x_draw_offset + x, data.y_draw_offset + y, COLOR_MASK_NONE, SCALE_NONE);
+    }
 }
 
 static void draw_invasion_warning(int x, int y, int image_id)
