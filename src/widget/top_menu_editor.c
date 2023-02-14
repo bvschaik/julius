@@ -1,6 +1,7 @@
 #include "top_menu_editor.h"
 
 #include "empire/empire.h"
+#include "empire/object.h"
 #include "game/file_editor.h"
 #include "game/game.h"
 #include "game/system.h"
@@ -305,6 +306,7 @@ static void menu_empire_choose(int param)
     window_go_back();
     scenario_editor_unset_custom_empire();
     empire_load(1, scenario_empire_id());
+    empire_object_init_cities(scenario_empire_id());
     window_editor_empire_show();
 }
 

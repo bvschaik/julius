@@ -319,6 +319,12 @@ void empire_object_init_cities(int empire_id)
             obj->obj.trade_route_id = LEGACY_MAX_ROUTES - 1;
         }
 
+        if (empire_id != SCENARIO_CUSTOM_EMPIRE) {
+            while (obj->obj.trade_route_id >= trade_route_count()) {
+                trade_route_new();
+            }
+        }
+
         if (empire_id == SCENARIO_CUSTOM_EMPIRE &&
             (city->type == EMPIRE_CITY_TRADE || city->type == EMPIRE_CITY_FUTURE_TRADE)) {
             obj->obj.trade_route_id = trade_route_new();

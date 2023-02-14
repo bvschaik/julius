@@ -3,6 +3,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "empire/city.h"
+#include "empire/trade_route.h"
 #include "empire/type.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
@@ -20,8 +21,8 @@
 #include "window/numeric_input.h"
 #include "window/select_list.h"
 
-#define MAX_ROUTES 20
-#define NAME_LENGTH 50
+#include <stdlib.h>
+#include <string.h>
 
 static void button_year(int param1, int param2);
 static void button_resource(int param1, int param2);
@@ -39,45 +40,64 @@ static generic_button buttons[] = {
     {320, 230, 100, 25, button_save, button_none}
 };
 
-static const uint8_t UNKNOWN[4] = {'?', '?', '?', 0};
-static uint8_t route_display_names[MAX_ROUTES][NAME_LENGTH];
+static const uint8_t UNKNOWN[4] = { '?', '?', '?', 0 };
+static const uint8_t NA[4] = { 'N', '/', 'A', 0 };
 
 static struct {
     int id;
     editor_demand_change demand_change;
     int focus_button_id;
-    int route_ids[MAX_ROUTES];
-    const uint8_t *route_names[MAX_ROUTES];
+    int *route_ids;
+    const uint8_t **route_names;
     int num_routes;
 } data;
 
-static void create_display_name(int route_id, const uint8_t *city_name)
+static void create_route_info(int route_id, const uint8_t *city_name)
 {
-    uint8_t *dst = route_display_names[route_id];
+    int index = route_id - 1;
+    data.route_ids[index] = route_id;
+    int length = string_length(city_name) + 10;
+    uint8_t *dst = malloc(sizeof(uint8_t) * length);
+    if (!dst) {
+        return;
+    }
     int offset = string_from_int(dst, route_id, 0);
     dst[offset++] = ' ';
     dst[offset++] = '-';
     dst[offset++] = ' ';
-    string_copy(city_name, &dst[offset], NAME_LENGTH - offset);
+    string_copy(city_name, &dst[offset], length - offset);
+    data.route_names[index] = dst;
 }
 
 static void init(int id)
 {
     data.id = id;
+    for (int i = 0; i < data.num_routes; i++) {
+        free((uint8_t *) data.route_names[i]);
+    }
+    free(data.route_ids);
+    free(data.route_names);
+    data.num_routes = trade_route_count() - 1;
+    if (!data.num_routes) {
+        data.route_ids = 0;
+        data.route_names = 0;
+        return;
+    }
+    data.route_ids = malloc(sizeof(int) * data.num_routes);
+    data.route_names = malloc(sizeof(uint8_t *) * data.num_routes);
+    if (!data.route_ids || !data.route_names) {
+        return;
+    }
+    memset(data.route_ids, 0, sizeof(int) * data.num_routes);
+    memset(data.route_names, 0, sizeof(uint8_t *) * data.num_routes);
     scenario_editor_demand_change_get(id, &data.demand_change);
-
-    data.num_routes = 0;
-    for (int i = 1; i < MAX_ROUTES; i++) {
+    for (int i = 1; i < trade_route_count(); i++) {
         empire_city *city = empire_city_get(empire_city_get_for_trade_route(i));
         if (city && (city->type == EMPIRE_CITY_TRADE || city->type == EMPIRE_CITY_FUTURE_TRADE)) {
             const uint8_t *city_name = empire_city_get_name(city);
-            create_display_name(i, city_name);
-
-            data.route_ids[data.num_routes] = i;
-            data.route_names[data.num_routes] = route_display_names[i];
-            data.num_routes++;
+            create_route_info(i, city_name);
         } else {
-            create_display_name(i, UNKNOWN);
+            create_route_info(i, UNKNOWN);
         }
     }
 }
@@ -85,6 +105,23 @@ static void init(int id)
 static void draw_background(void)
 {
     window_editor_map_draw_all();
+}
+
+static const uint8_t *get_text_for_route_id(int route_id)
+{
+    if (!data.num_routes) {
+        return NA;
+    }
+    // No route selected yet
+    if (route_id == 0) {
+        return data.route_names[0];
+    }
+    for (int i = 0; i < data.num_routes; i++) {
+        if (data.route_ids[i] == route_id) {
+            return data.route_names[i];
+        }
+    }
+    return UNKNOWN;
 }
 
 static void draw_foreground(void)
@@ -103,7 +140,7 @@ static void draw_foreground(void)
 
     lang_text_draw(44, 97, 330, 158, FONT_NORMAL_BLACK);
     button_border_draw(420, 152, 200, 25, data.focus_button_id == 3);
-    text_draw_centered(route_display_names[data.demand_change.route_id], 420, 158, 200, FONT_NORMAL_BLACK, 0);
+    text_draw_centered(get_text_for_route_id(data.demand_change.route_id), 420, 158, 200, FONT_NORMAL_BLACK, 0);
 
     lang_text_draw(44, 100, 60, 198, FONT_NORMAL_BLACK);
     button_border_draw(350, 192, 100, 25, data.focus_button_id == 4);

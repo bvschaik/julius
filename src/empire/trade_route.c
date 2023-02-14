@@ -19,17 +19,20 @@ int trade_route_init(void)
         log_error("Unable to create memory for trade routes. The game will now crash.", 0, 0);
         return 0;
     }
+    // Discard route 0
+    array_advance(routes);
     return 1;
 }
 
 int trade_route_new(void)
 {
-    // Discard route 0
-    if (!routes.size) {
-        array_advance(routes);
-    }
     array_advance(routes);
     return routes.size - 1;
+}
+
+int trade_route_count(void)
+{
+    return routes.size;
 }
 
 void trade_route_set(int route_id, resource_type resource, int limit)
