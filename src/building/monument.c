@@ -336,7 +336,7 @@ int building_monument_is_monument(const building *b)
 
 int building_monument_type_is_monument(building_type type)
 {
-    return MONUMENT_TYPES[type] != 0;
+    return type > BUILDING_NONE && type < BUILDING_TYPE_MAX && MONUMENT_TYPES[type] != 0;
 }
 
 int building_monument_type_is_mini_monument(building_type type)
