@@ -20,7 +20,7 @@ int trade_route_init(void)
         return 0;
     }
     // Discard route 0
-    array_advance(routes);
+    array_next(routes);
     return 1;
 }
 

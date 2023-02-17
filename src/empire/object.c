@@ -61,6 +61,8 @@ int empire_object_in_use(const full_empire_object *obj)
 void empire_object_clear(void)
 {
     array_init(objects, EMPIRE_OBJECT_SIZE_STEP, new_empire_object, empire_object_in_use);
+    // Discard object 0
+    array_next(objects);
 }
 
 int empire_object_count(void)
