@@ -125,7 +125,7 @@ void window_building_draw_military_academy(building_info_context *c)
         window_building_draw_description(c, 69, 25);
     } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 135, 2);
-    } else if (c->worker_percentage >= 100) {
+    } else if (c->worker_percentage < 100) {
         window_building_draw_description(c, 135, 1);
     } else {
         window_building_draw_description(c, 135, 3);
