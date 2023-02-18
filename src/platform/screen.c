@@ -35,72 +35,74 @@ static struct {
     const int HEIGHT;
 } MINIMUM = {640, 480};
 
-static int scale_percentage = 100;
+static struct {
+    int requested_percentage;
+    int percentage;
+    float screen_density;
+} scale = {100, 100, 1};
+
 static color_t *framebuffer;
 
 static int scale_logical_to_pixels(int logical_value)
 {
-    return logical_value * scale_percentage / 100;
+    return (int) (logical_value * scale.percentage / 100 / scale.screen_density);
 }
 
 static int scale_pixels_to_logical(int pixel_value)
 {
-    return pixel_value * 100 / scale_percentage;
+    return (int) (pixel_value * 100 / scale.percentage / scale.screen_density);
 }
 
 static int get_max_scale_percentage(int pixel_width, int pixel_height)
 {
-    int width_scale_pct = pixel_width * 100 / MINIMUM.WIDTH;
-    int height_scale_pct = pixel_height * 100 / MINIMUM.HEIGHT;
+    int width_scale_pct = (int) (pixel_width * 100 / scale.screen_density / MINIMUM.WIDTH);
+    int height_scale_pct = (int) (pixel_height * 100 / scale.screen_density / MINIMUM.HEIGHT);
     return SDL_min(width_scale_pct, height_scale_pct);
+}
+
+static void apply_max_scale(int pixel_width, int pixel_height)
+{
+    scale.percentage = scale.requested_percentage;
+    int max_scale = get_max_scale_percentage(pixel_width, pixel_height);
+    if (scale.percentage > max_scale) {
+        scale.percentage = max_scale;
+        SDL_Log("Maximum scale of %i applied (requested: %d)", scale.percentage, scale.requested_percentage);
+    }
 }
 
 static void set_scale_percentage(int new_scale, int pixel_width, int pixel_height)
 {
 #ifdef __vita__
-    scale_percentage = 100;
+    scale.requested_percentage = 100;
 #else
-    scale_percentage = calc_bound(new_scale, 50, 500);
+    scale.requested_percentage = calc_bound(new_scale, 50, 500);
 #endif
 
     if (!pixel_width || !pixel_height) {
         return;
     }
 
-    int max_scale_pct = get_max_scale_percentage(pixel_width, pixel_height);
-    if (max_scale_pct < scale_percentage) {
-        scale_percentage = max_scale_pct;
-        SDL_Log("Maximum scale of %i applied", scale_percentage);
-    }
+    apply_max_scale(pixel_width, pixel_height);
 
     SDL_SetWindowMinimumSize(SDL.window,
         scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
 
     const char *scale_quality = "linear";
-#ifndef __APPLE__
+#if !defined(__APPLE__) && !defined(__ANDROID__)
     // Scale using nearest neighbour when we scale a multiple of 100%: makes it look sharper.
     // But not on MacOS: users are used to the linear interpolation since that's what Apple also does.
-    if (scale_percentage % 100 == 0) {
+    if (scale.percentage % 100 == 0) {
         scale_quality = "nearest";
     }
 #endif
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, scale_quality);
 }
 
-#ifdef __ANDROID__
-static void set_scale_for_screen(int pixel_width, int pixel_height)
-{
-    set_scale_percentage(android_get_screen_density() * 100, pixel_width, pixel_height);
-    config_set(CONFIG_SCREEN_CURSOR_SCALE, scale_percentage);
-    if (SDL.texture) {
-        system_init_cursors(scale_percentage);
-    }
-    SDL_Log("Auto-setting scale to %i", scale_percentage);
-}
-#endif
-
 int platform_screen_create(const char *title, int display_scale_percentage)
 {
+#ifdef __ANDROID__
+    scale.screen_density = android_get_screen_density();
+#endif
     set_scale_percentage(display_scale_percentage, 0, 0);
 
     int width, height;
@@ -193,9 +195,7 @@ void platform_screen_destroy(void)
 
 int platform_screen_resize(int pixel_width, int pixel_height)
 {
-#ifdef __ANDROID__
-    set_scale_for_screen(pixel_width, pixel_height);
-#endif
+    apply_max_scale(pixel_width, pixel_height);
 
     int logical_width = scale_pixels_to_logical(pixel_width);
     int logical_height = scale_pixels_to_logical(pixel_height);
@@ -230,14 +230,34 @@ int system_scale_display(int display_scale_percentage)
     SDL_GetWindowSize(SDL.window, &width, &height);
     set_scale_percentage(display_scale_percentage, width, height);
     platform_screen_resize(width, height);
-    return scale_percentage;
+    return scale.percentage;
 }
 
-int system_get_max_display_scale(void)
+int system_can_scale_display(int *min_scale, int *max_scale)
 {
+#ifndef __ANDROID__
+    if (system_is_fullscreen_only()) {
+        return 0;
+    }
+#endif
     int width, height;
     SDL_GetWindowSize(SDL.window, &width, &height);
-    return get_max_scale_percentage(width, height);
+#ifdef __ANDROID__
+    int max_scale_current_orientation = get_max_scale_percentage(width, height);
+    int max_scale_alternative_orientation = get_max_scale_percentage(height, width);
+    if (max_scale_current_orientation < 100 && max_scale_alternative_orientation < 100) {
+        SDL_Log("Not allowing scale on Android: %d x %d = max scale %d or %d",
+            width, height, max_scale_current_orientation, max_scale_alternative_orientation);
+        return 0;
+    }
+#endif
+    if (min_scale) {
+        *min_scale = 50;
+    }
+    if (max_scale) {
+        *max_scale = get_max_scale_percentage(width, height);
+    }
+    return 1;
 }
 
 void platform_screen_move(int x, int y)
@@ -336,7 +356,7 @@ static void draw_software_mouse_cursor(void)
         const cursor *c = input_cursor_data(current_cursor_shape, platform_cursor_get_current_scale());
         if (c) {
             int size = platform_cursor_get_texture_size(c->width, c->height);
-            size = calc_adjust_with_percentage(size, calc_percentage(100, scale_percentage));
+            size = calc_adjust_with_percentage(size, calc_percentage(100, scale.percentage));
             SDL_Rect dst;
             dst.x = mouse->x - c->hotspot_x;
             dst.y = mouse->y - c->hotspot_y;
