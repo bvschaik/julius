@@ -78,6 +78,10 @@ void sound_device_open(void)
 #ifdef USE_SDL_AUDIOSTREAM
     custom_music.use_audiostream = HAS_AUDIOSTREAM();
 #endif
+    // Windows: use directsound by default, as wasapi has issues
+#ifdef __WINDOWS__
+    SDL_AudioInit("directsound");
+#endif
     if (0 == Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
         init_channels();
         return;
