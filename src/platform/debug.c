@@ -42,18 +42,23 @@ static void draw_routing(int x, int y, int grid_offset)
 #ifdef DRAW_HIGHWAY_TERRAIN
 static void draw_highway_terrain(int x, int y, int grid_offset)
 {
+    int offset = -8;
     int terrain = map_terrain_get(grid_offset);
     if (terrain & TERRAIN_HIGHWAY_TOP_LEFT) {
-        text_draw_centered("TL", x, y + 6, 58, FONT_NORMAL_BLACK, COLOR_WHITE);
+        text_draw_centered("TL", x + offset, y + 6, 58, FONT_SMALL_PLAIN, COLOR_WHITE);
+        offset += 16;
     }
     if (terrain & TERRAIN_HIGHWAY_TOP_RIGHT) {
-        text_draw_centered("TR", x, y + 6, 58, FONT_NORMAL_BLACK, COLOR_WHITE);
+        text_draw_centered("TR", x + offset, y + 6, 58, FONT_SMALL_PLAIN, COLOR_WHITE);
+        offset += 16;
     }
     if (terrain & TERRAIN_HIGHWAY_BOTTOM_LEFT) {
-        text_draw_centered("BL", x, y + 6, 58, FONT_NORMAL_BLACK, COLOR_WHITE);
+        text_draw_centered("BL", x + offset, y + 6, 58, FONT_SMALL_PLAIN, COLOR_WHITE);
+        offset += 16;
     }
     if (terrain & TERRAIN_HIGHWAY_BOTTOM_RIGHT) {
-        text_draw_centered("BR", x, y + 6, 58, FONT_NORMAL_BLACK, COLOR_WHITE);
+        text_draw_centered("BR", x + offset, y + 6, 58, FONT_SMALL_PLAIN, COLOR_WHITE);
+        offset += 16;
     }
 }
 #endif

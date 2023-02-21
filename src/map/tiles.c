@@ -689,13 +689,17 @@ int map_tiles_is_paved_road(int grid_offset)
 int map_tiles_highway_get_aqueduct_image(int grid_offset)
 {
     int aqueduct_image_id = assets_lookup_image_id(ASSET_AQUEDUCT_WITH_WATER);
+    int image_offset = 0;
     if (map_terrain_is(grid_offset - 1, TERRAIN_AQUEDUCT) || map_terrain_is(grid_offset + 1, TERRAIN_AQUEDUCT)) {
-        aqueduct_image_id++;
+        image_offset++;
+    }
+    if (city_view_orientation() == DIR_6_LEFT || city_view_orientation() == DIR_2_RIGHT) {
+        image_offset = (image_offset + 1) % 2;
     }
     if (!map_aqueduct_has_water_access_at(grid_offset)) {
-        aqueduct_image_id += 2;
+        image_offset += 2;
     }
-    return aqueduct_image_id;
+    return aqueduct_image_id + image_offset;
 }
 
 static void set_aqueduct_image(int grid_offset, int is_road, const terrain_image *img)
