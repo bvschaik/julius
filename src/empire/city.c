@@ -478,6 +478,10 @@ void empire_city_load_state(buffer *buf, int version)
         log_error("Unable to allocate enough memory for the empire city array. The game will now crash.", 0, 0);
     }
 
+    if (!trade_route_init()) {
+        return;
+    }
+
     int highest_id_in_use;
 
     for (int i = 0; i < cities_to_load; i++) {
