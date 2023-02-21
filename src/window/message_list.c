@@ -200,9 +200,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (!scenario_is_custom()) {
         handled |= image_buttons_handle_mouse(m_dialog, data.x_text + data.text_width_blocks * BLOCK_SIZE - 36,
             data.y_text - 27, &show_briefing_button, 1, &button_id);
-    }
-    if (button_id) {
-        data.focus_button_id = 15;
+        if (button_id) {
+            data.focus_button_id = 15;
+        }
     }
     handled |= generic_buttons_handle_mouse(m_dialog, data.x_text, data.y_text + 4,
         generic_buttons_messages, MAX_MESSAGES, &button_id);
