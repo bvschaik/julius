@@ -381,32 +381,7 @@ static int callback_calc_distance_build_road(int next_offset, int dist, int dire
 static int callback_calc_distance_build_aqueduct(int next_offset, int dist, int direction)
 {
     // check for existing highway/aqueduct tiles that won't work with this one
-    if (!map_can_place_aqueduct_on_highway(next_offset)) {
-        return 1;
-    }
-    if (map_terrain_is(next_offset, TERRAIN_HIGHWAY)) {
-        // only allow every other crossing to be enqueued so that aqueducts can't be built along highways
-        // don't check the first tile though because it might be on a highway
-        if (dist > 2) {
-            for (int i = 0; i < 4; i++) {
-                int surrounding_offset = next_offset + ROUTE_OFFSETS[i];
-                if (map_grid_is_valid_offset(surrounding_offset) && map_terrain_is(surrounding_offset, TERRAIN_HIGHWAY) && distance.determined.items[surrounding_offset]) {
-                    return 1;
-                }
-            }
-        }
-        // check up to two tiles ahead to see if we've cleared the highway. if we have, put in scores from here to there
-        int direction_offset = ROUTE_OFFSETS[direction];
-        for (int i = 1; i <= 2; i++) {
-            int next_offset2 = next_offset + direction_offset * i;
-            if (map_grid_is_valid_offset(next_offset2) && !map_terrain_is(next_offset2, TERRAIN_HIGHWAY)) {
-                for (int j = 0; j < i; j++) {
-                    distance.determined.items[next_offset + direction_offset * j] = dist + j;
-                }
-                enqueue(next_offset2, dist + i);
-                break;
-            }
-        }
+    if (!map_can_place_aqueduct_on_highway(next_offset, 1)) {
         return 1;
     }
 
@@ -437,7 +412,7 @@ static int callback_calc_distance_build_aqueduct(int next_offset, int dist, int 
 
 static int map_can_place_initial_road_or_aqueduct(int grid_offset, int is_aqueduct)
 {
-    if (is_aqueduct && !map_can_place_aqueduct_on_highway(grid_offset)) {
+    if (is_aqueduct && !map_can_place_aqueduct_on_highway(grid_offset, 0)) {
         return 0;
     }
     if (terrain_land_citizen.items[grid_offset] == CITIZEN_N1_BLOCKED) {

@@ -654,7 +654,7 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
                     blocked = 1;
                 }
             } else if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
-                blocked = !map_can_place_aqueduct_on_highway(grid_offset);
+                blocked = !map_can_place_aqueduct_on_highway(grid_offset, 0);
             } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                 blocked = 1;
             }
