@@ -829,7 +829,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_MONUMENT_PHASES, " phases. "},
     {TR_TOOLTIP_MONUMENT_RESOURCE_REQUIREMENTS, "Resource requirements:\n"},
     {TR_BUILDING_GLADIATOR_STATUE, "Gladiator statue"},
-    {TR_BUILDING_HIGHWAY, "Highway"},
+    {TR_BUILDING_HIGHWAY, "Railroad"},
     {TR_BUILDING_HIGHWAY_DESC, "Highways allow citizens to reach their destination more quickly."},
     {TR_BUILDING_GOLD_MINE, "Gold mine"},
     {TR_BUILDING_GOLD_MINE_DESC, "Mine gold for trade, or to supply your city mint in order to generate denarii."},
