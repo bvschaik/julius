@@ -679,6 +679,28 @@ void building_construction_cancel(void)
     building_rotation_reset_rotation();
 }
 
+static int should_mark_for_construction(building_type type)
+{
+    if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
+        return 0;
+    } else if (type == BUILDING_CITY_MINT && (city_buildings_has_city_mint() || !city_buildings_has_senate())) {
+        return 0;
+    } else if (type == BUILDING_BARRACKS && city_buildings_has_barracks() && 
+        !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) {
+        return 0;
+    } else if (type == BUILDING_MESS_HALL && city_buildings_has_mess_hall()) {
+        return 0;
+    } else if (building_monument_get_id(type)) {
+        return 0;
+    } else if (building_monument_is_grand_temple(type) &&
+        building_monument_count_grand_temples() >= config_get(CONFIG_GP_CH_MAX_GRAND_TEMPLES)) {
+        return 0;
+    } else if (type == BUILDING_AQUEDUCT) {
+        return 0;
+    }
+    return 1;
+}
+
 void building_construction_update(int x, int y, int grid_offset)
 {
     building_type type = building_construction_type();
@@ -842,14 +864,7 @@ void building_construction_update(int x, int y, int grid_offset)
         data.required_terrain.water || data.required_terrain.wall || data.required_terrain.distant_water) {
         // never mark as constructing
     } else {
-        if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
-            !(type == BUILDING_CITY_MINT && (city_buildings_has_city_mint() || !city_buildings_has_senate())) &&
-            !(type == BUILDING_BARRACKS && city_buildings_has_barracks() &&
-            !config_get(CONFIG_GP_CH_MULTIPLE_BARRACKS)) &&
-            !(type == BUILDING_MESS_HALL && city_buildings_has_mess_hall()) &&
-            !building_monument_get_id(type) &&
-            !(building_monument_is_grand_temple(type) &&
-            building_monument_count_grand_temples() >= config_get(CONFIG_GP_CH_MAX_GRAND_TEMPLES))) {
+        if (should_mark_for_construction(type)) {
             int size = building_properties_for_type(type)->size;
             mark_construction(x, y, size, TERRAIN_ALL, 0);
         }
