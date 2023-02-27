@@ -76,13 +76,21 @@ int map_water_determine_orientation(int x, int y, int size, int adjust_xy,
 {
     int edge = size - 1;
     int square = size * size;
-    int unadjusted_base_offset = map_grid_offset(x, y);
+    int unadjusted_base_offset;
     if (adjust_xy == 1) {
+        unadjusted_base_offset = map_grid_offset(x, y);
         switch (city_view_orientation()) {
             case DIR_0_TOP: break;
             case DIR_2_RIGHT: x -= edge; break;
             case DIR_6_LEFT: y -= edge; break;
             case DIR_4_BOTTOM: x -= edge; y -= edge; break;
+        }
+    } else {
+        switch (city_view_orientation()) {
+            case DIR_0_TOP: unadjusted_base_offset = map_grid_offset(x, y); break;
+            case DIR_2_RIGHT: unadjusted_base_offset = map_grid_offset(x + edge, y); break;
+            case DIR_6_LEFT: unadjusted_base_offset = map_grid_offset(x, y + edge); break;
+            case DIR_4_BOTTOM: unadjusted_base_offset = map_grid_offset(x + edge, y + edge); break;
         }
     }
     if (!map_grid_is_inside(x, y, size)) {
