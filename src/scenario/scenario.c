@@ -244,7 +244,7 @@ void scenario_load_state(buffer *buf, int version)
         scenario.requests[i].year = buffer_read_i16(buf);
     }
     for (int i = 0; i < MAX_REQUESTS; i++) {
-        scenario.requests[i].resource = resource_remap(buffer_read_i16(buf));
+        scenario.requests[i].resource = buffer_read_i16(buf);
     }
     for (int i = 0; i < MAX_REQUESTS; i++) {
         scenario.requests[i].amount = buffer_read_i16(buf);
@@ -306,7 +306,7 @@ void scenario_load_state(buffer *buf, int version)
         scenario.demand_changes[i].month = buffer_read_u8(buf);
     }
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
-        scenario.demand_changes[i].resource = resource_remap(buffer_read_u8(buf));
+        scenario.demand_changes[i].resource = buffer_read_u8(buf);
     }
     for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
         scenario.demand_changes[i].route_id = buffer_read_u8(buf);
@@ -331,7 +331,7 @@ void scenario_load_state(buffer *buf, int version)
         scenario.price_changes[i].month = buffer_read_u8(buf);
     }
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
-        scenario.price_changes[i].resource = resource_remap(buffer_read_u8(buf));
+        scenario.price_changes[i].resource = buffer_read_u8(buf);
     }
     for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
         scenario.price_changes[i].amount = buffer_read_u8(buf);
@@ -463,6 +463,20 @@ void scenario_load_state(buffer *buf, int version)
         buffer_read_raw(buf, scenario.empire.custom_name, sizeof(scenario.empire.custom_name));
     }
     buffer_skip(buf, 1);
+
+    // We can only remap resources at the end of the scenario load as the remapping relies on the allowed building list
+    // being loaded, otherwise on some edge cases changes to meat may affect fish instead
+    if (resource_mapping_get_version() < RESOURCE_CURRENT_VERSION) {
+        for (int i = 0; i < MAX_REQUESTS; i++) {
+            scenario.requests[i].resource = resource_remap(scenario.requests[i].resource);
+        }
+        for (int i = 0; i < MAX_DEMAND_CHANGES; i++) {
+            scenario.demand_changes[i].resource = resource_remap(scenario.demand_changes[i].resource);
+        }
+        for (int i = 0; i < MAX_PRICE_CHANGES; i++) {
+            scenario.price_changes[i].resource = resource_remap(scenario.price_changes[i].resource);
+        }
+    }
 
     scenario.is_saved = 1;
 }

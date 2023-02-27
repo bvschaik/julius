@@ -43,7 +43,7 @@ void empire_city_clear_all(void)
 {
     array_init(cities, CITIES_ARRAY_SIZE_STEP, 0, city_in_use);
     // Discard city 0
-    array_next(cities);
+    array_advance(cities);
 }
 
 empire_city *empire_city_get(int city_id)
