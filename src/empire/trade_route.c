@@ -20,7 +20,7 @@ int trade_route_init(void)
         return 0;
     }
     // Discard route 0
-    array_next(routes);
+    array_advance(routes);
     return 1;
 }
 
@@ -64,9 +64,8 @@ int trade_route_legacy_increase_limit(int route_id, resource_type resource)
         case 0: route->limit[resource] = 15; break;
         case 15: route->limit[resource] = 25; break;
         case 25: route->limit[resource] = 40; break;
-        default: return 0;
     }
-    return 1;
+    return route->limit[resource];
 }
 
 int trade_route_legacy_decrease_limit(int route_id, resource_type resource)
@@ -76,9 +75,8 @@ int trade_route_legacy_decrease_limit(int route_id, resource_type resource)
         case 40: route->limit[resource] = 25; break;
         case 25: route->limit[resource] = 15; break;
         case 15: route->limit[resource] = 0; break;
-        default: return 0;
     }
-    return 1;
+    return route->limit[resource];
 }
 
 void trade_route_increase_traded(int route_id, resource_type resource)

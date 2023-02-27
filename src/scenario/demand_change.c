@@ -34,17 +34,16 @@ void scenario_demand_change_process(void)
             city_id = 0;
         }
 
-        int success = 1;
         int last_amount = trade_route_limit(route, resource);
         int amount = scenario.demand_changes[i].amount;
         if (amount == DEMAND_CHANGE_LEGACY_IS_RISE) {
-            success = trade_route_legacy_increase_limit(route, resource);
+            amount = trade_route_legacy_increase_limit(route, resource);
         } else if (amount == DEMAND_CHANGE_LEGACY_IS_FALL) {
-            success = trade_route_legacy_decrease_limit(route, resource);
+            amount = trade_route_legacy_decrease_limit(route, resource);
         } else {
             trade_route_set_limit(route, resource, amount);
         }
-        if (success && empire_city_is_trade_route_open(route)) {
+        if (empire_city_is_trade_route_open(route)) {
             int change = amount - last_amount;
             if (amount > 0 && change > 0) {
                 city_message_post(1, MESSAGE_INCREASED_TRADING, city_id, resource);
