@@ -98,6 +98,9 @@ typedef struct {
     int state;
     int visible;
     int months_to_comply;
+    int extension_months_to_comply;
+    int extension_disfavor;
+    int ignored_disfavor;
 } request_t;
 
 typedef struct {

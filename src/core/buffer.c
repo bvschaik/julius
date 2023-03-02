@@ -1,5 +1,6 @@
 #include "core/buffer.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 void buffer_init(buffer *buf, void *data, int size)
@@ -173,4 +174,25 @@ void buffer_skip(buffer *buf, int size)
 int buffer_at_end(buffer *buf)
 {
     return buf->index >= buf->size;
+}
+
+void buffer_init_dynamic_piece(buffer *buffer, int32_t version, int32_t array_size, int32_t struct_size)
+{
+    int32_t buf_size = (4 * sizeof(int32_t)) + (array_size * struct_size);
+    uint8_t *buf_data = malloc(buf_size);
+    buffer_init(buffer, buf_data, buf_size);
+
+    buffer_write_i32(buffer, buf_size);
+    buffer_write_i32(buffer, version);
+    buffer_write_i32(buffer, array_size);
+    buffer_write_i32(buffer, struct_size);
+}
+
+void buffer_load_dynamic_piece_header_data(buffer *buffer, int32_t *size, int32_t *version, int32_t *array_size, int32_t *struct_size)
+{
+    buffer_set(buffer, 0);
+    *size = buffer_read_i32(buffer);
+    *version = buffer_read_i32(buffer);
+    *array_size = buffer_read_i32(buffer);
+    *struct_size = buffer_read_i32(buffer);
 }

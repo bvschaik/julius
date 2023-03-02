@@ -154,4 +154,25 @@ void buffer_skip(buffer *buffer, int size);
  */
 int buffer_at_end(buffer *buffer);
 
+/**
+ * Initializes a buffer for saving a dynamic state piece / file piece.
+ * Also stored the standard info of the piece at the start of the buffer.
+ * Size of the piece in bytes will be calculated as (Standard header size + (array_size * struct_size))
+ * @param buffer Buffer
+ * @param version Version of the piece being saved. Used for backwards compatibility when loading.
+ * @param array_size Number of elements in the array. If you are saving only a single struct, then this must be 1.
+ * @param struct_size Size in bytes of a single entry of the struct in the array.
+ */
+void buffer_init_dynamic_piece(buffer *buffer, int32_t version, int32_t array_size, int32_t struct_size);
+
+/**
+ * Reads the size, version, array_size and struct_size headers from the piece buffer.
+ * @param buffer Buffer
+ * @param size Size of the state piece in bytes.
+ * @param version Version of the piece.
+ * @param array_size Number of elements in the array.
+ * @param struct_size Size in bytes of a single entry of the struct in the array.
+ */
+void buffer_load_dynamic_piece_header_data(buffer *buffer, int32_t *size, int32_t *version, int32_t *array_size, int32_t *struct_size);
+
 #endif // CORE_BUFFER_H

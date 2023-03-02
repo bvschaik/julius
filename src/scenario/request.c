@@ -9,6 +9,7 @@
 #include "city/resource.h"
 #include "core/random.h"
 #include "game/resource.h"
+#include "game/save_version.h"
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "scenario/data.h"
@@ -55,15 +56,15 @@ void scenario_request_process(void)
                     } else if (scenario.requests[i].months_to_comply <= 0) {
                         city_message_post(1, MESSAGE_REQUEST_REFUSED, i, 0);
                         scenario.requests[i].state = REQUEST_STATE_OVERDUE;
-                        scenario.requests[i].months_to_comply = 24;
-                        city_ratings_reduce_favor_missed_request(3);
+                        scenario.requests[i].months_to_comply = scenario.requests[i].extension_months_to_comply;
+                        city_ratings_reduce_favor_missed_request(scenario.requests[i].extension_disfavor);
                     }
                 } else if (state == REQUEST_STATE_OVERDUE) {
                     if (scenario.requests[i].months_to_comply <= 0) {
                         city_message_post(1, MESSAGE_REQUEST_REFUSED_OVERDUE, i, 0);
                         scenario.requests[i].state = REQUEST_STATE_IGNORED;
                         scenario.requests[i].visible = 0;
-                        city_ratings_reduce_favor_missed_request(5);
+                        city_ratings_reduce_favor_missed_request(scenario.requests[i].ignored_disfavor);
                     }
                 }
                 if (!scenario.requests[i].can_comply_dialog_shown) {
@@ -171,4 +172,120 @@ const scenario_request *scenario_request_get_visible(int index)
         }
     }
     return 0;
+}
+
+static void request_save(buffer *list, int index)
+{
+    buffer_write_i16(list, scenario.requests[index].year);
+    buffer_write_i16(list, scenario.requests[index].resource);
+    buffer_write_i16(list, scenario.requests[index].amount);
+    buffer_write_i16(list, scenario.requests[index].deadline_years);
+
+    buffer_write_u8(list, scenario.requests[index].can_comply_dialog_shown);
+
+    buffer_write_u8(list, scenario.requests[index].favor);
+    buffer_write_u8(list, scenario.requests[index].month);
+    buffer_write_u8(list, scenario.requests[index].state);
+    buffer_write_u8(list, scenario.requests[index].visible);
+    buffer_write_u8(list, scenario.requests[index].months_to_comply);
+
+    buffer_write_i16(list, scenario.requests[index].extension_months_to_comply);
+    buffer_write_i16(list, scenario.requests[index].extension_disfavor);
+    buffer_write_i16(list, scenario.requests[index].ignored_disfavor);
+}
+
+void scenario_request_save_state(buffer *list)
+{
+    int32_t array_size = MAX_REQUESTS;
+    int32_t struct_size = (7 * sizeof(int16_t)) + (6 * sizeof(uint8_t));
+    buffer_init_dynamic_piece(list,
+        SCENARIO_CURRENT_VERSION,
+        array_size,
+        struct_size);
+
+    for (int i = 0; i < array_size; i++) {
+        request_save(list, i);
+    }
+}
+
+static void request_load(buffer *list, int index, int version)
+{
+    scenario.requests[index].year = buffer_read_i16(list);
+    scenario.requests[index].resource = buffer_read_i16(list);
+    scenario.requests[index].amount = buffer_read_i16(list);
+    scenario.requests[index].deadline_years = buffer_read_i16(list);
+    scenario.requests[index].can_comply_dialog_shown = buffer_read_u8(list);
+    scenario.requests[index].favor = buffer_read_u8(list);
+    scenario.requests[index].month = buffer_read_u8(list);
+    scenario.requests[index].state = buffer_read_u8(list);
+    scenario.requests[index].visible = buffer_read_u8(list);
+    scenario.requests[index].months_to_comply = buffer_read_u8(list);
+    scenario.requests[index].extension_months_to_comply = buffer_read_i16(list);
+    scenario.requests[index].extension_disfavor = buffer_read_i16(list);
+    scenario.requests[index].ignored_disfavor = buffer_read_i16(list);
+}
+
+void scenario_request_load_state(buffer *list)
+{
+    int buffer_size, version, array_size, struct_size;
+
+    buffer_load_dynamic_piece_header_data(list,
+        &buffer_size,
+        &version,
+        &array_size,
+        &struct_size);
+
+    for (int i = 0; i < array_size; i++) {
+        request_load(list, i, version);
+    }
+}
+
+void scenario_request_load_state_old_version(buffer *list, int state_version, requests_old_state_sections section)
+{
+    // Old savegames had request data split out into multiple chunks,
+    // and saved as multiple arrays of variables, rather than an array of struct approach.
+    // So here we need to load in a similar section / varaible array manner when dealing with old versions.
+    if (state_version <= SCENARIO_LAST_NO_EXTENDED_REQUESTS) {
+        if (section == REQUESTS_OLD_STATE_SECTIONS_TARGET) {
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].year = buffer_read_i16(list);
+            }
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].resource = buffer_read_i16(list);
+            }
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].amount = buffer_read_i16(list);
+            }
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].deadline_years = buffer_read_i16(list);
+            }
+        } else if (section == REQUESTS_OLD_STATE_SECTIONS_CAN_COMPLY) {
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].can_comply_dialog_shown = buffer_read_u8(list);
+            }
+        } else if (section == REQUESTS_OLD_STATE_SECTIONS_FAVOR_REWARD) {
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].favor = buffer_read_u8(list);
+            }
+        } else if (section == REQUESTS_OLD_STATE_SECTIONS_ONGOING_INFO) {
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].month = buffer_read_u8(list);
+            }
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].state = buffer_read_u8(list);
+            }
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].visible = buffer_read_u8(list);
+            }
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].months_to_comply = buffer_read_u8(list);
+            }
+            // Setup any default values we need for values that didn't exist in old versions.
+            for (int i = 0; i < MAX_REQUESTS; i++) {
+                scenario.requests[i].extension_months_to_comply = REQUESTS_DEFAULT_MONTHS_TO_COMPLY;
+                scenario.requests[i].extension_disfavor = REQUESTS_DEFAULT_EXTENSION_DISFAVOUR;
+                scenario.requests[i].ignored_disfavor = REQUESTS_DEFAULT_IGNORED_DISFAVOUR;
+            }
+        }
+    }
 }

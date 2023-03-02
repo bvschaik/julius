@@ -906,6 +906,9 @@ static translation_string all_strings[] = {
     {TR_EDITOR_SELECTED_COORDS, "Selected coords: "},
     {TR_EDITOR_MAX_WAGES, "Up to"},
     {TR_EDITOR_MIN_WAGES, "Down to"},
+    {TR_EDITOR_FAVOUR_DISFAVOR, "Favor lost if extension needed"},
+    {TR_EDITOR_FAVOUR_IGNORED, "Favor lost if request ignored entirely"},
+    {TR_EDITOR_FAVOUR_EXTENSION_MONTHS, "Extension months allowed"},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -66,8 +66,6 @@
 #define UNCOMPRESSED 0x80000000
 #define PIECE_SIZE_DYNAMIC 0
 
-
-
 typedef struct {
     buffer buf;
     int compressed;
@@ -85,6 +83,7 @@ typedef struct {
     buffer *random_iv;
     buffer *camera;
     buffer *scenario;
+    buffer *scenario_requests;
     buffer *empire;
     buffer *end_marker;
 } scenario_state;
@@ -92,7 +91,7 @@ typedef struct {
 static struct {
     scenario_version version;
     int num_pieces;
-    file_piece pieces[12];
+    file_piece pieces[13];
     scenario_state state;
 } scenario_data;
 
@@ -140,6 +139,7 @@ typedef struct {
     buffer *figure_names;
     buffer *culture_coverage;
     buffer *scenario;
+    buffer *scenario_requests;
     buffer *max_game_year;
     buffer *earthquake;
     buffer *emperor_change_state;
@@ -204,6 +204,7 @@ typedef struct {
         int monument_deliveries;
         int enemy_armies;
         int scenario;
+        int scenario_requests;
         int graph_order;
         int city_data;
         int empire_cities;
@@ -226,6 +227,7 @@ typedef struct {
         int barracks_tower_sentry_request;
         int custom_empires;
         int scenario_version;
+        int scenario_requests;
         int city_faction_info;
         int resource_version;
         int static_building_counts;
@@ -310,12 +312,11 @@ static void init_scenario_data(scenario_version version)
     state->elevation = create_scenario_piece(26244, 0);
     state->random_iv = create_scenario_piece(8, 0);
     state->camera = create_scenario_piece(8, 0);
-    if (version <= SCENARIO_LAST_UNVERSIONED) {
-        state->scenario = create_scenario_piece(1720, 0);
-    } else if(version <= SCENARIO_LAST_NO_WAGE_LIMITS) {
-        state->scenario = create_scenario_piece(1830, 0);
-    } else {
-        state->scenario = create_scenario_piece(1838, 0);
+
+    int scenario_piece_size = scenario_get_state_buffer_size_by_scenario_version(version);
+    state->scenario = create_scenario_piece(scenario_piece_size, 0);
+    if (version > SCENARIO_LAST_NO_EXTENDED_REQUESTS) {
+        state->scenario_requests = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
     }
     if (version > SCENARIO_LAST_UNVERSIONED) {
         state->empire = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
@@ -395,13 +396,21 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
     version_data->features.monument_deliveries = version > SAVE_GAME_LAST_NO_DELIVERIES_VERSION;
     version_data->features.barracks_tower_sentry_request = version <= SAVE_GAME_LAST_BARRACKS_TOWER_SENTRY_REQUEST;
 
+    version_data->piece_sizes.scenario = scenario_get_state_buffer_size_by_savegame_version(version);
     if (version <= SAVE_GAME_LAST_UNVERSIONED_SCENARIOS) {
-        version_data->piece_sizes.scenario = 1720;
         version_data->features.custom_empires = 0;
     } else {
-        version_data->piece_sizes.scenario = 1838;
         version_data->features.custom_empires = 1;
     }
+
+    if (version > SAVE_GAME_LAST_NO_EXTENDED_REQUESTS) {
+        version_data->piece_sizes.scenario_requests = PIECE_SIZE_DYNAMIC;
+        version_data->features.scenario_requests = 1;
+    } else {
+        version_data->piece_sizes.scenario_requests = 1;
+        version_data->features.scenario_requests = 0;
+    }
+    
     version_data->features.scenario_version = version > SAVE_GAME_LAST_NO_SCENARIO_VERSION;
     version_data->features.city_faction_info = version <= SAVE_GAME_LAST_UNKNOWN_UNUSED_CITY_DATA;
     version_data->features.resource_version = version > SAVE_GAME_LAST_STATIC_RESOURCES;
@@ -474,6 +483,9 @@ static void init_savegame_data(savegame_version version)
     state->figure_names = create_savegame_piece(84, 0);
     state->culture_coverage = create_savegame_piece(60, 0);
     state->scenario = create_savegame_piece(version_data.piece_sizes.scenario, 0);
+    if (version_data.features.scenario_requests) {
+        state->scenario_requests = create_savegame_piece(version_data.piece_sizes.scenario_requests, 0);
+    }
     state->max_game_year = create_savegame_piece(4, 0);
     state->earthquake = create_savegame_piece(60, 0);
     state->emperor_change_state = create_savegame_piece(4, 0);
@@ -550,7 +562,7 @@ static void scenario_load_from_state(scenario_state *file, scenario_version vers
     map_elevation_load_state(file->elevation);
     city_view_load_scenario_state(file->camera);
     random_load_state(file->random_iv);
-    scenario_load_state(file->scenario, version);
+    scenario_load_state(file->scenario, file->scenario_requests, version);
     if (version > SCENARIO_LAST_UNVERSIONED) {
         empire_object_load(file->empire, version);
     }
@@ -569,6 +581,7 @@ static void scenario_save_to_state(scenario_state *file)
     city_view_save_scenario_state(file->camera);
     random_save_state(file->random_iv);
     scenario_save_state(file->scenario);
+    scenario_requests_save_state(file->scenario_requests);
     empire_object_save(file->empire);
     buffer_skip(file->end_marker, 4);
 }
@@ -595,7 +608,7 @@ static void savegame_load_from_state(savegame_state *state, savegame_version ver
         state->player_name,
         state->scenario_name);
 
-    scenario_load_state(state->scenario, scenario_version);
+    scenario_load_state(state->scenario, state->scenario_requests, scenario_version);
     scenario_map_init();
 
     map_building_load_state(state->building_grid, state->building_damage_grid);
@@ -726,6 +739,7 @@ static void savegame_save_to_state(savegame_state *state)
     city_culture_save_state(state->culture_coverage);
 
     scenario_save_state(state->scenario);
+    scenario_requests_save_state(state->scenario_requests);
 
     scenario_criteria_save_state(state->max_game_year);
     scenario_earthquake_save_state(state->earthquake);
@@ -960,12 +974,12 @@ int game_file_io_read_scenario_info(const char *filename, scenario_info *info)
 
     const scenario_state *state = &scenario_data.state;
 
-    scenario_description_from_buffer(state->scenario, info->description);
-    info->image_id = scenario_image_id_from_buffer(state->scenario);
+    scenario_description_from_buffer(state->scenario, info->description, version);
+    info->image_id = scenario_image_id_from_buffer(state->scenario, version);
     info->climate = scenario_climate_from_buffer(state->scenario, version);
-    info->total_invasions = scenario_invasions_from_buffer(state->scenario);
-    info->player_rank = scenario_rank_from_buffer(state->scenario);
-    info->start_year = scenario_start_year_from_buffer(state->scenario);
+    info->total_invasions = scenario_invasions_from_buffer(state->scenario, version);
+    info->player_rank = scenario_rank_from_buffer(state->scenario, version);
+    info->start_year = scenario_start_year_from_buffer(state->scenario, version);
     scenario_open_play_info_from_buffer(state->scenario, version, &info->is_open_play, &info->open_play_id);
 
     if (!info->is_open_play) {
@@ -975,7 +989,7 @@ int game_file_io_read_scenario_info(const char *filename, scenario_info *info)
     int grid_border_size;
 
     scenario_map_data_from_buffer(state->scenario, &minimap_data.city_width, &minimap_data.city_height,
-        &grid_start, &grid_border_size);
+        &grid_start, &grid_border_size, version);
     info->map_size = minimap_data.city_width;
     minimap_data.version = 0;
     minimap_data.climate = info->climate;
@@ -1358,7 +1372,7 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
 
     minimap_data.version = version;
     scenario_map_data_from_buffer(&scenario.buf, &minimap_data.city_width, &minimap_data.city_height,
-        &grid_start, &grid_border_size);
+        &grid_start, &grid_border_size, scenario_version);
     minimap_data.climate = scenario_climate_from_buffer(&scenario.buf, scenario_version);
     minimap_data.functions.building = savegame_building;
     minimap_data.functions.climate = get_climate;

@@ -9,6 +9,9 @@ typedef struct {
     int amount;
     int deadline_years;
     int favor;
+    int extension_months_to_comply;
+    int extension_disfavor;
+    int ignored_disfavor;
 } editor_request;
 
 typedef struct {

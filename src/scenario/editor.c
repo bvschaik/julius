@@ -6,6 +6,7 @@
 #include "scenario/data.h"
 #include "scenario/empire.h"
 #include "scenario/property.h"
+#include "scenario/request.h"
 
 #include <string.h>
 
@@ -87,8 +88,11 @@ void scenario_editor_create(int map_size)
     }
 
     for (int i = 0; i < MAX_REQUESTS; i++) {
-        scenario.requests[i].deadline_years = 5;
-        scenario.requests[i].favor = 8;
+        scenario.requests[i].deadline_years = REQUESTS_DEFAULT_DEADLINE_YEARS;
+        scenario.requests[i].favor = REQUESTS_DEFAULT_FAVOUR;
+        scenario.requests[i].extension_months_to_comply = REQUESTS_DEFAULT_MONTHS_TO_COMPLY;
+        scenario.requests[i].extension_disfavor = REQUESTS_DEFAULT_EXTENSION_DISFAVOUR;
+        scenario.requests[i].ignored_disfavor = REQUESTS_DEFAULT_IGNORED_DISFAVOUR;
     }
     for (int i = 0; i < MAX_INVASIONS; i++) {
         scenario.invasions[i].from = 8;
@@ -114,6 +118,9 @@ void scenario_editor_request_get(int index, editor_request *request)
     request->resource = scenario.requests[index].resource;
     request->deadline_years = scenario.requests[index].deadline_years;
     request->favor = scenario.requests[index].favor;
+    request->extension_months_to_comply = scenario.requests[index].extension_months_to_comply;
+    request->extension_disfavor = scenario.requests[index].extension_disfavor;
+    request->ignored_disfavor = scenario.requests[index].ignored_disfavor;
 }
 
 static void sort_requests(void)
@@ -136,8 +143,11 @@ void scenario_editor_request_delete(int index)
     scenario.requests[index].year = 0;
     scenario.requests[index].amount = 0;
     scenario.requests[index].resource = 0;
-    scenario.requests[index].deadline_years = 5;
-    scenario.requests[index].favor = 8;
+    scenario.requests[index].deadline_years = REQUESTS_DEFAULT_DEADLINE_YEARS;
+    scenario.requests[index].favor = REQUESTS_DEFAULT_FAVOUR;
+    scenario.requests[index].extension_months_to_comply = REQUESTS_DEFAULT_MONTHS_TO_COMPLY;
+    scenario.requests[index].extension_disfavor = REQUESTS_DEFAULT_EXTENSION_DISFAVOUR;
+    scenario.requests[index].ignored_disfavor = REQUESTS_DEFAULT_IGNORED_DISFAVOUR;
     sort_requests();
     scenario.is_saved = 0;
 }
@@ -149,6 +159,9 @@ void scenario_editor_request_save(int index, editor_request *request)
     scenario.requests[index].resource = request->resource;
     scenario.requests[index].deadline_years = request->deadline_years;
     scenario.requests[index].favor = request->favor;
+    scenario.requests[index].extension_months_to_comply = request->extension_months_to_comply;
+    scenario.requests[index].extension_disfavor = request->extension_disfavor;
+    scenario.requests[index].ignored_disfavor = request->ignored_disfavor;
     sort_requests();
     scenario.is_saved = 0;
 }
