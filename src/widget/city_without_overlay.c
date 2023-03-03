@@ -770,7 +770,7 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
     int should_mark_deleting = city_building_ghost_mark_deleting(tile);
     city_view_foreach_valid_map_tile(draw_footprint);
 #ifndef NDEBUG
-    debug_draw_city();
+    //debug_draw_city();
 #endif
     if (!should_mark_deleting) {
         city_view_foreach_valid_map_tile_row(
