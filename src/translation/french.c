@@ -684,10 +684,10 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_EFFICIENCY, "Rendement" },
     {TR_TOOLTIP_OVERLAY_EFFICIENCY_0, "Nul ne se souvient si ce bâtiment a déjà produit quelque chose." },
     {TR_TOOLTIP_OVERLAY_EFFICIENCY_1, "Ce bâtiment ne produit presque rien." },
-    {TR_TOOLTIP_OVERLAY_EFFICIENCY_2, "La production serait bien meilleure avec un rendement plus élevé." },
-    {TR_TOOLTIP_OVERLAY_EFFICIENCY_3, "La production est souvent à l'arrêt dans ce bâtiment, et le rendement faible." },
-    {TR_TOOLTIP_OVERLAY_EFFICIENCY_4, "Ce bâtiment est productif et opère quasiment à plein régime." },
-    {TR_TOOLTIP_OVERLAY_EFFICIENCY_5, "Ce bâtiment produit avec un rendement maximum." },
+    {TR_TOOLTIP_OVERLAY_EFFICIENCY_2, "La production ici serait bien plus convenable en améliorant le rendement." },
+    {TR_TOOLTIP_OVERLAY_EFFICIENCY_3, "La production s'interrompt souvent dans ce bâtiment, à cause d'un rendement perfectible." },
+    {TR_TOOLTIP_OVERLAY_EFFICIENCY_4, "Ce bâtiment produit quasiment à plein régime." },
+    {TR_TOOLTIP_OVERLAY_EFFICIENCY_5, "La production de ce bâtiment bénéficie d'un rendement maximum." },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_NO_COVERAGE, "Personne" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_FULL_COVERAGE, "Tout le monde" },
     {TR_TOOLTIP_ADVISOR_TRADE_LAND_POLICY, "Sélectionner une politique commerciale terrestre"},
@@ -906,6 +906,9 @@ static translation_string all_strings[] = {
     {TR_EDITOR_SELECTED_COORDS, "Coord. cliquées: "},
     {TR_EDITOR_MAX_WAGES, "max"},
     {TR_EDITOR_MIN_WAGES, "min"},
+    {TR_EDITOR_FAVOUR_DISFAVOR, "Estime perdue si prolongation utilisée"},
+    {TR_EDITOR_FAVOUR_IGNORED, "Estime perdue si requête ignorée totalement"},
+    {TR_EDITOR_FAVOUR_EXTENSION_MONTHS, "Prolongation permise en mois"},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
