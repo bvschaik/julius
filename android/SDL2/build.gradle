@@ -83,8 +83,3 @@ repositories {
     google()
     mavenCentral()
 }
-
-// Workaround for issue: https://issuetracker.google.com/issues/222811915
-// Create prefab dir to prevent failing Gradle Sync in Android Studio.
-// Sync will throw a warning (instead of error) but the project will build normally.
-mkdir "$buildDir/intermediates/prefab_package_configuration/debug/prefab"
