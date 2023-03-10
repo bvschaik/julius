@@ -1,6 +1,7 @@
 #include "data_transfer.h"
 
 #include "building/storage.h"
+#include "building/roadblock.h"
 #include "city/warning.h"
 
 #include <string.h>
@@ -102,10 +103,11 @@ int building_data_transfer_paste(building *b)
 
 building_data_type building_data_transfer_data_type_from_building_type(building_type type)
 {
+    if (building_type_is_roadblock(type)) {
+        return DATA_TYPE_ROADBLOCK;
+    }
+
     switch (type) {
-        case BUILDING_ROADBLOCK:
-        case BUILDING_GARDEN_WALL_GATE:
-            return DATA_TYPE_ROADBLOCK;
         case BUILDING_DOCK:
             return DATA_TYPE_DOCK;
         case BUILDING_GRANARY:
