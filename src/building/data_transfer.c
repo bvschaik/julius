@@ -1,7 +1,7 @@
 #include "data_transfer.h"
 
-#include "building/storage.h"
 #include "building/roadblock.h"
+#include "building/storage.h"
 #include "city/warning.h"
 
 #include <string.h>
