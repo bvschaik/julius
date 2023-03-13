@@ -191,9 +191,9 @@ static int determine_road_access(int x, int y, int size, building_type type, map
                 map_has_road_access_rotation(building_orientation, x, y, 3, road);
         case BUILDING_HIPPODROME:
             building_orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
-            return map_has_road_access_hippodrome_rotation(x, y, &road, building_orientation);
+            return map_has_road_access_hippodrome_rotation(x, y, road, building_orientation);
         case BUILDING_GRANARY:
-            return map_has_road_access_granary(x, y, &road);
+            return map_has_road_access_granary(x, y, road);
         default:
             return map_has_road_access(x, y, size, road);
     }
