@@ -90,9 +90,7 @@ static int can_get_required_resource(building_type type)
                 empire_can_import_resource_potentially(RESOURCE_TIMBER)) &&
                 building_monument_has_required_resources_to_build(type);
         case BUILDING_CITY_MINT:
-            return (empire_can_produce_resource_potentially(RESOURCE_GOLD) ||
-                empire_can_import_resource_potentially(RESOURCE_GOLD)) &&
-                (is_building_type_allowed(BUILDING_SENATE) ||
+            return (is_building_type_allowed(BUILDING_SENATE) ||
                 is_building_type_allowed(BUILDING_SENATE_UPGRADED)) &&
                 building_monument_has_required_resources_to_build(type);
         default:

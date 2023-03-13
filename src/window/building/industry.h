@@ -2,6 +2,7 @@
 #define WINDOW_BUILDING_INDUSTRY_H
 
 #include "common.h"
+#include "input/mouse.h"
 
 void window_building_draw_wheat_farm(building_info_context *c);
 void window_building_draw_vegetable_farm(building_info_context *c);
@@ -25,6 +26,9 @@ void window_building_draw_city_mint(building_info_context *c);
 
 void window_building_draw_shipyard(building_info_context *c);
 void window_building_draw_wharf(building_info_context *c);
+
+void window_building_draw_city_mint_foreground(building_info_context *c);
+int window_building_handle_mouse_city_mint(const mouse *m, building_info_context *c);
 
 void window_building_industry_get_tooltip(building_info_context *c, int *translation);
 

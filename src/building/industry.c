@@ -18,6 +18,7 @@
 
 #define MAX_PROGRESS_VENUS_GT 400
 #define DENARII_MINTED_PER_PRODUCTION 100
+#define DENARII_COST_PER_GOLD 600
 #define MAX_STORAGE 16
 #define INFINITE 10000
 
@@ -154,12 +155,28 @@ static void update_city_mint_production(int new_day)
         return;
     }
 
-    if (b->loads_stored < BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN) {
+    if (b->loads_stored < BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN && b->output_resource_id == RESOURCE_DENARII) {
         return;
     }
 
     if (b->data.industry.curse_days_left && new_day) {
         b->data.industry.curse_days_left--;
+        return;
+    }
+
+    if (b->output_resource_id == RESOURCE_GOLD) {
+        if (b->data.industry.progress == 0) {
+            if (city_finance_out_of_money()) {
+                return;
+            }
+            city_finance_process_sundry(DENARII_COST_PER_GOLD);
+        }
+        b->data.industry.progress += b->num_workers;
+
+        int max = building_industry_get_max_progress(b);
+        if (b->data.industry.progress > max) {
+            b->data.industry.progress = max;
+        }
         return;
     }
 
@@ -169,10 +186,20 @@ static void update_city_mint_production(int new_day)
     if (b->data.industry.progress > max) {
         b->data.industry.production_current_month += 100;
         b->data.industry.progress = 0;
+        int minted_personal_funds = 0;
         city_finance_treasury_add_miscellaneous(DENARII_MINTED_PER_PRODUCTION);
         if (city_buildings_has_governor_house()) {
-            city_data.emperor.personal_savings += DENARII_MINTED_PER_PRODUCTION / 10;
+            int personal_salary = city_emperor_salary_amount();
+            if (personal_salary > 5) {
+                minted_personal_funds = DENARII_MINTED_PER_PRODUCTION / 10;
+                minted_personal_funds = calc_adjust_with_percentage(minted_personal_funds, personal_salary);
+                if (minted_personal_funds == 0) {
+                    minted_personal_funds = 1;
+                }
+            }
         }
+        city_data.emperor.personal_savings += minted_personal_funds;
+        city_finance_treasury_add_miscellaneous(DENARII_MINTED_PER_PRODUCTION - minted_personal_funds);
         if (b->loads_stored >= BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN) {
             b->loads_stored -= BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN;
             if (b->loads_stored >= BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN) {
@@ -261,18 +288,29 @@ int building_stockpiling_enabled(building *b)
 
 int building_industry_has_produced_resource(building *b)
 {
-    return b->type != BUILDING_CITY_MINT && b->data.industry.progress >= building_industry_get_max_progress(b);
+    if (b->type == BUILDING_CITY_MINT) {
+        if (b->output_resource_id != RESOURCE_GOLD) {
+            return 0;
+        }
+        if (b->loads_stored >= RESOURCE_ONE_LOAD) {
+            return 1;
+        }
+    }
+    return b->data.industry.progress >= building_industry_get_max_progress(b);
 }
 
 void building_industry_start_new_production(building *b)
 {
-    b->data.industry.production_current_month += 100;
-    b->data.industry.progress = 0;
-    if (building_is_workshop(b->type) && b->loads_stored) {
-        if (b->loads_stored > 1) {
+    if (b->data.industry.progress >= building_industry_get_max_progress(b)) {
+        b->data.industry.production_current_month += 100;
+        b->data.industry.progress = 0;
+    }
+    int loads_when_complete = b->type == BUILDING_CITY_MINT ? RESOURCE_ONE_LOAD : 1;
+    if (building_is_workshop(b->type) && b->loads_stored >= loads_when_complete) {
+        if (b->loads_stored > loads_when_complete) {
             b->data.industry.has_raw_materials = 1;
         }
-        b->loads_stored--;
+        b->loads_stored -= loads_when_complete;
     }
     if (building_is_farm(b->type)) {
         update_farm_image(b);
@@ -389,6 +427,9 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
             b->road_network_id != road_network_id || b->loads_stored >= max_loads_stored) {
             continue;
         }
+        if (type == BUILDING_CITY_MINT && b->output_resource_id == RESOURCE_GOLD) {
+            continue;
+        }
         int dist = calc_maximum_distance(b->x, b->y, x, y);
         if (b->loads_stored > 0) {
             dist += 20;
@@ -419,6 +460,9 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int road_
     for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
         if (b->state != BUILDING_STATE_IN_USE ||
             !b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
+            continue;
+        }
+        if (type == BUILDING_CITY_MINT && b->output_resource_id == RESOURCE_GOLD) {
             continue;
         }
         int dist = 10 * b->loads_stored +

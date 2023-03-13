@@ -186,6 +186,7 @@ static int get_height_id(void)
                 return 6;
 
             case BUILDING_MESS_HALL:
+            case BUILDING_CITY_MINT:
                 return 7;
 
             case BUILDING_GRAND_TEMPLE_CERES:
@@ -795,6 +796,8 @@ static void draw_foreground(void)
             } else {
                 window_building_draw_garden_gate_foreground(&context);
             }
+        } else if (btype == BUILDING_CITY_MINT) {
+            window_building_draw_city_mint_foreground(&context);
         }
 
         if (building_monument_is_unfinished_monument(b)) {
@@ -890,6 +893,8 @@ static int handle_specific_building_info_mouse(const mouse *m)
             } else {
                 return window_building_handle_mouse_garden_gate(m, &context);
             }
+        } else if (btype == BUILDING_CITY_MINT) {
+            return window_building_handle_mouse_city_mint(m, &context);
         } else if (building_is_primary_product_producer(btype)) {
             return window_building_handle_mouse_primary_product_producer(m, &context);
         }
