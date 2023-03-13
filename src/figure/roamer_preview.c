@@ -2,6 +2,7 @@
 
 #include "building/industry.h"
 #include "building/properties.h"
+#include "building/rotation.h"
 #include "core/config.h"
 #include "figure/figure.h"
 #include "figure/movement.h"
@@ -180,6 +181,24 @@ static void init_roaming(figure *f, int roam_dir, int x, int y)
     }
 }
 
+static int determine_road_access(int x, int y, int size, building_type type, map_point *road)
+{
+    int building_orientation = 0;
+    switch (type) {
+        case BUILDING_WAREHOUSE:
+            building_orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
+            return map_has_road_access_rotation(building_orientation, x, y, size, road) ||
+                map_has_road_access_rotation(building_orientation, x, y, 3, road);
+        case BUILDING_HIPPODROME:
+            building_orientation = building_rotation_get_building_orientation(building_rotation_get_rotation());
+            return map_has_road_access_hippodrome_rotation(x, y, &road, building_orientation);
+        case BUILDING_GRANARY:
+            return map_has_road_access_granary(x, y, &road);
+        default:
+            return map_has_road_access(x, y, size, road);
+    }
+}
+
 void figure_roamer_preview_create(building_type b_type, int x, int y)
 {
     if (!config_get(CONFIG_UI_SHOW_ROAMING_PATH)) {
@@ -207,7 +226,7 @@ void figure_roamer_preview_create(building_type b_type, int x, int y)
     int b_size = building_is_farm(b_type) ? 3 : building_properties_for_type(b_type)->size;
 
     map_point road;
-    if (!map_has_road_access(x, y, b_size, &road)) {
+    if (!determine_road_access(x, y, b_size, b_type, &road)) {
         return;
     }
 
