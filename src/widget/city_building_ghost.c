@@ -413,19 +413,19 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     }
     // mouse pointer = center tile of reservoir instead of north, correct here:
     y -= 30;
+    if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!building_construction_in_progress() || draw_later)) {
+        if (draw_later) {
+            city_view_foreach_tile_in_range(
+                offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
+        }
+        city_view_foreach_tile_in_range(
+            tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
+    }
     if (blocked) {
         for (int i = 0; i < 9; i++) {
             draw_flat_tile(x + X_VIEW_OFFSETS[i], y + Y_VIEW_OFFSETS[i], COLOR_MASK_RED);
         }
     } else {
-        if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE) && (!building_construction_in_progress() || draw_later)) {
-            if (draw_later) {
-                city_view_foreach_tile_in_range(
-                    offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_first_reservoir_range);
-            }
-            city_view_foreach_tile_in_range(
-                tile->grid_offset + RESERVOIR_GRID_OFFSETS[orientation_index], 3, 10, draw_second_reservoir_range);
-        }
         draw_single_reservoir(x, y, has_water);
         if (draw_later) {
             draw_single_reservoir(x_start, y_start, has_water);
