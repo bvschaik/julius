@@ -427,8 +427,10 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
             b->road_network_id != road_network_id || b->loads_stored >= max_loads_stored) {
             continue;
         }
-        if (type == BUILDING_CITY_MINT && b->output_resource_id == RESOURCE_GOLD) {
-            continue;
+        if (type == BUILDING_CITY_MINT) {
+            if (b->data.monument.phase != MONUMENT_FINISHED || b->output_resource_id == RESOURCE_GOLD) {
+                continue;
+            }
         }
         int dist = calc_maximum_distance(b->x, b->y, x, y);
         if (b->loads_stored > 0) {

@@ -374,11 +374,11 @@ void window_building_draw_city_mint(building_info_context *c)
                 CUSTOM_TRANSLATION, TR_BUILDING_CITY_MINT_DESC_NO_PALACE + city_buildings_has_governor_house());
         }
         lang_text_draw(CUSTOM_TRANSLATION, TR_BUILDING_CITY_MINT_CONVERT,
-            c->x_offset + 16, BLOCK_SIZE * c->height_blocks - 78, FONT_NORMAL_BLACK);
+            c->x_offset + 16, c->y_offset + BLOCK_SIZE * c->height_blocks - 114, FONT_NORMAL_BLACK);
         lang_text_draw(CUSTOM_TRANSLATION, TR_BUILDING_CITY_MINT_GOLD_TO_DN,
-            c->x_offset + 40, BLOCK_SIZE * c->height_blocks - 54, FONT_NORMAL_BLACK);
+            c->x_offset + 40, c->y_offset + BLOCK_SIZE * c->height_blocks - 90, FONT_NORMAL_BLACK);
         lang_text_draw(CUSTOM_TRANSLATION, TR_BUILDING_CITY_MINT_DN_TO_GOLD,
-            c->x_offset + 40, BLOCK_SIZE * c->height_blocks - 30, FONT_NORMAL_BLACK);
+            c->x_offset + 40, c->y_offset + BLOCK_SIZE * c->height_blocks - 66, FONT_NORMAL_BLACK);
         data.city_mint_id = b->id;
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -395,7 +395,7 @@ void window_building_draw_city_mint_foreground(building_info_context *c)
         return;
     }
     int x = c->x_offset + 16;
-    int y = BLOCK_SIZE * c->height_blocks - 58;
+    int y = c->y_offset + BLOCK_SIZE * c->height_blocks - 94;
     button_border_draw(x, y, 20, 20, data.focus_button_id == 1);
     button_border_draw(x, y + 24, 20, 20, data.focus_button_id == 2);
     int selected_offset = building_get(data.city_mint_id)->output_resource_id == RESOURCE_DENARII ? 0 : 24;
@@ -508,7 +508,7 @@ int window_building_handle_mouse_city_mint(const mouse *m, building_info_context
     if (!data.city_mint_id) {
         return 0;
     }
-    if (generic_buttons_handle_mouse(m, c->x_offset + 16, BLOCK_SIZE * c->height_blocks - 58,
+    if (generic_buttons_handle_mouse(m, c->x_offset + 16, c->y_offset + BLOCK_SIZE * c->height_blocks - 94,
         mint_conversion_buttons, 2, &data.focus_button_id)) {
         window_request_refresh();
         return 1;
