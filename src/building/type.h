@@ -95,7 +95,7 @@ typedef enum {
     BUILDING_LOW_BRIDGE = 82,
     BUILDING_SHIP_BRIDGE = 83,
     BUILDING_SENATE_1_UNUSED = 84, // listed as "Senate 1" in the model.txt
-    BUILDING_SENATE_UPGRADED = 85,
+    BUILDING_SENATE = 85,
     BUILDING_FORUM = 86,
     BUILDING_FORUM_2_UNUSED = 87, // listed as "Forum 2" in the model.txt
     BUILDING_NATIVE_HUT = 88,

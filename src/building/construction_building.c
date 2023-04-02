@@ -457,7 +457,7 @@ static void add_to_map(int type, building *b, int size,
             building_menu_update();
             building_construction_clear_type();
             break;
-        case BUILDING_SENATE_UPGRADED:
+        case BUILDING_SENATE:
             add_building(b, image_group(GROUP_BUILDING_SENATE));
             city_buildings_add_senate(b);
             break;
@@ -594,7 +594,7 @@ int building_construction_place_building(building_type type, int x, int y)
             return 0;
         }
     }
-    if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
+    if (type == BUILDING_SENATE && city_buildings_has_senate()) {
         city_warning_show(WARNING_ONE_BUILDING_OF_TYPE);
         return 0;
     }

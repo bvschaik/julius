@@ -522,7 +522,7 @@ void building_construction_update(int x, int y, int grid_offset)
             data.required_terrain.water || data.required_terrain.wall) {
         // never mark as constructing
     } else {
-        if (!(type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) &&
+        if (!(type == BUILDING_SENATE && city_buildings_has_senate()) &&
             !(type == BUILDING_BARRACKS && building_count_total(BUILDING_BARRACKS) > 0) &&
             !(type == BUILDING_DISTRIBUTION_CENTER_UNUSED && city_buildings_has_distribution_center())) {
             int size = building_properties_for_type(type)->size;

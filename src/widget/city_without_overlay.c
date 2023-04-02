@@ -242,7 +242,7 @@ static void draw_workshop_raw_material_storage(const building *b, int x, int y, 
 
 static void draw_senate_rating_flags(const building *b, int x, int y, color_t color_mask)
 {
-    if (b->type == BUILDING_SENATE_UPGRADED) {
+    if (b->type == BUILDING_SENATE) {
         // rating flags
         int image_id = image_group(GROUP_BUILDING_SENATE);
         image_draw_masked(image_id + 1, x + 138, y + 44 - city_rating_culture() / 2, color_mask);

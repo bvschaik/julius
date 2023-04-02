@@ -892,7 +892,7 @@ static void set_senate_graphic(building *b)
 
 static void spawn_figure_senate_forum(building *b)
 {
-    if (b->type == BUILDING_SENATE_UPGRADED) {
+    if (b->type == BUILDING_SENATE) {
         set_senate_graphic(b);
     }
     check_labor_problem(b);

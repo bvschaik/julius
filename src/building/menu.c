@@ -18,7 +18,7 @@ static const building_type MENU_BUILDING_TYPE[BUILD_MENU_MAX][BUILD_MENU_ITEM_MA
     {BUILDING_SCHOOL, BUILDING_ACADEMY, BUILDING_LIBRARY, BUILDING_MISSION_POST, 0},
     {BUILDING_THEATER, BUILDING_AMPHITHEATER, BUILDING_COLOSSEUM, BUILDING_HIPPODROME,
         BUILDING_GLADIATOR_SCHOOL, BUILDING_LION_HOUSE, BUILDING_ACTOR_COLONY, BUILDING_CHARIOT_MAKER, 0},
-    {BUILDING_FORUM, BUILDING_SENATE_UPGRADED,
+    {BUILDING_FORUM, BUILDING_SENATE,
         BUILDING_GOVERNORS_HOUSE, BUILDING_GOVERNORS_VILLA, BUILDING_GOVERNORS_PALACE,
         BUILDING_SMALL_STATUE, BUILDING_MEDIUM_STATUE, BUILDING_LARGE_STATUE, BUILDING_TRIUMPHAL_ARCH, 0},
     {BUILDING_GARDENS, BUILDING_PLAZA, BUILDING_ENGINEERS_POST, BUILDING_LOW_BRIDGE, BUILDING_SHIP_BRIDGE,
@@ -123,7 +123,7 @@ static void enable_normal(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_ACTOR_COLONY);
     enable_if_allowed(enabled, type, BUILDING_CHARIOT_MAKER);
     enable_if_allowed(enabled, type, BUILDING_FORUM);
-    enable_if_allowed(enabled, type, BUILDING_SENATE_UPGRADED);
+    enable_if_allowed(enabled, type, BUILDING_SENATE);
     enable_if_allowed(enabled, type, BUILDING_GOVERNORS_HOUSE);
     enable_if_allowed(enabled, type, BUILDING_GOVERNORS_VILLA);
     enable_if_allowed(enabled, type, BUILDING_GOVERNORS_PALACE);
@@ -179,7 +179,7 @@ static void enable_tutorial1_after_collapse(int *enabled, building_type type)
 {
     enable_tutorial1_after_fire(enabled, type);
     enable_if_allowed(enabled, type, BUILDING_ENGINEERS_POST);
-    enable_if_allowed(enabled, type, BUILDING_SENATE_UPGRADED);
+    enable_if_allowed(enabled, type, BUILDING_SENATE);
 }
 
 static void enable_tutorial2_start(int *enabled, building_type type)
@@ -190,7 +190,7 @@ static void enable_tutorial2_start(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_ROAD);
     enable_if_allowed(enabled, type, BUILDING_PREFECTURE);
     enable_if_allowed(enabled, type, BUILDING_ENGINEERS_POST);
-    enable_if_allowed(enabled, type, BUILDING_SENATE_UPGRADED);
+    enable_if_allowed(enabled, type, BUILDING_SENATE);
     enable_if_allowed(enabled, type, BUILDING_MARKET);
     enable_if_allowed(enabled, type, BUILDING_GRANARY);
     enable_if_allowed(enabled, type, BUILDING_MENU_FARMS);
