@@ -1187,7 +1187,7 @@ void building_figure_generate(void)
             patrician_generated = spawn_patrician(b, patrician_generated);
         } else if (b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_POTTERY_WORKSHOP) {
             spawn_figure_industry(b);
-        } else if (b->type >= BUILDING_SENATE && b->type <= BUILDING_FORUM_UPGRADED) {
+        } else if (b->type >= BUILDING_SENATE_1_UNUSED && b->type <= BUILDING_FORUM_2_UNUSED) {
             spawn_figure_senate_forum(b);
         } else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) {
             spawn_figure_temple(b);
