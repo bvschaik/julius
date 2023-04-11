@@ -98,6 +98,9 @@ static void update_buildings(void)
                     value += 2;
                     range = 1;
                 } else {
+                    if (range <= 1) {
+                        range = 1;
+                    }
                     value += 2;
                 }
             }
