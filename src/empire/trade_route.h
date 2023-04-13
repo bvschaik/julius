@@ -12,6 +12,8 @@ int trade_route_new(void);
 
 int trade_route_count(void);
 
+int trade_route_is_valid(int route_id);
+
 void trade_route_set(int route_id, resource_type resource, int limit);
 
 int trade_route_limit(int route_id, resource_type resource);

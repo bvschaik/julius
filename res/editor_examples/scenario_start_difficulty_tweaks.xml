@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE events>
+<!-- This example document can be used for adjusting various things (money, favor, Rome wages, trade prices) at the start of the scenario based on the difficulty the player is playing on. 
+    Keep in mind the money and favour changes happen over and above what the game will already adjust based on difficulty. 
+    But you can also put in other changes, like trade price changes, or how much certain trade routes demand / supply for each difficulty. -->
+<events version="1">
+    <!-- Very easy -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+            <difficulty check="eq" value="very_easy"/>
+        </conditions>
+        <actions>
+            <favor_add amount="10"/>
+            <money_add amount="2000"/>
+            <savings_add amount="500"/>
+            <change_rome_wages amount="-2" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- Easy -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+            <difficulty check="eq" value="easy"/>
+        </conditions>
+        <actions>
+            <favor_add amount="5"/>
+            <money_add amount="1000"/>
+            <savings_add amount="200"/>
+            <change_rome_wages amount="-1" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- Normal -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+            <difficulty check="eq" value="normal"/>
+        </conditions>
+        <actions>
+            <savings_add amount="100"/>
+        </actions>
+    </event>
+    <!-- Hard -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+            <difficulty check="eq" value="hard"/>
+        </conditions>
+        <actions>
+            <money_add amount="-1000"/>
+            <change_rome_wages amount="1" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- Very hard -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+            <difficulty check="eq" value="very_hard"/>
+        </conditions>
+        <actions>
+            <money_add amount="-2000"/>
+            <change_rome_wages amount="2" set_to_value="false"/>
+        </actions>
+    </event>
+</events>

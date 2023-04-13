@@ -35,6 +35,12 @@ int trade_route_count(void)
     return routes.size;
 }
 
+int trade_route_is_valid(int route_id)
+{
+    route_resource *route = array_item(routes, route_id);
+    return route != 0;
+}
+
 void trade_route_set(int route_id, resource_type resource, int limit)
 {
     route_resource *route = array_item(routes, route_id);

@@ -284,7 +284,7 @@ static int xml_start_city(void)
     city_obj->obj.image_id = image_group(GROUP_EMPIRE_CITY_TRADE);
     city_obj->trade_route_cost = 500;
 
-    static const char *city_types[6] = { "roman", "ours", "trade", 0, "distant", "vulnerable" };
+    static const char *city_types[6] = { "roman", "ours", "trade", "future_trade", "distant", "vulnerable" };
     static const char *trade_route_types[2] = { "land", "sea" };
 
     const char *name = xml_parser_get_attribute_string("name");
@@ -302,6 +302,7 @@ static int xml_start_city(void)
         case EMPIRE_CITY_OURS:
             city_obj->obj.image_id = image_group(GROUP_EMPIRE_CITY);
             break;
+        case EMPIRE_CITY_FUTURE_TRADE:
         case EMPIRE_CITY_DISTANT_ROMAN:
             city_obj->obj.image_id = image_group(GROUP_EMPIRE_CITY_DISTANT_ROMAN);
             break;

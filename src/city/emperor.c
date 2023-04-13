@@ -309,6 +309,14 @@ int city_emperor_personal_savings(void)
     return city_data.emperor.personal_savings;
 }
 
+void city_emperor_add_personal_savings(int amount)
+{
+    city_data.emperor.personal_savings += amount;
+    if (city_data.emperor.personal_savings < 0) {
+        city_data.emperor.personal_savings = 0;
+    }
+}
+
 int city_emperor_rank(void)
 {
     return city_data.emperor.player_rank;

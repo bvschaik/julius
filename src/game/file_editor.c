@@ -45,6 +45,7 @@
 #include "scenario/invasion.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
+#include "scenario/scenario_events_controller.h"
 #include "sound/city.h"
 #include "sound/music.h"
 
@@ -69,6 +70,7 @@ void game_file_editor_clear_data(void)
     traders_clear();
     game_time_init(2098);
     scenario_invasion_clear();
+    scenario_events_clear();
 }
 
 static void clear_map_data(void)

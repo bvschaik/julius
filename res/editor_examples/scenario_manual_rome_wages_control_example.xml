@@ -1,0 +1,156 @@
+<?xml version="1.0"?>
+<!DOCTYPE events>
+<!-- This example shows how you can manually control Rome's wage adjustments, giving more precise control of when
+    they happen, and even taking things like difficulty into account. -->
+<events version="1">
+    <!-- START OF very easy ==================================================================================
+            We start off with wages at 26,
+            and then increase it by 1 once every two years,
+            until we get to 30. -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/> <!-- "eq" = equals -->
+            <difficulty check="eq" value="very_easy"/>
+        </conditions>
+        <actions>
+            <change_rome_wages amount="26" set_to_value="true"/>
+        </actions>
+    </event>
+    <!-- We make this event that increases the Rome wages repeat,
+    that way we don't need to make a new event for every two years. -->
+    <event repeat_months_min="24" repeat_months_max="24">
+        <conditions>
+            <time check="gte" amount="24"/> <!-- "gte" = greater than or equal -->
+            <difficulty check="eq" value="very_easy"/>
+            <!-- We just need to remember to along with time (to only start after a year)
+                and difficulty (only for very easy), to also check that we don't go over 30 for wages.
+                So we only let this run if wages are still 29 or less (lte = less than or equal).-->
+            <rome_wages check="lte" value="29"/>
+        </conditions>
+        <actions>
+            <change_rome_wages amount="1" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- END OF very easy ================================================================================== -->
+
+    <!-- START OF easy ==================================================================================
+            We start off with wages at 28,
+            and then increase it by 1 roughly every 18 months,
+            until we get to 32. -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+            <difficulty check="eq" value="easy"/>
+        </conditions>
+        <actions>
+            <change_rome_wages amount="28" set_to_value="true"/>
+        </actions>
+    </event>
+    <event repeat_months_min="15" repeat_months_max="21">
+        <conditions>
+            <time check="gte" min="18" max="24"/>
+            <difficulty check="eq" value="easy"/>
+            <rome_wages check="lte" value="31"/>
+        </conditions>
+        <actions>
+            <change_rome_wages amount="1" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- END OF easy ================================================================================== -->
+
+    <!-- START OF normal ==================================================================================
+            We start off with wages at 30,
+            and then increase it by 1 or 2 roughly every 18 months,
+            we only allow 4 repeats, so we can end up anywhere between 34 and 38. -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+            <difficulty check="eq" value="normal"/>
+        </conditions>
+        <actions>
+            <change_rome_wages amount="30" set_to_value="true"/>
+        </actions>
+    </event>
+    <event repeat_months_min="15" repeat_months_max="21" max_number_of_repeats="4">
+        <conditions>
+            <time check="gte" min="18" max="24"/>
+            <difficulty check="eq" value="normal"/>
+        </conditions>
+        <actions>
+            <change_rome_wages min="1" max="2" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- END OF normal ================================================================================== -->
+
+    <!-- START OF hard ==================================================================================
+            We start off with wages at 32,
+            and then increase it by between 1 and 4 roughly every 12 months,
+            until we get to 42.
+            Since we can overshoot (since we use random increases), we
+            also add an event to set it to 42 when it overshoots that -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+            <difficulty check="eq" value="hard"/>
+        </conditions>
+        <actions>
+            <change_rome_wages amount="32" set_to_value="true"/>
+        </actions>
+    </event>
+    <event repeat_months_min="9" repeat_months_max="15">
+        <conditions>
+            <time check="gte" min="18" max="24"/>
+            <difficulty check="eq" value="hard"/>
+            <rome_wages check="lte" value="41"/>
+        </conditions>
+        <actions>
+            <change_rome_wages min="1" max="4" set_to_value="false"/>
+        </actions>
+    </event>
+    <event>
+        <conditions>
+            <difficulty check="eq" value="hard"/>
+            <rome_wages check="gte" value="43"/>
+        </conditions>
+        <actions>
+            <change_rome_wages amount="42" set_to_value="true"/>
+        </actions>
+    </event>
+    <!-- END OF hard ================================================================================== -->
+
+    <!-- START OF very_hard ==================================================================================
+            We start off with wages at 34,
+            and then increase it by between 2 and 5 roughly every 12 months,
+            until we get to 45.
+            Since we can overshoot, we also put in an event to slowly bring
+            it back down to 45 if it is overshot. -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+            <difficulty check="eq" value="very_hard"/>
+        </conditions>
+        <actions>
+            <change_rome_wages amount="32" set_to_value="true"/>
+        </actions>
+    </event>
+    <event repeat_months_min="9" repeat_months_max="15">
+        <conditions>
+            <time check="gte" min="18" max="24"/>
+            <difficulty check="eq" value="very_hard"/>
+            <rome_wages check="lte" value="44"/>
+        </conditions>
+        <actions>
+            <change_rome_wages min="2" max="5" set_to_value="false"/>
+        </actions>
+    </event>
+    <event repeat_months_min="3" repeat_months_max="6">
+        <conditions>
+            <difficulty check="eq" value="very_hard"/>
+            <rome_wages check="gte" value="46"/>
+        </conditions>
+        <actions>
+            <change_rome_wages amount="-1" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- END OF very_hard ================================================================================== -->
+</events>

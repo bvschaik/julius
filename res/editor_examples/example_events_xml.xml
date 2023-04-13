@@ -1,0 +1,274 @@
+<?xml version="1.0"?>
+<!DOCTYPE events>
+<events version="1">
+    <!-- This event is setup to repeat randomly every 1 to 4 months.
+         How many months it takes before repeating is randomly chosen between min and max each time it triggers. -->
+    <event repeat_months_min="1" repeat_months_max="4">
+        <!-- Even though the event can repeat 1 to 4 months, we also have a time check here.
+             This is checking that the months passed since the start of the game is equal or greater than a random number between 4 and 6.
+             Once the scenario starts, this number will be determined (say it picks 5), and it will then start checking if that number of months have passed.
+             Once met, this event can trigger and start repeating.
+             
+             So in total, this basically means: This event start after 4 to 6 months, and repeats every 1 to 4 months after that. -->
+        <conditions>
+            <time check="gte" min="4" max="6"/>
+        </conditions>
+        <actions>
+            <!-- Give the player 1000 money -->
+            <money_add amount="1000"/>
+            <!-- Give the player 1 favor -->
+            <favor_add amount="1"/>
+        </actions>
+    </event>
+    <!-- This event is not setup to repeat, so it will only ever execute its actions once. -->
+    <event>
+        <conditions>
+            <!-- For the 'time' condition, we can do diffirent types of checks.
+            Here we say that the months must exactly equal 0 (start of the game).
+            We do this by using amount instead of a min and max.
+            Using amount="0" is the same as saying min="0" and max="0" -->
+            <time check="eq" amount="0"/>
+            <!-- We also only want this to fire if the player is playing on very easy -->
+            <difficulty check="eq" value="very_easy"/>
+        </conditions>
+        <actions>
+            <!-- We give the player an extra 10 favor -->
+            <favor_add amount="10"/>
+            <!-- Here we give the player a random amount of money between 10000 and 15000. -->
+            <money_add min="10000" max="15000"/>
+        </actions>        
+    </event>
+    <event>
+		<!-- On hard and very hard, we want to take some money and favour from the player at 
+        the start of the scenario. -->
+        <conditions>
+            <time check="eq" amount="0"/>
+            <difficulty check="gte" value="hard"/>
+        </conditions>
+        <actions>
+            <favor_add amount="-7"/>
+            <money_add min="-2735" max="-2735"/>
+        </actions>
+    </event>
+    <event>
+		<!-- If after a month you still do not have personal savings, then assume the player has their salary on 0.
+        Secretly give them some personal savings to mess with them. -->
+        <conditions>
+            <time check="eq" amount="1"/>
+            <savings check="eq" value="0"/>
+        </conditions>
+        <actions>
+            <savings_add min="77" max="77"/>
+        </actions>
+    </event>
+    <!-- Every month, if the player's city has less than 2000 money in its coffers, give money but reduce favour. -->
+    <event repeat_months_min="1" repeat_months_max="1" max_number_of_repeats="2">
+        <conditions>
+            <money check="lte" value="0"/>
+        </conditions>
+        <actions>
+            <money_add amount="500"/>
+            <favor_add amount="-5"/>
+        </actions>
+    </event>
+    <!-- We want to wheat to start off expensive but slowly have its price return to normal to encourage the player to export wheat early on.
+    So we do one event that runs at the start of the map to 'silently' increase the price, and then ... -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+        </conditions>
+        <actions>
+            <trade_price_adjust resource="wheat" amount="40" show_message="false"/>
+        </actions>
+    </event>
+    <!-- ... this second event runs randomly every (4 to 7) months while the wheat price is above 28, decreasing it by 2 each time. -->
+    <event repeat_months_min="4" repeat_months_max="7">
+        <conditions>
+            <trade_sell_price resource="wheat" check="gte" value="28"/>
+        </conditions>
+        <actions>
+            <trade_price_adjust resource="wheat" amount="-2" show_message="true"/>
+        </actions>
+    </event>
+    <!-- While Caesar loves us, and the trade price of wine is below 270, slowly increase it silently (no message shown) -->
+    <event repeat_months_min="1" repeat_months_max="6">
+        <conditions>
+            <stats_favor check="gte" value="80"/>
+        </conditions>
+        <actions>
+            <trade_sell_price resource="wine" check="lte" value="270"/>
+            <trade_price_adjust resource="wine" amount="2" show_message="false"/>
+        </actions>
+    </event>
+    <!-- The first time we have more than 10% unemployed people, we get land and sea trade problems that last 2 months each -->
+    <event>
+        <conditions>
+            <population_unemployed percentage="true" check="gte" value="10"/>
+        </conditions>
+        <actions>
+            <trade_problems_land duration="32"/>
+            <trade_problems_sea duration="32"/>
+        </actions>
+    </event>
+    <!-- Once favour is greater or equal (gte) to 80, increase wheat demand for Heliopolis to 200.
+	 Notes for this to work:
+		Heliopolis must exist as a city on the empire map. (Custom empires are your friend.)
+		Heliopolis must be trade-able. This trigger cannot change a city type between trade-able or not. Just adjust amounts.
+		Heliopolis must buy wheat (if it sold it instead, then the amount would change how much it sells, not change it to buying.)
+		In short, this works the same as demand changes that the editor can do,
+			you can just now have as many as you want, and have conditions on them
+	 -->
+    <event>
+        <conditions>
+            <stats_favor check="gte" value="80"/>
+        </conditions>
+        <actions>
+            <trade_route_amount target_city="Heliopolis" resource="wheat" amount="200" show_message="true"/>
+        </actions>
+    </event>
+    <!-- For the first two years Rome lowers wages consistently until it gets as low as 15. -->
+    <event repeat_months_min="1" repeat_months_max="1">
+        <conditions>
+            <time check="lte" amount="24"/>
+            <rome_wages check="gte" value="15"/>
+        </conditions>
+        <actions>
+            <change_rome_wages min="-1" max="-1" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- After two years, Rome's wages rises until it hits about 37. -->
+    <event repeat_months_min="1" repeat_months_max="5">
+        <conditions>
+            <time check="gte" amount="24"/>
+            <rome_wages check="lte" value="37"/>
+        </conditions>
+        <actions>
+            <change_rome_wages min="1" max="5" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- Once we have more than 1000 patricians, then we get start receiving some personal gifts. Totally legit. -->
+    <event repeat_months_min="7" repeat_months_max="12">
+        <conditions>
+            <city_population check="gte" value="1000" class="patrician"/>
+        </conditions>
+        <actions>
+            <savings_add min="250" max="350"/>
+        </actions>
+    </event>
+    <!-- Start a gladiator revolt after 36 months. -->
+    <event>
+        <conditions>
+            <time check="eq" amount="36"/>
+        </conditions>
+        <actions>
+            <gladiator_revolt/>
+        </actions>
+    </event>
+    <!-- At start of map, enable gold resource -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+        </conditions>
+        <actions>
+            <change_resource_produced resource="gold" produced="true"/>
+        </actions>
+    </event>
+    <!-- Disable plaza at the start of the game. Only enable it once the player has at least 4 working small temples -->
+    <event>
+        <conditions>
+            <time check="eq" amount="0"/>
+        </conditions>
+        <actions>
+            <change_allowed_buildings building="plaza" allowed="false"/>
+        </actions>
+    </event>
+    <event>
+        <conditions>
+            <building_count_active check="gte" value="4" building="all_small_temples"/>
+        </conditions>
+        <actions>
+            <change_allowed_buildings building="plaza" allowed="true"/>
+        </actions>
+    </event>
+    <!-- If at least 4 months have passed, and you have no active small temples, then you get a 'gods are angry' message -->
+    <event>
+        <conditions>
+            <time check="gte" amount="4"/>
+            <building_count_active check="lte" value="0" building="all_small_temples"/>
+        </conditions>
+        <actions>
+            <send_standard_message text_id="gods_wrathful"/>
+        </actions>
+    </event>
+    <!-- After 12 to 16 months, start a plague -->
+    <event>
+        <conditions>
+            <time check="gte" min="12" max="16"/>
+        </conditions>
+        <actions>
+            <city_health min="0" max="2" set_to_value="true"/>
+        </actions>
+    </event>
+    <!-- The first time health drops below 10, send a message about pestilence -->
+    <event>
+        <conditions>
+            <stats_health check="lte" value="10"/>
+        </conditions>
+        <actions>
+            <send_standard_message text_id="health_pestilence"/>
+        </actions>
+    </event>
+    <!-- Somewhere after 3 to 7 months, set the sell price of pottery to 177. Normally sells for 140. Buy price will be automatically adjusted accordingly. -->
+    <event>
+        <conditions>
+            <time check="eq" min="3" max="7"/>
+        </conditions>
+        <actions>
+            <trade_price_set resource="pottery" amount="177" set_buy_price="false" show_message="true"/>
+        </actions>
+    </event>
+    <!-- Once the player has at least 10 soldiers, increase the price of weapons by 12 -->
+    <event>
+        <conditions>
+            <count_own_troops check="gte" value="10" in_city_only="true"/>
+        </conditions>
+        <actions>
+            <trade_price_adjust resource="weapons" amount="12" show_message="true"/>
+        </actions>
+    </event>
+    <!-- After 8 months a new trade route becomes available. -->
+    <event>
+        <conditions>
+            <time check="eq" amount="8"/>
+        </conditions>
+        <actions>
+            <empire_map_convert_future_trade_city target_city="Ephesus" show_message="true"/>
+        </actions>
+    </event>
+    <!-- After 2 months, force start the first request (which we will use as a repeating request).
+        And about every 9 months, try and start the request again (will do nothing if already active.) -->
+    <event repeat_months_min="7" repeat_months_max="11">
+        <conditions>
+            <time check="gte" amount="2"/>
+        </conditions>
+        <actions>
+            <request_immediately_start request_id="0"/>
+        </actions>
+    </event>
+    <!-- For the second request, we want it to repeat immediately once it is completed,
+        but only do so 4 times in total. So we run this event every month, and limit it to 4,
+        but also only let it action if the request is not ongoing (otherwise it would count even the times
+        it cannot properly start the request.) 
+        
+        Note: For an request like this that repeat quickly, you probably want the request itself to have
+        a long leeway in its deadline, so that the player can leave it be for a bit and not get constant
+        request spam. -->
+    <event repeat_months_min="1" repeat_months_max="1" max_number_of_repeats="4">
+        <conditions>
+            <request_is_ongoing request_id="1" check_for_ongoing="false"/>
+        </conditions>
+        <actions>
+            <request_immediately_start request_id="1"/>
+        </actions>
+    </event>
+</events>

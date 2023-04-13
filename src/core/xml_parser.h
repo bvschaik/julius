@@ -101,6 +101,20 @@ int xml_parser_get_attribute_bool(const char *key);
 int xml_parser_get_attribute_enum(const char *key, const char **values, int total_values, int start_offset);
 
 /**
+ * @brief Gets the current line number the parser is on.
+ * 
+ * @return int The current line number.
+ */
+int xml_parser_get_current_line_number(void);
+
+/**
+ * @brief Returns the name of the current xml element that the parser is busy with.
+ * 
+ * @return Name of the current element.
+ */
+const char *xml_parser_get_current_element_name(void);
+
+/**
  * @brief Resets the parser, allowing it to be used with another file that has the same element structure.
  */
 void xml_parser_reset(void);

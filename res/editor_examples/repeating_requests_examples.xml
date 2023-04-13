@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<!DOCTYPE events>
+<!-- This example document shows how you might use events to create a map where you have to use repeating requests to obtain Caesar's favour.
+    What this aims to do is make Caesar lose favour more quickly when favour is high, but then the player repeating requests that can be rapidly
+    fulfilled to build up favour.
+    Though the player first have to build up a city that can produce enough to fulfill those requests that rapidly.
+
+    For the purpose of this example, we will assume we have 5 requests setup.
+    The first request, set to start at +2 years:
+        16 wheat, 1 year deadline, 6 months extension, +2 favour on fulfilled, -1 favour on extension, -10 favour on ignored.
+    The second request, set to start at +10 years:
+        32 wheat, 3 year deadline, 12 months extension, +2 favour on fulfilled, -1 favour on extension, -20 favour on ignored.
+    The third request, set to start at +12 years:
+        8 wine, 3 year deadline, 12 months extension, +2 favour on fulfilled, -1 favour on extension, -5 favour on ignored.
+    The fourth request, set to start at +12 years:
+        16 oil, 4 year deadline, 12 months extension, +4 favour on fulfilled, -2 favour on extension, -10 favour on ignored.
+    The fifth request, set to start at +12 years:
+        16 weapons, 4 year deadline, 12 months extension, +8 favour on fulfilled, -2 favour on extension, -10 favour on ignored.
+    
+    What we want, is for the first request to repeat once every 2 years, but only until 10 years in.
+    After that we want the new request to be the one that repeats, and since it will be the main way to get favour with Caesar, repeat as often as possible.
+    That way, if the player wants to get high favour, they will have to ship loads of wheat, as you only get 1 favour per request.
+    However, since it has a long deadline, the player can ignore it for a while if they don't want to worry about favour at that moment. -->
+<events version="1">
+    <!-- First request (id = 0) -->
+    <event repeat_months_min="12" repeat_months_max="12"> <!-- At most once per year -->
+        <conditions>
+            <time check="gte" amount="24"/> <!-- 2 years -->
+            <time check="lte" amount="120"/> <!-- 10 years -->
+            <request_is_ongoing request_id="0" check_for_ongoing="false"/> <!-- Only start this if it isn't currently ongoing -->
+        </conditions>
+        <actions>
+            <request_immediately_start request_id="0"/>
+        </actions>
+    </event>
+    <!-- Second request (id = 1) -->
+    <event repeat_months_min="1" repeat_months_max="1">  <!-- Immediately repeated upon completion / ignored -->
+        <conditions>
+            <time check="gte" amount="120"/> <!-- 10 years -->
+            <request_is_ongoing request_id="1" check_for_ongoing="false"/>
+        </conditions>
+        <actions>
+            <request_immediately_start request_id="1"/>
+        </actions>
+    </event>
+    <!-- Third request (id = 2) -->
+    <event repeat_months_min="1" repeat_months_max="1">  <!-- Immediately repeated upon completion / ignored -->
+        <conditions>
+        </conditions>
+        <actions>
+        </actions>
+        <time check="gte" amount="144"/> <!-- 12 years -->
+        <request_is_ongoing request_id="2" check_for_ongoing="false"/>
+        <request_immediately_start request_id="2"/>
+    </event>
+    <!-- Fourth request (id = 3) -->
+    <event repeat_months_min="8" repeat_months_max="12">  <!-- Random, roughly 10 months -->
+        <conditions>
+            <time check="gte" amount="144"/>
+            <request_is_ongoing request_id="3" check_for_ongoing="false"/>
+        </conditions>
+        <actions>
+            <request_immediately_start request_id="3"/>
+        </actions>
+    </event>
+    <!-- Fifth request (id = 4) -->
+    <event repeat_months_min="8" repeat_months_max="12">  <!-- Random, roughly 10 months -->
+        <conditions>
+            <time check="gte" amount="144"/>
+            <request_is_ongoing request_id="4" check_for_ongoing="false"/>
+        </conditions>
+        <actions>
+            <request_immediately_start request_id="4"/>
+        </actions>
+    </event>
+    <!-- Make it harder to keep Caesar's favour high (basically we counter gifts, of which a lavish gift can grant 10 favour per year without penalty).
+        This way the player has to make use of the repeatng requests to get to the target of 95 favour.
+        If fact, since the player will lose 1 favour per month, they will have to be constantly fulfilling multiple repeating requests to
+        get to the target favor -->
+    <event repeat_months_min="1" repeat_months_max="1"> <!-- Every month... -->
+        <conditions>
+            <stats_favor check="gte" value="40"/> <!-- when Caesar's favour is above 40, then... -->
+        </conditions>
+        <actions>
+            <favor_add amount="-1"/> <!-- drop Caesar's favor by 1. -->
+        </actions>
+    </event>
+</events>

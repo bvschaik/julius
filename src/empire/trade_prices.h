@@ -15,11 +15,23 @@
 void trade_prices_reset(void);
 
 /**
+ * Get the base buy price for the resource, without any discounts or penalties applied
+ * @param resource Resource
+ */
+int trade_price_base_buy(resource_type resource);
+
+/**
  * Get the buy price for the resource
  * @param resource Resource
  * @param int land_trader 1 if land_trader 0 else sea_trader
  */
 int trade_price_buy(resource_type resource, int land_trader);
+
+/**
+ * Get the base sell price for the resource, without any discounts or penalties applied
+ * @param resource Resource
+ */
+int trade_price_base_sell(resource_type resource);
 
 /**
  * Get the sell price for the resource

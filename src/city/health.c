@@ -31,6 +31,11 @@ void city_health_change(int amount)
     city_data.health.value = calc_bound(city_data.health.value + amount, 0, 100);
 }
 
+void city_health_set(int new_value)
+{
+    city_data.health.value = calc_bound(new_value, 0, 100);
+}
+
 static int is_plague_building(building_type type)
 {
     for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {

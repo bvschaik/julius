@@ -103,9 +103,19 @@ void trade_prices_reset(void)
     }
 }
 
+int trade_price_base_buy(resource_type resource)
+{
+    return prices[resource].buy;
+}
+
 int trade_price_buy(resource_type resource, int land_trader)
 {
     return calc_adjust_with_percentage(prices[resource].buy, 100 + trade_factor_buy(land_trader));
+}
+
+int trade_price_base_sell(resource_type resource)
+{
+    return prices[resource].sell;
 }
 
 int trade_price_sell(resource_type resource, int land_trader)

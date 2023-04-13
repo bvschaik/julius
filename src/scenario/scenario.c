@@ -361,7 +361,7 @@ void scenario_load_state(buffer *buf, buffer *buf_requests, int version)
 {
     state_offsets_init(version);
     if (version > SCENARIO_LAST_NO_EXTENDED_REQUESTS) {
-        int state_size = buffer_read_i32(buf);
+        buffer_read_i32(buf);
     }
 
     scenario.start_year = buffer_read_i16(buf);

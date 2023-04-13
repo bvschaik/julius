@@ -355,7 +355,7 @@ static void set_hotkey(hotkey_action action, int index, key_type key, key_modifi
                     if (!(test_action == action && test_index == index)) {
                         window_plain_message_dialog_show_with_extra(
                             TR_HOTKEY_DUPLICATE_TITLE, TR_HOTKEY_DUPLICATE_MESSAGE,
-                            hotkey_action_name_for(test_action));
+                            hotkey_action_name_for(test_action), 0);
                     }
                     break;
                 }

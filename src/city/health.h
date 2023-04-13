@@ -17,6 +17,8 @@ int city_health(void);
 
 void city_health_change(int amount);
 
+void city_health_set(int new_value);
+
 void city_health_update(void);
 
 void city_health_update_sickness_level_in_building(int building_id);

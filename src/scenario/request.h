@@ -47,6 +47,10 @@ int scenario_request_foreach_visible(int start_index, void (*callback)(int index
 
 const scenario_request *scenario_request_get_visible(int index);
 
+int scenario_request_is_ongoing(int id);
+
+int scenario_request_force_start(int id);
+
 void scenario_request_save_state(buffer *list);
 void scenario_request_load_state(buffer *list);
 

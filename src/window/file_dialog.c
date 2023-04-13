@@ -26,10 +26,12 @@
 #include "input/input.h"
 #include "platform/file_manager.h"
 #include "scenario/editor.h"
+#include "scenario/scenario_events_xml.h"
 #include "translation/translation.h"
 #include "widget/input_box.h"
 #include "window/city.h"
 #include "window/editor/map.h"
+#include "window/editor/scenario_events.h"
 #include "widget/minimap.h"
 #include "window/plain_message_dialog.h"
 
@@ -110,6 +112,7 @@ static file_type_data saved_game_data_expanded = { "svx" };
 static file_type_data scenario_data = { "map" };
 static file_type_data scenario_data_expanded = { "mapx" };
 static file_type_data empire_data = { "xml" };
+static file_type_data scenario_event_data = { "xml" };
 
 static int find_first_file_with_prefix(const char *prefix)
 {
@@ -155,6 +158,8 @@ static void init(file_type type, file_dialog_type dialog_type)
         data.file_data = &scenario_data;
     } else if (type == FILE_TYPE_EMPIRE) {
         data.file_data = &empire_data;
+    } else if (type == FILE_TYPE_SCENARIO_EVENTS) {
+        data.file_data = &scenario_event_data;
     } else {
         data.file_data = &saved_game_data;
     }
@@ -176,6 +181,8 @@ static void init(file_type type, file_dialog_type dialog_type)
             file_append_extension((char *) data.typed_name, saved_game_data_expanded.extension);
         } else if (type == FILE_TYPE_SCENARIO) {
             file_append_extension((char *)data.typed_name, scenario_data_expanded.extension);
+        } else if (type == FILE_TYPE_SCENARIO_EVENTS) {
+            file_append_extension((char *)data.typed_name, scenario_event_data.extension);
         }
         encoding_to_utf8(data.typed_name, data.file_data->last_loaded_file, FILE_NAME_MAX, 0);
     } else {
@@ -190,6 +197,8 @@ static void init(file_type type, file_dialog_type dialog_type)
             data.file_list = dir_append_files_with_extension(scenario_data_expanded.extension);
         } else if (type == FILE_TYPE_EMPIRE) {
             data.file_list = dir_find_files_with_extension("custom_empires", empire_data.extension);
+        } else if (type == FILE_TYPE_SCENARIO_EVENTS) {
+            data.file_list = dir_find_files_with_extension("editor/events", scenario_event_data.extension);
         } else {
             data.file_list = dir_find_files_with_extension(".", data.file_data->extension);
             data.file_list = dir_append_files_with_extension(saved_game_data_expanded.extension);
@@ -197,6 +206,8 @@ static void init(file_type type, file_dialog_type dialog_type)
     } else {
         if (type == FILE_TYPE_SCENARIO) {
             data.file_list = dir_find_files_with_extension(".", scenario_data_expanded.extension);
+        } else if (type == FILE_TYPE_SCENARIO_EVENTS) {
+            data.file_list = dir_find_files_with_extension("editor/events", scenario_event_data.extension);
         } else {
             data.file_list = dir_find_files_with_extension(".", saved_game_data_expanded.extension);
         }
@@ -265,6 +276,12 @@ static void draw_foreground(void)
             lang_text_draw_centered(43, 6, 32, 10, 554, FONT_LARGE_BLACK);
         } else if (data.type == FILE_TYPE_EMPIRE) {
             lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_CUSTOM_EMPIRE_TITLE, 32, 10, 554, FONT_LARGE_BLACK);
+        } else if (data.type == FILE_TYPE_SCENARIO_EVENTS) {
+            int message_id = TR_EDITOR_SCENARIO_EVENTS_IMPORT_FULL;
+            if (data.dialog_type == FILE_DIALOG_SAVE) {
+                message_id = TR_EDITOR_SCENARIO_EVENTS_EXPORT_FULL;
+            }
+            lang_text_draw_centered(CUSTOM_TRANSLATION, message_id, 32, 10, 554, FONT_LARGE_BLACK);
         } else {
             int text_id = data.dialog_type + (data.type == FILE_TYPE_SCENARIO ? 3 : 0);
             lang_text_draw_centered(43, text_id, 32, 10, 554, FONT_LARGE_BLACK);
@@ -282,7 +299,7 @@ static void draw_foreground(void)
         }
 
         // Saved game info
-        if (*data.selected_file && data.type != FILE_TYPE_EMPIRE) {
+        if (*data.selected_file && data.type != FILE_TYPE_EMPIRE && data.type != FILE_TYPE_SCENARIO_EVENTS) {
             if (data.savegame_info_status == SAVEGAME_STATUS_OK) {
                 if (data.type == FILE_TYPE_SAVED_GAME) {
                     draw_mission_info(362, 356, 246);
@@ -400,6 +417,8 @@ static void button_ok_cancel(int is_ok, int param2)
     memset(filename, 0, sizeof(filename));
     if (data.type == FILE_TYPE_EMPIRE) {
         strncpy(filename, "custom_empires/", FILE_NAME_MAX - 1);
+    } else if (data.type == FILE_TYPE_SCENARIO_EVENTS) {
+        strncpy(filename, "editor/events/", FILE_NAME_MAX - 1);
     }
     strncat(filename, chosen_filename, sizeof(filename) - strlen(filename) - 1);
 
@@ -436,6 +455,14 @@ static void button_ok_cancel(int is_ok, int param2)
                 window_editor_empire_show();
             } else {
                 window_plain_message_dialog_show(TR_EDITOR_UNABLE_TO_LOAD_EMPIRE_TITLE, TR_EDITOR_UNABLE_TO_LOAD_EMPIRE_MESSAGE, 1);
+                return;
+            }
+        } else if (data.type == FILE_TYPE_SCENARIO_EVENTS) {
+            int result = scenario_events_xml_parse_file(filename);
+            if (result) {
+                window_editor_scenario_events_show();
+            } else {
+                window_plain_message_dialog_show(TR_EDITOR_UNABLE_TO_LOAD_EVENTS_TITLE, TR_EDITOR_CHECK_LOG_MESSAGE, 1);
                 return;
             }
         }

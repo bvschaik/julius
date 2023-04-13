@@ -100,3 +100,13 @@ int random_from_stdlib(void) {
     srand((unsigned)time(&t));
     return rand();
 }
+
+int random_between_from_stdlib(int min, int max)
+{
+    int diff = max - min;
+    int rnd = 0;
+    if (diff > 0) {
+        rnd = random_from_stdlib() % diff;
+    }
+    return min + rnd;
+}

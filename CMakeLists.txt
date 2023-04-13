@@ -504,6 +504,15 @@ set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/random_event.c
     ${PROJECT_SOURCE_DIR}/src/scenario/request.c
     ${PROJECT_SOURCE_DIR}/src/scenario/scenario.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/scenario_events_xml.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/scenario_event.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/scenario_events_controller.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/scenario_events_parameter_data.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/action_types/action_handler.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/action_types/action_types.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/condition_types/comparison_helper.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/condition_types/condition_handler.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/condition_types/condition_types.c
 )
 set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/arrow_button.c
@@ -604,6 +613,10 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/editor/map.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/price_changes.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/requests.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/scenario_events.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/scenario_event_details.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/scenario_action_edit.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/scenario_condition_edit.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/special_events.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/start_year.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/starting_conditions.c

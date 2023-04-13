@@ -30,6 +30,8 @@ empire_city *empire_city_get_new(void);
 
 int empire_city_get_route_id(int city_id);
 
+int empire_city_get_id_by_name(const uint8_t *city_name);
+
 int empire_can_import_resource(int resource);
 
 int empire_can_import_resource_potentially(int resource);
@@ -73,6 +75,8 @@ void empire_city_generate_trader(void);
 void empire_city_remove_trader(int city_id, int figure_id);
 
 int empire_unlock_all_resources(void);
+
+int empire_city_change_own_resource_availability(resource_type resource, int is_available);
 
 const uint8_t *empire_city_get_name(const empire_city *city);
 

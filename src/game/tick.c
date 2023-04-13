@@ -58,6 +58,7 @@
 #include "scenario/price_change.h"
 #include "scenario/random_event.h"
 #include "scenario/request.h"
+#include "scenario/scenario_events_controller.h"
 #include "sound/music.h"
 #include "widget/minimap.h"
 
@@ -113,6 +114,8 @@ static void advance_month(void)
     city_games_decrement_month_counts();
     city_gods_update_blessings();
     tutorial_on_month_tick();
+    scenario_events_progress_paused(1);
+    scenario_events_process_all();
     if (setting_monthly_autosave()) {
         game_file_write_saved_game("autosave.svx");
     }

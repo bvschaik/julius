@@ -14,6 +14,21 @@
 #include "game/tutorial.h"
 #include "scenario/data.h"
 
+static void make_request_visible_and_send_message(int id)
+{
+    scenario.requests[id].visible = 1;
+    if (city_resource_count(scenario.requests[id].resource) >= scenario.requests[id].amount) {
+        scenario.requests[id].can_comply_dialog_shown = 1;
+    }
+    if (scenario.requests[id].resource == RESOURCE_DENARII) {
+        city_message_post(1, MESSAGE_CAESAR_REQUESTS_MONEY, id, 0);
+    } else if (scenario.requests[id].resource == RESOURCE_TROOPS) {
+        city_message_post(1, MESSAGE_CAESAR_REQUESTS_ARMY, id, 0);
+    } else {
+        city_message_post(1, MESSAGE_CAESAR_REQUESTS_GOODS, id, 0);
+    }
+}
+
 void scenario_request_init(void)
 {
     for (int i = 0; i < MAX_REQUESTS; i++) {
@@ -86,17 +101,7 @@ void scenario_request_process(void)
                 }
                 if (game_time_year() == year + scenario.requests[i].year &&
                     game_time_month() == scenario.requests[i].month) {
-                    scenario.requests[i].visible = 1;
-                    if (city_resource_count(scenario.requests[i].resource) >= scenario.requests[i].amount) {
-                        scenario.requests[i].can_comply_dialog_shown = 1;
-                    }
-                    if (scenario.requests[i].resource == RESOURCE_DENARII) {
-                        city_message_post(1, MESSAGE_CAESAR_REQUESTS_MONEY, i, 0);
-                    } else if (scenario.requests[i].resource == RESOURCE_TROOPS) {
-                        city_message_post(1, MESSAGE_CAESAR_REQUESTS_ARMY, i, 0);
-                    } else {
-                        city_message_post(1, MESSAGE_CAESAR_REQUESTS_GOODS, i, 0);
-                    }
+                    make_request_visible_and_send_message(i);
                 }
             }
         }
@@ -172,6 +177,58 @@ const scenario_request *scenario_request_get_visible(int index)
         }
     }
     return 0;
+}
+
+int scenario_request_is_ongoing(int id)
+{
+    if (id < 0 || id >= MAX_REQUESTS) {
+        return 0;
+    }
+
+    if (!scenario.requests[id].resource) {
+        return 0;
+    }
+    
+    if (scenario.requests[id].visible
+        && (scenario.requests[id].state == REQUEST_STATE_NORMAL
+            || scenario.requests[id].state == REQUEST_STATE_OVERDUE)
+        ) {
+        return 1;
+    }
+
+    if (!scenario.requests[id].visible
+        && (scenario.requests[id].state == REQUEST_STATE_DISPATCHED
+            || scenario.requests[id].state == REQUEST_STATE_DISPATCHED_LATE)
+        ) {
+        return 1;
+    }
+
+    return 0;
+}
+
+int scenario_request_force_start(int id)
+{
+    if (id < 0 || id >= MAX_REQUESTS) {
+        return 0;
+    }
+    
+    if (!scenario.requests[id].resource) {
+        return 0;
+    }
+
+    if (scenario_request_is_ongoing(id)) {
+        return 0;
+    }
+
+    scenario.requests[id].state = REQUEST_STATE_NORMAL;
+    scenario.requests[id].months_to_comply = 12 * scenario.requests[id].deadline_years;
+    scenario.requests[id].year = game_time_year();
+    scenario.requests[id].month = game_time_month();
+    scenario.requests[id].can_comply_dialog_shown = 0;
+    
+    make_request_visible_and_send_message(id);
+
+    return 1;
 }
 
 static void request_save(buffer *list, int index)
