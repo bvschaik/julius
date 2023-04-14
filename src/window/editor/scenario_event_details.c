@@ -277,7 +277,8 @@ static void set_amount_repeat_max(int value)
 
 static void button_click(int param1, int param2)
 {
-    if (param1 > MAX_VISIBLE_ROWS) {
+    if (param1 > MAX_VISIBLE_ROWS ||
+        param1 >= data.total_sub_items) {
         return;
     }
 

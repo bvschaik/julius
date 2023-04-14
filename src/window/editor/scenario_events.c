@@ -141,7 +141,11 @@ static void draw_foreground(void)
 
 static void button_event(int button_index, int param2)
 {
-    window_editor_scenario_event_details_show(data.list[button_index - 1]->id);
+    int target_index = button_index - 1;
+    if (!data.list[target_index]) {
+        return;
+    }
+    window_editor_scenario_event_details_show(data.list[target_index]->id);
 }
 
 static void on_scroll(void)

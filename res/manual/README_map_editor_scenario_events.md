@@ -32,7 +32,7 @@ To import:
 + At the bottom there are two buttons, one for import and one for export.
 + Click the import button.
 + A file selection window will open.
-+ It will list all the files that are in your './events' folder. (A folder inside your Caesar 3 folder.)
++ It will list all the files that are in your './editor/events' folder. (A folder called 'editor' inside your Caesar 3 folder, and a folder called 'events' inside that.)
 + Select the file you want to import.
 + Now click proceed. (The tick box.)
 + The scenario events should update to reflect the events you just imported.
