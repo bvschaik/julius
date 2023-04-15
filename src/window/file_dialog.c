@@ -26,7 +26,8 @@
 #include "input/input.h"
 #include "platform/file_manager.h"
 #include "scenario/editor.h"
-#include "scenario/scenario_events_xml.h"
+#include "scenario/scenario_events_export_xml.h"
+#include "scenario/scenario_events_import_xml.h"
 #include "translation/translation.h"
 #include "widget/input_box.h"
 #include "window/city.h"
@@ -484,6 +485,12 @@ static void button_ok_cancel(int is_ok, int param2)
             }
             game_file_editor_write_scenario(filename);
             window_editor_map_show();
+        } else if (data.type == FILE_TYPE_SCENARIO_EVENTS) {
+            if (!file_has_extension(filename, scenario_event_data.extension)) {
+                file_append_extension(filename, scenario_event_data.extension);
+            }
+            scenario_events_export_to_xml(filename);
+            window_editor_scenario_events_show();
         }
         strncpy(chosen_filename, filename, FILE_NAME_MAX);
     } else if (data.dialog_type == FILE_DIALOG_DELETE) {

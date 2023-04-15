@@ -46,6 +46,7 @@ static generic_button buttons[] = {
     {48, EVENTS_Y_OFFSET + (6 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_event, button_none, 7, 0},
     {48, EVENTS_Y_OFFSET + (7 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_event, button_none, 8, 0},
     {48, EVENTS_Y_OFFSET + (9 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_click, button_none, 9, 0},
+    {48, EVENTS_Y_OFFSET + (10 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_click, button_none, 10, 0},
     {48, EVENTS_Y_OFFSET + (11 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_click, button_none, 11, 0}
 };
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
@@ -125,6 +126,10 @@ static void draw_foreground(void)
     }
 
     y_offset += EVENTS_ROW_HEIGHT;
+    lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_EXPORT, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
+    if (data.focus_button_id == 10) {
+        button_border_draw(48, y_offset, BUTTON_WIDTH, EVENTS_ROW_HEIGHT, 1);
+    }
 
     y_offset += EVENTS_ROW_HEIGHT;
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_CLEAR, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
@@ -170,6 +175,8 @@ static void button_click(int type, int param2)
 {
     if (type == 9) {
         window_file_dialog_show(FILE_TYPE_SCENARIO_EVENTS, FILE_DIALOG_LOAD);
+    } else if (type == 10) {
+        window_file_dialog_show(FILE_TYPE_SCENARIO_EVENTS, FILE_DIALOG_SAVE);
     } else if (type == 11) {
         scenario_events_clear();
         data.total_events = scenario_events_get_count();

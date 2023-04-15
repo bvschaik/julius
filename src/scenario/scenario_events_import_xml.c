@@ -1,4 +1,4 @@
-#include "scenario_events_xml.h"
+#include "scenario_events_import_xml.h"
 
 #include "assets/assets.h"
 #include "core/array.h"
