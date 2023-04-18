@@ -31,6 +31,7 @@ static void on_scroll(void);
 static void button_click(int type, int param2);
 static void button_event(int button_index, int param2);
 static void populate_list(int offset);
+static void add_new_event(void);
 
 static scrollbar_type scrollbar = {
     368, EVENTS_Y_OFFSET, EVENTS_ROW_HEIGHT * MAX_VISIBLE_ROWS, BUTTON_WIDTH - 16, MAX_VISIBLE_ROWS, on_scroll, 0, 4
@@ -46,8 +47,9 @@ static generic_button buttons[] = {
     {48, EVENTS_Y_OFFSET + (6 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_event, button_none, 7, 0},
     {48, EVENTS_Y_OFFSET + (7 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_event, button_none, 8, 0},
     {48, EVENTS_Y_OFFSET + (9 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_click, button_none, 9, 0},
-    {48, EVENTS_Y_OFFSET + (10 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_click, button_none, 10, 0},
-    {48, EVENTS_Y_OFFSET + (11 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_click, button_none, 11, 0}
+    {48, EVENTS_Y_OFFSET + (11 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_click, button_none, 10, 0},
+    {48, EVENTS_Y_OFFSET + (12 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_click, button_none, 11, 0},
+    {48, EVENTS_Y_OFFSET + (13 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT - 2, button_click, button_none, 12, 0}
 };
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
 
@@ -84,6 +86,13 @@ static void populate_list(int offset)
     }
 }
 
+static void add_new_event(void)
+{
+    scenario_event_create(0, 0, 0);
+    init();
+    window_request_refresh();
+}
+
 static void draw_background(void)
 {
     window_editor_map_draw_all();
@@ -93,7 +102,7 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    outer_panel_draw(16, 16, 26, 36);
+    outer_panel_draw(16, 16, 26, 38);
 
     text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENTS_TITLE), 48, 58, BUTTON_WIDTH, FONT_LARGE_BLACK, 0);
     text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_COUNT), data.total_events, "", 48, 106, FONT_NORMAL_PLAIN, COLOR_BLACK);
@@ -103,12 +112,16 @@ static void draw_foreground(void)
         if (data.list[i]) {
             large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i ? 1 : 0);
 
-            text_draw_label_and_number(0, data.list[i]->id, "", 48, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
-            text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_CONDITIONS), data.list[i]->conditions.size, "", 100, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
-            text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_ACTIONS), data.list[i]->actions.size, "", 250, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
+            if (data.list[i]->state != EVENT_STATE_UNDEFINED) {
+                text_draw_label_and_number(0, data.list[i]->id, "", 48, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
+                text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_CONDITIONS), data.list[i]->conditions.size, "", 100, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
+                text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_ACTIONS), data.list[i]->actions.size, "", 250, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
 
-            if (data.focus_button_id == (i + 1)) {
-                button_border_draw(48, y_offset, BUTTON_WIDTH, EVENTS_ROW_HEIGHT, 1);
+                if (data.focus_button_id == (i + 1)) {
+                    button_border_draw(48, y_offset, BUTTON_WIDTH, EVENTS_ROW_HEIGHT, 1);
+                }
+            } else {
+                text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_DELETED), 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_PLAIN, 0);
             }
         }
 
@@ -120,20 +133,26 @@ static void draw_foreground(void)
     }
 
     y_offset += EVENTS_ROW_HEIGHT;
-    lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_IMPORT, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_ADD, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
     if (data.focus_button_id == 9) {
         button_border_draw(48, y_offset, BUTTON_WIDTH, EVENTS_ROW_HEIGHT, 1);
     }
 
-    y_offset += EVENTS_ROW_HEIGHT;
-    lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_EXPORT, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
+    y_offset += (EVENTS_ROW_HEIGHT * 2);
+    lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_IMPORT, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
     if (data.focus_button_id == 10) {
         button_border_draw(48, y_offset, BUTTON_WIDTH, EVENTS_ROW_HEIGHT, 1);
     }
 
     y_offset += EVENTS_ROW_HEIGHT;
-    lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_CLEAR, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_EXPORT, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
     if (data.focus_button_id == 11) {
+        button_border_draw(48, y_offset, BUTTON_WIDTH, EVENTS_ROW_HEIGHT, 1);
+    }
+
+    y_offset += EVENTS_ROW_HEIGHT;
+    lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_CLEAR, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
+    if (data.focus_button_id == 12) {
         button_border_draw(48, y_offset, BUTTON_WIDTH, EVENTS_ROW_HEIGHT, 1);
     }
 
@@ -150,7 +169,9 @@ static void button_event(int button_index, int param2)
     if (!data.list[target_index]) {
         return;
     }
-    window_editor_scenario_event_details_show(data.list[target_index]->id);
+    if (data.list[target_index]->state != EVENT_STATE_UNDEFINED) {
+        window_editor_scenario_event_details_show(data.list[target_index]->id);
+    }
 }
 
 static void on_scroll(void)
@@ -174,10 +195,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
 static void button_click(int type, int param2)
 {
     if (type == 9) {
-        window_file_dialog_show(FILE_TYPE_SCENARIO_EVENTS, FILE_DIALOG_LOAD);
+        add_new_event();
     } else if (type == 10) {
-        window_file_dialog_show(FILE_TYPE_SCENARIO_EVENTS, FILE_DIALOG_SAVE);
+        window_file_dialog_show(FILE_TYPE_SCENARIO_EVENTS, FILE_DIALOG_LOAD);
     } else if (type == 11) {
+        window_file_dialog_show(FILE_TYPE_SCENARIO_EVENTS, FILE_DIALOG_SAVE);
+    } else if (type == 12) {
         scenario_events_clear();
         data.total_events = scenario_events_get_count();
     }

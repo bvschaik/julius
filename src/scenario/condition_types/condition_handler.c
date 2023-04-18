@@ -53,6 +53,12 @@ int scenario_condition_type_is_met(scenario_condition_t *condition)
     }
 }
 
+void scenario_condition_type_delete(scenario_condition_t *condition)
+{
+    memset(condition, 0, sizeof(scenario_condition_t));
+    condition->type = CONDITION_TYPE_UNDEFINED;
+}
+
 void scenario_condition_type_save_state(buffer *buf, scenario_condition_t *condition, int link_type, int32_t link_id)
 {
     buffer_write_i16(buf, link_type);

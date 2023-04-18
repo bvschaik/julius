@@ -550,3 +550,8 @@ void empire_city_load_state(buffer *buf, int version)
     }
     cities.size = highest_id_in_use + 1;
 }
+
+int empire_city_get_array_size(void)
+{
+    return cities.size;
+}

@@ -88,4 +88,6 @@ void empire_city_update_gold_trading(void);
 
 void empire_city_load_state(buffer *buf, int version);
 
+int empire_city_get_array_size(void);
+
 #endif // EMPIRE_CITY_H

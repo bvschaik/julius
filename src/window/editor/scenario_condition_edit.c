@@ -1,6 +1,7 @@
 #include "scenario_condition_edit.h"
 
 #include "core/string.h"
+#include "game/resource.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -11,8 +12,14 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/scenario_events_parameter_data.h"
+#include "scenario/condition_types/condition_handler.h"
 #include "window/editor/map.h"
+#include "window/editor/select_scenario_condition_type.h"
+#include "window/editor/select_city_by_type.h"
+#include "window/editor/select_city_trade_route.h"
+#include "window/editor/select_special_attribute_mapping.h"
 #include "window/numeric_input.h"
+#include "window/select_list.h"
 
 #define BUTTON_LEFT_PADDING 32
 #define BUTTON_WIDTH 320
@@ -21,19 +28,29 @@
 
 static void init(scenario_condition_t *condition);
 static void button_amount(int param1, int param2);
+static void button_delete(int param1, int param2);
+static void button_change_type(int param1, int param2);
+static void set_param_value(int value);
+static void set_resource_value(int value);
+static void set_parameter_being_edited(int value);
+static void resource_selection(void);
+static void change_parameter(xml_data_attribute_t *parameter, int param1);
 
 static generic_button buttons[] = {
     {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (0 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 1, 0},
     {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (1 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 2, 0},
     {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (2 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 3, 0},
     {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (3 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 4, 0},
-    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (4 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 5, 0}
+    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (4 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 5, 0},
+    {288, 32, 64, 14, button_delete, button_none, 0, 0},
+    {32, 64, BUTTON_WIDTH, 32, button_change_type, button_none, 0, 0}
 };
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
 
 static struct {
     int focus_button_id;
-    int target_param;
+    int parameter_being_edited;
+    int parameter_being_edited_current_value;
 
     scenario_condition_t *condition;
     scenario_condition_data_t *xml_info;
@@ -42,11 +59,11 @@ static struct {
 static void init(scenario_condition_t *condition)
 {
     data.condition = condition;
-    data.xml_info = scenario_events_parameter_data_get_conditions_xml_attributes(condition->type);
 }
 
 static void draw_background(void)
 {
+    data.xml_info = scenario_events_parameter_data_get_conditions_xml_attributes(data.condition->type);
     window_editor_map_draw_all();
 }
 
@@ -56,42 +73,47 @@ static void draw_foreground(void)
 
     outer_panel_draw(16, 16, 24, 24);
 
-    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_CONDITION), 32, 32, BUTTON_WIDTH, FONT_LARGE_BLACK, 0);
-    text_draw_centered(string_from_ascii(data.xml_info->xml_attr.name), 32, 64, BUTTON_WIDTH, FONT_LARGE_BLACK, 0);
+    for (int i = 5; i <= 6; i++) {
+        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
+    }
+
+    text_draw_centered(translation_for(TR_EDITOR_DELETE), 288, 40, 72, FONT_SMALL_PLAIN, 0);
+
+    text_draw_centered(translation_for(data.xml_info->xml_attr.key), 32, 72, BUTTON_WIDTH, FONT_SMALL_PLAIN, 0);
 
     int y_offset = DETAILS_Y_OFFSET;
     int button_id = 0;
     if (data.xml_info->xml_parm1.type > PARAMETER_TYPE_UNDEFINED) {
         large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
-        text_draw_label_and_number(string_from_ascii(data.xml_info->xml_parm1.name), data.condition->parameter1, "", 64, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        text_draw_label_and_number(translation_for(data.xml_info->xml_parm1.key), data.condition->parameter1, "", 64, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
     }
     y_offset += DETAILS_ROW_HEIGHT;
     button_id++;
 
     if (data.xml_info->xml_parm2.type > PARAMETER_TYPE_UNDEFINED) {
         large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
-        text_draw_label_and_number(string_from_ascii(data.xml_info->xml_parm2.name), data.condition->parameter2, "", 64, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        text_draw_label_and_number(translation_for(data.xml_info->xml_parm2.key), data.condition->parameter2, "", 64, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
     }
     y_offset += DETAILS_ROW_HEIGHT;
     button_id++;
 
     if (data.xml_info->xml_parm3.type > PARAMETER_TYPE_UNDEFINED) {
         large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
-        text_draw_label_and_number(string_from_ascii(data.xml_info->xml_parm3.name), data.condition->parameter3, "", 64, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        text_draw_label_and_number(translation_for(data.xml_info->xml_parm3.key), data.condition->parameter3, "", 64, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
     }
     y_offset += DETAILS_ROW_HEIGHT;
     button_id++;
 
     if (data.xml_info->xml_parm4.type > PARAMETER_TYPE_UNDEFINED) {
         large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
-        text_draw_label_and_number(string_from_ascii(data.xml_info->xml_parm4.name), data.condition->parameter4, "", 64, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        text_draw_label_and_number(translation_for(data.xml_info->xml_parm4.key), data.condition->parameter4, "", 64, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
     }
     y_offset += DETAILS_ROW_HEIGHT;
     button_id++;
 
     if (data.xml_info->xml_parm5.type > PARAMETER_TYPE_UNDEFINED) {
         large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
-        text_draw_label_and_number(string_from_ascii(data.xml_info->xml_parm5.name), data.condition->parameter5, "", 64, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        text_draw_label_and_number(translation_for(data.xml_info->xml_parm5.key), data.condition->parameter5, "", 64, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
     }
     y_offset += DETAILS_ROW_HEIGHT;
     button_id++;
@@ -112,31 +134,138 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void set_amount_param(int value)
+static void button_delete(int param1, int param2)
 {
-    switch (data.target_param) {
-        case 1: data.condition->parameter1 = value; break;
-        case 2: data.condition->parameter2 = value; break;
-        case 3: data.condition->parameter3 = value; break;
-        case 4: data.condition->parameter4 = value; break;
-        case 5: data.condition->parameter5 = value; break;
-    }
+    scenario_condition_type_delete(data.condition);
+    window_go_back();
+}
+
+static void button_change_type(int param1, int param2)
+{
+    window_editor_select_scenario_condition_type_show(data.condition);
 }
 
 static void button_amount(int param1, int param2)
 {
-    data.target_param = param1;
-
-    int max_limit = 0;
-    switch (data.target_param) {
-        case 1: max_limit = data.xml_info->xml_parm1.max_limit; break;
-        case 2: max_limit = data.xml_info->xml_parm2.max_limit; break;
-        case 3: max_limit = data.xml_info->xml_parm3.max_limit; break;
-        case 4: max_limit = data.xml_info->xml_parm4.max_limit; break;
-        case 5: max_limit = data.xml_info->xml_parm5.max_limit; break;
+    switch (param1) {
+        case 1: change_parameter(&data.xml_info->xml_parm1, param1); break;
+        case 2: change_parameter(&data.xml_info->xml_parm2, param1); break;
+        case 3: change_parameter(&data.xml_info->xml_parm3, param1); break;
+        case 4: change_parameter(&data.xml_info->xml_parm4, param1); break;
+        case 5: change_parameter(&data.xml_info->xml_parm5, param1); break;
     }
+}
 
-    window_numeric_input_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 9, max_limit, set_amount_param);
+static void set_param_value(int value)
+{
+    switch (data.parameter_being_edited) {
+        case 1:
+            data.condition->parameter1 = value;
+            return;
+        case 2:
+            data.condition->parameter2 = value;
+            return;
+        case 3:
+            data.condition->parameter3 = value;
+            return;
+        case 4:
+            data.condition->parameter4 = value;
+            return;
+        case 5:
+            data.condition->parameter5 = value;
+            return;
+        default:
+            return;
+    }
+}
+
+static void set_parameter_being_edited(int value)
+{
+    data.parameter_being_edited = value;
+    switch (value) {
+        case 1:
+            data.parameter_being_edited_current_value = data.condition->parameter1;
+            break;
+        case 2:
+            data.parameter_being_edited_current_value = data.condition->parameter2;
+            break;
+        case 3:
+            data.parameter_being_edited_current_value = data.condition->parameter3;
+            break;
+        case 4:
+            data.parameter_being_edited_current_value = data.condition->parameter4;
+            break;
+        case 5:
+            data.parameter_being_edited_current_value = data.condition->parameter5;
+            break;
+        default:
+            break;
+    }
+}
+
+static void set_resource_value(int value)
+{
+    switch (data.parameter_being_edited) {
+        case 1:
+            data.condition->parameter1 = value + 1;
+            return;
+        case 2:
+            data.condition->parameter2 = value + 1;
+            return;
+        case 3:
+            data.condition->parameter3 = value + 1;
+            return;
+        case 4:
+            data.condition->parameter4 = value + 1;
+            return;
+        case 5:
+            data.condition->parameter5 = value + 1;
+            return;
+        default:
+            return;
+    }
+}
+
+static void resource_selection(void)
+{
+    static const uint8_t *resource_texts[RESOURCE_MAX];
+    for (resource_type resource = RESOURCE_MIN_FOOD; resource < RESOURCE_MAX; resource++) {
+        resource_texts[resource - 1] = resource_get_data(resource)->text;
+    }
+    window_select_list_show_text(screen_dialog_offset_x() + 64, screen_dialog_offset_y() + 64,
+        resource_texts, RESOURCE_MAX - 1, set_resource_value);
+}
+
+static void change_parameter(xml_data_attribute_t *parameter, int param1)
+{
+    set_parameter_being_edited(param1);
+    switch (parameter->type) {
+        case PARAMETER_TYPE_NUMBER:
+        case PARAMETER_TYPE_MIN_MAX_NUMBER:
+            window_numeric_input_bound_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 9, parameter->min_limit, parameter->max_limit, set_param_value);
+            return;
+        case PARAMETER_TYPE_CHECK:
+        case PARAMETER_TYPE_DIFFICULTY:
+        case PARAMETER_TYPE_BOOLEAN:
+        case PARAMETER_TYPE_POP_CLASS:
+        case PARAMETER_TYPE_BUILDING:
+        case PARAMETER_TYPE_BUILDING_COUNTING:
+        case PARAMETER_TYPE_ALLOWED_BUILDING:
+        case PARAMETER_TYPE_STANDARD_MESSAGE:
+            window_editor_select_special_attribute_mapping_show(parameter->type, set_param_value, data.parameter_being_edited_current_value);
+            return;
+        case PARAMETER_TYPE_ROUTE:
+            window_editor_select_city_trade_route_show(set_param_value);
+            return;
+        case PARAMETER_TYPE_FUTURE_CITY:
+            window_editor_select_city_by_type_show(set_param_value, EMPIRE_CITY_FUTURE_TRADE);
+            return;
+        case PARAMETER_TYPE_RESOURCE:
+            resource_selection();
+            return;
+        default:
+            return;
+    }
 }
 
 void window_editor_scenario_condition_edit_show(scenario_condition_t *condition)

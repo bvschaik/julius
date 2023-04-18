@@ -62,6 +62,12 @@ int scenario_action_type_execute(scenario_action_t *action)
     }
 }
 
+void scenario_action_type_delete(scenario_action_t *action)
+{
+    memset(action, 0, sizeof(scenario_action_t));
+    action->type = ACTION_TYPE_UNDEFINED;
+}
+
 void scenario_action_type_save_state(buffer *buf, scenario_action_t *action, int link_type, int32_t link_id)
 {
     buffer_write_i16(buf, link_type);

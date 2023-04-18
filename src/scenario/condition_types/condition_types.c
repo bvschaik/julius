@@ -270,6 +270,10 @@ int scenario_condition_type_trade_sell_price_met(const scenario_condition_t *con
     int comparison = condition->parameter2;
     int value = condition->parameter3;
 
+    if (resource < RESOURCE_MIN || resource > RESOURCE_MAX) {
+        return 0;
+    }
+    
     int trade_sell_price = trade_price_base_sell(resource);
     return comparison_helper_compare_values(comparison, trade_sell_price, value);
 }

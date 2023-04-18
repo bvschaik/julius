@@ -203,6 +203,10 @@ int scenario_action_type_trade_price_set_execute(scenario_action_t *action)
     int set_buy_price = action->parameter3;
     int show_message = action->parameter4;
     
+    if (resource < RESOURCE_MIN || resource > RESOURCE_MAX) {
+        return 0;
+    }
+
     int current_price = 0;
     if (set_buy_price) {
         current_price = trade_price_base_buy(resource);
@@ -237,6 +241,10 @@ int scenario_action_type_trade_price_adjust_execute(scenario_action_t *action)
     int resource = action->parameter1;
     int adjustment = action->parameter2;
     int show_message = action->parameter3;
+
+    if (resource < RESOURCE_MIN || resource > RESOURCE_MAX) {
+        return 0;
+    }
 
     if (adjustment == 0) {
         return 1;
