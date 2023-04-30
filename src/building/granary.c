@@ -203,7 +203,7 @@ void building_granaries_calculate_stocks(void)
             total_non_getting += b->data.granary.resource_stored[RESOURCE_MEAT];
             non_getting_granaries.total_storage_meat += b->data.granary.resource_stored[RESOURCE_MEAT];
         }
-        if (total_non_getting > MAX_GRANARIES) {
+        if (total_non_getting > ONE_LOAD) {
             non_getting_granaries.building_ids[non_getting_granaries.num_items] = i;
             if (non_getting_granaries.num_items < MAX_GRANARIES - 2) {
                 non_getting_granaries.num_items++;
