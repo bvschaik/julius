@@ -71,4 +71,7 @@ void random_load_state(buffer *buf);
 int random_from_stdlib(void);
 
 int random_between_from_stdlib(int min, int max);
+
+double random_fractional_from_stdlib(void);
+
 #endif // CORE_RANDOM_H

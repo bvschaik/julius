@@ -25,6 +25,7 @@
 #include "figure/formation_legion.h"
 #include "figure/roamer_preview.h"
 #include "game/resource.h"
+#include "graphics/clouds.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/renderer.h"
@@ -760,6 +761,16 @@ static int get_highlighted_formation_id(const map_tile *tile)
     return highlighted_formation_id;
 }
 
+static void update_clouds(void)
+{
+    if (!window_is(WINDOW_CITY)) {
+        clouds_pause();
+    }
+    int camera_x, camera_y;
+    city_view_get_camera_in_pixels(&camera_x, &camera_y);
+    clouds_draw(camera_x, camera_y, GRID_SIZE * 60, GRID_SIZE * 30, draw_context.scale);
+}
+
 void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_coord, const map_tile *tile)
 {
     int highlighted_formation_id = get_highlighted_formation_id(tile);
@@ -794,4 +805,5 @@ void city_without_overlay_draw(int selected_figure_id, pixel_coordinate *figure_
         city_view_foreach_valid_map_tile(deletion_draw_figures_animations);
         city_view_foreach_valid_map_tile(deletion_draw_remaining);
     }
+    update_clouds();
 }

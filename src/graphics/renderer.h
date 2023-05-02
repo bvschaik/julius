@@ -4,26 +4,27 @@
 #include "core/image.h"
 
 typedef enum {
-    ATLAS_FIRST = 0,
-    ATLAS_MAIN = 0,
-    ATLAS_ENEMY = 1,
-    ATLAS_FONT = 2,
-    ATLAS_EXTRA_ASSET = 3,
-    ATLAS_UNPACKED_EXTRA_ASSET = 4,
-    ATLAS_CUSTOM = 5,
-    ATLAS_EXTERNAL = 6,
-    ATLAS_MAX = 7
+    ATLAS_FIRST,
+    ATLAS_MAIN = ATLAS_FIRST,
+    ATLAS_ENEMY,
+    ATLAS_FONT,
+    ATLAS_EXTRA_ASSET,
+    ATLAS_UNPACKED_EXTRA_ASSET,
+    ATLAS_CUSTOM,
+    ATLAS_EXTERNAL,
+    ATLAS_MAX
 } atlas_type;
 
 typedef enum {
-    CUSTOM_IMAGE_NONE = 0,
-    CUSTOM_IMAGE_EXTERNAL = 1,
-    CUSTOM_IMAGE_MINIMAP = 2,
-    CUSTOM_IMAGE_VIDEO = 3,
-    CUSTOM_IMAGE_EMPIRE_MAP = 4,
-    CUSTOM_IMAGE_RED_FOOTPRINT = 5,
-    CUSTOM_IMAGE_GREEN_FOOTPRINT = 6,
-    CUSTOM_IMAGE_MAX = 7
+    CUSTOM_IMAGE_NONE,
+    CUSTOM_IMAGE_EXTERNAL,
+    CUSTOM_IMAGE_MINIMAP,
+    CUSTOM_IMAGE_VIDEO,
+    CUSTOM_IMAGE_EMPIRE_MAP,
+    CUSTOM_IMAGE_RED_FOOTPRINT,
+    CUSTOM_IMAGE_GREEN_FOOTPRINT,
+    CUSTOM_IMAGE_CLOUDS,
+    CUSTOM_IMAGE_MAX
 } custom_image_type;
 
 typedef enum {
@@ -53,6 +54,8 @@ typedef struct {
     void (*fill_rect)(int x_start, int x_end, int y_start, int y_end, color_t color);
 
     void (*draw_image)(const image *img, int x, int y, color_t color, float scale);
+    void (*draw_image_advanced)(const image *img, float x, float y, color_t color,
+        float scale_x, float scale_y, double angle, int disable_coord_scaling);
     void (*draw_silhouette)(const image *img, int x, int y, color_t color, float scale);
 
     void (*create_custom_image)(custom_image_type type, int width, int height, int is_yuv);
@@ -60,6 +63,8 @@ typedef struct {
     color_t *(*get_custom_image_buffer)(custom_image_type type, int *actual_texture_width);
     void (*release_custom_image_buffer)(custom_image_type type);
     void (*update_custom_image)(custom_image_type type);
+    void (*update_custom_image_from)(custom_image_type type, const color_t *buffer,
+        int x_offset, int y_offset, int width, int height);
     void (*update_custom_image_yuv)(custom_image_type type, const uint8_t *y_data, int y_width,
         const uint8_t *cb_data, int cb_width, const uint8_t *cr_data, int cr_width);
     void (*draw_custom_image)(custom_image_type type, int x, int y, float scale, int disable_filtering);

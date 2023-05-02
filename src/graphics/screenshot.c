@@ -277,6 +277,9 @@ static void create_full_city_screenshot(void)
     int canvas_width = 8 * TILE_X_SIZE;
     int old_scale = city_view_get_scale();
 
+    int draw_cloud_shadows = config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS);
+    config_set(CONFIG_UI_DRAW_CLOUD_SHADOWS, 0);
+
     int min_width = (GRID_SIZE * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
     int max_height = (GRID_SIZE * TILE_Y_SIZE + city_height_pixels) / 2;
     int min_height = max_height - city_height_pixels - TILE_Y_SIZE;
@@ -315,6 +318,7 @@ static void create_full_city_screenshot(void)
     }
     city_view_set_viewport(viewport_width + (city_view_is_sidebar_collapsed() ? 42 : 162), viewport_height + TOP_MENU_HEIGHT);
     city_view_set_scale(old_scale);
+    config_set(CONFIG_UI_DRAW_CLOUD_SHADOWS, draw_cloud_shadows);
     graphics_reset_clip_rectangle();
     city_view_set_camera_from_pixel_position(original_camera_pixels.x, original_camera_pixels.y);
     if (!error) {

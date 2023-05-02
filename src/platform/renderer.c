@@ -489,7 +489,8 @@ static void set_texture_color_and_scale_mode(SDL_Texture *texture, color_t color
 #endif
 }
 
-static void draw_texture(const image *img, int x, int y, color_t color, float scale)
+static void draw_texture_advanced(const image *img, float x, float y, color_t color,
+    float scale_x, float scale_y, double angle, int disable_coord_scaling)
 {
     if (data.paused) {
         return;
@@ -500,6 +501,8 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     if (!texture) {
         return;
     }
+
+    float scale = scale_x == scale_y ? scale_x : 0.0;
 
     set_texture_color_and_scale_mode(texture, color, scale);
 
@@ -516,18 +519,34 @@ static void draw_texture(const image *img, int x, int y, color_t color, float sc
     int grid_correction = (img->is_isometric && config_get(CONFIG_UI_SHOW_GRID) && data.city_scale > 2.0f) ?
         2 : -src_correction;
 
+    float coord_scale_x = disable_coord_scaling ? 1.0f : scale_x;
+    float coord_scale_y = disable_coord_scaling ? 1.0f : scale_y;
+
 #ifdef USE_RENDERCOPYF
     if (HAS_RENDERCOPYF) {
-        SDL_FRect dst_coords = { (x + grid_correction) / scale, (y + grid_correction) / scale,
-            (img->width - grid_correction) / scale, (img->height - grid_correction) / scale };
-        SDL_RenderCopyF(data.renderer, texture, &src_coords, &dst_coords);
+        SDL_FRect dst_coords = {
+            (x + grid_correction) / coord_scale_x,
+            (y + grid_correction) / coord_scale_y,
+            (img->width - grid_correction) / scale_x,
+            (img->height - grid_correction) / scale_y
+        };
+        SDL_RenderCopyExF(data.renderer, texture, &src_coords, &dst_coords, angle, NULL, SDL_FLIP_NONE);
         return;
     }
 #endif
 
-    SDL_Rect dst_coords = { (int) round((x + grid_correction) / scale), (int) round((y + grid_correction) / scale),
-        (int) round((img->width - grid_correction) / scale), (int) round((img->height - grid_correction) / scale) };
-    SDL_RenderCopy(data.renderer, texture, &src_coords, &dst_coords);
+    SDL_Rect dst_coords = {
+        (int) round((x + grid_correction) / coord_scale_x),
+        (int) round((y + grid_correction) / coord_scale_y),
+        (int) round((img->width - grid_correction) / scale_x),
+        (int) round((img->height - grid_correction) / scale_y)
+    };
+    SDL_RenderCopyEx(data.renderer, texture, &src_coords, &dst_coords, angle, NULL, SDL_FLIP_NONE);
+}
+
+static void draw_texture(const image *img, int x, int y, color_t color, float scale)
+{
+    draw_texture_advanced(img, x, y, color, scale, scale, 0.0, 0);
 }
 
 static void create_custom_texture(custom_image_type type, int width, int height, int is_yuv)
@@ -600,10 +619,37 @@ static void update_custom_texture(custom_image_type type)
     if (data.paused || !data.custom_textures[type].texture || !data.custom_textures[type].buffer) {
         return;
     }
-    int width, height;
-    SDL_QueryTexture(data.custom_textures[type].texture, NULL, NULL, &width, &height);
+    int width;
+    SDL_QueryTexture(data.custom_textures[type].texture, NULL, NULL, &width, NULL);
     SDL_UpdateTexture(data.custom_textures[type].texture, NULL,
         data.custom_textures[type].buffer, sizeof(color_t) * width);
+#endif
+}
+
+static void update_custom_texture_from(custom_image_type type, const color_t *buffer,
+    int x_offset, int y_offset, int width, int height)
+{
+    if (data.paused || !data.custom_textures[type].texture) {
+        return;
+    }
+    int texture_width, texture_height;
+    SDL_QueryTexture(data.custom_textures[type].texture, NULL, NULL, &texture_width, &texture_height);
+    if (x_offset + width > texture_width || y_offset + height > texture_height) {
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Partial texture copy goes out of bounds");
+        return;
+    }
+#ifdef __vita__
+    int pitch;
+    SDL_LockTexture(data.custom_textures[type].texture, NULL, (void **) &data.custom_textures[type].buffer, &pitch);
+    texture_width = pitch / sizeof(color_t);
+    color_t *offset = &buffer[y_offset * texture_width + x_offset];
+    for (int y = 0; y < height; y++) {
+        memcpy(&offset[y * texture_width], &buffer[y * width], width * sizeof(color_t));
+    }
+    SDL_UnlockTexture(data.custom_textures[type].texture);
+#else
+    SDL_Rect rect = { x_offset, y_offset, width, height };
+    SDL_UpdateTexture(data.custom_textures[type].texture, &rect, buffer, sizeof(color_t) * width);
 #endif
 }
 
@@ -1012,12 +1058,14 @@ static void create_renderer_interface(void)
     data.renderer_interface.draw_rect = draw_rect;
     data.renderer_interface.fill_rect = fill_rect;
     data.renderer_interface.draw_image = draw_texture;
+    data.renderer_interface.draw_image_advanced = draw_texture_advanced;
     data.renderer_interface.draw_silhouette = draw_silhouetted_texture;
     data.renderer_interface.create_custom_image = create_custom_texture;
     data.renderer_interface.has_custom_image = has_custom_texture;
     data.renderer_interface.get_custom_image_buffer = get_custom_texture_buffer;
     data.renderer_interface.release_custom_image_buffer = release_custom_texture_buffer;
     data.renderer_interface.update_custom_image = update_custom_texture;
+    data.renderer_interface.update_custom_image_from = update_custom_texture_from;
     data.renderer_interface.update_custom_image_yuv = update_custom_texture_yuv;
     data.renderer_interface.draw_custom_image = draw_custom_texture;
     data.renderer_interface.supports_yuv_image_format = supports_yuv_texture;
