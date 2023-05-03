@@ -118,16 +118,16 @@ static void draw_foreground(void)
     lang_text_draw_centered_colored(44, 16, data.x + 51, data.y + 177, 55, FONT_NORMAL_PLAIN,
             data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
 
-    graphics_draw_rect(data.x + 21, data.y + 201, 25, 25, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
+    graphics_draw_rect(data.x + 21, data.y + 201, 25, 25, data.focus_button_id == 13 ? COLOR_FONT_BLUE : COLOR_BLACK);
     text_draw_centered(string_from_ascii("X"), data.x + 21, data.y + 207, 25, FONT_NORMAL_PLAIN, COLOR_RED);
-    graphics_draw_rect(data.x + 51, data.y + 201, 55, 25, data.focus_button_id == 13 ? COLOR_FONT_BLUE : COLOR_BLACK);
+    graphics_draw_rect(data.x + 51, data.y + 201, 55, 25, data.focus_button_id == 14 ? COLOR_FONT_BLUE : COLOR_BLACK);
     lang_text_draw_centered_colored(44, 17, data.x + 51, data.y + 207, 55, FONT_NORMAL_PLAIN,
-            data.focus_button_id == 13 ? COLOR_FONT_BLUE : COLOR_BLACK);
+            data.focus_button_id == 14 ? COLOR_FONT_BLUE : COLOR_BLACK);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (generic_buttons_handle_mouse(m, data.x, data.y, buttons, 13, &data.focus_button_id)) {
+    if (generic_buttons_handle_mouse(m, data.x, data.y, buttons, 14, &data.focus_button_id)) {
         return;
     }
     if (input_go_back_requested(m, h)) {
