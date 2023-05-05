@@ -763,7 +763,7 @@ static int get_highlighted_formation_id(const map_tile *tile)
 
 static void update_clouds(void)
 {
-    if (!window_is(WINDOW_CITY)) {
+    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY)) {
         clouds_pause();
     }
     int camera_x, camera_y;
