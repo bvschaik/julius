@@ -167,6 +167,7 @@ extern struct scenario_t {
     int enemy_id;
     int is_open_play;
     int open_play_scenario_id;
+    int intro_custom_message_id;
 
     scenario_win_criteria win_criteria;
 

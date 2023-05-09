@@ -6,6 +6,7 @@
 #include "core/string.h"
 #include "core/xml_exporter.h"
 #include "empire/city.h"
+#include "scenario/custom_messages.h"
 #include "scenario/scenario_events_controller.h"
 #include "scenario/scenario_events_parameter_data.h"
 #include "window/plain_message_dialog.h"
@@ -86,6 +87,17 @@ static int export_attribute_resource(xml_data_attribute_t *attr, int target)
     return 1;
 }
 
+static int export_attribute_custom_message(xml_data_attribute_t *attr, int target)
+{
+    custom_message_t *message = custom_messages_get(target);
+    if (message) {
+        const uint8_t *message_uid = message->linked_uid->text;
+        xml_exporter_add_attribute_text(attr->name, message_uid);
+        return 1;
+    }
+    return 0;
+}
+
 static int export_parse_attribute(xml_data_attribute_t *attr, int target)
 {
     switch (attr->type) {
@@ -115,6 +127,8 @@ static int export_parse_attribute(xml_data_attribute_t *attr, int target)
             return export_attribute_route(attr, target);
         case PARAMETER_TYPE_STANDARD_MESSAGE:
             return export_attribute_by_type(attr, PARAMETER_TYPE_STANDARD_MESSAGE, target);
+        case PARAMETER_TYPE_CUSTOM_MESSAGE:
+            return export_attribute_custom_message(attr, target);
         case PARAMETER_TYPE_UNDEFINED:
             return 1;
         default:
@@ -147,7 +161,7 @@ static void export_event_condition(scenario_condition_t *condition)
     export_parse_attribute(&data->xml_parm4, condition->parameter4);
     export_parse_attribute(&data->xml_parm5, condition->parameter5);
 
-    xml_exporter_close_element();
+    xml_exporter_close_element(0);
 }
 
 static void export_event_action(scenario_action_t *action)
@@ -174,7 +188,7 @@ static void export_event_action(scenario_action_t *action)
     export_parse_attribute(&data->xml_parm4, action->parameter4);
     export_parse_attribute(&data->xml_parm5, action->parameter5);
 
-    xml_exporter_close_element();
+    xml_exporter_close_element(0);
 }
 
 static int export_event(scenario_event_t *event)
@@ -200,16 +214,16 @@ static int export_event(scenario_event_t *event)
         scenario_condition_t *condition = array_item(event->conditions, i);
         export_event_condition(condition);
     }
-    xml_exporter_close_element();
+    xml_exporter_close_element(0);
 
     xml_exporter_new_element("actions", 1);
     for (int i = 0; i < event->actions.size; i++) {
         scenario_action_t *action = array_item(event->actions, i);
         export_event_action(action);
     }
-    xml_exporter_close_element();
+    xml_exporter_close_element(0);
 
-    xml_exporter_close_element();
+    xml_exporter_close_element(0);
     
     return 1;
 }
@@ -225,7 +239,7 @@ static void export_scenario_events(buffer *buf)
         scenario_event_t *event = scenario_event_get(i);
         export_event(event);
     }
-    xml_exporter_close_element();
+    xml_exporter_close_element(0);
     xml_exporter_newline();
 }
 
@@ -234,8 +248,14 @@ int scenario_events_export_to_xml(const char *filename)
     buffer buf;
     int buf_size = XML_EXPORT_MAX_SIZE;
     uint8_t *buf_data = malloc(buf_size);
+    if (!buf_data) {
+        log_error("Unable to allocate buffer to export scenario events XML", 0, 0);
+        free(buf_data);
+        return 0;
+    }
     buffer_init(&buf, buf_data, buf_size);
     export_scenario_events(&buf);
     io_write_buffer_to_file(filename, buf.data, buf.index);
+    free(buf_data);
     return 1;
 }

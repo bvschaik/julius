@@ -943,6 +943,14 @@ static translation_string all_strings[] = {
     {TR_EDITOR_DELETE, "Delete"},
     {TR_EDITOR_DELETED, "Deleted"},
     {TR_EDITOR_SCENARIO_EVENT_DELETED, "Deleted event"},
+    {TR_EDITOR_CUSTOM_MESSAGES_TITLE, "Custom messages" },
+    {TR_EDITOR_CUSTOM_MESSAGES_COUNT, "Total messages" },
+    {TR_EDITOR_CUSTOM_MESSAGES_CLEAR, "Clear messages" },
+    {TR_EDITOR_CUSTOM_MESSAGES_IMPORT_FULL, "Import custom messages" },
+    {TR_EDITOR_CUSTOM_MESSAGES_EXPORT_FULL, "Export custom messages" },
+    {TR_EDITOR_UNABLE_TO_LOAD_CUSTOM_MESSAGES_TITLE, "Unable to load custom messages"},
+    {TR_EDITOR_SCENARIO_SELECT_INTRO, "Select scenario intro"},
+    {TR_EDITOR_SCENARIO_DESELECT_INTRO, "Deselect scenario intro"},
     {TR_PARAMETER_TYPE_CHECK, "Comparison check"},
     {TR_PARAMETER_TYPE_MIN_MAX_NUMBER_MIN, "Minimum"},
     {TR_PARAMETER_TYPE_MIN_MAX_NUMBER_MAX, "Maximum"},
@@ -996,6 +1004,8 @@ static translation_string all_strings[] = {
     {TR_ACTION_TYPE_TRADE_SET_PRICE, "Set trade price"},
     {TR_ACTION_TYPE_EMPIRE_MAP_CONVERT_FUTURE_TRADE_CITY, "Convert empire future trade city"},
     {TR_ACTION_TYPE_REQUEST_IMMEDIATELY_START, "Immediately start request"},
+    {TR_ACTION_TYPE_SHOW_CUSTOM_MESSAGE, "Show custom message"},
+    {TR_ACTION_TYPE_A_MESSAGE, "A message"},
     {TR_PARAMETER_VALUE_COMPARISON_TYPE_EQUAL, "Equal"},
     {TR_PARAMETER_VALUE_COMPARISON_TYPE_EQUAL_OR_LESS, "Less than or equal"},
     {TR_PARAMETER_VALUE_COMPARISON_TYPE_EQUAL_OR_MORE, "Greater than or equal"},
@@ -1085,6 +1095,8 @@ static translation_string all_strings[] = {
     {TR_PARAMETER_VALUE_MESSAGE_SOLDIERS_STARVING, "Soldiers starving"},
     {TR_PARAMETER_VALUE_MESSAGE_CAESAR_ANGER, "Caesar anger"},
     {TR_PARAMETER_VALUE_MESSAGE_ENEMIES_LEAVING, "Enemies leaving"},
+    {TR_PARAMETER_VALUE_MEDIA_TYPE_SOUND, "Sound"},
+    {TR_PARAMETER_VALUE_MEDIA_TYPE_VIDEO, "Video"},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

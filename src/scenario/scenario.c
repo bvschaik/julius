@@ -38,6 +38,7 @@ static struct {
     int invasions_part3;
     int misc;
     int requests;
+    int introduction;
     int custom_name;
     int end;
 } state_offsets;
@@ -136,6 +137,11 @@ static void state_offsets_init(int scenario_version)
     state_offsets.misc = next_start_offset;
     next_start_offset = state_offsets.misc + 51;
 
+    if (scenario_version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
+        state_offsets.introduction = next_start_offset;
+        next_start_offset = state_offsets.introduction + 4;
+    }
+
     state_offsets.custom_name = next_start_offset;
     next_start_offset = state_offsets.custom_name + 51;
 
@@ -148,6 +154,9 @@ int scenario_get_state_buffer_size_by_savegame_version(int savegame_version)
         return 1720;
     } else if (savegame_version <= SAVE_GAME_LAST_NO_EXTENDED_REQUESTS) {
         state_offsets_init(SCENARIO_LAST_NO_EXTENDED_REQUESTS);
+        return state_offsets.end;
+    } else if (savegame_version <= SAVE_GAME_LAST_NO_CUSTOM_MESSAGES) {
+        state_offsets_init(SCENARIO_LAST_NO_CUSTOM_MESSAGES);
         return state_offsets.end;
     } else {
         state_offsets_init(SCENARIO_CURRENT_VERSION);
@@ -346,6 +355,8 @@ void scenario_save_state(buffer *buf)
     buffer_write_u8(buf, scenario.empire.distant_battle_enemy_travel_months);
     buffer_write_u8(buf, scenario.open_play_scenario_id);
 
+    buffer_write_i32(buf, scenario.intro_custom_message_id);
+    
     buffer_write_raw(buf, scenario.empire.custom_name, sizeof(scenario.empire.custom_name));
     buffer_write_u8(buf, 0);
 }
@@ -558,6 +569,11 @@ void scenario_load_state(buffer *buf, buffer *buf_requests, int version)
     scenario.empire.distant_battle_enemy_travel_months = buffer_read_u8(buf);
     scenario.open_play_scenario_id = buffer_read_u8(buf);
 
+    scenario.intro_custom_message_id = -1;
+    if (version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
+        scenario.intro_custom_message_id = buffer_read_i32(buf);
+    }
+    
     if (version > SCENARIO_LAST_UNVERSIONED) {
         buffer_read_raw(buf, scenario.empire.custom_name, sizeof(scenario.empire.custom_name));
     }

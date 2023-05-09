@@ -174,7 +174,7 @@ static void XMLCALL end_element(void *unused, const char *name)
         element_text *current_text = &data.texts[data.depth];
         if (current_text->text) {
             // Remove trailing paragraph
-            if (current_text->text[current_text->current_size - 1] == '\n') {
+            if (current_text->current_size > 0 && current_text->text[current_text->current_size - 1] == '\n') {
                 current_text->current_size--;
             }
             append_to_text(current_text, "\0", 1);
@@ -230,7 +230,7 @@ int xml_parser_init(const xml_parser_element *elements, int total_elements)
 
     memcpy(data.elements, elements, elements_size);
     memset(data.parents, 0, sizeof(xml_parser_element *) * total_elements);
-    memset(data.texts, 0, sizeof(element_text *) * total_elements);
+    memset(data.texts, 0, sizeof(element_text) * total_elements);
 
     data.parser = XML_ParserCreate(NULL);
     XML_SetHashSalt(data.parser, XML_HASH_SEED);

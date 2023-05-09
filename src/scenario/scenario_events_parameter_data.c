@@ -147,6 +147,9 @@ static scenario_action_data_t scenario_action_data[ACTION_TYPE_MAX] = {
     [ACTION_TYPE_REQUEST_IMMEDIATELY_START]     = { .type = ACTION_TYPE_REQUEST_IMMEDIATELY_START,
                                         .xml_attr =     { .name = "request_immediately_start",     .type = PARAMETER_TYPE_TEXT,     .key = TR_ACTION_TYPE_REQUEST_IMMEDIATELY_START },
                                         .xml_parm1 =    { .name = "request_id",     .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,           .max_limit = 19,     .key = TR_PARAMETER_TYPE_NUMBER }, },
+    [ACTION_TYPE_SHOW_CUSTOM_MESSAGE]     = { .type = ACTION_TYPE_SHOW_CUSTOM_MESSAGE,
+                                        .xml_attr =     { .name = "show_custom_message",     .type = PARAMETER_TYPE_TEXT,     .key = TR_ACTION_TYPE_SHOW_CUSTOM_MESSAGE },
+                                        .xml_parm1 =    { .name = "message_uid",    .type = PARAMETER_TYPE_CUSTOM_MESSAGE,    .key = TR_PARAMETER_TYPE_NUMBER }, },
 };
 
 scenario_action_data_t *scenario_events_parameter_data_get_actions_xml_attributes(action_types type)
@@ -498,6 +501,13 @@ static special_attribute_mapping_t special_attribute_mappings_standard_message[]
 
 #define SPECIAL_ATTRIBUTE_MAPPINGS_STANDARD_MESSAGE_SIZE (sizeof(special_attribute_mappings_standard_message) / sizeof(special_attribute_mapping_t))
 
+static special_attribute_mapping_t special_attribute_mappings_media_type[] = {
+    { .type = PARAMETER_TYPE_MEDIA_TYPE,                  .text = "sound",                     .value = 1,          .key = TR_PARAMETER_VALUE_MEDIA_TYPE_SOUND },
+    { .type = PARAMETER_TYPE_MEDIA_TYPE,                  .text = "video",                     .value = 2,          .key = TR_PARAMETER_VALUE_MEDIA_TYPE_VIDEO },
+};
+
+#define SPECIAL_ATTRIBUTE_MAPPINGS_MEDIA_TYPE_SIZE (sizeof(special_attribute_mappings_media_type) / sizeof(special_attribute_mapping_t))
+
 special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mapping(parameter_type type, int index)
 {
     switch (type) {
@@ -516,6 +526,8 @@ special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mappin
             return &special_attribute_mappings_allowed_buildings[index];
         case PARAMETER_TYPE_STANDARD_MESSAGE:
             return &special_attribute_mappings_standard_message[index];
+        case PARAMETER_TYPE_MEDIA_TYPE:
+            return &special_attribute_mappings_media_type[index];
         default:
             return 0;
     }
@@ -539,6 +551,8 @@ int scenario_events_parameter_data_get_mappings_size(parameter_type type)
             return SPECIAL_ATTRIBUTE_MAPPINGS_ALLOWED_BUILDINGS_SIZE;
         case PARAMETER_TYPE_STANDARD_MESSAGE:
             return SPECIAL_ATTRIBUTE_MAPPINGS_STANDARD_MESSAGE_SIZE;
+        case PARAMETER_TYPE_MEDIA_TYPE:
+            return SPECIAL_ATTRIBUTE_MAPPINGS_MEDIA_TYPE_SIZE;
         default:
             return 0;
     }

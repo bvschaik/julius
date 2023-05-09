@@ -39,6 +39,7 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
+#include "scenario/custom_messages.h"
 #include "scenario/distant_battle.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
@@ -71,6 +72,7 @@ void game_file_editor_clear_data(void)
     game_time_init(2098);
     scenario_invasion_clear();
     scenario_events_clear();
+    custom_messages_clear_all();
 }
 
 static void clear_map_data(void)

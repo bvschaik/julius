@@ -46,12 +46,15 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "scenario/criteria.h"
+#include "scenario/custom_media.h"
+#include "scenario/custom_messages.h"
 #include "scenario/earthquake.h"
 #include "scenario/emperor_change.h"
 #include "scenario/empire.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
+#include "scenario/message_media_text_blob.h"
 #include "scenario/scenario.h"
 #include "scenario/scenario_events_controller.h"
 #include "sound/city.h"
@@ -88,6 +91,10 @@ typedef struct {
     buffer *scenario_events;
     buffer *scenario_conditions;
     buffer *scenario_actions;
+    buffer *custom_messages;
+    buffer *custom_media;
+    buffer *message_media_text_blob;
+    buffer *message_media_metadata;
     buffer *empire;
     buffer *end_marker;
 } scenario_state;
@@ -95,7 +102,7 @@ typedef struct {
 static struct {
     scenario_version version;
     int num_pieces;
-    file_piece pieces[16];
+    file_piece pieces[20];
     scenario_state state;
 } scenario_data;
 
@@ -147,6 +154,10 @@ typedef struct {
     buffer *scenario_events;
     buffer *scenario_conditions;
     buffer *scenario_actions;
+    buffer *custom_messages;
+    buffer *custom_media;
+    buffer *message_media_text_blob;
+    buffer *message_media_metadata;
     buffer *max_game_year;
     buffer *earthquake;
     buffer *emperor_change_state;
@@ -238,6 +249,7 @@ typedef struct {
         int scenario_events;
         int scenario_conditions;
         int scenario_actions;
+        int custom_messages_and_media;
         int city_faction_info;
         int resource_version;
         int static_building_counts;
@@ -332,6 +344,12 @@ static void init_scenario_data(scenario_version version)
         state->scenario_events = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
         state->scenario_conditions = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
         state->scenario_actions = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
+    }
+    if (version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
+        state->custom_messages = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->custom_media = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->message_media_text_blob = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->message_media_metadata = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
     }
     if (version > SCENARIO_LAST_UNVERSIONED) {
         state->empire = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
@@ -435,6 +453,12 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
         version_data->features.scenario_conditions = 0;
         version_data->features.scenario_actions = 0;
     }
+
+    if (version > SAVE_GAME_LAST_NO_CUSTOM_MESSAGES) {
+        version_data->features.custom_messages_and_media = 1;
+    } else {
+        version_data->features.custom_messages_and_media = 0;
+    }
     
     version_data->features.scenario_version = version > SAVE_GAME_LAST_NO_SCENARIO_VERSION;
     version_data->features.city_faction_info = version <= SAVE_GAME_LAST_UNKNOWN_UNUSED_CITY_DATA;
@@ -520,6 +544,12 @@ static void init_savegame_data(savegame_version version)
     if (version_data.features.scenario_actions) {
         state->scenario_actions = create_savegame_piece(PIECE_SIZE_DYNAMIC, 0);
     }
+    if (version_data.features.custom_messages_and_media) {
+        state->custom_messages = create_savegame_piece(PIECE_SIZE_DYNAMIC, 0);
+        state->custom_media = create_savegame_piece(PIECE_SIZE_DYNAMIC, 0);
+        state->message_media_text_blob = create_savegame_piece(PIECE_SIZE_DYNAMIC, 0);
+        state->message_media_metadata = create_savegame_piece(PIECE_SIZE_DYNAMIC, 0);
+    }
     state->max_game_year = create_savegame_piece(4, 0);
     state->earthquake = create_savegame_piece(60, 0);
     state->emperor_change_state = create_savegame_piece(4, 0);
@@ -602,6 +632,11 @@ static void scenario_load_from_state(scenario_state *file, scenario_version vers
     } else {
         scenario_events_clear();
     }
+    custom_messages_clear_all();
+    if (version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
+        message_media_text_blob_load_state(file->message_media_text_blob, file->message_media_metadata);
+        custom_messages_load_state(file->custom_messages, file->custom_media);
+    }
     if (version > SCENARIO_LAST_UNVERSIONED) {
         empire_object_load(file->empire, version);
     }
@@ -622,6 +657,9 @@ static void scenario_save_to_state(scenario_state *file)
     scenario_save_state(file->scenario);
     scenario_requests_save_state(file->scenario_requests);
     scenario_events_save_state(file->scenario_events, file->scenario_conditions, file->scenario_actions);
+    custom_messages_save_state(file->custom_messages);
+    custom_media_save_state(file->custom_media);
+    message_media_text_blob_save_state(file->message_media_text_blob, file->message_media_metadata);
     empire_object_save(file->empire);
     buffer_skip(file->end_marker, 4);
 }
@@ -653,6 +691,11 @@ static void savegame_load_from_state(savegame_state *state, savegame_version ver
         scenario_events_load_state(state->scenario_events, state->scenario_conditions, state->scenario_actions);
     } else {
         scenario_events_clear();
+    }
+    custom_messages_clear_all();
+    if (scenario_version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
+        message_media_text_blob_load_state(state->message_media_text_blob, state->message_media_metadata);
+        custom_messages_load_state(state->custom_messages, state->custom_media);
     }
     scenario_map_init();
 
@@ -786,6 +829,9 @@ static void savegame_save_to_state(savegame_state *state)
     scenario_save_state(state->scenario);
     scenario_requests_save_state(state->scenario_requests);
     scenario_events_save_state(state->scenario_events, state->scenario_conditions, state->scenario_actions);
+    custom_messages_save_state(state->custom_messages);
+    custom_media_save_state(state->custom_media);
+    message_media_text_blob_save_state(state->message_media_text_blob, state->message_media_metadata);
 
     scenario_criteria_save_state(state->max_game_year);
     scenario_earthquake_save_state(state->earthquake);

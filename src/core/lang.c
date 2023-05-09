@@ -146,7 +146,7 @@ static void set_message_parameters(lang_message *m, int title, int text, int urg
 }
 
 
-void load_custom_messages(void)
+void load_augustus_messages(void)
 {
     int i = 321;
     while (i < MAX_MESSAGE_ENTRIES) {

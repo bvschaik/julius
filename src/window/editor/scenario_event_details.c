@@ -106,7 +106,7 @@ static struct {
 
 static void populate_list(int offset)
 {
-    //Ensure we dont offset past the end or beginning of the list.
+    // Ensure we dont offset past the end or beginning of the list.
     if (data.total_sub_items - offset < MAX_VISIBLE_ROWS) {
         offset = data.total_sub_items - MAX_VISIBLE_ROWS;
     }

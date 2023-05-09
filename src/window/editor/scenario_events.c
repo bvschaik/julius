@@ -69,7 +69,7 @@ static void init(void)
 
 static void populate_list(int offset)
 {
-    //Ensure we dont offset past the end or beginning of the list.
+    // Ensure we dont offset past the end or beginning of the list.
     if (data.total_events - offset < MAX_VISIBLE_ROWS) {
         offset = data.total_events - MAX_VISIBLE_ROWS;
     }

@@ -489,6 +489,10 @@ set(ASSETS_FILES
 set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/building.c
     ${PROJECT_SOURCE_DIR}/src/scenario/criteria.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/custom_media.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/custom_messages_export_xml.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/custom_messages_import_xml.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/custom_messages.c
     ${PROJECT_SOURCE_DIR}/src/scenario/demand_change.c
     ${PROJECT_SOURCE_DIR}/src/scenario/distant_battle.c
     ${PROJECT_SOURCE_DIR}/src/scenario/earthquake.c
@@ -500,6 +504,7 @@ set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/gladiator_revolt.c
     ${PROJECT_SOURCE_DIR}/src/scenario/invasion.c
     ${PROJECT_SOURCE_DIR}/src/scenario/map.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/message_media_text_blob.c
     ${PROJECT_SOURCE_DIR}/src/scenario/price_change.c
     ${PROJECT_SOURCE_DIR}/src/scenario/property.c
     ${PROJECT_SOURCE_DIR}/src/scenario/random_event.c
@@ -606,6 +611,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/editor/allowed_buildings.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/attributes.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/build_menu.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/custom_messages.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/demand_changes.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_demand_change.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_invasion.c

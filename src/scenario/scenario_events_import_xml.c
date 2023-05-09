@@ -14,6 +14,7 @@
 #include "core/zlib_helper.h"
 #include "empire/city.h"
 #include "empire/type.h"
+#include "scenario/custom_messages.h"
 #include "scenario/scenario_event.h"
 #include "scenario/scenario_event_data.h"
 #include "scenario/scenario_events_controller.h"
@@ -24,7 +25,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define XML_TOTAL_ELEMENTS 36
+#define XML_TOTAL_ELEMENTS 37
 
 static struct {
     int success;
@@ -48,6 +49,7 @@ static int xml_import_special_parse_limited_number(xml_data_attribute_t *attr, i
 static int xml_import_special_parse_min_max_number(xml_data_attribute_t *attr, int *target);
 static int xml_import_special_parse_resource(xml_data_attribute_t *attr, int *target);
 static int xml_import_special_parse_route(xml_data_attribute_t *attr, int *target);
+static int xml_import_special_parse_custom_message(xml_data_attribute_t *attr, int *target);
 
 static condition_types get_condition_type_from_element_name(const char *name);
 static action_types get_action_type_from_element_name(const char *name);
@@ -92,6 +94,7 @@ static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "trade_price_set", xml_import_create_action, 0, "actions" },
     { "empire_map_convert_future_trade_city", xml_import_create_action, 0, "actions" },
     { "request_immediately_start", xml_import_create_action, 0, "actions" },
+    { "show_custom_message", xml_import_create_action, 0, "actions" },
 };
 
 static int xml_import_start_scenario_events(void)
@@ -289,6 +292,8 @@ static int xml_import_special_parse_attribute(xml_data_attribute_t *attr, int *t
             return xml_import_special_parse_route(attr, target);
         case PARAMETER_TYPE_STANDARD_MESSAGE:
             return xml_import_special_parse_type(attr, PARAMETER_TYPE_STANDARD_MESSAGE, target);
+        case PARAMETER_TYPE_CUSTOM_MESSAGE:
+            return xml_import_special_parse_custom_message(attr, target);
         case PARAMETER_TYPE_UNDEFINED:
             return 1;
         default:
@@ -453,6 +458,27 @@ static int xml_import_special_parse_min_max_number(xml_data_attribute_t *attr, i
     }
 
     return xml_import_special_parse_limited_number(attr, target);
+}
+
+static int xml_import_special_parse_custom_message(xml_data_attribute_t *attr, int *target)
+{
+    int has_attr = xml_parser_has_attribute(attr->name);
+    if (!has_attr) {
+        xml_import_log_error("Missing attribute.");
+        return 0;
+    }
+
+    const char *value = xml_parser_get_attribute_string(attr->name);
+    const uint8_t *converted_name = string_from_ascii(value);
+    int message_id = custom_messages_get_id_by_uid(converted_name);
+
+    if (message_id) {
+        *target = message_id;
+        return 1;
+    } else {
+        xml_import_log_error("Could not find custom message. Setup custom messages first.");
+        return 0;
+    }
 }
 
 static void reset_data(void)

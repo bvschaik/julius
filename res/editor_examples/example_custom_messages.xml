@@ -1,0 +1,129 @@
+<?xml version="1.0"?>
+<!DOCTYPE messages>
+<messages version="1" language="english">
+    <!-- All messages must have a unique identifier (uid) that can be used to reference them.
+        Unique identifiers must be unique, there cannot be duplicates -->
+    <message uid="scenario briefing">
+        <!-- This is the text that will be displayed when the message is shown. Note that text uses Rich Text formatting, so it is possible to define new lines, paragraphs or built-in images.
+        @L will start a new line.
+        @P will start a new paragraph.
+        @G### will show an image where ### is the id of the image.-->
+        <title>Toga puer iratus est</title>
+        <subtitle>An assignment from a slightly fuming Caesar</subtitle>
+        <text>I am most displeased.@L
+        I ask you to give me a prosperous city, and what did you give me? A single palace and tent squalor as far as the eye can see.@L
+        I expected defending legions and you gave me winding roads and lion tamers running marathons.@L
+        I requested wheat and wine to test your industry, but you tore it down the day after.@P
+        
+        You shall find my favour hard to come by on your next assignment.@L
+        I shall be watching closely.@P
+
+        My dearest governor.@L
+		My most beloved governor.@L
+		I am most displeased... and my wrath is palpable.@L
+		@G1</text>
+        <!-- For sound files, it will look for the file in the following directories (in order):
+            ./community/sounds/
+            ./mp3/
+            ./wavs/
+        
+            It will play the file that matches the filename as soon as it finds it.
+            If it cannot find it at all, then it will simply not play anything. -->
+        <media type="sound" filename="fanfare_nu3.wav"/>
+        <!-- For background music files, it will look for the file in the following directories (in order):
+            ./community/sounds/
+            ./mp3/
+            ./wavs/
+        
+            It will play the file that matches the filename as soon as it finds it.
+            If it cannot find it at all, then it will simply not play anything. -->
+        <background_music filename="ROME1.WAV"/>
+    </message>
+    <message uid="caesar gives large slums warning">
+        <title>Message from Caesar</title>
+        <text>My dearest governor.@L
+        Did I not say I wish to see no sprawling slums in your city?@P
+        
+        I shall not warn you again.@L
+        My anger is growing, and the whips sing the songs of rowing.</text>
+        <!-- For video files, it will look for the file in the following directories (in order):
+            ./community/video/
+            ./smk/
+        
+            It will play the file that matches the filename as soon as it finds it.
+            If it cannot find it at all, then it will simply not play anything. -->
+        <media type="video" filename="Urgent_message1.smk"/>
+    </message>
+    <message uid="Message images 0 to 49">
+        <text>0 = @G0
+		1 = @G1
+		2 = @G2
+		3 = @G3
+		4 = @G4
+		5 = @G5
+		6 = @G6
+		7 = @G7
+		8 = @G8
+		9 = @G9
+        10 = @G10
+		11 = @G11
+		12 = @G12
+		13 = @G13
+		14 = @G14
+		15 = @G15
+		16 = @G16
+		17 = @G17
+		18 = @G18
+		19 = @G19
+        20 = @G20
+		21 = @G21
+		22 = @G22
+		23 = @G23
+		24 = @G24
+		25 = @G25
+		26 = @G26
+		27 = @G27
+		28 = @G28
+		29 = @G29
+        30 = @G30
+		31 = @G31
+		32 = @G32
+		33 = @G33
+		34 = @G34
+		35 = @G35
+		36 = @G36
+		37 = @G37
+		38 = @G38
+		39 = @G39
+        40 = @G30
+		41 = @G41
+		42 = @G42
+		43 = @G43
+		44 = @G44
+		45 = @G45
+		46 = @G46
+		47 = @G47
+		48 = @G48
+		49 = @G49</text>
+    </message>
+    <message uid="Message audio fanfare1">
+        <text>fanfare_nu1.wav</text>
+        <media type="sound" filename="fanfare_nu1.wav"/>
+    </message>
+    <message uid="Message audio fanfare2">
+        <text>fanfare_nu2.wav</text>
+        <media type="sound" filename="fanfare_nu2.wav"/>
+    </message>
+    <message uid="Message audio fanfare3">
+        <text>fanfare_nu3.wav</text>
+        <media type="sound" filename="fanfare_nu3.wav"/>
+    </message>
+    <message uid="Message audio fanfare4">
+        <text>fanfare_nu4.wav</text>
+        <media type="sound" filename="fanfare_nu4.wav"/>
+    </message>
+    <message uid="Message audio fanfare5">
+        <text>fanfare_nu5.wav</text>
+        <media type="sound" filename="fanfare_nu5.wav"/>
+    </message>
+</messages>

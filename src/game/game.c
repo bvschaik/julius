@@ -102,7 +102,7 @@ int game_init(void)
     }
 
     init_augustus_building_properties();
-    load_custom_messages();
+    load_augustus_messages();
     sound_system_init();
     game_state_init();
     resource_init();
@@ -123,7 +123,7 @@ static int reload_language(int is_editor, int reload_images)
     }
     encoding_type encoding = update_encoding();
     if (!is_editor) {
-        load_custom_messages();
+        load_augustus_messages();
     }
 
     if (!image_load_fonts(encoding)) {

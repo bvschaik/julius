@@ -45,10 +45,19 @@ void xml_exporter_add_attribute_text(const char *name, const uint8_t *value);
 void xml_exporter_add_attribute_int(const char *name, int value);
 
 /**
+ * @brief Exports a text inside the current element. Will close the start tag if it is still open.
+ * 
+ * @param value The value of the attribute.
+ */
+void xml_exporter_add_element_text(const uint8_t *value);
+
+/**
  * @brief Closes the current element,
  *        creating a end-tag (or ending the start-tag as an empty-element tag).
+ * 
+ * @param keep_inline Should the close tag be kept on the same line without whitespaces or a newline added?
  */
-void xml_exporter_close_element(void);
+void xml_exporter_close_element(int keep_inline);
 
 /**
  * @brief Adds the requested number of whitespaces to the buffer.

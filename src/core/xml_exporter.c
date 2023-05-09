@@ -66,7 +66,7 @@ static void export_declaration_doctype(const char *type)
     xml_exporter_newline();
 }
 
-static void finish_start_tag(int has_children)
+static void finish_start_tag(int has_children, int add_newline_for_children)
 {
     if (data.current_element->start_tag_done == 1) {
         return;
@@ -75,7 +75,9 @@ static void finish_start_tag(int has_children)
     data.current_element->start_tag_done = 1;
     if (has_children) {
         buffer_write_raw(data.output_buf, ">", 1);
-        xml_exporter_newline();
+        if (add_newline_for_children) {
+            xml_exporter_newline();
+        }
     } else {
         buffer_write_raw(data.output_buf, "/>", 2);
         xml_exporter_newline();
@@ -85,11 +87,13 @@ static void finish_start_tag(int has_children)
     }
 }
 
-static void create_end_tag(void)
+static void create_end_tag(int keep_inline)
 {
     data.current_element->element_closed_off = 1;
     
-    xml_exporter_whitespaces(data.current_element_depth * WHITESPACES_PER_TAB);
+    if (!keep_inline) {
+        xml_exporter_whitespaces(data.current_element_depth * WHITESPACES_PER_TAB);
+    }
     buffer_write_raw(data.output_buf, "</", 2);
     ascii_as_const_string(data.output_buf, data.current_element->name);
     buffer_write_raw(data.output_buf, ">", 1);
@@ -118,10 +122,10 @@ void xml_exporter_init(buffer *buf, const char *type)
 void xml_exporter_new_element(const char *name, int is_child)
 {
     if (is_child) {
-        finish_start_tag(1);
+        finish_start_tag(1, 1);
         increase_depth();
     } else {
-        xml_exporter_close_element();
+        xml_exporter_close_element(0);
         same_depth_new_element();
     }
     data.current_element->name = name;
@@ -156,13 +160,21 @@ void xml_exporter_add_attribute_int(const char *name, int value)
     buffer_write_raw(data.output_buf, text_out_2, 1);
 }
 
-void xml_exporter_close_element(void)
+void xml_exporter_add_element_text(const uint8_t *value)
+{
+    if (data.current_element->start_tag_done == 0) {
+        finish_start_tag(1, 0);
+    }
+    buffer_write_raw(data.output_buf, value, string_length(value));
+}
+
+void xml_exporter_close_element(int keep_inline)
 {
     if (data.current_element) {
         if (data.current_element->start_tag_done == 0) {
-            finish_start_tag(0);
+            finish_start_tag(0, 1);
         } else if (data.current_element->element_closed_off == 0) {
-            create_end_tag();
+            create_end_tag(keep_inline);
         }
     }
 }
