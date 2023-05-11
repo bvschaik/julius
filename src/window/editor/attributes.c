@@ -28,6 +28,7 @@
 #include "window/editor/price_changes.h"
 #include "window/editor/requests.h"
 #include "window/editor/scenario_events.h"
+#include "window/editor/select_custom_message.h"
 #include "window/editor/special_events.h"
 #include "window/editor/starting_conditions.h"
 #include "window/editor/win_criteria.h"
@@ -184,6 +185,15 @@ static void draw_foreground(void)
     button_border_draw(470, 116, 250, 30, data.focus_button_id == 12);
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_CUSTOM_MESSAGES_TITLE, 470, 125, 250, FONT_NORMAL_BLACK);
 
+    button_border_draw(470, 156, 250, 30, data.focus_button_id == 13);
+    if (!scenario_editor_get_custom_message_introduction()) {
+        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_SELECT_INTRO, 470, 165, 250, FONT_NORMAL_BLACK);
+    } else {
+        text_draw_number(scenario_editor_get_custom_message_introduction(), '@',
+            " ", 470, 165, FONT_NORMAL_BLACK, 0);
+        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_DESELECT_INTRO, 490, 165, 230, FONT_NORMAL_BLACK);
+    }
+
     arrow_buttons_draw(0, 0, image_arrows, 2);
 
     graphics_reset_dialog();
@@ -278,12 +288,19 @@ static void button_custom_messages(int param1, int param2)
 
 static void button_change_intro(int param1, int param2)
 {
-
+    stop(0);
+    if (!scenario_editor_get_custom_message_introduction()) {
+        window_editor_select_custom_message_show(scenario_editor_set_custom_message_introduction);
+    } else {
+        scenario_editor_set_custom_message_introduction(0);
+        window_request_refresh();
+    }
 }
 
 static void button_delete_intro(int param1, int param2)
 {
-
+    stop(0);
+    scenario_editor_set_custom_message_introduction(0);
 }
 
 static void change_climate(int param1, int param2)

@@ -154,6 +154,7 @@ static void button_event(int button_index, int param2)
     if (!data.list[target_index]) {
         return;
     };
+    window_message_dialog_show_custom_message(data.list[target_index]->id, 0, 0, 1);
 }
 
 static void on_scroll(void)

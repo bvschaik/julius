@@ -17,6 +17,7 @@
 #include "window/editor/select_scenario_action_type.h"
 #include "window/editor/select_city_by_type.h"
 #include "window/editor/select_city_trade_route.h"
+#include "window/editor/select_custom_message.h"
 #include "window/editor/select_special_attribute_mapping.h"
 #include "window/numeric_input.h"
 #include "window/select_list.h"
@@ -34,6 +35,7 @@ static void set_param_value(int value);
 static void set_parameter_being_edited(int value);
 static void set_resource_value(int value);
 static void resource_selection(void);
+static void custom_message_selection(void);
 static void change_parameter(xml_data_attribute_t *parameter, int param1);
 
 static generic_button buttons[] = {
@@ -236,6 +238,11 @@ static void resource_selection(void)
         resource_texts, RESOURCE_MAX - 1, set_resource_value);
 }
 
+static void custom_message_selection(void)
+{
+    window_editor_select_custom_message_show(set_param_value);
+}
+
 static void change_parameter(xml_data_attribute_t *parameter, int param1)
 {
     set_parameter_being_edited(param1);
@@ -262,6 +269,9 @@ static void change_parameter(xml_data_attribute_t *parameter, int param1)
             return;
         case PARAMETER_TYPE_RESOURCE:
             resource_selection();
+            return;
+        case PARAMETER_TYPE_CUSTOM_MESSAGE:
+            custom_message_selection();
             return;
         default:
             return;

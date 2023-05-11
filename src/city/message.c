@@ -157,13 +157,17 @@ static void show_message_popup(int message_id)
     city_message *msg = &data.messages[message_id];
     data.consecutive_message_delay = 5;
     msg->is_read = 1;
-    int text_id = city_message_get_text_id(msg->message_type);
-    if (!has_video(text_id)) {
-        play_sound(text_id);
+    if (msg->message_type != MESSAGE_CUSTOM_MESSAGE) {
+        int text_id = city_message_get_text_id(msg->message_type);
+        if (!has_video(text_id)) {
+            play_sound(text_id);
+        }
+        window_message_dialog_show_city_message(text_id,
+            msg->year, msg->month, msg->param1, msg->param2,
+            city_message_get_advisor(msg->message_type), 1);
+    } else {
+        window_message_dialog_show_custom_message(msg->param1, msg->year, msg->month, 0);
     }
-    window_message_dialog_show_city_message(text_id,
-        msg->year, msg->month, msg->param1, msg->param2,
-        city_message_get_advisor(msg->message_type), 1);
 }
 
 void city_message_disable_sound_for_next_message(void)
@@ -197,7 +201,7 @@ void city_message_post(int use_popup, int message_type, int param1, int param2)
     msg->month = game_time_month();
     msg->param1 = param1;
     msg->param2 = param2;
-    msg->sequence = data.next_message_sequence++;
+    msg->sequence = ++data.next_message_sequence;
 
     int text_id = city_message_get_text_id(message_type);
     lang_message_type lang_msg_type = lang_get_message(text_id)->message_type;

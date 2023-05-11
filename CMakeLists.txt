@@ -628,6 +628,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/editor/scenario_condition_edit.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/select_city_by_type.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/select_city_trade_route.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/select_custom_message.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/select_scenario_action_type.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/select_scenario_condition_type.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/select_special_attribute_mapping.c

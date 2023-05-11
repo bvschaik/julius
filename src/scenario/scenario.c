@@ -569,7 +569,7 @@ void scenario_load_state(buffer *buf, buffer *buf_requests, int version)
     scenario.empire.distant_battle_enemy_travel_months = buffer_read_u8(buf);
     scenario.open_play_scenario_id = buffer_read_u8(buf);
 
-    scenario.intro_custom_message_id = -1;
+    scenario.intro_custom_message_id = 0;
     if (version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
         scenario.intro_custom_message_id = buffer_read_i32(buf);
     }

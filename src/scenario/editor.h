@@ -105,4 +105,7 @@ void scenario_editor_set_time_limit(int years);
 void scenario_editor_toggle_survival_time(void);
 void scenario_editor_set_survival_time(int years);
 
+int scenario_editor_get_custom_message_introduction(void);
+void scenario_editor_set_custom_message_introduction(int id);
+
 #endif // SCENARIO_EDITOR_H

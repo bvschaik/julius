@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "core/image_group.h"
 #include "core/lang.h"
+#include "game/time.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -14,6 +15,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "scenario/custom_messages.h"
 #include "scenario/property.h"
 #include "translation/translation.h"
 #include "window/city.h"
@@ -75,6 +77,16 @@ static struct {
     int focus_button_id;
 } data;
 
+static int review_briefing_button_should_be_active(void)
+{
+    if (!scenario_is_custom()) {
+        return 1;
+    } else if (scenario_intro_message()) {
+        return 1;
+    }
+    return 0;
+}
+
 static void init(void)
 {
     city_message_sort_and_compact();
@@ -97,7 +109,7 @@ static void draw_background(void)
     lang_text_draw_centered(63, 0, 0, 48, BLOCK_SIZE * data.width_blocks, FONT_LARGE_BLACK);
     inner_panel_draw(data.x_text, data.y_text, data.text_width_blocks, data.text_height_blocks);
 
-    if (!scenario_is_custom()) {
+    if (review_briefing_button_should_be_active()) {
         button_border_draw(data.x_text + data.text_width_blocks * BLOCK_SIZE - 39, data.y_text - 30, 39, 28, 0);
     }
 
@@ -121,10 +133,13 @@ static void draw_messages(int total_messages)
     int index = scrollbar.scroll_position;
     for (int i = 0; i < max; i++, index++) {
         const city_message *msg = city_message_get(index);
-        const lang_message *lang_msg = lang_get_message(city_message_get_text_id(msg->message_type));
         int image_offset = 0;
-        if (lang_msg->message_type == MESSAGE_TYPE_DISASTER) {
-            image_offset = 2;
+        const lang_message *lang_msg = 0;
+        if (msg->message_type != MESSAGE_CUSTOM_MESSAGE) {
+            lang_msg = lang_get_message(city_message_get_text_id(msg->message_type));
+            if (lang_msg->message_type == MESSAGE_TYPE_DISASTER) {
+                image_offset = 2;
+            }
         }
         if (msg->is_read) {
             image_draw(image_group(GROUP_MESSAGE_ICON) + 15 + image_offset,
@@ -140,12 +155,20 @@ static void draw_messages(int total_messages)
         int width = lang_text_draw(25, msg->month, data.x_text + 42, data.y_text + 8 + 20 * i, font);
         lang_text_draw_year(msg->year,
             data.x_text + 42 + width, data.y_text + 8 + 20 * i, font);
-        text_draw(
-            lang_msg->title.text,
-            data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
+        if (msg->message_type != MESSAGE_CUSTOM_MESSAGE && lang_msg) {
+            text_draw(
+                lang_msg->title.text,
+                data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
+        } else {
+            custom_message_t *custom_msg = custom_messages_get(msg->param1);
+            if (custom_msg->title) {
+                text_draw(custom_msg->title->text, data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
+            } else {
+                text_draw(translation_for(TR_ACTION_TYPE_A_MESSAGE), data.x_text + 180, data.y_text + 8 + 20 * i, font, 0);
+            }
+        }
     }
     scrollbar_draw(&scrollbar);
-
 }
 
 static void draw_foreground(void)
@@ -155,7 +178,7 @@ static void draw_foreground(void)
     image_buttons_draw(16, 32 + BLOCK_SIZE * data.height_blocks - 42, &image_button_help, 1);
     image_buttons_draw(BLOCK_SIZE * data.width_blocks - 38, 32 + BLOCK_SIZE * data.height_blocks - 36,
         &image_button_close, 1);
-    if (!scenario_is_custom()) {
+    if (review_briefing_button_should_be_active()) {
         image_buttons_draw(data.x_text + data.text_width_blocks * BLOCK_SIZE - 36, data.y_text - 27, &show_briefing_button, 1);
     }
     draw_delete_read_button(BLOCK_SIZE * data.width_blocks - 58, 32 + BLOCK_SIZE * data.height_blocks - 36,
@@ -197,7 +220,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         data.focus_button_id = 14;
     }
 
-    if (!scenario_is_custom()) {
+    if (review_briefing_button_should_be_active()) {
         handled |= image_buttons_handle_mouse(m_dialog, data.x_text + data.text_width_blocks * BLOCK_SIZE - 36,
             data.y_text - 27, &show_briefing_button, 1, &button_id);
         if (button_id) {
@@ -239,11 +262,15 @@ static void button_message(int param1, int param2)
     if (id < city_message_count()) {
         const city_message *msg = city_message_get(id);
         city_message_mark_read(id);
-        window_message_dialog_show_city_message(
-            city_message_get_text_id(msg->message_type),
-            msg->year, msg->month, msg->param1, msg->param2,
-            city_message_get_advisor(msg->message_type),
-            0);
+        if (msg->message_type != MESSAGE_CUSTOM_MESSAGE) {
+            window_message_dialog_show_city_message(
+                city_message_get_text_id(msg->message_type),
+                msg->year, msg->month, msg->param1, msg->param2,
+                city_message_get_advisor(msg->message_type),
+                0);
+        } else {
+            window_message_dialog_show_custom_message(msg->param1, msg->year, msg->month, 0);
+        }
     }
 }
 
@@ -275,6 +302,8 @@ static void button_mission_briefing(int param1, int param2)
 {
     if (!scenario_is_custom()) {
         window_mission_briefing_show_review();
+    } else if (scenario_intro_message()) {
+        window_message_dialog_show_custom_message(scenario_intro_message(), game_time_year(), game_time_month(), 0);
     }
 }
 

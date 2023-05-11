@@ -364,6 +364,9 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
     scenario_events_process_all();
     building_menu_update();
     city_message_init_scenario();
+    if (scenario_intro_message()) {
+        city_message_post(1, MESSAGE_CUSTOM_MESSAGE, scenario_intro_message(), 0);
+    }
     return 1;
 }
 

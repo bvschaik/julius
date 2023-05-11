@@ -17,6 +17,7 @@
 #include "game/time.h"
 #include "scenario/data.h"
 #include "scenario/gladiator_revolt.h"
+#include "scenario/custom_messages.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 
@@ -321,5 +322,22 @@ int scenario_action_type_trade_route_amount_execute(scenario_action_t *action)
         }
     }
 
+    return 1;
+}
+
+int scenario_action_type_show_custom_message_execute(scenario_action_t *action)
+{
+    int custom_message_id = action->parameter1;
+
+    int custom_message_count = custom_messages_count();
+    if (custom_message_id < 1 || custom_message_id > custom_message_count) {
+        return 0;
+    }
+
+    custom_message_t *message = custom_messages_get(custom_message_id);
+
+    if (message && message->in_use) {
+        city_message_post(1, MESSAGE_CUSTOM_MESSAGE, message->id, 0);
+    }
     return 1;
 }

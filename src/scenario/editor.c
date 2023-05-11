@@ -558,3 +558,13 @@ void scenario_editor_set_survival_time(int years)
     scenario.win_criteria.survival_time.years = years;
     scenario.is_saved = 0;
 }
+
+int scenario_editor_get_custom_message_introduction(void)
+{
+    return scenario.intro_custom_message_id;
+}
+
+void scenario_editor_set_custom_message_introduction(int id)
+{
+    scenario.intro_custom_message_id = id;
+}

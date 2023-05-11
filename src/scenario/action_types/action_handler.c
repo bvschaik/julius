@@ -57,6 +57,8 @@ int scenario_action_type_execute(scenario_action_t *action)
             return scenario_action_type_trade_problems_sea_execute(action);
         case ACTION_TYPE_TRADE_SET_PRICE:
             return scenario_action_type_trade_price_set_execute(action);
+        case ACTION_TYPE_SHOW_CUSTOM_MESSAGE:
+            return scenario_action_type_show_custom_message_execute(action);
         default:
             return 0;
     }

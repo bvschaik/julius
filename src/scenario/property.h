@@ -61,4 +61,6 @@ int scenario_initial_funds(void);
 
 int scenario_rescue_loan(void);
 
+int scenario_intro_message(void);
+
 #endif // SCENARIO_PROPERTY_H

@@ -141,6 +141,7 @@ void game_file_editor_create_scenario(int size)
 {
     create_blank_map(size);
     prepare_map_for_editing();
+    scenario_editor_set_custom_message_introduction(0);
 }
 
 int game_file_editor_load_scenario(const char *scenario_file)

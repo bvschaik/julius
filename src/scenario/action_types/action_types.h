@@ -39,4 +39,6 @@ int scenario_action_type_trade_route_amount_execute(scenario_action_t *action);
 void scenario_action_type_city_health_init(scenario_action_t *action);
 int scenario_action_type_city_health_execute(scenario_action_t *action);
 
+int scenario_action_type_show_custom_message_execute(scenario_action_t *action);
+
 #endif // ACTION_TYPES_H

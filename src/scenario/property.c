@@ -142,3 +142,8 @@ int scenario_rescue_loan(void)
 {
     return scenario.rescue_loan;
 }
+
+int scenario_intro_message(void)
+{
+    return scenario.intro_custom_message_id;
+}
