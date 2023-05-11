@@ -84,7 +84,6 @@ typedef struct {
     const uint8_t *text;
     const char *xml_attr_name;
     building_type industry;
-    building_type workshop;
     int production_per_month;
     struct {
         warning_type needed;
@@ -120,7 +119,9 @@ int resource_is_inventory(resource_type resource);
 
 resource_type resource_get_from_industry(building_type industry);
 
-resource_type resource_get_raw_material_for_good(resource_type good);
+const resource_type *resource_get_raw_materials_for_good(resource_type good);
+
+const resource_type *resource_get_goods_from_raw_material(resource_type raw_material);
 
 const resource_data *resource_get_data(resource_type resource);
 

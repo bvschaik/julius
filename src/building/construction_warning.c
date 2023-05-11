@@ -198,20 +198,22 @@ static void check_raw_material_access(building_type type)
     if (good == RESOURCE_NONE) {
         return;
     }
-    resource_type raw_material = resource_get_raw_material_for_good(good);
-    if (raw_material == RESOURCE_NONE) {
+    const resource_type *raw_materials = resource_get_raw_materials_for_good(good);
+    if (raw_materials == 0) {
         return;
     }
-    const resource_data *data = resource_get_data(raw_material);
-    if (building_count_active(data->industry) <= 0) {
-        if (city_resource_count(good) <= 0 && city_resource_count(raw_material) <= 0) {
-            show(data->warning.needed);
-            if (empire_can_produce_resource(raw_material)) {
-                show(data->warning.create_industry);
-            } else if (!empire_can_import_resource(raw_material)) {
-                show(WARNING_OPEN_TRADE_TO_IMPORT);
-            } else if (!(city_resource_trade_status(raw_material) & TRADE_STATUS_IMPORT)) {
-                show(WARNING_TRADE_IMPORT_RESOURCE);
+    for (int i = 0; raw_materials[i] != RESOURCE_NONE; i++) {
+        const resource_data *data = resource_get_data(raw_materials[i]);
+        if (building_count_active(data->industry) <= 0) {
+            if (city_resource_count(good) <= 0 && city_resource_count(raw_materials[i]) <= 0) {
+                show(data->warning.needed);
+                if (empire_can_produce_resource(raw_materials[i])) {
+                    show(data->warning.create_industry);
+                } else if (!empire_can_import_resource(raw_materials[i])) {
+                    show(WARNING_OPEN_TRADE_TO_IMPORT);
+                } else if (!(city_resource_trade_status(raw_materials[i]) & TRADE_STATUS_IMPORT)) {
+                    show(WARNING_TRADE_IMPORT_RESOURCE);
+                }
             }
         }
     }

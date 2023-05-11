@@ -147,10 +147,15 @@ int can_produce_resource(int resource)
 
 int empire_can_produce_resource(int resource)
 {
-    resource_type raw_resource = resource_get_raw_material_for_good(resource);
+    const resource_type *raw_resources = resource_get_raw_materials_for_good(resource);
     // finished goods: check imports of raw materials
-    if (raw_resource != RESOURCE_NONE) {
-        return empire_can_import_resource(raw_resource) || can_produce_resource(raw_resource);
+    if (raw_resources != 0) {
+        for (int i = 0; raw_resources[i] != RESOURCE_NONE; i++) {
+            if (!empire_can_import_resource(raw_resources[i]) || !can_produce_resource(raw_resources[i])) {
+                return 0;
+            }
+        }
+        return 1;
     }
     // check if we can produce the raw materials
     return can_produce_resource(resource);
@@ -158,10 +163,15 @@ int empire_can_produce_resource(int resource)
 
 int empire_can_produce_resource_potentially(int resource)
 {
-    resource_type raw_resource = resource_get_raw_material_for_good(resource);
+    const resource_type *raw_resources = resource_get_raw_materials_for_good(resource);
     // finished goods: check imports of raw materials
-    if (raw_resource != RESOURCE_NONE) {
-        return empire_can_import_resource_potentially(raw_resource) || can_produce_resource(raw_resource);
+    if (raw_resources != 0) {
+        for (int i = 0; raw_resources[i] != RESOURCE_NONE; i++) {
+            if (!empire_can_import_resource_potentially(raw_resources[i]) || !can_produce_resource(raw_resources[i])) {
+                return 0;
+            }
+        }
+        return 1;
     }
     // check if we can produce the raw materials
     return can_produce_resource(resource);

@@ -39,7 +39,7 @@ int building_is_raw_resource_producer(building_type type)
 int building_is_workshop(building_type type)
 {
     resource_type good = resource_get_from_industry(type);
-    return good != RESOURCE_NONE && resource_get_raw_material_for_good(good) != RESOURCE_NONE;
+    return good != RESOURCE_NONE && resource_get_raw_materials_for_good(good) != 0;
 }
 
 int building_get_efficiency(const building *b)
@@ -383,6 +383,21 @@ void building_curse_farms(int big_curse)
     }
 }
 
+static int is_valid_raw_material_for_building(building_type type, resource_type raw_material)
+{
+    resource_type good = resource_get_from_industry(type);
+    if (good == RESOURCE_NONE) {
+        return 0;
+    }
+    const resource_type *raw_materials = resource_get_raw_materials_for_good(good);
+    for (int i = 0; raw_materials[i] != RESOURCE_NONE; i++) {
+        if (raw_materials[i] == raw_material) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 void building_workshop_add_raw_material(building *b, int resource)
 {
     if (!b->id) {
@@ -390,21 +405,25 @@ void building_workshop_add_raw_material(building *b, int resource)
     }
     if (b->type == BUILDING_CITY_MINT && resource == RESOURCE_GOLD) {
         b->loads_stored += RESOURCE_ONE_LOAD;
-    } else if (building_is_workshop(b->type) && resource_get_data(resource)->workshop == b->type) {
+    } else if (building_is_workshop(b->type) && is_valid_raw_material_for_building(b->type, resource)) {
         b->loads_stored++;
     }
 }
 
 int building_has_workshop_for_raw_material_with_room(int resource, int road_network_id)
 {
-    building_type type = resource_get_data(resource)->workshop;
-    if (type == BUILDING_NONE) {
+    const resource_type *goods = resource_get_goods_from_raw_material(resource);
+
+    if (goods == 0) {
         return 0;
     }
-    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-        if (b->state == BUILDING_STATE_IN_USE && b->has_road_access && b->distance_from_entry > 0 &&
-            b->road_network_id == road_network_id && b->loads_stored < 2) {
-            return 1;
+    for (int i = 0; goods[i] != RESOURCE_NONE; i++) {
+        building_type type = resource_get_data(goods[i])->industry;
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state == BUILDING_STATE_IN_USE && b->has_road_access && b->distance_from_entry > 0 &&
+                b->road_network_id == road_network_id && b->loads_stored < 2) {
+                return 1;
+            }
         }
     }
     return 0;
@@ -415,30 +434,34 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
-    building_type type = resource_get_data(resource)->workshop;
-    if (type == BUILDING_NONE) {
+    const resource_type *goods = resource_get_goods_from_raw_material(resource);
+
+    if (goods == 0) {
         return 0;
     }
-    int max_loads_stored = type == BUILDING_CITY_MINT ? 2 * RESOURCE_ONE_LOAD : 2;
     int min_dist = INFINITE;
     building *min_building = 0;
-    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-        if (b->state != BUILDING_STATE_IN_USE || !b->has_road_access || b->distance_from_entry <= 0 ||
-            b->road_network_id != road_network_id || b->loads_stored >= max_loads_stored) {
-            continue;
-        }
-        if (type == BUILDING_CITY_MINT) {
-            if (b->data.monument.phase != MONUMENT_FINISHED || b->output_resource_id == RESOURCE_GOLD) {
+    for (int i = 0; goods[i] != RESOURCE_NONE; i++) {
+        building_type type = resource_get_data(goods[i])->industry;
+        int max_loads_stored = type == BUILDING_CITY_MINT ? 2 * RESOURCE_ONE_LOAD : 2;
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE || !b->has_road_access || b->distance_from_entry <= 0 ||
+                b->road_network_id != road_network_id || b->loads_stored >= max_loads_stored) {
                 continue;
             }
-        }
-        int dist = calc_maximum_distance(b->x, b->y, x, y);
-        if (b->loads_stored > 0) {
-            dist += 20;
-        }
-        if (dist < min_dist) {
-            min_dist = dist;
-            min_building = b;
+            if (type == BUILDING_CITY_MINT) {
+                if (b->data.monument.phase != MONUMENT_FINISHED || b->output_resource_id == RESOURCE_GOLD) {
+                    continue;
+                }
+            }
+            int dist = calc_maximum_distance(b->x, b->y, x, y);
+            if (b->loads_stored > 0) {
+                dist += 20;
+            }
+            if (dist < min_dist) {
+                min_dist = dist;
+                min_building = b;
+            }
         }
     }
     if (min_building) {
@@ -453,25 +476,31 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int road_
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
-    building_type type = resource_get_data(resource)->workshop;
-    if (type == BUILDING_NONE) {
+    const resource_type *goods = resource_get_goods_from_raw_material(resource);
+
+    if (goods == 0) {
         return 0;
     }
     int min_dist = INFINITE;
     building *min_building = 0;
-    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-        if (b->state != BUILDING_STATE_IN_USE ||
-            !b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
-            continue;
-        }
-        if (type == BUILDING_CITY_MINT && b->output_resource_id == RESOURCE_GOLD) {
-            continue;
-        }
-        int dist = 10 * b->loads_stored +
-            calc_maximum_distance(b->x, b->y, x, y);
-        if (dist < min_dist) {
-            min_dist = dist;
-            min_building = b;
+    for (int i = 0; goods[i] != RESOURCE_NONE; i++) {
+        building_type type = resource_get_data(goods[i])->industry;
+        for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+            if (b->state != BUILDING_STATE_IN_USE ||
+                !b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
+                continue;
+            }
+            if (type == BUILDING_CITY_MINT) {
+                if (b->data.monument.phase != MONUMENT_FINISHED || b->output_resource_id == RESOURCE_GOLD) {
+                    continue;
+                }
+            }
+            int dist = 10 * b->loads_stored +
+                calc_maximum_distance(b->x, b->y, x, y);
+            if (dist < min_dist) {
+                min_dist = dist;
+                min_building = b;
+            }
         }
     }
     if (min_building) {

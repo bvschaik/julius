@@ -10,7 +10,14 @@
 #include "scenario/property.h"
 #include "translation/translation.h"
 
+#include <string.h>
+
 #define RESOURCE_ALL (RESOURCE_MAX + RESOURCE_TOTAL_SPECIAL)
+
+typedef struct {
+    resource_type raw_material;
+    resource_type good;
+} resource_chain;
 
 static const resource_type resource_mappings[][RESOURCE_ALL] = {
     {
@@ -60,13 +67,13 @@ static resource_data resource_info[RESOURCE_ALL] = {
     [RESOURCE_FRUIT]      = { .type = RESOURCE_FRUIT,      .xml_attr_name = "fruit",       .flags = RESOURCE_FLAG_FOOD | RESOURCE_FLAG_INVENTORY, .industry = BUILDING_FRUIT_FARM,         .production_per_month = 80,  .default_trade_price = {  38,  30 } },
     [RESOURCE_MEAT]       = { .type = RESOURCE_MEAT,       .xml_attr_name = "meat",        .flags = RESOURCE_FLAG_FOOD | RESOURCE_FLAG_INVENTORY, .industry = BUILDING_PIG_FARM,           .production_per_month = 80,  .default_trade_price = {  44,  36 } },
     [RESOURCE_FISH]       = { .type = RESOURCE_FISH,       .xml_attr_name = "fish",        .flags = RESOURCE_FLAG_FOOD | RESOURCE_FLAG_INVENTORY, .industry = BUILDING_WHARF,              .production_per_month = 100, .default_trade_price = {  44,  36 } },
-    [RESOURCE_CLAY]       = { .type = RESOURCE_CLAY,       .xml_attr_name = "clay",        .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_CLAY_PIT,           .production_per_month = 80,  .default_trade_price = {  40,  30 }, .workshop = BUILDING_POTTERY_WORKSHOP,   .warning = { WARNING_CLAY_NEEDED,   WARNING_BUILD_CLAY_PIT    } },
-    [RESOURCE_TIMBER]     = { .type = RESOURCE_TIMBER,     .xml_attr_name = "timber|wood", .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_TIMBER_YARD,        .production_per_month = 80,  .default_trade_price = {  50,  35 }, .workshop = BUILDING_FURNITURE_WORKSHOP, .warning = { WARNING_TIMBER_NEEDED, WARNING_BUILD_TIMBER_YARD } },
-    [RESOURCE_OLIVES]     = { .type = RESOURCE_OLIVES,     .xml_attr_name = "olives",      .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_OLIVE_FARM,         .production_per_month = 80,  .default_trade_price = {  42,  34 }, .workshop = BUILDING_OIL_WORKSHOP,       .warning = { WARNING_OLIVES_NEEDED, WARNING_BUILD_OLIVE_FARM  } },
-    [RESOURCE_VINES]      = { .type = RESOURCE_VINES,      .xml_attr_name = "vines",       .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_VINES_FARM,         .production_per_month = 80,  .default_trade_price = {  44,  36 }, .workshop = BUILDING_WINE_WORKSHOP,      .warning = { WARNING_VINES_NEEDED,  WARNING_BUILD_VINES_FARM  } },
-    [RESOURCE_IRON]       = { .type = RESOURCE_IRON,       .xml_attr_name = "iron",        .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_IRON_MINE,          .production_per_month = 80,  .default_trade_price = {  60,  40 }, .workshop = BUILDING_WEAPONS_WORKSHOP,   .warning = { WARNING_IRON_NEEDED,   WARNING_BUILD_IRON_MINE   } },
+    [RESOURCE_CLAY]       = { .type = RESOURCE_CLAY,       .xml_attr_name = "clay",        .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_CLAY_PIT,           .production_per_month = 80,  .default_trade_price = {  40,  30 }, .warning = { WARNING_CLAY_NEEDED,   WARNING_BUILD_CLAY_PIT    } },
+    [RESOURCE_TIMBER]     = { .type = RESOURCE_TIMBER,     .xml_attr_name = "timber|wood", .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_TIMBER_YARD,        .production_per_month = 80,  .default_trade_price = {  50,  35 }, .warning = { WARNING_TIMBER_NEEDED, WARNING_BUILD_TIMBER_YARD } },
+    [RESOURCE_OLIVES]     = { .type = RESOURCE_OLIVES,     .xml_attr_name = "olives",      .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_OLIVE_FARM,         .production_per_month = 80,  .default_trade_price = {  42,  34 }, .warning = { WARNING_OLIVES_NEEDED, WARNING_BUILD_OLIVE_FARM  } },
+    [RESOURCE_VINES]      = { .type = RESOURCE_VINES,      .xml_attr_name = "vines",       .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_VINES_FARM,         .production_per_month = 80,  .default_trade_price = {  44,  36 }, .warning = { WARNING_VINES_NEEDED,  WARNING_BUILD_VINES_FARM  } },
+    [RESOURCE_IRON]       = { .type = RESOURCE_IRON,       .xml_attr_name = "iron",        .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_IRON_MINE,          .production_per_month = 80,  .default_trade_price = {  60,  40 }, .warning = { WARNING_IRON_NEEDED,   WARNING_BUILD_IRON_MINE   } },
     [RESOURCE_MARBLE]     = { .type = RESOURCE_MARBLE,     .xml_attr_name = "marble",      .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_MARBLE_QUARRY,      .production_per_month = 40,  .default_trade_price = { 200, 140 } },
-    [RESOURCE_GOLD]       = { .type = RESOURCE_GOLD,       .xml_attr_name = "gold",        .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_GOLD_MINE,          .production_per_month = 20,  .default_trade_price = { 350, 250 }, .workshop = BUILDING_CITY_MINT,          .warning = { WARNING_GOLD_NEEDED,   WARNING_BUILD_GOLD_MINE   } },
+    [RESOURCE_GOLD]       = { .type = RESOURCE_GOLD,       .xml_attr_name = "gold",        .flags = RESOURCE_FLAG_STORABLE,                       .industry = BUILDING_GOLD_MINE,          .production_per_month = 20,  .default_trade_price = { 350, 250 }, .warning = { WARNING_GOLD_NEEDED,   WARNING_BUILD_GOLD_MINE   } },
     [RESOURCE_POTTERY]    = { .type = RESOURCE_POTTERY,    .xml_attr_name = "pottery",     .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_POTTERY_WORKSHOP,   .production_per_month = 40,  .default_trade_price = { 180, 140 } },
     [RESOURCE_FURNITURE]  = { .type = RESOURCE_FURNITURE,  .xml_attr_name = "furniture",   .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_FURNITURE_WORKSHOP, .production_per_month = 40,  .default_trade_price = { 200, 150 } },
     [RESOURCE_OIL]        = { .type = RESOURCE_OIL,        .xml_attr_name = "oil",         .flags = RESOURCE_FLAG_INVENTORY,                      .industry = BUILDING_OIL_WORKSHOP,       .production_per_month = 40,  .default_trade_price = { 180, 140 } },
@@ -76,6 +83,19 @@ static resource_data resource_info[RESOURCE_ALL] = {
     [RESOURCE_TROOPS]     = { .type = RESOURCE_TROOPS  }
 };
 
+static const resource_chain SUPPLY_CHAIN[] = {
+    { .raw_material = RESOURCE_CLAY,   .good = RESOURCE_POTTERY   },
+    { .raw_material = RESOURCE_TIMBER, .good = RESOURCE_FURNITURE },
+    { .raw_material = RESOURCE_OLIVES, .good = RESOURCE_OIL       },
+    { .raw_material = RESOURCE_VINES,  .good = RESOURCE_WINE      },
+    { .raw_material = RESOURCE_IRON,   .good = RESOURCE_WEAPONS   },
+    { .raw_material = RESOURCE_GOLD,   .good = RESOURCE_DENARII   },
+};
+
+#define SUPPLY_CHAIN_SIZE (sizeof(SUPPLY_CHAIN) / sizeof(resource_chain))
+
+static resource_type resource_list[SUPPLY_CHAIN_SIZE + 1];
+
 int resource_is_food(resource_type resource)
 {
     return (resource_info[resource].flags & RESOURCE_FLAG_FOOD) == RESOURCE_FLAG_FOOD;
@@ -83,7 +103,7 @@ int resource_is_food(resource_type resource)
 
 int resource_is_raw_material(resource_type resource)
 {
-    return !resource_is_food(resource) && resource_get_raw_material_for_good(resource) == RESOURCE_NONE;
+    return !resource_is_food(resource) && resource_get_raw_materials_for_good(resource) == 0;
 }
 
 int resource_is_inventory(resource_type resource)
@@ -104,14 +124,32 @@ resource_type resource_get_from_industry(building_type industry)
     return RESOURCE_NONE;
 }
 
-resource_type resource_get_raw_material_for_good(resource_type good)
+const resource_type *resource_get_raw_materials_for_good(resource_type good)
 {
-    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (resource_info[r].workshop == resource_info[good].industry) {
-            return r;
+    memset(resource_list, RESOURCE_NONE, sizeof(resource_type) * SUPPLY_CHAIN_SIZE);
+    int current_position = 0;
+    for (int i = 0; i < RESOURCE_ALL; i++) {
+        const resource_chain *chain = &SUPPLY_CHAIN[i];
+        if (chain->good == good) {
+            resource_list[current_position] = chain->raw_material;
+            current_position++;
         }
     }
-    return RESOURCE_NONE;
+    return current_position > 0 ? resource_list : 0;
+}
+
+const resource_type *resource_get_goods_from_raw_material(resource_type raw_material)
+{
+    memset(resource_list, RESOURCE_NONE, sizeof(resource_type) * SUPPLY_CHAIN_SIZE);
+    int current_position = 0;
+    for (int i = 0; i < RESOURCE_ALL; i++) {
+        const resource_chain *chain = &SUPPLY_CHAIN[i];
+        if (chain->raw_material == raw_material) {
+            resource_list[current_position] = chain->good;
+            current_position++;
+        }
+    }
+    return current_position > 0 ? resource_list : 0;
 }
 
 void resource_init(void)
