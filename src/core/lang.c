@@ -1,12 +1,14 @@
 #include "core/lang.h"
 
 #include "core/buffer.h"
+#include "core/encoding.h"
 #include "core/file.h"
 #include "core/io.h"
 #include "core/string.h"
 
 #include <stdlib.h>
 #include <string.h>
+#include <SDL.h>
 
 #define MAX_TEXT_ENTRIES 1000
 #define MAX_TEXT_DATA 200000
@@ -37,6 +39,49 @@ static struct {
     lang_message message_entries[MAX_MESSAGE_ENTRIES];
     uint8_t message_data[MAX_MESSAGE_DATA];
 } data;
+
+void dump_lang_data(void)
+{
+    int decomposed = encoding_system_uses_decomposed();
+    char buf[1024 * 10];
+    uint8_t *p;
+
+    SDL_Log("Lang text_data entries:");
+    for (int i = 0; i < MAX_TEXT_ENTRIES; ++i) {
+        if (data.text_entries[i].in_use) {
+            buf[0] = 0;
+            encoding_to_utf8(data.text_data + data.text_entries[i].offset, buf, sizeof(buf), decomposed);
+            SDL_Log("%d: %s", i, buf);
+        }
+    }
+    SDL_Log("Lang message_data entries:");
+    for (int i = 0; i < MAX_MESSAGE_ENTRIES; ++i) {
+        buf[0] = 0;
+        p = data.message_entries[i].title.text;
+        if (p) {
+            encoding_to_utf8(p, buf, sizeof(buf), decomposed);
+            SDL_Log("%d: %s", i, buf);
+        }
+        buf[0] = 0;
+        p = data.message_entries[i].subtitle.text;
+        if (p) {
+            encoding_to_utf8(p, buf, sizeof(buf), decomposed);
+            SDL_Log("    subtitle: %s", buf);
+        }
+        buf[0] = 0;
+        p = data.message_entries[i].video.text;
+        if (p) {
+            encoding_to_utf8(p, buf, sizeof(buf), decomposed);
+            SDL_Log("    video: %s", buf);
+        }
+        buf[0] = 0;
+        p = data.message_entries[i].content.text;
+        if (p) {
+            encoding_to_utf8(p, buf, sizeof(buf), decomposed);
+            SDL_Log("    content: %s", buf);
+        }
+    }
+}
 
 static int file_exists_in_dir(const char *dir, const char *file)
 {

@@ -130,6 +130,7 @@ static int reload_language(int is_editor, int reload_images)
         errlog("unable to load main graphics");
         return 0;
     }
+    dump_lang_data();
     return 1;
 }
 

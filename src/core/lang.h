@@ -69,6 +69,11 @@ typedef struct {
 } lang_message;
 
 /**
+ * Dump preloaded lang data
+ */
+void dump_lang_data(void);
+
+/**
  * Checks whether the directory contains language files
  * @param dir Directory to check
  * @return boolean true if it contains language files, false if not
