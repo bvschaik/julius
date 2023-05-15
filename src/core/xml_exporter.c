@@ -1,11 +1,6 @@
 #include "xml_exporter.h"
 
-#include "core/buffer.h"
 #include "core/string.h"
-#include "empire/city.h"
-#include "game/settings.h"
-#include "scenario/scenario_events_controller.h"
-#include "translation/translation.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -160,12 +155,17 @@ void xml_exporter_add_attribute_int(const char *name, int value)
     buffer_write_raw(data.output_buf, text_out_2, 1);
 }
 
+void xml_exporter_add_text(const uint8_t *value)
+{
+    buffer_write_raw(data.output_buf, value, string_length(value));
+}
+
 void xml_exporter_add_element_text(const uint8_t *value)
 {
     if (data.current_element->start_tag_done == 0) {
         finish_start_tag(1, 0);
     }
-    buffer_write_raw(data.output_buf, value, string_length(value));
+    xml_exporter_add_text(value);
 }
 
 void xml_exporter_close_element(int keep_inline)

@@ -1,8 +1,6 @@
 #include "custom_messages_import_xml.h"
 
-#include "core/array.h"
-#include "core/buffer.h"
-#include "core/io.h"
+#include "core/file.h"
 #include "core/lang.h"
 #include "core/log.h"
 #include "core/string.h"
@@ -10,6 +8,7 @@
 #include "scenario/custom_messages.h"
 #include "scenario/scenario_events_parameter_data.h"
 #include "window/plain_message_dialog.h"
+
 #include <math.h>
 #include <stdio.h>
 #include <string.h>

@@ -45,6 +45,13 @@ void xml_exporter_add_attribute_text(const char *name, const uint8_t *value);
 void xml_exporter_add_attribute_int(const char *name, int value);
 
 /**
+ * @brief Exports a text at the current position.
+ * 
+ * @param value The value of the attribute.
+ */
+void xml_exporter_add_text(const uint8_t *value);
+
+/**
  * @brief Exports a text inside the current element. Will close the start tag if it is still open.
  * 
  * @param value The value of the attribute.

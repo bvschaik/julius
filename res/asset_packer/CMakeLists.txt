@@ -49,12 +49,14 @@ set(ZLIB_FILES
 
 set(CORE_FILES
     ${MAIN_DIR}/src/core/array.c
+    ${MAIN_DIR}/src/core/buffer.c
     ${MAIN_DIR}/src/core/calc.c
     ${MAIN_DIR}/src/core/dir.c
     ${MAIN_DIR}/src/core/file.c
     ${MAIN_DIR}/src/core/image_packer.c
     ${MAIN_DIR}/src/core/png_read.c
     ${MAIN_DIR}/src/core/string.c
+    ${MAIN_DIR}/src/core/xml_exporter.c
     ${MAIN_DIR}/src/core/xml_parser.c
 )
 

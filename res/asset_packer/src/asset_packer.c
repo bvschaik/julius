@@ -6,10 +6,14 @@
 #include "assets/layer.h"
 #include "assets/xml.h"
 #include "core/array.h"
+#include "core/buffer.h"
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/image_packer.h"
+#include "core/io.h"
 #include "core/png_read.h"
+#include "core/string.h"
+#include "core/xml_exporter.h"
 #include "graphics/color.h"
 #include "platform/file_manager.h"
 
@@ -89,96 +93,92 @@ static int prepare_packed_assets_dir(void)
     return 1;
 }
 
-static void add_attribute_int(FILE *dest, const char *name, int value)
+static void add_attribute_int(const char *name, int value)
 {
     if (value != 0) {
-        fprintf(dest, " %s=\"%d\"", name, value);
+        xml_exporter_add_attribute_int(name, value);
     }
 }
 
-static void add_attribute_bool(FILE *dest, const char *name, int value, const char *expression_if_true)
+static void add_attribute_bool(const char *name, int value, const char *expression_if_true)
 {
     if (value != 0) {
-        fprintf(dest, " %s=\"%s\"", name, expression_if_true);
+        xml_exporter_add_attribute_text(name, string_from_ascii(expression_if_true));
     }
 }
 
-static void add_attribute_enum(FILE *dest, const char *name, int value, const char **display_value, int max_values)
+static void add_attribute_enum(const char *name, int value, const char **display_value, int max_values)
 {
     if (value > 0 && value <= max_values) {
-        fprintf(dest, " %s=\"%s\"", name, display_value[value - 1]);
+        xml_exporter_add_attribute_text(name, string_from_ascii(display_value[value - 1]));
     }
 }
 
-static void add_attribute_string(FILE *dest, const char *name, const char *value)
+static void add_attribute_string(const char *name, const char *value)
 {
     if (value && *value != 0) {
-        fprintf(dest, " %s=\"%s\"", name, value);
+        xml_exporter_add_attribute_text(name, string_from_ascii(value));
     }
 }
 
-static void create_image_xml_line(FILE *xml_file, const asset_image *image)
+static void create_image_xml_line(const asset_image *image)
 {
-    fprintf(xml_file, "%s<image", FORMAT_IDENT);
-
-    add_attribute_string(xml_file, "id", image->id);
+    xml_exporter_new_element("image", 1);
+    add_attribute_string("id", image->id);
     if (image->has_defined_size) {
-        add_attribute_int(xml_file, "width", image->img.width);
-        add_attribute_int(xml_file, "height", image->img.height);
+        add_attribute_int("width", image->img.width);
+        add_attribute_int("height", image->img.height);
     }
-    add_attribute_bool(xml_file, "isometric", image->img.is_isometric, "true");
-    fprintf(xml_file, ">%s", FORMAT_NEWLINE);
+    add_attribute_bool("isometric", image->img.is_isometric, "true");
 }
 
-static void create_layer_xml_line(FILE *xml_file, const layer *l)
+static void create_layer_xml_line(const layer *l)
 {
-    fprintf(xml_file, "%s%s<layer", FORMAT_IDENT, FORMAT_IDENT);
+    xml_exporter_new_element("layer", 1);
 
-    add_attribute_string(xml_file, "group", l->original_image_group);
-    add_attribute_string(xml_file, "image", l->original_image_id);
-    add_attribute_int(xml_file, "src_x", l->src_x);
-    add_attribute_int(xml_file, "src_y", l->src_y);
-    add_attribute_int(xml_file, "x", l->x_offset);
-    add_attribute_int(xml_file, "y", l->y_offset);
-    add_attribute_int(xml_file, "width", l->width);
-    add_attribute_int(xml_file, "height", l->height);
-    add_attribute_enum(xml_file, "invert", l->invert, LAYER_INVERT, 3);
-    add_attribute_enum(xml_file, "rotate", l->rotate, LAYER_ROTATE, 3);
-    add_attribute_enum(xml_file, "part", l->part, LAYER_PART, 2);
-    add_attribute_enum(xml_file, "mask", l->mask, LAYER_MASK, 2);
+    add_attribute_string("group", l->original_image_group);
+    add_attribute_string("image", l->original_image_id);
+    add_attribute_int("src_x", l->src_x);
+    add_attribute_int("src_y", l->src_y);
+    add_attribute_int("x", l->x_offset);
+    add_attribute_int("y", l->y_offset);
+    add_attribute_int("width", l->width);
+    add_attribute_int("height", l->height);
+    add_attribute_enum("invert", l->invert, LAYER_INVERT, 3);
+    add_attribute_enum("rotate", l->rotate, LAYER_ROTATE, 3);
+    add_attribute_enum("part", l->part, LAYER_PART, 2);
+    add_attribute_enum("mask", l->mask, LAYER_MASK, 2);
 
-    fprintf(xml_file, "/>%s", FORMAT_NEWLINE);
+    xml_exporter_close_element(0);
 }
 
-static void create_animation_xml_line(FILE *xml_file, const asset_image *image)
+static void create_animation_xml_line(const asset_image *image)
 {
-    fprintf(xml_file, "%s%s<animation", FORMAT_IDENT, FORMAT_IDENT);
+    xml_exporter_new_element("animation", 1);
 
     if (!image->has_frame_elements) {
-        add_attribute_int(xml_file, "frames", image->img.animation->num_sprites);
+        add_attribute_int("frames", image->img.animation->num_sprites);
     }
-    add_attribute_int(xml_file, "speed", image->img.animation->speed_id);
-    add_attribute_int(xml_file, "x", image->img.animation->sprite_offset_x);
-    add_attribute_int(xml_file, "y", image->img.animation->sprite_offset_y);
-    add_attribute_bool(xml_file, "reversible", image->img.animation->can_reverse, "true");
-
-    fprintf(xml_file, "%s>%s", image->has_frame_elements ? "" : "/", FORMAT_NEWLINE);
+    add_attribute_int("speed", image->img.animation->speed_id);
+    add_attribute_int("x", image->img.animation->sprite_offset_x);
+    add_attribute_int("y", image->img.animation->sprite_offset_y);
+    add_attribute_bool("reversible", image->img.animation->can_reverse, "true");
 }
 
-static void create_frame_xml_line(FILE *xml_file, const layer *l)
+static void create_frame_xml_line(const layer *l)
 {
-    fprintf(xml_file, "%s%s%s<frame", FORMAT_IDENT, FORMAT_IDENT, FORMAT_IDENT);
+    xml_exporter_new_element("frame", 1);
 
-    add_attribute_string(xml_file, "group", l->original_image_group);
-    add_attribute_string(xml_file, "image", l->original_image_id);
-    add_attribute_int(xml_file, "src_x", l->src_x);
-    add_attribute_int(xml_file, "src_y", l->src_y);
-    add_attribute_int(xml_file, "width", l->width);
-    add_attribute_int(xml_file, "height", l->height);
-    add_attribute_enum(xml_file, "invert", l->invert, LAYER_INVERT, 3);
-    add_attribute_enum(xml_file, "rotate", l->rotate, LAYER_ROTATE, 3);
+    add_attribute_string("group", l->original_image_group);
+    add_attribute_string("image", l->original_image_id);
+    add_attribute_int("src_x", l->src_x);
+    add_attribute_int("src_y", l->src_y);
+    add_attribute_int("width", l->width);
+    add_attribute_int("height", l->height);
+    add_attribute_enum("invert", l->invert, LAYER_INVERT, 3);
+    add_attribute_enum("rotate", l->rotate, LAYER_ROTATE, 3);
 
-    fprintf(xml_file, "/>%s", FORMAT_NEWLINE);
+    xml_exporter_close_element(0);
 }
 
 void new_packed_asset(packed_asset *asset, int index)
@@ -439,6 +439,49 @@ static void pack_group(int group_id)
     snprintf(current_dir, FILE_NAME_MAX, "%s/%s/", PACKED_ASSETS_DIR, group->name);
     snprintf(current_file, FILE_NAME_MAX, "%s/%s", PACKED_ASSETS_DIR, group->path);
 
+    buffer buf;
+    int buf_size = 5 * 1024 * 1024;
+    uint8_t *buf_data = malloc(buf_size);
+    buffer_init(&buf, buf_data, buf_size);
+    xml_exporter_init(&buf, "assetlist");
+    xml_exporter_add_text(string_from_ascii("<!-- XML auto packed by asset_packer. DO NOT use as a reference."));
+    xml_exporter_newline();
+    xml_exporter_add_text(string_from_ascii("     Use the assets directory from the source code instead. -->"));
+    xml_exporter_newline();
+    xml_exporter_newline();
+    xml_exporter_new_element("assetlist", 0);
+    xml_exporter_add_attribute_text("name", string_from_ascii(group->name));
+
+    for (int image_id = group->first_image_index; image_id <= group->last_image_index; image_id++) {
+        asset_image *image = asset_image_get_from_id(image_id);
+        create_image_xml_line(image);
+        for (layer *l = &image->first_layer; l; l = l->next) {
+            pack_layer(&packer, l);
+            create_layer_xml_line(l);
+        }
+        if (image->img.animation) {
+            create_animation_xml_line(image);
+            if (image->has_frame_elements) {
+                for (int i = 0; i < image->img.animation->num_sprites; i++) {
+                    image_id++;
+                    asset_image *frame = asset_image_get_from_id(image_id);
+                    layer *l = frame->last_layer;
+                    pack_layer(&packer, l);
+                    create_frame_xml_line(l);
+                }
+            }
+            xml_exporter_close_element(0);
+        }
+        xml_exporter_close_element(0);
+    }
+
+    xml_exporter_close_element(0);
+
+    packed_asset *asset;
+    array_foreach(packed_assets, asset) {
+        free(asset->pixels);
+    }
+
     FILE *xml_dest = fopen(current_file, "wb");
 
     if (!xml_dest) {
@@ -446,46 +489,11 @@ static void pack_group(int group_id)
         return;
     }
 
-    fprintf(xml_dest, "<?xml version=\"1.0\"?>\n");
-    fprintf(xml_dest, "<!DOCTYPE assetlist>\n\n");
-
-    fprintf(xml_dest, "<!-- XML auto packed by asset_packer. DO NOT use as a reference.\n");
-    fprintf(xml_dest, "     Use the assets directory from the source code instead. -->\n\n");
-
-    fprintf(xml_dest, "<assetlist name=\"%s\">%s", group->name, FORMAT_NEWLINE);
-
-    for (int image_id = group->first_image_index; image_id <= group->last_image_index; image_id++) {
-        asset_image *image = asset_image_get_from_id(image_id);
-        create_image_xml_line(xml_dest, image);
-        for (layer *l = &image->first_layer; l; l = l->next) {
-            pack_layer(&packer, l);
-            create_layer_xml_line(xml_dest, l);
-        }
-        if (image->img.animation) {
-            create_animation_xml_line(xml_dest, image);
-            if (image->has_frame_elements) {
-                for (int i = 0; i < image->img.animation->num_sprites; i++) {
-                    image_id++;
-                    asset_image *frame = asset_image_get_from_id(image_id);
-                    layer *l = frame->last_layer;
-                    pack_layer(&packer, l);
-                    create_frame_xml_line(xml_dest, l);
-                }
-                fprintf(xml_dest, "%s%s</animation>%s", FORMAT_IDENT, FORMAT_IDENT, FORMAT_NEWLINE);
-            }
-        }
-        fprintf(xml_dest, "%s</image>%s", FORMAT_IDENT, FORMAT_NEWLINE);
-    }
-
-    fprintf(xml_dest, "</assetlist>\n");
-
-    packed_asset *asset;
-    array_foreach(packed_assets, asset) {
-        free(asset->pixels);
-    }
+    fwrite(buf.data, 1, (size_t) buf.index, xml_dest);
 
     fclose(xml_dest);
     image_packer_free(&packer);
+    free(buf_data);
 
     snprintf(current_file, FILE_NAME_MAX, "%s/%s.png", PACKED_ASSETS_DIR, group->name);
 
