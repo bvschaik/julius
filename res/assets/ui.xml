@@ -224,6 +224,8 @@
 	<image id="Panelling_Silver_02" src="Panelling_Silver_02"/>
 	<image id="Panelling_Stone_01" src="Panelling_Stone_01"/>
 	<image id="Panelling_Stone_02" src="Panelling_Stone_02"/>
+	<image id="Panelling_Concrete_01" src="Panelling_Concrete_01"/>
+	<image id="Panelling_Concrete_02" src="Panelling_Concrete_02"/>
 	<!-- Note: Standards for custom legions -->
 	<image id="11Legion_Elephants" src="11Legion_Elephants"/>
 	<image id="13Legion_Bulls" src="13Legion_Bulls"/>
@@ -234,8 +236,8 @@
 	<image id="SeaRouteDot" width="5" height="5">
 		<layer group="182" image="7"/>
 	</image>
-	<image id="GoldShield" src="empire_gold_shield" />
-	<image id="First Ornament" src="Hibernia" />
-	<image src="Etna" />
-	<image src="Rhodes" />
+	<image id="GoldShield" src="empire_gold_shield"/>
+	<image id="First Ornament" src="Hibernia"/>
+	<image src="Etna"/>
+	<image src="Rhodes"/>
 </assetlist>
