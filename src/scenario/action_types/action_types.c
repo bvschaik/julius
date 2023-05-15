@@ -341,3 +341,12 @@ int scenario_action_type_show_custom_message_execute(scenario_action_t *action)
     }
     return 1;
 }
+
+int scenario_action_type_tax_rate_set_execute(scenario_action_t *action)
+{
+    int new_rate = action->parameter1;
+
+    city_finance_set_tax_percentage(new_rate);
+
+    return 1;
+}

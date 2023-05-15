@@ -91,7 +91,12 @@ int city_finance_tax_percentage(void)
 
 void city_finance_change_tax_percentage(int change)
 {
-    city_data.finance.tax_percentage = calc_bound(city_data.finance.tax_percentage + change, 0, 25);
+    city_finance_set_tax_percentage(city_data.finance.tax_percentage + change);
+}
+
+void city_finance_set_tax_percentage(int new_rate)
+{
+    city_data.finance.tax_percentage = calc_bound(new_rate, 0, 25);
 }
 
 int city_finance_percentage_taxed_people(void)

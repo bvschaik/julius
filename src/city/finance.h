@@ -43,6 +43,8 @@ int city_finance_tax_percentage(void);
 
 void city_finance_change_tax_percentage(int change);
 
+void city_finance_set_tax_percentage(int new_rate);
+
 int city_finance_percentage_taxed_people(void);
 
 int city_finance_estimated_tax_income(void);

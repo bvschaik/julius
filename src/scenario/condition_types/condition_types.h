@@ -36,4 +36,6 @@ int scenario_condition_type_time_met(const scenario_condition_t *condition);
 
 int scenario_condition_type_trade_sell_price_met(const scenario_condition_t *condition);
 
+int scenario_condition_type_tax_rate_met(const scenario_condition_t *condition);
+
 #endif // CONDITION_TYPES_H

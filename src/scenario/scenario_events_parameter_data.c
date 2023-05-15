@@ -75,6 +75,10 @@ static scenario_condition_data_t scenario_condition_data[CONDITION_TYPE_MAX] = {
                                         .xml_attr =     { .name = "request_is_ongoing",     .type = PARAMETER_TYPE_TEXT,     .key = TR_CONDITION_TYPE_REQUEST_IS_ONGOING },
                                         .xml_parm1 =    { .name = "request_id",     .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,         .max_limit = 19,     .key = TR_PARAMETER_TYPE_NUMBER },
                                         .xml_parm2 =    { .name = "check_for_ongoing",   .type = PARAMETER_TYPE_BOOLEAN,     .min_limit = 0,         .max_limit = 1,      .key = TR_PARAMETER_CHECK_FOR_ONGOING }, },
+    [CONDITION_TYPE_TAX_RATE]           = { .type = CONDITION_TYPE_TAX_RATE,
+                                        .xml_attr =     { .name = "tax_rate",       .type = PARAMETER_TYPE_TEXT,             .key = TR_CONDITION_TYPE_TAX_RATE },
+                                        .xml_parm1 =    { .name = "check",          .type = PARAMETER_TYPE_CHECK,            .min_limit = 1,         .max_limit = 3,         .key = TR_PARAMETER_TYPE_CHECK },
+                                        .xml_parm2 =    { .name = "value",          .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,         .max_limit = 25,       .key = TR_PARAMETER_TYPE_NUMBER }, },
 };
 
 scenario_condition_data_t *scenario_events_parameter_data_get_conditions_xml_attributes(condition_types type)
@@ -150,6 +154,9 @@ static scenario_action_data_t scenario_action_data[ACTION_TYPE_MAX] = {
     [ACTION_TYPE_SHOW_CUSTOM_MESSAGE]     = { .type = ACTION_TYPE_SHOW_CUSTOM_MESSAGE,
                                         .xml_attr =     { .name = "show_custom_message",     .type = PARAMETER_TYPE_TEXT,     .key = TR_ACTION_TYPE_SHOW_CUSTOM_MESSAGE },
                                         .xml_parm1 =    { .name = "message_uid",    .type = PARAMETER_TYPE_CUSTOM_MESSAGE,    .key = TR_PARAMETER_TYPE_NUMBER }, },
+    [ACTION_TYPE_TAX_RATE_SET]          = { .type = ACTION_TYPE_TAX_RATE_SET,
+                                        .xml_attr =     { .name = "tax_rate_set",          .type = PARAMETER_TYPE_TEXT,     .key = TR_ACTION_TYPE_TAX_RATE_SET },
+                                        .xml_parm1 =    { .name = "amount",         .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,      .max_limit = 25,     .key = TR_PARAMETER_TYPE_NUMBER }, },
 };
 
 scenario_action_data_t *scenario_events_parameter_data_get_actions_xml_attributes(action_types type)

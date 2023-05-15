@@ -277,3 +277,12 @@ int scenario_condition_type_trade_sell_price_met(const scenario_condition_t *con
     int trade_sell_price = trade_price_base_sell(resource);
     return comparison_helper_compare_values(comparison, trade_sell_price, value);
 }
+
+int scenario_condition_type_tax_rate_met(const scenario_condition_t *condition)
+{
+    int tax_rate = city_finance_tax_percentage();
+    int comparison = condition->parameter1;
+    int value = condition->parameter2;
+
+    return comparison_helper_compare_values(comparison, tax_rate, value);
+}
