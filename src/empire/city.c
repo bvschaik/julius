@@ -151,7 +151,7 @@ int empire_can_produce_resource(int resource)
     // finished goods: check imports of raw materials
     if (raw_resources != 0) {
         for (int i = 0; raw_resources[i] != RESOURCE_NONE; i++) {
-            if (!empire_can_import_resource(raw_resources[i]) || !can_produce_resource(raw_resources[i])) {
+            if (!empire_can_import_resource(raw_resources[i]) && !can_produce_resource(raw_resources[i])) {
                 return 0;
             }
         }
@@ -167,7 +167,7 @@ int empire_can_produce_resource_potentially(int resource)
     // finished goods: check imports of raw materials
     if (raw_resources != 0) {
         for (int i = 0; raw_resources[i] != RESOURCE_NONE; i++) {
-            if (!empire_can_import_resource_potentially(raw_resources[i]) || !can_produce_resource(raw_resources[i])) {
+            if (!empire_can_import_resource_potentially(raw_resources[i]) && !can_produce_resource(raw_resources[i])) {
                 return 0;
             }
         }
