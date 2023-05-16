@@ -5,6 +5,10 @@ static uint8_t EMPTY[] = {0};
 
 static lang_message msg;
 
+void dump_lang_data(void)
+{
+}
+
 int lang_load(int is_editor)
 {
     return 1;
