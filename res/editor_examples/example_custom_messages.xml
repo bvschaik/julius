@@ -23,7 +23,7 @@
 		I am most displeased... and my wrath is palpable.@L
 		@G1</text>
         <!-- For sound files, it will look for the file in the following directories (in order):
-            ./community/sounds/
+            ./community/audio/
             ./mp3/
             ./wavs/
         
@@ -31,7 +31,7 @@
             If it cannot find it at all, then it will simply not play anything. -->
         <media type="sound" filename="fanfare_nu3.wav"/>
         <!-- For background music files, it will look for the file in the following directories (in order):
-            ./community/sounds/
+            ./community/audio/
             ./mp3/
             ./wavs/
         

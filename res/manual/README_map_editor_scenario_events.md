@@ -109,6 +109,24 @@ Here is a list of available conditions that can be used.
     - "all_parks" = will count all gardens, statues and ponds.
 
 
+### Building count (inactive or active)
++ type = building_count_any
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ value = The amount to check for. Allowed values: Any number from 0 to 10000000.
++ building = Which type of building to cound.
+  - Allowed values: A very big list. Refer to: (special_attribute_mappings_buildings)
+  - Some notes:
+    - "all_farms" = will count all farm types.
+    - "all_raw_materials" = will count all marble quarries, clay pits, timber yards, iron and gold mines.
+    - "all_workshops" = will count all workshops.
+    - "all_small_temples" = will count all small temples.
+    - "all_large_temples" = will count all large temples.
+    - "all_grand_temples" = will count all grand temples. (Excluding pantheon)
+    - "all_trees" = will count all decorative trees.
+    - "all_paths" = will count all decorative paths. (Including garden paths.)
+    - "all_parks" = will count all gardens, statues and ponds.
+
+
 ### Count own troops
 + type = count_own_troops
 + check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
@@ -330,6 +348,19 @@ Here is a list of available conditions that can be used.
 + type = send_standard_message
 + text_id = The name of the message to display to the player.
   - Allowed values: A very big list. Refer to: (special_attribute_mappings_standard_message) in code.
+
+
+### Set Tax Rate
++ type = tax_rate_set
++ amount = The new tax rate to set for the player.
+  - Allowed values: Any number from 0 to 100.
+  - Note: This does not prevent the player from changing it again afterwards.
+
+
+### Show custom message
++ type = show_custom_message
++ message_uid = The unique name (uid) of the custom message to display to the player.
+  - Allowed values: Any uid of any message from custom messages that you have imported.
 
 
 ### Trade good price

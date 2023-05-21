@@ -107,7 +107,101 @@ int scenario_condition_type_building_count_active_met(const scenario_condition_t
             total_active_count += building_count_active(type);
             break;
     }
-    
+
+    return comparison_helper_compare_values(comparison, total_active_count, value);
+}
+
+int scenario_condition_type_building_count_any_met(const scenario_condition_t *condition)
+{
+    int comparison = condition->parameter1;
+    int value = condition->parameter2;
+    building_type type = condition->parameter3;
+
+    int total_active_count = 0;
+    switch(type) {
+        case BUILDING_MENU_FARMS:
+            total_active_count += building_count_total(BUILDING_WHEAT_FARM);
+            total_active_count += building_count_total(BUILDING_VEGETABLE_FARM);
+            total_active_count += building_count_total(BUILDING_FRUIT_FARM);
+            total_active_count += building_count_total(BUILDING_OLIVE_FARM);
+            total_active_count += building_count_total(BUILDING_VINES_FARM);
+            total_active_count += building_count_total(BUILDING_PIG_FARM);
+            break;
+        case BUILDING_MENU_RAW_MATERIALS:
+            total_active_count += building_count_total(BUILDING_MARBLE_QUARRY);
+            total_active_count += building_count_total(BUILDING_IRON_MINE);
+            total_active_count += building_count_total(BUILDING_TIMBER_YARD);
+            total_active_count += building_count_total(BUILDING_CLAY_PIT);
+            total_active_count += building_count_total(BUILDING_GOLD_MINE);
+            break;
+        case BUILDING_MENU_WORKSHOPS:
+            total_active_count += building_count_total(BUILDING_WINE_WORKSHOP);
+            total_active_count += building_count_total(BUILDING_OIL_WORKSHOP);
+            total_active_count += building_count_total(BUILDING_WEAPONS_WORKSHOP);
+            total_active_count += building_count_total(BUILDING_FURNITURE_WORKSHOP);
+            total_active_count += building_count_total(BUILDING_POTTERY_WORKSHOP);
+            total_active_count += building_count_total(BUILDING_CITY_MINT);
+            break;
+        case BUILDING_MENU_SMALL_TEMPLES:
+            total_active_count += building_count_total(BUILDING_SMALL_TEMPLE_CERES);
+            total_active_count += building_count_total(BUILDING_SMALL_TEMPLE_NEPTUNE);
+            total_active_count += building_count_total(BUILDING_SMALL_TEMPLE_MERCURY);
+            total_active_count += building_count_total(BUILDING_SMALL_TEMPLE_MARS);
+            total_active_count += building_count_total(BUILDING_SMALL_TEMPLE_VENUS);
+            break;
+        case BUILDING_MENU_LARGE_TEMPLES:
+            total_active_count += building_count_total(BUILDING_LARGE_TEMPLE_CERES);
+            total_active_count += building_count_total(BUILDING_LARGE_TEMPLE_NEPTUNE);
+            total_active_count += building_count_total(BUILDING_LARGE_TEMPLE_MERCURY);
+            total_active_count += building_count_total(BUILDING_LARGE_TEMPLE_MARS);
+            total_active_count += building_count_total(BUILDING_LARGE_TEMPLE_VENUS);
+            break;
+        case BUILDING_MENU_GRAND_TEMPLES:
+            total_active_count += building_count_total(BUILDING_GRAND_TEMPLE_CERES);
+            total_active_count += building_count_total(BUILDING_GRAND_TEMPLE_NEPTUNE);
+            total_active_count += building_count_total(BUILDING_GRAND_TEMPLE_MERCURY);
+            total_active_count += building_count_total(BUILDING_GRAND_TEMPLE_MARS);
+            total_active_count += building_count_total(BUILDING_GRAND_TEMPLE_VENUS);
+            break;
+        case BUILDING_MENU_TREES:
+            total_active_count += building_count_total(BUILDING_PINE_TREE);
+            total_active_count += building_count_total(BUILDING_FIR_TREE);
+            total_active_count += building_count_total(BUILDING_OAK_TREE);
+            total_active_count += building_count_total(BUILDING_ELM_TREE);
+            total_active_count += building_count_total(BUILDING_FIG_TREE);
+            total_active_count += building_count_total(BUILDING_PLUM_TREE);
+            total_active_count += building_count_total(BUILDING_PALM_TREE);
+            total_active_count += building_count_total(BUILDING_DATE_TREE);
+            break;
+        case BUILDING_MENU_PATHS:
+            total_active_count += building_count_total(BUILDING_PINE_PATH);
+            total_active_count += building_count_total(BUILDING_FIR_PATH);
+            total_active_count += building_count_total(BUILDING_OAK_PATH);
+            total_active_count += building_count_total(BUILDING_ELM_PATH);
+            total_active_count += building_count_total(BUILDING_FIG_PATH);
+            total_active_count += building_count_total(BUILDING_PLUM_PATH);
+            total_active_count += building_count_total(BUILDING_PALM_PATH);
+            total_active_count += building_count_total(BUILDING_DATE_PATH);
+            total_active_count += building_count_total(BUILDING_GARDEN_PATH);
+            break;
+        case BUILDING_MENU_PARKS:
+            total_active_count += building_count_total(BUILDING_GARDENS);
+            total_active_count += building_count_total(BUILDING_GRAND_GARDEN);
+            total_active_count += building_count_total(BUILDING_SMALL_STATUE);
+            total_active_count += building_count_total(BUILDING_MEDIUM_STATUE);
+            total_active_count += building_count_total(BUILDING_LARGE_STATUE);
+            total_active_count += building_count_total(BUILDING_SMALL_STATUE_ALT);
+            total_active_count += building_count_total(BUILDING_SMALL_STATUE_ALT_B);
+            total_active_count += building_count_total(BUILDING_LEGION_STATUE);
+            total_active_count += building_count_total(BUILDING_GLADIATOR_STATUE);
+            total_active_count += building_count_total(BUILDING_SMALL_POND);
+            total_active_count += building_count_total(BUILDING_LARGE_POND);
+            total_active_count += building_count_total(BUILDING_DOLPHIN_FOUNTAIN);
+            break;
+        default:
+            total_active_count += building_count_total(type);
+            break;
+    }
 
     return comparison_helper_compare_values(comparison, total_active_count, value);
 }

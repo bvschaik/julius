@@ -79,6 +79,11 @@ static scenario_condition_data_t scenario_condition_data[CONDITION_TYPE_MAX] = {
                                         .xml_attr =     { .name = "tax_rate",       .type = PARAMETER_TYPE_TEXT,             .key = TR_CONDITION_TYPE_TAX_RATE },
                                         .xml_parm1 =    { .name = "check",          .type = PARAMETER_TYPE_CHECK,            .min_limit = 1,         .max_limit = 3,         .key = TR_PARAMETER_TYPE_CHECK },
                                         .xml_parm2 =    { .name = "value",          .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,         .max_limit = 25,       .key = TR_PARAMETER_TYPE_NUMBER }, },
+    [CONDITION_TYPE_BUILDING_COUNT_ANY]     = { .type = CONDITION_TYPE_BUILDING_COUNT_ANY,
+                                        .xml_attr =     { .name = "building_count_any",     .type = PARAMETER_TYPE_TEXT,  .key = TR_CONDITION_TYPE_BUILDING_COUNT_ANY },
+                                        .xml_parm1 =    { .name = "check",          .type = PARAMETER_TYPE_CHECK,            .min_limit = 1,         .max_limit = 3,             .key = TR_PARAMETER_TYPE_CHECK },
+                                        .xml_parm2 =    { .name = "value",          .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,         .max_limit = UNLIMITED,     .key = TR_PARAMETER_TYPE_NUMBER },
+                                        .xml_parm3 =    { .name = "building",       .type = PARAMETER_TYPE_BUILDING_COUNTING,                        .key = TR_PARAMETER_TYPE_BUILDING_COUNTING }, },
 };
 
 scenario_condition_data_t *scenario_events_parameter_data_get_conditions_xml_attributes(condition_types type)

@@ -989,6 +989,7 @@ static translation_string all_strings[] = {
     {TR_CONDITION_TYPE_COUNT_OWN_TROOPS, "Count of own troops"},
     {TR_CONDITION_TYPE_REQUEST_IS_ONGOING, "Request is ongoing"},
     {TR_CONDITION_TYPE_TAX_RATE, "Tax rate"},
+    {TR_CONDITION_TYPE_BUILDING_COUNT_ANY, "Count of building type"},
     {TR_ACTION_TYPE_ADJUST_FAVOR, "Adjust favor"},
     {TR_ACTION_TYPE_ADJUST_MONEY, "Adjust money"},
     {TR_ACTION_TYPE_ADJUST_SAVINGS, "Adjust savings"},
