@@ -102,7 +102,7 @@ static void add_warehouse(building *b)
     int y_offset[9] = { 0, 1, 0, 1, 2, 0, 2, 1, 2 };
     int corner = building_rotation_get_corner(2 * building_rotation_get_rotation());
 
-    b->storage_id = building_storage_create();
+    b->storage_id = building_storage_create(b->id);
     b->prev_part_building_id = 0;
     map_building_tiles_add(b->id, b->x + x_offset[corner], b->y + y_offset[corner], 1,
         image_group(GROUP_BUILDING_WAREHOUSE), TERRAIN_BUILDING);
@@ -133,6 +133,12 @@ static void add_building(building *b)
     }
 }
 
+static void add_depot(building *b)
+{
+    b->data.depot.current_order.condition.condition_type = ORDER_CONDITION_ALWAYS;
+    add_building(b);
+}
+
 static void add_to_map(int type, building *b, int size,
     int orientation, int waterside_orientation_abs, int waterside_orientation_rel)
 {
@@ -159,7 +165,7 @@ static void add_to_map(int type, building *b, int size,
             break;
         // distribution
         case BUILDING_GRANARY:
-            b->storage_id = building_storage_create();
+            b->storage_id = building_storage_create(b->id);
             add_building(b);
             map_tiles_update_area_roads(b->x, b->y, 5);
             break;
@@ -276,6 +282,9 @@ static void add_to_map(int type, building *b, int size,
             break;
         case BUILDING_HIGHWAY:
             add_building(b);
+            break;
+        case BUILDING_DEPOT:
+            add_depot(b);
             break;
     }
     map_routing_update_land();

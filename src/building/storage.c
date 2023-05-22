@@ -15,12 +15,10 @@
 #define STORAGE_STATIC_BUFFER_SIZE 10
 #define STORAGE_CURRENT_BUFFER_SIZE (STORAGE_STATIC_BUFFER_SIZE + RESOURCE_MAX)
 
-typedef struct {
-    int id;
-    int in_use;
-    int building_id;
-    building_storage storage;
-} data_storage;
+#define FULL_STORAGE 32
+#define THREE_QUARTERS_STORAGE 24
+#define HALF_STORAGE 16
+#define QUARTER_STORAGE 8
 
 static array(data_storage) storages;
 
@@ -42,6 +40,11 @@ void building_storage_clear_all(void)
     }
 }
 
+int building_storage_get_array_size(void)
+{
+    return storages.size;
+}
+
 void building_storage_reset_building_ids(void)
 {
     data_storage *storage;
@@ -61,16 +64,16 @@ void building_storage_reset_building_ids(void)
             if (b->storage_id) {
                 if (array_item(storages, b->storage_id)->building_id) {
                     // storage is already connected to a building: corrupt, create new
-                    b->storage_id = building_storage_create();
+                    b->storage_id = building_storage_create(b->id);
                 } else {
-                    array_item(storages, b->storage_id)->building_id = i;
+                    array_item(storages, b->storage_id)->building_id = b->id;
                 }
             }
         }
     }
 }
 
-int building_storage_create(void)
+int building_storage_create(int building_id)
 {
     data_storage *storage;
     array_new_item(storages, 1, storage);
@@ -78,6 +81,7 @@ int building_storage_create(void)
         return 0;
     }
     storage->in_use = 1;
+    storage->building_id = building_id;
     if (config_get(CONFIG_GP_CH_WAREHOUSES_DONT_ACCEPT)) {
         building_storage_accept_none(storage->id);
     }
@@ -105,6 +109,11 @@ void building_storage_delete(int storage_id)
 const building_storage *building_storage_get(int storage_id)
 {
     return &array_item(storages, storage_id)->storage;
+}
+
+const data_storage *building_storage_get_array_entry(int storage_id)
+{
+    return array_item(storages, storage_id);
 }
 
 void building_storage_set_data(int storage_id, building_storage new_data)
@@ -191,6 +200,35 @@ void building_storage_accept_none(int storage_id)
     data_storage *s = array_item(storages, storage_id);
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         s->storage.resource_state[r] = BUILDING_STORAGE_STATE_NOT_ACCEPTING;
+    }
+}
+
+int building_storage_resource_max_storable(building *b, resource_type resource_id)
+{
+    if (b->type == BUILDING_GRANARY && resource_id >= RESOURCE_MIN_NON_FOOD) {
+        return 0;
+    }
+
+    const building_storage *s = building_storage_get(b->storage_id);
+    switch (s->resource_state[resource_id]) {
+        case BUILDING_STORAGE_STATE_ACCEPTING:
+        case BUILDING_STORAGE_STATE_GETTING:
+            return FULL_STORAGE;
+            break;
+        case BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS:
+        case BUILDING_STORAGE_STATE_GETTING_3QUARTERS:
+            return THREE_QUARTERS_STORAGE;
+            break;
+        case BUILDING_STORAGE_STATE_ACCEPTING_HALF:
+        case BUILDING_STORAGE_STATE_GETTING_HALF:
+            return HALF_STORAGE;
+            break;
+        case BUILDING_STORAGE_STATE_ACCEPTING_QUARTER:
+        case BUILDING_STORAGE_STATE_GETTING_QUARTER:
+            return QUARTER_STORAGE;
+            break;
+        default:
+            return 0;
     }
 }
 

@@ -73,7 +73,9 @@ augustus_building_properties_mapping augustus_building_properties[] = {
     {BUILDING_GLADIATOR_STATUE, {1,1,0,0,1}, "Aesthetics", ""},
     {BUILDING_HIGHWAY, { 2, 1, 0, 0, 0 }, "Logistics", "Highway_Placement"},
     {BUILDING_GOLD_MINE, { 2, 0, 0, 0, 0 }, "Industry", "Gold_Mine_C_OFF"},
-    {BUILDING_CITY_MINT, { 3, 0, 0, 0, 0 }, "Administration", "City_Mint_ON"}
+    {BUILDING_CITY_MINT, { 3, 0, 0, 0, 0 }, "Administration", "City_Mint_ON"},
+    {BUILDING_HIGHWAY, { 2, 1, 0, 0, 0 }, "Logistics", "Highway_Placement"},
+    {BUILDING_DEPOT, {2,0,0,0,0}, "Logistics", "Cart Depot N OFF"}
 };
 
 #define AUGUSTUS_BUILDINGS (sizeof(augustus_building_properties) / sizeof(augustus_building_properties_mapping))

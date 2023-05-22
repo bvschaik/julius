@@ -23,6 +23,10 @@ int building_granary_add_resource(building *granary, int resource, int is_produc
 
 int building_granary_remove_resource(building *granary, int resource, int amount);
 
+int building_granary_try_remove_resource(building *granary, int resource, int desired_amount);
+
+int building_granary_try_fullload_remove_resource(building *granary, int resource, int desired_loads);
+
 int building_granaries_remove_resource(int resource, int amount);
 
 int building_granaries_send_resources_to_rome(int resource, int amount);

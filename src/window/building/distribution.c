@@ -627,7 +627,8 @@ void window_building_draw_granary(building_info_context *c)
     c->height_blocks = 22 + y_offset_blocks;    
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
-    lang_text_draw_centered(98, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+    text_draw_label_and_number_centered(lang_get_string(28, b->type), b->storage_id, "",
+        c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
 
     if (b->has_plague) {
         window_building_play_sound(c, "wavs/clinic.wav");
@@ -918,7 +919,8 @@ void window_building_draw_warehouse(building_info_context *c)
     c->height_blocks = 22 + y_offset_blocks;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
-    lang_text_draw_centered(99, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
+    text_draw_label_and_number_centered(lang_get_string(28, b->type), b->storage_id, "",
+        c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
 
     if (b->has_plague) {
         window_building_play_sound(c, "wavs/clinic.wav");

@@ -33,6 +33,8 @@ int building_warehouse_is_not_accepting(int resource, building *b);
 
 int building_warehouse_remove_resource(building *warehouse, int resource, int amount);
 
+int building_warehouse_try_remove_resource(building *warehouse, int resource, int desired_amount);
+
 void building_warehouse_remove_resource_curse(building *warehouse, int amount);
 
 void building_warehouse_space_set_image(building *space, int resource);

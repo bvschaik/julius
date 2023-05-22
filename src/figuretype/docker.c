@@ -411,8 +411,8 @@ void figure_docker_action(figure *f)
             } else {
                 int has_queued_docker = 0;
                 for (int i = 0; i < 3; i++) {
-                    if (b->data.dock.docker_ids[i]) {
-                        figure *docker = figure_get(b->data.dock.docker_ids[i]);
+                    if (b->data.distribution.cartpusher_ids[i]) {
+                        figure *docker = figure_get(b->data.distribution.cartpusher_ids[i]);
                         if (docker->id == b->data.dock.queued_docker_id && docker->state == FIGURE_STATE_ALIVE) {
                             if (docker->action_state == FIGURE_ACTION_133_DOCKER_IMPORT_QUEUE ||
                                 docker->action_state == FIGURE_ACTION_134_DOCKER_EXPORT_QUEUE) {

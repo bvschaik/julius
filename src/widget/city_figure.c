@@ -250,6 +250,7 @@ static void draw_figure(const figure *f, int x, int y, float scale, int highligh
     if (f->cart_image_id) {
         switch (f->type) {
             case FIGURE_CART_PUSHER:
+            case FIGURE_DEPOT_CART_PUSHER:
             case FIGURE_WAREHOUSEMAN:
             case FIGURE_LION_TAMER:
             case FIGURE_DOCKER:

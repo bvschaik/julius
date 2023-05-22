@@ -698,8 +698,8 @@ int figure_trade_ship_is_trading(figure *ship)
         return TRADE_SHIP_BUYING;
     }
     for (int i = 0; i < 3; i++) {
-        figure *f = figure_get(b->data.dock.docker_ids[i]);
-        if (!b->data.dock.docker_ids[i] || f->state != FIGURE_STATE_ALIVE) {
+        figure *f = figure_get(b->data.distribution.cartpusher_ids[i]);
+        if (!b->data.distribution.cartpusher_ids[i] || f->state != FIGURE_STATE_ALIVE) {
             continue;
         }
         switch (f->action_state) {
@@ -723,8 +723,8 @@ static int trade_dock_ignoring_ship(figure *f)
     building *b = building_get(f->destination_building_id);
     if (b->state == BUILDING_STATE_IN_USE && b->type == BUILDING_DOCK && b->num_workers > 0 && b->data.dock.trade_ship_id == f->id) {
         for (int i = 0; i < 3; i++) {
-            if (b->data.dock.docker_ids[i]) {
-                figure *docker = figure_get(b->data.dock.docker_ids[i]);
+            if (b->data.distribution.cartpusher_ids[i]) {
+                figure *docker = figure_get(b->data.distribution.cartpusher_ids[i]);
                 if (docker->state == FIGURE_STATE_ALIVE && docker->action_state != FIGURE_ACTION_132_DOCKER_IDLING) {
                     return 0;
                 }

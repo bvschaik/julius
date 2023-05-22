@@ -15,6 +15,7 @@
 #include "figure/formation.h"
 #include "figure/phrase.h"
 #include "figure/trader.h"
+#include "figuretype/depot.h"
 #include "figuretype/trader.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -27,10 +28,12 @@
 #include "scenario/property.h"
 #include "translation/translation.h"
 #include "widget/city.h"
+#include "window/city.h"
 
 #define CAMEL_PORTRAIT 59
 
 static void select_figure(int index, int param2);
+static void depot_recall(int figure_id, int param2);
 
 static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
     8, 4, 4, 9, 51, 13, 8, 16, 7, 51, // 0-9
@@ -61,9 +64,14 @@ static generic_button figure_buttons[] = {
     {386, 46, 50, 50, select_figure, button_none, 6, 0},
 };
 
+static generic_button depot_figure_buttons[] = {
+    {90, 160, 100, 22, depot_recall, button_none, 0, 0},
+};
+
 static struct {
     int figure_images[7];
     int focus_button_id;
+    int depot_focus_button_id;
     building_info_context *context_for_callback;
 } data;
 
@@ -88,6 +96,8 @@ static int big_people_image(figure_type type)
         case FIGURE_BARKEEP:
         case FIGURE_BARKEEP_SUPPLIER:
             return assets_get_image_id("Entertainment", "Barkeep Portrait");
+        case FIGURE_DEPOT_CART_PUSHER:
+            return image_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[FIGURE_IMMIGRANT] - 1;
         default:
             break;
     }
@@ -362,6 +372,48 @@ static void draw_cartpusher(building_info_context *c, figure *f)
     }
 }
 
+static int is_depot_cartpusher_recalled(figure *f)
+{
+    return f->action_state == FIGURE_ACTION_243_DEPOT_CART_PUSHER_RETURNING ||
+        f->action_state == FIGURE_ACTION_244_DEPOT_CART_PUSHER_CANCEL_ORDER;
+}
+
+static void draw_depot_cartpusher(building_info_context* c, figure* f)
+{
+    image_draw(big_people_image(f->type), c->x_offset + 28, c->y_offset + 112, COLOR_MASK_NONE, SCALE_NONE);
+    
+    building *depot = building_get(f->building_id);
+    int resource_type = depot->data.depot.current_order.resource_type;
+
+    lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
+    if (f->loads_sold_or_carrying > 0 && f->resource_id != RESOURCE_NONE) {
+        image_draw(resource_get_data(resource_type)->image.icon,
+            c->x_offset + 92, c->y_offset + 135, COLOR_MASK_NONE, SCALE_NONE);
+        text_draw_number(f->loads_sold_or_carrying, 'x', "", c->x_offset + 118, c->y_offset + 139, FONT_NORMAL_BROWN, COLOR_BLACK);
+    }
+
+    building *source = building_get(depot->data.depot.current_order.src_storage_id);
+    building *destination = building_get(depot->data.depot.current_order.dst_storage_id);
+
+    button_border_draw(c->x_offset + 90, c->y_offset + 160, 100, 22,
+        data.depot_focus_button_id == 1 || is_depot_cartpusher_recalled(f));
+    translation_key button_text = is_depot_cartpusher_recalled(f) ?
+         TR_FIGURE_INFO_DEPOT_RETURNING : TR_FIGURE_INFO_DEPOT_RECALL;
+    text_draw_centered(translation_for(button_text), c->x_offset + 90, c->y_offset + 166,
+        100, FONT_SMALL_PLAIN, 0);
+
+    int width = text_draw(translation_for(TR_FIGURE_INFO_DEPOT_DELIVER), c->x_offset + 40, c->y_offset + 216,
+        FONT_NORMAL_BROWN, 0);
+    image_draw(resource_get_data(resource_type)->image.icon,
+        c->x_offset + 40 + width, c->y_offset + 210, COLOR_MASK_NONE, SCALE_NONE);
+    width += text_draw_label_and_number(lang_get_string(28, source->type),
+        source->storage_id, " -----) ",
+        c->x_offset + 66 + width, c->y_offset + 216, FONT_NORMAL_BROWN, 0);
+    text_draw_label_and_number(lang_get_string(28, destination->type),
+        destination->storage_id, "",
+        c->x_offset + 66 + width, c->y_offset + 216, FONT_NORMAL_BROWN, 0);
+}
+
 static void draw_supplier(building_info_context *c, figure *f)
 {
     image_draw(big_people_image(f->type), c->x_offset + 28, c->y_offset + 112, COLOR_MASK_NONE, SCALE_NONE);
@@ -476,6 +528,8 @@ static void draw_figure_info(building_info_context *c, int figure_id)
         draw_supplier(c, f);
     } else if (type == FIGURE_WORK_CAMP_WORKER || type == FIGURE_WORK_CAMP_SLAVE) {
         draw_monument_worker(c, f);
+    } else if (type == FIGURE_DEPOT_CART_PUSHER) {
+        draw_depot_cartpusher(c, f);
     } else {
         draw_normal_figure(c, f);
     }
@@ -534,6 +588,12 @@ int window_building_handle_mouse_figure_list(const mouse *m, building_info_conte
     int handled = generic_buttons_handle_mouse(m, c->x_offset, c->y_offset,
         figure_buttons, c->figure.count, &data.focus_button_id);
     data.context_for_callback = 0;
+    figure *f = figure_get(c->figure.figure_ids[c->figure.selected_index]);
+    if (f->type == FIGURE_DEPOT_CART_PUSHER && !is_depot_cartpusher_recalled(f)) {
+        depot_figure_buttons[0].parameter1 = f->id;
+        generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, depot_figure_buttons, 1, &data.depot_focus_button_id);
+        window_invalidate();
+    }
     return handled;
 }
 
@@ -550,4 +610,10 @@ void window_building_play_figure_phrase(building_info_context *c)
     figure *f = figure_get(figure_id);
     c->figure.sound_id = figure_phrase_play(f);
     c->figure.phrase_id = f->phrase_id;
+}
+
+static void depot_recall(int figure_id, int param2)
+{
+    figure_depot_recall(figure_get(figure_id));
+    window_city_show();
 }

@@ -115,17 +115,27 @@ int building_warehouse_add_resource(building *b, int resource)
 
 int building_warehouse_remove_resource(building *warehouse, int resource, int amount)
 {
-    if (warehouse->has_plague) {
-        return 0;
-    }
     // returns amount still needing removal
     if (warehouse->type != BUILDING_WAREHOUSE) {
         return amount;
     }
+    return amount - building_warehouse_try_remove_resource(warehouse, resource, amount);
+}
+
+int building_warehouse_try_remove_resource(building *warehouse, int resource, int desired_amount)
+{
+    if (desired_amount <= 0) {
+        return 0;
+    }
+    if (warehouse->has_plague) {
+        return 0;
+    }
+    int remaining_desired = desired_amount;
+    int removed_amount = 0;
     building *space = warehouse;
     for (int i = 0; i < 8; i++) {
-        if (amount <= 0) {
-            return 0;
+        if (remaining_desired <= 0) {
+            return removed_amount;
         }
         space = building_next(space);
         if (space->id <= 0) {
@@ -134,19 +144,21 @@ int building_warehouse_remove_resource(building *warehouse, int resource, int am
         if (space->subtype.warehouse_resource_id != resource || space->loads_stored <= 0) {
             continue;
         }
-        if (space->loads_stored > amount) {
-            city_resource_remove_from_warehouse(resource, amount);
-            space->loads_stored -= amount;
-            amount = 0;
+        if (space->loads_stored > remaining_desired) {
+            removed_amount += remaining_desired;
+            city_resource_remove_from_warehouse(resource, remaining_desired);
+            space->loads_stored -= remaining_desired;
+            remaining_desired = 0;
         } else {
+            removed_amount += space->loads_stored;
             city_resource_remove_from_warehouse(resource, space->loads_stored);
-            amount -= space->loads_stored;
+            remaining_desired -= space->loads_stored;
             space->loads_stored = 0;
             space->subtype.warehouse_resource_id = RESOURCE_NONE;
         }
         building_warehouse_space_set_image(space, resource);
     }
-    return amount;
+    return removed_amount;
 }
 
 void building_warehouse_remove_resource_curse(building *warehouse, int amount)

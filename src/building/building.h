@@ -5,6 +5,24 @@
 #include "core/buffer.h"
 #include "core/time.h"
 #include "game/resource.h"
+#include "translation/translation.h"
+
+typedef enum order_condition_type {
+    ORDER_CONDITION_NEVER = 0,
+    ORDER_CONDITION_ALWAYS,
+    ORDER_CONDITION_SOURCE_HAS_MORE_THAN,
+    ORDER_CONDITION_DESTINATION_HAS_LESS_THAN
+} order_condition_type;
+
+typedef struct order {
+    resource_type resource_type;
+    int src_storage_id;
+    int dst_storage_id;
+    struct {
+        order_condition_type condition_type;
+        int threshold;
+    } condition;
+} order;
 
 typedef struct building {
     int id;
@@ -75,11 +93,13 @@ typedef struct building {
             short queued_docker_id;
             unsigned char num_ships;
             signed char orientation;
-            short docker_ids[3];
             short trade_ship_id;
             unsigned char has_accepted_route_ids;
             int accepted_route_ids;
         } dock;
+        struct {
+            short cartpusher_ids[3];
+        } distribution;
         struct {
             unsigned char fetch_inventory_id;
             unsigned char is_mess_hall;
@@ -146,6 +166,9 @@ typedef struct building {
         struct {
             short flag_frame;
         } warehouse;
+        struct {
+            order current_order;
+        } depot;
     } data;
     int tax_income_or_storage;
     unsigned char house_days_without_food;

@@ -61,6 +61,9 @@ typedef struct {
         int drawn;
         int figure_ids[7];
     } figure;
+    int depot_select_resource;
+    int depot_select_source;
+    int depot_select_destination;
 } building_info_context;
 
 void window_building_set_possible_position(int * x_offset, int * y_offset, int width_blocks, int height_blocks);

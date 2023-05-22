@@ -143,7 +143,12 @@ int building_granary_add_resource(building *granary, int resource, int is_produc
 
 int building_granary_remove_resource(building *granary, int resource, int amount)
 {
-    if (amount <= 0) {
+    return amount - building_granary_try_remove_resource(granary, resource, amount);
+}
+
+int building_granary_try_remove_resource(building *granary, int resource, int desired_amount)
+{
+    if (desired_amount <= 0) {
         return 0;
     }
     if (granary->has_plague) {
@@ -151,15 +156,30 @@ int building_granary_remove_resource(building *granary, int resource, int amount
     }
 
     int removed;
-    if (granary->resources[resource] >= amount) {
-        removed = amount;
+    if (granary->resources[resource] >= desired_amount) {
+        removed = desired_amount;
     } else {
         removed = granary->resources[resource];
     }
     city_resource_remove_from_granary(resource, removed);
     granary->resources[resource] -= removed;
     granary->resources[RESOURCE_NONE] += removed;
-    return amount - removed;
+    return removed;
+}
+
+int building_granary_try_fullload_remove_resource(building *granary, int resource, int desired_loads)
+{
+    if (desired_loads <= 0) {
+        return 0;
+    }
+    if (granary->has_plague) {
+        return 0;
+    }
+    int desired_amount = desired_loads * RESOURCE_ONE_LOAD;
+    if (granary->resources[resource] < desired_amount) {
+        desired_amount = (granary->resources[resource] / RESOURCE_ONE_LOAD) * RESOURCE_ONE_LOAD;
+    }
+    return building_granary_try_remove_resource(granary, resource, desired_amount) / RESOURCE_ONE_LOAD;
 }
 
 int building_granaries_remove_resource(int resource, int amount)

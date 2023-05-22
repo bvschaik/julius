@@ -107,8 +107,8 @@ void figure_delete(figure *f)
             break;
         case FIGURE_DOCKER:
             for (int i = 0; i < 3; i++) {
-                if (b->data.dock.docker_ids[i] == f->id) {
-                    b->data.dock.docker_ids[i] = 0;
+                if (b->data.distribution.cartpusher_ids[i] == f->id) {
+                    b->data.distribution.cartpusher_ids[i] = 0;
                 }
             }
             break;
@@ -161,6 +161,13 @@ void figure_delete(figure *f)
                 fort->figure_id2 = 0;
             }
         }
+        case FIGURE_DEPOT_CART_PUSHER:
+            for (int i = 0; i < 3; i++) {
+                if (b->data.distribution.cartpusher_ids[i] == f->id) {
+                    b->data.distribution.cartpusher_ids[i] = 0;
+                }
+            }
+            break;
         default:
             if (f->building_id) {
                 b->figure_id = 0;

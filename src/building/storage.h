@@ -50,6 +50,13 @@ typedef struct {
     int permissions;
 } building_storage;
 
+typedef struct {
+    int id;
+    int in_use;
+    int building_id;
+    building_storage storage;
+} data_storage;
+
 /**
  * Clear and reset all building storages
  */
@@ -57,9 +64,10 @@ void building_storage_clear_all(void);
 
 /**
  * Creates a building storage
+ * @param building_id The id of the building this is a storage for
  * @return storage id, 0 when creation failed
  */
-int building_storage_create(void);
+int building_storage_create(int building_id);
 
 /**
  * Restores a building storage after undoing destruction.
@@ -73,6 +81,18 @@ int building_storage_restore(int storage_id);
  * @param storage_id Storage id
  */
 void building_storage_delete(int storage_id);
+
+/**
+ * Gets the size of the storages array.
+ * @return size of array
+ */
+int building_storage_get_array_size(void);
+
+/**
+ * Gets an entry from the data storage array.
+ * @return Read-only data entry.
+ */
+const data_storage *building_storage_get_array_entry(int storage_id);
 
 /**
  * Gets a read-only building storage
@@ -113,6 +133,14 @@ void building_storage_toggle_empty_all(int storage_id);
  * Resets building id's for all storages
  */
 void building_storage_reset_building_ids(void);
+
+/**
+ * Gets the maximum (in full units) a given storage will store of a given resource
+ * @param storage_id Storage id
+ * @param resource_id Resource id
+ * @return Max amount that can be stored, 0 if it does not accept the resource at all.
+ */
+int building_storage_resource_max_storable(building *b, resource_type resource_id);
 
 /**
  * Save data

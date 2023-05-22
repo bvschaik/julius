@@ -1358,19 +1358,19 @@ static void spawn_figure_dock(building *b)
         // count existing dockers
         int existing_dockers = 0;
         for (int i = 0; i < 3; i++) {
-            if (b->data.dock.docker_ids[i]) {
-                if (figure_get(b->data.dock.docker_ids[i])->type == FIGURE_DOCKER) {
+            if (b->data.distribution.cartpusher_ids[i]) {
+                if (figure_get(b->data.distribution.cartpusher_ids[i])->type == FIGURE_DOCKER) {
                     existing_dockers++;
                 } else {
-                    b->data.dock.docker_ids[i] = 0;
+                    b->data.distribution.cartpusher_ids[i] = 0;
                 }
             }
         }
         if (existing_dockers > max_dockers) {
             // too many dockers, kill one of them
             for (int i = 2; i >= 0; i--) {
-                if (b->data.dock.docker_ids[i]) {
-                    figure_get(b->data.dock.docker_ids[i])->state = FIGURE_STATE_DEAD;
+                if (b->data.distribution.cartpusher_ids[i]) {
+                    figure_get(b->data.distribution.cartpusher_ids[i])->state = FIGURE_STATE_DEAD;
                     break;
                 }
             }
@@ -1379,8 +1379,8 @@ static void spawn_figure_dock(building *b)
             f->action_state = FIGURE_ACTION_132_DOCKER_IDLING;
             f->building_id = b->id;
             for (int i = 0; i < 3; i++) {
-                if (!b->data.dock.docker_ids[i]) {
-                    b->data.dock.docker_ids[i] = f->id;
+                if (!b->data.distribution.cartpusher_ids[i]) {
+                    b->data.distribution.cartpusher_ids[i] = f->id;
                     break;
                 }
             }
@@ -1697,6 +1697,59 @@ static void spawn_figure_watchtower(building *b)
     }
 }
 
+static void spawn_figure_depot(building* b)
+{
+    check_labor_problem(b);
+
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 100);
+
+        int pct_workers = worker_percentage(b);
+        int max_carts = 0;
+        if (pct_workers >= 75) {
+            max_carts = 3;
+        } else if (pct_workers >= 50) {
+            max_carts = 2;
+        } else if (pct_workers > 0) {
+            max_carts = 1;
+        }
+
+        int existing_carts = 0;
+        for (int i = 0; i < 3; i++) {
+            if (b->data.distribution.cartpusher_ids[i]) {
+                figure* f = figure_get(b->data.distribution.cartpusher_ids[i]);
+                if (f->type == FIGURE_DEPOT_CART_PUSHER &&
+                    f->building_id == b->id) {
+                    existing_carts++;
+                } else {
+                    b->data.distribution.cartpusher_ids[i] = 0;
+                }
+            }
+        }
+
+        if (existing_carts >= max_carts) {
+            return;
+        }
+
+        int spawn_delay = default_spawn_delay(b);
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            figure* f = figure_create(FIGURE_DEPOT_CART_PUSHER, road.x, road.y, DIR_0_TOP);
+            f->action_state = FIGURE_ACTION_238_DEPOT_CART_PUSHER_INITIAL;
+            f->building_id = b->id;
+
+            for (int i = 0; i < 3; i++) {
+                if (!b->data.distribution.cartpusher_ids[i]) {
+                    b->data.distribution.cartpusher_ids[i] = f->id;
+                    break;
+                }
+            }
+        }
+    }
+}
+
 static void update_native_crop_progress(building *b)
 {
     b->data.industry.progress++;
@@ -1863,6 +1916,9 @@ void building_figure_generate(void)
                     break;
                 case BUILDING_CARAVANSERAI:
                     spawn_figure_caravanserai(b);
+                    break;
+                case BUILDING_DEPOT:
+                    spawn_figure_depot(b);
                     break;
             }
         }
