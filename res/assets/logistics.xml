@@ -573,7 +573,7 @@
 		<layer group="19" image="16"/>
 		<layer src="Aqueduct_Mask_Right" y="27" mask="alpha"/>
 	</image>
-	<!-- Note: Ox Portrait -->
+	<!-- Note: Ox Portrait (Assets created by marwana) -->
 	<image id="Ox_Portrait">
 		<layer group="190" image="7"/>
 		<layer src="ox_portrait"/>
