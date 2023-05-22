@@ -402,16 +402,21 @@ static void draw_depot_cartpusher(building_info_context* c, figure* f)
     text_draw_centered(translation_for(button_text), c->x_offset + 90, c->y_offset + 166,
         100, FONT_SMALL_PLAIN, 0);
 
-    int width = text_draw(translation_for(TR_FIGURE_INFO_DEPOT_DELIVER), c->x_offset + 40, c->y_offset + 216,
+    int width = text_draw(translation_for(TR_FIGURE_INFO_DEPOT_DELIVER), c->x_offset + 40, c->y_offset + 200,
         FONT_NORMAL_BROWN, 0);
     image_draw(resource_get_data(resource_type)->image.icon,
-        c->x_offset + 40 + width, c->y_offset + 210, COLOR_MASK_NONE, SCALE_NONE);
+        c->x_offset + 40 + width, c->y_offset + 194, COLOR_MASK_NONE, SCALE_NONE);
+
+    width = text_draw(translation_for(TR_FIGURE_INFO_DEPOT_FROM), c->x_offset + 40, c->y_offset + 216,
+        FONT_NORMAL_BROWN, 0);
     width += text_draw_label_and_number(lang_get_string(28, source->type),
-        source->storage_id, " -----) ",
-        c->x_offset + 66 + width, c->y_offset + 216, FONT_NORMAL_BROWN, 0);
+        source->storage_id, "",
+        c->x_offset + 40 + width, c->y_offset + 216, FONT_NORMAL_BROWN, 0);
+    width += text_draw(translation_for(TR_FIGURE_INFO_DEPOT_TO),
+        c->x_offset + 40 + width, c->y_offset + 216, FONT_NORMAL_BROWN, 0);
     text_draw_label_and_number(lang_get_string(28, destination->type),
         destination->storage_id, "",
-        c->x_offset + 66 + width, c->y_offset + 216, FONT_NORMAL_BROWN, 0);
+        c->x_offset + 40 + width, c->y_offset + 216, FONT_NORMAL_BROWN, 0);
 }
 
 static void draw_supplier(building_info_context *c, figure *f)
