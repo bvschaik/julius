@@ -46,12 +46,12 @@
     <!-- Third request (id = 2) -->
     <event repeat_months_min="1" repeat_months_max="1">  <!-- Immediately repeated upon completion / ignored -->
         <conditions>
+            <time check="gte" amount="144"/> <!-- 12 years -->
+            <request_is_ongoing request_id="2" check_for_ongoing="false"/>
         </conditions>
         <actions>
+            <request_immediately_start request_id="2"/>
         </actions>
-        <time check="gte" amount="144"/> <!-- 12 years -->
-        <request_is_ongoing request_id="2" check_for_ongoing="false"/>
-        <request_immediately_start request_id="2"/>
     </event>
     <!-- Fourth request (id = 3) -->
     <event repeat_months_min="8" repeat_months_max="12">  <!-- Random, roughly 10 months -->
