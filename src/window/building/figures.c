@@ -389,7 +389,7 @@ static void draw_depot_cartpusher(building_info_context* c, figure* f)
     if (f->loads_sold_or_carrying > 0 && f->resource_id != RESOURCE_NONE) {
         image_draw(resource_get_data(resource_type)->image.icon,
             c->x_offset + 92, c->y_offset + 135, COLOR_MASK_NONE, SCALE_NONE);
-        text_draw_number(f->loads_sold_or_carrying, 'x', "", c->x_offset + 118, c->y_offset + 139, FONT_NORMAL_BROWN, COLOR_BLACK);
+        text_draw_number(f->loads_sold_or_carrying, 'x', "", c->x_offset + 118, c->y_offset + 139, FONT_NORMAL_BROWN, COLOR_MASK_NONE);
     }
 
     building *source = building_get(depot->data.depot.current_order.src_storage_id);
