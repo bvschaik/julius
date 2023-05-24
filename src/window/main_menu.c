@@ -82,12 +82,12 @@ static void draw_foreground(void)
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / BLOCK_SIZE, data.focus_button_id == i + 1 ? 1 : 0);
     }
 
-    lang_text_draw_centered(30, 1, 192, 136, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(30, 2, 192, 176, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(30, 3, 192, 216, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(9, 8, 192, 256, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(2, 0, 192, 296, 256, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(30, 5, 192, 336, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(30, 1, 192, 137, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(30, 2, 192, 177, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(30, 3, 192, 217, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(9, 8, 192, 257, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(2, 0, 192, 297, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(30, 5, 192, 337, 256, FONT_NORMAL_GREEN);
 
     graphics_reset_dialog();
 }
