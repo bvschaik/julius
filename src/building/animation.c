@@ -187,7 +187,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     return new_sprite;
 }
 
-int building_animation_advance_warehouse_flag(building *b, int image_id)
+int building_animation_advance_storage_flag(building *b, int image_id)
 {
     const image *img = assets_get_image(image_id);
     if (!img->animation) {

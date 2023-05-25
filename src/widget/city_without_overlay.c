@@ -513,6 +513,44 @@ static void draw_warehouse_flag(const building *b, int x, int y, color_t color_m
     }
 }
 
+static int get_granary_flag_image_id(const building *b)
+{
+    const building_storage *storage = building_storage_get(b->storage_id);
+    int permission_mask = 0xf;
+    int warehouse_permission_mask = 0x7;
+    int permissions = (~storage->permissions) & permission_mask;
+    if (!permissions) {
+        return 0;
+    }
+
+    // Can mostly reuse the flags used for Warehouses, with two exceptions
+    // With all granary permissions, use reuse warehouse flag for all permissions
+    if (permissions == permission_mask) {
+        int image_id = assets_get_image_id("Logistics", "Warehouse_Flag_All");
+        return image_id;
+    }
+    // Different flag for all permissions except mess hall
+    if (permissions == warehouse_permission_mask) {
+        int image_id = assets_get_image_id("Logistics", "Granary_Flag_Market_Both_Traders");
+        return image_id;
+    }
+    int image_offset = (permissions - 1) * WAREHOUSE_FLAG_FRAMES;
+    int image_id = assets_get_image_id("Logistics", "Warehouse_Flag_Market") + image_offset;
+    return image_id;
+}
+
+static void draw_granary_flag(const building *b, int x, int y, color_t color_mask)
+{
+    if (!b->has_plague) {
+        int image_id = get_granary_flag_image_id(b);
+        if (!image_id) {
+            return;
+        }
+        image_id += b->data.warehouse.flag_frame;
+        image_draw(image_id, x + 81, y - 101, color_mask, draw_context.scale);
+    }
+}
+
 static void draw_warehouse_ornaments(int x, int y, color_t color_mask)
 {
     image_draw(image_group(GROUP_BUILDING_WAREHOUSE) + 17, x - 4, y - 42, color_mask, draw_context.scale);
@@ -569,9 +607,11 @@ static void draw_animation(int x, int y, int grid_offset)
             } else if (b->type == BUILDING_WAREHOUSE) {
                 draw_warehouse_ornaments(x, y, color_mask);
                 draw_warehouse_flag(b, x, y, color_mask);
-                building_animation_advance_warehouse_flag(b, get_warehouse_flag_image_id(b));
+                building_animation_advance_storage_flag(b, get_warehouse_flag_image_id(b));
             } else if (b->type == BUILDING_GRANARY) {
                 draw_granary_stores(img, b, x, y, color_mask);
+                draw_granary_flag(b, x, y, color_mask);
+                building_animation_advance_storage_flag(b, get_granary_flag_image_id(b));
             } else if (b->type == BUILDING_BURNING_RUIN && b->has_plague) {
                 image_draw(image_group(GROUP_PLAGUE_SKULL), x + 18, y - 32, color_mask, draw_context.scale);
             }
