@@ -218,7 +218,7 @@ int scenario_action_type_trade_price_set_execute(scenario_action_t *action)
     int adjustment = 0;
     if (current_price == amount) {
         return 1;
-    } else if (current_price < amount) {
+    } else if (amount < current_price) {
         adjustment = amount - current_price;
     } else {
         adjustment = current_price - amount;
