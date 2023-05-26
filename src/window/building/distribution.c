@@ -871,7 +871,7 @@ int window_building_handle_mouse_granary_orders(const mouse *m, building_info_co
     data.building_id = c->building_id;
 
     int buttons_to_show = city_resource_get_available_foods()->size < scrollbar.elements_in_view ?
-        city_resource_get_available()->size : scrollbar.elements_in_view;
+        city_resource_get_available_foods()->size : scrollbar.elements_in_view;
     
     return scrollbar_handle_mouse(&scrollbar, m, 1) ||
         generic_buttons_handle_mouse(m, c->x_offset + 172, y_offset + 46, orders_resource_buttons, buttons_to_show,
