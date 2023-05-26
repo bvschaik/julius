@@ -555,7 +555,7 @@
     </image> 
     <image id="Granary_Flag_Mess_Both_Traders_1" src="flag_mess_both_traders_a1"/>
     <image id="Granary_Flag_Mess_Both_Traders">
-        <layer group="this" image="Granary_Flag_Both_Traders_1"/>
+        <layer group="this" image="Granary_Flag_Mess_Both_Traders_1"/>
         <animation speed="6" reversible="false">
             <frame id="Granary_Flag_Mess_Both_Traders_2" src="flag_mess_both_traders_a2"/>
             <frame id="Granary_Flag_Mess_Both_Traders_3" src="flag_mess_both_traders_a3"/>
