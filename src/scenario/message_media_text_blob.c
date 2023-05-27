@@ -6,10 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define MESSAGE_MEDIA_TEXT_BLOB_INITIAL_SIZE (100 * 1024)
-#define MESSAGE_MEDIA_TEXT_BLOB_SIZE_INCREASE_OVERSHOOT (10 * 1024)
-#define MESSAGE_MEDIA_TEXT_BLOB_INITIAL_ENTRIES 100
-#define MESSAGE_MEDIA_TEXT_BLOB_ENTRIES_INCREASE_OVERSHOOT 10
+#define MESSAGE_MEDIA_TEXT_BLOB_INITIAL_SIZE (4 * 1024 * 1024)
+#define MESSAGE_MEDIA_TEXT_BLOB_SIZE_INCREASE_OVERSHOOT (1 * 1024 * 1024)
+#define MESSAGE_MEDIA_TEXT_BLOB_INITIAL_ENTRIES 1000
+#define MESSAGE_MEDIA_TEXT_BLOB_ENTRIES_INCREASE_OVERSHOOT 100
 
 static message_media_text_blob_t message_media_text_blob;
 
@@ -147,16 +147,16 @@ void message_media_text_blob_save_state(buffer *blob_buffer, buffer *meta_buffer
 
 void message_media_text_blob_load_state(buffer *blob_buffer, buffer *meta_buffer)
 {
-    message_media_text_blob_clear();
-    resize_text_entries(0);
-    resize_text_blob(0);
-
     int buffer_size, version, array_size, struct_size;
     buffer_load_dynamic_piece_header_data(blob_buffer,
         &buffer_size,
         &version,
         &array_size,
         &struct_size);
+
+    message_media_text_blob_clear();
+    resize_text_entries(array_size);
+    resize_text_blob(buffer_size);
 
     message_media_text_blob.size = buffer_size;    
     buffer_read_raw(blob_buffer, message_media_text_blob.text_blob, message_media_text_blob.size);
