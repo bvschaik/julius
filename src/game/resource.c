@@ -128,7 +128,7 @@ const resource_type *resource_get_raw_materials_for_good(resource_type good)
 {
     memset(resource_list, RESOURCE_NONE, sizeof(resource_type) * SUPPLY_CHAIN_SIZE);
     int current_position = 0;
-    for (int i = 0; i < RESOURCE_ALL; i++) {
+    for (int i = 0; i < SUPPLY_CHAIN_SIZE; i++) {
         const resource_chain *chain = &SUPPLY_CHAIN[i];
         if (chain->good == good) {
             resource_list[current_position] = chain->raw_material;
@@ -142,7 +142,7 @@ const resource_type *resource_get_goods_from_raw_material(resource_type raw_mate
 {
     memset(resource_list, RESOURCE_NONE, sizeof(resource_type) * SUPPLY_CHAIN_SIZE);
     int current_position = 0;
-    for (int i = 0; i < RESOURCE_ALL; i++) {
+    for (int i = 0; i < SUPPLY_CHAIN_SIZE; i++) {
         const resource_chain *chain = &SUPPLY_CHAIN[i];
         if (chain->raw_material == raw_material) {
             resource_list[current_position] = chain->good;
