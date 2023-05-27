@@ -212,10 +212,6 @@ static const lang_message* get_custom_or_standard_lang_message(int text_id)
 static void init(int text_id, int is_custom_message, void (*background_callback)(void))
 {
     scroll_drag_end();
-    if (!data.show_video && (data.should_play_audio || data.should_play_background_music)) {
-        sound_speech_stop();
-        sound_music_stop();
-    }
     for (int i = 0; i < MAX_HISTORY; i++) {
         data.history[i].text_id = 0;
         data.history[i].scroll_position = 0;
@@ -751,8 +747,12 @@ static void cleanup(void)
         data.show_video = 0;
     }
     player_message.message_advisor = 0;
-    sound_speech_stop();
-    sound_music_stop();
+    if (data.should_play_audio) {
+        sound_speech_stop();
+    }
+    if (data.should_play_background_music) {
+        sound_music_stop();
+    }
 }
 
 static void button_close(int param1, int param2)
