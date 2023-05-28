@@ -392,7 +392,7 @@ static void save_main_data(buffer *main)
     buffer_write_i32(main, city_data.religion.venus_blessing_months_left);
     buffer_write_i32(main, city_data.religion.venus_curse_active);
     buffer_write_i32(main, city_data.building.num_striking_industries);
-    buffer_write_i32(main, city_data.religion.neptune_double_trade_active);
+    buffer_write_i32(main, city_data.religion.neptune_trade_bonus_active);
     buffer_write_i32(main, city_data.religion.mars_spirit_power);
     buffer_write_i32(main, city_data.religion.angry_message_delay);
     buffer_write_i32(main, city_data.resource.food_consumed_last_month);
@@ -891,7 +891,7 @@ static void load_main_data(buffer *main, int version)
     city_data.religion.venus_blessing_months_left = buffer_read_i32(main);
     city_data.religion.venus_curse_active = buffer_read_i32(main);
     city_data.building.num_striking_industries = buffer_read_i32(main);
-    city_data.religion.neptune_double_trade_active = buffer_read_i32(main);
+    city_data.religion.neptune_trade_bonus_active = buffer_read_i32(main);
     city_data.religion.mars_spirit_power = buffer_read_i32(main);
     if (!discard_unused_values) {
         buffer_skip(main, 4);
