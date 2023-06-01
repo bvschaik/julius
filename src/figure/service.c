@@ -560,6 +560,7 @@ int figure_service_provide_coverage(figure *f)
         case FIGURE_WAREHOUSEMAN:
         case FIGURE_DOCKER:
         case FIGURE_CART_PUSHER:
+        case FIGURE_DEPOT_CART_PUSHER:
             b = building_get(f->building_id);
             building *dest_b = building_get(f->destination_building_id);
 
