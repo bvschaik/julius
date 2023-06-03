@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="Walkers">
+	<!-- Note: Ox Portrait (Assets created by marwana) -->
+	<image id="Ox_Portrait">
+		<layer group="190" image="7"/>
+		<layer src="ox_portrait"/>
+	</image>
+	<!-- Note: Ox Death animation frames 01-08 -->
+	<image id="ox_death_01" src="ox_death_01"/>
+	<image id="ox_death_02" src="ox_death_02"/>
+	<image id="ox_death_03" src="ox_death_03"/>
+	<image id="ox_death_04" src="ox_death_04"/>
+	<image id="ox_death_05" src="ox_death_05"/>
+	<image id="ox_death_06" src="ox_death_06"/>
+	<image id="ox_death_07" src="ox_death_07"/>
+	<image id="ox_death_08" src="ox_death_08"/>
+	<!-- Note: Ox Walking animation frames NORTH-EAST DIRECTION 01-12 -->
+	<image id="ox_ne_01" src="ox_ne_01"/>
+	<image id="ox_ne_02" src="ox_ne_02"/>
+	<image id="ox_ne_03" src="ox_ne_03"/>
+	<image id="ox_ne_04" src="ox_ne_04"/>
+	<image id="ox_ne_05" src="ox_ne_05"/>
+	<image id="ox_ne_06" src="ox_ne_06"/>
+	<image id="ox_ne_07" src="ox_ne_07"/>
+	<image id="ox_ne_08" src="ox_ne_08"/>
+	<image id="ox_ne_09" src="ox_ne_09"/>
+	<image id="ox_ne_10" src="ox_ne_10"/>
+	<image id="ox_ne_11" src="ox_ne_11"/>
+	<image id="ox_ne_12" src="ox_ne_12"/>
+	<!-- Note: Ox Walking animation frames EAST DIRECTION 01-12 -->
+	<image id="ox_e_01" src="ox_e_01"/>
+	<image id="ox_e_02" src="ox_e_02"/>
+	<image id="ox_e_03" src="ox_e_03"/>
+	<image id="ox_e_04" src="ox_e_04"/>
+	<image id="ox_e_05" src="ox_e_05"/>
+	<image id="ox_e_06" src="ox_e_06"/>
+	<image id="ox_e_07" src="ox_e_07"/>
+	<image id="ox_e_08" src="ox_e_08"/>
+	<image id="ox_e_09" src="ox_e_09"/>
+	<image id="ox_e_10" src="ox_e_10"/>
+	<image id="ox_e_11" src="ox_e_11"/>
+	<image id="ox_e_12" src="ox_e_12"/>
+	<!-- Note: Ox Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="ox_se_01" src="ox_se_01"/>
+	<image id="ox_se_02" src="ox_se_02"/>
+	<image id="ox_se_03" src="ox_se_03"/>
+	<image id="ox_se_04" src="ox_se_04"/>
+	<image id="ox_se_05" src="ox_se_05"/>
+	<image id="ox_se_06" src="ox_se_06"/>
+	<image id="ox_se_07" src="ox_se_07"/>
+	<image id="ox_se_08" src="ox_se_08"/>
+	<image id="ox_se_09" src="ox_se_09"/>
+	<image id="ox_se_10" src="ox_se_10"/>
+	<image id="ox_se_11" src="ox_se_11"/>
+	<image id="ox_se_12" src="ox_se_12"/>
+	<!-- Note: Ox Walking animation frames SOUTH DIRECTION 01-12 -->
+	<image id="ox_s_01" src="ox_s_01"/>
+	<image id="ox_s_02" src="ox_s_02"/>
+	<image id="ox_s_03" src="ox_s_03"/>
+	<image id="ox_s_04" src="ox_s_04"/>
+	<image id="ox_s_05" src="ox_s_05"/>
+	<image id="ox_s_06" src="ox_s_06"/>
+	<image id="ox_s_07" src="ox_s_07"/>
+	<image id="ox_s_08" src="ox_s_08"/>
+	<image id="ox_s_09" src="ox_s_09"/>
+	<image id="ox_s_10" src="ox_s_10"/>
+	<image id="ox_s_11" src="ox_s_11"/>
+	<image id="ox_s_12" src="ox_s_12"/>
+	<!-- Note: Ox Walking animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="ox_sw_01" src="ox_sw_01"/>
+	<image id="ox_sw_02" src="ox_sw_02"/>
+	<image id="ox_sw_03" src="ox_sw_03"/>
+	<image id="ox_sw_04" src="ox_sw_04"/>
+	<image id="ox_sw_05" src="ox_sw_05"/>
+	<image id="ox_sw_06" src="ox_sw_06"/>
+	<image id="ox_sw_07" src="ox_sw_07"/>
+	<image id="ox_sw_08" src="ox_sw_08"/>
+	<image id="ox_sw_09" src="ox_sw_09"/>
+	<image id="ox_sw_10" src="ox_sw_10"/>
+	<image id="ox_sw_11" src="ox_sw_11"/>
+	<image id="ox_sw_12" src="ox_sw_12"/>
+	<!-- Note: Ox Walking animation frames WEST DIRECTION 01-12 -->
+	<image id="ox_w_01" src="ox_w_01"/>
+	<image id="ox_w_02" src="ox_w_02"/>
+	<image id="ox_w_03" src="ox_w_03"/>
+	<image id="ox_w_04" src="ox_w_04"/>
+	<image id="ox_w_05" src="ox_w_05"/>
+	<image id="ox_w_06" src="ox_w_06"/>
+	<image id="ox_w_07" src="ox_w_07"/>
+	<image id="ox_w_08" src="ox_w_08"/>
+	<image id="ox_w_09" src="ox_w_09"/>
+	<image id="ox_w_10" src="ox_w_10"/>
+	<image id="ox_w_11" src="ox_w_11"/>
+	<image id="ox_w_12" src="ox_w_12"/>
+	<!-- Note: Ox Walking animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="ox_nw_01" src="ox_nw_01"/>
+	<image id="ox_nw_02" src="ox_nw_02"/>
+	<image id="ox_nw_03" src="ox_nw_03"/>
+	<image id="ox_nw_04" src="ox_nw_04"/>
+	<image id="ox_nw_05" src="ox_nw_05"/>
+	<image id="ox_nw_06" src="ox_nw_06"/>
+	<image id="ox_nw_07" src="ox_nw_07"/>
+	<image id="ox_nw_08" src="ox_nw_08"/>
+	<image id="ox_nw_09" src="ox_nw_09"/>
+	<image id="ox_nw_10" src="ox_nw_10"/>
+	<image id="ox_nw_11" src="ox_nw_11"/>
+	<image id="ox_nw_12" src="ox_nw_12"/>
+	<!-- Note: Ox Walking animation frames NORTH DIRECTION 01-12 -->
+	<image id="ox_n_01" src="ox_n_01"/>
+	<image id="ox_n_02" src="ox_n_02"/>
+	<image id="ox_n_03" src="ox_n_03"/>
+	<image id="ox_n_04" src="ox_n_04"/>
+	<image id="ox_n_05" src="ox_n_05"/>
+	<image id="ox_n_06" src="ox_n_06"/>
+	<image id="ox_n_07" src="ox_n_07"/>
+	<image id="ox_n_08" src="ox_n_08"/>
+	<image id="ox_n_09" src="ox_n_09"/>
+	<image id="ox_n_10" src="ox_n_10"/>
+	<image id="ox_n_11" src="ox_n_11"/>
+	<image id="ox_n_12" src="ox_n_12"/>
+</assetlist>

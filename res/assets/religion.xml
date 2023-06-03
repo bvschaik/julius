@@ -647,8 +647,8 @@
 		</animation>
 	</image>
 	<!-- Note: Large Temple and Oracle Construction Phases -->
-	<image id="Oracle_Cons_01" src="Oracle_Construction_01" isometric="true"/>
-	<image id="Oracle_Cons_02" isometric="true" width="118" height="77">
+	<image id="Oracle_Construction_01" src="Oracle_Construction_01" isometric="true"/>
+	<image id="Oracle_Construction_02" isometric="true" width="118" height="77">
 		<layer group="76" image="0" part="footprint" y="-10"/>
 		<layer src="Oracle_Construction_02"/>
 	</image>

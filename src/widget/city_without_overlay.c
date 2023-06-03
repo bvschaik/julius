@@ -497,7 +497,7 @@ static int get_warehouse_flag_image_id(const building *b)
         return 0;
     }
     int image_offset = (permissions - 1) * WAREHOUSE_FLAG_FRAMES;
-    int image_id = assets_get_image_id("Logistics", "Warehouse_Flag_Market") + image_offset;
+    int image_id = assets_get_image_id("Flags", "Warehouse_Flag_Market") + image_offset;
     return image_id;
 }
 
@@ -526,16 +526,16 @@ static int get_granary_flag_image_id(const building *b)
     // Can mostly reuse the flags used for Warehouses, with two exceptions
     // With all granary permissions, use reuse warehouse flag for all permissions
     if (permissions == permission_mask) {
-        int image_id = assets_get_image_id("Logistics", "Warehouse_Flag_All");
+        int image_id = assets_get_image_id("Flags", "Warehouse_Flag_All");
         return image_id;
     }
     // Different flag for all permissions except mess hall
     if (permissions == warehouse_permission_mask) {
-        int image_id = assets_get_image_id("Logistics", "Granary_Flag_Market_Both_Traders");
+        int image_id = assets_get_image_id("Flags", "Granary_Flag_Market_Both_Traders");
         return image_id;
     }
     int image_offset = (permissions - 1) * WAREHOUSE_FLAG_FRAMES;
-    int image_id = assets_get_image_id("Logistics", "Warehouse_Flag_Market") + image_offset;
+    int image_id = assets_get_image_id("Flags", "Warehouse_Flag_Market") + image_offset;
     return image_id;
 }
 

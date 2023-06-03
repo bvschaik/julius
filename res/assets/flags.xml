@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="Flags">
+	<!-- Warehouse Flags (Assets created by Ouaz) -->
+	<image id="Warehouse_Flag_Market_1" src="flag_market_trade_a1"/>
+	<image id="Warehouse_Flag_Market">
+		<layer group="this" image="Warehouse_Flag_Market_1"/>
+		<animation speed="6" reversible="false">
+			<frame id="Warehouse_Flag_Market_2" src="flag_market_trade_a2"/>
+			<frame id="Warehouse_Flag_Market_3" src="flag_market_trade_a3"/>
+			<frame id="Warehouse_Flag_Market_4" src="flag_market_trade_a4"/>
+			<frame id="Warehouse_Flag_Market_5" src="flag_market_trade_a5"/>
+			<frame id="Warehouse_Flag_Market_6" src="flag_market_trade_a6"/>
+			<frame id="Warehouse_Flag_Market_7" src="flag_market_trade_a7"/>
+			<frame id="Warehouse_Flag_Market_8" src="flag_market_trade_a8"/>
+		</animation>
+	</image>
+	<image id="Warehouse_Flag_Land_1" src="flag_land_trade_a1"/>
+	<image id="Warehouse_Flag_Land">
+		<layer group="this" image="Warehouse_Flag_Land_1"/>
+		<animation speed="6" reversible="false">
+			<frame id="Warehouse_Flag_Land_2" src="flag_land_trade_a2"/>
+			<frame id="Warehouse_Flag_Land_3" src="flag_land_trade_a3"/>
+			<frame id="Warehouse_Flag_Land_4" src="flag_land_trade_a4"/>
+			<frame id="Warehouse_Flag_Land_5" src="flag_land_trade_a5"/>
+			<frame id="Warehouse_Flag_Land_6" src="flag_land_trade_a6"/>
+			<frame id="Warehouse_Flag_Land_7" src="flag_land_trade_a7"/>
+			<frame id="Warehouse_Flag_Land_8" src="flag_land_trade_a8"/>
+		</animation>
+	</image>
+	<image id="Warehouse_Flag_Market_Land_1" src="flag_market_land_trade_a1"/>
+	<image id="Warehouse_Flag_Market_Land">
+		<layer group="this" image="Warehouse_Flag_Market_Land_1"/>
+		<animation speed="6" reversible="false">
+			<frame id="Warehouse_Flag_Market_Land_2" src="flag_market_land_trade_a2"/>
+			<frame id="Warehouse_Flag_Market_Land_3" src="flag_market_land_trade_a3"/>
+			<frame id="Warehouse_Flag_Market_Land_4" src="flag_market_land_trade_a4"/>
+			<frame id="Warehouse_Flag_Market_Land_5" src="flag_market_land_trade_a5"/>
+			<frame id="Warehouse_Flag_Market_Land_6" src="flag_market_land_trade_a6"/>
+			<frame id="Warehouse_Flag_Market_Land_7" src="flag_market_land_trade_a7"/>
+			<frame id="Warehouse_Flag_Market_Land_8" src="flag_market_land_trade_a8"/>
+		</animation>
+	</image>
+	<image id="Warehouse_Flag_Sea_1" src="flag_sea_trade_a1"/>
+	<image id="Warehouse_Flag_Sea">
+		<layer group="this" image="Warehouse_Flag_Sea_1"/>
+		<animation speed="6" reversible="false">
+			<frame id="Warehouse_Flag_Sea_2" src="flag_sea_trade_a2"/>
+			<frame id="Warehouse_Flag_Sea_3" src="flag_sea_trade_a3"/>
+			<frame id="Warehouse_Flag_Sea_4" src="flag_sea_trade_a4"/>
+			<frame id="Warehouse_Flag_Sea_5" src="flag_sea_trade_a5"/>
+			<frame id="Warehouse_Flag_Sea_6" src="flag_sea_trade_a6"/>
+			<frame id="Warehouse_Flag_Sea_7" src="flag_sea_trade_a7"/>
+			<frame id="Warehouse_Flag_Sea_8" src="flag_sea_trade_a8"/>
+		</animation>
+	</image>
+	<image id="Warehouse_Flag_Market_Sea_1" src="flag_market_sea_trade_a1"/>
+	<image id="Warehouse_Flag_Market_Sea">
+		<layer group="this" image="Warehouse_Flag_Market_Sea_1"/>
+		<animation speed="6" reversible="false">
+			<frame id="Warehouse_Flag_Market_Sea_2" src="flag_market_sea_trade_a2"/>
+			<frame id="Warehouse_Flag_Market_Sea_3" src="flag_market_sea_trade_a3"/>
+			<frame id="Warehouse_Flag_Market_Sea_4" src="flag_market_sea_trade_a4"/>
+			<frame id="Warehouse_Flag_Market_Sea_5" src="flag_market_sea_trade_a5"/>
+			<frame id="Warehouse_Flag_Market_Sea_6" src="flag_market_sea_trade_a6"/>
+			<frame id="Warehouse_Flag_Market_Sea_7" src="flag_market_sea_trade_a7"/>
+			<frame id="Warehouse_Flag_Market_Sea_8" src="flag_market_sea_trade_a8"/>
+		</animation>
+	</image>
+	<image id="Warehouse_Flag_Land_Sea_1" src="flag_both_traders_a1"/>
+	<image id="Warehouse_Flag_Land_Sea">
+		<layer group="this" image="Warehouse_Flag_Land_Sea_1"/>
+		<animation speed="6" reversible="false">
+			<frame id="Warehouse_Flag_Land_Sea_2" src="flag_both_traders_a2"/>
+			<frame id="Warehouse_Flag_Land_Sea_3" src="flag_both_traders_a3"/>
+			<frame id="Warehouse_Flag_Land_Sea_4" src="flag_both_traders_a4"/>
+			<frame id="Warehouse_Flag_Land_Sea_5" src="flag_both_traders_a5"/>
+			<frame id="Warehouse_Flag_Land_Sea_6" src="flag_both_traders_a6"/>
+			<frame id="Warehouse_Flag_Land_Sea_7" src="flag_both_traders_a7"/>
+			<frame id="Warehouse_Flag_Land_Sea_8" src="flag_both_traders_a8"/>
+		</animation>
+	</image>
+	<image id="Warehouse_Flag_All_1" src="flag_all_traders_a1"/>
+	<image id="Warehouse_Flag_All">
+		<layer group="this" image="Warehouse_Flag_All_1"/>
+		<animation speed="6" reversible="false">
+			<frame id="Warehouse_Flag_All_2" src="flag_all_traders_a2"/>
+			<frame id="Warehouse_Flag_All_3" src="flag_all_traders_a3"/>
+			<frame id="Warehouse_Flag_All_4" src="flag_all_traders_a4"/>
+			<frame id="Warehouse_Flag_All_5" src="flag_all_traders_a5"/>
+			<frame id="Warehouse_Flag_All_6" src="flag_all_traders_a6"/>
+			<frame id="Warehouse_Flag_All_7" src="flag_all_traders_a7"/>
+			<frame id="Warehouse_Flag_All_8" src="flag_all_traders_a8"/>
+		</animation>
+	</image>
+
+-    <image id="Granary_Flag_Mess_1" src="flag_mess_trade_a1"/>
+-    <image id="Granary_Flag_Mess">
+-        <layer group="this" image="Granary_Flag_Mess_1"/>
+-        <animation speed="6" reversible="false">
+-            <frame id="Granary_Flag_Mess_2" src="flag_mess_trade_a2"/>
+-            <frame id="Granary_Flag_Mess_3" src="flag_mess_trade_a3"/>
+-            <frame id="Granary_Flag_Mess_4" src="flag_mess_trade_a4"/>
+-            <frame id="Granary_Flag_Mess_5" src="flag_mess_trade_a5"/>
+-            <frame id="Granary_Flag_Mess_6" src="flag_mess_trade_a6"/>
+-            <frame id="Granary_Flag_Mess_7" src="flag_mess_trade_a7"/>
+-            <frame id="Granary_Flag_Mess_8" src="flag_mess_trade_a8"/>
+-        </animation>
+-    </image> 
+-    <image id="Granary_Flag_Market_Mess_1" src="flag_market_mess_trade_a1"/>
+-    <image id="Granary_Flag_Market_Mess">
+-        <layer group="this" image="Granary_Flag_Market_Mess_1"/>
+-        <animation speed="6" reversible="false">
+-            <frame id="Granary_Flag_Market_Mess_2" src="flag_market_mess_trade_a2"/>
+-            <frame id="Granary_Flag_Market_Mess_3" src="flag_market_mess_trade_a3"/>
+-            <frame id="Granary_Flag_Market_Mess_4" src="flag_market_mess_trade_a4"/>
+-            <frame id="Granary_Flag_Market_Mess_5" src="flag_market_mess_trade_a5"/>
+-            <frame id="Granary_Flag_Market_Mess_6" src="flag_market_mess_trade_a6"/>
+-            <frame id="Granary_Flag_Market_Mess_7" src="flag_market_mess_trade_a7"/>
+-            <frame id="Granary_Flag_Market_Mess_8" src="flag_market_mess_trade_a8"/>
+-        </animation>
+-    </image> 
+-    <image id="Granary_Flag_Mess_Land_1" src="flag_mess_land_trade_a1"/>
+-    <image id="Granary_Flag_Mess_Land">
+-        <layer group="this" image="Granary_Flag_Mess_Land_1"/>
+-        <animation speed="6" reversible="false">
+-            <frame id="Granary_Flag_Mess_Land_2" src="flag_mess_land_trade_a2"/>
+-            <frame id="Granary_Flag_Mess_Land_3" src="flag_mess_land_trade_a3"/>
+-            <frame id="Granary_Flag_Mess_Land_4" src="flag_mess_land_trade_a4"/>
+-            <frame id="Granary_Flag_Mess_Land_5" src="flag_mess_land_trade_a5"/>
+-            <frame id="Granary_Flag_Mess_Land_6" src="flag_mess_land_trade_a6"/>
+-            <frame id="Granary_Flag_Mess_Land_7" src="flag_mess_land_trade_a7"/>
+-            <frame id="Granary_Flag_Mess_Land_8" src="flag_mess_land_trade_a8"/>
+-        </animation>
+-    </image> 
+-    <image id="Granary_Flag_Market_Mess_Land_1" src="flag_market_mess_land_trade_a1"/>
+-    <image id="Granary_Flag_Market_Mess_Land">
+-        <layer group="this" image="Granary_Flag_Market_Mess_Land_1"/>
+-        <animation speed="6" reversible="false">
+-            <frame id="Granary_Flag_Market_Mess_Land_2" src="flag_market_mess_land_trade_a2"/>
+-            <frame id="Granary_Flag_Market_Mess_Land_3" src="flag_market_mess_land_trade_a3"/>
+-            <frame id="Granary_Flag_Market_Mess_Land_4" src="flag_market_mess_land_trade_a4"/>
+-            <frame id="Granary_Flag_Market_Mess_Land_5" src="flag_market_mess_land_trade_a5"/>
+-            <frame id="Granary_Flag_Market_Mess_Land_6" src="flag_market_mess_land_trade_a6"/>
+-            <frame id="Granary_Flag_Market_Mess_Land_7" src="flag_market_mess_land_trade_a7"/>
+-            <frame id="Granary_Flag_Market_Mess_Land_8" src="flag_market_mess_land_trade_a8"/>
+-        </animation>
+-    </image> 
+-    <image id="Granary_Flag_Mess_Sea_1" src="flag_mess_sea_trade_a1"/>
+-    <image id="Granary_Flag_Mess_Sea">
+-        <layer group="this" image="Granary_Flag_Mess_Sea_1"/>
+-        <animation speed="6" reversible="false">
+-            <frame id="Granary_Flag_Mess_Sea_2" src="flag_mess_sea_trade_a2"/>
+-            <frame id="Granary_Flag_Mess_Sea_3" src="flag_mess_sea_trade_a3"/>
+-            <frame id="Granary_Flag_Mess_Sea_4" src="flag_mess_sea_trade_a4"/>
+-            <frame id="Granary_Flag_Mess_Sea_5" src="flag_mess_sea_trade_a5"/>
+-            <frame id="Granary_Flag_Mess_Sea_6" src="flag_mess_sea_trade_a6"/>
+-            <frame id="Granary_Flag_Mess_Sea_7" src="flag_mess_sea_trade_a7"/>
+-            <frame id="Granary_Flag_Mess_Sea_8" src="flag_mess_sea_trade_a8"/>
+-        </animation>
+-    </image> 
+-    <image id="Granary_Flag_Market_Mess_Sea_1" src="flag_market_mess_sea_trade_a1"/>
+-    <image id="Granary_Flag_Market_Mess_Sea">
+-        <layer group="this" image="Granary_Flag_Market_Mess_Sea_1"/>
+-        <animation speed="6" reversible="false">
+-            <frame id="Granary_Flag_Market_Mess_Sea_2" src="flag_market_mess_sea_trade_a2"/>
+-            <frame id="Granary_Flag_Market_Mess_Sea_3" src="flag_market_mess_sea_trade_a3"/>
+-            <frame id="Granary_Flag_Market_Mess_Sea_4" src="flag_market_mess_sea_trade_a4"/>
+-            <frame id="Granary_Flag_Market_Mess_Sea_5" src="flag_market_mess_sea_trade_a5"/>
+-            <frame id="Granary_Flag_Market_Mess_Sea_6" src="flag_market_mess_sea_trade_a6"/>
+-            <frame id="Granary_Flag_Market_Mess_Sea_7" src="flag_market_mess_sea_trade_a7"/>
+-            <frame id="Granary_Flag_Market_Mess_Sea_8" src="flag_market_mess_sea_trade_a8"/>
+-        </animation>
+-    </image> 
+-    <image id="Granary_Flag_Mess_Both_Traders_1" src="flag_mess_both_traders_a1"/>
+-    <image id="Granary_Flag_Mess_Both_Traders">
+-        <layer group="this" image="Granary_Flag_Mess_Both_Traders_1"/>
+-        <animation speed="6" reversible="false">
+-            <frame id="Granary_Flag_Mess_Both_Traders_2" src="flag_mess_both_traders_a2"/>
+-            <frame id="Granary_Flag_Mess_Both_Traders_3" src="flag_mess_both_traders_a3"/>
+-            <frame id="Granary_Flag_Mess_Both_Traders_4" src="flag_mess_both_traders_a4"/>
+-            <frame id="Granary_Flag_Mess_Both_Traders_5" src="flag_mess_both_traders_a5"/>
+-            <frame id="Granary_Flag_Mess_Both_Traders_6" src="flag_mess_both_traders_a6"/>
+-            <frame id="Granary_Flag_Mess_Both_Traders_7" src="flag_mess_both_traders_a7"/>
+-            <frame id="Granary_Flag_Mess_Both_Traders_8" src="flag_mess_both_traders_a8"/>
+-        </animation>
+-    </image> 
+-    <image id="Granary_Flag_Market_Both_Traders_1" src="flag_market_both_traders_a1"/>
+-    <image id="Granary_Flag_Market_Both_Traders">
+-        <layer group="this" image="Granary_Flag_Market_Both_Traders_1"/>
+-        <animation speed="6" reversible="false">
+-            <frame id="Granary_Flag_Market_Both_Traders_2" src="flag_market_both_traders_a2"/>
+-            <frame id="Granary_Flag_Market_Both_Traders_3" src="flag_market_both_traders_a3"/>
+-            <frame id="Granary_Flag_Market_Both_Traders_4" src="flag_market_both_traders_a4"/>
+-            <frame id="Granary_Flag_Market_Both_Traders_5" src="flag_market_both_traders_a5"/>
+-            <frame id="Granary_Flag_Market_Both_Traders_6" src="flag_market_both_traders_a6"/>
+-            <frame id="Granary_Flag_Market_Both_Traders_7" src="flag_market_both_traders_a7"/>
+-            <frame id="Granary_Flag_Market_Both_Traders_8" src="flag_market_both_traders_a8"/>
+-        </animation>
+-    </image>
+</assetlist>

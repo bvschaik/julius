@@ -154,6 +154,133 @@
 		<layer group="83" image="0" x="0" y="5"/>
 		<layer src="Warehouse_Bricks_04" x="3" y="0"/>
 	</image>
+	<!-- Note: Concrete Maker OFF Variant -->
+	<image id="Concrete_Maker_C_OFF" src="Concrete_Maker_C_OFF" width="118" height="75" isometric="true"/>
+	<image id="Concrete_Maker_N_OFF" width="118" height="75" isometric="true">
+		<layer group="this" image="Concrete_Maker_C_OFF" x="0" y="0"/>
+		<layer src="Concrete_Maker_N_OFF" x="0" y="41"/>
+	</image>
+	<image id="Concrete_Maker_S_OFF" width="118" height="75" isometric="true">
+		<layer group="this" image="Concrete_Maker_C_OFF" x="0" y="0"/>
+		<layer src="Concrete_Maker_S_OFF" x="0" y="41"/>
+	</image>
+	<!-- Note: Concrete Maker ON Variant -->
+	<image id="Concrete_Maker_C_ON" width="118" height="75" isometric="true">
+		<layer group="this" image="Concrete_Maker_C_OFF"/>
+		<animation speed="6" x="16" y="16" reversible="false">
+			<frame group="this" image="Concrete_Maker_ON_01"/>
+			<frame group="this" image="Concrete_Maker_ON_02"/>
+			<frame group="this" image="Concrete_Maker_ON_03"/>
+			<frame group="this" image="Concrete_Maker_ON_04"/>
+			<frame group="this" image="Concrete_Maker_ON_05"/>
+			<frame group="this" image="Concrete_Maker_ON_06"/>
+		</animation>
+	</image>
+	<image id="Concrete_Maker_N_ON" width="118" height="75" isometric="true">
+		<layer group="this" image="Concrete_Maker_N_OFF"/>
+		<animation speed="6" x="16" y="16" reversible="false">
+			<frame group="this" image="Concrete_Maker_ON_01"/>
+			<frame group="this" image="Concrete_Maker_ON_02"/>
+			<frame group="this" image="Concrete_Maker_ON_03"/>
+			<frame group="this" image="Concrete_Maker_ON_04"/>
+			<frame group="this" image="Concrete_Maker_ON_05"/>
+			<frame group="this" image="Concrete_Maker_ON_06"/>
+		</animation>
+	</image>
+	<image id="Concrete_Maker_S_ON" width="118" height="75" isometric="true">
+		<layer group="this" image="Concrete_Maker_S_OFF"/>
+		<animation speed="6" x="16" y="16" reversible="false">
+			<frame group="this" image="Concrete_Maker_ON_01"/>
+			<frame group="this" image="Concrete_Maker_ON_02"/>
+			<frame group="this" image="Concrete_Maker_ON_03"/>
+			<frame group="this" image="Concrete_Maker_ON_04"/>
+			<frame group="this" image="Concrete_Maker_ON_05"/>
+			<frame group="this" image="Concrete_Maker_ON_06"/>
+		</animation>
+	</image>
+	<!-- Note: Concrete Cart -->
+	<image id="Concrete_Cart_NE" width="39" height="39">
+		<layer group="97" image="0" x="0" y="0"/>
+		<layer src="Concrete_Cart_NE" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_E" width="39" height="39">
+		<layer group="97" image="1" x="0" y="0"/>
+		<layer src="Concrete_Cart_E" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_SE" width="39" height="39">
+		<layer group="97" image="2" x="0" y="0"/>
+		<layer src="Concrete_Cart_SE" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_S" width="39" height="39">
+		<layer group="97" image="3" x="0" y="0"/>
+		<layer src="Concrete_Cart_S" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_SW" width="39" height="39">
+		<layer group="97" image="4" x="0" y="0"/>
+		<layer src="Concrete_Cart_SW" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_W" width="39" height="39">
+		<layer group="97" image="5" x="0" y="0"/>
+		<layer src="Concrete_Cart_W" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_NW" width="39" height="39">
+		<layer group="97" image="6" x="0" y="0"/>
+		<layer src="Concrete_Cart_NW" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_N" width="39" height="39">
+		<layer group="97" image="7" x="0" y="0"/>
+		<layer src="Concrete_Cart_N" x="0" y="0"/>
+	</image>
+	<!-- Note: Concrete Getting Cart -->
+	<image id="Concrete_Cart_Getting_NE" width="39" height="39">
+		<layer group="97" image="0" x="0" y="0"/>
+		<layer src="Concrete_Cart_Getting_NE" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_Getting_E" width="39" height="39">
+		<layer group="97" image="1" x="0" y="0"/>
+		<layer src="Concrete_Cart_Getting_E" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_Getting_SE" width="39" height="39">
+		<layer group="97" image="2" x="0" y="0"/>
+		<layer src="Concrete_Cart_Getting_SE" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_Getting_S" width="39" height="39">
+		<layer group="97" image="3" x="0" y="0"/>
+		<layer src="Concrete_Cart_Getting_S" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_Getting_SW" width="39" height="39">
+		<layer group="97" image="4" x="0" y="0"/>
+		<layer src="Concrete_Cart_Getting_SW" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_Getting_W" width="39" height="39">
+		<layer group="97" image="5" x="0" y="0"/>
+		<layer src="Concrete_Cart_Getting_W" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_Getting_NW" width="39" height="39">
+		<layer group="97" image="6" x="0" y="0"/>
+		<layer src="Concrete_Cart_Getting_NW" x="0" y="0"/>
+	</image>
+	<image id="Concrete_Cart_Getting_N" width="39" height="39">
+		<layer group="97" image="7" x="0" y="0"/>
+		<layer src="Concrete_Cart_Getting_N" x="0" y="0"/>
+	</image>
+	<!-- Note: Concrete Warehouse Tiles -->
+	<image id="Warehouse_concrete_01" width="58" height="45" isometric="true">
+		<layer group="83" image="0" x="0" y="4"/>
+		<layer src="Warehouse_Concrete_01" x="20" y="12"/>
+	</image>
+	<image id="Warehouse_concrete_02" width="58" height="45" isometric="true">
+		<layer group="83" image="0" x="0" y="4"/>
+		<layer src="Warehouse_Concrete_02" x="20" y="7"/>
+	</image>
+	<image id="Warehouse_concrete_03" width="58" height="45" isometric="true">
+		<layer group="83" image="0" x="0" y="4"/>
+		<layer src="Warehouse_Concrete_03" x="18" y="0"/>
+	</image>
+	<image id="Warehouse_concrete_04" width="58" height="45" isometric="true">
+		<layer group="83" image="0" x="0" y="4"/>
+		<layer src="Warehouse_Concrete_04" x="4" y="0"/>
+	</image>
 	<!-- Note: Gold Mine OFF - Climate Variants -->
 	<image id="Gold_Mine_C_OFF" width="118" height="67" isometric="true">
 		<layer src="Gold_Mine_C_OFF" x="0" y="0"/>

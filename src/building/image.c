@@ -343,7 +343,7 @@ int building_image_get(const building *b)
         case BUILDING_ORACLE:
             switch (b->data.monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Religion", "Oracle Cons");
+                    return assets_get_image_id("Religion", "Oracle_Construction_01");
                 default:
                     return image_group(GROUP_BUILDING_ORACLE);
             }
@@ -740,7 +740,7 @@ int building_image_get(const building *b)
         case BUILDING_CARAVANSERAI:
             switch (b->data.monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Logistics", "Caravanserai Cons");
+                    return assets_get_image_id("Logistics", "Caravanserai_Construction_01");
                 default:
                     switch (scenario_property_climate()) {
                         case CLIMATE_DESERT:
