@@ -140,9 +140,17 @@ int can_produce_resource(int resource)
 
     // Wine can also be produced via Venus Grand Temple
     // Potential bug: if venus grand temples were to require wine to be built, we would crash here with a stack overflow
-    return resource == RESOURCE_WINE && scenario_building_allowed(BUILDING_MENU_GRAND_TEMPLES) &&
-        scenario_building_allowed(BUILDING_GRAND_TEMPLE_VENUS) &&
-        building_monument_has_required_resources_to_build(BUILDING_GRAND_TEMPLE_VENUS);
+    if (resource == RESOURCE_WINE) {
+        return scenario_building_allowed(BUILDING_MENU_GRAND_TEMPLES) &&
+            scenario_building_allowed(BUILDING_GRAND_TEMPLE_VENUS) &&
+            building_monument_has_required_resources_to_build(BUILDING_GRAND_TEMPLE_VENUS);
+    }
+    // Gold can also be produced via City Mint
+    // Potential bug: if the city mint was to require gold to be built, we would crash here with a stack overflow
+    if (resource == RESOURCE_GOLD) {
+        return scenario_building_allowed(BUILDING_CITY_MINT) &&
+            building_monument_has_required_resources_to_build(BUILDING_CITY_MINT);
+    }
 }
 
 int empire_can_produce_resource(int resource)
