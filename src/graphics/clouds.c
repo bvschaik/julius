@@ -27,7 +27,7 @@
 #define CLOUD_TEXTURE_WIDTH (CLOUD_WIDTH * CLOUD_COLUMNS)
 #define CLOUD_TEXTURE_HEIGHT (CLOUD_HEIGHT * CLOUD_ROWS)
 
-#define CLOUD_SPEED 0.6
+#define CLOUD_SPEED 0.3
 
 #define PI 3.14159265358979323846
 
@@ -59,8 +59,8 @@ typedef struct {
         speed_type x;
         speed_type y;
     } speed;
-    double scale_x;
-    double scale_y;
+    float scale_x;
+    float scale_y;
     int side;
     int angle;
 } cloud_type;
@@ -206,8 +206,8 @@ static void generate_cloud(cloud_type *cloud)
 
     cloud->x = 0;
     cloud->y = 0;
-    cloud->scale_x = (int) ((1.5f - random_fractional_from_stdlib()) / CLOUD_SCALE);
-    cloud->scale_y = (int) ((1.5f - random_fractional_from_stdlib()) / CLOUD_SCALE);
+    cloud->scale_x = (float) ((1.5f - random_fractional_from_stdlib()) / CLOUD_SCALE);
+    cloud->scale_y = (float) ((1.5f - random_fractional_from_stdlib()) / CLOUD_SCALE);
     int scaled_width = (int) (CLOUD_WIDTH / cloud->scale_x);
     int scaled_height = (int) (CLOUD_HEIGHT / cloud->scale_y);
     cloud->side = (int) sqrt(scaled_width * scaled_width + scaled_height * scaled_height);
