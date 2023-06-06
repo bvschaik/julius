@@ -13,11 +13,6 @@
 
 #define XML_EXPORT_MAX_SIZE 5000000
 
-static struct {
-    int success;
-    char error_message[200];
-} data;
-
 static int export_attribute_media_type(const char *name, int target)
 {
     special_attribute_mapping_t *found = scenario_events_parameter_data_get_attribute_mapping_by_value(PARAMETER_TYPE_MEDIA_TYPE, target);

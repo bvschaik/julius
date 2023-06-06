@@ -213,7 +213,6 @@ void figure_depot_cartpusher_action(figure *f)
     f->cart_image_id = 0;
     int speed_factor = DEPOT_CART_PUSHER_SPEED;
     int percentage_speed = 0;
-    int road_network_id = map_road_network_get(f->grid_offset);
     f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
     building *b = building_get(f->building_id);
 

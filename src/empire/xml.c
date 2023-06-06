@@ -609,8 +609,8 @@ static void xml_end_distant_battle_path(void)
             army_obj->in_use = 1;
             army_obj->obj.type = obj_type;
             army_obj->obj.image_id = image_group(image_id);
-            army_obj->obj.x = (double)j / current->num_months * x_diff + last->x;
-            army_obj->obj.y = (double)j / current->num_months * y_diff + last->y;
+            army_obj->obj.x = (int) ((double) j / current->num_months * x_diff + last->x);
+            army_obj->obj.y = (int) ((double)j / current->num_months * y_diff + last->y);
             army_obj->obj.distant_battle_travel_months = month;
             month++;
         }

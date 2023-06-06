@@ -864,7 +864,7 @@ static void savegame_save_to_state(savegame_state *state)
 static int get_scenario_version(FILE *fp)
 {
     char version_magic[8];
-    int read = fread(version_magic, 1, 8, fp);
+    size_t read = fread(version_magic, 1, 8, fp);
     if (read != sizeof(version_magic)) {
         log_error("Unable to read version header from file", 0, 0);
         return 0;
@@ -988,7 +988,7 @@ static int load_scenario_to_buffers(const char *filename, scenario_version *vers
         if (piece->compressed) {
             result = read_compressed_chunk(fp, piece->buf.data, piece->buf.size, 1, &compress_buffer);
         } else {
-            int bytes_read = fread(piece->buf.data, 1, piece->buf.size, fp);
+            size_t bytes_read = fread(piece->buf.data, 1, piece->buf.size, fp);
             result = bytes_read == piece->buf.size;
         }
         if (!result) {

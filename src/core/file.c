@@ -63,8 +63,8 @@ void file_append_extension(char *filename, const char *extension)
     filename--;
     *filename = '.';
     filename++;
-    int len = strlen(extension);
-    for (int i = 0; i < len; i++) {
+    size_t len = strlen(extension);
+    for (size_t i = 0; i < len; i++) {
         *filename = extension[i];
         filename++;
     }

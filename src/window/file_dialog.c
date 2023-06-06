@@ -442,7 +442,7 @@ static void button_ok_cancel(int is_ok, int param2)
     } else if (data.type == FILE_TYPE_CUSTOM_MESSAGES) {
         strncpy(filename, "editor/messages/", FILE_NAME_MAX - 1);
     }
-    strncat(filename, chosen_filename, sizeof(filename) - strlen(filename) - 1);
+    strncat(filename, chosen_filename, sizeof(filename) - strlen(filename));
 
     if (data.dialog_type != FILE_DIALOG_SAVE && !file_exists(filename, NOT_LOCALIZED)) {
         data.message_not_exist_start_time = time_get_millis();

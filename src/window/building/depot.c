@@ -293,7 +293,7 @@ int handle_mouse_depot_select_source_destination(const mouse *m, building_info_c
     }
 
     int y_offset = window_building_get_vertical_offset(c, 28);
-    int index = 0, offset = scrollbar.scroll_position;
+    int offset = scrollbar.scroll_position;
     setup_for_selected_depot(c, offset);
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         depot_select_storage_buttons[i].x = 0;

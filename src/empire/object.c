@@ -60,9 +60,10 @@ int empire_object_in_use(const full_empire_object *obj)
 
 void empire_object_clear(void)
 {
-    array_init(objects, EMPIRE_OBJECT_SIZE_STEP, new_empire_object, empire_object_in_use);
-    // Discard object 0
-    array_next(objects);
+    if (!array_init(objects, EMPIRE_OBJECT_SIZE_STEP, new_empire_object, empire_object_in_use) ||
+        !array_next(objects)) { // Discard object 0
+        log_error("Unable to allocate enough memory for the empire object array. The game will now crash.", 0, 0);
+    }
 }
 
 int empire_object_count(void)

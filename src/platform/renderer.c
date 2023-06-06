@@ -502,7 +502,7 @@ static void draw_texture_advanced(const image *img, float x, float y, color_t co
         return;
     }
 
-    float scale = scale_x == scale_y ? scale_x : 0.0;
+    float scale = scale_x == scale_y ? scale_x : 0.0f;
 
     set_texture_color_and_scale_mode(texture, color, scale);
 
@@ -546,7 +546,7 @@ static void draw_texture_advanced(const image *img, float x, float y, color_t co
 
 static void draw_texture(const image *img, int x, int y, color_t color, float scale)
 {
-    draw_texture_advanced(img, x, y, color, scale, scale, 0.0, 0);
+    draw_texture_advanced(img, (float) x, (float) y, color, scale, scale, 0.0, 0);
 }
 
 static void create_custom_texture(custom_image_type type, int width, int height, int is_yuv)
@@ -642,7 +642,7 @@ static void update_custom_texture_from(custom_image_type type, const color_t *bu
     int pitch;
     SDL_LockTexture(data.custom_textures[type].texture, NULL, (void **) &data.custom_textures[type].buffer, &pitch);
     texture_width = pitch / sizeof(color_t);
-    color_t *offset = &buffer[y_offset * texture_width + x_offset];
+    color_t *offset = &data.custom_textures[type].buffer[y_offset * texture_width + x_offset];
     for (int y = 0; y < height; y++) {
         memcpy(&offset[y * texture_width], &buffer[y * width], width * sizeof(color_t));
     }

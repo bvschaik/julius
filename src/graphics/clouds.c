@@ -59,8 +59,8 @@ typedef struct {
         speed_type x;
         speed_type y;
     } speed;
-    float scale_x;
-    float scale_y;
+    double scale_x;
+    double scale_y;
     int side;
     int angle;
 } cloud_type;
@@ -77,11 +77,11 @@ static void position_ellipse(ellipse *e, int cloud_width, int cloud_height)
 {
     double angle = random_fractional_from_stdlib() * PI * 2;
 
-    e->x = CLOUD_WIDTH / 2 + random_fractional_from_stdlib() * cloud_width * cos(angle);
-    e->y = CLOUD_HEIGHT / 2 + random_fractional_from_stdlib() * cloud_height * sin(angle);
+    e->x = (int) (CLOUD_WIDTH / 2 + random_fractional_from_stdlib() * cloud_width * cos(angle));
+    e->y = (int) (CLOUD_HEIGHT / 2 + random_fractional_from_stdlib() * cloud_height * sin(angle));
 
-    e->width = random_from_min_to_range(CLOUD_WIDTH * 0.10, CLOUD_WIDTH * 0.10);
-    e->height = random_from_min_to_range(CLOUD_HEIGHT * 0.10, CLOUD_HEIGHT * 0.10);
+    e->width = random_from_min_to_range((int) (CLOUD_WIDTH * 0.10), (int) (CLOUD_WIDTH * 0.10));
+    e->height = random_from_min_to_range((int) (CLOUD_HEIGHT * 0.10), (int) (CLOUD_HEIGHT * 0.10));
 
     e->half_width = e->width / 2;
     e->half_height = e->height / 2;
@@ -192,8 +192,8 @@ static void generate_cloud(cloud_type *cloud)
     color_t buffer[CLOUD_WIDTH * CLOUD_HEIGHT];
     memset(buffer, 0, sizeof(color_t) * CLOUD_WIDTH * CLOUD_HEIGHT);
 
-    int width = random_from_min_to_range(CLOUD_WIDTH * 0.15f, CLOUD_WIDTH * 0.2f);
-    int height = random_from_min_to_range(CLOUD_HEIGHT * 0.15f, CLOUD_HEIGHT * 0.2f);
+    int width = random_from_min_to_range((int) (CLOUD_WIDTH * 0.15f), (int) (CLOUD_WIDTH * 0.2f));
+    int height = random_from_min_to_range((int) (CLOUD_HEIGHT * 0.15f), (int) (CLOUD_HEIGHT * 0.2f));
 
     for (int i = 0; i < NUM_CLOUD_ELLIPSES; i++) {
         generate_cloud_ellipse(buffer, width, height);
@@ -206,11 +206,11 @@ static void generate_cloud(cloud_type *cloud)
 
     cloud->x = 0;
     cloud->y = 0;
-    cloud->scale_x = (1.5f - random_fractional_from_stdlib()) / CLOUD_SCALE;
-    cloud->scale_y = (1.5f - random_fractional_from_stdlib()) / CLOUD_SCALE;
-    int scaled_width = CLOUD_WIDTH / cloud->scale_x;
-    int scaled_height = CLOUD_HEIGHT / cloud->scale_y;
-    cloud->side = sqrt(scaled_width * scaled_width + scaled_height * scaled_height);
+    cloud->scale_x = (int) ((1.5f - random_fractional_from_stdlib()) / CLOUD_SCALE);
+    cloud->scale_y = (int) ((1.5f - random_fractional_from_stdlib()) / CLOUD_SCALE);
+    int scaled_width = (int) (CLOUD_WIDTH / cloud->scale_x);
+    int scaled_height = (int) (CLOUD_HEIGHT / cloud->scale_y);
+    cloud->side = (int) sqrt(scaled_width * scaled_width + scaled_height * scaled_height);
     cloud->angle = random_between_from_stdlib(0, 360);
     cloud->status = STATUS_CREATED;
 }

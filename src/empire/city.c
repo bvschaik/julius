@@ -526,7 +526,7 @@ void empire_city_load_state(buffer *buf, int version)
         return;
     }
 
-    int highest_id_in_use;
+    int highest_id_in_use = 0;
 
     for (int i = 0; i < cities_to_load; i++) {
         empire_city *city = array_next(cities);
