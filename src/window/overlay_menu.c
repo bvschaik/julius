@@ -24,7 +24,7 @@
 static void button_menu_item(int index, int param2);
 static void button_submenu_item(int index, int param2);
 
-#define OVERLAY_BUTTONS 12
+#define OVERLAY_BUTTONS 11
 
 static generic_button menu_buttons[] = {
     {0, 0, 160, 24, button_menu_item, button_none, 0, 0},
@@ -37,7 +37,7 @@ static generic_button menu_buttons[] = {
     {0, 168, 160, 24, button_menu_item, button_none, 7, 0},
     {0, 192, 160, 24, button_menu_item, button_none, 8, 0},
     {0, 216, 160, 24, button_menu_item, button_none, 9, 0},
-    {0, 216, 160, 24, button_menu_item, button_none, 10, 0},
+    {0, 240, 160, 24, button_menu_item, button_none, 10, 0},
 };
 static generic_button submenu_buttons[] = {
     {0, 0, 160, 24, button_submenu_item, button_none, 0, 0},
