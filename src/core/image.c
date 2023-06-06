@@ -1159,6 +1159,7 @@ int image_load_external_pixels(color_t *dst, const image *img, int row_width)
                 log_error("unable to load external image",
                     data.bitmaps[draw_data->bitmap_id], 0);
                 free(draw_data->buffer);
+                draw_data->buffer = 0;
                 return 0;
             }
         }
