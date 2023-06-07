@@ -4,6 +4,7 @@
 #include "core/image_group.h" 
 #include "type.h"
 
+#include <stddef.h>
 
 augustus_building_properties_mapping augustus_building_properties[] = {
     {BUILDING_ROADBLOCK, { 1, 1, 0, 0, 0 }, "Logistics", 0},
