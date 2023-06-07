@@ -251,7 +251,7 @@ static void route_queue_all_from(int source, max_directions directions,
             }
         } else {
             int dist = 1 + distance.determined.items[offset];
-            for (unsigned int i = 0; i < directions; i++) {
+            for (max_directions i = 0; i < directions; i++) {
                 int route_offset = ROUTE_OFFSETS[i];
                 int next_offset = offset + route_offset;
                 if (valid_offset(next_offset, dist)) {

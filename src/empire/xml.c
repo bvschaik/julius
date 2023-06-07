@@ -205,7 +205,7 @@ static int xml_start_ornament(void)
     int ornament_id = xml_parser_get_attribute_enum("type", ORNAMENTS, TOTAL_ORNAMENTS, 0);
     if (ornament_id == -1) {
         if (strcmp("all", xml_parser_get_attribute_string("type")) == 0) {
-            for (size_t i = 0; i < TOTAL_ORNAMENTS; i++) {
+            for (int i = 0; i < (int) TOTAL_ORNAMENTS; i++) {
                 add_ornament(i);
             }
         } else {

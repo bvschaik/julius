@@ -139,7 +139,7 @@ int32_t buffer_read_i32(buffer *buffer);
  * @param max_size Size of the value, max bytes to read
  * @return Bytes read
  */
-int buffer_read_raw(buffer *buffer, void *value, int max_size);
+size_t buffer_read_raw(buffer *buffer, void *value, int max_size);
 
 /**
  * Skip data in the buffer

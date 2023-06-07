@@ -32,8 +32,8 @@
 
 typedef struct {
     const uint8_t *data;
-    int length;
-    int index;
+    size_t length;
+    size_t index;
     int bit_index;
 } bitstream;
 
@@ -145,7 +145,7 @@ static int32_t read_i32(uint8_t *data)
 
 // Bitstream functions
 
-static bitstream *bitstream_init(bitstream *bs, const uint8_t *data, int len)
+static bitstream *bitstream_init(bitstream *bs, const uint8_t *data, size_t len)
 {
     bs->data = data;
     bs->length = len;
@@ -461,12 +461,12 @@ static int read_frame_info(smacker s)
     }
 
     uint8_t *data = (uint8_t *) s->frame_sizes;
-    long offset = 0;
+    int offset = 0;
     for (int i = 0; i < s->frames; i++) {
         // Clear first two flag bits in-place (and flip endian-ness if necessary)
         s->frame_sizes[i] = read_i32(&data[4 * i]) & 0xfffffffc;
         s->frame_offsets[i] = offset;
-        offset += s->frame_sizes[i];
+        offset += (long) s->frame_sizes[i];
     }
     return 1;
 }
@@ -707,7 +707,7 @@ static int decode_audio_track(smacker s, int track, uint8_t *data, int length)
 
 static int decode_palette(smacker s, uint8_t *data, int length)
 {
-    color_t new_palette[MAX_PALETTE];
+    color_t new_palette[MAX_PALETTE] = { 0 };
     int index = 0;
     int color_index = 0;
     while (index < length && color_index < MAX_PALETTE) {
@@ -746,7 +746,7 @@ static int decode_palette(smacker s, uint8_t *data, int length)
     return 1;
 }
 
-static int decode_video(smacker s, uint8_t *frame_data, int length)
+static int decode_video(smacker s, uint8_t *frame_data, size_t length)
 {
     reset_escape16(s->mclr_tree);
     reset_escape16(s->mmap_tree);

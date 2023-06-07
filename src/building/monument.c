@@ -691,14 +691,14 @@ void building_monument_delivery_save_state(buffer *buf)
 void building_monument_delivery_load_state(buffer *buf, int includes_delivery_buffer_size)
 {
     int delivery_buf_size = ORIGINAL_DELIVERY_BUFFER_SIZE;
-    int buf_size = buf->size;
+    size_t buf_size = buf->size;
 
     if (includes_delivery_buffer_size) {
         delivery_buf_size = buffer_read_i32(buf);
         buf_size -= 4;
     }
 
-    int deliveries_to_load = buf_size / delivery_buf_size;
+    int deliveries_to_load = (int) buf_size / delivery_buf_size;
 
     if (!array_init(monument_deliveries, DELIVERY_ARRAY_SIZE_STEP, 0, delivery_in_use) ||
         !array_expand(monument_deliveries, deliveries_to_load)) {

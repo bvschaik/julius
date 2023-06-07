@@ -637,14 +637,14 @@ void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_eve
 void building_load_state(buffer *buf, buffer *sequence, buffer *corrupt_houses, int save_version)
 {
     int building_buf_size = BUILDING_STATE_ORIGINAL_BUFFER_SIZE;
-    int buf_size = buf->size;
+    size_t buf_size = buf->size;
 
     if (save_version > SAVE_GAME_LAST_STATIC_VERSION) {
         building_buf_size = buffer_read_i32(buf);
         buf_size -= 4;
     }
 
-    int buildings_to_load = buf_size / building_buf_size;
+    int buildings_to_load = (int) buf_size / building_buf_size;
 
     if (!array_init(data.buildings, BUILDING_ARRAY_SIZE_STEP, initialize_new_building, building_in_use) ||
         !array_expand(data.buildings, buildings_to_load)) {

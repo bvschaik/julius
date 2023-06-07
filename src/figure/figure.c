@@ -518,14 +518,14 @@ void figure_load_state(buffer *list, buffer *seq, int version)
     data.created_sequence = buffer_read_i32(seq);
 
     int figure_buf_size = FIGURE_ORIGINAL_BUFFER_SIZE;
-    int buf_size = list->size;
+    size_t buf_size = list->size;
 
     if (version > SAVE_GAME_LAST_STATIC_VERSION) {
         figure_buf_size = buffer_read_i32(list);
         buf_size -= 4;
     }
 
-    int figures_to_load = buf_size / figure_buf_size;
+    int figures_to_load = (int) buf_size / figure_buf_size;
 
     if (!array_init(data.figures, FIGURE_ARRAY_SIZE_STEP, initialize_new_figure, figure_is_active) ||
         !array_expand(data.figures, figures_to_load)) {

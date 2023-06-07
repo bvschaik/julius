@@ -910,7 +910,7 @@ static int read_compressed_chunk(FILE *fp, void *buf, size_t bytes_to_read, int 
     if (!core_memory_block_ensure_size(compress_buffer, bytes_to_read)) {
         return 0;
     }
-    size_t input_size = read_int32(fp);
+    int input_size = read_int32(fp);
     if ((unsigned int)input_size == UNCOMPRESSED) {
         return fread(buf, 1, bytes_to_read, fp) == bytes_to_read;
     } else {
@@ -919,10 +919,10 @@ static int read_compressed_chunk(FILE *fp, void *buf, size_t bytes_to_read, int 
         }
 
         if (!read_as_zlib) {
-            return zip_decompress(compress_buffer->memory, input_size, buf, bytes_to_read);
+            return zip_decompress(compress_buffer->memory, input_size, buf, (int) bytes_to_read);
         } else {
             int output_size = 0;
-            return zlib_helper_decompress(compress_buffer->memory, input_size, buf, bytes_to_read, &output_size);
+            return zlib_helper_decompress(compress_buffer->memory, input_size, buf, (int) bytes_to_read, &output_size);
         }
     }
 }
@@ -940,7 +940,7 @@ static int write_compressed_chunk(FILE *fp, void *buf, size_t bytes_to_write, me
         return 0;
     }
     int output_size = 0;
-    if (zlib_helper_compress(buf, bytes_to_write, compress_buffer->memory, COMPRESS_BUFFER_INITIAL_SIZE, &output_size)) {
+    if (zlib_helper_compress(buf, (int) bytes_to_write, compress_buffer->memory, COMPRESS_BUFFER_INITIAL_SIZE, &output_size)) {
         write_int32(fp, output_size);
         fwrite(compress_buffer->memory, 1, output_size, fp);
     } else {
@@ -993,7 +993,7 @@ static int load_scenario_to_buffers(const char *filename, scenario_version_t *ve
         }
         if (!result) {
             log_info("Incorrect buffer size, got", 0, result);
-            log_info("Incorrect buffer size, expected", 0, piece->buf.size);
+            log_info("Incorrect buffer size, expected", 0, (int) piece->buf.size);
             file_close(fp);
             return 0;
         }
@@ -1127,7 +1127,7 @@ int game_file_io_write_scenario(const char *filename)
     for (int i = 0; i < scenario_data.num_pieces; i++) {
         file_piece *piece = &scenario_data.pieces[i];
         if (piece->dynamic) {
-            write_int32(fp, piece->buf.size);
+            write_int32(fp, (int) piece->buf.size);
             if (!piece->buf.size) {
                 continue;
             }
@@ -1161,7 +1161,7 @@ static int savegame_read_from_file(FILE *fp, savegame_version_t version)
         // The last piece may be smaller than buf.size
         if (!result && i != (savegame_data.num_pieces - 1)) {
             log_info("Incorrect buffer size, got", 0, result);
-            log_info("Incorrect buffer size, expected", 0, piece->buf.size);
+            log_info("Incorrect buffer size, expected", 0, (int) piece->buf.size);
             return 0;
         }
     }
@@ -1174,7 +1174,7 @@ static void savegame_write_to_file(FILE *fp, memory_block *compress_buffer)
     for (int i = 0; i < savegame_data.num_pieces; i++) {
         file_piece *piece = &savegame_data.pieces[i];
         if (piece->dynamic) {
-            write_int32(fp, piece->buf.size);
+            write_int32(fp, (int) piece->buf.size);
             if (!piece->buf.size) {
                 continue;
             }

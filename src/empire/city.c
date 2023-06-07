@@ -514,7 +514,7 @@ void empire_city_load_state(buffer *buf, int version)
     if (version <= SAVE_GAME_LAST_STATIC_SCENARIO_OBJECTS) {
         cities_to_load = LEGACY_MAX_CITIES;
     } else {
-        cities_to_load = (buf->size - sizeof(int32_t)) / buffer_read_i32(buf);
+        cities_to_load = (int) (buf->size - sizeof(int32_t)) / buffer_read_i32(buf);
     }
 
     if (!array_init(cities, CITIES_ARRAY_SIZE_STEP, 0, city_in_use) ||

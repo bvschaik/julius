@@ -780,14 +780,14 @@ void formations_load_state(buffer *buf, buffer *totals, int version)
     data.selected_formation = 0;
 
     int formation_buf_size = ORIGINAL_BUFFER_SIZE_PER_FORMATION;
-    int buf_size = buf->size;
+    size_t buf_size = buf->size;
 
     if (version > SAVE_GAME_LAST_STATIC_VERSION) {
         formation_buf_size = buffer_read_i32(buf);
         buf_size -= 4;
     }
 
-    int formations_to_load = buf_size / formation_buf_size;
+    int formations_to_load = (int) buf_size / formation_buf_size;
 
     if (!array_init(formations, FORMATION_ARRAY_SIZE_STEP, initialize_new_formation, formation_in_use) ||
         !array_expand(formations, formations_to_load)) {

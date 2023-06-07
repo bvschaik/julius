@@ -3,6 +3,8 @@
 
 #include "core/dir.h"
 
+#include <stddef.h>
+
 /**
  * @file
  * I/O functions.
@@ -35,6 +37,6 @@ int io_read_file_part_into_buffer(const char *filepath, int localizable, void *b
  * @param size Number of bytes to write
  * @return Number of bytes written
  */
-int io_write_buffer_to_file(const char *filepath, const void *buffer, int size);
+int io_write_buffer_to_file(const char *filepath, const void *buffer, size_t size);
 
 #endif // CORE_IO_H

@@ -136,7 +136,7 @@ void building_list_load_state(buffer *small, buffer *large, buffer *burning, buf
     data.burning.size = 0;
 
     if (!is_new_version) {
-        int size = small->size / sizeof(int16_t);
+        size_t size = small->size / sizeof(int16_t);
         for (int i = 0; i < size; i++) {
             building_list_small_add(buffer_read_i16(small));
         }
@@ -151,7 +151,7 @@ void building_list_load_state(buffer *small, buffer *large, buffer *burning, buf
 
         buffer_skip(burning_totals, 4);
     } else {
-        int size = small->size / sizeof(int32_t);
+        size_t size = small->size / sizeof(int32_t);
         for (int i = 0; i < size; i++) {
             building_list_small_add(buffer_read_i32(small));
         }

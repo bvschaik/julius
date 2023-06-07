@@ -155,9 +155,9 @@ int32_t buffer_read_i32(buffer *buf)
     }
 }
 
-int buffer_read_raw(buffer *buf, void *value, int max_size)
+size_t buffer_read_raw(buffer *buf, void *value, int max_size)
 {
-    int size = buf->size - buf->index;
+    size_t size = buf->size - buf->index;
     if (size > max_size) {
         size = max_size;
     }

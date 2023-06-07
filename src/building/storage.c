@@ -255,7 +255,7 @@ void building_storage_save_state(buffer *buf)
 void building_storage_load_state(buffer *buf, int version)
 {
     int storage_buf_size = STORAGE_ORIGINAL_BUFFER_SIZE;
-    int buf_size = buf->size;
+    size_t buf_size = buf->size;
     int includes_storage_size = version > SAVE_GAME_LAST_STATIC_VERSION;
     int num_resources = RESOURCE_MAX_LEGACY;
 
@@ -265,7 +265,7 @@ void building_storage_load_state(buffer *buf, int version)
         num_resources = storage_buf_size - STORAGE_STATIC_BUFFER_SIZE;
     }
 
-    int storages_to_load = buf_size / storage_buf_size;
+    int storages_to_load = (int) buf_size / storage_buf_size;
 
     if (!array_init(storages, STORAGE_ARRAY_SIZE_STEP, storage_create, storage_in_use) ||
         !array_expand(storages, storages_to_load)) {

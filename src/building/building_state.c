@@ -19,7 +19,7 @@ static void write_type_data(buffer *buf, const building *b)
     // This function should ALWAYS write 26 bytes.
     // If you don't write 26 bytes, the function will pad them at the end.
     // If you need more than 26 bytes, don't use the type data.
-    int buffer_index = buf->index;
+    size_t buffer_index = buf->index;
 
     if (building_is_house(b->type)) {
         buffer_write_u8(buf, b->data.house.theater);
@@ -109,7 +109,7 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_u8(buf, b->data.entertainment.days2);
         buffer_write_u8(buf, b->data.entertainment.play);
     }
-    int remaining_bytes = TYPE_DATA_CURRENT_BUFFER_SIZE - (buf->index - buffer_index);
+    int remaining_bytes = TYPE_DATA_CURRENT_BUFFER_SIZE - (int) (buf->index - buffer_index);
     for (int i = 0; i < remaining_bytes; i++) {
         buffer_write_u8(buf, 0);
     }
@@ -236,7 +236,7 @@ static void read_type_data(buffer *buf, building *b, int version)
     } else {
         type_data_bytes = TYPE_DATA_CURRENT_BUFFER_SIZE;
     }
-    int buffer_index = buf->index;
+    size_t buffer_index = buf->index;
 
     if (building_is_house(b->type)) {
         if (version <= SAVE_GAME_LAST_STATIC_RESOURCES) {
@@ -407,7 +407,7 @@ static void read_type_data(buffer *buf, building *b, int version)
         b->data.entertainment.days2 = buffer_read_u8(buf);
         b->data.entertainment.play = buffer_read_u8(buf);
     }
-    int remaining_bytes = type_data_bytes - (buf->index - buffer_index);
+    int remaining_bytes = type_data_bytes - (int) (buf->index - buffer_index);
     if (remaining_bytes > 0) {
         buffer_skip(buf, remaining_bytes);
     }

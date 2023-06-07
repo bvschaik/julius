@@ -79,7 +79,7 @@ void figure_visited_buildings_save_state(buffer *buf)
 
 void figure_visited_buildings_load_state(buffer *buf)
 {
-    int visited_buildings_to_load = (buf->size - sizeof(int32_t)) / buffer_read_i32(buf);
+    int visited_buildings_to_load = (int) (buf->size - sizeof(int32_t)) / buffer_read_i32(buf);
 
     if (!array_init(visited_buildings, VISITED_BUILDINGS_ARRAY_SIZE_STEP, visited_building_create, visited_building_in_use) ||
         !array_expand(visited_buildings, visited_buildings_to_load)) {

@@ -190,7 +190,7 @@ void figure_route_save_state(buffer *figures, buffer *buf_paths)
 
 void figure_route_load_state(buffer *figures, buffer *buf_paths)
 {
-    int elements_to_load = buf_paths->size / MAX_PATH_LENGTH;
+    int elements_to_load = (int) buf_paths->size / MAX_PATH_LENGTH;
 
     if (!array_init(paths, ARRAY_SIZE_STEP, create_new_path, path_is_used) ||
         !array_expand(paths, elements_to_load)) {

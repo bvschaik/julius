@@ -3,6 +3,8 @@
 
 #include "input/mouse.h"
 
+#include <stddef.h>
+
 #define JOYSTICK_MAX_NAME 64
 #define JOYSTICK_MAX_GUID 33
 
@@ -72,7 +74,7 @@ typedef struct {
     char name[JOYSTICK_MAX_NAME];
     char guid[JOYSTICK_MAX_GUID];
     mapping_element mapping[MAX_JOYSTICK_MAPPINGS];
-    int num_mappings;
+    size_t num_mappings;
 } joystick_model;
 
 int joystick_has_model(const char *guid);
