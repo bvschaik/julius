@@ -189,7 +189,7 @@ void window_advisors_draw_dialog_background(void)
 
     prepare_advisor_image_ids();
 
-    for (int i = 0; i < ADVISOR_MAX; i++) {
+    for (unsigned int i = 0; i < ADVISOR_MAX; i++) {
         int selected = current_advisor && i == (current_advisor % ADVISOR_MAX) - 1;
         image_draw(advisor_image_ids[selected][i], 45 * i + 8, 441, COLOR_MASK_NONE, SCALE_NONE);
     }

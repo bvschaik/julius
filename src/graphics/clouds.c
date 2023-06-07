@@ -152,7 +152,7 @@ static void generate_cloud_ellipse(color_t *cloud, int width, int height)
         set_alpha(cloud, e.x, e.y + y, alpha);
 
         for (int x = 1; x <= line_width; x++) {
-            int alpha = (x * x * e.squared_height + squared_y * e.squared_width) * 255 / e.width_times_height;
+            alpha = (x * x * e.squared_height + squared_y * e.squared_width) * 255 / e.width_times_height;
 
             set_alpha(cloud, e.x + x, e.y - y, alpha);
             set_alpha(cloud, e.x + x, e.y + y, alpha);
@@ -189,25 +189,25 @@ static void generate_cloud(cloud_type *cloud)
         init_cloud_images();
     }
 
-    color_t buffer[CLOUD_WIDTH * CLOUD_HEIGHT];
-    memset(buffer, 0, sizeof(color_t) * CLOUD_WIDTH * CLOUD_HEIGHT);
+    color_t pixels[CLOUD_WIDTH * CLOUD_HEIGHT];
+    memset(pixels, 0, sizeof(color_t) * CLOUD_WIDTH * CLOUD_HEIGHT);
 
     int width = random_from_min_to_range((int) (CLOUD_WIDTH * 0.15f), (int) (CLOUD_WIDTH * 0.2f));
     int height = random_from_min_to_range((int) (CLOUD_HEIGHT * 0.15f), (int) (CLOUD_HEIGHT * 0.2f));
 
     for (int i = 0; i < NUM_CLOUD_ELLIPSES; i++) {
-        generate_cloud_ellipse(buffer, width, height);
+        generate_cloud_ellipse(pixels, width, height);
     }
 
     const image *img = &cloud->img;
 
-    graphics_renderer()->update_custom_image_from(CUSTOM_IMAGE_CLOUDS, buffer,
+    graphics_renderer()->update_custom_image_from(CUSTOM_IMAGE_CLOUDS, pixels,
         img->atlas.x_offset, img->atlas.y_offset, img->width, img->height);
 
     cloud->x = 0;
     cloud->y = 0;
-    cloud->scale_x = (float) ((1.5f - random_fractional_from_stdlib()) / CLOUD_SCALE);
-    cloud->scale_y = (float) ((1.5f - random_fractional_from_stdlib()) / CLOUD_SCALE);
+    cloud->scale_x = (float) ((1.5 - random_fractional_from_stdlib()) / CLOUD_SCALE);
+    cloud->scale_y = (float) ((1.5 - random_fractional_from_stdlib()) / CLOUD_SCALE);
     int scaled_width = (int) (CLOUD_WIDTH / cloud->scale_x);
     int scaled_height = (int) (CLOUD_HEIGHT / cloud->scale_y);
     cloud->side = (int) sqrt(scaled_width * scaled_width + scaled_height * scaled_height);

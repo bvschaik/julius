@@ -31,12 +31,6 @@
 #define IMAGE_BYTES_PER_PIXEL 3
 #define MINIMAP_SCALE 2.0f
 
-static const char filename_formats[SCREENSHOT_MAX][32] = {
-    "full city %Y-%m-%d %H.%M.%S.png",
-    "city %Y-%m-%d %H.%M.%S.png",
-    "minimap %Y-%m-%d %H.%M.%S.png",
-};
-
 static struct {
     int width;
     int height;
@@ -99,12 +93,23 @@ static int image_create(int width, int height, int has_alpha_channel, int rows_i
     return 1;
 }
 
-static const char *generate_filename(int city_screenshot)
+static const char *generate_filename(screenshot_type type)
 {
     static char filename[FILE_NAME_MAX];
     time_t curtime = time(NULL);
     struct tm *loctime = localtime(&curtime);
-    strftime(filename, FILE_NAME_MAX, filename_formats[city_screenshot], loctime);
+    switch (type) {
+        case SCREENSHOT_FULL_CITY:
+            strftime(filename, FILE_NAME_MAX, "full city %Y-%m-%d %H.%M.%S.png", loctime);
+            break;
+        case SCREENSHOT_MINIMAP:
+            strftime(filename, FILE_NAME_MAX, "minimap %Y-%m-%d %H.%M.%S.png", loctime);
+            break;
+        case SCREENSHOT_DISPLAY:
+        default:
+            strftime(filename, FILE_NAME_MAX, "city %Y-%m-%d %H.%M.%S.png", loctime);
+            break;
+    }    
     return filename;
 }
 
@@ -180,23 +185,23 @@ static int image_write_rows(const color_t *canvas, int canvas_width)
 static int image_write_canvas(void)
 {
     const color_t *canvas;
-    color_t *buffer = 0;
-    buffer = malloc(sizeof(color_t) * screenshot.width * screenshot.height);
-    if (!graphics_renderer()->save_screen_buffer(buffer, 0, 0, screen_width(), screen_height(), screen_width())) {
-        free(buffer);
+    color_t *pixels = 0;
+    pixels = malloc(sizeof(color_t) * screenshot.width * screenshot.height);
+    if (!graphics_renderer()->save_screen_buffer(pixels, 0, 0, screen_width(), screen_height(), screen_width())) {
+        free(pixels);
         return 0;
     }
-    canvas = buffer;
+    canvas = pixels;
     int current_height = image_set_loop_height_limits(0, screenshot.height);
     int size;
     while ((size = image_request_rows())) {
         if (!image_write_rows(canvas + current_height * screenshot.width, screenshot.width)) {
-            free(buffer);
+            free(pixels);
             return 0;
         }
         current_height += size;
     }
-    free(buffer);
+    free(pixels);
     return 1;
 }
 
@@ -369,17 +374,18 @@ static void create_minimap_screenshot(void)
     window_invalidate();
 }
 
-void graphics_save_screenshot(int screenshot_type)
+void graphics_save_screenshot(screenshot_type type)
 {
-    switch (screenshot_type) {
+    switch (type) {
         case SCREENSHOT_FULL_CITY:
             create_full_city_screenshot();
             return;
-        case SCREENSHOT_DISPLAY:
-            create_window_screenshot();
-            return;
         case SCREENSHOT_MINIMAP:
             create_minimap_screenshot();
+            return;
+        case SCREENSHOT_DISPLAY:
+        default:
+            create_window_screenshot();
             return;
     }
 }

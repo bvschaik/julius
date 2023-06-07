@@ -20,11 +20,11 @@ int sidebar_common_get_height(void)
     return screen_height() - TOP_MENU_HEIGHT;
 }
 
-void sidebar_common_draw_relief(int x_offset, int y_offset, int image, int is_collapsed)
+void sidebar_common_draw_relief(int x_offset, int y_offset, int image_id, int is_collapsed)
 {
     // relief images below panel
-    int image_base = image_group(image);
-    int image_offset = image == GROUP_SIDE_PANEL ? 2 : 1;
+    int image_base = image_group(image_id);
+    int image_offset = image_id == GROUP_SIDE_PANEL ? 2 : 1;
     int y_max = screen_height();
     while (y_offset < y_max) {
         if (y_max - y_offset <= 120) {

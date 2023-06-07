@@ -37,7 +37,7 @@ static building_variant variants[] = {
 
 int building_variant_has_variants(building_type type)
 {
-    for (int i = 0; i < BUILDINGS_WITH_VARIANTS; i++) {
+    for (size_t i = 0; i < BUILDINGS_WITH_VARIANTS; i++) {
         if (variants[i].type == type) {
             return 1;
         }
@@ -59,7 +59,7 @@ static building_variant *get_variant_data(building_type type)
     }
 
     building_variant *variant = 0;
-    for (int i = 0; i < BUILDINGS_WITH_VARIANTS; i++) {
+    for (size_t i = 0; i < BUILDINGS_WITH_VARIANTS; i++) {
         if ((city_view_orientation() / 2 != variants[i].orientation && variants[i].orientation != CITY_DIRECTION_ANY)) {
             continue;
         }

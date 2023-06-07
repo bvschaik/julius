@@ -245,42 +245,42 @@ void figure_tavern_action(figure *f)
 
 static int fight_plague(figure *f, int force)
 {
-    int building_with_plague = 0;
+    int building_with_plague_id = 0;
 
     // Find in houses
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
         for (building *house = building_first_of_type(type); house; house = house->next_of_type) {
             if (house->has_plague) {
-                building_with_plague = house->id;
+                building_with_plague_id = house->id;
                 break;
             }
         }
     }
 
     // If no houses, find in docks
-    if (!building_with_plague) {
+    if (!building_with_plague_id) {
         for (building *dock = building_first_of_type(BUILDING_DOCK); dock; dock = dock->next_of_type) {
             if (dock->has_plague) {
-                building_with_plague = dock->id;
+                building_with_plague_id = dock->id;
                 break;
             }
         }
     }
 
     // If no docks, find in warehouses
-    if (!building_with_plague) {
+    if (!building_with_plague_id) {
         for (building *warehouse = building_first_of_type(BUILDING_WAREHOUSE); warehouse; warehouse = warehouse->next_of_type) {
             if (warehouse->has_plague) {
-                building_with_plague = warehouse->id;
+                building_with_plague_id = warehouse->id;
                 break;
             }
         }
 
         // If no warehouse, find in granaries
-        if (!building_with_plague) {
+        if (!building_with_plague_id) {
             for (building *granary = building_first_of_type(BUILDING_GRANARY); granary; granary = granary->next_of_type) {
                 if (granary->has_plague) {
-                    building_with_plague = granary->id;
+                    building_with_plague_id = granary->id;
                     break;
                 }
             }
@@ -288,7 +288,7 @@ static int fight_plague(figure *f, int force)
     }
 
     // No plague in buildings
-    if (!building_with_plague) {
+    if (!building_with_plague_id) {
         return 0;
     }
 
@@ -298,8 +298,7 @@ static int fight_plague(figure *f, int force)
             if (!force) {
                 return 0;
             }
-            building *building = building_get(f->destination_building_id);
-            if (building->has_plague) {
+            if (building_get(f->destination_building_id)->has_plague) {
                 return 1;
             }
     }
@@ -309,7 +308,7 @@ static int fight_plague(figure *f, int force)
         return 0;
     }
     int distance;
-    int building_with_plague_id = city_buildings_get_closest_plague(f->x, f->y, &distance);
+    building_with_plague_id = city_buildings_get_closest_plague(f->x, f->y, &distance);
     if (building_with_plague_id > 0 && distance <= 25) {
         building *building_with_plague = building_get(building_with_plague_id);
         f->wait_ticks_missile = 0;

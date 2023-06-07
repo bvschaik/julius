@@ -1363,6 +1363,7 @@ void plm_buffer_skip(plm_buffer_t *self, size_t count);
 int plm_buffer_skip_bytes(plm_buffer_t *self, uint8_t v);
 int plm_buffer_next_start_code(plm_buffer_t *self);
 int plm_buffer_find_start_code(plm_buffer_t *self, int code);
+int plm_buffer_has_start_code(plm_buffer_t *self, int code);
 int plm_buffer_no_start_code(plm_buffer_t *self);
 int16_t plm_buffer_read_vlc(plm_buffer_t *self, const plm_vlc_t *table);
 uint16_t plm_buffer_read_vlc_uint(plm_buffer_t *self, const plm_vlc_uint_t *table);
@@ -1864,11 +1865,11 @@ double plm_demux_get_duration(plm_demux_t *self, int type) {
 	
 	// Find last video PTS. Start searching 64kb from the end and go further 
 	// back if needed.
-	long start_range = 64 * 1024;
-	long max_range = 4096 * 1024;
-	for (long range = start_range; range <= max_range; range *= 2) {
+	size_t start_range = 64 * 1024;
+	size_t max_range = 4096 * 1024;
+	for (size_t range = start_range; range <= max_range; range *= 2) {
 		size_t seek_pos = file_size - range;
-		if (seek_pos < 0) {
+		if (file_size < range) {
 			seek_pos = 0;
 			range = max_range; // Make sure to bail after this round
 		}
@@ -1941,10 +1942,7 @@ plm_packet_t *plm_demux_seek(plm_demux_t *self, double seek_time, int type, int 
 		// Estimate byte offset and jump to it.
 		long offset = (long) ((seek_time - cur_time - scan_span) * byterate);
 		size_t seek_pos = cur_pos + offset;
-		if (seek_pos < 0) {
-			seek_pos = 0;
-		}
-		else if (seek_pos > file_size - 256) {
+		if (seek_pos > file_size - 256) {
 			seek_pos = file_size - 256;
 		}
 

@@ -303,7 +303,7 @@ static void create_selection_lists(void)
         lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_TERRAIN_NORTHERN);
     data.terrain_texts[TERRAIN_DESERT] = lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ASSET_PREVIEWER_TERRAIN_DESERT);
 
-    for (int i = 0; i < TOTAL_ZOOM_VALUES; i++) {
+    for (size_t i = 0; i < TOTAL_ZOOM_VALUES; i++) {
         if (data.zoom_texts[i]) {
             continue;
         }
@@ -692,10 +692,10 @@ static void change_asset_group(int group)
     }
 }
 
-static void set_terrain(int terrain)
+static void set_terrain(int type)
 {
-    if (data.terrain != terrain) {
-        data.terrain = terrain;
+    if (data.terrain != type) {
+        data.terrain = type;
         load_climate(0);
         window_invalidate();
     }

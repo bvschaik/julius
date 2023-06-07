@@ -165,7 +165,7 @@ void city_festival_schedule(void)
     }
 }
 
-void festival_sentiment_and_deity(int size, int god_id)
+static void festival_sentiment_and_deity(int size, int god_id)
 {
     if (city_data.festival.first_festival_effect_months <= 0) {
         city_data.festival.first_festival_effect_months = 12;

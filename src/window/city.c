@@ -246,8 +246,7 @@ static int get_building_type_from_grid_offset(int grid_offset)
     if (terrain & TERRAIN_BUILDING) {
         int building_id = map_building_at(grid_offset);
         if (building_id) {
-            building *building = building_main(building_get(building_id));
-            return building->type;
+            return building_main(building_get(building_id))->type;
         }
     } else if (terrain & TERRAIN_AQUEDUCT) {
         return BUILDING_AQUEDUCT;

@@ -1,3 +1,5 @@
+#include "debug.h"
+
 #include "city/view.h"
 #include "core/string.h"
 #include "game/game.h"

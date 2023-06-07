@@ -14,7 +14,6 @@
 #include "map/grid.h"
 
 #define MAX_ROTATION 3
-#define MAX_BIG_ROTATION 100
 
 static struct {
     int rotation;

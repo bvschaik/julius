@@ -103,11 +103,11 @@ int custom_messages_count(void)
     return custom_messages.size - 1;
 }
 
-void custom_messages_save_state(buffer *buffer)
+void custom_messages_save_state(buffer *buf)
 {
     int32_t array_size = custom_messages.size;
     int32_t struct_size = (4 * sizeof(int32_t));
-    buffer_init_dynamic_piece(buffer,
+    buffer_init_dynamic_piece(buf,
         CUSTOM_MESSAGES_CURRENT_VERSION,
         array_size,
         struct_size);
@@ -115,13 +115,13 @@ void custom_messages_save_state(buffer *buffer)
     custom_message_t *entry;
     array_foreach(custom_messages, entry) {
         int linked_uid = entry && entry->linked_uid && entry->linked_uid->in_use ? entry->linked_uid->id : -1;
-        buffer_write_i32(buffer, linked_uid);
+        buffer_write_i32(buf, linked_uid);
         int title_id = entry && entry->title && entry->title->in_use ? entry->title->id : -1;
-        buffer_write_i32(buffer, title_id);
+        buffer_write_i32(buf, title_id);
         int subtitle_id = entry && entry->subtitle && entry->subtitle->in_use ? entry->subtitle->id : -1;
-        buffer_write_i32(buffer, subtitle_id);
+        buffer_write_i32(buf, subtitle_id);
         int text_id = entry && entry->display_text && entry->display_text->in_use ? entry->display_text->id : -1;
-        buffer_write_i32(buffer, text_id);
+        buffer_write_i32(buf, text_id);
     }
 }
 

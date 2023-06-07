@@ -115,7 +115,7 @@ static inline void ordered_queue_swap(int first, int second)
     queue.items[second] = temp;
 }
 
-void ordered_queue_reorder(int start_index)
+static void ordered_queue_reorder(int start_index)
 {
     int left_child = 2 * start_index + 1;
     if (left_child >= queue.tail) {
@@ -251,7 +251,7 @@ static void route_queue_all_from(int source, max_directions directions,
             }
         } else {
             int dist = 1 + distance.determined.items[offset];
-            for (int i = 0; i < directions; i++) {
+            for (unsigned int i = 0; i < directions; i++) {
                 int route_offset = ROUTE_OFFSETS[i];
                 int next_offset = offset + route_offset;
                 if (valid_offset(next_offset, dist)) {
@@ -621,7 +621,7 @@ static int callback_travel_noncitizen_land(int offset, int next_offset, int dire
         return 0;
     }
     uint8_t terrain = terrain_land_noncitizen.items[next_offset];
-    if (terrain >= NONCITIZEN_0_PASSABLE && terrain < NONCITIZEN_5_FORT) {
+    if (terrain < NONCITIZEN_5_FORT) {
         return 1;
     }
     return 0;

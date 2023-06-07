@@ -108,7 +108,6 @@ static inline void draw_fullscreen_background(int image_id)
         if (scale == scale_w) {
             y = (int) ((s_height - img->height / scale) / 2 * scale);
         }
-        const image *img = image_get(image_id);
         if (image_is_external(img)) {
             image_load_external_data(img);
         } else if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {

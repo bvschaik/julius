@@ -21,7 +21,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#if _MSC_VER
+#if defined(_MSC_VER)
 // Of course MSVC is the only compiler that doesn't have POSIX strcasecmp...
 #include <mbstring.h>
 #else
@@ -342,7 +342,7 @@ int platform_file_manager_should_case_correct_file(void)
 
 int platform_file_manager_compare_filename(const char *a, const char *b)
 {
-#if _MSC_VER
+#if defined(_MSC_VER)
     return _mbsicmp((const unsigned char *) a, (const unsigned char *) b);
 #else
     return strcasecmp(a, b);
@@ -351,7 +351,7 @@ int platform_file_manager_compare_filename(const char *a, const char *b)
 
 int platform_file_manager_compare_filename_prefix(const char *filename, const char *prefix, int prefix_len)
 {
-#if _MSC_VER
+#if defined(_MSC_VER)
     return _mbsnicmp((const unsigned char *) filename, (const unsigned char *) prefix, prefix_len);
 #else
     return strncasecmp(filename, prefix, prefix_len);

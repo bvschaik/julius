@@ -62,12 +62,12 @@ struct { \
         } \
     } \
     if (!error && (a).in_use) { \
-        for (int i = index; i < (a).size; i++) { \
-            if (!(a).in_use(array_item(a, i))) { \
-                ptr = array_item(a, i); \
+        for (int array_i = index; array_i < (a).size; array_i++) { \
+            if (!(a).in_use(array_item(a, array_i))) { \
+                ptr = array_item(a, array_i); \
                 memset(ptr, 0, sizeof(**(a).items)); \
                 if ((a).constructor) { \
-                    (a).constructor(ptr, i); \
+                    (a).constructor(ptr, array_i); \
                 } \
                 break; \
             } \
@@ -159,7 +159,7 @@ struct { \
 #define array_next(a) \
 ( \
     memset(array_item(a, (a).size), 0, sizeof(**(a).items)), \
-    (a).constructor ? (a).constructor(array_item(a, (a).size), (a).size) : 0, \
+    (a).constructor ? (a).constructor(array_item(a, (a).size), (a).size) : (void) 0, \
     (a).size++, \
     array_item(a, (a).size - 1) \
 )

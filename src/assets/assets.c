@@ -85,12 +85,12 @@ int assets_get_image_id(const char *assetlist_name, const char *image_name)
         log_info("Asset group not found: ", assetlist_name, 0);
         return data.roadblock_image_id;
     }
-    const asset_image *image = asset_image_get_from_id(group->first_image_index);
-    while (image && image->index <= group->last_image_index) {
-        if (image->id && strcmp(image->id, image_name) == 0) {
-            return image->index + IMAGE_MAIN_ENTRIES;
+    const asset_image *img = asset_image_get_from_id(group->first_image_index);
+    while (img && img->index <= group->last_image_index) {
+        if (img->id && strcmp(img->id, image_name) == 0) {
+            return img->index + IMAGE_MAIN_ENTRIES;
         }
-        image = asset_image_get_from_id(image->index + 1);
+        img = asset_image_get_from_id(img->index + 1);
     }
     log_info("Asset image not found: ", image_name, 0);
     log_info("Asset group is: ", assetlist_name, 0);
@@ -120,13 +120,13 @@ void assets_load_unpacked_asset(int image_id)
     if (!img) {
         return;
     }
-    const color_t *data;
+    const color_t *pixels;
     if (img->is_reference) {
         asset_image *referenced_asset =
             asset_image_get_from_id(img->first_layer.calculated_image_id - IMAGE_MAIN_ENTRIES);
-        data = referenced_asset->data;
+        pixels = referenced_asset->data;
     } else {
-        data = img->data;
+        pixels = img->data;
     }
-    graphics_renderer()->load_unpacked_image(&img->img, data);
+    graphics_renderer()->load_unpacked_image(&img->img, pixels);
 }

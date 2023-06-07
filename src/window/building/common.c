@@ -95,7 +95,10 @@ void window_building_draw_levy(int amount, int x_offset, int y_offset)
     }
 }
 
-void window_building_draw_tourism(building_info_context *c, int x_offset, int y_offset)
+/***
+ * UNUSED
+ *
+ * void window_building_draw_tourism(building_info_context *c, int x_offset, int y_offset)
 {
     building *b = building_get(c->building_id);
     if (b->tourism_income_this_year > 0) {
@@ -107,7 +110,7 @@ void window_building_draw_tourism(building_info_context *c, int x_offset, int y_
         text_draw(translation_for(TR_WINDOW_BUILDING_TOURISM_DISABLED),
             x_offset + 0, y_offset + 10, FONT_NORMAL_BROWN, 0);
     }
-}
+} ***/
 
 static void draw_employment_details(building_info_context *c, building *b, int y_offset, int text_id)
 {

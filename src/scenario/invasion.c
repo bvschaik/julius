@@ -306,27 +306,27 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, int at
     }
     // spawn the lot!
     int seq = 0;
-    for (int type = 0; type < 3; type++) {
-        if (formations_per_type[type] <= 0) {
+    for (int type_id = 0; type_id < 3; type_id++) {
+        if (formations_per_type[type_id] <= 0) {
             continue;
         }
-        int figure_type = ENEMY_PROPERTIES[enemy_type].figure_types[type];
-        for (int i = 0; i < formations_per_type[type]; i++) {
+        figure_type type = ENEMY_PROPERTIES[enemy_type].figure_types[type_id];
+        for (int i = 0; i < formations_per_type[type_id]; i++) {
             int formation_id = formation_create_enemy(
-                figure_type, x, y, ENEMY_PROPERTIES[enemy_type].formation_layout, orientation,
+                type, x, y, ENEMY_PROPERTIES[enemy_type].formation_layout, orientation,
                 enemy_type, attack_type, invasion_id, data.last_internal_invasion_id
             );
             if (formation_id <= 0) {
                 continue;
             }
-            for (int fig = 0; fig < soldiers_per_formation[type][i]; fig++) {
-                figure *f = figure_create(figure_type, x, y, orientation);
+            for (int fig = 0; fig < soldiers_per_formation[type_id][i]; fig++) {
+                figure *f = figure_create(type, x, y, orientation);
                 f->faction_id = 0;
                 f->is_friendly = 0;
                 f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
                 f->wait_ticks = 200 * seq + 10 * fig + 10;
                 f->formation_id = formation_id;
-                f->name = figure_name_get(figure_type, enemy_type);
+                f->name = figure_name_get(type, enemy_type);
                 f->is_ghost = 1;
             }
             seq++;

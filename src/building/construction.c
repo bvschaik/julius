@@ -52,7 +52,7 @@ struct reservoir_info {
 struct cycle {
     int size;
     int rotations_to_next;
-    int array[MAX_CYCLE_SIZE];
+    building_type array[MAX_CYCLE_SIZE];
 };
 
 enum {
@@ -88,7 +88,7 @@ static int last_items_cleared;
 static const int FORT_X_OFFSET[4][4] = { {3,4,4,3},{-1,0,0,-1},{-4,-3,-3,4},{0,1,1,0} };
 static const int FORT_Y_OFFSET[4][4] = { {-1,-1,0,0},{-4,-4,-3,-3},{0,0,1,1},{3,3,4,4} };
 
-const static struct cycle building_cycles[BUILDING_CYCLES] = {
+static const struct cycle building_cycles[BUILDING_CYCLES] = {
     { 5, 1, { BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY,
       BUILDING_SMALL_TEMPLE_MARS,  BUILDING_SMALL_TEMPLE_VENUS }},
     { 5, 1, {BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY,
@@ -315,7 +315,7 @@ static int plot_draggable_building(int x_start, int y_start, int x_end, int y_en
     return items_placed;
 }
 
-static int place_draggable_building(int x_start, int y_start, int x_end, int y_end, int building_type, int rotation)
+static int place_draggable_building(int x_start, int y_start, int x_end, int y_end, building_type type, int rotation)
 {
     int x_min, y_min, x_max, y_max;
     map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
@@ -323,15 +323,15 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
 
     int items_placed = 0;
     int gates_placed = 0;
-    int gate_type = building_connectable_gate_type(building_type);
+    int gate_type = building_connectable_gate_type(type);
 
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
             int grid_offset = map_grid_offset(x, y);
             if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                 items_placed++;
-                building *b = building_create(building_type, x, y);
-                if (building_variant_has_variants(building_type)) {
+                building *b = building_create(type, x, y);
+                if (building_variant_has_variants(type)) {
                     b->variant = building_rotation_get_rotation_with_limit(building_variant_get_number_of_variants(b->type));
                 } else {
                     b->subtype.orientation = rotation;
@@ -355,9 +355,9 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
         }
     }
 
-    if (building_is_connectable(building_type)) {
+    if (building_is_connectable(type)) {
         map_property_clear_constructing_and_deleted();
-        building_connectable_update_connections_for_type(building_type);
+        building_connectable_update_connections_for_type(type);
         if (gates_placed) {
             map_tiles_update_all_roads();
         }
@@ -926,9 +926,9 @@ void building_construction_place(void)
         return;
     }
 
-    figure_type enemy_type = nearby_enemy_type(x_start, y_start, x_end, y_end);
+    figure_type enemy_figure_type = nearby_enemy_type(x_start, y_start, x_end, y_end);
 
-    if (type != BUILDING_CLEAR_LAND && enemy_type != FIGURE_NONE) {
+    if (type != BUILDING_CLEAR_LAND && enemy_figure_type != FIGURE_NONE) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT || type == BUILDING_HIGHWAY) {
             game_undo_restore_map(0);
         } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || building_is_connectable(type)) {
@@ -938,7 +938,7 @@ void building_construction_place(void)
         } else {
             map_property_clear_constructing_and_deleted();
         }
-        city_warning_show(enemy_type == FIGURE_WOLF ? WARNING_WOLF_NEARBY : WARNING_ENEMY_NEARBY, NEW_WARNING_SLOT);
+        city_warning_show(enemy_figure_type == FIGURE_WOLF ? WARNING_WOLF_NEARBY : WARNING_ENEMY_NEARBY, NEW_WARNING_SLOT);
         return;
     }
 

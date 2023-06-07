@@ -20,7 +20,7 @@ void figure_name_init(void);
  * @param enemy Enemy type if applicable
  * @return Name ID
  */
-int figure_name_get(figure_type type, enemy_type enemy);
+int figure_name_get(figure_type type, enemy_type_t enemy);
 
 /**
  * Saves generator state

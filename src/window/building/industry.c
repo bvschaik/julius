@@ -316,7 +316,6 @@ void window_building_draw_city_mint(building_info_context *c)
         image_draw(resource_get_data(RESOURCE_DENARII)->image.icon, c->x_offset + 10, c->y_offset + 10,
             COLOR_MASK_NONE, SCALE_NONE);
 
-        building *b = building_get(c->building_id);
         int pct_done = calc_percentage(b->data.industry.progress, building_industry_get_max_progress(b));
         int width = lang_text_draw(CUSTOM_TRANSLATION, TR_BUILDING_GOLD_MINE_PRODUCTION,
             c->x_offset + 32, c->y_offset + 40, FONT_NORMAL_BLACK);
@@ -482,7 +481,7 @@ void window_building_draw_wharf(building_info_context *c)
     window_building_draw_employment(c, 142);
 }
 
-void city_mint_conversion_changed(int accepted, int checked)
+static void city_mint_conversion_changed(int accepted, int checked)
 {
     if (!accepted) {
         return;

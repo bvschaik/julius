@@ -173,7 +173,7 @@ static int has_top_part(const image *img, const color_t *pixels)
     return 0;
 }
 
-void split_top_and_footprint(const image *img, color_t *dst, const color_t *src, int src_height)
+static void split_top_and_footprint(const image *img, color_t *dst, const color_t *src, int src_height)
 {
     int tiles = (img->width + 2) / (FOOTPRINT_WIDTH + 2);
 
@@ -217,13 +217,13 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
     }
     int has_alpha_mask = load_image_layers(img, main_images, main_image_widths);
 
-    color_t *data = malloc(sizeof(color_t) * img->img.width * img->img.height);
-    if (!data) {
+    color_t *pixels = malloc(sizeof(color_t) * img->img.width * img->img.height);
+    if (!pixels) {
         log_error("Error creating image - out of memory", 0, 0);
         unload_image_layers(img);
         return 0;
     }
-    memset(data, 0, sizeof(color_t) * img->img.width * img->img.height);
+    memset(pixels, 0, sizeof(color_t) * img->img.width * img->img.height);
 
     // Images with an alpha mask layer need to be loaded from first to last, which is slower
     const layer *l = has_alpha_mask ? &img->first_layer : img->last_layer;
@@ -267,7 +267,7 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
         }
 
         for (int y = image_start_y; y < image_valid_height; y++) {
-            color_t *pixel = &data[y * img->img.width + image_start_x];
+            color_t *pixel = &pixels[y * img->img.width + image_start_x];
             const color_t *layer_pixel = 0;
             if (!inverts_and_rotates) {
                 layer_pixel = layer_get_color_for_image_position(l, image_start_x, y);
@@ -325,7 +325,7 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
         int tiles = (img->img.width + 2) / (FOOTPRINT_WIDTH + 2);
         int footprint_height = tiles * FOOTPRINT_HEIGHT;
 
-        if (has_top_part(&img->img, data)) {
+        if (has_top_part(&img->img, pixels)) {
             img->img.top = malloc(sizeof(image));
             if (!img->img.top) {
                 log_error("Error creating image - out of memory", 0, 0);
@@ -345,11 +345,11 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
                 return 0;
             }
             memset(new_data, 0, sizeof(color_t) * (footprint_height + img->img.top->height) *img->img.width);
-            split_top_and_footprint(&img->img, new_data, data, img->img.height);
+            split_top_and_footprint(&img->img, new_data, pixels, img->img.height);
 
             img->img.height = footprint_height;
-            free(data);
-            data = new_data;
+            free(pixels);
+            pixels = new_data;
         }
         if (reference_type == IMAGE_FULL_REFERENCE) {
             make_similar_images_references(img);
@@ -358,7 +358,7 @@ static int load_image(asset_image *img, color_t **main_images, int *main_image_w
 
     unload_image_layers(img);
 
-    img->data = data;
+    img->data = pixels;
 
     return 1;
 }
@@ -478,9 +478,9 @@ static int is_image_active(const asset_image *img)
 int asset_image_init_array(void)
 {
     data.total_isometric_images = 0;
-    asset_image *image;
-    array_foreach(data.asset_images, image) {
-        asset_image_unload(image);
+    asset_image *img;
+    array_foreach(data.asset_images, img) {
+        asset_image_unload(img);
     }
     return array_init(data.asset_images, ASSET_ARRAY_SIZE, new_image, is_image_active);
 }
@@ -592,26 +592,28 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths)
             current_image->img.atlas.y_offset = packer.rects[rect].output.y;
             current_image->img.atlas.id += packer.rects[rect].output.image_index;
             int dst_side = atlas_data->image_widths[packer.rects[rect].output.image_index];
-            image_copy_info copy = {
-                .src = { current_image->img.x_offset, current_image->img.y_offset + original_y_offset,
-                    original_width, original_height, current_image->data },
-                .dst = { current_image->img.atlas.x_offset, current_image->img.atlas.y_offset,
-                    dst_side, dst_side, atlas_data->buffers[packer.rects[rect].output.image_index] },
-                .rect = { 0, 0, current_image->img.width, current_image->img.height }
-            };
-            image_copy(&copy);
+            {
+                image_copy_info copy = {
+                    .src = { current_image->img.x_offset, current_image->img.y_offset + original_y_offset,
+                        original_width, original_height, current_image->data },
+                    .dst = { current_image->img.atlas.x_offset, current_image->img.atlas.y_offset,
+                        dst_side, dst_side, atlas_data->buffers[packer.rects[rect].output.image_index] },
+                    .rect = { 0, 0, current_image->img.width, current_image->img.height }
+                };
+                image_copy(&copy);
+            }
             if (current_image->img.top) {
                 rect++;
                 image *top = current_image->img.top;
                 int top_width = top->width;
-                int top_height = top->original.height;
+                int top_original_height = top->original.height;
                 top->atlas.x_offset = packer.rects[rect].output.x;
                 top->atlas.y_offset = packer.rects[rect].output.y;
                 top->atlas.id += packer.rects[rect].output.image_index;
                 dst_side = atlas_data->image_widths[packer.rects[rect].output.image_index];
                 image_crop(top, current_image->data);
                 image_copy_info copy = {
-                    .src = { top->x_offset, top->y_offset, top_width, top_height, current_image->data },
+                    .src = { top->x_offset, top->y_offset, top_width, top_original_height, current_image->data },
                     .dst = { top->atlas.x_offset, top->atlas.y_offset,
                         dst_side, dst_side, atlas_data->buffers[packer.rects[rect].output.image_index] },
                     .rect = { 0, 0, top->width, top->height }

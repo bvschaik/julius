@@ -129,7 +129,7 @@ static int count_active_requests(void)
     return count > MAX_REQUESTS_TO_DISPLAY ? MAX_REQUESTS_TO_DISPLAY : count;
 }
 
-int sort_requests(const void *va, const void *vb)
+static int sort_requests(const void *va, const void *vb)
 {
     return ((request *) va)->time - ((request *) vb)->time;
 }

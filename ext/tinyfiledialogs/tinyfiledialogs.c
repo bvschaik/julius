@@ -65,7 +65,6 @@ misrepresented as being the original software.
 #endif /* _WIN32 */
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
-#define MAX_MULTIPLE_FILES 32
 
 int tinyfd_verbose = 0; /* on unix: prints the command line calls */
 int tinyfd_silent = 1; /* 1 (default) or 0 : on unix,
@@ -108,8 +107,6 @@ char const tinyfd_needs[] = "\
 #pragma warning(disable:4100) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
 #pragma warning(disable:4706) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
 #endif
-
-#define RETURN_CACHED_INT(setter) static int result = -1; if (result == -1) { result = setter; } return result;
 
 #ifdef _WIN32
 
@@ -255,6 +252,8 @@ char const *tinyfd_selectFolderDialog(char const *const aTitle) /* NULL or "" */
 }
 
 #else /* unix */
+
+#define RETURN_CACHED_INT(setter) static int result = -1; if (result == -1) { result = setter; } return result;
 
 static int gWarningDisplayed = 0;
 

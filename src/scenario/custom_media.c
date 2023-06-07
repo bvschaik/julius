@@ -48,11 +48,11 @@ custom_media_t *custom_media_create(custom_media_type type, const uint8_t *filen
     return entry;
 }
 
-void custom_media_save_state(buffer *buffer)
+void custom_media_save_state(buffer *buf)
 {
     int32_t array_size = custom_media.size;
     int32_t struct_size = (4 * sizeof(int32_t)) + (1 * sizeof(int16_t));
-    buffer_init_dynamic_piece(buffer,
+    buffer_init_dynamic_piece(buf,
         CUSTOM_MEDIA_CURRENT_VERSION,
         array_size,
         struct_size);
@@ -60,28 +60,28 @@ void custom_media_save_state(buffer *buffer)
     custom_media_t *entry;
     array_foreach(custom_media, entry) {
         int entry_id = entry && entry->id ? entry->id : 0;
-        buffer_write_i32(buffer, entry_id);
+        buffer_write_i32(buf, entry_id);
         int entry_type = entry && entry->type ? entry->type : 0;
-        buffer_write_i32(buffer, entry_type);
+        buffer_write_i32(buf, entry_type);
         int entry_filename_id = entry && entry->filename && entry->filename->id ? entry->filename->id : 0;
-        buffer_write_i32(buffer, entry_filename_id);
+        buffer_write_i32(buf, entry_filename_id);
         int entry_link_type = entry && entry->link_type ? entry->link_type : 0;
-        buffer_write_i16(buffer, entry_link_type);
+        buffer_write_i16(buf, entry_link_type);
         int entry_link_id = entry && entry->link_id ? entry->link_id : 0;
-        buffer_write_i32(buffer, entry_link_id);
+        buffer_write_i32(buf, entry_link_id);
     }
 }
 
-void custom_media_load_state_entry(buffer *buffer, custom_media_t *entry, custom_media_link_type *link_type, int *link_id)
+void custom_media_load_state_entry(buffer *buf, custom_media_t *entry, custom_media_link_type *link_type, int *link_id)
 {
-    entry->id = buffer_read_i32(buffer);
-    entry->type = buffer_read_i32(buffer);
+    entry->id = buffer_read_i32(buf);
+    entry->type = buffer_read_i32(buf);
 
     // Expects the media text blob to be loaded already.
-    int linked_text_blob_id = buffer_read_i32(buffer);
+    int linked_text_blob_id = buffer_read_i32(buf);
     entry->filename = message_media_text_blob_get_entry(linked_text_blob_id);
-    entry->link_type = buffer_read_i16(buffer);
-    entry->link_id = buffer_read_i32(buffer);
+    entry->link_type = buffer_read_i16(buf);
+    entry->link_id = buffer_read_i32(buf);
 
     *link_type = entry->link_type;
     *link_id = entry->link_id;

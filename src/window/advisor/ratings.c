@@ -134,7 +134,7 @@ static int draw_background(void)
             if (config_get(CONFIG_UI_SHOW_MAX_PROSPERITY)) {
                 int max = calc_bound(city_ratings_prosperity_max(), 0, 100);
                 if (prosperity < max) {
-                    int width = lang_text_draw(CUSTOM_TRANSLATION, TR_ADVISOR_MAX_ATTAINABLE_PROSPERITY_IS, 72, 374 + line_width, FONT_NORMAL_WHITE);
+                    width = lang_text_draw(CUSTOM_TRANSLATION, TR_ADVISOR_MAX_ATTAINABLE_PROSPERITY_IS, 72, 374 + line_width, FONT_NORMAL_WHITE);
                     text_draw_number(max, 0, ".", 72 + width, 374 + line_width, FONT_NORMAL_WHITE, 0);
                 }
             }

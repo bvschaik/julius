@@ -20,8 +20,8 @@ typedef struct {
         struct empty_area *first;
         struct empty_area *last;
         struct empty_area *list;
-        int index;
-        int size;
+        unsigned int index;
+        unsigned int size;
         void (*set_comparator)(empty_area *area);
     } empty_areas;
 } internal_data;

@@ -81,8 +81,6 @@ static menu_bar_item menu[] = {
     {149, menu_empire, 2},
 };
 
-#define INDEX_OPTIONS 1
-
 static struct {
     int open_sub_menu;
     int focus_menu_id;

@@ -15,7 +15,7 @@
 #define MAX_TRACKS 7
 #define MAX_PALETTE 256
 
-#define FLAG_RING 0x01
+// #define FLAG_RING 0x01 - UNUSED
 #define FLAG_Y_INTERLACE 0x02
 #define FLAG_Y_DOUBLE 0x04
 
@@ -27,7 +27,7 @@
 
 #define BLOCK_MONO 0
 #define BLOCK_FULL 1
-#define BLOCK_VOID 2
+// #define BLOCK_VOID 2 - UNUSED
 #define BLOCK_SOLID 3
 
 typedef struct {
@@ -77,13 +77,13 @@ struct smacker_t {
     int32_t frames;
     int32_t us_per_frame;
     int32_t flags;
-    int32_t trees_size;
+    size_t trees_size;
     int32_t audio_size[7];
     int32_t audio_rate[7];
 
     long frame_data_offset_in_file;
     long *frame_offsets;
-    int32_t *frame_sizes;
+    size_t *frame_sizes;
     uint8_t *frame_types;
 
     hufftree16 *mmap_tree;
@@ -436,10 +436,10 @@ static int read_header(smacker s)
 
 static int read_frame_info(smacker s)
 {
-    int sizes_length = sizeof(int32_t) * s->frames;
-    int types_length = sizeof(uint8_t) * s->frames;
+    size_t sizes_length = sizeof(size_t) * s->frames;
+    size_t types_length = sizeof(uint8_t) * s->frames;
 
-    s->frame_sizes = (int32_t *) clear_malloc(sizes_length);
+    s->frame_sizes = (size_t *) clear_malloc(sizes_length);
     s->frame_offsets = (long *) clear_malloc(sizeof(long) * s->frames);
     s->frame_types = (uint8_t *) clear_malloc(types_length);
 
@@ -810,7 +810,7 @@ static uint8_t *read_frame_data(smacker s, int frame_id)
         log_error("SMK: unable to seek to frame data", 0, frame_id);
         return NULL;
     }
-    int frame_size = s->frame_sizes[frame_id];
+    size_t frame_size = s->frame_sizes[frame_id];
     uint8_t *frame_data = (uint8_t *) clear_malloc(frame_size);
     if (!frame_data) {
         log_error("SMK: no memory for frame data", 0, frame_id);

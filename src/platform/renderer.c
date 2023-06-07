@@ -355,7 +355,7 @@ static int create_texture_atlas(const image_atlas_data *atlas_data, int delete_b
     data.texture_lists[atlas_data->type] = malloc(sizeof(SDL_Texture *) * atlas_data->num_images);
     SDL_Texture **list = data.texture_lists[atlas_data->type];
     if (!list) {
-        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture lists for atlas %d - out of memory",
+        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Unable to create texture lists for atlas %u - out of memory",
             atlas_data->type);
         return 0;
     }
@@ -1008,7 +1008,7 @@ static void load_unpacked_image(const image *img, const color_t *pixels)
     }
     data.unpacked_images[index].texture = SDL_CreateTextureFromSurface(data.renderer, surface);
     while (!data.unpacked_images[index].texture) {
-        int oldest_texture_index = -1;
+        oldest_texture_index = -1;
         for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
             if (data.unpacked_images[i].texture &&
                 (oldest_texture_index == -1 ||

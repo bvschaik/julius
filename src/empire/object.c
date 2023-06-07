@@ -48,12 +48,12 @@ static void fix_image_ids(void)
     }
 }
 
-void new_empire_object(full_empire_object *obj, int position)
+static void new_empire_object(full_empire_object *obj, int position)
 {
     obj->obj.id = position;
 }
 
-int empire_object_in_use(const full_empire_object *obj)
+static int empire_object_in_use(const full_empire_object *obj)
 {
     return obj->in_use;
 }
@@ -205,14 +205,14 @@ void empire_object_load(buffer *buf, int version)
                     // our city is special and won't actually have an amount for goods it sells, so we set it to 1
                     amount = 1;
                 }
-                for (int i = 0; i < 10; i++) {
-                    if (old_sells_resource[i] == r) {
+                for (int j = 0; j < 10; j++) {
+                    if (old_sells_resource[j] == r) {
                         full->city_sells_resource[resource_remap(r)] = amount;
                         break;
                     }
                 }
-                for (int i = 0; i < 8; i++) {
-                    if (old_buys_resource[i] == r) {
+                for (int j = 0; j < 8; j++) {
+                    if (old_buys_resource[j] == r) {
                         full->city_buys_resource[resource_remap(r)] = amount;
                         break;
                     }
@@ -379,7 +379,7 @@ void empire_object_init_cities(int empire_id)
     }
 }
 
-int empire_object_init_distant_battle_travel_months(int object_type)
+int empire_object_init_distant_battle_travel_months(empire_object_type object_type)
 {
     int month = 0;
     full_empire_object *obj;

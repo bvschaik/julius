@@ -68,8 +68,9 @@ typedef enum {
     RESOURCE_REORDERED_VERSION = 2,
     RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION = 3,
     RESOURCE_HAS_GOLD_VERSION = 4,
-    RESOURCE_CURRENT_VERSION = RESOURCE_HAS_GOLD_VERSION
-} resource_version;
+    RESOURCE_HAS_NEW_MONUMENT_ELEMENTS = 5,
+    RESOURCE_CURRENT_VERSION = RESOURCE_HAS_NEW_MONUMENT_ELEMENTS
+} resource_version_t;
 
 typedef enum {
     RESOURCE_FLAG_NONE = 0,
@@ -131,7 +132,7 @@ int resource_mapping_get_version(void);
 
 resource_type resource_map_legacy_inventory(int id);
 
-resource_type resource_produced_by_building_type(int building_type);
+resource_type resource_produced_by_building_type(building_type type);
 
 int resource_production_per_month(resource_type);
 

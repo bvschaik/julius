@@ -133,8 +133,8 @@ void formations_clear(void);
 void formation_clear(int formation_id);
 
 formation *formation_create_legion(int building_id, int x, int y, figure_type type);
-int formation_create_herd(int figure_type, int x, int y, int num_animals);
-int formation_create_enemy(int figure_type, int x, int y, int layout, int orientation,
+int formation_create_herd(figure_type type, int x, int y, int num_animals);
+int formation_create_enemy(figure_type type, int x, int y, int layout, int orientation,
                            int enemy_type, int attack_type, int invasion_id, int invasion_sequence);
 
 formation *formation_get(int formation_id);

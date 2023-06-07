@@ -133,9 +133,9 @@ void formation_legion_move_to(formation *m, const map_tile *tile)
     while (figure_id) {
         figure *f = figure_get(figure_id);
         if (f->formation_id) {
-            formation *formation = formation_get(f->formation_id);
-            if (!formation->is_legion) {
-                m->target_formation_id = formation->id;
+            formation *l = formation_get(f->formation_id);
+            if (!l->is_legion) {
+                m->target_formation_id = l->id;
                 break;
             }
         }

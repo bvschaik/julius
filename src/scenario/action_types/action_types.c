@@ -23,10 +23,10 @@
 
 int scenario_action_type_change_allowed_buildings_execute(scenario_action_t *action)
 {
-    int building = action->parameter1;
+    int allowed_id = action->parameter1;
     int allowed = action->parameter2;
 
-    scenario.allowed_buildings[building] = allowed;
+    scenario.allowed_buildings[allowed_id] = allowed;
     building_menu_update();
     
     return 1;

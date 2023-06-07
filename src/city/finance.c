@@ -547,7 +547,6 @@ int city_finance_tourism_lowest_factor(void)
     return city_data.finance.tourism_lowest_factor;
 }
 
-
 const finance_overview *city_finance_overview_last_year(void)
 {
     return &city_data.finance.last_year;

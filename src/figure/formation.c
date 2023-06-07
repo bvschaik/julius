@@ -90,7 +90,7 @@ formation *formation_create_legion(int building_id, int x, int y, figure_type ty
     return m;
 }
 
-static formation *formation_create(int figure_type, int layout, int orientation, int x, int y)
+static formation *formation_create(figure_type type, int layout, int orientation, int x, int y)
 {
     formation *f;
     array_new_item(formations, 10, f);
@@ -102,7 +102,7 @@ static formation *formation_create(int figure_type, int layout, int orientation,
     f->y = y;
     f->in_use = 1;
     f->is_legion = 0;
-    f->figure_type = figure_type;
+    f->figure_type = type;
     f->legion_id = f->id - 10;
     f->morale = 100;
     if (layout == FORMATION_ENEMY_DOUBLE_LINE) {
@@ -118,9 +118,9 @@ static formation *formation_create(int figure_type, int layout, int orientation,
     return f;
 }
 
-int formation_create_herd(int figure_type, int x, int y, int num_animals)
+int formation_create_herd(figure_type type, int x, int y, int num_animals)
 {
-    formation *f = formation_create(figure_type, FORMATION_HERD, 0, x, y);
+    formation *f = formation_create(type, FORMATION_HERD, 0, x, y);
     if (!f) {
         return 0;
     }
@@ -130,10 +130,10 @@ int formation_create_herd(int figure_type, int x, int y, int num_animals)
     return f->id;
 }
 
-int formation_create_enemy(int figure_type, int x, int y, int layout, int orientation,
+int formation_create_enemy(figure_type type, int x, int y, int layout, int orientation,
     int enemy_type, int attack_type, int invasion_id, int invasion_sequence)
 {
-    formation *f = formation_create(figure_type, layout, orientation, x, y);
+    formation *f = formation_create(type, layout, orientation, x, y);
     if (!f) {
         return 0;
     }
@@ -395,7 +395,7 @@ void formation_update_monthly_morale_deployed(void)
     }
 }
 
-void formation_legion_mess_hall_morale(void)
+static void update_morale_for_mess_hall(void)
 {
     for (int i = 1; i < formations.size; i++) {
         formation *f = formation_get(i);
@@ -445,7 +445,7 @@ void formation_update_monthly_morale_at_rest(void)
                     formation_change_morale(m, -5);
                 }
             }
-            formation_legion_mess_hall_morale();
+            update_morale_for_mess_hall();
         } else {
             formation_change_morale(m, 0);
         }

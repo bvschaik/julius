@@ -288,7 +288,8 @@ static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read)
             return 0;
         }
     } else {
-        if (fread(compress_buffer, 1, input_size, fp) != input_size || !zip_decompress(compress_buffer, input_size, buffer, &bytes_to_read)) {
+        if (fread(compress_buffer, 1, input_size, fp) != input_size ||
+            !zip_decompress(compress_buffer, input_size, buffer, bytes_to_read)) {
             return 0;
         }
     }

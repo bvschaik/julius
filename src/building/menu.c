@@ -336,7 +336,7 @@ void building_menu_update(void)
     tutorial_build_buttons tutorial_buttons = tutorial_get_build_buttons();
     for (int sub = 0; sub < BUILD_MENU_MAX; sub++) {
         for (int item = 0; item < BUILD_MENU_ITEM_MAX; item++) {
-            int building_type = MENU_BUILDING_TYPE[sub][item];
+            building_type type = MENU_BUILDING_TYPE[sub][item];
             int *menu_item = &menu_enabled[sub][item];
             // first 12 items, parks and grand temples always disabled at the start
             if (sub < 12 || sub == 18 || sub == 21) {
@@ -346,36 +346,37 @@ void building_menu_update(void)
             }
             switch (tutorial_buttons) {
                 case TUT1_BUILD_START:
-                    enable_tutorial1_start(menu_item, building_type);
+                    enable_tutorial1_start(menu_item, type);
                     break;
                 case TUT1_BUILD_AFTER_FIRE:
-                    enable_tutorial1_after_fire(menu_item, building_type);
+                    enable_tutorial1_after_fire(menu_item, type);
                     break;
                 case TUT1_BUILD_AFTER_COLLAPSE:
-                    enable_tutorial1_after_collapse(menu_item, building_type);
+                    enable_tutorial1_after_collapse(menu_item, type);
                     break;
                 case TUT1_BUILD_AFTER_SENATE:
-                    enable_tutorial1_after_senate(menu_item, building_type);
+                    enable_tutorial1_after_senate(menu_item, type);
+                    break;
                 case TUT2_BUILD_START:
-                    enable_tutorial2_start(menu_item, building_type);
+                    enable_tutorial2_start(menu_item, type);
                     break;
                 case TUT2_BUILD_UP_TO_250:
-                    enable_tutorial2_up_to_250(menu_item, building_type);
+                    enable_tutorial2_up_to_250(menu_item, type);
                     break;
                 case TUT2_BUILD_UP_TO_450:
-                    enable_tutorial2_up_to_450(menu_item, building_type);
+                    enable_tutorial2_up_to_450(menu_item, type);
                     break;
                 case TUT2_BUILD_AFTER_450:
-                    enable_tutorial2_after_450(menu_item, building_type);
+                    enable_tutorial2_after_450(menu_item, type);
                     break;
                 default:
-                    enable_normal(menu_item, building_type);
+                    enable_normal(menu_item, type);
                     break;
             }
-            disable_resources(menu_item, building_type);
+            disable_resources(menu_item, type);
 
             if (*menu_item) {
-                int submenu = building_menu_get_submenu_for_type(building_type);
+                int submenu = building_menu_get_submenu_for_type(type);
                 if (submenu) {
                     disable_if_no_enabled_submenu_items(menu_item, submenu);
                 }

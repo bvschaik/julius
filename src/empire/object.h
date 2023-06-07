@@ -47,7 +47,7 @@ void empire_object_save(buffer *buf);
 
 void empire_object_init_cities(int empire_id);
 
-int empire_object_init_distant_battle_travel_months(int object_type);
+int empire_object_init_distant_battle_travel_months(empire_object_type object_type);
 
 full_empire_object *empire_object_get_full(int object_id);
 

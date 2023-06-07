@@ -267,7 +267,7 @@ static int set_enemy_target_building(formation *m)
 }
 
 
-int get_structures_on_native_land(int *dst_x, int *dst_y)
+static int get_structures_on_native_land(int *dst_x, int *dst_y)
 {
     int meeting_x, meeting_y;
     city_buildings_main_native_meeting_center(&meeting_x, &meeting_y);

@@ -69,7 +69,7 @@ typedef enum {
 typedef enum {
     LINK_TYPE_UNDEFINED = -1,
     LINK_TYPE_SCENARIO_EVENT = 0
-} link_type;
+} link_type_t;
 
 enum {
     COMPARISON_TYPE_UNDEFINED = 0,

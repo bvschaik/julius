@@ -105,6 +105,8 @@ typedef struct {
 
 int city_finance_tourism_income_last_month(void);
 
+int city_finance_tourism_lowest_factor(void);
+
 const finance_overview *city_finance_overview_last_year(void);
 
 const finance_overview *city_finance_overview_this_year(void);

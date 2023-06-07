@@ -82,7 +82,7 @@ augustus_building_properties_mapping augustus_building_properties[] = {
 
 void init_augustus_building_properties(void)
 {
-    for (int i = 0; i < AUGUSTUS_BUILDINGS; ++i) {
+    for (size_t i = 0; i < AUGUSTUS_BUILDINGS; ++i) {
         if (augustus_building_properties[i].asset_image_id) {
             augustus_building_properties[i].properties.image_group =
                 assets_get_image_id(augustus_building_properties[i].asset_name,
@@ -268,7 +268,7 @@ const building_properties *building_properties_for_type(building_type type)
         return &properties[0];
     }
     if (type >= BUILDING_ROADBLOCK || is_vanilla_building_with_changed_properties(type)) {
-        for (int i = 0; i < AUGUSTUS_BUILDINGS; ++i) {
+        for (size_t i = 0; i < AUGUSTUS_BUILDINGS; ++i) {
             if (augustus_building_properties[i].type == type) {
                 return &augustus_building_properties[i].properties;
             }

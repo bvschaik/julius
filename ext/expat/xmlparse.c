@@ -69,8 +69,6 @@ typedef unsigned __int32 uintptr_t;
 #  include <errno.h>
 #endif
 
-#define XML_BUILDING_EXPAT 1
-
 #ifdef _WIN32
 #  include "winconfig.h"
 #elif defined(HAVE_EXPAT_CONFIG_H)
@@ -513,7 +511,6 @@ static XML_Parser parserCreate(const XML_Char *encodingName,
 static void parserInit(XML_Parser parser, const XML_Char *encodingName);
 
 #define poolStart(pool) ((pool)->start)
-#define poolEnd(pool) ((pool)->ptr)
 #define poolLength(pool) ((pool)->ptr - (pool)->start)
 #define poolChop(pool) ((void)--(pool->ptr))
 #define poolLastChar(pool) (((pool)->ptr)[-1])

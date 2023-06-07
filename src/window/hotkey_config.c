@@ -1,4 +1,4 @@
-#include "config.h"
+#include "hotkey_config.h"
 
 #include "building/type.h"
 #include "core/hotkey_config.h"
@@ -35,7 +35,7 @@ static void button_close(int save, int param2);
 static scrollbar_type scrollbar = {580, 72, 352, 560, NUM_VISIBLE_OPTIONS, on_scroll, 1};
 
 typedef struct {
-    int action;
+    hotkey_action action;
     int name_translation;
     int name_text_group;
     int name_text_id;

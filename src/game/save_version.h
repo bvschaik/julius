@@ -34,8 +34,9 @@ typedef enum {
     SAVE_GAME_LAST_NO_EXTENDED_REQUESTS = 0x94,
     SAVE_GAME_LAST_NO_EVENTS = 0x95,
     SAVE_GAME_LAST_NO_CUSTOM_MESSAGES = 0x96,
-    SAVE_GAME_LAST_NO_CART_DEPOT = 0x97
-} savegame_version;
+    SAVE_GAME_LAST_NO_CART_DEPOT = 0x97,
+    SAVE_GAME_LAST_NO_NEW_MONUMENT_RESOURCES = 0x98
+} savegame_version_t;
 
 typedef enum {
     SCENARIO_CURRENT_VERSION = 12,
@@ -52,7 +53,7 @@ typedef enum {
     SCENARIO_LAST_NO_EXTENDED_REQUESTS = 9,
     SCENARIO_LAST_NO_EVENTS = 10,
     SCENARIO_LAST_NO_CUSTOM_MESSAGES = 11
-} scenario_version;
+} scenario_version_t;
 
 typedef enum {
     SAVEGAME_STATUS_NEWER_VERSION = -1,

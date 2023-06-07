@@ -83,16 +83,15 @@ static int big_people_image(figure_type type)
         case FIGURE_CARAVANSERAI_COLLECTOR:
         case FIGURE_LIGHTHOUSE_SUPPLIER:
             return assets_get_image_id("Logistics", "Slave Portrait");
-            break;
         case FIGURE_MESS_HALL_COLLECTOR:
         case FIGURE_MESS_HALL_FORT_SUPPLIER:
             return assets_get_image_id("Military", "M Hall Portrait");
-            break;
         case FIGURE_TRADE_CARAVAN_DONKEY:
         case FIGURE_TRADE_CARAVAN:
             if (scenario_property_climate() == CLIMATE_DESERT) {
                 return image_group(GROUP_BIG_PEOPLE) + CAMEL_PORTRAIT - 1;
             }
+            break;
         case FIGURE_BARKEEP:
         case FIGURE_BARKEEP_SUPPLIER:
             return assets_get_image_id("Entertainment", "Barkeep Portrait");
@@ -383,11 +382,11 @@ static void draw_depot_cartpusher(building_info_context* c, figure* f)
     image_draw(big_people_image(f->type), c->x_offset + 28, c->y_offset + 112, COLOR_MASK_NONE, SCALE_NONE);
     
     building *depot = building_get(f->building_id);
-    int resource_type = depot->data.depot.current_order.resource_type;
+    resource_type resource = depot->data.depot.current_order.resource_type;
 
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
     if (f->loads_sold_or_carrying > 0 && f->resource_id != RESOURCE_NONE) {
-        image_draw(resource_get_data(resource_type)->image.icon,
+        image_draw(resource_get_data(resource)->image.icon,
             c->x_offset + 92, c->y_offset + 135, COLOR_MASK_NONE, SCALE_NONE);
         text_draw_number(f->loads_sold_or_carrying, 'x', "", c->x_offset + 118, c->y_offset + 139, FONT_NORMAL_BROWN, COLOR_MASK_NONE);
     }
@@ -404,7 +403,7 @@ static void draw_depot_cartpusher(building_info_context* c, figure* f)
 
     int width = text_draw(translation_for(TR_FIGURE_INFO_DEPOT_DELIVER), c->x_offset + 40, c->y_offset + 200,
         FONT_NORMAL_BROWN, 0);
-    image_draw(resource_get_data(resource_type)->image.icon,
+    image_draw(resource_get_data(resource)->image.icon,
         c->x_offset + 40 + width, c->y_offset + 194, COLOR_MASK_NONE, SCALE_NONE);
 
     width = text_draw(translation_for(TR_FIGURE_INFO_DEPOT_FROM), c->x_offset + 40, c->y_offset + 216,

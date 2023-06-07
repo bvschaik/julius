@@ -59,7 +59,7 @@
 typedef struct {
     int x;
     int y;
-} tile_offset;
+} tile_xy_offsets;
 
 enum farm_ghost_object {
     FARM_GHOST_NO_DRAW,
@@ -120,7 +120,7 @@ static struct {
         int grid_offset;
         building_type type;
     } roamer_preview;
-    tile_offset offsets[4][MAX_TILES];
+    tile_xy_offsets offsets[4][MAX_TILES];
 } data = {
     .scale = SCALE_NONE
 };
@@ -1266,16 +1266,16 @@ static void create_tile_offsets(void)
         return;
     }
 
-    static const tile_offset steps[4] = { { 1, 1 }, { -1, 1 }, { -1, -1 }, { 1, -1 } };
+    static const tile_xy_offsets steps[4] = { { 1, 1 }, { -1, 1 }, { -1, -1 }, { 1, -1 } };
 
     for (int dir = 0; dir < 4; dir++) {
-        const tile_offset *step = &steps[dir];
+        const tile_xy_offsets *step = &steps[dir];
         int index = 0;
         int column = 0;
         int row = 0;
         int *x = dir & 1 ? &row : &column;
         int *y = dir & 1 ? &column : &row;
-        tile_offset *offset = data.offsets[dir];
+        tile_xy_offsets *offset = data.offsets[dir];
 
         while (index < MAX_TILES) {
             for (column = 0; column < row; column++) {

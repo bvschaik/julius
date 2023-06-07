@@ -351,7 +351,7 @@ int map_routing_wall_tile_in_radius(int x, int y, int radius, int *x_wall, int *
 
 int map_routing_citizen_is_passable(int grid_offset)
 {
-    return terrain_land_citizen.items[grid_offset] >= CITIZEN_0_ROAD ||
+    return terrain_land_citizen.items[grid_offset] >= CITIZEN_0_ROAD &&
         terrain_land_citizen.items[grid_offset] <= CITIZEN_2_PASSABLE_TERRAIN;
 }
 

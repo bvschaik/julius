@@ -907,8 +907,8 @@ building_type building_house_determine_worst_desirability_building_type(const bu
 
     for (int y = y_min; y <= y_max; y++) {
         for (int x = x_min; x <= x_max; x++) {
-            int building_type = get_building_type_at_tile(house, x, y);
-            const model_building *model = model_get_building(building_type);
+            building_type type = get_building_type_at_tile(house, x, y);
+            const model_building *model = model_get_building(type);
             // simplified desirability calculation
             int des = model->desirability_value;
             int step_size = model->desirability_step_size;
@@ -920,7 +920,7 @@ building_type building_house_determine_worst_desirability_building_type(const bu
                 }
                 if (des < lowest_desirability) {
                     lowest_desirability = des;
-                    lowest_building_type = building_type;
+                    lowest_building_type = type;
                 }
             }
         }

@@ -146,13 +146,13 @@ static condition_types get_condition_type_from_element_name(const char *name)
 
 static int condition_populate_parameters(scenario_condition_t *condition)
 {
-    scenario_condition_data_t *data = scenario_events_parameter_data_get_conditions_xml_attributes(condition->type);
+    scenario_condition_data_t *condition_data = scenario_events_parameter_data_get_conditions_xml_attributes(condition->type);
     int success = 1;
-    success &= xml_import_special_parse_attribute(&data->xml_parm1, &condition->parameter1);
-    success &= xml_import_special_parse_attribute(&data->xml_parm2, &condition->parameter2);
-    success &= xml_import_special_parse_attribute(&data->xml_parm3, &condition->parameter3);
-    success &= xml_import_special_parse_attribute(&data->xml_parm4, &condition->parameter4);
-    success &= xml_import_special_parse_attribute(&data->xml_parm5, &condition->parameter5);
+    success &= xml_import_special_parse_attribute(&condition_data->xml_parm1, &condition->parameter1);
+    success &= xml_import_special_parse_attribute(&condition_data->xml_parm2, &condition->parameter2);
+    success &= xml_import_special_parse_attribute(&condition_data->xml_parm3, &condition->parameter3);
+    success &= xml_import_special_parse_attribute(&condition_data->xml_parm4, &condition->parameter4);
+    success &= xml_import_special_parse_attribute(&condition_data->xml_parm5, &condition->parameter5);
 
     return success;
 }
@@ -187,13 +187,13 @@ static action_types get_action_type_from_element_name(const char *name)
 
 static int action_populate_parameters(scenario_action_t *action)
 {
-    scenario_action_data_t *data = scenario_events_parameter_data_get_actions_xml_attributes(action->type);
+    scenario_action_data_t *action_data = scenario_events_parameter_data_get_actions_xml_attributes(action->type);
     int success = 1;
-    success &= xml_import_special_parse_attribute(&data->xml_parm1, &action->parameter1);
-    success &= xml_import_special_parse_attribute(&data->xml_parm2, &action->parameter2);
-    success &= xml_import_special_parse_attribute(&data->xml_parm3, &action->parameter3);
-    success &= xml_import_special_parse_attribute(&data->xml_parm4, &action->parameter4);
-    success &= xml_import_special_parse_attribute(&data->xml_parm5, &action->parameter5);
+    success &= xml_import_special_parse_attribute(&action_data->xml_parm1, &action->parameter1);
+    success &= xml_import_special_parse_attribute(&action_data->xml_parm2, &action->parameter2);
+    success &= xml_import_special_parse_attribute(&action_data->xml_parm3, &action->parameter3);
+    success &= xml_import_special_parse_attribute(&action_data->xml_parm4, &action->parameter4);
+    success &= xml_import_special_parse_attribute(&action_data->xml_parm5, &action->parameter5);
 
     return success;
 }
@@ -484,7 +484,7 @@ static void reset_data(void)
     data.error_line_number = -1;
 }
 
-static int parse_xml(char *buffer, int buffer_length)
+static int parse_xml(char *buf, int buffer_length)
 {
     reset_data();
     scenario_events_clear();
@@ -493,7 +493,7 @@ static int parse_xml(char *buffer, int buffer_length)
         data.success = 0;
     }
     if (data.success) {
-        if (!xml_parser_parse(buffer, buffer_length, 1)) {
+        if (!xml_parser_parse(buf, buffer_length, 1)) {
             data.success = 0;
             scenario_events_clear();
         }
@@ -514,28 +514,28 @@ static char *file_to_buffer(const char *filename, int *output_length)
     int size = ftell(file);
     rewind(file);
 
-    char *buffer = malloc(size);
-    if (!buffer) {
+    char *buf = malloc(size);
+    if (!buf) {
         log_error("Error opening empire file", filename, 0);
         return 0;
     }
-    memset(buffer, 0, size);
-    if (!buffer) {
+    memset(buf, 0, size);
+    if (!buf) {
         log_error("Unable to allocate buffer to read XML file", filename, 0);
-        free(buffer);
+        free(buf);
         file_close(file);
         return 0;
     }
-    *output_length = (int) fread(buffer, 1, size, file);
+    *output_length = (int) fread(buf, 1, size, file);
     if (*output_length > size) {
         log_error("Unable to read file into buffer", filename, 0);
-        free(buffer);
+        free(buf);
         file_close(file);
         *output_length = 0;
         return 0;
     }
     file_close(file);
-    return buffer;
+    return buf;
 }
 
 int scenario_events_xml_parse_file(const char *filename)

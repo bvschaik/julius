@@ -333,7 +333,7 @@ static void zip_output_func(uint8_t *buffer, int length, struct pk_token *token)
 }
 
 int zip_decompress(const void *input_buffer, int input_length,
-                   void *output_buffer, int *output_length)
+                   void *output_buffer, int output_length)
 {
     struct pk_token token;
     struct pk_decomp_buffer *buf = (struct pk_decomp_buffer *) malloc(sizeof(struct pk_decomp_buffer));
@@ -345,15 +345,13 @@ int zip_decompress(const void *input_buffer, int input_length,
     token.input_data = (const uint8_t *) input_buffer;
     token.input_length = input_length;
     token.output_data = (uint8_t *) output_buffer;
-    token.output_length = *output_length;
+    token.output_length = output_length;
 
     int ok = 1;
     int pk_error = pk_explode(zip_input_func, zip_output_func, buf, &token);
     if (pk_error || token.stop) {
         log_error("COMP Error uncompressing.", 0, 0);
         ok = 0;
-    } else {
-        *output_length = token.output_ptr;
     }
     free(buf);
     return ok;

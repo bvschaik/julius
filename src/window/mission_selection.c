@@ -13,7 +13,6 @@
 #include "sound/speech.h"
 #include "window/mission_briefing.h"
 
-#define BORDER_IMAGE_DEPTH 11
 #define BACKGROUND_WIDTH 1024
 #define BACKGROUND_HEIGHT 768
 

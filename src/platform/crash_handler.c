@@ -196,7 +196,7 @@ static void print_stacktrace(LPEXCEPTION_POINTERS e)
             linenum = !!filelineinfo_ok ? line.LineNumber : 0;
 
             // This is the code path taken on VC if debugging syms are found
-            log_info_sprintf("(%d) %s L:%d(%s+%#0lx) [0x%08X]\n", count, filename, linenum, pSym->Name,
+            log_info_sprintf("(%d) %s L:%u(%s+%#0lx) [0x%08X]\n", count, filename, linenum, pSym->Name,
                 Disp, (unsigned int)sf.AddrPC.Offset);
         } else {
             // This is the code path taken on MinGW, and VC if no debugging syms are found.

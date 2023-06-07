@@ -91,7 +91,7 @@ static int xml_start_image_element(void)
     img->img.width = xml_parser_get_attribute_int("width");
     img->img.height = xml_parser_get_attribute_int("height");
     const char *group = xml_parser_get_attribute_string("group");
-    const char *image = xml_parser_get_attribute_string("image");
+    const char *image_id = xml_parser_get_attribute_string("image");
     img->img.is_isometric = xml_parser_get_attribute_bool("isometric");
     if (img->img.is_isometric) {
         asset_image_count_isometric();
@@ -105,7 +105,7 @@ static int xml_start_image_element(void)
     
     img->last_layer = &img->first_layer;
     if (path || group) {
-        asset_image_add_layer(img, path, group, image, 0, 0, 0, 0, 0, 0, INVERT_NONE, ROTATE_NONE, PART_BOTH, 0);
+        asset_image_add_layer(img, path, group, image_id, 0, 0, 0, 0, 0, 0, INVERT_NONE, ROTATE_NONE, PART_BOTH, 0);
     }
     return 1;
 }
@@ -123,7 +123,7 @@ static int xml_start_layer_element(void)
 
     const char *path = xml_parser_get_attribute_string("src");
     const char *group = xml_parser_get_attribute_string("group");
-    const char *image = xml_parser_get_attribute_string("image");
+    const char *image_id = xml_parser_get_attribute_string("image");
     int src_x = xml_parser_get_attribute_int("src_x");
     int src_y = xml_parser_get_attribute_int("src_y");
     int offset_x = xml_parser_get_attribute_int("x");
@@ -135,7 +135,7 @@ static int xml_start_layer_element(void)
     layer_isometric_part part = xml_parser_get_attribute_enum("part", part_values, 2, PART_FOOTPRINT);
     layer_mask mask = xml_parser_get_attribute_enum("mask", mask_values, 2, LAYER_MASK_GRAYSCALE);
 
-    if (!asset_image_add_layer(img, path, group, image, src_x, src_y,
+    if (!asset_image_add_layer(img, path, group, image_id, src_x, src_y,
         offset_x, offset_y, width, height, invert, rotate, part == PART_NONE ? PART_BOTH : part, mask)) {
         log_info("Invalid layer for image", img->id, 0);
     }
@@ -178,7 +178,7 @@ static int xml_start_frame_element(void)
 
     const char *path = xml_parser_get_attribute_string("src");
     const char *group = xml_parser_get_attribute_string("group");
-    const char *image = xml_parser_get_attribute_string("image");
+    const char *image_id = xml_parser_get_attribute_string("image");
     int src_x = xml_parser_get_attribute_int("src_x");
     int src_y = xml_parser_get_attribute_int("src_y");
     int width = xml_parser_get_attribute_int("width");
@@ -187,7 +187,7 @@ static int xml_start_frame_element(void)
     layer_rotate_type rotate = xml_parser_get_attribute_enum("rotate", ROTATE_VALUES, 3, ROTATE_90_DEGREES);
 
     img->last_layer = &img->first_layer;
-    if (!asset_image_add_layer(img, path, group, image, src_x, src_y,
+    if (!asset_image_add_layer(img, path, group, image_id, src_x, src_y,
         0, 0, width, height, invert, rotate, PART_BOTH, 0)) {
         img->active = 0;
         return 1;

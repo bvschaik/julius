@@ -195,16 +195,16 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
             break;
 
         case SDL_WINDOWEVENT_SHOWN:
-            SDL_Log("Window %d shown", (unsigned int) event->windowID);
+            SDL_Log("Window %u shown", (unsigned int) event->windowID);
             *window_active = 1;
             break;
         case SDL_WINDOWEVENT_HIDDEN:
-            SDL_Log("Window %d hidden", (unsigned int) event->windowID);
+            SDL_Log("Window %u hidden", (unsigned int) event->windowID);
             *window_active = 0;
             break;
 
         case SDL_WINDOWEVENT_EXPOSED:
-            SDL_Log("Window %d exposed", (unsigned int) event->windowID);
+            SDL_Log("Window %u exposed", (unsigned int) event->windowID);
             window_invalidate();
             break;
 
@@ -234,6 +234,7 @@ static void handle_event(SDL_Event *event)
         case SDL_APP_DIDENTERFOREGROUND:
             platform_renderer_resume();
 #if SDL_VERSION_ATLEAST(2, 0, 2)
+            // fallthrough
         case SDL_RENDER_TARGETS_RESET:
 #endif
             platform_renderer_invalidate_target_textures();
@@ -246,6 +247,7 @@ static void handle_event(SDL_Event *event)
                 "The rendering context was lost.The game will likely blackscreen.\n\n"
                 "Please restart the game to fix the issue.",
                 NULL);
+            break;
 #endif
         case SDL_KEYDOWN:
             platform_handle_key_down(&event->key);

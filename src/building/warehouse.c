@@ -86,8 +86,8 @@ int building_warehouse_add_resource(building *b, int resource)
     }
     // Use a new bay if there aren't any partially filled
     if (!space_found) {
-        int space_found = 0;
-        building *space = building_main(b);
+        space_found = 0;
+        space = building_main(b);
         for (int i = 0; i < 8; i++) {
             space = building_next(space);
             if (!space->id) {
@@ -277,7 +277,7 @@ int building_warehouse_is_getting(int resource, building *b)
     }
 }
 
-int building_warehouse_is_gettable(int resource, building *b)
+static int warehouse_is_gettable(int resource, building *b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
     if (!b->has_plague &&
@@ -296,7 +296,7 @@ int building_warehouse_is_not_accepting(int resource, building *b)
     return !((building_warehouse_is_accepting(resource, b) || building_warehouse_is_getting(resource, b)));
 }
 
-int building_warehouse_get_acceptable_quantity(int resource, building *b)
+static int get_acceptable_quantity(resource_type resource, building *b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
     switch (s->resource_state[resource]) {
@@ -495,7 +495,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
             continue;
         }
         int loads_stored = building_warehouse_amount_can_get_from(b, resource);
-        if (loads_stored > 0 && !building_warehouse_is_gettable(resource, b)) {
+        if (loads_stored > 0 && !warehouse_is_gettable(resource, b)) {
             int dist = calc_maximum_distance(b->x, b->y, src->x, src->y);
             dist -= 4 * loads_stored;
             if (dist < min_dist) {
@@ -676,7 +676,8 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
                 }
             }
         }
-        if (room >= 4 && (loads_stored <= 4 || ((building_warehouse_get_acceptable_quantity(r, warehouse) - loads_stored) >= 4)) && city_resource_count(r) - loads_stored >= 4) {
+        if (room >= 4 && (loads_stored <= 4 || ((get_acceptable_quantity(r, warehouse) - loads_stored) >= 4)) &&
+            city_resource_count(r) - loads_stored >= 4) {
             if (!building_warehouse_for_getting(warehouse, r, 0)) {
                 continue;
             }

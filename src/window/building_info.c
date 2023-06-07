@@ -595,8 +595,6 @@ static void draw_background(void)
             window_building_draw_work_camp(&context);
         } else if (btype == BUILDING_ARCHITECT_GUILD) {
             window_building_draw_architect_guild(&context);
-        } else if (btype == BUILDING_MESS_HALL) {
-            window_building_draw_mess_hall(&context);
         } else if (btype == BUILDING_TAVERN) {
             if (context.storage_show_special_orders) {
                 window_building_draw_distributor_orders(&context, translation_for(TR_TAVERN_SPECIAL_ORDERS_HEADER));
@@ -715,8 +713,6 @@ static void draw_background(void)
             } else {
                 window_building_draw_palisade_gate(&context);
             }
-        } else if (btype == BUILDING_DEPOT) {
-            window_building_draw_depot(&context);
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info(&context);

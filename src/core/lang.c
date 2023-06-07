@@ -312,12 +312,12 @@ static int load_message(const char *filename, int localizable, uint8_t *data_buf
 
 static int load_files(const char *text_filename, const char *message_filename, int localizable)
 {
-    uint8_t *buffer = (uint8_t *) malloc(BUFFER_SIZE);
-    if (!buffer) {
+    uint8_t *buf = (uint8_t *) malloc(BUFFER_SIZE);
+    if (!buf) {
         return 0;
     }
-    int success = load_text(text_filename, localizable, buffer) && load_message(message_filename, localizable, buffer);
-    free(buffer);
+    int success = load_text(text_filename, localizable, buf) && load_message(message_filename, localizable, buf);
+    free(buf);
     return success;
 }
 

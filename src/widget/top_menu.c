@@ -311,7 +311,7 @@ void widget_top_menu_draw(int force)
     text_draw_number(treasury, '@', " ", data.offset_funds - 6 + x_offset + width, 5, FONT_NORMAL_PLAIN, treasure_color);
 
     if (draw_panel_pop_date) {
-        int text_width = text_get_width(lang_get_string(6, 1), pop_date_font);
+        text_width = text_get_width(lang_get_string(6, 1), pop_date_font);
         text_width += calc_digits_in_number(city_population()) * 11;
         panel_width = draw_black_panel(data.offset_population, 0, text_width);
         x_offset = (panel_width - text_width) / 2;

@@ -67,7 +67,7 @@ static int get_next_name(int32_t *field, int offset, int max)
     return name;
 }
 
-int figure_name_get(figure_type type, enemy_type enemy)
+int figure_name_get(figure_type type, enemy_type_t enemy)
 {
     switch (type) {
     case FIGURE_TAX_COLLECTOR:

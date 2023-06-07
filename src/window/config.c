@@ -33,13 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NUM_CHECKBOXES 28
 #define MAX_LANGUAGE_DIRS 20
-
-#define FIRST_BUTTON_Y 72
-#define BUTTON_SPACING 24
-#define TEXT_Y_OFFSET 4
-
 #define MAX_WIDGETS 30
 
 #define NUM_VISIBLE_ITEMS 13
@@ -48,7 +42,6 @@
 #define ITEM_HEIGHT 24
 
 #define NUM_BOTTOM_BUTTONS 5
-#define MAX_LANGUAGE_DIRS 20
 #define CHECKBOX_CHECK_SIZE 20
 #define CHECKBOX_HEIGHT 20
 #define CHECKBOX_WIDTH 560
@@ -411,15 +404,15 @@ static inline void set_range_values(void)
 
 static inline void fetch_original_config_values(void)
 {
-    int game_speed_index = 0;
+    size_t game_speed_index = 0;
     while (game_speed_index < sizeof(game_speeds) / sizeof(int)) {
         if (setting_game_speed() == game_speeds[game_speed_index]) {
             break;
         }
         game_speed_index++;
     }
-    data.config_values[CONFIG_ORIGINAL_GAME_SPEED].original_value = game_speed_index;
-    data.config_values[CONFIG_ORIGINAL_GAME_SPEED].new_value = game_speed_index;
+    data.config_values[CONFIG_ORIGINAL_GAME_SPEED].original_value = (int) game_speed_index;
+    data.config_values[CONFIG_ORIGINAL_GAME_SPEED].new_value = (int) game_speed_index;
 
     data.config_values[CONFIG_ORIGINAL_ENABLE_MUSIC].original_value = setting_sound(SOUND_MUSIC)->enabled;
     data.config_values[CONFIG_ORIGINAL_ENABLE_MUSIC].new_value = setting_sound(SOUND_MUSIC)->enabled;
@@ -714,7 +707,7 @@ static void calculate_available_resolutions_and_fullscreen(void)
     static int old_fullscreen = -1;
     int width = screen_width();
     int height = screen_height();
-    for (int i = 0; i < sizeof(resolutions) / sizeof(resolution); i++) {
+    for (size_t i = 0; i < sizeof(resolutions) / sizeof(resolution); i++) {
         if (resolutions[i].width == width && resolutions[i].height == height) {
             current_resolution_index = resolution_index;
         } else if (current_resolution_index == -1 && (resolutions[i].width > width ||
@@ -836,7 +829,7 @@ static void draw_background(void)
         }
     }
 
-    for (int i = 0; i < sizeof(bottom_buttons) / sizeof(*bottom_buttons); i++) {
+    for (size_t i = 0; i < sizeof(bottom_buttons) / sizeof(*bottom_buttons); i++) {
         int disabled = i == NUM_BOTTOM_BUTTONS - 1 && !data.has_changes;
         text_draw_centered(translation_for(bottom_buttons[i].parameter2),
             bottom_buttons[i].x, bottom_buttons[i].y + 9, bottom_buttons[i].width,
@@ -874,7 +867,7 @@ static void draw_foreground(void)
                 btn->width, btn->height, data.focus_button == i + 1);
         }
     }
-    for (int i = 0; i < sizeof(bottom_buttons) / sizeof(*bottom_buttons); i++) {
+    for (size_t i = 0; i < sizeof(bottom_buttons) / sizeof(*bottom_buttons); i++) {
         button_border_draw(bottom_buttons[i].x, bottom_buttons[i].y,
             bottom_buttons[i].width, bottom_buttons[i].height, data.bottom_focus_button == i + 1);
     }

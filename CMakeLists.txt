@@ -61,9 +61,13 @@ else()
 endif()
 
 if (CMAKE_COMPILER_IS_GNUCC)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Werror=implicit-function-declaration")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-missing-field-initializers -Wno-sign-compare -Werror=implicit-function-declaration")
     if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 5.0)
         set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion -Wstrict-prototypes ${CMAKE_C_FLAGS}")
+    endif()
+
+    if(CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL 7.0)
+        set(CMAKE_C_FLAGS "-Walloc-zero -Wdouble-promotion -Wduplicated-branches -Wduplicated-cond -Wformat=2 -Wformat-signedness -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-prototypes -Wshadow -Wundef -Wunused-macros -Wwrite-strings ${CMAKE_C_FLAGS}")
     endif()
 endif()
 
@@ -218,7 +222,6 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/crash_handler.c
     ${PROJECT_SOURCE_DIR}/src/platform/cursor.c
     ${PROJECT_SOURCE_DIR}/src/platform/file_manager.c
-    ${PROJECT_SOURCE_DIR}/src/platform/file_manager_cache.c
     ${PROJECT_SOURCE_DIR}/src/platform/icon.c
     ${PROJECT_SOURCE_DIR}/src/platform/joystick.c
     ${PROJECT_SOURCE_DIR}/src/platform/keyboard_input.c
@@ -240,12 +243,14 @@ endif()
 if (${TARGET_PLATFORM} STREQUAL "vita")
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/file_manager_cache.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
     )
 elseif (${TARGET_PLATFORM} STREQUAL "switch")
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/file_manager_cache.c
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch.c
     )
 elseif (${TARGET_PLATFORM} STREQUAL "android")

@@ -117,7 +117,7 @@ static void create_new_model(const char *guid, const char *name, int instance_id
     } else {
         strncpy(model.name, name, JOYSTICK_MAX_NAME - 1);
     }
-    int size = sizeof(default_mapping);
+    size_t size = sizeof(default_mapping);
     if (size > sizeof(model.mapping)) {
         size = sizeof(model.mapping);
     }

@@ -242,7 +242,7 @@ static void update_god_moods(void)
 
     if (god_id < MAX_GODS) {
         god_status *god = &city_data.religion.gods[god_id];
-        if (god->happiness >= 50 && god->happy_bolts >= 5) {
+        if (god->happiness >= 50 && god->happy_bolts >= BLESSING_BOLTS_NEEDED_FOR_BLESSING) {
             god->blessing_done = 1;
             god->happy_bolts = 0;
             perform_blessing(god_id);

@@ -4,9 +4,9 @@
 #include "building/type.h"
 #include "scenario/data.h"
 
-int scenario_building_allowed(int building_type)
+int scenario_building_allowed(int type)
 {
-    switch (building_type) {
+    switch (type) {
         case BUILDING_ROAD:
             return scenario.allowed_buildings[ALLOWED_BUILDING_ROAD];
         case BUILDING_DRAGGABLE_RESERVOIR:

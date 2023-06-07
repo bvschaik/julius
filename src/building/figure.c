@@ -1158,13 +1158,13 @@ static void spawn_figure_temple(building *b)
                 }
                 int food_to_deliver = building_temple_mars_food_to_deliver(b, mess_hall_id);
                 if (food_to_deliver >= 0) {
-                    figure *f = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
+                    figure *priest = figure_create(FIGURE_PRIEST, road.x, road.y, DIR_4_BOTTOM);
 
-                    f->collecting_item_id = food_to_deliver;
-                    b->figure_id2 = f->id;
-                    f->destination_building_id = mess_hall_id;
-                    f->building_id = b->id;
-                    f->action_state = FIGURE_ACTION_214_DESTINATION_MARS_PRIEST_CREATED;
+                    priest->collecting_item_id = food_to_deliver;
+                    b->figure_id2 = priest->id;
+                    priest->destination_building_id = mess_hall_id;
+                    priest->building_id = b->id;
+                    priest->action_state = FIGURE_ACTION_214_DESTINATION_MARS_PRIEST_CREATED;
                 }
             }
         }

@@ -41,7 +41,7 @@ enum {
 
 int map_terrain_is(int grid_offset, int terrain);
 
-int map_terrain_is_superset(int grid_offset, int terrain_sum);
+int map_terrain_is_superset(int grid_offset, unsigned int terrain_sum);
 
 int map_terrain_get(int grid_offset);
 

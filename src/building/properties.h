@@ -12,7 +12,7 @@ typedef struct {
 } building_properties;
 
 typedef struct {
-    int type;
+    building_type type;
     building_properties properties;
     const char* asset_name;
     const char* asset_image_id;

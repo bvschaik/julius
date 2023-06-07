@@ -95,8 +95,8 @@ static void draw_foreground(void)
                 button_border_draw(BUTTON_LEFT_PADDING, y_offset, BUTTON_WIDTH, DETAILS_ROW_HEIGHT, 1);
             }
 
-            int translation_key = data.list[i]->xml_attr.key;
-            text_draw(translation_for(translation_key), 48, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
+            translation_key key = data.list[i]->xml_attr.key;
+            text_draw(translation_for(key), 48, y_offset + 8, FONT_NORMAL_PLAIN, COLOR_BLACK);
         }
 
         y_offset += DETAILS_ROW_HEIGHT;

@@ -85,18 +85,18 @@ static int get_storage_road_access(building *b, map_point *point)
     }
 }
 
-static int is_order_condition_satisfied(const building *depot, const order *order)
+static int is_order_condition_satisfied(const building *depot, const order *current_order)
 {
-    if (!order->src_storage_id || !order->dst_storage_id || !order->resource_type) {
+    if (!current_order->src_storage_id || !current_order->dst_storage_id || !current_order->resource_type) {
         return 0;
     }
 
-    if (order->condition.condition_type == ORDER_CONDITION_NEVER) {
+    if (current_order->condition.condition_type == ORDER_CONDITION_NEVER) {
         return 0;
     }
 
-    building *src = building_get(order->src_storage_id);
-    building *dst = building_get(order->dst_storage_id);
+    building *src = building_get(current_order->src_storage_id);
+    building *dst = building_get(current_order->dst_storage_id);
     if (!src || !dst) {
         return 0;
     }
@@ -113,26 +113,26 @@ static int is_order_condition_satisfied(const building *depot, const order *orde
     }
 
     int src_amount = src->type == BUILDING_GRANARY ?
-        building_granary_resource_amount(order->resource_type, src) / RESOURCE_ONE_LOAD :
-        building_warehouse_get_amount(src, order->resource_type);
+        building_granary_resource_amount(current_order->resource_type, src) / RESOURCE_ONE_LOAD :
+        building_warehouse_get_amount(src, current_order->resource_type);
     int dst_amount = dst->type == BUILDING_GRANARY ?
-        building_granary_resource_amount(order->resource_type, dst) / RESOURCE_ONE_LOAD :
-        building_warehouse_get_amount(dst, order->resource_type);
+        building_granary_resource_amount(current_order->resource_type, dst) / RESOURCE_ONE_LOAD :
+        building_warehouse_get_amount(dst, current_order->resource_type);
     if (src_amount == 0) {
         return 0;
     }
 
-    switch (order->condition.condition_type) {
+    switch (current_order->condition.condition_type) {
         case ORDER_CONDITION_SOURCE_HAS_MORE_THAN:
-            return src_amount >= order->condition.threshold;
+            return src_amount >= current_order->condition.threshold;
         case ORDER_CONDITION_DESTINATION_HAS_LESS_THAN:
-            return dst_amount < order->condition.threshold;
+            return dst_amount < current_order->condition.threshold;
         default:
             return 1;
     }
 }
 
-static int is_current_state_still_valid_for_order(const figure *f, const order *order)
+static int is_current_state_still_valid_for_order(const figure *f, const order *current_order)
 {
     building *destination = building_get(f->destination_building_id);
     if (destination->state != BUILDING_STATE_IN_USE) {
@@ -143,7 +143,7 @@ static int is_current_state_still_valid_for_order(const figure *f, const order *
         case FIGURE_ACTION_239_DEPOT_CART_PUSHER_HEADING_TO_SOURCE:
         case FIGURE_ACTION_240_DEPOT_CART_PUSHER_AT_SOURCE:
         {
-            if (f->destination_building_id == order->src_storage_id) {
+            if (f->destination_building_id == current_order->src_storage_id) {
                 return 1;
             } else {
                 return 0;
@@ -153,8 +153,8 @@ static int is_current_state_still_valid_for_order(const figure *f, const order *
         case FIGURE_ACTION_241_DEPOT_CART_HEADING_TO_DESTINATION:
         case FIGURE_ACTION_242_DEPOT_CART_PUSHER_AT_DESTINATION:
         {
-            if (f->resource_id == order->resource_type
-                && f->destination_building_id == order->dst_storage_id
+            if (f->resource_id == current_order->resource_type
+                && f->destination_building_id == current_order->dst_storage_id
                 && f->loads_sold_or_carrying > 0) {
                 return 1;
             } else {

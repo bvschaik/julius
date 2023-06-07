@@ -548,7 +548,7 @@ static void window_building_draw_monument_hippodrome_construction_process(buildi
         TR_BUILDING_HIPPODROME_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
 }
 
-void draw_grand_temple_venus_wine(building_info_context *c)
+static void draw_grand_temple_venus_wine(building_info_context *c)
 {
     int y = 50;
     data.building_id = c->building_id;
@@ -563,7 +563,7 @@ void draw_grand_temple_venus_wine(building_info_context *c)
 
 }
 
-void draw_grand_temple_mars_military(building_info_context *c)
+static void draw_grand_temple_mars_military(building_info_context *c)
 {
     int y = 60;
     data.building_id = c->building_id;

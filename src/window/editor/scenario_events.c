@@ -128,7 +128,7 @@ static void draw_foreground(void)
         y_offset += EVENTS_ROW_HEIGHT;
     }
 
-    for (int i = 8; i < MAX_BUTTONS; i++) {
+    for (size_t i = 8; i < MAX_BUTTONS; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i ? 1 : 0);
     }
 

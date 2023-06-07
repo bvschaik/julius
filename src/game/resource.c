@@ -51,7 +51,7 @@ static const resource_type legacy_inventory_mapping[LEGACY_INVENTORY_MAX] = {
 };
 
 static struct {
-    resource_version version;
+    resource_version_t version;
     const resource_type *resources;
     const resource_type *inventory;
     int total_resources;
@@ -269,10 +269,10 @@ int resource_mapping_get_version(void)
     return mapping.version;
 }
 
-resource_type resource_produced_by_building_type(int building_type)
+resource_type resource_produced_by_building_type(building_type type)
 {
     for (int resource = 0; resource < RESOURCE_ALL; resource++) {
-        if (resource_info[resource].industry == building_type) {
+        if (resource_info[resource].industry == type) {
             return resource;
         }
     }

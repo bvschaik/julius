@@ -16,17 +16,17 @@ static int event_in_use(const scenario_event_t *event)
     return event->state != EVENT_STATE_UNDEFINED;
 }
 
+static void new_scenario_event(scenario_event_t *obj, int position)
+{
+    obj->id = position;
+}
+
 void scenario_events_init(void)
 {
     scenario_event_t *current;
     array_foreach(scenario_events, current) {
         scenario_event_init(current);
     }
-}
-
-void new_scenario_event(scenario_event_t *obj, int position)
-{
-    obj->id = position;
 }
 
 void scenario_events_clear(void)
@@ -103,9 +103,9 @@ static void info_save_state(buffer *buf)
 static void conditions_save_state(buffer *buf)
 {
     int32_t array_size = 0;
-    scenario_event_t *current;
-    array_foreach(scenario_events, current) {
-        array_size += current->conditions.size;
+    scenario_event_t *current_event;
+    array_foreach(scenario_events, current_event) {
+        array_size += current_event->conditions.size;
     }
     // If in future conditions can be linked to more things, then also take them into account here.
 
@@ -116,11 +116,11 @@ static void conditions_save_state(buffer *buf)
         struct_size);
 
     for (int i = 0; i < scenario_events.size; i++) {
-        scenario_event_t *current_event = array_item(scenario_events, i);
+        current_event = array_item(scenario_events, i);
 
         for (int j = 0; j < current_event->conditions.size; j++) {
-            scenario_condition_t *current = array_item(current_event->conditions, j);
-            scenario_condition_type_save_state(buf, current, LINK_TYPE_SCENARIO_EVENT, current_event->id);
+            scenario_condition_t *current_condition = array_item(current_event->conditions, j);
+            scenario_condition_type_save_state(buf, current_condition, LINK_TYPE_SCENARIO_EVENT, current_event->id);
         }
     }
 }
@@ -128,9 +128,9 @@ static void conditions_save_state(buffer *buf)
 static void actions_save_state(buffer *buf)
 {
     int32_t array_size = 0;
-    scenario_event_t *current;
-    array_foreach(scenario_events, current) {
-        array_size += current->actions.size;
+    scenario_event_t *current_event;
+    array_foreach(scenario_events, current_event) {
+        array_size += current_event->actions.size;
     }
     // If in future actions can be linked to more things, then also take them into account here.
 
@@ -141,11 +141,11 @@ static void actions_save_state(buffer *buf)
         struct_size);
 
     for (int i = 0; i < scenario_events.size; i++) {
-        scenario_event_t *current_event = array_item(scenario_events, i);
+        current_event = array_item(scenario_events, i);
 
         for (int j = 0; j < current_event->actions.size; j++) {
-            scenario_action_t *current = array_item(current_event->actions, j);
-            scenario_action_type_save_state(buf, current, LINK_TYPE_SCENARIO_EVENT, current_event->id);
+            scenario_action_t *current_action = array_item(current_event->actions, j);
+            scenario_action_type_save_state(buf, current_action, LINK_TYPE_SCENARIO_EVENT, current_event->id);
         }
     }
 }

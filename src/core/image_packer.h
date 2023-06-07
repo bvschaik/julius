@@ -37,7 +37,7 @@ typedef struct {
         unsigned int y;
         int packed;
         int rotated;
-        int image_index;
+        unsigned int image_index;
     } output;
 } image_packer_rect;
 

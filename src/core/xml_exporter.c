@@ -37,7 +37,7 @@ static int decrease_depth(void)
     return data.current_element_depth;
 }
 
-static int ascii_as_string(buffer *buf, char *text_out)
+static int ascii_as_string(buffer *buf, const char *text_out)
 {
     const uint8_t *converted = string_from_ascii(text_out);
     buffer_write_raw(buf, converted, string_length(converted));

@@ -88,8 +88,8 @@ int png_get_image_size(const char *path, int *width, int *height)
     if (!png_load(path)) {
         return 0;
     }
-    *width = !data.last_png.width ? png_get_image_width(data.png_ptr, data.info_ptr) : data.last_png.width;
-    *height = !data.last_png.height ? png_get_image_height(data.png_ptr, data.info_ptr) : data.last_png.height;
+    *width = !data.last_png.width ? (int) png_get_image_width(data.png_ptr, data.info_ptr) : data.last_png.width;
+    *height = !data.last_png.height ? (int) png_get_image_height(data.png_ptr, data.info_ptr) : data.last_png.height;
 
     return 1;
 }

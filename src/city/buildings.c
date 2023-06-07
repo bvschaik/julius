@@ -144,7 +144,7 @@ int city_buildings_get_closest_plague(int x, int y, int *distance)
     }
 
     // Find closest in buildings (docks, granaries or warehouses)
-    for (int i = 0 ; i < NUM_PLAGUE_BUILDINGS; i++) {
+    for (size_t i = 0 ; i < NUM_PLAGUE_BUILDINGS; i++) {
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->has_plague && b->distance_from_entry) {
@@ -197,7 +197,7 @@ void city_buildings_update_plague(void)
         }
     }
 
-    for (int i = 0 ; i < NUM_PLAGUE_BUILDINGS; i++) {
+    for (size_t i = 0 ; i < NUM_PLAGUE_BUILDINGS; i++) {
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             update_sickness_duration(b->id);

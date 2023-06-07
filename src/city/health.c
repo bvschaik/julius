@@ -38,7 +38,7 @@ void city_health_set(int new_value)
 
 static int is_plague_building(building_type type)
 {
-    for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
+    for (size_t i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
         if (type == PLAGUE_BUILDINGS[i]) {
             return 1;
         }
@@ -157,7 +157,7 @@ static int cause_disease(void)
         city_message_post_with_popup_delay(MESSAGE_CAT_ILLNESS, MESSAGE_SICKNESS, sick_building_type, grid_offset);
     }
 
-    for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
+    for (size_t i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->sickness_level >= MAX_SICKNESS_LEVEL) {
@@ -279,7 +279,7 @@ static void adjust_sickness_level_in_house(building *b, int health, int populati
 
 static void adjust_sickness_level_in_plague_buildings(int hospital_coverage_bonus)
 {
-    for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
+    for (size_t i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->has_plague || !b->sickness_level) {
@@ -392,7 +392,7 @@ int city_health_get_global_sickness_level(void)
         }
     }
 
-    for (int i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
+    for (size_t i = 0; i < NUM_PLAGUE_BUILDINGS; i++) {
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             building_number++;

@@ -52,7 +52,7 @@ int city_population_at_month(int max_months, int month);
 
 int city_population_at_age(int age);
 
-int city_population_at_level(int house_level);
+int city_population_at_level(int level);
 
 void city_population_request_yearly_update(void);
 
@@ -62,7 +62,7 @@ void city_population_check_consistency(void);
 
 int city_population_graph_order(void);
 
-void city_population_set_graph_order(int order);
+void city_population_set_graph_order(int graph_order);
 
 int city_population_open_housing_capacity(void);
 

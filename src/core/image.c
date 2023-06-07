@@ -17,7 +17,7 @@
 
 #define ENEMY_ENTRIES 801
 #define CYRILLIC_FONT_ENTRIES 2000
-#define BASE_FONT_ENTRIES 1340
+// #define BASE_FONT_ENTRIES 1340 - UNUSED, but useful info
 
 #define FONT_STYLES 3
 

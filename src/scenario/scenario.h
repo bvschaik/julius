@@ -14,8 +14,8 @@ void scenario_fix_patch_trade(int mission_id);
 
 void scenario_unlock_all_buildings(void);
 
-int scenario_get_state_buffer_size_by_savegame_version(int savegame_version);
-int scenario_get_state_buffer_size_by_scenario_version(int scenario_version);
+int scenario_get_state_buffer_size_by_savegame_version_t(int savegame_version_t);
+int scenario_get_state_buffer_size_by_scenario_version_t(int scenario_version_t);
 void scenario_save_state(buffer *buf);
 void scenario_load_state(buffer *buf, buffer *buf_requests, int version);
 

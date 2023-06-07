@@ -791,8 +791,8 @@ int figure_movement_can_launch_cross_country_missile(int x_src, int y_src, int x
                 break;
             }
             if (map_terrain_is(grid_offset, TERRAIN_BUILDING) && map_property_multi_tile_size(grid_offset) > 1) {
-                int building_type = building_get(map_building_at(grid_offset))->type;
-                if (building_type != BUILDING_FORT_GROUND) {
+                building_type type = building_get(map_building_at(grid_offset))->type;
+                if (type != BUILDING_FORT_GROUND) {
                     break;
                 }
             }

@@ -216,7 +216,7 @@ int building_animation_advance_fumigation(building *b)
         }
     }
 
-    if (b->fumigation_frame > 5 || b->fumigation_frame < 0) {
+    if (b->fumigation_frame > 5) {
         b->fumigation_frame = 0;
     }
 

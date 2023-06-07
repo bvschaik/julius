@@ -36,13 +36,13 @@ static void resize_text_blob(int needed_space)
 static void resize_text_entries(int needed_entries)
 {
     if (!message_media_text_blob.max_size_text_entries) {
-        int size = MESSAGE_MEDIA_TEXT_BLOB_INITIAL_ENTRIES * sizeof(text_blob_string_t);
+        size_t size = MESSAGE_MEDIA_TEXT_BLOB_INITIAL_ENTRIES * sizeof(text_blob_string_t);
         message_media_text_blob.text_entries = (text_blob_string_t *) malloc(size);
         message_media_text_blob.max_size_text_entries = size;
     }
     int needed_max_count = message_media_text_blob.entry_count + needed_entries;
     if (message_media_text_blob.max_size_text_entries < needed_max_count * sizeof(text_blob_string_t)) {
-        int size = (needed_max_count + MESSAGE_MEDIA_TEXT_BLOB_ENTRIES_INCREASE_OVERSHOOT) * sizeof(text_blob_string_t);
+        size_t size = (needed_max_count + MESSAGE_MEDIA_TEXT_BLOB_ENTRIES_INCREASE_OVERSHOOT) * sizeof(text_blob_string_t);
         text_blob_string_t *new_blob = realloc(message_media_text_blob.text_entries, size);
         if (new_blob) {
             message_media_text_blob.text_entries = new_blob;

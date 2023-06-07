@@ -24,7 +24,7 @@ typedef struct {
     text_blob_string_t *text_entries;
     uint8_t *text_blob;
 
-    int max_size_text_entries;
+    size_t max_size_text_entries;
     int max_size_text_blob;
 } message_media_text_blob_t;
 

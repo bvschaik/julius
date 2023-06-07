@@ -205,7 +205,7 @@ static int xml_start_ornament(void)
     int ornament_id = xml_parser_get_attribute_enum("type", ORNAMENTS, TOTAL_ORNAMENTS, 0);
     if (ornament_id == -1) {
         if (strcmp("all", xml_parser_get_attribute_string("type")) == 0) {
-            for (int i = 0; i < TOTAL_ORNAMENTS; i++) {
+            for (size_t i = 0; i < TOTAL_ORNAMENTS; i++) {
                 add_ornament(i);
             }
         } else {
@@ -718,14 +718,14 @@ static void set_trade_coords(const empire_object *our_city)
     free(section_distances);
 }
 
-static int parse_xml(char *buffer, int buffer_length)
+static int parse_xml(char *buf, int buffer_length)
 {
     reset_data();
     empire_object_clear();
     if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS)) {
         return 0;
     }
-    if (!xml_parser_parse(buffer, buffer_length, 1)) {
+    if (!xml_parser_parse(buf, buffer_length, 1)) {
         data.success = 0;
     }
     xml_parser_free();
@@ -756,28 +756,28 @@ static char *file_to_buffer(const char *filename, int *output_length)
     int size = ftell(file);
     rewind(file);
 
-    char *buffer = malloc(size);
-    if (!buffer) {
+    char *buf = malloc(size);
+    if (!buf) {
         log_error("Error opening empire file", filename, 0);
         return 0;
     }
-    memset(buffer, 0, size);
-    if (!buffer) {
+    memset(buf, 0, size);
+    if (!buf) {
         log_error("Unable to allocate buffer to read XML file", filename, 0);
-        free(buffer);
+        free(buf);
         file_close(file);
         return 0;
     }
-    *output_length = (int) fread(buffer, 1, size, file);
+    *output_length = (int) fread(buf, 1, size, file);
     if (*output_length > size) {
         log_error("Unable to read file into buffer", filename, 0);
-        free(buffer);
+        free(buf);
         file_close(file);
         *output_length = 0;
         return 0;
     }
     file_close(file);
-    return buffer;
+    return buf;
 }
 
 int empire_xml_parse_file(const char *filename)

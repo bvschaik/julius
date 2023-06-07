@@ -10,9 +10,9 @@
 #include <string.h>
 
 enum {
-    WATER_ACCESS_NONE = 0b00,
-    WATER_ACCESS_WELL = 0b01,
-    WATER_ACCESS_FOUNTAIN = 0b10
+    WATER_ACCESS_NONE = 0x0,
+    WATER_ACCESS_WELL = 0x1,
+    WATER_ACCESS_FOUNTAIN = 0x2
 };
 
 static uint8_t has_water_access[GRID_SIZE * GRID_SIZE];

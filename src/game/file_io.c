@@ -100,7 +100,7 @@ typedef struct {
 } scenario_state;
 
 static struct {
-    scenario_version version;
+    scenario_version_t version;
     int num_pieces;
     file_piece pieces[20];
     scenario_state state;
@@ -255,7 +255,7 @@ typedef struct {
         int static_building_counts;
         int visited_buildings;
     } features;
-} savegame_version_data;
+} savegame_version_t_data;
 
 static struct {
     int num_pieces;
@@ -265,7 +265,7 @@ static struct {
 
 static struct {
     minimap_functions functions;
-    savegame_version version;
+    savegame_version_t version;
     int city_width;
     int city_height;
     int caravanserai_id;
@@ -318,7 +318,7 @@ static void clear_scenario_pieces(void)
     scenario_data.num_pieces = 0;
 }
 
-static void init_scenario_data(scenario_version version)
+static void init_scenario_data(scenario_version_t version)
 {
     clear_scenario_pieces();
     scenario_data.version = version;
@@ -335,7 +335,7 @@ static void init_scenario_data(scenario_version version)
     state->random_iv = create_scenario_piece(8, 0);
     state->camera = create_scenario_piece(8, 0);
 
-    int scenario_piece_size = scenario_get_state_buffer_size_by_scenario_version(version);
+    int scenario_piece_size = scenario_get_state_buffer_size_by_scenario_version_t(version);
     state->scenario = create_scenario_piece(scenario_piece_size, 0);
     if (version > SCENARIO_LAST_NO_EXTENDED_REQUESTS) {
         state->scenario_requests = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
@@ -357,7 +357,7 @@ static void init_scenario_data(scenario_version version)
     state->end_marker = create_scenario_piece(4, 0);
 }
 
-static void get_version_data(savegame_version_data *version_data, savegame_version version)
+static void get_version_data(savegame_version_t_data *version_data, savegame_version_t version)
 {
     int multiplier = 1;
     int count_multiplier = 1;
@@ -429,7 +429,7 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
     version_data->features.monument_deliveries = version > SAVE_GAME_LAST_NO_DELIVERIES_VERSION;
     version_data->features.barracks_tower_sentry_request = version <= SAVE_GAME_LAST_BARRACKS_TOWER_SENTRY_REQUEST;
 
-    version_data->piece_sizes.scenario = scenario_get_state_buffer_size_by_savegame_version(version);
+    version_data->piece_sizes.scenario = scenario_get_state_buffer_size_by_savegame_version_t(version);
     if (version <= SAVE_GAME_LAST_UNVERSIONED_SCENARIOS) {
         version_data->features.custom_empires = 0;
     } else {
@@ -467,11 +467,11 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
     version_data->features.visited_buildings = version > SAVE_GAME_LAST_GLOBAL_BUILDING_INFO;
 }
 
-static void init_savegame_data(savegame_version version)
+static void init_savegame_data(savegame_version_t version)
 {
     clear_savegame_pieces();
 
-    savegame_version_data version_data;
+    savegame_version_t_data version_data;
     get_version_data(&version_data, version);
 
     savegame_state *state = &savegame_data.state;
@@ -611,9 +611,9 @@ static void init_savegame_data(savegame_version version)
     }
 }
 
-static void scenario_load_from_state(scenario_state *file, scenario_version version)
+static void scenario_load_from_state(scenario_state *file, scenario_version_t version)
 {
-    resource_version resource_version = RESOURCE_ORIGINAL_VERSION;
+    resource_version_t resource_version = RESOURCE_ORIGINAL_VERSION;
     if (version > SCENARIO_LAST_NO_STATIC_RESOURCES) {
         resource_version = buffer_read_u32(file->resource_version);
     }
@@ -664,7 +664,7 @@ static void scenario_save_to_state(scenario_state *file)
     buffer_skip(file->end_marker, 4);
 }
 
-static scenario_version save_version_to_scenario_version(savegame_version save_version, buffer *buf) {
+static scenario_version_t save_version_to_scenario_version(savegame_version_t save_version, buffer *buf) {
     if (save_version <= SAVE_GAME_LAST_UNVERSIONED_SCENARIOS) {
         return SCENARIO_LAST_UNVERSIONED;
     }
@@ -677,9 +677,9 @@ static scenario_version save_version_to_scenario_version(savegame_version save_v
     return buffer_read_i32(buf);
 }
 
-static void savegame_load_from_state(savegame_state *state, savegame_version version)
+static void savegame_load_from_state(savegame_state *state, savegame_version_t version)
 {
-    scenario_version scenario_version = save_version_to_scenario_version(version, state->scenario_version);
+    scenario_version_t scenario_version = save_version_to_scenario_version(version, state->scenario_version);
     scenario_settings_load_state(state->scenario_campaign_mission,
         state->scenario_settings,
         state->scenario_is_custom,
@@ -861,7 +861,7 @@ static void savegame_save_to_state(savegame_state *state)
     figure_visited_buildings_save_state(state->visited_buildings);
 }
 
-static int get_scenario_version(FILE *fp)
+static int get_scenario_version_t(FILE *fp)
 {
     char version_magic[8];
     size_t read = fread(version_magic, 1, 8, fp);
@@ -905,48 +905,48 @@ static void write_int32(FILE *fp, int value)
     fwrite(&data, 1, 4, fp);
 }
 
-static int read_compressed_chunk(FILE *fp, void *buffer, int bytes_to_read, int read_as_zlib, memory_block *compress_buffer)
+static int read_compressed_chunk(FILE *fp, void *buf, size_t bytes_to_read, int read_as_zlib, memory_block *compress_buffer)
 {
     if (!core_memory_block_ensure_size(compress_buffer, bytes_to_read)) {
         return 0;
     }
-    int input_size = read_int32(fp);
+    size_t input_size = read_int32(fp);
     if ((unsigned int)input_size == UNCOMPRESSED) {
-        return fread(buffer, 1, bytes_to_read, fp) == bytes_to_read;
+        return fread(buf, 1, bytes_to_read, fp) == bytes_to_read;
     } else {
         if (fread(compress_buffer->memory, 1, input_size, fp) != input_size) {
             return 0;
         }
 
         if (!read_as_zlib) {
-            return zip_decompress(compress_buffer->memory, input_size, buffer, &bytes_to_read);
+            return zip_decompress(compress_buffer->memory, input_size, buf, bytes_to_read);
         } else {
             int output_size = 0;
-            return zlib_helper_decompress(compress_buffer->memory, input_size, buffer, bytes_to_read, &output_size);
+            return zlib_helper_decompress(compress_buffer->memory, input_size, buf, bytes_to_read, &output_size);
         }
     }
 }
 
-static int read_compressed_savegame_chunk(FILE *fp, void *buffer, int bytes_to_read,
-    savegame_version version, memory_block *compress_buffer)
+static int read_compressed_savegame_chunk(FILE *fp, void *buf, size_t bytes_to_read,
+    savegame_version_t version, memory_block *compress_buffer)
 {
     int read_as_zlib = version > SAVE_GAME_LAST_ZIP_COMPRESSION;
-    return read_compressed_chunk(fp, buffer, bytes_to_read, read_as_zlib, compress_buffer);
+    return read_compressed_chunk(fp, buf, bytes_to_read, read_as_zlib, compress_buffer);
 }
 
-static int write_compressed_chunk(FILE *fp, void *buffer, int bytes_to_write, memory_block *compress_buffer)
+static int write_compressed_chunk(FILE *fp, void *buf, size_t bytes_to_write, memory_block *compress_buffer)
 {
     if (!core_memory_block_ensure_size(compress_buffer, bytes_to_write)) {
         return 0;
     }
     int output_size = 0;
-    if (zlib_helper_compress(buffer, bytes_to_write, compress_buffer->memory, COMPRESS_BUFFER_INITIAL_SIZE, &output_size)) {
+    if (zlib_helper_compress(buf, bytes_to_write, compress_buffer->memory, COMPRESS_BUFFER_INITIAL_SIZE, &output_size)) {
         write_int32(fp, output_size);
         fwrite(compress_buffer->memory, 1, output_size, fp);
     } else {
         // unable to compress: write uncompressed
         write_int32(fp, UNCOMPRESSED);
-        fwrite(buffer, 1, bytes_to_write, fp);
+        fwrite(buf, 1, bytes_to_write, fp);
     }
     return 1;
 }
@@ -965,13 +965,13 @@ static int prepare_dynamic_piece(FILE *fp, file_piece *piece)
     return 1;
 }
 
-static int load_scenario_to_buffers(const char *filename, scenario_version *version)
+static int load_scenario_to_buffers(const char *filename, scenario_version_t *version)
 {
     FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
     if (!fp) {
         return 0;
     }
-    *version = get_scenario_version(fp);
+    *version = get_scenario_version_t(fp);
     init_scenario_data(*version);
     if (*version > SCENARIO_CURRENT_VERSION) {
         log_error("Scenario version incompatible with current version, got version", 0, *version);
@@ -1006,7 +1006,7 @@ static int load_scenario_to_buffers(const char *filename, scenario_version *vers
 int game_file_io_read_scenario(const char *filename)
 {
     log_info("Loading scenario", filename, 0);
-    scenario_version version = SCENARIO_VERSION_NONE;
+    scenario_version_t version = SCENARIO_VERSION_NONE;
     if (!load_scenario_to_buffers(filename, &version)) {
         return 0;
     }
@@ -1059,7 +1059,7 @@ static void set_viewport(int *x, int *y, int *width, int *height)
 
 int game_file_io_read_scenario_info(const char *filename, scenario_info *info)
 {
-    scenario_version version = 0;
+    scenario_version_t version = 0;
     if (!load_scenario_to_buffers(filename, &version)) {
         return (version > SCENARIO_CURRENT_VERSION) ? SAVEGAME_STATUS_NEWER_VERSION : SAVEGAME_STATUS_INVALID;
     }
@@ -1143,7 +1143,7 @@ int game_file_io_write_scenario(const char *filename)
     return 1;
 }
 
-static int savegame_read_from_file(FILE *fp, savegame_version version)
+static int savegame_read_from_file(FILE *fp, savegame_version_t version)
 {
     memory_block compress_buffer;
     core_memory_block_init(&compress_buffer, COMPRESS_BUFFER_INITIAL_SIZE);
@@ -1187,7 +1187,7 @@ static void savegame_write_to_file(FILE *fp, memory_block *compress_buffer)
     }
 }
 
-static int get_savegame_versions(FILE *fp, savegame_version *save_version, resource_version *resource_version)
+static int get_savegame_version_ts(FILE *fp, savegame_version_t *save_version, resource_version_t *resource_version)
 {
     buffer buf;
     uint8_t data[4];
@@ -1226,9 +1226,9 @@ int game_file_io_read_saved_game(const char *filename, int offset)
         fseek(fp, offset, SEEK_SET);
     }
     int result = 0;
-    savegame_version save_version;
-    resource_version resource_version;
-    if (get_savegame_versions(fp, &save_version, &resource_version)) {
+    savegame_version_t save_version;
+    resource_version_t resource_version;
+    if (get_savegame_version_ts(fp, &save_version, &resource_version)) {
         if (save_version > SAVE_GAME_CURRENT_VERSION || resource_version > RESOURCE_CURRENT_VERSION) {
             log_error("Newer save game version than supported. Please update Augustus. Version:", 0, save_version);
             file_close(fp);
@@ -1314,15 +1314,15 @@ static building *savegame_building(int id)
 }
 
 static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *info,
-    savegame_version version, memory_block *compress_buffer)
+    savegame_version_t version, memory_block *compress_buffer)
 {
     clear_savegame_pieces();
 
-    savegame_version_data version_data;  
+    savegame_version_t_data version_data;  
     get_version_data(&version_data, version);
 
     file_piece scenario_version_data;
-    file_piece city_data, game_time, terrain_grid, random_grid, scenario;
+    file_piece city_data, game_time, terrain_grid, random_grid, scenario_piece;
     file_piece bitfields_grid, edge_grid, building_grid, buildings;
 
     savegame_state *state = &savegame_data.state;
@@ -1334,7 +1334,7 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
     init_file_piece(&random_grid, 26244, 0);
     init_file_piece(&edge_grid, 26244, 0);
     init_file_piece(&bitfields_grid, 26244, 0);
-    init_file_piece(&scenario, version_data.piece_sizes.scenario, 0);
+    init_file_piece(&scenario_piece, version_data.piece_sizes.scenario, 0);
     init_file_piece(&building_grid, 52488, 0);
     init_file_piece(&buildings, version_data.piece_sizes.buildings, 0);
 
@@ -1437,7 +1437,7 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
     skip_piece(fp, 84, 0);
     skip_piece(fp, 60, 0);
 
-    if (fread(scenario.buf.data, 1, scenario.buf.size, fp) != scenario.buf.size) {
+    if (fread(scenario_piece.buf.data, 1, scenario_piece.buf.size, fp) != scenario_piece.buf.size) {
         return SAVEGAME_STATUS_INVALID;
     }
 
@@ -1463,9 +1463,9 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
     int grid_border_size;
 
     minimap_data.version = version;
-    scenario_map_data_from_buffer(&scenario.buf, &minimap_data.city_width, &minimap_data.city_height,
+    scenario_map_data_from_buffer(&scenario_piece.buf, &minimap_data.city_width, &minimap_data.city_height,
         &grid_start, &grid_border_size, scenario_version);
-    minimap_data.climate = scenario_climate_from_buffer(&scenario.buf, scenario_version);
+    minimap_data.climate = scenario_climate_from_buffer(&scenario_piece.buf, scenario_version);
     minimap_data.functions.building = savegame_building;
     minimap_data.functions.climate = get_climate;
     minimap_data.functions.map.width = map_width;
@@ -1486,7 +1486,7 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
     free_file_piece(&city_data);
     free_file_piece(&game_time);
     free_file_piece(&terrain_grid);
-    free_file_piece(&scenario);
+    free_file_piece(&scenario_piece);
     free_file_piece(&random_grid);
     free_file_piece(&edge_grid);
     free_file_piece(&bitfields_grid);
@@ -1503,10 +1503,10 @@ int game_file_io_read_saved_game_info(const char *filename, saved_game_info *inf
         return SAVEGAME_STATUS_INVALID;
     }
     savegame_load_status result = SAVEGAME_STATUS_INVALID;
-    savegame_version save_version;
-    resource_version resource_version;
+    savegame_version_t save_version;
+    resource_version_t resource_version;
 
-    if (!get_savegame_versions(fp, &save_version, &resource_version)) {
+    if (!get_savegame_version_ts(fp, &save_version, &resource_version)) {
         file_close(fp);
         return SAVEGAME_STATUS_INVALID;
     }

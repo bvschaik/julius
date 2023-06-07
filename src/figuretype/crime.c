@@ -41,7 +41,7 @@ typedef struct {
     int resource;
 } looter_destination;
 
-int get_looter_destination(figure *f)
+static int get_looter_destination(figure *f)
 {
     resource_storage_info info[RESOURCE_MAX] = { 0 };
 
@@ -85,7 +85,7 @@ int get_looter_destination(figure *f)
     }
 }
 
-void figure_crime_loot_storage(figure *f, int resource, int building_id)
+static void loot_storage(figure *f, int resource, int building_id)
 {
     building *storage = building_get(building_id);
 
@@ -474,7 +474,7 @@ void figure_looter_action(figure *f)
             figure_image_increase_offset(f, 12);
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                figure_crime_loot_storage(f, f->collecting_item_id, f->destination_building_id);
+                loot_storage(f, f->collecting_item_id, f->destination_building_id);
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);

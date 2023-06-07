@@ -285,9 +285,9 @@ int city_population_at_age(int age)
     return city_data.population.at_age[age];
 }
 
-int city_population_at_level(int house_level)
+int city_population_at_level(int level)
 {
-    return city_data.population.at_level[house_level];
+    return city_data.population.at_level[level];
 }
 
 static void yearly_advance_ages_and_calculate_deaths(void)
@@ -422,9 +422,9 @@ int city_population_graph_order(void)
     return city_data.population.graph_order;
 }
 
-void city_population_set_graph_order(int order)
+void city_population_set_graph_order(int graph_order)
 {
-    city_data.population.graph_order = order;
+    city_data.population.graph_order = graph_order;
 }
 
 int city_population_open_housing_capacity(void)

@@ -77,7 +77,7 @@ static int export_attribute_resource(xml_data_attribute_t *attr, int target)
     char resource_name_to_use[50] = " ";
 
     const char *next = strchr(resource_name, '|');
-    size_t length = next ? (next - resource_name) : strlen(resource_name);
+    size_t length = next ? (size_t) (next - resource_name) : strlen(resource_name);
     if (length > 48) {
         length = 48;
     }
@@ -143,23 +143,23 @@ static void export_event_condition(scenario_condition_t *condition)
         return;
     }
 
-    scenario_condition_data_t *data = scenario_events_parameter_data_get_conditions_xml_attributes(condition->type);
-    if (data->type == CONDITION_TYPE_UNDEFINED) {
+    scenario_condition_data_t *condition_data = scenario_events_parameter_data_get_conditions_xml_attributes(condition->type);
+    if (condition_data->type == CONDITION_TYPE_UNDEFINED) {
         return;
     }
 
-    if (data->xml_attr.name) {
-        xml_exporter_new_element(data->xml_attr.name, 1);
+    if (condition_data->xml_attr.name) {
+        xml_exporter_new_element(condition_data->xml_attr.name, 1);
     } else {
         log_exporting_error("Error while exporting condition.");
         return;
     }
 
-    export_parse_attribute(&data->xml_parm1, condition->parameter1);
-    export_parse_attribute(&data->xml_parm2, condition->parameter2);
-    export_parse_attribute(&data->xml_parm3, condition->parameter3);
-    export_parse_attribute(&data->xml_parm4, condition->parameter4);
-    export_parse_attribute(&data->xml_parm5, condition->parameter5);
+    export_parse_attribute(&condition_data->xml_parm1, condition->parameter1);
+    export_parse_attribute(&condition_data->xml_parm2, condition->parameter2);
+    export_parse_attribute(&condition_data->xml_parm3, condition->parameter3);
+    export_parse_attribute(&condition_data->xml_parm4, condition->parameter4);
+    export_parse_attribute(&condition_data->xml_parm5, condition->parameter5);
 
     xml_exporter_close_element(0);
 }
@@ -170,23 +170,23 @@ static void export_event_action(scenario_action_t *action)
         return;
     }
 
-    scenario_action_data_t *data = scenario_events_parameter_data_get_actions_xml_attributes(action->type);
-    if (data->type == ACTION_TYPE_UNDEFINED) {
+    scenario_action_data_t *action_data = scenario_events_parameter_data_get_actions_xml_attributes(action->type);
+    if (action_data->type == ACTION_TYPE_UNDEFINED) {
         return;
     }
 
-    if (data->xml_attr.name) {
-        xml_exporter_new_element(data->xml_attr.name, 1);
+    if (action_data->xml_attr.name) {
+        xml_exporter_new_element(action_data->xml_attr.name, 1);
     } else {
         log_exporting_error("Error while exporting action.");
         return;
     }
 
-    export_parse_attribute(&data->xml_parm1, action->parameter1);
-    export_parse_attribute(&data->xml_parm2, action->parameter2);
-    export_parse_attribute(&data->xml_parm3, action->parameter3);
-    export_parse_attribute(&data->xml_parm4, action->parameter4);
-    export_parse_attribute(&data->xml_parm5, action->parameter5);
+    export_parse_attribute(&action_data->xml_parm1, action->parameter1);
+    export_parse_attribute(&action_data->xml_parm2, action->parameter2);
+    export_parse_attribute(&action_data->xml_parm3, action->parameter3);
+    export_parse_attribute(&action_data->xml_parm4, action->parameter4);
+    export_parse_attribute(&action_data->xml_parm5, action->parameter5);
 
     xml_exporter_close_element(0);
 }

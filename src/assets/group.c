@@ -41,10 +41,10 @@ image_groups *group_get_current(void)
 void group_unload_current(void)
 {
     image_groups *group = group_get_current();
-    asset_image *image = asset_image_get_from_id(group->last_image_index);
-    while (image && image->index >= group->first_image_index) {
-        asset_image_unload(image);
-        image = asset_image_get_from_id(image->index - 1);
+    asset_image *img = asset_image_get_from_id(group->last_image_index);
+    while (img && img->index >= group->first_image_index) {
+        asset_image_unload(img);
+        img = asset_image_get_from_id(img->index - 1);
     }
     free((char *) group->name);
 #ifdef BUILDING_ASSET_PACKER

@@ -160,6 +160,7 @@ void figure_delete(figure *f)
             if (fort->figure_id2 == f->id) {
                 fort->figure_id2 = 0;
             }
+            break;
         }
         case FIGURE_DEPOT_CART_PUSHER:
             for (int i = 0; i < 3; i++) {

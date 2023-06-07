@@ -219,9 +219,9 @@ static int get_average_housing_level(void)
     return avg < base_average_level ? base_average_level : avg;
 }
 
-static int house_level_sentiment_modifier(int house_level, int average)
+static int house_level_sentiment_modifier(int level, int average)
 {
-    int diff_from_average = house_level - average;
+    int diff_from_average = level - average;
     if (diff_from_average < 0) {
         diff_from_average *= SQUALOR_MULTIPLIER;
     }

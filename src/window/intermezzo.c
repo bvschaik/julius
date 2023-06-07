@@ -96,13 +96,13 @@ static void draw_background(void)
     graphics_clear_screen();
 
     int mission = scenario_is_custom() ? 0 : scenario_campaign_mission();
-    int image = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * mission;
+    int image_id = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * mission;
     if (data.type == INTERMEZZO_MISSION_BRIEFING) {
-        image++;
+        image_id++;
     } else if (data.type == INTERMEZZO_WON) {
-        image += 2;
+        image_id += 2;
     }
-    image_draw_fullscreen_background(image);
+    image_draw_fullscreen_background(image_id);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)

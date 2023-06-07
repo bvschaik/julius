@@ -119,7 +119,7 @@ typedef enum {
     ENEMY_9_EGYPTIAN = 9,
     ENEMY_10_CARTHAGINIAN = 10,
     ENEMY_11_CAESAR = 11
-} enemy_type;
+} enemy_type_t;
 
 enum {
     FIGURE_STATE_ALIVE = 1,

@@ -43,7 +43,7 @@ static void draw_foreground(void)
 
     outer_panel_draw(160, 44, 16, 22);
 
-    for (int i = 0; i < MAX_BUTTONS; i++) {
+    for (size_t i = 0; i < MAX_BUTTONS; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
     }
 

@@ -121,13 +121,13 @@ static struct {
 
 static void set_city_message(int year, int month,
     int param1, int param2,
-    int message_advisor, int use_popup)
+    message_advisor advisor, int use_popup)
 {
     player_message.year = year;
     player_message.month = month;
     player_message.param1 = param1;
     player_message.param2 = param2;
-    player_message.message_advisor = message_advisor;
+    player_message.message_advisor = advisor;
     player_message.use_popup = use_popup;
 }
 
@@ -286,15 +286,15 @@ static void draw_city_message_text(const lang_message *msg)
 
         case MESSAGE_TYPE_EMIGRATION:
             {
-                int low_mood_cause = player_message.param1;
-                if (!low_mood_cause) {
-                    low_mood_cause = city_sentiment_low_mood_cause();
+                low_mood_cause cause = player_message.param1;
+                if (!cause) {
+                    cause = city_sentiment_low_mood_cause();
                 }
-                if (low_mood_cause >= 1 && low_mood_cause <= 5) {
+                if (cause >= LOW_MOOD_CAUSE_NO_FOOD && cause <= LOW_MOOD_CAUSE_MANY_TENTS) {
                     int max_width = BLOCK_SIZE * (data.text_width_blocks - 1) - 64;
-                    lang_text_draw_multiline(12, low_mood_cause + 2,
+                    lang_text_draw_multiline(12, cause + 2,
                         data.x + 64, data.y_text + 44, max_width, FONT_NORMAL_WHITE);
-                } else if (low_mood_cause == LOW_MOOD_CAUSE_SQUALOR) {
+                } else if (cause == LOW_MOOD_CAUSE_SQUALOR) {
                     int max_width = BLOCK_SIZE * (data.text_width_blocks - 1) - 64;
                     lang_text_draw_multiline(CUSTOM_TRANSLATION, TR_CITY_MESSAGE_SQUALOR,
                         data.x + 64, data.y_text + 44, max_width, FONT_NORMAL_WHITE);
@@ -806,7 +806,7 @@ static void get_tooltip(tooltip_context *c)
     }
 }
 
-void init_window(int text_id, int is_custom_message, void (*background_callback)(void))
+static void init_window(int text_id, int is_custom_message, void (*background_callback)(void))
 {
     window_type window = {
         WINDOW_MESSAGE_DIALOG,
@@ -825,9 +825,9 @@ void window_message_dialog_show(int text_id, void (*background_callback)(void))
 }
 
 void window_message_dialog_show_city_message(int text_id, int year, int month,
-    int param1, int param2, int message_advisor, int use_popup)
+    int param1, int param2, int advisor, int use_popup)
 {
-    set_city_message(year, month, param1, param2, message_advisor, use_popup);
+    set_city_message(year, month, param1, param2, advisor, use_popup);
     init_window(text_id, 0, window_city_draw_all);
 }
 

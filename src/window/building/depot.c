@@ -286,7 +286,7 @@ static void set_order_destination(int depot_building_id, int building_id)
     window_building_info_depot_return_to_main_window();
 }
 
-int handle_mouse_depot_select_source_destination(const mouse *m, building_info_context *c, int is_source)
+static int handle_mouse_depot_select_source_destination(const mouse *m, building_info_context *c, int is_source)
 {
     if (scrollbar_handle_mouse(&scrollbar, m, 1)) {
         return 1;
@@ -361,7 +361,7 @@ void window_building_draw_depot_select_resource_foreground(building_info_context
 int window_building_handle_mouse_depot_select_resource(const mouse *m, building_info_context *c)
 {
     setup_for_selected_depot(c, 0);
-    for (int i = 0; i < sizeof(depot_select_resource_buttons) / sizeof(generic_button); i++) {
+    for (size_t i = 0; i < sizeof(depot_select_resource_buttons) / sizeof(generic_button); i++) {
         depot_select_resource_buttons[i].parameter1 = data.depot_building_id;
     }
     int y_offset = window_building_get_vertical_offset(c, 28) + 46;
