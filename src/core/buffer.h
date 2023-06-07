@@ -1,6 +1,7 @@
 #ifndef CORE_BUFFER_H
 #define CORE_BUFFER_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 /**
