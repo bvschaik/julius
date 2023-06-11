@@ -244,6 +244,13 @@ void scenario_events_load_state(buffer *buf_events, buffer *buf_conditions, buff
     info_load_state(buf_events);
     conditions_load_state(buf_conditions);
     actions_load_state(buf_actions);
+
+    scenario_event_t *current;
+    array_foreach(scenario_events, current) {
+        if (current->state == EVENT_STATE_DELETED) {
+            current->state = EVENT_STATE_UNDEFINED;
+        }
+    }
 }
 
 void scenario_events_process_all(void)

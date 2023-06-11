@@ -30,6 +30,10 @@ void scenario_event_init(scenario_event_t *event)
 
 void scenario_event_save_state(buffer *buf, scenario_event_t *event)
 {
+    if (event->state == EVENT_STATE_UNDEFINED) {
+        event->state = EVENT_STATE_DELETED; // We need a different state than undefined to avoid array overrides on load which breaks the linking by id.
+    }
+
     buffer_write_i32(buf, event->id);
     buffer_write_i16(buf, event->state);
     buffer_write_i32(buf, event->repeat_months_min);
@@ -43,7 +47,7 @@ void scenario_event_save_state(buffer *buf, scenario_event_t *event)
 
 void scenario_event_load_state(buffer *buf, scenario_event_t *event)
 {
-    buffer_read_i32(buf);
+    int saved_id = buffer_read_i32(buf);
     event->state = buffer_read_i16(buf);
     event->repeat_months_min = buffer_read_i32(buf);
     event->repeat_months_max = buffer_read_i32(buf);
@@ -60,6 +64,9 @@ void scenario_event_load_state(buffer *buf, scenario_event_t *event)
     if (!array_init(event->actions, SCENARIO_ACTIONS_ARRAY_SIZE_STEP, 0, action_in_use) ||
         !array_expand(event->actions, actions_count)) {
         log_error("Unable to create actions array. The game will now crash.", 0, 0);
+    }
+    if (event->id != saved_id) {
+        log_error("Loaded event id does not match what it was saved with. The game will likely crash. event->id: ", 0, event->id);
     }
 }
 
@@ -125,11 +132,6 @@ void scenario_event_link_action(scenario_event_t *event, scenario_action_t *acti
 void scenario_event_initialize_new(scenario_event_t *event, int position)
 {
     event->id = position;
-}
-
-int scenario_event_is_valid(const scenario_event_t *event)
-{
-    return event->state != EVENT_STATE_UNDEFINED;
 }
 
 

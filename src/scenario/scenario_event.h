@@ -15,7 +15,6 @@ scenario_action_t *scenario_event_get_action(scenario_event_t *event, int id);
 scenario_action_t *scenario_event_action_create(scenario_event_t *event, int type);
 void scenario_event_link_action(scenario_event_t *event, scenario_action_t *action);
 void scenario_event_initialize_new(scenario_event_t *event, int position);
-int scenario_event_is_valid(const scenario_event_t *event);
 
 
 int scenario_event_can_repeat(scenario_event_t *event);
