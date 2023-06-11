@@ -83,7 +83,7 @@ struct smacker_t {
 
     long frame_data_offset_in_file;
     long *frame_offsets;
-    size_t *frame_sizes;
+    int32_t *frame_sizes;
     uint8_t *frame_types;
 
     hufftree16 *mmap_tree;
@@ -436,10 +436,10 @@ static int read_header(smacker s)
 
 static int read_frame_info(smacker s)
 {
-    size_t sizes_length = sizeof(size_t) * s->frames;
+    int sizes_length = sizeof(int32_t) * s->frames;
     size_t types_length = sizeof(uint8_t) * s->frames;
 
-    s->frame_sizes = (size_t *) clear_malloc(sizes_length);
+    s->frame_sizes = (int32_t *) clear_malloc(sizes_length);
     s->frame_offsets = (long *) clear_malloc(sizeof(long) * s->frames);
     s->frame_types = (uint8_t *) clear_malloc(types_length);
 
