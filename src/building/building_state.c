@@ -341,7 +341,7 @@ static void read_type_data(buffer *buf, building *b, int version)
         b->data.monument.progress = buffer_read_i16(buf);
         b->data.monument.phase = buffer_read_i16(buf);
     } else if (b->type == BUILDING_DEPOT) {
-        b->data.depot.current_order.resource_type = buffer_read_i8(buf);
+        b->data.depot.current_order.resource_type = resource_remap(buffer_read_i8(buf));
         b->data.depot.current_order.src_storage_id = buffer_read_i32(buf);
         b->data.depot.current_order.dst_storage_id = buffer_read_i32(buf);
         b->data.depot.current_order.condition.condition_type = buffer_read_i8(buf);
