@@ -130,11 +130,11 @@ static void disable_finished(int *enabled, building_type menu_building_type, bui
 static void disable_if_no_enabled_submenu_items(int *enabled, int submenu)
 {
     for (int item = 0; item < BUILD_MENU_ITEM_MAX && MENU_BUILDING_TYPE[submenu][item]; item++) {
-        if (!is_building_type_allowed(MENU_BUILDING_TYPE[submenu][item])) {
-            *enabled = 0;
+        if (is_building_type_allowed(MENU_BUILDING_TYPE[submenu][item])) {
             return;
         }
     }
+    *enabled = 0;
 }
 
 static void enable_normal(int *enabled, building_type type)
