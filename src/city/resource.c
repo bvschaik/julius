@@ -246,8 +246,8 @@ void city_resource_calculate_warehouse_stocks(void)
         if (warehouse->has_road_access) {
             b->has_road_access = warehouse->has_road_access;
             if (b->subtype.warehouse_resource_id) {
-                int loads = b->loads_stored;
                 int resource = b->subtype.warehouse_resource_id;
+                int loads = b->resources[resource];
                 city_data.resource.stored_in_warehouses[resource] += loads;
                 city_data.resource.space_in_warehouses[resource] += 4 - loads;
             } else {
@@ -257,7 +257,7 @@ void city_resource_calculate_warehouse_stocks(void)
     }
 }
 
-void city_resource_determine_available(void)
+void city_resource_determine_available(int storable_only)
 {
     for (int i = 0; i < RESOURCE_MAX; i++) {
         available.resource_list.items[i] = 0;
@@ -271,6 +271,9 @@ void city_resource_determine_available(void)
     potential.food_list.size = 0;
 
     for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        if (!resource_is_storable(r)) {
+            continue;
+        }
         if (empire_can_produce_resource(r) || empire_can_import_resource(r)) {
             available.resource_list.items[available.resource_list.size++] = r;
             potential.resource_list.items[potential.resource_list.size++] = r;
@@ -285,6 +288,26 @@ void city_resource_determine_available(void)
             }
         }
     }
+    if (!storable_only) {
+        for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+            if (resource_is_storable(r)) {
+                continue;
+            }
+            if (empire_can_produce_resource(r) || empire_can_import_resource(r)) {
+                available.resource_list.items[available.resource_list.size++] = r;
+                potential.resource_list.items[potential.resource_list.size++] = r;
+                if (resource_is_food(r)) {
+                    available.food_list.items[available.food_list.size++] = r;
+                    potential.food_list.items[potential.food_list.size++] = r;
+                }
+            } else if (empire_can_produce_resource_potentially(r) || empire_can_import_resource_potentially(r)) {
+                potential.resource_list.items[potential.resource_list.size++] = r;
+                if (resource_is_food(r)) {
+                    potential.food_list.items[potential.food_list.size++] = r;
+                }
+            }
+        }
+    }
 }
 
 resource_type city_resource_ceres_temple_food(void)
@@ -293,7 +316,7 @@ resource_type city_resource_ceres_temple_food(void)
 
     // locally produced
     for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        if (can_produce_resource(r)) {
+        if (empire_can_produce_resource_locally(r)) {
             return r;
         }
         if (imported == RESOURCE_NONE && empire_can_import_resource_potentially(r)) {

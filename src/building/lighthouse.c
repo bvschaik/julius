@@ -15,12 +15,12 @@
 
 int building_lighthouse_enough_timber(building *lighthouse)
 {
-    return lighthouse->loads_stored > TIMBER_CONSUMPTION;
+    return lighthouse->resources[RESOURCE_TIMBER] > TIMBER_CONSUMPTION;
 }
 
 int building_lighthouse_get_storage_destination(building *lighthouse)
 {
-    if (lighthouse->loads_stored >= MAX_TIMBER) {
+    if (lighthouse->resources[RESOURCE_TIMBER] >= MAX_TIMBER) {
         return 0;
     }
 
@@ -54,7 +54,7 @@ void building_lighthouse_consume_timber(void)
 {
     if (building_monument_working(BUILDING_LIGHTHOUSE)) {
         building *b = building_get(building_find(BUILDING_LIGHTHOUSE));
-        if (b->loads_stored > 0) {
+        if (b->resources[RESOURCE_TIMBER] > 0) {
             trade_policy policy = city_trade_policy_get(SEA_TRADE_POLICY);
             int consume = TIMBER_CONSUMPTION;
 
@@ -62,10 +62,10 @@ void building_lighthouse_consume_timber(void)
                 consume = calc_adjust_with_percentage(consume, 100 + POLICY_3_MALUS_PERCENT);
             }
 
-            if (b->loads_stored - consume < 0) {
-                b->loads_stored = 0;
+            if (b->resources[RESOURCE_TIMBER] - consume < 0) {
+                b->resources[RESOURCE_TIMBER] = 0;
             } else {
-                b->loads_stored -= consume;
+                b->resources[RESOURCE_TIMBER] -= consume;
             }
         }
         set_lighthouse_graphic(b);

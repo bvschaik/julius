@@ -38,6 +38,8 @@ int scenario_condition_type_building_count_active_met(const scenario_condition_t
             total_active_count += building_count_active(BUILDING_TIMBER_YARD);
             total_active_count += building_count_active(BUILDING_CLAY_PIT);
             total_active_count += building_count_active(BUILDING_GOLD_MINE);
+            total_active_count += building_count_active(BUILDING_STONE_QUARRY);
+            total_active_count += building_count_active(BUILDING_SAND_PIT);
             break;
         case BUILDING_MENU_WORKSHOPS:
             total_active_count += building_count_active(BUILDING_WINE_WORKSHOP);
@@ -45,6 +47,8 @@ int scenario_condition_type_building_count_active_met(const scenario_condition_t
             total_active_count += building_count_active(BUILDING_WEAPONS_WORKSHOP);
             total_active_count += building_count_active(BUILDING_FURNITURE_WORKSHOP);
             total_active_count += building_count_active(BUILDING_POTTERY_WORKSHOP);
+            total_active_count += building_count_active(BUILDING_CONCRETE_MAKER);
+            total_active_count += building_count_active(BUILDING_BRICKWORKS);
             total_active_count += building_count_active(BUILDING_CITY_MINT);
             break;
         case BUILDING_MENU_SMALL_TEMPLES:

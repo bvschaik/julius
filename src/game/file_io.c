@@ -255,7 +255,7 @@ typedef struct {
         int static_building_counts;
         int visited_buildings;
     } features;
-} savegame_version_t_data;
+} savegame_version_data;
 
 static struct {
     int num_pieces;
@@ -335,7 +335,7 @@ static void init_scenario_data(scenario_version_t version)
     state->random_iv = create_scenario_piece(8, 0);
     state->camera = create_scenario_piece(8, 0);
 
-    int scenario_piece_size = scenario_get_state_buffer_size_by_scenario_version_t(version);
+    int scenario_piece_size = scenario_get_state_buffer_size_by_scenario_version(version);
     state->scenario = create_scenario_piece(scenario_piece_size, 0);
     if (version > SCENARIO_LAST_NO_EXTENDED_REQUESTS) {
         state->scenario_requests = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
@@ -357,7 +357,7 @@ static void init_scenario_data(scenario_version_t version)
     state->end_marker = create_scenario_piece(4, 0);
 }
 
-static void get_version_data(savegame_version_t_data *version_data, savegame_version_t version)
+static void get_version_data(savegame_version_data *version_data, savegame_version_t version)
 {
     int multiplier = 1;
     int count_multiplier = 1;
@@ -429,7 +429,7 @@ static void get_version_data(savegame_version_t_data *version_data, savegame_ver
     version_data->features.monument_deliveries = version > SAVE_GAME_LAST_NO_DELIVERIES_VERSION;
     version_data->features.barracks_tower_sentry_request = version <= SAVE_GAME_LAST_BARRACKS_TOWER_SENTRY_REQUEST;
 
-    version_data->piece_sizes.scenario = scenario_get_state_buffer_size_by_savegame_version_t(version);
+    version_data->piece_sizes.scenario = scenario_get_state_buffer_size_by_savegame_version(version);
     if (version <= SAVE_GAME_LAST_UNVERSIONED_SCENARIOS) {
         version_data->features.custom_empires = 0;
     } else {
@@ -471,7 +471,7 @@ static void init_savegame_data(savegame_version_t version)
 {
     clear_savegame_pieces();
 
-    savegame_version_t_data version_data;
+    savegame_version_data version_data;
     get_version_data(&version_data, version);
 
     savegame_state *state = &savegame_data.state;
@@ -749,9 +749,7 @@ static void savegame_load_from_state(savegame_state *state, savegame_version_t v
     building_storage_load_state(state->building_storages, version);
     scenario_gladiator_revolt_load_state(state->gladiator_revolt);
     trade_routes_load_state(state->trade_route_limit, state->trade_route_traded, version);
-    if (version <= SAVE_GAME_LAST_NO_GOLD_AND_MINTING) {
-        empire_city_update_gold_trading();
-    }
+    empire_city_update_trading_data(version);
     map_routing_load_state(state->routing_counters);
     enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
     scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
@@ -861,7 +859,7 @@ static void savegame_save_to_state(savegame_state *state)
     figure_visited_buildings_save_state(state->visited_buildings);
 }
 
-static int get_scenario_version_t(FILE *fp)
+static int get_scenario_version(FILE *fp)
 {
     char version_magic[8];
     size_t read = fread(version_magic, 1, 8, fp);
@@ -971,7 +969,7 @@ static int load_scenario_to_buffers(const char *filename, scenario_version_t *ve
     if (!fp) {
         return 0;
     }
-    *version = get_scenario_version_t(fp);
+    *version = get_scenario_version(fp);
     init_scenario_data(*version);
     if (*version > SCENARIO_CURRENT_VERSION) {
         log_error("Scenario version incompatible with current version, got version", 0, *version);
@@ -1187,7 +1185,7 @@ static void savegame_write_to_file(FILE *fp, memory_block *compress_buffer)
     }
 }
 
-static int get_savegame_version_ts(FILE *fp, savegame_version_t *save_version, resource_version_t *resource_version)
+static int get_savegame_versions(FILE *fp, savegame_version_t *save_version, resource_version_t *resource_version)
 {
     buffer buf;
     uint8_t data[4];
@@ -1228,7 +1226,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     int result = 0;
     savegame_version_t save_version;
     resource_version_t resource_version;
-    if (get_savegame_version_ts(fp, &save_version, &resource_version)) {
+    if (get_savegame_versions(fp, &save_version, &resource_version)) {
         if (save_version > SAVE_GAME_CURRENT_VERSION || resource_version > RESOURCE_CURRENT_VERSION) {
             log_error("Newer save game version than supported. Please update Augustus. Version:", 0, save_version);
             file_close(fp);
@@ -1318,7 +1316,7 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
 {
     clear_savegame_pieces();
 
-    savegame_version_t_data version_data;  
+    savegame_version_data version_data;  
     get_version_data(&version_data, version);
 
     file_piece scenario_version_data;
@@ -1506,7 +1504,7 @@ int game_file_io_read_saved_game_info(const char *filename, saved_game_info *inf
     savegame_version_t save_version;
     resource_version_t resource_version;
 
-    if (!get_savegame_version_ts(fp, &save_version, &resource_version)) {
+    if (!get_savegame_versions(fp, &save_version, &resource_version)) {
         file_close(fp);
         return SAVEGAME_STATUS_INVALID;
     }

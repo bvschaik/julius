@@ -168,34 +168,34 @@
 	<image id="Concrete_Maker_C_ON" width="118" height="75" isometric="true">
 		<layer group="this" image="Concrete_Maker_C_OFF"/>
 		<animation speed="6" x="16" y="16" reversible="false">
-			<frame group="this" image="Concrete_Maker_ON_01"/>
-			<frame group="this" image="Concrete_Maker_ON_02"/>
-			<frame group="this" image="Concrete_Maker_ON_03"/>
-			<frame group="this" image="Concrete_Maker_ON_04"/>
-			<frame group="this" image="Concrete_Maker_ON_05"/>
-			<frame group="this" image="Concrete_Maker_ON_06"/>
+			<frame src="Concrete_Maker_ON_01"/>
+			<frame src="Concrete_Maker_ON_02"/>
+			<frame src="Concrete_Maker_ON_03"/>
+			<frame src="Concrete_Maker_ON_04"/>
+			<frame src="Concrete_Maker_ON_05"/>
+			<frame src="Concrete_Maker_ON_06"/>
 		</animation>
 	</image>
 	<image id="Concrete_Maker_N_ON" width="118" height="75" isometric="true">
 		<layer group="this" image="Concrete_Maker_N_OFF"/>
 		<animation speed="6" x="16" y="16" reversible="false">
-			<frame group="this" image="Concrete_Maker_ON_01"/>
-			<frame group="this" image="Concrete_Maker_ON_02"/>
-			<frame group="this" image="Concrete_Maker_ON_03"/>
-			<frame group="this" image="Concrete_Maker_ON_04"/>
-			<frame group="this" image="Concrete_Maker_ON_05"/>
-			<frame group="this" image="Concrete_Maker_ON_06"/>
+			<frame src="Concrete_Maker_ON_01"/>
+			<frame src="Concrete_Maker_ON_02"/>
+			<frame src="Concrete_Maker_ON_03"/>
+			<frame src="Concrete_Maker_ON_04"/>
+			<frame src="Concrete_Maker_ON_05"/>
+			<frame src="Concrete_Maker_ON_06"/>
 		</animation>
 	</image>
 	<image id="Concrete_Maker_S_ON" width="118" height="75" isometric="true">
 		<layer group="this" image="Concrete_Maker_S_OFF"/>
 		<animation speed="6" x="16" y="16" reversible="false">
-			<frame group="this" image="Concrete_Maker_ON_01"/>
-			<frame group="this" image="Concrete_Maker_ON_02"/>
-			<frame group="this" image="Concrete_Maker_ON_03"/>
-			<frame group="this" image="Concrete_Maker_ON_04"/>
-			<frame group="this" image="Concrete_Maker_ON_05"/>
-			<frame group="this" image="Concrete_Maker_ON_06"/>
+			<frame src="Concrete_Maker_ON_01"/>
+			<frame src="Concrete_Maker_ON_02"/>
+			<frame src="Concrete_Maker_ON_03"/>
+			<frame src="Concrete_Maker_ON_04"/>
+			<frame src="Concrete_Maker_ON_05"/>
+			<frame src="Concrete_Maker_ON_06"/>
 		</animation>
 	</image>
 	<!-- Note: Concrete Cart -->
@@ -263,23 +263,6 @@
 	<image id="Concrete_Cart_Getting_N" width="39" height="39">
 		<layer group="97" image="7" x="0" y="0"/>
 		<layer src="Concrete_Cart_Getting_N" x="0" y="0"/>
-	</image>
-	<!-- Note: Concrete Warehouse Tiles -->
-	<image id="Warehouse_concrete_01" width="58" height="45" isometric="true">
-		<layer group="83" image="0" x="0" y="4"/>
-		<layer src="Warehouse_Concrete_01" x="20" y="12"/>
-	</image>
-	<image id="Warehouse_concrete_02" width="58" height="45" isometric="true">
-		<layer group="83" image="0" x="0" y="4"/>
-		<layer src="Warehouse_Concrete_02" x="20" y="7"/>
-	</image>
-	<image id="Warehouse_concrete_03" width="58" height="45" isometric="true">
-		<layer group="83" image="0" x="0" y="4"/>
-		<layer src="Warehouse_Concrete_03" x="18" y="0"/>
-	</image>
-	<image id="Warehouse_concrete_04" width="58" height="45" isometric="true">
-		<layer group="83" image="0" x="0" y="4"/>
-		<layer src="Warehouse_Concrete_04" x="4" y="0"/>
 	</image>
 	<!-- Note: Gold Mine OFF - Climate Variants -->
 	<image id="Gold_Mine_C_OFF" width="118" height="67" isometric="true">
@@ -612,9 +595,9 @@
 		<layer src="Warehouse_Silver_04" x="9" y="1"/>
 	</image>
 	<!-- Note: Plain Stone Quarry OFF - Climate Variants -->
-	<image id="Stone_Quarry_C_OFF" src="Stone_Quarry_C_OFF" width="118" height="62" isometric="true"/>
-	<image id="Stone_Quarry_N_OFF" src="Stone_Quarry_N_OFF" width="118" height="62" isometric="true"/>
-	<image id="Stone_Quarry_S_OFF" src="Stone_Quarry_S_OFF" width="118" height="62" isometric="true"/>
+	<image id="Stone_Quarry_C_OFF" src="Stone_Quarry_C_OFF" width="118" height="60" isometric="true"/>
+	<image id="Stone_Quarry_N_OFF" src="Stone_Quarry_N_OFF" width="118" height="60" isometric="true"/>
+	<image id="Stone_Quarry_S_OFF" src="Stone_Quarry_S_OFF" width="118" height="60" isometric="true"/>
 	<!-- Note: Plain Stone Quarry ON animation reference DO NOT USE! -->
 	<image id="Stone_Quarry_ON_01" width="48" height="49">
 		<layer src="Stone_Quarry_ON_Base" x="0" y="0"/>
@@ -645,7 +628,7 @@
 		<layer src="Stone_Quarry_ON" x="32" y="21"/>
 	</image>
 	<!-- Note: Plain Stone Quarry ON - Climate Variants -->
-	<image id="Stone_Quarry_C_ON" width="118" height="62" isometric="true">
+	<image id="Stone_Quarry_C_ON" width="118" height="60" isometric="true">
 		<layer group="this" image="Stone_Quarry_C_OFF"/>
 		<animation speed="10" x="18" y="-15" reversible="true">
 			<frame group="this" image="Stone_Quarry_ON_01"/>
@@ -657,7 +640,7 @@
 			<frame group="this" image="Stone_Quarry_ON_07"/>
 		</animation>
 	</image>
-	<image id="Stone_Quarry_N_ON" width="118" height="62" isometric="true">
+	<image id="Stone_Quarry_N_ON" width="118" height="60" isometric="true">
 		<layer group="this" image="Stone_Quarry_N_OFF"/>
 		<animation speed="10" x="18" y="-15" reversible="true">
 			<frame group="this" image="Stone_Quarry_ON_01"/>
@@ -669,7 +652,7 @@
 			<frame group="this" image="Stone_Quarry_ON_07"/>
 		</animation>
 	</image>
-	<image id="Stone_Quarry_S_ON" width="118" height="62" isometric="true">
+	<image id="Stone_Quarry_S_ON" width="118" height="60" isometric="true">
 		<layer group="this" image="Stone_Quarry_S_OFF"/>
 		<animation speed="10" x="18" y="-15" reversible="true">
 			<frame group="this" image="Stone_Quarry_ON_01"/>

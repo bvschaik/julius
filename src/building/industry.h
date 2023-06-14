@@ -2,6 +2,7 @@
 #define BUILDING_INDUSTRY_H
 
 #include "building/building.h"
+#include "game/resource.h"
 #include "map/point.h"
 
 #define BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN 20
@@ -9,6 +10,11 @@
 int building_is_farm(building_type type);
 int building_is_raw_resource_producer(building_type type);
 int building_is_workshop(building_type type);
+
+int building_get_raw_materials_for_workshop(resource_supply_chain *chain, building_type type);
+int building_get_required_raw_amount_for_production(building_type type, int resource);
+int building_industry_has_raw_materials_for_production(const building *b);
+
 /** Returns 0-100 representing building efficiency, or -1 if building type does
  * not have efficiency. Wharfs are calculated against an arbitrary benchmark. */
 int building_get_efficiency(const building *b);
@@ -20,6 +26,7 @@ int building_industry_get_max_progress(const building *b);
 int building_stockpiling_enabled(building *b);
 int building_industry_has_produced_resource(building *b);
 void building_industry_start_new_production(building *b);
+int building_loads_stored(const building *b);
 
 void building_bless_farms(void);
 void building_curse_farms(int big_curse);

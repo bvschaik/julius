@@ -58,7 +58,7 @@ void city_overlay_problems_prepare_building(building *b)
     } else if (building_is_workshop(b->type)) {
         if (is_problem_cartpusher(b->figure_id)) {
             b->show_on_problem_overlay = 1;
-        } else if (b->loads_stored <= 0) {
+        } else if (!building_industry_has_raw_materials_for_production(b)) {
             b->show_on_problem_overlay = 1;
         }
     } else if ((b->type == BUILDING_THEATER || b->type == BUILDING_AMPHITHEATER || b->type == BUILDING_ARENA ||
@@ -285,7 +285,7 @@ static int get_tooltip_problems(tooltip_context *c, const building *b)
     } else if (building_is_workshop(b->type)) {
         if (is_problem_cartpusher(b->figure_id)) {
             c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_CARTPUSHER;
-        } else if (b->loads_stored <= 0) {
+        } else if (!building_industry_has_raw_materials_for_production(b)) {
             c->translation_key = TR_TOOLTIP_OVERLAY_PROBLEMS_NO_RESOURCES;
         }
     } else if (b->type == BUILDING_THEATER && !b->data.entertainment.days1) {

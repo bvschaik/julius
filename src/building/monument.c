@@ -38,10 +38,10 @@ typedef struct {
 static const monument_type grand_temple = {
     .phases    = 6,
     .resources = {
-        { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 20 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8, [RESOURCE_MARBLE] = 20 },
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 20 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8, [RESOURCE_CONCRETE] = 20 },
         { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8, [RESOURCE_MARBLE] = 16 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8, [RESOURCE_CLAY] = 28, [RESOURCE_MARBLE] = 12 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_BRICKS] = 28, [RESOURCE_MARBLE] = 12 },
         { [ARCHITECTS] = 4 },
         { NOTHING }
     }
@@ -50,10 +50,10 @@ static const monument_type grand_temple = {
 static const monument_type pantheon = {
     .phases    = 6,
     .resources = {
-        { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 16 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_MARBLE] = 16 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_MARBLE] = 32 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 32, [RESOURCE_CLAY] = 40, [RESOURCE_MARBLE] = 32 },
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 20 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_STONE] = 20 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_CONCRETE] = 40 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_MARBLE] = 32, [RESOURCE_GOLD] = 16 },
         { [ARCHITECTS] = 4 },
         { NOTHING }
     }
@@ -62,10 +62,10 @@ static const monument_type pantheon = {
 static const monument_type lighthouse = {
     .phases    = 5,
     .resources = {
-        { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 12 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_MARBLE] = 12 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_MARBLE] = 8 },
-        { [ARCHITECTS] = 4, [RESOURCE_TIMBER] = 8,  [RESOURCE_CLAY] = 20, [RESOURCE_MARBLE] = 8 },
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 16 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_STONE] = 16 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_STONE] = 12 },
+        { [ARCHITECTS] = 4, [RESOURCE_TIMBER] = 8,  [RESOURCE_BRICKS] = 20, [RESOURCE_STONE] = 12 },
         { NOTHING }
     }
 };
@@ -73,10 +73,10 @@ static const monument_type lighthouse = {
 static const monument_type colosseum = {
     .phases    = 5,
     .resources = {
-        { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 12 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_MARBLE] = 16 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 12, [RESOURCE_MARBLE] = 16 },
-        { [ARCHITECTS] = 4, [RESOURCE_TIMBER] = 12, [RESOURCE_CLAY] = 16, [RESOURCE_MARBLE] = 12 },
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 12 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8,  [RESOURCE_CONCRETE] = 16 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 12, [RESOURCE_STONE] = 16 },
+        { [ARCHITECTS] = 4, [RESOURCE_TIMBER] = 12, [RESOURCE_BRICKS] = 16, [RESOURCE_MARBLE] = 20 },
         { NOTHING }
     }
 };
@@ -84,10 +84,10 @@ static const monument_type colosseum = {
 static const monument_type hippodrome = {
     .phases    = 5,
     .resources = {
-        { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 32 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_MARBLE] = 32 },
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_MARBLE] = 32 },
-        { [ARCHITECTS] = 4, [RESOURCE_TIMBER] = 32, [RESOURCE_CLAY] = 46, [RESOURCE_MARBLE] = 32 },
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 32 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_CONCRETE] = 32 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 16, [RESOURCE_STONE] = 32 },
+        { [ARCHITECTS] = 4, [RESOURCE_TIMBER] = 32, [RESOURCE_BRICKS] = 32, [RESOURCE_MARBLE] = 48 },
         { NOTHING }
     }
 };
@@ -110,9 +110,10 @@ static const monument_type large_temple_nymphaeum_and_large_mausuleum = {
 
 
 static const monument_type caravanserai = {
-    .phases    = 2,
+    .phases    = 3,
     .resources = {
-        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 6, [RESOURCE_CLAY] = 8, [RESOURCE_MARBLE] = 6 },
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 12 },
+        { [ARCHITECTS] = 1, [RESOURCE_TIMBER] = 8, [RESOURCE_BRICKS] = 12, [RESOURCE_STONE] = 12 },
         { NOTHING }
     }
 };
@@ -246,8 +247,7 @@ int building_monument_add_module(building *b, int module)
     return 1;
 }
 
-int building_monument_get_monument(int x, int y, int resource, int road_network_id,
-    int distance_from_entry, map_point *dst)
+int building_monument_get_monument(int x, int y, int resource, int road_network_id, map_point *dst)
 {
     if (city_resource_is_stockpiled(resource)) {
         return 0;
@@ -322,8 +322,7 @@ void building_monument_set_phase(building *b, int phase)
     if (b->data.monument.phase != MONUMENT_FINISHED) {
         for (int resource = 0; resource < RESOURCE_MAX; resource++) {
             b->resources[resource] =
-                building_monument_resources_needed_for_monument_type(b->type, resource,
-                b->data.monument.phase);
+                building_monument_resources_needed_for_monument_type(b->type, resource, b->data.monument.phase);
         }
     }
 }
@@ -599,12 +598,20 @@ int building_monument_working(building_type type)
     return monument_id;
 }
 
+int building_monument_requires_resource(building_type type, int resource)
+{
+    int phases = building_monument_phases(type);
+    for (int phase = 1; phase < phases; phase++) {
+        if (building_monument_resources_needed_for_monument_type(type, resource, phase) > 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
 int building_monument_has_required_resources_to_build(building_type type)
 {
     int phases = building_monument_phases(type);
-    if (!phases) {
-        return 1;
-    }
     for (int phase = 1; phase < phases; phase++) {
         for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
             if (building_monument_resources_needed_for_monument_type(type, r, phase) > 0 &&

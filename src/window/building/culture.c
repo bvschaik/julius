@@ -555,10 +555,10 @@ static void draw_grand_temple_venus_wine(building_info_context *c)
     image_draw(resource_get_data(RESOURCE_WINE)->image.icon, c->x_offset + 24, c->y_offset + y - 5,
         COLOR_MASK_NONE, SCALE_NONE);
     building *b = building_get(c->building_id);
-    if (b->loads_stored < 1) {
+    if (b->resources[RESOURCE_WINE] < 1) {
         lang_text_draw_amount(8, 10, 0, c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
     } else {
-        lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 10, b->resources[RESOURCE_WINE], c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
     }
 
 }
@@ -570,10 +570,10 @@ static void draw_grand_temple_mars_military(building_info_context *c)
     image_draw(resource_get_data(RESOURCE_WEAPONS)->image.icon, c->x_offset + 24, c->y_offset + y - 5,
         COLOR_MASK_NONE, SCALE_NONE);
     building *b = building_get(c->building_id);
-    if (b->loads_stored < 1) {
+    if (b->resources[RESOURCE_WEAPONS] < 1) {
         lang_text_draw_amount(8, 10, 0, c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
     } else {
-        lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 10, b->resources[RESOURCE_WEAPONS], c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
     }
 
     lang_text_draw(50, 21, c->x_offset + 236, c->y_offset + y, FONT_NORMAL_BLACK); // "Priority"
@@ -1046,10 +1046,10 @@ void window_building_draw_lighthouse(building_info_context *c)
         image_draw(resource_get_data(RESOURCE_TIMBER)->image.icon, c->x_offset + 22, c->y_offset + 46,
             COLOR_MASK_NONE, SCALE_NONE);
         int width = lang_text_draw(125, 12, c->x_offset + 50, c->y_offset + 50, FONT_NORMAL_BLACK);
-        if (b->loads_stored < 1) {
+        if (b->resources[RESOURCE_TIMBER] < 1) {
             lang_text_draw_amount(8, 10, 0, c->x_offset + 50 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
         } else {
-            lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 50 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
+            lang_text_draw_amount(8, 10, b->resources[RESOURCE_TIMBER], c->x_offset + 50 + width, c->y_offset + 50, FONT_NORMAL_BLACK);
         }
 
         if (building_monument_has_labour_problems(b)) {

@@ -148,7 +148,7 @@ static void state_offsets_init(int scenario_version)
     state_offsets.end = next_start_offset;
 }
 
-int scenario_get_state_buffer_size_by_savegame_version_t(int savegame_version)
+int scenario_get_state_buffer_size_by_savegame_version(int savegame_version)
 {
     if (savegame_version <= SAVE_GAME_LAST_UNVERSIONED_SCENARIOS) {
         return 1720;
@@ -164,7 +164,7 @@ int scenario_get_state_buffer_size_by_savegame_version_t(int savegame_version)
     }
 }
 
-int scenario_get_state_buffer_size_by_scenario_version_t(int scenario_version)
+int scenario_get_state_buffer_size_by_scenario_version(int scenario_version)
 {
     if (scenario_version <= SCENARIO_LAST_UNVERSIONED) {
         return 1720;
@@ -178,7 +178,7 @@ int scenario_get_state_buffer_size_by_scenario_version_t(int scenario_version)
 
 void scenario_save_state(buffer *buf)
 {
-    int buf_size = scenario_get_state_buffer_size_by_scenario_version_t(SCENARIO_CURRENT_VERSION);
+    int buf_size = scenario_get_state_buffer_size_by_scenario_version(SCENARIO_CURRENT_VERSION);
     uint8_t *buf_data = malloc(buf_size);
     buffer_init(buf, buf_data, buf_size);
     

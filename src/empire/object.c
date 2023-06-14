@@ -517,7 +517,7 @@ void empire_object_set_expanded(int object_id, int new_city_type)
 int empire_object_city_buys_resource(int object_id, int resource)
 {
     const full_empire_object *object = array_item(objects, object_id);
-    if (object->city_buys_resource[resource]) {
+    if (object->city_buys_resource[resource] && resource_is_storable(resource)) {
         return 1;
     }
     return 0;
@@ -526,7 +526,7 @@ int empire_object_city_buys_resource(int object_id, int resource)
 int empire_object_city_sells_resource(int object_id, int resource)
 {
     const full_empire_object *object = array_item(objects, object_id);
-    if (object->city_sells_resource[resource]) {
+    if (object->city_sells_resource[resource] && resource_is_storable(resource)) {
         return 1;
     }
     return 0;

@@ -45,6 +45,7 @@ static struct {
     int id;
     editor_request request;
     int focus_button_id;
+    resource_type avaialble_resources[RESOURCE_MAX];
 } data;
 
 static void init(int id)
@@ -146,7 +147,7 @@ static void button_amount(int param1, int param2)
 
 static void set_resource(int value)
 {
-    data.request.resource = value;
+    data.request.resource = data.avaialble_resources[value];
     if (data.request.amount > 999) {
         data.request.amount = 999;
     }
@@ -155,11 +156,16 @@ static void set_resource(int value)
 static void button_resource(int param1, int param2)
 {
     static const uint8_t *resource_texts[RESOURCE_MAX + 1];
-    for (resource_type resource = RESOURCE_NONE; resource <= RESOURCE_MAX; resource++) {
-        resource_texts[resource] = resource_get_data(resource)->text;
+    static int total_resources = 0;
+    if (!total_resources) {
+        for (resource_type resource = RESOURCE_NONE; resource <= RESOURCE_MAX; resource++) {
+            resource_texts[total_resources] = resource_get_data(resource)->text;
+            data.avaialble_resources[total_resources] = resource;
+            total_resources++;
+        }
     }
     window_select_list_show_text(screen_dialog_offset_x() + 210, screen_dialog_offset_y() + 40,
-        resource_texts, RESOURCE_MAX + 1, set_resource);
+        resource_texts, total_resources + 1, set_resource);
 }
 
 static void set_deadline_years(int value)

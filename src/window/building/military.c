@@ -118,10 +118,10 @@ void window_building_draw_barracks(building_info_context *c)
         COLOR_MASK_NONE, SCALE_NONE);
 
     building *b = building_get(c->building_id);
-    if (b->loads_stored < 1) {
+    if (b->resources[RESOURCE_WEAPONS] < 1) {
         lang_text_draw_amount(8, 10, 0, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
     } else {
-        lang_text_draw_amount(8, 10, b->loads_stored, c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
+        lang_text_draw_amount(8, 10, b->resources[RESOURCE_WEAPONS], c->x_offset + 92, c->y_offset + 44, FONT_NORMAL_BLACK);
     }
 
     if (!c->has_road_access) {
@@ -132,7 +132,7 @@ void window_building_draw_barracks(building_info_context *c)
         window_building_draw_description_at(c, 70, 136, 4);
     } else {
         int offset = 0;
-        if (b->loads_stored > 0) {
+        if (b->resources[RESOURCE_WEAPONS] > 0) {
             offset = 4;
         }
         if (city_data.mess_hall.food_stress_cumulative > 50) {

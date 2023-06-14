@@ -36,10 +36,18 @@ int building_is_raw_resource_producer(building_type type)
     return resource_is_raw_material(resource_get_from_industry(type));
 }
 
-int building_is_workshop(building_type type)
+int building_get_raw_materials_for_workshop(resource_supply_chain *chain, building_type type)
 {
     resource_type good = resource_get_from_industry(type);
-    return good != RESOURCE_NONE && resource_get_raw_materials_for_good(good) != 0;
+    if (good == RESOURCE_NONE) {
+        return 0;
+    }
+    return resource_get_supply_chain_for_good(chain, good);
+}
+
+int building_is_workshop(building_type type)
+{
+    return building_get_raw_materials_for_workshop(0, type) > 0;
 }
 
 int building_get_efficiency(const building *b)
@@ -132,8 +140,8 @@ static void update_venus_gt_production(void)
     venus_gt->data.monument.progress += (10 + (city_data.culture.population_with_venus_access /
         MAX_PROGRESS_VENUS_GT / 2));
     if (venus_gt->data.monument.progress > MAX_PROGRESS_VENUS_GT) {
-        if (venus_gt->loads_stored < MAX_STORAGE) {
-            venus_gt->loads_stored += 1;
+        if (venus_gt->resources[RESOURCE_WINE] < MAX_STORAGE) {
+            venus_gt->resources[RESOURCE_WINE] += 1;
         }
         venus_gt->data.monument.progress = venus_gt->data.monument.progress - MAX_PROGRESS_VENUS_GT;
     }
@@ -155,7 +163,8 @@ static void update_city_mint_production(int new_day)
         return;
     }
 
-    if (b->loads_stored < BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN && b->output_resource_id == RESOURCE_DENARII) {
+    if (b->resources[RESOURCE_GOLD] < BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN &&
+        b->output_resource_id == RESOURCE_DENARII) {
         return;
     }
 
@@ -200,13 +209,23 @@ static void update_city_mint_production(int new_day)
         }
         city_data.emperor.personal_savings += minted_personal_funds;
         city_finance_treasury_add_miscellaneous(DENARII_MINTED_PER_PRODUCTION - minted_personal_funds);
-        if (b->loads_stored >= BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN) {
-            b->loads_stored -= BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN;
-            if (b->loads_stored >= BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN) {
+        if (b->resources[RESOURCE_GOLD] >= BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN) {
+            b->resources[RESOURCE_GOLD] -= BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN;
                 b->data.industry.has_raw_materials = 1;
-            }
         }
     }
+}
+
+int building_industry_has_raw_materials_for_production(const building *b)
+{
+    resource_supply_chain chain[RESOURCE_SUPPLY_CHAIN_MAX_SIZE];
+    int num_raw_materials = building_get_raw_materials_for_workshop(chain, b->type);
+    for (int i = 0; i < num_raw_materials; i++) {
+        if (b->resources[chain[i].raw_material] < chain[i].raw_amount) {
+            return 0;
+        }
+    }
+    return 1;
 }
 
 void building_industry_update_production(int new_day)
@@ -215,6 +234,7 @@ void building_industry_update_production(int new_day)
 
     for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
         building_type type = resource_get_data(r)->industry;
+        int is_storable = resource_is_storable(r);
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state != BUILDING_STATE_IN_USE) {
                 continue;
@@ -244,7 +264,13 @@ void building_industry_update_production(int new_day)
                 continue;
             }
 
-            if (building_is_workshop(b->type) && !b->loads_stored) {
+            if (!building_industry_has_raw_materials_for_production(b)) {
+                continue;
+            }
+
+            if (!is_storable && b->data.industry.progress == 0 &&
+                !building_has_workshop_for_raw_material_with_room(r, b->road_network_id) &&
+                !building_monument_get_monument(b->x, b->y, r, b->road_network_id, 0)) {
                 continue;
             }
 
@@ -292,7 +318,7 @@ int building_industry_has_produced_resource(building *b)
         if (b->output_resource_id != RESOURCE_GOLD) {
             return 0;
         }
-        if (b->loads_stored >= RESOURCE_ONE_LOAD) {
+        if (b->resources[RESOURCE_GOLD] >= RESOURCE_ONE_LOAD) {
             return 1;
         }
     }
@@ -305,16 +331,27 @@ void building_industry_start_new_production(building *b)
         b->data.industry.production_current_month += 100;
         b->data.industry.progress = 0;
     }
-    int loads_when_complete = b->type == BUILDING_CITY_MINT ? RESOURCE_ONE_LOAD : 1;
-    if (building_is_workshop(b->type) && b->loads_stored >= loads_when_complete) {
-        if (b->loads_stored > loads_when_complete) {
-            b->data.industry.has_raw_materials = 1;
+    resource_supply_chain chain[RESOURCE_SUPPLY_CHAIN_MAX_SIZE];
+    int num_raw_materials = building_get_raw_materials_for_workshop(chain, b->type);
+    int has_raw_materials = building_industry_has_raw_materials_for_production(b);
+    if (has_raw_materials) {
+        for (int i = 0; i < num_raw_materials; i++) {
+            b->resources[chain[i].raw_material] -= chain[i].raw_amount;
         }
-        b->loads_stored -= loads_when_complete;
     }
+    b->data.industry.has_raw_materials = has_raw_materials;
     if (building_is_farm(b->type)) {
         update_farm_image(b);
     }
+}
+
+int building_loads_stored(const building *b)
+{
+    int amount = 0;
+    for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+        amount += b->resources[r];
+    }
+    return amount;
 }
 
 void building_bless_farms(void)
@@ -337,26 +374,25 @@ void building_bless_farms(void)
 
 void building_bless_industry(void)
 {
-    for (resource_type r = RESOURCE_MIN_NON_FOOD; r < RESOURCE_MAX_NON_FOOD; r++) {
+    for (resource_type r = RESOURCE_MIN_NON_FOOD; r <= RESOURCE_DENARII; r++) {
         building_type type = resource_get_data(r)->industry;
-        if (!building_is_workshop(type)) {
+        resource_supply_chain chain[RESOURCE_SUPPLY_CHAIN_MAX_SIZE];
+        int num_resources = resource_get_supply_chain_for_good(chain, r);
+        if (num_resources == 0) {
             continue;
         }
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (b->state == BUILDING_STATE_IN_USE && b->loads_stored) {
-                if (b->loads_stored < MERCURY_BLESSING_LOADS) {
-                    b->loads_stored = MERCURY_BLESSING_LOADS;
-                }
-                b->data.industry.progress = building_industry_get_max_progress(b);
+            if (b->state != BUILDING_STATE_IN_USE || b->output_resource_id != r) {
+                continue;
             }
+            for (int i = 0; i < num_resources; i++) {
+                if (b->resources[chain[i].raw_material] > 0 &&
+                    b->resources[chain[i].raw_material] < MERCURY_BLESSING_LOADS * chain[i].raw_amount) {
+                    b->resources[chain[i].raw_material] = MERCURY_BLESSING_LOADS * chain[i].raw_amount;
+                }
+            }
+            b->data.industry.progress = building_industry_get_max_progress(b);
         }
-    }
-    building *city_mint = building_first_of_type(BUILDING_CITY_MINT);
-    if (city_mint && city_mint->state == BUILDING_STATE_IN_USE && city_mint->loads_stored > 0) {
-        if (city_mint->loads_stored < MERCURY_BLESSING_LOADS * RESOURCE_ONE_LOAD) {
-            city_mint->loads_stored = MERCURY_BLESSING_LOADS * RESOURCE_ONE_LOAD;
-        }
-        city_mint->data.industry.progress = building_industry_get_max_progress(city_mint);
     }
 }
 
@@ -383,16 +419,17 @@ void building_curse_farms(int big_curse)
     }
 }
 
-static int is_valid_raw_material_for_building(building_type type, resource_type raw_material)
+int building_get_required_raw_amount_for_production(building_type type, int raw_material)
 {
     resource_type good = resource_get_from_industry(type);
     if (good == RESOURCE_NONE) {
         return 0;
     }
-    const resource_type *raw_materials = resource_get_raw_materials_for_good(good);
-    for (int i = 0; raw_materials[i] != RESOURCE_NONE; i++) {
-        if (raw_materials[i] == raw_material) {
-            return 1;
+    resource_supply_chain chain[RESOURCE_SUPPLY_CHAIN_MAX_SIZE];
+    int num_resources = resource_get_supply_chain_for_good(chain, good);
+    for (int i = 0; i < num_resources; i++) {
+        if (chain[i].raw_material == raw_material) {
+            return chain[i].raw_amount;
         }
     }
     return 0;
@@ -403,25 +440,21 @@ void building_workshop_add_raw_material(building *b, int resource)
     if (!b->id) {
         return;
     }
-    if (b->type == BUILDING_CITY_MINT && resource == RESOURCE_GOLD) {
-        b->loads_stored += RESOURCE_ONE_LOAD;
-    } else if (building_is_workshop(b->type) && is_valid_raw_material_for_building(b->type, resource)) {
-        b->loads_stored++;
+    if (building_get_required_raw_amount_for_production(b->type, resource) > 0) {
+        b->resources[resource] += RESOURCE_ONE_LOAD;
     }
 }
 
 int building_has_workshop_for_raw_material_with_room(int resource, int road_network_id)
 {
-    const resource_type *goods = resource_get_goods_from_raw_material(resource);
+    resource_supply_chain chain[RESOURCE_SUPPLY_CHAIN_MAX_SIZE];
+    int num_goods = resource_get_supply_chain_for_raw_material(chain, resource);
 
-    if (goods == 0) {
-        return 0;
-    }
-    for (int i = 0; goods[i] != RESOURCE_NONE; i++) {
-        building_type type = resource_get_data(goods[i])->industry;
+    for (int i = 0; i < num_goods; i++) {
+        building_type type = resource_get_data(chain[i].good)->industry;
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state == BUILDING_STATE_IN_USE && b->has_road_access && b->distance_from_entry > 0 &&
-                b->road_network_id == road_network_id && b->loads_stored < 2) {
+                b->road_network_id == road_network_id && b->resources[resource] < 2 * RESOURCE_ONE_LOAD) {
                 return 1;
             }
         }
@@ -434,19 +467,19 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
-    const resource_type *goods = resource_get_goods_from_raw_material(resource);
+    resource_supply_chain chain[RESOURCE_SUPPLY_CHAIN_MAX_SIZE];
+    int num_goods = resource_get_supply_chain_for_raw_material(chain, resource);
 
-    if (goods == 0) {
+    if (num_goods == 0) {
         return 0;
     }
     int min_dist = INFINITE;
     building *min_building = 0;
-    for (int i = 0; goods[i] != RESOURCE_NONE; i++) {
-        building_type type = resource_get_data(goods[i])->industry;
-        int max_loads_stored = type == BUILDING_CITY_MINT ? 2 * RESOURCE_ONE_LOAD : 2;
+    for (int i = 0; i < num_goods; i++) {
+        building_type type = resource_get_data(chain[i].good)->industry;
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state != BUILDING_STATE_IN_USE || !b->has_road_access || b->distance_from_entry <= 0 ||
-                b->road_network_id != road_network_id || b->loads_stored >= max_loads_stored) {
+                b->road_network_id != road_network_id || b->resources[resource] >= 2 * RESOURCE_ONE_LOAD) {
                 continue;
             }
             if (type == BUILDING_CITY_MINT) {
@@ -455,7 +488,7 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
                 }
             }
             int dist = calc_maximum_distance(b->x, b->y, x, y);
-            if (b->loads_stored > 0) {
+            if (b->resources[resource] > 0) {
                 dist += 20;
             }
             if (dist < min_dist) {
@@ -476,15 +509,16 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int road_
     if (city_resource_is_stockpiled(resource)) {
         return 0;
     }
-    const resource_type *goods = resource_get_goods_from_raw_material(resource);
+    resource_supply_chain chain[RESOURCE_SUPPLY_CHAIN_MAX_SIZE];
+    int num_goods = resource_get_supply_chain_for_raw_material(chain, resource);
 
-    if (goods == 0) {
+    if (num_goods == 0) {
         return 0;
     }
     int min_dist = INFINITE;
     building *min_building = 0;
-    for (int i = 0; goods[i] != RESOURCE_NONE; i++) {
-        building_type type = resource_get_data(goods[i])->industry;
+    for (int i = 0; i < num_goods; i++) {
+        building_type type = resource_get_data(chain[i].good)->industry;
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state != BUILDING_STATE_IN_USE ||
                 !b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
@@ -495,7 +529,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int road_
                     continue;
                 }
             }
-            int dist = 10 * b->loads_stored +
+            int dist = b->resources[resource] +
                 calc_maximum_distance(b->x, b->y, x, y);
             if (dist < min_dist) {
                 min_dist = dist;

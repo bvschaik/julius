@@ -389,6 +389,10 @@ static special_attribute_mapping_t special_attribute_mappings_buildings[] = {
     { .type = PARAMETER_TYPE_BUILDING,            .text = "gladiator_statue",              .value = BUILDING_GLADIATOR_STATUE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "highway",                       .value = BUILDING_HIGHWAY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "gold_mine",                     .value = BUILDING_GOLD_MINE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "stone_quarry",                  .value = BUILDING_STONE_QUARRY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "sand_pit",                      .value = BUILDING_SAND_PIT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "concrete_maker",                .value = BUILDING_CONCRETE_MAKER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "brickworks",                    .value = BUILDING_BRICKWORKS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "city_mint",                     .value = BUILDING_CITY_MINT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
 };
 

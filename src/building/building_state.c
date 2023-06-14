@@ -152,7 +152,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_u8(buf, b->house_tavern_food_access);
     buffer_write_i16(buf, b->prev_part_building_id);
     buffer_write_i16(buf, b->next_part_building_id);
-    buffer_write_i16(buf, b->loads_stored);
+    buffer_write_i16(buf, 0);
     buffer_write_u8(buf, b->house_sentiment_message);
     buffer_write_u8(buf, b->has_well_access);
     buffer_write_i16(buf, b->num_workers);
@@ -467,7 +467,7 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     b->house_tavern_food_access = buffer_read_u8(buf);
     b->prev_part_building_id = buffer_read_i16(buf);
     b->next_part_building_id = buffer_read_i16(buf);
-    b->loads_stored = buffer_read_i16(buf);
+    int loads_stored = buffer_read_i16(buf);
     b->house_sentiment_message = buffer_read_u8(buf);
     b->has_well_access = buffer_read_u8(buf);
     b->num_workers = buffer_read_i16(buf);
@@ -512,11 +512,11 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         }
 
         if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && !b->data.monument.phase) {
-            b->data.monument.phase = -1;
+            b->data.monument.phase = MONUMENT_FINISHED;
         }
 
         if (((b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) || b->type == BUILDING_ORACLE) && !b->data.monument.phase) {
-            b->data.monument.phase = -1;
+            b->data.monument.phase = MONUMENT_FINISHED;
         }
 
     }
@@ -579,6 +579,49 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         }
         for (int i = 0; i < resource_total_mapped(); i++) {
             b->accepted_goods[resource_remap(i)] = buffer_read_u8(buf);
+        }
+    }
+
+    // Backwards compatibility - update loads stored to the proper new variable
+    if (save_version <= SAVE_GAME_LAST_NO_NEW_MONUMENT_RESOURCES && !building_monument_is_unfinished_monument(b)) {
+        switch (b->type) {
+            case BUILDING_GRAND_TEMPLE_MARS:
+            case BUILDING_BARRACKS:
+                b->resources[RESOURCE_WEAPONS] = loads_stored;
+                break;
+            case BUILDING_POTTERY_WORKSHOP:
+                b->resources[RESOURCE_CLAY] = loads_stored * RESOURCE_ONE_LOAD;
+                break;
+            case BUILDING_OIL_WORKSHOP:
+                b->resources[RESOURCE_OIL] = loads_stored * RESOURCE_ONE_LOAD;
+                break;
+            case BUILDING_WINE_WORKSHOP:
+                b->resources[RESOURCE_VINES] = loads_stored * RESOURCE_ONE_LOAD;
+                break;
+            case BUILDING_FURNITURE_WORKSHOP:
+                b->resources[RESOURCE_TIMBER] = loads_stored * RESOURCE_ONE_LOAD;
+                break;
+            case BUILDING_WEAPONS_WORKSHOP:
+                b->resources[RESOURCE_IRON] = loads_stored * RESOURCE_ONE_LOAD;
+                break;
+            case BUILDING_CITY_MINT:
+                b->resources[RESOURCE_GOLD] = loads_stored;
+                break;
+            case BUILDING_SMALL_TEMPLE_NEPTUNE:
+            case BUILDING_LARGE_TEMPLE_NEPTUNE:
+                b->days_since_offering = loads_stored;
+                break;
+            case BUILDING_WAREHOUSE_SPACE:
+                b->resources[b->subtype.warehouse_resource_id] = loads_stored;
+                break;
+            case BUILDING_LIGHTHOUSE:
+                b->resources[RESOURCE_TIMBER] = loads_stored;
+                break;
+            case TR_BUILDING_GRAND_TEMPLE_VENUS:
+                b->resources[RESOURCE_WINE] = loads_stored;
+                break;
+            default:
+                break;
         }
     }
 

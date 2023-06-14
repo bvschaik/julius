@@ -198,20 +198,18 @@ static void check_raw_material_access(building_type type)
     if (good == RESOURCE_NONE) {
         return;
     }
-    const resource_type *raw_materials = resource_get_raw_materials_for_good(good);
-    if (raw_materials == 0) {
-        return;
-    }
-    for (int i = 0; raw_materials[i] != RESOURCE_NONE; i++) {
-        const resource_data *data = resource_get_data(raw_materials[i]);
+    resource_supply_chain chain[RESOURCE_SUPPLY_CHAIN_MAX_SIZE];
+    int num_resources = resource_get_supply_chain_for_good(chain, good);
+    for (int i = 0; i < num_resources; i++) {
+        const resource_data *data = resource_get_data(chain[i].raw_material);
         if (building_count_active(data->industry) <= 0) {
-            if (city_resource_count(good) <= 0 && city_resource_count(raw_materials[i]) <= 0) {
+            if (city_resource_count(good) <= 0 && city_resource_count(chain[i].raw_material) <= 0) {
                 show(data->warning.needed);
-                if (empire_can_produce_resource(raw_materials[i])) {
+                if (empire_can_produce_resource(chain[i].raw_material)) {
                     show(data->warning.create_industry);
-                } else if (!empire_can_import_resource(raw_materials[i])) {
+                } else if (!empire_can_import_resource(chain[i].raw_material)) {
                     show(WARNING_OPEN_TRADE_TO_IMPORT);
-                } else if (!(city_resource_trade_status(raw_materials[i]) & TRADE_STATUS_IMPORT)) {
+                } else if (!(city_resource_trade_status(chain[i].raw_material) & TRADE_STATUS_IMPORT)) {
                     show(WARNING_TRADE_IMPORT_RESOURCE);
                 }
             }

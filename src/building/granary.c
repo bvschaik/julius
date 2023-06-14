@@ -535,7 +535,7 @@ void building_granary_bless(void)
         }
     }
     if (min_building) {
-        city_resource_determine_available();
+        city_resource_determine_available(1);
 
         const resource_list *list = city_resource_get_available_foods();
 

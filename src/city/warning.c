@@ -69,6 +69,14 @@ static const uint8_t *get_text_for_warning(warning_type type)
             return translation_for(TR_CITY_WARNING_GOLD_NEEDED);
         case WARNING_BUILD_GOLD_MINE:
             return translation_for(TR_CITY_WARNING_BUILD_GOLD_MINE);
+        case WARNING_SAND_NEEDED:
+            return translation_for(TR_CITY_WARNING_SAND_NEEDED);
+        case WARNING_BUILD_SAND_PIT:
+            return translation_for(TR_CITY_WARNING_BUILD_SAND_PIT);
+        case WARNING_STONE_NEEDED:
+            return translation_for(TR_CITY_WARNING_STONE_NEEDED);
+        case WARNING_BUILD_STONE_MINE:
+            return translation_for(TR_CITY_WARNING_BUILD_STONE_MINE);
         case WARNING_SENATE_NEEDED:
             return translation_for(TR_CITY_WARNING_SENATE_NEEDED);
         case WARNING_BUILD_SENATE:

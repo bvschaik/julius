@@ -112,7 +112,7 @@ int figure_trade_caravan_can_buy(figure *trader, int building_id, int city_id)
     building *space = b;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
-        if (space->id > 0 && space->loads_stored > 0 &&
+        if (space->id > 0 && space->resources[space->subtype.warehouse_resource_id] > 0 &&
             empire_can_export_resource_to_city(city_id, space->subtype.warehouse_resource_id)) {
             return 1;
         }
@@ -180,8 +180,9 @@ int figure_trade_caravan_can_sell(figure *trader, int building_id, int city_id)
         building *space = b;
         for (int s = 0; s < 8; s++) {
             space = building_next(space);
-            if (space->id > 0 && space->loads_stored < 4) {
-                if (!space->loads_stored) {
+            int loads_stored = space->resources[space->subtype.warehouse_resource_id];
+            if (space->id > 0 && loads_stored < 4) {
+                if (!loads_stored) {
                     // empty space
                     return 1;
                 }
@@ -218,11 +219,11 @@ static int trader_get_buy_resource(int building_id, int city_id)
             continue;
         }
         int resource = space->subtype.warehouse_resource_id;
-        if (space->loads_stored > 0 && empire_can_export_resource_to_city(city_id, resource)) {
+        if (space->resources[resource] > 0 && empire_can_export_resource_to_city(city_id, resource)) {
             // update stocks
             city_resource_remove_from_warehouse(resource, 1);
-            space->loads_stored--;
-            if (space->loads_stored <= 0) {
+            space->resources[resource]--;
+            if (space->resources[resource] <= 0) {
                 space->subtype.warehouse_resource_id = RESOURCE_NONE;
             }
             // update finances
@@ -277,7 +278,7 @@ static int trader_get_sell_resource(int building_id, int city_id)
     building *space = b;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
-        if (space->id > 0 && space->loads_stored > 0 && space->loads_stored < 4 &&
+        if (space->id > 0 && space->resources[resource_to_import] > 0 && space->resources[resource_to_import] < 4 &&
             space->subtype.warehouse_resource_id == resource_to_import) {
             building_warehouse_space_add_import(space, resource_to_import, 1);
             city_trade_next_caravan_import_resource();
@@ -288,7 +289,7 @@ static int trader_get_sell_resource(int building_id, int city_id)
     space = b;
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
-        if (space->id > 0 && !space->loads_stored) {
+        if (space->id > 0 && !space->resources[resource_to_import]) {
             building_warehouse_space_add_import(space, resource_to_import, 1);
             city_trade_next_caravan_import_resource();
             return resource_to_import;
@@ -301,7 +302,7 @@ static int trader_get_sell_resource(int building_id, int city_id)
             space = b;
             for (int i = 0; i < 8; i++) {
                 space = building_next(space);
-                if (space->id > 0 && space->loads_stored < 4
+                if (space->id > 0 && space->resources[resource_to_import] < 4
                     && space->subtype.warehouse_resource_id == resource_to_import) {
                     building_warehouse_space_add_import(space, resource_to_import, 1);
                     return resource_to_import;
@@ -366,8 +367,8 @@ static int get_closest_storage(const figure *f, int x, int y, int city_id, map_p
                     if (space->subtype.warehouse_resource_id == RESOURCE_NONE) {
                         distance_penalty -= 16;
                     }
-                    if (space->id && importable[space->subtype.warehouse_resource_id] && space->loads_stored < 4 &&
-                        space->subtype.warehouse_resource_id == resource) {
+                    if (space->id && importable[space->subtype.warehouse_resource_id] &&
+                        space->resources[resource] < 4 && space->subtype.warehouse_resource_id == resource) {
                         distance_penalty -= 8;
                     }
                 }

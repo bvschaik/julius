@@ -175,7 +175,7 @@ static int building_distribution_get_resource_storages(resource_storage_info inf
         int distance = building_dist(x, y, w, h, b);
 
         for (resource_type r = RESOURCE_MIN_NON_FOOD; r < RESOURCE_MAX_NON_FOOD; r++) {
-            if (info[r].needed) {
+            if (resource_is_storable(r) && info[r].needed) {
                 update_good_resource(info, r, b, distance);
             }
         }

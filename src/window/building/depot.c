@@ -23,13 +23,13 @@ static void order_set_condition_type(int index, int param2);
 static void order_set_condition_threshold(int index, int param2);
 static void set_order_resource(int depot_building_id, int resource_id);
 
-static void setup_for_selected_depot(building_info_context *c, int offset);
-
 #define DEPOT_BUTTONS_X_OFFSET 32
 #define DEPOT_BUTTONS_Y_OFFSET 204
 #define ROW_HEIGHT 22
 #define ROW_HEIGHT_RESOURCE 26
+#define ROW_WIDTH_RESOURCE 193
 #define MAX_VISIBLE_ROWS 15
+#define MAX_RESOURCE_ROWS 24
 
 static struct {
     int focus_button_id;
@@ -64,23 +64,30 @@ static generic_button depot_select_storage_buttons[] = {
 };
 
 static generic_button depot_select_resource_buttons[] = {
-    {18, 0, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN},
-    {232, 0, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 1},
-    {18, ROW_HEIGHT_RESOURCE * 1, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 2},
-    {232, ROW_HEIGHT_RESOURCE * 1, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 3},
-    {18, ROW_HEIGHT_RESOURCE * 2, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 4},
-    {232, ROW_HEIGHT_RESOURCE * 2, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 5},
-    {18, ROW_HEIGHT_RESOURCE * 3, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 6},
-    {232, ROW_HEIGHT_RESOURCE * 3, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 7},
-    {18, ROW_HEIGHT_RESOURCE * 4, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 8},
-    {232, ROW_HEIGHT_RESOURCE * 4, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 9},
-    {18, ROW_HEIGHT_RESOURCE * 5, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 10},
-    {232, ROW_HEIGHT_RESOURCE * 5, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 11},
-    {18, ROW_HEIGHT_RESOURCE * 6, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 12},
-    {232, ROW_HEIGHT_RESOURCE * 6, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 13},
-    {18, ROW_HEIGHT_RESOURCE * 7, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 14},
-    {232, ROW_HEIGHT_RESOURCE * 7, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 15},
-    {18, ROW_HEIGHT_RESOURCE * 8, 214, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, RESOURCE_MIN + 16},
+    {18, 0, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, 0, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 1, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 1, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 2, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 2, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 3, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 3, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 4, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 4, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 5, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 5, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 6, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 6, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 7, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 7, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 8, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 8, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 9, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 9, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 10, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 10, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18, ROW_HEIGHT_RESOURCE * 11, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
+    {18 + ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE * 11, ROW_WIDTH_RESOURCE, ROW_HEIGHT_RESOURCE, set_order_resource, button_none, 0, 0},
 };
 
 static generic_button depot_order_buttons[] = {
@@ -124,10 +131,15 @@ static void setup_for_selected_depot(building_info_context *c, int offset)
     }
 }
 
-void window_building_depot_init(void)
+void window_building_depot_init(int for_resources)
 {
-    int total = building_storage_get_array_size();
-    scrollbar_init(&scrollbar, 0, total);
+    int offset = scrollbar.scroll_position;
+    if (!for_resources) {
+        int total = building_storage_get_array_size();
+        scrollbar_init(&scrollbar, offset, total);
+    } else {
+        scrollbar_init(&scrollbar, offset, RESOURCE_MAX - RESOURCE_MIN);
+    }
 }
 
 static void on_scroll(void)
@@ -325,9 +337,11 @@ static void order_set_resource(int index, int param2)
 
 static void set_order_resource(int depot_building_id, int resource_id)
 {
-    building *b = building_get(depot_building_id);
-    b->data.depot.current_order.resource_type = resource_id;
-    window_building_info_depot_return_to_main_window();
+    if (resource_id >= RESOURCE_MIN && resource_id < RESOURCE_MAX && resource_is_storable(resource_id)) {
+        building *b = building_get(depot_building_id);
+        b->data.depot.current_order.resource_type = resource_id;
+        window_building_info_depot_return_to_main_window();
+    }
 }
 
 void window_building_draw_depot_select_resource(building_info_context *c)
@@ -343,28 +357,48 @@ void window_building_draw_depot_select_resource(building_info_context *c)
 void window_building_draw_depot_select_resource_foreground(building_info_context *c)
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
-    for (int i = RESOURCE_MIN; i < RESOURCE_MAX; i++) {
-        int index = i - RESOURCE_MIN;
 
-        int image_id = resource_get_data(i)->image.icon;
-        const uint8_t *str = resource_get_data(i)->text;
-        button_border_draw(c->x_offset + depot_select_resource_buttons[index].x,
-            y_offset + 46 + depot_select_resource_buttons[index].y,
-            214, 26, data.depot_resource_focus_button_id == index + 1);
-        image_draw(image_id, c->x_offset + depot_select_resource_buttons[index].x + 3,
-            y_offset + 46 + depot_select_resource_buttons[index].y + 3, COLOR_MASK_NONE, SCALE_NONE);
-        text_draw(str, c->x_offset + depot_select_resource_buttons[index].x + 33,
-            y_offset + 46 + depot_select_resource_buttons[index].y + 10, FONT_SMALL_PLAIN, COLOR_FONT_PLAIN);
+    scrollbar.x = c->x_offset + 16 * (c->width_blocks - 2) - 26;
+    scrollbar.y = y_offset + 46;
+    scrollbar_draw(&scrollbar);
+    int offset = scrollbar.scroll_position;
+
+    for (int i = 0; i < MAX_RESOURCE_ROWS; i++) {
+        depot_select_resource_buttons[i].parameter2 = 0;
     }
+    
+    resource_type resource_id = RESOURCE_MIN + (offset * 2); // Two items per scroll bar step
+    int i = 0;
+    do {
+        if (resource_id < RESOURCE_MAX && resource_is_storable(resource_id)) {
+            int image_id = resource_get_data(resource_id)->image.icon;
+            const uint8_t *str = resource_get_data(resource_id)->text;
+            depot_select_resource_buttons[i].parameter2 = resource_id;
+            button_border_draw(c->x_offset + depot_select_resource_buttons[i].x,
+                y_offset + 46 + depot_select_resource_buttons[i].y,
+                depot_select_resource_buttons[i].width, depot_select_resource_buttons[i].height, data.depot_resource_focus_button_id == i + 1);
+            image_draw(image_id, c->x_offset + depot_select_resource_buttons[i].x + 3,
+                y_offset + 46 + depot_select_resource_buttons[i].y + 3, COLOR_MASK_NONE, SCALE_NONE);
+            text_draw(str, c->x_offset + depot_select_resource_buttons[i].x + 33,
+                y_offset + 46 + depot_select_resource_buttons[i].y + 10, FONT_SMALL_PLAIN, COLOR_FONT_PLAIN);
+            i++;
+        }
+        resource_id++;
+    } while (i < MAX_RESOURCE_ROWS && resource_id < RESOURCE_MAX);
 }
 
 int window_building_handle_mouse_depot_select_resource(const mouse *m, building_info_context *c)
 {
-    setup_for_selected_depot(c, 0);
-    for (size_t i = 0; i < sizeof(depot_select_resource_buttons) / sizeof(generic_button); i++) {
+    if (scrollbar_handle_mouse(&scrollbar, m, 1)) {
+        return 1;
+    }
+
+    int offset = scrollbar.scroll_position;
+    setup_for_selected_depot(c, offset);
+    for (int i = 0; i < sizeof(depot_select_resource_buttons) / sizeof(generic_button); i++) {
         depot_select_resource_buttons[i].parameter1 = data.depot_building_id;
     }
     int y_offset = window_building_get_vertical_offset(c, 28) + 46;
     return generic_buttons_handle_mouse(m, c->x_offset, y_offset, depot_select_resource_buttons,
-        17, &data.depot_resource_focus_button_id);
+        MAX_RESOURCE_ROWS, &data.depot_resource_focus_button_id);
 }

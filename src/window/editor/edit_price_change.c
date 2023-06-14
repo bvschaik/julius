@@ -37,6 +37,7 @@ static struct {
     int id;
     editor_price_change price_change;
     int focus_button_id;
+    resource_type available_resources[RESOURCE_MAX];
 } data;
 
 static void init(int id)
@@ -101,17 +102,25 @@ static void button_year(int param1, int param2)
 
 static void set_resource(int value)
 {
-    data.price_change.resource = value;
+    data.price_change.resource = data.available_resources[value];
 }
 
 static void button_resource(int param1, int param2)
 {
     static const uint8_t *resource_texts[RESOURCE_MAX];
-    for (resource_type resource = RESOURCE_NONE; resource < RESOURCE_MAX; resource++) {
-        resource_texts[resource] = resource_get_data(resource)->text;
+    static int total_resources = 0;
+    if (!total_resources) {
+        for (resource_type resource = RESOURCE_NONE; resource < RESOURCE_MAX; resource++) {
+            if (!resource_is_storable(resource)) {
+                continue;
+            }
+            resource_texts[total_resources] = resource_get_data(resource)->text;
+            data.available_resources[total_resources] = resource;
+            total_resources++;
+        }
     }
     window_select_list_show_text(screen_dialog_offset_x() + 25, screen_dialog_offset_y() + 40,
-        resource_texts, RESOURCE_MAX, set_resource);
+        resource_texts, total_resources, set_resource);
 }
 
 static void button_toggle_rise(int param1, int param2)

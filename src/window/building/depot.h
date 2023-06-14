@@ -4,7 +4,7 @@
 #include "common.h"
 #include "input/mouse.h"
 
-void window_building_depot_init(void);
+void window_building_depot_init(int for_resources);
 
 void window_building_draw_depot(building_info_context *c);
 void window_building_draw_depot_foreground(building_info_context *c);

@@ -146,6 +146,9 @@ void empire_select_object(int x, int y)
 
 int empire_can_export_resource_to_city(int city_id, int resource)
 {
+    if (!resource_is_storable(resource)) {
+        return 0;
+    }
     empire_city *city = empire_city_get(city_id);
     if (city_id && trade_route_limit_reached(city->route_id, resource)) {
         // quota reached
@@ -183,6 +186,9 @@ int empire_can_export_resource_to_city(int city_id, int resource)
 
 int empire_can_import_resource_from_city(int city_id, int resource)
 {
+    if (!resource_is_storable(resource)) {
+        return 0;
+    }
     empire_city *city = empire_city_get(city_id);
     if (!city->sells_resource[resource]) {
         return 0;

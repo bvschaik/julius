@@ -1175,6 +1175,53 @@ static void draw_grand_temple_neptune(const map_tile *tile, int x, int y)
     set_roamer_path(BUILDING_GRAND_TEMPLE_NEPTUNE, props->size, tile, has_blocked_tiles(num_tiles, blocked));
 }
 
+static void draw_concrete_maker(const map_tile *tile, int x, int y)
+{
+    int grid_offset = tile->grid_offset;
+    const int building_size = 2;
+    const int num_tiles = 4;
+    int blocked_tiles[4];
+    int blocked = 0;
+    color_t color;
+    if (city_finance_out_of_money()) {
+        blocked = 1;
+        for (int i = 0; i < num_tiles; i++) {
+            blocked_tiles[i] = 1;
+        }
+    } else {
+        blocked = is_blocked_for_building(grid_offset, building_size, blocked_tiles);
+    }
+    int image_id = assets_get_image_id("Industry", "Concrete_Maker_C_ON");
+
+    if (blocked) {
+        color = COLOR_MASK_BUILDING_GHOST_RED;
+    } else {
+        color = COLOR_MASK_BUILDING_GHOST;
+    }
+
+    int has_water = 0;
+    int orientation_index = city_view_orientation() / 2;
+    for (int i = 0; i < num_tiles; i++) {
+        int tile_offset = grid_offset + tile_grid_offset(orientation_index, i);
+        if (map_terrain_is(tile_offset, TERRAIN_RESERVOIR_RANGE)) {
+            has_water = 1;
+            break;
+        }
+    }
+    draw_building(image_id, x, y, color);
+    if (has_water) {
+        const image *img = image_get(image_id);
+        if (img && img->animation) {
+            image_draw(image_id + img->animation->start_offset + 1,
+                x - img->animation->sprite_offset_x,
+                y + 1,
+                color, data.scale);
+        }
+    }
+    draw_building_tiles(x, y, num_tiles, blocked_tiles);
+    set_roamer_path(BUILDING_CONCRETE_MAKER, building_size, tile, has_blocked_tiles(num_tiles, blocked_tiles));
+}
+
 int city_building_ghost_mark_deleting(const map_tile *tile)
 {
     int construction_type = building_construction_type();
@@ -1354,6 +1401,9 @@ void city_building_ghost_draw(const map_tile *tile)
             break;
         case BUILDING_MARKET:
             draw_market(tile, x, y);
+            break;
+        case BUILDING_CONCRETE_MAKER:
+            draw_concrete_maker(tile, x, y);
             break;
         case BUILDING_HOUSE_VACANT_LOT:
             if (config_get(CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE_HOUSES)) {

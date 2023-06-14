@@ -56,7 +56,7 @@ static int try_import_resource(int building_id, int resource, int city_id)
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
         if (space->id > 0) {
-            if (space->loads_stored && space->loads_stored < 4 && space->subtype.warehouse_resource_id == resource) {
+            if (space->resources[resource] > 0 && space->resources[resource] < 4) {
                 trade_route_increase_traded(route_id, resource);
                 building_warehouse_space_add_import(space, resource, 0);
                 return 1;
@@ -101,7 +101,7 @@ static int try_export_resource(int building_id, int resource, int city_id)
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
         if (space->id > 0) {
-            if (space->loads_stored && space->subtype.warehouse_resource_id == resource) {
+            if (space->resources[resource] > 0) {
                 trade_route_increase_traded(empire_city_get_route_id(city_id), resource);
                 building_warehouse_space_remove_export(space, resource, 0);
                 return 1;
@@ -170,7 +170,7 @@ static int get_closest_building_for_import(int x, int y, int city_id, building *
             if (space->id && space->subtype.warehouse_resource_id == RESOURCE_NONE) {
                 distance_penalty -= 8;
             }
-            if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored < 4) {
+            if (space->id && space->subtype.warehouse_resource_id == resource && space->resources[resource] < 4) {
                 distance_penalty -= 4;
             }
         }
@@ -237,7 +237,7 @@ static int get_closest_building_for_export(int x, int y, int city_id, building *
         building *space = b;
         for (int s = 0; s < 8; s++) {
             space = building_next(space);
-            if (space->id && space->subtype.warehouse_resource_id == resource && space->loads_stored > 0) {
+            if (space->id && space->subtype.warehouse_resource_id == resource && space->resources[resource] > 0) {
                 distance_penalty--;
             }
         }

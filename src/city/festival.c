@@ -153,12 +153,12 @@ void city_festival_schedule(void)
         int wine_needed = city_data.festival.grand_wine;
         if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
             building *venus_gt = building_get(building_monument_get_venus_gt());
-            if (wine_needed <= venus_gt->loads_stored) {
-                venus_gt->loads_stored -= wine_needed;
+            if (wine_needed <= venus_gt->resources[RESOURCE_WINE]) {
+                venus_gt->resources[RESOURCE_WINE] -= wine_needed;
                 wine_needed = 0;
             } else {
-                wine_needed -= venus_gt->loads_stored;
-                venus_gt->loads_stored = 0;
+                wine_needed -= venus_gt->resources[RESOURCE_WINE];
+                venus_gt->resources[RESOURCE_WINE] = 0;
             }
         }
         building_warehouses_remove_resource(RESOURCE_WINE, wine_needed);
@@ -234,7 +234,7 @@ void city_festival_calculate_costs(void)
     int wine_available = city_data.resource.stored_in_warehouses[RESOURCE_WINE];
     if (building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
         building *venus_gt = building_get(building_monument_get_venus_gt());
-        wine_available += venus_gt->loads_stored;
+        wine_available += venus_gt->resources[RESOURCE_WINE];
     }
 
     city_data.festival.small_cost = city_data.population.population / 20 + 10;

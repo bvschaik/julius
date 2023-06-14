@@ -74,8 +74,11 @@ augustus_building_properties_mapping augustus_building_properties[] = {
     {BUILDING_GLADIATOR_STATUE, {1,1,0,0,1}, "Aesthetics", ""},
     {BUILDING_HIGHWAY, { 2, 1, 0, 0, 0 }, "Logistics", "Highway_Placement"},
     {BUILDING_GOLD_MINE, { 2, 0, 0, 0, 0 }, "Industry", "Gold_Mine_C_OFF"},
+    {BUILDING_STONE_QUARRY, { 2, 0, 0, 0, 0 }, "Industry", "Stone_Quarry_C_OFF"},
+    {BUILDING_SAND_PIT, { 2, 0, 0, 0, 0 }, "Industry", "Sand_Pit_C_OFF"},
+    {BUILDING_BRICKWORKS, { 2, 0, 0, 0, 0 }, "Industry", "Brickworks_C_OFF"},
+    {BUILDING_CONCRETE_MAKER, { 2, 0, 0, 0, 0 }, "Industry", "Concrete_Maker_C_OFF"},
     {BUILDING_CITY_MINT, { 3, 0, 0, 0, 0 }, "Administration", "City_Mint_ON"},
-    {BUILDING_HIGHWAY, { 2, 1, 0, 0, 0 }, "Logistics", "Highway_Placement"},
     {BUILDING_DEPOT, {2,0,0,0,0}, "Logistics", "Cart Depot N OFF"}
 };
 

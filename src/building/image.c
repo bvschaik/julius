@@ -234,6 +234,42 @@ int building_image_get(const building *b)
                 default:
                     return assets_get_image_id("Industry", "Gold_Mine_C_ON");
             }
+        case BUILDING_STONE_QUARRY:
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    return assets_get_image_id("Industry", "Stone_Quarry_N_ON");
+                case CLIMATE_DESERT:
+                    return assets_get_image_id("Industry", "Stone_Quarry_S_ON");
+                default:
+                    return assets_get_image_id("Industry", "Stone_Quarry_C_ON");
+            }
+        case BUILDING_SAND_PIT:
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    return assets_get_image_id("Industry", "Sand_Pit_N_ON");
+                case CLIMATE_DESERT:
+                    return assets_get_image_id("Industry", "Sand_Pit_S_ON");
+                default:
+                    return assets_get_image_id("Industry", "Sand_Pit_C_ON");
+            }
+        case BUILDING_BRICKWORKS:
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    return assets_get_image_id("Industry", "Brickworks_N_ON");
+                case CLIMATE_DESERT:
+                    return assets_get_image_id("Industry", "Brickworks_S_ON");
+                default:
+                    return assets_get_image_id("Industry", "Brickworks_C_ON");
+            }
+        case BUILDING_CONCRETE_MAKER:
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    return assets_get_image_id("Industry", "Concrete_Maker_N_ON");
+                case CLIMATE_DESERT:
+                    return assets_get_image_id("Industry", "Concrete_Maker_S_ON");
+                default:
+                    return assets_get_image_id("Industry", "Concrete_Maker_C_ON");
+            }
         case BUILDING_CITY_MINT:
             switch (b->data.monument.phase) {
                 case MONUMENT_START:
@@ -418,11 +454,14 @@ int building_image_get(const building *b)
         case BUILDING_WAREHOUSE:
             return image_group(GROUP_BUILDING_WAREHOUSE);
         case BUILDING_WAREHOUSE_SPACE:
-            if (b->loads_stored <= 0 || b->subtype.warehouse_resource_id == RESOURCE_NONE) {
+        {
+            resource_type resource = b->subtype.warehouse_resource_id;
+            if (resource == RESOURCE_NONE || b->resources[resource] <= 0) {
                 return image_group(GROUP_BUILDING_WAREHOUSE_STORAGE_EMPTY);
             } else {
-                return resource_get_data(b->subtype.warehouse_resource_id)->image.storage + b->loads_stored - 1;
+                return resource_get_data(b->subtype.warehouse_resource_id)->image.storage + b->resources[resource] - 1;
             }
+        }
         case BUILDING_HIPPODROME:
             {
                 int phase = b->data.monument.phase;
@@ -647,7 +686,7 @@ int building_image_get(const building *b)
                 case 4:
                     return assets_get_image_id("Logistics", "Lighthouse Const 04");
                 default:
-                    if (b->loads_stored > 0 && b->num_workers > 0) {
+                    if (b->resources[RESOURCE_TIMBER] > 0 && b->num_workers > 0) {
                         return assets_get_image_id("Logistics", "Lighthouse ON");
                     } else {
                         return assets_get_image_id("Logistics", "Lighthouse OFF");
@@ -741,6 +780,8 @@ int building_image_get(const building *b)
             switch (b->data.monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Logistics", "Caravanserai_Construction_01");
+                case 2:
+                    return assets_get_image_id("Logistics", "Caravanserai_Construction_02");
                 default:
                     switch (scenario_property_climate()) {
                         case CLIMATE_DESERT:

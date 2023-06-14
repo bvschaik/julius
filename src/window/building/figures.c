@@ -185,7 +185,7 @@ static void draw_trader(building_info_context *c, figure *f)
         int y_base = c->y_offset + 174;
         width = lang_text_draw(129, 2, c->x_offset + 40, y_base, FONT_NORMAL_BROWN);
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-            if (city->buys_resource[r]) {
+            if (city->buys_resource[r] && resource_is_storable(r)) {
                 int image_id = resource_get_data(r)->image.icon;
                 image_draw(image_id, c->x_offset + 40 + width, y_base - 3, COLOR_MASK_NONE, SCALE_NONE);
                 width += 25;
@@ -195,7 +195,7 @@ static void draw_trader(building_info_context *c, figure *f)
         y_base = c->y_offset + 202;
         width = lang_text_draw(129, 3, c->x_offset + 40, y_base, FONT_NORMAL_BROWN);
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-            if (city->sells_resource[r]) {
+            if (city->sells_resource[r] && resource_is_storable(r)) {
                 int image_id = resource_get_data(r)->image.icon;
                 image_draw(image_id, c->x_offset + 40 + width, y_base - 3, COLOR_MASK_NONE, SCALE_NONE);
                 width += 25;

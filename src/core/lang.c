@@ -509,6 +509,14 @@ const uint8_t *lang_get_string(int group, int index)
                 return translation_for(TR_BUILDING_CITY_MINT);
             case BUILDING_DEPOT:
                 return translation_for(TR_BUILDING_DEPOT);
+            case BUILDING_STONE_QUARRY:
+                return translation_for(TR_BUILDING_STONE_QUARRY);
+            case BUILDING_SAND_PIT:
+                return translation_for(TR_BUILDING_SAND_PIT);
+            case BUILDING_BRICKWORKS:
+                return translation_for(TR_BUILDING_BRICKWORKS);
+            case BUILDING_CONCRETE_MAKER:
+                return translation_for(TR_BUILDING_CONCRETE_MAKER);
             default:
                 break;
         }

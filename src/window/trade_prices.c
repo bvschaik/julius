@@ -51,7 +51,7 @@ static void init(int shade_x, int shade_y, int shade_width, int shade_height)
         (!has_sea_trade_policy && has_land_trade_policy) ||
         (has_sea_trade_policy && has_land_trade_policy && !same_policy));
 
-    city_resource_determine_available();
+    city_resource_determine_available(1);
     data.window_width = (data.four_line ? 4 : 9) + city_resource_get_potential()->size * 2;
 }
 

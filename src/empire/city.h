@@ -42,9 +42,11 @@ int empire_can_export_resource_potentially(int resource);
 
 int empire_can_export_resource(int resource);
 
-int can_produce_resource(int resource);
+int empire_can_produce_resource_locally(int resource);
 
 int empire_can_produce_resource(int resource);
+
+int empire_can_produce_resource_naturally(int resource);
 
 int empire_can_produce_resource_potentially(int resource);
 
@@ -84,7 +86,7 @@ void empire_city_save_state(buffer *buf);
 
 int empire_city_can_mine_gold(int city_name_id);
 
-void empire_city_update_gold_trading(void);
+void empire_city_update_trading_data(int version);
 
 void empire_city_load_state(buffer *buf, int version);
 

@@ -1137,11 +1137,12 @@ static void spawn_figure_temple(building *b)
                 create_roaming_figure(b, road.x, road.y, FIGURE_PRIEST);
             }
             // Neptune Module 1 Bonus
-            if (building_is_neptune_temple(b->type) && building_monument_gt_module_is_active(NEPTUNE_MODULE_1_HIPPODROME_ACCESS) && !b->figure_id2) {
-                b->loads_stored += 1;
-                if (b->loads_stored > 1) {
+            if (building_is_neptune_temple(b->type) &&
+                building_monument_gt_module_is_active(NEPTUNE_MODULE_1_HIPPODROME_ACCESS) && !b->figure_id2) {
+                b->days_since_offering++;
+                if (b->days_since_offering > 1) {
                     spawn_figure_chariot(b, road, 1);
-                    b->loads_stored = 0;
+                    b->days_since_offering = 0;
                 }
             }
             b->figure_spawn_delay = 0;
@@ -1257,6 +1258,9 @@ static void spawn_figure_mission_post(building *b)
 
 static void spawn_figure_industry(building *b)
 {
+    if (b->type == BUILDING_CONCRETE_MAKER) {
+        b->has_water_access = map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE);
+    }
     check_labor_problem(b);
     map_point road;
     if (map_has_road_access(b->x, b->y, b->size, &road)) {
@@ -1523,7 +1527,7 @@ static void spawn_figure_architect_guild(building *b)
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
-            if (building_monument_get_monument(road.x, road.y, RESOURCE_NONE, b->road_network_id, b->distance_from_entry, 0)) {
+            if (building_monument_get_monument(road.x, road.y, RESOURCE_NONE, b->road_network_id, 0)) {
                 figure *f = figure_create(FIGURE_WORK_CAMP_ARCHITECT, road.x, road.y, DIR_4_BOTTOM);
                 f->action_state = FIGURE_ACTION_206_WORK_CAMP_ARCHITECT_CREATED;
                 b->figure_id = f->id;

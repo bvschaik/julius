@@ -34,18 +34,22 @@ typedef enum {
     RESOURCE_IRON,
     RESOURCE_MARBLE,
     RESOURCE_GOLD,
+    RESOURCE_SAND,
+    RESOURCE_STONE,
     RESOURCE_POTTERY,
     RESOURCE_FURNITURE,
     RESOURCE_OIL,
     RESOURCE_WINE,
     RESOURCE_WEAPONS,
+    RESOURCE_CONCRETE,
+    RESOURCE_BRICKS,
     RESOURCE_DENARII,
     RESOURCE_TROOPS,
     // helper constants
     RESOURCE_MIN_FOOD = RESOURCE_WHEAT,
     RESOURCE_MAX_FOOD = RESOURCE_FISH + 1,
     RESOURCE_MIN_NON_FOOD = RESOURCE_MAX_FOOD,
-    RESOURCE_MAX_NON_FOOD = RESOURCE_WEAPONS + 1,
+    RESOURCE_MAX_NON_FOOD = RESOURCE_BRICKS + 1,
     RESOURCE_MIN = RESOURCE_MIN_FOOD,
     RESOURCE_MAX = RESOURCE_MAX_NON_FOOD,
     RESOURCE_TOTAL_SPECIAL = 2,
@@ -57,10 +61,14 @@ typedef enum {
 
     RESOURCE_MAX_LEGACY = 16,
     RESOURCE_MAX_WITH_FISH = 17,
-    RESOURCE_MAX_WITH_GOLD = 18
+    RESOURCE_MAX_WITH_GOLD = 18,
+    RESOURCE_MAX_WITH_MONUMENT_RESOURCES = 22
 } resource_type;
 
 #define LEGACY_INVENTORY_MAX 8
+#define RESOURCE_ONE_LOAD 100
+
+#define RESOURCE_SUPPLY_CHAIN_MAX_SIZE 10
 
 typedef enum {
     RESOURCE_ORIGINAL_VERSION = 0,
@@ -68,7 +76,8 @@ typedef enum {
     RESOURCE_REORDERED_VERSION = 2,
     RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION = 3,
     RESOURCE_HAS_GOLD_VERSION = 4,
-    RESOURCE_CURRENT_VERSION = RESOURCE_HAS_GOLD_VERSION
+    RESOURCE_HAS_NEW_MONUMENT_ELEMENTS = 5,
+    RESOURCE_CURRENT_VERSION = RESOURCE_HAS_NEW_MONUMENT_ELEMENTS
 } resource_version_t;
 
 typedef enum {
@@ -77,6 +86,12 @@ typedef enum {
     RESOURCE_FLAG_STORABLE = 2,
     RESOURCE_FLAG_INVENTORY = 4 | RESOURCE_FLAG_STORABLE // Inventory goods are always storable
 } resource_flags;
+
+typedef struct {
+    int raw_amount;
+    resource_type raw_material;
+    resource_type good;
+} resource_supply_chain;
 
 typedef struct {
     resource_type type;
@@ -116,12 +131,12 @@ int resource_is_food(resource_type resource);
 int resource_is_raw_material(resource_type resource);
 
 int resource_is_inventory(resource_type resource);
+int resource_is_storable(resource_type resource);
 
 resource_type resource_get_from_industry(building_type industry);
 
-const resource_type *resource_get_raw_materials_for_good(resource_type good);
-
-const resource_type *resource_get_goods_from_raw_material(resource_type raw_material);
+int resource_get_supply_chain_for_good(resource_supply_chain *chain, resource_type good);
+int resource_get_supply_chain_for_raw_material(resource_supply_chain *chain, resource_type raw_material);
 
 const resource_data *resource_get_data(resource_type resource);
 

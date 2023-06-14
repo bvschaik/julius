@@ -32,7 +32,13 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
         return 0;
     }
     if (building_is_workshop(b->type)) {
-        if (b->loads_stored <= 0 || b->num_workers <= 0 || b->strike_duration_days > 0) {
+        if (b->num_workers <= 0 || b->strike_duration_days > 0 ||
+            !building_industry_has_raw_materials_for_production(b)) {
+            return 0;
+        }
+    }
+    if (b->type == BUILDING_CONCRETE_MAKER) {
+        if (!b->has_water_access || b->data.industry.progress == 0) {
             return 0;
         }
     }
@@ -72,8 +78,9 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
         return 0;
     }
     if (b->type == BUILDING_CITY_MINT &&
-        (b->loads_stored < BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN || b->num_workers <= 0 ||
-        (building_count_active(BUILDING_SENATE) == 0 && building_count_active(BUILDING_SENATE_UPGRADED) == 0))) {
+        ((b->output_resource_id == RESOURCE_DENARII &&
+            b->resources[RESOURCE_GOLD] < BUILDING_INDUSTRY_CITY_MINT_GOLD_PER_COIN) || b->num_workers <= 0 ||
+            (building_count_active(BUILDING_SENATE) == 0 && building_count_active(BUILDING_SENATE_UPGRADED) == 0))) {
         return 0;
     }
     if ((b->type == BUILDING_ARCHITECT_GUILD || b->type == BUILDING_MESS_HALL || b->type == BUILDING_ARENA)
@@ -127,7 +134,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     int is_reverse = 0;
     if (b->type == BUILDING_WINE_WORKSHOP) {
         // exception for wine...
-        int pct_done = calc_percentage(b->data.industry.progress, 400);
+        int pct_done = calc_percentage(b->data.industry.progress, building_industry_get_max_progress(b));
         if (pct_done <= 0) {
             new_sprite = 0;
         } else if (pct_done < 4) {

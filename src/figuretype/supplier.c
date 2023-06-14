@@ -99,7 +99,7 @@ static int take_resource_from_generic_building(figure *f, int building_id)
 {
     building *b = building_get(building_id);
     int num_loads;
-    int stored = b->loads_stored;
+    int stored = b->resources[RESOURCE_WINE];
     if (stored < 2) {
         num_loads = stored;
     } else {
@@ -108,7 +108,7 @@ static int take_resource_from_generic_building(figure *f, int building_id)
     if (num_loads <= 0) {
         return 0;
     }
-    b->loads_stored -= num_loads;
+    b->resources[RESOURCE_WINE] -= num_loads;
 
     // create delivery boys
     int priest_id = f->id;
@@ -252,7 +252,7 @@ void figure_supplier_action(figure *f)
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {
                 if (f->direction == DIR_FIGURE_AT_DESTINATION && f->type == FIGURE_LIGHTHOUSE_SUPPLIER) {
-                    building_get(f->building_id)->loads_stored += 100;
+                    building_get(f->building_id)->resources[RESOURCE_TIMBER] += 100;
                 }
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_REROUTE) {

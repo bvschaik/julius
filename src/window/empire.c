@@ -193,7 +193,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         lang_text_draw(47, 10, x_offset + 44, y_offset + 40, FONT_NORMAL_GREEN);
         int index = 0;
         for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-            if (!city->sells_resource[resource]) {
+            if (!city->sells_resource[resource] || !resource_is_storable(resource)) {
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
@@ -214,7 +214,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         lang_text_draw(47, 9, x_offset + 44, y_offset + 71, FONT_NORMAL_GREEN);
         index = 0;
         for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-            if (!city->buys_resource[resource]) {
+            if (!city->buys_resource[resource] || !resource_is_storable(resource)) {
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
@@ -234,7 +234,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
     } else { // trade is closed
         int index = lang_text_draw(47, 5, x_offset + 50, y_offset + 42, FONT_NORMAL_GREEN);
         for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-            if (!city->sells_resource[resource]) {
+            if (!city->sells_resource[resource] || !resource_is_storable(resource)) {
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
@@ -243,7 +243,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         }
         index += lang_text_draw(47, 4, x_offset + index + 100, y_offset + 42, FONT_NORMAL_GREEN);
         for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
-            if (!city->buys_resource[resource]) {
+            if (!city->buys_resource[resource] || !resource_is_storable(resource)) {
                 continue;
             }
             int trade_max = trade_route_limit(city->route_id, resource);
@@ -683,6 +683,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
                     // we only want to handle resource buttons that the selected city trades
                     for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+                        if (!resource_is_storable(resource)) {
+                            continue;
+                        }
                         data.focus_resource = resource;
                         if (city->sells_resource[resource]) {
                             generic_buttons_handle_mouse(m, x_offset + 120 + 124 * index_sell, y_offset + 31,
@@ -770,7 +773,7 @@ static int get_tooltip_resource(tooltip_context *c)
 
     int item_offset = lang_text_get_width(47, 5, FONT_NORMAL_GREEN);
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (city->sells_resource[r]) {
+        if (city->sells_resource[r] && resource_is_storable(r)) {
             if (is_mouse_hit(c, x_offset + 60 + item_offset, y_offset + 33, 26)) {
                 return r;
             }
@@ -779,7 +782,7 @@ static int get_tooltip_resource(tooltip_context *c)
     }
     item_offset += lang_text_get_width(47, 4, FONT_NORMAL_GREEN);
     for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
-        if (city->buys_resource[r]) {
+        if (city->buys_resource[r] && resource_is_storable(r)) {
             if (is_mouse_hit(c, x_offset + 110 + item_offset, y_offset + 33, 26)) {
                 return r;
             }

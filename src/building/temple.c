@@ -18,7 +18,7 @@ int building_temple_get_storage_destination(building *temple)
         }
         building *grand_temple = building_get(building_monument_get_venus_gt());
         if (grand_temple->id != 0 && grand_temple->road_network_id == temple->road_network_id &&
-            temple->resources[RESOURCE_WINE] < BASELINE_STOCK && grand_temple->loads_stored > 0) {
+            temple->resources[RESOURCE_WINE] < BASELINE_STOCK && grand_temple->resources[RESOURCE_WINE] > 0) {
             temple->data.market.fetch_inventory_id = RESOURCE_WINE;
             return grand_temple->id;
         }

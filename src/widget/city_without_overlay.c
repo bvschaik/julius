@@ -7,6 +7,7 @@
 #include "building/dock.h"
 #include "building/granary.h"
 #include "building/image.h"
+#include "building/industry.h"
 #include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
@@ -287,33 +288,51 @@ static void draw_entertainment_spectators(building *b, int x, int y, color_t col
 static void draw_workshop_raw_material_storage(const building *b, int x, int y, color_t color_mask)
 {
     if (b->type == BUILDING_WINE_WORKSHOP) {
-        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials) {
+        if (building_loads_stored(b) >= 2 * RESOURCE_ONE_LOAD || b->data.industry.has_raw_materials) {
             image_draw(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL), x + 45, y + 23,
                 color_mask, draw_context.scale);
         }
     }
     if (b->type == BUILDING_OIL_WORKSHOP) {
-        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials) {
+        if (building_loads_stored(b) >= 2 * RESOURCE_ONE_LOAD || b->data.industry.has_raw_materials) {
             image_draw(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 1, x + 35, y + 15,
                 color_mask, draw_context.scale);
         }
     }
     if (b->type == BUILDING_WEAPONS_WORKSHOP) {
-        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials) {
+        if (building_loads_stored(b) >= 2 * RESOURCE_ONE_LOAD || b->data.industry.has_raw_materials) {
             image_draw(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 3, x + 46, y + 24,
                 color_mask, draw_context.scale);
         }
     }
     if (b->type == BUILDING_FURNITURE_WORKSHOP) {
-        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials) {
+        if (building_loads_stored(b) >= 2 * RESOURCE_ONE_LOAD || b->data.industry.has_raw_materials) {
             image_draw(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 2, x + 48, y + 19,
                 color_mask, draw_context.scale);
         }
     }
     if (b->type == BUILDING_POTTERY_WORKSHOP) {
-        if (b->loads_stored >= 2 || b->data.industry.has_raw_materials) {
+        if (building_loads_stored(b) >= 2 * RESOURCE_ONE_LOAD || b->data.industry.has_raw_materials) {
             image_draw(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4, x + 47, y + 24,
                 color_mask, draw_context.scale);
+        }
+    }
+    if (b->type == BUILDING_BRICKWORKS) {
+        if (b->data.industry.has_raw_materials ||
+            b->resources[RESOURCE_CLAY] >= building_get_required_raw_amount_for_production(b->type, RESOURCE_CLAY)) {
+            image_draw(image_group(GROUP_BUILDING_WORKSHOP_RAW_MATERIAL) + 4, x + 47, y + 24,
+                color_mask, draw_context.scale);
+        }
+        if (b->data.industry.has_raw_materials ||
+            b->resources[RESOURCE_SAND] >= building_get_required_raw_amount_for_production(b->type, RESOURCE_SAND)) {
+            int image_id = assets_get_image_id("Industry", "Sand_Supplied_Workshop");
+            image_draw(image_id, x + 67, y + 12, color_mask, draw_context.scale);
+        }
+    }
+    if (b->type == BUILDING_CONCRETE_MAKER) {
+        if (building_loads_stored(b) >= 2 * RESOURCE_ONE_LOAD || b->data.industry.has_raw_materials) {
+            int image_id = assets_get_image_id("Industry", "Sand_Supplied_Workshop");
+            image_draw(image_id, x + 47, y + 24, color_mask, draw_context.scale);
         }
     }
 }

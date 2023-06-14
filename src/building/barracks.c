@@ -20,7 +20,7 @@ static int is_valid_destination(building *b, int road_network_id)
 {
     return b->state == BUILDING_STATE_IN_USE && map_has_road_access(b->x, b->y, b->size, 0) &&
         b->distance_from_entry > 0 && b->road_network_id == road_network_id &&
-        b->loads_stored < MAX_WEAPONS_BARRACKS;
+        b->resources[RESOURCE_WEAPONS] < MAX_WEAPONS_BARRACKS;
 }
 
 int building_get_barracks_for_weapon(int x, int y, int resource, int road_network_id,
@@ -39,7 +39,7 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
             continue;
         }
         int dist = calc_maximum_distance(b->x, b->y, x, y);
-        dist += 8 * b->loads_stored;
+        dist += 8 * b->resources[RESOURCE_WEAPONS];
         if (dist < min_dist) {
             min_dist = dist;
             min_building = b;
@@ -49,7 +49,7 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
     if (monument && monument->data.monument.phase == MONUMENT_FINISHED &&
         is_valid_destination(monument, road_network_id)) {
         int dist = calc_maximum_distance(monument->x, monument->y, x, y);
-        dist += 8 * monument->loads_stored;
+        dist += 8 * monument->resources[RESOURCE_WEAPONS];
         if (dist < min_dist) {
             min_dist = dist;
             min_building = monument;
@@ -67,7 +67,7 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
 void building_barracks_add_weapon(building *barracks)
 {
     if (barracks->id > 0) {
-        barracks->loads_stored++;
+        barracks->resources[RESOURCE_WEAPONS]++;
     }
 }
 
@@ -84,7 +84,7 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
         if (m->in_distant_battle || m->legion_recruit_type == LEGION_RECRUIT_NONE) {
             continue;
         }
-        if (m->legion_recruit_type == LEGION_RECRUIT_LEGIONARY && barracks->loads_stored <= 0) {
+        if (m->legion_recruit_type == LEGION_RECRUIT_LEGIONARY && barracks->resources[RESOURCE_WEAPONS] <= 0) {
             continue;
         }
         building *fort = building_get(m->building_id);
@@ -125,8 +125,8 @@ int building_barracks_create_soldier(building *barracks, int x, int y)
         f->formation_id = formation_id;
         f->formation_at_rest = 1;
         if (m->figure_type == FIGURE_FORT_LEGIONARY) {
-            if (barracks->loads_stored > 0) {
-                barracks->loads_stored--;
+            if (barracks->resources[RESOURCE_WEAPONS] > 0) {
+                barracks->resources[RESOURCE_WEAPONS]--;
             }
         }
         int academy_id = get_closest_military_academy(building_get(m->building_id));
