@@ -19,7 +19,7 @@ void map_bookmarks_clear(void)
 void map_bookmark_save(int number)
 {
     if (number >= 0 && number < MAX_BOOKMARKS) {
-        city_view_get_camera(&bookmarks[number].x, &bookmarks[number].y);
+        city_view_get_camera_absolute(&bookmarks[number].x, &bookmarks[number].y);
     }
 }
 
@@ -29,7 +29,7 @@ int map_bookmark_go_to(int number)
         int x = bookmarks[number].x;
         int y = bookmarks[number].y;
         if (x > -1 && map_grid_offset(x, y) > -1) {
-            city_view_set_camera(x, y);
+            city_view_set_camera_absolute(x, y);
             return 1;
         }
     }

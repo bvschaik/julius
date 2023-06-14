@@ -141,7 +141,7 @@ static int get_height_id(void)
             case BUILDING_GOVERNORS_PALACE:
             case BUILDING_FORUM:
             case BUILDING_ROADBLOCK:
-            case BUILDING_FORUM_UPGRADED:
+            case BUILDING_FORUM_2_UNUSED:
             case BUILDING_WORKCAMP:
             case BUILDING_ARCHITECT_GUILD:
             case BUILDING_OBELISK:
@@ -161,8 +161,8 @@ static int get_height_id(void)
             case BUILDING_GLADIATOR_STATUE:
                 return 1;
 
+            case BUILDING_SENATE_1_UNUSED:
             case BUILDING_SENATE:
-            case BUILDING_SENATE_UPGRADED:
             case BUILDING_FOUNTAIN:
                 return 2;
 
@@ -626,9 +626,9 @@ static void draw_background(void)
         } else if (btype == BUILDING_GOVERNORS_HOUSE || btype == BUILDING_GOVERNORS_VILLA ||
             btype == BUILDING_GOVERNORS_PALACE) {
             window_building_draw_governor_home(&context);
-        } else if (btype == BUILDING_FORUM || btype == BUILDING_FORUM_UPGRADED) {
+        } else if (btype == BUILDING_FORUM || btype == BUILDING_FORUM_2_UNUSED) {
             window_building_draw_forum(&context);
-        } else if (btype == BUILDING_SENATE || btype == BUILDING_SENATE_UPGRADED) {
+        } else if (btype == BUILDING_SENATE_1_UNUSED || btype == BUILDING_SENATE) {
             window_building_draw_senate(&context);
         } else if (btype == BUILDING_ENGINEERS_POST) {
             window_building_draw_engineers_post(&context);

@@ -31,7 +31,7 @@ task findSDL2Mixer {
 
 android {
     compileSdkVersion 33
-    buildToolsVersion "33.0.1"
+    buildToolsVersion "33.0.2"
     ndkVersion "25.1.8937393"
 
     defaultConfig {
@@ -82,8 +82,3 @@ repositories {
     google()
     mavenCentral()
 }
-
-// Workaround for issue: https://issuetracker.google.com/issues/222811915
-// Create prefab dir to prevent failing Gradle Sync in Android Studio.
-// Sync will throw a warning (instead of error) but the project will build normally.
-mkdir "$buildDir/intermediates/prefab_package_configuration/debug/prefab"

@@ -7,10 +7,10 @@
 void building_government_distribute_treasury(void)
 {
     int units =
-        5 * building_count_active(BUILDING_SENATE) +
+        5 * building_count_active(BUILDING_SENATE_1_UNUSED) +
         1 * building_count_active(BUILDING_FORUM) +
-        8 * building_count_active(BUILDING_SENATE_UPGRADED) +
-        2 * building_count_active(BUILDING_FORUM_UPGRADED);
+        8 * building_count_active(BUILDING_SENATE) +
+        2 * building_count_active(BUILDING_FORUM_2_UNUSED);
     int amount_per_unit = 0;
     int remainder = 0;
     int treasury = city_finance_treasury();

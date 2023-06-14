@@ -543,7 +543,7 @@ static void init(int page, int show_background_image)
     }
 
     enable_all_widgets();
-    if (system_is_fullscreen_only()) {
+    if (!system_can_scale_display(0, 0)) {
         disable_widget(TYPE_SPACE, TR_CONFIG_VIDEO);
         disable_widget(TYPE_HEADER, TR_CONFIG_VIDEO);
         disable_widget(TYPE_CHECKBOX, CONFIG_ORIGINAL_FULLSCREEN);
@@ -551,6 +551,8 @@ static void init(int page, int show_background_image)
         disable_widget(TYPE_NUMERICAL_RANGE, RANGE_RESOLUTION);
         disable_widget(TYPE_NUMERICAL_DESC, RANGE_DISPLAY_SCALE);
         disable_widget(TYPE_NUMERICAL_RANGE, RANGE_DISPLAY_SCALE);
+    }
+    if (system_is_fullscreen_only()) {
         disable_widget(TYPE_NUMERICAL_DESC, RANGE_CURSOR_SCALE);
         disable_widget(TYPE_NUMERICAL_RANGE, RANGE_CURSOR_SCALE);
     }
@@ -684,10 +686,14 @@ static const uint8_t *display_text_max_grand_temples(void)
 
 static void update_scale(void)
 {
-    int max_scale = system_get_max_display_scale();
-    ranges[RANGE_DISPLAY_SCALE].max = max_scale;
-    if (*ranges[RANGE_DISPLAY_SCALE].value > max_scale) {
-        *ranges[RANGE_DISPLAY_SCALE].value = max_scale;
+    int min_scale = 0;
+    int max_scale = 0;
+    if (system_can_scale_display(&min_scale, &max_scale)) {
+        scale_ranges[RANGE_DISPLAY_SCALE].min = min_scale;
+        scale_ranges[RANGE_DISPLAY_SCALE].max = max_scale;
+        if (*scale_ranges[RANGE_DISPLAY_SCALE].value > max_scale) {
+            *scale_ranges[RANGE_DISPLAY_SCALE].value = max_scale;
+        }
     }
 }
 

@@ -53,10 +53,12 @@ void system_set_fullscreen(int fullscreen);
 int system_scale_display(int scale_percentage);
 
 /**
- * Gets maximum display scale for the current display
- * @return Maximum scale percentage
+ * Checks whether the display can be scaled. If true, min_scale and max_scale indicate by how much.
+ * @param min_scale Minimum scale that can be applied
+ * @param max_scale Maximum scale that can be applied
+ * @return True if the display can be scaled
  */
-int system_get_max_display_scale(void);
+int system_can_scale_display(int *min_scale, int *max_scale);
 
 /**
  * (Re-)Initialize cursors with the specified scale percentage

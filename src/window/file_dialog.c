@@ -135,7 +135,8 @@ static int find_first_file_with_prefix(const char *prefix)
             left = middle + 1;
         }
     }
-    if (platform_file_manager_compare_filename_prefix(data.file_list->files[left], prefix, len) == 0) {
+    if (left < data.file_list->num_files &&
+        platform_file_manager_compare_filename_prefix(data.file_list->files[left], prefix, len) == 0) {
         return left;
     } else {
         return -1;

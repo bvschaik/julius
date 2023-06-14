@@ -268,11 +268,58 @@ void city_view_get_camera_in_pixels(int *x, int *y)
     *y = data.camera.tile.y * HALF_TILE_HEIGHT_PIXELS + data.camera.pixel.y;
 }
 
+static void adjust_for_orientation(int x, int y, int orientation, int *x_out, int *y_out)
+{
+    switch (orientation) {
+        default:
+        case DIR_0_TOP:
+            *x_out = x;
+            *y_out = y;
+            break;
+        case DIR_2_RIGHT:
+            *x_out = y / 2;
+            *y_out = (VIEW_X_MAX - x) * 2;
+            break;
+        case DIR_4_BOTTOM:
+            *x_out = VIEW_X_MAX - x;
+            *y_out = VIEW_Y_MAX - y;
+            break;
+        case DIR_6_LEFT:
+            *x_out = (VIEW_Y_MAX - y) / 2;
+            *y_out = x * 2;
+            break;
+    }
+}
+
+void city_view_get_camera_absolute(int *x_abs, int *y_abs)
+{
+    int x_offset = data.viewport.width_tiles / 2;
+    int y_offset = data.viewport.height_tiles / 2;
+    int x_center = data.camera.tile.x + x_offset;
+    int y_center = data.camera.tile.y + y_offset;
+    int x_center_abs, y_center_abs;
+    int to_rotate = (DIR_8_NONE - data.orientation) % DIR_8_NONE;
+    adjust_for_orientation(x_center, y_center, to_rotate, &x_center_abs, &y_center_abs);
+    *x_abs = x_center_abs - x_offset;
+    *y_abs = y_center_abs - y_offset;
+}
+
 void city_view_set_camera(int x, int y)
 {
     data.camera.tile.x = x;
     data.camera.tile.y = y;
     check_camera_boundaries();
+}
+
+void city_view_set_camera_absolute(int x_abs, int y_abs)
+{
+    int x_offset = data.viewport.width_tiles / 2;
+    int y_offset = data.viewport.height_tiles / 2;
+    int x_center_abs = x_abs + x_offset;
+    int y_center_abs = y_abs + y_offset;
+    int x_center, y_center;
+    adjust_for_orientation(x_center_abs, y_center_abs, data.orientation, &x_center, &y_center);
+    city_view_set_camera(x_center - x_offset, y_center - y_offset);
 }
 
 void city_view_set_camera_from_pixel_position(int x, int y)

@@ -20,7 +20,7 @@ jobs:
           - name: Linux x64
             os: ubuntu-22.04
             cache-key: linux-x64
-            SDL_VERSION: 2.26.2
+            SDL_VERSION: 2.26.4
             SDL_MIXER_VERSION: 2.6.2
             BUILD_TARGET: linux
             DEPLOY: linux
@@ -35,7 +35,7 @@ jobs:
           - name: macOS
             os: macos-latest
             cache-key: macos
-            SDL_VERSION: 2.26.2
+            SDL_VERSION: 2.26.4
             SDL_MIXER_VERSION: 2.6.2
             BUILD_TARGET: mac
             DEPLOY: mac
@@ -50,7 +50,7 @@ jobs:
           - name: Android
             os: ubuntu-20.04
             cache-key: android
-            SDL_VERSION: 2.26.2
+            SDL_VERSION: 2.26.4
             SDL_MIXER_VERSION: 2.6.2
             BUILD_TARGET: android
             DEPLOY: android
@@ -64,7 +64,6 @@ jobs:
     env:
       SDL_VERSION: ${{ matrix.SDL_VERSION }}
       SDL_MIXER_VERSION: ${{ matrix.SDL_MIXER_VERSION }}
-      MPG123_VERSION: ${{ matrix.MPG123_VERSION }}
       BUILD_TARGET: ${{ matrix.BUILD_TARGET }}
       DEPLOY: ${{ matrix.DEPLOY }}
       SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
@@ -78,7 +77,7 @@ jobs:
         if: ${{ matrix.cache-key }}
         with:
           path: deps
-          key: ${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}-${{ env.MPG123_VERSION }}
+          key: ${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
       - name: Set up environment
         env:
           FILE_ENCRYPTION_IV: ${{ secrets.FILE_ENCRYPTION_IV }}
@@ -124,7 +123,7 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: windows-latest
     env:
-      SDL_VERSION: 2.26.2
+      SDL_VERSION: 2.26.4
       SDL_MIXER_VERSION: 2.6.2
       COMPILER: ${{ matrix.COMPILER }}
       SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
