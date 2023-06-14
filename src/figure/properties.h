@@ -4,7 +4,7 @@
 #include "figure/type.h"
 
 typedef enum {
-    FIGURE_CATEGORY_INACTIVE= 0,
+    FIGURE_CATEGORY_INACTIVE = 0,
     FIGURE_CATEGORY_CITIZEN = 1,
     FIGURE_CATEGORY_ARMED = 2,
     FIGURE_CATEGORY_HOSTILE = 3,
