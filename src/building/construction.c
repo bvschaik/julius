@@ -683,7 +683,7 @@ void building_construction_cancel(void)
 
 static int should_mark_for_construction(building_type type)
 {
-    if (type == BUILDING_SENATE_UPGRADED && city_buildings_has_senate()) {
+    if (type == BUILDING_SENATE && city_buildings_has_senate()) {
         return 0;
     } else if (type == BUILDING_CITY_MINT && (city_buildings_has_city_mint() || !city_buildings_has_senate())) {
         return 0;

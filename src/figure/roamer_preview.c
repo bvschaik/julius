@@ -14,7 +14,7 @@
 #include <string.h>
 
 #define TOTAL_ROAMERS 4
-#define MAX_STORED_BUILDING_TYPES 4
+#define MAX_STORED_BUILDING_TYPES 2
 #define SHOWN_BUILDING_OFFSET 12
 
 static struct {
@@ -29,9 +29,7 @@ static figure_type building_type_to_figure_type(building_type type)
         case BUILDING_MARKET:
             return FIGURE_MARKET_TRADER;
         case BUILDING_SENATE:
-        case BUILDING_SENATE_UPGRADED:
         case BUILDING_FORUM:
-        case BUILDING_FORUM_UPGRADED:
             return FIGURE_TAX_COLLECTOR;
         case BUILDING_SCHOOL:
             return FIGURE_SCHOOL_CHILD;

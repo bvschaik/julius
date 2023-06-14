@@ -443,7 +443,7 @@ int building_image_get(const building *b)
                     }
                 }
             }
-        case BUILDING_SENATE_UPGRADED:
+        case BUILDING_SENATE:
             if (!b->upgrade_level) {
                 return image_group(GROUP_BUILDING_SENATE);
             } else {

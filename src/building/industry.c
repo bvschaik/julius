@@ -149,7 +149,7 @@ static void update_venus_gt_production(void)
 
 static void update_city_mint_production(int new_day)
 {
-    if (building_count_active(BUILDING_SENATE) == 0 && building_count_active(BUILDING_SENATE_UPGRADED) == 0) {
+    if (building_count_active(BUILDING_SENATE) == 0) {
         return;
     }
 

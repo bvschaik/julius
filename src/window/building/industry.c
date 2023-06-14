@@ -392,7 +392,7 @@ void window_building_draw_city_mint(building_info_context *c)
 
         if (!c->has_road_access) {
             window_building_draw_description_at(c, 96, 69, 25);
-        } else if (building_count_active(BUILDING_SENATE) == 0 && building_count_active(BUILDING_SENATE_UPGRADED) == 0) {
+        } else if (building_count_active(BUILDING_SENATE) == 0) {
             window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_CITY_MINT_NO_SENATE);
         } else if (b->num_workers <= 0) {
             window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_CITY_MINT_NO_EMPLOYEES);

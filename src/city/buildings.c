@@ -21,11 +21,7 @@ static const building *get_first_working_building(building_type type)
 
 int city_buildings_has_senate(void)
 {
-    const building *senate = get_first_working_building(BUILDING_SENATE);
-    if (!senate->id) {
-        senate = get_first_working_building(BUILDING_SENATE_UPGRADED);
-    }
-    return senate->id != 0;
+    return get_first_working_building(BUILDING_SENATE)->id != 0;
 }
 
 int city_buildings_has_governor_house(void)

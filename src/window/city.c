@@ -208,9 +208,7 @@ static void show_roamers_for_overlay(int overlay)
             break;
         case OVERLAY_TAX_INCOME:
             figure_roamer_preview_create_all_for_building_type(BUILDING_FORUM);
-            figure_roamer_preview_create_all_for_building_type(BUILDING_FORUM_UPGRADED);
             figure_roamer_preview_create_all_for_building_type(BUILDING_SENATE);
-            figure_roamer_preview_create_all_for_building_type(BUILDING_SENATE_UPGRADED);
             break;
         case OVERLAY_FOOD_STOCKS:
             figure_roamer_preview_create_all_for_building_type(BUILDING_MARKET);
@@ -357,9 +355,7 @@ static void show_overlay_from_grid_offset(int grid_offset)
             overlay = OVERLAY_HOSPITAL;
             break;
         case BUILDING_FORUM:
-        case BUILDING_FORUM_UPGRADED:
         case BUILDING_SENATE:
-        case BUILDING_SENATE_UPGRADED:
             overlay = OVERLAY_TAX_INCOME;
             break;
         case BUILDING_MARKET:

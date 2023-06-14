@@ -689,10 +689,10 @@ static void update_scale(void)
     int min_scale = 0;
     int max_scale = 0;
     if (system_can_scale_display(&min_scale, &max_scale)) {
-        scale_ranges[RANGE_DISPLAY_SCALE].min = min_scale;
-        scale_ranges[RANGE_DISPLAY_SCALE].max = max_scale;
-        if (*scale_ranges[RANGE_DISPLAY_SCALE].value > max_scale) {
-            *scale_ranges[RANGE_DISPLAY_SCALE].value = max_scale;
+        ranges[RANGE_DISPLAY_SCALE].min = min_scale;
+        ranges[RANGE_DISPLAY_SCALE].max = max_scale;
+        if (*ranges[RANGE_DISPLAY_SCALE].value > max_scale) {
+            *ranges[RANGE_DISPLAY_SCALE].value = max_scale;
         }
     }
 }
