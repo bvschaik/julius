@@ -427,7 +427,7 @@ static translation_string all_strings[] = {
 	    "Nya tillgångar kommer ej visas korrekt.\n"
         "Din installation av Caesar 3 har ej en korrekt installerad 'assets'-mapp.\n"
         "Var god och säkertställ att '/assets'-mappen finns på översta nivån i din Caesar 3-installationsmapp." },
-    {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Fyren måste placeras nära vatten"},
+    {TR_WARNING_WATER_NEEDED_FOR_BUILDING, "Fyren måste placeras nära vatten"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Det här huset har tillgång till alla fem gudarna via Pantheon."},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Den rikliga maten ökar moralen" },
     {TR_BUILDING_LEGION_FOOD_STATUS, "Förnödenhetsstatus"},

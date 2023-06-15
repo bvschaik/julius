@@ -444,7 +444,7 @@ static translation_string all_strings[] = {
         "Votre installation de Caesar 3 n'a pas de dossier assets correctement installé. "
         "Les nouveaux bâtiments ne seront pas correctement affichés.\n"
         "Veuillez vous assurer qu'un dossier '/assets' à jour existe dans le répertoire d'installation de Caesar 3."},
-    {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Le phare doit être placé près de l'eau"},
+    {TR_WARNING_WATER_NEEDED_FOR_BUILDING, "Le phare doit être placé près de l'eau"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Cette maison a accès aux cinq dieux vénérés au Panthéon"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "La nourriture abondante renforce le moral"},
     {TR_BUILDING_LEGION_FOOD_STATUS, "Statut alimentaire"},

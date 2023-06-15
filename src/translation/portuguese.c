@@ -422,7 +422,7 @@ static translation_string all_strings[] = {
         "Os assets extra do Augustus não foram carregados.\n"
         "Isto pode ser devido a uma pasta 'assets' antiga ou faltando.\n"
         "Certifique que tem a pasta 'assets' mais atual, que pode ser descarregada do GitHub." },
-    {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "O Farol deve ser posicionado perto da água" },
+    {TR_WARNING_WATER_NEEDED_FOR_BUILDING, "O Farol deve ser posicionado perto da água" },
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Esta moradia tem acesso a todos os cinco deuses do Panteão" },
     {TR_BUILDING_LEGION_FOOD_BONUS, "A abundância de comida está melhorando o moral" },
     {TR_BUILDING_LEGION_FOOD_STATUS, "Condição da comida" },

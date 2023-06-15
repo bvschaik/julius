@@ -454,7 +454,7 @@ static translation_string all_strings[] = {
         "Extra Augustus Assets wurden nicht geladen.\n"
         "Das kann durch ein fehlendes oder veraltetes Assetverzeichnis passieren.\n"
         "Bitte stellen Sie sicher, dass die das aktuellste Assetverzeichnis haben, welches durch Github bereitgestellt wird."},
-    {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Leuchtturm muss nah am Wasser platziert werden."},
+    {TR_WARNING_WATER_NEEDED_FOR_BUILDING, "Leuchtturm muss nah am Wasser platziert werden."},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Dieses Haus hat durch das Pantheon Zugang zu allen fünf Göttern."},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Reichhaltiges Nahrungsangebot steigert die Moral"},
     {TR_BUILDING_LEGION_FOOD_STATUS, "Versorgungsstatus"},

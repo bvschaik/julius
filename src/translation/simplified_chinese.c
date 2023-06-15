@@ -428,7 +428,7 @@ static translation_string all_strings[] = {
         "无法加载Augustus额外资源。\n"
         "原因可能是‘assets’目录缺失或版本老旧。\n"
         "请确保‘assets’目录下的文件为最新版，可从Github上下载。" },
-    {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "灯塔必须临水建立"},
+    {TR_WARNING_WATER_NEEDED_FOR_BUILDING, "灯塔必须临水建立"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "该住宅可接触到万神殿的所有5位神灵"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "充足的食物正在提高士气" },
     {TR_BUILDING_LEGION_FOOD_STATUS, "食物状态"},

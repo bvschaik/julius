@@ -448,7 +448,7 @@ static translation_string all_strings[] = {
         "The extra Augustus assets could not be loaded.\n"
         "This can be due to a missing or old 'assets' directory.\n"
         "Please ensure you have the most up-to-date 'assets' directory, which can obtained from GitHub." },
-    {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Lighthouse must be placed near water"},
+    {TR_WARNING_WATER_NEEDED_FOR_BUILDING, "Building must be placed near water"},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "This house has access to all five gods from the Pantheon"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "Plentiful food is boosting morale" },
     {TR_BUILDING_LEGION_FOOD_STATUS, "Food status"},
@@ -794,7 +794,7 @@ static translation_string all_strings[] = {
     {TR_CITY_WARNING_SAND_NEEDED, "This building needs sand"},
     {TR_CITY_WARNING_BUILD_SAND_PIT, "Build a sand pit"},
     {TR_CITY_WARNING_STONE_NEEDED, "This building needs stone"},
-    {TR_CITY_WARNING_BUILD_STONE_MINE, "Build a stone mine"},
+    {TR_CITY_WARNING_BUILD_STONE_QUARRY, "Build a stone quarry"},
     {TR_CITY_WARNING_SENATE_NEEDED, "This building needs a working senate"},
     {TR_CITY_WARNING_BUILD_SENATE, "Build a senate"},
     {TR_HOTKEY_SHOW_OVERLAY_EFFICIENCY, "Efficiency overlay"},

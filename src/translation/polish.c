@@ -350,7 +350,7 @@ static translation_string all_strings[] = {
         "Twoja instalacja Cezara 3 nie posiada odpowiednio zainstalowanego folderu z modami. "
         "Nowe obiekty mogą nie wyświetlać się prawidłowo.\n"
         "Zapewnij aby folder '/assets' istniał w katalogu w którym jest zainstalowany Cezar 3. " },
-    { TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Latarnia musi być zbudowana blisko wody" },
+    { TR_WARNING_WATER_NEEDED_FOR_BUILDING, "Latarnia musi być zbudowana blisko wody" },
     { TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Ten dom ma dostęp do wszystkich bogów z panteonu." },
     { TR_BUILDING_LEGION_FOOD_BONUS, "Liczne jedzenie wzmaga morale" },
     { TR_BUILDING_LEGION_FOOD_STATUS, "Status jedzenia" },

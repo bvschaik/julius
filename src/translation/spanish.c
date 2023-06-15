@@ -415,7 +415,7 @@ static translation_string all_strings[] = {
         "Los recursos adicionales de Augustus no pudieron cargarse.\n"
         "Falta la carpeta 'assets' o está desactualizada.\n"
         "Asegúrate de tener la última versión de la carpeta 'assets', que puedes obtenerse desde GitHub."},
-    {TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "El faro debe ser construido cerca del agua."},
+    {TR_WARNING_WATER_NEEDED_FOR_BUILDING, "El faro debe ser construido cerca del agua."},
     {TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "Esta casa tiene acceso a todos los dioses del Panteón"},
     {TR_BUILDING_LEGION_FOOD_BONUS, "La abundante comida aumenta la moral"},
     {TR_BUILDING_LEGION_FOOD_STATUS, "Estado nutricional"},

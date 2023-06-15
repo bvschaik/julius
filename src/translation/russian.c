@@ -452,7 +452,7 @@ static translation_string all_strings[] = {
         "Мы не нашли установленную папку модов. \
   Из-за этого, новые спрайты не будут отображаться.\n \
   Убедитесь, что папка '/assets' существует на верхнем уровне каталога установки Caesar 3." },
-    { TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE, "Маяк нужно ставить возле воды" },
+    { TR_WARNING_WATER_NEEDED_FOR_BUILDING, "Маяк нужно ставить возле воды" },
     { TR_TOOLTIP_OVERLAY_PANTHEON_ACCESS, "В этом доме есть доступ ко всем пяти богам Пантеона." },
     { TR_BUILDING_LEGION_FOOD_BONUS, "Обильная еда поднимает боевой дух" },
     { TR_BUILDING_LEGION_FOOD_STATUS, "Статус еды" },

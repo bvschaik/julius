@@ -33,8 +33,8 @@ static const uint8_t *get_text_for_warning(warning_type type)
             return translation_for(TR_WARNING_NO_MESS_HALL);
         case WARNING_MAX_GRAND_TEMPLES:
             return translation_for(TR_WARNING_MAX_GRAND_TEMPLES);
-        case WARNING_WATER_NEEDED_FOR_LIGHTHOUSE:
-            return translation_for(TR_WARNING_WATER_NEEDED_FOR_LIGHTHOUSE);
+        case WARNING_WATER_NEEDED_FOR_BUILDING:
+            return translation_for(TR_WARNING_WATER_NEEDED_FOR_BUILDING);
         case WARNING_RESOURCES_NOT_AVAILABLE:
             return translation_for(TR_WARNING_RESOURCES_NOT_AVAILABLE);
         case WARNING_VARIANT_TOGGLE:
@@ -76,7 +76,7 @@ static const uint8_t *get_text_for_warning(warning_type type)
         case WARNING_STONE_NEEDED:
             return translation_for(TR_CITY_WARNING_STONE_NEEDED);
         case WARNING_BUILD_STONE_MINE:
-            return translation_for(TR_CITY_WARNING_BUILD_STONE_MINE);
+            return translation_for(TR_CITY_WARNING_BUILD_STONE_QUARRY);
         case WARNING_SENATE_NEEDED:
             return translation_for(TR_CITY_WARNING_SENATE_NEEDED);
         case WARNING_BUILD_SENATE:
