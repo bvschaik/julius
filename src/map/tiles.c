@@ -1297,9 +1297,10 @@ void map_tiles_add_entry_exit_flags(void)
     }
     if (entry_orientation >= 0) {
 
-        int grid_offset_flag = city_map_entry_flag()->grid_offset;
+        int grid_offset_flag = map_grid_offset(city_map_entry_flag()->x, city_map_entry_flag()->y);
+        int flag_is_set = city_map_entry_flag()->x || city_map_entry_flag()->y || city_map_entry_flag()->grid_offset;
 
-        if (!grid_offset_flag) {
+        if (!flag_is_set || !map_grid_is_valid_offset(grid_offset_flag)) {
             int grid_offset = map_grid_offset(entry_point.x, entry_point.y);
             int x_tile, y_tile;
             for (int i = 1; i < 10; i++) {
@@ -1317,9 +1318,11 @@ void map_tiles_add_entry_exit_flags(void)
     }
     if (exit_orientation >= 0) {
 
-        int grid_offset_flag = city_map_exit_flag()->grid_offset;
+        int grid_offset_flag = map_grid_offset(city_map_exit_flag()->x, city_map_exit_flag()->y) ;
+        int flag_is_set = city_map_exit_flag()->x || city_map_exit_flag()->y || city_map_exit_flag()->grid_offset;
 
-        if (!grid_offset_flag) {
+
+        if (!flag_is_set || !map_grid_is_valid_offset(grid_offset_flag)) {
             int grid_offset = map_grid_offset(exit_point.x, exit_point.y);
             int x_tile, y_tile;
             for (int i = 1; i < 10; i++) {
