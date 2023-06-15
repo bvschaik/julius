@@ -2,6 +2,975 @@
 <!DOCTYPE assetlist>
 <!-- Unless specifically mentioned, all assets created by Areldir -->
 <assetlist name="Walkers">
+	<!-- Note: Barkeep Portrait -->
+	<image id="Barkeep Portrait">
+		<layer group="190" image="2"/>
+		<layer src="barkeep_portrait_overlay"/>
+	</image>
+	<!-- Note: Barkeep Death animation frames 01-08 -->
+	<image id="Barkeep death 01">
+		<layer group="88" image="96"/>
+		<layer src="barkeep_death_01"/>
+	</image>
+	<image id="Barkeep death 02">
+		<layer group="88" image="97"/>
+		<layer src="barkeep_death_02"/>
+	</image>
+	<image id="Barkeep death 03">
+		<layer group="88" image="98"/>
+		<layer src="barkeep_death_03"/>
+	</image>
+	<image id="Barkeep death 04">
+		<layer group="88" image="99"/>
+		<layer src="barkeep_death_04"/>
+	</image>
+	<image id="Barkeep death 05">
+		<layer group="88" image="100"/>
+		<layer src="barkeep_death_05"/>
+	</image>
+	<image id="Barkeep death 06" src="barkeep_death_06"/>
+	<image id="Barkeep death 07" src="barkeep_death_07"/>
+	<image id="Barkeep death 08" src="barkeep_death_08"/>
+	<!-- Note: Barkeep Walking animation frames NORTH-EAST DIRECTION 01-12 -->
+	<image id="Barkeep NE 01">
+		<layer group="88" image="0"/>
+		<layer src="barkeep_ne_01"/>
+	</image>
+	<image id="Barkeep NE 02">
+		<layer group="88" image="8"/>
+		<layer src="barkeep_ne_02"/>
+	</image>
+	<image id="Barkeep NE 03">
+		<layer group="88" image="16"/>
+		<layer src="barkeep_ne_03"/>
+	</image>
+	<image id="Barkeep NE 04">
+		<layer group="88" image="24"/>
+		<layer src="barkeep_ne_04"/>
+	</image>
+	<image id="Barkeep NE 05">
+		<layer group="88" image="32"/>
+		<layer src="barkeep_ne_05"/>
+	</image>
+	<image id="Barkeep NE 06">
+		<layer group="88" image="40"/>
+		<layer src="barkeep_ne_06"/>
+	</image>
+	<image id="Barkeep NE 07">
+		<layer group="88" image="48"/>
+		<layer src="barkeep_ne_07"/>
+	</image>
+	<image id="Barkeep NE 08">
+		<layer group="88" image="56"/>
+		<layer src="barkeep_ne_08"/>
+	</image>
+	<image id="Barkeep NE 09">
+		<layer group="88" image="64"/>
+		<layer src="barkeep_ne_09"/>
+	</image>
+	<image id="Barkeep NE 10">
+		<layer group="88" image="72"/>
+		<layer src="barkeep_ne_10"/>
+	</image>
+	<image id="Barkeep NE 11">
+		<layer group="88" image="80"/>
+		<layer src="barkeep_ne_11"/>
+	</image>
+	<image id="Barkeep NE 12">
+		<layer group="88" image="88"/>
+		<layer src="barkeep_ne_12"/>
+	</image>
+	<!-- Note: Barkeep Walking animation frames EAST DIRECTION 01-12 -->
+	<image id="Barkeep E 01">
+		<layer group="88" image="1"/>
+		<layer src="barkeep_e_01"/>
+	</image>
+	<image id="Barkeep E 02">
+		<layer group="88" image="9"/>
+		<layer src="barkeep_e_02"/>
+	</image>
+	<image id="Barkeep E 03">
+		<layer group="88" image="17"/>
+		<layer src="barkeep_e_03"/>
+	</image>
+	<image id="Barkeep E 04">
+		<layer group="88" image="25"/>
+		<layer src="barkeep_e_04"/>
+	</image>
+	<image id="Barkeep E 05">
+		<layer group="88" image="33"/>
+		<layer src="barkeep_e_05"/>
+	</image>
+	<image id="Barkeep E 06">
+		<layer group="88" image="41"/>
+		<layer src="barkeep_e_06"/>
+	</image>
+	<image id="Barkeep E 07">
+		<layer group="88" image="49"/>
+		<layer src="barkeep_e_07"/>
+	</image>
+	<image id="Barkeep E 08">
+		<layer group="88" image="57"/>
+		<layer src="barkeep_e_08"/>
+	</image>
+	<image id="Barkeep E 09">
+		<layer group="88" image="65"/>
+		<layer src="barkeep_e_09"/>
+	</image>
+	<image id="Barkeep E 10">
+		<layer group="88" image="73"/>
+		<layer src="barkeep_e_10"/>
+	</image>
+	<image id="Barkeep E 11">
+		<layer group="88" image="81"/>
+		<layer src="barkeep_e_11"/>
+	</image>
+	<image id="Barkeep E 12">
+		<layer group="88" image="89"/>
+		<layer src="barkeep_e_12"/>
+	</image>
+	<!-- Note: Barkeep Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="Barkeep SE 01">
+		<layer group="88" image="2"/>
+		<layer src="barkeep_se_01"/>
+	</image>
+	<image id="Barkeep SE 02">
+		<layer group="88" image="10"/>
+		<layer src="barkeep_se_02"/>
+	</image>
+	<image id="Barkeep SE 03">
+		<layer group="88" image="18"/>
+		<layer src="barkeep_se_03"/>
+	</image>
+	<image id="Barkeep SE 04">
+		<layer group="88" image="26"/>
+		<layer src="barkeep_se_04"/>
+	</image>
+	<image id="Barkeep SE 05">
+		<layer group="88" image="34"/>
+		<layer src="barkeep_se_05"/>
+	</image>
+	<image id="Barkeep SE 06">
+		<layer group="88" image="42"/>
+		<layer src="barkeep_se_06"/>
+	</image>
+	<image id="Barkeep SE 07">
+		<layer group="88" image="50"/>
+		<layer src="barkeep_se_07"/>
+	</image>
+	<image id="Barkeep SE 08">
+		<layer group="88" image="58"/>
+		<layer src="barkeep_se_08"/>
+	</image>
+	<image id="Barkeep SE 09">
+		<layer group="88" image="66"/>
+		<layer src="barkeep_se_09"/>
+	</image>
+	<image id="Barkeep SE 10">
+		<layer group="88" image="74"/>
+		<layer src="barkeep_se_10"/>
+	</image>
+	<image id="Barkeep SE 11">
+		<layer group="88" image="82"/>
+		<layer src="barkeep_se_11"/>
+	</image>
+	<image id="Barkeep SE 12">
+		<layer group="88" image="90"/>
+		<layer src="barkeep_se_12"/>
+	</image>
+	<!-- Note: Barkeep Walking animation frames SOUTH DIRECTION 01-12 -->
+	<image id="Barkeep S 01">
+		<layer group="88" image="3"/>
+		<layer src="barkeep_s_01"/>
+	</image>
+	<image id="Barkeep S 02">
+		<layer group="88" image="11"/>
+		<layer src="barkeep_s_02"/>
+	</image>
+	<image id="Barkeep S 03">
+		<layer group="88" image="19"/>
+		<layer src="barkeep_s_03"/>
+	</image>
+	<image id="Barkeep S 04">
+		<layer group="88" image="27"/>
+		<layer src="barkeep_s_04"/>
+	</image>
+	<image id="Barkeep S 05">
+		<layer group="88" image="35"/>
+		<layer src="barkeep_s_05"/>
+	</image>
+	<image id="Barkeep S 06">
+		<layer group="88" image="43"/>
+		<layer src="barkeep_s_06"/>
+	</image>
+	<image id="Barkeep S 07">
+		<layer group="88" image="51"/>
+		<layer src="barkeep_s_07"/>
+	</image>
+	<image id="Barkeep S 08">
+		<layer group="88" image="59"/>
+		<layer src="barkeep_s_08"/>
+	</image>
+	<image id="Barkeep S 09">
+		<layer group="88" image="67"/>
+		<layer src="barkeep_s_09"/>
+	</image>
+	<image id="Barkeep S 10">
+		<layer group="88" image="75"/>
+		<layer src="barkeep_s_10"/>
+	</image>
+	<image id="Barkeep S 11">
+		<layer group="88" image="83"/>
+		<layer src="barkeep_s_11"/>
+	</image>
+	<image id="Barkeep S 12">
+		<layer group="88" image="91"/>
+		<layer src="barkeep_s_12"/>
+	</image>
+	<!-- Note: Barkeep Walking animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="Barkeep SW 01">
+		<layer group="88" image="4"/>
+		<layer src="barkeep_sw_01"/>
+	</image>
+	<image id="Barkeep SW 02">
+		<layer group="88" image="12"/>
+		<layer src="barkeep_sw_02"/>
+	</image>
+	<image id="Barkeep SW 03">
+		<layer group="88" image="20"/>
+		<layer src="barkeep_sw_03"/>
+	</image>
+	<image id="Barkeep SW 04">
+		<layer group="88" image="28"/>
+		<layer src="barkeep_sw_04"/>
+	</image>
+	<image id="Barkeep SW 05">
+		<layer group="88" image="36"/>
+		<layer src="barkeep_sw_05"/>
+	</image>
+	<image id="Barkeep SW 06">
+		<layer group="88" image="44"/>
+		<layer src="barkeep_sw_06"/>
+	</image>
+	<image id="Barkeep SW 07">
+		<layer group="88" image="52"/>
+		<layer src="barkeep_sw_07"/>
+	</image>
+	<image id="Barkeep SW 08">
+		<layer group="88" image="60"/>
+		<layer src="barkeep_sw_08"/>
+	</image>
+	<image id="Barkeep SW 09">
+		<layer group="88" image="68"/>
+		<layer src="barkeep_sw_09"/>
+	</image>
+	<image id="Barkeep SW 10">
+		<layer group="88" image="76"/>
+		<layer src="barkeep_sw_10"/>
+	</image>
+	<image id="Barkeep SW 11">
+		<layer group="88" image="84"/>
+		<layer src="barkeep_sw_11"/>
+	</image>
+	<image id="Barkeep SW 12">
+		<layer group="88" image="92"/>
+		<layer src="barkeep_sw_12"/>
+	</image>
+	<!-- Note: Barkeep Walking animation frames WEST DIRECTION 01-12 -->
+	<image id="Barkeep W 01">
+		<layer group="88" image="5"/>
+		<layer src="barkeep_w_01"/>
+	</image>
+	<image id="Barkeep W 02">
+		<layer group="88" image="13"/>
+		<layer src="barkeep_w_02"/>
+	</image>
+	<image id="Barkeep W 03">
+		<layer group="88" image="21"/>
+		<layer src="barkeep_w_03"/>
+	</image>
+	<image id="Barkeep W 04">
+		<layer group="88" image="29"/>
+		<layer src="barkeep_w_04"/>
+	</image>
+	<image id="Barkeep W 05">
+		<layer group="88" image="37"/>
+		<layer src="barkeep_w_05"/>
+	</image>
+	<image id="Barkeep W 06">
+		<layer group="88" image="45"/>
+		<layer src="barkeep_w_06"/>
+	</image>
+	<image id="Barkeep W 07">
+		<layer group="88" image="53"/>
+		<layer src="barkeep_w_07"/>
+	</image>
+	<image id="Barkeep W 08">
+		<layer group="88" image="61"/>
+		<layer src="barkeep_w_08"/>
+	</image>
+	<image id="Barkeep W 09">
+		<layer group="88" image="69"/>
+		<layer src="barkeep_w_09"/>
+	</image>
+	<image id="Barkeep W 10">
+		<layer group="88" image="77"/>
+		<layer src="barkeep_w_10"/>
+	</image>
+	<image id="Barkeep W 11">
+		<layer group="88" image="85"/>
+		<layer src="barkeep_w_11"/>
+	</image>
+	<image id="Barkeep W 12">
+		<layer group="88" image="93"/>
+		<layer src="barkeep_w_12"/>
+	</image>
+	<!-- Note: Barkeep Walking animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="Barkeep NW 01">
+		<layer group="88" image="6"/>
+		<layer src="barkeep_nw_01"/>
+	</image>
+	<image id="Barkeep NW 02">
+		<layer group="88" image="14"/>
+		<layer src="barkeep_nw_02"/>
+	</image>
+	<image id="Barkeep NW 03">
+		<layer group="88" image="22"/>
+		<layer src="barkeep_nw_03"/>
+	</image>
+	<image id="Barkeep NW 04">
+		<layer group="88" image="30"/>
+		<layer src="barkeep_nw_04"/>
+	</image>
+	<image id="Barkeep NW 05">
+		<layer group="88" image="38"/>
+		<layer src="barkeep_nw_05"/>
+	</image>
+	<image id="Barkeep NW 06">
+		<layer group="88" image="46"/>
+		<layer src="barkeep_nw_06"/>
+	</image>
+	<image id="Barkeep NW 07">
+		<layer group="88" image="54"/>
+		<layer src="barkeep_nw_07"/>
+	</image>
+	<image id="Barkeep NW 08">
+		<layer group="88" image="62"/>
+		<layer src="barkeep_nw_08"/>
+	</image>
+	<image id="Barkeep NW 09">
+		<layer group="88" image="70"/>
+		<layer src="barkeep_nw_09"/>
+	</image>
+	<image id="Barkeep NW 10">
+		<layer group="88" image="78"/>
+		<layer src="barkeep_nw_10"/>
+	</image>
+	<image id="Barkeep NW 11">
+		<layer group="88" image="86"/>
+		<layer src="barkeep_nw_11"/>
+	</image>
+	<image id="Barkeep NW 12">
+		<layer group="88" image="94"/>
+		<layer src="barkeep_nw_12"/>
+	</image>
+	<!-- Note: Barkeep Walking animation frames NORTH DIRECTION 01-12 -->
+	<image id="Barkeep N 01">
+		<layer group="88" image="7"/>
+		<layer src="barkeep_n_01"/>
+	</image>
+	<image id="Barkeep N 02">
+		<layer group="88" image="15"/>
+		<layer src="barkeep_n_02"/>
+	</image>
+	<image id="Barkeep N 03">
+		<layer group="88" image="23"/>
+		<layer src="barkeep_n_03"/>
+	</image>
+	<image id="Barkeep N 04">
+		<layer group="88" image="31"/>
+		<layer src="barkeep_n_04"/>
+	</image>
+	<image id="Barkeep N 05">
+		<layer group="88" image="39"/>
+		<layer src="barkeep_n_05"/>
+	</image>
+	<image id="Barkeep N 06">
+		<layer group="88" image="47"/>
+		<layer src="barkeep_n_06"/>
+	</image>
+	<image id="Barkeep N 07">
+		<layer group="88" image="55"/>
+		<layer src="barkeep_n_07"/>
+	</image>
+	<image id="Barkeep N 08">
+		<layer group="88" image="63"/>
+		<layer src="barkeep_n_08"/>
+	</image>
+	<image id="Barkeep N 09">
+		<layer group="88" image="71"/>
+		<layer src="barkeep_n_09"/>
+	</image>
+	<image id="Barkeep N 10">
+		<layer group="88" image="79"/>
+		<layer src="barkeep_n_10"/>
+	</image>
+	<image id="Barkeep N 11">
+		<layer group="88" image="87"/>
+		<layer src="barkeep_n_11"/>
+	</image>
+	<image id="Barkeep N 12">
+		<layer group="88" image="95"/>
+		<layer src="barkeep_n_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Portrait (Assets created by MSTVD) -->
+	<image id="barracks_worker_portrait">
+		<layer group="190" image="3"/>
+		<layer src="barracks_worker_portrait_overlay"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Death animation frames 01-08 -->
+	<image id="barracks_worker_death_01">
+		<layer group="108 " image="102"/>
+		<layer src="barracks_worker_death_01"/>
+	</image>
+	<image id="barracks_worker_death_02">
+		<layer group="108 " image="103"/>
+		<layer src="barracks_worker_death_02"/>
+	</image>
+	<image id="barracks_worker_death_03">
+		<layer group="108 " image="104"/>
+		<layer src="barracks_worker_death_03"/>
+	</image>
+	<image id="barracks_worker_death_04">
+		<layer group="108 " image="105"/>
+		<layer src="barracks_worker_death_04"/>
+	</image>
+	<image id="barracks_worker_death_05">
+		<layer group="108 " image="106"/>
+		<layer src="barracks_worker_death_05"/>
+	</image>
+	<image id="barracks_worker_death_06">
+		<layer group="108 " image="107"/>
+		<layer src="barracks_worker_death_06"/>
+	</image>
+	<image id="barracks_worker_death_07">
+		<layer group="108 " image="108"/>
+		<layer src="barracks_worker_death_07"/>
+	</image>
+	<image id="barracks_worker_death_08">
+		<layer group="108 " image="109"/>
+		<layer src="barracks_worker_death_08"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames NORTH-EAST DIRECTION 01-12 -->
+	<image id="barracks_worker_ne_01">
+		<layer group="108 " image="0"/>
+		<layer src="barracks_worker_ne_01"/>
+	</image>
+	<image id="barracks_worker_ne_02">
+		<layer group="108" image="8"/>
+		<layer src="barracks_worker_ne_02"/>
+	</image>
+	<image id="barracks_worker_ne_03">
+		<layer group="108" image="16"/>
+		<layer src="barracks_worker_ne_03"/>
+	</image>
+	<image id="barracks_worker_ne_04">
+		<layer group="108" image="24"/>
+		<layer src="barracks_worker_ne_04"/>
+	</image>
+	<image id="barracks_worker_ne_05">
+		<layer group="108" image="32"/>
+		<layer src="barracks_worker_ne_05"/>
+	</image>
+	<image id="barracks_worker_ne_06">
+		<layer group="108" image="40"/>
+		<layer src="barracks_worker_ne_06"/>
+	</image>
+	<image id="barracks_worker_ne_07">
+		<layer group="108" image="48"/>
+		<layer src="barracks_worker_ne_07"/>
+	</image>
+	<image id="barracks_worker_ne_08">
+		<layer group="108" image="56"/>
+		<layer src="barracks_worker_ne_08"/>
+	</image>
+	<image id="barracks_worker_ne_09">
+		<layer group="108" image="64"/>
+		<layer src="barracks_worker_ne_09"/>
+	</image>
+	<image id="barracks_worker_ne_10">
+		<layer group="108" image="72"/>
+		<layer src="barracks_worker_ne_10"/>
+	</image>
+	<image id="barracks_worker_ne_11">
+		<layer group="108" image="80"/>
+		<layer src="barracks_worker_ne_11"/>
+	</image>
+	<image id="barracks_worker_ne_12">
+		<layer group="108" image="88"/>
+		<layer src="barracks_worker_ne_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames EAST DIRECTION 01-12 -->
+	<image id="barracks_worker_e_01">
+		<layer group="108" image="1"/>
+		<layer src="barracks_worker_e_01"/>
+	</image>
+	<image id="barracks_worker_e_02">
+		<layer group="108" image="9"/>
+		<layer src="barracks_worker_e_02"/>
+	</image>
+	<image id="barracks_worker_e_03">
+		<layer group="108" image="17"/>
+		<layer src="barracks_worker_e_03"/>
+	</image>
+	<image id="barracks_worker_e_04">
+		<layer group="108" image="25"/>
+		<layer src="barracks_worker_e_04"/>
+	</image>
+	<image id="barracks_worker_e_05">
+		<layer group="108" image="33"/>
+		<layer src="barracks_worker_e_05"/>
+	</image>
+	<image id="barracks_worker_e_06">
+		<layer group="108" image="41"/>
+		<layer src="barracks_worker_e_06"/>
+	</image>
+	<image id="barracks_worker_e_07">
+		<layer group="108" image="49"/>
+		<layer src="barracks_worker_e_07"/>
+	</image>
+	<image id="barracks_worker_e_08">
+		<layer group="108" image="57"/>
+		<layer src="barracks_worker_e_08"/>
+	</image>
+	<image id="barracks_worker_e_09">
+		<layer group="108" image="65"/>
+		<layer src="barracks_worker_e_09"/>
+	</image>
+	<image id="barracks_worker_e_10">
+		<layer group="108" image="73"/>
+		<layer src="barracks_worker_e_10"/>
+	</image>
+	<image id="barracks_worker_e_11">
+		<layer group="108" image="81"/>
+		<layer src="barracks_worker_e_11"/>
+	</image>
+	<image id="barracks_worker_e_12">
+		<layer group="108" image="89"/>
+		<layer src="barracks_worker_e_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="barracks_worker_se_01">
+		<layer group="108" image="2"/>
+		<layer src="barracks_worker_se_01"/>
+	</image>
+	<image id="barracks_worker_se_02">
+		<layer group="108" image="10"/>
+		<layer src="barracks_worker_se_02"/>
+	</image>
+	<image id="barracks_worker_se_03">
+		<layer group="108" image="18"/>
+		<layer src="barracks_worker_se_03"/>
+	</image>
+	<image id="barracks_worker_se_04">
+		<layer group="108" image="26"/>
+		<layer src="barracks_worker_se_04"/>
+	</image>
+	<image id="barracks_worker_se_05">
+		<layer group="108" image="34"/>
+		<layer src="barracks_worker_se_05"/>
+	</image>
+	<image id="barracks_worker_se_06">
+		<layer group="108" image="42"/>
+		<layer src="barracks_worker_se_06"/>
+	</image>
+	<image id="barracks_worker_se_07">
+		<layer group="108" image="50"/>
+		<layer src="barracks_worker_se_07"/>
+	</image>
+	<image id="barracks_worker_se_08">
+		<layer group="108" image="58"/>
+		<layer src="barracks_worker_se_08"/>
+	</image>
+	<image id="barracks_worker_se_09">
+		<layer group="108" image="66"/>
+		<layer src="barracks_worker_se_09"/>
+	</image>
+	<image id="barracks_worker_se_10">
+		<layer group="108" image="74"/>
+		<layer src="barracks_worker_se_10"/>
+	</image>
+	<image id="barracks_worker_se_11">
+		<layer group="108" image="82"/>
+		<layer src="barracks_worker_se_11"/>
+	</image>
+	<image id="barracks_worker_se_12">
+		<layer group="108" image="90"/>
+		<layer src="barracks_worker_se_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames SOUTH DIRECTION 01-12 -->
+	<image id="barracks_worker_s_01">
+		<layer group="108" image="3"/>
+		<layer src="barracks_worker_s_01"/>
+	</image>
+	<image id="barracks_worker_s_02">
+		<layer group="108" image="11"/>
+		<layer src="barracks_worker_s_02"/>
+	</image>
+	<image id="barracks_worker_s_03">
+		<layer group="108" image="19"/>
+		<layer src="barracks_worker_s_03"/>
+	</image>
+	<image id="barracks_worker_s_04">
+		<layer group="108" image="27"/>
+		<layer src="barracks_worker_s_04"/>
+	</image>
+	<image id="barracks_worker_s_05">
+		<layer group="108" image="35"/>
+		<layer src="barracks_worker_s_05"/>
+	</image>
+	<image id="barracks_worker_s_06">
+		<layer group="108" image="43"/>
+		<layer src="barracks_worker_s_06"/>
+	</image>
+	<image id="barracks_worker_s_07">
+		<layer group="108" image="51"/>
+		<layer src="barracks_worker_s_07"/>
+	</image>
+	<image id="barracks_worker_s_08">
+		<layer group="108" image="59"/>
+		<layer src="barracks_worker_s_08"/>
+	</image>
+	<image id="barracks_worker_s_09">
+		<layer group="108" image="67"/>
+		<layer src="barracks_worker_s_09"/>
+	</image>
+	<image id="barracks_worker_s_10">
+		<layer group="108" image="75"/>
+		<layer src="barracks_worker_s_10"/>
+	</image>
+	<image id="barracks_worker_s_11">
+		<layer group="108" image="83"/>
+		<layer src="barracks_worker_s_11"/>
+	</image>
+	<image id="barracks_worker_s_12">
+		<layer group="108" image="91"/>
+		<layer src="barracks_worker_s_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="barracks_worker_sw_01">
+		<layer group="108" image="4"/>
+		<layer src="barracks_worker_sw_01"/>
+	</image>
+	<image id="barracks_worker_sw_02">
+		<layer group="108" image="12"/>
+		<layer src="barracks_worker_sw_02"/>
+	</image>
+	<image id="barracks_worker_sw_03">
+		<layer group="108" image="20"/>
+		<layer src="barracks_worker_sw_03"/>
+	</image>
+	<image id="barracks_worker_sw_04">
+		<layer group="108" image="28"/>
+		<layer src="barracks_worker_sw_04"/>
+	</image>
+	<image id="barracks_worker_sw_05">
+		<layer group="108" image="36"/>
+		<layer src="barracks_worker_sw_05"/>
+	</image>
+	<image id="barracks_worker_sw_06">
+		<layer group="108" image="44"/>
+		<layer src="barracks_worker_sw_06"/>
+	</image>
+	<image id="barracks_worker_sw_07">
+		<layer group="108" image="52"/>
+		<layer src="barracks_worker_sw_07"/>
+	</image>
+	<image id="barracks_worker_sw_08">
+		<layer group="108" image="60"/>
+		<layer src="barracks_worker_sw_08"/>
+	</image>
+	<image id="barracks_worker_sw_09">
+		<layer group="108" image="68"/>
+		<layer src="barracks_worker_sw_09"/>
+	</image>
+	<image id="barracks_worker_sw_10">
+		<layer group="108" image="76"/>
+		<layer src="barracks_worker_sw_10"/>
+	</image>
+	<image id="barracks_worker_sw_11">
+		<layer group="108" image="84"/>
+		<layer src="barracks_worker_sw_11"/>
+	</image>
+	<image id="barracks_worker_sw_12">
+		<layer group="108" image="92"/>
+		<layer src="barracks_worker_sw_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames WEST DIRECTION 01-12 -->
+	<image id="barracks_worker_w_01">
+		<layer group="108" image="5"/>
+		<layer src="barracks_worker_w_01"/>
+	</image>
+	<image id="barracks_worker_w_02">
+		<layer group="108" image="13"/>
+		<layer src="barracks_worker_w_02"/>
+	</image>
+	<image id="barracks_worker_w_03">
+		<layer group="108" image="21"/>
+		<layer src="barracks_worker_w_03"/>
+	</image>
+	<image id="barracks_worker_w_04">
+		<layer group="108" image="29"/>
+		<layer src="barracks_worker_w_04"/>
+	</image>
+	<image id="barracks_worker_w_05">
+		<layer group="108" image="37"/>
+		<layer src="barracks_worker_w_05"/>
+	</image>
+	<image id="barracks_worker_w_06">
+		<layer group="108" image="45"/>
+		<layer src="barracks_worker_w_06"/>
+	</image>
+	<image id="barracks_worker_w_07">
+		<layer group="108" image="53"/>
+		<layer src="barracks_worker_w_07"/>
+	</image>
+	<image id="barracks_worker_w_08">
+		<layer group="108" image="61"/>
+		<layer src="barracks_worker_w_08"/>
+	</image>
+	<image id="barracks_worker_w_09">
+		<layer group="108" image="69"/>
+		<layer src="barracks_worker_w_09"/>
+	</image>
+	<image id="barracks_worker_w_10">
+		<layer group="108" image="77"/>
+		<layer src="barracks_worker_w_10"/>
+	</image>
+	<image id="barracks_worker_w_11">
+		<layer group="108" image="85"/>
+		<layer src="barracks_worker_w_11"/>
+	</image>
+	<image id="barracks_worker_w_12">
+		<layer group="108" image="93"/>
+		<layer src="barracks_worker_w_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="barracks_worker_nw_01">
+		<layer group="108" image="6"/>
+		<layer src="barracks_worker_nw_01"/>
+	</image>
+	<image id="barracks_worker_nw_02">
+		<layer group="108" image="14"/>
+		<layer src="barracks_worker_nw_02"/>
+	</image>
+	<image id="barracks_worker_nw_03">
+		<layer group="108" image="22"/>
+		<layer src="barracks_worker_nw_03"/>
+	</image>
+	<image id="barracks_worker_nw_04">
+		<layer group="108" image="30"/>
+		<layer src="barracks_worker_nw_04"/>
+	</image>
+	<image id="barracks_worker_nw_05">
+		<layer group="108" image="38"/>
+		<layer src="barracks_worker_nw_05"/>
+	</image>
+	<image id="barracks_worker_nw_06">
+		<layer group="108" image="46"/>
+		<layer src="barracks_worker_nw_06"/>
+	</image>
+	<image id="barracks_worker_nw_07">
+		<layer group="108" image="54"/>
+		<layer src="barracks_worker_nw_07"/>
+	</image>
+	<image id="barracks_worker_nw_08">
+		<layer group="108" image="62"/>
+		<layer src="barracks_worker_nw_08"/>
+	</image>
+	<image id="barracks_worker_nw_09">
+		<layer group="108" image="70"/>
+		<layer src="barracks_worker_nw_09"/>
+	</image>
+	<image id="barracks_worker_nw_10">
+		<layer group="108" image="78"/>
+		<layer src="barracks_worker_nw_10"/>
+	</image>
+	<image id="barracks_worker_nw_11">
+		<layer group="108" image="86"/>
+		<layer src="barracks_worker_nw_11"/>
+	</image>
+	<image id="barracks_worker_nw_12">
+		<layer group="108" image="94"/>
+		<layer src="barracks_worker_nw_12"/>
+	</image>
+	<!-- Note: Barracks Cart Pusher Walking animation frames NORTH DIRECTION 01-12 -->
+	<image id="barracks_worker_n_01">
+		<layer group="108" image="7"/>
+		<layer src="barracks_worker_n_01"/>
+	</image>
+	<image id="barracks_worker_n_02">
+		<layer group="108" image="15"/>
+		<layer src="barracks_worker_n_02"/>
+	</image>
+	<image id="barracks_worker_n_03">
+		<layer group="108" image="23"/>
+		<layer src="barracks_worker_n_03"/>
+	</image>
+	<image id="barracks_worker_n_04">
+		<layer group="108" image="31"/>
+		<layer src="barracks_worker_n_04"/>
+	</image>
+	<image id="barracks_worker_n_05">
+		<layer group="108" image="39"/>
+		<layer src="barracks_worker_n_05"/>
+	</image>
+	<image id="barracks_worker_n_06">
+		<layer group="108" image="47"/>
+		<layer src="barracks_worker_n_06"/>
+	</image>
+	<image id="barracks_worker_n_07">
+		<layer group="108" image="55"/>
+		<layer src="barracks_worker_n_07"/>
+	</image>
+	<image id="barracks_worker_n_08">
+		<layer group="108" image="63"/>
+		<layer src="barracks_worker_n_08"/>
+	</image>
+	<image id="barracks_worker_n_09">
+		<layer group="108" image="71"/>
+		<layer src="barracks_worker_n_09"/>
+	</image>
+	<image id="barracks_worker_n_10">
+		<layer group="108" image="79"/>
+		<layer src="barracks_worker_n_10"/>
+	</image>
+	<image id="barracks_worker_n_11">
+		<layer group="108" image="87"/>
+		<layer src="barracks_worker_n_11"/>
+	</image>
+	<image id="barracks_worker_n_12">
+		<layer group="108" image="95"/>
+		<layer src="barracks_worker_n_12"/>
+	</image>
+	<!-- Note: Mess Hall Walker Portrait -->
+	<image id="M Hall Portrait">
+		<layer group="190" image="14"/>
+		<layer src="mess_walker_portrait_overlay"/>
+	</image>
+	<!-- Note: Mess Hall Walker Death animation frames 01-08 -->
+	<image id="M Hall death 01" src="mess_walker_death_01"/>
+	<image id="M Hall death 02" src="mess_walker_death_02"/>
+	<image id="M Hall death 03" src="mess_walker_death_03"/>
+	<image id="M Hall death 04" src="mess_walker_death_04"/>
+	<image id="M Hall death 05" src="mess_walker_death_05"/>
+	<image id="M Hall death 06" src="mess_walker_death_06"/>
+	<image id="M Hall death 07" src="mess_walker_death_07"/>
+	<image id="M Hall death 08" src="mess_walker_death_08"/>
+	<!-- Note: Mess Hall Walker Walking animation frames NORTH-EAST DIRECTION 01-12 -->
+	<image id="M Hall NE 01" src="mess_walker_ne_01"/>
+	<image id="M Hall NE 02" src="mess_walker_ne_02"/>
+	<image id="M Hall NE 03" src="mess_walker_ne_03"/>
+	<image id="M Hall NE 04" src="mess_walker_ne_04"/>
+	<image id="M Hall NE 05" src="mess_walker_ne_05"/>
+	<image id="M Hall NE 06" src="mess_walker_ne_06"/>
+	<image id="M Hall NE 07" src="mess_walker_ne_07"/>
+	<image id="M Hall NE 08" src="mess_walker_ne_08"/>
+	<image id="M Hall NE 09" src="mess_walker_ne_09"/>
+	<image id="M Hall NE 10" src="mess_walker_ne_10"/>
+	<image id="M Hall NE 11" src="mess_walker_ne_11"/>
+	<image id="M Hall NE 12" src="mess_walker_ne_12"/>
+	<!-- Note: Mess Hall Walker Walking animation frames EAST DIRECTION 01-12 -->
+	<image id="M Hall E 01" src="mess_walker_e_01"/>
+	<image id="M Hall E 02" src="mess_walker_e_02"/>
+	<image id="M Hall E 03" src="mess_walker_e_03"/>
+	<image id="M Hall E 04" src="mess_walker_e_04"/>
+	<image id="M Hall E 05" src="mess_walker_e_05"/>
+	<image id="M Hall E 06" src="mess_walker_e_06"/>
+	<image id="M Hall E 07" src="mess_walker_e_07"/>
+	<image id="M Hall E 08" src="mess_walker_e_08"/>
+	<image id="M Hall E 09" src="mess_walker_e_09"/>
+	<image id="M Hall E 10" src="mess_walker_e_10"/>
+	<image id="M Hall E 11" src="mess_walker_e_11"/>
+	<image id="M Hall E 12" src="mess_walker_e_12"/>
+	<!-- Note: Mess Hall Walker Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="M Hall SE 01" src="mess_walker_se_01"/>
+	<image id="M Hall SE 02" src="mess_walker_se_02"/>
+	<image id="M Hall SE 03" src="mess_walker_se_03"/>
+	<image id="M Hall SE 04" src="mess_walker_se_04"/>
+	<image id="M Hall SE 05" src="mess_walker_se_05"/>
+	<image id="M Hall SE 06" src="mess_walker_se_06"/>
+	<image id="M Hall SE 07" src="mess_walker_se_07"/>
+	<image id="M Hall SE 08" src="mess_walker_se_08"/>
+	<image id="M Hall SE 09" src="mess_walker_se_09"/>
+	<image id="M Hall SE 10" src="mess_walker_se_10"/>
+	<image id="M Hall SE 11" src="mess_walker_se_11"/>
+	<image id="M Hall SE 12" src="mess_walker_se_12"/>
+	<!-- Note: Mess Hall Walker Walking animation frames SOUTH DIRECTION 01-12 -->
+	<image id="M Hall S 01" src="mess_walker_s_01"/>
+	<image id="M Hall S 02" src="mess_walker_s_02"/>
+	<image id="M Hall S 03" src="mess_walker_s_03"/>
+	<image id="M Hall S 04" src="mess_walker_s_04"/>
+	<image id="M Hall S 05" src="mess_walker_s_05"/>
+	<image id="M Hall S 06" src="mess_walker_s_06"/>
+	<image id="M Hall S 07" src="mess_walker_s_07"/>
+	<image id="M Hall S 08" src="mess_walker_s_08"/>
+	<image id="M Hall S 09" src="mess_walker_s_09"/>
+	<image id="M Hall S 10" src="mess_walker_s_10"/>
+	<image id="M Hall S 11" src="mess_walker_s_11"/>
+	<image id="M Hall S 12" src="mess_walker_s_12"/>
+	<!-- Note: Mess Hall Walker Walking animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="M Hall SW 01" src="mess_walker_sw_01"/>
+	<image id="M Hall SW 02" src="mess_walker_sw_02"/>
+	<image id="M Hall SW 03" src="mess_walker_sw_03"/>
+	<image id="M Hall SW 04" src="mess_walker_sw_04"/>
+	<image id="M Hall SW 05" src="mess_walker_sw_05"/>
+	<image id="M Hall SW 06" src="mess_walker_sw_06"/>
+	<image id="M Hall SW 07" src="mess_walker_sw_07"/>
+	<image id="M Hall SW 08" src="mess_walker_sw_08"/>
+	<image id="M Hall SW 09" src="mess_walker_sw_09"/>
+	<image id="M Hall SW 10" src="mess_walker_sw_10"/>
+	<image id="M Hall SW 11" src="mess_walker_sw_11"/>
+	<image id="M Hall SW 12" src="mess_walker_sw_12"/>
+	<!-- Note: Mess Hall Walker Walking animation frames WEST DIRECTION 01-12 -->
+	<image id="M Hall W 01" src="mess_walker_w_01"/>
+	<image id="M Hall W 02" src="mess_walker_w_02"/>
+	<image id="M Hall W 03" src="mess_walker_w_03"/>
+	<image id="M Hall W 04" src="mess_walker_w_04"/>
+	<image id="M Hall W 05" src="mess_walker_w_05"/>
+	<image id="M Hall W 06" src="mess_walker_w_06"/>
+	<image id="M Hall W 07" src="mess_walker_w_07"/>
+	<image id="M Hall W 08" src="mess_walker_w_08"/>
+	<image id="M Hall W 09" src="mess_walker_w_09"/>
+	<image id="M Hall W 10" src="mess_walker_w_10"/>
+	<image id="M Hall W 11" src="mess_walker_w_11"/>
+	<image id="M Hall W 12" src="mess_walker_w_12"/>
+	<!-- Note: Mess Hall Walker Walking animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="M Hall NW 01" src="mess_walker_nw_01"/>
+	<image id="M Hall NW 02" src="mess_walker_nw_02"/>
+	<image id="M Hall NW 03" src="mess_walker_nw_03"/>
+	<image id="M Hall NW 04" src="mess_walker_nw_04"/>
+	<image id="M Hall NW 05" src="mess_walker_nw_05"/>
+	<image id="M Hall NW 06" src="mess_walker_nw_06"/>
+	<image id="M Hall NW 07" src="mess_walker_nw_07"/>
+	<image id="M Hall NW 08" src="mess_walker_nw_08"/>
+	<image id="M Hall NW 09" src="mess_walker_nw_09"/>
+	<image id="M Hall NW 10" src="mess_walker_nw_10"/>
+	<image id="M Hall NW 11" src="mess_walker_nw_11"/>
+	<image id="M Hall NW 12" src="mess_walker_nw_12"/>
+	<!-- Note: Mess Hall Walker Walking animation frames NORTH DIRECTION 01-12 -->
+	<image id="M Hall N 01" src="mess_walker_n_01"/>
+	<image id="M Hall N 02" src="mess_walker_n_02"/>
+	<image id="M Hall N 03" src="mess_walker_n_03"/>
+	<image id="M Hall N 04" src="mess_walker_n_04"/>
+	<image id="M Hall N 05" src="mess_walker_n_05"/>
+	<image id="M Hall N 06" src="mess_walker_n_06"/>
+	<image id="M Hall N 07" src="mess_walker_n_07"/>
+	<image id="M Hall N 08" src="mess_walker_n_08"/>
+	<image id="M Hall N 09" src="mess_walker_n_09"/>
+	<image id="M Hall N 10" src="mess_walker_n_10"/>
+	<image id="M Hall N 11" src="mess_walker_n_11"/>
+	<image id="M Hall N 12" src="mess_walker_n_12"/>
 	<!-- Note: Ox Portrait (Assets created by marwana) -->
 	<image id="Ox_Portrait">
 		<layer group="190" image="7"/>
@@ -120,4 +1089,122 @@
 	<image id="ox_n_10" src="ox_n_10"/>
 	<image id="ox_n_11" src="ox_n_11"/>
 	<image id="ox_n_12" src="ox_n_12"/>
+	<!-- Note: Slave Portrait -->
+	<image id="Slave Portrait">
+		<layer group="190" image="14"/>
+		<layer src="slave_portrait_overlay"/>
+	</image>
+	<!-- Note: Slave Death animation frames 01-08 -->
+	<image id="Slave death 01" src="slave_death_01"/>
+	<image id="Slave death 02" src="slave_death_02"/>
+	<image id="Slave death 03" src="slave_death_03"/>
+	<image id="Slave death 04" src="slave_death_04"/>
+	<image id="Slave death 05" src="slave_death_05"/>
+	<image id="Slave death 06" src="slave_death_06"/>
+	<image id="Slave death 07" src="slave_death_07"/>
+	<image id="Slave death 08" src="slave_death_08"/>
+	<!-- Note: Slave Walking animation frames NORTH-EAST DIRECTION 01-12 -->
+	<image id="Slave NE 01" src="slave_ne_01"/>
+	<image id="Slave NE 02" src="slave_ne_02"/>
+	<image id="Slave NE 03" src="slave_ne_03"/>
+	<image id="Slave NE 04" src="slave_ne_04"/>
+	<image id="Slave NE 05" src="slave_ne_05"/>
+	<image id="Slave NE 06" src="slave_ne_06"/>
+	<image id="Slave NE 07" src="slave_ne_07"/>
+	<image id="Slave NE 08" src="slave_ne_08"/>
+	<image id="Slave NE 09" src="slave_ne_09"/>
+	<image id="Slave NE 10" src="slave_ne_10"/>
+	<image id="Slave NE 11" src="slave_ne_11"/>
+	<image id="Slave NE 12" src="slave_ne_12"/>
+	<!-- Note: Slave Walking animation frames EAST DIRECTION 01-12 -->
+	<image id="Slave E 01" src="slave_e_01"/>
+	<image id="Slave E 02" src="slave_e_02"/>
+	<image id="Slave E 03" src="slave_e_03"/>
+	<image id="Slave E 04" src="slave_e_04"/>
+	<image id="Slave E 05" src="slave_e_05"/>
+	<image id="Slave E 06" src="slave_e_06"/>
+	<image id="Slave E 07" src="slave_e_07"/>
+	<image id="Slave E 08" src="slave_e_08"/>
+	<image id="Slave E 09" src="slave_e_09"/>
+	<image id="Slave E 10" src="slave_e_10"/>
+	<image id="Slave E 11" src="slave_e_11"/>
+	<image id="Slave E 12" src="slave_e_12"/>
+	<!-- Note: Slave Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="Slave SE 01" src="slave_se_01"/>
+	<image id="Slave SE 02" src="slave_se_02"/>
+	<image id="Slave SE 03" src="slave_se_03"/>
+	<image id="Slave SE 04" src="slave_se_04"/>
+	<image id="Slave SE 05" src="slave_se_05"/>
+	<image id="Slave SE 06" src="slave_se_06"/>
+	<image id="Slave SE 07" src="slave_se_07"/>
+	<image id="Slave SE 08" src="slave_se_08"/>
+	<image id="Slave SE 09" src="slave_se_09"/>
+	<image id="Slave SE 10" src="slave_se_10"/>
+	<image id="Slave SE 11" src="slave_se_11"/>
+	<image id="Slave SE 12" src="slave_se_12"/>
+	<!-- Note: Slave Walking animation frames SOUTH DIRECTION 01-12 -->
+	<image id="Slave S 01" src="slave_s_01"/>
+	<image id="Slave S 02" src="slave_s_02"/>
+	<image id="Slave S 03" src="slave_s_03"/>
+	<image id="Slave S 04" src="slave_s_04"/>
+	<image id="Slave S 05" src="slave_s_05"/>
+	<image id="Slave S 06" src="slave_s_06"/>
+	<image id="Slave S 07" src="slave_s_07"/>
+	<image id="Slave S 08" src="slave_s_08"/>
+	<image id="Slave S 09" src="slave_s_09"/>
+	<image id="Slave S 10" src="slave_s_10"/>
+	<image id="Slave S 11" src="slave_s_11"/>
+	<image id="Slave S 12" src="slave_s_12"/>
+	<!-- Note: Slave Walking animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="Slave SW 01" src="slave_sw_01"/>
+	<image id="Slave SW 02" src="slave_sw_02"/>
+	<image id="Slave SW 03" src="slave_sw_03"/>
+	<image id="Slave SW 04" src="slave_sw_04"/>
+	<image id="Slave SW 05" src="slave_sw_05"/>
+	<image id="Slave SW 06" src="slave_sw_06"/>
+	<image id="Slave SW 07" src="slave_sw_07"/>
+	<image id="Slave SW 08" src="slave_sw_08"/>
+	<image id="Slave SW 09" src="slave_sw_09"/>
+	<image id="Slave SW 10" src="slave_sw_10"/>
+	<image id="Slave SW 11" src="slave_sw_11"/>
+	<image id="Slave SW 12" src="slave_sw_12"/>
+	<!-- Note: Slave Walking animation frames WEST DIRECTION 01-12 -->
+	<image id="Slave W 01" src="slave_w_01"/>
+	<image id="Slave W 02" src="slave_w_02"/>
+	<image id="Slave W 03" src="slave_w_03"/>
+	<image id="Slave W 04" src="slave_w_04"/>
+	<image id="Slave W 05" src="slave_w_05"/>
+	<image id="Slave W 06" src="slave_w_06"/>
+	<image id="Slave W 07" src="slave_w_07"/>
+	<image id="Slave W 08" src="slave_w_08"/>
+	<image id="Slave W 09" src="slave_w_09"/>
+	<image id="Slave W 10" src="slave_w_10"/>
+	<image id="Slave W 11" src="slave_w_11"/>
+	<image id="Slave W 12" src="slave_w_12"/>
+	<!-- Note: Slave Walking animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="Slave NW 01" src="slave_nw_01"/>
+	<image id="Slave NW 02" src="slave_nw_02"/>
+	<image id="Slave NW 03" src="slave_nw_03"/>
+	<image id="Slave NW 04" src="slave_nw_04"/>
+	<image id="Slave NW 05" src="slave_nw_05"/>
+	<image id="Slave NW 06" src="slave_nw_06"/>
+	<image id="Slave NW 07" src="slave_nw_07"/>
+	<image id="Slave NW 08" src="slave_nw_08"/>
+	<image id="Slave NW 09" src="slave_nw_09"/>
+	<image id="Slave NW 10" src="slave_nw_10"/>
+	<image id="Slave NW 11" src="slave_nw_11"/>
+	<image id="Slave NW 12" src="slave_nw_12"/>
+	<!-- Note: Slave Walking animation frames NORTH DIRECTION 01-12 -->
+	<image id="Slave N 01" src="slave_n_01"/>
+	<image id="Slave N 02" src="slave_n_02"/>
+	<image id="Slave N 03" src="slave_n_03"/>
+	<image id="Slave N 04" src="slave_n_04"/>
+	<image id="Slave N 05" src="slave_n_05"/>
+	<image id="Slave N 06" src="slave_n_06"/>
+	<image id="Slave N 07" src="slave_n_07"/>
+	<image id="Slave N 08" src="slave_n_08"/>
+	<image id="Slave N 09" src="slave_n_09"/>
+	<image id="Slave N 10" src="slave_n_10"/>
+	<image id="Slave N 11" src="slave_n_11"/>
+	<image id="Slave N 12" src="slave_n_12"/>
 </assetlist>
