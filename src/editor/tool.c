@@ -282,7 +282,7 @@ void editor_tool_update_use(const map_tile *tile)
         case TOOL_LOWER_LAND:
             map_image_context_reset_water();
             map_image_context_reset_elevation();
-            map_tiles_update_all_elevation();
+            map_tiles_update_all_elevation_editor();
             map_tiles_update_region_water(x_min, y_min, x_max, y_max);
             map_tiles_update_region_trees(x_min, y_min, x_max, y_max);
             map_tiles_update_region_shrub(x_min, y_min, x_max, y_max);
@@ -372,7 +372,7 @@ static void update_terrain_after_elevation_changes(void)
 
     map_image_context_reset_water();
     map_image_context_reset_elevation();
-    map_tiles_update_all_elevation();
+    map_tiles_update_all_elevation_editor();
     map_tiles_update_all_rocks();
     map_tiles_update_all_empty_land();
     map_tiles_update_all_meadow();
