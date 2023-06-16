@@ -666,11 +666,8 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
             if (space->id > 0) {
                 resource_type space_resource = space->subtype.warehouse_resource_id;
                 if (space_resource == RESOURCE_NONE) {
-                    continue;
-                }
-                if (space->resources[space_resource] <= 0) {
                     room += MAX_CARTLOADS_PER_SPACE;
-                } else {
+                } else if (r == space_resource) {
                     room += MAX_CARTLOADS_PER_SPACE - space->resources[space_resource];
                 }
             }
