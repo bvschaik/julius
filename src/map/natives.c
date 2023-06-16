@@ -192,7 +192,7 @@ void map_natives_check_land(int update_behavior)
     for (int i = 0; i < 2; i++) {
         building_type type = native_buildings[i];
         int size = building_properties_for_type(type)->size;
-        int radius = size * 2;
+        int radius = size * 3;
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state != BUILDING_STATE_IN_USE) {
                 continue;
