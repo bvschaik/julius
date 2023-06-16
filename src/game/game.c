@@ -169,7 +169,7 @@ void game_exit_editor(void)
 
 int game_reload_language(void)
 {
-    return reload_language(0, 1);
+    return reload_language(editor_is_active(), 1);
 }
 
 void game_run(void)
