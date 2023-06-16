@@ -290,6 +290,9 @@ void building_industry_update_production(int new_day)
             if (b->type == BUILDING_CONCRETE_MAKER) {
                 progress *= b->has_water_access;
                 progress /= 2;
+                if (b->num_workers > 0 && b->has_water_access == 1 && progress == 0) {
+                    progress = 1;
+                }
             }
             b->data.industry.progress += progress;
 
