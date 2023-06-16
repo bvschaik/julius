@@ -62,12 +62,12 @@ struct { \
         } \
     } \
     if (!error && (a).in_use) { \
-        for (int array_i = index; array_i < (a).size; array_i++) { \
-            if (!(a).in_use(array_item(a, array_i))) { \
-                ptr = array_item(a, array_i); \
+        for (int array_index = index; array_index < (a).size; array_index++) { \
+            if (!(a).in_use(array_item(a, array_index))) { \
+                ptr = array_item(a, array_index); \
                 memset(ptr, 0, sizeof(**(a).items)); \
                 if ((a).constructor) { \
-                    (a).constructor(ptr, array_i); \
+                    (a).constructor(ptr, array_index); \
                 } \
                 break; \
             } \
@@ -121,9 +121,10 @@ struct { \
  * Iterates through an array
  * @param a The array structure
  * @param item A pointer to the array item that will be used to traverse the structure
+ * @note You can use the array_index parameter to retrieve the index of the current item
  */
 #define array_foreach(a, item) \
-    for(int i = 0; i < (a).size && ((item) = array_item(a, i)); i++)
+    for(int array_index = 0; array_index < (a).size && ((item) = array_item(a, array_index)); array_index++)
 
 /**
  * Trims an array, removing its latest items that aren't being used until the first one is used.

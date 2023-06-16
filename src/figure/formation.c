@@ -189,8 +189,7 @@ void formation_record_fight(formation *m)
 int formation_grid_offset_for_invasion(int invasion_sequence)
 {
     formation *m;
-    array_foreach(formations, m)
-    {
+    array_foreach(formations, m) {
         if (m->in_use == 1 && !m->is_legion && !m->is_herd && m->invasion_sequence == invasion_sequence) {
             if (m->x_home > 0 || m->y_home > 0) {
                 return map_grid_offset(m->x_home, m->y_home);
@@ -205,8 +204,7 @@ int formation_grid_offset_for_invasion(int invasion_sequence)
 void formation_caesar_pause(void)
 {
     formation *m;
-    array_foreach(formations, m)
-    {
+    array_foreach(formations, m) {
         if (m->in_use == 1 && m->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
             m->wait_ticks = 20;
         }
@@ -216,8 +214,7 @@ void formation_caesar_pause(void)
 void formation_caesar_retreat(void)
 {
     formation *m;
-    array_foreach(formations, m)
-    {
+    array_foreach(formations, m) {
         if (m->in_use == 1 && m->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
             m->months_low_morale = 1;
         }
@@ -263,8 +260,7 @@ int formation_get_num_legions(void)
 {
     int total = 0;
     formation *m;
-    array_foreach(formations, m)
-    {
+    array_foreach(formations, m) {
         if (m->in_use && m->is_legion) {
             total++;
         }
@@ -286,8 +282,7 @@ int formation_for_legion(int legion_index)
 {
     int index = 1;
     formation *m;
-    array_foreach(formations, m)
-    {
+    array_foreach(formations, m) {
         if (m->in_use && m->is_legion) {
             if (index++ == legion_index) {
                 return m->id;
@@ -366,8 +361,7 @@ static void change_all_morale(int legion, int enemy)
 void formation_update_monthly_morale_deployed(void)
 {
     formation *f;
-    array_foreach(formations, f)
-    {
+    array_foreach(formations, f) {
         if (f->in_use != 1 || f->is_herd) {
             continue;
         }
@@ -662,8 +656,7 @@ static void update_direction(int formation_id, int first_figure_direction)
 static void update_directions(void)
 {
     formation *m;
-    array_foreach(formations, m)
-    {
+    array_foreach(formations, m) {
         if (m->in_use && !m->is_herd) {
             update_direction(m->id, figure_get(m->figures[0])->direction);
         }
@@ -673,8 +666,7 @@ static void update_directions(void)
 static void set_legion_max_figures(void)
 {
     formation *m;
-    array_foreach(formations, m)
-    {
+    array_foreach(formations, m) {
         if (m->in_use && m->is_legion) {
             m->max_figures = MAX_FORMATION_FIGURES;
         }

@@ -48,8 +48,7 @@ int building_storage_get_array_size(void)
 void building_storage_reset_building_ids(void)
 {
     data_storage *storage;
-    array_foreach(storages, storage)
-    {
+    array_foreach(storages, storage) {
         storage->building_id = 0;
     }
 
@@ -240,8 +239,7 @@ void building_storage_save_state(buffer *buf)
     buffer_write_i32(buf, STORAGE_CURRENT_BUFFER_SIZE);
 
     data_storage *s;
-    array_foreach(storages, s)
-    {
+    array_foreach(storages, s) {
         buffer_write_i32(buf, s->storage.permissions); // Originally unused
         buffer_write_i32(buf, s->building_id);
         buffer_write_u8(buf, (uint8_t) s->in_use);

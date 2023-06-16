@@ -337,7 +337,7 @@ void building_update_state(void)
             } else if ((b->type >= BUILDING_GRAND_TEMPLE_CERES && b->type <= BUILDING_GRAND_TEMPLE_VENUS) || b->type == BUILDING_PANTHEON || b->type == BUILDING_LIGHTHOUSE) {
                 road_recalc = 1;
             }
-            map_building_tiles_remove(i, b->x, b->y);
+            map_building_tiles_remove(array_index, b->x, b->y);
             if (building_type_is_roadblock(b->type)) {
                 // Leave the road behind the deleted roadblock
                 map_terrain_add(b->grid_offset, TERRAIN_ROAD);
@@ -354,7 +354,7 @@ void building_update_state(void)
             building_delete(b);
         } else if (b->immigrant_figure_id) {
             const figure *f = figure_get(b->immigrant_figure_id);
-            if (f->state != FIGURE_STATE_ALIVE || f->destination_building_id != i) {
+            if (f->state != FIGURE_STATE_ALIVE || f->destination_building_id != array_index) {
                 b->immigrant_figure_id = 0;
             }
         }
@@ -377,8 +377,7 @@ void building_update_state(void)
 void building_update_desirability(void)
 {
     building *b;
-    array_foreach(data.buildings, b)
-    {
+    array_foreach(data.buildings, b) {
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
         }

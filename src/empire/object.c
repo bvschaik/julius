@@ -355,10 +355,10 @@ void empire_object_init_cities(int empire_id)
                 || city->type == EMPIRE_CITY_FUTURE_ROMAN) {
                 continue;
             }
-            if (empire_object_city_sells_resource(i, resource)) {
+            if (empire_object_city_sells_resource(array_index, resource)) {
                 city->sells_resource[resource] = 1;
             }
-            if (empire_object_city_buys_resource(i, resource)) {
+            if (empire_object_city_buys_resource(array_index, resource)) {
                 city->buys_resource[resource] = 1;
             }
             if (city->type != EMPIRE_CITY_OURS) {
@@ -375,7 +375,7 @@ void empire_object_init_cities(int empire_id)
         city->trader_figure_ids[0] = 0;
         city->trader_figure_ids[1] = 0;
         city->trader_figure_ids[2] = 0;
-        city->empire_object_id = i;
+        city->empire_object_id = array_index;
     }
 }
 
@@ -497,7 +497,7 @@ int empire_object_get_closest(int x, int y)
         int dist = calc_maximum_distance(x, y, obj_x + obj->width / 2, obj_y + obj->height / 2);
         if (dist < min_dist) {
             min_dist = dist;
-            min_obj_id = i + 1;
+            min_obj_id = array_index + 1;
         }
     }
     return min_obj_id;

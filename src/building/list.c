@@ -100,8 +100,7 @@ void building_list_save_state(buffer *small, buffer *large, buffer *burning, buf
     if (buf_size) {
         uint8_t *buf_data = malloc(buf_size);
         buffer_init(small, buf_data, buf_size);
-        array_foreach(data.small, value)
-        {
+        array_foreach(data.small, value) {
             buffer_write_i32(small, *value);
         }
     }
@@ -110,8 +109,7 @@ void building_list_save_state(buffer *small, buffer *large, buffer *burning, buf
     if (buf_size) {
         uint8_t *buf_data = malloc(buf_size);
         buffer_init(large, buf_data, buf_size);
-        array_foreach(data.large, value)
-        {
+        array_foreach(data.large, value) {
             buffer_write_i32(large, *value);
         }
     }
@@ -120,8 +118,7 @@ void building_list_save_state(buffer *small, buffer *large, buffer *burning, buf
     if (buf_size) {
         uint8_t *buf_data = malloc(buf_size);
         buffer_init(burning, buf_data, buf_size);
-        array_foreach(data.burning, value)
-        {
+        array_foreach(data.burning, value) {
             buffer_write_i32(burning, *value);
         }
     }

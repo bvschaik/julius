@@ -232,8 +232,7 @@ static void get_assets_for_group(int group_id)
 static void populate_asset_rects(image_packer *packer)
 {
     packed_asset *asset;
-    array_foreach(packed_assets, asset)
-    {
+    array_foreach(packed_assets, asset) {
         int width, height;
         asset->rect = &packer->rects[asset->id];
         if (!png_get_image_size(asset->path, &width, &height)) {

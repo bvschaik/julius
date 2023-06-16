@@ -70,8 +70,7 @@ void figure_visited_buildings_save_state(buffer *buf)
     buffer_init(buf, buf_data, buf_size);
     buffer_write_i32(buf, VISITED_BUILDINGS_BUFFER_SIZE);
     const visited_building *visited;
-    array_foreach(visited_buildings, visited)
-    {
+    array_foreach(visited_buildings, visited) {
         buffer_write_i32(buf, visited->building_id);
         buffer_write_i32(buf, visited->prev_index);
     }

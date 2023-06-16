@@ -66,7 +66,7 @@ int custom_messages_get_id_by_uid(const uint8_t *message_uid)
         if (entry && entry->linked_uid) {
             const uint8_t *current_uid = entry->linked_uid->text;
             if (string_equals(current_uid, message_uid)) {
-                return i;
+                return array_index;
             }
         }
     }

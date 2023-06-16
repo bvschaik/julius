@@ -486,8 +486,7 @@ void building_monument_add_delivery(int monument_id, int figure_id, int resource
 void building_monument_remove_delivery(int figure_id)
 {
     monument_delivery *delivery;
-    array_foreach(monument_deliveries, delivery)
-    {
+    array_foreach(monument_deliveries, delivery) {
         if (delivery->walker_id == figure_id) {
             delivery->destination_id = 0;
         }
@@ -499,8 +498,7 @@ static int resource_in_delivery(int monument_id, int resource_id)
 {
     int resources = 0;
     monument_delivery *delivery;
-    array_foreach(monument_deliveries, delivery)
-    {
+    array_foreach(monument_deliveries, delivery) {
         if (delivery->destination_id == monument_id &&
             delivery->resource == resource_id) {
             resources += delivery->cartloads;
@@ -519,8 +517,7 @@ static int resource_in_delivery_multipart(building *b, int resource_id)
 
     while (b->id) {
         monument_delivery *delivery;
-        array_foreach(monument_deliveries, delivery)
-        {
+        array_foreach(monument_deliveries, delivery) {
             if (delivery->destination_id == b->id &&
                 delivery->resource == resource_id) {
                 resources += delivery->cartloads;
@@ -689,8 +686,7 @@ void building_monument_delivery_save_state(buffer *buf)
     buffer_write_i32(buf, ORIGINAL_DELIVERY_BUFFER_SIZE);
 
     monument_delivery *delivery;
-    array_foreach(monument_deliveries, delivery)
-    {
+    array_foreach(monument_deliveries, delivery) {
         delivery_save(buf, delivery);
     }
 }

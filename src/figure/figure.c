@@ -234,8 +234,7 @@ void figure_init_scenario(void)
 void figure_kill_all(void)
 {
     figure *f;
-    array_foreach(data.figures, f)
-    {
+    array_foreach(data.figures, f) {
         switch (f->type) {
             default:
                 f->state = FIGURE_STATE_DEAD;

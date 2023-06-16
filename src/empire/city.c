@@ -67,7 +67,7 @@ int empire_city_get_id_by_name(const uint8_t *city_name)
     array_foreach(cities, city) {
         const uint8_t *current_name = empire_city_get_name(city);
         if (string_equals(current_name, city_name)) {
-            return i;
+            return array_index;
         }
     }
     return 0;
@@ -233,7 +233,7 @@ int empire_city_get_for_object(int empire_object_id)
     empire_city *city;
     array_foreach(cities, city) {
         if (city->in_use && city->empire_object_id == empire_object_id) {
-            return i;
+            return array_index;
         }
     }
     return 0;
@@ -244,7 +244,7 @@ int empire_city_get_for_trade_route(int route_id)
     empire_city *city;
     array_foreach(cities, city) {
         if (city->in_use && city->route_id == route_id) {
-            return i;
+            return array_index;
         }
     }
     return -1;
@@ -289,7 +289,7 @@ int empire_city_get_vulnerable_roman(void)
     empire_city *city;
     array_foreach(cities, city) {
         if (city->in_use && city->type == EMPIRE_CITY_VULNERABLE_ROMAN) {
-            city_id = i;
+            city_id = array_index;
         }
     }
     return city_id;
@@ -406,7 +406,7 @@ void empire_city_generate_trader(void)
         } else {
             city_trade_add_land_trade_route();
         }
-        if (generate_trader(i, city)) {
+        if (generate_trader(array_index, city)) {
             break;
         }
     }
