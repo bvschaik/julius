@@ -261,10 +261,10 @@ static void draw_workshop(
                     c->x_offset + 60, c->y_offset + 60 + resources_y_offset, FONT_NORMAL_BLACK);
                 int extra_width = lang_text_draw_amount(8, 10, b->resources[chain[i].raw_material],
                     c->x_offset + 60 + width, c->y_offset + 60 + resources_y_offset, font);
-                text_draw_number(chain[i].raw_amount, '(',
-                    (const char *) translation_for(TR_BUILDING_WINDOW_INDUSTRY_NEEDED),
+                text_draw_number_scaled(chain[i].raw_amount, '(',
+                    translation_for(TR_BUILDING_WINDOW_INDUSTRY_NEEDED),
                     c->x_offset + 60 + width + extra_width, c->y_offset + 60 + resources_y_offset,
-                    FONT_NORMAL_BLACK, COLOR_MASK_NONE);
+                    FONT_NORMAL_BLACK, COLOR_MASK_NONE, SCALE_NONE);
                 resources_y_offset += 20;
             }
         }

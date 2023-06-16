@@ -24,7 +24,7 @@ int text_draw_ellipsized(const uint8_t *str, int x, int y, int box_width, font_t
 
 int text_draw_number(int value, char prefix, const char *postfix, int x, int y, font_t font, color_t color);
 void text_draw_number_finances(int value, int x, int y, font_t font, color_t color);
-int text_draw_number_scaled(int value, char prefix, const char *postfix,
+int text_draw_number_scaled(int value, char prefix, const uint8_t *postfix,
         int x, int y, font_t font, color_t color, float scale);
 int text_draw_money(int value, int x_offset, int y_offset, font_t font);
 void text_draw_with_money(const uint8_t *text, int value, const char *prefix, const char *postfix,

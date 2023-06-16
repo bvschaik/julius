@@ -132,7 +132,7 @@ static void draw_map_flag(const figure *f, int x, int y, float scale)
         number = id - MAP_FLAG_HERD_MIN + 1;
     }
     if (number > 0) {
-        text_draw_number_scaled(number, '@', " ", x + 6, y + 7, FONT_NORMAL_PLAIN, COLOR_WHITE, scale);
+        text_draw_number_scaled(number, '@', 0, x + 6, y + 7, FONT_NORMAL_PLAIN, COLOR_WHITE, scale);
     }
 }
 

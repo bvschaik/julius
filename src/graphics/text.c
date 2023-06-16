@@ -377,7 +377,7 @@ static int number_to_string(uint8_t *str, int value, char prefix, const char *po
     return offset;
 }
 
-int text_draw_number_scaled(int value, char prefix, const char *postfix,
+int text_draw_number_scaled(int value, char prefix, const uint8_t *postfix,
     int x, int y, font_t font, color_t color, float scale)
 {
     const font_definition *def = font_definition_for(font);
@@ -417,7 +417,7 @@ int text_draw_number_scaled(int value, char prefix, const char *postfix,
     }
 
     if (postfix && *postfix) {
-        current_x += text_draw_scaled(string_from_ascii(postfix), current_x, y, font, color, scale);
+        current_x += text_draw_scaled(postfix, current_x, y, font, color, scale);
     } else {
         current_x += def->space_width;
     }
@@ -427,7 +427,8 @@ int text_draw_number_scaled(int value, char prefix, const char *postfix,
 
 int text_draw_number(int value, char prefix, const char *postfix, int x, int y, font_t font, color_t color)
 {
-    return text_draw_number_scaled(value, prefix, postfix, x, y, font, color, SCALE_NONE);
+    const uint8_t *ascii_postfix = postfix && *postfix ? string_from_ascii(postfix) : 0;
+    return text_draw_number_scaled(value, prefix, ascii_postfix, x, y, font, color, SCALE_NONE);
 }
 
 void text_draw_number_finances(int value, int x, int y, font_t font, color_t color)
