@@ -82,10 +82,10 @@ static int big_people_image(figure_type type)
         case FIGURE_CARAVANSERAI_SUPPLIER:
         case FIGURE_CARAVANSERAI_COLLECTOR:
         case FIGURE_LIGHTHOUSE_SUPPLIER:
-            return assets_get_image_id("Logistics", "Slave Portrait");
+            return assets_get_image_id("Walkers", "Slave Portrait");
         case FIGURE_MESS_HALL_COLLECTOR:
         case FIGURE_MESS_HALL_FORT_SUPPLIER:
-            return assets_get_image_id("Military", "M Hall Portrait");
+            return assets_get_image_id("Walkers", "M Hall Portrait");
         case FIGURE_TRADE_CARAVAN_DONKEY:
         case FIGURE_TRADE_CARAVAN:
             if (scenario_property_climate() == CLIMATE_DESERT) {
@@ -94,7 +94,7 @@ static int big_people_image(figure_type type)
             break;
         case FIGURE_BARKEEP:
         case FIGURE_BARKEEP_SUPPLIER:
-            return assets_get_image_id("Entertainment", "Barkeep Portrait");
+            return assets_get_image_id("Walkers", "Barkeep Portrait");
         case FIGURE_DEPOT_CART_PUSHER:
             return image_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[FIGURE_IMMIGRANT] - 1;
         default:
