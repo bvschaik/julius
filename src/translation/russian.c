@@ -779,7 +779,7 @@ static translation_string all_strings[] = {
     {TR_CITY_WARNING_SAND_NEEDED, "Этому зданию нужен песок"},
     {TR_CITY_WARNING_BUILD_SAND_PIT, "Постройте песчаный карьер"},
     {TR_CITY_WARNING_STONE_NEEDED, "Этому зданию нужен камень"},
-    {TR_CITY_WARNING_BUILD_STONE_MINE, "Постройте каменный карьер"},
+    {TR_CITY_WARNING_BUILD_STONE_QUARRY, "Постройте каменный карьер"},
     {TR_CITY_WARNING_SENATE_NEEDED, "Для этого здания нужен работающий сенат"},
     {TR_CITY_WARNING_BUILD_SENATE, "Постройте сенат"},
     {TR_HOTKEY_SHOW_OVERLAY_EFFICIENCY, "Слой эффективности"},
