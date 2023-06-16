@@ -12,7 +12,8 @@ static const building DUMMY_BUILDING;
 static const building *get_first_working_building(building_type type)
 {
     for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-        if (b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_CREATED) {
+        if (b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_CREATED ||
+            b->state == BUILDING_STATE_MOTHBALLED) {
             return b;
         }
     }
