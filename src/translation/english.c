@@ -1187,7 +1187,10 @@ static translation_string all_strings[] = {
     {TR_BUILDING_HALF_STAFF_DESC, "Building is half understaffed. Will operate at a reduced speed." },
     {TR_BUILDING_SOME_STAFF_DESC, "Building is understaffed. Will operate suboptimally." },
     {TR_BUILDING_MOST_STAFF_DESC, "Building is some workers. Will have some inefficiency." },
-    {TR_BUILDING_INFO_MOTHBALL_WARNING, "This building is mothballed." }
+    {TR_BUILDING_INFO_MOTHBALL_WARNING, "This building is mothballed." },
+    {TR_BUILDING_INFO_CARTLOAD, "cartload." },
+    {TR_BUILDING_INFO_CARTLOADS, "cartloads." },
+    
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

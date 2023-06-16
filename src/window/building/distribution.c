@@ -958,12 +958,13 @@ void window_building_draw_warehouse(building_info_context *c)
                 int width = text_draw_number(amount, '@', " ", x + 24, y + 7, FONT_NORMAL_BLACK, COLOR_MASK_NONE);
                 text_draw(resource_get_data(r)->text, x + 24 + width, y + 7, FONT_NORMAL_BLACK, COLOR_MASK_NONE);
             }
-            int width = lang_text_draw(98, 2, c->x_offset + 34, c->y_offset + 40, FONT_NORMAL_BLACK);
-            lang_text_draw_amount(8, 16, total_stored, c->x_offset + 34 + width, c->y_offset + 40, FONT_NORMAL_BLACK);
+            int width = lang_text_draw(98, 2, c->x_offset + 20, c->y_offset + 40, FONT_NORMAL_BLACK);
+            lang_text_draw_amount(CUSTOM_TRANSLATION, TR_BUILDING_INFO_CARTLOAD,
+                total_stored, c->x_offset + 20 + width, c->y_offset + 40, FONT_NORMAL_BLACK);
 
             width = lang_text_draw(98, 3, c->x_offset + 220, c->y_offset + 40, FONT_NORMAL_BLACK);
-            lang_text_draw_amount(8, 16, 32 - total_stored,
-                c->x_offset + 220 + width, c->y_offset + 40, FONT_NORMAL_BLACK);
+            lang_text_draw_amount(CUSTOM_TRANSLATION, TR_BUILDING_INFO_CARTLOAD,
+                32 - total_stored, c->x_offset + 220 + width, c->y_offset + 40, FONT_NORMAL_BLACK);
         }
     }
     int y_offset = 160 + y_offset_blocks * BLOCK_SIZE;
