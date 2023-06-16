@@ -1262,7 +1262,7 @@ static void set_elevation_image(int x, int y, int grid_offset)
     }
 }
 
-void update_all_elevation(int recalculate_trees)
+static void update_all_elevation(int recalculate_trees)
 {
     elevation_recalculate_trees = recalculate_trees;
     int width = map_data.width - 1;
