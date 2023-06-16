@@ -1259,7 +1259,14 @@ static void spawn_figure_mission_post(building *b)
 static void spawn_figure_industry(building *b)
 {
     if (b->type == BUILDING_CONCRETE_MAKER) {
-        b->has_water_access = map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE);
+        b->has_water_access = map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_RESERVOIR_RANGE) ?
+            2 : 0;
+        if (!b->has_water_access) {
+            b->has_water_access = map_terrain_exists_tile_in_area_with_type(b->x, b->y, b->size, TERRAIN_FOUNTAIN_RANGE);
+            if (!b->has_water_access) {
+                b->has_water_access = b->has_well_access;
+            }
+        }
     }
     check_labor_problem(b);
     map_point road;

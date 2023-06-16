@@ -283,10 +283,15 @@ void building_industry_update_production(int new_day)
             if (b->data.industry.blessing_days_left && new_day) {
                 b->data.industry.blessing_days_left--;
             }
-            b->data.industry.progress += b->num_workers;
+            int progress = b->num_workers;
             if (b->data.industry.blessing_days_left && building_is_farm(b->type)) {
-                b->data.industry.progress += b->num_workers;
+                progress += b->num_workers;
             }
+            if (b->type == BUILDING_CONCRETE_MAKER) {
+                progress *= b->has_water_access;
+                progress /= 2;
+            }
+            b->data.industry.progress += progress;
 
             int max = building_industry_get_max_progress(b);
             if (b->data.industry.progress > max) {
