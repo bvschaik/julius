@@ -228,10 +228,9 @@ void resource_init(void)
     resource_info[RESOURCE_SAND].image.editor.empire = assets_get_image_id("UI", "Panelling_Sand_02");
 
     resource_info[RESOURCE_CONCRETE].text = lang_get_string(CUSTOM_TRANSLATION, TR_RESOURCE_CONCRETE);
-    resource_info[RESOURCE_CONCRETE].image.cart.single_load = assets_get_image_id("Industry", "Sand_Cart_NE");
-    resource_info[RESOURCE_CONCRETE].image.cart.multiple_loads = assets_get_image_id("Industry", "Sand_Cart_Getting_NE");
-    resource_info[RESOURCE_CONCRETE].image.cart.eight_loads = assets_get_image_id("Industry", "Sand_Cart_Getting_NE");
-    resource_info[RESOURCE_CONCRETE].image.storage = assets_get_image_id("Industry", "Warehouse_Sand_01");
+    resource_info[RESOURCE_CONCRETE].image.cart.single_load = assets_get_image_id("Industry", "Concrete_Cart_NE");
+    resource_info[RESOURCE_CONCRETE].image.cart.multiple_loads = assets_get_image_id("Industry", "Concrete_Cart_Getting_NE");
+    resource_info[RESOURCE_CONCRETE].image.cart.eight_loads = assets_get_image_id("Industry", "Concrete_Cart_Getting_NE");
     resource_info[RESOURCE_CONCRETE].image.icon = assets_get_image_id("UI", "Panelling_Concrete_01");
     resource_info[RESOURCE_CONCRETE].image.empire = assets_get_image_id("UI", "Panelling_Concrete_02");
     resource_info[RESOURCE_CONCRETE].image.editor.icon = assets_get_image_id("UI", "Panelling_Concrete_01");
