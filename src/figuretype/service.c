@@ -449,14 +449,7 @@ void figure_market_trader_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
     figure_image_increase_offset(f, 12);
-    if (f->action_state == FIGURE_ACTION_125_ROAMING) {
-        // force return on out of stock
-        int stock = building_market_get_max_food_stock(market) +
-            building_market_get_max_goods_stock(market);
-        if (f->roam_length >= 96 && stock <= 0) {
-            f->roam_length = f->max_roam_length;
-        }
-    }
+
     roamer_action(f, 1);
     figure_image_update(f, image_group(GROUP_FIGURE_MARKET_LADY));
 }
