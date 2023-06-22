@@ -388,10 +388,12 @@
 		<layer group="83" image="0" x="0" y="0"/>
 		<layer src="Warehouse_Gold_04" x="9" y="1"/>
 	</image>
+	<!-- Assets created by Areldir, with tweaks from Ouaz -->
 	<!-- Note: Sand Pit OFF - Climate Variants -->
 	<image id="Sand_Pit_C_OFF" src="Sand_Pit_C_OFF" width="118" height="60" isometric="true"/>
 	<image id="Sand_Pit_N_OFF" src="Sand_Pit_N_OFF" width="118" height="60" isometric="true"/>
 	<image id="Sand_Pit_S_OFF" src="Sand_Pit_S_OFF" width="118" height="60" isometric="true"/>
+	<!-- Assets created by Areldir -->
 	<!-- Note: Sand Pit ON - Climate Variants -->
 	<image id="Sand_Pit_C_ON" width="118" height="60" isometric="true">
 		<layer group="this" image="Sand_Pit_C_OFF"/>
