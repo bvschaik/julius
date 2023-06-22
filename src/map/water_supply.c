@@ -28,6 +28,7 @@
 #define FOUNTAIN_RADIUS 4
 
 static const int ADJACENT_OFFSETS[] = { -GRID_SIZE, 1, GRID_SIZE, -1 };
+static const int CONNECTOR_OFFSETS[] = { OFFSET(1,-1), OFFSET(3,1), OFFSET(1,3), OFFSET(-1,1) };
 
 static struct {
     int items[MAX_QUEUE];
@@ -92,9 +93,21 @@ static void set_all_aqueducts_to_no_water(void)
     }
 }
 
+static int is_valid_reservoir_connection(int grid_offset)
+{
+    int xy = map_property_multi_tile_xy(grid_offset);
+    return xy != EDGE_X0Y0 && xy != EDGE_X2Y0 && xy != EDGE_X0Y2 && xy != EDGE_X2Y2;
+}
+
 static void fill_aqueducts_from_offset(int grid_offset)
 {
     if (!map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
+        building *b = building_get(map_building_at(grid_offset));
+        if (b->id && b->type == BUILDING_RESERVOIR) {
+            if (!b->has_water_access && is_valid_reservoir_connection(grid_offset)) {
+                b->has_water_access = 2;
+            }
+        }
         return;
     }
     memset(&queue, 0, sizeof(queue));
@@ -118,12 +131,8 @@ static void fill_aqueducts_from_offset(int grid_offset)
             int new_offset = grid_offset + ADJACENT_OFFSETS[i];
             building *b = building_get(map_building_at(new_offset));
             if (b->id && b->type == BUILDING_RESERVOIR) {
-                // check if aqueduct connects to reservoir --> doesn't connect to corner
-                int xy = map_property_multi_tile_xy(new_offset);
-                if (xy != EDGE_X0Y0 && xy != EDGE_X2Y0 && xy != EDGE_X0Y2 && xy != EDGE_X2Y2) {
-                    if (!b->has_water_access) {
-                        b->has_water_access = 2;
-                    }
+                if (!b->has_water_access && is_valid_reservoir_connection(new_offset)) {
+                    b->has_water_access = 2;
                 }
             } else if (map_terrain_is(new_offset, TERRAIN_AQUEDUCT)) {
                 if (!map_aqueduct_has_water_access_at(new_offset)) {
@@ -168,7 +177,6 @@ void map_water_supply_update_reservoir_fountain(void)
     }
     // fill reservoirs from full ones
     int changed = 1;
-    static const int CONNECTOR_OFFSETS[] = { OFFSET(1,-1), OFFSET(3,1), OFFSET(1,3), OFFSET(-1,1) };
     while (changed == 1) {
         changed = 0;
         for (building *b = building_first_of_type(BUILDING_RESERVOIR); b; b = b->next_of_type) {
@@ -258,6 +266,30 @@ void map_water_supply_update_reservoir_fountain(void)
             b->has_water_access = 0;
         }
     }
+}
+
+int map_water_supply_has_aqueduct_access(int grid_offset)
+{
+    for (int i = 0; i < 4; i++) {
+        int new_offset = grid_offset + CONNECTOR_OFFSETS[i];
+        if (!map_grid_is_valid_offset(new_offset)) {
+            continue;
+        }
+        if (map_terrain_is(new_offset, TERRAIN_AQUEDUCT)) {
+            if (map_aqueduct_has_water_access_at(new_offset)) {
+                return 1;
+            }
+            continue;
+        }
+        building *b = building_get(map_building_at(new_offset));
+        if (!b->id || b->type != BUILDING_RESERVOIR || !b->has_water_access) {
+            continue;
+        }
+        if (is_valid_reservoir_connection(new_offset)) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 int map_water_supply_is_well_unnecessary(int well_id, int radius)

@@ -553,7 +553,8 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     color_t color = blocked ? COLOR_MASK_BUILDING_GHOST_RED : COLOR_MASK_BUILDING_GHOST;
     int draw_later = 0;
     int x_start, y_start, offset;
-    int has_water = map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER);
+    int has_water = map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER) ||
+        map_water_supply_has_aqueduct_access(map_grid_offset(map_x, map_y));
     int orientation_index = city_view_orientation() / 2;
     int drawing_two_reservoirs = building_construction_in_progress();
     if (drawing_two_reservoirs) {

@@ -39,6 +39,7 @@
 #include "map/terrain.h"
 #include "map/tiles.h"
 #include "map/water.h"
+#include "map/water_supply.h"
 
 #define BUILDING_CYCLES 4
 #define MAX_CYCLE_SIZE 10
@@ -1012,7 +1013,8 @@ void building_construction_place(void)
                 image_group(GROUP_BUILDING_RESERVOIR), TERRAIN_BUILDING);
             map_aqueduct_remove(map_grid_offset(x_end - 1, y_end - 1));
             if (!map_terrain_exists_tile_in_area_with_type(x_start - 2, y_start - 2, 5, TERRAIN_WATER)
-                && info.place_reservoir_at_start == PLACE_RESERVOIR_NO) {
+                && info.place_reservoir_at_start == PLACE_RESERVOIR_NO &&
+                !map_water_supply_has_aqueduct_access(reservoir->grid_offset)) {
                 building_construction_warning_check_reservoir(BUILDING_RESERVOIR);
             }
         }
