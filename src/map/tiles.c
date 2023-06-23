@@ -1281,6 +1281,18 @@ void map_tiles_update_all_elevation_editor(void)
     update_all_elevation(1);
 }
 
+static void remove_entry_exit_flag(const map_tile *tile)
+{
+    // re-calculate grid_offset because the stored offset might be invalid
+    map_terrain_remove(map_grid_offset(tile->x, tile->y), TERRAIN_ROCK);
+}
+
+void map_tiles_remove_entry_exit_flags(void)
+{
+    remove_entry_exit_flag(city_map_entry_flag());
+    remove_entry_exit_flag(city_map_exit_flag());
+}
+
 void map_tiles_add_entry_exit_flags(void)
 {
     int entry_orientation;
@@ -1356,6 +1368,8 @@ void map_tiles_add_entry_exit_flags(void)
 
 void map_tiles_update_all(void)
 {
+    map_tiles_remove_entry_exit_flags();
+
     map_tiles_update_all_elevation();
     map_tiles_update_all_water();
     map_tiles_update_all_earthquake();

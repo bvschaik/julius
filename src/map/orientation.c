@@ -49,6 +49,7 @@ static void determine_leftmost_tile(void)
 
 void map_orientation_change(int counter_clockwise)
 {
+    map_tiles_remove_entry_exit_flags();
     game_undo_disable();
     determine_leftmost_tile();
 
