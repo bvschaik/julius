@@ -403,6 +403,10 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
         case HOTKEY_SHOW_MESSAGES:
             def->action = &data.hotkey_state.show_messages;
             break;
+        case HOTKEY_SHOW_OVERLAY_RISKS_NATIVE:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_NATIVE;
+            break;
 
 		default:
             def->action = 0;

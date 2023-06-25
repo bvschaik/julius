@@ -1197,7 +1197,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_INFO_MOTHBALL_WARNING, "This building is mothballed." },
     {TR_BUILDING_INFO_CARTLOAD, "cartload." },
     {TR_BUILDING_INFO_CARTLOADS, "cartloads." },
-    
+    {TR_HOTKEY_SHOW_OVERLAY_RISKS_NATIVE, "Native overlay"},
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
