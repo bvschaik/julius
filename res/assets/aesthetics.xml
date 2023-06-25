@@ -405,6 +405,18 @@
 	<image id="R Garden Wall 09" src="Garden_Wall_B_Intersection_03" isometric="true"/>
 	<image id="R Garden Wall 10" src="Garden_Wall_B_Intersection_04" isometric="true"/>
 	<image id="R Garden Wall 11" src="Garden_Wall_B_Intersection_4w" isometric="true"/>
+	<!-- Note: Assets for 'Panelled garden wall' all directions and intersection variants -->
+	<image id="Garden_Wall_C_01" src="Garden_Wall_C" isometric="true"/>
+	<image id="Garden_Wall_C_02" src="Garden_Wall_C_R" isometric="true"/>
+	<image id="Garden_Wall_C_03" src="Garden_Wall_C_Corner_01" isometric="true"/>
+	<image id="Garden_Wall_C_04" src="Garden_Wall_C_Corner_02" isometric="true"/>
+	<image id="Garden_Wall_C_05" src="Garden_Wall_C_Corner_03" isometric="true"/>
+	<image id="Garden_Wall_C_06" src="Garden_Wall_C_Corner_04" isometric="true"/>
+	<image id="Garden_Wall_C_07" src="Garden_Wall_C_Intersection_01" isometric="true"/>
+	<image id="Garden_Wall_C_08" src="Garden_Wall_C_Intersection_02" isometric="true"/>
+	<image id="Garden_Wall_C_09" src="Garden_Wall_C_Intersection_03" isometric="true"/>
+	<image id="Garden_Wall_C_10" src="Garden_Wall_C_Intersection_04" isometric="true"/>
+	<image id="Garden_Wall_C_11" src="Garden_Wall_C_Intersection_4w" isometric="true"/>
 	<!-- Note: Rotation variants for Vanilla Small Statue -->
 	<!-- Assets created by Lizzaran -->
 	<image id="V Small Statue R" width="58" height="53" isometric="true">

@@ -668,15 +668,16 @@
 			<frame src="Nymphaeum_ON_06"/>
 		</animation>
 	</image>
-	<!-- Note: Large Mausoleum Construction 0% Phase -->
+	<!-- Note: Large Mausoleum Construction Phases -->
 	<image id="Mausoleum L Cons" isometric="true">
 		<layer group="this" image="const_base_3x3" x="0" y="0"/>
 		<layer src="Mausoleum_Large_Construction_01" x="0" y="0"/>
 	</image>
+	<image id="Mausoleum_Large_Construction_02" src="Mausoleum_Large_Construction_02" isometric="true"/>
 	<!-- Note: Large Mausoleum asset -->
 	<image id="Mausoleum L" src="Mausoleum_Large" isometric="true"/>
-	<!-- Note: Small Mausoleum Construction 0% Phase -->
-	<image id="Mausoleum S Cons" src="Mausoleum_Small_Construction_0%" isometric="true"/>
+	<!-- Note: Small Mausoleum Construction 01 Phase -->
+	<image id="Mausoleum S Cons" src="Mausoleum_Small_Construction_01" isometric="true"/>
 	<!-- Note: Small Mausoleum asset -->
 	<image id="Mausoleum S" src="Mausoleum_Small" isometric="true"/>
 	<!-- Note: Small Mausoleum asset (Rotation Variant) -->
@@ -684,6 +685,9 @@
 		<layer src="Mausoleum_Small" x="0" y="0" part="footprint"/>
 		<layer src="Mausoleum_Small_R" x="0" y="0"/>
 	</image>
+	<!-- Note: Large Mausoleum variant asset construction 02 phase, with rotation -->
+	<image id="Mausoleum_Large_Alt_Construction_02" src="Mausoleum_Large_Alt_Construction_02" isometric="true"/>
+	<image id="Mausoleum_Large_Alt_Construction_02_R" src="Mausoleum_Large_Alt_Construction_02_R" isometric="true"/>
 	<!-- Note: Large Mausoleum variant asset with rotation -->
 	<image id="Mausoleum_L_Alt" src="Mausoleum_Large_Alt" isometric="true"/>
 	<image id="Mausoleum_L_Alt_R" isometric="true">
