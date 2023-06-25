@@ -25,4 +25,6 @@ const city_overlay *city_overlay_for_mothball(void);
 
 const city_overlay *city_overlay_for_warehouses(void);
 
+const city_overlay *city_overlay_for_storages(void);
+
 #endif // WIGET_CITY_OVERLAY_OTHER_H

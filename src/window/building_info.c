@@ -14,6 +14,7 @@
 #include "figure/formation_legion.h"
 #include "figure/roamer_preview.h"
 #include "figure/phrase.h"
+#include "game/state.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
@@ -74,6 +75,7 @@ static building_info_context context;
 static int focus_image_button_id;
 static int focus_mothball_image_button_id;
 static int focus_monument_construction_button_id;
+static int original_overlay;
 
 static int get_height_id(void)
 {
@@ -246,6 +248,7 @@ static int center_in_city(int element_width_pixels)
 
 static void init(int grid_offset)
 {
+    original_overlay = game_state_overlay();
     context.can_play_sound = 1;
     context.storage_show_special_orders = 0;
     context.depot_select_destination = 0;
@@ -342,7 +345,8 @@ static void init(int grid_offset)
                 context.warehouse_space_text = building_warehouse_get_space_info(b);
                 break;
             case BUILDING_DEPOT:
-                window_building_depot_init(0);
+                game_state_set_overlay(OVERLAY_STORAGES);
+                window_building_depot_init_main(b->id);
                 break;
             default:
                 if (building_monument_is_unfinished_monument(b)) {
@@ -1005,6 +1009,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         handled |= handle_specific_building_info_mouse(m);
     }
     if (!handled && input_go_back_requested(m, h)) {
+        game_state_set_overlay(original_overlay);
         window_city_show();
     }
 }
@@ -1043,6 +1048,12 @@ static void get_tooltip(tooltip_context *c)
         window_building_warehouse_get_tooltip_distribution_permissions(&translation);
     } else if (btype == BUILDING_DOCK) {
         precomposed_text = window_building_dock_get_tooltip(&context);        
+    } else if (context.type == BUILDING_INFO_BUILDING && btype == BUILDING_DEPOT) {
+        if (context.depot_select_source || context.depot_select_destination) {
+            window_building_depot_get_tooltip_source_destination(&translation);
+        } else if (!context.depot_select_resource) {
+            window_building_depot_get_tooltip_main(&translation);
+        }
     }
     if (!text_id && !group_id && !translation) {
         if (btype >= BUILDING_WHEAT_FARM && btype <= BUILDING_POTTERY_WORKSHOP) {
@@ -1076,6 +1087,7 @@ static void button_close(int param1, int param2)
         context.storage_show_special_orders = 0;
         window_invalidate();
     } else {
+        game_state_set_overlay(original_overlay);
         window_city_show();
     }
 }
@@ -1131,21 +1143,21 @@ void window_building_info_show_storage_orders(void)
 
 void window_building_info_depot_select_source(void)
 {
-    window_building_depot_init(0);
+    window_building_depot_init_storage_selection();
     context.depot_select_source = 1;
     window_invalidate();
 }
 
 void window_building_info_depot_select_destination(void)
 {
-    window_building_depot_init(0);
+    window_building_depot_init_storage_selection();
     context.depot_select_destination = 1;
     window_invalidate();
 }
 
 void window_building_info_depot_select_resource(void)
 {
-    window_building_depot_init(1);
+    window_building_depot_init_resource_selection();
     context.depot_select_resource = 1;
     window_invalidate();
 }

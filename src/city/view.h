@@ -12,6 +12,13 @@ typedef struct {
     int y;
 } view_tile, pixel_offset;
 
+typedef struct {
+    int x;
+    int y;
+    int width;
+    int height;
+} pixel_area;
+
 typedef void (map_callback)(int x, int y, int grid_offset);
 
 void city_view_init(void);
@@ -33,6 +40,7 @@ void city_view_get_camera_absolute(int *x_abs, int *y_abs);
 void city_view_get_pixel_offset(int *x, int *y);
 void city_view_get_camera_in_pixels(int *x, int *y);
 
+void city_view_adjust_camera_from_obstruction(int grid_offset, int size, const pixel_area *obstruction);
 void city_view_set_camera(int x, int y);
 void city_view_set_camera_absolute(int x_abs, int y_abs);
 

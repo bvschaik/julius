@@ -4,13 +4,18 @@
 #include "building/model.h"
 #include "building/monument.h"
 #include "building/roadblock.h"
+#include "building/rotation.h"
+#include "building/storage.h"
 #include "city/constants.h"
 #include "city/finance.h"
 #include "core/calc.h"
 #include "core/config.h"
+#include "core/string.h"
 #include "game/resource.h"
 #include "game/state.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
+#include "graphics/text.h"
 #include "map/building.h"
 #include "map/desirability.h"
 #include "map/image.h"
@@ -72,6 +77,11 @@ static int show_building_warehouses(const building *b)
     return b->type == BUILDING_WAREHOUSE || b->type == BUILDING_WAREHOUSE_SPACE;
 }
 
+static int show_building_storages(const building *b)
+{
+    b = building_main((building *) b);
+    return b->storage_id > 0 && building_storage_get(b->storage_id);
+}
 
 static int show_building_none(const building *b)
 {
@@ -800,3 +810,66 @@ const city_overlay *city_overlay_for_warehouses(void)
     return &overlay;
 }
 
+static void draw_storage_ids(int x, int y, float scale, int grid_offset)
+{
+    if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        return;
+    }
+    int building_id = map_building_at(grid_offset);
+    building *b = building_get(building_id);
+    if (!b || b->is_deleted || map_property_is_deleted(b->grid_offset) || !b->storage_id ||
+        !map_property_is_draw_tile(grid_offset)) {
+        return;
+    }
+    uint8_t number[10];
+    string_from_int(number, b->storage_id, 0);
+    int text_width = text_get_width(number, FONT_SMALL_PLAIN);
+    int box_width = text_width + 10;
+    int box_height = 22;
+    if (b->type == BUILDING_GRANARY) {
+        x += 90;
+        y += 15;
+    } else if (b->type == BUILDING_WAREHOUSE) {
+        switch (building_rotation_get_building_orientation(b->subtype.orientation)) {
+            case 6:
+                x -= 30;
+                break;
+            case 4:
+                x += 30;
+                y -= 30;
+                break;
+            case 2:
+                x += 90;
+                break;
+            case 0:
+            default:
+                x += 30;
+                y += 30;
+                break;
+        }
+    }
+    x /= scale;
+    y /= scale;
+    x -= box_width / 2;
+    y -= box_height / 2;
+    graphics_draw_rect(x, y, box_width, box_height, COLOR_BLACK);
+    graphics_fill_rect(x + 1, y + 1, box_width - 2, box_height - 2, COLOR_WHITE);
+    text_draw(number, x + 5, y + 6, FONT_SMALL_PLAIN, COLOR_BLACK);
+}
+
+const city_overlay *city_overlay_for_storages(void)
+{
+    static city_overlay overlay = {
+        OVERLAY_STORAGES,
+        COLUMN_COLOR_GREEN,
+        show_building_storages,
+        show_figure_none,
+        get_column_height_none,
+        get_tooltip_none,
+        0,
+        0,
+        0,
+        draw_storage_ids
+    };
+    return &overlay;
+}

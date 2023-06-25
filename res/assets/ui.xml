@@ -240,4 +240,6 @@
 	<image id="First Ornament" src="Hibernia"/>
 	<image src="Etna"/>
 	<image src="Rhodes"/>
+	<!-- Center Camera button by Ouaz -->
+	<image id="Center Camera Button" src="Center_Camera_Button"/>
 </assetlist>

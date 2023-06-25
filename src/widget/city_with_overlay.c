@@ -125,6 +125,8 @@ static const city_overlay *get_city_overlay(void)
             return city_overlay_for_enemy();
         case OVERLAY_WAREHOUSE:
             return city_overlay_for_warehouses();
+        case OVERLAY_STORAGES:
+            return city_overlay_for_storages();
         default:
             return 0;
     }

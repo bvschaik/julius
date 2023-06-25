@@ -94,27 +94,11 @@ static int is_order_condition_satisfied(const building *depot, const order *curr
     if (current_order->condition.condition_type == ORDER_CONDITION_NEVER) {
         return 0;
     }
-
     building *src = building_get(current_order->src_storage_id);
-    building *dst = building_get(current_order->dst_storage_id);
-    if (!src || !dst) {
-        return 0;
-    }
-
-    if (src->state != BUILDING_STATE_IN_USE || dst->state != BUILDING_STATE_IN_USE) {
-        return 0;
-    }
-
-    if (src->type != BUILDING_GRANARY && src->type != BUILDING_WAREHOUSE) {
-        return 0;
-    }
-    if (dst->type != BUILDING_GRANARY && dst->type != BUILDING_WAREHOUSE) {
-        return 0;
-    }
-
     int src_amount = src->type == BUILDING_GRANARY ?
         building_granary_resource_amount(current_order->resource_type, src) / RESOURCE_ONE_LOAD :
         building_warehouse_get_amount(src, current_order->resource_type);
+    building *dst = building_get(current_order->dst_storage_id);
     int dst_amount = dst->type == BUILDING_GRANARY ?
         building_granary_resource_amount(current_order->resource_type, dst) / RESOURCE_ONE_LOAD :
         building_warehouse_get_amount(dst, current_order->resource_type);
@@ -207,6 +191,22 @@ static int storage_add_resource(building *b, int resource, int amount)
     return amount;
 }
 
+static int check_valid_storages(order *current_order)
+{
+    int valid_storages = 1;
+    building *src = building_get(current_order->src_storage_id);
+    if (!src || !src->storage_id || src->state != BUILDING_STATE_IN_USE) {
+        valid_storages = 0;
+        current_order->src_storage_id = 0;
+    }
+    building *dst = building_get(current_order->dst_storage_id);
+    if (!dst || !dst->storage_id || dst->state != BUILDING_STATE_IN_USE) {
+        valid_storages = 0;
+        current_order->dst_storage_id = 0;
+    }
+    return valid_storages;
+}
+
 void figure_depot_cartpusher_action(figure *f)
 {
     figure_image_increase_offset(f, 12);
@@ -216,10 +216,14 @@ void figure_depot_cartpusher_action(figure *f)
     f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
     building *b = building_get(f->building_id);
 
-    if (b->state != BUILDING_STATE_IN_USE) {
+    if (!b || b->type != BUILDING_DEPOT || b->state != BUILDING_STATE_IN_USE) {
         f->state = FIGURE_STATE_DEAD;
         update_image(f);
         return;
+    }
+
+    if (!check_valid_storages(&b->data.depot.current_order)) {
+        f->action_state = FIGURE_ACTION_244_DEPOT_CART_PUSHER_CANCEL_ORDER;
     }
 
     int is_linked = 0;
