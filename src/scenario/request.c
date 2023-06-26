@@ -268,7 +268,7 @@ void scenario_request_save_state(buffer *list)
 static void request_load(buffer *list, int index, int version)
 {
     scenario.requests[index].year = buffer_read_i16(list);
-    scenario.requests[index].resource = buffer_read_i16(list);
+    scenario.requests[index].resource = resource_remap(buffer_read_i16(list));
     scenario.requests[index].amount = buffer_read_i16(list);
     scenario.requests[index].deadline_years = buffer_read_i16(list);
     scenario.requests[index].can_comply_dialog_shown = buffer_read_u8(list);
