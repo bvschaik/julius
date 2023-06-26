@@ -558,17 +558,26 @@ static void set_gold_production(empire_city *city)
     }
 }
 
-void empire_city_update_trading_data(int version)
+void empire_city_update_trading_data(void)
 {
-    if (scenario_empire_id() == SCENARIO_CUSTOM_EMPIRE) {
-        return;
-    }
+    int version = resource_mapping_get_version();
     empire_city *city;
     array_foreach(cities, city) {
-        if (version < SAVE_GAME_LAST_NO_NEW_MONUMENT_RESOURCES) {
+        if (version < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
+            if (city->type == EMPIRE_CITY_OURS) {
+                if (city->sells_resource[RESOURCE_FISH]) {
+                    city->sells_resource[RESOURCE_MEAT] = 1;
+                } else if (scenario_building_allowed(BUILDING_WHARF)) {
+                    city->sells_resource[RESOURCE_FISH] = 1;
+                }
+            }
+        } else if (scenario_empire_id() == SCENARIO_CUSTOM_EMPIRE) {
+            continue;
+        }
+        if (version < RESOURCE_HAS_NEW_MONUMENT_ELEMENTS) {
             set_new_monument_elements_production(city);
         }
-        if (version < SAVE_GAME_LAST_NO_GOLD_AND_MINTING) {
+        if (version < RESOURCE_HAS_GOLD_VERSION) {
             set_gold_production(city);
         }
     }
@@ -631,15 +640,6 @@ void empire_city_load_state(buffer *buf, int version)
         }
         if (version <= SAVE_GAME_LAST_STATIC_SCENARIO_OBJECTS) {
             buffer_skip(buf, 10);
-        }
-        if (resource_mapping_get_version() < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
-            if (city->type == EMPIRE_CITY_OURS) {
-                if (city->sells_resource[RESOURCE_FISH]) {
-                    city->sells_resource[RESOURCE_MEAT] = 1;
-                } else if (scenario_building_allowed(BUILDING_WHARF)) {
-                    city->sells_resource[RESOURCE_FISH] = 1;
-                }
-            }
         }
     }
     cities.size = highest_id_in_use + 1;

@@ -71,30 +71,6 @@ int empire_object_count(void)
     return objects.size;
 }
 
-static void set_gold_production(full_empire_object *full)
-{
-    if (scenario_empire_id() != SCENARIO_CUSTOM_EMPIRE && empire_city_can_mine_gold(full->city_name_id) &&
-        full->city_sells_resource[RESOURCE_IRON] > 0) {
-        full->city_sells_resource[RESOURCE_GOLD] = full->city_type == EMPIRE_CITY_OURS ? 1 : 5;
-    }
-}
-
-static void update_resource_production_and_trading(full_empire_object *full)
-{
-    if (resource_mapping_get_version() < RESOURCE_HAS_GOLD_VERSION) {
-        set_gold_production(full);
-        if (resource_mapping_get_version() < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
-            if (full->city_type == EMPIRE_CITY_OURS) {
-                if (full->city_sells_resource[RESOURCE_FISH]) {
-                    full->city_sells_resource[RESOURCE_MEAT] = 1;
-                } else if (scenario_building_allowed(BUILDING_WHARF)) {
-                    full->city_sells_resource[RESOURCE_FISH] = 1;
-                }
-            }
-        }
-    }
-}
-
 void empire_object_load(buffer *buf, int version)
 {
     // we're loading a scenario that does not have a custom empire
@@ -226,7 +202,6 @@ void empire_object_load(buffer *buf, int version)
         if (version > SCENARIO_LAST_UNVERSIONED) {
             buffer_read_raw(buf, full->city_custom_name, sizeof(full->city_custom_name));
         }
-        update_resource_production_and_trading(full);
     }
     objects.size = highest_id_in_use + 1;
     fix_image_ids();
@@ -377,6 +352,7 @@ void empire_object_init_cities(int empire_id)
         city->trader_figure_ids[2] = 0;
         city->empire_object_id = array_index;
     }
+    empire_city_update_trading_data();
 }
 
 int empire_object_init_distant_battle_travel_months(empire_object_type object_type)
