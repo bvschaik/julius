@@ -367,7 +367,7 @@ static special_attribute_mapping_t special_attribute_mappings_buildings[] = {
     { .type = PARAMETER_TYPE_BUILDING,            .text = "dolphin_fountain",              .value = BUILDING_DOLPHIN_FOUNTAIN,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "hedge_dark",                    .value = BUILDING_HEDGE_DARK,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "hedge_light",                   .value = BUILDING_HEDGE_LIGHT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "garden_wall",                   .value = BUILDING_GARDEN_WALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "looped_garden_wall",            .value = BUILDING_LOOPED_GARDEN_WALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "legion_statue",                 .value = BUILDING_LEGION_STATUE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "decorative_column",             .value = BUILDING_DECORATIVE_COLUMN,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "colonnade",                     .value = BUILDING_COLONNADE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
@@ -380,7 +380,7 @@ static special_attribute_mapping_t special_attribute_mappings_buildings[] = {
     { .type = PARAMETER_TYPE_BUILDING,            .text = "garden_path",                   .value = BUILDING_GARDEN_PATH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "caravanserai",                  .value = BUILDING_CARAVANSERAI,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "roofed_garden_wall",            .value = BUILDING_ROOFED_GARDEN_WALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "garden_wall_gate",              .value = BUILDING_GARDEN_WALL_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "garden_wall_gate",              .value = BUILDING_ROOFED_GARDEN_WALL_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "hedge_gate_dark",               .value = BUILDING_HEDGE_GATE_DARK,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "hedge_gate_light",              .value = BUILDING_HEDGE_GATE_LIGHT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "palisade_gate",                 .value = BUILDING_PALISADE_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
@@ -392,6 +392,10 @@ static special_attribute_mapping_t special_attribute_mappings_buildings[] = {
     { .type = PARAMETER_TYPE_BUILDING,            .text = "concrete_maker",                .value = BUILDING_CONCRETE_MAKER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "brickworks",                    .value = BUILDING_BRICKWORKS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "city_mint",                     .value = BUILDING_CITY_MINT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "panelled_garden_wall",          .value = BUILDING_PANELLED_GARDEN_WALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "panelled_garden_gate",          .value = BUILDING_PANELLED_GARDEN_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "looped_garden_gate",            .value = BUILDING_LOOPED_GARDEN_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+
 };
 
 static special_attribute_mapping_t special_attribute_mappings_allowed_buildings[] = {

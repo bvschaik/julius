@@ -37,9 +37,12 @@ static const building_type connectable_buildings[] = {
     BUILDING_PALM_PATH,
     BUILDING_PINE_PATH,
     BUILDING_PLUM_PATH,
-    BUILDING_GARDEN_WALL,
+    BUILDING_LOOPED_GARDEN_WALL,
     BUILDING_ROOFED_GARDEN_WALL,
-    BUILDING_GARDEN_WALL_GATE,
+    BUILDING_PANELLED_GARDEN_WALL,
+    BUILDING_LOOPED_GARDEN_GATE,
+    BUILDING_ROOFED_GARDEN_WALL_GATE,
+    BUILDING_PANELLED_GARDEN_GATE,
     BUILDING_PALISADE,
     BUILDING_HEDGE_GATE_DARK,
     BUILDING_HEDGE_GATE_LIGHT,
@@ -165,9 +168,12 @@ static struct {
 int building_connectable_gate_type(building_type type)
 {
     switch (type) {
-        case BUILDING_GARDEN_WALL:
+        case BUILDING_LOOPED_GARDEN_WALL:
+            return BUILDING_LOOPED_GARDEN_GATE;
+        case BUILDING_PANELLED_GARDEN_WALL:
+            return BUILDING_PANELLED_GARDEN_GATE;
         case BUILDING_ROOFED_GARDEN_WALL:
-            return BUILDING_GARDEN_WALL_GATE;
+            return BUILDING_ROOFED_GARDEN_WALL_GATE;
         case BUILDING_HEDGE_DARK:
             return BUILDING_HEDGE_GATE_DARK;
         case BUILDING_HEDGE_LIGHT:
@@ -309,12 +315,13 @@ static int is_garden_path(building_type type)
 
 static int is_garden_wall_or_gate(building_type type)
 {
-    return type == BUILDING_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_GARDEN_WALL_GATE;
+    return type == BUILDING_LOOPED_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL_GATE ||
+        type == BUILDING_LOOPED_GARDEN_GATE || BUILDING_PANELLED_GARDEN_WALL || BUILDING_PANELLED_GARDEN_GATE;
 }
 
 static int is_garden_wall(building_type type)
 {
-    return type == BUILDING_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL;
+    return type == BUILDING_LOOPED_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL || BUILDING_PANELLED_GARDEN_WALL;
 }
 
 int building_connectable_get_garden_wall_offset(int grid_offset)
@@ -476,8 +483,9 @@ int building_connectable_num_variants(building_type type)
         case BUILDING_HEDGE_DARK:
         case BUILDING_HEDGE_LIGHT:
         case BUILDING_COLONNADE:
-        case BUILDING_GARDEN_WALL:
+        case BUILDING_LOOPED_GARDEN_WALL:
         case BUILDING_ROOFED_GARDEN_WALL:
+        case BUILDING_PANELLED_GARDEN_WALL:
         case BUILDING_PALISADE:
             return BUILDING_CONNECTABLE_ROTATION_LIMIT_HEDGES;
         default:

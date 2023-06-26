@@ -471,7 +471,7 @@ const uint8_t *lang_get_string(int group, int index)
                 return translation_for(TR_BUILDING_HEDGE_DARK);
             case BUILDING_HEDGE_LIGHT:
                 return translation_for(TR_BUILDING_HEDGE_LIGHT);
-            case BUILDING_GARDEN_WALL:
+            case BUILDING_LOOPED_GARDEN_WALL:
                 return translation_for(TR_BUILDING_GARDEN_WALL);
             case BUILDING_LEGION_STATUE:
                 return translation_for(TR_BUILDING_LEGION_STATUE);
@@ -495,7 +495,7 @@ const uint8_t *lang_get_string(int group, int index)
                 return translation_for(TR_BUILDING_CARAVANSERAI);
             case BUILDING_ROOFED_GARDEN_WALL:
                 return translation_for(TR_BUILDING_ROOFED_GARDEN_WALL);
-            case BUILDING_GARDEN_WALL_GATE:
+            case BUILDING_ROOFED_GARDEN_WALL_GATE:
                 return translation_for(TR_BUILDING_GARDEN_WALL_GATE);
             case BUILDING_PALISADE:
                 return translation_for(TR_BUILDING_PALISADE);
@@ -517,6 +517,12 @@ const uint8_t *lang_get_string(int group, int index)
                 return translation_for(TR_BUILDING_BRICKWORKS);
             case BUILDING_CONCRETE_MAKER:
                 return translation_for(TR_BUILDING_CONCRETE_MAKER);
+            case BUILDING_LOOPED_GARDEN_GATE:
+                return translation_for(TR_BUILDING_LOOPED_GARDEN_WALL_GATE);
+            case BUILDING_PANELLED_GARDEN_WALL:
+                return translation_for(TR_BUILDING_PANELLED_GARDEN_WALL);
+            case TR_BUILDING_PANELLED_GARDEN_WALL_GATE:
+                return translation_for(TR_BUILDING_PANELLED_GARDEN_WALL_GATE);
             default:
                 break;
         }

@@ -45,21 +45,12 @@ static building_type get_clone_type_from_building(building *b, building_type clo
             } else {
                 return BUILDING_NONE;
             }
-        case BUILDING_GARDEN_WALL_GATE:
-        // Check neighbouring tiles to see if it's a part of garden wall.
-        // If it is, return that garden wall type, otherwise return default garden wall type.
-        {
-            if (b) {
-                int grid_offset = b->grid_offset;
-                for (const int *tile_delta = map_grid_adjacent_offsets(b->size); *tile_delta; tile_delta++) {
-                    building *neighbour = building_get(map_building_at(grid_offset + *tile_delta));
-                    if (neighbour->type == BUILDING_ROOFED_GARDEN_WALL || neighbour->type == BUILDING_GARDEN_WALL) {
-                        return neighbour->type;
-                    }
-                }
-            }
-            return BUILDING_GARDEN_WALL;
-        }
+        case BUILDING_ROOFED_GARDEN_WALL_GATE:
+            return BUILDING_ROOFED_GARDEN_WALL;
+        case BUILDING_PANELLED_GARDEN_GATE:
+            return BUILDING_PANELLED_GARDEN_WALL;
+        case BUILDING_LOOPED_GARDEN_GATE:
+            return BUILDING_LOOPED_GARDEN_WALL;
         case BUILDING_HEDGE_GATE_LIGHT:
             return BUILDING_HEDGE_LIGHT;
         case BUILDING_HEDGE_GATE_DARK:

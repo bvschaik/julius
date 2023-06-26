@@ -95,7 +95,7 @@ int scenario_building_allowed(int type)
         case BUILDING_HEDGE_LIGHT:
         case BUILDING_PAVILION_BLUE:
         case BUILDING_COLONNADE:
-        case BUILDING_GARDEN_WALL:
+        case BUILDING_LOOPED_GARDEN_WALL:
         case BUILDING_ROOFED_GARDEN_WALL:
         case BUILDING_DECORATIVE_COLUMN:
             return scenario.allowed_buildings[ALLOWED_BUILDING_GARDENS];

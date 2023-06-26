@@ -818,11 +818,14 @@ int building_image_get(const building *b)
         case BUILDING_COLONNADE:
             return assets_get_image_id("Aesthetics", "G Colonnade 01") +
                 building_connectable_get_colonnade_offset(b->grid_offset);
-        case BUILDING_GARDEN_WALL:
+        case BUILDING_LOOPED_GARDEN_WALL:
             return assets_get_image_id("Aesthetics", "C Garden Wall 01") +
                 building_connectable_get_garden_wall_offset(b->grid_offset);
         case BUILDING_ROOFED_GARDEN_WALL:
             return assets_get_image_id("Aesthetics", "R Garden Wall 01") +
+                building_connectable_get_garden_wall_offset(b->grid_offset);
+        case BUILDING_PANELLED_GARDEN_WALL:
+            return assets_get_image_id("Aesthetics", "Garden_Wall_C_01") +
                 building_connectable_get_garden_wall_offset(b->grid_offset);
         case BUILDING_DATE_PATH:
         case BUILDING_ELM_PATH:
@@ -880,8 +883,12 @@ int building_image_get(const building *b)
             } else {
                 return image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * (map_random_get(b->grid_offset) & 3);
             }
-        case BUILDING_GARDEN_WALL_GATE:
+        case BUILDING_ROOFED_GARDEN_WALL_GATE:
             return assets_get_image_id("Aesthetics", "Garden_Gate_B") + building_connectable_get_garden_gate_offset(b->grid_offset);
+        case BUILDING_LOOPED_GARDEN_GATE:
+            return assets_get_image_id("Aesthetics", "Garden_Gate_A") + building_connectable_get_garden_gate_offset(b->grid_offset);
+        case BUILDING_PANELLED_GARDEN_GATE:
+            return assets_get_image_id("Aesthetics", "Garden_Gate_C") + building_connectable_get_garden_gate_offset(b->grid_offset);
         case BUILDING_HEDGE_GATE_LIGHT:
             return assets_get_image_id("Aesthetics", "L Hedge Gate") + building_connectable_get_hedge_gate_offset(b->grid_offset);
         case BUILDING_HEDGE_GATE_DARK:

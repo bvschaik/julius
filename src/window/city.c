@@ -270,7 +270,9 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_PLAZA:
         case BUILDING_ROAD:
         case BUILDING_ROADBLOCK:
-        case BUILDING_GARDEN_WALL_GATE:
+        case BUILDING_ROOFED_GARDEN_WALL_GATE:
+        case BUILDING_LOOPED_GARDEN_GATE:
+        case BUILDING_PANELLED_GARDEN_GATE:
         case BUILDING_HIGHWAY:
             overlay = OVERLAY_ROADS;
             break;
@@ -467,7 +469,9 @@ static int has_storage_orders(building_type type)
         type == BUILDING_TAVERN ||
         type == BUILDING_ROADBLOCK ||
         type == BUILDING_CARAVANSERAI ||
-        type == BUILDING_GARDEN_WALL_GATE ||
+        type == BUILDING_ROOFED_GARDEN_WALL_GATE ||
+        type == BUILDING_LOOPED_GARDEN_GATE ||
+        type == BUILDING_PANELLED_GARDEN_GATE ||
         type == BUILDING_HEDGE_GATE_DARK ||
         type == BUILDING_HEDGE_GATE_LIGHT ||
         type == BUILDING_PALISADE_GATE ||

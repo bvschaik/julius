@@ -51,7 +51,7 @@ augustus_building_properties_mapping augustus_building_properties[] = {
     {BUILDING_DOLPHIN_FOUNTAIN, { 2, 1, 0, 0, 0 }, "", ""},
     {BUILDING_HEDGE_DARK, { 1, 1, 0, 0, 0 }, "Aesthetics", "D Hedge 01"},
     {BUILDING_HEDGE_LIGHT, { 1, 1, 0, 0, 0 }, "Aesthetics", "L Hedge 01"},
-    {BUILDING_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Aesthetics", "C Garden Wall 01"},
+    {BUILDING_LOOPED_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Aesthetics", "C Garden Wall 01"},
     {BUILDING_LEGION_STATUE, { 2, 1, 0, 0, 1 }, "Aesthetics", "legio statue"},
     {BUILDING_DECORATIVE_COLUMN, { 1, 1, 0, 0, 0 }, "Aesthetics", "sml col B"},
     {BUILDING_COLONNADE, { 1, 1, 0, 0, 0 }, "Aesthetics", "G Colonnade 01"},
@@ -65,7 +65,7 @@ augustus_building_properties_mapping augustus_building_properties[] = {
     {BUILDING_CARAVANSERAI, { 4, 1, 0, 0, 0 }, "Logistics", "Caravanserai_C_OFF"},
     {BUILDING_SMALL_STATUE, {1,1,0,0,-12}, "Aesthetics", "V Small Statue" },
     {BUILDING_ROOFED_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Aesthetics", "R Garden Wall 01"},
-    {BUILDING_GARDEN_WALL_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Gate_B"},
+    {BUILDING_ROOFED_GARDEN_WALL_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Gate_B"},
     {BUILDING_PALISADE, {1,1,0,0,0}, "Military", "Pal Wall C 01"},
     {BUILDING_HEDGE_GATE_DARK, { 1, 1, 0, 0, 0 }, "Aesthetics", "D Hedge Gate"},
     {BUILDING_HEDGE_GATE_LIGHT, { 1, 1, 0, 0, 0 }, "Aesthetics", "L Hedge Gate"},
@@ -79,7 +79,11 @@ augustus_building_properties_mapping augustus_building_properties[] = {
     {BUILDING_BRICKWORKS, { 2, 0, 0, 0, 0 }, "Industry", "Brickworks_C_OFF"},
     {BUILDING_CONCRETE_MAKER, { 2, 0, 0, 0, 0 }, "Industry", "Concrete_Maker_C_OFF"},
     {BUILDING_CITY_MINT, { 3, 0, 0, 0, 0 }, "Administration", "City_Mint_ON"},
-    {BUILDING_DEPOT, {2,0,0,0,0}, "Logistics", "Cart Depot N OFF"}
+    {BUILDING_DEPOT, {2,0,0,0,0}, "Logistics", "Cart Depot N OFF"},
+    {BUILDING_LOOPED_GARDEN_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Gate"},
+    {BUILDING_PANELLED_GARDEN_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Gate_C"},
+    {BUILDING_PANELLED_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Wall_C"},
+
 };
 
 #define AUGUSTUS_BUILDINGS (sizeof(augustus_building_properties) / sizeof(augustus_building_properties_mapping))

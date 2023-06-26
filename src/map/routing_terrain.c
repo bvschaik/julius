@@ -183,7 +183,9 @@ static int get_land_type_noncitizen(int grid_offset)
                     break;
             }
             break;
-        case BUILDING_GARDEN_WALL_GATE:
+        case BUILDING_ROOFED_GARDEN_WALL_GATE:
+        case BUILDING_LOOPED_GARDEN_GATE:
+        case BUILDING_PANELLED_GARDEN_GATE:
         case BUILDING_ROADBLOCK:
         case BUILDING_HEDGE_GATE_DARK:
         case BUILDING_HEDGE_GATE_LIGHT:

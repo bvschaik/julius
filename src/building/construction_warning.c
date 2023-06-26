@@ -67,7 +67,7 @@ static void check_road_access(int type, int x, int y, int size)
         case BUILDING_DOLPHIN_FOUNTAIN:
         case BUILDING_HEDGE_DARK:
         case BUILDING_HEDGE_LIGHT:
-        case BUILDING_GARDEN_WALL:
+        case BUILDING_LOOPED_GARDEN_WALL:
         case BUILDING_LEGION_STATUE:
         case BUILDING_DECORATIVE_COLUMN:
         case BUILDING_GLADIATOR_STATUE:

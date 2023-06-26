@@ -358,7 +358,7 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
 
     if (building_is_connectable(type)) {
         map_property_clear_constructing_and_deleted();
-        building_connectable_update_connections_for_type(type);
+        building_connectable_update_connections();
         if (gates_placed) {
             map_tiles_update_all_roads();
         }
@@ -653,8 +653,9 @@ int building_construction_is_updatable(void)
         case BUILDING_HEDGE_LIGHT:
         case BUILDING_COLONNADE:
         case BUILDING_GARDEN_PATH:
-        case BUILDING_GARDEN_WALL:
+        case BUILDING_LOOPED_GARDEN_WALL:
         case BUILDING_ROOFED_GARDEN_WALL:
+        case BUILDING_PANELLED_GARDEN_WALL:
         case BUILDING_DECORATIVE_COLUMN:
         case BUILDING_WALL:
         case BUILDING_PLAZA:
@@ -789,7 +790,7 @@ void building_construction_update(int x, int y, int grid_offset)
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
-    } else if (type == BUILDING_GARDEN_WALL) {
+    } else if (type == BUILDING_LOOPED_GARDEN_WALL) {
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, 1);
         if (items_placed >= 0) {
             current_cost *= items_placed;
@@ -799,8 +800,13 @@ void building_construction_update(int x, int y, int grid_offset)
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
+    } else if (type == BUILDING_PANELLED_GARDEN_WALL) {
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, 1);
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
     } else if (type == BUILDING_DECORATIVE_COLUMN) {
-            int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, 0);
+        int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, 0);
             if (items_placed >= 0) {
                 current_cost *= items_placed;
             }
@@ -1038,10 +1044,13 @@ void building_construction_place(void)
     } else if (type == BUILDING_GARDEN_PATH) {
         int rotation = building_rotation_get_rotation_with_limit(BUILDING_CONNECTABLE_ROTATION_LIMIT_PATHS);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation);
-    } else if (type == BUILDING_GARDEN_WALL) {
+    } else if (type == BUILDING_LOOPED_GARDEN_WALL) {
         int rotation = building_rotation_get_rotation_with_limit(BUILDING_CONNECTABLE_ROTATION_LIMIT_PATHS);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation);
     } else if (type == BUILDING_ROOFED_GARDEN_WALL) {
+        int rotation = building_rotation_get_rotation_with_limit(BUILDING_CONNECTABLE_ROTATION_LIMIT_PATHS);
+        placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation);
+    } else if (type == BUILDING_PANELLED_GARDEN_WALL) {
         int rotation = building_rotation_get_rotation_with_limit(BUILDING_CONNECTABLE_ROTATION_LIMIT_PATHS);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation);
     } else if (type == BUILDING_DECORATIVE_COLUMN) {

@@ -1198,7 +1198,11 @@ static translation_string all_strings[] = {
     {TR_BUILDING_INFO_CARTLOAD, "cartload." },
     {TR_BUILDING_INFO_CARTLOADS, "cartloads." },
     {TR_HOTKEY_SHOW_OVERLAY_RISKS_NATIVE, "Native overlay"},
-
+    {TR_BUILDING_PANELLED_GARDEN_WALL, "Panelled garden walls"},
+    {TR_BUILDING_LOOPED_GARDEN_WALL_GATE, "Looped garden wall gate"},
+    {TR_BUILDING_LOOPED_GARDEN_WALL_GATE_DESC, "PLACEHOLDER looped garden wall gate description" },
+    {TR_BUILDING_PANELLED_GARDEN_WALL_GATE, "Panelled garden wall gate" },
+    {TR_BUILDING_PANELLED_GARDEN_WALL_GATE_DESC, "PLACEHOLDER panelled garden wall gate description" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

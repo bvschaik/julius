@@ -229,7 +229,9 @@ const model_building *model_get_building(building_type type)
 {
     switch (type) {
         case BUILDING_ROADBLOCK:
-        case BUILDING_GARDEN_WALL_GATE:
+        case BUILDING_ROOFED_GARDEN_WALL_GATE:
+        case BUILDING_LOOPED_GARDEN_GATE:
+        case BUILDING_PANELLED_GARDEN_GATE:
         case BUILDING_HEDGE_GATE_DARK:
         case BUILDING_HEDGE_GATE_LIGHT:
             return &MODEL_ROADBLOCK;
@@ -300,10 +302,10 @@ const model_building *model_get_building(building_type type)
 
     if ((type >= BUILDING_PINE_TREE && type <= BUILDING_SMALL_STATUE_ALT_B) ||
         type == BUILDING_HEDGE_DARK || type == BUILDING_HEDGE_LIGHT ||
-        type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_GARDEN_WALL ||
-        type == BUILDING_COLONNADE || type == BUILDING_GARDEN_WALL || 
+        type == BUILDING_DECORATIVE_COLUMN || type == BUILDING_LOOPED_GARDEN_WALL ||
+        type == BUILDING_COLONNADE || type == BUILDING_LOOPED_GARDEN_WALL || 
         type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_GARDEN_PATH ||
-        type == BUILDING_GLADIATOR_STATUE) {
+        type == BUILDING_PANELLED_GARDEN_WALL || type == BUILDING_GLADIATOR_STATUE) {
         return &buildings[41];
     }
 
