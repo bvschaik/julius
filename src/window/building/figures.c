@@ -394,8 +394,8 @@ static void draw_depot_cartpusher(building_info_context* c, figure* f)
     building *source = building_get(depot->data.depot.current_order.src_storage_id);
     building *destination = building_get(depot->data.depot.current_order.dst_storage_id);
 
-    button_border_draw(c->x_offset + 90, c->y_offset + 160, 100, 22,
-        data.depot_focus_button_id == 1 || is_depot_cartpusher_recalled(f));
+    button_border_draw(c->x_offset + 90, c->y_offset + 160, 100, 22, data.depot_focus_button_id == 1 ||
+        is_depot_cartpusher_recalled(f));
     translation_key button_text = is_depot_cartpusher_recalled(f) ?
          TR_FIGURE_INFO_DEPOT_RETURNING : TR_FIGURE_INFO_DEPOT_RECALL;
     text_draw_centered(translation_for(button_text), c->x_offset + 90, c->y_offset + 166,
@@ -595,8 +595,11 @@ int window_building_handle_mouse_figure_list(const mouse *m, building_info_conte
     figure *f = figure_get(c->figure.figure_ids[c->figure.selected_index]);
     if (f->type == FIGURE_DEPOT_CART_PUSHER && !is_depot_cartpusher_recalled(f)) {
         depot_figure_buttons[0].parameter1 = f->id;
+        int focus_id = data.depot_focus_button_id;
         generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, depot_figure_buttons, 1, &data.depot_focus_button_id);
-        window_invalidate();
+        if (focus_id != data.depot_focus_button_id) {
+            window_request_refresh();
+        }
     }
     return handled;
 }
