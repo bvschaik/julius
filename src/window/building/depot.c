@@ -125,7 +125,7 @@ static generic_button depot_order_buttons[] = {
     {384, 82, 32, 22, set_camera_position, button_none, 0, 0},
 };
 
-static void setup_for_selected_depot(building_info_context *c, int offset)
+static void setup_buttons_for_selected_depot(building_info_context *c)
 {
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         depot_select_storage_buttons[i].parameter1 = data.depot_building_id;
@@ -134,8 +134,9 @@ static void setup_for_selected_depot(building_info_context *c, int offset)
 
     int button_index = 0;
     int storage_array_size = building_storage_get_array_size();
-    for (int i = offset; i < storage_array_size; i++) {
-        if (button_index >= MAX_VISIBLE_ROWS) {
+    int current_storage_offset = 0;
+    for (int i = 0; i < storage_array_size; i++) {
+        if (current_storage_offset >= data.available_storages || button_index >= MAX_VISIBLE_ROWS) {
             break;
         }
         int building_id = building_storage_get_array_entry(i)->building_id;
@@ -143,6 +144,10 @@ static void setup_for_selected_depot(building_info_context *c, int offset)
             building *store_building = building_get(building_id);
             if (store_building && building_is_active(store_building)
                 && building_storage_resource_max_storable(store_building, data.target_resource_id) > 0) {
+                current_storage_offset++;
+                if (current_storage_offset < scrollbar.scroll_position) {
+                    continue;
+                }
                 depot_select_storage_buttons[button_index].parameter2 = building_id;
                 depot_view_storage_buttons[button_index].parameter1 = building_id;
                 button_index++;
@@ -222,6 +227,7 @@ static void on_scroll(void)
 
 void window_building_draw_depot(building_info_context *c)
 {
+    setup_buttons_for_selected_depot(c);
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 138);
@@ -235,8 +241,6 @@ void window_building_draw_depot(building_info_context *c)
 
 void window_building_draw_depot_foreground(building_info_context *c)
 {
-    int offset = scrollbar.scroll_position;
-    setup_for_selected_depot(c, offset);
     building *b = building_get(data.depot_building_id);
     building *src = building_get(b->data.depot.current_order.src_storage_id);
     building *dst = building_get(b->data.depot.current_order.dst_storage_id);
@@ -375,6 +379,8 @@ static void order_set_condition_threshold(int index, int param2)
 
 void window_building_draw_depot_order_source_destination_background(building_info_context *c, int is_select_destination)
 {
+    setup_buttons_for_selected_depot(c);
+
     uint8_t *title = translation_for(TR_BUILDING_INFO_DEPOT_SELECT_SOURCE_TITLE);
     if (is_select_destination) {
         title = translation_for(TR_BUILDING_INFO_DEPOT_SELECT_DESTINATION_TITLE);
@@ -398,8 +404,7 @@ void window_building_draw_depot_select_source_destination(building_info_context 
     scrollbar.y = y_offset + 46;
     scrollbar_draw(&scrollbar);
 
-    int index = 0, offset = scrollbar.scroll_position;
-    setup_for_selected_depot(c, offset);
+    int index = 0;
     int base_width = BLOCK_SIZE * (c->width_blocks - 4) - 4 - (scrollbar.max_scroll_position > 0 ? 39 : 0);
 
     for (index = 0; index < MAX_VISIBLE_ROWS; index++) {
@@ -423,6 +428,9 @@ void window_building_draw_depot_select_source_destination(building_info_context 
 
 static void set_order_source(int depot_building_id, int building_id)
 {
+    if (!building_id) {
+        return;
+    }
     building *b = building_get(depot_building_id);
     b->data.depot.current_order.src_storage_id = building_id;
     if (b->data.depot.current_order.dst_storage_id == building_id) {
@@ -433,6 +441,9 @@ static void set_order_source(int depot_building_id, int building_id)
 
 static void set_order_destination(int depot_building_id, int building_id)
 {
+    if (!building_id) {
+        return;
+    }
     building *b = building_get(depot_building_id);
     b->data.depot.current_order.dst_storage_id = building_id;
     if (b->data.depot.current_order.src_storage_id == building_id) {
@@ -459,8 +470,6 @@ static int handle_mouse_depot_select_source_destination(const mouse *m, building
     }
 
     int y_offset = window_building_get_vertical_offset(c, 28);
-    int offset = scrollbar.scroll_position;
-    setup_for_selected_depot(c, offset);
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         depot_select_storage_buttons[i].x = 0;
         depot_select_storage_buttons[i].y = ROW_HEIGHT * i;
@@ -549,14 +558,13 @@ void window_building_draw_depot_select_resource_foreground(building_info_context
     scrollbar.x = c->x_offset + 16 * (c->width_blocks - 2) - 26;
     scrollbar.y = y_offset + 46;
     scrollbar_draw(&scrollbar);
-    int offset = scrollbar.scroll_position;
 
     for (int i = 0; i < MAX_RESOURCE_ROWS; i++) {
         depot_select_resource_buttons[i].parameter2 = 0;
     }
 
     const resource_list *list = city_resource_get_potential();
-    int list_index = offset * 2; // Two items per scroll bar step
+    int list_index = scrollbar.scroll_position * 2; // Two items per scroll bar step
 
     for (int i = 0; i < MAX_RESOURCE_ROWS && list_index < list->size; i++, list_index++) {
         resource_type resource_id = list->items[list_index];
@@ -581,9 +589,6 @@ int window_building_handle_mouse_depot_select_resource(const mouse *m, building_
     if (scrollbar_handle_mouse(&scrollbar, m, 1)) {
         return 1;
     }
-
-    int offset = scrollbar.scroll_position;
-    setup_for_selected_depot(c, offset);
     for (int i = 0; i < sizeof(depot_select_resource_buttons) / sizeof(generic_button); i++) {
         depot_select_resource_buttons[i].parameter1 = data.depot_building_id;
     }
