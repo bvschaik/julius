@@ -316,12 +316,12 @@ static int is_garden_path(building_type type)
 static int is_garden_wall_or_gate(building_type type)
 {
     return type == BUILDING_LOOPED_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL_GATE ||
-        type == BUILDING_LOOPED_GARDEN_GATE || BUILDING_PANELLED_GARDEN_WALL || BUILDING_PANELLED_GARDEN_GATE;
+        type == BUILDING_LOOPED_GARDEN_GATE || type == BUILDING_PANELLED_GARDEN_WALL || type == BUILDING_PANELLED_GARDEN_GATE;
 }
 
 static int is_garden_wall(building_type type)
 {
-    return type == BUILDING_LOOPED_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL || BUILDING_PANELLED_GARDEN_WALL;
+    return type == BUILDING_LOOPED_GARDEN_WALL || type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_PANELLED_GARDEN_WALL;
 }
 
 int building_connectable_get_garden_wall_offset(int grid_offset)
