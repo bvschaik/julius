@@ -881,7 +881,7 @@ int building_image_get(const building *b)
                 return image_group(GROUP_TERRAIN_RUBBLE_GENERAL) + 9 * (map_random_get(b->grid_offset) & 3);
             }
         case BUILDING_GARDEN_WALL_GATE:
-            return assets_get_image_id("Aesthetics", "Garden Gate") + building_connectable_get_garden_gate_offset(b->grid_offset);
+            return assets_get_image_id("Aesthetics", "Garden_Gate_B") + building_connectable_get_garden_gate_offset(b->grid_offset);
         case BUILDING_HEDGE_GATE_LIGHT:
             return assets_get_image_id("Aesthetics", "L Hedge Gate") + building_connectable_get_hedge_gate_offset(b->grid_offset);
         case BUILDING_HEDGE_GATE_DARK:

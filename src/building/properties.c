@@ -65,7 +65,7 @@ augustus_building_properties_mapping augustus_building_properties[] = {
     {BUILDING_CARAVANSERAI, { 4, 1, 0, 0, 0 }, "Logistics", "Caravanserai_C_OFF"},
     {BUILDING_SMALL_STATUE, {1,1,0,0,-12}, "Aesthetics", "V Small Statue" },
     {BUILDING_ROOFED_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Aesthetics", "R Garden Wall 01"},
-    {BUILDING_GARDEN_WALL_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden Gate"},
+    {BUILDING_GARDEN_WALL_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Gate_B"},
     {BUILDING_PALISADE, {1,1,0,0,0}, "Military", "Pal Wall C 01"},
     {BUILDING_HEDGE_GATE_DARK, { 1, 1, 0, 0, 0 }, "Aesthetics", "D Hedge Gate"},
     {BUILDING_HEDGE_GATE_LIGHT, { 1, 1, 0, 0, 0 }, "Aesthetics", "L Hedge Gate"},
