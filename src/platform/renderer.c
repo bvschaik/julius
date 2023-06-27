@@ -7,7 +7,6 @@
 #include "graphics/screen.h"
 #include "platform/cursor.h"
 #include "platform/emscripten/emscripten.h"
-#include "platform/haiku/haiku.h"
 #include "platform/platform.h"
 #include "platform/screen.h"
 #include "platform/switch/switch.h"
