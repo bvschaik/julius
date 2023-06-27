@@ -380,14 +380,14 @@
 	<image id="C Garden Wall 11" src="Garden_Wall_A_Intersection_4w" isometric="true"/>
 	<!-- Note: Assets for 'Looped garden wall gate' with rotation variant -->
 	<image id="Garden_Gate_A" width="58" height="61" isometric="true">
-		<layer src="Garden_Gate_A" x="0" y="0"/>
-		<layer src="Garden_Gate_A_Top" x="0" y="0"/>
-		<animation speed="1" x="0" y="0" reversible="false">
+		<layer src="Garden_Gate_B" x="0" y="17"/>
+		<layer src="Garden_Gate_A_Top" x="7" y="0"/>
+		<animation speed="1" x="7" y="0" reversible="false">
 			<frame src="Garden_Gate_A_Top"/>
 		</animation>
 	</image>
 	<image id="Garden_Gate_A_R" width="58" height="61" isometric="true">
-		<layer src="Garden_Gate_A_R" x="0" y="0"/>
+		<layer src="Garden_Gate_B_R" x="23" y="17"/>
 		<layer src="Garden_Gate_A_R_Top" x="0" y="0"/>
 		<animation speed="1" x="0" y="0" reversible="false">
 			<frame src="Garden_Gate_A_R_Top"/>
@@ -434,14 +434,14 @@
 	<image id="Garden_Wall_C_11" src="Garden_Wall_C_Intersection_4w" isometric="true"/>
 	<!-- Note: Assets for 'Panelled garden wall gate' with rotation variant -->
 	<image id="Garden_Gate_C" width="58" height="61" isometric="true">
-		<layer src="Garden_Gate_C" x="0" y="0"/>
-		<layer src="Garden_Gate_C_Top" x="0" y="0"/>
-		<animation speed="1" x="0" y="0" reversible="false">
+		<layer src="Garden_Gate_C" x="0" y="17"/>
+		<layer src="Garden_Gate_C_Top" x="7" y="0"/>
+		<animation speed="1" x="7" y="0" reversible="false">
 			<frame src="Garden_Gate_C_Top"/>
 		</animation>
 	</image>
 	<image id="Garden_Gate_C_R" width="58" height="61" isometric="true">
-		<layer src="Garden_Gate_C_R" x="0" y="0"/>
+		<layer src="Garden_Gate_C_R" x="23" y="17"/>
 		<layer src="Garden_Gate_C_R_Top" x="0" y="0"/>
 		<animation speed="1" x="0" y="0" reversible="false">
 			<frame src="Garden_Gate_C_R_Top"/>
@@ -505,6 +505,7 @@
 	<image id="Overgrown_Garden_01" src="Overgrown_Garden_01" isometric="true"/>
 	<image id="Overgrown_Garden_02" src="Overgrown_Garden_02" isometric="true"/>
 	<image id="Overgrown_Garden_03" src="Overgrown_Garden_03" isometric="true"/>
+	<image id="Overgrown_Garden_04" src="Overgrown_Garden_03" isometric="true"/>
 	<image id="Overgrown_Garden_M_01" src="Overgrown_Garden_M_01" isometric="true"/>
 	<image id="Overgrown_Garden_M_02" src="Overgrown_Garden_M_02" isometric="true"/>
 </assetlist>
