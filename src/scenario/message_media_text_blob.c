@@ -1,6 +1,7 @@
 #include "message_media_text_blob.h"
 
 #include "core/log.h"
+#include "core/encoding.h"
 #include "core/string.h"
 
 #include <stdlib.h>
@@ -77,7 +78,7 @@ void message_media_text_blob_clear(void)
     }
 }
 
-text_blob_string_t *message_media_text_blob_get_entry(int id)
+const text_blob_string_t *message_media_text_blob_get_entry(int id)
 {
     if (id < 0 || id >= message_media_text_blob.entry_count) {
         return 0;
@@ -85,7 +86,7 @@ text_blob_string_t *message_media_text_blob_get_entry(int id)
     return &message_media_text_blob.text_entries[id];
 }
 
-uint8_t *message_media_text_blob_get_text(int offset)
+const uint8_t *message_media_text_blob_get_text(int offset)
 {
     if (!offset) {
         return 0;
@@ -93,10 +94,9 @@ uint8_t *message_media_text_blob_get_text(int offset)
     return &message_media_text_blob.text_blob[offset];
 }
 
-text_blob_string_t *message_media_text_blob_add(const uint8_t *text)
+static text_blob_string_t *create_text_blob(int length)
 {
     resize_text_entries(1);
-    int length = string_length(text) + 1; // +1 to allow for end of string.
     resize_text_blob(length);
     int offset = message_media_text_blob.size;
     int index = message_media_text_blob.entry_count;
@@ -111,13 +111,41 @@ text_blob_string_t *message_media_text_blob_add(const uint8_t *text)
     message_media_text_blob.text_entries[index].length = length;
     message_media_text_blob.text_entries[index].offset = offset;
 
-    string_copy(text, &message_media_text_blob.text_blob[offset], length);
     message_media_text_blob.text_entries[index].text = &message_media_text_blob.text_blob[offset];
 
     message_media_text_blob.entry_count++;
     message_media_text_blob.size += length;
 
     return &message_media_text_blob.text_entries[index];
+}
+
+const text_blob_string_t *message_media_text_blob_add(const uint8_t *text)
+{
+    int length = string_length(text) + 1; // +1 to allow for end of string.
+    text_blob_string_t *entry = create_text_blob(length);
+
+    string_copy(text, entry->text, length);
+
+    return entry;
+}
+
+const text_blob_string_t *message_media_text_blob_add_encoded(const char *text)
+{
+    int length = sizeof(uint8_t) * (strlen(text) + 1);
+    uint8_t *output = malloc(length);
+    if (!output) {
+        log_error("Unable to create temporary output - out of memory.", 0, 0);
+        return 0;
+    }
+    encoding_from_utf8(text, output, length);
+    length = string_length(output) + 1; // +1 to allow for end of string.
+    text_blob_string_t *entry = create_text_blob(length);
+
+    string_copy(output, entry->text, length);
+
+    free(output);
+
+    return entry;
 }
 
 void message_media_text_blob_save_state(buffer *blob_buffer, buffer *meta_buffer)

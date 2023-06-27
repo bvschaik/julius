@@ -104,15 +104,12 @@ static void draw_foreground(void)
     int y_offset = MESSAGES_Y_OFFSET;
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (data.list[i]) {
-            large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
+            large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / BLOCK_SIZE,
+                data.focus_button_id == i + 1 ? 1 : 0);
 
             text_draw_label_and_number(0, data.list[i]->id, "", 48, y_offset + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
             if (data.list[i] && data.list[i]->linked_uid && data.list[i]->linked_uid->text) {
                 text_draw_centered(data.list[i]->linked_uid->text, 100, y_offset + 8, 250, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
-            }
-
-            if (data.focus_button_id == (i + 1)) {
-                button_border_draw(48, y_offset, BUTTON_WIDTH, MESSAGES_ROW_HEIGHT, 1);
             }
         }
 
@@ -120,26 +117,18 @@ static void draw_foreground(void)
     }
 
     for (size_t i = 8; i < MAX_BUTTONS; i++) {
-        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
+        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / BLOCK_SIZE,
+            data.focus_button_id == i + 1 ? 1 : 0);
     }
 
     y_offset += MESSAGES_ROW_HEIGHT;
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_IMPORT, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
-    if (data.focus_button_id == 9) {
-        button_border_draw(48, y_offset, BUTTON_WIDTH, MESSAGES_ROW_HEIGHT, 1);
-    }
 
     y_offset += MESSAGES_ROW_HEIGHT;
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_EXPORT, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
-    if (data.focus_button_id == 10) {
-        button_border_draw(48, y_offset, BUTTON_WIDTH, MESSAGES_ROW_HEIGHT, 1);
-    }
 
     y_offset += MESSAGES_ROW_HEIGHT;
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_CUSTOM_MESSAGES_CLEAR, 48, y_offset + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN);
-    if (data.focus_button_id == 11) {
-        button_border_draw(48, y_offset, BUTTON_WIDTH, MESSAGES_ROW_HEIGHT, 1);
-    }
 
     y_offset += MESSAGES_ROW_HEIGHT;
     lang_text_draw_centered(13, 3, 48, y_offset, BUTTON_WIDTH, FONT_NORMAL_BLACK);
@@ -183,7 +172,7 @@ static void button_click(int type, int param2)
         window_file_dialog_show(FILE_TYPE_CUSTOM_MESSAGES, FILE_DIALOG_SAVE);
     } else if (type == 11) {
         custom_messages_clear_all();
-        data.total_messages = custom_messages_count();
+        init();
     }
 }
 

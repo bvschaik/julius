@@ -15,10 +15,10 @@ typedef enum {
 typedef struct {
     int id;
     int in_use;
-    text_blob_string_t *linked_uid;
-    text_blob_string_t *title;
-    text_blob_string_t *subtitle;
-    text_blob_string_t *display_text;
+    const text_blob_string_t *linked_uid;
+    const text_blob_string_t *title;
+    const text_blob_string_t *subtitle;
+    const text_blob_string_t *display_text;
     custom_media_t *linked_media;
     custom_media_t *linked_background_music;
 } custom_message_t;

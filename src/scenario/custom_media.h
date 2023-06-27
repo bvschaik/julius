@@ -26,7 +26,7 @@ typedef enum {
 typedef struct {
     int id;
     custom_media_type type;
-    text_blob_string_t *filename;
+    const text_blob_string_t *filename;
     custom_media_link_type link_type;
     int link_id;
 } custom_media_t;

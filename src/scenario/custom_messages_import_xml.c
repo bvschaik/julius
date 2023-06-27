@@ -92,17 +92,17 @@ static void xml_end_message(void)
 
 static void xml_on_title(const char *text)
 {
-    data.current_message->title = message_media_text_blob_add(string_from_ascii(text));
+    data.current_message->title = message_media_text_blob_add_encoded(text);
 }
 
 static void xml_on_subtitle(const char *text)
 {
-    data.current_message->subtitle = message_media_text_blob_add(string_from_ascii(text));
+    data.current_message->subtitle = message_media_text_blob_add_encoded(text);
 }
 
 static void xml_on_text(const char *text)
 {
-    data.current_message->display_text = message_media_text_blob_add(string_from_ascii(text));
+    data.current_message->display_text = message_media_text_blob_add_encoded(text);
 }
 
 static int xml_start_media(void)

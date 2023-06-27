@@ -31,9 +31,10 @@ typedef struct {
 message_media_text_blob_t *message_media_text_get_data(void);
 
 void message_media_text_blob_clear(void);
-text_blob_string_t *message_media_text_blob_get_entry(int id);
-uint8_t *message_media_text_blob_get_text(int offset);
-text_blob_string_t *message_media_text_blob_add(const uint8_t *text);
+const text_blob_string_t *message_media_text_blob_get_entry(int id);
+const uint8_t *message_media_text_blob_get_text(int offset);
+const text_blob_string_t *message_media_text_blob_add(const uint8_t *text);
+const text_blob_string_t *message_media_text_blob_add_encoded(const char *text);
 
 void message_media_text_blob_save_state(buffer *blob_buffer, buffer *meta_buffer);
 void message_media_text_blob_load_state(buffer *blob_buffer, buffer *meta_buffer);
