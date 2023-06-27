@@ -112,7 +112,9 @@ static const char *ini_keys[] = {
     "rotate_map_north",
     "build_wheat_farm",
     "show_empire_map",
-    "show_messages"
+    "show_messages",
+    "show_overlay_native",
+    "build_highway"
 };
 
 static struct {
