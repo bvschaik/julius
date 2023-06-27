@@ -69,20 +69,11 @@ static void update_image(figure *f)
 static int get_storage_road_access(building *b, map_point *point)
 {
     if (b->type == BUILDING_GRANARY) {
+        // Deliver to center of granary
         map_point_store_result(b->x + 1, b->y + 1, point);
         return 1;
-    } else if (b->type == BUILDING_WAREHOUSE) {
-        if (b->has_road_access == 1) {
-            map_point_store_result(b->x, b->y, point);
-            return 1;
-        } else {
-            return map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, 3, point);
-        }
-    } else {
-        point->x = b->road_access_x;
-        point->y = b->road_access_y;
-        return b->has_road_access;
     }
+    return map_has_road_access_rotation(b->subtype.orientation, b->x, b->y, b->size, point);
 }
 
 static int is_order_condition_satisfied(const building *depot, const order *current_order)

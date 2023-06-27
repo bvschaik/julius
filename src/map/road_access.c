@@ -41,6 +41,18 @@ int map_has_road_access(int x, int y, int size, map_point *road)
 
 int map_has_road_access_rotation(int rotation, int x, int y, int size, map_point *road)
 {
+    int min_grid_offset = map_grid_offset(x, y);
+    if (map_terrain_is(min_grid_offset, TERRAIN_BUILDING)) {
+        // Use already determined road access for a building
+        const building *b = building_get(map_building_at(min_grid_offset));
+        if (b->has_road_access) {
+            if (road) {
+                road->x = b->road_access_x;
+                road->y = b->road_access_y;
+            }
+            return 1;
+        }
+    }
     switch (rotation) {
         case 3:
             x = x - size + 1;
@@ -56,7 +68,6 @@ int map_has_road_access_rotation(int rotation, int x, int y, int size, map_point
             break;
     }
     int min_value = 12;
-    int min_grid_offset = map_grid_offset(x, y);
     find_minimum_road_tile(x, y, size, &min_value, &min_grid_offset);
     if (min_value < 12) {
         if (road) {
