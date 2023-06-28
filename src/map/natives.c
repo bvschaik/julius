@@ -3,6 +3,7 @@
 #include "building/building.h"
 #include "building/list.h"
 #include "building/properties.h"
+#include "building/roadblock.h"
 #include "city/buildings.h"
 #include "city/military.h"
 #include "core/calc.h"
@@ -42,7 +43,7 @@ static int has_building_on_native_land(int x, int y, int size, int radius)
                     type != BUILDING_NATIVE_HUT &&
                     type != BUILDING_NATIVE_MEETING &&
                     type != BUILDING_NATIVE_CROPS &&
-                    type != BUILDING_ROADBLOCK) {
+                    (!building_type_is_roadblock(type) || type == BUILDING_PALISADE_GATE)) {
                     return 1;
                 }
             } else if (map_terrain_is(map_grid_offset(xx, yy), TERRAIN_AQUEDUCT | TERRAIN_WALL | TERRAIN_GARDEN)) {
@@ -199,7 +200,7 @@ void map_natives_check_land(int update_behavior)
             }
             if (b->sentiment.native_anger >= 100) {
                 mark_native_land(b->x, b->y, size, radius);
-                if (update_behavior && has_building_on_native_land(b->x, b->y, size, radius)) {
+                if (!city_military_natives_are_retreating() && update_behavior && has_building_on_native_land(b->x, b->y, size, radius)) {
                     city_military_start_native_attack();
                 }
             } else if (update_behavior) {

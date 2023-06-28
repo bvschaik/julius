@@ -16,6 +16,7 @@ void city_military_update_totals(void);
 int city_military_is_native_attack_active(void);
 void city_military_start_native_attack(void);
 void city_military_decrease_native_attack_duration(void);
+int city_military_natives_are_retreating(void);
 
 void city_military_determine_distant_battle_city(void);
 int city_military_distant_battle_city(void);

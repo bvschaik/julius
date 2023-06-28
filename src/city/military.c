@@ -94,6 +94,11 @@ void city_military_decrease_native_attack_duration(void)
     }
 }
 
+int city_military_natives_are_retreating(void)
+{
+    return formation_get(NATIVE_FORMATION)->months_low_morale;
+}
+
 void city_military_determine_distant_battle_city(void)
 {
     city_data.distant_battle.city = empire_city_get_vulnerable_roman();
