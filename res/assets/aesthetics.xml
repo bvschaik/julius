@@ -501,6 +501,10 @@
 	<!-- Note: Assets for 'Garden' - additional variant -->
 	<!-- Assets created by Areldir -->
 	<image id="Garden_Alt_01" src="Garden_01" isometric="true"/>
+	<image id="Garden_Alt_02" width="58" height="32" isometric="true">
+		<layer group="59" image="3" x="0" y="0"/>
+		<layer src="Garden_02"/>
+	</image>
 	<!-- Note: Assets for 'Overgrown Garden', both 1x1 and 2x2 variants-->
 	<image id="Overgrown_Garden_01" src="Overgrown_Garden_01" isometric="true"/>
 	<image id="Overgrown_Garden_02" src="Overgrown_Garden_02" isometric="true"/>
