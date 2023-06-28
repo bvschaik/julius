@@ -56,7 +56,8 @@ static int try_import_resource(int building_id, int resource, int city_id)
     for (int i = 0; i < 8; i++) {
         space = building_next(space);
         if (space->id > 0) {
-            if (space->resources[resource] > 0 && space->resources[resource] < 4) {
+            if (space->resources[resource] > 0 && space->resources[resource] < 4 &&
+                space->subtype.warehouse_resource_id == resource) {
                 trade_route_increase_traded(route_id, resource);
                 building_warehouse_space_add_import(space, resource, 0);
                 return 1;

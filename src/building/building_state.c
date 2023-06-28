@@ -625,6 +625,15 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         }
     }
 
+    // Fix bug where warehouses have invalid resources stored
+    if (b->type == BUILDING_WAREHOUSE_SPACE) {
+        for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+            if (r != b->subtype.warehouse_resource_id) {
+                b->resources[r] = 0;
+            }
+        }
+    }
+
     if (
         (b->type == BUILDING_LIGHTHOUSE || b->type == BUILDING_CARAVANSERAI) && 
         b->figure_id2 && 
