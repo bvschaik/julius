@@ -744,7 +744,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LIGHTHOUSE_NEEDS_WORKERS, "The Lighthouse is understaffed, and cannot keep the fire going. Ships struggle to find the way to your city's docks."},
     {TR_BUILDING_CARAVANSERAI_NEEDS_WORKERS, "The Caravanserai is understaffed, and cannot keep up support to all the incoming caravans."},
     {TR_BUILDING_ROOFED_GARDEN_WALL, "Roofed garden wall"},
-    {TR_BUILDING_GARDEN_WALL_GATE, "Roofed garden wall gate"},
+    {TR_BUILDING_GARDEN_WALL_GATE, "Garden wall gate"},
     {TR_BUILDING_GARDEN_WALL_GATE_DESC, "This small gate controls the movement of people in and out of your city's most secluded spots."},
     {TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING, "The cart pusher is on his way to get goods from another warehouse."},
     {TR_BUILDING_PALISADE, "Palisade" },
