@@ -267,19 +267,14 @@ int map_road_to_largest_network_rotation(int rotation, int x, int y, int size, i
     }
     int min_index = 12;
     int min_grid_offset = -1;
-    int min_road_is_roadblock = 0;
     int base_offset = map_grid_offset(x, y);
     for (const int *tile_delta = map_grid_adjacent_offsets(size); *tile_delta; tile_delta++) {
         int grid_offset = base_offset + *tile_delta;
         if (map_terrain_is(grid_offset, TERRAIN_ROAD) && map_routing_distance(grid_offset) > 0) {
             int index = city_map_road_network_index(map_road_network_get(grid_offset));
-            int is_roadblock = building_type_is_roadblock(building_get(map_building_at(grid_offset))->type);
-            if (index < min_index || (index == min_index && min_road_is_roadblock)) {
-                if (!is_roadblock || min_grid_offset == -1 || min_road_is_roadblock) {
-                    min_index = index;
-                    min_grid_offset = grid_offset;
-                    min_road_is_roadblock = is_roadblock;
-                }
+            if (index < min_index) {
+                min_index = index;
+                min_grid_offset = grid_offset;
             }
         }
     }
