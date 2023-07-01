@@ -142,7 +142,7 @@ static void setup_buttons_for_selected_depot(building_info_context *c)
         int building_id = building_storage_get_array_entry(i)->building_id;
         if (building_id) {
             building *store_building = building_get(building_id);
-            if (store_building && building_is_active(store_building)
+            if (store_building && building_is_active(store_building) && store_building->storage_id == i &&
                 && building_storage_resource_max_storable(store_building, data.target_resource_id) > 0) {
                 current_storage_offset++;
                 if (current_storage_offset < scrollbar.scroll_position) {
@@ -176,7 +176,7 @@ static void calculate_available_storages(int building_id)
             continue;
         }
         building *store_building = building_get(storage_building_id);
-        if (store_building && building_is_active(store_building)
+        if (store_building && building_is_active(store_building) && store_building->storage_id == i &&
             && building_storage_resource_max_storable(store_building, data.target_resource_id) > 0) {
             data.available_storages++;
             if (b->data.depot.current_order.src_storage_id == store_building->id) {
