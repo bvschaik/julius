@@ -43,12 +43,16 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
         return 0;
     }
     building *granary = building_get(granary_id);
-    int market_units = building_get(market_id)->resources[resource];
+    building *market = building_get(market_id);
+    int market_units = market->resources[resource];
     int max_units = 0;
     int granary_units = granary->resources[resource];
     int num_loads;
-    if (building_get(market_id)->data.market.is_mess_hall) {
+
+    if (market->type == BUILDING_MESS_HALL) {
         max_units = MAX_FOOD_STOCKED_MESS_HALL - market_units;
+    } else if (market->type == BUILDING_CARAVANSERAI) {
+        max_units = MAX_FOOD_STOCKED_CARAVANSERAI - market_units;
     } else {
         max_units = MAX_FOOD_STOCKED_MARKET - market_units;
     }
