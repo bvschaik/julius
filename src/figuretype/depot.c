@@ -191,12 +191,15 @@ static int storage_add_resource(building *b, int resource, int amount)
     return amount;
 }
 
-static int check_valid_storages(order *current_order)
+static int check_valid_storages(order *current_order, int action_state)
 {
     int valid_storages = 1;
     building *src = building_get(current_order->src_storage_id);
     if (!src || !src->storage_id || src->state != BUILDING_STATE_IN_USE) {
-        valid_storages = 0;
+        if (action_state == FIGURE_ACTION_239_DEPOT_CART_PUSHER_HEADING_TO_SOURCE ||
+            action_state == FIGURE_ACTION_240_DEPOT_CART_PUSHER_AT_SOURCE) {
+            valid_storages = 0;
+        }
         current_order->src_storage_id = 0;
     }
     building *dst = building_get(current_order->dst_storage_id);
@@ -204,7 +207,7 @@ static int check_valid_storages(order *current_order)
         valid_storages = 0;
         current_order->dst_storage_id = 0;
     }
-    return valid_storages;
+    return valid_storages || action_state == FIGURE_ACTION_243_DEPOT_CART_PUSHER_RETURNING;
 }
 
 void figure_depot_cartpusher_action(figure *f)
@@ -220,10 +223,6 @@ void figure_depot_cartpusher_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
         update_image(f);
         return;
-    }
-
-    if (!check_valid_storages(&b->data.depot.current_order)) {
-        f->action_state = FIGURE_ACTION_244_DEPOT_CART_PUSHER_CANCEL_ORDER;
     }
 
     int is_linked = 0;
@@ -374,8 +373,8 @@ void figure_depot_cartpusher_action(figure *f)
             figure_route_remove(f);
             break;
     }
-
-    if (!is_current_state_still_valid_for_order(f, &b->data.depot.current_order)) {
+    if (!is_current_state_still_valid_for_order(f, &b->data.depot.current_order) ||
+        !check_valid_storages(&b->data.depot.current_order, f->action_state)) {
         f->action_state = FIGURE_ACTION_244_DEPOT_CART_PUSHER_CANCEL_ORDER;
     }
 
