@@ -185,10 +185,13 @@ int map_terrain_exists_rock_in_radius(int x, int y, int size, int radius)
     int x_min, y_min, x_max, y_max;
     map_grid_get_area(x, y, size, radius, &x_min, &y_min, &x_max, &y_max);
 
+    int entry_flag_offset = map_grid_offset(city_map_entry_flag()->x, city_map_entry_flag()->y);
+    int exit_flag_offset = map_grid_offset(city_map_entry_flag()->x, city_map_entry_flag()->y);
+
     for (int yy = y_min; yy <= y_max; yy++) {
         for (int xx = x_min; xx <= x_max; xx++) {
             int offset = map_grid_offset(xx, yy);
-            if (offset == city_map_entry_flag()->grid_offset || offset == city_map_exit_flag()->grid_offset) {
+            if (offset == entry_flag_offset || offset == exit_flag_offset) {
                 continue;
             }
             if (map_terrain_is(offset, TERRAIN_ROCK)) {
