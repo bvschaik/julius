@@ -116,7 +116,7 @@ jobs:
             cache-key: mingw
             COMPILER: mingw-64
             SKIP_UPLOAD: true
-          - name: Windows MSVC
+          - name: Windows MSVC Debug
             cache-key: msvc
             COMPILER: msvc
             SKIP_UPLOAD: true

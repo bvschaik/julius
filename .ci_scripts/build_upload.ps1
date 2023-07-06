@@ -25,8 +25,9 @@ if ("$env:GITHUB_REF" -match "^refs/tags/v") {
 # Create deploy file
 mkdir deploy
 if ("${env:COMPILER}" -eq "msvc") {
-    $suffix = "windows-msvc"
-    CopyFile build/Release/augustus.exe .
+    $suffix = "windows-msvc-debug"
+    CopyFile build/Debug/augustus.exe .
+    CopyFile build/Debug/augustus.pdb .
     CopyFile ext\SDL2\SDL2-${env:SDL_VERSION}\lib\x64\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\lib\x64\SDL2_mixer.dll .
 } elseif ("${env:COMPILER}" -eq "mingw-32") {
