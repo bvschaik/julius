@@ -24,10 +24,12 @@ if ("$env:GITHUB_REF" -match "^refs/tags/v") {
 
 # Create deploy file
 mkdir deploy
+$pdbfile = ""
 if ("${env:COMPILER}" -eq "msvc") {
     $suffix = "windows-msvc-debug"
-    CopyFile build/Debug/augustus.exe .
-    CopyFile build/Debug/augustus.pdb .
+    $pdbfile = "augustus.pdb"
+    CopyFile build/RelWithDebInfo/augustus.exe .
+    CopyFile build/RelWithDebInfo/augustus.pdb .
     CopyFile ext\SDL2\SDL2-${env:SDL_VERSION}\lib\x64\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\lib\x64\SDL2_mixer.dll .
 } elseif ("${env:COMPILER}" -eq "mingw-32") {
@@ -74,9 +76,9 @@ if ($repo -eq "release") {
 
     xcopy /ei res\maps .\maps
     xcopy /ei res\manual .\manual
-    7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll assets maps manual
+    7z a "deploy\$deploy_file" augustus.exe $pdbfile SDL2.dll SDL2_mixer.dll assets maps manual
 } else {
-    7z a "deploy\$deploy_file" augustus.exe SDL2.dll SDL2_mixer.dll
+    7z a "deploy\$deploy_file" augustus.exe $pdbfile SDL2.dll SDL2_mixer.dll
 }
 
 if (!$?) {
