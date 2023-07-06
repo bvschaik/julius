@@ -138,32 +138,17 @@ static const char *print_exception_name(DWORD exception_code)
 
 static void print_stacktrace(LPEXCEPTION_POINTERS e)
 {
+    void *stack[100];
     char crash_info[256];
-    int filelineinfo_ok = 0;
-    PIMAGEHLP_SYMBOL64 pSym;
-    STACKFRAME sf;
-    DWORD64 dwModBase, Disp64;
-    DWORD Disp;
-    BOOL more = FALSE;
-    IMAGEHLP_LINE64 line;
-    const char *filename = NULL;
-    unsigned int linenum = 0;
-    line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
-    int count = 0;
+    char buffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(TCHAR)];
     char modname[MAX_PATH];
-    pSym = (PIMAGEHLP_SYMBOL64)GlobalAlloc(GMEM_FIXED, 16384);
-    ZeroMemory(&sf, sizeof(sf));
-    sf.AddrPC.Mode = AddrModeFlat;
-    sf.AddrStack.Mode = AddrModeFlat;
-    sf.AddrFrame.Mode = AddrModeFlat;
-    sf.AddrReturn.Mode  = AddrModeFlat;
 
-    PCONTEXT context = e->ContextRecord;
-    DWORD machine_type = 0;
-    sf.AddrPC.Offset = context->Rip;
-    sf.AddrFrame.Offset = context->Rbp;
-    sf.AddrStack.Offset = context->Rsp;
-    machine_type = IMAGE_FILE_MACHINE_AMD64;
+    PSYMBOL_INFO symbol = (PSYMBOL_INFO) buffer;
+    symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+    symbol->MaxNameLen = MAX_SYM_NAME;
+    DWORD displacement;
+    IMAGEHLP_LINE64 line;
+    line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
 
     // Record exception info
     log_info_sprintf("Exception: %s (0x%08x)", print_exception_name(e->ExceptionRecord->ExceptionCode),
@@ -173,38 +158,25 @@ static void print_stacktrace(LPEXCEPTION_POINTERS e)
     // Record stacktrace
     log_info_sprintf("Stacktrace:");
 
-    while (1) {
-        more = StackWalk(machine_type, GetCurrentProcess(), GetCurrentThread(), &sf, context, NULL,
-            SymFunctionTableAccess64, SymGetModuleBase64, NULL);
-        if (!more || sf.AddrFrame.Offset == 0) {
-            break;
-        }
-        dwModBase = SymGetModuleBase64(GetCurrentProcess(), sf.AddrPC.Offset);
-        if (dwModBase) {
-            GetModuleFileName((HINSTANCE) dwModBase, modname, MAX_PATH);
-        } else {
-            strcpy(modname, "Unknown");
-        }
+    int frames = CaptureStackBackTrace(0, 100, stack, NULL);
 
-        pSym->SizeOfStruct = sizeof(IMAGEHLP_SYMBOL);
-        pSym->MaxNameLength = MAX_PATH;
-
-        // unwind callstack
-        if (SymGetSymFromAddr64(GetCurrentProcess(), sf.AddrPC.Offset, &Disp64, pSym)) {
-            filelineinfo_ok = SymGetLineFromAddr64(GetCurrentProcess(), sf.AddrPC.Offset, &Disp, &line);
-            filename = !!filelineinfo_ok ? line.FileName : "UNKNOWN FILE";
-            linenum = !!filelineinfo_ok ? line.LineNumber : 0;
-
+    for (int frame = 0; frame < frames; frame++) {
+        if (SymFromAddr(GetCurrentProcess(), (DWORD64) stack[frame], 0, symbol)) {
+            int has_line = SymGetLineFromAddr64(GetCurrentProcess(), (DWORD64) stack[frame], &displacement, &line);
             // This is the code path taken on VC if debugging syms are found
-            log_info_sprintf("(%d) %s L:%u(%s+%#0lx) [0x%08X]\n", count, filename, linenum, pSym->Name,
-                Disp, (unsigned int)sf.AddrPC.Offset);
+            log_info_sprintf("(%d) %s L:%lu(%s+%#0lx) [0x%08lX]\n", frame, has_line ? line.FileName : "UNKNOWN FILE",
+                has_line ? line.LineNumber : 0, symbol->Name, displacement, (unsigned long) (DWORD64) stack[frame]);
         } else {
+            DWORD64 mod_base = SymGetModuleBase64(GetCurrentProcess(), (DWORD64) stack[frame]);
+            if (mod_base) {
+                GetModuleFileName((HINSTANCE) mod_base, modname, MAX_PATH);
+            } else {
+                strcpy(modname, "Unknown");
+            }
             // This is the code path taken on MinGW, and VC if no debugging syms are found.
-            log_info_sprintf("(%d) %s [0x%08X]\n", count, modname, (unsigned int)sf.AddrPC.Offset);
+            log_info_sprintf("(%d) %s [0x%08lX]\n", frame, modname, (unsigned long) (DWORD64) stack[frame]);
         }
-        ++count;
     }
-    GlobalFree(pSym);
 }
 
 #endif
