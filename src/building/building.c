@@ -577,6 +577,9 @@ int building_get_laborers(building_type type)
     // Neptune GT bonus
     if (type == BUILDING_FOUNTAIN && building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
         workers /= 2;
+        if (workers == 0) {
+            workers = 1;
+        }
     }
     return workers;
 }
