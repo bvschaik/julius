@@ -75,7 +75,9 @@ void system_setup_crash_handler(void)
 #elif defined(_WIN32)
 
 #include <windows.h>
+
 #include <imagehlp.h>
+#include <shlwapi.h>
 #include <stdio.h>
 
 #ifdef HAS_STACK_TRACE
@@ -188,9 +190,13 @@ static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e)
     log_error("Oops, crashed :(", 0, 0);
 
 #ifdef _M_X64
+    wchar_t path[MAX_PATH];
+    GetModuleFileNameW(0, path, MAX_PATH);
+    PathRemoveFileSpecW(path);
+    SetEnvironmentVariableW(L"_NT_SYMBOL_PATH", path);
 
     // Initialize IMAGEHLP.DLL.
-    SymInitialize(GetCurrentProcess(), ".", TRUE);
+    SymInitialize(GetCurrentProcess(), 0, TRUE);
 
     print_stacktrace(e);
 
