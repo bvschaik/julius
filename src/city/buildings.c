@@ -125,7 +125,7 @@ int city_buildings_get_closest_plague(int x, int y, int *distance)
     // Find closest in houses
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (b->has_plague && b->distance_from_entry) {
+            if (b->state == BUILDING_STATE_IN_USE && b->has_plague && b->distance_from_entry) {
                 int dist = calc_maximum_distance(x, y, b->x, b->y);
                 if (b->figure_id4) {
                     if (dist < min_occupied_dist) {
@@ -144,7 +144,7 @@ int city_buildings_get_closest_plague(int x, int y, int *distance)
     for (size_t i = 0 ; i < NUM_PLAGUE_BUILDINGS; i++) {
         building_type type = PLAGUE_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (b->has_plague && b->distance_from_entry) {
+            if (b->state == BUILDING_STATE_IN_USE && b->has_plague && b->distance_from_entry) {
                 int dist = calc_maximum_distance(x, y, b->x, b->y);
                 if (b->figure_id4) {
                     if (dist < min_occupied_dist) {
@@ -170,19 +170,21 @@ static void update_sickness_duration(int building_id)
 {
     building *b = building_get(building_id);
 
-    if (b->has_plague) {
-        // Stop plague after time or if doctor heals it
-        if (b->sickness_duration == 99) {
-            b->sickness_duration = 0;
-            b->has_plague = 0;
-            b->sickness_level = 0;
-            b->sickness_doctor_cure = 0;
-            b->figure_id4 = 0;
-            b->fumigation_frame = 0;
-            b->fumigation_direction = 0;
-        } else {
-            b->sickness_duration += 1;
-        }
+    if (b->state != BUILDING_STATE_IN_USE || !b->has_plague) {
+        return;
+    }
+
+    // Stop plague after time or if doctor heals it
+    if (b->sickness_duration == 99) {
+        b->sickness_duration = 0;
+        b->has_plague = 0;
+        b->sickness_level = 0;
+        b->sickness_doctor_cure = 0;
+        b->figure_id4 = 0;
+        b->fumigation_frame = 0;
+        b->fumigation_direction = 0;
+    } else {
+        b->sickness_duration += 1;
     }
 }
 

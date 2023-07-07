@@ -159,15 +159,17 @@ void building_destroy_by_rioter(building *b)
 
 int building_destroy_first_of_type(building_type type)
 {
-    building *b = building_first_of_type(type);
-    if (!b) {
-        return 0;
+    for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED) {
+            continue;
+        }
+        int grid_offset = b->grid_offset;
+        game_undo_disable();
+        building_destroy_by_collapse(b);
+        map_routing_update_land();
+        return grid_offset;
     }
-    int grid_offset = b->grid_offset;
-    game_undo_disable();
-    building_destroy_by_collapse(b);
-    map_routing_update_land();
-    return grid_offset;
+    return 0;
 }
 
 void building_destroy_last_placed(void)

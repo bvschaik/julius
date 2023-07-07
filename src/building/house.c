@@ -74,8 +74,8 @@ void building_house_change_to_vacant_lot(building *house)
 
 static void prepare_for_merge(int building_id, int num_tiles)
 {
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        merge_data.inventory[i] = 0;
+    for (resource_type r = 0; r < RESOURCE_MAX; r++) {
+        merge_data.inventory[r] = 0;
     }
     merge_data.population = 0;
     merge_data.sentiment = 0;
@@ -87,11 +87,11 @@ static void prepare_for_merge(int building_id, int num_tiles)
             if (house->id != building_id && house->house_size) {
                 merge_data.population += house->house_population;
                 merge_data.sentiment += house->house_population * house->sentiment.house_happiness;
-                for (int inv = 0; inv < RESOURCE_MAX; inv++) {
-                    merge_data.inventory[inv] += house->resources[inv];
-                    house->house_population = 0;
-                    house->state = BUILDING_STATE_DELETED_BY_GAME;
+                for (resource_type r = 0; r < RESOURCE_MAX; r++) {
+                    merge_data.inventory[r] += house->resources[r];
                 }
+                house->house_population = 0;
+                house->state = BUILDING_STATE_DELETED_BY_GAME;
             }
         }
     }
@@ -108,8 +108,8 @@ static void merge(building *b)
     if (b->house_population) {
         b->sentiment.house_happiness = merge_data.sentiment / b->house_population;
     }
-    for (int i = 0; i < RESOURCE_MAX; i++) {
-        b->resources[i] += merge_data.inventory[i];
+    for (resource_type r = 0; r < RESOURCE_MAX; r++) {
+        b->resources[r] += merge_data.inventory[r];
     }
     map_building_tiles_remove(b->id, b->x, b->y);
     b->x = merge_data.x;
