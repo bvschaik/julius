@@ -130,6 +130,7 @@ static void setup_buttons_for_selected_depot(building_info_context *c)
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         depot_select_storage_buttons[i].parameter1 = data.depot_building_id;
         depot_select_storage_buttons[i].parameter2 = 0;
+        depot_view_storage_buttons[i].parameter1 = 0;
     }
 
     int button_index = 0;
@@ -145,7 +146,7 @@ static void setup_buttons_for_selected_depot(building_info_context *c)
             if (store_building && building_is_active(store_building) && store_building->storage_id == i &&
                 building_storage_resource_max_storable(store_building, data.target_resource_id) > 0) {
                 current_storage_offset++;
-                if (current_storage_offset < scrollbar.scroll_position) {
+                if (current_storage_offset <= scrollbar.scroll_position) {
                     continue;
                 }
                 depot_select_storage_buttons[button_index].parameter2 = building_id;
