@@ -5,10 +5,7 @@
 #include "core/file.h"
 #include "core/smacker.h"
 #include "core/time.h"
-#include "game/settings.h"
-#include "game/system.h"
 #include "graphics/renderer.h"
-#include "graphics/screen.h"
 #include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
@@ -182,7 +179,6 @@ static void end_video(void)
     if (data.restart_music) {
         sound_music_update(1);
     }
-    system_show_cursor();
     graphics_renderer()->release_custom_image_buffer(CUSTOM_IMAGE_VIDEO);
 }
 
@@ -332,43 +328,27 @@ static void update_video_frame(void)
     graphics_renderer()->update_custom_image(CUSTOM_IMAGE_VIDEO);
 }
 
-void video_draw(int x_offset, int y_offset)
+void video_draw(int x_offset, int y_offset, int width, int height)
 {
     get_next_frame();
     if (data.video.draw_frame) {
         update_video_frame();
         data.video.draw_frame = 0;
     }
-    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x_offset, y_offset, 1.0f, 0);
-}
 
-void video_draw_fullscreen(void)
-{
-    if (setting_fullscreen()) {
-        system_hide_cursor();
-    } else {
-        system_show_cursor();
-    }
-    get_next_frame();
-    if (data.video.draw_frame) {
-        update_video_frame();
-    }
+    float scale = 1.0f;
 
-    int s_width = screen_width();
-    int s_height = screen_height();
-    float scale_w = data.video.width / (float) screen_width();
-    float scale_h = data.video.height / (float) screen_height();
-    float scale = scale_w > scale_h ? scale_w : scale_h;
+    if (data.video.width != width || data.video.height != height) {
+        float scale_w = data.video.width / (float) width;
+        float scale_h = data.video.height / (float) height;
+        scale = scale_w > scale_h ? scale_w : scale_h;
 
-    int x = 0;
-    int y = 0;
-    if (scale == scale_h) {
-        x = (int) ((s_width - data.video.width / scale) / 2 * scale);
+        if (scale == scale_h) {
+            x_offset += (int) ((width - data.video.width / scale) / 2 * scale);
+        }
+        if (scale == scale_w) {
+            y_offset += (int) ((height - data.video.height / scale) / 2 * scale);
+        }
     }
-    if (scale == scale_w) {
-        y = (int) ((s_height - data.video.height / scale) / 2 * scale);
-    }
-
-    graphics_renderer()->clear_screen();
-    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x, y, scale, 0);
+    graphics_renderer()->draw_custom_image(CUSTOM_IMAGE_VIDEO, x_offset, y_offset, scale, 0);
 }

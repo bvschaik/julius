@@ -1,5 +1,7 @@
 #include "victory_video.h"
 
+#include "game/settings.h"
+#include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"
@@ -26,17 +28,23 @@ static int init(const char *filename, int width, int height, void (*callback)(vo
 static void draw_background(void)
 {
     graphics_clear_screen();
+    if (setting_fullscreen()) {
+        system_hide_cursor();
+    } else {
+        system_show_cursor();
+    }
 }
 
 static void draw_foreground(void)
 {
-    video_draw_fullscreen();
+    video_draw(0, 0, screen_width(), screen_height());
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (m->left.went_up || m->right.went_up || video_is_finished()) {
         video_stop();
+        system_show_cursor();
         data.callback();
     }
 }

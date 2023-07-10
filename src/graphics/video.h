@@ -38,15 +38,12 @@ void video_stop(void);
 void video_shutdown(void);
 
 /**
- * Draws a frame of the current video at the specified position
+ * Draws a frame of the current video at the specified position at the specified size
  * @param x_offset X offset
  * @param y_offset Y offset
+ * @param width Width of the video container
+ * @param height Height of the video container
  */
-void video_draw(int x_offset, int y_offset);
-
-/**
- * Draws a frame of the current video at fullscreen
- */
-void video_draw_fullscreen(void);
+void video_draw(int x_offset, int y_offset, int width, int height);
 
 #endif // GRAPHICS_VIDEO_H

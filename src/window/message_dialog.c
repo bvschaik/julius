@@ -491,7 +491,7 @@ static void draw_background_video(void)
     }
 
     outer_panel_draw(data.x, data.y, 26, 28);
-    graphics_draw_rect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
+    graphics_fill_rect(data.x + 7, data.y + 7, 402, 294, COLOR_BLACK);
 
     int y_base = data.y + 308;
     int inner_height_blocks = 6;
@@ -619,7 +619,7 @@ static void draw_foreground_normal(void)
 
 static void draw_foreground_video(void)
 {
-    video_draw(data.x + 8, data.y + 8);
+    video_draw(data.x + 8, data.y + 8, 400, 292);
     image_buttons_draw(data.x + 16, data.y + 408, get_advisor_button(), 1);
     image_buttons_draw(data.x + 372, data.y + 410, &image_button_close, 1);
     const lang_message *msg = get_custom_or_standard_lang_message(data.text_id);

@@ -1,5 +1,7 @@
 #include "intro_video.h"
 
+#include "game/settings.h"
+#include "game/system.h"
 #include "graphics/graphics.h"
 #include "graphics/screen.h"
 #include "graphics/video.h"
@@ -29,11 +31,16 @@ static int start_next_video(void)
 static void draw_background(void)
 {
     graphics_clear_screen();
+    if (setting_fullscreen()) {
+        system_hide_cursor();
+    } else {
+        system_show_cursor();
+    }
 }
 
 static void draw_foreground(void)
 {
-    video_draw_fullscreen();
+    video_draw(0, 0, screen_width(), screen_height());
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -42,6 +49,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         video_stop();
         if (!start_next_video()) {
             sound_music_play_intro();
+            system_show_cursor();
             window_go_back();
         }
         started = 1;
