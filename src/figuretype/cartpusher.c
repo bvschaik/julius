@@ -659,6 +659,10 @@ static void determine_warehouseman_destination(figure *f, int road_network_id, i
 
 static void warehouseman_initial_action(figure *f, int road_network_id, int remove_resources)
 {
+    if (!road_network_id) {
+        f->state = FIGURE_STATE_DEAD;
+        return;
+    }
     building *b = building_get(f->building_id);
     f->is_ghost = 1;
     f->wait_ticks++;
