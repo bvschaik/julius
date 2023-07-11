@@ -32,15 +32,12 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "platform/android/android.h"
 #include "platform/emscripten/emscripten.h"
 #include "platform/switch/switch.h"
 #include "platform/vita/vita.h"
-
-#ifdef LOG_TO_FILE
-#include <string.h>
-#endif
 
 #if defined(USE_TINYFILEDIALOGS) || defined(__ANDROID__)
 #define SHOW_FOLDER_SELECT_DIALOG
@@ -61,26 +58,53 @@ static struct {
     int quit;
 } data = {1, 0};
 
-#ifdef LOG_TO_FILE
 static FILE *log_file = 0;
+
+static void write_to_output(FILE *output, const char *log_type, const char *message)
+{
+    fwrite(log_type, sizeof(char), strlen(log_type), output);
+    fwrite(message, sizeof(char), strlen(message), output);
+    fwrite("\n", sizeof(char), 1, output);
+    fflush(output);
+}
 
 static void write_log(void *userdata, int category, SDL_LogPriority priority, const char *message)
 {
+    const char *log_type = priority == SDL_LOG_PRIORITY_ERROR ? "ERROR: " : "INFO: ";
     if (log_file) {
-        if (priority == SDL_LOG_PRIORITY_ERROR) {
-            fwrite("ERROR: ", sizeof(char), 7, log_file);
-        } else {
-            fwrite("INFO: ", sizeof(char), 6, log_file);
-        }
-        fwrite(message, sizeof(char), strlen(message), log_file);
-        fwrite("\n", sizeof(char), 1, log_file);
-        fflush(log_file);
+        write_to_output(log_file, log_type, message);
     }
+    write_to_output(stdout, log_type, message);
+}
+
+static void backup_log(void)
+{
+    FILE *in = fopen("augustus-log.txt", "rb");
+    if (!in) {
+        return;
+    }
+    FILE *out = fopen("augustus-log-backup.txt", "wb");
+    if (!out) {
+        fclose(in);
+        return;
+    }
+
+    char buf[1024];
+    int read = 0;
+
+    while ((read = fread(buf, 1, 1024, in)) == 1024) {
+        fwrite(buf, 1, 1024, out);
+    }
+    fwrite(buf, 1, read, out);
+
+    fclose(out);
+    fclose(in);
 }
 
 static void setup_logging(void)
 {
     // On some platforms (vita, android), not removing the file will not empty it when reopening for writing
+    backup_log();
     file_remove("augustus-log.txt");
     log_file = file_open("augustus-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
@@ -93,11 +117,6 @@ static void teardown_logging(void)
         file_close(log_file);
     }
 }
-
-#else
-static void setup_logging(void) {}
-static void teardown_logging(void) {}
-#endif
 
 static void post_event(int code)
 {
