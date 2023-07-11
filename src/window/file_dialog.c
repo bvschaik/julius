@@ -103,6 +103,7 @@ static struct {
     } info;
     savegame_load_status savegame_info_status;
     int redraw_full_window;
+    int selected_index;
 } data;
 
 static const int MISSION_ID_TO_CITY_ID[] = {
@@ -540,6 +541,7 @@ static void button_ok_cancel(int is_ok, int param2)
             if (scrollbar.scroll_position < 0) {
                 scrollbar.scroll_position = 0;
             }
+            button_select_file(data.selected_index - 1, 0);
         }
     }
 
@@ -555,6 +557,7 @@ static void button_select_file(int index, int param2)
 {
     if (index < data.file_list->num_files &&
         strcmp(data.selected_file, data.file_list->files[scrollbar.scroll_position + index]) != 0) {
+        data.selected_index = index + 1;
         strncpy(data.selected_file, data.file_list->files[scrollbar.scroll_position + index], FILE_NAME_MAX - 1);
         encoding_from_utf8(data.selected_file, data.typed_name, FILE_NAME_MAX);
         string_copy(data.typed_name, data.previously_seen_typed_name, FILE_NAME_MAX);
