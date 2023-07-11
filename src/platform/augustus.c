@@ -79,11 +79,11 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
 
 static void backup_log(void)
 {
-    FILE *in = fopen("augustus-log.txt", "rb");
+    FILE *in = file_open("augustus-log.txt", "rb");
     if (!in) {
         return;
     }
-    FILE *out = fopen("augustus-log-backup.txt", "wb");
+    FILE *out = file_open("augustus-log-backup.txt", "wb");
     if (!out) {
         fclose(in);
         return;
@@ -97,14 +97,15 @@ static void backup_log(void)
     }
     fwrite(buf, 1, read, out);
 
-    fclose(out);
-    fclose(in);
+    file_close(out);
+    file_close(in);
 }
 
 static void setup_logging(void)
 {
-    // On some platforms (vita, android), not removing the file will not empty it when reopening for writing
     backup_log();
+
+    // On some platforms (vita, android), not removing the file will not empty it when reopening for writing
     file_remove("augustus-log.txt");
     log_file = file_open("augustus-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
@@ -112,8 +113,9 @@ static void setup_logging(void)
 
 static void teardown_logging(void)
 {
+    log_repeated_messages();
+
     if (log_file) {
-        log_repeated_messages();
         file_close(log_file);
     }
 }
