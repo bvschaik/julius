@@ -628,21 +628,24 @@ static void determine_warehouseman_destination(figure *f, int road_network_id, i
         }
         return;
     }
-    // priority 5: resource to other warehouse
-    dst_building_id = building_warehouse_for_storing(f->building_id, f->x, f->y, f->resource_id,
-        road_network_id, 0, &dst);
-    
-    int empty_warehouse = building_storage_get(building_get(f->building_id)->storage_id)->empty_all; // deliver to another warehouse because this one is being emptied
-    if (dst_building_id && empty_warehouse) {
-        if (dst_building_id == f->building_id) {
-            f->state = FIGURE_STATE_DEAD;
-        } else {
-            set_destination(f, FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE, dst_building_id, dst.x, dst.y);
-            if (remove_resources) {
-                remove_resource_from_warehouse(f);
+
+    // priority 5: another warehouse to empty this one
+    if (building_storage_get(building_get(f->building_id)->storage_id)->empty_all) {
+        dst_building_id = building_warehouse_for_storing(f->building_id, f->x, f->y, f->resource_id, -1, 0, &dst);
+
+        // deliver to another warehouse because this one is being emptied
+        if (dst_building_id) {
+            if (dst_building_id == f->building_id) {
+                f->state = FIGURE_STATE_DEAD;
+            } else {
+                set_destination(f, FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE, dst_building_id, dst.x, dst.y);
+                f->terrain_usage = TERRAIN_USAGE_PREFER_ROADS_HIGHWAY;
+                if (remove_resources) {
+                    remove_resource_from_warehouse(f);
+                }
             }
+            return;
         }
-        return;
     }
     // priority 6: raw material to well-stocked workshop
     dst_building_id = building_get_workshop_for_raw_material(f->x, f->y, f->resource_id, road_network_id, &dst);
@@ -659,7 +662,7 @@ static void determine_warehouseman_destination(figure *f, int road_network_id, i
 
 static void warehouseman_initial_action(figure *f, int road_network_id, int remove_resources)
 {
-    if (!road_network_id) {
+    if (!road_network_id && f->terrain_usage == TERRAIN_USAGE_ROADS_HIGHWAY) {
         f->state = FIGURE_STATE_DEAD;
         return;
     }

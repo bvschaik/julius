@@ -451,7 +451,7 @@ int building_warehouse_for_storing(int src_building_id, int x, int y, int resour
     int min_dist = INFINITE;
     int min_building_id = 0;
     for (building *b = building_first_of_type(BUILDING_WAREHOUSE); b; b = b->next_of_type) {
-        if (b->id == src_building_id || b->road_network_id != road_network_id ||
+        if (b->id == src_building_id || (road_network_id != -1 && b->road_network_id != road_network_id) ||
             !building_warehouse_accepts_storage(b, resource, understaffed)) {
             continue;
         }
