@@ -85,4 +85,8 @@ void scenario_condition_type_load_state(buffer *buf, scenario_condition_t *condi
     condition->parameter3 = buffer_read_i32(buf);
     condition->parameter4 = buffer_read_i32(buf);
     condition->parameter5 = buffer_read_i32(buf);
+
+    if (condition->type == CONDITION_TYPE_TRADE_SELL_PRICE) {
+        condition->parameter1 = resource_remap(condition->parameter1);
+    }
 }

@@ -94,4 +94,14 @@ void scenario_action_type_load_state(buffer *buf, scenario_action_t *action, int
     action->parameter3 = buffer_read_i32(buf);
     action->parameter4 = buffer_read_i32(buf);
     action->parameter5 = buffer_read_i32(buf);
+
+    if (action->type == ACTION_TYPE_CHANGE_RESOURCE_PRODUCED) {
+        action->parameter1 = resource_remap(action->parameter1);
+    } else if (action->type == ACTION_TYPE_TRADE_ADJUST_PRICE) {
+        action->parameter1 = resource_remap(action->parameter1);
+    } else if (action->type == ACTION_TYPE_TRADE_ADJUST_ROUTE_AMOUNT) {
+        action->parameter2 = resource_remap(action->parameter2);        
+    } else if (action->type == ACTION_TYPE_TRADE_SET_PRICE) {
+        action->parameter1 = resource_remap(action->parameter1);        
+    }
 }
