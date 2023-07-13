@@ -78,7 +78,7 @@ augustus_building_properties_mapping augustus_building_properties[] = {
     {BUILDING_SAND_PIT, { 2, 0, 0, 0, 0 }, "Industry", "Sand_Pit_C_OFF"},
     {BUILDING_BRICKWORKS, { 2, 0, 0, 0, 0 }, "Industry", "Brickworks_C_OFF"},
     {BUILDING_CONCRETE_MAKER, { 2, 0, 0, 0, 0 }, "Industry", "Concrete_Maker_C_OFF"},
-    {BUILDING_CITY_MINT, { 3, 0, 0, 0, 0 }, "Administration", "City_Mint_ON"},
+    {BUILDING_CITY_MINT, { 3, 1, 0, 0, 0 }, "Administration", "City_Mint_ON"},
     {BUILDING_DEPOT, {2,0,0,0,0}, "Logistics", "Cart Depot N OFF"},
     {BUILDING_LOOPED_GARDEN_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Gate"},
     {BUILDING_PANELLED_GARDEN_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Gate_C"},
