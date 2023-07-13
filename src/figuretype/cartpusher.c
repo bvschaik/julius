@@ -662,10 +662,14 @@ static void determine_warehouseman_destination(figure *f, int road_network_id, i
 
 static void warehouseman_initial_action(figure *f, int road_network_id, int remove_resources)
 {
-    if (!road_network_id && f->terrain_usage == TERRAIN_USAGE_ROADS_HIGHWAY) {
+    if (!road_network_id &&
+        (f->terrain_usage == TERRAIN_USAGE_ROADS_HIGHWAY || f->terrain_usage == TERRAIN_USAGE_ROADS)) {
         f->state = FIGURE_STATE_DEAD;
         return;
     }
+
+    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
+
     building *b = building_get(f->building_id);
     f->is_ghost = 1;
     f->wait_ticks++;
@@ -683,7 +687,6 @@ static void warehouseman_initial_action(figure *f, int road_network_id, int remo
 
 void figure_warehouseman_action(figure *f)
 {
-    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
     int road_network_id = map_road_network_get(f->grid_offset);
@@ -709,6 +712,7 @@ void figure_warehouseman_action(figure *f)
             figure_combat_handle_corpse(f);
             break;
         case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
+            f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
             warehouseman_initial_action(f, road_network_id, 1);
             break;
         }
