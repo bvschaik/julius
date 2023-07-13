@@ -1,5 +1,6 @@
 #include "condition_handler.h"
 
+#include "game/resource.h"
 #include "scenario/condition_types/condition_types.h"
 
 void scenario_condition_type_init(scenario_condition_t *condition)
