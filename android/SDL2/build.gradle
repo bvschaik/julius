@@ -31,8 +31,8 @@ task findSDL2Mixer {
 
 android {
     compileSdkVersion 33
-    buildToolsVersion "33.0.2"
-    ndkVersion "25.1.8937393"
+    buildToolsVersion "34.0.0"
+    ndkVersion "25.2.9519653"
 
     defaultConfig {
         minSdkVersion 21
