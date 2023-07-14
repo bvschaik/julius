@@ -78,6 +78,12 @@ jobs:
         with:
           path: deps
           key: ${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
+      - name: Setup JDK 17
+        if: matrix.BUILD_TARGET == 'android'
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
       - name: Set up environment
         env:
           FILE_ENCRYPTION_IV: ${{ secrets.FILE_ENCRYPTION_IV }}
