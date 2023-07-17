@@ -246,20 +246,18 @@ void window_building_draw_depot_foreground(building_info_context *c)
     building *src = building_get(b->data.depot.current_order.src_storage_id);
     building *dst = building_get(b->data.depot.current_order.dst_storage_id);
 
-    int group_id = 120;
-    int text_offset = 0;
     if (!b->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (b->num_workers <= 0) {
-        window_building_draw_description(c, group_id, text_offset + 5);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_DEPOT_NO_EMPLOYEES);
     } else if (c->worker_percentage < 25) {
-        window_building_draw_description(c, group_id, text_offset + 10);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_DEPOT_FEW_EMPLOYEES);
     } else if (c->worker_percentage < 50) {
-        window_building_draw_description(c, group_id, text_offset + 9);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_DEPOT_SOME_EMPLOYEES);
     } else if (c->worker_percentage < 75) {
-        window_building_draw_description(c, group_id, text_offset + 8);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_DEPOT_HALF_EMPLOYEES);
     } else if (c->worker_percentage < 100) {
-        window_building_draw_description(c, group_id, text_offset + 7);
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_DEPOT_MANY_EMPLOYEES);
     } else {
         window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_DEPOT_DESC);
     }
