@@ -65,11 +65,13 @@ static wchar_t *utf8_to_wchar(const char *str)
 #include <errno.h>
 #include <libgen.h>
 #define fs_dir_type DIR
-#define fs_dir_entry struct dirent
 #define fs_dir_open opendir
 #define fs_dir_close closedir
+#ifndef USE_FILE_CACHE
+#define fs_dir_entry struct dirent
 #define fs_dir_read readdir
 #define dir_entry_name(d) ((d)->d_name)
+#endif
 typedef const char *dir_name;
 #endif
 

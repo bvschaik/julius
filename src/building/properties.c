@@ -272,7 +272,7 @@ static int is_vanilla_building_with_changed_properties(building_type type)
 
 const building_properties *building_properties_for_type(building_type type)
 {
-    if (type < 0 || type > BUILDING_TYPE_MAX) {
+    if (type > BUILDING_TYPE_MAX) {
         return &properties[0];
     }
     if (type >= BUILDING_ROADBLOCK || is_vanilla_building_with_changed_properties(type)) {

@@ -848,8 +848,8 @@ static void draw_storage_ids(int x, int y, float scale, int grid_offset)
                 break;
         }
     }
-    x /= scale;
-    y /= scale;
+    x = (int) (x / scale);
+    y = (int) (y / scale);
     x -= box_width / 2;
     y -= box_height / 2;
     graphics_draw_rect(x, y, box_width, box_height, COLOR_BLACK);

@@ -19,7 +19,6 @@
 #include "window/hotkey_editor.h"
 #include "window/plain_message_dialog.h"
 
-#define HOTKEY_HEADER -1
 #define TR_NONE -1
 #define GROUP_BUILDINGS 28
 

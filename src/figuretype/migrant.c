@@ -96,7 +96,7 @@ static int closest_house_with_room(int x, int y)
     return min_building_id;
 }
 
-int house_is_valid(const building *b, int figure_id)
+static int house_is_valid(const building *b, int figure_id)
 {
     return b && b->state == BUILDING_STATE_IN_USE &&
         b->immigrant_figure_id == figure_id && b->house_size > 0 && !b->has_plague;

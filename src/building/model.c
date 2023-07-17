@@ -318,7 +318,7 @@ const model_building *model_get_building(building_type type)
         return &buildings[43];
     }
 
-    if (type > 129 || type < 0) {
+    if (type > 129) {
         return &MODEL_NULL;
     } else {
         return &buildings[type];

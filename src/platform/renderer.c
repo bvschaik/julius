@@ -1237,8 +1237,8 @@ void platform_renderer_clear(void)
 #ifdef PLATFORM_USE_SOFTWARE_CURSOR
 static void draw_software_mouse_cursor(void)
 {
-    const mouse *mouse = mouse_get();
-    if (!mouse->is_touch) {
+    const mouse *m = mouse_get();
+    if (!m->is_touch) {
         cursor_shape current = platform_cursor_get_current_shape();
         if (current == CURSOR_DISABLED) {
             return;
@@ -1246,8 +1246,8 @@ static void draw_software_mouse_cursor(void)
         int size = calc_adjust_with_percentage(data.cursors[current].size,
             calc_percentage(100, platform_screen_get_scale()));
         SDL_Rect dst;
-        dst.x = mouse->x - data.cursors[current].hotspot.x;
-        dst.y = mouse->y - data.cursors[current].hotspot.y;
+        dst.x = m->x - data.cursors[current].hotspot.x;
+        dst.y = m->y - data.cursors[current].hotspot.y;
         dst.w = size;
         dst.h = size;
         SDL_RenderCopy(data.renderer, data.cursors[current].texture, NULL, &dst);

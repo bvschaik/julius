@@ -4,7 +4,8 @@
 #include "input/keys.h"
 
 typedef enum {
-    HOTKEY_ARROW_UP,
+    HOTKEY_HEADER = -1,
+    HOTKEY_ARROW_UP = 0,
     HOTKEY_ARROW_DOWN,
     HOTKEY_ARROW_LEFT,
     HOTKEY_ARROW_RIGHT,

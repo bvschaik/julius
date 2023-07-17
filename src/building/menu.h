@@ -4,6 +4,7 @@
 #include "building/type.h"
 
 typedef enum {
+    SUBMENU_NONE = -1,
     BUILD_MENU_VACANT_HOUSE = 0,
     BUILD_MENU_CLEAR_LAND = 1,
     BUILD_MENU_ROAD = 2,

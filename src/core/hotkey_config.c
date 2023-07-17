@@ -237,7 +237,7 @@ const hotkey_mapping *hotkey_for_action(hotkey_action action, int index)
 
 const hotkey_mapping *hotkey_default_for_action(hotkey_action action, int index)
 {
-    if (index < 0 || index >= 2 || (int) action < 0 || action >= HOTKEY_MAX_ITEMS) {
+    if (index < 0 || index >= 2 || action >= HOTKEY_MAX_ITEMS) {
         return 0;
     }
     return &data.default_mappings[action][index];

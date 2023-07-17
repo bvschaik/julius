@@ -131,7 +131,7 @@ const text_blob_string_t *message_media_text_blob_add(const uint8_t *text)
 
 const text_blob_string_t *message_media_text_blob_add_encoded(const char *text)
 {
-    int length = sizeof(uint8_t) * (strlen(text) + 1);
+    int length = (int) (sizeof(uint8_t) * (strlen(text) + 1));
     uint8_t *output = malloc(length);
     if (!output) {
         log_error("Unable to create temporary output - out of memory.", 0, 0);

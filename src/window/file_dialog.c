@@ -541,7 +541,7 @@ static void button_ok_cancel(int is_ok, int param2)
             if (scrollbar.scroll_position < 0) {
                 scrollbar.scroll_position = 0;
             }
-            button_select_file(data.selected_index - 1, 0);
+            button_select_file(data.selected_index == 0 ? 0 : data.selected_index - 1, 0);
         }
     }
 

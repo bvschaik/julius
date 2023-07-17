@@ -944,6 +944,9 @@ if(${TARGET_PLATFORM} STREQUAL "vita")
         vorbisfile
         vorbis
         mikmod
+        xmp
+        stdc++
+        modplug
         mpg123
         FLAC
         ogg

@@ -112,7 +112,7 @@ const uint8_t *vita_keyboard_get(const uint8_t *initial_text, int max_length)
     string_copy(initial_text, final_text, max_length);
 
     if (ime_init_apputils == 0) {
-        sceAppUtilInit(&(SceAppUtilInitParam){}, &(SceAppUtilBootParam){});
+        sceAppUtilInit(&(SceAppUtilInitParam) { 0 }, &(SceAppUtilBootParam) { 0 });
         ime_init_apputils = 1;
     }
     init_ime_dialog(initial_text, max_length, SCE_IME_TYPE_BASIC_LATIN, 0);

@@ -36,8 +36,6 @@
 #define MENU_ICON_Y_OFFSET 3
 #define MENU_ITEM_MONEY_OFFSET 82
 
-#define SUBMENU_NONE -1
-
 #define TOOLTIP_TEXT_LENGTH 1000
 
 static uint8_t tooltip_text[TOOLTIP_TEXT_LENGTH];

@@ -90,7 +90,7 @@ static void backup_log(void)
     }
 
     char buf[1024];
-    int read = 0;
+    size_t read = 0;
 
     while ((read = fread(buf, 1, 1024, in)) == 1024) {
         fwrite(buf, 1, 1024, out);

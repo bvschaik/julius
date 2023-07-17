@@ -81,14 +81,14 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
 
         // Check type
         int type = TYPE_FILE;
-        struct stat file_info;
+        struct stat current_file_info;
 
         if (stat_status == STAT_UNTESTED) {
-            stat_status = stat(file_item->name, &file_info) == STAT_DOESNT_WORK ? STAT_DOESNT_WORK : STAT_WORKS;
+            stat_status = stat(file_item->name, &current_file_info) == STAT_DOESNT_WORK ? STAT_DOESNT_WORK : STAT_WORKS;
         }
         if (stat_status == STAT_WORKS) {
-            stat(file_item->name, &file_info);
-            if (S_ISDIR(file_info.st_mode)) {
+            stat(file_item->name, &current_file_info);
+            if (S_ISDIR(current_file_info.st_mode)) {
                 type = TYPE_DIR;
             }
         } else {
