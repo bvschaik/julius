@@ -18,8 +18,7 @@ if ("$env:GITHUB_REF" -match "^refs/tags/v") {
     $pr_id = $matches[1];
     $version = "pr-$pr_id-$version"
 } else {
-    echo "Unknown branch type: ${env:GITHUB_REF} - skipping upload"
-    exit
+    echo "Unknown branch type: ${env:GITHUB_REF}"
 }
 
 # Create deploy file
@@ -32,6 +31,11 @@ if ("${env:COMPILER}" -eq "msvc") {
     CopyFile build/RelWithDebInfo/augustus.pdb .
     CopyFile ext\SDL2\SDL2-${env:SDL_VERSION}\lib\x64\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\lib\x64\SDL2_mixer.dll .
+} elseif ("${env:COMPILER}" -eq "msvc-arm64") {
+    $suffix = "windows-msvc-arm64"
+    CopyFile build/Release/augustus.exe .
+    CopyFile ext\SDL2\SDL2\SDL2.dll .
+    CopyFile ext\SDL2\SDL2_mixer\SDL2_mixer.dll .
 } elseif ("${env:COMPILER}" -eq "mingw-32") {
     $suffix = "windows"
     CopyFile build/augustus.exe .

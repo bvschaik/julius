@@ -125,6 +125,9 @@ jobs:
           - name: Windows MSVC Debug
             cache-key: msvc
             COMPILER: msvc
+          - name: Windows MSVC ARM64
+            cache-key: msvc-arm64
+            COMPILER: msvc-arm64
             SKIP_UPLOAD: true
     name: ${{ matrix.name }}
     runs-on: windows-latest
