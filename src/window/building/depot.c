@@ -140,19 +140,20 @@ static void setup_buttons_for_selected_depot(building_info_context *c)
         if (current_storage_offset >= data.available_storages || button_index >= MAX_VISIBLE_ROWS) {
             break;
         }
-        int building_id = building_storage_get_array_entry(i)->building_id;
-        if (building_id) {
-            building *store_building = building_get(building_id);
-            if (store_building && building_is_active(store_building) && store_building->storage_id == i &&
-                building_storage_resource_max_storable(store_building, data.target_resource_id) > 0) {
-                current_storage_offset++;
-                if (current_storage_offset <= scrollbar.scroll_position) {
-                    continue;
-                }
-                depot_select_storage_buttons[button_index].parameter2 = building_id;
-                depot_view_storage_buttons[button_index].parameter1 = building_id;
-                button_index++;
+        const data_storage *storage = building_storage_get_array_entry(i);
+        if (!storage->in_use || !storage->building_id) {
+            continue;
+        }
+        building *store_building = building_get(storage->building_id);
+        if (building_is_active(store_building) && store_building->storage_id == storage->id &&
+            building_storage_resource_max_storable(store_building, data.target_resource_id) > 0) {
+            current_storage_offset++;
+            if (current_storage_offset <= scrollbar.scroll_position) {
+                continue;
             }
+            depot_select_storage_buttons[button_index].parameter2 = storage->building_id;
+            depot_view_storage_buttons[button_index].parameter1 = storage->building_id;
+            button_index++;
         }
     }
 }
