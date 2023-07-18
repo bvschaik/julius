@@ -200,8 +200,10 @@ static void window_building_draw_monument_resources_needed(building_info_context
                 COLOR_MASK_NONE, SCALE_NONE);
             int width = text_draw_number(resource_delivered_amount, '@', "/",
                 c->x_offset + 54, c->y_offset + y_offset + 5, FONT_NORMAL_BLACK, 0);
-            text_draw_number(resource_needed_amount, '@', " ",
-                c->x_offset + 44 + width, c->y_offset + +y_offset + 5, FONT_NORMAL_BLACK, 0);
+            width += text_draw_number(resource_needed_amount, '@', " ",
+                c->x_offset + 44 + width, c->y_offset + y_offset + 5, FONT_NORMAL_BLACK, 0);
+            text_draw(resource_get_data(r)->text, c->x_offset + 44 + width, c->y_offset + y_offset + 5,
+                FONT_NORMAL_BLACK, 0);
             y_offset += 20;
         }
     } else {
