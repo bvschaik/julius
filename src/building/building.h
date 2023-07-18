@@ -154,7 +154,7 @@ typedef struct building {
             unsigned char was_tent;
         } rubble;
         struct {
-            short exceptions;
+            unsigned short exceptions;
         } roadblock;
         struct {
             short flag_frame;

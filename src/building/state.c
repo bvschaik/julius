@@ -365,7 +365,7 @@ static void read_type_data(buffer *buf, building *b, int version)
         }
         b->data.dock.trade_ship_id = buffer_read_i16(buf);
     } else if (building_type_is_roadblock(b->type)) {
-        b->data.roadblock.exceptions = buffer_read_i16(buf);
+        b->data.roadblock.exceptions = buffer_read_u16(buf);
     } else if (is_industry_type(b)) {
         b->data.industry.progress = buffer_read_i16(buf);
         if (version <= SAVE_GAME_LAST_STATIC_RESOURCES) {
@@ -529,6 +529,15 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     // Backwards compatibility - double the current progress of industry buildings, except for wheat farms
     if (save_version < SAVE_GAME_LAST_NO_GOLD_AND_MINTING && b->output_resource_id && b->type != BUILDING_WHEAT_FARM) {
         b->data.industry.progress *= 2;
+    }
+
+    // Backwards compatibility - set roadblock permissions for gatehouses and triumphal arches
+    if (save_version <= SAVE_GAME_LAST_MONUMENT_TYPE_DATA) {
+        if (b->type == BUILDING_TRIUMPHAL_ARCH) {
+            b->data.roadblock.exceptions = ROADBLOCK_PERMISSION_ALL;
+        } else if (b->type == BUILDING_GATEHOUSE) {
+            b->data.roadblock.exceptions = 0;
+        }
     }
 
     // To keep backward savegame compatibility, only fill more recent building struct elements

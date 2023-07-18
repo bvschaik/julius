@@ -64,7 +64,7 @@ static int show_building_sentiment(const building *b)
 
 static int show_building_roads(const building *b)
 {
-    return building_type_is_roadblock(b->type) || b->type == BUILDING_GATEHOUSE;
+    return building_type_is_roadblock(b->type);
 }
 
 static int show_building_mothball(const building *b)

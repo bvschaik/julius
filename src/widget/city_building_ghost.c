@@ -442,8 +442,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
         int tile_offset = grid_offset + tile_grid_offset(orientation_index, i);
         int forbidden_terrain = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
         if (!fully_blocked) {
-            if (type == BUILDING_GATEHOUSE || type == BUILDING_TRIUMPHAL_ARCH ||
-                type == BUILDING_PLAZA || building_type_is_roadblock(type)) {
+            if (type == BUILDING_PLAZA || building_type_is_roadblock(type)) {
                 forbidden_terrain &= ~TERRAIN_ROAD;
             }
             if (type == BUILDING_GATEHOUSE) {

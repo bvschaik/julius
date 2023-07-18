@@ -52,7 +52,7 @@ typedef struct {
     terrain_info_type terrain_type;
     int can_go_to_advisor;
     int rubble_building_type;
-    int storage_show_special_orders;
+    int show_special_orders;
     struct {
         int sound_id;
         int phrase_id;

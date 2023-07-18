@@ -182,20 +182,16 @@ building *building_create(building_type type, int x, int y)
 
     const building_properties *props = building_properties_for_type(type);
 
-    memset(&(b->data), 0, sizeof(b->data));
-
     b->state = BUILDING_STATE_CREATED;
     b->faction_id = 1;
     b->type = type;
     b->size = props->size;
     b->created_sequence = extra.created_sequence++;
     b->sentiment.house_happiness = 100;
-    b->distance_from_entry = 0;
 
     fill_adjacent_types(b);
 
     // house size
-    b->house_size = 0;
     if (type >= BUILDING_HOUSE_SMALL_TENT && type <= BUILDING_HOUSE_MEDIUM_INSULA) {
         b->house_size = 1;
     } else if (type >= BUILDING_HOUSE_LARGE_INSULA && type <= BUILDING_HOUSE_MEDIUM_VILLA) {
@@ -209,8 +205,6 @@ building *building_create(building_type type, int x, int y)
     // subtype
     if (building_is_house(type)) {
         b->subtype.house_level = type - BUILDING_HOUSE_VACANT_LOT;
-    } else {
-        b->subtype.house_level = 0;
     }
 
     b->output_resource_id = resource_get_from_industry(type);
@@ -233,6 +227,12 @@ building *building_create(building_type type, int x, int y)
         b->subtype.orientation = building_rotation_get_rotation();
     }
 
+    // Most roadblock-like buildings should allow everything by default
+    if (building_type_is_roadblock(b->type) && b->type != BUILDING_ROADBLOCK && b->type != BUILDING_GATEHOUSE &&
+        b->type != BUILDING_PALISADE_GATE) {
+        b->data.roadblock.exceptions = ROADBLOCK_PERMISSION_ALL;
+    }
+
     b->x = x;
     b->y = y;
     b->grid_offset = map_grid_offset(x, y);
@@ -241,22 +241,6 @@ building *building_create(building_type type, int x, int y)
     b->fire_proof = props->fire_proof;
     b->is_adjacent_to_water = map_terrain_is_adjacent_to_water(x, y, b->size);
 
-    // init expanded data
-    b->house_tavern_wine_access = 0;
-    b->house_tavern_food_access = 0;
-    b->house_arena_gladiator = 0;
-    b->house_arena_lion = 0;
-    b->is_tourism_venue = 0;
-    b->tourism_disabled = 0;
-    b->tourism_income = 0;
-    b->tourism_income_this_year = 0;
-    b->upgrade_level = 0;
-    b->variant = 0;
-    b->sickness_level = 0;
-    b->sickness_duration = 0;
-    b->sickness_doctor_cure = 0;
-    b->fumigation_frame = 0;
-    b->fumigation_direction = 0;
     return b;
 }
 
@@ -338,8 +322,8 @@ void building_update_state(void)
                 b->type == BUILDING_PANTHEON || b->type == BUILDING_LIGHTHOUSE) {
                 road_recalc = 1;
             }
-            map_building_tiles_remove(array_index, b->x, b->y);
-            if (building_type_is_roadblock(b->type)) {
+            map_building_tiles_remove(b->id, b->x, b->y);
+            if (building_type_is_roadblock(b->type) && b->size == 1) {
                 // Leave the road behind the deleted roadblock
                 map_terrain_add(b->grid_offset, TERRAIN_ROAD);
                 road_recalc = 1;

@@ -133,7 +133,6 @@ void window_building_draw_prefect(building_info_context *c)
     window_building_draw_employment(c, 142);
 }
 
-
 void window_building_draw_roadblock(building_info_context *c)
 {
     c->help_id = 0;
@@ -143,14 +142,12 @@ void window_building_draw_roadblock(building_info_context *c)
     window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_ROADBLOCK_DESC);
 }
 
-void window_building_draw_roadblock_foreground(building_info_context *c)
+void window_building_draw_roadblock_button(building_info_context *c)
 {
-    button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
-        16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
+    button_border_draw(c->x_offset + 80, c->y_offset + BLOCK_SIZE * c->height_blocks - 34,
+        BLOCK_SIZE * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
     lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + BLOCK_SIZE * c->height_blocks - 30,
         BLOCK_SIZE * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-
-
 }
 
 void window_building_draw_roadblock_orders(building_info_context *c)
@@ -160,7 +157,6 @@ void window_building_draw_roadblock_orders(building_info_context *c)
     outer_panel_draw(c->x_offset, y_offset, 29, 28);
     text_draw_centered(translation_for(TR_BUILDING_ROADBLOCK), c->x_offset, y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - 2, 21);
-
 }
 
 void window_building_draw_roadblock_orders_foreground(building_info_context *c)
@@ -214,15 +210,6 @@ void window_building_draw_palisade_gate(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_PALISADE_GATE), c->x_offset, c->y_offset + 10, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_PALISADE_GATE_DESC);
-}
-
-void window_building_draw_garden_gate_foreground(building_info_context *c)
-{
-    button_border_draw(c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
-        16 * (c->width_blocks - 10), 20, data.focus_button_id == 1 ? 1 : 0);
-    lang_text_draw_centered(98, 5, c->x_offset + 80, c->y_offset + BLOCK_SIZE * c->height_blocks - 30,
-        BLOCK_SIZE * (c->width_blocks - 10), FONT_NORMAL_BLACK);
-
 }
 
 void window_building_draw_burning_ruin(building_info_context *c)
@@ -362,14 +349,13 @@ void window_building_draw_highway(building_info_context *c)
     window_building_draw_levy(HIGHWAY_LEVY_MONTHLY, c->x_offset - 270, c->y_offset + BLOCK_SIZE * c->height_blocks - 110);
 }
 
-void toggle_figure_state(int index, int param2)
+static void toggle_figure_state(int index, int param2)
 {
     building *b = building_get(data.building_id);
     if (building_type_is_roadblock(b->type)) {
         building_roadblock_set_permission(index, b);
     }
     window_invalidate();
-
 }
 
 static void roadblock_orders(int param1, int param2)
@@ -380,11 +366,10 @@ static void go_to_orders(int param1, int param2)
     window_building_info_show_storage_orders();
 }
 
-
-int window_building_handle_mouse_roadblock(const mouse *m, building_info_context *c)
+int window_building_handle_mouse_roadblock_button(const mouse *m, building_info_context *c)
 {
     return generic_buttons_handle_mouse(
-        m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
+        m, c->x_offset + 80, c->y_offset + BLOCK_SIZE * c->height_blocks - 34,
         go_to_orders_button, 1, &data.focus_button_id);
 }
 
@@ -400,11 +385,4 @@ int window_building_handle_mouse_roadblock_orders(const mouse *m, building_info_
     }
 
     return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, roadblock_order_buttons, 1, &data.orders_focus_button_id);
-}
-
-int window_building_handle_mouse_garden_gate(const mouse *m, building_info_context *c)
-{
-    return generic_buttons_handle_mouse(
-        m, c->x_offset + 80, c->y_offset + 16 * c->height_blocks - 34,
-        go_to_orders_button, 1, &data.focus_button_id);
 }

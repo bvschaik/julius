@@ -462,9 +462,7 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, roadblock_permiss
     int is_road = terrain_is_road_like(grid_offset);
     if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
         building *b = building_get(map_building_at(grid_offset));
-        if (b->type == BUILDING_GATEHOUSE) {
-            is_road = 0;
-        } else if (building_type_is_roadblock(b->type)) {
+        if (building_type_is_roadblock(b->type)) {
             if (!building_roadblock_get_permission(perm, b)) {
                 is_road = 0;
             }
@@ -474,10 +472,6 @@ static int get_adjacent_road_tile_for_roaming(int grid_offset, roadblock_permiss
                     tile_has_adjacent_road_tiles(grid_offset, perm) || tile_has_adjacent_granary_road(grid_offset)) {
                     is_road = 1;
                 }
-            }
-        } else if (b->type == BUILDING_TRIUMPHAL_ARCH) {
-            if (map_routing_citizen_is_road(grid_offset)) {
-                is_road = 1;
             }
         }
     }

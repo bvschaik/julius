@@ -3,6 +3,8 @@
 
 #include "building/building.h"
 
+#define ROADBLOCK_PERMISSION_ALL 0xffff
+
 typedef enum {
 	PERMISSION_NONE = 0,
 	PERMISSION_MAINTENANCE = 1,
@@ -17,8 +19,8 @@ typedef enum {
 	PERMISSION_WATCHMAN = 10,
 } roadblock_permission;
 
-void building_roadblock_set_permission(roadblock_permission p, building* b);
-int building_roadblock_get_permission(roadblock_permission p, building* b);
+void building_roadblock_set_permission(roadblock_permission p, building *b);
+int building_roadblock_get_permission(roadblock_permission p, building *b);
 
 int building_type_is_roadblock(building_type type);
 
