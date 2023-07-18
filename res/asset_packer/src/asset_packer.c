@@ -69,14 +69,14 @@ typedef struct {
 
 static array(packed_asset) packed_assets;
 
-static int remove_file(const char *filename)
+static int remove_file(const char *filename, long unused)
 {
     snprintf(current_file, FILE_NAME_MAX, "%s/%s", PACKED_ASSETS_DIR, filename);
     platform_file_manager_remove_file(current_file);
     return LIST_CONTINUE;
 }
 
-static int find_packed_assets_dir(const char *dir)
+static int find_packed_assets_dir(const char *dir, long unused)
 {
     return strcmp(dir, PACKED_ASSETS_DIR) == 0 ? LIST_MATCH : LIST_NO_MATCH;
 }
@@ -625,7 +625,7 @@ int main(int argc, char **argv)
     xml_init();
 
     for (int i = 0; i < xml_files->num_files; ++i) {
-        xml_process_assetlist_file(xml_files->files[i]);
+        xml_process_assetlist_file(xml_files->files[i].name);
     }
 
     xml_finish();

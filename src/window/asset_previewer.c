@@ -225,7 +225,7 @@ static void set_max_asset_buttons(void)
 
 static void load_assets(int changed)
 {
-    assets_load_single_group(data.xml_files->files[data.active_group_index],
+    assets_load_single_group(data.xml_files->files[data.active_group_index].name,
         data.main_atlas->buffers, data.main_atlas->image_widths);
     data.active_group = group_get_current();
     update_entries();
@@ -276,7 +276,7 @@ static int update_asset_groups_list(void)
     static char original_file[FILE_NAME_MAX];
 
     for (int i = 0; i < data.xml_files->num_files; i++) {
-        strncpy(original_file, data.xml_files->files[i], FILE_NAME_MAX - 1);
+        strncpy(original_file, data.xml_files->files[i].name, FILE_NAME_MAX - 1);
         file_remove_extension(original_file);
         int size = (int) strlen(original_file) + 1;
         uint8_t *file = malloc(sizeof(uint8_t) * size);

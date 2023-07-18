@@ -22,7 +22,7 @@ static enum {
 static jobject java_asset_manager;
 static AAssetManager *asset_manager;
 
-static int assets_directory_found(const char *dummy)
+static int assets_directory_found(const char *dummy, long unused)
 {
     return LIST_MATCH;
 }
@@ -98,7 +98,7 @@ void *asset_handler_open_asset(const char *asset_name, const char *mode)
     }
 }
 
-int asset_handler_get_directory_contents(int type, const char *extension, int (*callback)(const char *))
+int asset_handler_get_directory_contents(int type, const char *extension, int (*callback)(const char *, long))
 {
     if (assets_location == ASSETS_LOCATION_NONE) {
         determine_assets_location();
@@ -116,7 +116,7 @@ int asset_handler_get_directory_contents(int type, const char *extension, int (*
     while ((asset_name = AAssetDir_getNextFileName(dir))) {
         char *asset_extension = strrchr(asset_name, '.');
         if (asset_extension && strcmp(asset_extension + 1, extension) == 0) {
-            match = callback(asset_name);
+            match = callback(asset_name, 0);
         }
         if (match == LIST_MATCH) {
             break;

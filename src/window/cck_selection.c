@@ -100,7 +100,7 @@ static void draw_scenario_list(void)
         } else if (!data.focus_button_id && data.selected_item == i + scrollbar.scroll_position) {
             font = FONT_NORMAL_WHITE;
         }
-        strcpy(file, data.scenarios->files[i + scrollbar.scroll_position]);
+        strcpy(file, data.scenarios->files[i + scrollbar.scroll_position].name);
         encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
         file_remove_extension((char *) displayable_file);
         text_ellipsize(displayable_file, font, 240);
@@ -278,7 +278,7 @@ static void button_select_item(int index, int param2)
         return;
     }
     data.selected_item = scrollbar.scroll_position + index;
-    strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item]);
+    strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item].name);
     game_file_io_read_scenario_info(data.selected_scenario_filename, &data.info);
     encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
     file_remove_extension((char *) data.selected_scenario_display);

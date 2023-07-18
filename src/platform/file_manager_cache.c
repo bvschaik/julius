@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <time.h>
 
 enum {
     STAT_DOESNT_WORK = -1,
@@ -91,6 +92,7 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
             if (S_ISDIR(current_file_info.st_mode)) {
                 type = TYPE_DIR;
             }
+            file_item->modified_time = current_file_info.st_mtime;
         } else {
             // When stat does not work, we check if a file is a directory by trying to open it as a dir
             // For performance reasons, we only check for a directory if the name has no extension
@@ -111,6 +113,7 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
                     closedir(file_d);
                 }
             }
+            file_item->modified_time = 0;
         }
         file_item->type = type;
     }
@@ -118,45 +121,54 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
     return info;
 }
 
-void platform_file_manager_cache_add_file_info(const char *filename)
+void platform_file_manager_cache_update_file_info(const char *filename)
 {
-    // Julius only creates files in the base dir
+    // Augustus only modifies files in the base dir
     if (!base_dir_info) {
         return;
     }
-    file_info *f = malloc(sizeof(file_info));
-    strncpy(f->name, filename, FILE_NAME_MAX - 1);
-    f->name[FILE_NAME_MAX - 1] = 0;
-    f->type = TYPE_FILE;
-    char c;
-    const char *name = f->name;
-    do {
-        c = *name;
-        name++;
-    } while (c != '.' && c);
-    f->extension = name;
-    f->next = base_dir_info->first_file;
-    base_dir_info->first_file = f;
+    file_info *current_file = 0;
+    for (current_file = base_dir_info->first_file; current_file; current_file = current_file->next) {
+        if (strcmp(filename, current_file->name) == 0) {
+            break;
+        }
+    }
+    if (!current_file) {
+        current_file = malloc(sizeof(file_info));
+        strncpy(current_file->name, filename, FILE_NAME_MAX - 1);
+        current_file->name[FILE_NAME_MAX - 1] = 0;
+        current_file->type = TYPE_FILE;
+        char c;
+        const char *name = current_file->name;
+        do {
+            c = *name;
+            name++;
+        } while (c != '.' && c);
+        current_file->extension = name;
+        current_file->next = base_dir_info->first_file;
+        base_dir_info->first_file = current_file;
+    }
+    current_file->modified_time = time(0);
 }
 
 void platform_file_manager_cache_delete_file_info(const char *filename)
 {
-    // Julius only deletes files from the base dir
+    // Augustus only deletes files from the base dir
     if (!base_dir_info) {
         return;
     }
     file_info *prev = 0;
-    for (file_info *f = base_dir_info->first_file; f; f = f->next) {
-        if (strcmp(filename, f->name) == 0) {
+    for (file_info *current_file = base_dir_info->first_file; current_file; current_file = current_file->next) {
+        if (strcmp(filename, current_file->name) == 0) {
             if (prev) {
-                prev->next = f->next;
+                prev->next = current_file->next;
             } else {
-                base_dir_info->first_file = f->next;
+                base_dir_info->first_file = current_file->next;
             }
-            free(f);
+            free(current_file);
             return;
         }
-        prev = f;
+        prev = current_file;
     }
 }
 

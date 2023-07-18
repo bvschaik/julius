@@ -254,7 +254,7 @@ static void set_assets_directory(void)
 }
 
 int platform_file_manager_list_directory_contents(
-    const char *dir, int type, const char *extension, int (*callback)(const char *))
+    const char *dir, int type, const char *extension, int (*callback)(const char *, long))
 {
     if (type == TYPE_NONE) {
         return LIST_ERROR;
@@ -285,7 +285,7 @@ int platform_file_manager_list_directory_contents(
         if (!platform_file_manager_cache_file_has_extension(f, extension)) {
             continue;
         }
-        match = callback(f->name);
+        match = callback(f->name, f->modified_time);
         if (match == LIST_MATCH) {
             break;
         }
@@ -317,9 +317,9 @@ int platform_file_manager_list_directory_contents(
                 // Skip current (.), parent (..) and hidden directories (.*)
                 continue;
             }
-            match = callback(name);
+            match = callback(name, file_info.st_mtime);
         } else if (file_has_extension(name, extension)) {
-            match = callback(name);
+            match = callback(name, file_info.st_mtime);
         }
         if (match == LIST_MATCH) {
             break;
@@ -384,11 +384,7 @@ int platform_file_manager_set_base_path(const char *path)
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
     if (strchr(mode, 'w')) {
-        char temp_filename[FILE_NAME_MAX];
-        strncpy(temp_filename, filename, FILE_NAME_MAX - 1);
-        if (!file_exists(temp_filename, NOT_LOCALIZED)) {
-            platform_file_manager_cache_add_file_info(filename);
-        }
+        platform_file_manager_cache_update_file_info(filename);
     }
     filename = set_dir_name(filename);
     return fopen(filename, mode);
@@ -503,11 +499,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
 #ifdef USE_FILE_CACHE
     if (strchr(mode, 'w')) {
-        char temp_filename[FILE_NAME_MAX];
-        strncpy(temp_filename, filename, FILE_NAME_MAX - 1);
-        if (!file_exists(temp_filename, NOT_LOCALIZED)) {
-            platform_file_manager_cache_add_file_info(filename);
-        }
+        platform_file_manager_cache_update_file_info(filename);
     }
 #endif
     return fopen(filename, mode);
@@ -559,4 +551,3 @@ int platform_file_manager_create_directory(const char *name)
     }
 #endif
 }
-

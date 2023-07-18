@@ -65,7 +65,7 @@ int android_get_file_descriptor(const char *filename, const char *mode)
     int result = 0;
     jni_function_handler handler;
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "openFileDescriptor",
-        "(Lcom/github/Keriew/augustus/AugustusMainActivity;Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
+        "(L" CLASS_AUGUSTUS_ACTIVITY ";Ljava/lang/String;Ljava/lang/String;)I", &handler)) {
         jni_destroy_function_handler(&handler);
         return 0;
     }
@@ -101,18 +101,33 @@ int android_set_base_path(const char *path)
     return result;
 }
 
-int android_get_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *))
+int android_get_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *, long))
 {
     if (strcmp(dir, ASSETS_DIRECTORY) == 0) {
         return asset_handler_get_directory_contents(type, extension, callback);
     }
     jni_function_handler handler;
+    jni_function_handler get_name;
+    jni_function_handler get_last_modified_time;
+
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "getDirectoryFileList",
-        "(Lcom/github/Keriew/augustus/AugustusMainActivity;Ljava/lang/String;ILjava/lang/String;)[Ljava/lang/String;",
+        "(L" CLASS_AUGUSTUS_ACTIVITY ";Ljava/lang/String;ILjava/lang/String;)[L" CLASS_FILE_MANAGER "$FileInfo;",
         &handler)) {
         jni_destroy_function_handler(&handler);
         return LIST_ERROR;
     }
+    if (!jni_get_method_handler(CLASS_FILE_MANAGER "$FileInfo", "getName", "()Ljava/lang/String;", &get_name)) {
+        jni_destroy_function_handler(&get_name);
+        jni_destroy_function_handler(&handler);
+        return LIST_ERROR;
+    }
+    if (!jni_get_method_handler(CLASS_FILE_MANAGER "$FileInfo", "getModifiedTime", "()J", &get_last_modified_time)) {
+        jni_destroy_function_handler(&get_last_modified_time);
+        jni_destroy_function_handler(&get_name);
+        jni_destroy_function_handler(&handler);
+        return LIST_ERROR;
+    }
+    
     jstring jdir = (*handler.env)->NewStringUTF(handler.env, dir);
     jstring jextension = (*handler.env)->NewStringUTF(handler.env, extension);
     jobjectArray result = (jobjectArray) (*handler.env)->CallStaticObjectMethod(
@@ -122,16 +137,22 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
     int match = LIST_NO_MATCH;
     int len = (*handler.env)->GetArrayLength(handler.env, result);
     for (int i = 0; i < len; ++i) {
-        jstring jfilename = (jstring) (*handler.env)->GetObjectArrayElement(handler.env, result, i);
+        jobject jfile_info = (jobject) (*handler.env)->GetObjectArrayElement(handler.env, result, i);
+        jstring jfilename = (jstring) (*handler.env)->CallObjectMethod(handler.env, jfile_info, get_name.method);
         const char *filename = (*handler.env)->GetStringUTFChars(handler.env, jfilename, NULL);
-        match = callback(filename);
+        long last_modified = (long) (*handler.env)->CallLongMethod(handler.env, jfile_info,
+            get_last_modified_time.method);
+        match = callback(filename, last_modified);
         (*handler.env)->ReleaseStringUTFChars(handler.env, (jstring) jfilename, filename);
         (*handler.env)->DeleteLocalRef(handler.env, jfilename);
+        (*handler.env)->DeleteLocalRef(handler.env, jfile_info);
         if (match == LIST_MATCH) {
             break;
         }
     }
     (*handler.env)->DeleteLocalRef(handler.env, result);
+    jni_destroy_function_handler(&get_last_modified_time);
+    jni_destroy_function_handler(&get_name);
     jni_destroy_function_handler(&handler);
     return match;
 }

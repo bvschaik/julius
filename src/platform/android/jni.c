@@ -56,6 +56,9 @@ int jni_get_method_handler(
 
 void jni_destroy_function_handler(jni_function_handler *handler)
 {
+    if (!handler) {
+        return;
+    }
     if (handler->env) {
         if (handler->activity) {
             (*handler->env)->DeleteLocalRef(handler->env, handler->activity);

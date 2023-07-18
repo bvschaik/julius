@@ -530,12 +530,12 @@ static void init(int page, int show_background_image)
     const dir_listing *subdirs = dir_find_all_subdirectories();
     const char *original_value = data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value;
     for (int i = 0; i < subdirs->num_files; i++) {
-        if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i])) {
+        if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i].name)) {
             int opt_id = data.num_language_options;
-            strncpy(data.language_options_utf8[opt_id], subdirs->files[i], CONFIG_STRING_VALUE_MAX - 1);
-            encoding_from_utf8(subdirs->files[i], data.language_options_data[opt_id], CONFIG_STRING_VALUE_MAX);
+            strncpy(data.language_options_utf8[opt_id], subdirs->files[i].name, CONFIG_STRING_VALUE_MAX - 1);
+            encoding_from_utf8(subdirs->files[i].name, data.language_options_data[opt_id], CONFIG_STRING_VALUE_MAX);
             data.language_options[opt_id] = data.language_options_data[opt_id];
-            if (strcmp(original_value, subdirs->files[i]) == 0) {
+            if (strcmp(original_value, subdirs->files[i].name) == 0) {
                 data.selected_language_option = opt_id;
             }
             data.num_language_options++;

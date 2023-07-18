@@ -13,10 +13,18 @@ enum {
 };
 
 /**
+ * File information
+ */
+typedef struct {
+    char *name; /**< Filenames in UTF-8 encoding */
+    unsigned int modified_time; /**< Timestamp */
+} dir_entry;
+
+/**
  * Directory listing
  */
 typedef struct {
-    char **files; /**< Filenames in UTF-8 encoding */
+    dir_entry *files; /**< Filenames and last modified time */
     int num_files; /**< Number of files in the list */
 } dir_listing;
 
@@ -27,7 +35,7 @@ typedef struct {
  * @return Directory listing
  */
 const dir_listing *dir_find_files_with_extension(const char *dir, const char *extension);
-const dir_listing* dir_append_files_with_extension(const char *extension);
+const dir_listing *dir_append_files_with_extension(const char *extension);
 
 
 /**

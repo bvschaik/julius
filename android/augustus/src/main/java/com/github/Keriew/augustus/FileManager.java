@@ -39,7 +39,7 @@ public class FileManager {
         try {
             baseUri = newUri;
             FileInfo.base = new FileInfo(DocumentsContract.getTreeDocumentId(newUri), null,
-                DocumentsContract.Document.MIME_TYPE_DIR, Uri.EMPTY);
+                DocumentsContract.Document.MIME_TYPE_DIR, 0, Uri.EMPTY);
             return 1;
         } catch (Exception e) {
             Log.e("augustus", "Error in setBaseUri: " + e);
@@ -61,15 +61,17 @@ public class FileManager {
         }
         result = new HashMap<>();
         Uri children = DocumentsContract.buildChildDocumentsUriUsingTree(dir, DocumentsContract.getDocumentId(dir));
-        String[] columns = new String[]{
-                DocumentsContract.Document.COLUMN_DOCUMENT_ID,
-                DocumentsContract.Document.COLUMN_DISPLAY_NAME,
-                DocumentsContract.Document.COLUMN_MIME_TYPE
+        String[] columns = new String[] {
+            DocumentsContract.Document.COLUMN_DOCUMENT_ID,
+            DocumentsContract.Document.COLUMN_DISPLAY_NAME,
+            DocumentsContract.Document.COLUMN_MIME_TYPE,
+            DocumentsContract.Document.COLUMN_LAST_MODIFIED
         };
         Cursor cursor = activity.getContentResolver().query(children, columns, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                FileInfo fileInfo = new FileInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2), dir);
+                FileInfo fileInfo = new FileInfo(cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                    cursor.getLong(3), dir);
                 result.put(cursor.getString(1).toLowerCase(), fileInfo);
             }
             cursor.close();
@@ -112,18 +114,18 @@ public class FileManager {
     }
 
     @SuppressWarnings("unused")
-    public static String[] getDirectoryFileList(AugustusMainActivity activity, String dir, int type, String ext) {
-        ArrayList<String> fileList = new ArrayList<>();
+    public static FileInfo[] getDirectoryFileList(AugustusMainActivity activity, String dir, int type, String ext) {
+        ArrayList<FileInfo> fileList = new ArrayList<>();
 
         if (baseUri == Uri.EMPTY) {
-            return new String[0];
+            return new FileInfo[0];
         }
         FileInfo lookupDir = FileInfo.base;
         if (!dir.equals(".")) {
             dir += "/.";
             lookupDir = getDirectoryFromPath(activity, dir.split("[\\\\/]"));
             if (lookupDir == null) {
-                return new String[0];
+                return new FileInfo[0];
             }
         }
         for (FileInfo file : getDirectoryContents(activity, lookupDir).values()) {
@@ -136,13 +138,13 @@ public class FileManager {
                 int extCharPos = fileName.lastIndexOf('.');
                 String currentExtension = fileName.substring(extCharPos + 1);
                 if (currentExtension.equalsIgnoreCase(ext)) {
-                    fileList.add(fileName);
+                    fileList.add(file);
                 }
             } else {
-                fileList.add(file.getName());
+                fileList.add(file);
             }
         }
-        String[] result = new String[fileList.size()];
+        FileInfo[] result = new FileInfo[fileList.size()];
         return fileList.toArray(result);
     }
 
@@ -194,21 +196,23 @@ public class FileManager {
             if (fileInfo == null) {
                 if (!isWrite) {
                     return 0;
-                } else {
-                    fileUri = DocumentsContract.createDocument(activity.getContentResolver(),
-                        folderInfo.getUri(), "application/octet-stream", fileName);
-                    if (fileUri == null) {
-                        return 0;
-                    }
-                    HashMap<String, FileInfo> dirCache = directoryStructureCache.get(folderInfo.getUri());
-                    if (dirCache != null) {
-                        fileInfo = new FileInfo(DocumentsContract.getDocumentId(fileUri),
-                            fileName, "application/octet-stream", folderInfo.getUri());
-                        dirCache.put(fileName.toLowerCase(), fileInfo);
-                    }
+                }
+                fileUri = DocumentsContract.createDocument(activity.getContentResolver(),
+                    folderInfo.getUri(), "application/octet-stream", fileName);
+                if (fileUri == null) {
+                    return 0;
+                }
+                HashMap<String, FileInfo> dirCache = directoryStructureCache.get(folderInfo.getUri());
+                if (dirCache != null) {
+                    fileInfo = new FileInfo(DocumentsContract.getDocumentId(fileUri),
+                        fileName, "application/octet-stream", System.currentTimeMillis(), folderInfo.getUri());
+                    dirCache.put(fileName.toLowerCase(), fileInfo);
                 }
             } else {
                 fileUri = fileInfo.getUri();
+                if (isWrite) {
+                    fileInfo.updateModifiedTime();
+                }
             }
             ParcelFileDescriptor pfd = activity.getContentResolver().openFileDescriptor(fileUri, internalMode);
             return (pfd == null) ? 0 : pfd.detachFd();
@@ -218,39 +222,50 @@ public class FileManager {
         }
     }
 
-    private static class FileInfo {
+    @SuppressWarnings("unused")
+    public static class FileInfo {
         static FileInfo base;
         private final String documentId;
         private final String name;
         private final String mimeType;
         private final Uri parent;
+        private long modifiedTime;
         private Uri uri;
 
-        private FileInfo(String documentId, String name, String mimeType, Uri parent) {
+        private FileInfo(String documentId, String name, String mimeType, long modifiedTime, Uri parent) {
             this.documentId = documentId;
             this.name = name;
             this.mimeType = mimeType;
             this.parent = parent;
+            this.modifiedTime = modifiedTime / 1000;
             this.uri = Uri.EMPTY;
         }
 
         public String getName() {
-            return name;
+            return this.name;
+        }
+
+        public long getModifiedTime() {
+            return this.modifiedTime;
+        }
+
+        public void updateModifiedTime() {
+            this.modifiedTime = System.currentTimeMillis() / 1000;
         }
 
         public boolean isDirectory() {
-            return mimeType.equals(DocumentsContract.Document.MIME_TYPE_DIR);
+            return this.mimeType.equals(DocumentsContract.Document.MIME_TYPE_DIR);
         }
 
         Uri getUri() {
-            if (baseUri != Uri.EMPTY && uri == Uri.EMPTY) {
-                uri = DocumentsContract.buildDocumentUriUsingTree(baseUri, documentId);
+            if (baseUri != Uri.EMPTY && this.uri == Uri.EMPTY) {
+                this.uri = DocumentsContract.buildDocumentUriUsingTree(baseUri, this.documentId);
             }
-            return uri;
+            return this.uri;
         }
 
         Uri getParentUri() {
-            return parent;
+            return this.parent;
         }
     }
 }
