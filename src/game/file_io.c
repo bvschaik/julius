@@ -1343,7 +1343,6 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
     state->building_grid = &building_grid.buf;
     state->buildings = &buildings.buf;
 
-
     info->mission = read_int32(fp);
     skip_piece(fp, 4, 0); // file version
     if (version_data.features.resource_version) {
@@ -1438,7 +1437,24 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
     if (fread(scenario_piece.buf.data, 1, scenario_piece.buf.size, fp) != scenario_piece.buf.size) {
         return SAVEGAME_STATUS_INVALID;
     }
-
+    if (version_data.features.scenario_requests) {
+        skip_piece(fp, version_data.piece_sizes.scenario_requests, 0);
+    }
+    if (version_data.features.scenario_events) {
+        skip_piece(fp, PIECE_SIZE_DYNAMIC, 0);
+    }
+    if (version_data.features.scenario_conditions) {
+        skip_piece(fp, PIECE_SIZE_DYNAMIC, 0);
+    }
+    if (version_data.features.scenario_actions) {
+        skip_piece(fp, PIECE_SIZE_DYNAMIC, 0);
+    }
+    if (version_data.features.custom_messages_and_media) {
+        skip_piece(fp, PIECE_SIZE_DYNAMIC, 0);
+        skip_piece(fp, PIECE_SIZE_DYNAMIC, 0);
+        skip_piece(fp, PIECE_SIZE_DYNAMIC, 0);
+        skip_piece(fp, PIECE_SIZE_DYNAMIC, 0);
+    }
     skip_piece(fp, 4, 0);
     skip_piece(fp, 60, 0);
     skip_piece(fp, 4, 0);

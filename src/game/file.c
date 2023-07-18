@@ -370,23 +370,28 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
     return 1;
 }
 
-static const char *get_scenario_filename(const uint8_t *scenario_name, int decomposed)
+static const char *get_scenario_filename(const uint8_t *scenario_name, const char *extension, int decomposed)
 {
     static char filename[FILE_NAME_MAX];
     encoding_to_utf8(scenario_name, filename, FILE_NAME_MAX, decomposed);
-    if (!file_has_extension(filename, "map")) {
-        file_append_extension(filename, "map");
+    if (!file_has_extension(filename, extension)) {
+        file_append_extension(filename, extension);
     }
     return filename;
 }
 
 int game_file_start_scenario_by_name(const uint8_t *scenario_name)
 {
-    if (start_scenario(scenario_name, get_scenario_filename(scenario_name, 0))) {
+    if (start_scenario(scenario_name, get_scenario_filename(scenario_name, "map", 0))) {
         return 1;
-    } else {
-        return start_scenario(scenario_name, get_scenario_filename(scenario_name, 1));
     }
+    if (start_scenario(scenario_name, get_scenario_filename(scenario_name, "mapx", 0))) {
+        return 1;
+    }
+    if (start_scenario(scenario_name, get_scenario_filename(scenario_name, "map", 1))) {
+        return 1;
+    }
+    return start_scenario(scenario_name, get_scenario_filename(scenario_name, "mapx", 1));
 }
 
 int game_file_start_scenario(const char *scenario_file)
