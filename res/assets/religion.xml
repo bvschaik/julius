@@ -674,8 +674,17 @@
 		<layer src="Mausoleum_Large_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Mausoleum_Large_Construction_02" src="Mausoleum_Large_Construction_02" isometric="true"/>
+	<!-- Note: Large Mausoleum variant asset construction 02 phase, with rotation -->
+	<image id="Mausoleum_Large_Alt_Construction_02" src="Mausoleum_Large_Alt_Construction_02" isometric="true"/>
+	<image id="Mausoleum_Large_Alt_Construction_02_R" src="Mausoleum_Large_Alt_Construction_02_R" isometric="true"/>
 	<!-- Note: Large Mausoleum asset -->
 	<image id="Mausoleum L" src="Mausoleum_Large" isometric="true"/>
+	<!-- Note: Large Mausoleum variant asset with rotation -->
+	<image id="Mausoleum_L_Alt" src="Mausoleum_Large_Alt" isometric="true"/>
+	<image id="Mausoleum_L_Alt_R" isometric="true">
+		<layer src="Mausoleum_Large_Alt" x="0" y="0"/>
+		<layer src="Mausoleum_Large_Alt_R" x="31" y="87"/>
+	</image>
 	<!-- Note: Small Mausoleum Construction 01 Phase -->
 	<image id="Mausoleum S Cons" src="Mausoleum_Small_Construction_01" isometric="true"/>
 	<!-- Note: Small Mausoleum asset -->
@@ -684,15 +693,6 @@
 	<image id="Mausoleum S R" isometric="true">
 		<layer src="Mausoleum_Small" x="0" y="0" part="footprint"/>
 		<layer src="Mausoleum_Small_R" x="0" y="0"/>
-	</image>
-	<!-- Note: Large Mausoleum variant asset construction 02 phase, with rotation -->
-	<image id="Mausoleum_Large_Alt_Construction_02" src="Mausoleum_Large_Alt_Construction_02" isometric="true"/>
-	<image id="Mausoleum_Large_Alt_Construction_02_R" src="Mausoleum_Large_Alt_Construction_02_R" isometric="true"/>
-	<!-- Note: Large Mausoleum variant asset with rotation -->
-	<image id="Mausoleum_L_Alt" src="Mausoleum_Large_Alt" isometric="true"/>
-	<image id="Mausoleum_L_Alt_R" isometric="true">
-		<layer src="Mausoleum_Large_Alt" x="0" y="0"/>
-		<layer src="Mausoleum_Large_Alt_R" x="31" y="87"/>
 	</image>
 	<!-- Note: Altar Assets for Each God WITH ROTATION VARIANTS (Original Assets by MonoNavidegno, Tweaked by Areldir) -->
 	<image id="Altar_Ceres" isometric="true" width="58" height="89">

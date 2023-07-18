@@ -100,7 +100,7 @@ static const monument_type oracle_and_small_mausuleum = {
     }
 };
 
-static const monument_type large_temple_nymphaeum_and_large_mausuleum = {
+static const monument_type large_temple_and_nymphaeum = {
     .phases    = 2,
     .resources = {
         { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 4 },
@@ -108,6 +108,14 @@ static const monument_type large_temple_nymphaeum_and_large_mausuleum = {
     }
 };
 
+static const monument_type large_mausuleum = {
+    .phases    = 3,
+    .resources = {
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 8, [RESOURCE_CONCRETE] = 4 },
+        { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 4 },
+        { NOTHING }
+    }
+};
 
 static const monument_type caravanserai = {
     .phases    = 3,
@@ -134,16 +142,16 @@ static const monument_type *MONUMENT_TYPES[BUILDING_TYPE_MAX] = {
     [BUILDING_GRAND_TEMPLE_VENUS]   = &grand_temple,
     [BUILDING_PANTHEON]             = &pantheon,
     [BUILDING_ORACLE]               = &oracle_and_small_mausuleum,
-    [BUILDING_LARGE_TEMPLE_CERES]   = &large_temple_nymphaeum_and_large_mausuleum,
-    [BUILDING_LARGE_TEMPLE_NEPTUNE] = &large_temple_nymphaeum_and_large_mausuleum,
-    [BUILDING_LARGE_TEMPLE_MERCURY] = &large_temple_nymphaeum_and_large_mausuleum,
-    [BUILDING_LARGE_TEMPLE_MARS]    = &large_temple_nymphaeum_and_large_mausuleum,
-    [BUILDING_LARGE_TEMPLE_VENUS]   = &large_temple_nymphaeum_and_large_mausuleum,
+    [BUILDING_LARGE_TEMPLE_CERES]   = &large_temple_and_nymphaeum,
+    [BUILDING_LARGE_TEMPLE_NEPTUNE] = &large_temple_and_nymphaeum,
+    [BUILDING_LARGE_TEMPLE_MERCURY] = &large_temple_and_nymphaeum,
+    [BUILDING_LARGE_TEMPLE_MARS]    = &large_temple_and_nymphaeum,
+    [BUILDING_LARGE_TEMPLE_VENUS]   = &large_temple_and_nymphaeum,
     [BUILDING_LIGHTHOUSE]           = &lighthouse,
     [BUILDING_COLOSSEUM]            = &colosseum,
     [BUILDING_HIPPODROME]           = &hippodrome,
-    [BUILDING_NYMPHAEUM]            = &large_temple_nymphaeum_and_large_mausuleum,
-    [BUILDING_LARGE_MAUSOLEUM]      = &large_temple_nymphaeum_and_large_mausuleum,
+    [BUILDING_NYMPHAEUM]            = &large_temple_and_nymphaeum,
+    [BUILDING_LARGE_MAUSOLEUM]      = &large_mausuleum,
     [BUILDING_SMALL_MAUSOLEUM]      = &oracle_and_small_mausuleum,
     [BUILDING_CARAVANSERAI]         = &caravanserai,
     [BUILDING_CITY_MINT]            = &city_mint

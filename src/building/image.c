@@ -759,16 +759,17 @@ int building_image_get(const building *b)
                     return assets_get_image_id("Religion", "Mausoleum S") + orientation % 2;
                 }
             }
-        case BUILDING_LARGE_MAUSOLEUM:
+        case BUILDING_LARGE_MAUSOLEUM: {
+            int offset = building_variant_get_offset_with_rotation(b->type, b->variant);
             switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Mausoleum L Cons");
+                case 2:
+                    return assets_get_image_id("Religion", "Mausoleum_Large_Construction_02") + offset;
                 default:
-                {
-                    int offset = building_variant_get_offset_with_rotation(b->type, b->variant);
                     return assets_get_image_id("Religion", "Mausoleum L") + offset;
-                }
             }
+        }
         case BUILDING_NYMPHAEUM:
             switch (b->monument.phase) {
                 case MONUMENT_START:
