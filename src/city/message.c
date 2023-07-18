@@ -210,7 +210,9 @@ void city_message_post(int use_popup, int message_type, int param1, int param2)
         window_invalidate();
     }
 
-    if (config_get(CONFIG_UI_MESSAGE_ALERTS)) {
+    // Since custom messages are scenario specific, don't show them as simple alerts at the top
+    // Also, beware: should we change this behavior, the below code will crash
+    if (message_type != MESSAGE_CUSTOM_MESSAGE && config_get(CONFIG_UI_MESSAGE_ALERTS)) {
         city_warning_show_custom(lang_get_message(text_id)->title.text, NEW_WARNING_SLOT);
         use_popup = 0;
     }

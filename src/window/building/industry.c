@@ -549,7 +549,7 @@ static void city_mint_conversion_changed(int accepted, int checked)
     }
     city_mint->data.industry.progress = 0;
     city_mint->data.industry.age_months = 0;
-    city_mint->data.industry.average_production_per_month;
+    city_mint->data.industry.average_production_per_month = 0;
     city_mint->data.industry.production_current_month = 0;
 }
 
