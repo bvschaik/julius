@@ -191,7 +191,7 @@ static void window_building_draw_monument_resources_needed(building_info_context
     if (building_monument_needs_resources(b)) {
         for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
             int resource_needed_amount = building_monument_resources_needed_for_monument_type(b->type, r,
-                b->data.monument.phase);
+                b->monument.phase);
             if (!resource_needed_amount) {
                 continue;
             }
@@ -215,7 +215,7 @@ void window_building_draw_monument_construction_process(building_info_context *c
 {
     building *b = building_get(c->building_id);
 
-    if (b->data.monument.phase != MONUMENT_FINISHED) {
+    if (b->monument.phase != MONUMENT_FINISHED) {
         if (!c->has_road_access) {
             window_building_draw_description(c, CUSTOM_TRANSLATION,
                 TR_WINDOW_BUILDING_INFO_WARNING_NO_MONUMENT_ROAD_ACCESS);
@@ -225,15 +225,15 @@ void window_building_draw_monument_construction_process(building_info_context *c
         }
         int width = text_draw(translation_for(TR_CONSTRUCTION_PHASE),
             c->x_offset + 22, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
-        width += text_draw_number(b->data.monument.phase, '@', "/",
+        width += text_draw_number(b->monument.phase, '@', "/",
             c->x_offset + 22 + width, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
         width += text_draw_number(building_monument_phases(b->type) - 1, '@', "",
             c->x_offset + 10 + width, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
-        text_draw(translation_for(tr_phase_name + b->data.monument.phase - 1),
+        text_draw(translation_for(tr_phase_name + b->monument.phase - 1),
             c->x_offset + 32 + width, c->y_offset + 50, FONT_NORMAL_BLACK, 0);
         text_draw(translation_for(TR_REQUIRED_RESOURCES), c->x_offset + 22, c->y_offset + 70, FONT_NORMAL_BLACK, 0);
         window_building_draw_monument_resources_needed(c);
-        int height = text_draw_multiline(translation_for(tr_phase_name_text + b->data.monument.phase - 1),
+        int height = text_draw_multiline(translation_for(tr_phase_name_text + b->monument.phase - 1),
             c->x_offset + 22, c->y_offset + 170, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
 
         if (building_monument_is_construction_halted(b)) {
@@ -244,7 +244,7 @@ void window_building_draw_monument_construction_process(building_info_context *c
                 c->x_offset + 22, c->y_offset + 180 + height, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
         }
         if (c->height_blocks > 26) {
-            int phase_offset = b->data.monument.phase % 2;
+            int phase_offset = b->monument.phase % 2;
             image_draw_border(assets_get_image_id("UI", "Large_Banner_Border"),
                 c->x_offset + 32, c->y_offset + 196 + height, COLOR_MASK_NONE);
             image_draw(assets_get_image_id("UI", "Const. Banner 01") +

@@ -1,7 +1,5 @@
 #include "building.h"
 
-#include "building/building_state.h"
-#include "building/building_variant.h"
 #include "building/distribution.h"
 #include "building/industry.h"
 #include "building/granary.h"
@@ -10,7 +8,9 @@
 #include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
+#include "building/state.h"
 #include "building/storage.h"
+#include "building/variant.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/population.h"
@@ -416,7 +416,7 @@ int building_is_active(const building *b)
         case BUILDING_NYMPHAEUM:
         case BUILDING_SMALL_MAUSOLEUM:
         case BUILDING_LARGE_MAUSOLEUM:
-            return b->data.monument.phase == MONUMENT_FINISHED;
+            return b->monument.phase == MONUMENT_FINISHED;
         case BUILDING_WHARF:
             return b->num_workers > 0 && b->data.industry.fishing_boat_id;
         case BUILDING_DOCK:
@@ -531,7 +531,7 @@ int building_get_levy(const building *b)
     if (levy <= 0) {
         return 0;
     }
-    if (building_monument_type_is_monument(b->type) && b->data.monument.phase != MONUMENT_FINISHED) {
+    if (building_monument_type_is_monument(b->type) && b->monument.phase != MONUMENT_FINISHED) {
         return 0;
     }
     if (b->state != BUILDING_STATE_IN_USE && levy && !b->prev_part_building_id) {

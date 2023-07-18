@@ -1,6 +1,5 @@
 #include "city.h"
 
-#include "building/building_variant.h"
 #include "building/clone.h"
 #include "building/construction.h"
 #include "building/data_transfer.h"
@@ -10,6 +9,7 @@
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/type.h"
+#include "building/variant.h"
 #include "city/message.h"
 #include "city/victory.h"
 #include "city/view.h"

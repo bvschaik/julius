@@ -1,10 +1,10 @@
 #include "orientation.h"
 
 #include "assets/assets.h"
-#include "building/building_variant.h"
 #include "building/connectable.h"
 #include "building/image.h"
 #include "building/properties.h"
+#include "building/variant.h"
 #include "city/view.h"
 #include "core/direction.h"
 #include "core/image.h"

@@ -15,10 +15,10 @@
 
 static void advance_monument_secondary_animation(building *b)
 {
-    if (b->type == BUILDING_GRAND_TEMPLE_CERES && b->data.monument.upgrades == 1) {
-        b->data.monument.secondary_frame++;
-        if (b->data.monument.secondary_frame > 4) {
-            b->data.monument.secondary_frame = 0;
+    if (b->type == BUILDING_GRAND_TEMPLE_CERES && b->monument.upgrades == 1) {
+        b->monument.secondary_frame++;
+        if (b->monument.secondary_frame > 4) {
+            b->monument.secondary_frame = 0;
         }
     }
 }
@@ -74,7 +74,7 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
         return 0;
     }
     if (building_monument_is_monument(b) && (b->type != BUILDING_ORACLE && b->type != BUILDING_NYMPHAEUM &&
-        (b->num_workers <= 0 || b->data.monument.phase != MONUMENT_FINISHED))) {
+        (b->num_workers <= 0 || b->monument.phase != MONUMENT_FINISHED))) {
         return 0;
     }
     if (b->type == BUILDING_CITY_MINT &&

@@ -291,8 +291,6 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/animation.c
     ${PROJECT_SOURCE_DIR}/src/building/barracks.c
     ${PROJECT_SOURCE_DIR}/src/building/building.c
-    ${PROJECT_SOURCE_DIR}/src/building/building_state.c
-    ${PROJECT_SOURCE_DIR}/src/building/building_variant.c
     ${PROJECT_SOURCE_DIR}/src/building/caravanserai.c
     ${PROJECT_SOURCE_DIR}/src/building/clone.c
     ${PROJECT_SOURCE_DIR}/src/building/connectable.c
@@ -327,9 +325,11 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/properties.c
     ${PROJECT_SOURCE_DIR}/src/building/roadblock.c
     ${PROJECT_SOURCE_DIR}/src/building/rotation.c
+    ${PROJECT_SOURCE_DIR}/src/building/state.c
     ${PROJECT_SOURCE_DIR}/src/building/storage.c
     ${PROJECT_SOURCE_DIR}/src/building/tavern.c
     ${PROJECT_SOURCE_DIR}/src/building/temple.c
+    ${PROJECT_SOURCE_DIR}/src/building/variant.c
     ${PROJECT_SOURCE_DIR}/src/building/warehouse.c
 )
 set(CITY_FILES

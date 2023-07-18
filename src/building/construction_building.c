@@ -2,7 +2,6 @@
 
 #include "assets/assets.h"
 #include "building/building.h"
-#include "building/building_variant.h"
 #include "building/construction.h"
 #include "building/construction_warning.h"
 #include "building/count.h"
@@ -14,6 +13,7 @@
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/storage.h"
+#include "building/variant.h"
 #include "city/buildings.h"
 #include "city/view.h"
 #include "city/warning.h"

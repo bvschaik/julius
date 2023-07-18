@@ -18,7 +18,7 @@ void building_entertainment_run_shows(void)
     for (size_t i = 0; i < NUM_ENTERTAINMENT_BUILDINGS; i++) {
         building_type type = ENTERTAINMENT_BUILDINGS[i];
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (building_monument_is_monument(b) && b->data.monument.phase != MONUMENT_FINISHED) {
+            if (building_monument_is_monument(b) && b->monument.phase != MONUMENT_FINISHED) {
                 continue;
             }
             // update number of shows

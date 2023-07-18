@@ -151,12 +151,6 @@ typedef struct building {
             unsigned char evolve_text_id;
         } house;
         struct {
-            int upgrades;
-            short progress;
-            short phase;
-            short secondary_frame;
-        } monument;
-        struct {
             unsigned char was_tent;
         } rubble;
         struct {
@@ -169,6 +163,12 @@ typedef struct building {
             order current_order;
         } depot;
     } data;
+    struct {
+        int upgrades;
+        short progress;
+        short phase;
+        short secondary_frame;
+    } monument;
     int tax_income_or_storage;
     unsigned char house_days_without_food;
     unsigned char has_plague;

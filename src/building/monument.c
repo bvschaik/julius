@@ -238,11 +238,11 @@ int building_monument_access_point(building *b, map_point *dst)
 int building_monument_add_module(building *b, int module)
 {
     if (!building_monument_is_monument(b) ||
-        b->data.monument.phase != MONUMENT_FINISHED ||
-        (b->data.monument.upgrades && b->type != BUILDING_CARAVANSERAI && b->type != BUILDING_LIGHTHOUSE)) {
+        b->monument.phase != MONUMENT_FINISHED ||
+        (b->monument.upgrades && b->type != BUILDING_CARAVANSERAI && b->type != BUILDING_LIGHTHOUSE)) {
         return 0;
     }
-    b->data.monument.upgrades = module;
+    b->monument.upgrades = module;
     map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
     return 1;
 }
@@ -259,8 +259,8 @@ int building_monument_get_monument(int x, int y, int resource, int road_network_
             continue;
         }
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (b->data.monument.phase == MONUMENT_FINISHED ||
-                b->data.monument.phase < MONUMENT_START ||
+            if (b->monument.phase == MONUMENT_FINISHED ||
+                b->monument.phase < MONUMENT_START ||
                 building_monument_is_construction_halted(b) ||
                 (!resource && building_monument_needs_resources(b))) {
                 continue;
@@ -296,7 +296,7 @@ int building_monument_has_unfinished_monuments(void)
             continue;
         }
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (b->data.monument.phase != MONUMENT_FINISHED) {
+            if (b->monument.phase != MONUMENT_FINISHED) {
                 return 1;
             }
         }
@@ -314,15 +314,15 @@ void building_monument_set_phase(building *b, int phase)
     if (phase == building_monument_phases(b->type)) {
         phase = MONUMENT_FINISHED;
     }
-    if (phase == b->data.monument.phase) {
+    if (phase == b->monument.phase) {
         return;
     }
-    b->data.monument.phase = phase;
+    b->monument.phase = phase;
     map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
-    if (b->data.monument.phase != MONUMENT_FINISHED) {
+    if (b->monument.phase != MONUMENT_FINISHED) {
         for (int resource = 0; resource < RESOURCE_MAX; resource++) {
             b->resources[resource] =
-                building_monument_resources_needed_for_monument_type(b->type, resource, b->data.monument.phase);
+                building_monument_resources_needed_for_monument_type(b->type, resource, b->monument.phase);
         }
     }
 }
@@ -358,7 +358,7 @@ int building_monument_is_grand_temple(building_type type)
 
 int building_monument_needs_resource(building *b, int resource)
 {
-    if (b->data.monument.phase == MONUMENT_FINISHED) {
+    if (b->monument.phase == MONUMENT_FINISHED) {
         return 0;
     }
     return (b->resources[resource]);
@@ -400,7 +400,7 @@ void building_monument_finish_monuments(void)
             continue;
         }
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
-            if (b->data.monument.phase == MONUMENT_FINISHED) {
+            if (b->monument.phase == MONUMENT_FINISHED) {
                 continue;
             }
             building_monument_set_phase(b, MONUMENT_FINISHED);
@@ -413,7 +413,7 @@ void building_monument_finish_monuments(void)
 
 int building_monument_needs_resources(building *b)
 {
-    if (b->data.monument.phase == MONUMENT_FINISHED) {
+    if (b->monument.phase == MONUMENT_FINISHED) {
         return 0;
     }
     for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
@@ -429,19 +429,19 @@ int building_monument_progress(building *b)
     if (building_monument_needs_resources(b)) {
         return 0;
     }
-    if (b->data.monument.phase == MONUMENT_FINISHED) {
+    if (b->monument.phase == MONUMENT_FINISHED) {
         return 0;
     }
     while (b->prev_part_building_id) {
         b = building_get(b->prev_part_building_id);
     }
-    building_monument_set_phase(b, b->data.monument.phase + 1);
+    building_monument_set_phase(b, b->monument.phase + 1);
 
     while (b->next_part_building_id) {
         b = building_get(b->next_part_building_id);
-        building_monument_set_phase(b, b->data.monument.phase + 1);
+        building_monument_set_phase(b, b->monument.phase + 1);
     }
-    if (b->data.monument.phase == MONUMENT_FINISHED) {
+    if (b->monument.phase == MONUMENT_FINISHED) {
         if (building_monument_is_grand_temple(b->type)) {
             city_message_post(1, MESSAGE_GRAND_TEMPLE_COMPLETE, 0, b->grid_offset);
         } else if (b->type == BUILDING_PANTHEON) {
@@ -584,7 +584,7 @@ int building_monument_working(building_type type)
     if (!monument_id) {
         return 0;
     }
-    if (b->data.monument.phase != MONUMENT_FINISHED || b->state != BUILDING_STATE_IN_USE) {
+    if (b->monument.phase != MONUMENT_FINISHED || b->state != BUILDING_STATE_IN_USE) {
         return 0;
     }
 
@@ -627,7 +627,7 @@ int building_monument_upgraded(building_type type)
     if (!monument_id) {
         return 0;
     }
-    if (!b->data.monument.upgrades) {
+    if (!b->monument.upgrades) {
         return 0;
     }
     return monument_id;
@@ -642,7 +642,7 @@ int building_monument_module_type(building_type type)
     }
 
     building *b = building_get(monument_id);
-    return b->data.monument.upgrades;
+    return b->monument.upgrades;
 }
 
 int building_monument_gt_module_is_active(int module)
@@ -731,5 +731,5 @@ int building_monument_toggle_construction_halted(building *b)
 
 int building_monument_is_unfinished_monument(const building *b)
 {
-    return building_monument_is_monument(b) && b->data.monument.phase != MONUMENT_FINISHED;
+    return building_monument_is_monument(b) && b->monument.phase != MONUMENT_FINISHED;
 }

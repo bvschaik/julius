@@ -79,7 +79,7 @@ static int is_venue(building *b)
             return 1;
         case BUILDING_COLOSSEUM:
         case BUILDING_HIPPODROME:
-            return b->data.monument.phase == MONUMENT_FINISHED;
+            return b->monument.phase == MONUMENT_FINISHED;
         default:
             return 0;
     }
@@ -126,7 +126,7 @@ static building *determine_destination(figure *f)
             if (b->state != BUILDING_STATE_IN_USE) {
                 continue;
             }
-            if ((type == BUILDING_HIPPODROME || type == BUILDING_COLOSSEUM) && b->data.monument.phase != -1) {
+            if ((type == BUILDING_HIPPODROME || type == BUILDING_COLOSSEUM) && b->monument.phase != MONUMENT_FINISHED) {
                 continue;
             }
             if (!b->distance_from_entry || b->road_network_id != road_network) {

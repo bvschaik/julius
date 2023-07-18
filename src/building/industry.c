@@ -55,7 +55,7 @@ int building_get_efficiency(const building *b)
     if (b->state == BUILDING_STATE_MOTHBALLED) {
         return -1;
     }
-    int resource = resource_produced_by_building_type(b->type);
+    resource_type resource = b->output_resource_id;
     if (b->data.industry.age_months == 0 || !resource) {
         return -1;
     }
@@ -137,13 +137,13 @@ static void update_venus_gt_production(void)
         return;
     }
     
-    venus_gt->data.monument.progress += (10 + (city_data.culture.population_with_venus_access /
+    venus_gt->monument.progress += (10 + (city_data.culture.population_with_venus_access /
         MAX_PROGRESS_VENUS_GT / 2));
-    if (venus_gt->data.monument.progress > MAX_PROGRESS_VENUS_GT) {
+    if (venus_gt->monument.progress > MAX_PROGRESS_VENUS_GT) {
         if (venus_gt->resources[RESOURCE_WINE] < MAX_STORAGE) {
             venus_gt->resources[RESOURCE_WINE] += 1;
         }
-        venus_gt->data.monument.progress = venus_gt->data.monument.progress - MAX_PROGRESS_VENUS_GT;
+        venus_gt->monument.progress = venus_gt->monument.progress - MAX_PROGRESS_VENUS_GT;
     }
 }
 
@@ -335,6 +335,11 @@ int building_industry_has_produced_resource(building *b)
 
 void building_industry_start_new_production(building *b)
 {
+    if (b->type == BUILDING_CITY_MINT && b->output_resource_id == RESOURCE_GOLD &&
+        b->resources[RESOURCE_GOLD] >= RESOURCE_ONE_LOAD) {
+        b->resources[RESOURCE_GOLD] -= RESOURCE_ONE_LOAD;
+        return;
+    }
     if (b->data.industry.progress >= building_industry_get_max_progress(b)) {
         b->data.industry.production_current_month += 100;
         b->data.industry.progress = 0;
@@ -463,6 +468,11 @@ int building_has_workshop_for_raw_material_with_room(int resource, int road_netw
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
             if (b->state == BUILDING_STATE_IN_USE && b->has_road_access && b->distance_from_entry > 0 &&
                 b->road_network_id == road_network_id && b->resources[resource] < 2 * RESOURCE_ONE_LOAD) {
+                if (type == BUILDING_CITY_MINT) {
+                    if (b->monument.phase != MONUMENT_FINISHED || b->output_resource_id == RESOURCE_GOLD) {
+                        continue;
+                    }
+                }
                 return 1;
             }
         }
@@ -491,7 +501,7 @@ int building_get_workshop_for_raw_material_with_room(int x, int y, int resource,
                 continue;
             }
             if (type == BUILDING_CITY_MINT) {
-                if (b->data.monument.phase != MONUMENT_FINISHED || b->output_resource_id == RESOURCE_GOLD) {
+                if (b->monument.phase != MONUMENT_FINISHED || b->output_resource_id == RESOURCE_GOLD) {
                     continue;
                 }
             }
@@ -533,7 +543,7 @@ int building_get_workshop_for_raw_material(int x, int y, int resource, int road_
                 continue;
             }
             if (type == BUILDING_CITY_MINT) {
-                if (b->data.monument.phase != MONUMENT_FINISHED || b->output_resource_id == RESOURCE_GOLD) {
+                if (b->monument.phase != MONUMENT_FINISHED || b->output_resource_id == RESOURCE_GOLD) {
                     continue;
                 }
             }

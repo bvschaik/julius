@@ -1,7 +1,6 @@
 #include "city_building_ghost.h"
 
 #include "assets/assets.h"
-#include "building/building_variant.h"
 #include "building/connectable.h"
 #include "building/construction.h"
 #include "building/count.h"
@@ -13,6 +12,7 @@
 #include "building/properties.h"
 #include "building/rotation.h"
 #include "building/type.h"
+#include "building/variant.h"
 #include "city/buildings.h"
 #include "city/finance.h"
 #include "city/view.h"

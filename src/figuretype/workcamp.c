@@ -288,7 +288,8 @@ void figure_workcamp_engineer_action(figure *f)
         case FIGURE_ACTION_207_WORK_CAMP_ARCHITECT_GOING_TO_MONUMENT:
             figure_movement_move_ticks(f, 1);
             monument = building_get(f->destination_building_id);
-            if (monument->state == BUILDING_STATE_UNUSED || !building_monument_access_point(monument, &dst) || b->data.monument.phase == MONUMENT_FINISHED) {
+            if (monument->state == BUILDING_STATE_UNUSED || !building_monument_access_point(monument, &dst) ||
+                b->monument.phase == MONUMENT_FINISHED) {
                 f->state = FIGURE_STATE_DEAD;
             } else {
                 if (f->direction == DIR_FIGURE_AT_DESTINATION || f->direction == DIR_FIGURE_LOST) {

@@ -751,7 +751,7 @@ static void draw_foreground(void)
             window_building_draw_primary_product_stockpiling(&context);
         }
 
-        if (btype == BUILDING_LIGHTHOUSE && b->data.monument.phase == MONUMENT_FINISHED) {
+        if (btype == BUILDING_LIGHTHOUSE && b->monument.phase == MONUMENT_FINISHED) {
             window_building_draw_lighthouse_foreground(&context);
         } else if (btype == BUILDING_GRANARY) {
             if (context.storage_show_special_orders) {
@@ -793,14 +793,14 @@ static void draw_foreground(void)
             } else {
                 window_building_distributor_draw_foreground(&context);
             }
-        } else if (building_is_venus_temple(btype) && b->data.monument.phase <= 0 &&
+        } else if (building_is_venus_temple(btype) && b->monument.phase <= 0 &&
             building_monument_gt_module_is_active(VENUS_MODULE_1_DISTRIBUTE_WINE)) {
             if (context.storage_show_special_orders) {
                 window_building_draw_distributor_orders_foreground(&context);
             } else {
                 window_building_distributor_draw_foreground(&context);
             }
-        } else if (building_is_ceres_temple(btype) && b->data.monument.phase <= 0 &&
+        } else if (building_is_ceres_temple(btype) && b->monument.phase <= 0 &&
             building_monument_gt_module_is_active(CERES_MODULE_2_DISTRIBUTE_FOOD)) {
             if (context.storage_show_special_orders) {
                 window_building_draw_distributor_orders_foreground(&context);
@@ -825,7 +825,7 @@ static void draw_foreground(void)
             btype == BUILDING_PANTHEON) {
             window_building_draw_grand_temple_foreground(&context);
         } else if (btype == BUILDING_CARAVANSERAI &&
-            b->data.monument.phase == MONUMENT_FINISHED) {
+            b->monument.phase == MONUMENT_FINISHED) {
             if (context.storage_show_special_orders) {
                 window_building_draw_distributor_orders_foreground(&context);
             } else {

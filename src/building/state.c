@@ -1,4 +1,5 @@
-#include "building_state.h"
+#include "state.h"
+
 #include "building/industry.h"
 #include "building/monument.h"
 #include "building/roadblock.h"
@@ -48,26 +49,12 @@ static void write_type_data(buffer *buf, const building *b)
         buffer_write_u8(buf, b->data.house.num_gods);
         buffer_write_u8(buf, b->data.house.devolve_delay);
         buffer_write_u8(buf, b->data.house.evolve_text_id);
-    // Do not place this after if (building_has_supplier_inventory(b->type) or after if (building_monument_is_monument(b))
-    // Because Caravanserai is monument AND supplier building and resources_needed / inventory is same memory spot
-    } else if (b->type == BUILDING_CARAVANSERAI) {
-        buffer_write_i32(buf, b->data.monument.upgrades);
-        buffer_write_i16(buf, b->data.monument.progress);
-        buffer_write_i16(buf, b->data.monument.phase);
-        buffer_write_u8(buf, b->data.market.fetch_inventory_id);
-        // As above, Ceres and Venus temples are both monuments and suppliers 
-    } else if (b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
-        buffer_write_i32(buf, b->data.monument.upgrades);
-        buffer_write_i16(buf, b->data.monument.progress);
-        buffer_write_i16(buf, b->data.monument.phase);
+    } else if (b->type == BUILDING_CARAVANSERAI || b->type == BUILDING_LARGE_TEMPLE_CERES ||
+        b->type == BUILDING_LARGE_TEMPLE_VENUS) {
         buffer_write_u8(buf, b->data.market.fetch_inventory_id);
     } else if (building_has_supplier_inventory(b->type)) {
         buffer_write_u8(buf, b->data.market.fetch_inventory_id);
         buffer_write_u8(buf, b->data.market.is_mess_hall);
-    } else if (building_monument_is_monument(b)) {
-        buffer_write_i32(buf, b->data.monument.upgrades);
-        buffer_write_i16(buf, b->data.monument.progress);
-        buffer_write_i16(buf, b->data.monument.phase);
     } else if (b->type == BUILDING_DEPOT) {
         buffer_write_i8(buf, b->data.depot.current_order.resource_type);
         buffer_write_i32(buf, b->data.depot.current_order.src_storage_id);
@@ -180,6 +167,11 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_u8(buf, b->show_on_problem_overlay);
 
     // expanded building data
+    // Monuments
+    buffer_write_i32(buf, b->monument.upgrades);
+    buffer_write_i16(buf, b->monument.progress);
+    buffer_write_i16(buf, b->monument.phase);
+    
     // Tourism
     buffer_write_u8(buf, b->house_arena_gladiator);
     buffer_write_u8(buf, b->house_arena_lion);
@@ -278,9 +270,11 @@ static void read_type_data(buffer *buf, building *b, int version)
                 b->resources[resource_remap(i)] = buffer_read_i16(buf);
             }
         }
-        b->data.monument.upgrades = buffer_read_i32(buf);
-        b->data.monument.progress = buffer_read_i16(buf);
-        b->data.monument.phase = buffer_read_i16(buf);
+        if (version <= SAVE_GAME_LAST_MONUMENT_TYPE_DATA) {
+            b->monument.upgrades = buffer_read_i32(buf);
+            b->monument.progress = buffer_read_i16(buf);
+            b->monument.phase = buffer_read_i16(buf);
+        }
         b->data.market.fetch_inventory_id = resource_map_legacy_inventory(buffer_read_u8(buf));
         // As above, Ceres and Venus temples are both monuments and suppliers 
     } else if (b->type == BUILDING_LARGE_TEMPLE_CERES || b->type == BUILDING_LARGE_TEMPLE_VENUS) {
@@ -289,11 +283,13 @@ static void read_type_data(buffer *buf, building *b, int version)
                 b->resources[resource_remap(i)] = buffer_read_i16(buf);
             }
         }
-        b->data.monument.upgrades = buffer_read_i32(buf);
-        b->data.monument.progress = buffer_read_i16(buf);
-        b->data.monument.phase = buffer_read_i16(buf);
-        if (!b->data.monument.phase) { // Compatibility fix
-            b->data.monument.phase = MONUMENT_FINISHED;
+        if (version <= SAVE_GAME_LAST_MONUMENT_TYPE_DATA) {
+            b->monument.upgrades = buffer_read_i32(buf);
+            b->monument.progress = buffer_read_i16(buf);
+            b->monument.phase = buffer_read_i16(buf);
+            if (!b->monument.phase) { // Compatibility fix
+                b->monument.phase = MONUMENT_FINISHED;
+            }
         }
         b->data.market.fetch_inventory_id = resource_map_legacy_inventory(buffer_read_u8(buf));
     } else if (building_has_supplier_inventory(b->type)) {
@@ -328,7 +324,7 @@ static void read_type_data(buffer *buf, building *b, int version)
                 b->resources[resource_remap(i)] = buffer_read_i16(buf);
             }
         }
-    } else if (building_monument_is_monument(b)) {
+    } else if (building_monument_is_monument(b) && version <= SAVE_GAME_LAST_MONUMENT_TYPE_DATA) {
         if (version <= SAVE_GAME_LAST_STATIC_RESOURCES) {
             for (int i = 0; i < RESOURCE_MAX_LEGACY; i++) {
                 b->resources[resource_remap(i)] = buffer_read_i16(buf);
@@ -337,9 +333,9 @@ static void read_type_data(buffer *buf, building *b, int version)
                 b->resources[RESOURCE_NONE] = 1;
             }
         }
-        b->data.monument.upgrades = buffer_read_i32(buf);
-        b->data.monument.progress = buffer_read_i16(buf);
-        b->data.monument.phase = buffer_read_i16(buf);
+        b->monument.upgrades = buffer_read_i32(buf);
+        b->monument.progress = buffer_read_i16(buf);
+        b->monument.phase = buffer_read_i16(buf);
     } else if (b->type == BUILDING_DEPOT) {
         b->data.depot.current_order.resource_type = resource_remap(buffer_read_i8(buf));
         b->data.depot.current_order.src_storage_id = buffer_read_i32(buf);
@@ -507,16 +503,18 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         }
 
         // Backwards compatibility fixes for culture update
-        if (building_monument_is_monument(b) && b->subtype.house_level && b->type != BUILDING_HIPPODROME && b->type <= BUILDING_LIGHTHOUSE) {
-            b->data.monument.phase = b->subtype.house_level;
+        if (building_monument_is_monument(b) && b->subtype.house_level && b->type != BUILDING_HIPPODROME &&
+            b->type <= BUILDING_LIGHTHOUSE) {
+            b->monument.phase = b->subtype.house_level;
         }
 
-        if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && !b->data.monument.phase) {
-            b->data.monument.phase = MONUMENT_FINISHED;
+        if ((b->type == BUILDING_HIPPODROME || b->type == BUILDING_COLOSSEUM) && !b->monument.phase) {
+            b->monument.phase = MONUMENT_FINISHED;
         }
 
-        if (((b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) || b->type == BUILDING_ORACLE) && !b->data.monument.phase) {
-            b->data.monument.phase = MONUMENT_FINISHED;
+        if (((b->type >= BUILDING_LARGE_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS) ||
+            b->type == BUILDING_ORACLE) && !b->monument.phase) {
+            b->monument.phase = MONUMENT_FINISHED;
         }
 
     }
@@ -546,6 +544,12 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     // }
     // Building state variables are automatically set to 0, so if the savegame version doesn't include
     // that information, you can be assured that the game will read it as 0
+
+    if (save_version > SAVE_GAME_LAST_MONUMENT_TYPE_DATA) {
+        b->monument.upgrades = buffer_read_i32(buf);
+        b->monument.progress = buffer_read_i16(buf);
+        b->monument.phase = buffer_read_i16(buf);
+    }
 
     if (building_buf_size >= BUILDING_STATE_TOURISM_BUFFER_SIZE) {
         b->house_arena_gladiator = buffer_read_u8(buf);

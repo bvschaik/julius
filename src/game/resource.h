@@ -146,8 +146,6 @@ int resource_mapping_get_version(void);
 
 resource_type resource_map_legacy_inventory(int id);
 
-resource_type resource_produced_by_building_type(building_type type);
-
 int resource_production_per_month(resource_type);
 
 resource_type resource_remap(int id);

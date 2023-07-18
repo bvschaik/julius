@@ -1,4 +1,4 @@
-#include "building_variant.h"
+#include "variant.h"
 
 #include "building/properties.h"
 #include "building/rotation.h"

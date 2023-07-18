@@ -1793,7 +1793,8 @@ void building_figure_generate(void)
             spawn_figure_industry(b);
         } else if (b->type >= BUILDING_SENATE_1_UNUSED && b->type <= BUILDING_FORUM_2_UNUSED) {
             spawn_figure_senate_forum(b);
-        } else if (b->type >= BUILDING_SMALL_TEMPLE_CERES && b->type <= BUILDING_LARGE_TEMPLE_VENUS && b->data.monument.phase <= 0) {
+        } else if (b->type >= BUILDING_SMALL_TEMPLE_CERES &&
+            b->type <= BUILDING_LARGE_TEMPLE_VENUS && b->monument.phase <= 0) {
             spawn_figure_temple(b);
         } else {
             // single building type

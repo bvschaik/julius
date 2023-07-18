@@ -365,7 +365,7 @@ void window_building_draw_city_mint(building_info_context *c)
     c->help_id = 0;
     building *b = building_get(c->building_id);
     data.city_mint_id = 0;
-    if (b->data.monument.phase == MONUMENT_FINISHED) {
+    if (b->monument.phase == MONUMENT_FINISHED) {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         image_draw(resource_get_data(RESOURCE_DENARII)->image.icon, c->x_offset + 10, c->y_offset + 10,
             COLOR_MASK_NONE, SCALE_NONE);
@@ -547,6 +547,10 @@ static void city_mint_conversion_changed(int accepted, int checked)
     } else {
         city_mint->output_resource_id = RESOURCE_DENARII;
     }
+    city_mint->data.industry.progress = 0;
+    city_mint->data.industry.age_months = 0;
+    city_mint->data.industry.average_production_per_month;
+    city_mint->data.industry.production_current_month = 0;
 }
 
 static void set_city_mint_conversion(int resource, int param2)

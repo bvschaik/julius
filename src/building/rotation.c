@@ -1,9 +1,9 @@
 #include "rotation.h"
 
-#include "building/building_variant.h"
 #include "building/connectable.h"
 #include "building/construction.h"
 #include "building/properties.h"
+#include "building/variant.h"
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/config.h"

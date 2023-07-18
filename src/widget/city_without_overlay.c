@@ -640,10 +640,10 @@ static void draw_animation(int x, int y, int grid_offset)
                 if (animation_offset > img->animation->num_sprites) {
                     animation_offset = img->animation->num_sprites;
                 }
-                if (b->type == BUILDING_GRAND_TEMPLE_CERES && b->data.monument.upgrades == 1) {
-                    draw_ceres_module_crops(x + 190, y + 95 - y_offset, b->data.monument.secondary_frame, color_mask);
+                if (b->type == BUILDING_GRAND_TEMPLE_CERES && b->monument.upgrades == 1) {
+                    draw_ceres_module_crops(x + 190, y + 95 - y_offset, b->monument.secondary_frame, color_mask);
                 }
-                if (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE && b->data.monument.upgrades == 2) {
+                if (b->type == BUILDING_GRAND_TEMPLE_NEPTUNE && b->monument.upgrades == 2) {
                     draw_neptune_fountain(x + 98, y + 87 - y_offset, (animation_offset - 1) % 5, color_mask);
                 }
                 if (b->type == BUILDING_GRANARY) {

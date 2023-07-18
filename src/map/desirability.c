@@ -105,7 +105,7 @@ static void update_buildings(void)
                 }
             }
 
-            if (building_monument_is_monument(b) && b->data.monument.phase != MONUMENT_FINISHED) {
+            if (building_monument_is_monument(b) && b->monument.phase != MONUMENT_FINISHED) {
                 value = 0;
                 step = 0;
                 step_size = 0;

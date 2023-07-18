@@ -1,11 +1,11 @@
 #include "image.h"
 
 #include "assets/assets.h"
-#include "building/building_variant.h"
 #include "building/connectable.h"
 #include "building/monument.h"
 #include "building/properties.h"
 #include "building/rotation.h"
+#include "building/variant.h"
 #include "city/festival.h"
 #include "city/view.h"
 #include "core/direction.h"
@@ -103,7 +103,7 @@ int building_image_get(const building *b)
                 return assets_get_image_id("Entertainment", "Theatre Upgrade ON");
             }
         case BUILDING_COLOSSEUM:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Entertainment", "Coloseum Cons 01");
                 case 2:
@@ -271,7 +271,7 @@ int building_image_get(const building *b)
                     return assets_get_image_id("Industry", "Concrete_Maker_C_ON");
             }
         case BUILDING_CITY_MINT:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Logistics", "Lighthouse Const 01");
                 default:
@@ -342,42 +342,42 @@ int building_image_get(const building *b)
         case BUILDING_SMALL_TEMPLE_VENUS:
             return image_group(GROUP_BUILDING_TEMPLE_VENUS);
         case BUILDING_LARGE_TEMPLE_CERES:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Ceres_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_CERES) + 1;
             }
         case BUILDING_LARGE_TEMPLE_NEPTUNE:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Neptune_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1;
             }
         case BUILDING_LARGE_TEMPLE_MERCURY:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Mercury_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1;
             }
         case BUILDING_LARGE_TEMPLE_MARS:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Mars_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_MARS) + 1;
             }
         case BUILDING_LARGE_TEMPLE_VENUS:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Venus_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_VENUS) + 1;
             }
         case BUILDING_ORACLE:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Oracle_Construction_01");
                 default:
@@ -464,7 +464,7 @@ int building_image_get(const building *b)
         }
         case BUILDING_HIPPODROME:
             {
-                int phase = b->data.monument.phase;
+                int phase = b->monument.phase;
                 if (!phase) {
                     phase = MONUMENT_FINISHED;
                 }
@@ -544,7 +544,7 @@ int building_image_get(const building *b)
         case BUILDING_NATIVE_CROPS:
             return image_group(GROUP_BUILDING_FARM_CROPS);
         case BUILDING_GRAND_TEMPLE_CERES:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Ceres Complex Const 01");
                 case 2:
@@ -556,7 +556,7 @@ int building_image_get(const building *b)
                 case 5:
                     return assets_get_image_id("Religion", "Ceres Complex Const 05");
                 default:
-                    switch (b->data.monument.upgrades) {
+                    switch (b->monument.upgrades) {
                         case 1:
                             return assets_get_image_id("Religion", "Ceres Complex Module");
                         case 2:
@@ -566,7 +566,7 @@ int building_image_get(const building *b)
                     }
             }
         case BUILDING_GRAND_TEMPLE_NEPTUNE:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Neptune Complex Const 01");
                 case 2:
@@ -578,7 +578,7 @@ int building_image_get(const building *b)
                 case 5:
                     return assets_get_image_id("Religion", "Neptune Complex Const 05");
                 default:
-                    switch (b->data.monument.upgrades) {
+                    switch (b->monument.upgrades) {
                         case 1:
                             return assets_get_image_id("Religion", "Neptune Complex Module");
                         case 2:
@@ -588,7 +588,7 @@ int building_image_get(const building *b)
                     }
             }
         case BUILDING_GRAND_TEMPLE_MERCURY:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Mercury Complex Const 01");
                 case 2:
@@ -600,7 +600,7 @@ int building_image_get(const building *b)
                 case 5:
                     return assets_get_image_id("Religion", "Mercury Complex Const 05");
                 default:
-                    switch (b->data.monument.upgrades) {
+                    switch (b->monument.upgrades) {
                         case 1:
                             return assets_get_image_id("Religion", "Mercury Complex Module");
                         case 2:
@@ -610,7 +610,7 @@ int building_image_get(const building *b)
                     }
             }
         case BUILDING_GRAND_TEMPLE_MARS:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Mars Complex Const 01");
                 case 2:
@@ -622,7 +622,7 @@ int building_image_get(const building *b)
                 case 5:
                     return assets_get_image_id("Religion", "Mars Complex Const 05");
                 default:
-                    switch (b->data.monument.upgrades) {
+                    switch (b->monument.upgrades) {
                         case 1:
                             return assets_get_image_id("Religion", "Mars Complex Module");
                         case 2:
@@ -632,7 +632,7 @@ int building_image_get(const building *b)
                     }
             }
         case BUILDING_GRAND_TEMPLE_VENUS:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Venus Complex Const 01");
                 case 2:
@@ -644,7 +644,7 @@ int building_image_get(const building *b)
                 case 5:
                     return assets_get_image_id("Religion", "Venus Complex Const 05");
                 default:
-                    switch (b->data.monument.upgrades) {
+                    switch (b->monument.upgrades) {
                         case 1:
                             return assets_get_image_id("Religion", "Venus Complex Module");
                         case 2:
@@ -654,7 +654,7 @@ int building_image_get(const building *b)
                     }
             }
         case BUILDING_PANTHEON:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Pantheon Const 01");
                 case 2:
@@ -666,7 +666,7 @@ int building_image_get(const building *b)
                 case 5:
                     return assets_get_image_id("Religion", "Pantheon Const 05");
                 default:
-                    switch (b->data.monument.upgrades) {
+                    switch (b->monument.upgrades) {
                         case 1:
                             return assets_get_image_id("Religion", "Pantheon Module");
                         case 2:
@@ -676,7 +676,7 @@ int building_image_get(const building *b)
                     }
             }
         case BUILDING_LIGHTHOUSE:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Logistics", "Lighthouse Const 01");
                 case 2:
@@ -750,7 +750,7 @@ int building_image_get(const building *b)
             return image_id + offset;
         }
         case BUILDING_SMALL_MAUSOLEUM:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Mausoleum S Cons");
                 default:
@@ -760,7 +760,7 @@ int building_image_get(const building *b)
                 }
             }
         case BUILDING_LARGE_MAUSOLEUM:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Mausoleum L Cons");
                 default:
@@ -770,14 +770,14 @@ int building_image_get(const building *b)
                 }
             }
         case BUILDING_NYMPHAEUM:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Religion", "Pantheon_Const_00");
                 default:
                     return assets_get_image_id("Religion", "Nymphaeum ON");
             }
         case BUILDING_CARAVANSERAI:
-            switch (b->data.monument.phase) {
+            switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Logistics", "Caravanserai_Construction_01");
                 case 2:

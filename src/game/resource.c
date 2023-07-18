@@ -325,16 +325,6 @@ int resource_mapping_get_version(void)
     return mapping.version;
 }
 
-resource_type resource_produced_by_building_type(building_type type)
-{
-    for (int resource = 0; resource < RESOURCE_ALL; resource++) {
-        if (resource_info[resource].industry == type) {
-            return resource;
-        }
-    }
-    return RESOURCE_NONE;
-}
-
 int resource_production_per_month(resource_type resource)
 {
     int production = resource_info[resource].production_per_month;

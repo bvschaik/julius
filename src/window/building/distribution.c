@@ -1438,7 +1438,7 @@ void window_building_draw_caravanserai(building_info_context *c)
 {
     building *b = building_get(c->building_id);
 
-    if (b->data.monument.phase == MONUMENT_FINISHED) {
+    if (b->monument.phase == MONUMENT_FINISHED) {
         window_building_play_sound(c, "wavs/market2.wav");
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
