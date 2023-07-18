@@ -338,7 +338,7 @@ int building_construction_place_building(building_type type, int x, int y)
             if (building_rotation_get_road_orientation() == 1) {
                 building_orientation = 1;
             } else {
-                building_orientation = 3;
+                building_orientation = 2;
             }
         }
     }

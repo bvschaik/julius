@@ -52,25 +52,6 @@ static int get_land_type_citizen_building(int grid_offset)
         case BUILDING_FORT_GROUND:
             type = CITIZEN_2_PASSABLE_TERRAIN;
             break;
-        case BUILDING_TRIUMPHAL_ARCH:
-            if (b->subtype.orientation == 3) {
-                switch (map_property_multi_tile_xy(grid_offset)) {
-                    case EDGE_X0Y1:
-                    case EDGE_X1Y1:
-                    case EDGE_X2Y1:
-                        type = CITIZEN_0_ROAD;
-                        break;
-                }
-            } else {
-                switch (map_property_multi_tile_xy(grid_offset)) {
-                    case EDGE_X1Y0:
-                    case EDGE_X1Y1:
-                    case EDGE_X1Y2:
-                        type = CITIZEN_0_ROAD;
-                        break;
-                }
-            }
-            break;
         case BUILDING_GRANARY:
             switch (map_property_multi_tile_xy(grid_offset)) {
                 case EDGE_X1Y0:
