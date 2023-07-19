@@ -99,7 +99,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_FARMS_DELIVER_CLOSE, "Farms and wharves deliver only to nearby granaries"},
     {TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES, "Food isn't delivered to getting granaries"},
     {TR_CONFIG_ALL_HOUSES_MERGE, "All houses merge"},
-    {TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, "Open trade route count as providing different wine type"},
+    {TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, "Open trade route counts as providing different wine type"},
     {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Randomly collapsing clay pits and iron mines take some money instead"},
     {TR_CONFIG_MULTIPLE_BARRACKS, "Allow building multiple barracks" },
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Warehouses and granaries don't accept anything when built"},
