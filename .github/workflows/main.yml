@@ -169,10 +169,11 @@ jobs:
           name: ${{ matrix.name }}
           path: deploy\
       - uses: ruby/setup-ruby@v1
+        if: matrix.COMPILER == 'mingw-64'
         with:
           ruby-version: '3.0'
       - name: Send Webhook Notification
-        if: always()
+        if: matrix.COMPILER == 'mingw-64'
         env:
           JOB_STATUS: ${{ job.status }}
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
