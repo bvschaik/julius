@@ -84,6 +84,9 @@ void translation_load(language_type language)
         case LANGUAGE_CZECH:
             translation_czech(&strings, &num_strings);
             break;
+        case LANGUAGE_CATALAN:
+            translation_catalan(&strings, &num_strings);
+            break;
     }
 
     memset(data.strings, 0, sizeof(data.strings));

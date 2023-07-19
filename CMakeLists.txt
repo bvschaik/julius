@@ -559,6 +559,7 @@ set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/tool_restriction.c
 )
 set(TRANSLATION_FILES
+    ${PROJECT_SOURCE_DIR}/src/translation/catalan.c
     ${PROJECT_SOURCE_DIR}/src/translation/czech.c
     ${PROJECT_SOURCE_DIR}/src/translation/english.c
     ${PROJECT_SOURCE_DIR}/src/translation/french.c
