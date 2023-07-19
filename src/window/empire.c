@@ -192,7 +192,7 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
         // city sells
         lang_text_draw(47, 10, x_offset + 44, y_offset + 40, FONT_NORMAL_GREEN);
         int index = 0;
-        for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
+        for (resource_type resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
             if (!city->sells_resource[resource] || !resource_is_storable(resource)) {
                 continue;
             }
