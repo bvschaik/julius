@@ -14,6 +14,7 @@ void image_draw_enemy(int image_id, int x, int y, float scale);
 void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color, float scale);
 
 void image_draw_fullscreen_background(int image_id);
+void image_draw_blurred_fullscreen(int image_id, int intensity);
 
 void image_draw_border(int base_image_id, int x, int y, color_t color);
 

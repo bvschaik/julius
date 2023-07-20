@@ -722,25 +722,8 @@ void scenario_settings_init_mission(void)
         setting_personal_savings_for_mission(scenario.settings.campaign_rank);
 }
 
-void scenario_fix_patch_trade(int mission_id) {
-    // Damascus, allow import of marble and stone and marble buildings
-    if (mission_id == 15) {
-        empire_city_force_sell(1, RESOURCE_MARBLE);
-        trade_route_set(1, RESOURCE_MARBLE, 25);
-        empire_city_force_sell(1, RESOURCE_STONE);
-        trade_route_set(1, RESOURCE_STONE, 25);
-        scenario.allowed_buildings[ALLOWED_BUILDING_LARGE_TEMPLES] = 1;
-        scenario.allowed_buildings[ALLOWED_BUILDING_ORACLE] = 1;
-    // Caesarea, allow import of clay (for monuments) and sand
-    } else if (mission_id == 14) {
-        empire_city_force_sell(3, RESOURCE_CLAY);
-        trade_route_set(3, RESOURCE_CLAY, 15);
-        empire_city_force_sell(3, RESOURCE_SAND);
-        trade_route_set(3, RESOURCE_SAND, 25);
-    }
-}
-
-void scenario_unlock_all_buildings(void) {
+void scenario_unlock_all_buildings(void)
+{
     for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++) {
         scenario.allowed_buildings[i] = 1;
     }

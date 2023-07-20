@@ -12,6 +12,7 @@
 #include "city/message.h"
 #include "city/trade.h"
 #include "city/resource.h"
+#include "editor/editor.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "empire/type.h"
@@ -21,6 +22,7 @@
 #include "scenario/building.h"
 #include "scenario/empire.h"
 #include "scenario/map.h"
+#include "scenario/property.h"
 
 #include <string.h>
 
@@ -29,6 +31,8 @@
 #define SEA_TRADER_DELAY_TICKS 30
 #define LEGACY_MAX_CITIES 41
 #define CITIES_ARRAY_SIZE_STEP 50
+
+#define NOT_SELLING 0
 
 #define EMPIRE_CITY_CURRENT_BUF_SIZE (18 + 2 * RESOURCE_MAX)
 
@@ -313,19 +317,6 @@ void empire_city_expand_empire(void)
     }
 }
 
-// Override hardcoded empire data to allow new trade
-void empire_city_force_sell(int route, int resource)
-{
-    empire_city *city;
-    array_foreach(cities, city) {
-        if (city->route_id == route) {
-            city->sells_resource[resource] = 1;
-            empire_object_city_force_sell_resource(city->empire_object_id, resource);
-            break;
-        }        
-    }
-}
-
 static int generate_trader(int city_id, empire_city *city)
 {
     // Check timeout before city can send another trader
@@ -497,7 +488,7 @@ void empire_city_save_state(buffer *buf)
     }
 }
 
-int empire_city_can_mine_gold(int city_name_id)
+static int city_can_mine_gold(int city_name_id)
 {
     switch (city_name_id) {
         case 4:  // Mediolanum
@@ -512,19 +503,50 @@ int empire_city_can_mine_gold(int city_name_id)
     }
 }
 
-static void set_new_monument_elements_production(empire_city *city)
+static void change_selling_of_resource(empire_city *city, resource_type resource, unsigned int amount)
 {
+    int sells = amount != NOT_SELLING;
+    city->sells_resource[resource] = sells;
+    empire_object_get_full(city->empire_object_id)->city_sells_resource[resource] = sells;
+    if (city->type != EMPIRE_CITY_OURS) {
+        trade_route_set_limit(city->route_id, resource, amount);
+    }
+}
+
+static void set_gold_production(empire_city *city)
+{
+    if (city_can_mine_gold(city->name_id) && city->sells_resource[RESOURCE_IRON]) {
+        change_selling_of_resource(city, RESOURCE_GOLD, 5);
+    }
+}
+
+static void set_new_monument_elements_production(int empire_id, empire_city *city)
+{
+    int damascus_empire_id;
+    int caesarea_empire_id;
+    if (scenario_is_custom() || editor_is_active()) {
+        damascus_empire_id = 37;
+        caesarea_empire_id = 34;
+    } else {
+        damascus_empire_id = 0;
+        caesarea_empire_id = 37;
+    }
+
+    // Original Damascus, allow import of marble for Tarsus
+    if (empire_id == damascus_empire_id && city->name_id == 12) {
+        change_selling_of_resource(city, RESOURCE_MARBLE, 25);
+    }
+
+    // Original Caesarea, allow import of clay for Tingis
+    if (empire_id == caesarea_empire_id && city->name_id == 14) {
+        change_selling_of_resource(city, RESOURCE_CLAY, 15);
+    }
+
     if (city->sells_resource[RESOURCE_IRON] || city->sells_resource[RESOURCE_MARBLE]) {
-        city->sells_resource[RESOURCE_STONE] = 1;
-        if (city->type != EMPIRE_CITY_OURS) {
-            trade_route_set_limit(city->route_id, RESOURCE_STONE, 25);
-        }
+        change_selling_of_resource(city, RESOURCE_STONE, 25);
     }
     if (city->sells_resource[RESOURCE_CLAY]) {
-        city->sells_resource[RESOURCE_SAND] = 1;
-        if (city->type != EMPIRE_CITY_OURS) {
-            trade_route_set_limit(city->route_id, RESOURCE_SAND, 25);
-        }
+        change_selling_of_resource(city, RESOURCE_SAND, 25);
     }
     // If a city sells both sand and stone and also sells more than four items,
     // make land routes sell stone and water routes sell sand
@@ -535,11 +557,9 @@ static void set_new_monument_elements_production(empire_city *city)
                 resources_sold++;
                 if (resources_sold > 4) {
                     if (city->is_sea_trade) {
-                        city->sells_resource[RESOURCE_STONE] = 0;
-                        trade_route_set_limit(city->route_id, RESOURCE_STONE, 0);
+                        change_selling_of_resource(city, RESOURCE_STONE, NOT_SELLING);
                     } else {
-                        city->sells_resource[RESOURCE_SAND] = 0;
-                        trade_route_set_limit(city->route_id, RESOURCE_SAND, 0);
+                        change_selling_of_resource(city, RESOURCE_SAND, NOT_SELLING);
                     }
                     break;
                 }
@@ -548,38 +568,28 @@ static void set_new_monument_elements_production(empire_city *city)
     }
 }
 
-static void set_gold_production(empire_city *city)
+static void update_trading_data(int empire_id, empire_city *city)
 {
-    if (empire_city_can_mine_gold(city->name_id) && city->sells_resource[RESOURCE_IRON]) {
-        city->sells_resource[RESOURCE_GOLD] = 1;
-        if (city->type != EMPIRE_CITY_OURS) {
-            trade_route_set_limit(city->route_id, RESOURCE_GOLD, 5);
-        }
-    }
+    set_gold_production(city);
+    set_new_monument_elements_production(empire_id, city);
 }
 
-void empire_city_update_trading_data(void)
+void empire_city_update_trading_data(int empire_id)
 {
-    int version = resource_mapping_get_version();
     empire_city *city;
     array_foreach(cities, city) {
-        if (version < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
+        if (resource_mapping_get_version() < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
             if (city->type == EMPIRE_CITY_OURS) {
                 if (city->sells_resource[RESOURCE_FISH]) {
-                    city->sells_resource[RESOURCE_MEAT] = 1;
+                    change_selling_of_resource(city, RESOURCE_MEAT, !NOT_SELLING);
                 } else if (scenario_building_allowed(BUILDING_WHARF)) {
-                    city->sells_resource[RESOURCE_FISH] = 1;
+                    change_selling_of_resource(city, RESOURCE_FISH, !NOT_SELLING);
                 }
             }
-        } else if (scenario_empire_id() == SCENARIO_CUSTOM_EMPIRE) {
+        } else if (empire_id == SCENARIO_CUSTOM_EMPIRE) {
             continue;
         }
-        if (version < RESOURCE_HAS_NEW_MONUMENT_ELEMENTS) {
-            set_new_monument_elements_production(city);
-        }
-        if (version < RESOURCE_HAS_GOLD_VERSION) {
-            set_gold_production(city);
-        }
+        update_trading_data(empire_id, city);
     }
 }
 

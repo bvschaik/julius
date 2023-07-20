@@ -93,6 +93,7 @@ void empire_load_editor(int empire_id, int viewport_width, int viewport_height)
 {
     empire_load(1, empire_id);
     empire_object_init_cities(empire_id);
+    empire_clear_selected_object();
     empire_center_on_our_city(viewport_width, viewport_height);
 }
 

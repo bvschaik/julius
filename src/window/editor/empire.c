@@ -162,7 +162,8 @@ static void draw_background(void)
 {
     update_screen_size();
     if (data.x_min || data.y_min) {
-        graphics_clear_screen();
+        image_draw_blurred_fullscreen(image_group(GROUP_EDITOR_EMPIRE_MAP), 3);
+        graphics_shade_rect(0, 0, screen_width(), screen_height(), 7);
     }
     draw_paneling();
     draw_preview_image(data.x_max - 92, data.y_max - 100, 72, COLOR_MASK_NONE, 0);
@@ -361,7 +362,7 @@ static void draw_city_info(const empire_city *city)
         case EMPIRE_CITY_TRADE: {
             width += lang_text_draw(47, 5, x_offset + 20 + width, y_offset, FONT_NORMAL_GREEN);
             int resource_x_offset = x_offset + 30 + width;
-            for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+            for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
                 if (empire_object_city_sells_resource(city->empire_object_id, r)) {
                     draw_resource(r, trade_route_limit(city->route_id, r), resource_x_offset, y_offset - 9);
                     resource_x_offset += 32;
@@ -370,7 +371,7 @@ static void draw_city_info(const empire_city *city)
             resource_x_offset += 50;
             resource_x_offset += lang_text_draw(47, 4, resource_x_offset, y_offset, FONT_NORMAL_GREEN);
             resource_x_offset += 10;
-            for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
+            for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
                 if (empire_object_city_buys_resource(city->empire_object_id, r)) {
                     draw_resource(r, trade_route_limit(city->route_id, r), resource_x_offset, y_offset - 9);
                     resource_x_offset += 32;

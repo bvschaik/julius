@@ -88,7 +88,7 @@ void image_draw_letter(font_t font, int letter_id, int x, int y, color_t color, 
     graphics_renderer()->draw_image(img, x, y, color, scale);
 }
 
-static inline void draw_fullscreen_background(int image_id)
+static inline void draw_fullscreen_background(int image_id, int x, int y, color_t alpha)
 {
     int s_width = screen_width();
     int s_height = screen_height();
@@ -96,24 +96,28 @@ static inline void draw_fullscreen_background(int image_id)
     float scale_w = img->width / (float) screen_width();
     float scale_h = img->height / (float) screen_height();
     float scale = scale_w < scale_h ? scale_w : scale_h;
+
+    color_t color_mask = COLOR_MASK_NONE;
+
+    if (alpha != ALPHA_OPAQUE) {
+        color_mask &= (alpha << COLOR_BITSHIFT_ALPHA) | 0xffffff;
+    }
     
     if (scale >= SCALE_NONE) {
-        image_draw(image_id, (s_width - img->width) / 2, (s_height - img->height) / 2, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_id, (s_width - img->width) / 2, (s_height - img->height) / 2, color_mask, SCALE_NONE);
     } else {
-        int x = 0;
-        int y = 0;
         if (scale == scale_h) {
-            x = (int) ((s_width - img->width / scale) / 2 * scale);
+            x = (int) ((x + s_width - img->width / scale) / 2 * scale);
         }
         if (scale == scale_w) {
-            y = (int) ((s_height - img->height / scale) / 2 * scale);
+            y = (int) ((y + s_height - img->height / scale) / 2 * scale);
         }
         if (image_is_external(img)) {
             image_load_external_data(img);
         } else if ((img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET) == ATLAS_UNPACKED_EXTRA_ASSET) {
             assets_load_unpacked_asset(image_id);
         }
-        graphics_renderer()->draw_image(img, x, y, COLOR_MASK_NONE, scale);
+        graphics_renderer()->draw_image(img, x, y, color_mask, scale);
     }
 }
 
@@ -145,8 +149,32 @@ static inline void draw_fullscreen_borders(void)
 void image_draw_fullscreen_background(int image_id)
 {
     graphics_renderer()->clear_screen();
-    draw_fullscreen_background(image_id);
+    draw_fullscreen_background(image_id, 0, 0, ALPHA_OPAQUE);
     draw_fullscreen_borders();
+}
+
+void image_draw_blurred_fullscreen(int image_id, int intensity)
+{
+    graphics_renderer()->clear_screen();
+
+    color_t alpha = 0x80;
+
+    draw_fullscreen_background(image_id, 0, 0, 0x80);
+    color_t alpha_step = 0x60 / intensity;
+
+    for (int i = 1; i <= intensity; i++) {
+        draw_fullscreen_background(image_id, 0, i, alpha);
+        draw_fullscreen_background(image_id, i, 0, alpha);
+        draw_fullscreen_background(image_id, 0, -i, alpha);
+        draw_fullscreen_background(image_id, -i, 0, alpha);
+
+        draw_fullscreen_background(image_id, -i, i, alpha / 2);
+        draw_fullscreen_background(image_id, i, -i, alpha / 2);
+        draw_fullscreen_background(image_id, -i, -i, alpha / 2);
+        draw_fullscreen_background(image_id, i, i, alpha / 2);
+
+        alpha -= alpha_step;
+    }
 }
 
 void image_draw_border(int base_image_id, int x, int y, color_t color)

@@ -64,8 +64,6 @@ int empire_city_get_vulnerable_roman(void);
 
 void empire_city_expand_empire(void);
 
-void empire_city_force_sell(int route, int resource);
-
 void empire_city_set_vulnerable(int city_id);
 
 void empire_city_set_foreign(int city_id);
@@ -84,9 +82,7 @@ const uint8_t *empire_city_get_name(const empire_city *city);
 
 void empire_city_save_state(buffer *buf);
 
-int empire_city_can_mine_gold(int city_name_id);
-
-void empire_city_update_trading_data(void);
+void empire_city_update_trading_data(int empire_id);
 
 void empire_city_load_state(buffer *buf, int version);
 

@@ -205,6 +205,7 @@ void empire_object_load(buffer *buf, int version)
     }
     objects.size = highest_id_in_use + 1;
     fix_image_ids();
+    empire_city_update_trading_data(scenario_empire_id());
 }
 
 void empire_object_save(buffer *buf)
@@ -352,7 +353,7 @@ void empire_object_init_cities(int empire_id)
         city->trader_figure_ids[2] = 0;
         city->empire_object_id = array_index;
     }
-    empire_city_update_trading_data();
+    empire_city_update_trading_data(empire_id);
 }
 
 int empire_object_init_distant_battle_travel_months(empire_object_type object_type)

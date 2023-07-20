@@ -517,9 +517,11 @@ int scroll_get_delta(const mouse* m, pixel_offset* delta, scroll_type type)
         data.speed.decaying = speed_is_changing(&data.speed.x) || speed_is_changing(&data.speed.y);
         data.is_scrolling = data.speed.decaying;
     }
-    int scale = city_view_get_scale();
-    delta->x = calc_adjust_with_percentage(delta->x, scale);
-    delta->y = calc_adjust_with_percentage(delta->y, scale);
+    if (type == SCROLL_TYPE_CITY) {
+        int scale = city_view_get_scale();
+        delta->x = calc_adjust_with_percentage(delta->x, scale);
+        delta->y = calc_adjust_with_percentage(delta->y, scale);
+    }
     return delta->x != 0 || delta->y != 0;
 }
 

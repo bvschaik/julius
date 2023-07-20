@@ -352,7 +352,8 @@ static void draw_background(void)
     data.y_max = s_height <= MAX_HEIGHT ? s_height : data.y_min + MAX_HEIGHT;
 
     if (data.x_min || data.y_min) {
-        graphics_clear_screen();
+        image_draw_blurred_fullscreen(image_group(GROUP_EMPIRE_MAP), 3);
+        graphics_shade_rect(0, 0, screen_width(), screen_height(), 7);
     }
 }
 

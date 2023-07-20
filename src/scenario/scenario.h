@@ -10,8 +10,6 @@ void scenario_settings_init(void);
 
 void scenario_settings_init_mission(void);
 
-void scenario_fix_patch_trade(int mission_id);
-
 void scenario_unlock_all_buildings(void);
 
 int scenario_get_state_buffer_size_by_savegame_version(int savegame_version_t);
