@@ -9,6 +9,8 @@ void platform_screen_destroy(void);
 int platform_screen_resize(int pixel_width, int pixel_height);
 void platform_screen_move(int x, int y);
 
+int platform_screen_get_scale(void);
+
 void platform_screen_set_fullscreen(void);
 void platform_screen_set_windowed(void);
 void platform_screen_set_window_size(int logical_width, int logical_height);

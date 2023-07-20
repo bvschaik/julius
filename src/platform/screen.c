@@ -268,6 +268,11 @@ void platform_screen_move(int x, int y)
     }
 }
 
+int platform_screen_get_scale(void)
+{
+    return scale.percentage;
+}
+
 void platform_screen_set_fullscreen(void)
 {
     SDL_GetWindowPosition(SDL.window, &window_pos.x, &window_pos.y);
