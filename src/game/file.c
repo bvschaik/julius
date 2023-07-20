@@ -271,6 +271,7 @@ static void initialize_saved_game(void)
     map_orientation_update_buildings();
     figure_route_clean();
     map_road_network_update();
+    map_routing_update_land();
     building_maintenance_check_rome_access();
     building_granaries_calculate_stocks();
     building_menu_update();

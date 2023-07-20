@@ -496,6 +496,11 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         b->data.industry.progress = 0;
     }
 
+    // Triumphal arches may have wrong orientation
+    if (b->type == BUILDING_TRIUMPHAL_ARCH && b->subtype.orientation == 3) {
+        b->subtype.orientation = 2;
+    }
+
     if (building_buf_size < BUILDING_STATE_STRIKES) {
         // Backwards compatibility fixes for sentiment update
         if (b->house_population && b->sentiment.house_happiness < 20) {
