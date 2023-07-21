@@ -647,7 +647,10 @@
 		</animation>
 	</image>
 	<!-- Note: Large Temple and Oracle Construction Phases -->
-	<image id="Oracle_Construction_01" src="Oracle_Construction_01" isometric="true"/>
+	<image id="Oracle_Construction_01" isometric="true" width="118" height="69">
+		<layer src="Construction_Base_2x2" y="9"/>
+		<layer src="Oracle_Construction_01"/>
+	</image>
 	<image id="Oracle_Construction_02" isometric="true" width="118" height="77">
 		<layer group="76" image="0" part="footprint" y="-10"/>
 		<layer src="Oracle_Construction_02"/>
@@ -686,7 +689,18 @@
 		<layer src="Mausoleum_Large_Alt_R" x="31" y="87"/>
 	</image>
 	<!-- Note: Small Mausoleum Construction 01 Phase -->
-	<image id="Mausoleum S Cons" src="Mausoleum_Small_Construction_01" isometric="true"/>
+	<image id="Mausoleum S Cons" width="118" height="69" isometric="true">
+		<layer src="Construction_Base_2x2" y="9"/>
+		<layer src="Mausoleum_Small_Construction_01"/>
+	</image>
+	<image id="Mausoleum_Small_Construction_02" width="118" height="71" isometric="true">
+		<layer src="Construction_Base_2x2" y="11"/>
+		<layer src="Mausoleum_Small_Construction_02"/>
+	</image>
+	<image id="Mausoleum_Small_R_Construction_02" width="118" height="71" isometric="true">
+		<layer src="Construction_Base_2x2" y="11"/>
+		<layer src="Mausoleum_Small_R_Construction_02"/>
+	</image>
 	<!-- Note: Small Mausoleum asset -->
 	<image id="Mausoleum S" src="Mausoleum_Small" isometric="true"/>
 	<!-- Note: Small Mausoleum asset (Rotation Variant) -->
