@@ -339,10 +339,10 @@ void city_health_update(void)
             }
             house_health += b->data.house.num_foods * 15;
 
-            int mausuleum_health = building_count_active(BUILDING_SMALL_MAUSOLEUM);
-            mausuleum_health += building_count_active(BUILDING_LARGE_MAUSOLEUM) * 2;
+            int mausoleum_health = building_count_active(BUILDING_SMALL_MAUSOLEUM);
+            mausoleum_health += building_count_active(BUILDING_LARGE_MAUSOLEUM) * 2;
 
-            house_health += calc_bound(mausuleum_health, 0, 10);
+            house_health += calc_bound(mausoleum_health, 0, 10);
 
             int health_cap = (model_get_house(b->subtype.house_level)->food_types && !b->data.house.num_foods) ?
                 40 : 100;

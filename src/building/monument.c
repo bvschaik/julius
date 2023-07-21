@@ -92,7 +92,7 @@ static const monument_type hippodrome = {
     }
 };
 
-static const monument_type oracle_and_small_mausuleum = {
+static const monument_type oracle_and_small_mausoleum = {
     .phases    = 2,
     .resources = {
         { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 2 },
@@ -108,7 +108,7 @@ static const monument_type large_temple_and_nymphaeum = {
     }
 };
 
-static const monument_type large_mausuleum = {
+static const monument_type large_mausoleum = {
     .phases    = 3,
     .resources = {
         { [ARCHITECTS] = 1, [RESOURCE_STONE] = 8, [RESOURCE_CONCRETE] = 4 },
@@ -141,7 +141,7 @@ static const monument_type *MONUMENT_TYPES[BUILDING_TYPE_MAX] = {
     [BUILDING_GRAND_TEMPLE_MARS]    = &grand_temple,
     [BUILDING_GRAND_TEMPLE_VENUS]   = &grand_temple,
     [BUILDING_PANTHEON]             = &pantheon,
-    [BUILDING_ORACLE]               = &oracle_and_small_mausuleum,
+    [BUILDING_ORACLE]               = &oracle_and_small_mausoleum,
     [BUILDING_LARGE_TEMPLE_CERES]   = &large_temple_and_nymphaeum,
     [BUILDING_LARGE_TEMPLE_NEPTUNE] = &large_temple_and_nymphaeum,
     [BUILDING_LARGE_TEMPLE_MERCURY] = &large_temple_and_nymphaeum,
@@ -151,8 +151,8 @@ static const monument_type *MONUMENT_TYPES[BUILDING_TYPE_MAX] = {
     [BUILDING_COLOSSEUM]            = &colosseum,
     [BUILDING_HIPPODROME]           = &hippodrome,
     [BUILDING_NYMPHAEUM]            = &large_temple_and_nymphaeum,
-    [BUILDING_LARGE_MAUSOLEUM]      = &large_mausuleum,
-    [BUILDING_SMALL_MAUSOLEUM]      = &oracle_and_small_mausuleum,
+    [BUILDING_LARGE_MAUSOLEUM]      = &large_mausoleum,
+    [BUILDING_SMALL_MAUSOLEUM]      = &oracle_and_small_mausoleum,
     [BUILDING_CARAVANSERAI]         = &caravanserai,
     [BUILDING_CITY_MINT]            = &city_mint
 };
