@@ -403,7 +403,7 @@ static int image_y_offset_chinese(uint8_t c, int image_height, int line_height)
         if (c < 0x80) {
             return 0;
         } else {
-            return 1;
+            return 2;
         }
     }
     if (c < 0x80) {
