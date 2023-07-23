@@ -15,7 +15,7 @@
 #define MAX_TRACKS 7
 #define MAX_PALETTE 256
 
-#define FLAG_RING 0x01
+// #define FLAG_RING 0x01 - not supported
 #define FLAG_Y_INTERLACE 0x02
 #define FLAG_Y_DOUBLE 0x04
 
@@ -27,7 +27,7 @@
 
 #define BLOCK_MONO 0
 #define BLOCK_FULL 1
-#define BLOCK_VOID 2
+// #define BLOCK_VOID 2 - not supported
 #define BLOCK_SOLID 3
 
 typedef struct {

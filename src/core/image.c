@@ -29,7 +29,7 @@
 #define EMPIRE_DATA_SIZE (2000*1000*4)
 #define ENEMY_DATA_SIZE 2400000
 #define CYRILLIC_FONT_DATA_SIZE 1500000
-#define TRAD_CHINESE_FONT_DATA_SIZE 7200000
+#define CHINESE_FONT_DATA_SIZE 7200000
 #define KOREAN_FONT_DATA_SIZE 7500000
 #define JAPANESE_FONT_DATA_SIZE 11000000
 #define SCRATCH_DATA_SIZE 12100000
@@ -449,7 +449,7 @@ static int parse_chinese_font(
 
 static int load_traditional_chinese_fonts(void)
 {
-    if (!alloc_font_memory(TRAD_CHINESE_FONT_ENTRIES, TRAD_CHINESE_FONT_DATA_SIZE)) {
+    if (!alloc_font_memory(TRAD_CHINESE_FONT_ENTRIES, CHINESE_FONT_DATA_SIZE)) {
         return 0;
     }
 
@@ -491,7 +491,7 @@ static int load_traditional_chinese_fonts(void)
 
 static int load_simplified_chinese_fonts(void)
 {
-    if (!alloc_font_memory(TRAD_CHINESE_FONT_ENTRIES, TRAD_CHINESE_FONT_DATA_SIZE)) {
+    if (!alloc_font_memory(SIMP_CHINESE_FONT_ENTRIES, CHINESE_FONT_DATA_SIZE)) {
         return 0;
     }
 

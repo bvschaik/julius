@@ -65,7 +65,6 @@ misrepresented as being the original software.
 #endif /* _WIN32 */
 
 #define MAX_PATH_OR_CMD 1024 /* _MAX_PATH or MAX_PATH */
-#define MAX_MULTIPLE_FILES 32
 
 int tinyfd_verbose = 0; /* on unix: prints the command line calls */
 int tinyfd_silent = 1; /* 1 (default) or 0 : on unix,

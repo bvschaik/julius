@@ -684,7 +684,7 @@ static int translate_hotkeys(void)
     return handled;
 }
 
-int translate_system_functions(void)
+static int translate_system_functions(void)
 {
     if (get_joystick_input_for_action(MAPPING_ACTION_SHOW_VIRTUAL_KEYBOARD, &data.virtual_keyboard)) {
         if (data.virtual_keyboard.state == INPUT_STATE_WENT_DOWN) {

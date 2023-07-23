@@ -12,12 +12,12 @@
  * For example, given a fort, return the enumaration value corresponding to
  * the specific type of fort rather than the general value
  *
- * @param building Building to examine
+ * @param b Building to examine
  * @return the building_type value to clone, or BUILDING_NONE if not cloneable
  */
-static building_type get_clone_type_from_building(building *building)
+static building_type get_clone_type_from_building(building *b)
 {
-    building_type clone_type = building->type;
+    building_type clone_type = b->type;
 
     if (building_is_house(clone_type)) {
         return BUILDING_HOUSE_VACANT_LOT;
@@ -27,7 +27,7 @@ static building_type get_clone_type_from_building(building *building)
         case BUILDING_RESERVOIR:
             return BUILDING_DRAGGABLE_RESERVOIR;
         case BUILDING_FORT:
-            switch (building->subtype.fort_figure_type) {
+            switch (b->subtype.fort_figure_type) {
                 case FIGURE_FORT_LEGIONARY: return BUILDING_FORT_LEGIONARIES;
                 case FIGURE_FORT_JAVELIN: return BUILDING_FORT_JAVELIN;
                 case FIGURE_FORT_MOUNTED: return BUILDING_FORT_MOUNTED;

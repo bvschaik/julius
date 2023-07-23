@@ -58,6 +58,7 @@ static void draw_hippodrome_horse(const figure *f, int x, int y)
             } else {
                 y -= 12;
             }
+            break;
         case DIR_4_BOTTOM:
             x += 20;
             if (val <= 9) {

@@ -411,7 +411,7 @@ void platform_screen_render(void)
     SDL_RenderPresent(SDL.renderer);
 }
 
-void platform_screen_generate_mouse_cursor_texture(int cursor_id, int scale, const color_t *cursor_colors)
+void platform_screen_generate_mouse_cursor_texture(int cursor_id, cursor_scale scale, const color_t *cursor_colors)
 {
     if (SDL.cursors[cursor_id]) {
         SDL_DestroyTexture(SDL.cursors[cursor_id]);
