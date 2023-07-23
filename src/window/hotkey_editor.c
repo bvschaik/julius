@@ -1,4 +1,4 @@
-#include "config.h"
+#include "hotkey_editor.h"
 
 #include "core/hotkey_config.h"
 #include "core/image_group.h"

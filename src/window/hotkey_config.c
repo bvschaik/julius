@@ -1,4 +1,4 @@
-#include "config.h"
+#include "hotkey_config.h"
 
 #include "building/type.h"
 #include "core/hotkey_config.h"

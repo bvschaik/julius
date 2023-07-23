@@ -1,4 +1,4 @@
-#include "minimap.h"
+#include "scenario_minimap.h"
 
 #include "city/view.h"
 #include "graphics/graphics.h"

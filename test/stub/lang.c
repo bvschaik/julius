@@ -1,5 +1,7 @@
-#include "core/lang.h"
 #include "core/encoding.h"
+#include "core/lang.h"
+#include "graphics/font.h"
+#include "translation/translation.h"
 
 static uint8_t EMPTY[] = {0};
 
