@@ -16,6 +16,18 @@
 const char *system_version(void);
 
 /**
+ * Gets the current processor architecture
+ * @return Processor architecture
+ */
+const char *system_architecture(void);
+
+/**
+ * Gets the current operating system
+ * @return Operating system
+ */
+const char *system_OS(void);
+
+/**
  * Resize window
  * @param width New width
  * @param height New height

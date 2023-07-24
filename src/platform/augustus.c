@@ -551,7 +551,8 @@ static void setup(const augustus_args *args)
     system_setup_crash_handler();
     setup_logging();
 
-    SDL_Log("Augustus version %s", system_version());
+    SDL_Log("Augustus version %s, %s build", system_version(), system_architecture());
+    SDL_Log("Running on: %s", system_OS());
 
     if (!init_sdl()) {
         SDL_Log("Exiting: SDL init failed");

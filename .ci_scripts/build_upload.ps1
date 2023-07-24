@@ -23,27 +23,30 @@ if ("$env:GITHUB_REF" -match "^refs/tags/v") {
 
 # Create deploy file
 mkdir deploy
-$pdbfile = ""
 if ("${env:COMPILER}" -eq "msvc") {
-    $suffix = "windows-msvc-debug"
-    $pdbfile = "augustus.pdb"
+    $suffix = "windows-msvc-x64"
     CopyFile build/RelWithDebInfo/augustus.exe .
     CopyFile build/RelWithDebInfo/augustus.pdb .
     CopyFile ext\SDL2\SDL2-${env:SDL_VERSION}\lib\x64\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\lib\x64\SDL2_mixer.dll .
 } elseif ("${env:COMPILER}" -eq "msvc-arm64") {
     $suffix = "windows-msvc-arm64"
-    CopyFile build/Release/augustus.exe .
+    CopyFile build/RelWithDebInfo/augustus.exe .
+    CopyFile build/RelWithDebInfo/augustus.pdb .
     CopyFile ext\SDL2\SDL2\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer\SDL2_mixer.dll .
 } elseif ("${env:COMPILER}" -eq "mingw-32") {
     $suffix = "windows"
+    build/cv2pdb.exe build/augustus.exe
     CopyFile build/augustus.exe .
+    CopyFile build/augustus.pdb .
     CopyFile ext\SDL2\SDL2-${env:SDL_VERSION}\i686-w64-mingw32\bin\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\i686-w64-mingw32\bin\SDL2_mixer.dll .
 } elseif ("${env:COMPILER}" -eq "mingw-64") {
     $suffix = "windows-64bit"
+    build/cv2pdb.exe build/augustus.exe
     CopyFile build/augustus.exe .
+    CopyFile build/augustus.pdb .
     CopyFile ext\SDL2\SDL2-${env:SDL_VERSION}\x86_64-w64-mingw32\bin\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\x86_64-w64-mingw32\bin\SDL2_mixer.dll .
 } else {
@@ -80,9 +83,9 @@ if ($repo -eq "release") {
 
     xcopy /ei res\maps .\maps
     xcopy /ei res\manual .\manual
-    7z a "deploy\$deploy_file" augustus.exe $pdbfile SDL2.dll SDL2_mixer.dll assets maps manual
+    7z a "deploy\$deploy_file" augustus.exe augustus.pdb SDL2.dll SDL2_mixer.dll assets maps manual
 } else {
-    7z a "deploy\$deploy_file" augustus.exe $pdbfile SDL2.dll SDL2_mixer.dll
+    7z a "deploy\$deploy_file" augustus.exe augustus.pdb SDL2.dll SDL2_mixer.dll
 }
 
 if (!$?) {

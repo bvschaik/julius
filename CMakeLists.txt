@@ -803,6 +803,11 @@ if(MSVC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
 endif()
 
+# Show debug info on crash on 32 bit builds compiled with MinGW
+if(MINGW AND CMAKE_SIZEOF_VOID_P EQUAL 4 AND CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-omit-frame-pointer")
+endif()
+
 if(CMAKE_INSTALL_DATADIR)
     add_compile_definitions(CUSTOM_ASSETS_DIR="${CMAKE_INSTALL_DATADIR}")
 endif()

@@ -8,7 +8,7 @@ case "$BUILD_TARGET" in
 	docker run -d --name vitasdk --workdir /build/git -v "${PWD}:/build/git" gnuton/vitasdk-docker:20230717 tail -f /dev/null
 	;;
 "switch")
-	docker run -d --name switchdev --workdir /build/git -v "${PWD}:/build/git" devkitpro/devkita64:20200730 tail -f /dev/null
+	docker run -d --name switchdev --workdir /build/git -v "${PWD}:/build/git" devkitpro/devkita64:20230622 tail -f /dev/null
 	;;
 "android")
 	# Decrypt the key files

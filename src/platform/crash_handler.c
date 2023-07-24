@@ -9,7 +9,7 @@
 #if (defined(__GNUC__) && !defined(__MINGW32__) && !defined(__OpenBSD__) && \
    !defined(__vita__) && !defined(__SWITCH__) && !defined(__ANDROID__) && \
    !defined(__HAIKU__) && !defined(__EMSCRIPTEN__)) || \
-    (defined(_WIN32) && defined(_M_X64))
+    (defined(_WIN32) && (defined(_M_IX86) || defined(_M_X64) || defined(_M_ARM64)))
 #define HAS_STACK_TRACE
 #endif
 
@@ -59,9 +59,32 @@ static void backtrace_print(void)
 }
 #endif
 
+static const char *fetch_signal_name(int sig)
+{
+    switch (sig) {
+        case SIGILL:
+            return "Illegal Instruction";
+        case SIGBUS:
+            return "Bus Error";
+        case SIGFPE:
+            return "Floating point exception";
+        case SIGSEGV:
+            return "Segmentation fault";
+        case SIGCHLD:
+            return "Child process has stopped";
+        case SIGXCPU:
+            return "CPU time limit exceeded";
+        case SIGSYS:
+            return "Bad system call";
+        default:
+            return "Another signal type";
+    }
+}
+
 static void crash_handler(int sig)
 {
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Oops, crashed with signal %d :(", sig);
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Oops, crashed :(");
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Signal %d: %s", sig, fetch_signal_name(sig));
     backtrace_print();
     display_crash_message();
     exit_with_status(1);
@@ -73,6 +96,10 @@ void system_setup_crash_handler(void)
 }
 
 #elif defined(_WIN32)
+
+// This define is a hack to easily remove the full Github Actions path from the source file,
+// but the source compilation path on Github Actions has been stable since forever
+#define GITHUB_ACTIONS_SOURCE_PATH "D:\\a\\julius\\julius\\"
 
 #include <windows.h>
 
@@ -140,17 +167,40 @@ static const char *print_exception_name(DWORD exception_code)
 
 static void print_stacktrace(LPEXCEPTION_POINTERS e)
 {
-    void *stack[100];
     char crash_info[256];
-    char buffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(TCHAR)];
     char modname[MAX_PATH];
 
-    PSYMBOL_INFO symbol = (PSYMBOL_INFO) buffer;
-    symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
-    symbol->MaxNameLen = MAX_SYM_NAME;
-    DWORD displacement;
-    IMAGEHLP_LINE64 line;
-    line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+    DWORD image;
+    STACKFRAME64 stackframe;
+    ZeroMemory(&stackframe, sizeof(STACKFRAME64));
+
+    CONTEXT context = *e->ContextRecord;
+
+#ifdef _M_IX86
+    image = IMAGE_FILE_MACHINE_I386;
+    stackframe.AddrPC.Offset = context.Eip;
+    stackframe.AddrPC.Mode = AddrModeFlat;
+    stackframe.AddrFrame.Offset = context.Ebp;
+    stackframe.AddrFrame.Mode = AddrModeFlat;
+    stackframe.AddrStack.Offset = context.Esp;
+    stackframe.AddrStack.Mode = AddrModeFlat;
+#elif _M_X64
+    image = IMAGE_FILE_MACHINE_AMD64;
+    stackframe.AddrPC.Offset = context.Rip;
+    stackframe.AddrPC.Mode = AddrModeFlat;
+    stackframe.AddrFrame.Offset = context.Rsp;
+    stackframe.AddrFrame.Mode = AddrModeFlat;
+    stackframe.AddrStack.Offset = context.Rsp;
+    stackframe.AddrStack.Mode = AddrModeFlat;
+#elif _M_ARM64
+    image = IMAGE_FILE_MACHINE_ARM64;
+    stackframe.AddrPC.Offset = context.Pc;
+    stackframe.AddrPC.Mode = AddrModeFlat;
+    stackframe.AddrFrame.Offset = context.Fp;
+    stackframe.AddrFrame.Mode = AddrModeFlat;
+    stackframe.AddrStack.Offset = context.Sp;
+    stackframe.AddrStack.Mode = AddrModeFlat;
+#endif
 
     // Record exception info
     log_info_sprintf("Exception: %s (0x%08x)", print_exception_name(e->ExceptionRecord->ExceptionCode),
@@ -160,23 +210,50 @@ static void print_stacktrace(LPEXCEPTION_POINTERS e)
     // Record stacktrace
     log_info_sprintf("Stacktrace:");
 
-    int frames = CaptureStackBackTrace(0, 100, stack, NULL);
+    for (int frame = 0; frame < 512; frame++) {
+        BOOL more = StackWalk64(image, GetCurrentProcess(), GetCurrentThread(),
+            &stackframe, &context, NULL, SymFunctionTableAccess64, SymGetModuleBase64, NULL);
 
-    for (int frame = 0; frame < frames; frame++) {
-        if (SymFromAddr(GetCurrentProcess(), (DWORD64) stack[frame], 0, symbol)) {
-            int has_line = SymGetLineFromAddr64(GetCurrentProcess(), (DWORD64) stack[frame], &displacement, &line);
-            // This is the code path taken on VC if debugging syms are found
-            log_info_sprintf("(%d) %s L:%lu(%s+%#0lx) [0x%08lX]\n", frame, has_line ? line.FileName : "UNKNOWN FILE",
-                has_line ? line.LineNumber : 0, symbol->Name, displacement, (unsigned long) (DWORD64) stack[frame]);
+        if (!more) {
+            break;
+        }
+
+        char buffer[sizeof(SYMBOL_INFO) + MAX_SYM_NAME * sizeof(TCHAR)];
+        PSYMBOL_INFO symbol = (PSYMBOL_INFO) buffer;
+        symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
+        symbol->MaxNameLen = MAX_SYM_NAME;
+        DWORD64 displacement64;
+        DWORD displacement;
+        IMAGEHLP_LINE64 line;
+        line.SizeOfStruct = sizeof(IMAGEHLP_LINE64);
+
+        // This is the code path taken if debugging syms are found
+        if (SymFromAddr(GetCurrentProcess(), stackframe.AddrPC.Offset, &displacement64, symbol)) {
+            int has_line = SymGetLineFromAddr64(GetCurrentProcess(), stackframe.AddrPC.Offset, &displacement, &line);
+            const char *relative_file_name;
+            if (!has_line) {
+                relative_file_name = "UNKNOWN FILE";
+            } else if (strncmp(line.FileName, GITHUB_ACTIONS_SOURCE_PATH, sizeof(GITHUB_ACTIONS_SOURCE_PATH) - 1) == 0) {
+                relative_file_name = line.FileName + sizeof(GITHUB_ACTIONS_SOURCE_PATH) - 1;
+            } else {
+                relative_file_name = line.FileName;
+            }
+            log_info_sprintf("(%d) %s L:%lu(%s+%#0lx) [0x%p]\n", frame, relative_file_name,
+                has_line ? line.LineNumber : 0, symbol->Name, displacement, (void *) stackframe.AddrPC.Offset);
+
+            // No need to go further up the stack
+            if (strcmp(symbol->Name, "SDL_main") == 0) {
+                break;
+            }
+        // This is the code path taken if no debugging syms are found.
         } else {
-            DWORD64 mod_base = SymGetModuleBase64(GetCurrentProcess(), (DWORD64) stack[frame]);
+            DWORD64 mod_base = SymGetModuleBase64(GetCurrentProcess(), stackframe.AddrPC.Offset);
             if (mod_base) {
                 GetModuleFileName((HINSTANCE) mod_base, modname, MAX_PATH);
             } else {
                 strcpy(modname, "Unknown");
             }
-            // This is the code path taken on MinGW, and VC if no debugging syms are found.
-            log_info_sprintf("(%d) %s [0x%08lX]\n", frame, modname, (unsigned long) (DWORD64) stack[frame]);
+            log_info_sprintf("(%d) %s [0x%p]\n", frame, modname, (void *) stackframe.AddrPC.Offset);
         }
     }
 }
@@ -189,7 +266,6 @@ static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e)
     // Prologue.
     log_error("Oops, crashed :(", 0, 0);
 
-#ifdef _M_X64
     wchar_t path[MAX_PATH];
     GetModuleFileNameW(0, path, MAX_PATH);
     PathRemoveFileSpecW(path);
@@ -202,10 +278,6 @@ static LONG CALLBACK exception_handler(LPEXCEPTION_POINTERS e)
 
     // Unintialize IMAGEHLP.DLL
     SymCleanup(GetCurrentProcess());
-
-#else
-    log_info("No stack trace available", 0, 0);
-#endif
 
     // Inform user
     display_crash_message();

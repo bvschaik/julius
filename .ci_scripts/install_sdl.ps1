@@ -19,8 +19,7 @@ if ("${env:COMPILER}" -eq "msvc") {
     CheckSuccess("Unpack SDL")
     7z x deps\SDL_mixer.zip -oext\SDL2
     CheckSuccess("Unpack SDL mixer")
-} 
-if ("${env:COMPILER}" -eq "msvc-arm64") {
+} elseif ("${env:COMPILER}" -eq "msvc-arm64") {
     $Env:SDL2_DIR = $PWD.Path + "\deps\SDL2"
     mkdir -Force $Env:SDL2_DIR
     $Env:SDL2_MIXER_DIR = $PWD.Path + "\deps\SDL2_mixer"

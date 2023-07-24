@@ -115,14 +115,14 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: Windows 32-bit
+          - name: Windows MinGW x86
             cache-key: mingw
             COMPILER: mingw-32
-          - name: Windows 64-bit
+          - name: Windows MinGW x64
             cache-key: mingw
             COMPILER: mingw-64
             SKIP_UPLOAD: true
-          - name: Windows MSVC Debug
+          - name: Windows MSVC x64
             cache-key: msvc
             COMPILER: msvc
           - name: Windows MSVC ARM64
@@ -154,6 +154,15 @@ jobs:
           location: D:\
           install: mingw-w64-i686-gcc
           update: true
+      - name: Install cv2pdb
+        if: matrix.COMPILER == 'mingw-32' || matrix.COMPILER == 'mingw-64'
+        uses: robinraju/release-downloader@v1.8
+        with:
+          repository: "rainers/cv2pdb"
+          tag: "v0.52"
+          fileName: "cv2pdb-0.52.zip"
+          out-file-path: "build"
+          extract: true
       - name: Set up environment
         run: ./.ci_scripts/install_sdl.ps1
       - name: Build and test
