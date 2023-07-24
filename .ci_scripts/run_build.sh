@@ -7,7 +7,7 @@ case "$BUILD_TARGET" in
 	docker exec vitasdk /bin/bash -c "cd build && make -j4"
 	;;
 "switch")
-	docker exec switchdev /bin/bash -c "cd build && make -j4"
+	docker exec switchdev /bin/bash -c "git config --global --add safe.directory /build/git && cd build && make -j4"
 	;;
 "mac")
 	cp -r res/maps ./build	
