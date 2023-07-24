@@ -99,7 +99,7 @@ void system_setup_crash_handler(void)
 
 // This define is a hack to easily remove the full Github Actions path from the source file,
 // but the source compilation path on Github Actions has been stable since forever
-#define GITHUB_ACTIONS_SOURCE_PATH "D:\\a\\julius\\julius\\"
+#define GITHUB_ACTIONS_SOURCE_PATH "D:\\a\\augustus\\augustus\\"
 
 #include <windows.h>
 
