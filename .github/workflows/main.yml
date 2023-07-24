@@ -125,6 +125,7 @@ jobs:
           - name: Windows MSVC x64
             cache-key: msvc
             COMPILER: msvc
+            SKIP_UPLOAD: true
           - name: Windows MSVC ARM64
             cache-key: msvc-arm64
             COMPILER: msvc-arm64
