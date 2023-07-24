@@ -55,7 +55,7 @@ if(CMAKE_COMPILER_IS_GNUCC)
     endif()
 
     if(CMAKE_C_COMPILER_VERSION VERSION_GREATER_EQUAL 7.0)
-        set(CMAKE_C_FLAGS "-Walloc-zero -Wdouble-promotion -Wduplicated-branches -Wduplicated-cond -Wformat=2 -Wformat-signedness -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-prototypes -Wshadow -Wundef -Wunused-macros -Wwrite-strings ${CMAKE_C_FLAGS}")
+        set(CMAKE_C_FLAGS "-Walloc-zero -Wdouble-promotion -Wduplicated-branches -Wduplicated-cond -Wformat=2 -Wformat-signedness -Winit-self -Wlogical-op -Wmissing-declarations -Wmissing-prototypes -Wundef -Wunused-macros -Wwrite-strings ${CMAKE_C_FLAGS}")
     endif()
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Clang" AND "${CMAKE_BUILD_TYPE}" MATCHES "Debug" AND NOT ${TARGET_PLATFORM} STREQUAL "android")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=undefined")
