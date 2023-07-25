@@ -215,7 +215,7 @@ static multibyte_font_data multibyte_font_info[MULTIBYTE_FONT_MAX] = {
     }
 };
 
-static const image DUMMY_IMAGE;
+static const image DUMMY_IMAGE = { 0 };
 
 static struct {
     int current_climate;

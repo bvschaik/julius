@@ -265,7 +265,7 @@ void scenario_request_save_state(buffer *list)
     }
 }
 
-static void request_load(buffer *list, int index, int version)
+static void request_load(buffer *list, int index)
 {
     scenario.requests[index].year = buffer_read_i16(list);
     scenario.requests[index].resource = resource_remap(buffer_read_i16(list));
@@ -293,7 +293,7 @@ void scenario_request_load_state(buffer *list)
         &struct_size);
 
     for (int i = 0; i < array_size; i++) {
-        request_load(list, i, version);
+        request_load(list, i);
     }
 }
 

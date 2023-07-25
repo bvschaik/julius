@@ -21,12 +21,12 @@ typedef struct {
  * @param box Input box
  */
 void input_box_start(input_box *box);
-void input_box_pause(input_box *box);
-void input_box_resume(input_box *box);
-void input_box_stop(input_box *box);
+void input_box_pause(void);
+void input_box_resume(void);
+void input_box_stop(void);
 
-void input_box_refresh_text(input_box *box);
-int input_box_is_accepted(input_box *box);
+void input_box_refresh_text(void);
+int input_box_is_accepted(void);
 
 int input_box_handle_mouse(const mouse *m, const input_box *box);
 void input_box_draw(const input_box *box);

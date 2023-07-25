@@ -824,7 +824,7 @@ static uint8_t *read_frame_data(smacker s, int frame_id)
     return frame_data;
 }
 
-static void free_frame_data(const smacker s, uint8_t *frame_data)
+static void free_frame_data(uint8_t *frame_data)
 {
     free(frame_data);
 }
@@ -846,7 +846,7 @@ static smacker_frame_status decode_frame(smacker s)
     if (frame_type & 0x01) {
         int palette_size = frame_data[0] * 4;
         if (!decode_palette(s, &frame_data[1], palette_size - 1)) {
-            free_frame_data(s, frame_data);
+            free_frame_data(frame_data);
             return SMACKER_FRAME_ERROR;
         }
         data_index += palette_size;
@@ -861,11 +861,11 @@ static smacker_frame_status decode_frame(smacker s)
         }
     }
     if (!decode_video(s, &frame_data[data_index], s->frame_sizes[frame_id] - data_index)) {
-        free_frame_data(s, frame_data);
+        free_frame_data(frame_data);
         return SMACKER_FRAME_ERROR;
     }
 
-    free_frame_data(s, frame_data);
+    free_frame_data(frame_data);
     return SMACKER_FRAME_OK;
 }
 

@@ -1192,7 +1192,7 @@ void plm_read_audio_packet(plm_buffer_t *buffer, void *user) {
 
 void plm_read_packets(plm_t *self, int requested_type) {
 	plm_packet_t *packet;
-	while ((packet = plm_demux_decode(self->demux))) {
+	while ((packet = plm_demux_decode(self->demux)) != 0) {
 		if (packet->type == self->video_packet_type) {
 			plm_buffer_write(self->video_buffer, packet->data, packet->length);
 		}
@@ -1294,7 +1294,7 @@ int plm_seek(plm_t *self, double time, int seek_exact) {
 	plm_audio_rewind(self->audio_decoder);
 
 	plm_packet_t *packet = NULL;
-	while ((packet = plm_demux_decode(self->demux))) {
+	while ((packet = plm_demux_decode(self->demux)) != 0) {
 		if (packet->type == self->video_packet_type) {
 			plm_buffer_write(self->video_buffer, packet->data, packet->length);
 		}
@@ -1878,7 +1878,7 @@ double plm_demux_get_duration(plm_demux_t *self, int type) {
 
 		double last_pts = PLM_PACKET_INVALID_TS;
 		plm_packet_t *packet = NULL;
-		while ((packet = plm_demux_decode(self))) {
+		while ((packet = plm_demux_decode(self)) != 0) {
 			if (packet->pts != PLM_PACKET_INVALID_TS && packet->type == type) {
 				last_pts = packet->pts;
 			}

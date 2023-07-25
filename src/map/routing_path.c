@@ -86,7 +86,7 @@ static int next_is_better(
     return 0;
 }
 
-int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst_y, int num_directions)
+int map_routing_get_path(uint8_t *path, int dst_x, int dst_y, int num_directions)
 {
     int dst_grid_offset = map_grid_offset(dst_x, dst_y);
     int distance = map_routing_distance(dst_grid_offset);
@@ -111,7 +111,8 @@ int map_routing_get_path(uint8_t *path, int src_x, int src_y, int dst_x, int dst
                 int next_offset = grid_offset + map_grid_direction_delta(next_direction);
                 int next_distance = map_routing_distance(next_offset);
                 int next_is_highway = map_terrain_is(next_offset, TERRAIN_HIGHWAY);
-                if (next_distance && next_is_better(base_distance, distance, next_distance, direction, next_direction, is_highway, next_is_highway)) {
+                if (next_distance && next_is_better(base_distance, distance, next_distance,
+                        direction, next_direction, is_highway, next_is_highway)) {
                     distance = next_distance;
                     direction = next_direction;
                     is_highway = next_is_highway;

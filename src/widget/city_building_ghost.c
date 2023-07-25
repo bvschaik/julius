@@ -308,8 +308,7 @@ static int get_building_image_id(int map_x, int map_y, building_type type, const
     return image_id;
 }
 
-static int get_new_building_image_id(int map_x, int map_y, int grid_offset,
-    building_type type, const building_properties *props)
+static int get_new_building_image_id(int grid_offset, building_type type)
 {
     data.ghost_building.type = type;
     data.ghost_building.grid_offset = grid_offset;
@@ -463,7 +462,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
         }
     }
     if (type >= BUILDING_ROADBLOCK || type == BUILDING_LIBRARY || type == BUILDING_SMALL_STATUE || type == BUILDING_MEDIUM_STATUE) {
-        image_id = get_new_building_image_id(tile->x, tile->y, grid_offset, type, props);
+        image_id = get_new_building_image_id(grid_offset, type);
         draw_regular_building(type, image_id, x_view, y_view, grid_offset, num_tiles, blocked_tiles);
     } else {
         image_id = get_building_image_id(tile->x, tile->y, type, props);
@@ -551,7 +550,9 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     data.reservoir_range.blocked = blocked;
     color_t color = blocked ? COLOR_MASK_BUILDING_GHOST_RED : COLOR_MASK_BUILDING_GHOST;
     int draw_later = 0;
-    int x_start, y_start, offset;
+    int x_start = 0;
+    int y_start = 0;
+    int offset = 0;
     int has_water = map_terrain_exists_tile_in_area_with_type(map_x - 1, map_y - 1, 5, TERRAIN_WATER) ||
         map_water_supply_has_aqueduct_access(map_grid_offset(map_x, map_y));
     int orientation_index = city_view_orientation() / 2;
@@ -897,8 +898,7 @@ static void draw_fort(const map_tile *tile, int x, int y)
 
     color_t color_mask = blocked ? COLOR_MASK_BUILDING_GHOST_RED : COLOR_MASK_BUILDING_GHOST;
 
-    const building_properties *props = building_properties_for_type(BUILDING_FORT);
-    int image_id = get_new_building_image_id(tile->x, tile->y, tile->grid_offset, BUILDING_FORT, props);
+    int image_id = get_new_building_image_id(tile->grid_offset, BUILDING_FORT);
     int image_id_grounds = image_group(GROUP_BUILDING_FORT) + 1;
     if (orientation_index == 0 || orientation_index == 3) {
         // draw fort first, then ground
@@ -1150,7 +1150,7 @@ static void draw_highway(const map_tile *tile, int x, int y)
         }
     }
 
-    int image_id = get_new_building_image_id(tile->x, tile->y, grid_offset, BUILDING_HIGHWAY, props);
+    int image_id = get_new_building_image_id(grid_offset, BUILDING_HIGHWAY);
     draw_regular_building(BUILDING_HIGHWAY, image_id, x, y, grid_offset, num_tiles, blocked_tiles);
 }
 
@@ -1170,7 +1170,7 @@ static void draw_grand_temple_neptune(const map_tile *tile, int x, int y)
     // need to add 2 for the bonus the Neptune GT will add
     int radius = map_water_supply_reservoir_radius() + 2;
     city_view_foreach_tile_in_range(tile->grid_offset, props->size, radius, draw_grand_temple_neptune_range);
-    int image_id = get_new_building_image_id(tile->x, tile->y, tile->grid_offset, BUILDING_GRAND_TEMPLE_NEPTUNE, props);
+    int image_id = get_new_building_image_id(tile->grid_offset, BUILDING_GRAND_TEMPLE_NEPTUNE);
     draw_regular_building(BUILDING_GRAND_TEMPLE_NEPTUNE, image_id, x, y, tile->grid_offset, num_tiles, blocked);
     set_roamer_path(BUILDING_GRAND_TEMPLE_NEPTUNE, props->size, tile, has_blocked_tiles(num_tiles, blocked));
 }

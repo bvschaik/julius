@@ -56,9 +56,7 @@ int building_warehouse_amount_can_get_from(building *destination, int resource);
 
 int building_warehouse_for_getting(building *src, int resource, map_point *dst);
 
-int building_warehouse_with_resource(int src_building_id, int x, int y, int resource,
-    int distance_from_entry, int road_network_id, int* understaffed,
-    map_point* dst);
+int building_warehouse_with_resource(int x, int y, int resource, int road_network_id, int* understaffed, map_point* dst);
 
 int building_warehouse_determine_worker_task(building *warehouse, int *resource);
 

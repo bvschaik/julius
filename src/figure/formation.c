@@ -59,7 +59,7 @@ void formation_clear(int formation_id)
     array_trim(formations);
 }
 
-formation *formation_create_legion(int building_id, int x, int y, figure_type type)
+formation *formation_create_legion(int building_id, figure_type type)
 {
     formation *m;
     array_new_item(formations, 1, m);

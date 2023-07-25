@@ -19,11 +19,11 @@
 #include "translation/translation.h"
 #include "window/building_info.h"
 
-static void order_set_source(int index, int param2);
-static void order_set_destination(int index, int param2);
-static void order_set_resource(int index, int param2);
-static void order_set_condition_type(int index, int param2);
-static void order_set_condition_threshold(int index, int param2);
+static void order_set_source(int param1, int param2);
+static void order_set_destination(int param1, int param2);
+static void order_set_resource(int param1, int param2);
+static void order_set_condition_type(int param1, int param2);
+static void order_set_condition_threshold(int param1, int param2);
 static void set_order_resource(int depot_building_id, int resource_id);
 static void set_camera_position(int building_id, int param2);
 
@@ -125,7 +125,7 @@ static generic_button depot_order_buttons[] = {
     {384, 82, 32, 22, set_camera_position, button_none, 0, 0},
 };
 
-static void setup_buttons_for_selected_depot(building_info_context *c)
+static void setup_buttons_for_selected_depot(void)
 {
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         depot_select_storage_buttons[i].parameter1 = data.depot_building_id;
@@ -229,7 +229,7 @@ static void on_scroll(void)
 
 void window_building_draw_depot(building_info_context *c)
 {
-    setup_buttons_for_selected_depot(c);
+    setup_buttons_for_selected_depot();
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 138);
@@ -353,33 +353,33 @@ int window_building_handle_mouse_depot(const mouse *m, building_info_context *c)
         depot_order_buttons, 7, &data.focus_button_id);
 }
 
-static void order_set_source(int index, int param2)
+static void order_set_source(int param1, int param2)
 {
     if (data.available_storages > 1) {
         window_building_info_depot_select_source();
     }
 }
 
-static void order_set_destination(int index, int param2)
+static void order_set_destination(int param1, int param2)
 {
     if (data.available_storages > 1) {
         window_building_info_depot_select_destination();
     }
 }
 
-static void order_set_condition_type(int index, int param2)
+static void order_set_condition_type(int param1, int param2)
 {
     window_building_info_depot_toggle_condition_type();
 }
 
-static void order_set_condition_threshold(int index, int param2)
+static void order_set_condition_threshold(int param1, int param2)
 {
     window_building_info_depot_toggle_condition_threshold();
 }
 
 void window_building_draw_depot_order_source_destination_background(building_info_context *c, int is_select_destination)
 {
-    setup_buttons_for_selected_depot(c);
+    setup_buttons_for_selected_depot();
 
     uint8_t *title = translation_for(TR_BUILDING_INFO_DEPOT_SELECT_SOURCE_TITLE);
     if (is_select_destination) {
@@ -499,7 +499,7 @@ int window_building_handle_mouse_depot_select_destination(const mouse *m, buildi
     return handle_mouse_depot_select_source_destination(m, c, 0);
 }
 
-static void order_set_resource(int index, int param2)
+static void order_set_resource(int param1, int param2)
 {
     window_building_info_depot_select_resource();
 }

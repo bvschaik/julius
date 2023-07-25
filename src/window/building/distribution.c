@@ -39,7 +39,7 @@ static void go_to_orders(int param1, int param2);
 static void toggle_resource_state(int index, int param2);
 static void toggle_partial_resource_state(int index, int param2);
 static void granary_orders(int index, int param2);
-static void dock_toggle_route(int route_id, int city_id);
+static void dock_toggle_route(int route_id, int param2);
 static void warehouse_orders(int index, int param2);
 static void market_orders(int index, int param2);
 static void storage_toggle_permissions(int index, int param2);
@@ -48,7 +48,7 @@ static void init_dock_permission_buttons(void);
 static void draw_dock_permission_buttons(int x_offset, int y_offset, int dock_id);
 static void on_scroll(void);
 
-static void button_caravanserai_policy(int selected_policy, int param2);
+static void button_caravanserai_policy(int param1, int param2);
 
 static generic_button go_to_orders_button[] = {
     {0, 0, 304, 20, go_to_orders, button_none, 0, 0}
@@ -1307,7 +1307,7 @@ static void button_stockpiling(int param1, int param2)
     window_invalidate();
 }
 
-static void dock_toggle_route(int route_id, int city_id)
+static void dock_toggle_route(int route_id, int param2)
 {
     int can_trade = building_dock_can_trade_with_route(route_id, data.building_id);
     building_dock_set_can_trade_with_route(route_id, data.building_id, !can_trade);
@@ -1425,7 +1425,7 @@ static void apply_policy(int selected_policy)
     city_finance_process_sundry(TRADE_POLICY_COST);
 }
 
-static void button_caravanserai_policy(int selected_policy, int param2)
+static void button_caravanserai_policy(int param1, int param2)
 {
     if (building_monument_working(BUILDING_CARAVANSERAI)) {
         window_option_popup_show(land_trade_policy.title, land_trade_policy.subtitle,

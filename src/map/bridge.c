@@ -88,7 +88,7 @@ int map_bridge_calculate_length_direction(int x, int y, int *length, int *direct
     return 0;
 }
 
-static int get_pillar_distance(int length)
+static int get_pillar_distance(void)
 {
     switch (bridge.length) {
         case  9:
@@ -111,7 +111,7 @@ static int get_pillar_distance(int length)
 int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_bridge)
 {
     if (is_ship_bridge) {
-        int pillar_distance = get_pillar_distance(length);
+        int pillar_distance = get_pillar_distance();
         if (index == 1 || index == length - 2) {
             // platform after ramp
             return 13;

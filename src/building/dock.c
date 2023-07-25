@@ -351,7 +351,7 @@ int building_dock_get_closer_free_destination(int ship_id, ship_dock_request_typ
 
         int distance_to_dock = figure_trader_ship_get_distance_to_dock(ship, dock->id);
         if (distance_to_dock > MAX_DISTANCE_FOR_REROUTING ||
-            (figure_trader_ship_other_ship_closer_to_dock(ship_id, dock->id, distance_to_dock))) {
+            (figure_trader_ship_other_ship_closer_to_dock(dock->id, distance_to_dock))) {
             continue;
         }
 

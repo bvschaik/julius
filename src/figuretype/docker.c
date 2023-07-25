@@ -191,7 +191,7 @@ static int get_closest_building_for_import(int x, int y, int city_id, building *
             if (is_invalid_destination(b, dock) ||
                 building_storage_get(b->storage_id)->empty_all ||
                 building_granary_is_not_accepting(resource, b) ||
-                building_granary_is_full(resource, b)) {
+                building_granary_is_full(b)) {
                 continue;
             }
             // always prefer granary

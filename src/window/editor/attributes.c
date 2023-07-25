@@ -88,7 +88,7 @@ static input_box scenario_description_input = {
 static void start(void)
 {
     if (data.is_paused) {
-        input_box_resume(&scenario_description_input);
+        input_box_resume();
     } else {
         string_copy(scenario_brief_description(), data.brief_description, BRIEF_DESC_LENGTH);
         input_box_start(&scenario_description_input);
@@ -98,9 +98,9 @@ static void start(void)
 static void stop(int paused)
 {
     if (paused) {
-        input_box_pause(&scenario_description_input);
+        input_box_pause();
     } else {
-        input_box_stop(&scenario_description_input);
+        input_box_stop();
     }
     data.is_paused = paused;
     scenario_editor_update_brief_description(data.brief_description);

@@ -22,9 +22,9 @@ typedef enum {
     G_ENDING
 } games_messages;
 
-static void naval_battle_start(int id);
-static void executions_start(int id);
-static void imperial_games_start(int id);
+static void naval_battle_start(void);
+static void executions_start(void);
+static void imperial_games_start(void);
 
 games_type ALL_GAMES[MAX_GAMES] = {
     {
@@ -86,7 +86,7 @@ static void begin_games(void)
     city_data.games.months_to_go = 0;
     city_data.games.games_is_active = 1;
     city_data.games.remaining_duration = game->duration_days;
-    game->games_start_function(city_data.games.selected_games_id);
+    game->games_start_function();
 
     post_games_message(G_STARTING);
 }
@@ -179,20 +179,20 @@ void city_games_remove_naval_battle_distant_battle_bonus(void)
     city_data.games.naval_battle_distant_battle_bonus = 0;
 }
 
-static void naval_battle_start(int id)
+static void naval_battle_start(void)
 {
     games_type *game = city_games_get_game_type(city_data.games.selected_games_id);
     city_data.games.naval_battle_bonus_months = game->bonus_duration;
     city_data.games.naval_battle_distant_battle_bonus = 1;
 }
 
-static void executions_start(int id)
+static void executions_start(void)
 {
     games_type *game = city_games_get_game_type(city_data.games.selected_games_id);
     city_data.games.executions_bonus_months = game->bonus_duration;
 }
 
-static void imperial_games_start(int id)
+static void imperial_games_start(void)
 {
     games_type *game = city_games_get_game_type(city_data.games.selected_games_id);
     city_data.games.imperial_games_bonus_months = game->bonus_duration;

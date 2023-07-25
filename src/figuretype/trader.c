@@ -142,7 +142,7 @@ int figure_trade_caravan_can_sell(figure *trader, int building_id, int city_id)
         for (int r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
             int resource = city_trade_next_caravan_import_resource();
             if (resource_is_food(resource) && !building_granary_is_not_accepting(resource, b) &&
-                !building_granary_is_full(resource, b) && empire_can_import_resource_from_city(city_id, resource)) {
+                !building_granary_is_full(b) && empire_can_import_resource_from_city(city_id, resource)) {
                 return 1;
             }
         }
@@ -401,7 +401,7 @@ static int get_closest_storage(const figure *f, int x, int y, int city_id, map_p
                 distance_penalty--;
             }
             if (!can_import || s->empty_all || !importable[resource] ||
-                building_granary_is_full(resource, b) || building_granary_is_not_accepting(resource, b) ||
+                building_granary_is_full(b) || building_granary_is_not_accepting(resource, b) ||
                 !empire_can_import_resource_from_city(city_id, resource)) {
                 continue;
             }
@@ -803,14 +803,15 @@ void figure_trade_ship_action(figure *f)
                 map_point tile;
                 int dock_id;
                 if (!f->destination_building_id &&
-                    (dock_id = building_dock_get_destination(f->id, 0, &tile))) {
+                    (dock_id = building_dock_get_destination(f->id, 0, &tile)) != 0) {
                     f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                     f->destination_building_id = dock_id;
                     f->destination_x = tile.x;
                     f->destination_y = tile.y;
                     figure_route_remove(f);
                 }
-                if ((dock_id = building_dock_get_closer_free_destination(f->id, SHIP_DOCK_REQUEST_2_FIRST_QUEUE, &tile))) {
+                if ((dock_id = building_dock_get_closer_free_destination(f->id,
+                        SHIP_DOCK_REQUEST_2_FIRST_QUEUE, &tile)) != 0) {
                     f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                     f->destination_building_id = dock_id;
                     f->destination_x = tile.x;
@@ -818,7 +819,7 @@ void figure_trade_ship_action(figure *f)
                     figure_route_remove(f);
                 } else if (!building_dock_is_working(f->destination_building_id) ||
                     !building_dock_accepts_ship(f->id, f->destination_building_id)) {
-                    if ((dock_id = building_dock_get_destination(f->id, 0, &tile))) {
+                    if ((dock_id = building_dock_get_destination(f->id, 0, &tile)) != 0) {
                         f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                         f->destination_building_id = dock_id;
                         f->destination_x = tile.x;
@@ -834,8 +835,9 @@ void figure_trade_ship_action(figure *f)
                 f->wait_ticks = 0;
                 map_point tile;
                 int dock_id;
-                if (!building_dock_is_working(f->destination_building_id) || !building_dock_accepts_ship(f->id, f->destination_building_id)) {
-                    if ((dock_id = building_dock_get_destination(f->id, f->destination_building_id, &tile))) {
+                if (!building_dock_is_working(f->destination_building_id) ||
+                    !building_dock_accepts_ship(f->id, f->destination_building_id)) {
+                    if ((dock_id = building_dock_get_destination(f->id, f->destination_building_id, &tile)) != 0) {
                         f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                         f->destination_building_id = dock_id;
                         f->destination_x = tile.x;
@@ -862,7 +864,7 @@ void figure_trade_ship_action(figure *f)
                     building *dock = building_get(f->destination_building_id);
                     dock->data.dock.trade_ship_id = f->id;
                 } else if (
-                    (dock_id = building_dock_get_closer_free_destination(f->id, SHIP_DOCK_REQUEST_1_DOCKING, &tile)) &&
+                    (dock_id = building_dock_get_closer_free_destination(f->id, SHIP_DOCK_REQUEST_1_DOCKING, &tile)) != 0 &&
                     building_dock_request_docking(f->id, dock_id, &tile)
                     ) {
                     f->action_state = FIGURE_ACTION_111_TRADE_SHIP_GOING_TO_DOCK;
@@ -871,7 +873,7 @@ void figure_trade_ship_action(figure *f)
                     f->destination_y = tile.y;
                     building *dock = building_get(f->destination_building_id);
                     dock->data.dock.trade_ship_id = f->id;
-                } else if ((dock_id = building_dock_reposition_anchored_ship(f->id, &tile))) {
+                } else if ((dock_id = building_dock_reposition_anchored_ship(f->id, &tile)) != 0) {
                     f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                     f->destination_building_id = dock_id;
                     f->destination_x = tile.x;
@@ -910,7 +912,7 @@ void figure_trade_ship_action(figure *f)
                 }
                 map_point tile;
                 int dock_id;
-                if ((dock_id = building_dock_get_destination(f->id, f->destination_building_id, &tile))) {
+                if ((dock_id = building_dock_get_destination(f->id, f->destination_building_id, &tile)) != 0) {
                     f->action_state = FIGURE_ACTION_113_TRADE_SHIP_GOING_TO_DOCK_QUEUE;
                     f->destination_building_id = dock_id;
                     f->destination_x = tile.x;
@@ -1062,7 +1064,7 @@ int figure_trader_ship_get_distance_to_dock(const figure *ship, int dock_id)
     return path_length;
 }
 
-int figure_trader_ship_other_ship_closer_to_dock(int ship_id, int dock_id, int distance)
+int figure_trader_ship_other_ship_closer_to_dock(int dock_id, int distance)
 {
     for (int route_id = 0; route_id < 20; route_id++) {
         if (is_sea_trade_route(route_id) && empire_city_is_trade_route_open(route_id)) {

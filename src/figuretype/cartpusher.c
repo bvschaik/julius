@@ -136,7 +136,7 @@ static void set_destination(figure *f, int action, int building_id, int x_dst, i
 
 static void determine_cartpusher_destination(figure *f, building *b, int road_network_id)
 {
-    map_point dst;
+    map_point dst = { 0, 0 };
     int understaffed_storages = 0;
 
     int dst_building_id = 0;
@@ -588,10 +588,9 @@ static void determine_warehouseman_destination(figure *f, int road_network_id, i
         }
         return;
     }
-    building *warehouse = building_get(f->building_id);
     // delivering resource
     // priority 1: weapons to barracks
-    dst_building_id = building_get_barracks_for_weapon(f->x,f->y,f->resource_id, road_network_id, warehouse->distance_from_entry, &dst);
+    dst_building_id = building_get_barracks_for_weapon(f->x,f->y,f->resource_id, road_network_id, &dst);
     if (dst_building_id) {
         set_destination(f, FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE, dst_building_id, dst.x, dst.y);
         if (remove_resources) {

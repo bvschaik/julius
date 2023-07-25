@@ -25,28 +25,28 @@ void input_box_start(input_box *box)
             box->height_blocks * BLOCK_SIZE);
 }
 
-void input_box_pause(input_box *box)
+void input_box_pause(void)
 {
     keyboard_pause_capture();
 }
 
-void input_box_resume(input_box *box)
+void input_box_resume(void)
 {
     keyboard_resume_capture();
 }
 
-void input_box_stop(input_box *box)
+void input_box_stop(void)
 {
     keyboard_stop_capture();
     system_keyboard_set_input_rect(0, 0, 0, 0);
 }
 
-void input_box_refresh_text(input_box *box)
+void input_box_refresh_text(void)
 {
     keyboard_refresh();
 }
 
-int input_box_is_accepted(input_box *box)
+int input_box_is_accepted(void)
 {
     return keyboard_input_is_accepted();
 }

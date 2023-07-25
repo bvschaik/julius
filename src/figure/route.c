@@ -132,14 +132,13 @@ void figure_route_add(figure *f)
         }
         if (can_travel) {
             if (f->terrain_usage == TERRAIN_USAGE_WALLS) {
-                path_length = map_routing_get_path(path->directions, f->x, f->y,
-                    f->destination_x, f->destination_y, 4);
+                path_length = map_routing_get_path(path->directions, f->destination_x, f->destination_y, 4);
                 if (path_length <= 0) {
-                    path_length = map_routing_get_path(path->directions, f->x, f->y,
+                    path_length = map_routing_get_path(path->directions,
                         f->destination_x, f->destination_y, direction_limit);
                 }
             } else {
-                path_length = map_routing_get_path(path->directions, f->x, f->y,
+                path_length = map_routing_get_path(path->directions,
                     f->destination_x, f->destination_y, direction_limit);
             }
         } else { // cannot travel

@@ -37,7 +37,7 @@ int figure_trader_ship_can_queue_for_export(figure *ship);
 
 int figure_trader_ship_get_distance_to_dock(const figure *ship, int dock_id);
 
-int figure_trader_ship_other_ship_closer_to_dock(int ship_id, int dock_id, int distance);
+int figure_trader_ship_other_ship_closer_to_dock(int dock_id, int distance);
 
 #define IMAGE_CAMEL 4922
 

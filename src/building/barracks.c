@@ -23,8 +23,7 @@ static int is_valid_destination(building *b, int road_network_id)
         b->resources[RESOURCE_WEAPONS] < MAX_WEAPONS_BARRACKS;
 }
 
-int building_get_barracks_for_weapon(int x, int y, int resource, int road_network_id,
-    int distance_from_entry, map_point *dst)
+int building_get_barracks_for_weapon(int x, int y, int resource, int road_network_id, map_point *dst)
 {
     if (resource != RESOURCE_WEAPONS) {
         return 0;

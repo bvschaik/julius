@@ -18,7 +18,7 @@ int formation_legion_create_for_fort(building *fort)
 {
     formation_calculate_legion_totals();
 
-    formation *m = formation_create_legion(fort->id, fort->x, fort->y, fort->subtype.fort_figure_type);
+    formation *m = formation_create_legion(fort->id, fort->subtype.fort_figure_type);
     if (!m->id) {
         return 0;
     }

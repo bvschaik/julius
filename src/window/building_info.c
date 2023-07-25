@@ -1084,7 +1084,7 @@ static void button_advisor(int advisor, int param2)
     window_advisors_show_advisor(advisor);
 }
 
-static void button_mothball(int mothball, int param2)
+static void button_mothball(int param1, int param2)
 {
     building *b = building_get(context.building_id);
     int workers_needed = model_get_building(b->type)->laborers;

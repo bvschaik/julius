@@ -19,7 +19,7 @@ typedef struct {
     int building_id_required;
     int water_access_required;
     int resource_cost[RESOURCE_MAX];
-    void (*games_start_function)(int id);
+    void (*games_start_function)(void);
 } games_type;
 
 int city_games_money_cost(int game_type_id);

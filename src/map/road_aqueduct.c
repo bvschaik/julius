@@ -216,7 +216,7 @@ static int aqueduct_placement_creates_corner_from_edge(int x, int y, int corner_
 
 // check to see if placing an aqueduct here would create a corner due to two adjacent tiles having aqueducts
 // note: this tile DOES need to be on a highway
-static int aqueduct_placement_creates_corner_from_center(int x, int y, int check_aqueduct_routing)
+static int aqueduct_placement_creates_corner_from_center(int x, int y)
 {
     if (is_aqueduct(x - 1, y, 0) && is_aqueduct(x, y - 1, 0)) {
         return 1;
@@ -270,7 +270,7 @@ int map_can_place_aqueduct_on_highway(int grid_offset, int check_aqueduct_routin
         return 1;
     }
 
-    if (aqueduct_placement_creates_corner_from_center(x, y, check_aqueduct_routing)) {
+    if (aqueduct_placement_creates_corner_from_center(x, y)) {
         return 0;
     } else if (aqueduct_highway_line(x, y, 1, 0, check_aqueduct_routing)) {
         return 0;
@@ -289,7 +289,7 @@ int map_can_place_highway_under_aqueduct(int grid_offset, int check_highway_rout
 
     int x = map_grid_offset_to_x(grid_offset);
     int y = map_grid_offset_to_y(grid_offset);
-    if (aqueduct_placement_creates_corner_from_center(x, y, 0)) {
+    if (aqueduct_placement_creates_corner_from_center(x, y)) {
         return 0;
     } else if (aqueduct_highway_line(x, y, 1, check_highway_routing, 0)) {
         return 0;

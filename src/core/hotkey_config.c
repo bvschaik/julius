@@ -277,7 +277,7 @@ static void load_file(void)
     }
     char line_buffer[MAX_LINE];
     char *line;
-    while ((line = fgets(line_buffer, MAX_LINE, fp))) {
+    while ((line = fgets(line_buffer, MAX_LINE, fp)) != 0) {
         // Remove newline from string
         size_t size = strlen(line);
         while (size > 0 && (line[size - 1] == '\n' || line[size - 1] == '\r')) {

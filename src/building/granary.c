@@ -80,7 +80,7 @@ int building_granary_is_not_accepting(int resource, building *b)
     return !(granary_is_accepting(resource, b) || building_granary_is_getting(resource, b));
 }
 
-int building_granary_is_full(int resource, building *b)
+int building_granary_is_full(building *b)
 {
     return b->resources[RESOURCE_NONE] <= 0;
 }

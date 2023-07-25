@@ -191,7 +191,6 @@ void map_grid_get_corner_tiles(int start_x, int start_y, int x, int y, int *c1x,
         *c1y = y - 1;
         *c2x = x;
         *c2y = y + 1;
-        return;
     } else {
         *c1x = x - 1;
         *c1y = y;

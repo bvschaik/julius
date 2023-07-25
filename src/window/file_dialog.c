@@ -372,7 +372,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     data.double_click = m->left.double_click;
 
-    if (input_box_is_accepted(&file_name_input)) {
+    if (input_box_is_accepted()) {
         button_ok_cancel(1, 0);
         return;
     }
@@ -395,7 +395,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
-        input_box_stop(&file_name_input);
+        input_box_stop();
         window_go_back();
         return;
     }
@@ -429,7 +429,7 @@ static char *get_chosen_filename(void)
 static void button_ok_cancel(int is_ok, int param2)
 {
     if (!is_ok) {
-        input_box_stop(&file_name_input);
+        input_box_stop();
         window_go_back();
         return;
     }
@@ -454,7 +454,7 @@ static void button_ok_cancel(int is_ok, int param2)
         if (data.type == FILE_TYPE_SAVED_GAME) {
             int result = game_file_load_saved_game(filename);
             if (result == 1) {
-                input_box_stop(&file_name_input);
+                input_box_stop();
                 window_city_show();
             } else if (result == 0) {
                 data.message_not_exist_start_time = time_get_millis();
@@ -466,7 +466,7 @@ static void button_ok_cancel(int is_ok, int param2)
             }
         } else if (data.type == FILE_TYPE_SCENARIO) {
             if (game_file_editor_load_scenario(filename)) {
-                input_box_stop(&file_name_input);
+                input_box_stop();
                 window_editor_map_show();
             } else {
                 data.message_not_exist_start_time = time_get_millis();
@@ -499,7 +499,7 @@ static void button_ok_cancel(int is_ok, int param2)
             }
         }
     } else if (data.dialog_type == FILE_DIALOG_SAVE) {
-        input_box_stop(&file_name_input);
+        input_box_stop();
         if (data.type == FILE_TYPE_SAVED_GAME) {
             if (!file_has_extension(filename, saved_game_data_expanded.extension)) {
                 file_append_extension(filename, saved_game_data_expanded.extension);
@@ -561,7 +561,7 @@ static void button_select_file(int index, int param2)
         strncpy(data.selected_file, data.file_list->files[scrollbar.scroll_position + index].name, FILE_NAME_MAX - 1);
         encoding_from_utf8(data.selected_file, data.typed_name, FILE_NAME_MAX);
         string_copy(data.typed_name, data.previously_seen_typed_name, FILE_NAME_MAX);
-        input_box_refresh_text(&file_name_input);
+        input_box_refresh_text();
         data.message_not_exist_start_time = 0;
         window_request_refresh();
     }

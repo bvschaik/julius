@@ -194,7 +194,7 @@ static int image_write_canvas(void)
     canvas = pixels;
     int current_height = image_set_loop_height_limits(0, screenshot.height);
     int size;
-    while ((size = image_request_rows())) {
+    while ((size = image_request_rows()) != 0) {
         if (!image_write_rows(canvas + current_height * screenshot.width, screenshot.width)) {
             free(pixels);
             return 0;
@@ -299,7 +299,7 @@ static void create_full_city_screenshot(void)
     city_view_set_viewport(canvas_width + (city_view_is_sidebar_collapsed() ? 42 : 162),
         IMAGE_HEIGHT_CHUNK + TOP_MENU_HEIGHT);
     int current_height = base_height;
-    while ((size = image_request_rows())) {
+    while ((size = image_request_rows()) != 0) {
         int y_offset = current_height + IMAGE_HEIGHT_CHUNK > max_height ?
             IMAGE_HEIGHT_CHUNK - (max_height - current_height) - TILE_Y_SIZE: 0;
         for (int width = 0; width < city_width_pixels; width += canvas_width) {

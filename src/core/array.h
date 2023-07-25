@@ -124,7 +124,7 @@ struct { \
  * @note You can use the array_index parameter to retrieve the index of the current item
  */
 #define array_foreach(a, item) \
-    for(int array_index = 0; array_index < (a).size && ((item) = array_item(a, array_index)); array_index++)
+    for(int array_index = 0; array_index < (a).size && ((item) = array_item(a, array_index)) != 0; array_index++)
 
 /**
  * Trims an array, removing its latest items that aren't being used until the first one is used.

@@ -248,7 +248,7 @@ static int is_cancel_construction_button(int x, int y)
     return x >= x_offset && x < x_offset + touch_width && y >= y_offset && y < y_offset + touch_height;
 }
 
-static int is_rotate_backward_button(int x, int y, int is_touch)
+static int is_rotate_backward_button(int x, int y)
 {
     int city_x, city_y, width, height;
     city_view_get_viewport(&city_x, &city_y, &width, &height);
@@ -260,7 +260,7 @@ static int is_rotate_backward_button(int x, int y, int is_touch)
         y >= y_offset && y < y_offset + 4 * BLOCK_SIZE;
 }
 
-static int is_rotate_forward_button(int x, int y, int is_touch)
+static int is_rotate_forward_button(int x, int y)
 {
     int city_x, city_y, width, height;
     city_view_get_viewport(&city_x, &city_y, &width, &height);
@@ -387,7 +387,7 @@ static int has_confirmed_construction(int ghost_offset, int tile_offset, int ran
 static int input_coords_in_city(int x, int y)
 {
     if (is_pause_button(x, y) || is_cancel_construction_button(x, y) ||
-        is_rotate_forward_button(x, y, 0) || is_rotate_backward_button(x, y, 0)) {
+        is_rotate_forward_button(x, y) || is_rotate_backward_button(x, y)) {
         return 0;
     }
     int x_offset, y_offset, width, height;
@@ -475,11 +475,11 @@ static int handle_construction_buttons(int x, int y, int is_touch)
     }
 
     if (building_construction_can_rotate()) {
-        if (is_rotate_backward_button(x, y , is_touch)) {
+        if (is_rotate_backward_button(x, y)) {
             building_rotation_rotate_backward();
             return 1;
         }
-        if (is_rotate_forward_button(x, y, is_touch)) {
+        if (is_rotate_forward_button(x, y)) {
             building_rotation_rotate_forward();
             return 1;
         }

@@ -1034,7 +1034,7 @@ static void apply_policy(int selected_policy)
     city_finance_process_sundry(TRADE_POLICY_COST);
 }
 
-static void button_lighthouse_policy(int selected_policy, int param2)
+static void button_lighthouse_policy(int param1, int param2)
 {
     if (building_monument_working(BUILDING_LIGHTHOUSE)) {
         window_option_popup_show(sea_trade_policy.title, sea_trade_policy.subtitle,

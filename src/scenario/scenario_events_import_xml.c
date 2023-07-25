@@ -359,8 +359,6 @@ static int xml_import_special_parse_future_city(xml_data_attribute_t *attr, int 
         xml_import_log_error("Could not find city");
         return 0;
     }
-
-    return 0;
 }
 
 static int xml_import_special_parse_resource(xml_data_attribute_t *attr, int *target)
@@ -410,8 +408,6 @@ static int xml_import_special_parse_route(xml_data_attribute_t *attr, int *targe
         xml_import_log_error("Could not find city");
         return 0;
     }
-
-    return 0;
 }
 
 static int xml_import_special_parse_limited_number(xml_data_attribute_t *attr, int *target)

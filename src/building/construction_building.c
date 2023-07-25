@@ -139,8 +139,7 @@ static void add_depot(building *b)
     add_building(b);
 }
 
-static void add_to_map(int type, building *b, int size,
-    int orientation, int waterside_orientation_abs, int waterside_orientation_rel)
+static void add_to_map(int type, building *b, int size, int orientation, int waterside_orientation_abs)
 {
     if (building_variant_has_variants(b->type)) {
         b->variant = building_rotation_get_rotation_with_limit(building_variant_get_number_of_variants(b->type));
@@ -465,6 +464,6 @@ int building_construction_place_building(building_type type, int x, int y)
     if (b->id <= 0) {
         return 0;
     }
-    add_to_map(type, b, size, building_orientation, waterside_orientation_abs, waterside_orientation_rel);
+    add_to_map(type, b, size, building_orientation, waterside_orientation_abs);
     return 1;
 }

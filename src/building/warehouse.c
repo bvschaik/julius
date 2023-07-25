@@ -514,9 +514,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
     }
 }
 
-int building_warehouse_with_resource(int src_building_id, int x, int y, int resource,
-    int distance_from_entry, int road_network_id, int *understaffed,
-    map_point *dst)
+int building_warehouse_with_resource(int x, int y, int resource, int road_network_id, int *understaffed, map_point *dst)
 {
     int min_dist = INFINITE;
     building *min_building = 0;
@@ -686,7 +684,8 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     // deliver weapons to barracks
     if ((building_count_active(BUILDING_BARRACKS) || building_count_active(BUILDING_GRAND_TEMPLE_MARS)) &&
         !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
-        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x, warehouse->y, RESOURCE_WEAPONS, warehouse->road_network_id, warehouse->distance_from_entry, 0));
+        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x, warehouse->y, RESOURCE_WEAPONS,
+            warehouse->road_network_id, 0));
         if (barracks->resources[RESOURCE_WEAPONS] < MAX_WEAPONS_BARRACKS &&
             warehouse->road_network_id == barracks->road_network_id) {
             space = warehouse;

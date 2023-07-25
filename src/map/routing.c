@@ -326,7 +326,7 @@ static int callback_calc_distance_build_wall(int next_offset, int dist, int dire
     return 1;
 }
 
-static int can_build_highway(int next_offset, int dist, int check_highway_routing)
+static int can_build_highway(int next_offset, int check_highway_routing)
 {
     int size = 2;
     for (int x = 0; x < size; x++) {
@@ -346,7 +346,7 @@ static int can_build_highway(int next_offset, int dist, int check_highway_routin
 
 static int callback_calc_distance_build_highway(int next_offset, int dist, int direction)
 {
-    if (can_build_highway(next_offset, dist, 1)) {
+    if (can_build_highway(next_offset, 1)) {
         enqueue(next_offset, dist);
     }
     return 1;
@@ -458,7 +458,7 @@ int map_routing_calculate_distances_for_building(routed_building_type type, int 
     clear_data();
 
     if (type == ROUTED_BUILDING_HIGHWAY) {
-        if (!can_build_highway(source_offset, 1, 0)) {
+        if (!can_build_highway(source_offset, 0)) {
             return 0;
         }
         route_queue_all_from(source_offset, DIRECTIONS_NO_DIAGONALS, callback_calc_distance_build_highway, 0);

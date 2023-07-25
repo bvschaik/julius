@@ -85,7 +85,7 @@ static int get_storage_road_access(building *b, map_point *point)
     }
 }
 
-static int is_order_condition_satisfied(const building *depot, const order *current_order)
+static int is_order_condition_satisfied(const order *current_order)
 {
     if (!current_order->src_storage_id || !current_order->dst_storage_id || !current_order->resource_type) {
         return 0;
@@ -250,7 +250,7 @@ void figure_depot_cartpusher_action(figure *f)
                 f->state = FIGURE_STATE_DEAD;
             }
 
-            if (is_order_condition_satisfied(b, &b->data.depot.current_order)) {
+            if (is_order_condition_satisfied(&b->data.depot.current_order)) {
                 building *src = building_get(b->data.depot.current_order.src_storage_id);
                 map_point road_access;
                 get_storage_road_access(src, &road_access);

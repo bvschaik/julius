@@ -7,7 +7,7 @@
 
 static const building_type PLAGUE_BUILDINGS[] = { BUILDING_DOCK, BUILDING_WAREHOUSE, BUILDING_GRANARY };
 
-static const building DUMMY_BUILDING;
+static const building DUMMY_BUILDING = { 0 };
 
 static const building *get_first_working_building(building_type type)
 {

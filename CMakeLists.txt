@@ -800,7 +800,8 @@ endif()
 
 if(MSVC)
     add_compile_definitions(_CRT_SECURE_NO_WARNINGS)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
+    string(REGEX REPLACE "/W3" "/W4" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8 /wd4100 /wd4244 /wd4131")
 endif()
 
 # Show debug info on crash on 32 bit builds compiled with MinGW

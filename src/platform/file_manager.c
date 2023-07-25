@@ -301,7 +301,7 @@ int platform_file_manager_list_directory_contents(
     int match = LIST_NO_MATCH;
     fs_dir_entry *entry;
     struct stat file_info;
-    while ((entry = fs_dir_read(d))) {
+    while ((entry = fs_dir_read(d)) != 0) {
         const char *name = dir_entry_name(entry);
         if (stat(name, &file_info) != -1) {
             int m = file_info.st_mode;

@@ -90,7 +90,7 @@ static int default_values[CONFIG_MAX_ENTRIES] = {
     [CONFIG_GP_CH_MAX_GRAND_TEMPLES] = 2
 };
 
-static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
+static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX] = { 0 };
 
 int config_get(config_key key)
 {
@@ -144,7 +144,7 @@ void config_load(void)
     }
     char line_buffer[MAX_LINE];
     char *line;
-    while ((line = fgets(line_buffer, MAX_LINE, fp))) {
+    while ((line = fgets(line_buffer, MAX_LINE, fp)) != 0) {
         // Remove newline from string
         size_t size = strlen(line);
         while (size > 0 && (line[size - 1] == '\n' || line[size - 1] == '\r')) {

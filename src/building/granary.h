@@ -35,7 +35,7 @@ int building_granary_remove_for_getting_deliveryman(building *src, building *dst
 
 int building_granary_is_not_accepting(int resource, building* b);
 
-int building_granary_is_full(int resource, building *b);
+int building_granary_is_full(building *b);
 
 int building_granary_resource_amount(int resource, building *b);
 

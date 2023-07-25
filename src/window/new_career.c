@@ -66,7 +66,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         image_buttons_handle_mouse(m_dialog, 159, 249, image_buttons, 2, 0)) {
         return;
     }
-    if (input_box_is_accepted(&player_name_input)) {
+    if (input_box_is_accepted()) {
         start_mission(0, 0);
         return;
     }
@@ -77,13 +77,13 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void button_back(int param1, int param2)
 {
-    input_box_stop(&player_name_input);
+    input_box_stop();
     window_go_back();
 }
 
 static void start_mission(int param1, int param2)
 {
-    input_box_stop(&player_name_input);
+    input_box_stop();
     setting_set_player_name(player_name);
     window_mission_selection_show();
 }
