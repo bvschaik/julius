@@ -32,7 +32,7 @@ static int start_delayed(const touch *t)
 
 const touch *touch_get_earliest(void)
 {
-    time_millis timestamp = 0;
+    time_millis timestamp = -1;
     int touch_index = MAX_ACTIVE_TOUCHES;
     for (int i = 0; i < MAX_ACTIVE_TOUCHES; ++i) {
         if (data.finger[i].in_use && !start_delayed(&data.finger[i]) && data.finger[i].start_time < timestamp) {
