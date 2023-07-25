@@ -85,12 +85,6 @@ static void set_scale_percentage(int new_scale, int pixel_width, int pixel_heigh
         scale_logical_to_pixels(MINIMUM.WIDTH), scale_logical_to_pixels(MINIMUM.HEIGHT));
 }
 
-int platform_screen_get_scale(void)
-{
-    return scale.percentage;
-}
-
-
 #if !defined(_WIN32) && !defined(__APPLE__)
 static void set_window_icon(void)
 {
@@ -174,7 +168,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
 #endif
     set_scale_percentage(display_scale_percentage, width, height);
     return platform_screen_resize(width, height, 1);
-}
+    }
 
 void platform_screen_destroy(void)
 {
