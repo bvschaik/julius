@@ -52,7 +52,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH}" "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(CMAKE_C_STANDARD 99)
 
-if (CMAKE_COMPILER_IS_GNUCC)
+if(CMAKE_COMPILER_IS_GNUCC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -Wno-unused-parameter -Wno-missing-field-initializers -Wno-sign-compare -Werror=implicit-function-declaration")
     if(CMAKE_C_COMPILER_VERSION VERSION_GREATER 5.0)
         set(CMAKE_C_FLAGS "-Werror=incompatible-pointer-types -Werror=int-conversion -Wstrict-prototypes ${CMAKE_C_FLAGS}")
@@ -883,10 +883,10 @@ if(APPLE)
 endif()
 
 if(SDL2_INCLUDE_DIR)
-    include_directories(${SDL2_INCLUDE_DIR})
+    include_directories(SYSTEM ${SDL2_INCLUDE_DIR})
 endif()
 if(SDL2_MIXER_INCLUDE_DIR)
-    include_directories(${SDL2_MIXER_INCLUDE_DIR})
+    include_directories(SYSTEM ${SDL2_MIXER_INCLUDE_DIR})
 endif()
 
 if(SYSTEM_LIBS)
@@ -904,7 +904,7 @@ else()
 endif()
 
 if(PNG_FOUND)
-    include_directories(${PNG_INCLUDE_DIRS})
+    include_directories(SYSTEM ${PNG_INCLUDE_DIRS})
     target_link_libraries(${SHORT_NAME} ${PNG_LIBRARIES})
 else()
     if(SYSTEM_LIBS)
@@ -926,12 +926,12 @@ else()
 endif()
 
 if(${TARGET_PLATFORM} STREQUAL "vita")
-    include_directories(
+    include_directories(SYSTEM
         $ENV{VITASDK}/arm-vita-eabi/include
         ${CMAKE_CURRENT_SOURCE_DIR}
     )
 elseif (${TARGET_PLATFORM} STREQUAL "switch")
-    include_directories(
+    include_directories(SYSTEM
         ${DEVKITPRO}/portlibs/switch/include/SDL2
         ${DEVKITPRO}/libnx/include
         ${DEVKITPRO}/portlibs/switch/include
@@ -939,10 +939,10 @@ elseif (${TARGET_PLATFORM} STREQUAL "switch")
     )
 endif()
 
-include_directories(ext)
+include_directories(SYSTEM ext)
 include_directories(src)
 if(MSVC)
-    include_directories(ext/dirent)
+    include_directories(SYSTEM ext/dirent)
 endif()
 
 if(${TARGET_PLATFORM} STREQUAL "vita")

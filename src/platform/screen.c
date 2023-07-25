@@ -27,18 +27,18 @@ static struct {
     int x;
     int y;
     int centered;
-} window_pos = {0, 0, 1};
+} window_pos = { 0, 0, 1 };
 
 static struct {
     const int WIDTH;
     const int HEIGHT;
-} MINIMUM = {640, 480};
+} MINIMUM = { 640, 480 };
 
 static struct {
     int requested_percentage;
     int percentage;
     float screen_density;
-} scale = {100, 100, 1};
+} scale = { 100, 100, 1 };
 
 static int scale_logical_to_pixels(int logical_value)
 {
@@ -247,6 +247,11 @@ void platform_screen_move(int x, int y)
         window_pos.y = y;
         window_pos.centered = 0;
     }
+}
+
+int platform_screen_get_scale(void)
+{
+    return scale.percentage;
 }
 
 void platform_screen_set_fullscreen(void)

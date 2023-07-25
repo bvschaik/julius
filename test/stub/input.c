@@ -1,3 +1,4 @@
+#include "game/system.h"
 #include "input/hotkey.h"
 #include "input/keys.h"
 #include "input/mouse.h"

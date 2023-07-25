@@ -15,7 +15,7 @@
 #define MAX_TRACKS 7
 #define MAX_PALETTE 256
 
-// #define FLAG_RING 0x01 - UNUSED
+ // #define FLAG_RING 0x01 - not supported
 #define FLAG_Y_INTERLACE 0x02
 #define FLAG_Y_DOUBLE 0x04
 
@@ -27,7 +27,7 @@
 
 #define BLOCK_MONO 0
 #define BLOCK_FULL 1
-// #define BLOCK_VOID 2 - UNUSED
+// #define BLOCK_VOID 2 - not supported
 #define BLOCK_SOLID 3
 
 typedef struct {
@@ -735,9 +735,9 @@ static int decode_palette(smacker s, uint8_t *data, int length)
         } else {
             // Literal color
             new_palette[color_index] =
-                    (PALETTE_MAP[data[index] & 0x3f] << 16) |
-                    (PALETTE_MAP[data[index + 1] & 0x3f] << 8) |
-                    (PALETTE_MAP[data[index + 2] & 0x3f]);
+                (PALETTE_MAP[data[index] & 0x3f] << 16) |
+                (PALETTE_MAP[data[index + 1] & 0x3f] << 8) |
+                (PALETTE_MAP[data[index + 2] & 0x3f]);
             color_index++;
             index += 3;
         }

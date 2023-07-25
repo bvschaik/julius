@@ -32,7 +32,7 @@
 #define MAIN_DATA_SIZE 12100000
 #define ENEMY_DATA_SIZE 2400000
 #define CYRILLIC_FONT_DATA_SIZE 1500000
-#define TRAD_CHINESE_FONT_DATA_SIZE 7200000
+#define CHINESE_FONT_DATA_SIZE 7200000
 #define KOREAN_FONT_DATA_SIZE 7500000
 #define JAPANESE_FONT_DATA_SIZE 11000000
 
@@ -273,7 +273,7 @@ static void read_index_entry(buffer *buf, image *img, image_draw_data *draw_data
             img->animation->sprite_offset_y = buffer_read_i16(buf);
             buffer_skip(buf, 10);
             img->animation->can_reverse = buffer_read_i8(buf);
-            buffer_skip(buf, 1); 
+            buffer_skip(buf, 1);
         }
     } else {
         buffer_skip(buf, 18);
@@ -335,7 +335,7 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
     int num_images, atlas_type type)
 {
     if (image_packer_init(&data.packer, num_images + data.images_with_tops,
-            data.max_image_width, data.max_image_height) != IMAGE_PACKER_OK) {
+        data.max_image_width, data.max_image_height) != IMAGE_PACKER_OK) {
         return 0;
     }
     data.packer.options.fail_policy = IMAGE_PACKER_NEW_IMAGE;
@@ -420,9 +420,9 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
 static color_t to_32_bit(uint16_t c)
 {
     return ALPHA_OPAQUE |
-           ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) |
-           ((c & 0x3e0) << 6)  | ((c & 0x380) << 1) |
-           ((c & 0x1f) << 3)   | ((c & 0x1c) >> 2);
+        ((c & 0x7c00) << 9) | ((c & 0x7000) << 4) |
+        ((c & 0x3e0) << 6) | ((c & 0x380) << 1) |
+        ((c & 0x1f) << 3) | ((c & 0x1c) >> 2);
 }
 
 static void convert_uncompressed(buffer *buf, int width, int height, int x_offset, int y_offset,
@@ -712,7 +712,7 @@ static void free_font_memory(void)
 static int alloc_font_memory(int font_entries)
 {
     free_font_memory();
-    data.font = (image*) malloc(font_entries * sizeof(image));
+    data.font = (image *) malloc(font_entries * sizeof(image));
     if (!data.font) {
         return 0;
     }
@@ -957,7 +957,7 @@ static int load_multibyte_font(multibyte_font_type type)
     data.packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
 
     multibyte_font_sizes *font_sizes;
-    int (*parse_multibyte_font)(buffer *input, color_t *pixels, multibyte_font_sizes *font_size,
+    int (*parse_multibyte_font)(buffer * input, color_t * pixels, multibyte_font_sizes * font_size,
         int letter_spacing, int num_chars, int num_half_width, int offset);
     if (file_version == 2) {
         font_sizes = font_info->sizes.v2;

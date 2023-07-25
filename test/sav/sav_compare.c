@@ -1,3 +1,5 @@
+#include "sav_compare.h"
+
 #include "../src/core/zip.h"
 #include "../src/figure/type.h"
 #include "../src/map/grid.h"
@@ -5,7 +7,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SAVEGAME_PARTS 300
 #define COMPRESS_BUFFER_SIZE 600000
 #define UNCOMPRESSED 0x80000000
 

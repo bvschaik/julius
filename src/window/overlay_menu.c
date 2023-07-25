@@ -104,9 +104,9 @@ static void draw_foreground(void)
         int overlay = MENU_ID_TO_OVERLAY[i];
         int translation = get_overlay_translation(overlay);
         if (translation) {
-            text_draw_centered(translation_for(translation), x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN, 0);
+            text_draw_centered(translation_for(translation), x_offset - 170, 78 + 24 * i, 160, FONT_NORMAL_GREEN, 0);
         } else {
-            lang_text_draw_centered(14, MENU_ID_TO_OVERLAY[i], x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(14, MENU_ID_TO_OVERLAY[i], x_offset - 170, 78 + 24 * i, 160, FONT_NORMAL_GREEN);
         }
     }
     if (data.selected_submenu > 0) {
@@ -120,9 +120,9 @@ static void draw_foreground(void)
                 10, data.submenu_focus_button_id == i + 1 ? 1 : 2);
 
             if (translation) {
-                text_draw_centered(translation_for(translation), x_offset - 348, 77 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_GREEN, 0);
+                text_draw_centered(translation_for(translation), x_offset - 348, 78 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_GREEN, 0);
             } else {
-                lang_text_draw_centered(14, overlay, x_offset - 348, 77 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_GREEN);
+                lang_text_draw_centered(14, overlay, x_offset - 348, 78 + 24 * (i + data.selected_menu), 160, FONT_NORMAL_GREEN);
             }
         }
     }
