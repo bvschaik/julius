@@ -82,7 +82,7 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
 #if defined(_MSC_VER) && !defined(NDEBUG)
     OutputDebugStringA(log_text);
 #else
-    write_to_output(stdout, message);
+    write_to_output(stdout, log_text);
 #endif
 }
 
