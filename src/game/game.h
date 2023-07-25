@@ -13,6 +13,8 @@ void game_run(void);
 
 void game_draw(void);
 
+void game_display_fps(int fps);
+
 void game_exit_editor(void);
 
 void game_exit(void);

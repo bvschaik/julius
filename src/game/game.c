@@ -11,6 +11,7 @@
 #include "core/locale.h"
 #include "core/log.h"
 #include "core/random.h"
+#include "core/string.h"
 #include "editor/editor.h"
 #include "figure/type.h"
 #include "game/animation.h"
@@ -21,6 +22,8 @@
 #include "game/state.h"
 #include "game/tick.h"
 #include "graphics/font.h"
+#include "graphics/graphics.h"
+#include "graphics/text.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
@@ -190,6 +193,17 @@ void game_draw(void)
 {
     window_draw(0);
     sound_city_play();
+}
+
+void game_display_fps(int fps)
+{
+    int x_offset = 8;
+    int y_offset = 24;
+    int width = 24;
+    int height = 20;
+    graphics_draw_rect(x_offset, y_offset, width + 2, height + 2, COLOR_BLACK);
+    graphics_fill_rect(x_offset + 1, y_offset + 1, width, height, COLOR_WHITE);
+    text_draw_number_centered_colored(fps, x_offset, y_offset + 6, width, FONT_SMALL_PLAIN, COLOR_BLACK);
 }
 
 void game_exit(void)

@@ -13,10 +13,9 @@
 #include "graphics/window.h"
 #include "input/mouse.h"
 #include "input/touch.h"
+#include "platform/android/android.h"
 #include "platform/arguments.h"
-#ifndef NDEBUG
-#include "platform/debug.h"
-#endif
+#include "platform/emscripten/emscripten.h"
 #include "platform/file_manager.h"
 #include "platform/joystick.h"
 #include "platform/keyboard_input.h"
@@ -24,7 +23,9 @@
 #include "platform/prefs.h"
 #include "platform/renderer.h"
 #include "platform/screen.h"
+#include "platform/switch/switch.h"
 #include "platform/touch.h"
+#include "platform/vita/vita.h"
 #include "window/asset_previewer.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.h"
@@ -34,10 +35,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "platform/android/android.h"
-#include "platform/emscripten/emscripten.h"
-#include "platform/switch/switch.h"
-#include "platform/vita/vita.h"
+#ifdef _MSC_VER
+#include <Windows.h>
+#endif
 
 #if defined(USE_TINYFILEDIALOGS) || defined(__ANDROID__)
 #define SHOW_FOLDER_SELECT_DIALOG
@@ -56,25 +56,34 @@ enum {
 static struct {
     int active;
     int quit;
-} data = {1, 0};
+    struct {
+        int frame_count;
+        int last_fps;
+        Uint32 last_update_time;
+    } fps;
+} data = { 1 };
 
 static FILE *log_file = 0;
 
-static void write_to_output(FILE *output, const char *log_type, const char *message)
+static void write_to_output(FILE *output, const char *message)
 {
-    fwrite(log_type, sizeof(char), strlen(log_type), output);
     fwrite(message, sizeof(char), strlen(message), output);
-    fwrite("\n", sizeof(char), 1, output);
     fflush(output);
 }
 
 static void write_log(void *userdata, int category, SDL_LogPriority priority, const char *message)
 {
-    const char *log_type = priority == SDL_LOG_PRIORITY_ERROR ? "ERROR: " : "INFO: ";
+    char log_text[300] = { 0 };
+    snprintf(log_text, 300, "%s %s\n", priority == SDL_LOG_PRIORITY_ERROR ? "ERROR: " : "INFO: ", message);
     if (log_file) {
-        write_to_output(log_file, log_type, message);
+        write_to_output(log_file, log_text);
     }
-    write_to_output(stdout, log_type, message);
+    // On Windows MSVC, we can at least get output to the debug window
+#if defined(_MSC_VER) && !defined(NDEBUG)
+    OutputDebugStringA(log_text);
+#else
+    write_to_output(stdout, message);
+#endif
 }
 
 static void backup_log(void)
@@ -168,16 +177,25 @@ static void platform_per_frame_callback(void)
 
 static void run_and_draw(void)
 {
-#ifdef DRAW_FPS
-    debug_run_and_draw();
-#else
-    time_set_millis(SDL_GetTicks());
+    time_millis time_before_run = SDL_GetTicks();
+    time_set_millis(time_before_run);
 
     game_run();
     game_draw();
+    Uint32 time_after_draw = SDL_GetTicks();
+
+    data.fps.frame_count++;
+    if (time_after_draw - data.fps.last_update_time > 1000) {
+        data.fps.last_fps = data.fps.frame_count;
+        data.fps.last_update_time = time_after_draw;
+        data.fps.frame_count = 0;
+    }
+
+    if (config_get(CONFIG_UI_DISPLAY_FPS)) {
+        game_display_fps(data.fps.last_fps);
+    }
 
     platform_renderer_render();
-#endif
 }
 
 static void handle_mouse_button(SDL_MouseButtonEvent *event, int is_down)
@@ -472,7 +490,7 @@ static const char *ask_for_data_dir(int again)
     }
     return tinyfd_selectFolderDialog("Please select your Caesar 3 folder");
 #endif
-    }
+}
 #endif
 
 static int pre_init(const char *custom_data_dir)
@@ -594,7 +612,7 @@ static void setup(const augustus_args *args)
     system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
 
     time_set_millis(SDL_GetTicks());
-    
+
     int result = args->launch_asset_previewer ? window_asset_previewer_show() : game_init();
 
     if (!result) {

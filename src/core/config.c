@@ -43,6 +43,7 @@ static const char *ini_keys[] = {
     "ui_always_show_rotation_buttons",
     "ui_show_roaming_path",
     "ui_draw_cloud_shadows",
+    "ui_display_fps",
     "gameplay_change_max_grand_temples",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",
