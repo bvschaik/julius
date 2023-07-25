@@ -96,7 +96,12 @@ int png_get_image_size(const char *path, int *width, int *height)
 
 static int load_image(void)
 {
-    png_bytep row = 0;
+    png_bytep row = malloc(sizeof(png_byte) * data.last_png.width * BYTES_PER_PIXEL);
+    if (!row) {
+        log_error("Unable to load png file. Out of memory", 0, 0);
+        unload_png();
+        return 0;
+    };
     if (setjmp(png_jmpbuf(data.png_ptr))) {
         log_error("Unable to read png file", 0, 0);
         free(row);
@@ -112,12 +117,6 @@ static int load_image(void)
     }
     png_read_update_info(data.png_ptr, data.info_ptr);
 
-    row = malloc(sizeof(png_byte) * data.last_png.width * BYTES_PER_PIXEL);
-    if (!row) {
-        log_error("Unable to load png file. Out of memory", 0, 0);
-        unload_png();
-        return 0;
-    }
     color_t *dst = data.last_png.pixels;
     if (data.last_png.buffer_size < data.last_png.width * data.last_png.height) {
         dst = realloc(data.last_png.pixels, sizeof(color_t) * data.last_png.width * data.last_png.height);
