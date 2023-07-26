@@ -19,6 +19,13 @@ static void new_entry(custom_media_t *obj, int position)
 
 void custom_media_clear(void)
 {
+    if (custom_media.size) {
+        custom_media_t *entry;
+        array_foreach(custom_media, entry) {
+            message_media_text_blob_mark_entry_as_unused(entry->filename);
+        }
+    }
+
     if (!array_init(custom_media, CUSTOM_MEDIA_ARRAY_SIZE_STEP, new_entry, entry_in_use) ||
         !array_next(custom_media)) {
         log_error("Unable to allocate enough memory for the custom media array. The game will now crash.", 0, 0);
@@ -87,3 +94,14 @@ void custom_media_load_state_entry(buffer *buf, custom_media_t *entry, custom_me
     *link_id = entry->link_id;
 }
 
+int custom_media_relink_text_blob(int text_id, text_blob_string_t *new_text_link)
+{
+    custom_media_t *entry;
+    array_foreach(custom_media, entry) {
+        if (entry && entry->filename && entry->filename->id == text_id) {
+            entry->filename = new_text_link;
+            return 1;
+        }
+    }
+    return 0;
+}

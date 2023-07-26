@@ -56,6 +56,10 @@ int empire_city_get_for_trade_route(int route_id);
 
 int empire_city_is_trade_route_open(int route_id);
 
+int empire_city_get_trade_route_cost(int route_id);
+
+void empire_city_set_trade_route_cost(int route_id, int new_cost);
+
 void empire_city_reset_yearly_trade_amounts(void);
 
 int empire_city_count_wine_sources(void);

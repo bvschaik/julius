@@ -93,7 +93,7 @@ Here is a list of available conditions that can be used.
 
 ### Building active count
 + type = building_count_active
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 10000000.
 + building = Which type of building to cound.
   - Allowed values: A very big list. Refer to: (special_attribute_mappings_buildings)
@@ -111,7 +111,7 @@ Here is a list of available conditions that can be used.
 
 ### Building count (inactive or active)
 + type = building_count_any
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 10000000.
 + building = Which type of building to cound.
   - Allowed values: A very big list. Refer to: (special_attribute_mappings_buildings)
@@ -129,47 +129,56 @@ Here is a list of available conditions that can be used.
 
 ### Count own troops
 + type = count_own_troops
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 100.
 + in_city_only = Should it only count soldiers that are in the city? Allowed values: "false" or "true".
   - "false" will also count soldiers that are away on empire missions.
   - "true" will only count soldiers that are currently in the city.
 
 
+### Custom variable value
++ type = variable_check
+  - Note: To import custom variable names via the events file, use "<variable uid="Myvariablename" initial_value="0"/>" entries in the variables section at the top of the events file. You can have a maximum of 100 different custom variables.
++ variable_uid = The unique name (uid) of the custom variable to use.
+  - Allowed values: Any uid of any custom variable that you have imported / set up via the editor.
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
++ value = The amount to check for. Allowed values: -1000000000 to 1000000000.
+
+
 ### Favor
-+ type = favor
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ type = stats_favor
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 100.
 
 
 ### Funds: City coffers
 + type = money
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from -10000 to 1000000000.
 
 
 ### Funds: Personal savings
 + type = savings
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 1000000000.
 
 
 ### Game difficulty
 + type = difficulty
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The difficulty to check for. Allowed values: "very_easy","easy","normal","hard","very_hard"
 
 
 ### Months passed
 + type = time
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + min = The minimum amount of months to use for the check. Allowed values: Any number of 0 or more.
 + max = The maximum amount of months to use for the check. Allowed values: Any number of "min" or more.
 
 
 ### Population: City totals
 + type = city_population
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 10000000.
 + class = Which class of pops to count. Allowed values: "all", "patrician", "plebeian", "slums"
   - "all" = Total city population is counted.
@@ -183,7 +192,7 @@ Here is a list of available conditions that can be used.
 + percentage = Should the check do a percentage check? Allowed values: "false" or "true".
   - "false" will compare total unemployed people to value given.
   - "true" will compare % (0 to 100) of unemployed people as % of total population to value given.
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 100.
 
 
@@ -197,46 +206,62 @@ Here is a list of available conditions that can be used.
 
 ### Rome Wages
 + type = rome_wages
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 10000.
 
 
 ### Stats: City Health
 + type = stats_health
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 100.
 
 
 ### Stats: Culture
 + type = stats_culture
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 100.
 
 
 ### Stats: Favor
 + type = stats_favor
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 100.
 
 
 ### Stats: Peace
 + type = stats_peace
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 100.
 
 
 ### Stats: Prosperity
 + type = stats_prosperity
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 100.
 
 
 ### Trade good sell price
 + type = trade_sell_price
 + resource = What resource to use. Allowed values: (Any resource name) "wheat", "timber", "marble", etc.
-+ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte".
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
   - Note: This checks the unadjusted trade price of the target resource. i.e. no caravserai or lighthouse discounts or penalties taken into account.
 + value = The amount to check for. Allowed values: Any number from 0 to 1000000000.
+
+
+### Trade route is open
++ type = trade_route_open
++ target_city = The name of the city that you want to adjust the route of.
++ check_for_open = Should this condition pass if the trade route is open? Allowed values: "false" or "true".
+  - "false" this condition will pass if the route has not yet been opened, or cannot be opened.
+  - "true" this condition will pass if the route is open.
+
+
+### Trade route opening price
++ type = trade_route_price
++ target_city = The name of the city that you want to adjust the route of.
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
++ value = The amount to check for. Allowed values: Any number from 0 to 1000000000.
+  - Note: A trade route that is already open is considered to have a price of 0.
 
 
 
@@ -264,6 +289,17 @@ Here is a list of available conditions that can be used.
   - "true" = Building type is enable and avaiable for construction.
 
 
+### Change custom variable
++ type = change_variable
+  - Note: To import custom variable names via the events file, use "<variable uid="Myvariablename" initial_value="0"/>" entries in the variables section at the top of the events file. You can have a maximum of 100 different custom variables.
++ variable_uid = The unique name (uid) of the custom variable to use.
+  - Allowed values: Any uid of any custom variable that you have imported / set up via the editor.
++ value = The value to change the custom variable by (or set its value to if set_to_value = true). Allowed values: -1000000000 to 1000000000.
++ set_to_value = Should we set the city health to the given value, instead of adding it? Allowed values: "false" or "true".
+  - "true" = The custom variable value will be set to what is given in 'value'.
+  - "false" = The 'value' will be added to the custom variable value.
+
+
 ### City health
 + type = city_health
 + min = The minimum amount to adjust the city health by. Allowed values: -100 to 100.
@@ -286,7 +322,7 @@ Here is a list of available conditions that can be used.
 
 
 ### Favour adjustment
-+ type = favor
++ type = favor_add
 + amount = The amount to adjust favour by. Allowed values: -100 to 100
 
 
@@ -298,7 +334,7 @@ Here is a list of available conditions that can be used.
 
 
 ### Money
-+ type = money
++ type = money_add
 + min = The minimum amount to adjust money by. Allowed values: -10000000 to 10000000. (Negative values remove money.)
 + max = The maximum amount to adjust money by. Allowed values: -10000000 to 10000000. Must be larger than or equal to 'min'.
 
@@ -339,7 +375,7 @@ Here is a list of available conditions that can be used.
 
 
 ### Savings
-+ type = savings
++ type = savings_add
 + min = The minimum amount to adjust savings by. Allowed values: -10000000 to 10000000. (Negative values remove savings.)
 + max = The maximum amount to adjust savings by. Allowed values: -10000000 to 10000000. Must be larger than or equal to 'min'.
 
@@ -381,6 +417,23 @@ Here is a list of available conditions that can be used.
 + show_message = Should we show the normal 'price changed' message? Allowed values: "false" or "true"
   - "false" = No message is shown.
   - "true" = The standard 'price has changed' message is shown.
+
+
+### Trade route change opening price
++ type = change_trade_route_open_price
++ target_city = The name of the city that you want to adjust the route of.
+  - WARNING! If you change the empire map / cities after importing this, then it may not be pointing to the correct route anymore!
+  - The name of the city is only checked once at the point of import.
+  - If you change the empire map / cities, then re-import the scenario events afterwards.
++ amount = The amount to adjust the opening price by (or set it to if set_to_value = true). Allowed values: -1000000000 to 1000000000.
+  - Note: The final price will be set to 0 instead if it would result in a negative cost.
+  - Note: This does not close an already open route.
++ set_to_value = Should we set the city health to the given value, instead of adding it? Allowed values: "false" or "true".
+  - "true" = The price will be set to what is given in 'value'.
+  - "false" = The 'value' will be added to the opening price of the route.
++ show_message = Should we show the a 'route cost changed' message? Allowed values: "false" or "true"
+  - "false" = No message is shown.
+  - "true" = A 'route cost changed' message is shown. Displays city name and new opening price.
 
 
 ### Trade: Land trade problems

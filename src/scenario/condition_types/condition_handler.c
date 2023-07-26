@@ -25,6 +25,8 @@ int scenario_condition_type_is_met(scenario_condition_t *condition)
             return scenario_condition_type_city_population_met(condition);
         case CONDITION_TYPE_COUNT_OWN_TROOPS:
             return scenario_condition_type_count_own_troops_met(condition);
+        case CONDITION_TYPE_CUSTOM_VARIABLE_CHECK:
+            return scenario_condition_type_custom_variable_check_met(condition);
         case CONDITION_TYPE_DIFFICULTY:
             return scenario_condition_type_difficulty_met(condition);
         case CONDITION_TYPE_MONEY:
@@ -49,12 +51,17 @@ int scenario_condition_type_is_met(scenario_condition_t *condition)
             return scenario_condition_type_stats_prosperity_met(condition);
         case CONDITION_TYPE_TIME_PASSED:
             return scenario_condition_type_time_met(condition);
+        case CONDITION_TYPE_TRADE_ROUTE_OPEN:
+            return scenario_condition_type_trade_route_open_met(condition);
+        case CONDITION_TYPE_TRADE_ROUTE_PRICE:
+            return scenario_condition_type_trade_route_price_met(condition);
         case CONDITION_TYPE_TRADE_SELL_PRICE:
             return scenario_condition_type_trade_sell_price_met(condition);
         case CONDITION_TYPE_TAX_RATE:
             return scenario_condition_type_tax_rate_met(condition);
         default:
-            return 0;
+            // If we cannot figure condition type (such as with deleted conditions) then default to passed.
+            return 1;
     }
 }
 

@@ -41,6 +41,16 @@ static void new_entry(custom_message_t *obj, int position)
 
 void custom_messages_clear(void)
 {
+    if (custom_messages.size) {
+        custom_message_t *entry;
+        array_foreach(custom_messages, entry) {
+            message_media_text_blob_mark_entry_as_unused(entry->linked_uid);
+            message_media_text_blob_mark_entry_as_unused(entry->title);
+            message_media_text_blob_mark_entry_as_unused(entry->subtitle);
+            message_media_text_blob_mark_entry_as_unused(entry->display_text);
+        }
+    }
+
     if (!array_init(custom_messages, CUSTOM_MESSAGES_ARRAY_SIZE_STEP, new_entry, entry_in_use) ||
         !array_next(custom_messages)) {
         log_error("Unable to allocate enough memory for the custom media array. The game will now crash.", 0, 0);
@@ -51,7 +61,7 @@ void custom_messages_clear_all(void)
 {
     custom_messages_clear();
     custom_media_clear();
-    message_media_text_blob_clear();
+    message_media_text_blob_remove_unused();
 }
 
 custom_message_t *custom_messages_get(int message_id)
@@ -324,4 +334,25 @@ const char *custom_messages_get_background_music(custom_message_t *message)
     } else {
         return 0;
     }
+}
+
+int custom_messages_relink_text_blob(int text_id, text_blob_string_t *new_text_link)
+{
+    custom_message_t *entry;
+    array_foreach(custom_messages, entry) {
+        if (entry && entry->linked_uid && entry->linked_uid->id == text_id) {
+            entry->linked_uid = new_text_link;
+            return 1;
+        } else if (entry && entry->title && entry->title->id == text_id) {
+            entry->title = new_text_link;
+            return 1;
+        } else if (entry && entry->subtitle && entry->subtitle->id == text_id) {
+            entry->subtitle = new_text_link;
+            return 1;
+        } else if (entry && entry->display_text && entry->display_text->id == text_id) {
+            entry->display_text = new_text_link;
+            return 1;
+        }
+    }
+    return 0;
 }

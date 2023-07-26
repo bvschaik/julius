@@ -13,6 +13,7 @@ typedef enum {
 typedef struct {
     int id;
     int in_use;
+    int index;
     int offset;
     int length;
     uint8_t *text;
@@ -26,6 +27,8 @@ typedef struct {
 
     size_t max_size_text_entries;
     int max_size_text_blob;
+
+    int highest_id;
 } message_media_text_blob_t;
 
 message_media_text_blob_t *message_media_text_get_data(void);
@@ -38,5 +41,8 @@ const text_blob_string_t *message_media_text_blob_add_encoded(const char *text);
 
 void message_media_text_blob_save_state(buffer *blob_buffer, buffer *meta_buffer);
 void message_media_text_blob_load_state(buffer *blob_buffer, buffer *meta_buffer);
+
+void message_media_text_blob_mark_entry_as_unused(const text_blob_string_t *entry);
+void message_media_text_blob_remove_unused(void);
 
 #endif // MESSAGE_MEDIA_TEXT_BLOB_H

@@ -10,10 +10,13 @@
 #include "city/military.h"
 #include "city/ratings.h"
 #include "core/random.h"
+#include "empire/city.h"
 #include "empire/trade_prices.h"
+#include "empire/trade_route.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "scenario/request.h"
+#include "scenario/scenario.h"
 #include "scenario/condition_types/comparison_helper.h"
 
 int scenario_condition_type_building_count_active_met(const scenario_condition_t *condition)
@@ -239,6 +242,15 @@ int scenario_condition_type_count_own_troops_met(const scenario_condition_t *con
     return comparison_helper_compare_values(comparison, soldier_count, value);
 }
 
+int scenario_condition_type_custom_variable_check_met(const scenario_condition_t *condition)
+{
+    int target_variable = scenario_get_custom_variable_value(condition->parameter1);
+    int comparison = condition->parameter2;
+    int value = condition->parameter3;
+
+    return comparison_helper_compare_values(comparison, target_variable, value);
+}
+
 int scenario_condition_type_difficulty_met(const scenario_condition_t *condition)
 {
     int difficulty = setting_difficulty();
@@ -360,6 +372,34 @@ int scenario_condition_type_time_met(const scenario_condition_t *condition)
     int target_months = condition->parameter4;
 
     return comparison_helper_compare_values(comparison, total_months, target_months);
+}
+
+int scenario_condition_type_trade_route_open_met(const scenario_condition_t *condition)
+{
+    int route_id = condition->parameter1;
+    int check_for_open = condition->parameter2;
+
+    if (!trade_route_is_valid(route_id)) {
+        return 0;
+    }
+
+    int route_is_open = empire_city_is_trade_route_open(route_id);
+    return route_is_open == check_for_open;
+}
+
+int scenario_condition_type_trade_route_price_met(const scenario_condition_t *condition)
+{
+    int route_id = condition->parameter1;
+    int comparison = condition->parameter2;
+    int value = condition->parameter3;
+
+    if (!trade_route_is_valid(route_id)) {
+        return 0;
+    }
+
+    int route_is_open = empire_city_is_trade_route_open(route_id);
+    int route_price = route_is_open ? 0 : empire_city_get_trade_route_cost(route_id);
+    return comparison_helper_compare_values(comparison, route_price, value);
 }
 
 int scenario_condition_type_trade_sell_price_met(const scenario_condition_t *condition)

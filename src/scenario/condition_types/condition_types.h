@@ -11,6 +11,8 @@ int scenario_condition_type_city_population_met(const scenario_condition_t *cond
 
 int scenario_condition_type_count_own_troops_met(const scenario_condition_t *condition);
 
+int scenario_condition_type_custom_variable_check_met(const scenario_condition_t *condition);
+
 int scenario_condition_type_difficulty_met(const scenario_condition_t *condition);
 
 int scenario_condition_type_money_met(const scenario_condition_t *condition);
@@ -35,6 +37,10 @@ int scenario_condition_type_stats_prosperity_met(const scenario_condition_t *con
 
 void scenario_condition_type_time_init(scenario_condition_t *condition);
 int scenario_condition_type_time_met(const scenario_condition_t *condition);
+
+int scenario_condition_type_trade_route_open_met(const scenario_condition_t *condition);
+
+int scenario_condition_type_trade_route_price_met(const scenario_condition_t *condition);
 
 int scenario_condition_type_trade_sell_price_met(const scenario_condition_t *condition);
 

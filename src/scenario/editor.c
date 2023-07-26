@@ -7,6 +7,7 @@
 #include "scenario/empire.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
+#include "scenario/scenario.h"
 
 #include <string.h>
 
@@ -97,6 +98,7 @@ void scenario_editor_create(int map_size)
     for (int i = 0; i < MAX_INVASIONS; i++) {
         scenario.invasions[i].from = 8;
     }
+    scenario_delete_all_custom_variables();
 
     scenario.random_events.max_wages = 45;
     scenario.random_events.min_wages = 5;

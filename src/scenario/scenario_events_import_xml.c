@@ -8,6 +8,7 @@
 #include "empire/city.h"
 #include "empire/type.h"
 #include "scenario/custom_messages.h"
+#include "scenario/scenario.h"
 #include "scenario/scenario_event.h"
 #include "scenario/scenario_event_data.h"
 #include "scenario/scenario_events_controller.h"
@@ -18,7 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define XML_TOTAL_ELEMENTS 40
+#define XML_TOTAL_ELEMENTS 47
 
 static struct {
     int success;
@@ -27,12 +28,15 @@ static struct {
     uint8_t error_line_number_text[50];
     int version;
     scenario_event_t *current_event;
+    int variables_count;
 } data;
 
 static int xml_import_start_scenario_events(void);
 static int xml_import_start_event(void);
 static int xml_import_create_condition(void);
 static int xml_import_create_action(void);
+static int xml_import_start_custom_variables(void);
+static int xml_import_create_custom_variable(void);
 static void xml_import_log_error(const char *msg);
 
 static int xml_import_special_parse_attribute(xml_data_attribute_t *attr, int *target);
@@ -43,6 +47,7 @@ static int xml_import_special_parse_min_max_number(xml_data_attribute_t *attr, i
 static int xml_import_special_parse_resource(xml_data_attribute_t *attr, int *target);
 static int xml_import_special_parse_route(xml_data_attribute_t *attr, int *target);
 static int xml_import_special_parse_custom_message(xml_data_attribute_t *attr, int *target);
+static int xml_import_special_parse_custom_variable(xml_data_attribute_t *attr, int *target);
 
 static condition_types get_condition_type_from_element_name(const char *name);
 static action_types get_action_type_from_element_name(const char *name);
@@ -90,7 +95,14 @@ static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "request_immediately_start", xml_import_create_action, 0, "actions" },
     { "show_custom_message", xml_import_create_action, 0, "actions" },
     { "tax_rate_set", xml_import_create_action, 0, "actions" },
-    { "building_count_any", xml_import_create_condition, 0, "conditions" },
+    { "building_count_any", xml_import_create_condition, 0, "conditions" }, //40
+    { "variable_check", xml_import_create_condition, 0, "conditions" },
+    { "trade_route_open", xml_import_create_condition, 0, "conditions" },
+    { "trade_route_price", xml_import_create_condition, 0, "conditions" },
+    { "change_variable", xml_import_create_action, 0, "actions" },
+    { "change_trade_route_open_price", xml_import_create_action, 0, "actions" },
+    { "variables", xml_import_start_custom_variables, 0, "events" },
+    { "variable", xml_import_create_custom_variable, 0, "variables" },
 };
 
 static int xml_import_start_scenario_events(void)
@@ -130,6 +142,50 @@ static int xml_import_start_event(void)
     }
 
     data.current_event = scenario_event_create(min, max, max_repeats);
+    return 1;
+}
+
+static int xml_import_start_custom_variables(void)
+{
+    if (!data.success) {
+        return 0;
+    }
+
+    scenario_delete_all_custom_variables();
+    data.variables_count = 0;
+    return 1;
+}
+
+static int xml_import_create_custom_variable(void)
+{
+    if (!data.success) {
+        return 0;
+    }
+
+    if (!xml_parser_has_attribute("uid")) {
+        xml_import_log_error("Variable has no unique identifier (uid)");
+        return 0;
+    }
+
+    int initial_value = 0;
+    if (xml_parser_has_attribute("initial_value")) {
+        initial_value = xml_parser_get_attribute_int("initial_value");
+    }
+
+    const char *uid_value = xml_parser_get_attribute_string("uid");
+    const uint8_t *uid = string_from_ascii(uid_value);
+    int var_id = scenario_get_custom_variable_id_by_uid(uid);
+    if(var_id) {
+        xml_import_log_error("Variable unique identifier is not unique");
+        return 0;
+    }
+
+    custom_variable_t *custom_variable = scenario_custom_variable_create(uid, initial_value);
+    if (!custom_variable) {
+        xml_import_log_error("Could not import the variable!");
+        return 0;
+    }
+
     return 1;
 }
 
@@ -290,6 +346,8 @@ static int xml_import_special_parse_attribute(xml_data_attribute_t *attr, int *t
             return xml_import_special_parse_type(attr, PARAMETER_TYPE_STANDARD_MESSAGE, target);
         case PARAMETER_TYPE_CUSTOM_MESSAGE:
             return xml_import_special_parse_custom_message(attr, target);
+        case PARAMETER_TYPE_CUSTOM_VARIABLE:
+            return xml_import_special_parse_custom_variable(attr, target);
         case PARAMETER_TYPE_UNDEFINED:
             return 1;
         default:
@@ -469,6 +527,27 @@ static int xml_import_special_parse_custom_message(xml_data_attribute_t *attr, i
         return 1;
     } else {
         xml_import_log_error("Could not find custom message. Setup custom messages first.");
+        return 0;
+    }
+}
+
+static int xml_import_special_parse_custom_variable(xml_data_attribute_t *attr, int *target)
+{
+    int has_attr = xml_parser_has_attribute(attr->name);
+    if (!has_attr) {
+        xml_import_log_error("Missing attribute.");
+        return 0;
+    }
+
+    const char *value = xml_parser_get_attribute_string(attr->name);
+    const uint8_t *converted_name = string_from_ascii(value);
+    int variable_id = scenario_get_custom_variable_id_by_uid(converted_name);
+
+    if (variable_id) {
+        *target = variable_id;
+        return 1;
+    } else {
+        xml_import_log_error("Could not find custom variable. Setup custom variables first via import or editor.");
         return 0;
     }
 }

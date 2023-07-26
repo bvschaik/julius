@@ -626,16 +626,16 @@ static void scenario_load_from_state(scenario_state *file, scenario_version_t ve
     map_elevation_load_state(file->elevation);
     city_view_load_scenario_state(file->camera);
     random_load_state(file->random_iv);
+    custom_messages_clear_all();
+    if (version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
+        message_media_text_blob_load_state(file->message_media_text_blob, file->message_media_metadata);
+        custom_messages_load_state(file->custom_messages, file->custom_media);
+    }
     scenario_load_state(file->scenario, file->scenario_requests, version);
     if (version > SCENARIO_LAST_NO_EVENTS) {
         scenario_events_load_state(file->scenario_events, file->scenario_conditions, file->scenario_actions);
     } else {
         scenario_events_clear();
-    }
-    custom_messages_clear_all();
-    if (version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
-        message_media_text_blob_load_state(file->message_media_text_blob, file->message_media_metadata);
-        custom_messages_load_state(file->custom_messages, file->custom_media);
     }
     if (version > SCENARIO_LAST_UNVERSIONED) {
         empire_object_load(file->empire, version);
@@ -686,16 +686,16 @@ static void savegame_load_from_state(savegame_state *state, savegame_version_t v
         state->player_name,
         state->scenario_name);
 
+    custom_messages_clear_all();
+    if (scenario_version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
+        message_media_text_blob_load_state(state->message_media_text_blob, state->message_media_metadata);
+        custom_messages_load_state(state->custom_messages, state->custom_media);
+    }
     scenario_load_state(state->scenario, state->scenario_requests, scenario_version);
     if (scenario_version > SCENARIO_LAST_NO_EVENTS) {
         scenario_events_load_state(state->scenario_events, state->scenario_conditions, state->scenario_actions);
     } else {
         scenario_events_clear();
-    }
-    custom_messages_clear_all();
-    if (scenario_version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
-        message_media_text_blob_load_state(state->message_media_text_blob, state->message_media_metadata);
-        custom_messages_load_state(state->custom_messages, state->custom_media);
     }
     scenario_map_init();
 

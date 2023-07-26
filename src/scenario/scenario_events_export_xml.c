@@ -7,6 +7,7 @@
 #include "core/xml_exporter.h"
 #include "empire/city.h"
 #include "scenario/custom_messages.h"
+#include "scenario/scenario.h"
 #include "scenario/scenario_events_controller.h"
 #include "scenario/scenario_events_parameter_data.h"
 #include "window/plain_message_dialog.h"
@@ -98,6 +99,22 @@ static int export_attribute_custom_message(xml_data_attribute_t *attr, int targe
     return 0;
 }
 
+static int export_attribute_custom_variable(xml_data_attribute_t *attr, int target)
+{
+    const custom_variable_t *variable = scenario_get_custom_variable(target);
+    if (variable) {
+        if (!variable->linked_uid) {
+            const uint8_t error_name[] = "ERROR_NO_VARIABLE_NAME_GIVEN";
+            xml_exporter_add_attribute_text(attr->name, error_name);
+            return 1;
+        }
+        const uint8_t *variable_uid = variable->linked_uid->text;
+        xml_exporter_add_attribute_text(attr->name, variable_uid);
+        return 1;
+    }
+    return 0;
+}
+
 static int export_parse_attribute(xml_data_attribute_t *attr, int target)
 {
     switch (attr->type) {
@@ -129,6 +146,8 @@ static int export_parse_attribute(xml_data_attribute_t *attr, int target)
             return export_attribute_by_type(attr, PARAMETER_TYPE_STANDARD_MESSAGE, target);
         case PARAMETER_TYPE_CUSTOM_MESSAGE:
             return export_attribute_custom_message(attr, target);
+        case PARAMETER_TYPE_CUSTOM_VARIABLE:
+            return export_attribute_custom_variable(attr, target);
         case PARAMETER_TYPE_UNDEFINED:
             return 1;
         default:
@@ -199,6 +218,7 @@ static int export_event(scenario_event_t *event)
 
     xml_exporter_new_element("event", 1);
 
+    xml_exporter_add_attribute_int("id", event->id);
     if (event->repeat_months_min > 0) {
         xml_exporter_add_attribute_int("repeat_months_min", event->repeat_months_min);
     }
@@ -228,11 +248,40 @@ static int export_event(scenario_event_t *event)
     return 1;
 }
 
+static int export_custom_variable(custom_variable_t *variable)
+{
+    if (!variable->in_use) {
+        return 1;
+    }
+
+    xml_exporter_new_element("variable", 1);
+
+    xml_exporter_add_attribute_text("uid", variable->linked_uid->text);
+    xml_exporter_add_attribute_int("initial_value", variable->value);
+
+    xml_exporter_close_element(0);
+    
+    return 1;
+}
+
+static void export_scenario_variables(buffer *buf)
+{
+    xml_exporter_new_element("variables", 1);
+
+    for (int i = 1; i < MAX_CUSTOM_VARIABLES; i++) {
+        custom_variable_t *variable = scenario_get_custom_variable(i);
+        export_custom_variable(variable);
+    }
+    xml_exporter_close_element(0);
+    xml_exporter_newline();
+}
+
 static void export_scenario_events(buffer *buf)
 {
-    xml_exporter_init(buf, "events");
     xml_exporter_new_element("events", 0);
-    xml_exporter_add_attribute_int("version", SCENARIO_EVENTS_XML_VERSION);
+    xml_exporter_add_attribute_int("version", SCENARIO_EVENTS_XML_CURRENT_VERSION);
+
+    export_scenario_variables(buf);
 
     int event_count = scenario_events_get_count();
     for (int i = 0; i < event_count; i++) {
@@ -254,6 +303,7 @@ int scenario_events_export_to_xml(const char *filename)
         return 0;
     }
     buffer_init(&buf, buf_data, buf_size);
+    xml_exporter_init(&buf, "events");
     export_scenario_events(&buf);
     io_write_buffer_to_file(filename, buf.data, buf.index);
     free(buf_data);

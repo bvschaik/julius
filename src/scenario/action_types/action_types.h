@@ -5,6 +5,8 @@
 
 int scenario_action_type_change_allowed_buildings_execute(scenario_action_t *action);
 
+int scenario_action_type_change_custom_variable_execute(scenario_action_t *action);
+
 int scenario_action_type_change_resource_produced_execute(scenario_action_t *action);
 
 int scenario_action_type_empire_map_convert_future_trade_city_execute(scenario_action_t *action);
@@ -33,6 +35,8 @@ int scenario_action_type_trade_price_adjust_execute(scenario_action_t *action);
 int scenario_action_type_trade_problems_land_execute(scenario_action_t *action);
 
 int scenario_action_type_trade_problems_sea_execute(scenario_action_t *action);
+
+int scenario_action_type_trade_route_adjust_open_price_execute(scenario_action_t *action);
 
 int scenario_action_type_trade_route_amount_execute(scenario_action_t *action);
 

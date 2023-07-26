@@ -27,8 +27,8 @@
 #include <string.h>
 
 #define RESOURCES_TO_TRADER_RATIO 60
-#define LAND_TRADER_DELAY_TICKS 4
-#define SEA_TRADER_DELAY_TICKS 30
+#define LAND_TRADER_DELAY_DAYS 4
+#define SEA_TRADER_DELAY_DAYS 30
 #define LEGACY_MAX_CITIES 41
 #define CITIES_ARRAY_SIZE_STEP 50
 
@@ -265,6 +265,32 @@ int empire_city_is_trade_route_open(int route_id)
     return 0;
 }
 
+int empire_city_get_trade_route_cost(int route_id)
+{
+    empire_city *city;
+    array_foreach(cities, city) {
+        if (city->in_use && city->route_id == route_id) {
+            return city->cost_to_open;
+        }
+    }
+    return 0;
+}
+
+void empire_city_set_trade_route_cost(int route_id, int new_cost)
+{
+    if (new_cost < 0) {
+        new_cost = 0;
+    }
+
+    empire_city *city;
+    array_foreach(cities, city) {
+        if (city->in_use && city->route_id == route_id) {
+            city->cost_to_open = new_cost;
+            return;
+        }
+    }
+}
+
 void empire_city_reset_yearly_trade_amounts(void)
 {
     empire_city *city;
@@ -324,7 +350,7 @@ static int generate_trader(int city_id, empire_city *city)
         city->trader_entry_delay--;
         return 0;
     }
-    city->trader_entry_delay = city->is_sea_trade ? SEA_TRADER_DELAY_TICKS : LAND_TRADER_DELAY_TICKS;
+    city->trader_entry_delay = city->is_sea_trade ? SEA_TRADER_DELAY_DAYS : LAND_TRADER_DELAY_DAYS;
 
     // Check that we have space to trade
     int trade_potential = 0;

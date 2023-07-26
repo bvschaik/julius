@@ -330,6 +330,18 @@ static void draw_city_message_text(const lang_message *msg)
                 data.text_height_blocks - 1, 0);
             break;
 
+        case MESSAGE_TYPE_ROUTE_PRICE_CHANGE:
+            {
+                empire_city *city = empire_city_get(player_message.param1);
+                const uint8_t *city_name = empire_city_get_name(city);
+                text_draw(city_name, data.x + 64, data.y_text + 44, FONT_NORMAL_WHITE, 0);
+                text_draw_money(player_message.param2, data.x + 240, data.y_text + 44, FONT_NORMAL_WHITE);
+                rich_text_draw(msg->content.text,
+                    data.x_text + 8, data.y_text + 86, BLOCK_SIZE * (data.text_width_blocks - 1),
+                    data.text_height_blocks - 1, 0);
+            }
+            break;
+
         case MESSAGE_TYPE_CUSTOM:
             {
                 rich_text_draw(msg->content.text,

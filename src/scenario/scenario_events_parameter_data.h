@@ -26,6 +26,7 @@ typedef enum {
     PARAMETER_TYPE_MIN_MAX_NUMBER,
     PARAMETER_TYPE_MEDIA_TYPE,
     PARAMETER_TYPE_CUSTOM_MESSAGE,
+    PARAMETER_TYPE_CUSTOM_VARIABLE,
 } parameter_type;
 
 typedef struct {

@@ -295,6 +295,14 @@ void load_augustus_messages(void)
     set_message_parameters(m, TR_CITY_MESSAGE_TITLE_ROAD_TO_ROME_WARNING, TR_CITY_MESSAGE_TEXT_ROAD_TO_ROME_WARNING, 1, MESSAGE_TYPE_GENERAL);
     i += 1;
 
+    // Custom message placeholder (MESSAGE_CUSTOM_MESSAGE = 160). Actual displayed text is determined by the contents of the custom message being displayed.
+    m = &data.message_entries[i];
+    set_message_parameters(m, TR_EDITOR_CUSTOM_MESSAGES_TITLE, TR_EDITOR_CUSTOM_MESSAGES_TITLE, 0, MESSAGE_TYPE_CUSTOM);
+    i += 1;
+
+    m = &data.message_entries[i];
+    set_message_parameters(m, TR_CITY_MESSAGE_TITLE_TRADE_ROUTE_PRICE_CHANGE, TR_CITY_MESSAGE_TEXT_TRADE_ROUTE_PRICE_CHANGE, 0, MESSAGE_TYPE_ROUTE_PRICE_CHANGE);
+    i += 1;
 }
 
 

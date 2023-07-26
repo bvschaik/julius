@@ -610,6 +610,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/editor/attributes.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/build_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/custom_messages.c
+    ${PROJECT_SOURCE_DIR}/src/window/editor/custom_variables.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/demand_changes.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_demand_change.c
     ${PROJECT_SOURCE_DIR}/src/window/editor/edit_invasion.c
@@ -667,6 +668,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/resource_settings.c
     ${PROJECT_SOURCE_DIR}/src/window/select_list.c
     ${PROJECT_SOURCE_DIR}/src/window/set_salary.c
+    ${PROJECT_SOURCE_DIR}/src/window/text_input.c
     ${PROJECT_SOURCE_DIR}/src/window/trade_opened.c
     ${PROJECT_SOURCE_DIR}/src/window/trade_prices.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c

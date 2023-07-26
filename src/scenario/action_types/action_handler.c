@@ -38,6 +38,8 @@ int scenario_action_type_execute(scenario_action_t *action)
             return scenario_action_type_savings_add_execute(action);
         case ACTION_TYPE_CHANGE_ALLOWED_BUILDINGS:
             return scenario_action_type_change_allowed_buildings_execute(action);
+        case ACTION_TYPE_CHANGE_CUSTOM_VARIABLE:
+            return scenario_action_type_change_custom_variable_execute(action);
         case ACTION_TYPE_CHANGE_RESOURCE_PRODUCED:
             return scenario_action_type_change_resource_produced_execute(action);
         case ACTION_TYPE_EMPIRE_MAP_CONVERT_FUTURE_TRADE_CITY:
@@ -52,6 +54,8 @@ int scenario_action_type_execute(scenario_action_t *action)
             return scenario_action_type_trade_price_adjust_execute(action);
         case ACTION_TYPE_TRADE_ADJUST_ROUTE_AMOUNT:
             return scenario_action_type_trade_route_amount_execute(action);
+        case ACTION_TYPE_TRADE_ADJUST_ROUTE_OPEN_PRICE:
+            return scenario_action_type_trade_route_adjust_open_price_execute(action);
         case ACTION_TYPE_TRADE_PROBLEM_LAND:
             return scenario_action_type_trade_problems_land_execute(action);
         case ACTION_TYPE_TRADE_PROBLEM_SEA:

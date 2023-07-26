@@ -11,6 +11,12 @@ int comparison_helper_compare_values(int compare_type, int value1, int value2)
             return value1 <= value2;
         case COMPARISON_TYPE_EQUAL_OR_MORE:
             return value1 >= value2;
+        case COMPARISON_TYPE_NOT_EQUAL:
+            return value1 != value2;
+        case COMPARISON_TYPE_LESS_THAN:
+            return value1 < value2;
+        case COMPARISON_TYPE_GREATER_THAN:
+            return value1 > value2;
         default:
             return 0;
     }

@@ -42,4 +42,6 @@ const char *custom_messages_get_video(custom_message_t *message);
 const char *custom_messages_get_audio(custom_message_t *message);
 const char *custom_messages_get_background_music(custom_message_t *message);
 
+int custom_messages_relink_text_blob(int text_id, text_blob_string_t *new_text_link);
+
 #endif // CUSTOM_MESSAGES_H

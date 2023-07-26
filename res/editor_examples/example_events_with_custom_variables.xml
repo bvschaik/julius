@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE events>
+<events version="2">
+    <variables>
+        <variable uid="ConsecutiveMonthsNotInDebt" initial_value="0"/>
+        <variable uid="TotalMonthsInDebt" initial_value="0"/>
+    </variables>
+    <!-- Repeats forever -->
+    <event repeat_months_min="1" repeat_months_max="1">
+        <conditions>
+            <money check="gte" min="0" max="0"/>
+        </conditions>
+        <actions>
+            <!-- Increase the custom variable that tracks how many months they are not in debt -->
+            <change_variable variable_uid="ConsecutiveMonthsNotInDebt" value="1" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- Repeats forever -->
+    <event repeat_months_min="1" repeat_months_max="1">
+        <conditions>
+            <money check="lt" min="0" max="0"/>
+        </conditions>
+        <actions>
+            <!-- We set the custom variable for consecutive months not in debt back to 0 and increase the total months in debt by 1 -->
+            <change_variable variable_uid="ConsecutiveMonthsNotInDebt" value="0" set_to_value="true"/>
+            <change_variable variable_uid="TotalMonthsInDebt" value="1" set_to_value="false"/>
+        </actions>
+    </event>
+    <!-- Repeats forever -->
+    <event repeat_months_min="1" repeat_months_max="1">
+        <conditions>
+            <!-- 5 years of no debt -->
+            <variable_check variable_uid="ConsecutiveMonthsNotInDebt" check="gte" value="60"/>
+        </conditions>
+        <actions>
+            <!-- Big favor bonus + message, and we start counting from 0 again -->
+            <change_variable variable_uid="ConsecutiveMonthsNotInDebt" value="0" set_to_value="true"/>
+            <favor_add amount="20"/>
+            <show_custom_message message_uid="caesarlovesyourmoney"/>
+        </actions>
+    </event>
+    <!-- Does not repeat. We only let this happen once. -->
+    <event>
+        <conditions>
+            <!-- A total of 18 months spent in debt, even if not consecutive -->
+            <variable_check variable_uid="TotalMonthsInDebt" check="gte" value="18"/>
+        </conditions>
+        <actions>
+            <!-- Big favor penalty and show a message to the player -->
+            <favor_add amount="-20"/>
+            <show_custom_message message_uid="caesarissickofyourdebt"/>
+        </actions>
+    </event>
+</events>

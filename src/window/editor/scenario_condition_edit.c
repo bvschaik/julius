@@ -13,6 +13,7 @@
 #include "input/input.h"
 #include "scenario/scenario_events_parameter_data.h"
 #include "scenario/condition_types/condition_handler.h"
+#include "window/editor/custom_variables.h"
 #include "window/editor/map.h"
 #include "window/editor/select_scenario_condition_type.h"
 #include "window/editor/select_city_by_type.h"
@@ -125,6 +126,12 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
+static void close_window(void)
+{
+    scenario_condition_type_init(data.condition);
+    window_go_back();
+}
+
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
@@ -132,14 +139,14 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
-        window_go_back();
+        close_window();
     }
 }
 
 static void button_delete(int param1, int param2)
 {
     scenario_condition_type_delete(data.condition);
-    window_go_back();
+    close_window();
 }
 
 static void button_change_type(int param1, int param2)
@@ -243,6 +250,34 @@ static void custom_message_selection(void)
     window_editor_select_custom_message_show(set_param_value);
 }
 
+static void set_param_custom_variable(custom_variable_t *variable)
+{
+    switch (data.parameter_being_edited) {
+        case 1:
+            data.condition->parameter1 = variable->id;
+            return;
+        case 2:
+            data.condition->parameter2 = variable->id;
+            return;
+        case 3:
+            data.condition->parameter3 = variable->id;
+            return;
+        case 4:
+            data.condition->parameter4 = variable->id;
+            return;
+        case 5:
+            data.condition->parameter5 = variable->id;
+            return;
+        default:
+            return;
+    }
+}
+
+static void custom_variable_selection(void)
+{
+    window_editor_custom_variables_select_show(set_param_custom_variable);
+}
+
 static void change_parameter(xml_data_attribute_t *parameter, int param1)
 {
     set_parameter_being_edited(param1);
@@ -272,6 +307,9 @@ static void change_parameter(xml_data_attribute_t *parameter, int param1)
             return;
         case PARAMETER_TYPE_CUSTOM_MESSAGE:
             custom_message_selection();
+            return;
+        case PARAMETER_TYPE_CUSTOM_VARIABLE:
+            custom_variable_selection();
             return;
         default:
             return;

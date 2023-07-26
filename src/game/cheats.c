@@ -26,10 +26,11 @@
 #include "window/building_info.h"
 #include "window/city.h"
 #include "window/console.h"
+#include "window/editor/scenario_events.h"
 
 #include <string.h>
 
-#define NUMBER_OF_COMMANDS 10
+#define NUMBER_OF_COMMANDS 11
 
 static void game_cheat_add_money(uint8_t *);
 static void game_cheat_start_invasion(uint8_t *);
@@ -41,6 +42,7 @@ static void game_cheat_finish_monuments(uint8_t *);
 static void game_cheat_set_monument_phase(uint8_t *);
 static void game_cheat_unlock_all_buildings(uint8_t *);
 static void game_cheat_incite_riot(uint8_t *);
+static void game_cheat_show_custom_events(uint8_t *);
 
 static void (*const execute_command[])(uint8_t *args) = {
     game_cheat_add_money,
@@ -52,7 +54,8 @@ static void (*const execute_command[])(uint8_t *args) = {
     game_cheat_finish_monuments,
     game_cheat_set_monument_phase,
     game_cheat_unlock_all_buildings,
-    game_cheat_incite_riot
+    game_cheat_incite_riot,
+    game_cheat_show_custom_events
 };
 
 static const char *commands[] = {
@@ -65,7 +68,8 @@ static const char *commands[] = {
     "finishmonuments",
     "monumentphase",
     "whathaveromansdoneforus",
-    "nike"
+    "nike",
+    "debug.customevents"
 };
 
 static struct {
@@ -230,6 +234,11 @@ static void game_cheat_incite_riot(uint8_t *args)
     show_warning(TR_CHEAT_INCITED_RIOT);
     city_data.sentiment.value = 50;
     city_sentiment_change_happiness(50);
+}
+
+static void game_cheat_show_custom_events(uint8_t *args)
+{
+    window_editor_scenario_events_show(0);
 }
 
 void game_cheat_parse_command(uint8_t *command)
