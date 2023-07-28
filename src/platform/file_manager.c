@@ -346,10 +346,12 @@ int platform_file_manager_should_case_correct_file(void)
 
 int platform_file_manager_filename_contains(const char *a, const char *b)
 {
-#ifdef _WIN32
+#if defined(_WIN32)
     return StrStrIA(a, b) != 0;
+#elif defined(BUILDING_ASSET_PACKER)
+    return strcasestr(a, b) != 0;
 #else
-    // I'd rather not use SDL, but strcasestr isn't supported on all platforms, like Vita
+    // I'd rather not use SDL here, but strcasestr isn't supported on all platforms, like Vita
     return SDL_strcasestr(a, b) != 0;
 #endif
 }
