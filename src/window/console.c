@@ -62,7 +62,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void button_back(int param1, int param2)
 {
-    input_box_stop();
+    input_box_stop(&command_input);
     window_go_back();
 }
 

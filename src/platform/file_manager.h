@@ -42,6 +42,14 @@ int platform_file_manager_list_directory_contents(
 int platform_file_manager_should_case_correct_file(void);
 
 /**
+ * Checks whether a filename contains a string
+ * @param a Filename to check
+ * @param b Expression that needs to be contained
+ * @return 1 if the filename contains the expression, 0 otherwise
+ */
+int platform_file_manager_filename_contains(const char *a, const char *b);
+
+/**
  * Compares two filenames in a case-insensitive manner
  * @param a Filename A
  * @param b Filename B

@@ -29,6 +29,8 @@
 #endif
 
 #ifdef _WIN32
+// Windows doesn't have strcasestr either, but it has StrStrIA which is exactly the same
+#include <shlwapi.h>
 #include <windows.h>
 
 #define fs_dir_type _WDIR
@@ -342,6 +344,16 @@ int platform_file_manager_should_case_correct_file(void)
 #endif
 }
 
+int platform_file_manager_filename_contains(const char *a, const char *b)
+{
+#ifdef _WIN32
+    return StrStrIA(a, b) != 0;
+#else
+    // I'd rather not use SDL, but strcasestr isn't supported on all platforms, like Vita
+    return SDL_strcasestr(a, b) != 0;
+#endif
+}
+
 int platform_file_manager_compare_filename(const char *a, const char *b)
 {
 #ifdef _MSC_VER
@@ -530,7 +542,7 @@ int platform_file_manager_close_file(FILE *stream)
         EM_ASM(
             Module.syncFS();
         );
-    }
+}
 #endif
     return result == 0;
 }
@@ -548,6 +560,6 @@ int platform_file_manager_create_directory(const char *name)
         return 1;
     } else {
         return errno == EEXIST;
-    }
+}
 #endif
 }

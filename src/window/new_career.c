@@ -77,13 +77,13 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void button_back(int param1, int param2)
 {
-    input_box_stop();
+    input_box_stop(&player_name_input);
     window_go_back();
 }
 
 static void start_mission(int param1, int param2)
 {
-    input_box_stop();
+    input_box_stop(&player_name_input);
     setting_set_player_name(player_name);
     window_mission_selection_show();
 }

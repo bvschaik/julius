@@ -45,7 +45,7 @@ void scrollbar_init(scrollbar_type *scrollbar, int scroll_position, int total_el
 
 void scrollbar_reset(scrollbar_type *scrollbar, int scroll_position)
 {
-    scrollbar->scroll_position = scroll_position;
+    scrollbar->scroll_position = calc_bound(scroll_position, 0, scrollbar->max_scroll_position);
     scrollbar->is_dragging_scrollbar_dot = 0;
     scrollbar->touch_drag_state = TOUCH_DRAG_NONE;
 }

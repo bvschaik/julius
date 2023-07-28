@@ -100,7 +100,7 @@ static void stop(int paused)
     if (paused) {
         input_box_pause();
     } else {
-        input_box_stop();
+        input_box_stop(&scenario_description_input);
     }
     data.is_paused = paused;
     scenario_editor_update_brief_description(data.brief_description);

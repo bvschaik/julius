@@ -13,6 +13,9 @@ typedef struct {
     int allow_punctuation;
     uint8_t *text;
     int text_length;
+    const uint8_t *placeholder;
+    void (*on_change)(int is_addition_at_end);
+    uint8_t *old_text;
 } input_box;
 
 /**
@@ -23,9 +26,9 @@ typedef struct {
 void input_box_start(input_box *box);
 void input_box_pause(void);
 void input_box_resume(void);
-void input_box_stop(void);
+void input_box_stop(input_box *box);
 
-void input_box_refresh_text(void);
+void input_box_refresh_text(input_box *box);
 int input_box_is_accepted(void);
 
 int input_box_handle_mouse(const mouse *m, const input_box *box);

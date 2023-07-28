@@ -15,7 +15,28 @@ int string_equals(const uint8_t *a, const uint8_t *b)
     }
 }
 
-uint8_t* string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
+int string_equals_until(const uint8_t *a, const uint8_t *b, unsigned int limit)
+{
+    if (!limit) {
+        return 1;
+    }
+    unsigned int cursor = 0;
+    while (*a && *b && *a == *b) {
+        ++a;
+        ++b;
+        cursor++;
+        if (cursor == limit) {
+            return 1;
+        }
+    }
+    if (*a == 0 && *b == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
 {
     int length = 0;
     while (length < maxlength && *src) {
@@ -55,7 +76,7 @@ const uint8_t *string_from_ascii(const char *str)
 
 int string_to_int(const uint8_t *str)
 {
-    static const int multipliers[] = {1, 10, 100, 1000, 10000, 100000, 1000000, 10000000};
+    static const int multipliers[] = { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000 };
     const uint8_t *ptr = str;
     int negative = 0;
     int num_chars = 0;

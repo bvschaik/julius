@@ -36,7 +36,7 @@ static void init(int x, int y, void (*callback)(char *))
     data.y = y;
     text_input.x = data.x + 16;
     text_input.y = data.y + 16;
-    
+
     data.callback = callback;
     data.focus_button_id = 0;
     memset(text, 0, MAX_VARIABLE_NAME_SIZE);
@@ -46,7 +46,7 @@ static void init(int x, int y, void (*callback)(char *))
 
 static void close(void)
 {
-    input_box_stop();
+    input_box_stop(&text_input);
     window_go_back();
 }
 
