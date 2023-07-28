@@ -348,11 +348,27 @@ int platform_file_manager_filename_contains(const char *a, const char *b)
 {
 #if defined(_WIN32)
     return StrStrIA(a, b) != 0;
-#elif defined(BUILDING_ASSET_PACKER)
-    return strcasestr(a, b) != 0;
 #else
-    // I'd rather not use SDL here, but strcasestr isn't supported on all platforms, like Vita
-    return SDL_strcasestr(a, b) != 0;
+    int has_a = a && *a;
+    int has_b = b && *b;
+    if (!has_a) {
+        return !has_b;
+    } else if (!has_b) {
+        return 1;
+    }
+    size_t a_length = strlen(a);
+    size_t b_length = strlen(b);
+    if (a_length < b_length) {
+        return 0;
+    }
+    size_t limit = a_length - b_length;
+    for (size_t i = 0; i <= limit; i++) {
+        if (strncasecmp(a, b, b_length) == 0) {
+            return 1;
+        }
+        a++;
+    }
+    return 0;
 #endif
 }
 
@@ -544,7 +560,7 @@ int platform_file_manager_close_file(FILE *stream)
         EM_ASM(
             Module.syncFS();
         );
-}
+    }
 #endif
     return result == 0;
 }
@@ -562,6 +578,6 @@ int platform_file_manager_create_directory(const char *name)
         return 1;
     } else {
         return errno == EEXIST;
-}
+    }
 #endif
 }
