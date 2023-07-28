@@ -657,6 +657,8 @@
 	</image>
 	<!-- Note: Lararium asset -->
 	<image id="Lararium 01" src="Lararium" isometric="true"/>
+	<!-- Note: Nymphaeum Construction Phases -->
+	<image id="Nymphaeum_Construction_02" src="Nymphaeum_Construction_02" isometric="true"/>
 	<!-- Note: Nymphaeum OFF asset -->
 	<image id="Nymphaeum OFF" src="Nymphaeum_OFF" isometric="true"/>
 	<!-- Note: Nymphaeum ON Animation -->
