@@ -25,6 +25,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
+#include "input/scroll.h"
 #include "platform/file_manager.h"
 #include "scenario/editor.h"
 #include "scenario/custom_messages_export_xml.h"
@@ -424,6 +425,47 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
+static int handle_arrow_keys(int direction)
+{
+    int delta;
+    switch (direction) {
+        case DIR_0_TOP:
+        case DIR_1_TOP_RIGHT:
+        case DIR_7_TOP_LEFT:
+            delta = -1;
+            break;
+        case DIR_4_BOTTOM:
+        case DIR_3_BOTTOM_RIGHT:
+        case DIR_5_BOTTOM_LEFT:
+            delta = 1;
+            break;
+        default:
+            return 0;
+    }
+    int new_index = 0;
+    if (data.selected_index == 0) {
+        if (delta == 1) {
+            new_index = 1;
+        } else {
+            new_index = data.filtered_file_list.num_files;
+        }
+    } else {
+        new_index = data.selected_index + delta;
+        if (new_index == 0) {
+            new_index = data.filtered_file_list.num_files;
+        } else if (new_index > data.filtered_file_list.num_files) {
+            new_index = 1;
+        }
+    }
+    button_select_file(new_index - scrollbar.scroll_position - 1, 0);
+    if (data.selected_index > scrollbar.scroll_position + NUM_FILES_IN_VIEW) {
+        scrollbar_reset(&scrollbar, data.selected_index - NUM_FILES_IN_VIEW);
+    } else if (data.selected_index <= scrollbar.scroll_position) {
+        scrollbar_reset(&scrollbar, data.selected_index - 1);
+    }
+    return 1;
+}
+
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     data.double_click = m->left.double_click;
@@ -440,10 +482,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 
     const mouse *m_dialog = mouse_in_dialog(m);
+
     int focus_id = data.focus_button_id;
     int scroll_position = scrollbar.scroll_position;
     data.focus_button_id = 0;
     if (scrollbar_handle_mouse(&scrollbar, m_dialog, 1) ||
+        handle_arrow_keys(scroll_for_menu(m)) ||
         input_box_handle_mouse(m_dialog, &main_input) ||
         generic_buttons_handle_mouse(m_dialog, 0, 0, sort_by_button, 1, &data.sort_by_button_focused) ||
         generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, NUM_FILES_IN_VIEW, &data.focus_button_id) ||

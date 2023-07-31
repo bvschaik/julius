@@ -557,7 +557,6 @@ static void advance_animation_frame(const image *img)
     }
 }
 
-
 static void draw_foreground(void)
 {
     for (int i = 0; i < NUM_BUTTONS; i++) {
