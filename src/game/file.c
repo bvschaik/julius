@@ -238,7 +238,7 @@ static int load_custom_scenario(const uint8_t *scenario_name, const char *scenar
  */
 static void check_hippodrome_compatibility(building *b)
 {
-// if we got the middle part of the hippodrome
+    // if we got the middle part of the hippodrome
     if (b->next_part_building_id && b->prev_part_building_id) {
         building *next = building_get(b->next_part_building_id);
         building *prev = building_get(b->prev_part_building_id);
@@ -405,7 +405,7 @@ int game_file_start_scenario(const char *scenario_file)
 int game_file_load_saved_game(const char *filename)
 {
     int result = game_file_io_read_saved_game(filename, 0);
-    if (result != 1) {
+    if (result != FILE_LOAD_SUCCESS) {
         return result;
     }
     check_backward_compatibility();

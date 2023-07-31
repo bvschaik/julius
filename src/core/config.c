@@ -44,6 +44,7 @@ static const char *ini_keys[] = {
     "ui_show_roaming_path",
     "ui_draw_cloud_shadows",
     "ui_display_fps",
+    "ui_ask_confirmation_on_file_overwrite",
     "gameplay_change_max_grand_temples",
     "gameplay_change_jealous_gods",
     "gameplay_change_global_labour",
@@ -86,6 +87,7 @@ static int default_values[CONFIG_MAX_ENTRIES] = {
     [CONFIG_UI_SHOW_WATER_STRUCTURE_RANGE] = 1,
     [CONFIG_UI_SHOW_CONSTRUCTION_SIZE] = 1,
     [CONFIG_UI_HIGHLIGHT_LEGIONS] = 1,
+    [CONFIG_UI_ASK_CONFIRMATION_ON_FILE_OVERWRITE] = 1,
     [CONFIG_SCREEN_DISPLAY_SCALE] = 100,
     [CONFIG_SCREEN_CURSOR_SCALE] = 100,
     [CONFIG_GP_CH_MAX_GRAND_TEMPLES] = 2

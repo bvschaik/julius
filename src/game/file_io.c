@@ -29,6 +29,7 @@
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "figure/visited_buildings.h"
+#include "game/file.h"
 #include "game/save_version.h"
 #include "game/time.h"
 #include "game/tutorial.h"
@@ -459,7 +460,7 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
     } else {
         version_data->features.custom_messages_and_media = 0;
     }
-    
+
     version_data->features.scenario_version = version > SAVE_GAME_LAST_NO_SCENARIO_VERSION;
     version_data->features.city_faction_info = version <= SAVE_GAME_LAST_UNKNOWN_UNUSED_CITY_DATA;
     version_data->features.resource_version = version > SAVE_GAME_LAST_STATIC_RESOURCES;
@@ -664,7 +665,8 @@ static void scenario_save_to_state(scenario_state *file)
     buffer_skip(file->end_marker, 4);
 }
 
-static scenario_version_t save_version_to_scenario_version(savegame_version_t save_version, buffer *buf) {
+static scenario_version_t save_version_to_scenario_version(savegame_version_t save_version, buffer *buf)
+{
     if (save_version <= SAVE_GAME_LAST_UNVERSIONED_SCENARIOS) {
         return SCENARIO_LAST_UNVERSIONED;
     }
@@ -908,7 +910,7 @@ static int read_compressed_chunk(FILE *fp, void *buf, size_t bytes_to_read, int 
         return 0;
     }
     int input_size = read_int32(fp);
-    if ((unsigned int)input_size == UNCOMPRESSED) {
+    if ((unsigned int) input_size == UNCOMPRESSED) {
         return fread(buf, 1, bytes_to_read, fp) == bytes_to_read;
     } else {
         if (fread(compress_buffer->memory, 1, input_size, fp) != input_size) {
@@ -1217,7 +1219,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
     if (!fp) {
         log_error("Unable to load game, unable to open file.", 0, 0);
-        return 0;
+        return FILE_LOAD_DOES_NOT_EXIST;
     }
     if (offset) {
         fseek(fp, offset, SEEK_SET);
@@ -1229,7 +1231,7 @@ int game_file_io_read_saved_game(const char *filename, int offset)
         if (save_version > SAVE_GAME_CURRENT_VERSION || resource_version > RESOURCE_CURRENT_VERSION) {
             log_error("Newer save game version than supported. Please update Augustus. Version:", 0, save_version);
             file_close(fp);
-            return -1;
+            return FILE_LOAD_INCOMPATIBLE_VERSION;
         }
         log_info("Savegame version", 0, save_version);
         resource_set_mapping(resource_version);
@@ -1238,8 +1240,8 @@ int game_file_io_read_saved_game(const char *filename, int offset)
     }
     file_close(fp);
     if (!result) {
-        log_error("Unable to load game, unable to read savefile.", 0, 0);
-        return 0;
+        log_error("Unable to load game, incompatible savefile.", 0, 0);
+        return FILE_LOAD_WRONG_FILE_FORMAT;
     }
     savegame_load_from_state(&savegame_data.state, save_version);
     return 1;
@@ -1315,7 +1317,7 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
 {
     clear_savegame_pieces();
 
-    savegame_version_data version_data;  
+    savegame_version_data version_data;
     get_version_data(&version_data, version);
 
     file_piece scenario_version_data;
