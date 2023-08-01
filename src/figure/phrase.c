@@ -254,7 +254,7 @@ static const int FIGURE_TYPE_TO_SOUND_TYPE[] = {
     18, -1, 1, 25, 25, 25, 25, 25, 25, 25, // 40-49
     25, 25, 25, 25, 25, 25, 25, 25, -1, -1, // 50-59
     -1, -1, -1, -1, 30, -1, 31, -1, -1, -1, // 60-69
-    -1, -1, -1, 18, 19, 2, 1, 19, 8, 11,  // 70-79
+    -1, -1, -1, -1, 19, 2, 1, 19, 8, 11,  // 70-79
     11, -1, 1, -1, -1, 19, 20, 20, 19, 19,  // 80-89
     19, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 90-99
 };
@@ -359,7 +359,8 @@ static int cart_pusher_phrase(figure *f)
     return -1;
 }
 
-static int mess_hall_supplier_phrase(figure* f) {
+static int mess_hall_supplier_phrase(figure *f)
+{
     return 0;
 }
 
@@ -418,7 +419,7 @@ static int citizen_phrase(figure *f)
     return 7 + f->phrase_sequence_exact;
 }
 
-static int missionary_phrase(figure* f)
+static int missionary_phrase(figure *f)
 {
     if (++f->phrase_sequence_exact >= 4) {
         f->phrase_sequence_exact = 0;
@@ -426,7 +427,7 @@ static int missionary_phrase(figure* f)
     return 7 + f->phrase_sequence_exact;
 }
 
-static int homeless_phrase(figure* f)
+static int homeless_phrase(figure *f)
 {
     if (++f->phrase_sequence_exact >= 2) {
         f->phrase_sequence_exact = 0;
