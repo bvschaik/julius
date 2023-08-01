@@ -36,7 +36,7 @@ static void set_cart_graphic(figure *f, int always_carries_resource)
     } else if (carried == 1) {
         f->cart_image_id = resource_get_data(f->resource_id)->image.cart.single_load;
     } else if (cartpusher_carries_food(f) && carried >= 8) {
-        f->cart_image_id = resource_get_data(f->resource_id)->image.cart.eight_loads;        
+        f->cart_image_id = resource_get_data(f->resource_id)->image.cart.eight_loads;
     } else {
         f->cart_image_id = resource_get_data(f->resource_id)->image.cart.multiple_loads;
     }
@@ -75,7 +75,7 @@ static int should_change_destination(const figure *f, int building_id, int x_dst
             if (current_destination->type == BUILDING_GRANARY) {
                 if (!building_granary_accepts_storage(current_destination, f->resource_id, 0)) {
                     return 1;
-                }                
+                }
             } else if (!building_warehouse_accepts_storage(current_destination, f->resource_id, 0)) {
                 return 1;
             }
@@ -155,8 +155,8 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
         b->output_resource_id, road_network_id, 0, &understaffed_storages, &dst);
     if (config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
-        building* src_building = building_get(f->building_id);
-        building* dst_building = building_get(dst_building_id);
+        building *src_building = building_get(f->building_id);
+        building *dst_building = building_get(dst_building_id);
         int src_building_type = src_building->type;
         if ((src_building_type >= BUILDING_WHEAT_FARM && src_building_type <= BUILDING_PIG_FARM) || src_building_type == BUILDING_WHARF) {
             dist = calc_maximum_distance(src_building->x, src_building->y, dst_building->x, dst_building->y);
@@ -199,8 +199,8 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
         b->output_resource_id, road_network_id, 1, &understaffed_storages, &dst);
     if (config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
-        building* src_building = building_get(f->building_id);
-        building* dst_building = building_get(dst_building_id);
+        building *src_building = building_get(f->building_id);
+        building *dst_building = building_get(dst_building_id);
         int src_building_type = src_building->type;
         if ((src_building_type >= BUILDING_WHEAT_FARM && src_building_type <= BUILDING_PIG_FARM) || src_building_type == BUILDING_WHARF) {
             dist = calc_maximum_distance(src_building->x, src_building->y, dst_building->x, dst_building->y);
@@ -228,7 +228,7 @@ static void determine_cartpusher_destination_food(figure *f, int road_network_id
         b->output_resource_id, road_network_id, 0, 0, &dst);
     if (dst_building_id && config_get(CONFIG_GP_CH_FARMS_DELIVER_CLOSE)) {
         int dist = 0;
-        building* dst_building = building_get(dst_building_id);
+        building *dst_building = building_get(dst_building_id);
         if ((b->type >= BUILDING_WHEAT_FARM && b->type <= BUILDING_PIG_FARM) || b->type == BUILDING_WHARF) {
             dist = calc_maximum_distance(b->x, b->y, dst_building->x, dst_building->y);
         }
@@ -262,11 +262,13 @@ static void update_image(figure *f)
     int dir = figure_image_normalize_direction(
         f->direction < 8 ? f->direction : f->previous_tile_direction);
 
+    int base_group = f->type == FIGURE_CART_PUSHER ? GROUP_FIGURE_CARTPUSHER : GROUP_FIGURE_MIGRANT;
+
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset(f) + 96;
+        f->image_id = image_group(base_group) + figure_image_corpse_offset(f) + 96;
         f->cart_image_id = 0;
     } else {
-        f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * f->image_offset;
+        f->image_id = image_group(base_group) + dir + 8 * f->image_offset;
     }
     if (f->cart_image_id) {
         f->cart_image_id += dir;
@@ -277,9 +279,10 @@ static void update_image(figure *f)
     }
 }
 
-static int cartpusher_percentage_speed(figure* f) {
+static int cartpusher_percentage_speed(figure *f)
+{
     // Ceres grand temple base bonus
-    building* src_building = building_get(f->building_id);
+    building *src_building = building_get(f->building_id);
     int src_building_type = src_building->type;
     if (src_building_type >= BUILDING_WHEAT_FARM && src_building_type <= BUILDING_PIG_FARM) {
         if (building_monument_working(BUILDING_GRAND_TEMPLE_CERES)) {
@@ -344,7 +347,7 @@ void figure_cartpusher_action(figure *f)
             if (f->wait_ticks > NON_STORABLE_RESOURCE_CARTPUSHER_MAX_WAIT_TICKS) {
                 f->state = FIGURE_STATE_DEAD;
             } else if ((f->wait_ticks % (NON_STORABLE_RESOURCE_CARTPUSHER_MAX_WAIT_TICKS / 10) == 0)) {
-                determine_cartpusher_destination(f, b, road_network_id);                
+                determine_cartpusher_destination(f, b, road_network_id);
             }
             break;
         case FIGURE_ACTION_21_CARTPUSHER_DELIVERING_TO_WAREHOUSE:
@@ -590,7 +593,7 @@ static void determine_warehouseman_destination(figure *f, int road_network_id, i
     }
     // delivering resource
     // priority 1: weapons to barracks
-    dst_building_id = building_get_barracks_for_weapon(f->x,f->y,f->resource_id, road_network_id, &dst);
+    dst_building_id = building_get_barracks_for_weapon(f->x, f->y, f->resource_id, road_network_id, &dst);
     if (dst_building_id) {
         set_destination(f, FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE, dst_building_id, dst.x, dst.y);
         if (remove_resources) {
@@ -710,7 +713,8 @@ void figure_warehouseman_action(figure *f)
         case FIGURE_ACTION_149_CORPSE:
             figure_combat_handle_corpse(f);
             break;
-        case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED: {
+        case FIGURE_ACTION_50_WAREHOUSEMAN_CREATED:
+        {
             f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
             warehouseman_initial_action(f, road_network_id, 1);
             break;
@@ -797,7 +801,7 @@ void figure_warehouseman_action(figure *f)
                 f->action_state = FIGURE_ACTION_233_WAREHOUSEMAN_RECONSIDER_TARGET;
                 figure_warehouseman_action(f);
                 return;
-            } 
+            }
             break;
         case FIGURE_ACTION_55_WAREHOUSEMAN_AT_GRANARY:
             if (config_get(CONFIG_GP_CH_GETTING_GRANARIES_GO_OFFROAD)) {
