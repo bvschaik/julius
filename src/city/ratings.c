@@ -118,55 +118,47 @@ void city_ratings_change_favor(int amount)
     city_data.ratings.favor = calc_bound(city_data.ratings.favor + amount, 0, 100);
 }
 
-void city_ratings_reset_favor_emperor_change(void)
+void city_ratings_change_peace(int amount)
 {
-    city_data.ratings.favor = 50;
+    city_ratings_set_peace(city_data.ratings.peace + amount);
 }
 
-void city_ratings_reduce_favor_missed_request(int penalty)
+void city_ratings_change_prosperity(int amount)
 {
-    city_ratings_change_favor(-penalty);
-    city_data.ratings.favor_ignored_request_penalty = penalty;
+    city_ratings_set_prosperity(city_data.ratings.prosperity + amount);
 }
 
-void city_ratings_limit_favor(int max_favor)
+static void update_peace_explanation(void)
 {
-    if (city_data.ratings.favor > max_favor) {
-        city_data.ratings.favor = max_favor;
+    int reason;
+    if (city_data.figure.imperial_soldiers) {
+        reason = 8; // FIXED: 7+8 interchanged
+    } else if (city_data.figure.enemies) {
+        reason = 7;
+    } else if (city_data.figure.rioters) {
+        reason = 6;
+    } else {
+        if (city_data.ratings.peace < 10) {
+            reason = 0;
+        } else if (city_data.ratings.peace < 30) {
+            reason = 1;
+        } else if (city_data.ratings.peace < 60) {
+            reason = 2;
+        } else if (city_data.ratings.peace < 90) {
+            reason = 3;
+        } else if (city_data.ratings.peace < 100) {
+            reason = 4;
+        } else { // >= 100
+            reason = 5;
+        }
     }
+    city_data.ratings.peace_explanation = reason;
 }
 
-static void update_culture_explanation(void)
+void city_ratings_set_peace(int value)
 {
-    int min_percentage = 100;
-    int reason = 1;
-    if (city_data.ratings.culture >= 100) {
-        return;
-    }
-    if (city_data.culture.religion_coverage < min_percentage) {
-        min_percentage = city_data.culture.religion_coverage;
-        reason = 4;
-    }
-    int pct_theater = city_culture_coverage_theater();
-    if (pct_theater < min_percentage) {
-        min_percentage = pct_theater;
-        reason = 5;
-    }
-    int pct_library = city_culture_coverage_library();
-    if (pct_library < min_percentage) {
-        min_percentage = pct_library;
-        reason = 2;
-    }
-    int pct_school = city_culture_coverage_school();
-    if (pct_school < min_percentage) {
-        min_percentage = pct_school;
-        reason = 1;
-    }
-    int pct_academy = city_culture_coverage_academy();
-    if (pct_academy < min_percentage) {
-        reason = 3;
-    }
-    city_data.ratings.culture_explanation = reason;
+    city_data.ratings.peace = calc_bound(value, 0, 100);
+    update_peace_explanation();
 }
 
 static int has_made_money(void)
@@ -244,31 +236,61 @@ static void update_prosperity_explanation(void)
     city_data.ratings.prosperity_explanation = reason;
 }
 
-static void update_peace_explanation(void)
+void city_ratings_set_prosperity(int value)
 {
-    int reason;
-    if (city_data.figure.imperial_soldiers) {
-        reason = 8; // FIXED: 7+8 interchanged
-    } else if (city_data.figure.enemies) {
-        reason = 7;
-    } else if (city_data.figure.rioters) {
-        reason = 6;
-    } else {
-        if (city_data.ratings.peace < 10) {
-            reason = 0;
-        } else if (city_data.ratings.peace < 30) {
-            reason = 1;
-        } else if (city_data.ratings.peace < 60) {
-            reason = 2;
-        } else if (city_data.ratings.peace < 90) {
-            reason = 3;
-        } else if (city_data.ratings.peace < 100) {
-            reason = 4;
-        } else { // >= 100
-            reason = 5;
-        }
+    city_data.ratings.prosperity = calc_bound(value, 0, 100);
+    update_prosperity_explanation();
+}
+
+void city_ratings_reset_favor_emperor_change(void)
+{
+    city_data.ratings.favor = 50;
+}
+
+void city_ratings_reduce_favor_missed_request(int penalty)
+{
+    city_ratings_change_favor(-penalty);
+    city_data.ratings.favor_ignored_request_penalty = penalty;
+}
+
+void city_ratings_limit_favor(int max_favor)
+{
+    if (city_data.ratings.favor > max_favor) {
+        city_data.ratings.favor = max_favor;
     }
-    city_data.ratings.peace_explanation = reason;
+}
+
+static void update_culture_explanation(void)
+{
+    int min_percentage = 100;
+    int reason = 1;
+    if (city_data.ratings.culture >= 100) {
+        return;
+    }
+    if (city_data.culture.religion_coverage < min_percentage) {
+        min_percentage = city_data.culture.religion_coverage;
+        reason = 4;
+    }
+    int pct_theater = city_culture_coverage_theater();
+    if (pct_theater < min_percentage) {
+        min_percentage = pct_theater;
+        reason = 5;
+    }
+    int pct_library = city_culture_coverage_library();
+    if (pct_library < min_percentage) {
+        min_percentage = pct_library;
+        reason = 2;
+    }
+    int pct_school = city_culture_coverage_school();
+    if (pct_school < min_percentage) {
+        min_percentage = pct_school;
+        reason = 1;
+    }
+    int pct_academy = city_culture_coverage_academy();
+    if (pct_academy < min_percentage) {
+        reason = 3;
+    }
+    city_data.ratings.culture_explanation = reason;
 }
 
 void city_ratings_update_favor_explanation(void)
@@ -519,8 +541,7 @@ static void update_peace_rating(void)
     city_data.ratings.peace_num_rioters = 0;
     city_data.ratings.peace_destroyed_buildings = 0;
 
-    city_data.ratings.peace = calc_bound(city_data.ratings.peace + change, 0, 100);
-    update_peace_explanation();
+    city_ratings_change_peace(change);
 }
 
 static void update_favor_rating(int is_yearly_update, int is_monthly_update)

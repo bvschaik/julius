@@ -194,7 +194,7 @@ static int storage_add_resource(building *b, int resource, int amount)
         }
     } else if (b->type == BUILDING_WAREHOUSE) {
         while (amount > 0) {
-            if (!building_warehouse_add_resource(b, resource)) {
+            if (!building_warehouse_add_resource(b, resource, 1)) {
                 return amount;
             }
             amount--;

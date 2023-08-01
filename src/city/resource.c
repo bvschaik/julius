@@ -2,9 +2,11 @@
 
 #include "building/building.h"
 #include "building/count.h"
+#include "building/granary.h"
 #include "building/industry.h"
 #include "building/model.h"
 #include "building/monument.h"
+#include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/data_private.h"
 #include "city/message.h"
@@ -16,6 +18,7 @@
 #include "figure/figure.h"
 #include "figure/formation.h"
 #include "game/difficulty.h"
+#include "game/resource.h"
 #include "game/tutorial.h"
 #include "map/road_access.h"
 #include "scenario/building.h"
@@ -56,6 +59,44 @@ int city_resource_get_amount_including_granaries(resource_type resource, int amo
         }
     }
     return amount_stored;
+}
+
+int city_resource_get_available_empty_space_granaries(resource_type food, int respect_settings)
+{
+    int available_storage = 0;
+    if (!resource_is_food(food)) {
+        return 0;
+    }
+
+    for (building *b = building_first_of_type(BUILDING_GRANARY); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+        if (!respect_settings) {
+            available_storage += b->resources[RESOURCE_NONE];
+        } else {
+            available_storage += building_granary_maximum_receptible_amount(food, b);
+        }
+    }
+
+    return available_storage;
+}
+
+int city_resource_get_available_empty_space_warehouses(resource_type resource, int respect_settings)
+{
+    int available_storage = 0;
+    for (building *b = building_first_of_type(BUILDING_WAREHOUSE); b; b = b->next_of_type) {
+        if (b->state != BUILDING_STATE_IN_USE) {
+            continue;
+        }
+        if (!respect_settings) {
+            available_storage += building_warehouse_max_space_for_resource(resource, b);
+        } else {
+            available_storage += building_warehouse_maximum_receptible_amount(resource, b);
+        }
+    }
+
+    return available_storage;
 }
 
 const resource_list *city_resource_get_available(void)

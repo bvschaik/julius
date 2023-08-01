@@ -35,6 +35,10 @@ int scenario_condition_type_is_met(scenario_condition_t *condition)
             return scenario_condition_type_population_unemployed_met(condition);
         case CONDITION_TYPE_REQUEST_IS_ONGOING:
             return scenario_condition_type_request_is_ongoing_met(condition);
+        case CONDITION_TYPE_RESOURCE_STORAGE_AVAILABLE:
+            return scenario_condition_type_resource_storage_available_met(condition);
+        case CONDITION_TYPE_RESOURCE_STORED_COUNT:
+            return scenario_condition_type_resource_stored_count_met(condition);
         case CONDITION_TYPE_ROME_WAGES:
             return scenario_condition_type_rome_wages_met(condition);
         case CONDITION_TYPE_SAVINGS:

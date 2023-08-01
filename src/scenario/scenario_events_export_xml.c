@@ -119,31 +119,27 @@ static int export_parse_attribute(xml_data_attribute_t *attr, int target)
 {
     switch (attr->type) {
         case PARAMETER_TYPE_ALLOWED_BUILDING:
-            return export_attribute_by_type(attr, PARAMETER_TYPE_ALLOWED_BUILDING, target);
         case PARAMETER_TYPE_BOOLEAN:
-            return export_attribute_by_type(attr, PARAMETER_TYPE_BOOLEAN, target);
         case PARAMETER_TYPE_BUILDING:
-            return export_attribute_by_type(attr, PARAMETER_TYPE_BUILDING, target);
+        case PARAMETER_TYPE_CHECK:
+        case PARAMETER_TYPE_DIFFICULTY:
+        case PARAMETER_TYPE_POP_CLASS:
+        case PARAMETER_TYPE_RATING_TYPE:
+        case PARAMETER_TYPE_STANDARD_MESSAGE:
+        case PARAMETER_TYPE_STORAGE_TYPE:
+            return export_attribute_by_type(attr, attr->type, target);
         case PARAMETER_TYPE_BUILDING_COUNTING:
             return export_attribute_by_type(attr, PARAMETER_TYPE_BUILDING, target);
-        case PARAMETER_TYPE_CHECK:
-            return export_attribute_by_type(attr, PARAMETER_TYPE_CHECK, target);
-        case PARAMETER_TYPE_DIFFICULTY:
-            return export_attribute_by_type(attr, PARAMETER_TYPE_DIFFICULTY, target);
         case PARAMETER_TYPE_FUTURE_CITY:
             return export_attribute_future_city(attr, target);
         case PARAMETER_TYPE_MIN_MAX_NUMBER:
             return export_attribute_number(attr, target);
         case PARAMETER_TYPE_NUMBER:
             return export_attribute_number(attr, target);
-        case PARAMETER_TYPE_POP_CLASS:
-            return export_attribute_by_type(attr, PARAMETER_TYPE_POP_CLASS, target);
         case PARAMETER_TYPE_RESOURCE:
             return export_attribute_resource(attr, target);
         case PARAMETER_TYPE_ROUTE:
             return export_attribute_route(attr, target);
-        case PARAMETER_TYPE_STANDARD_MESSAGE:
-            return export_attribute_by_type(attr, PARAMETER_TYPE_STANDARD_MESSAGE, target);
         case PARAMETER_TYPE_CUSTOM_MESSAGE:
             return export_attribute_custom_message(attr, target);
         case PARAMETER_TYPE_CUSTOM_VARIABLE:

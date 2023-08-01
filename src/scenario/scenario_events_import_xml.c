@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define XML_TOTAL_ELEMENTS 47
+#define XML_TOTAL_ELEMENTS 51
 
 static struct {
     int success;
@@ -103,6 +103,10 @@ static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "change_trade_route_open_price", xml_import_create_action, 0, "actions" },
     { "variables", xml_import_start_custom_variables, 0, "events" },
     { "variable", xml_import_create_custom_variable, 0, "variables" },
+    { "change_city_rating", xml_import_create_action, 0, "actions" },
+    { "change_resource_stockpiles", xml_import_create_action, 0, "actions" },
+    { "resource_stored_count", xml_import_create_condition, 0, "conditions" }, //50
+    { "resource_storage_available", xml_import_create_condition, 0, "conditions" },
 };
 
 static int xml_import_start_scenario_events(void)
@@ -319,31 +323,27 @@ static int xml_import_special_parse_attribute(xml_data_attribute_t *attr, int *t
 {
     switch (attr->type) {
         case PARAMETER_TYPE_ALLOWED_BUILDING:
-            return xml_import_special_parse_type(attr, PARAMETER_TYPE_ALLOWED_BUILDING, target);
         case PARAMETER_TYPE_BOOLEAN:
-            return xml_import_special_parse_type(attr, PARAMETER_TYPE_BOOLEAN, target);
         case PARAMETER_TYPE_BUILDING:
-            return xml_import_special_parse_type(attr, PARAMETER_TYPE_BUILDING, target);
+        case PARAMETER_TYPE_CHECK:
+        case PARAMETER_TYPE_DIFFICULTY:
+        case PARAMETER_TYPE_POP_CLASS:
+        case PARAMETER_TYPE_RATING_TYPE:
+        case PARAMETER_TYPE_STANDARD_MESSAGE:
+        case PARAMETER_TYPE_STORAGE_TYPE:
+            return xml_import_special_parse_type(attr, attr->type, target);
         case PARAMETER_TYPE_BUILDING_COUNTING:
             return xml_import_special_parse_building_counting(attr, target);
-        case PARAMETER_TYPE_CHECK:
-            return xml_import_special_parse_type(attr, PARAMETER_TYPE_CHECK, target);
-        case PARAMETER_TYPE_DIFFICULTY:
-            return xml_import_special_parse_type(attr, PARAMETER_TYPE_DIFFICULTY, target);
         case PARAMETER_TYPE_FUTURE_CITY:
             return xml_import_special_parse_future_city(attr, target);
         case PARAMETER_TYPE_NUMBER:
             return xml_import_special_parse_limited_number(attr, target);
         case PARAMETER_TYPE_MIN_MAX_NUMBER:
             return xml_import_special_parse_min_max_number(attr, target);
-        case PARAMETER_TYPE_POP_CLASS:
-            return xml_import_special_parse_type(attr, PARAMETER_TYPE_POP_CLASS, target);
         case PARAMETER_TYPE_RESOURCE:
             return xml_import_special_parse_resource(attr, target);
         case PARAMETER_TYPE_ROUTE:
             return xml_import_special_parse_route(attr, target);
-        case PARAMETER_TYPE_STANDARD_MESSAGE:
-            return xml_import_special_parse_type(attr, PARAMETER_TYPE_STANDARD_MESSAGE, target);
         case PARAMETER_TYPE_CUSTOM_MESSAGE:
             return xml_import_special_parse_custom_message(attr, target);
         case PARAMETER_TYPE_CUSTOM_VARIABLE:

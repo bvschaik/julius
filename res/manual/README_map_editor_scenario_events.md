@@ -96,7 +96,8 @@ Here is a list of available conditions that can be used.
 + check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 10000000.
 + building = Which type of building to cound.
-  - Allowed values: A very big list. Refer to: (special_attribute_mappings_buildings)
+  - Allowed values: A very big list. Easiest is look at this condition type in the editor.
+    Otherwise, refer to: (special_attribute_mappings_buildings in "https://github.com/Keriew/augustus/blob/9429b006f38873749e4b4aa3c0cee99696eb23b2/src/scenario/scenario_events_parameter_data.c#L234")
   - Some notes:
     - "all_farms" = will count all farm types.
     - "all_raw_materials" = will count all marble quarries, clay pits, timber yards, iron and gold mines.
@@ -114,7 +115,8 @@ Here is a list of available conditions that can be used.
 + check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
 + value = The amount to check for. Allowed values: Any number from 0 to 10000000.
 + building = Which type of building to cound.
-  - Allowed values: A very big list. Refer to: (special_attribute_mappings_buildings)
+  - Allowed values: A very big list. Easiest is look at this condition type in the editor.
+    Otherwise, refer to: (special_attribute_mappings_buildings in "https://github.com/Keriew/augustus/blob/9429b006f38873749e4b4aa3c0cee99696eb23b2/src/scenario/scenario_events_parameter_data.c#L234")
   - Some notes:
     - "all_farms" = will count all farm types.
     - "all_raw_materials" = will count all marble quarries, clay pits, timber yards, iron and gold mines.
@@ -202,6 +204,27 @@ Here is a list of available conditions that can be used.
 + check_for_ongoing = Should this condition pass if the request is ongoing? Allowed values: "false" or "true".
   - "false" this condition will pass if the request is not ongoing. I.e. has not yet started, or has been fulfilled or ignored and is gone again.
   - "true" this condition will pass if the request is currently ongoing. I.e. the player can see the request message from Caesar, and still has a chance to fullfill it.
+
+
+### Resource storage available
++ type = resource_storage_available
++ resource = What resource to use. Allowed values: (Any resource name) "wheat", "timber", "marble", etc.
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
++ value = The amount to check for. Allowed values: Any number from 0 to 1000000000.
++ storage_type = What type of storages to check in. Allowed values: "all", "granaries", "warehouses".
+  - Note: If you check for non-food types in granaries, the answer will always be 0.
++ respect_settings = Only count empty storage space that is set to accept the target resource. Allowed values: "false" or "true".
+  - Note: If false, will count any open storage space, regardless of if the player has set the target resource to be allowed there.
+  - Example: A lone warehouse is set to accept up to 8 wheat and 24 wood. And has only 4 wheat stored. If respect_settings = true, the answer is 4. If respect_settings = false, the answer is 28.
+
+
+### Resource stored count
++ type = resource_stored_count
++ resource = What resource to use. Allowed values: (Any resource name) "wheat", "timber", "marble", etc.
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
++ value = The amount to check for. Allowed values: Any number from 0 to 1000000000.
++ storage_type = What type of storages to check in. Allowed values: "all", "granaries", "warehouses".
+  - Note: If you check for non-food types in granaries, the answer will always be 0.
 
 
 ### Rome Wages
@@ -298,6 +321,29 @@ Here is a list of available conditions that can be used.
 + set_to_value = Should we set the city health to the given value, instead of adding it? Allowed values: "false" or "true".
   - "true" = The custom variable value will be set to what is given in 'value'.
   - "false" = The 'value' will be added to the custom variable value.
+
+
+### Change resource stockpiles
++ type = change_resource_stockpiles
++ resource = The target resource. Allowed values: (Any resource name) "wheat", "timber", "marble", etc.
++ amount = The amount to change the stockpile by. Allowed values: Any number from -1000000000 to 1000000000.
+  - Note: The value is in full loads.
+  - Note: Negative values will remove from the stockpiles. If you try to remove more than there is, it will simply remove as much as possible (so there will be none left).
+  - Note: Positive values will add to the stockpiles. If you try to add more than is possible (not  enough free space) it will simply discard the rest (i.e. is lost).
++ storage_type = What type of storages to check in. Allowed values: "all", "granaries", "warehouses".
+  - Note: You cannot change the stockpiles of non-food types in granaries. It will simply have no effect.
++ respect_settings = If adding to the stockpiles, only add to places that accept that resource, and only up to the limits set. Allowed values: "false" or "true".
+  - Note: If false, and you are adding to the stockpiles, will add the resource to whatever empty space is found.
+
+
+### City change rating
++ type = change_city_rating
++ rating = The target rating to change. Allowed values: "peace", "prosperity"
++ amount = The amount to adjust the opening price by (or set it to if set_to_value = true). Allowed values: -100 to 100.
+  - Note: The rating is limited to 0 to 100.
++ set_to_value = Should we set the target rating to the given value, instead of adding it? Allowed values: "false" or "true".
+  - "true" = The target rating will be set to what is given in 'value'.
+  - "false" = The 'value' will be added to the current target rating.
 
 
 ### City health

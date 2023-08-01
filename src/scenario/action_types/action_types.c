@@ -1,6 +1,8 @@
 #include "action_types.h"
 
+#include "building/granary.h"
 #include "building/menu.h"
+#include "building/warehouse.h"
 #include "city/data_private.h"
 #include "city/emperor.h"
 #include "city/finance.h"
@@ -15,12 +17,15 @@
 #include "empire/trade_prices.h"
 #include "empire/trade_route.h"
 #include "game/time.h"
+#include "game/resource.h"
 #include "scenario/data.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/custom_messages.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 #include "scenario/scenario.h"
+
+#include <stdlib.h>
 
 int scenario_action_type_change_allowed_buildings_execute(scenario_action_t *action)
 {
@@ -30,6 +35,34 @@ int scenario_action_type_change_allowed_buildings_execute(scenario_action_t *act
     scenario.allowed_buildings[allowed_id] = allowed;
     building_menu_update();
     
+    return 1;
+}
+
+int scenario_action_type_change_city_rating_execute(scenario_action_t *action)
+{
+    selected_rating rating = action->parameter1;
+    int value = action->parameter2;
+    int is_hard_set = action->parameter3;
+
+    switch (rating) {
+        case SELECTED_RATING_PROSPERITY:
+            if (is_hard_set) {
+                city_ratings_set_prosperity(value);
+            } else {
+                city_ratings_change_prosperity(value);
+            }
+            break;
+        case SELECTED_RATING_PEACE:
+            if (is_hard_set) {
+                city_ratings_set_peace(value);
+            } else {
+                city_ratings_change_peace(value);
+            }
+            break;
+        default:
+            break;
+    }
+
     return 1;
 }
 
@@ -57,6 +90,53 @@ int scenario_action_type_change_resource_produced_execute(scenario_action_t *act
     building_menu_update();
     
     return successfully_changed;
+}
+
+int scenario_action_type_change_resource_stockpiles_execute(scenario_action_t *action)
+{
+    int resource = action->parameter1;
+    int amount = action->parameter2;
+    storage_types storage_type = action->parameter3;
+    int respect_settings = action->parameter4;
+    
+    if (resource < RESOURCE_MIN || resource > RESOURCE_MAX) {
+        return 0;
+    }
+    if (amount == 0) {
+        return 1;
+    }
+
+    int remaining = abs(amount);
+    int to_remove = (amount < 0);
+    switch(storage_type) {
+        case STORAGE_TYPE_ALL:
+            if (to_remove) {
+                remaining = building_warehouses_remove_resource(resource, remaining);
+                remaining = building_granaries_remove_resource(resource, remaining * RESOURCE_ONE_LOAD);
+            } else {
+                remaining = building_warehouses_add_resource(resource, remaining, respect_settings);
+                remaining = building_granaries_add_resource(resource, remaining * RESOURCE_ONE_LOAD, respect_settings);
+            }
+            break;
+        case STORAGE_TYPE_GRANARIES:
+            if (to_remove) {
+                remaining = building_granaries_remove_resource(resource, remaining * RESOURCE_ONE_LOAD);
+            } else {
+                remaining = building_granaries_add_resource(resource, remaining * RESOURCE_ONE_LOAD, respect_settings);
+            }
+            break;
+        case STORAGE_TYPE_WAREHOUSES:
+            if (to_remove) {
+                remaining = building_warehouses_remove_resource(resource, remaining);
+            } else {
+                remaining = building_warehouses_add_resource(resource, remaining, respect_settings);
+            }
+            break;
+        default:
+            break;
+    }
+
+    return 1;
 }
 
 void scenario_action_type_city_health_init(scenario_action_t *action)

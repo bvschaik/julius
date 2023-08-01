@@ -12,9 +12,19 @@ typedef struct {
     resource_type items[RESOURCE_MAX];
 } resource_list;
 
+typedef enum {
+    STORAGE_TYPE_NONE = 0,
+    STORAGE_TYPE_ALL = 1,
+    STORAGE_TYPE_GRANARIES = 2,
+    STORAGE_TYPE_WAREHOUSES = 3
+} storage_types;
+
 int city_resource_count_food_on_granaries(resource_type food);
 int city_resource_count(resource_type resource);
 int city_resource_get_amount_including_granaries(resource_type resource, int amount, int *checked_granaries);
+
+int city_resource_get_available_empty_space_granaries(resource_type food, int respect_settings);
+int city_resource_get_available_empty_space_warehouses(resource_type resource, int respect_settings);
 
 const resource_list *city_resource_get_available(void);
 

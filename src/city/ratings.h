@@ -32,6 +32,14 @@ int city_ratings_peace_num_rioters(void);
 
 void city_ratings_change_favor(int amount);
 
+void city_ratings_change_peace(int amount);
+
+void city_ratings_change_prosperity(int amount);
+
+void city_ratings_set_peace(int value);
+
+void city_ratings_set_prosperity(int value);
+
 void city_ratings_reset_favor_emperor_change(void);
 
 void city_ratings_reduce_favor_missed_request(int penalty);

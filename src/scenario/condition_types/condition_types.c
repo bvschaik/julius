@@ -289,6 +289,71 @@ int scenario_condition_type_request_is_ongoing_met(const scenario_condition_t *c
     return check_for_ongoing ? is_ongoing : !is_ongoing;
 }
 
+int scenario_condition_type_resource_storage_available_met(const scenario_condition_t *condition)
+{
+    int resource = condition->parameter1;
+    int comparison = condition->parameter2;
+    int value = condition->parameter3;
+    storage_types storage_type = condition->parameter4;
+    int respect_settings = condition->parameter5;
+
+    if (resource < RESOURCE_MIN || resource > RESOURCE_MAX) {
+        return 0;
+    }
+
+    int storage_available = 0;
+    switch(storage_type) {
+        case STORAGE_TYPE_ALL:
+            storage_available += city_resource_get_available_empty_space_warehouses(resource, respect_settings);
+            storage_available += city_resource_get_available_empty_space_granaries(resource, respect_settings) / RESOURCE_ONE_LOAD;
+            break;
+        case STORAGE_TYPE_GRANARIES:
+            storage_available += city_resource_get_available_empty_space_granaries(resource, respect_settings) / RESOURCE_ONE_LOAD;
+            break;
+        case STORAGE_TYPE_WAREHOUSES:
+            storage_available += city_resource_get_available_empty_space_warehouses(resource, respect_settings);
+            break;
+        default:
+            break;
+    }
+
+    return comparison_helper_compare_values(comparison, storage_available, value);
+}
+
+int scenario_condition_type_resource_stored_count_met(const scenario_condition_t *condition)
+{
+    int resource = condition->parameter1;
+    int comparison = condition->parameter2;
+    int value = condition->parameter3;
+    storage_types storage_type = condition->parameter4;
+
+    if (resource < RESOURCE_MIN || resource > RESOURCE_MAX) {
+        return 0;
+    }
+
+    int amount_stored = 0;
+    switch(storage_type) {
+        case STORAGE_TYPE_ALL:
+            amount_stored += city_resource_count(resource);
+            if (resource_is_food(resource)) {
+                amount_stored += city_resource_count_food_on_granaries(resource) / RESOURCE_ONE_LOAD;
+            }
+            break;
+        case STORAGE_TYPE_GRANARIES:
+            if (resource_is_food(resource)) {
+                amount_stored += city_resource_count_food_on_granaries(resource) / RESOURCE_ONE_LOAD;
+            }
+            break;
+        case STORAGE_TYPE_WAREHOUSES:
+            amount_stored += city_resource_count(resource);
+            break;
+        default:
+            break;
+    }
+
+    return comparison_helper_compare_values(comparison, amount_stored, value);
+}
+
 int scenario_condition_type_rome_wages_met(const scenario_condition_t *condition)
 {
     int wages = city_labor_wages_rome();

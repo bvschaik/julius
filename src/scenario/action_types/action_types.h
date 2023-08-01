@@ -5,9 +5,13 @@
 
 int scenario_action_type_change_allowed_buildings_execute(scenario_action_t *action);
 
+int scenario_action_type_change_city_rating_execute(scenario_action_t *action);
+
 int scenario_action_type_change_custom_variable_execute(scenario_action_t *action);
 
 int scenario_action_type_change_resource_produced_execute(scenario_action_t *action);
+
+int scenario_action_type_change_resource_stockpiles_execute(scenario_action_t *action);
 
 int scenario_action_type_empire_map_convert_future_trade_city_execute(scenario_action_t *action);
 

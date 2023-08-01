@@ -21,6 +21,10 @@ int scenario_condition_type_population_unemployed_met(const scenario_condition_t
 
 int scenario_condition_type_request_is_ongoing_met(const scenario_condition_t *condition);
 
+int scenario_condition_type_resource_storage_available_met(const scenario_condition_t *condition);
+
+int scenario_condition_type_resource_stored_count_met(const scenario_condition_t *condition);
+
 int scenario_condition_type_rome_wages_met(const scenario_condition_t *condition);
 
 int scenario_condition_type_savings_met(const scenario_condition_t *condition);
