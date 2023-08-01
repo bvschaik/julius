@@ -199,8 +199,7 @@ static void draw_permissions_buttons(int x, int y, int buttons, building_info_co
     };
     int offsets[] = { 96, 132, 96, 96 };
     int dx = x;
-    for (int i = 0; i < buttons; i++)
-    {
+    for (int i = 0; i < buttons; i++) {
         int rule_id = rules[i];
         button_border_draw(dx, y, 20, 20, data.permission_focus_button_id == i + 1 ? 1 : 0);
         if (building_storage_get_permission(rule_id, building_get(data.building_id))) {
@@ -490,7 +489,7 @@ void window_building_draw_distributor_orders(building_info_context *c, const uin
     }
 
     int scrollbar_shown = scrollbar.max_scroll_position > 0;
-    
+
     inner_panel_draw(c->x_offset + 16, y_offset + 42, c->width_blocks - (scrollbar_shown ? 4 : 2), 21);
 }
 
@@ -624,7 +623,7 @@ void window_building_draw_granary(building_info_context *c)
         generate_granary_resource_list(b);
         y_offset_blocks = ((data.stored_resources.size - 1) / 2 - 3) * 2 + 2;
     }
-    c->height_blocks = 22 + y_offset_blocks;    
+    c->height_blocks = 22 + y_offset_blocks;
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
     text_draw_label_and_number_centered(lang_get_string(28, b->type), b->storage_id, "",
@@ -768,21 +767,21 @@ static void draw_button_from_state(int state, int x, int y, building_type type, 
         case BUILDING_STORAGE_STATE_GETTING_3QUARTERS:
         case BUILDING_STORAGE_STATE_GETTING_HALF:
         case BUILDING_STORAGE_STATE_GETTING_QUARTER:
-            {
-                int image_width = image_get(image_group(GROUP_CONTEXT_ICONS) + 12)->width + 15;
-                int group_number;
-                if (resource_is_food(resource)) { 
-                    // Check whether to use "getting goods" or "getting food"
-                    group_number = 10;
-                } else {
-                    group_number = 9;
-                }
-                int text_width = lang_text_get_width(99, group_number, FONT_NORMAL_WHITE);
-                int start_x = x + (210 - image_width - text_width) / 2;
-                image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, start_x, y - 2, COLOR_MASK_NONE, SCALE_NONE);
-                lang_text_draw(99, group_number, start_x + image_width, y, FONT_NORMAL_WHITE);
-                break;
+        {
+            int image_width = image_get(image_group(GROUP_CONTEXT_ICONS) + 12)->width + 15;
+            int group_number;
+            if (resource_is_food(resource)) {
+                // Check whether to use "getting goods" or "getting food"
+                group_number = 10;
+            } else {
+                group_number = 9;
             }
+            int text_width = lang_text_get_width(99, group_number, FONT_NORMAL_WHITE);
+            int start_x = x + (210 - image_width - text_width) / 2;
+            image_draw(image_group(GROUP_CONTEXT_ICONS) + 12, start_x, y - 2, COLOR_MASK_NONE, SCALE_NONE);
+            lang_text_draw(99, group_number, start_x + image_width, y, FONT_NORMAL_WHITE);
+            break;
+        }
         case BUILDING_STORAGE_STATE_NOT_ACCEPTING:
         case BUILDING_STORAGE_STATE_NOT_ACCEPTING_3QUARTERS:
         case BUILDING_STORAGE_STATE_NOT_ACCEPTING_HALF:
@@ -872,7 +871,7 @@ int window_building_handle_mouse_granary_orders(const mouse *m, building_info_co
 
     int buttons_to_show = city_resource_get_potential_foods()->size < scrollbar.elements_in_view ?
         city_resource_get_potential_foods()->size : scrollbar.elements_in_view;
-    
+
     return scrollbar_handle_mouse(&scrollbar, m, 1) ||
         generic_buttons_handle_mouse(m, c->x_offset + 172, y_offset + 46, orders_resource_buttons, buttons_to_show,
             &data.resource_focus_button_id) ||
@@ -1102,7 +1101,7 @@ int window_building_handle_mouse_warehouse_orders(const mouse *m, building_info_
 
     int buttons_to_show = city_resource_get_potential()->size < scrollbar.elements_in_view ?
         city_resource_get_potential()->size : scrollbar.elements_in_view;
-    
+
     return scrollbar_handle_mouse(&scrollbar, m, 1) ||
         generic_buttons_handle_mouse(m, c->x_offset + 172, y_offset + 46, orders_resource_buttons, buttons_to_show,
             &data.resource_focus_button_id) ||
@@ -1130,7 +1129,7 @@ void window_building_warehouse_get_tooltip_distribution_permissions(int *transla
     if (data.image_button_focus_id) {
         building *b = building_get(data.building_id);
         if (building_storage_get_permission(BUILDING_STORAGE_PERMISSION_WORKER, b)) {
-            *translation = TR_TOOLTIP_BUTTON_ACCEPT_WORKERS; 
+            *translation = TR_TOOLTIP_BUTTON_ACCEPT_WORKERS;
         } else {
             *translation = TR_TOOLTIP_BUTTON_REJECT_WORKERS;
         }
@@ -1191,7 +1190,7 @@ const uint8_t *window_building_dock_get_tooltip(building_info_context *c)
                 continue;
             }
             if (traded > 0) {
-                cursor = string_copy(string_from_ascii(", "), cursor, 400 - (int) (cursor - text));                
+                cursor = string_copy(string_from_ascii(", "), cursor, 400 - (int) (cursor - text));
             }
             traded++;
             cursor = string_copy(resource_get_data(resource)->text, cursor, 400 - (int) (cursor - text));

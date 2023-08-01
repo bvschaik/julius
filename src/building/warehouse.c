@@ -120,7 +120,7 @@ int building_warehouses_add_resource(int resource, int amount, int respect_setti
     if (amount <= 0) {
         return 0;
     }
-    
+
     for (building *b = building_first_of_type(BUILDING_WAREHOUSE); b; b = b->next_of_type) {
         if (b->state != BUILDING_STATE_IN_USE) {
             continue;
@@ -279,9 +279,9 @@ int building_warehouse_is_accepting(int resource, building *b)
     int amount = building_warehouse_get_amount(b, resource);
     if (!b->has_plague &&
         ((s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS && amount < THREEQ_WAREHOUSE) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_WAREHOUSE) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER && amount < QUARTER_WAREHOUSE))) {
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_3QUARTERS && amount < THREEQ_WAREHOUSE) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_HALF && amount < HALF_WAREHOUSE) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_ACCEPTING_QUARTER && amount < QUARTER_WAREHOUSE))) {
         return 1;
     } else {
         return 0;
@@ -292,11 +292,11 @@ int building_warehouse_is_getting(int resource, building *b)
 {
     const building_storage *s = building_storage_get(b->storage_id);
     int amount = building_warehouse_get_amount(b, resource);
-    if (!b->has_plague && 
+    if (!b->has_plague &&
         ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS && amount < THREEQ_WAREHOUSE) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_WAREHOUSE) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER && amount < QUARTER_WAREHOUSE))) {
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS && amount < THREEQ_WAREHOUSE) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF && amount < HALF_WAREHOUSE) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER && amount < QUARTER_WAREHOUSE))) {
         return 1;
     } else {
         return 0;
@@ -308,9 +308,9 @@ static int warehouse_is_gettable(int resource, building *b)
     const building_storage *s = building_storage_get(b->storage_id);
     if (!b->has_plague &&
         ((s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) ||
-        (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER))) {
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_HALF) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_3QUARTERS) ||
+            (s->resource_state[resource] == BUILDING_STORAGE_STATE_GETTING_QUARTER))) {
         return 1;
     } else {
         return 0;
@@ -688,9 +688,6 @@ static int contains_non_stockpiled_food(building *space, const int *resources)
 
 int building_warehouse_determine_worker_task(building *warehouse, int *resource)
 {
-    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_WORKER, warehouse)) {
-        return WAREHOUSE_TASK_NONE; // Disabled by player
-    }
     int pct_workers = calc_percentage(warehouse->num_workers, model_get_building(warehouse->type)->laborers);
     if (pct_workers < 50) {
         return WAREHOUSE_TASK_NONE;
@@ -733,7 +730,9 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
             return WAREHOUSE_TASK_GETTING;
         }
     }
-
+    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_WORKER, warehouse)) {
+        return WAREHOUSE_TASK_NONE;
+    }
     // deliver weapons to barracks
     if ((building_count_active(BUILDING_BARRACKS) || building_count_active(BUILDING_GRAND_TEMPLE_MARS)) &&
         !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
