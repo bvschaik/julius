@@ -1,6 +1,6 @@
-#include "building/type.h"
 #include "core/lang.h"
 
+#include "building/building.h"
 #include "core/buffer.h"
 #include "core/file.h"
 #include "core/io.h"
@@ -549,6 +549,16 @@ const uint8_t *lang_get_string(int group, int index)
         ++str;
     }
     return str;
+}
+
+const uint8_t *lang_get_building_type_string(int type)
+{
+    if (building_is_house(type) || type == BUILDING_NATIVE_HUT ||
+        type == BUILDING_NATIVE_MEETING || type == BUILDING_NATIVE_CROPS) {
+        return lang_get_string(41, type);
+    } else {
+        return lang_get_string(28, type);
+    }
 }
 
 const lang_message *lang_get_message(int id)

@@ -213,7 +213,7 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    outer_panel_draw(16, 16, 42, 37);
+    outer_panel_draw(0, 0, 42, 38);
 
     for (int i = 0; i < 4; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);

@@ -75,4 +75,7 @@ int scenario_events_parameter_data_get_mappings_size(parameter_type type);
 
 int scenario_events_parameter_data_get_default_value_for_parameter(xml_data_attribute_t *attribute_data);
 
+const uint8_t *scenario_events_parameter_data_get_display_string(special_attribute_mapping_t *entry);
+void scenario_events_parameter_data_get_display_string_for_value(parameter_type type, int value, uint8_t *result_text, int maxlength);
+
 #endif // SCENARIO_EVENTS_PARAMETER_DATA_H

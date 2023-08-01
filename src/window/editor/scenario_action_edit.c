@@ -24,9 +24,10 @@
 #include "window/select_list.h"
 
 #define BUTTON_LEFT_PADDING 32
-#define BUTTON_WIDTH 320
+#define BUTTON_WIDTH 608
 #define DETAILS_Y_OFFSET 128
 #define DETAILS_ROW_HEIGHT 32
+#define MAX_TEXT_LENGTH 50
 
 static void init(scenario_action_t *action);
 static void button_amount(int param1, int param2);
@@ -55,9 +56,18 @@ static struct {
     int parameter_being_edited;
     int parameter_being_edited_current_value;
 
+    uint8_t display_text[MAX_TEXT_LENGTH];
+
     scenario_action_t *action;
     scenario_action_data_t *xml_info;
 } data;
+
+static uint8_t *translation_for_param_value(parameter_type type, int value)
+{
+    memset(data.display_text, 0, MAX_TEXT_LENGTH);
+    scenario_events_parameter_data_get_display_string_for_value(type, value, data.display_text, MAX_TEXT_LENGTH);
+    return data.display_text;
+}
 
 static void init(scenario_action_t *action)
 {
@@ -74,7 +84,7 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    outer_panel_draw(16, 16, 24, 24);
+    outer_panel_draw(0, 0, 42, 24);
 
     for (int i = 5; i <= 6; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
@@ -84,42 +94,65 @@ static void draw_foreground(void)
 
     text_draw_centered(translation_for(data.xml_info->xml_attr.key), 32, 72, BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
 
-    int y_offset = DETAILS_Y_OFFSET;
     int button_id = 0;
     if (data.xml_info->xml_parm1.type > PARAMETER_TYPE_UNDEFINED) {
-        large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
-        text_draw_label_and_number(translation_for(data.xml_info->xml_parm1.key), data.action->parameter1, "", 64, y_offset + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16,
+            data.focus_button_id == button_id + 1 ? 1 : 0);
+        text_draw_centered(translation_for(data.xml_info->xml_parm1.key),
+            buttons[button_id].x, buttons[button_id].y + 8, buttons[button_id].width / 2,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        text_draw_centered(translation_for_param_value(data.xml_info->xml_parm1.type, data.action->parameter1),
+            buttons[button_id].x + BUTTON_WIDTH / 2, buttons[button_id].y + 8, buttons[button_id].width / 2,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     }
-    y_offset += DETAILS_ROW_HEIGHT;
     button_id++;
 
     if (data.xml_info->xml_parm2.type > PARAMETER_TYPE_UNDEFINED) {
-        large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
-        text_draw_label_and_number(translation_for(data.xml_info->xml_parm2.key), data.action->parameter2, "", 64, y_offset + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16,
+            data.focus_button_id == button_id + 1 ? 1 : 0);
+        text_draw_centered(translation_for(data.xml_info->xml_parm2.key),
+            buttons[button_id].x, buttons[button_id].y + 8, buttons[button_id].width / 2,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        text_draw_centered(translation_for_param_value(data.xml_info->xml_parm2.type, data.action->parameter2),
+            buttons[button_id].x + BUTTON_WIDTH / 2, buttons[button_id].y + 8, buttons[button_id].width / 2,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     }
-    y_offset += DETAILS_ROW_HEIGHT;
     button_id++;
 
     if (data.xml_info->xml_parm3.type > PARAMETER_TYPE_UNDEFINED) {
-        large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
-        text_draw_label_and_number(translation_for(data.xml_info->xml_parm3.key), data.action->parameter3, "", 64, y_offset + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16,
+            data.focus_button_id == button_id + 1 ? 1 : 0);
+        text_draw_centered(translation_for(data.xml_info->xml_parm3.key),
+            buttons[button_id].x, buttons[button_id].y + 8, buttons[button_id].width / 2,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        text_draw_centered(translation_for_param_value(data.xml_info->xml_parm3.type, data.action->parameter3),
+            buttons[button_id].x + BUTTON_WIDTH / 2, buttons[button_id].y + 8, buttons[button_id].width / 2,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     }
-    y_offset += DETAILS_ROW_HEIGHT;
     button_id++;
 
     if (data.xml_info->xml_parm4.type > PARAMETER_TYPE_UNDEFINED) {
-        large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
-        text_draw_label_and_number(translation_for(data.xml_info->xml_parm4.key), data.action->parameter4, "", 64, y_offset + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16,
+            data.focus_button_id == button_id + 1 ? 1 : 0);
+        text_draw_centered(translation_for(data.xml_info->xml_parm4.key),
+            buttons[button_id].x, buttons[button_id].y + 8, buttons[button_id].width / 2,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        text_draw_centered(translation_for_param_value(data.xml_info->xml_parm4.type, data.action->parameter4),
+            buttons[button_id].x + BUTTON_WIDTH / 2, buttons[button_id].y + 8, buttons[button_id].width / 2,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     }
-    y_offset += DETAILS_ROW_HEIGHT;
     button_id++;
 
     if (data.xml_info->xml_parm5.type > PARAMETER_TYPE_UNDEFINED) {
-        large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
-        text_draw_label_and_number(translation_for(data.xml_info->xml_parm5.key), data.action->parameter5, "", 64, y_offset + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16,
+            data.focus_button_id == button_id + 1 ? 1 : 0);
+        text_draw_centered(translation_for(data.xml_info->xml_parm5.key),
+            buttons[button_id].x, buttons[button_id].y + 8, buttons[button_id].width / 2,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        text_draw_centered(translation_for_param_value(data.xml_info->xml_parm5.type, data.action->parameter5),
+            buttons[button_id].x + BUTTON_WIDTH / 2, buttons[button_id].y + 8, buttons[button_id].width / 2,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     }
-    y_offset += DETAILS_ROW_HEIGHT;
-    button_id++;
 
     lang_text_draw_centered(13, 3, 32, 32 + 16 * 20, BUTTON_WIDTH, FONT_NORMAL_BLACK);
 

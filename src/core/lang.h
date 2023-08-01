@@ -95,6 +95,13 @@ void load_augustus_messages(void);
 const uint8_t *lang_get_string(int group, int index);
 
 /**
+ * Gets a localized string for a building type
+ * @param type The building type to get the display string of
+ * @return String
+ */
+const uint8_t *lang_get_building_type_string(int type);
+
+/**
  * Gets the message for the specified ID
  * @param id ID of the message
  * @return Message
