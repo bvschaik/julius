@@ -96,7 +96,7 @@ static int big_people_image(figure_type type)
         case FIGURE_BARKEEP_SUPPLIER:
             return assets_get_image_id("Walkers", "Barkeep Portrait");
         case FIGURE_DEPOT_CART_PUSHER:
-            return image_group(GROUP_BIG_PEOPLE) + FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[FIGURE_IMMIGRANT] - 1;
+            return assets_lookup_image_id(ASSET_OX);
         default:
             break;
     }
@@ -377,10 +377,10 @@ static int is_depot_cartpusher_recalled(figure *f)
         f->action_state == FIGURE_ACTION_244_DEPOT_CART_PUSHER_CANCEL_ORDER;
 }
 
-static void draw_depot_cartpusher(building_info_context* c, figure* f)
+static void draw_depot_cartpusher(building_info_context *c, figure *f)
 {
     image_draw(big_people_image(f->type), c->x_offset + 28, c->y_offset + 112, COLOR_MASK_NONE, SCALE_NONE);
-    
+
     building *depot = building_get(f->building_id);
     resource_type resource = depot->data.depot.current_order.resource_type;
 
@@ -397,7 +397,7 @@ static void draw_depot_cartpusher(building_info_context* c, figure* f)
     button_border_draw(c->x_offset + 90, c->y_offset + 160, 100, 22, data.depot_focus_button_id == 1 ||
         is_depot_cartpusher_recalled(f));
     translation_key button_text = is_depot_cartpusher_recalled(f) ?
-         TR_FIGURE_INFO_DEPOT_RETURNING : TR_FIGURE_INFO_DEPOT_RECALL;
+        TR_FIGURE_INFO_DEPOT_RETURNING : TR_FIGURE_INFO_DEPOT_RECALL;
     text_draw_centered(translation_for(button_text), c->x_offset + 90, c->y_offset + 166,
         100, FONT_SMALL_PLAIN, 0);
 
@@ -425,7 +425,7 @@ static void draw_depot_cartpusher(building_info_context* c, figure* f)
         c->x_offset + 40 + width, c->y_offset + 200 + y_offset, FONT_NORMAL_BROWN, 0);
     text_draw_label_and_number(lang_get_string(28, destination->type),
         destination->storage_id, "",
-        c->x_offset + 40 + width, c->y_offset + 200+ y_offset, FONT_NORMAL_BROWN, 0);
+        c->x_offset + 40 + width, c->y_offset + 200 + y_offset, FONT_NORMAL_BROWN, 0);
 }
 
 static void draw_supplier(building_info_context *c, figure *f)

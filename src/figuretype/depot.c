@@ -1,5 +1,6 @@
 #include "depot.h"
 
+#include "assets/assets.h"
 #include "building/granary.h"
 #include "building/industry.h"
 #include "building/storage.h"
@@ -27,6 +28,9 @@
 #define DEPOT_CART_REROUTE_DELAY 10
 #define DEPOT_CART_LOAD_OFFLOAD_DELAY 10
 
+static const int CART_OFFSETS_X[8] = { 24, 34, 29,  7, -15, -20, -13,  6 };
+static const int CART_OFFSETS_Y[8] = { -5,  6, 17, 40,  15,   7,  -3, -6 };
+
 static int cartpusher_carries_food(figure *f)
 {
     return resource_is_food(f->resource_id);
@@ -40,9 +44,19 @@ static void set_cart_graphic(figure *f)
     } else if (carried == 1) {
         f->cart_image_id = resource_get_data(f->resource_id)->image.cart.single_load;
     } else if (cartpusher_carries_food(f) && carried >= 8) {
-        f->cart_image_id = resource_get_data(f->resource_id)->image.cart.eight_loads;        
+        f->cart_image_id = resource_get_data(f->resource_id)->image.cart.eight_loads;
     } else {
         f->cart_image_id = resource_get_data(f->resource_id)->image.cart.multiple_loads;
+    }
+}
+
+static void set_cart_offset(figure *f, int direction)
+{
+    f->x_offset_cart = CART_OFFSETS_X[direction];
+    f->y_offset_cart = CART_OFFSETS_Y[direction];
+
+    if (f->loads_sold_or_carrying >= 8) {
+        f->y_offset_cart -= 40;
     }
 }
 
@@ -52,17 +66,15 @@ static void update_image(figure *f)
         f->direction < 8 ? f->direction : f->previous_tile_direction);
 
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(GROUP_FIGURE_MIGRANT) + figure_image_corpse_offset(f) + 96;
+        f->image_id = assets_lookup_image_id(ASSET_OX) + 1 + figure_image_corpse_offset(f);
         f->cart_image_id = 0;
     } else {
-        f->image_id = image_group(GROUP_FIGURE_MIGRANT) + dir + 8 * f->image_offset;
+        f->image_id = assets_lookup_image_id(ASSET_OX) + 9 + dir * 12 + f->image_offset;
     }
     if (f->cart_image_id) {
+        dir = (dir + 4) % 8;
         f->cart_image_id += dir;
-        figure_image_set_cart_offset(f, dir);
-        if (f->loads_sold_or_carrying >= 8) {
-            f->y_offset_cart -= 40;
-        }
+        set_cart_offset(f, dir);
     }
 }
 
