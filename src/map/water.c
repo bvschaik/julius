@@ -55,20 +55,12 @@ void map_water_add_building(int building_id, int x, int y, int size)
     }
 }
 
-static int blocked_land_terrain(void)
-{
-    return
-        TERRAIN_TREE | TERRAIN_ROCK | TERRAIN_WATER |
-        TERRAIN_BUILDING | TERRAIN_SHRUB | TERRAIN_GARDEN |
-        TERRAIN_ROAD | TERRAIN_ELEVATION | TERRAIN_RUBBLE;
-}
-
 static int is_blocked_tile(int grid_offset)
 {
     if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
         return map_terrain_is(grid_offset, TERRAIN_ROCK | TERRAIN_ROAD | TERRAIN_BUILDING);
     }
-    return map_terrain_is(grid_offset, blocked_land_terrain());
+    return map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR);
 }
 
 int map_water_determine_orientation(int x, int y, int size, int adjust_xy,
