@@ -12,6 +12,7 @@
 #include "graphics/window.h"
 
 #define MAX_LINKS 50
+#define TEMP_LINE_SIZE 200
 
 static void on_scroll(void);
 
@@ -28,7 +29,7 @@ static struct {
     int y_max;
 } links[MAX_LINKS];
 
-static uint8_t tmp_line[200];
+static uint8_t tmp_line[TEMP_LINE_SIZE];
 
 static struct {
     const font_definition *normal_font;
@@ -191,6 +192,22 @@ static int get_word_width(const uint8_t *str, int in_link, int *num_chars)
     return width;
 }
 
+static int get_raw_text_width(const uint8_t *str)
+{
+    int width = 0;
+    int guard = 0;
+    int start_link = 0;
+    while (*str && ++guard < 2000) {
+        int num_bytes = 1;
+        int letter_id = font_letter_id(data.normal_font, str, &num_bytes);
+        if (letter_id >= 0) {
+            width += 1 + image_letter(letter_id)->width;
+        }
+        str++;
+    }
+    return width;
+}
+
 static void draw_line(const uint8_t *str, int x, int y, color_t color, int measure_only)
 {
     int start_link = 0;
@@ -255,7 +272,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
             break;
         }
         // clear line
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < TEMP_LINE_SIZE; i++) {
             tmp_line[i] = 0;
         }
         int line_index = 0;
@@ -268,7 +285,23 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                 break;
             }
             int word_num_chars;
-            current_width += get_word_width(text, 0, &word_num_chars);
+            int word_width = get_word_width(text, 0, &word_num_chars);
+            if (word_width >= box_width) {
+                // Word too long to fit on a line, so cut it into smaller pieces.
+                int can_cut_more = 1;
+                while (can_cut_more) {
+                    char c = *text;
+                    if (c == '@') {
+                        break;
+                    }
+                    *text++;
+                    tmp_line[line_index++] = c;
+                    int temp_num_chars;
+                    int temp_width = get_raw_text_width(tmp_line);
+                    can_cut_more = (temp_width < box_width);
+                }
+            }
+            current_width += word_width;
             if (current_width >= box_width) {
                 if (current_width == 0) {
                     has_more_characters = 0;
