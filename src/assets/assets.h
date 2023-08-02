@@ -3,8 +3,7 @@
 
 #include "core/image.h"
 
-#define ASSETS_DIR_NAME "assets"
-#define ASSETS_DIRECTORY "***" ASSETS_DIR_NAME "***"
+#define ASSETS_IMAGE_PATH "Graphics"
 
 #define PATH_ROTATE_OFFSET 56
 

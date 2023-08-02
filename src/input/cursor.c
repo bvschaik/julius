@@ -4,7 +4,7 @@
 #include "game/system.h"
 #include "window/city.h"
 
-#define CURSOR_PATH_NAME "Color_Cursors"
+#define CURSOR_PATH_NAME "Cursors/Color_Cursors"
 
 static const cursor ARROW[CURSOR_SCALE_MAX][CURSOR_TYPE_MAX] = {
     {

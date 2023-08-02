@@ -29,8 +29,6 @@
 #endif
 
 #ifdef _WIN32
-// Windows doesn't have strcasestr either, but it has StrStrIA which is exactly the same
-#include <shlwapi.h>
 #include <windows.h>
 
 #define fs_dir_type _WDIR
@@ -171,6 +169,11 @@ static int write_base_path_to(char *dest)
 }
 #endif
 
+static struct {
+    char current_src_path[FILE_NAME_MAX];
+    char current_dst_path[FILE_NAME_MAX];
+} directory_copy_data;
+
 static void set_assets_directory(void)
 {
 #ifndef __ANDROID__
@@ -263,12 +266,19 @@ int platform_file_manager_list_directory_contents(
     }
 
     dir_name current_dir;
+    size_t assets_directory_length = strlen(ASSETS_DIRECTORY);
 
     if (!dir || !*dir || strcmp(dir, ".") == 0) {
         current_dir = CURRENT_DIR;
-    } else if (strcmp(dir, ASSETS_DIRECTORY) == 0) {
+    } else if (strncmp(dir, ASSETS_DIRECTORY, assets_directory_length) == 0) {
         set_assets_directory();
-        current_dir = set_dir_name(assets_directory);
+        if (strlen(dir) == assets_directory_length) {
+            current_dir = set_dir_name(assets_directory);
+        } else {
+            char full_asset_path[FILE_NAME_MAX];
+            snprintf(full_asset_path, FILE_NAME_MAX, "%s%s", assets_directory, dir + assets_directory_length);
+            current_dir = set_dir_name(full_asset_path);
+        }
     } else {
         current_dir = set_dir_name(dir);
     }
@@ -305,7 +315,13 @@ int platform_file_manager_list_directory_contents(
     struct stat file_info;
     while ((entry = fs_dir_read(d)) != 0) {
         const char *name = dir_entry_name(entry);
-        if (stat(name, &file_info) != -1) {
+        const char *full_path = name;
+        if (dir && *dir && strcmp(dir, ".") != 0) {
+            static char full_name[FILE_NAME_MAX];
+            snprintf(full_name, FILE_NAME_MAX, "%s/%s", dir, name);
+            full_path = full_name;
+        }
+        if (stat(full_path, &file_info) != -1) {
             int m = file_info.st_mode;
             if ((!(type & TYPE_FILE) && is_file(m)) ||
                 (!(type & TYPE_DIR) && S_ISDIR(m)) ||
@@ -344,32 +360,28 @@ int platform_file_manager_should_case_correct_file(void)
 #endif
 }
 
-int platform_file_manager_filename_contains(const char *a, const char *b)
+int platform_file_manager_filename_contains(const char *filename, const char *expression)
 {
-#if defined(_WIN32)
-    return StrStrIA(a, b) != 0;
-#else
-    int has_a = a && *a;
-    int has_b = b && *b;
-    if (!has_a) {
-        return !has_b;
-    } else if (!has_b) {
+    int has_filename = filename && *filename;
+    int has_expression = expression && *expression;
+    if (!has_filename) {
+        return !has_expression;
+    } else if (!has_expression) {
         return 1;
     }
-    size_t a_length = strlen(a);
-    size_t b_length = strlen(b);
-    if (a_length < b_length) {
+    size_t filename_length = strlen(filename);
+    size_t expression_length = strlen(expression);
+    if (filename_length < expression_length) {
         return 0;
     }
-    size_t limit = a_length - b_length;
+    size_t limit = filename_length - expression_length;
     for (size_t i = 0; i <= limit; i++) {
-        if (strncasecmp(a, b, b_length) == 0) {
+        if (platform_file_manager_compare_filename_prefix(filename, expression, (int) expression_length) == 0) {
             return 1;
         }
-        a++;
+        filename++;
     }
     return 0;
-#endif
 }
 
 int platform_file_manager_compare_filename(const char *a, const char *b)
@@ -565,19 +577,201 @@ int platform_file_manager_close_file(FILE *stream)
     return result == 0;
 }
 
-int platform_file_manager_create_directory(const char *name)
+int platform_file_manager_create_directory(const char *name, int overwrite)
 {
+    char tokenized_name[FILE_NAME_MAX] = { 0 };
+    char temporary_path[FILE_NAME_MAX] = { 0 };
+    strncpy(tokenized_name, name, FILE_NAME_MAX);
+    char *token = strtok(tokenized_name, "/\\");
+    int overwrite_last = 0;
+    while (token) {
+        overwrite_last = 0;
+        strncat(temporary_path, token, FILE_NAME_MAX - 1);
 #ifdef _WIN32
-    if (CreateDirectoryA(name, 0) != 0) {
-        return 1;
-    } else {
-        return GetLastError() == ERROR_ALREADY_EXISTS;
-    }
+        wchar_t *wpath = utf8_to_wchar(temporary_path);
+        if (CreateDirectoryW(wpath, 0) == 0) {
+            if (GetLastError() != ERROR_ALREADY_EXISTS) {
+                free(wpath);
+                return 0;
+            } else if (!overwrite) {
+                overwrite_last = 1;
+            }
+        }
+        free(wpath);
 #else
-    if (mkdir(name, 0744) == 0) {
-        return 1;
-    } else {
-        return errno == EEXIST;
-    }
+        if (mkdir(temporary_path, 0744) != 0) {
+            if (errno != EEXIST) {
+                return 0;
+            } else if (!overwrite) {
+                overwrite_last = 1;
+            }
+        }
 #endif
+        strncat(temporary_path, "/", FILE_NAME_MAX - 1);
+        token = strtok(0, "/\\");
+    }
+    return !overwrite_last;
+}
+
+int platform_file_manager_copy_file(const char *src, const char *dst)
+{
+    FILE *in = platform_file_manager_open_file(src, "rb");
+    if (!in) {
+        return 0;
+    }
+    FILE *out = platform_file_manager_open_file(dst, "wb");
+    if (!out) {
+        fclose(in);
+        return 0;
+    }
+
+    char buf[1024];
+    size_t read = 0;
+
+    while ((read = fread(buf, 1, 1024, in)) == 1024) {
+        fwrite(buf, 1, 1024, out);
+    }
+    fwrite(buf, 1, read, out);
+
+    file_close(out);
+    file_close(in);
+
+    return 1;
+}
+
+static void append_name_to_path(const char *name)
+{
+    strncat(directory_copy_data.current_src_path, "/", FILE_NAME_MAX - 1);
+    strncat(directory_copy_data.current_dst_path, "/", FILE_NAME_MAX - 1);
+
+    strncat(directory_copy_data.current_src_path, name, FILE_NAME_MAX - 1);
+    strncat(directory_copy_data.current_dst_path, name, FILE_NAME_MAX - 1);
+}
+
+static void move_up_path(void)
+{
+    char *last_src_path_delimiter = strrchr(directory_copy_data.current_src_path, '/');
+    char *last_dst_path_delimiter = strrchr(directory_copy_data.current_dst_path, '/');
+    if (last_src_path_delimiter) {
+        *last_src_path_delimiter = 0;
+    }
+    if (last_dst_path_delimiter) {
+        *last_dst_path_delimiter = 0;
+    }
+}
+
+
+static int copy_file(const char *name, long unused)
+{
+    append_name_to_path(name);
+    int result = platform_file_manager_copy_file(directory_copy_data.current_src_path,
+        directory_copy_data.current_dst_path) != 0;
+
+    move_up_path();
+
+    return result;
+}
+
+static int copy_directory(const char *name, long unused)
+{
+#ifdef __ANDROID__
+    return LIST_ERROR;
+#else
+    if (name) {
+        append_name_to_path(name);
+    }
+    if (!platform_file_manager_create_directory(directory_copy_data.current_dst_path, 0)) {
+        if (name) {
+            move_up_path();
+            return LIST_CONTINUE;
+        }
+    }
+
+    // Create subdirs
+    int result = platform_file_manager_list_directory_contents(directory_copy_data.current_src_path,
+            TYPE_DIR, 0, copy_directory) != LIST_ERROR &&
+        platform_file_manager_list_directory_contents(directory_copy_data.current_src_path,
+            TYPE_FILE, 0, copy_file) != LIST_ERROR;
+
+    move_up_path();
+
+    return result;
+#endif
+}
+
+static void copy_directory_name(const char *name, char *dst)
+{
+    if (strncmp(name, ASSETS_DIRECTORY, strlen(ASSETS_DIRECTORY)) == 0) {
+        set_assets_directory();
+        if (strlen(name) == strlen(ASSETS_DIRECTORY)) {
+            strncpy(dst, assets_directory, FILE_NAME_MAX);
+        } else {
+            snprintf(dst, FILE_NAME_MAX, "%s%s", assets_directory, name + strlen(assets_directory));
+        }
+    } else {
+        strncpy(dst, name, FILE_NAME_MAX);
+    }
+
+    char *cursor = dst;
+
+    for (size_t i = 0; i < FILE_NAME_MAX; i++) {
+        if (!*cursor) {
+            break;
+        } else if (*cursor == '\\') {
+            *cursor = '/';
+        }
+        cursor++;
+    }
+}
+
+int platform_file_manager_copy_directory(const char *src, const char *dst)
+{
+    copy_directory_name(src, directory_copy_data.current_src_path);
+    copy_directory_name(dst, directory_copy_data.current_dst_path);
+    return copy_directory(0, 0);
+}
+
+static int remove_file(const char *name, long unused)
+{
+    append_name_to_path(name);
+    int result = platform_file_manager_remove_file(directory_copy_data.current_src_path);
+    move_up_path();
+    return result;
+}
+
+static int remove_directory(const char *name, long unused)
+{
+#ifdef __ANDROID__
+    return LIST_ERROR;
+#else
+    if (name) {
+        append_name_to_path(name);
+    }
+
+    // Create subdirs
+    int result = platform_file_manager_list_directory_contents(directory_copy_data.current_src_path,
+            TYPE_FILE, 0, remove_file) != LIST_ERROR &&
+        platform_file_manager_list_directory_contents(directory_copy_data.current_src_path,
+            TYPE_DIR, 0, remove_directory) != LIST_ERROR;
+
+    if (result) {
+#ifdef _WIN32
+        wchar_t *wdir = utf8_to_wchar(directory_copy_data.current_src_path);
+        result = RemoveDirectoryW(wdir) != 0;
+        free(wdir);
+#else
+        result = remove(directory_copy_data.current_src_path);
+#endif
+    }
+
+    move_up_path();
+
+    return result;
+#endif
+}
+
+int platform_file_manager_remove_directory(const char *path)
+{
+    copy_directory_name(path, directory_copy_data.current_src_path);
+    return remove_directory(0, 0);
 }

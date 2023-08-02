@@ -12,9 +12,6 @@ then
 elif [[ "$GITHUB_REF" == "refs/heads/master" ]]
 then
   REPO=development
-elif [[ "$GITHUB_REF" == "refs/heads/release" ]]
-then
-  REPO=experimental
 elif [[ "$GITHUB_REF" =~ ^refs/pull/ ]]
 then
   PR_ID=${GITHUB_REF##refs/pull/}
@@ -22,7 +19,6 @@ then
   VERSION=pr-$PR_ID-$VERSION
 else
   echo "Unknown branch type $GITHUB_REF - skipping upload"
-  exit
 fi
 
 DEPLOY_FILE=

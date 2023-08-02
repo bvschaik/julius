@@ -1,6 +1,9 @@
 #ifndef CORE_DIR_H
 #define CORE_DIR_H
 
+#define ASSETS_DIR_NAME "assets"
+#define ASSETS_DIRECTORY "***" ASSETS_DIR_NAME "***"
+
 /**
  * @file
  * Directory-related functions.

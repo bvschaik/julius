@@ -36,7 +36,8 @@
 #define ASSETS_IMAGE_SIZE 2048
 #define CURSOR_IMAGE_SIZE 256
 #define PACKED_ASSETS_DIR "packed_assets"
-#define CURSORS_DIR "Color_Cursors"
+#define CURSORS_DIR "Cursors"
+#define CURSORS_NAME "Color_Cursors"
 #define BYTES_PER_PIXEL 4
 
 #ifdef FORMAT_XML
@@ -85,9 +86,14 @@ static int prepare_packed_assets_dir(void)
 {
     if (platform_file_manager_list_directory_contents(0, TYPE_DIR, 0, find_packed_assets_dir) == LIST_MATCH) {
         log_info("The packed assets dir exists, deleting its contents", 0, 0);
-        platform_file_manager_list_directory_contents(PACKED_ASSETS_DIR, TYPE_FILE, 0, remove_file);
-    } else if (!platform_file_manager_create_directory(PACKED_ASSETS_DIR)) {
-        log_error("Failed to create directory", PACKED_ASSETS_DIR, 0);
+        if (!platform_file_manager_remove_directory(PACKED_ASSETS_DIR)) {
+            log_error("There was a problem deleting the packed assets directory.", 0, 0);
+            return 0;
+        }
+    }
+    if (!platform_file_manager_create_directory(PACKED_ASSETS_DIR "/" ASSETS_IMAGE_PATH, 1) ||
+        !platform_file_manager_create_directory(PACKED_ASSETS_DIR "/" CURSORS_DIR, 1)) {
+        log_error("Failed to create directories", 0, 0);
         return 0;
     }
     return 1;
@@ -194,7 +200,8 @@ int packed_asset_active(const packed_asset *asset)
 static packed_asset *get_asset_image_from_list(const layer *l)
 {
     packed_asset *asset;
-    array_foreach(packed_assets, asset) {
+    array_foreach(packed_assets, asset)
+    {
         if (strcmp(l->asset_image_path, asset->path) == 0) {
             return asset;
         }
@@ -232,7 +239,8 @@ static void get_assets_for_group(int group_id)
 static void populate_asset_rects(image_packer *packer)
 {
     packed_asset *asset;
-    array_foreach(packed_assets, asset) {
+    array_foreach(packed_assets, asset)
+    {
         int width, height;
         asset->rect = &packer->rects[asset->id];
         if (!png_get_image_size(asset->path, &width, &height)) {
@@ -280,7 +288,8 @@ static void copy_to_final_image(const color_t *pixels, const image_packer_rect *
 static void create_final_image(const image_packer *packer)
 {
     packed_asset *asset;
-    array_foreach(packed_assets, asset) {
+    array_foreach(packed_assets, asset)
+    {
         copy_to_final_image(asset->pixels, asset->rect);
     }
 }
@@ -427,16 +436,13 @@ static void pack_group(int group_id)
     memset(final_image_pixels, 0, sizeof(color_t) * final_image_width * final_image_height);
 
     create_final_image(&packer);
-  
+
     printf("Info: %d Images packed. Texture size: %dx%d.\n", packed_assets.size,
         packer.result.last_image_width, packer.result.last_image_height);
 
     log_info("Creating xml file...", 0, 0);
 
-    static char current_dir[FILE_NAME_MAX];
-
-    snprintf(current_dir, FILE_NAME_MAX, "%s/%s/", PACKED_ASSETS_DIR, group->name);
-    snprintf(current_file, FILE_NAME_MAX, "%s/%s", PACKED_ASSETS_DIR, group->path);
+    snprintf(current_file, FILE_NAME_MAX, "%s/%s/%s", PACKED_ASSETS_DIR, ASSETS_IMAGE_PATH, group->path);
 
     buffer buf;
     int buf_size = 5 * 1024 * 1024;
@@ -477,7 +483,8 @@ static void pack_group(int group_id)
     xml_exporter_close_element(0);
 
     packed_asset *asset;
-    array_foreach(packed_assets, asset) {
+    array_foreach(packed_assets, asset)
+    {
         free(asset->pixels);
     }
 
@@ -494,7 +501,7 @@ static void pack_group(int group_id)
     image_packer_free(&packer);
     free(buf_data);
 
-    snprintf(current_file, FILE_NAME_MAX, "%s/%s.png", PACKED_ASSETS_DIR, group->name);
+    snprintf(current_file, FILE_NAME_MAX, "%s/%s/%s.png", PACKED_ASSETS_DIR, ASSETS_IMAGE_PATH, group->name);
 
     log_info("Creating png file...", 0, 0);
 
@@ -508,11 +515,11 @@ static void pack_cursors(void)
     static const char *cursor_names[] = { "Arrow", "Shovel", "Sword" };
     static const char *cursor_sizes[] = { "150", "200" };
 
-    #define NUM_CURSOR_NAMES (sizeof(cursor_names) / sizeof(cursor_names[0]))
-    #define NUM_CURSOR_SIZES (sizeof(cursor_sizes) / sizeof(cursor_sizes[0]) + 1)
+#define NUM_CURSOR_NAMES (sizeof(cursor_names) / sizeof(cursor_names[0]))
+#define NUM_CURSOR_SIZES (sizeof(cursor_sizes) / sizeof(cursor_sizes[0]) + 1)
 
     static layer cursors[NUM_CURSOR_NAMES * NUM_CURSOR_SIZES];
-    
+
     image_packer packer;
     image_packer_init(&packer, NUM_CURSOR_NAMES * NUM_CURSOR_SIZES, CURSOR_IMAGE_SIZE, CURSOR_IMAGE_SIZE);
 
@@ -520,7 +527,7 @@ static void pack_cursors(void)
     packer.options.reduce_image_size = 1;
     packer.options.sort_by = IMAGE_PACKER_SORT_BY_AREA;
 
-    for (int i = 0; i < NUM_CURSOR_NAMES; i++) {    
+    for (int i = 0; i < NUM_CURSOR_NAMES; i++) {
         for (int j = 0; j < NUM_CURSOR_SIZES; j++) {
             int index = i * NUM_CURSOR_SIZES + j;
             layer *cursor = &cursors[index];
@@ -532,10 +539,11 @@ static void pack_cursors(void)
                 return;
             }
             if (j > 0) {
-                snprintf(cursor->asset_image_path, FILE_NAME_MAX, "%s/%s_%s.png", CURSORS_DIR,
+                snprintf(cursor->asset_image_path, FILE_NAME_MAX, "%s/%s/%s_%s.png", CURSORS_DIR, CURSORS_NAME,
                     cursor_names[i], cursor_sizes[j - 1]);
             } else {
-                snprintf(cursor->asset_image_path, FILE_NAME_MAX, "%s/%s.png", CURSORS_DIR, cursor_names[i]);
+                snprintf(cursor->asset_image_path, FILE_NAME_MAX, "%s/%s/%s.png", CURSORS_DIR, CURSORS_NAME,
+                    cursor_names[i]);
             }
             if (!png_get_image_size(cursor->asset_image_path, &cursor->width, &cursor->height)) {
                 image_packer_free(&packer);
@@ -576,11 +584,11 @@ static void pack_cursors(void)
         pack_layer(&packer, cursor);
         copy_to_final_image(cursor->data, &packer.rects[i]);
         printf("%-16s  %3d     %3d        %3d         %3d\n",
-            cursor->asset_image_path + strlen(CURSORS_DIR) + 1,
+            cursor->asset_image_path + strlen(CURSORS_DIR) + strlen(CURSORS_NAME) + 2,
             packer.rects[i].output.x, packer.rects[i].output.y, cursor->width, cursor->height);
     }
 
-    snprintf(current_file, FILE_NAME_MAX, "%s/%s.png", PACKED_ASSETS_DIR, CURSORS_DIR);
+    snprintf(current_file, FILE_NAME_MAX, "%s/%s/%s.png", PACKED_ASSETS_DIR, CURSORS_DIR, CURSORS_NAME);
 
     save_final_image(current_file, final_image_width, final_image_height, final_image_pixels);
 
@@ -600,7 +608,7 @@ int main(int argc, char **argv)
             using_custom_path = 1;
         }
     }
-    const dir_listing *xml_files = dir_find_files_with_extension(ASSETS_DIRECTORY, "xml");
+    const dir_listing *xml_files = dir_find_files_with_extension(ASSETS_DIRECTORY "/" ASSETS_IMAGE_PATH, "xml");
     if (xml_files->num_files == 0) {
         if (using_custom_path) {
             log_error("No assets found on", argv[1], 0);
@@ -645,6 +653,10 @@ int main(int argc, char **argv)
     pack_cursors();
 
 #endif
+
+    log_info("Copying other assets...", 0, 0);
+
+    platform_file_manager_copy_directory(ASSETS_DIRECTORY, PACKED_ASSETS_DIR);
 
     log_info("All done!", 0, 0);
 

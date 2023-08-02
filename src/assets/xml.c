@@ -1,5 +1,6 @@
 #include "xml.h"
 
+#include "assets/assets.h"
 #include "assets/group.h"
 #include "assets/image.h"
 #include "core/calc.h"
@@ -48,13 +49,8 @@ static const char *ROTATE_VALUES[3] = { "90", "180", "270" };
 
 static void set_asset_image_base_path(const char *name)
 {
-    size_t position = 0;
-    char *dst = data.file_name;
-    memset(dst, 0, FILE_NAME_MAX);
-    strncpy(dst, name, FILE_NAME_MAX - position - 1);
-    position += strlen(name);
-    dst[position++] = '/';
-    data.file_name_position = position;
+    snprintf(data.file_name, FILE_NAME_MAX, "%s/%s/", ASSETS_IMAGE_PATH, name);
+    data.file_name_position = strlen(data.file_name);
 }
 
 static int xml_start_assetlist_element(void)
@@ -102,7 +98,7 @@ static int xml_start_image_element(void)
         img->has_defined_size = 1;
     }
 #endif
-    
+
     img->last_layer = &img->first_layer;
     if (path || group) {
         asset_image_add_layer(img, path, group, image_id, 0, 0, 0, 0, 0, 0, INVERT_NONE, ROTATE_NONE, PART_BOTH, 0);
@@ -159,7 +155,7 @@ static int xml_start_animation_element(void)
     img->img.animation->can_reverse = xml_parser_get_attribute_bool("reversible");
     img->img.animation->sprite_offset_x = xml_parser_get_attribute_int("x");
     img->img.animation->sprite_offset_y = xml_parser_get_attribute_int("y");
-    
+
     if (!img->img.animation->num_sprites) {
         data.in_animation = 1;
     }
@@ -248,7 +244,10 @@ int xml_process_assetlist_file(const char *xml_file_name)
 {
     log_info("Loading assetlist file", xml_file_name, 0);
 
-    FILE *xml_file = file_open_asset(xml_file_name, "r");
+    char full_path[FILE_NAME_MAX];
+    snprintf(full_path, FILE_NAME_MAX, "%s/%s", ASSETS_IMAGE_PATH, xml_file_name);
+
+    FILE *xml_file = file_open_asset(full_path, "r");
 
     if (!xml_file) {
         log_error("Error opening assetlist file", xml_file_name, 0);

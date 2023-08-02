@@ -265,7 +265,7 @@ static int update_asset_groups_list(void)
         data.xml_file_names = 0;
     }
 
-    data.xml_files = dir_find_files_with_extension(ASSETS_DIRECTORY, "xml");
+    data.xml_files = dir_find_files_with_extension(ASSETS_DIRECTORY "/" ASSETS_IMAGE_PATH, "xml");
 
     if (data.xml_files->num_files == 0) {
         data.active_group_index = 0;

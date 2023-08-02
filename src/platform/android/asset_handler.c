@@ -29,7 +29,7 @@ static int assets_directory_found(const char *dummy, long unused)
 
 static void determine_assets_location(void)
 {
-    if (android_get_directory_contents(ASSETS_DIR_NAME, TYPE_FILE, "xml", assets_directory_found) == LIST_MATCH) {
+    if (android_get_directory_contents(ASSETS_DIR_NAME, TYPE_DIR, "images", assets_directory_found) == LIST_MATCH) {
         assets_location = ASSETS_LOCATION_DIRECTORY;
     } else {
         assets_location = ASSETS_LOCATION_APK;
@@ -56,16 +56,19 @@ static AAssetManager *get_asset_manager(void)
 
 // Mask AAsset handler as file pointer
 // Courtesy of http://www.50ply.com/blog/2013/01/19/loading-compressed-android-assets-with-file-pointer/
-static int asset_read(void *asset, char *buf, int size) {
-    return AAsset_read((AAsset *)asset, buf, size);
+static int asset_read(void *asset, char *buf, int size)
+{
+    return AAsset_read((AAsset *) asset, buf, size);
 }
 
-static fpos_t asset_seek(void *asset, fpos_t offset, int whence) {
-    return AAsset_seek((AAsset *)asset, offset, whence);
+static fpos_t asset_seek(void *asset, fpos_t offset, int whence)
+{
+    return AAsset_seek((AAsset *) asset, offset, whence);
 }
 
-static int asset_close(void *asset) {
-    AAsset_close((AAsset *)asset);
+static int asset_close(void *asset)
+{
+    AAsset_close((AAsset *) asset);
     return 0;
 }
 
@@ -73,7 +76,7 @@ void *asset_handler_open_asset(const char *asset_name, const char *mode)
 {
     static char location[FILE_NAME_MAX];
     static int assets_dir_length;
-    if(!assets_dir_length) {
+    if (!assets_dir_length) {
         assets_dir_length = strlen(ASSETS_DIR_NAME) + 1;
         strncpy(location, ASSETS_DIR_NAME, FILE_NAME_MAX);
         location[assets_dir_length - 1] = '/';
@@ -84,7 +87,7 @@ void *asset_handler_open_asset(const char *asset_name, const char *mode)
             strncpy(location + assets_dir_length, asset_name, FILE_NAME_MAX - assets_dir_length - 1);
             int fd = android_get_file_descriptor(location, mode);
             if (!fd) {
-                return NULL;
+                return 0;
             }
             return fdopen(fd, mode);
         case ASSETS_LOCATION_APK:
@@ -98,19 +101,25 @@ void *asset_handler_open_asset(const char *asset_name, const char *mode)
     }
 }
 
-int asset_handler_get_directory_contents(int type, const char *extension, int (*callback)(const char *, long))
+int asset_handler_get_directory_contents(const char *dir_name, int type,
+    const char *extension, int (*callback)(const char *, long))
 {
+    if (*dir_name == '\\' || *dir_name == "/") {
+        dir_name++;
+    }
     if (assets_location == ASSETS_LOCATION_NONE) {
         determine_assets_location();
     }
     if (assets_location == ASSETS_LOCATION_DIRECTORY) {
-        return android_get_directory_contents(ASSETS_DIR_NAME, type, extension, callback);
+        char full_path[FILE_NAME_MAX];
+        snprintf(full_path, FILE_NAME_MAX, "%s/%s", ASSETS_DIR_NAME, dir_name);
+        return android_get_directory_contents(full_path, type, extension, callback);
     }
     AAssetManager *manager = get_asset_manager();
     if (!manager) {
         return LIST_ERROR;
     }
-    AAssetDir *dir = AAssetManager_openDir(manager, "");
+    AAssetDir *dir = AAssetManager_openDir(manager, dir_name);
     int match = LIST_NO_MATCH;
     const char *asset_name = 0;
     while ((asset_name = AAssetDir_getNextFileName(dir))) {

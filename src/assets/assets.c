@@ -25,7 +25,7 @@ void assets_init(int force_reload, color_t **main_images, int *main_image_widths
 
     graphics_renderer()->free_image_atlas(ATLAS_EXTRA_ASSET);
 
-    const dir_listing *xml_files = dir_find_files_with_extension(ASSETS_DIRECTORY, "xml");
+    const dir_listing *xml_files = dir_find_files_with_extension(ASSETS_DIRECTORY "/" ASSETS_IMAGE_PATH, "xml");
 
     if (!group_create_all(xml_files->num_files) || !asset_image_init_array()) {
         log_error("Not enough memory to initialize extra assets. The game will probably crash.", 0, 0);

@@ -1,6 +1,6 @@
 #include "android.h"
 
-#include "assets/assets.h"
+#include "core/dir.h"
 #include "core/file.h"
 #include "platform/android/asset_handler.h"
 #include "platform/android/jni.h"
@@ -103,8 +103,8 @@ int android_set_base_path(const char *path)
 
 int android_get_directory_contents(const char *dir, int type, const char *extension, int (*callback)(const char *, long))
 {
-    if (strcmp(dir, ASSETS_DIRECTORY) == 0) {
-        return asset_handler_get_directory_contents(type, extension, callback);
+    if (strncmp(dir, ASSETS_DIRECTORY, strlen(ASSETS_DIRECTORY)) == 0) {
+        return asset_handler_get_directory_contents(dir + strlen(ASSETS_DIRECTORY), type, extension, callback);
     }
     jni_function_handler handler;
     jni_function_handler get_name;
@@ -127,7 +127,7 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
         jni_destroy_function_handler(&handler);
         return LIST_ERROR;
     }
-    
+
     jstring jdir = (*handler.env)->NewStringUTF(handler.env, dir);
     jstring jextension = (*handler.env)->NewStringUTF(handler.env, extension);
     jobjectArray result = (jobjectArray) (*handler.env)->CallStaticObjectMethod(

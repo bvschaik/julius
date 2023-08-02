@@ -1,5 +1,6 @@
 #include "layer.h"
 
+#include "assets/assets.h"
 #include "assets/group.h"
 #include "assets/image.h"
 #include "assets/xml.h"
@@ -46,7 +47,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
         load_dummy_layer(l);
         return;
     }
-    
+
     asset_image *asset_img = 0;
 
     atlas_type type = img->atlas.id >> IMAGE_ATLAS_BIT_OFFSET;
@@ -153,7 +154,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             int src_y_offset = l->y_offset < 0 ? -l->y_offset : 0;
             int rect_x_offset = l->x_offset > 0 ? l->x_offset : 0;
             int rect_y_offset = l->y_offset > 0 ? l->y_offset : 0;
-            
+
             image_copy_info copy = {
                 .src = { src_x_offset, src_y_offset, width, height, data },
                 .dst = { 0, 0, l->width, l->height, new_data },
@@ -257,7 +258,7 @@ void layer_unload(layer *l)
     free(l->original_image_id);
 #endif
     if (!l->calculated_image_id && l->data != &DUMMY_LAYER_DATA) {
-        free((color_t *)l->data); // Freeing a const pointer. Ugly but necessary
+        free((color_t *) l->data); // Freeing a const pointer. Ugly but necessary
     }
     if (l->prev) {
         free(l);
@@ -305,7 +306,7 @@ int layer_add_from_image_path(layer *l, const char *path,
     if (path) {
         xml_get_full_image_path(l->asset_image_path, path);
     } else {
-        snprintf(l->asset_image_path, FILE_NAME_MAX, "%s.png", group_get_current()->name);
+        snprintf(l->asset_image_path, FILE_NAME_MAX, "%s/%s.png", ASSETS_IMAGE_PATH, group_get_current()->name);
     }
 #ifndef BUILDING_ASSET_PACKER
     if (!l->width || !l->height) {

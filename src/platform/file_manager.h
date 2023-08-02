@@ -43,11 +43,11 @@ int platform_file_manager_should_case_correct_file(void);
 
 /**
  * Checks whether a filename contains a string
- * @param a Filename to check
- * @param b Expression that needs to be contained
+ * @param filename Filename to check
+ * @param expression Expression that needs to be contained
  * @return 1 if the filename contains the expression, 0 otherwise
  */
-int platform_file_manager_filename_contains(const char *a, const char *b);
+int platform_file_manager_filename_contains(const char *filename, const char *expression);
 
 /**
  * Compares two filenames in a case-insensitive manner
@@ -101,8 +101,32 @@ int platform_file_manager_remove_file(const char *filename);
 /**
  * Creates a directory
  * @param path The full path to the new directory
- * @return 1 if creation was successful, false otherwise
+ * @param overwrite Whether to return error if overwriting the directory
+ * @return 1 if creation was successful, 0 otherwise
  */
-int platform_file_manager_create_directory(const char *name);
+int platform_file_manager_create_directory(const char *name, int overwrite);
+
+/**
+ * Copies a file
+ * @param src The source file
+ * @param dst The destination file
+ * @return 1 if copying was successful, 0 otherwise
+ */
+int platform_file_manager_copy_file(const char *src, const char *dst);
+
+/**
+ * Copies a directory recursively
+ * @param src The source directory
+ * @param dst The destination directory
+ * @return 1 if copying was successful, 0 otherwise
+ */
+int platform_file_manager_copy_directory(const char *src, const char *dst);
+
+/**
+ * Removes a directory recursively - use with care!!!
+ * @param path The directory to remove
+ * @return 1 if removing was successful, 0 otherwise
+ */
+int platform_file_manager_remove_directory(const char *path);
 
 #endif // PLATFORM_FILE_MANAGER_H
