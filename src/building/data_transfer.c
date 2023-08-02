@@ -64,6 +64,7 @@ int building_data_transfer_copy(building *b)
             break;
         case DATA_TYPE_DEPOT:
             data.depot_order = b->data.depot.current_order;
+            break;
         default:
             return 0;
 
@@ -98,6 +99,7 @@ int building_data_transfer_paste(building *b)
             break;
         case DATA_TYPE_DEPOT:
             b->data.depot.current_order = data.depot_order;
+            break;
         default:
             return 0;
     }

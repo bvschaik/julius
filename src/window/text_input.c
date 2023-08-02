@@ -15,7 +15,6 @@
 
 #define MAX_VARIABLE_NAME_SIZE 50
 
-static void input_number(int number);
 static void input_accept(void);
 static void button_cancel(int param1, int param2);
 

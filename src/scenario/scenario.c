@@ -76,7 +76,7 @@ static void state_offsets_init(int scenario_version)
     state_offsets.map_size = next_start_offset;
     next_start_offset = state_offsets.map_size + 16;
 
-    state_offsets.briefing = next_start_offset; 
+    state_offsets.briefing = next_start_offset;
     next_start_offset = state_offsets.briefing + MAX_BRIEF_DESCRIPTION + MAX_BRIEFING;
 
     if (scenario_version <= SCENARIO_LAST_NO_EXTENDED_REQUESTS) {
@@ -89,7 +89,7 @@ static void state_offsets_init(int scenario_version)
 
     state_offsets.herds = next_start_offset;
     next_start_offset = state_offsets.herds + (MAX_HERD_POINTS * 4);
-    
+
     state_offsets.demand_changes_part1 = next_start_offset;
     next_start_offset = state_offsets.demand_changes_part1 + (MAX_DEMAND_CHANGES * 9);
 
@@ -191,7 +191,7 @@ void scenario_save_state(buffer *buf)
     int buf_size = scenario_get_state_buffer_size_by_scenario_version(SCENARIO_CURRENT_VERSION);
     uint8_t *buf_data = malloc(buf_size);
     buffer_init(buf, buf_data, buf_size);
-    
+
     // size
     buffer_write_i32(buf, buf_size);
 
@@ -366,7 +366,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_u8(buf, scenario.open_play_scenario_id);
 
     buffer_write_i32(buf, scenario.intro_custom_message_id);
-    
+
     for (int i = 0; i < MAX_CUSTOM_VARIABLES; i++) {
         buffer_write_u8(buf, scenario.custom_variables[i].in_use);
         buffer_write_i32(buf, scenario.custom_variables[i].value);
@@ -376,7 +376,7 @@ void scenario_save_state(buffer *buf)
             buffer_write_i32(buf, 0);
         }
     }
-    
+
     buffer_write_raw(buf, scenario.empire.custom_name, sizeof(scenario.empire.custom_name));
     buffer_write_u8(buf, 0);
 }
@@ -593,7 +593,7 @@ void scenario_load_state(buffer *buf, buffer *buf_requests, int version)
     if (version > SCENARIO_LAST_NO_CUSTOM_MESSAGES) {
         scenario.intro_custom_message_id = buffer_read_i32(buf);
     }
-    
+
     if (version > SCENARIO_LAST_NO_CUSTOM_VARIABLES) {
         buffer_set(buf, state_offsets.custom_variables);
         for (int i = 0; i < MAX_CUSTOM_VARIABLES; i++) {
@@ -613,7 +613,7 @@ void scenario_load_state(buffer *buf, buffer *buf_requests, int version)
             scenario.custom_variables[i].linked_uid = 0;
         }
     }
-    
+
     buffer_set(buf, state_offsets.custom_name);
     if (version > SCENARIO_LAST_UNVERSIONED) {
         buffer_read_raw(buf, scenario.empire.custom_name, sizeof(scenario.empire.custom_name));
@@ -899,7 +899,6 @@ void scenario_set_custom_variable_value(int id, int new_value)
 
 int scenario_custom_variable_relink_text_blob(int text_id, text_blob_string_t *new_text_link)
 {
-    custom_variable_t *entry;
     for (int i = 1; i < MAX_CUSTOM_VARIABLES; i++) {
         if (scenario.custom_variables[i].linked_uid &&
             scenario.custom_variables[i].linked_uid->id == text_id) {
