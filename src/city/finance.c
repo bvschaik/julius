@@ -353,14 +353,17 @@ static void pay_monthly_building_levies(void)
         }
     }
 
+    int num_highway_tiles = 0;
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
-            if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY_TOP_LEFT)) {
-                levies += HIGHWAY_LEVY_MONTHLY;
+            if (map_terrain_is(grid_offset, TERRAIN_HIGHWAY)) {
+                num_highway_tiles++;
             }
         }
     }
+    int highway_tax = num_highway_tiles / 4 * HIGHWAY_LEVY_MONTHLY;
+    levies += highway_tax;
 
     city_data.finance.treasury -= levies;
     city_data.finance.this_year.expenses.levies += levies;
