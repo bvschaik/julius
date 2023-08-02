@@ -10,6 +10,7 @@ typedef enum {
     DATA_TYPE_DOCK,
     DATA_TYPE_MARKET,
     DATA_TYPE_ROADBLOCK,
+    DATA_TYPE_DEPOT
 } building_data_type;
 
 int building_data_transfer_copy(building *b);

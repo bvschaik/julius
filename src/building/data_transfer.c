@@ -10,6 +10,7 @@ static struct {
     building_data_type data_type;
     unsigned char resource[RESOURCE_MAX];
     building_storage storage;
+    order depot_order;
     char i8;
     short i16;
     int i32;
@@ -61,6 +62,8 @@ int building_data_transfer_copy(building *b)
             data.i8 = b->data.dock.has_accepted_route_ids;
             data.i32 = b->data.dock.accepted_route_ids;
             break;
+        case DATA_TYPE_DEPOT:
+            data.depot_order = b->data.depot.current_order;
         default:
             return 0;
 
@@ -93,6 +96,8 @@ int building_data_transfer_paste(building *b)
             b->data.dock.has_accepted_route_ids = data.i8;
             b->data.dock.accepted_route_ids = data.i32;
             break;
+        case DATA_TYPE_DEPOT:
+            b->data.depot.current_order = data.depot_order;
         default:
             return 0;
     }
@@ -117,6 +122,8 @@ building_data_type building_data_transfer_data_type_from_building_type(building_
             return DATA_TYPE_WAREHOUSE;
         case BUILDING_MARKET:
             return DATA_TYPE_MARKET;
+        case BUILDING_DEPOT:
+            return DATA_TYPE_DEPOT;
         default:
             return DATA_TYPE_NOT_SUPPORTED;
     }
