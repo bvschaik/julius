@@ -104,7 +104,7 @@ void *asset_handler_open_asset(const char *asset_name, const char *mode)
 int asset_handler_get_directory_contents(const char *dir_name, int type,
     const char *extension, int (*callback)(const char *, long))
 {
-    if (*dir_name == '\\' || *dir_name == "/") {
+    if (*dir_name == '\\' || *dir_name == '/') {
         dir_name++;
     }
     if (assets_location == ASSETS_LOCATION_NONE) {
