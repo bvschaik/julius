@@ -112,15 +112,26 @@ android {
         }
     }
     buildTypes {
+        rootProject.ext.usingAAR = false
         debug {
             ext.alwaysUpdateBuildId = false
             applicationIdSuffix ".debug"
             externalNativeBuild.cmake.arguments += "-DDRAW_FPS=1"
+            if (file('libs/SDL2-Debug.aar').exists()) {
+                println 'Using pre-packed SDL2 Debug AAR'
+                rootProject.ext.usingAAR = true
+                dependencies.debugImplementation files('libs/SDL2-Debug.aar')
+            }
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            if (file('libs/SDL2-Release.aar').exists()) {
+                println 'Using pre-packed SDL2 Release AAR'
+                rootProject.ext.usingAAR = true
+                dependencies.debugImplementation files('libs/SDL2-Release.aar')
+            }
         }
     }
     externalNativeBuild {
@@ -142,6 +153,15 @@ repositories {
 }
 
 dependencies {
-    implementation project(':SDL2')
+    if (!rootProject.ext.usingAAR) {
+        if (file('libs/SDL2.aar').exists()) {
+            println 'Using pre-packed SDL2 General AAR'
+            implementation files('libs/SDL2.aar')
+            rootProject.ext.usingAAR = true
+        } else {
+            println 'Pre-packed SDL2 AAR not found - building it'
+            implementation project(':SDL2')
+        }
+    }
     implementation 'androidx.appcompat:appcompat:1.6.1'
 }

@@ -11,6 +11,10 @@ buildscript {
     }
 }
 
+ext {
+    usingAAR = file('augustus/libs/SDL2-Debug.aar').exists() || file('augustus/libs/SDL2-debug.aar').exists() || file('augustus/libs/SDL2-release.aar').exists()
+}
+
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

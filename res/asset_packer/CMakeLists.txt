@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.1...3.27.0)
 include(CMakeDependentOption)
 
 option(SYSTEM_LIBS "Use system libraries when available." ON)

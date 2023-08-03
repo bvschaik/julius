@@ -12,6 +12,11 @@ def findLibrary(String prefix) {
 }
 
 task findSDL2 {
+    if (rootProject.ext.usingAAR) {
+        println 'External AAR found - not building SDL'
+        return;
+    }
+    println 'External AAR not found - building SDL'
     def path = findLibrary("SDL2")
     // Copy SDL Android sources, since Android Studio no longer
     // appears to recognize source sets outside the project root
@@ -24,6 +29,9 @@ task findSDL2 {
 }
 
 task findSDL2Mixer {
+    if (rootProject.ext.usingAAR) {
+        return;
+    }
     def path = findLibrary("SDL2_mixer")
     ext.sourcePath = path
     ext.includePath = new File(path, "include")
@@ -64,15 +72,27 @@ android {
     }
     externalNativeBuild {
         ndkBuild {
-            path '../../ext/SDL2/Android.mk'
+            if (!rootProject.ext.usingAAR) {
+                path '../../ext/SDL2/Android.mk'
+            } else {
+                path 'Android.mk'
+            }
         }
     }
     prefab {
         SDL2 {
-            headers "${findSDL2.includePath}"
+            if (!rootProject.ext.usingAAR) {
+                headers "${findSDL2.includePath}"
+            } else {
+                headerOnly = true
+            }
         }
         SDL2_mixer {
-            headers "${findSDL2Mixer.includePath}"
+            if (!rootProject.ext.usingAAR) {
+                headers "${findSDL2Mixer.includePath}"
+            } else {
+                headerOnly = true
+            }
         }
     }
     namespace 'com.github.Keriew.augustus.sdl2'
