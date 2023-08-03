@@ -77,5 +77,7 @@ int scenario_events_parameter_data_get_default_value_for_parameter(xml_data_attr
 
 const uint8_t *scenario_events_parameter_data_get_display_string(special_attribute_mapping_t *entry);
 void scenario_events_parameter_data_get_display_string_for_value(parameter_type type, int value, uint8_t *result_text, int maxlength);
+void scenario_events_parameter_data_get_display_string_for_action(scenario_action_t* action, uint8_t *result_text, int maxlength);
+void scenario_events_parameter_data_get_display_string_for_condition(scenario_condition_t* condition, uint8_t *result_text, int maxlength);
 
 #endif // SCENARIO_EVENTS_PARAMETER_DATA_H

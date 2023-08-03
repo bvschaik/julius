@@ -27,6 +27,7 @@
 #define DETAILS_Y_OFFSET 192
 #define DETAILS_ROW_HEIGHT 32
 #define MAX_VISIBLE_ROWS 10
+#define MAX_TEXT_LENGTH 75
 
 enum {
     SCENARIO_EVENT_DETAILS_SET_MAX_REPEATS = 0,
@@ -91,6 +92,7 @@ typedef struct {
     xml_data_attribute_t *xml_parm3;
     xml_data_attribute_t *xml_parm4;
     xml_data_attribute_t *xml_parm5;
+    uint8_t text[MAX_TEXT_LENGTH];
 } sub_item_entry_t;
 
 static struct {
@@ -138,6 +140,8 @@ static void populate_list(int offset)
                 entry.xml_parm4 = &xml_info->xml_parm4;
                 entry.xml_parm5 = &xml_info->xml_parm5;
             }
+            memset(entry.text, 0, MAX_TEXT_LENGTH);
+            scenario_events_parameter_data_get_display_string_for_condition(current, entry.text, MAX_TEXT_LENGTH);
 
             data.list[i] = entry;
         } else if ((target_id - data.conditions_count) < data.actions_count) {
@@ -162,6 +166,8 @@ static void populate_list(int offset)
                 entry.xml_parm4 = &xml_info->xml_parm4;
                 entry.xml_parm5 = &xml_info->xml_parm5;
             }
+            memset(entry.text, 0, MAX_TEXT_LENGTH);
+            scenario_events_parameter_data_get_display_string_for_action(current, entry.text, MAX_TEXT_LENGTH);
 
             data.list[i] = entry;
         } else {
@@ -270,22 +276,7 @@ static void draw_foreground(void)
             }
 
             if (data.list[i].type) {
-                text_draw(translation_for(data.list[i].xml_attr->key), 48, y_offset + 8, FONT_NORMAL_GREEN, font_color);
-                if (data.list[i].xml_parm1->type != PARAMETER_TYPE_UNDEFINED) {
-                    text_draw_number(data.list[i].parameter1, ' ', " ", 336, y_offset + 8, FONT_NORMAL_GREEN, font_color);
-                }
-                if (data.list[i].xml_parm2->type != PARAMETER_TYPE_UNDEFINED) {
-                    text_draw_number(data.list[i].parameter2, ' ', " ", 400, y_offset + 8, FONT_NORMAL_GREEN, font_color);
-                }
-                if (data.list[i].xml_parm3->type != PARAMETER_TYPE_UNDEFINED) {
-                    text_draw_number(data.list[i].parameter3, ' ', " ", 464, y_offset + 8, FONT_NORMAL_GREEN, font_color);
-                }
-                if (data.list[i].xml_parm4->type != PARAMETER_TYPE_UNDEFINED) {
-                    text_draw_number(data.list[i].parameter4, ' ', " ", 528, y_offset + 8, FONT_NORMAL_GREEN, font_color);
-                }
-                if (data.list[i].xml_parm5->type != PARAMETER_TYPE_UNDEFINED) {
-                    text_draw(string_from_ascii("..."), 592, y_offset + 8, FONT_NORMAL_GREEN, font_color);
-                }
+                text_draw(data.list[i].text, 48, y_offset + 8, FONT_NORMAL_GREEN, font_color);
             } else {
                 text_draw_centered(translation_for(TR_EDITOR_DELETED), 48, y_offset + 8, SHORT_BUTTON_WIDTH, FONT_NORMAL_PLAIN, font_color);
             }
