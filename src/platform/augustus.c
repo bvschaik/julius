@@ -87,6 +87,8 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
 
 static void backup_log(void)
 {
+    // On some platforms (vita, android), not removing the file will not empty it when reopening for writing
+    file_remove("augustus-log-backup.txt");
     platform_file_manager_copy_file("augustus-log.txt", "augustus-log-backup.txt");
 }
 
