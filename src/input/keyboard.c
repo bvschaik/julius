@@ -11,7 +11,7 @@ static struct {
     int accepted;
 
     int capture_numeric;
-    void (*capture_numeric_callback)(int);
+    void (*capture_numeric_callback)(int, int);
 
     uint8_t *text;
     int editing_length;
@@ -150,7 +150,7 @@ void keyboard_stop_capture(void)
     system_stop_text_input();
 }
 
-void keyboard_start_capture_numeric(void (*callback)(int))
+void keyboard_start_capture_numeric(void (*callback)(int, int))
 {
     data.capture_numeric = 1;
     data.capture_numeric_callback = callback;
@@ -375,7 +375,9 @@ int keyboard_text(const char *text_utf8)
     if (data.capture_numeric) {
         char c = text_utf8[0];
         if (c >= '0' && c <= '9') {
-            data.capture_numeric_callback(c - '0');
+            data.capture_numeric_callback(c - '0', 0);
+        } else if (c == '-') {
+            data.capture_numeric_callback(0, 1);
         }
         return 1;
     }

@@ -20,7 +20,7 @@ static void button_negative(int param1, int param2);
 static void button_delete(int param1, int param2);
 static void button_cancel(int param1, int param2);
 
-static void input_number(int number);
+static void input_number(int number, int minus);
 static void input_accept(void);
 static void input_delete(void);
 
@@ -51,11 +51,13 @@ static struct {
 
     int num_digits;
     int value;
+    int is_negative_value;
     int focus_button_id;
 } data;
 
 static void init(int x, int y, int max_digits, int min_value, int max_value, void (*callback)(int))
 {
+    data.is_negative_value = 0;
     data.x = x;
     data.y = y;
     data.max_digits = max_digits;
@@ -143,7 +145,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void button_number(int number, int param2)
 {
-    input_number(number);
+    input_number(number, 0);
 }
 
 static void button_accept(int param1, int param2)
@@ -151,9 +153,19 @@ static void button_accept(int param1, int param2)
     input_accept();
 }
 
+static void input_negative(void)
+{
+    if (data.value == 0) {
+        data.is_negative_value = !data.is_negative_value;
+    } else {
+        data.value *= -1;
+        data.is_negative_value = data.value < 0;
+    }
+}
+
 static void button_negative(int param1, int param2)
 {
-    data.value = data.value * -1;
+    input_negative();
 }
 
 static void button_delete(int param1, int param2)
@@ -166,12 +178,22 @@ static void button_cancel(int param1, int param2)
     close();
 }
 
-static void input_number(int number)
+static void input_number(int number, int minus)
 {
+    if (minus) {
+        input_negative();
+        return;
+    }
+    if (data.is_negative_value) {
+        number *= -1;
+    }
     if (data.num_digits < data.max_digits) {
         data.value = data.value * 10 + number;
         data.num_digits++;
         sound_effect_play(SOUND_EFFECT_BUILD);
+    }
+    if (data.is_negative_value && data.value > 0) {
+        data.value *= -1;
     }
 }
 
