@@ -67,11 +67,15 @@ typedef struct {
 } special_attribute_mapping_t;
 
 scenario_condition_data_t *scenario_events_parameter_data_get_conditions_xml_attributes(condition_types type);
+scenario_condition_data_t *scenario_events_parameter_data_get_conditions_xml_attributes_alphabetical(int index);
 scenario_action_data_t *scenario_events_parameter_data_get_actions_xml_attributes(action_types type);
+scenario_action_data_t *scenario_events_parameter_data_get_actions_xml_attributes_alphabetical(int index);
 special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mapping(parameter_type type, int index);
 special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mapping_by_value(parameter_type type, int target);
 special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mapping_by_text(parameter_type type, const char *value);
 int scenario_events_parameter_data_get_mappings_size(parameter_type type);
+
+void scenario_events_parameter_data_sort_alphabetically(void);
 
 int scenario_events_parameter_data_get_default_value_for_parameter(xml_data_attribute_t *attribute_data);
 

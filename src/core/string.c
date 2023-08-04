@@ -2,6 +2,8 @@
 
 #include "core/calc.h"
 
+#include <ctype.h>
+
 int string_equals(const uint8_t *a, const uint8_t *b)
 {
     while (*a && *b && *a == *b) {
@@ -135,4 +137,13 @@ int string_from_int(uint8_t *dst, int value, int force_plus_sign)
     }
 
     return total_chars;
+}
+
+int string_compare(const uint8_t *a, const uint8_t *b)
+{
+    while (*a && *b && tolower(*a) == tolower(*b)) {
+        ++a;
+        ++b;
+    }
+    return tolower(*a) - tolower(*b);
 }

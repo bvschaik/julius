@@ -15,6 +15,7 @@
 #include "scenario/editor_events.h"
 #include "scenario/property.h"
 #include "scenario/scenario_events_controller.h"
+#include "scenario/scenario_events_parameter_data.h"
 #include "window/city.h"
 #include "window/editor/attributes.h"
 #include "window/editor/map.h"
@@ -75,6 +76,7 @@ static void init_list(void)
 
 static void init(int from_editor)
 {
+    scenario_events_parameter_data_sort_alphabetically();
     data.from_editor = from_editor;
     init_list();
 }

@@ -226,6 +226,58 @@ scenario_action_data_t *scenario_events_parameter_data_get_actions_xml_attribute
     return &scenario_action_data[type];
 }
 
+typedef struct {
+    int type;
+    translation_key key;
+} sorting_attr_t;
+
+static scenario_condition_data_t *scenario_condition_data_alphabetical[CONDITION_TYPE_MAX - 1];
+static scenario_action_data_t *scenario_action_data_alphabetical[ACTION_TYPE_MAX - 1];
+
+static int compare_lower(const void *va, const void *vb)
+{
+    const sorting_attr_t *a = (const sorting_attr_t *) va;
+    const sorting_attr_t *b = (const sorting_attr_t *) vb;
+
+    const uint8_t *name_a = translation_for(a->key);
+    const uint8_t *name_b = translation_for(b->key);
+    return string_compare(name_a, name_b);
+}
+
+void scenario_events_parameter_data_sort_alphabetically(void)
+{
+    sorting_attr_t conditions[CONDITION_TYPE_MAX - 1];
+    sorting_attr_t actions[ACTION_TYPE_MAX - 1];
+    for (int i = 1; i < CONDITION_TYPE_MAX; i++) {
+        conditions[i-1].type = scenario_condition_data[i].type;
+        conditions[i-1].key = scenario_condition_data[i].xml_attr.key;
+    }
+    for (int i = 1; i < ACTION_TYPE_MAX; i++) {
+        actions[i-1].type = scenario_action_data[i].type;
+        actions[i-1].key = scenario_action_data[i].xml_attr.key;
+    }
+
+    qsort(conditions, CONDITION_TYPE_MAX - 1, sizeof(sorting_attr_t), compare_lower);
+    qsort(actions, ACTION_TYPE_MAX - 1, sizeof(sorting_attr_t), compare_lower);
+
+    for (int i = 0; i < CONDITION_TYPE_MAX - 1; i++) {
+        scenario_condition_data_alphabetical[i] = scenario_events_parameter_data_get_conditions_xml_attributes(conditions[i].type);
+    }
+    for (int i = 0; i < ACTION_TYPE_MAX - 1; i++) {
+        scenario_action_data_alphabetical[i] = scenario_events_parameter_data_get_actions_xml_attributes(actions[i].type);
+    }
+}
+
+scenario_condition_data_t *scenario_events_parameter_data_get_conditions_xml_attributes_alphabetical(int index)
+{
+    return scenario_condition_data_alphabetical[index];
+}
+
+scenario_action_data_t *scenario_events_parameter_data_get_actions_xml_attributes_alphabetical(int index)
+{
+    return scenario_action_data_alphabetical[index];
+}
+
 static special_attribute_mapping_t special_attribute_mappings_check[] = {
     { .type = PARAMETER_TYPE_CHECK,                .text = "eq",                            .value = COMPARISON_TYPE_EQUAL,               .key = TR_PARAMETER_VALUE_COMPARISON_TYPE_EQUAL },
     { .type = PARAMETER_TYPE_CHECK,                .text = "lte",                           .value = COMPARISON_TYPE_EQUAL_OR_LESS,       .key = TR_PARAMETER_VALUE_COMPARISON_TYPE_EQUAL_OR_LESS },
