@@ -36,7 +36,10 @@ static void init(void)
 {
     setting_clear_personal_savings();
     scenario_settings_init();
-    string_copy(lang_get_string(9, 5), player_name, PLAYER_NAME_LENGTH);
+    player_name_input.placeholder = lang_get_string(9, 5);
+    if (string_equals(player_name_input.placeholder, player_name)) {
+        *player_name = 0;
+    }
     input_box_start(&player_name_input);
 }
 
@@ -84,6 +87,9 @@ static void button_back(int param1, int param2)
 static void start_mission(int param1, int param2)
 {
     input_box_stop(&player_name_input);
+    if (!*player_name) {
+        string_copy(player_name_input.placeholder, player_name, PLAYER_NAME_LENGTH);
+    }
     setting_set_player_name(player_name);
     window_mission_selection_show();
 }
