@@ -117,6 +117,7 @@ void translation_czech(const translation_string **strings, int *num_strings);
 void translation_english(const translation_string **strings, int *num_strings);
 void translation_french(const translation_string **strings, int *num_strings);
 void translation_german(const translation_string **strings, int *num_strings);
+void translation_greek(const translation_string **strings, int *num_strings);
 void translation_italian(const translation_string **strings, int *num_strings);
 void translation_japanese(const translation_string **strings, int *num_strings);
 void translation_korean(const translation_string **strings, int *num_strings);
