@@ -25,9 +25,6 @@ public class FileManager {
     @SuppressWarnings("unused")
     public static int setBaseUri(String path) {
         directoryStructureCache.clear();
-        if (baseUri != Uri.EMPTY) {
-            return 1;
-        }
         return setBaseUri(Uri.parse(path));
     }
 

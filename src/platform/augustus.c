@@ -61,9 +61,8 @@ static struct {
         int last_fps;
         Uint32 last_update_time;
     } fps;
+    FILE *log_file;
 } data = { 1 };
-
-static FILE *log_file = 0;
 
 static void write_to_output(FILE *output, const char *message)
 {
@@ -75,8 +74,8 @@ static void write_log(void *userdata, int category, SDL_LogPriority priority, co
 {
     char log_text[300] = { 0 };
     snprintf(log_text, 300, "%s %s\n", priority == SDL_LOG_PRIORITY_ERROR ? "ERROR: " : "INFO: ", message);
-    if (log_file) {
-        write_to_output(log_file, log_text);
+    if (data.log_file) {
+        write_to_output(data.log_file, log_text);
     }
     // On Windows MSVC, we can at least get output to the debug window
 #if defined(_MSC_VER) && !defined(NDEBUG)
@@ -97,7 +96,7 @@ static void setup_logging(void)
 
     // On some platforms (vita, android), not removing the file will not empty it when reopening for writing
     file_remove("augustus-log.txt");
-    log_file = file_open("augustus-log.txt", "wt");
+    data.log_file = file_open("augustus-log.txt", "wt");
     SDL_LogSetOutputFunction(write_log, NULL);
 }
 
@@ -105,8 +104,8 @@ static void teardown_logging(void)
 {
     log_repeated_messages();
 
-    if (log_file) {
-        file_close(log_file);
+    if (data.log_file) {
+        file_close(data.log_file);
     }
 }
 
@@ -356,8 +355,8 @@ static void handle_event(SDL_Event *event)
 
         default:
             break;
-            }
     }
+}
 
 static void teardown(void)
 {
@@ -415,7 +414,7 @@ static int init_sdl(void)
         } else {
             SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Could not enable joystick support");
         }
-} else {
+    } else {
         platform_joystick_init();
     }
     SDL_SetEventFilter(handle_event_immediate, 0);
@@ -450,13 +449,13 @@ static const char *ask_for_data_dir(int again)
             "or the SD card, otherwise the path may not be recognised.\n\n"
             "Press OK to select another folder or Cancel to exit.",
             SDL_arraysize(buttons), buttons, NULL
-    };
+        };
         int result;
         SDL_ShowMessageBox(&messageboxdata, &result);
         if (!result) {
             return NULL;
         }
-}
+    }
     return android_show_c3_path_dialog(again);
 #else
     if (again) {
@@ -550,8 +549,10 @@ static void setup(const augustus_args *args)
     system_setup_crash_handler();
     setup_logging();
 
-    SDL_Log("Augustus version %s, %s build", system_version(), system_architecture());
-    SDL_Log("Running on: %s", system_OS());
+    if (data.log_file) {
+        SDL_Log("Augustus version %s, %s build", system_version(), system_architecture());
+        SDL_Log("Running on: %s", system_OS());
+    }
 
     if (!init_sdl()) {
         SDL_Log("Exiting: SDL init failed");
@@ -561,7 +562,16 @@ static void setup(const augustus_args *args)
     if (!pre_init(args->data_directory)) {
         SDL_Log("Exiting: game pre-init failed");
         exit_with_status(1);
-}
+    }
+
+    // If starting the log file failed (because, for example, the executable path isn't writable)
+    // try again, placing the log file on the C3 path
+    if (!data.log_file) {
+        setup_logging();
+        // We always want this info
+        SDL_Log("Augustus version %s, %s build", system_version(), system_architecture());
+        SDL_Log("Running on: %s", system_OS());
+    }
 
     if (args->force_windowed && setting_fullscreen()) {
         int w, h;
