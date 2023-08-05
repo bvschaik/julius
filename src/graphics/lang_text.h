@@ -11,6 +11,7 @@ int lang_text_draw(int group, int number, int x_offset, int y_offset, font_t fon
 int lang_text_draw_colored(int group, int number, int x_offset, int y_offset, font_t font, color_t color);
 
 void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, int box_width, font_t font);
+void lang_text_draw_right_aligned(int group, int number, int x_offset, int y_offset, int box_width, font_t font);
 void lang_text_draw_centered_colored(
     int group, int number, int x_offset, int y_offset, int box_width, font_t font, color_t color);
 

@@ -87,7 +87,7 @@ static generic_button file_buttons[] = {
 };
 
 static generic_button sort_by_button[] = {
-    {32, 439, 288, 26, button_toggle_sort_type, button_none, 0, 0}
+    {16, 437, 288, 26, button_toggle_sort_type, button_none, 0, 0}
 };
 
 static scrollbar_type scrollbar = { 304, 80, 350, 256, NUM_FILES_IN_VIEW, on_scroll, 1 };
@@ -128,7 +128,15 @@ static struct {
 } data;
 
 static input_box main_input = {
-    16, 48, 18, 2, FONT_NORMAL_WHITE, 0, data.filter_text, FILTER_TEXT_SIZE, 0, input_box_changed
+    .x = 16,
+    .y = 48,
+    .width_blocks = 18,
+    .height_blocks = 2,
+    .font = FONT_NORMAL_WHITE,
+    .text = data.filter_text,
+    .text_length = FILTER_TEXT_SIZE,
+    .put_clear_button_outside_box = 1,
+    .on_change = input_box_changed
 };
 
 static const int MISSION_ID_TO_CITY_ID[] = {
@@ -357,11 +365,20 @@ static void draw_foreground(void)
             int text_id = data.dialog_type + (data.type == FILE_TYPE_SCENARIO ? 3 : 0);
             lang_text_draw_centered(43, text_id, 32, 14, 554, FONT_LARGE_BLACK);
         }
-        lang_text_draw_centered(43, 5, 362, 447, 164, FONT_NORMAL_BLACK);
+        // Proceed? text
+        lang_text_draw_right_aligned(43, 5, 362, 447, 164, FONT_NORMAL_BLACK);
 
         // Sorting text
-        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_SAVE_DIALOG_SORTING_BY_NAME + data.sort_type,
-            32, 447, 288, FONT_NORMAL_BLACK);
+        int sort_translation = TR_SAVE_DIALOG_SORTING_BY_NAME + data.sort_type;
+        int sort_button_text_y = sort_by_button[0].y + sort_by_button[0].height / 2 - 5;
+        lang_text_draw_centered(
+            CUSTOM_TRANSLATION,
+            sort_translation,
+            sort_by_button[0].x,
+            sort_button_text_y,
+            sort_by_button[0].width,
+            FONT_NORMAL_BLACK
+        );
 
         // Saved game info
         if (*data.selected_file && data.type != FILE_TYPE_EMPIRE && data.type != FILE_TYPE_SCENARIO_EVENTS
@@ -419,7 +436,13 @@ static void draw_foreground(void)
     }
 
     input_box_draw(&main_input);
-    button_border_draw(32, 439, 288, 26, data.sort_by_button_focused);
+    button_border_draw(
+        sort_by_button[0].x,
+        sort_by_button[0].y,
+        sort_by_button[0].width,
+        sort_by_button[0].height,
+        data.sort_by_button_focused
+    );
     image_buttons_draw(0, 0, image_buttons, 2);
     scrollbar_draw(&scrollbar);
     graphics_reset_dialog();

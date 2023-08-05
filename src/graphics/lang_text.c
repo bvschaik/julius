@@ -29,6 +29,12 @@ void lang_text_draw_centered(int group, int number, int x_offset, int y_offset, 
     text_draw_centered(str, x_offset, y_offset, box_width, font, 0);
 }
 
+void lang_text_draw_right_aligned(int group, int number, int x_offset, int y_offset, int box_width, font_t font)
+{
+    const uint8_t *str = lang_get_string(group, number);
+    text_draw_right_aligned(str, x_offset, y_offset, box_width, font, 0);
+}
+
 void lang_text_draw_centered_colored(
     int group, int number, int x_offset, int y_offset, int box_width, font_t font, color_t color)
 {

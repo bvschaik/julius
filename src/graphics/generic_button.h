@@ -2,6 +2,7 @@
 #define GRAPHICS_CUSTOM_BUTTON_H
 
 #include "graphics/button.h"
+#include "graphics/font.h"
 #include "input/mouse.h"
 
 typedef struct {

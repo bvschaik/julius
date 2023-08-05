@@ -1,5 +1,7 @@
 #include "generic_button.h"
 
+#include "graphics/lang_text.h"
+
 static int get_button(const mouse *m, int x, int y, generic_button *buttons, int num_buttons)
 {
     for (int i = 0; i < num_buttons; i++) {

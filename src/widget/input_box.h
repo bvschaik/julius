@@ -13,6 +13,7 @@ typedef struct {
     int allow_punctuation;
     uint8_t *text;
     int text_length;
+    int put_clear_button_outside_box;
     const uint8_t *placeholder;
     void (*on_change)(int is_addition_at_end);
     uint8_t *old_text;

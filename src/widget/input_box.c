@@ -10,6 +10,8 @@
 
 #include <stdlib.h>
 
+#define CLEAR_BUTTON_WIDTH 43
+
 static void button_clear_text(int param1, int param2);
 
 static uint8_t *text_to_clear;
@@ -22,7 +24,10 @@ void input_box_start(input_box *box)
 {
     int text_width = (box->width_blocks - 2) * BLOCK_SIZE - 35;
     keyboard_start_capture(box->text, box->text_length, box->allow_punctuation, text_width, box->font);
-    clear_text_button.x_offset = box->x + box->width_blocks * 16 - 43;
+    clear_text_button.x_offset = box->x + box->width_blocks * 16;
+    if (!box->put_clear_button_outside_box) {
+        clear_text_button.x_offset -= CLEAR_BUTTON_WIDTH;
+    }
     clear_text_button.y_offset = box->y + 3;
     system_keyboard_set_input_rect(box->x, box->y,
         box->width_blocks * BLOCK_SIZE - 35, box->height_blocks * BLOCK_SIZE);
