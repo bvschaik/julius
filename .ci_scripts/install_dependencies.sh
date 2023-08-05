@@ -70,14 +70,11 @@ function install_sdl_macos {
 function install_sdl_android {
   local MODULE=$1
   local VERSION=$2
-  local DIRNAME=deps/$MODULE-$VERSION
-  local FILENAME=$DIRNAME.tar.gz
-  if [ ! -f "$FILENAME" ]
-  then
-    get_sdl_lib_url $MODULE $VERSION "tar.gz"
-    curl -o "$FILENAME" "$SDL_LIB_URL"
-  fi
+  local FILENAME=ext/SDL2/$MODULE-$VERSION.tar.gz
+  get_sdl_lib_url $MODULE $VERSION "tar.gz"
+  curl -o "$FILENAME" "$SDL_LIB_URL"
   tar -zxf $FILENAME -C ext/SDL2
+  rm $FILENAME
 }
 
 mkdir -p deps
@@ -92,8 +89,20 @@ then
     install_sdl_macos "SDL2_mixer" $SDL_MIXER_VERSION
   elif [ "$BUILD_TARGET" == "android" ]
   then
-    install_sdl_android "SDL2" $SDL_VERSION
-    install_sdl_android "SDL2_mixer" $SDL_MIXER_VERSION
+  	if [ ! -f augustus.keystore ]
+    then
+      BUILDTYPE=debug
+    else
+      BUILDTYPE=release
+    fi
+    if [ ! -f "deps/SDL2-$BUILDTYPE.aar" ]
+    then
+      install_sdl_android "SDL2" $SDL_VERSION
+      install_sdl_android "SDL2_mixer" $SDL_MIXER_VERSION
+    else
+      mkdir android/augustus/libs
+      cp deps/SDL2-$BUILDTYPE.aar android/augustus/libs/SDL2-$BUILDTYPE.aar
+    fi
   else
     if [ "$BUILD_TARGET" == "emscripten" ]
     then

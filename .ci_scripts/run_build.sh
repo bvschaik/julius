@@ -61,14 +61,21 @@ case "$BUILD_TARGET" in
 	if [ ! -f augustus.keystore ]
 	then
 		COMMAND=assembleDebug
+		BUILDTYPE=debug
 	else
 		COMMAND=assembleRelease
+		BUILDTYPE=release
 	fi
 	echo "Running ./gradlew $COMMAND"
 	TERM=dumb ./gradlew $COMMAND
 	if [ -f augustus/build/outputs/apk/release/augustus-release.apk ]
 	then
 		cp augustus/build/outputs/apk/release/augustus-release.apk ../build/augustus.apk
+	fi
+	cd ..
+	if [ ! -f "deps/SDL2-$BUILDTYPE.aar" ]
+        then
+		cp android/SDL2/build/outputs/aar/SDL2-$BUILDTYPE.aar deps/SDL2-$BUILDTYPE.aar
 	fi
 	;;
 "emscripten")

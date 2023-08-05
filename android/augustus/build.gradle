@@ -117,20 +117,20 @@ android {
             ext.alwaysUpdateBuildId = false
             applicationIdSuffix ".debug"
             externalNativeBuild.cmake.arguments += "-DDRAW_FPS=1"
-            if (file('libs/SDL2-Debug.aar').exists()) {
+            if (file('libs/SDL2-debug.aar').exists()) {
                 println 'Using pre-packed SDL2 Debug AAR'
                 rootProject.ext.usingAAR = true
-                dependencies.debugImplementation files('libs/SDL2-Debug.aar')
+                dependencies.debugImplementation files('libs/SDL2-debug.aar')
             }
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            if (file('libs/SDL2-Release.aar').exists()) {
+            if (file('libs/SDL2-release.aar').exists()) {
                 println 'Using pre-packed SDL2 Release AAR'
                 rootProject.ext.usingAAR = true
-                dependencies.debugImplementation files('libs/SDL2-Release.aar')
+                dependencies.debugImplementation files('libs/SDL2-release.aar')
             }
         }
     }
