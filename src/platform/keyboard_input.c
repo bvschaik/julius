@@ -6,6 +6,7 @@
 #include "input/keys.h"
 #include "input/keyboard.h"
 #include "input/mouse.h"
+#include "input/scroll.h"
 
 static int is_alt_down(SDL_KeyboardEvent *event)
 {
@@ -284,6 +285,27 @@ void platform_handle_key_down(SDL_KeyboardEvent *event)
 
     // handle hotkeys
     key_type key = get_key_from_scancode(event->keysym.scancode);
+
+    if (keyboard_is_capturing()) {
+        // Special event keys to handle when text input is active
+        switch (key) {
+            case KEY_TYPE_UP:
+                scroll_arrow_up(1);
+                break;
+            case KEY_TYPE_DOWN:
+                scroll_arrow_down(1);
+            // Fixed hotkeys - always handle them
+            case KEY_TYPE_ENTER:
+            case KEY_TYPE_ESCAPE:
+            case KEY_TYPE_F5:
+            case KEY_TYPE_DELETE:
+            case KEY_TYPE_BACKSPACE:
+                break;
+            default:
+                return;
+        }
+    }
+
     key_modifier_type mod = get_modifier(event->keysym.mod);
     hotkey_key_pressed(key, mod, event->repeat);
 

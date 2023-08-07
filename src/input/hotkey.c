@@ -412,7 +412,7 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             def->value = BUILDING_HIGHWAY;
             break;
 
-		default:
+        default:
             def->action = 0;
     }
 }
@@ -556,7 +556,8 @@ void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
     int found_action = 0;
     for (int i = 0; i < data.num_definitions; i++) {
         hotkey_definition *def = &data.definitions[i];
-        if ((window_is(WINDOW_ASSET_PREVIEWER) || window_is(WINDOW_EDITOR_EMPIRE)) && key == KEY_TYPE_F5 && def->action != &data.hotkey_state.f5_pressed) {
+        if ((window_is(WINDOW_ASSET_PREVIEWER) || window_is(WINDOW_EDITOR_EMPIRE)) &&
+            key == KEY_TYPE_F5 && def->action != &data.hotkey_state.f5_pressed) {
             continue;
         }
         if (def->key == key && def->modifiers == modifiers && (!repeat || def->repeatable)) {

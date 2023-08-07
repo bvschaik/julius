@@ -89,7 +89,7 @@ then
     install_sdl_macos "SDL2_mixer" $SDL_MIXER_VERSION
   elif [ "$BUILD_TARGET" == "android" ]
   then
-  	if [ ! -f augustus.keystore ]
+  	if [ ! -f "android/augustus.keystore" ]
     then
       BUILDTYPE=debug
     else
