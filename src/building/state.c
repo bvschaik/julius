@@ -600,6 +600,17 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         }
     }
 
+    // Update resource requirement changes on monuments
+    if (building_monument_is_monument(b) && !b->monument.phase != MONUMENT_FINISHED) {
+        for (resource_type resource = 0; resource < RESOURCE_MAX; resource++) {
+            int resource_needed_for_phase =
+                building_monument_resources_needed_for_monument_type(b->type, resource, b->monument.phase);
+            if (b->resources[resource] > resource_needed_for_phase) {
+                b->resources[resource] = resource_needed_for_phase;
+            }
+        }
+    }
+
     // Backwards compatibility - update loads stored to the proper new variable
     if (save_version <= SAVE_GAME_LAST_NO_NEW_MONUMENT_RESOURCES && !building_monument_is_unfinished_monument(b)) {
         switch (b->type) {
