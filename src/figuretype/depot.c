@@ -57,7 +57,7 @@ static void set_cart_offset(figure *f, int direction)
 
     if (f->loads_sold_or_carrying >= 8) {
         f->y_offset_cart -= 40;
-    } else if (direction == 3 && f->loads_sold_or_carrying == 0) {
+    } else if (direction == 3) {
         f->y_offset_cart -= 20;
     }
 }
