@@ -684,7 +684,6 @@ static void button_ok_cancel(int is_ok, int param2)
         if (data.type == FILE_TYPE_SAVED_GAME) {
             int result = game_file_load_saved_game(filename);
             if (result == FILE_LOAD_SUCCESS) {
-                input_box_stop(&main_input);
                 window_city_show();
             } else if (result == FILE_LOAD_DOES_NOT_EXIST) {
                 data.message_not_exist_start_time = time_get_millis();
@@ -700,7 +699,6 @@ static void button_ok_cancel(int is_ok, int param2)
             }
         } else if (data.type == FILE_TYPE_SCENARIO) {
             if (game_file_editor_load_scenario(filename)) {
-                input_box_stop(&main_input);
                 window_editor_map_show();
             } else {
                 data.message_not_exist_start_time = time_get_millis();
@@ -732,6 +730,7 @@ static void button_ok_cancel(int is_ok, int param2)
                 return;
             }
         }
+        input_box_stop(&main_input);
         strncpy(data.file_data->last_loaded_file, data.selected_file, FILE_NAME_MAX);
     } else if (data.dialog_type == FILE_DIALOG_SAVE) {
         if (config_get(CONFIG_UI_ASK_CONFIRMATION_ON_FILE_OVERWRITE) && file_exists(filename, NOT_LOCALIZED)) {
