@@ -130,7 +130,7 @@ android {
             if (file('libs/SDL2-release.aar').exists()) {
                 println 'Using pre-packed SDL2 Release AAR'
                 rootProject.ext.usingAAR = true
-                dependencies.debugImplementation files('libs/SDL2-release.aar')
+                dependencies.releaseImplementation files('libs/SDL2-release.aar')
             }
         }
     }
