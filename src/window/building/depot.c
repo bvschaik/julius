@@ -233,7 +233,10 @@ void window_building_draw_depot(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 138);
-    text_draw_centered(translation_for(TR_BUILDING_DEPOT),
+    const building *b = building_get(data.depot_building_id);
+    translation_key depot_name_key = b->num_workers <= 0 && b->has_road_access ?
+        TR_BUILDING_CAT_DEPOT : TR_BUILDING_DEPOT;
+    text_draw_centered(translation_for(depot_name_key),
         c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
     data.window_area.x = c->x_offset;
     data.window_area.y = c->y_offset;
