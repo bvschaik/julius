@@ -171,7 +171,7 @@ void building_state_save_to_buffer(buffer *buf, const building *b)
     buffer_write_i32(buf, b->monument.upgrades);
     buffer_write_i16(buf, b->monument.progress);
     buffer_write_i16(buf, b->monument.phase);
-    
+
     // Tourism
     buffer_write_u8(buf, b->house_arena_gladiator);
     buffer_write_u8(buf, b->house_arena_lion);
@@ -262,8 +262,8 @@ static void read_type_data(buffer *buf, building *b, int version)
         b->data.house.num_gods = buffer_read_u8(buf);
         b->data.house.devolve_delay = buffer_read_u8(buf);
         b->data.house.evolve_text_id = buffer_read_u8(buf);
-    // Do not place this after if (building_has_supplier_inventory(b->type) or after if (building_monument_is_monument(b))
-    // Because Caravanserai is monument AND supplier building and resources_needed / inventory is same memory spot
+        // Do not place this after if (building_has_supplier_inventory(b->type) or after if (building_monument_is_monument(b))
+        // Because Caravanserai is monument AND supplier building and resources_needed / inventory is same memory spot
     } else if (b->type == BUILDING_CARAVANSERAI) {
         if (version <= SAVE_GAME_LAST_STATIC_RESOURCES) {
             for (int i = 0; i < RESOURCE_MAX_LEGACY; i++) {
@@ -601,7 +601,7 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     }
 
     // Update resource requirement changes on monuments
-    if (building_monument_is_monument(b) && !b->monument.phase != MONUMENT_FINISHED) {
+    if (building_monument_is_monument(b) && b->monument.phase != MONUMENT_FINISHED) {
         for (resource_type resource = 0; resource < RESOURCE_MAX; resource++) {
             int resource_needed_for_phase =
                 building_monument_resources_needed_for_monument_type(b->type, resource, b->monument.phase);
@@ -664,9 +664,9 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
     }
 
     if (
-        (b->type == BUILDING_LIGHTHOUSE || b->type == BUILDING_CARAVANSERAI) && 
-        b->figure_id2 && 
-        !for_preview && 
+        (b->type == BUILDING_LIGHTHOUSE || b->type == BUILDING_CARAVANSERAI) &&
+        b->figure_id2 &&
+        !for_preview &&
         figure_get(b->figure_id2)->type != FIGURE_LABOR_SEEKER
     ) {
         b->figure_id = b->figure_id2;
