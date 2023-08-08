@@ -477,18 +477,29 @@ void building_monument_initialize_deliveries(void)
     }
 }
 
-void building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int loads_no)
+void building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int num_loads)
 {
     monument_delivery *delivery;
     array_new_item(monument_deliveries, 0, delivery);
     if (!delivery) {
-        log_error("Failed to create a new monument delivery. The game maybe running out of memory", 0, 0);
+        log_error("Failed to create a new monument delivery. The game may be running out of memory", 0, 0);
         return;
     }
     delivery->destination_id = monument_id;
     delivery->walker_id = figure_id;
     delivery->resource = resource_id;
-    delivery->cartloads = loads_no;
+    delivery->cartloads = num_loads;
+}
+
+int building_monument_has_delivery_for_worker(int figure_id)
+{
+    monument_delivery *delivery;
+    array_foreach(monument_deliveries, delivery) {
+        if (delivery->walker_id == figure_id && delivery->destination_id > 0) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
 void building_monument_remove_delivery(int figure_id)
@@ -496,6 +507,17 @@ void building_monument_remove_delivery(int figure_id)
     monument_delivery *delivery;
     array_foreach(monument_deliveries, delivery) {
         if (delivery->walker_id == figure_id) {
+            delivery->destination_id = 0;
+        }
+    }
+    array_trim(monument_deliveries);
+}
+
+void building_monument_remove_all_deliveries(int monument_id)
+{
+    monument_delivery *delivery;
+    array_foreach(monument_deliveries, delivery) {
+        if (delivery->destination_id == monument_id) {
             delivery->destination_id = 0;
         }
     }

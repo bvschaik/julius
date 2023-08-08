@@ -103,7 +103,7 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_hippodrome_horse_action,
     figure_workcamp_worker_action,
     figure_workcamp_slave_action,
-    figure_workcamp_engineer_action,
+    figure_workcamp_architect_action,
     figure_supplier_action,
     figure_delivery_boy_action,
     figure_supplier_action,

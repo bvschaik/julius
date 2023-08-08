@@ -1,6 +1,7 @@
 #include "figure/figure.h"
 
 #include "building/building.h"
+#include "building/monument.h"
 #include "core/array.h"
 #include "core/log.h"
 #include "city/emperor.h"
@@ -169,6 +170,12 @@ void figure_delete(figure *f)
                 }
             }
             break;
+        case FIGURE_CART_PUSHER:
+        case FIGURE_WORK_CAMP_ARCHITECT:
+        case FIGURE_WORK_CAMP_WORKER:
+        case FIGURE_WORK_CAMP_SLAVE:
+            building_monument_remove_delivery(f->id);
+            // intentional fallthrough
         default:
             if (f->building_id) {
                 b->figure_id = 0;

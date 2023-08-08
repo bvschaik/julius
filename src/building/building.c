@@ -278,6 +278,9 @@ void building_clear_related_data(building *b)
         city_buildings_remove_triumphal_arch();
         building_menu_update();
     }
+    if (building_monument_is_unfinished_monument(b)) {
+        building_monument_remove_all_deliveries(b->id);
+    }
 }
 
 building *building_restore_from_undo(building *to_restore)

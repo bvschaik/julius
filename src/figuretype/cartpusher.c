@@ -22,6 +22,7 @@
 #include "map/terrain.h"
 
 #define NON_STORABLE_RESOURCE_CARTPUSHER_MAX_WAIT_TICKS 300
+#define VALID_MONUMENT_RECHECK_TICKS 60
 
 static int cartpusher_carries_food(figure *f)
 {
@@ -180,6 +181,7 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
         // Special priority for non-storable resource: monument under construction
         dst_building_id = building_monument_get_monument(f->x, f->y, b->output_resource_id, road_network_id, &dst);
         if (dst_building_id) {
+            f->wait_ticks = VALID_MONUMENT_RECHECK_TICKS;
             set_destination(f, FIGURE_ACTION_239_CARTPUSHER_DELIVERING_TO_MONUMENT, dst_building_id, dst.x, dst.y);
             building_monument_add_delivery(dst_building_id, f->id, b->output_resource_id, 1);
         } else {
@@ -404,6 +406,13 @@ void figure_cartpusher_action(figure *f)
             }
             break;
         case FIGURE_ACTION_239_CARTPUSHER_DELIVERING_TO_MONUMENT:
+            if (f->wait_ticks++ >= VALID_MONUMENT_RECHECK_TICKS) {
+                if (!building_monument_has_delivery_for_worker(f->id)) {
+                    f->state = FIGURE_STATE_DEAD;
+                    break;
+                }
+                f->wait_ticks = 0;
+            }
             set_cart_graphic(f, 1);
             figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
@@ -462,6 +471,10 @@ void figure_cartpusher_action(figure *f)
         case FIGURE_ACTION_240_CARTPUSHER_AT_MONUMENT:
             f->wait_ticks++;
             if (f->wait_ticks > 5) {
+                if (!building_monument_has_delivery_for_worker(f->id)) {
+                    f->state = FIGURE_STATE_DEAD;
+                    break;
+                }
                 building_monument_deliver_resource(building_get(f->destination_building_id), f->resource_id);
                 building_monument_remove_delivery(f->id);
                 f->action_state = FIGURE_ACTION_27_CARTPUSHER_RETURNING;
@@ -501,9 +514,6 @@ void figure_cartpusher_action(figure *f)
             }
     }
     update_image(f);
-    if (f->state == FIGURE_STATE_DEAD) {
-        building_monument_remove_delivery(f->id);
-    }
 }
 
 static void determine_granaryman_destination(figure *f, int road_network_id, int remove_resources)
