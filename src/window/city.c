@@ -15,6 +15,7 @@
 #include "city/view.h"
 #include "city/warning.h"
 #include "core/config.h"
+#include "core/string.h"
 #include "figure/formation.h"
 #include "figure/formation_legion.h"
 #include "figure/roamer_preview.h"
@@ -78,12 +79,70 @@ static int center_in_city(int element_width_pixels)
     return x + margin;
 }
 
+static int find_index(const uint8_t *string, char search)
+{
+    int index = 0;
+    while (*string) {
+        if (*string == search) {
+            return index;
+        }
+        string++;
+        index++;
+    }
+    return -1;
+}
+
+static int is_same_mapping(const hotkey_mapping *current, const hotkey_mapping *new)
+{
+    if (!new) {
+        return current->key == KEY_TYPE_NONE;
+    }
+    return current->key == new->key && current->modifiers == new->modifiers;
+}
+
+static const uint8_t *get_paused_text(void)
+{
+    const uint8_t *pause_string = lang_get_string(13, 2);
+    static uint8_t proper_hotkey_pause_string[300];
+    static hotkey_mapping pause_key_mapping;
+    const hotkey_mapping *new_mapping = hotkey_for_action(HOTKEY_TOGGLE_PAUSE, 0);
+    if (*pause_string == *proper_hotkey_pause_string && is_same_mapping(&pause_key_mapping, new_mapping)) {
+        return proper_hotkey_pause_string;
+    }
+    int parenthesis_index = find_index(pause_string, '(');
+    if (parenthesis_index == -1) {
+        return pause_string;
+    }
+    int p_key_index = find_index(pause_string + parenthesis_index, 'P');
+    if (p_key_index == -1) {
+        return pause_string;
+    }
+    uint8_t *cursor = string_copy(pause_string, proper_hotkey_pause_string, parenthesis_index + 1);
+    pause_string += parenthesis_index;
+    if (new_mapping) {
+        pause_key_mapping.key = new_mapping->key;
+        pause_key_mapping.modifiers = new_mapping->modifiers;
+    } else {
+        pause_key_mapping.key = KEY_TYPE_NONE;
+        pause_key_mapping.modifiers = KEY_MOD_NONE;
+    }
+    if (pause_key_mapping.key == KEY_TYPE_NONE) {
+        return proper_hotkey_pause_string;
+    }
+    cursor = string_copy(pause_string, cursor, p_key_index + 1);
+    pause_string += p_key_index + 1;
+    const uint8_t *keyname = key_combination_display_name(pause_key_mapping.key, pause_key_mapping.modifiers);
+    cursor = string_copy(keyname, cursor, 300 - (cursor - proper_hotkey_pause_string));
+    string_copy(pause_string, cursor, 300 - (cursor - proper_hotkey_pause_string));
+    return proper_hotkey_pause_string;
+}
+
 static void draw_paused_banner(void)
 {
     if (game_state_is_paused()) {
         int x_offset = center_in_city(448);
         outer_panel_draw(x_offset, 40, 28, 3);
-        lang_text_draw_centered(13, 2, x_offset, 58, 448, FONT_NORMAL_BLACK);
+        text_draw_centered(get_paused_text(), x_offset, 58, 448, FONT_NORMAL_BLACK, 0);
     }
 }
 
