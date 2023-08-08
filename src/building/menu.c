@@ -109,6 +109,8 @@ static int is_building_type_allowed(building_type type);
 static int can_get_required_resource(building_type type)
 {
     switch (type) {
+        case BUILDING_SHIPYARD:
+            return empire_can_produce_resource_naturally(RESOURCE_FISH);
         case BUILDING_TAVERN:
             return empire_can_produce_resource_potentially(RESOURCE_WINE) ||
                 empire_can_import_resource_potentially(RESOURCE_WINE);
