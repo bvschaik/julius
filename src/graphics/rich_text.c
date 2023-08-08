@@ -192,22 +192,6 @@ static int get_word_width(const uint8_t *str, int in_link, int *num_chars)
     return width;
 }
 
-static int get_raw_text_width(const uint8_t *str)
-{
-    int width = 0;
-    int guard = 0;
-    int start_link = 0;
-    while (*str && ++guard < 2000) {
-        int num_bytes = 1;
-        int letter_id = font_letter_id(data.normal_font, str, &num_bytes);
-        if (letter_id >= 0) {
-            width += 1 + image_letter(letter_id)->width;
-        }
-        str++;
-    }
-    return width;
-}
-
 static void draw_line(const uint8_t *str, int x, int y, color_t color, int measure_only)
 {
     int start_link = 0;
@@ -255,6 +239,21 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
     }
 }
 
+static int get_raw_text_width(const uint8_t *str)
+{
+    int width = 0;
+    int guard = 0;
+    while (*str && ++guard < 2000) {
+        int num_bytes = 1;
+        int letter_id = font_letter_id(data.normal_font, str, &num_bytes);
+        if (letter_id >= 0) {
+            width += 1 + image_letter(letter_id)->width;
+        }
+        str += num_bytes;
+    }
+    return width;
+}
+
 static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                      int box_width, int height_lines, color_t color, int measure_only)
 {
@@ -294,9 +293,8 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                     if (c == '@') {
                         break;
                     }
-                    *text++;
+                    text++;
                     tmp_line[line_index++] = c;
-                    int temp_num_chars;
                     int temp_width = get_raw_text_width(tmp_line);
                     can_cut_more = (temp_width < box_width);
                 }
