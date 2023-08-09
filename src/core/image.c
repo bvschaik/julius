@@ -723,7 +723,7 @@ static int alloc_font_memory(int font_entries)
 
 static int load_external_fonts(int base_offset)
 {
-    uint8_t *tmp_data = malloc(EXTERNAL_FONT_ENTRIES * sizeof(uint8_t));
+    uint8_t *tmp_data = malloc(EXTERNAL_FONT_DATA_SIZE * sizeof(uint8_t));
     image_draw_data *draw_data = malloc(EXTERNAL_FONT_ENTRIES * sizeof(image_draw_data));
     if (!tmp_data || !draw_data || !alloc_font_memory(EXTERNAL_FONT_ENTRIES)) {
         free(tmp_data);
@@ -777,7 +777,7 @@ static int load_external_fonts(int base_offset)
     convert_images(data.font, draw_data, EXTERNAL_FONT_ENTRIES, &buf, atlas_data);
     free(tmp_data);
     free_draw_data(draw_data, EXTERNAL_FONT_ENTRIES);
-    make_plain_fonts_white(data.font, atlas_data, CYRILLIC_FONT_BASE_OFFSET);
+    make_plain_fonts_white(data.font, atlas_data, base_offset);
     graphics_renderer()->create_image_atlas(atlas_data, 1);
     image_packer_free(&data.packer);
 
