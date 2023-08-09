@@ -44,7 +44,7 @@ static struct {
     int num_definitions;
     arrow_definition *arrows;
     int num_arrows;
-    int shift_pressed;
+    key_modifier_type modifiers;
 } data;
 
 static void set_definition_for_action(hotkey_action action, hotkey_definition *def)
@@ -74,6 +74,15 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             break;
         case HOTKEY_ROTATE_MAP_RIGHT:
             def->action = &data.hotkey_state.rotate_map_right;
+            break;
+        case HOTKEY_ZOOM_IN:
+            def->action = &data.hotkey_state.zoom_in;
+            break;
+        case HOTKEY_ZOOM_OUT:
+            def->action = &data.hotkey_state.zoom_out;
+            break;
+        case HOTKEY_RESET_ZOOM:
+            def->action = &data.hotkey_state.reset_zoom;
             break;
         case HOTKEY_SHOW_ADVISOR_LABOR:
             def->action = &data.hotkey_state.show_advisor;
@@ -544,7 +553,7 @@ void hotkey_reset_state(void)
 
 void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
 {
-    data.shift_pressed = modifiers == KEY_MOD_SHIFT;
+    data.modifiers = modifiers;
 
     if (window_is(WINDOW_HOTKEY_EDITOR)) {
         window_hotkey_editor_key_pressed(key, modifiers);
@@ -578,7 +587,7 @@ void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat)
 
 void hotkey_key_released(key_type key, key_modifier_type modifiers)
 {
-    data.shift_pressed = modifiers == KEY_MOD_SHIFT;
+    data.modifiers = modifiers;
 
     if (window_is(WINDOW_HOTKEY_EDITOR)) {
         window_hotkey_editor_key_released(key, modifiers);
@@ -595,9 +604,9 @@ void hotkey_key_released(key_type key, key_modifier_type modifiers)
     }
 }
 
-int hotkey_shift_pressed(void)
+key_modifier_type hotkey_get_modifiers(void)
 {
-    return data.shift_pressed;
+    return data.modifiers;
 }
 
 static void confirm_exit(int accepted, int checked)

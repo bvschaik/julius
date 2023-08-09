@@ -18,6 +18,9 @@ typedef struct {
     int rotate_map_left;
     int rotate_map_right;
     int rotate_map_north;
+    int zoom_in;
+    int zoom_out;
+    int reset_zoom;
     int show_advisor;
     int show_overlay;
     int show_overlay_relative;
@@ -48,7 +51,7 @@ void hotkey_reset_state(void);
 
 void hotkey_key_pressed(key_type key, key_modifier_type modifiers, int repeat);
 void hotkey_key_released(key_type key, key_modifier_type modifiers);
-int hotkey_shift_pressed(void);
+key_modifier_type hotkey_get_modifiers(void);
 
 void hotkey_set_value_for_action(hotkey_action action, int value);
 

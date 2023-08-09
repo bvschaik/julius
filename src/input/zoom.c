@@ -62,33 +62,31 @@ void zoom_end_touch(void)
     data.touch.active = 0;
 }
 
-void zoom_map(const mouse *m, int current_zoom)
+void zoom_map(const mouse *m, const hotkeys *h, int current_zoom)
 {
     if (data.touch.active || m->is_touch) {
         return;
     }
-    if (m->middle.went_up) {
+    if (h->reset_zoom) {
         data.restore = 1;
         speed_clear(&data.step);
         data.input_offset.x = m->x;
         data.input_offset.y = m->y - TOP_MENU_HEIGHT;
+        return;
     }
-    if (m->scrolled != SCROLL_NONE) {
+    if (h->zoom_in || h->zoom_out) {
         data.restore = 0;
         int zoom_offset;
         int zoom_delta;
-        if (m->scrolled == SCROLL_DOWN) {
+        if (h->zoom_out) {
             zoom_offset = 0;
-            zoom_delta = hotkey_shift_pressed() ? 1 : ZOOM_DELTA;
+            zoom_delta = ZOOM_DELTA;
         } else {
             zoom_offset = -1;
-            zoom_delta = hotkey_shift_pressed() ? -1 : -ZOOM_DELTA;
+            zoom_delta = -ZOOM_DELTA;
         }
         int multiplier = (current_zoom + zoom_offset) / 100 + 1;
-        data.delta = zoom_delta;
-        if (!hotkey_shift_pressed()) {
-            data.delta *= multiplier;
-        }
+        data.delta = zoom_delta * multiplier;
         if (config_get(CONFIG_UI_SMOOTH_SCROLLING)) {
             speed_clear(&data.step);
             speed_set_target(&data.step, ZOOM_STEP, SPEED_CHANGE_IMMEDIATE, 1);

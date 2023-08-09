@@ -2,6 +2,7 @@
 
 #include "core/time.h"
 #include "graphics/screen.h"
+#include "input/hotkey.h"
 
 enum {
     SYSTEM_NONE = 0,
@@ -93,8 +94,12 @@ void mouse_set_middle_down(int down)
     data.is_touch = 0;
     data.is_inside_window = 1;
     last_click = 0;
+    if (down) {
+        hotkey_key_pressed(KEY_TYPE_MIDDLE_MOUSE_BUTTON, hotkey_get_modifiers(), 0);
+    } else {
+        hotkey_key_released(KEY_TYPE_MIDDLE_MOUSE_BUTTON, hotkey_get_modifiers());
+    }
 }
-
 
 void mouse_set_right_down(int down)
 {
@@ -131,6 +136,11 @@ void mouse_set_scroll(scroll_state state)
     data.scrolled = state;
     data.is_touch = 0;
     data.is_inside_window = 1;
+    if (state != SCROLL_NONE) {
+        key_type key = state == SCROLL_UP ? KEY_TYPE_MOUSE_SCROLL_UP : KEY_TYPE_MOUSE_SCROLL_DOWN;
+        hotkey_key_pressed(key, hotkey_get_modifiers(), 0);
+        hotkey_key_released(key, hotkey_get_modifiers());
+    }
 }
 
 void mouse_reset_scroll(void)

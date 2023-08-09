@@ -359,7 +359,6 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
     scroll_map(m);
 
     if (m->is_touch) {
-        zoom_map(m, city_view_get_scale());
         handle_touch();
     } else {
         if (m->right.went_down && input_coords_in_map(m->x, m->y) && !editor_tool_is_active()) {
@@ -388,7 +387,7 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h)
 
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
-    zoom_map(m, city_view_get_scale());
+    zoom_map(m, h, city_view_get_scale());
 
     if (tile->grid_offset) {
         if (m->left.went_down) {

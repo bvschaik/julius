@@ -2,10 +2,11 @@
 #define INPUT_ZOOM_H
 
 #include "city/view.h"
+#include "input/hotkey.h"
 #include "input/mouse.h"
 #include "input/touch.h"
 
-void zoom_map(const mouse *m, int current_zoom);
+void zoom_map(const mouse *m, const hotkeys *h, int current_zoom);
 void zoom_update_touch(const touch *first, const touch *last, int scale);
 void zoom_end_touch(void);
 

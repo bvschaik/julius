@@ -604,7 +604,6 @@ static void handle_mouse(const mouse *m)
 {
     map_tile *tile = &data.current_tile;
     update_city_view_coords(m->x, m->y, tile);
-    zoom_map(m, city_view_get_scale());
     building_construction_reset_draw_as_constructing();
     if (m->left.went_down) {
         if (handle_legion_click(tile)) {
@@ -665,6 +664,7 @@ void widget_city_handle_input(const mouse *m, const hotkeys *h)
         handle_touch();
     } else {
         handle_mouse(m);
+        zoom_map(m, h, city_view_get_scale());
     }
 
     if (h->escape_pressed) {
@@ -724,9 +724,9 @@ void widget_city_handle_input_military(const mouse *m, const hotkeys *h, int leg
         if (t->has_ended) {
             data.capture_input = 0;
         }
+    } else {
+        zoom_map(m, h, city_view_get_scale());        
     }
-    
-    zoom_map(m, city_view_get_scale());
 
     if ((!m->is_touch && m->left.went_down)
         || (m->is_touch && m->left.went_up && touch_was_click(touch_get_earliest()))) {

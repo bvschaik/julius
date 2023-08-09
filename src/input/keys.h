@@ -98,6 +98,9 @@ typedef enum {
     KEY_TYPE_KP_DIVIDE,
     // the key next to left shift on ISO (Non-US) keyboards, usually \ or <
     KEY_TYPE_NON_US,
+    KEY_TYPE_MIDDLE_MOUSE_BUTTON,
+    KEY_TYPE_MOUSE_SCROLL_UP,
+    KEY_TYPE_MOUSE_SCROLL_DOWN,
     KEY_TYPE_MAX_ITEMS
 } key_type;
 

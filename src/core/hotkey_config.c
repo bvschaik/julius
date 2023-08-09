@@ -26,6 +26,9 @@ static const char *ini_keys[] = {
     "decrease_game_speed",
     "rotate_map_left",
     "rotate_map_right",
+    "zoom_in",
+    "zoom_out",
+    "reset_zoom",
     "build_vacant_house",
     "build_clear_land",
     "build_road",
@@ -164,6 +167,9 @@ static void init_defaults(void)
     set_mapping(KEY_TYPE_PAGEUP, KEY_MOD_NONE, HOTKEY_INCREASE_GAME_SPEED);
     set_mapping(KEY_TYPE_HOME, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_LEFT);
     set_mapping(KEY_TYPE_END, KEY_MOD_NONE, HOTKEY_ROTATE_MAP_RIGHT);
+    set_mapping(KEY_TYPE_MOUSE_SCROLL_UP, KEY_MOD_NONE, HOTKEY_ZOOM_IN);
+    set_mapping(KEY_TYPE_MOUSE_SCROLL_DOWN, KEY_MOD_NONE, HOTKEY_ZOOM_OUT);
+    set_mapping(KEY_TYPE_MIDDLE_MOUSE_BUTTON, KEY_MOD_NONE, HOTKEY_RESET_ZOOM);
     set_layout_mapping("R", KEY_TYPE_R, KEY_MOD_NONE, HOTKEY_ROTATE_BUILDING);
     set_layout_mapping("Q", KEY_TYPE_Q, KEY_MOD_NONE, HOTKEY_BUILD_CLONE);
     set_layout_mapping("X", KEY_TYPE_X, KEY_MOD_NONE, HOTKEY_MOTHBALL_TOGGLE);
