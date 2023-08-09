@@ -581,7 +581,7 @@ int platform_file_manager_create_directory(const char *name, int overwrite)
 {
     char tokenized_name[FILE_NAME_MAX] = { 0 };
     char temporary_path[FILE_NAME_MAX] = { 0 };
-    strncpy(tokenized_name, name, FILE_NAME_MAX);
+    strncpy(tokenized_name, name, FILE_NAME_MAX - 1);
     char *token = strtok(tokenized_name, "/\\");
     int overwrite_last = 0;
     while (token) {
