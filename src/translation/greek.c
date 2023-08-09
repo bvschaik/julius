@@ -8,10 +8,11 @@ static translation_string all_strings[] = {
         "Μπορείτε να κατεβάσετε το patch από εδώ:\n"
         URL_PATCHES "\n"
         "Συνεχίζετε με δική σας ευθύνη."},
-    {TR_MISSING_FONTS_TITLE, "Λείπουν γραμματοσειρές"},
+    // Do not translate the following two strings since they cannot be shown in Greek:
+    {TR_MISSING_FONTS_TITLE, "Missing fonts"},
     {TR_MISSING_FONTS_MESSAGE,
-        "Η εγκατάσταση του Caesar 3 απαιτεί επιπλέον αρχεία γραμματοσειρών. "
-        "Μπορείτε να τα κατεβάσετε για τη γλώσσα σας από εδώ:\n"
+        "Your Caesar 3 installation requires extra font files. "
+        "You can download them for your language from:\n"
         URL_PATCHES},
     {TR_NO_EDITOR_TITLE, "Ο επεξεργαστής δεν έχει εγκατασταθεί"},
     {TR_NO_EDITOR_MESSAGE,
