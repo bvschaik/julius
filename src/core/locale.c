@@ -12,6 +12,8 @@ static const uint8_t NEW_GAME_FRENCH[] =
     {0x4e, 0x6f, 0x75, 0x76, 0x65, 0x6c, 0x6c, 0x65, 0x20, 0x70, 0x61, 0x72, 0x74, 0x69, 0x65, 0}; // Nouvelle partie
 static const uint8_t NEW_GAME_GERMAN[] =
     {0x4e, 0x65, 0x75, 0x65, 0x73, 0x20, 0x53, 0x70, 0x69, 0x65, 0x6c, 0}; // Neues Spiel
+static const uint8_t NEW_GAME_GREEK[] =
+    {0xcd, 0xdd, 0xef, 0x20, 0xd0, 0xe1, 0xe9, 0xf7, 0xed, 0xdf, 0xe4, 0xe9, 0};
 static const uint8_t NEW_GAME_ITALIAN[] =
     {0x4e, 0x75, 0x6f, 0x76, 0x61, 0x20, 0x70, 0x61, 0x72, 0x74, 0x69, 0x74, 0x61, 0}; // Nuova partita
 static const uint8_t NEW_GAME_SPANISH[] =
@@ -46,6 +48,8 @@ static language_type determine_language(void)
         return LANGUAGE_FRENCH;
     } else if (string_equals(NEW_GAME_GERMAN, new_game_string)) {
         return LANGUAGE_GERMAN;
+    } else if (string_equals(NEW_GAME_GREEK, new_game_string)) {
+        return LANGUAGE_GREEK;
     } else if (string_equals(NEW_GAME_ITALIAN, new_game_string)) {
         return LANGUAGE_ITALIAN;
     } else if (string_equals(NEW_GAME_SPANISH, new_game_string)) {
@@ -80,6 +84,7 @@ static void log_language(void)
         case LANGUAGE_ENGLISH: desc = "English"; break;
         case LANGUAGE_FRENCH: desc = "French"; break;
         case LANGUAGE_GERMAN: desc = "German"; break;
+        case LANGUAGE_GREEK: desc = "Greek"; break;
         case LANGUAGE_ITALIAN: desc = "Italian"; break;
         case LANGUAGE_SPANISH: desc = "Spanish"; break;
         case LANGUAGE_POLISH: desc = "Polish"; break;

@@ -16,7 +16,7 @@
 #define ENTRY_SIZE 64
 
 #define ENEMY_ENTRIES 801
-#define CYRILLIC_FONT_ENTRIES 2000
+#define EXTERNAL_FONT_ENTRIES 2000
 // #define BASE_FONT_ENTRIES 1340 - UNUSED, but useful info
 
 #define FONT_STYLES 3
@@ -24,19 +24,20 @@
 #define MAIN_INDEX_SIZE 660680
 #define ENEMY_INDEX_OFFSET HEADER_SIZE
 #define ENEMY_INDEX_SIZE ENTRY_SIZE * ENEMY_ENTRIES
-#define CYRILLIC_FONT_INDEX_OFFSET HEADER_SIZE
-#define CYRILLIC_FONT_INDEX_SIZE ENTRY_SIZE * CYRILLIC_FONT_ENTRIES
+#define EXTERNAL_FONT_INDEX_OFFSET HEADER_SIZE
+#define EXTERNAL_FONT_INDEX_SIZE ENTRY_SIZE * EXTERNAL_FONT_ENTRIES
 
 #define JAPANESE_HALF_WIDTH_CHARS 63
 
 #define MAIN_DATA_SIZE 12100000
 #define ENEMY_DATA_SIZE 2400000
-#define CYRILLIC_FONT_DATA_SIZE 1500000
+#define EXTERNAL_FONT_DATA_SIZE 1500000
 #define CHINESE_FONT_DATA_SIZE 7200000
 #define KOREAN_FONT_DATA_SIZE 7500000
 #define JAPANESE_FONT_DATA_SIZE 11000000
 
 #define CYRILLIC_FONT_BASE_OFFSET 201
+#define GREEK_FONT_BASE_OFFSET 1
 
 #define NAME_SIZE 32
 
@@ -113,8 +114,8 @@ static const char EDITOR_GRAPHICS_555[][NAME_SIZE] = {
     "c3map_south.555"
 };
 
-static const char CYRILLIC_FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
-static const char CYRILLIC_FONTS_555[NAME_SIZE] = "C3_fonts.555";
+static const char EXTERNAL_FONTS_SG2[NAME_SIZE] = "C3_fonts.sg2";
+static const char EXTERNAL_FONTS_555[NAME_SIZE] = "C3_fonts.555";
 static const char CHINESE_FONTS_555[NAME_SIZE] = "rome.555";
 static const char CHINESE_FONTS_555_V2[NAME_SIZE] = "rome-v2.555";
 static const char KOREAN_FONTS_555[NAME_SIZE] = "korean.555";
@@ -720,46 +721,46 @@ static int alloc_font_memory(int font_entries)
     return 1;
 }
 
-static int load_cyrillic_fonts(void)
+static int load_external_fonts(int base_offset)
 {
-    uint8_t *tmp_data = malloc(CYRILLIC_FONT_DATA_SIZE * sizeof(uint8_t));
-    image_draw_data *draw_data = malloc(CYRILLIC_FONT_ENTRIES * sizeof(image_draw_data));
-    if (!tmp_data || !draw_data || !alloc_font_memory(CYRILLIC_FONT_ENTRIES)) {
+    uint8_t *tmp_data = malloc(EXTERNAL_FONT_ENTRIES * sizeof(uint8_t));
+    image_draw_data *draw_data = malloc(EXTERNAL_FONT_ENTRIES * sizeof(image_draw_data));
+    if (!tmp_data || !draw_data || !alloc_font_memory(EXTERNAL_FONT_ENTRIES)) {
         free(tmp_data);
-        free_draw_data(draw_data, CYRILLIC_FONT_ENTRIES);
+        free_draw_data(draw_data, EXTERNAL_FONT_ENTRIES);
         return 0;
     }
-    memset(draw_data, 0, CYRILLIC_FONT_ENTRIES * sizeof(image_draw_data));
+    memset(draw_data, 0, EXTERNAL_FONT_ENTRIES * sizeof(image_draw_data));
 
-    if (CYRILLIC_FONT_INDEX_SIZE != io_read_file_part_into_buffer(CYRILLIC_FONTS_SG2, MAY_BE_LOCALIZED,
-        tmp_data, CYRILLIC_FONT_INDEX_SIZE, CYRILLIC_FONT_INDEX_OFFSET)) {
+    if (EXTERNAL_FONT_INDEX_SIZE != io_read_file_part_into_buffer(EXTERNAL_FONTS_SG2, MAY_BE_LOCALIZED,
+        tmp_data, EXTERNAL_FONT_INDEX_SIZE, EXTERNAL_FONT_INDEX_OFFSET)) {
         free_font_memory();
         free(tmp_data);
-        free_draw_data(draw_data, CYRILLIC_FONT_ENTRIES);
+        free_draw_data(draw_data, EXTERNAL_FONT_ENTRIES);
         return 0;
     }
     buffer buf;
-    buffer_init(&buf, tmp_data, CYRILLIC_FONT_INDEX_SIZE);
-    if (!prepare_images(&buf, data.font, draw_data, CYRILLIC_FONT_ENTRIES, ATLAS_FONT)) {
+    buffer_init(&buf, tmp_data, EXTERNAL_FONT_INDEX_SIZE);
+    if (!prepare_images(&buf, data.font, draw_data, EXTERNAL_FONT_ENTRIES, ATLAS_FONT)) {
         free_font_memory();
         free(tmp_data);
-        free_draw_data(draw_data, CYRILLIC_FONT_ENTRIES);
+        free_draw_data(draw_data, EXTERNAL_FONT_ENTRIES);
         return 0;
     }
 
-    int data_size = io_read_file_into_buffer(CYRILLIC_FONTS_555, MAY_BE_LOCALIZED, tmp_data, CYRILLIC_FONT_DATA_SIZE);
+    int data_size = io_read_file_into_buffer(EXTERNAL_FONTS_555, MAY_BE_LOCALIZED, tmp_data, EXTERNAL_FONT_DATA_SIZE);
     if (!data_size) {
         free_font_memory();
         free(tmp_data);
-        free_draw_data(draw_data, CYRILLIC_FONT_ENTRIES);
+        free_draw_data(draw_data, EXTERNAL_FONT_ENTRIES);
         return 0;
     }
 
     buffer_init(&buf, tmp_data, data_size);
-    if (!crop_and_pack_images(&buf, data.font, draw_data, CYRILLIC_FONT_ENTRIES, ATLAS_FONT)) {
+    if (!crop_and_pack_images(&buf, data.font, draw_data, EXTERNAL_FONT_ENTRIES, ATLAS_FONT)) {
         free_font_memory();
         free(tmp_data);
-        free_draw_data(draw_data, CYRILLIC_FONT_ENTRIES);
+        free_draw_data(draw_data, EXTERNAL_FONT_ENTRIES);
         return 0;
     }
 
@@ -769,19 +770,19 @@ static int load_cyrillic_fonts(void)
         image_packer_free(&data.packer);
         free_font_memory();
         free(tmp_data);
-        free_draw_data(draw_data, CYRILLIC_FONT_ENTRIES);
+        free_draw_data(draw_data, EXTERNAL_FONT_ENTRIES);
         return 0;
     }
 
-    convert_images(data.font, draw_data, CYRILLIC_FONT_ENTRIES, &buf, atlas_data);
+    convert_images(data.font, draw_data, EXTERNAL_FONT_ENTRIES, &buf, atlas_data);
     free(tmp_data);
-    free_draw_data(draw_data, CYRILLIC_FONT_ENTRIES);
+    free_draw_data(draw_data, EXTERNAL_FONT_ENTRIES);
     make_plain_fonts_white(data.font, atlas_data, CYRILLIC_FONT_BASE_OFFSET);
     graphics_renderer()->create_image_atlas(atlas_data, 1);
     image_packer_free(&data.packer);
 
     data.fonts_enabled = FULL_CHARSET_IN_FONT;
-    data.font_base_offset = CYRILLIC_FONT_BASE_OFFSET;
+    data.font_base_offset = base_offset;
     return 1;
 }
 
@@ -1038,7 +1039,9 @@ int image_load_fonts(encoding_type encoding)
     graphics_renderer()->get_max_image_size(&data.max_image_width, &data.max_image_height);
 
     if (encoding == ENCODING_CYRILLIC) {
-        return load_cyrillic_fonts();
+        return load_external_fonts(CYRILLIC_FONT_BASE_OFFSET);
+    } else if (encoding == ENCODING_GREEK) {
+        return load_external_fonts(GREEK_FONT_BASE_OFFSET);
     } else if (encoding == ENCODING_TRADITIONAL_CHINESE) {
         return load_multibyte_font(MULTIBYTE_FONT_TRADITIONAL_CHINESE);
     } else if (encoding == ENCODING_SIMPLIFIED_CHINESE) {
