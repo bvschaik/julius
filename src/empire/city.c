@@ -608,10 +608,10 @@ void empire_city_update_trading_data(int empire_id)
                     change_selling_of_resource(city, RESOURCE_FISH, !NOT_SELLING);
                 }
             }
-        } else if (empire_id == SCENARIO_CUSTOM_EMPIRE) {
-            continue;
         }
-        update_trading_data(empire_id, city);
+        if (empire_id != SCENARIO_CUSTOM_EMPIRE) {
+            update_trading_data(empire_id, city);
+        }
     }
 }
 

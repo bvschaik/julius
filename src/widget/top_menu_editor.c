@@ -303,6 +303,7 @@ static void menu_empire_choose(int param)
     clear_state();
     window_go_back();
     scenario_editor_unset_custom_empire();
+    resource_set_mapping(RESOURCE_ORIGINAL_VERSION);
     empire_load(1, scenario_empire_id());
     empire_object_init_cities(scenario_empire_id());
     window_editor_empire_show();
@@ -312,5 +313,6 @@ static void menu_empire_custom(int param)
 {
     clear_state();
     window_go_back();
+    resource_set_mapping(RESOURCE_CURRENT_VERSION);
     window_file_dialog_show(FILE_TYPE_EMPIRE, FILE_DIALOG_LOAD);
 }
