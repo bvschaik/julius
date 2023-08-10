@@ -139,6 +139,7 @@ void figure_workcamp_worker_action(figure *f)
             }
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                building_monument_remove_delivery(f->id);
                 warehouse_id = f->destination_building_id;
                 monument_id = building_monument_get_monument(b->x, b->y, f->collecting_item_id, b->road_network_id, &dst);
                 f->action_state = FIGURE_ACTION_205_WORK_CAMP_WORKER_GOING_TO_MONUMENT;
@@ -153,7 +154,6 @@ void figure_workcamp_worker_action(figure *f)
                 } else if (!take_resource_from_warehouse(f, warehouse_id)) {
                     f->state = FIGURE_STATE_DEAD;
                 } else {
-                    building_monument_remove_delivery(f->id);
                     // Placeholder delivery
                     building_monument_add_delivery(monument_id, f->id, f->collecting_item_id, 0);
                 }
