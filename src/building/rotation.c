@@ -217,7 +217,7 @@ int building_rotation_get_corner(int rotation)
 int building_rotation_type_has_rotations(building_type type)
 {
     if (building_variant_has_variants(type) || building_properties_for_type(type)->rotation_offset ||
-        building_is_connectable(type) || building_construction_type_can_cycle(type)) {
+     /*   building_is_connectable(type) || */ building_construction_type_can_cycle(type)) {
         return 1;
     }
     switch (type) {
