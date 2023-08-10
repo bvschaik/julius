@@ -33,7 +33,7 @@ static int create_slave_workers(int leader_id, int first_figure_id)
     slave->destination_y = f->destination_y;
     slave->action_state = FIGURE_ACTION_209_WORK_CAMP_SLAVE_FOLLOWING;
     slave->wait_ticks = VALID_MONUMENT_RECHECK_TICKS;
-    building_monument_add_delivery(slave->destination_building_id, f->id, f->collecting_item_id, 1);
+    building_monument_add_delivery(slave->destination_building_id, slave->id, slave->collecting_item_id, 1);
     return slave->id;
 }
 
@@ -148,13 +148,15 @@ void figure_workcamp_worker_action(figure *f)
                 f->previous_tile_x = f->x;
                 f->previous_tile_y = f->y;
                 f->wait_ticks = VALID_MONUMENT_RECHECK_TICKS;
-                int figure_id = f->id;
                 if (!monument_id) {
                     f->state = FIGURE_STATE_DEAD;
                 } else if (!take_resource_from_warehouse(f, warehouse_id)) {
                     f->state = FIGURE_STATE_DEAD;
+                } else {
+                    building_monument_remove_delivery(f->id);
+                    // Placeholder delivery
+                    building_monument_add_delivery(monument_id, f->id, f->collecting_item_id, 0);
                 }
-                f = figure_get(figure_id);
             } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
