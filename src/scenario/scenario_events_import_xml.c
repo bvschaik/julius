@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define XML_TOTAL_ELEMENTS 51
+#define XML_TOTAL_ELEMENTS 56
 
 static struct {
     int success;
@@ -107,6 +107,11 @@ static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "change_resource_stockpiles", xml_import_create_action, 0, "actions" },
     { "resource_stored_count", xml_import_create_condition, 0, "conditions" }, //50
     { "resource_storage_available", xml_import_create_condition, 0, "conditions" },
+    { "trade_route_set_open", xml_import_create_action, 0, "actions" },
+    { "trade_route_add_new_resource", xml_import_create_action, 0, "actions" },
+    { "trade_set_buy_price_only", xml_import_create_action, 0, "actions" },
+    { "trade_set_sell_price_only", xml_import_create_action, 0, "actions" },
+    { "building_force_collapse", xml_import_create_action, 0, "actions" },
 };
 
 static int xml_import_start_scenario_events(void)

@@ -868,7 +868,7 @@ static void button_show_resource_window(int param1, int param2)
 static void confirmed_open_trade(int accepted, int checked)
 {
     if (accepted) {
-        empire_city_open_trade(data.selected_city);
+        empire_city_open_trade(data.selected_city, 1);
         building_menu_update();
         window_trade_opened_show(data.selected_city);
     }

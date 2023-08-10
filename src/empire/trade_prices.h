@@ -49,6 +49,22 @@ int trade_price_sell(resource_type resource, int land_trader);
 int trade_price_change(resource_type resource, int amount);
 
 /**
+ * Change only the buy price of a resource
+ * @param resource Resource to change
+ * @param new_price The new price to set it to
+ * @return True if the price has been changed
+ */
+int trade_price_set_buy(resource_type resource, int new_price);
+
+/**
+ * Change only the sell price of a resource
+ * @param resource Resource to change
+ * @param new_price The new price to set it to
+ * @return True if the price has been changed
+ */
+int trade_price_set_sell(resource_type resource, int new_price);
+
+/**
  * Save trade prices to buffer
  * @param buf Buffer
  */

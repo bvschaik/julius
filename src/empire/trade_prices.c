@@ -8,6 +8,8 @@
 #include "core/calc.h"
 #include "trade_prices.h"
 
+#define MIN_PRICE 1
+
 struct trade_price {
     int32_t buy;
     int32_t sell;
@@ -136,6 +138,28 @@ int trade_price_change(resource_type resource, int amount)
         prices[resource].buy += amount;
         prices[resource].sell += amount;
     }
+    return 1;
+}
+
+int trade_price_set_buy(resource_type resource, int new_price)
+{
+    if (new_price < MIN_PRICE) {
+        prices[resource].buy = MIN_PRICE;
+    } else {
+        prices[resource].buy = new_price;
+    }
+
+    return 1;
+}
+
+int trade_price_set_sell(resource_type resource, int new_price)
+{
+    if (new_price < MIN_PRICE) {
+        prices[resource].sell = MIN_PRICE;
+    } else {
+        prices[resource].sell = new_price;
+    }
+    
     return 1;
 }
 

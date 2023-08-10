@@ -100,5 +100,9 @@ void scenario_condition_type_load_state(buffer *buf, scenario_condition_t *condi
 
     if (condition->type == CONDITION_TYPE_TRADE_SELL_PRICE) {
         condition->parameter1 = resource_remap(condition->parameter1);
+    } else if (condition->type == CONDITION_TYPE_RESOURCE_STORED_COUNT) {
+        condition->parameter1 = resource_remap(condition->parameter1);
+    } else if (condition->type == CONDITION_TYPE_RESOURCE_STORAGE_AVAILABLE) {
+        condition->parameter1 = resource_remap(condition->parameter1);
     }
 }

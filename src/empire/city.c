@@ -301,6 +301,26 @@ void empire_city_reset_yearly_trade_amounts(void)
     }
 }
 
+void empire_city_change_buying_of_resource(empire_city *city, resource_type resource, unsigned int amount)
+{
+    int buys = amount != NOT_SELLING;
+    city->buys_resource[resource] = buys;
+    empire_object_get_full(city->empire_object_id)->city_buys_resource[resource] = amount;
+    if (city->type != EMPIRE_CITY_OURS) {
+        trade_route_set_limit(city->route_id, resource, amount);
+    }
+}
+
+void empire_city_change_selling_of_resource(empire_city *city, resource_type resource, unsigned int amount)
+{
+    int sells = amount != NOT_SELLING;
+    city->sells_resource[resource] = sells;
+    empire_object_get_full(city->empire_object_id)->city_sells_resource[resource] = amount;
+    if (city->type != EMPIRE_CITY_OURS) {
+        trade_route_set_limit(city->route_id, resource, amount);
+    }
+}
+
 int empire_city_count_wine_sources(void)
 {
     int sources = 0;
@@ -396,10 +416,12 @@ static int generate_trader(int city_id, empire_city *city)
     return 0;
 }
 
-void empire_city_open_trade(int city_id)
+void empire_city_open_trade(int city_id, int apply_cost)
 {
     empire_city *city = array_item(cities, city_id);
-    city_finance_process_construction(city->cost_to_open);
+    if (apply_cost) {
+        city_finance_process_construction(city->cost_to_open);
+    }
     city->is_open = 1;
 }
 
@@ -529,20 +551,10 @@ static int city_can_mine_gold(int city_name_id)
     }
 }
 
-static void change_selling_of_resource(empire_city *city, resource_type resource, unsigned int amount)
-{
-    int sells = amount != NOT_SELLING;
-    city->sells_resource[resource] = sells;
-    empire_object_get_full(city->empire_object_id)->city_sells_resource[resource] = amount;
-    if (city->type != EMPIRE_CITY_OURS) {
-        trade_route_set_limit(city->route_id, resource, amount);
-    }
-}
-
 static void set_gold_production(empire_city *city)
 {
     if (city_can_mine_gold(city->name_id) && city->sells_resource[RESOURCE_IRON]) {
-        change_selling_of_resource(city, RESOURCE_GOLD, 5);
+        empire_city_change_selling_of_resource(city, RESOURCE_GOLD, 5);
     }
 }
 
@@ -560,14 +572,14 @@ static void set_new_monument_elements_production(int empire_id, empire_city *cit
 
     // Original Caesarea, allow import of clay for Tingis
     if (empire_id == caesarea_empire_id && city->name_id == 14) {
-        change_selling_of_resource(city, RESOURCE_CLAY, 15);
+        empire_city_change_selling_of_resource(city, RESOURCE_CLAY, 15);
     }
 
     if (city->sells_resource[RESOURCE_IRON] || city->sells_resource[RESOURCE_MARBLE]) {
-        change_selling_of_resource(city, RESOURCE_STONE, 25);
+        empire_city_change_selling_of_resource(city, RESOURCE_STONE, 25);
     }
     if (city->sells_resource[RESOURCE_CLAY]) {
-        change_selling_of_resource(city, RESOURCE_SAND, 25);
+        empire_city_change_selling_of_resource(city, RESOURCE_SAND, 25);
     }
     // If a city sells both sand and stone and also sells more than four items,
     // make land routes sell stone and water routes sell sand
@@ -579,9 +591,9 @@ static void set_new_monument_elements_production(int empire_id, empire_city *cit
                 if (resources_sold > 4) {
                     // Original Damascus, Tarsus should sell sand instead of stone, which can be produced locally
                     if (city->is_sea_trade || (empire_id == damascus_empire_id && city->name_id == 12)) {
-                        change_selling_of_resource(city, RESOURCE_STONE, NOT_SELLING);
+                        empire_city_change_selling_of_resource(city, RESOURCE_STONE, NOT_SELLING);
                     } else {
-                        change_selling_of_resource(city, RESOURCE_SAND, NOT_SELLING);
+                        empire_city_change_selling_of_resource(city, RESOURCE_SAND, NOT_SELLING);
                     }
                     break;
                 }
@@ -603,9 +615,9 @@ void empire_city_update_trading_data(int empire_id)
         if (resource_mapping_get_version() < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
             if (city->type == EMPIRE_CITY_OURS) {
                 if (city->sells_resource[RESOURCE_FISH]) {
-                    change_selling_of_resource(city, RESOURCE_MEAT, !NOT_SELLING);
+                    empire_city_change_selling_of_resource(city, RESOURCE_MEAT, !NOT_SELLING);
                 } else if (scenario_building_allowed(BUILDING_WHARF)) {
-                    change_selling_of_resource(city, RESOURCE_FISH, !NOT_SELLING);
+                    empire_city_change_selling_of_resource(city, RESOURCE_FISH, !NOT_SELLING);
                 }
             }
         }

@@ -77,6 +77,9 @@ static void draw_status(void)
             break;
     }
 
+    text_draw_number_scaled(widget_map_editor_get_grid_offset(), 0, translation_for(TR_EDITOR_GRID_OFFSET),
+        text_offset, 209, FONT_NORMAL_GREEN, 0, SCALE_NONE);
+
     map_point entry = scenario_map_entry();
     map_point exit = scenario_map_exit();
     int people_text;
@@ -139,13 +142,13 @@ void widget_sidebar_editor_draw_background(void)
     draw_buttons();
     widget_minimap_update(0);
     widget_minimap_draw_decorated(x_offset + 8, MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT);
-    draw_status();
     sidebar_common_draw_relief(x_offset, SIDEBAR_FILLER_Y_OFFSET, GROUP_EDITOR_SIDE_PANEL, 0);
 }
 
 void widget_sidebar_editor_draw_foreground(void)
 {
     draw_buttons();
+    draw_status();
     widget_minimap_draw_decorated(sidebar_common_get_x_offset_expanded() + 8,
         MINIMAP_Y_OFFSET, MINIMAP_WIDTH, MINIMAP_HEIGHT);
 }

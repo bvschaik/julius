@@ -1,5 +1,6 @@
 #include "action_types.h"
 
+#include "building/destruction.h"
 #include "building/granary.h"
 #include "building/menu.h"
 #include "building/warehouse.h"
@@ -18,6 +19,8 @@
 #include "empire/trade_route.h"
 #include "game/time.h"
 #include "game/resource.h"
+#include "map/building.h"
+#include "map/grid.h"
 #include "scenario/data.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/custom_messages.h"
@@ -282,6 +285,43 @@ int scenario_action_type_savings_add_execute(scenario_action_t *action)
     return 1;
 }
 
+int scenario_action_type_building_force_collapse_execute(scenario_action_t *action)
+{
+    int grid_offset = action->parameter1;
+    int block_radius = action->parameter2;
+    building_type type = action->parameter3;
+    int destroy_all = action->parameter4;
+
+    if (!map_grid_is_valid_offset(grid_offset)) {
+        return 0;
+    }
+
+    for (int y = -block_radius; y <= block_radius; y++) {
+        for (int x = -block_radius; x <= block_radius; x++) {
+            int current_grid_offset = map_grid_add_delta(grid_offset, x, y);
+            if (!map_grid_is_valid_offset(current_grid_offset)) {
+                continue;
+            }
+            int building_id = map_building_at(current_grid_offset);
+            if (!building_id) {
+                continue;
+            }
+            building *b = building_main(building_get(building_id));
+            if (b->type == BUILDING_BURNING_RUIN) {
+                continue;
+            }
+            if ((b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED) || b->is_deleted) {
+                continue;
+            }
+            if (destroy_all || b->type == type) {
+                building_destroy_by_collapse(b);
+            }
+        }
+    }
+    
+    return 1;
+}
+
 int scenario_action_type_send_standard_message_execute(scenario_action_t *action)
 {
     int text_id = action->parameter1;
@@ -327,6 +367,67 @@ int scenario_action_type_trade_price_set_execute(scenario_action_t *action)
         } else {
             city_message_post(1, MESSAGE_PRICE_DECREASED, -adjustment, resource);
         }
+    }
+
+    return 1;
+}
+
+int scenario_action_type_trade_set_buy_price_execute(scenario_action_t *action)
+{
+    int resource = action->parameter1;
+    int amount = action->parameter2;
+    
+    if (resource < RESOURCE_MIN || resource > RESOURCE_MAX) {
+        return 0;
+    }
+
+    return trade_price_set_buy(resource, amount);
+}
+
+int scenario_action_type_trade_set_sell_price_execute(scenario_action_t *action)
+{
+    int resource = action->parameter1;
+    int amount = action->parameter2;
+    
+    if (resource < RESOURCE_MIN || resource > RESOURCE_MAX) {
+        return 0;
+    }
+
+    return trade_price_set_sell(resource, amount);
+}
+
+int scenario_action_type_trade_add_new_resource_execute(scenario_action_t *action)
+{
+    int route_id = action->parameter1;
+    int resource = action->parameter2;
+    int amount = action->parameter3;
+    int add_as_buying = action->parameter4;
+    int show_message = action->parameter5;
+
+    if (amount <= 0) {
+        return 0;
+    }
+    if (!trade_route_is_valid(route_id)) {
+        return 0;
+    }
+    if (resource < RESOURCE_MIN || resource > RESOURCE_MAX) {
+        return 0;
+    }
+
+    int city_id = empire_city_get_for_trade_route(route_id);
+    if (show_message && empire_city_is_trade_route_open(route_id)) {
+        if (city_id < 0) {
+            city_id = 0;
+        }
+        city_message_post(1, MESSAGE_INCREASED_TRADING, city_id, resource);
+    }
+
+    empire_city *empire_city = empire_city_get(city_id);
+    if (add_as_buying) {
+        empire_city_change_buying_of_resource(empire_city, resource, amount);
+    } else {
+        empire_city_change_selling_of_resource(empire_city, resource, amount);
+        building_menu_update();
     }
 
     return 1;
@@ -410,6 +511,22 @@ int scenario_action_type_trade_route_adjust_open_price_execute(scenario_action_t
         }
         city_message_post(1, MESSAGE_ROUTE_PRICE_CHANGE, city_id, amount - old_cost);
     }
+    return 1;
+}
+
+int scenario_action_type_trade_route_open_execute(scenario_action_t *action)
+{
+    int route_id = action->parameter1;
+    int apply_cost = action->parameter2;
+
+    if (!trade_route_is_valid(route_id)) {
+        return 0;
+    }
+    int city_id = empire_city_get_for_trade_route(route_id);
+
+    empire_city_open_trade(city_id, apply_cost);
+    building_menu_update();
+
     return 1;
 }
 

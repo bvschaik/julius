@@ -312,6 +312,18 @@ Here is a list of available conditions that can be used.
   - "true" = Building type is enable and avaiable for construction.
 
 
+### Buildings: Force collapse
++ type = building_force_collapse
++ grid_offset = The grid_offset (map position) that is the center of the square to collapse buildings in.
++ block_radius = The 'radius' of the square to collapse buildings in. A radius of 2 will give you a 5x5 square.
++ building = Which type of building to collapse.
+  - Allowed values: A very big list. Easiest is look at this condition type in the editor.
+    Otherwise, refer to: (special_attribute_mappings_buildings in "https://github.com/Keriew/augustus/blob/9429b006f38873749e4b4aa3c0cee99696eb23b2/src/scenario/scenario_events_parameter_data.c#L234")
++ destroy_all = Should this collapse all building types, regardless of what is set in building? Allowed values: "false" or "true".
+  - "false" = Only collapse buildings that match the type given in building.
+  - "true" = Collapse all buildings in the target area.
+
+
 ### Change custom variable
 + type = change_variable
   - Note: To import custom variable names via the events file, use "<variable uid="Myvariablename" initial_value="0"/>" entries in the variables section at the top of the events file. You can have a maximum of 100 different custom variables.
@@ -507,4 +519,44 @@ Here is a list of available conditions that can be used.
   - "false" = No message is shown.
   - "true" = The standard 'price has changed' message is shown.
 
+
+### Trade: Add new resource to route
++ type = trade_route_add_new_resource
++ target_city = The name of the city that you want to adjust the route of.
+  - WARNING! If you change the empire map / cities after importing this, then it may not be pointing to the correct route anymore!
+  - The name of the city is only checked once at the point of import.
+  - If you change the empire map / cities, then re-import the scenario events afterwards.
++ resource = What resource to set the price of. Allowed values: (Any resource name) "wheat", "timber", "marble", etc.
++ amount = The yearly trade limit of the resource being added. Allowed values: 0 to 1000000000.
++ add_as_buying = Should the new resource be added to the target route as being bought by that route? Allowed values: "false" or "true"
+  - "false" = The route will sell the new resource.
+  - "true" = The route will buy the new resource.
++ show_message = Should we show the normal 'increased trade' message? Allowed values: "false" or "true"
+  - "false" = No message is shown.
+  - "true" = The standard 'increased trade' message is shown.
+
+
+### Trade: Open route
++ type = trade_route_set_open
++ target_city = The name of the city that you want to adjust the route of.
+  - WARNING! If you change the empire map / cities after importing this, then it may not be pointing to the correct route anymore!
+  - The name of the city is only checked once at the point of import.
+  - If you change the empire map / cities, then re-import the scenario events afterwards.
++ apply_cost = Should the trade route open cost be subtracted from the player's money? Allowed values: "false" or "true"
+  - "false" = The route is opened for free.
+  - "true" = The money is deducted from the player's money.
+
+
+### Trade: Set only the buy price for a resource
++ type = trade_set_buy_price_only
++ resource = What resource to set only the buy price of (sell price remains unchanged). Allowed values: (Any resource name) "wheat", "timber", "marble", etc.
++ amount = The new price. Allowed values: 0 to 1000000000.
+  - If new buy price is less than 2, will be set to 2 instead.
+
+
+### Trade: Set only the sell price for a resource
++ type = trade_set_sell_price_only
++ resource = What resource to set only the sell price of (buy price remains unchanged). Allowed values: (Any resource name) "wheat", "timber", "marble", etc.
++ amount = The new price. Allowed values: 0 to 1000000000.
+  - If new sell price is less than 1, will be set to 1 instead.
 

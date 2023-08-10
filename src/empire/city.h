@@ -62,6 +62,9 @@ void empire_city_set_trade_route_cost(int route_id, int new_cost);
 
 void empire_city_reset_yearly_trade_amounts(void);
 
+void empire_city_change_buying_of_resource(empire_city *city, resource_type resource, unsigned int amount);
+void empire_city_change_selling_of_resource(empire_city *city, resource_type resource, unsigned int amount);
+
 int empire_city_count_wine_sources(void);
 
 int empire_city_get_vulnerable_roman(void);
@@ -72,7 +75,7 @@ void empire_city_set_vulnerable(int city_id);
 
 void empire_city_set_foreign(int city_id);
 
-void empire_city_open_trade(int city_id);
+void empire_city_open_trade(int city_id, int apply_cost);
 
 void empire_city_generate_trader(void);
 

@@ -10,4 +10,6 @@ void widget_map_editor_handle_input(const mouse *m, const hotkeys *h);
 
 void widget_map_editor_clear_current_tile(void);
 
+int widget_map_editor_get_grid_offset(void);
+
 #endif // WIDGET_MAP_EDITOR_H

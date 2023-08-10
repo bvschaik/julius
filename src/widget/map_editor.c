@@ -33,6 +33,7 @@ static struct {
     int selected_grid_offset;
     int new_start_grid_offset;
     int capture_input;
+    int cursor_grid_offset;
 } data;
 
 static struct {
@@ -159,6 +160,7 @@ static void update_city_view_coords(int x, int y, map_tile *tile)
     } else {
         tile->grid_offset = tile->x = tile->y = 0;
     }
+    data.cursor_grid_offset = tile->grid_offset;
 }
 
 static void scroll_map(const mouse *m)
@@ -409,4 +411,9 @@ void widget_map_editor_clear_current_tile(void)
 {
     data.selected_grid_offset = 0;
     data.current_tile.grid_offset = 0;
+}
+
+int widget_map_editor_get_grid_offset(void)
+{
+    return data.cursor_grid_offset;
 }
