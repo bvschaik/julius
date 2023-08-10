@@ -640,6 +640,7 @@ static void scenario_load_from_state(scenario_state *file, scenario_version_t ve
     }
     if (version > SCENARIO_LAST_UNVERSIONED) {
         empire_object_load(file->empire, version);
+        empire_city_update_trading_data(scenario_empire_id());
     }
     buffer_skip(file->end_marker, 4);
 }
@@ -768,6 +769,7 @@ static void savegame_load_from_state(savegame_state *state, savegame_version_t v
     }
     if (version > SAVE_GAME_LAST_UNVERSIONED_SCENARIOS) {
         empire_object_load(state->custom_empire, scenario_version);
+        empire_city_update_trading_data(scenario_empire_id());
     }
     if (version <= SAVE_GAME_LAST_GLOBAL_BUILDING_INFO) {
         figure_visited_buildings_migrate();

@@ -533,7 +533,7 @@ static void change_selling_of_resource(empire_city *city, resource_type resource
 {
     int sells = amount != NOT_SELLING;
     city->sells_resource[resource] = sells;
-    empire_object_get_full(city->empire_object_id)->city_sells_resource[resource] = sells;
+    empire_object_get_full(city->empire_object_id)->city_sells_resource[resource] = amount;
     if (city->type != EMPIRE_CITY_OURS) {
         trade_route_set_limit(city->route_id, resource, amount);
     }
@@ -558,11 +558,6 @@ static void set_new_monument_elements_production(int empire_id, empire_city *cit
         caesarea_empire_id = 37;
     }
 
-    // Original Damascus, allow import of marble for Tarsus
-    if (empire_id == damascus_empire_id && city->name_id == 12) {
-        change_selling_of_resource(city, RESOURCE_MARBLE, 25);
-    }
-
     // Original Caesarea, allow import of clay for Tingis
     if (empire_id == caesarea_empire_id && city->name_id == 14) {
         change_selling_of_resource(city, RESOURCE_CLAY, 15);
@@ -582,7 +577,8 @@ static void set_new_monument_elements_production(int empire_id, empire_city *cit
             if (city->sells_resource[r]) {
                 resources_sold++;
                 if (resources_sold > 4) {
-                    if (city->is_sea_trade) {
+                    // Original Damascus, Tarsus should sell sand instead of stone, which can be produced locally
+                    if (city->is_sea_trade || (empire_id == damascus_empire_id && city->name_id == 12)) {
                         change_selling_of_resource(city, RESOURCE_STONE, NOT_SELLING);
                     } else {
                         change_selling_of_resource(city, RESOURCE_SAND, NOT_SELLING);

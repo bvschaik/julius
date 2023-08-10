@@ -205,7 +205,6 @@ void empire_object_load(buffer *buf, int version)
     }
     objects.size = highest_id_in_use + 1;
     fix_image_ids();
-    empire_city_update_trading_data(scenario_empire_id());
 }
 
 void empire_object_save(buffer *buf)

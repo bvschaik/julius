@@ -20,6 +20,7 @@
 #include "core/io.h"
 #include "core/lang.h"
 #include "core/string.h"
+#include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/trade_prices.h"
 #include "figure/enemy_army.h"
@@ -203,6 +204,7 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
 static void load_empire_data(int is_custom_scenario, int empire_id)
 {
     empire_load(is_custom_scenario, empire_id);
+    empire_city_update_trading_data(empire_id);
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 }
