@@ -56,6 +56,10 @@ uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
 
 int string_length(const uint8_t *str)
 {
+    if (!str) {
+        return 0;
+    }
+    
     int length = 0;
     while (*str) {
         length++;
