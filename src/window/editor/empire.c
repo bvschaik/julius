@@ -321,14 +321,16 @@ static void draw_map(void)
     graphics_reset_clip_rectangle();
 }
 
-static void draw_resource(resource_type resource, int trade_max, int x_offset, int y_offset)
+static int draw_resource(resource_type resource, int trade_max, int x_offset, int y_offset)
 {
     graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
     image_draw(resource_get_data(resource)->image.editor.empire, x_offset + 1, y_offset + 1,
         COLOR_MASK_NONE, SCALE_NONE);
-    if (trade_max != OUR_CITY) {
-        window_empire_draw_resource_shields(trade_max, x_offset, y_offset);
+    if (trade_max == OUR_CITY) {
+        return 0;
     }
+    window_empire_draw_resource_shields(trade_max, x_offset, y_offset);
+    return text_draw_number(trade_max, '\0', "", x_offset + 28, y_offset + 9, FONT_NORMAL_GREEN, 0);
 }
 
 static void draw_city_info(const empire_city *city)
@@ -364,8 +366,8 @@ static void draw_city_info(const empire_city *city)
             int resource_x_offset = x_offset + 30 + width;
             for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
                 if (empire_object_city_sells_resource(city->empire_object_id, r)) {
-                    draw_resource(r, trade_route_limit(city->route_id, r), resource_x_offset, y_offset - 9);
-                    resource_x_offset += 32;
+                    int width = draw_resource(r, trade_route_limit(city->route_id, r), resource_x_offset, y_offset - 9);
+                    resource_x_offset += 32 + width;
                 }
             }
             resource_x_offset += 50;
@@ -373,8 +375,8 @@ static void draw_city_info(const empire_city *city)
             resource_x_offset += 10;
             for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
                 if (empire_object_city_buys_resource(city->empire_object_id, r)) {
-                    draw_resource(r, trade_route_limit(city->route_id, r), resource_x_offset, y_offset - 9);
-                    resource_x_offset += 32;
+                    int width = draw_resource(r, trade_route_limit(city->route_id, r), resource_x_offset, y_offset - 9);
+                    resource_x_offset += 32 + width;
                 }
             }
             break;

@@ -239,7 +239,8 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             }
             int trade_max = trade_route_limit(city->route_id, resource);
             draw_trade_resource(resource, trade_max, x_offset + index + 60, y_offset + 33);
-            index += 32;
+            int width = text_draw_number(trade_max, 0, 0, x_offset + index + 88, y_offset + 42, FONT_NORMAL_GREEN, 0);
+            index += 32 + width;
         }
         index += lang_text_draw(47, 4, x_offset + index + 100, y_offset + 42, FONT_NORMAL_GREEN);
         for (int resource = RESOURCE_MIN; resource < RESOURCE_MAX; resource++) {
@@ -248,7 +249,8 @@ static void draw_trade_city_info(const empire_object *object, const empire_city 
             }
             int trade_max = trade_route_limit(city->route_id, resource);
             draw_trade_resource(resource, trade_max, x_offset + index + 110, y_offset + 33);
-            index += 32;
+            int width = text_draw_number(trade_max, 0, 0, x_offset + index + 138, y_offset + 42, FONT_NORMAL_GREEN, 0);
+            index += 32 + width;
         }
         index = lang_text_draw_amount(8, 0, city->cost_to_open,
             x_offset + 40, y_offset + 73, FONT_NORMAL_GREEN);
@@ -778,7 +780,8 @@ static int get_tooltip_resource(tooltip_context *c)
             if (is_mouse_hit(c, x_offset + 60 + item_offset, y_offset + 33, 26)) {
                 return r;
             }
-            item_offset += 32;
+            int trade_max = trade_route_limit(city->route_id, r);
+            item_offset += 32 + text_get_number_width(trade_max, 0, 0, FONT_NORMAL_GREEN);
         }
     }
     item_offset += lang_text_get_width(47, 4, FONT_NORMAL_GREEN);
@@ -787,7 +790,8 @@ static int get_tooltip_resource(tooltip_context *c)
             if (is_mouse_hit(c, x_offset + 110 + item_offset, y_offset + 33, 26)) {
                 return r;
             }
-            item_offset += 32;
+            int trade_max = trade_route_limit(city->route_id, r);
+            item_offset += 32 + text_get_number_width(trade_max, 0, 0, FONT_NORMAL_GREEN);
         }
     }
 

@@ -147,6 +147,8 @@ int text_get_number_width(int value, char prefix, const char *postfix, font_t fo
 
     if (postfix && *postfix) {
         width += text_get_width(string_from_ascii(postfix), font);
+    } else {
+        width += def->space_width;
     }
     return width;
 }
@@ -415,7 +417,7 @@ int text_draw_number_scaled(int value, char prefix, const uint8_t *postfix,
                 const image *img = image_letter(letter_id);
                 int height = def->image_y_offset(*str, img->height + img->y_offset, def->line_height);
                 image_draw_letter(def->font, letter_id, current_x, y - height, color, scale);
-                width = def->letter_spacing + img->width;
+                width = def->letter_spacing + img->original.width;
             }
 
             current_x += width + ((length == 4 || length == 7) ? separator_pixels : 0);
