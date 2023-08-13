@@ -342,6 +342,7 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
             } else if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR_EXCEPT_ROAD)) {
                 if (gate_type) {
                     items_placed++;
+                    gates_placed++;
                     building *b = building_create(gate_type, x, y);
                     if (building_variant_has_variants(gate_type)) {
                         b->variant = building_rotation_get_rotation_with_limit(building_variant_get_number_of_variants(b->type));
@@ -361,6 +362,7 @@ static int place_draggable_building(int x_start, int y_start, int x_end, int y_e
         building_connectable_update_connections();
         if (gates_placed) {
             map_tiles_update_all_roads();
+            map_tiles_update_all_plazas();
         }
     }
 
