@@ -986,6 +986,7 @@ if(${TARGET_PLATFORM} STREQUAL "vita")
         VERSION ${VITA_VERSION}
         NAME ${SHORT_NAME}
         FILE res/vita/icon0.png sce_sys/icon0.png
+        FILE res/vita/pic0.png sce_sys/pic0.png
         FILE res/vita/bg.png sce_sys/livearea/contents/bg.png
         FILE res/vita/startup.png sce_sys/livearea/contents/startup.png
         FILE res/vita/template.xml sce_sys/livearea/contents/template.xml
