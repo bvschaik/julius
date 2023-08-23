@@ -2,7 +2,6 @@
 
 #ifdef USE_FILE_CACHE
 
-#include "core/log.h"
 #include "core/string.h"
 #include "platform/file_manager.h"
 
