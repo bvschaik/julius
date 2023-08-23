@@ -28,7 +28,8 @@
 #define fs_dir_open _wopendir
 #define fs_dir_close _wclosedir
 #define fs_dir_read _wreaddir
-#define dir_entry_name(d) wchar_to_utf8(d->d_name)
+#define fs_chdir _wchdir
+#define dir_entry_name(d) wchar_to_utf8((d)->d_name)
 typedef const wchar_t *dir_name;
 
 static const char *wchar_to_utf8(const wchar_t *str)
@@ -54,12 +55,15 @@ static wchar_t *utf8_to_wchar(const char *str)
 }
 
 #else // not _WIN32
+#ifndef USE_FILE_CACHE
 #define fs_dir_type DIR
 #define fs_dir_entry struct dirent
 #define fs_dir_open opendir
 #define fs_dir_close closedir
 #define fs_dir_read readdir
 #define dir_entry_name(d) ((d)->d_name)
+#endif
+#define fs_chdir chdir
 typedef const char *dir_name;
 #endif
 
@@ -71,11 +75,7 @@ typedef const char *dir_name;
 #define S_ISSOCK(m) 0
 #endif
 
-#ifdef __vita__
-#define CURRENT_DIR VITA_PATH_PREFIX
-#define set_dir_name(n) vita_prepend_path(n)
-#define free_dir_name(n)
-#elif defined(_WIN32)
+#if defined(_WIN32)
 #define CURRENT_DIR L"."
 #define set_dir_name(n) utf8_to_wchar(n)
 #define free_dir_name(n)
@@ -87,7 +87,7 @@ typedef const char *dir_name;
 
 #ifdef _WIN32
 #include <direct.h>
-#elif !defined(__vita__)
+#else
 #include <unistd.h>
 #endif
 
@@ -211,36 +211,21 @@ int platform_file_manager_set_base_path(const char *path)
     }
 #ifdef __ANDROID__
     return android_set_base_path(path);
-#elif defined(_WIN32)
-    wchar_t *wpath = utf8_to_wchar(path);
-    int result = _wchdir(wpath);
-    free(wpath);
-    return result == 0;
 #else
-    return chdir(path) == 0;
+    dir_name set_path = set_dir_name(path);
+    int result = fs_chdir(set_path);
+    free_dir_name(set_path);
+    if (result == 0) {
+#ifdef USE_FILE_CACHE
+        platform_file_manager_cache_invalidate();
+#endif
+        return 1;
+    }
+    return 0;
 #endif
 }
 
-#ifdef __vita__
-FILE *platform_file_manager_open_file(const char *filename, const char *mode)
-{
-    if (strchr(mode, 'w')) {
-        char temp_filename[FILE_NAME_MAX];
-        strncpy(temp_filename, filename, FILE_NAME_MAX - 1);
-        if (!file_exists(temp_filename, NOT_LOCALIZED)) {
-            platform_file_manager_cache_add_file_info(filename);
-        }
-    }
-    return fopen(vita_prepend_path(filename), mode);
-}
-
-int platform_file_manager_remove_file(const char *filename)
-{
-    platform_file_manager_cache_delete_file_info(filename);
-    return remove(vita_prepend_path(filename)) == 0;
-}
-
-#elif defined(_WIN32)
+#if defined(_WIN32)
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {

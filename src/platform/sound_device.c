@@ -191,7 +191,7 @@ static void load_music_for_vita(const char *filename)
         vita_music_data.buffer = 0;
     }
     strncpy(vita_music_data.filename, filename, FILE_NAME_MAX - 1);
-    SceUID fd = sceIoOpen(vita_prepend_path(filename), SCE_O_RDONLY, 0777);
+    SceUID fd = sceIoOpen(filename, SCE_O_RDONLY, 0777);
     if (fd < 0) {
         return;
     }
@@ -379,7 +379,7 @@ static int put_custom_audio_stream(const Uint8 *audio_data, int len)
 #endif
 
     // Convert audio to SDL format
-    custom_music.cvt.buf = (Uint8 *)malloc((size_t)(len * custom_music.cvt.len_mult));
+    custom_music.cvt.buf = (Uint8 *) malloc((size_t) (len * custom_music.cvt.len_mult));
     if (!custom_music.cvt.buf) {
         return 0;
     }
