@@ -143,6 +143,7 @@ static const char *ASSET_DIRS[MAX_ASSET_DIRS] = {
     "***SDL_BASE_PATH***",
 #elif !defined (_WIN32)
     "***RELATIVE_APPIMG_PATH***",
+    "***EXEC_PATH***",
     "***RELATIVE_EXEC_PATH***",
     "~/.local/share/augustus-game",
     "/usr/share/augustus-game",
@@ -214,6 +215,22 @@ static void set_assets_directory(void)
                 continue;
             }
             strncpy(parent, "/share/augustus-game", FILE_NAME_MAX - (parent - assets_directory) - 1);
+#endif
+        } else if (strcmp(ASSET_DIRS[i], "***EXEC_PATH***") == 0) {
+#if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__) || defined(__APPLE__)
+            log_error("***EXEC_PATH*** is not available on your platform.", 0, 0);
+            continue;
+#else
+            char arg0_dir[FILE_NAME_MAX];
+            if (readlink("/proc/self/exe" /* Linux */, arg0_dir, FILE_NAME_MAX) == -1) {
+                if (readlink("/proc/curproc/file" /* FreeBSD */, arg0_dir, FILE_NAME_MAX) == -1) {
+                    if (readlink("/proc/self/path/a.out" /* Solaris */, arg0_dir, FILE_NAME_MAX) == -1) {
+                        continue;
+                    }
+                }
+            }
+            dirname(arg0_dir);
+            strncpy(assets_directory, arg0_dir, FILE_NAME_MAX);
 #endif
         } else if (strcmp(ASSET_DIRS[i], "***RELATIVE_EXEC_PATH***") == 0) {
 #if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__) || defined(__APPLE__)
