@@ -10,7 +10,7 @@
 #include <string.h>
 
 #define NUM_CLOUD_ELLIPSES 240
-#define CLOUD_ALPHA_CUTOFF 32
+#define CLOUD_ALPHA_INCREASE 32
 #define CLOUD_COLOR_MASK ((0x48 << COLOR_BITSHIFT_ALPHA) | COLOR_CHANNEL_RGB)
 
 #define CLOUD_WIDTH 64
@@ -102,26 +102,19 @@ static int ellipse_is_inside_bounds(const ellipse *e)
         y - e->height >= 0 && y + e->height < CLOUD_HEIGHT;
 }
 
-static void set_alpha(color_t *cloud, int x, int y, int alpha)
+static void darken_pixel(color_t *cloud, int x, int y)
 {
-    alpha = 255 - alpha;
+    int pixel = y * CLOUD_WIDTH + x;
 
-    if (alpha > CLOUD_ALPHA_CUTOFF) {
-        alpha = CLOUD_ALPHA_CUTOFF;
-    }
-
-    int index = y * CLOUD_WIDTH + x;
-
-    int current_alpha = cloud[index] >> COLOR_BITSHIFT_ALPHA;
-
-    alpha = (current_alpha + ((alpha * (255 - current_alpha)) >> 8));
+    int alpha = cloud[pixel] >> COLOR_BITSHIFT_ALPHA;
+    alpha = (alpha + ((CLOUD_ALPHA_INCREASE * (255 - alpha)) >> 8));
 
     // Clamp
     if (alpha > 255) {
         alpha = 255;
     }
 
-    cloud[index] = ALPHA_TRANSPARENT | (alpha << COLOR_BITSHIFT_ALPHA);
+    cloud[pixel] = ALPHA_TRANSPARENT | (alpha << COLOR_BITSHIFT_ALPHA);
 }
 
 static void generate_cloud_ellipse(color_t *cloud, int width, int height)
@@ -133,8 +126,7 @@ static void generate_cloud_ellipse(color_t *cloud, int width, int height)
 
     // Do the entire diameter
     for (int x = -e.width; x <= e.width; x++) {
-        int alpha = x * x * e.squared_height * 255 / e.width_times_height;
-        set_alpha(cloud, e.x + x, e.y, alpha);
+        darken_pixel(cloud, e.x + x, e.y);
     }
 
     int line_width = e.width;
@@ -153,18 +145,14 @@ static void generate_cloud_ellipse(color_t *cloud, int width, int height)
         line_delta = line_width - line_limit;
         line_width = line_limit;
 
-        int alpha = squared_y * e.squared_width * 255 / e.width_times_height;
-
-        set_alpha(cloud, e.x, e.y - y, alpha);
-        set_alpha(cloud, e.x, e.y + y, alpha);
+        darken_pixel(cloud, e.x, e.y - y);
+        darken_pixel(cloud, e.x, e.y + y);
 
         for (int x = 1; x <= line_width; x++) {
-            alpha = (x * x * e.squared_height + squared_y * e.squared_width) * 255 / e.width_times_height;
-
-            set_alpha(cloud, e.x + x, e.y - y, alpha);
-            set_alpha(cloud, e.x + x, e.y + y, alpha);
-            set_alpha(cloud, e.x - x, e.y - y, alpha);
-            set_alpha(cloud, e.x - x, e.y + y, alpha);
+            darken_pixel(cloud, e.x + x, e.y - y);
+            darken_pixel(cloud, e.x + x, e.y + y);
+            darken_pixel(cloud, e.x - x, e.y - y);
+            darken_pixel(cloud, e.x - x, e.y + y);
         }
     }
 }
