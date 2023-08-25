@@ -174,10 +174,10 @@ static int recalculate_market_supplier_destination(figure *f)
     building *market = building_get(f->building_id);
     resource_storage_info info[RESOURCE_MAX] = { 0 };
 
-    int road_network = map_road_network_get(f->grid_offset);
-    if (!road_network) {
-        return 1;
-    }
+    // Assume we're always on the source road network
+    // Fixes walkers stopping when deciding to recalculate best destination when on different network
+    int road_network = market->road_network_id;
+
     if (!building_market_get_needed_inventory(market, info) ||
         !building_distribution_get_resource_storages_for_figure(info, BUILDING_MARKET, road_network, f, MAX_DISTANCE)) {
         return 0;

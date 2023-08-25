@@ -308,16 +308,12 @@ void figure_cartpusher_action(figure *f)
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
     int percentage_speed = cartpusher_percentage_speed(f);
-    int road_network_id = map_road_network_get(f->grid_offset);
     f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     building *b = building_get(f->building_id);
 
-    // Fix: even though gardens and some buildings don't get assigned a network id, they're still used for pathfinding
-    // So we just assume that the network id is the same as the cartpusher's original building
-    if (!road_network_id &&
-        (map_terrain_is(f->grid_offset, TERRAIN_GARDEN) || map_terrain_is(f->grid_offset, TERRAIN_BUILDING))) {
-        road_network_id = b->road_network_id;
-    }
+    // Assume we're always on the source road network
+    // Fixes walkers stopping when deciding to recalculate best destination when on different network
+    int road_network_id = b->road_network_id;
 
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
@@ -701,7 +697,6 @@ void figure_warehouseman_action(figure *f)
 {
     figure_image_increase_offset(f, 12);
     f->cart_image_id = 0;
-    int road_network_id = map_road_network_get(f->grid_offset);
     int percentage_speed = cartpusher_percentage_speed(f);
     building *b = building_get(f->building_id);
 
@@ -709,12 +704,9 @@ void figure_warehouseman_action(figure *f)
         f->state = FIGURE_STATE_DEAD;
     }
 
-    // Fix: even though gardens and some buildings don't get assigned a network id, they're still used for pathfinding
-    // So we just assume that the network id is the same as the cartpusher's original building
-    if (!road_network_id &&
-        (map_terrain_is(f->grid_offset, TERRAIN_GARDEN) || map_terrain_is(f->grid_offset, TERRAIN_BUILDING))) {
-        road_network_id = b->road_network_id;
-    }
+    // Assume we're always on the source road network
+    // Fixes walkers stopping when deciding to recalculate best destination when on different network
+    int road_network_id = b->road_network_id;
 
     switch (f->action_state) {
         case FIGURE_ACTION_150_ATTACK:
