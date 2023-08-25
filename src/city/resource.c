@@ -320,7 +320,7 @@ void city_resource_determine_available(int storable_only)
             potential.resource_list.items[potential.resource_list.size++] = r;
             if (resource_is_food(r)) {
                 available.food_list.items[available.food_list.size++] = r;
-                potential.food_list.items[potential.food_list.size++] = r;               
+                potential.food_list.items[potential.food_list.size++] = r;
             }
         } else if (empire_can_produce_resource_potentially(r) || empire_can_import_resource_potentially(r)) {
             potential.resource_list.items[potential.resource_list.size++] = r;
@@ -511,9 +511,9 @@ static int mess_hall_consume_food(void)
 {
     int total_consumed = 0;
     building *b = building_first_of_type(BUILDING_MESS_HALL);
-    if (!b || b->state != BUILDING_STATE_IN_USE) {
+    if (!b || (b->state != BUILDING_STATE_IN_USE && b->state != BUILDING_STATE_MOTHBALLED)) {
         return 0;
-    };
+    }
     int food_required = city_military_total_soldiers_in_city() *
         difficulty_adjust_soldier_food_consumption(FOOD_PER_SOLDIER_MONTHLY);
     int num_foods = 0;
@@ -521,8 +521,10 @@ static int mess_hall_consume_food(void)
     int proportionate_amount = 0;
     int amount_for_type = 0;
 
-    for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
-        total_food_in_mess_hall += b->resources[r];
+    if (b->state != BUILDING_STATE_MOTHBALLED) {
+        for (resource_type r = RESOURCE_MIN_FOOD; r < RESOURCE_MAX_FOOD; r++) {
+            total_food_in_mess_hall += b->resources[r];
+        }
     }
 
     city_data.mess_hall.total_food = total_food_in_mess_hall;
