@@ -9,9 +9,8 @@
 #include <math.h>
 #include <string.h>
 
-#define NUM_CLOUD_ELLIPSES 240
-#define CLOUD_ALPHA_INCREASE 32
-#define CLOUD_COLOR_MASK ((0x48 << COLOR_BITSHIFT_ALPHA) | COLOR_CHANNEL_RGB)
+#define NUM_CLOUD_ELLIPSES 180
+#define CLOUD_ALPHA_INCREASE 16
 
 #define CLOUD_WIDTH 64
 #define CLOUD_HEIGHT 64
@@ -106,8 +105,9 @@ static void darken_pixel(color_t *cloud, int x, int y)
 {
     int pixel = y * CLOUD_WIDTH + x;
 
-    int alpha = cloud[pixel] >> COLOR_BITSHIFT_ALPHA;
-    alpha = (alpha + ((CLOUD_ALPHA_INCREASE * (255 - alpha)) >> 8));
+    color_t alpha = cloud[pixel] >> COLOR_BITSHIFT_ALPHA;
+    int darken = CLOUD_ALPHA_INCREASE >> (alpha >> 4);
+    alpha = (alpha + ((darken * (255 - alpha)) >> 8));
 
     // Clamp
     if (alpha > 255) {
@@ -273,7 +273,7 @@ void clouds_draw(int x_offset, int y_offset, int x_limit, int y_limit, float bas
         speed_set_target(&cloud->speed.y, CLOUD_SPEED / 2, SPEED_CHANGE_IMMEDIATE, 1);
 
         graphics_renderer()->draw_image_advanced(&cloud->img,
-            (cloud->x - x_offset) / base_scale, (cloud->y - y_offset) / base_scale, CLOUD_COLOR_MASK,
+            (cloud->x - x_offset) / base_scale, (cloud->y - y_offset) / base_scale, COLOR_MASK_NONE,
             cloud->scale_x * base_scale, cloud->scale_y * base_scale, cloud->angle, 1);
 
         cloud->x += speed_get_delta(&cloud->speed.x);
