@@ -68,6 +68,7 @@ static const char *ini_keys[] = {
     "gameplay_change_romers_dont_skip_corners",
     "gameplay_change_yearly_autosave",
     "gameplay_change_auto_kill_animals",
+    "gameplay_change_nonmilitary_gates_allow_walkers"
 };
 
 static const char *ini_string_keys[] = {

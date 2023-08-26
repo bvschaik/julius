@@ -110,6 +110,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_SHOW_ROAMING_PATH, "Preview paths travelled by roaming walkers"},
     {TR_CONFIG_DRAW_CLOUD_SHADOWS, "Draw cloud shadows"},
     {TR_CONFIG_ASK_CONFIRMATION_ON_FILE_OVERWRITE, "Ask for confirmation when overwriting a file"},
+    {TR_CONFIG_GATES_DEFAULT_TO_PASS_ALL_WALKERS, "Non-military gates default to allowing all walkers"},
     {TR_HOTKEY_TITLE, "Augustus hotkey configuration"},
     {TR_HOTKEY_LABEL, "Hotkey"},
     {TR_HOTKEY_ALTERNATIVE_LABEL, "Alternative"},
