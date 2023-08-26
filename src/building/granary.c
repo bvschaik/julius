@@ -151,11 +151,12 @@ int building_granaries_add_resource(int resource, int amount, int respect_settin
         if (b->state != BUILDING_STATE_IN_USE || b->resources[RESOURCE_NONE] <= 0) {
             continue;
         }
-        int space_available = 0;
-        if (!respect_settings) {
-            space_available = b->resources[RESOURCE_NONE];
-        } else {
-            space_available = building_granary_maximum_receptible_amount(resource, b);
+        int space_available = b->resources[RESOURCE_NONE];
+        if (respect_settings) {
+            int allowed_space = building_granary_maximum_receptible_amount(resource, b);
+            if (allowed_space < space_available) {
+                space_available = allowed_space;
+            }
         }
         if (space_available > amount) {
             space_available = amount;
