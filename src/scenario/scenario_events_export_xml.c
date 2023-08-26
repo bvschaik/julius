@@ -74,6 +74,11 @@ static int export_attribute_route(xml_data_attribute_t *attr, int target)
 
 static int export_attribute_resource(xml_data_attribute_t *attr, int target)
 {
+    if (target < RESOURCE_MIN || target > RESOURCE_MAX) {
+        log_exporting_error("Error while exporting resource.");
+        return 0;
+    }
+
     const char *resource_name = resource_get_data(target)->xml_attr_name;
     char resource_name_to_use[50] = " ";
 

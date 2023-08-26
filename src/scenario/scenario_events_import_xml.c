@@ -445,6 +445,7 @@ static int xml_import_special_parse_resource(xml_data_attribute_t *attr, int *ta
         }
     }
 
+    xml_import_log_error("Could not find a matching resource.");
     return 0;
 }
 
