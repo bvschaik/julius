@@ -221,6 +221,8 @@ void figure_supplier_action(figure *f)
             figure_movement_move_ticks(f, 1);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 f->wait_ticks = 0;
+                f->previous_tile_x = f->x;
+                f->previous_tile_y = f->y;
                 int id = f->id;
                 if (!resource_is_food(f->collecting_item_id)) {
                     int max_amount = f->type == FIGURE_LIGHTHOUSE_SUPPLIER ? 1 : 2;
