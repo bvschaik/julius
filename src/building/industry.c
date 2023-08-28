@@ -196,7 +196,6 @@ static void update_city_mint_production(int new_day)
         b->data.industry.production_current_month += 100;
         b->data.industry.progress = 0;
         int minted_personal_funds = 0;
-        city_finance_treasury_add_miscellaneous(DENARII_MINTED_PER_PRODUCTION);
         if (city_buildings_has_governor_house()) {
             int personal_salary = city_emperor_salary_amount();
             if (personal_salary > 5) {
