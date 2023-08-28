@@ -558,7 +558,7 @@ void formation_calculate_figures(void)
     clear_figures();
     for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
-        if (figure_is_dead(f)) {
+        if (f->state != FIGURE_STATE_ALIVE) {
             continue;
         }
         if (!figure_is_legion(f) && !figure_is_enemy(f) && !figure_is_herd(f)) {
