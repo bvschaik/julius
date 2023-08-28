@@ -269,7 +269,7 @@ static void button_message(int param1, int param2)
                 city_message_get_advisor(msg->message_type),
                 0);
         } else {
-            window_message_dialog_show_custom_message(msg->param1, msg->year, msg->month, 0);
+            window_message_dialog_show_custom_message(msg->param1, msg->year, msg->month);
         }
     }
 }
@@ -303,7 +303,7 @@ static void button_mission_briefing(int param1, int param2)
     if (!scenario_is_custom()) {
         window_mission_briefing_show_review();
     } else if (scenario_intro_message()) {
-        window_message_dialog_show_custom_message(scenario_intro_message(), game_time_year(), game_time_month(), 0);
+        window_message_dialog_show_custom_message(scenario_intro_message(), game_time_year(), game_time_month());
     }
 }
 

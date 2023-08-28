@@ -238,7 +238,7 @@ static void game_cheat_incite_riot(uint8_t *args)
 
 static void game_cheat_show_custom_events(uint8_t *args)
 {
-    window_editor_scenario_events_show(0);
+    window_editor_scenario_events_show();
 }
 
 void game_cheat_parse_command(uint8_t *command)

@@ -1,6 +1,7 @@
 #include "scenario_event_details.h"
 
 #include "core/string.h"
+#include "editor/editor.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -37,7 +38,7 @@ enum {
     SCENARIO_EVENT_DETAILS_ADD_ACTION,
 };
 
-static void init(int event_id, int from_editor);
+static void init(int event_id);
 static void init_scroll_list(void);
 static void on_scroll(void);
 static void button_click(int param1, int param2);
@@ -100,7 +101,6 @@ static struct {
     int total_sub_items;
     int conditions_count;
     int actions_count;
-    int from_editor;
 
     scenario_event_t *event;
 
@@ -178,9 +178,8 @@ static void populate_list(int offset)
     }
 }
 
-static void init(int event_id, int from_editor)
+static void init(int event_id)
 {
-    data.from_editor = from_editor;
     data.event = scenario_event_get(event_id);
 
     init_scroll_list();
@@ -198,7 +197,7 @@ static void init_scroll_list(void)
 
 static int color_from_state(event_state state)
 {
-    if (!data.from_editor) {
+    if (!editor_is_active()) {
         if (state == EVENT_STATE_ACTIVE) {
             return COLOR_MASK_GREEN;
         } else if (state == EVENT_STATE_PAUSED) {
@@ -230,7 +229,7 @@ static void draw_foreground(void)
     
     text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENTS_TITLE), 16, 32, 320, FONT_LARGE_BLACK, 0);
     text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_ID), data.event->id, "", 336, 40, FONT_NORMAL_PLAIN, COLOR_BLACK);
-    if (!data.from_editor) {
+    if (!editor_is_active()) {
         text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_STATE_UNDEFINED + data.event->state), 420, 40, 80, FONT_NORMAL_GREEN, color_from_state(data.event->state));
         text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_EXECUTION_COUNT), data.event->execution_count, "", 40, 72, FONT_NORMAL_PLAIN, COLOR_BLACK);
         text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_MONTHS_UNTIL_ACTIVE), data.event->months_until_active, "", 336, 72, FONT_NORMAL_PLAIN, COLOR_BLACK);
@@ -392,7 +391,7 @@ static void button_add(int param1, int param2)
     }
 }
 
-void window_editor_scenario_event_details_show(int event_id, int from_editor)
+void window_editor_scenario_event_details_show(int event_id)
 {
     window_type window = {
         WINDOW_EDITOR_SCENARIO_EVENT_DETAILS,
@@ -400,6 +399,6 @@ void window_editor_scenario_event_details_show(int event_id, int from_editor)
         draw_foreground,
         handle_input
     };
-    init(event_id, from_editor);
+    init(event_id);
     window_show(&window);
 }

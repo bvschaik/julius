@@ -1,6 +1,7 @@
 #include "scenario_events.h"
 
 #include "core/string.h"
+#include "editor/editor.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -63,8 +64,6 @@ static struct {
 
     int total_events;
     scenario_event_t *list[MAX_VISIBLE_ROWS];
-
-    int from_editor;
 } data;
 
 static void init_list(void)
@@ -74,10 +73,9 @@ static void init_list(void)
     scrollbar_init(&scrollbar, 0, data.total_events);
 }
 
-static void init(int from_editor)
+static void init(void)
 {
     scenario_events_parameter_data_sort_alphabetically();
-    data.from_editor = from_editor;
     init_list();
 }
 
@@ -114,7 +112,7 @@ static void draw_background(void)
 
 static int color_from_state(event_state state)
 {
-    if (!data.from_editor) {
+    if (!editor_is_active()) {
         if (state == EVENT_STATE_ACTIVE) {
             return COLOR_MASK_GREEN;
         } else if (state == EVENT_STATE_PAUSED) {
@@ -188,7 +186,7 @@ static void button_event(int button_index, int param2)
         return;
     }
     if (data.list[target_index]->state != EVENT_STATE_UNDEFINED) {
-        window_editor_scenario_event_details_show(data.list[target_index]->id, data.from_editor);
+        window_editor_scenario_event_details_show(data.list[target_index]->id);
     }
 }
 
@@ -199,7 +197,7 @@ static void on_scroll(void)
 
 static void close_window(void)
 {
-    if (data.from_editor) {
+    if (editor_is_active()) {
         window_editor_attributes_show();
     } else {
         window_city_show();
@@ -235,10 +233,10 @@ static void button_click(int type, int param2)
 
 static void button_open_variables(int param1, int param2)
 {
-    window_editor_custom_variables_show(data.from_editor);
+    window_editor_custom_variables_show();
 }
 
-void window_editor_scenario_events_show(int from_editor)
+void window_editor_scenario_events_show(void)
 {
     window_type window = {
         WINDOW_EDITOR_SCENARIO_EVENTS,
@@ -246,6 +244,6 @@ void window_editor_scenario_events_show(int from_editor)
         draw_foreground,
         handle_input
     };
-    init(from_editor);
+    init();
     window_show(&window);
 }

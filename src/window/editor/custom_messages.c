@@ -1,6 +1,7 @@
 #include "custom_messages.h"
 
 #include "core/string.h"
+#include "editor/editor.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -17,6 +18,7 @@
 #include "scenario/custom_messages_import_xml.h"
 #include "scenario/custom_messages.h"
 #include "scenario/message_media_text_blob.h"
+#include "window/city.h"
 #include "window/editor/attributes.h"
 #include "window/editor/map.h"
 #include "window/message_dialog.h"
@@ -143,12 +145,21 @@ static void button_event(int button_index, int param2)
     if (!data.list[target_index]) {
         return;
     };
-    window_message_dialog_show_custom_message(data.list[target_index]->id, 0, 0, 1);
+    window_message_dialog_show_custom_message(data.list[target_index]->id, 0, 0);
 }
 
 static void on_scroll(void)
 {
     window_request_refresh();
+}
+
+static void close_window(void)
+{
+    if (editor_is_active()) {
+        window_editor_attributes_show();
+    } else {
+        window_city_show();
+    }
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -159,7 +170,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
-        window_editor_attributes_show();
+        close_window();
     }
     populate_list(scrollbar.scroll_position);
 }

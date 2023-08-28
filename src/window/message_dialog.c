@@ -6,6 +6,7 @@
 #include "core/image_group.h"
 #include "core/lang.h"
 #include "core/string.h"
+#include "editor/editor.h"
 #include "empire/city.h"
 #include "figure/formation.h"
 #include "game/settings.h"
@@ -845,10 +846,10 @@ void window_message_dialog_show_city_message(int text_id, int year, int month,
     init_window(text_id, 0, window_city_draw_all);
 }
 
-void window_message_dialog_show_custom_message(int custom_message_id, int year, int month, int from_editor)
+void window_message_dialog_show_custom_message(int custom_message_id, int year, int month)
 {
     set_city_message(year, month, custom_message_id, 0, MESSAGE_ADVISOR_NONE, 1);
-    if (!from_editor) {
+    if (!editor_is_active()) {
         init_window(custom_message_id, 1, window_city_draw_all);
     } else {
         init_window(custom_message_id, 1, window_editor_map_draw_all);

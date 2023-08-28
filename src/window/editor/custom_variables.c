@@ -1,6 +1,7 @@
 #include "custom_variables.h"
 
 #include "core/string.h"
+#include "editor/editor.h"
 #include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -68,13 +69,11 @@ static struct {
     custom_variable_t *list[MAX_VISIBLE_ROWS];
 
     void (*callback)(custom_variable_t *);
-    int from_editor;
     int select_only;
 } data;
 
-static void init(int from_editor, int select_only)
+static void init(int select_only)
 {
-    data.from_editor = from_editor;
     data.select_only = select_only;
     populate_list(0);
     scrollbar_init(&scrollbar, 0, MAX_CUSTOM_VARIABLES);
@@ -117,7 +116,7 @@ static void draw_foreground(void)
         int j = (i * 2);
         if (data.list[i]) {
             large_label_draw(buttons[j].x, buttons[j].y, buttons[j].width / BLOCK_SIZE,
-                data.focus_button_id == j + 1 && data.from_editor ? 1 : 0);
+                data.focus_button_id == j + 1 && editor_is_active() ? 1 : 0);
 
             text_draw_label_and_number(0, data.list[i]->id, "", buttons[j].x, buttons[j].y + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
             if (data.list[i] && data.list[i]->linked_uid && data.list[i]->linked_uid->text) {
@@ -163,7 +162,7 @@ static void set_variable_name(char *value)
 
 static void button_name_click(int button_index, int param2)
 {
-    if (!data.from_editor) {
+    if (!editor_is_active()) {
         return;
     }
     if (!data.list[button_index]) {
@@ -184,7 +183,7 @@ static void button_name_click(int button_index, int param2)
 
 static void button_delete_variable(int button_index, int param2)
 {
-    if (!data.from_editor) {
+    if (!editor_is_active()) {
         return;
     }
     if (data.select_only) {
@@ -216,7 +215,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     populate_list(scrollbar.scroll_position);
 }
 
-void window_editor_custom_variables_show(int from_editor)
+void window_editor_custom_variables_show(void)
 {
     window_type window = {
         WINDOW_EDITOR_CUSTOM_VARIABLES,
@@ -224,7 +223,7 @@ void window_editor_custom_variables_show(int from_editor)
         draw_foreground,
         handle_input
     };
-    init(from_editor, 0);
+    init(0);
     window_show(&window);
 }
 
@@ -237,6 +236,6 @@ void window_editor_custom_variables_select_show(void (*callback)(custom_variable
         handle_input
     };
     data.callback = callback;
-    init(1, 1);
+    init(1);
     window_show(&window);
 }

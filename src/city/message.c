@@ -166,7 +166,7 @@ static void show_message_popup(int message_id)
             msg->year, msg->month, msg->param1, msg->param2,
             city_message_get_advisor(msg->message_type), 1);
     } else {
-        window_message_dialog_show_custom_message(msg->param1, msg->year, msg->month, 0);
+        window_message_dialog_show_custom_message(msg->param1, msg->year, msg->month);
     }
 }
 

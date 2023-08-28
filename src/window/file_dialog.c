@@ -653,7 +653,7 @@ static void confirm_save_file(int accepted, int checked)
         window_editor_map_show();
     } else if (data.type == FILE_TYPE_SCENARIO_EVENTS) {
         scenario_events_export_to_xml(filename);
-        window_editor_scenario_events_show(1);
+        window_editor_scenario_events_show();
     } else if (data.type == FILE_TYPE_CUSTOM_MESSAGES) {
         custom_messages_export_to_xml(filename);
         window_editor_custom_messages_show();
@@ -716,7 +716,7 @@ static void button_ok_cancel(int is_ok, int param2)
         } else if (data.type == FILE_TYPE_SCENARIO_EVENTS) {
             int result = scenario_events_xml_parse_file(filename);
             if (result) {
-                window_editor_scenario_events_show(1);
+                window_editor_scenario_events_show();
             } else {
                 window_plain_message_dialog_show(TR_EDITOR_UNABLE_TO_LOAD_EVENTS_TITLE, TR_EDITOR_CHECK_LOG_MESSAGE, 1);
                 return;
