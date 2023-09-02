@@ -168,6 +168,26 @@ static int change_market_supplier_destination(figure *f, int dst_building_id)
     return 1;
 }
 
+static int is_better_destination(figure *f, resource_type r, resource_storage_info *info)
+{
+    building *old_dest = building_get(f->destination_building_id);
+    // if any of these are true, the new building is automatically better
+    if (!building_is_active(old_dest)) {
+        return 1;
+    } else if (old_dest->type == BUILDING_GRANARY && old_dest->resources[r] <= 0) {
+        return 1;
+    } else if (old_dest->type == BUILDING_WAREHOUSE && building_warehouse_get_amount(old_dest, r) <= 0) {
+        return 1;
+    }
+    // make sure the new building is less than or equal to half the distance from the old
+    // building to help prevent market ladies from "ping ponging" back and forth
+    int old_dest_dist = building_dist(f->x, f->y, 1, 1, old_dest);
+    if (info->min_distance <= old_dest_dist / 2) {
+        return 1;
+    }
+    return 0;
+}
+
 static int recalculate_market_supplier_destination(figure *f)
 {
     int item = f->collecting_item_id;
@@ -183,11 +203,16 @@ static int recalculate_market_supplier_destination(figure *f)
         return 0;
     }
 
-    if (f->building_id == info[item].building_id) {
+    if (f->building_id == info[item].building_id || f->destination_building_id == info[item].building_id) {
         return 1;
     }
+
     if (info[item].building_id) {
-        return change_market_supplier_destination(f, info[item].building_id);
+        if (is_better_destination(f, item, &info[item])) {
+            return change_market_supplier_destination(f, info[item].building_id);
+        } else {
+            return 1;
+        }
     }
     resource_type fetch_inventory = building_market_fetch_inventory(market, info);
     if (fetch_inventory == RESOURCE_NONE) {
@@ -195,7 +220,7 @@ static int recalculate_market_supplier_destination(figure *f)
     }
     market->data.market.fetch_inventory_id = fetch_inventory;
     f->collecting_item_id = fetch_inventory;
-    return change_market_supplier_destination(f, info[item].building_id);
+    return change_market_supplier_destination(f, info[fetch_inventory].building_id);
 }
 
 void figure_supplier_action(figure *f)
