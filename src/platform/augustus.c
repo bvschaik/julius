@@ -17,6 +17,7 @@
 #include "platform/arguments.h"
 #include "platform/emscripten/emscripten.h"
 #include "platform/file_manager.h"
+#include "platform/file_manager_cache.h"
 #include "platform/joystick.h"
 #include "platform/keyboard_input.h"
 #include "platform/platform.h"
@@ -217,6 +218,9 @@ static void handle_window_event(SDL_WindowEvent *event, int *window_active)
 
         case SDL_WINDOWEVENT_SHOWN:
             SDL_Log("Window %u shown", (unsigned int) event->windowID);
+#ifdef USE_FILE_CACHE
+            platform_file_manager_cache_invalidate();
+#endif
             *window_active = 1;
             break;
         case SDL_WINDOWEVENT_HIDDEN:
@@ -481,6 +485,11 @@ static int pre_init(const char *custom_data_dir)
         SDL_Log("Loading game from %s", custom_data_dir);
         if (!platform_file_manager_set_base_path(custom_data_dir)) {
             SDL_Log("%s: directory not found", custom_data_dir);
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
+                "Error",
+                "Augustus requires the original files from Caesar 3.\n\n"
+                "Please insert the proper directory or copy the files to the selected directory.",
+                NULL);
             return 0;
         }
         return game_pre_init();
@@ -528,13 +537,6 @@ static int pre_init(const char *custom_data_dir)
         }
         user_dir = ask_for_data_dir(1);
     }
-#elif defined(__vita__)
-    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
-        "Error",
-        "Augustus requires the original files from Caesar 3 to run.\n\n"
-        "Please add the files to:\n\n"
-        VITA_PATH_PREFIX,
-        NULL);
 #else
     SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
         "Augustus requires the original files from Caesar 3 to run.",
@@ -561,7 +563,13 @@ static void setup(const augustus_args *args)
         exit_with_status(-1);
     }
 
-    if (!pre_init(args->data_directory)) {
+#ifdef __vita__
+    const char *base_dir = VITA_PATH_PREFIX;
+#else
+    const char *base_dir = args->data_directory;
+#endif
+
+    if (!pre_init(base_dir)) {
         SDL_Log("Exiting: game pre-init failed");
         exit_with_status(1);
     }

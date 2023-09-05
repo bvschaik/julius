@@ -947,18 +947,20 @@ if(MSVC)
 endif()
 
 if(${TARGET_PLATFORM} STREQUAL "vita")
-    target_link_libraries (${SHORT_NAME}
+    target_link_libraries(${SHORT_NAME}
         ${SDL2_MIXER_LIBRARY}
         ${SDL2_LIBRARY}
         vorbisfile
         vorbis
         mikmod
         xmp
-        stdc++
         modplug
         mpg123
         FLAC
         ogg
+        opusfile
+        opus
+        stdc++
         m
         SceAppUtil_stub
         SceAudio_stub

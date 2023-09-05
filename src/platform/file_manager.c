@@ -37,6 +37,9 @@
 #define fs_dir_close _wclosedir
 #define fs_dir_read _wreaddir
 #define fs_stat _wstat
+#define fs_chdir _wchdir
+#define fs_fopen _wfopen
+#define fs_remove _wremove
 #define dir_entry_name(d) wchar_to_utf8(d)
 typedef struct _stat stat_info;
 typedef wchar_t file_name;
@@ -75,6 +78,9 @@ static wchar_t *utf8_to_wchar(const char *str)
 #define dir_entry_name(d) (d)
 #define fs_stat stat
 #endif
+#define fs_chdir chdir
+#define fs_fopen fopen
+#define fs_remove remove
 typedef struct stat stat_info;
 typedef char file_name;
 #endif
@@ -87,11 +93,7 @@ typedef char file_name;
 #define S_ISSOCK(m) 0
 #endif
 
-#ifdef __vita__
-#define CURRENT_DIR VITA_PATH_PREFIX
-#define set_file_name(n) ( strncmp(n, "app0:", 5) ? vita_prepend_path(n) : n )
-#define free_file_name(n)
-#elif defined(_WIN32)
+#if defined(_WIN32)
 #define CURRENT_DIR L"."
 #define set_file_name(n) utf8_to_wchar(n)
 #define free_file_name(n) free((void *) n)
@@ -103,7 +105,7 @@ typedef char file_name;
 
 #ifdef _WIN32
 #include <direct.h>
-#elif !defined(__vita__)
+#else
 #include <unistd.h>
 #endif
 
@@ -436,85 +438,21 @@ int platform_file_manager_set_base_path(const char *path)
     }
 #ifdef __ANDROID__
     return android_set_base_path(path);
-#elif defined(__vita__)
-    return 1;
-#elif defined(_WIN32)
-    wchar_t *wpath = utf8_to_wchar(path);
-    int result = _wchdir(wpath);
-    free(wpath);
-    return result == 0;
 #else
-    return chdir(path) == 0;
+    const file_name *set_path = set_file_name(path);
+    int result = fs_chdir(set_path);
+    free_file_name(set_path);
+    if (result == 0) {
+#ifdef USE_FILE_CACHE
+        platform_file_manager_cache_invalidate();
+#endif
+        return 1;
+    }
+    return 0;
 #endif
 }
 
-#ifdef __vita__
-FILE *platform_file_manager_open_file(const char *filename, const char *mode)
-{
-    if (strchr(mode, 'w')) {
-        platform_file_manager_cache_update_file_info(filename);
-    }
-    filename = set_file_name(filename);
-    return fopen(filename, mode);
-}
-
-FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
-{
-    set_assets_directory();
-    const char *cased_asset_path = dir_get_asset(assets_directory, asset);
-    return fopen(cased_asset_path, mode);
-}
-
-int platform_file_manager_remove_file(const char *filename)
-{
-    platform_file_manager_cache_delete_file_info(filename);
-    return remove(vita_prepend_path(filename)) == 0;
-}
-
-#elif defined(_WIN32)
-
-FILE *platform_file_manager_open_file(const char *filename, const char *mode)
-{
-    wchar_t *wfile = utf8_to_wchar(filename);
-    wchar_t *wmode = utf8_to_wchar(mode);
-
-    FILE *fp = _wfopen(wfile, wmode);
-
-    free(wfile);
-    free(wmode);
-
-    return fp;
-}
-
-FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
-{
-    set_assets_directory();
-    const char *cased_asset_path = dir_get_asset(assets_directory, asset);
-
-    if (!cased_asset_path) {
-        return 0;
-    }
-
-    wchar_t *wfile = utf8_to_wchar(cased_asset_path);
-    wchar_t *wmode = utf8_to_wchar(mode);
-
-    FILE *fp = _wfopen(wfile, wmode);
-
-    free(wfile);
-    free(wmode);
-
-    return fp;
-}
-
-int platform_file_manager_remove_file(const char *filename)
-{
-    wchar_t *wfile = utf8_to_wchar(filename);
-    int result = _wremove(wfile);
-    free(wfile);
-    return result == 0;
-}
-
-#elif defined(__ANDROID__)
+#if defined(__ANDROID__)
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
 {
@@ -535,32 +473,6 @@ int platform_file_manager_remove_file(const char *filename)
     return android_remove_file(filename);
 }
 
-#elif defined(__EMSCRIPTEN__)
-
-FILE *platform_file_manager_open_file(const char *filename, const char *mode)
-{
-    writing_to_file = strchr(mode, 'w') != 0;
-    return fopen(filename, mode);
-}
-
-int platform_file_manager_remove_file(const char *filename)
-{
-    if (remove(filename) == 0) {
-        EM_ASM(
-            Module.syncFS();
-        );
-        return 1;
-    }
-    return 0;
-}
-
-FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
-{
-    set_assets_directory();
-    const char *cased_asset_path = dir_get_asset(assets_directory, asset);
-    return fopen(cased_asset_path, mode);
-}
-
 #else
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
@@ -570,7 +482,20 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode)
         platform_file_manager_cache_update_file_info(filename);
     }
 #endif
-    return fopen(filename, mode);
+
+#if defined(__EMSCRIPTEN__)
+    writing_to_file = strchr(mode, 'w') != 0;
+#endif
+
+    const file_name *wfile = set_file_name(filename);
+    const file_name *wmode = set_file_name(mode);
+
+    FILE *fp = fs_fopen(wfile, wmode);
+
+    free_file_name(wfile);
+    free_file_name(wmode);
+
+    return fp;
 }
 
 int platform_file_manager_remove_file(const char *filename)
@@ -578,14 +503,24 @@ int platform_file_manager_remove_file(const char *filename)
 #ifdef USE_FILE_CACHE
     platform_file_manager_cache_delete_file_info(filename);
 #endif
-    return remove(filename) == 0;
+    file_name *wfile = set_file_name(filename);
+    int result = fs_remove(wfile);
+    free_file_name(wfile);
+#if defined(__EMSCRIPTEN__)
+    if (result == 0) {
+        EM_ASM(
+            Module.syncFS();
+        );
+    }
+#endif
+    return result == 0;
 }
 
 FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
 {
     set_assets_directory();
     const char *cased_asset_path = dir_get_asset(assets_directory, asset);
-    return fopen(cased_asset_path, mode);
+    return platform_file_manager_open_file(cased_asset_path, mode);
 }
 #endif
 

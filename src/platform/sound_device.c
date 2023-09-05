@@ -195,7 +195,7 @@ static void load_music_for_vita(const char *filename)
         vita_music_data.buffer = 0;
     }
     strncpy(vita_music_data.filename, filename, FILE_NAME_MAX - 1);
-    SceUID fd = sceIoOpen(vita_prepend_path(filename), SCE_O_RDONLY, 0777);
+    SceUID fd = sceIoOpen(filename, SCE_O_RDONLY, 0777);
     if (fd < 0) {
         return;
     }

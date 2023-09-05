@@ -104,6 +104,7 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
                     dir_name_offset = strlen(info->name);
                     if(full_name[dir_name_offset - 1] != '/') {
                         full_name[dir_name_offset++] = '/';
+                        full_name[dir_name_offset] = 0;
                     }
                 }
                 strncpy(full_name + dir_name_offset, name, FILE_NAME_MAX - 1 - dir_name_offset);
@@ -178,6 +179,23 @@ int platform_file_manager_cache_file_has_extension(const file_info *f, const cha
         return 1;
     }
     return platform_file_manager_compare_filename(f->extension, extension) == 0;
+}
+
+void platform_file_manager_cache_invalidate(void)
+{
+    dir_info *info = base_dir_info;
+    while (info) {
+        file_info *file_item = info->first_file;
+        while (file_item) {
+            file_info *old_file_item = file_item;
+            file_item = file_item->next;
+            free(old_file_item);
+        }
+        dir_info *old_info = info;
+        info = info->next;
+        free(old_info);
+    }
+    base_dir_info = 0;
 }
 
 #endif // USE_FILE_CACHE

@@ -24,6 +24,7 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir);
 int platform_file_manager_cache_file_has_extension(const file_info *f, const char *extension);
 void platform_file_manager_cache_update_file_info(const char *filename);
 void platform_file_manager_cache_delete_file_info(const char *filename);
+void platform_file_manager_cache_invalidate(void);
 
 #endif
 
