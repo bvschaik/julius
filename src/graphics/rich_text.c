@@ -171,7 +171,7 @@ static int get_word_width(const uint8_t *str, int in_link, int *num_chars)
             // normal char
             int letter_id = font_letter_id(data.normal_font, str, &num_bytes);
             if (letter_id >= 0) {
-                width += 1 + image_letter(letter_id)->width;
+                width += 1 + image_letter(letter_id)->original.width;
             }
             word_char_seen = 1;
             if (num_bytes > 1) {
@@ -227,7 +227,7 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
                     int height = def->image_y_offset(*str, img->height + img->y_offset, def->line_height);
                     image_draw_letter(def->font, letter_id, x, y - height, color, SCALE_NONE);
                 }
-                x += img->width + def->letter_spacing;
+                x += img->original.width + def->letter_spacing;
             }
             if (num_link_chars > 0) {
                 num_link_chars -= num_bytes;
@@ -247,7 +247,7 @@ static int get_raw_text_width(const uint8_t *str)
         int num_bytes = 1;
         int letter_id = font_letter_id(data.normal_font, str, &num_bytes);
         if (letter_id >= 0) {
-            width += 1 + image_letter(letter_id)->width;
+            width += 1 + image_letter(letter_id)->original.width;
         }
         str += num_bytes;
     }
@@ -362,7 +362,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                 } else {
                     const image *img = image_get(image_id);
                     image_height_lines = img->height / data.line_height + 2;
-                    int image_offset_x = x_offset + (box_width - img->width) / 2 - 4;
+                    int image_offset_x = x_offset + (box_width - img->original.width) / 2 - 4;
                     if (line < height_lines + scrollbar.scroll_position) {
                         if (line >= scrollbar.scroll_position) {
                             image_draw(image_id, image_offset_x, y + 8, COLOR_MASK_NONE, SCALE_NONE);
