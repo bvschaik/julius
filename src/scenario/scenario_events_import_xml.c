@@ -598,6 +598,7 @@ static char *file_to_buffer(const char *filename, int *output_length)
     char *buf = malloc(size);
     if (!buf) {
         log_error("Error opening empire file", filename, 0);
+        file_close(file);
         return 0;
     }
     memset(buf, 0, size);

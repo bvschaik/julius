@@ -195,15 +195,20 @@ static void load_music_for_vita(const char *filename)
         vita_music_data.buffer = 0;
     }
     strncpy(vita_music_data.filename, filename, FILE_NAME_MAX - 1);
-    SceUID fd = sceIoOpen(filename, SCE_O_RDONLY, 0777);
-    if (fd < 0) {
+    FILE *fp = file_open(filename, "rb");
+    if (!fp) {
         return;
     }
-    vita_music_data.size = sceIoLseek(fd, 0, SCE_SEEK_END);
-    sceIoLseek(fd, 0, SCE_SEEK_SET);
+    fseek(fp, 0, SEEK_END);
+    vita_music_data.size = ftell(fp);
+    fseek(fp, 0, SEEK_SET);
     vita_music_data.buffer = malloc(sizeof(char) * vita_music_data.size);
-    sceIoRead(fd, vita_music_data.buffer, vita_music_data.size);
-    sceIoClose(fd);
+    if (!vita_music_data.buffer) {
+        file_close(fp);
+        return;
+    }
+    fread(vita_music_data.buffer, sizeof(char), (size_t) vita_music_data.size, fp);
+    file_close(fp);
 }
 #endif
 
