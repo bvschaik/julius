@@ -911,12 +911,19 @@ building_type building_house_determine_worst_desirability_building_type(const bu
             const model_building *model = model_get_building(type);
             // simplified desirability calculation
             int des = model->desirability_value;
+            int step = model->desirability_step;
             int step_size = model->desirability_step_size;
             int range = model->desirability_range;
+            int tiles_within_step = 0;
             int dist = calc_maximum_distance(x, y, house->x, house->y);
             if (dist <= range) {
-                while (--dist > 1) {
-                    des += step_size;
+                while (dist >= 1) {
+                    tiles_within_step++;
+                    if (tiles_within_step >= step) {
+                        des += step_size;
+                        tiles_within_step = 0;
+                    }
+                    dist--;
                 }
                 if (des < lowest_desirability) {
                     lowest_desirability = des;
