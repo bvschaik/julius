@@ -1259,6 +1259,7 @@ static translation_string all_strings[] = {
     {TR_PARAMETER_DISPLAY_BUY_PRICE, "buy price"},
     {TR_PARAMETER_DISPLAY_SELL_PRICE, "sell price"},
     {TR_PARAMETER_DISPLAY_MONTHS, "months"},
+    {TR_PARAMETER_DISPLAY_DAYS, "days"},
     {TR_PARAMETER_DISPLAY_RESPECT_SETTINGS, "respecting settings"},
     {TR_PARAMETER_DISPLAY_IGNORE_SETTINGS, "ignoring settings"},
     {TR_PARAMETER_DISPLAY_APPLY_COST, "apply cost"},

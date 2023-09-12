@@ -1065,7 +1065,7 @@ void scenario_events_parameter_data_get_display_string_for_action(scenario_actio
             {
                 result_text = translation_for_number_value(action->parameter1, result_text, &maxlength);
                 result_text = append_text(string_from_ascii(" "), result_text, &maxlength);
-                result_text = append_text(translation_for(TR_PARAMETER_DISPLAY_MONTHS), result_text, &maxlength);
+                result_text = append_text(translation_for(TR_PARAMETER_DISPLAY_DAYS), result_text, &maxlength);
                 return;
             }
         case ACTION_TYPE_SEND_STANDARD_MESSAGE:
