@@ -58,3 +58,29 @@ int building_count_upgraded(building_type type)
     }
     return upgraded;
 }
+
+int building_count_active_fort_type(figure_type type)
+{
+    int active = 0;
+    for (building *b = building_first_of_type(BUILDING_FORT); b; b = b->next_of_type) {
+        if (building_is_active(b) && b == building_main(b)) {
+            if (b->subtype.fort_figure_type == type) {
+                active++;
+            }
+        }
+    }
+    return active;
+}
+
+int building_count_fort_type_total(figure_type type)
+{
+    int total = 0;
+    for (building *b = building_first_of_type(BUILDING_FORT); b; b = b->next_of_type) {
+        if ((b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_CREATED) && b == building_main(b)) {
+            if (b->subtype.fort_figure_type == type) {
+                total++;
+            }
+        }
+    }
+    return total;
+}

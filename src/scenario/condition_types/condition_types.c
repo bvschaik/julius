@@ -110,6 +110,15 @@ int scenario_condition_type_building_count_active_met(const scenario_condition_t
             total_active_count += building_count_active(BUILDING_LARGE_POND);
             total_active_count += building_count_active(BUILDING_DOLPHIN_FOUNTAIN);
             break;
+        case BUILDING_FORT_LEGIONARIES:
+            total_active_count += building_count_fort_type_total(FIGURE_FORT_LEGIONARY);
+            break;
+        case BUILDING_FORT_JAVELIN:
+            total_active_count += building_count_fort_type_total(FIGURE_FORT_JAVELIN);
+            break;
+        case BUILDING_FORT_MOUNTED:
+            total_active_count += building_count_fort_type_total(FIGURE_FORT_MOUNTED);
+            break;
         default:
             total_active_count += building_count_active(type);
             break;
@@ -204,6 +213,15 @@ int scenario_condition_type_building_count_any_met(const scenario_condition_t *c
             total_active_count += building_count_total(BUILDING_SMALL_POND);
             total_active_count += building_count_total(BUILDING_LARGE_POND);
             total_active_count += building_count_total(BUILDING_DOLPHIN_FOUNTAIN);
+            break;
+        case BUILDING_FORT_LEGIONARIES:
+            total_active_count += building_count_fort_type_total(FIGURE_FORT_LEGIONARY);
+            break;
+        case BUILDING_FORT_JAVELIN:
+            total_active_count += building_count_fort_type_total(FIGURE_FORT_JAVELIN);
+            break;
+        case BUILDING_FORT_MOUNTED:
+            total_active_count += building_count_fort_type_total(FIGURE_FORT_MOUNTED);
             break;
         default:
             total_active_count += building_count_total(type);
