@@ -445,9 +445,7 @@ void empire_city_generate_trader(void)
         } else {
             city_trade_add_land_trade_route();
         }
-        if (generate_trader(array_index, city)) {
-            break;
-        }
+        generate_trader(array_index, city);
     }
 }
 

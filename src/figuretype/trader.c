@@ -20,6 +20,7 @@
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/image.h"
+#include "core/random.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/object.h"
@@ -31,12 +32,14 @@
 #include "figure/route.h"
 #include "figure/trader.h"
 #include "figure/visited_buildings.h"
+#include "game/time.h"
 #include "map/routing.h"
 #include "map/routing_path.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
 
 #define INFINITE 10000
+#define TRADER_INITIAL_WAIT GAME_TIME_TICKS_PER_DAY
 
 // Mercury Grand Temple base bonus to trader speed
 static int trader_bonus_speed(void)
@@ -63,7 +66,8 @@ int figure_create_trade_caravan(int x, int y, int city_id)
     figure *caravan = figure_create(FIGURE_TRADE_CARAVAN, x, y, DIR_0_TOP);
     caravan->empire_city_id = city_id;
     caravan->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
-    caravan->wait_ticks = 10;
+    random_generate_next();
+    caravan->wait_ticks = random_byte() & TRADER_INITIAL_WAIT;
     // donkey 1
     figure *donkey1 = figure_create(FIGURE_TRADE_CARAVAN_DONKEY, x, y, DIR_0_TOP);
     donkey1->action_state = FIGURE_ACTION_100_TRADE_CARAVAN_CREATED;
@@ -80,7 +84,8 @@ int figure_create_trade_ship(int x, int y, int city_id)
     figure *ship = figure_create(FIGURE_TRADE_SHIP, x, y, DIR_0_TOP);
     ship->empire_city_id = city_id;
     ship->action_state = FIGURE_ACTION_110_TRADE_SHIP_CREATED;
-    ship->wait_ticks = 10;
+    random_generate_next();
+    ship->wait_ticks = random_byte() & TRADER_INITIAL_WAIT;
     return ship->id;
 }
 
@@ -479,7 +484,7 @@ void figure_trade_caravan_action(figure *f)
         case FIGURE_ACTION_100_TRADE_CARAVAN_CREATED:
             f->is_ghost = 1;
             f->wait_ticks++;
-            if (f->wait_ticks > 20) {
+            if (f->wait_ticks > TRADER_INITIAL_WAIT) {
                 f->wait_ticks = 0;
                 go_to_next_storage(f);
             }
@@ -770,7 +775,7 @@ void figure_trade_ship_action(figure *f)
             f->trader_amount_bought = 0;
             f->is_ghost = 1;
             f->wait_ticks++;
-            if (f->wait_ticks > 20) {
+            if (f->wait_ticks > TRADER_INITIAL_WAIT) {
                 f->wait_ticks = 0;
                 map_point queue_tile;
                 int dock_id = building_dock_get_destination(f->id, 0, &queue_tile);
