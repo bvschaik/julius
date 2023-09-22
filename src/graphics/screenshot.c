@@ -4,6 +4,7 @@
 #include "city/warning.h"
 #include "core/buffer.h"
 #include "core/config.h"
+#include "core/direction.h"
 #include "core/file.h"
 #include "core/log.h"
 #include "core/string.h"
@@ -12,6 +13,7 @@
 #include "graphics/menu.h"
 #include "graphics/window.h"
 #include "map/grid.h"
+#include "map/orientation.h"
 #include "translation/translation.h"
 #include "widget/city_without_overlay.h"
 
@@ -30,12 +32,14 @@
 enum {
     FULL_CITY_SCREENSHOT = 0,
     DISPLAY_SCREENSHOT = 1,
-    MAX_SCREENSHOT_TYPES = 2
+    TIMELAPSE_SCREENSHOT = 2,
+    MAX_SCREENSHOT_TYPES = 3
 };
 
 static const char filename_formats[MAX_SCREENSHOT_TYPES][32] = {
     "full city %Y-%m-%d %H.%M.%S.png",
     "city %Y-%m-%d %H.%M.%S.png",
+    "timelapse %Y-%m-%d %H.%M.%S.png",
 };
 
 static struct {
@@ -95,12 +99,12 @@ static int image_create(int width, int height, int rows_in_memory)
     return 1;
 }
 
-static const char *generate_filename(int city_screenshot)
+static const char *generate_filename(int screenshot_mode)
 {
     static char filename[FILE_NAME_MAX];
     time_t curtime = time(NULL);
     struct tm *loctime = localtime(&curtime);
-    strftime(filename, FILE_NAME_MAX, filename_formats[city_screenshot], loctime);
+    strftime(filename, FILE_NAME_MAX, filename_formats[screenshot_mode], loctime);
     return filename;
 }
 
@@ -277,11 +281,97 @@ static void create_full_city_screenshot(void)
     image_free();
 }
 
-void graphics_save_screenshot(int full_city)
+static void create_timelapse_screenshot(void)
 {
-    if (full_city) {
-        create_full_city_screenshot();
-    } else {
-        create_window_screenshot();
+    pixel_offset original_camera_pixels;
+    city_view_get_camera_in_pixels(&original_camera_pixels.x, &original_camera_pixels.y);
+    int original_camera_orientation = city_view_orientation();
+    int width = screen_width();
+    int height = screen_height();
+
+    int city_width_pixels = map_grid_width() * TILE_X_SIZE;
+    int city_height_pixels = map_grid_height() * TILE_Y_SIZE;
+
+    if (!image_create(city_width_pixels, city_height_pixels + TILE_Y_SIZE, IMAGE_HEIGHT_CHUNK)) {
+        log_error("Unable to set memory for full city screenshot", 0, 0);
+        return;
+    }
+    const char *filename = generate_filename(TIMELAPSE_SCREENSHOT);
+    if (!image_begin_io(filename) || !image_write_header()) {
+        log_error("Unable to write screenshot to:", filename, 0);
+        image_free();
+        return;
+    }
+    
+    switch (original_camera_orientation) {
+        case DIR_2_RIGHT:
+            city_view_rotate_right();
+            map_orientation_change(1);
+            break;
+        case DIR_4_BOTTOM:
+            city_view_rotate_left();
+            map_orientation_change(0);
+            // fallthrough
+        case DIR_6_LEFT:
+            city_view_rotate_left();
+            map_orientation_change(0);
+            break;
+        default: // already north
+            break;
+    }
+    int canvas_width = city_width_pixels + (city_view_is_sidebar_collapsed() ? 40 : 160);
+    screen_set_resolution(canvas_width, TOP_MENU_HEIGHT + IMAGE_HEIGHT_CHUNK);
+    graphics_set_clip_rectangle(0, TOP_MENU_HEIGHT, city_width_pixels, IMAGE_HEIGHT_CHUNK);
+
+    int base_width = (GRID_SIZE * TILE_X_SIZE - city_width_pixels) / 2 + TILE_X_SIZE;
+    int max_height = (GRID_SIZE * TILE_Y_SIZE + city_height_pixels) / 2;
+    int min_height = max_height - city_height_pixels - TILE_Y_SIZE;
+    map_tile dummy_tile = {0, 0, 0};
+    int error = 0;
+    int current_height = image_set_loop_height_limits(min_height, max_height);
+    int size;
+    const color_t *canvas = (color_t *) graphics_canvas() + TOP_MENU_HEIGHT * canvas_width;
+    while ((size = image_request_rows())) {
+        city_view_set_camera_from_pixel_position(base_width, current_height);
+        city_without_overlay_draw(0, 0, &dummy_tile);
+        if (!image_write_rows(canvas, canvas_width)) {
+            log_error("Error writing image", 0, 0);
+            error = 1;
+            break;
+        }
+        current_height += size;
+    }
+    graphics_reset_clip_rectangle();
+    screen_set_resolution(width, height);
+    switch (original_camera_orientation) {
+        case DIR_2_RIGHT:
+            city_view_rotate_left();
+            map_orientation_change(0);
+            break;
+        case DIR_4_BOTTOM:
+            city_view_rotate_right();
+            map_orientation_change(1);
+            // fallthrough
+        case DIR_6_LEFT:
+            city_view_rotate_right();
+            map_orientation_change(1);
+            break;
+        default: // already north
+            break;
+    }
+    city_view_set_camera_from_pixel_position(original_camera_pixels.x, original_camera_pixels.y);
+    if (!error) {
+        image_finish();
+        log_info("Saved full city screenshot:", filename, 0);
+    }
+    image_free();
+}
+
+void graphics_save_screenshot(int mode)
+{
+    switch (mode) {
+        case 2: create_timelapse_screenshot(); break;
+        case 1: create_full_city_screenshot(); break;
+        case 0: create_window_screenshot(); break;
     }
 }

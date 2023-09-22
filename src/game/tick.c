@@ -26,6 +26,7 @@
 #include "city/sentiment.h"
 #include "city/trade.h"
 #include "city/victory.h"
+#include "core/config.h"
 #include "core/random.h"
 #include "editor/editor.h"
 #include "empire/city.h"
@@ -36,6 +37,7 @@
 #include "game/time.h"
 #include "game/tutorial.h"
 #include "game/undo.h"
+#include "graphics/screenshot.h"
 #include "map/desirability.h"
 #include "map/natives.h"
 #include "map/road_network.h"
@@ -100,6 +102,9 @@ static void advance_month(void)
     tutorial_on_month_tick();
     if (setting_monthly_autosave()) {
         game_file_write_saved_game("autosave.sav");
+    }
+    if (config_get(CONFIG_TIMELAPSE_SCREENSHOT)) {
+        graphics_save_screenshot(2);
     }
 }
 
