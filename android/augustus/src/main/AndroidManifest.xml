@@ -31,7 +31,8 @@
             android:launchMode="singleInstance"
             android:exported="true"
             android:preferMinimalPostProcessing="true"
-            android:resizeableActivity="true">
+            android:resizeableActivity="true"
+            android:screenOrientation="fullUser">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
