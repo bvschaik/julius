@@ -24,6 +24,7 @@
 #include "scenario/data.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/custom_messages.h"
+#include "scenario/invasion.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
 #include "scenario/scenario.h"
@@ -192,6 +193,26 @@ int scenario_action_type_favor_add_execute(scenario_action_t *action)
 int scenario_action_type_gladiator_revolt_execute(scenario_action_t *action)
 {
     scenario_gladiator_revolt_start_new();
+
+    return 1;
+}
+
+int scenario_action_type_invasion_immediate_execute(scenario_action_t *action)
+{
+    int attack_type = action->parameter1;
+    int size = action->parameter2;
+    int invasion_point = action->parameter3;
+    int target_type = action->parameter4;
+    int enemy_id = action->parameter5;
+
+    if (invasion_point < 0 || invasion_point > MAX_INVASION_POINTS) {
+        return 0;
+    }
+    if (enemy_id < ENEMY_UNDEFINED || enemy_id >= ENEMY_MAX) {
+        enemy_id = ENEMY_UNDEFINED;
+    }
+
+    scenario_invasion_start_from_action(attack_type, size, invasion_point, target_type, enemy_id);
 
     return 1;
 }

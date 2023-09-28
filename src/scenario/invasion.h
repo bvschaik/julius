@@ -2,6 +2,8 @@
 #define SCENARIO_INVASION_H
 
 #include "core/buffer.h"
+#include "figure/formation.h"
+#include "scenario/types.h"
 
 void scenario_invasion_clear(void);
 void scenario_invasion_init(void);
@@ -20,7 +22,8 @@ int scenario_invasion_start_from_caesar(int size);
 
 void scenario_invasion_start_from_cheat(void);
 
-void scenario_invasion_start_from_console(int attack_type, int size, int invasion_point);
+void scenario_invasion_start_from_action(invasion_type_enum invasion_type, int size, int invasion_point, formation_attack_enum attack_type, enemy_type_t enemy_id);
+void scenario_invasion_start_from_console(invasion_type_enum invasion_type, int size, int invasion_point);
 
 void scenario_invasion_process(void);
 

@@ -52,6 +52,8 @@ int scenario_action_type_execute(scenario_action_t *action)
             return scenario_action_type_empire_map_convert_future_trade_city_execute(action);
         case ACTION_TYPE_GLADIATOR_REVOLT:
             return scenario_action_type_gladiator_revolt_execute(action);
+        case ACTION_TYPE_INVASION_IMMEDIATE:
+            return scenario_action_type_invasion_immediate_execute(action);
         case ACTION_TYPE_REQUEST_IMMEDIATELY_START:
             return scenario_action_type_request_immediately_start_execute(action);
         case ACTION_TYPE_SEND_STANDARD_MESSAGE:

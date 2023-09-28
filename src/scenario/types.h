@@ -1,12 +1,13 @@
 #ifndef SCENARIO_TYPES_H
 #define SCENARIO_TYPES_H
 
-enum {
+typedef enum {
     INVASION_TYPE_LOCAL_UPRISING = 1,
     INVASION_TYPE_ENEMY_ARMY = 2,
     INVASION_TYPE_CAESAR = 3,
     INVASION_TYPE_DISTANT_BATTLE = 4,
-};
+    INVASION_TYPE_MARS_NATIVES = 5,
+} invasion_type_enum;
 
 enum {
     EARTHQUAKE_NONE = 0,

@@ -19,6 +19,8 @@ int scenario_action_type_favor_add_execute(scenario_action_t *action);
 
 int scenario_action_type_gladiator_revolt_execute(scenario_action_t *action);
 
+int scenario_action_type_invasion_immediate_execute(scenario_action_t *action);
+
 void scenario_action_type_money_add_init(scenario_action_t *action);
 int scenario_action_type_money_add_execute(scenario_action_t *action);
 

@@ -20,6 +20,8 @@ typedef struct {
 
 void enemy_armies_clear(void);
 
+void enemy_army_clear(int invasion_id);
+
 const enemy_army *enemy_army_get(int invasion_id);
 
 enemy_army *enemy_army_get_editable(int invasion_id);

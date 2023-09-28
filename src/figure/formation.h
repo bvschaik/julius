@@ -16,13 +16,13 @@ enum {
     LEGION_RECRUIT_LEGIONARY = 3
 };
 
-enum {
+typedef enum {
     FORMATION_ATTACK_FOOD_CHAIN = 0,
     FORMATION_ATTACK_GOLD_STORES = 1,
     FORMATION_ATTACK_BEST_BUILDINGS = 2,
     FORMATION_ATTACK_TROOPS = 3,
     FORMATION_ATTACK_RANDOM = 4
-};
+} formation_attack_enum;
 
 enum {
     FORMATION_COLUMN = 0,

@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define XML_TOTAL_ELEMENTS 56
+#define XML_TOTAL_ELEMENTS 57
 
 static struct {
     int success;
@@ -112,6 +112,7 @@ static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "trade_set_buy_price_only", xml_import_create_action, 0, "actions" },
     { "trade_set_sell_price_only", xml_import_create_action, 0, "actions" },
     { "building_force_collapse", xml_import_create_action, 0, "actions" },
+    { "invasion_start_immediate", xml_import_create_action, 0, "actions" },
 };
 
 static int xml_import_start_scenario_events(void)
@@ -328,14 +329,17 @@ static int xml_import_special_parse_attribute(xml_data_attribute_t *attr, int *t
 {
     switch (attr->type) {
         case PARAMETER_TYPE_ALLOWED_BUILDING:
+        case PARAMETER_TYPE_INVASION_TYPE:
         case PARAMETER_TYPE_BOOLEAN:
         case PARAMETER_TYPE_BUILDING:
         case PARAMETER_TYPE_CHECK:
         case PARAMETER_TYPE_DIFFICULTY:
+        case PARAMETER_TYPE_ENEMY_TYPE:
         case PARAMETER_TYPE_POP_CLASS:
         case PARAMETER_TYPE_RATING_TYPE:
         case PARAMETER_TYPE_STANDARD_MESSAGE:
         case PARAMETER_TYPE_STORAGE_TYPE:
+        case PARAMETER_TYPE_TARGET_TYPE:
             return xml_import_special_parse_type(attr, attr->type, target);
         case PARAMETER_TYPE_BUILDING_COUNTING:
             return xml_import_special_parse_building_counting(attr, target);

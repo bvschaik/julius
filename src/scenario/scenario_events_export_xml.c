@@ -124,14 +124,17 @@ static int export_parse_attribute(xml_data_attribute_t *attr, int target)
 {
     switch (attr->type) {
         case PARAMETER_TYPE_ALLOWED_BUILDING:
+        case PARAMETER_TYPE_INVASION_TYPE:
         case PARAMETER_TYPE_BOOLEAN:
         case PARAMETER_TYPE_BUILDING:
         case PARAMETER_TYPE_CHECK:
         case PARAMETER_TYPE_DIFFICULTY:
+        case PARAMETER_TYPE_ENEMY_TYPE:
         case PARAMETER_TYPE_POP_CLASS:
         case PARAMETER_TYPE_RATING_TYPE:
         case PARAMETER_TYPE_STANDARD_MESSAGE:
         case PARAMETER_TYPE_STORAGE_TYPE:
+        case PARAMETER_TYPE_TARGET_TYPE:
             return export_attribute_by_type(attr, attr->type, target);
         case PARAMETER_TYPE_BUILDING_COUNTING:
             return export_attribute_by_type(attr, PARAMETER_TYPE_BUILDING, target);

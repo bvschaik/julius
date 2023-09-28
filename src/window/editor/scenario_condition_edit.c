@@ -319,16 +319,19 @@ static void change_parameter(xml_data_attribute_t *parameter, int param1)
         case PARAMETER_TYPE_MIN_MAX_NUMBER:
             window_numeric_input_bound_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 9, parameter->min_limit, parameter->max_limit, set_param_value);
             return;
-        case PARAMETER_TYPE_CHECK:
-        case PARAMETER_TYPE_DIFFICULTY:
+        case PARAMETER_TYPE_ALLOWED_BUILDING:
         case PARAMETER_TYPE_BOOLEAN:
-        case PARAMETER_TYPE_POP_CLASS:
         case PARAMETER_TYPE_BUILDING:
         case PARAMETER_TYPE_BUILDING_COUNTING:
-        case PARAMETER_TYPE_ALLOWED_BUILDING:
+        case PARAMETER_TYPE_CHECK:
+        case PARAMETER_TYPE_DIFFICULTY:
+        case PARAMETER_TYPE_ENEMY_TYPE:
+        case PARAMETER_TYPE_INVASION_TYPE:
+        case PARAMETER_TYPE_POP_CLASS:
+        case PARAMETER_TYPE_RATING_TYPE:
         case PARAMETER_TYPE_STANDARD_MESSAGE:
         case PARAMETER_TYPE_STORAGE_TYPE:
-        case PARAMETER_TYPE_RATING_TYPE:
+        case PARAMETER_TYPE_TARGET_TYPE:
             window_editor_select_special_attribute_mapping_show(parameter->type, set_param_value, data.parameter_being_edited_current_value);
             return;
         case PARAMETER_TYPE_ROUTE:

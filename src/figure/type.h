@@ -107,6 +107,7 @@ typedef enum {
 } figure_type;
 
 typedef enum {
+    ENEMY_UNDEFINED = -1,
     ENEMY_0_BARBARIAN = 0,
     ENEMY_1_NUMIDIAN = 1,
     ENEMY_2_GAUL = 2,
@@ -118,7 +119,8 @@ typedef enum {
     ENEMY_8_GREEK = 8,
     ENEMY_9_EGYPTIAN = 9,
     ENEMY_10_CARTHAGINIAN = 10,
-    ENEMY_11_CAESAR = 11
+    ENEMY_11_CAESAR = 11,
+    ENEMY_MAX
 } enemy_type_t;
 
 enum {

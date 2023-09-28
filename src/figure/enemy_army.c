@@ -17,21 +17,23 @@ static struct {
 void enemy_armies_clear(void)
 {
     for (int i = 0; i < MAX_ENEMY_ARMIES; i++) {
-        enemy_armies[i].formation_id = 0;
-        enemy_armies[i].layout = 0;
-        enemy_armies[i].home_x = 0;
-        enemy_armies[i].home_y = 0;
-        enemy_armies[i].destination_x = 0;
-        enemy_armies[i].destination_y = 0;
-        enemy_armies[i].destination_building_id = 0;
-        enemy_armies[i].ignore_roman_soldiers = 0;
-        enemy_armies[i].started_retreating = 0;
+        enemy_army_clear(i);
     }
-    totals.enemy_formations = 0;
-    totals.enemy_strength = 0;
-    totals.legion_formations = 0;
-    totals.legion_strength = 0;
+    enemy_army_totals_clear();
     totals.days_since_roman_influence_calculation = 0;
+}
+
+void enemy_army_clear(int invasion_id)
+{
+    enemy_armies[invasion_id].formation_id = 0;
+    enemy_armies[invasion_id].layout = 0;
+    enemy_armies[invasion_id].home_x = 0;
+    enemy_armies[invasion_id].home_y = 0;
+    enemy_armies[invasion_id].destination_x = 0;
+    enemy_armies[invasion_id].destination_y = 0;
+    enemy_armies[invasion_id].destination_building_id = 0;
+    enemy_armies[invasion_id].ignore_roman_soldiers = 0;
+    enemy_armies[invasion_id].started_retreating = 0;
 }
 
 const enemy_army *enemy_army_get(int invasion_id)
