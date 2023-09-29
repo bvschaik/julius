@@ -21,6 +21,8 @@ int scenario_condition_type_is_met(scenario_condition_t *condition)
             return scenario_condition_type_building_count_active_met(condition);
         case CONDITION_TYPE_BUILDING_COUNT_ANY:
             return scenario_condition_type_building_count_any_met(condition);
+        case CONDITION_TYPE_BUILDING_COUNT_AREA:
+            return scenario_condition_type_building_count_area_met(condition);
         case CONDITION_TYPE_CITY_POPULATION:
             return scenario_condition_type_city_population_met(condition);
         case CONDITION_TYPE_COUNT_OWN_TROOPS:

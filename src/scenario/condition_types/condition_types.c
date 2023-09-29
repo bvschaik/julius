@@ -15,6 +15,7 @@
 #include "empire/trade_route.h"
 #include "game/settings.h"
 #include "game/time.h"
+#include "map/grid.h"
 #include "scenario/request.h"
 #include "scenario/scenario.h"
 #include "scenario/condition_types/comparison_helper.h"
@@ -28,87 +29,34 @@ int scenario_condition_type_building_count_active_met(const scenario_condition_t
     int total_active_count = 0;
     switch(type) {
         case BUILDING_MENU_FARMS:
-            total_active_count += building_count_active(BUILDING_WHEAT_FARM);
-            total_active_count += building_count_active(BUILDING_VEGETABLE_FARM);
-            total_active_count += building_count_active(BUILDING_FRUIT_FARM);
-            total_active_count += building_count_active(BUILDING_OLIVE_FARM);
-            total_active_count += building_count_active(BUILDING_VINES_FARM);
-            total_active_count += building_count_active(BUILDING_PIG_FARM);
+            total_active_count = building_set_count_farms(1);
             break;
         case BUILDING_MENU_RAW_MATERIALS:
-            total_active_count += building_count_active(BUILDING_MARBLE_QUARRY);
-            total_active_count += building_count_active(BUILDING_IRON_MINE);
-            total_active_count += building_count_active(BUILDING_TIMBER_YARD);
-            total_active_count += building_count_active(BUILDING_CLAY_PIT);
-            total_active_count += building_count_active(BUILDING_GOLD_MINE);
-            total_active_count += building_count_active(BUILDING_STONE_QUARRY);
-            total_active_count += building_count_active(BUILDING_SAND_PIT);
+            total_active_count = building_set_count_raw_materials(1);
             break;
         case BUILDING_MENU_WORKSHOPS:
-            total_active_count += building_count_active(BUILDING_WINE_WORKSHOP);
-            total_active_count += building_count_active(BUILDING_OIL_WORKSHOP);
-            total_active_count += building_count_active(BUILDING_WEAPONS_WORKSHOP);
-            total_active_count += building_count_active(BUILDING_FURNITURE_WORKSHOP);
-            total_active_count += building_count_active(BUILDING_POTTERY_WORKSHOP);
-            total_active_count += building_count_active(BUILDING_CONCRETE_MAKER);
-            total_active_count += building_count_active(BUILDING_BRICKWORKS);
-            total_active_count += building_count_active(BUILDING_CITY_MINT);
+            total_active_count = building_set_count_workshops(1);
             break;
         case BUILDING_MENU_SMALL_TEMPLES:
-            total_active_count += building_count_active(BUILDING_SMALL_TEMPLE_CERES);
-            total_active_count += building_count_active(BUILDING_SMALL_TEMPLE_NEPTUNE);
-            total_active_count += building_count_active(BUILDING_SMALL_TEMPLE_MERCURY);
-            total_active_count += building_count_active(BUILDING_SMALL_TEMPLE_MARS);
-            total_active_count += building_count_active(BUILDING_SMALL_TEMPLE_VENUS);
+            total_active_count = building_set_count_small_temples(1);
             break;
         case BUILDING_MENU_LARGE_TEMPLES:
-            total_active_count += building_count_active(BUILDING_LARGE_TEMPLE_CERES);
-            total_active_count += building_count_active(BUILDING_LARGE_TEMPLE_NEPTUNE);
-            total_active_count += building_count_active(BUILDING_LARGE_TEMPLE_MERCURY);
-            total_active_count += building_count_active(BUILDING_LARGE_TEMPLE_MARS);
-            total_active_count += building_count_active(BUILDING_LARGE_TEMPLE_VENUS);
+            total_active_count = building_set_count_large_temples(1);
             break;
         case BUILDING_MENU_GRAND_TEMPLES:
-            total_active_count += building_count_active(BUILDING_GRAND_TEMPLE_CERES);
-            total_active_count += building_count_active(BUILDING_GRAND_TEMPLE_NEPTUNE);
-            total_active_count += building_count_active(BUILDING_GRAND_TEMPLE_MERCURY);
-            total_active_count += building_count_active(BUILDING_GRAND_TEMPLE_MARS);
-            total_active_count += building_count_active(BUILDING_GRAND_TEMPLE_VENUS);
+            total_active_count = building_count_grand_temples_active();
             break;
         case BUILDING_MENU_TREES:
-            total_active_count += building_count_active(BUILDING_PINE_TREE);
-            total_active_count += building_count_active(BUILDING_FIR_TREE);
-            total_active_count += building_count_active(BUILDING_OAK_TREE);
-            total_active_count += building_count_active(BUILDING_ELM_TREE);
-            total_active_count += building_count_active(BUILDING_FIG_TREE);
-            total_active_count += building_count_active(BUILDING_PLUM_TREE);
-            total_active_count += building_count_active(BUILDING_PALM_TREE);
-            total_active_count += building_count_active(BUILDING_DATE_TREE);
+            total_active_count = building_set_count_deco_trees();
             break;
         case BUILDING_MENU_PATHS:
-            total_active_count += building_count_active(BUILDING_PINE_PATH);
-            total_active_count += building_count_active(BUILDING_FIR_PATH);
-            total_active_count += building_count_active(BUILDING_OAK_PATH);
-            total_active_count += building_count_active(BUILDING_ELM_PATH);
-            total_active_count += building_count_active(BUILDING_FIG_PATH);
-            total_active_count += building_count_active(BUILDING_PLUM_PATH);
-            total_active_count += building_count_active(BUILDING_PALM_PATH);
-            total_active_count += building_count_active(BUILDING_DATE_PATH);
-            total_active_count += building_count_active(BUILDING_GARDEN_PATH);
+            total_active_count = building_set_count_deco_paths();
             break;
         case BUILDING_MENU_PARKS:
-            total_active_count += building_count_active(BUILDING_GARDENS);
-            total_active_count += building_count_active(BUILDING_GRAND_GARDEN);
-            total_active_count += building_count_active(BUILDING_SMALL_STATUE);
-            total_active_count += building_count_active(BUILDING_MEDIUM_STATUE);
-            total_active_count += building_count_active(BUILDING_LARGE_STATUE);
-            total_active_count += building_count_active(BUILDING_SMALL_STATUE_ALT);
-            total_active_count += building_count_active(BUILDING_SMALL_STATUE_ALT_B);
-            total_active_count += building_count_active(BUILDING_LEGION_STATUE);
-            total_active_count += building_count_active(BUILDING_GLADIATOR_STATUE);
-            total_active_count += building_count_active(BUILDING_SMALL_POND);
-            total_active_count += building_count_active(BUILDING_LARGE_POND);
-            total_active_count += building_count_active(BUILDING_DOLPHIN_FOUNTAIN);
+            total_active_count = building_set_count_deco_statues();
+            break;
+        case BUILDING_ANY:
+            total_active_count = building_count_any_total(1);
             break;
         case BUILDING_FORT_LEGIONARIES:
             total_active_count += building_count_fort_type_total(FIGURE_FORT_LEGIONARY);
@@ -120,7 +68,7 @@ int scenario_condition_type_building_count_active_met(const scenario_condition_t
             total_active_count += building_count_fort_type_total(FIGURE_FORT_MOUNTED);
             break;
         default:
-            total_active_count += building_count_active(type);
+            total_active_count = building_count_active(type);
             break;
     }
 
@@ -136,83 +84,34 @@ int scenario_condition_type_building_count_any_met(const scenario_condition_t *c
     int total_active_count = 0;
     switch(type) {
         case BUILDING_MENU_FARMS:
-            total_active_count += building_count_total(BUILDING_WHEAT_FARM);
-            total_active_count += building_count_total(BUILDING_VEGETABLE_FARM);
-            total_active_count += building_count_total(BUILDING_FRUIT_FARM);
-            total_active_count += building_count_total(BUILDING_OLIVE_FARM);
-            total_active_count += building_count_total(BUILDING_VINES_FARM);
-            total_active_count += building_count_total(BUILDING_PIG_FARM);
+            total_active_count = building_set_count_farms(0);
             break;
         case BUILDING_MENU_RAW_MATERIALS:
-            total_active_count += building_count_total(BUILDING_MARBLE_QUARRY);
-            total_active_count += building_count_total(BUILDING_IRON_MINE);
-            total_active_count += building_count_total(BUILDING_TIMBER_YARD);
-            total_active_count += building_count_total(BUILDING_CLAY_PIT);
-            total_active_count += building_count_total(BUILDING_GOLD_MINE);
+            total_active_count = building_set_count_raw_materials(0);
             break;
         case BUILDING_MENU_WORKSHOPS:
-            total_active_count += building_count_total(BUILDING_WINE_WORKSHOP);
-            total_active_count += building_count_total(BUILDING_OIL_WORKSHOP);
-            total_active_count += building_count_total(BUILDING_WEAPONS_WORKSHOP);
-            total_active_count += building_count_total(BUILDING_FURNITURE_WORKSHOP);
-            total_active_count += building_count_total(BUILDING_POTTERY_WORKSHOP);
-            total_active_count += building_count_total(BUILDING_CITY_MINT);
+            total_active_count = building_set_count_workshops(0);
             break;
         case BUILDING_MENU_SMALL_TEMPLES:
-            total_active_count += building_count_total(BUILDING_SMALL_TEMPLE_CERES);
-            total_active_count += building_count_total(BUILDING_SMALL_TEMPLE_NEPTUNE);
-            total_active_count += building_count_total(BUILDING_SMALL_TEMPLE_MERCURY);
-            total_active_count += building_count_total(BUILDING_SMALL_TEMPLE_MARS);
-            total_active_count += building_count_total(BUILDING_SMALL_TEMPLE_VENUS);
+            total_active_count = building_set_count_small_temples(0);
             break;
         case BUILDING_MENU_LARGE_TEMPLES:
-            total_active_count += building_count_total(BUILDING_LARGE_TEMPLE_CERES);
-            total_active_count += building_count_total(BUILDING_LARGE_TEMPLE_NEPTUNE);
-            total_active_count += building_count_total(BUILDING_LARGE_TEMPLE_MERCURY);
-            total_active_count += building_count_total(BUILDING_LARGE_TEMPLE_MARS);
-            total_active_count += building_count_total(BUILDING_LARGE_TEMPLE_VENUS);
+            total_active_count = building_set_count_large_temples(0);
             break;
         case BUILDING_MENU_GRAND_TEMPLES:
-            total_active_count += building_count_total(BUILDING_GRAND_TEMPLE_CERES);
-            total_active_count += building_count_total(BUILDING_GRAND_TEMPLE_NEPTUNE);
-            total_active_count += building_count_total(BUILDING_GRAND_TEMPLE_MERCURY);
-            total_active_count += building_count_total(BUILDING_GRAND_TEMPLE_MARS);
-            total_active_count += building_count_total(BUILDING_GRAND_TEMPLE_VENUS);
+            total_active_count = building_count_grand_temples();
             break;
         case BUILDING_MENU_TREES:
-            total_active_count += building_count_total(BUILDING_PINE_TREE);
-            total_active_count += building_count_total(BUILDING_FIR_TREE);
-            total_active_count += building_count_total(BUILDING_OAK_TREE);
-            total_active_count += building_count_total(BUILDING_ELM_TREE);
-            total_active_count += building_count_total(BUILDING_FIG_TREE);
-            total_active_count += building_count_total(BUILDING_PLUM_TREE);
-            total_active_count += building_count_total(BUILDING_PALM_TREE);
-            total_active_count += building_count_total(BUILDING_DATE_TREE);
+            total_active_count = building_set_count_deco_trees();
             break;
         case BUILDING_MENU_PATHS:
-            total_active_count += building_count_total(BUILDING_PINE_PATH);
-            total_active_count += building_count_total(BUILDING_FIR_PATH);
-            total_active_count += building_count_total(BUILDING_OAK_PATH);
-            total_active_count += building_count_total(BUILDING_ELM_PATH);
-            total_active_count += building_count_total(BUILDING_FIG_PATH);
-            total_active_count += building_count_total(BUILDING_PLUM_PATH);
-            total_active_count += building_count_total(BUILDING_PALM_PATH);
-            total_active_count += building_count_total(BUILDING_DATE_PATH);
-            total_active_count += building_count_total(BUILDING_GARDEN_PATH);
+            total_active_count = building_set_count_deco_paths();
             break;
         case BUILDING_MENU_PARKS:
-            total_active_count += building_count_total(BUILDING_GARDENS);
-            total_active_count += building_count_total(BUILDING_GRAND_GARDEN);
-            total_active_count += building_count_total(BUILDING_SMALL_STATUE);
-            total_active_count += building_count_total(BUILDING_MEDIUM_STATUE);
-            total_active_count += building_count_total(BUILDING_LARGE_STATUE);
-            total_active_count += building_count_total(BUILDING_SMALL_STATUE_ALT);
-            total_active_count += building_count_total(BUILDING_SMALL_STATUE_ALT_B);
-            total_active_count += building_count_total(BUILDING_LEGION_STATUE);
-            total_active_count += building_count_total(BUILDING_GLADIATOR_STATUE);
-            total_active_count += building_count_total(BUILDING_SMALL_POND);
-            total_active_count += building_count_total(BUILDING_LARGE_POND);
-            total_active_count += building_count_total(BUILDING_DOLPHIN_FOUNTAIN);
+            total_active_count = building_set_count_deco_statues();
+            break;
+        case BUILDING_ANY:
+            total_active_count = building_count_any_total(0);
             break;
         case BUILDING_FORT_LEGIONARIES:
             total_active_count += building_count_fort_type_total(FIGURE_FORT_LEGIONARY);
@@ -224,11 +123,73 @@ int scenario_condition_type_building_count_any_met(const scenario_condition_t *c
             total_active_count += building_count_fort_type_total(FIGURE_FORT_MOUNTED);
             break;
         default:
-            total_active_count += building_count_total(type);
+            total_active_count = building_count_total(type);
             break;
     }
 
     return comparison_helper_compare_values(comparison, total_active_count, value);
+}
+
+int scenario_condition_type_building_count_area_met(const scenario_condition_t *condition)
+{
+    int grid_offset = condition->parameter1;
+    int block_radius = condition->parameter2;
+    building_type type = condition->parameter3;
+    int comparison = condition->parameter4;
+    int value = condition->parameter5;
+
+    if (!map_grid_is_valid_offset(grid_offset)) {
+        return 0;
+    }
+
+    int minx = map_grid_offset_to_x(grid_offset) - block_radius;
+    int miny = map_grid_offset_to_y(grid_offset) - block_radius;
+    int maxx = map_grid_offset_to_x(grid_offset) + block_radius;
+    int maxy = map_grid_offset_to_y(grid_offset) + block_radius;
+    int buildings_in_area = 0;
+    switch(type) {
+        case BUILDING_MENU_FARMS:
+            buildings_in_area = building_set_area_count_farms(minx, miny, maxx, maxy);
+            break;
+        case BUILDING_MENU_RAW_MATERIALS:
+            buildings_in_area = building_set_area_count_raw_materials(minx, miny, maxx, maxy);
+            break;
+        case BUILDING_MENU_WORKSHOPS:
+            buildings_in_area = building_set_area_count_workshops(minx, miny, maxx, maxy);
+            break;
+        case BUILDING_MENU_SMALL_TEMPLES:
+            buildings_in_area = building_set_area_count_small_temples(minx, miny, maxx, maxy);
+            break;
+        case BUILDING_MENU_LARGE_TEMPLES:
+            buildings_in_area = building_set_area_count_large_temples(minx, miny, maxx, maxy);
+            break;
+        case BUILDING_MENU_GRAND_TEMPLES:
+            buildings_in_area = building_set_area_count_grand_temples(minx, miny, maxx, maxy);
+            break;
+        case BUILDING_MENU_TREES:
+            buildings_in_area = building_set_area_count_deco_trees(minx, miny, maxx, maxy);
+            break;
+        case BUILDING_MENU_PATHS:
+            buildings_in_area = building_set_area_count_deco_paths(minx, miny, maxx, maxy);
+            break;
+        case BUILDING_MENU_PARKS:
+            buildings_in_area = building_set_area_count_deco_statues(minx, miny, maxx, maxy);
+            break;
+        case BUILDING_FORT_LEGIONARIES:
+            buildings_in_area = building_count_fort_type_in_area(minx, miny, maxx, maxy, FIGURE_FORT_LEGIONARY);
+            break;
+        case BUILDING_FORT_JAVELIN:
+            buildings_in_area = building_count_fort_type_in_area(minx, miny, maxx, maxy, FIGURE_FORT_JAVELIN);
+            break;
+        case BUILDING_FORT_MOUNTED:
+            buildings_in_area = building_count_fort_type_in_area(minx, miny, maxx, maxy, FIGURE_FORT_MOUNTED);
+            break;
+        default:
+            buildings_in_area = building_count_in_area(type, minx, miny, maxx, maxy);
+            break;
+    }
+
+    return comparison_helper_compare_values(comparison, buildings_in_area, value);
 }
 
 int scenario_condition_type_city_population_met(const scenario_condition_t *condition)

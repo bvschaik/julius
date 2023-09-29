@@ -7,6 +7,8 @@ int scenario_condition_type_building_count_active_met(const scenario_condition_t
 
 int scenario_condition_type_building_count_any_met(const scenario_condition_t *condition);
 
+int scenario_condition_type_building_count_area_met(const scenario_condition_t *condition);
+
 int scenario_condition_type_city_population_met(const scenario_condition_t *condition);
 
 int scenario_condition_type_count_own_troops_met(const scenario_condition_t *condition);

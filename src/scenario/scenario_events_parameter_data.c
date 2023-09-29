@@ -121,6 +121,13 @@ static scenario_condition_data_t scenario_condition_data[CONDITION_TYPE_MAX] = {
                                         .xml_parm3 =    { .name = "value",               .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,         .max_limit = UNLIMITED,     .key = TR_PARAMETER_TYPE_NUMBER },
                                         .xml_parm4 =    { .name = "storage_type",        .type = PARAMETER_TYPE_STORAGE_TYPE,     .key = TR_PARAMETER_TYPE_STORAGE_TYPE },
                                         .xml_parm5 =    { .name = "respect_settings",    .type = PARAMETER_TYPE_BOOLEAN,          .min_limit = 0,         .max_limit = 1,             .key = TR_PARAMETER_RESPECT_SETTINGS }, },
+    [CONDITION_TYPE_BUILDING_COUNT_AREA]     = { .type = CONDITION_TYPE_BUILDING_COUNT_AREA,
+                                        .xml_attr =     { .name = "building_count_area", .type = PARAMETER_TYPE_TEXT,             .key = TR_CONDITION_TYPE_BUILDING_COUNT_AREA },
+                                        .xml_parm1 =    { .name = "grid_offset",         .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,         .max_limit = UNLIMITED,     .key = TR_PARAMETER_GRID_OFFSET },
+                                        .xml_parm2 =    { .name = "block_radius",        .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,         .max_limit = UNLIMITED,     .key = TR_PARAMETER_RADIUS },
+                                        .xml_parm3 =    { .name = "building",            .type = PARAMETER_TYPE_BUILDING,         .key = TR_PARAMETER_TYPE_BUILDING_COUNTING },
+                                        .xml_parm4 =    { .name = "check",               .type = PARAMETER_TYPE_CHECK,            .min_limit = 1,         .max_limit = 6,             .key = TR_PARAMETER_TYPE_CHECK },
+                                        .xml_parm5 =    { .name = "value",               .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,         .max_limit = UNLIMITED,     .key = TR_PARAMETER_TYPE_NUMBER }, },
 };
 
 scenario_condition_data_t *scenario_events_parameter_data_get_conditions_xml_attributes(condition_types type)
@@ -350,12 +357,13 @@ static special_attribute_mapping_t special_attribute_mappings_pop_class[] = {
 #define SPECIAL_ATTRIBUTE_MAPPINGS_POP_CLASS_SIZE (sizeof(special_attribute_mappings_pop_class) / sizeof(special_attribute_mapping_t))
 
 static special_attribute_mapping_t special_attribute_mappings_buildings[] = {
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "vacant_lot",                    .value = BUILDING_HOUSE_VACANT_LOT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_farms",                     .value = BUILDING_MENU_FARMS,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_FARMS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_raw_materials",             .value = BUILDING_MENU_RAW_MATERIALS,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_RAW_MATERIALS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_workshops",                 .value = BUILDING_MENU_WORKSHOPS,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_WORKSHOPS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "road",                          .value = BUILDING_ROAD,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "wall",                          .value = BUILDING_WALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "any",                           .value = BUILDING_ANY,                         .key = TR_PARAMETER_VALUE_BUILDING_ANY },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "vacant_lot",                    .value = BUILDING_HOUSE_VACANT_LOT,            .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_farms",                     .value = BUILDING_MENU_FARMS,                  .key = TR_PARAMETER_VALUE_BUILDING_MENU_FARMS },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_raw_materials",             .value = BUILDING_MENU_RAW_MATERIALS,          .key = TR_PARAMETER_VALUE_BUILDING_MENU_RAW_MATERIALS },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_workshops",                 .value = BUILDING_MENU_WORKSHOPS,              .key = TR_PARAMETER_VALUE_BUILDING_MENU_WORKSHOPS },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "road",                          .value = BUILDING_ROAD,                        .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "wall",                          .value = BUILDING_WALL,                        .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "aqueduct",                      .value = BUILDING_AQUEDUCT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "house_small_tent",              .value = BUILDING_HOUSE_SMALL_TENT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "house_large_tent",              .value = BUILDING_HOUSE_LARGE_TENT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
@@ -1057,8 +1065,10 @@ void scenario_events_parameter_data_get_display_string_for_action(scenario_actio
             }
         case ACTION_TYPE_BUILDING_FORCE_COLLAPSE:
             {
+                result_text = append_text(string_from_ascii(" "), result_text, &maxlength);
                 result_text = append_text(translation_for(TR_PARAMETER_GRID_OFFSET), result_text, &maxlength);
                 result_text = translation_for_number_value(action->parameter1, result_text, &maxlength);
+                result_text = append_text(string_from_ascii(" "), result_text, &maxlength);
                 result_text = append_text(translation_for(TR_PARAMETER_RADIUS), result_text, &maxlength);
                 result_text = translation_for_number_value(action->parameter2, result_text, &maxlength);
                 if (action->parameter4) {
@@ -1293,6 +1303,19 @@ void scenario_events_parameter_data_get_display_string_for_condition(scenario_co
             {
                 result_text = translation_for_number_value(condition->parameter1, result_text, &maxlength);
                 result_text = translation_for_boolean_text(condition->parameter2, TR_PARAMETER_DISPLAY_ONGOING, TR_PARAMETER_DISPLAY_NOT_ONGOING, result_text, &maxlength);
+                return;
+            }
+        case CONDITION_TYPE_BUILDING_COUNT_AREA:
+            {
+                result_text = append_text(string_from_ascii(" "), result_text, &maxlength);
+                result_text = append_text(translation_for(TR_PARAMETER_GRID_OFFSET), result_text, &maxlength);
+                result_text = translation_for_number_value(condition->parameter1, result_text, &maxlength);
+                result_text = append_text(string_from_ascii(" "), result_text, &maxlength);
+                result_text = append_text(translation_for(TR_PARAMETER_RADIUS), result_text, &maxlength);
+                result_text = translation_for_number_value(condition->parameter2, result_text, &maxlength);
+                result_text = translation_for_type_lookup_by_value(PARAMETER_TYPE_BUILDING, condition->parameter3, result_text, &maxlength);
+                result_text = translation_for_attr_mapping_text(xml_info->xml_parm4.type, condition->parameter4, result_text, &maxlength);
+                result_text = translation_for_number_value(condition->parameter5, result_text, &maxlength);
                 return;
             }
         case CONDITION_TYPE_RESOURCE_STORAGE_AVAILABLE:

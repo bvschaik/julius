@@ -10,6 +10,7 @@
   * Building types
   */
 typedef enum {
+    BUILDING_ANY = 0,
     BUILDING_NONE = 0,
     BUILDING_MENU_FARMS = 2,
     BUILDING_MENU_RAW_MATERIALS = 3,
