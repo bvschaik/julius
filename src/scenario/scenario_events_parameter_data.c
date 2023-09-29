@@ -702,6 +702,7 @@ static special_attribute_mapping_t special_attribute_mappings_target_type[] = {
 
 static special_attribute_mapping_t special_attribute_mappings_enemy_type[] = {
     { .type = PARAMETER_TYPE_ENEMY_TYPE,                .text = "undefined",       .value = ENEMY_UNDEFINED,         .key = TR_PARAMETER_VALUE_ENEMY_UNDEFINED },
+/* TODO: Once maps no longer override army types, then re-enable this list so user can pick what they want.
     { .type = PARAMETER_TYPE_ENEMY_TYPE,                .text = "barbarian",       .value = ENEMY_0_BARBARIAN,       .key = TR_PARAMETER_VALUE_ENEMY_0_BARBARIAN },
     { .type = PARAMETER_TYPE_ENEMY_TYPE,                .text = "numidian",        .value = ENEMY_1_NUMIDIAN,        .key = TR_PARAMETER_VALUE_ENEMY_1_NUMIDIAN },
     { .type = PARAMETER_TYPE_ENEMY_TYPE,                .text = "gaul",            .value = ENEMY_2_GAUL,            .key = TR_PARAMETER_VALUE_ENEMY_2_GAUL },
@@ -714,6 +715,7 @@ static special_attribute_mapping_t special_attribute_mappings_enemy_type[] = {
     { .type = PARAMETER_TYPE_ENEMY_TYPE,                .text = "egyptian",        .value = ENEMY_9_EGYPTIAN,        .key = TR_PARAMETER_VALUE_ENEMY_9_EGYPTIAN },
     { .type = PARAMETER_TYPE_ENEMY_TYPE,                .text = "carthaginian",    .value = ENEMY_10_CARTHAGINIAN,   .key = TR_PARAMETER_VALUE_ENEMY_10_CARTHAGINIAN },
     { .type = PARAMETER_TYPE_ENEMY_TYPE,                .text = "caesar",          .value = ENEMY_11_CAESAR,         .key = TR_PARAMETER_VALUE_ENEMY_11_CAESAR },
+*/
 };
 
 #define SPECIAL_ATTRIBUTE_MAPPINGS_ENEMY_TYPE_SIZE (sizeof(special_attribute_mappings_enemy_type) / sizeof(special_attribute_mapping_t))
