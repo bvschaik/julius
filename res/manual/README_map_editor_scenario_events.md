@@ -129,6 +129,27 @@ Here is a list of available conditions that can be used.
     - "all_parks" = will count all gardens, statues and ponds.
 
 
+### Building area
++ type = building_count_area
++ grid_offset = The grid_offset (map position) that is the center of the square to collapse buildings in.
++ block_radius = The 'radius' of the square to check buildings in. A radius of 2 will give you a 5x5 square.
++ building = Which type of building to cound.
+  - Allowed values: A very big list. Easiest is look at this condition type in the editor.
+    Otherwise, refer to: (special_attribute_mappings_buildings in "https://github.com/Keriew/augustus/blob/9429b006f38873749e4b4aa3c0cee99696eb23b2/src/scenario/scenario_events_parameter_data.c#L234")
+  - Some notes:
+    - "all_farms" = will count all farm types.
+    - "all_raw_materials" = will count all marble quarries, clay pits, timber yards, iron and gold mines.
+    - "all_workshops" = will count all workshops.
+    - "all_small_temples" = will count all small temples.
+    - "all_large_temples" = will count all large temples.
+    - "all_grand_temples" = will count all grand temples. (Excluding pantheon)
+    - "all_trees" = will count all decorative trees.
+    - "all_paths" = will count all decorative paths. (Including garden paths.)
+    - "all_parks" = will count all gardens, statues and ponds.
++ check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
++ value = The amount to check for. Allowed values: Any number from 0 to 10000000.
+
+
 ### Count own troops
 + type = count_own_troops
 + check = What sort of check are we doing. Allowed values: "eq", "gte", "lte", "neq", "lt", "gt".
