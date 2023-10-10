@@ -10,6 +10,9 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 
+#define MAX_DISTANCE_BETWEEN_PILLARS 12
+#define MINIMUM_DISTANCE_FOR_PILLARS 9
+
 static struct {
     int end_grid_offset;
     int length;
@@ -88,30 +91,46 @@ int map_bridge_calculate_length_direction(int x, int y, int *length, int *direct
     return 0;
 }
 
+static int get_number_of_bridge_sections(void)
+{
+    if (bridge.length < MINIMUM_DISTANCE_FOR_PILLARS) {
+        return 1;
+    }
+    // Number of pillars is equal to length/max_distance, rounded up
+    int number_of_pillars = (bridge.length + MAX_DISTANCE_BETWEEN_PILLARS - 1) / MAX_DISTANCE_BETWEEN_PILLARS;
+    return number_of_pillars + 1;
+}
+
 static int get_pillar_distance(void)
 {
-    switch (bridge.length) {
-        case  9:
-        case 10:
-            return 4;
-        case 11:
-        case 12:
-            return 5;
-        case 13:
-        case 14:
-            return 6;
-        case 15:
-        case 16:
-            return 7;
-        default:
-            return 8;
+    if (bridge.length < MINIMUM_DISTANCE_FOR_PILLARS) {
+        return bridge.length;
     }
+
+    int number_of_sections = get_number_of_bridge_sections();
+    int pillar_distance = bridge.length / (number_of_sections);
+
+    return pillar_distance;
 }
+
+static int get_pillar_shift(void)
+{
+    if (bridge.length < MINIMUM_DISTANCE_FOR_PILLARS) {
+        return 0;
+    }
+
+    int pillar_distance = get_pillar_distance();
+    int pillar_shift = (bridge.length % pillar_distance) / 2;
+
+    return pillar_shift;
+}
+
 
 int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_bridge)
 {
     if (is_ship_bridge) {
         int pillar_distance = get_pillar_distance();
+        int pillar_shift = get_pillar_shift();
         if (index == 1 || index == length - 2) {
             // platform after ramp
             return 13;
@@ -139,7 +158,7 @@ int map_bridge_get_sprite_id(int index, int length, int direction, int is_ship_b
                 case DIR_6_LEFT:
                     return 8;
             }
-        } else if (index == pillar_distance) {
+        } else if ((index - pillar_shift) % pillar_distance == 0) {
             if (direction == DIR_0_TOP || direction == DIR_4_BOTTOM) {
                 return 14;
             } else {
