@@ -347,7 +347,7 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     .missile_defense_value = 0, .missile_attack_value = 0, .missile_delay = 0
     },
     [FIGURE_WOLF] = {
-    .category = FIGURE_CATEGORY_HOSTILE,
+    .category = FIGURE_CATEGORY_AGGRESSIVE_ANIMAL,
     .max_damage = 80, .attack_value = 8, .defense_value = 0,
     .missile_defense_value = 0, .missile_attack_value = 0, .missile_delay = 0
     },

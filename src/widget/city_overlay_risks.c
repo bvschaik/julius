@@ -139,7 +139,7 @@ static int show_figure_native(const figure *f)
 static int show_figure_enemy(const figure *f)
 {
     const figure_properties *props = figure_properties_for_type(f->type);
-    return props->category == FIGURE_CATEGORY_HOSTILE || props->category == FIGURE_CATEGORY_NATIVE;
+    return props->category == FIGURE_CATEGORY_HOSTILE || props->category == FIGURE_CATEGORY_NATIVE || props->category == FIGURE_CATEGORY_AGGRESSIVE_ANIMAL;
 }
 
 static int get_column_height_fire(const building *b)
