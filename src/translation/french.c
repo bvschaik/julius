@@ -109,6 +109,12 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_DUPLICATE_TITLE, "Raccourci déjà utilisé"},
     {TR_HOTKEY_DUPLICATE_MESSAGE, "Cette combinaison de touches est déjà affectée à l'action suivante :"},
     {TR_WARNING_SCREENSHOT_SAVED, "Capture d'écran enregistrée : "},
+    {TR_SIDEBAR_INFO_DIFFICULTY, "Difficulté"},
+    {TR_DIFFICULTY_VERY_EASY, "Très facile"},
+    {TR_DIFFICULTY_EASY, "Facile"},
+    {TR_DIFFICULTY_NORMAL, "Normal"},
+    {TR_DIFFICULTY_HARD, "Difficile"},
+    {TR_DIFFICULTY_VERY_HARD, "Très difficile"},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)

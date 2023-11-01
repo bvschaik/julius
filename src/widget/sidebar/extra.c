@@ -15,10 +15,12 @@
 #include "graphics/text.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
+#include "translation/translation.h"
 
 #define EXTRA_INFO_LINE_SPACE 16
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64
 #define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 48
+#define EXTRA_INFO_DIFFICULTY 48
 #define EXTRA_INFO_HEIGHT_RATINGS 176
 #define EXTRA_INFO_VERTICAL_PADDING 8
 
@@ -49,7 +51,16 @@ static struct {
     objective peace;
     objective favor;
     objective population;
+    int difficulty;
 } data;
+
+static translation_key difficulty_texts[] = {
+    TR_DIFFICULTY_VERY_EASY,
+    TR_DIFFICULTY_EASY,
+    TR_DIFFICULTY_NORMAL,
+    TR_DIFFICULTY_HARD,
+    TR_DIFFICULTY_VERY_HARD,
+};
 
 static sidebar_extra_display calculate_displayable_info(sidebar_extra_display info_to_display, int available_height)
 {
@@ -79,6 +90,15 @@ static sidebar_extra_display calculate_displayable_info(sidebar_extra_display in
             result |= SIDEBAR_EXTRA_DISPLAY_RATINGS;
         }
     }
+    else {
+        return result;
+    }
+    if (available_height >= EXTRA_INFO_DIFFICULTY) {
+        if (info_to_display & SIDEBAR_EXTRA_DISPLAY_DIFFICULTY) {
+            available_height -= EXTRA_INFO_DIFFICULTY;
+            result |= SIDEBAR_EXTRA_DISPLAY_DIFFICULTY;
+        }
+    }
     return result;
 }
 
@@ -95,6 +115,9 @@ static int calculate_extra_info_height(void)
         height += EXTRA_INFO_HEIGHT_UNEMPLOYMENT;
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_RATINGS) {
+        height += EXTRA_INFO_HEIGHT_RATINGS;
+    }
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_DIFFICULTY) {
         height += EXTRA_INFO_HEIGHT_RATINGS;
     }
     return height;
@@ -160,6 +183,9 @@ static int update_extra_info(int is_background)
         changed |= update_extra_info_value(city_rating_peace(), &data.peace.value);
         changed |= update_extra_info_value(city_rating_favor(), &data.favor.value);
         changed |= update_extra_info_value(city_population(), &data.population.value);
+    }
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_DIFFICULTY) {
+        changed |= update_extra_info_value(setting_difficulty(), &data.difficulty);
     }
     return changed;
 }
@@ -231,6 +257,17 @@ static void draw_extra_info_panel(void)
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 3, &data.peace, 0);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 53, 4, &data.favor, 0);
         y_current_line += draw_extra_info_objective(data.x_offset, y_current_line, 4, 6, &data.population, 1);
+    }
+
+    if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_DIFFICULTY) {
+        y_current_line += EXTRA_INFO_VERTICAL_PADDING;
+
+        text_draw(translation_for(TR_SIDEBAR_INFO_DIFFICULTY), data.x_offset + 10, y_current_line, FONT_NORMAL_WHITE, 0);
+        y_current_line += EXTRA_INFO_LINE_SPACE;
+
+        text_draw(translation_for(difficulty_texts[setting_difficulty()]), data.x_offset + 10, y_current_line, FONT_NORMAL_GREEN, 0);
+
+        y_current_line += EXTRA_INFO_VERTICAL_PADDING * 3;
     }
 }
 
