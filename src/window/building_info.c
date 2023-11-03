@@ -725,7 +725,7 @@ static void draw_background(void)
         } else if (btype == BUILDING_PALISADE_GATE) {
             window_building_draw_palisade_gate(&context);
         } else if (btype == BUILDING_SHRINE_CERES || btype == BUILDING_SHRINE_MARS || btype == BUILDING_SHRINE_MERCURY ||
-            btype == BUILDING_SHRINE_NEPTUNE || btype == BUILDING_SHRINE_MARS) {
+            btype == BUILDING_SHRINE_NEPTUNE || btype == BUILDING_SHRINE_VENUS) {
             window_building_draw_shrine(&context);
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
