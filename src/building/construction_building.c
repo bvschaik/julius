@@ -285,6 +285,15 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
         case BUILDING_DEPOT:
             add_depot(b);
             break;
+        case BUILDING_SHRINE_CERES:
+        case BUILDING_SHRINE_MARS:
+        case BUILDING_SHRINE_MERCURY:
+        case BUILDING_SHRINE_NEPTUNE:
+        case BUILDING_SHRINE_VENUS:
+            b->subtype.orientation = building_rotation_get_rotation();
+            add_building(b);
+            break;
+
     }
     map_routing_update_land();
     map_routing_update_walls();

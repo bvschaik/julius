@@ -1333,7 +1333,19 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LOOPED_GARDEN_WALL_GATE_DESC, "This small gate controls the movement of people in and out of your city's most secluded spots." },
     {TR_BUILDING_PANELLED_GARDEN_WALL_GATE, "Paneled garden wall gate" },
     {TR_BUILDING_PANELLED_GARDEN_WALL_GATE_DESC, "This small gate controls the movement of people in and out of your city's most secluded spots." },
-    {TR_HOTKEY_BUILD_HIGHWAY, "Highway"},
+    {TR_HOTKEY_BUILD_HIGHWAY, "Highway" },
+    {TR_BUILDING_SHRINE_CERES, "Ceres Shrine"},
+    {TR_BUILDING_SHRINE_CERES_DESC, "PLACEHOLDER"},
+    {TR_BUILDING_SHRINE_MARS, "Mars Shrine"},
+    {TR_BUILDING_SHRINE_MARS_DESC, "PLACEHOLDER" },
+    {TR_BUILDING_SHRINE_MERCURY, "Mercury Shrine"},
+    {TR_BUILDING_SHRINE_MERCURY_DESC, "PLACEHOLDER" },
+    {TR_BUILDING_SHRINE_NEPTUNE, "Neptune Shrine"},
+    {TR_BUILDING_SHRINE_NEPTUNE_DESC, "PLACEHOLDER" },
+    {TR_BUILDING_SHRINE_VENUS, "Venus Shrine"},
+    {TR_BUILDING_SHRINE_VENUS_DESC, "PLACEHOLDER" },
+    {TR_BUILDING_MENU_SHRINES, "Shrines" },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

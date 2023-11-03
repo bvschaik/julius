@@ -33,6 +33,8 @@ void window_building_draw_oracle(building_info_context *c);
 
 void window_building_draw_lararium(building_info_context* c);
 
+void window_building_draw_shrine(building_info_context *c);
+
 void window_building_draw_theater(building_info_context *c);
 
 void window_building_draw_amphitheater(building_info_context *c);

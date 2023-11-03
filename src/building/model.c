@@ -266,6 +266,11 @@ const model_building *model_get_building(building_type type)
         case BUILDING_HIPPODROME:
             return &MODEL_HIPPODROME;
         case BUILDING_LARARIUM:
+        case BUILDING_SHRINE_CERES:
+        case BUILDING_SHRINE_MARS:
+        case BUILDING_SHRINE_MERCURY:
+        case BUILDING_SHRINE_NEPTUNE:
+        case BUILDING_SHRINE_VENUS:
             return &MODEL_LARARIUM;
         case BUILDING_NYMPHAEUM:
             return &MODEL_NYMPHAEUM;

@@ -542,6 +542,11 @@ static special_attribute_mapping_t special_attribute_mappings_buildings[] = {
     { .type = PARAMETER_TYPE_BUILDING,            .text = "panelled_garden_wall",          .value = BUILDING_PANELLED_GARDEN_WALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "panelled_garden_gate",          .value = BUILDING_PANELLED_GARDEN_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "looped_garden_gate",            .value = BUILDING_LOOPED_GARDEN_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_ceres",                  .value = BUILDING_SHRINE_CERES,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_mars",                   .value = BUILDING_SHRINE_MARS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_mercury",                .value = BUILDING_SHRINE_MERCURY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_neptune",                .value = BUILDING_SHRINE_NEPTUNE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_venus",                  .value = BUILDING_SHRINE_VENUS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
 
 };
 

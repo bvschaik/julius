@@ -121,6 +121,7 @@ static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
     44, 44, 44, 24, 0, 0, 0, 0, 0, 0, //170-179
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //180-189
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //190-199
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //200-209
 };
 
 static time_millis last_update_time;

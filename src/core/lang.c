@@ -529,8 +529,21 @@ const uint8_t *lang_get_string(int group, int index)
                 return translation_for(TR_BUILDING_LOOPED_GARDEN_WALL_GATE);
             case BUILDING_PANELLED_GARDEN_WALL:
                 return translation_for(TR_BUILDING_PANELLED_GARDEN_WALL);
-            case TR_BUILDING_PANELLED_GARDEN_WALL_GATE:
+            case BUILDING_PANELLED_GARDEN_GATE:
                 return translation_for(TR_BUILDING_PANELLED_GARDEN_WALL_GATE);
+            case BUILDING_SHRINE_CERES:
+                return translation_for(TR_BUILDING_SHRINE_CERES);
+            case BUILDING_SHRINE_MARS:
+                return translation_for(TR_BUILDING_SHRINE_MARS);
+            case BUILDING_SHRINE_MERCURY:
+                return translation_for(TR_BUILDING_SHRINE_MERCURY);
+            case BUILDING_SHRINE_NEPTUNE:
+                return translation_for(TR_BUILDING_SHRINE_NEPTUNE);
+            case BUILDING_SHRINE_VENUS:
+                return translation_for(TR_BUILDING_SHRINE_VENUS);
+            case BUILDING_MENU_SHRINES:
+                return translation_for(TR_BUILDING_MENU_SHRINES);
+
             default:
                 break;
         }

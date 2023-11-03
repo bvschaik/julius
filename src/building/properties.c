@@ -83,6 +83,12 @@ augustus_building_properties_mapping augustus_building_properties[] = {
     {BUILDING_LOOPED_GARDEN_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Gate"},
     {BUILDING_PANELLED_GARDEN_GATE, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Gate_C"},
     {BUILDING_PANELLED_GARDEN_WALL, { 1, 1, 0, 0, 0 }, "Aesthetics", "Garden_Wall_C"},
+    {BUILDING_SHRINE_CERES, {1,0,0,0,1}, "Religion", "Altar_Ceres"},
+    {BUILDING_SHRINE_MARS, {1,0,0,0,1}, "Religion", "Altar_Mars"},
+    {BUILDING_SHRINE_MERCURY, {1,0,0,0,1}, "Religion", "Altar_Mercury"},
+    {BUILDING_SHRINE_NEPTUNE, {1,0,0,0,1}, "Religion", "Altar_Neptune"},
+    {BUILDING_SHRINE_VENUS, {1,0,0,0,1}, "Religion", "Altar_Venus"},
+
 
 };
 

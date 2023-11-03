@@ -922,6 +922,32 @@ int building_image_get(const building *b)
                 default:
                     return assets_get_image_id("Logistics", "Cart Depot C ON");
             }
+        case BUILDING_SHRINE_CERES:
+        {
+            int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
+            return assets_get_image_id("Religion", "Altar_Ceres") + orientation % 2;
+        }
+        case BUILDING_SHRINE_MARS:
+        {
+            int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
+            return assets_get_image_id("Religion", "Altar_Mars") + orientation % 2;
+        }
+        case BUILDING_SHRINE_MERCURY:
+        {
+            int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
+            return assets_get_image_id("Religion", "Altar_Mercury") + orientation % 2;
+        }
+        case BUILDING_SHRINE_NEPTUNE:
+        {
+            int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
+            return assets_get_image_id("Religion", "Altar_Neptune") + orientation % 2;
+        }
+        case BUILDING_SHRINE_VENUS:
+        {
+            int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
+            return assets_get_image_id("Religion", "Altar_Venus") + orientation % 2;
+        }
+
         default:
             return 0;
     }
