@@ -20,7 +20,7 @@
 #define EXTRA_INFO_LINE_SPACE 16
 #define EXTRA_INFO_HEIGHT_GAME_SPEED 64
 #define EXTRA_INFO_HEIGHT_UNEMPLOYMENT 48
-#define EXTRA_INFO_DIFFICULTY 48
+#define EXTRA_INFO_HEIGHT_DIFFICULTY 48
 #define EXTRA_INFO_HEIGHT_RATINGS 176
 #define EXTRA_INFO_VERTICAL_PADDING 8
 
@@ -93,9 +93,9 @@ static sidebar_extra_display calculate_displayable_info(sidebar_extra_display in
     else {
         return result;
     }
-    if (available_height >= EXTRA_INFO_DIFFICULTY) {
+    if (available_height >= EXTRA_INFO_HEIGHT_DIFFICULTY) {
         if (info_to_display & SIDEBAR_EXTRA_DISPLAY_DIFFICULTY) {
-            available_height -= EXTRA_INFO_DIFFICULTY;
+            available_height -= EXTRA_INFO_HEIGHT_DIFFICULTY;
             result |= SIDEBAR_EXTRA_DISPLAY_DIFFICULTY;
         }
     }
@@ -118,7 +118,7 @@ static int calculate_extra_info_height(void)
         height += EXTRA_INFO_HEIGHT_RATINGS;
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_DIFFICULTY) {
-        height += EXTRA_INFO_HEIGHT_RATINGS;
+        height += EXTRA_INFO_HEIGHT_DIFFICULTY;
     }
     return height;
 }
@@ -260,7 +260,7 @@ static void draw_extra_info_panel(void)
     }
 
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_DIFFICULTY) {
-        y_current_line += EXTRA_INFO_VERTICAL_PADDING;
+        y_current_line += EXTRA_INFO_VERTICAL_PADDING * 2;
 
         text_draw(translation_for(TR_SIDEBAR_INFO_DIFFICULTY), data.x_offset + 10, y_current_line, FONT_NORMAL_WHITE, 0);
         y_current_line += EXTRA_INFO_LINE_SPACE;
