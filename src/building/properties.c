@@ -89,7 +89,6 @@ augustus_building_properties_mapping augustus_building_properties[] = {
     {BUILDING_SHRINE_NEPTUNE, {1,0,0,0,1}, "Religion", "Altar_Neptune"},
     {BUILDING_SHRINE_VENUS, {1,0,0,0,1}, "Religion", "Altar_Venus"},
 
-
 };
 
 #define AUGUSTUS_BUILDINGS (sizeof(augustus_building_properties) / sizeof(augustus_building_properties_mapping))

@@ -362,6 +362,11 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_NYMPHAEUM:
         case BUILDING_SMALL_MAUSOLEUM:
         case BUILDING_LARGE_MAUSOLEUM:
+        case BUILDING_SHRINE_CERES:
+        case BUILDING_SHRINE_NEPTUNE:
+        case BUILDING_SHRINE_MERCURY:
+        case BUILDING_SHRINE_MARS:
+        case BUILDING_SHRINE_VENUS:
             overlay = OVERLAY_RELIGION;
             break;
         case BUILDING_PREFECTURE:
@@ -490,6 +495,7 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_HORSE_STATUE:
         case BUILDING_LEGION_STATUE:
         case BUILDING_GLADIATOR_STATUE:
+        case BUILDING_PANELLED_GARDEN_WALL:
             overlay = OVERLAY_DESIRABILITY;
             break;
         case BUILDING_MISSION_POST:

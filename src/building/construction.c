@@ -41,7 +41,7 @@
 #include "map/water.h"
 #include "map/water_supply.h"
 
-#define BUILDING_CYCLES 4
+#define BUILDING_CYCLES 5
 #define MAX_CYCLE_SIZE 10
 
 struct reservoir_info {
@@ -94,6 +94,8 @@ static const struct cycle building_cycles[BUILDING_CYCLES] = {
       BUILDING_SMALL_TEMPLE_MARS,  BUILDING_SMALL_TEMPLE_VENUS }},
     { 5, 1, {BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY,
       BUILDING_LARGE_TEMPLE_MARS,  BUILDING_LARGE_TEMPLE_VENUS}},
+    { 5, 2, { BUILDING_SHRINE_CERES, BUILDING_SHRINE_NEPTUNE, BUILDING_SHRINE_MERCURY,
+      BUILDING_SHRINE_MARS,  BUILDING_SHRINE_VENUS }},
     { 9, 2, {BUILDING_GARDEN_PATH, BUILDING_DATE_PATH, BUILDING_ELM_PATH,  BUILDING_FIG_PATH,  BUILDING_FIR_PATH,
       BUILDING_OAK_PATH,  BUILDING_PALM_PATH, BUILDING_PINE_PATH, BUILDING_PLUM_PATH}},
     { 8, 1, {BUILDING_DATE_TREE, BUILDING_ELM_TREE,  BUILDING_FIG_TREE,  BUILDING_FIR_TREE,
@@ -530,6 +532,9 @@ void building_construction_set_type(building_type type)
                 break;
             case BUILDING_MENU_LARGE_TEMPLES:
                 data.sub_type = BUILDING_LARGE_TEMPLE_CERES;
+                break;
+            case BUILDING_MENU_SHRINES:
+                data.sub_type = BUILDING_SHRINE_CERES;
                 break;
             case BUILDING_LIGHTHOUSE:
             case BUILDING_SAND_PIT:
@@ -1068,7 +1073,7 @@ void building_construction_place(void)
         return;
     }
 
-    if (data.type == BUILDING_MENU_SMALL_TEMPLES || data.type == BUILDING_MENU_LARGE_TEMPLES) {
+    if (data.type == BUILDING_MENU_SMALL_TEMPLES || data.type == BUILDING_MENU_LARGE_TEMPLES || data.type == BUILDING_MENU_SHRINES) {
         building_rotation_rotate_forward();
     }
     formation_move_herds_away(x_end, y_end);

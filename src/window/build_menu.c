@@ -177,7 +177,8 @@ static int get_sidebar_x_offset(void)
 static int is_all_button(building_type type)
 {
     return (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) ||
-        (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES);
+        (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES) ||
+        (type == BUILDING_MENU_SHRINES && data.selected_submenu == BUILD_MENU_SHRINES);
 }
 
 static void draw_menu_buttons(void)
@@ -214,6 +215,9 @@ static void draw_menu_buttons(void)
         if (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES) {
             cost = model_get_building(BUILDING_LARGE_TEMPLE_CERES)->cost;
         }
+        if (type == BUILDING_MENU_SHRINES && data.selected_submenu == BUILD_MENU_SHRINES) {
+            cost = model_get_building(BUILDING_SHRINE_CERES)->cost;
+        }
         if (cost) {
             text_draw_money(cost, x_offset - MENU_ITEM_MONEY_OFFSET,
                 data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
@@ -221,7 +225,7 @@ static void draw_menu_buttons(void)
         }
 
         // Don't draw icons for temple submenus
-        if ((type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES) &&
+        if ((type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES || type == BUILDING_MENU_SHRINES) &&
             data.selected_submenu == BUILD_MENU_TEMPLES) {
             continue;
         }

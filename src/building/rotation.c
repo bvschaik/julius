@@ -41,6 +41,8 @@ static int get_num_rotations(building_type type)
         return 2;
     }
     switch (type) {
+        case BUILDING_MENU_SHRINES:
+            return 10;
         case BUILDING_MENU_LARGE_TEMPLES:
         case BUILDING_MENU_SMALL_TEMPLES:
             return 5;
@@ -230,6 +232,7 @@ int building_rotation_type_has_rotations(building_type type)
         case BUILDING_TRIUMPHAL_ARCH:
         case BUILDING_MENU_LARGE_TEMPLES:
         case BUILDING_MENU_SMALL_TEMPLES:
+        case BUILDING_MENU_SHRINES:
             return 1;
         default:
             return 0;
