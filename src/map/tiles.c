@@ -29,6 +29,8 @@
 #define FORBIDDEN_TERRAIN_RUBBLE (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |\
             TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 
+#define EXTRA_GARDEN_VARIANTS 2
+
 static int aqueduct_include_construction = 0;
 static int highway_top_tile_offsets[4] = { 0, -GRID_SIZE, -1, -GRID_SIZE - 1 };
 static int elevation_recalculate_trees = 0;
@@ -220,9 +222,10 @@ static void clear_garden_image(int x, int y, int grid_offset)
 static void set_garden_image(int x, int y, int grid_offset)
 {
     int image_id;
-    static int alt_garden_image_id;
-    if (!alt_garden_image_id) {
-        alt_garden_image_id = assets_get_image_id("Aesthetics", "Garden_Alt_01");
+    static int alt_garden_image_ids[EXTRA_GARDEN_VARIANTS];
+    if (!alt_garden_image_ids[0]) {
+        alt_garden_image_ids[0] = assets_get_image_id("Aesthetics", "Garden_Alt_01");
+        alt_garden_image_ids[1] = assets_get_image_id("Aesthetics", "Garden_Alt_02");
     }
     if (map_terrain_is(grid_offset, TERRAIN_GARDEN) && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
         if (!map_image_at(grid_offset)) {
@@ -247,7 +250,7 @@ static void set_garden_image(int x, int y, int grid_offset)
                             image_id += 2;
                             break;
                         case 1: case 3:
-                            image_id = alt_garden_image_id;
+                            image_id = alt_garden_image_ids[0];
                             break;
                     }
                 } else {
@@ -256,7 +259,7 @@ static void set_garden_image(int x, int y, int grid_offset)
                             image_id += 1;
                             break;
                         case 0: case 2:
-                            image_id = alt_garden_image_id;
+                            image_id = alt_garden_image_ids[1];
                             break;
                     }
 
