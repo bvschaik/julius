@@ -105,8 +105,8 @@ static int draw_background(void)
     inner_panel_draw(32, 60, 36, 8);
 
     // taverns
-    text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE), 67, 64, FONT_NORMAL_WHITE, 0);
-    text_draw_number(building_count_total(BUILDING_TAVERN), '@', " ", 40, 64, FONT_NORMAL_WHITE, 0);
+    lang_text_draw_amount(CUSTOM_TRANSLATION, TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE,
+        building_count_total(BUILDING_THEATER), 40, 64, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_TAVERN), 150, 64, 100, FONT_NORMAL_WHITE);
     int width = text_draw_number(city_culture_get_tavern_person_coverage(), '_', " ",
         PEOPLE_OFFSET, 64, FONT_NORMAL_WHITE, 0);
@@ -153,9 +153,9 @@ static int draw_background(void)
         lang_text_draw_centered(57, 21, COVERAGE_OFFSET, 104, COVERAGE_WIDTH, FONT_NORMAL_WHITE);
     }
 
-    //arenas 
-    text_draw(translation_for(TR_WINDOW_ADVISOR_ENTERTAINMENT_ARENA_COVERAGE), 67, 124, FONT_NORMAL_WHITE, 0);
-    text_draw_number(building_count_total(BUILDING_ARENA), '@', "", 40, 124, FONT_NORMAL_WHITE, 0);
+    // arenas
+    lang_text_draw_amount(CUSTOM_TRANSLATION, TR_WINDOW_ADVISOR_ENTERTAINMENT_ARENA_COVERAGE,
+        building_count_total(BUILDING_ARENA), 40, 124, FONT_NORMAL_WHITE);
     text_draw_number_centered(building_count_active(BUILDING_ARENA), 150, 124, 100, FONT_NORMAL_WHITE);
     width = text_draw_number(city_culture_get_arena_person_coverage(), '_', " ", PEOPLE_OFFSET, 124, FONT_NORMAL_WHITE, 0);
     lang_text_draw(58, 5, PEOPLE_OFFSET + width, 124, FONT_NORMAL_WHITE);
