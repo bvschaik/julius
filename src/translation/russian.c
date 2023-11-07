@@ -1332,6 +1332,17 @@ static translation_string all_strings[] = {
     {TR_BUILDING_INFO_MOTHBALL_WARNING, "Это здание выключено." },
     {TR_BUILDING_INFO_CARTLOAD, "тележка." },
     {TR_BUILDING_INFO_CARTLOADS, "тележек." },
+    {TR_BUILDING_SHRINE_CERES, "Жертвенник Цереры"},
+    {TR_BUILDING_SHRINE_CERES_DESC, "PLACEHOLDER"},
+    {TR_BUILDING_SHRINE_MARS, "Жертвенник Марса"},
+    {TR_BUILDING_SHRINE_MARS_DESC, "PLACEHOLDER" },
+    {TR_BUILDING_SHRINE_MERCURY, "Жертвенник Меркурия"},
+    {TR_BUILDING_SHRINE_MERCURY_DESC, "PLACEHOLDER" },
+    {TR_BUILDING_SHRINE_NEPTUNE, "Жертвенник Нептуна"},
+    {TR_BUILDING_SHRINE_NEPTUNE_DESC, "PLACEHOLDER" },
+    {TR_BUILDING_SHRINE_VENUS, "Жертвенник Венеры"},
+    {TR_BUILDING_SHRINE_VENUS_DESC, "PLACEHOLDER" },
+    {TR_BUILDING_MENU_SHRINES, "Жертвенник"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
