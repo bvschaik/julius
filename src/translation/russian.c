@@ -961,7 +961,7 @@ static translation_string all_strings[] = {
     {TR_ADVISOR_ACTIVE_COLOSSEUM, "Город обслуживает Колизей"},
     {TR_ADVISOR_NO_ACTIVE_HIPPODROME, "Нет действующего Ипподрома в городе"},
     {TR_ADVISOR_ACTIVE_HIPPODROME, "Город обслуживает Ипподром"},
-    {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "Миссионерские посты"},
+    {TR_WINDOW_ADVISOR_EDUCATION_MISSION_POSTS, "миссион. посты"},
     {TR_CITY_MESSAGE_TITLE_ENEMIES_LEAVING, "Враги отступают"},
     {TR_CITY_MESSAGE_TEXT_ENEMIES_LEAVING, "Хм! В вашем ничтожном городе больше нет ничего, что стоило бы разрушить. Мы уходим, но берегитесь, мы всегда можем вернуться!"},
     {TR_ZOOM, "Увеличение:"},
