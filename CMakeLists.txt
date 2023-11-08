@@ -800,9 +800,9 @@ if (${TARGET_PLATFORM} STREQUAL "vita")
         FILE res/vita/startup.png sce_sys/livearea/contents/startup.png
         FILE res/vita/template.xml sce_sys/livearea/contents/template.xml
     )
-elseif(${TARGET_PLATFORM} STREQUAL "switch")
+elseif(NINTENDO_SWITCH)
 
-    pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2 SDL2_ttf SDL2_mixer SDL2_image)
+    pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2 SDL2_mixer)
     target_link_libraries(${SHORT_NAME} ${SDL2_LIBRARIES})
     target_include_directories(${SHORT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
     target_compile_options(${SHORT_NAME} PUBLIC ${SDL2_CFLAGS_OTHER})
