@@ -131,7 +131,7 @@ if(${TARGET_PLATFORM} STREQUAL "vita")
     set(VITA_VERSION "${VITA_VERSION_MAJOR}.${VITA_VERSION_MINOR}")
 endif()
 
-if (${TARGET_PLATFORM} STREQUAL "switch")
+if (NINTENDO_SWITCH)
     string(SUBSTRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}" 0 15 SWITCH_VERSION)
 endif()
 
@@ -194,7 +194,7 @@ if (${TARGET_PLATFORM} STREQUAL "vita")
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
     )
-elseif (${TARGET_PLATFORM} STREQUAL "switch")
+elseif (NINTENDO_SWITCH)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch.c
