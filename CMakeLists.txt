@@ -817,11 +817,11 @@ elseif(${TARGET_PLATFORM} STREQUAL "switch")
 nx_generate_nacp (${PROJECT_NAME}.nacp
     NAME   "Julius"
     AUTHOR "Bianca van Schaik"
-    ICON   ${CMAKE_SOURCE_DIR}/res/switch/icon0.jpg
 )
 
 nx_create_nro (${PROJECT_NAME}
     NACP ${PROJECT_NAME}.nacp
+    ICON ${CMAKE_SOURCE_DIR}/res/switch/icon0.jpg
 )
 
 else()
