@@ -1,4 +1,4 @@
-    cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.1)
 include(CMakeDependentOption)
 
 set(TARGET_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: vita switch android emscripten. Leave blank for no cross compilation")
@@ -33,6 +33,8 @@ endif()
 set(SHORT_NAME julius)
 set(USER_FRIENDLY_NAME Julius)
 project(${SHORT_NAME} C)
+
+find_package(PkgConfig REQUIRED)
 
 if (${TARGET_PLATFORM} STREQUAL "vita")
     include("${VITASDK}/share/vita.cmake" REQUIRED)
@@ -806,31 +808,11 @@ if (${TARGET_PLATFORM} STREQUAL "vita")
         FILE res/vita/template.xml sce_sys/livearea/contents/template.xml
     )
 elseif(${TARGET_PLATFORM} STREQUAL "switch")
-    target_link_libraries (${SHORT_NAME}
-        SDL2_mixer
-        SDL2
-        EGL
-        GLESv2
-        glapi
-        drm_nouveau
-        vorbisidec
-        modplug
-        mpg123
-        FLAC
-        opusfile
-        opus
-        ogg
-        m
-        z
-        nx
-        stdc++
-    )
 
-    set(FLAGS
-        -fPIE
-        -L${DEVKITPRO}/portlibs/switch/lib
-        -L${DEVKITPRO}/libnx/lib
-    )
+    pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2 SDL2_ttf SDL2_mixer SDL2_image)
+    target_link_libraries(${SHORT_NAME} ${SDL2_LIBRARIES})
+    target_include_directories(${SHORT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
+    target_compile_options(${SHORT_NAME} PUBLIC ${SDL2_CFLAGS_OTHER})
 
 nx_generate_nacp (${PROJECT_NAME}.nacp
     NAME   "Julius"
