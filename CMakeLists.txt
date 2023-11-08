@@ -752,13 +752,6 @@ if(${TARGET_PLATFORM} STREQUAL "vita")
         $ENV{VITASDK}/arm-vita-eabi/include
         ${CMAKE_CURRENT_SOURCE_DIR}
     )
-elseif (${TARGET_PLATFORM} STREQUAL "switch")
-    include_directories(SYSTEM
-        ${DEVKITPRO}/portlibs/switch/include/SDL2
-        ${DEVKITPRO}/libnx/include
-        ${DEVKITPRO}/portlibs/switch/include
-        ${CMAKE_CURRENT_SOURCE_DIR}
-    )
 endif()
 
 include_directories(SYSTEM ext)
