@@ -739,7 +739,7 @@ if(SYSTEM_LIBS)
 endif()
 if(PNG_FOUND)
     include_directories(SYSTEM ${PNG_INCLUDE_DIRS})
-    target_link_libraries(${SHORT_NAME} ${PNG_LIBRARIES})
+    target_link_libraries(${SHORT_NAME} PRIVATE ${PNG_LIBRARIES})
 else()
     if(SYSTEM_LIBS)
         message(STATUS "PNG was not found but that's ok: falling back to internal version")
@@ -805,9 +805,7 @@ if (${TARGET_PLATFORM} STREQUAL "vita")
 elseif(NINTENDO_SWITCH)
 
     pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2 SDL2_mixer)
-    target_link_libraries(${SHORT_NAME} ${SDL2_LIBRARIES})
-    target_include_directories(${SHORT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
-    target_compile_options(${SHORT_NAME} PUBLIC ${SDL2_CFLAGS_OTHER})
+    target_link_libraries(${SHORT_NAME} PRIVATE PkgConfig::SDL2)
 
 nx_generate_nacp (${PROJECT_NAME}.nacp
     NAME   "Julius"
