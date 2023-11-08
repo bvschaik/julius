@@ -34,7 +34,9 @@ set(SHORT_NAME julius)
 set(USER_FRIENDLY_NAME Julius)
 project(${SHORT_NAME} C)
 
-find_package(PkgConfig REQUIRED)
+if (NINTENDO_SWITCH)
+    find_package(PkgConfig REQUIRED)
+endif()
 
 if (${TARGET_PLATFORM} STREQUAL "vita")
     include("${VITASDK}/share/vita.cmake" REQUIRED)
