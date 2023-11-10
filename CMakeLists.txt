@@ -746,7 +746,7 @@ else()
     endif()
 
     include_directories(SYSTEM "ext/png")
-    target_sources(${SHORT_NAME} "${PNG_FILES}" "${ZLIB_FILES}")
+    target_sources(${SHORT_NAME} PRIVATE "${PNG_FILES}" "${ZLIB_FILES}")
 endif()
 
 if(${TARGET_PLATFORM} STREQUAL "vita")
