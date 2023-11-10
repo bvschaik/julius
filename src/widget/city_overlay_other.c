@@ -41,7 +41,7 @@ static int show_building_religion(const building *b)
         b->type == BUILDING_PANTHEON || b->type == BUILDING_NYMPHAEUM ||
         b->type == BUILDING_SHRINE_CERES || b->type == BUILDING_SHRINE_MARS ||
         b->type == BUILDING_SHRINE_MERCURY || b->type == BUILDING_SHRINE_VENUS ||
-        b->type == BUILDING_SHRINE_VENUS;
+        b->type == BUILDING_SHRINE_NEPTUNE;
 }
 
 static int show_building_food_stocks(const building *b)
