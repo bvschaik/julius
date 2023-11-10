@@ -92,11 +92,23 @@ static void draw_time_left(void)
     }
 }
 
+static void draw_speedrun_infos(void)
+{
+    if (config_get(CONFIG_SCREEN_DISPLAY_SPEEDRUN_INFOS)) {
+        int x, y, width, height;
+        city_view_get_viewport(&x, &y, &width, &height);
+        
+        large_label_draw(x, height, 10, 0);
+        lang_text_draw_centered(153, setting_difficulty() + 1, x + 4, height + 8, 150, FONT_NORMAL_WHITE);
+    }
+}
+
 static void draw_foreground(void)
 {
     widget_top_menu_draw(0);
     window_city_draw();
     widget_sidebar_city_draw_foreground();
+    draw_speedrun_infos();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         draw_time_left();
         if (mouse_get()->is_touch) {

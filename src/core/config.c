@@ -16,6 +16,7 @@ static const char *ini_keys[] = {
     "gameplay_fix_100y_ghosts",
     "screen_display_scale",
     "screen_cursor_scale",
+    "screen_display_speedrun_infos",
     "ui_sidebar_info",
     "ui_show_intro_video",
     "ui_smooth_scrolling",
