@@ -224,7 +224,7 @@ void city_labor_calculate_workers(int num_plebs, int num_patricians)
 
 static int is_industry_disabled(building *b)
 {
-    if (!b->output_resource_id) {
+    if (!b->output_resource_id || b->output_resource_id == RESOURCE_DENARII) {
         return 0;
     }
     int resource = b->output_resource_id;
