@@ -18,12 +18,7 @@ if(${TARGET_PLATFORM} STREQUAL "vita" AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 if(${TARGET_PLATFORM} STREQUAL "switch" AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-    if(DEFINED ENV{DEVKITPRO})
-        set(DEVKITPRO $ENV{DEVKITPRO})
-        set(CMAKE_TOOLCHAIN_FILE "./cmake/switch.cmake" CACHE PATH "toolchain file")
-    else()
-        message(FATAL_ERROR "Please define DEVKITPRO to point to your SDK path!")
-    endif()
+    message(FATAL_ERROR "Please use /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake to configure")
 endif()
 
 if(${TARGET_PLATFORM} STREQUAL "emscripten" AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -38,6 +33,10 @@ endif()
 set(SHORT_NAME julius)
 set(USER_FRIENDLY_NAME Julius)
 project(${SHORT_NAME} C)
+
+if (NINTENDO_SWITCH)
+    find_package(PkgConfig REQUIRED)
+endif()
 
 if (${TARGET_PLATFORM} STREQUAL "vita")
     include("${VITASDK}/share/vita.cmake" REQUIRED)
@@ -134,7 +133,7 @@ if(${TARGET_PLATFORM} STREQUAL "vita")
     set(VITA_VERSION "${VITA_VERSION_MAJOR}.${VITA_VERSION_MINOR}")
 endif()
 
-if (${TARGET_PLATFORM} STREQUAL "switch")
+if (NINTENDO_SWITCH)
     string(SUBSTRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}" 0 15 SWITCH_VERSION)
 endif()
 
@@ -197,7 +196,7 @@ if (${TARGET_PLATFORM} STREQUAL "vita")
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita.c
         ${PROJECT_SOURCE_DIR}/src/platform/vita/vita_keyboard.c
     )
-elseif (${TARGET_PLATFORM} STREQUAL "switch")
+elseif (NINTENDO_SWITCH)
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/switch/switch.c
@@ -755,13 +754,6 @@ if(${TARGET_PLATFORM} STREQUAL "vita")
         $ENV{VITASDK}/arm-vita-eabi/include
         ${CMAKE_CURRENT_SOURCE_DIR}
     )
-elseif (${TARGET_PLATFORM} STREQUAL "switch")
-    include_directories(SYSTEM
-        ${DEVKITPRO}/portlibs/switch/include/SDL2
-        ${DEVKITPRO}/libnx/include
-        ${DEVKITPRO}/portlibs/switch/include
-        ${CMAKE_CURRENT_SOURCE_DIR}
-    )
 endif()
 
 include_directories(SYSTEM ext)
@@ -810,45 +802,21 @@ if (${TARGET_PLATFORM} STREQUAL "vita")
         FILE res/vita/startup.png sce_sys/livearea/contents/startup.png
         FILE res/vita/template.xml sce_sys/livearea/contents/template.xml
     )
-elseif(${TARGET_PLATFORM} STREQUAL "switch")
-    target_link_libraries (${SHORT_NAME}
-        SDL2_mixer
-        SDL2
-        EGL
-        GLESv2
-        glapi
-        drm_nouveau
-        vorbisidec
-        modplug
-        mpg123
-        FLAC
-        opusfile
-        opus
-        ogg
-        m
-        z
-        nx
-        stdc++
-    )
+elseif(NINTENDO_SWITCH)
 
-    set(FLAGS
-        -fPIE
-        -L${DEVKITPRO}/portlibs/switch/lib
-        -L${DEVKITPRO}/libnx/lib
-    )
+    pkg_check_modules(SDL2 REQUIRED IMPORTED_TARGET sdl2 SDL2_mixer)
+    target_link_libraries(${SHORT_NAME} PkgConfig::SDL2)
 
-    foreach(flag ${FLAGS})
-        set(FLAGS_GENERAL "${FLAGS_GENERAL} ${flag}")
-    endforeach(flag ${FLAGS})
+nx_generate_nacp (${PROJECT_NAME}.nacp
+    NAME   "Julius"
+    AUTHOR "Bianca van Schaik"
+)
 
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${FLAGS_GENERAL}")
+nx_create_nro (${PROJECT_NAME}
+    NACP ${PROJECT_NAME}.nacp
+    ICON ${CMAKE_SOURCE_DIR}/res/switch/icon0.jpg
+)
 
-    target_compile_options(${SHORT_NAME} PRIVATE ${FLAGS})
-    add_custom_command(TARGET ${SHORT_NAME}
-        POST_BUILD
-        COMMAND ${DEVKITPRO}/tools/bin/nacptool --create "${SHORT_NAME}" "rsn8887" ${SWITCH_VERSION} ${SHORT_NAME}.nacp
-        COMMAND ${DEVKITPRO}/tools/bin/elf2nro ${SHORT_NAME} ${SHORT_NAME}.nro --icon=${CMAKE_SOURCE_DIR}/res/switch/icon0.jpg --nacp=${SHORT_NAME}.nacp
-    )
 else()
     if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
         target_link_libraries(${SHORT_NAME} m)
