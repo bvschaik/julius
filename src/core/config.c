@@ -16,7 +16,6 @@ static const char *ini_keys[] = {
     "gameplay_fix_100y_ghosts",
     "screen_display_scale",
     "screen_cursor_scale",
-    "screen_display_speedrun_infos",
     "ui_sidebar_info",
     "ui_show_intro_video",
     "ui_smooth_scrolling",
@@ -27,7 +26,8 @@ static const char *ini_keys[] = {
     "ui_show_water_structure_range",
     "ui_show_construction_size",
     "ui_highlight_legions",
-    "ui_show_military_sidebar"
+    "ui_show_military_sidebar",
+    "ui_show_speedrun_info",
 };
 
 static const char *ini_string_keys[] = {
