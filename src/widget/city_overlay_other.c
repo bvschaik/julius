@@ -109,6 +109,9 @@ static int show_figure_food_stocks(const figure *f)
         return 1;
     } else if (f->type == FIGURE_CART_PUSHER) {
         return resource_is_food(f->resource_id);
+    } else if (f->type == FIGURE_WAREHOUSEMAN) {
+        building *b = building_get(f->building_id);
+        return b->type == BUILDING_GRANARY;
     }
     return 0;
 }
