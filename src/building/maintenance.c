@@ -361,6 +361,7 @@ void building_maintenance_check_rome_access(void)
         city_warning_show(WARNING_CITY_BOXED_IN, NEW_WARNING_SLOT);
         city_warning_show(WARNING_CITY_BOXED_IN_PEOPLE_WILL_PERISH, NEW_WARNING_SLOT);
         city_view_go_to_grid_offset(problem_grid_offset);
+        game_state_pause();
     } else {
         data.obstruction_message_displayed = 0;
     }
