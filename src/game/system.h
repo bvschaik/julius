@@ -28,6 +28,12 @@ const char *system_architecture(void);
 const char *system_OS(void);
 
 /**
+ * Gets the current number of ticks in milisseconds since the game started
+ * @return Number of ticks
+ */
+uint64_t system_get_ticks(void);
+
+/**
  * Resize window
  * @param width New width
  * @param height New height

@@ -5,6 +5,7 @@
 #include "core/file.h"
 #include "core/smacker.h"
 #include "core/time.h"
+#include "game/system.h"
 #include "graphics/renderer.h"
 #include "sound/device.h"
 #include "sound/music.h"
@@ -13,6 +14,8 @@
 #include "pl_mpeg/pl_mpeg.h"
 
 #include <string.h>
+
+#define MAX_FRAME_TIME_ADVANCE_MS (1.0 / 30.0)
 
 typedef enum {
     VIDEO_TYPE_NONE = 0,
@@ -211,7 +214,7 @@ void video_size(int *width, int *height)
 
 void video_init(int restart_music)
 {
-    data.video.start_render_millis = time_get_millis();
+    data.video.start_render_millis = system_get_ticks();
     data.restart_music = restart_music;
 
     if (data.audio.has_audio) {
@@ -261,7 +264,7 @@ static void get_next_frame(void)
         (data.type == VIDEO_TYPE_MPG && !data.plm)) {
         return;
     }
-    time_millis now_millis = time_get_millis();
+    time_millis now_millis = system_get_ticks();
 
     if (data.type == VIDEO_TYPE_SMK) {
         int frame_no = (now_millis - data.video.start_render_millis) * 1000 / data.video.micros_per_frame;
@@ -286,7 +289,11 @@ static void get_next_frame(void)
             }
         }
     } else {
-        plm_decode(data.plm, (now_millis - data.video.start_render_millis + 1) / 1000.0);
+        double elapsed_time = (now_millis - data.video.start_render_millis) / 1000.0;
+        if (elapsed_time > MAX_FRAME_TIME_ADVANCE_MS) {
+            elapsed_time = MAX_FRAME_TIME_ADVANCE_MS;
+        }
+        plm_decode(data.plm, elapsed_time);
         data.video.start_render_millis = now_millis;
         if (plm_has_ended(data.plm)) {
             close_decoder();

@@ -150,6 +150,19 @@ void system_set_fullscreen(int fullscreen)
     post_event(fullscreen ? USER_EVENT_FULLSCREEN : USER_EVENT_WINDOWED);
 }
 
+uint64_t system_get_ticks(void)
+{
+#if SDL_VERSION_ATLEAST(2, 0, 18)
+    if (platform_sdl_version_at_least(2, 0, 18)) {
+        return SDL_GetTicks64();        
+    } else {
+        return SDL_GetTicks();
+    }
+#else
+    return SDL_GetTicks();
+#endif
+}
+
 #ifdef _WIN32
 #define PLATFORM_ENABLE_PER_FRAME_CALLBACK
 static void platform_per_frame_callback(void)
@@ -160,12 +173,12 @@ static void platform_per_frame_callback(void)
 
 static void run_and_draw(void)
 {
-    time_millis time_before_run = SDL_GetTicks();
+    time_millis time_before_run = system_get_ticks();
     time_set_millis(time_before_run);
 
     game_run();
     game_draw();
-    Uint32 time_after_draw = SDL_GetTicks();
+    Uint32 time_after_draw = system_get_ticks();
 
     data.fps.frame_count++;
     if (time_after_draw - data.fps.last_update_time > 1000) {
@@ -612,7 +625,7 @@ static void setup(const augustus_args *args)
     // This has to come after platform_screen_create, otherwise it fails on Nintendo Switch
     system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));
 
-    time_set_millis(SDL_GetTicks());
+    time_set_millis(system_get_ticks());
 
     int result = args->launch_asset_previewer ? window_asset_previewer_show() : game_init();
 
