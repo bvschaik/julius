@@ -5,7 +5,7 @@ case "$BUILD_TARGET" in
 	docker exec vitasdk /bin/bash -c "git config --global --add safe.directory /build/git && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTARGET_PLATFORM=vita .."
 	;;
 "switch")
-	docker exec switchdev /bin/bash -c "git config --global --add safe.directory /build/git && mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTARGET_PLATFORM=switch .."
+	docker exec switchdev /bin/bash -c "git config --global --add safe.directory /build/git && /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -DCMAKE_BUILD_TYPE=Release -DTARGET_PLATFORM=switch -B build -S ."
 	;;
 "mac")
 	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" ..
