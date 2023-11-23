@@ -459,7 +459,7 @@ static void determine_original_trees(buffer *images, int legacy_buffer)
                     for (int i = start; i < end; i++) {
                         int current_offset = base_offset + map_ring_tile(i)->grid_offset;
                         if (map_grid_is_valid_offset(current_offset) &&
-                            !map_terrain_is(current_offset, TERRAIN_MAP_EDGE)) {
+                            !map_terrain_is_superset(current_offset, TERRAIN_MAP_EDGE)) {
                             map_terrain_add(current_offset, TERRAIN_ORIGINALLY_TREE);
                         }
                     }
