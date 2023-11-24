@@ -776,8 +776,6 @@ static void savegame_load_from_state(savegame_state *state, savegame_version_t v
     } else {
         figure_visited_buildings_load_state(state->visited_buildings);
     }
-    map_image_clear();
-    map_image_update_all();
 }
 
 static void savegame_save_to_state(savegame_state *state)

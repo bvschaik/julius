@@ -264,6 +264,10 @@ static void initialize_saved_game(void)
 {
     load_empire_data(scenario_is_custom(), scenario_empire_id());
 
+    map_image_context_init();
+    map_image_clear();
+    map_image_update_all();
+
     scenario_map_init();
 
     city_view_init();
