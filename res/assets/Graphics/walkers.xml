@@ -1207,4 +1207,431 @@
 	<image id="Slave N 10" src="slave_n_10"/>
 	<image id="Slave N 11" src="slave_n_11"/>
 	<image id="Slave N 12" src="slave_n_12"/>
+	<!-- Note: Orange Market Lady Portrait -->
+	<image id="marketbuyer_portrait_overlay">
+		<layer group="190" image="11"/>
+		<layer src="marketbuyer_portrait_overlay"/>
+	</image>
+	<!-- Note: Orange Market Lady Death animation frames 01-08 -->
+	<image id="marketbuyer_death_01">
+		<layer group="106" image="96"/>
+		<layer src="marketbuyer_death_01"/>
+	</image>
+	<image id="marketbuyer_death_02">
+		<layer group="106" image="97"/>
+		<layer src="marketbuyer_death_02"/>
+	</image>
+	<image id="marketbuyer_death_03">
+		<layer group="106" image="98"/>
+		<layer src="marketbuyer_death_03"/>
+	</image>
+	<image id="marketbuyer_death_04">
+		<layer group="106" image="99"/>
+		<layer src="marketbuyer_death_04"/>
+	</image>
+	<image id="marketbuyer_death_05">
+		<layer group="106" image="100"/>
+		<layer src="marketbuyer_death_05"/>
+	</image>
+	<image id="marketbuyer_death_06">
+		<layer group="106" image="101"/>
+	</image>
+	<image id="marketbuyer_death_07">
+		<layer group="106" image="102"/>
+	</image>
+	<image id="marketbuyer_death_08">
+		<layer group="106" image="103"/>
+	</image>
+	<!-- Note: Orange Market Lady Walking animation frames NORTH-EAST DIRECTION 01-12 -->
+	<image id="marketbuyer_ne_01">
+		<layer group="106" image="0"/>
+		<layer src="marketbuyer_ne_01"/>
+	</image>
+	<image id="marketbuyer_ne_02">
+		<layer group="106" image="8"/>
+		<layer src="marketbuyer_ne_02"/>
+	</image>
+	<image id="marketbuyer_ne_03">
+		<layer group="106" image="16"/>
+		<layer src="marketbuyer_ne_03"/>
+	</image>
+	<image id="marketbuyer_ne_04">
+		<layer group="106" image="24"/>
+		<layer src="marketbuyer_ne_04"/>
+	</image>
+	<image id="marketbuyer_ne_05">
+		<layer group="106" image="32"/>
+		<layer src="marketbuyer_ne_05"/>
+	</image>
+	<image id="marketbuyer_ne_06">
+		<layer group="106" image="40"/>
+		<layer src="marketbuyer_ne_06"/>
+	</image>
+	<image id="marketbuyer_ne_07">
+		<layer group="106" image="48"/>
+		<layer src="marketbuyer_ne_07"/>
+	</image>
+	<image id="marketbuyer_ne_08">
+		<layer group="106" image="56"/>
+		<layer src="marketbuyer_ne_08"/>
+	</image>
+	<image id="marketbuyer_ne_09">
+		<layer group="106" image="64"/>
+		<layer src="marketbuyer_ne_09"/>
+	</image>
+	<image id="marketbuyer_ne_10">
+		<layer group="106" image="72"/>
+		<layer src="marketbuyer_ne_10"/>
+	</image>
+	<image id="marketbuyer_ne_11">
+		<layer group="106" image="80"/>
+		<layer src="marketbuyer_ne_11"/>
+	</image>
+	<image id="marketbuyer_ne_12">
+		<layer group="106" image="88"/>
+		<layer src="marketbuyer_ne_12"/>
+	</image>
+	<!-- Note: Orange Market Lady Walking animation frames EAST DIRECTION 01-12 -->
+	<image id="marketbuyer_e_01">
+		<layer group="106" image="1"/>
+		<layer src="marketbuyer_e_01"/>
+	</image>
+	<image id="marketbuyer_e_02">
+		<layer group="106" image="9"/>
+		<layer src="marketbuyer_e_02"/>
+	</image>
+	<image id="marketbuyer_e_03">
+		<layer group="106" image="17"/>
+		<layer src="marketbuyer_e_03"/>
+	</image>
+	<image id="marketbuyer_e_04">
+		<layer group="106" image="25"/>
+		<layer src="marketbuyer_e_04"/>
+	</image>
+	<image id="marketbuyer_e_05">
+		<layer group="106" image="33"/>
+		<layer src="marketbuyer_e_05"/>
+	</image>
+	<image id="marketbuyer_e_06">
+		<layer group="106" image="41"/>
+		<layer src="marketbuyer_e_06"/>
+	</image>
+	<image id="marketbuyer_e_07">
+		<layer group="106" image="49"/>
+		<layer src="marketbuyer_e_07"/>
+	</image>
+	<image id="marketbuyer_e_08">
+		<layer group="106" image="57"/>
+		<layer src="marketbuyer_e_08"/>
+	</image>
+	<image id="marketbuyer_e_09">
+		<layer group="106" image="65"/>
+		<layer src="marketbuyer_e_09"/>
+	</image>
+	<image id="marketbuyer_e_10">
+		<layer group="106" image="73"/>
+		<layer src="marketbuyer_e_10"/>
+	</image>
+	<image id="marketbuyer_e_11">
+		<layer group="106" image="81"/>
+		<layer src="marketbuyer_e_11"/>
+	</image>
+	<image id="marketbuyer_e_12">
+		<layer group="106" image="89"/>
+		<layer src="marketbuyer_e_12"/>
+	</image>
+	<!-- Note: Orange Market Lady Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="marketbuyer_se_01">
+		<layer group="106" image="2"/>
+		<layer src="marketbuyer_se_01"/>
+	</image>
+	<image id="marketbuyer_se_02">
+		<layer group="106" image="10"/>
+		<layer src="marketbuyer_se_02"/>
+	</image>
+	<image id="marketbuyer_se_03">
+		<layer group="106" image="18"/>
+		<layer src="marketbuyer_se_03"/>
+	</image>
+	<image id="marketbuyer_se_04">
+		<layer group="106" image="26"/>
+		<layer src="marketbuyer_se_04"/>
+	</image>
+	<image id="marketbuyer_se_05">
+		<layer group="106" image="34"/>
+		<layer src="marketbuyer_se_05"/>
+	</image>
+	<image id="marketbuyer_se_06">
+		<layer group="106" image="42"/>
+		<layer src="marketbuyer_se_06"/>
+	</image>
+	<image id="marketbuyer_se_07">
+		<layer group="106" image="50"/>
+		<layer src="marketbuyer_se_07"/>
+	</image>
+	<image id="marketbuyer_se_08">
+		<layer group="106" image="58"/>
+		<layer src="marketbuyer_se_08"/>
+	</image>
+	<image id="marketbuyer_se_09">
+		<layer group="106" image="66"/>
+		<layer src="marketbuyer_se_09"/>
+	</image>
+	<image id="marketbuyer_se_10">
+		<layer group="106" image="74"/>
+		<layer src="marketbuyer_se_10"/>
+	</image>
+	<image id="marketbuyer_se_11">
+		<layer group="106" image="82"/>
+		<layer src="marketbuyer_se_11"/>
+	</image>
+	<image id="marketbuyer_se_12">
+		<layer group="106" image="90"/>
+		<layer src="marketbuyer_se_12"/>
+	</image>
+	<!-- Note: Orange Market Lady Walking animation frames SOUTH DIRECTION 01-12 -->
+	<image id="marketbuyer_s_01">
+		<layer group="106" image="3"/>
+		<layer src="marketbuyer_s_01"/>
+	</image>
+	<image id="marketbuyer_s_02">
+		<layer group="106" image="11"/>
+		<layer src="marketbuyer_s_02"/>
+	</image>
+	<image id="marketbuyer_s_03">
+		<layer group="106" image="19"/>
+		<layer src="marketbuyer_s_03"/>
+	</image>
+	<image id="marketbuyer_s_04">
+		<layer group="106" image="27"/>
+		<layer src="marketbuyer_s_04"/>
+	</image>
+	<image id="marketbuyer_s_05">
+		<layer group="106" image="35"/>
+		<layer src="marketbuyer_s_05"/>
+	</image>
+	<image id="marketbuyer_s_06">
+		<layer group="106" image="43"/>
+		<layer src="marketbuyer_s_06"/>
+	</image>
+	<image id="marketbuyer_s_07">
+		<layer group="106" image="51"/>
+		<layer src="marketbuyer_s_07"/>
+	</image>
+	<image id="marketbuyer_s_08">
+		<layer group="106" image="59"/>
+		<layer src="marketbuyer_s_08"/>
+	</image>
+	<image id="marketbuyer_s_09">
+		<layer group="106" image="67"/>
+		<layer src="marketbuyer_s_09"/>
+	</image>
+	<image id="marketbuyer_s_10">
+		<layer group="106" image="75"/>
+		<layer src="marketbuyer_s_10"/>
+	</image>
+	<image id="marketbuyer_s_11">
+		<layer group="106" image="83"/>
+		<layer src="marketbuyer_s_11"/>
+	</image>
+	<image id="marketbuyer_s_12">
+		<layer group="106" image="91"/>
+		<layer src="marketbuyer_s_12"/>
+	</image>
+	<!-- Note: Orange Market Lady Walking animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="marketbuyer_sw_01">
+		<layer group="106" image="4"/>
+		<layer src="marketbuyer_sw_01"/>
+	</image>
+	<image id="marketbuyer_sw_02">
+		<layer group="106" image="12"/>
+		<layer src="marketbuyer_sw_02"/>
+	</image>
+	<image id="marketbuyer_sw_03">
+		<layer group="106" image="20"/>
+		<layer src="marketbuyer_sw_03"/>
+	</image>
+	<image id="marketbuyer_sw_04">
+		<layer group="106" image="28"/>
+		<layer src="marketbuyer_sw_04"/>
+	</image>
+	<image id="marketbuyer_sw_05">
+		<layer group="106" image="36"/>
+		<layer src="marketbuyer_sw_05"/>
+	</image>
+	<image id="marketbuyer_sw_06">
+		<layer group="106" image="44"/>
+		<layer src="marketbuyer_sw_06"/>
+	</image>
+	<image id="marketbuyer_sw_07">
+		<layer group="106" image="52"/>
+		<layer src="marketbuyer_sw_07"/>
+	</image>
+	<image id="marketbuyer_sw_08">
+		<layer group="106" image="60"/>
+		<layer src="marketbuyer_sw_08"/>
+	</image>
+	<image id="marketbuyer_sw_09">
+		<layer group="106" image="68"/>
+		<layer src="marketbuyer_sw_09"/>
+	</image>
+	<image id="marketbuyer_sw_10">
+		<layer group="106" image="76"/>
+		<layer src="marketbuyer_sw_10"/>
+	</image>
+	<image id="marketbuyer_sw_11">
+		<layer group="106" image="84"/>
+		<layer src="marketbuyer_sw_11"/>
+	</image>
+	<image id="marketbuyer_sw_12">
+		<layer group="106" image="92"/>
+		<layer src="marketbuyer_sw_12"/>
+	</image>
+	<!-- Note: Orange Market Lady Walking animation frames WEST DIRECTION 01-12 -->
+	<image id="marketbuyer_w_01">
+		<layer group="106" image="5"/>
+		<layer src="marketbuyer_w_01"/>
+	</image>
+	<image id="marketbuyer_w_02">
+		<layer group="106" image="13"/>
+		<layer src="marketbuyer_w_02"/>
+	</image>
+	<image id="marketbuyer_w_03">
+		<layer group="106" image="21"/>
+		<layer src="marketbuyer_w_03"/>
+	</image>
+	<image id="marketbuyer_w_04">
+		<layer group="106" image="29"/>
+		<layer src="marketbuyer_w_04"/>
+	</image>
+	<image id="marketbuyer_w_05">
+		<layer group="106" image="37"/>
+		<layer src="marketbuyer_w_05"/>
+	</image>
+	<image id="marketbuyer_w_06">
+		<layer group="106" image="45"/>
+		<layer src="marketbuyer_w_06"/>
+	</image>
+	<image id="marketbuyer_w_07">
+		<layer group="106" image="53"/>
+		<layer src="marketbuyer_w_07"/>
+	</image>
+	<image id="marketbuyer_w_08">
+		<layer group="106" image="61"/>
+		<layer src="marketbuyer_w_08"/>
+	</image>
+	<image id="marketbuyer_w_09">
+		<layer group="106" image="69"/>
+		<layer src="marketbuyer_w_09"/>
+	</image>
+	<image id="marketbuyer_w_10">
+		<layer group="106" image="77"/>
+		<layer src="marketbuyer_w_10"/>
+	</image>
+	<image id="marketbuyer_w_11">
+		<layer group="106" image="85"/>
+		<layer src="marketbuyer_w_11"/>
+	</image>
+	<image id="marketbuyer_w_12">
+		<layer group="106" image="93"/>
+		<layer src="marketbuyer_w_12"/>
+	</image>
+	<!-- Note: Orange Market Lady Walking animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="marketbuyer_nw_01">
+		<layer group="106" image="6"/>
+		<layer src="marketbuyer_nw_01"/>
+	</image>
+	<image id="marketbuyer_nw_02">
+		<layer group="106" image="14"/>
+		<layer src="marketbuyer_nw_02"/>
+	</image>
+	<image id="marketbuyer_nw_03">
+		<layer group="106" image="22"/>
+		<layer src="marketbuyer_nw_03"/>
+	</image>
+	<image id="marketbuyer_nw_04">
+		<layer group="106" image="30"/>
+		<layer src="marketbuyer_nw_04"/>
+	</image>
+	<image id="marketbuyer_nw_05">
+		<layer group="106" image="38"/>
+		<layer src="marketbuyer_nw_05"/>
+	</image>
+	<image id="marketbuyer_nw_06">
+		<layer group="106" image="46"/>
+		<layer src="marketbuyer_nw_06"/>
+	</image>
+	<image id="marketbuyer_nw_07">
+		<layer group="106" image="54"/>
+		<layer src="marketbuyer_nw_07"/>
+	</image>
+	<image id="marketbuyer_nw_08">
+		<layer group="106" image="62"/>
+		<layer src="marketbuyer_nw_08"/>
+	</image>
+	<image id="marketbuyer_nw_09">
+		<layer group="106" image="70"/>
+		<layer src="marketbuyer_nw_09"/>
+	</image>
+	<image id="marketbuyer_nw_10">
+		<layer group="106" image="78"/>
+		<layer src="marketbuyer_nw_10"/>
+	</image>
+	<image id="marketbuyer_nw_11">
+		<layer group="106" image="86"/>
+		<layer src="marketbuyer_nw_11"/>
+	</image>
+	<image id="marketbuyer_nw_12">
+		<layer group="106" image="94"/>
+		<layer src="marketbuyer_nw_12"/>
+	</image>
+	<!-- Note: Orange Market Lady Walking animation frames NORTH DIRECTION 01-12 -->
+	<image id="marketbuyer_n_01">
+		<layer group="106" image="7"/>
+		<layer src="marketbuyer_n_01"/>
+	</image>
+	<image id="marketbuyer_n_02">
+		<layer group="106" image="15"/>
+		<layer src="marketbuyer_n_02"/>
+	</image>
+	<image id="marketbuyer_n_03">
+		<layer group="106" image="23"/>
+		<layer src="marketbuyer_n_03"/>
+	</image>
+	<image id="marketbuyer_n_04">
+		<layer group="106" image="31"/>
+		<layer src="marketbuyer_n_04"/>
+	</image>
+	<image id="marketbuyer_n_05">
+		<layer group="106" image="39"/>
+		<layer src="marketbuyer_n_05"/>
+	</image>
+	<image id="marketbuyer_n_06">
+		<layer group="106" image="47"/>
+		<layer src="marketbuyer_n_06"/>
+	</image>
+	<image id="marketbuyer_n_07">
+		<layer group="106" image="55"/>
+		<layer src="marketbuyer_n_07"/>
+	</image>
+	<image id="marketbuyer_n_08">
+		<layer group="106" image="63"/>
+		<layer src="marketbuyer_n_08"/>
+	</image>
+	<image id="marketbuyer_n_09">
+		<layer group="106" image="71"/>
+		<layer src="marketbuyer_n_09"/>
+	</image>
+	<image id="marketbuyer_n_10">
+		<layer group="106" image="79"/>
+		<layer src="marketbuyer_n_10"/>
+	</image>
+	<image id="marketbuyer_n_11">
+		<layer group="106" image="87"/>
+		<layer src="marketbuyer_n_11"/>
+	</image>
+	<image id="marketbuyer_n_12">
+		<layer group="106" image="95"/>
+		<layer src="marketbuyer_n_12"/>
+	</image>
 </assetlist>
