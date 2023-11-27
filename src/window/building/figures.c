@@ -97,6 +97,8 @@ static int big_people_image(figure_type type)
             return assets_get_image_id("Walkers", "Barkeep Portrait");
         case FIGURE_DEPOT_CART_PUSHER:
             return assets_lookup_image_id(ASSET_OX);
+        case FIGURE_MARKET_SUPPLIER:
+            return assets_get_image_id("Walkers", "marketbuyer_portrait_overlay");
         default:
             break;
     }

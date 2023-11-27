@@ -314,7 +314,14 @@ void figure_supplier_action(figure *f)
                 dir * 12 + f->image_offset;
         }
     } else {
-        figure_image_update(f, image_group(GROUP_FIGURE_MARKET_LADY));
+        int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
+        if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+            f->image_id = assets_get_image_id("Walkers", "marketbuyer_death_01") +
+                figure_image_corpse_offset(f);
+        } else {
+            f->image_id = assets_get_image_id("Walkers", "marketbuyer_ne_01") +
+                dir * 12 + f->image_offset;
+        }
     }
 }
 
