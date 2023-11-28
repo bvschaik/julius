@@ -132,6 +132,13 @@ static void update_buildings(void)
 
 static void update_terrain(void)
 {
+    int venus_gt = building_monument_working(BUILDING_GRAND_TEMPLE_VENUS);
+    int value;
+    int value_bonus;
+    int step;
+    int step_size;
+    int range;
+
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
@@ -156,11 +163,23 @@ static void update_terrain(void)
                     model->desirability_range);
             } else if (terrain & TERRAIN_GARDEN) {
                 const model_building *model = model_get_building(BUILDING_GARDENS);
+                value = model->desirability_value;
+                step = model->desirability_step;
+                step_size = model->desirability_step_size;
+                range = model->desirability_range;
+
+                if (venus_gt) {
+                    value_bonus = ((value / 4) > 1) ? (value / 4) : 1;
+                    value += value_bonus;
+                    step += 1;
+                    range += 1;
+                }
+
                 add_to_terrain(x, y, 1,
-                    model->desirability_value,
-                    model->desirability_step,
-                    model->desirability_step_size,
-                    model->desirability_range);
+                    value,
+                    step,
+                    step_size,
+                    range);
             } else if (terrain & TERRAIN_RUBBLE) {
                 add_to_terrain(x, y, 1, -2, 1, 1, 2);
             } else if (terrain & TERRAIN_HIGHWAY) {
