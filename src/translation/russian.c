@@ -341,6 +341,7 @@ static translation_string all_strings[] = {
     {TR_MESS_HALL_SPECIAL_ORDERS_HEADER, "Указания посту снабжения"},
     {TR_BUILDING_MESS_HALL_NO_SOLDIERS, "У вас нет солдат, которых нужно накормить." },
     {TR_BUILDING_MESS_HALL_MONTHS_FOOD_STORED, "Запасов продуктов на месяцев:" },
+    {TR_BUILDING_MESS_HALL_NO_FOOD, "На этом пункте снабжения есть рабочии, но в данный момент они ищут доступный источник еды." },
     {TR_BUILDING_BARRACKS_FOOD_WARNING, "Недостаток продовольствия на вашем посту снабжения замедляет вербовку солдат." },
     {TR_BUILDING_BARRACKS_FOOD_WARNING_2, "Критический недостаток продовольствия на вашем посту снабжения сильно затрудняет вербовку солдат." },
     {TR_BUILDING_LEGION_FOOD_WARNING_1, "Недавний недостаток продовольствия снизил боевой дух" },
@@ -426,6 +427,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_CARAVANSERAI_POLICY_2, "Вы покупаете товар на 20% дешевле, но и продаете на 10% дешевле." },
     {TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, "Соглашение по объему" },
     {TR_BUILDING_CARAVANSERAI_POLICY_3, "Вместимость караванов увеличивается на 4 единицы, караван-сараю нужно на 20% больше еды." },
+    {TR_BUILDING_CARAVANSERAI_NO_FOOD, "В этом каравансаре есть рабочии, но в данный момент они ищут доступный источник еды." },
     {TR_BUILDING_LIGHTHOUSE, "Маяк" },
     {TR_BUILDING_LIGHTHOUSE_PHASE_1, "(Фундамент)" },
     {TR_BUILDING_LIGHTHOUSE_PHASE_2, "(Постамент)" },
@@ -1345,6 +1347,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SHRINE_VENUS, "Жертвенник Венеры"},
     {TR_BUILDING_SHRINE_VENUS_DESC, "PLACEHOLDER" },
     {TR_BUILDING_MENU_SHRINES, "Жертвенник"},
+    {TR_BUILDING_INFO_TOTAL_FOOD, "Всего еды:" },
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
