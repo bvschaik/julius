@@ -1032,6 +1032,8 @@ static void get_tooltip(tooltip_context *c)
         } else if (building_type_is_roadblock(btype)) {
             window_building_roadblock_get_tooltip_walker_permissions(&translation);
         }
+    } else if (building_is_house(btype)) {
+        precomposed_text = window_building_house_get_tooltip(&context);
     } else if (btype == BUILDING_GRANARY) {
         window_building_granary_get_tooltip_distribution_permissions(&translation);
     } else if (btype == BUILDING_WAREHOUSE) {

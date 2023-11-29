@@ -332,6 +332,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_2, "The diverse, nutritious diet enjoyed by your soldiers greatly increases morale."},
     {TR_BUILDING_MESS_HALL_NO_SOLDIERS, "You have no soldiers to feed." },
     {TR_BUILDING_MESS_HALL_MONTHS_FOOD_STORED, "Months of food stored:" },
+    {TR_BUILDING_MESS_HALL_NO_FOOD, "This supply post has employees, but they are currently looking for an available source of food." },
     {TR_MESS_HALL_SPECIAL_ORDERS_HEADER, "Supply post instructions"},
     {TR_BUILDING_BARRACKS_FOOD_WARNING, "Food shortages at your supply post are slowing soldier recruitment."},
     {TR_BUILDING_BARRACKS_FOOD_WARNING_2, "Critical food shortages at your supply post are crippling soldier recruitment." },
@@ -419,6 +420,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_CARAVANSERAI_POLICY_2, "Landed buyer's policy: Land imports are 20% cheaper, but land exports earn 10% less." },
     {TR_BUILDING_CARAVANSERAI_POLICY_3_TITLE, "Consilium quantitas terrae" },
     {TR_BUILDING_CARAVANSERAI_POLICY_3, "Landed quantity policy: Trade caravans carry 4 additional goods, but the Caravanserai consumes 20% more food." },
+    {TR_BUILDING_CARAVANSERAI_NO_FOOD, "This caravanserai has employees, but they are currently looking for an available source of food." },
     {TR_BUILDING_LIGHTHOUSE_PHASE_1, "(Foundation)" },
     {TR_BUILDING_LIGHTHOUSE_PHASE_2, "(Pedestal)" },
     {TR_BUILDING_LIGHTHOUSE_PHASE_3, "(Tower)" },
@@ -1347,7 +1349,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SHRINE_VENUS, "Venus altar"},
     {TR_BUILDING_SHRINE_VENUS_DESC, "PLACEHOLDER VENUS ALTAR DESCRIPTION" },
     {TR_BUILDING_MENU_SHRINES, "Altar" },
-
+    {TR_BUILDING_INFO_TOTAL_FOOD, "Total food:" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
