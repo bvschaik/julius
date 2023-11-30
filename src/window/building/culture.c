@@ -637,35 +637,29 @@ void window_building_draw_shrine(building_info_context *c)
     c->help_id = 67;
     building_type type = building_get(c->building_id)->type;
     translation_key name;
-    translation_key description;
     switch (type) {
         case BUILDING_SHRINE_CERES:
             name = TR_BUILDING_SHRINE_CERES;
-            description = TR_BUILDING_SHRINE_CERES_DESC;
             break;
         case BUILDING_SHRINE_NEPTUNE:
             name = TR_BUILDING_SHRINE_NEPTUNE;
-            description = TR_BUILDING_SHRINE_NEPTUNE_DESC;
             break;
         case BUILDING_SHRINE_MERCURY:
             name = TR_BUILDING_SHRINE_MERCURY;
-            description = TR_BUILDING_SHRINE_MERCURY_DESC;
             break;
         case BUILDING_SHRINE_MARS:
             name = TR_BUILDING_SHRINE_MARS;
-            description = TR_BUILDING_SHRINE_MARS_DESC;
             break;
         case BUILDING_SHRINE_VENUS:
         default:
             name = TR_BUILDING_SHRINE_VENUS;
-            description = TR_BUILDING_SHRINE_VENUS_DESC;
             break;
     }
     window_building_play_sound(c, "wavs/oracle.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(name),
         c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, description);
+    window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_SHRINE_DESC);
 }
 
 
