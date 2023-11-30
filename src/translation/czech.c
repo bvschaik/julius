@@ -22,7 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "Adresář, který jste zvolili neobsahuje platný jazykový balíček. "
         "Prosím zkontrolujte záznam pro výskyt chyb."},
-    {TR_BUILD_ALL_TEMPLES, "Vše"},
+    {TR_AUTO_CYCLE_TEMPLES, "Vše"},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Zrušit"},
     {TR_BUTTON_RESET_DEFAULTS, "Výchozí nastavení"},

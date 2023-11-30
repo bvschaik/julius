@@ -22,7 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "指定路徑未檢測到有效語言包。"
         "請檢視日志查看錯誤。"},
-    {TR_BUILD_ALL_TEMPLES, "全   部"},
+    {TR_AUTO_CYCLE_TEMPLES, "全   部"},
     {TR_BUTTON_OK, "確定"},
     {TR_BUTTON_CANCEL, "取消"},
     {TR_BUTTON_RESET_DEFAULTS, "重置默認"},

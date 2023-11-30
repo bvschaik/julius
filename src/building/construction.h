@@ -17,6 +17,10 @@ void building_construction_set_type(building_type type);
 
 void building_construction_clear_type(void);
 
+int building_construction_is_auto_cycling(void);
+
+void building_construction_toggle_auto_cycle(void);
+
 int building_construction_can_rotate(void);
 
 building_type building_construction_type(void);

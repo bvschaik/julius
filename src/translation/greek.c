@@ -23,7 +23,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "Ο κατάλογος που επιλέξατε δεν περιέχει έγκυρο πακέτο γλωσσών. "
         "Ελέγξτε το αρχείο καταγραφής για σφάλματα."},
-    {TR_BUILD_ALL_TEMPLES, "Όλοι"},
+    {TR_AUTO_CYCLE_TEMPLES, "Όλοι"},
     {TR_BUTTON_OK, "ΟΚ"},
     {TR_BUTTON_CANCEL, "Ακύρωση"},
     {TR_BUTTON_RESET_DEFAULTS, "Επαναφορά προεπιλογών"},

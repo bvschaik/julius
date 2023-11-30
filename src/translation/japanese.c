@@ -20,7 +20,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_TITLE, "不正な言語ディレクトリ"},
     {TR_INVALID_LANGUAGE_MESSAGE,
         "選択されたディレクトリには有効な言語パックがありません。 ログでエラー詳細をご確認ください。"},
-    {TR_BUILD_ALL_TEMPLES, "すべて"},
+    {TR_AUTO_CYCLE_TEMPLES, "すべて"},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "キャンセル"},
     {TR_BUTTON_RESET_DEFAULTS, "デフォルトに戻す"},

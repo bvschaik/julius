@@ -22,7 +22,7 @@ static translation_string all_strings[] = {
     {TR_INVALID_LANGUAGE_MESSAGE,
         "Выбранная папка не содержит необходимых файлов локализации."
         "Для просмотра ошибок обратитесь к log-файлу."},
-    {TR_BUILD_ALL_TEMPLES, "Все"},
+    {TR_AUTO_CYCLE_TEMPLES, "Все"},
     {TR_BUTTON_OK, "Да"},
     {TR_BUTTON_CANCEL, "Отмена"},
     {TR_BUTTON_RESET_DEFAULTS, "По умолчанию"},

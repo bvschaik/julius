@@ -54,7 +54,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_MENU_TREES, "Bäume"},
     {TR_BUILDING_MENU_PATHS, "Pfade"},
     {TR_BUILDING_MENU_PARKS, "Parkanlagen"},
-    {TR_BUILD_ALL_TEMPLES, "Alle"},
+    {TR_AUTO_CYCLE_TEMPLES, "Alle"},
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Abbrechen"},
     {TR_BUTTON_RESET_DEFAULTS, "Zurücksetzen"},

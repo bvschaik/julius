@@ -65,7 +65,6 @@ enum {
 
 static struct {
     building_type type;
-    building_type sub_type;
     int in_progress;
     map_tile start;
     map_tile end;
@@ -82,6 +81,7 @@ static struct {
     int start_offset_x_view;
     int start_offset_y_view;
     int cycle_step;
+    int auto_cycling;
 } data;
 
 static int last_items_cleared;
@@ -149,11 +149,7 @@ int building_construction_cycle_forward(void)
                 } else { // Otherwise pick the first one
                     new_type = building_cycles[i].array[j + 1];
                 }
-                if (building_cycles[i].array[j] == data.type) {
-                    data.type = new_type;
-                } else {
-                    data.sub_type = new_type;
-                }
+                data.type = new_type;
 
                 return 1;
             }
@@ -183,17 +179,23 @@ int building_construction_cycle_back(void)
                 } else { // Otherwise pick the previous element
                     new_type = building_cycles[i].array[j - 1];
                 }
-                if (building_cycles[i].array[j] == data.type) {
-                    data.type = new_type;
-                } else {
-                    data.sub_type = new_type;
-                }
+                data.type = new_type;
 
                 return 1;
             }
         }
     }
     return 0;
+}
+
+int building_construction_is_auto_cycling(void)
+{
+    return data.auto_cycling;
+}
+
+void building_construction_toggle_auto_cycle(void)
+{
+    data.auto_cycling ^= 1;
 }
 
 static void mark_construction(int x, int y, int size, int terrain, int absolute_xy)
@@ -486,7 +488,6 @@ void building_construction_set_type(building_type type)
         building_rotation_remove_rotation();
     }
     data.type = type;
-    data.sub_type = BUILDING_NONE;
     data.in_progress = 0;
     data.start.x = 0;
     data.start.y = 0;
@@ -527,15 +528,6 @@ void building_construction_set_type(building_type type)
             case BUILDING_TOWER:
                 data.required_terrain.wall = 1;
                 break;
-            case BUILDING_MENU_SMALL_TEMPLES:
-                data.sub_type = BUILDING_SMALL_TEMPLE_CERES;
-                break;
-            case BUILDING_MENU_LARGE_TEMPLES:
-                data.sub_type = BUILDING_LARGE_TEMPLE_CERES;
-                break;
-            case BUILDING_MENU_SHRINES:
-                data.sub_type = BUILDING_SHRINE_CERES;
-                break;
             case BUILDING_LIGHTHOUSE:
             case BUILDING_SAND_PIT:
                 data.required_terrain.distant_water = 1;
@@ -551,7 +543,6 @@ void building_construction_set_type(building_type type)
 void building_construction_clear_type(void)
 {
     data.cost_preview = 0;
-    data.sub_type = BUILDING_NONE;
     data.type = BUILDING_NONE;
     data.in_progress = 0;
     building_rotation_remove_rotation();
@@ -559,7 +550,7 @@ void building_construction_clear_type(void)
 
 building_type building_construction_type(void)
 {
-    return data.sub_type ? data.sub_type : data.type;
+    return data.type;
 }
 
 int building_construction_cost(void)
@@ -1073,7 +1064,7 @@ void building_construction_place(void)
         return;
     }
 
-    if (data.type == BUILDING_MENU_SMALL_TEMPLES || data.type == BUILDING_MENU_LARGE_TEMPLES || data.type == BUILDING_MENU_SHRINES) {
+    if (data.auto_cycling && building_construction_type_can_cycle(data.type)) {
         building_rotation_rotate_forward();
     }
     formation_move_herds_away(x_end, y_end);

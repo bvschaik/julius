@@ -174,11 +174,13 @@ static int get_sidebar_x_offset(void)
     return view_x + view_width;
 }
 
-static int is_all_button(building_type type)
+static int is_auto_cycle_button(building_type type)
 {
     return (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) ||
         (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES) ||
-        (type == BUILDING_MENU_SHRINES && data.selected_submenu == BUILD_MENU_SHRINES);
+        (type == BUILDING_MENU_SHRINES && data.selected_submenu == BUILD_MENU_SHRINES) ||
+        (type == BUILDING_MENU_TREES && data.selected_submenu == BUILD_MENU_TREES) ||
+        (type == BUILDING_MENU_PATHS && data.selected_submenu == BUILD_MENU_PATHS);
 }
 
 static void draw_menu_buttons(void)
@@ -191,14 +193,19 @@ static void draw_menu_buttons(void)
         label_draw(item_x_align, data.y_offset + MENU_Y_OFFSET + MENU_ITEM_HEIGHT * i, 18,
             data.focus_button_id == i + 1 ? 1 : 2);
         int type = building_menu_type(data.selected_submenu, item_index);
-        if (is_all_button(type)) {
-            text_draw_centered(translation_for(TR_BUILD_ALL_TEMPLES),
+
+        if (is_auto_cycle_button(type)) {
+            text_draw_centered(translation_for(TR_AUTO_CYCLE_TEMPLES),
                 item_x_align + MENU_TEXT_X_OFFSET, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
                 MENU_ITEM_WIDTH, FONT_NORMAL_GREEN, 0);
-        } else {
-            lang_text_draw_centered(28, type, item_x_align + MENU_TEXT_X_OFFSET, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
-                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
+            lang_text_draw_centered(18, 5 - building_construction_is_auto_cycling(), x_offset - MENU_ITEM_MONEY_OFFSET,
+                data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i, MENU_ITEM_MONEY_OFFSET,
+                FONT_NORMAL_GREEN);
+            continue;
         }
+        
+        lang_text_draw_centered(28, type, item_x_align + MENU_TEXT_X_OFFSET, data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
+                MENU_ITEM_WIDTH, FONT_NORMAL_GREEN);
         if (type == BUILDING_DRAGGABLE_RESERVOIR) {
             type = BUILDING_RESERVOIR;
         }
@@ -209,25 +216,10 @@ static void draw_menu_buttons(void)
         if (type == BUILDING_MENU_GRAND_TEMPLES) {
             cost = 0;
         }
-        if (type == BUILDING_MENU_SMALL_TEMPLES && data.selected_submenu == BUILD_MENU_SMALL_TEMPLES) {
-            cost = model_get_building(BUILDING_SMALL_TEMPLE_CERES)->cost;
-        }
-        if (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES) {
-            cost = model_get_building(BUILDING_LARGE_TEMPLE_CERES)->cost;
-        }
-        if (type == BUILDING_MENU_SHRINES && data.selected_submenu == BUILD_MENU_SHRINES) {
-            cost = model_get_building(BUILDING_SHRINE_CERES)->cost;
-        }
         if (cost) {
             text_draw_money(cost, x_offset - MENU_ITEM_MONEY_OFFSET,
                 data.y_offset + MENU_Y_OFFSET + 4 + MENU_ITEM_HEIGHT * i,
                 FONT_NORMAL_GREEN);
-        }
-
-        // Don't draw icons for temple submenus
-        if ((type == BUILDING_MENU_SMALL_TEMPLES || type == BUILDING_MENU_LARGE_TEMPLES || type == BUILDING_MENU_SHRINES) &&
-            data.selected_submenu == BUILD_MENU_TEMPLES) {
-            continue;
         }
 
         int icons_drawn = 0;
@@ -244,7 +236,6 @@ static void draw_menu_buttons(void)
                 data.y_offset + MENU_Y_OFFSET + MENU_ICON_Y_OFFSET + MENU_ITEM_HEIGHT * i, COLOR_MASK_NONE, SCALE_NONE);
             icons_drawn++;
         }
-
     }
 }
 
@@ -313,6 +304,12 @@ static void button_menu_item(int item)
     widget_city_clear_current_tile();
 
     building_type type = building_menu_type(data.selected_submenu, item);
+
+    if (is_auto_cycle_button(type)) {
+        building_construction_toggle_auto_cycle();
+        window_invalidate();
+        return;
+    }
     building_construction_set_type(type);
 
     if (set_submenu_for_type(type)) {
