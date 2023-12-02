@@ -186,7 +186,7 @@ static void init_audio(void)
         if (data.should_play_background_music) {
             sound_device_stop_music();
             int volume = setting_sound(SOUND_MUSIC)->volume;
-            sound_device_play_music(custom_messages_get_background_music(data.custom_msg), volume);
+            sound_device_play_music(custom_messages_get_background_music(data.custom_msg), volume, 0);
         }
     }
 }

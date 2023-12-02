@@ -62,8 +62,8 @@ static void play_track(int track)
     const char *mp3_track = dir_get_file(mp3_tracks[track], NOT_LOCALIZED);
 
     int volume = setting_sound(SOUND_MUSIC)->volume;
-    if (!mp3_track || !sound_device_play_music(mp3_track, volume)) {
-        sound_device_play_music(dir_get_file(tracks[track], NOT_LOCALIZED), volume);
+    if (!mp3_track || !sound_device_play_music(mp3_track, volume, 1)) {
+        sound_device_play_music(dir_get_file(tracks[track], NOT_LOCALIZED), volume, 1);
     }
     data.current_track = track;
 }

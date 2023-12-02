@@ -212,7 +212,7 @@ static void load_music_for_vita(const char *filename)
 }
 #endif
 
-int sound_device_play_music(const char *filename, int volume_pct)
+int sound_device_play_music(const char *filename, int volume_pct, int loop)
 {
     if (data.initialized && config_get(CONFIG_GENERAL_ENABLE_AUDIO)) {
         sound_device_stop_music();
@@ -240,7 +240,7 @@ int sound_device_play_music(const char *filename, int volume_pct)
             SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
                 "Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
         } else {
-            if (Mix_PlayMusic(data.music, -1) == -1) {
+            if (Mix_PlayMusic(data.music, loop ? -1 : 0) == -1) {
                 data.music = 0;
                 SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
                     "Error playing music file '%s'. Reason: %s", filename, Mix_GetError());
