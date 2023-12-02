@@ -164,6 +164,11 @@ static int get_height_id(void)
             case BUILDING_HEDGE_GATE_LIGHT:
             case BUILDING_PALISADE_GATE:
             case BUILDING_GLADIATOR_STATUE:
+            case BUILDING_SHRINE_CERES:
+            case BUILDING_SHRINE_NEPTUNE:
+            case BUILDING_SHRINE_MERCURY:
+            case BUILDING_SHRINE_MARS:
+            case BUILDING_SHRINE_VENUS:
                 return 1;
 
             case BUILDING_SENATE_1_UNUSED:
