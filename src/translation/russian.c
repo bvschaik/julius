@@ -241,7 +241,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_WORK_CAMP_DESC, "Здесь собираются рабочие для перевозки материалов на стройки." },
     {TR_BUILDING_DEPOT, "Станция повозок"},
     {TR_BUILDING_DEPOT_DESC, "Станция повозок отправляет тележки для перемещения товаров между складами и амбарами в соответствии с заказом. Тележки должны возвращаться на свой склад после каждой доставки."},
-    {TR_BUILDING_CAT_DEPOT, "Станция кошек"},
+    {TR_BUILDING_CAT_DEPOT, "Станция мурвозок"},
     {TR_HEADER_HOUSING, "Жилье" },
     {TR_ADVISOR_HOUSING_ROOM, "В городском жилище есть места для" },
     {TR_ADVISOR_HOUSING_NO_ROOM, "В городе нет свободных мест." },
