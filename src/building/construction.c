@@ -128,6 +128,19 @@ int building_construction_type_num_cycles(building_type type)
     return 1;
 }
 
+int building_construction_type_cycle_steps(building_type type)
+{
+    for (int i = 0; i < BUILDING_CYCLES; i++) {
+        int size = building_cycles[i].size;
+        for (int j = 0; j < size; j++) {
+            if (building_cycles[i].array[j] == type) {
+                return building_cycles[i].rotations_to_next;
+            }
+        }
+    }
+    return 1;
+}
+
 int building_construction_cycle_forward(void)
 {
     if (data.type == BUILDING_NONE) {
@@ -1065,7 +1078,9 @@ void building_construction_place(void)
     }
 
     if (data.auto_cycling && building_construction_type_can_cycle(data.type)) {
-        building_rotation_rotate_forward();
+        for (int i = 0; i < building_construction_type_cycle_steps(data.type); i++) {
+            building_rotation_rotate_forward();
+        }
     }
     formation_move_herds_away(x_end, y_end);
     city_finance_process_construction(placement_cost);

@@ -11,6 +11,8 @@ int building_construction_type_can_cycle(building_type type);
 
 int building_construction_type_num_cycles(building_type type);
 
+int building_construction_type_cycle_steps(building_type type);
+
 void building_construction_set_cost(int cost);
 
 void building_construction_set_type(building_type type);
