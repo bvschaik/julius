@@ -223,7 +223,7 @@ const model_building MODEL_SAND_PIT = { 40,-6,1,1,4,10 };
 const model_building MODEL_BRICKWORKS = { 80,-3,1,1,4,10 };
 const model_building MODEL_CONCRETE_MAKER = { 60,-3,1,1,4,10 };
 const model_building MODEL_CITY_MINT = { 250,-3,1,1,3,40 };
-const model_building MODEL_DEPOT = { 100,-3,1,1,2,10 };
+const model_building MODEL_DEPOT = { 100,-3,1,1,2,15 };
 
 const model_building *model_get_building(building_type type)
 {
