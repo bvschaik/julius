@@ -87,6 +87,7 @@ void city_ratings_peace_building_destroyed(building_type type)
         case BUILDING_TOWER:
         case BUILDING_WATCHTOWER:
         case BUILDING_PALISADE:
+        case BUILDING_PALISADE_GATE:
             break;
         default:
             city_data.ratings.peace_destroyed_buildings++;
