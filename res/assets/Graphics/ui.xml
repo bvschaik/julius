@@ -244,4 +244,11 @@
 	<image src="Rhodes"/>
 	<!-- Center Camera button by Ouaz -->
 	<image id="Center Camera Button" src="Center_Camera_Button"/>
+	<!-- Risk UI Widgets -->
+	<image id="Collapse_Widget" src="Collapse_Widget"/>
+	<image id="Collapse_Widget_NoRisk" src="Collapse_Widget_NoRisk"/>
+	<image id="Fire_Widget" src="Fire_Widget"/>
+	<image id="Fire_Widget_NoRisk" src="Fire_Widget_NoRisk"/>
+	<image id="Health_Widget" src="Health_Widget"/>
+	<image id="Health_Widget_NoRisk" src="Health_Widget_NoRisk"/>
 </assetlist>
