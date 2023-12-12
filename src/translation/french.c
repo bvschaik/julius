@@ -100,7 +100,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_DELIVER_ONLY_TO_ACCEPTING_GRANARIES, "Pas de nourriture livrée aux greniers allant chercher les biens"},
     {TR_CONFIG_ALL_HOUSES_MERGE, "Tous les logements de même rang fusionnent"},
     {TR_CONFIG_WINE_COUNTS_IF_OPEN_TRADE_ROUTE, "Ouvrir des routes commerciales fournit différents types de vins"},
-    {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Les effondrements coûtent de l'argent au lieu de détruire les mines"},
+    {TR_CONFIG_RANDOM_COLLAPSES_TAKE_MONEY, "Mines et puits effondrés coûtent de l'argent sans être détruits"},
     {TR_CONFIG_MULTIPLE_BARRACKS, "Autoriser la construction de plusieurs casernes"},
     {TR_CONFIG_NOT_ACCEPTING_WAREHOUSES, "Les entrepôts et les greniers n'acceptent rien par défaut"},
     {TR_CONFIG_HOUSES_DONT_EXPAND_INTO_GARDENS, "Les logements ne s'étendent pas sur les jardins"},
@@ -1345,7 +1345,9 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SHRINE_NEPTUNE, "Autel de Neptune"},
     {TR_BUILDING_SHRINE_VENUS, "Autel de Vénus"},
     {TR_BUILDING_MENU_SHRINES, "Autel" },
-    {TR_BUILDING_INFO_TOTAL_FOOD, "Nourriture (total) :" },
+    {TR_BUILDING_INFO_TOTAL_FOOD, "Total vivres :" },
+    {TR_BUILDING_FORMAL_GARDENS, "Jardins aménagés" },
+    {TR_BUILDING_OVERGROWN_GARDENS, "Jardins naturels" },
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
