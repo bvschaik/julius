@@ -503,7 +503,7 @@ int platform_file_manager_remove_file(const char *filename)
 #ifdef USE_FILE_CACHE
     platform_file_manager_cache_delete_file_info(filename);
 #endif
-    file_name *wfile = set_file_name(filename);
+    const file_name *wfile = set_file_name(filename);
     int result = fs_remove(wfile);
     free_file_name(wfile);
 #if defined(__EMSCRIPTEN__)
