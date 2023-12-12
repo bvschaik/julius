@@ -1345,6 +1345,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SHRINE_VENUS, "Святилище Венеры"},
     {TR_BUILDING_MENU_SHRINES, "Святилищя"},
     {TR_BUILDING_INFO_TOTAL_FOOD, "Всего еды:" },
+    {TR_BUILDING_FORMAL_GARDENS, "Формальные сады" },
+    {TR_BUILDING_OVERGROWN_GARDENS, "Заросшие сады" },
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
