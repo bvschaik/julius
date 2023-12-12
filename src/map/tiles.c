@@ -29,7 +29,8 @@
 #define FORBIDDEN_TERRAIN_RUBBLE (TERRAIN_AQUEDUCT | TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP |\
             TERRAIN_ROAD | TERRAIN_BUILDING | TERRAIN_GARDEN)
 
-#define EXTRA_GARDEN_VARIANTS 2
+#define GARDEN_VARIANTS 2
+#define GARDEN_IMAGES_PER_VARIANT 4
 
 static int aqueduct_include_construction = 0;
 static int highway_top_tile_offsets[4] = { 0, -GRID_SIZE, -1, -GRID_SIZE - 1 };
@@ -106,7 +107,7 @@ static int is_all_terrain_in_area(int x, int y, int size, int terrain)
 static int is_updatable_rock(int grid_offset)
 {
     return map_terrain_is(grid_offset, TERRAIN_ROCK) &&
-        !map_property_is_plaza_or_earthquake(grid_offset) &&
+        !map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset) &&
         !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP);
 }
 
@@ -211,64 +212,85 @@ static void clear_garden_image(int x, int y, int grid_offset)
     if (map_terrain_is(grid_offset, TERRAIN_GARDEN) &&
         !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
         map_image_set(grid_offset, 0);
-
         map_property_set_multi_tile_size(grid_offset, 1);
-
-
         map_property_mark_draw_tile(grid_offset);
     }
+    if (!map_terrain_is(grid_offset, TERRAIN_GARDEN | TERRAIN_ROAD | TERRAIN_ROCK)) {
+        map_property_clear_plaza_earthquake_or_overgrown_garden(grid_offset);
+    }
+}
+
+static int is_large_garden(int x, int y, int is_overgrown_garden)
+{
+    if (!map_grid_is_inside(x, y, 2)) {
+        return 0;
+    }
+    for (int dy = 0; dy < 2; dy++) {
+        for (int dx = 0; dx < 2; dx++) {
+            int grid_offset = map_grid_offset(x + dx, y + dy);
+            if ((map_terrain_get(grid_offset) & TERRAIN_NOT_CLEAR) != TERRAIN_GARDEN) {
+                return 0;
+            }
+            int grid_is_overgrown_garden = map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset) != 0;
+            if (grid_is_overgrown_garden != is_overgrown_garden) {
+                return 0;
+            }
+            if (map_image_at(grid_offset) != 0) {
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
 
 static void set_garden_image(int x, int y, int grid_offset)
 {
-    int image_id;
-    static int alt_garden_image_ids[EXTRA_GARDEN_VARIANTS];
-    if (!alt_garden_image_ids[0]) {
-        alt_garden_image_ids[0] = assets_get_image_id("Aesthetics", "Garden_Alt_01");
-        alt_garden_image_ids[1] = assets_get_image_id("Aesthetics", "Garden_Alt_02");
+    static int garden_image_ids[GARDEN_VARIANTS][GARDEN_IMAGES_PER_VARIANT];
+    if (!garden_image_ids[0][1]) {
+        garden_image_ids[0][0] = assets_get_image_id("Aesthetics", "Garden_Alt_01");
+        garden_image_ids[0][1] = image_group(GROUP_TERRAIN_GARDEN) + 1;
+        garden_image_ids[0][2] = garden_image_ids[0][1] + 1;
+        garden_image_ids[0][3] = garden_image_ids[0][0] + 1;
+        
+        garden_image_ids[1][0] = assets_get_image_id("Aesthetics", "Overgrown_Garden_01");
+        garden_image_ids[1][1] = garden_image_ids[1][0] + 1;
+        garden_image_ids[1][2] = garden_image_ids[1][0] + 2;
+        garden_image_ids[1][3] = garden_image_ids[1][0] + 3;
     }
-    if (map_terrain_is(grid_offset, TERRAIN_GARDEN) && !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
+
+    if (map_terrain_is(grid_offset, TERRAIN_GARDEN) &&
+        !map_terrain_is(grid_offset, TERRAIN_ELEVATION | TERRAIN_ACCESS_RAMP)) {
         if (!map_image_at(grid_offset)) {
-            image_id = image_group(GROUP_TERRAIN_GARDEN);
-            if (is_all_terrain_in_area(x, y, 2, TERRAIN_GARDEN)) {
-                switch (map_random_get(grid_offset) & 3) {
-                    case 0: case 1:
-                        image_id += 6;
-                        break;
-                    case 2:
-                        image_id += 5;
-                        break;
-                    case 3:
-                        image_id += 4;
-                        break;
-                }
-                map_building_tiles_add(0, x, y, 2, image_id, TERRAIN_GARDEN);
-            } else {
-                if (y & 1) {
-                    switch (x & 3) {
-                        case 0: case 2:
-                            image_id += 2;
+            int is_overgrown_garden = map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset) != 0;
+            int image_id = is_overgrown_garden ? garden_image_ids[1][0] : image_group(GROUP_TERRAIN_GARDEN);
+            if (is_large_garden(x, y, is_overgrown_garden)) {
+                if (!is_overgrown_garden) {
+                    switch (map_random_get(grid_offset) & 3) {
+                        case 0: case 1:
+                            image_id += 6;
                             break;
-                        case 1: case 3:
-                            image_id = alt_garden_image_ids[0];
+                        case 2:
+                            image_id += 5;
+                            break;
+                        case 3:
+                            image_id += 4;
                             break;
                     }
                 } else {
-                    switch (x & 3) {
-                        case 1: case 3:
-                            image_id += 1;
+                    switch (map_random_get(grid_offset) & 3) {
+                        case 0: case 1:
+                            image_id += 5;
                             break;
-                        case 0: case 2:
-                            image_id = alt_garden_image_ids[1];
+                        case 2: case 3:
+                            image_id += 4;
                             break;
                     }
-
                 }
-
+                map_building_tiles_add(0, x, y, 2, image_id, TERRAIN_GARDEN);
+            } else {
+                image_id = garden_image_ids[is_overgrown_garden][(x + y) % GARDEN_IMAGES_PER_VARIANT];
             }
-
             map_image_set(grid_offset, image_id);
-
         }
     }
 }
@@ -276,9 +298,9 @@ static void set_garden_image(int x, int y, int grid_offset)
 static void remove_plaza_below_building(int x, int y, int grid_offset)
 {
     if (map_terrain_is(grid_offset, TERRAIN_ROAD) &&
-        map_property_is_plaza_or_earthquake(grid_offset)) {
+        map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
         if (map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
-            map_property_clear_plaza_or_earthquake(grid_offset);
+            map_property_clear_plaza_earthquake_or_overgrown_garden(grid_offset);
         }
     }
 }
@@ -286,7 +308,7 @@ static void remove_plaza_below_building(int x, int y, int grid_offset)
 static void clear_plaza_image(int x, int y, int grid_offset)
 {
     if (map_terrain_is(grid_offset, TERRAIN_ROAD) &&
-        map_property_is_plaza_or_earthquake(grid_offset)) {
+        map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
         map_image_set(grid_offset, 0);
         map_property_set_multi_tile_size(grid_offset, 1);
         map_property_mark_draw_tile(grid_offset);
@@ -296,7 +318,7 @@ static void clear_plaza_image(int x, int y, int grid_offset)
 static int is_tile_plaza(int grid_offset)
 {
     if (map_terrain_is(grid_offset, TERRAIN_ROAD) &&
-        map_property_is_plaza_or_earthquake(grid_offset) &&
+        map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset) &&
         !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING) &&
         !map_image_at(grid_offset)) {
         return 1;
@@ -315,7 +337,7 @@ static int is_two_tile_square_plaza(int grid_offset)
 static void set_plaza_image(int x, int y, int grid_offset)
 {
     if (map_terrain_is(grid_offset, TERRAIN_ROAD) &&
-        map_property_is_plaza_or_earthquake(grid_offset) &&
+        map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset) &&
         !map_image_at(grid_offset)) {
         if (is_two_tile_square_plaza(grid_offset)) {
             int image_id = image_group(GROUP_TERRAIN_PLAZA);
@@ -341,22 +363,6 @@ void map_tiles_update_all_gardens(void)
 {
     foreach_map_tile(clear_garden_image);
     foreach_map_tile(set_garden_image);
-}
-
-static void determine_garden_tile(int x, int y, int grid_offset)
-{
-    int base_image = image_group(GROUP_TERRAIN_GARDEN);
-    int image_id = map_image_at(grid_offset);
-    if (image_id >= base_image && image_id <= base_image + 6) {
-        map_terrain_add(grid_offset, TERRAIN_GARDEN);
-        map_property_clear_constructing(grid_offset);
-        map_aqueduct_remove(grid_offset);
-    }
-}
-
-void map_tiles_determine_gardens(void)
-{
-    foreach_map_tile(determine_garden_tile);
 }
 
 void map_tiles_update_all_plazas(void)
@@ -757,7 +763,7 @@ static void set_road_image(int x, int y, int grid_offset)
         set_road_with_aqueduct_image(grid_offset);
         return;
     }
-    if (map_property_is_plaza_or_earthquake(grid_offset)) {
+    if (map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
         return;
     }
     if (map_tiles_is_paved_road(grid_offset)) {
@@ -1057,7 +1063,7 @@ static void set_aqueduct(int grid_offset)
     const terrain_image *img = map_image_context_get_aqueduct(grid_offset, aqueduct_include_construction);
     int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_HIGHWAY);
     if (is_road) {
-        map_property_clear_plaza_or_earthquake(grid_offset);
+        map_property_clear_plaza_earthquake_or_overgrown_garden(grid_offset);
     }
     set_aqueduct_image(grid_offset, is_road, img);
     map_aqueduct_set_image(grid_offset, img->aqueduct_offset);
@@ -1084,7 +1090,8 @@ void map_tiles_update_region_aqueducts(int x_min, int y_min, int x_max, int y_ma
 
 static void set_earthquake_image(int x, int y, int grid_offset)
 {
-    if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(grid_offset)) {
+    if (map_terrain_is(grid_offset, TERRAIN_ROCK) &&
+        map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
         const terrain_image *img = map_image_context_get_earthquake(grid_offset);
         if (img->is_valid) {
             map_image_set(grid_offset,
@@ -1099,9 +1106,10 @@ static void set_earthquake_image(int x, int y, int grid_offset)
 
 static void update_earthquake_tile(int x, int y, int grid_offset)
 {
-    if (map_terrain_is(grid_offset, TERRAIN_ROCK) && map_property_is_plaza_or_earthquake(grid_offset)) {
+    if (map_terrain_is(grid_offset, TERRAIN_ROCK) &&
+        map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
         map_terrain_add(grid_offset, TERRAIN_ROCK);
-        map_property_mark_plaza_or_earthquake(grid_offset);
+        map_property_mark_plaza_earthquake_or_overgrown_garden(grid_offset);
         foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_earthquake_image);
     }
 }
@@ -1116,7 +1124,7 @@ void map_tiles_set_earthquake(int x, int y)
     int grid_offset = map_grid_offset(x, y);
     // earthquake: terrain = rock && bitfields = plaza
     map_terrain_add(grid_offset, TERRAIN_ROCK);
-    map_property_mark_plaza_or_earthquake(grid_offset);
+    map_property_mark_plaza_earthquake_or_overgrown_garden(grid_offset);
 
     foreach_region_tile(x - 1, y - 1, x + 1, y + 1, set_earthquake_image);
 }

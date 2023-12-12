@@ -648,7 +648,7 @@ static void draw_aqueduct(const map_tile *tile, int x, int y)
         } else {
             if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
                 blocked = !map_is_straight_road_for_aqueduct(grid_offset);
-                if (map_property_is_plaza_or_earthquake(grid_offset)) {
+                if (map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
                     blocked = 1;
                 }
                 if (map_terrain_count_directly_adjacent_with_types(grid_offset, TERRAIN_ROAD | TERRAIN_AQUEDUCT)) {

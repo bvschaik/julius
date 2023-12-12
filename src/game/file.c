@@ -295,7 +295,6 @@ static void initialize_saved_game(void)
     image_load_climate(scenario_property_climate(), 0, 0, 0);
     image_load_enemy(scenario_property_enemy());
     city_military_determine_distant_battle_city();
-    map_tiles_determine_gardens();
 
     map_natives_check_land(0);
 

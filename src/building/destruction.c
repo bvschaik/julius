@@ -11,6 +11,7 @@
 #include "map/building.h"
 #include "map/building_tiles.h"
 #include "map/grid.h"
+#include "map/property.h"
 #include "map/random.h"
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
@@ -217,6 +218,7 @@ void building_destroy_by_enemy(int x, int y, int grid_offset)
         if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
             map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
             map_tiles_update_region_empty_land(x, y, x, y);
+            map_property_clear_plaza_earthquake_or_overgrown_garden(grid_offset);
             map_tiles_update_all_gardens();
         } else {
             map_building_tiles_set_rubble(0, x, y, 1);

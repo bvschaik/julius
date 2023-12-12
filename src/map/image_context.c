@@ -368,7 +368,7 @@ const terrain_image *map_image_context_get_earthquake(int grid_offset)
     for (int i = 0; i < MAX_TILES; i++) {
         int offset = grid_offset + map_grid_direction_delta(i);
         tiles[i] = (map_terrain_is(offset, TERRAIN_ROCK) &&
-            map_property_is_plaza_or_earthquake(grid_offset)) ? 1 : 0;
+            map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) ? 1 : 0;
     }
     return get_image(CONTEXT_EARTHQUAKE, tiles);
 }

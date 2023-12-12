@@ -85,14 +85,15 @@ building_type building_clone_type_from_grid_offset(int grid_offset)
     } else if (terrain & TERRAIN_WALL) {
         return BUILDING_WALL;
     } else if (terrain & TERRAIN_GARDEN) {
-        return BUILDING_GARDENS;
+        return map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset) ?
+            BUILDING_OVERGROWN_GARDENS : BUILDING_GARDENS;
     } else if (terrain & TERRAIN_ROAD) {
         if (terrain & TERRAIN_WATER) {
             if (map_sprite_bridge_at(grid_offset) > 6) {
                 return BUILDING_SHIP_BRIDGE;
             }
             return BUILDING_LOW_BRIDGE;
-        } else if (map_property_is_plaza_or_earthquake(grid_offset)) {
+        } else if (map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
             return BUILDING_PLAZA;
         }
         return BUILDING_ROAD;

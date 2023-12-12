@@ -173,7 +173,7 @@ int building_construction_place_aqueduct(int x_start, int y_start, int x_end, in
     int blocked = 0;
     int grid_offset = map_grid_offset(x_start, y_start);
     if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-        if (map_property_is_plaza_or_earthquake(grid_offset)) {
+        if (map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
             blocked = 1;
         }
         if (map_terrain_count_directly_adjacent_with_types(grid_offset, TERRAIN_ROAD | TERRAIN_AQUEDUCT)) {
@@ -184,7 +184,7 @@ int building_construction_place_aqueduct(int x_start, int y_start, int x_end, in
     }
     grid_offset = map_grid_offset(x_end, y_end);
     if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-        if (map_property_is_plaza_or_earthquake(grid_offset)) {
+        if (map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
             blocked = 1;
         }
         if (map_terrain_count_directly_adjacent_with_types(grid_offset, TERRAIN_ROAD | TERRAIN_AQUEDUCT)) {

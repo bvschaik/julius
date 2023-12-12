@@ -160,8 +160,8 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                 highways_removed += next_highways_removed;
                 items_placed += next_highways_removed;
             } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
-                if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
-                    map_property_clear_plaza_or_earthquake(grid_offset);
+                if (map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_GARDEN)) {
+                    map_property_clear_plaza_earthquake_or_overgrown_garden(grid_offset);
                 }
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
                 items_placed++;

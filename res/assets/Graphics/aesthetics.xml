@@ -509,7 +509,7 @@
 	<image id="Overgrown_Garden_01" src="Overgrown_Garden_01" isometric="true"/>
 	<image id="Overgrown_Garden_02" src="Overgrown_Garden_02" isometric="true"/>
 	<image id="Overgrown_Garden_03" src="Overgrown_Garden_03" isometric="true"/>
-	<image id="Overgrown_Garden_04" src="Overgrown_Garden_03" isometric="true"/>
+	<image id="Overgrown_Garden_04" src="Overgrown_Garden_04" isometric="true"/>
 	<image id="Overgrown_Garden_M_01" src="Overgrown_Garden_M_01" isometric="true"/>
 	<image id="Overgrown_Garden_M_02" src="Overgrown_Garden_M_02" isometric="true"/>
 </assetlist>

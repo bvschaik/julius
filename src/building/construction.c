@@ -272,11 +272,11 @@ static int place_plaza(int x_start, int y_start, int x_end, int y_end)
             int grid_offset = map_grid_offset(x, y);
             if (map_terrain_is(grid_offset, TERRAIN_ROAD) &&
                 !map_terrain_is(grid_offset, TERRAIN_WATER | TERRAIN_BUILDING | TERRAIN_AQUEDUCT)) {
-                if (!map_property_is_plaza_or_earthquake(grid_offset)) {
+                if (!map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
                     items_placed++;
                 }
                 map_image_set(grid_offset, 0);
-                map_property_mark_plaza_or_earthquake(grid_offset);
+                map_property_mark_plaza_earthquake_or_overgrown_garden(grid_offset);
                 map_property_set_multi_tile_size(grid_offset, 1);
                 map_property_mark_draw_tile(grid_offset);
             }
@@ -286,7 +286,7 @@ static int place_plaza(int x_start, int y_start, int x_end, int y_end)
     return items_placed;
 }
 
-static int place_garden(int x_start, int y_start, int x_end, int y_end)
+static int place_garden(int x_start, int y_start, int x_end, int y_end, int is_overgrown_garden)
 {
     game_undo_restore_map(1);
 
@@ -300,6 +300,9 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end)
             if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
                 items_placed++;
                 map_terrain_add(grid_offset, TERRAIN_GARDEN);
+                if (is_overgrown_garden) {
+                    map_property_mark_plaza_earthquake_or_overgrown_garden(grid_offset);
+                }
             }
         }
     }
@@ -671,6 +674,7 @@ int building_construction_is_updatable(void)
         case BUILDING_WALL:
         case BUILDING_PLAZA:
         case BUILDING_GARDENS:
+        case BUILDING_OVERGROWN_GARDENS:
         case BUILDING_HOUSE_VACANT_LOT:
         case BUILDING_PALISADE:
         case BUILDING_HIGHWAY:
@@ -767,7 +771,12 @@ void building_construction_update(int x, int y, int grid_offset)
             current_cost *= items_placed;
         }
     } else if (type == BUILDING_GARDENS) {
-        int items_placed = place_garden(data.start.x, data.start.y, x, y);
+        int items_placed = place_garden(data.start.x, data.start.y, x, y, 0);
+        if (items_placed >= 0) {
+            current_cost *= items_placed;
+        }
+    } else if (type == BUILDING_OVERGROWN_GARDENS) {
+        int items_placed = place_garden(data.start.x, data.start.y, x, y, 1);
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
@@ -951,7 +960,8 @@ void building_construction_place(void)
     if (type != BUILDING_CLEAR_LAND && enemy_figure_type != FIGURE_NONE) {
         if (type == BUILDING_WALL || type == BUILDING_ROAD || type == BUILDING_AQUEDUCT || type == BUILDING_HIGHWAY) {
             game_undo_restore_map(0);
-        } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS || building_is_connectable(type)) {
+        } else if (type == BUILDING_PLAZA || type == BUILDING_GARDENS ||
+            type == BUILDING_OVERGROWN_GARDENS || building_is_connectable(type)) {
             game_undo_restore_map(1);
         } else if (type == BUILDING_LOW_BRIDGE || type == BUILDING_SHIP_BRIDGE) {
             map_bridge_reset_building_length();
@@ -984,7 +994,10 @@ void building_construction_place(void)
     } else if (type == BUILDING_PLAZA) {
         placement_cost *= place_plaza(x_start, y_start, x_end, y_end);
     } else if (type == BUILDING_GARDENS) {
-        placement_cost *= place_garden(x_start, y_start, x_end, y_end);
+        placement_cost *= place_garden(x_start, y_start, x_end, y_end, 0);
+        map_routing_update_land();
+    } else if (type == BUILDING_OVERGROWN_GARDENS) {
+        placement_cost *= place_garden(x_start, y_start, x_end, y_end, 1);
         map_routing_update_land();
     } else if (type == BUILDING_LOW_BRIDGE) {
         int length = map_bridge_add(x_end, y_end, 0);

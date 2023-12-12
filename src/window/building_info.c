@@ -277,12 +277,15 @@ static void init(int grid_offset)
         } else {
             context.terrain_type = TERRAIN_INFO_EMPTY;
         }
-    } else if (map_property_is_plaza_or_earthquake(grid_offset)) {
+    } else if (map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
         if (map_terrain_is(grid_offset, TERRAIN_ROAD)) {
             context.terrain_type = TERRAIN_INFO_PLAZA;
         }
         if (map_terrain_is(grid_offset, TERRAIN_ROCK)) {
             context.terrain_type = TERRAIN_INFO_EARTHQUAKE;
+        }
+        if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
+            context.terrain_type = TERRAIN_INFO_GARDEN;
         }
     } else if (map_terrain_is(grid_offset, TERRAIN_TREE)) {
         context.terrain_type = TERRAIN_INFO_TREE;

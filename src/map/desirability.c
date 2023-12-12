@@ -130,29 +130,43 @@ static void update_buildings(void)
     }
 }
 
+static void add_garden_desirability(int x, int y)
+{
+    const model_building *model = model_get_building(BUILDING_GARDENS);
+
+    int value = model->desirability_value;
+    int step = model->desirability_step;
+    int step_size = model->desirability_step_size;
+    int range = model->desirability_range;
+
+    if (building_monument_working(BUILDING_GRAND_TEMPLE_VENUS)) {
+        int value_bonus = ((value / 4) > 1) ? (value / 4) : 1;
+        value += value_bonus;
+        step += 1;
+        range += 1;
+    }
+
+    add_to_terrain(x, y, 1, value, step, step_size, range);
+}
+
 static void update_terrain(void)
 {
-    int venus_gt = building_monument_working(BUILDING_GRAND_TEMPLE_VENUS);
-    int value;
-    int value_bonus;
-    int step;
-    int step_size;
-    int range;
-
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
         for (int x = 0; x < map_data.width; x++, grid_offset++) {
             int terrain = map_terrain_get(grid_offset);
-            if (map_property_is_plaza_or_earthquake(grid_offset)) {
+            if (map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
                 int type;
                 if (terrain & TERRAIN_ROAD) {
                     type = BUILDING_PLAZA;
                 } else if (terrain & TERRAIN_ROCK) {
                     // earthquake fault line: slight negative
                     type = BUILDING_HOUSE_VACANT_LOT;
+                } else if (terrain & TERRAIN_GARDEN) {
+                    add_garden_desirability(x, y);
                 } else {
                     // invalid plaza/earthquake flag
-                    map_property_clear_plaza_or_earthquake(grid_offset);
+                    map_property_clear_plaza_earthquake_or_overgrown_garden(grid_offset);
                     continue;
                 }
                 const model_building *model = model_get_building(type);
@@ -162,24 +176,7 @@ static void update_terrain(void)
                     model->desirability_step_size,
                     model->desirability_range);
             } else if (terrain & TERRAIN_GARDEN) {
-                const model_building *model = model_get_building(BUILDING_GARDENS);
-                value = model->desirability_value;
-                step = model->desirability_step;
-                step_size = model->desirability_step_size;
-                range = model->desirability_range;
-
-                if (venus_gt) {
-                    value_bonus = ((value / 4) > 1) ? (value / 4) : 1;
-                    value += value_bonus;
-                    step += 1;
-                    range += 1;
-                }
-
-                add_to_terrain(x, y, 1,
-                    value,
-                    step,
-                    step_size,
-                    range);
+                add_garden_desirability(x, y);
             } else if (terrain & TERRAIN_RUBBLE) {
                 add_to_terrain(x, y, 1, -2, 1, 1, 2);
             } else if (terrain & TERRAIN_HIGHWAY) {

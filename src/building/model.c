@@ -301,6 +301,8 @@ const model_building *model_get_building(building_type type)
             return &MODEL_CITY_MINT;
         case BUILDING_DEPOT:
             return &MODEL_DEPOT;
+        case BUILDING_OVERGROWN_GARDENS:
+            return &buildings[BUILDING_GARDENS];
         default:
             break;
     }
@@ -311,16 +313,16 @@ const model_building *model_get_building(building_type type)
         type == BUILDING_COLONNADE || type == BUILDING_LOOPED_GARDEN_WALL || 
         type == BUILDING_ROOFED_GARDEN_WALL || type == BUILDING_GARDEN_PATH ||
         type == BUILDING_PANELLED_GARDEN_WALL || type == BUILDING_GLADIATOR_STATUE) {
-        return &buildings[41];
+        return &buildings[BUILDING_SMALL_STATUE];
     }
 
     if (type == BUILDING_SMALL_POND || type == BUILDING_OBELISK ||
         type == BUILDING_LEGION_STATUE || type == BUILDING_DOLPHIN_FOUNTAIN) {
-        return &buildings[42];
+        return &buildings[BUILDING_MEDIUM_STATUE];
     }
 
     if (type == BUILDING_LARGE_POND || type == BUILDING_HORSE_STATUE) {
-        return &buildings[43];
+        return &buildings[BUILDING_LARGE_STATUE];
     }
 
     if (type > 129) {

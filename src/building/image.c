@@ -947,6 +947,8 @@ int building_image_get(const building *b)
             int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
             return assets_get_image_id("Religion", "Altar_Venus") + orientation % 2;
         }
+        case BUILDING_OVERGROWN_GARDENS:
+            return building_properties_for_type(BUILDING_OVERGROWN_GARDENS)->image_group;
 
         default:
             return 0;

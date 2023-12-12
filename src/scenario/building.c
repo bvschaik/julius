@@ -89,6 +89,7 @@ int scenario_building_allowed(int type)
         case BUILDING_MENU_STATUES:
             return scenario.allowed_buildings[ALLOWED_BUILDING_STATUES];
         case BUILDING_GARDENS:
+        case BUILDING_OVERGROWN_GARDENS:
         case BUILDING_MENU_TREES:
         case BUILDING_MENU_PATHS:
         case BUILDING_HEDGE_DARK:

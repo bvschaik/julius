@@ -302,6 +302,7 @@ void game_undo_reduce_time_available(void)
         case BUILDING_SHIP_BRIDGE:
         case BUILDING_PLAZA:
         case BUILDING_GARDENS:
+        case BUILDING_OVERGROWN_GARDENS:
             return;
         default: break;
     }

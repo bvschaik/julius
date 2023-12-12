@@ -308,9 +308,12 @@ static int get_building_type_from_grid_offset(int grid_offset)
     } else if (terrain & TERRAIN_AQUEDUCT) {
         return BUILDING_AQUEDUCT;
     } else if (terrain & TERRAIN_GARDEN) {
+        if (map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
+            return BUILDING_OVERGROWN_GARDENS;
+        }
         return BUILDING_GARDENS;
     } else if (terrain & TERRAIN_ROAD) {
-        if (map_property_is_plaza_or_earthquake(grid_offset)) {
+        if (map_property_is_plaza_earthquake_or_overgrown_garden(grid_offset)) {
             return BUILDING_PLAZA;
         }
         return BUILDING_ROAD;
@@ -438,6 +441,7 @@ static void show_overlay_from_grid_offset(int grid_offset)
             overlay = OVERLAY_FOOD_STOCKS;
             break;
         case BUILDING_GARDENS:
+        case BUILDING_OVERGROWN_GARDENS:
         case BUILDING_GOVERNORS_HOUSE:
         case BUILDING_GOVERNORS_VILLA:
         case BUILDING_GOVERNORS_PALACE:

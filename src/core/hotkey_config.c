@@ -34,6 +34,7 @@ static const char *ini_keys[] = {
     "build_road",
     "build_plaza",
     "build_gardens",
+    "build_overgrown_gardens",
     "build_prefecture",
     "build_engineers_post",
     "build_doctor",

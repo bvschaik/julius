@@ -547,7 +547,7 @@ static special_attribute_mapping_t special_attribute_mappings_buildings[] = {
     { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_mercury",                .value = BUILDING_SHRINE_MERCURY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_neptune",                .value = BUILDING_SHRINE_NEPTUNE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
     { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_venus",                  .value = BUILDING_SHRINE_VENUS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-
+    { .type = PARAMETER_TYPE_BUILDING,            .text = "overgrown_gardens",             .value = BUILDING_OVERGROWN_GARDENS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
 };
 
 #define SPECIAL_ATTRIBUTE_MAPPINGS_BUILDING_TYPE_SIZE (sizeof(special_attribute_mappings_buildings) / sizeof(special_attribute_mapping_t))

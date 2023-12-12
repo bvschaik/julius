@@ -543,7 +543,18 @@ const uint8_t *lang_get_string(int group, int index)
                 return translation_for(TR_BUILDING_SHRINE_VENUS);
             case BUILDING_MENU_SHRINES:
                 return translation_for(TR_BUILDING_MENU_SHRINES);
-
+            case BUILDING_MENU_GARDENS:
+                if (group == 28) {
+                    index = BUILDING_GARDENS;
+                }
+                break;
+            case BUILDING_GARDENS:
+                if (group == 28) {
+                    return translation_for(TR_BUILDING_FORMAL_GARDENS);
+                }
+                break;
+            case BUILDING_OVERGROWN_GARDENS:
+                return translation_for(TR_BUILDING_OVERGROWN_GARDENS);
             default:
                 break;
         }
