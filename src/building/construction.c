@@ -41,7 +41,6 @@
 #include "map/water.h"
 #include "map/water_supply.h"
 
-#define BUILDING_CYCLES 5
 #define MAX_CYCLE_SIZE 10
 
 struct reservoir_info {
@@ -89,7 +88,7 @@ static int last_items_cleared;
 static const int FORT_X_OFFSET[4][4] = { {3,4,4,3},{-1,0,0,-1},{-4,-3,-3,4},{0,1,1,0} };
 static const int FORT_Y_OFFSET[4][4] = { {-1,-1,0,0},{-4,-4,-3,-3},{0,0,1,1},{3,3,4,4} };
 
-static const struct cycle building_cycles[BUILDING_CYCLES] = {
+static const struct cycle building_cycles[] = {
     { 5, 1, { BUILDING_SMALL_TEMPLE_CERES, BUILDING_SMALL_TEMPLE_NEPTUNE, BUILDING_SMALL_TEMPLE_MERCURY,
       BUILDING_SMALL_TEMPLE_MARS,  BUILDING_SMALL_TEMPLE_VENUS }},
     { 5, 1, {BUILDING_LARGE_TEMPLE_CERES, BUILDING_LARGE_TEMPLE_NEPTUNE, BUILDING_LARGE_TEMPLE_MERCURY,
@@ -100,7 +99,10 @@ static const struct cycle building_cycles[BUILDING_CYCLES] = {
       BUILDING_OAK_PATH,  BUILDING_PALM_PATH, BUILDING_PINE_PATH, BUILDING_PLUM_PATH}},
     { 8, 1, {BUILDING_DATE_TREE, BUILDING_ELM_TREE,  BUILDING_FIG_TREE,  BUILDING_FIR_TREE,
       BUILDING_OAK_TREE,  BUILDING_PALM_TREE, BUILDING_PINE_TREE, BUILDING_PLUM_TREE }},
+    { 2, 1, {BUILDING_GARDENS, BUILDING_OVERGROWN_GARDENS }},
 };
+
+#define BUILDING_CYCLES (sizeof(building_cycles) / sizeof(struct cycle))
 
 int building_construction_type_can_cycle(building_type type)
 {

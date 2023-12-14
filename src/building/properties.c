@@ -107,7 +107,7 @@ void init_augustus_building_properties(void)
     }
 }
 
-static building_properties properties[170] = {
+static building_properties properties[BUILDING_TYPE_MAX] = {
     // SZ FIRE GRP OFF
         {0, 0,   0, 0, 0 },
         {0, 0,   0, 0, 0 },
@@ -245,22 +245,6 @@ static building_properties properties[170] = {
         {1, 1,   0, 0, 0 },
         {1, 1,   0, 0, 0 },
         {1, 1,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
-        {0, 0,   0, 0, 0 },
 };
 
 static int is_vanilla_building_with_changed_properties(building_type type)

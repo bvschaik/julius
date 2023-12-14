@@ -164,6 +164,7 @@ static void update_terrain(void)
                     type = BUILDING_HOUSE_VACANT_LOT;
                 } else if (terrain & TERRAIN_GARDEN) {
                     add_garden_desirability(x, y);
+                    continue;
                 } else {
                     // invalid plaza/earthquake flag
                     map_property_clear_plaza_earthquake_or_overgrown_garden(grid_offset);
