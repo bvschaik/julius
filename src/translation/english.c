@@ -1272,7 +1272,7 @@ static translation_string all_strings[] = {
     {TR_PARAMETER_VALUE_ENEMY_6_SELEUCID, "Seleucid"},
     {TR_PARAMETER_VALUE_ENEMY_7_ETRUSCAN, "Etruscan"},
     {TR_PARAMETER_VALUE_ENEMY_8_GREEK, "Greek"},
-    {TR_PARAMETER_VALUE_ENEMY_9_EGYPTIAN, "Eqyptian"},
+    {TR_PARAMETER_VALUE_ENEMY_9_EGYPTIAN, "Egyptian"},
     {TR_PARAMETER_VALUE_ENEMY_10_CARTHAGINIAN, "Carthaginian"},
     {TR_PARAMETER_VALUE_ENEMY_11_CAESAR, "Caesar"},
     {TR_PARAMETER_DISPLAY_SET_TO, "set to"},
