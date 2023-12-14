@@ -976,9 +976,9 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ASSET_PREVIEWER_REFRESH, "Обновить"},
     {TR_WINDOW_ASSET_PREVIEWER_QUIT, "Выход"},
     {TR_WINDOW_ASSET_PREVIEWER_ASSET, "Спрайты:"},
-    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_NONE, "Ни какая" },
-    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_CENTRAL, "Центральная"},
-    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_NORTHERN, "Средиземноморская"},
+    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_NONE, "Никакая" },
+    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_CENTRAL, "Средиземноморская"},
+    {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_NORTHERN, "Северная"},
     {TR_WINDOW_ASSET_PREVIEWER_TERRAIN_DESERT, "Пустынная"},
     {TR_WINDOW_ASSET_PREVIEWER_NO_ASSETS, "Нет спрайтов"},
     {TR_WINDOW_ASSET_PREVIEWER_UNNAMED_ASSET, "( безымянный спрайт )"},
@@ -1345,6 +1345,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SHRINE_VENUS, "Святилище Венеры"},
     {TR_BUILDING_MENU_SHRINES, "Святилищя"},
     {TR_BUILDING_INFO_TOTAL_FOOD, "Всего еды:" },
+    {TR_BUILDING_FORMAL_GARDENS, "Формальные сады" },
+    {TR_BUILDING_OVERGROWN_GARDENS, "Заросшие сады" },
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)

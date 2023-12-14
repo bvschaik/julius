@@ -233,6 +233,7 @@ int building_rotation_type_has_rotations(building_type type)
         case BUILDING_MENU_LARGE_TEMPLES:
         case BUILDING_MENU_SMALL_TEMPLES:
         case BUILDING_MENU_SHRINES:
+        case BUILDING_MENU_GARDENS:
             return 1;
         default:
             return 0;
