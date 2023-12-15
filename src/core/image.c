@@ -329,7 +329,7 @@ static int prepare_images(buffer *buf, image *images, image_draw_data *draw_data
     return 1;
 }
 
-static void convert_compressed(buffer *buf, int width, int x_offset, int y_offset,
+static void convert_compressed(buffer *buf, int width, int height, int x_offset, int y_offset,
     int buf_length, color_t *dst, int dst_width);
 
 static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *draw_datas,
@@ -370,7 +370,8 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
             if (draw_data->buffer) {
                 memset(draw_data->buffer, 0, sizeof(color_t) * img->width * img->height);
                 buffer_set(buf, draw_data->offset);
-                convert_compressed(buf, img->width, 0, 0, draw_data->data_length, draw_data->buffer, img->width);
+                convert_compressed(buf, img->width, img->height, 0, 0,
+                    draw_data->data_length, draw_data->buffer, img->width);
                 image_crop(img, draw_data->buffer);
             }
         }
@@ -383,7 +384,7 @@ static int crop_and_pack_images(buffer *buf, image *images, image_draw_data *dra
                 img->top->original.height = img->top->height;
                 memset(draw_data->buffer, 0, sizeof(color_t) * img->top->width * img->top->height);
                 buffer_set(buf, draw_data->offset + draw_data->uncompressed_length);
-                convert_compressed(buf, img->top->width, 0, 0,
+                convert_compressed(buf, img->top->width, img->top->height, 0, 0,
                     draw_data->data_length - draw_data->uncompressed_length, draw_data->buffer, img->top->width);
                 image_crop(img->top, draw_data->buffer);
                 if (!img->top->height) {
@@ -447,7 +448,7 @@ static void copy_compressed(const image *img, image_draw_data *draw_data, color_
     }
 }
 
-static void convert_compressed(buffer *buf, int width, int x_offset, int y_offset,
+static void convert_compressed(buffer *buf, int width, int height, int x_offset, int y_offset,
     int buf_length, color_t *dst, int dst_width)
 {
     int y = 0;
@@ -463,6 +464,9 @@ static void convert_compressed(buffer *buf, int width, int x_offset, int y_offse
                 y++;
                 x -= width;
             }
+            if (y >= height) {
+                return;
+            }
             buf_length -= 2;
         } else {
             // control = number of concrete pixels
@@ -471,6 +475,9 @@ static void convert_compressed(buffer *buf, int width, int x_offset, int y_offse
                 x++;
                 if (x >= width) {
                     y++;
+                    if (y >= height) {
+                        return;
+                    }
                     x -= width;
                 }
             }
@@ -537,7 +544,7 @@ static void convert_images(image *images, image_draw_data *draw_datas, int size,
                 free(draw_data->buffer);
                 draw_data->buffer = 0;
             } else {
-                convert_compressed(buf, img->width, img->atlas.x_offset, img->atlas.y_offset,
+                convert_compressed(buf, img->width, img->height, img->atlas.x_offset, img->atlas.y_offset,
                     draw_data->data_length, dst, dst_width);
             }
         } else if (img->is_isometric) {
@@ -1171,7 +1178,7 @@ int image_load_external_pixels(color_t *dst, const image *img, int row_width)
     buffer_init(&buf, draw_data->buffer, draw_data->data_length);
     // NB: isometric images are never external
     if (draw_data->is_compressed) {
-        convert_compressed(&buf, draw_data->width, 0, 0, draw_data->data_length, dst, row_width);
+        convert_compressed(&buf, draw_data->width, draw_data->height, 0, 0, draw_data->data_length, dst, row_width);
     } else {
         convert_uncompressed(&buf, draw_data->width, draw_data->height, 0, 0, dst, row_width);
     }
