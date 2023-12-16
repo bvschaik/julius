@@ -52,7 +52,7 @@ static void mark_well_access(int well_id, int radius)
     }
 }
 
-void map_water_supply_update_houses(void)
+void map_water_supply_update_buildings(void)
 {
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
         for (building *b = building_first_of_type(type); b; b = b->next_of_type) {
@@ -67,6 +67,11 @@ void map_water_supply_update_houses(void)
             }
         }
     }
+
+    for (building *b = building_first_of_type(BUILDING_CONCRETE_MAKER); b; b = b->next_of_type) {
+        b->has_well_access = 0;
+    }
+
     for (building *b = building_first_of_type(BUILDING_WELL); b; b = b->next_of_type) {
         if (b->state == BUILDING_STATE_IN_USE) {
             mark_well_access(b->id, map_water_supply_well_radius());

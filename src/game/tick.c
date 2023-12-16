@@ -164,7 +164,7 @@ static void advance_tick(void)
         case 24: house_population_evict_overcrowded(); break;
         case 25: city_labor_update(); break;
         case 27: map_water_supply_update_reservoir_fountain(); break;
-        case 28: map_water_supply_update_houses(); break;
+        case 28: map_water_supply_update_buildings(); break;
         case 29: formation_update_all(1); break;
         case 30: widget_minimap_invalidate(); break;
         case 31: building_figure_generate(); break;

@@ -1,7 +1,7 @@
 #ifndef MAP_WATER_SUPPLY_H
 #define MAP_WATER_SUPPLY_H
 
-void map_water_supply_update_houses(void);
+void map_water_supply_update_buildings(void);
 void map_water_supply_update_reservoir_fountain(void);
 int map_water_supply_has_aqueduct_access(int grid_offset);
 
