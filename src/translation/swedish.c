@@ -1039,7 +1039,8 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_CENTER_CAMERA, "Centrera kameran på byggnaden"},
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_ARENA_COVERAGE_PLURAL, "Arenor"},
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE_PLURAL, "Krogar"},
-
+    {TR_BUILDING_FORMAL_GARDENS, "Fina trädgårdar" },
+    {TR_BUILDING_OVERGROWN_GARDENS, "Vildvuxna trädgårdar" },
 };
 
 void translation_swedish(const translation_string **strings, int *num_strings)
