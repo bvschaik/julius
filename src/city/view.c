@@ -511,7 +511,7 @@ int city_view_pixels_to_view_tile(int x_pixels, int y_pixels, view_tile *tile)
     }
     tile->x = data.camera.tile.x + x_view_offset;
     tile->y = data.camera.tile.y + y_view_offset;
-    return 1;
+    return tile->x >= 0 && tile->x < VIEW_X_MAX && tile->y >= 0 && tile->y < VIEW_Y_MAX;
 }
 
 void city_view_set_selected_view_tile(const view_tile *tile)
