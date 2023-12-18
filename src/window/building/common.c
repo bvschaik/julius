@@ -335,6 +335,6 @@ void window_building_get_risks_tooltip(const building_info_context *c, int *grou
     if (m->x >= c->risk_icons.x_offset + 28 && m->x < c->risk_icons.x_offset + 52 &&
         m->y >= c->risk_icons.y_offset && m->y < c->risk_icons.y_offset + 24) {
         *group_id = 66;
-        *text_id = 52 + calc_bound(b->damage_risk + 39, 0, 100) / 40;
+        *text_id = 52 + calc_bound(b->damage_risk + 39, 0, 200) / 40;
     }
 }
