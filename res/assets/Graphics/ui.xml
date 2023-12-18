@@ -245,7 +245,6 @@
 	<!-- Center Camera button by Ouaz -->
 	<image id="Center Camera Button" src="Center_Camera_Button"/>
 	<!-- Risk UI Widgets -->
-	<image id="Risk_Widget_Background" src="Risk_Widget_Background"/>
 	<image id="Risk_Widget_Collapse" src="Risk_Widget_Collapse"/>
 	<image id="Risk_Widget_Fire" src="Risk_Widget_Fire"/>
 	<image id="Risk_Widget_Health" src="Risk_Widget_Health"/>

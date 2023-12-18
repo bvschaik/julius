@@ -52,14 +52,14 @@ void graphics_draw_rect(int x, int y, int width, int height, color_t color)
     graphics_renderer()->draw_rect(x, width, y, height, color);
 }
 
-void graphics_draw_inset_rect(int x, int y, int width, int height)
+void graphics_draw_inset_rect(int x, int y, int width, int height, color_t color_dark, color_t color_light)
 {
     int x_end = x + width - 1;
     int y_end = y + height - 1;
-    graphics_renderer()->draw_line(x, x_end, y, y, COLOR_INSET_DARK);
-    graphics_renderer()->draw_line(x_end, x_end, y, y_end, COLOR_INSET_LIGHT);
-    graphics_renderer()->draw_line(x, x_end, y_end, y_end, COLOR_INSET_LIGHT);
-    graphics_renderer()->draw_line(x, x, y, y_end, COLOR_INSET_DARK);
+    graphics_renderer()->draw_line(x, x_end, y, y, color_dark);
+    graphics_renderer()->draw_line(x_end, x_end, y, y_end, color_light);
+    graphics_renderer()->draw_line(x, x_end, y_end, y_end, color_light);
+    graphics_renderer()->draw_line(x, x, y, y_end, color_dark);
 }
 
 void graphics_fill_rect(int x, int y, int width, int height, color_t color)

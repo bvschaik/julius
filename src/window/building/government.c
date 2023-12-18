@@ -41,6 +41,7 @@ void window_building_draw_forum(building_info_context *c)
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
 }
 
 void window_building_draw_senate(building_info_context *c)
@@ -76,6 +77,7 @@ void window_building_draw_senate(building_info_context *c)
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
 
     lang_text_draw(105, 3, c->x_offset + 60, c->y_offset + 220, FONT_NORMAL_BLACK);
 }
@@ -87,6 +89,7 @@ void window_building_draw_governor_home(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(103, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 143, 103, 1);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 68, c->y_offset + 16);
 }
 
 void window_building_draw_garden(building_info_context *c)
@@ -127,7 +130,6 @@ void window_building_draw_large_statue(building_info_context *c)
             TR_WINDOW_BUILDING_GOVERNMENT_LARGE_STATUE_WATER_WARNING);
     }
 }
-
 
 void window_building_draw_triumphal_arch(building_info_context* c)
 {

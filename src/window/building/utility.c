@@ -96,6 +96,7 @@ void window_building_draw_engineers_post(building_info_context *c)
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
 }
 
 void window_building_draw_prefect(building_info_context *c)
@@ -131,6 +132,7 @@ void window_building_draw_prefect(building_info_context *c)
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
 }
 
 void window_building_draw_roadblock(building_info_context *c)
@@ -310,6 +312,7 @@ void window_building_draw_mission_post(building_info_context *c)
     window_building_draw_description(c, 134, 1);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment_without_house_cover(c, 142);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
 }
 
 static void draw_native(building_info_context *c, int group_id)
@@ -346,7 +349,7 @@ void window_building_draw_highway(building_info_context *c)
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_BUILDING_HIGHWAY, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_figure_list(c);
     window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 150, CUSTOM_TRANSLATION, TR_BUILDING_HIGHWAY_DESC);
-    window_building_draw_levy(HIGHWAY_LEVY_MONTHLY, c->x_offset - 270, c->y_offset + BLOCK_SIZE * c->height_blocks - 110);
+    window_building_draw_levy(HIGHWAY_LEVY_MONTHLY, c->x_offset + 30, c->y_offset + BLOCK_SIZE * c->height_blocks - 110);
 }
 
 static void toggle_figure_state(int index, int param2)

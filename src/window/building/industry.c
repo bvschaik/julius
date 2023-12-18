@@ -90,6 +90,7 @@ static void draw_farm(building_info_context *c, int help_id, const char *sound_f
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 162, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 168);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 170);
     window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 110, group_id, 1);
 }
 
@@ -176,6 +177,7 @@ static void draw_raw_material(
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 162, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 168);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 170);
     window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 110, group_id, text_offset + 1);
 }
 
@@ -315,6 +317,8 @@ static void draw_workshop(
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 146 + resources_y_offset, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 152 + resources_y_offset);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76,
+        c->y_offset + 154 + resources_y_offset);
     window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 126 + resources_y_offset,
         group_id, text_offset + 1);
 }
@@ -420,6 +424,7 @@ void window_building_draw_city_mint(building_info_context *c)
 
         inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 152);
+        window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
         window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 190, CUSTOM_TRANSLATION,
             b->output_resource_id == RESOURCE_DENARII ?
                 TR_BUILDING_CITY_MINT_DESC : TR_BUILDING_CITY_MINT_DESC_ALTERNATIVE);
@@ -493,6 +498,7 @@ void window_building_draw_shipyard(building_info_context *c)
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
 }
 
 void window_building_draw_wharf(building_info_context *c)
@@ -534,6 +540,7 @@ void window_building_draw_wharf(building_info_context *c)
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
 }
 
 static void city_mint_conversion_changed(int accepted, int checked)
@@ -576,8 +583,18 @@ int window_building_handle_mouse_city_mint(const mouse *m, building_info_context
 
 void window_building_industry_get_tooltip(building_info_context *c, int *translation)
 {
+    building_type type = building_get(c->building_id)->type;
+    int needed_resources = building_get_raw_materials_for_workshop(0, type);
+    int y_correction;
+    if (type == BUILDING_CITY_MINT) {
+        y_correction = 8;
+    } else if (needed_resources > 0) {
+        y_correction = 8 + needed_resources * 20;
+    } else {
+        y_correction = 0;
+    }
+
     const mouse *m = mouse_get();
-    int y_correction = building_is_workshop(building_get(c->building_id)->type) ? 8 : 0;
     if (m->x >= c->x_offset + 16 && m->x < c->width_blocks * BLOCK_SIZE + c->x_offset - 16 &&
         m->y >= c->y_offset + 60 + y_correction && m->y < c->y_offset + 86 + y_correction) {
         *translation = TR_BUILDING_WINDOW_INDUSTRY_EFFICIENCY_TOOLTIP;

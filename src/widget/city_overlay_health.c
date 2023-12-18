@@ -138,7 +138,8 @@ static int get_tooltip_hospital(tooltip_context *c, const building *b)
 
 static int get_tooltip_sickness(tooltip_context *c, const building *b)
 {
-    if (building_is_house(b->type) || b->type == BUILDING_DOCK || b->type == BUILDING_WAREHOUSE || b->type == BUILDING_GRANARY) {
+    if (building_is_house(b->type) ||
+        b->type == BUILDING_DOCK || b->type == BUILDING_WAREHOUSE || b->type == BUILDING_GRANARY) {
         if (b->sickness_level < 1) {
             c->translation_key = TR_TOOLTIP_OVERLAY_SICKNESS_NONE;
         } else if (b->sickness_level < LOW_SICKNESS_LEVEL) {

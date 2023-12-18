@@ -323,7 +323,7 @@ static void draw_map(void)
 
 static int draw_resource(resource_type resource, int trade_max, int x_offset, int y_offset)
 {
-    graphics_draw_inset_rect(x_offset, y_offset, 26, 26);
+    graphics_draw_inset_rect(x_offset, y_offset, 26, 26, COLOR_INSET_DARK, COLOR_INSET_LIGHT);
     image_draw(resource_get_data(resource)->image.editor.empire, x_offset + 1, y_offset + 1,
         COLOR_MASK_NONE, SCALE_NONE);
     if (trade_max == OUR_CITY) {

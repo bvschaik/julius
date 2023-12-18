@@ -31,6 +31,13 @@ typedef uint32_t color_t;
 #define COLOR_INSET_LIGHT 0xffffffff
 #define COLOR_INSET_DARK 0xff848484
 
+#define COLOR_RISK_ICON_BORDER_DARK 0xf0000000
+#define COLOR_RISK_ICON_BORDER_LIGHT 0xf0ffffff
+#define COLOR_RISK_ICON_LOW 0xffcaae6f
+#define COLOR_RISK_ICON_MEDIUM 0xffe7b951
+#define COLOR_RISK_ICON_HIGH 0xfff7a142
+#define COLOR_RISK_ICON_EXTREME 0xffff603a
+
 #define COLOR_MASK_NONE 0xffffffff
 #define COLOR_MASK_RED 0xffff0818
 #define COLOR_MASK_GREEN 0xff18ff18

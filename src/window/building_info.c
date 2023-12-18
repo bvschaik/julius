@@ -3,6 +3,7 @@
 #include "building/barracks.h"
 #include "building/culture.h"
 #include "building/house_evolution.h"
+#include "../building/industry.h"
 #include "building/model.h"
 #include "building/monument.h"
 #include "building/warehouse.h"
@@ -259,9 +260,9 @@ static void init(int grid_offset)
     original_overlay = game_state_overlay();
     context.can_play_sound = 1;
     context.show_special_orders = 0;
-    context.depot_select_destination = 0;
-    context.depot_select_source = 0;
-    context.depot_select_resource = 0;
+    context.depot_selection.destination = 0;
+    context.depot_selection.source = 0;
+    context.depot_selection.resource = 0;
     context.can_go_to_advisor = 0;
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
@@ -475,6 +476,7 @@ static void draw_background(void)
 {
     window_city_draw_panels();
     window_city_draw();
+    context.risk_icons.active = 0;
     if (context.type == BUILDING_INFO_NONE) {
         window_building_draw_no_people(&context);
     } else if (context.type == BUILDING_INFO_TERRAIN) {
@@ -550,11 +552,11 @@ static void draw_background(void)
                 window_building_draw_warehouse(&context);
             }
         } else if (btype == BUILDING_DEPOT) {
-            if (context.depot_select_source) {
+            if (context.depot_selection.source) {
                 window_building_draw_depot_order_source_destination_background(&context, 0);
-            } else if (context.depot_select_destination) {
+            } else if (context.depot_selection.destination) {
                 window_building_draw_depot_order_source_destination_background(&context, 1);
-            } else if (context.depot_select_resource) {
+            } else if (context.depot_selection.resource) {
                 window_building_draw_depot_select_resource(&context);
             } else {
                 window_building_draw_depot(&context);
@@ -767,11 +769,11 @@ static void draw_foreground(void)
                 window_building_draw_warehouse_foreground(&context);
             }
         } else if (btype == BUILDING_DEPOT) {
-            if (context.depot_select_source) {
+            if (context.depot_selection.source) {
                 window_building_draw_depot_select_source_destination(&context);
-            } else if (context.depot_select_destination) {
+            } else if (context.depot_selection.destination) {
                 window_building_draw_depot_select_source_destination(&context);
-            } else if (context.depot_select_resource) {
+            } else if (context.depot_selection.resource) {
                 window_building_draw_depot_select_resource_foreground(&context);
             } else {
                 window_building_draw_depot_foreground(&context);
@@ -851,9 +853,9 @@ static void draw_foreground(void)
     }
     // general buttons
     if (context.show_special_orders ||
-        context.depot_select_source ||
-        context.depot_select_destination ||
-        context.depot_select_resource) {
+        context.depot_selection.source ||
+        context.depot_selection.destination ||
+        context.depot_selection.resource) {
         int y_offset = window_building_get_vertical_offset(&context, 28);
         image_buttons_draw(context.x_offset, y_offset + 400, image_buttons_help_close, 2);
     } else {
@@ -865,17 +867,17 @@ static void draw_foreground(void)
             image_buttons_advisor, 1);
     }
     if (!context.show_special_orders &&
-        !context.depot_select_source &&
-        !context.depot_select_destination &&
-        !context.depot_select_resource &&
+        !context.depot_selection.source &&
+        !context.depot_selection.destination &&
+        !context.depot_selection.resource &&
         !building_monument_is_unfinished_monument(b) &&
         has_mothball_button()) {
             draw_mothball_button(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40);
     }
     if (!context.show_special_orders &&
-        !context.depot_select_source &&
-        !context.depot_select_destination &&
-        !context.depot_select_resource &&
+        !context.depot_selection.source &&
+        !context.depot_selection.destination &&
+        !context.depot_selection.resource &&
         !building_monument_is_unfinished_monument(b)) {
         int workers_needed = model_get_building(building_get(context.building_id)->type)->laborers;
         if (workers_needed) {
@@ -941,11 +943,11 @@ static int handle_specific_building_info_mouse(const mouse *m)
             btype == BUILDING_PANTHEON) {
             return window_building_handle_mouse_grand_temple(m, &context);
         } else if (btype == BUILDING_DEPOT) {
-            if (context.depot_select_source) {
+            if (context.depot_selection.source) {
                 window_building_handle_mouse_depot_select_source(m, &context);
-            } else if (context.depot_select_destination) {
+            } else if (context.depot_selection.destination) {
                 window_building_handle_mouse_depot_select_destination(m, &context);
-            } else if (context.depot_select_resource) {
+            } else if (context.depot_selection.resource) {
                 window_building_handle_mouse_depot_select_resource(m, &context);
             } else {
                 window_building_handle_mouse_depot(m, &context);
@@ -970,9 +972,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     int handled = 0;
     // general buttons
     if (context.show_special_orders ||
-        context.depot_select_destination ||
-        context.depot_select_source ||
-        context.depot_select_resource) {
+        context.depot_selection.destination ||
+        context.depot_selection.source ||
+        context.depot_selection.resource) {
         int y_offset = window_building_get_vertical_offset(&context, 28);
         handled |= image_buttons_handle_mouse(m, context.x_offset, y_offset + 400,
             image_buttons_help_close, 2, &focus_image_button_id);
@@ -1049,15 +1051,18 @@ static void get_tooltip(tooltip_context *c)
     } else if (btype == BUILDING_DOCK) {
         precomposed_text = window_building_dock_get_tooltip(&context);        
     } else if (context.type == BUILDING_INFO_BUILDING && btype == BUILDING_DEPOT) {
-        if (context.depot_select_source || context.depot_select_destination) {
+        if (context.depot_selection.source || context.depot_selection.destination) {
             window_building_depot_get_tooltip_source_destination(&translation);
-        } else if (!context.depot_select_resource) {
+        } else if (!context.depot_selection.resource) {
             window_building_depot_get_tooltip_main(&translation);
         }
     }
-    if (!text_id && !group_id && !translation) {
-        if (btype >= BUILDING_WHEAT_FARM && btype <= BUILDING_POTTERY_WORKSHOP) {
+    if (!text_id && !group_id && !translation && !precomposed_text) {
+        if (building_is_farm(btype) || building_is_raw_resource_producer(btype) || building_is_workshop(btype)) {
             window_building_industry_get_tooltip(&context, &translation);
+        }
+        if (!translation) {
+            window_building_get_risks_tooltip(&context, &group_id, &text_id);
         }
     }
     if (text_id || group_id || translation || precomposed_text) {
@@ -1144,21 +1149,21 @@ void window_building_info_show_storage_orders(void)
 void window_building_info_depot_select_source(void)
 {
     window_building_depot_init_storage_selection();
-    context.depot_select_source = 1;
+    context.depot_selection.source = 1;
     window_invalidate();
 }
 
 void window_building_info_depot_select_destination(void)
 {
     window_building_depot_init_storage_selection();
-    context.depot_select_destination = 1;
+    context.depot_selection.destination = 1;
     window_invalidate();
 }
 
 void window_building_info_depot_select_resource(void)
 {
     window_building_depot_init_resource_selection();
-    context.depot_select_resource = 1;
+    context.depot_selection.resource = 1;
     window_invalidate();
 }
 
@@ -1178,8 +1183,8 @@ void window_building_info_depot_toggle_condition_threshold(void)
 
 void window_building_info_depot_return_to_main_window(void)
 {
-    context.depot_select_source = 0;
-    context.depot_select_destination = 0;
-    context.depot_select_resource = 0;
+    context.depot_selection.source = 0;
+    context.depot_selection.destination = 0;
+    context.depot_selection.resource = 0;
     window_invalidate();
 }

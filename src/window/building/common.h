@@ -61,9 +61,16 @@ typedef struct {
         int drawn;
         int figure_ids[7];
     } figure;
-    int depot_select_resource;
-    int depot_select_source;
-    int depot_select_destination;
+    struct {
+        int resource;
+        int source;
+        int destination;
+    } depot_selection;
+    struct {
+        int active;
+        int x_offset;
+        int y_offset;
+    } risk_icons;
 } building_info_context;
 
 void window_building_set_possible_position(int * x_offset, int * y_offset, int width_blocks, int height_blocks);
@@ -84,5 +91,9 @@ void window_building_play_sound(building_info_context *c, const char *sound_file
 
 void window_building_draw_monument_construction_process(building_info_context *c,
     int tr_phase_name, int tr_phase_name_text, int tr_construction_desc);
+
+void window_building_draw_risks(building_info_context *c, int x_offset, int y_offset);
+
+void window_building_get_risks_tooltip(const building_info_context *c, int *group_id, int *text_id);
 
 #endif // WINDOW_BUILDING_COMMON_H

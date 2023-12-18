@@ -257,7 +257,7 @@ static void draw_foreground(void)
         y_offset += RESOURCE_ROW_HEIGHT;
 
         if (i < MAX_VISIBLE_ROWS - 1) {
-            graphics_draw_inset_rect(24, y_offset, 592 - data.margin_right, 2);
+            graphics_draw_inset_rect(24, y_offset, 592 - data.margin_right, 2, COLOR_INSET_DARK, COLOR_INSET_LIGHT);
         }
     }
 

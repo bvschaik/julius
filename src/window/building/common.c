@@ -8,6 +8,8 @@
 #include "city/population.h"
 #include "city/resource.h"
 #include "city/view.h"
+#include "core/calc.h"
+#include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
@@ -87,11 +89,11 @@ static int get_employment_info_text(const building *b, int consider_house_coveri
 
 void window_building_draw_levy(int amount, int x_offset, int y_offset)
 {
-    image_draw(resource_get_data(RESOURCE_DENARII)->image.icon, x_offset + 300, y_offset + 5, COLOR_MASK_NONE, SCALE_NONE);
-    int width = text_draw_money(abs(amount), x_offset + 320, y_offset + 10, FONT_NORMAL_BROWN);
+    image_draw(resource_get_data(RESOURCE_DENARII)->image.icon, x_offset, y_offset + 5, COLOR_MASK_NONE, SCALE_NONE);
+    int width = text_draw_money(abs(amount), x_offset + 20, y_offset + 10, FONT_NORMAL_BROWN);
     if (amount > 0) {
         text_draw(translation_for(TR_BUILDING_INFO_MONTHLY_LEVY),
-            x_offset + 320 + width, y_offset + 10, FONT_NORMAL_BROWN, 0);
+            x_offset + 20 + width, y_offset + 10, FONT_NORMAL_BROWN, 0);
     }
 }
 
@@ -120,7 +122,7 @@ static void draw_employment_details(building_info_context *c, building *b, int y
 
     int levy = building_get_levy(b);
     if (levy) {
-        window_building_draw_levy(levy, c->x_offset, y_offset);
+        y_offset -= 10;
     }
 
     int laborers_needed = building_get_laborers(b->type);
@@ -140,6 +142,7 @@ static void draw_employment_details(building_info_context *c, building *b, int y
                 c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BROWN, 0);
             lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 10, FONT_NORMAL_BROWN);
             lang_text_draw(69, text_id, c->x_offset + 70, y_offset + 26, FONT_NORMAL_BROWN);
+            y_offset += 6;
         } else {
             int width = lang_text_draw_amount(8, 12, b->num_workers,
                 c->x_offset + 60, y_offset + 16, FONT_NORMAL_BROWN);
@@ -147,6 +150,9 @@ static void draw_employment_details(building_info_context *c, building *b, int y
                 c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BROWN, 0);
             lang_text_draw(69, 0, c->x_offset + 70 + width, y_offset + 16, FONT_NORMAL_BROWN);
         }
+    }
+    if (levy) {
+        window_building_draw_levy(levy, c->x_offset + 64, y_offset + 26);
     }
 }
 
@@ -252,5 +258,83 @@ void window_building_draw_monument_construction_process(building_info_context *c
             image_draw(assets_get_image_id("UI", "Const. Banner 01") +
                 phase_offset, c->x_offset + 37, c->y_offset + 201 + height, COLOR_MASK_NONE, SCALE_NONE);
         }
+    }
+}
+
+static color_t get_color_for_risk(int risk_level)
+{
+    static color_t risk_colors[4] = { COLOR_RISK_ICON_LOW, COLOR_RISK_ICON_MEDIUM,
+        COLOR_RISK_ICON_HIGH, COLOR_RISK_ICON_EXTREME };
+    return risk_colors[calc_bound(risk_level, 0, 10) / 3];
+}
+
+void window_building_draw_risks(building_info_context *c, int x_offset, int y_offset)
+{
+    c->risk_icons.active = 1;
+    c->risk_icons.x_offset = x_offset;
+    c->risk_icons.y_offset = y_offset;
+
+    const building *b = building_get(c->building_id);
+    int risks_image_id = assets_lookup_image_id(ASSET_UI_RISKS);
+
+    // Health risk
+    if (b->house_size && b->house_population) {
+        graphics_draw_inset_rect(x_offset - 28, y_offset, 24, 24,
+            COLOR_RISK_ICON_BORDER_DARK, COLOR_RISK_ICON_BORDER_LIGHT);
+        image_draw(risks_image_id + 2, x_offset - 28, y_offset, get_color_for_risk(b->sickness_level / 10), SCALE_NONE);
+    }
+
+    // Fire risk
+    graphics_draw_inset_rect(x_offset, y_offset, 24, 24, COLOR_RISK_ICON_BORDER_DARK, COLOR_RISK_ICON_BORDER_LIGHT);
+    if (b->fire_proof) {
+        image_draw(risks_image_id + 1, x_offset, y_offset, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(risks_image_id + 3, x_offset, y_offset, COLOR_MASK_NONE, SCALE_NONE);
+    } else {
+        image_draw(risks_image_id + 1, x_offset, y_offset, get_color_for_risk(b->fire_risk / 10), SCALE_NONE);
+    }
+
+    // Damage risk
+    graphics_draw_inset_rect(x_offset + 28, y_offset, 24, 24,
+        COLOR_RISK_ICON_BORDER_DARK, COLOR_RISK_ICON_BORDER_LIGHT);
+    if (b->fire_proof || (b->house_size && b->subtype.house_level <= HOUSE_LARGE_TENT)) {
+        image_draw(risks_image_id, x_offset + 28, y_offset, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(risks_image_id + 3, x_offset + 28, y_offset, COLOR_MASK_NONE, SCALE_NONE);
+    } else {
+        image_draw(risks_image_id, x_offset + 28, y_offset, get_color_for_risk(b->damage_risk / 20), SCALE_NONE);
+    }
+}
+
+void window_building_get_risks_tooltip(const building_info_context *c, int *group_id, int *text_id)
+{
+    if (!c->risk_icons.active) {
+        return;
+    }
+
+    const building *b = building_get(c->building_id);
+    const mouse *m = mouse_get();
+
+    // Health tooltip
+    if (b->house_size && b->house_population) {
+        if (m->x >= c->risk_icons.x_offset - 28 && m->x < c->risk_icons.x_offset - 4 &&
+            m->y >= c->risk_icons.y_offset && m->y < c->risk_icons.y_offset + 24) {
+            *group_id = CUSTOM_TRANSLATION;
+            *text_id = TR_TOOLTIP_OVERLAY_SICKNESS_NONE + calc_bound(b->sickness_level + 19, 0, 100) / 20;
+            return;
+        }
+    }
+
+    // Fire tooltip
+    if (m->x >= c->risk_icons.x_offset && m->x < c->risk_icons.x_offset + 24 &&
+        m->y >= c->risk_icons.y_offset && m->y < c->risk_icons.y_offset + 24) {
+        *group_id = 66;
+        *text_id = 46 + calc_bound(b->fire_risk + 19, 0, 100) / 20;
+        return;
+    }
+
+    // Damage tooltip
+    if (m->x >= c->risk_icons.x_offset + 28 && m->x < c->risk_icons.x_offset + 52 &&
+        m->y >= c->risk_icons.y_offset && m->y < c->risk_icons.y_offset + 24) {
+        *group_id = 66;
+        *text_id = 52 + calc_bound(b->damage_risk + 39, 0, 100) / 40;
     }
 }
