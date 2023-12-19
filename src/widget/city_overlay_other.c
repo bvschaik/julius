@@ -84,6 +84,7 @@ static int draw_top_roads(int x, int y, float scale, int grid_offset)
         return 0;
     }
     int image_id = map_image_at(grid_offset);
+    image_draw_isometric_top_from_draw_tile(image_id, x, y, COLOR_MASK_NONE, scale);
     const image *img = image_get(image_id);
     int animation_offset = building_animation_offset(b, image_id, grid_offset);
     if (animation_offset > 0) {
@@ -96,7 +97,7 @@ static int draw_top_roads(int x, int y, float scale, int grid_offset)
             y + img->animation->sprite_offset_y - y_offset,
             COLOR_MASK_NONE, scale);
     }
-    return 0;
+    return 1;
 }
 
 static int show_building_mothball(const building *b)
