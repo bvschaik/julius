@@ -1,5 +1,6 @@
 #include "city_overlay_other.h"
 
+#include "building/animation.h"
 #include "building/industry.h"
 #include "building/model.h"
 #include "building/monument.h"
@@ -68,6 +69,34 @@ static int show_building_sentiment(const building *b)
 static int show_building_roads(const building *b)
 {
     return building_type_is_roadblock(b->type);
+}
+
+static int draw_top_roads(int x, int y, float scale, int grid_offset)
+{
+    if (!map_property_is_draw_tile(grid_offset)) {
+        return 0;
+    }
+    if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        return 0;
+    }
+    building *b = building_get(map_building_at(grid_offset));
+    if (b->type != BUILDING_TRIUMPHAL_ARCH) {
+        return 0;
+    }
+    int image_id = map_image_at(grid_offset);
+    const image *img = image_get(image_id);
+    int animation_offset = building_animation_offset(b, image_id, grid_offset);
+    if (animation_offset > 0) {
+        int y_offset = img->top ? img->top->original.height - FOOTPRINT_HALF_HEIGHT : 0;
+        if (animation_offset > img->animation->num_sprites) {
+            animation_offset = img->animation->num_sprites;
+        }
+        image_draw(image_id + img->animation->start_offset + animation_offset,
+            x + img->animation->sprite_offset_x,
+            y + img->animation->sprite_offset_y - y_offset,
+            COLOR_MASK_NONE, scale);
+    }
+    return 0;
 }
 
 static int show_building_mothball(const building *b)
@@ -409,7 +438,7 @@ const city_overlay *city_overlay_for_efficiency(void)
         0,
         get_tooltip_efficiency,
         0,
-        0
+        draw_top_roads
     };
     return &overlay;
 }
@@ -763,7 +792,7 @@ const city_overlay *city_overlay_for_roads(void)
         get_tooltip_none,
         0,
         0,
-        0
+        draw_top_roads
     };
     return &overlay;
 }
