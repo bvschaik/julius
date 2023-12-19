@@ -318,7 +318,8 @@ void window_building_get_risks_tooltip(const building_info_context *c, int *grou
         if (m->x >= c->risk_icons.x_offset - 28 && m->x < c->risk_icons.x_offset - 4 &&
             m->y >= c->risk_icons.y_offset && m->y < c->risk_icons.y_offset + 24) {
             *group_id = CUSTOM_TRANSLATION;
-            *text_id = TR_TOOLTIP_OVERLAY_SICKNESS_NONE + calc_bound(b->sickness_level + 19, 0, 100) / 20;
+            *text_id = b->sickness_level <= 0 ? TR_TOOLTIP_OVERLAY_SICKNESS_NONE :
+                TR_TOOLTIP_OVERLAY_SICKNESS_LOW + calc_bound(b->sickness_level, 0, 100) / 30;
             return;
         }
     }
