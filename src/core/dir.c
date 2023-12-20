@@ -130,8 +130,6 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         return 0;
     }
 
-    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len - 1);
-
     char *slash = strchr(&corrected_filename[dir_len], '/');
     if (!slash) {
         slash = strchr(&corrected_filename[dir_len], '\\');
@@ -150,7 +148,7 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
             }
         }
     } else {
-        if (correct_case(dir, corrected_filename, TYPE_FILE)) {
+        if (correct_case(dir, &corrected_filename[dir_len], TYPE_FILE)) {
             return corrected_filename;
         }
     }
