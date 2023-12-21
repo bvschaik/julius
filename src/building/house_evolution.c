@@ -101,6 +101,9 @@ static int has_required_goods_and_services(building *house, int for_upgrade, int
     }
     // religion
     int religion = model->religion;
+    if (religion > 3) {
+        religion = 3;
+    }
     if (house->data.house.num_gods < religion) {
         if (religion == 1) {
             ++demands->missing.religion;
@@ -681,6 +684,9 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     }
     // religion
     int religion = model->religion;
+    if (religion > 3) {
+        religion = 3;
+    }
     if (house->data.house.num_gods < religion) {
         if (religion == 1) {
             house->data.house.evolve_text_id = 20;
@@ -690,9 +696,6 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
             return;
         } else if (religion == 3) {
             house->data.house.evolve_text_id = 22;
-            return;
-        } else if (religion == 4) {
-            house->data.house.evolve_text_id = 67;
             return;
         }
     }
@@ -823,6 +826,9 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
     }
     // religion
     religion = model->religion;
+    if (religion > 3) {
+        religion = 3;
+    }
     if (house->data.house.num_gods < religion) {
         if (religion == 1) {
             house->data.house.evolve_text_id = 50;
@@ -832,9 +838,6 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
             return;
         } else if (religion == 3) {
             house->data.house.evolve_text_id = 52;
-            return;
-        } else if (religion == 4) {
-            house->data.house.evolve_text_id = 68;
             return;
         }
     }

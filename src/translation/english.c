@@ -1348,9 +1348,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_INFO_TOTAL_FOOD, "Total food:" },
     {TR_BUILDING_FORMAL_GARDENS, "Formal Gardens" },
     {TR_BUILDING_OVERGROWN_GARDENS, "Overgrown Gardens" },
-    {TR_BUILDING_HOUSE_DEVOLVE_ONLY_THREE_GODS, "This house will devolve soon. Its previously remarkable religious facilities were reduced to the temples of only three gods." },
-    {TR_BUILDING_HOUSE_EVOLVE_NEEDS_FOUR_GODS, "This house cannot evolve, as it has access to the temples of only three religions. As its inhabitants move up the world, they wish to spend more time worshipping other gods." },
-}; // 
+};
 
 void translation_english(const translation_string **strings, int *num_strings)
 {
