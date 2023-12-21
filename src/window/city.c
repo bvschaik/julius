@@ -173,11 +173,21 @@ static void draw_time_left(void)
     }
 }
 
+static void draw_speedrun_info(void)
+{
+    if (config_get(CONFIG_UI_SHOW_SPEEDRUN_INFO)) {
+        int s_height = screen_height();
+        large_label_draw(0, s_height - 25, 10, 0);
+        lang_text_draw_centered(153, setting_difficulty() + 1, 4, s_height - 18, 150, FONT_NORMAL_WHITE);
+    }
+}
+
 static void draw_foreground(void)
 {
     widget_top_menu_draw(0);
     window_city_draw();
     widget_sidebar_city_draw_foreground();
+    draw_speedrun_info();
     if (window_is(WINDOW_CITY) || window_is(WINDOW_CITY_MILITARY)) {
         draw_time_left();
         widget_city_draw_construction_buttons();
