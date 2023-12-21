@@ -688,8 +688,11 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         } else if (religion == 2) {
             house->data.house.evolve_text_id = 21;
             return;
-        } else if (religion >= 3) {
+        } else if (religion == 3) {
             house->data.house.evolve_text_id = 22;
+            return;
+        } else if (religion == 4) {
+            house->data.house.evolve_text_id = 67;
             return;
         }
     }
@@ -827,8 +830,11 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         } else if (religion == 2) {
             house->data.house.evolve_text_id = 51;
             return;
-        } else if (religion >= 3) {
+        } else if (religion == 3) {
             house->data.house.evolve_text_id = 52;
+            return;
+        } else if (religion == 4) {
+            house->data.house.evolve_text_id = 68;
             return;
         }
     }
