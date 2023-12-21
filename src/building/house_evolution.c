@@ -827,7 +827,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         } else if (religion == 2) {
             house->data.house.evolve_text_id = 51;
             return;
-        } else if (religion == 3) {
+        } else if (religion >= 3) {
             house->data.house.evolve_text_id = 52;
             return;
         }
