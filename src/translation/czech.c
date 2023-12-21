@@ -26,7 +26,7 @@ static translation_string all_strings[] = {
     {TR_BUTTON_OK, "OK"},
     {TR_BUTTON_CANCEL, "Zrušit"},
     {TR_BUTTON_RESET_DEFAULTS, "Výchozí nastavení"},
-    {TR_BUTTON_CONFIGURE_HOTKEYS, "Zkratky kláves"},
+    {TR_BUTTON_CONFIGURE_HOTKEYS, "Horké klávesy"},
     {TR_CONFIG_TITLE, "Konfigurační volby"},
     {TR_CONFIG_LANGUAGE_LABEL, "Jazyk:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(výchozí)"},
