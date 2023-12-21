@@ -108,7 +108,7 @@ static int has_required_goods_and_services(building *house, int for_upgrade, int
         } else if (religion == 2) {
             ++demands->missing.second_religion;
             return 0;
-        } else if (religion == 3) {
+        } else if (religion >= 3) {
             ++demands->missing.third_religion;
             return 0;
         }
@@ -688,7 +688,7 @@ void building_house_determine_evolve_text(building *house, int worst_desirabilit
         } else if (religion == 2) {
             house->data.house.evolve_text_id = 21;
             return;
-        } else if (religion == 3) {
+        } else if (religion >= 3) {
             house->data.house.evolve_text_id = 22;
             return;
         }
