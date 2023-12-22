@@ -42,6 +42,13 @@ static const int SHEEP_IMAGE_OFFSETS[] = {
     3,  3,  3,  3,  4,  4,  5,  5, -1, -1, -1, -1, -1, -1, -1, -1
 };
 
+static const int ZEBRA_IMAGE_OFFSETS[] = {
+    0,  0,  1,  1,  2,  2,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+    3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,  3,
+    3,  3,  3,  3,  4,  4,  4,  4, -13, -13, -13, -13, -13, -13, -13, -13
+};
+
 enum {
     HORSE_CREATED = 0,
     HORSE_RACING = 1,
@@ -331,7 +338,12 @@ void figure_zebra_action(figure *f)
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
         f->image_id = image_group(GROUP_FIGURE_ZEBRA) + 96 + figure_image_corpse_offset(f);
     } else if (f->action_state == FIGURE_ACTION_196_HERD_ANIMAL_AT_REST) {
-        f->image_id = image_group(GROUP_FIGURE_ZEBRA) + dir;
+        if (f->id & 3) {
+            f->image_id = image_group(GROUP_FIGURE_ZEBRA) + 104 + dir +
+                8 * ZEBRA_IMAGE_OFFSETS[f->wait_ticks & 0x3f];
+        } else {
+            f->image_id = image_group(GROUP_FIGURE_ZEBRA) + dir;
+        }
     } else {
         f->image_id = image_group(GROUP_FIGURE_ZEBRA) + dir + 8 * f->image_offset;
     }
