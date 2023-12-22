@@ -80,13 +80,19 @@ static int closest_house_with_room(int x, int y)
 
 }
 
+static int house_is_valid(const building *b, int figure_id)
+{
+    return b && b->state == BUILDING_STATE_IN_USE &&
+        b->immigrant_figure_id == figure_id && b->house_size > 0;
+}
+
 void figure_immigrant_action(figure *f)
 {
     building *b = building_get(f->immigrant_building_id);
 
     f->terrain_usage = TERRAIN_USAGE_ANY;
     f->cart_image_id = 0;
-    if (b->state != BUILDING_STATE_IN_USE || b->immigrant_figure_id != f->id || !b->house_size) {
+    if (!house_is_valid(b, f->id)) {
         f->state = FIGURE_STATE_DEAD;
         return;
     }
@@ -264,8 +270,11 @@ void figure_homeless_action(figure *f)
         case FIGURE_ACTION_8_HOMELESS_GOING_TO_HOUSE:
             f->is_ghost = 0;
             figure_movement_move_ticks(f, 1);
-            if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {
-                building_get(f->immigrant_building_id)->immigrant_figure_id = 0;
+            if (!house_is_valid(building_get(f->immigrant_building_id), f->id)) {
+                figure_route_remove(f);
+                f->action_state = FIGURE_ACTION_7_HOMELESS_CREATED;
+                f->wait_ticks = 30;
+            } else if (f->direction == DIR_FIGURE_REROUTE || f->direction == DIR_FIGURE_LOST) {                building_get(f->immigrant_building_id)->immigrant_figure_id = 0;
                 f->state = FIGURE_STATE_DEAD;
             } else if (f->direction == DIR_FIGURE_AT_DESTINATION) {
                 building *b = building_get(f->immigrant_building_id);
@@ -277,8 +286,9 @@ void figure_homeless_action(figure *f)
         case FIGURE_ACTION_9_HOMELESS_ENTERING_HOUSE:
             f->use_cross_country = 1;
             f->is_ghost = 1;
-            if (figure_movement_move_ticks_cross_country(f, 1) == 1) {
+            if (!house_is_valid(building_get(f->immigrant_building_id), f->id)) {
                 f->state = FIGURE_STATE_DEAD;
+            } else if (figure_movement_move_ticks_cross_country(f, 1) == 1) {                f->state = FIGURE_STATE_DEAD;
                 building *b = building_get(f->immigrant_building_id);
                 if (f->immigrant_building_id && building_is_house(b->type)) {
                     int max_people = model_get_house(b->subtype.house_level)->max_people;
