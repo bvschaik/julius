@@ -230,7 +230,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_WORK_CAMP, "Εγκατάσταση Εργατών" },
     {TR_BUILDING_WORK_CAMP_DESC, "Οι εργάτες συγκεντρώνονται εδώ για να μεταφέρουν υλικά στα εργοτάξια." },
 	{TR_BUILDING_DEPOT, "Αποθήκη κάρρων"},
-	TR_BUILDING_CAT_DEPOT, "Αποθήκη γατών"},
+	{TR_BUILDING_CAT_DEPOT, "Αποθήκη γατών"},
     {TR_BUILDING_DEPOT_DESC, "Η αποθήκη κάρρων στέλνει κάρρα για τη μεταφορά εμπορευμάτων μεταξύ αποθηκών και σιταποθηκών με βάση την παραγγελία. Τα κάρρα πρέπει να επιστρέφουν στην αποθήκη μετά από κάθε παράδοση."},
     {TR_HEADER_HOUSING, "Στέγαση"},
     {TR_ADVISOR_HOUSING_ROOM, "Οι κατοικίες της πόλης έχουν διαθέσιμο χώρο για"},
