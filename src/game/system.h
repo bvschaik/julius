@@ -64,6 +64,12 @@ int system_is_fullscreen_only(void);
 void system_set_fullscreen(int fullscreen);
 
 /**
+ * Changes the window title
+ * @param title The new window title
+ */
+void system_change_window_title(const char *title);
+
+/**
  * Set display scale to the given percentage
  * @param scale_percentage Scale percentage to set, 100% is normal
  * @return The actual scale percentage that was set, which may be different to respect minimum resolution

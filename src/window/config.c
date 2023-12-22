@@ -1308,9 +1308,18 @@ static int config_change_string_language(config_string_key key)
         window_plain_message_dialog_show(TR_INVALID_LANGUAGE_TITLE, TR_INVALID_LANGUAGE_MESSAGE, 1);
         return 0;
     }
+
+    char title[100];
+    encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
+    system_change_window_title(title);
+
     strncpy(data.config_string_values[key].original_value,
         data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
     string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
+
+    volume_offset = string_copy(translation_for(TR_CONFIG_VOLUME), volume_text, 63);
+    volume_offset = string_copy(string_from_ascii(" "), volume_offset, (int) (volume_offset - volume_text - 1));
+
     return 1;
 }
 

@@ -353,6 +353,11 @@ void system_set_mouse_position(int *x, int *y)
     SDL_WarpMouseInWindow(SDL.window, scale_logical_to_pixels(*x), scale_logical_to_pixels(*y));
 }
 
+void system_change_window_title(const char *title)
+{
+    SDL_SetWindowTitle(SDL.window, title);
+}
+
 int system_is_fullscreen_only(void)
 {
 #if defined(__ANDROID__) || defined(__SWITCH__) || defined(__vita__)
