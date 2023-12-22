@@ -180,7 +180,8 @@ static int is_auto_cycle_button(building_type type)
         (type == BUILDING_MENU_LARGE_TEMPLES && data.selected_submenu == BUILD_MENU_LARGE_TEMPLES) ||
         (type == BUILDING_MENU_SHRINES && data.selected_submenu == BUILD_MENU_SHRINES) ||
         (type == BUILDING_MENU_TREES && data.selected_submenu == BUILD_MENU_TREES) ||
-        (type == BUILDING_MENU_PATHS && data.selected_submenu == BUILD_MENU_PATHS);
+        (type == BUILDING_MENU_PATHS && data.selected_submenu == BUILD_MENU_PATHS) ||
+        (type == BUILDING_MENU_GARDENS && data.selected_submenu == BUILD_MENU_GARDENS);
 }
 
 static void draw_menu_buttons(void)
