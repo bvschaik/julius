@@ -1348,6 +1348,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_INFO_TOTAL_FOOD, "Total vivres :" },
     {TR_BUILDING_FORMAL_GARDENS, "Jardins aménagés" },
     {TR_BUILDING_OVERGROWN_GARDENS, "Jardins naturels" },
+    {TR_WINDOW_ADVISOR_RELIGION_ALTARS_HEADER, "Autels"}
 };
 
 void translation_french(const translation_string **strings, int *num_strings)
