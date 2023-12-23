@@ -1041,6 +1041,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE_PLURAL, "Krogar"},
     {TR_BUILDING_FORMAL_GARDENS, "Fina trädgårdar" },
     {TR_BUILDING_OVERGROWN_GARDENS, "Vildvuxna trädgårdar" },
+    {TR_WINDOW_ADVISOR_RELIGION_ALTARS_HEADER, "Altare" }
 };
 
 void translation_swedish(const translation_string **strings, int *num_strings)
