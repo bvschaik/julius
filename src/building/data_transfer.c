@@ -1,5 +1,6 @@
 #include "data_transfer.h"
 
+#include "building/industry.h"
 #include "building/roadblock.h"
 #include "building/storage.h"
 #include "city/warning.h"
@@ -65,6 +66,9 @@ int building_data_transfer_copy(building *b)
         case DATA_TYPE_DEPOT:
             data.depot_order = b->data.depot.current_order;
             break;
+        case DATA_TYPE_RAW_RESOURCE_PRODUCER:
+            data.i8 = b->data.industry.is_stockpiling;
+            break;
         default:
             return 0;
 
@@ -100,6 +104,9 @@ int building_data_transfer_paste(building *b)
         case DATA_TYPE_DEPOT:
             b->data.depot.current_order = data.depot_order;
             break;
+        case DATA_TYPE_RAW_RESOURCE_PRODUCER:
+            b->data.industry.is_stockpiling = data.i8;
+            break;
         default:
             return 0;
     }
@@ -112,6 +119,10 @@ building_data_type building_data_transfer_data_type_from_building_type(building_
 {
     if (building_type_is_roadblock(type)) {
         return DATA_TYPE_ROADBLOCK;
+    }
+
+    if (building_is_primary_product_producer(type)) {
+        return DATA_TYPE_RAW_RESOURCE_PRODUCER;
     }
 
     switch (type) {
