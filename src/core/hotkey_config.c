@@ -11,10 +11,15 @@
 #define MAX_LINE 100
 #define MAX_MAPPINGS HOTKEY_MAX_ITEMS * 2
 
+#define HOTKEY_CONFIG_UNVERSIONED 0
+#define HOTKEY_CONFIG_ZOOM 1
+#define HOTKEY_CURRENT_VERSION HOTKEY_CONFIG_ZOOM
+
 static const char *INI_FILENAME = "augustus-hotkeys.ini";
 
 // Keep this in the same order as the actions in hotkey_config.h
 static const char *ini_keys[] = {
+    "version",
     "arrow_up",
     "arrow_down",
     "arrow_left",
@@ -284,6 +289,7 @@ static void load_file(void)
     }
     char line_buffer[MAX_LINE];
     char *line;
+    int version = HOTKEY_CONFIG_UNVERSIONED;
     while ((line = fgets(line_buffer, MAX_LINE, fp)) != 0) {
         // Remove newline from string
         size_t size = strlen(line);
@@ -298,16 +304,29 @@ static void load_file(void)
         char *value = &equals[1];
         for (int i = 0; i < HOTKEY_MAX_ITEMS; i++) {
             if (strcmp(ini_keys[i], line) == 0) {
-                hotkey_mapping mapping;
-                if (key_combination_from_name(value, &mapping.key, &mapping.modifiers)) {
-                    mapping.action = i;
-                    hotkey_config_add_mapping(&mapping);
+                if (strcmp("version", line) == 0) {
+                    version = atoi(value);
+                } else {
+                    hotkey_mapping mapping;
+                    if (key_combination_from_name(value, &mapping.key, &mapping.modifiers)) {
+                        mapping.action = i;
+                        hotkey_config_add_mapping(&mapping);
+                    }
                 }
                 break;
             }
         }
     }
     file_close(fp);
+    if (data.num_mappings == 0) {
+        return;
+    }
+    if (version < HOTKEY_CONFIG_ZOOM && !hotkey_for_action(HOTKEY_ZOOM_IN, 0) &&
+        !hotkey_for_action(HOTKEY_ZOOM_OUT, 0) && !hotkey_for_action(HOTKEY_RESET_ZOOM, 0)) {
+        hotkey_config_add_mapping(hotkey_default_for_action(HOTKEY_ZOOM_IN, 0));
+        hotkey_config_add_mapping(hotkey_default_for_action(HOTKEY_ZOOM_OUT, 0));
+        hotkey_config_add_mapping(hotkey_default_for_action(HOTKEY_RESET_ZOOM, 0));
+    }
 }
 
 void hotkey_config_load(void)
@@ -328,6 +347,7 @@ void hotkey_config_save(void)
         log_error("Unable to write hotkey configuration file", INI_FILENAME, 0);
         return;
     }
+    fprintf(fp, "version=%d\n", HOTKEY_CURRENT_VERSION);
     for (int i = 0; i < data.num_mappings; i++) {
         const char *key_name = key_combination_name(data.mappings[i].key, data.mappings[i].modifiers);
         fprintf(fp, "%s=%s\n", ini_keys[data.mappings[i].action], key_name);
