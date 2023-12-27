@@ -468,7 +468,7 @@ void scenario_invasion_start_from_cheat(void)
 
 void scenario_invasion_start_from_action(invasion_type_enum invasion_type, int size, int invasion_point, formation_attack_enum attack_type, enemy_type_t enemy_id)
 {
-    if (attack_type < FORMATION_ATTACK_FOOD_CHAIN || attack_type > FORMATION_ATTACK_RANDOM) {
+    if (attack_type > FORMATION_ATTACK_RANDOM) {
         attack_type = FORMATION_ATTACK_RANDOM;
     }
     data.last_action_army_id++;
