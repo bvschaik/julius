@@ -256,7 +256,8 @@ void game_undo_perform(void)
         map_terrain_restore();
         map_sprite_restore();
         restore_map_images();
-    } else if (data.type == BUILDING_PLAZA || data.type == BUILDING_GARDENS) {
+    } else if (data.type == BUILDING_PLAZA || data.type == BUILDING_GARDENS ||
+        data.type == BUILDING_OVERGROWN_GARDENS) {
         map_terrain_restore();
         map_aqueduct_restore();
         map_property_restore();
