@@ -1,24 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop-application">
+<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop">
+	<!--Created with jdAppStreamEdit 8.0-->
 	<id>com.github.bvschaik.julius</id>
-	<metadata_license>CC0-1.0</metadata_license>
-	<project_license>AGPL-3.0</project_license>
 	<name>Julius</name>
 	<summary>Julius is an open source re-implementation of Caesar III</summary>
+	<summary xml:lang="de">Julius ist eine Open-Source-Neuimplementierung von Caesar III</summary>
+	<developer id="bvschaik">
+		<name>Bianca van Schaik</name>
+	</developer>
+	<launchable type="desktop-id">com.github.bvschaik.julius.desktop</launchable>
+	<metadata_license>CC0-1.0</metadata_license>
+	<project_license>AGPL-3.0-only</project_license>
 	<description>
-		<p>Julius is a fully working open-source version of Caesar III, with the same logic as the original, but with some UI enhancements, that is able to be played on multiple platforms. The same logic means that the saved games are 100% compatible, and any gameplay bugs present in the original Caesar 3 game will also be present in Julius.</p>
-		<ul>UI enhancements include:
+		<p>Julius is a fully functional open-source adaptation of Caesar III, maintaining the original game's logic while incorporating UI enhancements. It offers cross-platform compatibility, allowing for gameplay across multiple systems. Since it retains the same logic, saved games are fully compatible, and any gameplay bugs from the original Caesar III game will also persist in Julius.</p>
+		<p xml:lang="de">Julius ist eine voll funktionsfähige Open-Source-Version von Caesar III, welche die ursprüngliche Spiellogik beibehält und gleichzeitig UI-Verbesserungen integriert. Es bietet plattformübergreifende Kompatibilität und ermöglicht damit das Spielen auf verschiedenen Systemen. Da es die gleiche Logik beibehält, sind Spielstände vollständig kompatibel und alle Gameplay-Bugs aus dem Originalspiel Caesar III wurden übernommen.</p>
+		<ul>
 			<li>Support for widescreen resolutions</li>
-			<li>Windowed mode support for 32-bit desktops</li>
+			<li xml:lang="de">Unterstützung für Breitbildauflösungen</li>
+			<li>Windowed mode support for 32-bit systems</li>
+			<li xml:lang="de">Fenstermodus für 32-Bit-Systeme</li>
 			<li>A lot of small in-game quality of life improvements</li>
+			<li xml:lang="de">Viele kleine Verbesserungen für eine besseres Spielerlebnis</li>
 		</ul>
 		<p>Julius requires the original assets (graphics, sounds, etc) from Caesar III to run. It optionally supports the high-quality MP3 files once provided on the Sierra website.</p>
+		<p xml:lang="de">Julius benötigt die Originaldateien (Grafiken, Sounds usw.) von Caesar III, um zu funktionieren. Optional unterstützt es die hochwertigen MP3-Dateien, welche früher auf der Sierra-Website zur Verfügung gestellt wurden.</p>
 	</description>
-	<url type="homepage">https://github.com/bvschaik/julius</url>
-	<url type="bugtracker">https://github.com/bvschaik/julius/issues</url>
-	<url type="help">https://github.com/bvschaik/julius/wiki/Running-Julius-on-Linux-BSD</url>
-	<url type="vcs-browser">https://github.com/bvschaik/julius</url>
-	<launchable type="desktop-id">com.github.bvschaik.julius.desktop</launchable>
 	<screenshots>
 		<screenshot type="default">
 			<caption>A city in Julius</caption>
@@ -26,20 +32,24 @@
 		</screenshot>
 	</screenshots>
 	<releases>
-		<release version="1.7.0" date="2021-10-14"/>
-		<release version="1.6.0" date="2021-01-02"/>
-		<release version="1.5.1" date="2020-10-28"/>
-		<release version="1.5.0" date="2020-10-27"/>
-		<release version="1.4.1" date="2020-06-01"/>
-		<release version="1.4.0" date="2020-05-10"/>
-		<release version="1.3.1" date="2020-02-24"/>
-		<release version="1.3.0" date="2020-02-14"/>
+		<release version="1.7.0" date="2021-10-14" type="stable"/>
+		<release version="1.6.0" date="2021-01-02" type="stable"/>
+		<release version="1.5.1" date="2020-10-28" type="stable"/>
+		<release version="1.5.0" date="2020-10-27" type="stable"/>
+		<release version="1.4.1" date="2020-06-01" type="stable"/>
+		<release version="1.4.0" date="2020-05-10" type="stable"/>
+		<release version="1.3.1" date="2020-02-24" type="stable"/>
+		<release version="1.3.0" date="2020-02-14" type="stable"/>
 	</releases>
-	<provides>
-		<binary>julius</binary>
-	</provides>
-	<developer_name>Bianca van Schaik</developer_name>
+	<url type="homepage">https://github.com/bvschaik/julius</url>
+	<url type="bugtracker">https://github.com/bvschaik/julius/issues</url>
+	<url type="help">https://github.com/bvschaik/julius/wiki</url>
+	<url type="vcs-browser">https://github.com/bvschaik/julius</url>
+	<url type="contribute">https://github.com/bvschaik/julius/blob/master/CONTRIBUTING.md</url>
 	<content_rating type="oars-1.1">
 		<content_attribute id="violence-fantasy">moderate</content_attribute>
 	</content_rating>
+	<provides>
+		<binary>julius</binary>
+	</provides>
 </component>
