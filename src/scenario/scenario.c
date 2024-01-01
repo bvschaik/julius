@@ -150,9 +150,10 @@ static void state_offsets_init(int scenario_version)
     }
 
     state_offsets.custom_name = next_start_offset;
-    next_start_offset = state_offsets.custom_name + 51;
+    next_start_offset = state_offsets.custom_name +
+        (scenario_version > SCENARIO_LAST_WRONG_END_OFFSET ? sizeof(scenario.empire.custom_name) : 50);
 
-    state_offsets.end = next_start_offset;
+    state_offsets.end = next_start_offset + 1;
 }
 
 int scenario_get_state_buffer_size_by_savegame_version(int savegame_version)
@@ -167,6 +168,9 @@ int scenario_get_state_buffer_size_by_savegame_version(int savegame_version)
         return state_offsets.end;
     } else if (savegame_version <= SAVE_GAME_LAST_NO_CUSTOM_VARIABLES) {
         state_offsets_init(SCENARIO_LAST_NO_CUSTOM_VARIABLES);
+        return state_offsets.end;
+    } else if (savegame_version <= SAVE_GAME_LAST_WRONG_SCENARIO_END_OFFSET) {
+        state_offsets_init(SCENARIO_LAST_WRONG_END_OFFSET);
         return state_offsets.end;
     } else {
         state_offsets_init(SCENARIO_CURRENT_VERSION);
