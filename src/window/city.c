@@ -439,6 +439,8 @@ static void show_overlay_from_grid_offset(int grid_offset)
             break;
         case BUILDING_MARKET:
         case BUILDING_GRANARY:
+        case BUILDING_CARAVANSERAI:
+        case BUILDING_MESS_HALL:
         case BUILDING_FRUIT_FARM:
         case BUILDING_OLIVE_FARM:
         case BUILDING_PIG_FARM:
