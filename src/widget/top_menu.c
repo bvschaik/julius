@@ -31,6 +31,7 @@
 #include "window/main_menu.h"
 #include "window/message_dialog.h"
 #include "window/mission_briefing.h"
+#include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
 
 enum {
@@ -437,8 +438,13 @@ static void replay_map_confirmed(int confirmed, int checked)
         return;
     }
     if (scenario_is_custom()) {
-        game_file_start_scenario_by_name(scenario_name());
-        window_city_show();
+        if (!game_file_start_scenario_by_name(scenario_name())) {
+            window_city_show();
+            window_plain_message_dialog_show_with_extra(TR_REPLAY_MAP_NOT_FOUND_TITLE,
+                TR_REPLAY_MAP_NOT_FOUND_MESSAGE, 0, scenario_name());
+        } else {
+            window_city_show();
+        }
     } else {
         scenario_save_campaign_player_name();
         window_mission_briefing_show();
