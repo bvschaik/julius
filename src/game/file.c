@@ -204,7 +204,6 @@ static void initialize_scenario_data(const uint8_t *scenario_name)
 static void load_empire_data(int is_custom_scenario, int empire_id)
 {
     empire_load(is_custom_scenario, empire_id);
-    empire_city_update_trading_data(empire_id);
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 }
@@ -263,6 +262,7 @@ static void check_backward_compatibility(void)
 static void initialize_saved_game(void)
 {
     load_empire_data(scenario_is_custom(), scenario_empire_id());
+    empire_city_update_trading_data(scenario_empire_id());
 
     map_image_context_init();
     map_image_clear();
