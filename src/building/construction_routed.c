@@ -129,6 +129,7 @@ int building_construction_place_highway(int measure_only, int x_start, int y_sta
     int items_placed = 0;
     if (map_routing_calculate_distances_for_building(ROUTED_BUILDING_HIGHWAY, x_start, y_start) &&
         place_routed_building(x_start, y_start, x_end, y_end, ROUTED_BUILDING_HIGHWAY, &items_placed)) {
+        map_tiles_update_all_plazas();
         if (!measure_only) {
             map_routing_update_land();
             window_invalidate();
