@@ -20,6 +20,7 @@
 #include "window/city.h"
 #include "window/main_menu.h"
 #include "window/mission_briefing.h"
+#include "window/plain_message_dialog.h"
 
 static void button_click(int type, int param2);
 
@@ -48,13 +49,13 @@ static void draw_foreground(void)
     }
 
     text_draw_centered(translation_for(TR_LABEL_PAUSE_MENU), 192, 58, 192, FONT_LARGE_BLACK, 0);
-    lang_text_draw_centered(13, 5, 192, 106, 192, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(1, 2, 192, 146, 192, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(1, 3, 192, 186, 192, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(1, 4, 192, 226, 192, FONT_NORMAL_GREEN);
-    lang_text_draw_centered(1, 6, 192, 266, 192, FONT_NORMAL_GREEN);
-    text_draw_centered(translation_for(TR_BUTTON_BACK_TO_MAIN_MENU), 192, 306, 192, FONT_NORMAL_GREEN, 0);
-    lang_text_draw_centered(1, 5, 192, 346, 192, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(13, 5, 192, 108, 192, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(1, 2, 192, 148, 192, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(1, 3, 192, 188, 192, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(1, 4, 192, 228, 192, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(1, 6, 192, 268, 192, FONT_NORMAL_GREEN);
+    text_draw_centered(translation_for(TR_BUTTON_BACK_TO_MAIN_MENU), 192, 308, 192, FONT_NORMAL_GREEN, 0);
+    lang_text_draw_centered(1, 5, 192, 348, 192, FONT_NORMAL_GREEN);
 
     graphics_reset_dialog();
 }
@@ -78,14 +79,19 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void replay_map_confirmed(int confirmed, int checked)
 {
-    if (confirmed) {
-        if (scenario_is_custom()) {
-            game_file_start_scenario_by_name(scenario_name());
-            window_city_show();
+    if (!confirmed) {
+        return;
+    }
+    if (scenario_is_custom()) {
+        if (!game_file_start_scenario_by_name(scenario_name())) {
+            window_plain_message_dialog_show_with_extra(TR_REPLAY_MAP_NOT_FOUND_TITLE,
+                TR_REPLAY_MAP_NOT_FOUND_MESSAGE, 0, scenario_name());
         } else {
-            scenario_save_campaign_player_name();
-            window_mission_briefing_show();
+            window_city_show();
         }
+    } else {
+        scenario_save_campaign_player_name();
+        window_mission_briefing_show();
     }
 }
 

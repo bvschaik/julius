@@ -1350,7 +1350,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_OVERGROWN_GARDENS, "Overgrown Gardens" },
     {TR_WINDOW_ADVISOR_RELIGION_ALTARS_HEADER, "Altars"},
     {TR_REPLAY_MAP_NOT_FOUND_TITLE, "Unable to replay map"},
-    {TR_REPLAY_MAP_NOT_FOUND_MESSAGE, "The original map file for this scenario was not found. Unable to replay the map.\nPlease add the following file, either with a .map or .mapx extension:"}
+    { TR_REPLAY_MAP_NOT_FOUND_MESSAGE, "The original map file for this saved game was not found.\nYou need the following file with either a .map or .mapx extension:"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
