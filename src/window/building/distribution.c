@@ -1366,10 +1366,12 @@ void window_building_draw_mess_hall(building_info_context *c)
 
     text_draw_centered(translation_for(TR_BUILDING_MESS_HALL),
         c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
-    if (food_types > 0) {
-        draw_food_stocks(c, b, 64);
-    } else {
+    if (b->num_workers <= 0 && food_types <= 0) {
+        window_building_draw_description_at(c, 64, CUSTOM_TRANSLATION, TR_BUILDING_MESS_HALL_NO_EMPLOYEES);
+    } else if (b->num_workers > 0 && food_types <= 0) {    
         window_building_draw_description_at(c, 64, CUSTOM_TRANSLATION, TR_BUILDING_MESS_HALL_NO_FOOD);
+    } else {
+        draw_food_stocks(c, b, 64);
     }
     if (city_military_total_soldiers_in_city() > 0) {
         int width = text_draw(translation_for(TR_BUILDING_MESS_HALL_FULFILLMENT),
@@ -1470,10 +1472,12 @@ void window_building_draw_caravanserai(building_info_context *c)
 
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
 
-        if (food_types > 0) {
-            draw_food_stocks(c, b, 44);
-        } else {
+        if (b->num_workers <= 0 && food_types <= 0) {
+            window_building_draw_description_at(c, 44, CUSTOM_TRANSLATION, TR_BUILDING_CARAVANSERAI_NO_EMPLOYEES);
+        } else if (b->num_workers > 0 && food_types <= 0) {    
             window_building_draw_description_at(c, 44, CUSTOM_TRANSLATION, TR_BUILDING_CARAVANSERAI_NO_FOOD);
+        } else {
+            draw_food_stocks(c, b, 44);
         }
         if (building_monument_has_labour_problems(b)) {
             text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_NEEDS_WORKERS),
