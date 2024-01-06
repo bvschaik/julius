@@ -747,7 +747,7 @@
 		<layer src="Armoury_ON_01" x="44" y="35"/>
 		<layer src="Watchtower_ON_05" x="102" y="15"/>
 	</image>
-	<!-- Note: Armoury ON Animations for Central, North and South Climates Respectively -->
+	<!-- Note: Armoury ON Animations for Central, North and South Climates respectively -->
 	<image id="Armoury_ON_C" isometric="true">
 		<layer group="this" image="Armoury_OFF_C"/>
 		<animation speed="6" x="0" y="0" reversible="false">
@@ -777,5 +777,55 @@
 			<frame group="this" image="Armoury_Anim_04"/>
 			<frame group="this" image="Armoury_Anim_05"/>
 		</animation>
+	</image>
+	<!-- Note: Auxiliary Infantry Fort flag climate variants for Central, North and South Climates respectively. Assets by CaesarZX -->
+	<image id="fort_aux_inf_flag_central">
+		<layer group="66" image="2"/>
+		<layer src="auxinf_fort_flag" x="10" y="4"/>
+	</image>
+	<image id="fort_aux_inf_flag_north">
+		<layer group="66" image="2"/>
+		<layer src="Fort_Flag_Layer_North"/>
+		<layer src="auxinf_fort_flag" x="10" y="4"/>
+	</image>
+	<image id="fort_aux_inf_flag_south">
+		<layer group="66" image="2"/>
+		<layer src="Fort_Flag_Layer_South"/>
+		<layer src="auxinf_fort_flag" x="10" y="4"/>
+	</image>
+	<!-- Note: Auxiliary Infantry banner static. Asset by CaesarZX -->
+	<image id="auxinf_banner_0" src="auxinf_banner_0"/>
+	<!-- Note: Auxiliary Infantry banner animation frames. Assets by CaesarZX -->
+	<image id="auxinf_banner_01">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_01" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_02">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_02" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_03">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_03" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_04">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_04" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_05">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_05" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_06">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_06" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_07">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_07" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_08">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_08" x="4" y="3"/>
 	</image>
 </assetlist>

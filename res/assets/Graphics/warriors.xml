@@ -4,7 +4,7 @@
 <assetlist name="Warriors">
 	<!-- Note: Auxiliary Infantry Walker Portrait -->
 	<image id="auxinf_portrait">
-		<layer group="190" image="14"/>
+		<layer group="190" image="7"/>
 		<layer src="auxinf_portrait"/>
 	</image>
 	<!-- Note: Auxiliary Infantry Walker Death animation frames 01-08 -->
@@ -126,4 +126,58 @@
 	<image id="auxinf_n_10" src="auxinf_n_10"/>
 	<image id="auxinf_n_11" src="auxinf_n_11"/>
 	<image id="auxinf_n_12" src="auxinf_n_12"/>
+	<!-- Note: Auxiliary Infantry Walker Fighting animation frames NORTH-EAST DIRECTION 01-05 -->
+	<image id="auxinf_f_ne_01" src="auxinf_f_ne_01"/>
+	<image id="auxinf_f_ne_02" src="auxinf_f_ne_02"/>
+	<image id="auxinf_f_ne_03" src="auxinf_f_ne_03"/>
+	<image id="auxinf_f_ne_04" src="auxinf_f_ne_04"/>
+	<image id="auxinf_f_ne_05" src="auxinf_f_ne_05"/>
+	<!-- Note: Auxiliary Infantry Walker Fighting animation frames EAST DIRECTION 01-12 -->
+	<image id="auxinf_f_e_01" src="auxinf_f_e_01"/>
+	<image id="auxinf_f_e_02" src="auxinf_f_e_02"/>
+	<image id="auxinf_f_e_03" src="auxinf_f_e_03"/>
+	<image id="auxinf_f_e_04" src="auxinf_f_e_04"/>
+	<image id="auxinf_f_e_05" src="auxinf_f_e_05"/>
+	<!-- Note: Auxiliary Infantry Walker Fighting animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="auxinf_f_se_01" src="auxinf_f_se_01"/>
+	<image id="auxinf_f_se_02" src="auxinf_f_se_02"/>
+	<image id="auxinf_f_se_03" src="auxinf_f_se_03"/>
+	<image id="auxinf_f_se_04" src="auxinf_f_se_04"/>
+	<image id="auxinf_f_se_05" src="auxinf_f_se_05"/>
+	<!-- Note: Auxiliary Infantry Walker Fighting animation frames SOUTH DIRECTION 01-12 -->
+	<image id="auxinf_f_s_01" src="auxinf_f_s_01"/>
+	<image id="auxinf_f_s_02" src="auxinf_f_s_02"/>
+	<image id="auxinf_f_s_03" src="auxinf_f_s_03"/>
+	<image id="auxinf_f_s_04" src="auxinf_f_s_04"/>
+	<image id="auxinf_f_s_05" src="auxinf_f_s_05"/>
+	<!-- Note: Auxiliary Infantry Walker Fighting animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="auxinf_f_sw_01" src="auxinf_f_sw_01"/>
+	<image id="auxinf_f_sw_02" src="auxinf_f_sw_02"/>
+	<image id="auxinf_f_sw_03" src="auxinf_f_sw_03"/>
+	<image id="auxinf_f_sw_04" src="auxinf_f_sw_04"/>
+	<image id="auxinf_f_sw_05" src="auxinf_f_sw_05"/>
+	<!-- Note: Auxiliary Infantry Walker Fighting animation frames WEST DIRECTION 01-12 -->
+	<image id="auxinf_f_w_01" src="auxinf_f_w_01"/>
+	<image id="auxinf_f_w_02" src="auxinf_f_w_02"/>
+	<image id="auxinf_f_w_03" src="auxinf_f_w_03"/>
+	<image id="auxinf_f_w_04" src="auxinf_f_w_04"/>
+	<image id="auxinf_f_w_05" src="auxinf_f_w_05"/>
+	<!-- Note: Auxiliary Infantry Walker Fighting animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="auxinf_f_nw_01" src="auxinf_f_nw_01"/>
+	<image id="auxinf_f_nw_02" src="auxinf_f_nw_02"/>
+	<image id="auxinf_f_nw_03" src="auxinf_f_nw_03"/>
+	<image id="auxinf_f_nw_04" src="auxinf_f_nw_04"/>
+	<image id="auxinf_f_nw_05" src="auxinf_f_nw_05"/>
+	<!-- Note: Auxiliary Infantry Walker Fighting animation frames NORTH DIRECTION 01-12 -->
+	<image id="auxinf_f_n_01" src="auxinf_f_n_01"/>
+	<image id="auxinf_f_n_02" src="auxinf_f_n_02"/>
+	<image id="auxinf_f_n_03" src="auxinf_f_n_03"/>
+	<image id="auxinf_f_n_04" src="auxinf_f_n_04"/>
+	<image id="auxinf_f_n_05" src="auxinf_f_n_05"/>
+	<!-- Note: Caesar's Auxiliary Infantry Walker Portrait -->
+	<image id="auxinf_portrait_blue">
+		<layer group="190" image="7"/>
+		<layer src="auxinf_portrait"/>
+		<layer src="auxinf_blue_portrait"/>
+	</image>
 </assetlist>

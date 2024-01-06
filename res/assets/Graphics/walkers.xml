@@ -856,17 +856,42 @@
 	<!-- Note: Mess Hall Walker Portrait -->
 	<image id="M Hall Portrait">
 		<layer group="190" image="14"/>
-		<layer src="mess_walker_portrait_overlay"/>
+		<layer src="slave_portrait_overlay"/>
+		<layer src="mess_walker_portrait_overlay" x="17" y="13"/>
 	</image>
 	<!-- Note: Mess Hall Walker Death animation frames 01-08 -->
-	<image id="M Hall death 01" src="mess_walker_death_01"/>
-	<image id="M Hall death 02" src="mess_walker_death_02"/>
-	<image id="M Hall death 03" src="mess_walker_death_03"/>
-	<image id="M Hall death 04" src="mess_walker_death_04"/>
-	<image id="M Hall death 05" src="mess_walker_death_05"/>
-	<image id="M Hall death 06" src="mess_walker_death_06"/>
-	<image id="M Hall death 07" src="mess_walker_death_07"/>
-	<image id="M Hall death 08" src="mess_walker_death_08"/>
+	<image id="M Hall death 01">
+		<layer src="slave_death_01"/>
+		<layer src="mess_walker_death_01" x="7" y="6"/>
+	</image>
+	<image id="M Hall death 02">
+		<layer src="slave_death_02"/>
+		<layer src="mess_walker_death_02" x="4" y="4"/>
+	</image>
+	<image id="M Hall death 03">
+		<layer src="slave_death_03"/>
+		<layer src="mess_walker_death_03" x="0" y="6"/>
+	</image>
+	<image id="M Hall death 04">
+		<layer src="slave_death_04"/>
+		<layer src="mess_walker_death_04" x="0" y="12"/>
+	</image>
+	<image id="M Hall death 05">
+		<layer src="slave_death_04"/>
+		<layer src="mess_walker_death_04" x="0" y="16"/>
+	</image>
+	<image id="M Hall death 06">
+		<layer src="slave_death_06"/>
+		<layer src="mess_walker_death_06" x="0" y="16"/>
+	</image>
+	<image id="M Hall death 07">
+		<layer src="slave_death_07"/>
+		<layer src="mess_walker_death_07" x="0" y="16"/>
+	</image>
+	<image id="M Hall death 08">
+		<layer src="slave_death_08"/>
+		<layer src="mess_walker_death_08" x="0" y="16"/>
+	</image>
 	<!-- Note: Mess Hall Walker Walking animation frames NORTH-EAST DIRECTION 01-12 -->
 	<image id="M Hall NE 01" src="mess_walker_ne_01"/>
 	<image id="M Hall NE 02" src="mess_walker_ne_02"/>
