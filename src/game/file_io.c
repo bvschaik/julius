@@ -61,8 +61,6 @@
 #include "sound/city.h"
 #include "widget/minimap.h"
 
-#include "zlib.h"
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

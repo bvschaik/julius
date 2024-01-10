@@ -18,33 +18,8 @@ set(EXPAT_FILES
     ${MAIN_DIR}/ext/expat/xmltok.c
 )
 
-set(PNG_FILES
-    ${MAIN_DIR}/ext/png/png.c
-    ${MAIN_DIR}/ext/png/pngerror.c
-    ${MAIN_DIR}/ext/png/pngget.c
-    ${MAIN_DIR}/ext/png/pngmem.c
-    ${MAIN_DIR}/ext/png/pngpread.c
-    ${MAIN_DIR}/ext/png/pngread.c
-    ${MAIN_DIR}/ext/png/pngrio.c
-    ${MAIN_DIR}/ext/png/pngrtran.c
-    ${MAIN_DIR}/ext/png/pngrutil.c
-    ${MAIN_DIR}/ext/png/pngset.c
-    ${MAIN_DIR}/ext/png/pngtrans.c
-    ${MAIN_DIR}/ext/png/pngwio.c
-    ${MAIN_DIR}/ext/png/pngwrite.c
-    ${MAIN_DIR}/ext/png/pngwtran.c
-    ${MAIN_DIR}/ext/png/pngwutil.c
-)
-
-set(ZLIB_FILES
-    ${MAIN_DIR}/ext/zlib/adler32.c
-    ${MAIN_DIR}/ext/zlib/crc32.c
-    ${MAIN_DIR}/ext/zlib/deflate.c
-    ${MAIN_DIR}/ext/zlib/inffast.c
-    ${MAIN_DIR}/ext/zlib/inflate.c
-    ${MAIN_DIR}/ext/zlib/inftrees.c
-    ${MAIN_DIR}/ext/zlib/trees.c
-    ${MAIN_DIR}/ext/zlib/zutil.c
+set(SPNG_FILES
+    ${MAIN_DIR}/ext/spng/spng.c
 )
 
 set(CORE_FILES
@@ -72,16 +47,17 @@ set(PLATFORM_FILES
 )
 
 add_compile_definitions(BUILDING_ASSET_PACKER)
+add_compile_definitions(MINIZ_IMPLEMENTATION)
 
 if(FORMAT_XML)
     add_compile_definitions(FORMAT_XML)
 endif()
 
-if (PACK_XMLS)
+if(PACK_XMLS)
     add_compile_definitions(PACK_XMLS)
 endif()
 
-if (PACK_CURSORS)
+if(PACK_CURSORS)
     add_compile_definitions(PACK_CURSORS)
 endif()
 
@@ -94,34 +70,11 @@ add_executable(${SHORT_NAME}
     ${ASSETS_FILES}
     ${CORE_FILES}
     ${PLATFORM_FILES}
+    ${SPNG_FILES}
 )
 
 if(SYSTEM_LIBS)
-    find_package(ZLIB)
-    find_package(PNG)
     find_package(EXPAT)
-endif()
-
-if(ZLIB_FOUND)
-    include_directories(${ZLIB_INCLUDE_DIRS})
-    target_link_libraries(${SHORT_NAME} ${ZLIB_LIBRARIES})
-else()
-    if(SYSTEM_LIBS)
-        message(STATUS "Zlib was not found but that's ok: falling back to internal version")
-    endif()
-    include_directories(${MAIN_DIR}/ext/zlib)
-    target_sources(${SHORT_NAME} PRIVATE "${ZLIB_FILES}")
-endif()
-
-if(PNG_FOUND)
-    include_directories(${PNG_INCLUDE_DIRS})
-    target_link_libraries(${SHORT_NAME} ${PNG_LIBRARIES})
-else()
-    if(SYSTEM_LIBS)
-        message(STATUS "PNG was not found but that's ok: falling back to internal version")
-    endif()
-    include_directories(${MAIN_DIR}/ext/png)
-    target_sources(${SHORT_NAME} PRIVATE "${PNG_FILES}")
 endif()
 
 if(EXPAT_FOUND)
@@ -131,18 +84,22 @@ else()
     if(SYSTEM_LIBS)
         message(STATUS "Expat was not found but that's ok: falling back to internal version")
     endif()
+
     include_directories(${MAIN_DIR}/ext/expat)
     target_sources(${SHORT_NAME} PRIVATE "${EXPAT_FILES}")
+
     if(NOT WIN32)
         add_compile_definitions(XML_DEV_URANDOM)
     endif()
 endif()
 
 include_directories(${MAIN_DIR}/src)
+include_directories(${MAIN_DIR}/ext)
+
 if(MSVC)
     include_directories(${MAIN_DIR}/ext/dirent)
 endif()
 
-if (UNIX AND NOT APPLE AND (CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
+if(UNIX AND NOT APPLE AND(CMAKE_COMPILER_IS_GNUCC OR CMAKE_C_COMPILER_ID STREQUAL "Clang"))
     target_link_libraries(${SHORT_NAME} m)
 endif()

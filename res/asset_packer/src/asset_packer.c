@@ -17,7 +17,7 @@
 #include "graphics/color.h"
 #include "platform/file_manager.h"
 
-#include "png.h"
+#include "spng/spng.h"
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -288,62 +288,49 @@ static void copy_to_final_image(const color_t *pixels, const image_packer_rect *
 static void create_final_image(const image_packer *packer)
 {
     packed_asset *asset;
-    array_foreach(packed_assets, asset)
-    {
+    array_foreach(packed_assets, asset) {
         copy_to_final_image(asset->pixels, asset->rect);
     }
 }
 
 static void save_final_image(const char *path, unsigned int width, unsigned int height, const color_t *pixels)
 {
-    png_structp png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, 0, 0, 0);
+    spng_ctx *ctx = spng_ctx_new(SPNG_CTX_ENCODER);
 
-    if (!png_ptr) {
+    if (!ctx || spng_set_option(ctx, SPNG_IMG_COMPRESSION_LEVEL, 3)) {
         log_error("Error creating png structure for", path, 0);
         return;
     }
-    png_infop info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr) {
-        log_error("Error creating png structure for", path, 0);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    png_set_compression_level(png_ptr, 3);
-
     FILE *fp = fopen(path, "wb");
-    if (!fp) {
+    if (!fp || spng_set_png_file(ctx, fp)) {
         log_error("Error creating final png file at", path, 0);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
-    png_init_io(png_ptr, fp);
-
-    if (setjmp(png_jmpbuf(png_ptr))) {
-        log_error("Error constructing png file", path, 0);
+        spng_ctx_free(ctx);
         fclose(fp);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
         return;
     }
-    png_set_IHDR(png_ptr, info_ptr, width, height, 8, PNG_COLOR_TYPE_RGBA,
-        PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-    png_write_info(png_ptr, info_ptr);
+    struct spng_ihdr ihdr = {
+        .width = width,
+        .height = height,
+        .bit_depth = 8,
+        .color_type = SPNG_COLOR_TYPE_TRUECOLOR_ALPHA
+    };
+    if (spng_set_ihdr(ctx, &ihdr) ||
+        spng_encode_image(ctx, 0, 0, SPNG_FMT_PNG, SPNG_ENCODE_PROGRESSIVE | SPNG_ENCODE_FINALIZE)) {
+        log_error("Error creating final png file at", path, 0);
+        spng_ctx_free(ctx);
+        fclose(fp);
+        return;
+    }
 
     uint8_t *row_pixels = malloc(width * BYTES_PER_PIXEL);
     if (!row_pixels) {
         log_error("Out of memory for png creation", path, 0);
         fclose(fp);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
+        spng_ctx_free(ctx);
         return;
     }
     memset(row_pixels, 0, width * BYTES_PER_PIXEL);
 
-    if (setjmp(png_jmpbuf(png_ptr))) {
-        log_error("Error constructing png file", path, 0);
-        free(row_pixels);
-        fclose(fp);
-        png_destroy_write_struct(&png_ptr, &info_ptr);
-        return;
-    }
     for (unsigned int y = 0; y < height; ++y) {
         uint8_t *pixel = row_pixels;
         for (unsigned int x = 0; x < width; x++) {
@@ -354,13 +341,15 @@ static void save_final_image(const char *path, unsigned int width, unsigned int 
             *(pixel + 3) = (uint8_t) COLOR_COMPONENT(input, COLOR_BITSHIFT_ALPHA);
             pixel += BYTES_PER_PIXEL;
         }
-        png_write_row(png_ptr, row_pixels);
+        int result = spng_encode_scanline(ctx, row_pixels, width * BYTES_PER_PIXEL);
+        if (result != SPNG_OK && result != SPNG_EOI) {
+            log_error("Error constructing png file", path, 0);
+            break;
+        }
     }
-    png_write_end(png_ptr, info_ptr);
-
     free(row_pixels);
     fclose(fp);
-    png_destroy_write_struct(&png_ptr, &info_ptr);
+    spng_ctx_free(ctx);
 }
 
 static void pack_layer(const image_packer *packer, layer *l)
