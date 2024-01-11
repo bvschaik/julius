@@ -17,6 +17,8 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 
+static short global_roaming_noise = 0;
+
 static void advance_tick(figure *f)
 {
     switch (f->direction) {
@@ -435,7 +437,7 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                     if (f->direction < 0) f->direction = 6;
                 } while (dir++ < 4);
             } else { // > 2 road tiles
-                f->direction = (f->roam_random_counter + map_random_get(f->grid_offset)) & 6;
+                f->direction = (++global_roaming_noise + f->roam_random_counter + map_random_get(f->grid_offset)) & 6;
                 if (!road_tiles[f->direction] || f->direction == came_from_direction) {
                     f->roam_ticks_until_next_turn--;
                     if (f->roam_ticks_until_next_turn <= 0) {
