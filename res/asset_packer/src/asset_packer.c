@@ -141,6 +141,9 @@ static void create_image_xml_line(const asset_image *image)
 
 static void create_layer_xml_line(const layer *l)
 {
+    if (!l->original_image_group && !l->original_image_id && !l->width && !l->height) {
+        return;
+    }
     xml_exporter_new_element("layer", 1);
 
     add_attribute_string("group", l->original_image_group);
