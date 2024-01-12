@@ -64,6 +64,7 @@ typedef struct {
     const char *path;
     image_packer_rect *rect;
     color_t *pixels;
+    image img;
 } packed_asset;
 
 #define PACKED_ASSETS_BLOCK_SIZE 256
@@ -179,6 +180,8 @@ static void create_frame_xml_line(const layer *l)
     add_attribute_string("image", l->original_image_id);
     add_attribute_int("src_x", l->src_x);
     add_attribute_int("src_y", l->src_y);
+    add_attribute_int("x", l->x_offset);
+    add_attribute_int("y", l->y_offset);
     add_attribute_int("width", l->width);
     add_attribute_int("height", l->height);
     add_attribute_enum("invert", l->invert, LAYER_INVERT, 3);
@@ -200,9 +203,8 @@ int packed_asset_active(const packed_asset *asset)
 static packed_asset *get_asset_image_from_list(const layer *l)
 {
     packed_asset *asset;
-    array_foreach(packed_assets, asset)
-    {
-        if (strcmp(l->asset_image_path, asset->path) == 0) {
+    array_foreach(packed_assets, asset) {
+        if (asset->path && strcmp(l->asset_image_path, asset->path) == 0) {
             return asset;
         }
     }
@@ -213,7 +215,7 @@ static void add_asset_image_to_list(layer *l)
 {
     packed_asset *asset = get_asset_image_from_list(l);
     if (!asset) {
-        array_new_item(packed_assets, 0, asset);
+        array_new_item(packed_assets, 1, asset);
         if (!asset) {
             log_error("Out of memory.", 0, 0);
             return;
@@ -236,12 +238,101 @@ static void get_assets_for_group(int group_id)
     }
 }
 
+void image_crop(image *img, const color_t *pixels)
+{
+    if (!img->width || !img->height) {
+        return;
+    }
+    int x_first_opaque = 0;
+    int x_last_opaque = 0;
+    int y_first_opaque = 0;
+    int y_last_opaque = 0;
+
+    int found_opaque = 0;
+
+    // Check all four sides of the rect
+    for (int y = 0; y < img->height; y++) {
+        const color_t *row = &pixels[y * img->width];
+        for (int x = 0; x < img->width; x++) {
+            if ((row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                y_first_opaque = y;
+                y_last_opaque = y;
+                x_first_opaque = x;
+                x_last_opaque = x;
+                found_opaque = 1;
+                break;
+            }
+        }
+        if (found_opaque) {
+            break;
+        }
+    }
+    if (!found_opaque) {
+        img->width = 0;
+        img->height = 0;
+        return;
+    }
+    found_opaque = 0;
+    for (int y = img->height - 1; y > y_last_opaque; y--) {
+        const color_t *row = &pixels[y * img->width];
+        for (int x = img->width - 1; x >= 0; x--) {
+            if ((row[x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                y_last_opaque = y;
+                if (x_first_opaque > x) {
+                    x_first_opaque = x;
+                }
+                if (x_last_opaque < x) {
+                    x_last_opaque = x;
+                }
+                found_opaque = 1;
+                break;
+            }
+        }
+        if (found_opaque) {
+            break;
+        }
+    }
+    found_opaque = 0;
+    for (int x = 0; x < x_first_opaque; x++) {
+        for (int y = y_first_opaque; y <= y_last_opaque; y++) {
+            if ((pixels[y * img->width + x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                x_first_opaque = x;
+                found_opaque = 1;
+                break;
+            }
+        }
+        if (found_opaque) {
+            break;
+        }
+    }
+    found_opaque = 0;
+    for (int x = img->width - 1; x > x_last_opaque; x--) {
+        for (int y = y_first_opaque; y <= y_last_opaque; y++) {
+            if ((pixels[y * img->width + x] & COLOR_CHANNEL_ALPHA) != ALPHA_TRANSPARENT) {
+                x_last_opaque = x;
+                found_opaque = 1;
+                break;
+            }
+        }
+        if (found_opaque) {
+            break;
+        }
+    }
+
+    img->x_offset = x_first_opaque;
+    img->y_offset = y_first_opaque;
+    img->width = x_last_opaque - x_first_opaque + 1;
+    img->height = y_last_opaque - y_first_opaque + 1;
+}
+
 static void populate_asset_rects(image_packer *packer)
 {
     packed_asset *asset;
-    array_foreach(packed_assets, asset)
-    {
+    array_foreach(packed_assets, asset) {
         int width, height;
+        if (!asset->path) {
+            continue;
+        }
         asset->rect = &packer->rects[asset->id];
         if (!png_get_image_size(asset->path, &width, &height)) {
             continue;
@@ -259,22 +350,25 @@ static void populate_asset_rects(image_packer *packer)
             asset->pixels = 0;
             continue;
         }
-        asset->rect->input.width = width;
-        asset->rect->input.height = height;
+        asset->img.width = asset->img.original.width = width;
+        asset->img.height = asset->img.original.height = height;
+        image_crop(&asset->img, asset->pixels);
+        asset->rect->input.width = asset->img.width;
+        asset->rect->input.height = asset->img.height;
     }
 }
 
-static void copy_to_final_image(const color_t *pixels, const image_packer_rect *rect)
+static void copy_to_final_image(const color_t *pixels, const image_packer_rect *rect, int src_width)
 {
     if (!rect->output.rotated) {
         for (unsigned int y = 0; y < rect->input.height; y++) {
-            const color_t *src_pixel = &pixels[y * rect->input.width];
+            const color_t *src_pixel = &pixels[y * src_width];
             color_t *dst_pixel = &final_image_pixels[(y + rect->output.y) * final_image_width + rect->output.x];
             memcpy(dst_pixel, src_pixel, rect->input.width * sizeof(color_t));
         }
     } else {
         for (unsigned int y = 0; y < rect->input.height; y++) {
-            const color_t *src_pixel = &pixels[y * rect->input.width];
+            const color_t *src_pixel = &pixels[y * src_width];
             color_t *dst_pixel = &final_image_pixels[(rect->output.y + rect->input.width - 1) *
                 final_image_width + y + rect->output.x];
             for (unsigned int x = 0; x < rect->input.width; x++) {
@@ -289,7 +383,11 @@ static void create_final_image(const image_packer *packer)
 {
     packed_asset *asset;
     array_foreach(packed_assets, asset) {
-        copy_to_final_image(asset->pixels, asset->rect);
+        if (!asset->pixels) {
+            continue;
+        }
+        color_t *dst = asset->pixels + asset->img.y_offset * asset->img.original.width + asset->img.x_offset;
+        copy_to_final_image(dst, asset->rect, asset->img.original.width);
     }
 }
 
@@ -357,9 +455,12 @@ static void pack_layer(const image_packer *packer, layer *l)
     if (!l->asset_image_path) {
         return;
     }
-    image_packer_rect *rect = &packer->rects[l->calculated_image_id];
+    const image_packer_rect *rect = &packer->rects[l->calculated_image_id];
+    const packed_asset *asset = array_item(packed_assets, l->calculated_image_id);
     l->src_x = rect->output.x;
     l->src_y = rect->output.y;
+    l->x_offset += asset->img.x_offset;
+    l->y_offset += asset->img.y_offset;
     if (!rect->output.rotated) {
         l->width = rect->input.width;
         l->height = rect->input.height;
@@ -382,6 +483,20 @@ static void pack_layer(const image_packer *packer, layer *l)
                 l->rotate = ROTATE_90_DEGREES;
                 break;
         }
+    }
+}
+
+static void calculate_image_size(asset_image *image)
+{
+    const layer *l = &image->first_layer;
+    if (!l->calculated_image_id) {
+        return;
+    }
+    const packed_asset *asset = array_item(packed_assets, l->calculated_image_id);
+    if (asset->img.original.width != asset->img.width || asset->img.original.height != asset->img.height) {
+        image->img.width = asset->img.original.width;
+        image->img.height = asset->img.original.height;
+        image->has_defined_size = 1;
     }
 }
 
@@ -448,6 +563,9 @@ static void pack_group(int group_id)
 
     for (int image_id = group->first_image_index; image_id <= group->last_image_index; image_id++) {
         asset_image *image = asset_image_get_from_id(image_id);
+        if (!image->has_defined_size) {
+            calculate_image_size(image);
+        }
         create_image_xml_line(image);
         for (layer *l = &image->first_layer; l; l = l->next) {
             pack_layer(&packer, l);
@@ -472,8 +590,7 @@ static void pack_group(int group_id)
     xml_exporter_close_element(0);
 
     packed_asset *asset;
-    array_foreach(packed_assets, asset)
-    {
+    array_foreach(packed_assets, asset) {
         free(asset->pixels);
     }
 
@@ -571,7 +688,7 @@ static void pack_cursors(void)
     for (int i = 0; i < NUM_CURSOR_NAMES * NUM_CURSOR_SIZES; i++) {
         layer *cursor = &cursors[i];
         pack_layer(&packer, cursor);
-        copy_to_final_image(cursor->data, &packer.rects[i]);
+        copy_to_final_image(cursor->data, &packer.rects[i], cursor->width);
         printf("%-16s  %3d     %3d        %3d         %3d\n",
             cursor->asset_image_path + strlen(CURSORS_DIR) + strlen(CURSORS_NAME) + 2,
             packer.rects[i].output.x, packer.rects[i].output.y, cursor->width, cursor->height);

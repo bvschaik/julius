@@ -177,6 +177,8 @@ static int xml_start_frame_element(void)
     const char *image_id = xml_parser_get_attribute_string("image");
     int src_x = xml_parser_get_attribute_int("src_x");
     int src_y = xml_parser_get_attribute_int("src_y");
+    int offset_x = xml_parser_get_attribute_int("x");
+    int offset_y = xml_parser_get_attribute_int("y");
     int width = xml_parser_get_attribute_int("width");
     int height = xml_parser_get_attribute_int("height");
     layer_invert_type invert = xml_parser_get_attribute_enum("invert", INVERT_VALUES, 3, INVERT_HORIZONTAL);
@@ -184,7 +186,7 @@ static int xml_start_frame_element(void)
 
     img->last_layer = &img->first_layer;
     if (!asset_image_add_layer(img, path, group, image_id, src_x, src_y,
-        0, 0, width, height, invert, rotate, PART_BOTH, 0)) {
+        offset_x, offset_y, width, height, invert, rotate, PART_BOTH, 0)) {
         img->active = 0;
         return 1;
     }
@@ -193,6 +195,8 @@ static int xml_start_frame_element(void)
         asset_image_unload(img);
         return 1;
     }
+    img->img.width += offset_x;
+    img->img.height += offset_y;
     asset_image_check_and_handle_reference(img);
 #else
     data.current_image->has_frame_elements = 1;
