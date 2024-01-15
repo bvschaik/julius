@@ -1,5 +1,6 @@
 #include "xml_exporter.h"
 
+#include "core/encoding.h"
 #include "core/string.h"
 
 #include <stdio.h>
@@ -37,26 +38,12 @@ static int decrease_depth(void)
     return data.current_element_depth;
 }
 
-static int ascii_as_string(buffer *buf, const char *text_out)
-{
-    const uint8_t *converted = string_from_ascii(text_out);
-    buffer_write_raw(buf, converted, string_length(converted));
-    return 1;
-}
-
-static int ascii_as_const_string(buffer *buf, const char *text_out)
-{
-    const uint8_t *converted = string_from_ascii(text_out);
-    buffer_write_raw(buf, converted, string_length(converted));
-    return 1;
-}
-
 static void export_declaration_doctype(const char *type)
 {
     buffer_write_raw(data.output_buf, "<?xml version=\"1.0\"?>", 21);
     xml_exporter_newline();
     buffer_write_raw(data.output_buf, "<!DOCTYPE ", 10);
-    ascii_as_const_string(data.output_buf, type);
+    buffer_write_raw(data.output_buf, type, strlen(type));
     buffer_write_raw(data.output_buf, ">", 1);
     xml_exporter_newline();
 }
@@ -90,7 +77,7 @@ static void create_end_tag(int keep_inline)
         xml_exporter_whitespaces(data.current_element_depth * WHITESPACES_PER_TAB);
     }
     buffer_write_raw(data.output_buf, "</", 2);
-    ascii_as_const_string(data.output_buf, data.current_element->name);
+    buffer_write_raw(data.output_buf, data.current_element->name, strlen(data.current_element->name));
     buffer_write_raw(data.output_buf, ">", 1);
     xml_exporter_newline();
 
@@ -127,18 +114,23 @@ void xml_exporter_new_element(const char *name, int is_child)
     
     xml_exporter_whitespaces(data.current_element_depth * WHITESPACES_PER_TAB);
     buffer_write_raw(data.output_buf, "<", 1);
-    ascii_as_const_string(data.output_buf, data.current_element->name);
+    buffer_write_raw(data.output_buf, data.current_element->name, strlen(data.current_element->name));
 }
 
 void xml_exporter_add_attribute_text(const char *name, const uint8_t *value)
 {
     xml_exporter_whitespaces(1);
-    ascii_as_const_string(data.output_buf, name);
-    char text_out[] = "=\"";
-    ascii_as_string(data.output_buf, text_out);
-    buffer_write_raw(data.output_buf, value, string_length(value));
-    char text_out_2[] = "\"";
-    ascii_as_string(data.output_buf, text_out_2);
+    buffer_write_raw(data.output_buf, name, strlen(name));
+    buffer_write_raw(data.output_buf, "=\"", 2);
+#ifndef BUILDING_ASSET_PACKER
+    char value_out[300];
+    encoding_to_utf8(value, value_out, 300, 0);
+    buffer_write_raw(data.output_buf, value, strlen(value_out));
+#else
+    const char *value_ascii = string_from_ascii(value);
+    buffer_write_raw(data.output_buf, value_ascii, strlen(value_ascii));
+#endif
+    buffer_write_raw(data.output_buf, "\"", 1);
 }
 
 void xml_exporter_add_attribute_int(const char *name, int value)
@@ -147,12 +139,10 @@ void xml_exporter_add_attribute_int(const char *name, int value)
     int value_length = string_from_int(attr_value, value, 0);
 
     xml_exporter_whitespaces(1);
-    ascii_as_const_string(data.output_buf, name);
-    const uint8_t text_out[] = "=\"";
-    buffer_write_raw(data.output_buf, text_out, 2);
+    buffer_write_raw(data.output_buf, name, strlen(name));
+    buffer_write_raw(data.output_buf, "=\"", 2);
     buffer_write_raw(data.output_buf, attr_value, value_length);
-    const uint8_t text_out_2[] = "\"";
-    buffer_write_raw(data.output_buf, text_out_2, 1);
+    buffer_write_raw(data.output_buf, "\"", 1);
 }
 
 void xml_exporter_add_text(const uint8_t *value)
@@ -188,5 +178,5 @@ void xml_exporter_whitespaces(int count)
 
 void xml_exporter_newline(void)
 {
-    ascii_as_string(data.output_buf, "\n");
+    buffer_write_raw(data.output_buf, "\n", 1);
 }
