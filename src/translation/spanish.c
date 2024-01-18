@@ -693,7 +693,6 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_MOTHBALL, "Paralizada" },
     {TR_OVERLAY_ENEMY, "Enemigos" },
     {TR_BUILDING_TAVERN_DESC_5, "A tus ciudadanos les encanta visitar este establecimiento en su tiempo libre para socializar con buena comida y vino." },
-    {TR_OVERLAY_WAREHOUSES, "Almacenes" },
     {TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION, "El equipo azul, favorito de Neptuno. Estos son los más prometedores de los jóvenes aurigas de Roma que desean demostrar su valía." },
     {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "El equipo rojo, conocido como el equipo del auriga más exitoso en la historia de Roma, un ex remero y salvador de un cónsul romano." },
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "El equipo blanco, fundado por ex gladiadores. Llevan el combate en la sangre e incluso como hombres libres viven para el desafío." },

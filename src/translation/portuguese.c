@@ -702,7 +702,6 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_MOTHBALL, "Fechado" },
     {TR_OVERLAY_ENEMY, "Inimigos" },
     {TR_BUILDING_TAVERN_DESC_5, "Os cidadãos adoram visitar este estabelecimento nos seus tempos livres para socializar à base de vinho e de boa comida." },
-    {TR_OVERLAY_WAREHOUSES, "Armazéns" },
     {TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION, "Time Azul - os favoritos de Netuno. Os jovens corredores mais promissores de Roma, que anseiam por se provar dignos." },
     {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "Time Vermelho - conhecido como o time do mais bem sucedido corredor da história de Roma - um antigo remador, que salvou a vida de um cônsul romano." },
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "Time Branco - fundado por ex-gladiadores. Têm o combate no sangue, e mesmo como homens livres seguem vivendo pelo desafio." },

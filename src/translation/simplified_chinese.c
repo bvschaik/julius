@@ -708,7 +708,6 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_MOTHBALL, "搁    置"},
     {TR_OVERLAY_ENEMY, "敌    人"},
     {TR_BUILDING_TAVERN_DESC_5, "市民空闲之余喜欢前来社交，或享受附带葡萄酒的午饭。" },
-    {TR_OVERLAY_WAREHOUSES, "仓    库" },
     {TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION, "蓝队，海神纳普敦的宠儿，一批优秀的罗马年轻人想在此证明自己的实力。" },
     {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "红队，罗马史上最成功的战车驾驶员，他曾是一名划桨手，救过罗马执政官。" },
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "白队，由曾经的角斗士们组建，他们身体里流淌着战斗的血液，即使早已身获自由，他们依然为挑战而生。" },

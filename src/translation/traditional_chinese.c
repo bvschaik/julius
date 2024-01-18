@@ -708,7 +708,6 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_MOTHBALL, "擱    置"},
     {TR_OVERLAY_ENEMY, "敵    人"},
     {TR_BUILDING_TAVERN_DESC_5, "市民空閑之餘喜歡前來社交，或享受附帶葡萄酒的午飯。" },
-    {TR_OVERLAY_WAREHOUSES, "倉    庫" },
     {TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION, "藍隊，海神納普敦的寵兒，一批優秀的羅馬年輕人想在此證明自己的實力。" },
     {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "紅隊，羅馬史上最成功的戰車駕駛員，他曾是一名劃槳手，救過羅馬執政官。" },
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "白隊，由曾經的角鬥士們組建，他們身體里流淌著戰鬥的血液，即使早已身獲自由，他們依然為挑戰而生。" },

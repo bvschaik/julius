@@ -712,7 +712,6 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_MOTHBALL, "Ur bruk" },
     {TR_OVERLAY_ENEMY, "Fiender" },
     {TR_BUILDING_TAVERN_DESC_5, "Medborgare älskar att besöka den här anläggningen på deras fritid för att umgås över god mat och fint vin." },
-    {TR_OVERLAY_WAREHOUSES, "Handelsmagasin" },
     {TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION, "Det blåa laget - Neptunus favoriter. De här är de mest lovande av Roms unga kuskar som önskar visa vad de går för." },
     {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "Det röda laget - känt som laget som leds av den mest framgångsrika kusken i Roms historia - en föredetta roddare som räddade livet på en romesrk konsul." },
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "Det vita laget - grundat av föredetta gladiatorer. De har stridandet i blodet, och trots att de är fria män lever de för den här utmaningen." },

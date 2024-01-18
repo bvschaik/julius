@@ -767,7 +767,6 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_MOTHBALL, "En pause"},
     {TR_OVERLAY_ENEMY, "Ennemis"},
     {TR_BUILDING_TAVERN_DESC_5, "Pendant leur temps libre, les citoyens apprécient venir dans cet établissement pour se divertir et déguster un bon repas arrosé de vin." },
-    {TR_OVERLAY_WAREHOUSES, "Entrepôts" },
     {TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION, "L'équipe Bleue - les protégés de Neptune. Voici les jeunes auriges les plus prometteurs de Rome souhaitant faire leurs preuves." },
     {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "L'équipe Rouge - connue pour accueillir le plus talentueux aurige de l'histoire de Rome - un ancien rameur, et sauveur d'un consul Romain." },
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "L'équipe Blanche - fondée par d'anciens gladiateurs. Le combat coule dans leurs veines, et même en hommes libres, ils ne vivent que pour la compétition." },

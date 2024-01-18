@@ -712,7 +712,6 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_MOTHBALL, "Wyłączone budynki" },
     {TR_OVERLAY_ENEMY, "Wrogowie" },
     {TR_BUILDING_TAVERN_DESC_5, "Obywatele uwielbiają odwiedzać to miejsce w wolnym czasie by porozmawiać nad posiłkiem i winem." },
-    {TR_OVERLAY_WAREHOUSES, "Magazyny" },
     {TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION, "Drużyna niebieska, ulubieńcy Neptuna. Najbardziej obiecujący młodzi rydwaniści, którzy chcą udowodnić swoją odwagę." },
     {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "Drużyna czerwona, sławna z najlepszego rydwanisty w historii Rzymu, byłego galernika, który uratował konsula Rzymu." },
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "Drużyna biała, założona przez byłych gladiatorów. Mają walkę w krwi i nawet teraz, jako wolni ludzie wciąż żyją dla wyzwania."},

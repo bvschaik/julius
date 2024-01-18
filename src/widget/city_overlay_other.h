@@ -23,7 +23,7 @@ const city_overlay *city_overlay_for_levy(void);
 
 const city_overlay *city_overlay_for_mothball(void);
 
-const city_overlay *city_overlay_for_warehouses(void);
+const city_overlay *city_overlay_for_logistics(void);
 
 const city_overlay *city_overlay_for_storages(void);
 

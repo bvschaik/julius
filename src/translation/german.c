@@ -310,7 +310,6 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_SICKNESS, "Krankheit"},
     {TR_OVERLAY_STORAGES, "Lager" },
     {TR_OVERLAY_TAVERN, "Taverne"},
-    {TR_OVERLAY_WAREHOUSES, "Lagerhäuser"},
 	/* Warnungen */
     {TR_CITY_WARNING_BUILD_GOLD_MINE, "Baue eine Goldmine" },
     {TR_CITY_WARNING_BUILD_SAND_PIT, "Baue eine Sandgrube"},

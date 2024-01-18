@@ -729,7 +729,6 @@ static translation_string all_strings[] = {
     {TR_OVERLAY_MOTHBALL, "Attività sospesa"},
     {TR_OVERLAY_ENEMY, "Nemici"},
     {TR_BUILDING_TAVERN_DESC_5, "I cittadini amano visitare questo stabilimento nel loro tempo libero, per socializzare fra cibi delicati e vini ricercati."},
-    {TR_OVERLAY_WAREHOUSES, "Magazzini"},
     {TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION, "I Blu - i preferiti di Nettuno. Sono i più promettenti fra i giovani aurighi di Roma, desiderosi di provare il loro valore."},
     {TR_WINDOW_RACE_RED_HORSE_DESCRIPTION, "I Rossi - conosciuti come la squadra del più vincente auriga della storia di Roma - l'ex rematore e salvatore di un console Romano."},
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "I Bianchi - squadra fondata da ex gladiatori. Hanno il combattimento nel sangue e anche da liberti vivono per la lotta."},

@@ -106,9 +106,10 @@ static int show_building_mothball(const building *b)
     return b->state == BUILDING_STATE_MOTHBALLED;
 }
 
-static int show_building_warehouses(const building *b)
+static int show_building_logistics(const building *b)
 {
-    return b->type == BUILDING_WAREHOUSE || b->type == BUILDING_WAREHOUSE_SPACE;
+    return b->type == BUILDING_WAREHOUSE || b->type == BUILDING_WAREHOUSE_SPACE ||
+           b->type == BUILDING_GRANARY || b->type == BUILDING_DEPOT;
 }
 
 static int show_building_storages(const building *b)
@@ -154,13 +155,9 @@ static int show_figure_tax_income(const figure *f)
     return f->type == FIGURE_TAX_COLLECTOR;
 }
 
-static int show_figure_warehouses(const figure *f)
+static int show_figure_logistics(const figure *f)
 {
-    if (f->type != FIGURE_WAREHOUSEMAN) {
-        return 0;
-    }
-    building *b = building_get(f->building_id);
-    return b->type == BUILDING_WAREHOUSE;
+    return f->type == FIGURE_WAREHOUSEMAN || f->type == FIGURE_DEPOT_CART_PUSHER;
 }
 
 static int show_figure_none(const figure *f)
@@ -833,13 +830,13 @@ const city_overlay *city_overlay_for_mothball(void)
     return &overlay;
 }
 
-const city_overlay *city_overlay_for_warehouses(void)
+const city_overlay *city_overlay_for_logistics(void)
 {
     static city_overlay overlay = {
-        OVERLAY_WAREHOUSE,
+        OVERLAY_LOGISTICS,
         COLUMN_COLOR_GREEN,
-        show_building_warehouses,
-        show_figure_warehouses,
+        show_building_logistics,
+        show_figure_logistics,
         get_column_height_none,
         get_tooltip_none,
         0,

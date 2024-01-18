@@ -101,6 +101,7 @@ static const char *ini_keys[] = {
     "storage_order",
     "show_overlay_efficiency",
     "show_overlay_food_stocks",
+    "show_overlay_logistics",
     "show_overlay_entertainment",
     "show_overlay_education",
     "show_overlay_school",

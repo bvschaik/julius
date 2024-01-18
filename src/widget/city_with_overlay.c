@@ -123,8 +123,8 @@ static const city_overlay *get_city_overlay(void)
             return city_overlay_for_mothball();
         case OVERLAY_ENEMY:
             return city_overlay_for_enemy();
-        case OVERLAY_WAREHOUSE:
-            return city_overlay_for_warehouses();
+        case OVERLAY_LOGISTICS:
+            return city_overlay_for_logistics();
         case OVERLAY_STORAGES:
             return city_overlay_for_storages();
         default:
@@ -704,7 +704,7 @@ int city_with_overlay_get_tooltip_text(tooltip_context *c, int grid_offset)
         overlay_type != OVERLAY_WATER && overlay_type != OVERLAY_FIRE && overlay_type != OVERLAY_LEVY &&
         overlay_type != OVERLAY_DAMAGE && overlay_type != OVERLAY_NATIVE && overlay_type != OVERLAY_DESIRABILITY &&
         overlay_type != OVERLAY_PROBLEMS && overlay_type != OVERLAY_MOTHBALL && overlay_type != OVERLAY_ENEMY &&
-        overlay_type != OVERLAY_WAREHOUSE && overlay_type != OVERLAY_SICKNESS && overlay_type != OVERLAY_EFFICIENCY;
+        overlay_type != OVERLAY_LOGISTICS && overlay_type != OVERLAY_SICKNESS && overlay_type != OVERLAY_EFFICIENCY;
     building *b = building_get(building_id);
     if (overlay_requires_house && !b->house_size) {
         return 0;
