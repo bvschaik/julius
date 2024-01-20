@@ -53,10 +53,20 @@ static int show_figure_hospital(const figure *f)
 
 static int show_figure_sickness(const figure *f)
 {
-    return f->type == FIGURE_SURGEON || f->type == FIGURE_DOCTOR || f->type == FIGURE_DOCKER ||
-           f->type == FIGURE_CART_PUSHER || f->type == FIGURE_TRADE_SHIP || f->type == FIGURE_WAREHOUSEMAN ||
-           f->type == FIGURE_TRADE_CARAVAN || f->type == FIGURE_TRADE_CARAVAN_DONKEY || f->type == FIGURE_BARBER ||
-           f->type == FIGURE_BATHHOUSE_WORKER || f->type == FIGURE_DEPOT_CART_PUSHER;
+    if (f->type == FIGURE_SURGEON || f->type == FIGURE_DOCTOR ||
+        f->type == FIGURE_TRADE_SHIP || f->type == FIGURE_TRADE_CARAVAN ||
+        f->type == FIGURE_TRADE_CARAVAN_DONKEY || f->type == FIGURE_BARBER ||
+        f->type == FIGURE_BATHHOUSE_WORKER) {
+        return 1;
+    } else if (f->type == FIGURE_DOCKER || f->type == FIGURE_CART_PUSHER ||
+               f->type == FIGURE_WAREHOUSEMAN || f->type == FIGURE_DEPOT_CART_PUSHER) {
+               building *b = building_get(f->building_id);
+               building *dest_b = building_get(f->destination_building_id);
+               if (b->sickness_level > 0 || dest_b->sickness_level > 0) {
+               return 1;
+               }
+    }
+    return 0;
 }
 
 static int get_column_height_barber(const building *b)
