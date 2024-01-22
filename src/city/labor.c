@@ -55,6 +55,11 @@ static struct {
     {LABOR_CATEGORY_GOVERNANCE_RELIGION, 1},
 };
 
+int city_labor_all_have_workers(void)
+{
+    return city_data.labor.all_have_workers;
+}
+
 int city_labor_unemployment_percentage(void)
 {
     return city_data.labor.unemployment_percentage;
@@ -364,6 +369,8 @@ static void allocate_workers_to_non_water_buildings(void)
             city_data.labor.categories[i].workers_allocated < city_data.labor.categories[i].workers_needed
             ? 1 : 0;
     }
+    // if all buildings, which should have workers, do have
+    city_data.labor.all_have_workers = 1;
     for (int i = 1; i < MAX_BUILDINGS; i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
@@ -392,6 +399,9 @@ static void allocate_workers_to_non_water_buildings(void)
             } else {
                 b->num_workers = required_workers;
             }
+        }
+        if (b->num_workers <= 0) {
+            city_data.labor.all_have_workers = 0;
         }
     }
     for (int i = 0; i < MAX_CATS; i++) {

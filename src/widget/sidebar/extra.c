@@ -42,6 +42,7 @@ static struct {
     int is_collapsed;
     sidebar_extra_display info_to_display;
     int game_speed;
+    int all_have_workers;
     int unemployment_percentage;
     int unemployment_amount;
     objective culture;
@@ -145,6 +146,7 @@ static int update_extra_info(int is_background)
         changed |= update_extra_info_value(setting_game_speed(), &data.game_speed);
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
+        changed |= update_extra_info_value(city_labor_all_have_workers(), &data.all_have_workers);
         changed |= update_extra_info_value(city_labor_unemployment_percentage(), &data.unemployment_percentage);
         changed |= update_extra_info_value(
                        city_labor_workers_unemployed() - city_labor_workers_needed(),
@@ -212,7 +214,7 @@ static void draw_extra_info_panel(void)
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_UNEMPLOYMENT) {
         y_current_line += EXTRA_INFO_VERTICAL_PADDING;
 
-        lang_text_draw(68, 148, data.x_offset + 10, y_current_line, FONT_NORMAL_WHITE);
+        lang_text_draw(68, 148, data.x_offset + 10, y_current_line, data.all_have_workers ? FONT_NORMAL_WHITE : FONT_NORMAL_GREEN);
         y_current_line += EXTRA_INFO_LINE_SPACE;
 
         int text_width = text_draw_percentage(data.unemployment_percentage,

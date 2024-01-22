@@ -9,6 +9,8 @@ typedef struct {
     int total_houses_covered;
 } labor_category_data;
 
+int city_labor_all_have_workers(void);
+
 int city_labor_unemployment_percentage(void);
 int city_labor_unemployment_percentage_for_senate(void);
 

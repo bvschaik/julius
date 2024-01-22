@@ -183,6 +183,7 @@ extern struct city_data_t {
         int32_t graph_order;
     } population;
     struct {
+        int32_t all_have_workers;
         int32_t wages;
         int32_t wages_rome;
         int32_t workers_available;
