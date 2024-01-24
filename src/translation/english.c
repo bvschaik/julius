@@ -789,6 +789,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_HOUSE_DISEASE_DESC, "Pestilence has struck! Without adequate healthcare, residents dwelling here have died. This house is in quarantine while a doctor or surgeon decontaminates the area."},
     {TR_BUILDING_FUMIGATION_DESC, "The building is being cleansed of disease. The fumigation should last a few days."},
     {TR_OVERLAY_SICKNESS, "Sickness"},
+    {TR_ADVISOR_HEALTH_RATING, "Rating:"},
+    {TR_ADVISOR_HEALTH_SURVEILLANCE, "Disease surveillance:"},
     {TR_ADVISOR_SICKNESS_LEVEL_LOW, "Disease is a rare occurrence in the city. The high standard of healthcare provided to the vast majority of residents effectively prevents epidemics spreading here."},
     {TR_ADVISOR_SICKNESS_LEVEL_MEDIUM, "Some infectious diseases have appeared in areas of the city with a lacking hygiene, but the situation is under control. A sufficiently high level of healthcare will mitigate the impact of epidemics in the city."},
     {TR_ADVISOR_SICKNESS_LEVEL_HIGH, "Infectious diseases spread in areas of the city having a poor level of hygiene. If the situation is not remedied soon, some buildings may be quarantined. Greater access to healthcare would effectively prevent epidemics from breaking out."},
