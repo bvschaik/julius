@@ -56,8 +56,9 @@ static void set_asset_image_base_path(const char *name)
 static int xml_start_assetlist_element(void)
 {
     data.current_group = group_get_new();
-    const char *name = xml_parser_copy_attribute_string("name");
+    char *name = xml_parser_copy_attribute_string("name");
     if (!name || *name == '\0') {
+        free(name);
         return 0;
     }
     data.current_group->name = name;

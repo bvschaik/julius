@@ -11,6 +11,9 @@ static struct {
 
 int group_create_all(int total)
 {
+    for (int i = 0; i < data.total_groups; i++) {
+        free((char *)data.groups[i].name);
+    }
     if (data.groups_in_memory < total) {
         free(data.groups);
         data.groups_in_memory = 0;

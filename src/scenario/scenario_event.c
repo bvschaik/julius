@@ -134,7 +134,6 @@ void scenario_event_initialize_new(scenario_event_t *event, int position)
     event->id = position;
 }
 
-
 int scenario_event_can_repeat(scenario_event_t *event)
 {
     return (event->repeat_months_min > 0) && (event->repeat_months_max >= event->repeat_months_min) &&

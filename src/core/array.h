@@ -20,6 +20,16 @@ struct { \
 }
 
 /**
+ * Clears an array
+ * @param a The array structure
+ */
+#define array_clear(a) \
+( \
+    array_free((void **)(a).items, (a).blocks), \
+    memset(&(a), 0, sizeof(a)) \
+)
+
+/**
  * Initiates an array
  * @param a The array structure
  * @param size The size of each block of items
@@ -35,8 +45,7 @@ struct { \
  */
 #define array_init(a, size, new_item_callback, in_use_callback) \
 ( \
-    array_free((void **)(a).items, (a).blocks), \
-    memset(&(a), 0, sizeof(a)), \
+    array_clear(a), \
     (a).constructor = new_item_callback, \
     (a).in_use = in_use_callback, \
     (a).block_offset = array_next_power_of_two(size) - 1, \

@@ -31,6 +31,10 @@ void scenario_events_init(void)
 
 void scenario_events_clear(void)
 {
+    scenario_event_t *current;
+    array_foreach(scenario_events, current) {
+        scenario_event_delete(current);
+    }
     scenario_events.size = 0;
     if (!array_init(scenario_events, SCENARIO_EVENTS_SIZE_STEP, new_scenario_event, event_in_use)) {
         log_error("Unable to allocate enough memory for the scenario events array. The game will now crash.", 0, 0);
@@ -75,6 +79,8 @@ scenario_event_t *scenario_event_create(int repeat_min, int repeat_max, int max_
 
 void scenario_event_delete(scenario_event_t *event)
 {
+    array_clear(event->conditions);
+    array_clear(event->actions);
     memset(event, 0, sizeof(scenario_event_t));
     event->state = EVENT_STATE_UNDEFINED;
     array_trim(scenario_events);

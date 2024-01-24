@@ -223,7 +223,7 @@ static void set_assets_directory(void)
             log_error("***EXEC_PATH*** is not available on your platform.", 0, 0);
             continue;
 #else
-            char arg0_dir[FILE_NAME_MAX];
+            char arg0_dir[FILE_NAME_MAX] = { 0 };
             if (readlink("/proc/self/exe" /* Linux */, arg0_dir, FILE_NAME_MAX) == -1) {
                 if (readlink("/proc/curproc/file" /* FreeBSD */, arg0_dir, FILE_NAME_MAX) == -1) {
                     if (readlink("/proc/self/path/a.out" /* Solaris */, arg0_dir, FILE_NAME_MAX) == -1) {
