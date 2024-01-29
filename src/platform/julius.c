@@ -544,6 +544,10 @@ static void setup(const julius_args *args)
         setting_set_display(0, w, h);
         SDL_Log("Forcing windowed mode with size %d x %d", w, h);
     }
+    if (args->force_fullscreen && !setting_fullscreen()) {
+        setting_set_display(1, 0, 0);
+        SDL_Log("Forcing fullscreen mode");
+    }
 
     // handle arguments
     if (args->display_scale_percentage) {

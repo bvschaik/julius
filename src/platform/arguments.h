@@ -6,6 +6,7 @@ typedef struct {
     int display_scale_percentage;
     int cursor_scale_percentage;
     int force_windowed;
+    int force_fullscreen;
 } julius_args;
 
 int platform_parse_arguments(int argc, char **argv, julius_args *output_args);
