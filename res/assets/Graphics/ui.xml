@@ -232,6 +232,7 @@
 	<image id="13Legion_Bulls" src="13Legion_Bulls"/>
 	<image id="14Legion_Centaurs" src="14Legion_Centaurs"/>
 	<image id="15Legion_Octopi" src="15Legion_Octopi"/>
+	<image id="16Legion_Bears" src="16Legion_Bears"/>
 	<image id="LandRouteDot" width="5" height="5">
 		<layer group="181" image="7"/>
 	</image>

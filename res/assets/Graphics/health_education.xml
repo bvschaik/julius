@@ -43,4 +43,14 @@
 	<image id="GLib_Cons_04" src="Great_Library_Construction_04" isometric="true"/>
 	<!-- Note: Great Library Building Asset -->
 	<image id="Great_Library" src="Great_Library" isometric="true"/>
+	<!-- Note: Latrine Building Asset -->
+	<image id="Latrine_C" src="Latrine_C" width="58" height="39" isometric="true"/>
+	<image id="Latrine_N" width="58" height="39" isometric="true">
+		<layer src="Latrine_C" x="0" y="0"/>
+		<layer src="Latrine_N" x="0" y="17"/>
+	</image>
+	<image id="Latrine_S" width="58" height="39" isometric="true">
+		<layer src="Latrine_C" x="0" y="0"/>
+		<layer src="Latrine_S" x="0" y="17"/>
+	</image>
 </assetlist>

@@ -707,7 +707,7 @@
 	<image id="Mausoleum S" src="Mausoleum_Small" isometric="true"/>
 	<!-- Note: Small Mausoleum asset (Rotation Variant) -->
 	<image id="Mausoleum S R" isometric="true">
-		<layer src="Mausoleum_Small" x="0" y="0" part="footprint"/>
+		<layer group="this" image="Mausoleum S" part="footprint"/>
 		<layer src="Mausoleum_Small_R" x="0" y="0"/>
 	</image>
 	<!-- Note: Altar Assets for Each God WITH ROTATION VARIANTS (Original Assets by MonoNavidegno, Tweaked by Areldir) -->

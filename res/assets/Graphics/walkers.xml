@@ -430,40 +430,40 @@
 	</image>
 	<!-- Note: Barracks Cart Pusher Death animation frames 01-08 -->
 	<image id="barracks_worker_death_01">
-		<layer group="108" image="102"/>
+		<layer group="108 " image="102"/>
 		<layer src="barracks_worker_death_01"/>
 	</image>
 	<image id="barracks_worker_death_02">
-		<layer group="108" image="103"/>
+		<layer group="108 " image="103"/>
 		<layer src="barracks_worker_death_02"/>
 	</image>
 	<image id="barracks_worker_death_03">
-		<layer group="108" image="104"/>
+		<layer group="108 " image="104"/>
 		<layer src="barracks_worker_death_03"/>
 	</image>
 	<image id="barracks_worker_death_04">
-		<layer group="108" image="105"/>
+		<layer group="108 " image="105"/>
 		<layer src="barracks_worker_death_04"/>
 	</image>
 	<image id="barracks_worker_death_05">
-		<layer group="108" image="106"/>
+		<layer group="108 " image="106"/>
 		<layer src="barracks_worker_death_05"/>
 	</image>
 	<image id="barracks_worker_death_06">
-		<layer group="108" image="107"/>
+		<layer group="108 " image="107"/>
 		<layer src="barracks_worker_death_06"/>
 	</image>
 	<image id="barracks_worker_death_07">
-		<layer group="108" image="108"/>
+		<layer group="108 " image="108"/>
 		<layer src="barracks_worker_death_07"/>
 	</image>
 	<image id="barracks_worker_death_08">
-		<layer group="108" image="109"/>
+		<layer group="108 " image="109"/>
 		<layer src="barracks_worker_death_08"/>
 	</image>
 	<!-- Note: Barracks Cart Pusher Walking animation frames NORTH-EAST DIRECTION 01-12 -->
 	<image id="barracks_worker_ne_01">
-		<layer group="108" image="0"/>
+		<layer group="108 " image="0"/>
 		<layer src="barracks_worker_ne_01"/>
 	</image>
 	<image id="barracks_worker_ne_02">
