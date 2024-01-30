@@ -154,7 +154,7 @@ static struct {
 static int available_layouts_for_legion(const formation *m)
 {
     int layouts = LAYOUTS_PER_LEGION;
-    if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+    if (m->figure_type == FIGURE_FORT_LEGIONARY || m->figure_type == FIGURE_FORT_INFANTRY) {
         if (m->has_military_training) {
             layouts = LAYOUTS_PER_LEGION - 1;
         } else {
@@ -170,7 +170,7 @@ static void draw_layout_buttons(int x, int y, int background, const formation *m
     if (city_view_orientation() == DIR_6_LEFT || city_view_orientation() == DIR_2_RIGHT) {
         index = 1;
     }
-    const int *offsets = (m->figure_type == FIGURE_FORT_LEGIONARY) ?
+    const int *offsets = (m->figure_type == FIGURE_FORT_LEGIONARY || m->figure_type == FIGURE_FORT_INFANTRY) ?
         LAYOUT_IMAGE_OFFSETS_LEGIONARY[index] : LAYOUT_IMAGE_OFFSETS_AUXILIARY[index];
     int formation_types = available_layouts_for_legion(m);
 
@@ -463,7 +463,7 @@ int widget_sidebar_military_get_tooltip_text(tooltip_context *c)
         int index = data.inner_buttons_focus_id - 1;
         int layout;
         const formation *m = formation_get(data.active_legion.formation_id);
-        if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+        if (m->figure_type == FIGURE_FORT_LEGIONARY || m->figure_type == FIGURE_FORT_INFANTRY) {
             int index_increase = m->has_military_training ? 1 : 2;
             if (index > 4 - index_increase) {
                 return 0;
@@ -583,7 +583,7 @@ static void button_select_formation_layout(int index, int param2)
     }
     const int *layout_indexes;
     int swap_lines = city_view_orientation() == DIR_6_LEFT || city_view_orientation() == DIR_2_RIGHT;
-    if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+    if (m->figure_type == FIGURE_FORT_LEGIONARY || m->figure_type == FIGURE_FORT_INFANTRY) {
         int index_increase = m->has_military_training ? 1 : 2;
         if (index > 4 - index_increase) {
             return;
