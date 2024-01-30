@@ -391,7 +391,7 @@ void figure_soldier_action(figure *f)
             if (f->action_state != FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD) {
                 if (f->type == FIGURE_FORT_JAVELIN) {
                     f = javelin_launch_missile(f);
-                } else if (f->type == FIGURE_FORT_LEGIONARY || f->type == FIGURE_FORT_INFANTRY) {
+                } else if (f->type == FIGURE_FORT_LEGIONARY || f->type == FIGURE_FORT_INFANTRY || f->type == FIGURE_FORT_MOUNTED) {
                     legionary_attack_adjacent_enemy(f);
                 }
             }
