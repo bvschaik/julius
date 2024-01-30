@@ -63,6 +63,7 @@ static void check_road_access(int type, int x, int y, int size)
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_JAVELIN:
         case BUILDING_FORT_MOUNTED:     
+        case BUILDING_FORT_AUXILIA_INFANTRY:
         case BUILDING_HORSE_STATUE:
         case BUILDING_DOLPHIN_FOUNTAIN:
         case BUILDING_HEDGE_DARK:

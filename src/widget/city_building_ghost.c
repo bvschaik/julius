@@ -1386,6 +1386,7 @@ void city_building_ghost_draw(const map_tile *tile)
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_JAVELIN:
         case BUILDING_FORT_MOUNTED:
+        case BUILDING_FORT_AUXILIA_INFANTRY:
             draw_fort(tile, x, y);
             break;
         case BUILDING_HIPPODROME:

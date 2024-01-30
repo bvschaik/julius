@@ -85,6 +85,11 @@ static void hit_opponent(figure *f)
             attack_is_same_direction(f->attack_direction, m->direction)) {
         figure_attack += 4; // coordinated formation attack bonus
     }
+    if (m->is_halted && m->figure_type == FIGURE_FORT_INFANTRY &&
+        attack_is_same_direction(f->attack_direction, m->direction)) {
+        figure_attack += 2; // coordinated formation attack bonus
+    }
+
     // defense modifiers
     if (opponent_formation->is_halted &&
             (opponent_formation->figure_type == FIGURE_FORT_LEGIONARY ||
@@ -98,6 +103,20 @@ static void hit_opponent(figure *f)
             opponent_defense += 4;
         }
     }
+
+    // defense modifiers
+    if (opponent_formation->is_halted &&
+            (opponent_formation->figure_type == FIGURE_FORT_INFANTRY)) {
+        if (!attack_is_same_direction(opponent->attack_direction, opponent_formation->direction)) {
+            opponent_defense -= 2; // opponent not attacking in coordinated formation
+        } else if (opponent_formation->layout == FORMATION_COLUMN) {
+            opponent_defense += 4;
+        } else if (opponent_formation->layout == FORMATION_DOUBLE_LINE_1 ||
+                   opponent_formation->layout == FORMATION_DOUBLE_LINE_2) {
+            opponent_defense += 2;
+        }
+    }
+
 
     int max_damage = opponent_props->max_damage;
     int net_attack = figure_attack - opponent_defense;

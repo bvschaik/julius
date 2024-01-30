@@ -1,5 +1,6 @@
 #include "soldier.h"
 
+#include "assets/assets.h"
 #include "city/figures.h"
 #include "city/games.h"
 #include "city/map.h"
@@ -78,11 +79,17 @@ void figure_military_standard_action(figure *f)
         } else {
             f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 18 + f->image_offset / 2;
         }
-    } else {
+    } else if (m->figure_type == FIGURE_FORT_JAVELIN) {
         if (m->is_halted) {
             f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 17;
         } else {
             f->cart_image_id = image_group(GROUP_FIGURE_FORT_FLAGS) + 9 + f->image_offset / 2;
+        }
+    } else {
+        if (m->is_halted) {
+            f->cart_image_id = assets_get_image_id("Military", "auxinf_banner_0");
+        } else {
+            f->cart_image_id = assets_get_image_id("Military", "auxinf_banner_01") + f->image_offset / 2;
         }
     }
 }
@@ -207,6 +214,22 @@ static void update_image_legionary(figure *f, const formation *m, int dir)
     }
 }
 
+static void update_image_infantry(figure *f, int dir)
+{
+    if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        if (f->attack_image_offset < 14) {
+            f->image_id = assets_get_image_id("Warriors", "auxinf_f_ne_01") + dir * 5;
+        } else {
+            f->image_id = assets_get_image_id("Warriors", "auxinf_f_ne_01") + dir * 5 + ((f->attack_image_offset - 14) / 2);
+        }
+    } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = assets_get_image_id("Warriors", "auxinf_death_01") + figure_image_corpse_offset(f);
+    } else {
+        f->image_id = assets_get_image_id("Warriors", "auxinf_ne_01") + dir * 12 + f->image_offset;
+    }
+}
+
+
 static void update_image(figure *f, const formation *m)
 {
     int dir;
@@ -228,6 +251,8 @@ static void update_image(figure *f, const formation *m)
         update_image_mounted(f, dir);
     } else if (f->type == FIGURE_FORT_LEGIONARY) {
         update_image_legionary(f, m, dir);
+    } else if (f->type == FIGURE_FORT_INFANTRY) {
+        update_image_infantry(f, dir);
     }
 }
 
@@ -241,11 +266,17 @@ static int soldier_percentage_speed(figure_type type)
             return 50;
         case FIGURE_FORT_MOUNTED:
             return 75;
+        case FIGURE_FORT_INFANTRY:
+            return 85;
         default:
-            return 0;
             break;
         }
     }
+
+    if (type == FIGURE_FORT_INFANTRY) {
+        return 50;
+    }
+
     return 0;
 }
 
@@ -360,7 +391,7 @@ void figure_soldier_action(figure *f)
             if (f->action_state != FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD) {
                 if (f->type == FIGURE_FORT_JAVELIN) {
                     f = javelin_launch_missile(f);
-                } else if (f->type == FIGURE_FORT_LEGIONARY) {
+                } else if (f->type == FIGURE_FORT_LEGIONARY || f->type == FIGURE_FORT_INFANTRY) {
                     legionary_attack_adjacent_enemy(f);
                 }
             }

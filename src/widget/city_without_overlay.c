@@ -682,6 +682,14 @@ static void draw_animation(int x, int y, int grid_offset)
                 case CLIMATE_NORTHERN: image_id += 6; break;
                 default: break;
             }
+            if (fort->subtype.fort_figure_type == FIGURE_FORT_INFANTRY) {
+                image_id = assets_get_image_id("Military", "fort_aux_inf_flag_central");
+                switch (scenario_property_climate()) {
+                    case CLIMATE_DESERT: image_id += 2; break;
+                    case CLIMATE_NORTHERN: image_id += 1; break;
+                    default: break;
+                }
+            }
             image_draw(image_id, x + 81, y + 5,
                 draw_building_as_deleted(fort) ? COLOR_MASK_RED : COLOR_MASK_NONE, draw_context.scale);
         }

@@ -57,6 +57,7 @@ void figure_play_die_sound(const figure *f)
         case FIGURE_ENEMY54_GLADIATOR:
         case FIGURE_ENEMY_CAESAR_JAVELIN:
         case FIGURE_ENEMY_CAESAR_LEGIONARY:
+        case FIGURE_FORT_INFANTRY:
             is_soldier = 1;
             break;
         case FIGURE_MARKET_TRADER:
@@ -109,6 +110,7 @@ void figure_play_hit_sound(figure_type type)
         case FIGURE_FORT_JAVELIN:
         case FIGURE_TOWER_SENTRY:
         case FIGURE_WATCHMAN:
+        case FIGURE_FORT_INFANTRY:
             if (city_sound_update_hit_soldier()) {
                 sound_effect_play(SOUND_EFFECT_LIGHT_SWORD);
             }

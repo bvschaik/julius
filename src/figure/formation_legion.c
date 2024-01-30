@@ -73,6 +73,8 @@ void formation_legion_update_recruit_status(building *fort)
             m->legion_recruit_type = LEGION_RECRUIT_JAVELIN;
         } else if (type == FIGURE_FORT_MOUNTED) {
             m->legion_recruit_type = LEGION_RECRUIT_MOUNTED;
+        } else if (type == FIGURE_FORT_INFANTRY) {
+            m->legion_recruit_type = LEGION_RECRUIT_INFANTRY;
         }
     } else { // too many figures
         int too_many = m->num_figures - m->max_figures;

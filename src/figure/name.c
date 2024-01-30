@@ -141,6 +141,7 @@ int figure_name_get(figure_type type, enemy_type_t enemy)
     case FIGURE_FORT_LEGIONARY:
     case FIGURE_ENEMY_CAESAR_LEGIONARY:
     case FIGURE_MESS_HALL_SUPPLIER:
+    case FIGURE_FORT_INFANTRY:
         return get_next_name(&data.legionary, 297, 32);
 
     case FIGURE_INDIGENOUS_NATIVE:

@@ -461,6 +461,12 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     .max_damage = 20, .attack_value = 0, .defense_value = 0,
     .missile_defense_value = 0, .missile_attack_value = 0, .missile_delay = 0
     },
+    [FIGURE_FORT_INFANTRY] = {
+    .category = FIGURE_CATEGORY_ARMED,
+    .max_damage = 110, .attack_value = 8, .defense_value = 0,
+    .missile_defense_value = 2, .missile_attack_value = 0, .missile_delay = 0
+    },
+
 };
 
 const figure_properties *figure_properties_for_type(figure_type type)

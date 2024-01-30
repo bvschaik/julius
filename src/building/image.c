@@ -527,6 +527,7 @@ int building_image_get(const building *b)
         case BUILDING_FORT_JAVELIN:
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_MOUNTED:
+        case BUILDING_FORT_AUXILIA_INFANTRY:
             switch (scenario_property_climate()) {
                 case CLIMATE_NORTHERN:
                     return assets_get_image_id("Military", "Fort_Main_North");
