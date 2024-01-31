@@ -256,12 +256,18 @@ void window_building_draw_legion_info(building_info_context *c)
         flag_image_id += 9;
     } else if (m->figure_type == FIGURE_FORT_MOUNTED) {
         flag_image_id += 18;
-    } else if (m->figure_type == FIGURE_FORT_INFANTRY) {
-        flag_image_id = assets_get_image_id("Military", "auxinf_banner_0");
     }
     if (m->is_halted) {
         flag_image_id += 8;
     }
+    if (m->figure_type == FIGURE_FORT_INFANTRY) {
+        if (m->is_halted) {
+            flag_image_id = assets_get_image_id("Military", "auxinf_banner_0");
+        } else {
+            flag_image_id = assets_get_image_id("Military", "auxinf_banner_01");
+        }
+    }
+
     const image *flag_image = image_get(flag_image_id);
     int flag_height = flag_image->height;
     image_draw(flag_image_id, c->x_offset + 16 + (40 - flag_image->width - flag_image->x_offset) / 2,

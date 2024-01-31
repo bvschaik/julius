@@ -164,6 +164,9 @@ static int draw_background(void)
             case FIGURE_FORT_JAVELIN:
                 lang_text_draw(138, 35, 84 + width, 100 + 44 * i, FONT_NORMAL_GREEN);
                 break;
+            case FIGURE_FORT_INFANTRY:
+                text_draw(translation_for(TR_WINDOW_ADVISOR_MILITARY_INFANTRY), 84 + width, 100 + 44 * i, FONT_NORMAL_GREEN, 0);
+                break;
         }
         int morale_offset = m->morale / 5;
         if (morale_offset > 20) {
