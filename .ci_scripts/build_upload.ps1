@@ -64,7 +64,7 @@ if ($repo -eq "release") {
     mkdir build
     cd build
 
-    cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -D CMAKE_C_COMPILER=x86_64-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
+    cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=x86_64-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
     cmake --build . -j 4 --config Release
     if ($?) {
         .\asset_packer.exe ..\..\
@@ -121,7 +121,7 @@ if (!$packed_assets) {
     mkdir build
     cd build
 
-    cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -D CMAKE_C_COMPILER=x86_64-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
+    cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release -D CMAKE_C_COMPILER=x86_64-w64-mingw32-gcc.exe -D CMAKE_MAKE_PROGRAM=mingw32-make.exe ..
     cmake --build . -j 4 --config Release
     if ($?) {
         .\asset_packer.exe ..\..\

@@ -709,7 +709,7 @@ static int remove_directory(const char *name, long unused)
         append_name_to_path(name);
     }
 
-    // Create subdirs
+    // Remove subdirs
     int result = platform_file_manager_list_directory_contents(directory_copy_data.current_src_path,
             TYPE_FILE, 0, remove_file) != LIST_ERROR &&
         platform_file_manager_list_directory_contents(directory_copy_data.current_src_path,
@@ -721,7 +721,7 @@ static int remove_directory(const char *name, long unused)
         result = RemoveDirectoryW(wdir) != 0;
         free(wdir);
 #else
-        result = remove(directory_copy_data.current_src_path);
+        result = remove(directory_copy_data.current_src_path) == 0;
 #endif
     }
 

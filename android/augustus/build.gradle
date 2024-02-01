@@ -80,7 +80,7 @@ android {
         externalNativeBuild {
             cmake {
                 version "3.22.1"
-                arguments "-DTARGET_PLATFORM=android", "-DSYSTEM_LIBS=OFF","-DANDROID_STL=none"
+                arguments "-DTARGET_PLATFORM=android", "-DANDROID_STL=none"
             }
         }
         ndk {

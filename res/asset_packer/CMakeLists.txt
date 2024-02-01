@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.1...3.27.0)
 include(CMakeDependentOption)
 
-option(SYSTEM_LIBS "Use system libraries when available." ON)
 option(FORMAT_XML "Prettify the generated XML" OFF)
 option(PACK_XMLS "Pack the images from the XML files" ON)
 option(PACK_CURSORS "Pack the cursor images" ON)
@@ -12,10 +11,8 @@ project(${SHORT_NAME} C)
 
 set(MAIN_DIR "${PROJECT_SOURCE_DIR}/../..")
 
-set(EXPAT_FILES
-    ${MAIN_DIR}/ext/expat/xmlparse.c
-    ${MAIN_DIR}/ext/expat/xmlrole.c
-    ${MAIN_DIR}/ext/expat/xmltok.c
+set(SXML_FILES
+    ${MAIN_DIR}/ext/sxml/sxml.c
 )
 
 set(SPNG_FILES
@@ -70,28 +67,9 @@ add_executable(${SHORT_NAME}
     ${ASSETS_FILES}
     ${CORE_FILES}
     ${PLATFORM_FILES}
+    ${SXML_FILES}
     ${SPNG_FILES}
 )
-
-if(SYSTEM_LIBS)
-    find_package(EXPAT)
-endif()
-
-if(EXPAT_FOUND)
-    include_directories(${EXPAT_INCLUDE_DIRS})
-    target_link_libraries(${SHORT_NAME} ${EXPAT_LIBRARIES})
-else()
-    if(SYSTEM_LIBS)
-        message(STATUS "Expat was not found but that's ok: falling back to internal version")
-    endif()
-
-    include_directories(${MAIN_DIR}/ext/expat)
-    target_sources(${SHORT_NAME} PRIVATE "${EXPAT_FILES}")
-
-    if(NOT WIN32)
-        add_compile_definitions(XML_DEV_URANDOM)
-    endif()
-endif()
 
 include_directories(${MAIN_DIR}/src)
 include_directories(${MAIN_DIR}/ext)

@@ -272,11 +272,6 @@ static int xml_start_city(void)
         return 0;
     }
 
-    if (xml_parser_get_total_attributes() < 2) {
-        log_error("Wrong number of attributes for the city", 0, 0);
-        return 0;
-    }
-
     data.current_city_id = city_obj->obj.id;
     city_obj->in_use = 1;
     city_obj->obj.type = EMPIRE_OBJECT_CITY;

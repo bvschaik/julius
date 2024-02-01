@@ -39,14 +39,6 @@ int xml_parser_init(const xml_parser_element *elements, int total_elements);
 int xml_parser_parse(const char *buffer, unsigned int buffer_size, int is_final);
 
 /**
- * @brief Get the total number of attributes for the current element.
- * 
- * @return int The total number of attributes for the current element.
- * Note that both keys and values are considered attributes, so if you just want to find the number of keys you should divide the result by 2.
- */
-int xml_parser_get_total_attributes(void);
-
-/**
  * @brief Whether an element has a specific attribute.
  * 
  * @param key The key to check.

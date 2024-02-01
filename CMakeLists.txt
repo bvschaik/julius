@@ -11,7 +11,6 @@ option(DRAW_ROUTING "Draw routing debug information." OFF)
 option(DRAW_HIGHWAY_TERRAIN "Draw highway debug information." OFF)
 option(DRAW_ROAD_NETWORK_IDS "Draw road network IDs for debugging." OFF)
 option(DRAW_TILE_COORDS "Draw tile coordinates." OFF)
-option(SYSTEM_LIBS "Use system libraries when available." ON)
 
 if(${TARGET_PLATFORM} STREQUAL "vita" AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     if(DEFINED ENV{VITASDK})
@@ -170,18 +169,16 @@ if (EXISTS ${PROJECT_SOURCE_DIR}/res/packed_assets)
     set(ASSETS_DIR ${PROJECT_SOURCE_DIR}/res/packed_assets)
 endif()
 
-set(EXPAT_FILES
-    ${PROJECT_SOURCE_DIR}/ext/expat/xmlparse.c
-    ${PROJECT_SOURCE_DIR}/ext/expat/xmlrole.c
-    ${PROJECT_SOURCE_DIR}/ext/expat/xmltok.c
-)
-
 set(TINYFD_FILES
     ${PROJECT_SOURCE_DIR}/ext/tinyfiledialogs/tinyfiledialogs.c
 )
 
 set(SPNG_FILES
     ${PROJECT_SOURCE_DIR}/ext/spng/spng.c
+)
+
+set(SXML_FILES
+    ${PROJECT_SOURCE_DIR}/ext/sxml/sxml.c
 )
 
 set(ZIP_FILES
@@ -725,6 +722,7 @@ set(SOURCE_FILES
     ${TRANSLATION_FILES}
     ${TINYFD_FILES}
     ${SPNG_FILES}
+    ${SXML_FILES}
     ${ZIP_FILES}
     ${PROJECT_SOURCE_DIR}/res/augustus.rc
     ${MACOSX_FILES}
@@ -866,21 +864,6 @@ if(SDL2_INCLUDE_DIR)
 endif()
 if(SDL2_MIXER_INCLUDE_DIR)
     include_directories(SYSTEM ${SDL2_MIXER_INCLUDE_DIR})
-endif()
-
-if(SYSTEM_LIBS)
-    find_package(EXPAT)
-endif()
-
-if(EXPAT_FOUND)
-    include_directories(${EXPAT_INCLUDE_DIRS})
-    target_link_libraries(${SHORT_NAME} ${EXPAT_LIBRARIES})
-else()
-    include_directories("ext/expat")
-    target_sources(${SHORT_NAME} PRIVATE "${EXPAT_FILES}")
-    if(NOT WIN32)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DXML_DEV_URANDOM")
-    endif()
 endif()
 
 if(${TARGET_PLATFORM} STREQUAL "vita")

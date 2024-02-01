@@ -8,20 +8,20 @@ case "$BUILD_TARGET" in
 	docker exec switchdev /bin/bash -c "git config --global --add safe.directory /build/git && /opt/devkitpro/portlibs/switch/bin/aarch64-none-elf-cmake -DCMAKE_BUILD_TYPE=Release -DTARGET_PLATFORM=switch -B build -S ."
 	;;
 "mac")
-	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" ..
+	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" ..
 	;;
 "appimage")
-	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -DCMAKE_INSTALL_PREFIX=/usr ..
+	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
 	;;
 "linux")
-	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF ..
+	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
 	;;
 "android")
 	mkdir build
 	;;
 "emscripten")
 	export EMSDK=${PWD}/emsdk
-	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DSYSTEM_LIBS=OFF -DTARGET_PLATFORM=emscripten ..
+	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DTARGET_PLATFORM=emscripten ..
 	;;
 *)
 	mkdir build && cd build && cmake ..
