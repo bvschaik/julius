@@ -198,7 +198,7 @@ void window_building_draw_gold_mine(building_info_context *c)
 
 void window_building_draw_stone_quarry(building_info_context *c)
 {
-    draw_raw_material(c, 93, "wavs/mine.wav", CUSTOM_TRANSLATION, TR_BUILDING_STONE_QUARRY, RESOURCE_STONE);
+    draw_raw_material(c, 93, "wavs/quarry.wav", CUSTOM_TRANSLATION, TR_BUILDING_STONE_QUARRY, RESOURCE_STONE);
 }
 
 void window_building_draw_sand_pit(building_info_context *c)
@@ -367,6 +367,7 @@ static int governor_palace_is_allowed(void)
 void window_building_draw_city_mint(building_info_context *c)
 {
     c->help_id = 0;
+    window_building_play_sound(c, "wavs/coin.wav");
     building *b = building_get(c->building_id);
     data.city_mint_id = 0;
     if (b->monument.phase == MONUMENT_FINISHED) {
