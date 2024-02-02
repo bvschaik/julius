@@ -1355,6 +1355,8 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ADVISOR_RELIGION_ALTARS_HEADER, "святил."},
     {TR_REPLAY_MAP_NOT_FOUND_TITLE, "Невозможно повторить карту"},
     {TR_REPLAY_MAP_NOT_FOUND_MESSAGE, "Оригинальный файл карты для этой сохраненной игры не был найден.\nВам нужен следующий файл с расширением .map или .mapx:"},
+    {TR_BUILDING_FORT_AUXILIA_INFANTRY, "Наемники - Пехотинцы"},
+    {TR_WINDOW_ADVISOR_MILITARY_INFANTRY, "пехотинец"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
