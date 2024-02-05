@@ -69,18 +69,18 @@ jobs:
       SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         if: ${{ matrix.cache-key }}
         with:
           path: deps
           key: ${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
       - name: Setup JDK 17
         if: matrix.BUILD_TARGET == 'android'
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
@@ -106,7 +106,7 @@ jobs:
           ./.ci_scripts/build_upload.sh
         continue-on-error: true
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}
           path: deploy/
@@ -139,11 +139,11 @@ jobs:
       SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: deps
           key: windows-${{ matrix.cache-key }}-${{ env.SDL_VERSION }}-${{ env.SDL_MIXER_VERSION }}
@@ -157,7 +157,7 @@ jobs:
           update: true
       - name: Install cv2pdb
         if: matrix.COMPILER == 'mingw-32' || matrix.COMPILER == 'mingw-64'
-        uses: robinraju/release-downloader@v1.8
+        uses: robinraju/release-downloader@v1.9
         with:
           repository: "rainers/cv2pdb"
           tag: "v0.52"
@@ -174,7 +174,7 @@ jobs:
         run: ./.ci_scripts/build_upload.ps1
         continue-on-error: true
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.name }}
           path: deploy\
