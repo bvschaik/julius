@@ -65,6 +65,7 @@ function install_sdl_macos {
   echo "Installing framework:" "/Volumes/SDL2"/*.framework
   cp -rp "$VOLUME"/*.framework ~/Library/Frameworks
   if [ -d "$VOLUME/optional" ]
+  then
     echo "Installing optional framework:" "/Volumes/SDL2/optional"/*.framework
     cp -rp "$VOLUME"/optional/*.framework ~/Library/Frameworks
   fi
