@@ -544,6 +544,10 @@ static void setup(const julius_args *args)
         setting_set_display(0, w, h);
         SDL_Log("Forcing windowed mode with size %d x %d", w, h);
     }
+    if (args->force_fullscreen && !setting_fullscreen()) {
+        setting_set_display(1, 0, 0);
+        SDL_Log("Forcing fullscreen mode");
+    }
 
     // handle arguments
     if (args->display_scale_percentage) {
@@ -555,7 +559,7 @@ static void setup(const julius_args *args)
 
     char title[100];
     encoding_to_utf8(lang_get_string(9, 0), title, 100, 0);
-    if (!platform_screen_create(title, config_get(CONFIG_SCREEN_DISPLAY_SCALE))) {
+    if (!platform_screen_create(title, config_get(CONFIG_SCREEN_DISPLAY_SCALE), args->display_id)) {
         SDL_Log("Exiting: SDL create window failed");
         exit_with_status(-2);
     }

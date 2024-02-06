@@ -4,7 +4,7 @@
 #include "graphics/color.h"
 #include "input/cursor.h"
 
-int platform_screen_create(const char *title, int dispay_scale_percentage);
+int platform_screen_create(const char *title, int dispay_scale_percentage, int display_id);
 void platform_screen_destroy(void);
 
 int platform_screen_resize(int pixel_width, int pixel_height);
