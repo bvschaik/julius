@@ -157,7 +157,7 @@ jobs:
           update: true
       - name: Install cv2pdb
         if: matrix.COMPILER == 'mingw-32' || matrix.COMPILER == 'mingw-64'
-        uses: robinraju/release-downloader@v1.9
+        uses: robinraju/release-downloader@v1.8
         with:
           repository: "rainers/cv2pdb"
           tag: "v0.52"
