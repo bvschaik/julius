@@ -254,8 +254,11 @@ static void draw_military_info_text(int x_offset, int y_offset)
 
     // Number of soldiers
     int width = text_draw_number(m->num_figures, '@', " ", x_offset, y_offset + 60, FONT_NORMAL_WHITE, 0);
-    lang_text_draw(138, 46 - m->figure_type, x_offset + width, y_offset + 60, FONT_NORMAL_WHITE);
-
+    if (m->figure_type == FIGURE_FORT_INFANTRY) {
+        text_draw(translation_for(TR_WINDOW_ADVISOR_MILITARY_INFANTRY), x_offset + width, y_offset + 60, FONT_NORMAL_WHITE, 0);
+    } else {
+        lang_text_draw(138, 46 - m->figure_type, x_offset + width, y_offset + 60, FONT_NORMAL_WHITE);
+    }
     // No soldiers
     if (!m->num_figures) {
         int group_id, text_id;
