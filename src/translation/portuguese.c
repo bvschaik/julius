@@ -1349,6 +1349,10 @@ static translation_string all_strings[] = {
     {TR_PARAMETER_VALUE_INVASION_TYPE_NATIVES, "Nativos" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_ARENA_COVERAGE_PLURAL, "Arenas" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_TAVERN_COVERAGE_PLURAL, "Tabernas" },
+    {TR_BUILDING_FORMAL_GARDENS, "Jardim Formal" },
+    {TR_BUILDING_OVERGROWN_GARDENS, "Jardim Rústico" },
+    {TR_BUILDING_FORT_AUXILIA_INFANTRY, "Infantaria Auxiliar" },
+
 
 };
 
