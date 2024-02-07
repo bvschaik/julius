@@ -536,7 +536,10 @@ static int add_figure(int formation_id, int figure_id, int deployed, int damage,
             return fig;
         }
     }
-    return 0; // can happen on large invasions
+
+    // The rest of the code can happen on large invasions
+    // Try to balance the remaining soldiers evenly instead of stacking them all on one tile
+    return figure_id % MAX_FORMATION_FIGURES;
 }
 
 void formation_move_herds_away(int x, int y)
