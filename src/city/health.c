@@ -295,6 +295,43 @@ static void adjust_sickness_level_in_plague_buildings(int hospital_coverage_bonu
     }
 }
 
+int city_health_get_house_health_level(building *b) 
+{
+    int house_health = 0;
+
+    if (building_is_house(b->type)) {
+        house_health = calc_bound(b->subtype.house_level, 0, 10);
+        if (b->data.house.clinic && b->data.house.hospital) {
+            house_health += 50;
+            city_data.health.population_access.clinic += b->house_population;
+        } else if (b->data.house.hospital) {
+            house_health += 40;
+        } else if (b->data.house.clinic) {
+            house_health += 30;
+            city_data.health.population_access.clinic += b->house_population;
+        }
+        if (b->data.house.bathhouse) {
+            house_health += 20;
+            city_data.health.population_access.baths += b->house_population;
+        }
+        if (b->data.house.barber) {
+            house_health += 10;
+            city_data.health.population_access.barber += b->house_population;
+        }
+        house_health += b->data.house.num_foods * 15;
+
+        int mausoleum_health = building_count_active(BUILDING_SMALL_MAUSOLEUM);
+        mausoleum_health += building_count_active(BUILDING_LARGE_MAUSOLEUM) * 2;
+
+        house_health += calc_bound(mausoleum_health, 0, 10);
+
+        int health_cap = (model_get_house(b->subtype.house_level)->food_types && !b->data.house.num_foods) ?
+            40 : 100;
+        house_health = calc_bound(house_health, 0, health_cap);
+    }
+    return house_health;
+}
+
 void city_health_update(void)
 {
     if (city_data.population.population < 200 || scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
@@ -319,34 +356,8 @@ void city_health_update(void)
                 b->sickness_level = 0;
                 continue;
             }
-            int house_health = calc_bound(b->subtype.house_level, 0, 10);
-            if (b->data.house.clinic && b->data.house.hospital) {
-                house_health += 50;
-                city_data.health.population_access.clinic += b->house_population;
-            } else if (b->data.house.hospital) {
-                house_health += 40;
-            } else if (b->data.house.clinic) {
-                house_health += 30;
-                city_data.health.population_access.clinic += b->house_population;
-            }
-            if (b->data.house.bathhouse) {
-                house_health += 20;
-                city_data.health.population_access.baths += b->house_population;
-            }
-            if (b->data.house.barber) {
-                house_health += 10;
-                city_data.health.population_access.barber += b->house_population;
-            }
-            house_health += b->data.house.num_foods * 15;
+            int house_health = city_health_get_house_health_level(b);
 
-            int mausoleum_health = building_count_active(BUILDING_SMALL_MAUSOLEUM);
-            mausoleum_health += building_count_active(BUILDING_LARGE_MAUSOLEUM) * 2;
-
-            house_health += calc_bound(mausoleum_health, 0, 10);
-
-            int health_cap = (model_get_house(b->subtype.house_level)->food_types && !b->data.house.num_foods) ?
-                40 : 100;
-            house_health = calc_bound(house_health, 0, health_cap);
             total_population += b->house_population;
             healthy_population += calc_adjust_with_percentage(b->house_population, house_health);
             adjust_sickness_level_in_house(b, house_health, population_health_offset, hospital_coverage_bonus);

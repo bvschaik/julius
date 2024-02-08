@@ -359,6 +359,10 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_ACADEMY;
             break;
+        case HOTKEY_SHOW_OVERLAY_HEALTH:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_HEALTH;
+            break;
         case HOTKEY_SHOW_OVERLAY_BARBER:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_BARBER;

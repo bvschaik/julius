@@ -4,6 +4,13 @@
 #include "game/state.h"
 #include "translation/translation.h"
 
+static int show_building_health(const building *b)
+{
+    return b->type == BUILDING_HOSPITAL || b->type == BUILDING_DOCTOR ||
+           b->type == BUILDING_BARBER || b->type == BUILDING_BATHHOUSE ||
+           b->type == BUILDING_SMALL_MAUSOLEUM || b->type == BUILDING_LARGE_MAUSOLEUM;
+}
+
 static int show_building_barber(const building *b)
 {
     return b->type == BUILDING_BARBER;
@@ -29,6 +36,12 @@ static int show_building_sickness(const building *b)
     return b->type == BUILDING_HOSPITAL || b->type == BUILDING_DOCTOR ||
            b->type == BUILDING_BARBER || b->type == BUILDING_BATHHOUSE ||
            b->type == BUILDING_SMALL_MAUSOLEUM || b->type == BUILDING_LARGE_MAUSOLEUM;
+}
+
+static int show_figure_health(const figure *f)
+{
+    return f->type == FIGURE_SURGEON || f->type == FIGURE_DOCTOR ||
+           f->type == FIGURE_BARBER || f->type == FIGURE_BATHHOUSE_WORKER;
 }
 
 static int show_figure_barber(const figure *f)
@@ -69,6 +82,17 @@ static int show_figure_sickness(const figure *f)
     return 0;
 }
 
+static int get_column_height_health(const building *b)
+{
+    int house_health = city_health_get_house_health_level(b);
+    
+    if (b->house_population > 0 && house_health < 1 ) {
+    house_health += 1;
+    }
+    
+    return b->house_size && house_health ? house_health / 10 : NO_COLUMN;
+}
+
 static int get_column_height_barber(const building *b)
 {
     return b->house_size && b->data.house.barber ? b->data.house.barber / 10 : NO_COLUMN;
@@ -92,6 +116,48 @@ static int get_column_height_hospital(const building *b)
 static int get_column_height_sickness(const building *b)
 {
     return b->sickness_level ? b->sickness_level / 10 : NO_COLUMN;
+}
+
+static int get_tooltip_health(tooltip_context *c, const building *b)
+{
+    if (building_is_house(b->type)) {
+        int house_health = city_health_get_house_health_level(b);
+
+        if (house_health < 40) {
+            if (b->house_population < 1 && house_health < 1) {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_NONE;
+            } else if (b->house_population >= 1 && house_health < 10) {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_0;
+            } else if (house_health < 20) {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_1;
+            } else if (house_health < 30) {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_2;
+            } else {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_3;
+            }
+        } else if (house_health < 60) {
+            if (house_health < 50) {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_4;
+            } else {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_5;
+            }
+        } else if (house_health < 80) {
+            if (house_health < 70) {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_6;
+            } else {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_7;
+            }
+        } else if (house_health < 100) {
+            if (house_health < 90) {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_8;
+            } else {
+                c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_9;
+            }
+        } else {
+            c->translation_key = TR_TOOLTIP_OVERLAY_HEALTH_10;
+        }
+    }
+    return 0;
 }
 
 static int get_tooltip_barber(tooltip_context *c, const building *b)
@@ -163,6 +229,22 @@ static int get_tooltip_sickness(tooltip_context *c, const building *b)
         }        
     }
     return 0;
+}
+
+const city_overlay *city_overlay_for_health(void)
+{
+    static city_overlay overlay = {
+        OVERLAY_HEALTH,
+        COLUMN_COLOR_GREEN_TO_RED,
+        show_building_health,
+        show_figure_health,
+        get_column_height_health,
+        0,
+        get_tooltip_health,
+        0,
+        0
+    };
+    return &overlay;
 }
 
 const city_overlay *city_overlay_for_barber(void)
