@@ -15,6 +15,7 @@
 #include "input/touch.h"
 #include "platform/android/android.h"
 #include "platform/arguments.h"
+#include "platform/cursor.h"
 #include "platform/emscripten/emscripten.h"
 #include "platform/file_manager.h"
 #include "platform/file_manager_cache.h"
@@ -416,7 +417,7 @@ static void main_loop(void)
     }
 }
 
-static int init_sdl(void)
+static int init_sdl(int enable_joysticks)
 {
     SDL_Log("Initializing SDL");
 
@@ -434,7 +435,7 @@ static int init_sdl(void)
             SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Could not enable joystick support");
         }
     } else {
-        platform_joystick_init();
+        platform_joystick_init(enable_joysticks);
     }
     SDL_SetEventFilter(handle_event_immediate, 0);
 #if SDL_VERSION_ATLEAST(2, 0, 10)
@@ -571,7 +572,7 @@ static void setup(const augustus_args *args)
         SDL_Log("Running on: %s", system_OS());
     }
 
-    if (!init_sdl()) {
+    if (!init_sdl(args->enable_joysticks)) {
         SDL_Log("Exiting: SDL init failed");
         exit_with_status(-1);
     }
@@ -621,6 +622,10 @@ static void setup(const augustus_args *args)
 #ifdef PLATFORM_ENABLE_INIT_CALLBACK
     platform_init_callback();
 #endif
+
+    if (args->use_software_cursor) {
+        platform_cursor_force_software_mode();
+    }
 
     // This has to come after platform_screen_create, otherwise it fails on Nintendo Switch
     system_init_cursors(config_get(CONFIG_SCREEN_CURSOR_SCALE));

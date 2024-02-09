@@ -22,4 +22,15 @@ cursor_scale platform_cursor_get_current_scale(void);
  */
 int platform_cursor_get_texture_size(const cursor *c);
 
+/**
+ * Force software cursor mode
+ */
+void platform_cursor_force_software_mode(void);
+
+/**
+ * Indicates whether we're using the software cursor
+ * @return Whether we're using the software cursor
+ */
+int platform_cursor_is_software(void);
+
 #endif // PLATFORM_CURSOR_H

@@ -3,7 +3,7 @@
 
 #include "SDL.h"
 
-void platform_joystick_init(void);
+void platform_joystick_init(int force_enable);
 void platform_joystick_device_changed(int id, int is_connected);
 void platform_joystick_handle_axis(SDL_JoyAxisEvent *event);
 void platform_joystick_handle_trackball(SDL_JoyBallEvent *event);

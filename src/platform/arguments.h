@@ -7,6 +7,8 @@ typedef struct {
     int cursor_scale_percentage;
     int force_windowed;
     int launch_asset_previewer;
+    int enable_joysticks;
+    int use_software_cursor;
 } augustus_args;
 
 int platform_parse_arguments(int argc, char **argv, augustus_args *output_args);

@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <string.h>
 
+static int enabled;
+
 #ifdef __vita__
 #include "platform/vita/pad.h"
 
@@ -103,7 +105,7 @@ static int use_joystick(void)
 #if defined(__vita__) || defined(__SWITCH__)
     return 1;
 #else
-    return 0;
+    return enabled;
 #endif
 }
 
@@ -170,8 +172,10 @@ static void remove_joystick(int instance_id)
     joystick_remove(instance_id);
 }
 
-void platform_joystick_init(void)
+void platform_joystick_init(int force_enable)
 {
+    enabled = force_enable;
+
     if (!use_joystick()) {
         return;
     }

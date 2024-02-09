@@ -54,6 +54,8 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
     output_args->cursor_scale_percentage = 0;
     output_args->force_windowed = 0;
     output_args->launch_asset_previewer = 0;
+    output_args->enable_joysticks = 0;
+    output_args->use_software_cursor = 0;
 
     for (int i = 1; i < argc; i++) {
         // we ignore "-psn" arguments, this is needed to launch the app
@@ -94,6 +96,10 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
             output_args->force_windowed = 1;
         } else if (SDL_strcmp(argv[i], "--asset-previewer") == 0) {
             output_args->launch_asset_previewer = 1;
+        } else if (SDL_strcmp(argv[i], "--enable-joysticks") == 0) {
+            output_args->enable_joysticks = 1;
+        } else if (SDL_strcmp(argv[i], "--software-cursor") == 0) {
+            output_args->use_software_cursor = 1;
         } else if (SDL_strcmp(argv[i], "--help") == 0) {
             ok = 0;
         } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
@@ -113,6 +119,12 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
         SDL_Log("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
         SDL_Log("--windowed");
         SDL_Log("          Forces the game to start in windowed mode");
+        SDL_Log("--asset-previewer");
+        SDL_Log("          Runs the extra asset previewer instead of the game");
+        SDL_Log("--enable-joysticks");
+        SDL_Log("          Enables joystick support");
+        SDL_Log("--software-cursor");
+        SDL_Log("          Uses a software cursor instead of the default hardware cursor");
         SDL_Log("The last argument, if present, is interpreted as data directory for the Caesar 3 installation");
     }
     return ok;
