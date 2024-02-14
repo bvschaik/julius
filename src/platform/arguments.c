@@ -4,6 +4,8 @@
 
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
+#define WINDOWED_AND_FULLSCREEN_ERROR_MESSAGE "Option --windowed and --fullscreen cannot both be specified"
+#define DISPLAY_ID_ERROR_MESSAGE "Option --display must be followed by a number indicating the display, starting from 0"
 #define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
 
 static int parse_decimal_as_percentage(const char *str)
@@ -56,6 +58,8 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
     output_args->launch_asset_previewer = 0;
     output_args->enable_joysticks = 0;
     output_args->use_software_cursor = 0;
+    output_args->force_fullscreen = 0;
+    output_args->display_id = 0;
 
     for (int i = 1; i < argc; i++) {
         // we ignore "-psn" arguments, this is needed to launch the app
@@ -92,6 +96,14 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
                 SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
+        } else if (SDL_strcmp(argv[i], "--display") == 0) {
+            if (i + 1 < argc) {
+                output_args->display_id = SDL_strtol(argv[i + 1], 0, 10);
+                i++;
+            } else {
+                SDL_Log(DISPLAY_ID_ERROR_MESSAGE);
+                ok = 0;
+            }
         } else if (SDL_strcmp(argv[i], "--windowed") == 0) {
             output_args->force_windowed = 1;
         } else if (SDL_strcmp(argv[i], "--asset-previewer") == 0) {
@@ -100,6 +112,8 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
             output_args->enable_joysticks = 1;
         } else if (SDL_strcmp(argv[i], "--software-cursor") == 0) {
             output_args->use_software_cursor = 1;
+        } else if (SDL_strcmp(argv[i], "--fullscreen") == 0) {
+            output_args->force_fullscreen = 1;
         } else if (SDL_strcmp(argv[i], "--help") == 0) {
             ok = 0;
         } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
@@ -108,6 +122,10 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
         } else {
             output_args->data_directory = argv[i];
         }
+    }
+    if (output_args->force_fullscreen && output_args->force_windowed) {
+        SDL_Log(WINDOWED_AND_FULLSCREEN_ERROR_MESSAGE);
+        ok = 0;
     }
 
     if (!ok) {
@@ -125,6 +143,10 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
         SDL_Log("          Enables joystick support");
         SDL_Log("--software-cursor");
         SDL_Log("          Uses a software cursor instead of the default hardware cursor");
+        SDL_Log("--fullscreen");
+        SDL_Log("          Forces the game to start fullscreen");
+        SDL_Log("--display ID");
+        SDL_Log("          Forces the game to start on the specified display, numbered from 0");
         SDL_Log("The last argument, if present, is interpreted as data directory for the Caesar 3 installation");
     }
     return ok;

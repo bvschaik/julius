@@ -98,7 +98,7 @@ static void set_window_icon(void)
 }
 #endif
 
-int platform_screen_create(const char *title, int display_scale_percentage)
+int platform_screen_create(const char *title, int display_scale_percentage, int display_id)
 {
 #ifdef __ANDROID__
     scale.screen_density = android_get_screen_density();
@@ -127,7 +127,11 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 #endif
 
-    SDL_Log("Creating screen %d x %d, %s, driver: %s", width, height,
+    if (display_id < 0 || display_id >= SDL_GetNumVideoDisplays()) {
+        SDL_Log("Defaulting to display 0 instead of %d (num displays: %d)", display_id, SDL_GetNumVideoDisplays());
+        display_id = 0;
+    }
+    SDL_Log("Creating screen %d x %d on display %d, %s, driver: %s", width, height, display_id,
         fullscreen ? "fullscreen" : "windowed", SDL_GetCurrentVideoDriver());
     Uint32 flags = SDL_WINDOW_RESIZABLE;
 
@@ -140,7 +144,7 @@ int platform_screen_create(const char *title, int display_scale_percentage)
     }
 
     SDL.window = SDL_CreateWindow(title,
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED_DISPLAY(display_id), SDL_WINDOWPOS_CENTERED_DISPLAY(display_id),
         width, height, flags);
 
     if (!SDL.window) {
