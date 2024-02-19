@@ -1,5 +1,6 @@
 #include "utility.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/roadblock.h"
 #include "city/finance.h"
@@ -145,9 +146,8 @@ void window_building_draw_prefect(building_info_context *c)
 static void draw_roadblock_orders_buttons(int x, int y, int focused)
 {
     uint8_t refuse_all_button_text[] = { 'x', 0 };
-    uint8_t accept_all_button_text[] = { 'v', 0 };
     button_border_draw(x, y, 20, 20, data.orders_focus_button_id == 1);
-    text_draw_centered(accept_all_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+    image_draw(assets_get_image_id("UI", "Allowed_Walker_Check"), x + 4, y + 4, COLOR_MASK_NONE, SCALE_NONE);
     button_border_draw(x+25, y, 20, 20, data.orders_focus_button_id == 2);
     text_draw_centered(refuse_all_button_text, x + 26, y + 4, 20, FONT_NORMAL_BLACK, 0);
 
