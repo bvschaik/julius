@@ -37,3 +37,17 @@ int building_type_is_roadblock(building_type type)
             return 0;
     }
 }
+
+void building_roadblock_accept_none(building *b)
+{
+    if (building_type_is_roadblock(b->type)) {
+        b->data.roadblock.exceptions = 0;
+    }
+}
+
+void building_roadblock_accept_all(building *b)
+{
+    if (building_type_is_roadblock(b->type)) {
+        b->data.roadblock.exceptions = ROADBLOCK_PERMISSION_ALL;
+    }
+}

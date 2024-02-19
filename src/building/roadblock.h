@@ -21,6 +21,9 @@ typedef enum {
 
 void building_roadblock_set_permission(roadblock_permission p, building *b);
 int building_roadblock_get_permission(roadblock_permission p, building *b);
+void building_roadblock_accept_none(building *b);
+void building_roadblock_accept_all(building *b);
+
 
 int building_type_is_roadblock(building_type type);
 

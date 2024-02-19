@@ -1371,7 +1371,9 @@ static translation_string all_strings[] = {
     {TR_REPLAY_MAP_NOT_FOUND_TITLE, "Unable to replay map"},
     {TR_REPLAY_MAP_NOT_FOUND_MESSAGE, "The original map file for this saved game was not found.\nYou need the following file with either a .map or .mapx extension:"},
     {TR_BUILDING_FORT_AUXILIA_INFANTRY, "Auxiliaries - Infantry"},
-    {TR_WINDOW_ADVISOR_MILITARY_INFANTRY, "Infantrymen"}
+    {TR_WINDOW_ADVISOR_MILITARY_INFANTRY, "Infantrymen"},
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_ACCEPT_ALL, "Accept all walkers"},
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_REJECT_ALL, "Refuse all walkers"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

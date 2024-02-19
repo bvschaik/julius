@@ -29,9 +29,12 @@ static struct {
     int tooltip_id;
 } data = { 0, 0, 0, 0, 0 };
 
+
+
 static generic_button go_to_orders_button[] = {
-    {0, 0, 304, 20, go_to_orders, button_none, 0, 0}
+    {0, 0, 304, 20, go_to_orders, button_none, 0, 0},
 };
+
 
 static generic_button orders_permission_buttons[] = {
     {0, 4, 210, 22, toggle_figure_state, button_none, PERMISSION_MAINTENANCE, 0},
@@ -56,8 +59,12 @@ TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MISSIONARY, TR_TOOLTIP_BUTTON_ROADBLOCK_P
 
 static int size_of_orders_permission_buttons = sizeof(orders_permission_buttons) / sizeof(*orders_permission_buttons);
 
-static generic_button roadblock_order_buttons[] = {
-    {314, 0, 20, 20, roadblock_orders, button_none, 0, 0},
+static int permission_orders_tooltip_translations[] = { 0,
+TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_ACCEPT_ALL,TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_REJECT_ALL };
+
+static generic_button roadblock_orders_buttons[] = {
+    {286, 0, 20, 20, roadblock_orders, button_none, 0, 0 },
+    {309, 0, 20, 20, roadblock_orders, button_none, 1, 0 },
 };
 
 
@@ -135,6 +142,18 @@ void window_building_draw_prefect(building_info_context *c)
     window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
 }
 
+static void draw_roadblock_orders_buttons(int x, int y, int focused)
+{
+    uint8_t refuse_all_button_text[] = { 'x', 0 };
+    uint8_t accept_all_button_text[] = { 'v', 0 };
+    button_border_draw(x, y, 20, 20, data.orders_focus_button_id == 1);
+    text_draw_centered(accept_all_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+    button_border_draw(x+25, y, 20, 20, data.orders_focus_button_id == 2);
+    text_draw_centered(refuse_all_button_text, x + 26, y + 4, 20, FONT_NORMAL_BLACK, 0);
+
+}
+
+
 void window_building_draw_roadblock(building_info_context *c)
 {
     c->help_id = 0;
@@ -172,6 +191,7 @@ void window_building_draw_roadblock_orders_foreground(building_info_context *c)
     };
     building *b = building_get(c->building_id);
     data.building_id = b->id;
+    draw_roadblock_orders_buttons(c->x_offset + 365, y_offset + 404, data.orders_focus_button_id == 1);
 
     for (int i = 0; i < size_of_orders_permission_buttons; i++) {
         image_draw(image_group(ids[i * 2]) + 4, c->x_offset + 32, y_offset + 46 + 32 * i, COLOR_MASK_NONE, SCALE_NONE);
@@ -191,6 +211,8 @@ void window_building_roadblock_get_tooltip_walker_permissions(int *translation)
 {
     if (data.figure_focus_button_id) {
         *translation = permission_tooltip_translations[data.figure_focus_button_id];
+    } else if (data.orders_focus_button_id) {
+        *translation = permission_orders_tooltip_translations[data.orders_focus_button_id];
     } else {
         *translation = 0;
     }
@@ -361,8 +383,19 @@ static void toggle_figure_state(int index, int param2)
     window_invalidate();
 }
 
-static void roadblock_orders(int param1, int param2)
-{}
+
+
+static void roadblock_orders(int index, int param2)
+{
+    building *b = building_get(data.building_id);
+    if (index == 0) {
+        building_roadblock_accept_all(b);
+    } else if (index == 1) {
+        building_roadblock_accept_none(b);
+    }
+    window_invalidate();
+
+}
 
 static void go_to_orders(int param1, int param2)
 {
@@ -387,5 +420,5 @@ int window_building_handle_mouse_roadblock_orders(const mouse *m, building_info_
         return 1;
     }
 
-    return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, roadblock_order_buttons, 1, &data.orders_focus_button_id);
+    return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, roadblock_orders_buttons, 2, &data.orders_focus_button_id);
 }
