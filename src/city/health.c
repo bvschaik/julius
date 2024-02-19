@@ -295,7 +295,7 @@ static void adjust_sickness_level_in_plague_buildings(int hospital_coverage_bonu
     }
 }
 
-int city_health_get_house_health_level(building *b) 
+int city_health_get_house_health_level(const building *b) 
 {
     int house_health = 0;
 
