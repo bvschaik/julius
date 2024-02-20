@@ -15,6 +15,9 @@
 #include "map/road_access.h"
 
 static const int DOCTOR_HEALING_OFFSETS[] = { 0, 1, 2, 3, 4, 5, 4, 3, 2, 1};
+static const int BEGGAR_OFFSETS[] = { 104, 105, 106, 107, 108, 109, 110, 111};
+
+static int beggar_frame_count = sizeof(BEGGAR_OFFSETS) / sizeof(*BEGGAR_OFFSETS);
 
 static void roamer_action(figure *f, int num_ticks)
 {
@@ -530,4 +533,26 @@ void figure_tax_collector_action(figure *f)
             break;
     }
     figure_image_update(f, image_group(GROUP_FIGURE_TAX_COLLECTOR));
+}
+
+void figure_beggar_action(figure *f)
+{
+    f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
+    figure_image_increase_offset(f, 64);
+    f->cart_image_id = 0;
+
+    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        figure_combat_handle_corpse(f);
+    }
+    f->wait_ticks++;
+    if (f->wait_ticks > 800) {
+        f->state = FIGURE_STATE_DEAD;
+        f->image_offset = 0;
+    }
+    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = GROUP_FIGURE_LABOR_SEEKER + figure_image_corpse_offset(f) + 96;
+    } else {
+        f->image_id = image_group(GROUP_FIGURE_HOMELESS) + BEGGAR_OFFSETS[f->id % beggar_frame_count];
+    }
+
 }

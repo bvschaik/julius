@@ -1373,7 +1373,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_FORT_AUXILIA_INFANTRY, "Auxiliaries - Infantry"},
     {TR_WINDOW_ADVISOR_MILITARY_INFANTRY, "Infantrymen"},
     {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_ACCEPT_ALL, "Accept all walkers"},
-    {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_REJECT_ALL, "Refuse all walkers"}
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_REJECT_ALL, "Refuse all walkers"},
+    {TR_FIGURE_TYPE_BEGGAR, "Beggar"},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

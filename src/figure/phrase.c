@@ -256,7 +256,7 @@ static const int FIGURE_TYPE_TO_SOUND_TYPE[] = {
     -1, -1, -1, -1, 30, -1, 31, -1, -1, -1, // 60-69
     -1, -1, -1, -1, 19, 2, 1, 19, 8, 11,  // 70-79
     11, -1, 1, -1, -1, 19, 20, 20, 19, 19,  // 80-89
-    19, -1, -1, -1, -1, -1, -1, -1, -1, -1, // 90-99
+    19, -1, -1, 22, -1, -1, -1, -1, -1, -1, // 90-99
 };
 
 enum {
@@ -604,6 +604,14 @@ static int barkeep_phrase(figure *f)
     }
 }
 
+static int beggar_phrase(figure *f)
+{
+    if (++f->phrase_sequence_exact >= 2) {
+        f->phrase_sequence_exact = 0;
+    }
+    return 7 + f->phrase_sequence_exact;
+}
+
 static int phrase_based_on_figure_state(figure *f)
 {
     switch (f->type) {
@@ -665,6 +673,8 @@ static int phrase_based_on_figure_state(figure *f)
             return f->type == FIGURE_TRADE_CARAVAN ? trade_caravan_phrase(f) : -1;
         case FIGURE_TRADE_SHIP:
             return trade_ship_phrase(f);
+        case FIGURE_BEGGAR:
+            return beggar_phrase(f);
     }
     return -1;
 }

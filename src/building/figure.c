@@ -35,6 +35,15 @@
 #include "map/terrain.h"
 #include "map/water.h"
 
+
+
+#define BEGGAR_UNEMPLOYMENT_THRESHOLD 6
+
+static struct {
+    int beggar_counter;
+    int houses_needed_per_beggar;
+} data;
+
 static int worker_percentage(const building *b)
 {
     return calc_percentage(b->num_workers, model_get_building(b->type)->laborers);
@@ -134,6 +143,47 @@ static void create_roaming_figure(building *b, int x, int y, figure_type type)
     b->figure_id = f->id;
     figure_movement_init_roaming(f);
 }
+
+static void calculate_houses_needed_per_beggar(void)
+{
+    int unemployed_percentage = city_labor_unemployment_percentage();
+    int houses_needed = 100;
+    if (unemployed_percentage < 9) {
+        houses_needed = 40-unemployed_percentage;
+    } else if (unemployed_percentage < 12) {
+        houses_needed = 30-unemployed_percentage;
+    } else if (unemployed_percentage < 15) {
+        houses_needed = 25-unemployed_percentage;
+    } else if (unemployed_percentage < 18) {
+        houses_needed = 24-unemployed_percentage;
+    } else if (unemployed_percentage < 21) {
+        houses_needed = 23-unemployed_percentage;
+    } else {
+        houses_needed = 3;
+    }
+    data.houses_needed_per_beggar = houses_needed;
+
+}
+
+static void spawn_beggar(building *b)
+{
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > 16) {
+            b->figure_spawn_delay = 0;
+            if (data.beggar_counter > data.houses_needed_per_beggar) {
+                data.beggar_counter = 0;
+            } else {
+                data.beggar_counter++;
+                return;
+            }
+            figure *f = figure_create(FIGURE_BEGGAR, road.x, road.y, DIR_4_BOTTOM);
+            f->building_id = b->id;
+        }
+    }
+}
+
 
 static int spawn_patrician(building *b, int spawned)
 {
@@ -1773,6 +1823,7 @@ static void update_native_crop_progress(building *b)
 void building_figure_generate(void)
 {
     int patrician_generated = 0;
+    calculate_houses_needed_per_beggar();
     for (int i = 1; i < building_count(); i++) {
         building *b = building_get(i);
         if (b->state != BUILDING_STATE_IN_USE) {
@@ -1786,7 +1837,11 @@ void building_figure_generate(void)
 
         b->show_on_problem_overlay = 0;
         // range of building types
-        if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE) {
+        if (b->type >= BUILDING_HOUSE_SMALL_TENT && b->type <= BUILDING_HOUSE_GRAND_INSULA) {
+            if (city_labor_unemployment_percentage() > BEGGAR_UNEMPLOYMENT_THRESHOLD) {
+                spawn_beggar(b);
+            }
+        } else if (b->type >= BUILDING_HOUSE_SMALL_VILLA && b->type <= BUILDING_HOUSE_LUXURY_PALACE) {
             patrician_generated = spawn_patrician(b, patrician_generated);
         } else if (building_is_raw_resource_producer(b->type) ||
             building_is_farm(b->type) || building_is_workshop(b->type)) {

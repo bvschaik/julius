@@ -466,6 +466,11 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     .max_damage = 110, .attack_value = 8, .defense_value = 0,
     .missile_defense_value = 2, .missile_attack_value = 0, .missile_delay = 0
     },
+    [FIGURE_BEGGAR] = {
+    .category = FIGURE_CATEGORY_CITIZEN,
+    .max_damage = 10, .attack_value = 0, .defense_value = 0,
+    .missile_defense_value = 0, .missile_attack_value = 0, .missile_delay = 0
+    },
 
 };
 
