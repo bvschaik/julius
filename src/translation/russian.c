@@ -1371,6 +1371,9 @@ static translation_string all_strings[] = {
     {TR_REPLAY_MAP_NOT_FOUND_MESSAGE, "Оригинальный файл карты для этой сохраненной игры не был найден.\nВам нужен следующий файл с расширением .map или .mapx:"},
     {TR_BUILDING_FORT_AUXILIA_INFANTRY, "Наемники - Пехотинцы"},
     {TR_WINDOW_ADVISOR_MILITARY_INFANTRY, "пехотинец"},
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_ACCEPT_ALL, "Принимать всех граждан"},
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_REJECT_ALL, "Отказывать всех граждан"},
+    {TR_FIGURE_TYPE_BEGGAR, "Нищий"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
