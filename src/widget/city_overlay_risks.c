@@ -124,7 +124,7 @@ static int show_figure_problems(const figure *f)
         return building_get(f->building_id)->show_on_problem_overlay;
     } else if (f->type == FIGURE_CART_PUSHER) {
         return f->action_state == FIGURE_ACTION_20_CARTPUSHER_INITIAL || f->min_max_seen;
-    } else if (f->type == FIGURE_PROTESTER) {
+    } else if (f->type == FIGURE_PROTESTER || f->type == FIGURE_BEGGAR) {
         return 1;
     } else {
         return 0;
