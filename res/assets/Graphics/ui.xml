@@ -250,4 +250,8 @@
 	<image id="Risk_Widget_Fire" src="Risk_Widget_Fire"/>
 	<image id="Risk_Widget_Health" src="Risk_Widget_Health"/>
 	<image id="Risk_Widget_Cross" src="Risk_Widget_Cross"/>
+	<!-- Note: Checkmark toggle for denied walkers -->
+	<image id="Denied_Walker_Checkmark" src="Denied_Walker_Checkmark"/>
+	<!-- Note: UI button for accessing Housing Advisor -->
+	<image id="Housing_Advisor_S" src="Housing_Advisor_S"/>
 </assetlist>

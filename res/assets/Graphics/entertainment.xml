@@ -593,4 +593,21 @@
 			<frame group="this" image="Theatre_UP_ON_21"/>
 		</animation>
 	</image>
+	<!-- Note: Arena Upgrade Off Variant -->
+	<image id="Arena Upgrade OFF" width="178" height="152" isometric="true">
+		<layer group="this" image="Arena OFF" x="0" y="0"/>
+		<layer src="Arena_Off_Upgrade" x="0" y="20"/>
+	</image>
+	<!-- Note: Arena Upgrade ON Variant Animation -->
+	<image id="Arena Upgrade ON" width="178" height="152" isometric="true">
+		<layer group="this" image="Arena Upgrade OFF"/>
+		<animation speed="9" x="44" y="29" reversible="false">
+			<frame group="this" image="Arena_On_01"/>
+			<frame group="this" image="Arena_On_02"/>
+			<frame group="this" image="Arena_On_03"/>
+			<frame group="this" image="Arena_On_04"/>
+			<frame group="this" image="Arena_On_05"/>
+			<frame group="this" image="Arena_On_06"/>
+		</animation>
+	</image>
 </assetlist>
