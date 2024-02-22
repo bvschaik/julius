@@ -701,6 +701,12 @@ int image_load_climate(int climate_id, int is_editor, int force_reload, int keep
         data.main[image_group(GROUP_BUILDING_ENGINEERS_POST)].animation->sprite_offset_y += 1;
     }
 
+    // Fix black stripe in legionaries' dying animation
+    if (!is_editor) {
+        int image_id = image_group(GROUP_BUILDING_FORT_LEGIONARY) + 155;
+        data.main[image_id].width = 30;
+    }
+
     data.current_climate = climate_id;
     data.is_editor = is_editor;
 
