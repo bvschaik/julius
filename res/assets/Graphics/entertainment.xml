@@ -301,6 +301,23 @@
 			<frame group="this" image="Arena_On_06"/>
 		</animation>
 	</image>
+	<!-- Note: Arena Upgrade Off Variant -->
+	<image id="Arena Upgrade OFF" width="178" height="152" isometric="true">
+		<layer group="this" image="Arena OFF" x="0" y="0"/>
+		<layer src="Arena_Off_Upgrade" x="0" y="20"/>
+	</image>
+	<!-- Note: Arena Upgrade ON Variant Animation -->
+	<image id="Arena Upgrade ON" width="178" height="152" isometric="true">
+		<layer group="this" image="Arena Upgrade OFF"/>
+		<animation speed="9" x="44" y="29" reversible="false">
+			<frame group="this" image="Arena_On_01"/>
+			<frame group="this" image="Arena_On_02"/>
+			<frame group="this" image="Arena_On_03"/>
+			<frame group="this" image="Arena_On_04"/>
+			<frame group="this" image="Arena_On_05"/>
+			<frame group="this" image="Arena_On_06"/>
+		</animation>
+	</image>
 	<!-- Note: Tavern OFF Variant -->
 	<image id="Tavern OFF" src="Tavern_OFF" isometric="true"/>
 	<!-- Note: Tavern Variant supplied with wine/food but not working/missing employees -->
@@ -338,6 +355,48 @@
 			<frame group="this" image="Tavern_ON_03"/>
 			<frame group="this" image="Tavern_ON_04"/>
 			<frame group="this" image="Tavern_ON_05"/>
+		</animation>
+	</image>
+	<!-- Note: Tavern Upgrade Off Variant -->
+	<image id="Tavern Upgrade OFF" width="118" height="82" isometric="true">
+		<layer group="this" image="Tavern OFF" x="0" y="0"/>
+		<layer src="Tavern_OFF_Upgrade" x="0" y="0"/>
+	</image>
+	<!-- Note: Tavern Upgrade Variant supplied with wine/food but not working/missing employees -->
+	<image id="Tavern Upgrade Supp" isometric="true">
+		<layer group="this" image="Tavern Upgrade OFF"/>
+		<layer src="Tavern_Supplied_Upgrade" x="9" y="36"/>
+	</image>
+	<!-- Note: Tavern Upgrade ON animation reference DO NOT USE! -->
+	<image id="Tavern_UG_ON_01" width="118" height="82">
+		<layer src="Tavern_Supplied_Upgrade" x="9" y="36"/>
+		<layer src="Tavern_ON_01" x="11" y="28"/>
+	</image>
+	<image id="Tavern_UG_ON_02" width="118" height="82">
+		<layer src="Tavern_Supplied_Upgrade" x="9" y="36"/>
+		<layer src="Tavern_ON_02" x="11" y="28"/>
+	</image>
+	<image id="Tavern_UG_ON_03" width="118" height="82">
+		<layer src="Tavern_Supplied_Upgrade" x="9" y="36"/>
+		<layer src="Tavern_ON_03" x="11" y="28"/>
+	</image>
+	<image id="Tavern_UG_ON_04" width="118" height="82">
+		<layer src="Tavern_Supplied_Upgrade" x="9" y="36"/>
+		<layer src="Tavern_ON_04" x="11" y="28"/>
+	</image>
+	<image id="Tavern_UG_ON_05" width="118" height="82">
+		<layer src="Tavern_Supplied_Upgrade" x="9" y="36"/>
+		<layer src="Tavern_ON_05" x="11" y="28"/>
+	</image>
+	<!-- Note: Tavern Upgrade ON Animations -->
+	<image id="Tavern Upgrade ON" isometric="true">
+		<layer group="this" image="Tavern Upgrade OFF"/>
+		<animation speed="8" x="0" y="0" reversible="false">
+			<frame group="this" image="Tavern_UG_ON_01"/>
+			<frame group="this" image="Tavern_UG_ON_02"/>
+			<frame group="this" image="Tavern_UG_ON_03"/>
+			<frame group="this" image="Tavern_UG_ON_04"/>
+			<frame group="this" image="Tavern_UG_ON_05"/>
 		</animation>
 	</image>
 	<!-- Note: Theatre ON reference assets (DO NOT USE!) -->
@@ -591,23 +650,6 @@
 			<frame group="this" image="Theatre_UP_ON_19"/>
 			<frame group="this" image="Theatre_UP_ON_20"/>
 			<frame group="this" image="Theatre_UP_ON_21"/>
-		</animation>
-	</image>
-	<!-- Note: Arena Upgrade Off Variant -->
-	<image id="Arena Upgrade OFF" width="178" height="152" isometric="true">
-		<layer group="this" image="Arena OFF" x="0" y="0"/>
-		<layer src="Arena_Off_Upgrade" x="0" y="20"/>
-	</image>
-	<!-- Note: Arena Upgrade ON Variant Animation -->
-	<image id="Arena Upgrade ON" width="178" height="152" isometric="true">
-		<layer group="this" image="Arena Upgrade OFF"/>
-		<animation speed="9" x="44" y="29" reversible="false">
-			<frame group="this" image="Arena_On_01"/>
-			<frame group="this" image="Arena_On_02"/>
-			<frame group="this" image="Arena_On_03"/>
-			<frame group="this" image="Arena_On_04"/>
-			<frame group="this" image="Arena_On_05"/>
-			<frame group="this" image="Arena_On_06"/>
 		</animation>
 	</image>
 </assetlist>
