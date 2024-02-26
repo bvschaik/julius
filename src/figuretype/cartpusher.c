@@ -182,10 +182,10 @@ static void determine_cartpusher_destination(figure *f, building *b, int road_ne
         dst_building_id = building_monument_get_monument(f->x, f->y, b->output_resource_id, road_network_id, &dst);
         if (dst_building_id) {
             f->wait_ticks = VALID_MONUMENT_RECHECK_TICKS;
-            set_destination(f, FIGURE_ACTION_239_CARTPUSHER_DELIVERING_TO_MONUMENT, dst_building_id, dst.x, dst.y);
+            set_destination(f, FIGURE_ACTION_246_CARTPUSHER_DELIVERING_TO_MONUMENT, dst_building_id, dst.x, dst.y);
             building_monument_add_delivery(dst_building_id, f->id, b->output_resource_id, 1);
         } else {
-            f->action_state = FIGURE_ACTION_238_CARTPUSHER_WAITING_FOR_DESTINATION;
+            f->action_state = FIGURE_ACTION_245_CARTPUSHER_WAITING_FOR_DESTINATION;
         }
         return;
     }
@@ -347,7 +347,7 @@ void figure_cartpusher_action(figure *f)
             }
             f->image_offset = 0;
             break;
-        case FIGURE_ACTION_238_CARTPUSHER_WAITING_FOR_DESTINATION:
+        case FIGURE_ACTION_245_CARTPUSHER_WAITING_FOR_DESTINATION:
             set_cart_graphic(f, 1);
             f->wait_ticks++;
             if (f->wait_ticks > NON_STORABLE_RESOURCE_CARTPUSHER_MAX_WAIT_TICKS) {
@@ -409,7 +409,7 @@ void figure_cartpusher_action(figure *f)
                 f->state = FIGURE_STATE_DEAD;
             }
             break;
-        case FIGURE_ACTION_239_CARTPUSHER_DELIVERING_TO_MONUMENT:
+        case FIGURE_ACTION_246_CARTPUSHER_DELIVERING_TO_MONUMENT:
             if (f->wait_ticks++ >= VALID_MONUMENT_RECHECK_TICKS) {
                 if (!building_monument_has_delivery_for_worker(f->id)) {
                     f->state = FIGURE_STATE_DEAD;
@@ -420,7 +420,7 @@ void figure_cartpusher_action(figure *f)
             set_cart_graphic(f, 1);
             figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->action_state = FIGURE_ACTION_240_CARTPUSHER_AT_MONUMENT;
+                f->action_state = FIGURE_ACTION_247_CARTPUSHER_AT_MONUMENT;
                 f->wait_ticks = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 reroute_cartpusher(f);
@@ -472,7 +472,7 @@ void figure_cartpusher_action(figure *f)
             }
             f->image_offset = 0;
             break;
-        case FIGURE_ACTION_240_CARTPUSHER_AT_MONUMENT:
+        case FIGURE_ACTION_247_CARTPUSHER_AT_MONUMENT:
             f->wait_ticks++;
             if (f->wait_ticks > 5) {
                 if (!building_monument_has_delivery_for_worker(f->id)) {
@@ -936,7 +936,7 @@ void figure_warehouseman_action(figure *f)
             f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
             figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
             if (f->direction == DIR_FIGURE_AT_DESTINATION) {
-                f->action_state = FIGURE_ACTION_248_ARMOURY_SUPPLIER_AT_WAREHOUSE;
+                f->action_state = FIGURE_ACTION_249_ARMOURY_SUPPLIER_AT_WAREHOUSE;
                 f->wait_ticks = 0;
             } else if (f->direction == DIR_FIGURE_REROUTE) {
                 figure_route_remove(f);
@@ -948,7 +948,7 @@ void figure_warehouseman_action(figure *f)
                 return;
             }
             break;
-        case FIGURE_ACTION_248_ARMOURY_SUPPLIER_AT_WAREHOUSE:
+        case FIGURE_ACTION_249_ARMOURY_SUPPLIER_AT_WAREHOUSE:
             f->wait_ticks++;
             if (f->wait_ticks > 4) {
                 f->loads_sold_or_carrying = 0;
