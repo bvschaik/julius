@@ -951,6 +951,16 @@ int building_image_get(const building *b)
         case BUILDING_OVERGROWN_GARDENS:
             return building_properties_for_type(BUILDING_OVERGROWN_GARDENS)->image_group;
 
+        case BUILDING_ARMOURY:
+            switch (scenario_property_climate()) {
+                case CLIMATE_NORTHERN:
+                    return assets_get_image_id("Military", "Armoury_ON_N");
+                case CLIMATE_DESERT:
+                    return assets_get_image_id("Military", "Armoury_ON_S");
+                default:
+                    return assets_get_image_id("Military", "Armoury_ON_C");
+            }
+
         default:
             return 0;
     }

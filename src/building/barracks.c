@@ -37,6 +37,9 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
         if (!is_valid_destination(b, road_network_id)) {
             continue;
         }
+        if (b->resources[RESOURCE_WEAPONS] >= MAX_WEAPONS_BARRACKS) {
+            continue;
+        }
         int dist = calc_maximum_distance(b->x, b->y, x, y);
         dist += 8 * b->resources[RESOURCE_WEAPONS];
         if (dist < min_dist) {
@@ -46,7 +49,8 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
     }
     building *monument = building_first_of_type(BUILDING_GRAND_TEMPLE_MARS);
     if (monument && monument->monument.phase == MONUMENT_FINISHED &&
-        is_valid_destination(monument, road_network_id)) {
+        is_valid_destination(monument, road_network_id) &&
+        (monument->resources[RESOURCE_WEAPONS] < MAX_WEAPONS_BARRACKS)) {
         int dist = calc_maximum_distance(monument->x, monument->y, x, y);
         dist += 8 * monument->resources[RESOURCE_WEAPONS];
         if (dist < min_dist) {

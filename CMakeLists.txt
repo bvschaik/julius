@@ -261,6 +261,7 @@ set(CORE_FILES
 
 set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/animation.c
+    ${PROJECT_SOURCE_DIR}/src/building/armoury.c
     ${PROJECT_SOURCE_DIR}/src/building/barracks.c
     ${PROJECT_SOURCE_DIR}/src/building/building.c
     ${PROJECT_SOURCE_DIR}/src/building/caravanserai.c

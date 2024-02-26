@@ -99,6 +99,9 @@ int building_animation_offset(building *b, int image_id, int grid_offset)
     if (b->type == BUILDING_DEPOT && b->num_workers <= 0) {
         return 0;
     }
+    if (b->type == BUILDING_ARMOURY && b->num_workers <= 0) {
+        return 0;
+    }
     if (b->type == BUILDING_COLOSSEUM) {
         map_image_set(grid_offset, building_image_get(b));
     }

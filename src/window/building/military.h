@@ -26,6 +26,8 @@ int window_building_handle_mouse_grand_temple_mars(const mouse *m, building_info
 void window_building_draw_watchtower(building_info_context *c);
 void window_building_draw_palisade(building_info_context *c);
 
+void window_building_draw_armoury(building_info_context *c);
+
 
 
 

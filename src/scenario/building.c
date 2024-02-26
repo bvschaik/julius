@@ -135,6 +135,7 @@ int scenario_building_allowed(int type)
         case BUILDING_MILITARY_ACADEMY:
             return scenario.allowed_buildings[ALLOWED_BUILDING_MILITARY_ACADEMY];
         case BUILDING_BARRACKS:
+        case BUILDING_ARMOURY:
             return scenario.allowed_buildings[ALLOWED_BUILDING_BARRACKS];
         case BUILDING_MENU_FARMS:
         case BUILDING_WHEAT_FARM:

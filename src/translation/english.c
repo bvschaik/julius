@@ -1375,6 +1375,11 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_ACCEPT_ALL, "Accept all walkers"},
     {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_REJECT_ALL, "Refuse all walkers"},
     {TR_FIGURE_TYPE_BEGGAR, "Beggar"},
+    {TR_BUILDING_ARMOURY, "Armoury" },
+    {TR_BUILDING_ARMOURY_NO_EMPLOYEES, "Without access to employees the armoury cannot deliver weapons to our soldiers. May Mars protect you, because the unarmed legions won't."},
+    {TR_BUILDING_ARMOURY_SOME_EMPLOYEES, "With armoury being only partially staffed, fully equipping the legions will take considerable time. Hopefully the enemies of Rome will take their time."},
+    {TR_BUILDING_ARMOURY_MANY_EMPLOYEES, "The armoury is able to deliver weapons to soldiers, but lack of employees causes occassional shortages."},
+    {TR_BUILDING_ARMOURY_DESC, "The armoury makes sure that our soldiers are quickly and efficiently supplied with weapons. The barbarians are no match for Roman logistics." },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

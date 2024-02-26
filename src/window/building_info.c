@@ -187,6 +187,7 @@ static int get_height_id(void)
             case BUILDING_NYMPHAEUM:
             case BUILDING_SMALL_MAUSOLEUM:
             case BUILDING_LARGE_MAUSOLEUM:
+            case BUILDING_ARMOURY:
                 return 3;
 
             case BUILDING_WELL:
@@ -737,6 +738,8 @@ static void draw_background(void)
         } else if (btype == BUILDING_SHRINE_CERES || btype == BUILDING_SHRINE_MARS || btype == BUILDING_SHRINE_MERCURY ||
             btype == BUILDING_SHRINE_NEPTUNE || btype == BUILDING_SHRINE_VENUS) {
             window_building_draw_shrine(&context);
+        } else if (btype == BUILDING_ARMOURY) {
+            window_building_draw_armoury(&context);
         }
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info(&context);

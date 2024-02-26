@@ -568,6 +568,35 @@ static void determine_granaryman_destination(figure *f, int road_network_id, int
     f->wait_ticks = 2;
 }
 
+static void determine_armoury_supplier_destination(figure *f, int road_network_id)
+{
+    f->is_ghost = 0;
+
+    map_point dst;
+    building *armoury = building_get(f->building_id);
+    int dst_building_id;
+
+    // Has weapons, deliver to barracks
+    if (f->resource_id) { 
+        dst_building_id = building_get_barracks_for_weapon(armoury->x, armoury->y, RESOURCE_WEAPONS,
+            armoury->road_network_id, &dst);
+        if (dst_building_id) {
+            set_destination(f, FIGURE_ACTION_51_WAREHOUSEMAN_DELIVERING_RESOURCE, dst_building_id, dst.x, dst.y);
+            return;
+        }
+    } else {
+        // Go grab weapons
+        dst_building_id = building_warehouse_with_resource(armoury->x, armoury->y, RESOURCE_WEAPONS, armoury->road_network_id, 0, &dst);
+        if (dst_building_id) {
+            set_destination(f, FIGURE_ACTION_248_ARMOURY_SUPPLIER_GETTING_WEAPONS, dst_building_id, dst.x, dst.y);
+            return;
+        }
+    }
+
+    // no one will accept, stand idle
+    f->wait_ticks = 5;
+}
+
 static void remove_resource_from_warehouse(figure *f)
 {
     if (f->state != FIGURE_STATE_DEAD) {
@@ -685,6 +714,8 @@ static void warehouseman_initial_action(figure *f, int road_network_id, int remo
         f->wait_ticks = 0;
         if (b->type == BUILDING_GRANARY) {
             determine_granaryman_destination(f, road_network_id, remove_resources);
+        } else if (b->type == BUILDING_ARMOURY) {
+            determine_armoury_supplier_destination(f, road_network_id);
         } else {
             determine_warehouseman_destination(f, road_network_id, remove_resources);
         }
@@ -892,6 +923,38 @@ void figure_warehouseman_action(figure *f)
             } else if (f->direction == DIR_FIGURE_LOST) {
                 f->state = FIGURE_STATE_DEAD;
             }
+            break;
+        case FIGURE_ACTION_248_ARMOURY_SUPPLIER_GETTING_WEAPONS:
+            f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART); // empty
+            figure_movement_move_ticks_with_percentage(f, 1, percentage_speed);
+            if (f->direction == DIR_FIGURE_AT_DESTINATION) {
+                f->action_state = FIGURE_ACTION_248_ARMOURY_SUPPLIER_AT_WAREHOUSE;
+                f->wait_ticks = 0;
+            } else if (f->direction == DIR_FIGURE_REROUTE) {
+                figure_route_remove(f);
+            } else if (f->direction == DIR_FIGURE_LOST) {
+                f->state = FIGURE_STATE_DEAD;
+            } else if (f->wait_ticks++ > FIGURE_REROUTE_DESTINATION_TICKS) {
+                f->action_state = FIGURE_ACTION_233_WAREHOUSEMAN_RECONSIDER_TARGET;
+                figure_warehouseman_action(f);
+                return;
+            }
+            break;
+        case FIGURE_ACTION_248_ARMOURY_SUPPLIER_AT_WAREHOUSE:
+            f->wait_ticks++;
+            if (f->wait_ticks > 4) {
+                f->loads_sold_or_carrying = 0;
+                city_health_dispatch_sickness(f);
+                if (0 == building_warehouse_remove_resource(building_get(f->destination_building_id), 
+                    f->collecting_item_id, 1)) {
+                    f->loads_sold_or_carrying++;
+                    f->resource_id = f->collecting_item_id;
+                    f->destination_building_id = 0;
+                    figure_route_remove(f);
+                }
+                warehouseman_initial_action(f, road_network_id, 0);
+            }
+            f->image_offset = 0;
             break;
         case FIGURE_ACTION_233_WAREHOUSEMAN_RECONSIDER_TARGET:
             warehouseman_initial_action(f, road_network_id, 0);

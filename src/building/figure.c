@@ -1,6 +1,7 @@
 #include "building/figure.h"
 
 #include "assets/assets.h"
+#include "building/armoury.h"
 #include "building/barracks.h"
 #include "building/caravanserai.h"
 #include "building/granary.h"
@@ -1811,6 +1812,47 @@ static void spawn_figure_depot(building* b)
     }
 }
 
+static void spawn_figure_armoury(building *b)
+{
+    check_labor_problem(b);
+
+    map_point road;
+    if (map_has_road_access(b->x, b->y, b->size, &road)) {
+        spawn_labor_seeker(b, road.x, road.y, 50);
+        int pct_workers = worker_percentage(b);
+        int spawn_delay;
+        if (pct_workers >= 100) {
+            spawn_delay = 8;
+        } else if (pct_workers >= 75) {
+            spawn_delay = 24;
+        } else if (pct_workers >= 50) {
+            spawn_delay = 48;
+        } else if (pct_workers >= 25) {
+            spawn_delay = 72;
+        } else if (pct_workers >= 1) {
+            spawn_delay = 96;
+        } else {
+            return;
+        }
+
+        if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN)) {
+            return;
+        }
+
+        b->figure_spawn_delay++;
+        if (b->figure_spawn_delay > spawn_delay) {
+            b->figure_spawn_delay = 0;
+            if (building_armory_is_needed(b)) {
+                figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM);
+                f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+                f->collecting_item_id = RESOURCE_WEAPONS;
+                b->figure_id = f->id;
+                f->building_id = b->id;
+            }
+        }
+    }
+}
+
 static void update_native_crop_progress(building *b)
 {
     b->data.industry.progress++;
@@ -1986,6 +2028,9 @@ void building_figure_generate(void)
                     break;
                 case BUILDING_DEPOT:
                     spawn_figure_depot(b);
+                    break;
+                case BUILDING_ARMOURY:
+                    spawn_figure_armoury(b);
                     break;
             }
         }
