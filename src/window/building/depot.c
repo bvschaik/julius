@@ -235,7 +235,7 @@ void window_building_draw_depot(building_info_context *c)
     window_building_draw_employment(c, 138);
     window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
     const building *b = building_get(data.depot_building_id);
-    translation_key depot_name_key = b->num_workers <= 0 && b->has_road_access ?
+    translation_key depot_name_key = b->num_workers <= 0 && c->has_road_access ?
         TR_BUILDING_CAT_DEPOT : TR_BUILDING_DEPOT;
     text_draw_centered(translation_for(depot_name_key),
         c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK, 0);
@@ -251,7 +251,7 @@ void window_building_draw_depot_foreground(building_info_context *c)
     building *src = building_get(b->data.depot.current_order.src_storage_id);
     building *dst = building_get(b->data.depot.current_order.dst_storage_id);
 
-    if (!b->has_road_access) {
+    if (!c->has_road_access) {
         window_building_draw_description(c, 69, 25);
     } else if (b->num_workers <= 0) {
         window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_DEPOT_NO_EMPLOYEES);

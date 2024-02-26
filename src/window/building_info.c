@@ -358,6 +358,7 @@ static void init(int grid_offset)
                 context.warehouse_space_text = building_warehouse_get_space_info(b);
                 break;
             case BUILDING_DEPOT:
+                context.has_road_access = map_has_road_access(b->x, b->y, b->size, 0);
                 game_state_set_overlay(OVERLAY_STORAGES);
                 window_building_depot_init_main(b->id);
                 break;
