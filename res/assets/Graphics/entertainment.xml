@@ -767,7 +767,7 @@
 	</image>
 	<!-- Note: Amphitheatre Upgrade ON Asset: USE THIS ONE! -->
 	<image id="Amphitheatre Upgrade ON" width="178" height="146" isometric="true">
-		<layer group="45" y="0"/>
+		<layer group="this" image="Amphitheatre Upgrade OFF"/>
 		<animation speed="5" x="37" y="39" reversible="false">
 			<frame group="this" image="Amphitheatre_UP_ON_01"/>
 			<frame group="this" image="Amphitheatre_UP_ON_02"/>
