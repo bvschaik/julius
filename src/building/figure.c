@@ -1822,15 +1822,15 @@ static void spawn_figure_armoury(building *b)
         int pct_workers = worker_percentage(b);
         int spawn_delay;
         if (pct_workers >= 100) {
-            spawn_delay = 8;
+            spawn_delay = 3;
         } else if (pct_workers >= 75) {
-            spawn_delay = 24;
+            spawn_delay = 8;
         } else if (pct_workers >= 50) {
-            spawn_delay = 48;
+            spawn_delay = 16;
         } else if (pct_workers >= 25) {
-            spawn_delay = 72;
+            spawn_delay = 24;
         } else if (pct_workers >= 1) {
-            spawn_delay = 96;
+            spawn_delay = 48;
         } else {
             return;
         }
@@ -1844,7 +1844,7 @@ static void spawn_figure_armoury(building *b)
             b->figure_spawn_delay = 0;
             if (building_armory_is_needed(b)) {
                 figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM);
-                f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
+                f->action_state = FIGURE_ACTION_149_CORPSE;
                 f->collecting_item_id = RESOURCE_WEAPONS;
                 b->figure_id = f->id;
                 f->building_id = b->id;
