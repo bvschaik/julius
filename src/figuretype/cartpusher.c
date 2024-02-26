@@ -264,13 +264,21 @@ static void update_image(figure *f)
     int dir = figure_image_normalize_direction(
         f->direction < 8 ? f->direction : f->previous_tile_direction);
 
-    int base_group = f->type == FIGURE_CART_PUSHER ? GROUP_FIGURE_CARTPUSHER : GROUP_FIGURE_MIGRANT;
-
-    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = image_group(base_group) + figure_image_corpse_offset(f) + 96;
-        f->cart_image_id = 0;
+    if (building_get(f->building_id)->type == BUILDING_ARMOURY) {
+        if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+            f->image_id = assets_get_image_id("Walkers", "barracks_worker_death_01") + figure_image_corpse_offset(f);
+        } else {
+            f->image_id = assets_get_image_id("Walkers", "barracks_worker_ne_01") + dir * 12 + f->image_offset;
+        }
     } else {
-        f->image_id = image_group(base_group) + dir + 8 * f->image_offset;
+        int base_group = f->type == FIGURE_CART_PUSHER ? GROUP_FIGURE_CARTPUSHER : GROUP_FIGURE_MIGRANT;
+
+        if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+            f->image_id = image_group(base_group) + figure_image_corpse_offset(f) + 96;
+            f->cart_image_id = 0;
+        } else {
+            f->image_id = image_group(base_group) + dir + 8 * f->image_offset;
+        }
     }
     if (f->cart_image_id) {
         f->cart_image_id += dir;
