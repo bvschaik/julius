@@ -12,11 +12,9 @@ int building_armory_is_needed(building *armoury)
 
     if ((building_count_active(BUILDING_BARRACKS) || building_count_active(BUILDING_GRAND_TEMPLE_MARS)) &&
     !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
+        int barracks_id = building_get_barracks_for_weapon(armoury->x, armoury->y, RESOURCE_WEAPONS, armoury->road_network_id, 0);
 
-        building *barracks = building_get(building_get_barracks_for_weapon(armoury->x, armoury->y, RESOURCE_WEAPONS,
-            armoury->road_network_id, 0));
-
-        if (!barracks) {
+        if (!barracks_id) {
             return 0;
         }
 
@@ -24,5 +22,4 @@ int building_armory_is_needed(building *armoury)
     }
 
     return 0;
-
 }
