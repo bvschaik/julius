@@ -1,5 +1,6 @@
 #include "cartpusher.h"
 
+#include "assets/assets.h"
 #include "building/barracks.h"
 #include "building/granary.h"
 #include "building/industry.h"
