@@ -38,60 +38,60 @@
 	<image id="Architect 11" src="architect_11"/>
 	<image id="Architect 12" src="architect_12"/>
 	<!-- Note: Architect ON animation reference DO NOT USE! -->
-	<image id="Architects_Guild_On_01" width="75" height="48">
-		<layer src="Architects_Guild_On_01" x="2" y="1"/>
-		<layer group="this" image="Architect 01" x="36" y="1"/>
+	<image id="Architects_Guild_On_01" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_01" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_02" width="75" height="48">
-		<layer src="Architects_Guild_On_02" x="2" y="1"/>
-		<layer group="this" image="Architect 02" x="36" y="1"/>
+	<image id="Architects_Guild_On_02" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_02" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_03" width="75" height="48">
-		<layer src="Architects_Guild_On_03" x="2" y="1"/>
-		<layer group="this" image="Architect 03" x="36" y="1"/>
+	<image id="Architects_Guild_On_03" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_03" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_04" width="75" height="48">
-		<layer src="Architects_Guild_On_04" x="2" y="1"/>
-		<layer group="this" image="Architect 04" x="36" y="1"/>
+	<image id="Architects_Guild_On_04" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_04" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_05" width="75" height="48">
-		<layer src="Architects_Guild_On_05" x="2" y="1"/>
-		<layer group="this" image="Architect 05" x="36" y="1"/>
+	<image id="Architects_Guild_On_05" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_05" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_06" width="75" height="48">
-		<layer src="Architects_Guild_On_06" x="2" y="1"/>
-		<layer group="this" image="Architect 06" x="36" y="1"/>
+	<image id="Architects_Guild_On_06" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_06" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_07" width="75" height="48">
-		<layer src="Architects_Guild_On_04" x="2" y="1"/>
-		<layer group="this" image="Architect 07" x="36" y="1"/>
+	<image id="Architects_Guild_On_07" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_04" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_08" width="75" height="48">
-		<layer src="Architects_Guild_On_02" x="2" y="1"/>
-		<layer group="this" image="Architect 08" x="36" y="1"/>
+	<image id="Architects_Guild_On_08" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_02" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_09" width="75" height="48">
-		<layer src="Architects_Guild_On_01" x="2" y="1"/>
-		<layer group="this" image="Architect 09" x="36" y="1"/>
+	<image id="Architects_Guild_On_09" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_01" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_10" width="75" height="48">
-		<layer src="Architects_Guild_On_03" x="2" y="1"/>
-		<layer group="this" image="Architect 10" x="36" y="1"/>
+	<image id="Architects_Guild_On_10" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_03" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_11" width="75" height="48">
-		<layer src="Architects_Guild_On_05" x="2" y="1"/>
-		<layer group="this" image="Architect 11" x="36" y="1"/>
+	<image id="Architects_Guild_On_11" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_05" x="0" y="0"/>
 	</image>
-	<image id="Architects_Guild_On_12" width="75" height="48">
-		<layer src="Architects_Guild_On_04" x="2" y="1"/>
-		<layer group="this" image="Architect 12" x="36" y="1"/>
+	<image id="Architects_Guild_On_12" width="95" height="28">
+		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
+		<layer src="Architects_Guild_On_04" x="0" y="0"/>
 	</image>
 	<!-- Note: Architect's Guild OFF Variant -->
 	<image id="Arch Guild OFF" src="Architects_Guild_OFF" width="118" height="105" isometric="true"/>
 	<!-- Note: Architect's Guild ON Variant -->
 	<image id="Arch Guild ON" width="118" height="105" isometric="true">
 		<layer group="this" image="Arch Guild OFF"/>
-		<animation speed="6" x="0" y="57" reversible="false">
+		<animation speed="6" x="3" y="58" reversible="false">
 			<frame group="this" image="Architects_Guild_On_01"/>
 			<frame group="this" image="Architects_Guild_On_02"/>
 			<frame group="this" image="Architects_Guild_On_03"/>
