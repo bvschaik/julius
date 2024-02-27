@@ -1844,7 +1844,7 @@ static void spawn_figure_armoury(building *b)
             b->figure_spawn_delay = 0;
             if (building_armory_is_needed(b)) {
                 figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM);
-                f->action_state = FIGURE_ACTION_149_CORPSE;
+                f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
                 f->collecting_item_id = RESOURCE_WEAPONS;
                 b->figure_id = f->id;
                 f->building_id = b->id;
