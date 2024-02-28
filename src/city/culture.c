@@ -287,17 +287,17 @@ int city_culture_get_academy_person_coverage(void)
 
 int city_culture_get_tavern_person_coverage(void)
 {
-    return TAVERN_COVERAGE * building_count_active(BUILDING_TAVERN);
+    return TAVERN_COVERAGE * building_count_active(BUILDING_TAVERN) + TAVERN_UPGRADE_BONUS_COVERAGE * building_count_upgraded(BUILDING_TAVERN);
 }
 
 int city_culture_get_ampitheatre_person_coverage(void)
 {
-    return AMPHITHEATER_COVERAGE * building_count_active(BUILDING_AMPHITHEATER);
+    return AMPHITHEATER_COVERAGE * building_count_active(BUILDING_AMPHITHEATER) + AMPHITHEATER_UPGRADE_BONUS_COVERAGE * building_count_upgraded(AMPHITHEATER_UPGRADE_BONUS_COVERAGE);
 }
 
 int city_culture_get_arena_person_coverage(void)
 {
-    return ARENA_COVERAGE * building_count_active(BUILDING_ARENA);
+    return ARENA_COVERAGE * building_count_active(BUILDING_ARENA) + ARENA_UPGRADE_BONUS_COVERAGE * building_count_upgraded(BUILDING_ARENA);
 }
 
 

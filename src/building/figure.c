@@ -461,6 +461,15 @@ static void spawn_figure_chariot_maker(building *b)
     }
 }
 
+static void set_amphitheater_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    b->upgrade_level = b->desirability > 45;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
+}
+
 static void spawn_figure_amphitheater(building *b)
 {
     check_labor_problem(b);
@@ -490,6 +499,7 @@ static void spawn_figure_amphitheater(building *b)
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
+            set_amphitheater_graphic(b);
             figure *f;
             if (b->data.entertainment.days1 > 0) {
                 f = figure_create(FIGURE_GLADIATOR, road.x, road.y, DIR_0_TOP);
@@ -610,6 +620,16 @@ static void spawn_figure_hippodrome(building *b)
     }
 }
 
+static void set_arena_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    b->upgrade_level = b->desirability > 45;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
+}
+
+
 static void spawn_figure_colosseum(building *b)
 {
     check_labor_problem(b);
@@ -639,6 +659,11 @@ static void spawn_figure_colosseum(building *b)
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
+
+            if (b->type == BUILDING_ARENA) {
+                set_arena_graphic(b);
+            }
+
             figure *f;
             if (b->data.entertainment.days1 > 0) {
                 f = figure_create(FIGURE_LION_TAMER, road.x, road.y, DIR_0_TOP);
@@ -1132,6 +1157,16 @@ static void spawn_figure_grand_temple_mars(building *b)
     }
 }
 
+static void set_tavern_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    b->upgrade_level = b->desirability > 45;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
+}
+
+
 static void spawn_figure_tavern(building *b)
 {
     check_labor_problem(b);
@@ -1147,6 +1182,7 @@ static void spawn_figure_tavern(building *b)
         b->figure_spawn_delay++;
         if (b->figure_spawn_delay > spawn_delay) {
             b->figure_spawn_delay = 0;
+            set_tavern_graphic(b);
             if (!has_figure_of_type(b, FIGURE_BARKEEP) && b->resources[RESOURCE_WINE] >= 20) {
                 b->resources[RESOURCE_WINE] -= 20;
                 int resource_decay = b->resources[RESOURCE_MEAT] && b->resources[RESOURCE_FISH] ? 20 : 40;

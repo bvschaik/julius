@@ -95,7 +95,11 @@ int building_image_get(const building *b)
                 return image_id;
             }
         case BUILDING_AMPHITHEATER:
-            return image_group(GROUP_BUILDING_AMPHITHEATER);
+            if (!b->upgrade_level) {
+                return image_group(GROUP_BUILDING_AMPHITHEATER);
+            } else {
+                    return assets_get_image_id("Entertainment", "Amphitheatre Upgrade ON");
+            }
         case BUILDING_THEATER:
             if (!b->upgrade_level) {
                 return assets_get_image_id("Entertainment", "Theatre ON");
@@ -714,11 +718,19 @@ int building_image_get(const building *b)
                     return assets_get_image_id("Military", "Mess ON Central");
             }
         case BUILDING_TAVERN:
-            return assets_get_image_id("Entertainment", "Tavern ON");
+            if (!b->upgrade_level) {
+                return assets_get_image_id("Entertainment", "Tavern ON");
+            } else {
+                return assets_get_image_id("Entertainment", "Tavern Upgrade ON");
+            }
         case BUILDING_GRAND_GARDEN:
             return assets_get_image_id("Engineer", "Eng Guild ON");
         case BUILDING_ARENA:
-            return assets_get_image_id("Entertainment", "Arena ON");
+            if (!b->upgrade_level) {
+                return assets_get_image_id("Entertainment", "Arena ON");
+            } else {
+                return assets_get_image_id("Entertainment", "Arena Upgrade ON");
+            }
         case BUILDING_HORSE_STATUE:
         {
             int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
