@@ -96,9 +96,9 @@ int building_image_get(const building *b)
             }
         case BUILDING_AMPHITHEATER:
             if (!b->upgrade_level) {
-                return image_group(GROUP_BUILDING_AMPHITHEATER);
+                return assets_get_image_id("Entertainment", "Amphitheatre ON");
             } else {
-                    return assets_get_image_id("Entertainment", "Amphitheatre Upgrade ON");
+                return assets_get_image_id("Entertainment", "Amphitheatre Upgrade ON");
             }
         case BUILDING_THEATER:
             if (!b->upgrade_level) {
