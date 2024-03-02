@@ -312,6 +312,29 @@ static int place_garden(int x_start, int y_start, int x_end, int y_end, int is_o
     return items_placed;
 }
 
+static int place_wall(int x_start, int y_start, int x_end, int y_end)
+{
+    game_undo_restore_map(0);
+
+    int x_min, y_min, x_max, y_max;
+    map_grid_start_end_to_area(x_start, y_start, x_end, y_end, &x_min, &y_min, &x_max, &y_max);
+
+    int items_placed = 0;
+    for (int y = y_min; y <= y_max; y++) {
+        for (int x = x_min; x <= x_max; x++) {
+            int grid_offset = map_grid_offset(x, y);
+            if (!map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
+                items_placed++;
+                map_tiles_set_wall(x, y);
+            }
+        }
+    }
+    map_routing_update_land();
+    map_routing_update_walls();
+    return items_placed;
+}
+
+
 static int plot_draggable_building(int x_start, int y_start, int x_end, int y_end, int allow_roads)
 {
     int x_min, y_min, x_max, y_max;
@@ -752,7 +775,7 @@ void building_construction_update(int x, int y, int grid_offset)
             current_cost *= items_placed;
         }
     } else if (type == BUILDING_WALL) {
-        int items_placed = building_construction_place_wall(1, data.start.x, data.start.y, x, y);
+        int items_placed = place_wall(data.start.x, data.start.y, x, y);
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
@@ -987,7 +1010,7 @@ void building_construction_place(void)
         placement_cost *= items_placed;
         map_property_clear_constructing_and_deleted();
     } else if (type == BUILDING_WALL) {
-        placement_cost *= building_construction_place_wall(0, x_start, y_start, x_end, y_end);
+        placement_cost *= place_wall(x_start, y_start, x_end, y_end);
     } else if (type == BUILDING_ROAD) {
         placement_cost *= building_construction_place_road(0, x_start, y_start, x_end, y_end);
     } else if (type == BUILDING_HIGHWAY) {
