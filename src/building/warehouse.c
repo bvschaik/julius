@@ -733,24 +733,6 @@ int building_warehouse_determine_worker_task(building *warehouse, int *resource)
     if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_WORKER, warehouse)) {
         return WAREHOUSE_TASK_NONE;
     }
-    // deliver weapons to barracks
-    if ((building_count_active(BUILDING_BARRACKS) || building_count_active(BUILDING_GRAND_TEMPLE_MARS)) &&
-        !city_resource_is_stockpiled(RESOURCE_WEAPONS)) {
-        building *barracks = building_get(building_get_barracks_for_weapon(warehouse->x, warehouse->y, RESOURCE_WEAPONS,
-            warehouse->road_network_id, 0));
-        if (barracks->resources[RESOURCE_WEAPONS] < MAX_WEAPONS_BARRACKS &&
-            warehouse->road_network_id == barracks->road_network_id) {
-            space = warehouse;
-            for (int i = 0; i < 8; i++) {
-                space = building_next(space);
-                if (space->id > 0 && space->resources[RESOURCE_WEAPONS] > 0 &&
-                    space->subtype.warehouse_resource_id == RESOURCE_WEAPONS) {
-                    *resource = RESOURCE_WEAPONS;
-                    return WAREHOUSE_TASK_DELIVERING;
-                }
-            }
-        }
-    }
     // deliver raw materials to workshops
     space = warehouse;
     for (int i = 0; i < 8; i++) {
