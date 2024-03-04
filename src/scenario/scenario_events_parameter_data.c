@@ -850,7 +850,7 @@ int scenario_events_parameter_data_get_default_value_for_parameter(xml_data_attr
         case PARAMETER_TYPE_DIFFICULTY:
             return DIFFICULTY_NORMAL;
         case PARAMETER_TYPE_ENEMY_TYPE:
-            return ENEMY_0_BARBARIAN;
+            return ENEMY_UNDEFINED;
         case PARAMETER_TYPE_RESOURCE:
             return RESOURCE_WHEAT;
         case PARAMETER_TYPE_POP_CLASS:
