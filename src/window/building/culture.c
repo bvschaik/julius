@@ -447,12 +447,20 @@ void window_building_draw_amphitheater(building_info_context *c)
         window_building_draw_description(c, 69, 25);
     } else if (b->num_workers <= 0) {
         window_building_draw_description(c, 71, 6);
+    } else if (!b->data.entertainment.num_shows && b->upgrade_level) {
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_AMPHITHEATER_DESC_UPGRADED_NO_SHOWS);
     } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, 71, 2);
+    } else if (b->data.entertainment.num_shows == 2 && b->upgrade_level) {
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_AMPHITHEATER_DESC_UPGRADED_BOTH_SHOWS);
     } else if (b->data.entertainment.num_shows == 2) {
         window_building_draw_description(c, 71, 3);
+    } else if (b->data.entertainment.days1 && b->upgrade_level) {
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_AMPHITHEATER_DESC_UPGRADED_NO_ACTORS);
     } else if (b->data.entertainment.days1) {
         window_building_draw_description(c, 71, 4);
+    } else if (b->data.entertainment.days2 && b->upgrade_level) {
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_AMPHITHEATER_DESC_UPGRADED_NO_GLADIATORS);
     } else if (b->data.entertainment.days2) {
         window_building_draw_description(c, 71, 5);
     }
@@ -883,10 +891,18 @@ void window_building_draw_tavern(building_info_context *c)
         text_draw_multiline(translation_for(TR_BUILDING_TAVERN_DESC_2),
             c->x_offset + 32, c->y_offset + 96, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     } else if (!b->resources[RESOURCE_MEAT] && !b->resources[RESOURCE_FISH]) {
-        text_draw_multiline(translation_for(TR_BUILDING_TAVERN_DESC_3),
+        int string_key = TR_BUILDING_TAVERN_DESC_3;
+        if (b->upgrade_level) {
+            string_key = TR_BUILDING_TAVERN_DESC_UPGRADED_WINE_NO_FOOD;
+        }
+        text_draw_multiline(translation_for(string_key),
             c->x_offset + 32, c->y_offset + 96, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     } else {
-        text_draw_multiline(translation_for(TR_BUILDING_TAVERN_DESC_4),
+        int string_key = TR_BUILDING_TAVERN_DESC_4;
+        if (b->upgrade_level) {
+            string_key = TR_BUILDING_TAVERN_DESC_UPGRADED_WINE_AND_FOOD;
+        }
+        text_draw_multiline(translation_for(string_key),
             c->x_offset + 32, c->y_offset + 96, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
     }
 
@@ -1046,12 +1062,20 @@ void window_building_draw_arena(building_info_context *c)
         window_building_draw_description(c, 69, 25);
     } else if (b->num_workers <= 0) {
         window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_ARENA_CLOSED);
+    } else if (!b->data.entertainment.num_shows && b->upgrade_level) {
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_ARENA_DESC_UPGRADED_NO_SHOWS);
     } else if (!b->data.entertainment.num_shows) {
         window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_ARENA_NO_SHOWS);
+    } else if (b->data.entertainment.num_shows == 2 && b->upgrade_level) {
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_ARENA_DESC_UPGRADED_BOTH_SHOWS);
     } else if (b->data.entertainment.num_shows == 2) {
         window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_ARENA_BOTH_SHOWS);
+    } else if (b->data.entertainment.days1 && b->upgrade_level) {
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_ARENA_DESC_UPGRADED_NO_GLADIATORS);
     } else if (b->data.entertainment.days1) {
         window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_ARENA_NEEDS_GLADIATORS);
+    } else if (b->data.entertainment.days2 && b->upgrade_level) {
+        window_building_draw_description(c, CUSTOM_TRANSLATION, TR_BUILDING_ARENA_DESC_UPGRADED_NO_LIONS);
     } else if (b->data.entertainment.days2) {
         window_building_draw_description(c, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_ARENA_NEEDS_LIONS);
     }   
