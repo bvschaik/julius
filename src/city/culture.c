@@ -292,7 +292,7 @@ int city_culture_get_tavern_person_coverage(void)
 
 int city_culture_get_ampitheatre_person_coverage(void)
 {
-    return AMPHITHEATER_COVERAGE * building_count_active(BUILDING_AMPHITHEATER) + AMPHITHEATER_UPGRADE_BONUS_COVERAGE * building_count_upgraded(AMPHITHEATER_UPGRADE_BONUS_COVERAGE);
+    return AMPHITHEATER_COVERAGE * building_count_active(BUILDING_AMPHITHEATER) + AMPHITHEATER_UPGRADE_BONUS_COVERAGE * building_count_upgraded(BUILDING_AMPHITHEATER);
 }
 
 int city_culture_get_arena_person_coverage(void)
