@@ -625,6 +625,8 @@ void window_building_draw_armoury(building_info_context *c)
     c->help_id = 85;
     building *b = building_get(c->building_id);
 
+    window_building_play_sound(c, "wavs/tower3.wav");
+
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_ARMOURY), c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
 
