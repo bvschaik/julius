@@ -1857,8 +1857,10 @@ static void spawn_figure_armoury(building *b)
         spawn_labor_seeker(b, road.x, road.y, 50);
         int pct_workers = worker_percentage(b);
         int spawn_delay;
+        int carts_available = 1;
         if (pct_workers >= 100) {
             spawn_delay = 3;
+            carts_available = 2;
         } else if (pct_workers >= 75) {
             spawn_delay = 8;
         } else if (pct_workers >= 50) {
@@ -1871,8 +1873,17 @@ static void spawn_figure_armoury(building *b)
             return;
         }
 
-        if (has_figure_of_type(b, FIGURE_WAREHOUSEMAN)) {
+        if (b->figure_id && carts_available == 1) {
             return;
+        }
+
+        if (b->figure_id && b->figure_id4) {
+            return;
+        }
+
+        int figure_id_to_use = 1;
+        if (b->figure_id) {
+            figure_id_to_use = 4;
         }
 
         b->figure_spawn_delay++;
@@ -1882,7 +1893,11 @@ static void spawn_figure_armoury(building *b)
                 figure *f = figure_create(FIGURE_WAREHOUSEMAN, road.x, road.y, DIR_4_BOTTOM);
                 f->action_state = FIGURE_ACTION_50_WAREHOUSEMAN_CREATED;
                 f->collecting_item_id = RESOURCE_WEAPONS;
-                b->figure_id = f->id;
+                if (figure_id_to_use == 1) {
+                    b->figure_id = f->id;
+                } else {
+                    b->figure_id4 = f->id;
+                }
                 f->building_id = b->id;
             }
         }
