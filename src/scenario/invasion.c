@@ -478,12 +478,12 @@ void scenario_invasion_start_from_action(invasion_type_enum invasion_type, int s
     switch (invasion_type) {
         case INVASION_TYPE_ENEMY_ARMY:
             {
+                if (enemy_id <= ENEMY_UNDEFINED) {
+                    enemy_id = scenario.enemy_id;
+                }
                 enemy_army_clear(data.last_action_army_id);
                 int grid_offset = start_invasion(ENEMY_ID_TO_ENEMY_TYPE[enemy_id], size, invasion_point, attack_type, data.last_action_army_id);
                 if (grid_offset) {
-                    if (enemy_id <= ENEMY_UNDEFINED) {
-                        enemy_id = scenario.enemy_id;
-                    }
                     if (ENEMY_ID_TO_ENEMY_TYPE[enemy_id] > BARBARIAN_ENEMY_TYPE_MAX) {
                         city_message_post(1, MESSAGE_ENEMY_ARMY_ATTACK, data.last_internal_invasion_id, grid_offset);
                     } else {
@@ -540,7 +540,7 @@ void scenario_invasion_start_from_console(invasion_type_enum invasion_type, int 
         default:
             break;
     }
-    scenario_invasion_start_from_action(invasion_type, size, invasion_point, attack_type, ENEMY_UNDEFINED);
+    scenario_invasion_start_from_action(invasion_type, size, invasion_point, attack_type, scenario.enemy_id);
 }
 
 void scenario_invasion_save_state(buffer *invasion_id, buffer *warnings)
