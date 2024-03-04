@@ -1390,6 +1390,10 @@ static translation_string all_strings[] = {
     {TR_BUILDING_ARENA_DESC_UPGRADED_NO_GLADIATORS, "ARENA UPGRADED DESC PLACEHOLDER HAS LIONS BUT NO GLADIATORS" },
     {TR_BUILDING_ARENA_DESC_UPGRADED_NO_LIONS, "ARENA UPGRADED DESC PLACEHOLDER HAS GLADIATORS BUT NO LIONS" },
     {TR_BUILDING_ARENA_DESC_UPGRADED_NO_SHOWS, "ARENA UPGRADED DESC PLACEHOLDER HAS NO SHOWS" },
+    {TR_CHEAT_CASTED_CURSE, "Casted a curse"},
+    {TR_CHEAT_BUILDINGS_INVINCIBLE, "Built buildings don't collapse"},
+    {TR_CHEAT_CLIMATE_CHANGE, "Climate change in effect" },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

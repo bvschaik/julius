@@ -35,4 +35,6 @@ int city_god_venus_bonus_employment(void);
 
 void city_god_blessing_cheat(int god_id);
 
+void city_god_curse_cheat(int god_id, int is_major);
+
 #endif // CITY_GODS_H

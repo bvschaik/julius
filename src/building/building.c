@@ -608,6 +608,14 @@ void building_clear_all(void)
     extra.unfixable_houses = 0;
 }
 
+void building_make_immune_cheat(void)
+{
+    building *b;
+    array_foreach(data.buildings, b) {
+        b->fire_proof = 1;
+    }
+}
+
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
     buffer *sequence, buffer *corrupt_houses)
 {

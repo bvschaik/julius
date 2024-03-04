@@ -272,6 +272,8 @@ void building_totals_add_corrupted_house(int unfixable);
 
 void building_clear_all(void);
 
+void building_make_immune_cheat(void);
+
 void building_save_state(buffer *buf, buffer *highest_id, buffer *highest_id_ever,
                          buffer *sequence, buffer *corrupt_houses);
 

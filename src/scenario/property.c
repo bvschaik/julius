@@ -1,6 +1,8 @@
 #include "property.h"
 
+#include "core/calc.h"
 #include "core/string.h"
+#include "graphics/image.h"
 #include "scenario/data.h"
 
 int scenario_is_custom(void)
@@ -146,4 +148,11 @@ int scenario_rescue_loan(void)
 int scenario_intro_message(void)
 {
     return scenario.intro_custom_message_id;
+}
+
+void scenario_change_climate_cheat(scenario_climate climate)
+{
+    climate = calc_bound(climate, CLIMATE_CENTRAL, CLIMATE_DESERT);
+    scenario.climate = climate;
+    image_load_climate(scenario_property_climate(), 0, 0, 0);
 }
