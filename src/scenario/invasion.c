@@ -526,6 +526,7 @@ void scenario_invasion_start_from_action(invasion_type_enum invasion_type, int s
 void scenario_invasion_start_from_console(invasion_type_enum invasion_type, int size, int invasion_point)
 {
     int attack_type = FORMATION_ATTACK_RANDOM;
+    int enemy_id = scenario.enemy_id;
     switch (invasion_type) {
         case INVASION_TYPE_ENEMY_ARMY:
             attack_type = FORMATION_ATTACK_RANDOM;
@@ -535,12 +536,13 @@ void scenario_invasion_start_from_console(invasion_type_enum invasion_type, int 
             break;
         case INVASION_TYPE_LOCAL_UPRISING:
         case INVASION_TYPE_MARS_NATIVES:
+            enemy_id = ENEMY_0_BARBARIAN;
             attack_type = FORMATION_ATTACK_FOOD_CHAIN;
             break;
         default:
             break;
     }
-    scenario_invasion_start_from_action(invasion_type, size, invasion_point, attack_type, scenario.enemy_id);
+    scenario_invasion_start_from_action(invasion_type, size, invasion_point, attack_type, enemy_id);
 }
 
 void scenario_invasion_save_state(buffer *invasion_id, buffer *warnings)
