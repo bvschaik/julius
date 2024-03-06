@@ -11,10 +11,10 @@ def findLibrary(String prefix) {
     return new File(extPath, files[0])
 }
 
-task findSDL2 {
+tasks.register('findSDL2') {
     if (rootProject.ext.usingAAR) {
         println 'External AAR found - not building SDL'
-        return;
+        return
     }
     println 'External AAR not found - building SDL'
     def path = findLibrary("SDL2")
@@ -28,9 +28,9 @@ task findSDL2 {
     ext.includePath = new File(path, "include")
 }
 
-task findSDL2Mixer {
+tasks.register('findSDL2Mixer') {
     if (rootProject.ext.usingAAR) {
-        return;
+        return
     }
     def path = findLibrary("SDL2_mixer")
     ext.sourcePath = path
@@ -38,20 +38,19 @@ task findSDL2Mixer {
 }
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "34.0.0"
-    ndkVersion "25.2.9519653"
+    ndkVersion "26.2.11394342"
 
     defaultConfig {
+        compileSdk 34
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
         }
         externalNativeBuild {
             ndkBuild {
-                arguments 'SUPPORT_WAVPACK=false'
+                arguments 'SUPPORT_WAVPACK=false APP_PLATFORM=android-21'
             }
         }
     }

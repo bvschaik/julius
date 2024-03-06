@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 // apply plugin: 'com.github.triplet.play'
 
-task getVersion {
+tasks.register('getVersion') {
     def cmakeFile = rootProject.file("../CMakeLists.txt").text
     def versionMajor = (cmakeFile =~ /set\(PROJECT_VERSION_MAJOR (\d+)\)/)[0][1].toInteger()
     def versionMinor = (cmakeFile =~ /set\(PROJECT_VERSION_MINOR (\d+)\)/)[0][1].toInteger()
@@ -65,14 +65,13 @@ task getVersion {
 }
 
 android {
-    compileSdkVersion 33
-    buildToolsVersion "34.0.0"
-    ndkVersion "25.2.9519653"
+    ndkVersion "26.2.11394342"
 
     defaultConfig {
+        compileSdk 34
         applicationId "com.github.Keriew.augustus"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 34
 
         versionName getVersion.versionName
         versionCode getVersion.versionCode
