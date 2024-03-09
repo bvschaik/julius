@@ -12,9 +12,9 @@
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
+#include "graphics/list_box.h"
 #include "graphics/panel.h"
 #include "graphics/screen.h"
-#include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -31,11 +31,11 @@
 #define BACKGROUND_WIDTH 1024
 #define BACKGROUND_HEIGHT 768
 
-static void button_select_item(int index, int param2);
+static void select_scenario(int index, int is_double_click);
 static void button_start_scenario(int param1, int param2);
 static void button_back(int param1, int param2);
 static void button_toggle_minimap(int param1, int param2);
-static void on_scroll(void);
+static void draw_scenario_item(const list_box_item *item);
 
 static image_button start_button =
 { 600, 440, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start_scenario, button_none, 1, 0, 1 };
@@ -45,30 +45,21 @@ static image_button back_button =
 static generic_button toggle_minimap_button =
 { 570, 87, 39, 28, button_toggle_minimap, button_none, 0, 0 };
 
-static generic_button file_buttons[] = {
-    {18, 220, 252, 16, button_select_item, button_none, 0, 0},
-    {18, 236, 252, 16, button_select_item, button_none, 1, 0},
-    {18, 252, 252, 16, button_select_item, button_none, 2, 0},
-    {18, 268, 252, 16, button_select_item, button_none, 3, 0},
-    {18, 284, 252, 16, button_select_item, button_none, 4, 0},
-    {18, 300, 252, 16, button_select_item, button_none, 5, 0},
-    {18, 316, 252, 16, button_select_item, button_none, 6, 0},
-    {18, 332, 252, 16, button_select_item, button_none, 7, 0},
-    {18, 348, 252, 16, button_select_item, button_none, 8, 0},
-    {18, 364, 252, 16, button_select_item, button_none, 9, 0},
-    {18, 380, 252, 16, button_select_item, button_none, 10, 0},
-    {18, 396, 252, 16, button_select_item, button_none, 11, 0},
-    {18, 412, 252, 16, button_select_item, button_none, 12, 0},
-    {18, 428, 252, 16, button_select_item, button_none, 13, 0},
-    {18, 444, 252, 16, button_select_item, button_none, 14, 0},
+static list_box_type list_box = {
+    .x = 16,
+    .y = 210,
+    .width_blocks = 18,
+    .height_blocks = 16,
+    .item_height = 16,
+    .draw_inner_panel = 1,
+    .extend_to_hidden_scrollbar = 1,
+    .decorate_scrollbar = 1,
+    .draw_item = draw_scenario_item,
+    .on_select = select_scenario
 };
 
-static scrollbar_type scrollbar = {276, 210, 256, 260, MAX_SCENARIOS, on_scroll, 1, 8, 1};
-
 static struct {
-    int focus_button_id;
     int focus_toggle_button;
-    int selected_item;
     int show_minimap;
     char selected_scenario_filename[FILE_NAME_MAX];
     uint8_t selected_scenario_display[FILE_NAME_MAX];
@@ -81,30 +72,24 @@ static void init(void)
 {
     data.scenarios = dir_find_files_with_extension(".", "map");
     data.scenarios = dir_append_files_with_extension("mapx");
-    data.focus_button_id = 0;
     data.focus_toggle_button = 0;
     data.show_minimap = 0;
-    button_select_item(0, 0);
-    scrollbar_init(&scrollbar, 0, data.scenarios->num_files);
+    list_box_init(&list_box, data.scenarios->num_files);
+    list_box_select_index(&list_box, 0);
 }
 
-static void draw_scenario_list(void)
+static void draw_scenario_item(const list_box_item *item)
 {
-    inner_panel_draw(16, 210, 16, 16);
     char file[FILE_NAME_MAX];
     uint8_t displayable_file[FILE_NAME_MAX];
-    for (int i = 0; i < MAX_SCENARIOS; i++) {
-        font_t font = FONT_NORMAL_GREEN;
-        if (data.focus_button_id == i + 1) {
-            font = FONT_NORMAL_WHITE;
-        } else if (!data.focus_button_id && data.selected_item == i + scrollbar.scroll_position) {
-            font = FONT_NORMAL_WHITE;
-        }
-        strcpy(file, data.scenarios->files[i + scrollbar.scroll_position].name);
-        encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
-        file_remove_extension((char *) displayable_file);
-        text_ellipsize(displayable_file, font, 240);
-        text_draw(displayable_file, 24, 220 + 16 * i, font, 0);
+    font_t font = item->is_selected ? FONT_NORMAL_WHITE : FONT_NORMAL_GREEN;
+    strcpy(file, data.scenarios->files[item->index].name);
+    encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
+    file_remove_extension((char *) displayable_file);
+    text_ellipsize(displayable_file, font, item->width);
+    text_draw(displayable_file, item->x, item->y, font, 0);
+    if (item->is_focused) {
+        button_border_draw(item->x - 4, item->y - 4, item->width + 6, item->height + 4, 1);
     }
 }
 
@@ -226,8 +211,7 @@ static void draw_background(void)
     image_draw(image_group(GROUP_CCK_BACKGROUND), (WINDOW_WIDTH - BACKGROUND_WIDTH) / 2,
         (WINDOW_HEIGHT - BACKGROUND_HEIGHT) / 2, COLOR_MASK_NONE, SCALE_NONE);
     graphics_reset_clip_rectangle();
-    inner_panel_draw(280, 242, 2, 12);
-    draw_scenario_list();
+    list_box_request_refresh(&list_box);
     draw_scenario_info();
     graphics_reset_dialog();
 }
@@ -241,8 +225,7 @@ static void draw_foreground(void)
         toggle_minimap_button.x, toggle_minimap_button.y,
         toggle_minimap_button.width, toggle_minimap_button.height,
         data.focus_toggle_button);
-    scrollbar_draw(&scrollbar);
-    draw_scenario_list();
+    list_box_draw(&list_box);
     graphics_reset_dialog();
 }
 
@@ -250,12 +233,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
     data.focus_toggle_button = 0;
-    data.focus_button_id = 0;
-    if (scrollbar_handle_mouse(&scrollbar, m_dialog, 1) ||
-        image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0) ||
+    if (image_buttons_handle_mouse(m_dialog, 0, 0, &start_button, 1, 0) ||
         image_buttons_handle_mouse(m_dialog, 0, 0, &back_button, 1, 0) ||
         generic_buttons_handle_mouse(m_dialog, 0, 0, &toggle_minimap_button, 1, &data.focus_toggle_button) ||
-        generic_buttons_handle_mouse(m_dialog, 0, 0, file_buttons, MAX_SCENARIOS, &data.focus_button_id)) {
+        list_box_handle_input(&list_box, m_dialog, 1)) {
         return;
     }
     if (h->enter_pressed) {
@@ -272,17 +253,17 @@ static void button_back(int param1, int param2)
     window_go_back();
 }
 
-static void button_select_item(int index, int param2)
+static void select_scenario(int index, int is_double_click)
 {
-    if (index >= data.scenarios->num_files) {
-        return;
+    if (strcmp(data.selected_scenario_filename, data.scenarios->files[index].name) != 0) {
+        strcpy(data.selected_scenario_filename, data.scenarios->files[index].name);
+        game_file_io_read_scenario_info(data.selected_scenario_filename, &data.info);
+        encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
+        file_remove_extension((char *) data.selected_scenario_display);
+        window_invalidate();
+    } else if (is_double_click) {
+        button_start_scenario(0, 0);
     }
-    data.selected_item = scrollbar.scroll_position + index;
-    strcpy(data.selected_scenario_filename, data.scenarios->files[data.selected_item].name);
-    game_file_io_read_scenario_info(data.selected_scenario_filename, &data.info);
-    encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
-    file_remove_extension((char *) data.selected_scenario_display);
-    window_invalidate();
 }
 
 static void button_start_scenario(int param1, int param2)
