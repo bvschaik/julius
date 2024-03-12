@@ -753,8 +753,10 @@ void scenario_map_data_from_buffer(buffer *buf, int *width, int *height, int *gr
 
 void scenario_settings_init(void)
 {
-    scenario.settings.campaign_mission = 0;
-    scenario.settings.campaign_rank = 0;
+    scenario.campaign.mission = 0;
+    scenario.campaign.rank = 0;
+    scenario.campaign.player_name[0] = 0;
+    scenario.campaign.custom_name[0] = 0;
     scenario.settings.is_custom = 0;
     scenario.settings.starting_favor = difficulty_starting_favor();
     scenario.settings.starting_personal_savings = 0;
@@ -764,7 +766,7 @@ void scenario_settings_init_mission(void)
 {
     scenario.settings.starting_favor = difficulty_starting_favor();
     scenario.settings.starting_personal_savings =
-        setting_personal_savings_for_mission(scenario.settings.campaign_rank);
+        setting_personal_savings_for_mission(scenario.campaign.rank);
 }
 
 void scenario_unlock_all_buildings(void)
@@ -777,11 +779,11 @@ void scenario_unlock_all_buildings(void)
 
 void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
 {
-    buffer_write_i32(part1, scenario.settings.campaign_mission);
+    buffer_write_i32(part1, scenario.campaign.mission);
 
     buffer_write_i32(part2, scenario.settings.starting_favor);
     buffer_write_i32(part2, scenario.settings.starting_personal_savings);
-    buffer_write_i32(part2, scenario.settings.campaign_rank);
+    buffer_write_i32(part2, scenario.campaign.rank);
 
     buffer_write_i32(part3, scenario.settings.is_custom);
 
@@ -795,11 +797,11 @@ void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, b
 void scenario_settings_load_state(
     buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
 {
-    scenario.settings.campaign_mission = buffer_read_i32(part1);
+    scenario.campaign.mission = buffer_read_i32(part1);
 
     scenario.settings.starting_favor = buffer_read_i32(part2);
     scenario.settings.starting_personal_savings = buffer_read_i32(part2);
-    scenario.settings.campaign_rank = buffer_read_i32(part2);
+    scenario.campaign.rank = buffer_read_i32(part2);
 
     scenario.settings.is_custom = buffer_read_i32(part3);
 

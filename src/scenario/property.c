@@ -17,37 +17,42 @@ void scenario_set_custom(int custom)
 
 int scenario_campaign_rank(void)
 {
-    return scenario.settings.campaign_rank;
+    return scenario.campaign.rank;
 }
 
 void scenario_set_campaign_rank(int rank)
 {
-    scenario.settings.campaign_rank = rank;
+    scenario.campaign.rank = rank;
 }
 
 int scenario_campaign_mission(void)
 {
-    return scenario.settings.campaign_mission;
+    return scenario.campaign.mission;
 }
 
 void scenario_set_campaign_mission(int mission)
 {
-    scenario.settings.campaign_mission = mission;
+    scenario.campaign.mission = mission;
+}
+
+static int is_custom_campaign(void)
+{
+    return scenario.campaign.custom_name[0] != 0;
 }
 
 int scenario_is_tutorial_1(void)
 {
-    return !scenario.settings.is_custom && scenario.settings.campaign_rank == 0;
+    return !scenario.settings.is_custom && scenario.campaign.rank == 0 && !is_custom_campaign();
 }
 
 int scenario_is_tutorial_2(void)
 {
-    return !scenario.settings.is_custom && scenario.settings.campaign_rank == 1;
+    return !scenario.settings.is_custom && scenario.campaign.rank == 1 && !is_custom_campaign();
 }
 
 int scenario_is_tutorial_3(void)
 {
-    return !scenario.settings.is_custom && scenario.settings.campaign_rank == 2;
+    return !scenario.settings.is_custom && scenario.campaign.rank == 2 && !is_custom_campaign();
 }
 
 int scenario_starting_favor(void)
@@ -82,12 +87,12 @@ void scenario_set_player_name(const uint8_t *name)
 
 void scenario_save_campaign_player_name(void)
 {
-    string_copy(scenario.settings.player_name, scenario.settings.campaign_player_name, MAX_PLAYER_NAME);
+    string_copy(scenario.settings.player_name, scenario.campaign.player_name, MAX_PLAYER_NAME);
 }
 
 void scenario_restore_campaign_player_name(void)
 {
-    string_copy(scenario.settings.campaign_player_name, scenario.settings.player_name, MAX_PLAYER_NAME);
+    string_copy(scenario.campaign.player_name, scenario.settings.player_name, MAX_PLAYER_NAME);
 }
 
 int scenario_is_open_play(void)

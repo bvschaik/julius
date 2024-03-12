@@ -19,7 +19,7 @@
 #include "window/cck_selection.h"
 #include "window/config.h"
 #include "window/file_dialog.h"
-#include "window/new_career.h"
+#include "window/new_campaign.h"
 #include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
 
@@ -82,7 +82,7 @@ static void draw_foreground(void)
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / BLOCK_SIZE, data.focus_button_id == i + 1 ? 1 : 0);
     }
 
-    lang_text_draw_centered(30, 1, 192, 137, 256, FONT_NORMAL_GREEN);
+    lang_text_draw_centered(CUSTOM_TRANSLATION, TR_MAIN_MENU_NEW_CAMPAIGN, 192, 137, 256, FONT_NORMAL_GREEN);
     lang_text_draw_centered(30, 2, 192, 177, 256, FONT_NORMAL_GREEN);
     lang_text_draw_centered(30, 3, 192, 217, 256, FONT_NORMAL_GREEN);
     lang_text_draw_centered(9, 8, 192, 257, 256, FONT_NORMAL_GREEN);
@@ -116,7 +116,7 @@ static void confirm_exit(int accepted, int checked)
 static void button_click(int type, int param2)
 {
     if (type == 1) {
-        window_new_career_show();
+        window_new_campaign_show();
     } else if (type == 2) {
         window_file_dialog_show(FILE_TYPE_SAVED_GAME, FILE_DIALOG_LOAD);
     } else if (type == 3) {

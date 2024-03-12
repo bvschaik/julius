@@ -280,11 +280,6 @@ static void button_toggle_minimap(int param1, int param2)
     window_invalidate();
 }
 
-static void on_scroll(void)
-{
-    window_invalidate();
-}
-
 void window_cck_selection_show(void)
 {
     window_type window = {

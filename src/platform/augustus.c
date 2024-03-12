@@ -654,6 +654,8 @@ int main(int argc, char **argv)
 
     setup(&args);
 
+
+
     mouse_set_inside_window(1);
     run_and_draw();
 

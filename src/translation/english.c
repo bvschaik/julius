@@ -1393,7 +1393,13 @@ static translation_string all_strings[] = {
     {TR_CHEAT_CASTED_CURSE, "Cast a curse"},
     {TR_CHEAT_BUILDINGS_INVINCIBLE, "Built buildings don't collapse"},
     {TR_CHEAT_CLIMATE_CHANGE, "Climate change in effect" },
-
+    {TR_MAIN_MENU_NEW_CAMPAIGN, "Start new campaign"},
+    {TR_WINDOW_SELECT_CAMPAIGN, "Select a campaign"},
+    {TR_WINDOW_ORIGINAL_CAMPAIGN_NAME, "Original campaign" },
+    {TR_WINDOW_ORIGINAL_CAMPAIGN_DESC, "The original Caesar 3 campaign, in all its 25 year old glory."},
+    {TR_WINDOW_CUSTOM_CAMPAIGNS_NOT_IMPLEMENTED_TITLE, "Not yet implemented" },
+    {TR_WINDOW_CUSTOM_CAMPAIGNS_NOT_IMPLEMENTED_TEXT, "The custom campaign support has not been implemented yet.\nPlease check a later build."},
+    
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
