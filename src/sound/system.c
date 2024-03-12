@@ -107,7 +107,7 @@ static char channel_filenames[SOUND_CHANNEL_MAX][CHANNEL_FILENAME_MAX] = {
     "",
     "wavs/tower1.wav",
     "",
-    "",
+    "wavs/tower3.wav",
     "",
     "wavs/temp_farm.wav",
     "wavs/temp_ship.wav",

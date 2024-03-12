@@ -81,6 +81,7 @@ enum {
     SOUND_CHANNEL_CITY_RIVER = 132,
     SOUND_CHANNEL_CITY_MISSION_POST = 133,
     SOUND_CHANNEL_CITY_CONSTRUCTION_SITE = 134,
+    SOUND_CHANNEL_CITY_ARMORY = 76
 };
 
 typedef struct {
@@ -119,9 +120,9 @@ static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
     0, 0, 44, 37, 0, 0, 0, 0, 56, 0, //150-159
     9, 0, 0, 0, 0, 0, 0, 0, 0, 0, //160-169
     44, 44, 44, 24, 0, 0, 0, 0, 0, 0, //170-179
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //180-189
+    0, 0, 0, 0, 53, 0, 0, 55, 52, 0, //180-189
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //190-199
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //200-209
+    0, 0, 0, 65, 0, 0, 0, 0, 0, 0, //200-209
 };
 
 static time_millis last_update_time;
@@ -133,7 +134,7 @@ void sound_city_init(void)
     for (int i = 0; i < MAX_CHANNELS; i++) {
         channels[i].last_played_time = last_update_time;
     }
-    for (int i = 1; i < 65; i++) {
+    for (int i = 1; i < 66; i++) {
         channels[i].in_use = 1;
         channels[i].views_threshold = 200;
         channels[i].delay_millis = 30000;
@@ -202,6 +203,7 @@ void sound_city_init(void)
     channels[62].channel = SOUND_CHANNEL_CITY_RIVER;
     channels[63].channel = SOUND_CHANNEL_CITY_MISSION_POST;
     channels[64].channel = SOUND_CHANNEL_CITY_CONSTRUCTION_SITE;
+    channels[65].channel = SOUND_CHANNEL_CITY_ARMORY;
 }
 
 void sound_city_set_volume(int percentage)
@@ -213,7 +215,9 @@ void sound_city_set_volume(int percentage)
 
 void sound_city_mark_building_view(building_type type, int num_workers, int direction)
 {
+
     int channel = BUILDING_TYPE_TO_CHANNEL_ID[type];
+
     if (!channel) {
         return;
     }
