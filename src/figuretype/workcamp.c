@@ -295,8 +295,24 @@ void figure_workcamp_slave_action(figure *f)
     }
 }
 
+static void set_architect_graphic(figure *f, int working)
+{
+    int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
+
+    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = assets_get_image_id("Walkers", "architect_death_01") +
+            figure_image_corpse_offset(f);
+    } else if (working) {
+        f->image_id = assets_get_image_id("Logistics", "Architect 01") + f->image_offset;
+    } else {
+        f->image_id = assets_get_image_id("Walkers", "architect_ne_01") + dir * 12 +
+            f->image_offset;
+    }
+}
+
 void figure_workcamp_architect_action(figure *f)
 {
+    int working = 0;
     f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
     building *b = building_get(f->building_id);
     building *monument;
@@ -330,7 +346,6 @@ void figure_workcamp_architect_action(figure *f)
                     f->state = FIGURE_STATE_DEAD;
                 }
             }
-            figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
             break;
 
         case FIGURE_ACTION_207_WORK_CAMP_ARCHITECT_GOING_TO_MONUMENT:
@@ -351,11 +366,9 @@ void figure_workcamp_architect_action(figure *f)
                 } else if (f->direction == DIR_FIGURE_REROUTE) {
                     figure_route_remove(f);
                 }
-                figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
             }
             break;
         case FIGURE_ACTION_208_WORK_CAMP_ARCHITECT_WORKING_ON_MONUMENT:
-            figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
             f->terrain_usage = TERRAIN_USAGE_ANY;
             f->use_cross_country = 1;
             f->dont_draw_elevated = 1;
@@ -369,14 +382,15 @@ void figure_workcamp_architect_action(figure *f)
                     }
                 } else {
                     f->wait_ticks++;
-                    f->image_id = assets_get_image_id("Logistics", "Architect 01") + f->image_offset;
+                    working = 1;
                 }
             } else {
                 if (f->direction == DIR_FIGURE_REROUTE) {
                     figure_route_remove(f);
                 }
-                figure_image_update(f, image_group(GROUP_FIGURE_ENGINEER));
             }
             break;
     }
+
+    set_architect_graphic(f, working);
 }
