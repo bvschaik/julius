@@ -281,8 +281,11 @@ static void set_garden_image(int x, int y, int grid_offset)
                         case 0: case 1:
                             image_id += 5;
                             break;
-                        case 2: case 3:
+                        case 2:
                             image_id += 4;
+                            break;
+                        case 3:
+                            image_id += 6;
                             break;
                     }
                 }
