@@ -273,9 +273,6 @@ static void draw_hippodrome_spectators(const building *b, int x, int y, color_t 
 
 static void draw_entertainment_spectators(building *b, int x, int y, color_t color_mask)
 {
-    if (b->type == BUILDING_AMPHITHEATER && b->num_workers > 0) {
-        image_draw(image_group(GROUP_BUILDING_AMPHITHEATER_SHOW), x + 36, y - 47, color_mask, draw_context.scale);
-    }
     if (b->type == BUILDING_HIPPODROME && building_main(b)->num_workers > 0
         && city_entertainment_hippodrome_has_race()) {
         draw_hippodrome_spectators(b, x, y, color_mask);
