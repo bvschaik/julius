@@ -315,6 +315,11 @@ static void draw_workshop(
         window_building_draw_description_at(c, 96 + resources_y_offset, group_id, text_offset + 6);
     }
 
+    if (b->type == BUILDING_CONCRETE_MAKER) {
+        // Concrete maker needs more text space
+        resources_y_offset += 2 * BLOCK_SIZE;
+    }
+
     inner_panel_draw(c->x_offset + 16, c->y_offset + 146 + resources_y_offset, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 152 + resources_y_offset);
     window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76,
