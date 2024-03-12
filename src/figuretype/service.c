@@ -550,7 +550,7 @@ void figure_beggar_action(figure *f)
         f->image_offset = 0;
     }
     if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-        f->image_id = GROUP_FIGURE_LABOR_SEEKER + figure_image_corpse_offset(f) + 96;
+        f->image_id = image_group(GROUP_FIGURE_LABOR_SEEKER) + figure_image_corpse_offset(f) + 96;
     } else {
         f->image_id = image_group(GROUP_FIGURE_HOMELESS) + BEGGAR_OFFSETS[f->id % beggar_frame_count];
     }
