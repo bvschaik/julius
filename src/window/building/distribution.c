@@ -18,6 +18,7 @@
 #include "core/string.h"
 #include "empire/city.h"
 #include "empire/object.h"
+#include "empire/trade_route.h"
 #include "figure/figure.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
@@ -234,7 +235,7 @@ static void draw_granary_permissions_buttons(int x, int y, int buttons)
 static void init_dock_permission_buttons(void)
 {
     dock_distribution_permissions_buttons_count = 0;
-    for (int route_id = 0; route_id < 20; route_id++) {
+    for (int route_id = 0; route_id < trade_route_count(); route_id++) {
         int city_id = -1;
         if (is_sea_trade_route(route_id) && empire_city_is_trade_route_open(route_id)) {
             city_id = empire_city_get_for_trade_route(route_id);
