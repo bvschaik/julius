@@ -277,7 +277,7 @@ int building_image_get(const building *b)
         case BUILDING_CITY_MINT:
             switch (b->monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Logistics", "Lighthouse Const 01");
+                    return assets_get_image_id("Construction", "Lighthouse_Construction_01");
                 default:
                     return building_variant_get_image_id_with_rotation(b->type, b->variant);
             }
@@ -683,13 +683,13 @@ int building_image_get(const building *b)
         case BUILDING_LIGHTHOUSE:
             switch (b->monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Logistics", "Lighthouse Const 01");
+                    return assets_get_image_id("Construction", "Lighthouse_Construction_01");
                 case 2:
-                    return assets_get_image_id("Logistics", "Lighthouse Const 02");
+                    return assets_get_image_id("Logistics", "Lighthouse_Construction_02");
                 case 3:
-                    return assets_get_image_id("Logistics", "Lighthouse Const 03");
+                    return assets_get_image_id("Logistics", "Lighthouse_Construction_03");
                 case 4:
-                    return assets_get_image_id("Logistics", "Lighthouse Const 04");
+                    return assets_get_image_id("Logistics", "Lighthouse_Construction_04");
                 default:
                     if (b->resources[RESOURCE_TIMBER] > 0 && b->num_workers > 0) {
                         return assets_get_image_id("Logistics", "Lighthouse ON");
@@ -793,7 +793,7 @@ int building_image_get(const building *b)
         case BUILDING_CARAVANSERAI:
             switch (b->monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Logistics", "Caravanserai_Construction_01");
+                    return assets_get_image_id("Construction", "Caravanserai_Construction_01");
                 case 2:
                     return assets_get_image_id("Logistics", "Caravanserai_Construction_02");
                 default:

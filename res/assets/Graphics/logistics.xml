@@ -184,8 +184,7 @@
 			<frame group="this" image="Caravanserai_S_On_03"/>
 		</animation>
 	</image>
-	<!-- Note: Caravanserai Construction 0% Phase -->
-	<image id="Caravanserai_Construction_01" src="Caravanserai_Construction_01" isometric="true"/>
+	<!-- Note: Caravanserai Construction 50% Phase -->
 	<image id="Caravanserai_Construction_02" src="Caravanserai_Construction_02" isometric="true"/>
 	<!-- Note: Cart Depot OFF Variants for Central, Northern and Southern Climates Respectively -->
 	<image id="Cart Depot C OFF" src="Cart_Depot_OFF_C" isometric="true"/>
@@ -228,15 +227,14 @@
 			<frame src="Cart_Depot_ON_05"/>
 		</animation>
 	</image>
-	<!-- Note: Lighthouse Construction 01-04 are the 0%, 25%, 50%, and 75% construction phases respectively -->
-	<image id="Lighthouse Const 01" src="Lighthouse_Construction_01" isometric="true"/>
-	<image id="Lighthouse Const 02" src="Lighthouse_Construction_02" isometric="true"/>
-	<image id="Lighthouse Const 03" width="178" height="139" isometric="true">
-		<layer group="this" image="Lighthouse Const 02" x="0" y="34"/>
+	<!-- Note: Lighthouse Construction 02-04 are the 25%, 50%, and 75% construction phases respectively -->
+	<image id="Lighthouse_Construction_02" src="Lighthouse_Construction_02" isometric="true"/>
+	<image id="Lighthouse_Construction_03" width="178" height="139" isometric="true">
+		<layer group="this" image="Lighthouse_Construction_02" x="0" y="34"/>
 		<layer src="Lighthouse_Construction_03" x="55" y="0"/>
 	</image>
-	<image id="Lighthouse Const 04" width="178" height="198" isometric="true">
-		<layer group="this" image="Lighthouse Const 03" x="0" y="59"/>
+	<image id="Lighthouse_Construction_04" width="178" height="198" isometric="true">
+		<layer group="this" image="Lighthouse_Construction_03" x="0" y="59"/>
 		<layer src="Lighthouse_Construction_04" x="18" y="0"/>
 	</image>
 	<!-- Note: Lighthouse OFF Variant -->

@@ -31,4 +31,39 @@
 		<layer group="this" image="Construction_Footprint_09" x="90" y="45"/>
 		<layer group="this" image="Construction_Footprint_08" x="120" y="30"/>
 	</image>
+	<!-- Note: 4x4 construction site sand footprint -->
+	<image id="4x4_Construction_Footprint" width="238" height="120" isometric="true">
+		<layer group="this" image="3x3_Construction_Footprint" x="0" y="15"/>
+		<layer group="this" image="3x3_Construction_Footprint" x="30" y="30"/>
+		<layer group="this" image="2x2_Construction_Footprint" x="60" y="0" invert="horizontal"/>
+		<layer group="this" image="2x2_Construction_Footprint" x="120" y="30"/>
+	</image>
+	<!-- Note: 5x5 construction site sand footprint -->
+	<image id="5x5_Construction_Footprint" width="298" height="150" isometric="true">
+		<layer group="this" image="3x3_Construction_Footprint" x="0" y="30" invert="horizontal"/>
+		<layer group="this" image="4x4_Construction_Footprint" x="60" y="15"/>
+		<layer group="this" image="2x2_Construction_Footprint" x="90" y="0"/>
+		<layer group="this" image="2x2_Construction_Footprint" x="90" y="90"/>
+	</image>
+	<!-- Note: 7x7 construction site sand footprint -->
+	<!-- Note: Education Monument/s -->
+	<!-- Note: Great Library 0% construction phase -->
+	<image id="Great_Library_Construction_01" width="238" height="129" isometric="true">
+		<layer group="this" image="4x4_Construction_Footprint" x="0" y="9"/>
+		<layer src="4x4_Construction_Borders" x="0" y="9"/>
+		<layer src="Great_Library_Construction_01" x="0" y="0"/>
+	</image>
+	<!-- Note: Logistics Monument/s -->
+	<!-- Note: Caravanserai 0% construction phase -->
+	<image id="Caravanserai_Construction_01" width="238" height="129" isometric="true">
+		<layer group="this" image="4x4_Construction_Footprint" x="0" y="9"/>
+		<layer src="4x4_Construction_Borders" x="0" y="9"/>
+		<layer src="Caravanserai_Construction_01" x="0" y="0"/>
+	</image>
+	<!-- Note: Lighthouse 0% construction phase -->
+	<image id="Lighthouse_Construction_01" width="178" height="99" isometric="true">
+		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
+		<layer src="Lighthouse_Construction_01" x="0" y="0"/>
+	</image>
 </assetlist>
