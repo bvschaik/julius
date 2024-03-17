@@ -303,7 +303,7 @@ static void set_architect_graphic(figure *f, int working)
         f->image_id = assets_get_image_id("Walkers", "architect_death_01") +
             figure_image_corpse_offset(f);
     } else if (working) {
-        f->image_id = assets_get_image_id("Logistics", "Architect 01") + f->image_offset;
+        f->image_id = assets_get_image_id("Walkers", "Architect 01") + f->image_offset;
     } else {
         f->image_id = assets_get_image_id("Walkers", "architect_ne_01") + dir * 12 +
             f->image_offset;

@@ -1,129 +1,95 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
 <!-- Unless specifically mentioned, all assets created by Areldir -->
-<assetlist name="Entertainment">
-	<!-- Note: Colosseum ON state -->
-	<image id="Coloseum ON" width="298" height="213" isometric="true">
-		<layer group="48" y="0"/>
-		<layer group="48" image="14" x="70" y="33"/>
-		<layer src="Colosseum_ON_Overlay" x="70" y="33"/>
+<assetlist name="Health_Culture">
+	<!-- Assets for school and library upgrades created by Areldir based on concept art by Tomasz -->
+	<!-- Note: School Upgrade Asset -->
+	<image id="Upgraded_School" width="118" height="110" isometric="true">
+		<layer group="41" x="0" y="18"/>
+		<layer src="School_Upgrade_State" x="1" y="0"/>
 	</image>
-	<!-- Note: Colosseum Gladiator Fight animations (Fixed vanilla ON state) -->
-	<image id="Col Glad Fight" width="298" height="213" isometric="true">
-		<layer group="this" image="Coloseum ON"/>
-		<animation speed="5" x="122" y="57" reversible="false">
-			<frame group="48" image="1"/>
-			<frame group="48" image="2"/>
-			<frame group="48" image="3"/>
-			<frame group="48" image="4"/>
-			<frame group="48" image="5"/>
-			<frame group="48" image="6"/>
-			<frame group="48" image="7"/>
-			<frame group="48" image="8"/>
-			<frame group="48" image="9"/>
-			<frame group="48" image="10"/>
-			<frame group="48" image="11"/>
-			<frame group="48" image="12"/>
-			<frame group="48" image="13"/>
-		</animation>
+	<!-- Note: Library Cropped Reference Asset: DO NOT USE! -->
+	<image id="Library Ref 01" width="118" height="72">
+		<layer group="42" x="0" y="-47"/>
 	</image>
-	<!-- Note: Colosseum 'Naumachia' games animations -->
-	<image id="Col Naumachia" width="298" height="213" isometric="true">
-		<layer group="this" image="Coloseum ON"/>
-		<animation speed="9" x="100" y="58" reversible="false">
-			<frame src="Naumachia_01"/>
-			<frame src="Naumachia_02"/>
-			<frame src="Naumachia_03"/>
-			<frame src="Naumachia_04"/>
-			<frame src="Naumachia_05"/>
-			<frame src="Naumachia_06"/>
-			<frame src="Naumachia_07"/>
-			<frame src="Naumachia_08"/>
-			<frame src="Naumachia_09"/>
-			<frame src="Naumachia_10"/>
-			<frame src="Naumachia_11"/>
-			<frame src="Naumachia_12"/>
-		</animation>
+	<!-- Note: Library Downgrade Asset: USE THIS ONE! -->
+	<image id="Downgraded_Library" width="118" height="101" isometric="true">
+		<layer group="this" image="Library Ref 01" x="0" y="29"/>
+		<layer src="Library_Downgrade_State" x="22" y="0"/>
 	</image>
-	<!-- Note: Colosseum 'Imperial Games' animation frames: DO NOT USE!  -->
-	<image id="Imperial_Games_01" width="110" height="67">
-		<layer src="Imperial_Games_Base" x="0" y="0"/>
-		<layer src="Imperial_Games_01" x="38" y="38"/>
+	<!-- Note: Fix for Academy pixel clipping -->
+	<image id="Academy_Fix" isometric="true">
+		<layer group="43" image="0" x="0" y="0"/>
+		<layer src="Academy_Fix_Layer" x="150" y="27"/>
 	</image>
-	<image id="Imperial_Games_02" width="110" height="67">
-		<layer src="Imperial_Games_Base" x="0" y="0"/>
-		<layer src="Imperial_Games_02" x="38" y="38"/>
+	<!-- Note: Academy Upgrade Asset -->
+	<image id="Upgraded_Academy" isometric="true">
+		<layer group="43" image="0" x="0" y="0"/>
+		<layer src="Academy_Upgrade_State" x="6" y="20"/>
 	</image>
-	<image id="Imperial_Games_03" width="110" height="67">
-		<layer src="Imperial_Games_Base" x="0" y="0"/>
-		<layer src="Imperial_Games_03" x="38" y="38"/>
+	<!-- Assets for doctor created by Ouaz -->
+	<!-- Note: Doctor Healing animation frames 01-11 -->
+	<image id="Doctor heal" src="Doctor_heal_plague_01"/>
+	<image src="Doctor_heal_plague_02"/>
+	<image src="Doctor_heal_plague_03"/>
+	<image src="Doctor_heal_plague_04"/>
+	<image src="Doctor_heal_plague_05"/>
+	<image src="Doctor_heal_plague_06"/>
+	<!-- Note: College Building Asset -->
+	<image id="College" src="College" isometric="true"/>
+	<!-- Note: Latrine Building Asset -->
+	<image id="Latrine_C" src="Latrine_C" width="58" height="39" isometric="true"/>
+	<image id="Latrine_N" width="58" height="39" isometric="true">
+		<layer src="Latrine_C" x="0" y="0"/>
+		<layer src="Latrine_N" x="0" y="17"/>
 	</image>
-	<image id="Imperial_Games_04" width="110" height="67">
-		<layer src="Imperial_Games_Base" x="0" y="0"/>
-		<layer src="Imperial_Games_04" x="38" y="38"/>
+	<image id="Latrine_S" width="58" height="39" isometric="true">
+		<layer src="Latrine_C" x="0" y="0"/>
+		<layer src="Latrine_S" x="0" y="17"/>
 	</image>
-	<image id="Imperial_Games_05" width="110" height="67">
-		<layer src="Imperial_Games_Base" x="0" y="0"/>
-		<layer src="Imperial_Games_05" x="38" y="38"/>
+	<!-- Note: Lararium asset -->
+	<image id="Lararium 01" src="Lararium" isometric="true"/>
+	<!-- Note: Altar Assets for Each God WITH ROTATION VARIANTS (Original Assets by MonoNavidegno, Tweaked by Areldir) -->
+	<image id="Altar_Ceres" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Ceres" x="9" y="0"/>
 	</image>
-	<image id="Imperial_Games_06" width="110" height="67">
-		<layer src="Imperial_Games_Base" x="0" y="0"/>
-		<layer src="Imperial_Games_06" x="38" y="38"/>
+	<image id="Altar_Ceres_R" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Ceres_R" x="11" y="0"/>
 	</image>
-	<!-- Note: Colosseum 'Imperial Games' animations -->
-	<image id="Col Imp Games" width="298" height="213" isometric="true">
-		<layer group="this" image="Coloseum ON"/>
-		<animation speed="9" x="90" y="34" reversible="false">
-			<frame group="this" image="Imperial_Games_01"/>
-			<frame group="this" image="Imperial_Games_02"/>
-			<frame group="this" image="Imperial_Games_03"/>
-			<frame group="this" image="Imperial_Games_04"/>
-			<frame group="this" image="Imperial_Games_05"/>
-			<frame group="this" image="Imperial_Games_06"/>
-		</animation>
+	<image id="Altar_Mars" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Mars" x="9" y="0"/>
 	</image>
-	<!-- Note: Colosseum 'Executions' animation frames: DO NOT USE!  -->
-	<image id="Executions_01" width="102" height="60">
-		<layer src="Executions_Base" x="0" y="0"/>
-		<layer src="Executions_01" x="19" y="16"/>
+	<image id="Altar_Mars_R" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Mars_R" x="10" y="0"/>
 	</image>
-	<image id="Executions_02" width="102" height="60">
-		<layer src="Executions_Base" x="0" y="0"/>
-		<layer src="Executions_02" x="19" y="16"/>
+	<image id="Altar_Mercury" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Mercury" x="10" y="0"/>
 	</image>
-	<image id="Executions_03" width="102" height="60">
-		<layer src="Executions_Base" x="0" y="0"/>
-		<layer src="Executions_03" x="19" y="16"/>
+	<image id="Altar_Mercury_R" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Mercury_R" x="12" y="0"/>
 	</image>
-	<image id="Executions_04" width="102" height="60">
-		<layer src="Executions_Base" x="0" y="0"/>
-		<layer src="Executions_04" x="19" y="16"/>
+	<image id="Altar_Neptune" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Neptune" x="10" y="0"/>
 	</image>
-	<image id="Executions_05" width="102" height="60">
-		<layer src="Executions_Base" x="0" y="0"/>
-		<layer src="Executions_05" x="19" y="16"/>
+	<image id="Altar_Neptune_R" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Neptune_R" x="13" y="0"/>
 	</image>
-	<image id="Executions_06" width="102" height="60">
-		<layer src="Executions_Base" x="0" y="0"/>
-		<layer src="Executions_06" x="19" y="16"/>
+	<image id="Altar_Venus" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Venus" x="10" y="0"/>
 	</image>
-	<!-- Note: Colosseum 'Executions' animations -->
-	<image id="Col Exec" width="298" height="213" isometric="true">
-		<layer group="this" image="Coloseum ON"/>
-		<animation speed="9" x="100" y="43" reversible="false">
-			<frame group="this" image="Executions_01"/>
-			<frame group="this" image="Executions_02"/>
-			<frame group="this" image="Executions_03"/>
-			<frame group="this" image="Executions_04"/>
-			<frame group="this" image="Executions_05"/>
-			<frame group="this" image="Executions_06"/>
-		</animation>
+	<image id="Altar_Venus_R" isometric="true" width="58" height="89">
+		<layer src="Altar_Base" x="0" y="56"/>
+		<layer src="Altar_Venus_R" x="12" y="0"/>
 	</image>
-	<!-- Note: Colosseum Overlays -->
-	<image src="Colosseum_Fight_Overlay" id="Col Base Overlay"/>
-	<image src="Naumachia_Overlay"/>
-	<image src="Imperial_Games_Overlay"/>
-	<image src="Executions_Overlay"/>
 	<!-- Note: Arena Off Variant -->
 	<image id="Arena OFF" src="Arena_Off" isometric="true"/>
 	<!-- Note: Arena ON animation frames (DO NOT USE!) -->

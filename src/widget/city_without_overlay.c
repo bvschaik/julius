@@ -593,13 +593,13 @@ static void draw_granary_stores(const image *img, const building *b, int x, int 
 
 static void draw_ceres_module_crops(int x, int y, int image_offset, color_t color_mask)
 {
-    int image_id = assets_get_image_id("Religion", "Ceres Module 1 Crop");
+    int image_id = assets_get_image_id("Health_Culture", "Ceres Module 1 Crop");
     image_draw(image_id + image_offset, x, y, color_mask, draw_context.scale);
 }
 
 static void draw_neptune_fountain(int x, int y, int image_offset, color_t color_mask)
 {
-    int image_id = assets_get_image_id("Religion", "Neptune Module 2 Fountain");
+    int image_id = assets_get_image_id("Health_Culture", "Neptune Module 2 Fountain");
     image_draw(image_id + image_offset, x, y, color_mask, draw_context.scale);
 }
 
@@ -653,7 +653,7 @@ static void draw_animation(int x, int y, int grid_offset)
                     int festival_id = calc_bound(city_festival_games_active(), 0, 4);
                     int extra_x = festival_id ? 57 : 127;
                     int extra_y = festival_id ? 12 : 93;
-                    int overlay_id = assets_get_image_id("Entertainment", "Col Base Overlay") + festival_id;
+                    int overlay_id = assets_get_image_id("Health_Culture", "Col Base Overlay") + festival_id;
                     image_draw(overlay_id, x + extra_x, y + extra_y - y_offset, color_mask, draw_context.scale);
                 }
             }

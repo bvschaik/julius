@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
 <!-- Unless specifically mentioned, all assets created by Areldir -->
-<assetlist name="Logistics">
+<assetlist name="Admin_Logistics">
 	<!-- Note: Roadblock asset and colour variants -->
 	<image id="roadblock" src="Roadblock_New_Red" isometric="true"/>
 	<image id="roadblock_blue" isometric="true">
@@ -24,19 +24,6 @@
 		<layer group="this" image="roadblock" x="0" y="0"/>
 		<layer src="Roadblock_New_Orange" x="10" y="4"/>
 	</image>
-	<!-- Note: Architect animation frames 01-12 -->
-	<image id="Architect 01" src="architect_01"/>
-	<image id="Architect 02" src="architect_02"/>
-	<image id="Architect 03" src="architect_03"/>
-	<image id="Architect 04" src="architect_04"/>
-	<image id="Architect 05" src="architect_05"/>
-	<image id="Architect 06" src="architect_06"/>
-	<image id="Architect 07" src="architect_07"/>
-	<image id="Architect 08" src="architect_08"/>
-	<image id="Architect 09" src="architect_09"/>
-	<image id="Architect 10" src="architect_10"/>
-	<image id="Architect 11" src="architect_11"/>
-	<image id="Architect 12" src="architect_12"/>
 	<!-- Note: Architect ON animation reference DO NOT USE! -->
 	<image id="Architects_Guild_On_01" width="95" height="28">
 		<layer src="Architects_Guild_ON_Layer" x="22" y="6"/>
@@ -116,76 +103,6 @@
 		<layer group="this" image="Workcamp Central" x="0" y="0"/>
 		<layer src="Workcamp_South" x="0" y="57"/>
 	</image>
-	<!-- Note: Caravanserai ON animation references DO NOT USE! -->
-	<image id="Caravanserai_CN_On_01" width="238" height="155">
-		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
-		<layer src="Caravanserai_CN_ON_01" x="86" y="46"/>
-	</image>
-	<image id="Caravanserai_CN_On_02" width="238" height="155">
-		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
-		<layer src="Caravanserai_CN_ON_02" x="86" y="46"/>
-	</image>
-	<image id="Caravanserai_CN_On_03" width="238" height="155">
-		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
-		<layer src="Caravanserai_CN_ON_03" x="86" y="46"/>
-	</image>
-	<image id="Caravanserai_S_On_01" width="238" height="155">
-		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
-		<layer src="Caravanserai_S_ON_01" x="79" y="37"/>
-	</image>
-	<image id="Caravanserai_S_On_02" width="238" height="155">
-		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
-		<layer src="Caravanserai_S_On_02" x="79" y="37"/>
-	</image>
-	<image id="Caravanserai_S_On_03" width="238" height="155">
-		<layer src="Caravanserai_ON_Base" x="47" y="55"/>
-		<layer src="Caravanserai_S_On_03" x="79" y="37"/>
-	</image>
-	<!-- Note: Caravanserai OFF Variant for Central, Northern and Southern Climates Respectively -->
-	<image id="Caravanserai_C_OFF" width="238" height="155" isometric="true">
-		<layer src="Caravanserai_Construction_02" x="0" y="12"/>
-		<layer src="Caravanserai_Base" x="4" y="13"/>
-		<layer src="Caravanserai_C_Top" x="18" y="7"/>
-	</image>
-	<image id="Caravanserai_N_OFF" width="238" height="155" isometric="true">
-		<layer src="Caravanserai_Construction_02" x="0" y="12"/>
-		<layer src="Caravanserai_Base" x="4" y="13"/>
-		<layer src="Caravanserai_N_Top" x="18" y="0"/>
-	</image>
-	<image id="Caravanserai_S_OFF" width="238" height="155" isometric="true">
-		<layer src="Caravanserai_Construction_02" x="0" y="12"/>
-		<layer src="Caravanserai_Base" x="4" y="13"/>
-		<layer src="Caravanserai_S_Top" x="15" y="7"/>
-	</image>
-	<!-- Note: Caravanserai ON Variant for Central Climate -->
-	<image id="Caravanserai_C_ON" width="238" height="155" isometric="true">
-		<layer group="this" image="Caravanserai_C_OFF"/>
-		<animation speed="8" x="0" y="0" reversible="true">
-			<frame group="this" image="Caravanserai_CN_On_01"/>
-			<frame group="this" image="Caravanserai_CN_On_02"/>
-			<frame group="this" image="Caravanserai_CN_On_03"/>
-		</animation>
-	</image>
-	<!-- Note: Caravanserai ON Variant for Northern Climate -->
-	<image id="Caravanserai_N_ON" width="238" height="155" isometric="true">
-		<layer group="this" image="Caravanserai_N_OFF"/>
-		<animation speed="8" x="0" y="0" reversible="true">
-			<frame group="this" image="Caravanserai_CN_On_01"/>
-			<frame group="this" image="Caravanserai_CN_On_02"/>
-			<frame group="this" image="Caravanserai_CN_On_03"/>
-		</animation>
-	</image>
-	<!-- Note: Caravanserai ON Variant for Southern Climate -->
-	<image id="Caravanserai_S_ON" width="238" height="155" isometric="true">
-		<layer group="this" image="Caravanserai_S_OFF"/>
-		<animation speed="8" x="0" y="0" reversible="true">
-			<frame group="this" image="Caravanserai_S_On_01"/>
-			<frame group="this" image="Caravanserai_S_On_02"/>
-			<frame group="this" image="Caravanserai_S_On_03"/>
-		</animation>
-	</image>
-	<!-- Note: Caravanserai Construction 50% Phase -->
-	<image id="Caravanserai_Construction_02" src="Caravanserai_Construction_02" isometric="true"/>
 	<!-- Note: Cart Depot OFF Variants for Central, Northern and Southern Climates Respectively -->
 	<image id="Cart Depot C OFF" src="Cart_Depot_OFF_C" isometric="true"/>
 	<image id="Cart Depot N OFF" isometric="true">
@@ -227,29 +144,6 @@
 			<frame src="Cart_Depot_ON_05"/>
 		</animation>
 	</image>
-	<!-- Note: Lighthouse Construction 02-04 are the 25%, 50%, and 75% construction phases respectively -->
-	<image id="Lighthouse_Construction_02" src="Lighthouse_Construction_02" isometric="true"/>
-	<image id="Lighthouse_Construction_03" width="178" height="139" isometric="true">
-		<layer group="this" image="Lighthouse_Construction_02" x="0" y="34"/>
-		<layer src="Lighthouse_Construction_03" x="55" y="0"/>
-	</image>
-	<image id="Lighthouse_Construction_04" width="178" height="198" isometric="true">
-		<layer group="this" image="Lighthouse_Construction_03" x="0" y="59"/>
-		<layer src="Lighthouse_Construction_04" x="18" y="0"/>
-	</image>
-	<!-- Note: Lighthouse OFF Variant -->
-	<image id="Lighthouse OFF" src="Lighthouse_OFF" isometric="true"/>
-	<!-- Note: Lighthouse ON Variant -->
-	<image id="Lighthouse ON" isometric="true">
-		<layer group="this" image="Lighthouse OFF"/>
-		<animation speed="5" x="78" y="17" reversible="false">
-			<frame src="Lighthouse_ON_01"/>
-			<frame src="Lighthouse_ON_02"/>
-			<frame src="Lighthouse_ON_03"/>
-			<frame src="Lighthouse_ON_04"/>
-			<frame src="Lighthouse_ON_05"/>
-		</animation>
-	</image>
 	<!-- Note: Fix for flickering upgraded fountain on desert maps (Image provided by Ouaz and crudelios)-->
 	<image id="Frame_Flickering_Fix">
 		<layer group="53" image="7"/>
@@ -267,32 +161,6 @@
 			<frame group="this" image="Frame_Flickering_Fix"/>
 		</animation>
 	</image>
-	<!-- Note: Builder worker animation frames 01-12 -->
-	<image id="Builder_01" src="Builder_01"/>
-	<image id="Builder_02" src="Builder_02"/>
-	<image id="Builder_03" src="Builder_03"/>
-	<image id="Builder_04" src="Builder_04"/>
-	<image id="Builder_05" src="Builder_05"/>
-	<image id="Builder_06" src="Builder_06"/>
-	<image id="Builder_07" src="Builder_07"/>
-	<image id="Builder_08" src="Builder_08"/>
-	<image id="Builder_09" src="Builder_09"/>
-	<image id="Builder_10" src="Builder_10"/>
-	<image id="Builder_11" src="Builder_11"/>
-	<image id="Builder_12" src="Builder_12"/>
-	<!-- Note: Chiselling worker animation frames 01-12 -->
-	<image id="Chisel_NE_01" src="Chisel_NE_01"/>
-	<image id="Chisel_NE_02" src="Chisel_NE_02"/>
-	<image id="Chisel_NE_03" src="Chisel_NE_03"/>
-	<image id="Chisel_NE_04" src="Chisel_NE_04"/>
-	<image id="Chisel_NE_05" src="Chisel_NE_05"/>
-	<image id="Chisel_NE_06" src="Chisel_NE_06"/>
-	<image id="Chisel_NE_07" src="Chisel_NE_06"/>
-	<image id="Chisel_NE_08" src="Chisel_NE_05"/>
-	<image id="Chisel_NE_09" src="Chisel_NE_04"/>
-	<image id="Chisel_NE_10" src="Chisel_NE_03"/>
-	<image id="Chisel_NE_11" src="Chisel_NE_02"/>
-	<image id="Chisel_NE_12" src="Chisel_NE_01"/>
 	<!-- Note: Highway sprites (Assets by Marwana, with additions from Areldir and PrettyFlower) -->
 	<!-- Note: Highway Placement -->
 	<image id="Highway_Placement" width="118" height="60" isometric="true">
@@ -364,5 +232,17 @@
 	<image id="Aqueduct_Bridge_Right_Empty" isometric="true" width="58" height="57">
 		<layer group="19" image="16"/>
 		<layer src="Aqueduct_Mask_Right" y="27" mask="alpha"/>
+	</image>
+	<!-- Note: Forum upgrade state -->
+	<image id="Upgraded_Forum" width="118" height="114" isometric="true">
+		<layer group="63" image="0"/>
+		<layer src="Forum_Upgrade" x="0" y="27"/>
+	</image>
+	<!-- Note: Basilica Building OFF state -->
+	<image id="Basilica_OFF" src="Basilica_OFF" width="238" height="161" isometric="true"/>
+	<!-- Note: Basilica Building ON state -->
+	<image id="Basilica_ON" width="238" height="161" isometric="true">
+		<layer group="this" image="Basilica_OFF" x="0" y="0"/>
+		<layer src="Basilica_ON" x="45" y="78"/>
 	</image>
 </assetlist>

@@ -395,7 +395,7 @@ void figure_doctor_action(figure *f)
             if (f->image_offset >= sizeof DOCTOR_HEALING_OFFSETS / sizeof DOCTOR_HEALING_OFFSETS[0]) {
                 f->image_offset = 0;
             }
-            f->image_id = assets_get_image_id("Health_Education", "Doctor heal") +
+            f->image_id = assets_get_image_id("Health_Culture", "Doctor heal") +
                 DOCTOR_HEALING_OFFSETS[f->image_offset];
             break;
     }
