@@ -1137,7 +1137,7 @@
 	</image>
 	<!-- Note: Large Temple and Oracle Construction Phases -->
 	<image id="Oracle_Construction_01" isometric="true" width="118" height="69">
-		<layer src="Construction_Base_2x2" y="9"/>
+		<layer group="this" image="2x2_Construction_Footprint" y="9"/>
 		<layer src="Oracle_Construction_01"/>
 	</image>
 	<image id="Oracle_Construction_02" isometric="true" width="118" height="77">
@@ -1162,7 +1162,7 @@
 	</image>
 	<!-- Note: Large Mausoleum Construction Phases -->
 	<image id="Mausoleum L Cons" isometric="true">
-		<layer group="this" image="const_base_3x3" x="0" y="0"/>
+		<layer group="this" image="3x3_Construction_Footprint" x="0" y="0"/>
 		<layer src="Mausoleum_Large_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Mausoleum_Large_Construction_02" src="Mausoleum_Large_Construction_02" isometric="true"/>
@@ -1179,15 +1179,15 @@
 	</image>
 	<!-- Note: Small Mausoleum Construction 01 Phase -->
 	<image id="Mausoleum S Cons" width="118" height="69" isometric="true">
-		<layer src="Construction_Base_2x2" y="9"/>
+		<layer group="this" image="2x2_Construction_Footprint" y="9"/>
 		<layer src="Mausoleum_Small_Construction_01"/>
 	</image>
 	<image id="Mausoleum_Small_Construction_02" width="118" height="71" isometric="true">
-		<layer src="Construction_Base_2x2" y="11"/>
+		<layer group="this" image="2x2_Construction_Footprint" y="11"/>
 		<layer src="Mausoleum_Small_Construction_02"/>
 	</image>
 	<image id="Mausoleum_Small_R_Construction_02" width="118" height="71" isometric="true">
-		<layer src="Construction_Base_2x2" y="11"/>
+		<layer group="this" image="2x2_Construction_Footprint" y="11"/>
 		<layer src="Mausoleum_Small_R_Construction_02"/>
 	</image>
 	<!-- Note: Small Mausoleum asset -->
