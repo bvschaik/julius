@@ -20,6 +20,10 @@ case "$BUILD_TARGET" in
 	echo "Creating disk image"
 	hdiutil create -volname Julius -srcfolder julius.app -ov -format UDZO julius.dmg
 	;;
+"flatpak")
+	flatpak-builder repo com.github.bvschaik.julius.json --install-deps-from=flathub --keep-build-dirs
+	cp .flatpak-builder/build/julius/res/version.txt res/version.txt
+	;;
 "appimage")
 	cd build && make -j4 && make test
 	make DESTDIR=AppDir install
