@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE assetlist>
-<!-- Assets created by Areldir based on concept art by Tomasz -->
+<!-- Unless specifically mentioned, all assets created by Areldir -->
 <assetlist name="Health_Education">
+	<!-- Assets for school and library upgrades created by Areldir based on concept art by Tomasz -->
 	<!-- Note: School Upgrade Asset -->
 	<image id="Upgraded_School" width="118" height="110" isometric="true">
 		<layer group="41" x="0" y="18"/>
@@ -16,7 +17,6 @@
 		<layer group="this" image="Library Ref 01" x="0" y="29"/>
 		<layer src="Library_Downgrade_State" x="22" y="0"/>
 	</image>
-	<!-- Assets created by Areldir -->
 	<!-- Note: Fix for Academy pixel clipping -->
 	<image id="Academy_Fix" isometric="true">
 		<layer group="43" image="0" x="0" y="0"/>
@@ -27,6 +27,7 @@
 		<layer group="43" image="0" x="0" y="0"/>
 		<layer src="Academy_Upgrade_State" x="6" y="20"/>
 	</image>
+	<!-- Assets for doctor created by Ouaz -->
 	<!-- Note: Doctor Healing animation frames 01-11 -->
 	<image id="Doctor heal" src="Doctor_heal_plague_01"/>
 	<image src="Doctor_heal_plague_02"/>

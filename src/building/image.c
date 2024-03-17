@@ -109,13 +109,13 @@ int building_image_get(const building *b)
         case BUILDING_COLOSSEUM:
             switch (b->monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Entertainment", "Coloseum Cons 01");
+                    return assets_get_image_id("Construction", "Colosseum_Construction_01");
                 case 2:
-                    return assets_get_image_id("Entertainment", "Coloseum Cons 02");
+                    return assets_get_image_id("Construction", "Colosseum_Construction_02");
                 case 3:
-                    return assets_get_image_id("Entertainment", "Coloseum Cons 03");
+                    return assets_get_image_id("Construction", "Colosseum_Construction_03");
                 case 4:
-                    return assets_get_image_id("Entertainment", "Coloseum Cons 04");
+                    return assets_get_image_id("Construction", "Colosseum_Construction_04");
                 default:
                     switch (city_festival_games_active()) {
                         case 1:
@@ -484,10 +484,10 @@ int building_image_get(const building *b)
                     }
                 } else {
                     if (orientation == DIR_0_TOP || orientation == DIR_4_BOTTOM) {
-                        image_id = assets_get_image_id("Entertainment", "Circus NWSE 01") +
+                        image_id = assets_get_image_id("Construction", "Circus NWSE 01") +
                             ((phase - 1) * phase_offset);
                     } else {
-                        image_id = assets_get_image_id("Entertainment", "Circus NESW 01") +
+                        image_id = assets_get_image_id("Construction", "Circus NESW 01") +
                             ((phase - 1) * phase_offset);
                     }
                 }
