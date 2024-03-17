@@ -143,15 +143,18 @@
 	</image>
 	<!-- Note: Caravanserai OFF Variant for Central, Northern and Southern Climates Respectively -->
 	<image id="Caravanserai_C_OFF" width="238" height="155" isometric="true">
-		<layer src="Caravanserai_Base" x="0" y="12"/>
+		<layer src="Caravanserai_Construction_02" x="0" y="12"/>
+		<layer src="Caravanserai_Base" x="4" y="13"/>
 		<layer src="Caravanserai_C_Top" x="18" y="7"/>
 	</image>
 	<image id="Caravanserai_N_OFF" width="238" height="155" isometric="true">
-		<layer src="Caravanserai_Base" x="0" y="12"/>
+		<layer src="Caravanserai_Construction_02" x="0" y="12"/>
+		<layer src="Caravanserai_Base" x="4" y="13"/>
 		<layer src="Caravanserai_N_Top" x="18" y="0"/>
 	</image>
 	<image id="Caravanserai_S_OFF" width="238" height="155" isometric="true">
-		<layer src="Caravanserai_Base" x="0" y="12"/>
+		<layer src="Caravanserai_Construction_02" x="0" y="12"/>
+		<layer src="Caravanserai_Base" x="4" y="13"/>
 		<layer src="Caravanserai_S_Top" x="15" y="7"/>
 	</image>
 	<!-- Note: Caravanserai ON Variant for Central Climate -->

@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="Construction">
+	<!-- Note: 1x1 construction site sand footprints -->
+	<image id="Construction_Footprint_01" src="Construction_Footprint_01" isometric="true"/>
+	<image id="Construction_Footprint_02" src="Construction_Footprint_02" isometric="true"/>
+	<image id="Construction_Footprint_03" src="Construction_Footprint_03" isometric="true"/>
+	<image id="Construction_Footprint_04" src="Construction_Footprint_04" isometric="true"/>
+	<image id="Construction_Footprint_05" src="Construction_Footprint_05" isometric="true"/>
+	<image id="Construction_Footprint_06" src="Construction_Footprint_06" isometric="true"/>
+	<image id="Construction_Footprint_07" src="Construction_Footprint_07" isometric="true"/>
+	<image id="Construction_Footprint_08" src="Construction_Footprint_08" isometric="true"/>
+	<image id="Construction_Footprint_09" src="Construction_Footprint_09" isometric="true"/>
+	<!-- Note: 2x2 construction site sand footprint -->
+	<image id="2x2_Construction_Footprint" width="118" height="60" isometric="true">
+		<layer group="this" image="Construction_Footprint_01" x="0" y="15"/>
+		<layer group="this" image="Construction_Footprint_02" x="30" y="0"/>
+		<layer group="this" image="Construction_Footprint_03" x="30" y="30" invert="horizontal"/>
+		<layer group="this" image="Construction_Footprint_04" x="60" y="15"/>
+	</image>
+	<!-- Note: 3x3 construction site sand footprint -->
+	<image id="3x3_Construction_Footprint" width="178" height="90" isometric="true">
+		<layer group="this" image="Construction_Footprint_01" x="0" y="30" invert="horizontal"/>
+		<layer group="this" image="Construction_Footprint_02" x="30" y="15"/>
+		<layer group="this" image="Construction_Footprint_04" x="30" y="45"/>
+		<layer group="this" image="Construction_Footprint_03" x="60" y="0" invert="horizontal"/>
+		<layer group="this" image="Construction_Footprint_05" x="60" y="30"/>
+		<layer group="this" image="Construction_Footprint_06" x="60" y="60"/>
+		<layer group="this" image="Construction_Footprint_07" x="90" y="15" invert="horizontal"/>
+		<layer group="this" image="Construction_Footprint_09" x="90" y="45"/>
+		<layer group="this" image="Construction_Footprint_08" x="120" y="30"/>
+	</image>
+</assetlist>
