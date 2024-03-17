@@ -53,7 +53,12 @@
 		<layer group="this" image="4x4_Construction_Footprint" x="180" y="45" invert="horizontal"/>
 	</image>
 	<!-- Note: Administration Monument/s -->
-	<!-- Note: City Mint construction phases -->
+	<!-- Note: City Mint 0% and 50% construction phases -->
+	<image id="City_Mint_Construction_01" width="178" height="99" isometric="true">
+		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
+		<layer src="City_Mint_Construction_01" x="0" y="0"/>
+	</image>
 	<image id="City_Mint_Construction_02" src="City_Mint_Construction_02" width="178" height="117" isometric="true"/>
 	<!-- Note: City Mint OFF -->
 	<image id="City_Mint_OFF" src="City_Mint_OFF" width="178" height="117" isometric="true"/>
@@ -105,13 +110,6 @@
 			<frame group="this" image="City_Mint_ON_05"/>
 		</animation>
 	</image>
-	
-	
-	
-	
-	
-	
-	
 	<!-- Note: Education Monument/s -->
 	<!-- Note: Great Library 0%, 25%, 50%, and 75% construction phases -->
 	<image id="Great_Library_Construction_01" width="238" height="129" isometric="true">
@@ -501,6 +499,7 @@
 	<!-- Note: Ceres Large Temple 0%, 25%, 50% and 75% construction phases -->
 	<image id="Ceres_LT_0" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
 		<layer src="Ceres_Temple_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Ceres_LT_25" width="178" height="159">
@@ -612,6 +611,7 @@
 	<!-- Note: Mars Large Temple 0%, 25%, 50% and 75% construction phases -->
 	<image id="Mars_LT_0" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
 		<layer src="Mars_Temple_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Mars_LT_25" width="178" height="148">
@@ -719,6 +719,7 @@
 	<!-- Note: Mercury Large Temple 0%, 25%, 50% and 75% construction phases -->
 	<image id="Mercury_LT_0" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
 		<layer src="Mercury_Temple_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Mercury_LT_25" width="178" height="148">
@@ -815,6 +816,7 @@
 	<!-- Note: Neptune Large Temple 0%, 25%, 50% and 75% construction phases -->
 	<image id="Neptune_LT_0" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
 		<layer src="Neptune_Temple_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Neptune_LT_25" width="178" height="154">
@@ -951,6 +953,7 @@
 	<!-- Note: Pantheon Reference Assets DO NOT USE -->
 	<image id="Pantheon_Const_00" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
 		<layer src="Pantheon_Construction_01" x="0" y="0"/>
 	</image>
 	<!-- Note: Pantheon Construction 01-05 are the 0%, 25%, 50%, 75% and 100% construction phases respectively -->
@@ -1042,6 +1045,7 @@
 	<!-- Note: Venus Large Temple 0%, 25%, 50% and 75% construction phases -->
 	<image id="Venus_LT_0" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
 		<layer src="Venus_Temple_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Venus_LT_25" width="178" height="142">
@@ -1138,6 +1142,7 @@
 	<!-- Note: Large Temple and Oracle Construction Phases -->
 	<image id="Oracle_Construction_01" isometric="true" width="118" height="69">
 		<layer group="this" image="2x2_Construction_Footprint" y="9"/>
+		<layer src="2x2_Construction_Borders" y="9"/>
 		<layer src="Oracle_Construction_01"/>
 	</image>
 	<image id="Oracle_Construction_02" isometric="true" width="118" height="77">
@@ -1161,8 +1166,9 @@
 		</animation>
 	</image>
 	<!-- Note: Large Mausoleum Construction Phases -->
-	<image id="Mausoleum L Cons" isometric="true">
-		<layer group="this" image="3x3_Construction_Footprint" x="0" y="0"/>
+	<image id="Mausoleum L Cons" width="178" height="99" isometric="true">
+		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
 		<layer src="Mausoleum_Large_Construction_01" x="0" y="0"/>
 	</image>
 	<image id="Mausoleum_Large_Construction_02" src="Mausoleum_Large_Construction_02" isometric="true"/>
@@ -1180,14 +1186,17 @@
 	<!-- Note: Small Mausoleum Construction 01 Phase -->
 	<image id="Mausoleum S Cons" width="118" height="69" isometric="true">
 		<layer group="this" image="2x2_Construction_Footprint" y="9"/>
+		<layer src="2x2_Construction_Borders" y="9"/>
 		<layer src="Mausoleum_Small_Construction_01"/>
 	</image>
 	<image id="Mausoleum_Small_Construction_02" width="118" height="71" isometric="true">
 		<layer group="this" image="2x2_Construction_Footprint" y="11"/>
+		<layer src="2x2_Construction_Borders" y="11"/>
 		<layer src="Mausoleum_Small_Construction_02"/>
 	</image>
 	<image id="Mausoleum_Small_R_Construction_02" width="118" height="71" isometric="true">
 		<layer group="this" image="2x2_Construction_Footprint" y="11"/>
+		<layer src="2x2_Construction_Borders" y="11"/>
 		<layer src="Mausoleum_Small_R_Construction_02"/>
 	</image>
 	<!-- Note: Small Mausoleum asset -->
@@ -1197,6 +1206,4 @@
 		<layer group="this" image="Mausoleum S" part="footprint"/>
 		<layer src="Mausoleum_Small_R" x="0" y="0"/>
 	</image>
-	
-	
 </assetlist>
