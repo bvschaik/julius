@@ -33,6 +33,12 @@ case "$DEPLOY" in
   DEPLOY_FILE=julius-$VERSION-linux-x86_64.zip
   cp "${build_dir}/julius.zip" "deploy/$DEPLOY_FILE"
   ;;
+"flatpak")
+  flatpak build-export export repo
+  DEPLOY_FILE=julius-$VERSION-linux.flatpak
+  flatpak build-bundle export julius.flatpak com.github.bvschaik.julius --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+  cp julius.flatpak "deploy/$DEPLOY_FILE"
+  ;;
 "appimage")
   PACKAGE=linux-appimage
   DEPLOY_FILE=julius-$VERSION-linux.AppImage
