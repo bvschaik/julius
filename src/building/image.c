@@ -211,17 +211,17 @@ int building_image_get(const building *b)
             if (!b->upgrade_level) {
                 return image_group(GROUP_BUILDING_SCHOOL);
             } else {
-                return assets_get_image_id("Health_Education", "Upgraded_School");
+                return assets_get_image_id("Health_Culture", "Upgraded_School");
             }
         case BUILDING_ACADEMY:
             if (!b->upgrade_level) {
-                return assets_get_image_id("Health_Education", "Academy_Fix");
+                return assets_get_image_id("Health_Culture", "Academy_Fix");
             } else {
-                return assets_get_image_id("Health_Education", "Upgraded_Academy");
+                return assets_get_image_id("Health_Culture", "Upgraded_Academy");
             }
         case BUILDING_LIBRARY:
             if (!b->upgrade_level) {
-                return assets_get_image_id("Health_Education", "Downgraded_Library");
+                return assets_get_image_id("Health_Culture", "Downgraded_Library");
             } else {
                 return image_group(GROUP_BUILDING_LIBRARY);
             }
