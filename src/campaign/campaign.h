@@ -1,6 +1,7 @@
 #ifndef CAMPAIGN_H
 #define CAMPAIGN_H
 
+#include <stddef.h>
 #include <stdint.h>
 
 #define CAMPAIGN_FIRST_MISSION -1
