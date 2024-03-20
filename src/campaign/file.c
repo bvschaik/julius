@@ -4,6 +4,8 @@
 
 #include "zip/zip.h"
 
+#include <stddef.h>
+
 #define CUSTOM_CAMPAIGN_PREFIX_SIZE sizeof(CUSTOM_CAMPAIGN_DIR_NAME "/")
 
 static struct {
