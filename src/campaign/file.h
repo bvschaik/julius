@@ -1,7 +1,7 @@
 #ifndef CAMPAIGN_FILE_H
 #define CAMPAIGN_FILE_H
 
-#include <stdint.h>
+#include <stddef.h>
 
 int campaign_file_exists(const char *file);
 void *campaign_file_load(const char *file, size_t *length);
