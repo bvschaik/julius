@@ -1,5 +1,6 @@
 #include "custom_messages.h"
 
+#include "campaign/campaign.h"
 #include "core/array.h"
 #include "core/encoding.h"
 #include "core/file.h"
@@ -8,26 +9,22 @@
 
 #define CUSTOM_MESSAGES_ARRAY_SIZE_STEP 100
 
-#define AUDIO_FILE_PATHS_COUNT 4
-static const char AUDIO_FILE_PATHS[][32] = {
+static const char *AUDIO_FILE_PATHS[] = {
+    CUSTOM_CAMPAIGN_DIRECTORY "/audio/"
     "community/audio/",
     "mp3/",
     "wavs/",
+    0
 };
 
-#define VIDEO_FILE_PATHS_COUNT 2
-static const char VIDEO_FILE_PATHS[][32] = {
+static const char *VIDEO_FILE_PATHS[] = {
+    CUSTOM_CAMPAIGN_DIRECTORY "/video/",
     "community/video/",
     "smk/",
+    0
 };
 
 static array(custom_message_t) custom_messages;
-
-static struct {
-    char filepath_media[FILE_NAME_MAX];
-    char filepath_audio[FILE_NAME_MAX];
-    char temp_filepath[FILE_NAME_MAX];
-} data;
 
 static int entry_in_use(const custom_message_t *entry)
 {
@@ -232,79 +229,42 @@ uint8_t *custom_messages_get_text(custom_message_t *message)
     }
 }
 
-static int check_for_file_in_dir(const uint8_t *filename, const char *directory, int *final_length)
+static const char *check_for_file_in_dir(const char *filename, const char *directory)
 {
-    uint8_t filepath[FILE_NAME_MAX];
-
-    const uint8_t *converted = string_from_ascii(directory);
-    int converted_length = string_length(converted);
-    int filename_length = string_length(filename);
-    *final_length = converted_length + filename_length;
-
-    string_copy(converted, &filepath[0], converted_length + 1);
-    string_copy(filename, &filepath[converted_length], filename_length + 1);
-
-    encoding_to_utf8(filepath, data.temp_filepath, FILE_NAME_MAX, 0);
-    int found = file_exists(data.temp_filepath, MAY_BE_LOCALIZED);
-    if (found) {
-        return 1;
-    }
-    return 0;
+    static char filepath[FILE_NAME_MAX];
+    strncpy(filepath, directory, FILE_NAME_MAX);
+    size_t directory_length = strlen(directory);
+    strncpy(&filepath[directory_length], filename, FILE_NAME_MAX - directory_length);
+    filepath[FILE_NAME_MAX - 1] = 0;
+    return campaign_has_file(filepath) || file_exists(filepath, MAY_BE_LOCALIZED) ? filepath : 0;
 }
 
-static int search_for_sound_file(const uint8_t *filename)
+static const char *search_for_file(const uint8_t *filename, const char *paths[])
 {
-    for (int i = 0; i < AUDIO_FILE_PATHS_COUNT; i++) {
-        int final_length = 0;
-        int found = check_for_file_in_dir(filename, AUDIO_FILE_PATHS[i], &final_length);
-        if (found) {
-            memset(data.filepath_media, 0, sizeof(data.filepath_media));
-
-            strncpy(&data.filepath_media[0], data.temp_filepath, final_length);
-            return 1;
+    char filename_utf8[FILE_NAME_MAX];
+    for (int i = 0; i <= encoding_system_uses_decomposed(); i++) {
+        encoding_to_utf8(filename, filename_utf8, FILE_NAME_MAX, i);
+        for (int j = 0; paths[j]; j++) {
+            const char *path = check_for_file_in_dir(filename_utf8, paths[j]);
+            if (path) {
+                return path;
+            }
         }
     }
     return 0;
 }
 
-static int search_for_video_file(const uint8_t *filename)
+uint8_t *custom_messages_get_video(custom_message_t *message)
 {
-    for (int i = 0; i < VIDEO_FILE_PATHS_COUNT; i++) {
-        int final_length = 0;
-        int found = check_for_file_in_dir(filename, VIDEO_FILE_PATHS[i], &final_length);
-        if (found) {
-            memset(data.filepath_media, 0, sizeof(data.filepath_media));
-
-            strncpy(&data.filepath_media[0], data.temp_filepath, final_length);
-            return 1;
-        }
-    }
-    return 0;
-}
-
-static int search_for_background_music_file(const uint8_t *filename)
-{
-    for (int i = 0; i < AUDIO_FILE_PATHS_COUNT; i++) {
-        int final_length = 0;
-        int found = check_for_file_in_dir(filename, AUDIO_FILE_PATHS[i], &final_length);
-        if (found) {
-            memset(data.filepath_audio, 0, sizeof(data.filepath_audio));
-
-            strncpy(&data.filepath_audio[0], data.temp_filepath, final_length);
-            return 1;
-        }
-    }
-    return 0;
-}
-
-const char *custom_messages_get_video(custom_message_t *message)
-{
-    if (message->linked_media && message->linked_media->type == CUSTOM_MEDIA_VIDEO && message->linked_media->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN) {
-        if (search_for_video_file(message->linked_media->filename->text)) {
-            return data.filepath_media;
-        } else {
+    if (message->linked_media && message->linked_media->type == CUSTOM_MEDIA_VIDEO &&
+        message->linked_media->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN) {
+        const char *path_utf8 = search_for_file(message->linked_media->filename->text, VIDEO_FILE_PATHS);
+        if (!path_utf8) {
             return 0;
         }
+        static uint8_t path[FILE_NAME_MAX];
+        encoding_from_utf8(path_utf8, path, FILE_NAME_MAX);
+        return path;
     } else {
         return 0;
     }
@@ -312,12 +272,9 @@ const char *custom_messages_get_video(custom_message_t *message)
 
 const char *custom_messages_get_audio(custom_message_t *message)
 {
-    if (message->linked_media && message->linked_media->type == CUSTOM_MEDIA_SOUND && message->linked_media->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN) {
-        if (search_for_sound_file(message->linked_media->filename->text)) {
-            return data.filepath_media;
-        } else {
-            return 0;
-        }
+    if (message->linked_media && message->linked_media->type == CUSTOM_MEDIA_SOUND &&
+        message->linked_media->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN) {
+        return search_for_file(message->linked_media->filename->text, AUDIO_FILE_PATHS);
     } else {
         return 0;
     }
@@ -325,12 +282,10 @@ const char *custom_messages_get_audio(custom_message_t *message)
 
 const char *custom_messages_get_background_music(custom_message_t *message)
 {
-    if (message->linked_background_music && message->linked_background_music->type == CUSTOM_MEDIA_SOUND && message->linked_background_music->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_BACKGROUND_MUSIC) {
-        if (search_for_background_music_file(message->linked_background_music->filename->text)) {
-            return data.filepath_audio;
-        } else {
-            return 0;
-        }
+    if (message->linked_background_music &&
+        message->linked_background_music->type == CUSTOM_MEDIA_SOUND &&
+        message->linked_background_music->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_BACKGROUND_MUSIC) {
+        return search_for_file(message->linked_background_music->filename->text, AUDIO_FILE_PATHS);
     } else {
         return 0;
     }

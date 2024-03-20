@@ -56,7 +56,7 @@ struct { \
 /**
  * Creates a new item for the array, either by finding an available empty item or by expanding the array.
  * @param a The array structure
- * @param index The index upon which to start searching for a free slot. If index is greater than the arrray size,
+ * @param index The index upon which to start searching for a free slot. If index is greater than the array size,
  *        the array will be expanded.
  * @param ptr A pointer that will get the new item. Will be null if there was a memory allocation error.
  */

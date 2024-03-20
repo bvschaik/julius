@@ -105,7 +105,7 @@ static void finish_text(void)
     append_to_text(current_text, "\0", 1);
     // Remove beginning empty text
     const char *text = current_text->text;
-    while ((*text == '\n' || *text == ' ') && *text) {
+    while ((*text == '\r' || *text == '\n' || *text == ' ') && *text) {
         text++;
     }
     if (*text) {

@@ -151,9 +151,7 @@ static void setup_custom_lang_message(int text_id)
     data.custom_lang_message.subtitle.text = custom_messages_get_subtitle(data.custom_msg);
     data.custom_lang_message.content.text = custom_messages_get_text(data.custom_msg);
 
-    if (custom_messages_get_video(data.custom_msg)) {
-        data.custom_lang_message.video.text = (uint8_t *) string_from_ascii(custom_messages_get_video(data.custom_msg));
-    }
+    data.custom_lang_message.video.text = custom_messages_get_video(data.custom_msg);
 
     data.should_play_audio = 0;
     if (custom_messages_get_audio(data.custom_msg)) {

@@ -1,10 +1,10 @@
 #include "core/zip.h"
 
+#include "core/log.h"
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "core/log.h"
 
 enum {
     PK_SUCCESS = 0,

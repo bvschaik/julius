@@ -1395,6 +1395,7 @@ static translation_string all_strings[] = {
     {TR_CHEAT_CLIMATE_CHANGE, "Climate change in effect" },
     {TR_MAIN_MENU_NEW_CAMPAIGN, "Start new campaign"},
     {TR_WINDOW_SELECT_CAMPAIGN, "Select a campaign"},
+    {TR_WINDOW_CAMPAIGN_NO_DESC, "No description"},
     {TR_WINDOW_ORIGINAL_CAMPAIGN_NAME, "Original campaign" },
     {TR_WINDOW_ORIGINAL_CAMPAIGN_DESC, "The original Caesar 3 campaign, in all its 25 year old glory."},
     {TR_WINDOW_CUSTOM_CAMPAIGNS_NOT_IMPLEMENTED_TITLE, "Not yet implemented" },

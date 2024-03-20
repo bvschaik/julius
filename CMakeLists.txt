@@ -305,6 +305,12 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/variant.c
     ${PROJECT_SOURCE_DIR}/src/building/warehouse.c
 )
+set(CAMPAIGN_FILES
+    ${PROJECT_SOURCE_DIR}/src/campaign/campaign.c
+    ${PROJECT_SOURCE_DIR}/src/campaign/file.c
+    ${PROJECT_SOURCE_DIR}/src/campaign/mission.c
+    ${PROJECT_SOURCE_DIR}/src/campaign/xml.c
+)
 set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/buildings.c
     ${PROJECT_SOURCE_DIR}/src/city/culture.c
@@ -392,7 +398,6 @@ set(FIGURETYPE_FILES
 set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/animation.c
     ${PROJECT_SOURCE_DIR}/src/game/cheats.c
-    ${PROJECT_SOURCE_DIR}/src/game/custom_campaign.c
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
     ${PROJECT_SOURCE_DIR}/src/game/file.c
     ${PROJECT_SOURCE_DIR}/src/game/file_editor.c
@@ -708,6 +713,7 @@ set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${CORE_FILES}
     ${BUILDING_FILES}
+    ${CAMPAIGN_FILES}
     ${CITY_FILES}
     ${EMPIRE_FILES}
     ${FIGURE_FILES}

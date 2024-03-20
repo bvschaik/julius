@@ -1,8 +1,10 @@
+#include "sound/device.h"
+
+#include "campaign/campaign.h"
 #include "core/calc.h"
 #include "core/config.h"
 #include "core/file.h"
 #include "core/log.h"
-#include "sound/device.h"
 #include "game/settings.h"
 #include "platform/platform.h"
 #include "platform/vita/vita.h"
@@ -44,6 +46,7 @@ typedef struct {
 
 static struct {
     int initialized;
+    uint8_t *custom_music;
     Mix_Music *music;
     sound_channel channels[MAX_CHANNELS];
 } data;
@@ -129,6 +132,12 @@ void sound_device_close(void)
 static Mix_Chunk *load_chunk(const char *filename)
 {
     if (filename[0]) {
+        size_t size;
+        uint8_t *audio_data = campaign_load_file(filename, &size);
+        if (audio_data) {
+            SDL_RWops *sdl_memory = SDL_RWFromMem(audio_data, (int) size);
+            return Mix_LoadWAV_RW(sdl_memory, SDL_TRUE);
+        }
 #if defined(__vita__) || defined(__ANDROID__)
         FILE *fp = file_open(filename, "rb");
         if (!fp) {
@@ -219,23 +228,32 @@ int sound_device_play_music(const char *filename, int volume_pct, int loop)
         if (!filename) {
             return 0;
         }
+        size_t size;
+        data.custom_music = campaign_load_file(filename, &size);
+        if (data.custom_music) {
+            SDL_RWops *sdl_music = SDL_RWFromMem(data.custom_music, (int) size);
+            data.music = Mix_LoadMUSType_RW(sdl_music,
+                file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+        } else {
 #ifdef __vita__
-        load_music_for_vita(filename);
-        if (!vita_music_data.buffer) {
-            return 0;
-        }
-        SDL_RWops *sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
-        data.music = Mix_LoadMUSType_RW(sdl_music, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+            load_music_for_vita(filename);
+            if (!vita_music_data.buffer) {
+                return 0;
+            }
+            SDL_RWops *sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
+            data.music = Mix_LoadMUSType_RW(sdl_music,
+                file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
 #elif defined(__ANDROID__)
-        FILE *fp = file_open(filename, "rb");
-        if (!fp) {
-            return 0;
-        }
-        SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
-        data.music = Mix_LoadMUSType_RW(sdl_fp, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+            FILE *fp = file_open(filename, "rb");
+            if (!fp) {
+                return 0;
+            }
+            SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
+            data.music = Mix_LoadMUSType_RW(sdl_fp, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
 #else
-        data.music = Mix_LoadMUS(filename);
+            data.music = Mix_LoadMUS(filename);
 #endif
+        }
         if (!data.music) {
             SDL_LogWarn(SDL_LOG_CATEGORY_APPLICATION,
                 "Error opening music file '%s'. Reason: %s", filename, Mix_GetError());
@@ -296,6 +314,8 @@ void sound_device_stop_music(void)
             Mix_FreeMusic(data.music);
             data.music = 0;
         }
+        free(data.custom_music);
+        data.custom_music = 0;
     }
 }
 

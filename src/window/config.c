@@ -530,7 +530,7 @@ static void init(int page, int show_background_image)
     data.language_options[0] = data.language_options_data[0];
     data.num_language_options = 1;
     data.selected_language_option = 0;
-    const dir_listing *subdirs = dir_find_all_subdirectories();
+    const dir_listing *subdirs = dir_find_all_subdirectories(".");
     const char *original_value = data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value;
     for (int i = 0; i < subdirs->num_files; i++) {
         if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i].name)) {

@@ -741,7 +741,7 @@ void figure_warehouseman_action(figure *f)
     building *b = building_get(f->building_id);
 
     if (b->state != BUILDING_STATE_IN_USE || 
-        (b->figure_id != f->id) && (b->figure_id4 != f->id)) {
+        (b->figure_id != f->id && b->figure_id4 != f->id)) {
         f->state = FIGURE_STATE_DEAD;
     }
 

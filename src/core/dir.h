@@ -3,6 +3,8 @@
 
 #define ASSETS_DIR_NAME "assets"
 #define ASSETS_DIRECTORY "***" ASSETS_DIR_NAME "***"
+#define CUSTOM_CAMPAIGN_DIR_NAME "custom_campaigns"
+#define CUSTOM_CAMPAIGN_DIRECTORY "***" CUSTOM_CAMPAIGN_DIR_NAME "***"
 
 /**
  * @file
@@ -40,12 +42,12 @@ typedef struct {
 const dir_listing *dir_find_files_with_extension(const char *dir, const char *extension);
 const dir_listing *dir_append_files_with_extension(const char *extension);
 
-
 /**
  * Finds all subdirectories
+ * @param dir The directory to search on, or null if base directory
  * @return Directory listing
  */
-const dir_listing *dir_find_all_subdirectories(void);
+const dir_listing *dir_find_all_subdirectories(const char *dir);
 
 /**
  * Get the case sensitive and localized filename of the file

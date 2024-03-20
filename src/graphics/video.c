@@ -1,5 +1,6 @@
 #include "video.h"
 
+#include "campaign/campaign.h"
 #include "core/config.h"
 #include "core/dir.h"
 #include "core/file.h"
@@ -85,7 +86,7 @@ static int load_mpg(const char *filename)
     if (data.type == VIDEO_TYPE_SMK) {
         return 0;
     }
-    static char mpg_filename[FILE_NAME_MAX];
+    char mpg_filename[FILE_NAME_MAX];
     strncpy(mpg_filename, filename, FILE_NAME_MAX - 1);
     file_change_extension(mpg_filename, "mpg");
     if (strncmp(mpg_filename, "smk/", 4) == 0 || strncmp(mpg_filename, "smk\\", 4) == 0) {
@@ -93,12 +94,20 @@ static int load_mpg(const char *filename)
         mpg_filename[1] = 'p';
         mpg_filename[2] = 'g';
     }
-    const char *path = dir_get_file(mpg_filename, MAY_BE_LOCALIZED);
-    if (!path) {
-        return 0;
+    data.plm = 0;
+    size_t length;
+    uint8_t *video_buffer = campaign_load_file(mpg_filename, &length);
+    if (video_buffer) {
+        data.plm = plm_create_with_memory(video_buffer, length, 1);
     }
-    FILE *mpg = file_open(path, "rb");
-    data.plm = plm_create_with_file(mpg, 1);
+    if (!data.plm) {
+        const char *path = dir_get_file(mpg_filename, MAY_BE_LOCALIZED);
+        if (!path) {
+            return 0;
+        }
+        FILE *mpg = file_open(path, "rb");
+        data.plm = plm_create_with_file(mpg, 1);
+    }
 
     if (!data.plm) {
         return 0;

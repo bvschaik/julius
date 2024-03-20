@@ -1,12 +1,12 @@
 #include "new_campaign.h"
 
+#include "campaign/campaign.h"
 #include "core/dir.h"
 #include "core/direction.h"
 #include "core/image_group.h"
 #include "core/lang.h"
 #include "core/log.h"
 #include "core/string.h"
-#include "game/custom_campaign.h"
 #include "game/settings.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -42,10 +42,9 @@ static image_button image_buttons[] = {
 static struct {
     const dir_listing *campaign_list;
     uint8_t player_name[PLAYER_NAME_LENGTH];
-    const custom_campaign_info *campaign_info;
 } data;
 
-static custom_campaign_info original_campaign_info = {
+static campaign_info original_campaign_info = {
     .number_of_missions = 11
 };
 
@@ -69,9 +68,7 @@ static void reset_campaign_data(void)
     original_campaign_info.name = lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ORIGINAL_CAMPAIGN_NAME);
     original_campaign_info.description = lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ORIGINAL_CAMPAIGN_DESC);
 
-    data.campaign_info = &original_campaign_info;
-
-    custom_campaign_clear();
+    campaign_clear();
 }
 
 static void calculate_input_box_width(void)
@@ -90,7 +87,8 @@ static void init(void)
     if (string_equals(player_name_input.placeholder, data.player_name)) {
         *data.player_name = 0;
     }
-    data.campaign_list = dir_find_files_with_extension(0, "campaign");
+    data.campaign_list = dir_find_all_subdirectories(CUSTOM_CAMPAIGN_DIR_NAME);
+    data.campaign_list = dir_append_files_with_extension("campaign");
     calculate_input_box_width();
     input_box_start(&player_name_input);
     list_box_init(&list_box, data.campaign_list->num_files + 1);
@@ -111,11 +109,13 @@ static void draw_background(void)
 
     int campaign_id = list_box_get_selected_index(&list_box);
 
-    if (!data.campaign_info && campaign_id != ORIGINAL_CAMPAIGN_ID) {
+    const campaign_info *info = campaign_id == ORIGINAL_CAMPAIGN_ID ? &original_campaign_info : campaign_get_info();
+
+    if (!info) {
         lang_text_draw_centered(CUSTOM_TRANSLATION, TR_SAVE_DIALOG_INVALID_FILE, 362, 241, 246, FONT_LARGE_BLACK);
     } else {
-        if (data.campaign_info->name) {
-            text_draw_centered(data.campaign_info->name, 362, CAMPAIGN_LIST_Y_POSITION, 246, FONT_NORMAL_BLACK, 0);
+        if (info->name) {
+            text_draw_centered(info->name, 362, CAMPAIGN_LIST_Y_POSITION, 246, FONT_NORMAL_BLACK, 0);
         } else {
             uint8_t name[FILE_NAME_MAX];
             encoding_from_utf8(data.campaign_list->files[campaign_id - 1].name, name, FILE_NAME_MAX);
@@ -123,11 +123,11 @@ static void draw_background(void)
             text_ellipsize(name, FONT_NORMAL_BLACK, 246);
             text_draw_centered(name, 362, CAMPAIGN_LIST_Y_POSITION, 246, FONT_NORMAL_BLACK, 0);
         }
-        if (data.campaign_info->description) {
-            text_draw_multiline(data.campaign_info->description, 362, CAMPAIGN_LIST_Y_POSITION + 40, 246,
+        if (info->description) {
+            text_draw_multiline(info->description, 362, CAMPAIGN_LIST_Y_POSITION + 40, 246,
                 FONT_NORMAL_BLACK, 0);
         } else {
-            text_draw_centered(string_from_ascii("No description"), 362, 246, 246, FONT_NORMAL_BLACK, 0);
+            lang_text_draw_centered(CUSTOM_TRANSLATION, TR_WINDOW_CAMPAIGN_NO_DESC, 362, 246, 246, FONT_NORMAL_BLACK);
         }
     }
 
@@ -185,21 +185,20 @@ static void handle_input(const mouse *m, const hotkeys *h)
 static void button_back(int param1, int param2)
 {
     input_box_stop(&player_name_input);
-    custom_campaign_clear();
+    campaign_clear();
     window_go_back();
 }
 
 static void select_campaign(int index, int is_double_click)
 {
     if (index == ORIGINAL_CAMPAIGN_ID) {
-        custom_campaign_clear();
-        data.campaign_info = &original_campaign_info;
+        campaign_clear();
     } else {
         const char *campaign_file_name = data.campaign_list->files[index - 1].name;
         if (!campaign_file_name) {
             return;
         }
-        data.campaign_info = custom_campaign_load_info(campaign_file_name);
+        campaign_load(campaign_file_name);
     }
     window_request_refresh();
 

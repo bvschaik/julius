@@ -38,7 +38,7 @@ uint8_t *custom_messages_get_title(custom_message_t *message);
 uint8_t *custom_messages_get_subtitle(custom_message_t *message);
 uint8_t *custom_messages_get_text(custom_message_t *message);
 
-const char *custom_messages_get_video(custom_message_t *message);
+uint8_t *custom_messages_get_video(custom_message_t *message);
 const char *custom_messages_get_audio(custom_message_t *message);
 const char *custom_messages_get_background_music(custom_message_t *message);
 
