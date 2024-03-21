@@ -34,8 +34,9 @@ case "$DEPLOY" in
   cp "${build_dir}/julius.zip" "deploy/$DEPLOY_FILE"
   ;;
 "flatpak")
-  flatpak build-export export repo
+  PACKAGE=linux-flatpak
   DEPLOY_FILE=julius-$VERSION-linux.flatpak
+  flatpak build-export export repo
   flatpak build-bundle export julius.flatpak com.github.bvschaik.julius --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
   cp julius.flatpak "deploy/$DEPLOY_FILE"
   ;;
@@ -50,8 +51,6 @@ case "$DEPLOY" in
   cp "${build_dir}/julius.dmg" "deploy/$DEPLOY_FILE"
   ;;
 "vita")
-  ls -l "${build_dir}"
-  whoami
   PACKAGE=vita
   DEPLOY_FILE=julius-$VERSION-vita.vpk
   cp "${build_dir}/julius.vpk" "deploy/$DEPLOY_FILE"
