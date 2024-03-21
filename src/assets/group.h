@@ -22,6 +22,8 @@ void group_unload_current(void);
 
 image_groups *group_get_current(void);
 
+void group_set_for_external_files(void);
+
 int group_get_total(void);
 
 image_groups *group_get_from_id(int id);

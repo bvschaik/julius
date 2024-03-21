@@ -1,5 +1,7 @@
 #include "group.h"
 
+#include "assets/assets.h"
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -11,6 +13,7 @@ static struct {
 
 int group_create_all(int total)
 {
+    total += 1; // Create extra group for external files
     for (int i = 0; i < data.total_groups; i++) {
         free((char *)data.groups[i].name);
     }
@@ -39,6 +42,14 @@ image_groups *group_get_current(void)
         return 0;
     }
     return &data.groups[data.total_groups - 1];
+}
+
+void group_set_for_external_files(void)
+{
+    image_groups *external_files_group = group_get_new();
+    external_files_group->name = malloc(sizeof(ASSET_EXTERNAL_FILE_LIST));
+    external_files_group->first_image_index = -1;
+    external_files_group->last_image_index = -1;
 }
 
 void group_unload_current(void)

@@ -337,7 +337,7 @@ static void populate_asset_rects(image_packer *packer)
             continue;
         }
         asset->rect = &packer->rects[asset->id];
-        if (!png_get_image_size(asset->path, &width, &height)) {
+        if (!png_load_from_file(asset->path, 1) || !png_get_image_size(&width, &height)) {
             continue;
         }
         if (!width || !height) {
@@ -348,7 +348,7 @@ static void populate_asset_rects(image_packer *packer)
             log_error("Out of memory.", 0, 0);
             continue;
         }
-        if (!png_read(asset->path, asset->pixels, 0, 0, width, height, 0, 0, width, 0)) {
+        if (!png_read(asset->pixels, 0, 0, width, height, 0, 0, width, 0)) {
             free(asset->pixels);
             asset->pixels = 0;
             continue;
@@ -654,7 +654,8 @@ static void pack_cursors(void)
                 snprintf(cursor->asset_image_path, FILE_NAME_MAX, "%s/%s/%s.png", CURSORS_DIR, CURSORS_NAME,
                     cursor_names[i]);
             }
-            if (!png_get_image_size(cursor->asset_image_path, &cursor->width, &cursor->height)) {
+            if (!png_load_from_file(cursor->asset_image_path, 1) ||
+                !png_get_image_size(&cursor->width, &cursor->height)) {
                 image_packer_free(&packer);
                 return;
             }
@@ -664,8 +665,7 @@ static void pack_cursors(void)
                 image_packer_free(&packer);
                 return;
             }
-            png_read(cursor->asset_image_path, data, 0, 0,
-                cursor->width, cursor->height, 0, 0, cursor->width, 0);
+            png_read(data, 0, 0, cursor->width, cursor->height, 0, 0, cursor->width, 0);
             packer.rects[index].input.width = cursor->width;
             packer.rects[index].input.height = cursor->height;
             cursor->data = data;

@@ -6,6 +6,7 @@
 #include "core/dir.h"
 #include "core/log.h"
 #include "graphics/renderer.h"
+#include "core/png_read.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -40,6 +41,8 @@ void assets_init(int force_reload, color_t **main_images, int *main_image_widths
     xml_finish();
 
     asset_image_load_all(main_images, main_image_widths);
+
+    group_set_for_external_files();
 
     // By default, if the requested image is not found, the roadblock image will be shown.
     // This ensures compatibility with previous release versions of Augustus, which only had roadblocks
@@ -94,6 +97,16 @@ int assets_get_image_id(const char *assetlist_name, const char *image_name)
             return img->index + IMAGE_MAIN_ENTRIES;
         }
         img = asset_image_get_from_id(img->index + 1);
+    }
+    if (strcmp(assetlist_name, ASSET_EXTERNAL_FILE_LIST) == 0) {
+        asset_image *img = asset_image_create_external(image_name);
+        if (img) {
+            if (group->first_image_index == -1) {
+                group->first_image_index = img->index;
+            }
+            group->last_image_index = img->index;
+        }
+        return img->index + IMAGE_MAIN_ENTRIES;
     }
     log_info("Asset image not found: ", image_name, 0);
     log_info("Asset group is: ", assetlist_name, 0);

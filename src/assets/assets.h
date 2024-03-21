@@ -5,6 +5,8 @@
 
 #define ASSETS_IMAGE_PATH "Graphics"
 
+#define ASSET_EXTERNAL_FILE_LIST "***EXTERNAL_FILES***"
+
 #define PATH_ROTATE_OFFSET 56
 
 typedef enum {

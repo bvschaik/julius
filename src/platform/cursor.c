@@ -38,7 +38,7 @@ static const cursor *get_valid_cursor(const cursor *c)
     const cursor *current = c;
     for (int i = 0; i < CURSOR_TYPE_MAX; i++, current++) {
         if (current->type == CURSOR_TYPE_PNG &&
-            (!config_get(CONFIG_SCREEN_COLOR_CURSORS) || !png_load(current->data))) {
+            (!config_get(CONFIG_SCREEN_COLOR_CURSORS) || !png_load_from_file(current->data, 1))) {
             continue;
         }
         return current;
@@ -58,9 +58,9 @@ static SDL_Surface *generate_cursor_surface(const cursor *c)
     color_t *pixels = cursor_surface->pixels;
     SDL_memset(pixels, 0, sizeof(color_t) * size * size);
     if (c->type == CURSOR_TYPE_PNG) {
-        if (!png_read(c->data, pixels, c->offset_x, c->offset_y,
-                c->width, c->height, 0, 0, size, c->rotated)) {
+        if (!png_read(pixels, c->offset_x, c->offset_y, c->width, c->height, 0, 0, size, c->rotated)) {
             SDL_FreeSurface(cursor_surface);
+            cursor_surface = 0;
         }
     } else {
         for (int y = 0; y < c->height; y++) {
@@ -106,6 +106,7 @@ void system_init_cursors(int scale_percentage)
             data.cursors[i] = SDL_CreateColorCursor(data.surfaces[i], c->hotspot_x, c->hotspot_y);
         }
     }
+    png_unload();
     system_set_cursor(data.current_shape);
 }
 

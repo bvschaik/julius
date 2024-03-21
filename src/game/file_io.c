@@ -902,24 +902,48 @@ static void write_int32(FILE *fp, int value)
     fwrite(&data, 1, 4, fp);
 }
 
-static int read_compressed_chunk(FILE *fp, void *buf, size_t bytes_to_read, int read_as_zlib, memory_block *compress_buffer)
+static int read_compressed_chunk_from_buffer(buffer *buf, void *dst, size_t bytes_to_read, int read_as_zlib,
+    memory_block *compress_buffer)
 {
-    if (!core_memory_block_ensure_size(compress_buffer, bytes_to_read)) {
-        return 0;
+    int input_size = buffer_read_i32(buf);
+    if ((unsigned int) input_size == UNCOMPRESSED) {
+        return buffer_read_raw(buf, dst, bytes_to_read) == bytes_to_read;
+    } else {
+        if (!core_memory_block_ensure_size(compress_buffer, input_size)) {
+            return 0;
+        }
+        if (buffer_read_raw(buf, compress_buffer->memory, input_size) != input_size) {
+            return 0;
+        }
+
+        if (!read_as_zlib) {
+            return zip_decompress(compress_buffer->memory, input_size, dst, (int) bytes_to_read);
+        } else {
+            int output_size = 0;
+            return zlib_helper_decompress(compress_buffer->memory, input_size, dst, (int) bytes_to_read, &output_size);
+        }
     }
+}
+
+static int read_compressed_chunk(FILE *fp, void *dst, size_t bytes_to_read, int read_as_zlib,
+    memory_block *compress_buffer)
+{
     int input_size = read_int32(fp);
     if ((unsigned int) input_size == UNCOMPRESSED) {
-        return fread(buf, 1, bytes_to_read, fp) == bytes_to_read;
+        return fread(dst, 1, bytes_to_read, fp) == bytes_to_read;
     } else {
+        if (!core_memory_block_ensure_size(compress_buffer, input_size)) {
+            return 0;
+        }
         if (fread(compress_buffer->memory, 1, input_size, fp) != input_size) {
             return 0;
         }
 
         if (!read_as_zlib) {
-            return zip_decompress(compress_buffer->memory, input_size, buf, (int) bytes_to_read);
+            return zip_decompress(compress_buffer->memory, input_size, dst, (int) bytes_to_read);
         } else {
             int output_size = 0;
-            return zlib_helper_decompress(compress_buffer->memory, input_size, buf, (int) bytes_to_read, &output_size);
+            return zlib_helper_decompress(compress_buffer->memory, input_size, dst, (int) bytes_to_read, &output_size);
         }
     }
 }
@@ -948,7 +972,7 @@ static int write_compressed_chunk(FILE *fp, void *buf, size_t bytes_to_write, me
     return 1;
 }
 
-static int prepare_dynamic_piece(FILE *fp, file_piece *piece)
+static int prepare_dynamic_piece_from_file(FILE *fp, file_piece *piece)
 {
     if (piece->dynamic) {
         int size = read_int32(fp);
@@ -959,6 +983,68 @@ static int prepare_dynamic_piece(FILE *fp, file_piece *piece)
         memset(data, 0, size);
         buffer_init(&piece->buf, data, size);
     }
+    return 1;
+}
+
+static int prepare_dynamic_piece_from_buffer(buffer *buf, file_piece *piece)
+{
+    if (piece->dynamic) {
+        int size = buffer_read_i32(buf);
+        if (!size) {
+            return 0;
+        }
+        uint8_t *data = malloc(size);
+        memset(data, 0, size);
+        buffer_init(&piece->buf, data, size);
+    }
+    return 1;
+}
+
+static int get_scenario_version_from_buffer(buffer *buf)
+{
+    char version_magic[8];
+    size_t read = buffer_read_raw(buf, version_magic, 8);
+    if (read != sizeof(version_magic)) {
+        log_error("Unable to read version header from file", 0, 0);
+        return 0;
+    }
+    if (strcmp(version_magic, "VERSION") != 0) {
+        buffer_reset(buf);
+        return SCENARIO_LAST_UNVERSIONED;
+    }
+
+    return buffer_read_i32(buf);
+}
+
+static int load_scenario_from_buffer(buffer *buf)
+{
+    scenario_version_t version = get_scenario_version_from_buffer(buf);
+    init_scenario_data(version);
+    if (version > SCENARIO_CURRENT_VERSION) {
+        log_error("Scenario version incompatible with current version, got version", 0, version);
+        return 0;
+    }
+    memory_block compress_buffer;
+    core_memory_block_init(&compress_buffer, COMPRESS_BUFFER_INITIAL_SIZE);
+    for (int i = 0; i < scenario_data.num_pieces; i++) {
+        file_piece *piece = &scenario_data.pieces[i];
+        int result = 0;
+        if (!prepare_dynamic_piece_from_buffer(buf, piece)) {
+            continue;
+        }
+        if (piece->compressed) {
+            result = read_compressed_chunk_from_buffer(buf, piece->buf.data, piece->buf.size, 1, &compress_buffer);
+        } else {
+            result = buffer_read_raw(buf, piece->buf.data, piece->buf.size) == piece->buf.size;
+        }
+        if (!result) {
+            log_info("Incorrect buffer size, got", 0, result);
+            log_info("Incorrect buffer size, expected", 0, (int) piece->buf.size);
+            core_memory_block_free(&compress_buffer);
+            return 0;
+        }
+    }
+    core_memory_block_free(&compress_buffer);
     return 1;
 }
 
@@ -979,7 +1065,7 @@ static int load_scenario_to_buffers(const char *filename, scenario_version_t *ve
     for (int i = 0; i < scenario_data.num_pieces; i++) {
         file_piece *piece = &scenario_data.pieces[i];
         int result = 0;
-        if (!prepare_dynamic_piece(fp, piece)) {
+        if (!prepare_dynamic_piece_from_file(fp, piece)) {
             continue;
         }
         if (piece->compressed) {
@@ -992,11 +1078,21 @@ static int load_scenario_to_buffers(const char *filename, scenario_version_t *ve
             log_info("Incorrect buffer size, got", 0, result);
             log_info("Incorrect buffer size, expected", 0, (int) piece->buf.size);
             file_close(fp);
+            core_memory_block_free(&compress_buffer);
             return 0;
         }
     }
     core_memory_block_free(&compress_buffer);
     file_close(fp);
+    return 1;
+}
+
+int game_file_io_read_scenario_from_buffer(buffer *buf)
+{
+    if (!load_scenario_from_buffer(buf)) {
+        return 0;
+    }
+    scenario_load_from_state(&scenario_data.state, scenario_data.version);
     return 1;
 }
 
@@ -1140,6 +1236,34 @@ int game_file_io_write_scenario(const char *filename)
     return 1;
 }
 
+static int savegame_read_from_buffer(buffer *buf, savegame_version_t version)
+{
+    memory_block compress_buffer;
+    core_memory_block_init(&compress_buffer, COMPRESS_BUFFER_INITIAL_SIZE);
+    for (int i = 0; i < savegame_data.num_pieces; i++) {
+        file_piece *piece = &savegame_data.pieces[i];
+        int result = 0;
+        if (!prepare_dynamic_piece_from_buffer(buf, piece)) {
+            continue;
+        }
+        if (piece->compressed) {
+            result = read_compressed_chunk_from_buffer(buf, piece->buf.data, piece->buf.size,
+                version > SAVE_GAME_LAST_ZIP_COMPRESSION, &compress_buffer);
+        } else {
+            result = buffer_read_raw(buf, piece->buf.data, piece->buf.size) == piece->buf.size;
+        }
+        // The last piece may be smaller than buf.size
+        if (!result && i != (savegame_data.num_pieces - 1)) {
+            log_info("Incorrect buffer size, got", 0, result);
+            log_info("Incorrect buffer size, expected", 0, (int) piece->buf.size);
+            core_memory_block_free(&compress_buffer);
+            return 0;
+        }
+    }
+    core_memory_block_free(&compress_buffer);
+    return 1;
+}
+
 static int savegame_read_from_file(FILE *fp, savegame_version_t version)
 {
     memory_block compress_buffer;
@@ -1147,7 +1271,7 @@ static int savegame_read_from_file(FILE *fp, savegame_version_t version)
     for (int i = 0; i < savegame_data.num_pieces; i++) {
         file_piece *piece = &savegame_data.pieces[i];
         int result = 0;
-        if (!prepare_dynamic_piece(fp, piece)) {
+        if (!prepare_dynamic_piece_from_file(fp, piece)) {
             continue;
         }
         if (piece->compressed) {
@@ -1159,6 +1283,7 @@ static int savegame_read_from_file(FILE *fp, savegame_version_t version)
         if (!result && i != (savegame_data.num_pieces - 1)) {
             log_info("Incorrect buffer size, got", 0, result);
             log_info("Incorrect buffer size, expected", 0, (int) piece->buf.size);
+            core_memory_block_free(&compress_buffer);
             return 0;
         }
     }
@@ -1182,6 +1307,19 @@ static void savegame_write_to_file(FILE *fp, memory_block *compress_buffer)
             fwrite(piece->buf.data, 1, piece->buf.size, fp);
         }
     }
+}
+
+static int get_savegame_versions_from_buffer(buffer *buf, savegame_version_t *save_version,
+    resource_version_t *resource_version)
+{
+    *save_version = buffer_read_i32(buf);
+    if (*save_version > SAVE_GAME_LAST_STATIC_RESOURCES) {
+        *resource_version = buffer_read_i32(buf);
+    } else {
+        *resource_version = RESOURCE_ORIGINAL_VERSION;
+    }
+    buffer_reset(buf);
+    return *save_version != 0;
 }
 
 static int get_savegame_versions(FILE *fp, savegame_version_t *save_version, resource_version_t *resource_version)
@@ -1208,6 +1346,29 @@ static int get_savegame_versions(FILE *fp, savegame_version_t *save_version, res
     if (fseek(fp, seek_back_bytes, SEEK_CUR)) {
         return 0;
     }
+    return 1;
+}
+
+int game_file_io_read_save_game_from_buffer(buffer *buf)
+{
+    int result = 0;
+    savegame_version_t save_version;
+    resource_version_t resource_version;
+    if (get_savegame_versions_from_buffer(buf, &save_version, &resource_version)) {
+        if (save_version > SAVE_GAME_CURRENT_VERSION || resource_version > RESOURCE_CURRENT_VERSION) {
+            log_error("Newer save game version than supported. Please update Augustus. Version:", 0, save_version);
+            return FILE_LOAD_INCOMPATIBLE_VERSION;
+        }
+        log_info("Savegame version", 0, save_version);
+        resource_set_mapping(resource_version);
+        init_savegame_data(save_version);
+        result = savegame_read_from_buffer(buf, save_version);
+    }
+    if (!result) {
+        log_error("Unable to load game, incompatible savefile.", 0, 0);
+        return FILE_LOAD_WRONG_FILE_FORMAT;
+    }
+    savegame_load_from_state(&savegame_data.state, save_version);
     return 1;
 }
 
@@ -1406,7 +1567,8 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
         skip_piece(fp, 4, 0);
     }
 
-    if (!prepare_dynamic_piece(fp, &buildings) || !read_compressed_savegame_chunk(fp, buildings.buf.data, buildings.buf.size, version, compress_buffer)) {
+    if (!prepare_dynamic_piece_from_file(fp, &buildings) ||
+        !read_compressed_savegame_chunk(fp, buildings.buf.data, buildings.buf.size, version, compress_buffer)) {
         return SAVEGAME_STATUS_INVALID;
     }
 

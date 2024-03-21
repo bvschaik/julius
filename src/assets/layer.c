@@ -235,7 +235,8 @@ void layer_load(layer *l, color_t **main_data, int *main_image_widths)
         return;
     }
     memset(data, 0, size);
-    if (!png_read(l->asset_image_path, data, l->src_x, l->src_y, l->width, l->height, 0, 0, l->width, 0)) {
+    if (!png_load_from_file(l->asset_image_path, 1) ||
+        !png_read(data, l->src_x, l->src_y, l->width, l->height, 0, 0, l->width, 0)) {
         free(data);
         log_error("Problem loading layer from file", l->asset_image_path, 0);
         load_dummy_layer(l);
@@ -310,7 +311,7 @@ int layer_add_from_image_path(layer *l, const char *path,
     }
 #ifndef BUILDING_ASSET_PACKER
     if (!l->width || !l->height) {
-        if (!png_get_image_size(l->asset_image_path, &width, &height)) {
+        if (!png_load_from_file(l->asset_image_path, 1) || !png_get_image_size(&width, &height)) {
             log_info("Unable to load image", path, 0);
             layer_unload(l);
             return 0;

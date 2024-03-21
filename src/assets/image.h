@@ -35,6 +35,8 @@ int asset_image_load_all(color_t **main_images, int *main_image_widths);
 void asset_image_reload_climate(void);
 void asset_image_count_isometric(void);
 
+const asset_image *asset_image_create_external(const char *filename);
+
 void asset_image_copy_isometric_footprint(color_t *dst, const color_t *src, int width, int height,
     int dst_x_offset, int dst_y_offset, int dst_width, int src_x_offset, int src_y_offset, int src_width);
 void asset_image_copy_isometric_top(color_t *dst, const color_t *src, int width, int height,
