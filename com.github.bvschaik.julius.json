@@ -18,9 +18,8 @@
             "buildsystem" : "cmake-ninja",
             "sources" : [
                 {
-                    "type" : "git",
-                    "url" : "https://github.com/bvschaik/julius.git",
-                    "branch" : "master"
+                    "type" : "dir",
+                    "path" : "."
                 }
             ]
         }
