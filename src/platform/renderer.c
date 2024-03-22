@@ -972,8 +972,9 @@ static void load_unpacked_image(const image *img, const color_t *pixels)
     }
     int first_empty = -1;
     int oldest_texture_index = 0;
+    int unpacked_image_id = img->atlas.id & IMAGE_ATLAS_BIT_MASK;
     for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
-        if (data.unpacked_images[i].id == img->atlas.id && data.unpacked_images[i].texture) {
+        if (data.unpacked_images[i].id == unpacked_image_id && data.unpacked_images[i].texture) {
             return;
         }
         if (first_empty == -1 && !data.unpacked_images[i].texture) {
@@ -998,7 +999,7 @@ static void load_unpacked_image(const image *img, const color_t *pixels)
         return;
     }
     data.unpacked_images[index].last_used = time_get_millis();
-    data.unpacked_images[index].id = img->atlas.id;
+    data.unpacked_images[index].id = unpacked_image_id;
 
     if (data.unpacked_images[index].texture) {
         SDL_DestroyTexture(data.unpacked_images[index].texture);
