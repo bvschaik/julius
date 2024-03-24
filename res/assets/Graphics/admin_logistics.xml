@@ -116,7 +116,7 @@
 	<!-- Note: Cart Depot ON Variants for Northern, Central and Southern Climates Respectively -->
 	<image id="Cart Depot N ON" isometric="true">
 		<layer group="this" image="Cart Depot N OFF"/>
-		<animation speed="6" x="47" y="31" reversible="false">
+		<animation speed="6" x="75" y="33" reversible="false">
 			<frame src="Cart_Depot_ON_01"/>
 			<frame src="Cart_Depot_ON_02"/>
 			<frame src="Cart_Depot_ON_03"/>
@@ -126,7 +126,7 @@
 	</image>
 	<image id="Cart Depot C ON" isometric="true">
 		<layer group="this" image="Cart Depot C OFF"/>
-		<animation speed="6" x="47" y="31" reversible="false">
+		<animation speed="6" x="75" y="33" reversible="false">
 			<frame src="Cart_Depot_ON_01"/>
 			<frame src="Cart_Depot_ON_02"/>
 			<frame src="Cart_Depot_ON_03"/>
@@ -136,7 +136,7 @@
 	</image>
 	<image id="Cart Depot S ON" isometric="true">
 		<layer group="this" image="Cart Depot S OFF"/>
-		<animation speed="6" x="47" y="31" reversible="false">
+		<animation speed="6" x="75" y="33" reversible="false">
 			<frame src="Cart_Depot_ON_01"/>
 			<frame src="Cart_Depot_ON_02"/>
 			<frame src="Cart_Depot_ON_03"/>
@@ -144,6 +144,26 @@
 			<frame src="Cart_Depot_ON_05"/>
 		</animation>
 	</image>
+	<!-- Note: Cart Depot resource icons. USE offsets: x="11" y="37" relative to overall image size: width="118" height="84" -->
+	<image id="Cart_Depot_Wheat" src="Cart_Depot_Wheat"/>
+	<image id="Cart_Depot_Vegetables" src="Cart_Depot_Vegetables"/>
+	<image id="Cart_Depot_Fruit" src="Cart_Depot_Fruit"/>
+	<image id="Cart_Depot_Olives" src="Cart_Depot_Olives"/>
+	<image id="Cart_Depot_Grapes" src="Cart_Depot_Grapes"/>
+	<image id="Cart_Depot_Wine" src="Cart_Depot_Wine"/>
+	<image id="Cart_Depot_Meat" src="Cart_Depot_Meat"/>
+	<image id="Cart_Depot_Oil" src="Cart_Depot_Oil"/>
+	<image id="Cart_Depot_Iron" src="Cart_Depot_Iron"/>
+	<image id="Cart_Depot_Timber" src="Cart_Depot_Timber"/>
+	<image id="Cart_Depot_Clay" src="Cart_Depot_Clay"/>
+	<image id="Cart_Depot_Marble" src="Cart_Depot_Marble"/>
+	<image id="Cart_Depot_Weapons" src="Cart_Depot_Weapons"/>
+	<image id="Cart_Depot_Furniture" src="Cart_Depot_Furniture"/>
+	<image id="Cart_Depot_Pottery" src="Cart_Depot_Pottery"/>
+	<image id="Cart_Depot_Gold" src="Cart_Depot_Gold"/>
+	<image id="Cart_Depot_Sand" src="Cart_Depot_Sand"/>
+	<image id="Cart_Depot_Stone" src="Cart_Depot_Stone"/>
+	<image id="Cart_Depot_Bricks" src="Cart_Depot_Bricks"/>
 	<!-- Note: Fix for flickering upgraded fountain on desert maps (Image provided by Ouaz and crudelios)-->
 	<image id="Frame_Flickering_Fix">
 		<layer group="53" image="7"/>

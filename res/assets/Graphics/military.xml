@@ -818,4 +818,54 @@
 		<layer src="auxinf_banner_base"/>
 		<layer src="auxinf_banner_08" x="4" y="3"/>
 	</image>
+	<!-- Note: Auxiliary Archer Fort flag climate variants for Central, North and South Climates respectively. Assets by CaesarZX -->
+	<image id="fort_aux_arch_flag_central">
+		<layer group="66" image="2"/>
+		<layer src="auxarch_fort_flag" x="10" y="4"/>
+	</image>
+	<image id="fort_aux_arch_flag_north">
+		<layer group="66" image="2"/>
+		<layer src="Fort_Flag_Layer_North"/>
+		<layer src="auxarch_fort_flag" x="10" y="4"/>
+	</image>
+	<image id="fort_aux_arch_flag_south">
+		<layer group="66" image="2"/>
+		<layer src="Fort_Flag_Layer_South"/>
+		<layer src="auxarch_fort_flag" x="10" y="4"/>
+	</image>
+	<!-- Note: Auxiliary Archer banner static. Asset by CaesarZX -->
+	<image id="auxarch_banner_0" src="auxarch_banner_0"/>
+	<!-- Note: Auxiliary Archer banner animation frames. Assets by CaesarZX -->
+	<image id="auxarch_banner_01">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_01" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_02">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_02" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_03">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_03" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_04">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_044" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_05">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_05" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_06">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_06" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_07">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_07" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_08">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_08" x="4" y="3"/>
+	</image>
 </assetlist>
