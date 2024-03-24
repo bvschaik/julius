@@ -254,4 +254,9 @@
 	<image id="Denied_Walker_Checkmark" src="Denied_Walker_Checkmark"/>
 	<!-- Note: UI button for accessing Housing Advisor -->
 	<image id="Housing_Advisor_S" src="Housing_Advisor_S"/>
+	<!-- Note: Empire map icons for crude Roman trade cities and non-trade cities respectively -->
+	<image id="Empire_Icon_Roman_01" src="Empire_Icon_Roman_01"/>
+	<image id="Empire_Icon_Roman_02" src="Empire_Icon_Roman_02"/>
+	<!-- Note: Empire map icons for alternative distant cities -->
+	<image id="Empire_Icon_Distant_01" src="Empire_Icon_Distant_01"/>
 </assetlist>
