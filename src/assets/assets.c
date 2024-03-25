@@ -99,14 +99,14 @@ int assets_get_image_id(const char *assetlist_name, const char *image_name)
         img = asset_image_get_from_id(img->index + 1);
     }
     if (strcmp(assetlist_name, ASSET_EXTERNAL_FILE_LIST) == 0) {
-        asset_image *img = asset_image_create_external(image_name);
+        const asset_image *img = asset_image_create_external(image_name);
         if (img) {
             if (group->first_image_index == -1) {
                 group->first_image_index = img->index;
             }
             group->last_image_index = img->index;
+            return img->index + IMAGE_MAIN_ENTRIES;
         }
-        return img->index + IMAGE_MAIN_ENTRIES;
     }
     log_info("Asset image not found: ", image_name, 0);
     log_info("Asset group is: ", assetlist_name, 0);

@@ -101,6 +101,7 @@ static void create_blank_map(int size)
     scenario_editor_create(size);
     scenario_map_init();
     clear_map_data();
+    empire_reset_map();
     map_image_init_edges();
     city_view_set_scale(100);
     city_view_set_camera(76, 152);

@@ -11,6 +11,7 @@
 #include "core/xml_parser.h"
 #include "core/zlib_helper.h"
 #include "empire/city.h"
+#include "empire/empire.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
 #include "scenario/data.h"
@@ -20,7 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define XML_TOTAL_ELEMENTS 17
+#define XML_TOTAL_ELEMENTS 19
 #define BASE_BORDER_FLAG_IMAGE_ID 3323
 #define BASE_ORNAMENT_IMAGE_ID 3356
 #define BORDER_EDGE_DEFAULT_SPACING 50
@@ -101,6 +102,8 @@ static struct {
 } data;
 
 static int xml_start_empire(void);
+static int xml_start_map(void);
+static int xml_start_coords(void);
 static int xml_start_ornament(void);
 static int xml_start_border(void);
 static int xml_start_border_edge(void);
@@ -123,6 +126,8 @@ static void xml_end_distant_battle_path(void);
 
 static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "empire", xml_start_empire },
+    { "map", xml_start_map, 0, "empire" },
+    { "coordinates", xml_start_coords, 0, "map" },
     { "ornament", xml_start_ornament, 0, "empire" },
     { "border", xml_start_border, xml_end_border, "empire" },
     { "edge", xml_start_border_edge, 0, "border" },
@@ -164,12 +169,42 @@ static int xml_start_empire(void)
         log_error("No version set", 0, 0);
         return 0;
     }
-    if (xml_parser_get_attribute_bool("show_ireland")) {
+    if (data.version == 1 && xml_parser_get_attribute_bool("show_ireland")) {
         full_empire_object *obj = empire_object_get_new();
         obj->in_use = 1;
         obj->obj.type = EMPIRE_OBJECT_ORNAMENT;
         obj->obj.image_id = -1;
     }
+    return 1;
+}
+
+static int xml_start_map(void)
+{
+    const char *filename = xml_parser_get_attribute_string("image");
+    int x_offset = xml_parser_get_attribute_int("x_offset");
+    int y_offset = xml_parser_get_attribute_int("y_offset");
+    int width = xml_parser_get_attribute_int("width");
+    int height = xml_parser_get_attribute_int("height");
+
+    if (data.version > 1 && !filename && xml_parser_get_attribute_bool("show_ireland")) {
+        full_empire_object *obj = empire_object_get_new();
+        obj->in_use = 1;
+        obj->obj.type = EMPIRE_OBJECT_ORNAMENT;
+        obj->obj.image_id = -1;
+    }
+
+    empire_set_custom_map(filename, x_offset, y_offset, width, height);
+
+    return 1;
+}
+
+static int xml_start_coords(void)
+{
+    int relative = xml_parser_get_attribute_bool("relative");
+    int x_offset = xml_parser_get_attribute_int("x_offset");
+    int y_offset = xml_parser_get_attribute_int("y_offset");
+
+    empire_set_coordinates(relative, x_offset, y_offset);
     return 1;
 }
 
@@ -257,6 +292,7 @@ static int xml_start_border_edge(void)
     obj->obj.type = EMPIRE_OBJECT_BORDER_EDGE;
     obj->obj.x = xml_parser_get_attribute_int("x");
     obj->obj.y = xml_parser_get_attribute_int("y");
+    empire_transform_coordinates(&obj->obj.x, &obj->obj.y);
     obj->obj.image_id = xml_parser_get_attribute_bool("hidden") ? 0 : BASE_BORDER_FLAG_IMAGE_ID;
 
     return 1;
@@ -320,6 +356,7 @@ static int xml_start_city(void)
 
     city_obj->obj.x = xml_parser_get_attribute_int("x") - city_obj->obj.width / 2;
     city_obj->obj.y = xml_parser_get_attribute_int("y") - city_obj->obj.height / 2;
+    empire_transform_coordinates(&city_obj->obj.x, &city_obj->obj.y);
 
     if (city_obj->city_type == EMPIRE_CITY_TRADE || city_obj->city_type == EMPIRE_CITY_FUTURE_TRADE) {
         full_empire_object *route_obj = empire_object_get_new();
@@ -433,6 +470,7 @@ static int xml_start_trade_point(void)
     obj->obj.type = EMPIRE_OBJECT_TRADE_WAYPOINT;
     obj->obj.x = xml_parser_get_attribute_int("x");
     obj->obj.y = xml_parser_get_attribute_int("y");
+    empire_transform_coordinates(&obj->obj.x, &obj->obj.y);
 
     return 1;
 }
@@ -471,6 +509,7 @@ static int xml_start_battle(void)
     battle_obj->obj.image_id = image_group(GROUP_EMPIRE_BATTLE);
     battle_obj->obj.x = xml_parser_get_attribute_int("x");
     battle_obj->obj.y = xml_parser_get_attribute_int("y");
+    empire_transform_coordinates(&battle_obj->obj.x, &battle_obj->obj.y);
 
     return 1;
 }
@@ -514,6 +553,7 @@ static int xml_start_distant_battle_path(void)
     }
     w->x = xml_parser_get_attribute_int("start_x");
     w->y = xml_parser_get_attribute_int("start_y");
+    empire_transform_coordinates(&w->x, &w->y);
     w->num_months = 0;
     return 1;
 }
@@ -539,8 +579,10 @@ static int xml_start_distant_battle_waypoint(void)
         data.success = 0;
         log_error("Error creating new object - out of memory", 0, 0);
         return 0;
-    }    w->x = xml_parser_get_attribute_int("x");
+    }
+    w->x = xml_parser_get_attribute_int("x");
     w->y = xml_parser_get_attribute_int("y");
+    empire_transform_coordinates(&w->x, &w->y);
     w->num_months = xml_parser_get_attribute_int("num_months");
     return 1;
 }
@@ -716,6 +758,7 @@ static void set_trade_coords(const empire_object *our_city)
 static int parse_xml(char *buf, int buffer_length)
 {
     reset_data();
+    empire_clear();
     empire_object_clear();
     if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS)) {
         return 0;

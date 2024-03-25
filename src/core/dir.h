@@ -3,8 +3,8 @@
 
 #define ASSETS_DIR_NAME "assets"
 #define ASSETS_DIRECTORY "***" ASSETS_DIR_NAME "***"
-#define CUSTOM_CAMPAIGN_DIR_NAME "custom_campaigns"
-#define CUSTOM_CAMPAIGN_DIRECTORY "***" CUSTOM_CAMPAIGN_DIR_NAME "***"
+#define CAMPAIGNS_DIR_NAME "campaigns"
+#define CAMPAIGNS_DIRECTORY "***" CAMPAIGNS_DIR_NAME "***"
 
 /**
  * @file

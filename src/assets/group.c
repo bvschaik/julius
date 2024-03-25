@@ -1,6 +1,7 @@
 #include "group.h"
 
 #include "assets/assets.h"
+#include "core/log.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -47,7 +48,13 @@ image_groups *group_get_current(void)
 void group_set_for_external_files(void)
 {
     image_groups *external_files_group = group_get_new();
-    external_files_group->name = malloc(sizeof(ASSET_EXTERNAL_FILE_LIST));
+    char *name = malloc(sizeof(ASSET_EXTERNAL_FILE_LIST));
+    if (!name) {
+        log_error("Failed to allocate memory for external files group name. The game will now crash.", 0, 0);
+        return;
+    }
+    strcpy(name, ASSET_EXTERNAL_FILE_LIST);
+    external_files_group->name = name;
     external_files_group->first_image_index = -1;
     external_files_group->last_image_index = -1;
 }

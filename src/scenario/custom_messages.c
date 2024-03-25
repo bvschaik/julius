@@ -10,7 +10,7 @@
 #define CUSTOM_MESSAGES_ARRAY_SIZE_STEP 100
 
 static const char *AUDIO_FILE_PATHS[] = {
-    CUSTOM_CAMPAIGN_DIRECTORY "/audio/"
+    CAMPAIGNS_DIRECTORY "/audio/"
     "community/audio/",
     "mp3/",
     "wavs/",
@@ -18,7 +18,7 @@ static const char *AUDIO_FILE_PATHS[] = {
 };
 
 static const char *VIDEO_FILE_PATHS[] = {
-    CUSTOM_CAMPAIGN_DIRECTORY "/video/",
+    CAMPAIGNS_DIRECTORY "/video/",
     "community/video/",
     "smk/",
     0

@@ -1,13 +1,20 @@
 #include "empire.h"
 
+#include "assets/assets.h"
 #include "building/count.h"
+#include "campaign/campaign.h"
 #include "city/constants.h"
 #include "city/population.h"
 #include "city/resource.h"
 #include "core/calc.h"
 #include "core/config.h"
-#include "core/log.h"
+#include "core/file.h"
+#include "core/image.h"
+#include "core/image_group.h"
+#include "core/image_group_editor.h"
 #include "core/io.h"
+#include "core/log.h"
+#include "editor/editor.h"
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
@@ -17,8 +24,6 @@
 #include <string.h>
 
 enum {
-    EMPIRE_WIDTH = 2000,
-    EMPIRE_HEIGHT = 1000,
     EMPIRE_HEADER_SIZE = 1280,
     EMPIRE_DATA_SIZE = 12800
 };
@@ -31,7 +36,89 @@ static struct {
     int selected_object;
     int viewport_width;
     int viewport_height;
+    struct {
+        int id;
+        char path[FILE_NAME_MAX];
+        int offset_x;
+        int offset_y;
+        int width;
+        int height;
+    } image;
+    struct {
+        int relative;
+        int x_offset;
+        int y_offset;
+    } coordinates;
 } data;
+
+static void set_image_id(const char *path)
+{
+    if (!path || !*path) {
+        data.image.id = image_group(editor_is_active() ? GROUP_EDITOR_EMPIRE_MAP : GROUP_EMPIRE_MAP);
+        data.image.path[0] = 0;
+        return;
+    }
+    char *paths[] = {
+        CAMPAIGNS_DIRECTORY "/image/",
+        "community/image/",
+        0
+    };
+    for (int i = 0; paths[i]; i++) {
+        char full_path[FILE_NAME_MAX];
+        snprintf(full_path, FILE_NAME_MAX, "%s%s", paths[i], path);
+        if (campaign_has_file(full_path) || file_exists(full_path, NOT_LOCALIZED)) {
+            data.image.id = assets_get_image_id(ASSET_EXTERNAL_FILE_LIST, full_path);
+            strncpy(data.image.path, path, FILE_NAME_MAX);
+            return;
+        }
+    }
+    data.image.id = image_group(editor_is_active() ? GROUP_EDITOR_EMPIRE_MAP : GROUP_EMPIRE_MAP);
+    data.image.path[0] = 0;
+}
+
+void empire_set_custom_map(const char *path, int offset_x, int offset_y, int width, int height)
+{
+    set_image_id(path);
+    if (offset_x < 0) {
+        offset_x = 0;
+    }
+    if (offset_y < 0) {
+        offset_y = 0;
+    }
+    const image *img = image_get(data.image.id);
+    if (width > 0) {
+        width += offset_x;
+        if (width > img->original.width - offset_x) {
+            width = img->original.width - offset_x;
+        }
+    } else {
+        width = img->original.width - offset_x;
+    }
+    if (height > 0) {
+        height += offset_y;
+        if (height > img->original.height - offset_y) {
+            height = img->original.height - offset_y;
+        }
+    } else {
+        height = img->original.height - offset_y;
+    }
+
+    data.image.offset_x = offset_x;
+    data.image.offset_y = offset_y;
+    data.image.width = width;
+    data.image.height = height;
+}
+
+void empire_reset_map(void)
+{
+    data.image.id = image_group(editor_is_active() ? GROUP_EDITOR_EMPIRE_MAP : GROUP_EMPIRE_MAP);
+    data.image.path[0] = 0;
+    const image *img = image_get(data.image.id);
+    data.image.offset_x = 0;
+    data.image.offset_y = 0;
+    data.image.width = img->original.width - data.image.offset_x;
+    data.image.height = img->original.height - data.image.offset_y;
+}
 
 void empire_load(int is_custom_scenario, int empire_id)
 {
@@ -39,6 +126,9 @@ void empire_load(int is_custom_scenario, int empire_id)
     if (empire_id == SCENARIO_CUSTOM_EMPIRE) {
         return;
     }
+
+    empire_reset_map();
+    empire_set_coordinates(0, 0, 0);
 
     char raw_data[EMPIRE_DATA_SIZE];
     const char *filename = is_custom_scenario ? "c32.emp" : "c3.emp";
@@ -66,11 +156,11 @@ void empire_load(int is_custom_scenario, int empire_id)
 
 static void check_scroll_boundaries(void)
 {
-    int max_x = EMPIRE_WIDTH - data.viewport_width;
-    int max_y = EMPIRE_HEIGHT - data.viewport_height;
+    int max_x = data.image.width + data.image.offset_x - data.viewport_width;
+    int max_y = data.image.height + data.image.offset_y - data.viewport_height;
 
-    data.scroll_x = calc_bound(data.scroll_x, 0, max_x);
-    data.scroll_y = calc_bound(data.scroll_y, 0, max_y);
+    data.scroll_x = calc_bound(data.scroll_x, data.image.offset_x, max_x);
+    data.scroll_y = calc_bound(data.scroll_y, data.image.offset_y, max_y);
 }
 
 void empire_center_on_our_city(int viewport_width, int viewport_height)
@@ -92,6 +182,7 @@ void empire_center_on_our_city(int viewport_width, int viewport_height)
 void empire_load_editor(int empire_id, int viewport_width, int viewport_height)
 {
     empire_load(1, empire_id);
+    empire_set_coordinates(0, 0, 0);
     empire_object_init_cities(empire_id);
     empire_clear_selected_object();
     empire_center_on_our_city(viewport_width, viewport_height);
@@ -101,8 +192,8 @@ void empire_init_scenario(void)
 {
     data.scroll_x = data.initial_scroll_x;
     data.scroll_y = data.initial_scroll_y;
-    data.viewport_width = EMPIRE_WIDTH;
-    data.viewport_height = EMPIRE_HEIGHT;
+    data.viewport_width = data.image.width;
+    data.viewport_height = data.image.height;
 
     empire_object_init_cities(scenario_empire_id());
 }
@@ -112,6 +203,44 @@ void empire_set_viewport(int width, int height)
     data.viewport_width = width;
     data.viewport_height = height;
     check_scroll_boundaries();
+}
+
+int empire_get_image_id(void)
+{
+    return data.image.id;
+}
+
+void empire_get_map_size(int *width, int *height)
+{
+    *width = data.image.width;
+    *height = data.image.height;
+}
+
+void empire_set_coordinates(int relative, int x_offset, int y_offset)
+{
+    data.coordinates.relative = relative;
+    data.coordinates.x_offset = x_offset;
+    data.coordinates.y_offset = y_offset;
+}
+
+void empire_transform_coordinates(int *x_coord, int *y_coord)
+{
+    if (data.coordinates.relative) {
+        *x_coord += data.image.offset_x;
+        *y_coord += data.image.offset_y;
+    }
+    *x_coord += data.coordinates.x_offset;
+    *y_coord += data.coordinates.y_offset;
+}
+
+void empire_restore_coordinates(int *x_coord, int *y_coord)
+{
+    if (data.coordinates.relative) {
+        *x_coord -= data.image.offset_x;
+        *y_coord -= data.image.offset_y;
+    }
+    *x_coord -= data.coordinates.x_offset;
+    *y_coord -= data.coordinates.y_offset;
 }
 
 void empire_adjust_scroll(int *x_offset, int *y_offset)
@@ -250,6 +379,13 @@ int empire_can_import_resource_from_city(int city_id, int resource)
     return (max_in_stock == 0 || in_stock < max_in_stock) ? 1 : 0;
 }
 
+void empire_clear(void)
+{
+    data.selected_object = 0;
+    empire_reset_map();
+    empire_set_coordinates(0, 0, 0);
+}
+
 void empire_save_state(buffer *buf)
 {
     buffer_write_i32(buf, data.scroll_x);
@@ -262,4 +398,35 @@ void empire_load_state(buffer *buf)
     data.scroll_x = buffer_read_i32(buf);
     data.scroll_y = buffer_read_i32(buf);
     data.selected_object = buffer_read_i32(buf);
+}
+
+void empire_save_custom_map(buffer *buf)
+{
+    int path_length = strlen(data.image.path) + 1;
+    int buf_size = sizeof(int32_t) + 16 + path_length;
+    uint8_t *buf_data = malloc(buf_size);
+
+    buffer_init(buf, buf_data, buf_size);
+    buffer_write_i32(buf, path_length);
+
+    buffer_write_i32(buf, data.image.offset_x);
+    buffer_write_i32(buf, data.image.offset_y);
+    buffer_write_i32(buf, data.image.width);
+    buffer_write_i32(buf, data.image.height);
+
+    buffer_write_raw(buf, data.image.path, path_length);
+}
+
+void empire_load_custom_map(buffer *buf)
+{
+    int path_length = buffer_read_i32(buf);
+    int offset_x = buffer_read_i32(buf);
+    int offset_y = buffer_read_i32(buf);
+    int width = buffer_read_i32(buf);
+    int height = buffer_read_i32(buf);
+
+    char path[FILE_NAME_MAX] = { 0 };
+    buffer_read_raw(buf, path, path_length);
+
+    empire_set_custom_map(path, offset_x, offset_y, width, height);
 }

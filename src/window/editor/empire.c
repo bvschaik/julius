@@ -26,8 +26,8 @@
 #include "window/editor/map.h"
 #include "window/empire.h"
 
-#define MAX_WIDTH 2032
-#define MAX_HEIGHT 1136
+#define WIDTH_BORDER 32
+#define HEIGHT_BORDER 136
 
 #define OUR_CITY -1
 
@@ -61,36 +61,60 @@ static struct {
     int show_battle_objects;
     int preview_image_group;
     int preview_button_focused;
-    int picked_coord_x;
-    int picked_coord_y;
-    int picked_coord_enabled;
+    struct {
+        int x;
+        int y;
+        int active;
+    } coordinates;
+    struct {
+        int x_min;
+        int x_max;
+    } panel;
 } data;
 
 static void update_screen_size(void)
 {
     int s_width = screen_width();
     int s_height = screen_height();
-    data.x_min = s_width <= MAX_WIDTH ? 0 : (s_width - MAX_WIDTH) / 2;
-    data.x_max = s_width <= MAX_WIDTH ? s_width : data.x_min + MAX_WIDTH;
-    data.y_min = s_height <= MAX_HEIGHT ? 0 : (s_height - MAX_HEIGHT) / 2;
-    data.y_max = s_height <= MAX_HEIGHT ? s_height : data.y_min + MAX_HEIGHT;
+    int map_width, map_height;
+    empire_get_map_size(&map_width, &map_height);
+    int max_width = map_width + WIDTH_BORDER;
+    int max_height = map_height + HEIGHT_BORDER;
+
+    data.x_min = s_width <= max_width ? 0 : (s_width - max_width) / 2;
+    data.x_max = s_width <= max_width ? s_width : data.x_min + max_width;
+    data.y_min = s_height <= max_height ? 0 : (s_height - max_height) / 2;
+    data.y_max = s_height <= max_height ? s_height : data.y_min + max_height;
+
+    int bottom_panel_width = data.x_max - data.x_min;
+    if (bottom_panel_width < 608) {
+        bottom_panel_width = 640;
+        int difference = bottom_panel_width - (data.x_max - data.x_min);
+        int odd = difference % 1;
+        difference /= 2;
+        data.panel.x_min = data.x_min - difference - odd;
+        data.panel.x_max = data.x_max + difference;
+    } else {
+        data.panel.x_min = data.x_min;
+        data.panel.x_max = data.x_max;
+    }
 }
 
 static int map_viewport_width(void)
 {
-    return data.x_max - data.x_min - 32;
+    return data.x_max - data.x_min - WIDTH_BORDER;
 }
 
 static int map_viewport_height(void)
 {
-    return data.y_max - data.y_min - 136;
+    return data.y_max - data.y_min - HEIGHT_BORDER;
 }
 
 static void init(void)
 {
     update_screen_size();
     data.selected_button = 0;
-    data.picked_coord_enabled = 0;
+    data.coordinates.active = 0;
     data.preview_image_group = 0;
     int selected_object = empire_selected_object();
     if (selected_object) {
@@ -105,36 +129,59 @@ static void init(void)
 static void draw_paneling(void)
 {
     int image_base = image_group(GROUP_EDITOR_EMPIRE_PANELS);
+    int bottom_panel_is_larger = data.x_min != data.panel.x_min;
+    int vertical_y_limit = bottom_panel_is_larger ? data.y_max - 120 : data.y_max;
+
+    graphics_set_clip_rectangle(data.panel.x_min, data.y_min,
+        data.panel.x_max - data.panel.x_min, data.y_max - data.y_min);
+
     // bottom panel background
-    graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
-    for (int x = data.x_min; x < data.x_max; x += 70) {
+    for (int x = data.panel.x_min; x < data.panel.x_max; x += 70) {
         image_draw(image_base + 3, x, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_base + 3, x, data.y_max - 80, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_base + 3, x, data.y_max - 40, COLOR_MASK_NONE, SCALE_NONE);
     }
 
     // horizontal bar borders
-    for (int x = data.x_min; x < data.x_max; x += 86) {
-        image_draw(image_base + 1, x, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
+    for (int x = data.panel.x_min; x < data.panel.x_max; x += 86) {
         image_draw(image_base + 1, x, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_base + 1, x, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
     }
 
+    // extra vertical bar borders
+    if (bottom_panel_is_larger) {
+        for (int y = vertical_y_limit + 16; y < data.y_max; y += 86) {
+            image_draw(image_base, data.panel.x_min, y, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw(image_base, data.panel.x_max - 16, y, COLOR_MASK_NONE, SCALE_NONE);
+        }
+    }
+
+    graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, vertical_y_limit - data.y_min);
+
+    for (int x = data.x_min; x < data.x_max; x += 86) {
+        image_draw(image_base + 1, x, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
+    }
+
     // vertical bar borders
-    for (int y = data.y_min + 16; y < data.y_max; y += 86) {
+    for (int y = data.y_min + 16; y < vertical_y_limit; y += 86) {
         image_draw(image_base, data.x_min, y, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_base, data.x_max - 16, y, COLOR_MASK_NONE, SCALE_NONE);
     }
 
+    graphics_reset_clip_rectangle();
+
     // crossbars
     image_draw(image_base + 2, data.x_min, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
     image_draw(image_base + 2, data.x_min, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(image_base + 2, data.x_min, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 2, data.panel.x_min, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
     image_draw(image_base + 2, data.x_max - 16, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
     image_draw(image_base + 2, data.x_max - 16, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(image_base + 2, data.x_max - 16, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 2, data.panel.x_max - 16, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
 
-    graphics_reset_clip_rectangle();
+    if (bottom_panel_is_larger) {
+        image_draw(image_base + 2, data.panel.x_min, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base + 2, data.panel.x_max - 16, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
+    }
 }
 
 static int draw_preview_image(int x, int y, int center, color_t color_mask, int draw_borders)
@@ -166,7 +213,7 @@ static void draw_background(void)
         graphics_shade_rect(0, 0, screen_width(), screen_height(), 7);
     }
     draw_paneling();
-    draw_preview_image(data.x_max - 92, data.y_max - 100, 72, COLOR_MASK_NONE, 0);
+    draw_preview_image(data.panel.x_max - 92, data.y_max - 100, 72, COLOR_MASK_NONE, 0);
 }
 
 static void draw_shadowed_number(int value, int x, int y, color_t color)
@@ -282,17 +329,21 @@ static void draw_coordinates(void)
         y_coord = m->y - data.y_draw_offset;
     }
 
+    empire_restore_coordinates(&x_coord, &y_coord);
+
     show_coords(data.x_min + 20, data.y_min + 20,
         lang_get_string(CUSTOM_TRANSLATION, TR_EDITOR_CURRENT_COORDS), x_coord, y_coord);
     if (!(m->left.is_down && !is_outside_map(m->x, m->y))) {
         draw_preview_image(m->x, m->y, 0, ALPHA_FONT_SEMI_TRANSPARENT, 0);
     }
 
-    if (data.picked_coord_enabled) {
-        x_coord = data.picked_coord_x + data.x_draw_offset;
-        y_coord = data.picked_coord_y + data.y_draw_offset;
+    if (data.coordinates.active) {
+        x_coord = data.coordinates.x + data.x_draw_offset;
+        y_coord = data.coordinates.y + data.y_draw_offset;
+        empire_transform_coordinates(&x_coord, &y_coord);
         show_coords(data.x_min + 20, data.y_min + 50,
-            lang_get_string(CUSTOM_TRANSLATION, TR_EDITOR_SELECTED_COORDS), data.picked_coord_x, data.picked_coord_y);
+            lang_get_string(CUSTOM_TRANSLATION, TR_EDITOR_SELECTED_COORDS),
+                data.coordinates.x, data.coordinates.y);
         if (!draw_preview_image(x_coord, y_coord, 0, ALPHA_FONT_SEMI_TRANSPARENT, 1)) {
             graphics_draw_rect(x_coord - 3, y_coord - 3, 7, 7, COLOR_BLACK);
             graphics_draw_rect(x_coord - 1, y_coord - 1, 3, 3, COLOR_WHITE);
@@ -311,7 +362,7 @@ static void draw_map(void)
     data.x_draw_offset = data.x_min + 16;
     data.y_draw_offset = data.y_min + 16;
     empire_adjust_scroll(&data.x_draw_offset, &data.y_draw_offset);
-    image_draw(image_group(GROUP_EDITOR_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset,
+    image_draw(empire_get_image_id(), data.x_draw_offset, data.y_draw_offset,
         COLOR_MASK_NONE, SCALE_NONE);
 
     empire_object_foreach(draw_empire_object);
@@ -335,7 +386,7 @@ static int draw_resource(resource_type resource, int trade_max, int x_offset, in
 
 static void draw_city_info(const empire_city *city)
 {
-    int x_offset = data.x_min + 28;
+    int x_offset = data.panel.x_min + 28;
     int y_offset = data.y_max - 85;
     const uint8_t *city_name = empire_city_get_name(city);
     int width = text_draw(city_name, x_offset, y_offset, FONT_NORMAL_WHITE, 0);
@@ -388,7 +439,7 @@ static void draw_panel_buttons(const empire_city *city)
 {
     int x_offset;
     if (scenario_empire_id() != SCENARIO_CUSTOM_EMPIRE) {
-        arrow_buttons_draw(data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2);
+        arrow_buttons_draw(data.panel.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2);
         x_offset = 104;
     } else {
         x_offset = 24;
@@ -398,31 +449,31 @@ static void draw_panel_buttons(const empire_city *city)
         draw_city_info(city);
     } else {
         lang_text_draw_centered(150, scenario_empire_id(),
-            data.x_min, data.y_max - 85, data.x_max - data.x_min, FONT_NORMAL_GREEN);
+            data.panel.x_min, data.y_max - 85, data.x_max - data.x_min, FONT_NORMAL_GREEN);
     }
-    lang_text_draw(151, scenario_empire_id(), data.x_min + 220, data.y_max - 45, FONT_NORMAL_GREEN);
+    lang_text_draw(151, scenario_empire_id(), data.panel.x_min + 220, data.y_max - 45, FONT_NORMAL_GREEN);
 
 
-    button_border_draw(data.x_min + x_offset, data.y_max - 52, 100, 24, data.focus_button_id == 1);
-    lang_text_draw_centered(44, 7, data.x_min + x_offset, data.y_max - 45, 100, FONT_NORMAL_GREEN);
+    button_border_draw(data.panel.x_min + x_offset, data.y_max - 52, 100, 24, data.focus_button_id == 1);
+    lang_text_draw_centered(44, 7, data.panel.x_min + x_offset, data.y_max - 45, 100, FONT_NORMAL_GREEN);
 
     if (scenario.empire.id == SCENARIO_CUSTOM_EMPIRE) {
-        button_border_draw(data.x_min + 144, data.y_max - 52, 150, 24, data.focus_button_id == 2);
+        button_border_draw(data.panel.x_min + 144, data.y_max - 52, 150, 24, data.focus_button_id == 2);
         lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_TOGGLE_INVASIONS,
-            data.x_min + 144, data.y_max - 45, 150, FONT_NORMAL_GREEN);
+            data.panel.x_min + 144, data.y_max - 45, 150, FONT_NORMAL_GREEN);
 
-        button_border_draw(data.x_min + 314, data.y_max - 52, 150, 24, data.focus_button_id == 3);
+        button_border_draw(data.panel.x_min + 314, data.y_max - 52, 150, 24, data.focus_button_id == 3);
         lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_REFRESH_EMPIRE,
-            data.x_min + 314, data.y_max - 45, 150, FONT_NORMAL_GREEN);
+            data.panel.x_min + 314, data.y_max - 45, 150, FONT_NORMAL_GREEN);
 
         int width = lang_text_get_width(CUSTOM_TRANSLATION, TR_EDITOR_CITY_PREVIEW, FONT_NORMAL_GREEN);
 
-        if (data.x_min + 564 + width < data.x_max) {
+        if (data.panel.x_min + 564 + width < data.panel.x_max) {
             lang_text_draw(CUSTOM_TRANSLATION, TR_EDITOR_CITY_PREVIEW,
-                data.x_max - 96 - width, data.y_max - 45, FONT_NORMAL_GREEN);
+                data.panel.x_max - 96 - width, data.y_max - 45, FONT_NORMAL_GREEN);
         }
 
-        button_border_draw(data.x_max - 92, data.y_max - 100, 72, 72, data.preview_button_focused);
+        button_border_draw(data.panel.x_max - 92, data.y_max - 100, 72, 72, data.preview_button_focused);
     }
 }
 
@@ -488,15 +539,15 @@ static void handle_input(const mouse *m, const hotkeys *h)
     data.focus_button_id = 0;
     int x_offset = scenario.empire.id == SCENARIO_CUSTOM_EMPIRE ? 20 : 100;
     if (scenario.empire.id != SCENARIO_CUSTOM_EMPIRE &&
-        arrow_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2, 0)) {
+        arrow_buttons_handle_mouse(m, data.panel.x_min + 20, data.y_max - 100, arrow_buttons_empire, 2, 0)) {
         return;
     }
-    if (generic_buttons_handle_mouse(m, data.x_min + x_offset, data.y_max - 100, generic_buttons,
+    if (generic_buttons_handle_mouse(m, data.panel.x_min + x_offset, data.y_max - 100, generic_buttons,
         scenario.empire.id == SCENARIO_CUSTOM_EMPIRE ? 3 : 1, &data.focus_button_id)) {
         return;
     }
     if (scenario.empire.id == SCENARIO_CUSTOM_EMPIRE &&
-        generic_buttons_handle_mouse(m, data.x_max - 92, data.y_max - 100,
+        generic_buttons_handle_mouse(m, data.panel.x_max - 92, data.y_max - 100,
             preview_button, 1, &data.preview_button_focused)) {
         return;
     }
@@ -517,17 +568,18 @@ static void handle_input(const mouse *m, const hotkeys *h)
         if (m->right.went_up) {
             int has_scrolled = scroll_drag_end();
             if (!has_scrolled && input_go_back_requested(m, h)) {
-                if (data.picked_coord_enabled) {
-                    data.picked_coord_enabled = 0;
+                if (data.coordinates.active) {
+                    data.coordinates.active = 0;
                 } else {
                     window_editor_map_show();
                 }
             }
         }
         if (scenario.empire.id == SCENARIO_CUSTOM_EMPIRE && m->left.is_down && !is_outside_map(m->x, m->y)) {
-            data.picked_coord_enabled = 1;
-            data.picked_coord_x = m->x - data.x_draw_offset;
-            data.picked_coord_y = m->y - data.y_draw_offset;
+            data.coordinates.active = 1;
+            data.coordinates.x = m->x - data.x_draw_offset;
+            data.coordinates.y = m->y - data.y_draw_offset;
+            empire_restore_coordinates(&data.coordinates.x, &data.coordinates.y);
         }
     }
 }

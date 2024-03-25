@@ -95,13 +95,14 @@ typedef struct {
     buffer *message_media_text_blob;
     buffer *message_media_metadata;
     buffer *empire;
+    buffer *empire_map;
     buffer *end_marker;
 } scenario_state;
 
 static struct {
     scenario_version_t version;
     int num_pieces;
-    file_piece pieces[20];
+    file_piece pieces[21];
     scenario_state state;
 } scenario_data;
 
@@ -143,6 +144,7 @@ typedef struct {
     buffer *city_graph_order;
     buffer *emperor_change_time;
     buffer *empire;
+    buffer *empire_map;
     buffer *empire_cities;
     buffer *building_count_industry;
     buffer *trade_prices;
@@ -243,6 +245,7 @@ typedef struct {
         int monument_deliveries;
         int barracks_tower_sentry_request;
         int custom_empires;
+        int custom_empire_map_image;
         int scenario_version;
         int scenario_requests;
         int scenario_events;
@@ -353,6 +356,9 @@ static void init_scenario_data(scenario_version_t version)
     if (version > SCENARIO_LAST_UNVERSIONED) {
         state->empire = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
     }
+    if (version > SCENARIO_LAST_NO_CUSTOM_EMPIRE_MAP_IMAGE) {
+        state->empire_map = create_scenario_piece(PIECE_SIZE_DYNAMIC, 0);
+    }
     state->end_marker = create_scenario_piece(4, 0);
 }
 
@@ -459,6 +465,7 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
         version_data->features.custom_messages_and_media = 0;
     }
 
+    version_data->features.custom_empire_map_image = version > SAVE_GAME_LAST_NO_CUSTOM_EMPIRE_MAP_IMAGE; 
     version_data->features.scenario_version = version > SAVE_GAME_LAST_NO_SCENARIO_VERSION;
     version_data->features.city_faction_info = version <= SAVE_GAME_LAST_UNKNOWN_UNUSED_CITY_DATA;
     version_data->features.resource_version = version > SAVE_GAME_LAST_STATIC_RESOURCES;
@@ -523,6 +530,9 @@ static void init_savegame_data(savegame_version_t version)
     state->city_graph_order = create_savegame_piece(version_data.piece_sizes.graph_order, 0);
     state->emperor_change_time = create_savegame_piece(8, 0);
     state->empire = create_savegame_piece(12, 0);
+    if (version_data.features.custom_empire_map_image) {
+        state->empire_map = create_savegame_piece(PIECE_SIZE_DYNAMIC, 0);
+    }
     state->empire_cities = create_savegame_piece(version_data.piece_sizes.empire_cities, 1);
     if (version_data.features.static_building_counts) {
         state->building_count_industry = create_savegame_piece(version_data.building_counts.industry, 0);
@@ -640,6 +650,10 @@ static void scenario_load_from_state(scenario_state *file, scenario_version_t ve
         empire_object_load(file->empire, version);
         empire_city_update_trading_data(scenario_empire_id());
     }
+    empire_reset_map();
+    if (version > SCENARIO_LAST_NO_CUSTOM_EMPIRE_MAP_IMAGE) {
+        empire_load_custom_map(file->empire_map);
+    }
     buffer_skip(file->end_marker, 4);
 }
 
@@ -661,6 +675,7 @@ static void scenario_save_to_state(scenario_state *file)
     custom_media_save_state(file->custom_media);
     message_media_text_blob_save_state(file->message_media_text_blob, file->message_media_metadata);
     empire_object_save(file->empire);
+    empire_save_custom_map(file->empire_map);
     buffer_skip(file->end_marker, 4);
 }
 
@@ -728,6 +743,10 @@ static void savegame_load_from_state(savegame_state *state, savegame_version_t v
 
     scenario_emperor_change_load_state(state->emperor_change_time, state->emperor_change_state);
     empire_load_state(state->empire);
+    empire_reset_map();
+    if (version > SAVE_GAME_LAST_NO_CUSTOM_EMPIRE_MAP_IMAGE) {
+        empire_load_custom_map(state->empire_map);
+    }
     empire_city_load_state(state->empire_cities, version);
     trade_prices_load_state(state->trade_prices);
     figure_name_load_state(state->figure_names);
@@ -818,6 +837,7 @@ static void savegame_save_to_state(savegame_state *state)
 
     scenario_emperor_change_save_state(state->emperor_change_time, state->emperor_change_state);
     empire_save_state(state->empire);
+    empire_save_custom_map(state->empire_map);
     empire_city_save_state(state->empire_cities);
     trade_prices_save_state(state->trade_prices);
     figure_name_save_state(state->figure_names);
@@ -1587,6 +1607,9 @@ static savegame_load_status savegame_read_file_info(FILE *fp, saved_game_info *i
     skip_piece(fp, version_data.piece_sizes.graph_order, 0);
     skip_piece(fp, 8, 0);
     skip_piece(fp, 12, 0);
+    if (version_data.features.custom_empire_map_image) {
+        skip_piece(fp, PIECE_SIZE_DYNAMIC, 0);
+    }
     skip_piece(fp, version_data.piece_sizes.empire_cities, 1);
     if (version_data.features.static_building_counts) {
         skip_piece(fp, version_data.building_counts.industry, 0);

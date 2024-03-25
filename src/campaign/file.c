@@ -4,7 +4,7 @@
 
 #include "zip/zip.h"
 
-#define CUSTOM_CAMPAIGN_PREFIX_SIZE sizeof(CUSTOM_CAMPAIGN_DIR_NAME "/")
+#define CAMPAIGNS_PREFIX_SIZE sizeof(CAMPAIGNS_DIR_NAME "/")
 
 static struct {
     int is_folder;
@@ -110,7 +110,7 @@ void campaign_file_set_path(const char *path)
     if (path && path[0]) {
         data.is_folder = !file_has_extension(path, "campaign");
         if (data.is_folder) {
-            data.file_name_offset = snprintf(data.file_name, FILE_NAME_MAX, "%s/%s/", CUSTOM_CAMPAIGN_DIR_NAME, path);
+            data.file_name_offset = snprintf(data.file_name, FILE_NAME_MAX, "%s/%s/", CAMPAIGNS_DIR_NAME, path);
         } else {
             strncpy(data.file_name, path, FILE_NAME_MAX);
             data.file_name_offset = 0;
@@ -127,10 +127,10 @@ const char *campaign_file_remove_prefix(const char *path)
     if (!data.file_name[0]) {
         return 0;
     }
-    if (strncmp(path, CUSTOM_CAMPAIGN_DIR_NAME "/", CUSTOM_CAMPAIGN_PREFIX_SIZE) != 0) {
+    if (strncmp(path, CAMPAIGNS_DIR_NAME "/", CAMPAIGNS_PREFIX_SIZE) != 0) {
         return 0;
     }
-    path += CUSTOM_CAMPAIGN_PREFIX_SIZE;
+    path += CAMPAIGNS_PREFIX_SIZE;
 
     return path;
 }

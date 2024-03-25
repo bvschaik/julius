@@ -34,8 +34,8 @@
 
 #include <math.h>
 
-#define MAX_WIDTH 2032
-#define MAX_HEIGHT 1136
+#define WIDTH_BORDER 32
+#define HEIGHT_BORDER 136
 
 #define TRADE_DOT_SPACING 10
 
@@ -88,6 +88,10 @@ static struct {
     int is_scrolling;
     int finished_scroll;
     resource_type focus_resource;
+    struct {
+        int x_min;
+        int x_max;
+    } panel;
 } data = { 0, 1 };
 
 static void init(void)
@@ -105,36 +109,59 @@ static void init(void)
 static void draw_paneling(void)
 {
     int image_base = image_group(GROUP_EMPIRE_PANELS);
+    int bottom_panel_is_larger = data.x_min != data.panel.x_min;
+    int vertical_y_limit = bottom_panel_is_larger ? data.y_max - 120 : data.y_max;
+
+    graphics_set_clip_rectangle(data.panel.x_min, data.y_min,
+        data.panel.x_max - data.panel.x_min, data.y_max - data.y_min);
+
     // bottom panel background
-    graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, data.y_max - data.y_min);
-    for (int x = data.x_min; x < data.x_max; x += 70) {
+    for (int x = data.panel.x_min; x < data.panel.x_max; x += 70) {
         image_draw(image_base + 3, x, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_base + 3, x, data.y_max - 80, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_base + 3, x, data.y_max - 40, COLOR_MASK_NONE, SCALE_NONE);
     }
 
     // horizontal bar borders
-    for (int x = data.x_min; x < data.x_max; x += 86) {
-        image_draw(image_base + 1, x, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
+    for (int x = data.panel.x_min; x < data.panel.x_max; x += 86) {
         image_draw(image_base + 1, x, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_base + 1, x, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
     }
 
+    // extra vertical bar borders
+    if (bottom_panel_is_larger) {
+        for (int y = vertical_y_limit + 16; y < data.y_max; y += 86) {
+            image_draw(image_base, data.panel.x_min, y, COLOR_MASK_NONE, SCALE_NONE);
+            image_draw(image_base, data.panel.x_max - 16, y, COLOR_MASK_NONE, SCALE_NONE);
+        }
+    }
+
+    graphics_set_clip_rectangle(data.x_min, data.y_min, data.x_max - data.x_min, vertical_y_limit - data.y_min);
+
+    for (int x = data.x_min; x < data.x_max; x += 86) {
+        image_draw(image_base + 1, x, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
+    }
+
     // vertical bar borders
-    for (int y = data.y_min + 16; y < data.y_max; y += 86) {
+    for (int y = data.y_min + 16; y < vertical_y_limit; y += 86) {
         image_draw(image_base, data.x_min, y, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_base, data.x_max - 16, y, COLOR_MASK_NONE, SCALE_NONE);
     }
 
+    graphics_reset_clip_rectangle();
+
     // crossbars
     image_draw(image_base + 2, data.x_min, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
     image_draw(image_base + 2, data.x_min, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(image_base + 2, data.x_min, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 2, data.panel.x_min, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
     image_draw(image_base + 2, data.x_max - 16, data.y_min, COLOR_MASK_NONE, SCALE_NONE);
     image_draw(image_base + 2, data.x_max - 16, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(image_base + 2, data.x_max - 16, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 2, data.panel.x_max - 16, data.y_max - 16, COLOR_MASK_NONE, SCALE_NONE);
 
-    graphics_reset_clip_rectangle();
+    if (bottom_panel_is_larger) {
+        image_draw(image_base + 2, data.panel.x_min, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(image_base + 2, data.panel.x_max - 16, data.y_max - 120, COLOR_MASK_NONE, SCALE_NONE);
+    }
 }
 
 static void draw_trade_resource(resource_type resource, int trade_max, int x_offset, int y_offset)
@@ -336,11 +363,13 @@ static void draw_object_info(void)
                 }
                 break;
             default:
-                lang_text_draw_centered(47, 8, data.x_min, data.y_max - 48, data.x_max - data.x_min, FONT_NORMAL_GREEN);
+                lang_text_draw_centered(47, 8, data.panel.x_min, data.y_max - 48,
+                    data.panel.x_max - data.panel.x_min, FONT_NORMAL_GREEN);
                 break;
         }
     } else {
-        lang_text_draw_centered(47, 8, data.x_min, data.y_max - 48, data.x_max - data.x_min, FONT_NORMAL_GREEN);
+        lang_text_draw_centered(47, 8, data.panel.x_min, data.y_max - 48,
+            data.panel.x_max - data.panel.x_min, FONT_NORMAL_GREEN);
     }
 }
 
@@ -348,10 +377,28 @@ static void draw_background(void)
 {
     int s_width = screen_width();
     int s_height = screen_height();
-    data.x_min = s_width <= MAX_WIDTH ? 0 : (s_width - MAX_WIDTH) / 2;
-    data.x_max = s_width <= MAX_WIDTH ? s_width : data.x_min + MAX_WIDTH;
-    data.y_min = s_height <= MAX_HEIGHT ? 0 : (s_height - MAX_HEIGHT) / 2;
-    data.y_max = s_height <= MAX_HEIGHT ? s_height : data.y_min + MAX_HEIGHT;
+    int map_width, map_height;
+    empire_get_map_size(&map_width, &map_height);
+    int max_width = map_width + WIDTH_BORDER;
+    int max_height = map_height + HEIGHT_BORDER;
+
+    data.x_min = s_width <= max_width ? 0 : (s_width - max_width) / 2;
+    data.x_max = s_width <= max_width ? s_width : data.x_min + max_width;
+    data.y_min = s_height <= max_height ? 0 : (s_height - max_height) / 2;
+    data.y_max = s_height <= max_height ? s_height : data.y_min + max_height;
+
+    int bottom_panel_width = data.x_max - data.x_min;
+    if (bottom_panel_width < 608) {
+        bottom_panel_width = 640;
+        int difference = bottom_panel_width - (data.x_max - data.x_min);
+        int odd = difference % 1;
+        difference /= 2;
+        data.panel.x_min = data.x_min - difference - odd;
+        data.panel.x_max = data.x_max + difference;
+    } else {
+        data.panel.x_min = data.x_min;
+        data.panel.x_max = data.x_max;
+    }
 
     if (data.x_min || data.y_min) {
         image_draw_blurred_fullscreen(image_group(GROUP_EMPIRE_MAP), 3);
@@ -558,7 +605,7 @@ static void draw_map(void)
     data.x_draw_offset = data.x_min + 16;
     data.y_draw_offset = data.y_min + 16;
     empire_adjust_scroll(&data.x_draw_offset, &data.y_draw_offset);
-    image_draw(image_group(GROUP_EMPIRE_MAP), data.x_draw_offset, data.y_draw_offset, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(empire_get_image_id(), data.x_draw_offset, data.y_draw_offset, COLOR_MASK_NONE, SCALE_NONE);
 
     empire_object_foreach(draw_empire_object);
 
@@ -570,11 +617,14 @@ static void draw_map(void)
 static void draw_city_name(const empire_city *city)
 {
     int image_base = image_group(GROUP_EMPIRE_PANELS);
-    image_draw(image_base + 6, data.x_min + 2, data.y_max - 199, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw(image_base + 7, data.x_max - 84, data.y_max - 199, COLOR_MASK_NONE, SCALE_NONE);
+    int draw_ornaments_outside = data.x_min - data.panel.x_min > 90;
+    int base_x_min = draw_ornaments_outside ? data.panel.x_min : data.x_min;
+    int base_x_max = draw_ornaments_outside ? data.panel.x_max : data.x_max;
+    image_draw(image_base + 6, base_x_min + 2, data.y_max - 199, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_base + 7, base_x_max - 84, data.y_max - 199, COLOR_MASK_NONE, SCALE_NONE);
     image_draw(image_base + 8, (data.x_min + data.x_max - 332) / 2, data.y_max - 181, COLOR_MASK_NONE, SCALE_NONE);
     if (city) {
-        int x_offset = (data.x_min + data.x_max - 332) / 2 + 64;
+        int x_offset = (data.panel.x_min + data.panel.x_max - 332) / 2 + 64;
         int y_offset = data.y_max - 118;
         const uint8_t *city_name = empire_city_get_name(city);
         text_draw_centered(city_name, x_offset, y_offset, 268, FONT_LARGE_BLACK, 0);
@@ -583,13 +633,13 @@ static void draw_city_name(const empire_city *city)
 
 static void draw_panel_buttons(const empire_city *city)
 {
-    image_buttons_draw(data.x_min + 20, data.y_max - 44, image_button_help, 1);
-    image_buttons_draw(data.x_max - 44, data.y_max - 44, image_button_return_to_city, 1);
-    image_buttons_draw(data.x_max - 44, data.y_max - 100, image_button_advisor, 1);
-    image_buttons_draw(data.x_min + 24, data.y_max - 100, image_button_show_prices, 1);
+    image_buttons_draw(data.panel.x_min + 20, data.y_max - 44, image_button_help, 1);
+    image_buttons_draw(data.panel.x_max - 44, data.y_max - 44, image_button_return_to_city, 1);
+    image_buttons_draw(data.panel.x_max - 44, data.y_max - 100, image_button_advisor, 1);
+    image_buttons_draw(data.panel.x_min + 24, data.y_max - 100, image_button_show_prices, 1);
     if (city) {
         if (city->type == EMPIRE_CITY_TRADE && !city->is_open) {
-            button_border_draw((data.x_min + data.x_max - 500) / 2 + 30, data.y_max - 49, 440,
+            button_border_draw((data.panel.x_min + data.panel.x_max - 500) / 2 + 30, data.y_max - 49, 440,
                 26, data.selected_button);
         }
     }
@@ -653,19 +703,19 @@ static void handle_input(const mouse *m, const hotkeys *h)
     data.focus_button_id = 0;
     data.focus_resource = 0;
     int button_id;
-    image_buttons_handle_mouse(m, data.x_min + 20, data.y_max - 44, image_button_help, 1, &button_id);
+    image_buttons_handle_mouse(m, data.panel.x_min + 20, data.y_max - 44, image_button_help, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 1;
     }
-    image_buttons_handle_mouse(m, data.x_max - 44, data.y_max - 44, image_button_return_to_city, 1, &button_id);
+    image_buttons_handle_mouse(m, data.panel.x_max - 44, data.y_max - 44, image_button_return_to_city, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 2;
     }
-    image_buttons_handle_mouse(m, data.x_max - 44, data.y_max - 100, image_button_advisor, 1, &button_id);
+    image_buttons_handle_mouse(m, data.panel.x_max - 44, data.y_max - 100, image_button_advisor, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 3;
     }
-    image_buttons_handle_mouse(m, data.x_min + 24, data.y_max - 100, image_button_show_prices, 1, &button_id);
+    image_buttons_handle_mouse(m, data.panel.x_min + 24, data.y_max - 100, image_button_show_prices, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 4;
     }
@@ -679,7 +729,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
             const empire_city *city = empire_city_get(data.selected_city);
             if (city->type == EMPIRE_CITY_TRADE) {
                 if (city->is_open) {
-                    int x_offset = (data.x_min + data.x_max - 500) / 2;
+                    int x_offset = (data.panel.x_min + data.panel.x_max - 500) / 2;
                     int y_offset = data.y_max - 113;
                     int index_sell = 0;
                     int index_buy = 0;
@@ -710,7 +760,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
                     }
                 } else {
                     generic_buttons_handle_mouse(
-                        m, (data.x_min + data.x_max - 500) / 2, data.y_max - 105,
+                        m, (data.panel.x_min + data.panel.x_max - 500) / 2, data.y_max - 105,
                         generic_button_open_trade, 1, &data.selected_button);
                 }
             }
@@ -771,7 +821,7 @@ static int get_tooltip_resource(tooltip_context *c)
     if (city->type != EMPIRE_CITY_TRADE || city->is_open) {
         return 0;
     }
-    int x_offset = (data.x_min + data.x_max - 500) / 2;
+    int x_offset = (data.panel.x_min + data.panel.x_max - 500) / 2;
     int y_offset = data.y_max - 113;
 
     int item_offset = lang_text_get_width(47, 5, FONT_NORMAL_GREEN);
@@ -811,7 +861,7 @@ static void get_tooltip_trade_route_type(tooltip_context *c)
         return;
     }
 
-    int x_offset = (data.x_min + data.x_max + 355) / 2;
+    int x_offset = (data.panel.x_min + data.panel.x_max + 355) / 2;
     int y_offset = data.y_max - 41;
     int y_offset_max = y_offset + 22 - 2 * city->is_sea_trade;
     if (c->mouse_x >= x_offset && c->mouse_x < x_offset + 32 &&
