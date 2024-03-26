@@ -271,7 +271,7 @@ void window_building_draw_depot_foreground(building_info_context *c)
     int x_offset = c->x_offset + DEPOT_BUTTONS_X_OFFSET;
     int y_offset = c->y_offset + DEPOT_BUTTONS_Y_OFFSET;
 
-    text_draw(translation_for(TR_FIGURE_INFO_DEPOT_DELIVER), x_offset, y_offset + 8, FONT_SMALL_PLAIN, 0);
+    text_draw(translation_for(TR_FIGURE_INFO_DEPOT_DELIVER), x_offset, y_offset + 8, FONT_NORMAL_BLACK, 0);
     depot_order_buttons[0].x = 100;
     int image_id = resource_get_data(resource)->image.icon;
     const image *img = image_get(image_id);
@@ -282,32 +282,32 @@ void window_building_draw_depot_foreground(building_info_context *c)
         y_offset + depot_order_buttons[0].y + (26 - img->original.height) / 2, COLOR_MASK_NONE, SCALE_NONE);
     text_draw_centered(resource_get_data(resource)->text,
         x_offset + depot_order_buttons[0].x, y_offset + depot_order_buttons[0].y + 8, depot_order_buttons[0].width,
-        FONT_SMALL_PLAIN, 0);
+        FONT_NORMAL_BLACK, 0);
     image_draw(image_id,
         x_offset + depot_order_buttons[0].x + depot_order_buttons[0].width - 26 + (26 - img->original.width) / 2,
         y_offset + depot_order_buttons[0].y + (26 - img->original.height) / 2, COLOR_MASK_NONE, SCALE_NONE);
 
     order_condition_type condition_type = b->data.depot.current_order.condition.condition_type;
-    text_draw(translation_for(TR_BUILDING_INFO_DEPOT_CONDITION), x_offset, y_offset + depot_order_buttons[3].y + 6, FONT_SMALL_PLAIN, 0);
+    text_draw(translation_for(TR_BUILDING_INFO_DEPOT_CONDITION), x_offset, y_offset + depot_order_buttons[3].y + 6, FONT_NORMAL_BLACK, 0);
     button_border_draw(x_offset + depot_order_buttons[3].x, y_offset + depot_order_buttons[3].y,
         depot_order_buttons[3].width, depot_order_buttons[3].height, data.focus_button_id == 4);
     text_draw_centered(translation_for(TR_ORDER_CONDITION_NEVER + condition_type),
-        x_offset + depot_order_buttons[3].x, y_offset + depot_order_buttons[3].y + 6, depot_order_buttons[3].width, FONT_SMALL_PLAIN, 0);
+        x_offset + depot_order_buttons[3].x, y_offset + depot_order_buttons[3].y + 6, depot_order_buttons[3].width, FONT_NORMAL_BLACK, 0);
     if (condition_type != ORDER_CONDITION_ALWAYS && condition_type != ORDER_CONDITION_NEVER) {
         button_border_draw(x_offset + depot_order_buttons[4].x, y_offset + depot_order_buttons[4].y,
             depot_order_buttons[4].width, depot_order_buttons[4].height, data.focus_button_id == 5);
         text_draw_number_centered(b->data.depot.current_order.condition.threshold,
-            x_offset + depot_order_buttons[4].x, y_offset + depot_order_buttons[4].y + 6, depot_order_buttons[4].width, FONT_SMALL_PLAIN);
+            x_offset + depot_order_buttons[4].x, y_offset + depot_order_buttons[4].y + 6, depot_order_buttons[4].width, FONT_NORMAL_BLACK);
     }
 
-    text_draw(translation_for(TR_BUILDING_INFO_DEPOT_SOURCE), x_offset, y_offset + depot_order_buttons[1].y + 6, FONT_SMALL_PLAIN, 0);
+    text_draw(translation_for(TR_BUILDING_INFO_DEPOT_SOURCE), x_offset, y_offset + depot_order_buttons[1].y + 6, FONT_NORMAL_BLACK, 0);
     button_border_draw(x_offset + depot_order_buttons[1].x, y_offset + depot_order_buttons[1].y,
         depot_order_buttons[1].width, depot_order_buttons[1].height,
         data.focus_button_id == 2 && data.available_storages > 1);
     if (src->storage_id) {
         text_draw_label_and_number_centered(lang_get_string(28, src->type),
             src->storage_id, "", x_offset + depot_order_buttons[1].x, y_offset + depot_order_buttons[1].y + 6,
-            depot_order_buttons[1].width, FONT_SMALL_PLAIN, 0);
+            depot_order_buttons[1].width, FONT_NORMAL_BLACK, 0);
         button_border_draw(x_offset + depot_order_buttons[5].x, y_offset + depot_order_buttons[5].y,
             depot_order_buttons[5].width, depot_order_buttons[5].height, data.focus_button_id == 6);
         image_draw(assets_lookup_image_id(ASSET_CENTER_CAMERA_ON_BUILDING), x_offset + depot_order_buttons[5].x + 3,
@@ -316,23 +316,23 @@ void window_building_draw_depot_foreground(building_info_context *c)
     } else if (data.available_storages > 1) {
         lang_text_draw_centered(CUSTOM_TRANSLATION, TR_BUILDING_INFO_DEPOT_SELECT_SOURCE,
             x_offset + depot_order_buttons[1].x, y_offset + depot_order_buttons[1].y + 6,
-            depot_order_buttons[1].width, FONT_SMALL_PLAIN);
+            depot_order_buttons[1].width, FONT_NORMAL_BLACK);
     } else {
         translation_key translation = data.available_storages == 1 ? TR_BUILDING_INFO_DEPOT_ONE_BUILDING_FOR_RESOURCE :
             TR_BUILDING_INFO_DEPOT_NO_SOURCE_AVAILABLE;
         text_draw_centered(lang_get_string(CUSTOM_TRANSLATION, translation),
             x_offset + depot_order_buttons[1].x, y_offset + depot_order_buttons[1].y + 6,
-            depot_order_buttons[1].width, FONT_SMALL_PLAIN, COLOR_FONT_GRAY);
+            depot_order_buttons[1].width, FONT_NORMAL_PLAIN, COLOR_FONT_GRAY);
     }
 
-    text_draw(translation_for(TR_BUILDING_INFO_DEPOT_DESTINATION), x_offset, y_offset + depot_order_buttons[2].y + 6, FONT_SMALL_PLAIN, 0);
+    text_draw(translation_for(TR_BUILDING_INFO_DEPOT_DESTINATION), x_offset, y_offset + depot_order_buttons[2].y + 6, FONT_NORMAL_BLACK, 0);
     button_border_draw(x_offset + depot_order_buttons[2].x, y_offset + depot_order_buttons[2].y,
         depot_order_buttons[2].width, depot_order_buttons[2].height,
         data.focus_button_id == 3 && data.available_storages > 1);
     if (dst->storage_id) {
         text_draw_label_and_number_centered(lang_get_string(28, dst->type),
             dst->storage_id, "", x_offset + depot_order_buttons[2].x, y_offset + depot_order_buttons[2].y + 6,
-            depot_order_buttons[2].width, FONT_SMALL_PLAIN, 0);
+            depot_order_buttons[2].width, FONT_NORMAL_BLACK, 0);
         button_border_draw(x_offset + depot_order_buttons[6].x, y_offset + depot_order_buttons[6].y,
             depot_order_buttons[6].width, depot_order_buttons[6].height, data.focus_button_id == 7);
         image_draw(assets_lookup_image_id(ASSET_CENTER_CAMERA_ON_BUILDING), x_offset + depot_order_buttons[6].x + 3,
@@ -341,13 +341,13 @@ void window_building_draw_depot_foreground(building_info_context *c)
     } else if (data.available_storages > 1) {
         lang_text_draw_centered(CUSTOM_TRANSLATION, TR_BUILDING_INFO_DEPOT_SELECT_DESTINATION,
             x_offset + depot_order_buttons[2].x, y_offset + depot_order_buttons[2].y + 6,
-            depot_order_buttons[2].width, FONT_SMALL_PLAIN);
+            depot_order_buttons[2].width, FONT_NORMAL_BLACK);
     } else {
         translation_key translation = data.available_storages == 1 ? TR_BUILDING_INFO_DEPOT_ONE_BUILDING_FOR_RESOURCE :
             TR_BUILDING_INFO_DEPOT_NO_DESTINATION_AVAILABLE;
         text_draw_centered(lang_get_string(CUSTOM_TRANSLATION, translation),
             x_offset + depot_order_buttons[2].x, y_offset + depot_order_buttons[2].y + 6,
-            depot_order_buttons[1].width, FONT_SMALL_PLAIN, COLOR_FONT_GRAY);
+            depot_order_buttons[1].width, FONT_NORMAL_PLAIN, COLOR_FONT_GRAY);
     }
 }
 
@@ -423,9 +423,7 @@ void window_building_draw_depot_select_source_destination(building_info_context 
             image_draw(assets_lookup_image_id(ASSET_CENTER_CAMERA_ON_BUILDING),
                 c->x_offset + 21 + base_width, y_offset + 49 + ROW_HEIGHT * index, COLOR_MASK_NONE, SCALE_NONE);
             text_draw_label_and_number_centered(lang_get_string(28, bld->type), bld->storage_id, "",
-                c->x_offset + 33, y_offset + 53 + ROW_HEIGHT * index, base_width, FONT_SMALL_PLAIN, COLOR_FONT_PLAIN);
-            text_draw_label_and_number_centered(lang_get_string(28, bld->type), bld->storage_id, "",
-                c->x_offset + 32, y_offset + 52 + ROW_HEIGHT * index, base_width, FONT_SMALL_PLAIN, COLOR_WHITE);
+                c->x_offset + 32, y_offset + 52 + ROW_HEIGHT * index, base_width, FONT_NORMAL_WHITE, 0);
         }
     }
 }
@@ -581,10 +579,8 @@ void window_building_draw_depot_select_resource_foreground(building_info_context
             data.depot_resource_focus_button_id == i + 1);
         image_draw(image_id, c->x_offset + depot_select_resource_buttons[i].x + 3,
             y_offset + 46 + depot_select_resource_buttons[i].y + 3, COLOR_MASK_NONE, SCALE_NONE);
-        text_draw(str, c->x_offset + depot_select_resource_buttons[i].x + 34,
-            y_offset + 46 + depot_select_resource_buttons[i].y + 11, FONT_SMALL_PLAIN, COLOR_FONT_PLAIN);
         text_draw(str, c->x_offset + depot_select_resource_buttons[i].x + 33,
-            y_offset + 46 + depot_select_resource_buttons[i].y + 10, FONT_SMALL_PLAIN, COLOR_WHITE);
+            y_offset + 46 + depot_select_resource_buttons[i].y + 8, FONT_NORMAL_WHITE, 0);
     }
 }
 
