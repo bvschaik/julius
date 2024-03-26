@@ -25,6 +25,14 @@ static int start_revolt(void)
     return data.state;
 }
 
+static void check_and_fix_end_month(void)
+{
+    if (data.end_month >= GAME_TIME_MONTHS_PER_YEAR)
+    {
+        data.end_month -= GAME_TIME_MONTHS_PER_YEAR;
+    }
+}
+
 void scenario_gladiator_revolt_init(void)
 {
     data.game_year = scenario.start_year + scenario.gladiator_revolt.year;
@@ -44,6 +52,7 @@ void scenario_gladiator_revolt_process(void)
             start_revolt();
         }
     } else if (data.state == EVENT_IN_PROGRESS) {
+        check_and_fix_end_month();
         if (data.end_month == game_time_month()) {
             data.state = EVENT_FINISHED;
             city_message_post(1, MESSAGE_GLADIATOR_REVOLT_FINISHED, 0, 0);
@@ -74,6 +83,7 @@ void scenario_gladiator_revolt_start_new(void)
     data.game_year = game_time_year();
     data.month = game_time_month();
     data.end_month = 3 + data.month;
+    check_and_fix_end_month();
 
     start_revolt();
 }

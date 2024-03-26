@@ -54,13 +54,13 @@ static void get_min_max_month_year(int max_months, int *start_month, int *start_
         if (*end_month < 0) {
             *end_year -= 1;
         }
-        *start_month = 11 - (max_months % 12);
-        *start_year = *end_year - max_months / 12;
+        *start_month = 11 - (max_months % GAME_TIME_MONTHS_PER_YEAR);
+        *start_year = *end_year - max_months / GAME_TIME_MONTHS_PER_YEAR;
     } else {
         *start_month = 0;
         *start_year = scenario_property_start_year();
-        *end_month = (max_months + *start_month) % 12;
-        *end_year = (max_months + *start_month) / 12 + *start_year;
+        *end_month = (max_months + *start_month) % GAME_TIME_MONTHS_PER_YEAR;
+        *end_year = (max_months + *start_month) / GAME_TIME_MONTHS_PER_YEAR + *start_year;
     }
 }
 
@@ -68,8 +68,8 @@ static void get_current_month_year_from_months(int month, int max_months, int *c
 {
     int start_month, start_year, end_month, end_year;
     get_min_max_month_year(max_months, &start_month, &start_year, &end_month, &end_year);
-    *current_month = (start_month + month) % 12;
-    *current_year = start_year + month / 12 + (start_month + (month % 12) > 11 ? 1 : 0);
+    *current_month = (start_month + month) % GAME_TIME_MONTHS_PER_YEAR;
+    *current_year = start_year + month / GAME_TIME_MONTHS_PER_YEAR + (start_month + (month % GAME_TIME_MONTHS_PER_YEAR) > 11 ? 1 : 0);
 }
 
 static void draw_history_graph(int full_size, int x, int y)
