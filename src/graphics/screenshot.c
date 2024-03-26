@@ -183,7 +183,7 @@ static int image_write_rows(const color_t *canvas, int canvas_width)
                 pixel += bytes_per_pixel;
             }
         }
-        int result = spng_encode_scanline(screenshot.ctx, screenshot.pixels, screenshot.width * bytes_per_pixel);
+        int result = spng_encode_scanline(screenshot.ctx, screenshot.pixels, (size_t) screenshot.width * bytes_per_pixel);
         if (result != SPNG_OK && result != SPNG_EOI) {
             image_free();
             return 0;

@@ -628,6 +628,7 @@ int image_load_climate(int climate_id, int is_editor, int force_reload, int keep
 
     release_external_buffers();
     free(data.external_draw_data);
+    data.external_draw_data = 0;
     data.total_external_images = 0;
     data.images_with_tops = 0;
 

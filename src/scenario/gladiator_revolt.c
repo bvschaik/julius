@@ -27,8 +27,7 @@ static int start_revolt(void)
 
 static void check_and_fix_end_month(void)
 {
-    if (data.end_month >= GAME_TIME_MONTHS_PER_YEAR)
-    {
+    if (data.end_month >= GAME_TIME_MONTHS_PER_YEAR) {
         data.end_month -= GAME_TIME_MONTHS_PER_YEAR;
     }
 }

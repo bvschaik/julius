@@ -692,7 +692,7 @@ const asset_image *asset_image_create_external(const char *filename)
     img->img.original.width = img->img.width;
     img->img.original.height = img->img.height;
 
-    color_t *pixels = malloc(img->img.width * img->img.height * sizeof(color_t));
+    color_t *pixels = malloc(sizeof(color_t) * img->img.width * img->img.height);
     if (!pixels) {
         free(png);
         png_unload();

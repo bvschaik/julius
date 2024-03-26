@@ -165,6 +165,7 @@ static void init_filtered_file_list(void)
 {
     if (data.filtered_file_list.num_files > 0) {
         free(data.filtered_file_list.files);
+        data.filtered_file_list.files = 0;
         data.filtered_file_list.num_files = 0;
     }
     data.filtered_file_list.files = malloc(sizeof(dir_entry) * data.file_list->num_files);
