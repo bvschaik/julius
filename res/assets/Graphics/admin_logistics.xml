@@ -145,6 +145,7 @@
 		</animation>
 	</image>
 	<!-- Note: Cart Depot resource icons. USE offsets: x="11" y="37" relative to overall image size: width="118" height="84" -->
+	<image id="Cart_Depot_Cat" src="Cart_Depot_Cat"/>
 	<image id="Cart_Depot_Wheat" src="Cart_Depot_Wheat"/>
 	<image id="Cart_Depot_Vegetables" src="Cart_Depot_Vegetables"/>
 	<image id="Cart_Depot_Fruit" src="Cart_Depot_Fruit"/>
