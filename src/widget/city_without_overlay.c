@@ -471,6 +471,77 @@ static void draw_plague(building *b, int x, int y, color_t color_mask)
     }
 }
 
+static void draw_depot_resource(building *b, int x, int y, color_t color_mask)
+{
+    int img_id;
+
+    if (b->num_workers > 0) {
+        switch(b->data.depot.current_order.resource_type) {
+            case RESOURCE_VEGETABLES:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Vegetables");
+                break;
+            case RESOURCE_FRUIT:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Fruit");
+                break;
+            case RESOURCE_MEAT:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Meat");
+                break;
+            case RESOURCE_VINES:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Grapes");
+                break;
+            case RESOURCE_POTTERY:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Pottery");
+                break;
+            case RESOURCE_FURNITURE:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Furniture");
+                break;
+            case RESOURCE_OIL:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Oil");
+                break;
+            case RESOURCE_WINE:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Wine");
+                break;
+            case RESOURCE_MARBLE:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Marble");
+                break;
+            case RESOURCE_WEAPONS:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Weapons");
+                break;
+            case RESOURCE_CLAY:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Clay");
+                break;
+            case RESOURCE_TIMBER:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Timber");
+                break;
+            case RESOURCE_OLIVES:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Olives");
+                break;
+            case RESOURCE_IRON:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Iron");
+                break;
+            case RESOURCE_GOLD:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Gold");
+                break;
+            case RESOURCE_SAND:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Sand");
+                break;
+            case RESOURCE_STONE:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Stone");
+                break;
+            case RESOURCE_BRICKS:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Bricks");
+                break;
+            case RESOURCE_WHEAT:
+            default:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Wheat");
+                break;
+        }        
+    } else {
+        img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Cat");
+    }
+    image_draw(img_id, x + 11, y, COLOR_MASK_NONE, draw_context.scale);
+}
+
 static void draw_dock_workers(const building *b, int x, int y, color_t color_mask)
 {
     if (!b->has_plague) {
@@ -660,12 +731,15 @@ static void draw_animation(int x, int y, int grid_offset)
             if (b->has_plague) {
                 draw_plague(b, x, y, color_mask);
             }
+            if (b->type == BUILDING_DEPOT) {
+                draw_depot_resource(b, x, y, color_mask);
+            }
         }
     } else if (map_property_is_draw_tile(grid_offset) && building_id && b->has_plague) {
         draw_plague(b, x, y, color_mask);
     } else if (map_sprite_bridge_at(grid_offset)) {
         city_draw_bridge(x, y, draw_context.scale, grid_offset);
-    } else if (building_get(map_building_at(grid_offset))->type == BUILDING_FORT) {
+    } else if (b->type == BUILDING_FORT) {
         if (map_property_is_draw_tile(grid_offset)) {
             building *fort = building_get(map_building_at(grid_offset));
             image_id = assets_get_image_id("Military", "Fort_Jav_Flag_Central");
@@ -690,7 +764,7 @@ static void draw_animation(int x, int y, int grid_offset)
             image_draw(image_id, x + 81, y + 5,
                 draw_building_as_deleted(fort) ? COLOR_MASK_RED : COLOR_MASK_NONE, draw_context.scale);
         }
-    } else if (building_get(map_building_at(grid_offset))->type == BUILDING_GATEHOUSE) {
+    } else if (b->type == BUILDING_GATEHOUSE) {
         int xy = map_property_multi_tile_xy(grid_offset);
         int orientation = city_view_orientation();
         if ((orientation == DIR_0_TOP && xy == EDGE_X1Y1) ||
