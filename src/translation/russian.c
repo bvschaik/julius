@@ -1348,7 +1348,7 @@ static translation_string all_strings[] = {
     {TR_FIGURE_INFO_DEPOT_DELIVER, "Доставляет" },
     {TR_FIGURE_INFO_DEPOT_FROM, "От " },
     {TR_FIGURE_INFO_DEPOT_TO, " на " },
-    {TR_BUILDING_DEPOT_NO_EMPLOYEES, "Зданию очень сильно не хватает рабочих. Скорость работы будет значительно снижена." },
+    {TR_BUILDING_DEPOT_NO_EMPLOYEES, "Зданию очень сильно не хватает рабочих. В пустых телегах спят кошки, и волы становятся подозрительными." },
     {TR_BUILDING_DEPOT_FEW_EMPLOYEES, "Зданию очень не хватает рабочих. Скорость работы будет значительно снижена." },
     {TR_BUILDING_DEPOT_SOME_EMPLOYEES, "В здание наполовину работников. Оно будет работать на пониженной скорости." },
     {TR_BUILDING_DEPOT_HALF_EMPLOYEES, "Зданию сильно не хватает рабочих. Оно будет работать неоптимально." },
@@ -1392,6 +1392,13 @@ static translation_string all_strings[] = {
     {TR_CHEAT_CASTED_CURSE, "Гнев получен"},
     {TR_CHEAT_BUILDINGS_INVINCIBLE, "Построенные здания не разрушаются"},
     {TR_CHEAT_CLIMATE_CHANGE, "Климат меняется"},
+    {TR_MAIN_MENU_NEW_CAMPAIGN, "Начать новую кампанию"},
+    {TR_WINDOW_SELECT_CAMPAIGN, "Выбрать кампанию"},
+    {TR_WINDOW_CAMPAIGN_NO_DESC, "Нет описания"},
+    {TR_WINDOW_ORIGINAL_CAMPAIGN_NAME, "Оригинальная карьера" },
+    {TR_WINDOW_ORIGINAL_CAMPAIGN_DESC, "Оригинальная кампания Caesar 3 во всей своей красе 25-летней давности."},
+    {TR_WINDOW_CUSTOM_CAMPAIGNS_NOT_IMPLEMENTED_TITLE, "Not yet implemented" },
+    {TR_WINDOW_CUSTOM_CAMPAIGNS_NOT_IMPLEMENTED_TEXT, "The custom campaign support has not been implemented yet.\nPlease check a later build."},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
