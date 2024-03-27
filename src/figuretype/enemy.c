@@ -572,6 +572,7 @@ void figure_enemy_gladiator_action(figure *f)
 {
     f->terrain_usage = TERRAIN_USAGE_ANY;
     f->use_cross_country = 0;
+    f->is_ghost = 0;
     figure_image_increase_offset(f, 12);
     if (scenario_gladiator_revolt_is_finished()) {
         // end of gladiator revolt: kill gladiators
