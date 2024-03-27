@@ -107,6 +107,13 @@ int xml_parser_get_current_line_number(void);
 const char *xml_parser_get_current_element_name(void);
 
 /**
+ * @brief Returns the name of the parent xml element that the parser is busy with.
+ * 
+ * @return Name of the parent element, or NULL if root element..
+ */
+const char *xml_parser_get_parent_element_name(void);
+
+/**
  * @brief Resets the parser, allowing it to be used with another file that has the same element structure.
  */
 void xml_parser_reset(void);

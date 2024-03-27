@@ -6,10 +6,12 @@
 #include "core/calc.h"
 #include "core/file.h"
 #include "core/image_group.h"
+#include "core/image_group_editor.h"
 #include "core/log.h"
 #include "core/string.h"
 #include "core/xml_parser.h"
 #include "core/zlib_helper.h"
+#include "editor/editor.h"
 #include "empire/city.h"
 #include "empire/empire.h"
 #include "empire/object.h"
@@ -128,7 +130,7 @@ static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "empire", xml_start_empire },
     { "map", xml_start_map, 0, "empire" },
     { "coordinates", xml_start_coords, 0, "map" },
-    { "ornament", xml_start_ornament, 0, "empire" },
+    { "ornament", xml_start_ornament, 0, "empire|map" },
     { "border", xml_start_border, xml_end_border, "empire" },
     { "edge", xml_start_border_edge, 0, "border" },
     { "cities", 0, 0, "empire" },
@@ -186,14 +188,18 @@ static int xml_start_map(void)
     int width = xml_parser_get_attribute_int("width");
     int height = xml_parser_get_attribute_int("height");
 
-    if (data.version > 1 && !filename && xml_parser_get_attribute_bool("show_ireland")) {
+    empire_set_custom_map(filename, x_offset, y_offset, width, height);
+    
+    if (data.version > 1 && xml_parser_get_attribute_bool("show_ireland")) {
+        if (empire_get_image_id() != image_group(editor_is_active() ? GROUP_EDITOR_EMPIRE_MAP : GROUP_EMPIRE_MAP)) {
+            log_info("Ireland image cannot be enabled on custom maps", 0, 0);
+            return 1;
+        }
         full_empire_object *obj = empire_object_get_new();
         obj->in_use = 1;
         obj->obj.type = EMPIRE_OBJECT_ORNAMENT;
         obj->obj.image_id = -1;
     }
-
-    empire_set_custom_map(filename, x_offset, y_offset, width, height);
 
     return 1;
 }
@@ -233,6 +239,15 @@ static void add_ornament(int ornament_id)
 
 static int xml_start_ornament(void)
 {
+    const char *parent_name = xml_parser_get_parent_element_name();
+    if (data.version >= 2 && parent_name && strcmp(parent_name, "empire") == 0) {
+        log_info("Ornaments should go inside the map tag on version 2 and later", 0, 0);
+        return 1;
+    }
+    if (empire_get_image_id() != image_group(editor_is_active() ? GROUP_EDITOR_EMPIRE_MAP : GROUP_EMPIRE_MAP)) {
+        log_info("Ornaments are not shown on custom maps", 0, 0);
+        return 1;
+    }
     if (!xml_parser_has_attribute("type")) {
         log_info("No ornament type specified", 0, 0);
         return 1;

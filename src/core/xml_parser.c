@@ -521,6 +521,14 @@ const char *xml_parser_get_current_element_name(void)
     return data.current_element->name;
 }
 
+const char *xml_parser_get_parent_element_name(void)
+{
+    if (data.depth < 2) {
+        return 0;
+    }
+    return data.parents[data.depth - 2]->name;
+}
+
 void xml_parser_reset(void)
 {
     data.error = 0;
