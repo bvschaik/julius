@@ -87,9 +87,9 @@ void figure_military_standard_action(figure *f)
         }
     } else {
         if (m->is_halted) {
-            f->cart_image_id = assets_get_image_id("Military", "auxinf_banner_0");
+            f->cart_image_id = assets_get_image_id("UI", "auxinf_banner_0");
         } else {
-            f->cart_image_id = assets_get_image_id("Military", "auxinf_banner_01") + f->image_offset / 2;
+            f->cart_image_id = assets_get_image_id("UI", "auxinf_banner_01") + f->image_offset / 2;
         }
     }
 }

@@ -262,9 +262,9 @@ void window_building_draw_legion_info(building_info_context *c)
     }
     if (m->figure_type == FIGURE_FORT_INFANTRY) {
         if (m->is_halted) {
-            flag_image_id = assets_get_image_id("Military", "auxinf_banner_0");
+            flag_image_id = assets_get_image_id("UI", "auxinf_banner_0");
         } else {
-            flag_image_id = assets_get_image_id("Military", "auxinf_banner_01");
+            flag_image_id = assets_get_image_id("UI", "auxinf_banner_01");
         }
     }
 

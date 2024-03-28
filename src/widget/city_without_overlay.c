@@ -486,6 +486,9 @@ static void draw_depot_resource(building *b, int x, int y, color_t color_mask)
             case RESOURCE_MEAT:
                 img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Meat");
                 break;
+            case RESOURCE_FISH:
+                img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Fish");
+                break;
             case RESOURCE_VINES:
                 img_id = assets_get_image_id("Admin_Logistics", "Cart_Depot_Grapes");
                 break;

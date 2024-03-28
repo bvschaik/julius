@@ -259,4 +259,85 @@
 	<image id="Empire_Icon_Roman_02" src="Empire_Icon_Roman_02"/>
 	<!-- Note: Empire map icons for alternative distant cities -->
 	<image id="Empire_Icon_Distant_01" src="Empire_Icon_Distant_01"/>
+	<!-- Note: Legion banner base -->
+	<image id="Legion_Banner_Base" width="32" height="29">
+		<layer group="126" image="8"/>
+		<layer src="Legion_Banner_Base" x="0" y="0"/>
+	</image>
+	<!-- Note: Auxiliary Infantry banner static. Asset by CaesarZX -->
+	<image id="auxinf_banner_0" width="32" height="29">
+		<layer group="this" image="Legion_Banner_Base"/>
+		<layer src="auxinf_banner_0" x="0" y="0"/>
+	</image>
+	<!-- Note: Auxiliary Infantry banner animation frames. Assets by CaesarZX -->
+	<image id="auxinf_banner_01">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_01" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_02">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_02" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_03">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_03" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_04">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_04" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_05">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_05" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_06">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_06" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_07">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_07" x="4" y="3"/>
+	</image>
+	<image id="auxinf_banner_08">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxinf_banner_08" x="4" y="3"/>
+	</image>
+	<!-- Note: Auxiliary Archer banner static. Asset by CaesarZX -->
+	<image id="auxarch_banner_0" width="32" height="29">
+		<layer group="this" image="Legion_Banner_Base"/>
+		<layer src="auxarch_banner_0" x="0" y="0"/>
+	</image>
+	<!-- Note: Auxiliary Archer banner animation frames. Assets by CaesarZX -->
+	<image id="auxarch_banner_01">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_01" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_02">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_02" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_03">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_03" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_04">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_044" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_05">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_05" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_06">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_06" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_07">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_07" x="4" y="3"/>
+	</image>
+	<image id="auxarch_banner_08">
+		<layer src="auxinf_banner_base"/>
+		<layer src="auxarch_banner_08" x="4" y="3"/>
+	</image>
 </assetlist>
