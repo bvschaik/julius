@@ -340,4 +340,77 @@
 		<layer src="auxinf_banner_base"/>
 		<layer src="auxarch_banner_08" x="4" y="3"/>
 	</image>
+	<!-- Note: Unit flags for Tower and Watchtower Sentries -->
+	<image id="tower_banner_0" width="32" height="29">
+		<layer group="this" image="Legion_Banner_Base"/>
+		<layer src="tower_banner_0" x="0" y="0"/>
+	</image>
+	<image id="watchtower_banner_0" width="32" height="29">
+		<layer group="this" image="Legion_Banner_Base"/>
+		<layer src="watchtower_banner_0" x="0" y="0"/>
+	</image>
+	<!-- Note: Barracks UI buttons -->
+	<image id="Barracks_Priority_Legionaries_OFF" width="40" height="40">
+		<layer src="Barracks_Priority_Base" x="5" y="4"/>
+		<layer group="126" image="8" x="4" y="6"/>
+		<layer src="Barracks_Priority_OFF" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Legionaries_ON" width="40" height="40">
+		<layer group="this" image="Barracks_Priority_Legionaries_OFF"/>
+		<layer src="Barracks_Priority_ON" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Javelin_OFF" width="40" height="40">
+		<layer src="Barracks_Priority_Base" x="5" y="4"/>
+		<layer group="126" image="17" x="4" y="6"/>
+		<layer src="Barracks_Priority_OFF" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Javelin_ON" width="40" height="40">
+		<layer group="this" image="Barracks_Priority_Javelin_OFF"/>
+		<layer src="Barracks_Priority_ON" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Mounted_OFF" width="40" height="40">
+		<layer src="Barracks_Priority_Base" x="5" y="4"/>
+		<layer group="126" image="26" x="4" y="6"/>
+		<layer src="Barracks_Priority_OFF" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Mounted_ON" width="40" height="40">
+		<layer group="this" image="Barracks_Priority_Mounted_OFF"/>
+		<layer src="Barracks_Priority_ON" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Auxinf_OFF" width="40" height="40">
+		<layer src="Barracks_Priority_Base" x="5" y="4"/>
+		<layer group="this" image="auxinf_banner_0" x="4" y="6"/>
+		<layer src="Barracks_Priority_OFF" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Auxinf_ON" width="40" height="40">
+		<layer group="this" image="Barracks_Priority_Auxinf_OFF"/>
+		<layer src="Barracks_Priority_ON" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Auxarch_OFF" width="40" height="40">
+		<layer src="Barracks_Priority_Base" x="5" y="4"/>
+		<layer group="this" image="auxarch_banner_0" x="4" y="6"/>
+		<layer src="Barracks_Priority_OFF" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Auxarch_ON" width="40" height="40">
+		<layer group="this" image="Barracks_Priority_Auxarch_OFF"/>
+		<layer src="Barracks_Priority_ON" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Tower_OFF" width="40" height="40">
+		<layer src="Barracks_Priority_Base" x="5" y="4"/>
+		<layer group="this" image="tower_banner_0" x="4" y="6"/>
+		<layer src="Barracks_Priority_OFF" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Tower_ON" width="40" height="40">
+		<layer group="this" image="Barracks_Priority_Tower_OFF"/>
+		<layer src="Barracks_Priority_ON" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Watchtower_OFF" width="40" height="40">
+		<layer src="Barracks_Priority_Base" x="5" y="4"/>
+		<layer group="this" image="watchtower_banner_0" x="4" y="6"/>
+		<layer src="Barracks_Priority_OFF" x="0" y="0"/>
+	</image>
+	<image id="Barracks_Priority_Watchtower_ON" width="40" height="40">
+		<layer group="this" image="Barracks_Priority_Watchtower_OFF"/>
+		<layer src="Barracks_Priority_ON" x="0" y="0"/>
+	</image>
 </assetlist>
