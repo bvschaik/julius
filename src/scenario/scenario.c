@@ -1,5 +1,6 @@
 #include "scenario.h"
 
+#include "campaign/campaign.h"
 #include "city/resource.h"
 #include "core/string.h"
 #include "empire/city.h"
@@ -9,6 +10,8 @@
 #include "game/settings.h"
 #include "scenario/data.h"
 #include "scenario/request.h"
+
+#include <string.h>
 
 struct scenario_t scenario;
 
@@ -756,7 +759,6 @@ void scenario_settings_init(void)
     scenario.campaign.mission = 0;
     scenario.campaign.rank = 0;
     scenario.campaign.player_name[0] = 0;
-    scenario.campaign.custom_name[0] = 0;
     scenario.settings.is_custom = 0;
     scenario.settings.starting_favor = difficulty_starting_favor();
     scenario.settings.starting_personal_savings = 0;
@@ -777,7 +779,8 @@ void scenario_unlock_all_buildings(void)
 }
 
 
-void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
+void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3,
+    buffer *player_name, buffer *scenario_name, buffer *campaign_name)
 {
     buffer_write_i32(part1, scenario.campaign.mission);
 
@@ -792,10 +795,18 @@ void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3, b
     }
     buffer_write_raw(player_name, scenario.settings.player_name, MAX_PLAYER_NAME);
     buffer_write_raw(scenario_name, scenario.scenario_name, MAX_SCENARIO_NAME);
+
+    int campaign_name_length = (int) strlen(campaign_get_name()) + 1;
+    int buf_size = (int) sizeof(int32_t) + campaign_name_length;
+    uint8_t *buf_data = malloc(buf_size);
+
+    buffer_init(campaign_name, buf_data, buf_size);
+    buffer_write_i32(campaign_name, campaign_name_length);
+    buffer_write_raw(campaign_name, campaign_get_name(), campaign_name_length);
 }
 
 void scenario_settings_load_state(
-    buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name)
+    buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name, buffer *campaign_name)
 {
     scenario.campaign.mission = buffer_read_i32(part1);
 
@@ -808,6 +819,13 @@ void scenario_settings_load_state(
     buffer_skip(player_name, MAX_PLAYER_NAME);
     buffer_read_raw(player_name, scenario.settings.player_name, MAX_PLAYER_NAME);
     buffer_read_raw(scenario_name, scenario.scenario_name, MAX_SCENARIO_NAME);
+
+    if (campaign_name) {
+        int campaign_name_length = buffer_read_i32(campaign_name);
+        char name[FILE_NAME_MAX];
+        buffer_read_raw(campaign_name, name, campaign_name_length);
+        campaign_load(name);
+    }
 }
 
 custom_variable_t *scenario_custom_variable_create(const uint8_t *uid, int initial_value)

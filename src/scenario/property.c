@@ -1,5 +1,6 @@
 #include "property.h"
 
+#include "campaign/campaign.h"
 #include "core/calc.h"
 #include "core/string.h"
 #include "graphics/image.h"
@@ -35,24 +36,19 @@ void scenario_set_campaign_mission(int mission)
     scenario.campaign.mission = mission;
 }
 
-static int is_custom_campaign(void)
-{
-    return scenario.campaign.custom_name[0] != 0;
-}
-
 int scenario_is_tutorial_1(void)
 {
-    return !scenario.settings.is_custom && scenario.campaign.rank == 0 && !is_custom_campaign();
+    return !scenario.settings.is_custom && scenario.campaign.rank == 0 && !campaign_is_active();
 }
 
 int scenario_is_tutorial_2(void)
 {
-    return !scenario.settings.is_custom && scenario.campaign.rank == 1 && !is_custom_campaign();
+    return !scenario.settings.is_custom && scenario.campaign.rank == 1 && !campaign_is_active();
 }
 
 int scenario_is_tutorial_3(void)
 {
-    return !scenario.settings.is_custom && scenario.campaign.rank == 2 && !is_custom_campaign();
+    return !scenario.settings.is_custom && scenario.campaign.rank == 2 && !campaign_is_active();
 }
 
 int scenario_starting_favor(void)

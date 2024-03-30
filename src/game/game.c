@@ -3,6 +3,7 @@
 #include "assets/assets.h"
 #include "building/model.h"
 #include "building/properties.h"
+#include "campaign/campaign.h"
 #include "city/view.h"
 #include "core/config.h"
 #include "core/hotkey_config.h"
@@ -56,6 +57,7 @@ int game_pre_init(void)
     config_load();
     hotkey_config_load();
     scenario_settings_init();
+    campaign_clear();
     game_state_unpause();
 
     if (!lang_load(0)) {

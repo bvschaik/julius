@@ -3,13 +3,17 @@
 #include "campaign/file.h"
 #include "campaign/mission.h"
 #include "campaign/xml.h"
+#include "core/file.h"
 #include "core/log.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 static struct {
     int active;
     campaign_info campaign;
+    char file_name[FILE_NAME_MAX];
+    char suspended_filename[FILE_NAME_MAX];
     struct {
         campaign_mission_info info;
         int current_option_id;
@@ -47,13 +51,34 @@ static void get_campaign_data(void)
 
 int campaign_load(const char *filename)
 {
-    campaign_clear();
     if (!filename || !*filename) {
+        campaign_clear();
         return 0;
     }
+
+    if (strcmp(filename, data.file_name) == 0) {
+        data.active = 1;
+        return 1;
+    }
+
+    campaign_clear();
     campaign_file_set_path(filename);
     get_campaign_data();
+    if (data.active) {
+        strncpy(data.file_name, filename, FILE_NAME_MAX);
+    }
     return data.active;
+}
+
+int campaign_is_active(void)
+{
+    return data.active;
+}
+
+const char *campaign_get_name(void)
+{
+    static char disabled_file_name;
+    return data.active ? data.file_name : &disabled_file_name;
 }
 
 const campaign_info *campaign_get_info(void)
@@ -114,6 +139,17 @@ const campaign_mission_info *campaign_get_next_mission(int last_scenario_id)
     return &data.mission.info;
 }
 
+void campaign_suspend(void)
+{
+    strncpy(data.suspended_filename, data.file_name, FILE_NAME_MAX);
+    data.active = 0;
+}
+
+void campaign_restore(void)
+{
+    campaign_load(data.suspended_filename);
+}
+
 void campaign_clear(void)
 {
     campaign_file_set_path(0);
@@ -127,5 +163,6 @@ void campaign_clear(void)
     data.mission.info.get_next_option = get_next_mission_option;
     data.mission.current_option_id = 0;
     data.mission.current = 0;
+    data.file_name[0] = 0;
     data.active = 0;
 }

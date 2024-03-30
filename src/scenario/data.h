@@ -260,7 +260,6 @@ extern struct scenario_t {
     struct {
         int rank;
         int mission;
-        char custom_name[FILE_NAME_MAX];
         /** Temp storage for carrying over player name to next campaign mission */
         uint8_t player_name[MAX_PLAYER_NAME];
     } campaign;

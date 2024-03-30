@@ -4,7 +4,7 @@
 
 #include "zip/zip.h"
 
-#define CAMPAIGNS_PREFIX_SIZE sizeof(CAMPAIGNS_DIR_NAME "/")
+#define CAMPAIGNS_PREFIX_SIZE sizeof(CAMPAIGNS_DIRECTORY "/")
 
 static struct {
     int is_folder;
@@ -127,7 +127,7 @@ const char *campaign_file_remove_prefix(const char *path)
     if (!data.file_name[0]) {
         return 0;
     }
-    if (strncmp(path, CAMPAIGNS_DIR_NAME "/", CAMPAIGNS_PREFIX_SIZE) != 0) {
+    if (strncmp(path, CAMPAIGNS_DIRECTORY "/", CAMPAIGNS_PREFIX_SIZE) != 0) {
         return 0;
     }
     path += CAMPAIGNS_PREFIX_SIZE;

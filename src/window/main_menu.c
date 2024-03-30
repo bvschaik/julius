@@ -1,6 +1,7 @@
 #include "main_menu.h"
 
 #include "assets/assets.h"
+#include "campaign/campaign.h"
 #include "core/calc.h"
 #include "core/string.h"
 #include "editor/editor.h"
@@ -140,6 +141,7 @@ void window_main_menu_show(int restart_music)
     if (restart_music) {
         sound_music_play_intro();
     }
+    campaign_clear();
     window_type window = {
         WINDOW_MAIN_MENU,
         draw_background,

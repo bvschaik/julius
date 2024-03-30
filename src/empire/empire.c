@@ -402,7 +402,7 @@ void empire_load_state(buffer *buf)
 
 void empire_save_custom_map(buffer *buf)
 {
-    int path_length = strlen(data.image.path) + 1;
+    int path_length = (int) strlen(data.image.path) + 1;
     int buf_size = sizeof(int32_t) + 16 + path_length;
     uint8_t *buf_data = malloc(buf_size);
 

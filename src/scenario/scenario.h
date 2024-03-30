@@ -28,10 +28,10 @@ void scenario_objectives_from_buffer(buffer *buf, int version, scenario_win_crit
 void scenario_map_data_from_buffer(buffer *buf, int *width, int *height, int *grid_start, int *grid_border_size, int version);
 
 void scenario_settings_save_state(
-    buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name);
+    buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name, buffer *campaign_name);
 
 void scenario_settings_load_state(
-    buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name);
+    buffer *part1, buffer *part2, buffer *part3, buffer *player_name, buffer *scenario_name, buffer *campaign_name);
 
 void scenario_requests_save_state(buffer *buf);
 

@@ -39,6 +39,18 @@ typedef struct {
 int campaign_load(const char *filename);
 
 /**
+ * Checks if the campaign is active.
+ * @return 1 if the campaign is active, 0 otherwise.
+ */
+int campaign_is_active(void);
+
+/**
+ * Gets the campaign filename.
+ * @return The campaign filename if the campaign is active, 0 otherwise.
+ */
+const char *campaign_get_name(void);
+
+/**
  * Gets the basic info for the campaign.
  * @return A campaign_info struct with the data if successful, 0 otherwise.
  */
@@ -66,6 +78,16 @@ uint8_t *campaign_load_file(const char *filename, size_t *length);
  * or 0 if there's an error or if there are no new missions.
  */
 const campaign_mission_info *campaign_get_next_mission(int last_scenario_id);
+
+/**
+ * Suspends the campaign.
+ */
+void campaign_suspend(void);
+
+/**
+ * Restores a suspended campaign.
+ */
+void campaign_restore(void);
 
 /**
  * Clears the campaign data.

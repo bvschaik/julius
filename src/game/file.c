@@ -6,6 +6,7 @@
 #include "building/menu.h"
 #include "building/monument.h"
 #include "building/storage.h"
+#include "campaign/campaign.h"
 #include "city/data.h"
 #include "city/emperor.h"
 #include "city/map.h"
@@ -409,9 +410,14 @@ int game_file_start_scenario(const char *scenario_file)
 
 int game_file_load_saved_game(const char *filename)
 {
+    campaign_suspend();
     int result = game_file_io_read_saved_game(filename, 0);
     if (result != FILE_LOAD_SUCCESS) {
+        campaign_restore();
         return result;
+    }
+    if (!campaign_is_active()) {
+        campaign_clear();
     }
     check_backward_compatibility();
     initialize_saved_game();
