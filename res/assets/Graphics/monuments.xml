@@ -1184,7 +1184,7 @@
 		<layer src="Mausoleum_Large_Alt_R" x="31" y="87"/>
 	</image>
 	<!-- Note: Small Mausoleum Construction 01 Phase -->
-	<image id="Mausoleum S Cons" width="118" height="69" isometric="true">
+	<image id="Mausoleum_Small_Construction_01" width="118" height="69" isometric="true">
 		<layer group="this" image="2x2_Construction_Footprint" y="9"/>
 		<layer src="2x2_Construction_Borders" y="9"/>
 		<layer src="Mausoleum_Small_Construction_01"/>
@@ -1231,15 +1231,15 @@
 	</image>
 	<!-- Note: Triumphal Arch completed assets with rotation -->
 	<image id="Triumphal_Arch" width="178" height="161" isometric="true">
-		<layer src="Triumphal_Arch_Base"/>
+		<layer group="this" image="Triumphal_Arch_Base"/>
 		<animation speed="1" x="63" y="19" reversible="false">
 			<frame group="205" image="1"/>
 		</animation>
 	</image>
 	<image id="Triumphal_Arch_R" width="178" height="163" isometric="true">
-		<layer src="Triumphal_Arch_Base_R"/>
+		<layer group="this" image="Triumphal_Arch_Base_R"/>
 		<animation speed="1" x="27" y="17" reversible="false">
-			<frame group="205" image="1"/>
+			<frame group="205" image="3"/>
 		</animation>
 	</image>
 	<!-- Note: Triumphal Arch construction phases with rotation -->

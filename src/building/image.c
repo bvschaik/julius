@@ -765,7 +765,7 @@ int building_image_get(const building *b)
         case BUILDING_SMALL_MAUSOLEUM:
             switch (b->monument.phase) {
                 case MONUMENT_START:
-                    return assets_get_image_id("Monuments", "Mausoleum S Cons");
+                    return assets_get_image_id("Monuments", "Mausoleum_Small_Construction_01");
                 default:
                 {
                     int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
