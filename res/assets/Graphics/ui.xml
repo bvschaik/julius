@@ -418,4 +418,6 @@
 		<layer group="this" image="Barracks_Priority_Watchtower_OFF"/>
 		<layer src="Barracks_Priority_ON" x="0" y="0"/>
 	</image>
+	<!-- Note: Pantheon portrait for Epithet Advisor descriptions. Draw image borders and vignette in the same way as the Colosseum game selection buttons -->
+	<image id="Pantheon_Epithet_Button_01" src="Pantheon_Epithet_Button_01"/>
 </assetlist>
