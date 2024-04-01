@@ -1206,4 +1206,65 @@
 		<layer group="this" image="Mausoleum S" part="footprint"/>
 		<layer src="Mausoleum_Small_R" x="0" y="0"/>
 	</image>
+	<!-- Note: Triumphal Arch reference assets with rotation (DO NOT USE!!) -->
+	<image id="Triumphal_Arch_Base" width="178" height="161" isometric="true">
+		<layer group="205" image="0"/>
+		<layer group="205" image="1" x="63" y="19"/>
+	</image>
+	<image id="Triumphal_Arch_Base_R" width="178" height="163" isometric="true">
+		<layer group="205" image="2"/>
+		<layer group="205" image="3" x="27" y="17"/>
+	</image>
+	<image id="Triumphal_Arch_Overlay_Half" width="67" height="56">
+		<layer group="205" image="1" x="-19" y="-76"/>
+	</image>
+	<image id="Triumphal_Arch_Overlay_Half_R" width="67" height="54">
+		<layer group="205" image="3" x="0" y="-80"/>
+	</image>
+	<image id="Triumphal_Arch_Overlay" width="178" height="137">
+		<layer group="this" image="Triumphal_Arch_Overlay_Half" x="82" y="71"/>
+		<layer src="Triumphal_Arch_Construction_02_Top" x="89" y="30"/>
+	</image>
+	<image id="Triumphal_Arch_Overlay_R" width="178" height="137">
+		<layer group="this" image="Triumphal_Arch_Overlay_Half_R" x="27" y="71"/>
+		<layer src="Triumphal_Arch_Construction_02_Top_R" x="33" y="30"/>
+	</image>
+	<!-- Note: Triumphal Arch completed assets with rotation -->
+	<image id="Triumphal_Arch" width="178" height="161" isometric="true">
+		<layer src="Triumphal_Arch_Base"/>
+		<animation speed="1" x="63" y="19" reversible="false">
+			<frame group="205" image="1"/>
+		</animation>
+	</image>
+	<image id="Triumphal_Arch_R" width="178" height="163" isometric="true">
+		<layer src="Triumphal_Arch_Base_R"/>
+		<animation speed="1" x="27" y="17" reversible="false">
+			<frame group="205" image="1"/>
+		</animation>
+	</image>
+	<!-- Note: Triumphal Arch construction phases with rotation -->
+	<image id="Triumphal_Arch_Construction_01" width="178" height="99" isometric="true">
+		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
+		<layer src="Triumphal_Arch_Construction_01" x="0" y="0"/>
+	</image>
+	<image id="Triumphal_Arch_Construction_01_R" width="178" height="99" isometric="true">
+		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
+		<layer src="3x3_Construction_Borders" x="0" y="9"/>
+		<layer src="Triumphal_Arch_Construction_01_R" x="0" y="0"/>
+	</image>
+	<image id="Triumphal_Arch_Construction_02" width="178" height="137" isometric="true">
+		<layer group="this" image="Triumphal_Arch_Base" y="-24" part="footprint"/>
+		<layer src="Triumphal_Arch_Construction_02"/>
+		<animation speed="1" x="0" y="0" reversible="false">
+			<frame group="this" image="Triumphal_Arch_Overlay"/>
+		</animation>
+	</image>
+	<image id="Triumphal_Arch_Construction_02_R" width="178" height="137" isometric="true">
+		<layer group="this" image="Triumphal_Arch_Base_R" y="-26" part="footprint"/>
+		<layer src="Triumphal_Arch_Construction_02_R"/>
+		<animation speed="1" x="0" y="0" reversible="false">
+			<frame group="this" image="Triumphal_Arch_Overlay_R"/>
+		</animation>
+	</image>
 </assetlist>

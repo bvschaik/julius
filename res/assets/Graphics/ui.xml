@@ -254,11 +254,16 @@
 	<image id="Denied_Walker_Checkmark" src="Denied_Walker_Checkmark"/>
 	<!-- Note: UI button for accessing Housing Advisor -->
 	<image id="Housing_Advisor_S" src="Housing_Advisor_S"/>
-	<!-- Note: Empire map icons for crude Roman trade cities and non-trade cities respectively -->
+	<!-- Note: Empire map icons for Roman trade towns and non-trade towns respectively -->
 	<image id="Empire_Icon_Roman_01" src="Empire_Icon_Roman_01"/>
 	<image id="Empire_Icon_Roman_02" src="Empire_Icon_Roman_02"/>
-	<!-- Note: Empire map icons for alternative distant cities -->
+	<!-- Note: Empire map icons for Roman trade villages and non-trade villages respectively -->
+	<image id="Empire_Icon_Roman_01" src="Empire_Icon_Roman_01"/>
+	<image id="Empire_Icon_Roman_02" src="Empire_Icon_Roman_02"/>
+	<!-- Note: Empire map icons for distant towns -->
 	<image id="Empire_Icon_Distant_01" src="Empire_Icon_Distant_01"/>
+	<!-- Note: Empire map icons for distant villages -->
+	<image id="Empire_Icon_Distant_02" src="Empire_Icon_Distant_02"/>
 	<!-- Note: Legion banner base -->
 	<image id="Legion_Banner_Base" width="32" height="29">
 		<layer group="126" image="8"/>
