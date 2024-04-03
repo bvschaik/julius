@@ -1,26 +1,38 @@
 #include "mission_briefing.h"
 
+#include "assets/assets.h"
+#include "campaign/campaign.h"
 #include "city/mission.h"
 #include "core/image_group.h"
 #include "core/lang.h"
 #include "game/file.h"
 #include "game/mission.h"
+#include "game/settings.h"
 #include "game/tutorial.h"
 #include "graphics/graphics.h"
+#include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/rich_text.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
+#include "scenario/custom_messages.h"
 #include "scenario/criteria.h"
 #include "scenario/property.h"
+#include "scenario/scenario.h"
+#include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
+#include "translation/translation.h"
 #include "window/city.h"
 #include "window/intermezzo.h"
+#include "window/main_menu.h"
 #include "window/mission_selection.h"
+#include "window/plain_message_dialog.h"
+#include "window/video.h"
 
+static void show(void);
 static void button_back(int param1, int param2);
 static void button_start_mission(int param1, int param2);
 
@@ -36,6 +48,7 @@ static image_button image_button_start_mission = {
 
 static struct {
     int is_review;
+    int video_played;
     int focus_button;
     int campaign_mission_loaded;
 } data;
@@ -46,25 +59,146 @@ static void init(void)
     rich_text_reset(0);
 }
 
+static int load_scenario_file(void)
+{
+    if (!campaign_is_active()) {
+        return game_file_start_scenario_by_name(scenario_name());
+    } else {
+        return campaign_load_scenario(scenario_campaign_mission());
+    }
+}
+
+static int has_briefing_message(void)
+{
+    if (!scenario_is_custom()) {
+        return 1;
+    }
+    if (!scenario_intro_message()) {
+        return 0;
+    }
+    custom_message_t *message = custom_messages_get(scenario_intro_message());
+    if (!message) {
+        return 0;
+    }
+    return custom_messages_get_video(message) || custom_messages_get_text(message) ||
+        custom_messages_get_title(message) || custom_messages_get_subtitle(message);
+}
+
+static int play_video(void)
+{
+    if (!scenario_is_custom() || data.is_review || data.video_played) {
+        return 0;
+    }
+    data.video_played = 1;
+    uint8_t *video_file = custom_messages_get_video(custom_messages_get(scenario_intro_message()));
+    if (video_file) {
+        char utf8_filename[FILE_NAME_MAX];
+        encoding_to_utf8(video_file, utf8_filename, FILE_NAME_MAX, encoding_system_uses_decomposed());
+        window_video_show(utf8_filename, show);
+        return 1;
+    }
+    return 0;
+}
+
+static void play_audio(void)
+{
+    if (!scenario_is_custom()) {
+        return;
+    }
+    custom_message_t *custom_message = custom_messages_get(scenario_intro_message());
+
+    const char *background_music = custom_messages_get_background_music(custom_message);
+    if (background_music) {
+        sound_device_stop_music();
+        sound_device_play_music(background_music, setting_sound(SOUND_MUSIC)->volume, 0);
+    }
+
+    const char *audio_file = custom_messages_get_audio(custom_message);
+    if (audio_file) {
+        sound_speech_play_file(audio_file);
+    }
+}
+
+static void draw_background_image(void)
+{
+    if (!scenario_is_custom()) {
+        window_draw_underlying_window();
+        return;
+    }
+    const campaign_scenario *scenario = campaign_get_scenario(scenario_campaign_mission());
+    int image_id = 0;
+    if (scenario->briefing_image_path) {
+        image_id = assets_get_image_id(ASSET_EXTERNAL_FILE_LIST, scenario->briefing_image_path);
+    } else {
+        image_id = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * (scenario_campaign_mission() % 11) + 1;
+    }
+    image_draw_fullscreen_background(image_id);
+}
+
+static void get_briefing_texts(const uint8_t **title, const uint8_t **subtitle, const uint8_t **content)
+{
+    if (!scenario_is_custom()) {
+        int text_id = 200 + scenario_campaign_mission();
+        const lang_message *msg = lang_get_message(text_id);
+        *title = msg->title.text;
+        *subtitle = msg->subtitle.text;
+        *content = msg->content.text;
+    } else {
+        custom_message_t *custom_message = custom_messages_get(scenario_intro_message());
+        *title = custom_messages_get_title(custom_message);
+        *subtitle = custom_messages_get_subtitle(custom_message);
+        *content = custom_messages_get_text(custom_message);
+    }
+}
+
 static void draw_background(void)
 {
     if (!data.campaign_mission_loaded) {
-        data.campaign_mission_loaded = 1;
-        if (!game_file_start_scenario_by_name(scenario_name())) {
-            window_city_show();
+        if (!load_scenario_file()) {
+            window_main_menu_show(1);
+            setting_clear_personal_savings();
+            scenario_settings_init();
+            scenario_set_campaign_rank(2);
+            window_plain_message_dialog_show(TR_WINDOW_CAMPAIGN_MISSION_FAILED_TO_LOAD_TITLE,
+                TR_WINDOW_CAMPAIGN_MISSION_FAILED_TO_LOAD_TEXT, 0);
             return;
         }
+        data.campaign_mission_loaded = 1;
     }
 
-    window_draw_underlying_window();
+    if (!has_briefing_message()) {
+        button_start_mission(0, 0);
+        return;
+    }
+
+    if (play_video()) {
+        return;
+    }
+
+    const uint8_t *title;
+    const uint8_t *subtitle;
+    const uint8_t *content;
+
+    get_briefing_texts(&title, &subtitle, &content);
+
+    if (!title && !subtitle && !content) {
+        button_start_mission(0, 0);
+        return;
+    }
+
+    play_audio();
+    draw_background_image();
 
     graphics_in_dialog();
-    int text_id = 200 + scenario_campaign_mission();
-    const lang_message *msg = lang_get_message(text_id);
 
     outer_panel_draw(16, 32, 38, 27);
-    text_draw(msg->title.text, 32, 48, FONT_LARGE_BLACK, 0);
-    text_draw(msg->subtitle.text, 32, 78, FONT_NORMAL_BLACK, 0);
+
+    if (title) {
+        text_draw(title, 32, 48, FONT_LARGE_BLACK, 0);
+    }
+    if (subtitle) {
+        text_draw(subtitle, 32, 78, FONT_NORMAL_BLACK, 0);
+    }
 
     lang_text_draw(62, 7, 376, 433, FONT_NORMAL_BLACK);
     if (!data.is_review && game_mission_has_choice()) {
@@ -124,12 +258,14 @@ static void draw_background(void)
 
     inner_panel_draw(32, 184, 33, 15);
 
-    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED, 5);
-    rich_text_init(msg->content.text, 64, 184, 31, 15, 0);
+    if (content) {
+        rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED, 5);
+        rich_text_init(content, 64, 184, 31, 15, 0);
 
-    graphics_set_clip_rectangle(35, 187, 522, 234);
-    rich_text_draw(msg->content.text, 48, 196, 496, 14, 0);
-    graphics_reset_clip_rectangle();
+        graphics_set_clip_rectangle(35, 187, 522, 234);
+        rich_text_draw(content, 48, 196, 496, 14, 0);
+        graphics_reset_clip_rectangle();
+    }
 
     graphics_reset_dialog();
 }
@@ -167,6 +303,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 static void button_back(int param1, int param2)
 {
     if (!data.is_review) {
+        sound_music_stop();
         sound_speech_stop();
         window_mission_selection_show();
     }
@@ -175,9 +312,12 @@ static void button_back(int param1, int param2)
 static void button_start_mission(int param1, int param2)
 {
     sound_speech_stop();
+    sound_music_stop();
     sound_music_update(1);
     window_city_show();
-    city_mission_reset_save_start();
+    if (!data.is_review) {
+        city_mission_reset_save_start();
+    }
 }
 
 static void show(void)
@@ -195,13 +335,14 @@ static void show(void)
 void window_mission_briefing_show(void)
 {
     data.is_review = 0;
+    data.video_played = 0;
     data.campaign_mission_loaded = 0;
-    window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
+    campaign_is_active() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
 
 void window_mission_briefing_show_review(void)
 {
     data.is_review = 1;
     data.campaign_mission_loaded = 1;
-    window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
+    campaign_is_active() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }

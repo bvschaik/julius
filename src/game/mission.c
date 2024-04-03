@@ -1,5 +1,6 @@
 #include "mission.h"
 
+#include "campaign/campaign.h"
 #include "scenario/property.h"
 
 static const struct {
@@ -36,5 +37,11 @@ int game_mission_military(void)
 
 int game_mission_has_choice(void)
 {
-    return RANK_CHOICE[scenario_campaign_rank()];
+    if (!campaign_is_active()) {
+        return RANK_CHOICE[scenario_campaign_rank()];
+    } else {
+        int mission = scenario_campaign_mission();
+        const campaign_mission_info *info = campaign_get_current_mission(mission);
+        return info && info->total_scenarios > 1;
+    }
 }

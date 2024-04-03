@@ -114,17 +114,16 @@ static void draw_background(void)
     if (!info) {
         lang_text_draw_centered(CUSTOM_TRANSLATION, TR_SAVE_DIALOG_INVALID_FILE, 362, 241, 246, FONT_LARGE_BLACK);
     } else {
-        if (info->name) {
-            text_draw_centered(info->name, 362, CAMPAIGN_LIST_Y_POSITION, 246, FONT_NORMAL_BLACK, 0);
-        } else {
-            uint8_t name[FILE_NAME_MAX];
-            encoding_from_utf8(data.campaign_list->files[campaign_id - 1].name, name, FILE_NAME_MAX);
-            file_remove_extension((char *) name);
-            text_ellipsize(name, FONT_NORMAL_BLACK, 246);
-            text_draw_centered(name, 362, CAMPAIGN_LIST_Y_POSITION, 246, FONT_NORMAL_BLACK, 0);
+        int y_offset = 40;
+        text_draw_centered(info->name, 362, CAMPAIGN_LIST_Y_POSITION, 246, FONT_NORMAL_BLACK, 0);
+        if (info->author) {
+            int width = lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_CAMPAIGN_AUTHOR,
+                362, CAMPAIGN_LIST_Y_POSITION + 20, FONT_NORMAL_BLACK);
+            text_draw(info->author, 362 + width, CAMPAIGN_LIST_Y_POSITION + 20, FONT_NORMAL_BLACK, 0);
+            y_offset += 20;
         }
         if (info->description) {
-            text_draw_multiline(info->description, 362, CAMPAIGN_LIST_Y_POSITION + 40, 246,
+            text_draw_multiline(info->description, 362, CAMPAIGN_LIST_Y_POSITION + y_offset, 246,
                 FONT_NORMAL_BLACK, 0);
         } else {
             lang_text_draw_centered(CUSTOM_TRANSLATION, TR_WINDOW_CAMPAIGN_NO_DESC, 362, 246, 246, FONT_NORMAL_BLACK);
@@ -209,16 +208,16 @@ static void select_campaign(int index, int is_double_click)
 
 static void start_mission(int param1, int param2)
 {
-    if (list_box_get_selected_index(&list_box) == ORIGINAL_CAMPAIGN_ID) {
-        setting_set_player_name(data.player_name);
-        window_mission_selection_show();
-        input_box_stop(&player_name_input);
-        if (!*data.player_name) {
-            string_copy(player_name_input.placeholder, data.player_name, PLAYER_NAME_LENGTH);
-        }
-    } else {
-        window_plain_message_dialog_show(TR_WINDOW_CUSTOM_CAMPAIGNS_NOT_IMPLEMENTED_TITLE,
-            TR_WINDOW_CUSTOM_CAMPAIGNS_NOT_IMPLEMENTED_TEXT, 1);
+    if (list_box_get_selected_index(&list_box) != ORIGINAL_CAMPAIGN_ID && !campaign_is_active()) {
+        window_plain_message_dialog_show(TR_WINDOW_INVALID_CAMPAIGN_TITLE,
+            TR_WINDOW_INVALID_CAMPAIGN_TEXT, 1);
+        return;
+    }
+    setting_set_player_name(data.player_name);
+    window_mission_selection_show();
+    input_box_stop(&player_name_input);
+    if (!*data.player_name) {
+        string_copy(player_name_input.placeholder, data.player_name, PLAYER_NAME_LENGTH);
     }
 }
 

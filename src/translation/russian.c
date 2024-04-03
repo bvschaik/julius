@@ -1397,8 +1397,8 @@ static translation_string all_strings[] = {
     {TR_WINDOW_CAMPAIGN_NO_DESC, "Нет описания"},
     {TR_WINDOW_ORIGINAL_CAMPAIGN_NAME, "Оригинальная карьера" },
     {TR_WINDOW_ORIGINAL_CAMPAIGN_DESC, "Оригинальная кампания Caesar 3 во всей своей красе 25-летней давности."},
-    {TR_WINDOW_CUSTOM_CAMPAIGNS_NOT_IMPLEMENTED_TITLE, "Not yet implemented" },
-    {TR_WINDOW_CUSTOM_CAMPAIGNS_NOT_IMPLEMENTED_TEXT, "The custom campaign support has not been implemented yet.\nPlease check a later build."},
+    {TR_WINDOW_INVALID_CAMPAIGN_TITLE, "Not yet implemented" },
+    {TR_WINDOW_INVALID_CAMPAIGN_TEXT, "The custom campaign support has not been implemented yet.\nPlease check a later build."},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)

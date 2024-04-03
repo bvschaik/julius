@@ -4,7 +4,7 @@
 
 #include "zip/zip.h"
 
-#define CAMPAIGNS_PREFIX_SIZE sizeof(CAMPAIGNS_DIRECTORY "/")
+#define CAMPAIGNS_PREFIX_SIZE sizeof(CAMPAIGNS_DIRECTORY)
 
 static struct {
     int is_folder;

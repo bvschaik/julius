@@ -1,5 +1,6 @@
 #include "mission_end.h"
 
+#include "campaign/campaign.h"
 #include "city/emperor.h"
 #include "city/finance.h"
 #include "city/population.h"
@@ -23,7 +24,7 @@
 #include "window/intermezzo.h"
 #include "window/main_menu.h"
 #include "window/mission_selection.h"
-#include "window/victory_video.h"
+#include "window/video.h"
 
 static void button_fired(int param1, int param2);
 
@@ -131,13 +132,16 @@ static void advance_to_next_mission(void)
     game_undo_disable();
     game_state_reset_overlay();
 
-    if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
+    const campaign_mission_info *mission_info = campaign_get_next_mission(scenario_campaign_mission());
+
+    if (mission_info) {
+        scenario_set_campaign_mission(mission_info->first_scenario);
+        window_mission_selection_show();
+    } else if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
         window_main_menu_show(1);
-        if (!scenario_is_custom()) {
-            setting_clear_personal_savings();
-            scenario_settings_init();
-            scenario_set_campaign_rank(2);
-        }
+        setting_clear_personal_savings();
+        scenario_settings_init();
+        scenario_set_campaign_rank(2);
     } else {
         scenario_set_campaign_mission(game_mission_peaceful());
         window_mission_selection_show();
@@ -164,7 +168,7 @@ static void button_fired(int param1, int param2)
     sound_speech_stop();
     city_victory_stop_governing();
     game_undo_disable();
-    if (scenario_is_custom()) {
+    if (scenario_is_custom() && !campaign_is_active()) {
         window_main_menu_show(1);
     } else {
         window_mission_selection_show();
@@ -195,12 +199,15 @@ void window_mission_end_show_won(void)
         show_intermezzo();
     } else if (!scenario_is_custom() && scenario_campaign_rank() >= 10) {
         // Won campaign
-        window_victory_video_show("smk/win_game.smk", 400, 292, show_intermezzo);
+        window_video_show("smk/win_game.smk", show_intermezzo);
+    } else if (campaign_is_active() && !campaign_get_next_mission(scenario_campaign_mission())) {
+        // Won campaign
+        window_video_show("smk/win_game.smk", show_intermezzo);
     } else {
         if (setting_victory_video()) {
-            window_victory_video_show("smk/victory_balcony.smk", 400, 292, show_intermezzo);
+            window_video_show("smk/victory_balcony.smk", show_intermezzo);
         } else {
-            window_victory_video_show("smk/victory_senate.smk", 400, 292, show_intermezzo);
+            window_video_show("smk/victory_senate.smk", show_intermezzo);
         }
     }
 }

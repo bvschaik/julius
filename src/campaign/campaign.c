@@ -5,6 +5,7 @@
 #include "campaign/xml.h"
 #include "core/file.h"
 #include "core/log.h"
+#include "game/file.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -14,11 +15,7 @@ static struct {
     campaign_info campaign;
     char file_name[FILE_NAME_MAX];
     char suspended_filename[FILE_NAME_MAX];
-    struct {
-        campaign_mission_info info;
-        int current_option_id;
-        const campaign_mission *current;
-    } mission;
+    campaign_mission_info mission_info;
 } data;
 
 static void get_campaign_data(void)
@@ -111,32 +108,65 @@ uint8_t *campaign_load_file(const char *filename, size_t *length)
     return campaign_file_load(filename, length);
 }
 
-static const campaign_mission_option *get_next_mission_option(void)
+static int fill_mission_info(const campaign_mission *mission)
 {
-    if (!data.active || !data.mission.current || data.mission.current_option_id > data.mission.current->last_option) {
+    if (!mission) {
+        data.mission_info.title = 0;
+        data.mission_info.background_image = 0;
+        data.mission_info.first_scenario = 0;
+        data.mission_info.total_scenarios = 0;
+        return 0;
+    } else {
+        data.mission_info.title = mission->title;
+        data.mission_info.background_image = mission->background_image;
+        data.mission_info.first_scenario = mission->first_scenario;
+        data.mission_info.total_scenarios = mission->last_scenario - mission->first_scenario + 1;
+        return 1;
+    }
+}
+
+const campaign_mission_info *campaign_get_current_mission(int scenario_id)
+{
+    if (!data.active || !fill_mission_info(campaign_mission_current(scenario_id))) {
         return 0;
     }
-    const campaign_mission_option *option = campaign_mission_get_option(data.mission.current_option_id);
-    data.mission.current_option_id++;
-    return option;
+    return &data.mission_info;
 }
 
 const campaign_mission_info *campaign_get_next_mission(int last_scenario_id)
 {
+    if (!data.active || !fill_mission_info(campaign_mission_next(last_scenario_id))) {
+        return 0;
+    }
+    return &data.mission_info;
+}
+
+int campaign_load_scenario(int scenario_id)
+{
     if (!data.active) {
         return 0;
     }
-    const campaign_mission *current = campaign_mission_next(last_scenario_id);
-    if (!current) {
-        data.mission.current = 0;
-        data.mission.info.background_image = 0;
-        data.mission.current_option_id = 0;
+    const campaign_scenario *scenario = campaign_mission_get_scenario(scenario_id);
+    if (!scenario || !scenario->path) {
         return 0;
     }
-    data.mission.current = current;
-    data.mission.info.background_image = current->background_image;
-    data.mission.current_option_id = current->first_option;
-    return &data.mission.info;
+    size_t length;
+    uint8_t *scenario_data = campaign_load_file(scenario->path, &length);
+    if (!scenario_data) {
+        return 0;
+    }
+    int is_save_game = file_has_extension(scenario->path, ".sav") || file_has_extension(scenario->path, ".svx");
+    int result = game_file_start_scenario_from_buffer(scenario_data, (int) length, is_save_game);
+    free(scenario_data);
+    return result;
+}
+
+const campaign_scenario *campaign_get_scenario(int scenario_id)
+{
+    if (!data.active) {
+        return 0;
+    }
+    return campaign_mission_get_scenario(scenario_id);
 }
 
 void campaign_suspend(void)
@@ -155,14 +185,15 @@ void campaign_clear(void)
     campaign_file_set_path(0);
     campaign_mission_clear();
     free((uint8_t *) data.campaign.name);
+    free((uint8_t *) data.campaign.author);
     free((uint8_t *) data.campaign.description);
     data.campaign.name = 0;
+    data.campaign.author = 0;
     data.campaign.description = 0;
     data.campaign.number_of_missions = 0;
-    data.mission.info.background_image = 0;
-    data.mission.info.get_next_option = get_next_mission_option;
-    data.mission.current_option_id = 0;
-    data.mission.current = 0;
+    data.mission_info.background_image = 0;
+    data.mission_info.first_scenario = 0;
+    data.mission_info.total_scenarios = 0;
     data.file_name[0] = 0;
     data.active = 0;
 }

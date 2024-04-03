@@ -1,4 +1,4 @@
-#include "victory_video.h"
+#include "video.h"
 
 #include "game/settings.h"
 #include "game/system.h"
@@ -8,16 +8,12 @@
 #include "graphics/window.h"
 
 static struct {
-    int width;
-    int height;
     void (*callback)(void);
 } data;
 
-static int init(const char *filename, int width, int height, void (*callback)(void))
+static int init(const char *filename, void (*callback)(void))
 {
     if (video_start(filename)) {
-        data.width = width;
-        data.height = height;
         data.callback = callback;
         video_init(0);
         return 1;
@@ -49,11 +45,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-void window_victory_video_show(const char *filename, int width, int height, void (*callback)(void))
+void window_video_show(const char *filename, void (*callback)(void))
 {
-    if (init(filename, width, height, callback)) {
+    if (init(filename, callback)) {
         window_type window = {
-            WINDOW_VICTORY_VIDEO,
+            WINDOW_VIDEO,
             draw_background,
             draw_foreground,
             handle_input

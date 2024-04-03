@@ -1,6 +1,7 @@
 #ifndef GAME_FILE_IO_H
 #define GAME_FILE_IO_H
 
+#include "core/buffer.h"
 #include "scenario/data.h"
 
 typedef struct {
@@ -27,11 +28,15 @@ typedef struct {
 
 int game_file_io_read_scenario(const char *filename);
 
+int game_file_io_read_scenario_from_buffer(buffer *buf);
+
 int game_file_io_read_scenario_info(const char *filename, scenario_info *info);
 
 int game_file_io_write_scenario(const char *filename);
 
 int game_file_io_read_saved_game(const char *filename, int offset);
+
+int game_file_io_read_save_game_from_buffer(buffer *buf);
 
 int game_file_io_read_saved_game_info(const char *filename, saved_game_info *info);
 

@@ -182,6 +182,10 @@ static int xml_start_empire(void)
 
 static int xml_start_map(void)
 {
+    if (data.version < 2) {
+        log_info("Custom maps only work on version 2 and higher", 0, 0);
+        return 1;
+    }
     const char *filename = xml_parser_get_attribute_string("image");
     int x_offset = xml_parser_get_attribute_int("x_offset");
     int y_offset = xml_parser_get_attribute_int("y_offset");
@@ -190,7 +194,7 @@ static int xml_start_map(void)
 
     empire_set_custom_map(filename, x_offset, y_offset, width, height);
     
-    if (data.version > 1 && xml_parser_get_attribute_bool("show_ireland")) {
+    if (xml_parser_get_attribute_bool("show_ireland")) {
         if (empire_get_image_id() != image_group(editor_is_active() ? GROUP_EDITOR_EMPIRE_MAP : GROUP_EMPIRE_MAP)) {
             log_info("Ireland image cannot be enabled on custom maps", 0, 0);
             return 1;

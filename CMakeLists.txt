@@ -655,7 +655,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/trade_opened.c
     ${PROJECT_SOURCE_DIR}/src/window/trade_prices.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c
-    ${PROJECT_SOURCE_DIR}/src/window/victory_video.c
+    ${PROJECT_SOURCE_DIR}/src/window/video.c
 )
 set(EDITOR_FILES
     ${PROJECT_SOURCE_DIR}/src/editor/editor.c

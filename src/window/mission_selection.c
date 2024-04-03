@@ -1,45 +1,53 @@
 #include "mission_selection.h"
 
 #include "assets/assets.h"
+#include "campaign/campaign.h"
 #include "core/image_group.h"
+#include "core/lang.h"
+#include "core/log.h"
 #include "game/mission.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
 #include "graphics/lang_text.h"
+#include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
+#include "sound/music.h"
 #include "sound/speech.h"
 #include "window/mission_briefing.h"
+
+#include <stdlib.h>
 
 #define BACKGROUND_WIDTH 1024
 #define BACKGROUND_HEIGHT 768
 
 static void button_start(int param1, int param2);
 
-static const int BACKGROUND_IMAGE_OFFSET[] = {
-    0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 0
-};
+static campaign_scenario DEFAULT_SCENARIOS[2];
 
 static const struct {
     int x_peaceful;
     int y_peaceful;
     int x_military;
     int y_military;
-} CAMPAIGN_SELECTION[12] = {
-    {0, 0, 0, 0},
-    {0, 0, 0, 0},
-    {292, 182, 353, 232},
-    {118, 202, 324, 286},
-    {549, 285, 224, 121},
-    {173, 109, 240, 292},
-    {576, 283, 19, 316},
-    {97, 240, 156, 59},
-    {127, 300, 579, 327},
-    {103, 35, 410, 109},
-    {191, 153, 86, 8},
-    {200, 300, 400, 300},
+} CAMPAIGN_SELECTION[10] = {
+    {288, 178, 349, 228},
+    {114, 198, 320, 282},
+    {545, 281, 220, 117},
+    {169, 105, 236, 288},
+    {572, 279, 15, 312},
+    {93, 236, 152, 55},
+    {123, 296, 575, 323},
+    {99, 31, 406, 105},
+    {187, 149, 82, 4},
+    {196, 296, 396, 296},
+};
+
+const char *FANFARE_PATHS[2] = {
+    "wavs/fanfare_nu1.wav",
+    "wavs/fanfare_nu5.wav"
 };
 
 static image_button image_button_start_mission = {
@@ -49,7 +57,81 @@ static image_button image_button_start_mission = {
 static struct {
     int choice;
     int focus_button;
+    struct {
+        int total_scenarios;
+        int background_image_id;
+        const uint8_t *title;
+        const campaign_scenario **scenarios;
+    } mission;
 } data;
+
+static void clear_loaded_mission(void)
+{
+    free(data.mission.scenarios);
+    data.mission.scenarios = 0;
+    data.mission.title = 0;
+    data.mission.background_image_id = 0;
+    data.mission.total_scenarios = 0;
+}
+
+static void load_original_campaign_rank_scenarios(int rank)
+{
+    data.mission.title = lang_get_string(144, 1 + 3 * rank);
+    data.mission.total_scenarios = 2;
+    data.mission.background_image_id = image_group(GROUP_SELECT_MISSION) + rank - 2;
+    data.mission.scenarios = malloc(sizeof(campaign_scenario *) * data.mission.total_scenarios);
+    if (!data.mission.scenarios) {
+        log_error("Failed to allocate memory for scenarios. The game will now crash.", 0, 0);
+        return;
+    }
+    DEFAULT_SCENARIOS[0].id = game_mission_peaceful();
+    DEFAULT_SCENARIOS[0].name = lang_get_string(144, 1 + 3 * rank + 1);
+    DEFAULT_SCENARIOS[0].description = 0;
+    DEFAULT_SCENARIOS[0].type = SCENARIO_TYPE_PEACEFUL;
+    DEFAULT_SCENARIOS[0].x = CAMPAIGN_SELECTION[rank].x_peaceful;
+    DEFAULT_SCENARIOS[0].y = CAMPAIGN_SELECTION[rank].y_peaceful;
+
+    DEFAULT_SCENARIOS[1].id = game_mission_military();
+    DEFAULT_SCENARIOS[1].name = lang_get_string(144, 1 + 3 * rank + 2);
+    DEFAULT_SCENARIOS[1].description = 0;
+    DEFAULT_SCENARIOS[1].type = SCENARIO_TYPE_MILITARY;
+    DEFAULT_SCENARIOS[1].x = CAMPAIGN_SELECTION[rank].x_military;
+    DEFAULT_SCENARIOS[1].y = CAMPAIGN_SELECTION[rank].y_military;
+
+    data.mission.scenarios[0] = &DEFAULT_SCENARIOS[0];
+    data.mission.scenarios[1] = &DEFAULT_SCENARIOS[1];
+}
+
+static void load_new_campaign_rank_scenarios(int scenario_id)
+{
+    const campaign_mission_info *mission = campaign_get_current_mission(scenario_id);
+    data.mission.title = mission->title;
+    data.mission.total_scenarios = mission->total_scenarios;
+    if (mission->background_image) {
+        data.mission.background_image_id = assets_get_image_id("UI", mission->background_image);
+    } else {
+        data.mission.background_image_id = 0;
+    }
+    data.mission.scenarios = malloc(sizeof(campaign_scenario *) * data.mission.total_scenarios);
+    if (!data.mission.scenarios) {
+        log_error("Failed to allocate memory for scenarios. The game will now crash.", 0, 0);
+        return;
+    }
+    for (int i = 0; i < mission->total_scenarios; i++) {
+        data.mission.scenarios[i] = campaign_get_scenario(i + mission->first_scenario);
+    }
+}
+
+static void init(void)
+{
+    sound_music_stop();
+    sound_speech_stop();
+    if (!campaign_is_active()) {
+        load_original_campaign_rank_scenarios(scenario_campaign_rank());
+    } else {
+        load_new_campaign_rank_scenarios(scenario_campaign_mission());
+    }
+}
 
 static void draw_background_images(void)
 {
@@ -72,14 +154,26 @@ static void draw_background_images(void)
 
 static void draw_background(void)
 {
-    int rank = scenario_campaign_rank();
-
     draw_background_images();
     graphics_in_dialog();
-    image_draw(image_group(GROUP_SELECT_MISSION) + BACKGROUND_IMAGE_OFFSET[rank], 0, 0, COLOR_MASK_NONE, SCALE_NONE);
-    lang_text_draw(144, 1 + 3 * rank, 20, 410, FONT_LARGE_BLACK);
+    if (data.mission.background_image_id) {
+        image_draw(data.mission.background_image_id, 0, 0, COLOR_MASK_NONE, SCALE_NONE);
+    } else {
+        graphics_set_clip_rectangle(0, 0, 640, 400);
+        image_draw(image_group(GROUP_EMPIRE_MAP), 0, 0, COLOR_MASK_NONE, 2.5f);
+        graphics_reset_clip_rectangle();
+    }
+    if (data.mission.title) {
+        text_draw(data.mission.title, 20, 410, FONT_LARGE_BLACK, 0);
+    }
     if (data.choice) {
-        lang_text_draw_multiline(144, 1 + 3 * rank + data.choice, 20, 440, 560, FONT_NORMAL_BLACK);
+        const campaign_scenario *scenario = data.mission.scenarios[data.choice - 1];
+        if (scenario->name) {
+            text_draw_multiline(scenario->name, 20, 440, 560, FONT_NORMAL_BLACK, 0);
+        }
+        if (scenario->description) {
+            text_draw_multiline(scenario->description, 20, 456, 560, FONT_NORMAL_BLACK, 0);
+        }
     } else {
         lang_text_draw_multiline(144, 0, 20, 440, 560, FONT_NORMAL_BLACK);
     }
@@ -99,28 +193,15 @@ static void draw_foreground(void)
         image_buttons_draw(580, 410, &image_button_start_mission, 1);
     }
 
-    int rank = scenario_campaign_rank();
-    int x_peaceful = CAMPAIGN_SELECTION[rank].x_peaceful - 4;
-    int y_peaceful = CAMPAIGN_SELECTION[rank].y_peaceful - 4;
-    int x_military = CAMPAIGN_SELECTION[rank].x_military - 4;
-    int y_military = CAMPAIGN_SELECTION[rank].y_military - 4;
     int image_id = image_group(GROUP_SELECT_MISSION_BUTTON);
-    if (data.choice == 0) {
-        image_draw(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful,
-            COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military,
-            COLOR_MASK_NONE, SCALE_NONE);
-    } else if (data.choice == 1) {
-        image_draw(data.focus_button == 1 ? image_id + 1 : image_id + 2, x_peaceful, y_peaceful,
-            COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(data.focus_button == 2 ? image_id + 1 : image_id, x_military, y_military,
-            COLOR_MASK_NONE, SCALE_NONE);
-    } else {
-        image_draw(data.focus_button == 1 ? image_id + 1 : image_id, x_peaceful, y_peaceful,
-            COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(data.focus_button == 2 ? image_id + 1 : image_id + 2, x_military, y_military,
-            COLOR_MASK_NONE, SCALE_NONE);
+
+    for (int i = 0; i < data.mission.total_scenarios; i++) {
+        int offset = data.choice == i + 1 ? 2 : 0;
+        offset = data.focus_button == i + 1 ? 1 : offset;
+        const campaign_scenario *scenario = data.mission.scenarios[i];
+        image_draw(image_id + offset, scenario->x, scenario->y, COLOR_MASK_NONE, SCALE_NONE);
     }
+
     graphics_reset_dialog();
 }
 
@@ -128,17 +209,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
 
-    int rank = scenario_campaign_rank();
-    int x_peaceful = CAMPAIGN_SELECTION[rank].x_peaceful - 4;
-    int y_peaceful = CAMPAIGN_SELECTION[rank].y_peaceful - 4;
-    int x_military = CAMPAIGN_SELECTION[rank].x_military - 4;
-    int y_military = CAMPAIGN_SELECTION[rank].y_military - 4;
     data.focus_button = 0;
-    if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44)) {
-        data.focus_button = 1;
-    }
-    if (is_mouse_hit(m_dialog, x_military, y_military, 44)) {
-        data.focus_button = 2;
+    for (int i = 0; i < data.mission.total_scenarios; i++) {
+        const campaign_scenario *scenario = data.mission.scenarios[i];
+        if (is_mouse_hit(m_dialog, scenario->x, scenario->y, 44)) {
+            data.focus_button = i + 1;
+        }
     }
 
     if (data.choice > 0) {
@@ -154,31 +230,26 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 
     if (m_dialog->left.went_up) {
-        if (is_mouse_hit(m_dialog, x_peaceful, y_peaceful, 44)) {
-            scenario_set_campaign_mission(game_mission_peaceful());
-            data.choice = 1;
-            if (m_dialog->left.double_click) {
-                button_start(0, 0);
-                return;
+        for (int i = 0; i < data.mission.total_scenarios; i++) {
+            const campaign_scenario *scenario = data.mission.scenarios[i];
+            if (is_mouse_hit(m_dialog, scenario->x, scenario->y, 44)) {
+                scenario_set_campaign_mission(scenario->id);
+                data.choice = i + 1;
+                if (m_dialog->left.double_click) {
+                    button_start(0, 0);
+                    return;
+                }
+                window_invalidate();
+                sound_speech_play_file(FANFARE_PATHS[scenario->type == SCENARIO_TYPE_PEACEFUL ? 0 : 1]);
+                break;
             }
-            window_invalidate();
-            sound_speech_play_file("wavs/fanfare_nu1.wav");
-        }
-        if (is_mouse_hit(m_dialog, x_military, y_military, 44)) {
-            scenario_set_campaign_mission(game_mission_military());
-            data.choice = 2;
-            if (m_dialog->left.double_click) {
-                button_start(0, 0);
-                return;
-            }
-            window_invalidate();
-            sound_speech_play_file("wavs/fanfare_nu5.wav");
         }
     }
 }
 
 static void button_start(int param1, int param2)
 {
+    clear_loaded_mission();
     window_mission_briefing_show();
 }
 
@@ -188,13 +259,12 @@ void window_mission_selection_show(void)
         window_mission_briefing_show();
         return;
     }
+    init();
     window_type window = {
         WINDOW_MISSION_SELECTION,
         draw_background,
         draw_foreground,
         handle_input
     };
-    data.choice = 0;
-    data.focus_button = 0;
     window_show(&window);
 }

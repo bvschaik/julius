@@ -820,7 +820,7 @@ void scenario_settings_load_state(
     buffer_read_raw(player_name, scenario.settings.player_name, MAX_PLAYER_NAME);
     buffer_read_raw(scenario_name, scenario.scenario_name, MAX_SCENARIO_NAME);
 
-    if (campaign_name) {
+    if (campaign_name && !campaign_is_active()) {
         int campaign_name_length = buffer_read_i32(campaign_name);
         char name[FILE_NAME_MAX];
         buffer_read_raw(campaign_name, name, campaign_name_length);

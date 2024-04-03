@@ -5,15 +5,17 @@
 
 typedef struct {
     int id;
-    int first_option;
-    int last_option;
+    const uint8_t *title;
+    int first_scenario;
+    int last_scenario;
     const char *background_image;
 } campaign_mission;
 
 campaign_mission *campaign_mission_new(void);
+campaign_mission *campaign_mission_current(int index);
 campaign_mission *campaign_mission_next(int last_index);
-campaign_mission_option *campaign_mission_new_option(void);
-campaign_mission_option *campaign_mission_get_option(int option_id);
+campaign_scenario *campaign_mission_new_scenario(void);
+campaign_scenario *campaign_mission_get_scenario(int scenario_id);
 
 int campaign_mission_init(void);
 void campaign_mission_clear(void);

@@ -11,6 +11,16 @@ enum {
 };
 
 /**
+ * Starts a game scenario from a buffer.
+ * @param data The buffer containing the game data.
+ * @param length The length of the buffer.
+ * @param is_save_game A flag indicating whether the data is from a saved game or a scenario.
+ *                     Set to 1 if it is a saved game, 0 otherwise.
+ * @return Boolean true on success, false on failure
+ */
+int game_file_start_scenario_from_buffer(uint8_t *data, int length, int is_save_game);
+
+/**
  * Start scenario by name
  * @param scenario_name Name of the scenario without extension
  * @return Boolean true on success, false on failure

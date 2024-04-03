@@ -4,10 +4,16 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define CAMPAIGN_FIRST_MISSION -1
+#define CAMPAIGN_FIRST_MISSION 0
+
+typedef enum {
+    SCENARIO_TYPE_PEACEFUL = 0,
+    SCENARIO_TYPE_MILITARY = 1
+} scenario_type;
 
 typedef struct {
     const uint8_t *name;
+    const uint8_t *author;
     const uint8_t *description;
     int number_of_missions;
 } campaign_info;
@@ -16,19 +22,18 @@ typedef struct {
     int id;
     int x;
     int y;
-    const char *name;
-    const char *description;
+    const uint8_t *name;
+    const uint8_t *description;
+    scenario_type type;
     const char *path;
-    struct {
-        int x;
-        int y;
-        const char *path;
-    } image;
-} campaign_mission_option;
+    const char *briefing_image_path;
+} campaign_scenario;
 
 typedef struct {
+    const uint8_t *title;
     const char *background_image;
-    const campaign_mission_option *(*get_next_option)(void);
+    int first_scenario;
+    int total_scenarios;
 } campaign_mission_info;
 
 /**
@@ -72,12 +77,33 @@ int campaign_has_file(const char *filename);
 uint8_t *campaign_load_file(const char *filename, size_t *length);
 
 /**
+ * Loads a campaign scenario with the specified ID.
+ * @param scenario_id The ID of the scenario to load.
+ * @return 1 if the scenario was loaded successfully, 0 otherwise.
+ */
+int campaign_load_scenario(int scenario_id);
+
+/**
+ * Gets the current mission info.
+ * @param scenario_id The scenario id.
+ * @return A pointer to the mission info if successful, 0 otherwise.
+ */
+const campaign_mission_info *campaign_get_current_mission(int scenario_id);
+
+ /**
  * Gets the next mission from the campaign.
  * @param last_scenario_id The last played scenario.
  * @return A pointer to the first mission whose first scenario is higher than last_scenario_id,
  * or 0 if there's an error or if there are no new missions.
  */
 const campaign_mission_info *campaign_get_next_mission(int last_scenario_id);
+
+/**
+ * Gets a scenario from the campaign.
+ * @param scenario_id The scenario id.
+ * @return A pointer to the scenario with the given id, or 0 if there's an error.
+ */
+const campaign_scenario *campaign_get_scenario(int scenario_id);
 
 /**
  * Suspends the campaign.

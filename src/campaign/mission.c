@@ -3,23 +3,23 @@
 #include "core/array.h"
 
 #define MISSIONS_ARRAY_SIZE_STEP 8
-#define OPTIONS_ARRAY_SIZE_STEP 2
+#define SCENARIOS_ARRAY_SIZE_STEP 2
 
 static struct {
     array(campaign_mission) missions;
-    array(campaign_mission_option) options;
+    array(campaign_scenario) scenarios;
 } data;
 
 static void new_mission(campaign_mission *mission, int index)
 {
     mission->id = index;
-    mission->first_option = data.options.size;
-    mission->last_option = mission->first_option - 1;
+    mission->first_scenario = data.scenarios.size;
+    mission->last_scenario = mission->first_scenario - 1;
 }
 
-static void new_option(campaign_mission_option *option, int index)
+static void new_scenario(campaign_scenario *scenario, int index)
 {
-    option->id = index;
+    scenario->id = index;
 }
 
 campaign_mission *campaign_mission_new(void)
@@ -29,34 +29,45 @@ campaign_mission *campaign_mission_new(void)
     return mission;
 }
 
-campaign_mission *campaign_mission_next(int last_index)
+campaign_mission *campaign_mission_current(int index)
 {
     campaign_mission *mission;
     array_foreach(data.missions, mission) {
-        if (mission->first_option > last_index) {
+        if (mission->first_scenario <= index && mission->last_scenario >= index) {
             return mission;
         }
     }
     return 0;
 }
 
-campaign_mission_option *campaign_mission_new_option(void)
+campaign_mission *campaign_mission_next(int last_index)
 {
-    campaign_mission_option *option;
-    array_new_item(data.options, data.options.size, option);
-    return option;
+    campaign_mission *mission;
+    array_foreach(data.missions, mission) {
+        if (mission->first_scenario > last_index) {
+            return mission;
+        }
+    }
+    return 0;
 }
 
-campaign_mission_option *campaign_mission_get_option(int option_id)
+campaign_scenario *campaign_mission_new_scenario(void)
 {
-    return option_id >= 0 && option_id < data.options.size ? array_item(data.options, option_id) : 0;
+    campaign_scenario *scenario;
+    array_new_item(data.scenarios, data.scenarios.size, scenario);
+    return scenario;
+}
+
+campaign_scenario *campaign_mission_get_scenario(int scenario_id)
+{
+    return scenario_id >= 0 && scenario_id < data.scenarios.size ? array_item(data.scenarios, scenario_id) : 0;
 }
 
 int campaign_mission_init(void)
 {
     campaign_mission_clear();
     return array_init(data.missions, MISSIONS_ARRAY_SIZE_STEP, new_mission, 0) &&
-        array_init(data.options, OPTIONS_ARRAY_SIZE_STEP, new_option, 0);
+        array_init(data.scenarios, SCENARIOS_ARRAY_SIZE_STEP, new_scenario, 0);
 }
 
 void campaign_mission_clear(void)
@@ -66,12 +77,12 @@ void campaign_mission_clear(void)
         free((char *) mission->background_image);
     }
     array_clear(data.missions);
-    campaign_mission_option *option;
-    array_foreach(data.options, option) {
-        free((char *) option->name);
-        free((char *) option->description);
-        free((char *) option->path);
-        free((char *) option->image.path);
+    campaign_scenario *scenario;
+    array_foreach(data.scenarios, scenario) {
+        free((uint8_t *) scenario->name);
+        free((uint8_t *) scenario->description);
+        free((char *) scenario->path);
+        free((char *) scenario->briefing_image_path);
     }
-    array_clear(data.options);
+    array_clear(data.scenarios);
 }

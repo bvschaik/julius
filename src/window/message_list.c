@@ -1,5 +1,6 @@
 #include "message_list.h"
 
+#include "campaign/campaign.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/image_group.h"
@@ -81,10 +82,16 @@ static int review_briefing_button_should_be_active(void)
 {
     if (!scenario_is_custom()) {
         return 1;
-    } else if (scenario_intro_message()) {
-        return 1;
     }
-    return 0;
+    if (!campaign_is_active() || !scenario_intro_message()) {
+        return 0;
+    }
+    custom_message_t *custom_message = custom_messages_get(scenario_intro_message());
+    if (!custom_message) {
+        return 0;
+    }
+    return custom_messages_get_text(custom_message) ||
+        custom_messages_get_title(custom_message) || custom_messages_get_subtitle(custom_message);
 }
 
 static void init(void)
@@ -300,7 +307,7 @@ static void button_delete_all_read(int param1, int param2)
 
 static void button_mission_briefing(int param1, int param2)
 {
-    if (!scenario_is_custom()) {
+    if (!scenario_is_custom() || campaign_is_active()) {
         window_mission_briefing_show_review();
     } else if (scenario_intro_message()) {
         window_message_dialog_show_custom_message(scenario_intro_message(), game_time_year(), game_time_month());

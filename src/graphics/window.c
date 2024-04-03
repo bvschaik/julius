@@ -125,11 +125,11 @@ void window_draw(int force)
     update_input_before();
     window_type *w = data.current_window;
     if (force || data.refresh_on_draw) {
+        data.refresh_on_draw = 0;
+        data.refresh_immediate = 0;
         graphics_clear_screen();
         tooltip_invalidate();
         w->draw_background();
-        data.refresh_on_draw = 0;
-        data.refresh_immediate = 0;
     }
     w->draw_foreground();
 
