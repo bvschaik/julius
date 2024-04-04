@@ -157,7 +157,8 @@ int campaign_load_scenario(int scenario_id)
     if (!scenario_data) {
         return 0;
     }
-    int is_save_game = file_has_extension(scenario->path, ".sav") || file_has_extension(scenario->path, ".svx");
+    log_info("Loading custom campaign scenario", scenario->path, scenario->id);
+    int is_save_game = file_has_extension(scenario->path, "sav") || file_has_extension(scenario->path, "svx");
     int result = game_file_start_scenario_from_buffer(scenario_data, (int) length, is_save_game);
     free(scenario_data);
     return result;

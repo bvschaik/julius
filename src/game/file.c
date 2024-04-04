@@ -393,7 +393,7 @@ int game_file_start_scenario_from_buffer(uint8_t *data, int length, int is_save_
     map_bookmarks_clear();
 
     if (is_save_game) {
-        if (!game_file_io_read_save_game_from_buffer(&buf)) {
+        if (game_file_io_read_save_game_from_buffer(&buf) != FILE_LOAD_SUCCESS) {
             return 0;
         }
     } else {
@@ -412,7 +412,9 @@ int game_file_start_scenario_from_buffer(uint8_t *data, int length, int is_save_
     }
 
     if (is_save_game) {
+        check_backward_compatibility();
         initialize_saved_game();
+        building_storage_reset_building_ids();
         scenario_set_name(campaign_get_scenario(mission)->name);
     } else {
         initialize_scenario_data(campaign_get_scenario(mission)->name);

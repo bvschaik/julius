@@ -1341,6 +1341,7 @@ static void savegame_write_to_file(FILE *fp, memory_block *compress_buffer)
 static int get_savegame_versions_from_buffer(buffer *buf, savegame_version_t *save_version,
     resource_version_t *resource_version)
 {
+    buffer_skip(buf, 4);
     *save_version = buffer_read_i32(buf);
     if (*save_version > SAVE_GAME_LAST_STATIC_RESOURCES) {
         *resource_version = buffer_read_i32(buf);
@@ -1399,7 +1400,7 @@ int game_file_io_read_save_game_from_buffer(buffer *buf)
     }
     savegame_load_from_state(&savegame_data.state, save_version);
     clear_savegame_pieces();
-    return 1;
+    return FILE_LOAD_SUCCESS;
 }
 
 int game_file_io_read_saved_game(const char *filename, int offset)
