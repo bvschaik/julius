@@ -21,6 +21,7 @@ static const char *VIDEO_FILE_PATHS[] = {
     CAMPAIGNS_DIRECTORY "/video/",
     "community/video/",
     "smk/",
+    "mpg/",
     0
 };
 
