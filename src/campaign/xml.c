@@ -38,7 +38,8 @@ static struct {
     int success;
 } data;
 
-static const char *SCENARIO_TYPES[2] = { "peaceful", "military" };
+static const char *FANFARE_TYPES[3] = { "none", "peaceful", "military" };
+static const char *FANFARE_FILES[3] = { 0, "fanfare_nu1.wav", "fanfare_nu5.wav" };
 
 static int xml_start_campaign(void)
 {
@@ -115,6 +116,21 @@ static const char *create_full_campaign_path(const char *path, const char *file)
     return full_path;
 }
 
+static const char *create_full_regular_path(const char *path, const char *file)
+{
+    size_t full_path_length = strlen(path) + strlen(file) + 2;
+    char *full_path = malloc(full_path_length);
+    if (!full_path) {
+        return 0;
+    }
+    snprintf(full_path, full_path_length, "%s/%s", path, file);
+    if (!file_exists(full_path, MAY_BE_LOCALIZED)) {
+        free(full_path);
+        return 0;
+    }
+    return full_path; 
+}
+
 static int xml_start_mission(void)
 {
     if (!data.success) {
@@ -129,6 +145,17 @@ static int xml_start_mission(void)
     data.info->number_of_missions++;
     data.current_mission->title = copy_string_from_xml(xml_parser_get_attribute_string("title"));
     data.current_mission->background_image = xml_parser_copy_attribute_string("background_image");
+    const char *intro_video = xml_parser_get_attribute_string("video");
+    if (intro_video) {
+        data.current_mission->intro_video = create_full_campaign_path("video", intro_video);
+        if (!data.current_mission->intro_video) {
+            if (file_has_extension(intro_video, "smk")) {
+                data.current_mission->intro_video = create_full_regular_path("smk", intro_video);
+            } else if (file_has_extension(intro_video, "mpg")) {
+                data.current_mission->intro_video = create_full_regular_path("mpg", intro_video);
+            }
+        }
+    }
     if (xml_parser_has_attribute("file") && !xml_start_scenario()) {
         return 0;
     }
@@ -150,8 +177,26 @@ static int xml_start_scenario(void)
     scenario->y = xml_parser_get_attribute_int("y");
     scenario->name = copy_string_from_xml(xml_parser_get_attribute_string("name"));
     scenario->description = copy_string_from_xml(xml_parser_get_attribute_string("description"));
-    scenario_type type = xml_parser_get_attribute_enum("type", SCENARIO_TYPES, 2, 0);
-    scenario->type = type != -1 ? type : SCENARIO_TYPE_PEACEFUL;
+    if (xml_parser_has_attribute("fanfare")) {
+        const char *fanfare = 0;
+        int default_fanfare = xml_parser_get_attribute_enum("fanfare", FANFARE_TYPES, 3, 0);
+        if (default_fanfare > 0) {
+            fanfare = FANFARE_FILES[default_fanfare];
+        } else if (default_fanfare == -1) {
+            fanfare = xml_parser_get_attribute_string("fanfare");
+        }
+        if (fanfare) {
+            scenario->fanfare = create_full_campaign_path("audio", fanfare);
+            if (!scenario->fanfare) {
+                if (file_has_extension(fanfare, "wav")) {
+                    scenario->fanfare = create_full_regular_path("wavs", fanfare);
+                } else if (file_has_extension(fanfare, "mp3")) {
+                    scenario->fanfare = create_full_regular_path("mp3", fanfare);
+                }
+            }
+        }
+    }
+
 
     const char *scenario_path = xml_parser_get_attribute_string("file");
     if (!scenario_path) {

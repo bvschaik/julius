@@ -35,9 +35,6 @@ static void fix_image_ids(void)
         // empire map uses old version of graphics: increase every graphic id
         int offset = image_group(GROUP_EMPIRE_CITY) - image_id;
         array_foreach(objects, obj) {
-            if (!obj->in_use) {
-                continue;
-            }
             if (obj->obj.image_id > 0 && obj->obj.image_id < IMAGE_MAIN_ENTRIES) {
                 obj->obj.image_id += offset;
                 if (obj->obj.expanded.image_id) {

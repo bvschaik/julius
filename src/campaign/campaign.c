@@ -112,12 +112,14 @@ static int fill_mission_info(const campaign_mission *mission)
 {
     if (!mission) {
         data.mission_info.title = 0;
+        data.mission_info.intro_video = 0;
         data.mission_info.background_image = 0;
         data.mission_info.first_scenario = 0;
         data.mission_info.total_scenarios = 0;
         return 0;
     } else {
         data.mission_info.title = mission->title;
+        data.mission_info.intro_video = mission->intro_video;
         data.mission_info.background_image = mission->background_image;
         data.mission_info.first_scenario = mission->first_scenario;
         data.mission_info.total_scenarios = mission->last_scenario - mission->first_scenario + 1;

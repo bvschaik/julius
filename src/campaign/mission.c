@@ -74,13 +74,16 @@ void campaign_mission_clear(void)
 {
     campaign_mission *mission;
     array_foreach(data.missions, mission) {
+        free((uint8_t *) mission->title);
         free((char *) mission->background_image);
+        free((char *) mission->intro_video);
     }
     array_clear(data.missions);
     campaign_scenario *scenario;
     array_foreach(data.scenarios, scenario) {
         free((uint8_t *) scenario->name);
         free((uint8_t *) scenario->description);
+        free((char *) scenario->fanfare);
         free((char *) scenario->path);
         free((char *) scenario->briefing_image_path);
     }

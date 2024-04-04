@@ -4,13 +4,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define CAMPAIGN_FIRST_MISSION 0
-
-typedef enum {
-    SCENARIO_TYPE_PEACEFUL = 0,
-    SCENARIO_TYPE_MILITARY = 1
-} scenario_type;
-
 typedef struct {
     const uint8_t *name;
     const uint8_t *author;
@@ -24,13 +17,14 @@ typedef struct {
     int y;
     const uint8_t *name;
     const uint8_t *description;
-    scenario_type type;
     const char *path;
     const char *briefing_image_path;
+    const char *fanfare;
 } campaign_scenario;
 
 typedef struct {
     const uint8_t *title;
+    const char *intro_video;
     const char *background_image;
     int first_scenario;
     int total_scenarios;

@@ -17,6 +17,7 @@
 #include "sound/music.h"
 #include "sound/speech.h"
 #include "window/mission_briefing.h"
+#include "window/video.h"
 
 #include <stdlib.h>
 
@@ -45,11 +46,6 @@ static const struct {
     {196, 296, 396, 296},
 };
 
-const char *FANFARE_PATHS[2] = {
-    "wavs/fanfare_nu1.wav",
-    "wavs/fanfare_nu5.wav"
-};
-
 static image_button image_button_start_mission = {
     0, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start, button_none, 1, 0, 1
 };
@@ -58,6 +54,7 @@ static struct {
     int choice;
     int focus_button;
     struct {
+        const char *intro_video;
         int total_scenarios;
         int background_image_id;
         const uint8_t *title;
@@ -87,14 +84,14 @@ static void load_original_campaign_rank_scenarios(int rank)
     DEFAULT_SCENARIOS[0].id = game_mission_peaceful();
     DEFAULT_SCENARIOS[0].name = lang_get_string(144, 1 + 3 * rank + 1);
     DEFAULT_SCENARIOS[0].description = 0;
-    DEFAULT_SCENARIOS[0].type = SCENARIO_TYPE_PEACEFUL;
+    DEFAULT_SCENARIOS[0].fanfare = "wavs/fanfare_nu1.wav";
     DEFAULT_SCENARIOS[0].x = CAMPAIGN_SELECTION[rank].x_peaceful;
     DEFAULT_SCENARIOS[0].y = CAMPAIGN_SELECTION[rank].y_peaceful;
 
     DEFAULT_SCENARIOS[1].id = game_mission_military();
     DEFAULT_SCENARIOS[1].name = lang_get_string(144, 1 + 3 * rank + 2);
     DEFAULT_SCENARIOS[1].description = 0;
-    DEFAULT_SCENARIOS[1].type = SCENARIO_TYPE_MILITARY;
+    DEFAULT_SCENARIOS[1].fanfare = "wavs/fanfare_nu5.wav";
     DEFAULT_SCENARIOS[1].x = CAMPAIGN_SELECTION[rank].x_military;
     DEFAULT_SCENARIOS[1].y = CAMPAIGN_SELECTION[rank].y_military;
 
@@ -107,6 +104,7 @@ static void load_new_campaign_rank_scenarios(int scenario_id)
     const campaign_mission_info *mission = campaign_get_current_mission(scenario_id);
     data.mission.title = mission->title;
     data.mission.total_scenarios = mission->total_scenarios;
+    data.mission.intro_video = mission->intro_video;
     if (mission->background_image) {
         data.mission.background_image_id = assets_get_image_id("UI", mission->background_image);
     } else {
@@ -240,7 +238,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
                     return;
                 }
                 window_invalidate();
-                sound_speech_play_file(FANFARE_PATHS[scenario->type == SCENARIO_TYPE_PEACEFUL ? 0 : 1]);
+                if (scenario->fanfare) {
+                    sound_speech_play_file(scenario->fanfare);
+                } else {
+                    sound_speech_stop();
+                }
                 break;
             }
         }
@@ -253,13 +255,12 @@ static void button_start(int param1, int param2)
     window_mission_briefing_show();
 }
 
-void window_mission_selection_show(void)
+static void show(void)
 {
     if (!game_mission_has_choice()) {
         window_mission_briefing_show();
         return;
     }
-    init();
     window_type window = {
         WINDOW_MISSION_SELECTION,
         draw_background,
@@ -267,4 +268,16 @@ void window_mission_selection_show(void)
         handle_input
     };
     window_show(&window);
+}
+
+void window_mission_selection_show(void)
+{
+    init();
+    data.mission.intro_video ? window_video_show(data.mission.intro_video, show) : show();
+}
+
+void window_mission_selection_show_again(void)
+{
+    init();
+    show();
 }

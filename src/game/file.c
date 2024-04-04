@@ -415,12 +415,9 @@ int game_file_start_scenario_from_buffer(uint8_t *data, int length, int is_save_
         initialize_saved_game();
         scenario_set_name(campaign_get_scenario(mission)->name);
     } else {
-        char scenario_name[MAX_SCENARIO_NAME];
-        snprintf(scenario_name, MAX_SCENARIO_NAME, "Map%d", mission);
         initialize_scenario_data(campaign_get_scenario(mission)->name);
-        scenario_set_custom(2);
     }
-
+    scenario_set_custom(2);
     city_data_init_campaign_mission();
     scenario_set_campaign_mission(mission);
     scenario_settings_init_mission();

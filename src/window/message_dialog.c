@@ -347,7 +347,7 @@ static void draw_city_message_text(const lang_message *msg)
         {
             rich_text_draw(msg->content.text,
                 data.x_text + 8, data.y_text + 56, BLOCK_SIZE * (data.text_width_blocks - 1),
-                data.text_height_blocks - 1, 0);
+                data.text_height_blocks - 4, 0);
         }
         break;
 
@@ -447,8 +447,6 @@ static void draw_content(const lang_message *msg)
 
     // content!
     inner_panel_draw(data.x_text, data.y_text, data.text_width_blocks, data.text_height_blocks);
-    graphics_set_clip_rectangle(data.x_text + 3, data.y_text + 3,
-        BLOCK_SIZE * data.text_width_blocks - 6, BLOCK_SIZE * data.text_height_blocks - 6);
     rich_text_clear_links();
 
     if (msg->type == TYPE_MESSAGE) {
@@ -458,7 +456,6 @@ static void draw_content(const lang_message *msg)
             data.x_text + 8, data.y_text + 6, BLOCK_SIZE * (data.text_width_blocks - 1),
             data.text_height_blocks - 1, 0);
     }
-    graphics_reset_clip_rectangle();
 }
 
 static void draw_background_normal(void)

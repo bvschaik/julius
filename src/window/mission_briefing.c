@@ -261,10 +261,7 @@ static void draw_background(void)
     if (content) {
         rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED, 5);
         rich_text_init(content, 64, 184, 31, 15, 0);
-
-        graphics_set_clip_rectangle(35, 187, 522, 234);
         rich_text_draw(content, 48, 196, 496, 14, 0);
-        graphics_reset_clip_rectangle();
     }
 
     graphics_reset_dialog();
@@ -305,7 +302,7 @@ static void button_back(int param1, int param2)
     if (!data.is_review) {
         sound_music_stop();
         sound_speech_stop();
-        window_mission_selection_show();
+        window_mission_selection_show_again();
     }
 }
 

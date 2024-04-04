@@ -9,6 +9,7 @@ typedef struct {
     int first_scenario;
     int last_scenario;
     const char *background_image;
+    const char *intro_video;
 } campaign_mission;
 
 campaign_mission *campaign_mission_new(void);
