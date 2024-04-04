@@ -15,6 +15,7 @@
 #include "graphics/lang_text.h"
 #include "graphics/list_box.h"
 #include "graphics/panel.h"
+#include "graphics/rich_text.h"
 #include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -91,6 +92,7 @@ static void init(void)
     data.campaign_list = dir_append_files_with_extension("campaign");
     calculate_input_box_width();
     input_box_start(&player_name_input);
+    rich_text_set_fonts(FONT_NORMAL_BLACK, FONT_NORMAL_BLACK, 5);
     list_box_init(&list_box, data.campaign_list->num_files + 1);
     list_box_select_index(&list_box, ORIGINAL_CAMPAIGN_ID);
 }
@@ -123,8 +125,11 @@ static void draw_background(void)
             y_offset += 20;
         }
         if (info->description) {
-            text_draw_multiline(info->description, 362, CAMPAIGN_LIST_Y_POSITION + y_offset, 246,
-                FONT_NORMAL_BLACK, 0);
+            rich_text_reset(0);
+            int box_width = rich_text_init(info->description, 62, CAMPAIGN_LIST_Y_POSITION + y_offset,
+                246 / BLOCK_SIZE, (340 - y_offset) / BLOCK_SIZE, 0);
+            rich_text_draw(info->description, 362, CAMPAIGN_LIST_Y_POSITION + y_offset,
+                box_width * BLOCK_SIZE, (340 - y_offset) / BLOCK_SIZE, 0);
         } else {
             lang_text_draw_centered(CUSTOM_TRANSLATION, TR_WINDOW_CAMPAIGN_NO_DESC, 362, 246, 246, FONT_NORMAL_BLACK);
         }

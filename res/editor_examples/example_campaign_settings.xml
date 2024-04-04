@@ -45,8 +45,8 @@
         - author: Optional. The name of the user who created the campaign. If set, it will appear on the campaign selection
           list.
 
-        The text inside the description tag will appear on the campaign selection list. It does not yet support rich text
-        formatting, but support is planned in the future.
+        The text inside the description tag will appear on the campaign selection list. It supports rich text formatting,
+        but the text does not scroll beyond the allocated space.
     -->
     <description title="A test campaign" author="crudelios">
         This is a test campaign to test the campaign system.
