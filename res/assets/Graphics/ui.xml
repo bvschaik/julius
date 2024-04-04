@@ -137,28 +137,6 @@
 		<layer src="Advisor_Button_H" x="0" y="0"/>
 		<layer src="Housing_Advisor_H" x="0" y="0"/>
 	</image>
-	<!-- Note: Buttons for Building Mothball -->
-	<!-- Button assets created by MSTVD -->
-	<image id="Mothball_1" src="Mothball_1">
-		<layer group="this" image="Unmothball_1"/>
-		<layer src="Risk_Widget_Cross" x="1" y="2"/>
-	</image>
-	<image id="Mothball_2" src="Mothball_2">
-		<layer group="this" image="Unmothball_2"/>
-		<layer src="Risk_Widget_Cross" x="1" y="2"/>
-	</image>
-	<image id="Mothball_3" src="Mothball_3">
-		<layer group="this" image="Unmothball_3"/>
-		<layer src="Risk_Widget_Cross" x="1" y="2"/>
-	</image>
-	<image id="Mothball_4" src="Mothball_4">
-		<layer group="this" image="Unmothball_4"/>
-		<layer src="Risk_Widget_Cross" x="1" y="2"/>
-	</image>
-	<image id="Unmothball_1" src="Unmothball_1"/>
-	<image id="Unmothball_2" src="Unmothball_2"/>
-	<image id="Unmothball_3" src="Unmothball_3"/>
-	<image id="Unmothball_4" src="Unmothball_4"/>
 	<!-- Note: Checkmark toggle for allowed walkers -->
 	<!-- Image created by Ouaz -->
 	<image id="Allowed_Walker_Check" src="Allowed_Walker_Checkmark"/>
@@ -434,4 +412,26 @@
 	<image id="Pantheon_Epithet_Button_01" src="Pantheon_Epithet_Button_01"/>
 	<!-- Note: Large cross widget, for use in walker exception buttons -->
 	<image id="Large_Widget_Cross" src="Large_Widget_Cross"/>
+	<!-- Note: Buttons for Building Mothball -->
+	<!-- Button assets created by MSTVD -->
+	<image id="Unmothball_1" src="Unmothball_1"/>
+	<image id="Unmothball_2" src="Unmothball_2"/>
+	<image id="Unmothball_3" src="Unmothball_3"/>
+	<image id="Unmothball_4" src="Unmothball_4"/>
+	<image id="Mothball_1" src="Mothball_1">
+		<layer group="this" image="Unmothball_1"/>
+		<layer src="Risk_Widget_Cross" x="1" y="2"/>
+	</image>
+	<image id="Mothball_2" src="Mothball_2">
+		<layer group="this" image="Unmothball_2"/>
+		<layer src="Risk_Widget_Cross" x="1" y="2"/>
+	</image>
+	<image id="Mothball_3" src="Mothball_3">
+		<layer group="this" image="Unmothball_3"/>
+		<layer src="Risk_Widget_Cross" x="1" y="2"/>
+	</image>
+	<image id="Mothball_4" src="Mothball_4">
+		<layer group="this" image="Unmothball_4"/>
+		<layer src="Risk_Widget_Cross" x="1" y="2"/>
+	</image>
 </assetlist>

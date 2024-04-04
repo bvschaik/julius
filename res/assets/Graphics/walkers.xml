@@ -906,18 +906,54 @@
 	<image id="M Hall NE 11" src="mess_walker_ne_11"/>
 	<image id="M Hall NE 12" src="mess_walker_ne_12"/>
 	<!-- Note: Mess Hall Walker Walking animation frames EAST DIRECTION 01-12 -->
-	<image id="M Hall E 01" src="mess_walker_e_01"/>
-	<image id="M Hall E 02" src="mess_walker_e_02"/>
-	<image id="M Hall E 03" src="mess_walker_e_03"/>
-	<image id="M Hall E 04" src="mess_walker_e_04"/>
-	<image id="M Hall E 05" src="mess_walker_e_05"/>
-	<image id="M Hall E 06" src="mess_walker_e_06"/>
-	<image id="M Hall E 07" src="mess_walker_e_07"/>
-	<image id="M Hall E 08" src="mess_walker_e_08"/>
-	<image id="M Hall E 09" src="mess_walker_e_09"/>
-	<image id="M Hall E 10" src="mess_walker_e_10"/>
-	<image id="M Hall E 11" src="mess_walker_e_11"/>
-	<image id="M Hall E 12" src="mess_walker_e_12"/>
+	<image id="M Hall E 01">
+		<layer src="slave_e_01"/>
+		<layer src="mess_walker_e_01"/>
+	</image>
+	<image id="M Hall E 02">
+		<layer src="slave_e_02"/>
+		<layer src="mess_walker_e_02"/>
+	</image>
+	<image id="M Hall E 03">
+		<layer src="slave_e_03"/>
+		<layer src="mess_walker_e_03"/>
+	</image>
+	<image id="M Hall E 04">
+		<layer src="slave_e_04"/>
+		<layer src="mess_walker_e_04"/>
+	</image>
+	<image id="M Hall E 05">
+		<layer src="slave_e_05"/>
+		<layer src="mess_walker_e_05"/>
+	</image>
+	<image id="M Hall E 06">
+		<layer src="slave_e_06"/>
+		<layer src="mess_walker_e_06"/>
+	</image>
+	<image id="M Hall E 07">
+		<layer src="slave_e_07"/>
+		<layer src="mess_walker_e_07"/>
+	</image>
+	<image id="M Hall E 08">
+		<layer src="slave_e_08"/>
+		<layer src="mess_walker_e_08"/>
+	</image>
+	<image id="M Hall E 09">
+		<layer src="slave_e_09"/>
+		<layer src="mess_walker_e_09"/>
+	</image>
+	<image id="M Hall E 10">
+		<layer src="slave_e_10"/>
+		<layer src="mess_walker_e_10"/>
+	</image>
+	<image id="M Hall E 11">
+		<layer src="slave_e_11"/>
+		<layer src="mess_walker_e_11"/>
+	</image>
+	<image id="M Hall E 12">
+		<layer src="slave_e_12"/>
+		<layer src="mess_walker_e_12"/>
+	</image>
 	<!-- Note: Mess Hall Walker Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
 	<image id="M Hall SE 01" src="mess_walker_se_01"/>
 	<image id="M Hall SE 02" src="mess_walker_se_02"/>
@@ -984,18 +1020,54 @@
 	<image id="M Hall NW 11" src="mess_walker_nw_11"/>
 	<image id="M Hall NW 12" src="mess_walker_nw_12"/>
 	<!-- Note: Mess Hall Walker Walking animation frames NORTH DIRECTION 01-12 -->
-	<image id="M Hall N 01" src="mess_walker_n_01"/>
-	<image id="M Hall N 02" src="mess_walker_n_02"/>
-	<image id="M Hall N 03" src="mess_walker_n_03"/>
-	<image id="M Hall N 04" src="mess_walker_n_04"/>
-	<image id="M Hall N 05" src="mess_walker_n_05"/>
-	<image id="M Hall N 06" src="mess_walker_n_06"/>
-	<image id="M Hall N 07" src="mess_walker_n_07"/>
-	<image id="M Hall N 08" src="mess_walker_n_08"/>
-	<image id="M Hall N 09" src="mess_walker_n_09"/>
-	<image id="M Hall N 10" src="mess_walker_n_10"/>
-	<image id="M Hall N 11" src="mess_walker_n_11"/>
-	<image id="M Hall N 12" src="mess_walker_n_12"/>
+	<image id="M Hall N 01">
+		<layer src="slave_n_01"/>
+		<layer src="mess_walker_n_01"/>
+	</image>
+	<image id="M Hall N 02">
+		<layer src="slave_n_02"/>
+		<layer src="mess_walker_n_02"/>
+	</image>
+	<image id="M Hall N 03">
+		<layer src="slave_n_03"/>
+		<layer src="mess_walker_n_03"/>
+	</image>
+	<image id="M Hall N 04">
+		<layer src="slave_n_04"/>
+		<layer src="mess_walker_n_04"/>
+	</image>
+	<image id="M Hall N 05">
+		<layer src="slave_n_05"/>
+		<layer src="mess_walker_n_05"/>
+	</image>
+	<image id="M Hall N 06">
+		<layer src="slave_n_06"/>
+		<layer src="mess_walker_n_06"/>
+	</image>
+	<image id="M Hall N 07">
+		<layer src="slave_n_07"/>
+		<layer src="mess_walker_n_07"/>
+	</image>
+	<image id="M Hall N 08">
+		<layer src="slave_n_08"/>
+		<layer src="mess_walker_n_08"/>
+	</image>
+	<image id="M Hall N 09">
+		<layer src="slave_n_09"/>
+		<layer src="mess_walker_n_09"/>
+	</image>
+	<image id="M Hall N 10">
+		<layer src="slave_n_10"/>
+		<layer src="mess_walker_n_10"/>
+	</image>
+	<image id="M Hall N 11">
+		<layer src="slave_n_11"/>
+		<layer src="mess_walker_n_11"/>
+	</image>
+	<image id="M Hall N 12">
+		<layer src="slave_n_12"/>
+		<layer src="mess_walker_n_12"/>
+	</image>
 	<!-- Note: Ox Portrait (Assets created by marwana) -->
 	<image id="Ox_Portrait">
 		<layer group="190" image="7"/>
