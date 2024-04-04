@@ -510,7 +510,8 @@ void game_file_write_mission_saved_game(void)
         uint8_t encoded_filename[FILE_NAME_MAX];
         uint8_t *cursor = string_copy(campaign_get_info()->name, encoded_filename, FILE_NAME_MAX);
         cursor = string_copy(string_from_ascii(" - "), cursor, FILE_NAME_MAX - (cursor - encoded_filename));
-        cursor += string_from_int(cursor, scenario_campaign_mission(), 0);
+        cursor += string_from_int(cursor, scenario_campaign_mission() + 1, 0);
+        cursor = string_copy(string_from_ascii(" - "), cursor, FILE_NAME_MAX - (cursor - encoded_filename));
         cursor = string_copy(campaign_get_scenario(scenario_campaign_mission())->name, cursor,
             FILE_NAME_MAX - (cursor - encoded_filename));
         string_copy(string_from_ascii(".svx"), cursor, FILE_NAME_MAX - (cursor - encoded_filename));

@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "building/construction.h"
+#include "campaign/campaign.h"
 #include "city/constants.h"
 #include "city/finance.h"
 #include "city/population.h"
@@ -30,7 +31,7 @@
 #include "window/hotkey_config.h"
 #include "window/main_menu.h"
 #include "window/message_dialog.h"
-#include "window/mission_briefing.h"
+#include "window/mission_selection.h"
 #include "window/plain_message_dialog.h"
 #include "window/popup_dialog.h"
 
@@ -437,17 +438,15 @@ static void replay_map_confirmed(int confirmed, int checked)
         window_city_show();
         return;
     }
-    if (scenario_is_custom()) {
+    if (scenario_is_custom() && !campaign_is_active()) {
+        window_city_show();
         if (!game_file_start_scenario_by_name(scenario_name())) {
-            window_city_show();
             window_plain_message_dialog_show_with_extra(TR_REPLAY_MAP_NOT_FOUND_TITLE,
                 TR_REPLAY_MAP_NOT_FOUND_MESSAGE, 0, scenario_name());
-        } else {
-            window_city_show();
         }
     } else {
         scenario_save_campaign_player_name();
-        window_mission_briefing_show();
+        window_mission_selection_show_again();
     }
 }
 

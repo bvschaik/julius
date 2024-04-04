@@ -49,6 +49,7 @@ static image_button image_button_start_mission = {
 static struct {
     int is_review;
     int video_played;
+    int has_audio;
     int focus_button;
     int campaign_mission_loaded;
 } data;
@@ -56,6 +57,7 @@ static struct {
 static void init(void)
 {
     data.focus_button = 0;
+    data.has_audio = 0;
     rich_text_reset(0);
 }
 
@@ -109,13 +111,14 @@ static void play_audio(void)
 
     const char *background_music = custom_messages_get_background_music(custom_message);
     if (background_music) {
-        sound_device_stop_music();
         sound_device_play_music(background_music, setting_sound(SOUND_MUSIC)->volume, 0);
+        data.has_audio = 1;
     }
 
     const char *audio_file = custom_messages_get_audio(custom_message);
     if (audio_file) {
         sound_speech_play_file(audio_file);
+        data.has_audio = 1;
     }
 }
 
@@ -308,8 +311,10 @@ static void button_back(int param1, int param2)
 
 static void button_start_mission(int param1, int param2)
 {
-    sound_speech_stop();
-    sound_music_stop();
+    if (!data.is_review || data.has_audio) {
+        sound_music_stop();
+        sound_speech_stop();
+    }
     sound_music_update(1);
     window_city_show();
     if (!data.is_review) {

@@ -223,7 +223,7 @@ void video_size(int *width, int *height)
 
 void video_init(int restart_music)
 {
-    data.video.start_render_millis = system_get_ticks();
+    data.video.start_render_millis = system_get_ticks() - 1;
     data.restart_music = restart_music;
 
     if (data.audio.has_audio) {
