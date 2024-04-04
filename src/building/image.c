@@ -316,6 +316,11 @@ int building_image_get(const building *b)
         case BUILDING_ENGINEERS_POST:
             return image_group(GROUP_BUILDING_ENGINEERS_POST);
         case BUILDING_FORUM:
+            if (!b->upgrade_level) {
+                return image_group(GROUP_BUILDING_FORUM);
+            } else {
+                return assets_get_image_id("Admin_Logistics", "Upgraded_Forum");
+            }
             return image_group(GROUP_BUILDING_FORUM);
         case BUILDING_FOUNTAIN:
             if (b->upgrade_level == 3) {

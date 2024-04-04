@@ -1288,10 +1288,22 @@ static void set_senate_graphic(building *b)
     map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
 }
 
+static void set_forum_graphic(building *b)
+{
+    if (b->state != BUILDING_STATE_IN_USE) {
+        return;
+    }
+    b->upgrade_level = b->desirability > 30;
+    map_building_tiles_add(b->id, b->x, b->y, b->size, building_image_get(b), TERRAIN_BUILDING);
+}
+
 static void spawn_figure_senate_forum(building *b)
 {
     if (b->type == BUILDING_SENATE) {
         set_senate_graphic(b);
+    }
+    if (b->type == BUILDING_FORUM) {
+        set_forum_graphic(b);
     }
     check_labor_problem(b);
     if (has_figure_of_type(b, FIGURE_TAX_COLLECTOR)) {
