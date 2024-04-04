@@ -1028,6 +1028,25 @@ static void load_unpacked_image(const image *img, const color_t *pixels)
     SDL_FreeSurface(surface);
 }
 
+static void free_unpacked_image(const image *img)
+{
+    int unpacked_image_id = img->atlas.id & IMAGE_ATLAS_BIT_MASK;
+    int found_id = -1;
+    for (int i = 0; i < MAX_UNPACKED_IMAGES; i++) {
+        if (data.unpacked_images[i].id == unpacked_image_id && data.unpacked_images[i].texture) {
+            found_id = i;
+            break;
+        }
+    }
+    if (found_id == -1) {
+        return;
+    }
+    if (data.unpacked_images[found_id].texture) {
+        SDL_DestroyTexture(data.unpacked_images[found_id].texture);
+    }
+    memset(&data.unpacked_images[found_id], 0, sizeof(data.unpacked_images[found_id]));
+}
+
 static int should_pack_image(int width, int height)
 {
     return width * height < MAX_PACKED_IMAGE_SIZE;
@@ -1078,6 +1097,7 @@ static void create_renderer_interface(void)
     data.renderer_interface.has_image_atlas = has_texture_atlas;
     data.renderer_interface.free_image_atlas = free_texture_atlas_and_data;
     data.renderer_interface.load_unpacked_image = load_unpacked_image;
+    data.renderer_interface.free_unpacked_image = free_unpacked_image;
     data.renderer_interface.should_pack_image = should_pack_image;
     data.renderer_interface.update_scale = update_scale;
 

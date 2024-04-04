@@ -267,7 +267,7 @@ static int get_external_image_id(const char *filename)
     if (!found_path) {
         return 0;
     }
-    return assets_get_image_id(ASSET_EXTERNAL_FILE_LIST, full_path);
+    return assets_get_external_image(full_path, 0);
 }
 
 static int draw_text(const uint8_t *text, int x_offset, int y_offset,

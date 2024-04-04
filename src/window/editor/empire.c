@@ -509,6 +509,7 @@ static void refresh_empire(void)
         return;
     }
     empire_xml_parse_file(scenario.empire.custom_name);
+    window_invalidate();
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)

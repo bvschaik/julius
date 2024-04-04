@@ -83,6 +83,7 @@ typedef struct {
     void (*free_image_atlas)(atlas_type type);
 
     void (*load_unpacked_image)(const image *img, const color_t *pixels);
+    void (*free_unpacked_image)(const image *img);
 
     int (*should_pack_image)(int width, int height);
 

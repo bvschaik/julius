@@ -128,7 +128,7 @@ static void draw_background_image(void)
     const campaign_scenario *scenario = campaign_get_scenario(scenario_campaign_mission());
     int image_id = 0;
     if (scenario->briefing_image_path) {
-        image_id = assets_get_image_id(ASSET_EXTERNAL_FILE_LIST, scenario->briefing_image_path);
+        image_id = assets_get_external_image(scenario->briefing_image_path, 0);
     } else {
         image_id = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * (scenario_campaign_mission() % 11) + 1;
     }
