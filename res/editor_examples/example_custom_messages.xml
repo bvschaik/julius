@@ -49,6 +49,7 @@
         @G[augustus_48.png]
         </text>
         <!-- For sound files, it will look for the file in the following directories (in order):
+	    <current campaign>/audio/
             ./community/audio/
             ./mp3/
             ./wavs/
@@ -57,6 +58,7 @@
             If it cannot find it at all, then it will simply not play anything. -->
         <media type="sound" filename="fanfare_nu3.wav"/>
         <!-- For background music files, it will look for the file in the following directories (in order):
+	    <current campaign>/audio/
             ./community/audio/
             ./mp3/
             ./wavs/
@@ -73,8 +75,10 @@
         I shall not warn you again.@L
         My anger is growing, and the whips sing the songs of rowing.</text>
         <!-- For video files, it will look for the file in the following directories (in order):
+	    <current campaign>/video/
             ./community/video/
             ./smk/
+	    ./mpg/
         
             It will play the file that matches the filename as soon as it finds it.
             If it cannot find it at all, then it will simply not play anything. -->
