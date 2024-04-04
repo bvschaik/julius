@@ -4,10 +4,28 @@
     <!-- All messages must have a unique identifier (uid) that can be used to reference them.
         Unique identifiers must be unique, there cannot be duplicates -->
     <message uid="scenario briefing">
-        <!-- This is the text that will be displayed when the message is shown. Note that text uses Rich Text formatting, so it is possible to define new lines, paragraphs or built-in images.
-        @L will start a new line.
-        @P will start a new paragraph.
-        @G### will show an image where ### is the id of the image.-->
+        <!--
+            This is the text that will be displayed when the message is shown. Note that text uses Rich Text formatting,
+            so it is possible to define new lines, paragraphs or built-in images.
+
+            - @L will start a new line (line break).
+            - @P will start a new paragraph, identing the next line.
+            - @G### will show an image where ### is the id of the image.
+              The id of the image can be different depending on what you write:
+
+              * @G<image index>, with <image index> being a number, will fetch that image index from the messages group;
+              * @G<group number>:<image index>, with each being a number, will fetch the image index from the set group
+                number. This effectively allows you to display any original asset on the custom messages.
+              * @G[<asset group id>:<asset image id>], with both being strings, will fetch the image from the asset group
+                with the given id and the image with the given id. This allows you to display any custom asset image on
+                the custom messages. Note that you MUST use the [ and ] brackets, otherwise the game will not recognize
+                that you want to fetch a custom asset.
+              * @G[<png file path>], with the <png file path> being a string, will fetch the image from the given file
+                path. The file will be searched inside the "image" directory of the campaign directory if one is currently
+                loaded, otherwise it will search inside "community/image". Only PNG files are supported.
+
+              Note that no scaling will be done on the images. If they are too large they will be cropped at the sides.
+        -->
         <title>Toga puer iratus est</title>
         <subtitle>An assignment from a slightly fuming Caesar</subtitle>
         <text>I am most displeased.@L
@@ -20,8 +38,16 @@
 
         My dearest governor.@L
 		My most beloved governor.@L
-		I am most displeased... and my wrath is palpable.@L
-		@G1</text>
+		I am most displeased... and my wrath is palpable.@L@L
+        The next image is one in the message dialog group.@L
+		@G1
+        The next image is a different original image from another group.@L
+        @G10:5
+        The next image is a custom asset image.@L
+        @G[UI:Happy God Icon]
+        The next image is a custom image from a file. To see it, place a PNG file on "community/image" and rename it.@L
+        @G[augustus_48.png]
+        </text>
         <!-- For sound files, it will look for the file in the following directories (in order):
             ./community/audio/
             ./mp3/

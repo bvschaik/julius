@@ -360,6 +360,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                                 }
                                 size_t length = end - begin;
                                 text += length + 1;
+                                c = *text++;
                                 char *location = malloc((length + 1) * sizeof(char));
                                 if (location) {
                                     strncpy(location, begin, length);

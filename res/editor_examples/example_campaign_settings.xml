@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<!DOCTYPE campaign>
+<!-- This is an example campaign settings.xml file. -->
+<!--
+    How to create a custom campaign:
+
+    While the game does not have a built-in campaign editor, you can create custom campaigns by creating a new directory
+    inside the "campaigns" directory of the game and placing the campaign files inside it.
+
+    The new directory placed inside the campaigns directory will be your "base campaign directory".
+
+    Each "base campaign directory" has the following structure:
+
+    - settings.xml: This file. The campaign settings file. It contains the campaign title, author, and the missions and
+      scenarios that the campaign has
+    - scenario/: A directory where you place the scenarios for the campaign. The scenarios can be either custom maps
+      or savegames.
+    - image/: A directory where you can place images to be used on the scenario selection screen and mission briefing
+        screens, as well as inside custom messages.
+    - audio/: A directory where you can place audio files to be used on the scenario selection screen and mission
+        briefing screens, as well as inside custom messages.
+    - video/: A directory where you can place video files to be used on the scenario selection screen and mission
+        briefing screens, as well as inside custom messages.
+
+    When you have all the files in place, you can compress the "base campaign directory" into a .zip file and change the
+    extension from ".zip" to ".campaign". The game will recognize the .campaign file as a custom campaign and will show
+    it on the campaign selection.
+
+    Do note that for the ".campaign" file to load properly, the "settings.xml" file, as well as the "scenario", "image",
+    "audio" and "video" directories, must be in the root of the .campaign file.
+
+    For example, if the uncompressed campaign directory is in "campaigns/my_campaign", the .campaign file CANNOT start
+    with the "my_campaign" directory. It must start with the "settings.xml" file and the "scenario", "image", "audio" and
+    "video" directories.
+-->
+<!-- Version tag MUST be set to 1 -->
+<campaign version="1">
+    <!--
+        The info on the "description" tag will appear on the campaign list.
+        The campaign title will also be used for new scenario autosaves.
+
+        Available attributes:
+        - title: Mandatory. The title of the campaign. It will appear on the campaign selection list and will also be
+          used for new scenario autosaves.
+        - author: Optional. The name of the user who created the campaign. If set, it will appear on the campaign selection
+          list.
+
+        The text inside the description tag will appear on the campaign selection list. It does not yet support rich text
+        formatting, but support is planned in the future.
+    -->
+    <description title="A test campaign" author="crudelios">
+        This is a test campaign to test the campaign system.
+    </description>
+    <!-- This empty missions tag is mandatory. -->
+    <missions>
+        <!--
+            A campaign consists of missions, each of which can have one or more scenarios for the player to choose from.
+            If a player choose a scenario from a mission and wins it, the mission will advance to the next upon scenario
+            completion, just like the original campaign.
+
+            Available attributes:
+
+            - title: Optional. The title of the mission. It will appear on the scenario selection screen.
+
+            - video: Optional. The video file to play before the scenario selection window is shown.
+
+                The video will be searched for in the following directories (in order):
+                - <campaign directory>/video/
+                - ./smk/ (if video extension is smk)
+                - ./mpg/ (if video extension is mpg)
+                Supported extensions: ".smk", ".mpg"
+
+            - background_image: Optional. The image to show as the background of the scenario selection screen.
+
+              Recommended size of the image is 640x400, a bigger image will be cut and a smaller one will not fill the
+              display. If not set, the default small empire map background will be used.
+              The image must be in PNG format and in the "image" directory of the campaign directory.
+
+            If the current mission only has one scenario, you can also use all tags that are available on the "scenario" tag.
+
+            See examples below.
+        -->
+
+        <!--
+            The following mission has two scenarios for the user to choose from. Beating the chosen scenario will advance
+            to the next mission without the need to play the remaining scenarios of the same mission.The mission title
+            will appear on the scenario selection screen and the video will play before the scenario selection window is shown.
+        -->
+        <mission title="The first custom mission" video="Credits.mpg">
+
+            <!--
+                A mission scenario. A scenario can either be a custom map on ".map" or ".mapx" format, or a savegame in
+                ".sav" or ".svx" format.
+
+                Available attributes:
+
+                - file: Mandatory. The file path of the scenario.
+                
+                  It can be a custom map or a savegame. It must be placed inside the "scenario" directory of the campaign
+                  directory.
+
+                  If the campaign file is already compressed (i.e. the settings are loaded from a .campaign file), the
+                  game checks if the file exists and throws an error if it doesn't find it.
+
+                  This behaviour does NOT happen if the campaign is not yet in a proper .campaign file (i.e. it is in the
+                  "campaigns/<campaign name>" directory, to prevent easier new campaign development).
+
+                - name: Optional. The name of the scenario.
+                
+                  It will appear on the scenario selection screen and also on new campaign scenario autosaves. If a name
+                  is not provided, it will set "Scenario #" as default, where "#" is the internal scenario ID in the campaign.
+
+                - description: Optional. The description of the scenario.
+
+                  It will appear on the scenario selection screen.
+
+                - fanfare: Optional. The fanfare sound to play when the scenario is selected.
+
+                  If set to "peaceful" or "military", the game will play the default fanfare for peaceful or military scenarios.
+
+                  If set to "none", no fanfare will be played.
+
+                  If set to anything else, the game will look for the file in the following directories (in order):
+
+                    - <campaign directory>/audio/
+                    - ./community/audio/
+                    - ./wavs/
+                    - ./mp3/
+
+                  Supported audio files: mp3, wav.
+
+                - x: Optional. The X coordinate of the scenario button on the scenario selection screen.
+                
+                    If not set, the game will place the scenario button on the left of the map.
+
+                - y: Optional. The Y coordinate of the scenario button on the scenario selection screen.
+
+                    If not set, the game will place the scenario button on the top of the map.
+
+                - briefing_image: Optional. The background image to show on the mission briefing screen.
+
+                  If not set, the default mission briefing screen will be used.
+
+                  The image must be in PNG format and in the "image" directory of the campaign directory.
+
+                If you want an actual mission briefing window to appear like on the original campaign, you must set the
+                intro message on the scenario editor. If you do, the briefing window will appear even on campaign scenarios
+                that use savegames instead of new scenarios.
+            -->
+            <scenario file="Test_for_custom_campaign_1.mapx" x="150" y="200" fanfare="ROME1.MP3" name="Test scenario 1"
+                description="This is a test scenario."/>
+            <scenario file="Test_for_custom_campaign_2.mapx" x="400" y="300" background_image="briefing_m1s2.png"
+                fanfare="fanfare_nu3.wav" name="Test scenario 2" description="This is another test scenario."/>
+        </mission>
+        <!-- A mission with a single scenario. In this case, the scenario selection screen will not appear. -->
+        <mission file="Another scenario.svx"/>
+        <!-- A mission with three scenarios to choose from -->
+        <mission title="The third custom mission" background_image="great map.png">
+            <scenario file="m03s01.sav" name="Test scenario 3" description="This is yet another test scenario."
+                x="10" y="10" fanfare="peaceful"/>
+            <scenario file="m03s02.map" name="Test scenario 4" description="This is yet another test scenario."
+                x="100" y="200" fanfare="military"/>
+            <scenario file="m03s03.svx" name="Test scenario 5" description="This is yet another test scenario."
+                x="400" y="300" fanfare="my pretty fanfare.mp3"/>
+        </mission>
+    </missions>
+</campaign>
