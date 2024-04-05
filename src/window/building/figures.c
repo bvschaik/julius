@@ -79,10 +79,11 @@ static int big_people_image(figure_type type)
 {
     switch (type) {
         case FIGURE_WORK_CAMP_SLAVE:
-        case FIGURE_CARAVANSERAI_SUPPLIER:
-        case FIGURE_CARAVANSERAI_COLLECTOR:
         case FIGURE_LIGHTHOUSE_SUPPLIER:
             return assets_get_image_id("Walkers", "Slave Portrait");
+        case FIGURE_CARAVANSERAI_SUPPLIER:
+        case FIGURE_CARAVANSERAI_COLLECTOR:
+            return assets_get_image_id("Walkers", "caravanserai_walker_portrait");
         case FIGURE_MESS_HALL_COLLECTOR:
         case FIGURE_MESS_HALL_FORT_SUPPLIER:
             return assets_get_image_id("Walkers", "M Hall Portrait");
