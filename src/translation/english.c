@@ -1400,7 +1400,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_CAMPAIGN_AUTHOR, "Author:"},
     {TR_WINDOW_CAMPAIGN_NO_DESC, "No description"},
     {TR_WINDOW_ORIGINAL_CAMPAIGN_NAME, "Original campaign" },
-    {TR_WINDOW_ORIGINAL_CAMPAIGN_DESC, "The original Caesar 3 campaign, in all its decades old glory."},
+    {TR_WINDOW_ORIGINAL_CAMPAIGN_DESC, "The original Caesar 3 campaign from 1998, in all its glory."},
     {TR_WINDOW_INVALID_CAMPAIGN_TITLE, "Invalid campaign file" },
     {TR_WINDOW_INVALID_CAMPAIGN_TEXT, "The provided campaign file is invalid.\nPlese check augustus-log.txt in your Augustus directory for details."},
     {TR_WINDOW_CAMPAIGN_MISSION_FAILED_TO_LOAD_TITLE, "Unable to open mission"},
