@@ -375,9 +375,9 @@ void figure_delivery_boy_action(figure *f)
         }
     } else if (f->type == FIGURE_CARAVANSERAI_COLLECTOR) {
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-            f->image_id = assets_get_image_id("Walkers", "Slave death 01") + figure_image_corpse_offset(f);
+            f->image_id = assets_get_image_id("Walkers", "caravanserai_walker_death_01") + figure_image_corpse_offset(f);
         } else {
-            f->image_id = assets_get_image_id("Walkers", "Slave NE 01")
+            f->image_id = assets_get_image_id("Walkers", "caravanserai_walker_ne_01")
                 + dir * 12 + f->image_offset;
         }
     } else {
