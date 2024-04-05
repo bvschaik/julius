@@ -1392,11 +1392,11 @@ static translation_string all_strings[] = {
     {TR_CHEAT_CASTED_CURSE, "Гнев получен"},
     {TR_CHEAT_BUILDINGS_INVINCIBLE, "Построенные здания не разрушаются"},
     {TR_CHEAT_CLIMATE_CHANGE, "Климат меняется"},
-    {TR_MAIN_MENU_NEW_CAMPAIGN, "Начать новую кампанию"},
+    {TR_MAIN_MENU_NEW_CAMPAIGN, "Начать новую игру"},
     {TR_WINDOW_SELECT_CAMPAIGN, "Выбрать кампанию"},
     {TR_WINDOW_CAMPAIGN_NO_DESC, "Нет описания"},
     {TR_WINDOW_ORIGINAL_CAMPAIGN_NAME, "Оригинальная карьера" },
-    {TR_WINDOW_ORIGINAL_CAMPAIGN_DESC, "Оригинальная кампания Caesar 3 во всей своей красе 25-летней давности."},
+    {TR_WINDOW_ORIGINAL_CAMPAIGN_DESC, "Оригинальная кампания Цезаря 3 1998 года во всей своей красе."},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
