@@ -1123,8 +1123,6 @@ static translation_string all_strings[] = {
     {TR_WINDOW_CAMPAIGN_NO_DESC, "Keine Beschreibung"},
     {TR_WINDOW_ORIGINAL_CAMPAIGN_NAME, "Original-Kampagne" },
     {TR_WINDOW_ORIGINAL_CAMPAIGN_DESC, "Die ursprüngliche Caesar 3-Kampagne in ihrer ganzen 25 Jahre alten Pracht."},
-    {TR_WINDOW_INVALID_CAMPAIGN_TITLE, "Noch nicht implementiert." },
-    {TR_WINDOW_INVALID_CAMPAIGN_TEXT, "Die Unterstützung für eigene Kampagnen wurde noch nicht implementiert. Bitte prüfen Sie eine spätere Version."},
 	/* Missions-Editor - Aktion*/
     {TR_ACTION_TYPE_A_MESSAGE, "Eine Nachricht"},
     {TR_ACTION_TYPE_ADJUST_CITY_HEALTH, "Gesundheit der Stadt anpassen"},

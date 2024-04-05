@@ -49,6 +49,8 @@ static void button_scenario_events(int param1, int param2);
 static void button_custom_messages(int param1, int param2);
 static void button_change_intro(int param1, int param2);
 static void button_delete_intro(int param1, int param2);
+static void button_change_victory(int param1, int param2);
+static void button_delete_victory(int param1, int param2);
 static void change_climate(int param1, int param2);
 static void change_image(int forward, int param2);
 
@@ -66,6 +68,7 @@ static generic_button buttons[] = {
     {470, 76, 250, 30, button_scenario_events, button_none, 11, 0},
     {470, 116, 250, 30, button_custom_messages, button_none, 12, 0},
     {470, 156, 250, 30, button_change_intro, button_delete_intro, 13, 0},
+    {470, 196, 250, 30, button_change_victory, button_delete_victory, 14, 0},
 };
 #define NUMBER_OF_BUTTONS (sizeof(buttons) / sizeof(generic_button))
 
@@ -81,7 +84,7 @@ static struct {
 } data;
 
 static input_box scenario_description_input = {
-    92, 40, 19, 2, FONT_NORMAL_WHITE, 1,
+    200, 40, 19, 2, FONT_NORMAL_WHITE, 1,
     data.brief_description, BRIEF_DESC_LENGTH
 };
 
@@ -194,6 +197,15 @@ static void draw_foreground(void)
         lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_DESELECT_INTRO, 490, 165, 230, FONT_NORMAL_BLACK);
     }
 
+    button_border_draw(470, 196, 250, 30, data.focus_button_id == 14);
+    if (!scenario_editor_get_custom_victory_message()) {
+        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_SELECT_VICTORY, 470, 205, 250, FONT_NORMAL_BLACK);
+    } else {
+        text_draw_number(scenario_editor_get_custom_victory_message(), '@',
+            " ", 470, 205, FONT_NORMAL_BLACK, 0);
+        lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_DESELECT_VICTORY, 490, 205, 230, FONT_NORMAL_BLACK);
+    }
+
     arrow_buttons_draw(0, 0, image_arrows, 2);
 
     graphics_reset_dialog();
@@ -301,6 +313,23 @@ static void button_delete_intro(int param1, int param2)
 {
     stop(0);
     scenario_editor_set_custom_message_introduction(0);
+}
+
+static void button_change_victory(int param1, int param2)
+{
+    stop(0);
+    if (!scenario_editor_get_custom_victory_message()) {
+        window_editor_select_custom_message_show(scenario_editor_set_custom_victory_message);
+    } else {
+        scenario_editor_set_custom_victory_message(0);
+        window_request_refresh();
+    }
+}
+
+static void button_delete_victory(int param1, int param2)
+{
+    stop(0);
+    scenario_editor_set_custom_victory_message(0);
 }
 
 static void change_climate(int param1, int param2)

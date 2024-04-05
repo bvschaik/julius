@@ -108,4 +108,7 @@ void scenario_editor_set_survival_time(int years);
 int scenario_editor_get_custom_message_introduction(void);
 void scenario_editor_set_custom_message_introduction(int id);
 
+int scenario_editor_get_custom_victory_message(void);
+void scenario_editor_set_custom_victory_message(int id);
+
 #endif // SCENARIO_EDITOR_H

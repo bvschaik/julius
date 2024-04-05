@@ -226,8 +226,7 @@ void scenario_save_state(buffer *buf)
     buffer_write_i16(buf, 0);
     buffer_write_i32(buf, scenario.initial_funds);
     buffer_write_i16(buf, scenario.enemy_id);
-    buffer_write_i16(buf, 0);
-    buffer_write_i16(buf, 0);
+    buffer_write_i32(buf, scenario.victory_custom_message_id);
     buffer_write_i16(buf, 0);
 
     buffer_write_i32(buf, scenario.map.width);
@@ -428,7 +427,8 @@ void scenario_load_state(buffer *buf, buffer *buf_requests, int version)
     buffer_skip(buf, 2);
     scenario.initial_funds = buffer_read_i32(buf);
     scenario.enemy_id = buffer_read_i16(buf);
-    buffer_skip(buf, 6);
+    scenario.victory_custom_message_id = buffer_read_i32(buf);
+    buffer_skip(buf, 2);
 
     scenario.map.width = buffer_read_i32(buf);
     scenario.map.height = buffer_read_i32(buf);

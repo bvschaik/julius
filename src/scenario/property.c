@@ -151,6 +151,11 @@ int scenario_intro_message(void)
     return scenario.intro_custom_message_id;
 }
 
+int scenario_victory_message(void)
+{
+    return scenario.victory_custom_message_id;
+}
+
 void scenario_change_climate_cheat(scenario_climate climate)
 {
     climate = calc_bound(climate, CLIMATE_CENTRAL, CLIMATE_DESERT);

@@ -1397,9 +1397,6 @@ static translation_string all_strings[] = {
     {TR_WINDOW_SELECT_CAMPAIGN, "Choisir une campagne"},
     {TR_WINDOW_ORIGINAL_CAMPAIGN_NAME, "Campagne d'origine" },
     {TR_WINDOW_ORIGINAL_CAMPAIGN_DESC, "Campagne originelle de Caesar III, dans toute sa gloire d'antan et ses 25 ans d'âge."},
-    {TR_WINDOW_INVALID_CAMPAIGN_TITLE, "En cours d'ajout" },
-    {TR_WINDOW_INVALID_CAMPAIGN_TEXT, "La gestion des campagnes personnalisées est en cours d'ajout.\nVeuillez vérifier les prochaines versions."},
-
 };
 
 void translation_french(const translation_string **strings, int *num_strings)

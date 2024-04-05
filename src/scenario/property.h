@@ -63,6 +63,8 @@ int scenario_rescue_loan(void);
 
 int scenario_intro_message(void);
 
+int scenario_victory_message(void);
+
 void scenario_change_climate_cheat(scenario_climate climate);
 
 #endif // SCENARIO_PROPERTY_H

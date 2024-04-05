@@ -570,3 +570,13 @@ void scenario_editor_set_custom_message_introduction(int id)
 {
     scenario.intro_custom_message_id = id;
 }
+
+int scenario_editor_get_custom_victory_message(void)
+{
+    return scenario.victory_custom_message_id;
+}
+
+void scenario_editor_set_custom_victory_message(int id)
+{
+    scenario.victory_custom_message_id = id;
+}
