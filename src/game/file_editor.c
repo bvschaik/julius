@@ -73,6 +73,8 @@ void game_file_editor_clear_data(void)
     scenario_invasion_clear();
     scenario_events_clear();
     custom_messages_clear_all();
+    scenario_editor_set_custom_message_introduction(0);
+    scenario_editor_set_custom_victory_message(0);
 }
 
 static void clear_map_data(void)

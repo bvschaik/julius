@@ -139,18 +139,30 @@
 
                 - briefing_image: Optional. The background image to show on the mission briefing screen.
 
-                  If not set, the default mission briefing screen will be used.
+                  If not set, the default mission briefing background will be used.
 
                   The image must be in PNG format and in the "image" directory of the campaign directory.
 
                 If you want an actual mission briefing window to appear like on the original campaign, you must set the
                 intro message on the scenario editor. If you do, the briefing window will appear even on campaign scenarios
                 that use savegames instead of new scenarios.
+
+                - victory_image: Optional. The background image to show on the mission victory screen.
+
+                  If not set, the default mission victory background will be used.
+
+                  The image must be in PNG format and in the "image" directory of the campaign directory.
+
+                If you want a custom victory screen to appear like on the original campaign, you must set the victory
+                message on the scenario editor. If you do, the custom victory window will appear instead of the default
+                one. Note that if you create a custom victory message but don't set a video playback file to the that
+                message, no victory video will play.
             -->
             <scenario file="Test_for_custom_campaign_1.mapx" x="150" y="200" fanfare="ROME1.MP3" name="Test scenario 1"
                 description="This is a test scenario."/>
             <scenario file="Test_for_custom_campaign_2.mapx" x="400" y="300" background_image="briefing_m1s2.png"
-                fanfare="fanfare_nu3.wav" name="Test scenario 2" description="This is another test scenario."/>
+                victory_image="victory_m1s2.png" fanfare="fanfare_nu3.wav" name="Test scenario 2"
+                description="This is another test scenario."/>
         </mission>
         <!-- A mission with a single scenario. In this case, the scenario selection screen will not appear. -->
         <mission file="Another scenario.svx"/>

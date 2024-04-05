@@ -17,6 +17,7 @@
 #include "scenario/custom_media.h"
 #include "scenario/custom_messages_import_xml.h"
 #include "scenario/custom_messages.h"
+#include "scenario/editor.h"
 #include "scenario/message_media_text_blob.h"
 #include "window/city.h"
 #include "window/editor/attributes.h"
@@ -183,6 +184,8 @@ static void button_click(int type, int param2)
         window_file_dialog_show(FILE_TYPE_CUSTOM_MESSAGES, FILE_DIALOG_SAVE);
     } else if (type == 11) {
         custom_messages_clear_all();
+        scenario_editor_set_custom_message_introduction(0);
+        scenario_editor_set_custom_victory_message(0);
         init();
     }
 }

@@ -6,6 +6,7 @@
 #include "core/string.h"
 #include "core/xml_parser.h"
 #include "scenario/custom_messages.h"
+#include "scenario/editor.h"
 #include "scenario/scenario_events_parameter_data.h"
 #include "window/plain_message_dialog.h"
 
@@ -173,6 +174,8 @@ static int parse_xml(char *buf, int buffer_length)
 {
     reset_data();
     custom_messages_clear_all();
+    scenario_editor_set_custom_message_introduction(0);
+    scenario_editor_set_custom_victory_message(0);
     data.success = 1;
     if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS)) {
         data.success = 0;
