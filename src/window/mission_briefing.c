@@ -21,6 +21,7 @@
 #include "scenario/criteria.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
+#include "sound/channel.h"
 #include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
@@ -117,7 +118,8 @@ static void play_audio(void)
 
     const char *audio_file = custom_messages_get_audio(custom_message);
     if (audio_file) {
-        sound_speech_play_file(audio_file);
+        sound_device_play_file_on_channel(audio_file, SOUND_CHANNEL_SPEECH,
+            setting_sound(SOUND_SPEECH)->volume);
         data.has_audio = 1;
     }
 }

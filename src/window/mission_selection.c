@@ -6,6 +6,7 @@
 #include "core/lang.h"
 #include "core/log.h"
 #include "game/mission.h"
+#include "game/settings.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
@@ -14,6 +15,8 @@
 #include "graphics/screen.h"
 #include "graphics/window.h"
 #include "scenario/property.h"
+#include "sound/channel.h"
+#include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 #include "window/mission_briefing.h"
@@ -106,7 +109,7 @@ static void load_new_campaign_rank_scenarios(int scenario_id)
     data.mission.total_scenarios = mission->total_scenarios;
     data.mission.intro_video = mission->intro_video;
     if (mission->background_image) {
-        data.mission.background_image_id = assets_get_image_id("UI", mission->background_image);
+        data.mission.background_image_id = assets_get_external_image(mission->background_image, 0);
     } else {
         data.mission.background_image_id = 0;
     }
@@ -154,13 +157,13 @@ static void draw_background(void)
 {
     draw_background_images();
     graphics_in_dialog();
+    graphics_set_clip_rectangle(0, 0, 640, 400);
     if (data.mission.background_image_id) {
         image_draw(data.mission.background_image_id, 0, 0, COLOR_MASK_NONE, SCALE_NONE);
     } else {
-        graphics_set_clip_rectangle(0, 0, 640, 400);
         image_draw(image_group(GROUP_EMPIRE_MAP), 0, 0, COLOR_MASK_NONE, 2.5f);
-        graphics_reset_clip_rectangle();
     }
+    graphics_reset_clip_rectangle();
     if (data.mission.title) {
         text_draw(data.mission.title, 20, 410, FONT_LARGE_BLACK, 0);
     }
@@ -239,7 +242,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 }
                 window_invalidate();
                 if (scenario->fanfare) {
-                    sound_speech_play_file(scenario->fanfare);
+                    sound_device_play_file_on_channel(scenario->fanfare, SOUND_CHANNEL_SPEECH,
+                        setting_sound(SOUND_SPEECH)->volume);
                 } else {
                     sound_speech_stop();
                 }
