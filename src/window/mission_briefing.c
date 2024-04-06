@@ -50,7 +50,7 @@ static image_button image_button_start_mission = {
 static struct {
     int is_review;
     int video_played;
-    int has_audio;
+    int audio_played;
     int focus_button;
     int campaign_mission_loaded;
 } data;
@@ -58,7 +58,7 @@ static struct {
 static void init(void)
 {
     data.focus_button = 0;
-    data.has_audio = 0;
+    data.audio_played = 0;
     rich_text_reset(0);
 }
 
@@ -105,7 +105,7 @@ static int play_video(void)
 
 static void play_audio(void)
 {
-    if (!scenario_is_custom()) {
+    if (!scenario_is_custom() || data.audio_played) {
         return;
     }
     custom_message_t *custom_message = custom_messages_get(scenario_intro_message());
@@ -113,14 +113,14 @@ static void play_audio(void)
     const char *background_music = custom_messages_get_background_music(custom_message);
     if (background_music) {
         sound_device_play_music(background_music, setting_sound(SOUND_MUSIC)->volume, 0);
-        data.has_audio = 1;
+        data.audio_played = 1;
     }
 
     const char *audio_file = custom_messages_get_audio(custom_message);
     if (audio_file) {
         sound_device_play_file_on_channel(audio_file, SOUND_CHANNEL_SPEECH,
             setting_sound(SOUND_SPEECH)->volume);
-        data.has_audio = 1;
+        data.audio_played = 1;
     }
 }
 
@@ -313,7 +313,7 @@ static void button_back(int param1, int param2)
 
 static void button_start_mission(int param1, int param2)
 {
-    if (!data.is_review || data.has_audio) {
+    if (!data.is_review || data.audio_played) {
         sound_music_stop();
         sound_speech_stop();
     }
