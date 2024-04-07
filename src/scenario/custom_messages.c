@@ -143,7 +143,7 @@ static void link_media(custom_media_t *media, custom_media_link_type link_type, 
         case CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN:
             {
                 custom_message_t *message = custom_messages_get(link_id);
-                message->linked_media = media;
+                message->linked_media[media->type] = media;
             }
             break;
         case CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_BACKGROUND_MUSIC:
@@ -257,9 +257,10 @@ static const char *search_for_file(const uint8_t *filename, const char *paths[])
 
 uint8_t *custom_messages_get_video(custom_message_t *message)
 {
-    if (message->linked_media && message->linked_media->type == CUSTOM_MEDIA_VIDEO &&
-        message->linked_media->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN) {
-        const char *path_utf8 = search_for_file(message->linked_media->filename->text, VIDEO_FILE_PATHS);
+    custom_media_t *media = message->linked_media[CUSTOM_MEDIA_VIDEO];
+    if (media && media->type == CUSTOM_MEDIA_VIDEO &&
+            media->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN) {
+        const char *path_utf8 = search_for_file(media->filename->text, VIDEO_FILE_PATHS);
         if (!path_utf8) {
             return 0;
         }
@@ -273,9 +274,21 @@ uint8_t *custom_messages_get_video(custom_message_t *message)
 
 const char *custom_messages_get_audio(custom_message_t *message)
 {
-    if (message->linked_media && message->linked_media->type == CUSTOM_MEDIA_SOUND &&
-        message->linked_media->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN) {
-        return search_for_file(message->linked_media->filename->text, AUDIO_FILE_PATHS);
+    custom_media_t *media = message->linked_media[CUSTOM_MEDIA_SOUND];
+    if (media && media->type == CUSTOM_MEDIA_SOUND &&
+        media->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN) {
+        return search_for_file(media->filename->text, AUDIO_FILE_PATHS);
+    } else {
+        return 0;
+    }
+}
+
+const char *custom_messages_get_speech(custom_message_t *message)
+{
+    custom_media_t *media = message->linked_media[CUSTOM_MEDIA_SPEECH];
+    if (media && media->type == CUSTOM_MEDIA_SPEECH &&
+        media->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN) {
+        return search_for_file(media->filename->text, AUDIO_FILE_PATHS);
     } else {
         return 0;
     }

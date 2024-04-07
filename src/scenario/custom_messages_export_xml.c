@@ -48,11 +48,13 @@ static int export_message(custom_message_t *message)
     xml_exporter_add_element_text(custom_messages_get_text(message));
     xml_exporter_close_element(1);
 
-    if (message->linked_media && message->linked_media->type != CUSTOM_MEDIA_UNDEFINED) {
-        xml_exporter_new_element("media", 1);
-        export_attribute_media_type("type", message->linked_media->type);
-        xml_exporter_add_attribute_text("filename", message->linked_media->filename->text);
-        xml_exporter_close_element(0);
+    for (int i = 0; i < CUSTOM_MEDIA_MAX; i++) {
+        if (message->linked_media[i] && message->linked_media[i]->type != CUSTOM_MEDIA_UNDEFINED) {
+            xml_exporter_new_element("media", 1);
+            export_attribute_media_type("type", message->linked_media[i]->type);
+            xml_exporter_add_attribute_text("filename", message->linked_media[i]->filename->text);
+            xml_exporter_close_element(0);
+        }
     }
 
     if (message->linked_background_music && message->linked_background_music->type != CUSTOM_MEDIA_UNDEFINED) {

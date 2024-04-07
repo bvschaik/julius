@@ -271,16 +271,17 @@ int sound_device_play_music(const char *filename, int volume_pct, int loop)
     return 0;
 }
 
-void sound_device_play_file_on_channel(const char *filename, int channel, int volume_pct)
+int sound_device_play_file_on_channel(const char *filename, int channel, int volume_pct)
 {
     if (data.initialized && config_get(CONFIG_GENERAL_ENABLE_AUDIO)) {
         sound_device_stop_channel(channel);
         data.channels[channel].chunk = load_chunk(filename);
         if (data.channels[channel].chunk) {
             sound_device_set_channel_volume(channel, volume_pct);
-            Mix_PlayChannel(channel, data.channels[channel].chunk, 0);
+            return Mix_PlayChannel(channel, data.channels[channel].chunk, 0) != -1;
         }
     }
+    return 0;
 }
 
 void sound_device_play_channel(int channel, int volume_pct)
@@ -306,6 +307,16 @@ void sound_device_play_channel_panned(int channel, int volume_pct, int left_pct,
     }
 }
 
+void sound_device_on_audio_finished(void (*callback)(int))
+{
+    Mix_ChannelFinished(callback);
+}
+
+void sound_device_fadeout_music(int milisseconds)
+{
+    Mix_FadeOutMusic(milisseconds);
+}
+
 void sound_device_stop_music(void)
 {
     if (data.initialized) {
@@ -322,6 +333,7 @@ void sound_device_stop_music(void)
 void sound_device_stop_channel(int channel)
 {
     if (data.initialized) {
+        Mix_ChannelFinished(NULL);
         sound_channel *ch = &data.channels[channel];
         if (ch->chunk) {
             Mix_HaltChannel(channel);

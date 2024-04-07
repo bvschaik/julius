@@ -33,6 +33,8 @@
 #include "window/plain_message_dialog.h"
 #include "window/video.h"
 
+#include <string.h>
+
 static void show(void);
 static void button_back(int param1, int param2);
 static void button_start_mission(int param1, int param2);
@@ -52,6 +54,11 @@ static struct {
     int video_played;
     int audio_played;
     int focus_button;
+    struct {
+        char audio[FILE_NAME_MAX];
+        char speech[FILE_NAME_MAX];
+        char background_music[FILE_NAME_MAX];
+    } paths;
     int campaign_mission_loaded;
 } data;
 
@@ -59,6 +66,9 @@ static void init(void)
 {
     data.focus_button = 0;
     data.audio_played = 0;
+    data.paths.audio[0] = 0;
+    data.paths.speech[0] = 0;
+    data.paths.background_music[0] = 0;
     rich_text_reset(0);
 }
 
@@ -103,24 +113,71 @@ static int play_video(void)
     return 0;
 }
 
+static void fadeout_music(int unused)
+{
+    sound_device_fadeout_music(5000);
+    sound_device_on_audio_finished(0);
+}
+
+static void init_speech(int channel)
+{
+    if (channel != SOUND_CHANNEL_SPEECH) {
+        return;
+    }
+
+    int has_speech = *data.paths.speech && *data.paths.background_music;
+    if (*data.paths.speech) {
+        has_speech &= sound_device_play_file_on_channel(data.paths.speech,
+            SOUND_CHANNEL_SPEECH, setting_sound(SOUND_SPEECH)->volume);
+    }
+    if (*data.paths.background_music) {
+        int volume = 100;
+        if (has_speech) {
+            volume = setting_sound(SOUND_SPEECH)->volume / 3;
+        }
+        if (volume > setting_sound(SOUND_MUSIC)->volume) {
+            volume = setting_sound(SOUND_MUSIC)->volume;
+        }
+        has_speech &= sound_device_play_music(data.paths.background_music, volume, 0);
+    }
+    sound_device_on_audio_finished(has_speech ? fadeout_music : 0);
+}
+
 static void play_audio(void)
 {
     if (!scenario_is_custom() || data.audio_played) {
         return;
     }
-    custom_message_t *custom_message = custom_messages_get(scenario_intro_message());
+    data.audio_played = 1;
 
-    const char *background_music = custom_messages_get_background_music(custom_message);
-    if (background_music) {
-        sound_device_play_music(background_music, setting_sound(SOUND_MUSIC)->volume, 0);
-        data.audio_played = 1;
-    }
+    custom_message_t *custom_message = custom_messages_get(scenario_intro_message());
 
     const char *audio_file = custom_messages_get_audio(custom_message);
     if (audio_file) {
-        sound_device_play_file_on_channel(audio_file, SOUND_CHANNEL_SPEECH,
+        strncpy(data.paths.audio, audio_file, FILE_NAME_MAX);
+    }
+    const char *speech_file = custom_messages_get_speech(custom_message);
+    if (speech_file) {
+        strncpy(data.paths.speech, speech_file, FILE_NAME_MAX);
+    }
+    const char *background_music = custom_messages_get_background_music(custom_message);
+    if (background_music) {
+        strncpy(data.paths.background_music, background_music, FILE_NAME_MAX);
+    }
+    int playing_audio = 0;
+
+    if (audio_file) {
+        playing_audio = sound_device_play_file_on_channel(data.paths.audio, SOUND_CHANNEL_SPEECH,
             setting_sound(SOUND_SPEECH)->volume);
-        data.audio_played = 1;
+    }
+    if (speech_file) {
+        if (!playing_audio) {
+            init_speech(SOUND_CHANNEL_SPEECH);
+        } else {
+            sound_device_on_audio_finished(init_speech);
+        }
+    } else if (background_music) {
+        sound_device_play_music(data.paths.background_music, setting_sound(SOUND_MUSIC)->volume, 0);
     }
 }
 

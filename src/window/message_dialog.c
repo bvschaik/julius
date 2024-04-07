@@ -24,6 +24,7 @@
 #include "scenario/custom_messages.h"
 #include "scenario/property.h"
 #include "scenario/request.h"
+#include "sound/channel.h"
 #include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
@@ -97,6 +98,7 @@ static struct {
     void (*background_callback)(void);
     int show_video;
     int should_play_audio;
+    int should_play_speech;
     int should_play_background_music;
 
     int x;
@@ -158,6 +160,11 @@ static void setup_custom_lang_message(int text_id)
         data.should_play_audio = 1;
     }
 
+    data.should_play_speech = 0;
+    if (custom_messages_get_speech(data.custom_msg)) {
+        data.should_play_speech = 1;
+    }
+
     data.should_play_background_music = 0;
     if (custom_messages_get_background_music(data.custom_msg)) {
         data.should_play_background_music = 1;
@@ -175,16 +182,52 @@ static void clear_custom_lang_message(void)
     data.should_play_background_music = 0;
 }
 
+static void fadeout_music(int unused)
+{
+    sound_device_fadeout_music(5000);
+    sound_device_on_audio_finished(0);
+}
+
+static void init_speech(int channel)
+{
+    if (channel != SOUND_CHANNEL_SPEECH) {
+        return;
+    }
+    int has_speech = data.should_play_speech && data.should_play_background_music;
+    if (data.should_play_speech) {
+        has_speech &= sound_device_play_file_on_channel(custom_messages_get_speech(data.custom_msg),
+                SOUND_CHANNEL_SPEECH, setting_sound(SOUND_SPEECH)->volume);
+    }
+    if (data.should_play_background_music) {
+        int volume = 100;
+        if (has_speech) {
+            volume = setting_sound(SOUND_SPEECH)->volume / 3;
+        }
+        if (volume > setting_sound(SOUND_MUSIC)->volume) {
+            volume = setting_sound(SOUND_MUSIC)->volume;
+        }
+        has_speech &= sound_device_play_music(custom_messages_get_background_music(data.custom_msg), volume, 0);
+    }
+    sound_device_on_audio_finished(has_speech ? fadeout_music : 0);
+}
+
 static void init_audio(void)
 {
     if (!data.show_video) {
+        int playing_audio = 0;
         if (data.should_play_audio) {
-            sound_speech_play_file(custom_messages_get_audio(data.custom_msg));
+            playing_audio = sound_device_play_file_on_channel(custom_messages_get_audio(data.custom_msg),
+                SOUND_CHANNEL_SPEECH, setting_sound(SOUND_SPEECH)->volume);
         }
-        if (data.should_play_background_music) {
-            sound_device_stop_music();
-            int volume = setting_sound(SOUND_MUSIC)->volume;
-            sound_device_play_music(custom_messages_get_background_music(data.custom_msg), volume, 0);
+        if (data.should_play_speech) {
+            if (!playing_audio) {
+                init_speech(SOUND_CHANNEL_SPEECH);
+            } else {
+                sound_device_on_audio_finished(init_speech);
+            }
+        } else if (data.should_play_background_music) {
+            sound_device_play_music(custom_messages_get_background_music(data.custom_msg),
+                setting_sound(SOUND_MUSIC)->volume, 0);
         }
     }
 }
@@ -233,7 +276,8 @@ static void init(int text_id, int is_custom_message, void (*background_callback)
         data.show_video = 0;
     }
     if (data.show_video) {
-        video_init(1);
+        int restart_music = !data.should_play_audio && !data.should_play_speech && !data.should_play_background_music;
+        video_init(restart_music);
     }
     init_audio();
 }
@@ -763,6 +807,7 @@ static void cleanup(void)
     if (data.should_play_background_music) {
         sound_music_stop();
     }
+    sound_music_update(1);
 }
 
 static void button_close(int param1, int param2)

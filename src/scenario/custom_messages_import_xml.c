@@ -126,7 +126,7 @@ static int xml_start_media(void)
     }
 
     const char *media_filename = xml_parser_get_attribute_string("filename");
-    data.current_message->linked_media = custom_media_create(found->value, string_from_ascii(media_filename), CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN, data.current_message->id);
+    data.current_message->linked_media[found->value] = custom_media_create(found->value, string_from_ascii(media_filename), CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN, data.current_message->id);
     return 1;
 }
 

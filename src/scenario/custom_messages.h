@@ -19,7 +19,7 @@ typedef struct {
     const text_blob_string_t *title;
     const text_blob_string_t *subtitle;
     const text_blob_string_t *display_text;
-    custom_media_t *linked_media;
+    custom_media_t *linked_media[CUSTOM_MEDIA_MAX];
     custom_media_t *linked_background_music;
 } custom_message_t;
 
@@ -40,6 +40,7 @@ uint8_t *custom_messages_get_text(custom_message_t *message);
 
 uint8_t *custom_messages_get_video(custom_message_t *message);
 const char *custom_messages_get_audio(custom_message_t *message);
+const char *custom_messages_get_speech(custom_message_t *message);
 const char *custom_messages_get_background_music(custom_message_t *message);
 
 int custom_messages_relink_text_blob(int text_id, text_blob_string_t *new_text_link);
