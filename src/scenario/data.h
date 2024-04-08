@@ -165,6 +165,7 @@ extern struct scenario_t {
     int start_year;
     scenario_climate climate;
     int player_rank;
+    uint16_t caesar_salary;
 
     int initial_funds;
     int rescue_loan;

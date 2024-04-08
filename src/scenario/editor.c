@@ -41,6 +41,7 @@ void scenario_editor_create(int map_size)
     string_copy(lang_get_string(44, 37), scenario.brief_description, MAX_BRIEF_DESCRIPTION);
     string_copy(lang_get_string(44, 38), scenario.briefing, MAX_BRIEFING);
 
+    scenario.caesar_salary = 100;
     scenario.initial_funds = 1000;
     scenario.rescue_loan = 500;
     scenario.start_year = -500;
@@ -397,6 +398,17 @@ void scenario_editor_toggle_building_allowed(int id)
 void scenario_editor_set_player_rank(int rank)
 {
     scenario.player_rank = rank;
+    scenario.is_saved = 0;
+}
+
+void scenario_editor_set_caesar_salary(int salary)
+{
+    if (salary <= 0) {
+        salary = 100;
+    } else if (salary > 60000) {
+        salary = 60000;
+    }
+    scenario.caesar_salary = salary;
     scenario.is_saved = 0;
 }
 

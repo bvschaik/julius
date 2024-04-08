@@ -53,6 +53,8 @@ int scenario_property_enemy(void);
 
 int scenario_property_player_rank(void);
 
+int scenario_property_caesar_salary(void);
+
 int scenario_image_id(void);
 
 const uint8_t *scenario_brief_description(void);

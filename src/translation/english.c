@@ -1406,6 +1406,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_INVALID_CAMPAIGN_TEXT, "The provided campaign file is invalid.\nPlese check augustus-log.txt in your Augustus directory for details."},
     {TR_WINDOW_CAMPAIGN_MISSION_FAILED_TO_LOAD_TITLE, "Unable to open mission"},
     {TR_WINDOW_CAMPAIGN_MISSION_FAILED_TO_LOAD_TEXT, "The requested mission could not be opened.\nPlease check augustus-log.txt in your Augustus directory for details."},
+    {TR_EDITOR_CAESAR_SALARY, "Caesar's salary"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

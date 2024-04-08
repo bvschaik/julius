@@ -126,6 +126,11 @@ int scenario_property_player_rank(void)
     return scenario.player_rank;
 }
 
+int scenario_property_caesar_salary(void)
+{
+    return scenario.caesar_salary;
+}
+
 int scenario_image_id(void)
 {
     return scenario.image_id;

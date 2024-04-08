@@ -13,7 +13,7 @@
 
 #define RANKS 11
 
-const int SALARY_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
+static const int SALARY_PERCENTAGE_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
 static int cheated_invasion = 0;
 
@@ -22,6 +22,10 @@ void city_emperor_init_scenario(int rank)
     city_data.ratings.favor = scenario_starting_favor();
     city_data.emperor.personal_savings = scenario_starting_personal_savings();
     city_data.emperor.player_rank = rank;
+    city_data.emperor.caesar_salary = scenario_property_caesar_salary();
+    if (city_data.emperor.caesar_salary == 0) {
+        city_data.emperor.caesar_salary = 100;
+    }
     int salary_rank = rank;
     if (scenario_is_custom()) {
         city_data.emperor.personal_savings = 0;
@@ -202,9 +206,9 @@ int city_emperor_can_send_gift(int size)
 void city_emperor_calculate_gift_costs(void)
 {
     int savings = city_data.emperor.personal_savings;
-    city_data.emperor.gifts[GIFT_MODEST].cost = savings / 8 + 20;
-    city_data.emperor.gifts[GIFT_GENEROUS].cost = savings / 4 + 50;
-    city_data.emperor.gifts[GIFT_LAVISH].cost = savings / 2 + 100;
+    city_data.emperor.gifts[GIFT_MODEST].cost = calc_adjust_with_percentage(savings / 8 + 20, city_data.emperor.caesar_salary);
+    city_data.emperor.gifts[GIFT_GENEROUS].cost = calc_adjust_with_percentage(savings / 4 + 50, city_data.emperor.caesar_salary);
+    city_data.emperor.gifts[GIFT_LAVISH].cost = calc_adjust_with_percentage(savings / 2 + 100, city_data.emperor.caesar_salary);
 }
 
 void city_emperor_send_gift(void)
@@ -274,13 +278,13 @@ int city_emperor_months_since_gift(void)
 
 int city_emperor_salary_for_rank(int rank)
 {
-    return SALARY_FOR_RANK[rank];
+    return calc_adjust_with_percentage(city_data.emperor.caesar_salary, SALARY_PERCENTAGE_FOR_RANK[rank]);
 }
 
 void city_emperor_set_salary_rank(int rank)
 {
     city_data.emperor.salary_rank = rank;
-    city_data.emperor.salary_amount = SALARY_FOR_RANK[rank];
+    city_data.emperor.salary_amount = city_emperor_salary_for_rank(rank);
 }
 
 int city_emperor_salary_rank(void)
@@ -296,7 +300,7 @@ int city_emperor_salary_amount(void)
 int city_emperor_rank_for_salary_paid(int salary)
 {
     for (int i = 0; i < RANKS; i++) {
-        if (salary <= SALARY_FOR_RANK[i]*12) {
+        if (salary <= calc_adjust_with_percentage(city_data.emperor.caesar_salary, SALARY_PERCENTAGE_FOR_RANK[i]) * 12) {
             return i;
         }
     }

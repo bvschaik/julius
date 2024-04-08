@@ -56,6 +56,7 @@ extern struct city_data_t {
         int32_t salary_amount;
         int32_t donate_amount;
         int32_t personal_savings;
+        uint16_t caesar_salary;
         struct {
             int32_t count;
             int32_t size;

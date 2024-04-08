@@ -143,7 +143,8 @@ static void save_main_data(buffer *main)
         buffer_write_i16(main, city_data.resource.export_status_before_stockpiling[i]);
     }
     buffer_write_i8(main, city_data.sentiment.crime_cooldown);
-    for (int i = 0; i < 4; i++) {
+    buffer_write_u16(main, city_data.emperor.caesar_salary);
+    for (int i = 0; i < 2; i++) {
         buffer_write_u8(main, 0);
     }
     buffer_write_i32(main, city_data.caravanserai.total_food);
@@ -608,8 +609,12 @@ static void load_main_data(buffer *main, int version)
     if (!discard_unused_values) {
         buffer_skip(main, 231);
     }
-    city_data.sentiment.crime_cooldown = buffer_read_i8(main); 
-    buffer_skip(main, 4);
+    city_data.sentiment.crime_cooldown = buffer_read_i8(main);
+    city_data.emperor.caesar_salary = buffer_read_u16(main);
+    if (!city_data.emperor.caesar_salary) {
+        city_data.emperor.caesar_salary = 100;
+    }
+    buffer_skip(main, 2);
     city_data.caravanserai.total_food = buffer_read_i32(main);
     for (int i = 0; i < resource_total_mapped(); i++) {
         city_data.resource.stockpiled[resource_remap(i)] = buffer_read_i32(main);

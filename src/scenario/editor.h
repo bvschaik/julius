@@ -73,6 +73,7 @@ int scenario_editor_is_building_allowed(int id);
 void scenario_editor_toggle_building_allowed(int id);
 
 void scenario_editor_set_player_rank(int rank);
+void scenario_editor_set_caesar_salary(int salary);
 
 void scenario_editor_set_initial_funds(int amount);
 void scenario_editor_set_rescue_loan(int amount);
