@@ -193,9 +193,9 @@ static int get_average_housing_level(void)
 {
     int avg = 0;
     int population = 0;
+    int multiplier = 1;
 
     for (building_type type = BUILDING_HOUSE_SMALL_TENT; type <= BUILDING_HOUSE_LUXURY_PALACE; type++) {
-        int multiplier = 1;
         if (type == BUILDING_HOUSE_LARGE_CASA) {
             multiplier = 10;
         } else if (type == BUILDING_HOUSE_SMALL_VILLA) {
