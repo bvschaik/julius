@@ -460,6 +460,8 @@ int building_monument_progress(building *b)
             city_message_post(1, MESSAGE_COLOSSEUM_COMPLETE, 0, b->grid_offset);
         } else if (b->type == BUILDING_HIPPODROME) {
             city_message_post(1, MESSAGE_HIPPODROME_COMPLETE, 0, b->grid_offset);
+        } else if (b->type == BUILDING_CARAVANSERAI) {
+            city_message_post(1, MESSAGE_CARAVANSERAI_COMPLETE, 0, b->grid_offset);
         }
     }
     return 1;
