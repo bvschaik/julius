@@ -100,6 +100,7 @@ static struct {
     int should_play_audio;
     int should_play_speech;
     int should_play_background_music;
+    int background_image_id;
 
     int x;
     int y;
@@ -169,6 +170,11 @@ static void setup_custom_lang_message(int text_id)
     if (custom_messages_get_background_music(data.custom_msg)) {
         data.should_play_background_music = 1;
     }
+
+    const uint8_t *background_image_text = custom_messages_get_background_image(data.custom_msg);
+    if (background_image_text) {
+        data.background_image_id = rich_text_parse_image_id(&background_image_text, GROUP_INTERMEZZO_BACKGROUND, 1);
+    }
 }
 
 static void clear_custom_lang_message(void)
@@ -180,6 +186,7 @@ static void clear_custom_lang_message(void)
     data.custom_lang_message.video.text = 0;
     data.should_play_audio = 0;
     data.should_play_background_music = 0;
+    data.background_image_id = 0;
 }
 
 static void fadeout_music(int unused)
@@ -608,7 +615,9 @@ static void draw_background(void)
 {
     data.x_text = 0;
     data.y_text = 0;
-    if (data.background_callback) {
+    if (data.background_image_id && !editor_is_active()) {
+        image_draw_fullscreen_background(data.background_image_id);
+    } else if (data.background_callback) {
         data.background_callback();
     } else {
         window_draw_underlying_window();

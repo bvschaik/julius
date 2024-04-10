@@ -76,6 +76,31 @@
             - Aditionally, if there's a sound file and a speech file, the speech file only starts playing after the sound
               file finishes playing. -->
         <media type="speech" filename="caesar_1.wav"/>
+        <!--
+             Background images behave similarly to the "@G" parameter on rich text, except you don't need to prefix
+             the string with the @G.
+             
+             For example: <media type="background_image" location="[UI:Happy God Icon]" /> is a valid image.
+
+             Note above that instead of the "filename" attribute, you can also use the "location" attribute. One is an
+             alias of the other and both behave similarly, but "location" is provided as it's a technically more correct
+             term for ID's and extra assets.
+
+             As an alternative, you can directly indicate the filename without the square brackets. The four lines below
+             are exactly the same:
+
+             <media type="background_image" filename="my image.png" />
+             <media type="background_image" filename="[my image.png]" />
+             <media type="background_image" location="my image.png" />
+             <media type="background_image" location="[my image.png]" />
+
+             Another important difference is that if you only set an id, such as:
+
+             <media type="background_image" location="5" />
+
+             The default group will point to the fullscreen background intermezzo images instead of the message images.
+        -->
+        <media type="background_image" filename="image.png"/>
         <!-- For background music files, it will look for the file in the following directories (in order):
 	        <current campaign>/audio/
             ./community/audio/

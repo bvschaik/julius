@@ -16,7 +16,8 @@ typedef enum {
     CUSTOM_MEDIA_SOUND = 1,
     CUSTOM_MEDIA_VIDEO = 2,
     CUSTOM_MEDIA_SPEECH = 3,
-    CUSTOM_MEDIA_MAX = 4,
+    CUSTOM_MEDIA_BACKGROUND_IMAGE = 4,
+    CUSTOM_MEDIA_MAX = 5,
 } custom_media_type;
 
 typedef enum {

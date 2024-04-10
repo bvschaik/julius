@@ -231,14 +231,6 @@ static int xml_start_scenario(void)
             return 0;
         }
     }
-    const char *image_path = xml_parser_get_attribute_string("briefing_image");
-    if (image_path) {
-        scenario->briefing_image_path = create_full_campaign_path("image", image_path);
-    }
-    image_path = xml_parser_get_attribute_string("victory_image");
-    if (image_path) {
-        scenario->victory_image_path = create_full_campaign_path("image", image_path);
-    }
 
     if (!scenario->name) {
         char name[FILE_NAME_MAX];

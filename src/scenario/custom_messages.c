@@ -305,6 +305,17 @@ const char *custom_messages_get_background_music(custom_message_t *message)
     }
 }
 
+const uint8_t *custom_messages_get_background_image(custom_message_t *message)
+{
+    custom_media_t *media = message->linked_media[CUSTOM_MEDIA_BACKGROUND_IMAGE];
+    if (media && media->type == CUSTOM_MEDIA_BACKGROUND_IMAGE &&
+        media->link_type == CUSTOM_MEDIA_LINK_TYPE_CUSTOM_MESSAGE_AS_MAIN) {
+        return media->filename->text;
+    } else {
+        return 0;
+    }
+}
+
 int custom_messages_relink_text_blob(int text_id, text_blob_string_t *new_text_link)
 {
     custom_message_t *entry;

@@ -21,8 +21,6 @@ typedef struct {
     const uint8_t *name;
     const uint8_t *description;
     const char *path;
-    const char *briefing_image_path;
-    const char *victory_image_path;
     const char *fanfare;
 } campaign_scenario;
 

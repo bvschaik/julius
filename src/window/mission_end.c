@@ -46,6 +46,7 @@ static generic_button fired_buttons[] = {
 static struct {
     int focus_button_id;
     int audio_playing;
+    int background_image_id;
     struct {
         char audio[FILE_NAME_MAX];
         char speech[FILE_NAME_MAX];
@@ -162,14 +163,21 @@ static void draw_background_image(void)
     }
     graphics_clear_screen();
 
-    const campaign_scenario *scenario = campaign_get_scenario(scenario_campaign_mission());
-    int image_id = 0;
-    if (scenario && scenario->victory_image_path) {
-        image_id = assets_get_external_image(scenario->victory_image_path, 0);
-    } else {
-        image_id = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * (scenario_campaign_mission() % 11) + 2;
+    if (!data.background_image_id) {
+        int image_id = 0;
+        if (has_custom_victory_message()) {
+            custom_message_t *victory_message = custom_messages_get(scenario_victory_message());
+            const uint8_t *background_image = custom_messages_get_background_image(victory_message);
+            if (background_image) {
+                image_id = rich_text_parse_image_id(&background_image, GROUP_INTERMEZZO_BACKGROUND, 1);
+            }
+        }
+        if (!image_id) {
+            image_id = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * (scenario_campaign_mission() % 11) + 2;
+        }
+        data.background_image_id = image_id;
     }
-    image_draw_fullscreen_background(image_id);
+    image_draw_fullscreen_background(data.background_image_id);
 }
 
 static void draw_won(void)
@@ -342,6 +350,7 @@ static void button_fired(int param1, int param2)
 static void show_end_dialog(void)
 {
     data.audio_playing = 0;
+    data.background_image_id = 0;
     rich_text_reset(0);
     window_type window = {
         WINDOW_MISSION_END,

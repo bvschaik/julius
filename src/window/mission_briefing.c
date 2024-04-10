@@ -54,6 +54,7 @@ static struct {
     int video_played;
     int audio_played;
     int focus_button;
+    int background_image_id;
     struct {
         char audio[FILE_NAME_MAX];
         char speech[FILE_NAME_MAX];
@@ -194,14 +195,22 @@ static void draw_background_image(void)
         window_draw_underlying_window();
         return;
     }
-    const campaign_scenario *scenario = campaign_get_scenario(scenario_campaign_mission());
-    int image_id = 0;
-    if (scenario->briefing_image_path) {
-        image_id = assets_get_external_image(scenario->briefing_image_path, 0);
-    } else {
-        image_id = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * (scenario_campaign_mission() % 11) + 1;
+    if (!data.background_image_id) {
+        int image_id = 0;
+        if (has_briefing_message()) {
+            custom_message_t *intro_message = custom_messages_get(scenario_intro_message());
+            const uint8_t *background_image = custom_messages_get_background_image(intro_message);
+            if (background_image) {
+                image_id = rich_text_parse_image_id(&background_image, GROUP_INTERMEZZO_BACKGROUND, 1);
+            }
+        }
+        if (!image_id) {
+            image_id = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * (scenario_campaign_mission() % 11) + 2;
+        }
+        data.background_image_id = image_id;
     }
-    image_draw_fullscreen_background(image_id);
+
+    image_draw_fullscreen_background(data.background_image_id);
 }
 
 static void get_briefing_texts(const uint8_t **title, const uint8_t **subtitle, const uint8_t **content)
@@ -405,6 +414,7 @@ void window_mission_briefing_show(void)
     data.is_review = 0;
     data.video_played = 0;
     data.campaign_mission_loaded = 0;
+    data.background_image_id = 0;
     campaign_is_active() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
 
@@ -412,5 +422,6 @@ void window_mission_briefing_show_review(void)
 {
     data.is_review = 1;
     data.campaign_mission_loaded = 1;
+    data.background_image_id = 0;
     campaign_is_active() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }

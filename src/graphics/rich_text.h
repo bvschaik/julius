@@ -57,6 +57,16 @@ int rich_text_draw(const uint8_t *text, int x_offset, int y_offset,
                    int box_width, int height_lines, int measure_only);
 
 /**
+ * Parses rich text to obtain an image ID
+ * @param position Expects the current position of the text and returns the position at the end of parsing, on 0 if
+ *                 there was a parse error.
+ * @param default_image_group Indicates the default image group in none is provided and an image ID is set
+ * @param can_be_filepath Indicates whether the string can simply be an unformatted filepath that does not need parsing.
+ * @return The image ID of the parsed text or 0 if no image was found or if there was an error.
+ */
+int rich_text_parse_image_id(const uint8_t **position, int default_image_group, int can_be_filepath);
+
+/**
  * Draws rich text with specified color
  * @param text Text to draw
  * @param x_offset X offset

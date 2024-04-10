@@ -269,6 +269,78 @@ static int get_external_image_id(const char *filename)
     return assets_get_external_image(full_path, 0);
 }
 
+int rich_text_parse_image_id(const uint8_t **position, int default_image_group, int can_be_filepath)
+{
+    int image_id = 0;
+
+    if (can_be_filepath) {
+        int length = string_length(*position) + 1;
+        char *location = malloc(length * sizeof(char));
+        if (location) {
+            encoding_to_utf8(*position, location, length, encoding_system_uses_decomposed());
+            image_id = get_external_image_id(location);
+            free(location);
+        }
+        if (image_id) {
+            return image_id;
+        }
+    }
+    const uint8_t *cursor = *position;
+    if (*cursor == '[') {
+        cursor++; // skip '['
+        const char *begin = (const char *) cursor;
+        const char *end = strchr(begin, ']');
+        if (!end) {
+            *position = 0;
+            return 0;
+        }
+        size_t length = end - begin;
+        cursor += length + 1;
+        char *location = malloc((length + 1) * sizeof(char));
+        if (location) {
+            strncpy(location, begin, length);
+            location[length] = 0;
+            char *divider = strchr(location, ':');
+            // "[<asset group name>:<asset image name>]"
+            if (divider) {
+                *divider = 0;
+                const char *group_name = location;
+                const char *image_name = divider + 1;
+                image_id = assets_get_image_id(group_name, image_name);
+                // "[<asset png path>]"
+            } else {
+                image_id = get_external_image_id(location);
+            }
+            free(location);
+        }
+    } else {
+        int custom_group = default_image_group;
+        image_id = string_to_int(cursor);
+        char c = *cursor++;
+        if (image_id || c == '0') {
+            while (c >= '0' && c <= '9') {
+                c = *cursor++;
+            }
+            if (c == ':') {
+                int actual_image_id = string_to_int(cursor);
+                c = *cursor++;
+                if (actual_image_id || c == '0') {
+                    while (c >= '0' && c <= '9') {
+                        c = *cursor++;
+                    }
+                    if (actual_image_id) {
+                        custom_group = image_id;
+                        image_id = actual_image_id;
+                    }
+                }
+            }
+            image_id += image_group(custom_group) - 1;
+        }
+    }
+    *position = cursor;
+    return image_id;
+}
+
 static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                      int box_width, int height_lines, color_t color, int measure_only)
 {
@@ -349,57 +421,10 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                             text++; // skip 'G'
                             current_width = box_width;
                             // "@G[...]"
-                            if (*text == '[') {
-                                text++; // skip '['
-                                const char *begin = (const char *) text;
-                                const char *end = strchr(begin, ']');
-                                if (!end) {
-                                    has_more_characters = 0;
-                                    break;
-                                }
-                                size_t length = end - begin;
-                                text += length + 1;
-                                c = *text++;
-                                char *location = malloc((length + 1) * sizeof(char));
-                                if (location) {
-                                    strncpy(location, begin, length);
-                                    location[length] = 0;
-                                    char *divider = strchr(location, ':');
-                                    // "@G[<asset group name>:<asset image name>]"
-                                    if (divider) {
-                                        *divider = 0;
-                                        const char *group_name = location;
-                                        const char *image_name = divider + 1;
-                                        image_id = assets_get_image_id(group_name, image_name);
-                                    // "@G[<asset png path>]"
-                                    } else {
-                                        image_id = get_external_image_id(location);
-                                    }
-                                    free(location);
-                                }
-                            } else {
-                                int custom_group = GROUP_MESSAGE_IMAGES;
-                                image_id = string_to_int(text);
-                                c = *text++;
-                                if (image_id || c == '0') {
-                                    while (c >= '0' && c <= '9') {
-                                        c = *text++;
-                                    }
-                                    if (c == ':') {
-                                        int actual_image_id = string_to_int(text);
-                                        c = *text++;
-                                        if (actual_image_id || c == '0') {
-                                            while (c >= '0' && c <= '9') {
-                                                c = *text++;
-                                            }
-                                            if (actual_image_id) {
-                                                custom_group = image_id;
-                                                image_id = actual_image_id;
-                                            }
-                                        }
-                                    }
-                                    image_id += image_group(custom_group) - 1;
-                                }
+                            image_id = rich_text_parse_image_id(&text, GROUP_MESSAGE_IMAGES, 0);
+                            if (!text) {
+                                has_more_characters = 0;
+                                break;
                             }
                             int height = image_get(image_id)->original.height;
                             image_height_lines = height / data.line_height;
