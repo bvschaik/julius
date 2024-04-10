@@ -61,6 +61,11 @@ int scenario_starting_personal_savings(void)
     return scenario.settings.starting_personal_savings;
 }
 
+void scenario_set_starting_personal_savings(int personal_savings)
+{
+    scenario.settings.starting_personal_savings = personal_savings;
+}
+
 const uint8_t *scenario_name(void)
 {
     return scenario.scenario_name;

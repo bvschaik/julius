@@ -49,7 +49,7 @@
         @G[augustus_48.png]
         </text>
         <!-- For sound files, it will look for the file in the following directories (in order):
-	    <current campaign>/audio/
+	        <current campaign>/audio/
             ./community/audio/
             ./mp3/
             ./wavs/
@@ -57,8 +57,27 @@
             It will play the file that matches the filename as soon as it finds it.
             If it cannot find it at all, then it will simply not play anything. -->
         <media type="sound" filename="fanfare_nu3.wav"/>
+        <!-- For speech files, it will look for the file in the following directories (in order):
+	        <current campaign>/audio/
+            ./community/audio/
+            ./mp3/
+            ./wavs/
+        
+            It will play the file that matches the filename as soon as it finds it.
+            If it cannot find it at all, then it will simply not play anything.
+            
+            Speech files are special in two ways:
+
+            - If a speech file exists, the background music will be tied to it. That means that the background music will
+              only start playing when the speech file starts playing. Aditionally, when the speech file finishes playing,
+              the background music will fade out and stop. This allows you to mimic the original game's behaviour whithout
+              having to provide the background music yourself.
+
+            - Aditionally, if there's a sound file and a speech file, the speech file only starts playing after the sound
+              file finishes playing. -->
+        <media type="speech" filename="caesar_1.wav"/>
         <!-- For background music files, it will look for the file in the following directories (in order):
-	    <current campaign>/audio/
+	        <current campaign>/audio/
             ./community/audio/
             ./mp3/
             ./wavs/

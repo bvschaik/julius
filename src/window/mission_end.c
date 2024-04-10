@@ -7,6 +7,7 @@
 #include "city/population.h"
 #include "city/ratings.h"
 #include "city/victory.h"
+#include "core/calc.h"
 #include "core/encoding.h"
 #include "core/image_group.h"
 #include "game/mission.h"
@@ -163,7 +164,7 @@ static void draw_background_image(void)
 
     const campaign_scenario *scenario = campaign_get_scenario(scenario_campaign_mission());
     int image_id = 0;
-    if (scenario->victory_image_path) {
+    if (scenario && scenario->victory_image_path) {
         image_id = assets_get_external_image(scenario->victory_image_path, 0);
     } else {
         image_id = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * (scenario_campaign_mission() % 11) + 2;
@@ -277,8 +278,12 @@ static void draw_foreground(void)
 
 static void advance_to_next_mission(void)
 {
-    setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, city_emperor_personal_savings());
-    scenario_set_campaign_rank(scenario_campaign_rank() + 1);
+    const campaign_mission_info *mission_info = campaign_get_current_mission(scenario_campaign_mission());
+
+    if (mission_info && mission_info->next_rank != CAMPAIGN_NO_RANK) {
+        scenario_set_campaign_rank(mission_info->next_rank);
+    }
+
     scenario_save_campaign_player_name();
 
     city_victory_stop_governing();
@@ -286,10 +291,12 @@ static void advance_to_next_mission(void)
     game_undo_disable();
     game_state_reset_overlay();
 
-    const campaign_mission_info *mission_info = campaign_get_next_mission(scenario_campaign_mission());
+    mission_info = campaign_get_next_mission(scenario_campaign_mission());
 
     if (mission_info) {
         scenario_set_campaign_mission(mission_info->first_scenario);
+        int personal_savings = calc_bound(city_emperor_personal_savings(), 0, mission_info->max_personal_savings);
+        setting_set_personal_savings_for_mission(0, personal_savings);
         window_mission_selection_show();
     } else if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
         window_main_menu_show(1);
@@ -297,6 +304,8 @@ static void advance_to_next_mission(void)
         scenario_settings_init();
         scenario_set_campaign_rank(2);
     } else {
+        setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, city_emperor_personal_savings());
+        scenario_set_campaign_rank(scenario_campaign_rank() + 1);
         scenario_set_campaign_mission(game_mission_peaceful());
         window_mission_selection_show();
     }
@@ -333,6 +342,7 @@ static void button_fired(int param1, int param2)
 static void show_end_dialog(void)
 {
     data.audio_playing = 0;
+    rich_text_reset(0);
     window_type window = {
         WINDOW_MISSION_END,
         draw_background,

@@ -771,6 +771,11 @@ void scenario_settings_init_mission(void)
         setting_personal_savings_for_mission(scenario.campaign.rank);
 }
 
+void scenario_settings_init_favor(void)
+{
+    scenario.settings.starting_favor = difficulty_starting_favor();
+}
+
 void scenario_unlock_all_buildings(void)
 {
     for (int i = 0; i < MAX_ALLOWED_BUILDINGS; i++) {

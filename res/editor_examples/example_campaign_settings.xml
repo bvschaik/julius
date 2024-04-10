@@ -51,7 +51,20 @@
     <description title="A test campaign" author="crudelios">
         This is a test campaign to test the campaign system.
     </description>
-    <!-- This empty missions tag is mandatory. -->
+    <!--
+        This empty missions tag is mandatory. It represents the list of missions.
+
+        Available attributes:
+        - starting_rank: Optional. The rank the player will start the campaign with.
+        
+          If not set, the player will start with the lowest rank available in the game.
+
+          Available ranks, from lowest to highest, are as follows:
+
+            "citizen", "clerk", "engineer", "architect", "quaestor",
+            "procurator", "aedile", "praetor", "consul", "proconsul",
+            "caesar"          
+    -->
     <missions>
         <!--
             A campaign consists of missions, each of which can have one or more scenarios for the player to choose from.
@@ -76,6 +89,18 @@
               display. If not set, the default small empire map background will be used.
               The image must be in PNG format and in the "image" directory of the campaign directory.
 
+            - next_rank: Optional. The rank the player will advance to after completing the mission.
+
+              If not set, the player will keep the same rank.
+
+            - max_personal_savings: Optional. The maximum amount of personal savings the player can transfer from the
+              last mission when starting the new mission.
+              
+              Can be set to "0" to prevent any personal savings from being tranferred to the new mission.
+
+              If not set, the player will keep the same personal savings as when the previous mission ended.
+
+
             If the current mission only has one scenario, you can also use all tags that are available on the "scenario" tag.
 
             See examples below.
@@ -86,7 +111,7 @@
             to the next mission without the need to play the remaining scenarios of the same mission.The mission title
             will appear on the scenario selection screen and the video will play before the scenario selection window is shown.
         -->
-        <mission title="The first custom mission" video="Credits.mpg">
+        <mission title="The first custom mission" video="Credits.mpg" next_rank="clerk">
 
             <!--
                 A mission scenario. A scenario can either be a custom map on ".map" or ".mapx" format, or a savegame in

@@ -422,7 +422,8 @@ int game_file_start_scenario_from_buffer(uint8_t *data, int length, int is_save_
     scenario_set_custom(2);
     city_data_init_campaign_mission();
     scenario_set_campaign_mission(mission);
-    scenario_settings_init_mission();
+    scenario_settings_init_favor();
+    scenario_set_starting_personal_savings(setting_personal_savings_for_mission(0));
     city_emperor_init_scenario(scenario_campaign_rank());
 
     tutorial_init();

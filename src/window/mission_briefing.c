@@ -164,7 +164,14 @@ static void play_audio(void)
     if (background_music) {
         strncpy(data.paths.background_music, background_music, FILE_NAME_MAX);
     }
+
+    if (!audio_file && !speech_file && !background_music) {
+        return;
+    }
+
     int playing_audio = 0;
+
+    sound_music_stop();
 
     if (audio_file) {
         playing_audio = sound_device_play_file_on_channel(data.paths.audio, SOUND_CHANNEL_SPEECH,

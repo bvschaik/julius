@@ -445,6 +445,7 @@ static void replay_map_confirmed(int confirmed, int checked)
                 TR_REPLAY_MAP_NOT_FOUND_MESSAGE, 0, scenario_name());
         }
     } else {
+        setting_set_personal_savings_for_mission(0, scenario_starting_personal_savings());
         scenario_save_campaign_player_name();
         window_mission_selection_show_again();
     }

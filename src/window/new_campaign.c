@@ -97,6 +97,12 @@ static void init(void)
     list_box_select_index(&list_box, ORIGINAL_CAMPAIGN_ID);
 }
 
+static const campaign_info *get_campaign_info(void)
+{
+    return list_box_get_selected_index(&list_box) == ORIGINAL_CAMPAIGN_ID ?
+        &original_campaign_info : campaign_get_info();
+}
+
 static void draw_background(void)
 {
     image_draw_fullscreen_background(image_group(GROUP_MAIN_MENU_BACKGROUND));
@@ -109,10 +115,7 @@ static void draw_background(void)
     // Proceed? text
     lang_text_draw_right_aligned(43, 5, 362, 447, 164, FONT_NORMAL_BLACK);
 
-    int campaign_id = list_box_get_selected_index(&list_box);
-
-    const campaign_info *info = campaign_id == ORIGINAL_CAMPAIGN_ID ? &original_campaign_info : campaign_get_info();
-
+    const campaign_info *info = get_campaign_info();
     if (!info) {
         lang_text_draw_centered(CUSTOM_TRANSLATION, TR_SAVE_DIALOG_INVALID_FILE, 362, 241, 246, FONT_LARGE_BLACK);
     } else {
@@ -213,17 +216,20 @@ static void select_campaign(int index, int is_double_click)
 
 static void start_mission(int param1, int param2)
 {
-    if (list_box_get_selected_index(&list_box) != ORIGINAL_CAMPAIGN_ID && !campaign_is_active()) {
+    const campaign_info *info = get_campaign_info();
+    if (!info) {
         window_plain_message_dialog_show(TR_WINDOW_INVALID_CAMPAIGN_TITLE,
             TR_WINDOW_INVALID_CAMPAIGN_TEXT, 1);
         return;
     }
-    setting_set_player_name(data.player_name);
-    window_mission_selection_show();
-    input_box_stop(&player_name_input);
     if (!*data.player_name) {
         string_copy(player_name_input.placeholder, data.player_name, PLAYER_NAME_LENGTH);
     }
+    scenario_set_campaign_rank(info->starting_rank);
+    setting_set_player_name(data.player_name);
+    setting_set_personal_savings_for_mission(0, 0);
+    input_box_stop(&player_name_input);
+    window_mission_selection_show();
 }
 
 void window_new_campaign_show(void)

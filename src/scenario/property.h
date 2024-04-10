@@ -23,6 +23,8 @@ int scenario_is_tutorial_3(void);
 int scenario_starting_favor(void);
 int scenario_starting_personal_savings(void);
 
+void scenario_set_starting_personal_savings(int personal_savings);
+
 const uint8_t *scenario_name(void);
 void scenario_set_name(const uint8_t *name);
 

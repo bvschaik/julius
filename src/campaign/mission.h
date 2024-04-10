@@ -8,6 +8,8 @@ typedef struct {
     const uint8_t *title;
     int first_scenario;
     int last_scenario;
+    int next_rank;
+    int max_personal_savings;
     const char *background_image;
     const char *intro_video;
 } campaign_mission;

@@ -9,6 +9,7 @@ int scenario_is_saved(void);
 void scenario_settings_init(void);
 
 void scenario_settings_init_mission(void);
+void scenario_settings_init_favor(void);
 
 void scenario_unlock_all_buildings(void);
 

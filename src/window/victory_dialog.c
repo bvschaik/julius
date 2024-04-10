@@ -1,6 +1,7 @@
 #include "victory_dialog.h"
 
 #include "assets/assets.h"
+#include "campaign/campaign.h"
 #include "city/victory.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -47,7 +48,22 @@ static void draw_background(void)
     graphics_in_dialog();
 
     outer_panel_draw(48, 128, 34, 15);
-    if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
+    const campaign_mission_info *mission = campaign_get_current_mission(scenario_campaign_mission());
+
+    if (scenario_is_custom()) {
+        if (!mission || mission->next_rank <= CAMPAIGN_NO_RANK || mission->next_rank == scenario_campaign_rank()) {
+            lang_text_draw_centered(62, 0, 48, 159, 544, FONT_LARGE_BLACK);
+        } else {
+            if (mission->next_rank < 10) {
+                lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
+                lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK);
+                lang_text_draw_centered(32, mission->next_rank, 48, 194, 544, FONT_LARGE_BLACK);
+            } else {
+                text_draw_centered(scenario_player_name(), 48, 144, 512, FONT_LARGE_BLACK, 0);
+                lang_text_draw_multiline(62, 26, 140, 175, 360, FONT_NORMAL_BLACK);
+            }
+        }
+    } else if (scenario_campaign_rank() < 10) {
         lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
         lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK);
         lang_text_draw_centered(32, get_next_rank(), 48, 194, 544, FONT_LARGE_BLACK);
@@ -66,14 +82,26 @@ static void draw_foreground(void)
         int image_id = assets_get_image_id("UI", "Victory_Banner");
         image_draw(image_id, 88, 137, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_id, 512, 137, COLOR_MASK_NONE, SCALE_NONE);
-
         large_label_draw(80, 240, 30, focus_button_id == 1);
-        if (scenario_campaign_rank() < 10 || scenario_is_custom()) {
-            lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_GREEN);
+        if (scenario_is_custom()) {
+            const campaign_mission_info *mission = campaign_get_current_mission(scenario_campaign_mission());
+            if (!mission || mission->next_rank <= CAMPAIGN_NO_RANK || mission->next_rank == scenario_campaign_rank()) {
+                lang_text_draw_centered(44, 16, 80, 246, 480, FONT_NORMAL_GREEN);
+            } else {
+                if (mission->next_rank < 10) {
+                    lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_GREEN);
+                } else {
+                    lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_GREEN);
+                }
+            }
         } else {
-            lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_GREEN);
+            if (scenario_campaign_rank() < 10) {
+                lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_GREEN);
+            } else {
+                lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_GREEN);
+            }
         }
-        if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
+        if (scenario_is_custom() || scenario_campaign_rank() >= 2) {
             // Continue for 2/5 years
             large_label_draw(80, 272, 30, focus_button_id == 2);
             lang_text_draw_centered(62, 4, 80, 278, 480, FONT_NORMAL_GREEN);
