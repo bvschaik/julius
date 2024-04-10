@@ -7,6 +7,7 @@
 #include "core/log.h"
 #include "core/xml_parser.h"
 
+#include <limits.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
