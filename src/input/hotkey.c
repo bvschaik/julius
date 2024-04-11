@@ -327,18 +327,6 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
         case HOTKEY_PASTE_BUILDING_SETTINGS:
             def->action = &data.hotkey_state.paste_building_settings;
             break;
-        case HOTKEY_SHOW_OVERLAY_EFFICIENCY:
-            def->action = &data.hotkey_state.show_overlay;
-            def->value = OVERLAY_EFFICIENCY;
-            break;
-        case HOTKEY_SHOW_OVERLAY_FOOD_STOCKS:
-            def->action = &data.hotkey_state.show_overlay;
-            def->value = OVERLAY_FOOD_STOCKS;
-            break;
-        case HOTKEY_SHOW_OVERLAY_LOGISTICS:
-            def->action = &data.hotkey_state.show_overlay;
-            def->value = OVERLAY_LOGISTICS;
-            break;
         case HOTKEY_SHOW_OVERLAY_ENTERTAINMENT:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_ENTERTAINMENT;
@@ -383,9 +371,37 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_SICKNESS;
             break;
+        case HOTKEY_SHOW_OVERLAY_LOGISTICS:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_LOGISTICS;
+            break;
+        case HOTKEY_SHOW_OVERLAY_FOOD_STOCKS:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_FOOD_STOCKS;
+            break;
+        case HOTKEY_SHOW_OVERLAY_EFFICIENCY:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_EFFICIENCY;
+            break;
+        case HOTKEY_SHOW_OVERLAY_MOTHBALL:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_MOTHBALL;
+            break;
         case HOTKEY_SHOW_OVERLAY_TAX_INCOME:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_TAX_INCOME;
+            break;
+        case HOTKEY_SHOW_OVERLAY_LEVY:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_LEVY;
+            break;
+        case HOTKEY_SHOW_OVERLAY_EMPLOYMENT:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_EMPLOYMENT;
+            break;
+        case HOTKEY_SHOW_OVERLAY_RELIGION:
+            def->action = &data.hotkey_state.show_overlay;
+            def->value = OVERLAY_RELIGION;
             break;
         case HOTKEY_SHOW_OVERLAY_DESIRABILITY:
             def->action = &data.hotkey_state.show_overlay;
@@ -395,21 +411,9 @@ static void set_definition_for_action(hotkey_action action, hotkey_definition *d
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_SENTIMENT;
             break;
-        case HOTKEY_SHOW_OVERLAY_MOTHBALL:
-            def->action = &data.hotkey_state.show_overlay;
-            def->value = OVERLAY_MOTHBALL;
-            break;
-        case HOTKEY_SHOW_OVERLAY_RELIGION:
-            def->action = &data.hotkey_state.show_overlay;
-            def->value = OVERLAY_RELIGION;
-            break;
         case HOTKEY_SHOW_OVERLAY_ROADS:
             def->action = &data.hotkey_state.show_overlay;
             def->value = OVERLAY_ROADS;
-            break;
-        case HOTKEY_SHOW_OVERLAY_LEVY:
-            def->action = &data.hotkey_state.show_overlay;
-            def->value = OVERLAY_LEVY;
             break;
         case HOTKEY_ROTATE_MAP_NORTH:
             def->action = &data.hotkey_state.rotate_map_north;

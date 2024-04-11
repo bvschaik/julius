@@ -21,6 +21,8 @@ const city_overlay *city_overlay_for_roads(void);
 
 const city_overlay *city_overlay_for_levy(void);
 
+const city_overlay *city_overlay_for_employment(void);
+
 const city_overlay *city_overlay_for_mothball(void);
 
 const city_overlay *city_overlay_for_logistics(void);
