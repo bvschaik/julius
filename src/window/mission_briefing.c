@@ -60,7 +60,7 @@ static struct {
         char speech[FILE_NAME_MAX];
         char background_music[FILE_NAME_MAX];
     } paths;
-    int campaign_mission_loaded;
+    int file_loaded;
 } data;
 
 static void init(void)
@@ -231,7 +231,7 @@ static void get_briefing_texts(const uint8_t **title, const uint8_t **subtitle, 
 
 static void draw_background(void)
 {
-    if (!data.campaign_mission_loaded) {
+    if (!data.file_loaded) {
         if (!load_scenario_file()) {
             window_main_menu_show(1);
             setting_clear_personal_savings();
@@ -241,7 +241,7 @@ static void draw_background(void)
                 TR_WINDOW_CAMPAIGN_MISSION_FAILED_TO_LOAD_TEXT, 0);
             return;
         }
-        data.campaign_mission_loaded = 1;
+        data.file_loaded = 1;
     }
 
     if (!has_briefing_message()) {
@@ -413,15 +413,15 @@ void window_mission_briefing_show(void)
 {
     data.is_review = 0;
     data.video_played = 0;
-    data.campaign_mission_loaded = 0;
+    data.file_loaded = 0;
     data.background_image_id = 0;
-    campaign_is_active() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
+    scenario_is_custom() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
 
 void window_mission_briefing_show_review(void)
 {
     data.is_review = 1;
-    data.campaign_mission_loaded = 1;
+    data.file_loaded = 1;
     data.background_image_id = 0;
-    campaign_is_active() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
+    scenario_is_custom() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }

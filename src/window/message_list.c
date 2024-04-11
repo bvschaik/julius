@@ -83,7 +83,7 @@ static int review_briefing_button_should_be_active(void)
     if (!scenario_is_custom()) {
         return 1;
     }
-    if (!campaign_is_active() || !scenario_intro_message()) {
+    if (!scenario_intro_message()) {
         return 0;
     }
     custom_message_t *custom_message = custom_messages_get(scenario_intro_message());
@@ -307,10 +307,8 @@ static void button_delete_all_read(int param1, int param2)
 
 static void button_mission_briefing(int param1, int param2)
 {
-    if (!scenario_is_custom() || campaign_is_active()) {
+    if (!scenario_is_custom() || scenario_intro_message()) {
         window_mission_briefing_show_review();
-    } else if (scenario_intro_message()) {
-        window_message_dialog_show_custom_message(scenario_intro_message(), game_time_year(), game_time_month());
     }
 }
 

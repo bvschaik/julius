@@ -20,7 +20,7 @@
 #include "input/input.h"
 #include "sound/music.h"
 #include "widget/minimap.h"
-#include "window/city.h"
+#include "window/mission_briefing.h"
 
 #include <string.h>
 
@@ -74,6 +74,8 @@ static void init(void)
     data.scenarios = dir_append_files_with_extension("mapx");
     data.focus_toggle_button = 0;
     data.show_minimap = 0;
+    data.selected_scenario_display[0] = 0;
+    data.selected_scenario_filename[0] = 0;
     list_box_init(&list_box, data.scenarios->num_files);
     list_box_select_index(&list_box, 0);
 }
@@ -268,10 +270,11 @@ static void select_scenario(int index, int is_double_click)
 
 static void button_start_scenario(int param1, int param2)
 {
-    if (game_file_start_scenario(data.selected_scenario_filename)) {
-        sound_music_update(1);
-        window_city_show();
-    }
+    file_remove_extension(data.selected_scenario_filename);
+    encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
+    scenario_set_name(data.selected_scenario_display);
+    scenario_set_custom(2);
+    window_mission_briefing_show();
 }
 
 static void button_toggle_minimap(int param1, int param2)

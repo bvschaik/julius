@@ -28,13 +28,6 @@ int game_file_start_scenario_from_buffer(uint8_t *data, int length, int is_save_
 int game_file_start_scenario_by_name(const uint8_t *scenario_name);
 
 /**
- * Start scenario from filename
- * @param scenario_file File to load
- * @return Boolean true on success, false on failure
- */
-int game_file_start_scenario(const char *scenario_file);
-
-/**
  * Load saved game
  * @param filename File to load
  * @return 1, 0 for "file does not exist", -1 for "incompatible version", -2 for "invalid file format"
