@@ -70,6 +70,7 @@ static const char *ini_keys[] = {
     "gameplay_change_auto_kill_animals",
     "gameplay_change_nonmilitary_gates_allow_walkers",
     "ui_show_speedrun_info",
+    "ui_show_desirability_range",
 };
 
 static const char *ini_string_keys[] = {
@@ -92,7 +93,8 @@ static int default_values[CONFIG_MAX_ENTRIES] = {
     [CONFIG_UI_ASK_CONFIRMATION_ON_FILE_OVERWRITE] = 1,
     [CONFIG_SCREEN_DISPLAY_SCALE] = 100,
     [CONFIG_SCREEN_CURSOR_SCALE] = 100,
-    [CONFIG_GP_CH_MAX_GRAND_TEMPLES] = 2
+    [CONFIG_GP_CH_MAX_GRAND_TEMPLES] = 2,    
+    [CONFIG_UI_SHOW_DESIRABILITY_RANGE] = 0,
 };
 
 static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX] = { 0 };

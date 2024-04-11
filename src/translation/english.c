@@ -1414,7 +1414,8 @@ static translation_string all_strings[] = {
     {TR_WINDOW_CAMPAIGN_MISSION_FAILED_TO_LOAD_TITLE, "Unable to open mission"},
     {TR_WINDOW_CAMPAIGN_MISSION_FAILED_TO_LOAD_TEXT, "The requested mission could not be opened.\nPlease check augustus-log.txt in your Augustus directory for details."},
     {TR_EDITOR_CAESAR_SALARY, "Caesar's salary"},
-    {TR_CITY_MESSAGE_TEXT_CARAVANSERAI_COMPLETE, "The caravanserai is completed. New commercial horizons are emerging. Caravans from all over the world are eager to come and trade in your city."}
+    {TR_CITY_MESSAGE_TEXT_CARAVANSERAI_COMPLETE, "The caravanserai is completed. New commercial horizons are emerging. Caravans from all over the world are eager to come and trade in your city."},
+    {TR_CONFIG_SHOW_DESIRABILITY_RANGE, "Show desirability when building mausoleums and nymphaeums"},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -1408,6 +1408,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_CAMPAIGN_MISSION_FAILED_TO_LOAD_TEXT, "La mission choisie ne peut être ouverte.\nVeuillez consulter augustus-log.txt dans votre répertoire Augustus pour plus de détails."},
     {TR_EDITOR_CAESAR_SALARY, "Salaire de Caesar"},
     {TR_CITY_MESSAGE_TEXT_CARAVANSERAI_COMPLETE, "Le caravanserail est achevé. De nouveaux horizons commerciaux se profilent. Les caravanes des quatre coins du monde sont enthousiastes à l'idée de venir commercer dans votre cité."},
+    {TR_CONFIG_SHOW_DESIRABILITY_RANGE , "Voir l'attrait des mausolées et des nymphées lors du placement"},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)

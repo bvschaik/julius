@@ -191,6 +191,16 @@ static void draw_building(int image_id, int x, int y, color_t color)
     image_draw_isometric_top(image_id, x, y, color, data.scale);
 }
 
+static void city_building_ghost_draw_malus_range(int x, int y, int grid_offset)
+{
+    image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_RED & ALPHA_FONT_SEMI_TRANSPARENT, data.scale);
+}
+
+static void city_building_ghost_draw_bonus_range(int x, int y, int grid_offset)
+{
+    image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_DARK_GREEN & ALPHA_FONT_SEMI_TRANSPARENT, data.scale);
+}
+
 void city_building_ghost_draw_well_range(int x, int y, int grid_offset)
 {
     image_draw(image_group(GROUP_TERRAIN_FLAT_TILE), x, y, COLOR_MASK_DARK_BLUE, data.scale);
@@ -419,6 +429,27 @@ static void set_roamer_path(building_type type, int size, const map_tile *tile, 
     }
 }
 
+static void draw_mausoleum_desirability_range(const map_tile *tile, building_type type, int building_size)
+{
+    const model_building *model = model_get_building(type);
+    int positive_range = model->desirability_range;
+
+    int desirability_value = model->desirability_value;
+    int desirability_step_size = model->desirability_step_size;
+    int negative_range = 0;
+
+    while (desirability_value < 0) {
+        desirability_value += desirability_step_size;
+        negative_range++;
+    }
+
+    city_view_foreach_tile_in_range(tile->grid_offset, building_size, positive_range, city_building_ghost_draw_bonus_range);
+
+    if (type != BUILDING_NYMPHAEUM) {
+        city_view_foreach_tile_in_range(tile->grid_offset, building_size, negative_range, city_building_ghost_draw_malus_range);
+    }
+}
+
 static void draw_default(const map_tile *tile, int x_view, int y_view, building_type type)
 {
     const building_properties *props = building_properties_for_type(type);
@@ -435,6 +466,10 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
 
     if (building_connectable_gate_type(type) && map_terrain_get(grid_offset) & TERRAIN_ROAD) {
         type = building_connectable_gate_type(type);
+    }
+
+    if (config_get(CONFIG_UI_SHOW_DESIRABILITY_RANGE) && (type == BUILDING_NYMPHAEUM || type == BUILDING_SMALL_MAUSOLEUM || type == BUILDING_LARGE_MAUSOLEUM)) {
+        draw_mausoleum_desirability_range(tile, type, building_size);
     }
 
     for (int i = 0; i < num_tiles; i++) {
@@ -468,6 +503,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
         image_id = get_building_image_id(tile->x, tile->y, type, props);
         draw_regular_building(type, image_id, x_view, y_view, grid_offset, num_tiles, blocked_tiles);
     }
+
     set_roamer_path(type, building_size, tile, has_blocked_tiles(num_tiles, blocked_tiles));
 }
 
