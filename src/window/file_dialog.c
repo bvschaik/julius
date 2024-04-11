@@ -89,11 +89,7 @@ static struct {
     file_type_data *file_data;
     char selected_file[FILE_NAME_MAX];
     uint8_t typed_name[FILE_NAME_MAX];
-
-    union {
-        saved_game_info save_game;
-        scenario_info scenario;
-    } info;
+    saved_game_info info;
     savegame_load_status savegame_info_status;
     int redraw_full_window;
 } data;
@@ -281,28 +277,28 @@ static void init(file_type type, file_dialog_type dialog_type)
 
 static void draw_mission_info(int x_offset, int y_offset, int box_size)
 {
-    if (data.info.save_game.custom_mission) {
+    if (data.info.custom_mission) {
         text_draw_centered(translation_for(TR_SAVE_DIALOG_CUSTOM_SCENARIO),
             x_offset, y_offset, box_size, FONT_NORMAL_BLACK, 0);
         return;
     }
-    if (data.info.save_game.mission == 0) {
+    if (data.info.mission == 0) {
         text_draw_centered(translation_for(TR_SAVE_DIALOG_FIRST_MISSION),
             x_offset, y_offset, box_size, FONT_NORMAL_BLACK, 0);
         return;
     }
     translation_key mission_type;
-    if (data.info.save_game.mission == 1) {
+    if (data.info.mission == 1) {
         mission_type = TR_SAVE_DIALOG_MISSION;
-    } else if (data.info.save_game.mission % 2) {
+    } else if (data.info.mission % 2) {
         mission_type = TR_SAVE_DIALOG_MILITARY;
     } else {
         mission_type = TR_SAVE_DIALOG_PEACEFUL;
     }
     int width = text_draw(translation_for(mission_type), x_offset, y_offset, FONT_NORMAL_BLACK, 0);
-    width += text_draw_number(data.info.save_game.mission / 2 + 2, '\0', " -", x_offset + width, y_offset,
+    width += text_draw_number(data.info.mission / 2 + 2, '\0', " -", x_offset + width, y_offset,
         FONT_NORMAL_BLACK, COLOR_MASK_NONE);
-    lang_text_draw(21, MISSION_ID_TO_CITY_ID[data.info.save_game.mission], x_offset + width, y_offset, FONT_NORMAL_BLACK);
+    lang_text_draw(21, MISSION_ID_TO_CITY_ID[data.info.mission], x_offset + width, y_offset, FONT_NORMAL_BLACK);
 }
 
 static void draw_background(void)
@@ -310,9 +306,9 @@ static void draw_background(void)
     window_draw_underlying_window();
     if (*data.selected_file) {
         if (data.type == FILE_TYPE_SAVED_GAME) {
-            data.savegame_info_status = game_file_io_read_saved_game_info(data.selected_file, &data.info.save_game);
+            data.savegame_info_status = game_file_io_read_saved_game_info(data.selected_file, &data.info);
         } else {
-            data.savegame_info_status = game_file_io_read_scenario_info(data.selected_file, &data.info.scenario);
+            data.savegame_info_status = game_file_io_read_scenario_info(data.selected_file, &data.info);
         }
     }
     data.redraw_full_window = 1;
@@ -391,12 +387,12 @@ static void draw_foreground(void)
                 if (data.type == FILE_TYPE_SAVED_GAME) {
                     draw_mission_info(362, 356, 246);
                     text_draw(translation_for(TR_SAVE_DIALOG_FUNDS), 362, 376, FONT_NORMAL_BLACK, 0);
-                    text_draw_money(data.info.save_game.treasury, 494, 376, FONT_NORMAL_BLACK);
+                    text_draw_money(data.info.treasury, 494, 376, FONT_NORMAL_BLACK);
                     text_draw(translation_for(TR_SAVE_DIALOG_DATE), 362, 396, FONT_NORMAL_BLACK, 0);
-                    lang_text_draw_month_year_max_width(data.info.save_game.month, data.info.save_game.year,
+                    lang_text_draw_month_year_max_width(data.info.month, data.info.year,
                         500, 396, 108, FONT_NORMAL_BLACK, 0);
                     text_draw(translation_for(TR_SAVE_DIALOG_POPULATION), 362, 416, FONT_NORMAL_BLACK, 0);
-                    text_draw_number(data.info.save_game.population, '\0', "",
+                    text_draw_number(data.info.population, '\0', "",
                         500, 416, FONT_NORMAL_BLACK, COLOR_MASK_NONE);
                     widget_minimap_draw(352, 80, 266, 272);
                 } else {

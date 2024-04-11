@@ -63,7 +63,7 @@ static struct {
     int show_minimap;
     char selected_scenario_filename[FILE_NAME_MAX];
     uint8_t selected_scenario_display[FILE_NAME_MAX];
-    scenario_info info;
+    saved_game_info info;
     
     const dir_listing *scenarios;
 } data;

@@ -11,9 +11,6 @@ typedef struct {
     int population;
     int month;
     int year;
-} saved_game_info;
-
-typedef struct {
     uint8_t description[MAX_BRIEF_DESCRIPTION];
     int image_id;
     int start_year;
@@ -24,13 +21,13 @@ typedef struct {
     int is_open_play;
     int open_play_id;
     scenario_win_criteria win_criteria;
-} scenario_info;
+} saved_game_info;
 
 int game_file_io_read_scenario(const char *filename);
 
 int game_file_io_read_scenario_from_buffer(buffer *buf);
 
-int game_file_io_read_scenario_info(const char *filename, scenario_info *info);
+int game_file_io_read_scenario_info(const char *filename, saved_game_info *info);
 
 int game_file_io_write_scenario(const char *filename);
 
