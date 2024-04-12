@@ -26,6 +26,7 @@
 #include "figure/formation_legion.h"
 #include "figure/roamer_preview.h"
 #include "game/resource.h"
+#include "game/state.h"
 #include "graphics/clouds.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -901,10 +902,10 @@ static int get_highlighted_formation_id(const map_tile *tile)
 
 static void update_clouds(void)
 {
-    if (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY)) {
+    int camera_x, camera_y;
+    if (game_state_is_paused() || (!window_is(WINDOW_CITY) && !window_is(WINDOW_CITY_MILITARY))) {
         clouds_pause();
     }
-    int camera_x, camera_y;
     city_view_get_camera_in_pixels(&camera_x, &camera_y);
     clouds_draw(camera_x, camera_y, GRID_SIZE * 60, GRID_SIZE * 30, draw_context.scale);
 }

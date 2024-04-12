@@ -4,6 +4,7 @@
 #include "core/image.h"
 #include "core/random.h"
 #include "core/speed.h"
+#include "game/settings.h"
 #include "graphics/renderer.h"
 
 #include <math.h>
@@ -29,6 +30,8 @@
 #define CLOUD_TEXTURE_HEIGHT (CLOUD_HEIGHT * CLOUD_ROWS)
 
 #define CLOUD_SPEED 0.3
+
+#define PAUSE_MIN_FRAMES 2
 
 #define PI 3.14159265358979323846
 
@@ -66,8 +69,11 @@ typedef struct {
     int angle;
 } cloud_type;
 
-static cloud_type clouds[NUM_CLOUDS];
-static int movement_timeout;
+static struct {
+    cloud_type clouds[NUM_CLOUDS];
+    int movement_timeout;
+    int pause_frames;
+} data;
 
 static int random_from_min_to_range(int min, int range)
 {
@@ -161,7 +167,7 @@ static void init_cloud_images(void)
 {
     graphics_renderer()->create_custom_image(CUSTOM_IMAGE_CLOUDS, CLOUD_TEXTURE_WIDTH, CLOUD_TEXTURE_HEIGHT, 0);
     for (int i = 0; i < NUM_CLOUDS; i++) {
-        cloud_type *cloud = &clouds[i];
+        cloud_type *cloud = &data.clouds[i];
         image *img = &cloud->img;
         img->width = img->original.width = CLOUD_WIDTH;
         img->height = img->original.height = CLOUD_HEIGHT;
@@ -213,7 +219,7 @@ static void generate_cloud(cloud_type *cloud)
 static int cloud_intersects(const cloud_type *cloud)
 {
     for (int i = 0; i < NUM_CLOUDS; i++) {
-        const cloud_type *other = &clouds[i];
+        const cloud_type *other = &data.clouds[i];
         if (other->status != STATUS_MOVING) {
             continue;
         }
@@ -236,16 +242,13 @@ static void position_cloud(cloud_type *cloud, int x_limit, int y_limit)
         cloud->status = STATUS_MOVING;
         speed_clear(&cloud->speed.x);
         speed_clear(&cloud->speed.y);
-        movement_timeout = random_between_from_stdlib(CLOUD_MIN_CREATION_TIMEOUT, CLOUD_MAX_CREATION_TIMEOUT);
+        data.movement_timeout = random_between_from_stdlib(CLOUD_MIN_CREATION_TIMEOUT, CLOUD_MAX_CREATION_TIMEOUT);
     }
 }
 
 void clouds_pause(void)
 {
-    for (int i = 0; i < NUM_CLOUDS; i++) {
-        speed_clear(&clouds[i].speed.x);
-        speed_clear(&clouds[i].speed.y);
-    }
+    data.pause_frames = PAUSE_MIN_FRAMES;
 }
 
 void clouds_draw(int x_offset, int y_offset, int x_limit, int y_limit, float base_scale)
@@ -253,14 +256,23 @@ void clouds_draw(int x_offset, int y_offset, int x_limit, int y_limit, float bas
     if (!config_get(CONFIG_UI_DRAW_CLOUD_SHADOWS)) {
         return;
     }
+
+    double cloud_speed = 0;
+
+    if (data.pause_frames) {
+        data.pause_frames--;
+    } else {
+        cloud_speed = CLOUD_SPEED * setting_game_speed() / 100;
+    }
+
     for (int i = 0; i < NUM_CLOUDS; i++) {
-        cloud_type *cloud = &clouds[i];
+        cloud_type *cloud = &data.clouds[i];
         if (cloud->status == STATUS_INACTIVE) {
             generate_cloud(cloud);
             continue;
         } else if (cloud->status == STATUS_CREATED) {
-            if (movement_timeout > 0) {
-                movement_timeout--;
+            if (data.movement_timeout > 0) {
+                data.movement_timeout--;
             } else {
                 position_cloud(cloud, x_limit, y_limit);
             }
@@ -269,8 +281,9 @@ void clouds_draw(int x_offset, int y_offset, int x_limit, int y_limit, float bas
             cloud->status = STATUS_INACTIVE;
             continue;
         }
-        speed_set_target(&cloud->speed.x, -CLOUD_SPEED, SPEED_CHANGE_IMMEDIATE, 1);
-        speed_set_target(&cloud->speed.y, CLOUD_SPEED / 2, SPEED_CHANGE_IMMEDIATE, 1);
+
+        speed_set_target(&cloud->speed.x, -cloud_speed, SPEED_CHANGE_IMMEDIATE, 1);
+        speed_set_target(&cloud->speed.y, cloud_speed / 2, SPEED_CHANGE_IMMEDIATE, 1);
 
         graphics_renderer()->draw_image_advanced(&cloud->img,
             (cloud->x - x_offset) / base_scale, (cloud->y - y_offset) / base_scale, COLOR_MASK_NONE,
