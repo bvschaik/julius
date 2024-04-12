@@ -97,14 +97,6 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
             // This is effectively a hack, and definitely not full-proof, but the performance gains are well worth it
             if (!*file_item->extension) {
                 static char full_name[FILE_NAME_MAX];
-                if (!dir_name_offset) {
-                    strncpy(full_name, info->name, FILE_NAME_MAX);
-                    dir_name_offset = strlen(info->name);
-                    if (full_name[dir_name_offset - 1] != '/') {
-                        full_name[dir_name_offset++] = '/';
-                        full_name[dir_name_offset] = 0;
-                    }
-                }
                 strncpy(full_name + dir_name_offset, name, FILE_NAME_MAX - 1 - dir_name_offset);
                 DIR *file_d = opendir(full_name);
                 if (file_d) {
