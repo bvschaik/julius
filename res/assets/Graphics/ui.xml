@@ -243,17 +243,27 @@
 	<!-- Note: Checkmark toggle for denied walkers -->
 	<image id="Denied_Walker_Checkmark" src="Denied_Walker_Checkmark"/>
 	<!-- Note: UI button for accessing Housing Advisor -->
-	<image id="Housing_Advisor_S" src="Housing_Advisor_S"/>
+	<image id="Housing_Advisor_S" width="28" height="28">
+		<layer group="199" image="12"/>
+		<layer src="Housing_Advisor_S" x="3" y="3"/>
+	</image>
 	<!-- Note: Empire map icons for Roman trade towns and non-trade towns respectively -->
 	<image id="Empire_Icon_Roman_01" src="Empire_Icon_Roman_01"/>
 	<image id="Empire_Icon_Roman_02" src="Empire_Icon_Roman_02"/>
 	<!-- Note: Empire map icons for Roman trade villages and non-trade villages respectively -->
-	<image id="Empire_Icon_Roman_01" src="Empire_Icon_Roman_01"/>
-	<image id="Empire_Icon_Roman_02" src="Empire_Icon_Roman_02"/>
+	<image id="Empire_Icon_Roman_03" src="Empire_Icon_Roman_03"/>
+	<image id="Empire_Icon_Roman_04" src="Empire_Icon_Roman_04"/>
+	<!-- Note: Empire map icon for the city of Rome -->
+	<image id="Empire_Icon_Roman_05" src="Empire_Icon_Roman_05"/>
 	<!-- Note: Empire map icons for distant towns -->
 	<image id="Empire_Icon_Distant_01" src="Empire_Icon_Distant_01"/>
 	<!-- Note: Empire map icons for distant villages -->
 	<image id="Empire_Icon_Distant_02" src="Empire_Icon_Distant_02"/>
+	<!-- Note: Empire map icon for construction site -->
+	<image id="Empire_Icon_Construction_01" src="Empire_Icon_Construction_01"/>
+	<!-- Note: Empire map icon for farm and quarry resource nodes respectively -->
+	<image id="Empire_Icon_Resource_01" src="Empire_Icon_Resource_01"/>
+	<image id="Empire_Icon_Resource_02" src="Empire_Icon_Resource_02"/>
 	<!-- Note: Legion banner base -->
 	<image id="Legion_Banner_Base" width="32" height="29">
 		<layer group="126" image="8"/>

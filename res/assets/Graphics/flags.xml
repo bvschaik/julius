@@ -31,35 +31,35 @@
 	<!-- Note: Base assets for half-red, half-grey flags -->
 	<image id="flag_half_redgrey_a1" width="19" height="15">
 		<layer src="flag_red_a1"/>
-		<layer src="flag_grey_a1" x="8" y="0"/>
+		<layer group="this" image="flag_half_grey_a1" x="8" y="0"/>
 	</image>
 	<image id="flag_half_redgrey_a2" width="19" height="16">
 		<layer src="flag_red_a2"/>
-		<layer src="flag_grey_a2" x="8" y="0"/>
+		<layer group="this" image="flag_half_grey_a2" x="8" y="0"/>
 	</image>
 	<image id="flag_half_redgrey_a3" width="20" height="16">
 		<layer src="flag_red_a3"/>
-		<layer src="flag_grey_a3" x="9" y="0"/>
+		<layer group="this" image="flag_half_grey_a3" x="9" y="0"/>
 	</image>
 	<image id="flag_half_redgrey_a4" width="19" height="15">
 		<layer src="flag_red_a4"/>
-		<layer src="flag_grey_a4" x="8" y="0"/>
+		<layer group="this" image="flag_half_grey_a4" x="8" y="0"/>
 	</image>
 	<image id="flag_half_redgrey_a5" width="19" height="15">
 		<layer src="flag_red_a5"/>
-		<layer src="flag_grey_a5" x="8" y="0"/>
+		<layer group="this" image="flag_half_grey_a5" x="8" y="0"/>
 	</image>
 	<image id="flag_half_redgrey_a6" width="19" height="15">
 		<layer src="flag_red_a6"/>
-		<layer src="flag_grey_a6" x="8" y="0"/>
+		<layer group="this" image="flag_half_grey_a6" x="8" y="0"/>
 	</image>
 	<image id="flag_half_redgrey_a7" width="19" height="15">
 		<layer src="flag_red_a7"/>
-		<layer src="flag_grey_a7" x="8" y="0"/>
+		<layer group="this" image="flag_half_grey_a7" x="8" y="0"/>
 	</image>
 	<image id="flag_half_redgrey_a8" width="19" height="15">
 		<layer src="flag_red_a8"/>
-		<layer src="flag_grey_a8" x="8" y="0"/>
+		<layer group="this" image="flag_half_grey_a8" x="8" y="0"/>
 	</image>
 	<!-- Note: Warehouse flag for market -->
 	<image id="Warehouse_Flag_Market_1" width="21" height="24">
@@ -370,17 +370,20 @@
 	<image id="Warehouse_Flag_Land_Sea_6" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_purple_a6" x="1" y="1"/>
-		<layer src="flag_icon_traders_a6-8" x="3" y="2"/>
+		<layer src="flag_icon_traders_a1-2" x="3" y="2"/>
+		<layer src="flag_icon_traders_a6-8" x="4" y="10"/>
 	</image>
 	<image id="Warehouse_Flag_Land_Sea_7" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_purple_a7" x="1" y="1"/>
-		<layer src="flag_icon_traders_a6-8" x="3" y="2"/>
+		<layer src="flag_icon_traders_a1-2" x="3" y="2"/>
+		<layer src="flag_icon_traders_a6-8" x="4" y="10"/>
 	</image>
 	<image id="Warehouse_Flag_Land_Sea_8" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_purple_a8" x="1" y="1"/>
-		<layer src="flag_icon_traders_a6-8" x="3" y="2"/>
+		<layer src="flag_icon_traders_a1-2" x="3" y="2"/>
+		<layer src="flag_icon_traders_a6-8" x="4" y="10"/>
 	</image>
 	<image id="Warehouse_Flag_Land_Sea" width="21" height="24">
 		<layer group="this" image="Warehouse_Flag_Land_Sea_1"/>
@@ -408,7 +411,7 @@
 	<image id="Warehouse_Flag_All_3" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a3" x="0" y="1"/>
-		<layer src="flag_icon_traders_a3" x="3" y="2"/>
+		<layer src="flag_icon_traders_a3" x="2" y="2"/>
 	</image>
 	<image id="Warehouse_Flag_All_4" width="21" height="24">
 		<layer src="flag_layer_base"/>
@@ -423,17 +426,20 @@
 	<image id="Warehouse_Flag_All_6" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a6" x="1" y="1"/>
-		<layer src="flag_icon_traders_a6-8" x="3" y="2"/>
+		<layer src="flag_icon_traders_a1-2" x="3" y="2"/>
+		<layer src="flag_icon_traders_a6-8" x="4" y="10"/>
 	</image>
 	<image id="Warehouse_Flag_All_7" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a7" x="1" y="1"/>
-		<layer src="flag_icon_traders_a6-8" x="3" y="2"/>
+		<layer src="flag_icon_traders_a1-2" x="3" y="2"/>
+		<layer src="flag_icon_traders_a6-8" x="4" y="10"/>
 	</image>
 	<image id="Warehouse_Flag_All_8" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a8" x="1" y="1"/>
-		<layer src="flag_icon_traders_a6-8" x="3" y="2"/>
+		<layer src="flag_icon_traders_a1-2" x="3" y="2"/>
+		<layer src="flag_icon_traders_a6-8" x="4" y="10"/>
 	</image>
 	<image id="Warehouse_Flag_All" width="21" height="24">
 		<layer group="this" image="Warehouse_Flag_All_1"/>
