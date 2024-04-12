@@ -165,6 +165,9 @@ static void init_filtered_file_list(void)
         data.filtered_file_list.num_files = 0;
     }
     data.filtered_file_list.files = malloc(sizeof(dir_entry) * data.file_list->num_files);
+    if (!data.filtered_file_list.files) {
+        return;
+    }
     memset(data.filtered_file_list.files, 0, sizeof(dir_entry) * data.file_list->num_files);
 
     const char *filter = 0;
