@@ -141,7 +141,7 @@
 	<!-- Image created by Ouaz -->
 	<image id="Allowed_Walker_Check" src="Allowed_Walker_Checkmark"/>
 	<!-- Warehousing icon by Ouaz -->
-	<image id="Warehousing" src="Warehousing"/>
+	<image id="Warehousing_off" src="Warehousing_off"/>
 	<image id="Maintain_1" src="Maintain_1"/>
 	<!-- Normal -->
 	<image id="Maintain_2" src="Maintain_2"/>
