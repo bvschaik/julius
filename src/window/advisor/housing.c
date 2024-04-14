@@ -95,11 +95,7 @@ static int draw_background(void)
     text_draw(translation_for(TR_HEADER_HOUSING), 60, 12, FONT_LARGE_BLACK, 0);
     image_draw(housing_advisor_image, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
 
-    static uint8_t pop[32];
-    pop[0] = ' ';
-    string_from_int(pop + 1, city_population(), 0);
-
-    int x_offset = text_get_width(pop, FONT_NORMAL_BLACK);
+    int x_offset = text_get_number_width(city_population(), 0, "", FONT_NORMAL_BLACK);
     x_offset += lang_text_get_width(CUSTOM_TRANSLATION, TR_ADVISOR_TOTAL_POPULATION, FONT_NORMAL_BLACK);
     x_offset = 620 - x_offset;
 
