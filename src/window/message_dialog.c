@@ -810,7 +810,7 @@ static void cleanup(void)
         data.show_video = 0;
     }
     player_message.message_advisor = 0;
-    if (data.should_play_audio) {
+    if (data.should_play_audio || data.should_play_speech) {
         sound_speech_stop();
     }
     if (data.should_play_background_music) {

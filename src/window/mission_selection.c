@@ -121,6 +121,7 @@ static void load_new_campaign_rank_scenarios(int scenario_id)
     for (int i = 0; i < mission->total_scenarios; i++) {
         data.mission.scenarios[i] = campaign_get_scenario(i + mission->first_scenario);
     }
+    scenario_set_custom(2);
 }
 
 static void init(void)
