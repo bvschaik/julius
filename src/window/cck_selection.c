@@ -274,6 +274,7 @@ static void button_start_scenario(int param1, int param2)
     encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
     scenario_set_name(data.selected_scenario_display);
     scenario_set_custom(2);
+    scenario_set_player_name(lang_get_string(9, 5));
     window_mission_briefing_show();
 }
 
