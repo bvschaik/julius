@@ -183,8 +183,6 @@ static int parse_xml(char *buf, int buffer_length)
 {
     reset_data();
     custom_messages_clear_all();
-    scenario_editor_set_custom_message_introduction(0);
-    scenario_editor_set_custom_victory_message(0);
     data.success = 1;
     if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS)) {
         data.success = 0;
@@ -196,6 +194,16 @@ static int parse_xml(char *buf, int buffer_length)
         }
     }
     xml_parser_free();
+
+    int message_id = scenario_intro_message();
+
+    if (message_id > custom_messages_count() || !custom_messages_get(message_id)->in_use) {
+        scenario_editor_set_custom_message_introduction(0);
+    }
+    message_id = scenario_victory_message();
+        if (message_id > custom_messages_count() || !custom_messages_get(message_id)->in_use) {
+        scenario_editor_set_custom_victory_message(0);
+    }
 
     return data.success;
 }
