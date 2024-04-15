@@ -63,9 +63,12 @@
 
             "citizen", "clerk", "engineer", "architect", "quaestor",
             "procurator", "aedile", "praetor", "consul", "proconsul",
-            "caesar"          
+            "caesar"
+
+          Please note that due to engine limitations the ranking is case sensitive, and
+          must be written in lower case.
     -->
-    <missions>
+    <missions starting_rank="citizen">
         <!--
             A campaign consists of missions, each of which can have one or more scenarios for the player to choose from.
             If a player choose a scenario from a mission and wins it, the mission will advance to the next upon scenario
