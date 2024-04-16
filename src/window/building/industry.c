@@ -1,5 +1,6 @@
 #include "industry.h"
 
+#include "assets/assets.h"
 #include "building/building.h"
 #include "building/count.h"
 #include "building/industry.h"
@@ -464,7 +465,7 @@ void window_building_draw_city_mint_foreground(building_info_context *c)
     button_border_draw(x, y, 20, 20, data.focus_button_id == 1);
     button_border_draw(x, y + 24, 20, 20, data.focus_button_id == 2);
     int selected_offset = building_get(data.city_mint_id)->output_resource_id == RESOURCE_DENARII ? 0 : 24;
-    text_draw_centered(string_from_ascii("x"), x + 1, y + selected_offset + 4, 20, FONT_NORMAL_BLACK, 0);
+    image_draw(assets_get_image_id("UI", "Denied_Walker_Checkmark"), x + 4, y + 4 + selected_offset, COLOR_MASK_NONE, SCALE_NONE);
 }
 
 static int shipyard_boats_needed(void)
