@@ -111,8 +111,13 @@ int building_rotation_get_road_orientation(void)
 void building_rotation_force_two_orientations(void)
 {
     // for composite buildings like hippodrome
-    if (data.rotation == 1 || data.rotation == 2) {
+    if (data.rotation == 1) {
         data.rotation = 3;
+        return;
+    }
+    if (data.rotation == 2) {
+        data.rotation = 0;
+        return;
     }
 }
 
