@@ -124,6 +124,19 @@ void building_storage_cycle_partial_resource_state(int storage_id, resource_type
 void building_storage_accept_none(int storage_id);
 
 /**
+ * Sets all goods to 'accepting'
+ * @param storage_id Storage id
+ */
+void building_storage_accept_all(int storage_id);
+
+/**
+ * Checks if all goods are set to 'not accepting'
+ * Returns 1 if they are and 0 otherwise
+ * @param storage_id Storage id
+ */
+int building_storage_check_if_accepts_nothing(int storage_id);
+
+/**
  * Toggles the empty all flag for the storage
  * @param storage_id Storage id
  */

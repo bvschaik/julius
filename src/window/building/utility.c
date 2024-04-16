@@ -58,15 +58,19 @@ TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_TAX_COLLECTOR, TR_TOOLTIP_BUTTON_ROADBLOC
 TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MISSIONARY, TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_WATCHMAN,
 };
 
-static int size_of_orders_permission_buttons = sizeof(orders_permission_buttons) / sizeof(*orders_permission_buttons);
-
-static int permission_orders_tooltip_translations[] = { 0,
-TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_ACCEPT_ALL,TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_REJECT_ALL };
+static int permission_orders_tooltip_translations[] = {
+    TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_REJECT_ALL, TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_ACCEPT_ALL };
 
 static generic_button roadblock_orders_buttons[] = {
-    {286, 0, 20, 20, roadblock_orders, button_none, 0, 0 },
     {309, 0, 20, 20, roadblock_orders, button_none, 1, 0 },
 };
+
+static int size_of_orders_permission_buttons = sizeof(orders_permission_buttons) / sizeof(*orders_permission_buttons);
+
+typedef enum {
+    REJECT_ALL = 0,
+    ACCEPT_ALL = 1,
+} affect_all_button_current_state;
 
 
 
@@ -143,14 +147,24 @@ void window_building_draw_prefect(building_info_context *c)
     window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
 }
 
+static int affect_all_button_state(void)
+{
+    building *b = building_get(data.building_id);
+    if (b->data.roadblock.exceptions) {
+        return REJECT_ALL;
+    } else {
+        return ACCEPT_ALL;
+    }
+}
+
 static void draw_roadblock_orders_buttons(int x, int y, int focused)
 {
-    uint8_t refuse_all_button_text[] = { 'x', 0 };
-    button_border_draw(x, y, 20, 20, data.orders_focus_button_id == 1);
-    image_draw(assets_get_image_id("UI", "Allowed_Walker_Check"), x + 4, y + 4, COLOR_MASK_NONE, SCALE_NONE);
-    button_border_draw(x+25, y, 20, 20, data.orders_focus_button_id == 2);
-    text_draw_centered(refuse_all_button_text, x + 26, y + 4, 20, FONT_NORMAL_BLACK, 0);
-
+   if (affect_all_button_state() == ACCEPT_ALL) {
+       image_draw(assets_get_image_id("UI", "Allowed_Walker_Check"), x + 29, y + 4, COLOR_MASK_NONE, SCALE_NONE);
+   } else {
+       image_draw(assets_get_image_id("UI", "Denied_Walker_Checkmark"), x + 29, y + 4, COLOR_MASK_NONE, SCALE_NONE);
+   }
+    button_border_draw(x+25, y, 20, 20, data.orders_focus_button_id == 1);
 }
 
 
@@ -212,7 +226,7 @@ void window_building_roadblock_get_tooltip_walker_permissions(int *translation)
     if (data.figure_focus_button_id) {
         *translation = permission_tooltip_translations[data.figure_focus_button_id];
     } else if (data.orders_focus_button_id) {
-        *translation = permission_orders_tooltip_translations[data.orders_focus_button_id];
+        *translation = permission_orders_tooltip_translations[affect_all_button_state()];
     } else {
         *translation = 0;
     }
@@ -388,10 +402,10 @@ static void toggle_figure_state(int index, int param2)
 static void roadblock_orders(int index, int param2)
 {
     building *b = building_get(data.building_id);
-    if (index == 0) {
-        building_roadblock_accept_all(b);
-    } else if (index == 1) {
+    if (affect_all_button_state() == REJECT_ALL) {
         building_roadblock_accept_none(b);
+    } else {
+        building_roadblock_accept_all(b);
     }
     window_invalidate();
 
@@ -420,5 +434,6 @@ int window_building_handle_mouse_roadblock_orders(const mouse *m, building_info_
         return 1;
     }
 
-    return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, roadblock_orders_buttons, 2, &data.orders_focus_button_id);
+    return generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, roadblock_orders_buttons,
+        1, &data.orders_focus_button_id);
 }

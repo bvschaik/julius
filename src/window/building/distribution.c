@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "building/building.h"
+#include "building/distribution.h"
 #include "building/dock.h"
 #include "building/granary.h"
 #include "building/industry.h"
@@ -185,11 +186,40 @@ uint8_t granary_3quarters_button_text[] = "24";
 uint8_t granary_half_button_text[] = "16";
 uint8_t granary_quarter_button_text[] = "8";
 
-static void draw_accept_none_button(int x, int y, int focused)
+typedef enum {
+    REJECT_ALL = 0,
+    ACCEPT_ALL = 1,
+} affect_all_button_current_state;
+
+
+static int affect_all_button_distribution_state(void)
 {
-    uint8_t refuse_button_text[] = { 'x', 0 };
+    if (building_distribution_check_if_accepts_nothing(building_get(data.building_id))) {
+        return ACCEPT_ALL;
+    } else {
+        return REJECT_ALL;
+    }
+}
+
+static int affect_all_button_storage_state(void)
+{
+    int storage_id = building_get(data.building_id)->storage_id;
+    if (building_storage_check_if_accepts_nothing(storage_id)) {
+        return ACCEPT_ALL;
+    } else {
+        return REJECT_ALL;
+    }
+}
+
+
+static void draw_accept_none_button(int x, int y, int focused, affect_all_button_current_state state)
+{
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
-    text_draw_centered(refuse_button_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+    if (state == ACCEPT_ALL) {
+        image_draw(assets_get_image_id("UI", "Allowed_Walker_Check"), x + 4, y + 4, COLOR_MASK_NONE, SCALE_NONE);
+    } else {
+        image_draw(assets_get_image_id("UI", "Denied_Walker_Checkmark"), x + 4, y + 4, COLOR_MASK_NONE, SCALE_NONE);
+    }
 }
 
 static void draw_permissions_buttons(int x, int y, int buttons, building_info_context *c)
@@ -515,7 +545,8 @@ void window_building_draw_distributor_orders_foreground(building_info_context *c
 {
     int y_offset = window_building_get_vertical_offset(c, 28);
 
-    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1);
+    int button_state = affect_all_button_distribution_state();
+    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 1, button_state);
     building *b = building_get(c->building_id);
     int lang_group, lang_active_id, lang_inactive_id;
     switch (b->type) {
@@ -596,6 +627,17 @@ int window_building_handle_mouse_distributor_orders(const mouse *m, building_inf
             orders_resource_buttons, buttons_to_show, &data.resource_focus_button_id) ||
         generic_buttons_handle_mouse(m, c->x_offset + 80, y_offset + 404, market_order_buttons, 1,
             &data.orders_focus_button_id);
+}
+
+void window_building_get_tooltip_distribution_orders(int *group_id, int *text_id, int *translation)
+{
+    if (data.orders_focus_button_id == 1) {
+        if (affect_all_button_distribution_state() == ACCEPT_ALL) {
+            *translation = TR_TOOLTIP_BUTTON_STORAGE_ORDER_ACCEPT_ALL;
+        } else {
+            *translation = TR_TOOLTIP_BUTTON_STORAGE_ORDER_REJECT_ALL;
+        }
+    }
 }
 
 int window_building_handle_mouse_primary_product_producer(const mouse *m, building_info_context *c)
@@ -868,7 +910,8 @@ void window_building_draw_granary_orders_foreground(building_info_context *c)
     scrollbar_draw(&scrollbar);
 
     // accept none button
-    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 2);
+    int button_state = affect_all_button_storage_state();
+    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 2, button_state);
 
     draw_resource_orders_buttons(c->x_offset + 24, y_offset + 46, city_resource_get_potential_foods(), BUILDING_GRANARY,
         storage);
@@ -895,8 +938,11 @@ int window_building_handle_mouse_granary_orders(const mouse *m, building_info_co
 void window_building_get_tooltip_granary_orders(int *group_id, int *text_id, int *translation)
 {
     if (data.orders_focus_button_id == 2) {
-        *group_id = 143;
-        *text_id = 1;
+        if (affect_all_button_storage_state() == ACCEPT_ALL) {
+            *translation = TR_TOOLTIP_BUTTON_STORAGE_ORDER_ACCEPT_ALL;
+        } else {
+            *translation = TR_TOOLTIP_BUTTON_STORAGE_ORDER_REJECT_ALL;
+        }
     }
 }
 
@@ -1098,7 +1144,8 @@ void window_building_draw_warehouse_orders_foreground(building_info_context *c)
     }
 
     // accept none button
-    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 2);
+    int button_state = affect_all_button_storage_state();
+    draw_accept_none_button(c->x_offset + 394, y_offset + 404, data.orders_focus_button_id == 2, button_state);
 
     scrollbar_draw(&scrollbar);
 
@@ -1247,8 +1294,11 @@ void window_building_primary_product_producer_stockpiling_tooltip(int *translati
 void window_building_get_tooltip_warehouse_orders(int *group_id, int *text_id, int *translation)
 {
     if (data.orders_focus_button_id == 2) {
-        *group_id = 15;
-        *text_id = 1;
+        if (affect_all_button_storage_state() == ACCEPT_ALL) {
+            *translation = TR_TOOLTIP_BUTTON_STORAGE_ORDER_ACCEPT_ALL;
+        } else {
+            *translation = TR_TOOLTIP_BUTTON_STORAGE_ORDER_REJECT_ALL;
+        }
     }
 }
 
@@ -1285,7 +1335,11 @@ static void market_orders(int index, int param2)
 {
     building *b = building_get(data.building_id);
     if (index == 0) {
-        building_distribution_unaccept_all_goods(b);
+        if (affect_all_button_distribution_state() == ACCEPT_ALL) {
+            building_distribution_accept_all_goods(b);
+        } else {
+            building_distribution_unaccept_all_goods(b);
+        }
     }
     window_invalidate();
 }
@@ -1332,7 +1386,11 @@ static void granary_orders(int index, int param2)
     if (index == 0) {
         building_storage_toggle_empty_all(storage_id);
     } else if (index == 1) {
-        building_storage_accept_none(storage_id);
+        if (affect_all_button_storage_state() == ACCEPT_ALL) {
+            building_storage_accept_all(storage_id);
+        } else {
+            building_storage_accept_none(storage_id);
+        }
     }
     window_invalidate();
 }
@@ -1344,7 +1402,11 @@ static void warehouse_orders(int index, int param2)
         building_storage_toggle_empty_all(storage_id);
     } else if (index == 1) {
         int storage_id = building_get(data.building_id)->storage_id;
-        building_storage_accept_none(storage_id);
+        if (affect_all_button_storage_state() == ACCEPT_ALL) {
+            building_storage_accept_all(storage_id);
+        } else {
+            building_storage_accept_none(storage_id);
+        }
     }
     window_invalidate();
 }

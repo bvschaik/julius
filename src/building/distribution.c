@@ -14,6 +14,16 @@ int building_distribution_is_good_accepted(resource_type resource, const buildin
     return b->accepted_goods[resource] > 0;
 }
 
+int building_distribution_check_if_accepts_nothing(const building *b)
+{
+    for (resource_type resource = 0; resource < RESOURCE_MAX_WITH_MONUMENT_RESOURCES; resource++) {
+        if (b->accepted_goods[resource]) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
 void building_distribution_toggle_good_accepted(resource_type resource, building *b)
 {
     if (b->accepted_goods[resource] == 0) {
@@ -26,6 +36,32 @@ void building_distribution_toggle_good_accepted(resource_type resource, building
 void building_distribution_unaccept_all_goods(building *b)
 {
     memset(b->accepted_goods, 0, sizeof(b->accepted_goods));
+}
+
+void building_distribution_accept_all_goods(building *b)
+{
+    for (resource_type resource = 0; resource < RESOURCE_MAX_WITH_MONUMENT_RESOURCES; resource++) {
+        b->accepted_goods[resource] = 1;
+    }
+}
+
+int building_type_is_distributor(building_type type)
+{
+    switch (type) {
+        case BUILDING_DOCK:
+        case BUILDING_MARKET:
+        case BUILDING_CARAVANSERAI:
+        case BUILDING_MESS_HALL:
+        case BUILDING_TAVERN:
+        case BUILDING_LIGHTHOUSE:
+        case BUILDING_SMALL_TEMPLE_VENUS:
+        case BUILDING_LARGE_TEMPLE_VENUS:
+        case BUILDING_SMALL_TEMPLE_CERES:
+        case BUILDING_LARGE_TEMPLE_CERES:
+            return 1;
+        default:
+            return 0;
+    }
 }
 
 void building_distribution_update_demands(building *b)

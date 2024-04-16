@@ -1384,6 +1384,8 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ADVISOR_MILITARY_INFANTRY, "Infantrymen"},
     {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_ACCEPT_ALL, "Accept all walkers"},
     {TR_TOOLTIP_BUTTON_ROADBLOCK_ORDER_REJECT_ALL, "Refuse all walkers"},
+    {TR_TOOLTIP_BUTTON_STORAGE_ORDER_ACCEPT_ALL, "Accept all goods" },
+    {TR_TOOLTIP_BUTTON_STORAGE_ORDER_REJECT_ALL, "Refuse all goods" },
     {TR_FIGURE_TYPE_BEGGAR, "Beggar"},
     {TR_BUILDING_ARMOURY, "Armory" },
     {TR_BUILDING_ARMOURY_NO_EMPLOYEES, "Without access to employees, the armory cannot deliver weapons to our soldiers. May Mars protect us, because the unarmed legions certainly will not!"},

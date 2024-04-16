@@ -2,6 +2,7 @@
 
 #include "building/barracks.h"
 #include "building/culture.h"
+#include "building/distribution.h"
 #include "building/house_evolution.h"
 #include "../building/industry.h"
 #include "building/model.h"
@@ -1047,6 +1048,8 @@ static void get_tooltip(tooltip_context *c)
             window_building_get_tooltip_warehouse_orders(&group_id, &text_id, &translation);
         } else if (building_type_is_roadblock(btype)) {
             window_building_roadblock_get_tooltip_walker_permissions(&translation);
+        } else if (building_type_is_distributor(btype)) {
+            window_building_get_tooltip_distribution_orders(&group_id, &text_id, &translation);
         }
     } else if (building_is_house(btype)) {
         precomposed_text = window_building_house_get_tooltip(&context);
