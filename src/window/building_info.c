@@ -2,7 +2,7 @@
 
 #include "building/barracks.h"
 #include "building/culture.h"
-#include "building/distribution.h"
+#include "../building/distribution.h"
 #include "building/house_evolution.h"
 #include "../building/industry.h"
 #include "building/model.h"
