@@ -32,6 +32,7 @@ typedef enum {
     PARAMETER_TYPE_INVASION_TYPE,
     PARAMETER_TYPE_TARGET_TYPE,
     PARAMETER_TYPE_ENEMY_TYPE,
+    PARAMETER_TYPE_GOD,
 } parameter_type;
 
 typedef struct {

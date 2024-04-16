@@ -82,6 +82,12 @@ int scenario_action_type_execute(scenario_action_t *action)
             return scenario_action_type_show_custom_message_execute(action);
         case ACTION_TYPE_TAX_RATE_SET:
             return scenario_action_type_tax_rate_set_execute(action);
+        case ACTION_TYPE_CAUSE_BLESSING:
+            return scenario_action_type_blessing_execute(action);
+        case ACTION_TYPE_CAUSE_MINOR_CURSE:
+            return scenario_action_type_minor_curse_execute(action);
+        case ACTION_TYPE_CAUSE_MAJOR_CURSE:
+            return scenario_action_type_major_curse_execute(action);
         default:
             return 0;
     }

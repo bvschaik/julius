@@ -7,6 +7,7 @@
 #include "city/data_private.h"
 #include "city/emperor.h"
 #include "city/finance.h"
+#include "city/gods.h"
 #include "city/health.h"
 #include "city/labor.h"
 #include "city/message.h"
@@ -609,6 +610,33 @@ int scenario_action_type_tax_rate_set_execute(scenario_action_t *action)
     int new_rate = action->parameter1;
 
     city_finance_set_tax_percentage(new_rate);
+
+    return 1;
+}
+
+int scenario_action_type_blessing_execute(scenario_action_t *action)
+{
+    int god = action->parameter1;
+
+    city_god_blessing(god);
+
+    return 1;
+}
+
+int scenario_action_type_minor_curse_execute(scenario_action_t *action)
+{
+    int god = action->parameter1;
+
+    city_god_curse(god,0);
+
+    return 1;
+}
+
+int scenario_action_type_major_curse_execute(scenario_action_t *action)
+{
+    int god = action->parameter1;
+
+    city_god_curse(god, 1);
 
     return 1;
 }

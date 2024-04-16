@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define XML_TOTAL_ELEMENTS 58
+#define XML_TOTAL_ELEMENTS 61
 
 static struct {
     int success;
@@ -114,6 +114,9 @@ static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "building_force_collapse", xml_import_create_action, 0, "actions" },
     { "invasion_start_immediate", xml_import_create_action, 0, "actions" },
     { "building_count_area", xml_import_create_condition, 0, "conditions" },
+    { "cause_blessing", xml_import_create_action, 0, "actions" },
+    { "cause_minor_curse", xml_import_create_action, 0, "actions" }, // 60
+    { "cause_major_curse", xml_import_create_action, 0, "actions" },
 };
 
 static int xml_import_start_scenario_events(void)
@@ -341,6 +344,7 @@ static int xml_import_special_parse_attribute(xml_data_attribute_t *attr, int *t
         case PARAMETER_TYPE_STANDARD_MESSAGE:
         case PARAMETER_TYPE_STORAGE_TYPE:
         case PARAMETER_TYPE_TARGET_TYPE:
+        case PARAMETER_TYPE_GOD:
             return xml_import_special_parse_type(attr, attr->type, target);
         case PARAMETER_TYPE_BUILDING_COUNTING:
             return xml_import_special_parse_building_counting(attr, target);

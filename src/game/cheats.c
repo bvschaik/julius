@@ -200,7 +200,7 @@ static void game_cheat_cast_blessing(uint8_t *args)
 {
     int god_id = 0;
     parse_integer(args, &god_id);
-    city_god_blessing_cheat(god_id);
+    city_god_blessing(god_id);
     show_warning(TR_CHEAT_CASTED_BLESSING);
 }
 
@@ -210,7 +210,7 @@ static void game_cheat_cast_curse(uint8_t *args)
     int is_major = 0;
     int index = parse_integer(args, &god_id);
     parse_integer(args + index, &is_major);
-    city_god_curse_cheat(god_id, is_major);
+    city_god_curse(god_id, is_major);
     show_warning(TR_CHEAT_CASTED_CURSE);
 }
 

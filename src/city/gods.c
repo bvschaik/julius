@@ -449,12 +449,12 @@ int city_god_venus_bonus_employment(void)
     }
 }
 
-void city_god_blessing_cheat(int god_id)
+void city_god_blessing(int god_id)
 {
     perform_blessing(god_id);
 }
 
-void city_god_curse_cheat(int god_id, int is_major)
+void city_god_curse(int god_id, int is_major)
 {
     if (is_major) {
         perform_large_curse(god_id);

@@ -1,5 +1,6 @@
 #include "scenario_events_parameter_data.h"
 
+#include "city/constants.h"
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "core/lang.h"
@@ -260,6 +261,15 @@ static scenario_action_data_t scenario_action_data[ACTION_TYPE_MAX] = {
                                         .xml_parm3 =    { .name = "invasion_point",              .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,           .max_limit = 8,       .key = TR_PARAMETER_TYPE_INVASION_POINT },
                                         .xml_parm4 =    { .name = "target_type",                 .type = PARAMETER_TYPE_TARGET_TYPE,      .key = TR_PARAMETER_TYPE_TARGET_TYPE },
                                         .xml_parm5 =    { .name = "enemy_type",                  .type = PARAMETER_TYPE_ENEMY_TYPE,       .key = TR_PARAMETER_TYPE_ENEMY_TYPE }, },
+    [ACTION_TYPE_CAUSE_BLESSING]         = { .type = ACTION_TYPE_CAUSE_BLESSING,
+                                        .xml_attr = {.name = "cause_blessing",       .type = PARAMETER_TYPE_TEXT,      .key = TR_ACTION_TYPE_CAUSE_BLESSING },
+                                        .xml_parm1 = {.name = "god",                 .type = PARAMETER_TYPE_GOD,       .key = TR_PARAMETER_TYPE_GOD }, },
+    [ACTION_TYPE_CAUSE_MINOR_CURSE]      = {.type = ACTION_TYPE_CAUSE_MINOR_CURSE,
+                                        .xml_attr = {.name = "cause_minor_curse",    .type = PARAMETER_TYPE_TEXT,      .key = TR_ACTION_TYPE_CAUSE_MINOR_CURSE },
+                                        .xml_parm1 = {.name = "god",                 .type = PARAMETER_TYPE_GOD,       .key = TR_PARAMETER_TYPE_GOD }, },
+    [ACTION_TYPE_CAUSE_MAJOR_CURSE]      = {.type = ACTION_TYPE_CAUSE_MAJOR_CURSE,
+                                        .xml_attr = {.name = "cause_major_curse",    .type = PARAMETER_TYPE_TEXT,      .key = TR_ACTION_TYPE_CAUSE_MAJOR_CURSE },
+                                        .xml_parm1 = {.name = "god",                 .type = PARAMETER_TYPE_GOD,       .key = TR_PARAMETER_TYPE_GOD }, },
 };
 
 scenario_action_data_t *scenario_events_parameter_data_get_actions_xml_attributes(action_types type)
@@ -735,6 +745,18 @@ static special_attribute_mapping_t special_attribute_mappings_enemy_type[] = {
 
 #define SPECIAL_ATTRIBUTE_MAPPINGS_ENEMY_TYPE_SIZE (sizeof(special_attribute_mappings_enemy_type) / sizeof(special_attribute_mapping_t))
 
+special_attribute_mapping_t special_attribute_mappings_god[] =
+{
+    {.type = PARAMETER_TYPE_GOD,                .text = "Ceres",          .value = GOD_CERES,         .key = TR_PARAMETER_VALUE_GOD_CERES },
+    {.type = PARAMETER_TYPE_GOD,                .text = "Mars",           .value = GOD_MARS,          .key = TR_PARAMETER_VALUE_GOD_MARS },
+    {.type = PARAMETER_TYPE_GOD,                .text = "Mercury",        .value = GOD_MERCURY,       .key = TR_PARAMETER_VALUE_GOD_MERCURY },
+    {.type = PARAMETER_TYPE_GOD,                .text = "Neptune",        .value = GOD_NEPTUNE,       .key = TR_PARAMETER_VALUE_GOD_NEPTUNE },
+    {.type = PARAMETER_TYPE_GOD,                .text = "Venus",          .value = GOD_VENUS,         .key = TR_PARAMETER_VALUE_GOD_VENUS },
+
+};
+
+#define SPECIAL_ATTRIBUTE_MAPPINGS_GOD_SIZE (sizeof(special_attribute_mappings_god) / sizeof(special_attribute_mapping_t))
+
 special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mapping(parameter_type type, int index)
 {
     switch (type) {
@@ -765,6 +787,8 @@ special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mappin
             return &special_attribute_mappings_storage_type[index];
         case PARAMETER_TYPE_TARGET_TYPE:
             return &special_attribute_mappings_target_type[index];
+        case PARAMETER_TYPE_GOD:
+            return &special_attribute_mappings_god[index];
         default:
             return 0;
     }
@@ -800,6 +824,8 @@ int scenario_events_parameter_data_get_mappings_size(parameter_type type)
             return SPECIAL_ATTRIBUTE_MAPPINGS_STORAGE_TYPE_SIZE;
         case PARAMETER_TYPE_TARGET_TYPE:
             return SPECIAL_ATTRIBUTE_MAPPINGS_TARGET_TYPE_SIZE;
+        case PARAMETER_TYPE_GOD:
+            return SPECIAL_ATTRIBUTE_MAPPINGS_GOD_SIZE;
         default:
             return 0;
     }
@@ -871,6 +897,8 @@ int scenario_events_parameter_data_get_default_value_for_parameter(xml_data_attr
             return STORAGE_TYPE_ALL;
         case PARAMETER_TYPE_TARGET_TYPE:
             return FORMATION_ATTACK_BEST_BUILDINGS;
+        case PARAMETER_TYPE_GOD:
+            return GOD_CERES;
         default:
             return 0;
     }
@@ -1225,6 +1253,13 @@ void scenario_events_parameter_data_get_display_string_for_action(scenario_actio
         case ACTION_TYPE_SHOW_CUSTOM_MESSAGE:
             {
                 result_text = translation_for_type_lookup_by_value(PARAMETER_TYPE_CUSTOM_MESSAGE, action->parameter1, result_text, &maxlength);
+                return;
+            }
+        case ACTION_TYPE_CAUSE_BLESSING:
+        case ACTION_TYPE_CAUSE_MINOR_CURSE:
+        case ACTION_TYPE_CAUSE_MAJOR_CURSE:
+            {
+                result_text = translation_for_type_lookup_by_value(PARAMETER_TYPE_GOD, action->parameter1, result_text, &maxlength);
                 return;
             }
         default:
