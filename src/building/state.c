@@ -673,6 +673,14 @@ void building_state_load_from_buffer(buffer *buf, building *b, int building_buf_
         b->figure_id2 = 0;
     }
 
+    // Old save barracks and temple of mars should accept weapons by default
+    if (b->type == BUILDING_BARRACKS || b->type == BUILDING_GRAND_TEMPLE_MARS) {
+        if (!b->accepted_goods[RESOURCE_NONE]) {
+            b->accepted_goods[RESOURCE_NONE] = 1; // set RESOURCE_NONE to 1 to mark this as a new save compatibility
+            b->accepted_goods[RESOURCE_WEAPONS] = 1;
+        }
+    }
+
     // The following code should only be executed if the savegame includes building information that is not 
     // supported on this specific version of Augustus. The extra bytes in the buffer must be skipped in order
     // to prevent reading bogus data for the next building

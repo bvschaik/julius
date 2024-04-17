@@ -40,6 +40,9 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
         if (b->resources[RESOURCE_WEAPONS] >= MAX_WEAPONS_BARRACKS) {
             continue;
         }
+        if (!b->accepted_goods[RESOURCE_WEAPONS]) {
+            continue;
+        }
         int dist = calc_maximum_distance(b->x, b->y, x, y);
         dist += 8 * b->resources[RESOURCE_WEAPONS];
         if (dist < min_dist) {
@@ -50,7 +53,8 @@ int building_get_barracks_for_weapon(int x, int y, int resource, int road_networ
     building *monument = building_first_of_type(BUILDING_GRAND_TEMPLE_MARS);
     if (monument && monument->monument.phase == MONUMENT_FINISHED &&
         is_valid_destination(monument, road_network_id) &&
-        (monument->resources[RESOURCE_WEAPONS] < MAX_WEAPONS_BARRACKS)) {
+        (monument->resources[RESOURCE_WEAPONS] < MAX_WEAPONS_BARRACKS) &&
+        monument->accepted_goods[RESOURCE_WEAPONS]) {
         int dist = calc_maximum_distance(monument->x, monument->y, x, y);
         dist += 8 * monument->resources[RESOURCE_WEAPONS];
         if (dist < min_dist) {
@@ -78,7 +82,31 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
 {
     int recruit_type = LEGION_RECRUIT_NONE;
     int min_formation_id = 0;
+    int min_formation_id_for_priority = 0;
     int min_distance = INFINITE;
+    int priority_recruitment = barracks->subtype.barracks_priority;
+    int required_recruitment = recruit_type;
+
+    switch (priority_recruitment) {
+        case PRIORITY_FORT: 
+            required_recruitment = LEGION_RECRUIT_LEGIONARY;
+            break;
+        case PRIORITY_FORT_JAVELIN:
+            required_recruitment = LEGION_RECRUIT_JAVELIN;
+            break;
+        case PRIORITY_FORT_MOUNTED:
+            required_recruitment = LEGION_RECRUIT_MOUNTED;
+            break;
+        case PRIORITY_FORT_AUXILIA_INFANTRY:
+            required_recruitment = LEGION_RECRUIT_INFANTRY;
+            break;
+        case PRIORITY_FORT_AUXILIA_ARCHERY:
+            // TODO Add archer case
+        default:
+            break;
+    }
+
+    // find by recruitment priority
     for (int i = 1; i < formation_count(); i++) {
         formation *m = formation_get(i);
         if (!m->in_use || !m->is_legion) {
@@ -92,14 +120,19 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
         }
         building *fort = building_get(m->building_id);
         int dist = calc_maximum_distance(barracks->x, barracks->y, fort->x, fort->y);
-        if (m->legion_recruit_type > recruit_type ||
-            (m->legion_recruit_type == recruit_type && dist < min_distance)) {
+
+        // find closest one by priority
+        if (m->legion_recruit_type > recruit_type || (m->legion_recruit_type == recruit_type && dist < min_distance)) {
+            if (m->legion_recruit_type == required_recruitment) {
+                min_formation_id_for_priority = m->id;
+            }
             recruit_type = m->legion_recruit_type;
-            min_formation_id = m->id;
             min_distance = dist;
+            min_formation_id = m->id;
         }
     }
-    return min_formation_id;
+
+    return min_formation_id_for_priority ? min_formation_id_for_priority : min_formation_id;;
 }
 
 static int get_closest_military_academy(const building *fort)
@@ -170,11 +203,20 @@ static building *get_unmanned_tower_of_type(building_type type, building *barrac
 
 building *building_barracks_get_unmanned_tower(building *barracks, map_point *road)
 {
-    building *tower = get_unmanned_tower_of_type(BUILDING_TOWER, barracks, road);
+    int first_priority = BUILDING_TOWER;
+    int second_priority = BUILDING_WATCHTOWER;
+
+    // invert priority
+    if (barracks->subtype.barracks_priority == PRIORITY_WATCHTOWER) {
+        first_priority = BUILDING_WATCHTOWER;
+        second_priority = BUILDING_TOWER;
+    }
+
+    building *tower = get_unmanned_tower_of_type(first_priority, barracks, road);
     if (tower) {
         return tower;
     }
-    tower = get_unmanned_tower_of_type(BUILDING_WATCHTOWER, barracks, road);
+    tower = get_unmanned_tower_of_type(second_priority, barracks, road);
     return tower;
 }
 
@@ -198,9 +240,17 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
     return 1;
 }
 
-void building_barracks_toggle_priority(building *barracks)
+void building_barracks_set_priority(building *barracks, int priority)
 {
-    barracks->subtype.barracks_priority = 1 - barracks->subtype.barracks_priority;
+    // TODO remove when archery available
+    if (priority != 4) {
+        barracks->subtype.barracks_priority = priority;
+    }
+}
+
+void building_barracks_toggle_delivery(building *barracks)
+{
+    barracks->accepted_goods[RESOURCE_WEAPONS] ^= 1;
 }
 
 int building_barracks_get_priority(building *barracks)

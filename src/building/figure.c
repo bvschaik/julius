@@ -1130,7 +1130,11 @@ static void spawn_figure_grand_temple_mars(building *b)
             b->figure_spawn_delay = 0;
             map_has_road_access(b->x, b->y, b->size, &road);
             switch (b->subtype.barracks_priority) {
-                case PRIORITY_FORT:
+                case PRIORITY_FORT:                
+                case PRIORITY_FORT_JAVELIN:
+                case PRIORITY_FORT_MOUNTED:
+                case PRIORITY_FORT_AUXILIA_INFANTRY:
+                case PRIORITY_FORT_AUXILIA_ARCHERY:
                     if (!building_barracks_create_soldier(b, road.x, road.y)) {
                         building_barracks_create_tower_sentry(b, road.x, road.y);
                     }
@@ -1570,6 +1574,10 @@ static void spawn_figure_barracks(building *b)
             map_has_road_access(b->x, b->y, b->size, &road);
             switch (b->subtype.barracks_priority) {
                 case PRIORITY_FORT:
+                case PRIORITY_FORT_JAVELIN:
+                case PRIORITY_FORT_MOUNTED:
+                case PRIORITY_FORT_AUXILIA_INFANTRY:
+                case PRIORITY_FORT_AUXILIA_ARCHERY:
                     if (!building_barracks_create_soldier(b, road.x, road.y)) {
                         building_barracks_create_tower_sentry(b, road.x, road.y);
                     }

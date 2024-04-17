@@ -484,7 +484,7 @@ void window_building_draw_amphitheater(building_info_context *c)
     } else {
         lang_text_draw(71, 9, c->x_offset + 32, c->y_offset + 234, FONT_NORMAL_BROWN);
     }
-    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 80, 71, 1);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 90, 71, 1);
 }
 
 static void draw_entertainment_school(building_info_context *c, const char *sound_file, int group_id)
@@ -589,7 +589,7 @@ static void draw_grand_temple_mars_military(building_info_context *c)
 {
     int y = 60;
     data.building_id = c->building_id;
-    image_draw(resource_get_data(RESOURCE_WEAPONS)->image.icon, c->x_offset + 24, c->y_offset + y - 5,
+    image_draw(resource_get_data(RESOURCE_WEAPONS)->image.icon, c->x_offset + 25, c->y_offset + y - 5,
         COLOR_MASK_NONE, SCALE_NONE);
     building *b = building_get(c->building_id);
     if (b->resources[RESOURCE_WEAPONS] < 1) {
@@ -598,9 +598,11 @@ static void draw_grand_temple_mars_military(building_info_context *c)
         lang_text_draw_amount(8, 10, b->resources[RESOURCE_WEAPONS], c->x_offset + 52, c->y_offset + y, FONT_NORMAL_BLACK);
     }
 
-    lang_text_draw(50, 21, c->x_offset + 236, c->y_offset + y, FONT_NORMAL_BLACK); // "Priority"
-    lang_text_draw(91, 0, c->x_offset + 326, c->y_offset + y, FONT_NORMAL_BLACK); // "Tower"
-    lang_text_draw(89, 0, c->x_offset + 326, c->y_offset + y + 20, FONT_NORMAL_BLACK); // "Fort"
+    lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_BARRACKS_PRIORITY, c->x_offset + 25, c->y_offset + 88, FONT_NORMAL_BLACK); // "Priority"
+
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 108, c->width_blocks - 2, 5);   
+    lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_BARRACKS_FORTS, c->x_offset + 50, c->y_offset + 113, FONT_NORMAL_BROWN); // "Forts"
+    lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_BARRACKS_TOWERS, c->x_offset + 327, c->y_offset + 113, FONT_NORMAL_BROWN); // "Towers"
 }
 
 static void draw_temple(building_info_context *c, const char *sound_file, int group_id)
@@ -752,7 +754,8 @@ void window_building_draw_grand_temple_foreground(building_info_context *c)
             16 * (c->width_blocks - 10), FONT_NORMAL_BLACK, 0);
     }
     if (b->type == BUILDING_GRAND_TEMPLE_MARS) {
-        window_building_draw_priority_buttons(c->x_offset + 285, c->y_offset + 55);
+        window_building_draw_priority_buttons(c->x_offset + 50, c->y_offset + 133, b->id);
+        window_building_draw_delivery_buttons(c->x_offset + 408, c->y_offset + 40, b->id);
     }
 }
 
@@ -799,7 +802,7 @@ void window_building_draw_grand_temple_mars(building_info_context *c)
     draw_grand_temple(c, "wavs/temple_war.wav", TR_BUILDING_GRAND_TEMPLE_MARS_DESC,
         TR_BUILDING_GRAND_TEMPLE_MARS_BONUS_DESC,
         assets_get_image_id("UI", "Mars L Banner"),
-        TR_BUILDING_MARS_TEMPLE_QUOTE, GOD_MARS, 50);
+        TR_BUILDING_MARS_TEMPLE_QUOTE, GOD_MARS, 150);
 }
 
 void window_building_draw_grand_temple_venus(building_info_context *c)
