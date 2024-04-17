@@ -868,16 +868,10 @@ void scenario_custom_variable_rename(int id, const uint8_t *name)
     if (scenario.custom_variables[id].linked_uid) {
         message_media_text_blob_mark_entry_as_unused(scenario.custom_variables[id].linked_uid);
         scenario.custom_variables[id].linked_uid = 0;
-    }
-    scenario.custom_variables[id].linked_uid = message_media_text_blob_add(name);
-    scenario.custom_variables[id].in_use = 1;
-}
-
-void scenario_custom_toggle_in_use(int id)
-{
-    if (scenario.custom_variables[id].in_use) {
         scenario.custom_variables[id].in_use = 0;
-    } else {
+    }
+    if (*name) {
+        scenario.custom_variables[id].linked_uid = message_media_text_blob_add(name);
         scenario.custom_variables[id].in_use = 1;
     }
 }
@@ -912,6 +906,17 @@ int scenario_get_custom_variable_id_by_uid(const uint8_t *variable_uid)
                 return i;
             }
         }
+    }
+    return 0;
+}
+
+const uint8_t *scenario_get_custom_variable_name(int id)
+{
+    if (id < 1 || id >= MAX_CUSTOM_VARIABLES) {
+        return 0;
+    }
+    if (scenario.custom_variables[id].linked_uid) {
+        return scenario.custom_variables[id].linked_uid->text;
     }
     return 0;
 }

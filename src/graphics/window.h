@@ -91,7 +91,8 @@ typedef enum {
     WINDOW_EDITOR_CUSTOM_VARIABLES,
     // New window types
     WINDOW_ASSET_PREVIEWER,
-    WINDOW_CUSTOM_MESSAGE
+    WINDOW_CUSTOM_MESSAGE,
+    WINDOW_TEXT_INPUT
 } window_id;
 
 typedef struct {

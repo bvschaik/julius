@@ -84,8 +84,12 @@ void input_box_draw(const input_box *box)
     text_draw_cursor(text_x, text_y + 1, keyboard_is_insert());
 
     if (!*box->text && box->placeholder) {
-        text_draw(box->placeholder, text_x + 1, text_y + 1, FONT_NORMAL_PLAIN, COLOR_BLACK);
-        text_draw(box->placeholder, text_x, text_y, FONT_NORMAL_PLAIN, COLOR_FONT_LIGHT_GRAY);
+        int width = box->width_blocks * BLOCK_SIZE - 32;
+        if (!box->put_clear_button_outside_box) {
+            width -= CLEAR_BUTTON_WIDTH;
+        }
+        text_draw_ellipsized(box->placeholder, text_x + 1, text_y + 1, width, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        text_draw_ellipsized(box->placeholder, text_x, text_y, width, FONT_NORMAL_PLAIN, COLOR_FONT_LIGHT_GRAY);
     }
 
     image_buttons_draw(0, 0, &clear_text_button, 1);

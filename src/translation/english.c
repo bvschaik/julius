@@ -37,6 +37,7 @@ static translation_string all_strings[] = {
     {TR_CONFIG_HEADER_CITY_MANAGEMENT_CHANGES, "City Management"},
     {TR_CONFIG_LANGUAGE_LABEL, "Language:"},
     {TR_CONFIG_LANGUAGE_DEFAULT, "(default)"},
+    {TR_CONFIG_DEFAULT_PLAYER_NAME, "Default player name:"},
     {TR_CONFIG_GAME_SPEED, "Game speed:"},
     {TR_CONFIG_VIDEO, "Video Options"},
     {TR_CONFIG_FULLSCREEN, "Fullscreen"},

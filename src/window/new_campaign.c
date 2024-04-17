@@ -84,7 +84,11 @@ static void init(void)
     reset_campaign_data();
     setting_clear_personal_savings();
     scenario_settings_init();
-    player_name_input.placeholder = lang_get_string(9, 5);
+    const uint8_t *default_player_name = setting_player_name();
+    if (!string_length(default_player_name)) {
+        default_player_name = lang_get_string(9, 5);
+    }
+    player_name_input.placeholder = default_player_name;
     if (string_equals(player_name_input.placeholder, data.player_name)) {
         *data.player_name = 0;
     }
@@ -226,7 +230,8 @@ static void start_mission(int param1, int param2)
         string_copy(player_name_input.placeholder, data.player_name, PLAYER_NAME_LENGTH);
     }
     scenario_set_campaign_rank(info->starting_rank);
-    setting_set_player_name(data.player_name);
+    scenario_set_player_name(data.player_name);
+    scenario_save_campaign_player_name();
     setting_set_personal_savings_for_mission(0, 0);
     input_box_stop(&player_name_input);
     window_mission_selection_show();

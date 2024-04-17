@@ -30,6 +30,7 @@
 #define BUTTON_WIDTH_NAME (BUTTON_WIDTH - BUTTON_WIDTH_VALUE)
 #define BUTTONS_X_OFFSET_VALUE (BUTTONS_X_OFFSET_NAME + BUTTON_WIDTH_NAME)
 
+#define MAX_VARIABLE_NAME_SIZE 50
 
 static void on_scroll(void);
 static void button_variable(int button_index, int param2);
@@ -148,16 +149,16 @@ static void button_variable(int button_index, int param2)
     if (data.select_only) {
         return;
     }
-    if (!data.list[button_index]) {
+    if (!data.list[button_index] || !data.list[button_index]->in_use) {
         return;
-    };
+    }
     data.target_variable = data.list[button_index]->id;
     window_numeric_input_bound_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 9, -1000000000, 1000000000, set_variable_value);
 }
 
-static void set_variable_name(char *value)
+static void set_variable_name(const uint8_t *value)
 {
-    scenario_custom_variable_rename(data.target_variable, string_from_ascii(value));
+    scenario_custom_variable_rename(data.target_variable, value);
 }
 
 static void button_name_click(int button_index, int param2)
@@ -176,8 +177,14 @@ static void button_name_click(int button_index, int param2)
         data.callback(data.list[button_index]);
         window_go_back();
     } else {
+        static uint8_t text_input_title[100];
+        uint8_t *cursor = string_copy(translation_for(TR_PARAMETER_TYPE_CUSTOM_VARIABLE), text_input_title, 100);
+        cursor = string_copy(string_from_ascii(" "), cursor, 100 - (cursor - text_input_title));
+        string_from_int(cursor, button_index + 1, 0);
+
         data.target_variable = data.list[button_index]->id;
-        window_text_input_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, set_variable_name);
+        window_text_input_show(text_input_title, 0, scenario_get_custom_variable_name(data.target_variable),
+            MAX_VARIABLE_NAME_SIZE, set_variable_name);
     }
 }
 
@@ -194,7 +201,6 @@ static void button_delete_variable(int button_index, int param2)
     };
     const uint8_t empty_name[2] = "";
     scenario_custom_variable_rename(data.list[button_index]->id, empty_name);
-    scenario_custom_toggle_in_use(data.list[button_index]->id);
 }
 
 static void on_scroll(void)

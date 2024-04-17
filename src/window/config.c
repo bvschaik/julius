@@ -23,12 +23,12 @@
 #include "sound/effect.h"
 #include "sound/music.h"
 #include "sound/speech.h"
+#include "translation/translation.h"
 #include "window/hotkey_config.h"
 #include "window/main_menu.h"
-#include "window/numeric_input.h"
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
-#include "translation/translation.h"
+#include "window/text_input.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -51,16 +51,20 @@
 #define NUMERICAL_SLIDER_PADDING 2
 #define NUMERICAL_DOT_SIZE 20
 
+#define PLAYER_NAME_LENGTH 32
+
 static void on_scroll(void);
 
 static void toggle_switch(int key);
-static void button_language_select(int param1, int param2);
+static void button_language_select(int height, int param2);
+static void button_edit_player_name(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
 static void button_close(int save, int param2);
 static void button_page(int page, int param2);
 
 static const uint8_t *display_text_language(void);
+static const uint8_t *display_text_player_name(void);
 static const uint8_t *display_text_game_speed(void);
 static const uint8_t *display_text_resolution(void);
 static const uint8_t *display_text_display_scale(void);
@@ -90,7 +94,8 @@ enum {
 };
 
 enum {
-    SELECT_LANGUAGE
+    SELECT_LANGUAGE,
+    SELECT_PLAYER_NAME
 };
 
 enum {
@@ -127,6 +132,11 @@ enum {
     CONFIG_MAX_ALL
 };
 
+enum {
+    CONFIG_STRING_ORIGINAL_PLAYER_NAME = CONFIG_STRING_MAX_ENTRIES,
+    CONFIG_STRING_MAX_ALL
+};
+
 typedef struct {
     int width;
     int height;
@@ -150,13 +160,11 @@ typedef struct {
     int enabled;
 } config_widget;
 
-static uint8_t display_text[10];
-static uint8_t volume_text[64];
-static uint8_t *volume_offset;
-
 static config_widget all_widgets[CONFIG_PAGES][MAX_WIDGETS] = {
     { // General Settings
         {TYPE_SELECT, SELECT_LANGUAGE, TR_CONFIG_LANGUAGE_LABEL, display_text_language},
+        {TYPE_SPACE},
+        {TYPE_SELECT, SELECT_PLAYER_NAME, TR_CONFIG_DEFAULT_PLAYER_NAME, display_text_player_name},
         {TYPE_SPACE},
         {TYPE_NUMERICAL_DESC, RANGE_GAME_SPEED, TR_CONFIG_GAME_SPEED},
         {TYPE_NUMERICAL_RANGE, RANGE_GAME_SPEED, 0, display_text_game_speed},
@@ -258,7 +266,8 @@ static const int game_speeds[] = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200,
 static resolution available_resolutions[sizeof(resolutions) / sizeof(resolution) + 2];
 
 static generic_button select_buttons[] = {
-    {150, 0, 200, 24, button_language_select, button_none},
+    {225, 0, 200, 24, button_language_select, button_none},
+    {225, 0, 200, 24, button_edit_player_name, button_none},
 };
 
 static numerical_range_widget ranges[] = {
@@ -317,16 +326,22 @@ static struct {
         char original_value[CONFIG_STRING_VALUE_MAX];
         char new_value[CONFIG_STRING_VALUE_MAX];
         int (*change_action)(config_string_key key);
-    } config_string_values[CONFIG_STRING_MAX_ENTRIES];
-    uint8_t language_options_data[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
-    const uint8_t *language_options[MAX_LANGUAGE_DIRS];
-    char language_options_utf8[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
-    int num_language_options;
-    int selected_language_option;
+    } config_string_values[CONFIG_STRING_MAX_ALL];
+    struct {
+        const uint8_t *options[MAX_LANGUAGE_DIRS];
+        uint8_t data[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
+        char data_utf8[MAX_LANGUAGE_DIRS][CONFIG_STRING_VALUE_MAX];
+        int total;
+        int selected;
+    } language_options;
     int active_numerical_range;
     int show_background_image;
     int has_changes;
     int reload_cursors;
+    uint8_t player_name[PLAYER_NAME_LENGTH];
+    uint8_t display_text[10];
+    uint8_t volume_text[64];
+    uint8_t *volume_offset;
     int graphics_behind_tab[CONFIG_PAGES];
 } data;
 
@@ -334,6 +349,7 @@ static int config_change_basic(config_key key);
 static int config_change_string_basic(config_string_key key);
 
 static int config_change_string_language(config_string_key key);
+static int config_change_string_player_name(config_string_key key);
 
 static int config_change_game_speed(config_key key);
 static int config_change_fullscreen(config_key key);
@@ -360,6 +376,7 @@ static int config_enable_gods_effects(config_key key);
 static inline void set_custom_config_changes(void)
 {
     data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].change_action = config_change_string_language;
+    data.config_string_values[CONFIG_STRING_ORIGINAL_PLAYER_NAME].change_action = config_change_string_player_name;
 
     data.config_values[CONFIG_ORIGINAL_FULLSCREEN].change_action = config_change_fullscreen;
     data.config_values[CONFIG_ORIGINAL_WINDOWED_RESOLUTION].change_action = config_change_display_resolution;
@@ -405,7 +422,19 @@ static inline void set_range_values(void)
     ranges[RANGE_MAX_GRAND_TEMPLES].value = &data.config_values[CONFIG_GP_CH_MAX_GRAND_TEMPLES].new_value;
 }
 
-static inline void fetch_original_config_values(void)
+static void set_player_name_width(void)
+{
+    int width = text_get_width(data.player_name, FONT_NORMAL_BLACK) + 16;
+    if (width < 200) {
+        width = 200;
+    } else if (width > 322) {
+        width = 322;
+        text_ellipsize(data.player_name, FONT_NORMAL_BLACK, width - 16);
+    }
+    select_buttons[SELECT_PLAYER_NAME].width = width;
+}
+
+static void fetch_original_config_values(void)
 {
     size_t game_speed_index = 0;
     while (game_speed_index < sizeof(game_speeds) / sizeof(int)) {
@@ -445,6 +474,18 @@ static inline void fetch_original_config_values(void)
 
     data.config_values[CONFIG_ORIGINAL_GODS_EFFECTS].original_value = setting_gods_enabled();
     data.config_values[CONFIG_ORIGINAL_GODS_EFFECTS].new_value = setting_gods_enabled();
+
+    const uint8_t *player_name = setting_player_name();
+    if (!string_length(player_name)) {
+        player_name = lang_get_string(9, 5);
+    }
+    string_copy(player_name, data.player_name, PLAYER_NAME_LENGTH);
+    encoding_to_utf8(data.player_name, data.config_string_values[CONFIG_STRING_ORIGINAL_PLAYER_NAME].original_value,
+        PLAYER_NAME_LENGTH, 0);
+    strncpy(data.config_string_values[CONFIG_STRING_ORIGINAL_PLAYER_NAME].new_value,
+        data.config_string_values[CONFIG_STRING_ORIGINAL_PLAYER_NAME].original_value, PLAYER_NAME_LENGTH);
+
+    set_player_name_width();
 }
 
 static void init_config_values(void)
@@ -452,7 +493,7 @@ static void init_config_values(void)
     for (int i = 0; i < CONFIG_MAX_ALL; ++i) {
         data.config_values[i].change_action = config_change_basic;
     }
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
+    for (int i = 0; i < CONFIG_STRING_MAX_ALL; ++i) {
         data.config_string_values[i].change_action = config_change_string_basic;
     }
     set_custom_config_changes();
@@ -510,9 +551,10 @@ static void init(int page, int show_background_image)
     if (!data.config_values[0].change_action) {
         init_config_values();
     }
-    if (!volume_text[0]) {
-        volume_offset = string_copy(translation_for(TR_CONFIG_VOLUME), volume_text, 63);
-        volume_offset = string_copy(string_from_ascii(" "), volume_offset, (int) (volume_offset - volume_text - 1));
+    if (!data.volume_text[0]) {
+        data.volume_offset = string_copy(translation_for(TR_CONFIG_VOLUME), data.volume_text, 63);
+        data.volume_offset = string_copy(string_from_ascii(" "), data.volume_offset,
+            (int) (data.volume_offset - data.volume_text - 1));
     }
 
     for (int i = 0; i < CONFIG_MAX_ENTRIES; i++) {
@@ -527,22 +569,22 @@ static void init(int page, int show_background_image)
     fetch_original_config_values();
 
     data.show_background_image = show_background_image;
-    string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
-    data.language_options[0] = data.language_options_data[0];
-    data.num_language_options = 1;
-    data.selected_language_option = 0;
+    string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options.data[0], CONFIG_STRING_VALUE_MAX);
+    data.language_options.options[0] = data.language_options.data[0];
+    data.language_options.total = 1;
+    data.language_options.selected = 0;
     const dir_listing *subdirs = dir_find_all_subdirectories(".");
     const char *original_value = data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].original_value;
     for (int i = 0; i < subdirs->num_files; i++) {
-        if (data.num_language_options < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i].name)) {
-            int opt_id = data.num_language_options;
-            strncpy(data.language_options_utf8[opt_id], subdirs->files[i].name, CONFIG_STRING_VALUE_MAX - 1);
-            encoding_from_utf8(subdirs->files[i].name, data.language_options_data[opt_id], CONFIG_STRING_VALUE_MAX);
-            data.language_options[opt_id] = data.language_options_data[opt_id];
+        if (data.language_options.total < MAX_LANGUAGE_DIRS && lang_dir_is_valid(subdirs->files[i].name)) {
+            int opt_id = data.language_options.total;
+            strncpy(data.language_options.data_utf8[opt_id], subdirs->files[i].name, CONFIG_STRING_VALUE_MAX - 1);
+            encoding_from_utf8(subdirs->files[i].name, data.language_options.data[opt_id], CONFIG_STRING_VALUE_MAX);
+            data.language_options.options[opt_id] = data.language_options.data[opt_id];
             if (strcmp(original_value, subdirs->files[i].name) == 0) {
-                data.selected_language_option = opt_id;
+                data.language_options.selected = opt_id;
             }
-            data.num_language_options++;
+            data.language_options.total++;
         }
     }
 
@@ -608,73 +650,78 @@ static uint8_t *percentage_string(uint8_t *string, int percentage)
 
 static const uint8_t *display_text_language(void)
 {
-    return data.language_options[data.selected_language_option];
+    return data.language_options.options[data.language_options.selected];
+}
+
+static const uint8_t *display_text_player_name(void)
+{
+    return data.player_name;
 }
 
 static const uint8_t *display_text_game_speed(void)
 {
-    return percentage_string(display_text, game_speeds[data.config_values[CONFIG_ORIGINAL_GAME_SPEED].new_value]);
+    return percentage_string(data.display_text, game_speeds[data.config_values[CONFIG_ORIGINAL_GAME_SPEED].new_value]);
 }
 
 static const uint8_t *display_text_resolution(void)
 {
-    uint8_t *str = display_text;
+    uint8_t *str = data.display_text;
     resolution *r = &available_resolutions[data.config_values[CONFIG_ORIGINAL_WINDOWED_RESOLUTION].new_value];
     str += string_from_int(str, r->width, 0);
     str = string_copy(string_from_ascii("x"), str, 5);
     string_from_int(str, r->height, 0);
-    return display_text;
+    return data.display_text;
 }
 
 static const uint8_t *display_text_display_scale(void)
 {
-    return percentage_string(display_text, data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].new_value);
+    return percentage_string(data.display_text, data.config_values[CONFIG_SCREEN_DISPLAY_SCALE].new_value);
 }
 
 static const uint8_t *display_text_cursor_scale(void)
 {
-    return percentage_string(display_text, data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value);
+    return percentage_string(data.display_text, data.config_values[CONFIG_SCREEN_CURSOR_SCALE].new_value);
 }
 
 static const uint8_t *display_text_master_volume(void)
 {
-    percentage_string(volume_offset, data.config_values[CONFIG_GENERAL_MASTER_VOLUME].new_value);
-    return volume_text;
+    percentage_string(data.volume_offset, data.config_values[CONFIG_GENERAL_MASTER_VOLUME].new_value);
+    return data.volume_text;
 }
 
 static const uint8_t *display_text_music_volume(void)
 {
-    percentage_string(volume_offset, data.config_values[CONFIG_ORIGINAL_MUSIC_VOLUME].new_value);
-    return volume_text;
+    percentage_string(data.volume_offset, data.config_values[CONFIG_ORIGINAL_MUSIC_VOLUME].new_value);
+    return data.volume_text;
 }
 
 static const uint8_t *display_text_speech_volume(void)
 {
-    percentage_string(volume_offset, data.config_values[CONFIG_ORIGINAL_SPEECH_VOLUME].new_value);
-    return volume_text;
+    percentage_string(data.volume_offset, data.config_values[CONFIG_ORIGINAL_SPEECH_VOLUME].new_value);
+    return data.volume_text;
 }
 
 static const uint8_t *display_text_sound_effects_volume(void)
 {
-    percentage_string(volume_offset, data.config_values[CONFIG_ORIGINAL_SOUND_EFFECTS_VOLUME].new_value);
-    return volume_text;
+    percentage_string(data.volume_offset, data.config_values[CONFIG_ORIGINAL_SOUND_EFFECTS_VOLUME].new_value);
+    return data.volume_text;
 }
 
 static const uint8_t *display_text_video_volume(void)
 {
-    percentage_string(volume_offset, data.config_values[CONFIG_GENERAL_VIDEO_VOLUME].new_value);
-    return volume_text;
+    percentage_string(data.volume_offset, data.config_values[CONFIG_GENERAL_VIDEO_VOLUME].new_value);
+    return data.volume_text;
 }
 
 static const uint8_t *display_text_city_sounds_volume(void)
 {
-    percentage_string(volume_offset, data.config_values[CONFIG_ORIGINAL_CITY_SOUNDS_VOLUME].new_value);
-    return volume_text;
+    percentage_string(data.volume_offset, data.config_values[CONFIG_ORIGINAL_CITY_SOUNDS_VOLUME].new_value);
+    return data.volume_text;
 }
 
 static const uint8_t *display_text_scroll_speed(void)
 {
-    return percentage_string(display_text, data.config_values[CONFIG_ORIGINAL_SCROLL_SPEED].new_value);
+    return percentage_string(data.display_text, data.config_values[CONFIG_ORIGINAL_SCROLL_SPEED].new_value);
 }
 
 static const uint8_t *display_text_difficulty(void)
@@ -684,8 +731,8 @@ static const uint8_t *display_text_difficulty(void)
 
 static const uint8_t *display_text_max_grand_temples(void)
 {
-    string_from_int(display_text, data.config_values[CONFIG_GP_CH_MAX_GRAND_TEMPLES].new_value, 0);
-    return display_text;
+    string_from_int(data.display_text, data.config_values[CONFIG_GP_CH_MAX_GRAND_TEMPLES].new_value, 0);
+    return data.display_text;
 }
 
 static void update_scale(void)
@@ -771,7 +818,7 @@ static inline void update_widgets(void)
     update_scale();
     calculate_available_resolutions_and_fullscreen();
     data.has_changes = 0;
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES && !data.has_changes; i++) {
+    for (int i = 0; i < CONFIG_STRING_MAX_ALL && !data.has_changes; i++) {
         if (config_string_changed(i)) {
             data.has_changes = 1;
         }
@@ -830,8 +877,8 @@ static void draw_background(void)
         } else if (w->type == TYPE_SELECT) {
             text_draw(translation_for(w->description), 20, y + 6 + w->y_offset, FONT_NORMAL_BLACK, 0);
             const generic_button *btn = &select_buttons[w->subtype];
-            text_draw_centered(w->get_display_text(), btn->x, y + btn->y + 6 + w->y_offset,
-                btn->width, FONT_NORMAL_BLACK, 0);
+            text_draw_centered(w->get_display_text(), btn->x + 8, y + btn->y + 6 + w->y_offset,
+                btn->width - 16, FONT_NORMAL_BLACK, 0);
         } else if (w->type == TYPE_NUMERICAL_RANGE) {
             numerical_range_draw(&ranges[w->subtype], NUMERICAL_RANGE_X, y + w->y_offset, w->get_display_text());
         } else if (w->type == TYPE_NUMERICAL_DESC) {
@@ -1021,10 +1068,10 @@ static void toggle_switch(int key)
 
 static void set_language(int index)
 {
-    const char *dir = index == 0 ? "" : data.language_options_utf8[index];
+    const char *dir = index == 0 ? "" : data.language_options.data_utf8[index];
     strncpy(data.config_string_values[CONFIG_STRING_UI_LANGUAGE_DIR].new_value, dir, CONFIG_STRING_VALUE_MAX - 1);
 
-    data.selected_language_option = index;
+    data.language_options.selected = index;
 }
 
 static void button_hotkeys(int param1, int param2)
@@ -1038,8 +1085,29 @@ static void button_language_select(int height, int param2)
     window_select_list_show_text(
         screen_dialog_offset_x() + btn->x,
         screen_dialog_offset_y() + height + btn->height,
-        data.language_options, data.num_language_options, set_language
+        data.language_options.options, data.language_options.total, set_language
     );
+}
+
+static void set_player_name(const uint8_t *name)
+{
+    if (!string_length(name)) {
+        name = lang_get_string(9, 5);
+    }
+    string_copy(name, data.player_name, PLAYER_NAME_LENGTH);
+    encoding_to_utf8(name, data.config_string_values[CONFIG_STRING_ORIGINAL_PLAYER_NAME].new_value,
+        PLAYER_NAME_LENGTH, 0);
+    set_player_name_width();
+    window_invalidate();
+}
+
+static void button_edit_player_name(int param1, int param2)
+{
+    uint8_t player_name[PLAYER_NAME_LENGTH];
+    encoding_from_utf8(data.config_string_values[CONFIG_STRING_ORIGINAL_PLAYER_NAME].new_value,
+        player_name, PLAYER_NAME_LENGTH);
+    window_text_input_show(lang_get_string(31, 0), lang_get_string(9, 5), player_name,
+        PLAYER_NAME_LENGTH, set_player_name);
 }
 
 static void button_reset_defaults(int param1, int param2)
@@ -1061,7 +1129,7 @@ static void cancel_values(void)
     for (int i = 0; i < CONFIG_MAX_ALL; i++) {
         data.config_values[i].new_value = data.config_values[i].original_value;
     }
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; i++) {
+    for (int i = 0; i < CONFIG_STRING_MAX_ALL; i++) {
         // memcpy required to fix warning on Switch build
         memcpy(data.config_string_values[i].new_value,
             data.config_string_values[i].original_value, CONFIG_STRING_VALUE_MAX - 1);
@@ -1317,11 +1385,22 @@ static int config_change_string_language(config_string_key key)
 
     strncpy(data.config_string_values[key].original_value,
         data.config_string_values[key].new_value, CONFIG_STRING_VALUE_MAX - 1);
-    string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options_data[0], CONFIG_STRING_VALUE_MAX);
+    string_copy(translation_for(TR_CONFIG_LANGUAGE_DEFAULT), data.language_options.data[0], CONFIG_STRING_VALUE_MAX);
 
-    volume_offset = string_copy(translation_for(TR_CONFIG_VOLUME), volume_text, 63);
-    volume_offset = string_copy(string_from_ascii(" "), volume_offset, (int) (volume_offset - volume_text - 1));
+    data.volume_offset = string_copy(translation_for(TR_CONFIG_VOLUME), data.volume_text, 63);
+    data.volume_offset = string_copy(string_from_ascii(" "), data.volume_offset,
+        (int) (data.volume_offset - data.volume_text - 1));
 
+    return 1;
+}
+
+static int config_change_string_player_name(config_string_key key)
+{
+    uint8_t player_name[PLAYER_NAME_LENGTH];
+    encoding_from_utf8(data.config_string_values[key].new_value, player_name, PLAYER_NAME_LENGTH);
+    setting_set_player_name(player_name);
+    strncpy(data.config_string_values[key].original_value,
+        data.config_string_values[key].new_value, PLAYER_NAME_LENGTH);
     return 1;
 }
 
@@ -1337,7 +1416,7 @@ static int apply_changed_configs(void)
             }
         }
     }
-    for (int i = 0; i < CONFIG_STRING_MAX_ENTRIES; ++i) {
+    for (int i = 0; i < CONFIG_STRING_MAX_ALL; ++i) {
         if (config_string_changed(i)) {
             if (!data.config_string_values[i].change_action(i)) {
                 return 0;
