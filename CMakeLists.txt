@@ -769,12 +769,18 @@ if (${TARGET_PLATFORM} STREQUAL "vita")
         vorbisfile
         vorbis
         mikmod
+        xmp
+        modplug
         mpg123
         FLAC
         ogg
+        opusfile
+        opus
+        stdc++
         m
         SceAppUtil_stub
         SceAudio_stub
+        SceAudioIn_stub
         SceCommonDialog_stub
         SceCtrl_stub
         SceDisplay_stub
