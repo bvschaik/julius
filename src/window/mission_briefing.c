@@ -337,7 +337,7 @@ static void draw_background(void)
     inner_panel_draw(32, 184, 33, 15);
 
     if (content) {
-        rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED, 5);
+        rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_GREEN, FONT_NORMAL_RED, 5);
         rich_text_init(content, 64, 184, 31, 15, 0);
         rich_text_draw(content, 48, 196, 496, 14, 0);
     }

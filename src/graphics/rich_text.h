@@ -21,10 +21,11 @@ int rich_text_init(
 /**
  * Sets fonts to use
  * @param normal_font Normal text
+ * @param heading_font Heading text
  * @param link_font Link text
  * @param line_spacing Spacing between lines
  */
-void rich_text_set_fonts(font_t normal_font, font_t link_font, int line_spacing);
+void rich_text_set_fonts(font_t normal_font, font_t heading_font, font_t link_font, int line_spacing);
 
 /**
  * Resets the text to the specified scroll position and forces recalculation of lines

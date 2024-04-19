@@ -96,7 +96,7 @@ static void init(void)
     data.campaign_list = dir_append_files_with_extension("campaign");
     calculate_input_box_width();
     input_box_start(&player_name_input);
-    rich_text_set_fonts(FONT_NORMAL_BLACK, FONT_NORMAL_BLACK, 5);
+    rich_text_set_fonts(FONT_NORMAL_BLACK, FONT_NORMAL_BLACK, FONT_NORMAL_BLACK, 5);
     list_box_init(&list_box, data.campaign_list->num_files + 1);
     list_box_select_index(&list_box, ORIGINAL_CAMPAIGN_ID);
 }

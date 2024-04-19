@@ -490,7 +490,7 @@ static void draw_content(const lang_message *msg)
         data.y_text += 128;
     }
 
-    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED, 5);
+    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_GREEN, FONT_NORMAL_RED, 5);
     int header_offset = msg->type == TYPE_MANUAL ? 48 : 32;
     data.text_height_blocks = msg->height_blocks - 1 - (header_offset + data.y_text - data.y) / BLOCK_SIZE;
     data.text_width_blocks = rich_text_init(msg->content.text,
@@ -540,13 +540,13 @@ static void draw_background_video(void)
     if (msg->type == TYPE_MESSAGE && msg->message_type == MESSAGE_TYPE_IMPERIAL) {
         lines_available = 3;
     }
-    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_RED, 5);
+    rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_GREEN, FONT_NORMAL_RED, 5);
     rich_text_clear_links();
     if (msg->message_type != MESSAGE_TYPE_CUSTOM) {
         lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
         if (lines_required > lines_available) {
             small_font = 1;
-            rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN, 7);
+            rich_text_set_fonts(FONT_SMALL_PLAIN, FONT_SMALL_PLAIN, FONT_SMALL_PLAIN, 7);
             lines_required = rich_text_draw(msg->content.text, 0, 0, 384, lines_available, 1);
         }
     }

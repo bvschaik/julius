@@ -208,7 +208,7 @@ static void draw_won(void)
     lang_text_draw_centered(62, 0, 48, y_offset + 16, 544, FONT_LARGE_BLACK);
 
     if (victory_message_text) {
-        rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_WHITE, 5);
+        rich_text_set_fonts(FONT_NORMAL_WHITE, FONT_NORMAL_GREEN, FONT_NORMAL_WHITE, 5);
         int width_blocks = rich_text_init(victory_message_text, 96, y_offset + 56, 28, panel_height_blocks - 11, 1);
         inner_panel_draw(64, y_offset + 56, width_blocks + 2, panel_height_blocks - 11);
         rich_text_draw(victory_message_text, 80, y_offset + 64, width_blocks * BLOCK_SIZE, panel_height_blocks - 12, 0);

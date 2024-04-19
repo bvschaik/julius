@@ -246,12 +246,18 @@ static void handle_element_text(const sxmltok_t *token)
     if (data.current_element && data.current_element->on_text) {
         const char *text = data.buffer.data + token->startpos;
         int length = token->endpos - token->startpos;
-        // Remove whitespace at beginning
-        while (*text == ' ' && length > 0) {
-            text++;
-            length--;
+        while (length) {
+            char *end = memchr(text, '\n', length);
+            int line_length = end ? end - text + 1: length;
+            length -= line_length;
+            // Remove whitespace at beginning
+            while (*text == ' ' && line_length > 0) {
+                text++;
+                line_length--;
+            }
+            append_to_text(&data.texts[data.depth], text, line_length);
+            text += line_length;
         }
-        append_to_text(&data.texts[data.depth], text, length);
     }
 }
 

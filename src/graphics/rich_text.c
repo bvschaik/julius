@@ -41,6 +41,7 @@ static uint8_t tmp_line[TEMP_LINE_SIZE];
 static struct {
     const font_definition *normal_font;
     const font_definition *link_font;
+    const font_definition *heading_font;
     int line_height;
     int paragraph_indent;
 
@@ -81,9 +82,10 @@ int rich_text_init(
     return data.text_width_blocks;
 }
 
-void rich_text_set_fonts(font_t normal_font, font_t link_font, int line_spacing)
+void rich_text_set_fonts(font_t normal_font, font_t heading_font, font_t link_font, int line_spacing)
 {
     data.normal_font = font_definition_for(normal_font);
+    data.heading_font = font_definition_for(heading_font);
     data.link_font = font_definition_for(link_font);
     data.line_height = data.normal_font->line_height + line_spacing;
     data.paragraph_indent = locale_paragraph_indent();
@@ -133,7 +135,7 @@ static void add_link(int message_id, int x_start, int x_end, int y)
     }
 }
 
-static int get_word_width(const uint8_t *str, int in_link, int *num_chars, int line_start)
+static int get_word_width(const uint8_t *str, const font_definition *def, int in_link, int *num_chars, int line_start)
 {
     int width = 0;
     int guard = 0;
@@ -143,7 +145,7 @@ static int get_word_width(const uint8_t *str, int in_link, int *num_chars, int l
     while (*str && ++guard < 2000) {
         if (*str == '@') {
             str++;
-            if (*str == 'P' || *str == 'L' || *str == 'G') {
+            if (*str == 'P' || *str == 'L' || *str == 'G' || *str == 'H') {
                 *num_chars += 2;
                 break;
             } else if (!word_char_seen) {
@@ -166,7 +168,7 @@ static int get_word_width(const uint8_t *str, int in_link, int *num_chars, int l
             }
         } else if (*str > ' ') {
             // normal char
-            int letter_id = font_letter_id(data.normal_font, str, &num_bytes);
+            int letter_id = font_letter_id(def, str, &num_bytes);
             if (letter_id >= 0) {
                 width += 1 + image_letter(letter_id)->original.width;
             }
@@ -189,7 +191,7 @@ static int get_word_width(const uint8_t *str, int in_link, int *num_chars, int l
     return width;
 }
 
-static void draw_line(const uint8_t *str, int x, int y, color_t color, int measure_only)
+static void draw_line(const uint8_t *str, const font_definition *def, int x, int y, color_t color, int measure_only)
 {
     int start_link = 0;
     int num_link_chars = 0;
@@ -199,12 +201,11 @@ static void draw_line(const uint8_t *str, int x, int y, color_t color, int measu
             while (*str >= '0' && *str <= '9') {
                 str++;
             }
-            int width = get_word_width(str, 1, &num_link_chars, 0);
+            int width = get_word_width(str, data.link_font, 1, &num_link_chars, 0);
             add_link(message_id, x, x + width, y);
             start_link = 1;
         }
         if (*str >= ' ') {
-            const font_definition *def = data.normal_font;
             if (num_link_chars > 0) {
                 def = data.link_font;
             }
@@ -351,7 +352,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
             scrollbar_update_total_elements(&scrollbar, data.num_lines);
         }
     }
-    int image_height_lines = 0;
+    int lines_to_skip = 0;
     int image_id = 0;
     int lines_before_image = 0;
     int paragraph = 0;
@@ -360,7 +361,8 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
     int guard = 0;
     int line = 0;
     int num_lines = 0;
-    while (has_more_characters || image_height_lines) {
+    int heading = 0;
+    while (has_more_characters || lines_to_skip) {
         if (++guard >= 1000) {
             break;
         }
@@ -369,16 +371,18 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
             tmp_line[i] = 0;
         }
         int line_index = 0;
-        int current_width, x_line_offset;
-        current_width = x_line_offset = paragraph ? data.paragraph_indent : 0;
+        int line_break = 0;
+        int x_line_offset = paragraph ? data.paragraph_indent : 0;
+        int current_width = x_line_offset;
+        const font_definition *def = heading ? data.heading_font : data.normal_font;
         paragraph = 0;
-        while ((has_more_characters || image_height_lines) && current_width < box_width) {
-            if (image_height_lines) {
-                image_height_lines--;
+        while (!line_break && (has_more_characters || lines_to_skip)) {
+            if (lines_to_skip) {
+                lines_to_skip--;
                 break;
             }
             int word_num_chars;
-            int word_width = get_word_width(text, 0, &word_num_chars, line_index == 0);
+            int word_width = get_word_width(text, def, 0, &word_num_chars, line_index == 0);
             if (word_width >= box_width) {
                 // Word too long to fit on a line, so cut it into smaller pieces.
                 int can_cut_more = 1;
@@ -393,43 +397,70 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                     can_cut_more = (temp_width < box_width);
                 }
             }
-            current_width += word_width;
-            if (current_width >= box_width) {
+            if (current_width + word_width >= box_width) {
+                line_break = 1;
                 if (current_width == 0) {
                     has_more_characters = 0;
                 }
             } else {
+                current_width += word_width;
                 for (int i = 0; i < word_num_chars; i++) {
                     char c = *text++;
                     if (c == '@') {
-                        // Paragraph
-                        if (*text == 'P') {
-                            paragraph = 1;
+                        // Heading
+                        if (*text == 'H') {
+                            heading = 1;
+                            if (line_index) {
+                                line_break = 1;
+                            }
+                            if (line > 0) {
+                                lines_to_skip = 1;
+                            } else {
+                                def = data.heading_font;
+                            }
                             text++;
-                            current_width = box_width;
+                            break;
+                        // Paragraph
+                        } else if (*text == 'P') {
+                            paragraph = 1;
+                            if (heading) {
+                                heading = 0;
+                                lines_to_skip = 1;
+                            }
+                            text++;
+                            line_break = 1;
                             break;
                         // Line break
                         } else if (*text == 'L') {
                             text++;
-                            current_width = box_width;
+                            line_break = 1;
+                            if (heading) {
+                                heading = 0;
+                                lines_to_skip = 1;
+                            }
                             break;
-                        // Image
+                            // Image
                         } else if (*text == 'G') {
+                            heading = 0;
                             if (line_index) {
                                 num_lines++;
                             }
                             text++; // skip 'G'
-                            current_width = box_width;
+                            line_break = 1;
                             // "@G[...]"
                             image_id = rich_text_parse_image_id(&text, GROUP_MESSAGE_IMAGES, 0);
                             if (!text) {
                                 has_more_characters = 0;
                                 break;
                             }
-                            int height = image_get(image_id)->original.height;
-                            image_height_lines = height / data.line_height;
-                            if ((height % data.line_height) > height / 2) {
-                                image_height_lines++;
+                            const image *img = image_get(image_id);
+                            int height = img->original.height;
+                            if (img->top) {
+                                height += img->top->original.height - height / 2;
+                            }
+                            lines_to_skip = height / data.line_height;
+                            if ((height % data.line_height) > data.line_height / 2) {
+                                lines_to_skip++;
                             }
                             if (line > 0 || line_index) {
                                 lines_before_image = 1;
@@ -454,7 +485,10 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
             }
         }
         if (!outside_viewport) {
-            draw_line(tmp_line, x_line_offset + x_offset, y, color, measure_only);
+            if (def == data.heading_font) {
+                x_line_offset = (box_width - current_width) / 2;
+            }
+            draw_line(tmp_line, def, x_line_offset + x_offset, y, color, measure_only);
         }
         if (!measure_only) {
             if (image_id) {
@@ -463,9 +497,12 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                 } else {
                     const image *img = image_get(image_id);
                     int height = img->original.height;
-                    image_height_lines = height / data.line_height;
-                    if ((height % data.line_height) > height / 2) {
-                        image_height_lines++;
+                    if (img->top) {
+                        height += img->top->original.height - height / 2;
+                    }
+                    lines_to_skip = height / data.line_height;
+                    if ((height % data.line_height) > data.line_height / 2) {
+                        lines_to_skip++;
                     }
                     int image_offset_x = x_offset + (box_width - img->original.width) / 2 - 4;
                     if (line < height_lines + scrollbar.scroll_position) {

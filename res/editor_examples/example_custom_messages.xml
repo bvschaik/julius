@@ -8,6 +8,8 @@
             This is the text that will be displayed when the message is shown. Note that text uses Rich Text formatting,
             so it is possible to define new lines, paragraphs or built-in images.
 
+            - @H will start a new heading. It will be centered, on its own line, and in green color. You must use @P or
+              @L to start a new paragraph after a heading.
             - @L will start a new line (line break).
             - @P will start a new paragraph, identing the next line.
             - @G### will show an image where ### is the id of the image.
@@ -28,7 +30,7 @@
         -->
         <title>Toga puer iratus est</title>
         <subtitle>An assignment from a slightly fuming Caesar</subtitle>
-        <text>I am most displeased.@L
+        <text>@HI am most displeased.@L
         I ask you to give me a prosperous city, and what did you give me? A single palace and tent squalor as far as the eye can see.@L
         I expected defending legions and you gave me winding roads and lion tamers running marathons.@L
         I requested wheat and wine to test your industry, but you tore it down the day after.@P
