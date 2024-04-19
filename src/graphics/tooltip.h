@@ -40,7 +40,6 @@ typedef struct {
     const uint8_t *precomposed_text;
 } tooltip_context;
 
-void tooltip_invalidate(void);
 void tooltip_handle(const mouse *m, void (*func)(tooltip_context *));
 
 #endif // GRAPHICS_TOOLTIP_H

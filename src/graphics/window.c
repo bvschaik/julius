@@ -128,7 +128,6 @@ void window_draw(int force)
         data.refresh_on_draw = 0;
         data.refresh_immediate = 0;
         graphics_clear_screen();
-        tooltip_invalidate();
         w->draw_background();
     }
     w->draw_foreground();

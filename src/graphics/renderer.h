@@ -70,6 +70,12 @@ typedef struct {
     void (*draw_custom_image)(custom_image_type type, int x, int y, float scale, int disable_filtering);
     int (*supports_yuv_image_format)(void);
 
+    int (*start_tooltip_creation)(int width, int height);
+    void (*finish_tooltip_creation)(void);
+    int (*has_tooltip)(void);
+    void (*set_tooltip_position)(int x, int y);
+    void (*set_tooltip_opacity)(int opacity);
+
     int (*save_image_from_screen)(int image_id, int x, int y, int width, int height);
     void (*draw_image_to_screen)(int image_id, int x, int y);
     int (*save_screen_buffer)(color_t *pixels, int x, int y, int width, int height, int row_width);
