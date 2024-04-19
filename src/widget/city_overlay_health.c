@@ -84,12 +84,12 @@ static int show_figure_sickness(const figure *f)
 
 static int get_column_height_health(const building *b)
 {
-    int house_health = city_health_get_house_health_level(b);
-    
-    if (b->house_population > 0 && house_health < 1 ) {
-    house_health += 1;
+    int house_health = city_health_get_house_health_level(b, 0);
+
+    if (b->house_population > 0 && house_health < 1) {
+        house_health += 1;
     }
-    
+
     return b->house_size && house_health ? house_health / 10 : NO_COLUMN;
 }
 
@@ -121,7 +121,7 @@ static int get_column_height_sickness(const building *b)
 static int get_tooltip_health(tooltip_context *c, const building *b)
 {
     if (building_is_house(b->type)) {
-        int house_health = city_health_get_house_health_level(b);
+        int house_health = city_health_get_house_health_level(b, 0);
 
         if (house_health < 40) {
             if (b->house_population < 1 && house_health < 1) {

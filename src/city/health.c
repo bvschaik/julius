@@ -295,7 +295,7 @@ static void adjust_sickness_level_in_plague_buildings(int hospital_coverage_bonu
     }
 }
 
-int city_health_get_house_health_level(const building *b) 
+int city_health_get_house_health_level(const building *b, int update_city_data) 
 {
     int house_health = 0;
 
@@ -303,20 +303,28 @@ int city_health_get_house_health_level(const building *b)
         house_health = calc_bound(b->subtype.house_level, 0, 10);
         if (b->data.house.clinic && b->data.house.hospital) {
             house_health += 50;
-            city_data.health.population_access.clinic += b->house_population;
+            if (update_city_data) {
+                city_data.health.population_access.clinic += b->house_population;
+            }
         } else if (b->data.house.hospital) {
             house_health += 40;
         } else if (b->data.house.clinic) {
             house_health += 30;
-            city_data.health.population_access.clinic += b->house_population;
+            if (update_city_data) {
+                city_data.health.population_access.clinic += b->house_population;
+            }
         }
         if (b->data.house.bathhouse) {
             house_health += 20;
-            city_data.health.population_access.baths += b->house_population;
+            if (update_city_data) {
+                city_data.health.population_access.baths += b->house_population;
+            }
         }
         if (b->data.house.barber) {
             house_health += 10;
-            city_data.health.population_access.barber += b->house_population;
+            if (update_city_data) {
+                city_data.health.population_access.barber += b->house_population;
+            }
         }
         house_health += b->data.house.num_foods * 15;
 
@@ -356,7 +364,7 @@ void city_health_update(void)
                 b->sickness_level = 0;
                 continue;
             }
-            int house_health = city_health_get_house_health_level(b);
+            int house_health = city_health_get_house_health_level(b, 1);
 
             total_population += b->house_population;
             healthy_population += calc_adjust_with_percentage(b->house_population, house_health);

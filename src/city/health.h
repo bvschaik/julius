@@ -19,7 +19,7 @@ void city_health_change(int amount);
 
 void city_health_set(int new_value);
 
-int city_health_get_house_health_level(const building *b);
+int city_health_get_house_health_level(const building *b, int update_city_data);
 
 void city_health_update(void);
 
