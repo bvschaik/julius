@@ -242,10 +242,7 @@ int building_barracks_create_tower_sentry(building *barracks, int x, int y)
 
 void building_barracks_set_priority(building *barracks, int priority)
 {
-    // TODO remove when archery available
-    if (priority != 4) {
         barracks->subtype.barracks_priority = priority;
-    }
 }
 
 void building_barracks_toggle_delivery(building *barracks)
