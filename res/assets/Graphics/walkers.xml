@@ -2319,7 +2319,7 @@
 	</image>
 	<image id="architect_nw_11">
 		<layer group="110" image="86"/>
-		<layer src="architect_nw_1`"/>
+		<layer src="architect_nw_11"/>
 	</image>
 	<image id="architect_nw_12">
 		<layer group="110" image="94"/>
@@ -2924,3 +2924,4 @@
 		<layer src="caravanserai_walker_n_12"/>
 	</image>
 </assetlist>
+
