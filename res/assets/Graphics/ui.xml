@@ -327,7 +327,7 @@
 	</image>
 	<image id="auxarch_banner_04">
 		<layer src="auxinf_banner_base"/>
-		<layer src="auxarch_banner_044" x="4" y="3"/>
+		<layer src="auxarch_banner_04" x="4" y="3"/>
 	</image>
 	<image id="auxarch_banner_05">
 		<layer src="auxinf_banner_base"/>
@@ -445,3 +445,4 @@
 		<layer src="Risk_Widget_Cross" x="1" y="2"/>
 	</image>
 </assetlist>
+
