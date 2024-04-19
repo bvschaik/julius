@@ -42,6 +42,7 @@ void figure_play_die_sound(const figure *f)
         case FIGURE_PREFECT:
         case FIGURE_FORT_JAVELIN:
         case FIGURE_FORT_LEGIONARY:
+        case FIGURE_FORT_ARCHER:
         case FIGURE_GLADIATOR:
         case FIGURE_INDIGENOUS_NATIVE:
         case FIGURE_TOWER_SENTRY:

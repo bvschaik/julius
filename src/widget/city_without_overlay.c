@@ -765,6 +765,14 @@ static void draw_animation(int x, int y, int grid_offset)
                     default: break;
                 }
             }
+            if (fort->subtype.fort_figure_type == FIGURE_FORT_ARCHER) {
+                image_id = assets_get_image_id("Military", "fort_aux_arch_flag_central");
+                switch (scenario_property_climate()) {
+                    case CLIMATE_DESERT: image_id += 2; break;
+                    case CLIMATE_NORTHERN: image_id += 1; break;
+                    default: break;
+                }
+            }
             image_draw(image_id, x + 81, y + 5,
                 draw_building_as_deleted(fort) ? COLOR_MASK_RED : COLOR_MASK_NONE, draw_context.scale);
         }

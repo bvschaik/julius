@@ -482,7 +482,8 @@ int building_is_fort(building_type type)
     return type == BUILDING_FORT_LEGIONARIES ||
         type == BUILDING_FORT_JAVELIN ||
         type == BUILDING_FORT_MOUNTED ||
-        type == BUILDING_FORT_AUXILIA_INFANTRY;
+        type == BUILDING_FORT_AUXILIA_INFANTRY ||
+        type == BUILDING_FORT_ARCHERS;
 }
 
 int building_mothball_toggle(building *b)

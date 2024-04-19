@@ -45,6 +45,8 @@ static void add_fort(int type, building *fort)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
     } else if (type == BUILDING_FORT_AUXILIA_INFANTRY) {
         fort->subtype.fort_figure_type = FIGURE_FORT_INFANTRY;
+    } else if (BUILDING_FORT_ARCHERS) {
+        fort->subtype.fort_figure_type = FIGURE_FORT_ARCHER;
     }
 
     // create parade ground
@@ -250,6 +252,7 @@ static void add_to_map(int type, building *b, int size, int orientation, int wat
         case BUILDING_FORT_JAVELIN:
         case BUILDING_FORT_MOUNTED:
         case BUILDING_FORT_AUXILIA_INFANTRY:
+        case BUILDING_FORT_ARCHERS:
             add_fort(type, b);
             break;
         case BUILDING_GRAND_TEMPLE_CERES:

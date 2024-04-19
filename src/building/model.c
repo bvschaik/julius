@@ -328,7 +328,7 @@ const model_building *model_get_building(building_type type)
         return &buildings[BUILDING_LARGE_STATUE];
     }
 
-    if (type == BUILDING_FORT_AUXILIA_INFANTRY) {
+    if (type == BUILDING_FORT_AUXILIA_INFANTRY || type == BUILDING_FORT_ARCHERS) {
         return &buildings[BUILDING_FORT_LEGIONARIES];
     }
 

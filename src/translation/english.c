@@ -1440,6 +1440,9 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BARRACKS_PRIORITY_WATCHTOWER, "Prioritize Watchtower delivery"},
     {TR_TOOLTIP_BUTTON_REJECT_DELIVERY, "Stop weapons delivery from the Armory"},
     {TR_TOOLTIP_BUTTON_ACCEPT_DELIVERY, "Allow weapons delivery from the Armory"},
+    {TR_CONFIG_SHOW_DESIRABILITY_RANGE, "Show desirability when building mausoleums and nymphaeums"},
+    {TR_BUILDING_FORT_ARCHERS, "Archers"},
+    {TR_WINDOW_ADVISOR_MILITARY_ARCHER, "Archers"}
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

@@ -658,6 +658,7 @@ static int phrase_based_on_figure_state(figure *f)
         case FIGURE_FORT_MOUNTED:
         case FIGURE_FORT_LEGIONARY:
         case FIGURE_FORT_INFANTRY:
+        case FIGURE_FORT_ARCHER:
             return soldier_phrase();
         case FIGURE_DOCKER:
             return docker_phrase(f);

@@ -33,6 +33,7 @@ static building_type get_clone_type_from_building(building *b, building_type clo
                     case FIGURE_FORT_JAVELIN: return BUILDING_FORT_JAVELIN;
                     case FIGURE_FORT_MOUNTED: return BUILDING_FORT_MOUNTED;
                     case FIGURE_FORT_INFANTRY: return BUILDING_FORT_AUXILIA_INFANTRY;
+                    case FIGURE_FORT_ARCHER: return BUILDING_FORT_ARCHERS;
                 }
             }
             return BUILDING_NONE;

@@ -329,6 +329,13 @@ void window_building_draw_legion_info(building_info_context *c)
             flag_image_id = assets_get_image_id("UI", "auxinf_banner_01");
         }
     }
+    if (m->figure_type == FIGURE_FORT_ARCHER) {
+        if (m->is_halted) {
+            flag_image_id = assets_get_image_id("UI", "auxarch_banner_0");
+        } else {
+            flag_image_id = assets_get_image_id("UI", "auxarch_banner_01");
+        }
+    }
 
     const image *flag_image = image_get(flag_image_id);
     int flag_height = flag_image->height;

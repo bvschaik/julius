@@ -167,6 +167,8 @@ static int draw_background(void)
             case FIGURE_FORT_INFANTRY:
                 text_draw(translation_for(TR_WINDOW_ADVISOR_MILITARY_INFANTRY), 84 + width, 100 + 44 * i, FONT_NORMAL_GREEN, 0);
                 break;
+            case FIGURE_FORT_ARCHER:
+                text_draw(translation_for(TR_WINDOW_ADVISOR_MILITARY_ARCHER), 84 + width, 100 + 44 * i, FONT_NORMAL_GREEN, 0);
         }
         int morale_offset = m->morale / 5;
         if (morale_offset > 20) {

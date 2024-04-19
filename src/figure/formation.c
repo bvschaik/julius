@@ -299,7 +299,8 @@ void formation_change_morale(formation *m, int amount)
         max_morale = m->has_military_training ? 90 : 80;
     } else if (m->figure_type == FIGURE_ENEMY_CAESAR_LEGIONARY) {
         max_morale = 100;
-    } else if (m->figure_type == FIGURE_FORT_JAVELIN || m->figure_type == FIGURE_FORT_MOUNTED || m->figure_type == FIGURE_FORT_INFANTRY) {
+    } else if (m->figure_type == FIGURE_FORT_JAVELIN || m->figure_type == FIGURE_FORT_MOUNTED 
+        || m->figure_type == FIGURE_FORT_INFANTRY || m->figure_type == FIGURE_FORT_ARCHER) {
         max_morale = m->has_military_training ? 70 : 60;
     } else {
         switch (m->enemy_type) {

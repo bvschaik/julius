@@ -50,6 +50,7 @@ static int get_num_rotations(building_type type)
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_MOUNTED:
         case BUILDING_FORT_AUXILIA_INFANTRY:
+        case BUILDING_FORT_ARCHERS:
         case BUILDING_WAREHOUSE:
             return 4;
         case BUILDING_HIPPODROME:
@@ -233,6 +234,7 @@ int building_rotation_type_has_rotations(building_type type)
         case BUILDING_FORT_LEGIONARIES:
         case BUILDING_FORT_MOUNTED:
         case BUILDING_FORT_AUXILIA_INFANTRY:
+        case BUILDING_FORT_ARCHERS:
         case BUILDING_WAREHOUSE:
         case BUILDING_HIPPODROME:
         case BUILDING_GATEHOUSE:

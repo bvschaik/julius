@@ -131,6 +131,7 @@ int scenario_building_allowed(int type)
         case BUILDING_FORT_JAVELIN:
         case BUILDING_FORT_MOUNTED:
         case BUILDING_FORT_AUXILIA_INFANTRY:
+        case BUILDING_FORT_ARCHERS:
             return scenario.allowed_buildings[ALLOWED_BUILDING_FORT];
         case BUILDING_MILITARY_ACADEMY:
             return scenario.allowed_buildings[ALLOWED_BUILDING_MILITARY_ACADEMY];
