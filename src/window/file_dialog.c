@@ -731,8 +731,7 @@ static void file_tooltip(const list_box_item *item, tooltip_context *c)
 
 static void handle_tooltip(tooltip_context *c)
 {
-    // TODO fix tooltips on large words
-    // list_box_handle_tooltip(&list_box, c);
+    list_box_handle_tooltip(&list_box, c);
 }
 
 void window_file_dialog_show(file_type type, file_dialog_type dialog_type)

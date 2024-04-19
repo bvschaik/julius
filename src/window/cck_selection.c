@@ -36,6 +36,7 @@ static void button_start_scenario(int param1, int param2);
 static void button_back(int param1, int param2);
 static void button_toggle_minimap(int param1, int param2);
 static void draw_scenario_item(const list_box_item *item);
+static void file_tooltip(const list_box_item *item, tooltip_context *c);
 
 static image_button start_button =
 { 600, 440, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start_scenario, button_none, 1, 0, 1 };
@@ -55,7 +56,8 @@ static list_box_type list_box = {
     .extend_to_hidden_scrollbar = 1,
     .decorate_scrollbar = 1,
     .draw_item = draw_scenario_item,
-    .on_select = select_scenario
+    .on_select = select_scenario,
+    .handle_tooltip = file_tooltip
 };
 
 static struct {
@@ -82,11 +84,9 @@ static void init(void)
 
 static void draw_scenario_item(const list_box_item *item)
 {
-    char file[FILE_NAME_MAX];
     uint8_t displayable_file[FILE_NAME_MAX];
     font_t font = item->is_selected ? FONT_NORMAL_WHITE : FONT_NORMAL_GREEN;
-    strcpy(file, data.scenarios->files[item->index].name);
-    encoding_from_utf8(file, displayable_file, FILE_NAME_MAX);
+    encoding_from_utf8(data.scenarios->files[item->index].name, displayable_file, FILE_NAME_MAX);
     file_remove_extension((char *) displayable_file);
     text_ellipsize(displayable_file, font, item->width);
     text_draw(displayable_file, item->x, item->y, font, 0);
@@ -250,6 +250,23 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
+static void file_tooltip(const list_box_item *item, tooltip_context *c)
+{
+    static uint8_t displayable_file[FILE_NAME_MAX];
+    font_t font = item->is_selected ? FONT_NORMAL_WHITE : FONT_NORMAL_GREEN;
+    encoding_from_utf8(data.scenarios->files[item->index].name, displayable_file, FILE_NAME_MAX);
+    file_remove_extension((char *) displayable_file);
+    if (text_get_width(displayable_file, font) > item->width) {
+        c->precomposed_text = displayable_file;
+        c->type = TOOLTIP_BUTTON;
+    }
+}
+
+static void handle_tooltip(tooltip_context *c)
+{
+    list_box_handle_tooltip(&list_box, c);
+}
+
 static void button_back(int param1, int param2)
 {
     window_go_back();
@@ -290,7 +307,8 @@ void window_cck_selection_show(void)
         WINDOW_CCK_SELECTION,
         draw_background,
         draw_foreground,
-        handle_input
+        handle_input,
+        handle_tooltip
     };
     init();
     window_show(&window);

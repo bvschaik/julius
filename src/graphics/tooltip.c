@@ -200,6 +200,9 @@ static void draw_button_tooltip(tooltip_context *c)
     if (y < 20) {
         y = 20;
     }
+    if (height > screen_height() - 20) {
+        height = screen_height() - 20;
+    }
 
     save_window_under_tooltip_to_buffer(x, y, width, height);
 

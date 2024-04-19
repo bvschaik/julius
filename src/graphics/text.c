@@ -241,7 +241,7 @@ void text_ellipsize(uint8_t *str, font_t font, int requested_width)
     }
 }
 
-static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
+static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars, int max_width)
 {
     const font_definition *def = font_definition_for(font);
     int width = 0;
@@ -254,6 +254,9 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
             if (word_char_seen) {
                 break;
             }
+            if (max_width && width + def->space_width >= max_width) {
+                break;
+            }
             width += def->space_width;
         } else if (*str == '$') {
             if (word_char_seen) {
@@ -263,7 +266,11 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars)
             // normal char
             int letter_id = font_letter_id(def, str, &num_bytes);
             if (letter_id >= 0) {
-                width += image_letter(letter_id)->original.width + def->letter_spacing;
+                int letter_width = image_letter(letter_id)->original.width + def->letter_spacing;
+                if (max_width && width + letter_width >= max_width) {
+                    break;
+                }
+                width += letter_width;
             }
             word_char_seen = 1;
             if (num_bytes > 1) {
@@ -589,7 +596,13 @@ int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_
         int line_index = 0;
         while (has_more_characters && current_width < box_width) {
             int word_num_chars;
-            int word_width = get_word_width(str, font, &word_num_chars);
+            int word_width = get_word_width(str, font, &word_num_chars, 0);
+            if (word_width >= box_width) {
+                word_width = get_word_width(str, font, &word_num_chars, box_width - current_width);
+                if (!word_num_chars) {
+                    current_width = box_width;
+                }
+            }
             current_width += word_width;
             if (current_width >= box_width) {
                 if (current_width == 0) {
@@ -629,7 +642,13 @@ int text_measure_multiline(const uint8_t *str, int box_width, font_t font)
         int current_width = 0;
         while (has_more_characters && current_width < box_width) {
             int word_num_chars;
-            int word_width = get_word_width(str, font, &word_num_chars);
+            int word_width = get_word_width(str, font, &word_num_chars, 0);
+            if (word_width >= box_width) {
+                word_width = get_word_width(str, font, &word_num_chars, box_width - current_width);
+                if (!word_num_chars) {
+                    current_width = box_width;
+                }
+            }
             current_width += word_width;
             if (current_width >= box_width) {
                 if (current_width == 0) {

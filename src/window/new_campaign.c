@@ -34,6 +34,7 @@ static void start_mission(int param1, int param2);
 static void button_back(int param1, int param2);
 static void draw_campaign_item(const list_box_item *item);
 static void select_campaign(int index, int is_double_click);
+static void campaign_name_tooltip(const list_box_item *item, tooltip_context *c);
 
 static image_button image_buttons[] = {
     {536, 440, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 0, start_mission, button_none, 0, 0, 1},
@@ -59,7 +60,8 @@ static list_box_type list_box = {
     .extend_to_hidden_scrollbar = 1,
     .decorate_scrollbar = 1,
     .draw_item = draw_campaign_item,
-    .on_select = select_campaign
+    .on_select = select_campaign,
+    .handle_tooltip = campaign_name_tooltip
 };
 
 static input_box player_name_input = { 304, 52, 20, 2, FONT_NORMAL_WHITE, 1, data.player_name, PLAYER_NAME_LENGTH };
@@ -237,13 +239,35 @@ static void start_mission(int param1, int param2)
     window_mission_selection_show();
 }
 
+static void campaign_name_tooltip(const list_box_item *item, tooltip_context *c)
+{
+    static uint8_t file[FILE_NAME_MAX];
+    if (item->index == ORIGINAL_CAMPAIGN_ID) {
+        string_copy(lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ORIGINAL_CAMPAIGN_NAME), file, FILE_NAME_MAX);
+    } else {
+        encoding_from_utf8(data.campaign_list->files[item->index - 1].name, file, FILE_NAME_MAX);
+        file_remove_extension((char *) file);
+    }
+    font_t font = item->is_selected ? FONT_NORMAL_WHITE : FONT_NORMAL_GREEN;
+    if (text_get_width(file, font) > item->width) {
+        c->precomposed_text = file;
+        c->type = TOOLTIP_BUTTON;
+    }
+}
+
+static void handle_tooltip(tooltip_context *c)
+{
+    list_box_handle_tooltip(&list_box, c);
+}
+
 void window_new_campaign_show(void)
 {
     window_type window = {
         WINDOW_NEW_CAMPAIGN,
         draw_background,
         draw_foreground,
-        handle_input
+        handle_input,
+        handle_tooltip
     };
     init();
     window_show(&window);
