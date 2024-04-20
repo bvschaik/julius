@@ -171,8 +171,8 @@ static void init_filtered_file_list(void)
     memset(data.filtered_file_list.files, 0, sizeof(dir_entry) * data.file_list->num_files);
 
     const char *filter = 0;
+    char filter_utf8[FILTER_TEXT_SIZE];
     if (data.dialog_type != FILE_DIALOG_SAVE && *data.filter_text) {
-        char filter_utf8[FILTER_TEXT_SIZE];
         encoding_to_utf8(data.filter_text, filter_utf8, FILTER_TEXT_SIZE, encoding_system_uses_decomposed());
         if (strlen(filter_utf8) >= MIN_FILTER_SIZE) {
             filter = filter_utf8;
