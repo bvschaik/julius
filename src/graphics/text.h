@@ -36,6 +36,6 @@ int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_
 /**
  * @return Number of lines required to draw the text
  */
-int text_measure_multiline(const uint8_t *str, int box_width, font_t font);
+int text_measure_multiline(const uint8_t *str, int box_width, font_t font, int *largest_width);
 
 #endif // GRAPHICS_TEXT_H
