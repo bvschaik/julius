@@ -736,10 +736,10 @@ int figure_movement_move_ticks_cross_country(figure *f, int num_ticks)
     int is_at_destination = 0;
     while (num_ticks > 0) {
         num_ticks--;
-        if (f->missile_damage > 0) {
-            f->missile_damage--;
+        if (f->missile_height > 0) {
+            f->missile_height--;
         } else {
-            f->missile_damage = 0;
+            f->missile_height = 0;
         }
         if (f->cc_delta_x + f->cc_delta_y <= 0) {
             is_at_destination = 1;

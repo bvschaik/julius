@@ -45,7 +45,7 @@ static void add_fort(int type, building *fort)
         fort->subtype.fort_figure_type = FIGURE_FORT_MOUNTED;
     } else if (type == BUILDING_FORT_AUXILIA_INFANTRY) {
         fort->subtype.fort_figure_type = FIGURE_FORT_INFANTRY;
-    } else if (BUILDING_FORT_ARCHERS) {
+    } else if (type == BUILDING_FORT_ARCHERS) {
         fort->subtype.fort_figure_type = FIGURE_FORT_ARCHER;
     }
 

@@ -33,7 +33,7 @@ typedef struct {
     unsigned char y;
     unsigned char previous_tile_x;
     unsigned char previous_tile_y;
-    unsigned char missile_damage;
+    unsigned char missile_height;
     unsigned char damage;
     short grid_offset;
     unsigned char destination_x;

@@ -50,16 +50,17 @@ void figure_create_explosion_cloud(int x, int y, int size)
     sound_effect_play(SOUND_EFFECT_EXPLOSION);
 }
 
-void figure_create_missile(int building_id, int x, int y, int x_dst, int y_dst, figure_type type)
+void figure_create_missile(int figure_id, int x, int y, int x_dst, int y_dst, figure_type type)
 {
     figure *f = figure_create(type, x, y, DIR_0_TOP);
+    figure *launcher = figure_get(figure_id);
     if (f->id) {
-        if (type == FIGURE_BOLT || type == FIGURE_FRIENDLY_ARROW) {
-            f->missile_damage = 60;
+        if (launcher->type == FIGURE_BALLISTA || launcher->type == FIGURE_WATCHTOWER_ARCHER) {
+            f->missile_height = 60;
         } else {
-            f->missile_damage = 10;
+            f->missile_height = 10;
         }
-        f->building_id = building_id;
+        f->building_id = figure_id;
         f->destination_x = x_dst;
         f->destination_y = y_dst;
         figure_movement_set_cross_country_direction(
