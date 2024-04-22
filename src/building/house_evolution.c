@@ -578,7 +578,8 @@ void building_house_process_evolve_and_consume_goods(void)
             if (!b->has_plague) {
                 has_expanded |= evolve_callback[b->type - BUILDING_HOUSE_VACANT_LOT](b, demands);
             }
-            if (game_time_day() == 0 || game_time_day() == 7) {
+            // 1x1 houses only consume half of the goods
+            if (game_time_day() == 0 || (game_time_day() == 7 && b->house_size > 1)) {
                 consume_resources(b);
             }
             b->last_update = last_update;
