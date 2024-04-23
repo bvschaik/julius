@@ -42,8 +42,10 @@ static int take_food_from_granary(figure *f, int market_id, int granary_id)
     if (!resource_is_food(resource)) {
         return 0;
     }
+
     building *granary = building_get(granary_id);
     building *market = building_get(market_id);
+
     int market_units = market->resources[resource];
     int max_units = 0;
     int granary_units = granary->resources[resource];

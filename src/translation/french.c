@@ -1440,6 +1440,11 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BARRACKS_PRIORITY_WATCHTOWER, "Priorité d'affectation aux Tours de guet"},
     {TR_TOOLTIP_BUTTON_REJECT_DELIVERY, "Suspendre la livraison d'armes par l'Armurerie"},
     {TR_TOOLTIP_BUTTON_ACCEPT_DELIVERY, "Autoriser la livraison d'armes par l'Armurerie"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_BARKEEP, "Autoriser les tavernières à acheter ici"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_CARAVANSERAI, "Autoriser le fournisseur du caravansérail à acheter ici"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_ARMOURY, "Autoriser les armureries à se fournir ici"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_LIGHTHOUSE, "Autoriser le gardien du phare à obtenir du bois ici"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_WORKCAMP, "Autoriser les architectes à se fournir ici"},
 };
 
 void translation_french(const translation_string **strings, int *num_strings)

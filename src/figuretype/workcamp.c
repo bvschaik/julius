@@ -4,6 +4,7 @@
 #include "building/building.h"
 #include "building/model.h"
 #include "building/monument.h"
+#include "building/storage.h"
 #include "building/warehouse.h"
 #include "city/gods.h"
 #include "city/resource.h"
@@ -114,6 +115,12 @@ void figure_workcamp_worker_action(figure *f)
                 warehouse_id = building_warehouse_with_resource(f->x, f->y, resource, b->road_network_id, 0, &dst);
                 if (!warehouse_id) {
                     continue;
+                }
+                if (warehouse_id) {
+                    building *b = building_get(warehouse_id);                    
+                    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_WORKCAMP, b)) {
+                        continue;
+                    }
                 }
                 f->collecting_item_id = resource;
                 f->destination_building_id = warehouse_id;

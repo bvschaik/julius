@@ -3,6 +3,7 @@
 #include "building/count.h"
 #include "building/model.h"
 #include "building/monument.h"
+#include "building/storage.h"
 #include "core/config.h"
 #include "city/buildings.h"
 #include "city/military.h"
@@ -20,7 +21,8 @@ static int is_valid_destination(building *b, int road_network_id)
 {
     return b->state == BUILDING_STATE_IN_USE && map_has_road_access(b->x, b->y, b->size, 0) &&
         b->distance_from_entry > 0 && b->road_network_id == road_network_id &&
-        b->resources[RESOURCE_WEAPONS] < MAX_WEAPONS_BARRACKS;
+        b->resources[RESOURCE_WEAPONS] < MAX_WEAPONS_BARRACKS &&
+        building_storage_get_permission(BUILDING_STORAGE_PERMISSION_ARMOURY, b);
 }
 
 int building_get_barracks_for_weapon(int x, int y, int resource, int road_network_id, map_point *dst)

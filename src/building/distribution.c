@@ -183,10 +183,22 @@ static int building_distribution_get_resource_storages(resource_storage_info inf
 
     int permission;
 
-    if (type == BUILDING_MESS_HALL) {
-        permission = BUILDING_STORAGE_PERMISSION_QUARTERMASTER;
-    } else {
-        permission = BUILDING_STORAGE_PERMISSION_MARKET;
+    switch (type) {
+        case BUILDING_MESS_HALL:
+            permission = BUILDING_STORAGE_PERMISSION_QUARTERMASTER;
+            break;
+        case BUILDING_TAVERN:
+            permission = BUILDING_STORAGE_PERMISSION_BARKEEP;
+            break;
+        case BUILDING_CARAVANSERAI:
+            permission = BUILDING_STORAGE_PERMISSION_CARAVANSERAI;
+            break;
+        case BUILDING_LIGHTHOUSE:
+            permission = BUILDING_STORAGE_PERMISSION_LIGHTHOUSE;
+            break;
+        default:
+            permission = BUILDING_STORAGE_PERMISSION_MARKET;
+            break;
     }
 
     if (is_food_needed(info)) {

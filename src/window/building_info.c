@@ -218,9 +218,6 @@ static int get_height_id(void)
             case BUILDING_COLOSSEUM:
                 return 8;
 
-            case BUILDING_GRANARY:
-                return 9;
-
             case BUILDING_GRAND_TEMPLE_MARS:
                 return 10;
 
@@ -457,7 +454,6 @@ static void init(int grid_offset)
         case 6: context.height_blocks = 38; break;
         case 7: context.height_blocks = 26; break;
         case 8: context.height_blocks = 40; context.width_blocks = 30; break;
-        case 9: context.height_blocks = 20; break;
         case 10: context.height_blocks = 47; context.width_blocks = 30; break;
         default: context.height_blocks = 22; break;
     }

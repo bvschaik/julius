@@ -1442,7 +1442,12 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ACCEPT_DELIVERY, "Allow weapons delivery from the Armory"},
     {TR_CONFIG_SHOW_DESIRABILITY_RANGE, "Show desirability when building mausolea and nymphaea"},
     {TR_BUILDING_FORT_ARCHERS, "Auxiliaries - Archers"},
-    {TR_WINDOW_ADVISOR_MILITARY_ARCHER, "Archers"}
+    {TR_WINDOW_ADVISOR_MILITARY_ARCHER, "Archers"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_BARKEEP, "Allow barkeep to get food here"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_CARAVANSERAI, "Allow caravanserai supplier to get food here"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_ARMOURY, "Allow armoury to get weapons here"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_LIGHTHOUSE, "Allow lighthouse keeper to get timber here"},
+    {TR_TOOLTIP_BUTTON_ACCEPT_WORKCAMP, "Allow architect to get materials here"},
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
