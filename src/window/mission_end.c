@@ -306,14 +306,14 @@ static void advance_to_next_mission(void)
         int personal_savings = calc_bound(city_emperor_personal_savings(), 0, mission_info->max_personal_savings);
         setting_set_personal_savings_for_mission(0, personal_savings);
         window_mission_selection_show();
-    } else if (scenario_campaign_rank() >= 11 || scenario_is_custom()) {
+    } else if (scenario_campaign_rank() >= 10 || scenario_is_custom()) {
         window_main_menu_show(1);
         setting_clear_personal_savings();
         scenario_settings_init();
         scenario_set_campaign_rank(2);
     } else {
-        setting_set_personal_savings_for_mission(scenario_campaign_rank() + 1, city_emperor_personal_savings());
         scenario_set_campaign_rank(scenario_campaign_rank() + 1);
+        setting_set_personal_savings_for_mission(scenario_campaign_rank(), city_emperor_personal_savings());
         scenario_set_campaign_mission(game_mission_peaceful());
         window_mission_selection_show();
     }

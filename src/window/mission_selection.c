@@ -88,15 +88,15 @@ static void load_original_campaign_rank_scenarios(int rank)
     DEFAULT_SCENARIOS[0].name = lang_get_string(144, 1 + 3 * rank + 1);
     DEFAULT_SCENARIOS[0].description = 0;
     DEFAULT_SCENARIOS[0].fanfare = "wavs/fanfare_nu1.wav";
-    DEFAULT_SCENARIOS[0].x = CAMPAIGN_SELECTION[rank].x_peaceful;
-    DEFAULT_SCENARIOS[0].y = CAMPAIGN_SELECTION[rank].y_peaceful;
+    DEFAULT_SCENARIOS[0].x = CAMPAIGN_SELECTION[rank - 2].x_peaceful;
+    DEFAULT_SCENARIOS[0].y = CAMPAIGN_SELECTION[rank - 2].y_peaceful;
 
     DEFAULT_SCENARIOS[1].id = game_mission_military();
     DEFAULT_SCENARIOS[1].name = lang_get_string(144, 1 + 3 * rank + 2);
     DEFAULT_SCENARIOS[1].description = 0;
     DEFAULT_SCENARIOS[1].fanfare = "wavs/fanfare_nu5.wav";
-    DEFAULT_SCENARIOS[1].x = CAMPAIGN_SELECTION[rank].x_military;
-    DEFAULT_SCENARIOS[1].y = CAMPAIGN_SELECTION[rank].y_military;
+    DEFAULT_SCENARIOS[1].x = CAMPAIGN_SELECTION[rank - 2].x_military;
+    DEFAULT_SCENARIOS[1].y = CAMPAIGN_SELECTION[rank - 2].y_military;
 
     data.mission.scenarios[0] = &DEFAULT_SCENARIOS[0];
     data.mission.scenarios[1] = &DEFAULT_SCENARIOS[1];
