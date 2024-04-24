@@ -126,8 +126,12 @@ static int save_screen_buffer(color_t *pixels, int x, int y, int width, int heig
         return 0;
     }
     SDL_Rect rect = { x, y, width, height };
-    return SDL_RenderReadPixels(data.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels,
+    SDL_Texture *render_texture = SDL_GetRenderTarget(data.renderer);
+    SDL_SetRenderTarget(data.renderer, NULL);
+    int result = SDL_RenderReadPixels(data.renderer, &rect, SDL_PIXELFORMAT_ARGB8888, pixels,
         row_width * sizeof(color_t)) == 0;
+    SDL_SetRenderTarget(data.renderer, render_texture);
+    return result;
 }
 
 static void draw_line(int x_start, int x_end, int y_start, int y_end, color_t color)
