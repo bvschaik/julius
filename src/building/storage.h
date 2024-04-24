@@ -45,7 +45,6 @@ typedef enum {
     BUILDING_STORAGE_PERMISSION_WORKCAMP = 9,
 } building_storage_permission_states;
 
-
 /**
  * Building storage struct
  */
