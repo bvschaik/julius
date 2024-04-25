@@ -191,10 +191,11 @@ static int get_word_width(const uint8_t *str, const font_definition *def, int in
     return width;
 }
 
-static void draw_line(const uint8_t *str, const font_definition *def, int x, int y, color_t color, int measure_only)
+static void draw_line(const uint8_t *str, const font_definition *font, int x, int y, color_t color, int measure_only)
 {
     int start_link = 0;
     int num_link_chars = 0;
+    const font_definition *def = font;
     while (*str) {
         if (*str == '@') {
             int message_id = string_to_int(++str);
@@ -206,10 +207,7 @@ static void draw_line(const uint8_t *str, const font_definition *def, int x, int
             start_link = 1;
         }
         if (*str >= ' ') {
-            if (num_link_chars > 0) {
-                def = data.link_font;
-            }
-
+            def = num_link_chars > 0 ? data.link_font : font;
             int num_bytes = 1;
             int letter_id = font_letter_id(def, str, &num_bytes);
             if (letter_id < 0) {
