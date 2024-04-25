@@ -69,6 +69,9 @@ int empire_city_get_id_by_name(const uint8_t *city_name)
 {
     empire_city *city;
     array_foreach(cities, city) {
+        if (!city->in_use) {
+            continue;
+        }
         const uint8_t *current_name = empire_city_get_name(city);
         if (string_equals(current_name, city_name)) {
             return array_index;
