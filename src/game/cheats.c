@@ -27,10 +27,10 @@
 #include "window/building_info.h"
 #include "window/city.h"
 #include "window/console.h"
+#include "window/editor/attributes.h"
 #include "window/editor/scenario_events.h"
 
 #include <string.h>
-
 
 static void game_cheat_add_money(uint8_t *);
 static void game_cheat_start_invasion(uint8_t *);
@@ -43,10 +43,10 @@ static void game_cheat_set_monument_phase(uint8_t *);
 static void game_cheat_unlock_all_buildings(uint8_t *);
 static void game_cheat_incite_riot(uint8_t *);
 static void game_cheat_show_custom_events(uint8_t *);
+static void game_cheat_show_editor(uint8_t *);
 static void game_cheat_cast_curse(uint8_t *);
 static void game_cheat_make_buildings_invincible(uint8_t *);
 static void game_cheat_change_climate(uint8_t *);
-
 
 static void (*const execute_command[])(uint8_t *args) = {
     game_cheat_add_money,
@@ -60,6 +60,7 @@ static void (*const execute_command[])(uint8_t *args) = {
     game_cheat_unlock_all_buildings,
     game_cheat_incite_riot,
     game_cheat_show_custom_events,
+    game_cheat_show_editor,
     game_cheat_cast_curse,
     game_cheat_make_buildings_invincible,
     game_cheat_change_climate
@@ -77,6 +78,7 @@ static const char *commands[] = {
     "whathaveromansdoneforus",
     "nike",
     "debug.customevents",
+    "debug.showeditor",
     "curse",
     "romanconcrete",
     "globalwarming"
@@ -275,6 +277,11 @@ static void game_cheat_incite_riot(uint8_t *args)
 static void game_cheat_show_custom_events(uint8_t *args)
 {
     window_editor_scenario_events_show();
+}
+
+static void game_cheat_show_editor(uint8_t *args)
+{
+    window_editor_attributes_show();
 }
 
 void game_cheat_parse_command(uint8_t *command)
