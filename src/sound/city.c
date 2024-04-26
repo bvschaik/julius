@@ -81,7 +81,7 @@ enum {
     SOUND_CHANNEL_CITY_RIVER = 132,
     SOUND_CHANNEL_CITY_MISSION_POST = 133,
     SOUND_CHANNEL_CITY_CONSTRUCTION_SITE = 134,
-    SOUND_CHANNEL_CITY_ARMORY = 76
+    SOUND_CHANNEL_CITY_ARMOURY = 76
 };
 
 typedef struct {
@@ -203,7 +203,7 @@ void sound_city_init(void)
     channels[62].channel = SOUND_CHANNEL_CITY_RIVER;
     channels[63].channel = SOUND_CHANNEL_CITY_MISSION_POST;
     channels[64].channel = SOUND_CHANNEL_CITY_CONSTRUCTION_SITE;
-    channels[65].channel = SOUND_CHANNEL_CITY_ARMORY;
+    channels[65].channel = SOUND_CHANNEL_CITY_ARMOURY;
 }
 
 void sound_city_set_volume(int percentage)

@@ -22,7 +22,7 @@ static int is_valid_destination(building *b, int road_network_id)
     return b->state == BUILDING_STATE_IN_USE && map_has_road_access(b->x, b->y, b->size, 0) &&
         b->distance_from_entry > 0 && b->road_network_id == road_network_id &&
         b->resources[RESOURCE_WEAPONS] < MAX_WEAPONS_BARRACKS &&
-        building_storage_get_permission(BUILDING_STORAGE_PERMISSION_ARMOURY, b);
+        b->accepted_goods[RESOURCE_WEAPONS];
 }
 
 int building_get_barracks_for_weapon(int x, int y, int resource, int road_network_id, map_point *dst)
@@ -80,16 +80,29 @@ void building_barracks_add_weapon(building *barracks)
     }
 }
 
+static int has_recruitment_priority(int current_type, int legion_type, int priority_type, int dist, int min_distance)
+{
+    if (legion_type == priority_type) {
+        if (current_type != priority_type) {
+            return 1;
+        }
+    } else if (legion_type == LEGION_RECRUIT_LEGIONARY) {
+        if (current_type != LEGION_RECRUIT_LEGIONARY) {
+            return 1;
+        }
+    }
+
+    return dist < min_distance;
+}
+
 static int get_closest_legion_needing_soldiers(const building *barracks)
 {
     int recruit_type = LEGION_RECRUIT_NONE;
     int min_formation_id = 0;
-    int min_formation_id_for_priority = 0;
     int min_distance = INFINITE;
-    int priority_recruitment = barracks->subtype.barracks_priority;
     int required_recruitment = recruit_type;
 
-    switch (priority_recruitment) {
+    switch (barracks->subtype.barracks_priority) {
         case PRIORITY_FORT: 
             required_recruitment = LEGION_RECRUIT_LEGIONARY;
             break;
@@ -103,7 +116,8 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
             required_recruitment = LEGION_RECRUIT_INFANTRY;
             break;
         case PRIORITY_FORT_AUXILIA_ARCHERY:
-            // TODO Add archer case
+            required_recruitment = LEGION_RECRUIT_ARCHER;
+            break;
         default:
             break;
     }
@@ -124,17 +138,14 @@ static int get_closest_legion_needing_soldiers(const building *barracks)
         int dist = calc_maximum_distance(barracks->x, barracks->y, fort->x, fort->y);
 
         // find closest one by priority
-        if (m->legion_recruit_type > recruit_type || (m->legion_recruit_type == recruit_type && dist < min_distance)) {
-            if (m->legion_recruit_type == required_recruitment) {
-                min_formation_id_for_priority = m->id;
-            }
+        if (has_recruitment_priority(recruit_type, m->legion_recruit_type, required_recruitment, dist, min_distance)) {
             recruit_type = m->legion_recruit_type;
             min_distance = dist;
             min_formation_id = m->id;
         }
     }
 
-    return min_formation_id_for_priority ? min_formation_id_for_priority : min_formation_id;;
+    return min_formation_id;
 }
 
 static int get_closest_military_academy(const building *fort)

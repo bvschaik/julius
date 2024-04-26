@@ -3,7 +3,6 @@
 
 #include "building/building.h"
 
-int building_armory_is_needed(building *b);
-
+int building_armoury_is_needed(building *b);
 
 #endif // BUILDING_ARMOURY_H

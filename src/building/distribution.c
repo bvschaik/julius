@@ -173,7 +173,7 @@ static int is_food_needed(const resource_storage_info info[RESOURCE_MAX])
     return 0;
 }
 
-static int building_distribution_get_resource_storages(resource_storage_info info[RESOURCE_MAX],
+static int get_resource_storages(resource_storage_info info[RESOURCE_MAX],
     building_type type, int road_network, int x, int y, int w, int h, int max_distance)
 {
     for (resource_type r = RESOURCE_MIN; r < RESOURCE_MAX; r++) {
@@ -195,6 +195,9 @@ static int building_distribution_get_resource_storages(resource_storage_info inf
             break;
         case BUILDING_LIGHTHOUSE:
             permission = BUILDING_STORAGE_PERMISSION_LIGHTHOUSE;
+            break;
+        case BUILDING_ARMOURY:
+            permission = BUILDING_STORAGE_PERMISSION_ARMOURY;
             break;
         default:
             permission = BUILDING_STORAGE_PERMISSION_MARKET;
@@ -240,13 +243,12 @@ static int building_distribution_get_resource_storages(resource_storage_info inf
 int building_distribution_get_resource_storages_for_building(resource_storage_info info[RESOURCE_MAX], building *start, int max_distance)
 {
     int size = building_properties_for_type(start->type)->size;
-    return building_distribution_get_resource_storages(info, start->type, start->road_network_id,
+    return get_resource_storages(info, start->type, start->road_network_id,
         start->x, start->y, size, size, max_distance);
 }
 
 int building_distribution_get_resource_storages_for_figure(resource_storage_info info[RESOURCE_MAX], building_type type,
     int road_network, figure *start, int max_distance)
 {
-    return building_distribution_get_resource_storages(info, type, road_network,
-        start->x, start->y, 1, 1, max_distance);
+    return get_resource_storages(info, type, road_network, start->x, start->y, 1, 1, max_distance);
 }

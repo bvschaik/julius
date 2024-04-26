@@ -86,8 +86,6 @@ static void draw_priority_buttons(int x, int y, int buttons, int building_id)
         }
         image_draw(base_priority_image_id + i * 2 + (i == priority ? 1 : 0), x_adj, y_adj, COLOR_MASK_NONE, SCALE_NONE);
     }
-    
-    window_request_refresh();
 }
 
 static void draw_delivery_buttons(int x, int y, int building_id)
@@ -110,8 +108,6 @@ static void draw_delivery_buttons(int x, int y, int building_id)
     }
     
     button_border_draw(x, y, 52, 52, data.focus_delivery_button_id || !accept_delivery ? 1 : 0);
-
-    window_request_refresh();    
 }
 
 void window_building_draw_wall(building_info_context *c)
