@@ -490,10 +490,12 @@
 	<!-- Note: Grand Temple construction footprints -->
 	<image id="Grand_Temple_Construction_Base_01" width="418" height="219" isometric="true">
 		<layer group="this" image="7x7_Construction_Footprint" x="0" y="9"/>
+		<layer src="7x7_Construction_Borders" x="0" y="9"/>
 		<layer src="Grand_Temple_Construction_Base_01"/>
 	</image>
 	<image id="Grand_Temple_Construction_Base_02" width="418" height="219" isometric="true">
 		<layer group="this" image="7x7_Construction_Footprint" x="0" y="9"/>
+		<layer src="7x7_Construction_Borders" x="0" y="9"/>
 		<layer src="Grand_Temple_Construction_Base_02"/>
 	</image>
 	<!-- Note: Ceres Large Temple 0%, 25%, 50% and 75% construction phases -->

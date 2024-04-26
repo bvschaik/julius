@@ -459,7 +459,7 @@
 	<image id="Warehouse_Flag_All_3" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a3" x="0" y="1"/>
-		<layer src="flag_icon_traders_a3" x="2" y="2"/>
+		<layer src="flag_icon_traders_a3" x="3" y="2"/>
 	</image>
 	<image id="Warehouse_Flag_All_4" width="21" height="24">
 		<layer src="flag_layer_base"/>
