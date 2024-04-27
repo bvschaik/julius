@@ -581,7 +581,7 @@ static void draw_permissions_flag(building *b, int x, int y, color_t color_mask)
     if (b->has_plague) {
         return;
     }
-    static int base_permission_image[7];
+    static int base_permission_image[8];
     if (!base_permission_image[0]) {
         base_permission_image[0] = 0xdeadbeef; // Invalid image ID, just to confirm the other values have been set
         base_permission_image[1] = assets_get_image_id("UI", "Warehouse_Flag_Market");
