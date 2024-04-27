@@ -128,6 +128,10 @@
 	<image id="Great_Library_Construction_01" width="238" height="129" isometric="true">
 		<layer group="this" image="4x4_Construction_Footprint" x="0" y="9"/>
 		<layer src="4x4_Construction_Borders" x="0" y="9"/>
+		<layer src="Construction_Part_TimberPad" x="45" y="75"/>
+		<layer src="Construction_Part_TimberPad" x="45" y="32"/>
+		<layer src="Construction_Part_TimberPad" x="134" y="32"/>
+		<layer src="Construction_Part_TimberPad" x="134" y="75"/>
 		<layer src="Great_Library_Construction_01" x="0" y="0"/>
 		<layer src="Construction_Part_Cart" x="176" y="61"/>
 		<layer src="Construction_Part_Pots_01" x="73" y="55"/>
@@ -408,6 +412,7 @@
 	<image id="Caravanserai_Construction_01" width="238" height="129" isometric="true">
 		<layer group="this" image="4x4_Construction_Footprint" x="0" y="9"/>
 		<layer src="4x4_Construction_Borders" x="0" y="9"/>
+		<layer src="Construction_Part_TimberPad" x="134" y="75"/>
 		<layer src="Caravanserai_Construction_01" x="0" y="0"/>
 		<layer src="Construction_Part_Cart" x="41" y="56"/>
 		<layer src="Construction_Part_Pots_01" x="175" y="53"/>
@@ -485,6 +490,7 @@
 	<image id="Lighthouse_Construction_01" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
+		<layer src="Construction_Part_TimberPad" x="31" y="53"/>
 		<layer src="Construction_Part_Cart" x="70" y="66"/>
 		<layer src="Lighthouse_Construction_01" x="0" y="0"/>
 	</image>
@@ -1312,6 +1318,8 @@
 		<layer group="112" image="0" x="30" y="54"/>
 		<layer group="112" image="0" x="63" y="37"/>
 		<layer group="112" image="0" x="91" y="23"/>
+		<layer src="Construction_Part_TimberPad" x="91" y="52"/>
+		<layer src="Construction_Part_TimberPad" x="34" y="22"/>
 		<layer src="Triumphal_Arch_Construction_01" x="0" y="0"/>
 		<layer src="Construction_Part_Cart" x="132" y="38"/>
 	</image>

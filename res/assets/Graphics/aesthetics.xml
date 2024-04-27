@@ -292,11 +292,27 @@
 	<image id="L Hedge 04" src="Light_Green_Hedge_Corner_02" isometric="true"/>
 	<image id="L Hedge 05" src="Light_Green_Hedge_Corner_03" isometric="true"/>
 	<image id="L Hedge 06" src="Light_Green_Hedge_Corner_04" isometric="true"/>
-	<image id="L Hedge 07" src="Light_Green_Hedge_Intersection_01" isometric="true"/>
-	<image id="L Hedge 08" src="Light_Green_Hedge_Intersection_02" isometric="true"/>
-	<image id="L Hedge 09" src="Light_Green_Hedge_Intersection_03" isometric="true"/>
-	<image id="L Hedge 10" src="Light_Green_Hedge_Intersection_04" isometric="true"/>
-	<image id="L Hedge 11" src="Light_Green_Hedge_Intersections_4w" isometric="true"/>
+	<image id="L Hedge 07" isometric="true" width="58" height="42">
+		<layer group="this" image="L Hedge 02"/>
+		<layer src="Light_Green_Hedge_Intersection_01" x="9" y="0"/>
+	</image>
+	<image id="L Hedge 08" isometric="true" width="58" height="42">
+		<layer group="this" image="L Hedge 01"/>
+		<layer src="Light_Green_Hedge_Intersection_02" x="5" y="0"/>
+	</image>
+	<image id="L Hedge 09" isometric="true" width="58" height="42">
+		<layer group="this" image="L Hedge 01"/>
+		<layer group="this" image="L Hedge 04"/>
+	</image>
+	<image id="L Hedge 10" isometric="true" width="58" height="42">
+		<layer group="this" image="L Hedge 02"/>
+		<layer group="this" image="L Hedge 04"/>
+	</image>
+	<image id="L Hedge 11" isometric="true" width="58" height="42">
+		<layer group="this" image="L Hedge 01"/>
+		<layer group="this" image="L Hedge 02"/>
+		<layer group="this" image="L Hedge 04"/>
+	</image>
 	<!-- Note: Assets for 'Verdant Hedge' including all directions and intersection variants -->
 	<image id="D Hedge 01" src="Dark_Green_Hedge" isometric="true"/>
 	<image id="D Hedge 02" src="Dark_Green_Hedge_R" isometric="true"/>
@@ -304,11 +320,27 @@
 	<image id="D Hedge 04" src="Dark_Green_Hedge_Corner_02" isometric="true"/>
 	<image id="D Hedge 05" src="Dark_Green_Hedge_Corner_03" isometric="true"/>
 	<image id="D Hedge 06" src="Dark_Green_Hedge_Corner_04" isometric="true"/>
-	<image id="D Hedge 07" src="Dark_Green_Hedge_Intersection_01" isometric="true"/>
-	<image id="D Hedge 08" src="Dark_Green_Hedge_Intersection_02" isometric="true"/>
-	<image id="D Hedge 09" src="Dark_Green_Hedge_Intersection_03" isometric="true"/>
-	<image id="D Hedge 10" src="Dark_Green_Hedge_Intersection_04" isometric="true"/>
-	<image id="D Hedge 11" src="Dark_Green_Hedge_Intersections_4w" isometric="true"/>
+	<image id="D Hedge 07" isometric="true" width="58" height="42">
+		<layer group="this" image="D Hedge 02"/>
+		<layer src="Dark_Green_Hedge_Intersection_01" x="9" y="0"/>
+	</image>
+	<image id="D Hedge 08" isometric="true" width="58" height="42">
+		<layer group="this" image="D Hedge 01"/>
+		<layer src="Dark_Green_Hedge_Intersection_02" x="5" y="0"/>
+	</image>
+	<image id="D Hedge 09" isometric="true" width="58" height="42">
+		<layer group="this" image="D Hedge 01"/>
+		<layer group="this" image="D Hedge 04"/>
+	</image>
+	<image id="D Hedge 10" isometric="true" width="58" height="42">
+		<layer group="this" image="D Hedge 02"/>
+		<layer group="this" image="D Hedge 04"/>
+	</image>
+	<image id="D Hedge 11" isometric="true" width="58" height="42">
+		<layer group="this" image="D Hedge 01"/>
+		<layer group="this" image="D Hedge 02"/>
+		<layer group="this" image="D Hedge 04"/>
+	</image>
 	<!-- Note: Assets for 'Hedge Gates' including both directions/colours -->
 	<image id="L Hedge Gate" width="58" height="56" isometric="true">
 		<layer src="Light_Green_Hedge_Gate" x="0" y="8"/>
