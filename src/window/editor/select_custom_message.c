@@ -142,7 +142,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
-        window_editor_attributes_show();
+        window_go_back();
     }
     populate_list(scrollbar.scroll_position);
 }

@@ -3,6 +3,7 @@
 #include "core/lang.h"
 #include "core/string.h"
 #include "map/grid.h"
+#include "scenario/criteria.h"
 #include "scenario/data.h"
 #include "scenario/empire.h"
 #include "scenario/property.h"
@@ -549,12 +550,14 @@ void scenario_editor_toggle_time_limit(void)
     if (scenario.win_criteria.time_limit.enabled) {
         scenario.win_criteria.survival_time.enabled = 0;
     }
+    scenario_criteria_init_max_year();
     scenario.is_saved = 0;
 }
 
 void scenario_editor_set_time_limit(int years)
 {
     scenario.win_criteria.time_limit.years = years;
+    scenario_criteria_init_max_year();
     scenario.is_saved = 0;
 }
 
@@ -564,12 +567,14 @@ void scenario_editor_toggle_survival_time(void)
     if (scenario.win_criteria.survival_time.enabled) {
         scenario.win_criteria.time_limit.enabled = 0;
     }
+    scenario_criteria_init_max_year();
     scenario.is_saved = 0;
 }
 
 void scenario_editor_set_survival_time(int years)
 {
     scenario.win_criteria.survival_time.years = years;
+    scenario_criteria_init_max_year();
     scenario.is_saved = 0;
 }
 
