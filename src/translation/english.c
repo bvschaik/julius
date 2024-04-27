@@ -1436,7 +1436,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_BARRACKS_TOWERS, "Towers"},
     {TR_TOOLTIP_BARRACKS_PRIORITY_FORT, "Prioritize training of Legionaries"},
     {TR_TOOLTIP_BARRACKS_PRIORITY_JAVELIN, "Prioritize training of Javelins"},
-    {TR_TOOLTIP_BARRACKS_PRIORITY_MOUNTED, "Prioritize training of Mounted"},
+    {TR_TOOLTIP_BARRACKS_PRIORITY_MOUNTED, "Prioritize training of Horses"},
     {TR_TOOLTIP_BARRACKS_PRIORITY_AUXINF, "Prioritize training of Swords"},
     {TR_TOOLTIP_BARRACKS_PRIORITY_AUXARCH, "Prioritize training of Archers"},
     {TR_TOOLTIP_BARRACKS_PRIORITY_TOWER, "Prioritize training of tower sentries"},
@@ -1451,12 +1451,12 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ACCEPT_ARMOURY, "Allow armories to get from here"},
     {TR_TOOLTIP_BUTTON_ACCEPT_LIGHTHOUSE, "Allow the Lighthouse to get from here"},
     {TR_TOOLTIP_BUTTON_ACCEPT_WORKCAMP, "Allow workcamps to get from here"},
-    {TR_BUILDING_FORT_LEGIONARIES, "Legonaries" },
-    {TR_WINDOW_ADVISOR_LEGIONARIES, "Legonaries" },
-    {TR_BUILDING_FORT_MOUNTED, "Auxiliaries - Mounted" },
-    {TR_WINDOW_ADVISOR_MOUNTED, "Horse" },
-    {TR_BUILDING_FORT_JAVELIN, "Auxiliaries - Javelin" },
-    {TR_WINDOW_ADVISOR_JAVELIN, "Javelin" },
+    {TR_BUILDING_FORT_LEGIONARIES, "Legionaries" },
+    {TR_WINDOW_ADVISOR_LEGIONARIES, "Legionaries" },
+    {TR_BUILDING_FORT_MOUNTED, "Auxiliaries - Horses" },
+    {TR_WINDOW_ADVISOR_MOUNTED, "Horses" },
+    {TR_BUILDING_FORT_JAVELIN, "Auxiliaries - Javelins" },
+    {TR_WINDOW_ADVISOR_JAVELIN, "Javelins" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
