@@ -258,8 +258,12 @@ static void draw_military_info_text(int x_offset, int y_offset)
         text_draw(translation_for(TR_WINDOW_ADVISOR_MILITARY_INFANTRY), x_offset + width, y_offset + 60, FONT_NORMAL_WHITE, 0);
     } else if (m->figure_type == FIGURE_FORT_ARCHER) {
         text_draw(translation_for(TR_WINDOW_ADVISOR_MILITARY_ARCHER), x_offset + width, y_offset + 60, FONT_NORMAL_WHITE, 0);
-    } else {
-        lang_text_draw(138, 46 - m->figure_type, x_offset + width, y_offset + 60, FONT_NORMAL_WHITE);
+    } else if (m->figure_type == FIGURE_FORT_LEGIONARY) {
+        text_draw(translation_for(TR_WINDOW_ADVISOR_LEGIONARIES), x_offset + width, y_offset + 60, FONT_NORMAL_WHITE, 0);
+    } else if (m->figure_type == FIGURE_FORT_JAVELIN) {
+        text_draw(translation_for(TR_WINDOW_ADVISOR_JAVELIN), x_offset + width, y_offset + 60, FONT_NORMAL_WHITE, 0);
+    } else if (m->figure_type == FIGURE_FORT_MOUNTED) {
+        text_draw(translation_for(TR_WINDOW_ADVISOR_MOUNTED), x_offset + width, y_offset + 60, FONT_NORMAL_WHITE, 0);
     }
     // No soldiers
     if (!m->num_figures) {

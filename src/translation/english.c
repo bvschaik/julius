@@ -1451,6 +1451,12 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ACCEPT_ARMOURY, "Allow armories to get from here"},
     {TR_TOOLTIP_BUTTON_ACCEPT_LIGHTHOUSE, "Allow the Lighthouse to get from here"},
     {TR_TOOLTIP_BUTTON_ACCEPT_WORKCAMP, "Allow workcamps to get from here"},
+    {TR_BUILDING_FORT_LEGIONARIES, "Legonaries" },
+    {TR_WINDOW_ADVISOR_LEGIONARIES, "Legonaries" },
+    {TR_BUILDING_FORT_MOUNTED, "Auxiliaries - Mounted" },
+    {TR_WINDOW_ADVISOR_MOUNTED, "Horse" },
+    {TR_BUILDING_FORT_JAVELIN, "Auxiliaries - Javelin" },
+    {TR_WINDOW_ADVISOR_JAVELIN, "Javelin" },
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
