@@ -321,7 +321,6 @@ int building_image_get(const building *b)
             } else {
                 return assets_get_image_id("Admin_Logistics", "Upgraded_Forum");
             }
-            return image_group(GROUP_BUILDING_FORUM);
         case BUILDING_FOUNTAIN:
             if (b->upgrade_level == 3) {
                 return scenario_property_climate() == CLIMATE_DESERT ?
