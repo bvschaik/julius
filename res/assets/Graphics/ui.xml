@@ -692,13 +692,15 @@
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a1" x="1" y="1"/>
 		<layer src="flag_icon_land_a3" x="3" y="2"/>
-		<layer src="flag_icon_land_a1_2_6_8" x="11" y="3"/>
+		<layer src="flag_icon_land_a4" x="11" y="3"/>
+		<layer src="flag_icon_land_a5" x="11" y="3"/>
 	</image>
 	<image id="Warehouse_Flag_Market_Land_2" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a2" x="1" y="1"/>
 		<layer src="flag_icon_land_a3" x="3" y="2"/>
-		<layer src="flag_icon_land_a1_2_6_8" x="11" y="3"/>
+		<layer src="flag_icon_land_a4" x="11" y="3"/>
+		<layer src="flag_icon_land_a5" x="11" y="3"/>
 	</image>
 	<image id="Warehouse_Flag_Market_Land_3" width="21" height="24">
 		<layer src="flag_layer_base"/>
@@ -715,25 +717,29 @@
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a5" x="1" y="1"/>
 		<layer src="flag_icon_land_a3" x="3" y="2"/>
+		<layer src="flag_icon_land_a4" x="11" y="3"/>
 		<layer src="flag_icon_land_a5" x="11" y="3"/>
 	</image>
 	<image id="Warehouse_Flag_Market_Land_6" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a6" x="1" y="1"/>
 		<layer src="flag_icon_land_a3" x="3" y="2"/>
-		<layer src="flag_icon_land_a1_2_6_8" x="11" y="3"/>
+		<layer src="flag_icon_land_a4" x="11" y="3"/>
+		<layer src="flag_icon_land_a5" x="11" y="3"/>
 	</image>
 	<image id="Warehouse_Flag_Market_Land_7" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a7" x="1" y="1"/>
 		<layer src="flag_icon_land_a3" x="3" y="2"/>
-		<layer src="flag_icon_land_a1_2_6_8" x="11" y="3"/>
+		<layer src="flag_icon_land_a4" x="11" y="3"/>
+		<layer src="flag_icon_land_a5" x="11" y="3"/>
 	</image>
 	<image id="Warehouse_Flag_Market_Land_8" width="21" height="24">
 		<layer src="flag_layer_base"/>
 		<layer src="flag_red_a8" x="1" y="1"/>
 		<layer src="flag_icon_land_a3" x="3" y="2"/>
-		<layer src="flag_icon_land_a1_2_6_8" x="11" y="3"/>
+		<layer src="flag_icon_land_a4" x="11" y="3"/>
+		<layer src="flag_icon_land_a5" x="11" y="3"/>
 	</image>
 	<image id="Warehouse_Flag_Market_Land" width="21" height="24">
 		<layer group="this" image="Warehouse_Flag_Market_Land_1"/>
@@ -750,7 +756,7 @@
 	<!-- Note: Flag for sea traders only -->
 	<image id="Warehouse_Flag_Sea_1" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_blue_a1" x="0" y="1"/>
+		<layer src="flag_blue_a1" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
@@ -758,7 +764,7 @@
 	</image>
 	<image id="Warehouse_Flag_Sea_2" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_blue_a2" x="0" y="1"/>
+		<layer src="flag_blue_a2" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
@@ -766,24 +772,24 @@
 	</image>
 	<image id="Warehouse_Flag_Sea_3" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_blue_a3" x="0" y="1"/>
+		<layer src="flag_blue_a3" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 	</image>
 	<image id="Warehouse_Flag_Sea_4" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_blue_a4" x="0" y="1"/>
+		<layer src="flag_blue_a4" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 	</image>
 	<image id="Warehouse_Flag_Sea_5" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_blue_a5" x="0" y="1"/>
+		<layer src="flag_blue_a5" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
 	</image>
 	<image id="Warehouse_Flag_Sea_6" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_blue_a6" x="0" y="1"/>
+		<layer src="flag_blue_a6" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
@@ -791,7 +797,7 @@
 	</image>
 	<image id="Warehouse_Flag_Sea_7" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_blue_a7" x="0" y="1"/>
+		<layer src="flag_blue_a7" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
@@ -799,7 +805,7 @@
 	</image>
 	<image id="Warehouse_Flag_Sea_8" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_blue_a8" x="0" y="1"/>
+		<layer src="flag_blue_a8" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
@@ -820,7 +826,7 @@
 	<!-- Note: Warehouse flag for market and sea traders -->
 	<image id="Warehouse_Flag_Market_Sea_1" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_red_a1" x="0" y="1"/>
+		<layer src="flag_red_a1" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
@@ -828,7 +834,7 @@
 	</image>
 	<image id="Warehouse_Flag_Market_Sea_2" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_red_a2" x="0" y="1"/>
+		<layer src="flag_red_a2" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
@@ -836,24 +842,24 @@
 	</image>
 	<image id="Warehouse_Flag_Market_Sea_3" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_red_a3" x="0" y="1"/>
+		<layer src="flag_red_a3" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 	</image>
 	<image id="Warehouse_Flag_Market_Sea_4" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_red_a4" x="0" y="1"/>
+		<layer src="flag_red_a4" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 	</image>
 	<image id="Warehouse_Flag_Market_Sea_5" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_red_a5" x="0" y="1"/>
+		<layer src="flag_red_a5" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
 	</image>
 	<image id="Warehouse_Flag_Market_Sea_6" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_red_a6" x="0" y="1"/>
+		<layer src="flag_red_a6" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
@@ -861,7 +867,7 @@
 	</image>
 	<image id="Warehouse_Flag_Market_Sea_7" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_red_a7" x="0" y="1"/>
+		<layer src="flag_red_a7" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
@@ -869,7 +875,7 @@
 	</image>
 	<image id="Warehouse_Flag_Market_Sea_8" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_red_a8" x="0" y="1"/>
+		<layer src="flag_red_a8" x="1" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 		<layer src="flag_icon_sea_a4" x="12" y="10"/>
 		<layer src="flag_icon_sea_a5" x="14" y="7"/>
