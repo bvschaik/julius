@@ -64,12 +64,15 @@
 		<layer group="this" image="3x3_Construction_Footprint" x="120" y="120"/>
 		<layer group="this" image="4x4_Construction_Footprint" x="180" y="45" invert="horizontal"/>
 	</image>
+	<!-- Note: 1x1 construction site timber pad -->
+	<image id="Construction_Part_TimberPad" src="Construction_Part_TimberPad" isometric="true"/>
 	<!-- Note: Administration Monument/s -->
 	<!-- Note: City Mint 0% and 50% construction phases -->
 	<image id="City_Mint_Construction_01" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
 		<layer src="City_Mint_Construction_01" x="0" y="0"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="31" y="53"/>
 		<layer src="Construction_Part_Cart" x="113" y="42"/>
 	</image>
 	<image id="City_Mint_Construction_02" src="City_Mint_Construction_02" width="178" height="117" isometric="true"/>
@@ -128,10 +131,10 @@
 	<image id="Great_Library_Construction_01" width="238" height="129" isometric="true">
 		<layer group="this" image="4x4_Construction_Footprint" x="0" y="9"/>
 		<layer src="4x4_Construction_Borders" x="0" y="9"/>
-		<layer src="Construction_Part_TimberPad" x="45" y="75"/>
-		<layer src="Construction_Part_TimberPad" x="45" y="32"/>
-		<layer src="Construction_Part_TimberPad" x="134" y="32"/>
-		<layer src="Construction_Part_TimberPad" x="134" y="75"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="45" y="75"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="45" y="32"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="134" y="32"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="134" y="75"/>
 		<layer src="Great_Library_Construction_01" x="0" y="0"/>
 		<layer src="Construction_Part_Cart" x="176" y="61"/>
 		<layer src="Construction_Part_Pots_01" x="73" y="55"/>
@@ -146,6 +149,7 @@
 	<image id="Circus NESW 01" width="298" height="159" isometric="true">
 		<layer group="this" image="5x5_Construction_Footprint" x="0" y="9"/>
 		<layer src="Circus_Construction_01_Back_Part" x="0" y="0"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="180" y="40"/>
 	</image>
 	<image id="Circus NWSE 01" width="298" height="159" isometric="true">
 		<layer group="this" image="5x5_Construction_Footprint" x="0" y="9"/>
@@ -162,6 +166,8 @@
 	<image id="Circus NESW 03" isometric="true">
 		<layer group="this" image="5x5_Construction_Footprint" x="0" y="0"/>
 		<layer src="Circus_Construction_01_Front_Part" x="0" y="0"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="61" y="89"/>
+		<layer src="Construction_Part_Cart" x="111" y="104"/>
 	</image>
 	<image id="Circus NWSE 03" isometric="true">
 		<layer group="this" image="5x5_Construction_Footprint" x="0" y="0"/>
@@ -176,6 +182,7 @@
 	<image id="Circus NWSE 13" width="298" height="155" isometric="true">
 		<layer group="214" image="0" part="footprint" x="0" y="-79"/>
 		<layer src="Circus_Construction_02_R_Back_Part"/>
+		<layer src="Construction_Part_Cart" x="125" y="77"/>
 	</image>
 	<image id="Circus NESW 12" width="298" height="150" isometric="true">
 		<layer group="213" image="2" part="footprint" x="0" y="-31"/>
@@ -198,10 +205,12 @@
 	<image id="Circus NESW 23" width="298" height="179" isometric="true">
 		<layer group="213" image="0" part="footprint" x="0" y="-56"/>
 		<layer src="Circus_Construction_03_Back_Part"/>
+		<layer src="Construction_Part_Cart" x="128" y="97"/>
 	</image>
 	<image id="Circus NWSE 23" width="298" height="178" isometric="true">
 		<layer group="214" image="0" part="footprint" x="0" y="-56"/>
 		<layer src="Circus_Construction_03_R_Back_Part"/>
+		<layer src="Construction_Part_Cart" x="114" y="83"/>
 	</image>
 	<image id="Circus NESW 22" width="298" height="164" isometric="true">
 		<layer group="213" image="2" part="footprint" x="0" y="-17"/>
@@ -269,7 +278,11 @@
 	<image id="Colosseum_Construction_01" width="298" height="159" isometric="true">
 		<layer group="this" image="5x5_Construction_Footprint" x="0" y="9"/>
 		<layer src="5x5_Construction_Borders" x="0" y="9"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="60" y="39"/>
 		<layer src="Colosseum_Construction_01" x="0" y="0"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="61" y="98"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="179" y="98"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="176" y="38"/>
 		<layer src="Construction_Part_Cart" x="111" y="113"/>
 		<layer src="Construction_Part_Pots_01" x="206" y="62"/>
 	</image>
@@ -412,7 +425,7 @@
 	<image id="Caravanserai_Construction_01" width="238" height="129" isometric="true">
 		<layer group="this" image="4x4_Construction_Footprint" x="0" y="9"/>
 		<layer src="4x4_Construction_Borders" x="0" y="9"/>
-		<layer src="Construction_Part_TimberPad" x="134" y="75"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="134" y="75"/>
 		<layer src="Caravanserai_Construction_01" x="0" y="0"/>
 		<layer src="Construction_Part_Cart" x="41" y="56"/>
 		<layer src="Construction_Part_Pots_01" x="175" y="53"/>
@@ -490,7 +503,7 @@
 	<image id="Lighthouse_Construction_01" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
-		<layer src="Construction_Part_TimberPad" x="31" y="53"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="31" y="53"/>
 		<layer src="Construction_Part_Cart" x="70" y="66"/>
 		<layer src="Lighthouse_Construction_01" x="0" y="0"/>
 	</image>
@@ -862,17 +875,21 @@
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
 		<layer src="Neptune_Temple_Construction_01" x="0" y="0"/>
+		<layer src="Construction_Part_Pots_01" x="83" y="64"/>
 	</image>
 	<image id="Neptune_LT_25" width="178" height="154">
 		<layer group="72" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Neptune_Temple_Ponds_Off" x="21" y="55"/>
 		<layer src="Neptune_Temple_Construction_02" x="0" y="50"/>
 	</image>
 	<image id="Neptune_LT_50" width="178" height="154">
 		<layer group="72" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Neptune_Temple_Ponds_Off" x="21" y="55"/>
 		<layer src="Neptune_Temple_Construction_03" x="0" y="29"/>
 	</image>
 	<image id="Neptune_LT_75" width="178" height="154">
 		<layer group="72" image="1" part="footprint" x="0" y="0"/>
+		<layer src="Neptune_Temple_Ponds_Off" x="21" y="55"/>
 		<layer src="Neptune_Temple_Construction_04" x="0" y="8"/>
 	</image>
 	<!-- Note: Neptune Large Temple Off state for NO Reservoir Access -->
@@ -1318,8 +1335,8 @@
 		<layer group="112" image="0" x="30" y="54"/>
 		<layer group="112" image="0" x="63" y="37"/>
 		<layer group="112" image="0" x="91" y="23"/>
-		<layer src="Construction_Part_TimberPad" x="91" y="52"/>
-		<layer src="Construction_Part_TimberPad" x="34" y="22"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="91" y="52"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="34" y="22"/>
 		<layer src="Triumphal_Arch_Construction_01" x="0" y="0"/>
 		<layer src="Construction_Part_Cart" x="132" y="38"/>
 	</image>
