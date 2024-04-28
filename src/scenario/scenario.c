@@ -610,6 +610,8 @@ void scenario_load_state(buffer *buf, buffer *buf_requests, int version)
             int uid_text_id = buffer_read_i32(buf);
             if (uid_text_id) {
                 scenario.custom_variables[i].linked_uid = message_media_text_blob_get_entry(uid_text_id);
+            } else {
+                scenario.custom_variables[i].linked_uid = 0;
             }
         }
     } else {
