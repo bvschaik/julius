@@ -143,9 +143,18 @@ static void check_barracks(int type)
     }
 }
 
+static void check_armoury(int type)
+{
+    if (type == BUILDING_BARRACKS) {
+        if (building_count_active(BUILDING_ARMOURY) <= 0) {
+            show(WARNING_NO_ARMOURY);
+        }
+    }
+}
+
 static void check_weapons_access(int type)
 {
-    if (!has_warning && type == BUILDING_BARRACKS) {
+    if (type == BUILDING_BARRACKS) {
         if (city_resource_count(RESOURCE_WEAPONS) <= 0) {
             show(WARNING_WEAPONS_NEEDED);
         }
@@ -234,6 +243,7 @@ void building_construction_warning_check_all(building_type type, int x, int y, i
 
     check_barracks(type);
     check_weapons_access(type);
+    check_armoury(type);
 
     check_wall(type, x, y, size);
     check_water(type, x, y);

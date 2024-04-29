@@ -1457,6 +1457,8 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ADVISOR_MOUNTED, "Horses" },
     {TR_BUILDING_FORT_JAVELIN, "Auxiliaries - Javelins" },
     {TR_WINDOW_ADVISOR_JAVELIN, "Javelins" },
+    {TR_WARNING_NO_ARMOURY, "Build an armory to deliver weapons to barracks" },
+
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

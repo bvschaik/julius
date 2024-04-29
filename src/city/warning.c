@@ -81,6 +81,8 @@ static const uint8_t *get_text_for_warning(warning_type type)
             return translation_for(TR_CITY_WARNING_SENATE_NEEDED);
         case WARNING_BUILD_SENATE:
             return translation_for(TR_CITY_WARNING_BUILD_SENATE);
+        case WARNING_NO_ARMOURY:
+            return translation_for(TR_WARNING_NO_ARMOURY);
         default:
            return lang_get_string(19, type - 2);
     }
