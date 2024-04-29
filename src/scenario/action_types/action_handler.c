@@ -138,3 +138,13 @@ void scenario_action_type_load_state(buffer *buf, scenario_action_t *action, int
         action->parameter1 = resource_remap(action->parameter1);        
     }
 }
+
+int scenario_action_uses_custom_variable(const scenario_action_t *action, int custom_variable_id)
+{
+    switch (action->type) {
+        case ACTION_TYPE_CHANGE_CUSTOM_VARIABLE:
+            return action->parameter1 == custom_variable_id;
+        default:
+            return 0;
+    }
+}

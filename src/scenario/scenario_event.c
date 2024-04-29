@@ -206,3 +206,22 @@ int scenario_event_execute(scenario_event_t *event)
 
     return actioned;
 }
+
+int scenario_event_uses_custom_variable(const scenario_event_t *event, int custom_variable_id)
+{
+    scenario_condition_t *current;
+    array_foreach(event->conditions, current) {
+        if (scenario_condition_uses_custom_variable(current, custom_variable_id)) {
+            return 1;
+        }
+    }
+
+    scenario_action_t *action;
+    array_foreach(event->actions, action) {
+        if (scenario_action_uses_custom_variable(action, custom_variable_id)) {
+            return 1;
+        }
+    }
+
+    return 0;
+}

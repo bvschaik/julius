@@ -284,11 +284,11 @@ static void game_cheat_show_custom_events(uint8_t *args)
 
 static void game_cheat_show_editor(uint8_t *args)
 {
+    window_editor_attributes_show();
     if (!map_editor_warning_shown) {
         window_plain_message_dialog_show(TR_CHEAT_EDITOR_WARNING_TITLE, TR_CHEAT_EDITOR_WARNING_TEXT, 1);
         map_editor_warning_shown = 1;
     }
-    window_editor_attributes_show();
 }
 
 void game_cheat_parse_command(uint8_t *command)

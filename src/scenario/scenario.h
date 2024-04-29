@@ -37,7 +37,6 @@ void scenario_settings_load_state(
 void scenario_requests_save_state(buffer *buf);
 
 custom_variable_t *scenario_custom_variable_create(const uint8_t *uid, int initial_value);
-void scenario_custom_variable_set_value(int id, int initial_value);
 void scenario_custom_variable_rename(int id, const uint8_t *name);
 void scenario_delete_all_custom_variables(void);
 custom_variable_t *scenario_get_custom_variable(int id);

@@ -860,11 +860,6 @@ custom_variable_t *scenario_custom_variable_create(const uint8_t *uid, int initi
     return &scenario.custom_variables[id];
 }
 
-void scenario_custom_variable_set_value(int id, int initial_value)
-{
-    scenario.custom_variables[id].value = initial_value;
-}
-
 void scenario_custom_variable_rename(int id, const uint8_t *name)
 {
     if (scenario.custom_variables[id].linked_uid) {

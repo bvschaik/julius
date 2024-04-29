@@ -1076,7 +1076,7 @@ static uint8_t *translation_for_type_lookup_by_value(parameter_type type, int va
     return result_text;
 }
 
-void scenario_events_parameter_data_get_display_string_for_action(scenario_action_t* action, uint8_t *result_text, int maxlength)
+void scenario_events_parameter_data_get_display_string_for_action(scenario_action_t *action, uint8_t *result_text, int maxlength)
 {
     scenario_action_data_t *xml_info = scenario_events_parameter_data_get_actions_xml_attributes(action->type);
     result_text = append_text(translation_for(xml_info->xml_attr.key), result_text, &maxlength);
@@ -1271,7 +1271,7 @@ void scenario_events_parameter_data_get_display_string_for_action(scenario_actio
     }
 }
 
-void scenario_events_parameter_data_get_display_string_for_condition(scenario_condition_t* condition, uint8_t *result_text, int maxlength)
+void scenario_events_parameter_data_get_display_string_for_condition(scenario_condition_t *condition, uint8_t *result_text, int maxlength)
 {
     scenario_condition_data_t *xml_info = scenario_events_parameter_data_get_conditions_xml_attributes(condition->type);
     result_text = append_text(translation_for(xml_info->xml_attr.key), result_text, &maxlength);

@@ -16,6 +16,7 @@
 #include "scenario/message_media_text_blob.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
+#include "scenario/scenario_events_controller.h"
 #include "window/editor/attributes.h"
 #include "window/editor/map.h"
 #include "window/numeric_input.h"
@@ -153,7 +154,8 @@ static void button_variable(int button_index, int param2)
         return;
     }
     data.target_variable = data.list[button_index]->id;
-    window_numeric_input_bound_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 9, -1000000000, 1000000000, set_variable_value);
+    window_numeric_input_bound_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 9,
+        -1000000000, 1000000000, set_variable_value);
 }
 
 static void set_variable_name(const uint8_t *value)
@@ -163,12 +165,15 @@ static void set_variable_name(const uint8_t *value)
 
 static void button_name_click(int button_index, int param2)
 {
-    if (!editor_is_active()) {
-        return;
-    }
+
     if (!data.list[button_index]) {
         return;
     };
+
+    if (!editor_is_active() && scenario_events_custom_variable_in_use(data.list[button_index]->id)) {
+        return;
+    }
+
     int has_name = data.list[button_index]->linked_uid && data.list[button_index]->linked_uid->in_use;
     if (data.select_only) {
         if (!has_name) {
@@ -190,15 +195,15 @@ static void button_name_click(int button_index, int param2)
 
 static void button_delete_variable(int button_index, int param2)
 {
-    if (!editor_is_active()) {
-        return;
-    }
     if (data.select_only) {
         return;
     }
     if (!data.list[button_index]) {
         return;
     };
+    if (!editor_is_active() && scenario_events_custom_variable_in_use(data.list[button_index]->id)) {
+        return;
+    }
     const uint8_t empty_name[2] = "";
     scenario_custom_variable_rename(data.list[button_index]->id, empty_name);
 }

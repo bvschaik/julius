@@ -108,3 +108,13 @@ void scenario_condition_type_load_state(buffer *buf, scenario_condition_t *condi
         condition->parameter1 = resource_remap(condition->parameter1);
     }
 }
+
+int scenario_condition_uses_custom_variable(const scenario_condition_t *condition, int custom_variable_id)
+{
+    switch (condition->type) {
+        case CONDITION_TYPE_CUSTOM_VARIABLE_CHECK:
+            return condition->parameter1 == custom_variable_id;
+        default:
+            return 0;
+    }
+}

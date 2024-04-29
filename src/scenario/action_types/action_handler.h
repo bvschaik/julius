@@ -10,5 +10,6 @@ int scenario_action_type_execute(scenario_action_t *action);
 void scenario_action_type_delete(scenario_action_t *action);
 void scenario_action_type_save_state(buffer *buf, const scenario_action_t *action, int link_type, int32_t link_id);
 void scenario_action_type_load_state(buffer *buf, scenario_action_t *action, int *link_type, int32_t *link_id);
+int scenario_action_uses_custom_variable(const scenario_action_t *action, int custom_variable_id);
 
 #endif // ACTION_HANDLER_H
