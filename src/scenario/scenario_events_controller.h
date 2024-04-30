@@ -23,6 +23,6 @@ void scenario_events_load_state(buffer *buf_events, buffer *buf_conditions, buff
 
 void scenario_events_process_all(void);
 void scenario_events_progress_paused(int months_passed);
-int scenario_events_custom_variable_in_use(int custom_variable_id);
+scenario_event_t *scenario_events_get_using_custom_variable(int custom_variable_id);
 
 #endif // SCENARIO_EVENTS_CONTOLLER_H

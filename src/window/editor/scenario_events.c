@@ -131,31 +131,29 @@ static void draw_foreground(void)
     outer_panel_draw(16, 16, 26, 38);
 
     text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENTS_TITLE), 48, 58, BUTTON_WIDTH, FONT_LARGE_BLACK, 0);
-    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_COUNT), data.total_events, "", 48, 106, FONT_NORMAL_PLAIN, COLOR_BLACK);
+    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_COUNT), data.total_events, "",
+        48, 106, FONT_NORMAL_PLAIN, COLOR_BLACK);
 
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (data.list[i]) {
             large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
 
             if (data.list[i]->state != EVENT_STATE_UNDEFINED) {
-                text_draw_label_and_number(0, data.list[i]->id, "", buttons[i].x, buttons[i].y + 8, FONT_NORMAL_GREEN, color_from_state(data.list[i]->state));
-                text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_CONDITIONS), data.list[i]->conditions.size, "", 100, buttons[i].y + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
-                text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_ACTIONS), data.list[i]->actions.size, "", 250, buttons[i].y + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
-
-                if (data.focus_button_id == i + 1) {
-                    button_border_draw(buttons[i].x, buttons[i].y, buttons[i].width, buttons[i].height, 1);
-                }
+                text_draw_label_and_number(0, data.list[i]->id, "", buttons[i].x, buttons[i].y + 8,
+                    FONT_NORMAL_GREEN, color_from_state(data.list[i]->state));
+                text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_CONDITIONS),
+                    data.list[i]->conditions.size, "", 100, buttons[i].y + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+                text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_ACTIONS),
+                    data.list[i]->actions.size, "", 250, buttons[i].y + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
             } else {
-                text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_DELETED), 48, buttons[i].y + 8, BUTTON_WIDTH, FONT_NORMAL_GREEN, 0);
+                text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_DELETED), 48, buttons[i].y + 8,
+                    BUTTON_WIDTH, FONT_NORMAL_GREEN, 0);
             }
         }
     }
 
     for (size_t i = 8; i < MAX_BUTTONS; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
-        if (data.focus_button_id == i + 1) {
-            button_border_draw(buttons[i].x, buttons[i].y , buttons[i].width, buttons[i].height, 1);
-        }
     }
 
     generic_button *btn = &buttons[8];
@@ -195,15 +193,6 @@ static void on_scroll(void)
     window_request_refresh();
 }
 
-static void close_window(void)
-{
-    if (editor_is_active()) {
-        window_editor_attributes_show();
-    } else {
-        window_city_show();
-    }
-}
-
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
@@ -212,7 +201,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
-        close_window();
+        window_editor_attributes_show();
     }
     populate_list(scrollbar.scroll_position);
 }

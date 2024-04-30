@@ -122,7 +122,8 @@ static void draw_background(void)
     outer_panel_draw(0, 28, 46, 34);
 
     button_border_draw(18, 278, 184, 144, 0);
-    image_draw(image_group(GROUP_EDITOR_SCENARIO_IMAGE) + scenario_image_id(), 20, 280, COLOR_MASK_NONE, SCALE_NONE);
+    int group_id = editor_is_active() ? image_group(GROUP_EDITOR_SCENARIO_IMAGE) : image_group(GROUP_SCENARIO_IMAGE);
+    image_draw(group_id + scenario_image_id(), 20, 280, COLOR_MASK_NONE, SCALE_NONE);
 
     graphics_reset_dialog();
 }

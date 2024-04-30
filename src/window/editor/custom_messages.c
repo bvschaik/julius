@@ -154,15 +154,6 @@ static void on_scroll(void)
     window_request_refresh();
 }
 
-static void close_window(void)
-{
-    if (editor_is_active()) {
-        window_editor_attributes_show();
-    } else {
-        window_city_show();
-    }
-}
-
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
@@ -171,7 +162,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
-        close_window();
+        window_editor_attributes_show();
     }
     populate_list(scrollbar.scroll_position);
 }

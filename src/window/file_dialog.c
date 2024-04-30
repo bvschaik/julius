@@ -638,7 +638,8 @@ static void button_ok_cancel(int is_ok, int param2)
                 scenario_editor_set_custom_empire(filename);
                 window_editor_empire_show();
             } else {
-                window_plain_message_dialog_show(TR_EDITOR_UNABLE_TO_LOAD_EMPIRE_TITLE, TR_EDITOR_UNABLE_TO_LOAD_EMPIRE_MESSAGE, 1);
+                window_plain_message_dialog_show(TR_EDITOR_UNABLE_TO_LOAD_EMPIRE_TITLE,
+                    TR_EDITOR_UNABLE_TO_LOAD_EMPIRE_MESSAGE, 1);
                 return;
             }
         } else if (data.type == FILE_TYPE_SCENARIO_EVENTS) {
@@ -654,7 +655,8 @@ static void button_ok_cancel(int is_ok, int param2)
             if (result) {
                 window_editor_custom_messages_show();
             } else {
-                window_plain_message_dialog_show(TR_EDITOR_UNABLE_TO_LOAD_CUSTOM_MESSAGES_TITLE, TR_EDITOR_CHECK_LOG_MESSAGE, 1);
+                window_plain_message_dialog_show(TR_EDITOR_UNABLE_TO_LOAD_CUSTOM_MESSAGES_TITLE,
+                    TR_EDITOR_CHECK_LOG_MESSAGE, 1);
                 return;
             }
         }

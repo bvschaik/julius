@@ -228,44 +228,56 @@ static void draw_foreground(void)
     }
     
     text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENTS_TITLE), 16, 32, 320, FONT_LARGE_BLACK, 0);
-    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_ID), data.event->id, "", 336, 40, FONT_NORMAL_PLAIN, COLOR_BLACK);
+    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_ID),
+        data.event->id, "", 336, 40, FONT_NORMAL_PLAIN, COLOR_BLACK);
     if (!editor_is_active()) {
-        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_STATE_UNDEFINED + data.event->state), 420, 40, 80, FONT_NORMAL_GREEN, color_from_state(data.event->state));
-        text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_EXECUTION_COUNT), data.event->execution_count, "", 40, 72, FONT_NORMAL_PLAIN, COLOR_BLACK);
-        text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_MONTHS_UNTIL_ACTIVE), data.event->months_until_active, "", 336, 72, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_STATE_UNDEFINED + data.event->state),
+            420, 40, 80, FONT_NORMAL_GREEN, color_from_state(data.event->state));
+        text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_EXECUTION_COUNT),
+            data.event->execution_count, "", 40, 72, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_MONTHS_UNTIL_ACTIVE),
+            data.event->months_until_active, "", 336, 72, FONT_NORMAL_PLAIN, COLOR_BLACK);
     }
     
-    text_draw_centered(translation_for(TR_EDITOR_DELETE), buttons[0].x, buttons[0].y + 8, buttons[0].width + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+    text_draw_centered(translation_for(TR_EDITOR_DELETE), buttons[0].x, buttons[0].y + 8, buttons[0].width + 8,
+        FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     if (data.focus_button_id == 1) {
         button_border_draw(buttons[0].x, buttons[0].y, buttons[0].width, buttons[0].height + 8, 1);
     }
 
     int y_offset = EVENT_REPEAT_Y_OFFSET;
     if (scenario_event_can_repeat(data.event) == 0) {
-        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_DOES_NOT_REPEAT), 32, y_offset + 8, SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_DOES_NOT_REPEAT), 32, y_offset + 8,
+            SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     } else if (data.event->max_number_of_repeats > 0) {
-        text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS), data.event->max_number_of_repeats, "",
-            SHORT_BUTTON_LEFT_PADDING + 16, y_offset + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS),
+            data.event->max_number_of_repeats, "", SHORT_BUTTON_LEFT_PADDING + 16, y_offset + 8,
+            FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     } else {
-        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS), 32, y_offset + 8, SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
-        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEATS_FOREVER), 240, y_offset + 8, SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS), 32, y_offset + 8,
+            SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEATS_FOREVER), 240, y_offset + 8,
+            SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     }
 
     y_offset += DETAILS_ROW_HEIGHT;
-    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEAT_MIN_MONTHS), data.event->repeat_months_min, "",
-        SHORT_BUTTON_LEFT_PADDING + 16, y_offset + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
-    
+    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEAT_MIN_MONTHS),
+        data.event->repeat_months_min, "", SHORT_BUTTON_LEFT_PADDING + 16, y_offset + 8,
+        FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+
     y_offset += DETAILS_ROW_HEIGHT;
-    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEAT_MAX_MONTHS), data.event->repeat_months_max, "",
-        SHORT_BUTTON_LEFT_PADDING + 16, y_offset + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEAT_MAX_MONTHS),
+        data.event->repeat_months_max, "", SHORT_BUTTON_LEFT_PADDING + 16, y_offset + 8,
+        FONT_NORMAL_GREEN, COLOR_MASK_NONE);
 
     y_offset = DETAILS_Y_OFFSET;
     int i_button_offset = 4;
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (data.list[i].sub_type != SUB_ITEM_TYPE_UNDEFINED) {
-            large_label_draw(buttons[i + i_button_offset].x, buttons[i + i_button_offset].y, buttons[i + i_button_offset].width / 16, data.focus_button_id == i + i_button_offset + 1 ? 1 : 0);
-            if (data.focus_button_id == (i + i_button_offset + 1)
-                && data.list[i].type) {
+            large_label_draw(buttons[i + i_button_offset].x, buttons[i + i_button_offset].y,
+                buttons[i + i_button_offset].width / 16, data.focus_button_id == i + i_button_offset + 1 ? 1 : 0);
+
+            if (data.focus_button_id == (i + i_button_offset + 1) && data.list[i].type) {
                 button_border_draw(BUTTON_LEFT_PADDING, y_offset, BUTTON_WIDTH, DETAILS_ROW_HEIGHT, 1);
             }
 
@@ -277,17 +289,20 @@ static void draw_foreground(void)
             if (data.list[i].type) {
                 text_draw(data.list[i].text, 48, y_offset + 8, FONT_NORMAL_GREEN, font_color);
             } else {
-                text_draw_centered(translation_for(TR_EDITOR_DELETED), 48, y_offset + 8, SHORT_BUTTON_WIDTH, FONT_NORMAL_PLAIN, font_color);
+                text_draw_centered(translation_for(TR_EDITOR_DELETED), 48, y_offset + 8,
+                    SHORT_BUTTON_WIDTH, FONT_NORMAL_PLAIN, font_color);
             }
         }
 
         y_offset += DETAILS_ROW_HEIGHT;
     }
 
-    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_CONDITION_ADD), 32, y_offset + 8, SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_CONDITION_ADD), 32, y_offset + 8,
+        SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
 
     y_offset += DETAILS_ROW_HEIGHT;
-    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_ACTION_ADD), 32, y_offset + 8, SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_ACTION_ADD), 32, y_offset + 8,
+        SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
 
     lang_text_draw_centered(13, 3, 48, 16 * 36, BUTTON_WIDTH, FONT_NORMAL_BLACK);
 
