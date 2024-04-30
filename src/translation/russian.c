@@ -1443,7 +1443,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_FORT_AUXILIA_INFANTRY, "Ауксиларии - Пехотинцы"},
     {TR_WINDOW_ADVISOR_MILITARY_INFANTRY, "пехотинцев"},
     {TR_BUILDING_FORT_ARCHERS, "Ауксиларии - Лучники"},
-    {TR_WINDOW_ADVISOR_MILITARY_ARCHER, "лучники"},
+    {TR_WINDOW_ADVISOR_MILITARY_ARCHER, "лучников"},
 };
 
 void translation_russian(const translation_string **strings, int *num_strings)
