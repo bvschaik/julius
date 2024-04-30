@@ -42,8 +42,8 @@
 		<release version="1.3.1" date="2020-02-24"/>
 		<release version="1.3.0" date="2020-02-14"/>
 	</releases>
-	<url type="homepage">https://github.com/keriew/augustus</url>
-	<developer_name>Tomasz Drzewiecki</developer_name>
+	<url type="homepage">https://github.com/Keriew/augustus</url>
+	<developer_name>Augustus Dev Team</developer_name>
 	<content_rating type="oars-1.1">
 		<content_attribute id="violence-fantasy">moderate</content_attribute>
 	</content_rating>
