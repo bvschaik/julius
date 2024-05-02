@@ -87,7 +87,7 @@ static int has_recruitment_priority(int current_type, int legion_type, int prior
             return 1;
         }
     } else if (legion_type == LEGION_RECRUIT_LEGIONARY) {
-        if (current_type != LEGION_RECRUIT_LEGIONARY) {
+        if (current_type != LEGION_RECRUIT_LEGIONARY && current_type != priority_type) {
             return 1;
         }
     }

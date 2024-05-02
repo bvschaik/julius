@@ -195,12 +195,9 @@ void window_building_draw_barracks(building_info_context *c)
         }
     }
 
-    lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_BARRACKS_PRIORITY, c->x_offset + 32, c->y_offset + 170, FONT_NORMAL_BLACK); // "Priority"
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 188, c->width_blocks - 2, 5);
+    lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_BARRACKS_PRIORITY,
+        c->x_offset + 32, c->y_offset + 170, FONT_NORMAL_BLACK); // "Priority"
     
-    lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_BARRACKS_FORTS, c->x_offset + 42, c->y_offset + 200, FONT_NORMAL_BROWN); // "Forts"
-    lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_BARRACKS_TOWERS, c->x_offset + 324, c->y_offset + 200, FONT_NORMAL_BROWN); // "Towers"
-
     inner_panel_draw(c->x_offset + 16, c->y_offset + 290, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 294);
     window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 298);
@@ -208,6 +205,12 @@ void window_building_draw_barracks(building_info_context *c)
 
 void window_building_draw_barracks_foreground(building_info_context *c)
 {
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 188, c->width_blocks - 2, 5);
+    lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_BARRACKS_FORTS,
+        c->x_offset + 42, c->y_offset + 200, FONT_NORMAL_BROWN); // "Forts"
+    lang_text_draw(CUSTOM_TRANSLATION, TR_WINDOW_BARRACKS_TOWERS,
+        c->x_offset + 324, c->y_offset + 200, FONT_NORMAL_BROWN); // "Towers"
+
     draw_priority_buttons(c->x_offset + 42, c->y_offset + 218, 7, data.building_id);
     draw_delivery_buttons(c->x_offset + 392, c->y_offset + 40, data.building_id);
 }
