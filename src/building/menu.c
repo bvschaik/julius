@@ -6,6 +6,7 @@
 #include "empire/city.h"
 #include "game/tutorial.h"
 #include "scenario/building.h"
+#include "scenario/property.h"
 
 #define BUILD_MENU_ITEM_MAX 30
 
@@ -147,14 +148,26 @@ static void enable_if_allowed(int *enabled, building_type menu_building_type, bu
 
 static void disable_raw(int *enabled, building_type menu_building_type, building_type type, int resource)
 {
-    if (type == menu_building_type && !empire_can_produce_resource_naturally(resource)) {
+    if (type != menu_building_type) {
+        return;
+    }
+    if (!empire_can_produce_resource_naturally(resource)) {
+        *enabled = 0;
+    }
+    if (scenario_is_tutorial_2() && resource == RESOURCE_SAND) {
         *enabled = 0;
     }
 }
 
 static void disable_finished(int *enabled, building_type menu_building_type, building_type type, int resource)
 {
-    if (type == menu_building_type && !empire_can_produce_resource_potentially(resource)) {
+    if (type != menu_building_type) {
+        return;
+    }
+    if (!empire_can_produce_resource_potentially(resource)) {
+        *enabled = 0;
+    }
+    if (scenario_is_tutorial_2() && (resource != RESOURCE_POTTERY && resource != RESOURCE_WEAPONS)) {
         *enabled = 0;
     }
 }
