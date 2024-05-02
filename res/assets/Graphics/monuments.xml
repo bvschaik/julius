@@ -128,7 +128,7 @@
 	</image>
 	<!-- Note: Education Monument/s -->
 	<!-- Note: Great Library 0%, 25%, 50%, and 75% construction phases -->
-	<image id="Great_Library_Construction_01" width="238" height="129" isometric="true">
+	<!--image id="Great_Library_Construction_01" width="238" height="129" isometric="true">
 		<layer group="this" image="4x4_Construction_Footprint" x="0" y="9"/>
 		<layer src="4x4_Construction_Borders" x="0" y="9"/>
 		<layer group="this" image="Construction_Part_TimberPad" x="45" y="75"/>
@@ -141,9 +141,9 @@
 	</image>
 	<image id="Great_Library_Construction_02" src="Great_Library_Construction_02" isometric="true"/>
 	<image id="Great_Library_Construction_03" src="Great_Library_Construction_03" isometric="true"/>
-	<image id="Great_Library_Construction_04" src="Great_Library_Construction_04" isometric="true"/>
+	<image id="Great_Library_Construction_04" src="Great_Library_Construction_04" isometric="true"/-->
 	<!-- Note: Great Library Building Asset -->
-	<image id="Great_Library" src="Great_Library" isometric="true"/>
+	<!--image id="Great_Library" src="Great_Library" isometric="true"/-->
 	<!-- Note: Entertainment Monument/s -->
 	<!-- Note: Circus 0% construction phases -->
 	<image id="Circus NESW 01" width="298" height="159" isometric="true">
@@ -1360,5 +1360,31 @@
 		<animation speed="1" x="0" y="0" reversible="false">
 			<frame group="this" image="Triumphal_Arch_Overlay_R"/>
 		</animation>
+	</image>
+	<!-- Note: Senate 2nd upgrade tier 25%, 50% and 75% construction phases -->
+	<image id="Senate_T2_Construction_02" width="298" height="181" isometric="true">
+		<layer group="62" image="0" x="0" y="0" part="footprint"/>
+		<layer src="Senate_T2_Construction_Base_01" x="20" y="68"/>
+		<layer src="Senate_T2_Construction_02" x="69" y="31"/>
+		<layer src="Senate_T2_Construction_02_Top" x="38" y="67"/>
+		<layer src="Construction_Part_Pots_01" x="123" y="135"/>
+		<layer src="Construction_Part_Cart" x="130" y="68"/>
+	</image>
+	<image id="Senate_T2_Construction_03" width="298" height="181" isometric="true">
+		<layer group="62" image="0" x="0" y="0" part="footprint"/>
+		<layer src="Senate_T2_Construction_Base_01" x="20" y="68"/>
+		<layer src="Senate_T2_Construction_02" x="69" y="31"/>
+		<layer src="Senate_T2_Construction_03" x="69" y="23"/>
+		<layer src="Senate_T2_Construction_03_Top" x="36" y="55"/>
+		<layer src="Construction_Part_Pots_01" x="123" y="136"/>
+		<layer src="Construction_Part_Cart" x="239" y="90"/>
+	</image>
+	<image id="Senate_T2_Construction_04" width="298" height="181" isometric="true">
+		<layer group="62" image="0" x="0" y="0" part="footprint"/>
+		<layer src="Senate_T2_Construction_Base_01" x="20" y="68"/>
+		<layer src="Senate_T2_Construction_04" x="43" y="4"/>
+		<layer src="Senate_T2_Construction_04_Top" x="23" y="77"/>
+		<layer src="Construction_Part_Pots_01" x="62" y="112"/>
+		<layer src="Construction_Part_Cart" x="131" y="139"/>
 	</image>
 </assetlist>

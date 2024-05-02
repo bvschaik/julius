@@ -36,7 +36,7 @@
 	<image src="Doctor_heal_plague_05"/>
 	<image src="Doctor_heal_plague_06"/>
 	<!-- Note: College Building Asset -->
-	<image id="College" src="College" isometric="true"/>
+	<!--image id="College" src="College" isometric="true"/-->
 	<!-- Note: Latrine Building Asset -->
 	<image id="Latrine_C" src="Latrine_C" width="58" height="39" isometric="true"/>
 	<image id="Latrine_N" width="58" height="39" isometric="true">
