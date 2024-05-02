@@ -772,7 +772,7 @@
 	</image>
 	<image id="Warehouse_Flag_Sea_3" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_blue_a3" x="1" y="1"/>
+		<layer src="flag_blue_a3" x="0" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 	</image>
 	<image id="Warehouse_Flag_Sea_4" width="21" height="24">
@@ -842,7 +842,7 @@
 	</image>
 	<image id="Warehouse_Flag_Market_Sea_3" width="21" height="24">
 		<layer src="flag_layer_base"/>
-		<layer src="flag_red_a3" x="1" y="1"/>
+		<layer src="flag_red_a3" x="0" y="1"/>
 		<layer src="flag_icon_sea_a3" x="4" y="2"/>
 	</image>
 	<image id="Warehouse_Flag_Market_Sea_4" width="21" height="24">
