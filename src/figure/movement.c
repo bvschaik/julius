@@ -350,7 +350,19 @@ void figure_movement_init_roaming(figure *f)
     }
 }
 
-static void roam_set_direction(figure *f)
+static int is_valid_road_for_roaming(int grid_offset, int permission)
+{
+    if (!map_terrain_is(grid_offset, TERRAIN_ROAD)) {
+        return 0;
+    }
+    if (!map_terrain_is(grid_offset, TERRAIN_BUILDING)) {
+        return 1;
+    }
+    building *b = building_get(map_building_at(grid_offset));
+    return !building_type_is_roadblock(b->type) || building_roadblock_get_permission(permission, b);
+}
+
+static void roam_set_direction(figure *f, int permission)
 {
     int grid_offset = map_grid_offset(f->x, f->y);
     int direction = calc_general_direction(f->x, f->y, f->destination_x, f->destination_y);
@@ -360,7 +372,7 @@ static void roam_set_direction(figure *f)
     int road_offset_dir1 = 0;
     int road_dir1 = 0;
     for (int i = 0, dir = direction; i < 8; i++) {
-        if (dir % 2 == 0 && map_terrain_is(grid_offset + map_grid_direction_delta(dir), TERRAIN_ROAD)) {
+        if (dir % 2 == 0 && is_valid_road_for_roaming(grid_offset + map_grid_direction_delta(dir), permission)) {
             road_dir1 = dir;
             break;
         }
@@ -373,7 +385,7 @@ static void roam_set_direction(figure *f)
     int road_offset_dir2 = 0;
     int road_dir2 = 0;
     for (int i = 0, dir = direction; i < 8; i++) {
-        if (dir % 2 == 0 && map_terrain_is(grid_offset + map_grid_direction_delta(dir), TERRAIN_ROAD)) {
+        if (dir % 2 == 0 && is_valid_road_for_roaming(grid_offset + map_grid_direction_delta(dir), permission)) {
             road_dir2 = dir;
             break;
         }
@@ -570,7 +582,7 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                 } while (!road_tiles[f->direction] && dir++ < 4);
             } else if (adjacent_road_tiles == 2) {
                 if (f->roam_ticks_until_next_turn == -1) {
-                    roam_set_direction(f);
+                    roam_set_direction(f, permission);
                     came_from_direction = -1;
                 }
                 // 1. continue in the same direction
@@ -592,7 +604,7 @@ void figure_movement_roam_ticks(figure *f, int num_ticks)
                 if (!road_tiles[f->direction] || f->direction == came_from_direction) {
                     f->roam_ticks_until_next_turn--;
                     if (f->roam_ticks_until_next_turn <= 0) {
-                        roam_set_direction(f);
+                        roam_set_direction(f, permission);
                         came_from_direction = -1;
                     }
                     int dir = 0;
