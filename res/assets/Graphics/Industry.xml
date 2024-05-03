@@ -514,7 +514,7 @@
 	<!-- Note: Sand Overlay for Supplied Workshop -->
 	<image id="Sand_Supplied_Workshop" src="Sand_Supplied_Workshop" width="25" height="21"/>
 	<!-- Note: Silver Cart -->
-	<image id="Silver_Cart_NE" width="39" height="39">
+	<!--image id="Silver_Cart_NE" width="39" height="39">
 		<layer group="97" image="0" x="0" y="0"/>
 		<layer src="Silver_Cart_NE" x="0" y="0"/>
 	</image>
@@ -545,9 +545,9 @@
 	<image id="Silver_Cart_N" width="39" height="39">
 		<layer group="97" image="7" x="0" y="0"/>
 		<layer src="Silver_Cart_N" x="0" y="0"/>
-	</image>
+	</image-->
 	<!-- Note: Silver Getting Cart -->
-	<image id="Silver_Cart_Getting_NE" width="39" height="39">
+	<!--image id="Silver_Cart_Getting_NE" width="39" height="39">
 		<layer group="97" image="0" x="0" y="0"/>
 		<layer src="Silver_Cart_Getting_NE" x="15" y="4"/>
 	</image>
@@ -578,9 +578,9 @@
 	<image id="Silver_Cart_Getting_N" width="39" height="39">
 		<layer group="97" image="7" x="0" y="0"/>
 		<layer src="Silver_Cart_Getting_N" x="15" y="4"/>
-	</image>
+	</image-->
 	<!-- Note: Silver Warehouse Tiles -->
-	<image id="Warehouse_Silver_01" isometric="true">
+	<!--image id="Warehouse_Silver_01" isometric="true">
 		<layer group="83" image="0" x="0" y="0"/>
 		<layer src="Warehouse_Silver_01" x="20" y="14"/>
 	</image>
@@ -595,7 +595,7 @@
 	<image id="Warehouse_Silver_04" isometric="true">
 		<layer group="83" image="0" x="0" y="0"/>
 		<layer src="Warehouse_Silver_04" x="9" y="1"/>
-	</image>
+	</image-->
 	<!-- Note: Plain Stone Quarry OFF - Climate Variants -->
 	<image id="Stone_Quarry_C_OFF" src="Stone_Quarry_C_OFF" width="118" height="60" isometric="true"/>
 	<image id="Stone_Quarry_N_OFF" src="Stone_Quarry_N_OFF" width="118" height="60" isometric="true"/>
@@ -750,10 +750,10 @@
 		<layer src="Warehouse_Stone_04" x="4" y="0"/>
 	</image>
 	<!-- Note: Smoke Animation Frames -->
-	<image src="Smoke_Anim_01" id="Smoke_Anim"/>
+	<!--image src="Smoke_Anim_01" id="Smoke_Anim"/>
 	<image src="Smoke_Anim_02"/>
 	<image src="Smoke_Anim_03"/>
 	<image src="Smoke_Anim_04"/>
 	<image src="Smoke_Anim_05"/>
-	<image src="Smoke_Anim_06"/>
+	<image src="Smoke_Anim_06"/-->
 </assetlist>

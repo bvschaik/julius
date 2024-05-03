@@ -343,14 +343,16 @@
 	</image>
 	<!-- Note: Assets for 'Hedge Gates' including both directions/colours -->
 	<image id="L Hedge Gate" width="58" height="56" isometric="true">
-		<layer src="Light_Green_Hedge_Gate" x="0" y="8"/>
+		<layer src="Dark_Green_Hedge_Gate" x="0" y="8"/>
+		<layer src="Light_Green_Hedge_Gate" x="10" y="8"/>
 		<layer src="Light_Green_Hedge_Gate_Top" x="15" y="0"/>
 		<animation speed="1" x="15" y="0" reversible="false">
 			<frame src="Light_Green_Hedge_Gate_Top"/>
 		</animation>
 	</image>
 	<image id="L Hedge Gate R" width="58" height="56" isometric="true">
-		<layer src="Light_Green_Hedge_R_Gate" x="24" y="8"/>
+		<layer src="Dark_Green_Hedge_R_Gate" x="24" y="8"/>
+		<layer src="Light_Green_Hedge_R_Gate" x="43" y="8"/>
 		<layer src="Light_Green_Hedge_R_Gate_Top" x="0" y="0"/>
 		<animation speed="1" x="0" y="0" reversible="false">
 			<frame src="Light_Green_Hedge_R_Gate_Top"/>
@@ -459,21 +461,42 @@
 	<image id="Garden_Wall_C_04" src="Garden_Wall_C_Corner_02" isometric="true"/>
 	<image id="Garden_Wall_C_05" src="Garden_Wall_C_Corner_03" isometric="true"/>
 	<image id="Garden_Wall_C_06" src="Garden_Wall_C_Corner_04" isometric="true"/>
-	<image id="Garden_Wall_C_07" src="Garden_Wall_C_Intersection_01" isometric="true"/>
-	<image id="Garden_Wall_C_08" src="Garden_Wall_C_Intersection_02" isometric="true"/>
-	<image id="Garden_Wall_C_09" src="Garden_Wall_C_Intersection_03" isometric="true"/>
-	<image id="Garden_Wall_C_10" src="Garden_Wall_C_Intersection_04" isometric="true"/>
-	<image id="Garden_Wall_C_11" src="Garden_Wall_C_Intersection_4w" isometric="true"/>
+	<image id="Garden_Wall_C_07" isometric="true" width="58" height="48">
+		<layer group="this" image="Garden_Wall_C_02"/>
+		<layer src="Garden_Wall_C_Intersection_01" x="12" y="0"/>
+	</image>
+	<image id="Garden_Wall_C_08" isometric="true" width="58" height="48">
+		<layer group="this" image="Garden_Wall_C_01"/>
+		<layer src="Garden_Wall_C_Intersection_02" x="29" y="0"/>
+	</image>
+	<image id="Garden_Wall_C_09" isometric="true" width="58" height="48">
+		<layer group="this" image="Garden_Wall_C_01"/>
+		<layer group="this" image="Garden_Wall_C_04"/>
+		<layer src="Garden_Wall_C_Intersection_03" x="23" y="5"/>
+	</image>
+	<image id="Garden_Wall_C_10" isometric="true" width="58" height="48">
+		<layer group="this" image="Garden_Wall_C_02"/>
+		<layer group="this" image="Garden_Wall_C_04"/>
+		<layer src="Garden_Wall_C_Intersection_04" x="30" y="5"/>
+	</image>
+	<image id="Garden_Wall_C_11" isometric="true" width="58" height="48">
+		<layer group="this" image="Garden_Wall_C_06"/>
+		<layer group="this" image="Garden_Wall_C_04"/>
+		<layer src="Garden_Wall_C_Intersection_04" x="30" y="5"/>
+		<layer src="Garden_Wall_C_Intersection_03" x="23" y="5"/>
+	</image>
 	<!-- Note: Assets for 'Panelled garden wall gate' with rotation variant -->
 	<image id="Garden_Gate_C" width="58" height="61" isometric="true">
-		<layer src="Garden_Gate_C" x="0" y="17"/>
+		<layer src="Garden_Gate_B" x="0" y="17"/>
+		<layer src="Garden_Gate_C" x="8" y="17"/>
 		<layer src="Garden_Gate_C_Top" x="7" y="0"/>
 		<animation speed="1" x="7" y="0" reversible="false">
 			<frame src="Garden_Gate_C_Top"/>
 		</animation>
 	</image>
 	<image id="Garden_Gate_C_R" width="58" height="61" isometric="true">
-		<layer src="Garden_Gate_C_R" x="23" y="17"/>
+		<layer src="Garden_Gate_B_R" x="23" y="17"/>
+		<layer src="Garden_Gate_C_R" x="46" y="17"/>
 		<layer src="Garden_Gate_C_R_Top" x="0" y="0"/>
 		<animation speed="1" x="0" y="0" reversible="false">
 			<frame src="Garden_Gate_C_R_Top"/>

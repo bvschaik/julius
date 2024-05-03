@@ -632,7 +632,7 @@
 		</animation>
 	</image>
 	<!-- Note: Assets for 'Palisade tower' with rotation and climate variants -->
-	<image id="Palisade_Tower_C" width="58" height="75" isometric="true">
+	<!--image id="Palisade_Tower_C" width="58" height="75" isometric="true">
 		<layer src="Palisade_Terrain_C" x="0" y="45"/>
 		<layer src="Palisade_Tower" x="0" y="0"/>
 	</image>
@@ -658,7 +658,7 @@
 		<layer src="Palisade_Terrain_S" x="0" y="45"/>
 		<layer src="Palisade_Tower" x="0" y="0"/>
 		<layer src="Palisade_Tower_R" x="12" y="41"/>
-	</image>
+	</image-->
 	<!-- Note: Fort climate variants -->
 	<image id="Fort_Main_Central" isometric="true">
 		<layer group="66" image="0" x="0" y="0"/>
