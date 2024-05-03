@@ -1227,7 +1227,7 @@ void window_building_warehouse_get_tooltip_distribution_permissions(int *transla
 void window_building_granary_get_tooltip_distribution_permissions(int *translation)
 {
     if (data.permission_focus_button_id) {
-        int permission = warehouse_distribution_permissions_buttons[data.permission_focus_button_id - 1].parameter1;
+        int permission = granary_distribution_permissions_buttons[data.permission_focus_button_id - 1].parameter1;
         int show_reject_tooltip = building_storage_get_permission(permission, building_get(data.building_id)) == 1;
         *translation = TR_TOOLTIP_BUTTON_ACCEPT_MARKET_LADIES + permission * 2 + show_reject_tooltip;
     }
