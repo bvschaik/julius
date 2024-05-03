@@ -157,12 +157,30 @@ int android_get_directory_contents(const char *dir, int type, const char *extens
     return match;
 }
 
+int android_create_directory(const char *name)
+{
+    int result = 0;
+    jni_function_handler handler;
+    if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "createFolder",
+        "(L" CLASS_AUGUSTUS_ACTIVITY ";Ljava/lang/String;)I", &handler)) {
+        jni_destroy_function_handler(&handler);
+        return 0;
+    }
+    jstring jname = (*handler.env)->NewStringUTF(handler.env, name);
+    result = (int) (*handler.env)->CallStaticIntMethod(
+        handler.env, handler.class, handler.method, handler.activity, jname);
+    (*handler.env)->DeleteLocalRef(handler.env, jname);
+    jni_destroy_function_handler(&handler);
+
+    return result;
+}
+
 int android_remove_file(const char *filename)
 {
     int result = 0;
     jni_function_handler handler;
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "deleteFile",
-        "(Lcom/github/Keriew/augustus/AugustusMainActivity;Ljava/lang/String;)Z", &handler)) {
+        "(L "CLASS_AUGUSTUS_ACTIVITY "; Ljava / lang / String;)Z", &handler)) {
         jni_destroy_function_handler(&handler);
         return 0;
     }

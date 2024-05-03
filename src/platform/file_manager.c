@@ -559,6 +559,15 @@ int platform_file_manager_create_directory(const char *name, int overwrite)
             }
         }
         free(wpath);
+#elif defined (__ANDROID__)
+        int result = android_create_directory(temporary_path);
+        if (result != 1) {
+            if (result == 0) {
+                return 0;
+            } else if (!overwrite) {
+                overwrite_last = 1;                
+            }
+        }
 #else
         if (mkdir(temporary_path, 0744) != 0) {
             if (errno != EEXIST) {
@@ -702,9 +711,6 @@ static int remove_file(const char *name, long unused)
 
 static int remove_directory(const char *name, long unused)
 {
-#ifdef __ANDROID__
-    return LIST_ERROR;
-#else
     if (name) {
         append_name_to_path(name);
     }
@@ -720,6 +726,8 @@ static int remove_directory(const char *name, long unused)
         wchar_t *wdir = utf8_to_wchar(directory_copy_data.current_src_path);
         result = RemoveDirectoryW(wdir) != 0;
         free(wdir);
+#elif defined(__ANDROID__)
+        return android_remove_file(directory_copy_data.current_src_path);
 #else
         result = remove(directory_copy_data.current_src_path) == 0;
 #endif
@@ -728,7 +736,6 @@ static int remove_directory(const char *name, long unused)
     move_up_path();
 
     return result;
-#endif
 }
 
 int platform_file_manager_remove_directory(const char *path)
