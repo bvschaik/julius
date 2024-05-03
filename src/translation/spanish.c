@@ -1455,7 +1455,7 @@ static translation_string all_strings[] = {
     {TR_TOOLTIP_BUTTON_ACCEPT_BARKEEP, "Permitir a las tabernas que obtengan alimentos desde aquí."},
     {TR_TOOLTIP_BUTTON_REJECT_BARKEEP, "No permitir a las tabernas que obtengan alimentos desde aquí."},
     {TR_TOOLTIP_BUTTON_ACCEPT_CARAVANSERAI, "Permitir al caravasar obtener alimentos desde aquí."},
-    {TR_TOOLTIP_BUTTON_REJECT_CARAVANSERAI, "No pacíficaermitir al caravasar obtener alimentos desde aquí."},
+    {TR_TOOLTIP_BUTTON_REJECT_CARAVANSERAI, "No permitir al caravasar obtener alimentos desde aquí."},
     {TR_TOOLTIP_BUTTON_ACCEPT_LIGHTHOUSE, "Permitir al farero obtener madera desde aquí."},
     {TR_TOOLTIP_BUTTON_REJECT_LIGHTHOUSE, "No permitir al farero obtener madera desde aquí."},
     {TR_TOOLTIP_BUTTON_ACCEPT_ARMOURY, "Permitir a las armerías que obtengan armas desde aquí."},
@@ -1466,8 +1466,8 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ADVISOR_LEGIONARIES, "Legionarios" },
     {TR_BUILDING_FORT_MOUNTED, "Auxiliares - Caballeria" },
     {TR_WINDOW_ADVISOR_MOUNTED, "Caballeria" },
-    {TR_BUILDING_FORT_JAVELIN, "Auxiliares - Javelineross" },
-    {TR_WINDOW_ADVISOR_JAVELIN, "Javelineros" },
+    {TR_BUILDING_FORT_JAVELIN, "Auxiliares - Jabalineros" },
+    {TR_WINDOW_ADVISOR_JAVELIN, "Jabalineros" },
     {TR_WARNING_NO_ARMOURY, "Construye una armería para entregar armas a los barracones" },
     
 };
