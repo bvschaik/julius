@@ -180,7 +180,7 @@ int android_remove_file(const char *filename)
     int result = 0;
     jni_function_handler handler;
     if (!jni_get_static_method_handler(CLASS_FILE_MANAGER, "deleteFile",
-        "(L "CLASS_AUGUSTUS_ACTIVITY ";Ljava/lang/String;)Z", &handler)) {
+        "(L" CLASS_AUGUSTUS_ACTIVITY ";Ljava/lang/String;)Z", &handler)) {
         jni_destroy_function_handler(&handler);
         return 0;
     }
