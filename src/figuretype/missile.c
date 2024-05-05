@@ -71,9 +71,10 @@ void figure_create_missile(int figure_id, int x, int y, int x_dst, int y_dst, fi
 
 static int is_citizen(figure *f)
 {
+    const figure_properties *target_props = figure_properties_for_type(f->type);
+    const figure_category category = target_props->category;
     if (f->action_state != FIGURE_ACTION_149_CORPSE) {
-        if (f->type && f->type != FIGURE_EXPLOSION && f->type != FIGURE_FORT_STANDARD &&
-            f->type != FIGURE_MAP_FLAG && f->type != FIGURE_FLOTSAM && (f->type < FIGURE_INDIGENOUS_NATIVE || f->type == FIGURE_TOWER_SENTRY)) {
+        if (category == FIGURE_CATEGORY_CITIZEN || category == FIGURE_CATEGORY_ARMED || category == FIGURE_CATEGORY_CRIMINAL) {
             return f->id;
         }
     }
