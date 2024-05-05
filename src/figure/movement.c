@@ -332,8 +332,8 @@ void figure_movement_init_roaming(figure *f)
     if (b->figure_roam_direction > 6) {
         b->figure_roam_direction = 0;
     }
-    int x = b->x;
-    int y = b->y;
+    int x = f->x;
+    int y = f->y;
     switch (roam_dir) {
         case DIR_0_TOP: y -= 8; break;
         case DIR_2_RIGHT: x += 8; break;

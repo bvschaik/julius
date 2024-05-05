@@ -269,7 +269,7 @@ void figure_roamer_preview_create(building_type b_type, int x, int y)
         if (map_grid_is_valid_offset(roamer.grid_offset)) {
             data.travelled_tiles.items[roamer.grid_offset] = FIGURE_ROAMER_PREVIEW_EXIT_TILE;
         }
-        init_roaming(&roamer, i * 2, x, y);
+        init_roaming(&roamer, i * 2, roamer.x, roamer.y);
         while (++roamer.roam_length < roamer.max_roam_length) {
             if (roamer.progress_on_tile == 0 && data.travelled_tiles.items[roamer.grid_offset] < FIGURE_ROAMER_PREVIEW_MAX_PASSAGES) {
                 data.travelled_tiles.items[roamer.grid_offset]++;
