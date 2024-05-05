@@ -1427,7 +1427,6 @@ static translation_string all_strings[] = {
     {TR_WINDOW_CAMPAIGN_MISSION_FAILED_TO_LOAD_TEXT, "The requested mission could not be opened.\nPlease check augustus-log.txt in your Augustus directory for details."},
     {TR_EDITOR_CAESAR_SALARY, "Caesar's salary"},
     {TR_CITY_MESSAGE_TEXT_CARAVANSERAI_COMPLETE, "The Caravanserai is now complete, and new commercial opportunities are sure to appear. Caravans from all over the world already announce that they are eager to come and trade with your city."},
-    {TR_CONFIG_SHOW_DESIRABILITY_RANGE, "Show desirability when building a Nymphaeum or Mausoleum"},
     {TR_WINDOW_BARRACKS_PRIORITY, "Recruitment Priority:"},
     {TR_WINDOW_BARRACKS_FORTS, "Forts"},
     {TR_WINDOW_BARRACKS_TOWERS, "Towers"},
