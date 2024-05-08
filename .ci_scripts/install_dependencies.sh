@@ -86,6 +86,12 @@ mkdir -p deps
 if [ "$BUILD_TARGET" == "appimage" ] || [ "$BUILD_TARGET" == "codeql-cpp" ]
 then
   sudo add-apt-repository universe && sudo add-apt-repository ppa:savoury1/multimedia && sudo apt-get update && sudo apt-get -y install libgl1-mesa-dev libsdl2-dev libsdl2-mixer-dev libfuse2
+elif [ "$BUILD_TARGET" == "flatpak" ]
+then
+  sudo apt-get update && sudo apt-get -y install flatpak-builder
+  sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+  sudo flatpak-builder repo com.github.keriew.augustus.json --install-deps-from=flathub --install-deps-only --delete-build-dirs
+  sudo rm -R .flatpak-builder
 elif [ ! -z "$SDL_VERSION" ] && [ ! -z "$SDL_MIXER_VERSION" ]
 then
   if [ "$BUILD_TARGET" == "mac" ]

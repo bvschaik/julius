@@ -88,7 +88,7 @@ elseif (EXISTS "${CMAKE_SOURCE_DIR}/.git")
             OUTPUT_STRIP_TRAILING_WHITESPACE
         )
         execute_process(
-            COMMAND git diff-index --quiet HEAD --
+            COMMAND git diff --quiet HEAD --
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
             RESULT_VARIABLE VERSION_COMMIT_DIRTY
         )

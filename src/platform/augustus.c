@@ -502,7 +502,7 @@ static int pre_init(const char *custom_data_dir)
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR,
                 "Error",
                 "Augustus requires the original files from Caesar 3.\n\n"
-                "Please insert the proper directory or copy the files to the selected directory.",
+                "Please enter the proper directory or copy the files to the selected directory.",
                 NULL);
             return 0;
         }

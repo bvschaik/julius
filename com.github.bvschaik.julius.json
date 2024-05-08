@@ -1,0 +1,27 @@
+{
+    "id" : "com.github.bvschaik.julius",
+    "runtime" : "org.freedesktop.Platform",
+    "runtime-version" : "23.08",
+    "sdk" : "org.freedesktop.Sdk",
+    "command" : "julius",
+    "finish-args" : [
+        "--filesystem=home",
+        "--share=ipc",
+        "--device=dri",
+        "--socket=wayland",
+        "--socket=fallback-x11",
+        "--socket=pulseaudio"
+    ],
+    "modules" : [
+        {
+            "name" : "julius",
+            "buildsystem" : "cmake-ninja",
+            "sources" : [
+                {
+                    "type" : "dir",
+                    "path" : "."
+                }
+            ]
+        }
+    ]
+}
