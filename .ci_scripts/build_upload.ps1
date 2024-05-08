@@ -30,7 +30,7 @@ if ("${env:COMPILER}" -eq "msvc") {
     CopyFile ext\SDL2\SDL2-${env:SDL_VERSION}\lib\x64\SDL2.dll .
     CopyFile ext\SDL2\SDL2_mixer-${env:SDL_MIXER_VERSION}\lib\x64\SDL2_mixer.dll .
 } elseif ("${env:COMPILER}" -eq "msvc-arm64") {
-    $suffix = "windows-msvc-arm64"
+    $suffix = "windows-arm64"
     CopyFile build/RelWithDebInfo/augustus.exe .
     CopyFile build/RelWithDebInfo/augustus.pdb .
     CopyFile ext\SDL2\SDL2\SDL2.dll .
@@ -107,14 +107,14 @@ if (!$env:UPLOAD_TOKEN) {
     exit
 }
 
-echo "Uploading $deploy_file to $repo/windows/$version"
-curl -u "$env:UPLOAD_TOKEN" -T "deploy/$deploy_file" "https://augustus.josecadete.net/upload/$repo/windows/$version/${deploy_file}"
+echo "Uploading $deploy_file to $repo/$suffix/$version"
+curl -u "$env:UPLOAD_TOKEN" -T "deploy/$deploy_file" "https://augustus.josecadete.net/upload/$repo/$suffix/$version/${deploy_file}"
 if (!$?) {
     throw "Unable to upload"
 }
 echo "Uploaded. URL: https://augustus.josecadete.net/$repo.html"
 
-if (!$packed_assets) {
+if (!$packed_assets -and $suffix -eq "windows") {
     echo "Packing the assets"
 
     cd .\res\asset_packer
