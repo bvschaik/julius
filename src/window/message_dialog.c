@@ -474,7 +474,7 @@ static void draw_subtitle(const lang_message *msg)
     if (msg->subtitle.x && msg->subtitle.text) {
         int width = BLOCK_SIZE * (msg->width_blocks - 1) - msg->subtitle.x;
         int height = text_draw_multiline(msg->subtitle.text,
-            data.x + msg->subtitle.x, data.y + msg->subtitle.y, width, FONT_NORMAL_BLACK, 0);
+            data.x + msg->subtitle.x, data.y + msg->subtitle.y, width, 0, FONT_NORMAL_BLACK, 0);
         if (data.y + msg->subtitle.y + height > data.y_text) {
             data.y_text = data.y + msg->subtitle.y + height;
         }

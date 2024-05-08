@@ -167,7 +167,7 @@ static int write_base_path_to(char *dest)
     if (!base_path) {
         return 0;
     }
-    strncpy(dest, base_path, FILE_NAME_MAX - 1);
+    snprintf(dest, FILE_NAME_MAX, "%s", base_path);
     SDL_free(base_path);
     return 1;
 #else
@@ -195,9 +195,7 @@ static void set_assets_directory(void)
             if (!home_dir) {
                 continue;
             }
-            size_t home_dir_length = strlen(home_dir);
-            strncpy(assets_directory, home_dir, FILE_NAME_MAX);
-            strncpy(assets_directory + home_dir_length, &ASSET_DIRS[i][1], FILE_NAME_MAX - home_dir_length);
+            snprintf(assets_directory, FILE_NAME_MAX, "%s%s", home_dir, &ASSET_DIRS[i][1]);
             // Special case - SDL base path
         } else if (strcmp(ASSET_DIRS[i], "***SDL_BASE_PATH***") == 0) {
             if (!write_base_path_to(assets_directory)) {
@@ -216,14 +214,14 @@ static void set_assets_directory(void)
             if (!parent) {
                 continue;
             }
-            strncpy(parent, "/share/augustus-game", FILE_NAME_MAX - (parent - assets_directory) - 1);
+            snprintf(parent, FILE_NAME_MAX - (parent - assets_directory), "/share/augustus-game");
 #endif
         } else if (strcmp(ASSET_DIRS[i], "***EXEC_PATH***") == 0) {
 #if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__) || defined(__APPLE__)
             log_error("***EXEC_PATH*** is not available on your platform.", 0, 0);
             continue;
 #else
-            char arg0_dir[FILE_NAME_MAX] = { 0 };
+            char arg0_dir[FILE_NAME_MAX];
             if (readlink("/proc/self/exe" /* Linux */, arg0_dir, FILE_NAME_MAX) == -1) {
                 if (readlink("/proc/curproc/file" /* FreeBSD */, arg0_dir, FILE_NAME_MAX) == -1) {
                     if (readlink("/proc/self/path/a.out" /* Solaris */, arg0_dir, FILE_NAME_MAX) == -1) {
@@ -232,7 +230,7 @@ static void set_assets_directory(void)
                 }
             }
             dirname(arg0_dir);
-            strncpy(assets_directory, arg0_dir, FILE_NAME_MAX);
+            snprintf(assets_directory, FILE_NAME_MAX, "%s", arg0_dir);
 #endif
         } else if (strcmp(ASSET_DIRS[i], "***RELATIVE_EXEC_PATH***") == 0) {
 #if defined(_WIN32) || defined(__vita__) || defined(__SWITCH__) || defined(__APPLE__)
@@ -248,21 +246,22 @@ static void set_assets_directory(void)
                 }
             }
             dirname(arg0_dir);
-            size_t arg0_dir_length = strlen(arg0_dir);
-            strncpy(assets_directory, arg0_dir, FILE_NAME_MAX);
-            strncpy(assets_directory + arg0_dir_length, "/../share/augustus-game",
-                    FILE_NAME_MAX - arg0_dir_length);
+            if (snprintf(assets_directory, FILE_NAME_MAX, "%s/../share/augustus-game", arg0_dir) > FILE_NAME_MAX) {
+                log_error("Path too long", arg0_dir, 0);
+                continue;
+            }
 #endif
         } else {
-            strncpy(assets_directory, ASSET_DIRS[i], FILE_NAME_MAX - 1);
+            snprintf(assets_directory, FILE_NAME_MAX, "%s", ASSET_DIRS[i]);
         }
         size_t offset = strlen(assets_directory);
         assets_directory[offset++] = '/';
         // Special case for romfs on switch
 #ifdef __SWITCH__
         if (strcmp(assets_directory, "romfs:/") != 0) {
+#else
+            snprintf(&assets_directory[offset], FILE_NAME_MAX - offset, "%s", ASSETS_DIR_NAME);
 #endif
-            strncpy(&assets_directory[offset], ASSETS_DIR_NAME, FILE_NAME_MAX - offset);
 #ifdef __SWITCH__
         }
 #endif
@@ -277,7 +276,7 @@ static void set_assets_directory(void)
         }
         free_file_name(result);
     }
-    strncpy(assets_directory, ".", FILE_NAME_MAX - 1);
+    snprintf(assets_directory, FILE_NAME_MAX, ".");
 #endif
 }
 
@@ -540,14 +539,19 @@ int platform_file_manager_close_file(FILE *stream)
 
 int platform_file_manager_create_directory(const char *name, int overwrite)
 {
-    char tokenized_name[FILE_NAME_MAX] = { 0 };
+    char tokenized_name[FILE_NAME_MAX];
     char temporary_path[FILE_NAME_MAX] = { 0 };
-    strncpy(tokenized_name, name, FILE_NAME_MAX - 1);
+    snprintf(tokenized_name, FILE_NAME_MAX, "%s", name);
     char *token = strtok(tokenized_name, "/\\");
     int overwrite_last = 0;
+    int cursor = 0;
     while (token) {
         overwrite_last = 0;
-        strncat(temporary_path, token, FILE_NAME_MAX - 1);
+        cursor += snprintf(&temporary_path[cursor], FILE_NAME_MAX - cursor, "%s", token);
+        if (cursor > FILE_NAME_MAX) {
+            log_error("Path too long", name, 0);
+            return 0;
+        }
 #ifdef _WIN32
         wchar_t *wpath = utf8_to_wchar(temporary_path);
         if (CreateDirectoryW(wpath, 0) == 0) {
@@ -577,7 +581,11 @@ int platform_file_manager_create_directory(const char *name, int overwrite)
             }
         }
 #endif
-        strncat(temporary_path, "/", FILE_NAME_MAX - 1);
+        cursor += snprintf(&temporary_path[cursor], FILE_NAME_MAX - cursor, "/");
+        if (cursor > FILE_NAME_MAX) {
+            log_error("Path too long", name, 0);
+            return 0;
+        }
         token = strtok(0, "/\\");
     }
     return !overwrite_last;
@@ -674,12 +682,12 @@ static void copy_directory_name(const char *name, char *dst)
     if (strncmp(name, ASSETS_DIRECTORY, strlen(ASSETS_DIRECTORY)) == 0) {
         set_assets_directory();
         if (strlen(name) == strlen(ASSETS_DIRECTORY)) {
-            strncpy(dst, assets_directory, FILE_NAME_MAX);
+            snprintf(dst, FILE_NAME_MAX, "%s", assets_directory);
         } else {
             snprintf(dst, FILE_NAME_MAX, "%s%s", assets_directory, name + strlen(assets_directory));
         }
     } else {
-        strncpy(dst, name, FILE_NAME_MAX);
+        snprintf(dst, FILE_NAME_MAX, "%s", name);
     }
 
     char *cursor = dst;

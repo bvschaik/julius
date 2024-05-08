@@ -167,10 +167,10 @@ static void select_asset(int index, int unused)
     free(data.selected_asset_id);
     data.selected_asset_id = 0;
     if (img->id) {
-        size_t id_length = strlen(img->id) + 1;
-        data.selected_asset_id = malloc(id_length * sizeof(char));
+        size_t id_length = (strlen(img->id) + 1) * sizeof(char);
+        data.selected_asset_id = malloc(id_length);
         if (data.selected_asset_id) {
-            strncpy(data.selected_asset_id, img->id, id_length);
+            snprintf(data.selected_asset_id, id_length, "%s", img->id);
         }
     }
     if (data.animation.enabled) {
@@ -233,7 +233,7 @@ static int update_asset_groups_list(void)
     static char original_file[FILE_NAME_MAX];
 
     for (int i = 0; i < data.xml_files->num_files; i++) {
-        strncpy(original_file, data.xml_files->files[i].name, FILE_NAME_MAX - 1);
+        snprintf(original_file, FILE_NAME_MAX, "%s", data.xml_files->files[i].name);
         file_remove_extension(original_file);
         int size = (int) strlen(original_file) + 1;
         uint8_t *file = malloc(sizeof(uint8_t) * size);

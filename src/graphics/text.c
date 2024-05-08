@@ -285,22 +285,6 @@ static int get_word_width(const uint8_t *str, font_t font, int *out_num_chars, i
     return width;
 }
 
-void text_draw_centered_with_linebreaks(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color)
-{
-    int count = 0;
-    char *split;
-
-    char oldstr[512];
-    strcpy(oldstr, (char *) str);
-
-    split = strtok(oldstr, "\n");
-    while (split != NULL) {
-        text_draw_centered((uint8_t *) split, x, y + (20 * count), box_width, font, color);
-        count++;
-        split = strtok(NULL, "\n");
-    }
-}
-
 void text_draw_centered(const uint8_t *str, int x, int y, int box_width, font_t font, color_t color)
 {
     int offset = (box_width - text_get_width(str, font)) / 2;
@@ -575,7 +559,8 @@ void text_draw_number_centered_colored(
     text_draw_centered(str, x_offset, y_offset, box_width, font, color);
 }
 
-int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_width, font_t font, uint32_t color)
+int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_width,
+    int centered, font_t font, color_t color)
 {
     int line_height = font_definition_for(font)->line_height;
     if (line_height < 11) {
@@ -594,37 +579,36 @@ int text_draw_multiline(const uint8_t *str, int x_offset, int y_offset, int box_
         }
         int current_width = 0;
         int line_index = 0;
-        while (has_more_characters && current_width < box_width) {
+        while (has_more_characters) {
             int word_num_chars;
             int word_width = get_word_width(str, font, &word_num_chars, 0);
             if (word_width >= box_width) {
                 word_width = get_word_width(str, font, &word_num_chars, box_width - current_width);
                 if (!word_num_chars) {
-                    current_width = box_width;
-                }
-            }
-            current_width += word_width;
-            if (current_width >= box_width) {
-                if (current_width == 0) {
                     has_more_characters = 0;
-                }
-            } else {
-                for (int i = 0; i < word_num_chars; i++) {
-                    if (line_index == 0 && *str <= ' ') {
-                        str++; // skip whitespace at start of line
-                    } else {
-                        tmp_line[line_index++] = *str++;
-                    }
-                }
-                if (!*str) {
-                    has_more_characters = 0;
-                } else if (*str == '\n') {
-                    str++;
                     break;
                 }
             }
+            if (current_width + word_width >= box_width) {
+                break;
+            }
+            current_width += word_width;
+            for (int i = 0; i < word_num_chars; i++) {
+                if (line_index == 0 && *str <= ' ') {
+                    str++; // skip whitespace at start of line
+                } else {
+                    tmp_line[line_index++] = *str++;
+                }
+            }
+            if (!*str) {
+                has_more_characters = 0;
+            } else if (*str == '\n') {
+                str++;
+                break;
+            }
         }
-        text_draw(tmp_line, x_offset, y, font, color);
+        int line_offset = centered ? (box_width - current_width) / 2 : 0;
+        text_draw(tmp_line, x_offset + line_offset, y, font, color);
         y += line_height + 5;
     }
     return y - y_offset;

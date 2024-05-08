@@ -233,10 +233,7 @@ uint8_t *custom_messages_get_text(custom_message_t *message)
 static const char *check_for_file_in_dir(const char *filename, const char *directory)
 {
     static char filepath[FILE_NAME_MAX];
-    strncpy(filepath, directory, FILE_NAME_MAX);
-    size_t directory_length = strlen(directory);
-    strncpy(&filepath[directory_length], filename, FILE_NAME_MAX - directory_length);
-    filepath[FILE_NAME_MAX - 1] = 0;
+    snprintf(filepath, FILE_NAME_MAX, "%s%s", directory, filename);
     return campaign_has_file(filepath) || file_exists(filepath, MAY_BE_LOCALIZED) ? filepath : 0;
 }
 

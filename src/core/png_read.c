@@ -55,7 +55,7 @@ int png_load_from_file(const char *path, int is_asset)
         return 0;
     }
     data.cache.type = CACHE_TYPE_FILE;
-    strncpy(data.cache.path, path, FILE_NAME_MAX - 1);
+    snprintf(data.cache.path, FILE_NAME_MAX, "%s", path);
     return 1;
 }
 

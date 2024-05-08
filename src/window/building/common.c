@@ -214,7 +214,7 @@ static void window_building_draw_monument_resources_needed(building_info_context
         }
     } else {
         text_draw_multiline(translation_for(TR_BUILDING_MONUMENT_CONSTRUCTION_ARCHITECT_NEEDED),
-            c->x_offset + 22, c->y_offset + 95, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+            c->x_offset + 22, c->y_offset + 95, BLOCK_SIZE * (c->width_blocks - 4), 0, FONT_NORMAL_BLACK, 0);
     }
 }
 
@@ -228,7 +228,7 @@ void window_building_draw_monument_construction_process(building_info_context *c
             window_building_draw_description(c, CUSTOM_TRANSLATION,
                 TR_WINDOW_BUILDING_INFO_WARNING_NO_MONUMENT_ROAD_ACCESS);
             text_draw_multiline(translation_for(tr_construction_desc),
-                c->x_offset + 22, c->y_offset + 180, 16 * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+                c->x_offset + 22, c->y_offset + 180, 16 * (c->width_blocks - 4), 0, FONT_NORMAL_BLACK, 0);
             return;
         }
         int width = text_draw(translation_for(TR_CONSTRUCTION_PHASE),
@@ -242,14 +242,16 @@ void window_building_draw_monument_construction_process(building_info_context *c
         text_draw(translation_for(TR_REQUIRED_RESOURCES), c->x_offset + 22, c->y_offset + 70, FONT_NORMAL_BLACK, 0);
         window_building_draw_monument_resources_needed(c);
         int height = text_draw_multiline(translation_for(tr_phase_name_text + b->monument.phase - 1),
-            c->x_offset + 22, c->y_offset + 170, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+            c->x_offset + 22, c->y_offset + 170, BLOCK_SIZE * (c->width_blocks - 4), 0, FONT_NORMAL_BLACK, 0);
 
         if (building_monument_is_construction_halted(b)) {
             height += text_draw_multiline(translation_for(TR_BUILDING_MONUMENT_CONSTRUCTION_HALTED),
-                c->x_offset + 22, c->y_offset + 180 + height, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+                c->x_offset + 22, c->y_offset + 180 + height, BLOCK_SIZE * (c->width_blocks - 4),
+                0, FONT_NORMAL_BLACK, 0);
         } else {
             height += text_draw_multiline(translation_for(tr_construction_desc),
-                c->x_offset + 22, c->y_offset + 180 + height, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+                c->x_offset + 22, c->y_offset + 180 + height, BLOCK_SIZE * (c->width_blocks - 4),
+                0, FONT_NORMAL_BLACK, 0);
         }
         if (c->height_blocks > 26) {
             int phase_offset = b->monument.phase % 2;

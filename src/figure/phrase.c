@@ -15,7 +15,7 @@
 #include "figuretype/trader.h"
 #include "sound/speech.h"
 
-#include <string.h>
+#include <stdio.h>
 
 #define SOUND_FILENAME_MAX 32
 
@@ -269,8 +269,7 @@ static void play_sound_file(int sound_id, int phrase_id)
 {
     if (sound_id >= 0 && phrase_id >= 0) {
         char path[SOUND_FILENAME_MAX];
-        strcpy(path, "wavs/");
-        strcat(path, FIGURE_SOUNDS[sound_id][phrase_id]);
+        snprintf(path, SOUND_FILENAME_MAX, "wavs/%s", FIGURE_SOUNDS[sound_id][phrase_id]);
         sound_speech_play_file(path);
     }
 }

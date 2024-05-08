@@ -238,7 +238,7 @@ static void draw_button_tooltip(tooltip_context *c)
 
     graphics_draw_rect(0, 0, width, height, COLOR_BLACK);
     graphics_fill_rect(1, 1, width - 2, height - 2, COLOR_WHITE);
-    text_draw_multiline(text, 8, 8, width - 15, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    text_draw_multiline(text, 8, 8, width - 15, 0, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
     graphics_renderer()->finish_tooltip_creation();
 }
@@ -286,7 +286,7 @@ static void draw_overlay_tooltip(tooltip_context *c)
 
     graphics_draw_rect(0, 0, width, height, COLOR_BLACK);
     graphics_fill_rect(1, 1, width - 2, height - 2, COLOR_WHITE);
-    text_draw_multiline(text, 8, 8, width - 15, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    text_draw_multiline(text, 8, 8, width - 15, 0, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 
     graphics_renderer()->finish_tooltip_creation();
 

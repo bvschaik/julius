@@ -27,8 +27,7 @@ static void xml_end_image_element(void);
 static void xml_end_animation_element(void);
 
 static struct {
-    char file_name[FILE_NAME_MAX];
-    size_t file_name_position;
+    char base_path[FILE_NAME_MAX];
     int finished;
     int in_animation;
     image_groups *current_group;
@@ -49,8 +48,7 @@ static const char *ROTATE_VALUES[3] = { "90", "180", "270" };
 
 static void set_asset_image_base_path(const char *name)
 {
-    snprintf(data.file_name, FILE_NAME_MAX, "%s/%s/", ASSETS_IMAGE_PATH, name);
-    data.file_name_position = strlen(data.file_name);
+    snprintf(data.base_path, FILE_NAME_MAX, "%s/%s", ASSETS_IMAGE_PATH, name);
 }
 
 static int xml_start_assetlist_element(void)
@@ -271,13 +269,13 @@ int xml_process_assetlist_file(const char *xml_file_name)
     }
 #ifdef BUILDING_ASSET_PACKER
     else {
-        size_t xml_file_name_length = strlen(xml_file_name);
-        char *path = malloc(sizeof(char *) * (xml_file_name_length + 1));
+        size_t buf_size = sizeof(char *) * (strlen(xml_file_name) + 1);
+        char *path = malloc(buf_size);
         if (!path) {
             error = 1;
             group_unload_current();
         } else {
-            strcpy(path, xml_file_name);
+            memcpy(path, xml_file_name, buf_size);
             group_get_current()->path = path;
         }
     }
@@ -298,9 +296,7 @@ void xml_finish(void)
 
 void xml_get_full_image_path(char *full_path, const char *image_file_name)
 {
-    strncpy(full_path, data.file_name, data.file_name_position);
-    size_t file_name_size = strlen(image_file_name);
-    strncpy(full_path + data.file_name_position, image_file_name, FILE_NAME_MAX - data.file_name_position);
-    strncpy(full_path + data.file_name_position + file_name_size, ".png",
-        FILE_NAME_MAX - data.file_name_position - file_name_size);
+    if (snprintf(full_path, FILE_NAME_MAX, "%s/%s.png", data.base_path, image_file_name) > FILE_NAME_MAX) {
+        log_error("Image path too long", image_file_name, 0);
+    }
 }

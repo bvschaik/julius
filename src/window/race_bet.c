@@ -80,7 +80,7 @@ static void draw_background(void)
 
     text_draw_centered(translation_for(TR_WINDOW_RACE_BET_TITLE), 0, 20, BLOCK_SIZE * data.width_blocks, FONT_LARGE_BLACK, 0);
 
-    text_draw_multiline(translation_for(TR_WINDOW_RACE_BET_DESCRIPTION), 25, 65, 438, FONT_NORMAL_BLACK, 0);
+    text_draw_multiline(translation_for(TR_WINDOW_RACE_BET_DESCRIPTION), 25, 65, 438, 0, FONT_NORMAL_BLACK, 0);
 
     inner_panel_draw(18, 300, 28, 2);
     text_draw_centered(translation_for(TR_WINDOW_RACE_BET_AMOUNT), 18, 310, 80, FONT_NORMAL_WHITE, 0);
@@ -95,7 +95,7 @@ static void draw_background(void)
         horse_description = TR_WINDOW_RACE_BLUE_HORSE_DESCRIPTION + data.chosen_horse - 1;
     }
     if (horse_description) {
-        text_draw_multiline(translation_for(horse_description), 25, 250, 438, FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(translation_for(horse_description), 25, 250, 438, 0, FONT_NORMAL_BLACK, 0);
     }
 
     int button_enabled = data.bet_amount > 0 && data.chosen_horse != 0 && !data.in_progress_bet;

@@ -342,7 +342,8 @@ static void set_native_target_building(formation *m)
     if (min_building) {
         formation_set_destination_building(m, min_building->x, min_building->y, min_building->id);
     } else {
-        int dst_x, dst_y;
+        int dst_x = 0;
+        int dst_y = 0;
         int has_target = get_structures_on_native_land(&dst_x, &dst_y);
         if (has_target) {
             formation_set_destination_building(m, dst_x, dst_y, 0);

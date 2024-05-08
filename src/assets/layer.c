@@ -335,12 +335,13 @@ static char *copy_attribute(const char *attribute)
     if (!attribute) {
         return 0;
     }
-    char *dest = malloc((strlen(attribute) + 1) * sizeof(char));
+    size_t buf_size = (strlen(attribute) + 1) * sizeof(char);
+    char *dest = malloc(buf_size);
     if (!dest) {
         log_error("There was no memory to copy the attribute", attribute, 0);
         return 0;
     }
-    strcpy(dest, attribute);
+    memcpy(dest, attribute, buf_size);
     return dest;
 }
 #endif

@@ -795,7 +795,7 @@ void window_building_draw_granary(building_info_context *c)
             } else if (f->loads_sold_or_carrying) {
                 text_draw_multiline(translation_for(TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_RETURNING_WITH),
                     c->x_offset + 64, c->y_offset + y_offset + 63,
-                    BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN, 0);
+                    BLOCK_SIZE * (c->width_blocks - 5), 0, FONT_NORMAL_BROWN, 0);
             } else {
                 lang_text_draw_multiline(99, 17, c->x_offset + 64, c->y_offset + y_offset + 63,
                     BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN);
@@ -803,7 +803,7 @@ void window_building_draw_granary(building_info_context *c)
         } else {
             text_draw_multiline(translation_for(TR_WINDOW_BUILDING_DISTRIBUTION_GRANARY_CART_PUSHER_GETTING),
                 c->x_offset + 64, c->y_offset + y_offset + 63,
-                BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN, 0);
+                BLOCK_SIZE * (c->width_blocks - 5), 0, FONT_NORMAL_BROWN, 0);
         }
     } else if (b->num_workers) {
         // cartpusher is waiting for orders
@@ -1085,7 +1085,7 @@ void window_building_draw_warehouse(building_info_context *c)
             } else if (f->loads_sold_or_carrying) {
                 text_draw_multiline(translation_for(TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_RETURNING_WITH),
                     c->x_offset + 64, c->y_offset + y_offset + 63,
-                    BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN, 0);
+                    BLOCK_SIZE * (c->width_blocks - 5), 0, FONT_NORMAL_BROWN, 0);
             } else {
                 lang_text_draw_multiline(99, 17, c->x_offset + 64, c->y_offset + y_offset + 63,
                     BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN);
@@ -1094,7 +1094,8 @@ void window_building_draw_warehouse(building_info_context *c)
             image_draw(resource_get_data(f->collecting_item_id)->image.icon,
                 c->x_offset + 32, c->y_offset + y_offset + 60, COLOR_MASK_NONE, SCALE_NONE);
             text_draw_multiline(translation_for(TR_WINDOW_BUILDING_DISTRIBUTION_CART_PUSHER_GETTING),
-                c->x_offset + 64, c->y_offset + y_offset + 63, BLOCK_SIZE * (c->width_blocks - 5), FONT_NORMAL_BROWN, 0);
+                c->x_offset + 64, c->y_offset + y_offset + 63, BLOCK_SIZE * (c->width_blocks - 5),
+                0, FONT_NORMAL_BROWN, 0);
         }
     } else if (b->num_workers) {
         // cartpusher is waiting for orders
@@ -1481,17 +1482,17 @@ void window_building_draw_mess_hall(building_info_context *c)
 
         if (city_mess_hall_food_types() == 2) {
             text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_1), c->x_offset + 32,
-                c->y_offset + 175 + y_offset, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+                c->y_offset + 175 + y_offset, BLOCK_SIZE * (c->width_blocks - 4), 0, FONT_NORMAL_BLACK, 0);
         } else if (city_mess_hall_food_types() >= 3) {
             text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_FOOD_TYPES_BONUS_2), c->x_offset + 32,
-                c->y_offset + 175 + y_offset, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+                c->y_offset + 175 + y_offset, BLOCK_SIZE * (c->width_blocks - 4), 0, FONT_NORMAL_BLACK, 0);
         }
     } else {
         text_draw_centered(translation_for(TR_BUILDING_MESS_HALL_NO_SOLDIERS), c->x_offset, c->y_offset + 150 + y_offset,
             BLOCK_SIZE * (c->width_blocks), FONT_NORMAL_BLACK, 0);
     }
     text_draw_multiline(translation_for(TR_BUILDING_MESS_HALL_DESC), c->x_offset + 32, c->y_offset + 226 + y_offset,
-        BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+        BLOCK_SIZE * (c->width_blocks - 4), 0, FONT_NORMAL_BLACK, 0);
 
     inner_panel_draw(c->x_offset + 16, c->y_offset + 308 + y_offset, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 308 + y_offset);
@@ -1560,10 +1561,10 @@ void window_building_draw_caravanserai(building_info_context *c)
         }
         if (building_monument_has_labour_problems(b)) {
             text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_NEEDS_WORKERS),
-                c->x_offset + 22, c->y_offset + 80 + y_offset, 15 * c->width_blocks, FONT_NORMAL_BLACK, 0);
+                c->x_offset + 22, c->y_offset + 80 + y_offset, 15 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
         } else {
             text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_DESC), c->x_offset + 32,
-                c->y_offset + 80 + y_offset, BLOCK_SIZE * (c->width_blocks - 4), FONT_NORMAL_BLACK, 0);
+                c->y_offset + 80 + y_offset, BLOCK_SIZE * (c->width_blocks - 4), 0, FONT_NORMAL_BLACK, 0);
         }
         if (!land_trade_policy.items[0].image_id) {
             int base_policy_image = assets_get_image_id("UI",
@@ -1577,10 +1578,10 @@ void window_building_draw_caravanserai(building_info_context *c)
         trade_policy policy = city_trade_policy_get(LAND_TRADE_POLICY);
 
         text_draw_multiline(translation_for(land_trade_policy.items[policy].header),
-            c->x_offset + 160, c->y_offset + 156 + y_offset, 260, FONT_NORMAL_BLACK, 0);
+            c->x_offset + 160, c->y_offset + 156 + y_offset, 260, 0, FONT_NORMAL_BLACK, 0);
         if (policy != NO_POLICY) {
             text_draw_multiline(translation_for(land_trade_policy.items[policy].desc),
-                c->x_offset + 160, c->y_offset + 181 + y_offset, 260, FONT_NORMAL_BLACK, 0);
+                c->x_offset + 160, c->y_offset + 181 + y_offset, 260, 0, FONT_NORMAL_BLACK, 0);
         }
         image_draw(land_trade_policy.items[policy].image_id, c->x_offset + 32, c->y_offset + 150 + y_offset,
             COLOR_MASK_NONE, SCALE_NONE);

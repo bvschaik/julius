@@ -74,17 +74,11 @@ static int asset_close(void *asset)
 
 void *asset_handler_open_asset(const char *asset_name, const char *mode)
 {
-    static char location[FILE_NAME_MAX];
-    static int assets_dir_length;
-    if (!assets_dir_length) {
-        assets_dir_length = strlen(ASSETS_DIR_NAME) + 1;
-        strncpy(location, ASSETS_DIR_NAME, FILE_NAME_MAX);
-        location[assets_dir_length - 1] = '/';
-    }
+    char location[FILE_NAME_MAX];
 
     switch (assets_location) {
         case ASSETS_LOCATION_DIRECTORY:
-            strncpy(location + assets_dir_length, asset_name, FILE_NAME_MAX - assets_dir_length - 1);
+            snprintf(location, FILE_NAME_MAX, "%s/%s", ASSETS_DIR_NAME, asset_name);
             int fd = android_get_file_descriptor(location, mode);
             if (!fd) {
                 return 0;

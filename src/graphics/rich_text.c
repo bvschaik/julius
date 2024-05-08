@@ -297,8 +297,7 @@ int rich_text_parse_image_id(const uint8_t **position, int default_image_group, 
         cursor += length + 1;
         char *location = malloc((length + 1) * sizeof(char));
         if (location) {
-            strncpy(location, begin, length);
-            location[length] = 0;
+            snprintf(location, length + 1, "%s", begin);
             char *divider = strchr(location, ':');
             // "[<asset group name>:<asset image name>]"
             if (divider) {
@@ -374,6 +373,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
         int current_width = x_line_offset;
         const font_definition *def = heading ? data.heading_font : data.normal_font;
         paragraph = 0;
+        int centered = heading;
         while (!line_break && (has_more_characters || lines_to_skip)) {
             if (lines_to_skip) {
                 lines_to_skip--;
@@ -415,6 +415,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
                                 lines_to_skip = 1;
                             } else {
                                 def = data.heading_font;
+                                centered = 1;
                             }
                             text++;
                             break;
@@ -483,7 +484,7 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
             }
         }
         if (!outside_viewport) {
-            if (def == data.heading_font) {
+            if (centered) {
                 x_line_offset = (box_width - current_width) / 2;
             }
             draw_line(tmp_line, def, x_line_offset + x_offset, y, color, measure_only);

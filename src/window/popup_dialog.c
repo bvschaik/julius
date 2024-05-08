@@ -77,7 +77,7 @@ static void draw_background(void)
         text_draw_centered(data.custom_title, 80, 100, 480, FONT_LARGE_BLACK, 0);
     }
     if (text_get_width(data.custom_text, FONT_NORMAL_BLACK) >= 420) {
-        text_draw_multiline(data.custom_text, 110, 140, 420, FONT_NORMAL_BLACK, 0);
+        text_draw_multiline(data.custom_text, 110, 140, 420, 0, FONT_NORMAL_BLACK, 0);
     } else {
         text_draw_centered(data.custom_text, 80, 140, 480, FONT_NORMAL_BLACK, 0);
     }

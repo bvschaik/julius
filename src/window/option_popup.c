@@ -129,7 +129,7 @@ static void draw_background(void)
     outer_panel_draw(0, 0, data.width_blocks, data.height_blocks);
 
     text_draw_centered(translation_for(data.title), 0, 20, 480, FONT_LARGE_BLACK, 0);
-    text_draw_multiline(translation_for(data.subtitle), 20, 60, 440, FONT_NORMAL_BLACK, 0);
+    text_draw_multiline(translation_for(data.subtitle), 20, 60, 440, 0, FONT_NORMAL_BLACK, 0);
     if (data.price) {
         text_draw_with_money(translation_for(TR_OPTION_MENU_COST), data.price, " ", ".",
             20, 110, 0, FONT_NORMAL_BLACK, 0);
@@ -154,10 +154,10 @@ static void draw_background(void)
                 Y_OFFSET_PER_OPTION[data.row_size] / 16 - 1);
         }
         text_draw_multiline(translation_for(data.options[i + scrollbar.scroll_position].header),
-            text_x, y_offset + 49, text_width - 8,
+            text_x, y_offset + 49, text_width - 8, 0,
             data.selected_option == i + scrollbar.scroll_position + 1 ? FONT_NORMAL_WHITE : FONT_NORMAL_BLACK, 0);
         text_draw_multiline(translation_for(data.options[i + scrollbar.scroll_position].desc),
-            text_x, y_offset + 69, text_width - 8,
+            text_x, y_offset + 69, text_width - 8, 0,
             data.selected_option == i + scrollbar.scroll_position + 1 ? FONT_NORMAL_WHITE : FONT_NORMAL_BLACK, 0);
 
 

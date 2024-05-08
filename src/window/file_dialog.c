@@ -7,6 +7,7 @@
 #include "core/file.h"
 #include "core/image_group.h"
 #include "core/lang.h"
+#include "core/log.h"
 #include "core/string.h"
 #include "core/time.h"
 #include "editor/empire.h"
@@ -222,7 +223,7 @@ static void init(file_type type, file_dialog_type dialog_type)
     data.message_not_exist_start_time = 0;
 
     if (strlen(data.file_data->last_loaded_file) > 0) {
-        strncpy(data.selected_file, data.file_data->last_loaded_file, FILE_NAME_MAX);
+        snprintf(data.selected_file, FILE_NAME_MAX, "%s", data.file_data->last_loaded_file);
         if (data.dialog_type == FILE_DIALOG_SAVE) {
             file_remove_extension(data.selected_file);
         }
@@ -547,15 +548,19 @@ static void input_box_changed(int is_addition_at_end)
 static const char *prepare_filename(void)
 {
     static char filename[FILE_NAME_MAX];
-    memset(filename, 0, sizeof(filename));
+    int result = 0;
     if (data.type == FILE_TYPE_EMPIRE) {
-        strncpy(filename, "custom_empires/", FILE_NAME_MAX - 1);
+        result = snprintf(filename, FILE_NAME_MAX, "custom_empires/%s", data.selected_file);
     } else if (data.type == FILE_TYPE_SCENARIO_EVENTS) {
-        strncpy(filename, "editor/events/", FILE_NAME_MAX - 1);
+        result = snprintf(filename, FILE_NAME_MAX, "editor/events/%s", data.selected_file);
     } else if (data.type == FILE_TYPE_CUSTOM_MESSAGES) {
-        strncpy(filename, "editor/messages/", FILE_NAME_MAX - 1);
+        result = snprintf(filename, FILE_NAME_MAX, "editor/messages/%s", data.selected_file);
+    } else {
+        result = snprintf(filename, FILE_NAME_MAX, "%s", data.selected_file);
     }
-    strncat(filename, data.selected_file, sizeof(filename) - strlen(filename));
+    if (result > FILE_NAME_MAX) {
+        log_info("Output is truncated", data.selected_file, 0);
+    }
     return filename;
 }
 
@@ -586,7 +591,7 @@ static void confirm_save_file(int accepted, int checked)
         custom_messages_export_to_xml(filename);
         window_editor_custom_messages_show();
     }
-    strncpy(data.file_data->last_loaded_file, data.selected_file, FILE_NAME_MAX);
+    snprintf(data.file_data->last_loaded_file, FILE_NAME_MAX, "%s", data.selected_file);
 }
 
 static void button_ok_cancel(int is_ok, int param2)
@@ -661,7 +666,7 @@ static void button_ok_cancel(int is_ok, int param2)
             }
         }
         input_box_stop(&main_input);
-        strncpy(data.file_data->last_loaded_file, data.selected_file, FILE_NAME_MAX);
+        snprintf(data.file_data->last_loaded_file, FILE_NAME_MAX, "%s", data.selected_file);
     } else if (data.dialog_type == FILE_DIALOG_SAVE) {
         if (config_get(CONFIG_UI_ASK_CONFIRMATION_ON_FILE_OVERWRITE) && file_exists(filename, NOT_LOCALIZED)) {
             window_popup_dialog_show_confirmation(lang_get_string(CUSTOM_TRANSLATION, TR_SAVE_DIALOG_OVERWRITE_FILE),
@@ -678,7 +683,7 @@ static void button_ok_cancel(int is_ok, int param2)
             init_filtered_file_list();
             list_box_update_total_items(&list_box, data.filtered_file_list.num_files);
             select_correct_index();
-            strncpy(data.file_data->last_loaded_file, data.selected_file, FILE_NAME_MAX);
+            snprintf(data.file_data->last_loaded_file, FILE_NAME_MAX, "%s", data.selected_file);
             window_request_refresh();
         }
     }
@@ -704,7 +709,7 @@ static void select_file(int index, int is_double_click)
     }
     if (strcmp(data.selected_file, data.filtered_file_list.files[index].name) != 0) {
         data.message_not_exist_start_time = 0;
-        strncpy(data.selected_file, data.filtered_file_list.files[index].name, FILE_NAME_MAX - 1);
+        snprintf(data.selected_file, FILE_NAME_MAX, "%s", data.filtered_file_list.files[index].name);
         if (data.dialog_type == FILE_DIALOG_SAVE) {
             file_remove_extension(data.selected_file);
         }

@@ -373,7 +373,7 @@ void scenario_editor_change_empire(int change)
 void scenario_editor_set_custom_empire(const char *filename)
 {
     scenario.empire.id = SCENARIO_CUSTOM_EMPIRE;
-    strncpy(scenario.empire.custom_name, filename, sizeof(scenario.empire.custom_name) - 1);
+    snprintf(scenario.empire.custom_name, FILE_NAME_MAX, "%s", filename);
 }
 
 void scenario_editor_unset_custom_empire(void)
@@ -382,7 +382,7 @@ void scenario_editor_unset_custom_empire(void)
         return;
     }
     scenario.empire.id = 0;
-    memset(scenario.empire.custom_name, 0, sizeof(scenario.empire.custom_name));
+    scenario.empire.custom_name[0] = 0;
 }
 
 int scenario_editor_is_building_allowed(int id)

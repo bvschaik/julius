@@ -17,13 +17,13 @@
 
 #include <math.h>
 #include <stdio.h>
-#include <string.h>
 
 #define XML_TOTAL_ELEMENTS 61
+#define ERROR_MESSAGE_LENGTH 200
 
 static struct {
     int success;
-    char error_message[200];
+    char error_message[ERROR_MESSAGE_LENGTH];
     int error_line_number;
     uint8_t error_line_number_text[50];
     int version;
@@ -289,7 +289,7 @@ static void xml_import_log_error(const char *msg)
 {
     data.success = 0;
     data.error_line_number = xml_parser_get_current_line_number();
-    strcpy(data.error_message, msg);
+    snprintf(data.error_message, ERROR_MESSAGE_LENGTH, "%s", msg);
     log_error("Error while import scenario events from XML. ", data.error_message, 0);
     log_error("Line:", 0, data.error_line_number);
 

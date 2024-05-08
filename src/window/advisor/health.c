@@ -96,7 +96,7 @@ static int draw_background(void)
     lang_text_draw(CUSTOM_TRANSLATION, TR_ADVISOR_HEALTH_SURVEILLANCE, 60, 246 + text_height, FONT_NORMAL_BLACK);
     text_height += 16;
     text_draw_multiline(translation_for(TR_ADVISOR_SICKNESS_LEVEL_LOW + sickness_level),
-        60, 246 + text_height, 512, FONT_NORMAL_BLACK, 0);
+        60, 246 + text_height, 512, 0, FONT_NORMAL_BLACK, 0);
 
     return ADVISOR_HEIGHT;
 }

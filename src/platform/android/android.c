@@ -23,7 +23,7 @@ static const char *get_c3_path(void)
 
     jobject result = (*handler.env)->CallStaticObjectMethod(handler.env, handler.class, handler.method);
     const char *temp_path = (*handler.env)->GetStringUTFChars(handler.env, (jstring) result, NULL);
-    strncpy(path, temp_path, FILE_NAME_MAX - 1);
+    snprintf(path, FILE_NAME_MAX, "%s", temp_path);
     (*handler.env)->ReleaseStringUTFChars(handler.env, (jstring) result, temp_path);
     (*handler.env)->DeleteLocalRef(handler.env, result);
     jni_destroy_function_handler(&handler);

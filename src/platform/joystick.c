@@ -216,11 +216,11 @@ static void create_new_model(const char *guid, const char *name, int instance_id
 {
     joystick_model model;
     memset(&model, 0, sizeof(model));
-    strncpy(model.guid, guid, JOYSTICK_MAX_GUID);
+    snprintf(model.guid, JOYSTICK_MAX_GUID, "%s", guid);
     if (!name) {
         snprintf(model.name, JOYSTICK_MAX_NAME, "Joystick %d", instance_id);
     } else {
-        strncpy(model.name, name, JOYSTICK_MAX_NAME - 1);
+        snprintf(model.name, JOYSTICK_MAX_NAME, "Joystick %s", name);
     }
     if (controller) {
         set_default_controller_mapping(&model, controller);

@@ -4,6 +4,7 @@
 #include "game/system.h"
 #include "graphics/font.h"
 
+#include <stdio.h>
 #include <string.h>
 
 static const char *key_names[KEY_TYPE_MAX_ITEMS] = {
@@ -51,13 +52,16 @@ const char *key_combination_name(key_type key, key_modifier_type modifiers)
 {
     static char name[100];
     name[0] = 0;
+    int cursor = 0;
     for (const modifier_name *modname = modifier_names; modname->modifier; modname++) {
         if (modifiers & modname->modifier) {
-            strcat(name, modname->name);
-            strcat(name, " ");
+            cursor += snprintf(&name[cursor], 100 - cursor, "%s ", modname->name);
+            if (cursor >= 100) {
+                return name;
+            }
         }
     }
-    strcat(name, key_names[key]);
+    snprintf(&name[cursor], 100 - cursor, "%s", key_names[key]);
     return name;
 }
 
@@ -83,8 +87,8 @@ static key_type parse_key(const char *name)
 
 int key_combination_from_name(const char *name, key_type *key, key_modifier_type *modifiers)
 {
-    char editable_name[100] = {0};
-    strncpy(editable_name, name, 99);
+    char editable_name[100];
+    snprintf(editable_name, 100, "%s", name);
 
     *key = KEY_TYPE_NONE;
     *modifiers = KEY_MOD_NONE;
@@ -126,54 +130,52 @@ const uint8_t *key_combination_display_name(key_type key, key_modifier_type modi
     static uint8_t str_result[100];
 
     result[0] = 0;
+    int cursor = 0;
     if (modifiers & KEY_MOD_CTRL) {
-        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_CTRL));
-        strcat(result, " ");
+        cursor = snprintf(result, 100, "%s ", system_keyboard_key_modifier_name(KEY_MOD_CTRL));
     }
-    if (modifiers & KEY_MOD_ALT) {
-        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_ALT));
-        strcat(result, " ");
+    if (cursor < 100 && modifiers & KEY_MOD_ALT) {
+        cursor += snprintf(&result[cursor], 100 - cursor, "%s ", system_keyboard_key_modifier_name(KEY_MOD_ALT));
     }
-    if (modifiers & KEY_MOD_GUI) {
-        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_GUI));
-        strcat(result, " ");
+    if (cursor < 100 && modifiers & KEY_MOD_GUI) {
+        cursor += snprintf(&result[cursor], 100 - cursor, "%s ", system_keyboard_key_modifier_name(KEY_MOD_GUI));
     }
-    if (modifiers & KEY_MOD_SHIFT) {
-        strcat(result, system_keyboard_key_modifier_name(KEY_MOD_SHIFT));
-        strcat(result, " ");
+    if (cursor < 100 && modifiers & KEY_MOD_SHIFT) {
+        cursor += snprintf(&result[cursor], 100 - cursor, "%s ", system_keyboard_key_modifier_name(KEY_MOD_SHIFT));
     }
 
-    // Modifiers are easy, now for key name...
-    const char *key_name = system_keyboard_key_name(key);
-    if ((key_name[0] & 0x80) == 0) {
-        // Special cases where we know the key is not displayable using the internal font
-        switch (key_name[0]) {
-            case '[': key_name = "Left bracket"; break;
-            case ']': key_name = "Right bracket"; break;
-            case '\\': key_name = "Backslash"; break;
-            case '`': key_name = "Backtick"; break;
-            case '~': key_name = "Tilde"; break;
-            case '#': key_name = "Hash"; break;
-            case '$': key_name = "Dollar"; break;
-            case '&': key_name = "Ampersand"; break;
-            case '<': key_name = "Less than"; break;
-            case '>': key_name = "Greater than"; break;
-            case '@': key_name = "At-sign"; break;
-            case '^': key_name = "Caret"; break;
-            case '_': key_name = "Underscore"; break;
-            case '|': key_name = "Pipe"; break;
-            case '{': key_name = "Left curly brace"; break;
-            case '}': key_name = "Right curly brace"; break;
-            case '\0': key_name = key_display_names[key];
+    if (cursor < 100) {
+        // Modifiers are easy, now for key name...
+        const char *key_name = system_keyboard_key_name(key);
+        if ((key_name[0] & 0x80) == 0) {
+            // Special cases where we know the key is not displayable using the internal font
+            switch (key_name[0]) {
+                case '[': key_name = "Left bracket"; break;
+                case ']': key_name = "Right bracket"; break;
+                case '\\': key_name = "Backslash"; break;
+                case '`': key_name = "Backtick"; break;
+                case '~': key_name = "Tilde"; break;
+                case '#': key_name = "Hash"; break;
+                case '$': key_name = "Dollar"; break;
+                case '&': key_name = "Ampersand"; break;
+                case '<': key_name = "Less than"; break;
+                case '>': key_name = "Greater than"; break;
+                case '@': key_name = "At-sign"; break;
+                case '^': key_name = "Caret"; break;
+                case '_': key_name = "Underscore"; break;
+                case '|': key_name = "Pipe"; break;
+                case '{': key_name = "Left curly brace"; break;
+                case '}': key_name = "Right curly brace"; break;
+                case '\0': key_name = key_display_names[key];
+            }
+            snprintf(&result[cursor], 100 - cursor, "%s", key_name);
+        } else if (can_display(key_name)) {
+            snprintf(&result[cursor], 100 - cursor, "%s", key_name);
+        } else {
+            snprintf(&result[cursor], 100 - cursor, "? (%s)", key_display_names[key]);
         }
-        strcat(result, key_name);
-    } else if (can_display(key_name)) {
-        strcat(result, key_name);
-    } else {
-        strcat(result, "? (");
-        strcat(result, key_display_names[key]);
-        strcat(result, ")");
     }
+
     encoding_from_utf8(result, str_result, 100);
     return str_result;
 }

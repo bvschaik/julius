@@ -53,7 +53,7 @@ void group_set_for_external_files(void)
         log_error("Failed to allocate memory for external files group name. The game will now crash.", 0, 0);
         return;
     }
-    strcpy(name, ASSET_EXTERNAL_FILE_LIST);
+    memcpy(name, ASSET_EXTERNAL_FILE_LIST, sizeof(ASSET_EXTERNAL_FILE_LIST));
     external_files_group->name = name;
     external_files_group->first_image_index = -1;
     external_files_group->last_image_index = -1;

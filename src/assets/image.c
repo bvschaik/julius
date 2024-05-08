@@ -713,7 +713,7 @@ const asset_image *asset_image_create_external(const char *filename)
         asset_image_unload(img);
         return 0;
     }
-    strcpy(id, filename);
+    memcpy(id, filename, sizeof(char) * (strlen(filename) + 1));
     img->id = id;
     img->img.atlas.id = ATLAS_UNPACKED_EXTRA_ASSET << IMAGE_ATLAS_BIT_OFFSET;
     img->img.atlas.id += img->index;

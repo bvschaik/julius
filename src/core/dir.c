@@ -61,8 +61,7 @@ static int add_to_listing(const char *filename, long modified_time)
     if (data.listing.num_files >= data.max_files) {
         expand_dir_listing();
     }
-    strncpy(data.listing.files[data.listing.num_files].name, filename, FILE_NAME_MAX);
-    data.listing.files[data.listing.num_files].name[FILE_NAME_MAX - 1] = 0;
+    snprintf(data.listing.files[data.listing.num_files].name, FILE_NAME_MAX, "%s", filename);
     data.listing.files[data.listing.num_files].modified_time = modified_time;
     ++data.listing.num_files;
     return LIST_CONTINUE;
@@ -87,6 +86,7 @@ const dir_listing *dir_find_all_subdirectories(const char *dir)
 static int compare_case(const char *filename, long unused)
 {
     if (platform_file_manager_compare_filename(filename, data.cased_filename) == 0) {
+        // We are copying anyway because the comparison is case insensitive, so we can't use the original filename
         strcpy(data.cased_filename, filename);
         return LIST_MATCH;
     }
@@ -111,7 +111,6 @@ static void move_left(char *str)
 static const char *get_case_corrected_file(const char *dir, const char *filepath)
 {
     static char corrected_filename[2 * FILE_NAME_MAX];
-    corrected_filename[2 * FILE_NAME_MAX - 1] = 0;
 
     size_t dir_len = 0;
     size_t dir_skip = 0;
@@ -120,7 +119,7 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         dir_skip = 2;
     }
     dir_len = strlen(dir);
-    strncpy(corrected_filename, dir, 2 * FILE_NAME_MAX - 1);
+    snprintf(corrected_filename, 2 * FILE_NAME_MAX, "%s", dir);
     if (dir_len) {
         if (dir[dir_len - 1] != '/') {
             corrected_filename[dir_len] = '/';
@@ -128,7 +127,7 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
         }
     }
 
-    strncpy(&corrected_filename[dir_len], filepath, 2 * FILE_NAME_MAX - dir_len - 1);
+    snprintf(&corrected_filename[dir_len], 2 * FILE_NAME_MAX - dir_len, "%s", filepath);
 
     FILE *fp = file_open(corrected_filename, "rb");
     if (fp) {

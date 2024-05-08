@@ -128,15 +128,15 @@ static void play_audio(void)
 
     const char *audio_file = custom_messages_get_audio(custom_message);
     if (audio_file) {
-        strncpy(data.paths.audio, audio_file, FILE_NAME_MAX);
+        snprintf(data.paths.audio, FILE_NAME_MAX, "%s", audio_file);
     }
     const char *speech_file = custom_messages_get_speech(custom_message);
     if (speech_file) {
-        strncpy(data.paths.speech, speech_file, FILE_NAME_MAX);
+        snprintf(data.paths.speech, FILE_NAME_MAX, "%s", speech_file);
     }
     const char *background_music = custom_messages_get_background_music(custom_message);
     if (background_music) {
-        strncpy(data.paths.background_music, background_music, FILE_NAME_MAX);
+        snprintf(data.paths.background_music, FILE_NAME_MAX, "%s", background_music);
     }
     int playing_audio = 0;
 
@@ -182,8 +182,8 @@ static void draw_background_image(void)
 
 static void draw_won(void)
 {
-    int panel_height_blocks;
-    int y_offset;
+    int panel_height_blocks = 18;
+    int y_offset = 128;
     const uint8_t *victory_message_text = 0;
     if (has_custom_victory_message()) {
         custom_message_t *victory_message = custom_messages_get(scenario_victory_message());
@@ -192,9 +192,6 @@ static void draw_won(void)
             y_offset = 0;
             panel_height_blocks = 30;
         }
-    } else {
-        y_offset = 128;
-        panel_height_blocks = 18;
     }
 
     play_audio();

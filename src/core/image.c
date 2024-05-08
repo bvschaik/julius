@@ -1148,8 +1148,8 @@ int image_is_external(const image *img)
 int image_load_external_pixels(color_t *dst, const image *img, int row_width)
 {
     image_draw_data *draw_data = &data.external_draw_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
-    char filename[FILE_NAME_MAX] = "555/";
-    strcpy(&filename[4], data.bitmaps[draw_data->bitmap_id]);
+    char filename[FILE_NAME_MAX];
+    snprintf(filename, FILE_NAME_MAX, "555/%s", data.bitmaps[draw_data->bitmap_id]);
     file_change_extension(filename, "555");
     if (!draw_data->buffer) {
         draw_data->buffer = malloc(draw_data->data_length * sizeof(uint8_t));

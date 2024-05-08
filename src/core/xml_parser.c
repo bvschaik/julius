@@ -483,12 +483,12 @@ char *xml_parser_copy_attribute_string(const char *key)
     if (!value) {
         return 0;
     }
-    size_t value_size = strlen(value);
-    char *result = malloc(sizeof(char) * (value_size + 1));
+    size_t buf_size = sizeof(char) * (strlen(value) + 1);
+    char *result = malloc(buf_size);
     if (!result) {
         return 0;
     }
-    strcpy(result, value);
+    memcpy(result, value, buf_size);
     return result;
 }
 

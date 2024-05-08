@@ -9,7 +9,7 @@
 #include "sound/music.h"
 #include "sound/speech.h"
 
-#include <string.h>
+#include <stdio.h>
 
 static char channel_filenames[SOUND_CHANNEL_MAX][CHANNEL_FILENAME_MAX] = {
     "", // speech channel
@@ -180,7 +180,7 @@ static void correct_channel_filenames(void)
         if (!corrected) {
             channel_filenames[i][0] = 0;
         } else if (corrected != original) {
-            strncpy(original, corrected, CHANNEL_FILENAME_MAX);
+            snprintf(original, CHANNEL_FILENAME_MAX, "%s", corrected);
         }
     }
 }

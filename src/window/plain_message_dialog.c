@@ -46,7 +46,7 @@ static void draw_background(void)
     graphics_in_dialog();
     outer_panel_draw(80, 80, 30, 13);
     text_draw_centered(data.title, 80, 100, 480, FONT_LARGE_BLACK, 0);
-    text_draw_multiline(data.message, 100, 140, 450, FONT_NORMAL_BLACK, 0);
+    text_draw_multiline(data.message, 100, 140, 450, 0, FONT_NORMAL_BLACK, 0);
     if (data.extra) {
         text_draw_centered(data.extra, 100, 180, 450, FONT_NORMAL_BLACK, 0);
     }

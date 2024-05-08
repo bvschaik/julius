@@ -155,15 +155,15 @@ static void play_audio(void)
 
     const char *audio_file = custom_messages_get_audio(custom_message);
     if (audio_file) {
-        strncpy(data.paths.audio, audio_file, FILE_NAME_MAX);
+        snprintf(data.paths.audio, FILE_NAME_MAX, "%s", audio_file);
     }
     const char *speech_file = custom_messages_get_speech(custom_message);
     if (speech_file) {
-        strncpy(data.paths.speech, speech_file, FILE_NAME_MAX);
+        snprintf(data.paths.speech, FILE_NAME_MAX, "%s", speech_file);
     }
     const char *background_music = custom_messages_get_background_music(custom_message);
     if (background_music) {
-        strncpy(data.paths.background_music, background_music, FILE_NAME_MAX);
+        snprintf(data.paths.background_music, FILE_NAME_MAX, "%s", background_music);
     }
 
     if (!audio_file && !speech_file && !background_music) {

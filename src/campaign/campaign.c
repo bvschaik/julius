@@ -62,7 +62,7 @@ int campaign_load(const char *filename)
     campaign_file_set_path(filename);
     get_campaign_data();
     if (data.active) {
-        strncpy(data.file_name, filename, FILE_NAME_MAX);
+        snprintf(data.file_name, FILE_NAME_MAX, "%s", filename);
     }
     return data.active;
 }
@@ -178,7 +178,7 @@ const campaign_scenario *campaign_get_scenario(int scenario_id)
 
 void campaign_suspend(void)
 {
-    strncpy(data.suspended_filename, data.file_name, FILE_NAME_MAX);
+    snprintf(data.suspended_filename, FILE_NAME_MAX, "%s", data.file_name);
     data.active = 0;
 }
 

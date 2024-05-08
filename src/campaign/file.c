@@ -19,7 +19,7 @@ static struct {
 int campaign_file_exists(const char *filename)
 {
     if (data.is_folder) {
-        strncpy(&data.file_name[data.file_name_offset], filename, FILE_NAME_MAX - data.file_name_offset);
+        snprintf(&data.file_name[data.file_name_offset], FILE_NAME_MAX - data.file_name_offset, "%s", filename);
         return file_exists(data.file_name, NOT_LOCALIZED);
     }
     int close_at_end = data.zip.parser == 0;
@@ -37,7 +37,7 @@ int campaign_file_exists(const char *filename)
 static void *load_file_from_folder(const char *file, size_t *length)
 {
     *length = 0;
-    strncpy(&data.file_name[data.file_name_offset], file, FILE_NAME_MAX - data.file_name_offset);
+    snprintf(&data.file_name[data.file_name_offset], FILE_NAME_MAX - data.file_name_offset, "%s", file);
     FILE *campaign_file = file_open(data.file_name, "rb");
     if (!campaign_file) {
         return 0;
@@ -112,7 +112,7 @@ void campaign_file_set_path(const char *path)
         if (data.is_folder) {
             data.file_name_offset = snprintf(data.file_name, FILE_NAME_MAX, "%s/%s/", CAMPAIGNS_DIR_NAME, path);
         } else {
-            strncpy(data.file_name, path, FILE_NAME_MAX);
+            snprintf(data.file_name, FILE_NAME_MAX, "%s", path);
             data.file_name_offset = 0;
         }
     } else {

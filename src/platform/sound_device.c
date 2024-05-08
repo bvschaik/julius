@@ -203,7 +203,7 @@ static void load_music_for_vita(const char *filename)
         free(vita_music_data.buffer);
         vita_music_data.buffer = 0;
     }
-    strncpy(vita_music_data.filename, filename, FILE_NAME_MAX - 1);
+    snprintf(vita_music_data.filename, FILE_NAME_MAX, "%s", filename);
     FILE *fp = file_open(filename, "rb");
     if (!fp) {
         return;

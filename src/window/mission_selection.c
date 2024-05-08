@@ -171,10 +171,10 @@ static void draw_background(void)
     if (data.choice) {
         const campaign_scenario *scenario = data.mission.scenarios[data.choice - 1];
         if (scenario->name) {
-            text_draw_multiline(scenario->name, 20, 440, 560, FONT_NORMAL_BLACK, 0);
+            text_draw_multiline(scenario->name, 20, 440, 560, 0, FONT_NORMAL_BLACK, 0);
         }
         if (scenario->description) {
-            text_draw_multiline(scenario->description, 20, 456, 560, FONT_NORMAL_BLACK, 0);
+            text_draw_multiline(scenario->description, 20, 456, 560, 0, FONT_NORMAL_BLACK, 0);
         }
     } else {
         lang_text_draw_multiline(144, 0, 20, 440, 560, FONT_NORMAL_BLACK);

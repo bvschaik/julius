@@ -45,8 +45,7 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
         info->next = malloc(sizeof(dir_info));
         info = info->next;
     }
-    strncpy(info->name, dir, FILE_NAME_MAX - 1);
-    info->name[FILE_NAME_MAX - 1] = 0;
+    snprintf(info->name, FILE_NAME_MAX, "%s", dir);
     info->first_file = 0;
     info->next = 0;
     struct dirent *entry;
@@ -68,8 +67,7 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
         file_item->next = 0;
 
         // Copy name
-        strncpy(file_item->name, name, FILE_NAME_MAX - 1);
-        file_item->name[FILE_NAME_MAX - 1] = 0;
+        snprintf(file_item->name, FILE_NAME_MAX, "%s", name);
 
         // Copy extension
         char c;
@@ -100,14 +98,14 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
             if (!*file_item->extension) {
                 static char full_name[FILE_NAME_MAX];
                 if (!dir_name_offset) {
-                    strncpy(full_name, info->name, FILE_NAME_MAX);
+                    snprintf(full_name, FILE_NAME_MAX, "%s", info->name);
                     dir_name_offset = strlen(info->name);
                     if(full_name[dir_name_offset - 1] != '/') {
                         full_name[dir_name_offset++] = '/';
                         full_name[dir_name_offset] = 0;
                     }
                 }
-                strncpy(full_name + dir_name_offset, name, FILE_NAME_MAX - 1 - dir_name_offset);
+                snprintf(&full_name[dir_name_offset], FILE_NAME_MAX - dir_name_offset, "%s", name);
                 DIR *file_d = opendir(full_name);
                 if (file_d) {
                     type = TYPE_DIR;
@@ -136,8 +134,7 @@ void platform_file_manager_cache_update_file_info(const char *filename)
     }
     if (!current_file) {
         current_file = malloc(sizeof(file_info));
-        strncpy(current_file->name, filename, FILE_NAME_MAX - 1);
-        current_file->name[FILE_NAME_MAX - 1] = 0;
+        snprintf(current_file->name, FILE_NAME_MAX, "%s", filename);
         current_file->type = TYPE_FILE;
         char c;
         const char *name = current_file->name;

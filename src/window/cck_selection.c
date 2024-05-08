@@ -275,7 +275,7 @@ static void button_back(int param1, int param2)
 static void select_scenario(int index, int is_double_click)
 {
     if (strcmp(data.selected_scenario_filename, data.scenarios->files[index].name) != 0) {
-        strcpy(data.selected_scenario_filename, data.scenarios->files[index].name);
+        snprintf(data.selected_scenario_filename, FILE_NAME_MAX, "%s", data.scenarios->files[index].name);
         game_file_io_read_scenario_info(data.selected_scenario_filename, &data.info);
         encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
         file_remove_extension((char *) data.selected_scenario_display);

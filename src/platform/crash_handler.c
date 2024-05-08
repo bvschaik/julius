@@ -251,7 +251,7 @@ static void print_stacktrace(LPEXCEPTION_POINTERS e)
             if (mod_base) {
                 GetModuleFileName((HINSTANCE) mod_base, modname, MAX_PATH);
             } else {
-                strcpy(modname, "Unknown");
+                snprintf(modname, MAX_PATH, "Unknown");
             }
             log_info_sprintf("(%d) %s [0x%p]\n", frame, modname, (void *) stackframe.AddrPC.Offset);
         }

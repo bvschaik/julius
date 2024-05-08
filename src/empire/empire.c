@@ -68,7 +68,7 @@ static void set_image_id(const char *path)
         snprintf(full_path, FILE_NAME_MAX, "%s%s", paths[i], path);
         if (campaign_has_file(full_path) || file_exists(full_path, NOT_LOCALIZED)) {
             data.image.id = assets_get_external_image(full_path, 1);
-            strncpy(data.image.path, path, FILE_NAME_MAX);
+            snprintf(data.image.path, FILE_NAME_MAX, "%s", path);
             return;
         }
     }
