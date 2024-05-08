@@ -1,11 +1,10 @@
 {
-    "id" : "com.github.bvschaik.julius",
+    "id" : "com.github.keriew.augustus",
     "runtime" : "org.freedesktop.Platform",
     "runtime-version" : "23.08",
     "sdk" : "org.freedesktop.Sdk",
-    "command" : "julius",
+    "command" : "augustus",
     "finish-args" : [
-        "--filesystem=home",
         "--share=ipc",
         "--device=dri",
         "--socket=wayland",
@@ -14,7 +13,7 @@
     ],
     "modules" : [
         {
-            "name" : "julius",
+            "name" : "augustus",
             "buildsystem" : "cmake-ninja",
             "sources" : [
                 {

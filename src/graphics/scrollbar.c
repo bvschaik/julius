@@ -13,12 +13,6 @@ enum {
     TOUCH_DRAG_IN_PROGRESS = 2
 };
 
-enum {
-    TOUCH_DRAG_NONE = 0,
-    TOUCH_DRAG_PENDING = 1,
-    TOUCH_DRAG_IN_PROGRESS = 2
-};
-
 #define SCROLL_BUTTON_HEIGHT 26
 #define SCROLL_BUTTON_WIDTH 39
 #define SCROLL_DOT_SIZE 25
@@ -128,41 +122,6 @@ static int handle_touch(scrollbar_type *scrollbar, const touch *t, int in_dialog
     }
     if (t->has_ended) {
         scrollbar->touch_drag_state = TOUCH_DRAG_NONE;
-    }
-    if (scrollbar->on_scroll_callback && old_position != scrollbar->scroll_position) {
-        scrollbar->on_scroll_callback();
-    }
-    return active;
-}
-
-static int touch_inside_scrollable_area(const scrollbar_type *scrollbar, const touch *t)
-{
-    return scrollbar->max_scroll_position > 0 &&
-        t->start_point.x >= scrollbar->x - scrollbar->scrollable_width && t->start_point.x <= scrollbar->x - 2 &&
-        t->start_point.y >= scrollbar->y && t->start_point.y < scrollbar->y + scrollbar->height;
-}
-
-static int handle_touch(scrollbar_type *scrollbar, const touch *t)
-{
-    int old_position = scrollbar->scroll_position;
-    int active = scrollbar->touch_drag_state == TOUCH_DRAG_IN_PROGRESS;
-
-    if (t->has_started && touch_inside_scrollable_area(scrollbar, t)) {
-        scrollbar->touch_drag_state = TOUCH_DRAG_PENDING;
-        scrollbar->position_on_touch = scrollbar->scroll_position;
-    }
-    if (t->has_moved && scrollbar->touch_drag_state != TOUCH_DRAG_NONE) {
-        scrollbar->touch_drag_state = TOUCH_DRAG_IN_PROGRESS;
-        int element_height = (scrollbar->height - 8 * scrollbar->has_y_margin) / scrollbar->elements_in_view;
-        int current_y = t->current_point.y - ((t->current_point.y - (scrollbar->y + 8 * scrollbar->has_y_margin)) % element_height);
-        int start_y = t->start_point.y - ((t->start_point.y - (scrollbar->y + 8 * scrollbar->has_y_margin)) % element_height);
-        int touch_scrolled = (current_y - start_y) / element_height;
-        scrollbar->scroll_position = calc_bound(scrollbar->position_on_touch - touch_scrolled, 0, scrollbar->max_scroll_position);
-        active = 1;
-    }
-    if (t->has_ended) {
-        scrollbar->touch_drag_state = TOUCH_DRAG_NONE;
-        // decay scrollbar movement
     }
     if (scrollbar->on_scroll_callback && old_position != scrollbar->scroll_position) {
         scrollbar->on_scroll_callback();
