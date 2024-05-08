@@ -114,7 +114,11 @@ if (!$?) {
 }
 echo "Uploaded. URL: https://augustus.josecadete.net/$repo.html"
 
-if (!$packed_assets -and $suffix -eq "windows") {
+if ($suffix -ne "windows") {
+    exit
+}
+
+if (!$packed_assets) {
     echo "Packing the assets"
 
     cd .\res\asset_packer
