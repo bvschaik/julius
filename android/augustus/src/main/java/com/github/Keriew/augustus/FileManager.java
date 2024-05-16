@@ -83,15 +83,24 @@ public class FileManager {
     }
 
     private static FileInfo getDirectoryFromPath(Activity activity, String[] path) {
-        FileInfo currentDir = FileInfo.base;
+        ArrayList<FileInfo> dirList = new ArrayList<>();
+        dirList.add(FileInfo.base);
 
         for (int i = 0; i < path.length - 1; ++i) {
-            currentDir = findFile(activity, currentDir, path[i]);
-            if (currentDir == null || !currentDir.isDirectory()) {
-                return null;
+            if (path[i].equals("..")) {
+                if (dirList.size() == 1) {
+                    return null;
+                }
+                dirList.remove(dirList.size() - 1);
+            } else if (!path[i].equals(".")) {
+                FileInfo currentDir = findFile(activity, dirList.get(dirList.size() - 1), path[i]);
+                if (currentDir == null || !currentDir.isDirectory()) {
+                    return null;
+                }
+                dirList.add(currentDir);
             }
         }
-        return currentDir;
+        return dirList.get(dirList.size() - 1);
     }
 
     private static FileInfo getFileFromPath(AugustusMainActivity activity, String filePath) {
