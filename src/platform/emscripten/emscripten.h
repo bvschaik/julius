@@ -5,5 +5,7 @@
 
 #include <emscripten.h>
 
+#define PLATFORM_NO_USER_DIRECTORIES
+
 #endif // __EMSCRIPTEN__
 #endif // PLATFORM_EMSCRIPTEN_H

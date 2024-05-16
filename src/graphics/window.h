@@ -92,7 +92,8 @@ typedef enum {
     // New window types
     WINDOW_ASSET_PREVIEWER,
     WINDOW_CUSTOM_MESSAGE,
-    WINDOW_TEXT_INPUT
+    WINDOW_TEXT_INPUT,
+    WINDOW_USER_PATH_SETUP
 } window_id;
 
 typedef struct {

@@ -3,6 +3,8 @@
 
 #include "graphics/color.h"
 
+void screen_set_dialog_offset(int width, int height);
+
 void screen_set_resolution(int width, int height);
 
 color_t *screen_pixel(int x, int y);

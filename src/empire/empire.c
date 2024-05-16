@@ -59,19 +59,26 @@ static void set_image_id(const char *path)
         return;
     }
     char *paths[] = {
-        CAMPAIGNS_DIRECTORY "/image/",
-        "community/image/",
+        CAMPAIGNS_DIRECTORY "/image",
+        "image",
         0
     };
     for (int i = 0; paths[i]; i++) {
         char full_path[FILE_NAME_MAX];
-        snprintf(full_path, FILE_NAME_MAX, "%s%s", paths[i], path);
-        if (campaign_has_file(full_path) || file_exists(full_path, NOT_LOCALIZED)) {
-            data.image.id = assets_get_external_image(full_path, 1);
+        const char *found_path = 0;
+        snprintf(full_path, FILE_NAME_MAX, "%s/%s", paths[i], path);
+        if (campaign_has_file(full_path)) {
+            found_path = full_path;
+        } else {
+            found_path = dir_get_file_at_location(full_path, PATH_LOCATION_COMMUNITY);
+        }
+        if (found_path) {
+            data.image.id = assets_get_external_image(found_path, 1);
             snprintf(data.image.path, FILE_NAME_MAX, "%s", path);
             return;
         }
     }
+    log_error("Unable to find map image file", path, 0);
     data.image.id = image_group(editor_is_active() ? GROUP_EDITOR_EMPIRE_MAP : GROUP_EMPIRE_MAP);
     data.image.path[0] = 0;
 }

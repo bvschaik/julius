@@ -93,7 +93,7 @@ static int image_create(int width, int height, int has_alpha_channel, int rows_i
 
 static const char *generate_filename(screenshot_type type)
 {
-    static char filename[FILE_NAME_MAX];
+    char filename[FILE_NAME_MAX];
     time_t curtime = time(NULL);
     struct tm *loctime = localtime(&curtime);
     switch (type) {
@@ -108,7 +108,7 @@ static const char *generate_filename(screenshot_type type)
             strftime(filename, FILE_NAME_MAX, "city %Y-%m-%d %H.%M.%S.png", loctime);
             break;
     }    
-    return filename;
+    return dir_append_location(filename, PATH_LOCATION_SCREENSHOT);
 }
 
 static int image_begin_io(const char *filename)

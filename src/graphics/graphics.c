@@ -14,12 +14,13 @@ static void set_translation(int x, int y)
 
 void graphics_in_dialog(void)
 {
-    set_translation(screen_dialog_offset_x(), screen_dialog_offset_y());
+    graphics_in_dialog_with_size(640, 480);
 }
 
 void graphics_in_dialog_with_size(int width, int height)
 {
     set_translation((screen_width() - width) / 2, (screen_height() - height) / 2);
+    screen_set_dialog_offset(width, height);
 }
 
 void graphics_reset_dialog(void)

@@ -14,12 +14,17 @@ static struct {
     } dialog_offset;
 } data;
 
+void screen_set_dialog_offset(int width, int height)
+{
+    data.dialog_offset.x = (data.width - width) / 2;
+    data.dialog_offset.y = (data.height - height) / 2;
+}
+
 void screen_set_resolution(int width, int height)
 {
     data.width = width;
     data.height = height;
-    data.dialog_offset.x = (width - 640) / 2;
-    data.dialog_offset.y = (height - 480) / 2;
+    screen_set_dialog_offset(640, 480);
 
     graphics_renderer()->clear_screen();
     graphics_renderer()->set_clip_rectangle(0, 0, width, height);

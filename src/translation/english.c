@@ -864,6 +864,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_ACADEMY_UPGRADE_DESC, "This academy is operational. Local development allowed your citizens to expand the building, providing more halls for orations and research to take place."},
     {TR_BUILDING_PALISADE_GATE, "Palisade gate"},
     {TR_BUILDING_PALISADE_GATE_DESC, "This narrow wooden gateway controls the movement of people in and out of your city's defenses."},
+    {TR_SAVE_DIALOG_FILE_DOES_NOT_EXIST_TITLE, "File does not exist"},
+    {TR_SAVE_DIALOG_FILE_DOES_NOT_EXIST_TEXT, "The selected file does not exist.\nPlease select a different file."},
     {TR_SAVE_DIALOG_INVALID_FILE, "Invalid file"},
     {TR_SAVE_DIALOG_INVALID_FILE_DESC, "The savegame you're trying to load is invalid.\n\nThe save may have been corrupted due to a bug.\n\nIf you're sure this should be a valid save, please report the bug to:\n\nhttps://github.com/Keriew/augustus/issues/new\n\nPlease attach the save as well."},
     {TR_SAVE_DIALOG_INCOMPATIBLE_VERSION, "Incompatible version"},
@@ -1469,6 +1471,24 @@ static translation_string all_strings[] = {
     {TR_BUILDING_FORT_JAVELIN, "Auxiliaries - Javelins" },
     {TR_WINDOW_ADVISOR_JAVELIN, "Javelins" },
     {TR_WARNING_NO_ARMOURY, "Build an armory to deliver weapons to barracks" },
+    {TR_CONFIG_USER_PATH_DEFAULT, "Default (Caesar III installation path, no subdirectories)" },
+    {TR_CONFIG_USER_PATH_WITH_SUBDIRECTORIES, "Caesar III installation path, using subdirectories" },
+    {TR_CONFIG_USER_PATH_RECOMMENDED, "Recommended ("},
+    {TR_CONFIG_USER_PATH_CUSTOM, "Set custom directory..."},
+    {TR_USER_DIRECTORIES_NOT_SET_UP_TITLE, "Custom user directories not setup"},
+    {TR_USER_DIRECTORIES_NOT_SET_UP_TEXT, "You have not setup your user directory, where the savegames, scenarios and maps will be stored.\n" \
+        "Do you wish to do it now?"},
+    {TR_USER_DIRECTORIES_CANCELLED_TITLE, "Directory selection canceled"},
+    {TR_USER_DIRECTORIES_CANCELLED_TEXT, "You have decided not to set a user directory. The C3 install directory will be used.\n"
+        "You can change your settings later in the configuration window."},
+    {TR_USER_DIRECTORIES_NOT_WRITEABLE_TITLE, "User directory not writeable"},
+    {TR_USER_DIRECTORIES_NOT_WRITEABLE_TEXT, "The selected user directory is not writeable.\n\nPlease select a different user directory."},
+    {TR_USER_DIRECTORIES_NOT_WRITEABLE_TEXT_DETAILED, "The selected user directory is not writeable.\n\nYou will not be able to save your games.\nPlease select a different user directory from the options window on the main menu."},
+    {TR_USER_DIRECTORIES_WINDOW_TITLE, "Set user directory"},
+    {TR_USER_DIRETORIES_WINDOW_USER_PATH, "User directory:" },
+    {TR_USER_DIRECTORIES_USER_PATH_CHANGED_TITLE, "User path changed"},
+    {TR_USER_DIRECTORIES_USER_PATH_CHANGED_TEXT, "The user path was successfully changed.\nDo you want to copy over your files?"},
+    {TR_USER_DIRECTORIES_USER_PATH_CHANGED_OVERWRITE, "Overwrite existing files"}
 
 };
 

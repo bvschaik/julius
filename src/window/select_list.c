@@ -10,6 +10,8 @@
 #include "input/input.h"
 
 #define MAX_ITEMS_PER_LIST 20
+#define BASE_LIST_WIDTH 200
+#define MAX_LIST_WIDTH 496
 
 enum {
     MODE_TEXT,
@@ -71,6 +73,7 @@ static struct {
     int group;
     const uint8_t **items;
     int num_items;
+    int width;
     void (*callback)(int);
     int focus_button_id;
 } data;
@@ -81,8 +84,12 @@ static void init_group(int x, int y, int group, int num_items, void (*callback)(
     data.y = y;
     data.mode = MODE_GROUP;
     data.group = group;
+    data.width = BASE_LIST_WIDTH;
     data.num_items = num_items;
     data.callback = callback;
+    for (int i = 0; i < MAX_ITEMS_PER_LIST; i++) {
+        buttons_list1[i].width = data.width - 10;
+    }
 }
 
 static void init_text(int x, int y, const uint8_t **items, int num_items, void (*callback)(int))
@@ -93,6 +100,26 @@ static void init_text(int x, int y, const uint8_t **items, int num_items, void (
     data.items = items;
     data.num_items = num_items;
     data.callback = callback;
+    data.width = BASE_LIST_WIDTH;
+    if (data.num_items <= MAX_ITEMS_PER_LIST) {
+        for (int i = 0; i < num_items; i++) {
+            int width = text_get_width(data.items[i], FONT_NORMAL_PLAIN) + 10;
+            if (width > data.width) {
+                data.width = width;
+                data.width += BLOCK_SIZE - (data.width % BLOCK_SIZE);
+                if (width > MAX_LIST_WIDTH) {
+                    data.width = MAX_LIST_WIDTH;
+                }
+            }
+        }
+        for (int i = 0; i < num_items; i++) {
+            buttons_list1[i].width = data.width;
+        }
+    } else {
+        for (int i = 0; i < MAX_ITEMS_PER_LIST; i++) {
+            buttons_list1[i].width = data.width - 10;
+        }
+    }
 }
 
 static int items_in_first_list(void)
@@ -104,9 +131,15 @@ static void draw_item(int item_id, int x, int y, int selected)
 {
     color_t color = selected ? COLOR_FONT_BLUE : COLOR_BLACK;
     if (data.mode == MODE_GROUP) {
-        lang_text_draw_centered_colored(data.group, item_id, data.x + x, data.y + y, 190, FONT_NORMAL_PLAIN, color);
+        lang_text_draw_centered_colored(data.group, item_id, data.x + x, data.y + y, data.width - 10,
+            FONT_NORMAL_PLAIN, color);
     } else {
-        text_draw_centered(data.items[item_id], data.x + x, data.y + y, 190, FONT_NORMAL_PLAIN, color);
+        if (data.width == BASE_LIST_WIDTH) {
+            text_draw_centered(data.items[item_id], data.x + x, data.y + y, BASE_LIST_WIDTH - 10, FONT_NORMAL_PLAIN, color);
+        } else {
+            text_draw_ellipsized(data.items[item_id], data.x + x + 5, data.y + y,
+                data.width - 10, FONT_NORMAL_PLAIN, color);
+        }
     }
 }
 
@@ -122,7 +155,8 @@ static void draw_foreground(void)
             draw_item(i + max_first, 205, 11 + 20 * i, MAX_ITEMS_PER_LIST + i + 1 == data.focus_button_id);
         }
     } else {
-        outer_panel_draw(data.x, data.y, 13, (20 * data.num_items + 24) / BLOCK_SIZE);
+        int width_blocks = (data.width + BLOCK_SIZE - 1) / BLOCK_SIZE;
+        outer_panel_draw(data.x, data.y, width_blocks, (20 * data.num_items + 24) / BLOCK_SIZE);
         for (int i = 0; i < data.num_items; i++) {
             draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
         }
@@ -137,7 +171,7 @@ static int click_outside_window(const mouse *m)
         width = 26 * BLOCK_SIZE;
         height = 20 * items_in_first_list() + 24;
     } else {
-        width = 13 * BLOCK_SIZE;
+        width = data.width + BLOCK_SIZE - 1;
         height = 20 * data.num_items + 24;
     }
     return m->left.went_up && (m->x < data.x || m->x >= data.x + width || m->y < data.y || m->y >= data.y + height);

@@ -1079,7 +1079,7 @@ static int load_scenario_from_buffer(buffer *buf)
 
 static int load_scenario_to_buffers(const char *filename, scenario_version_t *version)
 {
-    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+    FILE *fp = file_open(filename, "rb");
     if (!fp) {
         return 0;
     }
@@ -1414,7 +1414,7 @@ int game_file_io_read_save_game_from_buffer(buffer *buf)
 int game_file_io_read_saved_game(const char *filename, int offset)
 {
     log_info("Loading saved game", filename, 0);
-    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+    FILE *fp = file_open(filename, "rb");
     if (!fp) {
         log_error("Unable to load game, unable to open file.", 0, 0);
         return FILE_LOAD_DOES_NOT_EXIST;
@@ -1717,7 +1717,7 @@ int game_file_io_read_saved_game_info(const char *filename, saved_game_info *inf
         return SAVEGAME_STATUS_INVALID;
     }
     memset(info, 0, sizeof(saved_game_info));
-    FILE *fp = file_open(dir_get_file(filename, NOT_LOCALIZED), "rb");
+    FILE *fp = file_open(filename, "rb");
     if (!fp) {
         return SAVEGAME_STATUS_INVALID;
     }

@@ -27,6 +27,9 @@
 #include "graphics/text.h"
 #include "graphics/video.h"
 #include "graphics/window.h"
+#include "platform/file_manager.h"
+#include "platform/prefs.h"
+#include "platform/user_path.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
 #include "sound/city.h"
@@ -111,8 +114,29 @@ int game_init(void)
     sound_system_init();
     game_state_init();
     resource_init();
+    int actions = ACTION_NONE;
+    if (missing_fonts) {
+        actions |= ACTION_SHOW_MESSAGE_MISSING_FONTS;
+    }
+    if (is_unpatched()) {
+        actions |= ACTION_SHOW_MESSAGE_MISSING_PATCH;
+    }
     int missing_assets = !assets_get_image_id("Admin_Logistics", "roadblock"); // If can't find roadblocks asset, extra assets not installed properly
-    window_logo_show(missing_fonts ? MESSAGE_MISSING_FONTS : (is_unpatched() ? MESSAGE_MISSING_PATCH : (missing_assets ? MESSAGE_MISSING_EXTRA_ASSETS : MESSAGE_NONE)));
+    if (missing_assets) {
+        actions |= ACTION_SHOW_MESSAGE_MISSING_EXTRA_ASSETS;
+    }
+    if (config_must_configure_user_directory()) {
+        actions |= ACTION_SETUP_USER_DIR;
+    } else if (!platform_file_manager_is_directory_writeable(pref_user_dir())) {
+        actions |= ACTION_SHOW_MESSAGE_USER_DIR_NOT_WRITABLE;
+    } else {
+        platform_user_path_create_subdirectories();
+    }
+    if (config_get(CONFIG_UI_SHOW_INTRO_VIDEO)) {
+        actions |= ACTION_SHOW_INTRO_VIDEOS;
+    }
+
+    window_logo_show(actions);
     return 1;
 }
 

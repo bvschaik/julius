@@ -9,14 +9,58 @@
 #include "window/intro_video.h"
 #include "window/main_menu.h"
 #include "window/plain_message_dialog.h"
+#include "window/popup_dialog.h"
+#include "window/user_path_setup.h"
 
-static void init(void)
+static int pending_actions;
+
+static void init(int actions)
 {
+    pending_actions = actions;
     sound_music_play_intro();
+}
+
+static int process_pending_actions(void)
+{
+    if (pending_actions & ACTION_SHOW_MESSAGE_MISSING_PATCH) {
+        window_plain_message_dialog_show(TR_NO_PATCH_TITLE, TR_NO_PATCH_MESSAGE, 0);
+        pending_actions ^= ACTION_SHOW_MESSAGE_MISSING_PATCH;
+        return 1;
+    }
+    if (pending_actions & ACTION_SHOW_MESSAGE_MISSING_FONTS) {
+        window_plain_message_dialog_show(TR_MISSING_FONTS_TITLE, TR_MISSING_FONTS_MESSAGE, 0);
+        pending_actions ^= ACTION_SHOW_MESSAGE_MISSING_FONTS;
+        return 1;
+    }
+    if (pending_actions & ACTION_SHOW_MESSAGE_MISSING_EXTRA_ASSETS) {
+        window_plain_message_dialog_show(TR_NO_EXTRA_ASSETS_TITLE, TR_NO_EXTRA_ASSETS_MESSAGE, 0);
+        pending_actions ^= ACTION_SHOW_MESSAGE_MISSING_EXTRA_ASSETS;
+        return 1;
+    }
+    if (pending_actions & ACTION_SETUP_USER_DIR) {
+        window_user_path_setup_show(1);
+        pending_actions ^= ACTION_SETUP_USER_DIR;
+        return 1;
+    }
+    if (pending_actions & ACTION_SHOW_MESSAGE_USER_DIR_NOT_WRITABLE) {
+        window_plain_message_dialog_show(TR_USER_DIRECTORIES_NOT_WRITEABLE_TITLE,
+            TR_USER_DIRECTORIES_NOT_WRITEABLE_TEXT_DETAILED, 0);
+        pending_actions ^= ACTION_SHOW_MESSAGE_USER_DIR_NOT_WRITABLE;
+        return 1;
+    }
+    if (pending_actions & ACTION_SHOW_INTRO_VIDEOS) {
+        window_intro_video_show();
+        pending_actions ^= ACTION_SHOW_INTRO_VIDEOS;
+        return 1;
+    }
+    return 0;
 }
 
 static void draw_background(void)
 {
+    if (process_pending_actions()) {
+        return;
+    }
     graphics_clear_screen();
 
     graphics_in_dialog();
@@ -27,6 +71,9 @@ static void draw_background(void)
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
+    if (pending_actions) {
+        return;
+    }
     if (m->left.went_up || m->right.went_up) {
         window_main_menu_show(0);
         return;
@@ -36,7 +83,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-void window_logo_show(int show_patch_message)
+void window_logo_show(int actions)
 {
     window_type window = {
         WINDOW_LOGO,
@@ -44,16 +91,6 @@ void window_logo_show(int show_patch_message)
         0,
         handle_input
     };
-    init();
+    init(actions);
     window_show(&window);
-    if (show_patch_message == MESSAGE_MISSING_PATCH) {
-        window_plain_message_dialog_show(TR_NO_PATCH_TITLE, TR_NO_PATCH_MESSAGE, 0);
-    } else if (show_patch_message == MESSAGE_MISSING_FONTS) {
-        window_plain_message_dialog_show(TR_MISSING_FONTS_TITLE, TR_MISSING_FONTS_MESSAGE, 0);
-    } else if (show_patch_message == MESSAGE_MISSING_EXTRA_ASSETS) {
-        window_plain_message_dialog_show(TR_NO_EXTRA_ASSETS_TITLE, TR_NO_EXTRA_ASSETS_MESSAGE, 0);
-    }
-    if (config_get(CONFIG_UI_SHOW_INTRO_VIDEO)) {
-        window_intro_video_show();
-    }
 }

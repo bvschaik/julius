@@ -2,12 +2,15 @@
 #define WINDOW_LOGO_H
 
 enum {
-    MESSAGE_NONE = 0,
-    MESSAGE_MISSING_PATCH = 1,
-    MESSAGE_MISSING_FONTS = 2,
-    MESSAGE_MISSING_EXTRA_ASSETS = 3,
+    ACTION_NONE = 0,
+    ACTION_SHOW_MESSAGE_MISSING_PATCH = 1 << 0,
+    ACTION_SHOW_MESSAGE_MISSING_FONTS = 1 << 1,
+    ACTION_SHOW_MESSAGE_MISSING_EXTRA_ASSETS = 1 << 2,
+    ACTION_SETUP_USER_DIR = 1 << 3,
+    ACTION_SHOW_MESSAGE_USER_DIR_NOT_WRITABLE = 1 << 4,
+    ACTION_SHOW_INTRO_VIDEOS = 1 << 5
 };
 
-void window_logo_show(int show_patch_message);
+void window_logo_show(int actions);
 
 #endif // WINDOW_LOGO_H

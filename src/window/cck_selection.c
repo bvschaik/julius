@@ -72,7 +72,7 @@ static struct {
 
 static void init(void)
 {
-    data.scenarios = dir_find_files_with_extension(".", "map");
+    data.scenarios = dir_find_files_with_extension_at_location(PATH_LOCATION_SCENARIO, "map");
     data.scenarios = dir_append_files_with_extension("mapx");
     data.focus_toggle_button = 0;
     data.show_minimap = 0;
@@ -276,7 +276,10 @@ static void select_scenario(int index, int is_double_click)
 {
     if (strcmp(data.selected_scenario_filename, data.scenarios->files[index].name) != 0) {
         snprintf(data.selected_scenario_filename, FILE_NAME_MAX, "%s", data.scenarios->files[index].name);
-        game_file_io_read_scenario_info(data.selected_scenario_filename, &data.info);
+        const char *filename = dir_get_file_at_location(data.selected_scenario_filename, PATH_LOCATION_SCENARIO);
+        if (filename) {
+            game_file_io_read_scenario_info(filename, &data.info);
+        }
         encoding_from_utf8(data.selected_scenario_filename, data.selected_scenario_display, FILE_NAME_MAX);
         file_remove_extension((char *) data.selected_scenario_display);
         window_invalidate();

@@ -63,7 +63,7 @@ int encoding_can_display(const char *utf8_char);
 void encoding_to_utf8(const uint8_t *input, char *output, int output_length, int decompose);
 
 /**
- * Converts the internally-encoded input to UTF-8 output
+ * Converts the UTF-8 to internally-encoded output
  * @param input Input to convert, UTF-8 encoded
  * @param output Output buffer to store the internally encoded input
  * @param output_length Length of the output buffer

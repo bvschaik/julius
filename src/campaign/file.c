@@ -19,8 +19,8 @@ static struct {
 int campaign_file_exists(const char *filename)
 {
     if (data.is_folder) {
-        snprintf(&data.file_name[data.file_name_offset], FILE_NAME_MAX - data.file_name_offset, "%s", filename);
-        return file_exists(data.file_name, NOT_LOCALIZED);
+        snprintf(&data.file_name[data.file_name_offset], FILE_NAME_MAX - data.file_name_offset, "/%s", filename);
+        return dir_get_file_at_location(data.file_name, PATH_LOCATION_CAMPAIGN) != 0;
     }
     int close_at_end = data.zip.parser == 0;
     if (!campaign_file_open_zip()) {
@@ -37,8 +37,12 @@ int campaign_file_exists(const char *filename)
 static void *load_file_from_folder(const char *file, size_t *length)
 {
     *length = 0;
-    snprintf(&data.file_name[data.file_name_offset], FILE_NAME_MAX - data.file_name_offset, "%s", file);
-    FILE *campaign_file = file_open(data.file_name, "rb");
+    snprintf(&data.file_name[data.file_name_offset], FILE_NAME_MAX - data.file_name_offset, "/%s", file);
+    const char *filename = dir_get_file_at_location(data.file_name, PATH_LOCATION_CAMPAIGN);
+    if (!filename) {
+        return 0;
+    }
+    FILE *campaign_file = file_open(filename, "rb");
     if (!campaign_file) {
         return 0;
     }
@@ -109,12 +113,7 @@ void campaign_file_set_path(const char *path)
     campaign_file_close_zip();
     if (path && path[0]) {
         data.is_folder = !file_has_extension(path, "campaign");
-        if (data.is_folder) {
-            data.file_name_offset = snprintf(data.file_name, FILE_NAME_MAX, "%s/%s/", CAMPAIGNS_DIR_NAME, path);
-        } else {
-            snprintf(data.file_name, FILE_NAME_MAX, "%s", path);
-            data.file_name_offset = 0;
-        }
+        data.file_name_offset = snprintf(data.file_name, FILE_NAME_MAX, "%s", path);
     } else {
         data.file_name[0] = 0;
         data.file_name_offset = 0;
@@ -149,7 +148,11 @@ int campaign_file_open_zip(void)
         return 0;
     }
     if (!data.zip.stream) {
-        data.zip.stream = file_open(data.file_name, "rb");
+        const char *filename = dir_get_file_at_location(data.file_name, PATH_LOCATION_CAMPAIGN);
+        if (!filename) {
+            return 0;
+        }
+        data.zip.stream = file_open(filename, "rb");
         if (!data.zip.stream) {
             return 0;
         }

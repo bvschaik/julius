@@ -97,7 +97,7 @@ static void draw_foreground(void)
         button_border_draw(data.checkbox_start_width, 180, CHECKBOX_CHECK_SIZE, CHECKBOX_CHECK_SIZE, data.has_focus);
     }
     if (data.has_buttons) {
-        image_buttons_draw(80, data.checkbox_text ? 110 : 80, buttons, 2);
+        image_buttons_draw(80, data.checkbox_text ? 110 : 90, buttons, 2);
     } else {
         lang_text_draw_centered(13, 1, 80, 208, 480, FONT_NORMAL_BLACK);
     }
@@ -110,12 +110,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (data.has_buttons && image_buttons_handle_mouse(mouse_in_dialog(m), 80,
-        data.checkbox_text ? 110 : 80, buttons, 2, 0)) {
+        data.checkbox_text ? 110 : 90, buttons, 2, 0)) {
         return;
     }
     if (input_go_back_requested(m, h)) {
-        data.close_func(0, 0);
         window_go_back();
+        data.close_func(0, 0);
     }
     if (h->enter_pressed) {
         confirm();

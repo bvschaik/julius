@@ -29,12 +29,13 @@
 #include "window/plain_message_dialog.h"
 #include "window/select_list.h"
 #include "window/text_input.h"
+#include "window/user_path_setup.h"
 
 #include <stdio.h>
 #include <string.h>
 
 #define MAX_LANGUAGE_DIRS 20
-#define MAX_WIDGETS 30
+#define MAX_WIDGETS 32
 
 #define NUM_VISIBLE_ITEMS 13
 
@@ -58,12 +59,14 @@ static void on_scroll(void);
 static void toggle_switch(int key);
 static void button_language_select(int height, int param2);
 static void button_edit_player_name(int param1, int param2);
+static void button_change_user_directory(int param1, int param2);
 static void button_reset_defaults(int param1, int param2);
 static void button_hotkeys(int param1, int param2);
 static void button_close(int save, int param2);
 static void button_page(int page, int param2);
 
 static const uint8_t *display_text_language(void);
+static const uint8_t *display_text_user_directory(void);
 static const uint8_t *display_text_player_name(void);
 static const uint8_t *display_text_game_speed(void);
 static const uint8_t *display_text_resolution(void);
@@ -95,7 +98,8 @@ enum {
 
 enum {
     SELECT_LANGUAGE,
-    SELECT_PLAYER_NAME
+    SELECT_PLAYER_NAME,
+    SELECT_USER_DIRECTORY
 };
 
 enum {
@@ -162,6 +166,8 @@ typedef struct {
 
 static config_widget all_widgets[CONFIG_PAGES][MAX_WIDGETS] = {
     { // General Settings
+        {TYPE_SELECT, SELECT_USER_DIRECTORY, TR_USER_DIRETORIES_WINDOW_USER_PATH, display_text_user_directory},
+        {TYPE_SPACE},
         {TYPE_SELECT, SELECT_LANGUAGE, TR_CONFIG_LANGUAGE_LABEL, display_text_language},
         {TYPE_SPACE},
         {TYPE_SELECT, SELECT_PLAYER_NAME, TR_CONFIG_DEFAULT_PLAYER_NAME, display_text_player_name},
@@ -268,6 +274,7 @@ static resolution available_resolutions[sizeof(resolutions) / sizeof(resolution)
 static generic_button select_buttons[] = {
     {225, 0, 200, 24, button_language_select, button_none},
     {225, 0, 200, 24, button_edit_player_name, button_none},
+    {225, 0, 200, 24, button_change_user_directory, button_none},
 };
 
 static numerical_range_widget ranges[] = {
@@ -651,6 +658,11 @@ static uint8_t *percentage_string(uint8_t *string, int percentage)
 static const uint8_t *display_text_language(void)
 {
     return data.language_options.options[data.language_options.selected];
+}
+
+static const uint8_t *display_text_user_directory(void)
+{
+    return translation_for(TR_USER_DIRECTORIES_WINDOW_TITLE);
 }
 
 static const uint8_t *display_text_player_name(void)
@@ -1110,6 +1122,11 @@ static void button_edit_player_name(int param1, int param2)
         PLAYER_NAME_LENGTH, set_player_name);
 }
 
+static void button_change_user_directory(int param1, int param2)
+{
+    window_user_path_setup_show(0);
+}
+
 static void button_reset_defaults(int param1, int param2)
 {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
@@ -1130,8 +1147,8 @@ static void cancel_values(void)
         data.config_values[i].new_value = data.config_values[i].original_value;
     }
     for (int i = 0; i < CONFIG_STRING_MAX_ALL; i++) {
-        snprintf(data.config_string_values[i].new_value, CONFIG_STRING_VALUE_MAX, "%s",
-            data.config_string_values[i].original_value);
+        memcpy(data.config_string_values[i].new_value, data.config_string_values[i].original_value,
+            CONFIG_STRING_VALUE_MAX);
     }
 }
 

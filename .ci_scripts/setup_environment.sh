@@ -10,7 +10,7 @@ case "$BUILD_TARGET" in
 "switch")
 	# You can obtain a recent devkitA64 image from https://hub.docker.com/repository/docker/devkitpro/devkita64/general
 	# As for Vita above, make sure that it compiles correctly and runs on a Switch prior to pushing the change
-	docker run -d --name switchdev --workdir /build/git -v "${PWD}:/build/git" devkitpro/devkita64:20231108 tail -f /dev/null
+	docker run -d --name switchdev --workdir /build/git -v "${PWD}:/build/git" devkitpro/devkita64:20240324 tail -f /dev/null
 	;;
 "android")
 	# Decrypt the key files

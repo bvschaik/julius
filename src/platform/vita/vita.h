@@ -21,5 +21,7 @@ void platform_hide_virtual_keyboard(void);
 
 #define PLATFORM_USE_SOFTWARE_CURSOR
 
+#define PLATFORM_NO_USER_DIRECTORIES
+
 #endif // __vita__
 #endif // PLATFORM_VITA_H

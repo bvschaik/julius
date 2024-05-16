@@ -193,6 +193,20 @@ void system_set_mouse_position(int *x, int *y);
 void system_setup_crash_handler(void);
 
 /**
+ * Indicates whether the current platform supports a "selct folder" dialog
+ * @return 1 if it supports displaying a folder dialog, 0 otherwise 
+ */
+int system_supports_select_folder_dialog(void);
+
+/**
+ * Shows a "select folder" dialog
+ * @param title Title of the dialog
+ * @param default_path Default path to show
+ * @return The selected folder, or 0 if the dialog was cancelled
+ */
+const char *system_show_select_folder_dialog(const char *title, const char *default_path);
+
+/**
  * Exit the game
  */
 void system_exit(void);

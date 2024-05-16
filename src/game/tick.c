@@ -32,6 +32,7 @@
 #include "city/trade.h"
 #include "city/victory.h"
 #include "core/config.h"
+#include "core/dir.h"
 #include "core/random.h"
 #include "editor/editor.h"
 #include "empire/city.h"
@@ -117,10 +118,10 @@ static void advance_month(void)
     scenario_events_progress_paused(1);
     scenario_events_process_all();
     if (setting_monthly_autosave()) {
-        game_file_write_saved_game("autosave.svx");
+        game_file_write_saved_game(dir_append_location("autosave.svx", PATH_LOCATION_SAVEGAME));
     }
     if (new_year && config_get(CONFIG_GP_CH_YEARLY_AUTOSAVE)) {
-        game_file_write_saved_game("autosave-year.svx");
+        game_file_write_saved_game(dir_append_location("autosave-year.svx", PATH_LOCATION_SAVEGAME));
     }
 }
 

@@ -121,6 +121,24 @@ static void post_event(int code)
     SDL_PushEvent(&event);
 }
 
+int system_supports_select_folder_dialog(void)
+{
+#ifdef USE_TINYFILEDIALOGS
+    return 1;
+#else
+    return 0;
+#endif
+}
+
+const char *system_show_select_folder_dialog(const char *title, const char *default_path)
+{
+#ifdef USE_TINYFILEDIALOGS
+    return tinyfd_selectFolderDialog(title, default_path);
+#else
+    return 0;
+#endif
+}
+
 void system_exit(void)
 {
     post_event(USER_EVENT_QUIT);
@@ -456,11 +474,10 @@ static int init_sdl(int enable_joysticks)
 #ifdef SHOW_FOLDER_SELECT_DIALOG
 static const char *ask_for_data_dir(int again)
 {
-#ifdef __ANDROID__
     if (again) {
         const SDL_MessageBoxButtonData buttons[] = {
-           {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
-           {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}
+            {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
+            {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}
         };
         const SDL_MessageBoxData messageboxdata = {
             SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
@@ -476,19 +493,10 @@ static const char *ask_for_data_dir(int again)
             return NULL;
         }
     }
+#ifdef __ANDROID__
     return android_show_c3_path_dialog(again);
 #else
-    if (again) {
-        int result = tinyfd_messageBox("Wrong folder selected",
-            "Augustus requires the original files from Caesar 3 to run.\n\n"
-            "The selected folder is not a proper Caesar 3 folder.\n\n"
-            "Press OK to select another folder or Cancel to exit.",
-            "okcancel", "warning", 1);
-        if (!result) {
-            return NULL;
-        }
-    }
-    return tinyfd_selectFolderDialog("Please select your Caesar 3 folder");
+    return system_show_select_folder_dialog("Please select your Caesar 3 folder", 0);
 #endif
 }
 #endif
@@ -532,7 +540,7 @@ static int pre_init(const char *custom_data_dir)
 
 #ifdef SHOW_FOLDER_SELECT_DIALOG
     const char *user_dir = pref_data_dir();
-    if (user_dir) {
+    if (*user_dir) {
         SDL_Log("Loading game from user pref %s", user_dir);
         if (platform_file_manager_set_base_path(user_dir) && game_pre_init()) {
             return 1;

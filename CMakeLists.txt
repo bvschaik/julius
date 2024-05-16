@@ -202,6 +202,7 @@ set(PLATFORM_FILES
     ${PROJECT_SOURCE_DIR}/src/platform/screen.c
     ${PROJECT_SOURCE_DIR}/src/platform/sound_device.c
     ${PROJECT_SOURCE_DIR}/src/platform/touch.c
+    ${PROJECT_SOURCE_DIR}/src/platform/user_path.c
     ${PROJECT_SOURCE_DIR}/src/platform/version.c
     ${PROJECT_SOURCE_DIR}/src/platform/virtual_keyboard.c
 )
@@ -654,6 +655,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/text_input.c
     ${PROJECT_SOURCE_DIR}/src/window/trade_opened.c
     ${PROJECT_SOURCE_DIR}/src/window/trade_prices.c
+    ${PROJECT_SOURCE_DIR}/src/window/user_path_setup.c
     ${PROJECT_SOURCE_DIR}/src/window/victory_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/video.c
 )

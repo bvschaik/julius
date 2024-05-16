@@ -94,7 +94,7 @@ static void init(void)
     if (string_equals(player_name_input.placeholder, data.player_name)) {
         *data.player_name = 0;
     }
-    data.campaign_list = dir_find_all_subdirectories(CAMPAIGNS_DIR_NAME);
+    data.campaign_list = dir_find_all_subdirectories_at_location(PATH_LOCATION_CAMPAIGN);
     data.campaign_list = dir_append_files_with_extension("campaign");
     calculate_input_box_width();
     input_box_start(&player_name_input);

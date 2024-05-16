@@ -14,6 +14,7 @@ static struct {
     dir_listing listing;
     int max_files;
     char *cased_filename;
+    char current_dir[FILE_NAME_MAX];
 } data;
 
 static void allocate_listing_files(int min, int max)
@@ -27,6 +28,7 @@ static void allocate_listing_files(int min, int max)
 static void clear_dir_listing(void)
 {
     data.listing.num_files = 0;
+    data.current_dir[0] = 0;
     if (data.max_files <= 0) {
         data.listing.files = (dir_entry *) malloc(BASE_MAX_FILES * sizeof(dir_entry));
         allocate_listing_files(0, BASE_MAX_FILES);
@@ -70,17 +72,29 @@ static int add_to_listing(const char *filename, long modified_time)
 const dir_listing *dir_find_files_with_extension(const char *dir, const char *extension)
 {
     clear_dir_listing();
+    snprintf(data.current_dir, FILE_NAME_MAX, "%s", dir);
     platform_file_manager_list_directory_contents(dir, TYPE_FILE, extension, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(dir_entry), compare_lower);
     return &data.listing;
 }
 
+const dir_listing *dir_find_files_with_extension_at_location(int location, const char *extension)
+{
+    return dir_find_files_with_extension(platform_file_manager_get_directory_for_location(location, 0), extension);
+}
+
 const dir_listing *dir_find_all_subdirectories(const char *dir)
 {
     clear_dir_listing();
+    snprintf(data.current_dir, FILE_NAME_MAX, "%s", dir);
     platform_file_manager_list_directory_contents(dir, TYPE_DIR, 0, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(dir_entry), compare_lower);
     return &data.listing;
+}
+
+const dir_listing *dir_find_all_subdirectories_at_location(int location)
+{
+    return dir_find_all_subdirectories(platform_file_manager_get_directory_for_location(location, 0));
 }
 
 static int compare_case(const char *filename, long unused)
@@ -171,7 +185,7 @@ static const char *get_case_corrected_file(const char *dir, const char *filepath
 
 const dir_listing *dir_append_files_with_extension(const char *extension)
 {
-    platform_file_manager_list_directory_contents(0, TYPE_FILE, extension, add_to_listing);
+    platform_file_manager_list_directory_contents(data.current_dir, TYPE_FILE, extension, add_to_listing);
     qsort(data.listing.files, data.listing.num_files, sizeof(dir_entry), compare_lower);
     return &data.listing;
 }
@@ -193,7 +207,15 @@ const char *dir_get_file(const char *filepath, int localizable)
     return get_case_corrected_file(0, filepath);
 }
 
-const char *dir_get_asset(const char *asset_path, const char *filepath)
+const char *dir_get_file_at_location(const char *filename, int location)
 {
-    return get_case_corrected_file(asset_path, filepath);
+    return get_case_corrected_file(platform_file_manager_get_directory_for_location(location, 0), filename);
+}
+
+const char *dir_append_location(const char *filename, int location)
+{
+    static char corrected_filename[FILE_NAME_MAX];
+    snprintf(corrected_filename, FILE_NAME_MAX, "%s%s",
+        platform_file_manager_get_directory_for_location(location, 0), filename);
+    return corrected_filename;
 }

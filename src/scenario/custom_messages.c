@@ -10,18 +10,18 @@
 #define CUSTOM_MESSAGES_ARRAY_SIZE_STEP 100
 
 static const char *AUDIO_FILE_PATHS[] = {
-    CAMPAIGNS_DIRECTORY "/audio/",
-    "community/audio/",
-    "mp3/",
-    "wavs/",
+    CAMPAIGNS_DIRECTORY "/audio",
+    "community/audio",
+    "mp3",
+    "wavs",
     0
 };
 
 static const char *VIDEO_FILE_PATHS[] = {
-    CAMPAIGNS_DIRECTORY "/video/",
-    "community/video/",
-    "smk/",
-    "mpg/",
+    CAMPAIGNS_DIRECTORY "/video",
+    "community/video",
+    "smk",
+    "mpg",
     0
 };
 
@@ -233,8 +233,13 @@ uint8_t *custom_messages_get_text(custom_message_t *message)
 static const char *check_for_file_in_dir(const char *filename, const char *directory)
 {
     static char filepath[FILE_NAME_MAX];
-    snprintf(filepath, FILE_NAME_MAX, "%s%s", directory, filename);
-    return campaign_has_file(filepath) || file_exists(filepath, MAY_BE_LOCALIZED) ? filepath : 0;
+    int location = PATH_LOCATION_ROOT;
+    if (strncmp(directory, "community/", 10) == 0) {
+        directory += 10;
+        location = PATH_LOCATION_COMMUNITY;
+    }
+    snprintf(filepath, FILE_NAME_MAX, "%s/%s", directory, filename);
+    return campaign_has_file(filepath) || dir_get_file_at_location(filepath, location) ? filepath : 0;
 }
 
 static const char *search_for_file(const uint8_t *filename, const char *paths[])

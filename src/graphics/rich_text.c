@@ -253,19 +253,20 @@ static int get_raw_text_width(const uint8_t *str)
 static int get_external_image_id(const char *filename)
 {
     char full_path[FILE_NAME_MAX];
-    char *paths[] = { CAMPAIGNS_DIRECTORY "/image", "community/image" };
-    int found_path = 0;
-    for (int i = 0; i < 2; i++) {
+    char *paths[] = { CAMPAIGNS_DIRECTORY "/image", "image" };
+    const char *found_path = 0;
+    for (int i = 0; i < 2 && !found_path; i++) {
         snprintf(full_path, FILE_NAME_MAX, "%s/%s", paths[i], filename);
-        if (campaign_has_file(full_path) || file_exists(full_path, NOT_LOCALIZED)) {
-            found_path = 1;
-            break;
+        if (campaign_has_file(full_path)) {
+            found_path = full_path;
+        } else {
+            found_path = dir_get_file_at_location(full_path, PATH_LOCATION_COMMUNITY);
         }
     }
     if (!found_path) {
         return 0;
     }
-    return assets_get_external_image(full_path, 0);
+    return assets_get_external_image(found_path, 0);
 }
 
 int rich_text_parse_image_id(const uint8_t **position, int default_image_group, int can_be_filepath)

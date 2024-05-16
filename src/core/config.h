@@ -8,6 +8,7 @@ typedef enum {
     CONFIG_GENERAL_MASTER_VOLUME,
     CONFIG_GENERAL_ENABLE_VIDEO_SOUND,
     CONFIG_GENERAL_VIDEO_VOLUME,
+    CONFIG_GENERAL_HAS_SET_USER_DIRECTORIES,
     CONFIG_GP_FIX_IMMIGRATION_BUG,
     CONFIG_GP_FIX_100_YEAR_GHOSTS,
     CONFIG_SCREEN_DISPLAY_SCALE,
@@ -117,6 +118,13 @@ const char *config_get_default_string_value(config_string_key key);
  * Load config from file
  */
 void config_load(void);
+
+/**
+ * Whether the user directory must be configured
+ * 
+ * @return 1 If the user directory still needs to be set, 0 otherwise
+ */
+int config_must_configure_user_directory(void);
 
 /**
  * Save config to file

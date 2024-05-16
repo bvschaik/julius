@@ -223,10 +223,6 @@ static int load_scenario_data(const char *scenario_file)
 
 static int load_custom_scenario(const uint8_t *scenario_name, const char *scenario_file)
 {
-    if (!file_exists(scenario_file, NOT_LOCALIZED)) {
-        return 0;
-    }
-
     clear_scenario_data();
     if (!load_scenario_data(scenario_file)) {
         return 0;
@@ -339,11 +335,15 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
     map_bookmarks_clear();
     int is_save_game = 0;
     if (scenario_is_custom()) {
-        if (!load_custom_scenario(scenario_name, scenario_file)) {
-            uint8_t scenario_mapx_name[FILE_NAME_MAX];
-            string_copy(scenario_name, scenario_mapx_name, FILE_NAME_MAX);
-            if (game_file_load_saved_game(scenario_file) == FILE_LOAD_SUCCESS) {
+        const char *full_scenario_file = dir_get_file_at_location(scenario_file, PATH_LOCATION_SCENARIO);
+        if (!full_scenario_file) {
+            return 0;
+        }
+        if (!load_custom_scenario(scenario_name, full_scenario_file)) {
+            if (game_file_load_saved_game(full_scenario_file) == FILE_LOAD_SUCCESS) {
                 is_save_game = 1;
+                uint8_t scenario_mapx_name[FILE_NAME_MAX];
+                string_copy(scenario_name, scenario_mapx_name, FILE_NAME_MAX);
                 scenario_set_name(scenario_mapx_name);
             } else {
                 return 0;
@@ -383,7 +383,7 @@ static const char *get_scenario_filename(const uint8_t *scenario_name, const cha
     static char filename[FILE_NAME_MAX];
     encoding_to_utf8(scenario_name, filename, FILE_NAME_MAX, decomposed);
     if (!file_has_extension(filename, extension)) {
-        file_append_extension(filename, extension);
+        file_append_extension(filename, extension, FILE_NAME_MAX);
     }
     return filename;
 }
@@ -518,7 +518,7 @@ void game_file_write_mission_saved_game(void)
         encoding_to_utf8(encoded_filename, localized_filename, FILE_NAME_MAX, encoding_system_uses_decomposed());
         filename = localized_filename;
     }
-    if (!file_exists(filename, NOT_LOCALIZED)) {
-        game_file_io_write_saved_game(filename);
+    if (!dir_get_file_at_location(filename, PATH_LOCATION_SAVEGAME)) {
+        game_file_io_write_saved_game(dir_append_location(filename, PATH_LOCATION_SAVEGAME));
     }
 }

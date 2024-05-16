@@ -25,6 +25,23 @@ enum {
 int platform_file_manager_set_base_path(const char *path);
 
 /**
+ * Gets a directory location for the specified type
+ * @param location The location to get
+ * @param user_directory The user directory to use, or 0 to use the one from the preferences
+ * @return The path for the provided location, or an empty string if the location is the base path.
+ *         If there is an actual path, it is guaranteeed to end with "/".
+ *         The return value is a pointer to a static buffer, so it should be copied if needed.
+ */
+const char *platform_file_manager_get_directory_for_location(int location, const char *user_directory);
+
+/**
+ * Checks if a directory is writeable
+ * @param directory The directory to check
+ * @return 1 if the directory is writeable, 0 otherwise
+ */
+int platform_file_manager_is_directory_writeable(const char *directory);
+
+/**
  * Gets the contents of a directory by the specified extension
  * @param dir The directory to search on, or null if base directory
  * @param type The file type to filter (dir, file or both)
@@ -101,10 +118,12 @@ int platform_file_manager_remove_file(const char *filename);
 /**
  * Creates a directory
  * @param path The full path to the new directory
+ * @param location The base location to create the directory. The game won't attempt to create the directories in location.
+ * If location and name are similar, the game will create the directory in the location. Can be 0.
  * @param overwrite Whether to return error if overwriting the directory
  * @return 1 if creation was successful, 0 otherwise
  */
-int platform_file_manager_create_directory(const char *name, int overwrite);
+int platform_file_manager_create_directory(const char *name, const char *location, int overwrite);
 
 /**
  * Copies a file
@@ -118,9 +137,10 @@ int platform_file_manager_copy_file(const char *src, const char *dst);
  * Copies a directory recursively
  * @param src The source directory
  * @param dst The destination directory
+ * @param overwrite_files Whether to overwrite existing files
  * @return 1 if copying was successful, 0 otherwise
  */
-int platform_file_manager_copy_directory(const char *src, const char *dst);
+int platform_file_manager_copy_directory(const char *src, const char *dst, int overwrite_files);
 
 /**
  * Removes a directory recursively - use with care!!!

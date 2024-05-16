@@ -3,6 +3,8 @@
 
 #ifdef __ANDROID__
 
+#define PLATFORM_NO_USER_DIRECTORIES
+
 const char *android_show_c3_path_dialog(int again);
 float android_get_screen_density(void);
 int android_get_file_descriptor(const char *filename, const char *mode);

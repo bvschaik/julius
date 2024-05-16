@@ -71,6 +71,16 @@ typedef struct {
 
 static array(packed_asset) packed_assets;
 
+const char *pref_user_dir(void)
+{
+    return "";
+}
+
+int random_from_stdlib(void)
+{
+    return 0;
+}
+
 static int remove_file(const char *filename, long unused)
 {
     snprintf(current_file, FILE_NAME_MAX, "%s/%s", PACKED_ASSETS_DIR, filename);
@@ -92,8 +102,8 @@ static int prepare_packed_assets_dir(void)
             return 0;
         }
     }
-    if (!platform_file_manager_create_directory(PACKED_ASSETS_DIR "/" ASSETS_IMAGE_PATH, 1) ||
-        !platform_file_manager_create_directory(PACKED_ASSETS_DIR "/" CURSORS_DIR, 1)) {
+    if (!platform_file_manager_create_directory(PACKED_ASSETS_DIR "/" ASSETS_IMAGE_PATH, 0, 1) ||
+        !platform_file_manager_create_directory(PACKED_ASSETS_DIR "/" CURSORS_DIR, 0, 1)) {
         log_error("Failed to create directories", 0, 0);
         return 0;
     }
@@ -765,7 +775,7 @@ int main(int argc, char **argv)
 
     log_info("Copying other assets...", 0, 0);
 
-    platform_file_manager_copy_directory(ASSETS_DIRECTORY, PACKED_ASSETS_DIR);
+    platform_file_manager_copy_directory(ASSETS_DIRECTORY, PACKED_ASSETS_DIR, 1);
 
     log_info("All done!", 0, 0);
 

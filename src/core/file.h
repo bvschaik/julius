@@ -61,14 +61,22 @@ void file_change_extension(char *filename, const char *new_extension);
  * Appends the extension to the file
  * @param[in,out] filename Filename to change
  * @param extension Extension to append
+ * @param length Length of the filename buffer
  */
-void file_append_extension(char *filename, const char *extension);
+void file_append_extension(char *filename, const char *extension, size_t length);
 
 /**
  * Removes the extension from the file
  * @param[in,out] filename Filename to change
  */
 void file_remove_extension(char *filename);
+
+/**
+ * Removes the directory from the filename
+ * @param filename Filename to change
+ * @return Filename without directory
+ */
+const char *file_remove_directory(const char *filename);
 
 /**
  * Check if file exists

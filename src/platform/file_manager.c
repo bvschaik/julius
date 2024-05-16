@@ -1,13 +1,16 @@
 #include "file_manager.h"
 
 #include "assets/assets.h"
+#include "core/config.h"
 #include "core/file.h"
 #include "core/log.h"
+#include "core/random.h"
 #include "core/string.h"
 #include "platform/android/android.h"
 #include "platform/emscripten/emscripten.h"
 #include "platform/file_manager_cache.h"
 #include "platform/platform.h"
+#include "platform/prefs.h"
 #include "platform/vita/vita.h"
 
 #ifndef BUILDING_ASSET_PACKER
@@ -30,6 +33,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <sys/utime.h>
 
 #define fs_dir_type _WDIR
 #define fs_dir_entry struct _wdirent
@@ -66,6 +70,17 @@ static wchar_t *utf8_to_wchar(const char *str)
     return result;
 }
 
+static void copy_file_times(FILE *src, FILE *dst)
+{
+    stat_info file_info;
+    if (_fstat(_fileno(src), &file_info) == -1) {
+        return;
+    }
+    struct _utimbuf ut;
+    ut.actime = file_info.st_atime;
+    ut.modtime = file_info.st_mtime;
+    _futime(_fileno(dst), &ut);
+}
 #else // not _WIN32
 #include <errno.h>
 #include <libgen.h>
@@ -83,6 +98,33 @@ static wchar_t *utf8_to_wchar(const char *str)
 #define fs_remove remove
 typedef struct stat stat_info;
 typedef char file_name;
+
+#ifdef __SWITCH__
+static void copy_file_times(const char *src, const char *dst)
+{
+    stat_info file_info;
+    if (stat(src, &file_info) == -1) {
+        return;
+    }
+    struct timeval times[2] = { 0 };
+    times[0].tv_sec = file_info.st_atime;
+    times[1].tv_sec = file_info.st_mtime;
+    utimes(dst, times);
+}
+#else
+static void copy_file_times(FILE *src, FILE *dst)
+{
+    stat_info file_info;
+    if (fstat(fileno(src), &file_info) == -1) {
+        return;
+    }
+    struct timespec times[2] = { 0 };
+    times[0].tv_sec = file_info.st_atime;
+    times[1].tv_sec = file_info.st_mtime;
+    futimens(fileno(dst), times);
+}
+#endif
+
 #endif
 
 #ifndef S_ISLNK
@@ -121,7 +163,7 @@ static int is_file(int mode)
 #endif
 
 #ifdef __ANDROID__
-static const char *assets_directory = ASSETS_DIRECTORY;
+static const char *const assets_directory = ASSETS_DIRECTORY;
 #else
 #define MAX_ASSET_DIRS 10
 
@@ -179,7 +221,34 @@ static int write_base_path_to(char *dest)
 static struct {
     char current_src_path[FILE_NAME_MAX];
     char current_dst_path[FILE_NAME_MAX];
+    int overwrite_files;
 } directory_copy_data;
+
+static struct {
+    const char *root;
+    const char *configs;
+    const char *assets;
+    const char *savegames;
+    const char *scenarios;
+    const char *campaigns;
+    const char *screenshots;
+    const char *community;
+    const char *editor_custom_empires;
+    const char *editor_custom_messages;
+    const char *editor_custom_events;
+} paths = {
+    "",
+    "config/",
+    assets_directory,
+    "savegames/",
+    "scenarios/",
+    "campaigns/",
+    "screenshots/",
+    "community/",
+    "editor/empires/",
+    "editor/messages/",
+    "editor/events/"
+};
 
 static void set_assets_directory(void)
 {
@@ -299,7 +368,8 @@ int platform_file_manager_list_directory_contents(
         } else {
             char full_asset_path[FILE_NAME_MAX];
             // Prevent double slashes as they may not work
-            if (*assets_directory && assets_directory[strlen(assets_directory) - 1] == '/' && dir[assets_directory_length] == '/') {
+            if (*assets_directory && assets_directory[strlen(assets_directory) - 1] == '/' &&
+                dir[assets_directory_length] == '/') {
                 assets_directory_length++;
             }
             snprintf(full_asset_path, FILE_NAME_MAX, "%s%s", assets_directory, dir + assets_directory_length);
@@ -451,6 +521,101 @@ int platform_file_manager_set_base_path(const char *path)
 #endif
 }
 
+const char *platform_file_manager_get_directory_for_location(int location, const char *user_directory)
+{
+    static char full_path[FILE_NAME_MAX];
+    if (!user_directory) {
+        user_directory = pref_user_dir();
+    }
+    int cursor = 0;
+    char slash[2] = { 0 };
+    size_t user_directory_length = strlen(user_directory);
+    if (user_directory_length &&
+        user_directory[user_directory_length - 1] != '/' && user_directory[user_directory_length - 1] != '\\') {
+        slash[0] = '/';
+    }
+
+    switch (location) {
+        default:
+            full_path[0] = 0;
+            break;
+        case PATH_LOCATION_CONFIG:
+            if (*user_directory) {
+                cursor = snprintf(full_path, FILE_NAME_MAX, "%s%s%s", user_directory, slash, paths.configs);
+            } else {
+                full_path[0] = 0;
+            }
+            break;
+        case PATH_LOCATION_ASSET:
+            set_assets_directory();
+            cursor = snprintf(full_path, FILE_NAME_MAX, "%s", paths.assets);
+            break;
+        case PATH_LOCATION_SAVEGAME:
+            if (*user_directory) {
+                cursor = snprintf(full_path, FILE_NAME_MAX, "%s%s%s", user_directory, slash, paths.savegames);
+            } else {
+                full_path[0] = 0;
+            }
+            break;
+        case PATH_LOCATION_SCENARIO:
+            if (*user_directory) {
+                cursor = snprintf(full_path, FILE_NAME_MAX, "%s%s%s", user_directory, slash, paths.scenarios);
+            } else {
+                full_path[0] = 0;
+            }
+            break;
+        case PATH_LOCATION_CAMPAIGN:
+            cursor = snprintf(full_path, FILE_NAME_MAX, "%s%s%s", user_directory, slash, paths.campaigns);
+            break;
+        case PATH_LOCATION_SCREENSHOT:
+            if (*user_directory) {
+                cursor = snprintf(full_path, FILE_NAME_MAX, "%s%s%s", user_directory, slash, paths.screenshots);
+            } else {
+                full_path[0] = 0;
+            }
+            break;
+        case PATH_LOCATION_COMMUNITY:
+            cursor = snprintf(full_path, FILE_NAME_MAX, "%s%s%s", user_directory, slash, paths.community);
+            break;
+        case PATH_LOCATION_EDITOR_CUSTOM_EMPIRES:
+            cursor = snprintf(full_path, FILE_NAME_MAX, "%s%s%s", user_directory, slash, paths.editor_custom_empires);
+            break;
+        case PATH_LOCATION_EDITOR_CUSTOM_EVENTS:
+            cursor = snprintf(full_path, FILE_NAME_MAX, "%s%s%s", user_directory, slash, paths.editor_custom_events);
+            break;
+        case PATH_LOCATION_EDITOR_CUSTOM_MESSAGES:
+            cursor = snprintf(full_path, FILE_NAME_MAX, "%s%s%s", user_directory, slash, paths.editor_custom_messages);
+            break;
+    }
+
+    if (cursor >= FILE_NAME_MAX) {
+        log_error("Path ID too long for location: ", 0, location);
+    }
+    return full_path;
+}
+
+int platform_file_manager_is_directory_writeable(const char *directory)
+{
+    char file_name[FILE_NAME_MAX];
+    if (!directory || !*directory) {
+        directory = ".";
+    }
+    int attempt = 0;
+    do {
+        snprintf(file_name, FILE_NAME_MAX, "%s/test_%d.txt", directory, random_from_stdlib());
+        attempt++;
+    } while (file_exists(file_name, NOT_LOCALIZED) && attempt < 5);
+    FILE *fp = file_open(file_name, "w");
+    if (!fp) {
+        return 0;
+    }
+    fclose(fp);
+    if (!file_remove(file_name)) {
+        return 0;
+    }
+    return 1;
+}
+
 #if defined(__ANDROID__)
 
 FILE *platform_file_manager_open_file(const char *filename, const char *mode)
@@ -517,9 +682,8 @@ int platform_file_manager_remove_file(const char *filename)
 
 FILE *platform_file_manager_open_asset(const char *asset, const char *mode)
 {
-    set_assets_directory();
-    const char *cased_asset_path = dir_get_asset(assets_directory, asset);
-    return platform_file_manager_open_file(cased_asset_path, mode);
+    const char *cased_asset_path = dir_get_file_at_location(asset, PATH_LOCATION_ASSET);
+    return cased_asset_path ? platform_file_manager_open_file(cased_asset_path, mode) : 0;
 }
 #endif
 
@@ -537,14 +701,30 @@ int platform_file_manager_close_file(FILE *stream)
     return result == 0;
 }
 
-int platform_file_manager_create_directory(const char *name, int overwrite)
+int platform_file_manager_create_directory(const char *name, const char *location, int overwrite)
 {
     char tokenized_name[FILE_NAME_MAX];
     char temporary_path[FILE_NAME_MAX] = { 0 };
-    snprintf(tokenized_name, FILE_NAME_MAX, "%s", name);
-    char *token = strtok(tokenized_name, "/\\");
     int overwrite_last = 0;
     int cursor = 0;
+    if (location) {
+        cursor = snprintf(temporary_path, FILE_NAME_MAX, "%s", location);
+        if (cursor > FILE_NAME_MAX) {
+            log_error("Path too long", name, 0);
+            return 0;
+        }
+        size_t location_length = strlen(location);
+        if (strncmp(name, location, location_length) == 0) {
+            name += location_length;
+        }
+    }
+    if (*name == '/' || *name == '\\') {
+        cursor += snprintf(&temporary_path[cursor], FILE_NAME_MAX - cursor, "/");
+        name++;
+    }
+    snprintf(tokenized_name, FILE_NAME_MAX, "%s", name);
+    char *token = strtok(tokenized_name, "/\\");
+
     while (token) {
         overwrite_last = 0;
         cursor += snprintf(&temporary_path[cursor], FILE_NAME_MAX - cursor, "%s", token);
@@ -591,6 +771,7 @@ int platform_file_manager_create_directory(const char *name, int overwrite)
     return !overwrite_last;
 }
 
+
 int platform_file_manager_copy_file(const char *src, const char *dst)
 {
     FILE *in = platform_file_manager_open_file(src, "rb");
@@ -606,13 +787,26 @@ int platform_file_manager_copy_file(const char *src, const char *dst)
     char buf[1024];
     size_t read = 0;
 
+
     while ((read = fread(buf, 1, 1024, in)) == 1024) {
         fwrite(buf, 1, 1024, out);
     }
     fwrite(buf, 1, read, out);
-
     file_close(out);
+    out = platform_file_manager_open_file(dst, "rb");
+    if (!out) {
+        fclose(in);
+        return 1;
+    }
+#ifndef __SWITCH__
+    copy_file_times(in, out);
+#endif
     file_close(in);
+    file_close(out);
+
+#ifdef __SWITCH_
+    copy_file_times(src, dst);
+#endif
 
     return 1;
 }
@@ -642,6 +836,13 @@ static void move_up_path(void)
 static int copy_file(const char *name, long unused)
 {
     append_name_to_path(name);
+    if (!directory_copy_data.overwrite_files) {
+        FILE *file = platform_file_manager_open_file(directory_copy_data.current_dst_path, "rb");
+        if (file) {
+            file_close(file);
+            return LIST_CONTINUE;
+        }
+    }
     int result = platform_file_manager_copy_file(directory_copy_data.current_src_path,
         directory_copy_data.current_dst_path) != 0;
 
@@ -658,7 +859,7 @@ static int copy_directory(const char *name, long unused)
     if (name) {
         append_name_to_path(name);
     }
-    if (!platform_file_manager_create_directory(directory_copy_data.current_dst_path, 0)) {
+    if (!platform_file_manager_create_directory(directory_copy_data.current_dst_path, 0, 0)) {
         if (name) {
             move_up_path();
             return LIST_CONTINUE;
@@ -702,10 +903,19 @@ static void copy_directory_name(const char *name, char *dst)
     }
 }
 
-int platform_file_manager_copy_directory(const char *src, const char *dst)
+static int do_nothing(const char *name, long unused)
 {
+    return LIST_MATCH;
+}
+
+int platform_file_manager_copy_directory(const char *src, const char *dst, int overwrite_files)
+{
+    if (!platform_file_manager_list_directory_contents(src, TYPE_DIR, 0, do_nothing)) {
+        return 0;
+    }
     copy_directory_name(src, directory_copy_data.current_src_path);
     copy_directory_name(dst, directory_copy_data.current_dst_path);
+    directory_copy_data.overwrite_files = overwrite_files;
     return copy_directory(0, 0);
 }
 
