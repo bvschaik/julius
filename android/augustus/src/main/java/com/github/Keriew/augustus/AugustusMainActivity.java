@@ -42,6 +42,7 @@ public class AugustusMainActivity extends SDLActivity {
         }
     }
 
+    @SuppressWarnings("unused")
     public float getScreenDensity() {
         return getResources().getDisplayMetrics().density;
     }

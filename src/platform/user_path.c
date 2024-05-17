@@ -43,6 +43,17 @@ void platform_user_path_create_subdirectories(void)
     }
 }
 
+static int is_same_directory(const char *original_directory, const char *new_directory)
+{
+    if (strncmp(original_directory, "./", 2) == 0) {
+        original_directory += 2;
+    }
+    if (strncmp(new_directory, "./", 2) == 0) {
+        new_directory += 2;
+    }
+    return strcmp(new_directory, original_directory) == 0;
+}
+
 void platform_user_path_copy_files(const char *original_user_path, int overwrite)
 {
     for (int location = 0; location < PATH_LOCATION_MAX; location++) {
@@ -55,7 +66,7 @@ void platform_user_path_copy_files(const char *original_user_path, int overwrite
             platform_file_manager_get_directory_for_location(location, original_user_path));
         snprintf(new_directory, FILE_NAME_MAX, "%s",
             platform_file_manager_get_directory_for_location(location, 0));
-        if (strcmp(new_directory, original_directory) == 0) {
+        if (is_same_directory(original_directory, new_directory)) {
             continue;
         }
         const dir_listing *listing = 0;

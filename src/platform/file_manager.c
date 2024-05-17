@@ -853,9 +853,6 @@ static int copy_file(const char *name, long unused)
 
 static int copy_directory(const char *name, long unused)
 {
-#ifdef __ANDROID__
-    return LIST_ERROR;
-#else
     if (name) {
         append_name_to_path(name);
     }
@@ -875,7 +872,6 @@ static int copy_directory(const char *name, long unused)
     move_up_path();
 
     return result;
-#endif
 }
 
 static void copy_directory_name(const char *name, char *dst)
