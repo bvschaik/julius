@@ -50,7 +50,12 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
     info->next = 0;
     struct dirent *entry;
     file_info *file_item = 0;
-    int dir_name_offset = 0;
+    char full_name[FILE_NAME_MAX];
+    size_t dir_name_offset = 0;
+    if (*info->name) {
+        dir_name_offset = snprintf(full_name, FILE_NAME_MAX, "%s/", info->name);
+    }
+
     while ((entry = readdir(d))) {
         const char *name = entry->d_name;
         if (name[0] == '.') {
@@ -68,25 +73,29 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
 
         // Copy name
         snprintf(file_item->name, FILE_NAME_MAX, "%s", name);
+        snprintf(&full_name[dir_name_offset], FILE_NAME_MAX - dir_name_offset, "%s", name);
 
         // Copy extension
-        char c;
-        const char *extension = file_item->name;
-        do {
-            c = *extension;
-            extension++;
-        } while (c != '.' && c);
-        file_item->extension = extension;
+        file_item->extension = strrchr(file_item->name, '.');
+        if (!file_item->extension) {
+            file_item->extension = file_item->name + strlen(file_item->name);
+        } else {
+            file_item->extension++;
+        }
 
         // Check type
         int type = TYPE_FILE;
         struct stat current_file_info;
 
+        int has_stat = 0;
+
         if (stat_status == STAT_UNTESTED) {
-            stat_status = stat(file_item->name, &current_file_info) == STAT_DOESNT_WORK ? STAT_DOESNT_WORK : STAT_WORKS;
+            stat_status = stat(full_name, &current_file_info) == 0 ? STAT_WORKS : STAT_DOESNT_WORK;
+            has_stat = stat_status == STAT_WORKS;
+        } else if (stat_status == STAT_WORKS) {
+            has_stat = stat(full_name, &current_file_info) == 0;
         }
-        if (stat_status == STAT_WORKS) {
-            stat(file_item->name, &current_file_info);
+        if (has_stat) {
             if (S_ISDIR(current_file_info.st_mode)) {
                 type = TYPE_DIR;
             }
@@ -96,16 +105,6 @@ const dir_info *platform_file_manager_cache_get_dir_info(const char *dir)
             // For performance reasons, we only check for a directory if the name has no extension
             // This is effectively a hack, and definitely not full-proof, but the performance gains are well worth it
             if (!*file_item->extension) {
-                static char full_name[FILE_NAME_MAX];
-                if (!dir_name_offset) {
-                    snprintf(full_name, FILE_NAME_MAX, "%s", info->name);
-                    dir_name_offset = strlen(info->name);
-                    if(full_name[dir_name_offset - 1] != '/') {
-                        full_name[dir_name_offset++] = '/';
-                        full_name[dir_name_offset] = 0;
-                    }
-                }
-                snprintf(&full_name[dir_name_offset], FILE_NAME_MAX - dir_name_offset, "%s", name);
                 DIR *file_d = opendir(full_name);
                 if (file_d) {
                     type = TYPE_DIR;

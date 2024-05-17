@@ -324,16 +324,11 @@ static void set_assets_directory(void)
             snprintf(assets_directory, FILE_NAME_MAX, "%s", ASSET_DIRS[i]);
         }
         size_t offset = strlen(assets_directory);
-        assets_directory[offset++] = '/';
+        offset += snprintf(&assets_directory[offset], FILE_NAME_MAX - offset, "/");
         // Special case for romfs on switch
-#ifdef __SWITCH__
         if (strcmp(assets_directory, "romfs:/") != 0) {
-#else
             snprintf(&assets_directory[offset], FILE_NAME_MAX - offset, "%s", ASSETS_DIR_NAME);
-#endif
-#ifdef __SWITCH__
         }
-#endif
         log_info("Trying asset path at", assets_directory, 0);
         const file_name *result = set_file_name(assets_directory);
         fs_dir_type *dir = fs_dir_open(result);
@@ -804,7 +799,7 @@ int platform_file_manager_copy_file(const char *src, const char *dst)
     file_close(in);
     file_close(out);
 
-#ifdef __SWITCH_
+#ifdef __SWITCH__
     copy_file_times(src, dst);
 #endif
 

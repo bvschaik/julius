@@ -8,14 +8,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if !defined(__EMSCRIPTEN__) && !defined(__ANDROID__) && !defined(__SWITCH__)
 static int is_container(void)
 {
     return getenv("container") || getenv("APPIMAGE") || getenv("SNAP");
 }
+#endif
 
 const char *platform_user_path_recommend(void)
 {
-#if defined(__EMSCRIPTEN__) || defined(__ANDROID__) || defined(__SWITCH__) || defined(__VITA__)
+#if defined(__EMSCRIPTEN__) || defined(__ANDROID__) || defined(__SWITCH__)
     return 0;
 #else
     if (is_container()) {

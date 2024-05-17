@@ -194,7 +194,7 @@ static void set_paths(int index)
     if (!path) {
         return;
     }
-    if (strcmp(path, pref_data_dir()) == 0) {
+    if (*path && strcmp(path, pref_data_dir()) == 0) {
         snprintf(data.user_path, FILE_NAME_MAX, "./");
     } else {
         snprintf(data.user_path, FILE_NAME_MAX, "%s", path);
