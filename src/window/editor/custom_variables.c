@@ -183,12 +183,6 @@ static void button_name_click(int button_index, int param2)
         return;
     };
 
-    scenario_event_t *event = scenario_events_get_using_custom_variable(data.list[button_index]->id);
-    if (event) {
-        show_used_event_popup_dialog(event);
-        return;
-    }
-
     int has_name = data.list[button_index]->linked_uid && data.list[button_index]->linked_uid->in_use;
     if (data.select_only) {
         if (!has_name) {
@@ -197,6 +191,11 @@ static void button_name_click(int button_index, int param2)
         data.callback(data.list[button_index]);
         window_go_back();
     } else {
+        scenario_event_t *event = scenario_events_get_using_custom_variable(data.list[button_index]->id);
+        if (event) {
+            show_used_event_popup_dialog(event);
+            return;
+        }
         data.target_variable = data.list[button_index]->id;
         static uint8_t text_input_title[100];
         uint8_t *cursor = string_copy(translation_for(TR_PARAMETER_TYPE_CUSTOM_VARIABLE), text_input_title, 100);
