@@ -66,6 +66,16 @@
 	</image>
 	<!-- Note: 1x1 construction site timber pad -->
 	<image id="Construction_Part_TimberPad" src="Construction_Part_TimberPad" isometric="true"/>
+	<!-- Note: Construction site corner pillars -->
+	<image id="Construction_Part_Pillar" src="Construction_Part_Pillar"/>
+	<image id="Construction_Part_Pillar_B" width="11" height="12">
+		<layer src="Construction_Part_Shadow_B"/>
+		<layer group="this" image="Construction_Part_Pillar"/>
+	</image>
+	<image id="Construction_Part_Pillar_L" width="8" height="12">
+		<layer src="Construction_Part_Shadow_L"/>
+		<layer group="this" image="Construction_Part_Pillar"/>
+	</image>
 	<!-- Note: Administration Monument/s -->
 	<!-- Note: City Mint 0% and 50% construction phases -->
 	<image id="City_Mint_Construction_01" width="178" height="99" isometric="true">
@@ -534,7 +544,13 @@
 	<image id="Grand_Temple_Construction_Base_01" width="418" height="219" isometric="true">
 		<layer group="this" image="7x7_Construction_Footprint" x="0" y="9"/>
 		<layer src="7x7_Construction_Borders" x="0" y="9"/>
-		<layer src="Grand_Temple_Construction_Base_01"/>
+		<layer group="this" image="Construction_Part_Pillar" x="207" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="414" y="103"/>
+		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="104"/>
+		<layer group="this" image="Construction_Part_Pillar_B" x="207" y="207"/>
+		<layer src="Grand_Temple_Construction_Base_01" x="298" y="142"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="268" y="142" invert="horizontal"/>
+		<layer src="Construction_Part_Cart" x="256" y="158"/>
 	</image>
 	<image id="Grand_Temple_Construction_Base_02" width="418" height="219" isometric="true">
 		<layer group="this" image="7x7_Construction_Footprint" x="0" y="9"/>
@@ -545,7 +561,11 @@
 	<image id="Ceres_LT_0" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
-		<layer src="Ceres_Temple_Construction_01" x="0" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="88" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="174" y="43"/>
+		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="44"/>
+		<layer group="this" image="Construction_Part_Pillar_B" x="87" y="87"/>
+		<layer src="Ceres_Temple_Construction_01" x="36" y="22"/>
 		<layer src="Construction_Part_Cart" x="68" y="59"/>
 	</image>
 	<image id="Ceres_LT_25" width="178" height="159">
