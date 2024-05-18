@@ -139,14 +139,14 @@ int32_t buffer_read_i32(buffer *buffer);
  * @param max_size Size of the value, max bytes to read
  * @return Bytes read
  */
-size_t buffer_read_raw(buffer *buffer, void *value, int max_size);
+size_t buffer_read_raw(buffer *buffer, void *value, size_t max_size);
 
 /**
  * Skip data in the buffer
  * @param buffer Buffer
  * @param size Bytes to skip
  */
-void buffer_skip(buffer *buffer, int size);
+void buffer_skip(buffer *buffer, size_t size);
 
 /**
  * Returns whether the pointer of this buffer is at the end of the buffer

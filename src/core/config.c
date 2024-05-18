@@ -101,7 +101,7 @@ static int default_values[CONFIG_MAX_ENTRIES] = {
     [CONFIG_UI_SHOW_DESIRABILITY_RANGE] = 0,
 };
 
-static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX];
+static const char default_string_values[CONFIG_STRING_MAX_ENTRIES][CONFIG_STRING_VALUE_MAX] = { 0 };
 
 int config_get(config_key key)
 {
