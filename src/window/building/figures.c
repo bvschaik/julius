@@ -327,8 +327,12 @@ static void draw_cartpusher(building_info_context *c, figure *f)
         image_draw(big_people_image(f->type), c->x_offset + 28, c->y_offset + 112, COLOR_MASK_NONE, SCALE_NONE);
     }
     lang_text_draw(65, f->name, c->x_offset + 90, c->y_offset + 108, FONT_LARGE_BROWN);
-    int width = lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BROWN);
-
+    int width = 0;
+    if (building_get(f->building_id)->type == BUILDING_ARMOURY) {
+        width = text_draw(translation_for(TR_FIGURE_TYPE_ARMORY_CARTPUSHER), c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BROWN, 0);
+    } else {
+        width = lang_text_draw(64, f->type, c->x_offset + 92, c->y_offset + 139, FONT_NORMAL_BROWN);
+    }
     if (f->action_state != FIGURE_ACTION_132_DOCKER_IDLING && f->resource_id) {
         int resource = f->resource_id;
         image_draw(resource_get_data(resource)->image.icon,

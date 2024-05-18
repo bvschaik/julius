@@ -1488,7 +1488,8 @@ static translation_string all_strings[] = {
     {TR_USER_DIRETORIES_WINDOW_USER_PATH, "User directory:" },
     {TR_USER_DIRECTORIES_USER_PATH_CHANGED_TITLE, "User path changed"},
     {TR_USER_DIRECTORIES_USER_PATH_CHANGED_TEXT, "The user path was successfully changed.\nDo you want to copy over your files?"},
-    {TR_USER_DIRECTORIES_USER_PATH_CHANGED_OVERWRITE, "Overwrite existing files"}
+    {TR_USER_DIRECTORIES_USER_PATH_CHANGED_OVERWRITE, "Overwrite existing files"},
+    {TR_FIGURE_TYPE_ARMORY_CARTPUSHER, "Armory deliverymen"}
 
 };
 
