@@ -80,6 +80,17 @@ static int has_valid_monument_destination(figure *f)
     return 1;
 }
 
+static void workcamp_worker_image_update(figure *f)
+{
+    int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
+    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = assets_get_image_id("Walkers", "overseer_death_01") +
+            figure_image_corpse_offset(f); + figure_image_corpse_offset(f);
+    } else {
+        f->image_id = assets_get_image_id("Walkers", "overseer_ne_01") + dir * 12 + f->image_offset;
+    }
+}
+
 void figure_workcamp_worker_action(figure *f)
 {
     f->terrain_usage = TERRAIN_USAGE_ROADS_HIGHWAY;
@@ -206,7 +217,7 @@ void figure_workcamp_worker_action(figure *f)
             break;
     }
 
-    figure_image_update(f, image_group(GROUP_FIGURE_PATRICIAN));
+    workcamp_worker_image_update(f);
 }
 
 void figure_workcamp_slave_action(figure *f)

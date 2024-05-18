@@ -102,6 +102,8 @@ static int big_people_image(figure_type type)
             return assets_get_image_id("Walkers", "marketbuyer_portrait_overlay");
         case FIGURE_WORK_CAMP_ARCHITECT:
             return assets_get_image_id("Walkers", "architect_portrait");
+        case FIGURE_WORK_CAMP_WORKER:
+            return assets_get_image_id("Walkers", "overseer_portrait_overlay");
         default:
             break;
     }
