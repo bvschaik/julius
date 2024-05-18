@@ -90,7 +90,7 @@ elif [ "$BUILD_TARGET" == "flatpak" ]
 then
   sudo apt-get update && sudo apt-get -y install flatpak-builder
   sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-  sudo flatpak-builder repo com.github.keriew.augustus.json --install-deps-from=flathub --install-deps-only --delete-build-dirs
+  sudo flatpak-builder repo res/com.github.keriew.augustus.json --install-deps-from=flathub --install-deps-only --delete-build-dirs
   sudo rm -R .flatpak-builder
 elif [ ! -z "$SDL_VERSION" ] && [ ! -z "$SDL_MIXER_VERSION" ]
 then

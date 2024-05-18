@@ -25,7 +25,7 @@ case "$BUILD_TARGET" in
 	fi
 	;;
 "flatpak")
-	flatpak-builder repo com.github.keriew.augustus.json --install-deps-from=flathub --keep-build-dirs
+	flatpak-builder repo res/com.github.keriew.augustus.json --install-deps-from=flathub --keep-build-dirs
 	cp .flatpak-builder/build/augustus/res/version.txt res/version.txt
 	;;
 "appimage")
