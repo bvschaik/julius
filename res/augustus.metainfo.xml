@@ -4,7 +4,7 @@
 	<metadata_license>CC0-1.0</metadata_license>
 	<project_license>AGPL-3.0</project_license>
 	<name>Augustus</name>
-	<summary>Augustus is an open source re-implementation of Caesar III with changes to gameplay</summary>
+	<summary>Roman city management game</summary>
 	<description>
 		<p>Augustus is an open source re-implementation of Caesar III with changes to gameplay.</p>
 		<p>The aim of this project is to provide enhanced, customizable gameplay to Caesar 3 using project Julius UI enhancements.</p>
@@ -19,32 +19,62 @@
 			<li>Roadblocks</li>
 			<li>Market special orders</li>
 			<li>Partial warehouse storage</li>
-			<li>Increased game limits</li>
-	        </ul>
+			<li>No game building or walker limits</li>
+			<li>Monument construction</li>
+			<li>Improved map editor with custom enents</li>
+			<li>Custom campaigns</li>
+	    </ul>
 		<p>Augustus requires the original assets (graphics, sounds, etc) from Caesar 3 to run. It optionally supports the high-quality MP3 files once provided on the Sierra website.</p>
 	</description>
 	<launchable type="desktop-id">com.github.keriew.augustus.desktop</launchable>
 	<screenshots>
 		<screenshot type="default">
 			<image type="source">https://raw.githubusercontent.com/keriew/augustus/master/doc/main-image.png</image>
+			<caption>A full city in Augustus</caption>
 		</screenshot>
 	</screenshots>
 	<releases>
-		<release version="4.0.0" date="2023-12-28"/>
-		<release version="3.2.0" date="2022-09-22"/>
-		<release version="3.1.0" date="2021-11-25"/>
-		<release version="3.0.1" date="2021-05-17"/>
-		<release version="2.0.1" date="2020-11-16"/>
-		<release version="2.0.0" date="2020-11-12"/>
-		<release version="1.4.1a" date="2020-06-09"/>
-		<release version="1.4.1" date="2020-06-09"/>
-		<release version="1.4.0" date="2020-06-05"/>
+		<release version="4.0.0" date="2023-12-28">
+			<url>https://github.com/Keriew/augustus/releases/tag/v4.0.0</url>
+		</release>
+		<release version="3.2.0" date="2022-09-22">
+			<url>https://github.com/Keriew/augustus/releases/tag/v3.2.0</url>
+		</release>
+		<release version="3.1.0" date="2021-11-25">
+			<url>https://github.com/Keriew/augustus/releases/tag/v3.1.0</url>
+		</release>
+		<release version="3.0.1" date="2021-05-17">
+			<url>https://github.com/Keriew/augustus/releases/tag/v3.0.1</url>
+		</release>
+		<release version="2.0.1" date="2020-11-16">
+			<url>https://github.com/Keriew/augustus/releases/tag/v2.0.1</url>
+		</release>
+		<release version="2.0.0" date="2020-11-12">
+			<url>https://github.com/Keriew/augustus/releases/tag/v2.0.0</url>
+		</release>
+		<release version="1.4.1a" date="2020-06-09">
+			<url>https://github.com/Keriew/augustus/releases/tag/v1.4.1a</url>
+		</release>
+		<release version="1.4.1" date="2020-06-09">
+			<url>https://github.com/Keriew/augustus/releases/tag/v1.4.1</url>
+		</release>
+		<release version="1.4.0" date="2020-06-05">
+			<url>https://github.com/Keriew/augustus/releases/tag/v1.4.0</url>
+		</release>
 		<release version="1.3.1" date="2020-02-24"/>
 		<release version="1.3.0" date="2020-02-14"/>
 	</releases>
 	<url type="homepage">https://github.com/Keriew/augustus</url>
-	<developer_name>Augustus Dev Team</developer_name>
+ 	<url type="bugtracker">https://github.com/Keriew/augustus/issues</url>
+	<url type="help">https://github.com/Keriew/augustus/blob/master/res/manual/augustus_manual_en_4_0.pdf</url>
+	<developer id="com.github.keriew">
+		<name>Augustus Dev Team</name>
+	</developer>
 	<content_rating type="oars-1.1">
 		<content_attribute id="violence-fantasy">moderate</content_attribute>
+		<content_attribute id="violence-desecration">mild</content_attribute>
+		<content_attribute id="drugs-alcohol">mild</content_attribute>
+		<content_attribute id="language-humor">mild</content_attribute>
+		<content_attribute id="money-gambling">mild</content_attribute>
 	</content_rating>
 </component>
