@@ -282,7 +282,7 @@ static void draw_granary_permissions_buttons(int x, int y, int buttons)
         images_permission[2] = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE);
         images_permission[3] = assets_get_image_id("Walkers", "Barkeep SW 01");
         images_permission[4] = assets_get_image_id("Walkers", "M Hall SW 01");
-        images_permission[5] = assets_get_image_id("Walkers", "caravanserai_walker_sw_01");
+        images_permission[5] = assets_get_image_id("Walkers", "caravanserai_overseer_sw_01");
     }
 
     int image_offset_x, image_offset_y;
