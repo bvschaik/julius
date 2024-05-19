@@ -873,6 +873,8 @@ static translation_string all_strings[] = {
     {TR_BUILDING_ACADEMY_UPGRADE_DESC, "Эта академия работает. Местное развитие позволило вашим горожанам расширить здание, предоставив больше места для речей и исследований."},
     {TR_BUILDING_PALISADE_GATE, "Частокольные ворота"},
     {TR_BUILDING_PALISADE_GATE_DESC, "Эти узкие деревянные ворота контролируют движение людей внутрь и наружу оборонительных сооружений вашего города."},
+    {TR_SAVE_DIALOG_FILE_DOES_NOT_EXIST_TITLE, "Файл не существует"},
+    {TR_SAVE_DIALOG_FILE_DOES_NOT_EXIST_TEXT, "Выбранный файл не существует.\nПожалуйста, выберите другой файл."},
     {TR_SAVE_DIALOG_INVALID_FILE, "Недействительный файл"},
     {TR_SAVE_DIALOG_INVALID_FILE_DESC, "Сохранение, которое вы пытаетесь загрузить, недействительно.\n\nВозможно, сохранение было повреждено из-за глюка.\n\nЕсли вы уверены, что это должно быть корректное сохранение, сообщите об ошибке по адресу:\n\nhttps://github.com/Keriew/augustus/issues/new\n\nПожалуйста, прикрепите сохранение."},
     {TR_SAVE_DIALOG_INCOMPATIBLE_VERSION, "Несовместимая версия"},
@@ -1462,6 +1464,25 @@ static translation_string all_strings[] = {
     {TR_WINDOW_ADVISOR_MILITARY_INFANTRY, "пехотинцев"},
     {TR_BUILDING_FORT_ARCHERS, "Ауксиларии - Лучники"},
     {TR_WINDOW_ADVISOR_MILITARY_ARCHER, "лучников"},
+    {TR_CONFIG_USER_PATH_DEFAULT, "По умолчанию (путь установки Цезаря III, без подкаталогов)" },
+    {TR_CONFIG_USER_PATH_WITH_SUBDIRECTORIES, "Путь установки Цезаря III, используя подкаталоги" },
+    {TR_CONFIG_USER_PATH_RECOMMENDED, "Рекомендовано ("},
+    {TR_CONFIG_USER_PATH_CUSTOM, "Установите пользовательский каталог..."},
+    {TR_USER_DIRECTORIES_NOT_SET_UP_TITLE, "Пользовательские каталоги не настроены"},
+    {TR_USER_DIRECTORIES_NOT_SET_UP_TEXT, "Вы не настроили каталог пользователя, в котором будут храниться сохранения, сценарии и карты.\n" \
+        "Хотите ли вы сделать это сейчас?"},
+    {TR_USER_DIRECTORIES_CANCELLED_TITLE, "Выбор каталога отменен"},
+    {TR_USER_DIRECTORIES_CANCELLED_TEXT, "Вы решили не задавать каталог пользователя. Будет использоваться каталог установки Ц3.\n"
+        "Вы можете изменить настройки позже в окне конфигурации."},
+    {TR_USER_DIRECTORIES_NOT_WRITEABLE_TITLE, "Каталог пользователя недоступен для записи"},
+    {TR_USER_DIRECTORIES_NOT_WRITEABLE_TEXT, "Выбранный каталог пользователя недоступен для записи.\n\nПожалуйста, выберите другой каталог пользователя."},
+    {TR_USER_DIRECTORIES_NOT_WRITEABLE_TEXT_DETAILED, "Выбранный каталог пользователя недоступен для записи.\n\nВы не сможете сохранить свои игры.\nПожалуйста, выберите другой каталог пользователя в окне опций главного меню."},
+    {TR_USER_DIRECTORIES_WINDOW_TITLE, "Установить каталог пользователя"},
+    {TR_USER_DIRETORIES_WINDOW_USER_PATH, "Каталог пользователя:" },
+    {TR_USER_DIRECTORIES_USER_PATH_CHANGED_TITLE, "Путь пользователя изменен"},
+    {TR_USER_DIRECTORIES_USER_PATH_CHANGED_TEXT, "Путь пользователя был успешно изменен.\nНе хотите ли вы скопировать свои файлы?"},
+    {TR_USER_DIRECTORIES_USER_PATH_CHANGED_OVERWRITE, "Перезаписать существующие файлы"},
+    {TR_FIGURE_TYPE_ARMORY_CARTPUSHER, "Разносчик оружия"},
 
 };
 
