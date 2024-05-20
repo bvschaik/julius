@@ -90,47 +90,6 @@ char *tinyfd_selectFolderDialog(char const *aTitle, char const *aDefaultPath) { 
 #pragma warning(disable:4706) /* allows usage of strncpy, strcpy, strcat, sprintf, fopen */
 #endif
 
-static char * getPathWithoutFinalSlash(
-		char * aoDestination, /* make sure it is allocated, use _MAX_PATH */
-		char const * aSource) /* aoDestination and aSource can be the same */
-{
-		char const * lTmp ;
-		if ( aSource )
-		{
-				lTmp = strrchr(aSource, '/');
-				if (!lTmp)
-				{
-						lTmp = strrchr(aSource, '\\');
-				}
-				if (lTmp)
-				{
-						strncpy(aoDestination, aSource, lTmp - aSource );
-						aoDestination[lTmp - aSource] = '\0';
-				}
-				else
-				{
-						* aoDestination = '\0';
-				}
-		}
-		else
-		{
-				* aoDestination = '\0';
-		}
-		return aoDestination;
-}
-
-static void ensureFinalSlash( char * aioString )
-{
-		if ( aioString && strlen( aioString ) )
-		{
-				char * lastcar = aioString + strlen( aioString ) - 1 ;
-				if ( strncmp( lastcar , TINYFD_SLASH , 1 ) )
-				{
-						strcat( lastcar , TINYFD_SLASH ) ;
-				}
-		}
-}
-
 static int tfd_quoteDetected(char const * aString)
 {
 	char const * p;
@@ -165,22 +124,6 @@ static int tfd_quoteDetected(char const * aString)
 
 #ifdef _WIN32
 
-static void replaceChr(char * aString, char aOldChr, char aNewChr)
-{
-		char * p;
-
-		if (!aString) return;
-		if (aOldChr == aNewChr) return;
-
-		p = aString;
-		while ((p = strchr(p, aOldChr)))
-		{
-				*p = aNewChr;
-				p++;
-		}
-		return;
-}
-
 #if !defined(WC_ERR_INVALID_CHARS)
 /* undefined prior to Vista, so not yet in MINGW header file */
 #define WC_ERR_INVALID_CHARS 0x00000000 /* 0x00000080 for MINGW maybe ? */
@@ -202,14 +145,6 @@ static int sizeUtf8(wchar_t const * aUtf16string)
 {
 		return WideCharToMultiByte(CP_UTF8, WC_ERR_INVALID_CHARS,
 				aUtf16string, -1, NULL, 0, NULL, NULL);
-}
-
-static int sizeMbcs(wchar_t const * aMbcsString)
-{
-		int lRes = WideCharToMultiByte(CP_ACP, 0,
-				aMbcsString, -1, NULL, 0, NULL, NULL);
-		/* DWORD licic = GetLastError(); */
-		return lRes;
 }
 
 static wchar_t* tinyfd_mbcsTo16(char const* aMbcsString)
@@ -252,30 +187,6 @@ static wchar_t * tinyfd_utf8to16(char const * aUtf8string)
 	}
 }
 
-static char *tinyfd_utf16toMbcs(wchar_t const *aUtf16string)
-{
-		static char * lMbcsString = NULL;
-		int lSize;
-
-		free(lMbcsString);
-		if (!aUtf16string) { lMbcsString = NULL; return NULL; }
-		lSize = sizeMbcs(aUtf16string);
-	if (lSize)
-	{
-		lMbcsString = (char*) malloc(lSize);
-		lSize = WideCharToMultiByte(CP_ACP, 0, aUtf16string, -1, lMbcsString, lSize, NULL, NULL);
-	}
-	else strcpy(lMbcsString, "");
-		return lMbcsString;
-}
-
-static char * tinyfd_utf8toMbcs(char const * aUtf8string)
-{
-		wchar_t const * lUtf16string;
-		lUtf16string = tinyfd_utf8to16(aUtf8string);
-		return tinyfd_utf16toMbcs(lUtf16string);
-}
-
 static char * tinyfd_utf16to8(wchar_t const * aUtf16string)
 {
 		static char * lUtf8string = NULL;
@@ -291,13 +202,6 @@ static char * tinyfd_utf16to8(wchar_t const * aUtf16string)
 	}
 	else strcpy(lUtf8string, "");
 		return lUtf8string;
-}
-
-static char * tinyfd_mbcsTo8(char const * aMbcsString)
-{
-		wchar_t const * lUtf16string;
-		lUtf16string = tinyfd_mbcsTo16(aMbcsString);
-		return tinyfd_utf16to8(lUtf16string);
 }
 
 static int dirExists(char const * aDirPath)
@@ -476,6 +380,47 @@ static int tfd_isDarwin(void)
 				lsIsDarwin = !uname(&lUtsname) && !strcmp(lUtsname.sysname,"Darwin") ;
 		}
 		return lsIsDarwin ;
+}
+
+static char * getPathWithoutFinalSlash(
+		char * aoDestination, /* make sure it is allocated, use _MAX_PATH */
+		char const * aSource) /* aoDestination and aSource can be the same */
+{
+		char const * lTmp ;
+		if ( aSource )
+		{
+				lTmp = strrchr(aSource, '/');
+				if (!lTmp)
+				{
+						lTmp = strrchr(aSource, '\\');
+				}
+				if (lTmp)
+				{
+						strncpy(aoDestination, aSource, lTmp - aSource );
+						aoDestination[lTmp - aSource] = '\0';
+				}
+				else
+				{
+						* aoDestination = '\0';
+				}
+		}
+		else
+		{
+				* aoDestination = '\0';
+		}
+		return aoDestination;
+}
+
+static void ensureFinalSlash( char * aioString )
+{
+		if ( aioString && strlen( aioString ) )
+		{
+				char * lastcar = aioString + strlen( aioString ) - 1 ;
+				if ( strncmp( lastcar , TINYFD_SLASH , 1 ) )
+				{
+						strcat( lastcar , TINYFD_SLASH ) ;
+				}
+		}
 }
 
 static int dirExists( char const * aDirPath )
