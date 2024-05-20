@@ -394,4 +394,52 @@
 	<image id="auxarch_fm_n_03" src="auxarch_fm_n_03"/>
 	<image id="auxarch_fm_n_04" src="auxarch_fm_n_04"/>
 	<image id="auxarch_fm_n_05" src="auxarch_fm_n_05"/>
+	<!-- Note: Legionary Walker Ranged Fighting animation frames NORTH-EAST DIRECTION 01-05 -->
+	<image id="legionary_fr_ne_01" src="legionary_fr_ne_01"/>
+	<image id="legionary_fr_ne_02" src="legionary_fr_ne_02"/>
+	<image id="legionary_fr_ne_03" src="legionary_fr_ne_03"/>
+	<image id="legionary_fr_ne_04" src="legionary_fr_ne_04"/>
+	<image id="legionary_fr_ne_05" src="legionary_fr_ne_05"/>
+	<!-- Note: Legionary Walker Ranged Fighting animation frames EAST DIRECTION 01-12 -->
+	<image id="legionary_fr_e_01" src="legionary_fr_e_01"/>
+	<image id="legionary_fr_e_02" src="legionary_fr_e_02"/>
+	<image id="legionary_fr_e_03" src="legionary_fr_e_03"/>
+	<image id="legionary_fr_e_04" src="legionary_fr_e_04"/>
+	<image id="legionary_fr_e_05" src="legionary_fr_e_05"/>
+	<!-- Note: Legionary Walker Ranged Fighting animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="legionary_fr_se_01" src="legionary_fr_se_01"/>
+	<image id="legionary_fr_se_02" src="legionary_fr_se_02"/>
+	<image id="legionary_fr_se_03" src="legionary_fr_se_03"/>
+	<image id="legionary_fr_se_04" src="legionary_fr_se_04"/>
+	<image id="legionary_fr_se_05" src="legionary_fr_se_05"/>
+	<!-- Note: Legionary Walker Ranged Fighting animation frames SOUTH DIRECTION 01-12 -->
+	<image id="legionary_fr_s_01" src="legionary_fr_s_01"/>
+	<image id="legionary_fr_s_02" src="legionary_fr_s_02"/>
+	<image id="legionary_fr_s_03" src="legionary_fr_s_03"/>
+	<image id="legionary_fr_s_04" src="legionary_fr_s_04"/>
+	<image id="legionary_fr_s_05" src="legionary_fr_s_05"/>
+	<!-- Note: Legionary Walker Ranged Fighting animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="legionary_fr_sw_01" src="legionary_fr_sw_01"/>
+	<image id="legionary_fr_sw_02" src="legionary_fr_sw_02"/>
+	<image id="legionary_fr_sw_03" src="legionary_fr_sw_03"/>
+	<image id="legionary_fr_sw_04" src="legionary_fr_sw_04"/>
+	<image id="legionary_fr_sw_05" src="legionary_fr_sw_05"/>
+	<!-- Note: Legionary Walker Ranged Fighting animation frames WEST DIRECTION 01-12 -->
+	<image id="legionary_fr_w_01" src="legionary_fr_w_01"/>
+	<image id="legionary_fr_w_02" src="legionary_fr_w_02"/>
+	<image id="legionary_fr_w_03" src="legionary_fr_w_03"/>
+	<image id="legionary_fr_w_04" src="legionary_fr_w_04"/>
+	<image id="legionary_fr_w_05" src="legionary_fr_w_05"/>
+	<!-- Note: Legionary Walker Ranged Fighting animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="legionary_fr_nw_01" src="legionary_fr_nw_01"/>
+	<image id="legionary_fr_nw_02" src="legionary_fr_nw_02"/>
+	<image id="legionary_fr_nw_03" src="legionary_fr_nw_03"/>
+	<image id="legionary_fr_nw_04" src="legionary_fr_nw_04"/>
+	<image id="legionary_fr_nw_05" src="legionary_fr_nw_05"/>
+	<!-- Note: Legionary Walker Ranged Fighting animation frames NORTH DIRECTION 01-12 -->
+	<image id="legionary_fr_n_01" src="legionary_fr_n_01"/>
+	<image id="legionary_fr_n_02" src="legionary_fr_n_02"/>
+	<image id="legionary_fr_n_03" src="legionary_fr_n_03"/>
+	<image id="legionary_fr_n_04" src="legionary_fr_n_04"/>
+	<image id="legionary_fr_n_05" src="legionary_fr_n_05"/>
 </assetlist>
