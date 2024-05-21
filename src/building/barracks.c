@@ -91,6 +91,9 @@ static int has_recruitment_priority(int current_type, int legion_type, int prior
             return 1;
         }
     }
+    if (priority_type != LEGION_RECRUIT_NONE && current_type == priority_type && legion_type != priority_type) {
+        return 0;
+    }
 
     return dist < min_distance;
 }
