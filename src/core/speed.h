@@ -57,7 +57,7 @@ void speed_set_target(speed_type *speed, double new_speed, time_millis total_tim
 
 /**
  * Immediately invert the speed (positive speed becomes negative and vice-versa)
- * @param sp Speed structure to act on
+ * @param speed Speed structure to act on
  */
 void speed_invert(speed_type *speed);
 

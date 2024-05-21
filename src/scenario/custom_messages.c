@@ -238,7 +238,9 @@ static const char *check_for_file_in_dir(const char *filename, const char *direc
         directory += 10;
         location = PATH_LOCATION_COMMUNITY;
     }
-    snprintf(filepath, FILE_NAME_MAX, "%s/%s", directory, filename);
+    if (snprintf(filepath, FILE_NAME_MAX, "%s/%s", directory, filename) > FILE_NAME_MAX) {
+        log_error("Filename too long. The file will not be loaded.", filename, 0);
+    }
     return campaign_has_file(filepath) || dir_get_file_at_location(filepath, location) ? filepath : 0;
 }
 

@@ -153,7 +153,7 @@ void building_storage_reset_building_ids(void);
 
 /**
  * Gets the maximum (in full units) a given storage will store of a given resource
- * @param storage_id Storage id
+ * @param b The building to check
  * @param resource_id Resource id
  * @return Max amount that can be stored, 0 if it does not accept the resource at all.
  */

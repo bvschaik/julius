@@ -28,7 +28,7 @@ FILE *file_open(const char *filename, const char *mode);
 
 /**
  * Wrapper for fopen converting filename to path in asset directory
- * @param filename Asset filename
+ * @param asset Asset filename
  * @param mode Mode to open the asset file (e.g. "wb").
  * @return FILE
  */

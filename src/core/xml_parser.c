@@ -26,7 +26,7 @@ static struct {
     struct {
         sxml_t context;
         sxmltok_t *tokens;
-        int num_tokens;
+        unsigned int num_tokens;
         int line_number;
         unsigned int current_position;
     } parser;
@@ -43,7 +43,7 @@ static struct {
     element_text *texts;
 } data;
 
-static const char EMPTY_STRING;
+static const char EMPTY_STRING = 0;
 
 static int dummy_element_on_enter(void)
 {
@@ -163,7 +163,7 @@ static int handle_attributes(const sxmltok_t *first, unsigned int size)
         return 1;
     }
     data.attributes.first = first;
-    for (int i = 0; i < size; i++) {
+    for (unsigned int i = 0; i < size; i++) {
         data.buffer.data[first[i].endpos] = 0;
         i += handle_attribute_value(first + i + 1, size - i - 1);
     }
@@ -263,7 +263,7 @@ static void handle_element_text(const sxmltok_t *token)
 
 static int expand_xml_token_array(void)
 {
-    size_t expanded_size = data.parser.num_tokens + XML_TOKENS_SIZE_STEP;
+    unsigned int expanded_size = data.parser.num_tokens + XML_TOKENS_SIZE_STEP;
     sxmltok_t *expanded_tokens = realloc(data.parser.tokens, sizeof(sxmltok_t) * expanded_size);
     if (!expanded_tokens) {
         return 0;

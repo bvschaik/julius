@@ -154,13 +154,13 @@ void game_cheat_victory(void)
     }
 }
 
-void game_cheat_breakpoint()
+void game_cheat_breakpoint(void)
 {
     if (data.is_cheating) {
     }
 }
 
-void game_cheat_console()
+void game_cheat_console(void)
 {
     if (data.is_cheating) {
         building_construction_clear_type();

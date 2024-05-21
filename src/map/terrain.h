@@ -95,7 +95,7 @@ int map_terrain_count_directly_adjacent_with_type(int grid_offset, int terrain);
 /**
  * Check orthogonal neighbours of a tile if they contain a terrain.
  * @param grid_offset Tile which neighbours will be checked.
- * @param terrain Terrain bitmask to be checked for.
+ * @param terrain_sum Terrain bitmask to be checked for.
  * @return 1 if any orthogonal tiles matches all terrains from the bitmask, 0 otherwise.
  */
 int map_terrain_count_directly_adjacent_with_types(int grid_offset, int terrain_sum);

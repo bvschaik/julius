@@ -41,7 +41,7 @@ void scrollbar_reset(scrollbar_type *scrollbar, int scroll_position);
 /**
  * Update the number of total elements, adjusting the scroll position if necessary
  * @param scrollbar Scrollbar
- * @param total_items New number of total elements
+ * @param total_elements New number of total elements
  */
 void scrollbar_update_total_elements(scrollbar_type *scrollbar, int total_elements);
 

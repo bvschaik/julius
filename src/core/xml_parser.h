@@ -81,7 +81,7 @@ char *xml_parser_copy_attribute_string(const char *key);
 int xml_parser_get_attribute_bool(const char *key);
 
 /**
- * @brief 
+ * @brief Gets an attribute as an enumeration
  * 
  * @param key The key to obtain.
  * @param values The possibe values for the enum, as an array of strings. You can have multiple values per index by separating them with "|".

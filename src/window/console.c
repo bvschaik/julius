@@ -76,7 +76,7 @@ static void send_command(int param1, int param2)
     game_cheat_parse_command(command_copy);
 }
 
-void window_console_show()
+void window_console_show(void)
 {
     window_type window = {
         WINDOW_FILE_DIALOG,

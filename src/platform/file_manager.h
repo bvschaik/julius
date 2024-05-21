@@ -93,7 +93,7 @@ FILE *platform_file_manager_open_file(const char *filename, const char *mode);
 
 /**
  * Opens an asset file
- * @param filename The asset file to open
+ * @param asset The asset file to open
  * @param mode The mode to open the asset file - refer to fopen()
  * @return A pointer to a FILE structure on success, NULL otherwise
  */
@@ -117,7 +117,7 @@ int platform_file_manager_remove_file(const char *filename);
 
 /**
  * Creates a directory
- * @param path The full path to the new directory
+ * @param name The full path to the new directory
  * @param location The base location to create the directory. The game won't attempt to create the directories in location.
  * If location and name are similar, the game will create the directory in the location. Can be 0.
  * @param overwrite Whether to return error if overwriting the directory

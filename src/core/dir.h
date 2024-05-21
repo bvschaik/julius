@@ -95,7 +95,7 @@ const char *dir_get_file(const char *filepath, int localizable);
 
 /**
  * Get the case sensitive filename from the requested location ID
- * @param filename File path to match to a case-sensitive file on the filesystem
+ * @param filepath File path to match to a case-sensitive file on the filesystem
  * @param location The location ID where the file should reside
  * @return Corrected file, or NULL if the file was not found
  */

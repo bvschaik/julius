@@ -53,11 +53,11 @@ static const char* str_findstr (const char* start, const char* end, const char* 
 
 static BOOL str_startswith (const char* start, const char* end, const char* prefix)
 {
-	long nbytes;
+	size_t nbytes;
 	assert (start <= end);
 	
 	nbytes= strlen (prefix);
-	if (end - start < nbytes)
+	if ((size_t) (end - start) < nbytes)
 		return FALSE;
 	
 	return memcmp (prefix, start, nbytes) == 0;
@@ -543,7 +543,7 @@ sxmlerr_t sxml_parse(sxml_t *state, const char *buffer, UINT bufferlen, sxmltok_
 		const char* lt= str_findchr (start, end, '<');
 		while (buffer_fromoffset (&args, temp.bufferpos) != lt)
 		{
-			sxmlerr_t err= parse_characters (&temp, &args, lt);
+			err= parse_characters (&temp, &args, lt);
 			if (err != SXML_SUCCESS)
 				return err;
 

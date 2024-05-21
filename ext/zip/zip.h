@@ -130,7 +130,7 @@ extern ZIP_EXPORT struct zip_t *zip_open(const char *zipname, int level,
 
 /**
  * Opens zip archive with compression level using the given mode.
- * The function additionally returns @param errnum -
+ * The function additionally returns errnum
  *
  * @param zipname zip archive file name.
  * @param level compression level (0-9 are the standard zlib-style levels).
@@ -162,7 +162,7 @@ extern ZIP_EXPORT struct zip_t *zip_cstream_open(FILE *cstream, int level,
                                          char mode);
 /**
  * Opens zip archive from existing FILE stream with compression level using the given mode.
- * The function additionally returns @param errnum -
+ * The function additionally returns errnum
  * The stream will not be closed when calling zip_close.
  *
  * @param cstream C File stream.
@@ -255,7 +255,7 @@ extern ZIP_EXPORT int zip_entry_close(struct zip_t *zip);
  * All slashes MUST be forward slashes '/' as opposed to backwards slashes '\'
  * for compatibility with Amiga and UNIX file systems etc.
  *
- * @param zip: zip archive handler.
+ * @param zip zip archive handler.
  *
  * @return the pointer to the current zip entry name, or NULL on error.
  */
@@ -495,7 +495,7 @@ extern ZIP_EXPORT struct zip_t *zip_stream_open(const char *stream, size_t size,
 
 /**
  * Opens zip archive stream into memory.
- * The function additionally returns @param errnum -
+ * The function additionally returns errnum
  *
  * @param stream zip archive stream.
  * @param size stream size.*
@@ -529,8 +529,6 @@ extern ZIP_EXPORT ssize_t zip_stream_copy(struct zip_t *zip, void **buf,
  * Close zip archive releases resources.
  *
  * @param zip zip archive handler.
- *
- * @return
  */
 extern ZIP_EXPORT void zip_stream_close(struct zip_t *zip);
 
@@ -539,7 +537,7 @@ extern ZIP_EXPORT void zip_stream_close(struct zip_t *zip);
  *
  * @param zipname zip archive file.
  * @param filenames input files.
- * @param len: number of input files.
+ * @param len number of input files.
  *
  * @return the return code - 0 on success, negative number (< 0) on error.
  */
