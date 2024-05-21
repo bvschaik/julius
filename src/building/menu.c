@@ -175,6 +175,9 @@ static void disable_finished(int *enabled, building_type menu_building_type, bui
 static void disable_if_no_enabled_submenu_items(int *enabled, int submenu)
 {
     for (int item = 0; item < BUILD_MENU_ITEM_MAX && MENU_BUILDING_TYPE[submenu][item]; item++) {
+        if (BUILD_MENU_TYPE_TO_BUILDING_TYPE[submenu] == MENU_BUILDING_TYPE[submenu][item]) {
+            continue;
+        }
         if (is_building_type_allowed(MENU_BUILDING_TYPE[submenu][item])) {
             return;
         }
@@ -198,6 +201,11 @@ static void enable_normal(int *enabled, building_type type)
     enable_if_allowed(enabled, type, BUILDING_HOSPITAL);
     enable_if_allowed(enabled, type, BUILDING_MENU_SMALL_TEMPLES);
     enable_if_allowed(enabled, type, BUILDING_MENU_LARGE_TEMPLES);
+    enable_if_allowed(enabled, type, BUILDING_LARGE_TEMPLE_CERES);
+    enable_if_allowed(enabled, type, BUILDING_LARGE_TEMPLE_NEPTUNE);
+    enable_if_allowed(enabled, type, BUILDING_LARGE_TEMPLE_MERCURY);
+    enable_if_allowed(enabled, type, BUILDING_LARGE_TEMPLE_MARS);
+    enable_if_allowed(enabled, type, BUILDING_LARGE_TEMPLE_VENUS);
     enable_if_allowed(enabled, type, BUILDING_MENU_GRAND_TEMPLES);
     enable_if_allowed(enabled, type, BUILDING_ORACLE);
     enable_if_allowed(enabled, type, BUILDING_MENU_SHRINES);
