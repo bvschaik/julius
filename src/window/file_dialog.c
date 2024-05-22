@@ -513,7 +513,7 @@ static void input_box_changed(int is_addition_at_end)
             scroll_index = find_first_file_with_prefix(data.selected_file);
         }
         file_append_extension(data.selected_file, data.file_data->extension, FILE_NAME_MAX);
-        if (scroll_index >= 0 &&
+        if (scroll_index >= 0 && data.filtered_file_list.num_files > scroll_index &&
             platform_file_manager_compare_filename(data.selected_file,
                 data.filtered_file_list.files[scroll_index].name) == 0) {
             list_box_select_index(&list_box, scroll_index);
