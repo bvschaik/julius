@@ -1,11 +1,13 @@
 #include "city_pause_menu.h"
 
 #include "building/construction.h"
+#include "campaign/campaign.h"
 #include "core/lang.h"
 #include "game/file.h"
-#include "game/undo.h"
+#include "game/settings.h"
 #include "game/state.h"
 #include "game/system.h"
+#include "game/undo.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/lang_text.h"
@@ -19,7 +21,7 @@
 #include "window/popup_dialog.h"
 #include "window/city.h"
 #include "window/main_menu.h"
-#include "window/mission_briefing.h"
+#include "window/mission_selection.h"
 #include "window/plain_message_dialog.h"
 
 static void button_click(int type, int param2);
