@@ -640,6 +640,7 @@ int scenario_events_xml_parse_file(const char *filename)
     free(xml_contents);
     if (!success) {
         log_error("Error parsing file", filename, 0);
+        scenario_events_clear();
     }
     return success;
 }
