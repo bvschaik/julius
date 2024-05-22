@@ -241,7 +241,10 @@ static const char *check_for_file_in_dir(const char *filename, const char *direc
     if (snprintf(filepath, FILE_NAME_MAX, "%s/%s", directory, filename) > FILE_NAME_MAX) {
         log_error("Filename too long. The file will not be loaded.", filename, 0);
     }
-    return campaign_has_file(filepath) || dir_get_file_at_location(filepath, location) ? filepath : 0;
+    if (campaign_has_file(filepath)) {
+        return filepath;
+    }
+    return dir_get_file_at_location(filepath, location);
 }
 
 static const char *search_for_file(const uint8_t *filename, const char *paths[])
