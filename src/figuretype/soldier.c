@@ -42,6 +42,8 @@ static const map_point ALTERNATIVE_POINTS[] = { {-1, -6},
     {-6, -4}, {-6, -5}, {-6, -6}, {-5, -6}, {-4, -6}, {-3, -6}, {-2, -6}, {-1, -6},
 };
 
+
+
 void figure_military_standard_action(figure *f)
 {
     const formation *m = formation_get(f->formation_id);
@@ -100,14 +102,29 @@ void figure_military_standard_action(figure *f)
     }
 }
 
+static int frames_to_shoot(figure *f)
+{
+    switch (f->type) {
+        case FIGURE_FORT_LEGIONARY:
+            return 15;
+        default:
+            return 1;
+    }
+}
+
 static figure *soldier_launch_missile(figure *f)
 {
+    if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        return f;
+    }
     int range = 10;
     int projectile_type = FIGURE_JAVELIN;
     if (f->type == FIGURE_FORT_ARCHER) {
         range = 12;
         projectile_type = FIGURE_FRIENDLY_ARROW;
-    } 
+    } else if (f->type == FIGURE_FORT_LEGIONARY) {
+        range = 6;
+    }
     int missile_delay = figure_properties_for_type(f->type)->missile_delay;
 
 
@@ -123,7 +140,13 @@ static figure *soldier_launch_missile(figure *f)
         }
     }
     if (f->attack_image_offset) {
-        if (f->attack_image_offset == 1) {
+        if (f->attack_image_offset == frames_to_shoot(f)) {
+            if (frames_to_shoot(f) > 1) { 
+                // Adjust the target in case of long delay
+                if (figure_combat_get_missile_target_for_soldier(f, range, &tile)) {
+                    f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
+                }
+            }
             if (tile.x == -1 || tile.y == -1) {
                 map_point_get_last_result(&tile);
             }
@@ -219,8 +242,11 @@ static void update_image_legionary(figure *f, const formation *m, int dir)
     } else if (f->action_state == FIGURE_ACTION_149_CORPSE) {
         f->image_id = image_id + 152 + figure_image_corpse_offset(f);
     } else if (f->action_state == FIGURE_ACTION_84_SOLDIER_AT_STANDARD) {
+        int missile_offset = figure_image_missile_launcher_offset(f);
         if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout) {
             f->image_id = image_id + dir + 144;
+        } else if (missile_offset && dir < DIR_8_NONE) {
+            f->image_id = assets_get_image_id("Warriors", "legionary_fr_ne_01") + dir * 5 + missile_offset;
         } else {
             f->image_id = image_id + dir;
         }
@@ -360,6 +386,7 @@ void figure_soldier_action(figure *f)
             f->wait_ticks = 0;
             f->formation_at_rest = 1;
             f->image_offset = 0;
+            f->attack_image_offset = 0;
             if (f->x != f->formation_position_x.soldier || f->y != f->formation_position_y.soldier) {
                 f->action_state = FIGURE_ACTION_81_SOLDIER_GOING_TO_FORT;
             }
@@ -392,6 +419,7 @@ void figure_soldier_action(figure *f)
             }
             break;
         case FIGURE_ACTION_83_SOLDIER_GOING_TO_STANDARD:
+            f->attack_image_offset = 0;
             f->formation_at_rest = 0;
             f->destination_x = m->standard_x + formation_layout_position_x(m->layout, f->index_in_formation);
             f->destination_y = m->standard_y + formation_layout_position_y(m->layout, f->index_in_formation);
@@ -435,7 +463,12 @@ void figure_soldier_action(figure *f)
                     f = soldier_launch_missile(f);
                 } else if (f->type == FIGURE_FORT_ARCHER) {
                     f = soldier_launch_missile(f);
-                } else if (f->type == FIGURE_FORT_LEGIONARY || f->type == FIGURE_FORT_INFANTRY || f->type == FIGURE_FORT_MOUNTED) {
+                } else if (f->type == FIGURE_FORT_LEGIONARY) {
+                    legionary_attack_adjacent_enemy(f);
+                    if (m->layout == FORMATION_DOUBLE_LINE_1 || m->layout == FORMATION_DOUBLE_LINE_2) {
+                        f = soldier_launch_missile(f);
+                    }
+                } else if (f->type == FIGURE_FORT_INFANTRY || f->type == FIGURE_FORT_MOUNTED) {
                     legionary_attack_adjacent_enemy(f);
                 }
             }

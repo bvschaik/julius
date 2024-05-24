@@ -69,7 +69,7 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     [FIGURE_FORT_LEGIONARY] = {
     .category = FIGURE_CATEGORY_ARMED,
     .max_damage = 150, .attack_value = 10, .defense_value = 2,
-    .missile_defense_value = 0, .missile_attack_value = 0, .missile_delay = 0
+    .missile_defense_value = 0, .missile_attack_value = 2, .missile_delay = 150
     },
     [FIGURE_FORT_STANDARD] = {
     .category = FIGURE_CATEGORY_INACTIVE,
@@ -289,7 +289,7 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     [FIGURE_ENEMY_CAESAR_LEGIONARY] = {
     .category = FIGURE_CATEGORY_HOSTILE,
     .max_damage = 150, .attack_value = 13, .defense_value = 2,
-    .missile_defense_value = 0, .missile_attack_value = 0, .missile_delay = 0
+    .missile_defense_value = 0, .missile_attack_value = 2, .missile_delay = 150
     },
     [FIGURE_NATIVE_TRADER] = {
     .category = FIGURE_CATEGORY_NATIVE,
