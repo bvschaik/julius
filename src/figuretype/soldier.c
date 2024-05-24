@@ -102,11 +102,11 @@ void figure_military_standard_action(figure *f)
     }
 }
 
-static int frames_to_shoot(figure *f)
+static int ticks_to_shoot(figure *f)
 {
     switch (f->type) {
         case FIGURE_FORT_LEGIONARY:
-            return 15;
+            return 19;
         default:
             return 1;
     }
@@ -140,8 +140,8 @@ static figure *soldier_launch_missile(figure *f)
         }
     }
     if (f->attack_image_offset) {
-        if (f->attack_image_offset == frames_to_shoot(f)) {
-            if (frames_to_shoot(f) > 1) { 
+        if (f->attack_image_offset == ticks_to_shoot(f)) {
+            if (ticks_to_shoot(f) > 1) {
                 // Adjust the target in case of long delay
                 if (figure_combat_get_missile_target_for_soldier(f, range, &tile)) {
                     f->direction = calc_missile_shooter_direction(f->x, f->y, tile.x, tile.y);
@@ -245,7 +245,7 @@ static void update_image_legionary(figure *f, const formation *m, int dir)
         int missile_offset = figure_image_missile_launcher_offset(f);
         if (m->is_halted && m->layout == FORMATION_COLUMN && m->missile_attack_timeout) {
             f->image_id = image_id + dir + 144;
-        } else if (missile_offset && dir < DIR_8_NONE) {
+        } else if (missile_offset >= 0 && dir < DIR_8_NONE) {
             f->image_id = assets_get_image_id("Warriors", "legionary_fr_ne_01") + dir * 5 + missile_offset;
         } else {
             f->image_id = image_id + dir;
