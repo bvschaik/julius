@@ -442,4 +442,172 @@
 	<image id="legionary_fr_n_03" src="legionary_fr_n_03"/>
 	<image id="legionary_fr_n_04" src="legionary_fr_n_04"/>
 	<image id="legionary_fr_n_05" src="legionary_fr_n_05"/>
+	<!-- Note: Caesar Legionary Walker Ranged Fighting animation frames NORTH-EAST DIRECTION 01-05 -->
+	<image id="caesar_legionary_fr_ne_01">
+		<layer group="this" image="legionary_fr_ne_01"/>
+		<layer src="caesar_legionary_fr_ne_01"/>
+	</image>
+	<image id="caesar_legionary_fr_ne_02">
+		<layer group="this" image="legionary_fr_ne_02"/>
+		<layer src="caesar_legionary_fr_ne_02"/>
+	</image>
+	<image id="caesar_legionary_fr_ne_03">
+		<layer group="this" image="legionary_fr_ne_03"/>
+		<layer src="caesar_legionary_fr_ne_03"/>
+	</image>
+	<image id="caesar_legionary_fr_ne_04">
+		<layer group="this" image="legionary_fr_ne_04"/>
+		<layer src="caesar_legionary_fr_ne_04"/>
+	</image>
+	<image id="caesar_legionary_fr_ne_05">
+		<layer group="this" image="legionary_fr_ne_05"/>
+		<layer src="caesar_legionary_fr_ne_05"/>
+	</image>
+	<!-- Note: Caesar Legionary Walker Ranged Fighting animation frames EAST DIRECTION 01-12 -->
+	<image id="caesar_legionary_fr_e_01">
+		<layer group="this" image="legionary_fr_e_01"/>
+		<layer src="caesar_legionary_fr_e_01"/>
+	</image>
+	<image id="caesar_legionary_fr_e_02">
+		<layer group="this" image="legionary_fr_e_02"/>
+		<layer src="caesar_legionary_fr_e_02"/>
+	</image>
+	<image id="caesar_legionary_fr_e_03">
+		<layer group="this" image="legionary_fr_e_03"/>
+		<layer src="caesar_legionary_fr_e_03"/>
+	</image>
+	<image id="caesar_legionary_fr_e_04">
+		<layer group="this" image="legionary_fr_e_04"/>
+		<layer src="caesar_legionary_fr_e_04"/>
+	</image>
+	<image id="caesar_legionary_fr_e_05">
+		<layer group="this" image="legionary_fr_e_05"/>
+		<layer src="caesar_legionary_fr_e_05"/>
+	</image>
+	<!-- Note: Caesar Legionary Walker Ranged Fighting animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="caesar_legionary_fr_se_01">
+		<layer group="this" image="legionary_fr_se_01"/>
+		<layer src="caesar_legionary_fr_se_01"/>
+	</image>
+	<image id="caesar_legionary_fr_se_02">
+		<layer group="this" image="legionary_fr_se_02"/>
+		<layer src="caesar_legionary_fr_se_02"/>
+	</image>
+	<image id="caesar_legionary_fr_se_03">
+		<layer group="this" image="legionary_fr_se_03"/>
+		<layer src="caesar_legionary_fr_se_03"/>
+	</image>
+	<image id="caesar_legionary_fr_se_04">
+		<layer group="this" image="legionary_fr_se_04"/>
+		<layer src="caesar_legionary_fr_se_04"/>
+	</image>
+	<image id="caesar_legionary_fr_se_05">
+		<layer group="this" image="legionary_fr_se_05"/>
+		<layer src="caesar_legionary_fr_se_05"/>
+	</image>
+	<!-- Note: Caesar Legionary Walker Ranged Fighting animation frames SOUTH DIRECTION 01-12 -->
+	<image id="caesar_legionary_fr_s_01">
+		<layer group="this" image="legionary_fr_s_01"/>
+		<layer src="caesar_legionary_fr_s_01"/>
+	</image>
+	<image id="caesar_legionary_fr_s_02">
+		<layer group="this" image="legionary_fr_s_02"/>
+		<layer src="caesar_legionary_fr_s_02"/>
+	</image>
+	<image id="caesar_legionary_fr_s_03">
+		<layer group="this" image="legionary_fr_s_03"/>
+		<layer src="caesar_legionary_fr_s_03"/>
+	</image>
+	<image id="caesar_legionary_fr_s_04">
+		<layer group="this" image="legionary_fr_s_04"/>
+		<layer src="caesar_legionary_fr_s_04"/>
+	</image>
+	<image id="caesar_legionary_fr_s_05">
+		<layer group="this" image="legionary_fr_s_05"/>
+		<layer src="caesar_legionary_fr_s_05"/>
+	</image>
+	<!-- Note: Caesar Legionary Walker Ranged Fighting animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="caesar_legionary_fr_sw_01">
+		<layer group="this" image="legionary_fr_sw_01"/>
+		<layer src="caesar_legionary_fr_sw_01"/>
+	</image>
+	<image id="caesar_legionary_fr_sw_02">
+		<layer group="this" image="legionary_fr_sw_02"/>
+		<layer src="caesar_legionary_fr_sw_02"/>
+	</image>
+	<image id="caesar_legionary_fr_sw_03">
+		<layer group="this" image="legionary_fr_sw_03"/>
+		<layer src="caesar_legionary_fr_sw_03"/>
+	</image>
+	<image id="caesar_legionary_fr_sw_04">
+		<layer group="this" image="legionary_fr_sw_04"/>
+		<layer src="caesar_legionary_fr_sw_04"/>
+	</image>
+	<image id="caesar_legionary_fr_sw_05">
+		<layer group="this" image="legionary_fr_sw_05"/>
+		<layer src="caesar_legionary_fr_sw_05"/>
+	</image>
+	<!-- Note: Caesar Legionary Walker Ranged Fighting animation frames WEST DIRECTION 01-12 -->
+	<image id="caesar_legionary_fr_w_01">
+		<layer group="this" image="legionary_fr_w_01"/>
+		<layer src="caesar_legionary_fr_w_01"/>
+	</image>
+	<image id="caesar_legionary_fr_w_02">
+		<layer group="this" image="legionary_fr_w_02"/>
+		<layer src="caesar_legionary_fr_w_02"/>
+	</image>
+	<image id="caesar_legionary_fr_w_03">
+		<layer group="this" image="legionary_fr_w_03"/>
+		<layer src="caesar_legionary_fr_w_03"/>
+	</image>
+	<image id="caesar_legionary_fr_w_04">
+		<layer group="this" image="legionary_fr_w_04"/>
+		<layer src="caesar_legionary_fr_w_04"/>
+	</image>
+	<image id="caesar_legionary_fr_w_05">
+		<layer group="this" image="legionary_fr_w_05"/>
+		<layer src="caesar_legionary_fr_w_05"/>
+	</image>
+	<!-- Note: Caesar Legionary Walker Ranged Fighting animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="caesar_legionary_fr_nw_01">
+		<layer group="this" image="legionary_fr_nw_01"/>
+		<layer src="caesar_legionary_fr_nw_01"/>
+	</image>
+	<image id="caesar_legionary_fr_nw_02">
+		<layer group="this" image="legionary_fr_nw_02"/>
+		<layer src="caesar_legionary_fr_nw_02"/>
+	</image>
+	<image id="caesar_legionary_fr_nw_03">
+		<layer group="this" image="legionary_fr_nw_03"/>
+		<layer src="caesar_legionary_fr_nw_03"/>
+	</image>
+	<image id="caesar_legionary_fr_nw_04">
+		<layer group="this" image="legionary_fr_nw_04"/>
+		<layer src="caesar_legionary_fr_nw_04"/>
+	</image>
+	<image id="caesar_legionary_fr_nw_05">
+		<layer group="this" image="legionary_fr_nw_05"/>
+		<layer src="caesar_legionary_fr_nw_05"/>
+	</image>
+	<!-- Note: Caesar Legionary Walker Ranged Fighting animation frames NORTH DIRECTION 01-12 -->
+	<image id="caesar_legionary_fr_n_01">
+		<layer group="this" image="legionary_fr_n_01"/>
+		<layer src="caesar_legionary_fr_n_01"/>
+	</image>
+	<image id="caesar_legionary_fr_n_02">
+		<layer group="this" image="legionary_fr_n_02"/>
+		<layer src="caesar_legionary_fr_n_02"/>
+	</image>
+	<image id="caesar_legionary_fr_n_03">
+		<layer group="this" image="legionary_fr_n_03"/>
+		<layer src="caesar_legionary_fr_n_03"/>
+	</image>
+	<image id="caesar_legionary_fr_n_04">
+		<layer group="this" image="legionary_fr_n_04"/>
+		<layer src="caesar_legionary_fr_n_04"/>
+	</image>
+	<image id="caesar_legionary_fr_n_05">
+		<layer group="this" image="legionary_fr_n_05"/>
+		<layer src="caesar_legionary_fr_n_05"/>
+	</image>
 </assetlist>

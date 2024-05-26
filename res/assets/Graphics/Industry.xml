@@ -269,10 +269,12 @@
 		<layer src="Gold_Mine_C_OFF" x="0" y="0"/>
 	</image>
 	<image id="Gold_Mine_N_OFF" width="118" height="67" isometric="true">
-		<layer src="Gold_Mine_N_OFF" x="0" y="0"/>
+		<layer src="Gold_Mine_C_OFF" x="0" y="0"/>
+		<layer src="Gold_Mine_N_OFF" x="0" y="22"/>
 	</image>
 	<image id="Gold_Mine_S_OFF" width="118" height="67" isometric="true">
-		<layer src="Gold_Mine_S_OFF" x="0" y="0"/>
+		<layer src="Gold_Mine_C_OFF" x="0" y="0"/>
+		<layer src="Gold_Mine_S_OFF" x="0" y="22"/>
 	</image>
 	<!-- Note: Gold Mine ON - Climate Variants -->
 	<image id="Gold_Mine_C_ON" width="118" height="67" isometric="true">
@@ -391,8 +393,14 @@
 	<!-- Assets created by Areldir, with tweaks from Ouaz -->
 	<!-- Note: Sand Pit OFF - Climate Variants -->
 	<image id="Sand_Pit_C_OFF" src="Sand_Pit_C_OFF" width="118" height="60" isometric="true"/>
-	<image id="Sand_Pit_N_OFF" src="Sand_Pit_N_OFF" width="118" height="60" isometric="true"/>
-	<image id="Sand_Pit_S_OFF" src="Sand_Pit_S_OFF" width="118" height="60" isometric="true"/>
+	<image id="Sand_Pit_N_OFF" width="118" height="60" isometric="true">
+		<layer group="this" image="Sand_Pit_C_OFF"/>
+		<layer src="Sand_Pit_N_OFF"/>
+	</image>
+	<image id="Sand_Pit_S_OFF" width="118" height="60" isometric="true">
+		<layer group="this" image="Sand_Pit_C_OFF"/>
+		<layer src="Sand_Pit_S_OFF"/>
+	</image>
 	<!-- Assets created by Areldir -->
 	<!-- Note: Sand Pit ON - Climate Variants -->
 	<image id="Sand_Pit_C_ON" width="118" height="60" isometric="true">
@@ -598,8 +606,14 @@
 	</image-->
 	<!-- Note: Plain Stone Quarry OFF - Climate Variants -->
 	<image id="Stone_Quarry_C_OFF" src="Stone_Quarry_C_OFF" width="118" height="60" isometric="true"/>
-	<image id="Stone_Quarry_N_OFF" src="Stone_Quarry_N_OFF" width="118" height="60" isometric="true"/>
-	<image id="Stone_Quarry_S_OFF" src="Stone_Quarry_S_OFF" width="118" height="60" isometric="true"/>
+	<image id="Stone_Quarry_N_OFF" width="118" height="60" isometric="true">
+		<layer group="this" image="Stone_Quarry_C_OFF"/>
+		<layer src="Stone_Quarry_N_OFF"/>
+	</image>
+	<image id="Stone_Quarry_S_OFF" width="118" height="60" isometric="true">
+		<layer group="this" image="Stone_Quarry_C_OFF"/>
+		<layer src="Stone_Quarry_S_OFF"/>
+	</image>
 	<!-- Note: Plain Stone Quarry ON animation reference DO NOT USE! -->
 	<image id="Stone_Quarry_ON_01" width="48" height="49">
 		<layer src="Stone_Quarry_ON_Base" x="0" y="0"/>

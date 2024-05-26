@@ -260,11 +260,4 @@
 		<layer group="63" image="0"/>
 		<layer src="Forum_Upgrade" x="0" y="27"/>
 	</image>
-	<!-- Note: Basilica Building OFF state -->
-	<image id="Basilica_OFF" src="Basilica_OFF" width="238" height="161" isometric="true"/>
-	<!-- Note: Basilica Building ON state -->
-	<image id="Basilica_ON" width="238" height="161" isometric="true">
-		<layer group="this" image="Basilica_OFF" x="0" y="0"/>
-		<layer src="Basilica_ON" x="45" y="78"/>
-	</image>
 </assetlist>
