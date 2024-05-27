@@ -90,7 +90,8 @@ void list_box_request_refresh(list_box_type *list_box)
 static int get_actual_width_blocks(const list_box_type *list_box)
 {
     int width_blocks = list_box->width_blocks;
-    if (!list_box->extend_to_hidden_scrollbar || list_box->total_items > list_box->scrollbar.elements_in_view) {
+    if (!list_box->extend_to_hidden_scrollbar ||
+        calculate_scrollable_items(list_box) > list_box->scrollbar.elements_in_view) {
         width_blocks -= 2;
     }
     return width_blocks;
@@ -215,7 +216,7 @@ static int get_button_id_from_position(const list_box_type *list_box, int x, int
 {
     int padding = list_box->draw_inner_panel ? BLOCK_SIZE / 2 : 0;
     int width_blocks = get_actual_width_blocks(list_box);
-    if (x < list_box->x + padding || x > list_box->x + width_blocks * BLOCK_SIZE - padding || y < list_box->y) {
+    if (x < list_box->x + padding || x >= list_box->x + width_blocks * BLOCK_SIZE - padding || y < list_box->y) {
         return LIST_BOX_NO_SELECTION;
     }
     int button_id = (y - padding / 2 - list_box->y) / list_box->item_height;
