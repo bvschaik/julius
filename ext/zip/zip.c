@@ -1922,7 +1922,7 @@ ssize_t zip_stream_copy(struct zip_t *zip, void **buf, size_t *bufsize) {
     *bufsize = n;
   }
 
-  *buf = calloc(sizeof(unsigned char), n);
+  *buf = calloc(n, sizeof(unsigned char));
   memcpy(*buf, zip->archive.m_pState->m_pMem, n);
 
   return (ssize_t)n;

@@ -4,7 +4,7 @@
 
 int core_memory_block_init(memory_block *block, size_t initial_size)
 {
-    block->memory = calloc(sizeof(char), initial_size);
+    block->memory = calloc(initial_size, sizeof(char));
     if (!block->memory) {
         block->size = 0;
         return 0;
