@@ -45,8 +45,8 @@ static generic_button buttons[] = {
 };
 
 static struct {
-    int focus_button_id;
-    int total_types;
+    unsigned int focus_button_id;
+    unsigned int total_types;
     scenario_action_t *action;
     scenario_action_data_t *list[MAX_VISIBLE_ROWS];
 } data;
@@ -68,8 +68,8 @@ static void populate_list(int offset)
     if (offset < 0) {
         offset = 0;
     }
-    for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
-        int target_index = i + offset;
+    for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
+        unsigned int target_index = i + offset;
         if (target_index < data.total_types) {
             data.list[i] = scenario_events_parameter_data_get_actions_xml_attributes_alphabetical(target_index);
         }
@@ -88,7 +88,7 @@ static void draw_foreground(void)
     outer_panel_draw(16, 16, 42, 33);
 
     int y_offset = DETAILS_Y_OFFSET;
-    for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
+    for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (data.list[i]) {
             large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
             if (data.focus_button_id == (i + 1)) {

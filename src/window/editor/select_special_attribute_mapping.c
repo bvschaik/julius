@@ -23,7 +23,7 @@
 #define MAX_VISIBLE_ROWS 13
 
 static void on_scroll(void);
-static void button_click(int param1, int param2);
+static void button_click(int index, int param2);
 
 static scrollbar_type scrollbar = {
     640, DETAILS_Y_OFFSET, DETAILS_ROW_HEIGHT * MAX_VISIBLE_ROWS, BUTTON_WIDTH, MAX_VISIBLE_ROWS, on_scroll, 0, 4
@@ -46,8 +46,8 @@ static generic_button buttons[] = {
 };
 
 static struct {
-    int focus_button_id;
-    int list_size;
+    unsigned int focus_button_id;
+    unsigned int list_size;
     int parameter_type;
     void (*callback)(int);
 
@@ -65,8 +65,8 @@ static void populate_list(int offset)
     if (offset < 0) {
         offset = 0;
     }
-    for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
-        int target_index = i + offset;
+    for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
+        unsigned int target_index = i + offset;
         if (target_index < data.list_size) {
             data.list[i] = scenario_events_parameter_data_get_attribute_mapping(data.parameter_type, target_index);
         }
@@ -143,7 +143,7 @@ static void draw_foreground(void)
     text_draw(data.heading_text, 48, 40, FONT_NORMAL_PLAIN, COLOR_BLACK);
 
     int y_offset = DETAILS_Y_OFFSET;
-    for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
+    for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (i < data.list_size) {
             large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
             if (data.focus_button_id == (i + 1)) {
@@ -180,13 +180,13 @@ static void handle_input(const mouse *m, const hotkeys *h)
     populate_list(scrollbar.scroll_position);
 }
 
-static void button_click(int param1, int param2)
+static void button_click(int index, int param2)
 {
-    if (param1 >= data.list_size) {
+    if (index >= (int) data.list_size) {
         return;
     }
 
-    data.callback(data.list[param1]->value);
+    data.callback(data.list[index]->value);
     window_go_back();
 }
 

@@ -53,8 +53,8 @@ static generic_button resource_generic_buttons[] = {
 
 static struct {
     resource_type resource;
-    int focus_button_id;
-    int focus_image_button_id;
+    unsigned int focus_button_id;
+    unsigned int focus_image_button_id;
 } data;
 
 static void init(resource_type resource)
@@ -218,14 +218,14 @@ static void handle_input(const mouse* m, const hotkeys* h)
         return;
     }
     if (city_resource_trade_status(data.resource) & TRADE_STATUS_IMPORT) {
-        int button = 0;
+        unsigned int button = 0;
         arrow_buttons_handle_mouse(m_dialog, 0, 0, import_amount_arrow_buttons, 2, &button);
         if (button) {
             return;
         }
     }
     if (city_resource_trade_status(data.resource) & TRADE_STATUS_EXPORT) {
-        int button = 0;
+        unsigned int button = 0;
         arrow_buttons_handle_mouse(m_dialog, 0, 0, export_amount_arrow_buttons, 2, &button);
         if (button) {
             return;

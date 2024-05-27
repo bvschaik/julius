@@ -24,7 +24,7 @@ static generic_button buttons[] = {
     {400, 336, 160, 20, button_cancel, button_none, 0, 0},
 };
 
-static int focus_button_id;
+static unsigned int focus_button_id;
 
 static void init(void)
 {

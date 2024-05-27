@@ -17,8 +17,8 @@
 #define MENU_CLICK_MARGIN 20
 
 static struct {
-    int active_buttons;
-    int focus_button_id;
+    unsigned int active_buttons;
+    unsigned int focus_button_id;
 } data;
 
 static void button_menu_item(int index, int param2);
@@ -47,10 +47,10 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     window_city_draw();
-    int num_legions = formation_get_num_legions();
+    unsigned int num_legions = formation_get_num_legions();
     int x_offset = get_sidebar_x_offset();
 
-    for (int i = 0; i < num_legions; i++) {
+    for (unsigned int i = 0; i < num_legions; i++) {
         const formation *m = formation_get(formation_for_legion(i + 1));
         label_draw(x_offset - 170, 74 + 24 * i, 10, data.focus_button_id == i + 1 ? 1 : 2);
         lang_text_draw_centered(138, m->legion_id, x_offset - 170, 77 + 24 * i, 160, FONT_NORMAL_GREEN);
@@ -64,7 +64,7 @@ static int click_outside_menu(const mouse *m, int x_offset)
           (m->x < x_offset - MENU_X_OFFSET - MENU_CLICK_MARGIN ||
            m->x > x_offset + MENU_CLICK_MARGIN ||
            m->y < MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
-           m->y > MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * data.active_buttons);
+           m->y > MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * (int) data.active_buttons);
 }
 
 

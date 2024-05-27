@@ -40,7 +40,7 @@ static generic_button buttons[] = {
     {262, 408, 200, 30, button_milestone, button_none, 75}
 };
 
-static int focus_button_id;
+static unsigned int focus_button_id;
 
 static void draw_background(void)
 {

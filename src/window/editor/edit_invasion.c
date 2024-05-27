@@ -38,7 +38,7 @@ static generic_button buttons[] = {
 static struct {
     int id;
     editor_invasion invasion;
-    int focus_button_id;
+    unsigned int focus_button_id;
 } data;
 
 static void init(int id)

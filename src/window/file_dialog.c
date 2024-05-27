@@ -81,7 +81,7 @@ static struct {
         SORT_BY_NAME,
         SORT_BY_DATE
     } sort_type;
-    int sort_by_button_focused;
+    unsigned int sort_by_button_focused;
 
     file_type_data *file_data;
     char selected_file[FILE_NAME_MAX];

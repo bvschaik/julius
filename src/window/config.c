@@ -317,12 +317,12 @@ static translation_key page_names[CONFIG_PAGES] = {
 
 static struct {
     config_widget *widgets[MAX_WIDGETS * CONFIG_PAGES];
-    int num_widgets;
-    int focus_button;
-    int bottom_focus_button;
-    int page_focus_button;
-    int page;
-    int widgets_per_page[CONFIG_PAGES];
+    unsigned int num_widgets;
+    unsigned int focus_button;
+    unsigned int bottom_focus_button;
+    unsigned int page_focus_button;
+    unsigned int page;
+    unsigned int widgets_per_page[CONFIG_PAGES];
     int starting_option;
     struct {
         int original_value;
@@ -547,7 +547,7 @@ static void set_page(int page)
 {
     data.page = page;
     data.starting_option = 0;
-    for (int i = 0; i < data.page; i++) {
+    for (unsigned int i = 0; i < data.page; i++) {
         data.starting_option += data.widgets_per_page[i];
     }
     scrollbar_init(&scrollbar, 0, data.widgets_per_page[page]);
@@ -861,7 +861,7 @@ static void draw_background(void)
     int page_x_offset = 30;
     int open_tab_width = text_get_width(translation_for(page_names[data.page]), FONT_NORMAL_BLACK) + 6;
     int max_closed_tab_width = (600 - page_x_offset * CONFIG_PAGES - open_tab_width) / (CONFIG_PAGES - 1);
-    for (int i = 0; i < CONFIG_PAGES; ++i) {
+    for (unsigned int i = 0; i < CONFIG_PAGES; ++i) {
         page_x_offset += 15;
         int width = 0;
         if (data.page == i) {
@@ -879,7 +879,7 @@ static void draw_background(void)
 
     button_border_draw(10, 75, 620, 355, 0);
 
-    for (int i = 0; i < NUM_VISIBLE_ITEMS && i < data.widgets_per_page[data.page]; i++) {
+    for (unsigned int i = 0; i < NUM_VISIBLE_ITEMS && i < data.widgets_per_page[data.page]; i++) {
         config_widget *w = data.widgets[i + data.starting_option + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_HEADER) {
@@ -914,7 +914,7 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    for (int i = 0; i < CONFIG_PAGES; ++i) {
+    for (unsigned int i = 0; i < CONFIG_PAGES; ++i) {
         button_border_draw(page_buttons[i].x, page_buttons[i].y,
             page_buttons[i].width, page_buttons[i].height,
             data.page_focus_button == i + 1);
@@ -925,7 +925,7 @@ static void draw_foreground(void)
         }
     }
 
-    for (int i = 0; i < NUM_VISIBLE_ITEMS && i < data.widgets_per_page[data.page]; i++) {
+    for (unsigned int i = 0; i < NUM_VISIBLE_ITEMS && i < data.widgets_per_page[data.page]; i++) {
         config_widget *w = data.widgets[i + data.starting_option + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_CHECKBOX) {
@@ -958,7 +958,7 @@ static int is_checkbox(const mouse *m, int x, int y)
     return 0;
 }
 
-static int checkbox_handle_mouse(const mouse *m, int x, int y, int value_key, int *focus)
+static int checkbox_handle_mouse(const mouse *m, int x, int y, int value_key, unsigned int *focus)
 {
     if (!is_checkbox(m, x, y)) {
         return 0;
@@ -1035,11 +1035,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 
     int handled = 0;
-    for (int i = 0; i < NUM_VISIBLE_ITEMS && i < data.widgets_per_page[data.page]; i++) {
+    for (unsigned int i = 0; i < NUM_VISIBLE_ITEMS && i < data.widgets_per_page[data.page]; i++) {
         config_widget *w = data.widgets[i + data.starting_option + scrollbar.scroll_position];
         int y = ITEM_Y_OFFSET + ITEM_HEIGHT * i;
         if (w->type == TYPE_CHECKBOX) {
-            int focus = 0;
+            unsigned int focus = 0;
             handled |= checkbox_handle_mouse(m_dialog, 20, y + w->y_offset, w->subtype, &focus);
             if (focus) {
                 data.focus_button = i + 1;
@@ -1047,7 +1047,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         } else if (w->type == TYPE_SELECT) {
             generic_button *btn = &select_buttons[w->subtype];
             btn->parameter1 = y + w->y_offset;
-            int focus = 0;
+            unsigned int focus = 0;
             handled |= generic_buttons_handle_mouse(m_dialog, 0, y + w->y_offset, btn, 1, &focus);
             if (focus) {
                 data.focus_button = i + 1;
@@ -1467,7 +1467,7 @@ static void button_page(int page, int param2)
 static void get_tooltip(tooltip_context *c)
 {
     if (data.page_focus_button) {
-        int page = data.page_focus_button - 1;
+        unsigned int page = data.page_focus_button - 1;
         if (page == data.page) {
             return;
         }

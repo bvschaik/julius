@@ -36,15 +36,15 @@ static void menu_file_confirm_exit(int accepted, int checked)
 
 static void button_click(int type, int param2);
 
-static int focus_button_id;
+static unsigned int focus_button_id;
 
 static generic_button buttons[] = {
-        {192, 100, 192, 25, button_click, button_none, 1, 0},
-        {192, 140, 192, 25, button_click, button_none, 2, 0},
-        {192, 180, 192, 25, button_click, button_none, 3, 0},
-        {192, 220, 192, 25, button_click, button_none, 4, 0},
-        {192, 260, 192, 25, button_click, button_none, 5, 0},
-        {192, 300, 192, 25, button_click, button_none, 6, 0},
+    {192, 100, 192, 25, button_click, button_none, 1, 0},
+    {192, 140, 192, 25, button_click, button_none, 2, 0},
+    {192, 180, 192, 25, button_click, button_none, 3, 0},
+    {192, 220, 192, 25, button_click, button_none, 4, 0},
+    {192, 260, 192, 25, button_click, button_none, 5, 0},
+    {192, 300, 192, 25, button_click, button_none, 6, 0},
 };
 
 static void draw_foreground(void)
@@ -53,7 +53,7 @@ static void draw_foreground(void)
 
     outer_panel_draw(160, 44, 16, 19);
 
-    for (int i = 0; i < MAX_BUTTONS; i++) {
+    for (unsigned int i = 0; i < MAX_BUTTONS; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, focus_button_id == i + 1 ? 1 : 0);
     }
 

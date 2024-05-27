@@ -46,10 +46,10 @@ static const uint8_t NA[4] = { 'N', '/', 'A', 0 };
 static struct {
     int id;
     editor_demand_change demand_change;
-    int focus_button_id;
+    unsigned int focus_button_id;
     int *route_ids;
     const uint8_t **route_names;
-    int num_routes;
+    unsigned int num_routes;
     resource_type available_resources[RESOURCE_MAX];
 } data;
 
@@ -73,7 +73,7 @@ static void create_route_info(int route_id, const uint8_t *city_name)
 static void init(int id)
 {
     data.id = id;
-    for (int i = 0; i < data.num_routes; i++) {
+    for (unsigned int i = 0; i < data.num_routes; i++) {
         free((uint8_t *) data.route_names[i]);
     }
     free(data.route_ids);
@@ -117,7 +117,7 @@ static const uint8_t *get_text_for_route_id(int route_id)
     if (route_id == 0) {
         return data.route_names[0];
     }
-    for (int i = 0; i < data.num_routes; i++) {
+    for (unsigned int i = 0; i < data.num_routes; i++) {
         if (data.route_ids[i] == route_id) {
             return data.route_names[i];
         }

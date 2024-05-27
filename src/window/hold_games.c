@@ -48,9 +48,9 @@ static generic_button buttons_games_size[] = {
 };
 
 static struct {
-    int focus_button_id;
-    int focus_image_button_id;
-    int focus_game_button_id;
+    unsigned int focus_button_id;
+    unsigned int focus_image_button_id;
+    unsigned int focus_game_button_id;
     int return_to_city;
     int game_possible;
 } data;

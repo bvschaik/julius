@@ -58,9 +58,8 @@ static generic_button buttons[] = {
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
 
 static struct {
-    int focus_button_id;
-
-    int total_messages;
+    unsigned int focus_button_id;
+    unsigned int total_messages;
     custom_message_t *list[MAX_VISIBLE_ROWS];
 } data;
 
@@ -81,7 +80,7 @@ static void populate_list(int offset)
         offset = 0;
     }
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
-        int target_id = i + offset + 1; // Skip entry zero custom message
+        unsigned int target_id = i + offset + 1; // Skip entry zero custom message
         if (target_id <= data.total_messages) {
             data.list[i] = custom_messages_get(target_id);
         } else {
@@ -105,7 +104,7 @@ static void draw_foreground(void)
     text_draw_label_and_number(translation_for(TR_EDITOR_CUSTOM_MESSAGES_COUNT), data.total_messages, "", 48, 106, FONT_NORMAL_PLAIN, COLOR_BLACK);
 
     int y_offset = MESSAGES_Y_OFFSET;
-    for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
+    for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (data.list[i]) {
             large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / BLOCK_SIZE,
                 data.focus_button_id == i + 1 ? 1 : 0);

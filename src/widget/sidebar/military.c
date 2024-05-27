@@ -145,9 +145,9 @@ typedef struct {
 
 static struct {
     legion_info active_legion;
-    int top_buttons_focus_id;
-    int inner_buttons_focus_id;
-    int bottom_buttons_focus_id;
+    unsigned int top_buttons_focus_id;
+    unsigned int inner_buttons_focus_id;
+    unsigned int bottom_buttons_focus_id;
     int city_view_was_collapsed;
 } data;
 
@@ -177,7 +177,7 @@ static void draw_layout_buttons(int x, int y, int background, const formation *m
     int start_formation = LAYOUTS_PER_LEGION - formation_types;
     const generic_button *button_offsets = buttons_formation_layout[formation_types - 3];
 
-    for (int i = start_formation; i < LAYOUTS_PER_LEGION; i++) {
+    for (unsigned int i = start_formation; i < LAYOUTS_PER_LEGION; i++) {
         const generic_button *btn = &button_offsets[i - start_formation];
 
         if (background) {
@@ -344,7 +344,7 @@ static void draw_legion_buttons(int x_offset, int y_offset)
     const formation *m = formation_get(data.active_legion.formation_id);
     if (m->num_figures) {
         draw_layout_buttons(x_offset, y_offset + Y_OFFSET_LAYOUT_BUTTONS, 0, m);
-        for (int i = 0; i < 3; i++) {
+        for (unsigned int i = 0; i < 3; i++) {
             button_border_draw(x_offset + buttons_bottom[i].x, y_offset + Y_OFFSET_BOTTOM_BUTTONS,
                 30, 30, data.bottom_buttons_focus_id == i + 1);
         }

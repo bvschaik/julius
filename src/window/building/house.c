@@ -157,7 +157,7 @@ void window_building_draw_house(building_info_context *c)
         int total_food_types = 0;
         int total_food_amount = 0;
         if (list->size > 4) {
-            for (int i = 0; i < list->size; i++) {
+            for (unsigned int i = 0; i < list->size; i++) {
                 resource_type r = list->items[i];
                 if (resource_is_inventory(r) && b->resources[r]) {
                     total_food_types++;
@@ -172,7 +172,7 @@ void window_building_draw_house(building_info_context *c)
                 FONT_NORMAL_BROWN, 0);
             x_offset += text_draw(string_from_ascii("("), c->x_offset + x_offset, c->y_offset + y_content,
                 FONT_NORMAL_BROWN, 0);
-            for (int i = 0; i < list->size; i++) {
+            for (unsigned int i = 0; i < list->size; i++) {
                 resource_type r = list->items[i];
                 if (!resource_is_inventory(r) || !b->resources[r]) {
                     continue;
@@ -187,7 +187,7 @@ void window_building_draw_house(building_info_context *c)
             text_draw(string_from_ascii(")"), c->x_offset + x_offset, c->y_offset + y_content,
                 FONT_NORMAL_BROWN, 0);
         } else {
-            for (int i = 0; i < list->size; i++) {
+            for (unsigned int i = 0; i < list->size; i++) {
                 resource_type r = list->items[i];
                 if (!resource_is_inventory(r) || (list->size > 4 && !b->resources[r])) {
                     continue;
@@ -258,7 +258,7 @@ const uint8_t *window_building_house_get_tooltip(const building_info_context *c)
     int total_food_types = 0;
 
     if (list->size > 4) {
-        for (int i = 0; i < list->size; i++) {
+        for (unsigned int i = 0; i < list->size; i++) {
             resource_type r = list->items[i];
             if (resource_is_inventory(r) && b->resources[r]) {
                 total_food_types++;
@@ -270,7 +270,7 @@ const uint8_t *window_building_house_get_tooltip(const building_info_context *c)
     }
     static uint8_t text[400];
     uint8_t *cursor = text;
-    for (int i = 0; i < list->size; i++) {
+    for (unsigned int i = 0; i < list->size; i++) {
         resource_type r = list->items[i];
         if (resource_is_inventory(r) && b->resources[r]) {
             if (cursor != text) {

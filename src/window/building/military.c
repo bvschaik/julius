@@ -55,20 +55,20 @@ static generic_button return_button[] = {
 };
 
 static struct {
-    int focus_button_id;
-    int focus_priority_button_id;
-    int focus_delivery_button_id;
-    int return_button_id;
+    unsigned int focus_button_id;
+    unsigned int focus_priority_button_id;
+    unsigned int focus_delivery_button_id;
+    unsigned int return_button_id;
     int building_id;
     building_info_context *context_for_callback;
 } data;
 
-static void draw_priority_buttons(int x, int y, int buttons, int building_id)
+static void draw_priority_buttons(int x, int y, unsigned int buttons, int building_id)
 {
     int base_priority_image_id = assets_get_image_id("UI", "Barracks_Priority_Legionaries_OFF");
     data.building_id = building_id;    
 
-    for (int i = 0; i < buttons; i++) {
+    for (unsigned int i = 0; i < buttons; i++) {
         int has_focus = 0;
         if (data.focus_priority_button_id) {
             if (data.focus_priority_button_id - 1 == i) {
@@ -79,7 +79,7 @@ static void draw_priority_buttons(int x, int y, int buttons, int building_id)
         int y_adj = y + priority_buttons[i].y;
 
         building *barracks = building_get(data.building_id);
-        int priority = building_barracks_get_priority(barracks);
+        unsigned int priority = building_barracks_get_priority(barracks);
 
         if (has_focus || priority == i) {
             button_border_draw(x_adj - 3, y_adj - 3, 46, 46, 1);
@@ -458,7 +458,7 @@ void window_building_draw_legion_info_foreground(building_info_context *c)
     if (!m->num_figures) {
         return;
     }
-    for (int i = 5 - c->formation_types; i < 5; i++) {
+    for (unsigned int i = 5 - c->formation_types; i < 5; i++) {
         int has_focus = 0;
         if (data.focus_button_id) {
             if (data.focus_button_id - 1 == i) {

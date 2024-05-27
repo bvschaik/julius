@@ -21,7 +21,7 @@ static arrow_button arrow_buttons_taxes[] = {
     {204, 75, 15, 24, button_change_taxes, 0, 0}
 };
 
-static int arrow_button_focus;
+static unsigned int arrow_button_focus;
 
 static void draw_row(int group, int number, int y, int value_last_year, int value_this_year)
 {

@@ -25,7 +25,7 @@
 static struct {
     int show_window;
     int window_status;
-    int button_in_focus;
+    unsigned int button_in_focus;
     int first_time;
     char user_path[FILE_NAME_MAX];
 } data;

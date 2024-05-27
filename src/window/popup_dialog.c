@@ -38,7 +38,7 @@ static struct {
     int has_buttons;
     int translation_key;
     int checked;
-    int has_focus;
+    unsigned int has_focus;
     int checkbox_start_width;
     const uint8_t *custom_title;
     const uint8_t *custom_text;

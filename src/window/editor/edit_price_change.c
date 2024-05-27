@@ -36,7 +36,7 @@ static generic_button buttons[] = {
 static struct {
     int id;
     editor_price_change price_change;
-    int focus_button_id;
+    unsigned int focus_button_id;
     resource_type available_resources[RESOURCE_MAX];
 } data;
 

@@ -30,7 +30,7 @@ static generic_button graph_buttons[] = {
     { 509, 161, 104, 55, button_graph, button_none, 1, 0 }
 };
 
-static int focus_button_id;
+static unsigned int focus_button_id;
 
 static void get_y_axis(int max_value, int *y_max, int *y_shift)
 {

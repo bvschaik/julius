@@ -75,7 +75,7 @@ static struct {
     int y_text;
     int text_width_blocks;
     int text_height_blocks;
-    int focus_button_id;
+    unsigned int focus_button_id;
 } data;
 
 static int review_briefing_button_should_be_active(void)
@@ -134,11 +134,11 @@ static void draw_background(void)
     graphics_reset_dialog();
 }
 
-static void draw_messages(int total_messages)
+static void draw_messages(unsigned int total_messages)
 {
-    int max = total_messages < MAX_MESSAGES ? total_messages : MAX_MESSAGES;
-    int index = scrollbar.scroll_position;
-    for (int i = 0; i < max; i++, index++) {
+    unsigned int max = total_messages < MAX_MESSAGES ? total_messages : MAX_MESSAGES;
+    unsigned int index = scrollbar.scroll_position;
+    for (unsigned int i = 0; i < max; i++, index++) {
         const city_message *msg = city_message_get(index);
         int image_offset = 0;
         const lang_message *lang_msg = 0;
@@ -202,7 +202,7 @@ static void draw_foreground(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     const mouse *m_dialog = mouse_in_dialog(m);
-    int old_button_id = data.focus_button_id;
+    unsigned int old_button_id = data.focus_button_id;
     data.focus_button_id = 0;
 
     if (scrollbar_handle_mouse(&scrollbar, m_dialog, 1)) {
@@ -210,7 +210,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
 
-    int button_id;
+    unsigned int button_id;
     int handled = image_buttons_handle_mouse(m_dialog, 16, 32 + BLOCK_SIZE * data.height_blocks - 42,
         &image_button_help, 1, &button_id);
     if (button_id) {

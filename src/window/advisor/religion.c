@@ -19,7 +19,7 @@ static generic_button hold_festival_button[] = {
     {102, 340, 300, 20, button_hold_festival, button_none, 0, 0},
 };
 
-static int focus_button_id;
+static unsigned int focus_button_id;
 
 static int get_religion_advice(void)
 {

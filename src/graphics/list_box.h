@@ -5,14 +5,14 @@
 #include "graphics/tooltip.h"
 #include "input/mouse.h"
 
-#define LIST_BOX_NO_SELECTION -1
+#define LIST_BOX_NO_SELECTION ((unsigned int) -1)
 
 typedef struct {
     int x;
     int y;
     int width;
     int height;
-    int index;
+    unsigned int index;
     int button_position;
     int is_selected;
     int is_focused;
@@ -34,9 +34,9 @@ typedef struct {
 
     /* Private elements */
     unsigned int total_items;
-    int selected_index;
+    unsigned int selected_index;
     scrollbar_type scrollbar;
-    unsigned int focus_button_id;
+    int focus_button_id;
     int refresh_requested;
 } list_box_type;
 
@@ -46,10 +46,10 @@ unsigned int list_box_get_total_items(const list_box_type *list_box);
 void list_box_draw(list_box_type *list_box);
 int list_box_handle_input(list_box_type *list_box, const mouse *m, int in_dialog);
 void list_box_handle_tooltip(const list_box_type *list_box, tooltip_context *c);
-void list_box_show_index(list_box_type *list_box, int index);
+void list_box_show_index(list_box_type *list_box, unsigned int index);
 void list_box_show_selected_index(list_box_type *list_box);
-void list_box_select_index(list_box_type *list_box, int index);
-int list_box_get_selected_index(const list_box_type *list_box);
+void list_box_select_index(list_box_type *list_box, unsigned int index);
+unsigned int list_box_get_selected_index(const list_box_type *list_box);
 void list_box_request_refresh(list_box_type *list_box);
 int list_box_get_scroll_position(const list_box_type *list_box);
 

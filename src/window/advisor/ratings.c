@@ -25,7 +25,7 @@ static generic_button rating_buttons[] = {
     {440, 286, 110, 66, button_rating, button_none, SELECTED_RATING_FAVOR, 0},
 };
 
-static int focus_button_id;
+static unsigned int focus_button_id;
 
 void draw_rating_column(int x_offset, int y_offset, int value, int has_reached)
 {

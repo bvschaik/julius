@@ -36,7 +36,7 @@ static generic_button mint_conversion_buttons[] = {
 
 static struct {
     int city_mint_id;
-    int focus_button_id;
+    unsigned int focus_button_id;
 } data;
 
 static void draw_farm(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource)

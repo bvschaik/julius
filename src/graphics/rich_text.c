@@ -341,7 +341,7 @@ int rich_text_parse_image_id(const uint8_t **position, int default_image_group, 
 }
 
 static int draw_text(const uint8_t *text, int x_offset, int y_offset,
-                     int box_width, int height_lines, color_t color, int measure_only)
+                     int box_width, unsigned int height_lines, color_t color, int measure_only)
 {
     if (!measure_only) {
         graphics_set_clip_rectangle(x_offset, y_offset, box_width, data.line_height * height_lines);
@@ -357,8 +357,8 @@ static int draw_text(const uint8_t *text, int x_offset, int y_offset,
     int has_more_characters = 1;
     int y = y_offset;
     int guard = 0;
-    int line = 0;
-    int num_lines = 0;
+    unsigned int line = 0;
+    unsigned int num_lines = 0;
     int heading = 0;
     while (has_more_characters || lines_to_skip) {
         if (++guard >= 1000) {

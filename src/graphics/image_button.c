@@ -8,10 +8,10 @@
 #define PRESSED_REPEAT_INITIAL_MILLIS 300
 #define PRESSED_REPEAT_MILLIS 50
 
-static void fade_pressed_effect(image_button *buttons, int num_buttons)
+static void fade_pressed_effect(image_button *buttons, unsigned int num_buttons)
 {
     time_millis current_time = time_get_millis();
-    for (int i = 0; i < num_buttons; i++) {
+    for (unsigned int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
         if (btn->pressed) {
             if (current_time - btn->pressed_since > PRESSED_EFFECT_MILLIS) {
@@ -25,9 +25,9 @@ static void fade_pressed_effect(image_button *buttons, int num_buttons)
     }
 }
 
-static void fade_pressed_effect_build(image_button *buttons, int num_buttons)
+static void fade_pressed_effect_build(image_button *buttons, unsigned int num_buttons)
 {
-    for (int i = 0; i < num_buttons; i++) {
+    for (unsigned int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
         if (btn->pressed && btn->button_type == IB_BUILD) {
             btn->pressed--;
@@ -35,10 +35,10 @@ static void fade_pressed_effect_build(image_button *buttons, int num_buttons)
     }
 }
 
-void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons)
+void image_buttons_draw(int x, int y, image_button *buttons, unsigned int num_buttons)
 {
     fade_pressed_effect(buttons, num_buttons);
-    for (int i = 0; i < num_buttons; i++) {
+    for (unsigned int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
         int image_id = 0;
         if (btn->image_collection) {
@@ -59,7 +59,6 @@ void image_buttons_draw(int x, int y, image_button *buttons, int num_buttons)
     }
 }
 
-
 static int should_be_pressed(const image_button *btn, const mouse *m)
 {
     if ((m->left.went_down || m->left.is_down) && btn->left_click_handler != button_none) {
@@ -72,7 +71,7 @@ static int should_be_pressed(const image_button *btn, const mouse *m)
 }
 
 int image_buttons_handle_mouse(
-    const mouse *m, int x, int y, image_button *buttons, int num_buttons, int *focus_button_id)
+    const mouse *m, int x, int y, image_button *buttons, unsigned int num_buttons, unsigned int *focus_button_id)
 {
     fade_pressed_effect(buttons, num_buttons);
     fade_pressed_effect_build(buttons, num_buttons);
@@ -80,7 +79,7 @@ int image_buttons_handle_mouse(
     if (focus_button_id) {
         *focus_button_id = 0;
     }
-    for (int i = 0; i < num_buttons; i++) {
+    for (unsigned int i = 0; i < num_buttons; i++) {
         image_button *btn = &buttons[i];
         if (btn->focused) {
             btn->focused--;

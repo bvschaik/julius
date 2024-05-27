@@ -40,16 +40,16 @@ static struct {
     int title;
     int subtitle;
     option_menu_item *options;
-    int num_options;
+    unsigned int num_options;
     int width_blocks;
     int height_blocks;
     void (*close_func)(int selection);
-    int focus_button_id;
-    int original_option;
-    int selected_option;
+    unsigned int focus_button_id;
+    unsigned int original_option;
+    unsigned int selected_option;
     int price;
-    int visible_options;
-    int scroll_position;
+    unsigned int visible_options;
+    unsigned int scroll_position;
     int height;
     option_menu_row_size row_size;
 } data;
@@ -137,7 +137,7 @@ static void draw_background(void)
 
     int y_offset = START_Y_OFFSET;
 
-    for (int i = 0; i < data.visible_options; i++) {
+    for (unsigned int i = 0; i < data.visible_options; i++) {
         int text_width = data.num_options == data.visible_options ? 448 : 400;
         int text_x = 20;
 
@@ -174,7 +174,7 @@ static void draw_background(void)
 static void draw_foreground(void)
 {
     graphics_in_dialog_with_size(16 * data.width_blocks, 16 * data.height_blocks);
-    for (int i = 0; i < data.visible_options; i++) {
+    for (unsigned int i = 0; i < data.visible_options; i++) {
         if (data.options[i + scrollbar.scroll_position].image_id) {
             color_t color = data.focus_button_id == i + 3 ? COLOR_BORDER_RED : COLOR_BORDER_GREEN;
             image_draw_border(border_image_ids[data.row_size], 20, buttons[i + 2].y + 2, color);

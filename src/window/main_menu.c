@@ -29,7 +29,7 @@
 static void button_click(int type, int param2);
 
 static struct {
-    int focus_button_id;
+    unsigned int focus_button_id;
     int logo_image_id;
 } data;
 
@@ -79,8 +79,9 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    for (int i = 0; i < MAX_BUTTONS; i++) {
-        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / BLOCK_SIZE, data.focus_button_id == i + 1 ? 1 : 0);
+    for (unsigned int i = 0; i < MAX_BUTTONS; i++) {
+        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / BLOCK_SIZE,
+            data.focus_button_id == i + 1 ? 1 : 0);
     }
 
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_MAIN_MENU_NEW_CAMPAIGN, 192, 137, 256, FONT_NORMAL_GREEN);

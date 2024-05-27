@@ -109,7 +109,7 @@ static void draw_background(void)
     const resource_list *list = city_resource_get_potential();
     int resource_offset = BLOCK_SIZE * 2;
 
-    for (int i = 0; i < list->size; i++) {
+    for (unsigned int i = 0; i < list->size; i++) {
         resource_type r = list->items[i];
         image_draw(resource_get_data(r)->image.icon, icon_shift + i * resource_offset,
             50, COLOR_MASK_NONE, SCALE_NONE);
@@ -200,7 +200,7 @@ static resource_type get_tooltip_resource(tooltip_context *c)
 
     const resource_list *list = city_resource_get_potential();
 
-    for (int i = 0; i < list->size; i++) {
+    for (unsigned int i = 0; i < list->size; i++) {
         int x = x_base + i * BLOCK_SIZE * 2;
         if (x <= x_mouse && x + 24 > x_mouse && y <= y_mouse && y + 24 > y_mouse) {
             return list->items[i];

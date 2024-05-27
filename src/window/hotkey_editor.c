@@ -31,7 +31,7 @@ static struct {
     key_type key;
     key_modifier_type modifiers;
     void (*callback)(hotkey_action, int, key_type, key_modifier_type);
-    int focus_button;
+    unsigned int focus_button;
 } data;
 
 static void init(hotkey_action action, int index,
@@ -72,7 +72,7 @@ static void draw_foreground(void)
     text_draw_centered(key_combination_display_name(data.key, data.modifiers),
         192, 193, 256, FONT_NORMAL_WHITE, 0);
 
-    for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
+    for (unsigned int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         generic_button *btn = &bottom_buttons[i];
         button_border_draw(btn->x, btn->y, btn->width, btn->height, data.focus_button == i + 1);
     }

@@ -10,13 +10,13 @@ typedef struct {
     int y;
     int height;
     int scrollable_width;
-    int elements_in_view;
+    unsigned int elements_in_view;
     void (*on_scroll_callback)(void);
     int has_y_margin;
     int dot_padding;
     int always_visible;
-    int max_scroll_position;
-    int scroll_position;
+    unsigned int max_scroll_position;
+    unsigned int scroll_position;
     int is_dragging_scrollbar_dot;
     int scrollbar_dot_drag_offset;
     int touch_drag_state;
@@ -29,21 +29,21 @@ typedef struct {
  * @param scroll_position Scroll position to set
  * @param total_elements The number of elements to scroll
  */
-void scrollbar_init(scrollbar_type *scrollbar, int scroll_position, int total_elements);
+void scrollbar_init(scrollbar_type *scrollbar, unsigned int scroll_position, unsigned int total_elements);
 
 /**
  * Resets the text to the specified scroll position and forces recalculation of lines
  * @param scrollbar Scrollbar
  * @param scroll_position Scroll position to set
  */
-void scrollbar_reset(scrollbar_type *scrollbar, int scroll_position);
+void scrollbar_reset(scrollbar_type *scrollbar, unsigned int scroll_position);
 
 /**
  * Update the number of total elements, adjusting the scroll position if necessary
  * @param scrollbar Scrollbar
  * @param total_elements New number of total elements
  */
-void scrollbar_update_total_elements(scrollbar_type *scrollbar, int total_elements);
+void scrollbar_update_total_elements(scrollbar_type *scrollbar, unsigned int total_elements);
 
 /**
  * Draws the scrollbar

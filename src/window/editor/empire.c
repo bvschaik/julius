@@ -51,16 +51,16 @@ static generic_button preview_button[] = {
 };
 
 static struct {
-    int selected_button;
+    unsigned int selected_button;
     int selected_city;
     int x_min, x_max, y_min, y_max;
     int x_draw_offset, y_draw_offset;
-    int focus_button_id;
+    unsigned int focus_button_id;
     int is_scrolling;
     int finished_scroll;
     int show_battle_objects;
     int preview_image_group;
-    int preview_button_focused;
+    unsigned int preview_button_focused;
     struct {
         int x;
         int y;

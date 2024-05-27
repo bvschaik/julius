@@ -578,7 +578,7 @@ void building_granary_bless(void)
 
         const resource_list *list = city_resource_get_available_foods();
 
-        for (int i = 0; i < list->size;  i++) {
+        for (unsigned int i = 0; i < list->size;  i++) {
             for (int n = 0; n < 6; n++) {
                 building_granary_add_resource(min_building, list->items[i], 0);
             }

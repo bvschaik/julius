@@ -38,7 +38,7 @@ static generic_button buttons[] = {
     {320, 312, 290, 25, button_invasion, button_none, 19, 0},
 };
 
-static int focus_button_id;
+static unsigned int focus_button_id;
 
 static void draw_background(void)
 {
@@ -54,7 +54,7 @@ static void draw_foreground(void)
     lang_text_draw_centered(13, 3, 0, 456, 640, FONT_NORMAL_BLACK);
     lang_text_draw_multiline(152, 2, 32, 376, 576, FONT_NORMAL_BLACK);
 
-    for (int i = 0; i < 20; i++) {
+    for (unsigned int i = 0; i < 20; i++) {
         int x, y;
         if (i < 10) {
             x = 20;

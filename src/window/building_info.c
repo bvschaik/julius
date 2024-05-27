@@ -74,9 +74,9 @@ static generic_button generic_button_monument_construction[] = {
 };
 
 static building_info_context context;
-static int focus_image_button_id;
-static int focus_mothball_image_button_id;
-static int focus_monument_construction_button_id;
+static unsigned int focus_image_button_id;
+static unsigned int focus_mothball_image_button_id;
+static unsigned int focus_monument_construction_button_id;
 static int original_overlay;
 
 static int get_height_id(void)

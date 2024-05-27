@@ -72,10 +72,10 @@ static struct {
     int mode;
     int group;
     const uint8_t **items;
-    int num_items;
+    unsigned int num_items;
     int width;
     void (*callback)(int);
-    int focus_button_id;
+    unsigned int focus_button_id;
 } data;
 
 static void init_group(int x, int y, int group, int num_items, void (*callback)(int))
@@ -122,7 +122,7 @@ static void init_text(int x, int y, const uint8_t **items, int num_items, void (
     }
 }
 
-static int items_in_first_list(void)
+static unsigned int items_in_first_list(void)
 {
     return data.num_items / 2 + data.num_items % 2;
 }
@@ -146,18 +146,18 @@ static void draw_item(int item_id, int x, int y, int selected)
 static void draw_foreground(void)
 {
     if (data.num_items > MAX_ITEMS_PER_LIST) {
-        int max_first = items_in_first_list();
+        unsigned int max_first = items_in_first_list();
         outer_panel_draw(data.x, data.y, 26, (20 * max_first + 24) / BLOCK_SIZE);
-        for (int i = 0; i < max_first; i++) {
+        for (unsigned int i = 0; i < max_first; i++) {
             draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
         }
-        for (int i = 0; i < data.num_items - max_first; i++) {
+        for (unsigned int i = 0; i < data.num_items - max_first; i++) {
             draw_item(i + max_first, 205, 11 + 20 * i, MAX_ITEMS_PER_LIST + i + 1 == data.focus_button_id);
         }
     } else {
         int width_blocks = (data.width + BLOCK_SIZE - 1) / BLOCK_SIZE;
         outer_panel_draw(data.x, data.y, width_blocks, (20 * data.num_items + 24) / BLOCK_SIZE);
-        for (int i = 0; i < data.num_items; i++) {
+        for (unsigned int i = 0; i < data.num_items; i++) {
             draw_item(i, 5, 11 + 20 * i, i + 1 == data.focus_button_id);
         }
     }
@@ -180,11 +180,11 @@ static int click_outside_window(const mouse *m)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (data.num_items > MAX_ITEMS_PER_LIST) {
-        int items_first = items_in_first_list();
+        unsigned int items_first = items_in_first_list();
         if (generic_buttons_handle_mouse(m, data.x, data.y, buttons_list1, items_first, &data.focus_button_id)) {
             return;
         }
-        int second_id = 0;
+        unsigned int second_id = 0;
         generic_buttons_handle_mouse(m, data.x, data.y, buttons_list2, data.num_items - items_first, &second_id);
         if (second_id > 0) {
             data.focus_button_id = second_id + MAX_ITEMS_PER_LIST;

@@ -66,7 +66,7 @@ static generic_button buttons[] = {
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
 
 static struct {
-    int focus_button_id;
+    unsigned int focus_button_id;
 
     int target_variable;
     custom_variable_t *list[MAX_VISIBLE_ROWS];
@@ -116,8 +116,8 @@ static void draw_foreground(void)
     text_draw_label_and_number(translation_for(TR_EDITOR_CUSTOM_VARIABLES_COUNT), MAX_CUSTOM_VARIABLES, "", 48, 106,
         FONT_NORMAL_PLAIN, COLOR_BLACK);
 
-    for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
-        int j = (i * 2);
+    for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
+        unsigned int j = (i * 2);
         if (data.list[i]) {
             large_label_draw(buttons[j].x, buttons[j].y, buttons[j].width / BLOCK_SIZE, data.focus_button_id == j + 1);
 

@@ -41,7 +41,7 @@ enum {
 static void init(int event_id);
 static void init_scroll_list(void);
 static void on_scroll(void);
-static void button_click(int param1, int param2);
+static void button_click(int index, int param2);
 static void button_amount(int param1, int param2);
 static void button_add(int param1, int param2);
 static void button_delete_event(int param1, int param2);
@@ -97,10 +97,10 @@ typedef struct {
 } sub_item_entry_t;
 
 static struct {
-    int focus_button_id;
-    int total_sub_items;
-    int conditions_count;
-    int actions_count;
+    unsigned int focus_button_id;
+    unsigned int total_sub_items;
+    unsigned int conditions_count;
+    unsigned int actions_count;
 
     scenario_event_t *event;
 
@@ -117,7 +117,7 @@ static void populate_list(int offset)
         offset = 0;
     }
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
-        int target_id = i + offset;
+        unsigned int target_id = i + offset;
         if (target_id < data.conditions_count) {
             int condition_id = target_id;
             sub_item_entry_t entry;
@@ -220,10 +220,10 @@ static void draw_foreground(void)
 
     outer_panel_draw(0, 0, 42, 38);
 
-    for (int i = 0; i < 4; i++) {
+    for (unsigned int i = 0; i < 4; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
     }
-    for (int i = 14; i < 16; i++) {
+    for (unsigned int i = 14; i < 16; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
     }
     
@@ -272,7 +272,7 @@ static void draw_foreground(void)
 
     y_offset = DETAILS_Y_OFFSET;
     int i_button_offset = 4;
-    for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
+    for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (data.list[i].sub_type != SUB_ITEM_TYPE_UNDEFINED) {
             large_label_draw(buttons[i + i_button_offset].x, buttons[i + i_button_offset].y,
                 buttons[i + i_button_offset].width / 16, data.focus_button_id == i + i_button_offset + 1 ? 1 : 0);
@@ -366,20 +366,20 @@ static void button_delete_event(int param1, int param2)
     window_go_back();
 }
 
-static void button_click(int param1, int param2)
+static void button_click(int index, int param2)
 {
-    if (param1 > MAX_VISIBLE_ROWS ||
-        param1 >= data.total_sub_items) {
+    if (index > MAX_VISIBLE_ROWS ||
+        index >= (int) data.total_sub_items) {
         return;
     }
 
-    if (data.list[param1].sub_type == SUB_ITEM_TYPE_ACTION) {
-        scenario_action_t *action = scenario_event_get_action(data.event, data.list[param1].id);
+    if (data.list[index].sub_type == SUB_ITEM_TYPE_ACTION) {
+        scenario_action_t *action = scenario_event_get_action(data.event, data.list[index].id);
         if (action->type != ACTION_TYPE_UNDEFINED) {
             window_editor_scenario_action_edit_show(action);
         }
     } else {
-        scenario_condition_t *condition = scenario_event_get_condition(data.event, data.list[param1].id);
+        scenario_condition_t *condition = scenario_event_get_condition(data.event, data.list[index].id);
         if (condition->type != CONDITION_TYPE_UNDEFINED) {
             window_editor_scenario_condition_edit_show(condition);
         }

@@ -70,8 +70,8 @@ static generic_button depot_figure_buttons[] = {
 
 static struct {
     int figure_images[7];
-    int focus_button_id;
-    int depot_focus_button_id;
+    unsigned int focus_button_id;
+    unsigned int depot_focus_button_id;
     building_info_context *context_for_callback;
 } data;
 
@@ -620,7 +620,7 @@ int window_building_handle_mouse_figure_list(const mouse *m, building_info_conte
     figure *f = figure_get(c->figure.figure_ids[c->figure.selected_index]);
     if (f->type == FIGURE_DEPOT_CART_PUSHER && !is_depot_cartpusher_recalled(f)) {
         depot_figure_buttons[0].parameter1 = f->id;
-        int focus_id = data.depot_focus_button_id;
+        unsigned int focus_id = data.depot_focus_button_id;
         generic_buttons_handle_mouse(m, c->x_offset, c->y_offset, depot_figure_buttons, 1, &data.depot_focus_button_id);
         if (focus_id != data.depot_focus_button_id) {
             window_request_refresh();

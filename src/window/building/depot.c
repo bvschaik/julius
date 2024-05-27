@@ -36,14 +36,14 @@ static void set_camera_position(int building_id, int param2);
 #define MAX_RESOURCE_ROWS 24
 
 static struct {
-    int focus_button_id;
-    int orders_focus_button_id;
-    int resource_focus_button_id;
-    int storage_building_focus_button_id;
-    int storage_building_view_focus_button_id;
-    int depot_resource_focus_button_id;
+    unsigned int focus_button_id;
+    unsigned int orders_focus_button_id;
+    unsigned int resource_focus_button_id;
+    unsigned int storage_building_focus_button_id;
+    unsigned int storage_building_view_focus_button_id;
+    unsigned int depot_resource_focus_button_id;
     int depot_building_id;
-    int available_storages;
+    unsigned int available_storages;
     resource_type target_resource_id;
     pixel_area window_area;
 } data;
@@ -135,7 +135,7 @@ static void setup_buttons_for_selected_depot(void)
 
     int button_index = 0;
     int storage_array_size = building_storage_get_array_size();
-    int current_storage_offset = 0;
+    unsigned int current_storage_offset = 0;
     for (int i = 0; i < storage_array_size; i++) {
         if (current_storage_offset >= data.available_storages || button_index >= MAX_VISIBLE_ROWS) {
             break;
@@ -408,7 +408,7 @@ void window_building_draw_depot_select_source_destination(building_info_context 
     scrollbar.y = y_offset + 46;
     scrollbar_draw(&scrollbar);
 
-    int index = 0;
+    unsigned int index = 0;
     int base_width = BLOCK_SIZE * (c->width_blocks - 4) - 4 - (scrollbar.max_scroll_position > 0 ? 39 : 0);
 
     for (index = 0; index < MAX_VISIBLE_ROWS; index++) {
@@ -566,9 +566,9 @@ void window_building_draw_depot_select_resource_foreground(building_info_context
     }
 
     const resource_list *list = city_resource_get_potential();
-    int list_index = scrollbar.scroll_position * 2; // Two items per scroll bar step
+    unsigned int list_index = scrollbar.scroll_position * 2; // Two items per scroll bar step
 
-    for (int i = 0; i < MAX_RESOURCE_ROWS && list_index < list->size; i++, list_index++) {
+    for (unsigned int i = 0; i < MAX_RESOURCE_ROWS && list_index < list->size; i++, list_index++) {
         resource_type resource_id = list->items[list_index];
         int image_id = resource_get_data(resource_id)->image.icon;
         const uint8_t *str = resource_get_data(resource_id)->text;

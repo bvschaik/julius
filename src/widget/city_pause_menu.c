@@ -26,7 +26,7 @@
 
 static void button_click(int type, int param2);
 
-static int focus_button_id;
+static unsigned int focus_button_id;
 
 static generic_button buttons[] = {
         {192, 100, 192, 25, button_click, button_none, 1, 0},

@@ -80,11 +80,11 @@ static generic_button generic_button_open_trade[] = {
 };
 
 static struct {
-    int selected_button;
+    unsigned int selected_button;
     int selected_city;
     int x_min, x_max, y_min, y_max;
     int x_draw_offset, y_draw_offset;
-    int focus_button_id;
+    unsigned int focus_button_id;
     int is_scrolling;
     int finished_scroll;
     resource_type focus_resource;
@@ -702,7 +702,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
     data.focus_button_id = 0;
     data.focus_resource = 0;
-    int button_id;
+    unsigned int button_id;
     image_buttons_handle_mouse(m, data.panel.x_min + 20, data.y_max - 44, image_button_help, 1, &button_id);
     if (button_id) {
         data.focus_button_id = 1;

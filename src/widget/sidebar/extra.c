@@ -113,13 +113,13 @@ static struct {
         int angry;
     } gods;
     int next_invasion;
-    int visible_requests;
-    int active_requests;
+    unsigned int visible_requests;
+    unsigned int active_requests;
     int objectives_y_offset;
     int request_buttons_y_offset;
-    int focused_request_button_id;
-    int selected_request_id;
-    int selected_resource;
+    unsigned int focused_request_button_id;
+    unsigned int selected_request_id;
+    unsigned int selected_resource;
     request requests[MAX_REQUESTS_TO_DISPLAY];
 } data;
 
@@ -212,7 +212,7 @@ static int calculate_extra_info_height(int available_height)
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) {
         height += EXTRA_INFO_HEIGHT_REQUESTS_MIN;
-        int num_requests = count_active_requests();
+        unsigned int num_requests = count_active_requests();
         data.visible_requests = 1;
         while (data.visible_requests < num_requests) {
             if (height + EXTRA_INFO_HEIGHT_REQUESTS_PANEL > available_height) {
@@ -325,7 +325,7 @@ static int update_extra_info(int is_background)
         changed |= update_extra_info_value(city_population(), &data.objectives.population.value);
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) {
-        int new_requests = update_extra_info_value(count_active_requests(), &data.active_requests);
+        int new_requests = update_extra_info_value(count_active_requests(), (int *)&data.active_requests);
 
         int troop_requests = city_request_has_troop_request();
         if (troop_requests) {
@@ -407,7 +407,7 @@ static int draw_request_buttons(int y_offset)
 
     y_offset += EXTRA_INFO_VERTICAL_PADDING;
 
-    for (int i = 0; i < data.visible_requests; i++) {
+    for (unsigned int i = 0; i < data.visible_requests; i++) {
         const request *r = &data.requests[i];
         int base_button_y_offset = i * EXTRA_INFO_HEIGHT_REQUESTS_PANEL;
 
@@ -634,8 +634,7 @@ static void draw_extra_info_buttons(void)
         image_buttons_draw(data.x_offset, data.y_offset, &play_paused_button, 1);
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS && data.active_requests) {
-        for (int i = 0; i < data.visible_requests; i++) {
-
+        for (unsigned int i = 0; i < data.visible_requests; i++) {
             button_border_draw(data.x_offset + 2, data.request_buttons_y_offset + buttons_emperor_requests[i].y,
                 data.width - 4, buttons_emperor_requests[i].height, i == data.focused_request_button_id - 1);
         }
@@ -656,7 +655,7 @@ int sidebar_extra_handle_mouse(const mouse *m)
     }
     if ((data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) &&
         generic_buttons_handle_mouse(m, data.x_offset, data.request_buttons_y_offset,
-        buttons_emperor_requests, data.visible_requests, &data.focused_request_button_id)) {
+            buttons_emperor_requests, data.visible_requests, &data.focused_request_button_id)) {
         return 1;
     }
     return 0;
@@ -750,7 +749,7 @@ static void confirm_send_goods(int accepted, int checked)
 
 static void button_handle_request(int index, int param2)
 {
-    if (data.active_requests > data.visible_requests && index == data.visible_requests - 1) {
+    if (data.active_requests > data.visible_requests && index == (int) data.visible_requests - 1) {
         window_advisors_show_advisor(ADVISOR_IMPERIAL);
         return;
     }

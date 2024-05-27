@@ -14,8 +14,8 @@ static void button_set_priority(int new_priority, int param2);
 
 static struct {
     int category;
-    int max_items;
-    int focus_button_id;
+    unsigned int max_items;
+    unsigned int focus_button_id;
 } data;
 
 static generic_button priority_buttons[] = {
@@ -63,7 +63,7 @@ static void draw_background(void)
     int dialog_x = 160 - (dialog_width - MIN_DIALOG_WIDTH) / 2;
     outer_panel_draw(dialog_x, 176, dialog_width / BLOCK_SIZE, 9);
     lang_text_draw_centered(50, 25, 160, 185, 320, FONT_LARGE_BLACK);
-    for (int i = 0; i < 9; i++) {
+    for (unsigned int i = 0; i < 9; i++) {
         graphics_draw_rect(178 + 32 * i, 221, 27, 27, COLOR_BLACK);
         lang_text_draw_centered(50, 27 + i, 178 + 32 * i, 224, 27, FONT_LARGE_BLACK);
         if (i >= data.max_items) {
@@ -82,7 +82,7 @@ static void draw_foreground(void)
     graphics_in_dialog();
 
     color_t color;
-    for (int i = 0; i < 9; i++) {
+    for (unsigned int i = 0; i < 9; i++) {
         color = COLOR_BLACK;
         if (i == data.focus_button_id - 2) {
             color = COLOR_RED;

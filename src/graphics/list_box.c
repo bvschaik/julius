@@ -39,7 +39,7 @@ unsigned int list_box_get_total_items(const list_box_type *list_box)
     return list_box->total_items;
 }
 
-void list_box_select_index(list_box_type *list_box, int index)
+void list_box_select_index(list_box_type *list_box, unsigned int index)
 {
     if (index == list_box->selected_index) {
         return;
@@ -51,12 +51,12 @@ void list_box_select_index(list_box_type *list_box, int index)
     }
 }
 
-int list_box_get_selected_index(const list_box_type *list_box)
+unsigned int list_box_get_selected_index(const list_box_type *list_box)
 {
     return list_box->selected_index;
 }
 
-void list_box_show_index(list_box_type *list_box, int index)
+void list_box_show_index(list_box_type *list_box, unsigned int index)
 {
     if (index == LIST_BOX_NO_SELECTION) {
         return;
@@ -148,7 +148,7 @@ void list_box_draw(list_box_type *list_box)
         };
 
         int elements_in_view = list_box->scrollbar.elements_in_view * list_box->num_columns;
-        int index = list_box->scrollbar.scroll_position * list_box->num_columns;
+        unsigned int index = list_box->scrollbar.scroll_position * list_box->num_columns;
 
         for (int i = 0; i < elements_in_view; i++, index++) {
             if (index >= list_box->total_items) {
@@ -184,7 +184,7 @@ static int handle_arrow_keys(list_box_type *list_box, int direction)
         default:
             return 0;
     }
-    int max_index = list_box->total_items - 1;
+    unsigned int max_index = list_box->total_items - 1;
     if (list_box->selected_index == LIST_BOX_NO_SELECTION) {
         if (delta == 1) {
             list_box->selected_index = 0;
@@ -219,8 +219,8 @@ static int get_button_id_from_position(const list_box_type *list_box, int x, int
     if (x < list_box->x + padding || x >= list_box->x + width_blocks * BLOCK_SIZE - padding || y < list_box->y) {
         return LIST_BOX_NO_SELECTION;
     }
-    int button_id = (y - padding / 2 - list_box->y) / list_box->item_height;
-    if (button_id < 0 || button_id >= list_box->scrollbar.elements_in_view ||
+    unsigned int button_id = (y - padding / 2 - list_box->y) / list_box->item_height;
+    if (button_id >= list_box->scrollbar.elements_in_view ||
         button_id + list_box->scrollbar.scroll_position >= list_box->total_items) {
         return LIST_BOX_NO_SELECTION;
     }

@@ -23,9 +23,9 @@ static void roadblock_orders(int index, int param2);
 
 
 static struct {
-    int focus_button_id;
-    int orders_focus_button_id;
-    int figure_focus_button_id;
+    unsigned int focus_button_id;
+    unsigned int orders_focus_button_id;
+    unsigned int figure_focus_button_id;
     int building_id;
     int tooltip_id;
 } data = { 0, 0, 0, 0, 0 };
@@ -65,7 +65,7 @@ static generic_button roadblock_orders_buttons[] = {
     {309, 0, 20, 20, roadblock_orders, button_none, 1, 0 },
 };
 
-static int size_of_orders_permission_buttons = sizeof(orders_permission_buttons) / sizeof(*orders_permission_buttons);
+static unsigned int size_of_orders_permission_buttons = sizeof(orders_permission_buttons) / sizeof(*orders_permission_buttons);
 
 typedef enum {
     REJECT_ALL = 0,
@@ -207,7 +207,7 @@ void window_building_draw_roadblock_orders_foreground(building_info_context *c)
     data.building_id = b->id;
     draw_roadblock_orders_buttons(c->x_offset + 365, y_offset + 404, data.orders_focus_button_id == 1);
 
-    for (int i = 0; i < size_of_orders_permission_buttons; i++) {
+    for (unsigned int i = 0; i < size_of_orders_permission_buttons; i++) {
         image_draw(image_group(ids[i * 2]) + 4, c->x_offset + 32, y_offset + 46 + 32 * i, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_group(ids[i * 2 + 1]) + 4, c->x_offset + 64, y_offset + 46 + 32 * i,
             COLOR_MASK_NONE, SCALE_NONE);

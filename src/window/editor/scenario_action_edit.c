@@ -52,7 +52,7 @@ static generic_button buttons[] = {
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
 
 static struct {
-    int focus_button_id;
+    unsigned int focus_button_id;
     int parameter_being_edited;
     int parameter_being_edited_current_value;
 
@@ -86,7 +86,7 @@ static void draw_foreground(void)
 
     outer_panel_draw(0, 0, 42, 24);
 
-    for (int i = 5; i <= 6; i++) {
+    for (unsigned int i = 5; i <= 6; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
     }
 
@@ -94,7 +94,7 @@ static void draw_foreground(void)
 
     text_draw_centered(translation_for(data.xml_info->xml_attr.key), 32, 72, BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
 
-    int button_id = 0;
+    unsigned int button_id = 0;
     if (data.xml_info->xml_parm1.type > PARAMETER_TYPE_UNDEFINED) {
         large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16,
             data.focus_button_id == button_id + 1 ? 1 : 0);

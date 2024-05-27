@@ -68,11 +68,11 @@ static const int SUBMENU_ID_TO_OVERLAY[6][OVERLAY_BUTTONS] = {
 static struct {
     int selected_menu;
     int selected_submenu;
-    int num_submenu_items;
+    unsigned int num_submenu_items;
     time_millis submenu_focus_time;
 
-    int menu_focus_button_id;
-    int submenu_focus_button_id;
+    unsigned int menu_focus_button_id;
+    unsigned int submenu_focus_button_id;
 
     int keep_submenu_open;
 } data;
@@ -99,7 +99,7 @@ static void draw_foreground(void)
 {
     window_city_draw();
     int x_offset = get_sidebar_x_offset();
-    for (int i = 0; i < OVERLAY_BUTTONS; i++) {
+    for (unsigned int i = 0; i < OVERLAY_BUTTONS; i++) {
         label_draw(x_offset - 170, 74 + 24 * i, 10, data.menu_focus_button_id == i + 1 ? 1 : 2);
         int overlay = MENU_ID_TO_OVERLAY[i];
         int translation = get_overlay_translation(overlay);
@@ -112,7 +112,7 @@ static void draw_foreground(void)
     if (data.selected_submenu > 0) {
         image_draw(image_group(GROUP_BULLET), x_offset - 185, 80 + 24 * data.selected_menu,
             COLOR_MASK_NONE, SCALE_NONE);
-        for (int i = 0; i < data.num_submenu_items; i++) {
+        for (unsigned int i = 0; i < data.num_submenu_items; i++) {
             int overlay = SUBMENU_ID_TO_OVERLAY[data.selected_submenu][i];
             int translation = get_overlay_translation(overlay);
 

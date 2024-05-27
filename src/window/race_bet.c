@@ -41,13 +41,13 @@ static image_button image_button_close[] = {
 
 
 static struct {
-    int chosen_horse;
-    int bet_amount;
+    unsigned int chosen_horse;
+    unsigned int bet_amount;
     int in_progress_bet;
-    int focus_button_id;
-    int focus_button_id2;
-    int focus_button_id3;
-    int focus_image_button_id;
+    unsigned int focus_button_id;
+    unsigned int focus_button_id2;
+    unsigned int focus_button_id3;
+    unsigned int focus_image_button_id;
     int width_blocks;
     int height_blocks;
 } data;
@@ -119,7 +119,7 @@ static void draw_foreground(void)
 
     int border_id = assets_get_image_id("UI", "Image Border Small");
 
-    for (int i = 0; i < 4; i++) {
+    for (unsigned int i = 0; i < 4; i++) {
         color_t color = data.focus_button_id == (i + 1) || data.chosen_horse == (i + 1) ?
             COLOR_BORDER_RED : COLOR_BORDER_GREEN;
         image_draw_border(border_id, 34 + i * 110, 145, color);

@@ -35,7 +35,7 @@ static struct {
     int y_offset;
     int height_blocks;
 
-    int focus_button_id;
+    unsigned int focus_button_id;
 } data;
 
 static void init(const uint8_t *title, const uint8_t *placeholder, const uint8_t *text, int max_length,

@@ -226,7 +226,7 @@ int widget_sidebar_city_handle_mouse(const mouse *m)
         return 0;
     }
     int handled = 0;
-    int button_id;
+    unsigned int button_id;
     data.focus_button_for_tooltip = 0;
     if (city_view_is_sidebar_collapsed()) {
         int x_offset = sidebar_common_get_x_offset_collapsed();
@@ -238,8 +238,7 @@ int widget_sidebar_city_handle_mouse(const mouse *m)
         if (button_id) {
             data.focus_button_for_tooltip = button_id + 19;
         }
-    }
-    else {
+    } else {
         if (widget_minimap_handle_mouse(m)) {
             return 1;
         }

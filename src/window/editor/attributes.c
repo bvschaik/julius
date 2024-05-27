@@ -84,7 +84,7 @@ static arrow_button image_arrows[] = {
 static struct {
     int is_paused;
     uint8_t brief_description[BRIEF_DESC_LENGTH];
-    int focus_button_id;
+    unsigned int focus_button_id;
 } data;
 
 static input_box scenario_description_input = {

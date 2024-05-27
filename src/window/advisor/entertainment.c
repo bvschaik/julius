@@ -25,7 +25,8 @@
 #define COVERAGE_OFFSET 470
 #define COVERAGE_WIDTH 130
 
-static int focus_button_id;
+static unsigned int focus_button_id;
+
 static void button_hold_games(int param1, int param2);
 
 static generic_button hold_games_button[] = {

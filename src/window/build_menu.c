@@ -85,9 +85,9 @@ static const int Y_MENU_OFFSETS[] = {
 
 static struct {
     build_menu_group selected_submenu;
-    int num_items;
+    unsigned int num_items;
     int y_offset;
-    int focus_button_id;
+    unsigned int focus_button_id;
 } data = { SUBMENU_NONE };
 
 static int init(build_menu_group submenu)
@@ -189,7 +189,7 @@ static void draw_menu_buttons(void)
     int x_offset = get_sidebar_x_offset();
     int item_index = -1;
     int item_x_align = x_offset - MENU_X_OFFSET;
-    for (int i = 0; i < data.num_items; i++) {
+    for (unsigned int i = 0; i < data.num_items; i++) {
         item_index = building_menu_next_index(data.selected_submenu, item_index);
         label_draw(item_x_align, data.y_offset + MENU_Y_OFFSET + MENU_ITEM_HEIGHT * i, 18,
             data.focus_button_id == i + 1 ? 1 : 2);
@@ -252,7 +252,7 @@ static int click_outside_menu(const mouse *m, int x_offset)
         (m->x < x_offset - MENU_X_OFFSET - MENU_CLICK_MARGIN ||
         m->x > x_offset + MENU_CLICK_MARGIN ||
         m->y < data.y_offset + MENU_Y_OFFSET - MENU_CLICK_MARGIN ||
-        m->y > data.y_offset + MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * data.num_items);
+        m->y > data.y_offset + MENU_Y_OFFSET + MENU_CLICK_MARGIN + MENU_ITEM_HEIGHT * (int) data.num_items);
 }
 
 static int handle_build_submenu(const mouse *m)

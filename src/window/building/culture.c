@@ -73,9 +73,9 @@ static generic_button hold_games_button[] = {
 };
 
 static struct {
-    int focus_button_id;
+    unsigned int focus_button_id;
     int building_id;
-    int lighthouse_focus_button_id;
+    unsigned int lighthouse_focus_button_id;
     int module_choices[2];
 } data;
 
@@ -318,7 +318,7 @@ static void draw_temple_info(building_info_context *c, int image_offset)
     int x_offset = 112;
     if (building_is_mars_temple(b->type) && building_monument_gt_module_is_active(MARS_MODULE_1_MESS_HALL)) {
         const resource_list *list = city_resource_get_potential_foods();
-        for (int i = 0; i < list->size; i++) {
+        for (unsigned int i = 0; i < list->size; i++) {
             resource_type r = list->items[i];
             if (!resource_is_inventory(r) || (list->size > 4 && !b->resources[r])) {
                 continue;

@@ -25,7 +25,7 @@ static generic_button victory_buttons[] = {
     {32, 176, 480, 20, button_continue_governing, button_none, 60, 0},
 };
 
-static int focus_button_id = 0;
+static unsigned int focus_button_id = 0;
 
 static int get_next_rank(void)
 {

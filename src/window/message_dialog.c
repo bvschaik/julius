@@ -108,7 +108,7 @@ static struct {
     int y_text;
     int text_height_blocks;
     int text_width_blocks;
-    int focus_button_id;
+    unsigned int focus_button_id;
 
     lang_message custom_lang_message;
     custom_message_t *custom_msg;

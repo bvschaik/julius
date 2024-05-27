@@ -27,7 +27,7 @@
 #define MAX_VISIBLE_ROWS 14
 
 static void on_scroll(void);
-static void button_click(int param1, int param2);
+static void button_click(int index, int param2);
 
 static const uint8_t UNKNOWN[4] = { '?', '?', '?', 0 };
 
@@ -58,8 +58,8 @@ typedef struct {
 } list_item_entry_t;
 
 static struct {
-    int focus_button_id;
-    int list_size;
+    unsigned int focus_button_id;
+    unsigned int list_size;
     void (*callback)(int);
 
     list_item_entry_t list[MAX_VISIBLE_ROWS];
@@ -74,7 +74,7 @@ static void populate_list(int offset)
         offset = 0;
     }
     for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
-        int target_id = i + offset + 1;
+        unsigned int target_id = i + offset + 1;
         if (target_id < data.list_size) {
             data.list[i].route_id = target_id;
             int city_id = empire_city_get_for_trade_route(target_id);
@@ -114,7 +114,7 @@ static void draw_foreground(void)
     outer_panel_draw(16, 16, 42, 33);
 
     int y_offset = DETAILS_Y_OFFSET;
-    for (int i = 0; i < MAX_VISIBLE_ROWS; i++) {
+    for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (i < data.list_size - 1) {
             large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
             if (data.focus_button_id == (i + 1)) {
@@ -151,13 +151,13 @@ static void handle_input(const mouse *m, const hotkeys *h)
     populate_list(scrollbar.scroll_position);
 }
 
-static void button_click(int param1, int param2)
+static void button_click(int index, int param2)
 {
-    if (param1 >= data.list_size) {
+    if (index >= (int) data.list_size) {
         return;
     }
 
-    data.callback(data.list[param1].route_id);
+    data.callback(data.list[index].route_id);
     window_go_back();
 }
 

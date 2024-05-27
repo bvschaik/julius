@@ -91,7 +91,7 @@ static struct {
 };
 
 static struct {
-    int focus_button_id;
+    unsigned int focus_button_id;
     resource_list list;
     int margin_right;
     trade_policy_type policy_type;
@@ -228,7 +228,7 @@ static void draw_foreground(void)
     inner_panel_draw(16, RESOURCE_Y_OFFSET - 2, 38 - data.margin_right / BLOCK_SIZE, 21);
 
     int y_offset = RESOURCE_Y_OFFSET;
-    for (int i = 0; i < data.list.size && i < MAX_VISIBLE_ROWS; i++) {
+    for (unsigned int i = 0; i < data.list.size && i < MAX_VISIBLE_ROWS; i++) {
         int resource = data.list.items[i + scrollbar.scroll_position];
         int image_id = resource_get_data(resource)->image.icon;
         const image *img = image_get(image_id);

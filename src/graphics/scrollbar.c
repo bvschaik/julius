@@ -31,11 +31,13 @@ static image_button image_button_scroll_down = {
 
 static scrollbar_type *current;
 
-void scrollbar_init(scrollbar_type *scrollbar, int scroll_position, int total_elements)
+void scrollbar_init(scrollbar_type *scrollbar, unsigned int scroll_position, unsigned int total_elements)
 {
-    int max_scroll_position = total_elements - scrollbar->elements_in_view;
-    if (max_scroll_position < 0) {
+    unsigned int max_scroll_position;
+    if (total_elements <= scrollbar->elements_in_view) {
         max_scroll_position = 0;
+    } else {
+        max_scroll_position = total_elements - scrollbar->elements_in_view;
     }
     scrollbar->scroll_position = calc_bound(scroll_position, 0, max_scroll_position);
     scrollbar->max_scroll_position = max_scroll_position;
@@ -43,18 +45,20 @@ void scrollbar_init(scrollbar_type *scrollbar, int scroll_position, int total_el
     scrollbar->touch_drag_state = TOUCH_DRAG_NONE;
 }
 
-void scrollbar_reset(scrollbar_type *scrollbar, int scroll_position)
+void scrollbar_reset(scrollbar_type *scrollbar, unsigned int scroll_position)
 {
     scrollbar->scroll_position = calc_bound(scroll_position, 0, scrollbar->max_scroll_position);
     scrollbar->is_dragging_scrollbar_dot = 0;
     scrollbar->touch_drag_state = TOUCH_DRAG_NONE;
 }
 
-void scrollbar_update_total_elements(scrollbar_type *scrollbar, int total_elements)
+void scrollbar_update_total_elements(scrollbar_type *scrollbar, unsigned int total_elements)
 {
-    int max_scroll_position = total_elements - scrollbar->elements_in_view;
-    if (max_scroll_position < 0) {
+    unsigned int max_scroll_position;
+    if (total_elements <= scrollbar->elements_in_view) {
         max_scroll_position = 0;
+    } else {
+        max_scroll_position = total_elements - scrollbar->elements_in_view;
     }
     scrollbar->max_scroll_position = max_scroll_position;
     if (scrollbar->scroll_position > max_scroll_position) {
@@ -104,7 +108,7 @@ static int touch_inside_scrollable_area(const scrollbar_type *scrollbar, const t
 
 static int handle_touch(scrollbar_type *scrollbar, const touch *t, int in_dialog)
 {
-    int old_position = scrollbar->scroll_position;
+    unsigned int old_position = scrollbar->scroll_position;
     int active = scrollbar->touch_drag_state == TOUCH_DRAG_IN_PROGRESS;
 
     if (t->has_started && touch_inside_scrollable_area(scrollbar, t, in_dialog)) {
@@ -204,9 +208,10 @@ static void text_scroll(int is_down, int num_lines)
             scrollbar->scroll_position = scrollbar->max_scroll_position;
         }
     } else {
-        scrollbar->scroll_position -= num_lines;
-        if (scrollbar->scroll_position < 0) {
+        if (scrollbar->scroll_position <= (unsigned int) num_lines) {
             scrollbar->scroll_position = 0;
+        } else {
+            scrollbar->scroll_position -= num_lines;
         }
     }
     scrollbar->is_dragging_scrollbar_dot = 0;

@@ -115,7 +115,7 @@ static generic_button granary_distribution_permissions_buttons[] = {
 
 static generic_button dock_distribution_permissions_buttons[20];
 
-static int dock_distribution_permissions_buttons_count;
+static unsigned int dock_distribution_permissions_buttons_count;
 
 static scrollbar_type scrollbar = { .on_scroll_callback = on_scroll };
 
@@ -166,17 +166,17 @@ static generic_button primary_product_producer_button_stockpiling[] = {
 };
 
 static struct {
-    int focus_button_id;
-    int orders_focus_button_id;
-    int resource_focus_button_id;
-    int permission_focus_button_id;
+    unsigned int focus_button_id;
+    unsigned int orders_focus_button_id;
+    unsigned int resource_focus_button_id;
+    unsigned int permission_focus_button_id;
     int building_id;
-    int partial_resource_focus_button_id;
+    unsigned int partial_resource_focus_button_id;
     int tooltip_id;
-    int dock_max_cities_visible;
-    int caravanserai_focus_button_id;
-    int primary_product_stockpiling_id;
-    int image_button_focus_id;
+    unsigned int dock_max_cities_visible;
+    unsigned int caravanserai_focus_button_id;
+    unsigned int primary_product_stockpiling_id;
+    unsigned int image_button_focus_id;
     int showing_special_orders;
     int caravanserai_button_y_offset;
     resource_list stored_resources;
@@ -227,7 +227,7 @@ static void draw_accept_none_button(int x, int y, int focused, affect_all_button
     }
 }
 
-static void draw_permissions_buttons(int x, int y, int buttons, building_info_context *c)
+static void draw_permissions_buttons(int x, int y, unsigned int buttons, building_info_context *c)
 {
     int images_permission[] = {
         assets_get_image_id("Walkers", "marketbuyer_sw_01"),
@@ -241,7 +241,7 @@ static void draw_permissions_buttons(int x, int y, int buttons, building_info_co
 
     int image_offset_x, image_offset_y;
 
-    for (int i = 0; i < buttons; i++) {
+    for (unsigned int i = 0; i < buttons; i++) {
         int permission = warehouse_distribution_permissions_buttons[i].parameter1;
         int is_sea_trade_route = permission == BUILDING_STORAGE_PERMISSION_DOCK;
         
@@ -273,7 +273,7 @@ static void draw_permissions_buttons(int x, int y, int buttons, building_info_co
     image_buttons_draw(c->x_offset + 421, c->y_offset + 10, image_buttons_maintain, button);
 }
 
-static void draw_granary_permissions_buttons(int x, int y, int buttons)
+static void draw_granary_permissions_buttons(int x, int y, unsigned int buttons)
 {   
     static int images_permission[6];
     if (!images_permission[0]) {
@@ -287,7 +287,7 @@ static void draw_granary_permissions_buttons(int x, int y, int buttons)
 
     int image_offset_x, image_offset_y;
 
-    for (int i = 0; i < buttons; i++) {
+    for (unsigned int i = 0; i < buttons; i++) {
         int permission = granary_distribution_permissions_buttons[i].parameter1;
         int is_sea_trade_route = permission == BUILDING_STORAGE_PERMISSION_DOCK;
         int permission_state = building_storage_get_permission(permission, building_get(data.building_id));
@@ -329,7 +329,7 @@ static void init_dock_permission_buttons(void)
 
 static void draw_dock_permission_buttons(int x_offset, int y_offset, int dock_id)
 {
-    for (int i = 0; i < dock_distribution_permissions_buttons_count; i++) {
+    for (unsigned int i = 0; i < dock_distribution_permissions_buttons_count; i++) {
         if (i < scrollbar.scroll_position || i - scrollbar.scroll_position >= data.dock_max_cities_visible) {
             continue;
         }
@@ -456,7 +456,7 @@ static int count_food_types_in_stock(building *b)
     int count = 0;
     const resource_list *list = city_resource_get_potential_foods();
 
-    for (int i = 0; i < list->size; i++) {
+    for (unsigned int i = 0; i < list->size; i++) {
         resource_type r = list->items[i];
         if (resource_is_inventory(r) && b->resources[r] > 0) {
             count++;
@@ -471,7 +471,7 @@ static void draw_food_stocks(building_info_context *c, building *b, int y_offset
     const resource_list *list = city_resource_get_potential_foods();
     int food_type_index = 0;
 
-    for (int i = 0; i < list->size; i++) {
+    for (unsigned int i = 0; i < list->size; i++) {
         resource_type r = list->items[i];
         if (!resource_is_inventory(r) || b->resources[r] <= 0) {
             continue;
@@ -552,12 +552,12 @@ void window_building_distributor_draw_foreground(building_info_context *c)
 
 static void set_distributed_resources(building_type type)
 {
-    for (int i = 0; i < data.stored_resources.size; i++) {
+    for (unsigned int i = 0; i < data.stored_resources.size; i++) {
         data.stored_resources.items[i] = RESOURCE_NONE;
     }
     data.stored_resources.size = 0;
     const resource_list *list = city_resource_get_potential();
-    for (int i = 0; i < list->size; i++) {
+    for (unsigned int i = 0; i < list->size; i++) {
         if (building_distribution_resource_is_handled(list->items[i], type)) {
             data.stored_resources.items[data.stored_resources.size++] = list->items[i];
         }
@@ -634,7 +634,7 @@ void window_building_draw_distributor_orders_foreground(building_info_context *c
 
     int scrollbar_shown = scrollbar.max_scroll_position > 0;
 
-    for (int i = 0; i < scrollbar.elements_in_view && i < data.stored_resources.size; i++) {
+    for (unsigned int i = 0; i < scrollbar.elements_in_view && i < data.stored_resources.size; i++) {
         resource_type resource = data.stored_resources.items[i + scrollbar.scroll_position];
         int image_id = resource_get_data(resource)->image.icon;
         image_draw(image_id, c->x_offset + 32, y_offset + 46 + 22 * i, COLOR_MASK_NONE, SCALE_NONE);
@@ -750,7 +750,7 @@ void window_building_draw_granary(building_info_context *c)
             int y = c->y_offset + 31;
             int food_offset = 0;
             const resource_list *list = city_resource_get_potential_foods();
-            for (int i = 0; i < list->size; i++) {
+            for (unsigned int i = 0; i < list->size; i++) {
                 resource_type r = list->items[i];
                 if (!resource_is_inventory(r) || b->resources[r] <= 0) {
                     continue;
@@ -916,7 +916,7 @@ static void draw_resource_orders_buttons(int x, int y, const resource_list *list
 {
     int scrollbar_shown = scrollbar.max_scroll_position > 0;
 
-    for (int i = 0; i < scrollbar.elements_in_view && i < list->size - scrollbar.scroll_position; i++) {
+    for (unsigned int i = 0; i < scrollbar.elements_in_view && i < list->size - scrollbar.scroll_position; i++) {
         resource_type resource = list->items[i + scrollbar.scroll_position];
         int image_id = resource_get_data(resource)->image.icon;
         int y_offset = y + 22 * i;
@@ -965,7 +965,7 @@ int window_building_handle_mouse_granary_orders(const mouse *m, building_info_co
 
     data.building_id = c->building_id;
 
-    int buttons_to_show = city_resource_get_potential_foods()->size < scrollbar.elements_in_view ?
+    unsigned int buttons_to_show = city_resource_get_potential_foods()->size < scrollbar.elements_in_view ?
         city_resource_get_potential_foods()->size : scrollbar.elements_in_view;
 
     return scrollbar_handle_mouse(&scrollbar, m, 1) ||
@@ -990,7 +990,7 @@ void window_building_get_tooltip_granary_orders(int *group_id, int *text_id, int
 
 static void generate_warehouse_resource_list(building *warehouse)
 {
-    for (int i = 0; i < data.stored_resources.size; i++) {
+    for (unsigned int i = 0; i < data.stored_resources.size; i++) {
         data.stored_resources.items[i] = RESOURCE_NONE;
     }
     data.stored_resources.size = 0;
@@ -1042,7 +1042,7 @@ void window_building_draw_warehouse(building_info_context *c)
             int total_stored = 0;
             int x;
             int y = c->y_offset + 31;
-            for (int i = 0; i < data.stored_resources.size; i++) {
+            for (unsigned int i = 0; i < data.stored_resources.size; i++) {
                 if (i & 1) {
                     x = c->x_offset + 240;
                 } else {
@@ -1197,7 +1197,7 @@ int window_building_handle_mouse_warehouse_orders(const mouse *m, building_info_
 
     data.building_id = c->building_id;
 
-    int buttons_to_show = city_resource_get_potential()->size < scrollbar.elements_in_view ?
+    unsigned int buttons_to_show = city_resource_get_potential()->size < scrollbar.elements_in_view ?
         city_resource_get_potential()->size : scrollbar.elements_in_view;
 
     return scrollbar_handle_mouse(&scrollbar, m, 1) ||
@@ -1246,7 +1246,7 @@ const uint8_t *window_building_dock_get_tooltip(building_info_context *c)
     int height = 20;
     const mouse *m = mouse_get();
 
-    for (int i = 0; i < dock_distribution_permissions_buttons_count; i++) {
+    for (unsigned int i = 0; i < dock_distribution_permissions_buttons_count; i++) {
         if (i < scrollbar.scroll_position || i - scrollbar.scroll_position >= data.dock_max_cities_visible) {
             continue;
         }

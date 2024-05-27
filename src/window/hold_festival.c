@@ -42,8 +42,8 @@ static generic_button buttons_gods_size[] = {
     {102, 276, 430, 26, button_size, button_none, 3, 0},
 };
 
-static int focus_button_id;
-static int focus_image_button_id;
+static unsigned int focus_button_id;
+static unsigned int focus_image_button_id;
 
 static void draw_buttons(void)
 {

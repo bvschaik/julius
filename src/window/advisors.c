@@ -119,7 +119,7 @@ static int advisor_image_ids[2][ADVISOR_MAX];
 static const advisor_window_type *current_advisor_window = 0;
 static advisor_type current_advisor = ADVISOR_NONE;
 
-static int focus_button_id;
+static unsigned int focus_button_id;
 static int advisor_height;
 
 static void set_advisor_window(void)
@@ -235,10 +235,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (generic_buttons_handle_mouse(m_dialog, 0, 440, advisor_buttons, ADVISOR_MAX, &focus_button_id)) {
         return;
     }
-    int button_id;
+    unsigned int button_id;
     image_buttons_handle_mouse(m_dialog, 0, BLOCK_SIZE * (advisor_height - 2), &help_button, 1, &button_id);
     if (button_id) {
-        focus_button_id = -1;
+        focus_button_id = 0;
     }
     if (current_advisor_window->handle_mouse && current_advisor_window->handle_mouse(m_dialog)) {
         return;

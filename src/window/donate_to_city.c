@@ -35,8 +35,8 @@ static arrow_button arrow_buttons[] = {
 };
 
 static struct {
-    int focus_button_id;
-    int focus_arrow_button_id;
+    unsigned int focus_button_id;
+    unsigned int focus_arrow_button_id;
 } data;
 
 static void draw_background(void)

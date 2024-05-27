@@ -48,7 +48,7 @@ static void draw_housing_table(void)
         }
         total_residences += residences_at_level;
 
-        for (int i = 0; i < list.size; i++) {
+        for (unsigned int i = 0; i < list.size; i++) {
             if (model_house_uses_inventory(level, list.items[i])) {
                 houses_using_goods[list.items[i]] += residences_at_level;
             }
@@ -73,7 +73,7 @@ static void draw_housing_table(void)
     text_draw(translation_for(TR_ADVISOR_TOTAL_HOUSING_CAPACITY), 320, y_offset + 220, FONT_NORMAL_GREEN, 0);
     text_draw_number(city_population_total_housing_capacity(), '@', " ", 500, y_offset + 220, FONT_NORMAL_WHITE, 0);
 
-    for (int i = 0; i < list.size; i++) {
+    for (unsigned int i = 0; i < list.size; i++) {
         image_draw(resource_get_data(list.items[i])->image.icon, 54, y_offset + 260 + (23 * i),
             COLOR_MASK_NONE, SCALE_NONE);
         text_draw(translation_for(TR_ADVISOR_RESIDENCES_USING_POTTERY + i), 90, y_offset + 263 + (23 * i),

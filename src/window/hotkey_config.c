@@ -206,8 +206,8 @@ static translation_key bottom_button_texts[] = {
 };
 
 static struct {
-    int focus_button;
-    int bottom_focus_button;
+    unsigned int focus_button;
+    unsigned int bottom_focus_button;
     hotkey_mapping mappings[HOTKEY_MAX_ITEMS][2];
 } data;
 
@@ -293,7 +293,7 @@ static void draw_foreground(void)
 
     scrollbar_draw(&scrollbar);
 
-    for (int i = 0; i < NUM_VISIBLE_OPTIONS; i++) {
+    for (unsigned int i = 0; i < NUM_VISIBLE_OPTIONS; i++) {
         hotkey_widget *widget = &hotkey_widgets[i + scrollbar.scroll_position];
         if (widget->action != HOTKEY_HEADER) {
             generic_button *btn = &hotkey_buttons[2 * i];
@@ -303,7 +303,7 @@ static void draw_foreground(void)
         }
     }
 
-    for (int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
+    for (unsigned int i = 0; i < NUM_BOTTOM_BUTTONS; i++) {
         button_border_draw(bottom_buttons[i].x, bottom_buttons[i].y,
             bottom_buttons[i].width, bottom_buttons[i].height,
             data.bottom_focus_button == i + 1);
@@ -333,7 +333,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 static const uint8_t *hotkey_action_name_for(hotkey_action action)
 {
     const uint8_t *name = 0;
-    for (int i = 0; i < NUM_VISIBLE_OPTIONS + scrollbar.max_scroll_position; i++) {
+    for (unsigned int i = 0; i < NUM_VISIBLE_OPTIONS + scrollbar.max_scroll_position; i++) {
         hotkey_widget *widget = &hotkey_widgets[i];
         if (widget->action == action) {
             if (widget->name_translation != TR_NONE) {

@@ -61,7 +61,7 @@ static list_box_type list_box = {
 };
 
 static struct {
-    int focus_toggle_button;
+    unsigned int focus_toggle_button;
     int show_minimap;
     char selected_scenario_filename[FILE_NAME_MAX];
     uint8_t selected_scenario_display[FILE_NAME_MAX];

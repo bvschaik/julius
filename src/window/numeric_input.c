@@ -44,15 +44,15 @@ static generic_button buttons[] = {
 static struct {
     int x;
     int y;
-    int max_digits;
+    unsigned int max_digits;
     int min_value;
     int max_value;
     void (*callback)(int);
 
-    int num_digits;
+    unsigned int num_digits;
     int value;
     int is_negative_value;
-    int focus_button_id;
+    unsigned int focus_button_id;
 } data;
 
 static void init(int x, int y, int max_digits, int min_value, int max_value, void (*callback)(int))

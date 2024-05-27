@@ -44,7 +44,7 @@ static generic_button fired_buttons[] = {
 };
 
 static struct {
-    int focus_button_id;
+    unsigned int focus_button_id;
     int audio_playing;
     int background_image_id;
     struct {

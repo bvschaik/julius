@@ -8,7 +8,7 @@
 #define FOOD_PER_TRADER_MONTHLY 10
 
 typedef struct {
-    int size;
+    unsigned int size;
     resource_type items[RESOURCE_MAX];
 } resource_list;
 

@@ -57,9 +57,9 @@ static generic_button additional_buttons[] = {
     {445, 28, 60, 40, button_return_all_to_fort, button_none, 0, 0}
 };
 
-static int focus_button_id;
-static int focus_additional_button_id;
-static int num_legions;
+static unsigned int focus_button_id;
+static unsigned int focus_additional_button_id;
+static unsigned int num_legions;
 
 static void init(void)
 {
@@ -147,7 +147,7 @@ static int draw_background(void)
         lang_text_draw_multiline(51, 16, 64, 200, 496, FONT_NORMAL_GREEN);
         return ADVISOR_HEIGHT;
     }
-    for (int i = 0; i < 6 && i < num_legions; i++) {
+    for (unsigned int i = 0; i < 6 && i < num_legions; i++) {
         const formation *m = formation_get(formation_for_legion(i + 1 + scrollbar.scroll_position));
         button_border_draw(22, 77 + 44 * i, 560, 40, 0);
         image_draw(image_group(GROUP_FIGURE_FORT_STANDARD_ICONS) + m->legion_id, 32, 82 + 44 * i,
@@ -198,10 +198,10 @@ static int draw_background(void)
     return ADVISOR_HEIGHT;
 }
 
-static int get_num_legions_not_at_fort(void)
+static unsigned int get_num_legions_not_at_fort(void)
 {
-    int num_legions_not_at_fort = 0;
-    for (int i = 0; i < num_legions; i++) {
+    unsigned int num_legions_not_at_fort = 0;
+    for (unsigned int i = 0; i < num_legions; i++) {
         const formation* m = formation_get(formation_for_legion(i + 1));
         if (!m->in_distant_battle && !m->is_at_fort) {
             num_legions_not_at_fort++;
@@ -214,7 +214,7 @@ static void draw_foreground(void)
 {
     scrollbar_draw(&scrollbar);
     num_legions = formation_get_num_legions();
-    for (int i = 0; i < 6 && i < num_legions; i++) {
+    for (unsigned int i = 0; i < 6 && i < num_legions; i++) {
         button_border_draw(384, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 1);
         button_border_draw(464, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 2);
         button_border_draw(544, 83 + 44 * i, 30, 30, focus_button_id == 3 * i + 3);
@@ -233,7 +233,7 @@ static int handle_mouse(const mouse *m)
         focus_button_id = 0;
         return 1;
     }
-    int buttons = 3 * num_legions;
+    unsigned int buttons = 3 * num_legions;
     if (buttons > MAX_BUTTONS) {
         buttons = MAX_BUTTONS;
     }
@@ -278,9 +278,9 @@ static void button_empire_service(int legion_id, int param2)
 
 static void button_return_all_to_fort(int param1, int param2)
 {
-    int num_legions_not_at_fort = get_num_legions_not_at_fort();
+    unsigned int num_legions_not_at_fort = get_num_legions_not_at_fort();
     if (num_legions_not_at_fort > 0) {
-        for (int i = 0; i < num_legions; i++) {
+        for (unsigned int i = 0; i < num_legions; i++) {
             return_legion_to_fort(i + 1);
         }
     }

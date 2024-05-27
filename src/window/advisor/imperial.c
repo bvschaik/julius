@@ -47,9 +47,9 @@ static generic_button imperial_buttons[] = {
     {38, 264, 560, 40, button_request, button_request_resource, 4, 0},
 };
 
-static int focus_button_id;
-static int selected_request_id;
-static int selected_resource;
+static unsigned int focus_button_id;
+static unsigned int selected_request_id;
+static unsigned int selected_resource;
 static uint8_t tooltip_resource_info[RESOURCE_INFO_MAX_TEXT];
 
 static void draw_request(int index, const scenario_request *request)
@@ -163,7 +163,7 @@ static void draw_foreground(void)
     lang_text_draw_centered(52, 49, 320, 346, 250, FONT_NORMAL_WHITE);
 
     // Request buttons
-    for (int i = 0; i < CITY_REQUEST_MAX_ACTIVE; i++) {
+    for (unsigned int i = 0; i < CITY_REQUEST_MAX_ACTIVE; i++) {
         if (city_request_get_status(i)) {
             button_border_draw(38, 96 + i * 42, 560, 40, focus_button_id == i + 4);
         }
