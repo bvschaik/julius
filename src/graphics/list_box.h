@@ -21,9 +21,10 @@ typedef struct {
 typedef struct {
     int x;
     int y;
-    int width_blocks;
-    int height_blocks;
-    int item_height;
+    unsigned int width_blocks;
+    unsigned int height_blocks;
+    unsigned int item_height;
+    unsigned int num_columns;
     int draw_inner_panel;
     int extend_to_hidden_scrollbar;
     int decorate_scrollbar;
@@ -32,16 +33,16 @@ typedef struct {
     void (*handle_tooltip)(const list_box_item *item, tooltip_context *c);
 
     /* Private elements */
-    int total_items;
+    unsigned int total_items;
     int selected_index;
     scrollbar_type scrollbar;
-    int focus_button_id;
+    unsigned int focus_button_id;
     int refresh_requested;
 } list_box_type;
 
-void list_box_init(list_box_type *list_box, int total_items);
-void list_box_update_total_items(list_box_type *list_box, int total_items);
-int list_box_get_total_items(const list_box_type *list_box);
+void list_box_init(list_box_type *list_box, unsigned int total_items);
+void list_box_update_total_items(list_box_type *list_box, unsigned int total_items);
+unsigned int list_box_get_total_items(const list_box_type *list_box);
 void list_box_draw(list_box_type *list_box);
 int list_box_handle_input(list_box_type *list_box, const mouse *m, int in_dialog);
 void list_box_handle_tooltip(const list_box_type *list_box, tooltip_context *c);

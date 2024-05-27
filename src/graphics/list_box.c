@@ -8,24 +8,33 @@
 #include "graphics/window.h"
 #include "input/scroll.h"
 
+static unsigned int calculate_scrollable_items(const list_box_type *list_box)
+{
+    if (list_box->num_columns == 1) {
+        return list_box->total_items;
+    }
+    return (list_box->total_items + list_box->num_columns - 1) / list_box->num_columns;
+}
 
-void list_box_init(list_box_type *list_box, int total_items)
+void list_box_init(list_box_type *list_box, unsigned int total_items)
 {
     list_box->selected_index = LIST_BOX_NO_SELECTION;
     list_box->total_items = total_items;
     list_box->focus_button_id = LIST_BOX_NO_SELECTION;
-
-    scrollbar_init(&list_box->scrollbar, 0, list_box->total_items);
+    if (list_box->num_columns < 1) {
+        list_box->num_columns = 1;
+    }
+    scrollbar_init(&list_box->scrollbar, 0, calculate_scrollable_items(list_box));
 }
 
-void list_box_update_total_items(list_box_type *list_box, int total_items)
+void list_box_update_total_items(list_box_type *list_box, unsigned int total_items)
 {
     list_box->total_items = total_items;
-    scrollbar_update_total_elements(&list_box->scrollbar, total_items);
+    scrollbar_update_total_elements(&list_box->scrollbar, calculate_scrollable_items(list_box));
     list_box_request_refresh(list_box);
 }
 
-int list_box_get_total_items(const list_box_type *list_box)
+unsigned int list_box_get_total_items(const list_box_type *list_box)
 {
     return list_box->total_items;
 }
@@ -54,9 +63,9 @@ void list_box_show_index(list_box_type *list_box, int index)
     }
     scrollbar_type *scrollbar = &list_box->scrollbar;
     if (index >= list_box->total_items) {
-        scrollbar_reset(scrollbar, list_box->total_items - scrollbar->elements_in_view + 1);
+        scrollbar_reset(scrollbar, calculate_scrollable_items(list_box) - scrollbar->elements_in_view + 1);
     } else {
-        scrollbar_reset(scrollbar, index);
+        scrollbar_reset(scrollbar, index / list_box->num_columns);
     }
 }
 
@@ -105,7 +114,7 @@ static void draw_scrollbar(list_box_type *list_box)
     }
     scrollbar->elements_in_view = scrollable_height_pixels / list_box->item_height;
 
-    scrollbar_update_total_elements(scrollbar, list_box->total_items);
+    scrollbar_update_total_elements(scrollbar, calculate_scrollable_items(list_box));
 
     if (list_box->decorate_scrollbar && list_box->total_items > scrollbar->elements_in_view) {
         inner_panel_draw(scrollbar->x + 4, scrollbar->y + 32, 2, scrollbar->height / BLOCK_SIZE - 4);
@@ -132,25 +141,27 @@ void list_box_draw(list_box_type *list_box)
 
     if (list_box->draw_item) {
         list_box_item item = {
-            .x = list_box->x + padding,
             .y = list_box->y + padding,
-            .width = width_blocks * BLOCK_SIZE - padding * 2,
+            .width = (width_blocks * BLOCK_SIZE - padding * 2) / list_box->num_columns,
             .height = list_box->item_height
         };
 
-        int elements_in_view = list_box->scrollbar.elements_in_view;
-        int index = list_box->scrollbar.scroll_position;
+        int elements_in_view = list_box->scrollbar.elements_in_view * list_box->num_columns;
+        int index = list_box->scrollbar.scroll_position * list_box->num_columns;
 
         for (int i = 0; i < elements_in_view; i++, index++) {
             if (index >= list_box->total_items) {
                 break;
             }
+            item.x = list_box->x + padding + item.width * (i % list_box->num_columns);
             item.index = index;
             item.button_position = i;
             item.is_selected = index == list_box->selected_index;
             item.is_focused = list_box->focus_button_id == i;
             list_box->draw_item(&item);
-            item.y += list_box->item_height;
+            if (i % list_box->num_columns == list_box->num_columns - 1) {
+                item.y += list_box->item_height;
+            }
         }
     }
 }
@@ -212,7 +223,13 @@ static int get_button_id_from_position(const list_box_type *list_box, int x, int
         button_id + list_box->scrollbar.scroll_position >= list_box->total_items) {
         return LIST_BOX_NO_SELECTION;
     }
-    return button_id;
+    if (list_box->num_columns == 1) {
+        return button_id;
+    }
+    button_id *= list_box->num_columns;
+    int item_width = (width_blocks * BLOCK_SIZE - padding * 2) / list_box->num_columns;
+    int line_index = (x - list_box->x - padding) / item_width;
+    return button_id + line_index;
 }
 
 int list_box_handle_input(list_box_type *list_box, const mouse *m, int in_dialog)
@@ -235,8 +252,14 @@ int list_box_handle_input(list_box_type *list_box, const mouse *m, int in_dialog
         return 0;
     }
 
-    if (list_box->selected_index != list_box->focus_button_id + scrollbar->scroll_position) {
-        list_box->selected_index = list_box->focus_button_id + scrollbar->scroll_position;
+    unsigned int selected_index = list_box->focus_button_id + scrollbar->scroll_position * list_box->num_columns;
+
+    if (selected_index >= list_box->total_items) {
+        return 0;
+    }
+
+    if (list_box->selected_index != selected_index) {
+        list_box->selected_index = selected_index;
         list_box_request_refresh(list_box);
     }
     if (list_box->on_select) {
@@ -252,15 +275,18 @@ void list_box_handle_tooltip(const list_box_type *list_box, tooltip_context *c)
         return;
     }
     int padding = list_box->draw_inner_panel ? BLOCK_SIZE / 2 : 0;
+    int item_width = (get_actual_width_blocks(list_box) * BLOCK_SIZE - padding * 2) / list_box->num_columns;
     list_box_item item = {
-        .x = list_box->x + padding,
-        .y = list_box->y + padding,
-        .width = get_actual_width_blocks(list_box) * BLOCK_SIZE - padding * 2,
+        .width = item_width,
         .height = list_box->item_height,
-        .index = list_box->focus_button_id + list_box->scrollbar.scroll_position,
+        .index = list_box->focus_button_id + list_box->scrollbar.scroll_position * list_box->num_columns,
         .button_position = list_box->focus_button_id,
+        .x = list_box->x + padding + item_width * (list_box->focus_button_id % list_box->num_columns),
+        .y = list_box->y + padding + list_box->item_height * (list_box->focus_button_id / list_box->num_columns),
         .is_selected = item.index == list_box->selected_index,
         .is_focused = 1
     };
-    list_box->handle_tooltip(&item, c);
+    if (item.index < list_box->total_items) {
+        list_box->handle_tooltip(&item, c);
+    }
 }
