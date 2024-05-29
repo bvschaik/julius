@@ -13,7 +13,7 @@ typedef struct {
     int width;
     int height;
     unsigned int index;
-    int button_position;
+    unsigned int position;
     int is_selected;
     int is_focused;
 } list_box_item;
@@ -29,14 +29,14 @@ typedef struct {
     int extend_to_hidden_scrollbar;
     int decorate_scrollbar;
     void (*draw_item)(const list_box_item *item);
-    void (*on_select)(int index, int is_double_click);
+    void (*on_select)(unsigned int index, int is_double_click);
     void (*handle_tooltip)(const list_box_item *item, tooltip_context *c);
 
     /* Private elements */
     unsigned int total_items;
     unsigned int selected_index;
+    unsigned int focus_button_id;
     scrollbar_type scrollbar;
-    int focus_button_id;
     int refresh_requested;
 } list_box_type;
 

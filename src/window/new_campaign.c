@@ -33,7 +33,7 @@
 static void start_mission(int param1, int param2);
 static void button_back(int param1, int param2);
 static void draw_campaign_item(const list_box_item *item);
-static void select_campaign(int index, int is_double_click);
+static void select_campaign(unsigned int index, int is_double_click);
 static void campaign_name_tooltip(const list_box_item *item, tooltip_context *c);
 
 static image_button image_buttons[] = {
@@ -202,7 +202,7 @@ static void button_back(int param1, int param2)
     window_go_back();
 }
 
-static void select_campaign(int index, int is_double_click)
+static void select_campaign(unsigned int index, int is_double_click)
 {
     if (index == ORIGINAL_CAMPAIGN_ID) {
         campaign_clear();

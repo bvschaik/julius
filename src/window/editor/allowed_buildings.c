@@ -13,7 +13,7 @@
 #include "window/editor/map.h"
 
 static void draw_allowed_building(const list_box_item *item);
-static void toggle_building(int id, int param2);
+static void toggle_building(unsigned int id, int param2);
 
 static list_box_type allowed_building_list = {
     .x = 25,
@@ -72,7 +72,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-void toggle_building(int id, int param2)
+void toggle_building(unsigned int id, int param2)
 {
     scenario_editor_toggle_building_allowed(id + 1);
     list_box_request_refresh(&allowed_building_list);

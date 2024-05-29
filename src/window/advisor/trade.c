@@ -15,8 +15,8 @@
 #include "graphics/graphics.h" 
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
+#include "graphics/list_box.h"
 #include "graphics/panel.h"
-#include "graphics/scrollbar.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "sound/speech.h"
@@ -33,30 +33,33 @@
 #define RESOURCE_ROW_HEIGHT 41
 #define MAX_VISIBLE_ROWS 8
 
-static void on_scroll(void);
+static void draw_resource_info(const list_box_item *item);
+static void resource_item_tooltip(const list_box_item *item, tooltip_context *c);
 
 static void button_prices(int param1, int param2);
 static void button_empire(int param1, int param2);
 static void button_policy(int param1, int param2);
-static void button_resource(int resource_index, int param2);
+static void select_resource(unsigned int index, int param2);
 
-static scrollbar_type scrollbar = {
-    580, RESOURCE_Y_OFFSET, RESOURCE_ROW_HEIGHT * MAX_VISIBLE_ROWS, 560, MAX_VISIBLE_ROWS, on_scroll, 0, 4
+static list_box_type resource_list_box = {
+    .x = 16,
+    .y = 52,
+    .width_blocks = 37,
+    .height_blocks = 21,
+    .item_height = 40,
+    .decorate_scrollbar = 1,
+    .draw_inner_panel = 1,
+    .extend_to_hidden_scrollbar = 1,
+    .draw_item = draw_resource_info,
+    .on_select = select_resource,
+    .handle_tooltip = resource_item_tooltip
 };
 
 static generic_button resource_buttons[] = {
     {375, 392, 200, 24, button_prices, button_none, 1, 0},
     {160, 392, 200, 24, button_empire, button_none, 1, 0},
     {45, 390, 40, 30, button_policy, button_none, LAND_TRADE_POLICY, 0},
-    {95, 390, 40, 30, button_policy, button_none, SEA_TRADE_POLICY, 0},
-    {64, 56, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 0, 0},
-    {64, 97, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 1, 0},
-    {64, 138, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 2, 0},
-    {64, 179, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 3, 0},
-    {64, 220, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 4, 0},
-    {64, 261, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 5, 0},
-    {64, 302, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 6, 0},
-    {64, 343, 480, RESOURCE_ROW_HEIGHT - 2, button_resource, button_none, 7, 0}
+    {95, 390, 40, 30, button_policy, button_none, SEA_TRADE_POLICY, 0}
 };
 
 static struct {
@@ -93,7 +96,6 @@ static struct {
 static struct {
     unsigned int focus_button_id;
     resource_list list;
-    int margin_right;
     trade_policy_type policy_type;
 } data;
 
@@ -103,10 +105,49 @@ static void init(void)
     const resource_list *list = city_resource_get_potential();
     // We need to copy over the struct to prevent bugs when the trade prices window is shown
     memcpy(&data.list, list, sizeof(resource_list));
-    scrollbar_init(&scrollbar, 0, data.list.size);
-    if (data.list.size > MAX_VISIBLE_ROWS) {
-        data.margin_right = 48;
+    list_box_init(&resource_list_box, data.list.size);
+}
+
+static int draw_background(void)
+{
+    outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
+    image_draw(image_group(GROUP_ADVISOR_ICONS) + 4, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
+
+    lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK);
+    int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK);
+    lang_text_draw(54, 1, 600 - width, 38, FONT_NORMAL_BLACK);
+
+    button_border_draw(375, 392, 200, 24, data.focus_button_id == 1);
+    lang_text_draw_centered(54, 2, 375, 398, 200, FONT_NORMAL_BLACK);
+
+    button_border_draw(160, 392, 200, 24, data.focus_button_id == 2);
+    lang_text_draw_centered(54, 30, 160, 398, 200, FONT_NORMAL_BLACK);
+
+    int land_policy_available = building_monument_working(BUILDING_CARAVANSERAI);
+    int sea_policy_available = building_monument_working(BUILDING_LIGHTHOUSE);
+
+    button_border_draw(45, 390, 40, 30, land_policy_available && data.focus_button_id == 3);
+    int image_id;
+    
+    if (land_policy_available) {
+        image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1;
+    } else {
+        image_id = assets_get_image_id("UI", "Land Trade Policy Off Button");
     }
+    image_draw(image_id, 51, 394, COLOR_MASK_NONE, SCALE_NONE);
+
+    button_border_draw(95, 390, 40, 30, sea_policy_available && data.focus_button_id == 4);
+
+    if (sea_policy_available) {
+        image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE);
+    } else {
+        image_id = assets_get_image_id("UI", "Sea Trade Policy Off Button");
+    }
+    image_draw(image_id, 99, 394, COLOR_MASK_NONE, SCALE_NONE);
+
+    list_box_request_refresh(&resource_list_box);
+
+    return ADVISOR_HEIGHT;
 }
 
 static void draw_resource_status_text(int resource, int x, int y, int box_width)
@@ -179,87 +220,43 @@ static void draw_resource_status_text(int resource, int x, int y, int box_width)
     }
 }
 
-static int draw_background(void)
+static void draw_resource_info(const list_box_item *item)
 {
-    outer_panel_draw(0, 0, 40, ADVISOR_HEIGHT);
-    image_draw(image_group(GROUP_ADVISOR_ICONS) + 4, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
+    resource_type resource = data.list.items[item->index];
+    int image_id = resource_get_data(resource)->image.icon;
+    const image *img = image_get(image_id);
+    int image_x = (40 - img->original.width) / 2;
+    int image_y = (item->height - img->original.height) / 2;
+    image_draw(image_id, item->x + image_x, item->y + image_y, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw(image_id, item->x + item->width - 40 + image_x, item->y + image_y, COLOR_MASK_NONE, SCALE_NONE);
 
-    lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK);
-    int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK);
-    lang_text_draw(54, 1, 600 - width, 38, FONT_NORMAL_BLACK);
-
-    button_border_draw(375, 392, 200, 24, data.focus_button_id == 1);
-    lang_text_draw_centered(54, 2, 375, 398, 200, FONT_NORMAL_BLACK);
-
-    button_border_draw(160, 392, 200, 24, data.focus_button_id == 2);
-    lang_text_draw_centered(54, 30, 160, 398, 200, FONT_NORMAL_BLACK);
-
-    if (data.list.size > MAX_VISIBLE_ROWS) {
-        inner_panel_draw(scrollbar.x + 4, scrollbar.y + 28, 2, scrollbar.height / BLOCK_SIZE - 3);
+    if (item->is_focused) {
+        button_border_draw(item->x + 40, item->y - 2, item->width - 80, item->height, 1);
     }
-
-    int land_policy_available = building_monument_working(BUILDING_CARAVANSERAI);
-    int sea_policy_available = building_monument_working(BUILDING_LIGHTHOUSE);
-
-    button_border_draw(45, 390, 40, 30, land_policy_available && data.focus_button_id == 3);
-    int image_id;
-    
-    if (land_policy_available) {
-        image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE) + 1;
+    text_draw(resource_get_data(resource)->text, item->x + 48, item->y + 15, FONT_NORMAL_WHITE, COLOR_MASK_NONE);
+    if (resource_is_storable(resource)) {
+        int amount = city_resource_count(resource);
+        if (resource_is_food(resource)) {
+            amount += city_resource_count_food_on_granaries(resource) / 100;
+        }
+        text_draw_number_centered(amount, item->x + 140, item->y + 15, 60, FONT_NORMAL_WHITE);
     } else {
-        image_id = assets_get_image_id("UI", "Land Trade Policy Off Button");
+        lang_text_draw_centered(56, 2, item->x + 140, item->y + 15, 60, FONT_NORMAL_WHITE);
     }
-    image_draw(image_id, 51, 394, COLOR_MASK_NONE, SCALE_NONE);
-
-    button_border_draw(95, 390, 40, 30, sea_policy_available && data.focus_button_id == 4);
-
-    if (sea_policy_available) {
-        image_id = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE);
-    } else {
-        image_id = assets_get_image_id("UI", "Sea Trade Policy Off Button");
+    if (city_resource_is_mothballed(resource)) {
+        lang_text_draw_centered(18, 5, item->x + 180, item->y + 15, 100, FONT_NORMAL_WHITE);
     }
-    image_draw(image_id, 99, 394, COLOR_MASK_NONE, SCALE_NONE);
+    draw_resource_status_text(resource, item->x + 176, item->y + 5, item->width - 206);
 
-    return ADVISOR_HEIGHT;
+    if (item->position < resource_list_box.scrollbar.elements_in_view - 1) {
+        graphics_draw_inset_rect(item->x, item->y + item->height - 2, item->width, 2,
+            COLOR_INSET_DARK, COLOR_INSET_LIGHT);
+    }
 }
 
 static void draw_foreground(void)
 {
-    inner_panel_draw(16, RESOURCE_Y_OFFSET - 2, 38 - data.margin_right / BLOCK_SIZE, 21);
-
-    int y_offset = RESOURCE_Y_OFFSET;
-    for (unsigned int i = 0; i < data.list.size && i < MAX_VISIBLE_ROWS; i++) {
-        int resource = data.list.items[i + scrollbar.scroll_position];
-        int image_id = resource_get_data(resource)->image.icon;
-        const image *img = image_get(image_id);
-        int base_y = (RESOURCE_ROW_HEIGHT - img->height) / 2;
-        image_draw(image_id, 32, y_offset + base_y, COLOR_MASK_NONE, SCALE_NONE);
-        image_draw(image_id, 584 - data.margin_right, y_offset + base_y, COLOR_MASK_NONE, SCALE_NONE);
-
-        if (data.focus_button_id - 5 == i) {
-            button_border_draw(64, y_offset, 512 - data.margin_right, RESOURCE_ROW_HEIGHT, 1);
-        }
-        text_draw(resource_get_data(resource)->text, 72, y_offset + 17, FONT_NORMAL_WHITE, COLOR_MASK_NONE);
-        if (resource_is_storable(resource)) {
-            int amount = city_resource_count(resource);
-            if (resource_is_food(resource)) {
-                amount += city_resource_count_food_on_granaries(resource) / 100;
-            }
-            text_draw_number_centered(amount, 164, y_offset + 17, 60, FONT_NORMAL_WHITE);
-        } else {
-            lang_text_draw_centered(56, 2, 164, y_offset + 17, 60, FONT_NORMAL_WHITE);
-        }
-        if (city_resource_is_mothballed(resource)) {
-            lang_text_draw_centered(18, 5, 204, y_offset + 17, 100, FONT_NORMAL_WHITE);
-        }
-        draw_resource_status_text(resource, 240, y_offset + 7, 352 - data.margin_right);
-
-        y_offset += RESOURCE_ROW_HEIGHT;
-
-        if (i < MAX_VISIBLE_ROWS - 1) {
-            graphics_draw_inset_rect(24, y_offset, 592 - data.margin_right, 2, COLOR_INSET_DARK, COLOR_INSET_LIGHT);
-        }
-    }
+    list_box_draw(&resource_list_box);
 
     button_border_draw(375, 392, 200, 24, data.focus_button_id == 1);
     button_border_draw(160, 392, 200, 24, data.focus_button_id == 2);
@@ -268,21 +265,12 @@ static void draw_foreground(void)
     int sea_policy_available = building_monument_working(BUILDING_LIGHTHOUSE);
     button_border_draw(45, 390, 40, 30, land_policy_available && data.focus_button_id == 3);
     button_border_draw(95, 390, 40, 30, sea_policy_available && data.focus_button_id == 4);
-
-    if (data.list.size > MAX_VISIBLE_ROWS) {
-        scrollbar_draw(&scrollbar);
-    }
-}
-
-static void on_scroll(void)
-{
-    window_request_refresh();
 }
 
 static int handle_mouse(const mouse *m)
 {
     data.focus_button_id = 0;
-    return scrollbar_handle_mouse(&scrollbar, m, 1) ||
+    return list_box_handle_input(&resource_list_box, m, 1) ||
         generic_buttons_handle_mouse(m, 0, 0, resource_buttons, MAX_VISIBLE_ROWS + 4, &data.focus_button_id);
 }
 
@@ -330,12 +318,12 @@ static void button_policy(int policy_type, int param2)
     show_policy(policy_type);
 }
 
-static void button_resource(int resource_index, int param2)
+static void select_resource(unsigned int index, int param2)
 {
-    window_resource_settings_show(data.list.items[resource_index + scrollbar.scroll_position]);
+    window_resource_settings_show(data.list.items[index]);
 }
 
-static void write_resource_storage_tooltip(advisor_tooltip_result *r, int resource)
+static void write_resource_storage_tooltip(tooltip_context *c, resource_type resource)
 {
     static uint8_t tooltip_resource_info[200];
     int amount_warehouse = city_resource_count(resource);
@@ -351,7 +339,18 @@ static void write_resource_storage_tooltip(advisor_tooltip_result *r, int resour
     *text = ' ';
     text++;
     text = string_copy(translation_for(TR_ADVISOR_FROM_GRANARIES), text, 200 - (int) (text - tooltip_resource_info));
-    r->precomposed_text = tooltip_resource_info;
+    c->precomposed_text = tooltip_resource_info;
+}
+
+static void resource_item_tooltip(const list_box_item *item, tooltip_context *c)
+{
+    const mouse *m = mouse_in_dialog(mouse_get());
+    resource_type resource = data.list.items[item->index];
+    if (resource_is_food(resource) && m->x > item->x + 156 && m->x < item->x + 196) {
+        write_resource_storage_tooltip(c, resource);
+    } else {
+        c->text_id = 107;
+    }
 }
 
 static void get_tooltip_text(advisor_tooltip_result *r)
@@ -372,14 +371,12 @@ static void get_tooltip_text(advisor_tooltip_result *r)
         } else {
             r->translation_key = TR_TOOLTIP_ADVISOR_TRADE_SEA_POLICY_REQUIRED;
         }
-    } else if (data.focus_button_id > 4) {
-        const mouse *m = mouse_in_dialog(mouse_get());
-        int resource = data.list.items[data.focus_button_id - 5 + scrollbar.scroll_position];
-        if (resource_is_food(resource) && m->x > 180 && m->x < 220) {
-            write_resource_storage_tooltip(r, resource);
-            return;
-        }
-        r->text_id = 107;
+    } else {
+        tooltip_context c = { 0 };
+        list_box_handle_tooltip(&resource_list_box, &c);
+        r->precomposed_text = c.precomposed_text;
+        r->text_id = c.text_id;
+        r->translation_key = c.translation_key;
     }
 }
 

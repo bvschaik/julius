@@ -62,7 +62,7 @@ typedef enum {
 #define REFRESHED_INFO_TIME_MS 5000
 
 static void draw_asset_entry(const list_box_item *item);
-static void select_asset(int index, int unused);
+static void select_asset(unsigned int index, int unused);
 static void handle_tooltip(const list_box_item *item, tooltip_context *c);
 static void button_top(int option, int param2);
 static void button_toggle_animation_frames(int param1, int param2);
@@ -161,7 +161,7 @@ static int update_entries(void)
     return total_entries;
 }
 
-static void select_asset(int index, int unused)
+static void select_asset(unsigned int index, int unused)
 {
     const asset_image *img = asset_image_get_from_id(data.active_group->first_image_index + data.entries[index].index);
     free(data.selected_asset_id);

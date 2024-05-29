@@ -52,7 +52,7 @@ static void button_toggle_sort_type(int param1, int param2);
 static void button_ok_cancel(int is_ok, int param2);
 static void input_box_changed(int is_addition_at_end);
 static void draw_file(const list_box_item *item);
-static void select_file(int index, int is_double_click);
+static void select_file(unsigned int index, int is_double_click);
 static void file_tooltip(const list_box_item *item, tooltip_context *c);  
 
 static image_button image_buttons[] = {
@@ -682,7 +682,7 @@ static void button_toggle_sort_type(int param1, int param2)
     data.redraw_full_window = 1;
 }
 
-static void select_file(int index, int is_double_click)
+static void select_file(unsigned int index, int is_double_click)
 {
     if (index == LIST_BOX_NO_SELECTION) {
         return;

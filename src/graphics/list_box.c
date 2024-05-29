@@ -147,16 +147,16 @@ void list_box_draw(list_box_type *list_box)
             .height = list_box->item_height
         };
 
-        int elements_in_view = list_box->scrollbar.elements_in_view * list_box->num_columns;
+        unsigned int elements_in_view = list_box->scrollbar.elements_in_view * list_box->num_columns;
         unsigned int index = list_box->scrollbar.scroll_position * list_box->num_columns;
 
-        for (int i = 0; i < elements_in_view; i++, index++) {
+        for (unsigned int i = 0; i < elements_in_view; i++, index++) {
             if (index >= list_box->total_items) {
                 break;
             }
             item.x = list_box->x + padding + item.width * (i % list_box->num_columns);
             item.index = index;
-            item.button_position = i;
+            item.position = i;
             item.is_selected = index == list_box->selected_index;
             item.is_focused = list_box->focus_button_id == i;
             list_box->draw_item(&item);
@@ -212,7 +212,7 @@ static int handle_arrow_keys(list_box_type *list_box, int direction)
     return 1;
 }
 
-static int get_button_id_from_position(const list_box_type *list_box, int x, int y)
+static unsigned int get_button_id_from_position(const list_box_type *list_box, int x, int y)
 {
     int padding = list_box->draw_inner_panel ? BLOCK_SIZE / 2 : 0;
     int width_blocks = get_actual_width_blocks(list_box);
@@ -242,7 +242,7 @@ int list_box_handle_input(list_box_type *list_box, const mouse *m, int in_dialog
         list_box_request_refresh(list_box);
         return 1;
     }
-    int old_focus_button_id = list_box->focus_button_id;
+    unsigned int old_focus_button_id = list_box->focus_button_id;
     list_box->focus_button_id = get_button_id_from_position(list_box, m->x, m->y);
 
     if (old_focus_button_id != list_box->focus_button_id) {
@@ -281,7 +281,7 @@ void list_box_handle_tooltip(const list_box_type *list_box, tooltip_context *c)
         .width = item_width,
         .height = list_box->item_height,
         .index = list_box->focus_button_id + list_box->scrollbar.scroll_position * list_box->num_columns,
-        .button_position = list_box->focus_button_id,
+        .position = list_box->focus_button_id,
         .x = list_box->x + padding + item_width * (list_box->focus_button_id % list_box->num_columns),
         .y = list_box->y + padding + list_box->item_height * (list_box->focus_button_id / list_box->num_columns),
         .is_selected = item.index == list_box->selected_index,
