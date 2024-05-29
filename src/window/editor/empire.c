@@ -508,7 +508,11 @@ static void refresh_empire(void)
     if (scenario.empire.id != SCENARIO_CUSTOM_EMPIRE) {
         return;
     }
-    empire_xml_parse_file(scenario.empire.custom_name);
+    const char *filename = dir_get_file_at_location(scenario.empire.custom_name, PATH_LOCATION_EDITOR_CUSTOM_EMPIRES);
+    if (!filename) {
+        return;
+    }
+    empire_xml_parse_file(filename);
     window_invalidate();
 }
 
