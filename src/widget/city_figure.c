@@ -257,6 +257,7 @@ static void draw_figure(const figure *f, int x, int y, float scale, int highligh
             case FIGURE_NATIVE_TRADER:
             case FIGURE_IMMIGRANT:
             case FIGURE_EMIGRANT:
+            case FIGURE_LIGHTHOUSE_SUPPLIER:
                 draw_figure_with_cart(f, x, y, scale);
                 break;
             case FIGURE_HIPPODROME_HORSES:

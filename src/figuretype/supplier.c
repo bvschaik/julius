@@ -307,13 +307,21 @@ void figure_supplier_action(figure *f)
                 dir * 12 + f->image_offset;
         }
     } else if (f->type == FIGURE_LIGHTHOUSE_SUPPLIER) {
+        if (f->action_state == FIGURE_ACTION_146_SUPPLIER_RETURNING) {
+            f->cart_image_id = resource_get_data(f->collecting_item_id)->image.cart.single_load;
+        } else {
+            f->cart_image_id = image_group(GROUP_FIGURE_CARTPUSHER_CART);
+        }
         int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
         if (f->action_state == FIGURE_ACTION_149_CORPSE) {
-            f->image_id = assets_get_image_id("Walkers", "Slave death 01") +
-                figure_image_corpse_offset(f);
+            f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + figure_image_corpse_offset(f) + 96;
+            f->cart_image_id = 0;
         } else {
-            f->image_id = assets_get_image_id("Walkers", "Slave NE 01") +
-                dir * 12 + f->image_offset;
+            f->image_id = image_group(GROUP_FIGURE_CARTPUSHER) + dir + 8 * f->image_offset;
+        }
+        if (f->cart_image_id) {
+            f->cart_image_id += dir;
+            figure_image_set_cart_offset(f, dir);
         }
     } else if (f->type == FIGURE_CARAVANSERAI_SUPPLIER) {
         int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);

@@ -44,7 +44,7 @@ static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
     8, 8, 34, 39, 33, 43, 27, 48, 63, 8, //50-59
     8, 8, 8, 8, 53, 8, 38, 62, 54, 55, //60-69
     56, 8, 8, 58, 0, 7, 50, 0, 14, 3, //70-79
-    3, 58, 50, 0, 0, 3, 15, 15, 0, 3, //80-89
+    3, 58, 50, 0, 0, 3, 15, 15, 0, 51, //80-89
     0, 0, 0, 17, 0, 0, 0, 0, 0, 0, 0, //90-99
 };
 // Starting with FIGURE_WORK_CAMP_WORKER = 73,
@@ -79,7 +79,6 @@ static int big_people_image(figure_type type)
 {
     switch (type) {
         case FIGURE_WORK_CAMP_SLAVE:
-        case FIGURE_LIGHTHOUSE_SUPPLIER:
             return assets_get_image_id("Walkers", "Slave Portrait");
         case FIGURE_CARAVANSERAI_SUPPLIER:
             return assets_get_image_id("Walkers", "caravanserai_overseer_portrait");
