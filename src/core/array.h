@@ -88,6 +88,25 @@ struct { \
 }
 
 /**
+ * Removes an item from an array, moving the other items left and calling their constructors if applicable
+ * @param a The array structure
+ * @param index The array index to remove
+ */
+#define array_remove_item(a, index) \
+{ \
+    for (int array_index = index; array_index + 1 < (a).size; array_index++) { \
+        memcpy(array_item(a, array_index), array_item(a. array_index + 1), sizeof(**(a).items)); \
+        if ((a).constructor && (!(a).in_use || (a).in_use(array_item(a, array_index)))) { \
+            (a).constructor(array_item(a, array_index), array_index); \
+        } \
+    } \
+    if (index < (a).size) { \
+        memset(array_last(a), 0, sizeof(**(a).items)); \
+        (a).size--; \
+    } \
+}
+
+/**
  * Advances an array, creating a new item, incrementing size and increasing the memory buffer if needed
  * @param a The array structure
  * @return A pointer to the newest item of the array, or 0 if there was a memory allocation error
