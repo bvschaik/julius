@@ -234,7 +234,7 @@ static void draw_permissions_buttons(int x, int y, unsigned int buttons, buildin
         image_group(GROUP_FIGURE_TRADE_CARAVAN) + 4,
         image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE),
         assets_get_image_id("Walkers", "Barkeep SW 01"),
-        assets_get_image_id("Walkers", "Slave SW 01"),
+        assets_get_image_id("Walkers", "overseer_sw_01"),
         image_group(GROUP_FIGURE_CARTPUSHER_CART) + 104,
         image_group(GROUP_FIGURE_CARTPUSHER_CART) + 80
     };
@@ -281,7 +281,7 @@ static void draw_granary_permissions_buttons(int x, int y, unsigned int buttons)
         images_permission[1] = image_group(GROUP_FIGURE_TRADE_CARAVAN) + 4;
         images_permission[2] = image_group(GROUP_EMPIRE_TRADE_ROUTE_TYPE);
         images_permission[3] = assets_get_image_id("Walkers", "Barkeep SW 01");
-        images_permission[4] = assets_get_image_id("Walkers", "M Hall SW 01");
+        images_permission[4] = assets_get_image_id("Walkers", "quartermaster_sw_01");
         images_permission[5] = assets_get_image_id("Walkers", "caravanserai_overseer_sw_01");
     }
 
