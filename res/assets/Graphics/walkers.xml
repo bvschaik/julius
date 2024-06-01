@@ -4204,4 +4204,431 @@
 		<layer group="229" image="95"/>
 		<layer src="caravanserai_overseer_n_12"/>
 	</image>
+	<!-- Note: Supply Post Quartermaster Portrait -->
+	<image id="quartermaster_portrait">
+		<layer group="190" image="7"/>
+		<layer src="quartermaster_portrait_overlay"/>
+	</image>
+	<!-- Note: Supply Post Quartermaster Death animation frames 01-08 -->
+	<image id="quartermaster_death_01">
+		<layer group="117" image="96"/>
+		<layer src="quartermaster_death_01"/>
+	</image>
+	<image id="quartermaster_death_02">
+		<layer group="117" image="97"/>
+		<layer src="quartermaster_death_02"/>
+	</image>
+	<image id="quartermaster_death_03">
+		<layer group="117" image="98"/>
+		<layer src="quartermaster_death_03"/>
+	</image>
+	<image id="quartermaster_death_04">
+		<layer group="117" image="99"/>
+		<layer src="quartermaster_death_04"/>
+	</image>
+	<image id="quartermaster_death_05">
+		<layer group="117" image="100"/>
+		<layer src="quartermaster_death_05"/>
+	</image>
+	<image id="quartermaster_death_06">
+		<layer group="117" image="101"/>
+	</image>
+	<image id="quartermaster_death_07">
+		<layer group="117" image="102"/>
+	</image>
+	<image id="quartermaster_death_08">
+		<layer group="117" image="103"/>
+	</image>
+	<!-- Note: Supply Post Quartermaster Walking animation frames NORTH-EAST DIRECTION 01-12 -->
+	<image id="quartermaster_ne_01">
+		<layer group="117" image="0"/>
+		<layer src="quartermaster_ne_01"/>
+	</image>
+	<image id="quartermaster_ne_02">
+		<layer group="117" image="8"/>
+		<layer src="quartermaster_ne_02"/>
+	</image>
+	<image id="quartermaster_ne_03">
+		<layer group="117" image="16"/>
+		<layer src="quartermaster_ne_03"/>
+	</image>
+	<image id="quartermaster_ne_04">
+		<layer group="117" image="24"/>
+		<layer src="quartermaster_ne_04"/>
+	</image>
+	<image id="quartermaster_ne_05">
+		<layer group="117" image="32"/>
+		<layer src="quartermaster_ne_05"/>
+	</image>
+	<image id="quartermaster_ne_06">
+		<layer group="117" image="40"/>
+		<layer src="quartermaster_ne_06"/>
+	</image>
+	<image id="quartermaster_ne_07">
+		<layer group="117" image="48"/>
+		<layer src="quartermaster_ne_07"/>
+	</image>
+	<image id="quartermaster_ne_08">
+		<layer group="117" image="56"/>
+		<layer src="quartermaster_ne_08"/>
+	</image>
+	<image id="quartermaster_ne_09">
+		<layer group="117" image="64"/>
+		<layer src="quartermaster_ne_09"/>
+	</image>
+	<image id="quartermaster_ne_10">
+		<layer group="117" image="72"/>
+		<layer src="quartermaster_ne_10"/>
+	</image>
+	<image id="quartermaster_ne_11">
+		<layer group="117" image="80"/>
+		<layer src="quartermaster_ne_11"/>
+	</image>
+	<image id="quartermaster_ne_12">
+		<layer group="117" image="88"/>
+		<layer src="quartermaster_ne_12"/>
+	</image>
+	<!-- Note: Supply Post Quartermaster Walking animation frames EAST DIRECTION 01-12 -->
+	<image id="quartermaster_e_01">
+		<layer group="117" image="1"/>
+		<layer src="quartermaster_e_01"/>
+	</image>
+	<image id="quartermaster_e_02">
+		<layer group="117" image="9"/>
+		<layer src="quartermaster_e_02"/>
+	</image>
+	<image id="quartermaster_e_03">
+		<layer group="117" image="17"/>
+		<layer src="quartermaster_e_03"/>
+	</image>
+	<image id="quartermaster_e_04">
+		<layer group="117" image="25"/>
+		<layer src="quartermaster_e_04"/>
+	</image>
+	<image id="quartermaster_e_05">
+		<layer group="117" image="33"/>
+		<layer src="quartermaster_e_05"/>
+	</image>
+	<image id="quartermaster_e_06">
+		<layer group="117" image="41"/>
+		<layer src="quartermaster_e_06"/>
+	</image>
+	<image id="quartermaster_e_07">
+		<layer group="117" image="49"/>
+		<layer src="quartermaster_e_07"/>
+	</image>
+	<image id="quartermaster_e_08">
+		<layer group="117" image="57"/>
+		<layer src="quartermaster_e_08"/>
+	</image>
+	<image id="quartermaster_e_09">
+		<layer group="117" image="65"/>
+		<layer src="quartermaster_e_09"/>
+	</image>
+	<image id="quartermaster_e_10">
+		<layer group="117" image="73"/>
+		<layer src="quartermaster_e_10"/>
+	</image>
+	<image id="quartermaster_e_11">
+		<layer group="117" image="81"/>
+		<layer src="quartermaster_e_11"/>
+	</image>
+	<image id="quartermaster_e_12">
+		<layer group="117" image="89"/>
+		<layer src="quartermaster_e_12"/>
+	</image>
+	<!-- Note: Supply Post Quartermaster Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<image id="quartermaster_se_01">
+		<layer group="117" image="2"/>
+		<layer src="quartermaster_se_01"/>
+	</image>
+	<image id="quartermaster_se_02">
+		<layer group="117" image="10"/>
+		<layer src="quartermaster_se_02"/>
+	</image>
+	<image id="quartermaster_se_03">
+		<layer group="117" image="18"/>
+		<layer src="quartermaster_se_03"/>
+	</image>
+	<image id="quartermaster_se_04">
+		<layer group="117" image="26"/>
+		<layer src="quartermaster_se_04"/>
+	</image>
+	<image id="quartermaster_se_05">
+		<layer group="117" image="34"/>
+		<layer src="quartermaster_se_05"/>
+	</image>
+	<image id="quartermaster_se_06">
+		<layer group="117" image="42"/>
+		<layer src="quartermaster_se_06"/>
+	</image>
+	<image id="quartermaster_se_07">
+		<layer group="117" image="50"/>
+		<layer src="quartermaster_se_07"/>
+	</image>
+	<image id="quartermaster_se_08">
+		<layer group="117" image="58"/>
+		<layer src="quartermaster_se_08"/>
+	</image>
+	<image id="quartermaster_se_09">
+		<layer group="117" image="66"/>
+		<layer src="quartermaster_se_09"/>
+	</image>
+	<image id="quartermaster_se_10">
+		<layer group="117" image="74"/>
+		<layer src="quartermaster_se_10"/>
+	</image>
+	<image id="quartermaster_se_11">
+		<layer group="117" image="82"/>
+		<layer src="quartermaster_se_11"/>
+	</image>
+	<image id="quartermaster_se_12">
+		<layer group="117" image="90"/>
+		<layer src="quartermaster_se_12"/>
+	</image>
+	<!-- Note: Supply Post Quartermaster Walking animation frames SOUTH DIRECTION 01-12 -->
+	<image id="quartermaster_s_01">
+		<layer group="117" image="3"/>
+		<layer src="quartermaster_s_01"/>
+	</image>
+	<image id="quartermaster_s_02">
+		<layer group="117" image="11"/>
+		<layer src="quartermaster_s_02"/>
+	</image>
+	<image id="quartermaster_s_03">
+		<layer group="117" image="19"/>
+		<layer src="quartermaster_s_03"/>
+	</image>
+	<image id="quartermaster_s_04">
+		<layer group="117" image="27"/>
+		<layer src="quartermaster_s_04"/>
+	</image>
+	<image id="quartermaster_s_05">
+		<layer group="117" image="35"/>
+		<layer src="quartermaster_s_05"/>
+	</image>
+	<image id="quartermaster_s_06">
+		<layer group="117" image="43"/>
+		<layer src="quartermaster_s_06"/>
+	</image>
+	<image id="quartermaster_s_07">
+		<layer group="117" image="51"/>
+		<layer src="quartermaster_s_07"/>
+	</image>
+	<image id="quartermaster_s_08">
+		<layer group="117" image="59"/>
+		<layer src="quartermaster_s_08"/>
+	</image>
+	<image id="quartermaster_s_09">
+		<layer group="117" image="67"/>
+		<layer src="quartermaster_s_09"/>
+	</image>
+	<image id="quartermaster_s_10">
+		<layer group="117" image="75"/>
+		<layer src="quartermaster_s_10"/>
+	</image>
+	<image id="quartermaster_s_11">
+		<layer group="117" image="83"/>
+		<layer src="quartermaster_s_11"/>
+	</image>
+	<image id="quartermaster_s_12">
+		<layer group="117" image="91"/>
+		<layer src="quartermaster_s_12"/>
+	</image>
+	<!-- Note: Supply Post Quartermaster Walking animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<image id="quartermaster_sw_01">
+		<layer group="117" image="4"/>
+		<layer src="quartermaster_sw_01"/>
+	</image>
+	<image id="quartermaster_sw_02">
+		<layer group="117" image="12"/>
+		<layer src="quartermaster_sw_02"/>
+	</image>
+	<image id="quartermaster_sw_03">
+		<layer group="117" image="20"/>
+		<layer src="quartermaster_sw_03"/>
+	</image>
+	<image id="quartermaster_sw_04">
+		<layer group="117" image="28"/>
+		<layer src="quartermaster_sw_04"/>
+	</image>
+	<image id="quartermaster_sw_05">
+		<layer group="117" image="36"/>
+		<layer src="quartermaster_sw_05"/>
+	</image>
+	<image id="quartermaster_sw_06">
+		<layer group="117" image="44"/>
+		<layer src="quartermaster_sw_06"/>
+	</image>
+	<image id="quartermaster_sw_07">
+		<layer group="117" image="52"/>
+		<layer src="quartermaster_sw_07"/>
+	</image>
+	<image id="quartermaster_sw_08">
+		<layer group="117" image="60"/>
+		<layer src="quartermaster_sw_08"/>
+	</image>
+	<image id="quartermaster_sw_09">
+		<layer group="117" image="68"/>
+		<layer src="quartermaster_sw_09"/>
+	</image>
+	<image id="quartermaster_sw_10">
+		<layer group="117" image="76"/>
+		<layer src="quartermaster_sw_10"/>
+	</image>
+	<image id="quartermaster_sw_11">
+		<layer group="117" image="84"/>
+		<layer src="quartermaster_sw_11"/>
+	</image>
+	<image id="quartermaster_sw_12">
+		<layer group="117" image="92"/>
+		<layer src="quartermaster_sw_12"/>
+	</image>
+	<!-- Note: Supply Post Quartermaster Walking animation frames WEST DIRECTION 01-12 -->
+	<image id="quartermaster_w_01">
+		<layer group="117" image="5"/>
+		<layer src="quartermaster_w_01"/>
+	</image>
+	<image id="quartermaster_w_02">
+		<layer group="117" image="13"/>
+		<layer src="quartermaster_w_02"/>
+	</image>
+	<image id="quartermaster_w_03">
+		<layer group="117" image="21"/>
+		<layer src="quartermaster_w_03"/>
+	</image>
+	<image id="quartermaster_w_04">
+		<layer group="117" image="29"/>
+		<layer src="quartermaster_w_04"/>
+	</image>
+	<image id="quartermaster_w_05">
+		<layer group="117" image="37"/>
+		<layer src="quartermaster_w_05"/>
+	</image>
+	<image id="quartermaster_w_06">
+		<layer group="117" image="45"/>
+		<layer src="quartermaster_w_06"/>
+	</image>
+	<image id="quartermaster_w_07">
+		<layer group="117" image="53"/>
+		<layer src="quartermaster_w_07"/>
+	</image>
+	<image id="quartermaster_w_08">
+		<layer group="117" image="61"/>
+		<layer src="quartermaster_w_08"/>
+	</image>
+	<image id="quartermaster_w_09">
+		<layer group="117" image="69"/>
+		<layer src="quartermaster_w_09"/>
+	</image>
+	<image id="quartermaster_w_10">
+		<layer group="117" image="77"/>
+		<layer src="quartermaster_w_10"/>
+	</image>
+	<image id="quartermaster_w_11">
+		<layer group="117" image="85"/>
+		<layer src="quartermaster_w_11"/>
+	</image>
+	<image id="quartermaster_w_12">
+		<layer group="117" image="93"/>
+		<layer src="quartermaster_w_12"/>
+	</image>
+	<!-- Note: Supply Post Quartermaster Walking animation frames NORTH-WEST DIRECTION 01-12 -->
+	<image id="quartermaster_nw_01">
+		<layer group="117" image="6"/>
+		<layer src="quartermaster_nw_01"/>
+	</image>
+	<image id="quartermaster_nw_02">
+		<layer group="117" image="14"/>
+		<layer src="quartermaster_nw_02"/>
+	</image>
+	<image id="quartermaster_nw_03">
+		<layer group="117" image="22"/>
+		<layer src="quartermaster_nw_03"/>
+	</image>
+	<image id="quartermaster_nw_04">
+		<layer group="117" image="30"/>
+		<layer src="quartermaster_nw_04"/>
+	</image>
+	<image id="quartermaster_nw_05">
+		<layer group="117" image="38"/>
+		<layer src="quartermaster_nw_05"/>
+	</image>
+	<image id="quartermaster_nw_06">
+		<layer group="117" image="46"/>
+		<layer src="quartermaster_nw_06"/>
+	</image>
+	<image id="quartermaster_nw_07">
+		<layer group="117" image="54"/>
+		<layer src="quartermaster_nw_07"/>
+	</image>
+	<image id="quartermaster_nw_08">
+		<layer group="117" image="62"/>
+		<layer src="quartermaster_nw_08"/>
+	</image>
+	<image id="quartermaster_nw_09">
+		<layer group="117" image="70"/>
+		<layer src="quartermaster_nw_09"/>
+	</image>
+	<image id="quartermaster_nw_10">
+		<layer group="117" image="78"/>
+		<layer src="quartermaster_nw_10"/>
+	</image>
+	<image id="quartermaster_nw_11">
+		<layer group="117" image="86"/>
+		<layer src="quartermaster_nw_11"/>
+	</image>
+	<image id="quartermaster_nw_12">
+		<layer group="117" image="94"/>
+		<layer src="quartermaster_nw_12"/>
+	</image>
+	<!-- Note: Supply Post Quartermaster Walking animation frames NORTH DIRECTION 01-12 -->
+	<image id="quartermaster_n_01">
+		<layer group="117" image="7"/>
+		<layer src="quartermaster_n_01"/>
+	</image>
+	<image id="quartermaster_n_02">
+		<layer group="117" image="15"/>
+		<layer src="quartermaster_n_02"/>
+	</image>
+	<image id="quartermaster_n_03">
+		<layer group="117" image="23"/>
+		<layer src="quartermaster_n_03"/>
+	</image>
+	<image id="quartermaster_n_04">
+		<layer group="117" image="31"/>
+		<layer src="quartermaster_n_04"/>
+	</image>
+	<image id="quartermaster_n_05">
+		<layer group="117" image="39"/>
+		<layer src="quartermaster_n_05"/>
+	</image>
+	<image id="quartermaster_n_06">
+		<layer group="117" image="47"/>
+		<layer src="quartermaster_n_06"/>
+	</image>
+	<image id="quartermaster_n_07">
+		<layer group="117" image="55"/>
+		<layer src="quartermaster_n_07"/>
+	</image>
+	<image id="quartermaster_n_08">
+		<layer group="117" image="63"/>
+		<layer src="quartermaster_n_08"/>
+	</image>
+	<image id="quartermaster_n_09">
+		<layer group="117" image="71"/>
+		<layer src="quartermaster_n_09"/>
+	</image>
+	<image id="quartermaster_n_10">
+		<layer group="117" image="79"/>
+		<layer src="quartermaster_n_10"/>
+	</image>
+	<image id="quartermaster_n_11">
+		<layer group="117" image="87"/>
+		<layer src="quartermaster_n_11"/>
+	</image>
+	<image id="quartermaster_n_12">
+		<layer group="117" image="95"/>
+		<layer src="quartermaster_n_12"/>
+	</image>
 </assetlist>
