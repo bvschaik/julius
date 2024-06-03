@@ -294,7 +294,17 @@ void figure_supplier_action(figure *f)
             break;
     }
     if (f->type == FIGURE_MESS_HALL_SUPPLIER) {
-        figure_tower_sentry_set_image(f);
+        int dir = figure_image_normalize_direction(f->direction < 8 ? f->direction : f->previous_tile_direction);
+        switch (f->action_state) {
+            case FIGURE_ACTION_149_CORPSE:
+                f->image_id = f->image_id = assets_get_image_id("Walkers", "quartermaster_death_01") +
+                    figure_image_corpse_offset(f);
+                break;
+            default:
+                f->image_id = assets_get_image_id("Walkers", "quartermaster_ne_01") +
+                    dir * 12 + f->image_offset;
+                break;
+        }
     } else if (f->type == FIGURE_PRIEST_SUPPLIER) {
         figure_image_update(f, image_group(GROUP_FIGURE_PRIEST));
     } else if (f->type == FIGURE_BARKEEP_SUPPLIER) {
