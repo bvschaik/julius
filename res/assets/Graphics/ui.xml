@@ -893,4 +893,24 @@
 			<frame group="this" image="Warehouse_Flag_Market_Sea_8"/>
 		</animation>
 	</image>
+	<!-- Note: Blank UI button for military formations -->
+	<image id="Formation_UI_Blank" width="81" height="80">
+		<layer group="197" image="6"/>
+		<layer src="Formation_UI_Overlay" x="9" y="8"/>
+	</image>
+	<!-- Note: Reference asset for UI military formation helmet icon - DO NOT USE -->
+	<image id="Formation_UI_Helmet" width="22" height="16">
+		<layer group="197" image="0" x="-9" y="-11"/>
+		<layer src="Formation_UI_Helmet_Mask" mask="alpha"/>
+	</image>
+	<!-- Note: UI button for wedge formation -->
+	<image id="Formation_UI_Wedge" width="81" height="80">
+		<layer group="this" image="Formation_UI_Blank"/>
+		<layer group="this" image="Formation_UI_Helmet" x="29" y="11"/>
+		<layer group="this" image="Formation_UI_Helmet" x="20" y="30"/>
+		<layer group="this" image="Formation_UI_Helmet" x="40" y="30"/>
+		<layer group="this" image="Formation_UI_Helmet" x="9" y="49"/>
+		<layer group="this" image="Formation_UI_Helmet" x="29" y="49"/>
+		<layer group="this" image="Formation_UI_Helmet" x="49" y="49"/>
+	</image>
 </assetlist>
