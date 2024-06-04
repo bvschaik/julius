@@ -142,7 +142,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             load_dummy_layer(l);
             return;
         }
-        if (l->x_offset != 0 || l->y_offset != 0 || l->width != width || l->height != height) {
+        /****if (l->x_offset != 0 || l->y_offset != 0 || l->width != width || l->height != height) {
             color_t *new_data = malloc(sizeof(color_t) * l->width * l->height);
             if (!new_data) {
                 free(data);
@@ -163,7 +163,7 @@ static void load_layer_from_another_image(layer *l, color_t **main_data, int *ma
             image_copy(&copy);
             free(data);
             data = new_data;
-        }
+        }****/
     } else if (type == ATLAS_MAIN) {
         int atlas_width = main_image_widths[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
         const color_t *atlas_pixels = main_data[img->atlas.id & IMAGE_ATLAS_BIT_MASK];
