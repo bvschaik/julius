@@ -302,8 +302,9 @@ void figure_supplier_action(figure *f)
                 } else {
                     f->image_id = assets_get_image_id("Walkers", "quartermaster_f_ne_01") + dir * 5 + ((f->attack_image_offset - 14) / 2);
                 }
+                break;
             case FIGURE_ACTION_149_CORPSE:
-                f->image_id = f->image_id = assets_get_image_id("Walkers", "quartermaster_death_01") +
+                f->image_id = assets_get_image_id("Walkers", "quartermaster_death_01") +
                     figure_image_corpse_offset(f);
                 break;
             default:
