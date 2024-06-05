@@ -508,6 +508,7 @@ set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/font.c
     ${PROJECT_SOURCE_DIR}/src/graphics/generic_button.c
     ${PROJECT_SOURCE_DIR}/src/graphics/graphics.c
+    ${PROJECT_SOURCE_DIR}/src/graphics/grid_box.c
     ${PROJECT_SOURCE_DIR}/src/graphics/image.c
     ${PROJECT_SOURCE_DIR}/src/graphics/image_button.c
     ${PROJECT_SOURCE_DIR}/src/graphics/lang_text.c

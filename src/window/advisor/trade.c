@@ -12,10 +12,10 @@
 #include "empire/city.h"
 #include "game/resource.h"
 #include "graphics/generic_button.h"
-#include "graphics/graphics.h" 
+#include "graphics/graphics.h"
+#include "graphics/grid_box.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
-#include "graphics/list_box.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
@@ -33,25 +33,25 @@
 #define RESOURCE_ROW_HEIGHT 41
 #define MAX_VISIBLE_ROWS 8
 
-static void draw_resource_info(const list_box_item *item);
-static void resource_item_tooltip(const list_box_item *item, tooltip_context *c);
+static void draw_resource_info(const grid_box_item *item);
+static void resource_item_tooltip(const grid_box_item *item, tooltip_context *c);
 
 static void button_prices(int param1, int param2);
 static void button_empire(int param1, int param2);
 static void button_policy(int param1, int param2);
-static void select_resource(unsigned int index, int param2);
+static void button_resource(unsigned int index, unsigned int mouse_x, unsigned int mouse_y);
 
-static list_box_type resource_list_box = {
+static grid_box_type resource_grid = {
     .x = 16,
     .y = 52,
-    .width_blocks = 37,
-    .height_blocks = 21,
+    .width = 37 * BLOCK_SIZE,
+    .height = 21 * BLOCK_SIZE,
     .item_height = 40,
-    .decorate_scrollbar = 1,
     .draw_inner_panel = 1,
+    .decorate_scrollbar = 1,
     .extend_to_hidden_scrollbar = 1,
     .draw_item = draw_resource_info,
-    .on_select = select_resource,
+    .on_click = button_resource,
     .handle_tooltip = resource_item_tooltip
 };
 
@@ -105,7 +105,7 @@ static void init(void)
     const resource_list *list = city_resource_get_potential();
     // We need to copy over the struct to prevent bugs when the trade prices window is shown
     memcpy(&data.list, list, sizeof(resource_list));
-    list_box_init(&resource_list_box, data.list.size);
+    grid_box_init(&resource_grid, data.list.size);
 }
 
 static int draw_background(void)
@@ -145,7 +145,7 @@ static int draw_background(void)
     }
     image_draw(image_id, 99, 394, COLOR_MASK_NONE, SCALE_NONE);
 
-    list_box_request_refresh(&resource_list_box);
+    grid_box_request_refresh(&resource_grid);
 
     return ADVISOR_HEIGHT;
 }
@@ -220,7 +220,7 @@ static void draw_resource_status_text(int resource, int x, int y, int box_width)
     }
 }
 
-static void draw_resource_info(const list_box_item *item)
+static void draw_resource_info(const grid_box_item *item)
 {
     resource_type resource = data.list.items[item->index];
     int image_id = resource_get_data(resource)->image.icon;
@@ -248,7 +248,7 @@ static void draw_resource_info(const list_box_item *item)
     }
     draw_resource_status_text(resource, item->x + 176, item->y + 5, item->width - 206);
 
-    if (item->position < resource_list_box.scrollbar.elements_in_view - 1) {
+    if (item->position < resource_grid.scrollbar.elements_in_view - 1) {
         graphics_draw_inset_rect(item->x, item->y + item->height - 2, item->width, 2,
             COLOR_INSET_DARK, COLOR_INSET_LIGHT);
     }
@@ -256,7 +256,7 @@ static void draw_resource_info(const list_box_item *item)
 
 static void draw_foreground(void)
 {
-    list_box_draw(&resource_list_box);
+    grid_box_draw(&resource_grid);
 
     button_border_draw(375, 392, 200, 24, data.focus_button_id == 1);
     button_border_draw(160, 392, 200, 24, data.focus_button_id == 2);
@@ -270,7 +270,7 @@ static void draw_foreground(void)
 static int handle_mouse(const mouse *m)
 {
     data.focus_button_id = 0;
-    return list_box_handle_input(&resource_list_box, m, 1) ||
+    return grid_box_handle_input(&resource_grid, m, 1) ||
         generic_buttons_handle_mouse(m, 0, 0, resource_buttons, MAX_VISIBLE_ROWS + 4, &data.focus_button_id);
 }
 
@@ -318,7 +318,7 @@ static void button_policy(int policy_type, int param2)
     show_policy(policy_type);
 }
 
-static void select_resource(unsigned int index, int param2)
+static void button_resource(unsigned int index, unsigned int mouse_x, unsigned int mouse_y)
 {
     window_resource_settings_show(data.list.items[index]);
 }
@@ -342,11 +342,10 @@ static void write_resource_storage_tooltip(tooltip_context *c, resource_type res
     c->precomposed_text = tooltip_resource_info;
 }
 
-static void resource_item_tooltip(const list_box_item *item, tooltip_context *c)
+static void resource_item_tooltip(const grid_box_item *item, tooltip_context *c)
 {
-    const mouse *m = mouse_in_dialog(mouse_get());
     resource_type resource = data.list.items[item->index];
-    if (resource_is_food(resource) && m->x > item->x + 156 && m->x < item->x + 196) {
+    if (resource_is_food(resource) && item->mouse.x > 156 && item->mouse.x < 196) {
         write_resource_storage_tooltip(c, resource);
     } else {
         c->text_id = 107;
@@ -373,7 +372,7 @@ static void get_tooltip_text(advisor_tooltip_result *r)
         }
     } else {
         tooltip_context c = { 0 };
-        list_box_handle_tooltip(&resource_list_box, &c);
+        grid_box_handle_tooltip(&resource_grid, &c);
         r->precomposed_text = c.precomposed_text;
         r->text_id = c.text_id;
         r->translation_key = c.translation_key;

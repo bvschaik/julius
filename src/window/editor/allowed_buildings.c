@@ -3,8 +3,8 @@
 #include "graphics/button.h"
 #include "graphics/color.h"
 #include "graphics/graphics.h"
+#include "graphics/grid_box.h"
 #include "graphics/lang_text.h"
-#include "graphics/list_box.h"
 #include "graphics/panel.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -12,19 +12,21 @@
 #include "window/editor/attributes.h"
 #include "window/editor/map.h"
 
-static void draw_allowed_building(const list_box_item *item);
-static void toggle_building(unsigned int id, int param2);
+static void draw_allowed_building(const grid_box_item *item);
+static void toggle_building(unsigned int id, unsigned int mouse_x, unsigned int mouse_y);
 
-static list_box_type allowed_building_list = {
+static grid_box_type allowed_building_list = {
     .x = 25,
     .y = 82,
-    .width_blocks = 36,
-    .height_blocks = 20,
+    .width = 36 * BLOCK_SIZE,
+    .height = 20 * BLOCK_SIZE,
     .item_height = 20,
     .num_columns = 3,
+    .item_margin.horizontal = 10,
+    .item_margin.vertical = 2,
     .extend_to_hidden_scrollbar = 1,
     .draw_item = draw_allowed_building,
-    .on_select = toggle_building
+    .on_click = toggle_building
 };
 
 static void draw_background(void)
@@ -39,16 +41,16 @@ static void draw_background(void)
 
     graphics_reset_dialog();
 
-    list_box_request_refresh(&allowed_building_list);
+    grid_box_request_refresh(&allowed_building_list);
 }
 
-static void draw_allowed_building(const list_box_item *item)
+static void draw_allowed_building(const grid_box_item *item)
 {
-    button_border_draw(item->x + 5, item->y + 1, item->width - 10, item->height - 2, item->is_focused);
+    button_border_draw(item->x, item->y, item->width, item->height, item->is_focused);
     if (scenario_editor_is_building_allowed(item->index + 1)) {
-        lang_text_draw_centered(67, item->index + 1, item->x + 5, item->y + 5, item->width - 10, FONT_NORMAL_BLACK);
+        lang_text_draw_centered(67, item->index + 1, item->x, item->y + 4, item->width, FONT_NORMAL_BLACK);
     } else {
-        lang_text_draw_centered_colored(67, item->index + 1, item->x + 5, item->y + 5, item->width - 10,
+        lang_text_draw_centered_colored(67, item->index + 1, item->x, item->y + 4, item->width,
             FONT_NORMAL_PLAIN, COLOR_FONT_RED);
     }
 }
@@ -57,14 +59,14 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    list_box_draw(&allowed_building_list);
+    grid_box_draw(&allowed_building_list);
 
     graphics_reset_dialog();
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
 {
-    if (list_box_handle_input(&allowed_building_list, mouse_in_dialog(m), 1)) {
+    if (grid_box_handle_input(&allowed_building_list, mouse_in_dialog(m), 1)) {
         return;
     }
     if (input_go_back_requested(m, h)) {
@@ -72,10 +74,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-void toggle_building(unsigned int id, int param2)
+void toggle_building(unsigned int id, unsigned int mouse_x, unsigned int mouse_y)
 {
     scenario_editor_toggle_building_allowed(id + 1);
-    list_box_request_refresh(&allowed_building_list);
+    window_request_refresh();
 }
 
 void window_editor_allowed_buildings_show(void)
@@ -86,6 +88,6 @@ void window_editor_allowed_buildings_show(void)
         draw_foreground,
         handle_input
     };
-    list_box_init(&allowed_building_list, 48);
+    grid_box_init(&allowed_building_list, 48);
     window_show(&window);
 }

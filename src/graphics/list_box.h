@@ -24,7 +24,6 @@ typedef struct {
     unsigned int width_blocks;
     unsigned int height_blocks;
     unsigned int item_height;
-    unsigned int num_columns;
     int draw_inner_panel;
     int extend_to_hidden_scrollbar;
     int decorate_scrollbar;
