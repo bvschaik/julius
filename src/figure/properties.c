@@ -223,8 +223,8 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     },
     [FIGURE_ENEMY44_SWORD] = {
     .category = FIGURE_CATEGORY_HOSTILE,
-    .max_damage = 90, .attack_value = 7, .defense_value = 0,
-    .missile_defense_value = 0, .missile_attack_value = 0, .missile_delay = 0
+    .max_damage = 90, .attack_value = 7, .defense_value = 1,
+    .missile_defense_value = 1, .missile_attack_value = 0, .missile_delay = 0
     },
     [FIGURE_ENEMY45_SWORD] = {
     .category = FIGURE_CATEGORY_HOSTILE,
@@ -253,7 +253,7 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     },
     [FIGURE_ENEMY50_SWORD] = {
     .category = FIGURE_CATEGORY_HOSTILE,
-    .max_damage = 110, .attack_value = 10, .defense_value = 1,
+    .max_damage = 110, .attack_value = 10, .defense_value = 2,
     .missile_defense_value = 2, .missile_attack_value = 0, .missile_delay = 0
     },
     [FIGURE_ENEMY51_SPEAR] = {
@@ -269,7 +269,7 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     [FIGURE_ENEMY53_AXE] = {
     .category = FIGURE_CATEGORY_HOSTILE,
     .max_damage = 120, .attack_value = 15, .defense_value = 2,
-    .missile_defense_value = 3, .missile_attack_value = 0, .missile_delay = 0
+    .missile_defense_value = 0, .missile_attack_value = 0, .missile_delay = 0
     },
     [FIGURE_ENEMY54_GLADIATOR] = {
     .category = FIGURE_CATEGORY_HOSTILE,
@@ -289,7 +289,7 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     [FIGURE_ENEMY_CAESAR_LEGIONARY] = {
     .category = FIGURE_CATEGORY_HOSTILE,
     .max_damage = 150, .attack_value = 13, .defense_value = 2,
-    .missile_defense_value = 0, .missile_attack_value = 2, .missile_delay = 150
+    .missile_defense_value = 2, .missile_attack_value = 2, .missile_delay = 150
     },
     [FIGURE_NATIVE_TRADER] = {
     .category = FIGURE_CATEGORY_NATIVE,
@@ -474,7 +474,7 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     [FIGURE_FORT_ARCHER] = {
     .category = FIGURE_CATEGORY_ARMED,
     .max_damage = 80, .attack_value = 6, .defense_value = 0,
-    .missile_defense_value = 0, .missile_attack_value = 4, .missile_delay = 70
+    .missile_defense_value = 0, .missile_attack_value = 4, .missile_delay = 50
     },
 
 };
