@@ -4631,7 +4631,7 @@
 		<layer group="117" image="95"/>
 		<layer src="quartermaster_n_12"/>
 	</image>
-	<!-- Note: Supply Post Quartermaster Fighting animation frames NORTH-EAST DIRECTION 01-05 -->
+	<!-- Note: Supply Post Quartermaster Fighting animation frames NORTH-EAST DIRECTION 01-06 -->
 	<image id="quartermaster_f_ne_01">
 		<layer group="117" image="104"/>
 		<layer src="quartermaster_f_ne_01"/>
@@ -4656,7 +4656,7 @@
 		<layer group="117" image="144"/>
 		<layer src="quartermaster_f_ne_06"/>
 	</image>
-	<!-- Note: Supply Post Quartermaster Fighting animation frames EAST DIRECTION 01-12 -->
+	<!-- Note: Supply Post Quartermaster Fighting animation frames EAST DIRECTION 01-06 -->
 	<image id="quartermaster_f_e_01">
 		<layer group="117" image="105"/>
 		<layer src="quartermaster_f_e_01"/>
@@ -4681,7 +4681,7 @@
 		<layer group="117" image="145"/>
 		<layer src="quartermaster_f_e_06"/>
 	</image>
-	<!-- Note: Supply Post Quartermaster Fighting animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<!-- Note: Supply Post Quartermaster Fighting animation frames SOUTH-EAST DIRECTION 01-06 -->
 	<image id="quartermaster_f_se_01">
 		<layer group="117" image="106"/>
 		<layer src="quartermaster_f_se_01"/>
@@ -4706,7 +4706,7 @@
 		<layer group="117" image="146"/>
 		<layer src="quartermaster_f_se_06"/>
 	</image>
-	<!-- Note: Supply Post Quartermaster Fighting animation frames SOUTH DIRECTION 01-12 -->
+	<!-- Note: Supply Post Quartermaster Fighting animation frames SOUTH DIRECTION 01-06 -->
 	<image id="quartermaster_f_s_01">
 		<layer group="117" image="107"/>
 		<layer src="quartermaster_f_s_01"/>
@@ -4731,7 +4731,7 @@
 		<layer group="117" image="147"/>
 		<layer src="quartermaster_f_s_06"/>
 	</image>
-	<!-- Note: Supply Post Quartermaster Fighting animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<!-- Note: Supply Post Quartermaster Fighting animation frames SOUTH-WEST DIRECTION 01-06 -->
 	<image id="quartermaster_f_sw_01">
 		<layer group="117" image="108"/>
 		<layer src="quartermaster_f_sw_01"/>
@@ -4756,7 +4756,7 @@
 		<layer group="117" image="148"/>
 		<layer src="quartermaster_f_sw_06"/>
 	</image>
-	<!-- Note: Supply Post Quartermaster Fighting animation frames WEST DIRECTION 01-12 -->
+	<!-- Note: Supply Post Quartermaster Fighting animation frames WEST DIRECTION 01-06 -->
 	<image id="quartermaster_f_w_01">
 		<layer group="117" image="109"/>
 		<layer src="quartermaster_f_w_01"/>
@@ -4781,7 +4781,7 @@
 		<layer group="117" image="149"/>
 		<layer src="quartermaster_f_w_06"/>
 	</image>
-	<!-- Note: Supply Post Quartermaster Fighting animation frames NORTH-WEST DIRECTION 01-12 -->
+	<!-- Note: Supply Post Quartermaster Fighting animation frames NORTH-WEST DIRECTION 01-06 -->
 	<image id="quartermaster_f_nw_01">
 		<layer group="117" image="110"/>
 		<layer src="quartermaster_f_nw_01"/>
@@ -4806,7 +4806,7 @@
 		<layer group="117" image="150"/>
 		<layer src="quartermaster_f_nw_06"/>
 	</image>
-	<!-- Note: Supply Post Quartermaster Fighting animation frames NORTH DIRECTION 01-12 -->
+	<!-- Note: Supply Post Quartermaster Fighting animation frames NORTH DIRECTION 01-06 -->
 	<image id="quartermaster_f_n_01">
 		<layer group="117" image="111"/>
 		<layer src="quartermaster_f_n_01"/>
@@ -4831,4 +4831,170 @@
 		<layer group="117" image="151"/>
 		<layer src="quartermaster_f_n_06"/>
 	</image>
+	<!-- Note: Deer Portrait (Assets created by marwana) -->
+	<!--image id="deer_portrait">
+		<layer group="190" image="7"/>
+		<layer src="deer_portrait_overlay"/>
+	</image-->
+	<!-- Note: Deer Death animation frames 01-08 -->
+	<!--image id="deer_death_01" src="deer_death_01"/>
+	<image id="deer_death_02" src="deer_death_02"/>
+	<image id="deer_death_03" src="deer_death_03"/>
+	<image id="deer_death_04" src="deer_death_04"/>
+	<image id="deer_death_05" src="deer_death_05"/>
+	<image id="deer_death_06" src="deer_death_06"/>
+	<image id="deer_death_07" src="deer_death_07"/>
+	<image id="deer_death_08" src="deer_death_08"/-->
+	<!-- Note: Deer Walking animation frames NORTH-EAST DIRECTION 01-12 -->
+	<!--image id="deer_ne_01" src="deer_ne_01"/>
+	<image id="deer_ne_02" src="deer_ne_02"/>
+	<image id="deer_ne_03" src="deer_ne_03"/>
+	<image id="deer_ne_04" src="deer_ne_04"/>
+	<image id="deer_ne_05" src="deer_ne_05"/>
+	<image id="deer_ne_06" src="deer_ne_06"/>
+	<image id="deer_ne_07" src="deer_ne_07"/>
+	<image id="deer_ne_08" src="deer_ne_08"/>
+	<image id="deer_ne_09" src="deer_ne_09"/>
+	<image id="deer_ne_10" src="deer_ne_10"/>
+	<image id="deer_ne_11" src="deer_ne_11"/>
+	<image id="deer_ne_12" src="deer_ne_12"/-->
+	<!-- Note: Deer Walking animation frames EAST DIRECTION 01-12 -->
+	<!--image id="deer_e_01" src="deer_e_01"/>
+	<image id="deer_e_02" src="deer_e_02"/>
+	<image id="deer_e_03" src="deer_e_03"/>
+	<image id="deer_e_04" src="deer_e_04"/>
+	<image id="deer_e_05" src="deer_e_05"/>
+	<image id="deer_e_06" src="deer_e_06"/>
+	<image id="deer_e_07" src="deer_e_07"/>
+	<image id="deer_e_08" src="deer_e_08"/>
+	<image id="deer_e_09" src="deer_e_09"/>
+	<image id="deer_e_10" src="deer_e_10"/>
+	<image id="deer_e_11" src="deer_e_11"/>
+	<image id="deer_e_12" src="deer_e_12"/-->
+	<!-- Note: Deer Walking animation frames SOUTH-EAST DIRECTION 01-12 -->
+	<!--image id="deer_se_01" src="deer_se_01"/>
+	<image id="deer_se_02" src="deer_se_02"/>
+	<image id="deer_se_03" src="deer_se_03"/>
+	<image id="deer_se_04" src="deer_se_04"/>
+	<image id="deer_se_05" src="deer_se_05"/>
+	<image id="deer_se_06" src="deer_se_06"/>
+	<image id="deer_se_07" src="deer_se_07"/>
+	<image id="deer_se_08" src="deer_se_08"/>
+	<image id="deer_se_09" src="deer_se_09"/>
+	<image id="deer_se_10" src="deer_se_10"/>
+	<image id="deer_se_11" src="deer_se_11"/>
+	<image id="deer_se_12" src="deer_se_12"/-->
+	<!-- Note: Deer Walking animation frames SOUTH DIRECTION 01-12 -->
+	<!--image id="deer_s_01" src="deer_s_01"/>
+	<image id="deer_s_02" src="deer_s_02"/>
+	<image id="deer_s_03" src="deer_s_03"/>
+	<image id="deer_s_04" src="deer_s_04"/>
+	<image id="deer_s_05" src="deer_s_05"/>
+	<image id="deer_s_06" src="deer_s_06"/>
+	<image id="deer_s_07" src="deer_s_07"/>
+	<image id="deer_s_08" src="deer_s_08"/>
+	<image id="deer_s_09" src="deer_s_09"/>
+	<image id="deer_s_10" src="deer_s_10"/>
+	<image id="deer_s_11" src="deer_s_11"/>
+	<image id="deer_s_12" src="deer_s_12"/-->
+	<!-- Note: Deer Walking animation frames SOUTH-WEST DIRECTION 01-12 -->
+	<!--image id="deer_sw_01" src="deer_sw_01"/>
+	<image id="deer_sw_02" src="deer_sw_02"/>
+	<image id="deer_sw_03" src="deer_sw_03"/>
+	<image id="deer_sw_04" src="deer_sw_04"/>
+	<image id="deer_sw_05" src="deer_sw_05"/>
+	<image id="deer_sw_06" src="deer_sw_06"/>
+	<image id="deer_sw_07" src="deer_sw_07"/>
+	<image id="deer_sw_08" src="deer_sw_08"/>
+	<image id="deer_sw_09" src="deer_sw_09"/>
+	<image id="deer_sw_10" src="deer_sw_10"/>
+	<image id="deer_sw_11" src="deer_sw_11"/>
+	<image id="deer_sw_12" src="deer_sw_12"/-->
+	<!-- Note: Deer Walking animation frames WEST DIRECTION 01-12 -->
+	<!--image id="deer_w_01" src="deer_w_01"/>
+	<image id="deer_w_02" src="deer_w_02"/>
+	<image id="deer_w_03" src="deer_w_03"/>
+	<image id="deer_w_04" src="deer_w_04"/>
+	<image id="deer_w_05" src="deer_w_05"/>
+	<image id="deer_w_06" src="deer_w_06"/>
+	<image id="deer_w_07" src="deer_w_07"/>
+	<image id="deer_w_08" src="deer_w_08"/>
+	<image id="deer_w_09" src="deer_w_09"/>
+	<image id="deer_w_10" src="deer_w_10"/>
+	<image id="deer_w_11" src="deer_w_11"/>
+	<image id="deer_w_12" src="deer_w_12"/-->
+	<!-- Note: Deer Walking animation frames NORTH-WEST DIRECTION 01-12 -->
+	<!--image id="deer_nw_01" src="deer_nw_01"/>
+	<image id="deer_nw_02" src="deer_nw_02"/>
+	<image id="deer_nw_03" src="deer_nw_03"/>
+	<image id="deer_nw_04" src="deer_nw_04"/>
+	<image id="deer_nw_05" src="deer_nw_05"/>
+	<image id="deer_nw_06" src="deer_nw_06"/>
+	<image id="deer_nw_07" src="deer_nw_07"/>
+	<image id="deer_nw_08" src="deer_nw_08"/>
+	<image id="deer_nw_09" src="deer_nw_09"/>
+	<image id="deer_nw_10" src="deer_nw_10"/>
+	<image id="deer_nw_11" src="deer_nw_11"/>
+	<image id="deer_nw_12" src="deer_nw_12"/-->
+	<!-- Note: Deer Walking animation frames NORTH DIRECTION 01-12 -->
+	<!--image id="deer_n_01" src="deer_n_01"/>
+	<image id="deer_n_02" src="deer_n_02"/>
+	<image id="deer_n_03" src="deer_n_03"/>
+	<image id="deer_n_04" src="deer_n_04"/>
+	<image id="deer_n_05" src="deer_n_05"/>
+	<image id="deer_n_06" src="deer_n_06"/>
+	<image id="deer_n_07" src="deer_n_07"/>
+	<image id="deer_n_08" src="deer_n_08"/>
+	<image id="deer_n_09" src="deer_n_09"/>
+	<image id="deer_n_10" src="deer_n_10"/>
+	<image id="deer_n_11" src="deer_n_11"/>
+	<image id="deer_n_12" src="deer_n_12"/-->
+	<!-- Note: Deer Eating animation frames NORTH-EAST DIRECTION 01-05 -->
+	<!--image id="deer_eat_ne_01" src="deer_eat_ne_01"/>
+	<image id="deer_eat_ne_02" src="deer_eat_ne_02"/>
+	<image id="deer_eat_ne_03" src="deer_eat_ne_03"/>
+	<image id="deer_eat_ne_04" src="deer_eat_ne_04"/>
+	<image id="deer_eat_ne_05" src="deer_eat_ne_05"/-->
+	<!-- Note: Deer Eating animation frames EAST DIRECTION 01-05 -->
+	<!--image id="deer_eat_e_01" src="deer_eat_e_01"/>
+	<image id="deer_eat_e_02" src="deer_eat_e_02"/>
+	<image id="deer_eat_e_03" src="deer_eat_e_03"/>
+	<image id="deer_eat_e_04" src="deer_eat_e_04"/>
+	<image id="deer_eat_e_05" src="deer_eat_e_05"/-->
+	<!-- Note: Deer Eating animation frames SOUTH-EAST DIRECTION 01-05 -->
+	<!--image id="deer_eat_se_01" src="deer_eat_se_01"/>
+	<image id="deer_eat_se_02" src="deer_eat_se_02"/>
+	<image id="deer_eat_se_03" src="deer_eat_se_03"/>
+	<image id="deer_eat_se_04" src="deer_eat_se_04"/>
+	<image id="deer_eat_se_05" src="deer_eat_se_05"/-->
+	<!-- Note: Deer Eating animation frames SOUTH DIRECTION 01-05 -->
+	<!--image id="deer_eat_s_01" src="deer_eat_s_01"/>
+	<image id="deer_eat_s_02" src="deer_eat_s_02"/>
+	<image id="deer_eat_s_03" src="deer_eat_s_03"/>
+	<image id="deer_eat_s_04" src="deer_eat_s_04"/>
+	<image id="deer_eat_s_05" src="deer_eat_s_05"/-->
+	<!-- Note: Deer Eating animation frames SOUTH-WEST DIRECTION 01-05 -->
+	<!--image id="deer_eat_sw_01" src="deer_eat_sw_01"/>
+	<image id="deer_eat_sw_02" src="deer_eat_sw_02"/>
+	<image id="deer_eat_sw_03" src="deer_eat_sw_03"/>
+	<image id="deer_eat_sw_04" src="deer_eat_sw_04"/>
+	<image id="deer_eat_sw_05" src="deer_eat_sw_05"/-->
+	<!-- Note: Deer Eating animation frames WEST DIRECTION 01-05 -->
+	<!--image id="deer_eat_w_01" src="deer_eat_w_01"/>
+	<image id="deer_eat_w_02" src="deer_eat_w_02"/>
+	<image id="deer_eat_w_03" src="deer_eat_w_03"/>
+	<image id="deer_eat_w_04" src="deer_eat_w_04"/>
+	<image id="deer_eat_w_05" src="deer_eat_w_05"/-->
+	<!-- Note: Deer Eating animation frames NORTH-WEST DIRECTION 01-05 -->
+	<!--image id="deer_eat_nw_01" src="deer_eat_nw_01"/>
+	<image id="deer_eat_nw_02" src="deer_eat_nw_02"/>
+	<image id="deer_eat_nw_03" src="deer_eat_nw_03"/>
+	<image id="deer_eat_nw_04" src="deer_eat_nw_04"/>
+	<image id="deer_eat_nw_05" src="deer_eat_nw_05"/-->
+	<!-- Note: Deer Eating animation frames NORTH DIRECTION 01-05 -->
+	<!--image id="deer_eat_n_01" src="deer_eat_n_01"/>
+	<image id="deer_eat_n_02" src="deer_eat_n_02"/>
+	<image id="deer_eat_n_03" src="deer_eat_n_03"/>
+	<image id="deer_eat_n_04" src="deer_eat_n_04"/>
+	<image id="deer_eat_n_05" src="deer_eat_n_05"/-->
 </assetlist>
