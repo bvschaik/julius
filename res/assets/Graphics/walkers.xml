@@ -4632,51 +4632,203 @@
 		<layer src="quartermaster_n_12"/>
 	</image>
 	<!-- Note: Supply Post Quartermaster Fighting animation frames NORTH-EAST DIRECTION 01-05 -->
-	<image id="quartermaster_f_ne_01" src="quartermaster_f_ne_01"/>
-	<image id="quartermaster_f_ne_02" src="quartermaster_f_ne_02"/>
-	<image id="quartermaster_f_ne_03" src="quartermaster_f_ne_03"/>
-	<image id="quartermaster_f_ne_04" src="quartermaster_f_ne_04"/>
-	<image id="quartermaster_f_ne_05" src="quartermaster_f_ne_05"/>
+	<image id="quartermaster_f_ne_01">
+		<layer group="117" image="104"/>
+		<layer src="quartermaster_f_ne_01"/>
+	</image>
+	<image id="quartermaster_f_ne_02">
+		<layer group="117" image="112"/>
+		<layer src="quartermaster_f_ne_02"/>
+	</image>
+	<image id="quartermaster_f_ne_03">
+		<layer group="117" image="120"/>
+		<layer src="quartermaster_f_ne_03"/>
+	</image>
+	<image id="quartermaster_f_ne_04">
+		<layer group="117" image="128"/>
+		<layer src="quartermaster_f_ne_04"/>
+	</image>
+	<image id="quartermaster_f_ne_05">
+		<layer group="117" image="136"/>
+		<layer src="quartermaster_f_ne_05"/>
+	</image>
+	<image id="quartermaster_f_ne_06">
+		<layer group="117" image="144"/>
+		<layer src="quartermaster_f_ne_06"/>
+	</image>
 	<!-- Note: Supply Post Quartermaster Fighting animation frames EAST DIRECTION 01-12 -->
-	<image id="quartermaster_f_e_01" src="quartermaster_f_e_01"/>
-	<image id="quartermaster_f_e_02" src="quartermaster_f_e_02"/>
-	<image id="quartermaster_f_e_03" src="quartermaster_f_e_03"/>
-	<image id="quartermaster_f_e_04" src="quartermaster_f_e_04"/>
-	<image id="quartermaster_f_e_05" src="quartermaster_f_e_05"/>
+	<image id="quartermaster_f_e_01">
+		<layer group="117" image="105"/>
+		<layer src="quartermaster_f_e_01"/>
+	</image>
+	<image id="quartermaster_f_e_02">
+		<layer group="117" image="113"/>
+		<layer src="quartermaster_f_e_02"/>
+	</image>
+	<image id="quartermaster_f_e_03">
+		<layer group="117" image="121"/>
+		<layer src="quartermaster_f_e_03"/>
+	</image>
+	<image id="quartermaster_f_e_04">
+		<layer group="117" image="129"/>
+		<layer src="quartermaster_f_e_04"/>
+	</image>
+	<image id="quartermaster_f_e_05">
+		<layer group="117" image="137"/>
+		<layer src="quartermaster_f_e_05"/>
+	</image>
+	<image id="quartermaster_f_e_06">
+		<layer group="117" image="145"/>
+		<layer src="quartermaster_f_e_06"/>
+	</image>
 	<!-- Note: Supply Post Quartermaster Fighting animation frames SOUTH-EAST DIRECTION 01-12 -->
-	<image id="quartermaster_f_se_01" src="quartermaster_f_se_01"/>
-	<image id="quartermaster_f_se_02" src="quartermaster_f_se_02"/>
-	<image id="quartermaster_f_se_03" src="quartermaster_f_se_03"/>
-	<image id="quartermaster_f_se_04" src="quartermaster_f_se_04"/>
-	<image id="quartermaster_f_se_05" src="quartermaster_f_se_05"/>
+	<image id="quartermaster_f_se_01">
+		<layer group="117" image="106"/>
+		<layer src="quartermaster_f_se_01"/>
+	</image>
+	<image id="quartermaster_f_se_02">
+		<layer group="117" image="114"/>
+		<layer src="quartermaster_f_se_02"/>
+	</image>
+	<image id="quartermaster_f_se_03">
+		<layer group="117" image="122"/>
+		<layer src="quartermaster_f_se_03"/>
+	</image>
+	<image id="quartermaster_f_se_04">
+		<layer group="117" image="130"/>
+		<layer src="quartermaster_f_se_04"/>
+	</image>
+	<image id="quartermaster_f_se_05">
+		<layer group="117" image="138"/>
+		<layer src="quartermaster_f_se_05"/>
+	</image>
+	<image id="quartermaster_f_se_06">
+		<layer group="117" image="146"/>
+		<layer src="quartermaster_f_se_06"/>
+	</image>
 	<!-- Note: Supply Post Quartermaster Fighting animation frames SOUTH DIRECTION 01-12 -->
-	<image id="quartermaster_f_s_01" src="quartermaster_f_s_01"/>
-	<image id="quartermaster_f_s_02" src="quartermaster_f_s_02"/>
-	<image id="quartermaster_f_s_03" src="quartermaster_f_s_03"/>
-	<image id="quartermaster_f_s_04" src="quartermaster_f_s_04"/>
-	<image id="quartermaster_f_s_05" src="quartermaster_f_s_05"/>
+	<image id="quartermaster_f_s_01">
+		<layer group="117" image="107"/>
+		<layer src="quartermaster_f_s_01"/>
+	</image>
+	<image id="quartermaster_f_s_02">
+		<layer group="117" image="115"/>
+		<layer src="quartermaster_f_s_02"/>
+	</image>
+	<image id="quartermaster_f_s_03">
+		<layer group="117" image="123"/>
+		<layer src="quartermaster_f_s_03"/>
+	</image>
+	<image id="quartermaster_f_s_04">
+		<layer group="117" image="131"/>
+		<layer src="quartermaster_f_s_04"/>
+	</image>
+	<image id="quartermaster_f_s_05">
+		<layer group="117" image="139"/>
+		<layer src="quartermaster_f_s_05"/>
+	</image>
+	<image id="quartermaster_f_s_06">
+		<layer group="117" image="147"/>
+		<layer src="quartermaster_f_s_06"/>
+	</image>
 	<!-- Note: Supply Post Quartermaster Fighting animation frames SOUTH-WEST DIRECTION 01-12 -->
-	<image id="quartermaster_f_sw_01" src="quartermaster_f_sw_01"/>
-	<image id="quartermaster_f_sw_02" src="quartermaster_f_sw_02"/>
-	<image id="quartermaster_f_sw_03" src="quartermaster_f_sw_03"/>
-	<image id="quartermaster_f_sw_04" src="quartermaster_f_sw_04"/>
-	<image id="quartermaster_f_sw_05" src="quartermaster_f_sw_05"/>
+	<image id="quartermaster_f_sw_01">
+		<layer group="117" image="108"/>
+		<layer src="quartermaster_f_sw_01"/>
+	</image>
+	<image id="quartermaster_f_sw_02">
+		<layer group="117" image="116"/>
+		<layer src="quartermaster_f_sw_02"/>
+	</image>
+	<image id="quartermaster_f_sw_03">
+		<layer group="117" image="124"/>
+		<layer src="quartermaster_f_sw_03"/>
+	</image>
+	<image id="quartermaster_f_sw_04">
+		<layer group="117" image="132"/>
+		<layer src="quartermaster_f_sw_04"/>
+	</image>
+	<image id="quartermaster_f_sw_05">
+		<layer group="117" image="140"/>
+		<layer src="quartermaster_f_sw_05"/>
+	</image>
+	<image id="quartermaster_f_sw_06">
+		<layer group="117" image="148"/>
+		<layer src="quartermaster_f_sw_06"/>
+	</image>
 	<!-- Note: Supply Post Quartermaster Fighting animation frames WEST DIRECTION 01-12 -->
-	<image id="quartermaster_f_w_01" src="quartermaster_f_w_01"/>
-	<image id="quartermaster_f_w_02" src="quartermaster_f_w_02"/>
-	<image id="quartermaster_f_w_03" src="quartermaster_f_w_03"/>
-	<image id="quartermaster_f_w_04" src="quartermaster_f_w_04"/>
-	<image id="quartermaster_f_w_05" src="quartermaster_f_w_05"/>
+	<image id="quartermaster_f_w_01">
+		<layer group="117" image="109"/>
+		<layer src="quartermaster_f_w_01"/>
+	</image>
+	<image id="quartermaster_f_w_02">
+		<layer group="117" image="117"/>
+		<layer src="quartermaster_f_w_02"/>
+	</image>
+	<image id="quartermaster_f_w_03">
+		<layer group="117" image="125"/>
+		<layer src="quartermaster_f_w_03"/>
+	</image>
+	<image id="quartermaster_f_w_04">
+		<layer group="117" image="133"/>
+		<layer src="quartermaster_f_w_04"/>
+	</image>
+	<image id="quartermaster_f_w_05">
+		<layer group="117" image="141"/>
+		<layer src="quartermaster_f_w_05"/>
+	</image>
+	<image id="quartermaster_f_w_06">
+		<layer group="117" image="149"/>
+		<layer src="quartermaster_f_w_06"/>
+	</image>
 	<!-- Note: Supply Post Quartermaster Fighting animation frames NORTH-WEST DIRECTION 01-12 -->
-	<image id="quartermaster_f_nw_01" src="quartermaster_f_nw_01"/>
-	<image id="quartermaster_f_nw_02" src="quartermaster_f_nw_02"/>
-	<image id="quartermaster_f_nw_03" src="quartermaster_f_nw_03"/>
-	<image id="quartermaster_f_nw_04" src="quartermaster_f_nw_04"/>
-	<image id="quartermaster_f_nw_05" src="quartermaster_f_nw_05"/>
+	<image id="quartermaster_f_nw_01">
+		<layer group="117" image="110"/>
+		<layer src="quartermaster_f_nw_01"/>
+	</image>
+	<image id="quartermaster_f_nw_02">
+		<layer group="117" image="118"/>
+		<layer src="quartermaster_f_nw_02"/>
+	</image>
+	<image id="quartermaster_f_nw_03">
+		<layer group="117" image="126"/>
+		<layer src="quartermaster_f_nw_03"/>
+	</image>
+	<image id="quartermaster_f_nw_04">
+		<layer group="117" image="134"/>
+		<layer src="quartermaster_f_nw_04"/>
+	</image>
+	<image id="quartermaster_f_nw_05">
+		<layer group="117" image="142"/>
+		<layer src="quartermaster_f_nw_05"/>
+	</image>
+	<image id="quartermaster_f_nw_06">
+		<layer group="117" image="150"/>
+		<layer src="quartermaster_f_nw_06"/>
+	</image>
 	<!-- Note: Supply Post Quartermaster Fighting animation frames NORTH DIRECTION 01-12 -->
-	<image id="quartermaster_f_n_01" src="quartermaster_f_n_01"/>
-	<image id="quartermaster_f_n_02" src="quartermaster_f_n_02"/>
-	<image id="quartermaster_f_n_03" src="quartermaster_f_n_03"/>
-	<image id="quartermaster_f_n_04" src="quartermaster_f_n_04"/>
-	<image id="quartermaster_f_n_05" src="quartermaster_f_n_05"/>
+	<image id="quartermaster_f_n_01">
+		<layer group="117" image="111"/>
+		<layer src="quartermaster_f_n_01"/>
+	</image>
+	<image id="quartermaster_f_n_02">
+		<layer group="117" image="119"/>
+		<layer src="quartermaster_f_n_02"/>
+	</image>
+	<image id="quartermaster_f_n_03">
+		<layer group="117" image="127"/>
+		<layer src="quartermaster_f_n_03"/>
+	</image>
+	<image id="quartermaster_f_n_04">
+		<layer group="117" image="135"/>
+		<layer src="quartermaster_f_n_04"/>
+	</image>
+	<image id="quartermaster_f_n_05">
+		<layer group="117" image="143"/>
+		<layer src="quartermaster_f_n_05"/>
+	</image>
+	<image id="quartermaster_f_n_06">
+		<layer group="117" image="151"/>
+		<layer src="quartermaster_f_n_06"/>
+	</image>
 </assetlist>
