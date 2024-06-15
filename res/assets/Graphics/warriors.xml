@@ -655,11 +655,11 @@
 		<layer group="this" image="catapult_fr_ne_03"/>
 		<layer group="this" image="catapult_rock_ne_01" x="19" y="28"/>
 	</image>
-	<image id="catapult_fr_ne_07">
+	<image id="catapult_fr_ne_07" width="80" height="80">
 		<layer group="this" image="catapult_rock_ne_01" x="26" y="16"/>
 		<layer group="this" image="catapult_fr_ne_02"/>
 	</image>
-	<image id="catapult_fr_ne_08">
+	<image id="catapult_fr_ne_08" width="80" height="80">
 		<layer group="this" image="catapult_rock_ne_01" x="47" y="1"/>
 		<layer group="this" image="catapult_ne_01"/>
 	</image>
@@ -724,7 +724,7 @@
 	</image>
 	<image id="catapult_fr_s_08">
 		<layer group="this" image="catapult_s_01"/>
-		<layer group="this" image="catapult_rock_s_01" x="50" y="12"/>
+		<layer group="this" image="catapult_rock_s_01" x="34" y="12"/>
 	</image>
 	<!-- Note: Enemy Catapult Walker Ranged Fighting animation frames SOUTH-WEST DIRECTION 01-08 -->
 	<image id="catapult_fe_sw_01" src="catapult_sw_01"/>
@@ -762,7 +762,7 @@
 	</image>
 	<image id="catapult_fr_w_07">
 		<layer group="this" image="catapult_fr_w_02"/>
-		<layer group="this" image="catapult_rock_w_01" x="42" y="3"/>
+		<layer group="this" image="catapult_rock_w_01" x="42" y="12"/>
 	</image>
 	<image id="catapult_fr_w_08">
 		<layer group="this" image="catapult_w_01"/>
@@ -777,15 +777,15 @@
 		<layer group="this" image="catapult_fr_nw_04"/>
 		<layer group="this" image="catapult_rock_nw_01" x="54" y="45" invert="horizontal"/>
 	</image>
-	<image id="catapult_fr_nw_06">
-		<layer group="this" image="catapult_rock_nw_01" x="48" y="30" invert="horizontal"/>
+	<image id="catapult_fr_nw_06" width="80" height="80">
 		<layer group="this" image="catapult_fr_nw_03"/>
+		<layer group="this" image="catapult_fr_n_06_rock"/>
 	</image>
-	<image id="catapult_fr_nw_07">
+	<image id="catapult_fr_nw_07" width="80" height="80">
 		<layer group="this" image="catapult_fr_nw_02"/>
-		<layer group="this" image="catapult_rock_nw_01" x="39" y="17" invert="horizontal"/>
+		<layer group="this" image="catapult_fr_n_07_rock"/>
 	</image>
-	<image id="catapult_fr_nw_08">
+	<image id="catapult_fr_nw_08" width="80" height="80">
 		<layer group="this" image="catapult_nw_01"/>
 		<layer group="this" image="catapult_rock_nw_01" x="16" y="5" invert="horizontal"/>
 	</image>
