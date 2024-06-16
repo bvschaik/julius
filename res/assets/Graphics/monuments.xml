@@ -81,8 +81,14 @@
 	<image id="City_Mint_Construction_01" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
-		<layer src="City_Mint_Construction_01" x="0" y="0"/>
+		<layer group="this" image="Construction_Part_TimberPad_Shadow" x="59" y="53"/>
+		<layer group="this" image="Construction_Part_Pillar" x="88" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="174" y="43"/>
+		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="44"/>
+		<layer group="this" image="Construction_Part_Pillar_B" x="87" y="87"/>
+		<layer src="City_Mint_Construction_01" x="49" y="21"/>
 		<layer group="this" image="Construction_Part_TimberPad" x="31" y="53"/>
+		<layer src="Construction_Part_Groma" x="88" y="29"/>
 		<layer src="Construction_Part_Cart" x="113" y="42"/>
 	</image>
 	<image id="City_Mint_Construction_02" src="City_Mint_Construction_02" width="178" height="117" isometric="true"/>
@@ -513,9 +519,15 @@
 	<image id="Lighthouse_Construction_01" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
+		<layer group="this" image="Construction_Part_TimberPad_Shadow" x="59" y="53"/>
+		<layer group="this" image="Construction_Part_Pillar" x="88" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="174" y="43"/>
+		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="44"/>
+		<layer group="this" image="Construction_Part_Pillar_B" x="87" y="87"/>
 		<layer group="this" image="Construction_Part_TimberPad" x="31" y="53"/>
 		<layer src="Construction_Part_Cart" x="70" y="66"/>
-		<layer src="Lighthouse_Construction_01" x="0" y="0"/>
+		<layer src="Construction_Part_Groma" x="88" y="29"/>
+		<layer src="Lighthouse_Construction_01" x="31" y="27"/>
 	</image>
 	<image id="Lighthouse_Construction_02" src="Lighthouse_Construction_02" isometric="true"/>
 	<image id="Lighthouse_Construction_03" width="178" height="139" isometric="true">
@@ -548,14 +560,20 @@
 		<layer group="this" image="Construction_Part_Pillar" x="414" y="103"/>
 		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="104"/>
 		<layer group="this" image="Construction_Part_Pillar_B" x="207" y="207"/>
-		<layer src="Grand_Temple_Construction_Base_01" x="298" y="142"/>
+		<layer src="Construction_Part_TimberPad_Shadow" x="298" y="142"/>
 		<layer group="this" image="Construction_Part_TimberPad" x="268" y="142" invert="horizontal"/>
 		<layer src="Construction_Part_Cart" x="256" y="158"/>
 	</image>
 	<image id="Grand_Temple_Construction_Base_02" width="418" height="219" isometric="true">
 		<layer group="this" image="7x7_Construction_Footprint" x="0" y="9"/>
 		<layer src="7x7_Construction_Borders" x="0" y="9"/>
-		<layer src="Grand_Temple_Construction_Base_02"/>
+		<layer group="this" image="Construction_Part_Pillar" x="207" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="414" y="103"/>
+		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="104"/>
+		<layer group="this" image="Construction_Part_Pillar_B" x="207" y="207"/>
+		<layer src="Construction_Part_TimberPad_Shadow" x="120" y="143"/>
+		<layer group="this" image="Construction_Part_TimberPad" x="91" y="143"/>
+		<layer src="Construction_Part_Cart" x="130" y="156"/>
 	</image>
 	<!-- Note: Ceres Large Temple 0%, 25%, 50% and 75% construction phases -->
 	<image id="Ceres_LT_0" width="178" height="99" isometric="true">
@@ -565,7 +583,8 @@
 		<layer group="this" image="Construction_Part_Pillar" x="174" y="43"/>
 		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="44"/>
 		<layer group="this" image="Construction_Part_Pillar_B" x="87" y="87"/>
-		<layer src="Ceres_Temple_Construction_01" x="36" y="22"/>
+		<layer src="Ceres_Temple_Construction_01" x="36" y="41"/>
+		<layer src="Construction_Part_Groma" x="84" y="22"/>
 		<layer src="Construction_Part_Cart" x="68" y="59"/>
 	</image>
 	<image id="Ceres_LT_25" width="178" height="159">
@@ -678,8 +697,13 @@
 	<image id="Mars_LT_0" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
-		<layer src="Mars_Temple_Construction_01" x="0" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="88" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="174" y="43"/>
+		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="44"/>
+		<layer group="this" image="Construction_Part_Pillar_B" x="87" y="87"/>
+		<layer src="Mars_Temple_Construction_01" x="36" y="37"/>
 		<layer src="Construction_Part_Pots_01" x="83" y="64"/>
+		<layer src="Construction_Part_Groma" x="84" y="22"/>
 	</image>
 	<image id="Mars_LT_25" width="178" height="148">
 		<layer group="74" image="1" part="footprint" x="0" y="0"/>
