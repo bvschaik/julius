@@ -772,7 +772,6 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LARGE_MAUSOLEUM_PHASE_2, "Fassade" },
     {TR_BUILDING_LARGE_MAUSOLEUM_PHASE_1_TEXT, "Baumeister verlegen Schichten von präzise gearbeiteten Steinen, um das zentrale Gewölbe dieses Mausoleums zu bilden." },
     {TR_BUILDING_LARGE_MAUSOLEUM_PHASE_2_TEXT, "Geschickte Handwerker bereiten die Fassade dieses Mausoleums vor und meißeln glänzende Marmorstatuen zum Gedenken an diejenigen, die hier ruhen werden." },
-    {TR_BUILDING_LARGE_MAUSOLEUM_CONSTRUCTION_DESC, "Der Bau dieses Mausoleums benötigt gelagerte Materialien, einfache Arbeiter und Baumeister einer Baumeistergilde." },
     /* Gebäude - Leuchtturm */
 	{TR_BUILDING_LIGHTHOUSE, "Leuchtturm"},
     {TR_BUILDING_LIGHTHOUSE_PHASE_1, "(Fundament)"},
@@ -783,7 +782,6 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LIGHTHOUSE_PHASE_2_TEXT, "Baumeister konstruieren den Sockel, der die Flamme des Leuchtturms weit über den Hoizont erheben wird."},
     {TR_BUILDING_LIGHTHOUSE_PHASE_3_TEXT, "Der Leuchtturm wächst jeden Tag etwas höher, während die Bauarbeiter ihre Arbeit verrichten."},
     {TR_BUILDING_LIGHTHOUSE_PHASE_4_TEXT, "Baumeister geben dem Leuchtturm den letzten Schliff. Bald schon wird er kilometerweit leuchten und Schiffen den Weg weisen."},
-    {TR_BUILDING_LIGHTHOUSE_CONSTRUCTION_DESC, "Der Bau des Leuchtturms benötigt gelagerte Materialien aus einem Lagerhaus, Bauarbeiter eines Arbeiterlagers und Baumeister einer Baumeistergilde."},
     {TR_BUILDING_LIGHTHOUSE_BONUS_DESC, "Fischerboote bewegen sich 10 % schneller und eine stürmische See beruhigt sich doppelt so schnell."},
     {TR_BUILDING_LIGHTHOUSE_POLICY_TITLE, "Seehandelspolitik"},
     {TR_BUILDING_LIGHTHOUSE_NEEDS_WORKERS, "Der Leuchtturm ist unterbesetzt und kann das Feuer nicht am Laufen halten. Schiffe haben Mühe, den Weg zu den Docks Ihrer Stadt zu finden."},
@@ -889,7 +887,6 @@ static translation_string all_strings[] = {
     {TR_BUILDING_GRAND_TEMPLE_PHASE_4_TEXT, "Die Arbeit am Praecinctum hat begonnen, wo Gläubige sich für öffentliche Zeremonien versammeln."},
     {TR_BUILDING_GRAND_TEMPLE_PHASE_5, "(Dedicatio)"},
     {TR_BUILDING_GRAND_TEMPLE_PHASE_5_TEXT, "Mit dem Tempel beinahe fertiggestellt, sammeln sich Priester um die Rieten der Tempelweihe durchzuführen. "},
-    {TR_BUILDING_GRAND_TEMPLE_CONSTRUCTION_DESC, "Der Bau eines Prachttempels benötigt in einem Lagerhaus gelagerte Waren, Arbeiter von einem Arbeiterlager und Baumeister von einer Baumeistergilde."},
     {TR_BUILDING_TEMPLE_MODULE_CONSTRUCTED, "Widmung zugewiesen."},
     {TR_REQUIRED_RESOURCES, "Gelieferte Ressourcen für aktuelle Phase:"},
     {TR_ADD_MODULE, "Tempel umwidmen?"},
@@ -950,7 +947,6 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Tempel der Venus"},
     {TR_BUILDING_LARGE_TEMPLE_PHASE_1, "(Konstruktion)"},
     {TR_BUILDING_LARGE_TEMPLE_PHASE_1_TEXT, "Steinmetze und Baumeister bauen sorgfältig dieses heilige Bauwerk aus schimmerndem Marmor."},
-    {TR_BUILDING_LARGE_TEMPLE_CONSTRUCTION_DESC, "Für den Bau dieses Tempels werden Material aus einem Lagerhaus, Arbeiter aus einem Arbeitslager und Baumeister aus einer Baumeistergilde benötigt."},
     /* Gebäude - Versorgungsposten */
     {TR_BUILDING_INFO_MONTHLY_LEVY, "/ Monat"},
     {TR_BUILDING_MESS_HALL, "Versorgungsposten"},
