@@ -104,6 +104,7 @@ void figure_play_hit_sound(figure_type type)
         case FIGURE_ENEMY50_SWORD:
         case FIGURE_ENEMY52_MOUNTED_ARCHER:
         case FIGURE_ENEMY54_GLADIATOR:
+        case FIGURE_MESS_HALL_COLLECTOR:
             if (city_sound_update_hit_soldier()) {
                 sound_effect_play(SOUND_EFFECT_SWORD_SWING);
             }
@@ -112,6 +113,7 @@ void figure_play_hit_sound(figure_type type)
         case FIGURE_TOWER_SENTRY:
         case FIGURE_WATCHMAN:
         case FIGURE_FORT_INFANTRY:
+        case FIGURE_FORT_ARCHER:
             if (city_sound_update_hit_soldier()) {
                 sound_effect_play(SOUND_EFFECT_LIGHT_SWORD);
             }
