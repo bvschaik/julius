@@ -383,8 +383,8 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     },
     [FIGURE_MESS_HALL_SUPPLIER] = {
     .category = FIGURE_CATEGORY_ARMED,
-    .max_damage = 50, .attack_value = 6, .defense_value = 0,
-    .missile_defense_value = 0, .missile_attack_value = 6, .missile_delay = 50
+    .max_damage = 70, .attack_value = 8, .defense_value = 0,
+    .missile_defense_value = 0, .missile_attack_value = 0, .missile_delay = 0
     },
     [FIGURE_MESS_HALL_COLLECTOR] = {
     .category = FIGURE_CATEGORY_CITIZEN,
