@@ -102,25 +102,28 @@ static const monument_type oracle = {
 };
 
 static const monument_type small_mausoleum = {
-    .phases    = 2,
+    .phases    = 3,
     .resources = {
-        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 2, [RESOURCE_CONCRETE] = 4, [RESOURCE_MARBLE] = 2 },
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 2, [RESOURCE_CONCRETE] = 4 },
+        { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 2 },
         { NOTHING }
     }
 };
 
 static const monument_type large_temple = {
-    .phases    = 2,
+    .phases    = 3,
     .resources = {
-        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 4, [RESOURCE_CONCRETE] = 4, [RESOURCE_MARBLE] = 2 },
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 4, [RESOURCE_CONCRETE] = 4 },
+        { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 2 },
         { NOTHING }
     }
 };
 
 static const monument_type nymphaeum = {
-    .phases    = 2,
+    .phases    = 3,
     .resources = {
-        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 12, [RESOURCE_CONCRETE] = 4, [RESOURCE_MARBLE] = 2 },
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 12, [RESOURCE_CONCRETE] = 4 },
+        { [ARCHITECTS] = 1, [RESOURCE_MARBLE] = 2 },
         { NOTHING }
     }
 };

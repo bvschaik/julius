@@ -353,6 +353,8 @@ int building_image_get(const building *b)
             switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Monuments", "Ceres_LT_0");
+                case 2:
+                    return assets_get_image_id("Monuments", "Ceres_LT_50");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_CERES) + 1;
             }
@@ -360,6 +362,8 @@ int building_image_get(const building *b)
             switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Monuments", "Neptune_LT_0");
+                case 2:
+                    return assets_get_image_id("Monuments", "Neptune_LT_50");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_NEPTUNE) + 1;
             }
@@ -367,6 +371,8 @@ int building_image_get(const building *b)
             switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Monuments", "Mercury_LT_0");
+                case 2:
+                    return assets_get_image_id("Monuments", "Mercury_LT_50");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_MERCURY) + 1;
             }
@@ -374,12 +380,16 @@ int building_image_get(const building *b)
             switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Monuments", "Mars_LT_0");
+                case 2:
+                    return assets_get_image_id("Monuments", "Mars_LT_50");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_MARS) + 1;
             }
         case BUILDING_LARGE_TEMPLE_VENUS:
             switch (b->monument.phase) {
                 case MONUMENT_START:
+                    return assets_get_image_id("Monuments", "Venus_LT_0");
+                case 2:
                     return assets_get_image_id("Monuments", "Venus_LT_0");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_VENUS) + 1;
@@ -769,13 +779,14 @@ int building_image_get(const building *b)
             int offset = building_variant_get_offset_with_rotation(b->type, b->variant);
             return image_id + offset;
         }
-        case BUILDING_SMALL_MAUSOLEUM:
+        case BUILDING_SMALL_MAUSOLEUM: {
+            int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
             switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Monuments", "Mausoleum_Small_Construction_01");
+                case 2:
+                    return assets_get_image_id("Monuments", "Mausoleum_Small_Construction_02") + orientation % 2;
                 default:
-                {
-                    int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
                     return assets_get_image_id("Monuments", "Mausoleum S") + orientation % 2;
                 }
             }
@@ -794,6 +805,8 @@ int building_image_get(const building *b)
             switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Monuments", "Pantheon_Const_00");
+                case 2:
+                    return assets_get_image_id("Monuments", "Nymphaeum_Construction_02");
                 default:
                     return assets_get_image_id("Monuments", "Nymphaeum ON");
             }
