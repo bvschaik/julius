@@ -278,6 +278,8 @@ int building_image_get(const building *b)
             switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Monuments", "City_Mint_Construction_01");
+                case 2:
+                    return assets_get_image_id("Monuments", "City_Mint_Construction_02");
                 default:
                     return building_variant_get_image_id_with_rotation(b->type, b->variant);
             }

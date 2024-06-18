@@ -537,43 +537,43 @@ void window_building_draw_chariot_maker(building_info_context *c)
 static void window_building_draw_monument_large_temple_construction_process(building_info_context *c)
 {
     window_building_draw_monument_construction_process(c, TR_BUILDING_LARGE_TEMPLE_PHASE_1,
-        TR_BUILDING_LARGE_TEMPLE_PHASE_1_TEXT, TR_BUILDING_LARGE_TEMPLE_CONSTRUCTION_DESC);
+        TR_BUILDING_LARGE_TEMPLE_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
 }
 
 static void window_building_draw_monument_oracle_construction_process(building_info_context *c)
 {
     window_building_draw_monument_construction_process(c, TR_BUILDING_ORACLE_PHASE_1,
-        TR_BUILDING_ORACLE_PHASE_1_TEXT, TR_BUILDING_ORACLE_CONSTRUCTION_DESC);
+        TR_BUILDING_ORACLE_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
 }
 
 static void window_building_draw_monument_nymphaeum_construction_process(building_info_context *c)
 {
     window_building_draw_monument_construction_process(c, TR_BUILDING_NYMPHAEUM_PHASE_1,
-        TR_BUILDING_NYMPHAEUM_PHASE_1_TEXT, TR_BUILDING_NYMPHAEUM_CONSTRUCTION_DESC);
+        TR_BUILDING_NYMPHAEUM_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
 }
 
 static void window_building_draw_monument_small_mausoleum_construction_process(building_info_context *c)
 {
     window_building_draw_monument_construction_process(c, TR_BUILDING_SMALL_MAUSOLEUM_PHASE_1,
-        TR_BUILDING_SMALL_MAUSOLEUM_PHASE_1_TEXT, TR_BUILDING_SMALL_MAUSOLEUM_CONSTRUCTION_DESC);
+        TR_BUILDING_SMALL_MAUSOLEUM_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
 }
 
 static void window_building_draw_monument_large_mausoleum_construction_process(building_info_context *c)
 {
     window_building_draw_monument_construction_process(c, TR_BUILDING_LARGE_MAUSOLEUM_PHASE_1,
-        TR_BUILDING_LARGE_MAUSOLEUM_PHASE_1_TEXT, TR_BUILDING_LARGE_MAUSOLEUM_CONSTRUCTION_DESC);
+        TR_BUILDING_LARGE_MAUSOLEUM_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
 }
 
 static void window_building_draw_monument_temple_construction_process(building_info_context *c)
 {
     window_building_draw_monument_construction_process(c, TR_BUILDING_GRAND_TEMPLE_PHASE_1,
-        TR_BUILDING_GRAND_TEMPLE_PHASE_1_TEXT, TR_BUILDING_GRAND_TEMPLE_CONSTRUCTION_DESC);
+        TR_BUILDING_GRAND_TEMPLE_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
 }
 
 static void window_building_draw_monument_lighthouse_construction_process(building_info_context *c)
 {
     window_building_draw_monument_construction_process(c, TR_BUILDING_LIGHTHOUSE_PHASE_1,
-        TR_BUILDING_LIGHTHOUSE_PHASE_1_TEXT, TR_BUILDING_LIGHTHOUSE_CONSTRUCTION_DESC);
+        TR_BUILDING_LIGHTHOUSE_PHASE_1_TEXT, TR_BUILDING_MONUMENT_CONSTRUCTION_DESC);
 }
 
 static void window_building_draw_monument_colosseum_construction_process(building_info_context *c)
