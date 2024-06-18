@@ -948,9 +948,9 @@ static translation_string all_strings[] = {
     {TR_BUILDING_SMALL_TEMPLE_MERCURY_NAME, "Tempel des Merkur"},
     {TR_BUILDING_SMALL_TEMPLE_MARS_NAME, "Tempel des Mars"},
     {TR_BUILDING_SMALL_TEMPLE_VENUS_NAME, "Tempel der Venus"},
-    {TR_BUILDING_SMALL_TEMPLE_PHASE_1, "(Konstruktion)"},
-    {TR_BUILDING_SMALL_TEMPLE_PHASE_1_TEXT, "Steinmetze und Baumeister bauen sorgfältig dieses heilige Bauwerk aus schimmerndem Marmor."},
-    {TR_BUILDING_SMALL_TEMPLE_CONSTRUCTION_DESC, "Für den Bau dieses Tempels werden Material aus einem Lagerhaus, Arbeiter aus einem Arbeitslager und Baumeister aus einer Baumeistergilde benötigt."},
+    {TR_BUILDING_LARGE_TEMPLE_PHASE_1, "(Konstruktion)"},
+    {TR_BUILDING_LARGE_TEMPLE_PHASE_1_TEXT, "Steinmetze und Baumeister bauen sorgfältig dieses heilige Bauwerk aus schimmerndem Marmor."},
+    {TR_BUILDING_LARGE_TEMPLE_CONSTRUCTION_DESC, "Für den Bau dieses Tempels werden Material aus einem Lagerhaus, Arbeiter aus einem Arbeitslager und Baumeister aus einer Baumeistergilde benötigt."},
     /* Gebäude - Versorgungsposten */
     {TR_BUILDING_INFO_MONTHLY_LEVY, "/ Monat"},
     {TR_BUILDING_MESS_HALL, "Versorgungsposten"},
