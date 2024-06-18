@@ -392,7 +392,7 @@ int building_image_get(const building *b)
                 case MONUMENT_START:
                     return assets_get_image_id("Monuments", "Venus_LT_0");
                 case 2:
-                    return assets_get_image_id("Monuments", "Venus_LT_0");
+                    return assets_get_image_id("Monuments", "Venus_LT_50");
                 default:
                     return image_group(GROUP_BUILDING_TEMPLE_VENUS) + 1;
             }

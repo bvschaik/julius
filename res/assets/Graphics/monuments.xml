@@ -587,15 +587,15 @@
 		<layer src="Construction_Part_Groma" x="84" y="22"/>
 		<layer src="Construction_Part_Cart" x="68" y="59"/>
 	</image>
-	<image id="Ceres_LT_25" width="178" height="159">
+	<image id="Ceres_LT_25" width="178" height="159" isometric="true">
 		<layer group="71" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Ceres_Temple_Construction_02" x="0" y="59"/>
 	</image>
-	<image id="Ceres_LT_50" width="178" height="159">
+	<image id="Ceres_LT_50" width="178" height="159" isometric="true">
 		<layer group="71" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Ceres_Temple_Construction_03" x="0" y="26"/>
 	</image>
-	<image id="Ceres_LT_75" width="178" height="159">
+	<image id="Ceres_LT_75" width="178" height="159" isometric="true">
 		<layer group="this" image="Ceres_LT_50" x="0" y="0"/>
 		<layer src="Ceres_Temple_Construction_04" x="44" y="8"/>
 	</image>
@@ -705,15 +705,15 @@
 		<layer src="Construction_Part_Pots_01" x="83" y="64"/>
 		<layer src="Construction_Part_Groma" x="84" y="22"/>
 	</image>
-	<image id="Mars_LT_25" width="178" height="148">
+	<image id="Mars_LT_25" width="178" height="148" isometric="true">
 		<layer group="74" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Mars_Temple_Construction_02" x="0" y="44"/>
 	</image>
-	<image id="Mars_LT_50" width="178" height="148">
+	<image id="Mars_LT_50" width="178" height="148" isometric="true">
 		<layer group="74" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Mars_Temple_Construction_03" x="0" y="27"/>
 	</image>
-	<image id="Mars_LT_75" width="178" height="148">
+	<image id="Mars_LT_75" width="178" height="148" isometric="true">
 		<layer group="this" image="Mars_LT_50" x="0" y="0"/>
 		<layer src="Mars_Temple_Construction_04" x="27" y="7"/>
 	</image>
@@ -820,15 +820,15 @@
 		<layer src="Mercury_Temple_Construction_01" x="0" y="0"/>
 		<layer src="Construction_Part_Pots_01" x="83" y="64"/>
 	</image>
-	<image id="Mercury_LT_25" width="178" height="148">
+	<image id="Mercury_LT_25" width="178" height="148" isometric="true">
 		<layer group="73" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Mercury_Temple_Construction_02" x="0" y="41"/>
 	</image>
-	<image id="Mercury_LT_50" width="178" height="148">
+	<image id="Mercury_LT_50" width="178" height="148" isometric="true">
 		<layer group="73" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Mercury_Temple_Construction_03" x="0" y="16"/>
 	</image>
-	<image id="Mercury_LT_75" width="178" height="148">
+	<image id="Mercury_LT_75" width="178" height="148" isometric="true">
 		<layer group="this" image="Mercury_LT_50" x="0" y="0"/>
 		<layer src="Mercury_Temple_Construction_04" x="51" y="8"/>
 	</image>
@@ -921,17 +921,17 @@
 		<layer src="Neptune_Temple_Construction_01" x="0" y="0"/>
 		<layer src="Construction_Part_Pots_01" x="83" y="64"/>
 	</image>
-	<image id="Neptune_LT_25" width="178" height="154">
+	<image id="Neptune_LT_25" width="178" height="154" isometric="true">
 		<layer group="72" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Neptune_Temple_Ponds_Off" x="21" y="55"/>
 		<layer src="Neptune_Temple_Construction_02" x="0" y="50"/>
 	</image>
-	<image id="Neptune_LT_50" width="178" height="154">
+	<image id="Neptune_LT_50" width="178" height="154" isometric="true">
 		<layer group="72" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Neptune_Temple_Ponds_Off" x="21" y="55"/>
 		<layer src="Neptune_Temple_Construction_03" x="0" y="29"/>
 	</image>
-	<image id="Neptune_LT_75" width="178" height="154">
+	<image id="Neptune_LT_75" width="178" height="154" isometric="true">
 		<layer group="72" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Neptune_Temple_Ponds_Off" x="21" y="55"/>
 		<layer src="Neptune_Temple_Construction_04" x="0" y="8"/>
@@ -1156,15 +1156,15 @@
 		<layer src="Venus_Temple_Construction_01" x="0" y="0"/>
 		<layer src="Construction_Part_Pots_01" x="68" y="59"/>
 	</image>
-	<image id="Venus_LT_25" width="178" height="142">
+	<image id="Venus_LT_25" width="178" height="142" isometric="true">
 		<layer group="75" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Venus_Temple_Construction_02" x="0" y="34"/>
 	</image>
-	<image id="Venus_LT_50" width="178" height="142">
+	<image id="Venus_LT_50" width="178" height="142" isometric="true">
 		<layer group="75" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Venus_Temple_Construction_03" x="0" y="20"/>
 	</image>
-	<image id="Venus_LT_75" width="178" height="142">
+	<image id="Venus_LT_75" width="178" height="142" isometric="true">
 		<layer group="75" image="1" part="footprint" x="0" y="0"/>
 		<layer src="Venus_Temple_Construction_04" x="0" y="0"/>
 	</image>
