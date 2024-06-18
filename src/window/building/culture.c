@@ -649,10 +649,12 @@ void window_building_draw_oracle(building_info_context *c)
         window_building_play_sound(c, "wavs/oracle.wav");
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         lang_text_draw_centered(110, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
-        window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 248, 110, 1);
+        window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 148, 110, 1);
         inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 152);
         window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
+        text_draw_multiline(translation_for(TR_BUILDING_ORACLE_DESC),
+            c->x_offset + 32, c->y_offset + 56, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         lang_text_draw_centered(110, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
@@ -1310,10 +1312,11 @@ void window_building_draw_nymphaeum(building_info_context *c)
         text_draw_centered(translation_for(TR_BUILDING_NYMPHAEUM),
             c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
         text_draw_multiline(translation_for(TR_BUILDING_NYMPHAEUM_DESC),
-            c->x_offset + 22, c->y_offset + 56, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
+            c->x_offset + 32, c->y_offset + 56, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
         inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
         window_building_draw_employment(c, 152);
         window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
+        window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 148, 110, 1);
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         text_draw_centered(translation_for(TR_BUILDING_NYMPHAEUM),
