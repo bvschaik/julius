@@ -643,7 +643,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_LARGE_MAUSOLEUM_PHASE_1, "Θόλος" },
     {TR_BUILDING_LARGE_MAUSOLEUM_PHASE_2, "Πρόσοψη" },
     {TR_BUILDING_LARGE_MAUSOLEUM_PHASE_1_TEXT, "Οι κτίστες τοποθετούν στρώσεις από ακριβώς λαξευμένες πέτρες για να σχηματίσουν τον κεντρικό θόλο αυτού του μαυσωλείου." },
-    {TR_BUILDING_LARGE_MAUSOLEUM_PHASE_2_TEXT, "Ειδικευμένοι τεχνίτες προετοιμάζουν την πρόσοψη αυτού του μαυσωλείου, σμιλεύοντας αστραφτερά μαρμάρινα αγάλματα για να μνημονεύσουν εκείνους που θα αναπαυθούν εδώ." },,
+    {TR_BUILDING_LARGE_MAUSOLEUM_PHASE_2_TEXT, "Ειδικευμένοι τεχνίτες προετοιμάζουν την πρόσοψη αυτού του μαυσωλείου, σμιλεύοντας αστραφτερά μαρμάρινα αγάλματα για να μνημονεύσουν εκείνους που θα αναπαυθούν εδώ." },
 	{TR_FIGURE_TYPE_WATCHMAN, "Φύλακας" },
     {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "Αυτός ο ναός θα συλλέγει τρόφιμα για το σταθμό ανεφοδιασμού σας, μόλις αυτός κατασκευαστεί." },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MAINTENANCE, "Εναλλαγή πρόσβασης των νομαρχών και των μηχανικών" },
