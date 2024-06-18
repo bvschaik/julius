@@ -596,7 +596,7 @@ int building_warehouse_with_resource(int x, int y, int resource, int road_networ
         }
         if (loads_stored > 0) {
             int dist = calc_maximum_distance(b->x, b->y, x, y);
-            dist -= 4 * loads_stored;
+            dist -= 2 * loads_stored;
             if (dist < min_dist) {
                 min_dist = dist;
                 min_building = b;
