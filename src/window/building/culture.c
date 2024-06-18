@@ -540,6 +540,12 @@ static void window_building_draw_monument_small_temple_construction_process(buil
         TR_BUILDING_SMALL_TEMPLE_PHASE_1_TEXT, TR_BUILDING_SMALL_TEMPLE_CONSTRUCTION_DESC);
 }
 
+static void window_building_draw_monument_oracle_construction_process(building_info_context *c)
+{
+    window_building_draw_monument_construction_process(c, TR_BUILDING_ORACLE_PHASE_1,
+        TR_BUILDING_ORACLE_PHASE_1_TEXT, TR_BUILDING_ORACLE_CONSTRUCTION_DESC);
+}
+
 static void window_building_draw_monument_large_mausoleum_construction_process(building_info_context *c)
 {
     window_building_draw_monument_construction_process(c, TR_BUILDING_LARGE_MAUSOLEUM_PHASE_1,
@@ -627,7 +633,7 @@ void window_building_draw_oracle(building_info_context *c)
 {
     c->help_id = 67;
     building *b = building_get(c->building_id);
-    if (b->monument.phase <= 0) {
+    if (b->monument.phase == MONUMENT_FINISHED) {
         window_building_play_sound(c, "wavs/oracle.wav");
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         lang_text_draw_centered(110, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
@@ -638,7 +644,7 @@ void window_building_draw_oracle(building_info_context *c)
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         lang_text_draw_centered(110, 0, c->x_offset, c->y_offset + 12, 16 * c->width_blocks, FONT_LARGE_BLACK);
-        window_building_draw_monument_small_temple_construction_process(c);
+        window_building_draw_monument_oracle_construction_process(c);
     }
 }
 

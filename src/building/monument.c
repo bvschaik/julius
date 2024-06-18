@@ -93,9 +93,10 @@ static const monument_type hippodrome = {
 };
 
 static const monument_type oracle = {
-    .phases    = 2,
+    .phases    = 3,
     .resources = {
         { [ARCHITECTS] = 1, [RESOURCE_CONCRETE] = 2, [RESOURCE_MARBLE] = 2 },
+        { [ARCHITECTS] = 1 },
         { NOTHING }
     }
 };

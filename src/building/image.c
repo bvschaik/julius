@@ -388,6 +388,8 @@ int building_image_get(const building *b)
             switch (b->monument.phase) {
                 case MONUMENT_START:
                     return assets_get_image_id("Monuments", "Oracle_Construction_01");
+                case 2:
+                    return assets_get_image_id("Monuments", "Oracle_Construction_02");
                 default:
                     return image_group(GROUP_BUILDING_ORACLE);
             }
