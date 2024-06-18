@@ -46,8 +46,8 @@
 	<image id="Venus M Icon" src="Venus_Temple_Complex_Module_Banner"/>
 	<image id="Venus M2 Icon" src="Venus_Temple_Complex_Module2_Banner"/>
 	<!-- Note: Banner images for Construction Sites -->
-	<image id="Const. Banner 01" src="Construction_Banner_01"/>
-	<image id="Const. Banner 02" src="Construction_Banner_02"/>
+	<image id="Construction_Banner_01" src="Construction_Banner_01"/>
+	<image id="Construction_Banner_02" src="Construction_Banner_02"/>
 	<!-- Note: Banner with Augustus Logo for Main Menu  -->
 	<image id="Main Menu Banner" src="Augustus_Main_Menu_Banner_Sml"/>
 	<!-- Note: Border for Campaign Map Selection Screen  -->
