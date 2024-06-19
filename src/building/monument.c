@@ -149,8 +149,8 @@ static const monument_type caravanserai = {
 static const monument_type city_mint = {
     .phases    = 3,
     .resources = {
-        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 8, [RESOURCE_TIMBER] = 4 },
-        { [ARCHITECTS] = 1, [RESOURCE_BRICKS] = 4, [RESOURCE_IRON] = 4 },
+        { [ARCHITECTS] = 1, [RESOURCE_STONE] = 8 },
+        { [ARCHITECTS] = 1, [RESOURCE_BRICKS] = 4, [RESOURCE_IRON] = 4, [RESOURCE_TIMBER] = 4 },
         { NOTHING }
     }
 };
