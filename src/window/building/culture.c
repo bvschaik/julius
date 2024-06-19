@@ -627,7 +627,7 @@ static void draw_temple(building_info_context *c, const char *sound_file, int gr
 {
     c->help_id = 67;
     building *b = building_get(c->building_id);
-    if (b->monument.phase == MONUMENT_FINISHED) {
+    if (b->monument.phase <= 0) {
         window_building_play_sound(c, sound_file);
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
@@ -669,7 +669,8 @@ void window_building_draw_lararium(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_LARARIUM),
         c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 68, c->y_offset + 16);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
     window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_LARARIUM_DESC);
 }
 
@@ -700,7 +701,8 @@ void window_building_draw_shrine(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(name),
         c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
-    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 68, c->y_offset + 16);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
     window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_SHRINE_DESC);
 }
 
@@ -1335,10 +1337,12 @@ void window_building_draw_small_mausoleum(building_info_context *c)
         text_draw_centered(translation_for(TR_BUILDING_SMALL_MAUSOLEUM),
             c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
         text_draw_multiline(translation_for(TR_BUILDING_SMALL_MAUSOLEUM_DESC),
-            c->x_offset + 22, c->y_offset + 56, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
-        inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
-        window_building_draw_employment(c, 152);
-        window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
+            c->x_offset + 32, c->y_offset + 56, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 156, c->width_blocks - 2, 4);
+        window_building_draw_employment(c, 162);
+        window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 164);
+        text_draw_multiline(translation_for(TR_BUILDING_BOTH_MAUSOLEUM_DESC),
+            c->x_offset + 32, c->y_offset + 246, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         text_draw_centered(translation_for(TR_BUILDING_SMALL_MAUSOLEUM),
@@ -1357,10 +1361,12 @@ void window_building_draw_large_mausoleum(building_info_context *c)
         text_draw_centered(translation_for(TR_BUILDING_LARGE_MAUSOLEUM),
             c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
         text_draw_multiline(translation_for(TR_BUILDING_LARGE_MAUSOLEUM_DESC),
-            c->x_offset + 22, c->y_offset + 56, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
-        inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
-        window_building_draw_employment(c, 152);
-        window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
+            c->x_offset + 32, c->y_offset + 56, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
+        inner_panel_draw(c->x_offset + 16, c->y_offset + 156, c->width_blocks - 2, 4);
+        window_building_draw_employment(c, 162);
+        window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 164);
+        text_draw_multiline(translation_for(TR_BUILDING_BOTH_MAUSOLEUM_DESC),
+            c->x_offset + 32, c->y_offset + 246, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
     } else {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         text_draw_centered(translation_for(TR_BUILDING_LARGE_MAUSOLEUM),
