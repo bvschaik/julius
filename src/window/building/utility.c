@@ -316,6 +316,7 @@ void window_building_draw_fountain(building_info_context *c)
     }
     window_building_draw_description(c, 108, text_id);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 166, c->width_blocks - 2, 4);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 174);
     window_building_draw_employment_without_house_cover(c, 172);
 }
 
@@ -337,6 +338,8 @@ void window_building_draw_well(building_info_context *c)
     if (text_id) {
         window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 160, 109, text_id);
     }
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 116, c->width_blocks - 2, 4);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 124);
 }
 
 void window_building_draw_mission_post(building_info_context *c)

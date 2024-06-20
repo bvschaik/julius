@@ -1036,7 +1036,7 @@ void window_building_draw_warehouse(building_info_context *c)
         window_building_draw_description(c, 69, 25);
     } else {
         if (data.stored_resources.size == 0) {
-            lang_text_draw_centered(CUSTOM_TRANSLATION, TR_BUILDING_WAREHOUSE_NO_GOODS, c->x_offset, c->y_offset + 63,
+            lang_text_draw_centered(CUSTOM_TRANSLATION, TR_BUILDING_WAREHOUSE_NO_GOODS, c->x_offset, c->y_offset + 54,
                 BLOCK_SIZE * c->width_blocks, FONT_NORMAL_BLACK);
         } else {
             int total_stored = 0;

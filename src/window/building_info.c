@@ -151,7 +151,6 @@ static int get_height_id(void)
             case BUILDING_OBELISK:
             case BUILDING_HEDGE_DARK:
             case BUILDING_HEDGE_LIGHT:
-            case BUILDING_LARARIUM:
             case BUILDING_COLONNADE:
             case BUILDING_GARDEN_PATH:
             case BUILDING_WATCHTOWER:
@@ -182,6 +181,7 @@ static int get_height_id(void)
                 return 3;
 
             case BUILDING_WELL:
+            case BUILDING_LARARIUM:
                 return 4;
 
             case BUILDING_TAVERN:
@@ -738,9 +738,16 @@ static void draw_background(void)
             window_building_draw_palisade(&context);
         } else if (btype == BUILDING_PALISADE_GATE) {
             window_building_draw_palisade_gate(&context);
-        } else if (btype == BUILDING_SHRINE_CERES || btype == BUILDING_SHRINE_MARS || btype == BUILDING_SHRINE_MERCURY ||
-            btype == BUILDING_SHRINE_NEPTUNE || btype == BUILDING_SHRINE_VENUS) {
-            window_building_draw_shrine(&context);
+        } else if (btype == BUILDING_SHRINE_CERES) {
+            window_building_draw_shrine_ceres(&context);
+        } else if (btype == BUILDING_SHRINE_NEPTUNE) {
+            window_building_draw_shrine_neptune(&context);
+        } else if (btype == BUILDING_SHRINE_MERCURY) {
+            window_building_draw_shrine_mercury(&context);
+        } else if (btype == BUILDING_SHRINE_MARS) {
+            window_building_draw_shrine_mars(&context);
+        } else if (btype == BUILDING_SHRINE_VENUS) {
+            window_building_draw_shrine_venus(&context);
         } else if (btype == BUILDING_ARMOURY) {
             window_building_draw_armoury(&context);
         }

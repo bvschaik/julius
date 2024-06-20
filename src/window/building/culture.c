@@ -669,43 +669,75 @@ void window_building_draw_lararium(building_info_context *c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     text_draw_centered(translation_for(TR_BUILDING_LARARIUM),
         c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
-    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
-    window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_LARARIUM_DESC);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 116, c->width_blocks - 2, 4);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 124);
+    window_building_draw_description_at(c, 56, CUSTOM_TRANSLATION, TR_WINDOW_BUILDING_LARARIUM_DESC);
 }
 
-void window_building_draw_shrine(building_info_context *c)
+void window_building_draw_shrine_ceres(building_info_context *c)
 {
     c->help_id = 67;
-    building_type type = building_get(c->building_id)->type;
-    translation_key name;
-    switch (type) {
-        case BUILDING_SHRINE_CERES:
-            name = TR_BUILDING_SHRINE_CERES;
-            break;
-        case BUILDING_SHRINE_NEPTUNE:
-            name = TR_BUILDING_SHRINE_NEPTUNE;
-            break;
-        case BUILDING_SHRINE_MERCURY:
-            name = TR_BUILDING_SHRINE_MERCURY;
-            break;
-        case BUILDING_SHRINE_MARS:
-            name = TR_BUILDING_SHRINE_MARS;
-            break;
-        case BUILDING_SHRINE_VENUS:
-        default:
-            name = TR_BUILDING_SHRINE_VENUS;
-            break;
-    }
-    window_building_play_sound(c, "wavs/oracle.wav");
+    window_building_play_sound(c, "wavs/temple_farm.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
-    text_draw_centered(translation_for(name),
+    text_draw_centered(translation_for(TR_BUILDING_SHRINE_CERES),
         c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
     window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
-    window_building_draw_description_at(c, 96, CUSTOM_TRANSLATION, TR_BUILDING_SHRINE_DESC);
+    image_draw(21 + image_group(GROUP_PANEL_WINDOWS),
+        c->x_offset + 180, c->y_offset + 45, COLOR_MASK_NONE, SCALE_NONE);
 }
 
+void window_building_draw_shrine_neptune(building_info_context *c)
+{
+    c->help_id = 67;
+    window_building_play_sound(c, "wavs/temple_ship.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    text_draw_centered(translation_for(TR_BUILDING_SHRINE_NEPTUNE),
+        c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
+    image_draw(22 + image_group(GROUP_PANEL_WINDOWS),
+        c->x_offset + 180, c->y_offset + 45, COLOR_MASK_NONE, SCALE_NONE);
+}
+
+void window_building_draw_shrine_mercury(building_info_context *c)
+{
+    c->help_id = 67;
+    window_building_play_sound(c, "wavs/temple_comm.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    text_draw_centered(translation_for(TR_BUILDING_SHRINE_MERCURY),
+        c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
+    image_draw(23 + image_group(GROUP_PANEL_WINDOWS),
+        c->x_offset + 180, c->y_offset + 45, COLOR_MASK_NONE, SCALE_NONE);
+}
+
+void window_building_draw_shrine_mars(building_info_context *c)
+{
+    c->help_id = 67;
+    window_building_play_sound(c, "wavs/temple_war.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    text_draw_centered(translation_for(TR_BUILDING_SHRINE_MARS),
+        c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
+    image_draw(24 + image_group(GROUP_PANEL_WINDOWS),
+        c->x_offset + 180, c->y_offset + 45, COLOR_MASK_NONE, SCALE_NONE);
+}
+
+void window_building_draw_shrine_venus(building_info_context *c)
+{
+    c->help_id = 67;
+    window_building_play_sound(c, "wavs/temple_love.wav");
+    outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
+    text_draw_centered(translation_for(TR_BUILDING_SHRINE_VENUS),
+        c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 146, c->width_blocks - 2, 4);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 154);
+    image_draw(25 + image_group(GROUP_PANEL_WINDOWS),
+        c->x_offset + 180, c->y_offset + 45, COLOR_MASK_NONE, SCALE_NONE);
+}
 
 static void draw_grand_temple(building_info_context *c, const char *sound_file,
     int name, int bonus_desc, int banner_id, int quote, int temple_god_id, int extra_y)

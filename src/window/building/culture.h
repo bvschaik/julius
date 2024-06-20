@@ -33,7 +33,15 @@ void window_building_draw_oracle(building_info_context *c);
 
 void window_building_draw_lararium(building_info_context* c);
 
-void window_building_draw_shrine(building_info_context *c);
+void window_building_draw_shrine_ceres(building_info_context *c);
+
+void window_building_draw_shrine_neptune(building_info_context *c);
+
+void window_building_draw_shrine_mercury(building_info_context *c);
+
+void window_building_draw_shrine_mars(building_info_context *c);
+
+void window_building_draw_shrine_venus(building_info_context *c);
 
 void window_building_draw_theater(building_info_context *c);
 
