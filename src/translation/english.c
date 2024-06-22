@@ -1503,7 +1503,9 @@ static translation_string all_strings[] = {
     {TR_USER_DIRECTORIES_USER_PATH_CHANGED_TITLE, "User path changed"},
     {TR_USER_DIRECTORIES_USER_PATH_CHANGED_TEXT, "The user path was successfully changed.\nDo you want to copy over your files?"},
     {TR_USER_DIRECTORIES_USER_PATH_CHANGED_OVERWRITE, "Overwrite existing files"},
-    {TR_FIGURE_TYPE_ARMORY_CARTPUSHER, "Armory deliveryman"}
+    {TR_FIGURE_TYPE_ARMORY_CARTPUSHER, "Armory deliveryman"},
+    {TR_BUILDING_MILITARY_ADVISOR_GOTO, "Visit your Military Advisor?" },
+    {TR_BUILDING_FINANCIAL_ADVISOR_GOTO, "Visit your Financial Advisor?" },
 
 };
 

@@ -277,19 +277,26 @@ void window_building_draw_military_academy(building_info_context *c)
 
 void window_building_draw_fort(building_info_context *c)
 {
+    c->can_go_to_military_advisor_fort = 1;
     c->help_id = 87;
     window_building_play_sound(c, "wavs/fort.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(89, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     int text_id = formation_get(c->formation_id)->cursed_by_mars ? 1 : 2;
-    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 208, 89, text_id);
+    window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 388, 89, text_id);
 
     building *b = building_get(c->building_id);
-    inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
-    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 142);
+    inner_panel_draw(c->x_offset + 16, c->y_offset + 116, c->width_blocks - 2, 4);
+    window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 122);
     if (building_get_levy(b)) {
-        window_building_draw_levy(building_get_levy(b), c->x_offset + 56, c->y_offset + 150);
+        window_building_draw_levy(building_get_levy(b), c->x_offset + 56, c->y_offset + 130);
     }
+    image_draw(assets_get_image_id("UI", "Fort_Banner_01"),
+        c->x_offset + 37, c->y_offset + 195, COLOR_MASK_NONE, SCALE_NONE);
+    image_draw_border(assets_get_image_id("UI", "Large_Banner_Border"),
+        c->x_offset + 32, c->y_offset + 190 , COLOR_MASK_NONE);
+    text_draw_multiline(translation_for(TR_BUILDING_MILITARY_ADVISOR_GOTO),
+        c->x_offset + 80, c->y_offset + 410, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
 }
 
 void window_building_draw_legion_info(building_info_context *c)

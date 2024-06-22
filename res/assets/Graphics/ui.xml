@@ -915,4 +915,6 @@
 	</image>
 	<!-- Note: Banner image for Forts -->
 	<image id="Fort_Banner_01" src="Fort_Banner_01"/>
+	<!-- Note: Banner image for Triumphal arch -->
+	<image id="Triumphal_Arch_Banner" src="Triumphal_Arch_Banner"/>
 </assetlist>

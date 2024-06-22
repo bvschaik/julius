@@ -64,6 +64,14 @@ static image_button image_buttons_advisor[] = {
     {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 9, button_advisor, button_none, ADVISOR_RATINGS, 0, 1}
 };
 
+static image_button image_buttons_military_advisor[] = {
+    {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 3, button_advisor, button_none, ADVISOR_MILITARY, 0, 1}
+};
+
+static image_button image_buttons_financial_advisor[] = {
+    {350, -38, 28, 28, IB_NORMAL, GROUP_MESSAGE_ADVISOR_BUTTONS, 30, button_advisor, button_none, ADVISOR_FINANCIAL, 0, 1}
+};
+
 static image_button image_button_mothball[] = {
     {400, 3, 24, 24, IB_NORMAL, 0, 0, button_mothball, button_none, 0, 0, 1, "UI", "Mothball_1"},
     {400, 3, 24, 24, IB_NORMAL, 0, 0, button_mothball, button_none, 0, 0, 1, "UI", "Unmothball_1"}
@@ -135,7 +143,6 @@ static int get_height_id(void)
             case BUILDING_ENGINEERS_POST:
             case BUILDING_GATEHOUSE:
             case BUILDING_TOWER:
-            case BUILDING_FORT:
             case BUILDING_MILITARY_ACADEMY:
             case BUILDING_MARKET:
             case BUILDING_SHIPYARD:
@@ -197,6 +204,7 @@ static int get_height_id(void)
             case BUILDING_LARGE_TEMPLE_VENUS:
             case BUILDING_SMALL_MAUSOLEUM:
             case BUILDING_LARGE_MAUSOLEUM:
+            case BUILDING_TRIUMPHAL_ARCH:
                 return 5;
 
             case BUILDING_DOCK:
@@ -220,6 +228,9 @@ static int get_height_id(void)
 
             case BUILDING_GRAND_TEMPLE_MARS:
                 return 10;
+
+            case BUILDING_FORT:
+                return 11;
 
             default:
                 return 0;
@@ -270,7 +281,10 @@ static void init(int grid_offset)
     context.depot_selection.destination = 0;
     context.depot_selection.source = 0;
     context.depot_selection.resource = 0;
-    context.can_go_to_advisor = 0;
+    context.can_go_to_ratings_advisor_senate = 0;
+    context.can_go_to_military_advisor_fort = 0;
+    context.can_go_to_financial_advisor_forum = 0;
+    context.can_go_to_financial_advisor_senate = 0;
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
     context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE);
@@ -455,6 +469,7 @@ static void init(int grid_offset)
         case 7: context.height_blocks = 26; break;
         case 8: context.height_blocks = 40; context.width_blocks = 30; break;
         case 10: context.height_blocks = 47; context.width_blocks = 30; break;
+        case 11: context.height_blocks = 28; break;
         default: context.height_blocks = 22; break;
     }
     if (screen_height() <= 600) {
@@ -875,9 +890,21 @@ static void draw_foreground(void)
         image_buttons_draw(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
             image_buttons_help_close, 2);
     }
-    if (context.can_go_to_advisor) {
+    if (context.can_go_to_ratings_advisor_senate) {
         image_buttons_draw(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
             image_buttons_advisor, 1);
+    }
+    if (context.can_go_to_military_advisor_fort) {
+        image_buttons_draw(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 10,
+            image_buttons_military_advisor, 1);
+    }
+    if (context.can_go_to_financial_advisor_forum) {
+        image_buttons_draw(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 10,
+            image_buttons_financial_advisor, 1);
+    }
+    if (context.can_go_to_financial_advisor_senate) {
+        image_buttons_draw(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 10,
+            image_buttons_financial_advisor, 1);
     }
     if (!context.show_special_orders &&
         !context.depot_selection.source &&
@@ -1012,10 +1039,25 @@ static void handle_input(const mouse *m, const hotkeys *h)
             }
         }
     }
-    if (context.can_go_to_advisor) {
+    if (context.can_go_to_ratings_advisor_senate) {
         handled |= image_buttons_handle_mouse(
             m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
             image_buttons_advisor, 1, 0);
+    }
+    if (context.can_go_to_military_advisor_fort) {
+        handled |= image_buttons_handle_mouse(
+            m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 10,
+            image_buttons_military_advisor, 1, 0);
+    }
+    if (context.can_go_to_financial_advisor_forum) {
+        handled |= image_buttons_handle_mouse(
+            m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 10,
+            image_buttons_financial_advisor, 1, 0);
+    }
+    if (context.can_go_to_financial_advisor_senate) {
+        handled |= image_buttons_handle_mouse(
+            m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 10,
+            image_buttons_financial_advisor, 1, 0);
     }
 
     if (!handled) {
