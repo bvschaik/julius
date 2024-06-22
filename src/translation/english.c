@@ -665,6 +665,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_BOTH_MAUSOLEUM_DESC, "This mausoleum pleases all the gods, though it is not desirable to nearby houses. Such burial places improve sanitary conditions in the city, raising the overall health of your citizens." },
     {TR_FIGURE_TYPE_WATCHMAN, "Watchman" },
     {TR_BUILDING_MARS_TEMPLE_MODULE_DESC_NO_MESS, "This temple will collect food for your supply post, once one is constructed." },
+    {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION, "Walker permissions" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MAINTENANCE, "Toggle prefects and engineers access" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_PRIEST, "Toggle priests access" },
     {TR_TOOLTIP_BUTTON_ROADBLOCK_PERMISSION_MARKET, "Toggle market supplier access" },
