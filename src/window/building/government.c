@@ -144,10 +144,6 @@ void window_building_draw_triumphal_arch(building_info_context* c)
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(80, 2, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
     window_building_draw_description_at(c, BLOCK_SIZE * c->height_blocks - 328, 80, 3);
-    image_draw(assets_get_image_id("UI", "Triumphal_Arch_Banner"),
-        c->x_offset + 37, c->y_offset + 125, COLOR_MASK_NONE, SCALE_NONE);
-    image_draw_border(assets_get_image_id("UI", "Large_Banner_Border"),
-        c->x_offset + 32, c->y_offset + 120 , COLOR_MASK_NONE);
 }
 
 void window_building_draw_pond(building_info_context * c)
