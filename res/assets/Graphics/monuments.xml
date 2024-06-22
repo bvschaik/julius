@@ -918,7 +918,12 @@
 	<image id="Neptune_LT_0" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
-		<layer src="Neptune_Temple_Construction_01" x="0" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="88" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="174" y="43"/>
+		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="44"/>
+		<layer group="this" image="Construction_Part_Pillar_B" x="87" y="87"/>
+		<layer src="Neptune_Temple_Construction_01" x="47" y="40"/>
+		<layer src="Construction_Part_Groma" x="84" y="22"/>
 		<layer src="Construction_Part_Pots_01" x="83" y="64"/>
 	</image>
 	<image id="Neptune_LT_25" width="178" height="154" isometric="true">
@@ -1052,7 +1057,7 @@
 		<layer src="Neptune_Temple_Complex_Module_05" x="50" y="47"/>
 	</image>
 	<!-- Note: Neptune Complex Module2 Animation OFF (Fountain OFF) -->
-	<image id="Neptune Complex Off" width="418" height="231" isometric="true">
+	<image id="Neptune Complex Module 2 Off" width="418" height="231" isometric="true">
 		<layer group="this" image="Neptune Complex Off" x="0" y="0"/>
 		<layer src="Neptune_Temple_Complex_Module_OFF" x="98" y="27"/>
 	</image>
@@ -1153,7 +1158,12 @@
 	<image id="Venus_LT_0" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
-		<layer src="Venus_Temple_Construction_01" x="0" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="88" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="174" y="43"/>
+		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="44"/>
+		<layer group="this" image="Construction_Part_Pillar_B" x="87" y="87"/>
+		<layer src="Venus_Temple_Construction_01" x="36" y="41"/>
+		<layer src="Construction_Part_Groma" x="84" y="22"/>
 		<layer src="Construction_Part_Pots_01" x="68" y="59"/>
 	</image>
 	<image id="Venus_LT_25" width="178" height="142" isometric="true">
@@ -1284,7 +1294,12 @@
 	<image id="Mausoleum L Cons" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
-		<layer src="Mausoleum_Large_Construction_01" x="0" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="88" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="174" y="43"/>
+		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="44"/>
+		<layer group="this" image="Construction_Part_Pillar_B" x="87" y="87"/>
+		<layer src="Mausoleum_Large_Construction_01" x="69" y="17"/>
+		<layer src="Construction_Part_Groma" x="88" y="43"/>
 		<layer src="Construction_Part_Cart" x="41" y="41"/>
 		<layer src="Construction_Part_Pots_01" x="116" y="40"/>
 	</image>
@@ -1375,13 +1390,18 @@
 	<image id="Triumphal_Arch_Construction_01" width="178" height="99" isometric="true">
 		<layer group="this" image="3x3_Construction_Footprint" x="0" y="9"/>
 		<layer src="3x3_Construction_Borders" x="0" y="9"/>
+		<layer group="this" image="Construction_Part_Pillar" x="88" y="0"/>
+		<layer group="this" image="Construction_Part_Pillar" x="174" y="43"/>
+		<layer group="this" image="Construction_Part_Pillar_L" x="1" y="44"/>
+		<layer group="this" image="Construction_Part_Pillar_B" x="87" y="87"/>
 		<layer group="112" image="0" x="51" y="43"/>
 		<layer group="112" image="0" x="30" y="54"/>
 		<layer group="112" image="0" x="63" y="37"/>
 		<layer group="112" image="0" x="91" y="23"/>
 		<layer group="this" image="Construction_Part_TimberPad" x="91" y="52"/>
 		<layer group="this" image="Construction_Part_TimberPad" x="34" y="22"/>
-		<layer src="Triumphal_Arch_Construction_01" x="0" y="0"/>
+		<layer src="Triumphal_Arch_Construction_01" x="16" y="22"/>
+		<layer src="Construction_Part_Groma" x="86" y="15"/>
 		<layer src="Construction_Part_Cart" x="132" y="38"/>
 	</image>
 	<image id="Triumphal_Arch_Construction_01_R" width="178" height="99" isometric="true">

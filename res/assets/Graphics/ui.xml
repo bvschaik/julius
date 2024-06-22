@@ -913,4 +913,6 @@
 		<layer group="this" image="Formation_UI_Helmet" x="29" y="49"/>
 		<layer group="this" image="Formation_UI_Helmet" x="49" y="49"/>
 	</image>
+	<!-- Note: Banner image for Forts -->
+	<image id="Fort_Banner_01" src="Fort_Banner_01"/>
 </assetlist>
