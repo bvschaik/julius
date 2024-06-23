@@ -640,3 +640,12 @@ int scenario_action_type_major_curse_execute(scenario_action_t *action)
 
     return 1;
 }
+
+int scenario_action_type_change_climate_execute(scenario_action_t *action)
+{
+    int climate = action->parameter1;
+
+    scenario_change_climate(climate);
+
+    return 1;
+}

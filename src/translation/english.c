@@ -1133,6 +1133,7 @@ static translation_string all_strings[] = {
     {TR_PARAMETER_TYPE_TARGET_TYPE, "Target type"},
     {TR_PARAMETER_TYPE_ENEMY_TYPE, "Enemy type"},
     {TR_PARAMETER_TYPE_GOD, "God" },
+    {TR_PARAMETER_TYPE_CLIMATE, "Climate" },
     {TR_CONDITION_TYPE_TIME_PASSED, "Time passed"},
     {TR_CONDITION_TYPE_DIFFICULTY, "Difficulty"},
     {TR_CONDITION_TYPE_MONEY, "City money"},
@@ -1189,6 +1190,7 @@ static translation_string all_strings[] = {
     {TR_ACTION_TYPE_CAUSE_BLESSING, "Cause a blessing" },
     {TR_ACTION_TYPE_CAUSE_MINOR_CURSE, "Cause a minor curse" },
     {TR_ACTION_TYPE_CAUSE_MAJOR_CURSE, "Cause a major curse" },
+    {TR_ACTION_TYPE_CHANGE_CLIMATE, "Change climate" },
     {TR_PARAMETER_VALUE_COMPARISON_TYPE_EQUAL, "Equal"},
     {TR_PARAMETER_VALUE_COMPARISON_TYPE_EQUAL_OR_LESS, "Less than or equal"},
     {TR_PARAMETER_VALUE_COMPARISON_TYPE_EQUAL_OR_MORE, "Greater than or equal"},
@@ -1329,6 +1331,9 @@ static translation_string all_strings[] = {
     {TR_PARAMETER_VALUE_GOD_MERCURY, "Mercury"},
     {TR_PARAMETER_VALUE_GOD_NEPTUNE, "Neptune"},
     {TR_PARAMETER_VALUE_GOD_VENUS, "Venus"},
+    {TR_PARAMETER_VALUE_CLIMATE_CENTRAL, "Central" },
+    {TR_PARAMETER_VALUE_CLIMATE_NORTHERN, "Northern" },
+    {TR_PARAMETER_VALUE_CLIMATE_DESERT, "Desert" },
     {TR_PARAMETER_DISPLAY_SET_TO, "set to"},
     {TR_PARAMETER_DISPLAY_ADD_TO, "add"},
     {TR_PARAMETER_DISPLAY_BETWEEN, "between"},
@@ -1506,7 +1511,6 @@ static translation_string all_strings[] = {
     {TR_USER_DIRECTORIES_USER_PATH_CHANGED_OVERWRITE, "Overwrite existing files"},
     {TR_FIGURE_TYPE_ARMORY_CARTPUSHER, "Armory deliveryman"},
     {TR_TOOLTIP_BUTTON_CAN_GO_TO_ADVISORS, "Display the relevant advisor for this building." },
-
 };
 
 void translation_english(const translation_string **strings, int *num_strings)

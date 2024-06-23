@@ -88,6 +88,8 @@ int scenario_action_type_execute(scenario_action_t *action)
             return scenario_action_type_minor_curse_execute(action);
         case ACTION_TYPE_CAUSE_MAJOR_CURSE:
             return scenario_action_type_major_curse_execute(action);
+        case ACTION_TYPE_CHANGE_CLIMATE:
+            return scenario_action_type_change_climate_execute(action);
         default:
             return 0;
     }

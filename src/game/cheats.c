@@ -229,7 +229,7 @@ static void game_cheat_change_climate(uint8_t *args)
 {
     int climate = 0;
     parse_integer(args, &climate);
-    scenario_change_climate_cheat(climate);
+    scenario_change_climate(climate);
     show_warning(TR_CHEAT_CLIMATE_CHANGE);
 }
 
