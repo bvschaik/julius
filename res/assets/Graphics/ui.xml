@@ -917,4 +917,242 @@
 	<image id="Fort_Banner_01" src="Fort_Banner_01"/>
 	<!-- Note: Banner image for Triumphal arch -->
 	<image id="Triumphal_Arch_Banner" src="Triumphal_Arch_Banner"/>
+	<!-- Note: Advisor building window button borders -->
+	<image id="Advisor_Building_Window_Border_1" width="24" height="24">
+		<layer group="this" image="Unmothball_1"/>
+		<layer src="Advisor_Building_Window_Mask" mask="alpha"/>
+	</image>
+	<image id="Advisor_Building_Window_Border_2" width="24" height="24">
+		<layer group="this" image="Unmothball_2"/>
+		<layer src="Advisor_Building_Window_Mask" mask="alpha"/>
+	</image>
+	<image id="Advisor_Building_Window_Border_3" width="24" height="24">
+		<layer group="this" image="Unmothball_3"/>
+		<layer src="Advisor_Building_Window_Mask" mask="alpha"/>
+	</image>
+	<image id="Advisor_Building_Window_Border_4" width="24" height="24">
+		<layer group="this" image="Unmothball_4"/>
+		<layer src="Advisor_Building_Window_Mask" mask="alpha"/>
+	</image>
+	<!-- Note: Advisor building window button - Labor -->
+	<image id="Advisor_Building_Window_Labor_1" width="24" height="24">
+		<layer group="199" image="0" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Labor_2" width="24" height="24">
+		<layer group="199" image="2" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Labor_3" width="24" height="24">
+		<layer group="199" image="1" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Labor_4" width="24" height="24">
+		<layer group="199" image="0" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Military -->
+	<image id="Advisor_Building_Window_Military_1" width="24" height="24">
+		<layer group="199" image="3" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Military_2" width="24" height="24">
+		<layer group="199" image="5" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Military_3" width="24" height="24">
+		<layer group="199" image="4" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Military_4" width="24" height="24">
+		<layer group="199" image="3" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Imperial -->
+	<image id="Advisor_Building_Window_Imperial_1" width="24" height="24">
+		<layer group="199" image="6" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Imperial_2" width="24" height="24">
+		<layer group="199" image="8" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Imperial_3" width="24" height="24">
+		<layer group="199" image="7" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Imperial_4" width="24" height="24">
+		<layer group="199" image="6" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Ratings -->
+	<image id="Advisor_Building_Window_Ratings_1" width="24" height="24">
+		<layer group="199" image="9" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Ratings_2" width="24" height="24">
+		<layer group="199" image="11" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Ratings_3" width="24" height="24">
+		<layer group="199" image="10" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Ratings_4" width="24" height="24">
+		<layer group="199" image="9" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Trade -->
+	<image id="Advisor_Building_Window_Trade_1" width="24" height="24">
+		<layer group="199" image="12" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Trade_2" width="24" height="24">
+		<layer group="199" image="14" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Trade_3" width="24" height="24">
+		<layer group="199" image="13" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Trade_4" width="24" height="24">
+		<layer group="199" image="12" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Population -->
+	<image id="Advisor_Building_Window_Population_1" width="24" height="24">
+		<layer group="199" image="15" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Population_2" width="24" height="24">
+		<layer group="199" image="17" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Population_3" width="24" height="24">
+		<layer group="199" image="16" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Population_4" width="24" height="24">
+		<layer group="199" image="15" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Housing -->
+	<image id="Advisor_Building_Window_Housing_1" width="24" height="24">
+		<layer group="199" image="18" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Housing_2" width="24" height="24">
+		<layer group="199" image="20" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Housing_3" width="24" height="24">
+		<layer group="199" image="19" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Housing_4" width="24" height="24">
+		<layer group="199" image="18" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Health -->
+	<image id="Advisor_Building_Window_Health_1" width="24" height="24">
+		<layer group="199" image="21" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Health_2" width="24" height="24">
+		<layer group="199" image="23" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Health_3" width="24" height="24">
+		<layer group="199" image="22" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Health_4" width="24" height="24">
+		<layer group="199" image="21" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Education -->
+	<image id="Advisor_Building_Window_Education_1" width="24" height="24">
+		<layer group="199" image="24" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Education_2" width="24" height="24">
+		<layer group="199" image="26" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Education_3" width="24" height="24">
+		<layer group="199" image="25" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Education_4" width="24" height="24">
+		<layer group="199" image="24" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Entertainment -->
+	<image id="Advisor_Building_Window_Entertainment_1" width="24" height="24">
+		<layer group="199" image="27" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Entertainment_2" width="24" height="24">
+		<layer group="199" image="29" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Entertainment_3" width="24" height="24">
+		<layer group="199" image="28" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Entertainment_4" width="24" height="24">
+		<layer group="199" image="27" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Religion -->
+	<image id="Advisor_Building_Window_Religion_1" width="24" height="24">
+		<layer group="199" image="30" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Religion_2" width="24" height="24">
+		<layer group="199" image="32" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Religion_3" width="24" height="24">
+		<layer group="199" image="31" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Religion_4" width="24" height="24">
+		<layer group="199" image="30" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Financial -->
+	<image id="Advisor_Building_Window_Financial_1" width="24" height="24">
+		<layer group="199" image="33" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Financial_2" width="24" height="24">
+		<layer group="199" image="35" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Financial_3" width="24" height="24">
+		<layer group="199" image="34" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Financial_4" width="24" height="24">
+		<layer group="199" image="33" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
+	<!-- Note: Advisor building window button - Chief -->
+	<image id="Advisor_Building_Window_Chief_1" width="24" height="24">
+		<layer group="199" image="36" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_1"/>
+	</image>
+	<image id="Advisor_Building_Window_Chief_2" width="24" height="24">
+		<layer group="199" image="38" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_2"/>
+	</image>
+	<image id="Advisor_Building_Window_Chief_3" width="24" height="24">
+		<layer group="199" image="37" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_3"/>
+	</image>
+	<image id="Advisor_Building_Window_Chief_4" width="24" height="24">
+		<layer group="199" image="36" x="-2" y="-2"/>
+		<layer group="this" image="Advisor_Building_Window_Border_4"/>
+	</image>
 </assetlist>
