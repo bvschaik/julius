@@ -124,7 +124,7 @@ static void play_audio(void)
     data.paths.speech[0] = 0;
     data.paths.background_music[0] = 0;   
 
-    custom_message_t *custom_message = custom_messages_get(scenario_intro_message());
+    custom_message_t *custom_message = custom_messages_get(scenario_victory_message());
 
     const char *audio_file = custom_messages_get_audio(custom_message);
     if (audio_file) {
