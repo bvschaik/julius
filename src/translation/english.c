@@ -180,7 +180,7 @@ static translation_string all_strings[] = {
     {TR_HOTKEY_EDITOR_TOGGLE_BATTLE_INFO, "Toggle battle info"},
     {TR_HOTKEY_EDIT_TITLE, "Press new hotkey"},
     {TR_BUILDING_ROADBLOCK, "Roadblock"},
-    {TR_BUILDING_ROADBLOCK_DESC, "Roadblock stops loitering citizens."},
+    {TR_BUILDING_ROADBLOCK_DESC, "Roadblocks stop loitering citizens from entering certain areas of your city."},
     {TR_BUILDING_ARCHITECT_GUILD, "Architects' guild" },
     {TR_BUILDING_ARCHITECT_GUILD_DESC, "Architects here work tirelessly to construct monuments for the glory of Rome." },
     {TR_BUILDING_GRAND_TEMPLE_ADD_MODULE, "Bestow epithet on temple" },
@@ -546,7 +546,7 @@ static translation_string all_strings[] = {
     {TR_BUILDING_HIPPODROME_PHASE_3_TEXT, "Masons are carving stone seating that will one day accommodate tens of thousands of racing fans." },
     {TR_BUILDING_HIPPODROME_PHASE_4_TEXT, "More than a mere racetrack, artisans are crafting a monument worthy of the gods and people of Rome." },
     {TR_BUILDING_MONUMENT_CONSTRUCTION_DESC, "Construction of this monumental building will require resources stored in a warehouse, laborers from a work camp, and architects from an architects' guild." },
-    {TR_BUILDING_MONUMENT_CONSTRUCTION_HALTED, "Construction halted." },
+    {TR_BUILDING_MONUMENT_CONSTRUCTION_HALTED, "Construction is halted." },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_ARENA_COVERAGE, "Arena" },
     {TR_WINDOW_ADVISOR_ENTERTAINMENT_ARENA_COVERAGE_PLURAL, "Arenas" },
     {TR_BUILDING_INFO_TOURISM, "(travelers)" },
@@ -1505,8 +1505,7 @@ static translation_string all_strings[] = {
     {TR_USER_DIRECTORIES_USER_PATH_CHANGED_TEXT, "The user path was successfully changed.\nDo you want to copy over your files?"},
     {TR_USER_DIRECTORIES_USER_PATH_CHANGED_OVERWRITE, "Overwrite existing files"},
     {TR_FIGURE_TYPE_ARMORY_CARTPUSHER, "Armory deliveryman"},
-    {TR_BUILDING_MILITARY_ADVISOR_GOTO, "Visit your Military Advisor?" },
-    {TR_BUILDING_FINANCIAL_ADVISOR_GOTO, "Visit your Financial Advisor?" },
+    {TR_TOOLTIP_BUTTON_CAN_GO_TO_ADVISORS, "Display the relevant advisor for this building." },
 
 };
 

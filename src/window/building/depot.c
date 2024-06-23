@@ -229,6 +229,7 @@ static void on_scroll(void)
 
 void window_building_draw_depot(building_info_context *c)
 {
+    c->can_go_to_trade_advisor = 1;
     setup_buttons_for_selected_depot();
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);

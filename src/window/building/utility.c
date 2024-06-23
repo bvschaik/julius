@@ -76,6 +76,7 @@ typedef enum {
 
 void window_building_draw_engineers_post(building_info_context *c)
 {
+    c->can_go_to_chief_advisor = 1;
     c->help_id = 81;
     window_building_play_sound(c, "wavs/eng_post.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -113,6 +114,7 @@ void window_building_draw_engineers_post(building_info_context *c)
 
 void window_building_draw_prefect(building_info_context *c)
 {
+    c->can_go_to_chief_advisor = 1;
     c->help_id = 86;
     window_building_play_sound(c, "wavs/prefecture.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -344,6 +346,7 @@ void window_building_draw_well(building_info_context *c)
 
 void window_building_draw_mission_post(building_info_context *c)
 {
+    c->can_go_to_education_advisor = 1;
     c->help_id = 8;
     window_building_play_sound(c, "wavs/mission.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);

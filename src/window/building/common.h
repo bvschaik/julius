@@ -50,10 +50,17 @@ typedef struct {
     int warehouse_space_text;
     building_info_type type;
     terrain_info_type terrain_type;
-    int can_go_to_ratings_advisor_senate;
-    int can_go_to_military_advisor_fort;
-    int can_go_to_financial_advisor_forum;
-    int can_go_to_financial_advisor_senate;
+    int can_go_to_military_advisor;
+    int can_go_to_ratings_advisor;
+    int can_go_to_trade_advisor;
+    int can_go_to_population_advisor;
+    int can_go_to_housing_advisor;
+    int can_go_to_health_advisor;
+    int can_go_to_education_advisor;
+    int can_go_to_entertainment_advisor;
+    int can_go_to_religion_advisor;
+    int can_go_to_financial_advisor;
+    int can_go_to_chief_advisor;
     int rubble_building_type;
     int show_special_orders;
     struct {

@@ -41,6 +41,7 @@ static struct {
 
 static void draw_farm(building_info_context *c, int help_id, const char *sound_file, int group_id, int resource)
 {
+    c->can_go_to_trade_advisor = 1;
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
@@ -128,6 +129,7 @@ void window_building_draw_pig_farm(building_info_context *c)
 static void draw_raw_material(
     building_info_context *c, int help_id, const char *sound_file, int group_id, int text_offset, int resource)
 {
+    c->can_go_to_trade_advisor = 1;
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
@@ -227,6 +229,7 @@ static int no_target_for_resource(const building *b, resource_type resource)
 static void draw_workshop(
     building_info_context *c, int help_id, const char *sound_file, int group_id, int text_offset, resource_type resource)
 {
+    c->can_go_to_trade_advisor = 1;
     c->help_id = help_id;
     window_building_play_sound(c, sound_file);
 
@@ -377,6 +380,7 @@ void window_building_draw_city_mint(building_info_context *c)
     building *b = building_get(c->building_id);
     data.city_mint_id = 0;
     if (b->monument.phase == MONUMENT_FINISHED) {
+        c->can_go_to_financial_advisor = 1;
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         image_draw(resource_get_data(RESOURCE_DENARII)->image.icon, c->x_offset + 10, c->y_offset + 10,
             COLOR_MASK_NONE, SCALE_NONE);

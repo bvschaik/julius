@@ -12,7 +12,7 @@
 
 void window_building_draw_forum(building_info_context *c)
 {
-    c->can_go_to_financial_advisor_forum = 1;
+    c->can_go_to_financial_advisor = 1;
     c->help_id = 76;
     window_building_play_sound(c, "wavs/forum.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -44,14 +44,11 @@ void window_building_draw_forum(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
     window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
-    text_draw_multiline(translation_for(TR_BUILDING_FINANCIAL_ADVISOR_GOTO),
-        c->x_offset + 80, c->y_offset + 218, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
 }
 
 void window_building_draw_senate(building_info_context *c)
 {
-    c->can_go_to_ratings_advisor_senate = 1;
-    c->can_go_to_financial_advisor_forum = 1;
+    c->can_go_to_ratings_advisor = 1;
     c->help_id = 77;
     window_building_play_sound(c, "wavs/senate.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -83,10 +80,6 @@ void window_building_draw_senate(building_info_context *c)
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 142);
     window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);
-
-    lang_text_draw(105, 3, c->x_offset + 80, c->y_offset + 220, FONT_NORMAL_BLACK);
-    text_draw_multiline(translation_for(TR_BUILDING_FINANCIAL_ADVISOR_GOTO),
-        c->x_offset + 80, c->y_offset + 250, 14 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
 }
 
 void window_building_draw_governor_home(building_info_context *c)
