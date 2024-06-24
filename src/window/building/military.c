@@ -242,15 +242,18 @@ int window_building_handle_mouse_barracks(const mouse *m, building_info_context 
 
 int window_building_handle_mouse_grand_temple_mars(const mouse *m, building_info_context *c)
 {
+    unsigned int focused_button = data.focus_priority_button_id;
     if (generic_buttons_handle_mouse(m, c->x_offset + 50, c->y_offset + 135,
         priority_buttons, 7, &data.focus_priority_button_id) ||
-        generic_buttons_handle_mouse(m, c->x_offset + 408, c->y_offset + 40,
-        delivery_buttons, 1, &data.focus_delivery_button_id)
+        generic_buttons_handle_mouse(m, c->x_offset + 392, c->y_offset + 40,
+            delivery_buttons, 1, &data.focus_delivery_button_id)
         ) {
         window_invalidate();
         return 1;
     }
-
+    if (focused_button != data.focus_priority_button_id) {
+        window_invalidate();
+    }
     window_building_handle_mouse_grand_temple(m, c);
     return 0;
 }
