@@ -24,7 +24,7 @@ jobs:
           - name: Linux x64
             os: ubuntu-22.04
             cache-key: linux-x64
-            SDL_VERSION: 2.30.2
+            SDL_VERSION: 2.30.4
             SDL_MIXER_VERSION: 2.8.0
             BUILD_TARGET: linux
             DEPLOY: linux
@@ -39,7 +39,7 @@ jobs:
           - name: macOS
             os: macos-latest
             cache-key: macos
-            SDL_VERSION: 2.30.2
+            SDL_VERSION: 2.30.4
             SDL_MIXER_VERSION: 2.8.0
             BUILD_TARGET: mac
             DEPLOY: mac
@@ -54,7 +54,7 @@ jobs:
           - name: Android
             os: ubuntu-20.04
             cache-key: android
-            SDL_VERSION: 2.30.2
+            SDL_VERSION: 2.30.4
             SDL_MIXER_VERSION: 2.8.0
             BUILD_TARGET: android
             DEPLOY: android
@@ -136,7 +136,7 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: windows-latest
     env:
-      SDL_VERSION: 2.28.5
+      SDL_VERSION: 2.30.4
       SDL_MIXER_VERSION: 2.8.0
       COMPILER: ${{ matrix.COMPILER }}
       SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
