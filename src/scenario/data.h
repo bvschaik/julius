@@ -123,6 +123,25 @@ typedef struct {
     int is_rise;
 } demand_change_t;
 
+typedef struct {
+    struct win_criteria_t population;
+    struct win_criteria_t culture;
+    struct win_criteria_t prosperity;
+    struct win_criteria_t peace;
+    struct win_criteria_t favor;
+    struct {
+        int enabled;
+        int years;
+    } time_limit;
+    struct {
+        int enabled;
+        int years;
+    } survival_time;
+    int milestone25_year;
+    int milestone50_year;
+    int milestone75_year;
+} scenario_win_criteria;
+
 extern struct scenario_t {
     uint8_t scenario_name[MAX_SCENARIO_NAME];
 
@@ -141,24 +160,7 @@ extern struct scenario_t {
     int is_open_play;
     int open_play_scenario_id;
 
-    struct {
-        struct win_criteria_t population;
-        struct win_criteria_t culture;
-        struct win_criteria_t prosperity;
-        struct win_criteria_t peace;
-        struct win_criteria_t favor;
-        struct {
-            int enabled;
-            int years;
-        } time_limit;
-        struct {
-            int enabled;
-            int years;
-        } survival_time;
-        int milestone25_year;
-        int milestone50_year;
-        int milestone75_year;
-    } win_criteria;
+    scenario_win_criteria win_criteria;
 
     struct {
         int id;

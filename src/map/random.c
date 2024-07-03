@@ -26,6 +26,12 @@ int map_random_get(int grid_offset)
     return random.items[grid_offset];
 }
 
+int map_random_get_from_buffer(buffer *buf, int grid_offset)
+{
+    buffer_set(buf, grid_offset);
+    return buffer_read_u8(buf);
+}
+
 void map_random_save_state(buffer *buf)
 {
     map_grid_save_state_u8(random.items, buf);
