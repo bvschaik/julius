@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "building/building.h"
+#include "city/constants.h"
 #include "game/resource.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -12,7 +13,7 @@
 
 void window_building_draw_forum(building_info_context *c)
 {
-    c->can_go_to_financial_advisor = 1;
+    c->advisor_button = ADVISOR_FINANCIAL;
     c->help_id = 76;
     window_building_play_sound(c, "wavs/forum.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -48,7 +49,7 @@ void window_building_draw_forum(building_info_context *c)
 
 void window_building_draw_senate(building_info_context *c)
 {
-    c->can_go_to_ratings_advisor = 1;
+    c->advisor_button = ADVISOR_RATINGS;
     c->help_id = 77;
     window_building_play_sound(c, "wavs/senate.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);

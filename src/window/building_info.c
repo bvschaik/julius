@@ -1,5 +1,6 @@
 #include "building_info.h"
 
+#include "assets/assets.h"
 #include "building/barracks.h"
 #include "building/culture.h"
 #include "../building/distribution.h"
@@ -55,61 +56,10 @@ static void button_advisor(int advisor, int param2);
 static void button_mothball(int mothball, int param2);
 static void button_monument_construction(int param1, int param2);
 
-static image_button image_buttons_help_close[] = {
-    {14, 3, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
-    {424, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1}
-};
-
-static image_button image_buttons_labor_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_LABOR, 0, 1, "UI", "Advisor_Building_Window_Labor_1"}
-};
-
-static image_button image_buttons_military_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_MILITARY, 0, 1, "UI", "Advisor_Building_Window_Military_1"}
-};
-
-static image_button image_buttons_imperial_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_IMPERIAL, 0, 1, "UI", "Advisor_Building_Window_Imperial_1"}
-};
-
-static image_button image_buttons_ratings_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_RATINGS, 0, 1, "UI", "Advisor_Building_Window_Ratings_1"}
-};
-
-static image_button image_buttons_trade_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_TRADE, 0, 1, "UI", "Advisor_Building_Window_Trade_1"}
-};
-
-static image_button image_buttons_population_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_POPULATION, 0, 1, "UI", "Advisor_Building_Window_Population_1"}
-};
-
-static image_button image_buttons_housing_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_HOUSING, 0, 1, "UI", "Advisor_Building_Window_Housing_1"}
-};
-
-static image_button image_buttons_health_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_HEALTH, 0, 1, "UI", "Advisor_Building_Window_Health_1"}
-};
-
-static image_button image_buttons_education_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_EDUCATION, 0, 1, "UI", "Advisor_Building_Window_Education_1"}
-};
-
-static image_button image_buttons_entertainment_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_ENTERTAINMENT, 0, 1, "UI", "Advisor_Building_Window_Entertainment_1"}
-};
-
-static image_button image_buttons_religion_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_RELIGION, 0, 1, "UI", "Advisor_Building_Window_Religion_1"}
-};
-
-static image_button image_buttons_financial_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_FINANCIAL, 0, 1, "UI", "Advisor_Building_Window_Financial_1"}
-};
-
-static image_button image_buttons_chief_advisor[] = {
-    {350, -38, 28, 28, IB_NORMAL, 0, 0, button_advisor, button_none, ADVISOR_CHIEF, 0, 1, "UI", "Advisor_Building_Window_Chief_1"}
+static image_button image_buttons_help_advisor_close[] = {
+    {14, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
+    {424, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 4, button_close, button_none, 0, 0, 1},
+    {38, 3, 24, 24, IB_NORMAL, 0, 0, button_advisor, button_none, 0, 0, 1}
 };
 
 static image_button image_button_mothball[] = {
@@ -325,17 +275,7 @@ static void init(int grid_offset)
     context.depot_selection.destination = 0;
     context.depot_selection.source = 0;
     context.depot_selection.resource = 0;
-    context.can_go_to_military_advisor = 0;
-    context.can_go_to_ratings_advisor = 0;
-    context.can_go_to_trade_advisor = 0;
-    context.can_go_to_population_advisor = 0;
-    context.can_go_to_housing_advisor = 0;
-    context.can_go_to_health_advisor = 0;
-    context.can_go_to_education_advisor = 0;
-    context.can_go_to_entertainment_advisor = 0;
-    context.can_go_to_religion_advisor = 0;
-    context.can_go_to_financial_advisor = 0;
-    context.can_go_to_chief_advisor = 0;
+    context.advisor_button = ADVISOR_NONE;
     context.building_id = map_building_at(grid_offset);
     context.rubble_building_type = map_rubble_building_type(grid_offset);
     context.has_reservoir_pipes = map_terrain_is(grid_offset, TERRAIN_RESERVOIR_RANGE);
@@ -932,61 +872,23 @@ static void draw_foreground(void)
     } else if (context.type == BUILDING_INFO_LEGION) {
         window_building_draw_legion_info_foreground(&context);
     }
+
     // general buttons
     if (context.show_special_orders ||
         context.depot_selection.source ||
         context.depot_selection.destination ||
         context.depot_selection.resource) {
-        int y_offset = window_building_get_vertical_offset(&context, 28);
-        image_buttons_draw(context.x_offset, y_offset + 400, image_buttons_help_close, 2);
+        int y_offset = window_building_get_vertical_offset(&context, 28) + 400;
+        image_buttons_draw(context.x_offset, y_offset, image_buttons_help_advisor_close, 2);
     } else {
+        int image_id = assets_get_image_id("UI", "Advisor_Building_Window_Border_1");
+        image_buttons_help_advisor_close[2].image_offset = image_id + context.advisor_button * 4;
+        image_buttons_help_advisor_close[2].parameter1 = context.advisor_button;
+
         image_buttons_draw(context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
-            image_buttons_help_close, 2);
+            image_buttons_help_advisor_close, context.advisor_button ? 3 : 2);
     }
-    if (context.can_go_to_military_advisor) {
-        image_buttons_draw(context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_military_advisor, 1);
-    }
-    if (context.can_go_to_ratings_advisor) {
-        image_buttons_draw(context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_ratings_advisor, 1);
-    }
-    if (context.can_go_to_trade_advisor) {
-        image_buttons_draw(context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_trade_advisor, 1);
-    }
-    if (context.can_go_to_population_advisor) {
-        image_buttons_draw(context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_population_advisor, 1);
-    }
-    if (context.can_go_to_housing_advisor) {
-        image_buttons_draw(context.x_offset - 288, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_housing_advisor, 1);
-    }
-    if (context.can_go_to_health_advisor) {
-        image_buttons_draw(context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_health_advisor, 1);
-    }
-    if (context.can_go_to_education_advisor) {
-        image_buttons_draw(context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_education_advisor, 1);
-    }
-    if (context.can_go_to_entertainment_advisor) {
-        image_buttons_draw(context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_entertainment_advisor, 1);
-    }
-    if (context.can_go_to_religion_advisor) {
-        image_buttons_draw(context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_religion_advisor, 1);
-    }
-    if (context.can_go_to_financial_advisor) {
-        image_buttons_draw(context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_financial_advisor, 1);
-    }
-    if (context.can_go_to_chief_advisor) {
-        image_buttons_draw(context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_chief_advisor, 1);
-    }
+
     if (!context.show_special_orders &&
         !context.depot_selection.source &&
         !context.depot_selection.destination &&
@@ -1098,11 +1000,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
         context.depot_selection.resource) {
         int y_offset = window_building_get_vertical_offset(&context, 28);
         handled |= image_buttons_handle_mouse(m, context.x_offset, y_offset + 400,
-            image_buttons_help_close, 2, &focus_image_button_id);
+            image_buttons_help_advisor_close, 2, &focus_image_button_id);
     } else {
         handled |= image_buttons_handle_mouse(
             m, context.x_offset, context.y_offset + BLOCK_SIZE * context.height_blocks - 40,
-            image_buttons_help_close, 2, &focus_image_button_id);
+            image_buttons_help_advisor_close, context.advisor_button ? 3 : 2, &focus_image_button_id);
         building *b = building_get(context.building_id);
         if (building_monument_is_unfinished_monument(b)) {
             handled = generic_buttons_handle_mouse(
@@ -1119,61 +1021,6 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 }
             }
         }
-    }
-    if (context.can_go_to_military_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_military_advisor, 1, 0);
-    }
-    if (context.can_go_to_ratings_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_ratings_advisor, 1, 0);
-    }
-    if (context.can_go_to_trade_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_trade_advisor, 1, 0);
-    }
-    if (context.can_go_to_population_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_population_advisor, 1, 0);
-    }
-    if (context.can_go_to_housing_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 288, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_housing_advisor, 1, 0);
-    }
-    if (context.can_go_to_health_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_health_advisor, 1, 0);
-    }
-    if (context.can_go_to_education_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_education_advisor, 1, 0);
-    }
-    if (context.can_go_to_entertainment_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_entertainment_advisor, 1, 0);
-    }
-    if (context.can_go_to_religion_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_religion_advisor, 1, 0);
-    }
-    if (context.can_go_to_financial_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_financial_advisor, 1, 0);
-    }
-    if (context.can_go_to_chief_advisor) {
-        handled |= image_buttons_handle_mouse(
-            m, context.x_offset - 312, context.y_offset + BLOCK_SIZE * context.height_blocks + 1,
-            image_buttons_chief_advisor, 1, 0);
     }
 
     if (!handled) {
@@ -1192,7 +1039,16 @@ static void get_tooltip(tooltip_context *c)
     building *b = building_get(context.building_id);
     int btype = b->type;
     if (focus_image_button_id) {
-        text_id = focus_image_button_id;
+        if (focus_image_button_id == 3) {
+            int advisor = image_buttons_help_advisor_close[2].parameter1;
+            if (advisor == ADVISOR_HOUSING) {
+                translation = TR_TOOLTIP_ADVISOR_POPULATION_HOUSING_BUTTON;
+            } else {
+                text_id = 69 + advisor - (advisor >= ADVISOR_HOUSING ? 1 : 0);
+            }
+        } else {
+            text_id = focus_image_button_id;
+        }
     } else if (focus_mothball_image_button_id && has_mothball_button()) {
         if (!building_monument_is_unfinished_monument(b)) {
             if (building_get(context.building_id)->state == BUILDING_STATE_MOTHBALLED) {

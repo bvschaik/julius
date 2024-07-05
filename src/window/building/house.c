@@ -130,8 +130,7 @@ static void draw_happiness_info(building_info_context *c, int y_offset)
 
 void window_building_draw_house(building_info_context *c)
 {
-    c->can_go_to_population_advisor = 1;
-    c->can_go_to_housing_advisor = 1;
+    c->advisor_button = ADVISOR_HOUSING;
     c->help_id = 56;
     building *b = building_get(c->building_id);
     if (b->house_population <= 0) {

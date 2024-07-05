@@ -130,7 +130,7 @@ void window_building_draw_gatehouse(building_info_context *c)
 
 void window_building_draw_tower(building_info_context *c)
 {
-    c->can_go_to_military_advisor = 1;
+    c->advisor_button = ADVISOR_MILITARY;
     c->help_id = 85;
     window_building_play_sound(c, "wavs/tower.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -153,7 +153,7 @@ void window_building_draw_tower(building_info_context *c)
 
 void window_building_draw_barracks(building_info_context *c)
 {
-    c->can_go_to_military_advisor = 1;
+    c->advisor_button = ADVISOR_MILITARY;
     c->help_id = 37;
     data.building_id = c->building_id;
     window_building_play_sound(c, "wavs/barracks.wav");
@@ -260,7 +260,7 @@ int window_building_handle_mouse_grand_temple_mars(const mouse *m, building_info
 
 void window_building_draw_military_academy(building_info_context *c)
 {
-    c->can_go_to_military_advisor = 1;
+    c->advisor_button = ADVISOR_MILITARY;
     c->help_id = 88;
     window_building_play_sound(c, "wavs/mil_acad.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -283,7 +283,7 @@ void window_building_draw_military_academy(building_info_context *c)
 
 void window_building_draw_fort(building_info_context *c)
 {
-    c->can_go_to_military_advisor = 1;
+    c->advisor_button = ADVISOR_MILITARY;
     c->help_id = 87;
     window_building_play_sound(c, "wavs/fort.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -711,7 +711,7 @@ static void button_delivery(int index, int param2)
 
 void window_building_draw_watchtower(building_info_context *c)
 {
-    c->can_go_to_military_advisor = 1;
+    c->advisor_button = ADVISOR_MILITARY;
     c->help_id = 85;
     window_building_play_sound(c, "wavs/tower2.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -746,7 +746,7 @@ void window_building_draw_palisade(building_info_context *c)
 
 void window_building_draw_armoury(building_info_context *c)
 {
-    c->can_go_to_military_advisor = 1;
+    c->advisor_button = ADVISOR_MILITARY;
     c->help_id = 85;
     building *b = building_get(c->building_id);
 

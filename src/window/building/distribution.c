@@ -357,7 +357,7 @@ static void draw_dock_permission_buttons(int x_offset, int y_offset, int dock_id
 
 void window_building_draw_dock(building_info_context *c)
 {
-    c->can_go_to_trade_advisor = 1;
+    c->advisor_button = ADVISOR_TRADE;
     c->help_id = 83;
 
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
@@ -509,7 +509,7 @@ static void draw_good_stocks(building_info_context *c, building *b, int y_offset
 
 void window_building_draw_market(building_info_context *c)
 {
-    c->can_go_to_trade_advisor = 1;
+    c->advisor_button = ADVISOR_TRADE;
     c->help_id = 2;
     data.showing_special_orders = 0;
 
@@ -709,7 +709,7 @@ void window_building_draw_primary_product_stockpiling(building_info_context *c)
 
 void window_building_draw_granary(building_info_context *c)
 {
-    c->can_go_to_trade_advisor = 1;
+    c->advisor_button = ADVISOR_TRADE;
     c->help_id = 3;
     data.building_id = c->building_id;
     data.showing_special_orders = 0;
@@ -1006,7 +1006,7 @@ static void generate_warehouse_resource_list(building *warehouse)
 
 void window_building_draw_warehouse(building_info_context *c)
 {
-    c->can_go_to_trade_advisor = 1;
+    c->advisor_button = ADVISOR_TRADE;
     c->help_id = 4;
     data.building_id = c->building_id;
     data.showing_special_orders = 0;
@@ -1435,7 +1435,7 @@ static void warehouse_orders(int index, int param2)
 
 void window_building_draw_mess_hall(building_info_context *c)
 {
-    c->can_go_to_military_advisor = 1;
+    c->advisor_button = ADVISOR_MILITARY;
     building *b = building_get(c->building_id);
     int mess_hall_fulfillment_display = 100 - city_mess_hall_food_missing_month();
     int food_stress = city_mess_hall_food_stress();
@@ -1549,7 +1549,7 @@ void window_building_draw_caravanserai(building_info_context *c)
     building *b = building_get(c->building_id);
 
     if (b->monument.phase == MONUMENT_FINISHED) {
-        c->can_go_to_trade_advisor = 1;
+        c->advisor_button = ADVISOR_TRADE;
         window_building_play_sound(c, "wavs/market2.wav");
         int food_types = count_food_types_in_stock(b);
         int y_offset = ((food_types - 1) / 4) * BLOCK_SIZE * 2;
