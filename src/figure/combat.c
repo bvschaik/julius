@@ -110,10 +110,10 @@ static void hit_opponent(figure *f)
         if (!attack_is_same_direction(opponent->attack_direction, opponent_formation->direction)) {
             opponent_defense -= 2; // opponent not attacking in coordinated formation
         } else if (opponent_formation->layout == FORMATION_COLUMN) {
-            opponent_defense += 4;
+            opponent_defense += 3;
         } else if (opponent_formation->layout == FORMATION_DOUBLE_LINE_1 ||
                    opponent_formation->layout == FORMATION_DOUBLE_LINE_2) {
-            opponent_defense += 2;
+            opponent_defense += 1;
         }
     }
 
