@@ -383,7 +383,7 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     },
     [FIGURE_MESS_HALL_SUPPLIER] = {
     .category = FIGURE_CATEGORY_ARMED,
-    .max_damage = 70, .attack_value = 8, .defense_value = 0,
+    .max_damage = 70, .attack_value = 8, .defense_value = 1,
     .missile_defense_value = 0, .missile_attack_value = 0, .missile_delay = 0
     },
     [FIGURE_MESS_HALL_COLLECTOR] = {
@@ -463,7 +463,7 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     },
     [FIGURE_FORT_INFANTRY] = {
     .category = FIGURE_CATEGORY_ARMED,
-    .max_damage = 110, .attack_value = 8, .defense_value = 0,
+    .max_damage = 110, .attack_value = 8, .defense_value = 1,
     .missile_defense_value = 2, .missile_attack_value = 0, .missile_delay = 0
     },
     [FIGURE_BEGGAR] = {
