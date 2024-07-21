@@ -288,6 +288,7 @@ static void update_image_archer(figure *f, int dir)
     } else {
         f->image_id = assets_get_image_id("Warriors", "auxarch_ne_01") + dir * 12 + f->image_offset;
     }
+
 }
 
 

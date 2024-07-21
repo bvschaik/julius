@@ -123,6 +123,8 @@ static void (*figure_action_callbacks[])(figure *f) = {
     figure_soldier_action,
     figure_beggar_action,
     figure_soldier_action,
+    figure_enemy_catapult_action,
+    figure_catapult_missile_action,
 };
 
 void figure_action_handle(void)

@@ -409,6 +409,7 @@ static void init(int grid_offset)
                     case FIGURE_JAVELIN:
                     case FIGURE_BOLT:
                     case FIGURE_BALLISTA:
+                    case FIGURE_CATAPULT_MISSILE:
                     case FIGURE_CREATURE:
                     case FIGURE_FISH_GULLS:
                     case FIGURE_SPEAR:

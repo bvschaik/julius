@@ -161,6 +161,7 @@ int figure_name_get(figure_type type, enemy_type_t enemy)
     case FIGURE_ENEMY51_SPEAR:
     case FIGURE_ENEMY52_MOUNTED_ARCHER:
     case FIGURE_ENEMY53_AXE:
+    case FIGURE_ENEMY_CATAPULT:
         switch (enemy) {
         case ENEMY_8_GREEK:
             return get_next_name(&data.enemy_greek, 463, 32);

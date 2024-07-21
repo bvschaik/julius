@@ -230,6 +230,7 @@ int figure_combat_get_target_for_wolf(int x, int y, int max_distance)
             case FIGURE_JAVELIN:
             case FIGURE_BOLT:
             case FIGURE_BALLISTA:
+            case FIGURE_CATAPULT_MISSILE:
             case FIGURE_FRIENDLY_ARROW:
             case FIGURE_WATCHTOWER_ARCHER:
             case FIGURE_CREATURE:
@@ -359,6 +360,7 @@ int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, 
             case FIGURE_BOLT:
             case FIGURE_BALLISTA:
             case FIGURE_FRIENDLY_ARROW:
+            case FIGURE_CATAPULT_MISSILE:
             case FIGURE_WATCHTOWER_ARCHER:
             case FIGURE_CREATURE:
             case FIGURE_FISH_GULLS:

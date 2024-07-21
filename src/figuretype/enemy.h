@@ -29,4 +29,6 @@ void figure_enemy_gladiator_action(figure *f);
 
 void figure_enemy_caesar_legionary_action(figure *f);
 
+void figure_enemy_catapult_action(figure *f);
+
 #endif // FIGURETYPE_ENEMY_H

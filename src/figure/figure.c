@@ -137,6 +137,7 @@ void figure_delete(figure *f)
         case FIGURE_JAVELIN:
         case FIGURE_FRIENDLY_ARROW:
         case FIGURE_BOLT:
+        case FIGURE_CATAPULT_MISSILE:
         case FIGURE_SPEAR:
         case FIGURE_FISH_GULLS:
         case FIGURE_SHEEP:
@@ -213,7 +214,7 @@ int figure_is_dead(const figure *f)
 
 int figure_is_enemy(const figure *f)
 {
-    return f->type >= FIGURE_ENEMY43_SPEAR && f->type <= FIGURE_ENEMY_CAESAR_LEGIONARY;
+    return (f->type >= FIGURE_ENEMY43_SPEAR && f->type <= FIGURE_ENEMY_CAESAR_LEGIONARY) || f->type == FIGURE_ENEMY_CATAPULT;
 }
 
 int figure_is_legion(const figure *f)

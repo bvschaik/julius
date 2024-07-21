@@ -1,5 +1,6 @@
 #include "missile.h"
 
+#include "assets/assets.h"
 #include "city/view.h"
 #include "core/image.h"
 #include "figure/formation.h"
@@ -271,3 +272,23 @@ void figure_bolt_action(figure *f)
     int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
     f->image_id = image_group(GROUP_FIGURE_MISSILE) + 32 + dir;
 }
+
+void figure_catapult_missile_action(figure *f)
+{
+    f->use_cross_country = 1;
+    f->progress_on_tile++;
+    if (f->progress_on_tile > 120) {
+        f->state = FIGURE_STATE_DEAD;
+    }
+    int should_die = figure_movement_move_ticks_cross_country(f, 4);
+    int target_id = get_citizen_on_tile(f->grid_offset);
+    if (target_id) {
+        missile_hit_target(f, target_id, FIGURE_NONE);
+        sound_effect_play(SOUND_EFFECT_BALLISTA_HIT_GROUND);
+    } else if (should_die) {
+        f->state = FIGURE_STATE_DEAD;
+    }
+    int dir = (16 + f->direction - 2 * city_view_orientation()) % 16;
+    f->image_id = assets_get_image_id("Warriors", "catapult_rock_ne_01") + dir;
+}
+

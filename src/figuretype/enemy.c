@@ -1,5 +1,6 @@
 #include "enemy.h"
 
+#include "assets/assets.h"
 #include "city/figures.h"
 #include "city/sound.h"
 #include "core/calc.h"
@@ -46,7 +47,8 @@ static void enemy_initial(figure *f, formation *m)
         }
     }
     if (f->type == FIGURE_ENEMY43_SPEAR || f->type == FIGURE_ENEMY46_CAMEL ||
-        f->type == FIGURE_ENEMY51_SPEAR || f->type == FIGURE_ENEMY52_MOUNTED_ARCHER) {
+        f->type == FIGURE_ENEMY51_SPEAR || f->type == FIGURE_ENEMY52_MOUNTED_ARCHER ||
+        f->type == FIGURE_ENEMY_CATAPULT) {
         // missile throwers
         f->wait_ticks_missile++;
         map_point tile = { 0, 0 };
@@ -68,6 +70,8 @@ static void enemy_initial(figure *f, formation *m)
                 case ENEMY_10_CARTHAGINIAN:
                     missile_type = FIGURE_ARROW;
                     break;
+                case FIGURE_ENEMY_CATAPULT:
+                    missile_type = FIGURE_CATAPULT_MISSILE;
                 default:
                     missile_type = FIGURE_SPEAR;
                     break;
@@ -678,4 +682,27 @@ void figure_enemy_caesar_legionary_action(figure *f)
             }
             break;
     }
+}
+
+void figure_enemy_catapult_action(figure *f)
+{
+    formation *m = formation_get(f->formation_id);
+    figure_image_increase_offset(f, 12);
+    f->cart_image_id = 0;
+    enemy_action(f, m);
+
+    int dir = get_missile_direction(f, m);
+
+    if (f->action_state == FIGURE_ACTION_149_CORPSE) {
+        f->image_id = assets_get_image_id("Warriors", "catapult_death_01") + figure_image_corpse_offset(f);
+    } else if (f->direction == DIR_FIGURE_ATTACK) {
+        f->image_id = assets_get_image_id("Warriors", "catapult_ne_01") + dir;
+    } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
+        f->image_id = assets_get_image_id("Warriors", "catapult_ne_01") + dir;
+    } else if (f->action_state == FIGURE_ACTION_151_ENEMY_INITIAL) {
+        f->image_id = f->image_id = assets_get_image_id("Warriors", "catapult_fe_e_01") + dir * 8 + figure_image_missile_launcher_offset(f);
+    } else {
+        f->image_id = assets_get_image_id("Warriors", "catapult_ne_01") + dir;
+    }
+
 }

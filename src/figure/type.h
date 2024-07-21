@@ -106,7 +106,9 @@ typedef enum {
     FIGURE_FORT_INFANTRY = 92,
     FIGURE_BEGGAR = 93,
     FIGURE_FORT_ARCHER = 94,
-    FIGURE_TYPE_MAX = 95
+    FIGURE_ENEMY_CATAPULT = 95,
+    FIGURE_CATAPULT_MISSILE = 96,
+    FIGURE_TYPE_MAX = 97
 } figure_type;
 
 typedef enum {

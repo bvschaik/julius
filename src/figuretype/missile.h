@@ -19,4 +19,6 @@ void figure_javelin_action(figure *f);
 
 void figure_bolt_action(figure *f);
 
+void figure_catapult_missile_action(figure *f);
+
 #endif // FIGURETYPE_MISSILE_H
