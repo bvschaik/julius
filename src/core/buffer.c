@@ -134,8 +134,8 @@ int8_t buffer_read_i8(buffer *buf)
 int16_t buffer_read_i16(buffer *buf)
 {
     if (check_size(buf, 2)) {
-        uint8_t b0 = buf->data[buf->index++];
-        uint8_t b1 = buf->data[buf->index++];
+        uint16_t b0 = buf->data[buf->index++];
+        uint16_t b1 = buf->data[buf->index++];
         return (int16_t) (b0 | (b1 << 8));
     } else {
         return 0;
@@ -145,10 +145,10 @@ int16_t buffer_read_i16(buffer *buf)
 int32_t buffer_read_i32(buffer *buf)
 {
     if (check_size(buf, 4)) {
-        uint8_t b0 = buf->data[buf->index++];
-        uint8_t b1 = buf->data[buf->index++];
-        uint8_t b2 = buf->data[buf->index++];
-        uint8_t b3 = buf->data[buf->index++];
+        uint32_t b0 = buf->data[buf->index++];
+        uint32_t b1 = buf->data[buf->index++];
+        uint32_t b2 = buf->data[buf->index++];
+        uint32_t b3 = buf->data[buf->index++];
         return (int32_t) (b0 | (b1 << 8) | (b2 << 16) | (b3 << 24));
     } else {
         return 0;
