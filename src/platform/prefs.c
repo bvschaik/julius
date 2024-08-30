@@ -45,7 +45,7 @@ static FILE *open_pref_file(const char *filename, const char *mode)
     return fp;
 }
 
-const char *retrieve_directory(directory *dir)
+static const char *retrieve_directory(directory *dir)
 {
     if (dir->retrieved) {
         return dir->location;
@@ -57,12 +57,12 @@ const char *retrieve_directory(directory *dir)
         if (length > 0) {
             dir->location[length] = 0;
         }
+        dir->retrieved = 1;
     }
-    dir->retrieved = 1;
     return dir->location;
 }
 
-void save_directory(directory *dir, const char *location)
+static void save_directory(directory *dir, const char *location)
 {
     snprintf(dir->location, FILE_NAME_MAX, "%s", location);
     FILE *fp = open_pref_file(dir->filename, "w");

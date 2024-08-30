@@ -149,9 +149,7 @@ static void set_defaults(void)
 void config_load(void)
 {
     set_defaults();
-    // Override default, if value is the same at end, then we never setup the directories
-    needs_user_directory_setup = 0;
-    values[CONFIG_GENERAL_HAS_SET_USER_DIRECTORIES] = -1;
+    needs_user_directory_setup = 1;
     const char *file_name = dir_get_file_at_location(INI_FILENAME, PATH_LOCATION_CONFIG);
     if (!file_name) {
         return;
@@ -160,6 +158,10 @@ void config_load(void)
     if (!fp) {
         return;
     }
+    // Override default, if value is the same at end, then we never setup the directories
+    needs_user_directory_setup = 0;
+    values[CONFIG_GENERAL_HAS_SET_USER_DIRECTORIES] = -1;
+
     char line_buffer[MAX_LINE];
     char *line;
     while ((line = fgets(line_buffer, MAX_LINE, fp)) != 0) {
