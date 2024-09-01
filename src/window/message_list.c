@@ -30,6 +30,7 @@ static void button_close(int param1, int param2);
 static void button_message(int param1, int param2);
 static void button_delete(int param1, int param2);
 static void button_delete_all_read(int param1, int param2);
+static void button_delete_all_common(int param1, int param2);
 static void button_mission_briefing(int param1, int param2);
 static void on_scroll(void);
 
@@ -59,6 +60,11 @@ static generic_button generic_button_delete_read[] = {
     { 0, 0, 20, 20, button_delete_all_read, button_none, 0, 0 }
 };
 
+static generic_button generic_button_delete_common[] = {
+    { 0, 0, 20, 20, button_delete_all_common, button_none, 0, 0 }
+};
+
+
 static scrollbar_type scrollbar = {432, 112, 208, 416, MAX_MESSAGES, on_scroll, 1};
 
 static void draw_delete_read_button(int x, int y, int focused)
@@ -67,6 +73,14 @@ static void draw_delete_read_button(int x, int y, int focused)
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
     text_draw_centered(delete_read_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
 }
+
+static void draw_delete_common_button(int x, int y, int focused)
+{
+    uint8_t delete_common_text[] = { 'x', 0 };
+    button_border_draw(x, y, 20, 20, focused ? 1 : 0);
+    text_draw_centered(delete_common_text, x + 1, y + 4, 20, FONT_NORMAL_BLACK, 0);
+}
+
 
 static struct {
     int width_blocks;
@@ -190,6 +204,8 @@ static void draw_foreground(void)
     }
     draw_delete_read_button(BLOCK_SIZE * data.width_blocks - 58, 32 + BLOCK_SIZE * data.height_blocks - 36,
         data.focus_button_id == 14);
+    draw_delete_common_button(45, 32 + BLOCK_SIZE * data.height_blocks - 36,
+        data.focus_button_id == 16);
 
     int total_messages = city_message_count();
     if (total_messages > 0) {
@@ -234,6 +250,12 @@ static void handle_input(const mouse *m, const hotkeys *h)
             data.focus_button_id = 15;
         }
     }
+    handled |= generic_buttons_handle_mouse(m_dialog, 45,
+    32 + BLOCK_SIZE * data.height_blocks - 36, generic_button_delete_common, 1, &button_id);
+    if (button_id) {
+        data.focus_button_id = 16;
+    }
+
     handled |= generic_buttons_handle_mouse(m_dialog, data.x_text, data.y_text + 4,
         generic_buttons_messages, MAX_MESSAGES, &button_id);
     if (!data.focus_button_id) {
@@ -291,6 +313,20 @@ static void button_delete(int id_to_delete, int param2)
     }
 }
 
+static void button_delete_all_common(int param1, int param2)
+{
+    for (int id = 0; id < city_message_count();) {
+        const city_message *msg = city_message_get(id);
+        if (msg->message_type != MESSAGE_CUSTOM_MESSAGE) {
+            city_message_delete(id);
+        } else {
+            id++;
+        }
+    }
+    scrollbar_update_total_elements(&scrollbar, city_message_count());
+    window_invalidate();
+}
+
 static void button_delete_all_read(int param1, int param2)
 {
     for (int id = 0; id < city_message_count();) {
@@ -323,6 +359,8 @@ static void get_tooltip(tooltip_context *c)
     } else if (data.focus_button_id == 15) {
         c->text_group = 68;
         c->text_id = 42;
+    } else if (data.focus_button_id == 16) {
+        c->translation_key = TR_TOOLTIP_BUTTON_DELETE_COMMON_MESSAGES;
     } else {
         return;
     }
