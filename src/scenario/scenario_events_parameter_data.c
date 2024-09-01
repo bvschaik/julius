@@ -258,7 +258,7 @@ static scenario_action_data_t scenario_action_data[ACTION_TYPE_MAX] = {
                                         .xml_attr =     { .name = "invasion_start_immediate",    .type = PARAMETER_TYPE_TEXT,             .key = TR_ACTION_TYPE_INVASION_IMMEDIATE },
                                         .xml_parm1 =    { .name = "attack_type",                 .type = PARAMETER_TYPE_INVASION_TYPE,    .key = TR_PARAMETER_TYPE_INVASION_TYPE },
                                         .xml_parm2 =    { .name = "size",                        .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,           .max_limit = 150,     .key = TR_PARAMETER_TYPE_INVASION_SIZE },
-                                        .xml_parm3 =    { .name = "invasion_point",              .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,           .max_limit = 8,       .key = TR_PARAMETER_TYPE_INVASION_POINT },
+                                        .xml_parm3 =    { .name = "invasion_point",              .type = PARAMETER_TYPE_NUMBER,           .min_limit = 1,           .max_limit = 9,       .key = TR_PARAMETER_TYPE_INVASION_POINT },
                                         .xml_parm4 =    { .name = "target_type",                 .type = PARAMETER_TYPE_TARGET_TYPE,      .key = TR_PARAMETER_TYPE_TARGET_TYPE },
                                         .xml_parm5 =    { .name = "enemy_type",                  .type = PARAMETER_TYPE_ENEMY_TYPE,       .key = TR_PARAMETER_TYPE_ENEMY_TYPE }, },
     [ACTION_TYPE_CAUSE_BLESSING]         = { .type = ACTION_TYPE_CAUSE_BLESSING,
