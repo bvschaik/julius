@@ -16,6 +16,15 @@
 
 static const int SALARY_PERCENTAGE_FOR_RANK[11] = {0, 2, 5, 8, 12, 20, 30, 40, 60, 80, 100};
 
+static const struct {
+    int base;
+    int savings_divisor ;
+} GIFT_DATA[GIFT_MAX] = {
+    {20, 8},
+    {50, 4},
+    {100, 2}
+};
+
 static int cheated_invasion = 0;
 
 void city_emperor_init_scenario(int rank)
@@ -207,9 +216,9 @@ int city_emperor_can_send_gift(int size)
 void city_emperor_calculate_gift_costs(void)
 {
     int savings = city_data.emperor.personal_savings;
-    city_data.emperor.gifts[GIFT_MODEST].cost = calc_adjust_with_percentage(savings / 8 + 20, city_data.emperor.caesar_salary);
-    city_data.emperor.gifts[GIFT_GENEROUS].cost = calc_adjust_with_percentage(savings / 4 + 50, city_data.emperor.caesar_salary);
-    city_data.emperor.gifts[GIFT_LAVISH].cost = calc_adjust_with_percentage(savings / 2 + 100, city_data.emperor.caesar_salary);
+    city_data.emperor.gifts[GIFT_MODEST].cost = savings/ GIFT_DATA[GIFT_MODEST].savings_divisor + calc_adjust_with_percentage(GIFT_DATA[GIFT_MODEST].base, city_data.emperor.caesar_salary);
+    city_data.emperor.gifts[GIFT_GENEROUS].cost = savings / GIFT_DATA[GIFT_GENEROUS].savings_divisor + calc_adjust_with_percentage(GIFT_DATA[GIFT_GENEROUS].base, city_data.emperor.caesar_salary);
+    city_data.emperor.gifts[GIFT_LAVISH].cost = savings / GIFT_DATA[GIFT_LAVISH].savings_divisor + calc_adjust_with_percentage(GIFT_DATA[GIFT_LAVISH].base, city_data.emperor.caesar_salary);
 }
 
 void city_emperor_send_gift(void)

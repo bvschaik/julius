@@ -4,7 +4,8 @@
 enum {
     GIFT_MODEST = 0,
     GIFT_GENEROUS = 1,
-    GIFT_LAVISH = 2
+    GIFT_LAVISH = 2,
+    GIFT_MAX = 3,
 };
 
 typedef struct {
