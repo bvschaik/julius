@@ -64,6 +64,11 @@ function install_sdl_macos {
   mkdir -p ~/Library/Frameworks
   echo "Installing framework:" "/Volumes/SDL2"/*.framework
   cp -rp "$VOLUME"/*.framework ~/Library/Frameworks
+  if [ -d "$VOLUME/optional" ]
+  then
+    echo "Installing optional framework:" "/Volumes/SDL2/optional"/*.framework
+    cp -rp "$VOLUME"/optional/*.framework ~/Library/Frameworks
+  fi
   hdiutil detach "$VOLUME"
 }
 

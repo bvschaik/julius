@@ -24,8 +24,8 @@ jobs:
           - name: Linux x64
             os: ubuntu-20.04
             cache-key: linux-x64
-            SDL_VERSION: 2.26.4
-            SDL_MIXER_VERSION: 2.6.2
+            SDL_VERSION: 2.30.9
+            SDL_MIXER_VERSION: 2.8.0
             BUILD_TARGET: linux
             DEPLOY: linux
           - name: Linux x64 (old SDL versions)
@@ -39,8 +39,8 @@ jobs:
           - name: macOS
             os: macos-latest
             cache-key: macos
-            SDL_VERSION: 2.26.4
-            SDL_MIXER_VERSION: 2.6.2
+            SDL_VERSION: 2.30.9
+            SDL_MIXER_VERSION: 2.8.0
             BUILD_TARGET: mac
             DEPLOY: mac
           - name: Nintendo Switch
@@ -54,8 +54,8 @@ jobs:
           - name: Android
             os: ubuntu-20.04
             cache-key: android
-            SDL_VERSION: 2.26.4
-            SDL_MIXER_VERSION: 2.6.2
+            SDL_VERSION: 2.30.9
+            SDL_MIXER_VERSION: 2.8.0
             BUILD_TARGET: android
             DEPLOY: android
           - name: Emscripten
@@ -125,8 +125,8 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: windows-latest
     env:
-      SDL_VERSION: 2.26.4
-      SDL_MIXER_VERSION: 2.6.2
+      SDL_VERSION: 2.30.9
+      SDL_MIXER_VERSION: 2.8.0
       COMPILER: ${{ matrix.COMPILER }}
       SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}
     steps:
