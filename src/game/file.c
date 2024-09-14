@@ -393,6 +393,7 @@ int game_file_start_scenario_from_buffer(uint8_t *data, int length, int is_save_
     buffer buf;
     buffer_init(&buf, data, length);
     int mission = scenario_campaign_mission();
+    int rank = scenario_campaign_rank();
     map_bookmarks_clear();
 
     if (is_save_game) {
@@ -419,12 +420,13 @@ int game_file_start_scenario_from_buffer(uint8_t *data, int length, int is_save_
         initialize_saved_game();
         building_storage_reset_building_ids();
         scenario_set_name(campaign_get_scenario(mission)->name);
+        city_data_init_campaign_mission();
     } else {
         initialize_scenario_data(campaign_get_scenario(mission)->name);
     }
     scenario_set_custom(2);
-    city_data_init_campaign_mission();
     scenario_set_campaign_mission(mission);
+    scenario_set_campaign_rank(rank);
     scenario_restore_campaign_player_name();
     scenario_settings_init_favor();
     scenario_set_starting_personal_savings(setting_personal_savings_for_mission(0));
