@@ -17,7 +17,7 @@ static int export_attribute_media_type(const char *name, int target)
 {
     special_attribute_mapping_t *found = scenario_events_parameter_data_get_attribute_mapping_by_value(PARAMETER_TYPE_MEDIA_TYPE, target);
     if (found != 0) {
-        xml_exporter_add_attribute_text(name, string_from_ascii(found->text));
+        xml_exporter_add_attribute_text(name, found->text);
         return 1;
     }
     return 0;
@@ -29,41 +29,41 @@ static int export_message(custom_message_t *message)
         return 1;
     }
 
-    xml_exporter_new_element("message", 1);
-    xml_exporter_add_attribute_text("uid", message->linked_uid->text);
+    xml_exporter_new_element("message");
+    xml_exporter_add_attribute_encoded_text("uid", message->linked_uid->text);
 
     if (custom_messages_get_title(message)) {
-        xml_exporter_new_element("title", 1);
-        xml_exporter_add_element_text(custom_messages_get_title(message));
-        xml_exporter_close_element(1);
+        xml_exporter_new_element("title");
+        xml_exporter_add_element_encoded_text(custom_messages_get_title(message));
+        xml_exporter_close_element();
     }
 
     if (custom_messages_get_subtitle(message)) {
-        xml_exporter_new_element("subtitle", 1);
-        xml_exporter_add_element_text(custom_messages_get_subtitle(message));
-        xml_exporter_close_element(1);
+        xml_exporter_new_element("subtitle");
+        xml_exporter_add_element_encoded_text(custom_messages_get_subtitle(message));
+        xml_exporter_close_element();
     }
 
-    xml_exporter_new_element("text", 1);
-    xml_exporter_add_element_text(custom_messages_get_text(message));
-    xml_exporter_close_element(1);
+    xml_exporter_new_element("text");
+    xml_exporter_add_element_encoded_text(custom_messages_get_text(message));
+    xml_exporter_close_element();
 
     for (int i = 0; i < CUSTOM_MEDIA_MAX; i++) {
         if (message->linked_media[i] && message->linked_media[i]->type != CUSTOM_MEDIA_UNDEFINED) {
-            xml_exporter_new_element("media", 1);
+            xml_exporter_new_element("media");
             export_attribute_media_type("type", message->linked_media[i]->type);
-            xml_exporter_add_attribute_text("filename", message->linked_media[i]->filename->text);
-            xml_exporter_close_element(0);
+            xml_exporter_add_attribute_encoded_text("filename", message->linked_media[i]->filename->text);
+            xml_exporter_close_element();
         }
     }
 
     if (message->linked_background_music && message->linked_background_music->type != CUSTOM_MEDIA_UNDEFINED) {
-        xml_exporter_new_element("background_music", 1);
-        xml_exporter_add_attribute_text("filename", message->linked_background_music->filename->text);
-        xml_exporter_close_element(0);
+        xml_exporter_new_element("background_music");
+        xml_exporter_add_attribute_encoded_text("filename", message->linked_background_music->filename->text);
+        xml_exporter_close_element();
     }
 
-    xml_exporter_close_element(0);
+    xml_exporter_close_element();
     
     return 1;
 }
@@ -71,7 +71,7 @@ static int export_message(custom_message_t *message)
 static void export_custom_messages(buffer *buf)
 {
     xml_exporter_init(buf, "messages");
-    xml_exporter_new_element("messages", 0);
+    xml_exporter_new_element("messages");
     xml_exporter_add_attribute_int("version", CUSTOM_MESSAGES_XML_VERSION);
 
     int message_count = custom_messages_count();
@@ -79,7 +79,7 @@ static void export_custom_messages(buffer *buf)
         custom_message_t *message = custom_messages_get(i);
         export_message(message);
     }
-    xml_exporter_close_element(0);
+    xml_exporter_close_element();
     xml_exporter_newline();
 }
 

@@ -46,7 +46,7 @@ static const struct {
     {123, 296, 575, 323},
     {99, 31, 406, 105},
     {187, 149, 82, 4},
-    {196, 296, 396, 296},
+    {196, 296, 396, 296}
 };
 
 static image_button image_button_start_mission = {

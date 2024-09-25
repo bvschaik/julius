@@ -12,6 +12,7 @@ typedef struct {
     const uint8_t *description;
     int number_of_missions;
     int starting_rank;
+    int current_mission;
 } campaign_info;
 
 typedef struct {
@@ -94,7 +95,7 @@ const campaign_mission_info *campaign_get_current_mission(int scenario_id);
  * @return A pointer to the first mission whose first scenario is higher than last_scenario_id,
  * or 0 if there's an error or if there are no new missions.
  */
-const campaign_mission_info *campaign_get_next_mission(int last_scenario_id);
+const campaign_mission_info *campaign_advance_mission(int last_scenario_id);
 
 /**
  * Gets a scenario from the campaign.

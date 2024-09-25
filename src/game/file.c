@@ -302,7 +302,7 @@ static void initialize_saved_game(void)
     game_state_unpause();
 }
 
-static int get_campaign_mission_offset(int mission_id)
+int game_file_get_original_campaign_mission_offset(int mission_id)
 {
     uint8_t offset_data[4];
     buffer buf;
@@ -315,7 +315,7 @@ static int get_campaign_mission_offset(int mission_id)
 
 static int load_campaign_mission(int mission_id)
 {
-    int offset = get_campaign_mission_offset(mission_id);
+    int offset = game_file_get_original_campaign_mission_offset(mission_id);
     if (offset <= 0) {
         return 0;
     }

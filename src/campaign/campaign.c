@@ -2,6 +2,7 @@
 
 #include "campaign/file.h"
 #include "campaign/mission.h"
+#include "campaign/player_data.h"
 #include "campaign/xml.h"
 #include "core/file.h"
 #include "core/log.h"
@@ -18,7 +19,7 @@ static struct {
     campaign_mission_info mission_info;
 } data;
 
-static void get_campaign_data(void)
+static void get_campaign_data(const char *filename)
 {
     if (!campaign_file_open_zip()) {
         log_error("Error opening campaign file", 0, 0);
@@ -43,6 +44,8 @@ static void get_campaign_data(void)
         campaign_clear();
     }
 
+    data.campaign.current_mission = campaign_player_data_get_current_mission(filename);
+
     data.active = result;
 }
 
@@ -60,7 +63,7 @@ int campaign_load(const char *filename)
 
     campaign_clear();
     campaign_file_set_path(filename);
-    get_campaign_data();
+    get_campaign_data(filename);
     if (data.active) {
         snprintf(data.file_name, FILE_NAME_MAX, "%s", filename);
     }
@@ -139,11 +142,20 @@ const campaign_mission_info *campaign_get_current_mission(int scenario_id)
     return &data.mission_info;
 }
 
-const campaign_mission_info *campaign_get_next_mission(int last_scenario_id)
+const campaign_mission_info *campaign_advance_mission(int last_scenario_id)
 {
-    if (!data.active || !fill_mission_info(campaign_mission_next(last_scenario_id))) {
+    if (!data.active) {
         return 0;
     }
+    campaign_mission *mission = campaign_mission_next(last_scenario_id);
+    if (!fill_mission_info(mission)) {
+        mission = campaign_mission_current(last_scenario_id);
+        if (mission) {
+            campaign_player_data_update_current_mission(data.file_name, mission->id + 1);
+        }
+        return 0;
+    }
+    campaign_player_data_update_current_mission(data.file_name, mission->id);
     return &data.mission_info;
 }
 

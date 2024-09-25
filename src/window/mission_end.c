@@ -296,7 +296,7 @@ static void advance_to_next_mission(void)
     game_undo_disable();
     game_state_reset_overlay();
 
-    mission_info = campaign_get_next_mission(scenario_campaign_mission());
+    mission_info = campaign_advance_mission(scenario_campaign_mission());
 
     if (mission_info) {
         scenario_set_campaign_mission(mission_info->first_scenario);
@@ -382,7 +382,7 @@ void window_mission_end_show_won(void)
         char victory_video_utf8[FILE_NAME_MAX];
         encoding_to_utf8(victory_video, victory_video_utf8, FILE_NAME_MAX, encoding_system_uses_decomposed());
         window_video_show(victory_video_utf8, show_end_dialog);
-    } else if (campaign_is_active() && !campaign_get_next_mission(scenario_campaign_mission())) {
+    } else if (campaign_is_active() && !campaign_advance_mission(scenario_campaign_mission())) {
         // Won campaign
         window_video_show("smk/win_game.smk", show_intermezzo);
     } else {

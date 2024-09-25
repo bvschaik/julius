@@ -310,6 +310,7 @@ set(CAMPAIGN_FILES
     ${PROJECT_SOURCE_DIR}/src/campaign/campaign.c
     ${PROJECT_SOURCE_DIR}/src/campaign/file.c
     ${PROJECT_SOURCE_DIR}/src/campaign/mission.c
+    ${PROJECT_SOURCE_DIR}/src/campaign/player_data.c
     ${PROJECT_SOURCE_DIR}/src/campaign/xml.c
 )
 set(CITY_FILES
@@ -642,6 +643,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/military_menu.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_briefing.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_end.c
+    ${PROJECT_SOURCE_DIR}/src/window/mission_list.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_selection.c
     ${PROJECT_SOURCE_DIR}/src/window/new_campaign.c
     ${PROJECT_SOURCE_DIR}/src/window/numeric_input.c

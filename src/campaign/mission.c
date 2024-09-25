@@ -24,9 +24,7 @@ static void new_scenario(campaign_scenario *scenario, int index)
 
 campaign_mission *campaign_mission_new(void)
 {
-    campaign_mission *mission;
-    array_new_item(data.missions, data.missions.size, mission);
-    return mission;
+    return array_advance(data.missions);
 }
 
 campaign_mission *campaign_mission_current(int index)
@@ -53,9 +51,7 @@ campaign_mission *campaign_mission_next(int last_index)
 
 campaign_scenario *campaign_mission_new_scenario(void)
 {
-    campaign_scenario *scenario;
-    array_new_item(data.scenarios, data.scenarios.size, scenario);
-    return scenario;
+    return array_advance(data.scenarios);
 }
 
 campaign_scenario *campaign_mission_get_scenario(int scenario_id)

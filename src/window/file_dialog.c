@@ -306,7 +306,7 @@ static void draw_background(void)
         const char *filename = dir_get_file_at_location(data.selected_file, data.file_data->location);
         if (filename) {
             if (data.type == FILE_TYPE_SAVED_GAME) {
-                data.savegame_info_status = game_file_io_read_saved_game_info(filename, &data.info);
+                data.savegame_info_status = game_file_io_read_saved_game_info(filename, 0, &data.info);
             } else {
                 data.savegame_info_status = game_file_io_read_scenario_info(filename, &data.info);
             }

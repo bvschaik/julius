@@ -72,6 +72,7 @@ static void enemy_initial(figure *f, formation *m)
                     break;
                 case FIGURE_ENEMY_CATAPULT:
                     missile_type = FIGURE_CATAPULT_MISSILE;
+                    break;
                 default:
                     missile_type = FIGURE_SPEAR;
                     break;
@@ -700,7 +701,7 @@ void figure_enemy_catapult_action(figure *f)
     } else if (f->action_state == FIGURE_ACTION_150_ATTACK) {
         f->image_id = assets_get_image_id("Warriors", "catapult_ne_01") + dir;
     } else if (f->action_state == FIGURE_ACTION_151_ENEMY_INITIAL) {
-        f->image_id = f->image_id = assets_get_image_id("Warriors", "catapult_fe_e_01") + dir * 8 + figure_image_missile_launcher_offset(f);
+        f->image_id = assets_get_image_id("Warriors", "catapult_fe_e_01") + dir * 8 + figure_image_missile_launcher_offset(f);
     } else {
         f->image_id = assets_get_image_id("Warriors", "catapult_ne_01") + dir;
     }

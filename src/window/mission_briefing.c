@@ -29,11 +29,18 @@
 #include "window/city.h"
 #include "window/intermezzo.h"
 #include "window/main_menu.h"
+#include "window/mission_list.h"
 #include "window/mission_selection.h"
 #include "window/plain_message_dialog.h"
 #include "window/video.h"
 
 #include <string.h>
+
+typedef enum {
+    BUTTON_GO_BACK_NONE = 0,
+    BUTTON_GO_BACK_MISSION_SELECTION = 1,
+    BUTTON_GO_BACK_SCENARIO_SELECTION
+} button_go_back_action;
 
 static void show(void);
 static void button_back(int param1, int param2);
@@ -50,7 +57,7 @@ static image_button image_button_start_mission = {
 };
 
 static struct {
-    int is_review;
+    button_go_back_action back_action;
     int video_played;
     int audio_played;
     int focus_button;
@@ -100,7 +107,7 @@ static int has_briefing_message(void)
 
 static int play_video(void)
 {
-    if (!scenario_is_custom() || data.is_review || data.video_played) {
+    if (!scenario_is_custom() || data.back_action == BUTTON_GO_BACK_NONE || data.video_played) {
         return 0;
     }
     data.video_played = 1;
@@ -147,6 +154,7 @@ static void init_speech(int channel)
 static void play_audio(void)
 {
     if (!scenario_is_custom() || data.audio_played) {
+        data.audio_played = 1;
         return;
     }
     data.audio_played = 1;
@@ -167,6 +175,7 @@ static void play_audio(void)
     }
 
     if (!audio_file && !speech_file && !background_music) {
+        data.audio_played = 0;
         return;
     }
 
@@ -229,6 +238,12 @@ static void get_briefing_texts(const uint8_t **title, const uint8_t **subtitle, 
     }
 }
 
+static int can_go_back(void)
+{
+    return data.back_action == BUTTON_GO_BACK_SCENARIO_SELECTION ||
+        (data.back_action == BUTTON_GO_BACK_MISSION_SELECTION && game_mission_has_choice());
+}
+
 static void draw_background(void)
 {
     if (!data.file_loaded) {
@@ -279,7 +294,7 @@ static void draw_background(void)
     }
 
     lang_text_draw(62, 7, 376, 433, FONT_NORMAL_BLACK);
-    if (!data.is_review && game_mission_has_choice()) {
+    if (can_go_back()) {
         lang_text_draw(13, 4, 66, 435, FONT_NORMAL_BLACK);
     }
 
@@ -351,7 +366,7 @@ static void draw_foreground(void)
 
     rich_text_draw_scrollbar();
     image_buttons_draw(516, 426, &image_button_start_mission, 1);
-    if (!data.is_review && game_mission_has_choice()) {
+    if (can_go_back()) {
         image_buttons_draw(26, 428, &image_button_back, 1);
     }
 
@@ -368,7 +383,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (image_buttons_handle_mouse(m_dialog, 516, 426, &image_button_start_mission, 1, 0)) {
         return;
     }
-    if (!data.is_review && game_mission_has_choice()) {
+    if (can_go_back()) {
         if (image_buttons_handle_mouse(m_dialog, 26, 428, &image_button_back, 1, 0)) {
             return;
         }
@@ -377,22 +392,28 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void button_back(int param1, int param2)
 {
-    if (!data.is_review) {
-        sound_music_stop();
-        sound_speech_stop();
+    if (data.back_action == BUTTON_GO_BACK_NONE) {
+        return;
+    }
+    sound_music_stop();
+    sound_speech_stop();
+    if (data.back_action == BUTTON_GO_BACK_MISSION_SELECTION) {
         window_mission_selection_show_again();
+    } else {
+        window_mission_list_show_again();
+        sound_music_play_intro();
     }
 }
 
 static void button_start_mission(int param1, int param2)
 {
-    if (!data.is_review || data.audio_played) {
+    if (data.back_action != BUTTON_GO_BACK_NONE || data.audio_played) {
         sound_music_stop();
         sound_speech_stop();
     }
     sound_music_update(1);
     window_city_show();
-    if (!data.is_review) {
+    if (data.back_action != BUTTON_GO_BACK_NONE) {
         city_mission_reset_save_start();
     }
 }
@@ -411,7 +432,7 @@ static void show(void)
 
 void window_mission_briefing_show(void)
 {
-    data.is_review = 0;
+    data.back_action = BUTTON_GO_BACK_MISSION_SELECTION;
     data.video_played = 0;
     data.file_loaded = 0;
     data.background_image_id = 0;
@@ -420,8 +441,17 @@ void window_mission_briefing_show(void)
 
 void window_mission_briefing_show_review(void)
 {
-    data.is_review = 1;
+    data.back_action = BUTTON_GO_BACK_NONE;
     data.file_loaded = 1;
+    data.background_image_id = 0;
+    scenario_is_custom() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
+}
+
+void window_mission_briefing_show_from_scenario_selection(void)
+{
+    data.back_action = BUTTON_GO_BACK_SCENARIO_SELECTION;
+    data.video_played = 0;
+    data.file_loaded = 0;
     data.background_image_id = 0;
     scenario_is_custom() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
 }
