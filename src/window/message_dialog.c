@@ -185,6 +185,7 @@ static void clear_custom_lang_message(void)
     data.custom_lang_message.content.text = 0;
     data.custom_lang_message.video.text = 0;
     data.should_play_audio = 0;
+    data.should_play_speech = 0;
     data.should_play_background_music = 0;
     data.background_image_id = 0;
 }
