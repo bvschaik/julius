@@ -1418,7 +1418,7 @@ static translation_string all_strings[] = {
     { TR_HOTKEY_SHOW_OVERLAY_HEALTH, "보건 맵보기" },
     { TR_HOTKEY_SHOW_OVERLAY_LOGISTICS, "물류 맵보기" },
     { TR_HOTKEY_SHOW_OVERLAY_RELATIVE, "상대적 맵보기" },
-    { TR_MAIN_MENU_NEW_CAMPAIGN, "새로운 캠페인 시작" },
+    { TR_MAIN_MENU_SELECT_CAMPAIGN, "새로운 캠페인 시작" },
     { TR_MESS_HALL_SPECIAL_ORDERS_HEADER, "보급소 명령" },
     { TR_OVERLAY_EMPLOYMENT, "고용" },
     { TR_OVERLAY_HEALTH, "종합" },

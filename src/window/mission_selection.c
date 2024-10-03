@@ -1,10 +1,10 @@
 #include "mission_selection.h"
 
 #include "assets/assets.h"
-#include "campaign/campaign.h"
 #include "core/image_group.h"
 #include "core/lang.h"
 #include "core/log.h"
+#include "game/campaign.h"
 #include "game/mission.h"
 #include "game/settings.h"
 #include "graphics/graphics.h"
@@ -14,12 +14,14 @@
 #include "graphics/text.h"
 #include "graphics/screen.h"
 #include "graphics/window.h"
+#include "input/input.h"
 #include "scenario/property.h"
 #include "sound/channel.h"
 #include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
 #include "window/mission_briefing.h"
+#include "window/mission_list.h"
 #include "window/video.h"
 
 #include <stdlib.h>
@@ -28,29 +30,11 @@
 #define BACKGROUND_HEIGHT 768
 
 static void button_start(int param1, int param2);
+static void button_back(int param1, int param2);
 
-static campaign_scenario DEFAULT_SCENARIOS[2];
-
-static const struct {
-    int x_peaceful;
-    int y_peaceful;
-    int x_military;
-    int y_military;
-} CAMPAIGN_SELECTION[10] = {
-    {288, 178, 349, 228},
-    {114, 198, 320, 282},
-    {545, 281, 220, 117},
-    {169, 105, 236, 288},
-    {572, 279, 15, 312},
-    {93, 236, 152, 55},
-    {123, 296, 575, 323},
-    {99, 31, 406, 105},
-    {187, 149, 82, 4},
-    {196, 296, 396, 296}
-};
-
-static image_button image_button_start_mission = {
-    0, 0, 27, 27, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 56, button_start, button_none, 1, 0, 1
+static image_button image_buttons_start_mission[] = {
+    { 0, 0, 39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 120, button_back, button_none, 1, 0, 1 },
+    { 50, 0, 39, 26, IB_NORMAL, GROUP_SIDEBAR_BUTTONS, 116, button_start, button_none, 1, 0, 1 }
 };
 
 static struct {
@@ -72,46 +56,19 @@ static void clear_loaded_mission(void)
     data.mission.title = 0;
     data.mission.background_image_id = 0;
     data.mission.total_scenarios = 0;
+    data.choice = 0;
 }
 
-static void load_original_campaign_rank_scenarios(int rank)
+static void load_scenarios(void)
 {
-    data.mission.title = lang_get_string(144, 1 + 3 * rank);
-    data.mission.total_scenarios = 2;
-    data.mission.background_image_id = image_group(GROUP_SELECT_MISSION) + rank - 2;
-    data.mission.scenarios = malloc(sizeof(campaign_scenario *) * data.mission.total_scenarios);
-    if (!data.mission.scenarios) {
-        log_error("Failed to allocate memory for scenarios. The game will now crash.", 0, 0);
-        return;
-    }
-    DEFAULT_SCENARIOS[0].id = game_mission_peaceful();
-    DEFAULT_SCENARIOS[0].name = lang_get_string(144, 1 + 3 * rank + 1);
-    DEFAULT_SCENARIOS[0].description = 0;
-    DEFAULT_SCENARIOS[0].fanfare = "wavs/fanfare_nu1.wav";
-    DEFAULT_SCENARIOS[0].x = CAMPAIGN_SELECTION[rank - 2].x_peaceful;
-    DEFAULT_SCENARIOS[0].y = CAMPAIGN_SELECTION[rank - 2].y_peaceful;
-
-    DEFAULT_SCENARIOS[1].id = game_mission_military();
-    DEFAULT_SCENARIOS[1].name = lang_get_string(144, 1 + 3 * rank + 2);
-    DEFAULT_SCENARIOS[1].description = 0;
-    DEFAULT_SCENARIOS[1].fanfare = "wavs/fanfare_nu5.wav";
-    DEFAULT_SCENARIOS[1].x = CAMPAIGN_SELECTION[rank - 2].x_military;
-    DEFAULT_SCENARIOS[1].y = CAMPAIGN_SELECTION[rank - 2].y_military;
-
-    data.mission.scenarios[0] = &DEFAULT_SCENARIOS[0];
-    data.mission.scenarios[1] = &DEFAULT_SCENARIOS[1];
-}
-
-static void load_new_campaign_rank_scenarios(int scenario_id)
-{
-    const campaign_mission_info *mission = campaign_get_current_mission(scenario_id);
+    const campaign_mission_info *mission = game_campaign_get_current_mission(scenario_campaign_mission());
     data.mission.title = mission->title;
     data.mission.total_scenarios = mission->total_scenarios;
     data.mission.intro_video = mission->intro_video;
-    if (mission->background_image) {
-        data.mission.background_image_id = assets_get_external_image(mission->background_image, 0);
+    if (mission->background_image.path) {
+        data.mission.background_image_id = assets_get_external_image(mission->background_image.path, 0);
     } else {
-        data.mission.background_image_id = 0;
+        data.mission.background_image_id = mission->background_image.id;
     }
     data.mission.scenarios = malloc(sizeof(campaign_scenario *) * data.mission.total_scenarios);
     if (!data.mission.scenarios) {
@@ -119,20 +76,20 @@ static void load_new_campaign_rank_scenarios(int scenario_id)
         return;
     }
     for (int i = 0; i < mission->total_scenarios; i++) {
-        data.mission.scenarios[i] = campaign_get_scenario(i + mission->first_scenario);
+        data.mission.scenarios[i] = game_campaign_get_scenario(i + mission->first_scenario);
     }
-    scenario_set_custom(2);
+    scenario_set_custom(game_campaign_is_original() ? 0 : 2);
 }
 
 static void init(void)
 {
+    clear_loaded_mission();
     sound_music_stop();
     sound_speech_stop();
-    if (!campaign_is_active()) {
-        load_original_campaign_rank_scenarios(scenario_campaign_rank());
-    } else {
-        load_new_campaign_rank_scenarios(scenario_campaign_mission());
+    if (!game_campaign_is_active()) {
+        return;
     }
+    load_scenarios();
 }
 
 static void draw_background_images(void)
@@ -191,9 +148,7 @@ static void draw_foreground(void)
 {
     graphics_in_dialog();
 
-    if (data.choice > 0) {
-        image_buttons_draw(580, 410, &image_button_start_mission, 1);
-    }
+    image_buttons_draw(530, 410, image_buttons_start_mission, data.choice ? 2 : 1);
 
     int image_id = image_group(GROUP_SELECT_MISSION_BUTTON);
 
@@ -219,16 +174,18 @@ static void handle_input(const mouse *m, const hotkeys *h)
         }
     }
 
-    if (data.choice > 0) {
-        if (image_buttons_handle_mouse(m_dialog, 580, 410, &image_button_start_mission, 1, 0)) {
-            return;
-        }
-        if (m_dialog->right.went_up || h->escape_pressed) {
+    if (image_buttons_handle_mouse(m_dialog, 530, 410, image_buttons_start_mission, data.choice ? 2 : 1, 0)) {
+        return;
+    }
+
+    if (input_go_back_requested(m, h)) {
+        if (data.choice > 0) {
             data.choice = 0;
             window_invalidate();
+        } else {
+            button_back(0, 0);
         }
-    } else if (h->escape_pressed) {
-        hotkey_handle_escape();
+        return;
     }
 
     if (m_dialog->left.went_up) {
@@ -258,6 +215,13 @@ static void button_start(int param1, int param2)
 {
     clear_loaded_mission();
     window_mission_briefing_show();
+}
+
+static void button_back(int param1, int param2)
+{
+    clear_loaded_mission();
+    window_mission_list_show();
+    sound_music_play_intro();
 }
 
 static void show(void)

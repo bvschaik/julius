@@ -1,7 +1,7 @@
 #ifndef CAMPAIGN_MISSION_H
 #define CAMPAIGN_MISSION_H
 
-#include "campaign/campaign.h"
+#include "game/campaign.h"
 
 typedef struct {
     int id;
@@ -10,7 +10,10 @@ typedef struct {
     int last_scenario;
     int next_rank;
     int max_personal_savings;
-    const char *background_image;
+    struct {
+        const char *path;
+        int id;
+    } background_image;
     const char *intro_video;
 } campaign_mission;
 

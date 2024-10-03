@@ -17,6 +17,7 @@
 #include "empire/trade_route.h"
 #include "empire/type.h"
 #include "figuretype/trader.h"
+#include "game/campaign.h"
 #include "game/resource.h"
 #include "game/save_version.h"
 #include "scenario/building.h"
@@ -563,7 +564,7 @@ static void set_new_monument_elements_production(int empire_id, empire_city *cit
 {
     int damascus_empire_id;
     int caesarea_empire_id;
-    if (scenario_is_custom() || editor_is_active()) {
+    if (!game_campaign_is_original() || editor_is_active()) {
         damascus_empire_id = 37;
         caesarea_empire_id = 34;
     } else {

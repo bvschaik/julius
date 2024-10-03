@@ -1,10 +1,10 @@
 #include "mission_briefing.h"
 
 #include "assets/assets.h"
-#include "campaign/campaign.h"
 #include "city/mission.h"
 #include "core/image_group.h"
 #include "core/lang.h"
+#include "game/campaign.h"
 #include "game/file.h"
 #include "game/mission.h"
 #include "game/settings.h"
@@ -82,16 +82,16 @@ static void init(void)
 
 static int load_scenario_file(void)
 {
-    if (!campaign_is_active()) {
+    if (!game_campaign_is_active()) {
         return game_file_start_scenario_by_name(scenario_name());
     } else {
-        return campaign_load_scenario(scenario_campaign_mission());
+        return game_campaign_load_scenario(scenario_campaign_mission());
     }
 }
 
 static int has_briefing_message(void)
 {
-    if (!scenario_is_custom()) {
+    if (game_campaign_is_original()) {
         return 1;
     }
     if (!scenario_intro_message()) {
@@ -107,7 +107,7 @@ static int has_briefing_message(void)
 
 static int play_video(void)
 {
-    if (!scenario_is_custom() || data.back_action == BUTTON_GO_BACK_NONE || data.video_played) {
+    if (game_campaign_is_original() || data.back_action == BUTTON_GO_BACK_NONE || data.video_played) {
         return 0;
     }
     data.video_played = 1;
@@ -153,7 +153,7 @@ static void init_speech(int channel)
 
 static void play_audio(void)
 {
-    if (!scenario_is_custom() || data.audio_played) {
+    if (game_campaign_is_original() || data.audio_played) {
         data.audio_played = 1;
         return;
     }
@@ -200,7 +200,7 @@ static void play_audio(void)
 
 static void draw_background_image(void)
 {
-    if (!scenario_is_custom()) {
+    if (game_campaign_is_original()) {
         window_draw_underlying_window();
         return;
     }
@@ -224,7 +224,7 @@ static void draw_background_image(void)
 
 static void get_briefing_texts(const uint8_t **title, const uint8_t **subtitle, const uint8_t **content)
 {
-    if (!scenario_is_custom()) {
+    if (game_campaign_is_original()) {
         int text_id = 200 + scenario_campaign_mission();
         const lang_message *msg = lang_get_message(text_id);
         *title = msg->title.text;
@@ -436,7 +436,7 @@ void window_mission_briefing_show(void)
     data.video_played = 0;
     data.file_loaded = 0;
     data.background_image_id = 0;
-    scenario_is_custom() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
+    game_campaign_is_original() ? window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show) : show();
 }
 
 void window_mission_briefing_show_review(void)
@@ -444,7 +444,7 @@ void window_mission_briefing_show_review(void)
     data.back_action = BUTTON_GO_BACK_NONE;
     data.file_loaded = 1;
     data.background_image_id = 0;
-    scenario_is_custom() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
+    game_campaign_is_original() ? window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show) : show();
 }
 
 void window_mission_briefing_show_from_scenario_selection(void)
@@ -453,5 +453,5 @@ void window_mission_briefing_show_from_scenario_selection(void)
     data.video_played = 0;
     data.file_loaded = 0;
     data.background_image_id = 0;
-    scenario_is_custom() ? show() : window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show);
+    game_campaign_is_original() ? window_intermezzo_show(INTERMEZZO_MISSION_BRIEFING, show) : show();
 }

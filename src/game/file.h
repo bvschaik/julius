@@ -11,13 +11,6 @@ enum {
 };
 
 /**
- * Gets the file offset for the original campaign's mission id.
- * @param mission_id The ID of the mission to get the offset.
- * @return The file offset of the corresponding mission ID.
- */
-int game_file_get_original_campaign_mission_offset(int mission_id);
-
-/**
  * Starts a game scenario from a buffer.
  * @param data The buffer containing the game data.
  * @param length The length of the buffer.

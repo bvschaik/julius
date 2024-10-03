@@ -4,9 +4,19 @@
 #include "core/buffer.h"
 #include "scenario/data.h"
 
+typedef enum {
+    SAVEGAME_FROM_CUSTOM_SCENARIO = 0,
+    SAVEGAME_FROM_ORIGINAL_CAMPAIGN = 1,
+    SAVEGAME_FROM_CUSTOM_CAMPAIGN = 2
+} saved_game_origin;
+
 typedef struct {
-    int mission;
-    int custom_mission;
+    struct {
+        int mission;
+        char scenario_name[MAX_SCENARIO_NAME];
+        char campaign_name[FILE_NAME_MAX];
+        saved_game_origin type;
+    } origin;
     int treasury;
     int population;
     int month;

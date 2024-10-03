@@ -1,6 +1,7 @@
 #include "intermezzo.h"
 
 #include "core/time.h"
+#include "game/campaign.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/screen.h"
@@ -79,7 +80,7 @@ static void init(intermezzo_type type, void (*callback)(void))
     sound_speech_stop();
     if (data.type == INTERMEZZO_FIRED) {
         sound_speech_play_file(SOUND_FILE_LOSE);
-    } else if (scenario_is_custom()) {
+    } else if (!game_campaign_is_original()) {
         sound_speech_play_file(SOUND_FILE_CUSTOM_SCENARIO_WIN);
     } else { // If it isn't a custom scenario
         int mission = scenario_campaign_mission();
@@ -95,7 +96,7 @@ static void draw_background(void)
 {
     graphics_clear_screen();
 
-    int mission = scenario_is_custom() ? 0 : scenario_campaign_mission();
+    int mission = !game_campaign_is_original() ? 0 : scenario_campaign_mission();
     int image_id = image_group(GROUP_INTERMEZZO_BACKGROUND) + 2 * mission;
     if (data.type == INTERMEZZO_MISSION_BRIEFING) {
         image_id++;

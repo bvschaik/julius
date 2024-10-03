@@ -3,7 +3,7 @@
 #include "core/array.h"
 
 #define MISSIONS_ARRAY_SIZE_STEP 8
-#define SCENARIOS_ARRAY_SIZE_STEP 2
+#define SCENARIOS_ARRAY_SIZE_STEP 16
 
 static struct {
     array(campaign_mission) missions;
@@ -68,19 +68,23 @@ int campaign_mission_init(void)
 
 void campaign_mission_clear(void)
 {
-    campaign_mission *mission;
-    array_foreach(data.missions, mission) {
-        free((uint8_t *) mission->title);
-        free((char *) mission->background_image);
-        free((char *) mission->intro_video);
+    if (game_campaign_is_custom()) {
+        campaign_mission *mission;
+        array_foreach(data.missions, mission) {
+            free((uint8_t *) mission->title);
+            free((char *) mission->background_image.path);
+            free((char *) mission->intro_video);
+        }
     }
     array_clear(data.missions);
     campaign_scenario *scenario;
     array_foreach(data.scenarios, scenario) {
         free((uint8_t *) scenario->name);
-        free((uint8_t *) scenario->description);
-        free((char *) scenario->fanfare);
-        free((char *) scenario->path);
+        if (game_campaign_is_custom()) {
+            free((uint8_t *) scenario->description);
+            free((char *) scenario->fanfare);
+            free((char *) scenario->path);
+        }
     }
     array_clear(data.scenarios);
 }

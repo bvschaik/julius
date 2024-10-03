@@ -1508,13 +1508,41 @@ static building *savegame_building(int id)
     return &b;
 }
 
+static void get_saved_game_origin(saved_game_info *info, const savegame_state *state)
+{
+    info->origin.mission = buffer_read_i32(state->scenario_campaign_mission);
+    int scenario_is_custom = buffer_read_i32(state->scenario_is_custom);
+    int version = buffer_read_i32(state->file_version);
+
+    info->origin.campaign_name[0] = 0;
+
+    if (!scenario_is_custom) {
+        info->origin.type = SAVEGAME_FROM_ORIGINAL_CAMPAIGN;
+        info->origin.scenario_name[0] = 0;
+        return;
+    }
+
+    buffer_read_raw(state->scenario_name, info->origin.scenario_name, MAX_SCENARIO_NAME);
+    file_remove_extension(info->origin.scenario_name);
+
+    if (version <= SAVE_GAME_LAST_NO_CUSTOM_CAMPAIGNS) {
+        return;
+    }
+
+    int campaign_name_length = buffer_read_i32(state->campaign_name);
+    if (campaign_name_length <= 1) {
+        return;
+    }
+
+    info->origin.type = SAVEGAME_FROM_CUSTOM_CAMPAIGN;
+    buffer_read_raw(state->campaign_name, info->origin.campaign_name, campaign_name_length);
+    file_remove_extension(info->origin.campaign_name);
+}
+
 static savegame_load_status savegame_read_file_info(saved_game_info *info, savegame_version_t version)
 {
     const savegame_state *state = &savegame_data.state;
     scenario_version_t scenario_version = save_version_to_scenario_version(version, state->scenario_version);
-
-    info->mission = buffer_read_i32(state->scenario_campaign_mission);
-    info->custom_mission = buffer_read_i32(state->scenario_is_custom);
 
     city_data_load_basic_info(state->city_data, &info->population, &info->treasury, &minimap_data.caravanserai_id, version);
     game_time_load_basic_info(state->game_time, &info->month, &info->year);
@@ -1530,6 +1558,8 @@ static savegame_load_status savegame_read_file_info(saved_game_info *info, saveg
     if (!info->is_open_play) {
         scenario_objectives_from_buffer(state->scenario, version, &info->win_criteria);
     }
+
+    get_saved_game_origin(info, state);
 
     int grid_start;
     int grid_border_size;

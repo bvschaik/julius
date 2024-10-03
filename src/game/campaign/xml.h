@@ -1,7 +1,7 @@
 #ifndef CAMPAIGN_XML_H
 #define CAMPAIGN_XML_H
 
-#include "campaign/campaign.h"
+#include "game/campaign.h"
 
 #include <stdint.h>
 

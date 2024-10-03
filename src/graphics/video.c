@@ -1,11 +1,11 @@
 #include "video.h"
 
-#include "campaign/campaign.h"
 #include "core/config.h"
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/smacker.h"
 #include "core/time.h"
+#include "game/campaign.h"
 #include "game/system.h"
 #include "graphics/renderer.h"
 #include "platform/file_manager.h"
@@ -97,7 +97,7 @@ static int load_mpg(const char *filename)
     }
     data.plm = 0;
     size_t length;
-    uint8_t *video_buffer = campaign_load_file(mpg_filename, &length);
+    uint8_t *video_buffer = game_campaign_load_file(mpg_filename, &length);
     if (video_buffer) {
         data.plm = plm_create_with_memory(video_buffer, length, 1);
     }

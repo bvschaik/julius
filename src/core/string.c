@@ -38,17 +38,6 @@ int string_equals_until(const uint8_t *a, const uint8_t *b, unsigned int limit)
     }
 }
 
-const uint8_t *string_find(const uint8_t *text, uint8_t value)
-{
-    while (*text) {
-        if (*text == value) {
-            return text;
-        }
-        text++;
-    }
-    return 0;
-}
-
 uint8_t *string_copy(const uint8_t *src, uint8_t *dst, int maxlength)
 {
     int length = 0;

@@ -1,7 +1,6 @@
 #include "mission_end.h"
 
 #include "assets/assets.h"
-#include "campaign/campaign.h"
 #include "city/emperor.h"
 #include "city/finance.h"
 #include "city/population.h"
@@ -10,6 +9,7 @@
 #include "core/calc.h"
 #include "core/encoding.h"
 #include "core/image_group.h"
+#include "game/campaign.h"
 #include "game/mission.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -209,7 +209,7 @@ static void draw_won(void)
         int width_blocks = rich_text_init(victory_message_text, 96, y_offset + 56, 28, panel_height_blocks - 11, 1);
         inner_panel_draw(64, y_offset + 56, width_blocks + 2, panel_height_blocks - 11);
         rich_text_draw(victory_message_text, 80, y_offset + 64, width_blocks * BLOCK_SIZE, panel_height_blocks - 12, 0);
-    } else if (scenario_is_custom()) {
+    } else if (!game_campaign_is_original()) {
         inner_panel_draw(64, y_offset + 56, 32, panel_height_blocks - 11);
         lang_text_draw_multiline(147, 20, 80, y_offset + 64, 488, FONT_NORMAL_WHITE);
     } else {
@@ -283,7 +283,7 @@ static void draw_foreground(void)
 
 static void advance_to_next_mission(void)
 {
-    const campaign_mission_info *mission_info = campaign_get_current_mission(scenario_campaign_mission());
+    const campaign_mission_info *mission_info = game_campaign_get_current_mission(scenario_campaign_mission());
 
     if (mission_info && mission_info->next_rank != CAMPAIGN_NO_RANK) {
         scenario_set_campaign_rank(mission_info->next_rank);
@@ -296,23 +296,19 @@ static void advance_to_next_mission(void)
     game_undo_disable();
     game_state_reset_overlay();
 
-    mission_info = campaign_advance_mission(scenario_campaign_mission());
+    mission_info = game_campaign_advance_mission(scenario_campaign_mission());
 
     if (mission_info) {
         scenario_set_campaign_mission(mission_info->first_scenario);
         int personal_savings = calc_bound(city_emperor_personal_savings(), 0, mission_info->max_personal_savings);
-        setting_set_personal_savings_for_mission(0, personal_savings);
+        setting_set_personal_savings_for_mission(game_campaign_is_custom() ? 0 : scenario_campaign_rank(),
+            personal_savings);
         window_mission_selection_show();
-    } else if (scenario_campaign_rank() >= 10 || scenario_is_custom()) {
+    } else {
         window_main_menu_show(1);
         setting_clear_personal_savings();
         scenario_settings_init();
         scenario_set_campaign_rank(2);
-    } else {
-        scenario_set_campaign_rank(scenario_campaign_rank() + 1);
-        setting_set_personal_savings_for_mission(scenario_campaign_rank(), city_emperor_personal_savings());
-        scenario_set_campaign_mission(game_mission_peaceful());
-        window_mission_selection_show();
     }
 }
 
@@ -337,7 +333,7 @@ static void button_fired(int param1, int param2)
     sound_speech_stop();
     city_victory_stop_governing();
     game_undo_disable();
-    if (scenario_is_custom() && !campaign_is_active()) {
+    if (!game_campaign_is_active()) {
         window_main_menu_show(1);
     } else {
         window_mission_selection_show_again();
@@ -369,9 +365,6 @@ void window_mission_end_show_won(void)
     if (scenario_is_tutorial_1() || scenario_is_tutorial_2()) {
         // tutorials: immediately go to next mission
         show_intermezzo();
-    } else if (!scenario_is_custom() && scenario_campaign_rank() >= 10) {
-        // Won campaign
-        window_video_show("smk/win_game.smk", show_intermezzo);
     } else if (has_custom_victory_message()) {
         custom_message_t *victory_message = custom_messages_get(scenario_victory_message());
         const uint8_t *victory_video = custom_messages_get_video(victory_message);
@@ -382,7 +375,7 @@ void window_mission_end_show_won(void)
         char victory_video_utf8[FILE_NAME_MAX];
         encoding_to_utf8(victory_video, victory_video_utf8, FILE_NAME_MAX, encoding_system_uses_decomposed());
         window_video_show(victory_video_utf8, show_end_dialog);
-    } else if (campaign_is_active() && !campaign_advance_mission(scenario_campaign_mission())) {
+    } else if (game_campaign_is_active() && !game_campaign_advance_mission(scenario_campaign_mission())) {
         // Won campaign
         window_video_show("smk/win_game.smk", show_intermezzo);
     } else {

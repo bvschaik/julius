@@ -6,6 +6,7 @@
 #include "city/warning.h"
 #include "core/config.h"
 #include "core/direction.h"
+#include "game/campaign.h"
 #include "game/orientation.h"
 #include "game/state.h"
 #include "game/undo.h"
@@ -134,7 +135,7 @@ static void draw_sidebar_remainder(int x_offset, int is_collapsed)
 static void draw_number_of_messages(int x_offset)
 {
     int messages = city_message_count();
-    int show_messages = !scenario_is_custom() || messages > 0 || scenario_intro_message();
+    int show_messages = game_campaign_is_original() || messages > 0 || scenario_intro_message();
     buttons_build_expanded[13].enabled = show_messages;
     buttons_build_expanded[14].enabled = city_message_problem_area_count();
     if (show_messages) {

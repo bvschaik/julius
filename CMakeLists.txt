@@ -306,13 +306,7 @@ set(BUILDING_FILES
     ${PROJECT_SOURCE_DIR}/src/building/variant.c
     ${PROJECT_SOURCE_DIR}/src/building/warehouse.c
 )
-set(CAMPAIGN_FILES
-    ${PROJECT_SOURCE_DIR}/src/campaign/campaign.c
-    ${PROJECT_SOURCE_DIR}/src/campaign/file.c
-    ${PROJECT_SOURCE_DIR}/src/campaign/mission.c
-    ${PROJECT_SOURCE_DIR}/src/campaign/player_data.c
-    ${PROJECT_SOURCE_DIR}/src/campaign/xml.c
-)
+
 set(CITY_FILES
     ${PROJECT_SOURCE_DIR}/src/city/buildings.c
     ${PROJECT_SOURCE_DIR}/src/city/culture.c
@@ -398,6 +392,12 @@ set(FIGURETYPE_FILES
     ${PROJECT_SOURCE_DIR}/src/figuretype/workcamp.c
 )
 set(GAME_FILES
+    ${PROJECT_SOURCE_DIR}/src/game/campaign/campaign.c
+    ${PROJECT_SOURCE_DIR}/src/game/campaign/file.c
+    ${PROJECT_SOURCE_DIR}/src/game/campaign/mission.c
+    ${PROJECT_SOURCE_DIR}/src/game/campaign/original.c
+    ${PROJECT_SOURCE_DIR}/src/game/campaign/player_data.c
+    ${PROJECT_SOURCE_DIR}/src/game/campaign/xml.c
     ${PROJECT_SOURCE_DIR}/src/game/animation.c
     ${PROJECT_SOURCE_DIR}/src/game/cheats.c
     ${PROJECT_SOURCE_DIR}/src/game/difficulty.c
@@ -645,7 +645,6 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/mission_end.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_list.c
     ${PROJECT_SOURCE_DIR}/src/window/mission_selection.c
-    ${PROJECT_SOURCE_DIR}/src/window/new_campaign.c
     ${PROJECT_SOURCE_DIR}/src/window/numeric_input.c
     ${PROJECT_SOURCE_DIR}/src/window/option_popup.c
     ${PROJECT_SOURCE_DIR}/src/window/overlay_menu.c
@@ -653,6 +652,7 @@ set(WINDOW_FILES
     ${PROJECT_SOURCE_DIR}/src/window/popup_dialog.c
     ${PROJECT_SOURCE_DIR}/src/window/race_bet.c
     ${PROJECT_SOURCE_DIR}/src/window/resource_settings.c
+    ${PROJECT_SOURCE_DIR}/src/window/select_campaign.c
     ${PROJECT_SOURCE_DIR}/src/window/select_list.c
     ${PROJECT_SOURCE_DIR}/src/window/set_salary.c
     ${PROJECT_SOURCE_DIR}/src/window/text_input.c
@@ -718,7 +718,6 @@ set(SOURCE_FILES
     ${PLATFORM_FILES}
     ${CORE_FILES}
     ${BUILDING_FILES}
-    ${CAMPAIGN_FILES}
     ${CITY_FILES}
     ${EMPIRE_FILES}
     ${FIGURE_FILES}

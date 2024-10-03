@@ -1,11 +1,11 @@
 #include "xml.h"
 
-#include "campaign/file.h"
-#include "campaign/mission.h"
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/log.h"
 #include "core/xml_parser.h"
+#include "game/campaign/file.h"
+#include "game/campaign/mission.h"
 
 #include <limits.h>
 #include <stdint.h>
@@ -154,7 +154,7 @@ static int xml_start_mission(void)
     data.current_mission->title = copy_string_from_xml(xml_parser_get_attribute_string("title"));
     const char *background_image = xml_parser_get_attribute_string("background_image");
     if (background_image) {        
-        data.current_mission->background_image = create_full_campaign_path("image", background_image);
+        data.current_mission->background_image.path = create_full_campaign_path("image", background_image);
     }
     const char *intro_video = xml_parser_get_attribute_string("video");
     if (intro_video) {

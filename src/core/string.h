@@ -26,14 +26,6 @@ int string_equals(const uint8_t *a, const uint8_t *b);
 int string_equals_until(const uint8_t *a, const uint8_t *b, unsigned int limit);
 
 /**
- * Tries to find a value in a string
- * @param text String to search
- * @param value Value to find
- * @return A pointer to the first occurence of the found value if found, 0 otherwise.
- */
-const uint8_t *string_find(const uint8_t *text, uint8_t value);
-
-/**
  * Copies a string
  * @param src Source string
  * @param dst Destination string

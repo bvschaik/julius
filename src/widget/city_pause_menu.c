@@ -1,8 +1,8 @@
 #include "city_pause_menu.h"
 
 #include "building/construction.h"
-#include "campaign/campaign.h"
 #include "core/lang.h"
+#include "game/campaign.h"
 #include "game/file.h"
 #include "game/settings.h"
 #include "game/state.h"
@@ -84,7 +84,7 @@ static void replay_map_confirmed(int confirmed, int checked)
     if (!confirmed) {
         return;
     }
-    if (scenario_is_custom() && !campaign_is_active()) {
+    if (!game_campaign_is_active()) {
         if (!game_file_start_scenario_by_name(scenario_name())) {
             window_plain_message_dialog_show_with_extra(TR_REPLAY_MAP_NOT_FOUND_TITLE,
                 TR_REPLAY_MAP_NOT_FOUND_MESSAGE, 0, scenario_name());
@@ -92,7 +92,8 @@ static void replay_map_confirmed(int confirmed, int checked)
             window_city_show();
         }
     } else {
-        setting_set_personal_savings_for_mission(0, scenario_starting_personal_savings());
+        int mission_id = game_campaign_is_original() ? scenario_campaign_mission() : 0;
+        setting_set_personal_savings_for_mission(mission_id, scenario_starting_personal_savings());
         scenario_save_campaign_player_name();
         window_mission_selection_show_again();
     }

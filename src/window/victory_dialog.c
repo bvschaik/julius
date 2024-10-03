@@ -1,8 +1,8 @@
 #include "victory_dialog.h"
 
 #include "assets/assets.h"
-#include "campaign/campaign.h"
 #include "city/victory.h"
+#include "game/campaign.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -27,50 +27,27 @@ static generic_button victory_buttons[] = {
 
 static unsigned int focus_button_id = 0;
 
-static int get_next_rank(void)
-{
-    int current_rank = 0;
-    if (scenario_is_custom()) {
-        current_rank = scenario_property_player_rank();
-    } else {
-        current_rank = scenario_campaign_rank();
-    }
-    if (current_rank < MAX_RANK) {
-        return current_rank + 1;
-    } else {
-        return MAX_RANK;
-    }
-}
-
 static void draw_background(void)
 {
     window_draw_underlying_window();    	
     graphics_in_dialog();
 
     outer_panel_draw(48, 128, 34, 15);
-    const campaign_mission_info *mission = campaign_get_current_mission(scenario_campaign_mission());
+    const campaign_mission_info *mission = game_campaign_get_current_mission(scenario_campaign_mission());
 
-    if (scenario_is_custom()) {
-        if (!mission || mission->next_rank <= CAMPAIGN_NO_RANK || mission->next_rank == scenario_campaign_rank()) {
-            lang_text_draw_centered(62, 0, 48, 159, 544, FONT_LARGE_BLACK);
-        } else {
-            if (mission->next_rank < 10) {
-                lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
-                lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK);
-                lang_text_draw_centered(32, mission->next_rank, 48, 194, 544, FONT_LARGE_BLACK);
-            } else {
-                text_draw_centered(scenario_player_name(), 48, 144, 512, FONT_LARGE_BLACK, 0);
-                lang_text_draw_multiline(62, 26, 140, 175, 360, FONT_NORMAL_BLACK);
-            }
-        }
-    } else if (scenario_campaign_rank() < 10) {
-        lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
-        lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK);
-        lang_text_draw_centered(32, get_next_rank(), 48, 194, 544, FONT_LARGE_BLACK);
+    if (!mission || mission->next_rank <= CAMPAIGN_NO_RANK || mission->next_rank == scenario_campaign_rank()) {
+        lang_text_draw_centered(62, 0, 48, 159, 544, FONT_LARGE_BLACK);
     } else {
-        text_draw_centered(scenario_player_name(), 48, 144, 512, FONT_LARGE_BLACK, 0);
-        lang_text_draw_multiline(62, 26, 140, 175, 360, FONT_NORMAL_BLACK);
+        if (mission->next_rank < 10) {
+            lang_text_draw_centered(62, 0, 48, 144, 544, FONT_LARGE_BLACK);
+            lang_text_draw_centered(62, 2, 48, 175, 544, FONT_NORMAL_BLACK);
+            lang_text_draw_centered(32, mission->next_rank, 48, 194, 544, FONT_LARGE_BLACK);
+        } else {
+            text_draw_centered(scenario_player_name(), 48, 144, 512, FONT_LARGE_BLACK, 0);
+            lang_text_draw_multiline(62, 26, 140, 175, 360, FONT_NORMAL_BLACK);
+        }
     }
+
     graphics_reset_dialog();
 }
 
@@ -83,25 +60,17 @@ static void draw_foreground(void)
         image_draw(image_id, 88, 137, COLOR_MASK_NONE, SCALE_NONE);
         image_draw(image_id, 512, 137, COLOR_MASK_NONE, SCALE_NONE);
         large_label_draw(80, 240, 30, focus_button_id == 1);
-        if (scenario_is_custom()) {
-            const campaign_mission_info *mission = campaign_get_current_mission(scenario_campaign_mission());
-            if (!mission || mission->next_rank <= CAMPAIGN_NO_RANK || mission->next_rank == scenario_campaign_rank()) {
-                lang_text_draw_centered(44, 16, 80, 246, 480, FONT_NORMAL_GREEN);
-            } else {
-                if (mission->next_rank < 10) {
-                    lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_GREEN);
-                } else {
-                    lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_GREEN);
-                }
-            }
+        const campaign_mission_info *mission = game_campaign_get_current_mission(scenario_campaign_mission());
+        if (!mission || mission->next_rank <= CAMPAIGN_NO_RANK || mission->next_rank == scenario_campaign_rank()) {
+            lang_text_draw_centered(44, 16, 80, 246, 480, FONT_NORMAL_GREEN);
         } else {
-            if (scenario_campaign_rank() < 10) {
+            if (mission->next_rank < 10) {
                 lang_text_draw_centered(62, 3, 80, 246, 480, FONT_NORMAL_GREEN);
             } else {
                 lang_text_draw_centered(62, 27, 80, 246, 480, FONT_NORMAL_GREEN);
             }
         }
-        if (scenario_is_custom() || scenario_campaign_rank() >= 2) {
+        if (!game_campaign_is_original() || scenario_campaign_rank() >= 2) {
             // Continue for 2/5 years
             large_label_draw(80, 272, 30, focus_button_id == 2);
             lang_text_draw_centered(62, 4, 80, 278, 480, FONT_NORMAL_GREEN);
@@ -120,7 +89,7 @@ static void draw_foreground(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     int num_buttons;
-    if (scenario_campaign_rank() >= 2 || scenario_is_custom()) {
+    if (scenario_campaign_rank() >= 2 || !game_campaign_is_original()) {
         num_buttons = 3;
     } else {
         num_buttons = 1;

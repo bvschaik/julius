@@ -15,6 +15,7 @@
 #include "core/random.h"
 #include "figure/formation_legion.h"
 #include "figuretype/water.h"
+#include "game/campaign.h"
 #include "game/settings.h"
 #include "game/time.h"
 #include "scenario/property.h"
@@ -252,8 +253,8 @@ static void update_god_moods(void)
             god->happiness += 12;
             perform_small_curse(god_id);
         } else if (god->wrath_bolts >= 50 && god->months_since_festival > 3) {
-            if (scenario_campaign_rank() < 4 && !scenario_is_custom()) {
-                // no large curses in early scenarios
+            if (scenario_campaign_rank() < 4 && game_campaign_is_original()) {
+                // no large curses in early original scenarios
                 god->small_curse_done = 0;
                 return;
             }

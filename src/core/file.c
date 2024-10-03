@@ -67,7 +67,7 @@ void file_remove_extension(char *filename)
     }
 }
 
-const char *file_remove_directory(const char *filename)
+const char *file_remove_path(const char *filename)
 {
     char *filename_without_directory = strrchr(filename, '/');
     if (filename_without_directory) {

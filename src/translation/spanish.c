@@ -1413,7 +1413,7 @@ static translation_string all_strings[] = {
     {TR_CHEAT_CLIMATE_CHANGE, "Cambio climático en curso" },
     {TR_CHEAT_EDITOR_WARNING_TITLE, "Advertencia"},
     {TR_CHEAT_EDITOR_WARNING_TEXT, "Ejecutar el editor de mapas desde el modo ciudad puede corromper la partida guardada o hacer que el juego se cuelgue. Procede bajo tu propia responsabilidad y asegúrate de tener un respaldo de la partida guardada actualmente."},
-    {TR_MAIN_MENU_NEW_CAMPAIGN, "Empezar nueva campaña"},
+    {TR_MAIN_MENU_SELECT_CAMPAIGN, "Empezar nueva campaña"},
     {TR_WINDOW_SELECT_CAMPAIGN, "Selecciona una campaña"},
     {TR_WINDOW_CAMPAIGN_AUTHOR, "Autor:"},
     {TR_WINDOW_CAMPAIGN_NO_DESC, "Sin descripción"},

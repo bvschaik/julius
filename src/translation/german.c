@@ -1114,7 +1114,7 @@ static translation_string all_strings[] = {
     {TR_WINDOW_RACE_WHITE_HORSE_DESCRIPTION, "Das weiße Team - gegründet von ehemaligen Gladiatoren. Sie haben den Kampf im Blut, und auch als freie Männer leben sie für die Herausforderung."},
     {TR_WINDOW_RACE_GREEN_HORSE_DESCRIPTION, "Das grüne Team - Nachfahren der \"Celeres\"-Reiter aus der Zeit des römischen Königreichs. Sie behaupten immer noch, die Besten der Besten zu sein."},
     /* System - Kampagnen-Menü */
-    {TR_MAIN_MENU_NEW_CAMPAIGN, "Neue Kampagne starten"},
+    {TR_MAIN_MENU_SELECT_CAMPAIGN, "Neue Kampagne starten"},
     {TR_WINDOW_SELECT_CAMPAIGN, "Eine Kampagne auswählen"},
     {TR_WINDOW_CAMPAIGN_NO_DESC, "Keine Beschreibung"},
     {TR_WINDOW_ORIGINAL_CAMPAIGN_NAME, "Original-Kampagne" },

@@ -2,7 +2,6 @@
 
 #include "assets/assets.h"
 #include "building/count.h"
-#include "campaign/campaign.h"
 #include "city/constants.h"
 #include "city/population.h"
 #include "city/resource.h"
@@ -18,6 +17,7 @@
 #include "empire/city.h"
 #include "empire/object.h"
 #include "empire/trade_route.h"
+#include "game/campaign.h"
 #include "game/save_version.h"
 #include "scenario/empire.h"
 
@@ -67,7 +67,7 @@ static void set_image_id(const char *path)
         char full_path[FILE_NAME_MAX];
         const char *found_path = 0;
         snprintf(full_path, FILE_NAME_MAX, "%s/%s", paths[i], path);
-        if (campaign_has_file(full_path)) {
+        if (game_campaign_has_file(full_path)) {
             found_path = full_path;
         } else {
             found_path = dir_get_file_at_location(full_path, PATH_LOCATION_COMMUNITY);

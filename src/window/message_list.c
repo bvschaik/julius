@@ -1,10 +1,10 @@
 #include "message_list.h"
 
-#include "campaign/campaign.h"
 #include "city/message.h"
 #include "core/calc.h"
 #include "core/image_group.h"
 #include "core/lang.h"
+#include "game/campaign.h"
 #include "game/time.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
@@ -94,7 +94,7 @@ static struct {
 
 static int review_briefing_button_should_be_active(void)
 {
-    if (!scenario_is_custom()) {
+    if (game_campaign_is_original()) {
         return 1;
     }
     if (!scenario_intro_message()) {
@@ -343,7 +343,7 @@ static void button_delete_all_read(int param1, int param2)
 
 static void button_mission_briefing(int param1, int param2)
 {
-    if (!scenario_is_custom() || scenario_intro_message()) {
+    if (game_campaign_is_original() || scenario_intro_message()) {
         window_mission_briefing_show_review();
     }
 }

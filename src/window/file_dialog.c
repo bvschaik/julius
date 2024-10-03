@@ -275,28 +275,44 @@ static void init(file_type type, file_dialog_type dialog_type)
 
 static void draw_mission_info(int x_offset, int y_offset, int box_size)
 {
-    if (data.info.custom_mission) {
-        text_draw_centered(translation_for(TR_SAVE_DIALOG_CUSTOM_SCENARIO),
-            x_offset, y_offset, box_size, FONT_NORMAL_BLACK, 0);
-        return;
-    }
-    if (data.info.mission == 0) {
-        text_draw_centered(translation_for(TR_SAVE_DIALOG_FIRST_MISSION),
-            x_offset, y_offset, box_size, FONT_NORMAL_BLACK, 0);
-        return;
-    }
-    translation_key mission_type;
-    if (data.info.mission == 1) {
-        mission_type = TR_SAVE_DIALOG_MISSION;
-    } else if (data.info.mission % 2) {
-        mission_type = TR_SAVE_DIALOG_MILITARY;
+    uint8_t text[FILE_NAME_MAX];
+    uint8_t *cursor = text;
+
+    if (data.info.origin.type == SAVEGAME_FROM_CUSTOM_SCENARIO) {
+        cursor = string_copy(translation_for(TR_SAVE_DIALOG_CUSTOM_SCENARIO), cursor, FILE_NAME_MAX);
+        cursor = string_copy(string_from_ascii(" - "), cursor, FILE_NAME_MAX - (int) (cursor - text));
+        encoding_from_utf8(data.info.origin.scenario_name, cursor, FILE_NAME_MAX - (int) (cursor - text));
+    } else if (data.info.origin.type == SAVEGAME_FROM_ORIGINAL_CAMPAIGN) {
+        if (data.info.origin.mission == 0) {
+            text_draw_centered(translation_for(TR_SAVE_DIALOG_FIRST_MISSION),
+                x_offset, y_offset, box_size, FONT_NORMAL_BLACK, 0);
+            return;
+        } else {
+            translation_key mission_type;
+            if (data.info.origin.mission == 1) {
+                mission_type = TR_SAVE_DIALOG_MISSION;
+            } else if (data.info.origin.mission % 2) {
+                mission_type = TR_SAVE_DIALOG_MILITARY;
+            } else {
+                mission_type = TR_SAVE_DIALOG_PEACEFUL;
+            }
+            cursor = string_copy(translation_for(mission_type), cursor, FILE_NAME_MAX);
+            cursor = string_copy(string_from_ascii(" "), cursor, FILE_NAME_MAX - (int) (cursor - text));            
+            cursor += string_from_int(cursor, (data.info.origin.mission + 4) / 2, 0);
+            cursor = string_copy(string_from_ascii(" - "), cursor, FILE_NAME_MAX - (int) (cursor - text));
+            string_copy(lang_get_string(21, MISSION_ID_TO_CITY_ID[data.info.origin.mission]), cursor,
+                FILE_NAME_MAX - (int) (cursor - text));
+        }
     } else {
-        mission_type = TR_SAVE_DIALOG_PEACEFUL;
+        encoding_from_utf8(data.info.origin.campaign_name, cursor, FILE_NAME_MAX);
+        cursor += string_length(text);
+        cursor = string_copy(string_from_ascii(" - "), cursor, FILE_NAME_MAX - (int) (cursor - text));
+        cursor += string_from_int(cursor, data.info.origin.mission + 1, 0);
+        cursor = string_copy(string_from_ascii(" - "), cursor, FILE_NAME_MAX - (int) (cursor - text));
+        encoding_from_utf8(data.info.origin.scenario_name, cursor, FILE_NAME_MAX - (int) (cursor - text));
     }
-    int width = text_draw(translation_for(mission_type), x_offset, y_offset, FONT_NORMAL_BLACK, 0);
-    width += text_draw_number(data.info.mission / 2 + 2, '\0', " -", x_offset + width, y_offset,
-        FONT_NORMAL_BLACK, COLOR_MASK_NONE);
-    lang_text_draw(21, MISSION_ID_TO_CITY_ID[data.info.mission], x_offset + width, y_offset, FONT_NORMAL_BLACK);
+
+    text_draw_ellipsized(text, x_offset, y_offset, box_size, FONT_NORMAL_BLACK, 0);
 }
 
 static void draw_background(void)

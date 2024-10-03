@@ -1,12 +1,12 @@
 #include "emperor.h"
 
-#include "campaign/campaign.h"
 #include "city/data_private.h"
 #include "city/finance.h"
 #include "city/message.h"
 #include "city/ratings.h"
 #include "core/calc.h"
 #include "figure/formation.h"
+#include "game/campaign.h"
 #include "game/difficulty.h"
 #include "game/time.h"
 #include "scenario/property.h"
@@ -37,7 +37,7 @@ void city_emperor_init_scenario(int rank)
         city_data.emperor.caesar_salary = 100;
     }
     int salary_rank = rank;
-    if (scenario_is_custom() && !campaign_is_active()) {
+    if (!game_campaign_is_active()) {
         city_data.emperor.personal_savings = 0;
         city_data.emperor.player_rank = scenario_property_player_rank();
         salary_rank = scenario_property_player_rank();

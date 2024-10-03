@@ -1,10 +1,10 @@
 #include "scenario.h"
 
-#include "campaign/campaign.h"
 #include "city/resource.h"
 #include "core/string.h"
 #include "empire/city.h"
 #include "empire/trade_route.h"
+#include "game/campaign.h"
 #include "game/difficulty.h"
 #include "game/save_version.h"
 #include "game/settings.h"
@@ -803,13 +803,13 @@ void scenario_settings_save_state(buffer *part1, buffer *part2, buffer *part3,
     buffer_write_raw(player_name, scenario.settings.player_name, MAX_PLAYER_NAME);
     buffer_write_raw(scenario_name, scenario.scenario_name, MAX_SCENARIO_NAME);
 
-    int campaign_name_length = (int) strlen(campaign_get_name()) + 1;
+    int campaign_name_length = (int) strlen(game_campaign_get_name()) + 1;
     int buf_size = (int) sizeof(int32_t) + campaign_name_length;
     uint8_t *buf_data = malloc(buf_size);
 
     buffer_init(campaign_name, buf_data, buf_size);
     buffer_write_i32(campaign_name, campaign_name_length);
-    buffer_write_raw(campaign_name, campaign_get_name(), campaign_name_length);
+    buffer_write_raw(campaign_name, game_campaign_get_name(), campaign_name_length);
 }
 
 void scenario_settings_load_state(
@@ -827,11 +827,15 @@ void scenario_settings_load_state(
     buffer_read_raw(player_name, scenario.settings.player_name, MAX_PLAYER_NAME);
     buffer_read_raw(scenario_name, scenario.scenario_name, MAX_SCENARIO_NAME);
 
-    if (campaign_name && !campaign_is_active()) {
-        int campaign_name_length = buffer_read_i32(campaign_name);
-        char name[FILE_NAME_MAX];
-        buffer_read_raw(campaign_name, name, campaign_name_length);
-        campaign_load(name);
+    if (!game_campaign_is_active()) {
+        if (campaign_name) {
+            int campaign_name_length = buffer_read_i32(campaign_name);
+            char name[FILE_NAME_MAX];
+            buffer_read_raw(campaign_name, name, campaign_name_length);
+            game_campaign_load(name);
+        } else if (!scenario_is_custom()) {
+            game_campaign_load(CAMPAIGN_ORIGINAL_NAME);
+        }
     }
 }
 

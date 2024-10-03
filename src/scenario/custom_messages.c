@@ -1,11 +1,11 @@
 #include "custom_messages.h"
 
-#include "campaign/campaign.h"
 #include "core/array.h"
 #include "core/encoding.h"
 #include "core/file.h"
 #include "core/log.h"
 #include "core/string.h"
+#include "game/campaign.h"
 
 #define CUSTOM_MESSAGES_ARRAY_SIZE_STEP 100
 
@@ -241,7 +241,7 @@ static const char *check_for_file_in_dir(const char *filename, const char *direc
     if (snprintf(filepath, FILE_NAME_MAX, "%s/%s", directory, filename) > FILE_NAME_MAX) {
         log_error("Filename too long. The file will not be loaded.", filename, 0);
     }
-    if (campaign_has_file(filepath)) {
+    if (game_campaign_has_file(filepath)) {
         return filepath;
     }
     return dir_get_file_at_location(filepath, location);

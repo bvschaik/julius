@@ -1,10 +1,10 @@
 #include "mission_list.h"
 
 #include "assets/assets.h"
-#include "campaign/campaign.h"
 #include "core/image_group.h"
 #include "core/log.h"
 #include "core/string.h"
+#include "game/campaign.h"
 #include "game/file.h"
 #include "game/file_io.h"
 #include "graphics/generic_button.h"
@@ -19,16 +19,12 @@
 #include "widget/minimap.h"
 #include "window/mission_briefing.h"
 #include "window/mission_selection.h"
-#include "window/new_campaign.h"
+#include "window/select_campaign.h"
 
 #include <string.h>
 
-#define MISSION_PACK_FILE "mission1.pak"
 #define MISSION_LIST_Y_POSITION 48
 #define NUM_BOTTOM_BUTTONS (sizeof(bottom_buttons) / sizeof(generic_button))
-#define NUM_ORIGINAL_SCENARIOS 20
-#define MAX_ORIGINAL_SCENARIO_NAME_SIZE 50
-#define MAX_ORIGINAL_SCENARIO_DESCRIPTION_SIZE 150
 #define MISSION_MAP_MAX_WIDTH 352.0f
 #define MISSION_MAP_MAX_HEIGHT 300.0f
 #define SELECTED_ITEM_INFO_X_OFFSET 272
@@ -57,8 +53,10 @@ typedef struct {
     int rank;
     struct {
         int id;
-        int background_image_id;
-        const char *background_image_path;
+        struct {
+            int id;
+            const char *path;
+        } background_image;
         const uint8_t *title;
         int total_scenarios;
     } mission;
@@ -96,19 +94,6 @@ static list_box_type list_box = {
     .handle_tooltip = item_tooltip
 };
 
-static campaign_scenario ORIGINAL_SCENARIOS[NUM_ORIGINAL_SCENARIOS];
-
-static struct {
-    int x;
-    int y;
-    uint8_t name[MAX_ORIGINAL_SCENARIO_NAME_SIZE];
-    uint8_t description[MAX_ORIGINAL_SCENARIO_DESCRIPTION_SIZE];
-} ORIGINAL_SCENARIO_DATA[NUM_ORIGINAL_SCENARIOS] = {
-    { 0, 0 }, { 0, 0 }, { 288, 178 }, { 349, 228 }, { 114, 198 }, { 320, 282 }, { 545, 281 }, { 220, 117 },
-    { 169, 105 }, { 236, 288 }, { 572, 279 }, { 15, 312 }, { 93, 236 }, { 152, 55 }, { 123, 296 }, { 575, 323 },
-    { 99, 31 }, { 406, 105 }, { 187, 149 }, { 82, 4 }
-};
-
 static void clear_list(void)
 {
     data.total_items = 0;
@@ -116,100 +101,11 @@ static void clear_list(void)
     data.items = 0;
 }
 
-static void generate_original_campaign_list(void)
-{
-    clear_list();
-    data.total_items = 38;
-    data.items = malloc(sizeof(campaign_item) * data.total_items);
-    data.campaign_finished = 1;
-    if (!data.items) {
-        log_error("Error creating mission items. The game will probably crash.", 0, 0);
-    }
-    memset(data.items, 0, sizeof(campaign_item) * data.total_items);
-    int mission_id = 1;
-
-    for (int item = 0, rank = 0, scenario = 0; rank < 11; rank++) {
-
-        if (rank > 1) {
-            data.items[item].index = item;
-            data.items[item].type = ITEM_TYPE_NONE;
-            item++;
-        }
-
-        int scenarios_per_rank = rank < 2 ? 1 : 2;
-        data.items[item].index = item;
-        data.items[item].type = ITEM_TYPE_MISSION;
-        data.items[item].mission.total_scenarios = scenarios_per_rank;
-        data.items[item].mission.background_image_id = rank < 2 ? 0 : (image_group(GROUP_SELECT_MISSION) + rank - 2);
-        data.items[item].rank = rank;
-        data.items[item].mission.title = lang_get_string(144, 1 + 3 * rank);
-        data.items[item].mission.id = mission_id;
-
-        mission_id++;
-
-        if (scenarios_per_rank == 1) {
-            data.items[item].scenario = &ORIGINAL_SCENARIOS[scenario];
-        } else {
-            data.items[item].scenario = 0;
-        }
-        item++;
-
-        for (int i = 0; i < scenarios_per_rank; i++) {
-            int name_offset = rank < 2 ? 0 : 1;
-            const uint8_t *name = lang_get_string(144, 1 + 3 * rank + name_offset + i);
-            const uint8_t *description = string_find(name, ':');
-            int length;
-
-            if (description) {
-                description++;
-                length = (int) (description - name);
-                if (length > MAX_ORIGINAL_SCENARIO_NAME_SIZE) {
-                    length = MAX_ORIGINAL_SCENARIO_NAME_SIZE;
-                }
-                while (*description == ' ') {
-                    description++;
-                }
-            } else {
-                length = MAX_ORIGINAL_SCENARIO_NAME_SIZE;
-            }
-            string_copy(name, ORIGINAL_SCENARIO_DATA[scenario].name, length);
-            if (description) {
-                length = string_length(description) + 1;
-                if (length > MAX_ORIGINAL_SCENARIO_DESCRIPTION_SIZE) {
-                    length = MAX_ORIGINAL_SCENARIO_DESCRIPTION_SIZE;
-                }
-                string_copy(description, ORIGINAL_SCENARIO_DATA[scenario].description, length);
-
-                // Make first letter uppercase
-                if (ORIGINAL_SCENARIO_DATA[scenario].description[0] >= 'a' &&
-                    ORIGINAL_SCENARIO_DATA[scenario].description[0] <= 'z') {
-                    ORIGINAL_SCENARIO_DATA[scenario].description[0] -= 32;
-                }
-            }
-            ORIGINAL_SCENARIOS[scenario].id = scenario;
-            ORIGINAL_SCENARIOS[scenario].name = ORIGINAL_SCENARIO_DATA[scenario].name;
-            ORIGINAL_SCENARIOS[scenario].description = ORIGINAL_SCENARIO_DATA[scenario].description;
-            ORIGINAL_SCENARIOS[scenario].x = ORIGINAL_SCENARIO_DATA[scenario].x;
-            ORIGINAL_SCENARIOS[scenario].y = ORIGINAL_SCENARIO_DATA[scenario].y;
-
-            if (scenarios_per_rank == 2) {
-                data.items[item].index = item;
-                data.items[item].type = ITEM_TYPE_SCENARIO;
-                data.items[item].rank = rank;
-                data.items[item].scenario = &ORIGINAL_SCENARIOS[scenario];
-                item++;
-            }
-
-            scenario++;
-        }
-    }
-}
-
-static void generate_custom_campaign_list(void)
+static void generate_list(void)
 {
     clear_list();
 
-    const campaign_info *info = campaign_get_info();
+    const campaign_info *info = game_campaign_get_info();
 
     unsigned int missions_to_show = info->number_of_missions > info->current_mission ?
         info->current_mission + 1 : info->number_of_missions;
@@ -222,7 +118,7 @@ static void generate_custom_campaign_list(void)
     unsigned int current_scenario_id = 0;
     for (unsigned int i = 0; i < missions_to_show; i++) {
         int scenarios_on_last_mission = mission_info ? mission_info->total_scenarios : 0;
-        mission_info = campaign_get_current_mission(current_scenario_id);
+        mission_info = game_campaign_get_current_mission(current_scenario_id);
         if (mission_info->total_scenarios > 1) {
             data.total_items += mission_info->total_scenarios;
             if (scenarios_on_last_mission) {
@@ -248,7 +144,7 @@ static void generate_custom_campaign_list(void)
     for (int item = 0, mission = 0; mission < missions_to_show; mission++, item++) {
         int scenarios_on_last_mission = mission_info ? mission_info->total_scenarios : 0;
 
-        mission_info = campaign_get_current_mission(current_scenario_id);
+        mission_info = game_campaign_get_current_mission(current_scenario_id);
 
         if (scenarios_on_last_mission && (scenarios_on_last_mission > 1 || mission_info->total_scenarios > 1)) {
             data.items[item].index = item;
@@ -259,16 +155,19 @@ static void generate_custom_campaign_list(void)
         data.items[item].index = item;
         data.items[item].type = ITEM_TYPE_MISSION;
         data.items[item].mission.total_scenarios = mission_info->total_scenarios;
-        data.items[item].mission.background_image_path = mission_info->background_image;
+        if (mission_info->background_image.path) {
+            data.items[item].mission.background_image.path = mission_info->background_image.path;
+        } else {
+            data.items[item].mission.background_image.id = mission_info->background_image.id;
+        }
         data.items[item].rank = rank;
         data.items[item].mission.title = mission_info->title;
         data.items[item].mission.id = mission_id;
         mission_id++;
 
         if (mission_info->total_scenarios == 1) {
-            data.items[item].scenario = campaign_get_scenario(current_scenario_id);
+            data.items[item].scenario = game_campaign_get_scenario(current_scenario_id);
             current_scenario_id++;
-            continue;
         } else {
             for (int i = 0; i < mission_info->total_scenarios; i++) {
                 item++;
@@ -276,7 +175,7 @@ static void generate_custom_campaign_list(void)
                 data.items[item].index = item;
                 data.items[item].type = ITEM_TYPE_SCENARIO;
                 data.items[item].rank = rank;
-                data.items[item].scenario = campaign_get_scenario(current_scenario_id);
+                data.items[item].scenario = game_campaign_get_scenario(current_scenario_id);
 
                 current_scenario_id++;
             }
@@ -290,12 +189,11 @@ static void generate_custom_campaign_list(void)
 
 static void init(void)
 {
-    if (!campaign_is_active()) {
-        generate_original_campaign_list();
-    } else {
-        generate_custom_campaign_list();
+    if (!game_campaign_is_active()) {
+        return;
     }
 
+    generate_list();
     list_box_init(&list_box, data.total_items);
 
     if (data.total_items > 0) {
@@ -321,11 +219,11 @@ static int draw_mission_selection_map(void)
 {
     int image_id;
     float extra_scale = 1.0f;
-    if (!data.selected_item->mission.background_image_id) {
+    if (!data.selected_item->mission.background_image.id) {
         image_id = image_group(GROUP_EMPIRE_MAP);
         extra_scale = 2.5f;
     } else {
-        image_id = data.selected_item->mission.background_image_id;
+        image_id = data.selected_item->mission.background_image.id;
     }
 
     const image *img = image_get(image_id);
@@ -374,9 +272,7 @@ static void draw_background(void)
 
     graphics_in_dialog();
     outer_panel_draw(0, 0, 40, 30);
-    const uint8_t *title = campaign_is_active() ?
-        campaign_get_info()->name : lang_get_string(CUSTOM_TRANSLATION, TR_WINDOW_ORIGINAL_CAMPAIGN_NAME);
-    text_draw_centered(title, 32, 14, 554, FONT_LARGE_BLACK, 0);
+    text_draw_centered(game_campaign_get_info()->name, 32, 14, 554, FONT_LARGE_BLACK, 0);
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_WINDOW_MISSION_LIST_CAMPAIGN_NOT_FINISHED - data.campaign_finished,
         16, 446, SELECTED_ITEM_INFO_X_OFFSET - 48, FONT_NORMAL_BLACK);
 
@@ -492,7 +388,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
 
 static void button_back(int param1, int param2)
 {
-    window_new_campaign_show();
+    window_select_campaign_show();
 }
 
 static void select_item(unsigned int index, int is_double_click)
@@ -511,31 +407,11 @@ static void select_item(unsigned int index, int is_double_click)
     data.selected_item = &data.items[index];
 
     if (data.selected_item->scenario) {
-        if (!campaign_is_active()) {
-            data.savegame_info_status = game_file_io_read_saved_game_info(MISSION_PACK_FILE,
-                game_file_get_original_campaign_mission_offset(data.selected_item->scenario->id), &data.info);
-        } else {
-            size_t length;
-            const campaign_scenario *scenario = data.selected_item->scenario;
-            uint8_t *scenario_data = campaign_load_file(scenario->path, &length);
-            if (!scenario_data) {
-                data.savegame_info_status = 0;
-                return;
-            }
-            buffer buf;
-            buffer_init(&buf, scenario_data, (int) length);
-
-            if (file_has_extension(scenario->path, "sav") || file_has_extension(scenario->path, "svx")) {
-                data.savegame_info_status = game_file_io_read_saved_game_info_from_buffer(&buf, &data.info);
-            } else {
-                data.savegame_info_status = game_file_io_read_scenario_info_from_buffer(&buf, &data.info);
-            }
-            free(scenario_data);
-        }
+        data.savegame_info_status = game_campaign_load_scenario_info(data.selected_item->scenario->id, &data.info);
     }
-    if (data.selected_item->type == ITEM_TYPE_MISSION && data.selected_item->mission.background_image_path) {
-        data.selected_item->mission.background_image_id =
-            assets_get_external_image(data.selected_item->mission.background_image_path, 0);
+    if (data.selected_item->type == ITEM_TYPE_MISSION && data.selected_item->mission.background_image.path) {
+        data.selected_item->mission.background_image.id =
+            assets_get_external_image(data.selected_item->mission.background_image.path, 0);
     }
 }
 
@@ -545,7 +421,7 @@ static void start_scenario(int param1, int param2)
         return;
     }
     scenario_set_campaign_rank(data.selected_item->rank);
-    scenario_set_custom(campaign_is_active() ? 2 : 0);
+    scenario_set_custom(game_campaign_is_custom() ? 2 : 0);
 
     if (data.ok_button_type == BUTTON_TYPE_BEGIN_SCENARIO) {
         if (!data.selected_item->scenario) {
@@ -554,6 +430,7 @@ static void start_scenario(int param1, int param2)
         scenario_set_campaign_mission(data.selected_item->scenario->id);
         window_mission_briefing_show_from_scenario_selection();
     } else {
+        scenario_set_campaign_mission(data.items[data.selected_item->index + 1].scenario->id);
         window_mission_selection_show();
     }
 }

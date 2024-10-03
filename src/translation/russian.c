@@ -1411,7 +1411,7 @@ static translation_string all_strings[] = {
     {TR_CHEAT_CLIMATE_CHANGE, "Климат меняется"},
     {TR_CHEAT_EDITOR_WARNING_TITLE, "Внимание!"},
     {TR_CHEAT_EDITOR_WARNING_TEXT, "Запуск редактора карт из режима города может повредить сохранение или привести к краху игры.\n\nДействуйте на свой страх и риск и убедитесь, что у вас есть резервная копия текущего сохранения."},
-    {TR_MAIN_MENU_NEW_CAMPAIGN, "Начать новую игру"},
+    {TR_MAIN_MENU_SELECT_CAMPAIGN, "Начать новую игру"},
     {TR_WINDOW_SELECT_CAMPAIGN, "Выбрать кампанию"},
     {TR_WINDOW_CAMPAIGN_NO_DESC, "Нет описания"},
     {TR_WINDOW_ORIGINAL_CAMPAIGN_NAME, "Оригинальная карьера" },

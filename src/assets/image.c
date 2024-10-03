@@ -1,12 +1,12 @@
 #include "image.h"
 
 #include "assets/group.h"
-#include "campaign/campaign.h"
 #include "core/array.h"
 #include "core/image.h"
 #include "core/image_packer.h"
 #include "core/log.h"
 #include "core/png_read.h"
+#include "game/campaign.h"
 #include "graphics/color.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -672,7 +672,7 @@ const asset_image *asset_image_create_external(const char *filename)
         return 0;
     }
     size_t size;
-    uint8_t *png = campaign_load_file(filename, &size);
+    uint8_t *png = game_campaign_load_file(filename, &size);
     if (png) {
         if (!png_load_from_buffer(png, size)) {
             free(png);

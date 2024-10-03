@@ -1,13 +1,13 @@
 #include "rich_text.h"
 
 #include "assets/assets.h"
-#include "campaign/campaign.h"
 #include "core/calc.h"
 #include "core/file.h"
 #include "core/image.h"
 #include "core/image_group.h"
 #include "core/locale.h"
 #include "core/string.h"
+#include "game/campaign.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
@@ -257,7 +257,7 @@ static int get_external_image_id(const char *filename)
     const char *found_path = 0;
     for (int i = 0; i < 2 && !found_path; i++) {
         snprintf(full_path, FILE_NAME_MAX, "%s/%s", paths[i], filename);
-        if (campaign_has_file(full_path)) {
+        if (game_campaign_has_file(full_path)) {
             found_path = full_path;
         } else {
             found_path = dir_get_file_at_location(full_path, PATH_LOCATION_COMMUNITY);
