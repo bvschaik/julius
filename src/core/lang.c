@@ -30,6 +30,8 @@
 #define FILE_MM_RUS "c3_mm.rus"
 #define FILE_EDITOR_TEXT_ENG "c3_map.eng"
 #define FILE_EDITOR_MM_ENG "c3_map_mm.eng"
+#define FILE_EDITOR_TEXT_RUS "c3_map.rus"
+#define FILE_EDITOR_MM_RUS "c3_map_mm.rus"
 
 static struct {
     struct {
@@ -334,7 +336,9 @@ static int load_files(const char *text_filename, const char *message_filename, i
 int lang_load(int is_editor)
 {
     if (is_editor) {
-        return load_files(FILE_EDITOR_TEXT_ENG, FILE_EDITOR_MM_ENG, MAY_BE_LOCALIZED);
+        return
+            load_files(FILE_EDITOR_TEXT_RUS, FILE_EDITOR_MM_RUS, MAY_BE_LOCALIZED) ||
+            load_files(FILE_EDITOR_TEXT_ENG, FILE_EDITOR_MM_ENG, MAY_BE_LOCALIZED);
     }
     // Prefer language files from localized dir, fall back to main dir
     return
