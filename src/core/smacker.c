@@ -434,6 +434,16 @@ static int read_header(smacker s)
     return 1;
 }
 
+static void free_frame_info(smacker s)
+{
+    free(s->frame_sizes);
+    free(s->frame_offsets);
+    free(s->frame_types);
+    s->frame_sizes = 0;
+    s->frame_offsets = 0;
+    s->frame_types = 0;
+}
+
 static int read_frame_info(smacker s)
 {
     int sizes_length = sizeof(int32_t) * s->frames;
@@ -445,18 +455,14 @@ static int read_frame_info(smacker s)
 
     if (!s->frame_sizes || !s->frame_offsets || !s->frame_types) {
         log_error("SMK: no memory for frame info", 0, 0);
-        free(s->frame_sizes);
-        free(s->frame_offsets);
-        free(s->frame_types);
+        free_frame_info(s);
         return 0;
     }
 
     if (fread(s->frame_sizes, 1, sizes_length, s->fp) != sizes_length ||
         fread(s->frame_types, 1, types_length, s->fp) != types_length) {
         log_error("SMK: unable to read frame info from file", 0, 0);
-        free(s->frame_sizes);
-        free(s->frame_offsets);
-        free(s->frame_types);
+        free_frame_info(s);
         return 0;
     }
 
@@ -540,9 +546,7 @@ smacker smacker_open(FILE *fp)
 void smacker_close(smacker s)
 {
     file_close(s->fp);
-    free(s->frame_offsets);
-    free(s->frame_sizes);
-    free(s->frame_types);
+    free_frame_info(s);
     free_tree16(s->mclr_tree);
     free_tree16(s->mmap_tree);
     free_tree16(s->full_tree);
