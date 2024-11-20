@@ -328,6 +328,8 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
     scenario_settings_init_mission();
     city_emperor_init_scenario(rank);
 
+    tutorial_init();
+
     if (!is_save_game) {
         scenario_events_init();
         scenario_events_process_all();
