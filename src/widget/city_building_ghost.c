@@ -1203,8 +1203,11 @@ static void draw_grand_temple_neptune(const map_tile *tile, int x, int y)
     if (city_finance_out_of_money() || is_blocked_for_building(tile->grid_offset, props->size, blocked)) {
         image_blend_footprint_color(x, y, COLOR_MASK_RED, data.scale);
     }
+    int radius = map_water_supply_reservoir_radius();
     // need to add 2 for the bonus the Neptune GT will add
-    int radius = map_water_supply_reservoir_radius() + 2;
+    if (!building_monument_working(BUILDING_GRAND_TEMPLE_NEPTUNE)) {
+         radius += 2;
+    }
     city_view_foreach_tile_in_range(tile->grid_offset, props->size, radius, draw_grand_temple_neptune_range);
     int image_id = get_new_building_image_id(tile->grid_offset, BUILDING_GRAND_TEMPLE_NEPTUNE);
     draw_regular_building(BUILDING_GRAND_TEMPLE_NEPTUNE, image_id, x, y, tile->grid_offset, num_tiles, blocked);
