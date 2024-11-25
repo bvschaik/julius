@@ -450,10 +450,15 @@ int empire_object_get_closest(int x, int y)
 {
     int min_dist = 10000;
     int min_obj_id = 0;
+    int city_is_selected = 0;
     full_empire_object *full;
     array_foreach(objects, full) {
         const empire_object *obj = &full->obj;
         int obj_x, obj_y;
+        if (city_is_selected && obj->type != EMPIRE_OBJECT_CITY) {
+            //Prioritize selecting cities if available
+            continue;
+        }
         if (scenario_empire_is_expanded()) {
             obj_x = obj->expanded.x;
             obj_y = obj->expanded.y;
@@ -469,6 +474,9 @@ int empire_object_get_closest(int x, int y)
         }
         int dist = calc_maximum_distance(x, y, obj_x + obj->width / 2, obj_y + obj->height / 2);
         if (dist < min_dist) {
+            if (obj->type == EMPIRE_OBJECT_CITY) {
+                city_is_selected = 1;
+            }
             min_dist = dist;
             min_obj_id = array_index + 1;
         }
