@@ -195,6 +195,28 @@ void graphics_draw_from_buffer(int x, int y, int width, int height, const color_
     }
 }
 
+void graphics_blend_from_buffer(int x, int y, int width, int height, const color_t *buffer)
+{
+    const clip_info *current_clip = graphics_get_clip_info(x, y, width, height);
+    if (!current_clip->is_visible) {
+        return;
+    }
+    int min_dx = current_clip->clipped_pixels_left;
+    int max_dx = width - current_clip->clipped_pixels_right;
+    int min_dy = current_clip->clipped_pixels_top;
+    int max_dy = height - current_clip->clipped_pixels_bottom;
+    for (int dy = min_dy; dy < max_dy; dy++) {
+        for (int dx = min_dx; dx < max_dx; dx++) {
+            color_t src = buffer[dy * width + dx];
+            if (src) {
+                color_t *dst = graphics_get_pixel(x + dx, y + dy);
+                *dst = src;
+            }
+        }
+    }
+}
+
+
 color_t *graphics_get_pixel(int x, int y)
 {
     return &canvas.pixels[(translation.y + y) * canvas.width + (translation.x + x)];
