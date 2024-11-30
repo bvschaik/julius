@@ -473,7 +473,7 @@ static const figure_properties properties[FIGURE_TYPE_MAX] = {
     },
     [FIGURE_FORT_ARCHER] = {
     .category = FIGURE_CATEGORY_ARMED,
-    .max_damage = 80, .attack_value = 6, .defense_value = 0,
+    .max_damage = 90, .attack_value = 6, .defense_value = 0,
     .missile_defense_value = 0, .missile_attack_value = 4, .missile_delay = 50
     },
     [FIGURE_ENEMY_CATAPULT] = {
