@@ -106,10 +106,7 @@ local void gen_trees_header OF((void));
 #ifdef ZLIB_DEBUG
 local void send_bits      OF((deflate_state *s, int value, int length));
 
-local void send_bits(s, value, length)
-    deflate_state *s;
-    int value;
-    int length;
+local void send_bits(deflate_state *s, int value, int length)
 {
     Tracevv((stderr," l %2d v %4x ", length, value));
     Assert(length > 0 && length <= 15, "invalid length");
@@ -260,8 +257,7 @@ void gen_trees_header()
     fclose(header);
 }
 #endif
-void ZLIB_INTERNAL _tr_init(s)
-    deflate_state *s;
+void ZLIB_INTERNAL _tr_init(deflate_state *s)
 {
     tr_static_init();
 
@@ -282,8 +278,7 @@ void ZLIB_INTERNAL _tr_init(s)
 #endif
     init_block(s);
 }
-local void init_block(s)
-    deflate_state *s;
+local void init_block(deflate_state *s)
 {
     int n;
     for (n = 0; n < L_CODES;  n++) s->dyn_ltree[n].Freq = 0;
@@ -305,10 +300,7 @@ local void init_block(s)
 #define smaller(tree, n, m, depth) \
    (tree[n].Freq < tree[m].Freq || \
    (tree[n].Freq == tree[m].Freq && depth[n] <= depth[m]))
-local void pqdownheap(s, tree, k)
-    deflate_state *s;
-    ct_data *tree;
-    int k;
+local void pqdownheap(deflate_state *s, ct_data *tree, int k)
 {
     int v = s->heap[k];
     int j = k << 1;
@@ -323,9 +315,7 @@ local void pqdownheap(s, tree, k)
     }
     s->heap[k] = v;
 }
-local void gen_bitlen(s, desc)
-    deflate_state *s;
-    tree_desc *desc;
+local void gen_bitlen(deflate_state *s, tree_desc *desc)
 {
     ct_data *tree        = desc->dyn_tree;
     int max_code         = desc->max_code;
@@ -383,10 +373,7 @@ local void gen_bitlen(s, desc)
         }
     }
 }
-local void gen_codes (tree, max_code, bl_count)
-    ct_data *tree;
-    int max_code;
-    ushf *bl_count;
+local void gen_codes(ct_data *tree, int max_code, ushf *bl_count)
 {
     ush next_code[MAX_BITS+1];
     unsigned code = 0;
@@ -409,9 +396,7 @@ local void gen_codes (tree, max_code, bl_count)
              n, (isgraph(n) ? n : ' '), len, tree[n].Code, next_code[len]-1));
     }
 }
-local void build_tree(s, desc)
-    deflate_state *s;
-    tree_desc *desc;
+local void build_tree(deflate_state *s, tree_desc *desc)
 {
     ct_data *tree         = desc->dyn_tree;
     const ct_data *stree  = desc->stat_desc->static_tree;
@@ -463,10 +448,7 @@ local void build_tree(s, desc)
     gen_bitlen(s, (tree_desc *)desc);
     gen_codes ((ct_data *)tree, max_code, s->bl_count);
 }
-local void scan_tree (s, tree, max_code)
-    deflate_state *s;
-    ct_data *tree;
-    int max_code;
+local void scan_tree(deflate_state *s, ct_data *tree, int max_code)
 {
     int n;
     int prevlen = -1;
@@ -503,10 +485,7 @@ local void scan_tree (s, tree, max_code)
         }
     }
 }
-local void send_tree (s, tree, max_code)
-    deflate_state *s;
-    ct_data *tree;
-    int max_code;
+local void send_tree(deflate_state *s, ct_data *tree, int max_code)
 {
     int n;
     int prevlen = -1;
@@ -547,8 +526,7 @@ local void send_tree (s, tree, max_code)
         }
     }
 }
-local int build_bl_tree(s)
-    deflate_state *s;
+local int build_bl_tree(deflate_state *s)
 {
     int max_blindex;
     scan_tree(s, (ct_data *)s->dyn_ltree, s->l_desc.max_code);
@@ -563,9 +541,7 @@ local int build_bl_tree(s)
 
     return max_blindex;
 }
-local void send_all_trees(s, lcodes, dcodes, blcodes)
-    deflate_state *s;
-    int lcodes, dcodes, blcodes;
+local void send_all_trees(deflate_state *s, int lcodes, int dcodes, int blcodes)
 {
     int rank;
 
@@ -588,11 +564,7 @@ local void send_all_trees(s, lcodes, dcodes, blcodes)
     send_tree(s, (ct_data *)s->dyn_dtree, dcodes-1);
     Tracev((stderr, "\ndist tree: sent %ld", s->bits_sent));
 }
-void ZLIB_INTERNAL _tr_stored_block(s, buf, stored_len, last)
-    deflate_state *s;
-    charf *buf;
-    ulg stored_len;
-    int last;
+void ZLIB_INTERNAL _tr_stored_block(deflate_state *s, charf *buf, ulg stored_len, int last)
 {
     send_bits(s, (STORED_BLOCK<<1)+last, 3);
     bi_windup(s);
@@ -607,13 +579,11 @@ void ZLIB_INTERNAL _tr_stored_block(s, buf, stored_len, last)
     s->bits_sent += stored_len<<3;
 #endif
 }
-void ZLIB_INTERNAL _tr_flush_bits(s)
-    deflate_state *s;
+void ZLIB_INTERNAL _tr_flush_bits(deflate_state *s)
 {
     bi_flush(s);
 }
-void ZLIB_INTERNAL _tr_align(s)
-    deflate_state *s;
+void ZLIB_INTERNAL _tr_align(deflate_state *s)
 {
     send_bits(s, STATIC_TREES<<1, 3);
     send_code(s, END_BLOCK, static_ltree);
@@ -622,11 +592,7 @@ void ZLIB_INTERNAL _tr_align(s)
 #endif
     bi_flush(s);
 }
-void ZLIB_INTERNAL _tr_flush_block(s, buf, stored_len, last)
-    deflate_state *s;
-    charf *buf;
-    ulg stored_len;
-    int last;
+void ZLIB_INTERNAL _tr_flush_block(deflate_state *s, charf *buf, ulg stored_len, int last)
 {
     ulg opt_lenb, static_lenb;
     int max_blindex = 0;
@@ -695,10 +661,7 @@ void ZLIB_INTERNAL _tr_flush_block(s, buf, stored_len, last)
     Tracev((stderr,"\ncomprlen %lu(%lu) ", s->compressed_len>>3,
            s->compressed_len-7*last));
 }
-int ZLIB_INTERNAL _tr_tally (s, dist, lc)
-    deflate_state *s;
-    unsigned dist;
-    unsigned lc;
+int ZLIB_INTERNAL _tr_tally(deflate_state *s, unsigned dist, unsigned lc)
 {
     s->d_buf[s->last_lit] = (ush)dist;
     s->l_buf[s->last_lit++] = (uch)lc;
@@ -733,10 +696,7 @@ int ZLIB_INTERNAL _tr_tally (s, dist, lc)
 #endif
     return (s->last_lit == s->lit_bufsize-1);
 }
-local void compress_block(s, ltree, dtree)
-    deflate_state *s;
-    const ct_data *ltree;
-    const ct_data *dtree;
+local void compress_block(deflate_state *s, const ct_data *ltree, const ct_data *dtree)
 {
     unsigned dist;
     int lc;
@@ -776,8 +736,7 @@ local void compress_block(s, ltree, dtree)
 
     send_code(s, END_BLOCK, ltree);
 }
-local int detect_data_type(s)
-    deflate_state *s;
+local int detect_data_type(deflate_state *s)
 {
     unsigned long black_mask = 0xf3ffc07fUL;
     int n;
@@ -792,9 +751,7 @@ local int detect_data_type(s)
             return Z_TEXT;
     return Z_BINARY;
 }
-local unsigned bi_reverse(code, len)
-    unsigned code;
-    int len;
+local unsigned bi_reverse(unsigned code, int len)
 {
     register unsigned res = 0;
     do {
@@ -803,8 +760,7 @@ local unsigned bi_reverse(code, len)
     } while (--len > 0);
     return res >> 1;
 }
-local void bi_flush(s)
-    deflate_state *s;
+local void bi_flush(deflate_state *s)
 {
     if (s->bi_valid == 16) {
         put_short(s, s->bi_buf);
@@ -816,8 +772,7 @@ local void bi_flush(s)
         s->bi_valid -= 8;
     }
 }
-local void bi_windup(s)
-    deflate_state *s;
+local void bi_windup(deflate_state *s)
 {
     if (s->bi_valid > 8) {
         put_short(s, s->bi_buf);

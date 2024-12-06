@@ -124,8 +124,7 @@ void ZLIB_INTERNAL z_error (m)
     exit(1);
 }
 #endif
-const char * ZEXPORT zError(err)
-    int err;
+const char * ZEXPORT zError(int err)
 {
     return ERR_MSG(err);
 }
@@ -136,10 +135,7 @@ const char * ZEXPORT zError(err)
 
 #ifndef HAVE_MEMCPY
 
-void ZLIB_INTERNAL zmemcpy(dest, source, len)
-    Bytef* dest;
-    const Bytef* source;
-    uInt  len;
+void ZLIB_INTERNAL zmemcpy(Bytef *dest, const Bytef *source, uInt len)
 {
     if (len == 0) return;
     do {
@@ -147,10 +143,7 @@ void ZLIB_INTERNAL zmemcpy(dest, source, len)
     } while (--len != 0);
 }
 
-int ZLIB_INTERNAL zmemcmp(s1, s2, len)
-    const Bytef* s1;
-    const Bytef* s2;
-    uInt  len;
+int ZLIB_INTERNAL zmemcmp(const Bytef *s1, const Bytef *s2, uInt len)
 {
     uInt j;
 
@@ -160,9 +153,7 @@ int ZLIB_INTERNAL zmemcmp(s1, s2, len)
     return 0;
 }
 
-void ZLIB_INTERNAL zmemzero(dest, len)
-    Bytef* dest;
-    uInt  len;
+void ZLIB_INTERNAL zmemzero(Bytef *dest, uInt len)
 {
     if (len == 0) return;
     do {
@@ -190,7 +181,7 @@ typedef struct ptr_table_s {
 
 local ptr_table table[MAX_PTR];
 
-voidpf ZLIB_INTERNAL zcalloc (voidpf opaque, unsigned items, unsigned size)
+voidpf ZLIB_INTERNAL zcalloc(voidpf opaque, unsigned items, unsigned size)
 {
     voidpf buf;
     ulg bsize = (ulg)items*size;
@@ -210,7 +201,7 @@ voidpf ZLIB_INTERNAL zcalloc (voidpf opaque, unsigned items, unsigned size)
     return buf;
 }
 
-void ZLIB_INTERNAL zcfree (voidpf opaque, voidpf ptr)
+void ZLIB_INTERNAL zcfree(voidpf opaque, voidpf ptr)
 {
     int n;
 
@@ -245,13 +236,13 @@ void ZLIB_INTERNAL zcfree (voidpf opaque, voidpf ptr)
 #  define _hfree   hfree
 #endif
 
-voidpf ZLIB_INTERNAL zcalloc (voidpf opaque, uInt items, uInt size)
+voidpf ZLIB_INTERNAL zcalloc(voidpf opaque, uInt items, uInt size)
 {
     (void)opaque;
     return _halloc((long)items, size);
 }
 
-void ZLIB_INTERNAL zcfree (voidpf opaque, voidpf ptr)
+void ZLIB_INTERNAL zcfree(voidpf opaque, voidpf ptr)
 {
     (void)opaque;
     _hfree(ptr);
@@ -270,19 +261,14 @@ extern voidp  calloc OF((uInt items, uInt size));
 extern void   free   OF((voidpf ptr));
 #endif
 
-voidpf ZLIB_INTERNAL zcalloc (opaque, items, size)
-    voidpf opaque;
-    unsigned items;
-    unsigned size;
+voidpf ZLIB_INTERNAL zcalloc(voidpf opaque, unsigned items, unsigned size)
 {
     (void)opaque;
     return sizeof(uInt) > 2 ? (voidpf)malloc(items * size) :
                               (voidpf)calloc(items, size);
 }
 
-void ZLIB_INTERNAL zcfree (opaque, ptr)
-    voidpf opaque;
-    voidpf ptr;
+void ZLIB_INTERNAL zcfree(voidpf opaque, voidpf ptr)
 {
     (void)opaque;
     free(ptr);
