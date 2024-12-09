@@ -132,12 +132,14 @@ static void draw_button_tooltip(tooltip_context *c)
     const uint8_t *text = get_tooltip_text(c);
 
     int width = 200;
-    int lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
+    int largest_width;
+    int lines = text_measure_multiline(text, width - 16, FONT_SMALL_PLAIN, &largest_width);
     if (lines > 2) {
         width = 300;
-        lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
+        lines = text_measure_multiline(text, width - 16, FONT_SMALL_PLAIN, &largest_width);
     }
     int height = 16 * lines + 10;
+    width = largest_width + 16;
 
     int x, y;
     if (c->mouse_x < screen_dialog_offset_x() + width + 100) {
@@ -191,19 +193,21 @@ static void draw_button_tooltip(tooltip_context *c)
 
     graphics_draw_rect(x, y, width, height, COLOR_BLACK);
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-    text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    text_draw_multiline(text, x + 8, y + 8, width - 15, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 }
 
 static void draw_overlay_tooltip(tooltip_context *c)
 {
     const uint8_t *text = get_tooltip_text(c);
     int width = 200;
-    int lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
+    int largest_width;
+    int lines = text_measure_multiline(text, width - 16, FONT_SMALL_PLAIN, &largest_width);
     if (lines > 2) {
         width = 300;
-        lines = text_measure_multiline(text, width - 5, FONT_SMALL_PLAIN);
+        lines = text_measure_multiline(text, width - 16, FONT_SMALL_PLAIN, &largest_width);
     }
     int height = 16 * lines + 10;
+    width = largest_width + 16;
 
     int x, y;
     if (c->mouse_x < width + 20) {
@@ -223,7 +227,7 @@ static void draw_overlay_tooltip(tooltip_context *c)
 
     graphics_draw_rect(x, y, width, height, COLOR_BLACK);
     graphics_fill_rect(x + 1, y + 1, width - 2, height - 2, COLOR_WHITE);
-    text_draw_multiline(text, x + 5, y + 7, width - 5, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
+    text_draw_multiline(text, x + 8, y + 8, width - 15, FONT_SMALL_PLAIN, COLOR_TOOLTIP);
 }
 
 static void draw_senate_tooltip(tooltip_context *c)
