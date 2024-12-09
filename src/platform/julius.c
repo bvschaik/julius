@@ -592,7 +592,12 @@ static void setup(const julius_args *args)
 int main(int argc, char **argv)
 {
     julius_args args;
-    platform_parse_arguments(argc, argv, &args);
+    if (!platform_parse_arguments(argc, argv, &args)) {
+#if !defined(_WIN32) && !defined(__vita__) && !defined(__SWITCH__) && !defined(__ANDROID__) && !defined(__APPLE__)
+        // Only exit on Linux platforms where we know the system will not throw any weird arguments our way
+        exit_with_status(1);
+#endif
+    }
 
     setup(&args);
 
