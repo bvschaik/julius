@@ -37,6 +37,7 @@ const clip_info *graphics_get_clip_info(int x, int y, int width, int height);
 
 void graphics_save_to_buffer(int x, int y, int width, int height, color_t *buffer);
 void graphics_draw_from_buffer(int x, int y, int width, int height, const color_t *buffer);
+void graphics_blend_from_buffer(int x, int y, int width, int height, const color_t *buffer);
 
 color_t *graphics_get_pixel(int x, int y);
 
