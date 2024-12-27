@@ -680,7 +680,6 @@ if(${TARGET_PLATFORM} STREQUAL "emscripten")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
 
 elseif(${TARGET_PLATFORM} STREQUAL "ios")
-    message(STATUS "*** iOS ***")    
     add_subdirectory(ios/SDL2)
     find_library(SDL2 NAMES SDL2-static SDL2main)
     list(APPEND SDL2_LIBRARY
