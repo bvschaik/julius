@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "ios.h"
+#include "platform/ios/ios.h"
 #include "platform/android/android.h"
 #include "platform/emscripten/emscripten.h"
 #include "platform/switch/switch.h"
