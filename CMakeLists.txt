@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.1)
 include(CMakeDependentOption)
 
-set(TARGET_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: vita switch android emscripten. Leave blank for no cross compilation")
-set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS default vita switch android emscripten)
+set(TARGET_PLATFORM "default" CACHE STRING "Platform to cross-compile for. Options: vita switch android ios emscripten. Leave blank for no cross compilation")
+set_property(CACHE TARGET_PLATFORM PROPERTY STRINGS default vita switch android ios emscripten)
 
 string(TOLOWER ${TARGET_PLATFORM} TARGET_PLATFORM)
 
@@ -29,6 +29,39 @@ if(${TARGET_PLATFORM} STREQUAL "emscripten" AND NOT DEFINED CMAKE_TOOLCHAIN_FILE
         message(FATAL_ERROR "Please define EMSDK to point to your Emscripten SDK path!")
     endif()
 endif()
+    
+if(${TARGET_PLATFORM} STREQUAL "ios")
+
+    set(PLATFORM "OS64")
+    if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+        # Use ios-cmake toolchain
+        set(CMAKE_TOOLCHAIN_FILE "ios/ios.toolchain.cmake" CACHE PATH "toolchain file")
+    endif()
+
+    set(SYSTEM_LIBS OFF)
+
+    message(STATUS "*** SYSTEM_LIBS")
+
+    # Build SDL2 as static library
+    set(SDL_SHARED_ENABLED_BY_DEFAULT OFF)
+    set(SDL_SHARED OFF)
+    set(SDL_STATIC ON)
+
+    # Build SDL2_mixer as static library
+    set(BUILD_SHARED_LIBS OFF)
+
+    # Disable stuff that breaks the build and we don't need.
+    set(SDL2MIXER_WAVPACK OFF) 
+    set(SDL2MIXER_OPUS OFF) 
+    set(SDL2MIXER_MIDI OFF) 
+
+    # Explicitly set SDKROOT (called Base SDK in Xcode), otherwise it is set incorrectly.
+    set(CMAKE_XCODE_ATTRIBUTE_SDKROOT iphoneos)
+
+    # Support iPhone (1) and iPad (2) Destinations
+    set(CMAKE_XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY "1,2")
+endif()
+
 
 set(SHORT_NAME julius)
 set(USER_FRIENDLY_NAME Julius)
@@ -205,6 +238,12 @@ elseif (${TARGET_PLATFORM} STREQUAL "android")
     set(PLATFORM_FILES
         ${PLATFORM_FILES}
         ${PROJECT_SOURCE_DIR}/src/platform/android/android.c
+    )
+elseif (${TARGET_PLATFORM} STREQUAL "ios")
+    set(PLATFORM_FILES
+        ${PLATFORM_FILES}
+        ${PROJECT_SOURCE_DIR}/src/platform/ios/ios.m
+        ${PROJECT_SOURCE_DIR}/src/platform/ios/GameDataPickerController.m
     )
 endif()
 
@@ -614,32 +653,46 @@ set(SOURCE_FILES
     ${EMSCRIPTEN_FILES}
 )
 
+function(GET_SDL_EXT_DIR result module)
+    if(NOT module STREQUAL "")
+        set(module "_${module}")
+    endif()
+    set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
+    file(GLOB children
+        RELATIVE ${SDL_LOCATION}
+        CONFIGURE_DEPENDS
+        ${SDL_LOCATION}/SDL${module}
+        ${SDL_LOCATION}/SDL2${module}
+        ${SDL_LOCATION}/SDL${module}-*
+        ${SDL_LOCATION}/SDL2${module}-*
+    )
+    foreach(child ${children})
+        if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
+            set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
+            break()
+        endif()
+    endforeach()
+endfunction()
+
 if(${TARGET_PLATFORM} STREQUAL "emscripten")
     set(USE_FLAGS "-s USE_SDL=2 -s USE_SDL_MIXER=2 -s SDL2_MIXER_FORMATS=[\"mp3\"] -s USE_MPG123=1")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
-else()
-    function(GET_SDL_EXT_DIR result module)
-        if(NOT module STREQUAL "")
-            set(module "_${module}")
-        endif()
-        set(SDL_LOCATION ${PROJECT_SOURCE_DIR}/ext/SDL2)
-        file(GLOB children
-            RELATIVE ${SDL_LOCATION}
-            CONFIGURE_DEPENDS
-            ${SDL_LOCATION}/SDL${module}
-            ${SDL_LOCATION}/SDL2${module}
-            ${SDL_LOCATION}/SDL${module}-*
-            ${SDL_LOCATION}/SDL2${module}-*
-        )
-        foreach(child ${children})
-            if(IS_DIRECTORY "${SDL_LOCATION}/${child}")
-                set(${result} "${SDL_LOCATION}/${child}" PARENT_SCOPE)
-                break()
-            endif()
-        endforeach()
-    endfunction()
 
+elseif(${TARGET_PLATFORM} STREQUAL "ios")
+    message(STATUS "*** iOS ***")    
+    add_subdirectory(ios/SDL2)
+    find_library(SDL2 NAMES SDL2-static SDL2main)
+    list(APPEND SDL2_LIBRARY
+        SDL2-static
+        SDL2main
+    )
+    add_subdirectory(ios/SDL2_mixer)
+    find_library(SDL2_mixer NAMES SDL2_mixer)
+    list(APPEND SDL2_MIXER_LIBRARY
+        SDL2_mixer
+    )
+else()
     find_package(SDL2 REQUIRED)
     find_package(SDL2_mixer REQUIRED)
 endif()
@@ -831,6 +884,21 @@ else()
         find_library(LOG_LIB log)
         target_link_libraries(${SHORT_NAME} ${LOG_LIB})
     endif()
+
+    if(${TARGET_PLATFORM} STREQUAL "ios")
+        set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -DUSE_SDL_MAIN")
+        # Add SDL2 Mixer's headers, or they won't be found
+        target_include_directories(julius PRIVATE "ios/SDL2_mixer/include")
+
+        # Add UniformTypeIdentifiers to the list of linked frameworks
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-framework,UniformTypeIdentifiers")
+
+        set_target_properties(julius PROPERTIES
+            XCODE_ATTRIBUTE_INSTALL_PATH "$(LOCAL_APPS_DIR)"
+            XCODE_ATTRIBUTE_SKIP_INSTALL "No"
+        )
+    endif()
+
     target_link_libraries(${SHORT_NAME} ${SDL2_LIBRARY} ${SDL2_MIXER_LIBRARY})
     if(NOT APPLE AND NOT ${TARGET_PLATFORM} STREQUAL "android")
         install(TARGETS ${SHORT_NAME} RUNTIME DESTINATION bin)
