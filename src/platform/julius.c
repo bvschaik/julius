@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "ios.h"
 #include "platform/android/android.h"
 #include "platform/emscripten/emscripten.h"
 #include "platform/switch/switch.h"
@@ -37,7 +38,7 @@
 #include <string.h>
 #endif
 
-#if defined(USE_TINYFILEDIALOGS) || defined(__ANDROID__)
+#if defined(USE_TINYFILEDIALOGS) || defined(__ANDROID__) || defined(TARGET_OS_IPHONE)
 #define SHOW_FOLDER_SELECT_DIALOG
 #endif
 
@@ -417,7 +418,7 @@ static int init_sdl(void)
 #ifdef SHOW_FOLDER_SELECT_DIALOG
 static const char *ask_for_data_dir(int again)
 {
-#ifdef __ANDROID__
+#if defined __ANDROID__
     if (again) {
         const SDL_MessageBoxButtonData buttons[] = {
            {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
@@ -438,6 +439,28 @@ static const char *ask_for_data_dir(int again)
         }
     }
     return android_show_c3_path_dialog(again);
+#elif defined TARGET_OS_IPHONE
+    if (again) {
+        const SDL_MessageBoxButtonData buttons[] = {
+           {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
+           {SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT, 0, "Cancel"}
+        };
+        const SDL_MessageBoxData messageboxdata = {
+            SDL_MESSAGEBOX_WARNING, NULL, "Wrong folder selected",
+            "The selected folder is not a proper Caesar 3 folder.\n\n"
+            "Press OK to select another folder or Cancel to exit.",
+            SDL_arraysize(buttons), buttons, NULL
+        };
+        int result;
+        SDL_ShowMessageBox(&messageboxdata, &result);
+        if (!result) {
+            return NULL;
+        }
+    }
+    
+    printf("ask for data dir -- ios \n");
+    
+    return ios_show_c3_path_dialog(again);
 #else
     if (again) {
         int result = tinyfd_messageBox("Wrong folder selected",
@@ -477,16 +500,24 @@ static int pre_init(const char *custom_data_dir)
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
     if (platform_sdl_version_at_least(2, 0, 1)) {
+#ifdef TARGET_OS_IOS
+        char *base_path = ios_get_base_path();
+#else
         char *base_path = SDL_GetBasePath();
+#endif
         if (base_path) {
             if (platform_file_manager_set_base_path(base_path)) {
                 SDL_Log("Loading game from base path %s", base_path);
                 if (game_pre_init()) {
+#ifndef TARGET_OS_IOS
                     SDL_free(base_path);
+#endif
                     return 1;
                 }
             }
+#ifndef TARGET_OS_IOS
             SDL_free(base_path);
+#endif
         }
     }
 #endif
