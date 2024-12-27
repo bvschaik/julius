@@ -71,6 +71,11 @@ static void exit_with_status(int status)
     exit(status);
 }
 
+#ifdef TARGET_OS_IOS
+julius_args args;
+static void setup(const julius_args *args);
+#endif
+
 static void handler(int sig)
 {
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Oops, crashed with signal %d :(", sig);
@@ -357,6 +362,10 @@ static void teardown(void)
     platform_screen_destroy();
     SDL_Quit();
     teardown_logging();
+    
+#ifdef TARGET_OS_IOS
+    setup(&args);
+#endif
 }
 
 static void main_loop(void)
