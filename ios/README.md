@@ -15,7 +15,7 @@ Open the resulting Xcode Project file `julius.xcodeproj`
 Choose `julius` in the Build Schemes dropdown, choose a Simulator from the Run Destinations dropdown, and click Run.
 
 ## Build for Device
-With the Augustus project and target selected, set a Bundle Id, and choose a Development Team, then choose the `julius` in the Build Schemes dropdown, choose a device from the Run Destinations dropdown, and click Run.
+With the Julius project and target selected, set a Bundle Id, and choose a Development Team, then choose the `julius` in the Build Schemes dropdown, choose a device from the Run Destinations dropdown, and click Run.
 
 ## Running
 AirDrop or otherwise download a C3 install folder to your iOS device.
