@@ -14,7 +14,7 @@ static char path[GAME_PATH_MAX];
 
 void c3_path_chosen(char *new_path) {
     unsigned long len = strlen(new_path);
-    strncpy(path, new_path, len);
+    snprintf(path, GAME_PATH_MAX, "%s", new_path);
     has_directory = true;
 }
 
