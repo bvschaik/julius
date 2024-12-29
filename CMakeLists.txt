@@ -40,8 +40,6 @@ if(${TARGET_PLATFORM} STREQUAL "ios")
 
     set(SYSTEM_LIBS OFF)
 
-    message(STATUS "*** SYSTEM_LIBS")
-
     # Build SDL2 as static library
     set(SDL_SHARED_ENABLED_BY_DEFAULT OFF)
     set(SDL_SHARED OFF)
