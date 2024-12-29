@@ -1,6 +1,6 @@
 # iOS instructions
 
-Download SDL2 and SDL2_mixer source releases and put them in `ios/SDL2` and `ios/SDL2_mixer` respectively.
+Download SDL2 and SDL2_mixer source releases and put them in `ext/SDL2/SDL2` and `ext/SDL2/SDL2_mixer` respectively.
 
 run the following commands:
 
@@ -15,7 +15,7 @@ Open the resulting Xcode Project file `julius.xcodeproj`
 Choose `julius` in the Build Schemes dropdown, choose a Simulator from the Run Destinations dropdown, and click Run.
 
 ## Build for Device
-With the Julius project and target selected, set a Bundle Id, and choose a Development Team, then choose the `julius` in the Build Schemes dropdown, choose a device from the Run Destinations dropdown, and click Run.
+With the Julius project and target selected, set a Bundle Id, and choose a Development Team, then choose `julius` in the Build Schemes dropdown, choose a device from the Run Destinations dropdown, and click Run.
 
 ## Running
 AirDrop or otherwise download a C3 install folder to your iOS device.

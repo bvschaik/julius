@@ -678,13 +678,13 @@ if(${TARGET_PLATFORM} STREQUAL "emscripten")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
 
 elseif(${TARGET_PLATFORM} STREQUAL "ios")
-    add_subdirectory(ios/SDL2)
+    add_subdirectory(ext/SDL2/SDL2)
     find_library(SDL2 NAMES SDL2-static SDL2main)
     list(APPEND SDL2_LIBRARY
         SDL2-static
         SDL2main
     )
-    add_subdirectory(ios/SDL2_mixer)
+    add_subdirectory(ext/SDL2/SDL2_mixer)
     find_library(SDL2_mixer NAMES SDL2_mixer)
     list(APPEND SDL2_MIXER_LIBRARY
         SDL2_mixer
@@ -885,7 +885,7 @@ else()
     if(${TARGET_PLATFORM} STREQUAL "ios")
         set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -DUSE_SDL_MAIN")
         # Add SDL2 Mixer's headers, or they won't be found
-        target_include_directories(julius PRIVATE "ios/SDL2_mixer/include")
+        target_include_directories(julius PRIVATE "ext/SDL2/SDL2_mixer/include")
 
         # Add UniformTypeIdentifiers to the list of linked frameworks
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-framework,UniformTypeIdentifiers")
