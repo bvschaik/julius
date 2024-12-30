@@ -38,7 +38,7 @@
 #include <string.h>
 #endif
 
-#if defined(USE_TINYFILEDIALOGS) || defined(__ANDROID__) || defined(TARGET_OS_IPHONE)
+#if defined(USE_TINYFILEDIALOGS) || defined(__ANDROID__) || defined(__IPHONEOS__)
 #define SHOW_FOLDER_SELECT_DIALOG
 #endif
 
@@ -71,7 +71,7 @@ static void exit_with_status(int status)
     exit(status);
 }
 
-#ifdef TARGET_OS_IOS
+#ifdef __IPHONEOS__
 julius_args args;
 static void setup(const julius_args *args);
 #endif
@@ -363,7 +363,7 @@ static void teardown(void)
     SDL_Quit();
     teardown_logging();
     
-#ifdef TARGET_OS_IOS
+#ifdef __IPHONEOS__
     setup(&args);
 #endif
 }
@@ -448,7 +448,7 @@ static const char *ask_for_data_dir(int again)
         }
     }
     return android_show_c3_path_dialog(again);
-#elif defined TARGET_OS_IPHONE
+#elif defined __IPHONEOS__
     if (again) {
         const SDL_MessageBoxButtonData buttons[] = {
            {SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT, 1, "OK"},
@@ -509,7 +509,7 @@ static int pre_init(const char *custom_data_dir)
 
 #if SDL_VERSION_ATLEAST(2, 0, 1)
     if (platform_sdl_version_at_least(2, 0, 1)) {
-#ifdef TARGET_OS_IOS
+#ifdef __IPHONEOS__
         char *base_path = ios_get_base_path();
 #else
         char *base_path = SDL_GetBasePath();
@@ -518,13 +518,13 @@ static int pre_init(const char *custom_data_dir)
             if (platform_file_manager_set_base_path(base_path)) {
                 SDL_Log("Loading game from base path %s", base_path);
                 if (game_pre_init()) {
-#ifndef TARGET_OS_IOS
+#ifndef __IPHONEOS__
                     SDL_free(base_path);
 #endif
                     return 1;
                 }
             }
-#ifndef TARGET_OS_IOS
+#ifndef __IPHONEOS__
             SDL_free(base_path);
 #endif
         }

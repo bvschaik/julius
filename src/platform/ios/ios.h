@@ -2,7 +2,6 @@
 #define PLATFORM_IOS_H
 
 #ifdef __IPHONEOS__
-#include <TargetConditionals.h>
 
 const char* ios_show_c3_path_dialog(int again);
 void c3_path_chosen(char *new_path);
