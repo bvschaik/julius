@@ -32,11 +32,7 @@ endif()
     
 if(${TARGET_PLATFORM} STREQUAL "ios")
 
-    set(PLATFORM "OS64")
-    if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
-        # Use ios-cmake toolchain
-        set(CMAKE_TOOLCHAIN_FILE "ios/ios.toolchain.cmake" CACHE PATH "toolchain file")
-    endif()
+    set(CMAKE_SYSTEM_NAME "iOS")
 
     set(SYSTEM_LIBS OFF)
 
@@ -52,6 +48,7 @@ if(${TARGET_PLATFORM} STREQUAL "ios")
     set(SDL2MIXER_WAVPACK OFF) 
     set(SDL2MIXER_OPUS OFF) 
     set(SDL2MIXER_MIDI OFF) 
+    set(SDL2MIXER_MOD OFF) 
 
     # Explicitly set SDKROOT (called Base SDK in Xcode), otherwise it is set incorrectly.
     set(CMAKE_XCODE_ATTRIBUTE_SDKROOT iphoneos)
@@ -622,6 +619,16 @@ if(APPLE)
     set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/julius.icns)
 endif()
 
+
+set(IOS_FILES "")
+if(${TARGET_PLATFORM} STREQUAL "ios")
+    set(IOS_FILES 
+        ${PROJECT_SOURCE_DIR}/res/ios/Assets.xcassets
+    )
+
+endif()
+
+
 set(EMSCRIPTEN_FILES "")
 if(${TARGET_PLATFORM} STREQUAL "emscripten")
     set(EMSCRIPTEN_FILES ${PROJECT_SOURCE_DIR}/res/shell.html)
@@ -648,6 +655,7 @@ set(SOURCE_FILES
     ${TINYFD_FILES}
     ${PROJECT_SOURCE_DIR}/res/julius.rc
     ${MACOSX_FILES}
+    ${IOS_FILES}
     ${EMSCRIPTEN_FILES}
 )
 
@@ -678,14 +686,16 @@ if(${TARGET_PLATFORM} STREQUAL "emscripten")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
 
 elseif(${TARGET_PLATFORM} STREQUAL "ios")
-    add_subdirectory(ext/SDL2/SDL2)
+    GET_SDL_EXT_DIR(SDL_EXT_DIR "")
+    add_subdirectory(${SDL_EXT_DIR})
     find_library(SDL2 NAMES SDL2-static SDL2main)
     list(APPEND SDL2_LIBRARY
         SDL2-static
         SDL2main
     )
-    add_subdirectory(ext/SDL2/SDL2_mixer)
-    find_library(SDL2_mixer NAMES SDL2_mixer)
+    GET_SDL_EXT_DIR(SDL_MIXER_EXT_DIR "mixer")
+    add_subdirectory(${SDL_MIXER_EXT_DIR})
+    find_library(SDL2_mixer NAMES SDL2_mixer-static)
     list(APPEND SDL2_MIXER_LIBRARY
         SDL2_mixer
     )
@@ -696,6 +706,8 @@ endif()
 
 if(${TARGET_PLATFORM} STREQUAL "android")
     add_library(${SHORT_NAME} SHARED ${SDL2_ANDROID_HOOK} ${SOURCE_FILES})
+elseif(${TARGET_PLATFORM} STREQUAL "ios")
+    add_executable(${SHORT_NAME} MACOSX_BUNDLE ${SOURCE_FILES})
 else()
     add_executable(${SHORT_NAME} WIN32 ${SOURCE_FILES})
 endif()
@@ -710,7 +722,7 @@ if(MSVC)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8")
 endif()
 
-if(APPLE)
+if(APPLE AND NOT ${TARGET_PLATFORM} STREQUAL "ios")
     # generating a macOS icns file (see https://stackoverflow.com/a/20703594)
     add_custom_command(OUTPUT ${PROJECT_SOURCE_DIR}/res/julius.icns
         COMMAND mkdir -p julius.iconset
@@ -775,6 +787,25 @@ if(APPLE)
 			${codesignCommandWithEntitlements} \"${CMAKE_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}\"
 		)
 	")
+endif()
+
+if(${TARGET_PLATFORM} STREQUAL "ios")
+    # setting variables that will populate Info.plist
+    set_target_properties(${SHORT_NAME} PROPERTIES
+
+        MACOSX_BUNDLE_BUNDLE_NAME  ${USER_FRIENDLY_NAME}
+        MACOSX_BUNDLE_BUNDLE_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${VERSION_REVISION}"
+        MACOSX_BUNDLE_GUI_IDENTIFIER "com.github.bvschaik.julius"
+        MACOSX_BUNDLE_INFO_PLIST "${PROJECT_SOURCE_DIR}/res/ios/Info.plist"
+        MACOSX_BUNDLE_SHORT_VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}"
+        MACOSX_BUNDLE_UI_LAUNCH_STORYBOARD_NAME "LaunchScreen"
+        OUTPUT_NAME "${PROJECT_NAME}"
+        XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME "AppIcon"
+        XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 13.0
+        XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY 1,2
+    )
+    set_source_files_properties(${PROJECT_SOURCE_DIR}/res/ios/Assets.xcassets PROPERTIES
+        MACOSX_PACKAGE_LOCATION Resources)
 endif()
 
 if(SDL2_INCLUDE_DIR)
@@ -885,12 +916,12 @@ else()
     if(${TARGET_PLATFORM} STREQUAL "ios")
         set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -DUSE_SDL_MAIN")
         # Add SDL2 Mixer's headers, or they won't be found
-        target_include_directories(julius PRIVATE "ext/SDL2/SDL2_mixer/include")
+        target_include_directories(${SHORT_NAME} PRIVATE "${SDL_MIXER_EXT_DIR}/include")
 
         # Add UniformTypeIdentifiers to the list of linked frameworks
         set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-framework,UniformTypeIdentifiers")
 
-        set_target_properties(julius PROPERTIES
+        set_target_properties(${SHORT_NAME}  PROPERTIES
             XCODE_ATTRIBUTE_INSTALL_PATH "$(LOCAL_APPS_DIR)"
             XCODE_ATTRIBUTE_SKIP_INSTALL "No"
         )
