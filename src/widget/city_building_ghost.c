@@ -472,6 +472,8 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
         draw_mausoleum_desirability_range(tile, type, building_size);
     }
 
+    int check_figure = ((type != BUILDING_PLAZA && type != BUILDING_ROADBLOCK) || props->size != 1) ? 1 : 0;
+
     for (int i = 0; i < num_tiles; i++) {
         int tile_offset = grid_offset + tile_grid_offset(orientation_index, i);
         int forbidden_terrain = map_terrain_get(tile_offset) & TERRAIN_NOT_CLEAR;
@@ -489,7 +491,7 @@ static void draw_default(const map_tile *tile, int x_view, int y_view, building_
 
         if (fully_blocked || forbidden_terrain) {
             blocked_tiles[i] = 1;
-        } else if (map_has_figure_at(tile_offset) && type != BUILDING_PLAZA) {
+        } else if (check_figure && map_has_figure_at(tile_offset)) {
             blocked_tiles[i] = 1;
             figure_animal_try_nudge_at(grid_offset, tile_offset, building_size);
         } else {
@@ -576,7 +578,7 @@ static void draw_draggable_reservoir(const map_tile *tile, int x, int y)
     } else {
         if (map_building_is_reservoir(map_x, map_y)) {
             blocked = 0;
-        } else if (!map_tiles_are_clear(map_x, map_y, 3, TERRAIN_ALL)) {
+        } else if (!map_tiles_are_clear(map_x, map_y, 3, TERRAIN_ALL, 1)) {
             blocked = 1;
         }
     }

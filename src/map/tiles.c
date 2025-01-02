@@ -36,7 +36,7 @@ static int aqueduct_include_construction = 0;
 static int highway_top_tile_offsets[4] = { 0, -GRID_SIZE, -1, -GRID_SIZE - 1 };
 static int elevation_recalculate_trees = 0;
 
-static int is_clear(int x, int y, int size, int disallowed_terrain, int check_image)
+static int is_clear(int x, int y, int size, int disallowed_terrain, int check_figure, int check_image)
 {
     if (!map_grid_is_inside(x, y, size)) {
         return 0;
@@ -46,7 +46,7 @@ static int is_clear(int x, int y, int size, int disallowed_terrain, int check_im
             int grid_offset = map_grid_offset(x + dx, y + dy);
             if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR & disallowed_terrain)) {
                 return 0;
-            } else if (map_has_figure_at(grid_offset)) {
+            } else if (check_figure && map_has_figure_at(grid_offset)) {
                 return 0;
             } else if (check_image && map_image_at(grid_offset)) {
                 return 0;
@@ -56,9 +56,9 @@ static int is_clear(int x, int y, int size, int disallowed_terrain, int check_im
     return 1;
 }
 
-int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain)
+int map_tiles_are_clear(int x, int y, int size, int disallowed_terrain, int check_figure)
 {
-    return is_clear(x, y, size, disallowed_terrain, 0);
+    return is_clear(x, y, size, disallowed_terrain, check_figure, 0);
 }
 
 static void foreach_map_tile(void (*callback)(int x, int y, int grid_offset))
@@ -948,11 +948,11 @@ static void set_empty_land_pass2(int x, int y, int grid_offset)
         } else {
             image_id = image_group(GROUP_TERRAIN_GRASS_1);
         }
-        if (is_clear(x, y, 4, TERRAIN_ALL, 1)) {
+        if (is_clear(x, y, 4, TERRAIN_ALL, 1, 1)) {
             set_empty_land_image(x, y, 4, image_id + 42);
-        } else if (is_clear(x, y, 3, TERRAIN_ALL, 1)) {
+        } else if (is_clear(x, y, 3, TERRAIN_ALL, 1, 1)) {
             set_empty_land_image(x, y, 3, image_id + 24 + 9 * (map_random_get(grid_offset) & 1));
-        } else if (is_clear(x, y, 2, TERRAIN_ALL, 1)) {
+        } else if (is_clear(x, y, 2, TERRAIN_ALL, 1, 1)) {
             set_empty_land_image(x, y, 2, image_id + 8 + 4 * (map_random_get(grid_offset) & 3));
         } else {
             set_empty_land_image(x, y, 1, image_id + (map_random_get(grid_offset) & 7));
