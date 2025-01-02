@@ -216,7 +216,7 @@
 	<image id="Panelling_Stone_02" src="Panelling_Stone_02"/>
 	<image id="Panelling_Concrete_01" src="Panelling_Concrete_01"/>
 	<image id="Panelling_Concrete_02" src="Panelling_Concrete_02"/>
-	<!-- Note: Standards for custom legions -->
+	<!-- Note: Standards for custom legions by MSTVD -->
 	<image id="11Legion_Elephants" src="11Legion_Elephants"/>
 	<image id="12Legion_Thunder_Bolts" src="12Legion_Thunder_Bolts"/>
 	<image id="13Legion_Bulls" src="13Legion_Bulls"/>
@@ -1159,4 +1159,9 @@
 		<layer group="199" image="33" x="-2" y="-2"/>
 		<layer group="this" image="Advisor_Building_Window_Border_4"/>
 	</image>
+	<!-- Note: More standards for custom legions by MSTVD -->
+	<image id="17Legion_Scorpions" src="17Legion_Scorpions"/>
+	<image id="18Legion_Camels" src="18Legion_Camels"/>
+	<image id="19Legion_Dolphins" src="19Legion_Dolphins"/>
+	<image id="20Legion_Sea_Goats" src="20Legion_Sea_Goats"/>
 </assetlist>

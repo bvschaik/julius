@@ -515,6 +515,7 @@ void window_building_draw_shipyard(building_info_context *c)
 void window_building_draw_wharf(building_info_context *c)
 {
     c->help_id = 84;
+	c->advisor_button = ADVISOR_TRADE;
     window_building_play_sound(c, "wavs/wharf.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(102, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
