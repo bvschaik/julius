@@ -615,7 +615,7 @@ set(TRANSLATION_FILES
 )
 
 set(MACOSX_FILES "")
-if(APPLE)
+if(APPLE AND NOT ${TARGET_PLATFORM} STREQUAL "ios")
     set(MACOSX_FILES ${PROJECT_SOURCE_DIR}/res/julius.icns)
 endif()
 
