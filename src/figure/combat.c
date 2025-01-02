@@ -175,7 +175,8 @@ int figure_combat_get_target_for_soldier(int x, int y, int max_distance)
     int min_distance = 10000;
     for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
-        if (figure_is_dead(f)) {
+        if (figure_is_dead(f) || f->is_ghost ) {
+            // Do not allow to target dead and enemies located outside of the map
             continue;
         }
         if (figure_is_enemy(f) || f->type == FIGURE_RIOTER || is_attacking_native(f)) {
@@ -317,7 +318,8 @@ int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distan
     formation *l = formation_get(shooter->formation_id);
     for (int i = 1; i < figure_count(); i++) {
         figure *f = figure_get(i);
-        if (figure_is_dead(f)) {
+        if (figure_is_dead(f) || f->is_ghost ) {
+            // Do not allow to target dead and enemies located outside of the map
             continue;
         }
         if (is_valid_missile_target(f, l)) {
@@ -338,6 +340,10 @@ int figure_combat_get_missile_target_for_soldier(figure *shooter, int max_distan
 int figure_combat_get_missile_target_for_enemy(figure *enemy, int max_distance, int attack_citizens,
                                                map_point *tile)
 {
+    if (enemy->is_ghost) {
+        // Do not allow enemies to attack from outside of the map
+        return 0;
+    }
     int x = enemy->x;
     int y = enemy->y;
 
@@ -421,7 +427,8 @@ void figure_combat_attack_figure_at(figure *f, int grid_offset)
             break;
         }
         figure *opponent = figure_get(opponent_id);
-        if (opponent_id == f->id) {
+        if (opponent_id == f->id || opponent->is_ghost) {
+            // Do not allow troops to attack themselves or enemies located outside of the map
             opponent_id = opponent->next_figure_id_on_same_tile;
             continue;
         }

@@ -261,10 +261,14 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, format
         x = entry_point.x;
         y = entry_point.y;
     } else {
-        int num_points = 0;
-        for (int i = 0; i < MAX_INVASION_POINTS; i++) {
-            if (scenario.invasion_points[i].x != -1) {
-                num_points++;
+        // Determinate maximum number of valid invasion points.
+        // Strip out invalid invasion points from the end of the list.
+        int num_points = MAX_INVASION_POINTS;
+        for (int i = MAX_INVASION_POINTS - 1; i >= 0; i--) {
+            if (scenario.invasion_points[i].x == -1) {
+                num_points--;
+            } else if (num_points != MAX_INVASION_POINTS) {
+                break;
             }
         }
         if (invasion_point == MAX_INVASION_POINTS) { // random
@@ -336,6 +340,7 @@ static int start_invasion(int enemy_type, int amount, int invasion_point, format
                 f->faction_id = 0;
                 f->is_friendly = 0;
                 f->action_state = FIGURE_ACTION_151_ENEMY_INITIAL;
+                // TODO: should we adjust wait ticks to make enemy camping harder?
                 f->wait_ticks = 200 * seq + 10 * fig + 10;
                 f->formation_id = formation_id;
                 f->name = figure_name_get(type, enemy_type);
