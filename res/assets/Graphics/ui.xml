@@ -257,7 +257,7 @@
 	<!-- Note: Empire map icons for Roman trade villages and non-trade villages respectively -->
 	<image id="Empire_Icon_Roman_03" src="Empire_Icon_Roman_03"/>
 	<image id="Empire_Icon_Roman_04" src="Empire_Icon_Roman_04"/>
-	<!-- Note: Empire map icon for the city of Rome -->
+	<!-- Note: Empire map icon for the City of Rome -->
 	<image id="Empire_Icon_Roman_05" src="Empire_Icon_Roman_05"/>
 	<!-- Note: Empire map icons for distant towns -->
 	<image id="Empire_Icon_Distant_01" src="Empire_Icon_Distant_01"/>
@@ -268,6 +268,9 @@
 	<!-- Note: Empire map icon for farm and quarry resource nodes respectively -->
 	<image id="Empire_Icon_Resource_01" src="Empire_Icon_Resource_01"/>
 	<image id="Empire_Icon_Resource_02" src="Empire_Icon_Resource_02"/>
+	<!-- Note: Empire map icon for off-map trade emporium water and land variants respectively -->
+	<image id="Empire_Icon_Trade_01" src="Empire_Icon_Trade_01"/>
+	<image id="Empire_Icon_Trade_02" src="Empire_Icon_Trade_02"/>
 	<!-- Note: Legion banner base -->
 	<image id="Legion_Banner_Base" width="32" height="29">
 		<layer group="126" image="8"/>

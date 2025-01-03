@@ -5,10 +5,10 @@
 	<!-- Note: Native Hut variants (Assets created by Aster) -->
 	<image id="Native_Hut_Central_01" src="Native_Hut_Central_01" isometric="true"/>
 	<image id="Native_Hut_Central_02" src="Native_Hut_Central_02" isometric="true"/>
-	<image id="Native_Hut_Northern_01" src="Native_Hut_Central_01" isometric="true"/>
-	<image id="Native_Hut_Northern_02" src="Native_Hut_Central_02" isometric="true"/>
-	<image id="Native_Hut_Southern_01" src="Native_Hut_Central_01" isometric="true"/>
-	<image id="Native_Hut_Southern_02" src="Native_Hut_Central_02" isometric="true"/>
+	<image id="Native_Hut_Northern_01" src="Native_Hut_Northern_01" isometric="true"/>
+	<image id="Native_Hut_Northern_02" src="Native_Hut_Northern_02" isometric="true"/>
+	<image id="Native_Hut_Southern_01" src="Native_Hut_Southern_01" isometric="true"/>
+	<image id="Native_Hut_Southern_02" src="Native_Hut_Southern_02" isometric="true"/>
 	<!-- Note: Native Meeting Hut variants (Assets created by Aster) -->
 	<image id="Native_Meeting_Hut_Central_01" isometric="true" width="118" height="69">
 		<layer group="197" image="0" x="-30" y="-10"/>
