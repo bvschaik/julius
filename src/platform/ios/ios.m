@@ -1,12 +1,13 @@
 #import "ios.h"
-#import "SDL.h"
-#import "SDL_syswm.h"
-#import "SDL_video.h"
-#import "SDL_system.h"
-#import "SDL_messagebox.h"
-#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 #import "GameDataPickerController.h"
+#import "SDL.h"
+#import "SDL_messagebox.h"
+#import "SDL_system.h"
+#import "SDL_syswm.h"
+#import "SDL_video.h"
+
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 #define GAME_PATH_MAX 300
 static int has_directory;
