@@ -115,6 +115,7 @@ static struct {
     int next_invasion;
     unsigned int visible_requests;
     unsigned int active_requests;
+    int troop_requests;
     int objectives_y_offset;
     int request_buttons_y_offset;
     unsigned int focused_request_button_id;
@@ -325,20 +326,20 @@ static int update_extra_info(int is_background)
         changed |= update_extra_info_value(city_population(), &data.objectives.population.value);
     }
     if (data.info_to_display & SIDEBAR_EXTRA_DISPLAY_REQUESTS) {
-        int new_requests = update_extra_info_value(count_active_requests(), (int *)&data.active_requests);
+        int new_requests = update_extra_info_value(count_active_requests(), (int *) &data.active_requests);
+        new_requests |= update_extra_info_value(city_request_has_troop_request(), &data.troop_requests);
 
-        int troop_requests = city_request_has_troop_request();
-        if (troop_requests) {
+        if (data.troop_requests) {
             changed |= update_extra_info_value(RESOURCE_TROOPS, &data.requests[0].resource);
             changed |= update_extra_info_value(city_military_months_until_distant_battle(), &data.requests[0].time);
             changed |= update_extra_info_value(city_military_distant_battle_enemy_strength(), &data.requests[0].amount);
             changed |= update_extra_info_value(city_military_empire_service_legions(), &data.requests[0].available);
             data.requests[0].index = 0;
         }
-        int other_requests = data.active_requests - troop_requests;
+        int other_requests = data.active_requests - data.troop_requests;
         int must_resort = 0;
         for (int i = 0; i < other_requests; i++) {
-            request *slot = &data.requests[i + troop_requests];
+            request *slot = &data.requests[i + data.troop_requests];
             if (new_requests) {
                 slot->index = i;
             }
@@ -359,7 +360,7 @@ static int update_extra_info(int is_background)
             changed |= update_extra_info_value(is_stockpiled_changed(r->resource), &slot->stockpiled);
         }
         if (new_requests || must_resort) {
-            qsort(data.requests + troop_requests, other_requests, sizeof(request), sort_requests);
+            qsort(data.requests + data.troop_requests, other_requests, sizeof(request), sort_requests);
             changed = 1;
         }
     }
