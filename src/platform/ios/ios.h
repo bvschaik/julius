@@ -1,5 +1,6 @@
 #ifndef PLATFORM_IOS_H
 #define PLATFORM_IOS_H
+#import "SDL_platform.h"
 
 #ifdef __IPHONEOS__
 
