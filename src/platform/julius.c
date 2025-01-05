@@ -72,7 +72,7 @@ static void exit_with_status(int status)
 }
 
 #ifdef __IPHONEOS__
-julius_args args;
+static julius_args args;
 static void setup(const julius_args *args);
 #endif
 
