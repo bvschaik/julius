@@ -19,7 +19,7 @@ void c3_path_chosen(char *new_path) {
     has_directory = true;
 }
 
-const char* ios_get_base_path(void) {
+const char *ios_get_base_path(void) {
     NSURL *gameDataDirectory = [[[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject] URLByAppendingPathComponent:@"C3" isDirectory:YES];
     
     [gameDataDirectory.path getFileSystemRepresentation:path maxLength:300];
