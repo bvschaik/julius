@@ -467,8 +467,6 @@ static const char *ask_for_data_dir(int again)
         }
     }
     
-    printf("ask for data dir -- ios \n");
-    
     return ios_show_c3_path_dialog(again);
 #else
     if (again) {
