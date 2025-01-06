@@ -271,6 +271,31 @@
 	<!-- Note: Empire map icon for off-map trade emporium water and land variants respectively -->
 	<image id="Empire_Icon_Trade_01" src="Empire_Icon_Trade_01"/>
 	<image id="Empire_Icon_Trade_02" src="Empire_Icon_Trade_02"/>
+	<!-- Note: Empire map flag for the City of Rome -->
+	<image id="Empire_Icon_Flag_01">
+		<layer group="174" image="1"/>
+		<layer src="Empire_Icon_Flag_01"/>
+	</image>
+	<image id="Empire_Icon_Flag_02">
+		<layer group="174" image="2"/>
+		<layer src="Empire_Icon_Flag_02"/>
+	</image>
+	<image id="Empire_Icon_Flag_03">
+		<layer group="174" image="3"/>
+		<layer src="Empire_Icon_Flag_03"/>
+	</image>
+	<image id="Empire_Icon_Flag_04">
+		<layer group="174" image="4"/>
+		<layer src="Empire_Icon_Flag_04"/>
+	</image>
+	<image id="Empire_Icon_Flag_05">
+		<layer group="174" image="5"/>
+		<layer src="Empire_Icon_Flag_05"/>
+	</image>
+	<image id="Empire_Icon_Flag_06">
+		<layer group="174" image="6"/>
+		<layer src="Empire_Icon_Flag_06"/>
+	</image>
 	<!-- Note: Legion banner base -->
 	<image id="Legion_Banner_Base" width="32" height="29">
 		<layer group="126" image="8"/>
