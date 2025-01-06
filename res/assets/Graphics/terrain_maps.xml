@@ -2,18 +2,56 @@
 <!DOCTYPE assetlist>
 <!-- Unless specifically mentioned, all assets created by Areldir -->
 <assetlist name="Terrain_Maps">
-	<!-- Note: Native Hut variants (Assets created by Aster) -->
+	<!-- Note: Native Hut variants (Assets created by Aster/Hyuukin) -->
 	<image id="Native_Hut_Central_01" src="Native_Hut_Central_01" isometric="true"/>
 	<image id="Native_Hut_Central_02" src="Native_Hut_Central_02" isometric="true"/>
 	<image id="Native_Hut_Northern_01" src="Native_Hut_Northern_01" isometric="true"/>
 	<image id="Native_Hut_Northern_02" src="Native_Hut_Northern_02" isometric="true"/>
 	<image id="Native_Hut_Southern_01" src="Native_Hut_Southern_01" isometric="true"/>
 	<image id="Native_Hut_Southern_02" src="Native_Hut_Southern_02" isometric="true"/>
-	<!-- Note: Native Meeting Hut variants (Assets created by Aster) -->
+	<!-- Note: Native Meeting Hut variants (Assets created by Aster/Hyuukin) -->
 	<image id="Native_Meeting_Hut_Central_01" isometric="true" width="118" height="69">
 		<layer group="197" image="0" x="-30" y="-10"/>
 		<layer src="Native_Meeting_Hut_Central_01_Mask" mask="alpha"/>
 	</image>
 	<image id="Native_Meeting_Hut_Northern_01" src="Native_Meeting_Hut_Northern_01" isometric="true"/>
 	<image id="Native_Meeting_Hut_Southern_01" src="Native_Meeting_Hut_Southern_01" isometric="true"/>
+	<!-- Note: Low Bridge (for editor use) -->
+	<image id="Low_Bridge_Back" isometric="true">
+		<layer group="164" image="0"/>
+	</image>
+	<image id="Low_Bridge_Middle" isometric="true">
+		<layer group="164" image="1"/>
+	</image>
+	<image id="Low_Bridge_Front" isometric="true">
+		<layer group="164" image="2"/>
+	</image>
+	<image id="Low_Bridge_R_Back" isometric="true">
+		<layer group="164" image="3"/>
+	</image>
+	<image id="Low_Bridge_R_Middle" isometric="true">
+		<layer group="164" image="4"/>
+	</image>
+	<image id="Low_Bridge_R_Front" isometric="true">
+		<layer group="164" image="5"/>
+	</image>
+	<!-- Note: Ship Bridge (for editor use) -->
+	<image id="Ship_Bridge_Back" isometric="true">
+		<layer group="164" image="6"/>
+	</image>
+	<image id="Ship_Bridge_Middle" isometric="true">
+		<layer group="164" image="7"/>
+	</image>
+	<image id="Ship_Bridge_Front" isometric="true">
+		<layer group="164" image="8"/>
+	</image>
+	<image id="Ship_Bridge_R_Back" isometric="true">
+		<layer group="164" image="9"/>
+	</image>
+	<image id="Ship_Bridge_R_Middle" isometric="true">
+		<layer group="164" image="10"/>
+	</image>
+	<image id="Ship_Bridge_R_Front" isometric="true">
+		<layer group="164" image="11"/>
+	</image>
 </assetlist>
