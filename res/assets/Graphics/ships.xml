@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE assetlist>
+<!-- Unless specifically mentioned, all assets created by Areldir -->
+<assetlist name="Ships">
+	<!-- Note: Cargo Boat Portrait -->
+	<image id="Cargo_Boat_Portrait">
+		<layer group="190" image="0"/>
+		<layer src="Cargo_Boat_Portrait_Overlay"/>
+	</image>
+	<!-- Note: Cargo Boat Sailing animation frames ALL DIRECTIONS -->
+	<image id="Cargo_Boat_NE_01" src="Cargo_Boat_NE_01"/>
+	<image id="Cargo_Boat_E_01" src="Cargo_Boat_E_01"/>
+	<image id="Cargo_Boat_SE_01" src="Cargo_Boat_SE_01"/>
+	<image id="Cargo_Boat_S_01" src="Cargo_Boat_S_01"/>
+	<image id="Cargo_Boat_SW_01" src="Cargo_Boat_SW_01"/>
+	<image id="Cargo_Boat_W_01" src="Cargo_Boat_W_01"/>
+	<image id="Cargo_Boat_NW_01" src="Cargo_Boat_NW_01"/>
+	<image id="Cargo_Boat_N_01" src="Cargo_Boat_N_01"/>
+</assetlist>
