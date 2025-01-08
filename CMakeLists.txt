@@ -690,7 +690,7 @@ elseif(${TARGET_PLATFORM} STREQUAL "ios")
     add_subdirectory(${SDL_EXT_DIR})
     find_library(SDL2 NAMES SDL2-static SDL2main)
     list(APPEND SDL2_LIBRARY
-        SDL2-static
+        # We don't need to add SDL2-static here because SDL2_mixer will include it
         SDL2main
     )
     GET_SDL_EXT_DIR(SDL_MIXER_EXT_DIR "mixer")
@@ -916,7 +916,8 @@ else()
 
     if(${TARGET_PLATFORM} STREQUAL "ios")
         set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -DUSE_SDL_MAIN")
-        # Add SDL2 Mixer's headers, or they won't be found
+        # Add SDL2 and SDL_Mixer headers, or they won't be found
+        target_include_directories(${SHORT_NAME} PRIVATE "${SDL_EXT_DIR}/include")
         target_include_directories(${SHORT_NAME} PRIVATE "${SDL_MIXER_EXT_DIR}/include")
 
         # Add UniformTypeIdentifiers to the list of linked frameworks
