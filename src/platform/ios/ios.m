@@ -12,6 +12,8 @@
 #define GAME_PATH_MAX 300
 static int has_directory;
 static char path[GAME_PATH_MAX];
+static UIWindow *window = nil;
+static UIWindow *alertwindow = nil;
 
 void c3_path_chosen(char *new_path) {
     unsigned long len = strlen(new_path);
@@ -27,49 +29,27 @@ const char *ios_get_base_path(void) {
     return path;
 }
 
-int ios_set_base_path(const char *path) {
-    CFURLRef url = (__bridge CFURLRef)[NSURL fileURLWithPath: [NSString stringWithCString:path]];
-    
-    return 1;
-}
-
-
 const char *ios_show_c3_path_dialog(int again)
 {
-    UIWindow *window = nil;
-    UIWindow *alertwindow = nil;
+    if (window == nil) {
+        window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        window.rootViewController = [UIViewController new];
+        window.windowLevel = UIWindowLevelAlert;
 
-    GameDataPickerController *delegate = [[GameDataPickerController alloc] init];
-    UIDocumentPickerViewController *picker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes: @[UTTypeFolder]];
+        [window makeKeyAndVisible];
+    }
     
-    picker.delegate = delegate;
-
-    NSError *error = nil;
-    picker.directoryURL = [[NSFileManager defaultManager] URLForDirectory:NSDocumentDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
-
-    if (error) {
-        // Handle the error.
-    }
-
-    if (window == nil || window.rootViewController == nil) {
-        alertwindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-        alertwindow.rootViewController = [UIViewController new];
-        alertwindow.windowLevel = UIWindowLevelAlert;
-
-        window = alertwindow;
-
-        [alertwindow makeKeyAndVisible];
-        
-    }
-
-    [window.rootViewController presentViewController:picker animated:YES completion:nil];
+    
+    GameDataPickerController *controller = [[GameDataPickerController alloc] initWithWindow: window];
+    [controller showDocumentPicker];
+    
     
     while (!has_directory) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:5.0]];
     }
 
-    if (alertwindow) {
-        alertwindow.hidden = YES;
+    if (window) {
+        window.hidden = YES;
     }
     
     return path;

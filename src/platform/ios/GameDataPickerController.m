@@ -9,13 +9,33 @@
 
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
+@interface GameDataPickerController ()
+@property NSURL *url;
+@property UIWindow *window;
+@property UIDocumentPickerViewController *picker;
+@end
+
 @implementation GameDataPickerController
 
-NSURL *url;
+- (instancetype)initWithWindow:(UIWindow *)window {
+    self = [super init];
+    if (self) {
+        self.window = window;
+    }
+    return self;
+}
 
+- (void)showDocumentPicker {
+    self.picker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes: @[UTTypeFolder]];
+    
+    self.picker.delegate = self;
+
+    [self.window.rootViewController presentViewController:self.picker animated:YES completion:nil];
+}
+
+#pragma mark - UIDocumentPickerDelegate methods
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls {
     
-    NSLog(@"urls: %@", urls);
     NSURL *importDirectory = urls.firstObject;
     [importDirectory startAccessingSecurityScopedResource];
     
@@ -29,6 +49,20 @@ NSURL *url;
         NSLog(@"Files copied to: %@", gameDataDirectory);
     } else {
         NSLog(@"Error copying data files: %@", error);
+        
+        // Something has gone horribly wrong.
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Error"
+                                       message:[NSString stringWithFormat:@"Could not copy data files. \nReason: %@", error]
+                                       preferredStyle:UIAlertControllerStyleAlert];
+         
+        UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                              handler:^(UIAlertAction * action) {
+            [self showDocumentPicker];
+        }];
+         
+        [alert addAction:defaultAction];
+        [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+        
         return;
     }
     
@@ -40,7 +74,17 @@ NSURL *url;
 }
 
 - (void) documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
-    
+    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Game Data Required"
+                                   message:@"Julius cannot continue without game data. Please select a valid C3 Game Data folder."
+                                   preferredStyle:UIAlertControllerStyleAlert];
+     
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {
+        [self showDocumentPicker];
+    }];
+     
+    [alert addAction:defaultAction];
+    [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
 }
 
 @end
