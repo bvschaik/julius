@@ -41,7 +41,7 @@ const char *ios_show_c3_path_dialog(int again)
     
     
     GameDataPickerController *controller = [[GameDataPickerController alloc] initWithWindow: window];
-    [controller showDocumentPicker];
+    [controller showInstructions];
     
     
     while (!has_directory) {

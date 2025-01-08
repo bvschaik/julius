@@ -25,9 +25,22 @@
     return self;
 }
 
+- (void)showInstructions {
+   UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Game Data Required"
+                                   message:@"Julius cannot continue without game data. Please select a valid C3 Game Data folder."
+                                   preferredStyle:UIAlertControllerStyleAlert];
+     
+    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
+                                                          handler:^(UIAlertAction * action) {
+        [self showDocumentPicker];
+    }];
+    
+    [alert addAction:defaultAction];
+    [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+}
+
 - (void)showDocumentPicker {
     self.picker = [[UIDocumentPickerViewController alloc] initForOpeningContentTypes: @[UTTypeFolder]];
-    
     self.picker.delegate = self;
 
     [self.window.rootViewController presentViewController:self.picker animated:YES completion:nil];
@@ -57,7 +70,7 @@
          
         UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
                                                               handler:^(UIAlertAction * action) {
-            [self showDocumentPicker];
+            [self showInstructions];
         }];
          
         [alert addAction:defaultAction];
@@ -74,17 +87,7 @@
 }
 
 - (void) documentPickerWasCancelled:(UIDocumentPickerViewController *)controller {
-    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Game Data Required"
-                                   message:@"Julius cannot continue without game data. Please select a valid C3 Game Data folder."
-                                   preferredStyle:UIAlertControllerStyleAlert];
-     
-    UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
-                                                          handler:^(UIAlertAction * action) {
-        [self showDocumentPicker];
-    }];
-     
-    [alert addAction:defaultAction];
-    [self.window.rootViewController presentViewController:alert animated:YES completion:nil];
+    [self showInstructions];
 }
 
 @end
