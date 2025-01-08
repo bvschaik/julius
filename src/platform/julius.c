@@ -364,6 +364,7 @@ static void teardown(void)
     teardown_logging();
     
 #ifdef __IPHONEOS__
+    // iOS apps are not allowed to self-terminate. To avoid being stuck on a blank screen here, we start the game again.
     setup(&args);
 #endif
 }
