@@ -20,6 +20,10 @@ case "$BUILD_TARGET" in
 	echo "Creating disk image"
 	hdiutil create -volname Julius -srcfolder julius.app -ov -format UDZO julius.dmg
 	;;
+"ios")
+	cd build
+	xcodebuild clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -scheme julius
+	;;
 "flatpak")
 	flatpak-builder repo com.github.bvschaik.julius.json --install-deps-from=flathub --keep-build-dirs
 	cp .flatpak-builder/build/julius/res/version.txt res/version.txt
