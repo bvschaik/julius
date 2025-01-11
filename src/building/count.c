@@ -149,8 +149,8 @@ int building_count_upgraded(building_type type)
 
 int building_count_in_area(building_type type, int minx, int miny, int maxx, int maxy)
 {
-    int grid_area = abs((maxx - minx + 1) * (maxy - miny + 1));
-    int array_size = grid_area < building_count() ? grid_area : building_count();
+    int grid_area = (abs(maxx - minx) + 1) * (abs(maxy - miny) + 1);
+    int array_size = grid_area;
     int *found_buildings = (int *) malloc(array_size * sizeof(int));
 
     int total = 0;
