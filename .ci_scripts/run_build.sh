@@ -26,7 +26,7 @@ case "$BUILD_TARGET" in
 	;;
 "ios")
 	cd build
-	xcodebuild clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -scheme julius
+	xcodebuild clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -scheme augustus
 	;;
 "flatpak")
 	flatpak-builder repo res/com.github.keriew.augustus.json --install-deps-from=flathub --keep-build-dirs

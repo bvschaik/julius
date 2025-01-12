@@ -27,7 +27,7 @@
 
 - (void)showInstructions {
    UIAlertController* alert = [UIAlertController alertControllerWithTitle:@"Game Data Required"
-                                   message:@"Julius cannot continue without game data. Please select a valid C3 Game Data folder."
+                                   message:@"Augustus cannot continue without game data. Please select a valid C3 Game Data folder."
                                    preferredStyle:UIAlertControllerStyleAlert];
      
     UIAlertAction* defaultAction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault
