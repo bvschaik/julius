@@ -38,6 +38,7 @@ tasks.register('findSDL2Mixer') {
 }
 
 android {
+    compileSdk 34
     ndkVersion "26.3.11579264"
 
     defaultConfig {
@@ -50,7 +51,12 @@ android {
         }
         externalNativeBuild {
             ndkBuild {
-                arguments 'SUPPORT_WAVPACK=false APP_PLATFORM=android-21'
+                cFlags '-DMUSIC_WAV'
+                arguments 'SUPPORT_FLAC=false',
+                        'SUPPORT_OGG=false',
+                        'SUPPORT_MOD_MODPLUG=false',
+                        'SUPPORT_MID_TIMIDITY=false',
+                        'SUPPORT_WAVPACK=false'
             }
         }
     }

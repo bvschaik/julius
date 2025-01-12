@@ -24,6 +24,10 @@ case "$BUILD_TARGET" in
 		zip -r augustus.zip augustus.dmg 	
 	fi
 	;;
+"ios")
+	cd build
+	xcodebuild clean build CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -scheme julius
+	;;
 "flatpak")
 	flatpak-builder repo res/com.github.keriew.augustus.json --install-deps-from=flathub --keep-build-dirs
 	cp .flatpak-builder/build/augustus/res/version.txt res/version.txt

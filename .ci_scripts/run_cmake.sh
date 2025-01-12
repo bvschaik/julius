@@ -10,6 +10,9 @@ case "$BUILD_TARGET" in
 "mac")
 	mkdir build && cd build && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" ..
 	;;
+"ios")
+	mkdir build && cd build && cmake .. -DTARGET_PLATFORM=ios -G Xcode
+	;;
 "flatpak")
 	;;
 "appimage")

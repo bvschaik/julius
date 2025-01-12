@@ -2,11 +2,24 @@
 
 #include "SDL.h"
 
+#include <stdio.h>
+
 #define CURSOR_SCALE_ERROR_MESSAGE "Option --cursor-scale must be followed by a scale value of 1, 1.5 or 2"
 #define DISPLAY_SCALE_ERROR_MESSAGE "Option --display-scale must be followed by a scale value between 0.5 and 5"
 #define WINDOWED_AND_FULLSCREEN_ERROR_MESSAGE "Option --windowed and --fullscreen cannot both be specified"
 #define DISPLAY_ID_ERROR_MESSAGE "Option --display must be followed by a number indicating the display, starting from 0"
 #define UNKNOWN_OPTION_ERROR_MESSAGE "Option %s not recognized"
+
+static void print_log(const char *message)
+{
+    printf("%s\n", message);
+}
+
+static void print_log_str(const char *format, const char *value)
+{
+    printf(format, value);
+    printf("\n");
+}
 
 static int parse_decimal_as_percentage(const char *str)
 {
@@ -40,7 +53,7 @@ static int parse_decimal_as_percentage(const char *str)
     }
     if (*end) {
         // still some characters left, print out warning
-        SDL_Log("Invalid decimal: %s", str);
+        print_log_str("Invalid decimal: %s", str);
         return -1;
     }
     return percentage;
@@ -49,6 +62,7 @@ static int parse_decimal_as_percentage(const char *str)
 int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
 {
     int ok = 1;
+    int add_blank_line = 1;
 
     // Set sensible defaults
     output_args->data_directory = 0;
@@ -73,13 +87,13 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
                 int percentage = parse_decimal_as_percentage(argv[i + 1]);
                 i++;
                 if (percentage < 50 || percentage > 500) {
-                    SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
+                    print_log(DISPLAY_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 } else {
                     output_args->display_scale_percentage = percentage;
                 }
             } else {
-                SDL_Log(DISPLAY_SCALE_ERROR_MESSAGE);
+                print_log(DISPLAY_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--cursor-scale") == 0) {
@@ -89,11 +103,11 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
                 if (percentage == 100 || percentage == 150 || percentage == 200) {
                     output_args->cursor_scale_percentage = percentage;
                 } else {
-                    SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
+                    print_log(CURSOR_SCALE_ERROR_MESSAGE);
                     ok = 0;
                 }
             } else {
-                SDL_Log(CURSOR_SCALE_ERROR_MESSAGE);
+                print_log(CURSOR_SCALE_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--display") == 0) {
@@ -101,7 +115,7 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
                 output_args->display_id = SDL_strtol(argv[i + 1], 0, 10);
                 i++;
             } else {
-                SDL_Log(DISPLAY_ID_ERROR_MESSAGE);
+                print_log(DISPLAY_ID_ERROR_MESSAGE);
                 ok = 0;
             }
         } else if (SDL_strcmp(argv[i], "--windowed") == 0) {
@@ -115,39 +129,43 @@ int platform_parse_arguments(int argc, char **argv, augustus_args *output_args)
         } else if (SDL_strcmp(argv[i], "--fullscreen") == 0) {
             output_args->force_fullscreen = 1;
         } else if (SDL_strcmp(argv[i], "--help") == 0) {
+            add_blank_line = 0;
             ok = 0;
         } else if (SDL_strncmp(argv[i], "--", 2) == 0) {
-            SDL_Log(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
+            print_log_str(UNKNOWN_OPTION_ERROR_MESSAGE, argv[i]);
             ok = 0;
         } else {
             output_args->data_directory = argv[i];
         }
     }
     if (output_args->force_fullscreen && output_args->force_windowed) {
-        SDL_Log(WINDOWED_AND_FULLSCREEN_ERROR_MESSAGE);
+        print_log(WINDOWED_AND_FULLSCREEN_ERROR_MESSAGE);
         ok = 0;
     }
 
     if (!ok) {
-        SDL_Log("Usage: augustus [ARGS] [DATA_DIR]");
-        SDL_Log("ARGS may be:");
-        SDL_Log("--display-scale NUMBER");
-        SDL_Log("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
-        SDL_Log("--cursor-scale NUMBER");
-        SDL_Log("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
-        SDL_Log("--windowed");
-        SDL_Log("          Forces the game to start in windowed mode");
-        SDL_Log("--asset-previewer");
-        SDL_Log("          Runs the extra asset previewer instead of the game");
-        SDL_Log("--enable-joysticks");
-        SDL_Log("          Enables joystick support");
-        SDL_Log("--software-cursor");
-        SDL_Log("          Uses a software cursor instead of the default hardware cursor");
-        SDL_Log("--fullscreen");
-        SDL_Log("          Forces the game to start fullscreen");
-        SDL_Log("--display ID");
-        SDL_Log("          Forces the game to start on the specified display, numbered from 0");
-        SDL_Log("The last argument, if present, is interpreted as data directory for the Caesar 3 installation");
+        if (add_blank_line) {
+            print_log("");
+        }
+        print_log("Usage: julius [ARGS] [DATA_DIR]");
+        print_log("ARGS may be:");
+        print_log("--display-scale NUMBER");
+        print_log("          Scales the display by a factor of NUMBER. Number can be between 0.5 and 5");
+        print_log("--cursor-scale NUMBER");
+        print_log("          Scales the mouse cursor by a factor of NUMBER. Number can be 1, 1.5 or 2");
+        print_log("--windowed");
+        print_log("          Forces the game to start in windowed mode");
+        print_log("--fullscreen");
+        print_log("          Forces the game to start fullscreen");
+        print_log("--display ID");
+        print_log("          Forces the game to start on the specified display, numbered from 0");
+        print_log("--asset-previewer");
+        print_log("          Runs the extra asset previewer instead of the game");
+        print_log("--enable-joysticks");
+        print_log("          Enables joystick support");
+        print_log("--software-cursor");
+        print_log("          Uses a software cursor instead of the default hardware cursor");
+        print_log("The last argument, if present, is interpreted as data directory for the Caesar 3 installation");
     }
     return ok;
 }

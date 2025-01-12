@@ -24,7 +24,7 @@ jobs:
           - name: Linux x64
             os: ubuntu-22.04
             cache-key: linux-x64
-            SDL_VERSION: 2.30.4
+            SDL_VERSION: 2.30.9
             SDL_MIXER_VERSION: 2.8.0
             BUILD_TARGET: linux
             DEPLOY: linux
@@ -39,22 +39,29 @@ jobs:
           - name: macOS
             os: macos-latest
             cache-key: macos
-            SDL_VERSION: 2.30.4
+            SDL_VERSION: 2.30.9
             SDL_MIXER_VERSION: 2.8.0
             BUILD_TARGET: mac
             DEPLOY: mac
-          - name: PS Vita
-            os: ubuntu-20.04
-            BUILD_TARGET: vita
-            DEPLOY: vita
+          - name: iOS
+            os: macos-latest
+            cache-key: ios
+            SDL_VERSION: 2.30.9
+            SDL_MIXER_VERSION: 2.8.0
+            BUILD_TARGET: ios
+            DEPLOY: ios
           - name: Nintendo Switch
             os: ubuntu-20.04
             BUILD_TARGET: switch
             DEPLOY: switch
+          - name: PS Vita
+            os: ubuntu-20.04
+            BUILD_TARGET: vita
+            DEPLOY: vita
           - name: Android
             os: ubuntu-20.04
             cache-key: android
-            SDL_VERSION: 2.30.4
+            SDL_VERSION: 2.30.9
             SDL_MIXER_VERSION: 2.8.0
             BUILD_TARGET: android
             DEPLOY: android
@@ -136,7 +143,7 @@ jobs:
     name: ${{ matrix.name }}
     runs-on: windows-latest
     env:
-      SDL_VERSION: 2.30.4
+      SDL_VERSION: 2.30.9
       SDL_MIXER_VERSION: 2.8.0
       COMPILER: ${{ matrix.COMPILER }}
       SKIP_UPLOAD: ${{ matrix.SKIP_UPLOAD }}

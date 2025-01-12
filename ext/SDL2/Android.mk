@@ -1,2 +1,2 @@
-APP_STL := c++_static
+APP_STL := c++_shared
 include $(call all-subdir-makefiles)
