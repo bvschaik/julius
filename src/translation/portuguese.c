@@ -1097,8 +1097,6 @@ static translation_string all_strings[] = {
     {TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS, "Número máximo de repetições: "},
     {TR_EDITOR_SCENARIO_EVENT_MONTHS_UNTIL_ACTIVE, "Meses até a ativação: "},
     {TR_EDITOR_SCENARIO_EVENT_REPEATS_FOREVER, "Infinito"},
-    {TR_EDITOR_SCENARIO_EVENT_REPEAT_MAX_MONTHS, "Máximo de meses até a repetição: "},
-    {TR_EDITOR_SCENARIO_EVENT_REPEAT_MIN_MONTHS, "Mínimo de meses até a repetição: "},
     {TR_EDITOR_SCENARIO_EVENT_STATE_ACTIVE, "Ativo"},
     {TR_EDITOR_SCENARIO_EVENT_STATE_DISABLED, "Desativado"},
     {TR_EDITOR_SCENARIO_EVENT_STATE_PAUSED, "Interrompido"},

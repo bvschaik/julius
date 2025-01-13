@@ -40,6 +40,7 @@
 #include "map/tiles.h"
 #include "map/water.h"
 #include "map/water_supply.h"
+#include "scenario/scenario_events_controller.h"
 
 #define MAX_CYCLE_SIZE 10
 
@@ -661,6 +662,8 @@ void building_construction_start(int x, int y, int grid_offset)
         }
         if (!can_start) {
             building_construction_cancel();
+        } else {
+            scenario_events_full_process(EVENT_TRIGGER_BUILDING_PLACED_BY_PLAYER, 1, data.type);
         }
     }
 }

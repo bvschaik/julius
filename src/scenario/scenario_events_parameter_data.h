@@ -34,6 +34,7 @@ typedef enum {
     PARAMETER_TYPE_ENEMY_TYPE,
     PARAMETER_TYPE_GOD,
     PARAMETER_TYPE_CLIMATE,
+    PARAMETER_TYPE_EVENT_TRIGGER_TYPE,
 } parameter_type;
 
 typedef struct {

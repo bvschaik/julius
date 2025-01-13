@@ -1018,8 +1018,6 @@ static translation_string all_strings[] = {
     {TR_EDITOR_UNABLE_TO_SAVE_EVENTS_TITLE, "Αδυναμία αποθήκευσης συμβάντων σεναρίου"},
     {TR_EDITOR_IMPORT_LINE, "Γραμμή: "},
     {TR_EDITOR_SCENARIO_EVENT_ID, "ID: "},
-    {TR_EDITOR_SCENARIO_EVENT_REPEAT_MIN_MONTHS, "Ελάχιστοι μήνες πριν από την επανάληψη: "},
-    {TR_EDITOR_SCENARIO_EVENT_REPEAT_MAX_MONTHS, "Μέγιστοι μήνες πριν από την επανάληψη: "},
     {TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS, "Μέγιστος αριθμός επαναλήψεων: "},
     {TR_EDITOR_SCENARIO_EVENT_REPEATS_FOREVER, "Άπειρο"},
     {TR_EDITOR_SCENARIO_EVENT_DOES_NOT_REPEAT, "Δεν επαναλαμβάνεται."},

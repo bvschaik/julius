@@ -153,7 +153,7 @@ static void collapse_building(building *b)
     }
 
     game_undo_disable();
-    building_destroy_by_collapse(b);
+    building_destroy_by_poor_maintenance(b);
 }
 
 static void fire_building(building *b)

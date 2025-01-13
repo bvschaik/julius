@@ -18,6 +18,19 @@ typedef enum {
 } event_state;
 
 typedef enum {
+    EVENT_TRIGGER_UNDEFINED = 0,
+    EVENT_TRIGGER_MONTH_START = 1,
+    EVENT_TRIGGER_BUILDING_DESTROYED_BY_FIRE = 2,
+    EVENT_TRIGGER_BUILDING_DESTROYED_BY_POOR_MAINTENANCE = 3,
+    EVENT_TRIGGER_BUILDING_DESTROYED_BY_COMBAT = 4,
+    EVENT_TRIGGER_BUILDING_CLEARED_BY_PLAYER = 5,
+    EVENT_TRIGGER_BUILDING_DESTROYED_BY_DISEASE = 6,
+    EVENT_TRIGGER_BUILDING_DESTROYED_BY_ANYTHING = 7,
+    EVENT_TRIGGER_BUILDING_PLACED_BY_PLAYER = 8,
+    EVENT_TRIGGER_MAX,
+} event_trigger;
+
+typedef enum {
     CONDITION_TYPE_UNDEFINED = 0,
     CONDITION_TYPE_TIME_PASSED = 1,
     CONDITION_TYPE_DIFFICULTY = 2,
@@ -43,6 +56,7 @@ typedef enum {
     CONDITION_TYPE_RESOURCE_STORED_COUNT = 22,
     CONDITION_TYPE_RESOURCE_STORAGE_AVAILABLE = 23,
     CONDITION_TYPE_BUILDING_COUNT_AREA = 24,
+    CONDITION_TYPE_CONTEXT_BUILDING_TYPE = 25,
     CONDITION_TYPE_MAX,
     // helper constants
     CONDITION_TYPE_MIN = CONDITION_TYPE_TIME_PASSED,
@@ -131,11 +145,12 @@ typedef struct {
 typedef struct {
     int id;
     event_state state;
-    int repeat_months_min;
-    int repeat_months_max;
+    event_trigger trigger;
+    int repeat_triggers_min;
+    int repeat_triggers_max;
     int max_number_of_repeats;
     int execution_count;
-    int months_until_active;
+    int triggers_until_active;
     array(scenario_condition_t) conditions;
     array(scenario_action_t) actions;
 } scenario_event_t;

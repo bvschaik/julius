@@ -17,6 +17,7 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
+#include "scenario/scenario_events_controller.h"
 #include "translation/translation.h"
 #include "window/popup_dialog.h"
 
@@ -29,6 +30,12 @@ static struct {
     int fort_confirmed;
     int monument_confirmed;
 } confirm;
+
+static void event_process_clearing(int building_type)
+{
+    scenario_events_full_process(EVENT_TRIGGER_BUILDING_CLEARED_BY_PLAYER, 1, building_type);
+    scenario_events_full_process(EVENT_TRIGGER_BUILDING_DESTROYED_BY_ANYTHING, 1, building_type);
+}
 
 static building *get_deletable_building(int grid_offset)
 {
@@ -144,10 +151,12 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                     game_undo_add_building(space);
                     space->state = BUILDING_STATE_DELETED_BY_PLAYER;
                 }
+                event_process_clearing(b->type);
             } else if (map_terrain_is(grid_offset, TERRAIN_AQUEDUCT)) {
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE & ~TERRAIN_HIGHWAY);
                 items_placed++;
                 map_aqueduct_remove(grid_offset);
+                event_process_clearing(BUILDING_AQUEDUCT);
             } else if (map_terrain_is(grid_offset, TERRAIN_WATER)) {
                 if (!measure_only && map_bridge_count_figures(grid_offset) > 0) {
                     city_warning_show(WARNING_PEOPLE_ON_BRIDGE, NEW_WARNING_SLOT);
@@ -159,8 +168,17 @@ static int clear_land_confirmed(int measure_only, int x_start, int y_start, int 
                 int next_highways_removed = map_tiles_clear_highway(grid_offset, measure_only);
                 highways_removed += next_highways_removed;
                 items_placed += next_highways_removed;
+                event_process_clearing(BUILDING_HIGHWAY);
             } else if (map_terrain_is(grid_offset, TERRAIN_NOT_CLEAR)) {
-                if (map_terrain_is(grid_offset, TERRAIN_ROAD | TERRAIN_GARDEN)) {
+                int is_road = map_terrain_is(grid_offset, TERRAIN_ROAD);
+                int is_garden = map_terrain_is(grid_offset, TERRAIN_GARDEN);
+                if (is_road) {
+                    event_process_clearing(BUILDING_ROAD);
+                }
+                if (is_garden) {
+                    event_process_clearing(BUILDING_GARDENS);
+                }
+                if (is_road || is_garden) {
                     map_property_clear_plaza_earthquake_or_overgrown_garden(grid_offset);
                 }
                 map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);

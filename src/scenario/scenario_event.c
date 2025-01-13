@@ -36,22 +36,28 @@ void scenario_event_save_state(buffer *buf, scenario_event_t *event)
 
     buffer_write_i32(buf, event->id);
     buffer_write_i16(buf, event->state);
-    buffer_write_i32(buf, event->repeat_months_min);
-    buffer_write_i32(buf, event->repeat_months_max);
-    buffer_write_i32(buf, event->months_until_active);
+    buffer_write_i16(buf, event->trigger);
+    buffer_write_i32(buf, event->repeat_triggers_min);
+    buffer_write_i32(buf, event->repeat_triggers_max);
+    buffer_write_i32(buf, event->triggers_until_active);
     buffer_write_i32(buf, event->max_number_of_repeats);
     buffer_write_i32(buf, event->execution_count);
     buffer_write_i16(buf, event->conditions.size);
     buffer_write_i16(buf, event->actions.size);
 }
 
-void scenario_event_load_state(buffer *buf, scenario_event_t *event)
+void scenario_event_load_state(buffer *buf, scenario_event_t *event, int saved_version, int current_version)
 {
     int saved_id = buffer_read_i32(buf);
     event->state = buffer_read_i16(buf);
-    event->repeat_months_min = buffer_read_i32(buf);
-    event->repeat_months_max = buffer_read_i32(buf);
-    event->months_until_active = buffer_read_i32(buf);
+    if (saved_version >= SCENARIO_EVENTS_VERSION_TRIGGERS) {
+        event->trigger = buffer_read_i16(buf);
+    } else {
+        event->trigger = EVENT_TRIGGER_MONTH_START;
+    }
+    event->repeat_triggers_min = buffer_read_i32(buf);
+    event->repeat_triggers_max = buffer_read_i32(buf);
+    event->triggers_until_active = buffer_read_i32(buf);
     event->max_number_of_repeats = buffer_read_i32(buf);
     event->execution_count = buffer_read_i32(buf);
     int conditions_count = buffer_read_i16(buf);
@@ -136,7 +142,7 @@ void scenario_event_initialize_new(scenario_event_t *event, int position)
 
 int scenario_event_can_repeat(scenario_event_t *event)
 {
-    return (event->repeat_months_min > 0) && (event->repeat_months_max >= event->repeat_months_min) &&
+    return (event->repeat_triggers_min > 0) && (event->repeat_triggers_max >= event->repeat_triggers_min) &&
         ((event->execution_count < event->max_number_of_repeats) || (event->max_number_of_repeats <= 0));
 }
 
@@ -159,19 +165,19 @@ int scenario_event_all_conditions_met(scenario_event_t *event)
     return 1;
 }
 
-int scenario_event_decrease_pause_time(scenario_event_t *event, int months_passed)
+int scenario_event_decrease_pause_count(scenario_event_t *event, int count)
 {
     if (event->state != EVENT_STATE_PAUSED) {
         return 0;
     }
 
-    if (event->months_until_active > 0) {
-        event->months_until_active -= months_passed;
+    if (event->triggers_until_active > 0) {
+        event->triggers_until_active -= count;
     }
-    if (event->months_until_active < 0) {
-        event->months_until_active = 0;
+    if (event->triggers_until_active < 0) {
+        event->triggers_until_active = 0;
     }
-    if (event->months_until_active == 0) {
+    if (event->triggers_until_active == 0) {
         event->state = EVENT_STATE_ACTIVE;
     }
     return 1;
@@ -185,7 +191,7 @@ int scenario_event_conditional_execute(scenario_event_t *event)
         if (scenario_event_can_repeat(event)) {
             scenario_event_init(event);
             event->state = EVENT_STATE_PAUSED;
-            event->months_until_active = random_between_from_stdlib(event->repeat_months_min, event->repeat_months_max);
+            event->triggers_until_active = random_between_from_stdlib(event->repeat_triggers_min, event->repeat_triggers_max);
         } else {
             event->state = EVENT_STATE_DISABLED;
         }

@@ -1,5 +1,6 @@
 #include "scenario_events_controller.h"
 
+#include "building/type.h"
 #include "core/log.h"
 #include "game/save_version.h"
 #include "scenario/action_types/action_handler.h"
@@ -10,6 +11,8 @@
 #define SCENARIO_EVENTS_SIZE_STEP 50
 
 static array(scenario_event_t) scenario_events;
+
+static scenario_event_context_t scenario_events_context;
 
 static int event_in_use(const scenario_event_t *event)
 {
@@ -27,6 +30,9 @@ void scenario_events_init(void)
     array_foreach(scenario_events, current) {
         scenario_event_init(current);
     }
+
+    scenario_events_context.cause_of_context = EVENT_TRIGGER_UNDEFINED;
+    scenario_events_context.related_building_type = BUILDING_NONE;
 }
 
 void scenario_events_clear(void)
@@ -46,7 +52,7 @@ scenario_event_t *scenario_event_get(int event_id)
     return array_item(scenario_events, event_id);
 }
 
-scenario_event_t *scenario_event_create(int repeat_min, int repeat_max, int max_repeats)
+scenario_event_t *scenario_event_create(int repeat_min, int repeat_max, int max_repeats, int trigger_type)
 {
     if (repeat_min < 0) {
         log_error("Event minimum repeat is less than 0.", 0, 0);
@@ -70,9 +76,10 @@ scenario_event_t *scenario_event_create(int repeat_min, int repeat_max, int max_
         return 0;
     }
     event->state = EVENT_STATE_ACTIVE;
-    event->repeat_months_min = repeat_min;
-    event->repeat_months_max = repeat_max;
+    event->repeat_triggers_min = repeat_min;
+    event->repeat_triggers_max = repeat_max;
     event->max_number_of_repeats = max_repeats;
+    event->trigger = trigger_type;
 
     return event;
 }
@@ -188,8 +195,8 @@ static void info_load_state(buffer *buf)
         &struct_size);
 
     for (int i = 0; i < array_size; i++) {
-        scenario_event_t *event = scenario_event_create(0, 0, 0);
-        scenario_event_load_state(buf, event);
+        scenario_event_t *event = scenario_event_create(0, 0, 0, EVENT_TRIGGER_MONTH_START);
+        scenario_event_load_state(buf, event, version, SCENARIO_EVENTS_VERSION);
     }
 }
 
@@ -244,6 +251,16 @@ static void actions_load_state(buffer *buf)
     }
 }
 
+static void scenario_events_progress_paused(event_trigger type_to_progress, int count)
+{
+    scenario_event_t *current;
+    array_foreach(scenario_events, current) {
+        if (current->trigger == type_to_progress) {
+            scenario_event_decrease_pause_count(current, count);
+        }
+    }
+}
+
 void scenario_events_load_state(buffer *buf_events, buffer *buf_conditions, buffer *buf_actions)
 {
     scenario_events_clear();
@@ -259,12 +276,27 @@ void scenario_events_load_state(buffer *buf_events, buffer *buf_conditions, buff
     }
 }
 
-void scenario_events_process_all(void)
+void scenario_events_set_context(event_trigger cause, building_type b_type)
+{
+    scenario_events_context.cause_of_context = cause;
+    scenario_events_context.related_building_type = b_type;
+}
+
+void scenario_events_process_by_trigger_type(event_trigger type_to_process)
 {
     scenario_event_t *current;
     array_foreach(scenario_events, current) {
-        scenario_event_conditional_execute(current);
+        if (current->trigger == type_to_process) {
+            scenario_event_conditional_execute(current);
+        }
     }
+}
+
+void scenario_events_full_process(event_trigger cause, int progress_count, building_type b_type)
+{
+    scenario_events_set_context(cause, b_type);
+    scenario_events_progress_paused(cause, progress_count);
+    scenario_events_process_by_trigger_type(cause);
 }
 
 scenario_event_t *scenario_events_get_using_custom_variable(int custom_variable_id)
@@ -278,10 +310,7 @@ scenario_event_t *scenario_events_get_using_custom_variable(int custom_variable_
     return 0;
 }
 
-void scenario_events_progress_paused(int months_passed)
+scenario_event_context_t *scenario_events_get_context(void)
 {
-    scenario_event_t *current;
-    array_foreach(scenario_events, current) {
-        scenario_event_decrease_pause_time(current, months_passed);
-    }
+    return &scenario_events_context;
 }

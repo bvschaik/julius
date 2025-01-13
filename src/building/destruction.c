@@ -16,9 +16,16 @@
 #include "map/routing_terrain.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
+#include "scenario/scenario_events_controller.h"
 #include "sound/effect.h"
 
 #include <string.h>
+
+static void event_process_destruction(event_trigger trigger, int building_type)
+{
+    scenario_events_full_process(trigger, 1, building_type);
+    scenario_events_full_process(EVENT_TRIGGER_BUILDING_DESTROYED_BY_ANYTHING, 1, building_type);
+}
 
 static void destroy_on_fire(building *b, int plagued)
 {
@@ -140,22 +147,31 @@ void building_destroy_by_collapse(building *b)
     destroy_linked_parts(b, 0, 0);
 }
 
+void building_destroy_by_poor_maintenance(building *b)
+{
+    building_destroy_by_collapse(b);
+    event_process_destruction(EVENT_TRIGGER_BUILDING_DESTROYED_BY_POOR_MAINTENANCE, b->type);
+}
+
 void building_destroy_by_fire(building *b)
 {
     destroy_on_fire(b, 0);
     destroy_linked_parts(b, 1, 0);
+    event_process_destruction(EVENT_TRIGGER_BUILDING_DESTROYED_BY_FIRE, b->type);
 }
 
 void building_destroy_by_plague(building *b)
 {
     destroy_on_fire(b, 1);
     destroy_linked_parts(b, 1, 1);
+    event_process_destruction(EVENT_TRIGGER_BUILDING_DESTROYED_BY_DISEASE, b->type);
 }
 
 void building_destroy_by_rioter(building *b)
 {
     destroy_on_fire(b, 0);
     destroy_linked_parts(b, 1, 0);
+    event_process_destruction(EVENT_TRIGGER_BUILDING_DESTROYED_BY_COMBAT, b->type);
 }
 
 int building_destroy_first_of_type(building_type type)
@@ -210,16 +226,19 @@ void building_destroy_by_enemy(int x, int y, int grid_offset)
         if (b->state == BUILDING_STATE_IN_USE || b->state == BUILDING_STATE_MOTHBALLED) {
             city_ratings_peace_building_destroyed(b->type);
             building_destroy_by_collapse(b);
+            event_process_destruction(EVENT_TRIGGER_BUILDING_DESTROYED_BY_COMBAT, b->type);
         }
     } else {
         if (map_terrain_is(grid_offset, TERRAIN_WALL)) {
             figure_kill_tower_sentries_at(x, y);
+            event_process_destruction(EVENT_TRIGGER_BUILDING_DESTROYED_BY_COMBAT, BUILDING_WALL);
         }
         if (map_terrain_is(grid_offset, TERRAIN_GARDEN)) {
             map_terrain_remove(grid_offset, TERRAIN_CLEARABLE);
             map_tiles_update_region_empty_land(x, y, x, y);
             map_property_clear_plaza_earthquake_or_overgrown_garden(grid_offset);
             map_tiles_update_all_gardens();
+            event_process_destruction(EVENT_TRIGGER_BUILDING_DESTROYED_BY_COMBAT, BUILDING_GARDENS);
         } else {
             map_building_tiles_set_rubble(0, x, y, 1);
         }

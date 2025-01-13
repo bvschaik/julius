@@ -332,7 +332,8 @@ static int start_scenario(const uint8_t *scenario_name, const char *scenario_fil
 
     if (!is_save_game) {
         scenario_events_init();
-        scenario_events_process_all();
+        // Process month start events, since the first day of a new scenario does not trigger them
+        scenario_events_process_by_trigger_type(EVENT_TRIGGER_MONTH_START);
     }
     building_menu_update();
     city_message_init_scenario();
@@ -405,7 +406,8 @@ int game_file_start_scenario_from_buffer(uint8_t *data, int length, int is_save_
 
     if (!is_save_game) {
         scenario_events_init();
-        scenario_events_process_all();
+        // Process month start events, since the first day of a new scenario does not trigger them
+        scenario_events_process_by_trigger_type(EVENT_TRIGGER_MONTH_START);
     }
     building_menu_update();
     city_message_init_scenario();

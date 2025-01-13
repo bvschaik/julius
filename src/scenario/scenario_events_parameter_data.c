@@ -129,6 +129,9 @@ static scenario_condition_data_t scenario_condition_data[CONDITION_TYPE_MAX] = {
                                         .xml_parm3 =    { .name = "building",            .type = PARAMETER_TYPE_BUILDING,         .key = TR_PARAMETER_TYPE_BUILDING_COUNTING },
                                         .xml_parm4 =    { .name = "check",               .type = PARAMETER_TYPE_CHECK,            .min_limit = 1,         .max_limit = 6,             .key = TR_PARAMETER_TYPE_CHECK },
                                         .xml_parm5 =    { .name = "value",               .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,         .max_limit = UNLIMITED,     .key = TR_PARAMETER_TYPE_NUMBER }, },
+    [CONDITION_TYPE_CONTEXT_BUILDING_TYPE]     = { .type = CONDITION_TYPE_CONTEXT_BUILDING_TYPE,
+                                        .xml_attr =     { .name = "context_building_type", .type = PARAMETER_TYPE_TEXT,           .key = TR_CONDITION_TYPE_CONTEXT_BUILDING_TYPE },
+                                        .xml_parm1 =    { .name = "building",            .type = PARAMETER_TYPE_BUILDING,         .key = TR_PARAMETER_TYPE_CONTEXT_BUILDING }, },
 };
 
 scenario_condition_data_t *scenario_events_parameter_data_get_conditions_xml_attributes(condition_types type)
@@ -273,7 +276,6 @@ static scenario_action_data_t scenario_action_data[ACTION_TYPE_MAX] = {
     [ACTION_TYPE_CHANGE_CLIMATE]         = { .type = ACTION_TYPE_CHANGE_CLIMATE,
                                         .xml_attr = {.name = "change_climate",      .type = PARAMETER_TYPE_TEXT,      .key = TR_ACTION_TYPE_CHANGE_CLIMATE },
                                         .xml_parm1 = {.name = "climate",            .type = PARAMETER_TYPE_CLIMATE,   .key = TR_PARAMETER_TYPE_CLIMATE }, },
-
 };
 
 scenario_action_data_t *scenario_events_parameter_data_get_actions_xml_attributes(action_types type)
@@ -771,6 +773,19 @@ special_attribute_mapping_t special_attribute_mappings_climate[] =
 
 #define SPECIAL_ATTRIBUTE_MAPPINGS_CLIMATE_SIZE (sizeof(special_attribute_mappings_climate) / sizeof(special_attribute_mapping_t))
 
+static special_attribute_mapping_t special_attribute_mappings_event_trigger_type[] = {
+    { .type = PARAMETER_TYPE_EVENT_TRIGGER_TYPE,            .text = "start_of_month",                  .value = EVENT_TRIGGER_MONTH_START,                               .key = TR_PARAMETER_VALUE_EVENT_TRIGGER_MONTH_START },
+    { .type = PARAMETER_TYPE_EVENT_TRIGGER_TYPE,            .text = "on_building_caught_fire",         .value = EVENT_TRIGGER_BUILDING_DESTROYED_BY_FIRE,                .key = TR_PARAMETER_VALUE_EVENT_TRIGGER_BUILDING_DESTROYED_BY_FIRE },
+    { .type = PARAMETER_TYPE_EVENT_TRIGGER_TYPE,            .text = "on_building_collapsed",           .value = EVENT_TRIGGER_BUILDING_DESTROYED_BY_POOR_MAINTENANCE,    .key = TR_PARAMETER_VALUE_EVENT_TRIGGER_BUILDING_DESTROYED_BY_POOR_MAINTENANCE },
+    { .type = PARAMETER_TYPE_EVENT_TRIGGER_TYPE,            .text = "on_building_raided",              .value = EVENT_TRIGGER_BUILDING_DESTROYED_BY_COMBAT,              .key = TR_PARAMETER_VALUE_EVENT_TRIGGER_BUILDING_DESTROYED_BY_COMBAT },
+    { .type = PARAMETER_TYPE_EVENT_TRIGGER_TYPE,            .text = "on_building_cleared",             .value = EVENT_TRIGGER_BUILDING_CLEARED_BY_PLAYER,                .key = TR_PARAMETER_VALUE_EVENT_TRIGGER_BUILDING_CLEARED_BY_PLAYER },
+    { .type = PARAMETER_TYPE_EVENT_TRIGGER_TYPE,            .text = "on_building_plagued",             .value = EVENT_TRIGGER_BUILDING_DESTROYED_BY_DISEASE,             .key = TR_PARAMETER_VALUE_EVENT_TRIGGER_BUILDING_DESTROYED_BY_DISEASE },
+    { .type = PARAMETER_TYPE_EVENT_TRIGGER_TYPE,            .text = "on_any_building_removal",         .value = EVENT_TRIGGER_BUILDING_DESTROYED_BY_ANYTHING,            .key = TR_PARAMETER_VALUE_EVENT_TRIGGER_BUILDING_DESTROYED_BY_ANYTHING },
+    { .type = PARAMETER_TYPE_EVENT_TRIGGER_TYPE,            .text = "on_building_placed",              .value = EVENT_TRIGGER_BUILDING_PLACED_BY_PLAYER,                 .key = TR_PARAMETER_VALUE_EVENT_TRIGGER_BUILDING_PLACED_BY_PLAYER },
+};
+
+#define SPECIAL_ATTRIBUTE_MAPPINGS_EVENT_TRIGGER_TYPE_SIZE (sizeof(special_attribute_mappings_event_trigger_type) / sizeof(special_attribute_mapping_t))
+
 
 special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mapping(parameter_type type, int index)
 {
@@ -806,6 +821,8 @@ special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mappin
             return &special_attribute_mappings_god[index];
         case PARAMETER_TYPE_CLIMATE:
             return &special_attribute_mappings_climate[index];
+        case PARAMETER_TYPE_EVENT_TRIGGER_TYPE:
+            return &special_attribute_mappings_event_trigger_type[index];
         default:
             return 0;
     }
@@ -845,6 +862,8 @@ int scenario_events_parameter_data_get_mappings_size(parameter_type type)
             return SPECIAL_ATTRIBUTE_MAPPINGS_GOD_SIZE;
         case PARAMETER_TYPE_CLIMATE:
             return SPECIAL_ATTRIBUTE_MAPPINGS_CLIMATE_SIZE;
+        case PARAMETER_TYPE_EVENT_TRIGGER_TYPE:
+            return SPECIAL_ATTRIBUTE_MAPPINGS_EVENT_TRIGGER_TYPE_SIZE;
         default:
             return 0;
     }
@@ -1384,6 +1403,11 @@ void scenario_events_parameter_data_get_display_string_for_condition(scenario_co
                 result_text = translation_for_type_lookup_by_value(PARAMETER_TYPE_BUILDING, condition->parameter3, result_text, &maxlength);
                 result_text = translation_for_attr_mapping_text(xml_info->xml_parm4.type, condition->parameter4, result_text, &maxlength);
                 result_text = translation_for_number_value(condition->parameter5, result_text, &maxlength);
+                return;
+            }
+        case CONDITION_TYPE_CONTEXT_BUILDING_TYPE:
+            {
+                result_text = translation_for_type_lookup_by_value(PARAMETER_TYPE_BUILDING, condition->parameter1, result_text, &maxlength);
                 return;
             }
         case CONDITION_TYPE_RESOURCE_STORAGE_AVAILABLE:

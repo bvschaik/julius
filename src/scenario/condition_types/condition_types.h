@@ -13,6 +13,8 @@ int scenario_condition_type_city_population_met(const scenario_condition_t *cond
 
 int scenario_condition_type_count_own_troops_met(const scenario_condition_t *condition);
 
+int scenario_condition_type_context_building_type_met(const scenario_condition_t *condition);
+
 int scenario_condition_type_custom_variable_check_met(const scenario_condition_t *condition);
 
 int scenario_condition_type_difficulty_met(const scenario_condition_t *condition);

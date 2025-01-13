@@ -5,6 +5,8 @@
 
 void building_destroy_by_collapse(building *b);
 
+void building_destroy_by_poor_maintenance(building *b);
+
 void building_destroy_by_fire(building *b);
 
 void building_destroy_by_plague(building *b);

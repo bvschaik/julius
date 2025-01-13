@@ -99,7 +99,7 @@ static void populate_list(int offset)
 
 static void add_new_event(void)
 {
-    scenario_event_create(0, 0, 0);
+    scenario_event_create(0, 0, 0, EVENT_TRIGGER_MONTH_START);
     init_list();
     window_request_refresh();
 }

@@ -1040,8 +1040,6 @@ static translation_string all_strings[] = {
     {TR_EDITOR_UNABLE_TO_SAVE_EVENTS_TITLE, "No se pueden guardar los eventos del escenario"},
     {TR_EDITOR_IMPORT_LINE, "Linea: "},
     {TR_EDITOR_SCENARIO_EVENT_ID, "ID: "},
-    {TR_EDITOR_SCENARIO_EVENT_REPEAT_MIN_MONTHS, "Mínimo de meses antes de repetir: "},
-    {TR_EDITOR_SCENARIO_EVENT_REPEAT_MAX_MONTHS, "Máximo de meses antes de repetir: "},
     {TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS, "Número máximo de repeticiones: "},
     {TR_EDITOR_SCENARIO_EVENT_REPEATS_FOREVER, "Infinito"},
     {TR_EDITOR_SCENARIO_EVENT_DOES_NOT_REPEAT, "No se repite."},

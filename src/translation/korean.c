@@ -1016,8 +1016,6 @@ static translation_string all_strings[] = {
     {TR_EDITOR_UNABLE_TO_SAVE_EVENTS_TITLE, "시나리오 이벤트를 저장할 수 없습니다"},
     {TR_EDITOR_IMPORT_LINE, "줄: "},
     {TR_EDITOR_SCENARIO_EVENT_ID, "ID: "},
-    {TR_EDITOR_SCENARIO_EVENT_REPEAT_MIN_MONTHS, "다시 반복되기까지 최소 개월 수: "},
-    {TR_EDITOR_SCENARIO_EVENT_REPEAT_MAX_MONTHS, "다시 반복되기까지 최대 개월 수: "},
     {TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS, "최대 반복 횟수: "},
     {TR_EDITOR_SCENARIO_EVENT_REPEATS_FOREVER, "무한"},
     {TR_EDITOR_SCENARIO_EVENT_DOES_NOT_REPEAT, "반복하지 않음."},

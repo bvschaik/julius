@@ -140,6 +140,7 @@ static int export_parse_attribute(xml_data_attribute_t *attr, int target)
         case PARAMETER_TYPE_TARGET_TYPE:
         case PARAMETER_TYPE_GOD:
         case PARAMETER_TYPE_CLIMATE:
+        case PARAMETER_TYPE_EVENT_TRIGGER_TYPE:
             return export_attribute_by_type(attr, attr->type, target);
         case PARAMETER_TYPE_BUILDING_COUNTING:
             return export_attribute_by_type(attr, PARAMETER_TYPE_BUILDING, target);
@@ -219,6 +220,19 @@ static void export_event_action(scenario_action_t *action)
     xml_exporter_close_element();
 }
 
+static void add_event_trigger_attribute(scenario_event_t *event)
+{
+    if (event->trigger == EVENT_TRIGGER_UNDEFINED ||
+        event->trigger == EVENT_TRIGGER_MONTH_START) {
+        return;
+    }
+
+    special_attribute_mapping_t *found = scenario_events_parameter_data_get_attribute_mapping_by_value(PARAMETER_TYPE_EVENT_TRIGGER_TYPE, event->trigger);
+    if (found != 0) {
+        xml_exporter_add_attribute_text("check_trigger_when", found->text);
+    }
+}
+
 static int export_event(scenario_event_t *event)
 {
     if (event->state == EVENT_STATE_UNDEFINED) {
@@ -226,17 +240,17 @@ static int export_event(scenario_event_t *event)
     }
 
     xml_exporter_new_element("event");
-
     xml_exporter_add_attribute_int("id", event->id);
-    if (event->repeat_months_min > 0) {
-        xml_exporter_add_attribute_int("repeat_months_min", event->repeat_months_min);
+    if (event->repeat_triggers_min > 0) {
+        xml_exporter_add_attribute_int("repeat_triggers_min", event->repeat_triggers_min);
     }
-    if (event->repeat_months_max > 0) {
-        xml_exporter_add_attribute_int("repeat_months_max", event->repeat_months_max);
+    if (event->repeat_triggers_max > 0) {
+        xml_exporter_add_attribute_int("repeat_triggers_max", event->repeat_triggers_max);
     }
     if (event->max_number_of_repeats > 0) {
         xml_exporter_add_attribute_int("max_number_of_repeats", event->max_number_of_repeats);
     }
+    add_event_trigger_attribute(event);
 
     xml_exporter_new_element("conditions");
     for (int i = 0; i < event->conditions.size; i++) {

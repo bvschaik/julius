@@ -18,6 +18,7 @@
 #include "map/grid.h"
 #include "scenario/request.h"
 #include "scenario/scenario.h"
+#include "scenario/scenario_events_controller.h"
 #include "scenario/condition_types/comparison_helper.h"
 
 int scenario_condition_type_building_count_active_met(const scenario_condition_t *condition)
@@ -208,6 +209,18 @@ int scenario_condition_type_city_population_met(const scenario_condition_t *cond
     }
 
     return comparison_helper_compare_values(comparison, population_value_to_use, value);
+}
+
+int scenario_condition_type_context_building_type_met(const scenario_condition_t *condition)
+{
+    int building_type = condition->parameter1;
+
+    scenario_event_context_t *context = scenario_events_get_context();
+    if (!context) {
+        return 0;
+    }
+
+    return (building_type == BUILDING_ANY) || (building_type == context->related_building_type);
 }
 
 int scenario_condition_type_count_own_troops_met(const scenario_condition_t *condition)

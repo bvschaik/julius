@@ -1059,8 +1059,6 @@ static translation_string all_strings[] = {
     {TR_EDITOR_UNABLE_TO_SAVE_EVENTS_TITLE, "Невозможно сохранить события."},
     {TR_EDITOR_IMPORT_LINE, "Строка: "},
     {TR_EDITOR_SCENARIO_EVENT_ID, "ID: "},
-    {TR_EDITOR_SCENARIO_EVENT_REPEAT_MIN_MONTHS, "Мин. кол. месяцев до повторения: "},
-    {TR_EDITOR_SCENARIO_EVENT_REPEAT_MAX_MONTHS, "Макс. кол. месяцев до повторения: "},
     {TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS, "Макс. кол. повторов: "},
     {TR_EDITOR_SCENARIO_EVENT_REPEATS_FOREVER, "Бесконечно"},
     {TR_EDITOR_SCENARIO_EVENT_DOES_NOT_REPEAT, "Не повторяется"},

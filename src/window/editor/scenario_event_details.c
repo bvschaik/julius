@@ -18,6 +18,7 @@
 #include "window/editor/map.h"
 #include "window/editor/scenario_action_edit.h"
 #include "window/editor/scenario_condition_edit.h"
+#include "window/editor/select_special_attribute_mapping.h"
 #include "window/numeric_input.h"
 
 #define BUTTON_LEFT_PADDING 32
@@ -25,7 +26,7 @@
 #define SHORT_BUTTON_LEFT_PADDING 128
 #define SHORT_BUTTON_WIDTH 480
 #define EVENT_REPEAT_Y_OFFSET 96
-#define DETAILS_Y_OFFSET 192
+#define DETAILS_Y_OFFSET 224
 #define DETAILS_ROW_HEIGHT 32
 #define MAX_VISIBLE_ROWS 10
 #define MAX_TEXT_LENGTH 75
@@ -34,6 +35,7 @@ enum {
     SCENARIO_EVENT_DETAILS_SET_MAX_REPEATS = 0,
     SCENARIO_EVENT_DETAILS_SET_REPEAT_MIN,
     SCENARIO_EVENT_DETAILS_SET_REPEAT_MAX,
+    SCENARIO_EVENT_DETAILS_SET_TRIGGER,
     SCENARIO_EVENT_DETAILS_ADD_CONDITION,
     SCENARIO_EVENT_DETAILS_ADD_ACTION,
 };
@@ -43,6 +45,7 @@ static void init_scroll_list(void);
 static void on_scroll(void);
 static void button_click(int index, int param2);
 static void button_amount(int param1, int param2);
+static void button_trigger_change(int param1, int param2);
 static void button_add(int param1, int param2);
 static void button_delete_event(int param1, int param2);
 static void add_new_condition(void);
@@ -54,9 +57,10 @@ static scrollbar_type scrollbar = {
 
 static generic_button buttons[] = {
     {580, 32, 64, 14, button_delete_event, button_none, 10, 0},
-    {SHORT_BUTTON_LEFT_PADDING, EVENT_REPEAT_Y_OFFSET, SHORT_BUTTON_WIDTH, 14, button_amount, button_none, SCENARIO_EVENT_DETAILS_SET_MAX_REPEATS, 0},
-    {SHORT_BUTTON_LEFT_PADDING, EVENT_REPEAT_Y_OFFSET + 32, SHORT_BUTTON_WIDTH, 14, button_amount, button_none, SCENARIO_EVENT_DETAILS_SET_REPEAT_MIN, 0},
-    {SHORT_BUTTON_LEFT_PADDING, EVENT_REPEAT_Y_OFFSET + 64, SHORT_BUTTON_WIDTH, 14, button_amount, button_none, SCENARIO_EVENT_DETAILS_SET_REPEAT_MAX, 0},
+    {SHORT_BUTTON_LEFT_PADDING, EVENT_REPEAT_Y_OFFSET, SHORT_BUTTON_WIDTH, 14, button_trigger_change, button_none, SCENARIO_EVENT_DETAILS_SET_TRIGGER, 0},
+    {SHORT_BUTTON_LEFT_PADDING, EVENT_REPEAT_Y_OFFSET + 32, SHORT_BUTTON_WIDTH, 14, button_amount, button_none, SCENARIO_EVENT_DETAILS_SET_MAX_REPEATS, 0},
+    {SHORT_BUTTON_LEFT_PADDING, EVENT_REPEAT_Y_OFFSET + 64, SHORT_BUTTON_WIDTH, 14, button_amount, button_none, SCENARIO_EVENT_DETAILS_SET_REPEAT_MIN, 0},
+    {SHORT_BUTTON_LEFT_PADDING, EVENT_REPEAT_Y_OFFSET + 96, SHORT_BUTTON_WIDTH, 14, button_amount, button_none, SCENARIO_EVENT_DETAILS_SET_REPEAT_MAX, 0},
     {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (0 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_click, button_none, 0, 0},
     {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (1 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_click, button_none, 1, 0},
     {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (2 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_click, button_none, 2, 0},
@@ -105,6 +109,7 @@ static struct {
     scenario_event_t *event;
 
     sub_item_entry_t list[MAX_VISIBLE_ROWS];
+    uint8_t display_text[MAX_TEXT_LENGTH];
 } data;
 
 static void populate_list(int offset)
@@ -195,6 +200,13 @@ static void init_scroll_list(void)
     populate_list(0);
 }
 
+static uint8_t *translation_for_param_value(parameter_type type, int value)
+{
+    memset(data.display_text, 0, MAX_TEXT_LENGTH);
+    scenario_events_parameter_data_get_display_string_for_value(type, value, data.display_text, MAX_TEXT_LENGTH);
+    return data.display_text;
+}
+
 static int color_from_state(event_state state)
 {
     if (!editor_is_active()) {
@@ -220,13 +232,8 @@ static void draw_foreground(void)
 
     outer_panel_draw(0, 0, 42, 38);
 
-    for (unsigned int i = 0; i < 4; i++) {
-        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
-    }
-    for (unsigned int i = 14; i < 16; i++) {
-        large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
-    }
-    
+    lang_text_draw_centered(13, 3, 48, 16, BUTTON_WIDTH, FONT_NORMAL_BLACK);
+
     text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENTS_TITLE), 16, 32, 320, FONT_LARGE_BLACK, 0);
     text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_ID),
         data.event->id, "", 336, 40, FONT_NORMAL_PLAIN, COLOR_BLACK);
@@ -236,49 +243,73 @@ static void draw_foreground(void)
         text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_EXECUTION_COUNT),
             data.event->execution_count, "", 40, 72, FONT_NORMAL_PLAIN, COLOR_BLACK);
         text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_MONTHS_UNTIL_ACTIVE),
-            data.event->months_until_active, "", 336, 72, FONT_NORMAL_PLAIN, COLOR_BLACK);
+            data.event->triggers_until_active, "", 336, 72, FONT_NORMAL_PLAIN, COLOR_BLACK);
     }
     
-    text_draw_centered(translation_for(TR_EDITOR_DELETE), buttons[0].x, buttons[0].y + 8, buttons[0].width + 8,
-        FONT_NORMAL_GREEN, COLOR_MASK_NONE);
-    if (data.focus_button_id == 1) {
-        button_border_draw(buttons[0].x, buttons[0].y, buttons[0].width, buttons[0].height + 8, 1);
+    int button_id = 0;
+    large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
+    if (data.focus_button_id == button_id + 1) {
+        button_border_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width, buttons[button_id].height + 8, 1);
     }
+    text_draw_centered(translation_for(TR_EDITOR_DELETE), buttons[button_id].x, buttons[button_id].y + 8, buttons[button_id].width + 8,
+        FONT_NORMAL_GREEN, COLOR_MASK_NONE);
 
-    int y_offset = EVENT_REPEAT_Y_OFFSET;
+    button_id++;
+    large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
+    if (data.focus_button_id == button_id + 1) {
+        button_border_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width, buttons[button_id].height + 8, 1);
+    }
+    text_draw(translation_for(TR_EDITOR_SCENARIO_EVENT_TRIGGER),
+        buttons[button_id].x + 8, buttons[button_id].y + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+    text_draw_right_aligned(translation_for_param_value(PARAMETER_TYPE_EVENT_TRIGGER_TYPE, data.event->trigger),
+        buttons[button_id].x, buttons[button_id].y + 8, buttons[button_id].width - 8,
+        FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+
+    button_id++;
+    large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
+    if (data.focus_button_id == button_id + 1) {
+        button_border_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width, buttons[button_id].height + 8, 1);
+    }
     if (scenario_event_can_repeat(data.event) == 0) {
-        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_DOES_NOT_REPEAT), 32, y_offset + 8,
+        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_DOES_NOT_REPEAT), 32, buttons[button_id].y + 8,
             SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     } else if (data.event->max_number_of_repeats > 0) {
         text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS),
-            data.event->max_number_of_repeats, "", SHORT_BUTTON_LEFT_PADDING + 16, y_offset + 8,
+            data.event->max_number_of_repeats, "", SHORT_BUTTON_LEFT_PADDING + 16, buttons[button_id].y + 8,
             FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     } else {
-        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS), 32, y_offset + 8,
+        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_MAX_NUM_REPEATS), 32, buttons[button_id].y + 8,
             SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
-        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEATS_FOREVER), 240, y_offset + 8,
+        text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEATS_FOREVER), 240, buttons[button_id].y + 8,
             SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
     }
 
-    y_offset += DETAILS_ROW_HEIGHT;
-    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEAT_MIN_MONTHS),
-        data.event->repeat_months_min, "", SHORT_BUTTON_LEFT_PADDING + 16, y_offset + 8,
+    button_id++;
+    large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
+    if (data.focus_button_id == button_id + 1) {
+        button_border_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width, buttons[button_id].height + 8, 1);
+    }
+    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEAT_MIN_TRIGGERS),
+        data.event->repeat_triggers_min, "", SHORT_BUTTON_LEFT_PADDING + 16, buttons[button_id].y + 8,
         FONT_NORMAL_GREEN, COLOR_MASK_NONE);
 
-    y_offset += DETAILS_ROW_HEIGHT;
-    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEAT_MAX_MONTHS),
-        data.event->repeat_months_max, "", SHORT_BUTTON_LEFT_PADDING + 16, y_offset + 8,
+    button_id++;
+    large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
+    if (data.focus_button_id == button_id + 1) {
+        button_border_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width, buttons[button_id].height + 8, 1);
+    }
+    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENT_REPEAT_MAX_TRIGGERS),
+        data.event->repeat_triggers_max, "", SHORT_BUTTON_LEFT_PADDING + 16, buttons[button_id].y + 8,
         FONT_NORMAL_GREEN, COLOR_MASK_NONE);
 
-    y_offset = DETAILS_Y_OFFSET;
-    int i_button_offset = 4;
+    button_id = 5;
     for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (data.list[i].sub_type != SUB_ITEM_TYPE_UNDEFINED) {
-            large_label_draw(buttons[i + i_button_offset].x, buttons[i + i_button_offset].y,
-                buttons[i + i_button_offset].width / 16, data.focus_button_id == i + i_button_offset + 1 ? 1 : 0);
+            large_label_draw(buttons[i + button_id].x, buttons[i + button_id].y,
+                buttons[i + button_id].width / 16, data.focus_button_id == i + button_id + 1 ? 1 : 0);
 
-            if (data.focus_button_id == (i + i_button_offset + 1) && data.list[i].type) {
-                button_border_draw(BUTTON_LEFT_PADDING, y_offset, BUTTON_WIDTH, DETAILS_ROW_HEIGHT, 1);
+            if (data.focus_button_id == (i + button_id + 1) && data.list[i].type) {
+                button_border_draw(BUTTON_LEFT_PADDING, buttons[i + button_id].y, BUTTON_WIDTH, DETAILS_ROW_HEIGHT, 1);
             }
 
             color_t font_color = COLOR_MASK_BUILDING_GHOST_RED;
@@ -287,24 +318,29 @@ static void draw_foreground(void)
             }
 
             if (data.list[i].type) {
-                text_draw(data.list[i].text, 48, y_offset + 8, FONT_NORMAL_GREEN, font_color);
+                text_draw(data.list[i].text, 48, buttons[i + button_id].y + 8, FONT_NORMAL_GREEN, font_color);
             } else {
-                text_draw_centered(translation_for(TR_EDITOR_DELETED), 48, y_offset + 8,
+                text_draw_centered(translation_for(TR_EDITOR_DELETED), 48, buttons[i + button_id].y + 8,
                     SHORT_BUTTON_WIDTH, FONT_NORMAL_PLAIN, font_color);
             }
         }
-
-        y_offset += DETAILS_ROW_HEIGHT;
     }
 
-    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_CONDITION_ADD), 32, y_offset + 8,
-        SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+    button_id = 15;
+    large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
+    if (data.focus_button_id == button_id + 1) {
+        button_border_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width, buttons[button_id].height + 8, 1);
+    }
+    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_CONDITION_ADD), buttons[button_id].x, buttons[button_id].y + 8,
+        buttons[button_id].width, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
 
-    y_offset += DETAILS_ROW_HEIGHT;
-    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_ACTION_ADD), 32, y_offset + 8,
-        SHORT_BUTTON_WIDTH, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
-
-    lang_text_draw_centered(13, 3, 48, 16 * 36, BUTTON_WIDTH, FONT_NORMAL_BLACK);
+    button_id++;
+    large_label_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width / 16, data.focus_button_id == button_id + 1 ? 1 : 0);
+    if (data.focus_button_id == button_id + 1) {
+        button_border_draw(buttons[button_id].x, buttons[button_id].y, buttons[button_id].width, buttons[button_id].height + 8, 1);
+    }
+    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_ACTION_ADD), buttons[button_id].x, buttons[button_id].y + 8,
+        buttons[button_id].width, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
 
     scrollbar_draw(&scrollbar);
     graphics_reset_dialog();
@@ -335,12 +371,12 @@ static void set_amount_max_repeats(int value)
 
 static void set_amount_repeat_min(int value)
 {
-    data.event->repeat_months_min = value;
+    data.event->repeat_triggers_min = value;
 }
 
 static void set_amount_repeat_max(int value)
 {
-    data.event->repeat_months_max = value;
+    data.event->repeat_triggers_max = value;
 }
 
 static void add_new_condition(void)
@@ -384,6 +420,16 @@ static void button_click(int index, int param2)
             window_editor_scenario_condition_edit_show(condition);
         }
     }
+}
+
+static void set_event_trigger_value(int value)
+{
+    data.event->trigger = value;
+}
+
+static void button_trigger_change(int param1, int param2)
+{
+    window_editor_select_special_attribute_mapping_show(PARAMETER_TYPE_EVENT_TRIGGER_TYPE, set_event_trigger_value, data.event->trigger);
 }
 
 static void button_amount(int param1, int param2)

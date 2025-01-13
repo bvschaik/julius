@@ -13,6 +13,7 @@
 #include "building/industry.h"
 #include "building/lighthouse.h"
 #include "building/maintenance.h"
+#include "building/type.h"
 #include "building/warehouse.h"
 #include "city/buildings.h"
 #include "city/culture.h"
@@ -115,8 +116,7 @@ static void advance_month(void)
     city_games_decrement_month_counts();
     city_gods_update_blessings();
     tutorial_on_month_tick();
-    scenario_events_progress_paused(1);
-    scenario_events_process_all();
+    scenario_events_full_process(EVENT_TRIGGER_MONTH_START, 1, BUILDING_NONE);
     if (setting_monthly_autosave()) {
         game_file_write_saved_game(dir_append_location("autosave.svx", PATH_LOCATION_SAVEGAME));
     }
