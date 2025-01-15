@@ -380,6 +380,7 @@ set(GAME_FILES
     ${PROJECT_SOURCE_DIR}/src/game/file.c
     ${PROJECT_SOURCE_DIR}/src/game/file_editor.c
     ${PROJECT_SOURCE_DIR}/src/game/file_io.c
+    ${PROJECT_SOURCE_DIR}/src/game/file_minimap.c
     ${PROJECT_SOURCE_DIR}/src/game/game.c
     ${PROJECT_SOURCE_DIR}/src/game/mission.c
     ${PROJECT_SOURCE_DIR}/src/game/orientation.c
@@ -499,7 +500,6 @@ set(WIDGET_FILES
     ${PROJECT_SOURCE_DIR}/src/widget/map_editor.c
     ${PROJECT_SOURCE_DIR}/src/widget/map_editor_tool.c
     ${PROJECT_SOURCE_DIR}/src/widget/minimap.c
-    ${PROJECT_SOURCE_DIR}/src/widget/scenario_minimap.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu.c
     ${PROJECT_SOURCE_DIR}/src/widget/top_menu_editor.c
     ${PROJECT_SOURCE_DIR}/src/widget/sidebar/city.c
