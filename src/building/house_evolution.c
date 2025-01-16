@@ -534,10 +534,6 @@ static void consume_resources(building *b)
         if (!resource_is_inventory(r)) {
             continue;
         }
-        // mars module 2 - all goods reduced by 10% 
-        if (b->data.house.temple_mars && building_monument_gt_module_is_active(MARS_MODULE_2_ALL_GOODS)) {
-            consumption_reduction[r] += 10;
-        }
         if (!consumption_reduction[r] ||
             (game_time_total_months() % (100 / consumption_reduction[r]))) {
             consume_resource(b, r, model_house_uses_inventory(b->subtype.house_level, r));
