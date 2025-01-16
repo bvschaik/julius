@@ -17,41 +17,19 @@
 	<image id="Native_Meeting_Hut_Northern_01" src="Native_Meeting_Hut_Northern_01" isometric="true"/>
 	<image id="Native_Meeting_Hut_Southern_01" src="Native_Meeting_Hut_Southern_01" isometric="true"/>
 	<!-- Note: Low Bridge (for editor use) -->
-	<image id="Low_Bridge_Back" isometric="true">
-		<layer group="164" image="0"/>
-	</image>
-	<image id="Low_Bridge_Middle" isometric="true">
-		<layer group="164" image="1"/>
-	</image>
-	<image id="Low_Bridge_Front" isometric="true">
-		<layer group="164" image="2"/>
-	</image>
-	<image id="Low_Bridge_R_Back" isometric="true">
-		<layer group="164" image="3"/>
-	</image>
-	<image id="Low_Bridge_R_Middle" isometric="true">
-		<layer group="164" image="4"/>
-	</image>
-	<image id="Low_Bridge_R_Front" isometric="true">
-		<layer group="164" image="5"/>
-	</image>
+	<image id="Low_Bridge_Back" src="Low_Bridge_Back" isometric="true"/>
+	<image id="Low_Bridge_Middle" src="Low_Bridge_Middle" isometric="true"/>
+	<image id="Low_Bridge_Front" src="Low_Bridge_Front" isometric="true"/>
+	<image id="Low_Bridge_R_Back" src="Low_Bridge_R_Back" isometric="true"/>
+	<image id="Low_Bridge_R_Middle" src="Low_Bridge_R_Middle" isometric="true"/>
+	<image id="Low_Bridge_R_Front" src="Low_Bridge_R_Front" isometric="true"/>
 	<!-- Note: Ship Bridge (for editor use) -->
-	<image id="Ship_Bridge_Back" isometric="true">
-		<layer group="164" image="6"/>
-	</image>
-	<image id="Ship_Bridge_Middle" isometric="true">
-		<layer group="164" image="7"/>
-	</image>
-	<image id="Ship_Bridge_Front" isometric="true">
-		<layer group="164" image="8"/>
-	</image>
-	<image id="Ship_Bridge_R_Back" isometric="true">
-		<layer group="164" image="9"/>
-	</image>
-	<image id="Ship_Bridge_R_Middle" isometric="true">
-		<layer group="164" image="10"/>
-	</image>
-	<image id="Ship_Bridge_R_Front" isometric="true">
-		<layer group="164" image="11"/>
-	</image>
+	<image id="Ship_Bridge_Back" src="Ship_Bridge_Back" isometric="true"/>
+	<image id="Ship_Bridge_Middle_01" src="Ship_Bridge_Middle_01" isometric="true"/>
+	<image id="Ship_Bridge_Middle_02" src="Ship_Bridge_Middle_02" isometric="true"/>
+	<image id="Ship_Bridge_Front" src="Ship_Bridge_Front" isometric="true"/>
+	<image id="Ship_Bridge_R_Back" src="Ship_Bridge_R_Back" isometric="true"/>
+	<image id="Ship_Bridge_R_Middle_01" src="Ship_Bridge_R_Middle_01" isometric="true"/>
+	<image id="Ship_Bridge_R_Middle_02" src="Ship_Bridge_R_Middle_02" isometric="true"/>
+	<image id="Ship_Bridge_R_Front" src="Ship_Bridge_R_Front" isometric="true"/>
 </assetlist>
