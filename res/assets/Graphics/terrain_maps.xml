@@ -32,4 +32,8 @@
 	<image id="Ship_Bridge_R_Middle_01" src="Ship_Bridge_R_Middle_01" isometric="true"/>
 	<image id="Ship_Bridge_R_Middle_02" src="Ship_Bridge_R_Middle_02" isometric="true"/>
 	<image id="Ship_Bridge_R_Front" src="Ship_Bridge_R_Front" isometric="true"/>
+	<!-- Note: Native Towers (Assets created by Areldir) -->
+	<image id="Native_Watchtower_Central_01" src="Native_Watchtower_Central_01" isometric="true"/>
+	<image id="Native_Watchtower_Northern_01" src="Native_Watchtower_Northern_01" isometric="true"/>
+	<image id="Native_Watchtower_Southern_01" src="Native_Watchtower_Southern_01" isometric="true"/>
 </assetlist>
