@@ -123,16 +123,11 @@ void figure_workcamp_worker_action(figure *f)
                 if (!monument_id) {
                     continue;
                 }
-                warehouse_id = building_warehouse_with_resource(f->x, f->y, resource, b->road_network_id, 0, &dst);
+                warehouse_id = building_warehouse_with_resource(f->x, f->y, resource, b->road_network_id, 0, &dst, BUILDING_STORAGE_PERMISSION_WORKCAMP);
                 if (!warehouse_id) {
                     continue;
                 }
-                if (warehouse_id) {
-                    building *warehouse = building_get(warehouse_id);                    
-                    if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_WORKCAMP, warehouse)) {
-                        continue;
-                    }
-                }
+
                 f->collecting_item_id = resource;
                 f->destination_building_id = warehouse_id;
                 f->destination_x = dst.x;

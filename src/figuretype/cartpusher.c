@@ -595,7 +595,7 @@ static void determine_armoury_supplier_destination(figure *f, int road_network_i
         }
     } else {
         // Go grab weapons
-        dst_building_id = building_warehouse_with_resource(armoury->x, armoury->y, RESOURCE_WEAPONS, armoury->road_network_id, 0, &dst);
+        dst_building_id = building_warehouse_with_resource(armoury->x, armoury->y, RESOURCE_WEAPONS, armoury->road_network_id, 0, &dst, BUILDING_STORAGE_PERMISSION_ARMOURY);
         if (dst_building_id) {
             set_destination(f, FIGURE_ACTION_248_ARMOURY_SUPPLIER_GETTING_WEAPONS, dst_building_id, dst.x, dst.y);
             return;

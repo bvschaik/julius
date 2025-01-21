@@ -567,7 +567,7 @@ int building_warehouse_for_getting(building *src, int resource, map_point *dst)
     }
 }
 
-int building_warehouse_with_resource(int x, int y, int resource, int road_network_id, int *understaffed, map_point *dst)
+int building_warehouse_with_resource(int x, int y, int resource, int road_network_id, int *understaffed, map_point *dst, building_storage_permission_states p)
 {
     int min_dist = INFINITE;
     building *min_building = 0;
@@ -576,6 +576,9 @@ int building_warehouse_with_resource(int x, int y, int resource, int road_networ
             continue;
         }
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
+            continue;
+        }
+        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_WORKCAMP, b)) {
             continue;
         }
 
