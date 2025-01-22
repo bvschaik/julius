@@ -58,7 +58,7 @@ const char *system_architecture(void)
 }
 
 #if defined(_WIN32) || defined(_WIN64)
-#include <Windows.h>
+#include <windows.h>
 #elif defined (__GNUC__) && !defined (__SWITCH__)
 #include <sys/utsname.h>
 #endif

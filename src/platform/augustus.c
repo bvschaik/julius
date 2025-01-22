@@ -39,7 +39,7 @@
 #include <string.h>
 
 #ifdef _MSC_VER
-#include <Windows.h>
+#include <windows.h>
 #endif
 
 #if defined(USE_TINYFILEDIALOGS) || defined(__ANDROID__) || defined(__IPHONEOS__)
