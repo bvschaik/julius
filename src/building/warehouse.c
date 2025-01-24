@@ -578,7 +578,7 @@ int building_warehouse_with_resource(int x, int y, int resource, int road_networ
         if (!b->has_road_access || b->distance_from_entry <= 0 || b->road_network_id != road_network_id) {
             continue;
         }
-        if (!building_storage_get_permission(BUILDING_STORAGE_PERMISSION_WORKCAMP, b)) {
+        if (!building_storage_get_permission(p, b)) {
             continue;
         }
 
