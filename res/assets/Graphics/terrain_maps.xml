@@ -40,4 +40,8 @@
 	<image id="Native_Decoration_Central_01" src="Native_Decoration_Central_01" isometric="true"/>
 	<image id="Native_Decoration_Northern_01" src="Native_Decoration_Northern_01" isometric="true"/>
 	<image id="Native_Decoration_Southern_01" src="Native_Decoration_Southern_01" isometric="true"/>
+	<!-- Note: Native Monument (Central climate variant made with assistance of Hyuukin) -->
+	<image id="Native_L_Monument_Central_01" src="Native_L_Monument_Central_01" isometric="true"/>
+	<image id="Native_L_Monument_Northern_01" src="Native_L_Monument_Northern_01" isometric="true"/>
+	<image id="Native_L_Monument_Southern_01" src="Native_L_Monument_Southern_01" isometric="true"/>
 </assetlist>
