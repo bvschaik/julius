@@ -13,6 +13,7 @@
 #include "scenario/editor.h"
 #include "scenario/editor_events.h"
 #include "scenario/editor_map.h"
+#include "scenario/invasion.h"
 #include "scenario/map.h"
 #include "widget/map_editor.h"
 #include "widget/minimap.h"
@@ -117,9 +118,8 @@ static void draw_status(void)
         int width = text_draw_number(invasion_points, '@', " ", text_offset - 2, 254, FONT_NORMAL_GREEN, 0);
         lang_text_draw(44, 65, text_offset + width - 8, 254, FONT_NORMAL_GREEN);
     } else {
-        editor_invasion first_invasion;
-        scenario_editor_invasion_get(0, &first_invasion);
-        if (first_invasion.type) {
+        const invasion_t *first_invasion = scenario_invasion_get(0);
+        if (first_invasion->type != INVASION_TYPE_NONE) {
             lang_text_draw(44, 63, text_offset, 254, FONT_NORMAL_RED);
         }
     }

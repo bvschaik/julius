@@ -465,7 +465,7 @@ void asset_image_unload(asset_image *img)
     memset(&img->img, 0, sizeof(image));
 }
 
-static void new_image(asset_image *img, int index)
+static void new_image(asset_image *img, unsigned int index)
 {
     img->index = index;
     img->active = 1;
@@ -489,7 +489,7 @@ int asset_image_init_array(void)
 asset_image *asset_image_create(void)
 {
     asset_image *result;
-    array_new_item(data.asset_images, 1, result);
+    array_new_item_after_index(data.asset_images, 1, result);
     return result;
 }
 

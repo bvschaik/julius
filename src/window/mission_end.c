@@ -37,10 +37,10 @@
 
 #include <string.h>
 
-static void button_fired(int param1, int param2);
+static void button_fired(const generic_button *button);
 
 static generic_button fired_buttons[] = {
-    {80, 224, 480, 25, button_fired, button_none, 0, 0},
+    {80, 224, 480, 25, button_fired},
 };
 
 static struct {
@@ -327,7 +327,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_fired(int param1, int param2)
+static void button_fired(const generic_button *button)
 {
     sound_music_stop();
     sound_speech_stop();

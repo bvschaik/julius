@@ -10,7 +10,7 @@
 
 #define MIN_DIALOG_WIDTH 320
 
-static void button_set_priority(int new_priority, int param2);
+static void button_set_priority(const generic_button *button);
 
 static struct {
     int category;
@@ -19,16 +19,16 @@ static struct {
 } data;
 
 static generic_button priority_buttons[] = {
-    {180, 256, 280, 25, button_set_priority, button_none, 0, 0}, // no prio
-    {178, 221, 27, 27, button_set_priority, button_none, 1, 0},
-    {210, 221, 27, 27, button_set_priority, button_none, 2, 0},
-    {242, 221, 27, 27, button_set_priority, button_none, 3, 0},
-    {274, 221, 27, 27, button_set_priority, button_none, 4, 0},
-    {306, 221, 27, 27, button_set_priority, button_none, 5, 0},
-    {338, 221, 27, 27, button_set_priority, button_none, 6, 0},
-    {370, 221, 27, 27, button_set_priority, button_none, 7, 0},
-    {402, 221, 27, 27, button_set_priority, button_none, 8, 0},
-    {434, 221, 27, 27, button_set_priority, button_none, 9, 0},
+    {180, 256, 280, 25, button_set_priority}, // no priority
+    {178, 221, 27, 27, button_set_priority, 0, 1},
+    {210, 221, 27, 27, button_set_priority, 0, 2},
+    {242, 221, 27, 27, button_set_priority, 0, 3},
+    {274, 221, 27, 27, button_set_priority, 0, 4},
+    {306, 221, 27, 27, button_set_priority, 0, 5},
+    {338, 221, 27, 27, button_set_priority, 0, 6},
+    {370, 221, 27, 27, button_set_priority, 0, 7},
+    {402, 221, 27, 27, button_set_priority, 0, 8},
+    {434, 221, 27, 27, button_set_priority, 0, 9},
 };
 
 static void init(int category)
@@ -109,8 +109,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_set_priority(int new_priority, int param2)
+static void button_set_priority(const generic_button *button)
 {
+    int new_priority = button->parameter1;
     city_labor_set_priority(data.category, new_priority);
     window_go_back();
 }

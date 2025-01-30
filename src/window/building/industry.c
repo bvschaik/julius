@@ -20,18 +20,18 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/mouse.h"
-#include "scenario/building.h"
+#include "scenario/allowed_building.h"
 #include "scenario/property.h"
 #include "translation/translation.h"
 #include "window/popup_dialog.h"
 
 #include <stdio.h>
 
-static void set_city_mint_conversion(int resource, int param2);
+static void set_city_mint_conversion(const generic_button *button);
 
 static generic_button mint_conversion_buttons[] = {
-    {0, 0, 432, 24, set_city_mint_conversion, button_none, RESOURCE_DENARII},
-    {0, 24, 432, 24, set_city_mint_conversion, button_none, RESOURCE_GOLD},
+    {0, 0, 432, 24, set_city_mint_conversion, 0, RESOURCE_DENARII},
+    {0, 24, 432, 24, set_city_mint_conversion, 0, RESOURCE_GOLD},
 };
 
 static struct {
@@ -369,8 +369,8 @@ void window_building_draw_concrete_maker(building_info_context *c)
 
 static int governor_palace_is_allowed(void)
 {
-    return scenario_building_allowed(BUILDING_GOVERNORS_HOUSE) || scenario_building_allowed(BUILDING_GOVERNORS_VILLA) ||
-        scenario_building_allowed(BUILDING_GOVERNORS_PALACE);
+    return scenario_allowed_building(BUILDING_GOVERNORS_HOUSE) || scenario_allowed_building(BUILDING_GOVERNORS_VILLA) ||
+        scenario_allowed_building(BUILDING_GOVERNORS_PALACE);
 }
 
 void window_building_draw_city_mint(building_info_context *c)
@@ -572,8 +572,9 @@ static void city_mint_conversion_changed(int accepted, int checked)
     city_mint->data.industry.production_current_month = 0;
 }
 
-static void set_city_mint_conversion(int resource, int param2)
+static void set_city_mint_conversion(const generic_button *button)
 {
+    resource_type resource = button->parameter1;
     if (building_get(data.city_mint_id)->output_resource_id != resource) {
         window_popup_dialog_show_confirmation(translation_for(TR_BUILDING_CITY_MINT_CHANGE_PRODUCTION),
             translation_for(TR_BUILDING_CITY_MINT_PROGRESS_WILL_BE_LOST), 0, city_mint_conversion_changed);

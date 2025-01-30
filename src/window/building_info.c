@@ -18,6 +18,7 @@
 #include "figure/roamer_preview.h"
 #include "figure/phrase.h"
 #include "game/state.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/image_button.h"
@@ -54,7 +55,7 @@ static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_advisor(int advisor, int param2);
 static void button_mothball(int mothball, int param2);
-static void button_monument_construction(int param1, int param2);
+static void button_monument_construction(const generic_button *button);
 
 static image_button image_buttons_help_advisor_close[] = {
     {14, 3, 24, 24, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
@@ -68,7 +69,7 @@ static image_button image_button_mothball[] = {
 };
 
 static generic_button generic_button_monument_construction[] = {
-    {80, 3, 304, 24, button_monument_construction, button_none, 0, 0}
+    {80, 3, 304, 24, button_monument_construction}
 };
 
 static building_info_context context;
@@ -1144,7 +1145,7 @@ static void button_mothball(int param1, int param2)
     }
 }
 
-static void button_monument_construction(int param1, int param2)
+static void button_monument_construction(const generic_button *button)
 {
     building *b = building_get(context.building_id);
     building_monument_toggle_construction_halted(b);

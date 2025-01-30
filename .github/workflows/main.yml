@@ -178,8 +178,8 @@ jobs:
         uses: robinraju/release-downloader@v1.8
         with:
           repository: "rainers/cv2pdb"
-          tag: "v0.52"
-          fileName: "cv2pdb-0.52.zip"
+          tag: "v0.53"
+          fileName: "cv2pdb-0.53.zip"
           out-file-path: "build"
           extract: true
       - name: Set up environment

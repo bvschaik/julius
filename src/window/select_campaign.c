@@ -8,6 +8,7 @@
 #include "core/string.h"
 #include "game/campaign.h"
 #include "game/settings.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -31,17 +32,17 @@
 #define CAMPAIGN_LIST_Y_POSITION 96
 #define ORIGINAL_CAMPAIGN_ID 0
 
-static void start_mission(int param1, int param2);
-static void button_mission_list(int param1, int param2);
-static void button_back(int param1, int param2);
+static void button_start_mission(const generic_button *button);
+static void button_mission_list(const generic_button *button);
+static void button_back(const generic_button *button);
 static void draw_campaign_item(const list_box_item *item);
 static void select_campaign(unsigned int index, int is_double_click);
 static void campaign_name_tooltip(const list_box_item *item, tooltip_context *c);
 
 static generic_button bottom_buttons[] = {
-    {16, 436, 90, 30, button_back, button_none, TR_BUTTON_CANCEL },
-    {444, 436, 180, 30, start_mission, button_none, TR_WINDOW_CAMPAIGN_BUTTON_BEGIN_CAMPAIGN },
-    {234, 436, 200, 30, button_mission_list, button_none, TR_WINDOW_CAMPAIGN_BUTTON_MISSION_LIST }
+    {16, 436, 90, 30, button_back, 0, TR_BUTTON_CANCEL },
+    {444, 436, 180, 30, button_start_mission, 0, TR_WINDOW_CAMPAIGN_BUTTON_BEGIN_CAMPAIGN },
+    {234, 436, 200, 30, button_mission_list, 0, TR_WINDOW_CAMPAIGN_BUTTON_MISSION_LIST }
 };
 
 #define NUM_BOTTOM_BUTTONS (sizeof(bottom_buttons) / sizeof(generic_button))
@@ -189,7 +190,7 @@ static void draw_foreground(void)
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (input_box_is_accepted()) {
-        start_mission(0, 0);
+        button_start_mission(0);
         return;
     }
 
@@ -203,11 +204,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
-        button_back(0, 0);
+        button_back(0);
     }
 }
 
-static void button_back(int param1, int param2)
+static void button_back(const generic_button *button)
 {
     input_box_stop(&player_name_input);
     game_campaign_clear();
@@ -229,11 +230,11 @@ static void select_campaign(unsigned int index, int is_double_click)
     window_request_refresh();
 
     if (is_double_click) {
-        start_mission(0, 0);
+        button_start_mission(0);
     }
 }
 
-static void start_mission(int param1, int param2)
+static void button_start_mission(const generic_button *button)
 {
     const campaign_info *info = game_campaign_get_info();
     if (!info) {
@@ -252,7 +253,7 @@ static void start_mission(int param1, int param2)
     window_mission_selection_show();
 }
 
-static void button_mission_list(int param1, int param2)
+static void button_mission_list(const generic_button *button)
 {
     const campaign_info *info = game_campaign_get_info();
     if (!info || !info->current_mission) {

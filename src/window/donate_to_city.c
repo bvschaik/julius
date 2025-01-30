@@ -4,6 +4,7 @@
 #include "core/calc.h"
 #include "game/resource.h"
 #include "graphics/arrow_button.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -14,19 +15,19 @@
 #include "input/input.h"
 #include "window/advisors.h"
 
-static void button_set_amount(int amount_id, int param2);
-static void button_donate(int param1, int param2);
-static void button_cancel(int param1, int param2);
+static void button_set_amount(const generic_button *button);
+static void button_donate(const generic_button *button);
+static void button_cancel(const generic_button *button);
 static void arrow_button_amount(int is_down, int param2);
 
 static generic_button buttons[] = {
-    {336, 283, 160, 20, button_cancel, button_none, 0, 0},
-    {144, 283, 160, 20, button_donate, button_none, 0, 0},
-    {128, 216, 64, 20, button_set_amount, button_none, 0, 0},
-    {208, 216, 64, 20, button_set_amount, button_none, 1, 0},
-    {288, 216, 64, 20, button_set_amount, button_none, 2, 0},
-    {368, 216, 64, 20, button_set_amount, button_none, 3, 0},
-    {448, 216, 64, 20, button_set_amount, button_none, 4, 0},
+    {336, 283, 160, 20, button_cancel},
+    {144, 283, 160, 20, button_donate},
+    {128, 216, 64, 20, button_set_amount},
+    {208, 216, 64, 20, button_set_amount, 0, 1},
+    {288, 216, 64, 20, button_set_amount, 0, 2},
+    {368, 216, 64, 20, button_set_amount, 0, 3},
+    {448, 216, 64, 20, button_set_amount, 0, 4},
 };
 
 static arrow_button arrow_buttons[] = {
@@ -107,8 +108,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_set_amount(int amount_id, int param2)
+static void button_set_amount(const generic_button *button)
 {
+    int amount_id = button->parameter1;
     int amount;
     switch (amount_id) {
         case 0: amount = 0; break;
@@ -122,13 +124,13 @@ static void button_set_amount(int amount_id, int param2)
     window_invalidate();
 }
 
-static void button_donate(int param1, int param2)
+static void button_donate(const generic_button *button)
 {
     city_emperor_donate_savings_to_city();
     window_advisors_show();
 }
 
-static void button_cancel(int param1, int param2)
+static void button_cancel(const generic_button *button)
 {
     window_advisors_show();
 }

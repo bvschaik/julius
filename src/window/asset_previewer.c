@@ -15,6 +15,7 @@
 #include "game/animation.h"
 #include "game/settings.h"
 #include "game/system.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -64,20 +65,20 @@ typedef enum {
 static void draw_asset_entry(const list_box_item *item);
 static void select_asset(unsigned int index, int unused);
 static void handle_tooltip(const list_box_item *item, tooltip_context *c);
-static void button_top(int option, int param2);
-static void button_toggle_animation_frames(int param1, int param2);
+static void button_top(const generic_button *button);
+static void button_toggle_animation_frames(const generic_button *button);
 
 static generic_button buttons[NUM_BUTTONS] = {
-    { 0, 25, 180, 20, button_top, button_none, BUTTON_CHANGE_ASSET_GROUP },
-    { 200, 25, 140, 20, button_top, button_none, BUTTON_CHANGE_TERRAIN },
-    { 360, 5, 160, 20, button_top, button_none, BUTTON_CHANGE_ZOOM },
-    { 360, 25, 160, 20, button_top, button_none, BUTTON_TOGGLE_ANIMATIONS },
-    { 530, -40, 80, 40, button_top, button_none, BUTTON_REFRESH },
-    { 530, 5, 80, 40, button_top, button_none, BUTTON_QUIT },
+    { 0, 25, 180, 20, button_top, 0, BUTTON_CHANGE_ASSET_GROUP },
+    { 200, 25, 140, 20, button_top, 0, BUTTON_CHANGE_TERRAIN },
+    { 360, 5, 160, 20, button_top, 0, BUTTON_CHANGE_ZOOM },
+    { 360, 25, 160, 20, button_top, 0, BUTTON_TOGGLE_ANIMATIONS },
+    { 530, -40, 80, 40, button_top, 0, BUTTON_REFRESH },
+    { 530, 5, 80, 40, button_top, 0, BUTTON_QUIT },
 };
 
 static generic_button toggle_animation_button = {
-    0, 0, 0, 20, button_toggle_animation_frames, button_none, 0, 0
+    0, 0, 0, 20, button_toggle_animation_frames
 };
 
 static const int ZOOM_VALUES[] = { 50, 100, 200, 400 };
@@ -563,10 +564,61 @@ static void draw_foreground(void)
     }
 }
 
+static void recalculate_selected_index(void)
+{
+    int selected_index = list_box_get_selected_index(&list_box);
+    int total_entries = list_box_get_total_items(&list_box);
+    if (selected_index != LIST_BOX_NO_SELECTION) {
+        if (selected_index < total_entries) {
+            const asset_image *img =
+                asset_image_get_from_id(get_current_asset_index());
+            if (img->id && strcmp(data.selected_asset_id, img->id) == 0) {
+                return;
+            }
+        }
+        for (int i = 0; i < total_entries; i++) {
+            const asset_image *img =
+                asset_image_get_from_id(data.active_group->first_image_index + data.entries[i].index);
+            if (img->id && data.selected_asset_id && strcmp(data.selected_asset_id, img->id) == 0) {
+                list_box_select_index(&list_box, i);
+                return;
+            }
+        }
+    }
+    if (selected_index >= total_entries) {
+        list_box_select_index(&list_box, total_entries - 1);
+    } else {
+        list_box_select_index(&list_box, selected_index);
+    }
+}
+
+static void refresh_window(void)
+{
+    int asset_index = list_box_get_total_items(&list_box) > 0 ?
+        data.entries[list_box_get_scroll_position(&list_box)].index : 0;
+    int group_changed = update_asset_groups_list();
+    load_assets(group_changed);
+    if (group_changed) {
+        asset_index = 0;
+    }
+    recalculate_selected_index();
+    window_invalidate();
+    data.last_refresh = time_get_millis();
+    data.showing_refresh_info = 0;
+    int total_entries = list_box_get_total_items(&list_box);
+    for (int i = 0; i < total_entries; i++) {
+        if (data.entries[i].index == asset_index) {
+            list_box_show_index(&list_box, i);
+            return;
+        }
+    }
+    list_box_show_index(&list_box, total_entries);
+}
+
 static void handle_input(const mouse *m, const hotkeys *h)
 {
     if (h->f5_pressed) {
-        button_top(BUTTON_REFRESH, 0);
+        refresh_window();
     }
     if (list_box_handle_input(&list_box, m, 0)) {
         return;
@@ -639,73 +691,22 @@ static void confirm_exit(int accepted, int checked)
     }
 }
 
-static void recalculate_selected_index(void)
+static void button_top(const generic_button *button)
 {
-    int selected_index = list_box_get_selected_index(&list_box);
-    int total_entries = list_box_get_total_items(&list_box);
-    if (selected_index != LIST_BOX_NO_SELECTION) {
-        if (selected_index < total_entries) {
-            const asset_image *img =
-                asset_image_get_from_id(get_current_asset_index());
-            if (img->id && strcmp(data.selected_asset_id, img->id) == 0) {
-                return;
-            }
-        }
-        for (int i = 0; i < total_entries; i++) {
-            const asset_image *img =
-                asset_image_get_from_id(data.active_group->first_image_index + data.entries[i].index);
-            if (img->id && data.selected_asset_id && strcmp(data.selected_asset_id, img->id) == 0) {
-                list_box_select_index(&list_box, i);
-                return;
-            }
-        }
-    }
-    if (selected_index >= total_entries) {
-        list_box_select_index(&list_box, total_entries - 1);
-    } else {
-        list_box_select_index(&list_box, selected_index);
-    }
-}
-
-static void refresh_window(void)
-{
-    int asset_index = list_box_get_total_items(&list_box) > 0 ?
-        data.entries[list_box_get_scroll_position(&list_box)].index : 0;
-    int group_changed = update_asset_groups_list();
-    load_assets(group_changed);
-    if (group_changed) {
-        asset_index = 0;
-    }
-    recalculate_selected_index();
-    window_invalidate();
-    data.last_refresh = time_get_millis();
-    data.showing_refresh_info = 0;
-    int total_entries = list_box_get_total_items(&list_box);
-    for (int i = 0; i < total_entries; i++) {
-        if (data.entries[i].index == asset_index) {
-            list_box_show_index(&list_box, i);
-            return;
-        }
-    }
-    list_box_show_index(&list_box, total_entries);
-}
-
-static void button_top(int option, int param2)
-{
-    generic_button *btn = &buttons[option];
+    int option = button->parameter1;
     switch (option) {
         case BUTTON_CHANGE_ASSET_GROUP:
             if (data.xml_files->num_files > 0) {
-                window_select_list_show_text(btn->x + data.x_offset_top + 16, btn->y + 60 + btn->height,
+                window_select_list_show_text(data.x_offset_top + 16, 60, button,
                     data.xml_file_names, data.xml_files->num_files, change_asset_group);
             }
             return;
         case BUTTON_CHANGE_TERRAIN:
-            window_select_list_show_text(btn->x + data.x_offset_top + 16, btn->y + 60 + btn->height,
+            window_select_list_show_text(data.x_offset_top + 16, 60, button,
                 data.terrain_texts, TERRAIN_MAX, set_terrain);
             return;
         case BUTTON_CHANGE_ZOOM:
-            window_select_list_show_text(btn->x + data.x_offset_top + 16, btn->y + 60 + btn->height,
+            window_select_list_show_text(data.x_offset_top + 16, 60, button,
                 data.zoom_texts, TOTAL_ZOOM_VALUES, set_zoom);
             return;
         case BUTTON_TOGGLE_ANIMATIONS:
@@ -726,7 +727,7 @@ static void button_top(int option, int param2)
     }
 }
 
-static void button_toggle_animation_frames(int param1, int param2)
+static void button_toggle_animation_frames(const generic_button *button)
 {
     data.hide_animation_frames ^= 1;
     int asset_index = 0;

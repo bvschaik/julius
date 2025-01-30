@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "core/image_group.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -24,14 +25,14 @@ static int border_image_ids[2];
 
 static void on_scroll(void);
 
-static void button_select_option(int option, int param2);
+static void button_select_option(const generic_button *button);
 
 static generic_button buttons[] = {
-    {40, 0, 180, 20, button_select_option, button_none, CANCEL_BUTTON, 0},
-    {260, 0, 180, 20, button_select_option, button_none, CONFIRM_BUTTON, 0},
-    {20, 0, 0, 0, button_select_option, button_none, 2, 0},
-    {20, 0, 0, 0, button_select_option, button_none, 3, 0},
-    {20, 0, 0, 0, button_select_option, button_none, 4, 0}
+    {40, 0, 180, 20, button_select_option, 0, CANCEL_BUTTON},
+    {260, 0, 180, 20, button_select_option, 0, CONFIRM_BUTTON},
+    {20, 0, 0, 0, button_select_option, 0, 2},
+    {20, 0, 0, 0, button_select_option, 0, 3},
+    {20, 0, 0, 0, button_select_option, 0, 4}
 };
 
 static scrollbar_type scrollbar = { 420, START_Y_OFFSET + 40, 0, 400, 0, on_scroll, 0, 4 };
@@ -214,8 +215,10 @@ static void on_scroll(void)
     window_invalidate();
 }
 
-static void button_select_option(int option, int param2)
+static void button_select_option(const generic_button *button)
 {
+    int option = button->parameter1;
+
     switch (option) {
         case CANCEL_BUTTON:
             data.close_func(0);

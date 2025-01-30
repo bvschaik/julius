@@ -57,13 +57,13 @@
 static void on_scroll(void);
 
 static void toggle_switch(int key);
-static void button_language_select(int height, int param2);
-static void button_edit_player_name(int param1, int param2);
-static void button_change_user_directory(int param1, int param2);
-static void button_reset_defaults(int param1, int param2);
-static void button_hotkeys(int param1, int param2);
-static void button_close(int save, int param2);
-static void button_page(int page, int param2);
+static void button_language_select(const generic_button *button);
+static void button_edit_player_name(const generic_button *button);
+static void button_change_user_directory(const generic_button *button);
+static void button_reset_defaults(const generic_button *button);
+static void button_hotkeys(const generic_button *button);
+static void button_close(const generic_button *button);
+static void button_page(const generic_button *button);
 
 static const uint8_t *display_text_language(void);
 static const uint8_t *display_text_user_directory(void);
@@ -272,9 +272,9 @@ static const int game_speeds[] = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 200,
 static resolution available_resolutions[sizeof(resolutions) / sizeof(resolution) + 2];
 
 static generic_button select_buttons[] = {
-    {225, 0, 200, 24, button_language_select, button_none},
-    {225, 0, 200, 24, button_edit_player_name, button_none},
-    {225, 0, 200, 24, button_change_user_directory, button_none},
+    {225, 0, 200, 24, button_language_select},
+    {225, 0, 200, 24, button_edit_player_name},
+    {225, 0, 200, 24, button_change_user_directory},
 };
 
 static numerical_range_widget ranges[] = {
@@ -294,18 +294,18 @@ static numerical_range_widget ranges[] = {
 };
 
 static generic_button bottom_buttons[NUM_BOTTOM_BUTTONS] = {
-    {  20, 436,  120, 30, button_hotkeys, button_none, 0, TR_BUTTON_CONFIGURE_HOTKEYS },
-    { 170, 436, 150, 30, button_reset_defaults, button_none, 0, TR_BUTTON_RESET_DEFAULTS },
-    { 330, 436,  90, 30, button_close, button_none, 0, TR_BUTTON_CANCEL },
-    { 430, 436,  90, 30, button_close, button_none, 1, TR_BUTTON_OK },
-    { 530, 436,  90, 30, button_close, button_none, 2, TR_OPTION_MENU_APPLY }
+    {  20, 436,  120, 30, button_hotkeys, 0, 0, TR_BUTTON_CONFIGURE_HOTKEYS },
+    { 170, 436, 150, 30, button_reset_defaults, 0, 0, TR_BUTTON_RESET_DEFAULTS },
+    { 330, 436,  90, 30, button_close, 0, 0, TR_BUTTON_CANCEL },
+    { 430, 436,  90, 30, button_close, 0, 1, TR_BUTTON_OK },
+    { 530, 436,  90, 30, button_close, 0, 2, TR_OPTION_MENU_APPLY }
 };
 
 static generic_button page_buttons[] = {
-    { 0, 48, 0, 30, button_page, button_none, 0 },
-    { 0, 48, 0, 30, button_page, button_none, 1 },
-    { 0, 48, 0, 30, button_page, button_none, 2 },
-    { 0, 48, 0, 30, button_page, button_none, 3 },
+    { 0, 48, 0, 30, button_page, 0, 0 },
+    { 0, 48, 0, 30, button_page, 0, 1 },
+    { 0, 48, 0, 30, button_page, 0, 2 },
+    { 0, 48, 0, 30, button_page, 0, 3 },
 };
 
 static translation_key page_names[CONFIG_PAGES] = {
@@ -1086,17 +1086,16 @@ static void set_language(int index)
     data.language_options.selected = index;
 }
 
-static void button_hotkeys(int param1, int param2)
+static void button_hotkeys(const generic_button *button)
 {
     window_hotkey_config_show();
 }
 
-static void button_language_select(int height, int param2)
+static void button_language_select(const generic_button *button)
 {
-    const generic_button *btn = &select_buttons[SELECT_LANGUAGE];
-    window_select_list_show_text(
-        screen_dialog_offset_x() + btn->x,
-        screen_dialog_offset_y() + height + btn->height,
+    int height = button->parameter1;
+
+    window_select_list_show_text(screen_dialog_offset_x(), screen_dialog_offset_y() + height, button,
         data.language_options.options, data.language_options.total, set_language
     );
 }
@@ -1113,7 +1112,7 @@ static void set_player_name(const uint8_t *name)
     window_invalidate();
 }
 
-static void button_edit_player_name(int param1, int param2)
+static void button_edit_player_name(const generic_button *button)
 {
     uint8_t player_name[PLAYER_NAME_LENGTH];
     encoding_from_utf8(data.config_string_values[CONFIG_STRING_ORIGINAL_PLAYER_NAME].new_value,
@@ -1122,12 +1121,12 @@ static void button_edit_player_name(int param1, int param2)
         PLAYER_NAME_LENGTH, set_player_name);
 }
 
-static void button_change_user_directory(int param1, int param2)
+static void button_change_user_directory(const generic_button *button)
 {
     window_user_path_setup_show(0);
 }
 
-static void button_reset_defaults(int param1, int param2)
+static void button_reset_defaults(const generic_button *button)
 {
     for (int i = 0; i < CONFIG_MAX_ENTRIES; ++i) {
         data.config_values[i].new_value = config_get_default_value(i);
@@ -1443,8 +1442,10 @@ static int apply_changed_configs(void)
     return 1;
 }
 
-static void button_close(int save, int param2)
+static void button_close(const generic_button *button)
 {
+    int save = button->parameter1;
+
     if (!save) {
         cancel_values();
         window_go_back();
@@ -1458,8 +1459,9 @@ static void button_close(int save, int param2)
     window_request_refresh();
 }
 
-static void button_page(int page, int param2)
+static void button_page(const generic_button *button)
 {
+    int page = button->parameter1;
     set_page(page);
     window_invalidate();
 }

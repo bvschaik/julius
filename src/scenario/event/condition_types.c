@@ -16,9 +16,10 @@
 #include "game/settings.h"
 #include "game/time.h"
 #include "map/grid.h"
+#include "scenario/custom_variable.h"
+#include "scenario/event/condition_comparison_helper.h"
 #include "scenario/request.h"
 #include "scenario/scenario.h"
-#include "scenario/condition_types/comparison_helper.h"
 
 int scenario_condition_type_building_count_active_met(const scenario_condition_t *condition)
 {
@@ -223,7 +224,7 @@ int scenario_condition_type_count_own_troops_met(const scenario_condition_t *con
 
 int scenario_condition_type_custom_variable_check_met(const scenario_condition_t *condition)
 {
-    int target_variable = scenario_get_custom_variable_value(condition->parameter1);
+    int target_variable = scenario_custom_variable_get_value(condition->parameter1);
     int comparison = condition->parameter2;
     int value = condition->parameter3;
 

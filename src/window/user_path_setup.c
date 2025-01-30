@@ -30,11 +30,11 @@ static struct {
     char user_path[FILE_NAME_MAX];
 } data;
 
-static void button_pick_option(int param1, int param2);
+static void button_pick_option(const generic_button *button);
 static void button_ok_cancel(int is_ok, int param2);
 
 static generic_button path_button = {
-    150, 55, 458, 30, button_pick_option, button_none
+    150, 55, 458, 30, button_pick_option
 };
 
 static image_button ok_cancel_buttons[] = {
@@ -201,7 +201,7 @@ static void set_paths(int index)
     }
 }
 
-static void button_pick_option(int param1, int param2)
+static void button_pick_option(const generic_button *button)
 {
     static const uint8_t *texts[4];
     static uint8_t recommended_text[FILE_NAME_MAX];
@@ -222,8 +222,8 @@ static void button_pick_option(int param1, int param2)
         }
     };
 
-    window_select_list_show_text(screen_dialog_offset_x() + 150,
-        screen_dialog_offset_y() + path_button.y + path_button.height, texts, total_options, set_paths);
+    window_select_list_show_text(screen_dialog_offset_x(), screen_dialog_offset_y(), button, texts, total_options,
+        set_paths);
 }
 
 static void copy_user_files(int accepted, int overwrite)

@@ -21,7 +21,7 @@
 #include "game/resource.h"
 #include "game/tutorial.h"
 #include "map/road_access.h"
-#include "scenario/building.h"
+#include "scenario/allowed_building.h"
 #include "scenario/property.h"
 
 #include <math.h>

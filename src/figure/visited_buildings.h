@@ -4,7 +4,7 @@
 #include "core/buffer.h"
 
 typedef struct {
-    int index;
+    unsigned int index;
     int building_id;
     int prev_index;
 } visited_building;

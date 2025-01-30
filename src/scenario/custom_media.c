@@ -12,7 +12,7 @@ static int entry_in_use(const custom_media_t *entry)
     return entry->type != CUSTOM_MEDIA_UNDEFINED;
 }
 
-static void new_entry(custom_media_t *obj, int position)
+static void new_entry(custom_media_t *obj, unsigned int position)
 {
     obj->id = position;
 }
@@ -40,7 +40,7 @@ custom_media_t *custom_media_get(int media_id)
 custom_media_t *custom_media_create_blank(void)
 {
     custom_media_t *entry = 0;
-    array_new_item(custom_media, 1, entry);
+    array_new_item_after_index(custom_media, 1, entry);
     return entry;
 }
 
@@ -57,12 +57,9 @@ custom_media_t *custom_media_create(custom_media_type type, const uint8_t *filen
 
 void custom_media_save_state(buffer *buf)
 {
-    int32_t array_size = custom_media.size;
-    int32_t struct_size = (4 * sizeof(int32_t)) + (1 * sizeof(int16_t));
-    buffer_init_dynamic_piece(buf,
-        CUSTOM_MEDIA_CURRENT_VERSION,
-        array_size,
-        struct_size);
+    uint32_t array_size = custom_media.size;
+    uint32_t struct_size = (4 * sizeof(int32_t)) + (1 * sizeof(int16_t));
+    buffer_init_dynamic_array(buf, array_size, struct_size);
 
     custom_media_t *entry;
     array_foreach(custom_media, entry) {

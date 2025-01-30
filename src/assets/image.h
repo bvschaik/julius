@@ -5,7 +5,7 @@
 #include "assets/xml.h"
 
 typedef struct {
-    int index;
+    unsigned int index;
     int active;
     const char *id;
     layer first_layer;

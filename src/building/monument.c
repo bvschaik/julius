@@ -503,7 +503,7 @@ void building_monument_initialize_deliveries(void)
 void building_monument_add_delivery(int monument_id, int figure_id, int resource_id, int num_loads)
 {
     monument_delivery *delivery;
-    array_new_item(monument_deliveries, 0, delivery);
+    array_new_item(monument_deliveries, delivery);
     if (!delivery) {
         log_error("Failed to create a new monument delivery. The game may be running out of memory", 0, 0);
         return;

@@ -1,8 +1,8 @@
 #include "array.h"
 
-int array_add_blocks(void ***data, int *blocks, int items_per_block, int item_size, int num_blocks)
+int array_add_blocks(void ***data, unsigned int *blocks, unsigned int items_per_block, unsigned int item_size, unsigned int num_blocks)
 {
-    if (num_blocks <= 0) {
+    if (num_blocks == 0) {
         return 1;
     }
     void **new_block_pointer = realloc(*data, sizeof(void *) * (*blocks + num_blocks));
@@ -10,7 +10,7 @@ int array_add_blocks(void ***data, int *blocks, int items_per_block, int item_si
         return 0;
     }
     *data = new_block_pointer;
-    for (int i = 0; i < num_blocks; i++) {
+    for (unsigned int i = 0; i < num_blocks; i++) {
         void *new_block = malloc((size_t) item_size * items_per_block);
         if (!new_block) {
             return 0;
@@ -21,9 +21,9 @@ int array_add_blocks(void ***data, int *blocks, int items_per_block, int item_si
     return 1;
 }
 
-void array_free(void **data, int blocks)
+void array_free(void **data, unsigned int blocks)
 {
-    for (int i = 0; i < blocks; i++) {
+    for (unsigned int i = 0; i < blocks; i++) {
         free(data[i]);
     }
     free(data);

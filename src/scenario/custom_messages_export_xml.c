@@ -6,7 +6,7 @@
 #include "core/string.h"
 #include "core/xml_exporter.h"
 #include "scenario/custom_messages.h"
-#include "scenario/scenario_events_parameter_data.h"
+#include "scenario/event/parameter_data.h"
 #include "window/plain_message_dialog.h"
 
 #include <string.h>

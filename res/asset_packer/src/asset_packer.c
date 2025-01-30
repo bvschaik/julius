@@ -60,7 +60,7 @@ static unsigned int final_image_width;
 static unsigned int final_image_height;
 
 typedef struct {
-    int id;
+    unsigned int id;
     const char *path;
     image_packer_rect *rect;
     color_t *pixels;
@@ -201,7 +201,7 @@ static void create_frame_xml_line(const layer *l)
     xml_exporter_close_element();
 }
 
-void new_packed_asset(packed_asset *asset, int index)
+void new_packed_asset(packed_asset *asset, unsigned int index)
 {
     asset->id = index;
 }
@@ -226,7 +226,7 @@ static void add_asset_image_to_list(layer *l)
 {
     packed_asset *asset = get_asset_image_from_list(l);
     if (!asset) {
-        array_new_item(packed_assets, 1, asset);
+        array_new_item_after_index(packed_assets, 1, asset);
         if (!asset) {
             log_error("Out of memory.", 0, 0);
             return;

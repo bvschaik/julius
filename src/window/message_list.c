@@ -6,6 +6,7 @@
 #include "core/lang.h"
 #include "game/campaign.h"
 #include "game/time.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -27,10 +28,10 @@
 
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
-static void button_message(int param1, int param2);
-static void button_delete(int param1, int param2);
-static void button_delete_all_read(int param1, int param2);
-static void button_delete_all_common(int param1, int param2);
+static void button_message(const generic_button *button);
+static void button_delete(const generic_button *button);
+static void button_delete_all_read(const generic_button *button);
+static void button_delete_all_common(const generic_button *button);
 static void button_mission_briefing(int param1, int param2);
 static void on_scroll(void);
 
@@ -44,24 +45,24 @@ static image_button show_briefing_button = {
     0, 0, 33, 22, IB_NORMAL, GROUP_SIDEBAR_BRIEFING_ROTATE_BUTTONS, 0, button_mission_briefing, button_none, 0, 0, 1
 };
 static generic_button generic_buttons_messages[] = {
-    {0, 0, 412, 18, button_message, button_delete, 0, 0},
-    {0, 20, 412, 18, button_message, button_delete, 1, 0},
-    {0, 40, 412, 18, button_message, button_delete, 2, 0},
-    {0, 60, 412, 18, button_message, button_delete, 3, 0},
-    {0, 80, 412, 18, button_message, button_delete, 4, 0},
-    {0, 100, 412, 18, button_message, button_delete, 5, 0},
-    {0, 120, 412, 18, button_message, button_delete, 6, 0},
-    {0, 140, 412, 18, button_message, button_delete, 7, 0},
-    {0, 160, 412, 18, button_message, button_delete, 8, 0},
-    {0, 180, 412, 18, button_message, button_delete, 9, 0},
+    {0, 0, 412, 18, button_message, button_delete},
+    {0, 20, 412, 18, button_message, button_delete, 1},
+    {0, 40, 412, 18, button_message, button_delete, 2},
+    {0, 60, 412, 18, button_message, button_delete, 3},
+    {0, 80, 412, 18, button_message, button_delete, 4},
+    {0, 100, 412, 18, button_message, button_delete, 5},
+    {0, 120, 412, 18, button_message, button_delete, 6},
+    {0, 140, 412, 18, button_message, button_delete, 7},
+    {0, 160, 412, 18, button_message, button_delete, 8},
+    {0, 180, 412, 18, button_message, button_delete, 9},
 };
 
 static generic_button generic_button_delete_read[] = {
-    { 0, 0, 20, 20, button_delete_all_read, button_none, 0, 0 }
+    { 0, 0, 20, 20, button_delete_all_read }
 };
 
 static generic_button generic_button_delete_common[] = {
-    { 0, 0, 20, 20, button_delete_all_common, button_none, 0, 0 }
+    { 0, 0, 20, 20, button_delete_all_common }
 };
 
 
@@ -285,9 +286,10 @@ static void button_close(int param1, int param2)
     window_city_show();
 }
 
-static void button_message(int param1, int param2)
+static void button_message(const generic_button *button)
 {
-    int id = city_message_set_current(scrollbar.scroll_position + param1);
+    int index = button->parameter1;
+    int id = city_message_set_current(scrollbar.scroll_position + index);
     if (id < city_message_count()) {
         const city_message *msg = city_message_get(id);
         city_message_mark_read(id);
@@ -303,8 +305,9 @@ static void button_message(int param1, int param2)
     }
 }
 
-static void button_delete(int id_to_delete, int param2)
+static void button_delete(const generic_button *button)
 {
+    int id_to_delete = button->parameter1;
     int id = city_message_set_current(scrollbar.scroll_position + id_to_delete);
     if (id < city_message_count()) {
         city_message_delete(id);
@@ -313,7 +316,7 @@ static void button_delete(int id_to_delete, int param2)
     }
 }
 
-static void button_delete_all_common(int param1, int param2)
+static void button_delete_all_common(const generic_button *button)
 {
     for (int id = 0; id < city_message_count();) {
         const city_message *msg = city_message_get(id);
@@ -327,7 +330,7 @@ static void button_delete_all_common(int param1, int param2)
     window_invalidate();
 }
 
-static void button_delete_all_read(int param1, int param2)
+static void button_delete_all_read(const generic_button *button)
 {
     for (int id = 0; id < city_message_count();) {
             const city_message* msg = city_message_get(id);

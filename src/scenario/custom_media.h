@@ -27,7 +27,7 @@ typedef enum {
 } custom_media_link_type;
 
 typedef struct {
-    int id;
+    unsigned int id;
     custom_media_type type;
     const text_blob_string_t *filename;
     custom_media_link_type link_type;

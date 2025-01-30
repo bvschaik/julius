@@ -16,13 +16,13 @@
 
 #define MAX_RANK 10
 
-static void button_accept(int param1, int param2);
-static void button_continue_governing(int months, int param2);
+static void button_accept(const generic_button *button);
+static void button_continue_governing(const generic_button *button);
 
 static generic_button victory_buttons[] = {
-    {32, 112, 480, 20, button_accept, button_none, 0, 0},
-    {32, 144, 480, 20, button_continue_governing, button_none, 24, 0},
-    {32, 176, 480, 20, button_continue_governing, button_none, 60, 0},
+    {32, 112, 480, 20, button_accept},
+    {32, 144, 480, 20, button_continue_governing, 0, 24, 0},
+    {32, 176, 480, 20, button_continue_governing, 0, 60, 0},
 };
 
 static unsigned int focus_button_id = 0;
@@ -97,13 +97,14 @@ static void handle_input(const mouse *m, const hotkeys *h)
     generic_buttons_handle_mouse(mouse_in_dialog(m), 48, 128, victory_buttons, num_buttons, &focus_button_id);
 }
 
-static void button_accept(int param1, int param2)
+static void button_accept(const generic_button *button)
 {
     window_city_show();
 }
 
-static void button_continue_governing(int months, int param2)
+static void button_continue_governing(const generic_button *button)
 {
+    int months = button->parameter1;
     city_victory_continue_governing(months);
     window_city_show();
     city_victory_reset();

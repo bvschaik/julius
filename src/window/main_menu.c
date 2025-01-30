@@ -26,7 +26,7 @@
 
 #define MAX_BUTTONS 6
 
-static void button_click(int type, int param2);
+static void button_click(const generic_button *button);
 
 static struct {
     unsigned int focus_button_id;
@@ -34,12 +34,12 @@ static struct {
 } data;
 
 static generic_button buttons[] = {
-    {192, 130, 256, 25, button_click, button_none, 1, 0},
-    {192, 170, 256, 25, button_click, button_none, 2, 0},
-    {192, 210, 256, 25, button_click, button_none, 3, 0},
-    {192, 250, 256, 25, button_click, button_none, 4, 0},
-    {192, 290, 256, 25, button_click, button_none, 5, 0},
-    {192, 330, 256, 25, button_click, button_none, 6, 0},
+    {192, 130, 256, 25, button_click, 0, 1},
+    {192, 170, 256, 25, button_click, 0, 2},
+    {192, 210, 256, 25, button_click, 0, 3},
+    {192, 250, 256, 25, button_click, 0, 4},
+    {192, 290, 256, 25, button_click, 0, 5},
+    {192, 330, 256, 25, button_click, 0, 6},
 };
 
 static void draw_version_string(void)
@@ -115,8 +115,10 @@ static void confirm_exit(int accepted, int checked)
     }
 }
 
-static void button_click(int type, int param2)
+static void button_click(const generic_button *button)
 {
+    int type = button->parameter1;
+
     if (type == 1) {
         window_select_campaign_show();
     } else if (type == 2) {

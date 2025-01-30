@@ -17,24 +17,24 @@
 #define MENU_ITEM_WIDTH 160
 #define MENU_CLICK_MARGIN 20
 
-static void button_menu_item(int index, int param2);
+static void button_menu_item(const generic_button *button);
 
 static generic_button build_menu_buttons[] = {
-    {0, 0, 160, 20, button_menu_item, button_none, 0, 0},
-    {0, 24, 160, 20, button_menu_item, button_none, 1, 0},
-    {0, 48, 160, 20, button_menu_item, button_none, 2, 0},
-    {0, 72, 160, 20, button_menu_item, button_none, 3, 0},
-    {0, 96, 160, 20, button_menu_item, button_none, 4, 0},
-    {0, 120, 160, 20, button_menu_item, button_none, 5, 0},
-    {0, 144, 160, 20, button_menu_item, button_none, 6, 0},
-    {0, 168, 160, 20, button_menu_item, button_none, 7, 0},
-    {0, 192, 160, 20, button_menu_item, button_none, 8, 0},
-    {0, 216, 160, 20, button_menu_item, button_none, 9, 0},
-    {0, 240, 160, 20, button_menu_item, button_none, 10, 0},
-    {0, 264, 160, 20, button_menu_item, button_none, 11, 0},
-    {0, 288, 160, 20, button_menu_item, button_none, 12, 0},
-    {0, 312, 160, 20, button_menu_item, button_none, 13, 0},
-    {0, 336, 160, 20, button_menu_item, button_none, 14, 0}
+    {0, 0, 160, 20, button_menu_item},
+    {0, 24, 160, 20, button_menu_item, 0, 1},
+    {0, 48, 160, 20, button_menu_item, 0, 2},
+    {0, 72, 160, 20, button_menu_item, 0, 3},
+    {0, 96, 160, 20, button_menu_item, 0, 4},
+    {0, 120, 160, 20, button_menu_item, 0, 5},
+    {0, 144, 160, 20, button_menu_item, 0, 6},
+    {0, 168, 160, 20, button_menu_item, 0, 7},
+    {0, 192, 160, 20, button_menu_item, 0, 8},
+    {0, 216, 160, 20, button_menu_item, 0, 9},
+    {0, 240, 160, 20, button_menu_item, 0, 10},
+    {0, 264, 160, 20, button_menu_item, 0, 11},
+    {0, 288, 160, 20, button_menu_item, 0, 12},
+    {0, 312, 160, 20, button_menu_item, 0, 13},
+    {0, 336, 160, 20, button_menu_item, 0, 14}
 };
 
 static const int Y_MENU_OFFSETS[16] = {
@@ -134,8 +134,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_menu_item(int index, int param2)
+static void button_menu_item(const generic_button *button)
 {
+    int index = button->parameter1;
+
     widget_map_editor_clear_current_tile();
 
     switch (data.selected_submenu) {

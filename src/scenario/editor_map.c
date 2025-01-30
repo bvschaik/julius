@@ -3,19 +3,20 @@
 #include "figuretype/water.h"
 #include "map/routing_terrain.h"
 #include "scenario/data.h"
+#include "scenario/editor.h"
 
 void scenario_editor_set_entry_point(int x, int y)
 {
     scenario.entry_point.x = x;
     scenario.entry_point.y = y;
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
 }
 
 void scenario_editor_set_exit_point(int x, int y)
 {
     scenario.exit_point.x = x;
     scenario.exit_point.y = y;
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
 }
 
 static void update_river(void)
@@ -28,7 +29,7 @@ void scenario_editor_set_river_entry_point(int x, int y)
 {
     scenario.river_entry_point.x = x;
     scenario.river_entry_point.y = y;
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
     update_river();
 }
 
@@ -36,7 +37,7 @@ void scenario_editor_set_river_exit_point(int x, int y)
 {
     scenario.river_exit_point.x = x;
     scenario.river_exit_point.y = y;
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
     update_river();
 }
 
@@ -46,7 +47,7 @@ void scenario_editor_clear_herd_points(void)
         scenario.herd_points[i].x = -1;
         scenario.herd_points[i].y = -1;
     }
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
 }
 
 map_point scenario_editor_herd_point(int id)
@@ -58,7 +59,7 @@ void scenario_editor_set_herd_point(int id, int x, int y)
 {
     scenario.herd_points[id].x = x;
     scenario.herd_points[id].y = y;
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
 }
 
 void scenario_editor_clear_fishing_points(void)
@@ -67,7 +68,7 @@ void scenario_editor_clear_fishing_points(void)
         scenario.fishing_points[i].x = -1;
         scenario.fishing_points[i].y = -1;
     }
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
 }
 
 map_point scenario_editor_fishing_point(int id)
@@ -79,7 +80,7 @@ void scenario_editor_set_fishing_point(int id, int x, int y)
 {
     scenario.fishing_points[id].x = x;
     scenario.fishing_points[id].y = y;
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
 }
 
 int scenario_editor_count_invasion_points(void)
@@ -99,7 +100,7 @@ void scenario_editor_clear_invasion_points(void)
         scenario.invasion_points[i].x = -1;
         scenario.invasion_points[i].y = -1;
     }
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
 }
 
 map_point scenario_editor_invasion_point(int id)
@@ -111,7 +112,7 @@ void scenario_editor_set_invasion_point(int id, int x, int y)
 {
     scenario.invasion_points[id].x = x;
     scenario.invasion_points[id].y = y;
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
 }
 
 map_point scenario_editor_earthquake_point(void)
@@ -123,10 +124,5 @@ void scenario_editor_set_earthquake_point(int x, int y)
 {
     scenario.earthquake_point.x = x;
     scenario.earthquake_point.y = y;
-    scenario.is_saved = 0;
-}
-
-void scenario_editor_updated_terrain(void)
-{
-    scenario.is_saved = 0;
+    scenario_editor_set_as_unsaved();
 }

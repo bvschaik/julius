@@ -137,9 +137,9 @@
 		<layer src="Advisor_Button_H" x="5" y="4"/>
 		<layer src="Housing_Advisor_H" x="0" y="0"/>
 	</image>
-	<!-- Note: Checkmark toggle for allowed walkers -->
+	<!-- Note: Selected Item Toggle Icon -->
 	<!-- Image created by Ouaz -->
-	<image id="Allowed_Walker_Check" src="Allowed_Walker_Checkmark"/>
+	<image id="Selection_Checkmark" src="Selection_Checkmark"/>
 	<!-- Warehousing icon by Ouaz -->
 	<image id="Warehousing_off" src="Warehousing_off"/>
 	<image id="Maintain_1" src="Maintain_1"/>

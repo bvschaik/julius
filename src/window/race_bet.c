@@ -16,15 +16,15 @@
 #include "translation/translation.h"
 
 static void arrow_button_bet(int is_down, int param2);
-static void button_horse_selection(int option, int param2);
-static void button_confirm(int option, int param2);
+static void button_horse_selection(const generic_button *button);
+static void button_confirm(const generic_button *button);
 static void button_close(int param1, int param2);
 
 static generic_button buttons[] = {
-        {34, 145, 81, 91, button_horse_selection, button_none, BLUE_HORSE, 0},
-        {144, 145, 81, 91, button_horse_selection, button_none, RED_HORSE, 0},
-        {254, 145, 81, 91, button_horse_selection, button_none, WHITE_HORSE, 0},
-        {364, 145, 81, 91, button_horse_selection, button_none, GREEN_HORSE, 0}
+        {34, 145, 81, 91, button_horse_selection, 0, BLUE_HORSE},
+        {144, 145, 81, 91, button_horse_selection, 0, RED_HORSE},
+        {254, 145, 81, 91, button_horse_selection, 0, WHITE_HORSE},
+        {364, 145, 81, 91, button_horse_selection, 0, GREEN_HORSE}
 };
 
 static arrow_button amount_buttons[] = {
@@ -32,7 +32,7 @@ static arrow_button amount_buttons[] = {
         {130, 306, 15, 24, arrow_button_bet, 0, 0}
 };
 static generic_button bet_buttons[] = {
-        {90, 354, 300, 20, button_confirm, button_none, 1, 0},
+        {90, 354, 300, 20, button_confirm},
 };
 
 static image_button image_button_close[] = {
@@ -166,15 +166,16 @@ static void arrow_button_bet(int is_down, int param2)
     }
 }
 
-static void button_horse_selection(int option, int param2)
+static void button_horse_selection(const generic_button *button)
 {
+    int option = button->parameter1;
     if (!data.in_progress_bet) {
         data.chosen_horse = option;
         window_request_refresh();
     }
 }
 
-static void button_confirm(int option, int param2)
+static void button_confirm(const generic_button *button)
 {
     // save bet and go back
     if (!city_data.games.chosen_horse && data.chosen_horse && data.bet_amount) {

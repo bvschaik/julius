@@ -9,7 +9,6 @@
 #include "empire/type.h"
 #include "game/animation.h"
 #include "game/save_version.h"
-#include "scenario/building.h"
 #include "scenario/data.h"
 #include "scenario/empire.h"
 
@@ -45,7 +44,7 @@ static void fix_image_ids(void)
     }
 }
 
-static void new_empire_object(full_empire_object *obj, int position)
+static void new_empire_object(full_empire_object *obj, unsigned int position)
 {
     obj->obj.id = position;
 }
@@ -373,7 +372,7 @@ full_empire_object *empire_object_get_full(int object_id)
 full_empire_object *empire_object_get_new(void)
 {
     full_empire_object *obj;
-    array_new_item(objects, 1, obj);
+    array_new_item_after_index(objects, 1, obj);
     return obj;
 }
 

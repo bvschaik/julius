@@ -11,6 +11,7 @@
 #include "core/string.h"
 #include "empire/city.h"
 #include "game/resource.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/grid_box.h"
@@ -36,10 +37,10 @@
 static void draw_resource_info(const grid_box_item *item);
 static void resource_item_tooltip(const grid_box_item *item, tooltip_context *c);
 
-static void button_prices(int param1, int param2);
-static void button_empire(int param1, int param2);
-static void button_policy(int param1, int param2);
-static void button_resource(unsigned int index, unsigned int mouse_x, unsigned int mouse_y);
+static void button_prices(const generic_button *button);
+static void button_empire(const generic_button *button);
+static void button_policy(const generic_button *button);
+static void button_resource(const grid_box_item *item);
 
 static grid_box_type resource_grid = {
     .x = 16,
@@ -56,10 +57,10 @@ static grid_box_type resource_grid = {
 };
 
 static generic_button resource_buttons[] = {
-    {375, 392, 200, 24, button_prices, button_none, 1, 0},
-    {160, 392, 200, 24, button_empire, button_none, 1, 0},
-    {45, 390, 40, 30, button_policy, button_none, LAND_TRADE_POLICY, 0},
-    {95, 390, 40, 30, button_policy, button_none, SEA_TRADE_POLICY, 0}
+    {375, 392, 200, 24, button_prices},
+    {160, 392, 200, 24, button_empire},
+    {45, 390, 40, 30, button_policy, 0, LAND_TRADE_POLICY},
+    {95, 390, 40, 30, button_policy, 0, SEA_TRADE_POLICY}
 };
 
 static struct {
@@ -299,18 +300,19 @@ static void show_policy(trade_policy_type policy_type)
         TRADE_POLICY_COST, OPTION_MENU_SMALL_ROW);
 }
 
-static void button_prices(int param1, int param2)
+static void button_prices(const generic_button *button)
 {
     window_trade_prices_show(17, 53, 622, 334);
 }
 
-static void button_empire(int param1, int param2)
+static void button_empire(const generic_button *button)
 {
     window_empire_show();
 }
 
-static void button_policy(int policy_type, int param2)
+static void button_policy(const generic_button *button)
 {
+    int policy_type = button->parameter1;
     if ((policy_type == LAND_TRADE_POLICY && !building_monument_working(BUILDING_CARAVANSERAI)) ||
         (policy_type == SEA_TRADE_POLICY && !building_monument_working(BUILDING_LIGHTHOUSE))) {
         return;
@@ -318,9 +320,9 @@ static void button_policy(int policy_type, int param2)
     show_policy(policy_type);
 }
 
-static void button_resource(unsigned int index, unsigned int mouse_x, unsigned int mouse_y)
+static void button_resource(const grid_box_item *item)
 {
-    window_resource_settings_show(data.list.items[index]);
+    window_resource_settings_show(data.list.items[item->index]);
 }
 
 static void write_resource_storage_tooltip(tooltip_context *c, resource_type resource)

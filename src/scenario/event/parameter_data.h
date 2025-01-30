@@ -5,12 +5,13 @@
 #include "city/message.h"
 #include "game/settings.h"
 #include "scenario/data.h"
-#include "scenario/scenario_event_data.h"
+#include "scenario/event/data.h"
 #include "translation/translation.h"
 
 typedef enum {
     PARAMETER_TYPE_UNDEFINED = 0,
     PARAMETER_TYPE_NUMBER,
+    PARAMETER_TYPE_REQUEST,
     PARAMETER_TYPE_TEXT,
     PARAMETER_TYPE_CHECK,
     PARAMETER_TYPE_DIFFICULTY,
@@ -85,8 +86,11 @@ void scenario_events_parameter_data_sort_alphabetically(void);
 int scenario_events_parameter_data_get_default_value_for_parameter(xml_data_attribute_t *attribute_data);
 
 const uint8_t *scenario_events_parameter_data_get_display_string(special_attribute_mapping_t *entry);
-void scenario_events_parameter_data_get_display_string_for_value(parameter_type type, int value, uint8_t *result_text, int maxlength);
-void scenario_events_parameter_data_get_display_string_for_action(scenario_action_t* action, uint8_t *result_text, int maxlength);
-void scenario_events_parameter_data_get_display_string_for_condition(scenario_condition_t* condition, uint8_t *result_text, int maxlength);
+void scenario_events_parameter_data_get_display_string_for_value(parameter_type type, int value, uint8_t *result_text,
+    int maxlength);
+void scenario_events_parameter_data_get_display_string_for_action(const scenario_action_t *action, uint8_t *result_text,
+    int maxlength);
+void scenario_events_parameter_data_get_display_string_for_condition(const scenario_condition_t *condition,
+    uint8_t *result_text, int maxlength);
 
 #endif // SCENARIO_EVENTS_PARAMETER_DATA_H

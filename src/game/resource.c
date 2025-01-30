@@ -6,7 +6,7 @@
 #include "core/image.h"
 #include "core/image_group_editor.h"
 #include "game/save_version.h"
-#include "scenario/building.h"
+#include "scenario/allowed_building.h"
 #include "scenario/property.h"
 #include "translation/translation.h"
 
@@ -314,7 +314,7 @@ void resource_set_mapping(int version)
 resource_type resource_map_legacy_inventory(int id)
 {
     resource_type resource = mapping.inventory ? mapping.inventory[id] : id;
-    if (mapping.joined_meat_and_fish && resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF)) {
+    if (mapping.joined_meat_and_fish && resource == RESOURCE_MEAT && scenario_allowed_building(BUILDING_WHARF)) {
         return RESOURCE_FISH;
     }
     return resource;
@@ -337,7 +337,7 @@ int resource_production_per_month(resource_type resource)
 resource_type resource_remap(int id)
 {
     resource_type resource = mapping.resources ? mapping.resources[id] : id;
-    if (mapping.joined_meat_and_fish && resource == RESOURCE_MEAT && scenario_building_allowed(BUILDING_WHARF)) {
+    if (mapping.joined_meat_and_fish && resource == RESOURCE_MEAT && scenario_allowed_building(BUILDING_WHARF)) {
         return RESOURCE_FISH;
     }
     return resource;

@@ -25,8 +25,6 @@ typedef struct {
  * @param box Input box
  */
 void input_box_start(input_box *box);
-void input_box_pause(void);
-void input_box_resume(void);
 void input_box_stop(input_box *box);
 
 void input_box_refresh_text(input_box *box);

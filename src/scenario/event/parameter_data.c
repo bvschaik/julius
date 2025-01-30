@@ -1,5 +1,7 @@
-#include "scenario_events_parameter_data.h"
+#include "parameter_data.h"
 
+#include "building/menu.h"
+#include "building/properties.h"
 #include "city/constants.h"
 #include "city/ratings.h"
 #include "city/resource.h"
@@ -9,8 +11,9 @@
 #include "figure/formation.h"
 #include "game/resource.h"
 #include "scenario/custom_messages.h"
+#include "scenario/custom_variable.h"
 #include "scenario/invasion.h"
-#include "scenario/scenario.h"
+#include "scenario/request.h"
 
 #define UNLIMITED 1000000000
 #define NEGATIVE_UNLIMITED -1000000000
@@ -84,7 +87,7 @@ static scenario_condition_data_t scenario_condition_data[CONDITION_TYPE_MAX] = {
                                         .xml_parm3 =    { .name = "in_city_only",   .type = PARAMETER_TYPE_BOOLEAN,          .min_limit = 0,         .max_limit = 1,             .key = TR_PARAMETER_IN_CITY_ONLY }, },
     [CONDITION_TYPE_REQUEST_IS_ONGOING]     = { .type = CONDITION_TYPE_REQUEST_IS_ONGOING,
                                         .xml_attr =     { .name = "request_is_ongoing",     .type = PARAMETER_TYPE_TEXT,     .key = TR_CONDITION_TYPE_REQUEST_IS_ONGOING },
-                                        .xml_parm1 =    { .name = "request_id",     .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,         .max_limit = 19,     .key = TR_PARAMETER_TYPE_NUMBER },
+                                        .xml_parm1 =    { .name = "request_id",          .type = PARAMETER_TYPE_REQUEST,           .min_limit = 0,         .max_limit = UNLIMITED,     .key = TR_PARAMETER_TYPE_REQUEST },
                                         .xml_parm2 =    { .name = "check_for_ongoing",   .type = PARAMETER_TYPE_BOOLEAN,     .min_limit = 0,         .max_limit = 1,      .key = TR_PARAMETER_CHECK_FOR_ONGOING }, },
     [CONDITION_TYPE_TAX_RATE]           = { .type = CONDITION_TYPE_TAX_RATE,
                                         .xml_attr =     { .name = "tax_rate",       .type = PARAMETER_TYPE_TEXT,             .key = TR_CONDITION_TYPE_TAX_RATE },
@@ -200,7 +203,7 @@ static scenario_action_data_t scenario_action_data[ACTION_TYPE_MAX] = {
                                         .xml_parm2 =    { .name = "show_message",   .type = PARAMETER_TYPE_BOOLEAN,          .min_limit = 0,           .max_limit = 1,      .key = TR_PARAMETER_SHOW_MESSAGE }, },
     [ACTION_TYPE_REQUEST_IMMEDIATELY_START]     = { .type = ACTION_TYPE_REQUEST_IMMEDIATELY_START,
                                         .xml_attr =     { .name = "request_immediately_start",     .type = PARAMETER_TYPE_TEXT,     .key = TR_ACTION_TYPE_REQUEST_IMMEDIATELY_START },
-                                        .xml_parm1 =    { .name = "request_id",     .type = PARAMETER_TYPE_NUMBER,           .min_limit = 0,           .max_limit = 19,     .key = TR_PARAMETER_TYPE_NUMBER }, },
+                                        .xml_parm1 =    { .name = "request_id",     .type = PARAMETER_TYPE_REQUEST,           .min_limit = 0,           .max_limit = UNLIMITED,     .key = TR_PARAMETER_TYPE_REQUEST }, },
     [ACTION_TYPE_SHOW_CUSTOM_MESSAGE]     = { .type = ACTION_TYPE_SHOW_CUSTOM_MESSAGE,
                                         .xml_attr =     { .name = "show_custom_message",           .type = PARAMETER_TYPE_TEXT,     .key = TR_ACTION_TYPE_SHOW_CUSTOM_MESSAGE },
                                         .xml_parm1 =    { .name = "message_uid",    .type = PARAMETER_TYPE_CUSTOM_MESSAGE,   .key = TR_PARAMETER_TYPE_CUSTOM_MESSAGE }, },
@@ -370,255 +373,11 @@ static special_attribute_mapping_t special_attribute_mappings_pop_class[] = {
 
 #define SPECIAL_ATTRIBUTE_MAPPINGS_POP_CLASS_SIZE (sizeof(special_attribute_mappings_pop_class) / sizeof(special_attribute_mapping_t))
 
-static special_attribute_mapping_t special_attribute_mappings_buildings[] = {
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "any",                           .value = BUILDING_ANY,                         .key = TR_PARAMETER_VALUE_BUILDING_ANY },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "vacant_lot",                    .value = BUILDING_HOUSE_VACANT_LOT,            .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_farms",                     .value = BUILDING_MENU_FARMS,                  .key = TR_PARAMETER_VALUE_BUILDING_MENU_FARMS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_raw_materials",             .value = BUILDING_MENU_RAW_MATERIALS,          .key = TR_PARAMETER_VALUE_BUILDING_MENU_RAW_MATERIALS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_workshops",                 .value = BUILDING_MENU_WORKSHOPS,              .key = TR_PARAMETER_VALUE_BUILDING_MENU_WORKSHOPS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "road",                          .value = BUILDING_ROAD,                        .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "wall",                          .value = BUILDING_WALL,                        .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "aqueduct",                      .value = BUILDING_AQUEDUCT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_small_tent",              .value = BUILDING_HOUSE_SMALL_TENT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_large_tent",              .value = BUILDING_HOUSE_LARGE_TENT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_small_shack",             .value = BUILDING_HOUSE_SMALL_SHACK,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_large_shack",             .value = BUILDING_HOUSE_LARGE_SHACK,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_small_hovel",             .value = BUILDING_HOUSE_SMALL_HOVEL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_large_hovel",             .value = BUILDING_HOUSE_LARGE_HOVEL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_small_casa",              .value = BUILDING_HOUSE_SMALL_CASA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_large_casa",              .value = BUILDING_HOUSE_LARGE_CASA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_small_insula",            .value = BUILDING_HOUSE_SMALL_INSULA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_medium_insula",           .value = BUILDING_HOUSE_MEDIUM_INSULA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_large_insula",            .value = BUILDING_HOUSE_LARGE_INSULA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_grand_insula",            .value = BUILDING_HOUSE_GRAND_INSULA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_small_villa",             .value = BUILDING_HOUSE_SMALL_VILLA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_medium_villa",            .value = BUILDING_HOUSE_MEDIUM_VILLA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_large_villa",             .value = BUILDING_HOUSE_LARGE_VILLA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_grand_villa",             .value = BUILDING_HOUSE_GRAND_VILLA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_small_palace",            .value = BUILDING_HOUSE_SMALL_PALACE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_medium_palace",           .value = BUILDING_HOUSE_MEDIUM_PALACE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_large_palace",            .value = BUILDING_HOUSE_LARGE_PALACE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "house_luxury_palace",           .value = BUILDING_HOUSE_LUXURY_PALACE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "amphitheater",                  .value = BUILDING_AMPHITHEATER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "theater",                       .value = BUILDING_THEATER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "hippodrome",                    .value = BUILDING_HIPPODROME,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "colosseum",                     .value = BUILDING_COLOSSEUM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "gladiator_school",              .value = BUILDING_GLADIATOR_SCHOOL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "lion_house",                    .value = BUILDING_LION_HOUSE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "actor_colony",                  .value = BUILDING_ACTOR_COLONY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "chariot_maker",                 .value = BUILDING_CHARIOT_MAKER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "plaza",                         .value = BUILDING_PLAZA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "gardens",                       .value = BUILDING_GARDENS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "fort_legionaries",              .value = BUILDING_FORT_LEGIONARIES,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "small_statue",                  .value = BUILDING_SMALL_STATUE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "medium_statue",                 .value = BUILDING_MEDIUM_STATUE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "large_statue",                  .value = BUILDING_LARGE_STATUE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "fort_javelin",                  .value = BUILDING_FORT_JAVELIN,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "fort_mounted",                  .value = BUILDING_FORT_MOUNTED,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "doctor",                        .value = BUILDING_DOCTOR,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "hospital",                      .value = BUILDING_HOSPITAL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "bathhouse",                     .value = BUILDING_BATHHOUSE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "barber",                        .value = BUILDING_BARBER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "school",                        .value = BUILDING_SCHOOL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "academy",                       .value = BUILDING_ACADEMY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "library",                       .value = BUILDING_LIBRARY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "prefecture",                    .value = BUILDING_PREFECTURE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "triumphal_arch",                .value = BUILDING_TRIUMPHAL_ARCH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "fort",                          .value = BUILDING_FORT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "gatehouse",                     .value = BUILDING_GATEHOUSE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "tower",                         .value = BUILDING_TOWER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "small_temple_ceres",            .value = BUILDING_SMALL_TEMPLE_CERES,                    .key = TR_PARAMETER_VALUE_BUILDING_SMALL_TEMPLE_CERES },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "small_temple_neptune",          .value = BUILDING_SMALL_TEMPLE_NEPTUNE,                    .key = TR_PARAMETER_VALUE_BUILDING_SMALL_TEMPLE_NEPTUNE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "small_temple_mercury",          .value = BUILDING_SMALL_TEMPLE_MERCURY,                    .key = TR_PARAMETER_VALUE_BUILDING_SMALL_TEMPLE_MERCURY },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "small_temple_mars",             .value = BUILDING_SMALL_TEMPLE_MARS,                    .key = TR_PARAMETER_VALUE_BUILDING_SMALL_TEMPLE_MARS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "small_temple_venus",            .value = BUILDING_SMALL_TEMPLE_VENUS,                    .key = TR_PARAMETER_VALUE_BUILDING_SMALL_TEMPLE_VENUS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "large_temple_ceres",            .value = BUILDING_LARGE_TEMPLE_CERES,                    .key = TR_PARAMETER_VALUE_BUILDING_LARGE_TEMPLE_CERES },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "large_temple_neptune",          .value = BUILDING_LARGE_TEMPLE_NEPTUNE,                    .key = TR_PARAMETER_VALUE_BUILDING_LARGE_TEMPLE_NEPTUNE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "large_temple_mercury",          .value = BUILDING_LARGE_TEMPLE_MERCURY,                    .key = TR_PARAMETER_VALUE_BUILDING_LARGE_TEMPLE_MERCURY },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "large_temple_mars",             .value = BUILDING_LARGE_TEMPLE_MARS,                    .key = TR_PARAMETER_VALUE_BUILDING_LARGE_TEMPLE_MARS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "large_temple_venus",            .value = BUILDING_LARGE_TEMPLE_VENUS,                    .key = TR_PARAMETER_VALUE_BUILDING_LARGE_TEMPLE_VENUS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "market",                        .value = BUILDING_MARKET,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "granary",                       .value = BUILDING_GRANARY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "warehouse",                     .value = BUILDING_WAREHOUSE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "shipyard",                      .value = BUILDING_SHIPYARD,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "dock",                          .value = BUILDING_DOCK,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "wharf",                         .value = BUILDING_WHARF,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "governors_house",               .value = BUILDING_GOVERNORS_HOUSE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "governors_villa",               .value = BUILDING_GOVERNORS_VILLA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "governors_palace",              .value = BUILDING_GOVERNORS_PALACE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "mission_post",                  .value = BUILDING_MISSION_POST,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "engineers_post",                .value = BUILDING_ENGINEERS_POST,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "low_bridge",                    .value = BUILDING_LOW_BRIDGE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "ship_bridge",                   .value = BUILDING_SHIP_BRIDGE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "senate",                        .value = BUILDING_SENATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "forum",                         .value = BUILDING_FORUM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "native_hut",                    .value = BUILDING_NATIVE_HUT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "native_meeting",                .value = BUILDING_NATIVE_MEETING,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "reservoir",                     .value = BUILDING_RESERVOIR,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "fountain",                      .value = BUILDING_FOUNTAIN,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "well",                          .value = BUILDING_WELL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "native_crops",                  .value = BUILDING_NATIVE_CROPS,                    .key = TR_PARAMETER_VALUE_BUILDING_NATIVE_CROPS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "military_academy",              .value = BUILDING_MILITARY_ACADEMY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "barracks",                      .value = BUILDING_BARRACKS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_small_temples",             .value = BUILDING_MENU_SMALL_TEMPLES,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_SMALL_TEMPLES },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_large_temples",             .value = BUILDING_MENU_LARGE_TEMPLES,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_LARGE_TEMPLES },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "oracle",                        .value = BUILDING_ORACLE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "wheat_farm",                    .value = BUILDING_WHEAT_FARM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "vegetable_farm",                .value = BUILDING_VEGETABLE_FARM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "fruit_farm",                    .value = BUILDING_FRUIT_FARM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "olive_farm",                    .value = BUILDING_OLIVE_FARM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "vines_farm",                    .value = BUILDING_VINES_FARM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "pig_farm",                      .value = BUILDING_PIG_FARM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "marble_quarry",                 .value = BUILDING_MARBLE_QUARRY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "iron_mine",                     .value = BUILDING_IRON_MINE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "timber_yard",                   .value = BUILDING_TIMBER_YARD,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "clay_pit",                      .value = BUILDING_CLAY_PIT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "wine_workshop",                 .value = BUILDING_WINE_WORKSHOP,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "oil_workshop",                  .value = BUILDING_OIL_WORKSHOP,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "weapons_workshop",              .value = BUILDING_WEAPONS_WORKSHOP,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "furniture_workshop",            .value = BUILDING_FURNITURE_WORKSHOP,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "pottery_workshop",              .value = BUILDING_POTTERY_WORKSHOP,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "roadblock",                     .value = BUILDING_ROADBLOCK,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "workcamp",                      .value = BUILDING_WORKCAMP,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "grand_temple_ceres",            .value = BUILDING_GRAND_TEMPLE_CERES,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "grand_temple_neptune",          .value = BUILDING_GRAND_TEMPLE_NEPTUNE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "grand_temple_mercury",          .value = BUILDING_GRAND_TEMPLE_MERCURY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "grand_temple_mars",             .value = BUILDING_GRAND_TEMPLE_MARS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "grand_temple_venus",            .value = BUILDING_GRAND_TEMPLE_VENUS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_grand_temples",             .value = BUILDING_MENU_GRAND_TEMPLES,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_GRAND_TEMPLES },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_trees",                     .value = BUILDING_MENU_TREES,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_TREES },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_paths",                     .value = BUILDING_MENU_PATHS,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_PATHS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_parks",                     .value = BUILDING_MENU_PARKS,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_PARKS },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "small_pond",                    .value = BUILDING_SMALL_POND,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "large_pond",                    .value = BUILDING_LARGE_POND,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "pine_tree",                     .value = BUILDING_PINE_TREE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "fir_tree",                      .value = BUILDING_FIR_TREE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "oak_tree",                      .value = BUILDING_OAK_TREE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "elm_tree",                      .value = BUILDING_ELM_TREE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "fig_tree",                      .value = BUILDING_FIG_TREE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "plum_tree",                     .value = BUILDING_PLUM_TREE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "palm_tree",                     .value = BUILDING_PALM_TREE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "date_tree",                     .value = BUILDING_DATE_TREE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "pine_tree",                     .value = BUILDING_PINE_PATH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "fir_path",                      .value = BUILDING_FIR_PATH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "oak_path",                      .value = BUILDING_OAK_PATH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "elm_path",                      .value = BUILDING_ELM_PATH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "fig_path",                      .value = BUILDING_FIG_PATH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "plum_path",                     .value = BUILDING_PLUM_PATH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "palm_path",                     .value = BUILDING_PALM_PATH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "date_path",                     .value = BUILDING_DATE_PATH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "pavilion_blue",                 .value = BUILDING_PAVILION_BLUE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "pavilion_red",                  .value = BUILDING_PAVILION_RED,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "pavilion_orange",               .value = BUILDING_PAVILION_ORANGE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "pavilion_yellow",               .value = BUILDING_PAVILION_YELLOW,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "pavilion_green",                .value = BUILDING_PAVILION_GREEN,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "small_statue_alt",              .value = BUILDING_SMALL_STATUE_ALT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "small_statue_alt_b",            .value = BUILDING_SMALL_STATUE_ALT_B,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "obelisk",                       .value = BUILDING_OBELISK,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "pantheon",                      .value = BUILDING_PANTHEON,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "architect_guild",               .value = BUILDING_ARCHITECT_GUILD,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "mess_hall",                     .value = BUILDING_MESS_HALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "lighthouse",                    .value = BUILDING_LIGHTHOUSE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_statues",                   .value = BUILDING_MENU_STATUES,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_STATUES },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "all_governors_houses",          .value = BUILDING_MENU_GOV_RES,                    .key = TR_PARAMETER_VALUE_BUILDING_MENU_GOV_RES },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "tavern",                        .value = BUILDING_TAVERN,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "grand_garden",                  .value = BUILDING_GRAND_GARDEN,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "arena",                         .value = BUILDING_ARENA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "horse_statue",                  .value = BUILDING_HORSE_STATUE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "dolphin_fountain",              .value = BUILDING_DOLPHIN_FOUNTAIN,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "hedge_dark",                    .value = BUILDING_HEDGE_DARK,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "hedge_light",                   .value = BUILDING_HEDGE_LIGHT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "looped_garden_wall",            .value = BUILDING_LOOPED_GARDEN_WALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "legion_statue",                 .value = BUILDING_LEGION_STATUE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "decorative_column",             .value = BUILDING_DECORATIVE_COLUMN,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "colonnade",                     .value = BUILDING_COLONNADE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "lararium",                      .value = BUILDING_LARARIUM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "nymphaeum",                     .value = BUILDING_NYMPHAEUM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "small_mausoleum",               .value = BUILDING_SMALL_MAUSOLEUM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "large_mausoleum",               .value = BUILDING_LARGE_MAUSOLEUM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "watchtower",                    .value = BUILDING_WATCHTOWER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "palisade",                      .value = BUILDING_PALISADE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "garden_path",                   .value = BUILDING_GARDEN_PATH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "caravanserai",                  .value = BUILDING_CARAVANSERAI,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "roofed_garden_wall",            .value = BUILDING_ROOFED_GARDEN_WALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "garden_wall_gate",              .value = BUILDING_ROOFED_GARDEN_WALL_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "hedge_gate_dark",               .value = BUILDING_HEDGE_GATE_DARK,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "hedge_gate_light",              .value = BUILDING_HEDGE_GATE_LIGHT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "palisade_gate",                 .value = BUILDING_PALISADE_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "gladiator_statue",              .value = BUILDING_GLADIATOR_STATUE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "highway",                       .value = BUILDING_HIGHWAY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "gold_mine",                     .value = BUILDING_GOLD_MINE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "stone_quarry",                  .value = BUILDING_STONE_QUARRY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "sand_pit",                      .value = BUILDING_SAND_PIT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "concrete_maker",                .value = BUILDING_CONCRETE_MAKER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "brickworks",                    .value = BUILDING_BRICKWORKS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "city_mint",                     .value = BUILDING_CITY_MINT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "panelled_garden_wall",          .value = BUILDING_PANELLED_GARDEN_WALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "panelled_garden_gate",          .value = BUILDING_PANELLED_GARDEN_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "looped_garden_gate",            .value = BUILDING_LOOPED_GARDEN_GATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_ceres",                  .value = BUILDING_SHRINE_CERES,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_mars",                   .value = BUILDING_SHRINE_MARS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_mercury",                .value = BUILDING_SHRINE_MERCURY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_neptune",                .value = BUILDING_SHRINE_NEPTUNE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "shrine_venus",                  .value = BUILDING_SHRINE_VENUS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "overgrown_gardens",             .value = BUILDING_OVERGROWN_GARDENS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_BUILDING,            .text = "cart_depot",                    .value = BUILDING_DEPOT,                             .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-};
+static special_attribute_mapping_t special_attribute_mappings_buildings[BUILDING_TYPE_MAX];
+static unsigned int special_attribute_mappings_building_type_size;
 
-#define SPECIAL_ATTRIBUTE_MAPPINGS_BUILDING_TYPE_SIZE (sizeof(special_attribute_mappings_buildings) / sizeof(special_attribute_mapping_t))
-
-static special_attribute_mapping_t special_attribute_mappings_allowed_buildings[] = {
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "farms",                 .value = ALLOWED_BUILDING_FARMS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "raw_materials",         .value = ALLOWED_BUILDING_RAW_MATERIALS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "workshops",             .value = ALLOWED_BUILDING_WORKSHOPS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "road",                  .value = ALLOWED_BUILDING_ROAD,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "wall",                  .value = ALLOWED_BUILDING_WALL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "aqueduct",              .value = ALLOWED_BUILDING_AQUEDUCT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "housing",               .value = ALLOWED_BUILDING_HOUSING,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "amphitheater",          .value = ALLOWED_BUILDING_AMPHITHEATER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "theater",               .value = ALLOWED_BUILDING_THEATER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "hippodrome",            .value = ALLOWED_BUILDING_HIPPODROME,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "colosseum",             .value = ALLOWED_BUILDING_COLOSSEUM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "gladiator_school",      .value = ALLOWED_BUILDING_GLADIATOR_SCHOOL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "lion_house",            .value = ALLOWED_BUILDING_LION_HOUSE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "actor_colony",          .value = ALLOWED_BUILDING_ACTOR_COLONY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "chariot_maker",         .value = ALLOWED_BUILDING_CHARIOT_MAKER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "gardens",               .value = ALLOWED_BUILDING_GARDENS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "plaza",                 .value = ALLOWED_BUILDING_PLAZA,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "statues",               .value = ALLOWED_BUILDING_STATUES,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "doctor",                .value = ALLOWED_BUILDING_DOCTOR,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "hospital",              .value = ALLOWED_BUILDING_HOSPITAL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "bathhouse",             .value = ALLOWED_BUILDING_BATHHOUSE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "barber",                .value = ALLOWED_BUILDING_BARBER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "school",                .value = ALLOWED_BUILDING_SCHOOL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "academy",               .value = ALLOWED_BUILDING_ACADEMY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "library",               .value = ALLOWED_BUILDING_LIBRARY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "prefecture",            .value = ALLOWED_BUILDING_PREFECTURE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "fort",                  .value = ALLOWED_BUILDING_FORT,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "gatehouse",             .value = ALLOWED_BUILDING_GATEHOUSE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "tower",                 .value = ALLOWED_BUILDING_TOWER,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "small_temples",         .value = ALLOWED_BUILDING_SMALL_TEMPLES,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "large_temples",         .value = ALLOWED_BUILDING_LARGE_TEMPLES,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "market",                .value = ALLOWED_BUILDING_MARKET,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "granary",               .value = ALLOWED_BUILDING_GRANARY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "warehouse",             .value = ALLOWED_BUILDING_WAREHOUSE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "triumphal_arch",        .value = ALLOWED_BUILDING_TRIUMPHAL_ARCH,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "dock",                  .value = ALLOWED_BUILDING_DOCK,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "wharf",                 .value = ALLOWED_BUILDING_WHARF,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "governor_home",         .value = ALLOWED_BUILDING_GOVERNOR_HOME,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "engineers_post",        .value = ALLOWED_BUILDING_ENGINEERS_POST,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "senate",                .value = ALLOWED_BUILDING_SENATE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "forum",                 .value = ALLOWED_BUILDING_FORUM,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "well",                  .value = ALLOWED_BUILDING_WELL,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "oracle",                .value = ALLOWED_BUILDING_ORACLE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "mission_post",          .value = ALLOWED_BUILDING_MISSION_POST,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "bridge",                .value = ALLOWED_BUILDING_BRIDGE,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "barracks",              .value = ALLOWED_BUILDING_BARRACKS,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "military_academy",      .value = ALLOWED_BUILDING_MILITARY_ACADEMY,                    .key = TR_PARAMETER_VALUE_DYNAMIC_RESOLVE },
-    { .type = PARAMETER_TYPE_ALLOWED_BUILDING,            .text = "monuments",             .value = ALLOWED_BUILDING_MONUMENTS,                    .key = TR_EDITOR_ALLOWED_BUILDINGS_MONUMENTS },
-};
-
-#define SPECIAL_ATTRIBUTE_MAPPINGS_ALLOWED_BUILDINGS_SIZE (sizeof(special_attribute_mappings_allowed_buildings) / sizeof(special_attribute_mapping_t))
+static special_attribute_mapping_t special_attribute_mappings_allowed_buildings[BUILDING_TYPE_MAX];
+static unsigned int special_attribute_mappings_allowed_buildings_size;
 
 static special_attribute_mapping_t special_attribute_mappings_standard_message[] = {
     { .type = PARAMETER_TYPE_STANDARD_MESSAGE,            .text = "none",                      .value = 0,                    .key = TR_PARAMETER_VALUE_NONE },
@@ -771,6 +530,64 @@ special_attribute_mapping_t special_attribute_mappings_climate[] =
 
 #define SPECIAL_ATTRIBUTE_MAPPINGS_CLIMATE_SIZE (sizeof(special_attribute_mappings_climate) / sizeof(special_attribute_mapping_t))
 
+static void generate_building_type_mappings(void)
+{
+    if (special_attribute_mappings_building_type_size > 0) {
+        return;
+    }
+    for (building_type type = BUILDING_NONE; type < BUILDING_TYPE_MAX; type++) {
+        const building_properties *props = building_properties_for_type(type);
+        if (!props->event_data.attr || props->event_data.cannot_count) {
+            continue;
+        }
+        special_attribute_mapping_t *mapping = &special_attribute_mappings_buildings[special_attribute_mappings_building_type_size];
+        mapping->type = PARAMETER_TYPE_BUILDING;
+        mapping->text = props->event_data.attr;
+        mapping->value = type;
+        mapping->key = props->event_data.key ? props->event_data.key : TR_PARAMETER_VALUE_DYNAMIC_RESOLVE;
+        special_attribute_mappings_building_type_size++;
+    }
+}
+
+static void generate_submenu_mappings(build_menu_group menu)
+{
+    unsigned int menu_items = building_menu_count_all_items(menu);
+    for (unsigned int i = 0; i < menu_items; i++) {
+        building_type type = building_menu_type(menu, i);
+        build_menu_group submenu = building_menu_get_submenu_for_type(type);
+        if (submenu) {
+            if (submenu == menu) {
+                continue;
+            }
+            generate_submenu_mappings(submenu);
+        } else {
+            const building_properties *props = building_properties_for_type(type);
+            if (!props->event_data.attr) {
+                continue;
+            }
+            special_attribute_mapping_t *mapping = &special_attribute_mappings_allowed_buildings[special_attribute_mappings_allowed_buildings_size];
+            mapping->type = PARAMETER_TYPE_ALLOWED_BUILDING;
+            mapping->text = props->event_data.attr;
+            mapping->value = type;
+            mapping->key = props->event_data.key ? props->event_data.key : TR_PARAMETER_VALUE_DYNAMIC_RESOLVE;
+            special_attribute_mappings_allowed_buildings_size++;
+        }
+    }
+}
+
+static void generate_allowed_buildings_mappings(void)
+{
+    if (special_attribute_mappings_allowed_buildings_size > 0) {
+        return;
+    }
+    for (build_menu_group group = 0; group < BUILD_MENU_MAX; group++) {
+        // Top level function: main menus only
+        if (building_menu_is_submenu(group)) {
+            break;
+        }
+        generate_submenu_mappings(group);
+    }
+}
 
 special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mapping(parameter_type type, int index)
 {
@@ -789,8 +606,10 @@ special_attribute_mapping_t *scenario_events_parameter_data_get_attribute_mappin
             return &special_attribute_mappings_pop_class[index];
         case PARAMETER_TYPE_BUILDING:
         case PARAMETER_TYPE_BUILDING_COUNTING:
+            generate_building_type_mappings();
             return &special_attribute_mappings_buildings[index];
         case PARAMETER_TYPE_ALLOWED_BUILDING:
+            generate_allowed_buildings_mappings();
             return &special_attribute_mappings_allowed_buildings[index];
         case PARAMETER_TYPE_STANDARD_MESSAGE:
             return &special_attribute_mappings_standard_message[index];
@@ -828,9 +647,11 @@ int scenario_events_parameter_data_get_mappings_size(parameter_type type)
             return SPECIAL_ATTRIBUTE_MAPPINGS_POP_CLASS_SIZE;
         case PARAMETER_TYPE_BUILDING:
         case PARAMETER_TYPE_BUILDING_COUNTING:
-            return SPECIAL_ATTRIBUTE_MAPPINGS_BUILDING_TYPE_SIZE;
+            generate_building_type_mappings();
+            return special_attribute_mappings_building_type_size;
         case PARAMETER_TYPE_ALLOWED_BUILDING:
-            return SPECIAL_ATTRIBUTE_MAPPINGS_ALLOWED_BUILDINGS_SIZE;
+            generate_allowed_buildings_mappings();
+            return special_attribute_mappings_allowed_buildings_size;
         case PARAMETER_TYPE_STANDARD_MESSAGE:
             return SPECIAL_ATTRIBUTE_MAPPINGS_STANDARD_MESSAGE_SIZE;
         case PARAMETER_TYPE_MEDIA_TYPE:
@@ -903,11 +724,9 @@ int scenario_events_parameter_data_get_default_value_for_parameter(xml_data_attr
         case PARAMETER_TYPE_POP_CLASS:
             return POP_CLASS_ALL;
         case PARAMETER_TYPE_BUILDING:
-            return BUILDING_WELL;
+        case PARAMETER_TYPE_ALLOWED_BUILDING:
         case PARAMETER_TYPE_BUILDING_COUNTING:
             return BUILDING_WELL;
-        case PARAMETER_TYPE_ALLOWED_BUILDING:
-            return ALLOWED_BUILDING_FARMS;
         case PARAMETER_TYPE_STANDARD_MESSAGE:
             return MESSAGE_CAESAR_WRATH;
         case PARAMETER_TYPE_RATING_TYPE:
@@ -925,6 +744,17 @@ int scenario_events_parameter_data_get_default_value_for_parameter(xml_data_attr
     }
 }
 
+static const uint8_t *get_allowed_building_name(building_type type)
+{
+    if (type == BUILDING_HOUSE_VACANT_LOT) {
+        return lang_get_string(68, 20);
+    }
+    if (type == BUILDING_CLEAR_LAND) {
+        return lang_get_string(68, 21);
+    }
+    return lang_get_building_type_string(type);
+}
+
 const uint8_t *scenario_events_parameter_data_get_display_string(special_attribute_mapping_t *entry)
 {
     switch (entry->type) {
@@ -938,7 +768,7 @@ const uint8_t *scenario_events_parameter_data_get_display_string(special_attribu
             break;
         case PARAMETER_TYPE_ALLOWED_BUILDING:
             if (entry->key == TR_PARAMETER_VALUE_DYNAMIC_RESOLVE) {
-                return lang_get_string(67, entry->value);
+                return get_allowed_building_name(entry->value);
             } else {
                 return translation_for(entry->key);
             }
@@ -948,7 +778,64 @@ const uint8_t *scenario_events_parameter_data_get_display_string(special_attribu
     }
 }
 
-void scenario_events_parameter_data_get_display_string_for_value(parameter_type type, int value, uint8_t *result_text, int maxlength)
+static uint8_t *string_from_year(uint8_t *dst, int year, int *maxlength)
+{
+    uint8_t *cursor = dst;
+    if (year >= 0) {
+        int use_year_ad = locale_year_before_ad();
+        if (use_year_ad) {
+            cursor += string_from_int(cursor, year, 0);
+            *cursor = ' ';
+            cursor++;
+            cursor = string_copy(lang_get_string(20, 1), cursor, *maxlength - 10);
+        } else {
+            string_copy(lang_get_string(20, 1), cursor, *maxlength - 10);
+            *cursor = ' ';
+            cursor++;
+            cursor += string_from_int(cursor, year, 0);
+        }
+    } else {
+        cursor += string_from_int(cursor, -year, 0);
+        *cursor = ' ';
+        cursor++;
+        cursor = string_copy(lang_get_string(20, 0), cursor, *maxlength - 10);
+    }
+    int total_chars = (int) (cursor - dst);
+    *maxlength -= total_chars;
+    return cursor;
+}
+
+static uint8_t *translation_for_request_value(int value, uint8_t *result_text, int *maxlength)
+{
+    if (value < 0 || value >= scenario_request_count_total()) {
+        return string_copy(translation_for(TR_PARAMETER_VALUE_NONE), result_text, *maxlength);
+    }
+    const scenario_request *request = scenario_request_get(value);
+    if (!request || request->resource == RESOURCE_NONE) {
+        return string_copy(translation_for(TR_PARAMETER_VALUE_NONE), result_text, *maxlength);
+    }
+    uint8_t *cursor = result_text;
+    cursor = string_from_year(cursor, scenario_property_start_year() + request->year, maxlength);
+    cursor = string_copy(string_from_ascii(", "), cursor, *maxlength);
+    *maxlength -= 2;
+    int numbers = string_from_int(cursor, request->amount.min, 0);
+    *maxlength -= numbers;
+    cursor += numbers;
+    if (request->amount.min < request->amount.max) {
+        cursor = string_copy(string_from_ascii("-"), cursor, *maxlength);
+        numbers = string_from_int(cursor, request->amount.max, 0);
+        *maxlength -= numbers;
+        cursor += numbers;
+    }
+    cursor = string_copy(string_from_ascii(" "), cursor, *maxlength);
+    *maxlength -= 1;
+    cursor = string_copy(resource_get_data(request->resource)->text, cursor, *maxlength);
+
+    return cursor;
+}
+
+void scenario_events_parameter_data_get_display_string_for_value(parameter_type type, int value,
+    uint8_t *result_text, int maxlength)
 {
     switch (type) {
         case PARAMETER_TYPE_NUMBER:
@@ -957,13 +844,17 @@ void scenario_events_parameter_data_get_display_string_for_value(parameter_type 
             return;
         case PARAMETER_TYPE_CUSTOM_VARIABLE:
             {
-                const custom_variable_t *variable = scenario_get_custom_variable(value);
-                if (variable) {
-                    if (variable->linked_uid) {
-                        const uint8_t *text = variable->linked_uid->text;
+                if (scenario_custom_variable_exists(value)) {
+                    const uint8_t *text = scenario_custom_variable_get_name(value);
+                    if (text) {
                         result_text = string_copy(text, result_text, maxlength);
                     }
                 }
+                return;
+            }
+        case PARAMETER_TYPE_REQUEST:
+            {
+                translation_for_request_value(value, result_text, &maxlength);
                 return;
             }
         case PARAMETER_TYPE_CUSTOM_MESSAGE:
@@ -1096,7 +987,8 @@ static uint8_t *translation_for_type_lookup_by_value(parameter_type type, int va
     return result_text;
 }
 
-void scenario_events_parameter_data_get_display_string_for_action(scenario_action_t *action, uint8_t *result_text, int maxlength)
+void scenario_events_parameter_data_get_display_string_for_action(const scenario_action_t *action, uint8_t *result_text,
+    int maxlength)
 {
     scenario_action_data_t *xml_info = scenario_events_parameter_data_get_actions_xml_attributes(action->type);
     result_text = append_text(translation_for(xml_info->xml_attr.key), result_text, &maxlength);
@@ -1151,9 +1043,10 @@ void scenario_events_parameter_data_get_display_string_for_action(scenario_actio
             {
                 result_text = append_text(string_from_ascii(" "), result_text, &maxlength);
 
-                const custom_variable_t *variable = scenario_get_custom_variable(action->parameter1);
-                if (variable && variable->linked_uid) {
-                    result_text = append_text(variable->linked_uid->text, result_text, &maxlength);
+                if (scenario_custom_variable_exists(action->parameter1) &&
+                    scenario_custom_variable_get_name(action->parameter1)) {
+                    result_text = append_text(scenario_custom_variable_get_name(action->parameter1),
+                        result_text, &maxlength);
                 } else {
                     result_text = append_text(string_from_ascii("???"), result_text, &maxlength);
                 }
@@ -1202,7 +1095,8 @@ void scenario_events_parameter_data_get_display_string_for_action(scenario_actio
         case ACTION_TYPE_REQUEST_IMMEDIATELY_START:
         case ACTION_TYPE_TAX_RATE_SET:
             {
-                result_text = translation_for_number_value(action->parameter1, result_text, &maxlength);
+                result_text = append_text(string_from_ascii(" "), result_text, &maxlength);
+                result_text = translation_for_request_value(action->parameter1, result_text, &maxlength);
                 return;
             }
         case ACTION_TYPE_TRADE_PROBLEM_LAND:
@@ -1296,7 +1190,8 @@ void scenario_events_parameter_data_get_display_string_for_action(scenario_actio
     }
 }
 
-void scenario_events_parameter_data_get_display_string_for_condition(scenario_condition_t *condition, uint8_t *result_text, int maxlength)
+void scenario_events_parameter_data_get_display_string_for_condition(const scenario_condition_t *condition,
+    uint8_t *result_text, int maxlength)
 {
     scenario_condition_data_t *xml_info = scenario_events_parameter_data_get_conditions_xml_attributes(condition->type);
     result_text = append_text(translation_for(xml_info->xml_attr.key), result_text, &maxlength);
@@ -1329,9 +1224,9 @@ void scenario_events_parameter_data_get_display_string_for_condition(scenario_co
             {
                 result_text = append_text(string_from_ascii(" "), result_text, &maxlength);
 
-                const custom_variable_t *variable = scenario_get_custom_variable(condition->parameter1);
-                if (variable && variable->linked_uid) {
-                    result_text = append_text(variable->linked_uid->text, result_text, &maxlength);
+                if (scenario_custom_variable_exists(condition->parameter1) &&
+                    scenario_custom_variable_get_name(condition->parameter1)) {
+                    result_text = append_text(scenario_custom_variable_get_name(condition->parameter1), result_text, &maxlength);
                 } else {
                     result_text = append_text(string_from_ascii("???"), result_text, &maxlength);
                 }
@@ -1369,7 +1264,8 @@ void scenario_events_parameter_data_get_display_string_for_condition(scenario_co
             }
         case CONDITION_TYPE_REQUEST_IS_ONGOING:
             {
-                result_text = translation_for_number_value(condition->parameter1, result_text, &maxlength);
+                result_text = append_text(string_from_ascii(" "), result_text, &maxlength);
+                result_text = translation_for_request_value(condition->parameter1, result_text, &maxlength);
                 result_text = translation_for_boolean_text(condition->parameter2, TR_PARAMETER_DISPLAY_ONGOING, TR_PARAMETER_DISPLAY_NOT_ONGOING, result_text, &maxlength);
                 return;
             }

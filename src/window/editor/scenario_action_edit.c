@@ -11,10 +11,12 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "scenario/scenario_events_parameter_data.h"
-#include "scenario/action_types/action_handler.h"
+#include "scenario/event/parameter_data.h"
+#include "scenario/event/action_handler.h"
+#include "window/editor/allowed_buildings.h"
 #include "window/editor/custom_variables.h"
 #include "window/editor/map.h"
+#include "window/editor/requests.h"
 #include "window/editor/select_scenario_action_type.h"
 #include "window/editor/select_city_by_type.h"
 #include "window/editor/select_city_trade_route.h"
@@ -30,25 +32,26 @@
 #define MAX_TEXT_LENGTH 50
 
 static void init(scenario_action_t *action);
-static void button_amount(int param1, int param2);
-static void button_delete(int param1, int param2);
-static void button_change_type(int param1, int param2);
+static void button_amount(const generic_button *button);
+static void button_delete(const generic_button *button);
+static void button_change_type(const generic_button *button);
 static void set_param_value(int value);
 static void set_parameter_being_edited(int value);
 static void set_resource_value(int value);
-static void resource_selection(void);
+static void resource_selection(const generic_button *button);
 static void custom_message_selection(void);
-static void change_parameter(xml_data_attribute_t *parameter, int param1);
+static void change_parameter(xml_data_attribute_t *parameter, const generic_button *button);
 
 static generic_button buttons[] = {
-    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (0 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 1, 0},
-    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (1 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 2, 0},
-    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (2 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 3, 0},
-    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (3 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 4, 0},
-    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (4 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, button_none, 5, 0},
-    {288, 32, 64, 14, button_delete, button_none, 0, 0},
-    {32, 64, BUTTON_WIDTH, 32, button_change_type, button_none, 0, 0}
+    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (0 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, 0, 1},
+    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (1 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, 0, 2},
+    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (2 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, 0, 3},
+    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (3 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, 0, 4},
+    {BUTTON_LEFT_PADDING, DETAILS_Y_OFFSET + (4 * DETAILS_ROW_HEIGHT), BUTTON_WIDTH, DETAILS_ROW_HEIGHT - 2, button_amount, 0, 5},
+    {288, 32, 64, 14, button_delete},
+    {32, 64, BUTTON_WIDTH, 32, button_change_type}
 };
+
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
 
 static struct {
@@ -176,25 +179,25 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_delete(int param1, int param2)
+static void button_delete(const generic_button *button)
 {
     scenario_action_type_delete(data.action);
     close_window();
 }
 
-static void button_change_type(int param1, int param2)
+static void button_change_type(const generic_button *button)
 {
     window_editor_select_scenario_action_type_show(data.action);
 }
 
-static void button_amount(int param1, int param2)
+static void button_amount(const generic_button *button)
 {
-    switch (param1) {
-        case 1: change_parameter(&data.xml_info->xml_parm1, param1); break;
-        case 2: change_parameter(&data.xml_info->xml_parm2, param1); break;
-        case 3: change_parameter(&data.xml_info->xml_parm3, param1); break;
-        case 4: change_parameter(&data.xml_info->xml_parm4, param1); break;
-        case 5: change_parameter(&data.xml_info->xml_parm5, param1); break;
+    switch (button->parameter1) {
+        case 1: change_parameter(&data.xml_info->xml_parm1, button); break;
+        case 2: change_parameter(&data.xml_info->xml_parm2, button); break;
+        case 3: change_parameter(&data.xml_info->xml_parm3, button); break;
+        case 4: change_parameter(&data.xml_info->xml_parm4, button); break;
+        case 5: change_parameter(&data.xml_info->xml_parm5, button); break;
     }
 }
 
@@ -268,13 +271,13 @@ static void set_resource_value(int value)
     }
 }
 
-static void resource_selection(void)
+static void resource_selection(const generic_button *button)
 {
     static const uint8_t *resource_texts[RESOURCE_MAX];
     for (resource_type resource = RESOURCE_MIN_FOOD; resource < RESOURCE_MAX; resource++) {
         resource_texts[resource - 1] = resource_get_data(resource)->text;
     }
-    window_select_list_show_text(screen_dialog_offset_x() + 64, screen_dialog_offset_y() + 64,
+    window_select_list_show_text(screen_dialog_offset_x(), screen_dialog_offset_y(), button,
         resource_texts, RESOURCE_MAX - 1, set_resource_value);
 }
 
@@ -283,23 +286,23 @@ static void custom_message_selection(void)
     window_editor_select_custom_message_show(set_param_value);
 }
 
-static void set_param_custom_variable(custom_variable_t *variable)
+static void set_param_custom_variable(unsigned int id)
 {
     switch (data.parameter_being_edited) {
         case 1:
-            data.action->parameter1 = variable->id;
+            data.action->parameter1 = id;
             return;
         case 2:
-            data.action->parameter2 = variable->id;
+            data.action->parameter2 = id;
             return;
         case 3:
-            data.action->parameter3 = variable->id;
+            data.action->parameter3 = id;
             return;
         case 4:
-            data.action->parameter4 = variable->id;
+            data.action->parameter4 = id;
             return;
         case 5:
-            data.action->parameter5 = variable->id;
+            data.action->parameter5 = id;
             return;
         default:
             return;
@@ -308,18 +311,41 @@ static void set_param_custom_variable(custom_variable_t *variable)
 
 static void custom_variable_selection(void)
 {
-    window_editor_custom_variables_select_show(set_param_custom_variable);
+    window_editor_custom_variables_show(set_param_custom_variable);
 }
 
-static void change_parameter(xml_data_attribute_t *parameter, int param1)
+static void set_param_allowed_building(int type)
 {
-    set_parameter_being_edited(param1);
+    switch (data.parameter_being_edited) {
+        case 1:
+            data.action->parameter1 = type;
+            return;
+        case 2:
+            data.action->parameter2 = type;
+            return;
+        case 3:
+            data.action->parameter3 = type;
+            return;
+        case 4:
+            data.action->parameter4 = type;
+            return;
+        case 5:
+            data.action->parameter5 = type;
+            return;
+        default:
+            return;
+    }
+}
+
+static void change_parameter(xml_data_attribute_t *parameter, const generic_button *button)
+{
+    set_parameter_being_edited(button->parameter1);
     switch (parameter->type) {
         case PARAMETER_TYPE_NUMBER:
         case PARAMETER_TYPE_MIN_MAX_NUMBER:
-            window_numeric_input_bound_show(screen_dialog_offset_x() + 60, screen_dialog_offset_y() + 50, 9, parameter->min_limit, parameter->max_limit, set_param_value);
+            window_numeric_input_bound_show(BUTTON_WIDTH / 2, 0, button, 9, parameter->min_limit, parameter->max_limit,
+                set_param_value);
             return;
-        case PARAMETER_TYPE_ALLOWED_BUILDING:
         case PARAMETER_TYPE_BOOLEAN:
         case PARAMETER_TYPE_BUILDING:
         case PARAMETER_TYPE_BUILDING_COUNTING:
@@ -336,6 +362,12 @@ static void change_parameter(xml_data_attribute_t *parameter, int param1)
         case PARAMETER_TYPE_CLIMATE:
             window_editor_select_special_attribute_mapping_show(parameter->type, set_param_value, data.parameter_being_edited_current_value);
             return;
+        case PARAMETER_TYPE_ALLOWED_BUILDING:
+            window_editor_allowed_buildings_select(set_param_allowed_building, data.parameter_being_edited_current_value);
+            return;
+        case PARAMETER_TYPE_REQUEST:
+            window_editor_requests_show_with_callback(set_param_value);
+            return;
         case PARAMETER_TYPE_ROUTE:
             window_editor_select_city_trade_route_show(set_param_value);
             return;
@@ -343,7 +375,7 @@ static void change_parameter(xml_data_attribute_t *parameter, int param1)
             window_editor_select_city_by_type_show(set_param_value, EMPIRE_CITY_FUTURE_TRADE);
             return;
         case PARAMETER_TYPE_RESOURCE:
-            resource_selection();
+            resource_selection(button);
             return;
         case PARAMETER_TYPE_CUSTOM_MESSAGE:
             custom_message_selection();

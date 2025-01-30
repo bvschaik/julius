@@ -34,16 +34,12 @@ typedef struct {
     int extend_to_hidden_scrollbar;
     int decorate_scrollbar;
     void (*draw_item)(const grid_box_item *item);
-    void (*on_click)(unsigned int index, unsigned int mouse_x, unsigned int mouse_y);
+    void (*on_click)(const grid_box_item *item);
     void (*handle_tooltip)(const grid_box_item *item, tooltip_context *c);
 
     /* Private elements */
     unsigned int total_items;
-    struct {
-        unsigned int position;
-        unsigned int x;
-        unsigned int y;
-    } focus;
+    const grid_box_item *focused_item;
     scrollbar_type scrollbar;
     int refresh_requested;
 } grid_box_type;
@@ -56,6 +52,7 @@ int grid_box_handle_input(grid_box_type *grid_box, const mouse *m, int in_dialog
 void grid_box_handle_tooltip(const grid_box_type *grid_box, tooltip_context *c);
 void grid_box_show_index(grid_box_type *grid_box, unsigned int index);
 void grid_box_request_refresh(grid_box_type *grid_box);
+int grid_box_has_scrollbar(const grid_box_type *grid_box);
 unsigned int grid_box_get_scroll_position(const grid_box_type *grid_box);
 
 #endif // GRID_BOX_H

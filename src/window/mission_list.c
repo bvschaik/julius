@@ -7,6 +7,7 @@
 #include "game/campaign.h"
 #include "game/file.h"
 #include "game/file_io.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -30,8 +31,8 @@
 #define SELECTED_ITEM_INFO_X_OFFSET 272
 #define SELECTED_ITEM_INFO_WIDTH ((int) (MISSION_MAP_MAX_WIDTH))
 
-static void start_scenario(int param1, int param2);
-static void button_back(int param1, int param2);
+static void button_start_scenario(const generic_button *button);
+static void button_back(const generic_button *button);
 static void draw_item(const list_box_item *item);
 static void select_item(unsigned int index, int is_double_click);
 static void item_tooltip(const list_box_item *item, tooltip_context *c);
@@ -76,8 +77,8 @@ static struct {
 } data;
 
 static generic_button bottom_buttons[] = {
-    {344, 436, 90, 30, button_back, button_none, TR_BUTTON_CANCEL },
-    {444, 436, 180, 30, start_scenario, button_none, TR_WINDOW_MISSION_LIST_BUTTON_BEGIN_SCENARIO },
+    {344, 436, 90, 30, button_back, 0, TR_BUTTON_CANCEL },
+    {444, 436, 180, 30, button_start_scenario, 0, TR_WINDOW_MISSION_LIST_BUTTON_BEGIN_SCENARIO },
 };
 
 static list_box_type list_box = {
@@ -382,11 +383,11 @@ static void handle_input(const mouse *m, const hotkeys *h)
         return;
     }
     if (input_go_back_requested(m, h)) {
-        button_back(0, 0);
+        button_back(0);
     }
 }
 
-static void button_back(int param1, int param2)
+static void button_back(const generic_button *button)
 {
     window_select_campaign_show();
 }
@@ -399,7 +400,7 @@ static void select_item(unsigned int index, int is_double_click)
     }
 
     if (is_double_click) {
-        start_scenario(0, 0);
+        button_start_scenario(0);
         return;
     }
 
@@ -415,7 +416,7 @@ static void select_item(unsigned int index, int is_double_click)
     }
 }
 
-static void start_scenario(int param1, int param2)
+static void button_start_scenario(const generic_button *button)
 {
     if (data.selected_item->type == ITEM_TYPE_NONE) {
         return;

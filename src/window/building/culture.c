@@ -10,12 +10,13 @@
 #include "city/festival.h"
 #include "city/finance.h"
 #include "city/trade_policy.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
 #include "graphics/text.h"
-#include "scenario/building.h"
+#include "scenario/allowed_building.h"
 #include "sound/speech.h"
 #include "translation/translation.h"
 #include "window/advisor/entertainment.h"
@@ -27,13 +28,12 @@
 #define GOD_PANTHEON 5
 #define MODULE_COST 1000
 
-static void add_module_prompt(int param1, int param2);
-static void hold_games(int param1, int param2);
-static void race_bet(int param1, int param2);
+static void button_add_module_prompt(const generic_button *button);
+static void button_hold_games(const generic_button *button);
+static void button_race_bet(const generic_button *button);
+static void button_lighthouse_policy(const generic_button *button);
 
 static void draw_temple(building_info_context *c, const char *sound_file, int group_id);
-
-static void button_lighthouse_policy(int selected_policy, int param2);
 
 static struct {
     int title;
@@ -54,27 +54,26 @@ static struct {
     "wavs/dock1.wav"
 };
 
-static int god_id;
-
 static generic_button add_module_button[] = {
-    { 0, 0, 304, 20, add_module_prompt, button_none, 0, 0 }
+    { 0, 0, 304, 20, button_add_module_prompt}
 };
 
 static generic_button go_to_lighthouse_action_button[] = {
-    {0, 0, 400, 100, button_lighthouse_policy, button_none, 0, 0}
+    {0, 0, 400, 100, button_lighthouse_policy}
 };
 
 static generic_button race_bet_button[] = {
-    {0, 0, 300, 20, race_bet, button_none, 0, 0}
+    {0, 0, 300, 20, button_race_bet}
 };
 
 static generic_button hold_games_button[] = {
-    { 0, 0, 300, 20, hold_games, button_none, 0, 0 }
+    { 0, 0, 300, 20, button_hold_games}
 };
 
 static struct {
     unsigned int focus_button_id;
     int building_id;
+    int god_id;
     unsigned int lighthouse_focus_button_id;
     int module_choices[2];
 } data;
@@ -761,7 +760,7 @@ static void draw_grand_temple(building_info_context *c, const char *sound_file,
 {
     building *b = building_get(c->building_id);
     window_building_play_sound(c, sound_file);
-    god_id = temple_god_id;
+    data.god_id = temple_god_id;
     if (b->monument.phase == MONUMENT_FINISHED) {
         outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
         c->advisor_button = ADVISOR_RELIGION;
@@ -770,7 +769,7 @@ static void draw_grand_temple(building_info_context *c, const char *sound_file,
         window_building_draw_monument_temple_construction_process(c);
     }
     if (b->monument.upgrades) {
-        int module_name = temple_module_options[god_id * 2 + (b->monument.upgrades - 1)].option.header;
+        int module_name = temple_module_options[data.god_id * 2 + (b->monument.upgrades - 1)].option.header;
         text_draw_centered(translation_for(module_name),
             c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
     } else {
@@ -786,7 +785,7 @@ static void draw_grand_temple(building_info_context *c, const char *sound_file,
             height = text_draw_multiline(translation_for(bonus_desc),
                 c->x_offset + 22, c->y_offset + 56 + extra_y, 15 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
             if (b->monument.upgrades) {
-                int module_desc = temple_module_options[god_id * 2 + (b->monument.upgrades - 1)].option.desc;
+                int module_desc = temple_module_options[data.god_id * 2 + (b->monument.upgrades - 1)].option.desc;
                 height += text_draw_multiline(translation_for(module_desc),
                     c->x_offset + 22, c->y_offset + 66 + height + extra_y, 15 * c->width_blocks,
                     0, FONT_NORMAL_BLACK, 0);
@@ -1188,7 +1187,7 @@ static void apply_policy(int selected_policy)
     city_finance_process_sundry(TRADE_POLICY_COST);
 }
 
-static void button_lighthouse_policy(int param1, int param2)
+static void button_lighthouse_policy(const generic_button *button)
 {
     if (building_monument_working(BUILDING_LIGHTHOUSE)) {
         window_option_popup_show(sea_trade_policy.title, sea_trade_policy.subtitle,
@@ -1454,19 +1453,19 @@ static void generate_module_image_id(int index)
         temple_module_options[index].image_id);
 }
 
-static void add_module_prompt(int param1, int param2)
+static void button_add_module_prompt(const generic_button *button)
 {
     int num_options = 0;
-    int option_id = god_id * 2;
+    int option_id = data.god_id * 2;
 
     static option_menu_item options[2];
 
-    if (scenario_building_allowed(temple_module_options[option_id].required_building)) {
+    if (scenario_allowed_building(temple_module_options[option_id].required_building)) {
         generate_module_image_id(option_id);
         data.module_choices[num_options] = 1;
         options[num_options++] = temple_module_options[option_id].option;
     }
-    if (scenario_building_allowed(temple_module_options[option_id + 1].required_building)) {
+    if (scenario_allowed_building(temple_module_options[option_id + 1].required_building)) {
         generate_module_image_id(option_id + 1);
         data.module_choices[num_options] = 2;
         options[num_options++] = temple_module_options[option_id + 1].option;
@@ -1478,14 +1477,14 @@ static void add_module_prompt(int param1, int param2)
     }
 }
 
-static void hold_games(int param1, int param2)
+static void button_hold_games(const generic_button *button)
 {
     if (!city_festival_games_active() && !city_festival_games_planning_time() && !city_festival_games_cooldown()) {
         window_hold_games_show(1);
     }
 }
 
-static void race_bet(int param1, int param2)
+static void button_race_bet(const generic_button *button)
 {
     window_race_bet_show();
 }

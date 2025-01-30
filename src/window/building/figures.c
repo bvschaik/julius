@@ -17,6 +17,7 @@
 #include "figure/trader.h"
 #include "figuretype/depot.h"
 #include "figuretype/trader.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -32,8 +33,8 @@
 
 #define CAMEL_PORTRAIT 59
 
-static void select_figure(int index, int param2);
-static void depot_recall(int figure_id, int param2);
+static void select_figure(const generic_button *button);
+static void depot_recall(const generic_button *button);
 
 static const int FIGURE_TYPE_TO_BIG_FIGURE_IMAGE[] = {
     8, 4, 4, 9, 51, 13, 8, 16, 7, 4, // 0-9
@@ -56,17 +57,17 @@ static const int NEW_FIGURE_TYPES[] = {
 };
 
 static generic_button figure_buttons[] = {
-    {26, 46, 50, 50, select_figure, button_none, 0, 0},
-    {86, 46, 50, 50, select_figure, button_none, 1, 0},
-    {146, 46, 50, 50, select_figure, button_none, 2, 0},
-    {206, 46, 50, 50, select_figure, button_none, 3, 0},
-    {266, 46, 50, 50, select_figure, button_none, 4, 0},
-    {326, 46, 50, 50, select_figure, button_none, 5, 0},
-    {386, 46, 50, 50, select_figure, button_none, 6, 0},
+    {26, 46, 50, 50, select_figure},
+    {86, 46, 50, 50, select_figure, 0, 1},
+    {146, 46, 50, 50, select_figure, 0, 2},
+    {206, 46, 50, 50, select_figure, 0, 3},
+    {266, 46, 50, 50, select_figure, 0, 4},
+    {326, 46, 50, 50, select_figure, 0, 5},
+    {386, 46, 50, 50, select_figure, 0, 6},
 };
 
 static generic_button depot_figure_buttons[] = {
-    {90, 160, 100, 22, depot_recall, button_none, 0, 0},
+    {90, 160, 100, 22, depot_recall},
 };
 
 static struct {
@@ -633,8 +634,9 @@ int window_building_handle_mouse_figure_list(const mouse *m, building_info_conte
     return handled;
 }
 
-static void select_figure(int index, int param2)
+static void select_figure(const generic_button *button)
 {
+    int index = button->parameter1;
     data.context_for_callback->figure.selected_index = index;
     window_building_play_figure_phrase(data.context_for_callback);
     window_invalidate();
@@ -648,8 +650,9 @@ void window_building_play_figure_phrase(building_info_context *c)
     c->figure.phrase_id = f->phrase_id;
 }
 
-static void depot_recall(int figure_id, int param2)
+static void depot_recall(const generic_button *button)
 {
+    int figure_id = button->parameter1;
     figure_depot_recall(figure_get(figure_id));
     window_city_show();
 }

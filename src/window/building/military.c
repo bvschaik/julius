@@ -12,6 +12,7 @@
 #include "core/log.h"
 #include "core/string.h"
 #include "figure/formation_legion.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -23,35 +24,35 @@
 #include "window/city.h"
 #include "window/building/culture.h"
 
-static void button_return_to_fort(int param1, int param2);
-static void button_layout(int index, int param2);
-static void button_priority(int index, int param2);
-static void button_delivery(int index, int param2);
+static void button_return_to_fort(const generic_button *button);
+static void button_layout(const generic_button *button);
+static void button_priority(const generic_button *button);
+static void button_delivery(const generic_button *button);
 
 static generic_button layout_buttons[] = {
-    {19, 179, 84, 84, button_layout, button_none, 0, 0},
-    {104, 179, 84, 84, button_layout, button_none, 1, 0},
-    {189, 179, 84, 84, button_layout, button_none, 2, 0},
-    {274, 179, 84, 84, button_layout, button_none, 3, 0},
-    {359, 179, 84, 84, button_layout, button_none, 4, 0}
+    {19, 179, 84, 84, button_layout},
+    {104, 179, 84, 84, button_layout, 0, 1},
+    {189, 179, 84, 84, button_layout, 0, 2},
+    {274, 179, 84, 84, button_layout, 0, 3},
+    {359, 179, 84, 84, button_layout, 0, 4}
 };
 
 static generic_button priority_buttons[] = {
-    {0, 0, 40, 40, button_priority, button_none, 0, 0},
-    {56, 0, 40, 40, button_priority, button_none, 1, 0},
-    {112, 0, 40, 40, button_priority, button_none, 2, 0},
-    {168, 0, 40, 40, button_priority, button_none, 3, 0},
-    {224, 0, 40, 40, button_priority, button_none, 4, 0},
-    {280, 0, 40, 40, button_priority, button_none, 5, 0},
-    {336, 0, 40, 40, button_priority, button_none, 6, 0},
+    {0, 0, 40, 40, button_priority, 0, 0},
+    {56, 0, 40, 40, button_priority, 0, 1},
+    {112, 0, 40, 40, button_priority, 0, 2},
+    {168, 0, 40, 40, button_priority, 0, 3},
+    {224, 0, 40, 40, button_priority, 0, 4},
+    {280, 0, 40, 40, button_priority, 0, 5},
+    {336, 0, 40, 40, button_priority, 0, 6},
 };
 
 static generic_button delivery_buttons[] = {
-    {0, 0, 52, 52, button_delivery, button_none, 0, 0},
+    {0, 0, 52, 52, button_delivery},
 };
 
 static generic_button return_button[] = {
-    {0, 0, 288, 32, button_return_to_fort, button_none, 0, 0},
+    {0, 0, 288, 32, button_return_to_fort},
 };
 
 static struct {
@@ -646,7 +647,7 @@ void window_building_barracks_get_tooltip_priority(int *translation)
     }
 }
 
-static void button_return_to_fort(int param1, int param2)
+static void button_return_to_fort(const generic_button *button)
 {
     formation *m = formation_get(data.context_for_callback->formation_id);
     if (!m->in_distant_battle && m->is_at_fort != 1) {
@@ -655,8 +656,9 @@ static void button_return_to_fort(int param1, int param2)
     }
 }
 
-static void button_layout(int index, int param2)
+static void button_layout(const generic_button *button)
 {
+    int index = button->parameter1;
     formation *m = formation_get(data.context_for_callback->formation_id);
     if (m->in_distant_battle) {
         return;
@@ -697,13 +699,14 @@ static void button_layout(int index, int param2)
     window_city_military_show(data.context_for_callback->formation_id);
 }
 
-static void button_priority(int index, int param2)
+static void button_priority(const generic_button *button)
 {
+    int index = button->parameter1;
     building *barracks = building_get(data.building_id);
     building_barracks_set_priority(barracks, index);    
 }
 
-static void button_delivery(int index, int param2)
+static void button_delivery(const generic_button *button)
 {
     building *barracks = building_get(data.building_id);
     building_barracks_toggle_delivery(barracks);    

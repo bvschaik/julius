@@ -1,7 +1,8 @@
 #include "action_handler.h"
 
 #include "game/resource.h"
-#include "scenario/action_types/action_types.h"
+#include "scenario/allowed_building.h"
+#include "scenario/event/action_types.h"
 
 void scenario_action_type_init(scenario_action_t *action)
 {
@@ -113,7 +114,8 @@ void scenario_action_type_save_state(buffer *buf, const scenario_action_t *actio
     buffer_write_i32(buf, action->parameter5);
 }
 
-void scenario_action_type_load_state(buffer *buf, scenario_action_t *action, int *link_type, int32_t *link_id)
+unsigned int scenario_action_type_load_state(buffer *buf, scenario_action_t *action, int *link_type, int32_t *link_id,
+    int is_new_version)
 {
     *link_type = buffer_read_i16(buf);
     *link_id = buffer_read_i32(buf);
@@ -138,7 +140,23 @@ void scenario_action_type_load_state(buffer *buf, scenario_action_t *action, int
         action->parameter1 = resource_remap(action->parameter1);        
     } else if (action->type == ACTION_TYPE_TRADE_SET_SELL_PRICE_ONLY) {
         action->parameter1 = resource_remap(action->parameter1);        
+    } else if (action->type == ACTION_TYPE_CHANGE_ALLOWED_BUILDINGS) {
+        if (!is_new_version) {
+            int original_id = action->parameter1;
+            return scenario_action_type_load_allowed_building(action, original_id, 0) ? original_id : 0;
+        }
     }
+    return 0;
+}
+
+unsigned int scenario_action_type_load_allowed_building(scenario_action_t *action, int original_id, unsigned int index)
+{
+    if (action->type != ACTION_TYPE_CHANGE_ALLOWED_BUILDINGS || !original_id) {
+        return 0;
+    }
+    const building_type *building_list = scenario_allowed_building_get_buildings_from_original_id(original_id);
+    action->parameter1 = building_list[index];
+    return building_list[index + 1] != BUILDING_NONE ? index + 1 : 0;
 }
 
 int scenario_action_uses_custom_variable(const scenario_action_t *action, int custom_variable_id)

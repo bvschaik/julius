@@ -170,21 +170,17 @@ const text_blob_string_t *message_media_text_blob_add_encoded(const char *text)
 void message_media_text_blob_save_state(buffer *blob_buffer, buffer *meta_buffer)
 {
     message_media_text_blob_remove_unused();
-    int32_t array_size = message_media_text_blob.size;
-    int32_t struct_size = sizeof(uint8_t);
-    buffer_init_dynamic_piece(blob_buffer,
-        MESSAGE_MEDIA_TEXT_BLOB_VERSION,
-        array_size,
-        struct_size);
+    uint32_t array_size = message_media_text_blob.size;
+    uint32_t struct_size = sizeof(uint8_t);
+    buffer_init_dynamic_array(blob_buffer, array_size, struct_size);
 
-    buffer_write_raw(blob_buffer, message_media_text_blob.text_blob, array_size);
+    if (array_size) {
+        buffer_write_raw(blob_buffer, message_media_text_blob.text_blob, array_size);
+    }
 
     array_size = message_media_text_blob.entry_count;
     struct_size = (3 * sizeof(int32_t));
-    buffer_init_dynamic_piece(meta_buffer,
-        MESSAGE_MEDIA_TEXT_BLOB_VERSION,
-        array_size,
-        struct_size);
+    buffer_init_dynamic_array(meta_buffer, array_size, struct_size);
 
     for (int i = 0; i < array_size; i++) {
         buffer_write_i32(meta_buffer, message_media_text_blob.text_entries[i].id);
@@ -195,28 +191,19 @@ void message_media_text_blob_save_state(buffer *blob_buffer, buffer *meta_buffer
 
 void message_media_text_blob_load_state(buffer *blob_buffer, buffer *meta_buffer)
 {
-    int buffer_size, version, array_size, struct_size;
-    buffer_load_dynamic_piece_header_data(blob_buffer,
-        &buffer_size,
-        &version,
-        &array_size,
-        &struct_size);
+    unsigned int size = buffer_load_dynamic_array(blob_buffer);
 
     message_media_text_blob_clear();
-    resize_text_blob(buffer_size);
+    resize_text_blob(size);
 
-    message_media_text_blob.size = buffer_size;    
+    message_media_text_blob.size = size;
     buffer_read_raw(blob_buffer, message_media_text_blob.text_blob, message_media_text_blob.size);
 
-    buffer_load_dynamic_piece_header_data(meta_buffer,
-        &buffer_size,
-        &version,
-        &array_size,
-        &struct_size);
+    size = buffer_load_dynamic_array(meta_buffer);
 
-    resize_text_entries(array_size);
-    message_media_text_blob.entry_count = array_size;
-    for (int i = 0; i < array_size; i++) {
+    resize_text_entries(size);
+    message_media_text_blob.entry_count = size;
+    for (unsigned int i = 0; i < size; i++) {
         message_media_text_blob.text_entries[i].id = buffer_read_i32(meta_buffer);
         message_media_text_blob.text_entries[i].index = i;
         message_media_text_blob.text_entries[i].in_use = 1;
@@ -233,8 +220,6 @@ static void update_text_blob_link(int text_id, text_blob_string_t *new_text_link
     if (custom_messages_relink_text_blob(text_id, new_text_link)) {
         return;
     } else if (custom_media_relink_text_blob(text_id, new_text_link)) {
-        return;
-    } else if (scenario_custom_variable_relink_text_blob(text_id, new_text_link)) {
         return;
     } else {
         log_error("update_text_blob_link -> Failed to find old link to update, the game will now probably crash.", 0, 0);

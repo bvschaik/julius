@@ -58,6 +58,7 @@ void assets_init(int force_reload, color_t **main_images, int *main_image_widths
     data.asset_lookup[ASSET_CENTER_CAMERA_ON_BUILDING] = assets_get_image_id("UI", "Center Camera Button");
     data.asset_lookup[ASSET_OX] = assets_get_image_id("Walkers", "Ox_Portrait");
     data.asset_lookup[ASSET_UI_RISKS] = assets_get_image_id("UI", "Risk_Widget_Collapse");
+    data.asset_lookup[ASSET_UI_SELECTION_CHECKMARK] = assets_get_image_id("UI", "Selection_Checkmark");
 }
 
 int assets_load_single_group(const char *file_name, color_t **main_images, int *main_image_widths)

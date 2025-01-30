@@ -109,7 +109,7 @@ int game_init(void)
         return 0;
     }
 
-    init_augustus_building_properties();
+    building_properties_init();
     load_augustus_messages();
     sound_system_init();
     game_state_init();

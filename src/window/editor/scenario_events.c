@@ -14,9 +14,10 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/editor_events.h"
+#include "scenario/event/event.h"
+#include "scenario/event/controller.h"
+#include "scenario/event/parameter_data.h"
 #include "scenario/property.h"
-#include "scenario/scenario_events_controller.h"
-#include "scenario/scenario_events_parameter_data.h"
 #include "window/city.h"
 #include "window/editor/attributes.h"
 #include "window/editor/map.h"
@@ -32,9 +33,9 @@
 
 
 static void on_scroll(void);
-static void button_click(int type, int param2);
-static void button_event(int button_index, int param2);
-static void button_open_variables(int param1, int param2);
+static void button_click(const generic_button *button);
+static void button_event(const generic_button *button);
+static void button_open_variables(const generic_button *button);
 static void populate_list(int offset);
 static void add_new_event(void);
 
@@ -43,19 +44,19 @@ static scrollbar_type scrollbar = {
 };
 
 static generic_button buttons[] = {
-    {48, EVENTS_Y_OFFSET + (0 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, button_none, 1, 0},
-    {48, EVENTS_Y_OFFSET + (1 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, button_none, 2, 0},
-    {48, EVENTS_Y_OFFSET + (2 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, button_none, 3, 0},
-    {48, EVENTS_Y_OFFSET + (3 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, button_none, 4, 0},
-    {48, EVENTS_Y_OFFSET + (4 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, button_none, 5, 0},
-    {48, EVENTS_Y_OFFSET + (5 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, button_none, 6, 0},
-    {48, EVENTS_Y_OFFSET + (6 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, button_none, 7, 0},
-    {48, EVENTS_Y_OFFSET + (7 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, button_none, 8, 0},
-    {48, EVENTS_Y_OFFSET + (9 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, button_none, 9, 0},
-    {48, EVENTS_Y_OFFSET + (11 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, button_none, 10, 0},
-    {48, EVENTS_Y_OFFSET + (12 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, button_none, 11, 0},
-    {48, EVENTS_Y_OFFSET + (13 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, button_none, 12, 0},
-    {210, 100, BUTTON_WIDTH / 2, EVENTS_ROW_HEIGHT, button_open_variables, button_none, 0, 0}
+    {48, EVENTS_Y_OFFSET + (0 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 1},
+    {48, EVENTS_Y_OFFSET + (1 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 2},
+    {48, EVENTS_Y_OFFSET + (2 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 3},
+    {48, EVENTS_Y_OFFSET + (3 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 4},
+    {48, EVENTS_Y_OFFSET + (4 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 5},
+    {48, EVENTS_Y_OFFSET + (5 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 6},
+    {48, EVENTS_Y_OFFSET + (6 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 7},
+    {48, EVENTS_Y_OFFSET + (7 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 8},
+    {48, EVENTS_Y_OFFSET + (9 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 9},
+    {48, EVENTS_Y_OFFSET + (11 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 10},
+    {48, EVENTS_Y_OFFSET + (12 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 11},
+    {48, EVENTS_Y_OFFSET + (13 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 12},
+    {210, 100, BUTTON_WIDTH / 2, EVENTS_ROW_HEIGHT, button_open_variables}
 };
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
 
@@ -99,7 +100,9 @@ static void populate_list(int offset)
 
 static void add_new_event(void)
 {
-    scenario_event_create(0, 0, 0);
+    scenario_event_t *event = scenario_event_create(0, 0, 0);
+    array_advance(event->condition_groups);
+
     init_list();
     window_request_refresh();
 }
@@ -109,7 +112,7 @@ static void draw_background(void)
     window_editor_map_draw_all();
 }
 
-static int color_from_state(event_state state)
+static color_t color_from_state(event_state state)
 {
     if (!editor_is_active()) {
         if (state == EVENT_STATE_ACTIVE) {
@@ -136,14 +139,19 @@ static void draw_foreground(void)
     for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (data.list[i]) {
             large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
+            color_t color = color_from_state(data.list[i]->state);
 
             if (data.list[i]->state != EVENT_STATE_UNDEFINED) {
-                text_draw_label_and_number(0, data.list[i]->id, "", buttons[i].x, buttons[i].y + 8,
-                    FONT_NORMAL_GREEN, color_from_state(data.list[i]->state));
-                text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_CONDITIONS),
-                    data.list[i]->conditions.size, "", 100, buttons[i].y + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
-                text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_ACTIONS),
-                    data.list[i]->actions.size, "", 250, buttons[i].y + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+                text_draw_number(data.list[i]->id, 0, "", buttons[i].x + 6, buttons[i].y + 8, FONT_NORMAL_GREEN, color);
+                if (!*data.list[i]->name) {
+                    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_CONDITIONS),
+                        scenario_event_count_conditions(data.list[i]), "", 100, buttons[i].y + 8,
+                        FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+                    text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_ACTIONS),
+                        data.list[i]->actions.size, "", 250, buttons[i].y + 8, FONT_NORMAL_GREEN, COLOR_MASK_NONE);
+                } else {
+                    text_draw(data.list[i]->name, 100, buttons[i].y + 8, FONT_NORMAL_GREEN, color);
+                }
             } else {
                 text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENT_DELETED), 48, buttons[i].y + 8,
                     BUTTON_WIDTH, FONT_NORMAL_GREEN, 0);
@@ -176,9 +184,9 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void button_event(int button_index, int param2)
+static void button_event(const generic_button *button)
 {
-    int target_index = button_index - 1;
+    int target_index = button->parameter1 - 1;
     if (!data.list[target_index]) {
         return;
     }
@@ -205,8 +213,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     populate_list(scrollbar.scroll_position);
 }
 
-static void button_click(int type, int param2)
+static void button_click(const generic_button *button)
 {
+    int type = button->parameter1;
     if (type == 9) {
         add_new_event();
     } else if (type == 10) {
@@ -219,9 +228,9 @@ static void button_click(int type, int param2)
     }
 }
 
-static void button_open_variables(int param1, int param2)
+static void button_open_variables(const generic_button *button)
 {
-    window_editor_custom_variables_show();
+    window_editor_custom_variables_show(0);
 }
 
 void window_editor_scenario_events_show(void)

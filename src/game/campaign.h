@@ -19,7 +19,7 @@ typedef struct {
 } campaign_info;
 
 typedef struct {
-    int id;
+    unsigned int id;
     int x;
     int y;
     const uint8_t *name;

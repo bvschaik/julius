@@ -103,6 +103,7 @@ typedef struct {
     void (*draw_foreground)(void);
     void (*handle_input)(const mouse *m, const hotkeys *h);
     void (*get_tooltip)(tooltip_context *c);
+    void (*on_return)(window_id from);
 } window_type;
 
 /**

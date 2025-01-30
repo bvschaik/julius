@@ -13,7 +13,7 @@ typedef enum {
 } custom_messages_version;
 
 typedef struct {
-    int id;
+    unsigned int id;
     int in_use;
     const text_blob_string_t *linked_uid;
     const text_blob_string_t *title;

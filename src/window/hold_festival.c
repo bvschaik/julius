@@ -7,6 +7,7 @@
 #include "city/gods.h"
 #include "core/image_group.h"
 #include "game/resource.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -18,8 +19,8 @@
 #include "window/advisors.h"
 #include "window/message_dialog.h"
 
-static void button_god(int god, int param2);
-static void button_size(int size, int param2);
+static void button_god(const generic_button *button);
+static void button_size(const generic_button *button);
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_hold_festival(int param1, int param2);
@@ -32,14 +33,14 @@ static image_button image_buttons_bottom[] = {
 };
 
 static generic_button buttons_gods_size[] = {
-    {70, 96, 80, 90, button_god, button_none, 0, 0},
-    {170, 96, 80, 90, button_god, button_none, 1, 0},
-    {270, 96, 80, 90, button_god, button_none, 2, 0},
-    {370, 96, 80, 90, button_god, button_none, 3, 0},
-    {470, 96, 80, 90, button_god, button_none, 4, 0},
-    {102, 216, 430, 26, button_size, button_none, 1, 0},
-    {102, 246, 430, 26, button_size, button_none, 2, 0},
-    {102, 276, 430, 26, button_size, button_none, 3, 0},
+    {70, 96, 80, 90, button_god},
+    {170, 96, 80, 90, button_god, 0, 1},
+    {270, 96, 80, 90, button_god, 0, 2},
+    {370, 96, 80, 90, button_god, 0, 3},
+    {470, 96, 80, 90, button_god, 0, 4},
+    {102, 216, 430, 26, button_size, 0, 1},
+    {102, 246, 430, 26, button_size, 0, 2},
+    {102, 276, 430, 26, button_size, 0, 3},
 };
 
 static unsigned int focus_button_id;
@@ -146,14 +147,16 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_god(int god, int param2)
+static void button_god(const generic_button *button)
 {
+    int god = button->parameter1;
     city_festival_select_god(god);
     window_invalidate();
 }
 
-static void button_size(int size, int param2)
+static void button_size(const generic_button *button)
 {
+    int size = button->parameter1;
     if (!city_finance_out_of_money()) {
         if (city_festival_select_size(size)) {
             window_invalidate();

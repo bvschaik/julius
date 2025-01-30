@@ -21,35 +21,35 @@
 
 #define MAX_BUTTONS 8
 
-static void button_menu_item(int index, int param2);
-static void button_submenu_item(int index, int param2);
+static void button_menu_item(const generic_button *button);
+static void button_submenu_item(const generic_button *button);
 
 #define OVERLAY_BUTTONS 11
 
 static generic_button menu_buttons[] = {
-    {0, 0, 160, 24, button_menu_item, button_none, 0, 0},
-    {0, 24, 160, 24, button_menu_item, button_none, 1, 0},
-    {0, 48, 160, 24, button_menu_item, button_none, 2, 0},
-    {0, 72, 160, 24, button_menu_item, button_none, 3, 0},
-    {0, 96, 160, 24, button_menu_item, button_none, 4, 0},
-    {0, 120, 160, 24, button_menu_item, button_none, 5, 0},
-    {0, 144, 160, 24, button_menu_item, button_none, 6, 0},
-    {0, 168, 160, 24, button_menu_item, button_none, 7, 0},
-    {0, 192, 160, 24, button_menu_item, button_none, 8, 0},
-    {0, 216, 160, 24, button_menu_item, button_none, 9, 0},
-    {0, 240, 160, 24, button_menu_item, button_none, 10, 0},
+    {0, 0, 160, 24, button_menu_item, 0, 0},
+    {0, 24, 160, 24, button_menu_item, 0, 1},
+    {0, 48, 160, 24, button_menu_item, 0, 2},
+    {0, 72, 160, 24, button_menu_item, 0, 3},
+    {0, 96, 160, 24, button_menu_item, 0, 4},
+    {0, 120, 160, 24, button_menu_item, 0, 5},
+    {0, 144, 160, 24, button_menu_item, 0, 6},
+    {0, 168, 160, 24, button_menu_item, 0, 7},
+    {0, 192, 160, 24, button_menu_item, 0, 8},
+    {0, 216, 160, 24, button_menu_item, 0, 9},
+    {0, 240, 160, 24, button_menu_item, 0, 10},
 };
 static generic_button submenu_buttons[] = {
-    {0, 0, 160, 24, button_submenu_item, button_none, 0, 0},
-    {0, 24, 160, 24, button_submenu_item, button_none, 1, 0},
-    {0, 48, 160, 24, button_submenu_item, button_none, 2, 0},
-    {0, 72, 160, 24, button_submenu_item, button_none, 3, 0},
-    {0, 96, 160, 24, button_submenu_item, button_none, 4, 0},
-    {0, 120, 160, 24, button_submenu_item, button_none, 5, 0},
-    {0, 144, 160, 24, button_submenu_item, button_none, 6, 0},
-    {0, 168, 160, 24, button_submenu_item, button_none, 7, 0},
-    {0, 192, 160, 24, button_submenu_item, button_none, 8, 0},
-    {0, 216, 160, 24, button_submenu_item, button_none, 9, 0},
+    {0, 0, 160, 24, button_submenu_item, 0, 0},
+    {0, 24, 160, 24, button_submenu_item, 0, 1},
+    {0, 48, 160, 24, button_submenu_item, 0, 2},
+    {0, 72, 160, 24, button_submenu_item, 0, 3},
+    {0, 96, 160, 24, button_submenu_item, 0, 4},
+    {0, 120, 160, 24, button_submenu_item, 0, 5},
+    {0, 144, 160, 24, button_submenu_item, 0, 6},
+    {0, 168, 160, 24, button_submenu_item, 0, 7},
+    {0, 192, 160, 24, button_submenu_item, 0, 8},
+    {0, 216, 160, 24, button_submenu_item, 0, 9},
 };
 
 static const int MENU_ID_TO_OVERLAY[OVERLAY_BUTTONS] = { OVERLAY_NONE, OVERLAY_WATER, 1, 3, 5, 6, 7, OVERLAY_RELIGION, OVERLAY_DESIRABILITY, OVERLAY_SENTIMENT, OVERLAY_ROADS };
@@ -58,11 +58,11 @@ static const int ADDITIONAL_OVERLAY_TR[] = { TR_OVERLAY_ROADS, TR_OVERLAY_LEVY, 
 
 static const int SUBMENU_ID_TO_OVERLAY[6][OVERLAY_BUTTONS] = {
     {0},
-    {OVERLAY_FIRE, OVERLAY_DAMAGE, OVERLAY_CRIME, OVERLAY_NATIVE, OVERLAY_PROBLEMS, OVERLAY_ENEMY, 0},
-    {OVERLAY_ENTERTAINMENT, OVERLAY_TAVERN, OVERLAY_THEATER, OVERLAY_AMPHITHEATER, OVERLAY_ARENA, OVERLAY_COLOSSEUM, OVERLAY_HIPPODROME, 0},
-    {OVERLAY_EDUCATION, OVERLAY_SCHOOL, OVERLAY_LIBRARY, OVERLAY_ACADEMY, 0},
-    {OVERLAY_HEALTH, OVERLAY_BARBER, OVERLAY_BATHHOUSE, OVERLAY_CLINIC, OVERLAY_HOSPITAL, OVERLAY_SICKNESS, 0},
-    {OVERLAY_LOGISTICS, OVERLAY_FOOD_STOCKS, OVERLAY_EFFICIENCY, OVERLAY_MOTHBALL, OVERLAY_TAX_INCOME, OVERLAY_LEVY, OVERLAY_EMPLOYMENT, 0},
+    {OVERLAY_FIRE, OVERLAY_DAMAGE, OVERLAY_CRIME, OVERLAY_NATIVE, OVERLAY_PROBLEMS, OVERLAY_ENEMY},
+    {OVERLAY_ENTERTAINMENT, OVERLAY_TAVERN, OVERLAY_THEATER, OVERLAY_AMPHITHEATER, OVERLAY_ARENA, OVERLAY_COLOSSEUM, OVERLAY_HIPPODROME},
+    {OVERLAY_EDUCATION, OVERLAY_SCHOOL, OVERLAY_LIBRARY, OVERLAY_ACADEMY},
+    {OVERLAY_HEALTH, OVERLAY_BARBER, OVERLAY_BATHHOUSE, OVERLAY_CLINIC, OVERLAY_HOSPITAL, OVERLAY_SICKNESS},
+    {OVERLAY_LOGISTICS, OVERLAY_FOOD_STOCKS, OVERLAY_EFFICIENCY, OVERLAY_MOTHBALL, OVERLAY_TAX_INCOME, OVERLAY_LEVY, OVERLAY_EMPLOYMENT},
 };
 
 static struct {
@@ -205,8 +205,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_menu_item(int index, int param2)
+static void button_menu_item(const generic_button *button)
 {
+    int index = button->parameter1;
+
     if (MENU_ID_TO_SUBMENU_ID[index] == 0) {
         game_state_set_overlay(MENU_ID_TO_OVERLAY[index]);
         close_submenu();
@@ -220,8 +222,10 @@ static void button_menu_item(int index, int param2)
     }
 }
 
-static void button_submenu_item(int index, int param2)
+static void button_submenu_item(const generic_button *button)
 {
+    int index = button->parameter1;
+
     int overlay = SUBMENU_ID_TO_OVERLAY[data.selected_submenu][index];
     if (overlay) {
         game_state_set_overlay(overlay);

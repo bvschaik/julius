@@ -22,7 +22,8 @@
 #include "game/resource.h"
 #include "map/building.h"
 #include "map/grid.h"
-#include "scenario/data.h"
+#include "scenario/allowed_building.h"
+#include "scenario/custom_variable.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/custom_messages.h"
 #include "scenario/invasion.h"
@@ -34,10 +35,10 @@
 
 int scenario_action_type_change_allowed_buildings_execute(scenario_action_t *action)
 {
-    int allowed_id = action->parameter1;
+    int building_id = action->parameter1;
     int allowed = action->parameter2;
 
-    scenario.allowed_buildings[allowed_id] = allowed;
+    scenario_allowed_building_set(building_id, allowed);
     building_menu_update();
     
     return 1;
@@ -78,10 +79,10 @@ int scenario_action_type_change_custom_variable_execute(scenario_action_t *actio
     int is_hard_set = action->parameter3;
 
     if (!is_hard_set) {
-        value = scenario_get_custom_variable_value(variable_id) + value;
+        value = scenario_custom_variable_get_value(variable_id) + value;
     }
 
-    scenario_set_custom_variable_value(variable_id, value);
+    scenario_custom_variable_set_value(variable_id, value);
     
     return 1;
 }
@@ -242,7 +243,7 @@ int scenario_action_type_request_immediately_start_execute(scenario_action_t *ac
     }
 
     int request_id = action->parameter1;
-    if (request_id < 0 || request_id >= MAX_REQUESTS) {
+    if (request_id < 0 || request_id >= scenario_request_count_total()) {
         return 0;
     }
 

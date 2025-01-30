@@ -55,7 +55,7 @@ typedef struct {
 } building_storage;
 
 typedef struct {
-    int id;
+    unsigned int id;
     int in_use;
     int building_id;
     building_storage storage;

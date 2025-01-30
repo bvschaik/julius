@@ -11,6 +11,7 @@
 #include "city/ratings.h"
 #include "city/resource.h"
 #include "game/time.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -23,11 +24,11 @@
 
 #define ADVISOR_HEIGHT 27
 
-static void button_graph(int param1, int param2);
+static void button_graph(const generic_button *button);
 
 static generic_button graph_buttons[] = {
-    { 509,  61, 104, 55, button_graph, button_none, 0, 0 },
-    { 509, 161, 104, 55, button_graph, button_none, 1, 0 }
+    { 509,  61, 104, 55, button_graph},
+    { 509, 161, 104, 55, button_graph, 0, 1 }
 };
 
 static unsigned int focus_button_id;
@@ -505,29 +506,30 @@ static int handle_mouse(const mouse *m)
     return generic_buttons_handle_mouse(m, 0, 0, graph_buttons, 2, &focus_button_id);
 }
 
-static void button_graph(int param1, int param2)
+static void button_graph(const generic_button *button)
 {
+    int button_id = button->parameter1;
     int new_order;
-
+    
     switch (city_population_graph_order()) {
         default:
         case 0:
-            new_order = param1 ? 5 : 2;
+            new_order = button_id ? 5 : 2;
             break;
         case 1:
-            new_order = param1 ? 3 : 4;
+            new_order = button_id ? 3 : 4;
             break;
         case 2:
-            new_order = param1 ? 4 : 0;
+            new_order = button_id ? 4 : 0;
             break;
         case 3:
-            new_order = param1 ? 1 : 5;
+            new_order = button_id ? 1 : 5;
             break;
         case 4:
-            new_order = param1 ? 2 : 1;
+            new_order = button_id ? 2 : 1;
             break;
         case 5:
-            new_order = param1 ? 0 : 3;
+            new_order = button_id ? 0 : 3;
             break;
     }
     city_population_set_graph_order(new_order);

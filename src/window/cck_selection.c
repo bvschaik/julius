@@ -34,7 +34,7 @@
 static void select_scenario(unsigned int index, int is_double_click);
 static void button_start_scenario(int param1, int param2);
 static void button_back(int param1, int param2);
-static void button_toggle_minimap(int param1, int param2);
+static void button_toggle_minimap(const generic_button *button);
 static void draw_scenario_item(const list_box_item *item);
 static void file_tooltip(const list_box_item *item, tooltip_context *c);
 
@@ -44,7 +44,7 @@ static image_button start_button =
 static image_button back_button =
 { 330, 440, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_back, button_none, 1, 0, 1 };
 static generic_button toggle_minimap_button =
-{ 570, 87, 39, 28, button_toggle_minimap, button_none, 0, 0 };
+{ 570, 87, 39, 28, button_toggle_minimap };
 
 static list_box_type list_box = {
     .x = 16,
@@ -298,7 +298,7 @@ static void button_start_scenario(int param1, int param2)
     window_mission_briefing_show();
 }
 
-static void button_toggle_minimap(int param1, int param2)
+static void button_toggle_minimap(const generic_button *button)
 {
     data.show_minimap = !data.show_minimap;
     window_invalidate();

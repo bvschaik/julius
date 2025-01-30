@@ -31,7 +31,7 @@ static struct {
     int selected_formation;
 } data;
 
-static void initialize_new_formation(formation *m, int position)
+static void initialize_new_formation(formation *m, unsigned int position)
 {
     m->id = position;
 }
@@ -62,7 +62,7 @@ void formation_clear(int formation_id)
 formation *formation_create_legion(int building_id, figure_type type)
 {
     formation *m;
-    array_new_item(formations, 1, m);
+    array_new_item_after_index(formations, 1, m);
     if (!m) {
         return array_first(formations);
     }
@@ -93,7 +93,7 @@ formation *formation_create_legion(int building_id, figure_type type)
 static formation *formation_create(figure_type type, int layout, int orientation, int x, int y)
 {
     formation *f;
-    array_new_item(formations, 10, f);
+    array_new_item_after_index(formations, 10, f);
     if (!f) {
         return 0;
     }

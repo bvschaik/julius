@@ -38,7 +38,7 @@
 #include "window/advisor/trade.h"
 #include "window/advisor/housing.h"
 
-static void button_change_advisor(int advisor, int param2);
+static void button_change_advisor(const generic_button *button);
 static void button_help(int param1, int param2);
 
 static image_button help_button = {
@@ -46,20 +46,20 @@ static image_button help_button = {
 };
 
 static generic_button advisor_buttons[ADVISOR_MAX] = {
-    {9, 1, 40, 40, button_change_advisor, button_none, ADVISOR_LABOR, 0},
-    {54, 1, 40, 40, button_change_advisor, button_none, ADVISOR_MILITARY, 0},
-    {99, 1, 40, 40, button_change_advisor, button_none, ADVISOR_IMPERIAL, 0},
-    {144, 1, 40, 40, button_change_advisor, button_none, ADVISOR_RATINGS, 0},
-    {189, 1, 40, 40, button_change_advisor, button_none, ADVISOR_TRADE, 0},
-    {234, 1, 40, 40, button_change_advisor, button_none, ADVISOR_POPULATION, 0},
-    {279, 1, 40, 40, button_change_advisor, button_none, ADVISOR_HOUSING, 0},
-    {324, 1, 40, 40, button_change_advisor, button_none, ADVISOR_HEALTH, 0},
-    {369, 1, 40, 40, button_change_advisor, button_none, ADVISOR_EDUCATION, 0},
-    {414, 1, 40, 40, button_change_advisor, button_none, ADVISOR_ENTERTAINMENT, 0},
-    {459, 1, 40, 40, button_change_advisor, button_none, ADVISOR_RELIGION, 0},
-    {504, 1, 40, 40, button_change_advisor, button_none, ADVISOR_FINANCIAL, 0},
-    {549, 1, 40, 40, button_change_advisor, button_none, ADVISOR_CHIEF, 0},
-    {594, 1, 40, 40, button_change_advisor, button_none, 0, 0},
+    {9, 1, 40, 40, button_change_advisor, 0, ADVISOR_LABOR},
+    {54, 1, 40, 40, button_change_advisor, 0, ADVISOR_MILITARY},
+    {99, 1, 40, 40, button_change_advisor, 0, ADVISOR_IMPERIAL},
+    {144, 1, 40, 40, button_change_advisor, 0, ADVISOR_RATINGS},
+    {189, 1, 40, 40, button_change_advisor, 0, ADVISOR_TRADE},
+    {234, 1, 40, 40, button_change_advisor, 0, ADVISOR_POPULATION},
+    {279, 1, 40, 40, button_change_advisor, 0, ADVISOR_HOUSING},
+    {324, 1, 40, 40, button_change_advisor, 0, ADVISOR_HEALTH},
+    {369, 1, 40, 40, button_change_advisor, 0, ADVISOR_EDUCATION},
+    {414, 1, 40, 40, button_change_advisor, 0, ADVISOR_ENTERTAINMENT},
+    {459, 1, 40, 40, button_change_advisor, 0, ADVISOR_RELIGION},
+    {504, 1, 40, 40, button_change_advisor, 0, ADVISOR_FINANCIAL},
+    {549, 1, 40, 40, button_change_advisor, 0, ADVISOR_CHIEF},
+    {594, 1, 40, 40, button_change_advisor},
 };
 
 static const advisor_window_type *(*sub_advisors[])(void) = {
@@ -249,8 +249,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_change_advisor(int advisor, int param2)
+static void button_change_advisor(const generic_button *button)
 {
+    int advisor = button->parameter1;
     if (advisor) {
         window_advisors_set_advisor(advisor);
         window_invalidate();

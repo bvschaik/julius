@@ -11,7 +11,7 @@
 
 static array(visited_building) visited_buildings;
 
-static void visited_building_create(visited_building *visited, int index)
+static void visited_building_create(visited_building *visited, unsigned int index)
 {
     visited->index = index;
 }
@@ -46,7 +46,7 @@ int figure_visited_buildings_add(int index, int building_id)
         return index;
     }
     visited_building *visited;
-    array_new_item(visited_buildings, 1, visited);
+    array_new_item_after_index(visited_buildings, 1, visited);
     visited->building_id = building_id;
     visited->prev_index = index;
     return visited->index;
@@ -108,7 +108,7 @@ void figure_visited_buildings_migrate(void)
             }
             if (f->building_id & (1 << j)) {
                 visited_building *visited;
-                array_new_item(visited_buildings, 1, visited);
+                array_new_item_after_index(visited_buildings, 1, visited);
                 visited->building_id = dock_id;
                 visited->prev_index = f->last_visited_index;
                 f->last_visited_index = visited->index;

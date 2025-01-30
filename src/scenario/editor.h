@@ -3,58 +3,13 @@
 
 #include <stdint.h>
 
-typedef struct {
-    int year;
-    int resource;
-    int amount;
-    int deadline_years;
-    int favor;
-    int extension_months_to_comply;
-    int extension_disfavor;
-    int ignored_disfavor;
-} editor_request;
-
-typedef struct {
-    int year;
-    int type;
-    int amount;
-    int from;
-    int attack_type;
-} editor_invasion;
-
-typedef struct {
-    int year;
-    int resource;
-    int amount;
-    int is_rise;
-} editor_price_change;
-
-typedef struct {
-    int year;
-    int resource;
-    int route_id;
-    int amount;
-} editor_demand_change;
-
 void scenario_editor_create(int map_size);
 
+int scenario_editor_is_saved(void);
+void scenario_editor_set_as_saved(void);
+void scenario_editor_set_as_unsaved(void);
+
 void scenario_editor_set_native_images(int image_hut, int image_meeting, int image_crops);
-
-void scenario_editor_request_get(int index, editor_request *request);
-void scenario_editor_request_delete(int index);
-void scenario_editor_request_save(int index, editor_request *request);
-
-void scenario_editor_invasion_get(int index, editor_invasion *invasion);
-void scenario_editor_invasion_delete(int index);
-void scenario_editor_invasion_save(int index, editor_invasion *invasion);
-
-void scenario_editor_price_change_get(int index, editor_price_change *price_change);
-void scenario_editor_price_change_delete(int index);
-void scenario_editor_price_change_save(int index, editor_price_change *price_change);
-
-void scenario_editor_demand_change_get(int index, editor_demand_change *demand_change);
-void scenario_editor_demand_change_delete(int index);
-void scenario_editor_demand_change_save(int index, editor_demand_change *demand_change);
 
 void scenario_editor_cycle_image(int forward);
 
@@ -67,10 +22,6 @@ void scenario_editor_set_enemy(int enemy_id);
 void scenario_editor_change_empire(int change);
 void scenario_editor_set_custom_empire(const char *file_name);
 void scenario_editor_unset_custom_empire(void);
-
-int scenario_editor_is_building_allowed(int id);
-
-void scenario_editor_toggle_building_allowed(int id);
 
 void scenario_editor_set_player_rank(int rank);
 void scenario_editor_set_caesar_salary(int salary);

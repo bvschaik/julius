@@ -33,8 +33,8 @@
 
 
 static void on_scroll(void);
-static void button_click(int type, int param2);
-static void button_event(int button_index, int param2);
+static void button_click(const generic_button *button);
+static void button_event(const generic_button *button);
 static void populate_list(int offset);
 
 static scrollbar_type scrollbar = {
@@ -42,17 +42,17 @@ static scrollbar_type scrollbar = {
 };
 
 static generic_button buttons[] = {
-    {48, MESSAGES_Y_OFFSET + (0 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, button_none, 1, 0},
-    {48, MESSAGES_Y_OFFSET + (1 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, button_none, 2, 0},
-    {48, MESSAGES_Y_OFFSET + (2 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, button_none, 3, 0},
-    {48, MESSAGES_Y_OFFSET + (3 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, button_none, 4, 0},
-    {48, MESSAGES_Y_OFFSET + (4 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, button_none, 5, 0},
-    {48, MESSAGES_Y_OFFSET + (5 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, button_none, 6, 0},
-    {48, MESSAGES_Y_OFFSET + (6 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, button_none, 7, 0},
-    {48, MESSAGES_Y_OFFSET + (7 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, button_none, 8, 0},
-    {48, MESSAGES_Y_OFFSET + (9 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 9, 0},
-    {48, MESSAGES_Y_OFFSET + (10 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 10, 0},
-    {48, MESSAGES_Y_OFFSET + (11 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 11, 0}
+    {48, MESSAGES_Y_OFFSET + (0 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, 0, 1},
+    {48, MESSAGES_Y_OFFSET + (1 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, 0, 2},
+    {48, MESSAGES_Y_OFFSET + (2 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, 0, 3},
+    {48, MESSAGES_Y_OFFSET + (3 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, 0, 4},
+    {48, MESSAGES_Y_OFFSET + (4 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, 0, 5},
+    {48, MESSAGES_Y_OFFSET + (5 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, 0, 6},
+    {48, MESSAGES_Y_OFFSET + (6 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, 0, 7},
+    {48, MESSAGES_Y_OFFSET + (7 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_event, 0, 8},
+    {48, MESSAGES_Y_OFFSET + (9 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 9},
+    {48, MESSAGES_Y_OFFSET + (10 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 10},
+    {48, MESSAGES_Y_OFFSET + (11 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 11}
 };
 
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
@@ -139,13 +139,13 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void button_event(int button_index, int param2)
+static void button_event(const generic_button *button)
 {
-    int target_index = button_index - 1;
-    if (!data.list[target_index]) {
+    int index = button->parameter1 - 1;
+    if (!data.list[index]) {
         return;
     };
-    window_message_dialog_show_custom_message(data.list[target_index]->id, 0, 0);
+    window_message_dialog_show_custom_message(data.list[index]->id, 0, 0);
 }
 
 static void on_scroll(void)
@@ -166,8 +166,10 @@ static void handle_input(const mouse *m, const hotkeys *h)
     populate_list(scrollbar.scroll_position);
 }
 
-static void button_click(int type, int param2)
+static void button_click(const generic_button *button)
 {
+    int type = button->parameter1;
+
     if (type == 9) {
         window_file_dialog_show(FILE_TYPE_CUSTOM_MESSAGES, FILE_DIALOG_LOAD);
     } else if (type == 10) {

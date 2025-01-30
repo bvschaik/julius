@@ -43,10 +43,10 @@
 #include "scenario/distant_battle.h"
 #include "scenario/editor.h"
 #include "scenario/empire.h"
+#include "scenario/event/controller.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
-#include "scenario/scenario_events_controller.h"
 #include "sound/city.h"
 #include "sound/music.h"
 
@@ -136,6 +136,8 @@ static void prepare_map_for_editing(void)
     map_natives_init_editor();
     map_routing_update_all();
 
+    scenario_editor_set_as_saved();
+
     city_view_init();
     game_state_unpause();
 }
@@ -170,5 +172,9 @@ int game_file_editor_write_scenario(const char *scenario_file)
     scenario_distant_battle_set_roman_travel_months();
     scenario_distant_battle_set_enemy_travel_months();
 
-    return game_file_io_write_scenario(scenario_file);
+    if (game_file_io_write_scenario(scenario_file)) {
+        scenario_editor_set_as_saved();
+        return 1;
+    }
+    return 0;
 }

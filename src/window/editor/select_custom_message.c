@@ -28,7 +28,7 @@
 
 
 static void on_scroll(void);
-static void button_click(int button_index, int param2);
+static void button_click(const generic_button *button);
 static void populate_list(int offset);
 
 static scrollbar_type scrollbar = {
@@ -36,14 +36,14 @@ static scrollbar_type scrollbar = {
 };
 
 static generic_button buttons[] = {
-    {48, MESSAGES_Y_OFFSET + (0 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 0, 0},
-    {48, MESSAGES_Y_OFFSET + (1 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 1, 0},
-    {48, MESSAGES_Y_OFFSET + (2 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 2, 0},
-    {48, MESSAGES_Y_OFFSET + (3 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 3, 0},
-    {48, MESSAGES_Y_OFFSET + (4 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 4, 0},
-    {48, MESSAGES_Y_OFFSET + (5 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 5, 0},
-    {48, MESSAGES_Y_OFFSET + (6 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 6, 0},
-    {48, MESSAGES_Y_OFFSET + (7 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, button_none, 7, 0},
+    {48, MESSAGES_Y_OFFSET + (0 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 0},
+    {48, MESSAGES_Y_OFFSET + (1 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 1},
+    {48, MESSAGES_Y_OFFSET + (2 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 2},
+    {48, MESSAGES_Y_OFFSET + (3 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 3},
+    {48, MESSAGES_Y_OFFSET + (4 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 4},
+    {48, MESSAGES_Y_OFFSET + (5 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 5},
+    {48, MESSAGES_Y_OFFSET + (6 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 6},
+    {48, MESSAGES_Y_OFFSET + (7 * MESSAGES_ROW_HEIGHT), BUTTON_WIDTH, MESSAGES_ROW_HEIGHT - 2, button_click, 0, 7},
 };
 
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
@@ -120,8 +120,9 @@ static void draw_foreground(void)
     graphics_reset_dialog();
 }
 
-static void button_click(int button_index, int param2)
+static void button_click(const generic_button *button)
 {
+    int button_index = button->parameter1;
     if (!data.list[button_index]) {
         return;
     };

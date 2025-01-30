@@ -9,7 +9,7 @@
 #define FIGURE_FACTION_ROAMER_PREVIEW 2
 
 typedef struct {
-    int id;
+    unsigned int id;
 
     unsigned int image_id;
     unsigned int cart_image_id;

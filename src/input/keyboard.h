@@ -7,8 +7,6 @@
 
 void keyboard_start_capture(uint8_t *text, int max_length, int allow_punctuation, int box_width, font_t font);
 void keyboard_refresh(void);
-void keyboard_resume_capture(void);
-void keyboard_pause_capture(void);
 void keyboard_stop_capture(void);
 
 void keyboard_start_capture_numeric(void (*callback)(int, int));

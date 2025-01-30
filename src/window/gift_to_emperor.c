@@ -2,6 +2,7 @@
 
 #include "city/emperor.h"
 #include "game/resource.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -12,16 +13,16 @@
 #include "input/input.h"
 #include "window/advisors.h"
 
-static void button_set_gift(int gift_id, int param2);
-static void button_send_gift(int param1, int param2);
-static void button_cancel(int param1, int param2);
+static void button_set_gift(const generic_button *button);
+static void button_send_gift(const generic_button *button);
+static void button_cancel(const generic_button *button);
 
 static generic_button buttons[] = {
-    {208, 213, 300, 20, button_set_gift, button_none, 1, 0},
-    {208, 233, 300, 20, button_set_gift, button_none, 2, 0},
-    {208, 253, 300, 20, button_set_gift, button_none, 3, 0},
-    {118, 336, 260, 20, button_send_gift, button_none, 0, 0},
-    {400, 336, 160, 20, button_cancel, button_none, 0, 0},
+    {208, 213, 300, 20, button_set_gift, 0, 1},
+    {208, 233, 300, 20, button_set_gift, 0, 2},
+    {208, 253, 300, 20, button_set_gift, 0, 3},
+    {118, 336, 260, 20, button_send_gift},
+    {400, 336, 160, 20, button_cancel},
 };
 
 static unsigned int focus_button_id;
@@ -97,14 +98,15 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_set_gift(int gift_id, int param2)
+static void button_set_gift(const generic_button *button)
 {
+    int gift_id = button->parameter1;
     if (city_emperor_set_gift_size(gift_id - 1)) {
         window_invalidate();
     }
 }
 
-static void button_send_gift(int param1, int param2)
+static void button_send_gift(const generic_button *button)
 {
     if (city_emperor_can_send_gift(GIFT_MODEST)) {
         city_emperor_send_gift();
@@ -112,7 +114,7 @@ static void button_send_gift(int param1, int param2)
     }
 }
 
-static void button_cancel(int param1, int param2)
+static void button_cancel(const generic_button *button)
 {
     window_advisors_show();
 }

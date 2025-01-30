@@ -25,7 +25,7 @@ typedef struct order {
 } order;
 
 typedef struct building {
-    int id;
+    unsigned int id;
 
     struct building *prev_of_type;
     struct building *next_of_type;

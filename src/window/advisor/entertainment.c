@@ -10,6 +10,7 @@
 #include "city/gods.h"
 #include "city/houses.h"
 #include "core/calc.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -27,10 +28,10 @@
 
 static unsigned int focus_button_id;
 
-static void button_hold_games(int param1, int param2);
+static void button_hold_games(const generic_button *button);
 
 static generic_button hold_games_button[] = {
-    {102, 370, 300, 20, button_hold_games, button_none, 0, 0},
+    {102, 370, 300, 20, button_hold_games},
 };
 
 struct games_text {
@@ -207,7 +208,7 @@ static int handle_mouse(const mouse *m)
     return generic_buttons_handle_mouse(m, 0, 0, hold_games_button, 1, &focus_button_id);
 }
 
-static void button_hold_games(int param1, int param2)
+static void button_hold_games(const generic_button *button)
 {
     window_hold_games_show(0);
 }

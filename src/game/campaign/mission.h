@@ -4,7 +4,7 @@
 #include "game/campaign.h"
 
 typedef struct {
-    int id;
+    unsigned int id;
     const uint8_t *title;
     int first_scenario;
     int last_scenario;

@@ -3,6 +3,7 @@
 #include "core/hotkey_config.h"
 #include "core/image_group.h"
 #include "core/string.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -13,11 +14,11 @@
 
 #define NUM_BOTTOM_BUTTONS 2
 
-static void button_close(int save, int param2);
+static void button_close(const generic_button *button);
 
 static generic_button bottom_buttons[] = {
-    {192, 228, 120, 24, button_close, button_none, 0},
-    {328, 228, 120, 24, button_close, button_none, 1},
+    {192, 228, 120, 24, button_close},
+    {328, 228, 120, 24, button_close, 0, 1},
 };
 
 static translation_key bottom_button_texts[] = {
@@ -86,12 +87,13 @@ static void handle_input(const mouse *m, const hotkeys *h)
     int handled = 0;
     handled |= generic_buttons_handle_mouse(m_dialog, 0, 0, bottom_buttons, NUM_BOTTOM_BUTTONS, &data.focus_button);
     if (!handled && m->right.went_up) {
-        button_close(0, 0);
+        window_go_back();
     }
 }
 
-static void button_close(int ok, int param2)
+static void button_close(const generic_button *button)
 {
+    int ok = button->parameter1;
     // destroy window before callback call, because there may appear another popup window
     // by design new popup window can't be showed over another popup window
     window_go_back();
@@ -103,9 +105,10 @@ static void button_close(int ok, int param2)
 void window_hotkey_editor_key_pressed(key_type key, key_modifier_type modifiers)
 {
     if (key == KEY_TYPE_ENTER && modifiers == KEY_MOD_NONE) {
-        button_close(1, 0);
+        window_go_back();
+        data.callback(data.action, data.index, data.key, data.modifiers);
     } else if (key == KEY_TYPE_ESCAPE && modifiers == KEY_MOD_NONE) {
-        button_close(0, 0);
+        window_go_back();
     } else {
         if (key != KEY_TYPE_NONE) {
             data.key = key;

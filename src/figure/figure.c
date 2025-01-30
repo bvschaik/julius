@@ -39,7 +39,7 @@ int figure_count(void)
 figure *figure_create(figure_type type, int x, int y, direction_type dir)
 {
     figure *f = 0;
-    array_new_item(data.figures, 1, f);
+    array_new_item_after_index(data.figures, 1, f);
     if (!f) {
         return array_first(data.figures);
     }
@@ -227,7 +227,7 @@ int figure_is_herd(const figure *f)
     return f->type >= FIGURE_SHEEP && f->type <= FIGURE_ZEBRA;
 }
 
-static void initialize_new_figure(figure *f, int position)
+static void initialize_new_figure(figure *f, unsigned int position)
 {
     f->id = position;
 }

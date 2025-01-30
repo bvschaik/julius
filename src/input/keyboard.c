@@ -125,19 +125,6 @@ void keyboard_refresh(void)
     update_viewport(1);
 }
 
-void keyboard_resume_capture(void)
-{
-    data.capture = 1;
-    system_start_text_input();
-}
-
-void keyboard_pause_capture(void)
-{
-    data.capture = 0;
-    system_keyboard_hide();
-    system_stop_text_input();
-}
-
 void keyboard_stop_capture(void)
 {
     data.capture = 0;

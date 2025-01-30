@@ -157,23 +157,37 @@ int buffer_at_end(buffer *buffer);
 
 /**
  * Initializes a buffer for saving a dynamic state piece / file piece.
+ * Also stored the actual buffer size at the start of the buffer.
+ *
+ * @param buf Buffer
+ * @param size Size in bytes of the buffer to be saved
+ */
+void buffer_init_dynamic(buffer *buf, uint32_t size);
+
+/**
+ * Initializes a buffer for saving a dynamic state piece / file piece.
+ * Also stored the actual buffer size at the start of the buffer.
+ *
+ * @param buf Buffer
+ * @return The size of the buffer in bytes.
+ */
+uint32_t buffer_load_dynamic(buffer *buf);
+
+/**
+ * Initializes a buffer for saving a dynamic state piece / file piece.
  * Also stored the standard info of the piece at the start of the buffer.
  * Size of the piece in bytes will be calculated as (Standard header size + (array_size * struct_size))
  * @param buf Buffer
- * @param version Version of the piece being saved. Used for backwards compatibility when loading.
  * @param array_size Number of elements in the array. If you are saving only a single struct, then this must be 1.
- * @param struct_size Size in bytes of a single entry of the struct in the array.
+ * @param element_size Size in bytes of a single entry of the array.
  */
-void buffer_init_dynamic_piece(buffer *buf, int32_t version, int32_t array_size, int32_t struct_size);
+void buffer_init_dynamic_array(buffer *buf, uint32_t array_size, uint32_t element_size);
 
 /**
  * Reads the size, version, array_size and struct_size headers from the piece buffer.
  * @param buf Buffer
- * @param size Size of the state piece in bytes.
- * @param version Version of the piece.
- * @param array_size Number of elements in the array.
- * @param struct_size Size in bytes of a single entry of the struct in the array.
+ * @return Number of array items.
  */
-void buffer_load_dynamic_piece_header_data(buffer *buf, int32_t *size, int32_t *version, int32_t *array_size, int32_t *struct_size);
+uint32_t buffer_load_dynamic_array(buffer *buf);
 
 #endif // CORE_BUFFER_H

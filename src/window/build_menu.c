@@ -40,40 +40,40 @@
 
 static uint8_t tooltip_text[TOOLTIP_TEXT_LENGTH];
 
-static void button_menu_index(int param1, int param2);
+static void button_menu_index(const generic_button *button);
 static void button_menu_item(int item);
 
 static generic_button build_menu_buttons[] = {
-    {0, 0, 290, 20, button_menu_index, button_none, 1, 0},
-    {0, 24, 290, 20, button_menu_index, button_none, 2, 0},
-    {0, 48, 290, 20, button_menu_index, button_none, 3, 0},
-    {0, 72, 290, 20, button_menu_index, button_none, 4, 0},
-    {0, 96, 290, 20, button_menu_index, button_none, 5, 0},
-    {0, 120, 290, 20, button_menu_index, button_none, 6, 0},
-    {0, 144, 290, 20, button_menu_index, button_none, 7, 0},
-    {0, 168, 290, 20, button_menu_index, button_none, 8, 0},
-    {0, 192, 290, 20, button_menu_index, button_none, 9, 0},
-    {0, 216, 290, 20, button_menu_index, button_none, 10, 0},
-    {0, 240, 290, 20, button_menu_index, button_none, 11, 0},
-    {0, 264, 290, 20, button_menu_index, button_none, 12, 0},
-    {0, 288, 290, 20, button_menu_index, button_none, 13, 0},
-    {0, 312, 290, 20, button_menu_index, button_none, 14, 0},
-    {0, 336, 290, 20, button_menu_index, button_none, 15, 0},
-    {0, 360, 290, 20, button_menu_index, button_none, 16, 0},
-    {0, 384, 290, 20, button_menu_index, button_none, 17, 0},
-    {0, 408, 290, 20, button_menu_index, button_none, 18, 0},
-    {0, 432, 290, 20, button_menu_index, button_none, 19, 0},
-    {0, 456, 290, 20, button_menu_index, button_none, 20, 0},
-    {0, 480, 290, 20, button_menu_index, button_none, 21, 0},
-    {0, 504, 290, 20, button_menu_index, button_none, 22, 0},
-    {0, 528, 290, 20, button_menu_index, button_none, 23, 0},
-    {0, 552, 290, 20, button_menu_index, button_none, 24, 0},
-    {0, 576, 290, 20, button_menu_index, button_none, 25, 0},
-    {0, 600, 290, 20, button_menu_index, button_none, 26, 0},
-    {0, 624, 290, 20, button_menu_index, button_none, 27, 0},
-    {0, 648, 290, 20, button_menu_index, button_none, 28, 0},
-    {0, 672, 290, 20, button_menu_index, button_none, 29, 0},
-    {0, 696, 290, 20, button_menu_index, button_none, 30, 0},
+    {0, 0, 290, 20, button_menu_index, 0, 1},
+    {0, 24, 290, 20, button_menu_index, 0, 2},
+    {0, 48, 290, 20, button_menu_index, 0, 3},
+    {0, 72, 290, 20, button_menu_index, 0, 4},
+    {0, 96, 290, 20, button_menu_index, 0, 5},
+    {0, 120, 290, 20, button_menu_index, 0, 6},
+    {0, 144, 290, 20, button_menu_index, 0, 7},
+    {0, 168, 290, 20, button_menu_index, 0, 8},
+    {0, 192, 290, 20, button_menu_index, 0, 9},
+    {0, 216, 290, 20, button_menu_index, 0, 10},
+    {0, 240, 290, 20, button_menu_index, 0, 11},
+    {0, 264, 290, 20, button_menu_index, 0, 12},
+    {0, 288, 290, 20, button_menu_index, 0, 13},
+    {0, 312, 290, 20, button_menu_index, 0, 14},
+    {0, 336, 290, 20, button_menu_index, 0, 15},
+    {0, 360, 290, 20, button_menu_index, 0, 16},
+    {0, 384, 290, 20, button_menu_index, 0, 17},
+    {0, 408, 290, 20, button_menu_index, 0, 18},
+    {0, 432, 290, 20, button_menu_index, 0, 19},
+    {0, 456, 290, 20, button_menu_index, 0, 20},
+    {0, 480, 290, 20, button_menu_index, 0, 21},
+    {0, 504, 290, 20, button_menu_index, 0, 22},
+    {0, 528, 290, 20, button_menu_index, 0, 23},
+    {0, 552, 290, 20, button_menu_index, 0, 24},
+    {0, 576, 290, 20, button_menu_index, 0, 25},
+    {0, 600, 290, 20, button_menu_index, 0, 26},
+    {0, 624, 290, 20, button_menu_index, 0, 27},
+    {0, 648, 290, 20, button_menu_index, 0, 28},
+    {0, 672, 290, 20, button_menu_index, 0, 29},
+    {0, 696, 290, 20, button_menu_index, 0, 30},
 };
 
 static const int Y_MENU_OFFSETS[] = {
@@ -284,9 +284,10 @@ static int button_index_to_submenu_item(int index)
     return item;
 }
 
-static void button_menu_index(int param1, int param2)
+static void button_menu_index(const generic_button *button)
 {
-    button_menu_item(button_index_to_submenu_item(param1 - 1));
+    int index = button->parameter1 - 1;
+    button_menu_item(button_index_to_submenu_item(index));
 }
 
 static int set_submenu_for_type(building_type type)

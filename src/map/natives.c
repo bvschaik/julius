@@ -17,7 +17,7 @@
 #include "map/property.h"
 #include "map/random.h"
 #include "map/terrain.h"
-#include "scenario/building.h"
+#include "scenario/data.h" // TODO remove this dependency
 
 static void mark_native_land(int x, int y, int size, int radius)
 {
@@ -77,9 +77,9 @@ static void determine_meeting_center(void)
 
 void map_natives_init(void)
 {
-    int image_hut = scenario_building_image_native_hut();
-    int image_meeting = scenario_building_image_native_meeting();
-    int image_crops = scenario_building_image_native_crops();
+    int image_hut = scenario.native_images.hut;
+    int image_meeting = scenario.native_images.meeting;
+    int image_crops = scenario.native_images.crops;
     int native_image = image_group(GROUP_BUILDING_NATIVE);
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {
@@ -138,9 +138,9 @@ void map_natives_init(void)
 
 void map_natives_init_editor(void)
 {
-    int image_hut = scenario_building_image_native_hut();
-    int image_meeting = scenario_building_image_native_meeting();
-    int image_crops = scenario_building_image_native_crops();
+    int image_hut = scenario.native_images.hut;
+    int image_meeting = scenario.native_images.meeting;
+    int image_crops = scenario.native_images.crops;
     int native_image = image_group(GROUP_EDITOR_BUILDING_NATIVE);
     int grid_offset = map_data.start_offset;
     for (int y = 0; y < map_data.height; y++, grid_offset += map_data.border_size) {

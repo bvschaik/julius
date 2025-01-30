@@ -10,14 +10,14 @@ static struct {
     array(campaign_scenario) scenarios;
 } data;
 
-static void new_mission(campaign_mission *mission, int index)
+static void new_mission(campaign_mission *mission, unsigned int index)
 {
     mission->id = index;
     mission->first_scenario = data.scenarios.size;
     mission->last_scenario = mission->first_scenario - 1;
 }
 
-static void new_scenario(campaign_scenario *scenario, int index)
+static void new_scenario(campaign_scenario *scenario, unsigned int index)
 {
     scenario->id = index;
 }

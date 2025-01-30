@@ -21,15 +21,15 @@ static struct {
     unsigned int focus_button_id;
 } data;
 
-static void button_menu_item(int index, int param2);
+static void button_menu_item(const generic_button *button);
 
 static generic_button menu_buttons[] = {
-    {0, 0, 160, 24, button_menu_item, button_none, 1, 0},
-    {0, 24, 160, 24, button_menu_item, button_none, 2, 0},
-    {0, 48, 160, 24, button_menu_item, button_none, 3, 0},
-    {0, 72, 160, 24, button_menu_item, button_none, 4, 0},
-    {0, 96, 160, 24, button_menu_item, button_none, 5, 0},
-    {0, 120, 160, 24, button_menu_item, button_none, 6, 0},
+    {0, 0, 160, 24, button_menu_item, 0, 1},
+    {0, 24, 160, 24, button_menu_item, 0, 2},
+    {0, 48, 160, 24, button_menu_item, 0, 3},
+    {0, 72, 160, 24, button_menu_item, 0, 4},
+    {0, 96, 160, 24, button_menu_item, 0, 5},
+    {0, 120, 160, 24, button_menu_item, 0, 6},
 };
 
 static int get_sidebar_x_offset(void)
@@ -84,8 +84,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_menu_item(int index, int param2)
+static void button_menu_item(const generic_button *button)
 {
+    int index = button->parameter1;
     int formation_id = formation_for_legion(index);
     const formation *m = formation_get(formation_id);
     city_view_go_to_grid_offset(map_grid_offset(m->x_home, m->y_home));

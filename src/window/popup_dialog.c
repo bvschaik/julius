@@ -20,7 +20,7 @@
 #define PROCEED_TEXT 5
 #define CHECKBOX_CHECK_SIZE 20
 
-static void button_checkbox(int param1, int param2);
+static void button_checkbox(const generic_button *button);
 static void button_ok(int param1, int param2);
 static void button_cancel(int param1, int param2);
 static void confirm(void);
@@ -30,7 +30,7 @@ static image_button buttons[] = {
     {256, 100, 39, 26, IB_NORMAL, GROUP_OK_CANCEL_SCROLL_BUTTONS, 4, button_cancel, button_none, 0, 0, 1},
 };
 
-static generic_button checkbox = { 160, 180, 360, 20, button_checkbox, button_none };
+static generic_button checkbox = { 160, 180, 360, 20, button_checkbox };
 
 static struct {
     int ok_clicked;
@@ -133,7 +133,7 @@ static void button_cancel(int param1, int param2)
     data.close_func(0, 0);
 }
 
-static void button_checkbox(int param1, int param2)
+static void button_checkbox(const generic_button *button)
 {
     data.checked ^= 1;
     window_request_refresh();

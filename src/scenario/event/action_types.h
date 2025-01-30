@@ -1,7 +1,7 @@
 #ifndef ACTION_TYPES_H
 #define ACTION_TYPES_H
 
-#include "scenario/scenario_event_data.h"
+#include "scenario/event/data.h"
 
 int scenario_action_type_change_allowed_buildings_execute(scenario_action_t *action);
 

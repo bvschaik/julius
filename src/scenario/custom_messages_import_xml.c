@@ -7,7 +7,7 @@
 #include "core/xml_parser.h"
 #include "scenario/custom_messages.h"
 #include "scenario/editor.h"
-#include "scenario/scenario_events_parameter_data.h"
+#include "scenario/event/parameter_data.h"
 #include "window/plain_message_dialog.h"
 
 #include <math.h>

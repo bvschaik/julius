@@ -40,6 +40,8 @@ void building_menu_update(void);
 
 int building_menu_count_items(int submenu);
 
+int building_menu_count_all_items(int submenu);
+
 int building_menu_next_index(int submenu, int current_index);
 
 building_type building_menu_type(int submenu, int item);
@@ -54,6 +56,8 @@ int building_menu_is_enabled(building_type type);
  * @return True if the building menu has changed
  */
 int building_menu_has_changed(void);
+
+int building_menu_is_submenu(build_menu_group menu);
 
 int building_menu_get_submenu_for_type(building_type type);
 

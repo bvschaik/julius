@@ -176,23 +176,36 @@ int buffer_at_end(buffer *buf)
     return buf->index >= buf->size;
 }
 
-void buffer_init_dynamic_piece(buffer *buf, int32_t version, int32_t array_size, int32_t struct_size)
+void buffer_init_dynamic(buffer *buf, uint32_t size)
 {
-    int32_t buf_size = (4 * sizeof(int32_t)) + (array_size * struct_size);
-    uint8_t *buf_data = malloc(buf_size);
-    buffer_init(buf, buf_data, buf_size);
-
-    buffer_write_i32(buf, buf_size);
-    buffer_write_i32(buf, version);
-    buffer_write_i32(buf, array_size);
-    buffer_write_i32(buf, struct_size);
+    size += sizeof(uint32_t); // Add space for the buffer size
+    uint8_t *buf_data = malloc(size);
+    buffer_init(buf, buf_data, size);
+    buffer_write_u32(buf, size);
 }
 
-void buffer_load_dynamic_piece_header_data(buffer *buf, int32_t *size, int32_t *version, int32_t *array_size, int32_t *struct_size)
+uint32_t buffer_load_dynamic(buffer *buf)
 {
     buffer_set(buf, 0);
-    *size = buffer_read_i32(buf);
-    *version = buffer_read_i32(buf);
-    *array_size = buffer_read_i32(buf);
-    *struct_size = buffer_read_i32(buf);
+    uint32_t size = buffer_read_u32(buf) - sizeof(uint32_t);
+    return size;
+}
+
+void buffer_init_dynamic_array(buffer *buf, uint32_t array_size, uint32_t element_size)
+{
+    uint32_t buf_size = (3 * sizeof(uint32_t)) + (array_size * element_size);
+    buffer_init_dynamic(buf, buf_size);
+
+    buffer_write_i32(buf, 0); // Skip
+    buffer_write_u32(buf, array_size);
+    buffer_write_u32(buf, element_size);
+}
+
+uint32_t buffer_load_dynamic_array(buffer *buf)
+{
+    buffer_set(buf, 0);
+    buffer_skip(buf, 8); // Skip the buffer size and version
+    uint32_t array_size = buffer_read_u32(buf);
+    buffer_skip(buf, 4); // Skip the element size
+    return array_size;
 }

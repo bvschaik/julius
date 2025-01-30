@@ -11,6 +11,7 @@
 #include "city/gods.h"
 #include "core/image_group.h"
 #include "game/resource.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -25,7 +26,7 @@
 #include "window/city.h"
 #include "window/message_dialog.h"
 
-static void button_game(int god, int param2);
+static void button_game(const generic_button *button);
 static void button_help(int param1, int param2);
 static void button_close(int param1, int param2);
 static void button_hold_games(int param1, int param2);
@@ -41,10 +42,10 @@ static image_button action_button[] = {
 };
 
 static generic_button buttons_games_size[] = {
-    {170, 96, 80, 90, button_game, button_none, 1, 0},
-    {270, 96, 80, 90, button_game, button_none, 2, 0},
-    {370, 96, 80, 90, button_game, button_none, 3, 0},
-    //{370, 96, 80, 90, button_game, button_none, 4, 0},
+    {170, 96, 80, 90, button_game, 0, 1},
+    {270, 96, 80, 90, button_game, 0, 2},
+    {370, 96, 80, 90, button_game, 0, 3},
+    //{370, 96, 80, 90, button_game, 0, 4},
 };
 
 static struct {
@@ -159,9 +160,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_game(int game, int param2)
+static void button_game(const generic_button *button)
 {
-    city_data.games.selected_games_id = game;
+    city_data.games.selected_games_id = button->parameter1;
     window_invalidate();
 }
 

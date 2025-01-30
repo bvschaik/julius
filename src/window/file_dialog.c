@@ -15,6 +15,7 @@
 #include "game/file_editor.h"
 #include "game/file_io.h"
 #include "game/save_version.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -29,8 +30,8 @@
 #include "scenario/editor.h"
 #include "scenario/custom_messages_export_xml.h"
 #include "scenario/custom_messages_import_xml.h"
-#include "scenario/scenario_events_export_xml.h"
-#include "scenario/scenario_events_import_xml.h"
+#include "scenario/event/export_xml.h"
+#include "scenario/event/import_xml.h"
 #include "translation/translation.h"
 #include "widget/input_box.h"
 #include "window/city.h"
@@ -48,7 +49,7 @@
 #define FILTER_TEXT_SIZE 16
 #define MIN_FILTER_SIZE 2
 
-static void button_toggle_sort_type(int param1, int param2);
+static void button_toggle_sort_type(const generic_button *button);
 static void button_ok_cancel(int is_ok, int param2);
 static void input_box_changed(int is_addition_at_end);
 static void draw_file(const list_box_item *item);
@@ -61,7 +62,7 @@ static image_button image_buttons[] = {
 };
 
 static generic_button sort_by_button[] = {
-    {16, 437, 288, 26, button_toggle_sort_type, button_none, 0, 0}
+    {16, 437, 288, 26, button_toggle_sort_type}
 };
 
 typedef struct {
@@ -685,7 +686,7 @@ static void button_ok_cancel(int is_ok, int param2)
     }
 }
 
-static void button_toggle_sort_type(int param1, int param2)
+static void button_toggle_sort_type(const generic_button *button)
 {
     if (data.sort_type == SORT_BY_NAME) {
         data.sort_type = SORT_BY_DATE;

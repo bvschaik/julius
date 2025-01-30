@@ -1,7 +1,30 @@
 #include "condition_handler.h"
 
+#include "core/log.h"
 #include "game/resource.h"
 #include "scenario/condition_types/condition_types.h"
+
+static int condition_in_use(const scenario_condition_t *condition)
+{
+    return condition->type != CONDITION_TYPE_UNDEFINED;
+}
+
+void scenario_condition_group_new(scenario_condition_group_t *group, unsigned int id)
+{
+    // This group has been moved and is not new, no need to setup the array
+    if (group->type == FULFILLMENT_TYPE_ANY) {
+        return;
+    }
+    group->type = id == 0 ? FULFILLMENT_TYPE_ALL : FULFILLMENT_TYPE_ANY;
+    if (!array_init(group->conditions, CONDITION_GROUP_ITEMS_ARRAY_SIZE_STEP, 0, condition_in_use)) {
+        log_error("Unable to allocate enough memory for the scenario condition group. The game will now crash.", 0, 0);
+    }
+}
+
+int scenario_condition_group_in_use(const scenario_condition_group_t *group)
+{
+    return group->type == FULFILLMENT_TYPE_ALL || group->conditions.size > 0;
+}
 
 void scenario_condition_type_init(scenario_condition_t *condition)
 {
@@ -77,22 +100,31 @@ void scenario_condition_type_delete(scenario_condition_t *condition)
     condition->type = CONDITION_TYPE_UNDEFINED;
 }
 
-void scenario_condition_type_save_state(buffer *buf, scenario_condition_t *condition, int link_type, int32_t link_id)
+static void save_conditions_in_group(buffer *buf, const scenario_condition_group_t *group)
 {
-    buffer_write_i16(buf, link_type);
-    buffer_write_i32(buf, link_id);
-    buffer_write_i16(buf, condition->type);
-    buffer_write_i32(buf, condition->parameter1);
-    buffer_write_i32(buf, condition->parameter2);
-    buffer_write_i32(buf, condition->parameter3);
-    buffer_write_i32(buf, condition->parameter4);
-    buffer_write_i32(buf, condition->parameter5);
+    const scenario_condition_t *condition;
+    array_foreach(group->conditions, condition) {
+        buffer_write_i16(buf, condition->type);
+        buffer_write_i32(buf, condition->parameter1);
+        buffer_write_i32(buf, condition->parameter2);
+        buffer_write_i32(buf, condition->parameter3);
+        buffer_write_i32(buf, condition->parameter4);
+        buffer_write_i32(buf, condition->parameter5);
+    }
 }
 
-void scenario_condition_type_load_state(buffer *buf, scenario_condition_t *condition, int *link_type, int32_t *link_id)
+void scenario_condition_group_save_state(buffer *buf, const scenario_condition_group_t *group, int link_type,
+    int32_t link_id)
 {
-    *link_type = buffer_read_i16(buf);
-    *link_id = buffer_read_i32(buf);
+    buffer_write_i16(buf, link_type);
+    buffer_write_u32(buf, link_id);
+    buffer_write_u8(buf, group->type);
+    buffer_write_u32(buf, group->conditions.size);
+    save_conditions_in_group(buf, group);
+}
+
+void scenario_condition_load_state(buffer *buf, scenario_condition_group_t *group, scenario_condition_t *condition)
+{
     condition->type = buffer_read_i16(buf);
     condition->parameter1 = buffer_read_i32(buf);
     condition->parameter2 = buffer_read_i32(buf);
@@ -106,6 +138,23 @@ void scenario_condition_type_load_state(buffer *buf, scenario_condition_t *condi
         condition->parameter1 = resource_remap(condition->parameter1);
     } else if (condition->type == CONDITION_TYPE_RESOURCE_STORAGE_AVAILABLE) {
         condition->parameter1 = resource_remap(condition->parameter1);
+    }
+}
+
+void scenario_condition_group_load_state(buffer *buf, scenario_condition_group_t *group,
+    int *link_type, int32_t *link_id)
+{
+    *link_type = buffer_read_i16(buf);
+    *link_id = buffer_read_u32(buf);
+    group->type = buffer_read_u8(buf);
+    unsigned int total_conditions = buffer_read_u32(buf);
+    if (!array_init(group->conditions, CONDITION_GROUP_ITEMS_ARRAY_SIZE_STEP, 0, condition_in_use) ||
+        !array_expand(group->conditions, total_conditions)) {
+        log_error("Unable to create condition group array. The game will now crash.", 0, 0);
+    }
+    for (unsigned int i = 0; i < total_conditions; i++) {
+        scenario_condition_t *condition = array_next(group->conditions);
+        scenario_condition_load_state(buf, group, condition);
     }
 }
 

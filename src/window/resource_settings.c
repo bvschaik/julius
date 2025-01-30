@@ -15,7 +15,6 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
-#include "scenario/building.h"
 #include "translation/translation.h"
 #include "window/advisor/trade.h"
 #include "window/message_dialog.h"
@@ -25,9 +24,9 @@ static void button_help(int param1, int param2);
 static void button_ok(int param1, int param2);
 static void button_trade_up_down(int trade_type, int is_down);
 
-static void button_toggle_industry(int param1, int param2);
-static void button_toggle_trade(int status, int param2);
-static void button_toggle_stockpile(int param1, int param2);
+static void button_toggle_industry(const generic_button *button);
+static void button_toggle_trade(const generic_button *button);
+static void button_toggle_stockpile(const generic_button *button);
 
 static image_button resource_image_buttons[] = {
     {26, 332, 27, 27, IB_NORMAL, GROUP_CONTEXT_ICONS, 0, button_help, button_none, 0, 0, 1},
@@ -45,10 +44,10 @@ static arrow_button export_amount_arrow_buttons[] = {
 };
 
 static generic_button resource_generic_buttons[] = {
-    {66, 250, 496, 30, button_toggle_industry, button_none, 0, 0},
-    {30, 212, 286, 30, button_toggle_trade, button_none, TRADE_STATUS_IMPORT, 0},
-    {322, 212, 286, 30, button_toggle_trade, button_none, TRADE_STATUS_EXPORT, 0},
-    {66, 288, 496, 50, button_toggle_stockpile, button_none, 0, 0},
+    {66, 250, 496, 30, button_toggle_industry},
+    {30, 212, 286, 30, button_toggle_trade, 0, TRADE_STATUS_IMPORT},
+    {322, 212, 286, 30, button_toggle_trade, 0, TRADE_STATUS_EXPORT},
+    {66, 288, 496, 50, button_toggle_stockpile},
 };
 
 static struct {
@@ -258,15 +257,17 @@ static void button_trade_up_down(int trade_type, int is_down)
     }
 }
 
-static void button_toggle_industry(int param1, int param2)
+static void button_toggle_industry(const generic_button *button)
 {
     if (building_count_total(resource_get_data(data.resource)->industry) > 0) {
         city_resource_toggle_mothballed(data.resource);
     }
 }
 
-static void button_toggle_trade(int status, int param2)
+static void button_toggle_trade(const generic_button *button)
 {
+    int status = button->parameter1;
+
     if (!resource_is_storable(data.resource)) {
         return;
     }
@@ -277,7 +278,7 @@ static void button_toggle_trade(int status, int param2)
     city_resource_cycle_trade_status(data.resource, status);
 }
 
-static void button_toggle_stockpile(int param1, int param2)
+static void button_toggle_stockpile(const generic_button *button)
 {
     if (resource_is_storable(data.resource)) {
         city_resource_toggle_stockpiled(data.resource);

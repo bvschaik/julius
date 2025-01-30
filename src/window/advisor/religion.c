@@ -6,6 +6,7 @@
 #include "city/gods.h"
 #include "city/houses.h"
 #include "game/settings.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -13,10 +14,10 @@
 #include "graphics/text.h"
 #include "window/hold_festival.h"
 
-static void button_hold_festival(int param1, int param2);
+static void button_hold_festival(const generic_button *button);
 
 static generic_button hold_festival_button[] = {
-    {102, 340, 300, 20, button_hold_festival, button_none, 0, 0},
+    {102, 340, 300, 20, button_hold_festival},
 };
 
 static unsigned int focus_button_id;
@@ -177,7 +178,7 @@ static int handle_mouse(const mouse *m)
     return generic_buttons_handle_mouse(m, 0, 0, hold_festival_button, 1, &focus_button_id);
 }
 
-static void button_hold_festival(int param1, int param2)
+static void button_hold_festival(const generic_button *button)
 {
     if (!city_festival_is_planned()) {
         window_hold_festival_show();

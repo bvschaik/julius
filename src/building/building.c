@@ -175,7 +175,7 @@ static void remove_adjacent_types(building *b)
 building *building_create(building_type type, int x, int y)
 {
     building *b;
-    array_new_item(data.buildings, 1, b);
+    array_new_item_after_index(data.buildings, 1, b);
     if (!b) {
         city_warning_show(WARNING_DATA_LIMIT_REACHED, NEW_WARNING_SLOT);
         return array_first(data.buildings);
@@ -584,7 +584,7 @@ void building_totals_add_corrupted_house(int unfixable)
     }
 }
 
-static void initialize_new_building(building *b, int position)
+static void initialize_new_building(building *b, unsigned int position)
 {
     b->id = position;
 }

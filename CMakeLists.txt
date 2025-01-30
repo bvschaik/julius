@@ -61,6 +61,12 @@ if(${TARGET_PLATFORM} STREQUAL "ios")
 endif()
 
 
+# Enable "Edit and Continue" for MSVC
+if (POLICY CMP0141)
+    cmake_policy(SET CMP0141 NEW)
+    set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>")
+endif()
+
 set(SHORT_NAME augustus)
 set(USER_FRIENDLY_NAME Augustus)
 project(${SHORT_NAME} C)
@@ -502,12 +508,13 @@ set(ASSETS_FILES
     ${PROJECT_SOURCE_DIR}/src/assets/xml.c
 )
 set(SCENARIO_FILES
-    ${PROJECT_SOURCE_DIR}/src/scenario/building.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/allowed_building.c
     ${PROJECT_SOURCE_DIR}/src/scenario/criteria.c
     ${PROJECT_SOURCE_DIR}/src/scenario/custom_media.c
     ${PROJECT_SOURCE_DIR}/src/scenario/custom_messages_export_xml.c
     ${PROJECT_SOURCE_DIR}/src/scenario/custom_messages_import_xml.c
     ${PROJECT_SOURCE_DIR}/src/scenario/custom_messages.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/custom_variable.c
     ${PROJECT_SOURCE_DIR}/src/scenario/demand_change.c
     ${PROJECT_SOURCE_DIR}/src/scenario/distant_battle.c
     ${PROJECT_SOURCE_DIR}/src/scenario/earthquake.c
@@ -525,16 +532,16 @@ set(SCENARIO_FILES
     ${PROJECT_SOURCE_DIR}/src/scenario/random_event.c
     ${PROJECT_SOURCE_DIR}/src/scenario/request.c
     ${PROJECT_SOURCE_DIR}/src/scenario/scenario.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/scenario_event.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/scenario_events_import_xml.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/scenario_events_export_xml.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/scenario_events_controller.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/scenario_events_parameter_data.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/action_types/action_handler.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/action_types/action_types.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/condition_types/comparison_helper.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/condition_types/condition_handler.c
-    ${PROJECT_SOURCE_DIR}/src/scenario/condition_types/condition_types.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/event/event.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/event/import_xml.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/event/export_xml.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/event/controller.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/event/parameter_data.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/event/action_handler.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/event/action_types.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/event/condition_comparison_helper.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/event/condition_handler.c
+    ${PROJECT_SOURCE_DIR}/src/scenario/event/condition_types.c
 )
 set(GRAPHICS_FILES
     ${PROJECT_SOURCE_DIR}/src/graphics/arrow_button.c
@@ -859,7 +866,7 @@ if(MSVC)
     set_source_files_properties(${EXPAT_FILES} PROPERTIES COMPILE_FLAGS "/W3")
     set_source_files_properties(${SOURCE_FILES} PROPERTIES COMPILE_FLAGS "/W4")
     set_source_files_properties(${PROJECT_SOURCE_DIR}/res/augustus.rc PROPERTIES COMPILE_FLAGS "")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8 /wd4100 /wd4244")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /utf-8 /wd4100 /wd4244 /we4013")
 endif()
 
 # Show debug info on crash on 32 bit builds compiled with MinGW

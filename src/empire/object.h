@@ -6,7 +6,7 @@
 #include "game/resource.h"
 
 typedef struct {
-    int id;
+    unsigned int id;
     empire_object_type type;
     int animation_index;
     int x;

@@ -9,14 +9,14 @@
 #define MAX_PATH_LENGTH 500
 
 typedef struct {
-    int id;
+    unsigned int id;
     int figure_id;
     uint8_t directions[MAX_PATH_LENGTH];
 } figure_path_data;
 
 static array(figure_path_data) paths;
 
-static void create_new_path(figure_path_data *path, int position)
+static void create_new_path(figure_path_data *path, unsigned int position)
 {
     path->id = position;
 }
@@ -61,7 +61,7 @@ void figure_route_add(figure *f)
         return;
     }
     figure_path_data *path;
-    array_new_item(paths, 0, path);
+    array_new_item(paths, path);
     if (!path) {
         return;
     }

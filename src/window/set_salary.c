@@ -5,6 +5,7 @@
 #include "city/ratings.h"
 #include "city/victory.h"
 #include "game/resource.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/image.h"
@@ -17,22 +18,22 @@
 
 #define MIN_DIALOG_WIDTH 384
 
-static void button_cancel(int param1, int param2);
-static void button_set_salary(int rank, int param2);
+static void button_cancel(const generic_button *button);
+static void button_set_salary(const generic_button *button);
 
 static generic_button buttons[] = {
-    {240, 395, 160, 20, button_cancel, button_none, 0, 0},
-    {144, 85, 352, 20, button_set_salary, button_none, 0, 0},
-    {144, 105, 352, 20, button_set_salary, button_none, 1, 0},
-    {144, 125, 352, 20, button_set_salary, button_none, 2, 0},
-    {144, 145, 352, 20, button_set_salary, button_none, 3, 0},
-    {144, 165, 352, 20, button_set_salary, button_none, 4, 0},
-    {144, 185, 352, 20, button_set_salary, button_none, 5, 0},
-    {144, 205, 352, 20, button_set_salary, button_none, 6, 0},
-    {144, 225, 352, 20, button_set_salary, button_none, 7, 0},
-    {144, 245, 352, 20, button_set_salary, button_none, 8, 0},
-    {144, 265, 352, 20, button_set_salary, button_none, 9, 0},
-    {144, 285, 352, 20, button_set_salary, button_none, 10, 0},
+    {240, 395, 160, 20, button_cancel},
+    {144, 85, 352, 20, button_set_salary, 0, 0},
+    {144, 105, 352, 20, button_set_salary, 0, 1},
+    {144, 125, 352, 20, button_set_salary, 0, 2},
+    {144, 145, 352, 20, button_set_salary, 0, 3},
+    {144, 165, 352, 20, button_set_salary, 0, 4},
+    {144, 185, 352, 20, button_set_salary, 0, 5},
+    {144, 205, 352, 20, button_set_salary, 0, 6},
+    {144, 225, 352, 20, button_set_salary, 0, 7},
+    {144, 245, 352, 20, button_set_salary, 0, 8},
+    {144, 265, 352, 20, button_set_salary, 0, 9},
+    {144, 285, 352, 20, button_set_salary, 0, 10},
 };
 
 static unsigned int focus_button_id;
@@ -93,13 +94,15 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_cancel(int param1, int param2)
+static void button_cancel(const generic_button *button)
 {
     window_advisors_show();
 }
 
-static void button_set_salary(int rank, int param2)
+static void button_set_salary(const generic_button *button)
 {
+    int rank = button->parameter1;
+
     if (!city_victory_has_won()) {
         city_emperor_set_salary_rank(rank);
         city_finance_update_salary();

@@ -1,11 +1,12 @@
 #include "numeric_input.h"
 
 #include "core/string.h"
+#include "game/system.h"
 #include "graphics/color.h"
-#include "graphics/generic_button.h"
 #include "graphics/graphics.h"
 #include "graphics/lang_text.h"
 #include "graphics/panel.h"
+#include "graphics/screen.h"
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "input/input.h"
@@ -14,31 +15,34 @@
 
 #include <limits.h>
 
-static void button_number(int number, int param2);
-static void button_accept(int param1, int param2);
-static void button_negative(int param1, int param2);
-static void button_delete(int param1, int param2);
-static void button_cancel(int param1, int param2);
+#define WIDTH_BLOCKS 8
+#define HEIGHT_BLOCKS 15
+
+static void button_number(const generic_button *button);
+static void button_accept(const generic_button *button);
+static void button_negative(const generic_button *button);
+static void button_delete(const generic_button *button);
+static void button_cancel(const generic_button *button);
 
 static void input_number(int number, int minus);
 static void input_accept(void);
 static void input_delete(void);
 
 static generic_button buttons[] = {
-    {21, 51, 25, 25, button_number, button_none, 1, 0},
-    {51, 51, 25, 25, button_number, button_none, 2, 0},
-    {81, 51, 25, 25, button_number, button_none, 3, 0},
-    {21, 81, 25, 25, button_number, button_none, 4, 0},
-    {51, 81, 25, 25, button_number, button_none, 5, 0},
-    {81, 81, 25, 25, button_number, button_none, 6, 0},
-    {21, 111, 25, 25, button_number, button_none, 7, 0},
-    {51, 111, 25, 25, button_number, button_none, 8, 0},
-    {81, 111, 25, 25, button_number, button_none, 9, 0},
-    {21, 141, 25, 25, button_number, button_none, 0, 0},
-    {51, 141, 25, 25, button_negative, button_none, 0, 0},
-    {51, 171, 55, 25, button_accept, button_none, 1, 0},
-    {21, 201, 25, 25, button_delete, button_none, 1, 0},
-    {51, 201, 55, 25, button_cancel, button_none, 1, 0}
+    {21, 51, 25, 25, button_number, 0, 1},
+    {51, 51, 25, 25, button_number, 0, 2},
+    {81, 51, 25, 25, button_number, 0, 3},
+    {21, 81, 25, 25, button_number, 0, 4},
+    {51, 81, 25, 25, button_number, 0, 5},
+    {81, 81, 25, 25, button_number, 0, 6},
+    {21, 111, 25, 25, button_number, 0, 7},
+    {51, 111, 25, 25, button_number, 0, 8},
+    {81, 111, 25, 25, button_number, 0, 9},
+    {21, 141, 25, 25, button_number, 0, 0},
+    {51, 141, 25, 25, button_negative},
+    {51, 171, 55, 25, button_accept},
+    {21, 201, 25, 25, button_delete},
+    {51, 201, 55, 25, button_cancel}
 };
 
 static struct {
@@ -55,11 +59,38 @@ static struct {
     unsigned int focus_button_id;
 } data;
 
-static void init(int x, int y, int max_digits, int min_value, int max_value, void (*callback)(int))
+static void determine_offsets(int x, int y, const generic_button *button)
+{
+    x += screen_dialog_offset_x();
+    y += screen_dialog_offset_y();
+
+    if (!button) {
+        data.x = x;
+        data.y = y;
+        return;
+    }
+
+    data.x = x + button->x;
+    data.y = y + button->y;
+
+    if (data.x + WIDTH_BLOCKS * BLOCK_SIZE > screen_width()) {
+        data.x -= WIDTH_BLOCKS * BLOCK_SIZE - button->width;
+    }
+
+    if (data.y + button->height + HEIGHT_BLOCKS * BLOCK_SIZE > screen_height()) {
+        data.y -= HEIGHT_BLOCKS * BLOCK_SIZE;
+    } else {
+        data.y += button->height;
+    }
+}
+
+static void init(int x, int y, const generic_button *button, int max_digits,
+    int min_value, int max_value, void (*callback)(int))
 {
     data.is_negative_value = 0;
-    data.x = x;
-    data.y = y;
+
+    determine_offsets(x, y, button);
+    
     data.max_digits = max_digits;
     if (!min_value && !max_value) {
         data.min_value = INT_MIN;
@@ -73,11 +104,13 @@ static void init(int x, int y, int max_digits, int min_value, int max_value, voi
     data.value = 0;
     data.focus_button_id = 0;
     keyboard_start_capture_numeric(input_number);
+    system_keyboard_set_input_rect(data.x + 16, data.y + 16, 96, 30);
 }
 
 static void close(void)
 {
     keyboard_stop_capture_numeric();
+    system_keyboard_set_input_rect(0, 0, 0, 0);
     window_go_back();
 }
 
@@ -93,7 +126,7 @@ static void draw_number_button(int x, int y, int number, int is_selected)
 
 static void draw_foreground(void)
 {
-    outer_panel_draw(data.x, data.y, 8, 15);
+    outer_panel_draw(data.x, data.y, WIDTH_BLOCKS, HEIGHT_BLOCKS);
 
     graphics_fill_rect(data.x + 16, data.y + 16, 96, 30, COLOR_BLACK);
     if (data.num_digits > 0) {
@@ -112,19 +145,35 @@ static void draw_foreground(void)
     draw_number_button(data.x + 21, data.y + 141, 0, data.focus_button_id == 10);
 
     if (data.min_value < 0) {
-        graphics_draw_rect(data.x + 51, data.y + 141, 25, 25, data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
-        text_draw_centered(string_from_ascii("-"), data.x + 51, data.y + 147, 25, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        graphics_draw_rect(data.x + 51, data.y + 141, 25, 25,
+            data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
+        text_draw_centered(string_from_ascii("-"), data.x + 51, data.y + 147, 25, FONT_NORMAL_PLAIN,
+            data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
     }
     
     graphics_draw_rect(data.x + 51, data.y + 171, 55, 25, data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
     lang_text_draw_centered_colored(44, 16, data.x + 51, data.y + 177, 55, FONT_NORMAL_PLAIN,
-            data.focus_button_id == 11 ? COLOR_FONT_BLUE : COLOR_BLACK);
+            data.focus_button_id == 12 ? COLOR_FONT_BLUE : COLOR_BLACK);
 
-    graphics_draw_rect(data.x + 21, data.y + 201, 25, 25, data.focus_button_id == 13 ? COLOR_FONT_BLUE : COLOR_BLACK);
-    text_draw_centered(string_from_ascii("X"), data.x + 21, data.y + 207, 25, FONT_NORMAL_PLAIN, COLOR_RED);
+    if (data.focus_button_id == 13) {
+        graphics_fill_rect(data.x + 21, data.y + 201, 25, 25, COLOR_RED);
+    } else {
+        graphics_draw_rect(data.x + 21, data.y + 201, 25, 25, COLOR_BLACK);
+    }
+
+    text_draw_centered(string_from_ascii("X"), data.x + 22, data.y + 207, 25, FONT_NORMAL_PLAIN,
+        data.focus_button_id == 13 ? COLOR_WHITE : COLOR_RED);
     graphics_draw_rect(data.x + 51, data.y + 201, 55, 25, data.focus_button_id == 14 ? COLOR_FONT_BLUE : COLOR_BLACK);
     lang_text_draw_centered_colored(44, 17, data.x + 51, data.y + 207, 55, FONT_NORMAL_PLAIN,
             data.focus_button_id == 14 ? COLOR_FONT_BLUE : COLOR_BLACK);
+}
+
+static int click_outside_window(const mouse *m)
+{
+    int width = WIDTH_BLOCKS * BLOCK_SIZE;
+    int height = HEIGHT_BLOCKS * BLOCK_SIZE;
+
+    return m->left.went_up && (m->x < data.x || m->x >= data.x + width || m->y < data.y || m->y >= data.y + height);
 }
 
 static void handle_input(const mouse *m, const hotkeys *h)
@@ -132,7 +181,7 @@ static void handle_input(const mouse *m, const hotkeys *h)
     if (generic_buttons_handle_mouse(m, data.x, data.y, buttons, 14, &data.focus_button_id)) {
         return;
     }
-    if (input_go_back_requested(m, h)) {
+    if (input_go_back_requested(m, h) || click_outside_window(m)) {
         close();
     }
     if (h->enter_pressed) {
@@ -143,12 +192,13 @@ static void handle_input(const mouse *m, const hotkeys *h)
     }
 }
 
-static void button_number(int number, int param2)
+static void button_number(const generic_button *button)
 {
+    int number = button->parameter1;
     input_number(number, 0);
 }
 
-static void button_accept(int param1, int param2)
+static void button_accept(const generic_button *button)
 {
     input_accept();
 }
@@ -163,17 +213,17 @@ static void input_negative(void)
     }
 }
 
-static void button_negative(int param1, int param2)
+static void button_negative(const generic_button *button)
 {
     input_negative();
 }
 
-static void button_delete(int param1, int param2)
+static void button_delete(const generic_button *button)
 {
     input_delete();
 }
 
-static void button_cancel(int param1, int param2)
+static void button_cancel(const generic_button *button)
 {
     close();
 }
@@ -218,12 +268,14 @@ static void input_delete(void)
     }
 }
 
-void window_numeric_input_show(int x, int y, int max_digits, int max_value, void (*callback)(int))
+void window_numeric_input_show(int x, int y, const generic_button *button,
+    int max_digits, int max_value, void (*callback)(int))
 {
-    window_numeric_input_bound_show(x, y, max_digits, 0, max_value, callback);
+    window_numeric_input_bound_show(x, y, button, max_digits, 0, max_value, callback);
 }
 
-void window_numeric_input_bound_show(int x, int y, int max_digits, int min_value, int max_value, void (*callback)(int))
+void window_numeric_input_bound_show(int x, int y, const generic_button *button, int max_digits,
+    int min_value, int max_value, void (*callback)(int))
 {
     window_type window = {
         WINDOW_NUMERIC_INPUT,
@@ -231,6 +283,6 @@ void window_numeric_input_bound_show(int x, int y, int max_digits, int min_value
         draw_foreground,
         handle_input,
     };
-    init(x, y, max_digits, min_value, max_value, callback);
+    init(x, y, button, max_digits, min_value, max_value, callback);
     window_show(&window);
 }

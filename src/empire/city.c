@@ -20,7 +20,7 @@
 #include "game/campaign.h"
 #include "game/resource.h"
 #include "game/save_version.h"
-#include "scenario/building.h"
+#include "scenario/allowed_building.h"
 #include "scenario/empire.h"
 #include "scenario/map.h"
 #include "scenario/property.h"
@@ -157,14 +157,14 @@ int empire_can_produce_resource_locally(int resource)
     // Wine can also be produced via Venus Grand Temple
     if (resource == RESOURCE_WINE) {
         return !building_monument_requires_resource(BUILDING_GRAND_TEMPLE_VENUS, RESOURCE_WINE) &&
-            scenario_building_allowed(BUILDING_MENU_GRAND_TEMPLES) &&
-            scenario_building_allowed(BUILDING_GRAND_TEMPLE_VENUS) &&
+            scenario_allowed_building(BUILDING_MENU_GRAND_TEMPLES) &&
+            scenario_allowed_building(BUILDING_GRAND_TEMPLE_VENUS) &&
             building_monument_has_required_resources_to_build(BUILDING_GRAND_TEMPLE_VENUS);
     }
     // Gold can also be produced via City Mint
     if (resource == RESOURCE_GOLD) {
         return !building_monument_requires_resource(BUILDING_CITY_MINT, RESOURCE_GOLD) &&
-            scenario_building_allowed(BUILDING_CITY_MINT) &&
+            scenario_allowed_building(BUILDING_CITY_MINT) &&
             building_monument_has_required_resources_to_build(BUILDING_CITY_MINT);
     }
     return 0;
@@ -618,7 +618,7 @@ void empire_city_update_trading_data(int empire_id)
             if (city->type == EMPIRE_CITY_OURS) {
                 if (city->sells_resource[RESOURCE_FISH]) {
                     empire_city_change_selling_of_resource(city, RESOURCE_MEAT, !NOT_SELLING);
-                } else if (scenario_building_allowed(BUILDING_WHARF)) {
+                } else if (scenario_allowed_building(BUILDING_WHARF)) {
                     empire_city_change_selling_of_resource(city, RESOURCE_FISH, !NOT_SELLING);
                 }
             }

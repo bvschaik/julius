@@ -1,7 +1,5 @@
 #include "generic_button.h"
 
-#include "graphics/lang_text.h"
-
 static unsigned int get_button(const mouse *m, int x, int y, generic_button *buttons, unsigned int num_buttons)
 {
     for (unsigned int i = 0; i < num_buttons; i++) {
@@ -27,11 +25,19 @@ int generic_buttons_handle_mouse(const mouse *m, int x, int y, generic_button *b
     }
     generic_button *button = &buttons[button_id - 1];
     if (m->left.went_up) {
-        button->left_click_handler(button->parameter1, button->parameter2);
-        return button->left_click_handler != button_none;
+        if (button->left_click_handler) {
+            button->left_click_handler(button);
+            return 1;
+        } else {
+            return 0;
+        }
     } else if (m->right.went_up) {
-        button->right_click_handler(button->parameter1, button->parameter2);
-        return button->right_click_handler != button_none;
+        if (button->right_click_handler) {
+            button->right_click_handler(button);
+            return 1;
+        } else {
+            return 0;
+        }
     } else {
         return 0;
     }

@@ -22,7 +22,7 @@
 
 static array(data_storage) storages;
 
-static void storage_create(data_storage *storage, int position)
+static void storage_create(data_storage *storage, unsigned int position)
 {
     storage->id = position;
 }
@@ -75,7 +75,7 @@ void building_storage_reset_building_ids(void)
 int building_storage_create(int building_id)
 {
     data_storage *storage;
-    array_new_item(storages, 1, storage);
+    array_new_item_after_index(storages, 1, storage);
     if (!storage) {
         return 0;
     }

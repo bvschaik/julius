@@ -4,6 +4,7 @@
 #include "city/labor.h"
 #include "core/calc.h"
 #include "graphics/arrow_button.h"
+#include "graphics/button.h"
 #include "graphics/generic_button.h"
 #include "graphics/image.h"
 #include "graphics/lang_text.h"
@@ -15,18 +16,18 @@
 #define ADVISOR_HEIGHT 26
 
 static void arrow_button_wages(int is_down, int param2);
-static void button_priority(int category, int param2);
+static void button_priority(const generic_button *button);
 
 static generic_button category_buttons[] = {
-    {40, 77, 560, 22, button_priority, button_none, 0, 0},
-    {40, 102, 560, 22, button_priority, button_none, 1, 0},
-    {40, 127, 560, 22, button_priority, button_none, 2, 0},
-    {40, 152, 560, 22, button_priority, button_none, 3, 0},
-    {40, 177, 560, 22, button_priority, button_none, 4, 0},
-    {40, 202, 560, 22, button_priority, button_none, 5, 0},
-    {40, 227, 560, 22, button_priority, button_none, 6, 0},
-    {40, 252, 560, 22, button_priority, button_none, 7, 0},
-    {40, 277, 560, 22, button_priority, button_none, 8, 0},
+    {40, 77, 560, 22, button_priority},
+    {40, 102, 560, 22, button_priority, 0, 1},
+    {40, 127, 560, 22, button_priority, 0, 2},
+    {40, 152, 560, 22, button_priority, 0, 3},
+    {40, 177, 560, 22, button_priority, 0, 4},
+    {40, 202, 560, 22, button_priority, 0, 5},
+    {40, 227, 560, 22, button_priority, 0, 6},
+    {40, 252, 560, 22, button_priority, 0, 7},
+    {40, 277, 560, 22, button_priority, 0, 8},
 };
 
 static arrow_button wage_buttons[] = {
@@ -113,8 +114,9 @@ static void arrow_button_wages(int is_down, int param2)
     window_invalidate();
 }
 
-static void button_priority(int category, int param2)
+static void button_priority(const generic_button *button)
 {
+    int category = button->parameter1;
     window_labor_priority_show(category);
 }
 

@@ -46,18 +46,23 @@
 #include "map/sprite.h"
 #include "map/terrain.h"
 #include "map/tiles.h"
+#include "scenario/allowed_building.h"
 #include "scenario/criteria.h"
 #include "scenario/custom_media.h"
 #include "scenario/custom_messages.h"
+#include "scenario/custom_variable.h"
+#include "scenario/demand_change.h"
 #include "scenario/earthquake.h"
 #include "scenario/emperor_change.h"
 #include "scenario/empire.h"
+#include "scenario/event/controller.h"
 #include "scenario/gladiator_revolt.h"
 #include "scenario/invasion.h"
 #include "scenario/map.h"
 #include "scenario/message_media_text_blob.h"
+#include "scenario/price_change.h"
+#include "scenario/request.h"
 #include "scenario/scenario.h"
-#include "scenario/scenario_events_controller.h"
 #include "sound/city.h"
 #include "widget/minimap.h"
 
@@ -86,12 +91,17 @@ typedef struct {
     buffer *random_iv;
     buffer *camera;
     buffer *scenario;
-    buffer *scenario_requests;
     buffer *scenario_events;
     buffer *scenario_conditions;
     buffer *scenario_actions;
     buffer *custom_messages;
     buffer *custom_media;
+    buffer *requests;
+    buffer *invasions;
+    buffer *demand_changes;
+    buffer *price_changes;
+    buffer *allowed_buildings;
+    buffer *custom_variables;
     buffer *message_media_text_blob;
     buffer *message_media_metadata;
     buffer *empire;
@@ -102,7 +112,7 @@ typedef struct {
 static struct {
     scenario_version_t version;
     int num_pieces;
-    file_piece pieces[21];
+    file_piece pieces[sizeof(scenario_state) / sizeof(buffer *) + 1];
     scenario_state state;
 } scenario_data;
 
@@ -151,12 +161,17 @@ typedef struct {
     buffer *figure_names;
     buffer *culture_coverage;
     buffer *scenario;
-    buffer *scenario_requests;
     buffer *scenario_events;
     buffer *scenario_conditions;
     buffer *scenario_actions;
     buffer *custom_messages;
     buffer *custom_media;
+    buffer *requests;
+    buffer *invasions;
+    buffer *demand_changes;
+    buffer *price_changes;
+    buffer *allowed_buildings;
+    buffer *custom_variables;
     buffer *message_media_text_blob;
     buffer *message_media_metadata;
     buffer *max_game_year;
@@ -224,7 +239,6 @@ typedef struct {
         int monument_deliveries;
         int enemy_armies;
         int scenario;
-        int scenario_requests;
         int graph_order;
         int city_data;
         int empire_cities;
@@ -232,6 +246,7 @@ typedef struct {
         int trade_route_limit;
         int trade_route_traded;
         int figure_traders;
+        int invasion_warnings;
     } piece_sizes;
     struct {
         int culture1;
@@ -248,7 +263,7 @@ typedef struct {
         int custom_empires;
         int custom_empire_map_image;
         int scenario_version;
-        int scenario_requests;
+        int requests;
         int scenario_events;
         int scenario_conditions;
         int scenario_actions;
@@ -258,6 +273,7 @@ typedef struct {
         int static_building_counts;
         int visited_buildings;
         int custom_campaigns;
+        int dynamic_scenario_objects;
     } features;
 } savegame_version_data;
 
@@ -343,7 +359,14 @@ static void init_scenario_data(scenario_version_t version)
     int scenario_piece_size = scenario_get_state_buffer_size_by_scenario_version(version);
     state->scenario = create_scenario_piece(scenario_piece_size, 0);
     if (version > SCENARIO_LAST_NO_EXTENDED_REQUESTS) {
-        state->scenario_requests = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->requests = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
+    }
+    if (version > SCENARIO_LAST_STATIC_ORIGINAL_DATA) {
+        state->invasions = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->demand_changes = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->price_changes = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->allowed_buildings = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->custom_variables = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
     }
     if (version > SCENARIO_LAST_NO_EVENTS) {
         state->scenario_events = create_scenario_piece(PIECE_SIZE_DYNAMIC, 1);
@@ -426,6 +449,12 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
     }
     version_data->piece_sizes.figure_traders = 1604 + 100 * 2 * resource_total_mapped();
 
+    if (version > SAVE_GAME_LAST_STATIC_SCENARIO_ORIGINAL_DATA) {
+        version_data->piece_sizes.invasion_warnings = PIECE_SIZE_DYNAMIC;
+    } else {
+        version_data->piece_sizes.invasion_warnings = 3232;
+    }
+
     version_data->building_counts.culture1 = 132 * count_multiplier;
     version_data->building_counts.culture2 = 32 * count_multiplier;
     version_data->building_counts.culture3 = 40 * count_multiplier;
@@ -443,14 +472,7 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
     } else {
         version_data->features.custom_empires = 1;
     }
-
-    if (version > SAVE_GAME_LAST_NO_EXTENDED_REQUESTS) {
-        version_data->piece_sizes.scenario_requests = PIECE_SIZE_DYNAMIC;
-        version_data->features.scenario_requests = 1;
-    } else {
-        version_data->piece_sizes.scenario_requests = 1;
-        version_data->features.scenario_requests = 0;
-    }
+    version_data->features.requests = version > SAVE_GAME_LAST_NO_EXTENDED_REQUESTS;
 
     if (version > SAVE_GAME_LAST_NO_EVENTS) {
         version_data->features.scenario_events = 1;
@@ -475,6 +497,7 @@ static void get_version_data(savegame_version_data *version_data, savegame_versi
     version_data->features.static_building_counts = version <= SAVE_GAME_LAST_GLOBAL_BUILDING_INFO;
     version_data->features.visited_buildings = version > SAVE_GAME_LAST_GLOBAL_BUILDING_INFO;
     version_data->features.custom_campaigns = version > SAVE_GAME_LAST_NO_CUSTOM_CAMPAIGNS;
+    version_data->features.dynamic_scenario_objects = version > SAVE_GAME_LAST_STATIC_SCENARIO_ORIGINAL_DATA;
 }
 
 static void init_savegame_data(savegame_version_t version)
@@ -545,8 +568,15 @@ static void init_savegame_data(savegame_version_t version)
     state->figure_names = create_savegame_piece(84, 0);
     state->culture_coverage = create_savegame_piece(60, 0);
     state->scenario = create_savegame_piece(version_data.piece_sizes.scenario, 0);
-    if (version_data.features.scenario_requests) {
-        state->scenario_requests = create_savegame_piece(version_data.piece_sizes.scenario_requests, 0);
+    if (version_data.features.requests) {
+        state->requests = create_savegame_piece(PIECE_SIZE_DYNAMIC, 0);
+    }
+    if (version_data.features.dynamic_scenario_objects) {
+        state->invasions = create_savegame_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->demand_changes = create_savegame_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->price_changes = create_savegame_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->allowed_buildings = create_savegame_piece(PIECE_SIZE_DYNAMIC, 1);
+        state->custom_variables = create_savegame_piece(PIECE_SIZE_DYNAMIC, 1);
     }
     if (version_data.features.scenario_events) {
         state->scenario_events = create_savegame_piece(PIECE_SIZE_DYNAMIC, 0);
@@ -574,7 +604,7 @@ static void init_savegame_data(savegame_version_t version)
     state->building_list_burning_totals = create_savegame_piece(version_data.piece_sizes.burning_totals, 0);
     state->figure_sequence = create_savegame_piece(4, 0);
     state->scenario_settings = create_savegame_piece(12, 0);
-    state->invasion_warnings = create_savegame_piece(3232, 1);
+    state->invasion_warnings = create_savegame_piece(version_data.piece_sizes.invasion_warnings, 1);
     state->scenario_is_custom = create_savegame_piece(4, 0);
     state->city_sounds = create_savegame_piece(8960, 0);
     state->building_extra_highest_id = create_savegame_piece(4, 0);
@@ -647,9 +677,20 @@ static void scenario_load_from_state(scenario_state *file, scenario_version_t ve
         message_media_text_blob_load_state(file->message_media_text_blob, file->message_media_metadata);
         custom_messages_load_state(file->custom_messages, file->custom_media);
     }
-    scenario_load_state(file->scenario, file->scenario_requests, version);
+    scenario_load_state(file->scenario, version);
+    if (version > SCENARIO_LAST_NO_EXTENDED_REQUESTS) {
+        scenario_request_load_state(file->requests, version);
+    }
+    if (version > SCENARIO_LAST_STATIC_ORIGINAL_DATA) {
+        scenario_invasion_load_state(file->invasions);
+        scenario_demand_change_load_state(file->demand_changes);
+        scenario_price_change_load_state(file->price_changes);
+        scenario_allowed_building_load_state(file->allowed_buildings);
+        scenario_custom_variable_load_state(file->custom_variables);
+    }
     if (version > SCENARIO_LAST_NO_EVENTS) {
-        scenario_events_load_state(file->scenario_events, file->scenario_conditions, file->scenario_actions);
+        scenario_events_load_state(file->scenario_events, file->scenario_conditions, file->scenario_actions,
+            version > SCENARIO_LAST_STATIC_ORIGINAL_DATA);
     } else {
         scenario_events_clear();
     }
@@ -676,7 +717,12 @@ static void scenario_save_to_state(scenario_state *file)
     city_view_save_scenario_state(file->camera);
     random_save_state(file->random_iv);
     scenario_save_state(file->scenario);
-    scenario_requests_save_state(file->scenario_requests);
+    scenario_request_save_state(file->requests);
+    scenario_invasion_save_state(file->invasions);
+    scenario_demand_change_save_state(file->demand_changes);
+    scenario_price_change_save_state(file->price_changes);
+    scenario_allowed_building_save_state(file->allowed_buildings);
+    scenario_custom_variable_save_state(file->custom_variables);
     scenario_events_save_state(file->scenario_events, file->scenario_conditions, file->scenario_actions);
     custom_messages_save_state(file->custom_messages);
     custom_media_save_state(file->custom_media);
@@ -715,9 +761,23 @@ static void savegame_load_from_state(savegame_state *state, savegame_version_t v
         message_media_text_blob_load_state(state->message_media_text_blob, state->message_media_metadata);
         custom_messages_load_state(state->custom_messages, state->custom_media);
     }
-    scenario_load_state(state->scenario, state->scenario_requests, scenario_version);
+    scenario_load_state(state->scenario, scenario_version);
+
+    if (scenario_version > SCENARIO_LAST_NO_EXTENDED_REQUESTS) {
+        scenario_request_load_state(state->requests, scenario_version);
+    }
+
+    if (scenario_version > SCENARIO_LAST_STATIC_ORIGINAL_DATA) {
+        scenario_invasion_load_state(state->invasions);
+        scenario_demand_change_load_state(state->demand_changes);
+        scenario_price_change_load_state(state->price_changes);
+        scenario_allowed_building_load_state(state->allowed_buildings);
+        scenario_custom_variable_load_state(state->custom_variables);
+    }
+
     if (scenario_version > SCENARIO_LAST_NO_EVENTS) {
-        scenario_events_load_state(state->scenario_events, state->scenario_conditions, state->scenario_actions);
+        scenario_events_load_state(state->scenario_events, state->scenario_conditions, state->scenario_actions,
+            scenario_version > SCENARIO_LAST_STATIC_ORIGINAL_DATA);
     } else {
         scenario_events_clear();
     }
@@ -779,7 +839,8 @@ static void savegame_load_from_state(savegame_state *state, savegame_version_t v
     trade_routes_load_state(state->trade_route_limit, state->trade_route_traded, version);
     map_routing_load_state(state->routing_counters);
     enemy_armies_load_state(state->enemy_armies, state->enemy_army_totals);
-    scenario_invasion_load_state(state->last_invasion_id, state->invasion_warnings);
+    scenario_invasion_warning_load_state(state->last_invasion_id, state->invasion_warnings,
+        version > SAVE_GAME_LAST_STATIC_SCENARIO_ORIGINAL_DATA);
     map_bookmark_load_state(state->bookmarks);
 
     buffer_skip(state->end_marker, 284);
@@ -853,7 +914,12 @@ static void savegame_save_to_state(savegame_state *state)
     city_culture_save_state(state->culture_coverage);
 
     scenario_save_state(state->scenario);
-    scenario_requests_save_state(state->scenario_requests);
+    scenario_request_save_state(state->requests);
+    scenario_invasion_save_state(state->invasions);
+    scenario_demand_change_save_state(state->demand_changes);
+    scenario_price_change_save_state(state->price_changes);
+    scenario_allowed_building_save_state(state->allowed_buildings);
+    scenario_custom_variable_save_state(state->custom_variables);
     scenario_events_save_state(state->scenario_events, state->scenario_conditions, state->scenario_actions);
     custom_messages_save_state(state->custom_messages);
     custom_media_save_state(state->custom_media);
@@ -877,7 +943,7 @@ static void savegame_save_to_state(savegame_state *state)
     trade_routes_save_state(state->trade_route_limit, state->trade_route_traded);
     map_routing_save_state(state->routing_counters);
     enemy_armies_save_state(state->enemy_armies, state->enemy_army_totals);
-    scenario_invasion_save_state(state->last_invasion_id, state->invasion_warnings);
+    scenario_invasion_warning_save_state(state->last_invasion_id, state->invasion_warnings);
     map_bookmark_save_state(state->bookmarks);
 
     buffer_skip(state->end_marker, 284);
@@ -1185,7 +1251,11 @@ static int read_scenario_info(saved_game_info *info)
     scenario_description_from_buffer(state->scenario, info->description, scenario_data.version);
     info->image_id = scenario_image_id_from_buffer(state->scenario, scenario_data.version);
     info->climate = scenario_climate_from_buffer(state->scenario, scenario_data.version);
-    info->total_invasions = scenario_invasions_from_buffer(state->scenario, scenario_data.version);
+    if (scenario_data.version <= SCENARIO_LAST_STATIC_ORIGINAL_DATA) {
+        info->total_invasions = scenario_invasions_from_buffer(state->scenario, scenario_data.version);
+    } else {
+        info->total_invasions = scenario_invasions_from_buffer(state->invasions, scenario_data.version);
+    }
     info->player_rank = scenario_rank_from_buffer(state->scenario, scenario_data.version);
     info->start_year = scenario_start_year_from_buffer(state->scenario, scenario_data.version);
     scenario_open_play_info_from_buffer(state->scenario, scenario_data.version,
@@ -1550,7 +1620,11 @@ static savegame_load_status savegame_read_file_info(saved_game_info *info, saveg
     scenario_description_from_buffer(state->scenario, info->description, version);
     info->image_id = scenario_image_id_from_buffer(state->scenario, version);
     info->climate = scenario_climate_from_buffer(state->scenario, version);
-    info->total_invasions = scenario_invasions_from_buffer(state->scenario, version);
+    if (scenario_version <= SCENARIO_LAST_STATIC_ORIGINAL_DATA) {
+        info->total_invasions = scenario_invasions_from_buffer(state->scenario, scenario_version);
+    } else {
+        info->total_invasions = scenario_invasions_from_buffer(state->invasions, scenario_version);
+    }
     info->player_rank = scenario_rank_from_buffer(state->scenario, version);
     info->start_year = scenario_start_year_from_buffer(state->scenario, version);
     scenario_open_play_info_from_buffer(state->scenario, version, &info->is_open_play, &info->open_play_id);
