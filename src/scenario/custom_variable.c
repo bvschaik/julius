@@ -177,4 +177,5 @@ void scenario_custom_variable_load_state_old_version(buffer *buf)
         message_media_text_blob_mark_entry_as_unused(text);
     }
     array_trim(custom_variables);
+    message_media_text_blob_remove_unused();
 }
