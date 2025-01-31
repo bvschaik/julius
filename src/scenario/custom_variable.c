@@ -162,6 +162,10 @@ void scenario_custom_variable_load_state_old_version(buffer *buf)
         variable->in_use = buffer_read_u8(buf);
         variable->value = buffer_read_i32(buf);
         int name_link = buffer_read_i32(buf);
+        if (!variable->in_use) {
+            name_link = 0;
+            variable->value = 0;
+        }
         if (!name_link) {
             continue;
         }
