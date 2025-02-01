@@ -174,7 +174,7 @@ static void draw_background(void)
 
     graphics_in_dialog();
 
-    outer_panel_draw(16, 16, 40, 30);
+    outer_panel_draw(16, 16, 40, data.callback ? 28 : 30);
 
     text_draw_centered(translation_for(TR_EDITOR_CUSTOM_VARIABLES_TITLE), 0, 32, 640, FONT_LARGE_BLACK, 0);
     text_draw_label_and_number_centered(translation_for(TR_EDITOR_CUSTOM_VARIABLES_COUNT), data.custom_variables_in_use,
@@ -231,7 +231,8 @@ static void draw_variable_item(const grid_box_item *item)
     int value = scenario_custom_variable_get_value(id);
 
     // Variable ID
-    text_draw_number_centered(id, item->x + CHECKBOX_ROW_WIDTH, item->y + 8, 32, FONT_NORMAL_BLACK);
+    text_draw_number_centered(id, item->x + (data.callback ? 0 : CHECKBOX_ROW_WIDTH), item->y + 8,
+        32, FONT_NORMAL_BLACK);
 
     // Variable Name
     button_border_draw(item->x + item_buttons[1].x, item->y + item_buttons[1].y,
@@ -271,6 +272,11 @@ static void draw_foreground(void)
 
     grid_box_draw(&variable_buttons);
 
+    if (data.callback) {
+        graphics_reset_dialog();
+        return;
+    }
+
     for (unsigned int i = 0; i < NUM_CONSTANT_BUTTONS; i++) {
         int focus = data.constant_button_focus_id == i + 1;
         if ((i == 0 && data.custom_variables_in_use == 0) || (i == 1 && data.selection_type == CHECKBOX_NO_SELECTION)) {
@@ -285,7 +291,7 @@ static void draw_foreground(void)
 
 static void button_select_all_none(const generic_button *button)
 {
-    if (!data.custom_variables_in_use) {
+    if (!data.custom_variables_in_use || data.callback) {
         return;
     }
     if (data.selection_type != CHECKBOX_ALL_SELECTED) {
@@ -313,7 +319,7 @@ static void update_selection_type(void)
 
 static void button_variable_checkbox(const generic_button *button)
 {
-    if (!data.selected) {
+    if (!data.selected || data.callback) {
         return;
     }
     data.selected[data.target_index] ^= 1;
@@ -392,6 +398,9 @@ static void show_name_edit_popup(void)
 
 static void button_edit_variable_name(const generic_button *button)
 {
+    if (data.callback) {
+        return;
+    }
     show_name_edit_popup();
 }
 
@@ -403,7 +412,10 @@ static void set_variable_value(int value)
 
 static void button_edit_variable_value(const generic_button *button)
 {
-    window_numeric_input_bound_show(variable_buttons.focused_item->x, variable_buttons.focused_item->y, button,
+    if (data.callback) {
+        return;
+    }
+    window_numeric_input_bound_show(variable_buttons.focused_item.x, variable_buttons.focused_item.y, button,
         9, -1000000000, 1000000000, set_variable_value);
 }
 
@@ -414,7 +426,9 @@ static void variable_item_click(const grid_box_item *item)
     if (data.callback) {
         if (item->mouse.x >= ID_ROW_WIDTH) {
             data.callback(id);
+            data.target_index = NO_SELECTION;
         }
+        window_go_back();
         return;
     }
     data.target_index = item->index;
@@ -533,6 +547,9 @@ static void button_new_variable(const generic_button *button)
 
 static void button_ok(const generic_button *button)
 {
+    if (data.callback) {
+        return;
+    }
     window_go_back();
 }
 
@@ -545,9 +562,9 @@ static void handle_input(const mouse *m, const hotkeys *h)
         }
     }
     int x = 0, y = 0;
-    if (variable_buttons.focused_item) {
-        x = variable_buttons.focused_item->x;
-        y = variable_buttons.focused_item->y;
+    if (variable_buttons.focused_item.is_focused) {
+        x = variable_buttons.focused_item.x;
+        y = variable_buttons.focused_item.y;
     }
     if (generic_buttons_handle_mouse(m_dialog, x, y, item_buttons, NUM_ITEM_BUTTONS, &data.item_buttons_focus_id) ||
         generic_buttons_handle_mouse(m_dialog, 0, 0, constant_buttons, NUM_CONSTANT_BUTTONS,

@@ -20,16 +20,19 @@ static unsigned int calculate_scrollable_items(const grid_box_type *grid_box)
 void grid_box_init(grid_box_type *grid_box, unsigned int total_items)
 {
     grid_box->total_items = total_items;
-    grid_box->focused_item = 0;
     if (grid_box->num_columns == 0) {
         grid_box->num_columns = 1;
     }
+    grid_box->focused_item.is_focused = 0;
+    grid_box->focused_item.index = NO_POSITION;
     scrollbar_init(&grid_box->scrollbar, 0, calculate_scrollable_items(grid_box));
 }
 
 void grid_box_update_total_items(grid_box_type *grid_box, unsigned int total_items)
 {
     grid_box->total_items = total_items;
+    grid_box->focused_item.is_focused = 0;
+    grid_box->focused_item.index = NO_POSITION;
     scrollbar_update_total_elements(&grid_box->scrollbar, calculate_scrollable_items(grid_box));
     grid_box_request_refresh(grid_box);
 }
@@ -136,8 +139,8 @@ void grid_box_draw(grid_box_type *grid_box)
         if (index >= grid_box->total_items) {
             break;
         }
-        if (grid_box->focused_item && grid_box->focused_item->index == index) {
-            grid_box->draw_item(grid_box->focused_item);
+        if (grid_box->focused_item.index == index) {
+            grid_box->draw_item(&grid_box->focused_item);
         } else {
             item.x = grid_box->x + (inner_padding + grid_box->item_margin.horizontal) / 2 +
                 width * (i % grid_box->num_columns);
@@ -154,29 +157,26 @@ void grid_box_draw(grid_box_type *grid_box)
 
 static int set_focused_item(grid_box_type *grid_box, unsigned int position, unsigned int mouse_x, unsigned int mouse_y)
 {
-    static grid_box_item item;
+    unsigned int old_x = grid_box->focused_item.index != NO_POSITION ? grid_box->focused_item.mouse.x : NO_POSITION;
+    unsigned int old_y = grid_box->focused_item.index != NO_POSITION ? grid_box->focused_item.mouse.y : NO_POSITION;
+    unsigned int old_index = grid_box->focused_item.index;
 
-    unsigned int old_x = grid_box->focused_item ? grid_box->focused_item->mouse.x : NO_POSITION;
-    unsigned int old_y = grid_box->focused_item ? grid_box->focused_item->mouse.y : NO_POSITION;
-    unsigned int old_index = grid_box->focused_item ? grid_box->focused_item->index : NO_POSITION;
+    grid_box->focused_item.index = position + grid_box->scrollbar.scroll_position * grid_box->num_columns;
+    grid_box->focused_item.mouse.x = mouse_x - grid_box->item_margin.horizontal / 2;
+    grid_box->focused_item.mouse.y = mouse_y - grid_box->item_margin.vertical / 2;
 
-    item.index = position + grid_box->scrollbar.scroll_position * grid_box->num_columns;
-    item.mouse.x = mouse_x - grid_box->item_margin.horizontal / 2;
-    item.mouse.y = mouse_y - grid_box->item_margin.vertical / 2;
-
-    if (item.index != old_index) {
+    if (grid_box->focused_item.index != old_index) {
         unsigned int inner_padding = grid_box->draw_inner_panel ? BLOCK_SIZE : 0;
         unsigned int width = (get_usable_width(grid_box) - inner_padding) / grid_box->num_columns;
-        item.width = width - grid_box->item_margin.horizontal;
-        item.height = grid_box->item_height - grid_box->item_margin.vertical,
-        item.position = position;
-        item.x = grid_box->x + (inner_padding + grid_box->item_margin.horizontal) / 2 +
+        grid_box->focused_item.width = width - grid_box->item_margin.horizontal;
+        grid_box->focused_item.height = grid_box->item_height - grid_box->item_margin.vertical;
+        grid_box->focused_item.position = position;
+        grid_box->focused_item.x = grid_box->x + (inner_padding + grid_box->item_margin.horizontal) / 2 +
             width * (position % grid_box->num_columns);
-        item.y = grid_box->y + (inner_padding + grid_box->item_margin.vertical) / 2 +
+        grid_box->focused_item.y = grid_box->y + (inner_padding + grid_box->item_margin.vertical) / 2 +
             grid_box->item_height * (position / grid_box->num_columns);
-        item.is_focused = 1;
+        grid_box->focused_item.is_focused = 1;
 
-        grid_box->focused_item = &item;
         return 1;
     }
 
@@ -187,10 +187,11 @@ static int determine_focus(grid_box_type *grid_box, int x, int y)
 {
     unsigned int inner_padding = grid_box->draw_inner_panel ? BLOCK_SIZE / 2 : 0;
     unsigned int width = get_usable_width(grid_box);
-    unsigned int old_index = grid_box->focused_item ? grid_box->focused_item->index : NO_POSITION;
+    unsigned int old_index = grid_box->focused_item.index;
     if (x < grid_box->x + inner_padding || x >= grid_box->x + width - inner_padding ||
         y < grid_box->y + inner_padding || y >= grid_box->y + grid_box->height - inner_padding) {
-        grid_box->focused_item = 0;
+        grid_box->focused_item.index = NO_POSITION;
+        grid_box->focused_item.is_focused = 0;
         return old_index != NO_POSITION;
     }
     unsigned int mouse_x = x - grid_box->x - inner_padding;
@@ -201,7 +202,8 @@ static int determine_focus(grid_box_type *grid_box, int x, int y)
     position += mouse_x / item_width;
 
     if (position + grid_box->scrollbar.scroll_position * grid_box->num_columns >= grid_box->total_items) {
-        grid_box->focused_item = 0;
+        grid_box->focused_item.index = NO_POSITION;
+        grid_box->focused_item.is_focused = 0;
         return old_index != NO_POSITION;
     }
 
@@ -212,7 +214,8 @@ static int determine_focus(grid_box_type *grid_box, int x, int y)
         mouse_x >= item_width - grid_box->item_margin.horizontal + grid_box->item_margin.horizontal / 2 ||
         mouse_y < grid_box->item_margin.vertical / 2 ||
         mouse_y >= grid_box->item_height - grid_box->item_margin.vertical + grid_box->item_margin.vertical / 2) {
-        grid_box->focused_item = 0;
+        grid_box->focused_item.index = NO_POSITION;
+        grid_box->focused_item.is_focused = 0;
         return old_index != NO_POSITION;
     }
 
@@ -232,12 +235,12 @@ int grid_box_handle_input(grid_box_type *grid_box, const mouse *m, int in_dialog
         grid_box_request_refresh(grid_box);
     }
 
-    if (!m->left.went_up || !grid_box->focused_item) {
+    if (!m->left.went_up || grid_box->focused_item.index == NO_POSITION) {
         return 0;
     }
 
     if (grid_box->on_click) {
-        grid_box->on_click(grid_box->focused_item);
+        grid_box->on_click(&grid_box->focused_item);
     }
 
     return 1;
@@ -245,8 +248,8 @@ int grid_box_handle_input(grid_box_type *grid_box, const mouse *m, int in_dialog
 
 void grid_box_handle_tooltip(const grid_box_type *grid_box, tooltip_context *c)
 {
-    if (!grid_box->handle_tooltip || !grid_box->focused_item) {
+    if (!grid_box->handle_tooltip || grid_box->focused_item.index == NO_POSITION) {
         return;
     }
-    grid_box->handle_tooltip(grid_box->focused_item, c);
+    grid_box->handle_tooltip(&grid_box->focused_item, c);
 }

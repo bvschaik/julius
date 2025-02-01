@@ -151,7 +151,8 @@ int building_count_in_area(building_type type, int minx, int miny, int maxx, int
 {
     int grid_area = (abs(maxx - minx) + 1) * (abs(maxy - miny) + 1);
     int array_size = grid_area < building_count() ? grid_area : building_count();
-    int *found_buildings = (int *) malloc(array_size * sizeof(int));
+    unsigned int *found_buildings = (int *) malloc(array_size * sizeof(unsigned int));
+    memset(found_buildings, 0, array_size * sizeof(unsigned int));
 
     int total = 0;
     for (int x = minx; x <= maxx; x++) {

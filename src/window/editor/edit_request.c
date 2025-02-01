@@ -127,6 +127,8 @@ static void bound_request_values(void)
     if (data.request.repeat.times <= 0) {
         data.repeat_type = data.request.repeat.times == 0 ? REQUEST_REPEAT_NEVER : REQUEST_REPEAT_FOREVER;
         data.request.repeat.times = 1;
+    } else {
+        data.repeat_type = REQUEST_REPEAT_TIMES;
     }
     if (data.request.repeat.interval.min < 3) {
         data.request.repeat.interval.min = 3;

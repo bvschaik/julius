@@ -120,6 +120,8 @@ static void bound_invasion_values(void)
     if (data.invasion.repeat.times <= 0) {
         data.repeat_type = data.invasion.repeat.times == 0 ? INVASION_REPEAT_NEVER : INVASION_REPEAT_FOREVER;
         data.invasion.repeat.times = 1;
+    } else {
+        data.repeat_type = INVASION_REPEAT_TIMES;
     }
     if (data.invasion.repeat.interval.min < 3) {
         data.invasion.repeat.interval.min = 3;

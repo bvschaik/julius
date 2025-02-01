@@ -8,7 +8,7 @@
 #define EVENT_NAME_LENGTH 32
 #define CONDITION_GROUP_ITEMS_ARRAY_SIZE_STEP 2
 #define CONDITION_GROUP_STRUCT_SIZE (2 * sizeof(uint32_t) + 1 * sizeof(uint16_t) + 1 * sizeof(uint8_t))
-#define CONDITION_STRUCT_SIZE (5 * sizeof(uint32_t) + 1 * sizeof(uint8_t))
+#define CONDITION_STRUCT_SIZE (5 * sizeof(int32_t) + 1 * sizeof(int16_t))
 
 typedef enum {
     EVENT_STATE_UNDEFINED = 0,

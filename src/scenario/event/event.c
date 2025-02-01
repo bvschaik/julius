@@ -178,7 +178,7 @@ static int conditions_fulfilled(scenario_event_t *event)
                 break;
             }
         }
-        if (group->type == FULFILLMENT_TYPE_ANY && !group_fulfilled) {
+        if (group->type == FULFILLMENT_TYPE_ANY && group->conditions.size > 0 && !group_fulfilled) {
             return 0;
         }
     }

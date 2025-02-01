@@ -39,7 +39,7 @@ typedef struct {
 
     /* Private elements */
     unsigned int total_items;
-    const grid_box_item *focused_item;
+    grid_box_item focused_item;
     scrollbar_type scrollbar;
     int refresh_requested;
 } grid_box_type;
