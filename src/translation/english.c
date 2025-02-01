@@ -1587,7 +1587,10 @@ static translation_string all_strings[] = {
     {TR_EDITOR_ALLOWED_BUILDINGS_NOT_ALLOWED, "Not allowed"},
     {TR_SELECT_NONE, "Select None"},
     {TR_SELECT_ALL, "Select All"},
-    {TR_SELECTED, "Selected"}
+    {TR_SELECTED, "Selected"},
+    {TR_WINDOW_MESSAGE_LIST_SELECTED_ALL, "All messages"},
+    {TR_WINDOW_MESSAGE_LIST_SELECTED_COMMON, "Common messages" },
+    {TR_WINDOW_MESSAGE_LIST_SELECTED_CUSTOM, "Custom messages" }
 };
 
 void translation_english(const translation_string **strings, int *num_strings)
