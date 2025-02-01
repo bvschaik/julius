@@ -65,12 +65,12 @@
 	</image>
 	<!-- Note: Hellenised Native Meeting Hut variants -->
 	<image id="Hellenised_Meeting_Hut_Central_01" src="Hellenised_Meeting_Hut_Central_01" isometric="true"/>
-	<image id="Hellenised_Hut_Northern_01" isometric="true">
+	<image id="Hellenised_Meeting_Hut_Northern_01" isometric="true">
 		<layer group="this" image="Hellenised_Meeting_Hut_Central_01"/>
-		<layer src="Hellenised_Hut_Northern_01" x="0" y="40"/>
+		<layer src="Hellenised_Meeting_Hut_Northern_01" x="0" y="40"/>
 	</image>
-	<image id="Hellenised_Hut_Northern_02" isometric="true">
+	<image id="Hellenised_Meeting_Hut_Southern_01" isometric="true">
 		<layer group="this" image="Hellenised_Meeting_Hut_Central_01"/>
-		<layer src="Hellenised_Hut_Northern_02" x="0" y="40"/>
+		<layer src="Hellenised_Meeting_Hut_Southern_01" x="0" y="40"/>
 	</image>
 </assetlist>
