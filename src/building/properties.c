@@ -600,7 +600,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .size = 1,
         .fire_proof = 1,
         .custom_asset.group = "Admin_Logistics",
-        .event_data.cannot_count = 1
+        .event_data.attr = "roadblock"
     },
     [BUILDING_WORKCAMP] = {
         .size = 3,
