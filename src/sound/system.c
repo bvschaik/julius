@@ -166,9 +166,9 @@ static char channel_filenames[SOUND_CHANNEL_MAX][CHANNEL_FILENAME_MAX] = {
     "wavs/coin.wav",
     "wavs/river.wav",
     "wavs/mission.wav",
-    "assets/sounds/brickworks.wav",
-    "assets/sounds/lighthouse.wav",
-    "assets/sounds/ox.wav",
+    ASSETS_DIRECTORY "/Sounds/Brickworks.wav",
+    ASSETS_DIRECTORY "/Sounds/Lighthouse.wav",
+    ASSETS_DIRECTORY "/Sounds/Ox.wav",
 };
 
 static void correct_channel_filenames(void)

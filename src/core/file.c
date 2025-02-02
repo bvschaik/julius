@@ -12,6 +12,9 @@ FILE *file_open(const char *filename, const char *mode)
     if (!filename) {
         return 0;
     }
+    if (strncmp(filename, ASSETS_DIRECTORY, sizeof(ASSETS_DIRECTORY) - 1) == 0) {
+        return platform_file_manager_open_asset(filename + sizeof(ASSETS_DIRECTORY), mode);
+    }
     return platform_file_manager_open_file(filename, mode);
 }
 

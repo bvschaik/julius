@@ -192,6 +192,9 @@ const dir_listing *dir_append_files_with_extension(const char *extension)
 
 const char *dir_get_file(const char *filepath, int localizable)
 {
+    if (strncmp(ASSETS_DIRECTORY, filepath, sizeof(ASSETS_DIRECTORY) - 1) == 0) {
+        return dir_get_file_at_location(filepath + sizeof(ASSETS_DIRECTORY), PATH_LOCATION_ASSET);
+    }
     if (localizable != NOT_LOCALIZED) {
         const char *custom_dir = config_get_string(CONFIG_STRING_UI_LANGUAGE_DIR);
         if (*custom_dir) {
