@@ -116,7 +116,7 @@ static int draw_background(void)
 
     lang_text_draw(54, 0, 60, 12, FONT_LARGE_BLACK);
     int width = lang_text_get_width(54, 1, FONT_NORMAL_BLACK);
-    lang_text_draw(54, 1, 600 - width, 38, FONT_NORMAL_BLACK);
+    lang_text_draw(54, 1, 575 - width, 38, FONT_NORMAL_BLACK);
 
     button_border_draw(375, 392, 200, 24, data.focus_button_id == 1);
     lang_text_draw_centered(54, 2, 375, 398, 200, FONT_NORMAL_BLACK);

@@ -135,7 +135,7 @@ static int draw_background(void)
     text_draw_number_centered(building_count_active(BUILDING_MISSION_POST), 150, 165, 100, FONT_NORMAL_WHITE);
 
 
-    lang_text_draw_multiline(57, 22 + get_education_advice(), 60, 195, 512, FONT_NORMAL_BLACK);
+    lang_text_draw_multiline(57, 22 + get_education_advice(), 45, 195, 560, FONT_NORMAL_BLACK);
 
     return ADVISOR_HEIGHT;
 }

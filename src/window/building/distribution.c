@@ -1469,7 +1469,7 @@ void window_building_draw_mess_hall(building_info_context *c)
         c->x_offset, c->y_offset + 12, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK, 0);
     if (b->num_workers <= 0 && food_types <= 0) {
         window_building_draw_description_at(c, 64, CUSTOM_TRANSLATION, TR_BUILDING_MESS_HALL_NO_EMPLOYEES);
-    } else if (b->num_workers > 0 && food_types <= 0) {    
+    } else if (b->num_workers > 0 && food_types <= 0) {
         window_building_draw_description_at(c, 64, CUSTOM_TRANSLATION, TR_BUILDING_MESS_HALL_NO_FOOD);
     } else {
         draw_food_stocks(c, b, 64);
@@ -1576,18 +1576,22 @@ void window_building_draw_caravanserai(building_info_context *c)
 
         if (b->num_workers <= 0 && food_types <= 0) {
             window_building_draw_description_at(c, 44, CUSTOM_TRANSLATION, TR_BUILDING_CARAVANSERAI_NO_EMPLOYEES);
-        } else if (b->num_workers > 0 && food_types <= 0) {    
+        } else if (b->num_workers > 0 && food_types <= 0) {
             window_building_draw_description_at(c, 44, CUSTOM_TRANSLATION, TR_BUILDING_CARAVANSERAI_NO_FOOD);
         } else {
             draw_food_stocks(c, b, 44);
         }
-        if (building_monument_has_labour_problems(b)) {
+
+        if (!c->has_road_access) {
+            window_building_draw_description_at(c, 100, 69, 25);
+        } else if (building_monument_has_labour_problems(b)) {
             text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_NEEDS_WORKERS),
-                c->x_offset + 22, c->y_offset + 80 + y_offset, 15 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
+                c->x_offset + 32, c->y_offset + 80 + y_offset, 15 * c->width_blocks, 0, FONT_NORMAL_BLACK, 0);
         } else {
-            text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_DESC), c->x_offset + 32,
-                c->y_offset + 80 + y_offset, BLOCK_SIZE * (c->width_blocks - 4), 0, FONT_NORMAL_BLACK, 0);
+            text_draw_multiline(translation_for(TR_BUILDING_CARAVANSERAI_DESC),
+                c->x_offset + 32, c->y_offset + 80 + y_offset, BLOCK_SIZE * (c->width_blocks - 4), 0, FONT_NORMAL_BLACK, 0);
         }
+
         if (!land_trade_policy.items[0].image_id) {
             int base_policy_image = assets_get_image_id("UI",
                 land_trade_policy.base_image_name);

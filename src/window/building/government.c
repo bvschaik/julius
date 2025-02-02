@@ -27,7 +27,7 @@ void window_building_draw_forum(building_info_context *c)
         c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK);
 
     if (!c->has_road_access) {
-        window_building_draw_description(c, 69, 25);
+        window_building_draw_description_at(c, 72, 69, 25);
     } else if (b->num_workers <= 0) {
         window_building_draw_description_at(c, 72, 106, 10);
     } else if (c->worker_percentage >= 100) {
@@ -63,7 +63,7 @@ void window_building_draw_senate(building_info_context *c)
         c->x_offset + 44 + width, c->y_offset + 43, FONT_NORMAL_BLACK);
 
     if (!c->has_road_access) {
-        window_building_draw_description(c, 69, 25);
+        window_building_draw_description_at(c, 72, 69, 25);
     } else if (b->num_workers <= 0) {
         window_building_draw_description_at(c, 72, 106, 10);
     } else if (c->worker_percentage >= 100) {

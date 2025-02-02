@@ -9,7 +9,7 @@
 
 #include <string.h>
 
-#define MAX_CHANNELS 70
+#define MAX_CHANNELS 80
 
 // for compatibility with the original game:
 #define CITY_CHANNEL_OFFSET 18
@@ -41,14 +41,20 @@ enum {
     SOUND_CHANNEL_CITY_PREFECTURE = 69,
     SOUND_CHANNEL_CITY_FORT = 70,
     SOUND_CHANNEL_CITY_TOWER = 74,
+    SOUND_CHANNEL_CITY_WATCHTOWER = 75,
+    SOUND_CHANNEL_CITY_ARMOURY = 76,
+    SOUND_CHANNEL_CITY_WORKCAMP = 77,
     SOUND_CHANNEL_CITY_TEMPLE_CERES = 78,
     SOUND_CHANNEL_CITY_TEMPLE_NEPTUNE = 79,
     SOUND_CHANNEL_CITY_TEMPLE_MERCURY = 80,
     SOUND_CHANNEL_CITY_TEMPLE_MARS = 81,
     SOUND_CHANNEL_CITY_TEMPLE_VENUS = 82,
     SOUND_CHANNEL_CITY_MARKET = 83,
+    SOUND_CHANNEL_CITY_CARAVANSERAI = 84,
+    SOUND_CHANNEL_CITY_TAVERN = 85,
     SOUND_CHANNEL_CITY_GRANARY = 87,
     SOUND_CHANNEL_CITY_WAREHOUSE = 89,
+    SOUND_CHANNEL_CITY_MESS_HALL = 90,
     SOUND_CHANNEL_CITY_SHIPYARD = 91,
     SOUND_CHANNEL_CITY_DOCK = 93,
     SOUND_CHANNEL_CITY_WHARF = 95,
@@ -77,11 +83,17 @@ enum {
     SOUND_CHANNEL_CITY_WEAPONS_WORKSHOP = 125,
     SOUND_CHANNEL_CITY_FURNITURE_WORKSHOP = 126,
     SOUND_CHANNEL_CITY_POTTERY_WORKSHOP = 127,
-    SOUND_CHANNEL_CITY_EMPTY_LAND = 128,
-    SOUND_CHANNEL_CITY_RIVER = 132,
-    SOUND_CHANNEL_CITY_MISSION_POST = 133,
-    SOUND_CHANNEL_CITY_CONSTRUCTION_SITE = 134,
-    SOUND_CHANNEL_CITY_ARMOURY = 76
+    SOUND_CHANNEL_CITY_EMPTY_LAND1 = 128,
+    SOUND_CHANNEL_CITY_EMPTY_LAND2 = 129,
+    SOUND_CHANNEL_CITY_EMPTY_LAND3 = 130,
+    //SOUND_CHANNEL_CITY_EMPTY_LAND4 = 131,
+    SOUND_CHANNEL_CITY_CITY_MINT = 132,
+    SOUND_CHANNEL_CITY_RIVER = 133,
+    SOUND_CHANNEL_CITY_MISSION_POST = 134,
+    SOUND_CHANNEL_CITY_BRICKWORKS = 135,
+    SOUND_CHANNEL_CITY_LIGHTHOUSE = 136,
+    SOUND_CHANNEL_CITY_DEPOT = 137,
+    SOUND_CHANNEL_CITY_CONSTRUCTION_SITE = 138,
 };
 
 typedef struct {
@@ -98,8 +110,8 @@ typedef struct {
 } city_channel;
 
 static city_channel channels[MAX_CHANNELS];
-static int ambient_channels[] = { 61 };
-static int ambient_channels_number = 1;
+static int ambient_channels[] = { 61, 74, 75, };    // turn on "empty land" sound
+static int ambient_channels_number = 3;
 
 static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //0-9
@@ -113,15 +125,15 @@ static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
     63, 37, 0, 0, 38, 38, 39, 39, 0, 0, // 80-89
     40, 0, 0, 0, 43, 0, 0, 0, 44, 45, //90-99
     46, 47, 48, 49, 50, 51, 52, 53, 54, 55, //100-109
-    56, 57, 58, 59, 60, 0, 37, 25, 26, 27, //110-119
+    56, 57, 58, 59, 60, 0, 70, 25, 26, 27, //110-119    WORKCAMP = 116[70]
     28, 29, 0, 0, 0, 0, 0, 0, 0, 0, //120-129
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130-139
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //140-149
-    0, 0, 44, 37, 0, 0, 0, 0, 56, 0, //150-159
+    0, 0, 44, 37, 68, 69, 0, 0, 66, 0, //150-159        MESS_HALL = 154[68], LIGHTHOUSE = 155[69], TAVERN = 158[66]
     9, 0, 0, 0, 0, 0, 0, 0, 0, 0, //160-169
-    44, 44, 44, 24, 0, 0, 0, 0, 0, 0, //170-179
-    0, 0, 0, 0, 53, 0, 0, 55, 52, 0, //180-189
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //190-199
+    44, 44, 44, 71, 0, 0, 67, 0, 0, 0, //170-179        WATCHTOWER = 173[71], CARAVANSERAI = 176[67]
+    0, 0, 0, 0, 53, 72, 73, 55, 52, 0, //180-189        CITY_MINT = 185[72], DEPOT = 186[73]
+    77, 0, 0, 0, 0, 0, 0, 0, 0, 0, //190-199            BRICKWORKS = 190[77]
     0, 0, 0, 65, 0, 0, 0, 0, 0, 0, //200-209
 };
 
@@ -134,7 +146,7 @@ void sound_city_init(void)
     for (int i = 0; i < MAX_CHANNELS; i++) {
         channels[i].last_played_time = last_update_time;
     }
-    for (int i = 1; i < 66; i++) {
+    for (int i = 1; i < 80; i++) {
         channels[i].in_use = 1;
         channels[i].views_threshold = 200;
         channels[i].delay_millis = 30000;
@@ -199,11 +211,23 @@ void sound_city_init(void)
     channels[58].channel = SOUND_CHANNEL_CITY_WEAPONS_WORKSHOP;
     channels[59].channel = SOUND_CHANNEL_CITY_FURNITURE_WORKSHOP;
     channels[60].channel = SOUND_CHANNEL_CITY_POTTERY_WORKSHOP;
-    channels[61].channel = SOUND_CHANNEL_CITY_EMPTY_LAND;
+    channels[61].channel = SOUND_CHANNEL_CITY_EMPTY_LAND1;
     channels[62].channel = SOUND_CHANNEL_CITY_RIVER;
     channels[63].channel = SOUND_CHANNEL_CITY_MISSION_POST;
     channels[64].channel = SOUND_CHANNEL_CITY_CONSTRUCTION_SITE;
     channels[65].channel = SOUND_CHANNEL_CITY_ARMOURY;
+    channels[66].channel = SOUND_CHANNEL_CITY_TAVERN;
+    channels[67].channel = SOUND_CHANNEL_CITY_CARAVANSERAI;
+    channels[68].channel = SOUND_CHANNEL_CITY_MESS_HALL;
+    channels[69].channel = SOUND_CHANNEL_CITY_LIGHTHOUSE;
+    channels[70].channel = SOUND_CHANNEL_CITY_WORKCAMP;
+    channels[71].channel = SOUND_CHANNEL_CITY_WATCHTOWER;
+    channels[72].channel = SOUND_CHANNEL_CITY_CITY_MINT;
+    channels[73].channel = SOUND_CHANNEL_CITY_DEPOT;
+    channels[74].channel = SOUND_CHANNEL_CITY_EMPTY_LAND2;
+    channels[75].channel = SOUND_CHANNEL_CITY_EMPTY_LAND3;
+    //channels[76].channel = SOUND_CHANNEL_CITY_EMPTY_LAND4;
+    channels[77].channel = SOUND_CHANNEL_CITY_BRICKWORKS;
 }
 
 void sound_city_set_volume(int percentage)
@@ -316,8 +340,8 @@ void sound_city_play(void)
         }
     }
 
-    if (now - last_update_time < 2000) {
-        // Only play 1 sound every 2 seconds
+    if (now - last_update_time < 3000) {
+        // Only play 1 sound every 3 seconds
         return;
     }
     time_millis max_delay = 0;
@@ -331,7 +355,7 @@ void sound_city_play(void)
         }
     }
     if (!max_sound_id) {
-       // progress_ambient();
+        // progress_ambient();
         return;
     }
 

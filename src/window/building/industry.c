@@ -359,7 +359,7 @@ void window_building_draw_pottery_workshop(building_info_context *c)
 
 void window_building_draw_brickworks(building_info_context *c)
 {
-    draw_workshop(c, 1, "wavs/pottery_workshop.wav", CUSTOM_TRANSLATION, TR_BUILDING_BRICKWORKS, RESOURCE_BRICKS);
+    draw_workshop(c, 1, "assets/sounds/brickworks.wav", CUSTOM_TRANSLATION, TR_BUILDING_BRICKWORKS, RESOURCE_BRICKS);
 }
 
 void window_building_draw_concrete_maker(building_info_context *c)

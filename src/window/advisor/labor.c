@@ -47,9 +47,9 @@ static int draw_background(void)
 
     // table headers
     lang_text_draw(50, 21, 60, 56, FONT_SMALL_PLAIN);
-    lang_text_draw(50, 22, 170, 56, FONT_SMALL_PLAIN);
-    lang_text_draw(50, 23, 400, 56, FONT_SMALL_PLAIN);
-    lang_text_draw(50, 24, 500, 56, FONT_SMALL_PLAIN);
+    lang_text_draw(50, 22, 172, 56, FONT_SMALL_PLAIN);
+    lang_text_draw(50, 23, 416, 56, FONT_SMALL_PLAIN);
+    lang_text_draw(50, 24, 516, 56, FONT_SMALL_PLAIN);
 
     // xx employed, yy unemployed
     int width = text_draw_number(city_labor_workers_employed(), '@', " ", 32, 320, FONT_NORMAL_BLACK, 0);

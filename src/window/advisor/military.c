@@ -74,12 +74,12 @@ static int draw_background(void)
     image_draw(image_group(GROUP_ADVISOR_ICONS) + 1, 10, 10, COLOR_MASK_NONE, SCALE_NONE);
     lang_text_draw(51, 0, 60, 12, FONT_LARGE_BLACK);
 
-    lang_text_draw(51, 1, 374, 35, FONT_SMALL_PLAIN);
-    lang_text_draw(51, 2, 374, 50, FONT_SMALL_PLAIN);
-    lang_text_draw(51, 3, 454, 35, FONT_SMALL_PLAIN);
-    lang_text_draw(51, 4, 454, 50, FONT_SMALL_PLAIN);
-    lang_text_draw(51, 5, 534, 35, FONT_SMALL_PLAIN);
-    lang_text_draw(51, 6, 534, 50, FONT_SMALL_PLAIN);
+    lang_text_draw(51, 1, 380, 35, FONT_SMALL_PLAIN);
+    lang_text_draw(51, 2, 380, 50, FONT_SMALL_PLAIN);
+    lang_text_draw(51, 3, 455, 35, FONT_SMALL_PLAIN);
+    lang_text_draw(51, 4, 455, 50, FONT_SMALL_PLAIN);
+    lang_text_draw(51, 5, 535, 35, FONT_SMALL_PLAIN);
+    lang_text_draw(51, 6, 535, 50, FONT_SMALL_PLAIN);
     lang_text_draw(138, 36, 274, 50, FONT_SMALL_PLAIN);
 
     int enemy_text_id;

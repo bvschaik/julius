@@ -346,7 +346,11 @@ void window_building_draw_mission_post(building_info_context *c)
     window_building_play_sound(c, "wavs/mission.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(134, 0, c->x_offset, c->y_offset + 10, BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
-    window_building_draw_description(c, 134, 1);
+    if (!c->has_road_access) {
+        window_building_draw_description(c, 69, 25);
+    } else {
+        window_building_draw_description(c, 134, 1);
+    }
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment_without_house_cover(c, 142);
     window_building_draw_risks(c, c->x_offset + c->width_blocks * BLOCK_SIZE - 76, c->y_offset + 144);

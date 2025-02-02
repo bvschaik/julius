@@ -22,7 +22,7 @@
 
 
 #define ADVISOR_HEIGHT 24
-#define X_OFFSET 232
+#define X_OFFSET 225
 
 static void draw_title(int y, int text_id)
 {
