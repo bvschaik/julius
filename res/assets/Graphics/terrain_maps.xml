@@ -47,6 +47,7 @@
 	<!-- Note: Hellenised Native Hut variants (Assets created by Areldir) -->
 	<image id="Hellenised_Hut_Central_01" src="Hellenised_Hut_Central_01" isometric="true"/>
 	<image id="Hellenised_Hut_Central_02" src="Hellenised_Hut_Central_02" isometric="true"/>
+	<image id="Hellenised_Hut_Central_03" src="Hellenised_Hut_Central_03" isometric="true"/>
 	<image id="Hellenised_Hut_Northern_01" isometric="true">
 		<layer group="this" image="Hellenised_Hut_Central_01"/>
 		<layer src="Hellenised_Hut_Northern_01" x="0" y="23"/>
@@ -55,6 +56,10 @@
 		<layer group="this" image="Hellenised_Hut_Central_02"/>
 		<layer src="Hellenised_Hut_Northern_02" x="0" y="25"/>
 	</image>
+	<image id="Hellenised_Hut_Northern_03" isometric="true">
+		<layer group="this" image="Hellenised_Hut_Central_03"/>
+		<layer src="Hellenised_Hut_Northern_03" x="0" y="28"/>
+	</image>
 	<image id="Hellenised_Hut_Southern_01" isometric="true">
 		<layer group="this" image="Hellenised_Hut_Central_01"/>
 		<layer src="Hellenised_Hut_Southern_01" x="0" y="23"/>
@@ -62,6 +67,10 @@
 	<image id="Hellenised_Hut_Southern_02" isometric="true">
 		<layer group="this" image="Hellenised_Hut_Central_02"/>
 		<layer src="Hellenised_Hut_Southern_02" x="0" y="25"/>
+	</image>
+	<image id="Hellenised_Hut_Southern_03" isometric="true">
+		<layer group="this" image="Hellenised_Hut_Central_03"/>
+		<layer src="Hellenised_Hut_Southern_03" x="0" y="28"/>
 	</image>
 	<!-- Note: Hellenised Native Meeting Hut variants -->
 	<image id="Hellenised_Meeting_Hut_Central_01" src="Hellenised_Meeting_Hut_Central_01" isometric="true"/>
