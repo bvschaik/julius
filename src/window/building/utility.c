@@ -157,7 +157,7 @@ static int affect_all_button_state(void)
 static void draw_roadblock_orders_buttons(int x, int y, int focused)
 {
    if (affect_all_button_state() == ACCEPT_ALL) {
-       image_draw(assets_get_image_id("UI", "Allowed_Walker_Check"), x + 29, y + 4, COLOR_MASK_NONE, SCALE_NONE);
+       image_draw(assets_lookup_image_id(ASSET_UI_SELECTION_CHECKMARK), x + 29, y + 4, COLOR_MASK_NONE, SCALE_NONE);
    } else {
        image_draw(assets_get_image_id("UI", "Denied_Walker_Checkmark"), x + 29, y + 4, COLOR_MASK_NONE, SCALE_NONE);
    }

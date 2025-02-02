@@ -223,7 +223,7 @@ static void draw_accept_none_button(int x, int y, int focused, affect_all_button
 {
     button_border_draw(x, y, 20, 20, focused ? 1 : 0);
     if (state == ACCEPT_ALL) {
-        image_draw(assets_get_image_id("UI", "Selection_Checkmark"), x + 4, y + 4, COLOR_MASK_NONE, SCALE_NONE);
+        image_draw(assets_lookup_image_id(ASSET_UI_SELECTION_CHECKMARK), x + 4, y + 4, COLOR_MASK_NONE, SCALE_NONE);
     } else {
         image_draw(assets_get_image_id("UI", "Denied_Walker_Checkmark"), x + 4, y + 4, COLOR_MASK_NONE, SCALE_NONE);
     }
