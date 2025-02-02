@@ -66,7 +66,7 @@ static generic_button generic_buttons_messages[] = {
 };
 
 static generic_button generic_button_messages_type[] = {
-    { 20, 82, 372, 20, button_cycle_message_type, button_cycle_message_type }
+    { 20, 77, 372, 20, button_cycle_message_type, button_cycle_message_type }
 };
 
 static generic_button generic_button_delete_read[] = {
