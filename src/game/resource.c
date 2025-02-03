@@ -260,10 +260,9 @@ const resource_data *resource_get_data(resource_type resource)
     return &resource_info[resource];
 }
 
-void resource_set_mapping(int version)
+void resource_set_mapping(resource_version_t version)
 {
     mapping.version = version;
-    mapping.joined_meat_and_fish = version < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION;
     switch (version) {
         case RESOURCE_ORIGINAL_VERSION:
             mapping.resources = resource_mappings[0];
@@ -320,7 +319,7 @@ resource_type resource_map_legacy_inventory(int id)
     return resource;
 }
 
-int resource_mapping_get_version(void)
+resource_version_t resource_mapping_get_version(void)
 {
     return mapping.version;
 }

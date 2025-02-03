@@ -140,9 +140,9 @@ int resource_get_supply_chain_for_raw_material(resource_supply_chain *chain, res
 
 const resource_data *resource_get_data(resource_type resource);
 
-void resource_set_mapping(int version);
+void resource_set_mapping(resource_version_t version);
 
-int resource_mapping_get_version(void);
+resource_version_t resource_mapping_get_version(void);
 
 resource_type resource_map_legacy_inventory(int id);
 
