@@ -129,12 +129,22 @@ void xml_exporter_new_element(const char *name)
     buffer_write_raw(data.output_buf, data.current_element->name, strlen(data.current_element->name));
 }
 
+static size_t get_attribute_length(const char *attribute)
+{
+    const char *pos = strchr(attribute, '|');
+    if (pos) {
+        return pos - attribute;
+    } else {
+        return strlen(attribute);
+    }
+}
+
 void xml_exporter_add_attribute_text(const char *name, const char *value)
 {
     add_whitespaces(1);
     buffer_write_raw(data.output_buf, name, strlen(name));
     buffer_write_raw(data.output_buf, "=\"", 2);
-    buffer_write_raw(data.output_buf, value, strlen(value));
+    buffer_write_raw(data.output_buf, value, get_attribute_length(value));
     buffer_write_raw(data.output_buf, "\"", 1);
 }
 
