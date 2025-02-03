@@ -409,6 +409,7 @@ static int xml_import_special_parse_attribute(xml_data_attribute_t *attr, int *t
             return xml_import_special_parse_building_counting(attr, target);
         case PARAMETER_TYPE_FUTURE_CITY:
             return xml_import_special_parse_future_city(attr, target);
+        case PARAMETER_TYPE_REQUEST:
         case PARAMETER_TYPE_NUMBER:
             return xml_import_special_parse_limited_number(attr, target);
         case PARAMETER_TYPE_MIN_MAX_NUMBER:

@@ -790,7 +790,7 @@ static uint8_t *string_from_year(uint8_t *dst, int year, int *maxlength)
             cursor++;
             cursor = string_copy(lang_get_string(20, 1), cursor, *maxlength - 10);
         } else {
-            string_copy(lang_get_string(20, 1), cursor, *maxlength - 10);
+            cursor = string_copy(lang_get_string(20, 1), cursor, *maxlength - 10);
             *cursor = ' ';
             cursor++;
             cursor += string_from_int(cursor, year, 0);
