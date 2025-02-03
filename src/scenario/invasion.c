@@ -259,7 +259,7 @@ void scenario_invasion_foreach_warning(void (*callback)(int x, int y, int image_
 {
     const invasion_warning *warning;
     array_foreach(data.warnings, warning) {
-        if (warning->in_use && !warning->handled) {
+        if (warning->in_use && warning->handled) {
             callback(warning->x, warning->y, warning->image_id);
         }
     }
