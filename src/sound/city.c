@@ -9,7 +9,7 @@
 
 #include <string.h>
 
-#define MAX_CHANNELS 80
+#define MAX_CHANNELS 100
 
 // for compatibility with the original game:
 #define CITY_CHANNEL_OFFSET 18
@@ -93,7 +93,8 @@ enum {
     SOUND_CHANNEL_CITY_BRICKWORKS = 135,
     SOUND_CHANNEL_CITY_LIGHTHOUSE = 136,
     SOUND_CHANNEL_CITY_DEPOT = 137,
-    SOUND_CHANNEL_CITY_CONSTRUCTION_SITE = 138,
+    SOUND_CHANNEL_CITY_CONCRETE_MAKER = 138,
+    SOUND_CHANNEL_CITY_CONSTRUCTION_SITE = 139,
 };
 
 typedef struct {
@@ -110,8 +111,8 @@ typedef struct {
 } city_channel;
 
 static city_channel channels[MAX_CHANNELS];
-static int ambient_channels[] = { 61, 74, 75, };    // turn on "empty land" sound
-static int ambient_channels_number = 3;
+static int ambient_channels[] = { 61, 74, 75, 62};    // turn on "empty land" and river sound
+static int ambient_channels_number = 4;
 
 static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //0-9
@@ -132,7 +133,7 @@ static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
     0, 0, 44, 37, 68, 69, 0, 0, 66, 0, //150-159        MESS_HALL = 154[68], LIGHTHOUSE = 155[69], TAVERN = 158[66]
     9, 0, 0, 0, 0, 0, 0, 0, 0, 0, //160-169
     44, 44, 44, 71, 0, 0, 67, 0, 0, 0, //170-179        WATCHTOWER = 173[71], CARAVANSERAI = 176[67]
-    0, 0, 0, 0, 53, 72, 73, 55, 52, 0, //180-189        CITY_MINT = 185[72], DEPOT = 186[73]
+    0, 0, 0, 0, 53, 72, 73, 55, 52, 78, //180-189       CITY_MINT = 185[72], DEPOT = 186[73], CONCRETE_MAKER = 189[78]
     77, 0, 0, 0, 0, 0, 0, 0, 0, 0, //190-199            BRICKWORKS = 190[77]
     0, 0, 0, 65, 0, 0, 0, 0, 0, 0, //200-209
 };
@@ -228,6 +229,7 @@ void sound_city_init(void)
     channels[75].channel = SOUND_CHANNEL_CITY_EMPTY_LAND3;
     //channels[76].channel = SOUND_CHANNEL_CITY_EMPTY_LAND4;
     channels[77].channel = SOUND_CHANNEL_CITY_BRICKWORKS;
+    channels[78].channel = SOUND_CHANNEL_CITY_CONCRETE_MAKER;
 }
 
 void sound_city_set_volume(int percentage)
@@ -340,8 +342,8 @@ void sound_city_play(void)
         }
     }
 
-    if (now - last_update_time < 3000) {
-        // Only play 1 sound every 3 seconds
+    if (now - last_update_time < 2000) {
+        // Only play 1 sound every 2 seconds
         return;
     }
     time_millis max_delay = 0;

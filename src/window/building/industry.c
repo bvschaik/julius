@@ -365,7 +365,7 @@ void window_building_draw_brickworks(building_info_context *c)
 
 void window_building_draw_concrete_maker(building_info_context *c)
 {
-    draw_workshop(c, 1, "wavs/pottery_workshop.wav", CUSTOM_TRANSLATION, TR_BUILDING_CONCRETE_MAKER, RESOURCE_CONCRETE);
+    draw_workshop(c, 1, ASSETS_DIRECTORY "/Sounds/ConcreteMaker.wav", CUSTOM_TRANSLATION, TR_BUILDING_CONCRETE_MAKER, RESOURCE_CONCRETE);
 }
 
 static int governor_palace_is_allowed(void)

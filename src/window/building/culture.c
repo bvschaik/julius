@@ -912,7 +912,7 @@ void window_building_draw_work_camp(building_info_context *c)
 
 void window_building_draw_architect_guild(building_info_context *c)
 {
-    window_building_play_sound(c, "wavs/eng_post.wav");
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/Engineer.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     inner_panel_draw(c->x_offset + 16, c->y_offset + 136, c->width_blocks - 2, 4);
     window_building_draw_employment(c, 138);
