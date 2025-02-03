@@ -820,21 +820,21 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .custom_asset.id = "pavilion green",
         .event_data.attr = "pavilion_green"
     },
-    [BUILDING_SMALL_STATUE_ALT] = {
+    [BUILDING_GODDESS_STATUE] = {
         .size = 1,
         .fire_proof = 1,
         .rotation_offset = 13,
         .custom_asset.group = "Aesthetics",
         .custom_asset.id = "sml statue 2",
-        .event_data.attr = "small_statue_alt"
+        .event_data.attr = "goddess_statue|small_statue_alt"
     },
-    [BUILDING_SMALL_STATUE_ALT_B] = {
+    [BUILDING_SENATOR_STATUE] = {
         .size = 1,
         .fire_proof = 1,
         .rotation_offset = 13,
         .custom_asset.group = "Aesthetics",
         .custom_asset.id = "sml statue 3",
-        .event_data.attr = "small_statue_alt_b"
+        .event_data.attr = "senator_statue|small_statue_alt_b"
     },
     [BUILDING_OBELISK] = {
         .size = 2,

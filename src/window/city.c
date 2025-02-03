@@ -505,8 +505,8 @@ static void show_overlay_from_grid_offset(int grid_offset)
         case BUILDING_PAVILION_ORANGE:
         case BUILDING_PAVILION_YELLOW:
         case BUILDING_PAVILION_GREEN:
-        case BUILDING_SMALL_STATUE_ALT:
-        case BUILDING_SMALL_STATUE_ALT_B:
+        case BUILDING_GODDESS_STATUE:
+        case BUILDING_SENATOR_STATUE:
         case BUILDING_OBELISK:
         case BUILDING_HORSE_STATUE:
         case BUILDING_LEGION_STATUE:

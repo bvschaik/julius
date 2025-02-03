@@ -837,12 +837,12 @@ int building_image_get(const building *b)
         case BUILDING_PALM_TREE:
         case BUILDING_DATE_TREE:
             return assets_get_group_id("Aesthetics") + (b->type - BUILDING_PINE_TREE);
-        case BUILDING_SMALL_STATUE_ALT:
-        case BUILDING_SMALL_STATUE_ALT_B:
+        case BUILDING_GODDESS_STATUE:
+        case BUILDING_SENATOR_STATUE:
         {
             int orientation = building_rotation_get_building_orientation(b->subtype.orientation) / 2;
             return assets_get_image_id("Aesthetics", "sml statue 2") +
-                (b->type - BUILDING_SMALL_STATUE_ALT) + (orientation % 2) *
+                (b->type - BUILDING_GODDESS_STATUE) + (orientation % 2) *
                 building_properties_for_type(b->type)->rotation_offset;
         }
         case BUILDING_HEDGE_DARK:

@@ -458,9 +458,9 @@ const uint8_t *lang_get_string(int group, int index)
                 return translation_for(TR_BUILDING_YELLOW_PAVILION);
             case BUILDING_PAVILION_GREEN:
                 return translation_for(TR_BUILDING_GREEN_PAVILION);
-            case BUILDING_SMALL_STATUE_ALT:
+            case BUILDING_GODDESS_STATUE:
                 return translation_for(TR_BUILDING_SMALL_STATUE_ALT);
-            case BUILDING_SMALL_STATUE_ALT_B:
+            case BUILDING_SENATOR_STATUE:
                 return translation_for(TR_BUILDING_SMALL_STATUE_ALT_B);
             case BUILDING_OBELISK:
                 return translation_for(TR_BUILDING_OBELISK);

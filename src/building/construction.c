@@ -839,7 +839,7 @@ void building_construction_update(int x, int y, int grid_offset)
         if (items_placed >= 0) {
             current_cost *= items_placed;
         }
-    } else if (type >= BUILDING_SMALL_STATUE_ALT && type <= BUILDING_SMALL_STATUE_ALT_B) {
+    } else if (type >= BUILDING_GODDESS_STATUE && type <= BUILDING_SENATOR_STATUE) {
         int items_placed = plot_draggable_building(data.start.x, data.start.y, x, y, 0);
         if (items_placed >= 0) {
             current_cost *= items_placed;
@@ -1105,7 +1105,7 @@ void building_construction_place(void)
     } else if (type >= BUILDING_PINE_PATH && type <= BUILDING_DATE_PATH) {
         int rotation = building_rotation_get_rotation_with_limit(BUILDING_CONNECTABLE_ROTATION_LIMIT_PATHS);
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation);
-    } else if (type >= BUILDING_SMALL_STATUE_ALT && type <= BUILDING_SMALL_STATUE_ALT_B) {
+    } else if (type >= BUILDING_GODDESS_STATUE && type <= BUILDING_SENATOR_STATUE) {
         int rotation = building_rotation_get_rotation();
         placement_cost *= place_draggable_building(x_start, y_start, x_end, y_end, type, rotation % 2);
     } else if (type >= BUILDING_HEDGE_DARK && type <= BUILDING_HEDGE_LIGHT) {

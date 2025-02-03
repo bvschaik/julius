@@ -275,8 +275,8 @@ void map_orientation_update_buildings(void)
                 map_water_add_building(i, b->x, b->y, b->size);
                 break;
             case BUILDING_SMALL_STATUE:
-            case BUILDING_SMALL_STATUE_ALT:
-            case BUILDING_SMALL_STATUE_ALT_B:
+            case BUILDING_GODDESS_STATUE:
+            case BUILDING_SENATOR_STATUE:
             case BUILDING_GLADIATOR_STATUE:
             case BUILDING_MEDIUM_STATUE:
             case BUILDING_LEGION_STATUE:

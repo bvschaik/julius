@@ -104,7 +104,7 @@ static int get_height_id(void)
             return 7;
         }
 
-        if (b->type >= BUILDING_SMALL_POND && b->type <= BUILDING_SMALL_STATUE_ALT_B) {
+        if (b->type >= BUILDING_SMALL_POND && b->type <= BUILDING_SENATOR_STATUE) {
             return 1;
         }
 
@@ -686,8 +686,8 @@ static void draw_background(void)
             window_building_draw_well(&context);
         } else if (btype == BUILDING_SMALL_STATUE ||
             btype == BUILDING_MEDIUM_STATUE ||
-            btype == BUILDING_SMALL_STATUE_ALT ||
-            btype == BUILDING_SMALL_STATUE_ALT_B ||
+            btype == BUILDING_GODDESS_STATUE ||
+            btype == BUILDING_SENATOR_STATUE ||
             btype == BUILDING_LEGION_STATUE ||
             btype == BUILDING_DECORATIVE_COLUMN ||
             btype == BUILDING_HORSE_STATUE ||
