@@ -419,7 +419,7 @@ static void draw_depot_cartpusher(building_info_context *c, figure *f)
     translation_key button_text = is_depot_cartpusher_recalled(f) ?
         TR_FIGURE_INFO_DEPOT_RETURNING : TR_FIGURE_INFO_DEPOT_RECALL;
     text_draw_centered(translation_for(button_text), c->x_offset + 90, c->y_offset + 166,
-        100, FONT_SMALL_PLAIN, 0);
+        100, FONT_NORMAL_BROWN, 0);
 
     if (is_depot_cartpusher_recalled(f)) {
         return;
