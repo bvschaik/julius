@@ -351,6 +351,9 @@ void empire_object_init_cities(int empire_id)
         city->trader_figure_ids[2] = 0;
         city->empire_object_id = array_index;
     }
+    if (empire_id != SCENARIO_CUSTOM_EMPIRE) {
+        empire_city_update_our_fish_and_meat_production();
+    }
     empire_city_update_trading_data(empire_id);
 }
 

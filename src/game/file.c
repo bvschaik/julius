@@ -257,6 +257,9 @@ static void check_backward_compatibility(void)
 static void initialize_saved_game(void)
 {
     load_empire_data(!game_campaign_is_original(), scenario_empire_id());
+    if (resource_mapping_get_version() < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
+        empire_city_update_our_fish_and_meat_production();
+    }
     empire_city_update_trading_data(scenario_empire_id());
 
     map_image_context_init();

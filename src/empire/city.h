@@ -89,6 +89,8 @@ const uint8_t *empire_city_get_name(const empire_city *city);
 
 void empire_city_save_state(buffer *buf);
 
+void empire_city_update_our_fish_and_meat_production(void);
+
 void empire_city_update_trading_data(int empire_id);
 
 void empire_city_load_state(buffer *buf, int version);

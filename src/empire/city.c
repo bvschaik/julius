@@ -604,28 +604,32 @@ static void set_new_monument_elements_production(int empire_id, empire_city *cit
     }
 }
 
-static void update_trading_data(int empire_id, empire_city *city)
+void empire_city_update_our_fish_and_meat_production(void)
 {
-    set_gold_production(city);
-    set_new_monument_elements_production(empire_id, city);
+    empire_city *city;
+
+    array_foreach(cities, city) {
+        if (city->type != EMPIRE_CITY_OURS) {
+            continue;
+        }
+        if (city->sells_resource[RESOURCE_FISH]) {
+            empire_city_change_selling_of_resource(city, RESOURCE_MEAT, !NOT_SELLING);
+        } else if (scenario_allowed_building(BUILDING_WHARF)) {
+            empire_city_change_selling_of_resource(city, RESOURCE_FISH, !NOT_SELLING);
+        }
+        return;
+    }
 }
 
 void empire_city_update_trading_data(int empire_id)
 {
+    if (empire_id == SCENARIO_CUSTOM_EMPIRE) {
+        return;
+    }
     empire_city *city;
     array_foreach(cities, city) {
-        if (resource_mapping_get_version() < RESOURCE_SEPARATE_FISH_AND_MEAT_VERSION) {
-            if (city->type == EMPIRE_CITY_OURS) {
-                if (city->sells_resource[RESOURCE_FISH]) {
-                    empire_city_change_selling_of_resource(city, RESOURCE_MEAT, !NOT_SELLING);
-                } else if (scenario_allowed_building(BUILDING_WHARF)) {
-                    empire_city_change_selling_of_resource(city, RESOURCE_FISH, !NOT_SELLING);
-                }
-            }
-        }
-        if (empire_id != SCENARIO_CUSTOM_EMPIRE) {
-            update_trading_data(empire_id, city);
-        }
+        set_gold_production(city);
+        set_new_monument_elements_production(empire_id, city);
     }
 }
 
