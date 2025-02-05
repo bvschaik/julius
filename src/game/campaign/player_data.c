@@ -99,7 +99,7 @@ static void load_campaign_player_data(void)
         return;
     }
 
-    if (!xml_parser_init(xml_elements, XML_PARSER_ELEMENTS)) {
+    if (!xml_parser_init(xml_elements, XML_PARSER_ELEMENTS, 0)) {
         free(xml_data);
         log_error("Problem creating the campaign player data xml parser.", 0, 0);
         return;

@@ -262,7 +262,7 @@ static void xml_end_mission(void)
 
 int campaign_xml_get_info(const char *xml_text, size_t xml_size, campaign_info *info)
 {
-    if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS)) {
+    if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS, 0)) {
         return 0;
     }
     data.info = info;

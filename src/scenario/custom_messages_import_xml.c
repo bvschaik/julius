@@ -186,7 +186,7 @@ static int parse_xml(char *buf, int buffer_length)
     reset_data();
     custom_messages_clear_all();
     data.success = 1;
-    if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS)) {
+    if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS, 0)) {
         data.success = 0;
     }
     if (data.success) {

@@ -229,7 +229,7 @@ static void xml_end_animation_element(void)
 void xml_init(void)
 {
     if (!data.initialized) {
-        xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS);
+        xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS, 0);
         data.initialized = 1;
     }
 }

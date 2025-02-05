@@ -779,7 +779,7 @@ static int parse_xml(char *buf, int buffer_length)
     reset_data();
     empire_clear();
     empire_object_clear();
-    if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS)) {
+    if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS, 0)) {
         return 0;
     }
     if (!xml_parser_parse(buf, buffer_length, 1)) {

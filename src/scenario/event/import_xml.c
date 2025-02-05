@@ -35,6 +35,7 @@ static struct {
 
 static int xml_import_start_scenario_events(void);
 static int xml_import_start_event(void);
+static void xml_import_end_conditions(void);
 static int xml_import_start_group(void);
 static void xml_import_end_group(void);
 static int xml_import_create_condition(void);
@@ -62,7 +63,7 @@ static int action_populate_parameters(scenario_action_t *action);
 static const xml_parser_element xml_elements[XML_TOTAL_ELEMENTS] = {
     { "events", xml_import_start_scenario_events },
     { "event", xml_import_start_event, 0, "events" },
-    { "conditions", 0, 0, "event" },
+    { "conditions", 0, xml_import_end_conditions, "event" },
     { "group", xml_import_start_group, xml_import_end_group, "conditions" },
     { "actions", 0, 0, "event" },
     { "time", xml_import_create_condition, 0, "conditions|group" },
@@ -140,40 +141,6 @@ static int xml_import_start_scenario_events(void)
     return 1;
 }
 
-static int xml_import_start_event(void)
-{
-    if (!data.success) {
-        return 0;
-    }
-
-    int min = xml_parser_get_attribute_int("repeat_months_min");
-    if (!min) {
-        min = 0;
-    }
-
-    int max = xml_parser_get_attribute_int("repeat_months_max");
-    if (!max) {
-        max = min;
-    }
-
-    int max_repeats = xml_parser_get_attribute_int("max_number_of_repeats");
-    if (!max_repeats) {
-        max_repeats = 0;
-    }
-
-    data.current_event = scenario_event_create(min, max, max_repeats);
-
-    if (!data.current_event) {
-        data.success = 0;
-        log_error("Could not create the event - out of memory", 0, 0);
-        return 0;
-    }
-    if (xml_parser_has_attribute("name")) {
-        encoding_from_utf8(xml_parser_get_attribute_string("name"), data.current_event->name, EVENT_NAME_LENGTH);
-    }
-    return 1;
-}
-
 static int xml_import_start_custom_variables(void)
 {
     if (!data.success) {
@@ -225,15 +192,45 @@ static int xml_import_create_custom_variable(void)
     return 1;
 }
 
-static condition_types get_condition_type_from_element_name(const char *name)
+static int xml_import_start_event(void)
 {
-    for (condition_types i = CONDITION_TYPE_MIN; i < CONDITION_TYPE_MAX; i++) {
-        const char *condition_name = scenario_events_parameter_data_get_conditions_xml_attributes(i)->xml_attr.name;
-        if (condition_name && xml_parser_compare_multiple(condition_name, name)) {
-            return i;
-        }
+    if (!data.success) {
+        return 0;
     }
-    return CONDITION_TYPE_UNDEFINED;
+
+    int min = xml_parser_get_attribute_int("repeat_months_min");
+    if (!min) {
+        min = 0;
+    }
+
+    int max = xml_parser_get_attribute_int("repeat_months_max");
+    if (!max) {
+        max = min;
+    }
+
+    int max_repeats = xml_parser_get_attribute_int("max_number_of_repeats");
+    if (!max_repeats) {
+        max_repeats = 0;
+    }
+
+    data.current_event = scenario_event_create(min, max, max_repeats);
+
+    if (!data.current_event) {
+        data.success = 0;
+        log_error("Could not create the event - out of memory", 0, 0);
+        return 0;
+    }
+    if (xml_parser_has_attribute("name")) {
+        encoding_from_utf8(xml_parser_get_attribute_string("name"), data.current_event->name, EVENT_NAME_LENGTH);
+    }
+    return 1;
+}
+
+static void xml_import_end_conditions(void)
+{
+    if (data.current_event->condition_groups.size == 0) {
+        array_advance(data.current_event->condition_groups);
+    }
 }
 
 static scenario_condition_group_t *get_first_group(void)
@@ -270,6 +267,17 @@ static int xml_import_start_group(void)
 static void xml_import_end_group(void)
 {
     data.current_group = 0;
+}
+
+static condition_types get_condition_type_from_element_name(const char *name)
+{
+    for (condition_types i = CONDITION_TYPE_MIN; i < CONDITION_TYPE_MAX; i++) {
+        const char *condition_name = scenario_events_parameter_data_get_conditions_xml_attributes(i)->xml_attr.name;
+        if (condition_name && xml_parser_compare_multiple(condition_name, name)) {
+            return i;
+        }
+    }
+    return CONDITION_TYPE_UNDEFINED;
 }
 
 static int condition_populate_parameters(scenario_condition_t *condition)
@@ -639,7 +647,7 @@ static int parse_xml(char *buf, int buffer_length)
     reset_data();
     scenario_events_clear();
     data.success = 1;
-    if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS)) {
+    if (!xml_parser_init(xml_elements, XML_TOTAL_ELEMENTS, 1)) {
         data.success = 0;
     }
     if (data.success) {

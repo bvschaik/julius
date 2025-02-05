@@ -24,9 +24,10 @@ int xml_parser_compare_multiple(const char *string, const char *match);
  * 
  * @param elements A list of xml_parser_element structures, indicating the format of the xml file. This will be used for error checking.
  * @param total_elements The total number of elements passed.
+ * @param stop_on_invalid_xml Whether the parser should stop when it finds an invalid xml element.
  * @return 1 if init was successful, 0 otherwise.
  */
-int xml_parser_init(const xml_parser_element *elements, int total_elements);
+int xml_parser_init(const xml_parser_element *elements, int total_elements, int stop_on_invalid_xml);
 
 /**
  * @brief Parses a chunk of a xml file. 
