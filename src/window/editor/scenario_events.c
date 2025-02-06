@@ -26,9 +26,9 @@
 #include "window/file_dialog.h"
 #include "window/numeric_input.h"
 
-#define EVENTS_Y_OFFSET 146
-#define EVENTS_ROW_HEIGHT 32
-#define MAX_VISIBLE_ROWS 8
+#define EVENTS_Y_OFFSET 100
+#define EVENTS_ROW_HEIGHT 31
+#define MAX_VISIBLE_ROWS 10
 #define BUTTON_WIDTH 320
 
 
@@ -40,7 +40,7 @@ static void populate_list(int offset);
 static void add_new_event(void);
 
 static scrollbar_type scrollbar = {
-    368, EVENTS_Y_OFFSET, EVENTS_ROW_HEIGHT * MAX_VISIBLE_ROWS, BUTTON_WIDTH - 16, MAX_VISIBLE_ROWS, on_scroll, 0, 4
+    375, EVENTS_Y_OFFSET, EVENTS_ROW_HEIGHT * MAX_VISIBLE_ROWS, BUTTON_WIDTH - 17, MAX_VISIBLE_ROWS, on_scroll, 0, 4
 };
 
 static generic_button buttons[] = {
@@ -52,11 +52,13 @@ static generic_button buttons[] = {
     {48, EVENTS_Y_OFFSET + (5 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 6},
     {48, EVENTS_Y_OFFSET + (6 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 7},
     {48, EVENTS_Y_OFFSET + (7 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 8},
-    {48, EVENTS_Y_OFFSET + (9 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 9},
-    {48, EVENTS_Y_OFFSET + (11 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 10},
-    {48, EVENTS_Y_OFFSET + (12 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 11},
-    {48, EVENTS_Y_OFFSET + (13 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 12},
-    {210, 100, BUTTON_WIDTH / 2, EVENTS_ROW_HEIGHT, button_open_variables}
+    {48, EVENTS_Y_OFFSET + (8 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 9},
+    {48, EVENTS_Y_OFFSET + (9 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_event, 0, 10},
+    {48, EVENTS_Y_OFFSET + (11 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 11}, // add new
+    {48, EVENTS_Y_OFFSET + (13 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 12}, // import
+    {48, EVENTS_Y_OFFSET + (14 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 13}, // export
+    {48, EVENTS_Y_OFFSET + (15 * EVENTS_ROW_HEIGHT), BUTTON_WIDTH, EVENTS_ROW_HEIGHT, button_click, 0, 14}, // clear
+    {255, 60, BUTTON_WIDTH / 2, EVENTS_ROW_HEIGHT, button_open_variables}                                   // variables
 };
 #define MAX_BUTTONS (sizeof(buttons) / sizeof(generic_button))
 
@@ -132,9 +134,9 @@ static void draw_foreground(void)
 
     outer_panel_draw(16, 16, 26, 38);
 
-    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENTS_TITLE), 48, 58, BUTTON_WIDTH, FONT_LARGE_BLACK, 0);
+    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENTS_TITLE), 48, 30, BUTTON_WIDTH, FONT_LARGE_BLACK, 0);
     text_draw_label_and_number(translation_for(TR_EDITOR_SCENARIO_EVENTS_COUNT), data.total_events, "",
-        48, 106, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        30, 70, FONT_NORMAL_PLAIN, COLOR_BLACK);
 
     for (unsigned int i = 0; i < MAX_VISIBLE_ROWS; i++) {
         if (data.list[i]) {
@@ -159,26 +161,26 @@ static void draw_foreground(void)
         }
     }
 
-    for (size_t i = 8; i < MAX_BUTTONS; i++) {
+    for (size_t i = 10; i < MAX_BUTTONS; i++) {
         large_label_draw(buttons[i].x, buttons[i].y, buttons[i].width / 16, data.focus_button_id == i + 1 ? 1 : 0);
     }
 
-    generic_button *btn = &buttons[8];
+    generic_button *btn = &buttons[10];
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_ADD, btn->x, btn->y + 8, btn->width, FONT_NORMAL_GREEN);
 
-    btn = &buttons[9];
+    btn = &buttons[11];
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_IMPORT, btn->x, btn->y + 8, btn->width, FONT_NORMAL_GREEN);
 
-    btn = &buttons[10];
+    btn = &buttons[12];
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_EXPORT, btn->x, btn->y + 8, btn->width, FONT_NORMAL_GREEN);
 
-    btn = &buttons[11];
+    btn = &buttons[13];
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENTS_CLEAR, btn->x, btn->y + 8, btn->width, FONT_NORMAL_GREEN);
 
-    btn = &buttons[12];
+    btn = &buttons[14];
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_CUSTOM_VARIABLES_TITLE, btn->x, btn->y + 8, btn->width, FONT_NORMAL_GREEN);
 
-    lang_text_draw_centered(13, 3, 48, 600, BUTTON_WIDTH, FONT_NORMAL_BLACK);
+    lang_text_draw_centered(13, 3, 48, 600, BUTTON_WIDTH, FONT_NORMAL_BLACK); // Right-click to Continue
 
     scrollbar_draw(&scrollbar);
     graphics_reset_dialog();
@@ -216,13 +218,13 @@ static void handle_input(const mouse *m, const hotkeys *h)
 static void button_click(const generic_button *button)
 {
     int type = button->parameter1;
-    if (type == 9) {
+    if (type == 11) {
         add_new_event();
-    } else if (type == 10) {
-        window_file_dialog_show(FILE_TYPE_SCENARIO_EVENTS, FILE_DIALOG_LOAD);
-    } else if (type == 11) {
-        window_file_dialog_show(FILE_TYPE_SCENARIO_EVENTS, FILE_DIALOG_SAVE);
     } else if (type == 12) {
+        window_file_dialog_show(FILE_TYPE_SCENARIO_EVENTS, FILE_DIALOG_LOAD);
+    } else if (type == 13) {
+        window_file_dialog_show(FILE_TYPE_SCENARIO_EVENTS, FILE_DIALOG_SAVE);
+    } else if (type == 14) {
         scenario_events_clear();
         data.total_events = scenario_events_get_count();
     }
