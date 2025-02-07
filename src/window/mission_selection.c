@@ -16,7 +16,6 @@
 #include "graphics/window.h"
 #include "input/input.h"
 #include "scenario/property.h"
-#include "sound/channel.h"
 #include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
@@ -200,8 +199,8 @@ static void handle_input(const mouse *m, const hotkeys *h)
                 }
                 window_invalidate();
                 if (scenario->fanfare) {
-                    sound_device_play_file_on_channel(scenario->fanfare, SOUND_CHANNEL_SPEECH,
-                        setting_sound(SOUND_SPEECH)->volume);
+                    sound_device_play_file_on_channel(scenario->fanfare, SOUND_TYPE_SPEECH,
+                        setting_sound(SOUND_TYPE_SPEECH)->volume);
                 } else {
                     sound_speech_stop();
                 }

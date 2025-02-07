@@ -4,6 +4,7 @@
 #include "core/config.h"
 #include "core/file.h"
 #include "core/log.h"
+#include "core/time.h"
 #include "game/campaign.h"
 #include "game/settings.h"
 #include "platform/platform.h"
@@ -24,7 +25,7 @@
 #define AUDIO_CHANNELS 2
 #define AUDIO_BUFFERS 1024
 
-#define MAX_CHANNELS 160
+#define NO_CHANNEL -1
 
 #if SDL_VERSION_ATLEAST(2, 0, 7)
 #define USE_SDL_AUDIOSTREAM
@@ -42,14 +43,26 @@ static struct {
 typedef struct {
     const char *filename;
     Mix_Chunk *chunk;
+    time_millis last_played;
 } sound_channel;
 
 static struct {
     int initialized;
     uint8_t *custom_music;
     Mix_Music *music;
-    sound_channel channels[MAX_CHANNELS];
+    sound_channel *channels;
+    unsigned int total_channels;
+    void (*sound_finished_callback)(sound_type);
 } data;
+
+static struct {
+    int start;
+    int total;
+} sound_type_to_channels[SOUND_TYPE_MAX] = {
+    [SOUND_TYPE_SPEECH]  = { .total = 1  },
+    [SOUND_TYPE_EFFECTS] = { .total = 10 },
+    [SOUND_TYPE_CITY]    = { .total = 5  }
+};
 
 static struct {
     SDL_AudioFormat format;
@@ -73,10 +86,28 @@ static int percentage_to_volume(int percentage)
 
 static void init_channels(void)
 {
-    data.initialized = 1;
-    for (int i = 0; i < MAX_CHANNELS; i++) {
-        data.channels[i].chunk = 0;
+    if (data.initialized) {
+        return;
     }
+
+    for (sound_type type = 0; type < SOUND_TYPE_MAX; type++) {
+        if (!sound_type_to_channels[type].total) {
+            continue;
+        }
+        sound_type_to_channels[type].start = data.total_channels;
+        data.total_channels += sound_type_to_channels[type].total;
+    }
+
+    data.channels = malloc(sizeof(sound_channel) * data.total_channels);
+
+    if (!data.channels) {
+        log_error("Unable to create sound channels. The game may crash.", 0, 0);
+        data.total_channels = 0;
+        return;
+    }
+
+    memset(data.channels, 0, sizeof(sound_channel) * data.total_channels);
+    data.initialized = 1;
 }
 
 void sound_device_open(void)
@@ -118,67 +149,115 @@ void sound_device_open(void)
     }
 }
 
+static void stop_channel(int channel)
+{
+    if (!data.initialized) {
+        return;
+    }
+    sound_channel *ch = &data.channels[channel];
+    if (ch->chunk) {
+        Mix_HaltChannel(channel);
+        Mix_FreeChunk(ch->chunk);
+        ch->chunk = 0;
+    }
+    ch->filename = 0;
+    ch->last_played = 0;
+}
+
 void sound_device_close(void)
 {
-    if (data.initialized) {
-        for (int i = 0; i < MAX_CHANNELS; i++) {
-            sound_device_stop_channel(i);
-        }
-        Mix_CloseAudio();
-        data.initialized = 0;
+    if (!data.initialized) {
+        return;
     }
+    for (int i = 0; i < data.total_channels; i++) {
+        stop_channel(i);
+    }
+    Mix_ChannelFinished(NULL);
+    Mix_CloseAudio();
+    free(data.channels);
+    data.channels = 0;
+    data.total_channels = 0;
+    data.initialized = 0;
 }
 
 static Mix_Chunk *load_chunk(const char *filename)
 {
-    if (filename[0]) {
-        size_t size;
-        uint8_t *audio_data = game_campaign_load_file(filename, &size);
-        if (audio_data) {
-            SDL_RWops *sdl_memory = SDL_RWFromMem(audio_data, (int) size);
-            return Mix_LoadWAV_RW(sdl_memory, SDL_TRUE);
-        }
+    if (!filename || !*filename) {
+        return 0;
+    }
+    size_t size;
+    uint8_t *audio_data = game_campaign_load_file(filename, &size);
+    if (audio_data) {
+        SDL_RWops *sdl_memory = SDL_RWFromMem(audio_data, (int) size);
+        return Mix_LoadWAV_RW(sdl_memory, SDL_TRUE);
+    }
+    filename = dir_get_file(filename, MAY_BE_LOCALIZED);
+    if (!filename) {
+        return 0;
+    }
 #if defined(__vita__) || defined(__ANDROID__)
-        FILE *fp = file_open(filename, "rb");
-        if (!fp) {
-            return NULL;
-        }
-        SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
-        return Mix_LoadWAV_RW(sdl_fp, 1);
-#else
-        return Mix_LoadWAV(filename);
-#endif
-    } else {
+    FILE *fp = file_open(filename, "rb");
+    if (!fp) {
         return NULL;
     }
+    SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
+    return Mix_LoadWAV_RW(sdl_fp, 1);
+#else
+    return Mix_LoadWAV(filename);
+#endif
 }
 
-static int load_channel(sound_channel *channel)
+static void callback_for_audio_finished(int channel)
 {
-    if (!channel->chunk && channel->filename) {
-        channel->chunk = load_chunk(channel->filename);
+    if (!data.sound_finished_callback) {
+        return;
     }
-    return channel->chunk ? 1 : 0;
-}
-
-void sound_device_init_channels(int num_channels, char filenames[][CHANNEL_FILENAME_MAX])
-{
-    if (data.initialized) {
-        if (num_channels > MAX_CHANNELS) {
-            num_channels = MAX_CHANNELS;
-        }
-        Mix_AllocateChannels(num_channels);
-        log_info("Loading audio files", 0, 0);
-        for (int i = 0; i < num_channels; i++) {
-            data.channels[i].chunk = 0;
-            data.channels[i].filename = filenames[i][0] ? filenames[i] : 0;
+    for (sound_type type = SOUND_TYPE_MIN; type < SOUND_TYPE_MAX; type++) {
+        if (channel >= sound_type_to_channels[type].start &&
+            channel - sound_type_to_channels[type].start < sound_type_to_channels[type].total) {
+            data.sound_finished_callback(type);
+            return;
         }
     }
+    data.sound_finished_callback(NO_CHANNEL);
 }
 
-int sound_device_is_channel_playing(int channel)
+void sound_device_init_channels(void)
 {
-    return data.channels[channel].chunk && Mix_Playing(channel);
+    if (!data.initialized) {
+        return;
+    }
+    Mix_AllocateChannels(data.total_channels);
+    log_info("Loading audio files", 0, 0);
+    for (int i = 0; i < data.total_channels; i++) {
+        data.channels[i].chunk = 0;
+        data.channels[i].filename = 0;
+        data.channels[i].last_played = 0;
+    }
+    Mix_ChannelFinished(callback_for_audio_finished);
+}
+
+static int get_channel_for_filename(const char *filename, sound_type type)
+{
+    for (int i = 0; i < sound_type_to_channels[type].total; i++) {
+        int channel = i + sound_type_to_channels[type].start;
+        if (data.channels[channel].filename && strcmp(filename, data.channels[channel].filename) == 0) {
+            return channel;
+        }
+    }
+    return NO_CHANNEL;
+}
+
+int sound_device_is_file_playing_on_channel(const char *filename, sound_type type)
+{
+    if (!filename) {
+        return 0;
+    }
+    int channel = get_channel_for_filename(filename, type);
+    if (channel == NO_CHANNEL) {
+        return 0;
+    }
+    return Mix_Playing(channel);
 }
 
 void sound_device_set_music_volume(int volume_pct)
@@ -186,10 +265,13 @@ void sound_device_set_music_volume(int volume_pct)
     Mix_VolumeMusic(percentage_to_volume(volume_pct));
 }
 
-void sound_device_set_channel_volume(int channel, int volume_pct)
+void sound_device_set_volume_for_type(sound_type type, int volume_pct)
 {
-    if (data.channels[channel].chunk) {
-        Mix_VolumeChunk(data.channels[channel].chunk, percentage_to_volume(volume_pct));
+    for (int i = 0; i < sound_type_to_channels[type].total; i++) {
+        int channel = i + sound_type_to_channels[type].start;
+        if (data.channels[channel].chunk) {
+            Mix_VolumeChunk(data.channels[channel].chunk, percentage_to_volume(volume_pct));
+        }
     }
 }
 
@@ -271,45 +353,58 @@ int sound_device_play_music(const char *filename, int volume_pct, int loop)
     return 0;
 }
 
-int sound_device_play_file_on_channel(const char *filename, int channel, int volume_pct)
+static int get_available_channel(sound_type type)
 {
-    if (data.initialized && config_get(CONFIG_GENERAL_ENABLE_AUDIO)) {
-        sound_device_stop_channel(channel);
+    int oldest_channel = NO_CHANNEL;
+    for (int i = 0; i < sound_type_to_channels[type].total; i++) {
+        int channel = i + sound_type_to_channels[type].start;
+        if (!Mix_Playing(channel)) {
+            if (oldest_channel == NO_CHANNEL ||
+                data.channels[channel].last_played < data.channels[oldest_channel].last_played) {
+                oldest_channel = channel;
+            }
+        }
+    }
+    return oldest_channel;
+}
+
+int sound_device_play_file_on_channel_panned(const char *filename, sound_type type,
+    int volume_pct, int left_pct, int right_pct)
+{
+    if (!data.initialized || !config_get(CONFIG_GENERAL_ENABLE_AUDIO)) {
+        return 0;
+    }
+    int channel = get_channel_for_filename(filename, type);
+    if (channel == NO_CHANNEL) {
+        channel = get_available_channel(type);
+        if (channel == NO_CHANNEL) {
+            return 0;
+        }
+        stop_channel(channel);
         data.channels[channel].chunk = load_chunk(filename);
-        if (data.channels[channel].chunk) {
-            sound_device_set_channel_volume(channel, volume_pct);
-            return Mix_PlayChannel(channel, data.channels[channel].chunk, 0) != -1;
+        if (!data.channels[channel].chunk) {
+            return 0;
         }
+        data.channels[channel].filename = filename;
     }
-    return 0;
+    Mix_SetPanning(channel, left_pct * 255 / 100, right_pct * 255 / 100);
+    Mix_VolumeChunk(data.channels[channel].chunk, percentage_to_volume(volume_pct));
+    int result = Mix_PlayChannel(channel, data.channels[channel].chunk, 0);
+    if (result == -1) {
+        return 0;
+    }
+    data.channels[channel].last_played = time_get_millis();
+    return 1;
 }
 
-void sound_device_play_channel(int channel, int volume_pct)
+int sound_device_play_file_on_channel(const char *filename, sound_type type, int volume_pct)
 {
-    if (data.initialized && config_get(CONFIG_GENERAL_ENABLE_AUDIO)) {
-        sound_channel *ch = &data.channels[channel];
-        if (load_channel(ch)) {
-            sound_device_set_channel_volume(channel, volume_pct);
-            Mix_PlayChannel(channel, ch->chunk, 0);
-        }
-    }
+    return sound_device_play_file_on_channel_panned(filename, type, volume_pct, 100, 100);
 }
 
-void sound_device_play_channel_panned(int channel, int volume_pct, int left_pct, int right_pct)
+void sound_device_on_audio_finished(void (*callback)(sound_type))
 {
-    if (data.initialized && config_get(CONFIG_GENERAL_ENABLE_AUDIO)) {
-        sound_channel *ch = &data.channels[channel];
-        if (load_channel(ch)) {
-            Mix_SetPanning(channel, left_pct * 255 / 100, right_pct * 255 / 100);
-            sound_device_set_channel_volume(channel, volume_pct);
-            Mix_PlayChannel(channel, ch->chunk, 0);
-        }
-    }
-}
-
-void sound_device_on_audio_finished(void (*callback)(int))
-{
-    Mix_ChannelFinished(callback);
+    data.sound_finished_callback = callback;
 }
 
 void sound_device_fadeout_music(int milisseconds)
@@ -330,16 +425,10 @@ void sound_device_stop_music(void)
     }
 }
 
-void sound_device_stop_channel(int channel)
+void sound_device_stop_type(sound_type type)
 {
-    if (data.initialized) {
-        Mix_ChannelFinished(NULL);
-        sound_channel *ch = &data.channels[channel];
-        if (ch->chunk) {
-            Mix_HaltChannel(channel);
-            Mix_FreeChunk(ch->chunk);
-            ch->chunk = 0;
-        }
+    for (int i = 0; i < sound_type_to_channels[type].total; i++) {
+        stop_channel(i + sound_type_to_channels[type].start);
     }
 }
 

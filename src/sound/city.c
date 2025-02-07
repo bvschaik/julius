@@ -1,101 +1,24 @@
 #include "city.h"
 
+#include "building/properties.h"
 #include "city/figures.h"
+#include "core/file.h"
 #include "core/random.h"
 #include "core/time.h"
 #include "game/settings.h"
-#include "sound/channel.h"
 #include "sound/device.h"
 
 #include <string.h>
 
-#define MAX_CHANNELS 100
-
-// for compatibility with the original game:
-#define CITY_CHANNEL_OFFSET 18
-
-#define CONSTRUCTION_SITE_CHANNEL 64
-
-enum {
-    SOUND_CHANNEL_CITY_HOUSE_SLUM = 30,
-    SOUND_CHANNEL_CITY_HOUSE_POOR = 34,
-    SOUND_CHANNEL_CITY_HOUSE_MEDIUM = 38,
-    SOUND_CHANNEL_CITY_HOUSE_GOOD = 42,
-    SOUND_CHANNEL_CITY_HOUSE_POSH = 46,
-    SOUND_CHANNEL_CITY_AMPHITHEATER = 50,
-    SOUND_CHANNEL_CITY_THEATER = 51,
-    SOUND_CHANNEL_CITY_HIPPODROME = 52,
-    SOUND_CHANNEL_CITY_COLOSSEUM = 53,
-    SOUND_CHANNEL_CITY_GLADIATOR_SCHOOL = 54,
-    SOUND_CHANNEL_CITY_LION_PIT = 55,
-    SOUND_CHANNEL_CITY_ACTOR_COLONY = 56,
-    SOUND_CHANNEL_CITY_CHARIOT_MAKER = 57,
-    SOUND_CHANNEL_CITY_GARDEN = 58,
-    SOUND_CHANNEL_CITY_CLINIC = 62,
-    SOUND_CHANNEL_CITY_HOSPITAL = 63,
-    SOUND_CHANNEL_CITY_BATHHOUSE = 64,
-    SOUND_CHANNEL_CITY_BARBER = 65,
-    SOUND_CHANNEL_CITY_SCHOOL = 66,
-    SOUND_CHANNEL_CITY_ACADEMY = 67,
-    SOUND_CHANNEL_CITY_LIBRARY = 68,
-    SOUND_CHANNEL_CITY_PREFECTURE = 69,
-    SOUND_CHANNEL_CITY_FORT = 70,
-    SOUND_CHANNEL_CITY_TOWER = 74,
-    SOUND_CHANNEL_CITY_WATCHTOWER = 75,
-    SOUND_CHANNEL_CITY_ARMOURY = 76,
-    SOUND_CHANNEL_CITY_WORKCAMP = 77,
-    SOUND_CHANNEL_CITY_TEMPLE_CERES = 78,
-    SOUND_CHANNEL_CITY_TEMPLE_NEPTUNE = 79,
-    SOUND_CHANNEL_CITY_TEMPLE_MERCURY = 80,
-    SOUND_CHANNEL_CITY_TEMPLE_MARS = 81,
-    SOUND_CHANNEL_CITY_TEMPLE_VENUS = 82,
-    SOUND_CHANNEL_CITY_MARKET = 83,
-    SOUND_CHANNEL_CITY_CARAVANSERAI = 84,
-    SOUND_CHANNEL_CITY_TAVERN = 85,
-    SOUND_CHANNEL_CITY_GRANARY = 87,
-    SOUND_CHANNEL_CITY_WAREHOUSE = 89,
-    SOUND_CHANNEL_CITY_MESS_HALL = 90,
-    SOUND_CHANNEL_CITY_SHIPYARD = 91,
-    SOUND_CHANNEL_CITY_DOCK = 93,
-    SOUND_CHANNEL_CITY_WHARF = 95,
-    SOUND_CHANNEL_CITY_PALACE = 97,
-    SOUND_CHANNEL_CITY_ENGINEERS_POST = 98,
-    SOUND_CHANNEL_CITY_SENATE = 99,
-    SOUND_CHANNEL_CITY_FORUM = 100,
-    SOUND_CHANNEL_CITY_RESERVOIR = 101,
-    SOUND_CHANNEL_CITY_FOUNTAIN = 102,
-    SOUND_CHANNEL_CITY_WELL = 106,
-    SOUND_CHANNEL_CITY_MILITARY_ACADEMY = 110,
-    SOUND_CHANNEL_CITY_ORACLE = 111,
-    SOUND_CHANNEL_CITY_BURNING_RUIN = 112,
-    SOUND_CHANNEL_CITY_WHEAT_FARM = 113,
-    SOUND_CHANNEL_CITY_VEGETABLE_FARM = 114,
-    SOUND_CHANNEL_CITY_FRUIT_FARM = 115,
-    SOUND_CHANNEL_CITY_OLIVE_FARM = 116,
-    SOUND_CHANNEL_CITY_VINE_FARM = 117,
-    SOUND_CHANNEL_CITY_PIG_FARM = 118,
-    SOUND_CHANNEL_CITY_QUARRY = 119,
-    SOUND_CHANNEL_CITY_IRON_MINE = 120,
-    SOUND_CHANNEL_CITY_TIMBER_YARD = 121,
-    SOUND_CHANNEL_CITY_CLAY_PIT = 122,
-    SOUND_CHANNEL_CITY_WINE_WORKSHOP = 123,
-    SOUND_CHANNEL_CITY_OIL_WORKSHOP = 124,
-    SOUND_CHANNEL_CITY_WEAPONS_WORKSHOP = 125,
-    SOUND_CHANNEL_CITY_FURNITURE_WORKSHOP = 126,
-    SOUND_CHANNEL_CITY_POTTERY_WORKSHOP = 127,
-    SOUND_CHANNEL_CITY_EMPTY_LAND1 = 128,
-    SOUND_CHANNEL_CITY_EMPTY_LAND2 = 129,
-    SOUND_CHANNEL_CITY_EMPTY_LAND3 = 130,
-    //SOUND_CHANNEL_CITY_EMPTY_LAND4 = 131,
-    SOUND_CHANNEL_CITY_CITY_MINT = 132,
-    SOUND_CHANNEL_CITY_RIVER = 133,
-    SOUND_CHANNEL_CITY_MISSION_POST = 134,
-    SOUND_CHANNEL_CITY_BRICKWORKS = 135,
-    SOUND_CHANNEL_CITY_LIGHTHOUSE = 136,
-    SOUND_CHANNEL_CITY_DEPOT = 137,
-    SOUND_CHANNEL_CITY_CONCRETE_MAKER = 138,
-    SOUND_CHANNEL_CITY_CONSTRUCTION_SITE = 139,
-};
+typedef enum {
+    SOUND_AMBIENT_NONE = 0,
+    SOUND_AMBIENT_FIRST = 1,
+    SOUND_AMBIENT_EMPTY_LAND1 = 1,
+    SOUND_AMBIENT_EMPTY_LAND2,
+    SOUND_AMBIENT_EMPTY_LAND3,
+    SOUND_AMBIENT_RIVER,
+    SOUND_AMBIENT_MAX
+} sound_ambient_type;
 
 typedef struct {
     int in_use;
@@ -103,148 +26,142 @@ typedef struct {
     int total_views;
     int views_threshold;
     int direction_views[5];
-    int channel;
-    int times_played;
+    union {
+        sound_city_type city;
+        sound_ambient_type ambient;
+    } type;
     time_millis last_played_time;
     time_millis delay_millis;
-    int should_play;
-} city_channel;
+    const char *filename;
+} background_sound;
 
-static city_channel channels[MAX_CHANNELS];
-static int ambient_channels[] = { 61, 74, 75, 62};    // turn on "empty land" and river sound
-static int ambient_channels_number = 4;
+static struct {
+    background_sound city_sounds[SOUND_CITY_MAX];
+    background_sound ambient_sounds[SOUND_AMBIENT_MAX];
+    time_millis last_update_time;
+} data;
 
-static const int BUILDING_TYPE_TO_CHANNEL_ID[] = {
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //0-9
-    1, 1, 1, 1, 1, 1, 2, 2, 2, 2, //10-19
-    3, 3, 3, 3, 4, 4, 4, 4, 5, 5, //20-29
-    6, 7, 8, 9, 10, 11, 12, 13, 0, 14, //30-39
-    0, 0, 0, 0, 0, 0, 15, 16, 17, 18, //40-49
-    0, 19, 20, 21, 0, 22, 0, 23, 24, 24, //50-59
-    25, 26, 27, 28, 29, 25, 26, 27, 28, 29, //60-69
-    30, 31, 32, 0, 33, 34, 35, 36, 36, 36, //70-79
-    63, 37, 0, 0, 38, 38, 39, 39, 0, 0, // 80-89
-    40, 0, 0, 0, 43, 0, 0, 0, 44, 45, //90-99
-    46, 47, 48, 49, 50, 51, 52, 53, 54, 55, //100-109
-    56, 57, 58, 59, 60, 0, 70, 25, 26, 27, //110-119    WORKCAMP = 116[70]
-    28, 29, 0, 0, 0, 0, 0, 0, 0, 0, //120-129
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //130-139
-    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, //140-149
-    0, 0, 44, 37, 68, 69, 0, 0, 66, 0, //150-159        MESS_HALL = 154[68], LIGHTHOUSE = 155[69], TAVERN = 158[66]
-    9, 0, 0, 0, 0, 0, 0, 0, 0, 0, //160-169
-    44, 44, 44, 71, 0, 0, 67, 0, 0, 0, //170-179        WATCHTOWER = 173[71], CARAVANSERAI = 176[67]
-    0, 0, 0, 0, 53, 72, 73, 55, 52, 78, //180-189       CITY_MINT = 185[72], DEPOT = 186[73], CONCRETE_MAKER = 189[78]
-    77, 0, 0, 0, 0, 0, 0, 0, 0, 0, //190-199            BRICKWORKS = 190[77]
-    0, 0, 0, 65, 0, 0, 0, 0, 0, 0, //200-209
+static const char city_sound_files[SOUND_CITY_MAX][FILE_NAME_MAX] = {
+    "",
+    "wavs/house_slum1.wav",
+    "wavs/house_poor1.wav",
+    "wavs/house_mid1.wav",
+    "wavs/house_good1.wav",
+    "wavs/house_posh1.wav",
+    "wavs/ampitheatre.wav",
+    "wavs/theatre.wav",
+    "wavs/hippodrome.wav",
+    "wavs/colloseum.wav",
+    "wavs/glad_pit.wav",
+    "wavs/lion_pit.wav",
+    "wavs/art_pit.wav",
+    "wavs/char_pit.wav",
+    "wavs/gardens1.wav",
+    "wavs/clinic.wav",
+    "wavs/hospital.wav",
+    "wavs/baths.wav",
+    "wavs/barber.wav",
+    "wavs/school.wav",
+    "wavs/academy.wav",
+    "wavs/library.wav",
+    "wavs/prefecture.wav",
+    "wavs/fort1.wav",
+    "wavs/tower1.wav",
+    "wavs/tower2.wav",
+    "wavs/tower3.wav",
+    "wavs/tower4.wav",
+    "wavs/temp_farm.wav",
+    "wavs/temp_ship.wav",
+    "wavs/temp_comm.wav",
+    "wavs/temp_war.wav",
+    "wavs/temp_love.wav",
+    "wavs/market1.wav",
+    "wavs/market2.wav",
+    "wavs/market3.wav",
+    "wavs/granary1.wav",
+    "wavs/granary2.wav",
+    "wavs/warehouse1.wav",
+    "wavs/warehouse2.wav",
+    "wavs/shipyard1.wav",
+    "wavs/dock1.wav",
+    "wavs/wharf1.wav",
+    "wavs/palace.wav",
+    "wavs/eng_post.wav",
+    "wavs/senate.wav",
+    "wavs/forum.wav",
+    "wavs/resevoir.wav",
+    "wavs/fountain1.wav",
+    "wavs/well1.wav",
+    "wavs/mil_acad.wav",
+    "wavs/oracle.wav",
+    "wavs/burning_ruin.wav",
+    "wavs/wheat_farm.wav",
+    "wavs/veg_farm.wav",
+    "wavs/figs_farm.wav",
+    "wavs/olives_farm.wav",
+    "wavs/vines_farm.wav",
+    "wavs/meat_farm.wav",
+    "wavs/quarry.wav",
+    "wavs/mine.wav",
+    "wavs/lumber_mill.wav",
+    "wavs/clay_pit.wav",
+    "wavs/wine_workshop.wav",
+    "wavs/oil_workshop.wav",
+    "wavs/weap_workshop.wav",
+    "wavs/furn_workshop.wav",
+    "wavs/pott_workshop.wav",
+    "wavs/coin.wav"
+    "wavs/mission.wav",
+    ASSETS_DIRECTORY "/Sounds/Brickworks.wav",
+    ASSETS_DIRECTORY "/Sounds/Lighthouse.wav",
+    ASSETS_DIRECTORY "/Sounds/Ox.wav",
+    ASSETS_DIRECTORY "/Sounds/ConcreteMaker.wav",
+    ASSETS_DIRECTORY "/Sounds/Engineer.wav",
+   // ASSETS_DIRECTORY "/Sounds/Prefect.wav"
 };
 
-static time_millis last_update_time;
+static const char ambient_sound_files[SOUND_AMBIENT_MAX][FILE_NAME_MAX] = {
+    "",
+    "wavs/empty_land1.wav",
+    "wavs/empty_land2.wav",
+    "wavs/empty_land3.wav",
+    "wavs/river.wav",
+};
 
 void sound_city_init(void)
 {
-    last_update_time = time_get_millis();
-    memset(channels, 0, MAX_CHANNELS * sizeof(city_channel));
-    for (int i = 0; i < MAX_CHANNELS; i++) {
-        channels[i].last_played_time = last_update_time;
+    data.last_update_time = time_get_millis();
+    memset(data.city_sounds, 0, sizeof(data.city_sounds));
+    for (sound_city_type sound = SOUND_CITY_FIRST; sound < SOUND_CITY_MAX; sound++) {
+        data.city_sounds[sound].last_played_time = data.last_update_time;
+        data.city_sounds[sound].type.city = sound;
+        data.city_sounds[sound].in_use = 1;
+        data.city_sounds[sound].views_threshold = 200;
+        data.city_sounds[sound].delay_millis = 30000;
+        data.city_sounds[sound].filename = city_sound_files[sound];
     }
-    for (int i = 1; i < 80; i++) {
-        channels[i].in_use = 1;
-        channels[i].views_threshold = 200;
-        channels[i].delay_millis = 30000;
+
+    memset(data.ambient_sounds, 0, sizeof(data.ambient_sounds));
+    for (sound_ambient_type sound = SOUND_AMBIENT_FIRST; sound < SOUND_AMBIENT_MAX; sound++) {
+        data.ambient_sounds[sound].last_played_time = data.last_update_time;
+        data.ambient_sounds[sound].type.ambient = sound;
+        data.ambient_sounds[sound].in_use = 1;
+        data.ambient_sounds[sound].views_threshold = 200;
+        data.ambient_sounds[sound].delay_millis = 30000;
+        data.ambient_sounds[sound].filename = ambient_sound_files[sound];
     }
-    channels[1].channel = SOUND_CHANNEL_CITY_HOUSE_SLUM;
-    channels[2].channel = SOUND_CHANNEL_CITY_HOUSE_POOR;
-    channels[3].channel = SOUND_CHANNEL_CITY_HOUSE_MEDIUM;
-    channels[4].channel = SOUND_CHANNEL_CITY_HOUSE_GOOD;
-    channels[5].channel = SOUND_CHANNEL_CITY_HOUSE_POSH;
-    channels[6].channel = SOUND_CHANNEL_CITY_AMPHITHEATER;
-    channels[7].channel = SOUND_CHANNEL_CITY_THEATER;
-    channels[8].channel = SOUND_CHANNEL_CITY_HIPPODROME;
-    channels[9].channel = SOUND_CHANNEL_CITY_COLOSSEUM;
-    channels[10].channel = SOUND_CHANNEL_CITY_GLADIATOR_SCHOOL;
-    channels[11].channel = SOUND_CHANNEL_CITY_LION_PIT;
-    channels[12].channel = SOUND_CHANNEL_CITY_ACTOR_COLONY;
-    channels[13].channel = SOUND_CHANNEL_CITY_CHARIOT_MAKER;
-    channels[14].channel = SOUND_CHANNEL_CITY_GARDEN;
-    channels[15].channel = SOUND_CHANNEL_CITY_CLINIC;
-    channels[16].channel = SOUND_CHANNEL_CITY_HOSPITAL;
-    channels[17].channel = SOUND_CHANNEL_CITY_BATHHOUSE;
-    channels[18].channel = SOUND_CHANNEL_CITY_BARBER;
-    channels[19].channel = SOUND_CHANNEL_CITY_SCHOOL;
-    channels[20].channel = SOUND_CHANNEL_CITY_ACADEMY;
-    channels[21].channel = SOUND_CHANNEL_CITY_LIBRARY;
-    channels[22].channel = SOUND_CHANNEL_CITY_PREFECTURE;
-    channels[23].channel = SOUND_CHANNEL_CITY_FORT;
-    channels[24].channel = SOUND_CHANNEL_CITY_TOWER;
-    channels[25].channel = SOUND_CHANNEL_CITY_TEMPLE_CERES;
-    channels[26].channel = SOUND_CHANNEL_CITY_TEMPLE_NEPTUNE;
-    channels[27].channel = SOUND_CHANNEL_CITY_TEMPLE_MERCURY;
-    channels[28].channel = SOUND_CHANNEL_CITY_TEMPLE_MARS;
-    channels[29].channel = SOUND_CHANNEL_CITY_TEMPLE_VENUS;
-    channels[30].channel = SOUND_CHANNEL_CITY_MARKET;
-    channels[31].channel = SOUND_CHANNEL_CITY_GRANARY;
-    channels[32].channel = SOUND_CHANNEL_CITY_WAREHOUSE;
-    channels[33].channel = SOUND_CHANNEL_CITY_SHIPYARD;
-    channels[34].channel = SOUND_CHANNEL_CITY_DOCK;
-    channels[35].channel = SOUND_CHANNEL_CITY_WHARF;
-    channels[36].channel = SOUND_CHANNEL_CITY_PALACE;
-    channels[37].channel = SOUND_CHANNEL_CITY_ENGINEERS_POST;
-    channels[38].channel = SOUND_CHANNEL_CITY_SENATE;
-    channels[39].channel = SOUND_CHANNEL_CITY_FORUM;
-    channels[40].channel = SOUND_CHANNEL_CITY_RESERVOIR;
-    channels[41].channel = SOUND_CHANNEL_CITY_FOUNTAIN;
-    channels[42].channel = SOUND_CHANNEL_CITY_WELL;
-    channels[43].channel = SOUND_CHANNEL_CITY_MILITARY_ACADEMY;
-    channels[44].channel = SOUND_CHANNEL_CITY_ORACLE;
-    channels[45].channel = SOUND_CHANNEL_CITY_BURNING_RUIN;
-    channels[46].channel = SOUND_CHANNEL_CITY_WHEAT_FARM;
-    channels[47].channel = SOUND_CHANNEL_CITY_VEGETABLE_FARM;
-    channels[48].channel = SOUND_CHANNEL_CITY_FRUIT_FARM;
-    channels[49].channel = SOUND_CHANNEL_CITY_OLIVE_FARM;
-    channels[50].channel = SOUND_CHANNEL_CITY_VINE_FARM;
-    channels[51].channel = SOUND_CHANNEL_CITY_PIG_FARM;
-    channels[52].channel = SOUND_CHANNEL_CITY_QUARRY;
-    channels[53].channel = SOUND_CHANNEL_CITY_IRON_MINE;
-    channels[54].channel = SOUND_CHANNEL_CITY_TIMBER_YARD;
-    channels[55].channel = SOUND_CHANNEL_CITY_CLAY_PIT;
-    channels[56].channel = SOUND_CHANNEL_CITY_WINE_WORKSHOP;
-    channels[57].channel = SOUND_CHANNEL_CITY_OIL_WORKSHOP;
-    channels[58].channel = SOUND_CHANNEL_CITY_WEAPONS_WORKSHOP;
-    channels[59].channel = SOUND_CHANNEL_CITY_FURNITURE_WORKSHOP;
-    channels[60].channel = SOUND_CHANNEL_CITY_POTTERY_WORKSHOP;
-    channels[61].channel = SOUND_CHANNEL_CITY_EMPTY_LAND1;
-    channels[62].channel = SOUND_CHANNEL_CITY_RIVER;
-    channels[63].channel = SOUND_CHANNEL_CITY_MISSION_POST;
-    channels[64].channel = SOUND_CHANNEL_CITY_CONSTRUCTION_SITE;
-    channels[65].channel = SOUND_CHANNEL_CITY_ARMOURY;
-    channels[66].channel = SOUND_CHANNEL_CITY_TAVERN;
-    channels[67].channel = SOUND_CHANNEL_CITY_CARAVANSERAI;
-    channels[68].channel = SOUND_CHANNEL_CITY_MESS_HALL;
-    channels[69].channel = SOUND_CHANNEL_CITY_LIGHTHOUSE;
-    channels[70].channel = SOUND_CHANNEL_CITY_WORKCAMP;
-    channels[71].channel = SOUND_CHANNEL_CITY_WATCHTOWER;
-    channels[72].channel = SOUND_CHANNEL_CITY_CITY_MINT;
-    channels[73].channel = SOUND_CHANNEL_CITY_DEPOT;
-    channels[74].channel = SOUND_CHANNEL_CITY_EMPTY_LAND2;
-    channels[75].channel = SOUND_CHANNEL_CITY_EMPTY_LAND3;
-    //channels[76].channel = SOUND_CHANNEL_CITY_EMPTY_LAND4;
-    channels[77].channel = SOUND_CHANNEL_CITY_BRICKWORKS;
-    channels[78].channel = SOUND_CHANNEL_CITY_CONCRETE_MAKER;
 }
 
 void sound_city_set_volume(int percentage)
 {
-    for (int i = SOUND_CHANNEL_CITY_MIN; i <= SOUND_CHANNEL_CITY_MAX; i++) {
-        sound_device_set_channel_volume(i, percentage);
-    }
+    sound_device_set_volume_for_type(SOUND_TYPE_CITY, percentage);
 }
 
 void sound_city_mark_building_view(building_type type, int num_workers, int direction)
 {
+    sound_city_type sound = building_properties_for_type(type)->sound_id;
 
-    int channel = BUILDING_TYPE_TO_CHANNEL_ID[type];
-
-    if (!channel) {
+    if (sound == SOUND_CITY_NONE) {
         return;
     }
     if (type == BUILDING_THEATER || type == BUILDING_AMPHITHEATER ||
@@ -255,50 +172,50 @@ void sound_city_mark_building_view(building_type type, int num_workers, int dire
         }
     }
 
-    channels[channel].available = 1;
-    ++channels[channel].total_views;
-    ++channels[channel].direction_views[direction];
+    data.city_sounds[sound].available = 1;
+    ++data.city_sounds[sound].total_views;
+    ++data.city_sounds[sound].direction_views[direction];
 }
 
 void sound_city_mark_construction_site_view(int direction)
 {
-    int channel = CONSTRUCTION_SITE_CHANNEL;
-    if (!channel) {
-        return;
-    }
-
-    channels[channel].available = 1;
-    ++channels[channel].total_views;
-    ++channels[channel].direction_views[direction];
+    data.city_sounds[SOUND_CITY_CONSTRUCTION_SITE].available = 1;
+    ++data.city_sounds[SOUND_CITY_CONSTRUCTION_SITE].total_views;
+    ++data.city_sounds[SOUND_CITY_CONSTRUCTION_SITE].direction_views[direction];
 }
-
 
 void sound_city_decay_views(void)
 {
-    for (int i = 0; i < MAX_CHANNELS; i++) {
+    for (sound_city_type sound = SOUND_CITY_FIRST; sound < SOUND_CITY_MAX; sound++) {
         for (int d = 0; d < 5; d++) {
-            channels[i].direction_views[d] = 0;
+            data.city_sounds[sound].direction_views[d] = 0;
         }
-        channels[i].total_views /= 2;
+        data.city_sounds[sound].total_views /= 2;
+    }
+
+    for (sound_ambient_type sound = SOUND_AMBIENT_FIRST; sound < SOUND_AMBIENT_MAX; sound++) {
+        for (int d = 0; d < 5; d++) {
+            data.ambient_sounds[sound].direction_views[d] = 0;
+        }
+        data.ambient_sounds[sound].total_views /= 2;
     }
 }
 
 void sound_city_progress_ambient(void)
 {
-    for (int i = 0; i < ambient_channels_number; i++) {
-        channels[ambient_channels[i]].available = 1;
-        ++channels[ambient_channels[i]].total_views;
-        ++channels[ambient_channels[i]].direction_views[SOUND_DIRECTION_CENTER];
+    for (sound_ambient_type sound = SOUND_AMBIENT_FIRST; sound < SOUND_AMBIENT_MAX; sound++) {
+        data.ambient_sounds[sound].available = 1;
+        ++data.ambient_sounds[sound].total_views;
+        ++data.ambient_sounds[sound].direction_views[SOUND_DIRECTION_CENTER];
     }
 }
 
-static void play_channel(int channel, int direction)
+static void play_sound(const background_sound *sound, int direction)
 {
-    channel += CITY_CHANNEL_OFFSET;
-    if (!setting_sound(SOUND_CITY)->enabled) {
+    if (!setting_sound(SOUND_TYPE_CITY)->enabled || !*sound->filename) {
         return;
     }
-    if (sound_device_is_channel_playing(channel)) {
+    if (sound_device_is_file_playing_on_channel(sound->filename, SOUND_TYPE_CITY)) {
         return;
     }
     int left_pan;
@@ -319,117 +236,62 @@ static void play_channel(int channel, int direction)
             left_pan = right_pan = 0;
             break;
     }
-    sound_device_play_channel_panned(channel, setting_sound(SOUND_CITY)->volume, left_pan, right_pan);
+    sound_device_play_file_on_channel_panned(sound->filename, SOUND_TYPE_CITY,
+        setting_sound(SOUND_TYPE_CITY)->volume, left_pan, right_pan);
 }
 
 void sound_city_play(void)
 {
     time_millis now = time_get_millis();
-    for (int i = 1; i < MAX_CHANNELS; i++) {
-        channels[i].should_play = 0;
-        if (channels[i].available) {
-            channels[i].available = 0;
-            if (channels[i].total_views >= channels[i].views_threshold) {
-                if (now - channels[i].last_played_time >= channels[i].delay_millis) {
-                    channels[i].should_play = 1;
+    time_millis max_delay = 0;
+    background_sound *sound_to_play = 0;
+    for (sound_city_type sound = SOUND_CITY_FIRST; sound < SOUND_CITY_MAX; sound++) {
+        background_sound *current_sound = &data.city_sounds[sound];
+        if (current_sound->available) {
+            current_sound->available = 0;
+            if (current_sound->total_views >= current_sound->views_threshold) {
+                if (now - current_sound->last_played_time >= current_sound->delay_millis) {
+                    if (now - current_sound->last_played_time > max_delay) {
+                        max_delay = now - current_sound->last_played_time;
+                        sound_to_play = current_sound;
+                    }
                 }
             }
         } else {
-            channels[i].total_views = 0;
+            current_sound->total_views = 0;
             for (int d = 0; d < 5; d++) {
-                channels[i].direction_views[d] = 0;
+                current_sound->direction_views[d] = 0;
             }
         }
     }
 
-    if (now - last_update_time < 2000) {
+    if (now - data.last_update_time < 2000) {
         // Only play 1 sound every 2 seconds
         return;
     }
-    time_millis max_delay = 0;
-    int max_sound_id = 0;
-    for (int i = 1; i < MAX_CHANNELS; i++) {
-        if (channels[i].should_play) {
-            if (now - channels[i].last_played_time > max_delay) {
-                max_delay = now - channels[i].last_played_time;
-                max_sound_id = i;
-            }
-        }
-    }
-    if (!max_sound_id) {
+
+    if (!sound_to_play) {
         // progress_ambient();
         return;
     }
 
     // always only one channel available... use it
-    int channel = channels[max_sound_id].channel;
     int direction;
-    if (channels[max_sound_id].direction_views[SOUND_DIRECTION_CENTER] > 10) {
+    if (sound_to_play->direction_views[SOUND_DIRECTION_CENTER] > 10) {
         direction = SOUND_DIRECTION_CENTER;
-    } else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_LEFT] > 10) {
+    } else if (sound_to_play->direction_views[SOUND_DIRECTION_LEFT] > 10) {
         direction = SOUND_DIRECTION_LEFT;
-    } else if (channels[max_sound_id].direction_views[SOUND_DIRECTION_RIGHT] > 10) {
+    } else if (sound_to_play->direction_views[SOUND_DIRECTION_RIGHT] > 10) {
         direction = SOUND_DIRECTION_RIGHT;
     } else {
         direction = SOUND_DIRECTION_CENTER;
     }
 
-    play_channel(channel, direction);
-    last_update_time = now;
-    channels[max_sound_id].last_played_time = now;
-    channels[max_sound_id].total_views = 0;
+    play_sound(sound_to_play, direction);
+    data.last_update_time = now;
+    sound_to_play->last_played_time = now;
+    sound_to_play->total_views = 0;
     for (int d = 0; d < 5; d++) {
-        channels[max_sound_id].direction_views[d] = 0;
-    }
-    channels[max_sound_id].times_played++;
-}
-
-void sound_city_save_state(buffer *buf)
-{
-    for (int i = 0; i < MAX_CHANNELS; i++) {
-        const city_channel *ch = &channels[i];
-        buffer_write_i32(buf, ch->available);
-        buffer_write_i32(buf, ch->total_views);
-        buffer_write_i32(buf, ch->views_threshold);
-        for (int d = 0; d < 5; d++) {
-            buffer_write_i32(buf, ch->direction_views[d]);
-        }
-        buffer_write_i32(buf, 0); // current channel, always 0
-        buffer_write_i32(buf, ch->in_use ? 1 : 0); // num channels, max 1
-        buffer_write_i32(buf, ch->channel);
-        for (int c = 1; c < 8; c++) {
-            buffer_write_i32(buf, 0); // channels 1-7: never used
-        }
-        buffer_write_i32(buf, ch->in_use);
-        buffer_write_i32(buf, ch->times_played);
-        buffer_write_u32(buf, ch->last_played_time);
-        buffer_write_u32(buf, ch->delay_millis);
-        buffer_write_i32(buf, ch->should_play);
-        for (int x = 0; x < 9; x++) {
-            buffer_write_i32(buf, 0);
-        }
-    }
-}
-
-void sound_city_load_state(buffer *buf)
-{
-    for (int i = 0; i < MAX_CHANNELS; i++) {
-        city_channel *ch = &channels[i];
-        ch->available = buffer_read_i32(buf);
-        ch->total_views = buffer_read_i32(buf);
-        ch->views_threshold = buffer_read_i32(buf);
-        for (int d = 0; d < 5; d++) {
-            ch->direction_views[d] = buffer_read_i32(buf);
-        }
-        buffer_skip(buf, 4); // current channel
-        buffer_skip(buf, 4); // num channels
-        ch->channel = buffer_read_i32(buf);
-        buffer_skip(buf, 28);
-        ch->in_use = buffer_read_i32(buf);
-        ch->times_played = buffer_read_i32(buf);
-        ch->last_played_time = buffer_read_u32(buf);
-        ch->delay_millis = buffer_read_u32(buf);
-        ch->should_play = buffer_read_i32(buf);
-        buffer_skip(buf, 36);
+        sound_to_play->direction_views[d] = 0;
     }
 }

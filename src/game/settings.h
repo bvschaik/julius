@@ -17,13 +17,6 @@ typedef enum {
     DIFFICULTY_VERY_HARD = 4
 } set_difficulty;
 
-typedef enum {
-    SOUND_MUSIC = 1,
-    SOUND_SPEECH = 2,
-    SOUND_EFFECTS = 3,
-    SOUND_CITY = 4,
-} set_sound_type;
-
 typedef struct {
     int enabled;
     int volume;
@@ -37,12 +30,12 @@ int setting_fullscreen(void);
 void setting_window(int *width, int *height);
 void setting_set_display(int fullscreen, int width, int height);
 
-const set_sound *setting_sound(set_sound_type type);
+const set_sound *setting_sound(int type);
 
-int setting_sound_is_enabled(set_sound_type type);
-void setting_toggle_sound_enabled(set_sound_type type);
-void setting_set_sound_volume(set_sound_type type, int volume);
-void setting_reset_sound(set_sound_type type, int enabled, int volume);
+int setting_sound_is_enabled(int type);
+void setting_toggle_sound_enabled(int type);
+void setting_set_sound_volume(int type, int volume);
+void setting_reset_sound(int type, int enabled, int volume);
 
 int setting_game_speed(void);
 void setting_increase_game_speed(void);

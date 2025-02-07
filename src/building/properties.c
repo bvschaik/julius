@@ -2,6 +2,7 @@
 
 #include "assets/assets.h"
 #include "core/image_group.h"
+#include "sound/city.h"
 #include "translation/translation.h"
 #include "type.h"
 
@@ -52,124 +53,152 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     },
     [BUILDING_HOUSE_SMALL_TENT] = {
         .size = 1,
+        .sound_id = SOUND_CITY_HOUSE_SLUM,
         .event_data.attr = "vacant_lot|house_small_tent|housing"
     },
     [BUILDING_HOUSE_LARGE_TENT] = {
         .size = 1,
+        .sound_id = SOUND_CITY_HOUSE_SLUM,
         .event_data.attr = "house_large_tent"
     },
     [BUILDING_HOUSE_SMALL_SHACK] = {
         .size = 1,
+        .sound_id = SOUND_CITY_HOUSE_SLUM,
         .event_data.attr = "house_small_shack"
     },
     [BUILDING_HOUSE_LARGE_SHACK] = {
         .size = 1,
+        .sound_id = SOUND_CITY_HOUSE_SLUM,
         .event_data.attr = "house_large_shack"
     },
     [BUILDING_HOUSE_SMALL_HOVEL] = {
         .size = 1,
+        .sound_id = SOUND_CITY_HOUSE_SLUM,
         .event_data.attr = "house_small_hovel"
     },
     [BUILDING_HOUSE_LARGE_HOVEL] = {
         .size = 1,
+        .sound_id = SOUND_CITY_HOUSE_SLUM,
         .event_data.attr = "house_large_hovel"
     },
     [BUILDING_HOUSE_SMALL_CASA] = {
         .size = 1,
+        .sound_id = SOUND_CITY_HOUSE_POOR,
         .event_data.attr = "house_small_casa"
     },
     [BUILDING_HOUSE_LARGE_CASA] = {
         .size = 1,
+        .sound_id = SOUND_CITY_HOUSE_POOR,
         .event_data.attr = "house_large_casa"
     },
     [BUILDING_HOUSE_SMALL_INSULA] = {
         .size = 1,
+        .sound_id = SOUND_CITY_HOUSE_POOR,
         .event_data.attr = "house_small_insula"
     },
     [BUILDING_HOUSE_MEDIUM_INSULA] = {
         .size = 1,
+        .sound_id = SOUND_CITY_HOUSE_POOR,
         .event_data.attr = "house_medium_insula"
     },
     [BUILDING_HOUSE_LARGE_INSULA] = {
         .size = 2,
+        .sound_id = SOUND_CITY_HOUSE_MEDIUM,
         .event_data.attr = "house_large_insula"
     },
     [BUILDING_HOUSE_GRAND_INSULA] = {
         .size = 2,
+        .sound_id = SOUND_CITY_HOUSE_MEDIUM,
         .event_data.attr = "house_grand_insula"
     },
     [BUILDING_HOUSE_SMALL_VILLA] = {
         .size = 2,
+        .sound_id = SOUND_CITY_HOUSE_MEDIUM,
         .event_data.attr = "house_small_villa"
     },
     [BUILDING_HOUSE_MEDIUM_VILLA] = {
         .size = 2,
+        .sound_id = SOUND_CITY_HOUSE_MEDIUM,
         .event_data.attr = "house_medium_villa"
     },
     [BUILDING_HOUSE_LARGE_VILLA] = {
         .size = 3,
+        .sound_id = SOUND_CITY_HOUSE_GOOD,
         .event_data.attr = "house_large_villa"
     },
     [BUILDING_HOUSE_GRAND_VILLA] = {
         .size = 3,
+        .sound_id = SOUND_CITY_HOUSE_GOOD,
         .event_data.attr = "house_grand_villa"
     },
     [BUILDING_HOUSE_SMALL_PALACE] = {
         .size = 3,
+        .sound_id = SOUND_CITY_HOUSE_GOOD,
         .event_data.attr = "house_small_palace"
     },
     [BUILDING_HOUSE_MEDIUM_PALACE] = {
         .size = 3,
+        .sound_id = SOUND_CITY_HOUSE_GOOD,
         .event_data.attr = "house_medium_palace"
     },
     [BUILDING_HOUSE_LARGE_PALACE] = {
         .size = 4,
+        .sound_id = SOUND_CITY_HOUSE_POSH,
         .event_data.attr = "house_large_palace"
     },
     [BUILDING_HOUSE_LUXURY_PALACE] = {
         .size = 4,
+        .sound_id = SOUND_CITY_HOUSE_POSH,
         .event_data.attr = "house_luxury_palace"
     },
     [BUILDING_AMPHITHEATER] = {
         .size = 3,
         .image_group = 45,
+        .sound_id = SOUND_CITY_AMPHITHEATER,
         .event_data.attr = "amphitheater"
     },
     [BUILDING_THEATER] = {
         .size = 2,
         .image_group = 46,
+        .sound_id = SOUND_CITY_THEATER,
         .event_data.attr = "theater"
     },
     [BUILDING_HIPPODROME] = {
         .size = 5,
         .fire_proof = 1,
         .image_group = 213,
+        .sound_id = SOUND_CITY_HIPPODROME,
         .event_data.attr = "hippodrome"
     },
     [BUILDING_COLOSSEUM] = {
         .size = 5,
         .fire_proof = 1,
         .image_group = 48,
+        .sound_id = SOUND_CITY_COLOSSEUM,
         .event_data.attr = "colosseum"
     },
     [BUILDING_GLADIATOR_SCHOOL] = {
         .size = 3,
         .image_group = 49,
+        .sound_id = SOUND_CITY_GLADIATOR_SCHOOL,
         .event_data.attr = "gladiator_school"
     },
     [BUILDING_LION_HOUSE] = {
         .size = 3,
         .image_group = 50,
+        .sound_id = SOUND_CITY_LION_PIT,
         .event_data.attr = "lion_house"
     },
     [BUILDING_ACTOR_COLONY] = {
         .size = 3,
         .image_group = 51,
+        .sound_id = SOUND_CITY_ACTOR_COLONY,
         .event_data.attr = "actor_colony"
     },
     [BUILDING_CHARIOT_MAKER] = {
         .size = 3,
         .image_group = 52,
+        .sound_id = SOUND_CITY_CHARIOT_MAKER,
         .event_data.attr = "chariot_maker"
     },
     [BUILDING_PLAZA] = {
@@ -184,9 +213,10 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .fire_proof = 1,
         .image_group = 59,
         .image_offset = 1,
+        .sound_id = SOUND_CITY_GARDEN,
         .event_data.attr = "gardens",
         .event_data.cannot_count = 1
-},
+    },
     [BUILDING_FORT_LEGIONARIES] = {
         .size = 3,
         .fire_proof = 1,
@@ -231,21 +261,25 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_DOCTOR] = {
         .size = 1,
         .image_group = 68,
+        .sound_id = SOUND_CITY_CLINIC,
         .event_data.attr = "doctor"
     },
     [BUILDING_HOSPITAL] = {
         .size = 3,
         .image_group = 70,
+        .sound_id = SOUND_CITY_HOSPITAL,
         .event_data.attr = "hospital"
     },
     [BUILDING_BATHHOUSE] = {
         .size = 2,
         .image_group = 185,
+        .sound_id = SOUND_CITY_BATHHOUSE,
         .event_data.attr = "bathhouse"
     },
     [BUILDING_BARBER] = {
         .size = 1,
         .image_group = 67,
+        .sound_id = SOUND_CITY_BARBER,
         .event_data.attr = "barber"
     },
     [BUILDING_DISTRIBUTION_CENTER_UNUSED] = {
@@ -255,15 +289,18 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_SCHOOL] = {
         .size = 2,
         .image_group = 41,
+        .sound_id = SOUND_CITY_SCHOOL,
         .event_data.attr = "school"
     },
     [BUILDING_ACADEMY] = {
         .size = 3,
         .image_group = 43,
+        .sound_id = SOUND_CITY_ACADEMY,
         .event_data.attr = "academy"
     },
     [BUILDING_LIBRARY] = {
         .size = 2,
+        .sound_id = SOUND_CITY_LIBRARY,
         .custom_asset.group = "Health_Culture",
         .custom_asset.id = "Downgraded_Library",
         .event_data.attr = "library"
@@ -273,10 +310,11 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .fire_proof = 1,
         .image_group = 66,
         .image_offset = 1
-},
+    },
     [BUILDING_PREFECTURE] = {
         .size = 1,
         .image_group = 64,
+        .sound_id = SOUND_CITY_PREFECTURE,
         .event_data.attr = "prefecture"
     },
     [BUILDING_TRIUMPHAL_ARCH] = {
@@ -289,6 +327,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .size = 3,
         .fire_proof = 1,
         .image_group = 66,
+        .sound_id = SOUND_CITY_FORT,
         .event_data.attr = "fort"
     },
     [BUILDING_GATEHOUSE] = {
@@ -296,41 +335,48 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .fire_proof = 1,
         .image_group = 17,
         .image_offset = 1,
+        .sound_id = SOUND_CITY_TOWER,
         .event_data.attr = "gatehouse"
     },
     [BUILDING_TOWER] = {
         .size = 2,
         .fire_proof = 1,
         .image_group = 17,
+        .sound_id = SOUND_CITY_TOWER,
         .event_data.attr = "tower"
     },
     [BUILDING_SMALL_TEMPLE_CERES] = {
         .size = 2,
         .image_group = 71,
+        .sound_id = SOUND_CITY_TEMPLE_CERES,
         .event_data.attr = "small_temple_ceres",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_SMALL_TEMPLE_CERES
-},
+    },
     [BUILDING_SMALL_TEMPLE_NEPTUNE] = {
         .size = 2,
         .image_group = 72,
+        .sound_id = SOUND_CITY_TEMPLE_NEPTUNE,
         .event_data.attr = "small_temple_neptune",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_SMALL_TEMPLE_NEPTUNE
     },
     [BUILDING_SMALL_TEMPLE_MERCURY] = {
         .size = 2,
         .image_group = 73,
+        .sound_id = SOUND_CITY_TEMPLE_MERCURY,
         .event_data.attr = "small_temple_mercury",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_SMALL_TEMPLE_MERCURY
     },
     [BUILDING_SMALL_TEMPLE_MARS] = {
         .size = 2,
         .image_group = 74,
+        .sound_id = SOUND_CITY_TEMPLE_MARS,
         .event_data.attr = "small_temple_mars",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_SMALL_TEMPLE_MARS
     },
     [BUILDING_SMALL_TEMPLE_VENUS] = {
         .size = 2,
         .image_group = 75,
+        .sound_id = SOUND_CITY_TEMPLE_VENUS,
         .event_data.attr = "small_temple_venus",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_SMALL_TEMPLE_VENUS
     },
@@ -339,6 +385,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .fire_proof = 1,
         .image_group = 71,
         .image_offset = 1,
+        .sound_id = SOUND_CITY_TEMPLE_CERES,
         .event_data.attr = "large_temple_ceres",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_LARGE_TEMPLE_CERES
     },
@@ -347,6 +394,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .fire_proof = 1,
         .image_group = 72,
         .image_offset = 1,
+        .sound_id = SOUND_CITY_TEMPLE_NEPTUNE,
         .event_data.attr = "large_temple_neptune",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_LARGE_TEMPLE_NEPTUNE
     },
@@ -355,6 +403,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .fire_proof = 1,
         .image_group = 73,
         .image_offset = 1,
+        .sound_id = SOUND_CITY_TEMPLE_MERCURY,
         .event_data.attr = "large_temple_mercury",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_LARGE_TEMPLE_MERCURY
     },
@@ -363,6 +412,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .fire_proof = 1,
         .image_group = 74,
         .image_offset = 1,
+        .sound_id = SOUND_CITY_TEMPLE_MARS,
         .event_data.attr = "large_temple_mars",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_LARGE_TEMPLE_MARS
     },
@@ -371,23 +421,27 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .fire_proof = 1,
         .image_group = 75,
         .image_offset = 1,
+        .sound_id = SOUND_CITY_TEMPLE_VENUS,
         .event_data.attr = "large_temple_venus",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_LARGE_TEMPLE_VENUS
     },
     [BUILDING_MARKET] = {
         .size = 2,
         .image_group = 22,
+        .sound_id = SOUND_CITY_MARKET,
         .event_data.attr = "market"
     },
     [BUILDING_GRANARY] = {
         .size = 3,
         .image_group = 99,
+        .sound_id = SOUND_CITY_GRANARY,
         .event_data.attr = "granary"
     },
     [BUILDING_WAREHOUSE] = {
         .size = 1,
         .fire_proof = 1,
         .image_group = 82,
+        .sound_id = SOUND_CITY_WAREHOUSE,
         .event_data.attr = "warehouse"
     },
     [BUILDING_WAREHOUSE_SPACE] = {
@@ -398,43 +452,51 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_SHIPYARD] = {
         .size = 2,
         .image_group = 77,
+        .sound_id = SOUND_CITY_SHIPYARD,
         .event_data.attr = "shipyard"
     },
     [BUILDING_DOCK] = {
         .size = 3,
         .image_group = 78,
+        .sound_id = SOUND_CITY_DOCK,
         .event_data.attr = "dock"
     },
     [BUILDING_WHARF] = {
         .size = 2,
         .image_group = 79,
+        .sound_id = SOUND_CITY_WHARF,
         .event_data.attr = "wharf"
     },
     [BUILDING_GOVERNORS_HOUSE] = {
         .size = 3,
         .image_group = 85,
+        .sound_id = SOUND_CITY_PALACE,
         .event_data.attr = "governors_house"
     },
     [BUILDING_GOVERNORS_VILLA] = {
         .size = 4,
         .image_group = 86,
+        .sound_id = SOUND_CITY_PALACE,
         .event_data.attr = "governors_villa"
     },
     [BUILDING_GOVERNORS_PALACE] = {
         .size = 5,
         .image_group = 87,
+        .sound_id = SOUND_CITY_PALACE,
         .event_data.attr = "governors_palace"
     },
     [BUILDING_MISSION_POST] = {
         .size = 2,
         .fire_proof = 1,
         .image_group = 184,
+        .sound_id = SOUND_CITY_MISSION_POST,
         .event_data.attr = "mission_post"
     },
     [BUILDING_ENGINEERS_POST] = {
         .size = 1,
         .fire_proof = 1,
         .image_group = 81,
+        .sound_id = SOUND_CITY_ENGINEERS_POST,
         .event_data.attr = "engineers_post"
     },
     [BUILDING_LOW_BRIDGE] = {
@@ -448,11 +510,13 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_SENATE] = {
         .size = 5,
         .image_group = 62,
+        .sound_id = SOUND_CITY_SENATE,
         .event_data.attr = "senate"
     },
     [BUILDING_FORUM] = {
         .size = 2,
         .image_group = 63,
+        .sound_id = SOUND_CITY_FORUM,
         .event_data.attr = "forum"
     },
     [BUILDING_NATIVE_HUT] = {
@@ -472,18 +536,21 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .size = 3,
         .fire_proof = 1,
         .image_group = 25,
+        .sound_id = SOUND_CITY_RESERVOIR,
         .event_data.attr = "reservoir"
     },
     [BUILDING_FOUNTAIN] = {
         .size = 1,
         .fire_proof = 1,
         .image_group = 54,
+       // .sound_id = SOUND_CITY_FOUNTAIN, // Disabled in original
         .event_data.attr = "fountain"
     },
     [BUILDING_WELL] = {
         .size = 1,
         .fire_proof = 1,
         .image_group = 23,
+       // .sound_id = SOUND_CITY_WELL, // Disabled in original
         .event_data.attr = "well"
     },
     [BUILDING_NATIVE_CROPS] = {
@@ -492,10 +559,11 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .image_group = 100,
         .event_data.attr = "native_crops",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_NATIVE_CROPS
-},
+    },
     [BUILDING_MILITARY_ACADEMY] = {
         .size = 3,
         .image_group = 201,
+        .sound_id = SOUND_CITY_MILITARY_ACADEMY,
         .event_data.attr = "military_academy"
     },
     [BUILDING_BARRACKS] = {
@@ -510,90 +578,107 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_MENU_LARGE_TEMPLES] = {
         .event_data.attr = "large_temples|all_large_temples",
         .event_data.key = TR_PARAMETER_VALUE_BUILDING_MENU_LARGE_TEMPLES
-},
+    },
     [BUILDING_ORACLE] = {
         .size = 2,
         .fire_proof = 1,
         .image_group = 76,
+        .sound_id = SOUND_CITY_ORACLE,
         .event_data.attr = "amphitheater"
     },
     [BUILDING_BURNING_RUIN] = {
         .size = 1,
-        .fire_proof = 1
+        .fire_proof = 1,
+        .sound_id = SOUND_CITY_BURNING_RUIN
     },
     [BUILDING_WHEAT_FARM] = {
         .size = 3,
         .image_group = 37,
+        .sound_id = SOUND_CITY_WHEAT_FARM,
         .event_data.attr = "wheat_farm"
     },
     [BUILDING_VEGETABLE_FARM] = {
         .size = 3,
         .image_group = 37,
+        .sound_id = SOUND_CITY_VEGETABLE_FARM,
         .event_data.attr = "vegetable_farm"
     },
     [BUILDING_FRUIT_FARM] = {
         .size = 3,
         .image_group = 37,
+        .sound_id = SOUND_CITY_FRUIT_FARM,
         .event_data.attr = "fruit_farm"
     },
     [BUILDING_OLIVE_FARM] = {
         .size = 3,
         .image_group = 37,
+        .sound_id = SOUND_CITY_OLIVE_FARM,
         .event_data.attr = "olive_farm"
     },
     [BUILDING_VINES_FARM] = {
         .size = 3,
         .image_group = 37,
+        .sound_id = SOUND_CITY_VINE_FARM,
         .event_data.attr = "vines_farm"
     },
     [BUILDING_PIG_FARM] = {
         .size = 3,
         .image_group = 37,
+        .sound_id = SOUND_CITY_PIG_FARM,
         .event_data.attr = "pig_farm"
     },
     [BUILDING_MARBLE_QUARRY] = {
         .size = 2,
         .image_group = 38,
+        .sound_id = SOUND_CITY_QUARRY,
         .event_data.attr = "marble_quarry"
     },
     [BUILDING_IRON_MINE] = {
         .size = 2,
         .image_group = 39,
+        .sound_id = SOUND_CITY_IRON_MINE,
         .event_data.attr = "iron_mine"
     },
     [BUILDING_TIMBER_YARD] = {
         .size = 2,
         .image_group = 65,
+        .sound_id = SOUND_CITY_TIMBER_YARD,
         .event_data.attr = "timber_yard"
     },
     [BUILDING_CLAY_PIT] = {
         .size = 2,
         .image_group = 40,
+        .sound_id = SOUND_CITY_CLAY_PIT,
         .event_data.attr = "clay_pit"
     },
     [BUILDING_WINE_WORKSHOP] = {
         .size = 2,
         .image_group = 44,
+        .sound_id = SOUND_CITY_WINE_WORKSHOP,
         .event_data.attr = "wine_workshop"
     },
     [BUILDING_OIL_WORKSHOP] = {
         .size = 2,
         .image_group = 122,
+        .sound_id = SOUND_CITY_OIL_WORKSHOP,
         .event_data.attr = "oil_workshop"
     },
     [BUILDING_WEAPONS_WORKSHOP] = {
         .size = 2,
         .image_group = 123,
+        .sound_id = SOUND_CITY_WEAPONS_WORKSHOP,
         .event_data.attr = "weapons_workshop"
     },
     [BUILDING_FURNITURE_WORKSHOP] = {
         .size = 2,
         .image_group = 124,
+        .sound_id = SOUND_CITY_FURNITURE_WORKSHOP,
         .event_data.attr = "furniture_workshop"
     },
     [BUILDING_POTTERY_WORKSHOP] = {
         .size = 2,
         .image_group = 125,
+        .sound_id = SOUND_CITY_POTTERY_WORKSHOP,
         .event_data.attr = "pottery_workshop"
     },
     [BUILDING_ROADBLOCK] = {
@@ -604,6 +689,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     },
     [BUILDING_WORKCAMP] = {
         .size = 3,
+        .sound_id = SOUND_CITY_WORKCAMP,
         .custom_asset.group = "Admin_Logistics",
         .custom_asset.id = "Workcamp Central",
         .event_data.attr = "workcamp"
@@ -611,6 +697,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_GRAND_TEMPLE_CERES] = {
         .size = 7,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_TEMPLE_CERES,
         .custom_asset.group = "Monuments",
         .custom_asset.id = "Ceres Complex Off",
         .event_data.attr = "grand_temple_ceres"
@@ -618,6 +705,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_GRAND_TEMPLE_NEPTUNE] = {
         .size = 7,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_TEMPLE_NEPTUNE,
         .custom_asset.group = "Monuments",
         .custom_asset.id = "Neptune Complex Off",
         .event_data.attr = "grand_temple_neptune"
@@ -625,6 +713,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_GRAND_TEMPLE_MERCURY] = {
         .size = 7,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_TEMPLE_MERCURY,
         .custom_asset.group = "Monuments",
         .custom_asset.id = "Mercury Complex Off",
         .event_data.attr = "grand_temple_mercury"
@@ -632,6 +721,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_GRAND_TEMPLE_MARS] = {
         .size = 7,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_TEMPLE_MARS,
         .custom_asset.group = "Monuments",
         .custom_asset.id = "Mars Complex Off",
         .event_data.attr = "grand_temple_mars"
@@ -639,6 +729,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_GRAND_TEMPLE_VENUS] = {
         .size = 7,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_TEMPLE_VENUS,
         .custom_asset.group = "Monuments",
         .custom_asset.id = "Venus Complex Off",
         .event_data.attr = "grand_temple_venus"
@@ -846,6 +937,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_PANTHEON] = {
         .size = 7,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_ORACLE,
         .custom_asset.group = "Monuments",
         .custom_asset.id = "Pantheon Off",
         .event_data.attr = "pantheon"
@@ -853,12 +945,14 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_ARCHITECT_GUILD] = {
         .size = 2,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_ENGINEERS_POST,
         .custom_asset.group = "Admin_Logistics",
         .custom_asset.id = "Arch Guild OFF",
         .event_data.attr = "architect_guild"
     },
     [BUILDING_MESS_HALL] = {
         .size = 3,
+        .sound_id = SOUND_CITY_MESS_HALL,
         .custom_asset.group = "Military",
         .custom_asset.id = "Mess OFF Central",
         .event_data.attr = "mess_hall"
@@ -866,6 +960,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_LIGHTHOUSE] = {
         .size = 3,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_LIGHTHOUSE,
         .custom_asset.group = "Monuments",
         .custom_asset.id = "Lighthouse OFF",
         .event_data.attr = "lighthouse"
@@ -880,6 +975,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     },
     [BUILDING_TAVERN] = {
         .size = 2,
+        .sound_id = SOUND_CITY_TAVERN,
         .custom_asset.group = "Health_Culture",
         .custom_asset.id = "Tavern OFF",
         .event_data.attr = "tavern"
@@ -891,6 +987,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     },
     [BUILDING_ARENA] = {
         .size = 3,
+        .sound_id = SOUND_CITY_COLOSSEUM,
         .custom_asset.group = "Health_Culture",
         .custom_asset.id = "Arena OFF",
         .event_data.attr = "arena"
@@ -989,6 +1086,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_WATCHTOWER] = {
         .size = 2,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_WATCHTOWER,
         .custom_asset.group = "Military",
         .custom_asset.id = "Watchtower C OFF",
         .event_data.attr = "watchtower"
@@ -996,6 +1094,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_CARAVANSERAI] = {
         .size = 4,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_CARAVANSERAI,
         .custom_asset.group = "Monuments",
         .custom_asset.id = "Caravanserai_C_OFF",
         .event_data.attr = "caravanserai"
@@ -1056,7 +1155,7 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
         .custom_asset.id = "Highway_Placement",
         .event_data.attr = "highway",
         .event_data.cannot_count = 1
-},
+    },
     [BUILDING_GOLD_MINE] = {
         .size = 2,
         .custom_asset.group = "Industry",
@@ -1076,12 +1175,14 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     },
     [BUILDING_BRICKWORKS] = {
         .size = 2,
+        .sound_id = SOUND_CITY_BRICKWORKS,
         .custom_asset.group = "Industry",
         .custom_asset.id = "Brickworks_C_OFF",
         .event_data.attr = "brickworks"
     },
     [BUILDING_CONCRETE_MAKER] = {
         .size = 2,
+        .sound_id = SOUND_CITY_CONCRETE_MAKER,
         .custom_asset.group = "Industry",
         .custom_asset.id = "Concrete_Maker_C_OFF",
         .event_data.attr = "concrete_maker"
@@ -1089,12 +1190,14 @@ static building_properties properties[BUILDING_TYPE_MAX] = {
     [BUILDING_CITY_MINT] = {
         .size = 3,
         .fire_proof = 1,
+        .sound_id = SOUND_CITY_CITY_MINT,
         .custom_asset.group = "Monuments",
         .custom_asset.id = "City_Mint_ON",
         .event_data.attr = "city_mint"
     },
     [BUILDING_DEPOT] = {
         .size = 2,
+        .sound_id = SOUND_CITY_DEPOT,
         .custom_asset.group = "Admin_Logistics",
         .custom_asset.id = "Cart Depot N OFF",
         .event_data.attr = "cart_depot"

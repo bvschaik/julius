@@ -9,6 +9,7 @@ typedef struct {
     int image_group;
     int image_offset;
     int rotation_offset;
+    int sound_id;
     struct {
         const char *group;
         const char *id;

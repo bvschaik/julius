@@ -6,6 +6,7 @@
 #include "core/dir.h"
 #include "core/file.h"
 #include "core/string.h"
+#include "sound/device.h"
 
 #define INF_SIZE 560
 #define MAX_PERSONAL_SAVINGS 100
@@ -17,10 +18,7 @@ static struct {
     int window_width;
     int window_height;
     // sound settings
-    set_sound sound_effects;
-    set_sound sound_music;
-    set_sound sound_speech;
-    set_sound sound_city;
+    set_sound sound_settings[SOUND_TYPE_MAX];
     // speed settings
     int game_speed;
     int scroll_speed;
@@ -46,14 +44,14 @@ static void load_default_settings(void)
     data.window_width = 800;
     data.window_height = 600;
 
-    data.sound_effects.enabled = 1;
-    data.sound_effects.volume = 100;
-    data.sound_music.enabled = 1;
-    data.sound_music.volume = 80;
-    data.sound_speech.enabled = 1;
-    data.sound_speech.volume = 100;
-    data.sound_city.enabled = 1;
-    data.sound_city.volume = 100;
+    data.sound_settings[SOUND_TYPE_EFFECTS].enabled = 1;
+    data.sound_settings[SOUND_TYPE_EFFECTS].volume = 100;
+    data.sound_settings[SOUND_TYPE_MUSIC].enabled = 1;
+    data.sound_settings[SOUND_TYPE_MUSIC].volume = 80;
+    data.sound_settings[SOUND_TYPE_SPEECH].enabled = 1;
+    data.sound_settings[SOUND_TYPE_SPEECH].volume = 100;
+    data.sound_settings[SOUND_TYPE_CITY].enabled = 1;
+    data.sound_settings[SOUND_TYPE_CITY].volume = 100;
 
     data.game_speed = 90;
     data.scroll_speed = 70;
@@ -73,9 +71,9 @@ static void load_settings(buffer *buf)
     buffer_skip(buf, 4);
     data.fullscreen = buffer_read_i32(buf);
     buffer_skip(buf, 3);
-    data.sound_effects.enabled = buffer_read_u8(buf);
-    data.sound_music.enabled = buffer_read_u8(buf);
-    data.sound_speech.enabled = buffer_read_u8(buf);
+    data.sound_settings[SOUND_TYPE_EFFECTS].enabled = buffer_read_u8(buf);
+    data.sound_settings[SOUND_TYPE_MUSIC].enabled = buffer_read_u8(buf);
+    data.sound_settings[SOUND_TYPE_SPEECH].enabled = buffer_read_u8(buf);
     buffer_skip(buf, 6);
     data.game_speed = buffer_read_i32(buf);
     data.scroll_speed = buffer_read_i32(buf);
@@ -88,14 +86,14 @@ static void load_settings(buffer *buf)
     buffer_skip(buf, 4); //int personal_savings_last_mission;
     buffer_skip(buf, 4); //int current_mission_id;
     buffer_skip(buf, 4); //int is_custom_scenario;
-    data.sound_city.enabled = buffer_read_u8(buf);
+    data.sound_settings[SOUND_TYPE_CITY].enabled = buffer_read_u8(buf);
     data.warnings = buffer_read_u8(buf);
     data.monthly_autosave = buffer_read_u8(buf);
     buffer_skip(buf, 1); //unsigned char autoclear_enabled;
-    data.sound_effects.volume = buffer_read_i32(buf);
-    data.sound_music.volume = buffer_read_i32(buf);
-    data.sound_speech.volume = buffer_read_i32(buf);
-    data.sound_city.volume = buffer_read_i32(buf);
+    data.sound_settings[SOUND_TYPE_EFFECTS].volume = buffer_read_i32(buf);
+    data.sound_settings[SOUND_TYPE_MUSIC].volume = buffer_read_i32(buf);
+    data.sound_settings[SOUND_TYPE_SPEECH].volume = buffer_read_i32(buf);
+    data.sound_settings[SOUND_TYPE_CITY].volume = buffer_read_i32(buf);
     buffer_skip(buf, 8); // ram
     data.window_width = buffer_read_i32(buf);
     data.window_height = buffer_read_i32(buf);
@@ -162,9 +160,9 @@ void settings_save(void)
     buffer_skip(buf, 4);
     buffer_write_i32(buf, data.fullscreen);
     buffer_skip(buf, 3);
-    buffer_write_u8(buf, data.sound_effects.enabled);
-    buffer_write_u8(buf, data.sound_music.enabled);
-    buffer_write_u8(buf, data.sound_speech.enabled);
+    buffer_write_u8(buf, data.sound_settings[SOUND_TYPE_EFFECTS].enabled);
+    buffer_write_u8(buf, data.sound_settings[SOUND_TYPE_MUSIC].enabled);
+    buffer_write_u8(buf, data.sound_settings[SOUND_TYPE_SPEECH].enabled);
     buffer_skip(buf, 6);
     buffer_write_i32(buf, data.game_speed);
     buffer_write_i32(buf, data.scroll_speed);
@@ -177,14 +175,14 @@ void settings_save(void)
     buffer_skip(buf, 4); //int personal_savings_last_mission;
     buffer_skip(buf, 4); //int current_mission_id;
     buffer_skip(buf, 4); //int is_custom_scenario;
-    buffer_write_u8(buf, data.sound_city.enabled);
+    buffer_write_u8(buf, data.sound_settings[SOUND_TYPE_CITY].enabled);
     buffer_write_u8(buf, data.warnings);
     buffer_write_u8(buf, data.monthly_autosave);
     buffer_skip(buf, 1); //unsigned char autoclear_enabled;
-    buffer_write_i32(buf, data.sound_effects.volume);
-    buffer_write_i32(buf, data.sound_music.volume);
-    buffer_write_i32(buf, data.sound_speech.volume);
-    buffer_write_i32(buf, data.sound_city.volume);
+    buffer_write_i32(buf, data.sound_settings[SOUND_TYPE_EFFECTS].volume);
+    buffer_write_i32(buf, data.sound_settings[SOUND_TYPE_MUSIC].volume);
+    buffer_write_i32(buf, data.sound_settings[SOUND_TYPE_SPEECH].volume);
+    buffer_write_i32(buf, data.sound_settings[SOUND_TYPE_CITY].volume);
     buffer_skip(buf, 8); // ram
     buffer_write_i32(buf, data.window_width);
     buffer_write_i32(buf, data.window_height);
@@ -226,44 +224,39 @@ void setting_set_display(int fullscreen, int width, int height)
     }
 }
 
-static set_sound *get_sound(set_sound_type type)
+const set_sound *setting_sound(int type)
 {
-    switch (type) {
-    case SOUND_MUSIC: return &data.sound_music;
-    case SOUND_EFFECTS: return &data.sound_effects;
-    case SOUND_SPEECH: return &data.sound_speech;
-    case SOUND_CITY: return &data.sound_city;
-    default: return 0;
+    return type >= 0 && type < SOUND_TYPE_MAX ? &data.sound_settings[type] : 0;
+}
+
+int setting_sound_is_enabled(int type)
+{
+    return type >= 0 && type < SOUND_TYPE_MAX ? data.sound_settings[type].enabled : 0;
+}
+
+void setting_toggle_sound_enabled(int type)
+{
+    if (type < 0 || type >= SOUND_TYPE_MAX) {
+        return;
     }
+    data.sound_settings[type].enabled = data.sound_settings[type].enabled ? 0 : 1;
 }
 
-const set_sound *setting_sound(set_sound_type type)
+void setting_set_sound_volume(int type, int volume)
 {
-    return get_sound(type);
+    if (type < 0 || type >= SOUND_TYPE_MAX) {
+        return;
+    }
+    data.sound_settings[type].volume = calc_bound(volume, 0, 100);
 }
 
-int setting_sound_is_enabled(set_sound_type type)
+void setting_reset_sound(int type, int enabled, int volume)
 {
-    return get_sound(type)->enabled;
-}
-
-void setting_toggle_sound_enabled(set_sound_type type)
-{
-    set_sound *sound = get_sound(type);
-    sound->enabled = sound->enabled ? 0 : 1;
-}
-
-void setting_set_sound_volume(set_sound_type type, int volume)
-{
-    set_sound *sound = get_sound(type);
-    sound->volume = calc_bound(volume, 0, 100);
-}
-
-void setting_reset_sound(set_sound_type type, int enabled, int volume)
-{
-    set_sound *sound = get_sound(type);
-    sound->enabled = enabled;
-    sound->volume = calc_bound(volume, 0, 100);
+    if (type < 0 || type >= SOUND_TYPE_MAX) {
+        return;
+    }
+    data.sound_settings[type].enabled = enabled;
+    data.sound_settings[type].volume = calc_bound(volume, 0, 100);
 }
 
 int setting_game_speed(void)

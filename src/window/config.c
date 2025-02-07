@@ -20,6 +20,7 @@
 #include "graphics/text.h"
 #include "graphics/window.h"
 #include "sound/city.h"
+#include "sound/device.h"
 #include "sound/effect.h"
 #include "sound/music.h"
 #include "sound/speech.h"
@@ -453,25 +454,25 @@ static void fetch_original_config_values(void)
     data.config_values[CONFIG_ORIGINAL_GAME_SPEED].original_value = (int) game_speed_index;
     data.config_values[CONFIG_ORIGINAL_GAME_SPEED].new_value = (int) game_speed_index;
 
-    data.config_values[CONFIG_ORIGINAL_ENABLE_MUSIC].original_value = setting_sound(SOUND_MUSIC)->enabled;
-    data.config_values[CONFIG_ORIGINAL_ENABLE_MUSIC].new_value = setting_sound(SOUND_MUSIC)->enabled;
-    data.config_values[CONFIG_ORIGINAL_MUSIC_VOLUME].original_value = setting_sound(SOUND_MUSIC)->volume;
-    data.config_values[CONFIG_ORIGINAL_MUSIC_VOLUME].new_value = setting_sound(SOUND_MUSIC)->volume;
+    data.config_values[CONFIG_ORIGINAL_ENABLE_MUSIC].original_value = setting_sound(SOUND_TYPE_MUSIC)->enabled;
+    data.config_values[CONFIG_ORIGINAL_ENABLE_MUSIC].new_value = setting_sound(SOUND_TYPE_MUSIC)->enabled;
+    data.config_values[CONFIG_ORIGINAL_MUSIC_VOLUME].original_value = setting_sound(SOUND_TYPE_MUSIC)->volume;
+    data.config_values[CONFIG_ORIGINAL_MUSIC_VOLUME].new_value = setting_sound(SOUND_TYPE_MUSIC)->volume;
 
-    data.config_values[CONFIG_ORIGINAL_ENABLE_SPEECH].original_value = setting_sound(SOUND_SPEECH)->enabled;
-    data.config_values[CONFIG_ORIGINAL_ENABLE_SPEECH].new_value = setting_sound(SOUND_SPEECH)->enabled;
-    data.config_values[CONFIG_ORIGINAL_SPEECH_VOLUME].original_value = setting_sound(SOUND_SPEECH)->volume;
-    data.config_values[CONFIG_ORIGINAL_SPEECH_VOLUME].new_value = setting_sound(SOUND_SPEECH)->volume;
+    data.config_values[CONFIG_ORIGINAL_ENABLE_SPEECH].original_value = setting_sound(SOUND_TYPE_SPEECH)->enabled;
+    data.config_values[CONFIG_ORIGINAL_ENABLE_SPEECH].new_value = setting_sound(SOUND_TYPE_SPEECH)->enabled;
+    data.config_values[CONFIG_ORIGINAL_SPEECH_VOLUME].original_value = setting_sound(SOUND_TYPE_SPEECH)->volume;
+    data.config_values[CONFIG_ORIGINAL_SPEECH_VOLUME].new_value = setting_sound(SOUND_TYPE_SPEECH)->volume;
 
-    data.config_values[CONFIG_ORIGINAL_ENABLE_SOUND_EFFECTS].original_value = setting_sound(SOUND_EFFECTS)->enabled;
-    data.config_values[CONFIG_ORIGINAL_ENABLE_SOUND_EFFECTS].new_value = setting_sound(SOUND_EFFECTS)->enabled;
-    data.config_values[CONFIG_ORIGINAL_SOUND_EFFECTS_VOLUME].original_value = setting_sound(SOUND_EFFECTS)->volume;
-    data.config_values[CONFIG_ORIGINAL_SOUND_EFFECTS_VOLUME].new_value = setting_sound(SOUND_EFFECTS)->volume;
+    data.config_values[CONFIG_ORIGINAL_ENABLE_SOUND_EFFECTS].original_value = setting_sound(SOUND_TYPE_EFFECTS)->enabled;
+    data.config_values[CONFIG_ORIGINAL_ENABLE_SOUND_EFFECTS].new_value = setting_sound(SOUND_TYPE_EFFECTS)->enabled;
+    data.config_values[CONFIG_ORIGINAL_SOUND_EFFECTS_VOLUME].original_value = setting_sound(SOUND_TYPE_EFFECTS)->volume;
+    data.config_values[CONFIG_ORIGINAL_SOUND_EFFECTS_VOLUME].new_value = setting_sound(SOUND_TYPE_EFFECTS)->volume;
 
-    data.config_values[CONFIG_ORIGINAL_ENABLE_CITY_SOUNDS].original_value = setting_sound(SOUND_CITY)->enabled;
-    data.config_values[CONFIG_ORIGINAL_ENABLE_CITY_SOUNDS].new_value = setting_sound(SOUND_CITY)->enabled;
-    data.config_values[CONFIG_ORIGINAL_CITY_SOUNDS_VOLUME].original_value = setting_sound(SOUND_CITY)->volume;
-    data.config_values[CONFIG_ORIGINAL_CITY_SOUNDS_VOLUME].new_value = setting_sound(SOUND_CITY)->volume;
+    data.config_values[CONFIG_ORIGINAL_ENABLE_CITY_SOUNDS].original_value = setting_sound(SOUND_TYPE_CITY)->enabled;
+    data.config_values[CONFIG_ORIGINAL_ENABLE_CITY_SOUNDS].new_value = setting_sound(SOUND_TYPE_CITY)->enabled;
+    data.config_values[CONFIG_ORIGINAL_CITY_SOUNDS_VOLUME].original_value = setting_sound(SOUND_TYPE_CITY)->volume;
+    data.config_values[CONFIG_ORIGINAL_CITY_SOUNDS_VOLUME].new_value = setting_sound(SOUND_TYPE_CITY)->volume;
 
     data.config_values[CONFIG_ORIGINAL_SCROLL_SPEED].original_value = setting_scroll_speed();
     data.config_values[CONFIG_ORIGINAL_SCROLL_SPEED].new_value = setting_scroll_speed();
@@ -1248,10 +1249,10 @@ static int config_enable_audio(int key)
 static int config_set_master_volume(int key)
 {
     config_change_basic(key);
-    sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
-    sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
-    sound_effect_set_volume(setting_sound(SOUND_EFFECTS)->volume);
-    sound_city_set_volume(setting_sound(SOUND_CITY)->volume);
+    sound_music_set_volume(setting_sound(SOUND_TYPE_MUSIC)->volume);
+    sound_speech_set_volume(setting_sound(SOUND_TYPE_SPEECH)->volume);
+    sound_effect_set_volume(setting_sound(SOUND_TYPE_EFFECTS)->volume);
+    sound_city_set_volume(setting_sound(SOUND_TYPE_CITY)->volume);
     return 1;
 }
 
@@ -1259,8 +1260,8 @@ static int config_enable_music(int key)
 {
     config_change_basic(key);
 
-    if (setting_sound_is_enabled(SOUND_MUSIC) != data.config_values[key].new_value) {
-        setting_toggle_sound_enabled(SOUND_MUSIC);
+    if (setting_sound_is_enabled(SOUND_TYPE_MUSIC) != data.config_values[key].new_value) {
+        setting_toggle_sound_enabled(SOUND_TYPE_MUSIC);
     }
     if (data.config_values[key].new_value) {
         if (data.show_background_image) {
@@ -1278,8 +1279,8 @@ static int config_enable_music(int key)
 static int config_set_music_volume(int key)
 {
     config_change_basic(key);
-    setting_set_sound_volume(SOUND_MUSIC, data.config_values[key].new_value);
-    sound_music_set_volume(setting_sound(SOUND_MUSIC)->volume);
+    setting_set_sound_volume(SOUND_TYPE_MUSIC, data.config_values[key].new_value);
+    sound_music_set_volume(setting_sound(SOUND_TYPE_MUSIC)->volume);
     return 1;
 }
 
@@ -1287,8 +1288,8 @@ static int config_enable_speech(int key)
 {
     config_change_basic(key);
 
-    if (setting_sound_is_enabled(SOUND_SPEECH) != data.config_values[key].new_value) {
-        setting_toggle_sound_enabled(SOUND_SPEECH);
+    if (setting_sound_is_enabled(SOUND_TYPE_SPEECH) != data.config_values[key].new_value) {
+        setting_toggle_sound_enabled(SOUND_TYPE_SPEECH);
     }
     if (!data.config_values[key].new_value) {
         sound_speech_stop();
@@ -1299,8 +1300,8 @@ static int config_enable_speech(int key)
 static int config_set_speech_volume(int key)
 {
     config_change_basic(key);
-    setting_set_sound_volume(SOUND_SPEECH, data.config_values[key].new_value);
-    sound_speech_set_volume(setting_sound(SOUND_SPEECH)->volume);
+    setting_set_sound_volume(SOUND_TYPE_SPEECH, data.config_values[key].new_value);
+    sound_speech_set_volume(setting_sound(SOUND_TYPE_SPEECH)->volume);
     return 1;
 }
 
@@ -1308,8 +1309,8 @@ static int config_enable_effects(int key)
 {
     config_change_basic(key);
 
-    if (setting_sound_is_enabled(SOUND_EFFECTS) != data.config_values[key].new_value) {
-        setting_toggle_sound_enabled(SOUND_EFFECTS);
+    if (setting_sound_is_enabled(SOUND_TYPE_EFFECTS) != data.config_values[key].new_value) {
+        setting_toggle_sound_enabled(SOUND_TYPE_EFFECTS);
     }
     return 1;
 }
@@ -1317,8 +1318,8 @@ static int config_enable_effects(int key)
 static int config_set_effects_volume(int key)
 {
     config_change_basic(key);
-    setting_set_sound_volume(SOUND_EFFECTS, data.config_values[key].new_value);
-    sound_effect_set_volume(setting_sound(SOUND_EFFECTS)->volume);
+    setting_set_sound_volume(SOUND_TYPE_EFFECTS, data.config_values[key].new_value);
+    sound_effect_set_volume(setting_sound(SOUND_TYPE_EFFECTS)->volume);
     return 1;
 }
 
@@ -1326,8 +1327,8 @@ static int config_enable_city_sounds(int key)
 {
     config_change_basic(key);
 
-    if (setting_sound_is_enabled(SOUND_CITY) != data.config_values[key].new_value) {
-        setting_toggle_sound_enabled(SOUND_CITY);
+    if (setting_sound_is_enabled(SOUND_TYPE_CITY) != data.config_values[key].new_value) {
+        setting_toggle_sound_enabled(SOUND_TYPE_CITY);
     }
     return 1;
 }
@@ -1335,8 +1336,8 @@ static int config_enable_city_sounds(int key)
 static int config_set_city_sounds_volume(int key)
 {
     config_change_basic(key);
-    setting_set_sound_volume(SOUND_CITY, data.config_values[key].new_value);
-    sound_city_set_volume(setting_sound(SOUND_CITY)->volume);
+    setting_set_sound_volume(SOUND_TYPE_CITY, data.config_values[key].new_value);
+    sound_city_set_volume(setting_sound(SOUND_TYPE_CITY)->volume);
     return 1;
 }
 

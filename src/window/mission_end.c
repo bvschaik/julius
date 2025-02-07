@@ -26,7 +26,6 @@
 #include "scenario/custom_messages.h"
 #include "scenario/property.h"
 #include "scenario/scenario.h"
-#include "sound/channel.h"
 #include "sound/device.h"
 #include "sound/music.h"
 #include "sound/speech.h"
@@ -83,30 +82,30 @@ static int has_custom_victory_message(void)
     return scenario_victory_message() && custom_messages_get(scenario_victory_message());
 }
 
-static void fadeout_music(int unused)
+static void fadeout_music(sound_type unused)
 {
     sound_device_fadeout_music(5000);
     sound_device_on_audio_finished(0);
 }
 
-static void init_speech(int channel)
+static void init_speech(sound_type type)
 {
-    if (channel != SOUND_CHANNEL_SPEECH) {
+    if (type != SOUND_TYPE_SPEECH) {
         return;
     }
 
     int has_speech = *data.paths.speech && *data.paths.background_music;
     if (*data.paths.speech) {
         has_speech &= sound_device_play_file_on_channel(data.paths.speech,
-            SOUND_CHANNEL_SPEECH, setting_sound(SOUND_SPEECH)->volume);
+            SOUND_TYPE_SPEECH, setting_sound(SOUND_TYPE_SPEECH)->volume);
     }
     if (*data.paths.background_music) {
         int volume = 100;
         if (has_speech) {
-            volume = setting_sound(SOUND_SPEECH)->volume / 3;
+            volume = setting_sound(SOUND_TYPE_SPEECH)->volume / 3;
         }
-        if (volume > setting_sound(SOUND_MUSIC)->volume) {
-            volume = setting_sound(SOUND_MUSIC)->volume;
+        if (volume > setting_sound(SOUND_TYPE_MUSIC)->volume) {
+            volume = setting_sound(SOUND_TYPE_MUSIC)->volume;
         }
         has_speech &= sound_device_play_music(data.paths.background_music, volume, 0);
     }
@@ -141,17 +140,17 @@ static void play_audio(void)
     int playing_audio = 0;
 
     if (audio_file) {
-        playing_audio = sound_device_play_file_on_channel(data.paths.audio, SOUND_CHANNEL_SPEECH,
-            setting_sound(SOUND_SPEECH)->volume);
+        playing_audio = sound_device_play_file_on_channel(data.paths.audio, SOUND_TYPE_SPEECH,
+            setting_sound(SOUND_TYPE_SPEECH)->volume);
     }
     if (speech_file) {
         if (!playing_audio) {
-            init_speech(SOUND_CHANNEL_SPEECH);
+            init_speech(SOUND_TYPE_SPEECH);
         } else {
             sound_device_on_audio_finished(init_speech);
         }
     } else if (background_music) {
-        sound_device_play_music(data.paths.background_music, setting_sound(SOUND_MUSIC)->volume, 0);
+        sound_device_play_music(data.paths.background_music, setting_sound(SOUND_TYPE_MUSIC)->volume, 0);
     }
 }
 

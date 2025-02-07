@@ -61,7 +61,7 @@ static void play_track(int track)
     }
     const char *mp3_track = dir_get_file(mp3_tracks[track], NOT_LOCALIZED);
 
-    int volume = setting_sound(SOUND_MUSIC)->volume;
+    int volume = setting_sound(SOUND_TYPE_MUSIC)->volume;
     if (!mp3_track || !sound_device_play_music(mp3_track, volume, 1)) {
         sound_device_play_music(dir_get_file(tracks[track], NOT_LOCALIZED), volume, 1);
     }
@@ -70,14 +70,14 @@ static void play_track(int track)
 
 void sound_music_play_intro(void)
 {
-    if (setting_sound(SOUND_MUSIC)->enabled) {
+    if (setting_sound(SOUND_TYPE_MUSIC)->enabled) {
         play_track(TRACK_INTRO);
     }
 }
 
 void sound_music_play_editor(void)
 {
-    if (setting_sound(SOUND_MUSIC)->enabled) {
+    if (setting_sound(SOUND_TYPE_MUSIC)->enabled) {
         play_track(TRACK_CITY_1);
     }
 }
@@ -88,7 +88,7 @@ void sound_music_update(int force)
         --data.next_check;
         return;
     }
-    if (!setting_sound(SOUND_MUSIC)->enabled) {
+    if (!setting_sound(SOUND_TYPE_MUSIC)->enabled) {
         return;
     }
     int track;
