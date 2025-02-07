@@ -123,8 +123,8 @@ static void bound_invasion_values(void)
     } else {
         data.repeat_type = INVASION_REPEAT_TIMES;
     }
-    if (data.invasion.repeat.interval.min < 3) {
-        data.invasion.repeat.interval.min = 3;
+    if (data.invasion.repeat.interval.min < 1) {
+        data.invasion.repeat.interval.min = 1;
     }
     if (data.invasion.repeat.interval.max > 50) {
         data.invasion.repeat.interval.max = 50;

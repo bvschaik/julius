@@ -78,7 +78,7 @@ static void draw_housing_table(void)
             COLOR_MASK_NONE, SCALE_NONE);
         text_draw(translation_for(TR_ADVISOR_RESIDENCES_USING_POTTERY + i), 90, y_offset + 263 + (23 * i),
             FONT_NORMAL_BLACK, 0);
-        text_draw_number(houses_using_goods[list.items[i]], '@', " ", 450, y_offset + 263 + (23 * i),
+        text_draw_number(houses_using_goods[list.items[i]], '@', " ", 313, y_offset + 263 + (23 * i),
             FONT_NORMAL_BLACK, 0);
     }
 }

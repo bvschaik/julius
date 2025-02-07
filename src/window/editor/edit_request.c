@@ -130,8 +130,8 @@ static void bound_request_values(void)
     } else {
         data.repeat_type = REQUEST_REPEAT_TIMES;
     }
-    if (data.request.repeat.interval.min < 3) {
-        data.request.repeat.interval.min = 3;
+    if (data.request.repeat.interval.min < 1) {
+        data.request.repeat.interval.min = 1;
     }
     if (data.request.repeat.interval.max > 50) {
         data.request.repeat.interval.max = 50;

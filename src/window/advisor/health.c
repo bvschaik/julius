@@ -35,16 +35,16 @@ static void print_health_building_info(int y_offset, building_type type, int pop
 
     lang_text_draw_amount(8, BUILDING_ID_TO_STRING_ID[type - BUILDING_DOCTOR],
         building_count_total(type), 40, y_offset, FONT_NORMAL_WHITE);
-    text_draw_number_centered(building_count_total(type), 150, y_offset, 100, FONT_NORMAL_WHITE);
+    text_draw_number_centered(building_count_total(type), 180, y_offset, 100, FONT_NORMAL_WHITE);
 
-    int width = text_draw_number(population_served, '@', " ", 280, y_offset, FONT_NORMAL_WHITE, 0);
+    int width = text_draw_number(population_served, '@', " ", 305, y_offset, FONT_NORMAL_WHITE, 0);
 
     if (type == BUILDING_DOCTOR || type == BUILDING_HOSPITAL) {
-        lang_text_draw(56, 6, 280 + width, y_offset, FONT_NORMAL_WHITE);
+        lang_text_draw(56, 6, 305 + width, y_offset, FONT_NORMAL_WHITE);
     } else {
-        lang_text_draw(58, 5, 280 + width, y_offset, FONT_NORMAL_WHITE);
+        lang_text_draw(58, 5, 305 + width, y_offset, FONT_NORMAL_WHITE);
     }
-    
+
     if (coverage == 0) {
         lang_text_draw_centered(57, 10, 440, y_offset, 160, FONT_NORMAL_WHITE);
     } else if (coverage < 100) {
@@ -71,8 +71,8 @@ static int draw_background(void)
     } else {
         lang_text_draw_multiline(56, 15, 60, 65, 560, FONT_NORMAL_BLACK);
     }
-    lang_text_draw(56, 3, 180, 110, FONT_SMALL_PLAIN);
-    lang_text_draw(56, 4, 290, 110, FONT_SMALL_PLAIN);
+    lang_text_draw(56, 3, 205, 110, FONT_SMALL_PLAIN);
+    lang_text_draw(56, 4, 330, 110, FONT_SMALL_PLAIN);
     lang_text_draw_centered(56, 5, 440, 110, 160, FONT_SMALL_PLAIN);
 
     inner_panel_draw(32, 124, 36, 5);

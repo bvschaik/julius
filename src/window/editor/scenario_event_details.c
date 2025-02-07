@@ -121,14 +121,14 @@ static struct {
 } data;
 
 static input_box event_name_input = {
-    112, 50, 32, 2, FONT_NORMAL_WHITE, 1, data.event_name, EVENT_NAME_LENGTH
+    100, 40, 32, 2, FONT_NORMAL_WHITE, 1, data.event_name, EVENT_NAME_LENGTH
 };
 
 static grid_box_type conditions_grid_box = {
     .x = 16,
-    .y = 228,
+    .y = 188,
     .width = 18 * BLOCK_SIZE,
-    .height = 10 * BLOCK_SIZE,
+    .height = 13 * BLOCK_SIZE + 2,
     .num_columns = 1,
     .item_height = 30,
     .item_margin.horizontal = 10,
@@ -141,9 +141,9 @@ static grid_box_type conditions_grid_box = {
 
 static grid_box_type actions_grid_box = {
     .x = 320,
-    .y = 228,
+    .y = 188,
     .width = 18 * BLOCK_SIZE,
-    .height = 10 * BLOCK_SIZE,
+    .height = 13 * BLOCK_SIZE + 2,
     .num_columns = 1,
     .item_height = 30,
     .item_margin.horizontal = 10,
@@ -157,26 +157,26 @@ static grid_box_type actions_grid_box = {
 #define NUM_TOP_BUTTONS (sizeof(top_buttons) / sizeof(generic_button))
 
 static generic_button top_buttons[] = {
-    {192, 90, 220, 20, button_repeat_type, 0, EVENT_REPEAT_NEVER},
-    {192, 115, 220, 20, button_repeat_type, 0, EVENT_REPEAT_FOREVER},
-    {192, 140, 20, 20, button_repeat_type, 0, EVENT_REPEAT_TIMES},
-    {222, 138, 190, 25, button_repeat_times},
-    {272, 166, 50, 25, button_repeat_between, 0, REPEAT_MIN, DISABLE_ON_NO_REPEAT},
-    {362, 166, 50, 25, button_repeat_between, 0, REPEAT_MAX, DISABLE_ON_NO_REPEAT},
-    {150, 203, 150, 20, button_set_selected_to_group, 0, 0, DISABLE_ON_NO_SELECTION}
+    {100, 80, 220, 20, button_repeat_type, 0, EVENT_REPEAT_NEVER},
+    {100, 105, 220, 20, button_repeat_type, 0, EVENT_REPEAT_FOREVER},
+    {100, 130, 20, 20, button_repeat_type, 0, EVENT_REPEAT_TIMES},
+    {130, 128, 190, 25, button_repeat_times},
+    {410, 128, 50, 25, button_repeat_between, 0, REPEAT_MIN, DISABLE_ON_NO_REPEAT},
+    {500, 128, 50, 25, button_repeat_between, 0, REPEAT_MAX, DISABLE_ON_NO_REPEAT},
+    {144, 163, 155, 20, button_set_selected_to_group, 0, 0, DISABLE_ON_NO_SELECTION}
 };
 
 static generic_button select_all_none_buttons[] = {
-    {16, 203, 20, 20, button_select_all_none, 0, SELECT_CONDITIONS},
-    {320, 203, 20, 20, button_select_all_none, 0, SELECT_ACTIONS}
+    {16, 163, 20, 20, button_select_all_none, 0, SELECT_CONDITIONS},
+    {320, 163, 20, 20, button_select_all_none, 0, SELECT_ACTIONS}
 };
 
 #define NUM_BOTTOM_BUTTONS (sizeof(bottom_buttons) / sizeof(generic_button))
 
 static generic_button bottom_buttons[] = {
-    {16, 404, 192, 25, button_add_new_condition},
-    {224, 404, 192, 25, button_delete_selected, 0, 0, DISABLE_ON_NO_SELECTION},
-    {432, 404, 192, 25, button_add_new_action},
+    {16, 409, 192, 25, button_add_new_condition},
+    {224, 409, 192, 25, button_delete_selected, 0, 0, DISABLE_ON_NO_SELECTION},
+    {432, 409, 192, 25, button_add_new_action},
     {16, 439, 200, 25, button_delete_event},
     {524, 439, 100, 25, button_ok},
 };
@@ -401,13 +401,13 @@ static void draw_background(void)
     outer_panel_draw(0, 0, 40, 30);
 
     // Title and ID
-    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENTS_TITLE), 0, 16, 640, FONT_LARGE_BLACK, 0);
+    text_draw_centered(translation_for(TR_EDITOR_SCENARIO_EVENTS_TITLE), 0, 13, 640, FONT_LARGE_BLACK, 0);
     text_draw_label_and_number(translation_for(TR_EDITOR_ID),
-        data.event->id, "", 16, 24, FONT_NORMAL_PLAIN, COLOR_BLACK);
+        data.event->id, "", 16, 13, FONT_NORMAL_PLAIN, COLOR_BLACK);
 
     // "Name" string
-    lang_text_draw_right_aligned(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENT_NAME, 0, event_name_input.y + 10,
-        event_name_input.x - 8, FONT_NORMAL_BLACK);
+    lang_text_draw_right_aligned(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_EVENT_NAME, 0, event_name_input.y + 8,
+        event_name_input.x - 10, FONT_NORMAL_BLACK);
 
     // Top buttons
     // Repeat type selected checkbox
@@ -431,7 +431,7 @@ static void draw_background(void)
     }
     if (repeat_times > 2) {
         text_draw_label_and_number_centered(lang_get_string(CUSTOM_TRANSLATION, TR_EDITOR_REPEAT_TEXT), repeat_times,
-            (const char *)lang_get_string(CUSTOM_TRANSLATION, TR_EDITOR_REPEAT_TIMES),
+            (const char *) lang_get_string(CUSTOM_TRANSLATION, TR_EDITOR_REPEAT_TIMES),
             btn->x, btn->y + 6, btn->width, FONT_NORMAL_BLACK, 0);
     } else {
         lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_REPEAT_ONCE + repeat_times - 1, btn->x, btn->y + 6,
@@ -443,9 +443,9 @@ static void draw_background(void)
     color_t enabled_color = data.repeat_type == EVENT_REPEAT_NEVER ? COLOR_FONT_LIGHT_GRAY : COLOR_MASK_NONE;
 
     btn = &top_buttons[4];
-    lang_text_draw_right_aligned(CUSTOM_TRANSLATION, TR_EDITOR_REPEAT_FREQUENCY, 0, btn->y + 6, top_buttons[0].x - 16,
+    lang_text_draw_right_aligned(CUSTOM_TRANSLATION, TR_EDITOR_REPEAT_FREQUENCY, 0, btn->y - 20, top_buttons[0].x + 450,
         FONT_NORMAL_BLACK);
-    lang_text_draw_colored(CUSTOM_TRANSLATION, TR_EDITOR_BETWEEN, top_buttons[0].x, btn->y + 6,
+    lang_text_draw_colored(CUSTOM_TRANSLATION, TR_EDITOR_BETWEEN, top_buttons[0].x + 240, btn->y + 6,
         enabled_font, enabled_color);
     text_draw_number_centered_colored(data.event->repeat_months_min, btn->x, btn->y + 6,
         btn->width, enabled_font, enabled_color);
@@ -518,7 +518,7 @@ static void draw_background(void)
     // Add action button label
     lang_text_draw_centered(CUSTOM_TRANSLATION, TR_EDITOR_SCENARIO_ACTION_ADD,
         bottom_buttons[2].x, bottom_buttons[2].y + 6, bottom_buttons[2].width, FONT_NORMAL_BLACK);
-    
+
     // Bottom buttons
     lang_text_draw_centered_colored(CUSTOM_TRANSLATION, TR_EDITOR_DELETE, bottom_buttons[3].x, bottom_buttons[3].y + 6,
         bottom_buttons[3].width, FONT_NORMAL_PLAIN, COLOR_RED);

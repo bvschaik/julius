@@ -107,7 +107,7 @@ static int draw_background(void)
 
     lang_text_draw(58, 1, 173, 46, FONT_SMALL_PLAIN);
     lang_text_draw(58, 2, 260, 46, FONT_SMALL_PLAIN);
-    lang_text_draw(58, 3, PEOPLE_OFFSET + 10, 46, FONT_SMALL_PLAIN);
+    lang_text_draw(58, 3, PEOPLE_OFFSET + 20, 46, FONT_SMALL_PLAIN); // can entertain
     lang_text_draw_centered(58, 4, COVERAGE_OFFSET, 46, COVERAGE_WIDTH, FONT_SMALL_PLAIN);
 
     inner_panel_draw(32, 60, 36, 8);
