@@ -109,7 +109,7 @@ static const char city_sound_files[SOUND_CITY_MAX][FILE_NAME_MAX] = {
     "wavs/weap_workshop.wav",
     "wavs/furn_workshop.wav",
     "wavs/pott_workshop.wav",
-    "wavs/coin.wav"
+    "wavs/coin.wav",
     "wavs/mission.wav",
     ASSETS_DIRECTORY "/Sounds/Brickworks.wav",
     ASSETS_DIRECTORY "/Sounds/Lighthouse.wav",
