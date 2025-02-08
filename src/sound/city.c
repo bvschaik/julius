@@ -79,7 +79,6 @@ static const char city_sound_files[SOUND_CITY_MAX][FILE_NAME_MAX] = {
     "wavs/market2.wav",
     "wavs/market3.wav",
     "wavs/granary1.wav",
-    "wavs/granary2.wav",
     "wavs/warehouse1.wav",
     "wavs/warehouse2.wav",
     "wavs/shipyard1.wav",
