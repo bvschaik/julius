@@ -360,7 +360,7 @@ void window_building_draw_mission_post(building_info_context *c)
 static void draw_native(building_info_context *c, int group_id)
 {
     c->help_id = 0;
-    window_building_play_sound(c, "wavs/empty_land.wav");
+    //window_building_play_sound(c, "wavs/empty_land.wav");
     outer_panel_draw(c->x_offset, c->y_offset, c->width_blocks, c->height_blocks);
     lang_text_draw_centered(group_id, 0, c->x_offset, c->y_offset + 10,
         BLOCK_SIZE * c->width_blocks, FONT_LARGE_BLACK);
@@ -370,16 +370,19 @@ static void draw_native(building_info_context *c, int group_id)
 void window_building_draw_native_hut(building_info_context *c)
 {
     draw_native(c, 131);
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/NativeHut.wav");
 }
 
 void window_building_draw_native_meeting(building_info_context *c)
 {
     draw_native(c, 132);
+    window_building_play_sound(c, ASSETS_DIRECTORY "/Sounds/NativeHut.wav");
 }
 
 void window_building_draw_native_crops(building_info_context *c)
 {
     draw_native(c, 133);
+    window_building_play_sound(c, "wavs/empty_land.wav");
 }
 
 void window_building_draw_highway(building_info_context *c)
