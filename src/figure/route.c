@@ -61,7 +61,7 @@ void figure_route_add(figure *f)
         return;
     }
     figure_path_data *path;
-    array_new_item(paths, path);
+    array_new_item_after_index(paths, 1, path);
     if (!path) {
         return;
     }
