@@ -314,8 +314,7 @@ int sound_device_play_music(const char *filename, int volume_pct, int loop)
         data.custom_music = game_campaign_load_file(filename, &size);
         if (data.custom_music) {
             SDL_RWops *sdl_music = SDL_RWFromMem(data.custom_music, (int) size);
-            data.music = Mix_LoadMUSType_RW(sdl_music,
-                file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+            data.music = Mix_LoadMUS_RW(sdl_music, SDL_TRUE);
         } else {
 #ifdef __vita__
             load_music_for_vita(filename);
@@ -323,15 +322,14 @@ int sound_device_play_music(const char *filename, int volume_pct, int loop)
                 return 0;
             }
             SDL_RWops *sdl_music = SDL_RWFromMem(vita_music_data.buffer, vita_music_data.size);
-            data.music = Mix_LoadMUSType_RW(sdl_music,
-                file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+            data.music = Mix_LoadMUS_RW(sdl_music, SDL_TRUE);
 #elif defined(__ANDROID__)
             FILE *fp = file_open(filename, "rb");
             if (!fp) {
                 return 0;
             }
             SDL_RWops *sdl_fp = SDL_RWFromFP(fp, SDL_TRUE);
-            data.music = Mix_LoadMUSType_RW(sdl_fp, file_has_extension(filename, "mp3") ? MUS_MP3 : MUS_WAV, SDL_TRUE);
+            data.music = Mix_LoadMUS_RW(sdl_fp, SDL_TRUE);
 #else
             data.music = Mix_LoadMUS(filename);
 #endif
