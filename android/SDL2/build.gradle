@@ -53,7 +53,7 @@ android {
             ndkBuild {
                 arguments 'SUPPORT_FLAC_DRFLAC=false',
                         'SUPPORT_WAVPACK=false',
-                        'SUPPORT_GME=false',
+                        'SUPPORT_GME=false'
             }
         }
     }
